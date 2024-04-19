@@ -1,0 +1,16 @@
+.display_block { display: block; }
+.display_inline { display: inline; }
+.display_inline_block { display: inline-block; }
+.display_flex { display: flex; }
+.display_inline_flex { display: inline-flex; }
+.display_grid { display: grid; }
+.display_inline-grid { display: inline-grid; }
+.display_flow_root { display: flow-root; }
+.display_none { display: none; }
+.display_contents { display: contents; }
+.display_block_flex { display: block flex; }
+.display_block_flow { display: block flow; }
+.display_block_flow_root { display: block flow-root; }
+.display_block_grid { display: block grid; }
+.display_inline_flow { display: inline flow; }
+.display_inline_flow_root { display: inline flow-root; }
