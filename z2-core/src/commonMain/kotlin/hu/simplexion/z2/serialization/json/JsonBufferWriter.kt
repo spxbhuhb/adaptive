@@ -67,7 +67,7 @@ class JsonBufferWriter(
 
     fun nullValue(fieldName: String) {
         fieldName(fieldName)
-        put(NULL)
+        nullValue()
         separator()
     }
 
@@ -122,6 +122,10 @@ class JsonBufferWriter(
     @OptIn(ExperimentalStdlibApi::class)
     internal fun bytes(value: ByteArray) {
         quotedString(value.toHexString())
+    }
+
+    fun nullValue() {
+        put(NULL)
     }
 
     // ------------------------------------------------------------------------

@@ -17,10 +17,10 @@ class JsonBufferWriterTest {
         test("null") { string(null) }
 
         val uuidValue = UUID<Any>()
-        test("$uuidValue") { uuid(uuidValue) }
+        test("\"$uuidValue\"") { uuid(uuidValue) }
 
         val bytesValue = byteArrayOf(1, 2, 3)
-        test("010203") { bytes(bytesValue) }
+        test("\"010203\"") { bytes(bytesValue) }
     }
 
     @Test
@@ -39,7 +39,7 @@ class JsonBufferWriterTest {
 
         val uuidValue = UUID<Any>()
         test("\"u\":null") { uuid("u", null) }
-        test("\"u\":$uuidValue") { uuid("u", uuidValue) }
+        test("\"u\":\"$uuidValue\"") { uuid("u", uuidValue) }
 
         val bytesValue = byteArrayOf(1, 2, 3)
         test("\"b\":null") { bytes("b", null) }

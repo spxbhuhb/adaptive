@@ -3,6 +3,7 @@ package hu.simplexion.z2.serialization.protobuf
 import hu.simplexion.z2.serialization.InstanceEncoder
 import hu.simplexion.z2.serialization.MessageBuilder
 import hu.simplexion.z2.util.UUID
+import kotlin.enums.EnumEntries
 
 /**
  * Build Protocol Buffer messages.
@@ -282,6 +283,42 @@ class ProtoMessageBuilder : MessageBuilder {
             for (value in values) {
                 writer.bytes(fieldNumber, encoder.encodeInstance(ProtoMessageBuilder(), value))
             }
+        }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // Int
+    // ----------------------------------------------------------------------------
+
+    override fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>, value: E): MessageBuilder {
+        writer.sint32(fieldNumber, value.ordinal)
+        return this
+    }
+
+    override fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>, value: E?): MessageBuilder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            writer.sint32(fieldNumber, value.ordinal)
+        }
+        return this
+    }
+
+    override fun <E : Enum<E>> enumList(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>, values: List<E>): MessageBuilder {
+        sub(fieldNumber) {
+            for (value in values) {
+                it.sint32(value.ordinal)
+            }
+        }
+        return this
+    }
+
+    override fun <E : Enum<E>> enumListOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>, values: List<E>?): MessageBuilder {
+        if (values == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            intList(fieldNumber, fieldName, values.map { it.ordinal })
         }
         return this
     }

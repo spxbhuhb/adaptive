@@ -3,6 +3,7 @@ package hu.simplexion.z2.serialization.json
 import hu.simplexion.z2.serialization.InstanceEncoder
 import hu.simplexion.z2.serialization.MessageBuilder
 import hu.simplexion.z2.util.UUID
+import kotlin.enums.EnumEntries
 
 /**
  * Build JSON messages.
@@ -10,9 +11,9 @@ import hu.simplexion.z2.util.UUID
  * Use the type-specific functions to add records and then use [pack] to get
  * the wire format message.
  */
-class JsonMessageBuilder : MessageBuilder {
-
-    private val writer = JsonBufferWriter()
+class JsonMessageBuilder(
+    private val writer: JsonBufferWriter = JsonBufferWriter()
+) : MessageBuilder {
 
     override fun pack() = writer.pack()
 
@@ -180,7 +181,6 @@ class JsonMessageBuilder : MessageBuilder {
         return this
     }
 
-
     // ----------------------------------------------------------------------------
     // Instance
     // ----------------------------------------------------------------------------
@@ -214,8 +214,36 @@ class JsonMessageBuilder : MessageBuilder {
     }
 
     // ----------------------------------------------------------------------------
-    // Non-Primitive
+    // Enum
     // ----------------------------------------------------------------------------
+
+    override fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>, value: E): MessageBuilder {
+        enumOrNull(fieldNumber, fieldName, entries, value)
+        return this
+    }
+
+    override fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>, value: E?): MessageBuilder {
+        if (value == null) {
+            writer.nullValue(fieldName)
+        } else {
+            writer.fieldName(fieldName)
+            writer.quotedString(value.name)
+        }
+        return this
+    }
+
+    override fun <E : Enum<E>> enumList(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>, values: List<E>): MessageBuilder {
+        enumListOrNull(fieldNumber, fieldName, entries, values)
+        return this
+    }
+
+    override fun <E : Enum<E>> enumListOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>, values: List<E>?): MessageBuilder {
+        array(fieldName, values) { v, i ->
+            writer.quotedString(v[i].name)
+            writer.rollback() // array adds the separator
+        }
+        return this
+    }
 
 
     // ----------------------------------------------------------------------------

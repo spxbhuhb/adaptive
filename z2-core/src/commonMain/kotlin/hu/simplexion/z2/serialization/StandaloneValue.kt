@@ -11,6 +11,10 @@ interface StandaloneValue<M> {
     // Boolean
     // ---------------------------------------------------------------------------
 
+    fun encodeBoolean(value: Boolean?): ByteArray
+
+    fun encodeBooleanList(value: List<Boolean>?): ByteArray
+
     fun decodeBoolean(message: M?): Boolean
 
     fun decodeBooleanOrNull(message: M?): Boolean?
@@ -22,6 +26,10 @@ interface StandaloneValue<M> {
     // ---------------------------------------------------------------------------
     // Int
     // ---------------------------------------------------------------------------
+
+    fun encodeInt(value: Int?): ByteArray
+
+    fun encodeIntList(value: List<Int>?): ByteArray
 
     fun decodeInt(message: M?): Int
 
@@ -35,6 +43,10 @@ interface StandaloneValue<M> {
     // Long
     // ---------------------------------------------------------------------------
 
+    fun encodeLong(value: Long?): ByteArray
+
+    fun encodeLongList(value: List<Long>?): ByteArray
+
     fun decodeLong(message: M?): Long
 
     fun decodeLongOrNull(message: M?): Long?
@@ -46,6 +58,10 @@ interface StandaloneValue<M> {
     // ---------------------------------------------------------------------------
     // String
     // ---------------------------------------------------------------------------
+
+    fun encodeString(value: String?): ByteArray
+
+    fun encodeStringList(value: List<String>?): ByteArray
 
     fun decodeString(message: M?): String
 
@@ -59,6 +75,10 @@ interface StandaloneValue<M> {
     // ByteArray
     // ---------------------------------------------------------------------------
 
+    fun encodeByteArray(value: ByteArray?): ByteArray
+
+    fun encodeByteArrayList(value: List<ByteArray>?): ByteArray
+
     fun decodeByteArray(message: M?): ByteArray
 
     fun decodeByteArrayOrNull(message: M?): ByteArray?
@@ -70,6 +90,10 @@ interface StandaloneValue<M> {
     // ---------------------------------------------------------------------------
     // UUID
     // ---------------------------------------------------------------------------
+
+    fun encodeUuid(value: UUID<*>?): ByteArray
+
+    fun encodeUuidList(value: List<UUID<*>>?): ByteArray
 
     fun decodeUuid(message: M?): UUID<Any>
 
@@ -83,6 +107,10 @@ interface StandaloneValue<M> {
     // Instance
     // ---------------------------------------------------------------------------
 
+    fun <T> encodeInstance(value: T?, encoder: InstanceEncoder<T>): ByteArray
+
+    fun <T> encodeInstanceList(value: List<T>?, encoder: InstanceEncoder<T>): ByteArray
+
     fun <T> decodeInstance(message: M?, decoder: InstanceDecoder<T>): T
 
     fun <T> decodeInstanceOrNull(message: M?, decoder: InstanceDecoder<T>): T?
@@ -94,6 +122,10 @@ interface StandaloneValue<M> {
     // ---------------------------------------------------------------------------
     // Enum
     // ---------------------------------------------------------------------------
+
+    fun <E : Enum<E>> encodeEnum(value: E?, entries: EnumEntries<E>): ByteArray
+
+    fun <E : Enum<E>> encodeEnumList(value: List<E>?, entries: EnumEntries<E>): ByteArray
 
     fun <E : Enum<E>> decodeEnum(message: M?, entries: EnumEntries<E>): E
 

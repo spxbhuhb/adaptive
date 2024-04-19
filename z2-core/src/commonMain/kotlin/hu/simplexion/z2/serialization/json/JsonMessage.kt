@@ -7,13 +7,16 @@ import hu.simplexion.z2.util.UUID
 
 class JsonMessage : Message {
 
+    val root: JsonElement
     val map: MutableMap<String, JsonElement>?
 
     constructor(wireFormat: ByteArray, offset: Int = 0, length: Int = wireFormat.size) {
-        map = (JsonBufferReader(wireFormat, offset, length).read() as? JsonObject)?.entries
+        root = JsonBufferReader(wireFormat, offset, length).read()
+        map = (root as? JsonObject)?.entries
     }
 
     constructor(root: JsonObject) {
+        this.root = root
         map = root.entries
     }
 

@@ -1,6 +1,7 @@
 package hu.simplexion.z2.serialization.protobuf
 
 import hu.simplexion.z2.serialization.InstanceDecoder
+import hu.simplexion.z2.serialization.InstanceEncoder
 import hu.simplexion.z2.serialization.StandaloneValue
 import hu.simplexion.z2.util.UUID
 import kotlin.enums.EnumEntries
@@ -12,6 +13,12 @@ object ProtoStandaloneValue : StandaloneValue<ProtoMessage> {
     // ---------------------------------------------------------------------------
     // Boolean
     // ---------------------------------------------------------------------------
+
+    override fun encodeBoolean(value: Boolean?): ByteArray =
+        ProtoMessageBuilder().booleanOrNull(1, "", value).pack()
+
+    override fun encodeBooleanList(value: List<Boolean>?): ByteArray =
+        ProtoMessageBuilder().booleanListOrNull(1, "", value).pack()
 
     override fun decodeBoolean(message: ProtoMessage?): Boolean =
         message?.boolean(1, "") ?: false
@@ -29,6 +36,12 @@ object ProtoStandaloneValue : StandaloneValue<ProtoMessage> {
     // Int
     // ---------------------------------------------------------------------------
 
+    override fun encodeInt(value: Int?): ByteArray =
+        ProtoMessageBuilder().intOrNull(1, "", value).pack()
+
+    override fun encodeIntList(value: List<Int>?): ByteArray =
+        ProtoMessageBuilder().intListOrNull(1, "", value).pack()
+
     override fun decodeInt(message: ProtoMessage?): Int =
         message?.int(1, "") ?: 0
 
@@ -44,6 +57,12 @@ object ProtoStandaloneValue : StandaloneValue<ProtoMessage> {
     // ---------------------------------------------------------------------------
     // Long
     // ---------------------------------------------------------------------------
+
+    override fun encodeLong(value: Long?): ByteArray =
+        ProtoMessageBuilder().longOrNull(1, "", value).pack()
+
+    override fun encodeLongList(value: List<Long>?): ByteArray =
+        ProtoMessageBuilder().longListOrNull(1, "", value).pack()
 
     override fun decodeLong(message: ProtoMessage?): Long =
         message?.long(1, "") ?: 0L
@@ -61,6 +80,12 @@ object ProtoStandaloneValue : StandaloneValue<ProtoMessage> {
     // String
     // ---------------------------------------------------------------------------
 
+    override fun encodeString(value: String?): ByteArray =
+        ProtoMessageBuilder().stringOrNull(1, "", value).pack()
+
+    override fun encodeStringList(value: List<String>?): ByteArray =
+        ProtoMessageBuilder().stringListOrNull(1, "", value).pack()
+
     override fun decodeString(message: ProtoMessage?): String =
         message?.string(1, "") ?: ""
 
@@ -76,6 +101,12 @@ object ProtoStandaloneValue : StandaloneValue<ProtoMessage> {
     // ---------------------------------------------------------------------------
     // ByteArray
     // ---------------------------------------------------------------------------
+
+    override fun encodeByteArray(value: ByteArray?): ByteArray =
+        ProtoMessageBuilder().byteArrayOrNull(1, "", value).pack()
+
+    override fun encodeByteArrayList(value: List<ByteArray>?): ByteArray =
+        ProtoMessageBuilder().byteArrayListOrNull(1, "", value).pack()
 
     override fun decodeByteArray(message: ProtoMessage?): ByteArray =
         message?.byteArray(1, "") ?: ByteArray(0)
@@ -93,6 +124,12 @@ object ProtoStandaloneValue : StandaloneValue<ProtoMessage> {
     // UUID
     // ---------------------------------------------------------------------------
 
+    override fun encodeUuid(value: UUID<*>?): ByteArray =
+        ProtoMessageBuilder().uuidOrNull(1, "", value).pack()
+
+    override fun encodeUuidList(value: List<UUID<*>>?): ByteArray =
+        ProtoMessageBuilder().uuidListOrNull(1, "", value).pack()
+
     override fun decodeUuid(message: ProtoMessage?): UUID<Any> =
         message?.uuid(1, "") ?: UUID()
 
@@ -109,6 +146,12 @@ object ProtoStandaloneValue : StandaloneValue<ProtoMessage> {
     // Instance
     // ---------------------------------------------------------------------------
 
+    override fun <T> encodeInstance(value: T?, encoder: InstanceEncoder<T>): ByteArray =
+        ProtoMessageBuilder().instanceOrNull(1, "", encoder, value).pack()
+
+    override fun <T> encodeInstanceList(value: List<T>?, encoder: InstanceEncoder<T>): ByteArray =
+        ProtoMessageBuilder().instanceListOrNull(1, "", encoder, value).pack()
+
     override fun <T> decodeInstance(message: ProtoMessage?, decoder: InstanceDecoder<T>): T =
         checkNotNull(message?.instance(1, "", decoder)) { "cannot decode instance with $decoder" }
 
@@ -124,6 +167,12 @@ object ProtoStandaloneValue : StandaloneValue<ProtoMessage> {
     // ---------------------------------------------------------------------------
     // Enum
     // ---------------------------------------------------------------------------
+
+    override fun <E : Enum<E>> encodeEnum(value: E?, entries: EnumEntries<E>): ByteArray =
+        ProtoMessageBuilder().enumOrNull(1, "", entries, value).pack()
+
+    override fun <E : Enum<E>> encodeEnumList(value: List<E>?, entries: EnumEntries<E>): ByteArray =
+        ProtoMessageBuilder().enumListOrNull(1, "", entries, value).pack()
 
     override fun <E : Enum<E>> decodeEnum(message: ProtoMessage?, entries: EnumEntries<E>): E {
         if (message == null) return entries.first()
@@ -144,4 +193,5 @@ object ProtoStandaloneValue : StandaloneValue<ProtoMessage> {
         if (message == null) return null
         return message.intListOrNull(1, "")?.map { entries[it] }
     }
+
 }

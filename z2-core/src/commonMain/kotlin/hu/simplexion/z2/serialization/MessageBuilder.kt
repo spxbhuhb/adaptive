@@ -1,6 +1,7 @@
 package hu.simplexion.z2.serialization
 
 import hu.simplexion.z2.util.UUID
+import kotlin.enums.EnumEntries
 
 /**
  * Interface for building serialized messages. Protobuf needs field number
@@ -97,6 +98,18 @@ interface MessageBuilder {
     fun <T> instanceList(fieldNumber: Int, fieldName: String, encoder: InstanceEncoder<T>, values: List<T>): MessageBuilder
 
     fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, encoder: InstanceEncoder<T>, values: List<T>?): MessageBuilder
+
+    // ----------------------------------------------------------------------------
+    // Instance
+    // ----------------------------------------------------------------------------
+
+    fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>, value: E): MessageBuilder
+
+    fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>, value: E?): MessageBuilder
+
+    fun <E : Enum<E>> enumList(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>, values: List<E>): MessageBuilder
+
+    fun <E : Enum<E>> enumListOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>, values: List<E>?): MessageBuilder
 
     // ----------------------------------------------------------------------------
     // Utility
