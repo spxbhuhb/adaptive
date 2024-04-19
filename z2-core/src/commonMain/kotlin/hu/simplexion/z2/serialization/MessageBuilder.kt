@@ -10,6 +10,10 @@ interface MessageBuilder {
 
     fun pack(): ByteArray
 
+    fun startInstance() : MessageBuilder
+
+    fun endInstance() : MessageBuilder
+
     // ----------------------------------------------------------------------------
     // Boolean
     // ----------------------------------------------------------------------------

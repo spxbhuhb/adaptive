@@ -100,4 +100,28 @@ open class BufferWriter(
         writeOffset = 0
     }
 
+    /**
+     * Rolls back the write position by 1. Drops the last buffer when it is empty.
+     */
+    fun rollback() {
+        if (writeOffset == 0) {
+            buffers.removeLast()
+            writeOffset = buffers.last().size - 1
+        } else {
+            writeOffset -= 1
+        }
+    }
+
+    /**
+     * Get the last byte written into the buffer.
+     */
+    fun peekLast() : Byte {
+        if (writeOffset == 0) {
+            check(buffers.size != 1) { "write buffer underflow" }
+            return buffers[buffers.size - 2].last()
+        } else {
+            return buffers.last()[writeOffset - 1]
+        }
+    }
+
 }

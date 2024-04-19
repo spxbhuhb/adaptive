@@ -16,6 +16,16 @@ class JsonMessageBuilder : MessageBuilder {
 
     override fun pack() = writer.pack()
 
+    override fun startInstance(): MessageBuilder {
+        writer.openObject()
+        return this
+    }
+
+    override fun endInstance(): MessageBuilder {
+        writer.closeObject()
+        return this // protobuf is length based
+    }
+
     // ----------------------------------------------------------------------------
     // Boolean
     // ----------------------------------------------------------------------------
@@ -108,7 +118,7 @@ class JsonMessageBuilder : MessageBuilder {
     }
 
     override fun stringListOrNull(fieldNumber: Int, fieldName: String, values: List<String>?): JsonMessageBuilder {
-        array(fieldName, values) { v, i -> writer.string(v[i]) }
+        array(fieldName, values) { v, i -> writer.quotedString(v[i]) }
         return this
     }
 
@@ -147,12 +157,12 @@ class JsonMessageBuilder : MessageBuilder {
      * the UUID.
      */
     override fun uuid(fieldNumber: Int, fieldName: String, value: UUID<*>): JsonMessageBuilder {
-        writer.bytes(fieldName, value.toByteArray())
+        writer.uuid(fieldName, value)
         return this
     }
 
     override fun uuidOrNull(fieldNumber: Int, fieldName: String, value: UUID<*>?): JsonMessageBuilder {
-        writer.bytes(fieldName, value?.toByteArray())
+        writer.uuid(fieldName, value)
         return this
     }
 
@@ -196,7 +206,10 @@ class JsonMessageBuilder : MessageBuilder {
     }
 
     override fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, encoder: InstanceEncoder<T>, values: List<T>?): JsonMessageBuilder {
-        array(fieldName, values) { v, i -> encoder.encodeInstance(this, v[i]) }
+        array(fieldName, values) { v, i ->
+            encoder.encodeInstance(this, v[i])
+            writer.rollback() // array adds the separator
+        }
         return this
     }
 
@@ -217,10 +230,9 @@ class JsonMessageBuilder : MessageBuilder {
 
         writer.fieldName(fieldName)
         writer.openArray()
-        val last = values.size - 1
         for (index in values.indices) {
             block(values, index)
-            if (index != last) writer.separator()
+            writer.separator()
         }
         writer.closeArray()
     }

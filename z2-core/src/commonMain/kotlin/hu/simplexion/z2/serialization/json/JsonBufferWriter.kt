@@ -19,6 +19,8 @@ class JsonBufferWriter(
     maximumBufferSize: Int = 5_000_000 + initialBufferSize
 ) : BufferWriter(initialBufferSize, additionalBufferSize, maximumBufferSize) {
 
+    var level = 0
+
     // ------------------------------------------------------------------------
     // Public interface
     // ------------------------------------------------------------------------
@@ -26,27 +28,32 @@ class JsonBufferWriter(
     fun bool(fieldName: String, value: Boolean?) {
         fieldName(fieldName)
         if (value == null) put(NULL) else bool(value)
+        separator()
     }
 
     fun number(fieldName: String, value: Number?) {
         fieldName(fieldName)
         put(value?.toString())
+        separator()
     }
 
     fun string(fieldName: String, value: String?) {
         fieldName(fieldName)
         quotedString(value)
+        separator()
     }
 
     fun uuid(fieldName: String, value: UUID<*>?) {
         fieldName(fieldName)
-        put(value?.toString())
+        quotedString(value?.toString())
+        separator()
     }
 
     @OptIn(ExperimentalStdlibApi::class)
     fun bytes(fieldName: String, value: ByteArray?) {
         fieldName(fieldName)
         quotedString(value?.toHexString())
+        separator()
     }
 
     // ------------------------------------------------------------------------
@@ -61,26 +68,35 @@ class JsonBufferWriter(
     fun nullValue(fieldName: String) {
         fieldName(fieldName)
         put(NULL)
+        separator()
     }
 
     fun openArray() {
         put(0x5b) // '['
+        level++
     }
 
     fun closeArray() {
+        if (peekLast() == 0x2c.toByte()) rollback()
         put(0x5d) // ']'
+        level--
+        separator()
     }
 
     fun openObject() {
         put(0x7b) // '}'
+        level++
     }
 
     fun closeObject() {
+        if (peekLast() == 0x2c.toByte()) rollback()
         put(0x7d) // '}'
+        level--
+        separator()
     }
 
     fun separator() {
-        put(0x2c) // ','
+        if (level > 0) put(0x2c) // ','
     }
 
     // ------------------------------------------------------------------------
@@ -100,19 +116,19 @@ class JsonBufferWriter(
     }
 
     internal fun uuid(value: UUID<*>) {
-        string(value.toString())
+        quotedString(value.toString())
     }
 
     @OptIn(ExperimentalStdlibApi::class)
     internal fun bytes(value: ByteArray) {
-        string(value.toHexString())
+        quotedString(value.toHexString())
     }
 
     // ------------------------------------------------------------------------
     // Wire format writers
     // ------------------------------------------------------------------------
 
-    private fun quotedString(value: String?) {
+    fun quotedString(value: String?) {
         if (value == null) {
             put(NULL)
         } else {

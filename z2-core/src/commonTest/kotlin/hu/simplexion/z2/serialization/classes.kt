@@ -11,10 +11,12 @@ data class A(
 
         override fun encodeInstance(builder: MessageBuilder, value: A): ByteArray =
             builder
+                .startInstance()
                 .boolean(1, "b", value.b)
                 .int(2, "i", value.i)
                 .string(3, "s", value.s)
                 .intList(4, "l", value.l)
+                .endInstance()
                 .pack()
 
         override fun decodeInstance(message: Message?): A {
@@ -38,8 +40,10 @@ data class B(
 
         override fun encodeInstance(builder: MessageBuilder, value: B): ByteArray =
             builder
+                .startInstance()
                 .instance(1, "a", A, value.a)
                 .string(2, "s", value.s)
+                .endInstance()
                 .pack()
 
         override fun decodeInstance(message: Message?): B {

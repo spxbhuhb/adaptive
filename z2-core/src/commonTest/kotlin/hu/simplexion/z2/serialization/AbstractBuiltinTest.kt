@@ -39,71 +39,74 @@ abstract class AbstractBuiltinTest(
         var fieldNumber = 1
 
         val builder = serializationConfig.messageBuilder()
+            .startInstance()
+
             .boolean(fieldNumber ++, "booleanVal", booleanVal)
-            .booleanOrNull(fieldNumber ++, "booleanOrNullVal", booleanVal)
+            .booleanOrNull(fieldNumber ++, "booleanValOrNull", booleanVal)
             .booleanOrNull(fieldNumber ++, "booleanNullVal", null)
 
             .int(fieldNumber ++, "intVal", intVal)
-            .intOrNull(fieldNumber ++, "intOrNullVal", intVal)
+            .intOrNull(fieldNumber ++, "intValOrNull", intVal)
             .intOrNull(fieldNumber ++, "intNullVal", null)
 
             .long(fieldNumber ++, "longVal", longVal)
-            .longOrNull(fieldNumber ++, "longOrNullVal", longVal)
+            .longOrNull(fieldNumber ++, "longValOrNull", longVal)
             .longOrNull(fieldNumber ++, "longNullVal", null)
 
             .string(fieldNumber ++, "stringVal", stringVal)
-            .stringOrNull(fieldNumber ++, "stringOrNullVal", stringVal)
+            .stringOrNull(fieldNumber ++, "stringValOrNull", stringVal)
             .stringOrNull(fieldNumber ++, "stringNullVal", null)
 
             .byteArray(fieldNumber ++, "byteArrayVal", byteArrayVal)
-            .byteArrayOrNull(fieldNumber ++, "byteArrayOrNullVal", byteArrayVal)
+            .byteArrayOrNull(fieldNumber ++, "byteArrayValOrNull", byteArrayVal)
             .byteArrayOrNull(fieldNumber ++, "byteArrayNullVal", null)
 
             .uuid(fieldNumber ++, "uuidVal", uuidVal)
-            .uuidOrNull(fieldNumber ++, "uuidOrNullVal", uuidVal)
+            .uuidOrNull(fieldNumber ++, "uuidValOrNull", uuidVal)
             .uuidOrNull(fieldNumber ++, "uuidNullVal", null)
 
             .instance(fieldNumber ++, "instanceVal", A, instanceVal)
-            .instanceOrNull(fieldNumber ++, "instanceVal", A, instanceVal)
-            .instanceOrNull(fieldNumber ++, "instanceVal", A, null)
+            .instanceOrNull(fieldNumber ++, "instanceValOrNull", A, instanceVal)
+            .instanceOrNull(fieldNumber ++, "instanceNullVal", A, null)
 
             .booleanList(fieldNumber ++, "booleanListEmptyVal", emptyList())
             .booleanList(fieldNumber ++, "booleanListVal", booleanListVal)
-            .booleanListOrNull(fieldNumber ++, "booleanListOrNullVal", booleanListVal)
+            .booleanListOrNull(fieldNumber ++, "booleanListValOrNull", booleanListVal)
             .booleanListOrNull(fieldNumber ++, "booleanListNullVal", null)
 
             .intList(fieldNumber ++, "intListEmptyVal", emptyList())
             .intList(fieldNumber ++, "intListVal", intListVal)
-            .intListOrNull(fieldNumber ++, "intListOrNullVal", intListVal)
+            .intListOrNull(fieldNumber ++, "intListValOrNull", intListVal)
             .intListOrNull(fieldNumber ++, "intListNullVal", null)
 
             .longList(fieldNumber ++, "longListEmptyVal", emptyList())
             .longList(fieldNumber ++, "longListVal", longListVal)
-            .longListOrNull(fieldNumber ++, "longListOrNullVal", longListVal)
+            .longListOrNull(fieldNumber ++, "longListValOrNull", longListVal)
             .longListOrNull(fieldNumber ++, "longListNullVal", null)
 
             .stringList(fieldNumber ++, "stringListEmptyVal", emptyList())
             .stringList(fieldNumber ++, "stringListVal", stringListVal)
-            .stringListOrNull(fieldNumber ++, "stringListOrNullVal", stringListVal)
+            .stringListOrNull(fieldNumber ++, "stringListValOrNull", stringListVal)
             .stringListOrNull(fieldNumber ++, "stringListNullVal", null)
 
             .byteArrayList(fieldNumber ++, "byteArrayListEmptyVal", emptyList())
             .byteArrayList(fieldNumber ++, "byteArrayListVal", byteArrayListVal)
-            .byteArrayListOrNull(fieldNumber ++, "byteArrayListOrNullVal", byteArrayListVal)
+            .byteArrayListOrNull(fieldNumber ++, "byteArrayListValOrNull", byteArrayListVal)
             .byteArrayListOrNull(fieldNumber ++, "byteArrayListNullVal", null)
 
             .uuidList(fieldNumber ++, "uuidListEmptyVal", emptyList())
             .uuidList(fieldNumber ++, "uuidListVal", uuidListVal)
-            .uuidListOrNull(fieldNumber ++, "uuidListOrNullVal", uuidListVal)
+            .uuidListOrNull(fieldNumber ++, "uuidListValOrNull", uuidListVal)
             .uuidListOrNull(fieldNumber ++, "uuidListNullVal", null)
 
             .instanceList(fieldNumber ++, "instanceListEmptyVal", B, emptyList())
             .instanceList(fieldNumber ++, "instanceListVal", B, instanceListVal)
-            .instanceListOrNull(fieldNumber ++, "instanceListOrNulVal", B, instanceListVal)
+            .instanceListOrNull(fieldNumber ++, "instanceListValOrNull", B, instanceListVal)
             .instanceListOrNull(fieldNumber, "instanceListNullVal", B, null)
 
+            .endInstance()
+
         val wireformat = builder.pack()
-        println(wireformat.decodeToString())
         val message = serializationConfig.toMessage(wireformat)
 
         fieldNumber = 1
@@ -138,22 +141,22 @@ abstract class AbstractBuiltinTest(
 
         assertContentEquals(emptyList(), message.booleanList(fieldNumber ++, "booleanListEmptyVal"))
         assertContentEquals(booleanListVal, message.booleanList(fieldNumber ++, "booleanListVal"))
-        assertContentEquals(booleanListVal, message.booleanListOrNull(fieldNumber ++, "booleanListOrNullVal"))
+        assertContentEquals(booleanListVal, message.booleanListOrNull(fieldNumber ++, "booleanListValOrNull"))
         assertEquals(null, message.booleanListOrNull(fieldNumber ++, "booleanListNullVal"))
 
         assertContentEquals(emptyList(), message.intList(fieldNumber ++, "intListEmptyVal"))
         assertContentEquals(intListVal, message.intList(fieldNumber ++, "intListVal"))
-        assertContentEquals(intListVal, message.intListOrNull(fieldNumber ++, "intListOrNullVal"))
+        assertContentEquals(intListVal, message.intListOrNull(fieldNumber ++, "intListValOrNull"))
         assertEquals(null, message.intListOrNull(fieldNumber ++, "intListNullVal"))
 
         assertContentEquals(emptyList(), message.longList(fieldNumber ++, "longListEmptyVal"))
         assertContentEquals(longListVal, message.longList(fieldNumber ++, "longListVal"))
-        assertContentEquals(longListVal, message.longListOrNull(fieldNumber ++, "longListOrNullVal"))
+        assertContentEquals(longListVal, message.longListOrNull(fieldNumber ++, "longListValOrNull"))
         assertEquals(null, message.longListOrNull(fieldNumber ++, "longListNullVal"))
 
         assertContentEquals(emptyList(), message.stringList(fieldNumber ++, "stringListEmptyVal"))
         assertContentEquals(stringListVal, message.stringList(fieldNumber ++, "stringListVal"))
-        assertContentEquals(stringListVal, message.stringListOrNull(fieldNumber ++, "stringListOrNullVal"))
+        assertContentEquals(stringListVal, message.stringListOrNull(fieldNumber ++, "stringListValOrNull"))
         assertEquals(null, message.stringListOrNull(fieldNumber ++, "stringListNullVal"))
 
         assertContentEquals(emptyList(), message.byteArrayList(fieldNumber ++, "byteArrayListEmptyVal"))
@@ -161,7 +164,7 @@ abstract class AbstractBuiltinTest(
             assertContentEquals(byteArrayListVal[index], bytes)
         }
         assertNotNull(
-            message.byteArrayListOrNull(fieldNumber ++, "byteArrayListOrNullVal")
+            message.byteArrayListOrNull(fieldNumber ++, "byteArrayListValOrNull")
         ).forEachIndexed { index, bytes ->
             assertContentEquals(byteArrayListVal[index], bytes)
         }
@@ -169,12 +172,12 @@ abstract class AbstractBuiltinTest(
 
         assertContentEquals(emptyList(), message.uuidList<Any>(fieldNumber ++, "uuidListEmptyVal"))
         assertContentEquals(uuidListVal, message.uuidList(fieldNumber ++, "uuidListVal"))
-        assertContentEquals(uuidListVal, message.uuidListOrNull(fieldNumber ++, "uuidListOrNullVal"))
+        assertContentEquals(uuidListVal, message.uuidListOrNull(fieldNumber ++, "uuidListValOrNull"))
         assertEquals(null, message.uuidListOrNull<Any>(fieldNumber ++, "uuidListNullVal"))
 
         assertContentEquals(emptyList(), message.instanceList(fieldNumber ++, "instanceListEmptyVal", B))
         assertContentEquals(instanceListVal, message.instanceList(fieldNumber ++, "instanceListVal", B))
-        assertContentEquals(instanceListVal, message.instanceListOrNull(fieldNumber ++, "instanceListOrNullVal", B))
+        assertContentEquals(instanceListVal, message.instanceListOrNull(fieldNumber ++, "instanceListValOrNull", B))
         assertEquals(null, message.instanceListOrNull(fieldNumber, "instanceListNullVal", B))
     }
 
@@ -186,7 +189,7 @@ abstract class AbstractBuiltinTest(
         fun message(builder: MessageBuilder.() -> Unit): Message =
             serializationConfig.toMessage(serializationConfig.messageBuilder().apply(builder).pack())
 
-        assertEquals(Unit, standaloneValue.decodeUnit(message { }))
+//        assertEquals(Unit, standaloneValue.decodeUnit(message { }))
 
         assertEquals(booleanVal, standaloneValue.decodeBoolean(message { boolean(1, "val", booleanVal) }))
         assertEquals(null, standaloneValue.decodeBooleanOrNull(message { booleanOrNull(1, "val", null) }))

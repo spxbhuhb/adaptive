@@ -16,6 +16,14 @@ class ProtoMessageBuilder : MessageBuilder {
 
     override fun pack() = writer.pack()
 
+    override fun startInstance(): MessageBuilder {
+        return this // protobuf is length based
+    }
+
+    override fun endInstance(): MessageBuilder {
+        return this // protobuf is length based
+    }
+
     // ----------------------------------------------------------------------------
     // Boolean
     // ----------------------------------------------------------------------------

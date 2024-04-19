@@ -2,10 +2,7 @@ package hu.simplexion.z2.serialization.json
 
 import hu.simplexion.z2.serialization.InstanceDecoder
 import hu.simplexion.z2.serialization.Message
-import hu.simplexion.z2.serialization.json.elements.JsonArray
-import hu.simplexion.z2.serialization.json.elements.JsonBoolean
-import hu.simplexion.z2.serialization.json.elements.JsonElement
-import hu.simplexion.z2.serialization.json.elements.JsonObject
+import hu.simplexion.z2.serialization.json.elements.*
 import hu.simplexion.z2.util.UUID
 
 class JsonMessage : Message {
@@ -24,7 +21,7 @@ class JsonMessage : Message {
         requireNotNull(map?.get(fieldName)) { "missing field: $fieldName" }
 
     fun getOrNull(fieldName: String): JsonElement? =
-        map?.get(fieldName)
+        map?.get(fieldName)?.let { if (it is JsonNull) null else it }
 
     // -----------------------------------------------------------------------------------------
     // Boolean
@@ -79,16 +76,16 @@ class JsonMessage : Message {
     // -----------------------------------------------------------------------------------------
 
     override fun string(fieldNumber: Int, fieldName: String): String =
-        get(fieldName).toString()
+        get(fieldName).asString
 
     override fun stringOrNull(fieldNumber: Int, fieldName: String): String? =
-        getOrNull(fieldName)?.toString()
+        getOrNull(fieldName)?.asString
 
     override fun stringList(fieldNumber: Int, fieldName: String) =
         requireNotNull(stringListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun stringListOrNull(fieldNumber: Int, fieldName: String): List<String>? =
-        array(fieldName) { it.toString() }
+        array(fieldName) { it.asString }
 
     // -----------------------------------------------------------------------------------------
     // ByteArray
@@ -133,7 +130,7 @@ class JsonMessage : Message {
     }
 
     override fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, decoder: InstanceDecoder<T>): T? =
-        if (getOrNull(fieldName) != null) null else instance(fieldNumber, fieldName, decoder)
+        if (getOrNull(fieldName) == null) null else instance(fieldNumber, fieldName, decoder)
 
     override fun <T> instanceList(fieldNumber: Int, fieldName: String, decoder: InstanceDecoder<T>): MutableList<T> =
         requireNotNull(instanceListOrNull(fieldNumber, fieldName, decoder)) { "missing or null instance" }

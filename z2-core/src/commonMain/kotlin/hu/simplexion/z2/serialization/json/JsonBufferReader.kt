@@ -19,13 +19,39 @@ class JsonBufferReader(
 
     private val json = buffer.decodeToString()
 
-    private val stack = mutableListOf<JsonElement?>()
+    private val stack = mutableListOf<Pair<String?,JsonElement>>()
     private var current: JsonElement? = null
 
     private var valueExpected = true
     private var fieldName: String? = null
 
     private var currentPosition = 0
+
+    /**
+     * Push happens at the start of objects and arrays. For both there is no known current field name
+     * at the very beginning.
+     */
+    private fun push(value: JsonElement) {
+        stack += fieldName to value
+        current = value
+        fieldName = null
+    }
+
+    /**
+     * Pop happens at the end of objects and arrays. For both
+     */
+    private fun pop() {
+        val entry = stack.removeLast()
+
+        fieldName = entry.first
+        current = stack.lastOrNull()?.second
+
+        entry.second.append()
+
+        fieldName = null
+
+        valueExpected = false
+    }
 
     fun read(): JsonElement {
 
@@ -38,31 +64,27 @@ class JsonBufferReader(
 
                 '{' -> {
                     require(valueExpected) { "unexpected value at $currentPosition" }
-                    stack += current
-                    current = JsonObject()
-
+                    push(JsonObject())
                     valueExpected = false // object open must be followed by a field name or object close
                 }
 
                 '}' -> {
                     require(current is JsonObject && fieldName == null) { "unexpected close object at $currentPosition" }
-                    current = stack.removeLast()
-                    valueExpected = false  // object close must be followed by another close or a separator
+                    pop()
                 }
 
                 // -- array --
 
                 '[' -> {
                     require(valueExpected) { "unexpected value at $currentPosition" }
-                    stack += current
-                    current = JsonArray()
+                    push(JsonArray())
                     valueExpected = true // array open must be followed by a value or array close
                 }
 
                 ']' -> {
                     require(current is JsonArray) { "unexpected close array at $currentPosition" }
-                    current = stack.removeLast()
-                    valueExpected = false // array close must be followed by another close or a separator
+                    pop()
+                    valueExpected = false
                 }
 
                 // separator between field name and field value
@@ -96,33 +118,37 @@ class JsonBufferReader(
 
                 '\"' -> {
                     val value = StringBuilder()
-                    value.append(char)
+
                     while (currentPosition + 1 < json.length) {
-                        val nextChar = json[++ currentPosition]
-                        value.append(nextChar)
-                        if (nextChar == '\"' && value[value.length - 2] != '\\') {
+                        val nextChar = json[++currentPosition]
+                        if (nextChar == '\"' && value[value.length - 1] != '\\') {
                             break
+                        } else {
+                            value.append(nextChar)
                         }
                     }
 
                     if (valueExpected) {
                         JsonString(value.toString()).append()
                         fieldName = null
-                        valueExpected = false
                     } else {
                         fieldName = value.toString()
-                        valueExpected = false
                     }
+
+                    valueExpected = false
                 }
 
                 't', 'f', 'n' -> {
                     val value = StringBuilder()
                     value.append(char)
+
                     while (currentPosition + 1 < json.length) {
-                        val nextChar = json[++ currentPosition]
-                        value.append(nextChar)
+                        val nextChar = json[currentPosition + 1]
                         if (nextChar < 'a' || nextChar > 'z') {
                             break
+                        } else {
+                            value.append(nextChar)
+                            currentPosition++
                         }
                     }
 
@@ -132,9 +158,6 @@ class JsonBufferReader(
                         "null" -> JsonNull()
                         else -> throw IllegalArgumentException("unexpected value: $value")
                     }.append()
-
-                    fieldName = null
-                    valueExpected = false
                 }
 
                 else -> {
@@ -167,6 +190,7 @@ class JsonBufferReader(
                 valueExpected = false
             }
 
+            // this is for standalone values like 'null'
             else -> {
                 require(current == null) { "unexpected value at $currentPosition" }
                 current = this
