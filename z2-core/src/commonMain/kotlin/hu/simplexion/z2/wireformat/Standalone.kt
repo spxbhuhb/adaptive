@@ -3,7 +3,7 @@ package hu.simplexion.z2.wireformat
 import hu.simplexion.z2.util.UUID
 import kotlin.enums.EnumEntries
 
-interface StandaloneValue<M> {
+interface Standalone<M> {
 
     fun decodeUnit(message: M?)
 

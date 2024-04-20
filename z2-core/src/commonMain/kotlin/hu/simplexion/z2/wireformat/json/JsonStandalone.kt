@@ -1,7 +1,7 @@
 package hu.simplexion.z2.wireformat.json
 
 import hu.simplexion.z2.util.UUID
-import hu.simplexion.z2.wireformat.StandaloneValue
+import hu.simplexion.z2.wireformat.Standalone
 import hu.simplexion.z2.wireformat.WireFormat
 import hu.simplexion.z2.wireformat.json.elements.JsonArray
 import hu.simplexion.z2.wireformat.json.elements.JsonElement
@@ -9,7 +9,7 @@ import hu.simplexion.z2.wireformat.json.elements.JsonNull
 import hu.simplexion.z2.wireformat.json.elements.JsonObject
 import kotlin.enums.EnumEntries
 
-object JsonStandaloneValue : StandaloneValue<JsonMessage> {
+object JsonStandalone : Standalone<JsonMessage> {
 
     override fun decodeUnit(message: JsonMessage?) {}
 

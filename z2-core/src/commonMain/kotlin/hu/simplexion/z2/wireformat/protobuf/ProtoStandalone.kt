@@ -1,11 +1,11 @@
 package hu.simplexion.z2.wireformat.protobuf
 
 import hu.simplexion.z2.util.UUID
-import hu.simplexion.z2.wireformat.StandaloneValue
+import hu.simplexion.z2.wireformat.Standalone
 import hu.simplexion.z2.wireformat.WireFormat
 import kotlin.enums.EnumEntries
 
-object ProtoStandaloneValue : StandaloneValue<ProtoMessage> {
+object ProtoStandalone : Standalone<ProtoMessage> {
 
     override fun decodeUnit(message: ProtoMessage?) {}
 

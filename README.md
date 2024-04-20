@@ -13,10 +13,10 @@ Status: **migrating the code from the old proof-of-concept project**
 
 # Modules
 
-- [Adaptive] reactive UI (multiplatform, React and Compose independent, Svelte-like)
-- [Services] transparent client-server communication with simple function calls
+- [Adaptive](doc/adaptive/README.md) reactive UI (multiplatform, React and Compose independent, Svelte-like)
+- [Services](doc/services/README.md) transparent client-server communication with simple function calls
 - [Schematic] data model definition
-- [WireFormat] lightweight serialization (JSON, Protobuf) optimized for RPC
+- [WireFormat](doc/wireformat/README.md) lightweight serialization (JSON, Protobuf) optimized for RPC
 
 # Artifacts
 
@@ -45,3 +45,19 @@ Technically you don't need the executable but for me, it was necessary, I have n
 # Bits
 
 The colors are created with the [Material Theme Builder](https://material-foundation.github.io/material-theme-builder/)
+
+## License
+
+> Copyright (c) 2023 Simplexion Kft, Hungary and contributors
+>
+> Licensed under the Apache License, Version 2.0 (the "License");
+> you may not use this work except in compliance with the License.
+> You may obtain a copy of the License at
+>
+>    http://www.apache.org/licenses/LICENSE-2.0
+>
+> Unless required by applicable law or agreed to in writing, software
+> distributed under the License is distributed on an "AS IS" BASIS,
+> WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+> See the License for the specific language governing permissions and
+> limitations under the License.

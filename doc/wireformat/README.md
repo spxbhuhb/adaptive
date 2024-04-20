@@ -1,4 +1,18 @@
-# Supported Data Types
+# WireFormat
+
+A simple serialization library for Kotlin, part of [Z2](../../README.md). Its main purpose is to
+provide serialization for [Services](../services/README.md). It is optimized for handling function calls.
+
+WireFormat supports [JSON](https://json.org) and [Protobuf](https://protobuf.dev) out of the box, Protobuf being the
+default, JSON is provided for the faint-hearted.
+
+To switch to JSON put this somewhere into your bootstrap:
+
+```properties
+defaultWireFormatProvider=JsonWireFormatProvider()
+```
+
+## Supported Data Types
 
 The table below shows the data types supported by WireFormat serialization.
 
@@ -18,8 +32,8 @@ encoding/decoding methods.
 | kotlin.Short                    | -       |
 | kotlin.Byte                     | -       |
 | kotlin.Long                     | full    |
-| kotlin.Float                    | -       |
-| kotlin.Double                   | -       |
+| kotlin.Float                    | full    |
+| kotlin.Double                   | full    |
 | kotlin.Char                     | -       |
 | kotlin.String                   | full    | 
 | kotlin.Enum<T>                  | full    |

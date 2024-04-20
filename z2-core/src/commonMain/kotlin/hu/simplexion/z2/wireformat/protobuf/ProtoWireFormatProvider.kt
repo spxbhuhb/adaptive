@@ -2,18 +2,18 @@ package hu.simplexion.z2.wireformat.protobuf
 
 import hu.simplexion.z2.wireformat.Message
 import hu.simplexion.z2.wireformat.MessageBuilder
-import hu.simplexion.z2.wireformat.SerializationConfig
-import hu.simplexion.z2.wireformat.StandaloneValue
+import hu.simplexion.z2.wireformat.Standalone
+import hu.simplexion.z2.wireformat.WireFormatProvider
 
-class ProtoSerialization : SerializationConfig() {
+class ProtoWireFormatProvider : WireFormatProvider() {
 
     override fun messageBuilder(): MessageBuilder {
         return ProtoMessageBuilder()
     }
 
-    override fun standaloneValue(): StandaloneValue<Message> {
+    override fun standalone(): Standalone<Message> {
         @Suppress("UNCHECKED_CAST")
-        return ProtoStandaloneValue as StandaloneValue<Message>
+        return ProtoStandalone as Standalone<Message>
     }
 
     override fun toMessage(payload: ByteArray): Message {

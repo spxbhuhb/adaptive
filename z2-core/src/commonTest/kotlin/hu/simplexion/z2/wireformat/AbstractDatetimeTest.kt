@@ -10,16 +10,16 @@ import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.seconds
 
 abstract class AbstractDatetimeTest(
-    private val serializationConfig: SerializationConfig
+    private val wireFormatProvider: WireFormatProvider
 ) {
 
-    val sv = serializationConfig.standaloneValue()
+    val sv = wireFormatProvider.standalone()
 
     @Test
     fun testDuration() {
         val expected = 10.seconds
         val wireFormat = sv.encodeInstance(expected, DurationCoder)
-        val message = serializationConfig.toMessage(wireFormat)
+        val message = wireFormatProvider.toMessage(wireFormat)
         val actual = sv.decodeInstance(message, DurationCoder)
         assertEquals(expected, actual)
     }
@@ -28,7 +28,7 @@ abstract class AbstractDatetimeTest(
     fun testInstant() {
         val expected = Clock.System.now()
         val wireFormat = sv.encodeInstance(expected, InstantCoder)
-        val message = serializationConfig.toMessage(wireFormat)
+        val message = wireFormatProvider.toMessage(wireFormat)
         val actual = sv.decodeInstance(message, InstantCoder)
         assertEquals(expected, actual)
     }
@@ -37,7 +37,7 @@ abstract class AbstractDatetimeTest(
     fun testLocalDate() {
         val expected = LocalDate(2023, 7, 27)
         val wireFormat = sv.encodeInstance(expected, LocalDateCoder)
-        val message = serializationConfig.toMessage(wireFormat)
+        val message = wireFormatProvider.toMessage(wireFormat)
         val actual = sv.decodeInstance(message, LocalDateCoder)
         assertEquals(expected, actual)
     }
@@ -46,7 +46,7 @@ abstract class AbstractDatetimeTest(
     fun testLocalDateTime() {
         val expected = LocalDateTime(2023, 7, 27, 15, 35, 5, 11)
         val wireFormat = sv.encodeInstance(expected, LocalDateTimeCoder)
-        val message = serializationConfig.toMessage(wireFormat)
+        val message = wireFormatProvider.toMessage(wireFormat)
         val actual = sv.decodeInstance(message, LocalDateTimeCoder)
         assertEquals(expected, actual)
     }
@@ -55,7 +55,7 @@ abstract class AbstractDatetimeTest(
     fun testLocalTime() {
         val expected = LocalTime(15, 35)
         val wireFormat = sv.encodeInstance(expected, LocalTimeCoder)
-        val message = serializationConfig.toMessage(wireFormat)
+        val message = wireFormatProvider.toMessage(wireFormat)
         val actual = sv.decodeInstance(message, LocalTimeCoder)
         assertEquals(expected, actual)
     }

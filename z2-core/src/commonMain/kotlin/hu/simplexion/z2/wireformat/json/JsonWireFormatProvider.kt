@@ -2,18 +2,18 @@ package hu.simplexion.z2.wireformat.json
 
 import hu.simplexion.z2.wireformat.Message
 import hu.simplexion.z2.wireformat.MessageBuilder
-import hu.simplexion.z2.wireformat.SerializationConfig
-import hu.simplexion.z2.wireformat.StandaloneValue
+import hu.simplexion.z2.wireformat.Standalone
+import hu.simplexion.z2.wireformat.WireFormatProvider
 
-class JsonSerialization : SerializationConfig() {
+class JsonWireFormatProvider : WireFormatProvider() {
 
     override fun messageBuilder(): MessageBuilder {
         return JsonMessageBuilder()
     }
 
-    override fun standaloneValue(): StandaloneValue<Message> {
+    override fun standalone(): Standalone<Message> {
         @Suppress("UNCHECKED_CAST")
-        return JsonStandaloneValue as StandaloneValue<Message>
+        return JsonStandalone as Standalone<Message>
     }
 
     override fun toMessage(payload: ByteArray): Message {

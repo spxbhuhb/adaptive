@@ -6,14 +6,14 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 abstract class AbstractBuilderTest(
-    private val serializationConfig: SerializationConfig
+    private val wireFormatProvider: WireFormatProvider
 ) : TestValues() {
 
     @Test
     fun testBuilder() {
         var fieldNumber = 1
 
-        val builder = serializationConfig.messageBuilder()
+        val builder = wireFormatProvider.messageBuilder()
             .startInstance()
 
             .boolean(fieldNumber ++, "booleanVal", booleanVal)
@@ -100,7 +100,7 @@ abstract class AbstractBuilderTest(
             .endInstance()
 
         val wireFormat = builder.pack()
-        val message = serializationConfig.toMessage(wireFormat)
+        val message = wireFormatProvider.toMessage(wireFormat)
 
         fieldNumber = 1
 

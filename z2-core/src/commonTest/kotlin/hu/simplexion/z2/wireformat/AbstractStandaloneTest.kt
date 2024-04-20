@@ -5,17 +5,17 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
 abstract class AbstractStandaloneTest(
-    private val serializationConfig: SerializationConfig
+    private val wireFormatProvider: WireFormatProvider
 ) : TestValues() {
 
     @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun standaloneTest() {
 
-        val sv = serializationConfig.standaloneValue()
+        val sv = wireFormatProvider.standalone()
 
         fun message(wireFormat: () -> ByteArray): Message =
-            serializationConfig.toMessage(wireFormat())
+            wireFormatProvider.toMessage(wireFormat())
 
 //        assertEquals(Unit, sv.decodeUnit(message { }))
 
