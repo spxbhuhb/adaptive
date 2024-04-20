@@ -181,7 +181,7 @@ class SelectTest {
                     TraceEvent("AdaptiveSelectTest", 2, "after-Mount", "bridge: 1")
                 )
             ),
-            adapter.actual(dumpCode = true)
+            adapter.actual(dumpCode = false)
         )
     }
 

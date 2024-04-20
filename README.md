@@ -1,9 +1,30 @@
 [![Maven Central](https://img.shields.io/maven-central/v/hu.simplexion.z2/z2-core)](https://mvnrepository.com/artifact/hu.simplexion.z2/z2-core)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
-KMP full-stack app development library.
+Full-stack application development library, focusing on:
+
+* intentional coding (just write down what you want in a short, concise way)
+* clean code
+* no-boilerplate
+
+Z2 comes with a compiler plugin that performs many functions reach the goals above.
 
 Status: **migrating the code from the old proof-of-concept project**
+
+# Modules
+
+- [Adaptive] reactive UI (multiplatform, React and Compose independent, Svelte-like)
+- [Services] transparent client-server communication with simple function calls
+- [Schematic] data model definition
+- [WireFormat] lightweight serialization (JSON, Protobuf) optimized for RPC
+
+# Artifacts
+
+The modules are spread over the three artifacts the library provides:
+
+* [Core] fundamental code necessary for the compiler plugin to work with
+* [Plugin] the compiler plugin that performs all the code transformations
+* [Lib] application level code that uses Core and Plugin
 
 # Building Z2
 
