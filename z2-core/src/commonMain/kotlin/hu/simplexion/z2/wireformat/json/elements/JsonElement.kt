@@ -1,6 +1,6 @@
 package hu.simplexion.z2.wireformat.json.elements
 
-import hu.simplexion.z2.util.UUID
+import hu.simplexion.z2.utility.UUID
 
 interface JsonElement {
 

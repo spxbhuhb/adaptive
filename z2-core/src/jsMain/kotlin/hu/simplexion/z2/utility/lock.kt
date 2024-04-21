@@ -1,6 +1,4 @@
-package hu.simplexion.z2.util
-
-import java.util.concurrent.locks.ReentrantLock
+package hu.simplexion.z2.utility
 
 /**
  * This is a copy of Ktor multiplatform lock as we clearly need it.
@@ -11,15 +9,9 @@ import java.util.concurrent.locks.ReentrantLock
  */
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class Lock actual constructor() {
-
-    private val mutex = ReentrantLock()
-
     actual fun lock() {
-        mutex.lock()
     }
 
     actual fun unlock() {
-        mutex.unlock()
     }
-
 }

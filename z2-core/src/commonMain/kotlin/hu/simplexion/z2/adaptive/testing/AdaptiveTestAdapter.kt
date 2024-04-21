@@ -6,9 +6,9 @@ package hu.simplexion.z2.adaptive.testing
 import hu.simplexion.z2.adaptive.AdaptiveAdapter
 import hu.simplexion.z2.adaptive.AdaptiveBridge
 import hu.simplexion.z2.adaptive.AdaptiveFragment
-import hu.simplexion.z2.util.Lock
-import hu.simplexion.z2.util.use
-import hu.simplexion.z2.util.vmNowMicro
+import hu.simplexion.z2.utility.Lock
+import hu.simplexion.z2.utility.use
+import hu.simplexion.z2.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

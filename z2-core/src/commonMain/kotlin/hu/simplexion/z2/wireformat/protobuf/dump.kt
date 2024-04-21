@@ -1,6 +1,6 @@
 package hu.simplexion.z2.wireformat.protobuf
 
-import hu.simplexion.z2.util.toDotString
+import hu.simplexion.z2.utility.toDotString
 
 fun ProtoMessage.dumpProto(lines: MutableList<String>, indent: String = "") {
     for (record in records) {

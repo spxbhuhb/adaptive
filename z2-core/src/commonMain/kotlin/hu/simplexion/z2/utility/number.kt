@@ -1,4 +1,4 @@
-package hu.simplexion.z2.util
+package hu.simplexion.z2.utility
 
 /**
  * Convert an int into a byte array (4 bytes).

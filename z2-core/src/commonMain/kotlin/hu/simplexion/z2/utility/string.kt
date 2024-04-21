@@ -1,4 +1,4 @@
-package hu.simplexion.z2.util
+package hu.simplexion.z2.utility
 
 /**
  * Convert a [ByteArray] into a string, replacing all non-printable and non-ASCII

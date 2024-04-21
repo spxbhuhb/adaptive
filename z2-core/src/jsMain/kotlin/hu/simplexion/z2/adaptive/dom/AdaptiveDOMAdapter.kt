@@ -7,7 +7,7 @@ import hu.simplexion.z2.adaptive.AdaptiveAdapter
 import hu.simplexion.z2.adaptive.AdaptiveAdapterRegistry
 import hu.simplexion.z2.adaptive.AdaptiveBridge
 import hu.simplexion.z2.adaptive.AdaptiveFragment
-import hu.simplexion.z2.util.vmNowMicro
+import hu.simplexion.z2.utility.vmNowMicro
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

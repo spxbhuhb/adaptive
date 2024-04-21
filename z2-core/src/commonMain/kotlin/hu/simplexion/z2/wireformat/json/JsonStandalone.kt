@@ -1,6 +1,6 @@
 package hu.simplexion.z2.wireformat.json
 
-import hu.simplexion.z2.util.UUID
+import hu.simplexion.z2.utility.UUID
 import hu.simplexion.z2.wireformat.Standalone
 import hu.simplexion.z2.wireformat.WireFormat
 import hu.simplexion.z2.wireformat.json.elements.JsonArray

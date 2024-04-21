@@ -1,4 +1,4 @@
-package hu.simplexion.z2.util
+package hu.simplexion.z2.utility
 
 actual fun vmNowMicro(): Long {
     return System.nanoTime() / 1_000

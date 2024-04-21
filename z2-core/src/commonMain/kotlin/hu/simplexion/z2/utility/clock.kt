@@ -1,4 +1,4 @@
-package hu.simplexion.z2.util
+package hu.simplexion.z2.utility
 
 /**
  * Returns with a number that represents virtual machine time in microseconds.

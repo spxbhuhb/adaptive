@@ -4,7 +4,7 @@ import hu.simplexion.z2.services.factory.BasicServiceImplFactory
 import hu.simplexion.z2.services.factory.ServiceImplFactory
 import hu.simplexion.z2.services.transport.LocalServiceCallTransport
 import hu.simplexion.z2.services.transport.ServiceCallTransport
-import hu.simplexion.z2.util.UUID
+import hu.simplexion.z2.utility.UUID
 
 var defaultServiceCallTransport: ServiceCallTransport = LocalServiceCallTransport()
 

@@ -1,6 +1,6 @@
 package hu.simplexion.z2.services
 
-import hu.simplexion.z2.util.UUID
+import hu.simplexion.z2.utility.UUID
 import hu.simplexion.z2.wireformat.Message
 
 interface ServiceImpl<T : ServiceImpl<T>> : Service {

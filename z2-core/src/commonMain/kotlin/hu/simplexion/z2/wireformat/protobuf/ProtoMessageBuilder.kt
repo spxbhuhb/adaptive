@@ -1,6 +1,6 @@
 package hu.simplexion.z2.wireformat.protobuf
 
-import hu.simplexion.z2.util.UUID
+import hu.simplexion.z2.utility.UUID
 import hu.simplexion.z2.wireformat.MessageBuilder
 import hu.simplexion.z2.wireformat.WireFormat
 import kotlin.enums.EnumEntries

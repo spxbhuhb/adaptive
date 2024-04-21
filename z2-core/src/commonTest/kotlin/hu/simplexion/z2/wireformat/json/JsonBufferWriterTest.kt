@@ -1,6 +1,6 @@
 package hu.simplexion.z2.wireformat.json
 
-import hu.simplexion.z2.util.UUID
+import hu.simplexion.z2.utility.UUID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

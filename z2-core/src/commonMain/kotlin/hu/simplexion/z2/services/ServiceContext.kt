@@ -1,6 +1,6 @@
 package hu.simplexion.z2.services
 
-import hu.simplexion.z2.util.UUID
+import hu.simplexion.z2.utility.UUID
 
 interface ServiceContext {
     val uuid: UUID<ServiceContext>

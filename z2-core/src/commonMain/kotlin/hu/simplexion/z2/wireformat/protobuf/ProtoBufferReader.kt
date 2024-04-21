@@ -1,7 +1,7 @@
 package hu.simplexion.z2.wireformat.protobuf
 
-import hu.simplexion.z2.util.UUID
-import hu.simplexion.z2.util.toUuid
+import hu.simplexion.z2.utility.UUID
+import hu.simplexion.z2.utility.toUuid
 
 /**
  * A low level protobuf reader that decodes the protobuf wire
