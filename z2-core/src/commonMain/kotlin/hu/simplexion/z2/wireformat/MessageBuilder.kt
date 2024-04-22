@@ -16,6 +16,30 @@ interface MessageBuilder {
     fun endInstance() : MessageBuilder
 
     // ----------------------------------------------------------------------------
+    // Any
+    // ----------------------------------------------------------------------------
+
+    fun any(fieldNumber: Int, fieldName: String, value: Any): MessageBuilder
+
+    fun anyOrNull(fieldNumber: Int, fieldName: String, value: Any?): MessageBuilder
+
+    fun anyList(fieldNumber: Int, fieldName: String, values: List<Any>): MessageBuilder
+
+    fun anyListOrNull(fieldNumber: Int, fieldName: String, values: List<Any>?): MessageBuilder
+
+    // ----------------------------------------------------------------------------
+    // Unit
+    // ----------------------------------------------------------------------------
+
+    fun unit(fieldNumber: Int, fieldName: String, value: Unit): MessageBuilder
+
+    fun unitOrNull(fieldNumber: Int, fieldName: String, value: Unit?): MessageBuilder
+
+    fun unitList(fieldNumber: Int, fieldName: String, values: List<Unit>): MessageBuilder
+
+    fun unitListOrNull(fieldNumber: Int, fieldName: String, values: List<Unit>?): MessageBuilder
+    
+    // ----------------------------------------------------------------------------
     // Boolean
     // ----------------------------------------------------------------------------
 
@@ -39,6 +63,30 @@ interface MessageBuilder {
 
     fun intListOrNull(fieldNumber: Int, fieldName: String, values: List<Int>?): MessageBuilder
 
+    // ----------------------------------------------------------------------------
+    // Short
+    // ----------------------------------------------------------------------------
+
+    fun short(fieldNumber: Int, fieldName: String, value: Short): MessageBuilder
+
+    fun shortOrNull(fieldNumber: Int, fieldName: String, value: Short?): MessageBuilder
+
+    fun shortList(fieldNumber: Int, fieldName: String, values: List<Short>): MessageBuilder
+
+    fun shortListOrNull(fieldNumber: Int, fieldName: String, values: List<Short>?): MessageBuilder
+
+    // ----------------------------------------------------------------------------
+    // Byte
+    // ----------------------------------------------------------------------------
+
+    fun byte(fieldNumber: Int, fieldName: String, value: Byte): MessageBuilder
+
+    fun byteOrNull(fieldNumber: Int, fieldName: String, value: Byte?): MessageBuilder
+
+    fun byteList(fieldNumber: Int, fieldName: String, values: List<Byte>): MessageBuilder
+
+    fun byteListOrNull(fieldNumber: Int, fieldName: String, values: List<Byte>?): MessageBuilder
+    
     // ----------------------------------------------------------------------------
     // Long
     // ----------------------------------------------------------------------------
@@ -75,6 +123,18 @@ interface MessageBuilder {
 
     fun doubleListOrNull(fieldNumber: Int, fieldName: String, values: List<Double>?): MessageBuilder
 
+    // ----------------------------------------------------------------------------
+    // Char
+    // ----------------------------------------------------------------------------
+
+    fun char(fieldNumber: Int, fieldName: String, value: Char): MessageBuilder
+
+    fun charOrNull(fieldNumber: Int, fieldName: String, value: Char?): MessageBuilder
+
+    fun charList(fieldNumber: Int, fieldName: String, values: List<Char>): MessageBuilder
+
+    fun charListOrNull(fieldNumber: Int, fieldName: String, values: List<Char>?): MessageBuilder
+    
     // ----------------------------------------------------------------------------
     // String
     // ----------------------------------------------------------------------------
@@ -124,7 +184,7 @@ interface MessageBuilder {
     fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, encoder: WireFormat<T>, values: List<T>?): MessageBuilder
 
     // ----------------------------------------------------------------------------
-    // Instance
+    // Enum
     // ----------------------------------------------------------------------------
 
     fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>, value: E): MessageBuilder
@@ -135,4 +195,52 @@ interface MessageBuilder {
 
     fun <E : Enum<E>> enumListOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>, values: List<E>?): MessageBuilder
 
+    // ----------------------------------------------------------------------------
+    // UInt
+    // ----------------------------------------------------------------------------
+
+    fun uInt(fieldNumber: Int, fieldName: String, value: UInt): MessageBuilder
+
+    fun uIntOrNull(fieldNumber: Int, fieldName: String, value: UInt?): MessageBuilder
+
+    fun uIntList(fieldNumber: Int, fieldName: String, values: List<UInt>): MessageBuilder
+
+    fun uIntListOrNull(fieldNumber: Int, fieldName: String, values: List<UInt>?): MessageBuilder
+
+    // ----------------------------------------------------------------------------
+    // UShort
+    // ----------------------------------------------------------------------------
+
+    fun uShort(fieldNumber: Int, fieldName: String, value: UShort): MessageBuilder
+
+    fun uShortOrNull(fieldNumber: Int, fieldName: String, value: UShort?): MessageBuilder
+
+    fun uShortList(fieldNumber: Int, fieldName: String, values: List<UShort>): MessageBuilder
+
+    fun uShortListOrNull(fieldNumber: Int, fieldName: String, values: List<UShort>?): MessageBuilder
+
+    // ----------------------------------------------------------------------------
+    // UByte
+    // ----------------------------------------------------------------------------
+
+    fun uByte(fieldNumber: Int, fieldName: String, value: UByte): MessageBuilder
+
+    fun uByteOrNull(fieldNumber: Int, fieldName: String, value: UByte?): MessageBuilder
+
+    fun uByteList(fieldNumber: Int, fieldName: String, values: List<UByte>): MessageBuilder
+
+    fun uByteListOrNull(fieldNumber: Int, fieldName: String, values: List<UByte>?): MessageBuilder
+
+    // ----------------------------------------------------------------------------
+    // ULong
+    // ----------------------------------------------------------------------------
+
+    fun uLong(fieldNumber: Int, fieldName: String, value: ULong): MessageBuilder
+
+    fun uLongOrNull(fieldNumber: Int, fieldName: String, value: ULong?): MessageBuilder
+
+    fun uLongList(fieldNumber: Int, fieldName: String, values: List<ULong>): MessageBuilder
+
+    fun uLongListOrNull(fieldNumber: Int, fieldName: String, values: List<ULong>?): MessageBuilder
+    
 }

@@ -56,6 +56,30 @@ class JsonBufferWriter(
         separator()
     }
 
+    fun number(fieldName: String, value: UInt?) {
+        fieldName(fieldName)
+        put(value?.toString())
+        separator()
+    }
+
+    fun number(fieldName: String, value: UShort?) {
+        fieldName(fieldName)
+        put(value?.toString())
+        separator()
+    }
+
+    fun number(fieldName: String, value: UByte?) {
+        fieldName(fieldName)
+        put(value?.toString())
+        separator()
+    }
+
+    fun number(fieldName: String, value: ULong?) {
+        fieldName(fieldName)
+        put(value?.toString())
+        separator()
+    }
+
     // ------------------------------------------------------------------------
     // JSON primitives
     // ------------------------------------------------------------------------
@@ -126,6 +150,22 @@ class JsonBufferWriter(
 
     fun nullValue() {
         put(NULL)
+    }
+
+    internal fun number(value: UInt) {
+        put(value.toString())
+    }
+
+    internal fun number(value: UShort) {
+        put(value.toString())
+    }
+
+    internal fun number(value: UByte) {
+        put(value.toString())
+    }
+
+    internal fun number(value: ULong) {
+        put(value.toString())
     }
 
     // ------------------------------------------------------------------------

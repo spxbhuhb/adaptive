@@ -6,4 +6,7 @@ class JsonBoolean(
 
     override val asBoolean: Boolean
         get() = value
+
+    override val asUnit: Unit
+        get() = check(value) { "false value as Unit" }
 }

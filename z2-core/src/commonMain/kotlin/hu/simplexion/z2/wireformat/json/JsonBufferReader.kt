@@ -19,7 +19,7 @@ class JsonBufferReader(
 
     private val json = buffer.decodeToString()
 
-    private val stack = mutableListOf<Pair<String?,JsonElement>>()
+    private val stack = mutableListOf<Pair<String?, JsonElement>>()
     private var current: JsonElement? = null
 
     private var valueExpected = true
@@ -108,8 +108,19 @@ class JsonBufferReader(
 
                     val value = StringBuilder()
                     value.append(char)
-                    while (currentPosition + 1 < json.length && json[currentPosition + 1].isDigitOrDecimal()) {
-                        value.append(json[++ currentPosition])
+                    while (currentPosition + 1 < json.length) {
+                        val nextChar = json[currentPosition + 1]
+                        if (nextChar in '0' .. '9' || nextChar == '.' || nextChar == 'E' || nextChar == 'e' || nextChar == '-') {
+                            value.append(nextChar)
+                            currentPosition ++
+                        } else if (nextChar == 'I') {
+                            // `-Infinity`, `-` is already in value
+                            check(currentPosition + 8 < json.length) { "unfinished Infinity in JSON" }
+                            value.append(json.subSequence(currentPosition + 1, currentPosition + 9))
+                            currentPosition += 8
+                        } else {
+                            break
+                        }
                     }
 
                     JsonNumber(value.toString()).append()
@@ -120,7 +131,7 @@ class JsonBufferReader(
                     val value = StringBuilder()
 
                     while (currentPosition + 1 < json.length) {
-                        val nextChar = json[++currentPosition]
+                        val nextChar = json[++ currentPosition]
                         if (nextChar == '\"' && value[value.length - 1] != '\\') {
                             break
                         } else {
@@ -138,17 +149,17 @@ class JsonBufferReader(
                     valueExpected = false
                 }
 
-                't', 'f', 'n' -> {
+                't', 'f', 'n', 'N', 'I' -> {
                     val value = StringBuilder()
                     value.append(char)
 
                     while (currentPosition + 1 < json.length) {
                         val nextChar = json[currentPosition + 1]
-                        if (nextChar < 'a' || nextChar > 'z') {
-                            break
-                        } else {
+                        if (nextChar in 'a' .. 'z' || nextChar in 'A' .. 'Z') {
                             value.append(nextChar)
-                            currentPosition++
+                            currentPosition ++
+                        } else {
+                            break
                         }
                     }
 
@@ -156,6 +167,9 @@ class JsonBufferReader(
                         "true" -> JsonBoolean(true)
                         "false" -> JsonBoolean(false)
                         "null" -> JsonNull()
+                        "NaN" -> JsonNumber("NaN")
+                        "nan" -> JsonNumber("NaN")
+                        "Infinity" -> JsonNumber("Infinity")
                         else -> throw IllegalArgumentException("unexpected value: $value")
                     }.append()
                 }

@@ -5,6 +5,30 @@ import hu.simplexion.z2.utility.UUID
 interface Message {
 
     // -----------------------------------------------------------------------------------------
+    // Any
+    // -----------------------------------------------------------------------------------------
+
+    fun any(fieldNumber: Int, fieldName: String): Any
+
+    fun anyOrNull(fieldNumber: Int, fieldName: String): Any?
+
+    fun anyList(fieldNumber: Int, fieldName: String): List<Any>
+
+    fun anyListOrNull(fieldNumber: Int, fieldName: String): List<Any>?
+
+    // -----------------------------------------------------------------------------------------
+    // Unit
+    // -----------------------------------------------------------------------------------------
+
+    fun unit(fieldNumber: Int, fieldName: String): Unit
+
+    fun unitOrNull(fieldNumber: Int, fieldName: String): Unit?
+
+    fun unitList(fieldNumber: Int, fieldName: String): List<Unit>
+
+    fun unitListOrNull(fieldNumber: Int, fieldName: String): List<Unit>?
+    
+    // -----------------------------------------------------------------------------------------
     // Boolean
     // -----------------------------------------------------------------------------------------
 
@@ -28,6 +52,30 @@ interface Message {
 
     fun intListOrNull(fieldNumber: Int, fieldName: String): List<Int>?
 
+    // -----------------------------------------------------------------------------------------
+    // Short
+    // -----------------------------------------------------------------------------------------
+
+    fun short(fieldNumber: Int, fieldName: String): Short
+
+    fun shortOrNull(fieldNumber: Int, fieldName: String): Short?
+
+    fun shortList(fieldNumber: Int, fieldName: String): List<Short>
+
+    fun shortListOrNull(fieldNumber: Int, fieldName: String): List<Short>?
+
+    // -----------------------------------------------------------------------------------------
+    // Byte
+    // -----------------------------------------------------------------------------------------
+
+    fun byte(fieldNumber: Int, fieldName: String): Byte
+
+    fun byteOrNull(fieldNumber: Int, fieldName: String): Byte?
+
+    fun byteList(fieldNumber: Int, fieldName: String): List<Byte>
+
+    fun byteListOrNull(fieldNumber: Int, fieldName: String): List<Byte>?
+    
     // -----------------------------------------------------------------------------------------
     // Long
     // -----------------------------------------------------------------------------------------
@@ -63,6 +111,18 @@ interface Message {
     fun doubleList(fieldNumber: Int, fieldName: String): List<Double>
 
     fun doubleListOrNull(fieldNumber: Int, fieldName: String): List<Double>?
+
+    // -----------------------------------------------------------------------------------------
+    // Char
+    // -----------------------------------------------------------------------------------------
+
+    fun char(fieldNumber: Int, fieldName: String): Char
+
+    fun charOrNull(fieldNumber: Int, fieldName: String): Char?
+
+    fun charList(fieldNumber: Int, fieldName: String): List<Char>
+
+    fun charListOrNull(fieldNumber: Int, fieldName: String): List<Char>?
     
     // -----------------------------------------------------------------------------------------
     // String
@@ -112,4 +172,51 @@ interface Message {
 
     fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, decoder: WireFormat<T>): List<T>?
 
+    // -----------------------------------------------------------------------------------------
+    // UInt
+    // -----------------------------------------------------------------------------------------
+
+    fun uInt(fieldNumber: Int, fieldName: String): UInt
+
+    fun uIntOrNull(fieldNumber: Int, fieldName: String): UInt?
+
+    fun uIntList(fieldNumber: Int, fieldName: String): List<UInt>
+
+    fun uIntListOrNull(fieldNumber: Int, fieldName: String): List<UInt>?
+
+    // -----------------------------------------------------------------------------------------
+    // UShort
+    // -----------------------------------------------------------------------------------------
+
+    fun uShort(fieldNumber: Int, fieldName: String): UShort
+
+    fun uShortOrNull(fieldNumber: Int, fieldName: String): UShort?
+
+    fun uShortList(fieldNumber: Int, fieldName: String): List<UShort>
+
+    fun uShortListOrNull(fieldNumber: Int, fieldName: String): List<UShort>?
+
+    // -----------------------------------------------------------------------------------------
+    // UByte
+    // -----------------------------------------------------------------------------------------
+
+    fun uByte(fieldNumber: Int, fieldName: String): UByte
+
+    fun uByteOrNull(fieldNumber: Int, fieldName: String): UByte?
+
+    fun uByteList(fieldNumber: Int, fieldName: String): List<UByte>
+
+    fun uByteListOrNull(fieldNumber: Int, fieldName: String): List<UByte>?
+
+    // -----------------------------------------------------------------------------------------
+    // ULong
+    // -----------------------------------------------------------------------------------------
+
+    fun uLong(fieldNumber: Int, fieldName: String): ULong
+
+    fun uLongOrNull(fieldNumber: Int, fieldName: String): ULong?
+
+    fun uLongList(fieldNumber: Int, fieldName: String): List<ULong>
+
+    fun uLongListOrNull(fieldNumber: Int, fieldName: String): List<ULong>?
 }

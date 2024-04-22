@@ -3,10 +3,41 @@ package hu.simplexion.z2.wireformat
 import hu.simplexion.z2.utility.UUID
 import kotlin.enums.EnumEntries
 
+@OptIn(ExperimentalUnsignedTypes::class)
 interface Standalone<M> {
 
-    fun decodeUnit(message: M?)
+    // ---------------------------------------------------------------------------
+    // Any
+    // ---------------------------------------------------------------------------
 
+    fun encodeAny(value: Any?): ByteArray
+
+    fun encodeAnyList(value: List<Any>?): ByteArray
+
+    fun decodeAny(message: M?): Any
+
+    fun decodeAnyOrNull(message: M?): Any?
+
+    fun decodeAnyList(message: M?): List<Any>
+
+    fun decodeAnyListOrNull(message: M?): List<Any>?
+
+    // ---------------------------------------------------------------------------
+    // Unit
+    // ---------------------------------------------------------------------------
+
+    fun encodeUnit(value: Unit?): ByteArray
+
+    fun encodeUnitList(value: List<Unit>?): ByteArray
+
+    fun decodeUnit(message: M?): Unit
+
+    fun decodeUnitOrNull(message: M?): Unit?
+
+    fun decodeUnitList(message: M?): List<Unit>
+
+    fun decodeUnitListOrNull(message: M?): List<Unit>?
+    
     // ---------------------------------------------------------------------------
     // Boolean
     // ---------------------------------------------------------------------------
@@ -39,6 +70,38 @@ interface Standalone<M> {
 
     fun decodeIntListOrNull(message: M?): List<Int>?
 
+    // ---------------------------------------------------------------------------
+    // Short
+    // ---------------------------------------------------------------------------
+
+    fun encodeShort(value: Short?): ByteArray
+
+    fun encodeShortList(value: List<Short>?): ByteArray
+
+    fun decodeShort(message: M?): Short
+
+    fun decodeShortOrNull(message: M?): Short?
+
+    fun decodeShortList(message: M?): List<Short>
+
+    fun decodeShortListOrNull(message: M?): List<Short>?
+
+    // ---------------------------------------------------------------------------
+    // Byte
+    // ---------------------------------------------------------------------------
+
+    fun encodeByte(value: Byte?): ByteArray
+
+    fun encodeByteList(value: List<Byte>?): ByteArray
+
+    fun decodeByte(message: M?): Byte
+
+    fun decodeByteOrNull(message: M?): Byte?
+
+    fun decodeByteList(message: M?): List<Byte>
+
+    fun decodeByteListOrNull(message: M?): List<Byte>?
+    
     // ---------------------------------------------------------------------------
     // Long
     // ---------------------------------------------------------------------------
@@ -87,6 +150,22 @@ interface Standalone<M> {
 
     fun decodeDoubleListOrNull(message: M?): List<Double>?
 
+    // ---------------------------------------------------------------------------
+    // Char
+    // ---------------------------------------------------------------------------
+
+    fun encodeChar(value: Char?): ByteArray
+
+    fun encodeCharList(value: List<Char>?): ByteArray
+
+    fun decodeChar(message: M?): Char
+
+    fun decodeCharOrNull(message: M?): Char?
+
+    fun decodeCharList(message: M?): List<Char>
+
+    fun decodeCharListOrNull(message: M?): List<Char>?
+    
     // ---------------------------------------------------------------------------
     // String
     // ---------------------------------------------------------------------------
@@ -166,5 +245,69 @@ interface Standalone<M> {
     fun <E : Enum<E>> decodeEnumList(message: M?, entries: EnumEntries<E>): List<E>
 
     fun <E : Enum<E>> decodeEnumListOrNull(message: M?, entries: EnumEntries<E>): List<E>?
+
+    // ---------------------------------------------------------------------------
+    // UInt
+    // ---------------------------------------------------------------------------
+
+    fun encodeUInt(value: UInt?): ByteArray
+
+    fun encodeUIntList(value: List<UInt>?): ByteArray
+
+    fun decodeUInt(message: M?): UInt
+
+    fun decodeUIntOrNull(message: M?): UInt?
+
+    fun decodeUIntList(message: M?): List<UInt>
+
+    fun decodeUIntListOrNull(message: M?): List<UInt>?
+
+    // ---------------------------------------------------------------------------
+    // UShort
+    // ---------------------------------------------------------------------------
+
+    fun encodeUShort(value: UShort?): ByteArray
+
+    fun encodeUShortList(value: List<UShort>?): ByteArray
+
+    fun decodeUShort(message: M?): UShort
+
+    fun decodeUShortOrNull(message: M?): UShort?
+
+    fun decodeUShortList(message: M?): List<UShort>
+
+    fun decodeUShortListOrNull(message: M?): List<UShort>?
+
+    // ---------------------------------------------------------------------------
+    // UByte
+    // ---------------------------------------------------------------------------
+
+    fun encodeUByte(value: UByte?): ByteArray
+
+    fun encodeUByteList(value: List<UByte>?): ByteArray
+
+    fun decodeUByte(message: M?): UByte
+
+    fun decodeUByteOrNull(message: M?): UByte?
+
+    fun decodeUByteList(message: M?): List<UByte>
+
+    fun decodeUByteListOrNull(message: M?): List<UByte>?
+
+    // ---------------------------------------------------------------------------
+    // ULong
+    // ---------------------------------------------------------------------------
+
+    fun encodeULong(value: ULong?): ByteArray
+
+    fun encodeULongList(value: List<ULong>?): ByteArray
+
+    fun decodeULong(message: M?): ULong
+
+    fun decodeULongOrNull(message: M?): ULong?
+
+    fun decodeULongList(message: M?): List<ULong>
+
+    fun decodeULongListOrNull(message: M?): List<ULong>?
 
 }

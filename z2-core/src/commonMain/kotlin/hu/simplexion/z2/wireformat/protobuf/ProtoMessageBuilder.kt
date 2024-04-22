@@ -26,6 +26,62 @@ class ProtoMessageBuilder : MessageBuilder {
     }
 
     // ----------------------------------------------------------------------------
+    // Any
+    // ----------------------------------------------------------------------------
+
+    override fun any(fieldNumber: Int, fieldName: String, value: Any): ProtoMessageBuilder {
+        TODO()
+    }
+
+    override fun anyOrNull(fieldNumber: Int, fieldName: String, value: Any?): ProtoMessageBuilder {
+        TODO()
+    }
+
+    override fun anyList(fieldNumber: Int, fieldName: String, values: List<Any>): ProtoMessageBuilder {
+        TODO()
+    }
+
+    override fun anyListOrNull(fieldNumber: Int, fieldName: String, values: List<Any>?): ProtoMessageBuilder {
+        TODO()
+    }
+
+    // ----------------------------------------------------------------------------
+    // Unit
+    // ----------------------------------------------------------------------------
+
+    override fun unit(fieldNumber: Int, fieldName: String, value: Unit): ProtoMessageBuilder {
+        writer.bool(fieldNumber, true)
+        return this
+    }
+
+    override fun unitOrNull(fieldNumber: Int, fieldName: String, value: Unit?): ProtoMessageBuilder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            writer.bool(fieldNumber, true)
+        }
+        return this
+    }
+
+    override fun unitList(fieldNumber: Int, fieldName: String, values: List<Unit>): ProtoMessageBuilder {
+        sub(fieldNumber) {
+            for (value in values) {
+                it.bool(true)
+            }
+        }
+        return this
+    }
+
+    override fun unitListOrNull(fieldNumber: Int, fieldName: String, values: List<Unit>?): ProtoMessageBuilder {
+        if (values == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            unitList(fieldNumber, fieldName, values)
+        }
+        return this
+    }
+    
+    // ----------------------------------------------------------------------------
     // Boolean
     // ----------------------------------------------------------------------------
 
@@ -93,6 +149,78 @@ class ProtoMessageBuilder : MessageBuilder {
             writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             intList(fieldNumber, fieldName, values)
+        }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // Short
+    // ----------------------------------------------------------------------------
+
+    override fun short(fieldNumber: Int, fieldName: String, value: Short): ProtoMessageBuilder {
+        writer.sint32(fieldNumber, value.toInt())
+        return this
+    }
+
+    override fun shortOrNull(fieldNumber: Int, fieldName: String, value: Short?): ProtoMessageBuilder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            writer.sint32(fieldNumber, value.toInt())
+        }
+        return this
+    }
+
+    override fun shortList(fieldNumber: Int, fieldName: String, values: List<Short>): ProtoMessageBuilder {
+        sub(fieldNumber) {
+            for (value in values) {
+                it.sint32(value.toInt())
+            }
+        }
+        return this
+    }
+
+    override fun shortListOrNull(fieldNumber: Int, fieldName: String, values: List<Short>?): ProtoMessageBuilder {
+        if (values == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            shortList(fieldNumber, fieldName, values)
+        }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // Byte
+    // ----------------------------------------------------------------------------
+
+    override fun byte(fieldNumber: Int, fieldName: String, value: Byte): ProtoMessageBuilder {
+        writer.sint32(fieldNumber, value.toInt())
+        return this
+    }
+
+    override fun byteOrNull(fieldNumber: Int, fieldName: String, value: Byte?): ProtoMessageBuilder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            writer.sint32(fieldNumber, value.toInt())
+        }
+        return this
+    }
+
+    override fun byteList(fieldNumber: Int, fieldName: String, values: List<Byte>): ProtoMessageBuilder {
+        sub(fieldNumber) {
+            for (value in values) {
+                it.sint32(value.toInt())
+            }
+        }
+        return this
+    }
+
+    override fun byteListOrNull(fieldNumber: Int, fieldName: String, values: List<Byte>?): ProtoMessageBuilder {
+        if (values == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            byteList(fieldNumber, fieldName, values)
         }
         return this
     }
@@ -201,6 +329,42 @@ class ProtoMessageBuilder : MessageBuilder {
             writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             doubleList(fieldNumber, fieldName, values)
+        }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // Char
+    // ----------------------------------------------------------------------------
+
+    override fun char(fieldNumber: Int, fieldName: String, value: Char): ProtoMessageBuilder {
+        writer.sint32(fieldNumber, value.code)
+        return this
+    }
+
+    override fun charOrNull(fieldNumber: Int, fieldName: String, value: Char?): ProtoMessageBuilder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            writer.sint32(fieldNumber, value.code)
+        }
+        return this
+    }
+
+    override fun charList(fieldNumber: Int, fieldName: String, values: List<Char>): ProtoMessageBuilder {
+        sub(fieldNumber) {
+            for (value in values) {
+                it.sint32(value.code)
+            }
+        }
+        return this
+    }
+
+    override fun charListOrNull(fieldNumber: Int, fieldName: String, values: List<Char>?): ProtoMessageBuilder {
+        if (values == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            charList(fieldNumber, fieldName, values)
         }
         return this
     }
@@ -396,6 +560,150 @@ class ProtoMessageBuilder : MessageBuilder {
         return this
     }
 
+    // ----------------------------------------------------------------------------
+    // UInt
+    // ----------------------------------------------------------------------------
+
+    override fun uInt(fieldNumber: Int, fieldName: String, value: UInt): ProtoMessageBuilder {
+        writer.fixed32(fieldNumber, value)
+        return this
+    }
+
+    override fun uIntOrNull(fieldNumber: Int, fieldName: String, value: UInt?): ProtoMessageBuilder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            writer.fixed32(fieldNumber, value)
+        }
+        return this
+    }
+
+    override fun uIntList(fieldNumber: Int, fieldName: String, values: List<UInt>): ProtoMessageBuilder {
+        sub(fieldNumber) {
+            for (value in values) {
+                it.fixed32(value)
+            }
+        }
+        return this
+    }
+
+    override fun uIntListOrNull(fieldNumber: Int, fieldName: String, values: List<UInt>?): ProtoMessageBuilder {
+        if (values == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            uIntList(fieldNumber, fieldName, values)
+        }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // UShort
+    // ----------------------------------------------------------------------------
+
+    override fun uShort(fieldNumber: Int, fieldName: String, value: UShort): ProtoMessageBuilder {
+        writer.sint32(fieldNumber, value.toInt())
+        return this
+    }
+
+    override fun uShortOrNull(fieldNumber: Int, fieldName: String, value: UShort?): ProtoMessageBuilder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            writer.sint32(fieldNumber, value.toInt())
+        }
+        return this
+    }
+
+    override fun uShortList(fieldNumber: Int, fieldName: String, values: List<UShort>): ProtoMessageBuilder {
+        sub(fieldNumber) {
+            for (value in values) {
+                it.sint32(value.toInt())
+            }
+        }
+        return this
+    }
+
+    override fun uShortListOrNull(fieldNumber: Int, fieldName: String, values: List<UShort>?): ProtoMessageBuilder {
+        if (values == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            uShortList(fieldNumber, fieldName, values)
+        }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // UByte
+    // ----------------------------------------------------------------------------
+
+    override fun uByte(fieldNumber: Int, fieldName: String, value: UByte): ProtoMessageBuilder {
+        writer.sint32(fieldNumber, value.toInt())
+        return this
+    }
+
+    override fun uByteOrNull(fieldNumber: Int, fieldName: String, value: UByte?): ProtoMessageBuilder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            writer.sint32(fieldNumber, value.toInt())
+        }
+        return this
+    }
+
+    override fun uByteList(fieldNumber: Int, fieldName: String, values: List<UByte>): ProtoMessageBuilder {
+        sub(fieldNumber) {
+            for (value in values) {
+                it.sint32(value.toInt())
+            }
+        }
+        return this
+    }
+
+    override fun uByteListOrNull(fieldNumber: Int, fieldName: String, values: List<UByte>?): ProtoMessageBuilder {
+        if (values == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            uByteList(fieldNumber, fieldName, values)
+        }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // ULong
+    // ----------------------------------------------------------------------------
+
+    override fun uLong(fieldNumber: Int, fieldName: String, value: ULong): ProtoMessageBuilder {
+        writer.fixed64(fieldNumber, value)
+        return this
+    }
+
+    override fun uLongOrNull(fieldNumber: Int, fieldName: String, value: ULong?): ProtoMessageBuilder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            writer.fixed64(fieldNumber, value)
+        }
+        return this
+    }
+
+    override fun uLongList(fieldNumber: Int, fieldName: String, values: List<ULong>): ProtoMessageBuilder {
+        sub(fieldNumber) {
+            for (value in values) {
+                it.fixed64(value)
+            }
+        }
+        return this
+    }
+
+    override fun uLongListOrNull(fieldNumber: Int, fieldName: String, values: List<ULong>?): ProtoMessageBuilder {
+        if (values == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            uLongList(fieldNumber, fieldName, values)
+        }
+        return this
+    }
+    
     // ----------------------------------------------------------------------------
     // Utility
     // ----------------------------------------------------------------------------

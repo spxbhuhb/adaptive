@@ -1,6 +1,7 @@
 package hu.simplexion.z2.services
 
 import hu.simplexion.z2.utility.UUID
+import hu.simplexion.z2.utility.pluginGenerated
 import hu.simplexion.z2.wireformat.Message
 
 interface ServiceImpl<T : ServiceImpl<T>> : Service {
@@ -34,7 +35,7 @@ interface ServiceImpl<T : ServiceImpl<T>> : Service {
      * by the plugin.
      */
     suspend fun dispatch(funName: String, payload: Message): ByteArray {
-        placeholder()
+        pluginGenerated()
     }
 
 }

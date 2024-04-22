@@ -28,6 +28,50 @@ class JsonMessageBuilder(
     }
 
     // ----------------------------------------------------------------------------
+    // Any
+    // ----------------------------------------------------------------------------
+
+    override fun any(fieldNumber: Int, fieldName: String, value: Any): JsonMessageBuilder {
+        TODO()
+    }
+
+    override fun anyOrNull(fieldNumber: Int, fieldName: String, value: Any?): JsonMessageBuilder {
+        TODO()
+    }
+
+    override fun anyList(fieldNumber: Int, fieldName: String, values: List<Any>): JsonMessageBuilder {
+        TODO()
+    }
+
+    override fun anyListOrNull(fieldNumber: Int, fieldName: String, values: List<Any>?): JsonMessageBuilder {
+        TODO()
+    }
+
+    // ----------------------------------------------------------------------------
+    // Unit
+    // ----------------------------------------------------------------------------
+
+    override fun unit(fieldNumber: Int, fieldName: String, value: Unit): JsonMessageBuilder {
+        writer.bool(fieldName, true)
+        return this
+    }
+
+    override fun unitOrNull(fieldNumber: Int, fieldName: String, value: Unit?): JsonMessageBuilder {
+        writer.bool(fieldName, if (value != null) true else null)
+        return this
+    }
+
+    override fun unitList(fieldNumber: Int, fieldName: String, values: List<Unit>): JsonMessageBuilder {
+        unitListOrNull(fieldNumber, fieldName, values)
+        return this
+    }
+
+    override fun unitListOrNull(fieldNumber: Int, fieldName: String, values: List<Unit>?): JsonMessageBuilder {
+        array(fieldName, values) { v, i -> writer.bool(true) }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
     // Boolean
     // ----------------------------------------------------------------------------
 
@@ -71,6 +115,54 @@ class JsonMessageBuilder(
     }
 
     override fun intListOrNull(fieldNumber: Int, fieldName: String, values: List<Int>?): JsonMessageBuilder {
+        array(fieldName, values) { v, i -> writer.number(v[i]) }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // Short
+    // ----------------------------------------------------------------------------
+
+    override fun short(fieldNumber: Int, fieldName: String, value: Short): JsonMessageBuilder {
+        writer.number(fieldName, value)
+        return this
+    }
+
+    override fun shortOrNull(fieldNumber: Int, fieldName: String, value: Short?): JsonMessageBuilder {
+        writer.number(fieldName, value)
+        return this
+    }
+
+    override fun shortList(fieldNumber: Int, fieldName: String, values: List<Short>): JsonMessageBuilder {
+        shortListOrNull(fieldNumber, fieldName, values)
+        return this
+    }
+
+    override fun shortListOrNull(fieldNumber: Int, fieldName: String, values: List<Short>?): JsonMessageBuilder {
+        array(fieldName, values) { v, i -> writer.number(v[i]) }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // Byte
+    // ----------------------------------------------------------------------------
+
+    override fun byte(fieldNumber: Int, fieldName: String, value: Byte): JsonMessageBuilder {
+        writer.number(fieldName, value)
+        return this
+    }
+
+    override fun byteOrNull(fieldNumber: Int, fieldName: String, value: Byte?): JsonMessageBuilder {
+        writer.number(fieldName, value)
+        return this
+    }
+
+    override fun byteList(fieldNumber: Int, fieldName: String, values: List<Byte>): JsonMessageBuilder {
+        byteListOrNull(fieldNumber, fieldName, values)
+        return this
+    }
+
+    override fun byteListOrNull(fieldNumber: Int, fieldName: String, values: List<Byte>?): JsonMessageBuilder {
         array(fieldName, values) { v, i -> writer.number(v[i]) }
         return this
     }
@@ -148,6 +240,30 @@ class JsonMessageBuilder(
     }
 
     // ----------------------------------------------------------------------------
+    // Char
+    // ----------------------------------------------------------------------------
+
+    override fun char(fieldNumber: Int, fieldName: String, value: Char): JsonMessageBuilder {
+        writer.string(fieldName, value.toString())
+        return this
+    }
+
+    override fun charOrNull(fieldNumber: Int, fieldName: String, value: Char?): JsonMessageBuilder {
+        writer.string(fieldName, value?.toString())
+        return this
+    }
+
+    override fun charList(fieldNumber: Int, fieldName: String, values: List<Char>): JsonMessageBuilder {
+        charListOrNull(fieldNumber, fieldName, values)
+        return this
+    }
+
+    override fun charListOrNull(fieldNumber: Int, fieldName: String, values: List<Char>?): JsonMessageBuilder {
+        array(fieldName, values) { v, i -> writer.quotedString(v[i].toString()) }
+        return this
+    }
+    
+    // ----------------------------------------------------------------------------
     // String
     // ----------------------------------------------------------------------------
 
@@ -170,7 +286,6 @@ class JsonMessageBuilder(
         array(fieldName, values) { v, i -> writer.quotedString(v[i]) }
         return this
     }
-
 
     // ----------------------------------------------------------------------------
     // ByteArray
@@ -195,7 +310,6 @@ class JsonMessageBuilder(
         array(fieldName, values) { v, i -> writer.bytes(v[i]) }
         return this
     }
-
 
     // ----------------------------------------------------------------------------
     // UUID
@@ -293,7 +407,102 @@ class JsonMessageBuilder(
         return this
     }
 
+    // ----------------------------------------------------------------------------
+    // UInt
+    // ----------------------------------------------------------------------------
 
+    override fun uInt(fieldNumber: Int, fieldName: String, value: UInt): JsonMessageBuilder {
+        writer.number(fieldName, value)
+        return this
+    }
+
+    override fun uIntOrNull(fieldNumber: Int, fieldName: String, value: UInt?): JsonMessageBuilder {
+        writer.number(fieldName, value)
+        return this
+    }
+
+    override fun uIntList(fieldNumber: Int, fieldName: String, values: List<UInt>): JsonMessageBuilder {
+        uIntListOrNull(fieldNumber, fieldName, values)
+        return this
+    }
+
+    override fun uIntListOrNull(fieldNumber: Int, fieldName: String, values: List<UInt>?): JsonMessageBuilder {
+        array(fieldName, values) { v, i -> writer.number(v[i]) }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // UShort
+    // ----------------------------------------------------------------------------
+
+    override fun uShort(fieldNumber: Int, fieldName: String, value: UShort): JsonMessageBuilder {
+        writer.number(fieldName, value)
+        return this
+    }
+
+    override fun uShortOrNull(fieldNumber: Int, fieldName: String, value: UShort?): JsonMessageBuilder {
+        writer.number(fieldName, value)
+        return this
+    }
+
+    override fun uShortList(fieldNumber: Int, fieldName: String, values: List<UShort>): JsonMessageBuilder {
+        uShortListOrNull(fieldNumber, fieldName, values)
+        return this
+    }
+
+    override fun uShortListOrNull(fieldNumber: Int, fieldName: String, values: List<UShort>?): JsonMessageBuilder {
+        array(fieldName, values) { v, i -> writer.number(v[i]) }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // UByte
+    // ----------------------------------------------------------------------------
+
+    override fun uByte(fieldNumber: Int, fieldName: String, value: UByte): JsonMessageBuilder {
+        writer.number(fieldName, value)
+        return this
+    }
+
+    override fun uByteOrNull(fieldNumber: Int, fieldName: String, value: UByte?): JsonMessageBuilder {
+        writer.number(fieldName, value)
+        return this
+    }
+
+    override fun uByteList(fieldNumber: Int, fieldName: String, values: List<UByte>): JsonMessageBuilder {
+        uByteListOrNull(fieldNumber, fieldName, values)
+        return this
+    }
+
+    override fun uByteListOrNull(fieldNumber: Int, fieldName: String, values: List<UByte>?): JsonMessageBuilder {
+        array(fieldName, values) { v, i -> writer.number(v[i]) }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // ULong
+    // ----------------------------------------------------------------------------
+
+    override fun uLong(fieldNumber: Int, fieldName: String, value: ULong): JsonMessageBuilder {
+        writer.number(fieldName, value)
+        return this
+    }
+
+    override fun uLongOrNull(fieldNumber: Int, fieldName: String, value: ULong?): JsonMessageBuilder {
+        writer.number(fieldName, value)
+        return this
+    }
+
+    override fun uLongList(fieldNumber: Int, fieldName: String, values: List<ULong>): JsonMessageBuilder {
+        uLongListOrNull(fieldNumber, fieldName, values)
+        return this
+    }
+
+    override fun uLongListOrNull(fieldNumber: Int, fieldName: String, values: List<ULong>?): JsonMessageBuilder {
+        array(fieldName, values) { v, i -> writer.number(v[i]) }
+        return this
+    }
+    
     // ----------------------------------------------------------------------------
     // Utility
     // ----------------------------------------------------------------------------

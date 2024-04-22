@@ -1,6 +1,7 @@
 package hu.simplexion.z2.services
 
 import hu.simplexion.z2.services.transport.ServiceCallTransport
+import hu.simplexion.z2.utility.pluginGenerated
 import hu.simplexion.z2.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
 
 interface Service {
@@ -16,26 +17,26 @@ interface Service {
      * ```
      */
     var serviceName: String
-        get() = placeholder() // so we don't have to override in the interface that extends Service
-        set(value) = placeholder()
+        get() = pluginGenerated() // so we don't have to override in the interface that extends Service
+        set(value) = pluginGenerated(value)
 
     /**
      * The call transport to use when calling a service function. You can change this
-     * field to use different call transport than the default. When null calls use
-     * [defaultServiceCallTransport].
+     * field to use different call transport than the default. When null, service
+     * calls use [defaultServiceCallTransport].
      *
      * Overridden by the plugin with:
      *
      * ```kotlin
-     * override var serviceCallTransport : ServiceCallTransport? = null
+     * override var callTransport : ServiceCallTransport? = null
      * ```
      */
-    var serviceCallTransport: ServiceCallTransport?
-        get() = placeholder() // so we don't have to override in the interface that extends Service
-        set(value) = placeholder()
+    var callTransport: ServiceCallTransport?
+        get() = pluginGenerated() // so we don't have to override in the interface that extends Service
+        set(value) = pluginGenerated(value)
 
-    fun serviceCallTransportOrDefault(): ServiceCallTransport =
-        serviceCallTransport ?: defaultServiceCallTransport
+    fun callTransportOrDefault(): ServiceCallTransport =
+        callTransport ?: defaultServiceCallTransport
 
     val wireFormatBuilder
         get() = defaultWireFormatProvider.messageBuilder()

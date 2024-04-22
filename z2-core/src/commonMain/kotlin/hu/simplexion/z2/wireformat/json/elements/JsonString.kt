@@ -7,6 +7,9 @@ class JsonString(val value: String) : JsonElement {
     override val asString
         get() = value
 
+    override val asChar
+        get() = value.single()
+
     @OptIn(ExperimentalStdlibApi::class)
     override val asByteArray
         get() = value.hexToByteArray()

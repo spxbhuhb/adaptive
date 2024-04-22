@@ -3,7 +3,10 @@ package hu.simplexion.z2.wireformat.json
 import hu.simplexion.z2.utility.UUID
 import hu.simplexion.z2.wireformat.Message
 import hu.simplexion.z2.wireformat.WireFormat
-import hu.simplexion.z2.wireformat.json.elements.*
+import hu.simplexion.z2.wireformat.json.elements.JsonArray
+import hu.simplexion.z2.wireformat.json.elements.JsonElement
+import hu.simplexion.z2.wireformat.json.elements.JsonNull
+import hu.simplexion.z2.wireformat.json.elements.JsonObject
 
 class JsonMessage : Message {
 
@@ -27,20 +30,53 @@ class JsonMessage : Message {
         map?.get(fieldName)?.let { if (it is JsonNull) null else it }
 
     // -----------------------------------------------------------------------------------------
+    // Any
+    // -----------------------------------------------------------------------------------------
+
+    override fun any(fieldNumber: Int, fieldName: String): Any =
+        TODO()
+
+    override fun anyOrNull(fieldNumber: Int, fieldName: String): Any? =
+        TODO()
+
+    override fun anyList(fieldNumber: Int, fieldName: String) =
+        requireNotNull(anyListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+
+    override fun anyListOrNull(fieldNumber: Int, fieldName: String): List<Any>? =
+        array(fieldName) { TODO() }
+
+    // -----------------------------------------------------------------------------------------
+    // Unit
+    // -----------------------------------------------------------------------------------------
+
+    override fun unit(fieldNumber: Int, fieldName: String) {
+        get(fieldName).asUnit
+    }
+
+    override fun unitOrNull(fieldNumber: Int, fieldName: String): Unit? =
+        getOrNull(fieldName)?.asUnit
+
+    override fun unitList(fieldNumber: Int, fieldName: String) =
+        requireNotNull(unitListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+
+    override fun unitListOrNull(fieldNumber: Int, fieldName: String): List<Unit>? =
+        array(fieldName) { it.asUnit }
+
+    // -----------------------------------------------------------------------------------------
     // Boolean
     // -----------------------------------------------------------------------------------------
 
     override fun boolean(fieldNumber: Int, fieldName: String): Boolean =
-        (get(fieldName) as JsonBoolean).value
+        get(fieldName).asBoolean
 
     override fun booleanOrNull(fieldNumber: Int, fieldName: String): Boolean? =
-        (getOrNull(fieldName) as? JsonBoolean)?.value
+        getOrNull(fieldName)?.asBoolean
 
     override fun booleanList(fieldNumber: Int, fieldName: String) =
         requireNotNull(booleanListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun booleanListOrNull(fieldNumber: Int, fieldName: String): List<Boolean>? =
-        array(fieldName) { (it as JsonBoolean).value }
+        array(fieldName) { it.asBoolean }
 
     // -----------------------------------------------------------------------------------------
     // Int
@@ -57,6 +93,38 @@ class JsonMessage : Message {
 
     override fun intListOrNull(fieldNumber: Int, fieldName: String): List<Int>? =
         array(fieldName) { it.asInt }
+
+    // -----------------------------------------------------------------------------------------
+    // Short
+    // -----------------------------------------------------------------------------------------
+
+    override fun short(fieldNumber: Int, fieldName: String): Short =
+        get(fieldName).asShort
+
+    override fun shortOrNull(fieldNumber: Int, fieldName: String): Short? =
+        getOrNull(fieldName)?.asShort
+
+    override fun shortList(fieldNumber: Int, fieldName: String) =
+        requireNotNull(shortListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+
+    override fun shortListOrNull(fieldNumber: Int, fieldName: String): List<Short>? =
+        array(fieldName) { it.asShort }
+
+    // -----------------------------------------------------------------------------------------
+    // Byte
+    // -----------------------------------------------------------------------------------------
+
+    override fun byte(fieldNumber: Int, fieldName: String): Byte =
+        get(fieldName).asByte
+
+    override fun byteOrNull(fieldNumber: Int, fieldName: String): Byte? =
+        getOrNull(fieldName)?.asByte
+
+    override fun byteList(fieldNumber: Int, fieldName: String) =
+        requireNotNull(byteListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+
+    override fun byteListOrNull(fieldNumber: Int, fieldName: String): List<Byte>? =
+        array(fieldName) { it.asByte }
 
     // -----------------------------------------------------------------------------------------
     // Long
@@ -105,7 +173,23 @@ class JsonMessage : Message {
 
     override fun doubleListOrNull(fieldNumber: Int, fieldName: String): List<Double>? =
         array(fieldName) { it.asDouble }
-    
+
+    // -----------------------------------------------------------------------------------------
+    // Char
+    // -----------------------------------------------------------------------------------------
+
+    override fun char(fieldNumber: Int, fieldName: String): Char =
+        get(fieldName).asChar
+
+    override fun charOrNull(fieldNumber: Int, fieldName: String): Char? =
+        getOrNull(fieldName)?.asChar
+
+    override fun charList(fieldNumber: Int, fieldName: String) =
+        requireNotNull(charListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+
+    override fun charListOrNull(fieldNumber: Int, fieldName: String): List<Char>? =
+        array(fieldName) { it.asChar }
+
     // -----------------------------------------------------------------------------------------
     // String
     // -----------------------------------------------------------------------------------------
@@ -172,6 +256,70 @@ class JsonMessage : Message {
 
     override fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, decoder: WireFormat<T>): MutableList<T>? =
         array(fieldName) { decoder.decodeInstance(JsonMessage(it as JsonObject)) }
+
+    // -----------------------------------------------------------------------------------------
+    // UInt
+    // -----------------------------------------------------------------------------------------
+
+    override fun uInt(fieldNumber: Int, fieldName: String): UInt =
+        get(fieldName).asUInt
+
+    override fun uIntOrNull(fieldNumber: Int, fieldName: String): UInt? =
+        getOrNull(fieldName)?.asUInt
+
+    override fun uIntList(fieldNumber: Int, fieldName: String) =
+        requireNotNull(uIntListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+
+    override fun uIntListOrNull(fieldNumber: Int, fieldName: String): List<UInt>? =
+        array(fieldName) { it.asUInt }
+
+    // -----------------------------------------------------------------------------------------
+    // UShort
+    // -----------------------------------------------------------------------------------------
+
+    override fun uShort(fieldNumber: Int, fieldName: String): UShort =
+        get(fieldName).asUShort
+
+    override fun uShortOrNull(fieldNumber: Int, fieldName: String): UShort? =
+        getOrNull(fieldName)?.asUShort
+
+    override fun uShortList(fieldNumber: Int, fieldName: String) =
+        requireNotNull(uShortListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+
+    override fun uShortListOrNull(fieldNumber: Int, fieldName: String): List<UShort>? =
+        array(fieldName) { it.asUShort }
+
+    // -----------------------------------------------------------------------------------------
+    // UByte
+    // -----------------------------------------------------------------------------------------
+
+    override fun uByte(fieldNumber: Int, fieldName: String): UByte =
+        get(fieldName).asUByte
+
+    override fun uByteOrNull(fieldNumber: Int, fieldName: String): UByte? =
+        getOrNull(fieldName)?.asUByte
+
+    override fun uByteList(fieldNumber: Int, fieldName: String) =
+        requireNotNull(uByteListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+
+    override fun uByteListOrNull(fieldNumber: Int, fieldName: String): List<UByte>? =
+        array(fieldName) { it.asUByte }
+
+    // -----------------------------------------------------------------------------------------
+    // ULong
+    // -----------------------------------------------------------------------------------------
+
+    override fun uLong(fieldNumber: Int, fieldName: String): ULong =
+        get(fieldName).asULong
+
+    override fun uLongOrNull(fieldNumber: Int, fieldName: String): ULong? =
+        getOrNull(fieldName)?.asULong
+
+    override fun uLongList(fieldNumber: Int, fieldName: String) =
+        requireNotNull(uLongListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+
+    override fun uLongListOrNull(fieldNumber: Int, fieldName: String): List<ULong>? =
+        array(fieldName) { it.asULong }
 
     // --------------------------------------------------------------------------------------
     // Helpers

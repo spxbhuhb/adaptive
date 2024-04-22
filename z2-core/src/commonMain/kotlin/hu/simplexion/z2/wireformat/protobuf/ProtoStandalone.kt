@@ -7,8 +7,50 @@ import kotlin.enums.EnumEntries
 
 object ProtoStandalone : Standalone<ProtoMessage> {
 
-    override fun decodeUnit(message: ProtoMessage?) {}
+    // ---------------------------------------------------------------------------
+    // Any
+    // ---------------------------------------------------------------------------
 
+    override fun encodeAny(value: Any?): ByteArray =
+        TODO()
+
+    override fun encodeAnyList(value: List<Any>?): ByteArray =
+        TODO()
+
+    override fun decodeAny(message: ProtoMessage?): Any =
+        TODO()
+
+    override fun decodeAnyOrNull(message: ProtoMessage?): Any =
+        TODO()
+
+    override fun decodeAnyList(message: ProtoMessage?): List<Any> =
+        TODO()
+
+    override fun decodeAnyListOrNull(message: ProtoMessage?): List<Any> =
+        TODO()
+
+    // ---------------------------------------------------------------------------
+    // Unit
+    // ---------------------------------------------------------------------------
+
+    override fun encodeUnit(value: Unit?): ByteArray =
+        ProtoMessageBuilder().unitOrNull(1, "", value).pack()
+
+    override fun encodeUnitList(value: List<Unit>?): ByteArray =
+        ProtoMessageBuilder().unitListOrNull(1, "", value).pack()
+
+    override fun decodeUnit(message: ProtoMessage?): Unit =
+        checkNotNull(message?.unit(1, ""))
+
+    override fun decodeUnitOrNull(message: ProtoMessage?): Unit? =
+        message?.unitOrNull(1, "")
+
+    override fun decodeUnitList(message: ProtoMessage?): List<Unit> =
+        message?.unitList(1, "") ?: emptyList()
+
+    override fun decodeUnitListOrNull(message: ProtoMessage?): List<Unit>? =
+        message?.unitListOrNull(1, "")
+    
     // ---------------------------------------------------------------------------
     // Boolean
     // ---------------------------------------------------------------------------
@@ -52,6 +94,50 @@ object ProtoStandalone : Standalone<ProtoMessage> {
 
     override fun decodeIntListOrNull(message: ProtoMessage?): List<Int>? =
         message?.intListOrNull(1, "")
+
+    // ---------------------------------------------------------------------------
+    // Short
+    // ---------------------------------------------------------------------------
+
+    override fun encodeShort(value: Short?): ByteArray =
+        ProtoMessageBuilder().shortOrNull(1, "", value).pack()
+
+    override fun encodeShortList(value: List<Short>?): ByteArray =
+        ProtoMessageBuilder().shortListOrNull(1, "", value).pack()
+
+    override fun decodeShort(message: ProtoMessage?): Short =
+        message?.short(1, "") ?: 0
+
+    override fun decodeShortOrNull(message: ProtoMessage?): Short? =
+        message?.shortOrNull(1, "")
+
+    override fun decodeShortList(message: ProtoMessage?): List<Short> =
+        message?.shortList(1, "") ?: emptyList()
+
+    override fun decodeShortListOrNull(message: ProtoMessage?): List<Short>? =
+        message?.shortListOrNull(1, "")
+
+    // ---------------------------------------------------------------------------
+    // Byte
+    // ---------------------------------------------------------------------------
+
+    override fun encodeByte(value: Byte?): ByteArray =
+        ProtoMessageBuilder().byteOrNull(1, "", value).pack()
+
+    override fun encodeByteList(value: List<Byte>?): ByteArray =
+        ProtoMessageBuilder().byteListOrNull(1, "", value).pack()
+
+    override fun decodeByte(message: ProtoMessage?): Byte =
+        message?.byte(1, "") ?: 0
+
+    override fun decodeByteOrNull(message: ProtoMessage?): Byte? =
+        message?.byteOrNull(1, "")
+
+    override fun decodeByteList(message: ProtoMessage?): List<Byte> =
+        message?.byteList(1, "") ?: emptyList()
+
+    override fun decodeByteListOrNull(message: ProtoMessage?): List<Byte>? =
+        message?.byteListOrNull(1, "")
 
     // ---------------------------------------------------------------------------
     // Long
@@ -119,6 +205,28 @@ object ProtoStandalone : Standalone<ProtoMessage> {
     override fun decodeDoubleListOrNull(message: ProtoMessage?): List<Double>? =
         message?.doubleListOrNull(1, "")
 
+    // ---------------------------------------------------------------------------
+    // Char
+    // ---------------------------------------------------------------------------
+
+    override fun encodeChar(value: Char?): ByteArray =
+        ProtoMessageBuilder().charOrNull(1, "", value).pack()
+
+    override fun encodeCharList(value: List<Char>?): ByteArray =
+        ProtoMessageBuilder().charListOrNull(1, "", value).pack()
+
+    override fun decodeChar(message: ProtoMessage?): Char =
+        message?.char(1, "") ?: Char.MIN_VALUE
+
+    override fun decodeCharOrNull(message: ProtoMessage?): Char? =
+        message?.charOrNull(1, "")
+
+    override fun decodeCharList(message: ProtoMessage?): List<Char> =
+        message?.charList(1, "") ?: emptyList()
+
+    override fun decodeCharListOrNull(message: ProtoMessage?): List<Char>? =
+        message?.charListOrNull(1, "")
+    
     // ---------------------------------------------------------------------------
     // String
     // ---------------------------------------------------------------------------
@@ -236,5 +344,93 @@ object ProtoStandalone : Standalone<ProtoMessage> {
         if (message == null) return null
         return message.intListOrNull(1, "")?.map { entries[it] }
     }
+
+    // ---------------------------------------------------------------------------
+    // UInt
+    // ---------------------------------------------------------------------------
+
+    override fun encodeUInt(value: UInt?): ByteArray =
+        ProtoMessageBuilder().uIntOrNull(1, "", value).pack()
+
+    override fun encodeUIntList(value: List<UInt>?): ByteArray =
+        ProtoMessageBuilder().uIntListOrNull(1, "", value).pack()
+
+    override fun decodeUInt(message: ProtoMessage?): UInt =
+        message?.uInt(1, "") ?: UInt.MIN_VALUE
+
+    override fun decodeUIntOrNull(message: ProtoMessage?): UInt? =
+        message?.uIntOrNull(1, "")
+
+    override fun decodeUIntList(message: ProtoMessage?): List<UInt> =
+        message?.uIntList(1, "") ?: emptyList()
+
+    override fun decodeUIntListOrNull(message: ProtoMessage?): List<UInt>? =
+        message?.uIntListOrNull(1, "")
+
+    // ---------------------------------------------------------------------------
+    // UShort
+    // ---------------------------------------------------------------------------
+
+    override fun encodeUShort(value: UShort?): ByteArray =
+        ProtoMessageBuilder().uShortOrNull(1, "", value).pack()
+
+    override fun encodeUShortList(value: List<UShort>?): ByteArray =
+        ProtoMessageBuilder().uShortListOrNull(1, "", value).pack()
+
+    override fun decodeUShort(message: ProtoMessage?): UShort =
+        message?.uShort(1, "") ?: UShort.MIN_VALUE
+
+    override fun decodeUShortOrNull(message: ProtoMessage?): UShort? =
+        message?.uShortOrNull(1, "")
+
+    override fun decodeUShortList(message: ProtoMessage?): List<UShort> =
+        message?.uShortList(1, "") ?: emptyList()
+
+    override fun decodeUShortListOrNull(message: ProtoMessage?): List<UShort>? =
+        message?.uShortListOrNull(1, "")
+
+    // ---------------------------------------------------------------------------
+    // UByte
+    // ---------------------------------------------------------------------------
+
+    override fun encodeUByte(value: UByte?): ByteArray =
+        ProtoMessageBuilder().uByteOrNull(1, "", value).pack()
+
+    override fun encodeUByteList(value: List<UByte>?): ByteArray =
+        ProtoMessageBuilder().uByteListOrNull(1, "", value).pack()
+
+    override fun decodeUByte(message: ProtoMessage?): UByte =
+        message?.uByte(1, "") ?: UByte.MIN_VALUE
+
+    override fun decodeUByteOrNull(message: ProtoMessage?): UByte? =
+        message?.uByteOrNull(1, "")
+
+    override fun decodeUByteList(message: ProtoMessage?): List<UByte> =
+        message?.uByteList(1, "") ?: emptyList()
+
+    override fun decodeUByteListOrNull(message: ProtoMessage?): List<UByte>? =
+        message?.uByteListOrNull(1, "")
+
+    // ---------------------------------------------------------------------------
+    // ULong
+    // ---------------------------------------------------------------------------
+
+    override fun encodeULong(value: ULong?): ByteArray =
+        ProtoMessageBuilder().uLongOrNull(1, "", value).pack()
+
+    override fun encodeULongList(value: List<ULong>?): ByteArray =
+        ProtoMessageBuilder().uLongListOrNull(1, "", value).pack()
+
+    override fun decodeULong(message: ProtoMessage?): ULong =
+        message?.uLong(1, "") ?: ULong.MIN_VALUE
+
+    override fun decodeULongOrNull(message: ProtoMessage?): ULong? =
+        message?.uLongOrNull(1, "")
+
+    override fun decodeULongList(message: ProtoMessage?): List<ULong> =
+        message?.uLongList(1, "") ?: emptyList()
+
+    override fun decodeULongListOrNull(message: ProtoMessage?): List<ULong>? =
+        message?.uLongListOrNull(1, "")
 
 }

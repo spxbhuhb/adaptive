@@ -27,14 +27,16 @@ class ProtoWriterTest {
     @Test
     fun sint32() {
         // signed values, ZigZag encoding
-        assertEquals("10 02".ns, proto { sint64(2, 1L) })
-        assertEquals("10 04".ns, proto { sint64(2, 2L) })
-        assertEquals("10 01".ns, proto { sint64(2, - 1L) })
-        assertEquals("10 03".ns, proto { sint64(2, - 2L) })
-        assertEquals("10 ac 02".ns, proto { sint64(2, 150L) })
-        assertEquals("10 ab 02".ns, proto { sint64(2, - 150L) })
-        assertEquals("10 fe ff ff ff ff ff ff ff ff 01".ns, proto { sint64(2, Long.MAX_VALUE) })
-        assertEquals("10 ff ff ff ff ff ff ff ff ff 01".ns, proto { sint64(2, Long.MIN_VALUE) })
+        assertEquals("10 02".ns, proto { sint32(2, 1) })
+        assertEquals("10 04".ns, proto { sint32(2, 2) })
+        assertEquals("10 01".ns, proto { sint32(2, - 1) })
+        assertEquals("10 03".ns, proto { sint32(2, - 2) })
+        assertEquals("10 ac 02".ns, proto { sint32(2, 150) })
+        assertEquals("10 ab 02".ns, proto { sint32(2, - 150) })
+        assertEquals("10 ff ff ff ff 0f".ns, proto { sint32(2, Int.MIN_VALUE) })
+        assertEquals("10 fd ff ff ff 0f".ns, proto { sint32(2, Int.MIN_VALUE + 1) })
+        assertEquals("10 fc ff ff ff 0f".ns, proto { sint32(2, Int.MAX_VALUE - 1) })
+        assertEquals("10 fe ff ff ff 0f".ns, proto { sint32(2, Int.MAX_VALUE) })
     }
 
     @Test
@@ -55,7 +57,9 @@ class ProtoWriterTest {
         assertEquals("10 03".ns, proto { sint64(2, - 2L) })
         assertEquals("10 ac 02".ns, proto { sint64(2, 150L) })
         assertEquals("10 ab 02".ns, proto { sint64(2, - 150L) })
-        assertEquals("10 fe ff ff ff ff ff ff ff ff 01".ns, proto { sint64(2, Long.MAX_VALUE) })
         assertEquals("10 ff ff ff ff ff ff ff ff ff 01".ns, proto { sint64(2, Long.MIN_VALUE) })
+        assertEquals("10 fd ff ff ff ff ff ff ff ff 01".ns, proto { sint64(2, Long.MIN_VALUE + 1) })
+        assertEquals("10 fc ff ff ff ff ff ff ff ff 01".ns, proto { sint64(2, Long.MAX_VALUE - 1) })
+        assertEquals("10 fe ff ff ff ff ff ff ff ff 01".ns, proto { sint64(2, Long.MAX_VALUE) })
     }
 }

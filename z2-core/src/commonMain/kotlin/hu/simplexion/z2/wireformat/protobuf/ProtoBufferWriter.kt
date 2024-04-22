@@ -36,16 +36,16 @@ class ProtoBufferWriter(
 
     fun int32(fieldNumber: Int, value: Int) {
         tag(fieldNumber, VARINT)
-        varint(value.toULong())
+        varint(value.toUInt())
     }
 
     fun sint32(fieldNumber: Int, value: Int) {
         tag(fieldNumber, VARINT)
-        varint(((value shl 1) xor (value shr 31)).toULong())
+        varint(((value shl 1) xor (value shr 31)).toUInt())
     }
 
     fun sint32(value: Int) {
-        varint(((value shl 1) xor (value shr 31)).toULong())
+        varint(((value shl 1) xor (value shr 31)).toUInt())
     }
 
     fun uint32(fieldNumber: Int, value: UInt) {
@@ -165,13 +165,26 @@ class ProtoBufferWriter(
         return value
     }
 
+    private fun varint(value: UInt) {
+        var next = value and valueMaskInt
+        var remaining = value shr 7
+
+        while (remaining != 0U) {
+            put(continuation or next.toByte())
+            next = remaining and valueMaskInt
+            remaining = remaining shr 7
+        }
+
+        put(next.toByte())
+    }
+
     private fun varint(value: ULong) {
-        var next = value and valueMask
+        var next = value and valueMaskLong
         var remaining = value shr 7
 
         while (remaining != 0UL) {
             put(continuation or next.toByte())
-            next = remaining and valueMask
+            next = remaining and valueMaskLong
             remaining = remaining shr 7
         }
 
@@ -185,7 +198,8 @@ class ProtoBufferWriter(
 
     companion object {
         const val continuation = 0x80.toByte()
-        const val valueMask = 0x7fUL
+        const val valueMaskLong = 0x7fUL
+        const val valueMaskInt = 0x7FU
     }
 
 }

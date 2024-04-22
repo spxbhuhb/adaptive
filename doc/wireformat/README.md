@@ -23,18 +23,18 @@ encoding/decoding methods.
 | Type                             | Support |
 |----------------------------------|---------|
 | **Kotlin Built-in**              |         |
-| kotlin.Any                       | -       |
-| T? (a.k.a. `null`)               | partial |
+| kotlin.Any                       | planned |
+| T? (a.k.a. `null`)               | full    |
 | kotlin.Nothing                   | -       |
 | kotlin.Unit                      | full    | 
 | kotlin.Boolean                   | full    |
 | kotlin.Int                       | full    |
-| kotlin.Short                     | -       |
-| kotlin.Byte                      | -       |
+| kotlin.Short                     | full    |
+| kotlin.Byte                      | full    |
 | kotlin.Long                      | full    |
 | kotlin.Float                     | full    |
 | kotlin.Double                    | full    |
-| kotlin.Char                      | -       |
+| kotlin.Char                      | full    |
 | kotlin.String                    | full    | 
 | kotlin.Enum<T>                   | full    |
 | kotlin.Array<T>                  | -       |
@@ -51,14 +51,14 @@ encoding/decoding methods.
 | kotlin.Comparable                | -       |
 | kotlin.Function                  | -       |
 | **Kotlin Unsigned**              |         | 
-| UByte                            | -       |
-| UInt                             | -       |
-| UShort                           | -       |
-| ULong                            | -       |
-| UByteArray                       | -       | 
-| UShortArray                      | -       |
-| UIntArray                        | -       |
-| ULongArray                       | -       |
+| UByte                            | full    |
+| UInt                             | full    |
+| UShort                           | full    |
+| ULong                            | full    |
+| UByteArray                       | full    | 
+| UShortArray                      | full    |
+| UIntArray                        | full    |
+| ULongArray                       | full    |
 | **Kotlin Collections**           |         |
 | kotlin.collections.Iterable      | -       |
 | kotlin.collections.Collection    | -       |
@@ -86,3 +86,10 @@ encoding/decoding methods.
 | kotlinx.datetime.UtcOffset       | -       |
 | **Z2**                           |         |
 | hu.simplexion.z2.utility.UUID<T> | full    |
+
+## Special Cases
+
+### Unit
+
+- `Unit` is transported as a boolean with value `true`
+- `Unit?` is transported as a nullable boolean, with value `true` when not null

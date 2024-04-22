@@ -11,7 +11,49 @@ import kotlin.enums.EnumEntries
 
 object JsonStandalone : Standalone<JsonMessage> {
 
-    override fun decodeUnit(message: JsonMessage?) {}
+    // ---------------------------------------------------------------------------
+    // Any
+    // ---------------------------------------------------------------------------
+
+    override fun encodeAny(value: Any?): ByteArray =
+        TODO()
+
+    override fun encodeAnyList(value: List<Any>?): ByteArray =
+        TODO()
+
+    override fun decodeAny(message: JsonMessage?): Any =
+        TODO()
+
+    override fun decodeAnyOrNull(message: JsonMessage?): Any? =
+        TODO()
+
+    override fun decodeAnyList(message: JsonMessage?): List<Any> =
+        TODO()
+
+    override fun decodeAnyListOrNull(message: JsonMessage?): List<Any>? =
+        TODO()
+
+    // ---------------------------------------------------------------------------
+    // Unit
+    // ---------------------------------------------------------------------------
+
+    override fun encodeUnit(value: Unit?): ByteArray =
+        valueOrNull(value) { bool(true) }
+
+    override fun encodeUnitList(value: List<Unit>?): ByteArray =
+        arrayOrNull(value) { bool(true) }
+
+    override fun decodeUnit(message: JsonMessage?): Unit =
+        requireNotNull(decodeUnitOrNull(message))
+
+    override fun decodeUnitOrNull(message: JsonMessage?): Unit? =
+        fromValueOrNull(message) { asUnit }
+
+    override fun decodeUnitList(message: JsonMessage?): List<Unit> =
+        requireNotNull(decodeUnitListOrNull(message))
+
+    override fun decodeUnitListOrNull(message: JsonMessage?): List<Unit>? =
+        fromArray(message) { asUnit }
 
     // ---------------------------------------------------------------------------
     // Boolean
@@ -57,6 +99,50 @@ object JsonStandalone : Standalone<JsonMessage> {
     override fun decodeIntListOrNull(message: JsonMessage?): List<Int>? =
         fromArray(message) { asInt }
 
+    // ---------------------------------------------------------------------------
+    // Short
+    // ---------------------------------------------------------------------------
+
+    override fun encodeShort(value: Short?): ByteArray =
+        valueOrNull(value) { number(it) }
+
+    override fun encodeShortList(value: List<Short>?): ByteArray =
+        arrayOrNull(value) { number(it) }
+
+    override fun decodeShort(message: JsonMessage?): Short =
+        requireNotNull(decodeShortOrNull(message))
+
+    override fun decodeShortOrNull(message: JsonMessage?): Short? =
+        fromValueOrNull(message) { asShort }
+
+    override fun decodeShortList(message: JsonMessage?): List<Short> =
+        requireNotNull(decodeShortListOrNull(message))
+
+    override fun decodeShortListOrNull(message: JsonMessage?): List<Short>? =
+        fromArray(message) { asShort }
+
+    // ---------------------------------------------------------------------------
+    // Byte
+    // ---------------------------------------------------------------------------
+
+    override fun encodeByte(value: Byte?): ByteArray =
+        valueOrNull(value) { number(it) }
+
+    override fun encodeByteList(value: List<Byte>?): ByteArray =
+        arrayOrNull(value) { number(it) }
+
+    override fun decodeByte(message: JsonMessage?): Byte =
+        requireNotNull(decodeByteOrNull(message))
+
+    override fun decodeByteOrNull(message: JsonMessage?): Byte? =
+        fromValueOrNull(message) { asByte }
+
+    override fun decodeByteList(message: JsonMessage?): List<Byte> =
+        requireNotNull(decodeByteListOrNull(message))
+
+    override fun decodeByteListOrNull(message: JsonMessage?): List<Byte>? =
+        fromArray(message) { asByte }
+    
     // ---------------------------------------------------------------------------
     // Long
     // ---------------------------------------------------------------------------
@@ -123,6 +209,28 @@ object JsonStandalone : Standalone<JsonMessage> {
     override fun decodeDoubleListOrNull(message: JsonMessage?): List<Double>? =
         fromArray(message) { asDouble }
 
+    // ---------------------------------------------------------------------------
+    // Char
+    // ---------------------------------------------------------------------------
+
+    override fun encodeChar(value: Char?): ByteArray =
+        valueOrNull(value) { quotedString(it.toString()) }
+
+    override fun encodeCharList(value: List<Char>?): ByteArray =
+        arrayOrNull(value) { quotedString(it.toString()) }
+
+    override fun decodeChar(message: JsonMessage?): Char =
+        requireNotNull(decodeCharOrNull(message))
+
+    override fun decodeCharOrNull(message: JsonMessage?): Char? =
+        fromValueOrNull(message) { asChar }
+
+    override fun decodeCharList(message: JsonMessage?): List<Char> =
+        requireNotNull(decodeCharListOrNull(message))
+
+    override fun decodeCharListOrNull(message: JsonMessage?): List<Char>? =
+        fromArray(message) { asChar }
+    
     // ---------------------------------------------------------------------------
     // String
     // ---------------------------------------------------------------------------
@@ -246,6 +354,94 @@ object JsonStandalone : Standalone<JsonMessage> {
             val name = asString
             entries.first { it.name == name }
         }
+
+    // ---------------------------------------------------------------------------
+    // UInt
+    // ---------------------------------------------------------------------------
+
+    override fun encodeUInt(value: UInt?): ByteArray =
+        valueOrNull(value) { number(it) }
+
+    override fun encodeUIntList(value: List<UInt>?): ByteArray =
+        arrayOrNull(value) { number(it) }
+
+    override fun decodeUInt(message: JsonMessage?): UInt =
+        requireNotNull(decodeUIntOrNull(message))
+
+    override fun decodeUIntOrNull(message: JsonMessage?): UInt? =
+        fromValueOrNull(message) { asUInt }
+
+    override fun decodeUIntList(message: JsonMessage?): List<UInt> =
+        requireNotNull(decodeUIntListOrNull(message))
+
+    override fun decodeUIntListOrNull(message: JsonMessage?): List<UInt>? =
+        fromArray(message) { asUInt }
+
+    // ---------------------------------------------------------------------------
+    // UShort
+    // ---------------------------------------------------------------------------
+
+    override fun encodeUShort(value: UShort?): ByteArray =
+        valueOrNull(value) { number(it) }
+
+    override fun encodeUShortList(value: List<UShort>?): ByteArray =
+        arrayOrNull(value) { number(it) }
+
+    override fun decodeUShort(message: JsonMessage?): UShort =
+        requireNotNull(decodeUShortOrNull(message))
+
+    override fun decodeUShortOrNull(message: JsonMessage?): UShort? =
+        fromValueOrNull(message) { asUShort }
+
+    override fun decodeUShortList(message: JsonMessage?): List<UShort> =
+        requireNotNull(decodeUShortListOrNull(message))
+
+    override fun decodeUShortListOrNull(message: JsonMessage?): List<UShort>? =
+        fromArray(message) { asUShort }
+
+    // ---------------------------------------------------------------------------
+    // UByte
+    // ---------------------------------------------------------------------------
+
+    override fun encodeUByte(value: UByte?): ByteArray =
+        valueOrNull(value) { number(it) }
+
+    override fun encodeUByteList(value: List<UByte>?): ByteArray =
+        arrayOrNull(value) { number(it) }
+
+    override fun decodeUByte(message: JsonMessage?): UByte =
+        requireNotNull(decodeUByteOrNull(message))
+
+    override fun decodeUByteOrNull(message: JsonMessage?): UByte? =
+        fromValueOrNull(message) { asUByte }
+
+    override fun decodeUByteList(message: JsonMessage?): List<UByte> =
+        requireNotNull(decodeUByteListOrNull(message))
+
+    override fun decodeUByteListOrNull(message: JsonMessage?): List<UByte>? =
+        fromArray(message) { asUByte }
+
+    // ---------------------------------------------------------------------------
+    // ULong
+    // ---------------------------------------------------------------------------
+
+    override fun encodeULong(value: ULong?): ByteArray =
+        valueOrNull(value) { number(it) }
+
+    override fun encodeULongList(value: List<ULong>?): ByteArray =
+        arrayOrNull(value) { number(it) }
+
+    override fun decodeULong(message: JsonMessage?): ULong =
+        requireNotNull(decodeULongOrNull(message))
+
+    override fun decodeULongOrNull(message: JsonMessage?): ULong? =
+        fromValueOrNull(message) { asULong }
+
+    override fun decodeULongList(message: JsonMessage?): List<ULong> =
+        requireNotNull(decodeULongListOrNull(message))
+
+    override fun decodeULongListOrNull(message: JsonMessage?): List<ULong>? =
+        fromArray(message) { asULong }
 
     // ---------------------------------------------------------------------------
     // Utility
