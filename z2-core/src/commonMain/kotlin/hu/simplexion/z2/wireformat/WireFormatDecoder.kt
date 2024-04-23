@@ -2,7 +2,7 @@ package hu.simplexion.z2.wireformat
 
 import hu.simplexion.z2.utility.UUID
 
-interface Message {
+interface WireFormatDecoder {
 
     // -----------------------------------------------------------------------------------------
     // Any

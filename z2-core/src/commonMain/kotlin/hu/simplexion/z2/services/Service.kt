@@ -1,10 +1,11 @@
 package hu.simplexion.z2.services
 
 import hu.simplexion.z2.services.transport.ServiceCallTransport
+import hu.simplexion.z2.utility.FqNameAware
 import hu.simplexion.z2.utility.pluginGenerated
 import hu.simplexion.z2.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
 
-interface Service {
+interface Service : FqNameAware {
 
     /**
      * Name of the service. You can change this field at anytime in case you
@@ -13,10 +14,10 @@ interface Service {
      * Overridden by the plugin with:
      *
      * ```kotlin
-     * override var serviceName : String = "<fully qualified name of the service class>"
+     * override var fqName : String = "<fully qualified name of the service class>"
      * ```
      */
-    var serviceName: String
+    override var fqName: String
         get() = pluginGenerated() // so we don't have to override in the interface that extends Service
         set(value) = pluginGenerated(value)
 
@@ -38,8 +39,8 @@ interface Service {
     fun callTransportOrDefault(): ServiceCallTransport =
         callTransport ?: defaultServiceCallTransport
 
-    val wireFormatBuilder
-        get() = defaultWireFormatProvider.messageBuilder()
+    val wireFormatEncoder
+        get() = defaultWireFormatProvider.encoder()
 
     val wireFormatStandalone
         get() = defaultWireFormatProvider.standalone()

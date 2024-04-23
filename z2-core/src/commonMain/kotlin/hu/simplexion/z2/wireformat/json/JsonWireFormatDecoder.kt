@@ -1,24 +1,33 @@
-package hu.simplexion.z2.wireformat.protobuf
+package hu.simplexion.z2.wireformat.json
 
 import hu.simplexion.z2.utility.UUID
-import hu.simplexion.z2.wireformat.Message
 import hu.simplexion.z2.wireformat.WireFormat
+import hu.simplexion.z2.wireformat.WireFormatDecoder
+import hu.simplexion.z2.wireformat.json.elements.JsonArray
+import hu.simplexion.z2.wireformat.json.elements.JsonElement
+import hu.simplexion.z2.wireformat.json.elements.JsonNull
+import hu.simplexion.z2.wireformat.json.elements.JsonObject
 
-/**
- * Parse Protocol Buffer messages.
- *
- * @param  wireFormat  The wire format message to parse. This buffer backs the parser, it should
- *                     not change until the message is in use.
- */
-class ProtoMessage(
-    wireFormat: ByteArray,
-    offset: Int = 0,
-    length: Int = wireFormat.size
-) : Message {
+class JsonWireFormatDecoder : WireFormatDecoder {
 
-    val records: List<ProtoRecord> = ProtoBufferReader(wireFormat, offset, length).records()
+    val root: JsonElement
+    val map: MutableMap<String, JsonElement>?
 
-    operator fun get(fieldNumber: Int): ProtoRecord? = records.lastOrNull { it.fieldNumber == fieldNumber }
+    constructor(wireFormat: ByteArray, offset: Int = 0, length: Int = wireFormat.size) {
+        root = JsonBufferReader(wireFormat, offset, length).read()
+        map = (root as? JsonObject)?.entries
+    }
+
+    constructor(root: JsonObject) {
+        this.root = root
+        map = root.entries
+    }
+
+    fun get(fieldName: String): JsonElement =
+        requireNotNull(map?.get(fieldName)) { "missing field: $fieldName" }
+
+    fun getOrNull(fieldName: String): JsonElement? =
+        map?.get(fieldName)?.let { if (it is JsonNull) null else it }
 
     // -----------------------------------------------------------------------------------------
     // Any
@@ -31,308 +40,304 @@ class ProtoMessage(
         TODO()
 
     override fun anyList(fieldNumber: Int, fieldName: String) =
-        TODO()
+        requireNotNull(anyListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
-    override fun anyListOrNull(fieldNumber: Int, fieldName: String): List<Any> =
-        TODO()
+    override fun anyListOrNull(fieldNumber: Int, fieldName: String): List<Any>? =
+        array(fieldName) { TODO() }
 
     // -----------------------------------------------------------------------------------------
     // Unit
     // -----------------------------------------------------------------------------------------
 
     override fun unit(fieldNumber: Int, fieldName: String) {
-        check(get(fieldNumber)?.value == 1UL)
+        get(fieldName).asUnit
     }
 
     override fun unitOrNull(fieldNumber: Int, fieldName: String): Unit? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else unit(fieldNumber, fieldName)
+        getOrNull(fieldName)?.asUnit
 
     override fun unitList(fieldNumber: Int, fieldName: String) =
-        scalarList(fieldNumber, { check(value.bool()) }, { check(varint().bool()) })
+        requireNotNull(unitListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun unitListOrNull(fieldNumber: Int, fieldName: String): List<Unit>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else unitList(fieldNumber, fieldName)
-    
+        array(fieldName) { it.asUnit }
+
     // -----------------------------------------------------------------------------------------
     // Boolean
     // -----------------------------------------------------------------------------------------
 
     override fun boolean(fieldNumber: Int, fieldName: String): Boolean =
-        get(fieldNumber)?.let { it.value == 1UL } ?: false
+        get(fieldName).asBoolean
 
     override fun booleanOrNull(fieldNumber: Int, fieldName: String): Boolean? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else boolean(fieldNumber, fieldName)
+        getOrNull(fieldName)?.asBoolean
 
     override fun booleanList(fieldNumber: Int, fieldName: String) =
-        scalarList(fieldNumber, { value.bool() }, { varint().bool() })
+        requireNotNull(booleanListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun booleanListOrNull(fieldNumber: Int, fieldName: String): List<Boolean>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else booleanList(fieldNumber, fieldName)
+        array(fieldName) { it.asBoolean }
 
     // -----------------------------------------------------------------------------------------
     // Int
     // -----------------------------------------------------------------------------------------
 
     override fun int(fieldNumber: Int, fieldName: String): Int =
-        get(fieldNumber)?.value?.sint32() ?: 0
+        get(fieldName).asInt
 
     override fun intOrNull(fieldNumber: Int, fieldName: String): Int? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else int(fieldNumber, fieldName)
+        getOrNull(fieldName)?.asInt
 
     override fun intList(fieldNumber: Int, fieldName: String) =
-        scalarList(fieldNumber, { value.sint32() }, { varint().sint32() })
+        requireNotNull(intListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun intListOrNull(fieldNumber: Int, fieldName: String): List<Int>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else intList(fieldNumber, fieldName)
+        array(fieldName) { it.asInt }
 
     // -----------------------------------------------------------------------------------------
     // Short
     // -----------------------------------------------------------------------------------------
 
     override fun short(fieldNumber: Int, fieldName: String): Short =
-        get(fieldNumber)?.value?.sint32()?.toShort() ?: 0
+        get(fieldName).asShort
 
     override fun shortOrNull(fieldNumber: Int, fieldName: String): Short? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else short(fieldNumber, fieldName)
+        getOrNull(fieldName)?.asShort
 
     override fun shortList(fieldNumber: Int, fieldName: String) =
-        scalarList(fieldNumber, { value.sint32().toShort() }, { varint().sint32().toShort() })
+        requireNotNull(shortListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun shortListOrNull(fieldNumber: Int, fieldName: String): List<Short>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else shortList(fieldNumber, fieldName)
+        array(fieldName) { it.asShort }
 
     // -----------------------------------------------------------------------------------------
     // Byte
     // -----------------------------------------------------------------------------------------
 
     override fun byte(fieldNumber: Int, fieldName: String): Byte =
-        get(fieldNumber)?.value?.sint32()?.toByte() ?: 0
+        get(fieldName).asByte
 
     override fun byteOrNull(fieldNumber: Int, fieldName: String): Byte? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else byte(fieldNumber, fieldName)
+        getOrNull(fieldName)?.asByte
 
     override fun byteList(fieldNumber: Int, fieldName: String) =
-        scalarList(fieldNumber, { value.sint32().toByte() }, { varint().sint32().toByte() })
+        requireNotNull(byteListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun byteListOrNull(fieldNumber: Int, fieldName: String): List<Byte>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else byteList(fieldNumber, fieldName)
-    
+        array(fieldName) { it.asByte }
+
     // -----------------------------------------------------------------------------------------
     // Long
     // -----------------------------------------------------------------------------------------
 
     override fun long(fieldNumber: Int, fieldName: String): Long =
-        get(fieldNumber)?.value?.sint64() ?: 0L
+        get(fieldName).asLong
 
     override fun longOrNull(fieldNumber: Int, fieldName: String): Long? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else long(fieldNumber, fieldName)
+        getOrNull(fieldName)?.asLong
 
     override fun longList(fieldNumber: Int, fieldName: String) =
-        scalarList(fieldNumber, { value.sint64() }, { varint().sint64() })
+        requireNotNull(longListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun longListOrNull(fieldNumber: Int, fieldName: String): List<Long>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else longList(fieldNumber, fieldName)
+        array(fieldName) { it.asLong }
 
     // -----------------------------------------------------------------------------------------
     // Float
     // -----------------------------------------------------------------------------------------
 
-    override fun float(fieldNumber: Int, fieldName: String): Float = get(fieldNumber)?.value?.float() ?: 0f
+    override fun float(fieldNumber: Int, fieldName: String): Float =
+        get(fieldName).asFloat
 
     override fun floatOrNull(fieldNumber: Int, fieldName: String): Float? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else float(fieldNumber, fieldName)
+        getOrNull(fieldName)?.asFloat
 
     override fun floatList(fieldNumber: Int, fieldName: String) =
-        scalarList(fieldNumber, { value.float() }, { i32().float() })
+        requireNotNull(floatListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun floatListOrNull(fieldNumber: Int, fieldName: String): List<Float>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else floatList(fieldNumber, fieldName)
+        array(fieldName) { it.asFloat }
 
     // -----------------------------------------------------------------------------------------
     // Double
     // -----------------------------------------------------------------------------------------
 
-    override fun double(fieldNumber: Int, fieldName: String): Double = get(fieldNumber)?.value?.double() ?: 0.0
+    override fun double(fieldNumber: Int, fieldName: String): Double =
+        get(fieldName).asDouble
 
     override fun doubleOrNull(fieldNumber: Int, fieldName: String): Double? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else double(fieldNumber, fieldName)
+        getOrNull(fieldName)?.asDouble
 
     override fun doubleList(fieldNumber: Int, fieldName: String) =
-        scalarList(fieldNumber, { value.double() }, { i64().double() })
+        requireNotNull(doubleListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun doubleListOrNull(fieldNumber: Int, fieldName: String): List<Double>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else doubleList(fieldNumber, fieldName)
+        array(fieldName) { it.asDouble }
 
     // -----------------------------------------------------------------------------------------
     // Char
     // -----------------------------------------------------------------------------------------
 
     override fun char(fieldNumber: Int, fieldName: String): Char =
-        get(fieldNumber)?.value?.sint32()?.toChar() ?: Char.MIN_VALUE
+        get(fieldName).asChar
 
     override fun charOrNull(fieldNumber: Int, fieldName: String): Char? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else char(fieldNumber, fieldName)
+        getOrNull(fieldName)?.asChar
 
     override fun charList(fieldNumber: Int, fieldName: String) =
-        scalarList(fieldNumber, { value.sint32().toChar() }, { varint().sint32().toChar() })
+        requireNotNull(charListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun charListOrNull(fieldNumber: Int, fieldName: String): List<Char>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else charList(fieldNumber, fieldName)
-    
+        array(fieldName) { it.asChar }
+
     // -----------------------------------------------------------------------------------------
     // String
     // -----------------------------------------------------------------------------------------
 
-    override fun string(fieldNumber: Int, fieldName: String): String = get(fieldNumber)?.string() ?: ""
+    override fun string(fieldNumber: Int, fieldName: String): String =
+        get(fieldName).asString
 
     override fun stringOrNull(fieldNumber: Int, fieldName: String): String? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else string(fieldNumber, fieldName)
+        getOrNull(fieldName)?.asString
 
-    override fun stringList(fieldNumber: Int, fieldName: String) = scalarList(fieldNumber, { string() }, { string() })
+    override fun stringList(fieldNumber: Int, fieldName: String) =
+        requireNotNull(stringListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun stringListOrNull(fieldNumber: Int, fieldName: String): List<String>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else stringList(fieldNumber, fieldName)
+        array(fieldName) { it.asString }
 
     // -----------------------------------------------------------------------------------------
     // ByteArray
     // -----------------------------------------------------------------------------------------
 
-    override fun byteArray(fieldNumber: Int, fieldName: String): ByteArray = get(fieldNumber)?.bytes() ?: ByteArray(0)
+    override fun byteArray(fieldNumber: Int, fieldName: String): ByteArray =
+        get(fieldName).asByteArray
 
     override fun byteArrayOrNull(fieldNumber: Int, fieldName: String): ByteArray? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else byteArray(fieldNumber, fieldName)
+        getOrNull(fieldName)?.asByteArray
 
-    override fun byteArrayList(fieldNumber: Int, fieldName: String) = scalarList(fieldNumber, { bytes() }, { bytes() })
+    override fun byteArrayList(fieldNumber: Int, fieldName: String) =
+        requireNotNull(byteArrayListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun byteArrayListOrNull(fieldNumber: Int, fieldName: String): List<ByteArray>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else byteArrayList(fieldNumber, fieldName)
+        array(fieldName) { it.asByteArray }
 
     // -----------------------------------------------------------------------------------------
     // UUID
     // -----------------------------------------------------------------------------------------
 
-    override fun <T> uuid(fieldNumber: Int, fieldName: String): UUID<T> = get(fieldNumber)?.uuid() ?: UUID.nil()
+    override fun <T> uuid(fieldNumber: Int, fieldName: String): UUID<T> =
+        get(fieldName).asUuid()
 
     override fun <T> uuidOrNull(fieldNumber: Int, fieldName: String): UUID<T>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else uuid(fieldNumber, fieldName)
+        getOrNull(fieldName)?.asUuid()
 
-    override fun <T> uuidList(fieldNumber: Int, fieldName: String): List<UUID<T>> = scalarList(fieldNumber, { uuid() }, { uuid() })
+    override fun <T> uuidList(fieldNumber: Int, fieldName: String) =
+        requireNotNull(uuidListOrNull<T>(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun <T> uuidListOrNull(fieldNumber: Int, fieldName: String): List<UUID<T>>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else uuidList(fieldNumber, fieldName)
+        array(fieldName) { it.asUuid() }
 
     // -----------------------------------------------------------------------------------------
     // Instance
     // -----------------------------------------------------------------------------------------
 
     override fun <T> instance(fieldNumber: Int, fieldName: String, decoder: WireFormat<T>): T {
-        val record = get(fieldNumber) ?: return decoder.decodeInstance(null)
-        check(record is LenProtoRecord)
-        return decoder.decodeInstance(record.message())
+        val element = get(fieldName)
+        check(element is JsonObject)
+        return decoder.wireFormatDecode(JsonWireFormatDecoder(element))
     }
 
     override fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, decoder: WireFormat<T>): T? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else instance(fieldNumber, fieldName, decoder)
+        if (getOrNull(fieldName) == null) null else instance(fieldNumber, fieldName, decoder)
 
-    override fun <T> instanceList(fieldNumber: Int, fieldName: String, decoder: WireFormat<T>): MutableList<T> {
-        val list = mutableListOf<T>()
-        for (record in records) {
-            if (record.fieldNumber != fieldNumber) continue
-            check(record is LenProtoRecord)
-            list += decoder.decodeInstance(record.message())
-        }
-        return list
-    }
+    override fun <T> instanceList(fieldNumber: Int, fieldName: String, decoder: WireFormat<T>): MutableList<T> =
+        requireNotNull(instanceListOrNull(fieldNumber, fieldName, decoder)) { "missing or null instance" }
 
-    override fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, decoder: WireFormat<T>): List<T>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else instanceList(fieldNumber, fieldName, decoder)
-
+    override fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, decoder: WireFormat<T>): MutableList<T>? =
+        array(fieldName) { decoder.wireFormatDecode(JsonWireFormatDecoder(it as JsonObject)) }
 
     // -----------------------------------------------------------------------------------------
     // UInt
     // -----------------------------------------------------------------------------------------
 
     override fun uInt(fieldNumber: Int, fieldName: String): UInt =
-        get(fieldNumber)?.value?.toUInt() ?: UInt.MIN_VALUE
+        get(fieldName).asUInt
 
     override fun uIntOrNull(fieldNumber: Int, fieldName: String): UInt? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else uInt(fieldNumber, fieldName)
+        getOrNull(fieldName)?.asUInt
 
     override fun uIntList(fieldNumber: Int, fieldName: String) =
-        scalarList(fieldNumber, { value.toUInt() }, { i32().toUInt() })
+        requireNotNull(uIntListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun uIntListOrNull(fieldNumber: Int, fieldName: String): List<UInt>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else uIntList(fieldNumber, fieldName)
+        array(fieldName) { it.asUInt }
 
     // -----------------------------------------------------------------------------------------
     // UShort
     // -----------------------------------------------------------------------------------------
 
     override fun uShort(fieldNumber: Int, fieldName: String): UShort =
-        get(fieldNumber)?.value?.sint32()?.toUShort() ?: UShort.MIN_VALUE
+        get(fieldName).asUShort
 
     override fun uShortOrNull(fieldNumber: Int, fieldName: String): UShort? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else uShort(fieldNumber, fieldName)
+        getOrNull(fieldName)?.asUShort
 
     override fun uShortList(fieldNumber: Int, fieldName: String) =
-        scalarList(fieldNumber, { value.sint32().toUShort() }, { varint().sint32().toUShort() })
+        requireNotNull(uShortListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun uShortListOrNull(fieldNumber: Int, fieldName: String): List<UShort>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else uShortList(fieldNumber, fieldName)
+        array(fieldName) { it.asUShort }
 
     // -----------------------------------------------------------------------------------------
     // UByte
     // -----------------------------------------------------------------------------------------
 
     override fun uByte(fieldNumber: Int, fieldName: String): UByte =
-        get(fieldNumber)?.value?.sint32()?.toUByte() ?: UByte.MIN_VALUE
+        get(fieldName).asUByte
 
     override fun uByteOrNull(fieldNumber: Int, fieldName: String): UByte? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else uByte(fieldNumber, fieldName)
+        getOrNull(fieldName)?.asUByte
 
     override fun uByteList(fieldNumber: Int, fieldName: String) =
-        scalarList(fieldNumber, { value.sint32().toUByte() }, { varint().sint32().toUByte() })
+        requireNotNull(uByteListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun uByteListOrNull(fieldNumber: Int, fieldName: String): List<UByte>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else uByteList(fieldNumber, fieldName)
+        array(fieldName) { it.asUByte }
 
     // -----------------------------------------------------------------------------------------
     // ULong
     // -----------------------------------------------------------------------------------------
 
     override fun uLong(fieldNumber: Int, fieldName: String): ULong =
-        get(fieldNumber)?.value ?: ULong.MIN_VALUE
+        get(fieldName).asULong
 
     override fun uLongOrNull(fieldNumber: Int, fieldName: String): ULong? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else uLong(fieldNumber, fieldName)
+        getOrNull(fieldName)?.asULong
 
     override fun uLongList(fieldNumber: Int, fieldName: String) =
-        scalarList(fieldNumber, { value }, { i64() })
+        requireNotNull(uLongListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun uLongListOrNull(fieldNumber: Int, fieldName: String): List<ULong>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else uLongList(fieldNumber, fieldName)
-    
+        array(fieldName) { it.asULong }
+
     // --------------------------------------------------------------------------------------
     // Helpers
     // --------------------------------------------------------------------------------------
 
-    fun <T> scalarList(
-        fieldNumber: Int,
-        single: ProtoRecord.() -> T,
-        item: ProtoBufferReader.() -> T
-    ): MutableList<T> {
-        val list = mutableListOf<T>()
+    fun <T> array(
+        fieldName: String, item: (element: JsonElement) -> T
+    ): MutableList<T>? {
+        val result = mutableListOf<T>()
 
-        for (record in records) {
-            if (record.fieldNumber != fieldNumber) continue
+        val a = getOrNull(fieldName) ?: return null
+        require(a is JsonArray) { "field $fieldName is not an array" }
 
-            if (record !is LenProtoRecord) {
-                list += record.single()
-            } else {
-                list += ProtoBufferReader(record).packed(item)
-            }
+        for (element in a.items) {
+            result += item(element)
         }
-        return list
+
+        return result
     }
 
 }

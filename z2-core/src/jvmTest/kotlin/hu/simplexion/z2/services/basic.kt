@@ -1,6 +1,6 @@
 package hu.simplexion.z2.services
 
-import hu.simplexion.z2.wireformat.Message
+import hu.simplexion.z2.wireformat.WireFormatDecoder
 import hu.simplexion.z2.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
@@ -30,14 +30,14 @@ interface TestService : Service {
 
 object TestServiceConsumer : TestService {
 
-    override var serviceName = "TestService"
+    override var fqName = "TestService"
 
     override suspend fun testFun(arg1: Int, arg2: String): String =
         wireFormatStandalone.decodeString(
             defaultServiceCallTransport.call(
-                serviceName,
+                fqName,
                 "testFun",
-                wireFormatBuilder
+                wireFormatEncoder
                     .int(1, "arg1", arg1)
                     .string(2, "arg2", arg2)
                     .pack()
@@ -48,9 +48,9 @@ object TestServiceConsumer : TestService {
 
 class TestServiceImpl(override val serviceContext: ServiceContext) : TestService, ServiceImpl<TestServiceImpl> {
 
-    override var serviceName = "TestService"
+    override var fqName = "TestService"
 
-    override suspend fun dispatch(funName: String, payload: Message): ByteArray =
+    override suspend fun dispatch(funName: String, payload: WireFormatDecoder): ByteArray =
         when (funName) {
             "testFun" -> defaultWireFormatProvider.standalone().encodeString(testFun(payload.int(1, "arg1"), payload.string(2, "arg2")))
             else -> throw IllegalStateException("unknown function: $funName")

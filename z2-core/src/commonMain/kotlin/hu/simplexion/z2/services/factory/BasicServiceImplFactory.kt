@@ -8,7 +8,7 @@ class BasicServiceImplFactory : ServiceImplFactory {
     val templates = mutableMapOf<String, ServiceImpl<*>>()
 
     override fun plusAssign(template: ServiceImpl<*>) {
-        templates[template.serviceName] = template
+        templates[template.fqName] = template
     }
 
     override fun get(serviceName: String, context: ServiceContext): ServiceImpl<*>? =

@@ -3,8 +3,7 @@ package hu.simplexion.z2.wireformat
 import hu.simplexion.z2.utility.UUID
 import kotlin.enums.EnumEntries
 
-@OptIn(ExperimentalUnsignedTypes::class)
-interface Standalone<M> {
+interface Standalone<D> {
 
     // ---------------------------------------------------------------------------
     // Any
@@ -14,13 +13,13 @@ interface Standalone<M> {
 
     fun encodeAnyList(value: List<Any>?): ByteArray
 
-    fun decodeAny(message: M?): Any
+    fun decodeAny(decoder: D?): Any
 
-    fun decodeAnyOrNull(message: M?): Any?
+    fun decodeAnyOrNull(decoder: D?): Any?
 
-    fun decodeAnyList(message: M?): List<Any>
+    fun decodeAnyList(decoder: D?): List<Any>
 
-    fun decodeAnyListOrNull(message: M?): List<Any>?
+    fun decodeAnyListOrNull(decoder: D?): List<Any>?
 
     // ---------------------------------------------------------------------------
     // Unit
@@ -30,13 +29,13 @@ interface Standalone<M> {
 
     fun encodeUnitList(value: List<Unit>?): ByteArray
 
-    fun decodeUnit(message: M?): Unit
+    fun decodeUnit(decoder: D?)
 
-    fun decodeUnitOrNull(message: M?): Unit?
+    fun decodeUnitOrNull(decoder: D?): Unit?
 
-    fun decodeUnitList(message: M?): List<Unit>
+    fun decodeUnitList(decoder: D?): List<Unit>
 
-    fun decodeUnitListOrNull(message: M?): List<Unit>?
+    fun decodeUnitListOrNull(decoder: D?): List<Unit>?
     
     // ---------------------------------------------------------------------------
     // Boolean
@@ -46,13 +45,13 @@ interface Standalone<M> {
 
     fun encodeBooleanList(value: List<Boolean>?): ByteArray
 
-    fun decodeBoolean(message: M?): Boolean
+    fun decodeBoolean(decoder: D?): Boolean
 
-    fun decodeBooleanOrNull(message: M?): Boolean?
+    fun decodeBooleanOrNull(decoder: D?): Boolean?
 
-    fun decodeBooleanList(message: M?): List<Boolean>
+    fun decodeBooleanList(decoder: D?): List<Boolean>
 
-    fun decodeBooleanListOrNull(message: M?): List<Boolean>?
+    fun decodeBooleanListOrNull(decoder: D?): List<Boolean>?
 
     // ---------------------------------------------------------------------------
     // Int
@@ -62,13 +61,13 @@ interface Standalone<M> {
 
     fun encodeIntList(value: List<Int>?): ByteArray
 
-    fun decodeInt(message: M?): Int
+    fun decodeInt(decoder: D?): Int
 
-    fun decodeIntOrNull(message: M?): Int?
+    fun decodeIntOrNull(decoder: D?): Int?
 
-    fun decodeIntList(message: M?): List<Int>
+    fun decodeIntList(decoder: D?): List<Int>
 
-    fun decodeIntListOrNull(message: M?): List<Int>?
+    fun decodeIntListOrNull(decoder: D?): List<Int>?
 
     // ---------------------------------------------------------------------------
     // Short
@@ -78,13 +77,13 @@ interface Standalone<M> {
 
     fun encodeShortList(value: List<Short>?): ByteArray
 
-    fun decodeShort(message: M?): Short
+    fun decodeShort(decoder: D?): Short
 
-    fun decodeShortOrNull(message: M?): Short?
+    fun decodeShortOrNull(decoder: D?): Short?
 
-    fun decodeShortList(message: M?): List<Short>
+    fun decodeShortList(decoder: D?): List<Short>
 
-    fun decodeShortListOrNull(message: M?): List<Short>?
+    fun decodeShortListOrNull(decoder: D?): List<Short>?
 
     // ---------------------------------------------------------------------------
     // Byte
@@ -94,13 +93,13 @@ interface Standalone<M> {
 
     fun encodeByteList(value: List<Byte>?): ByteArray
 
-    fun decodeByte(message: M?): Byte
+    fun decodeByte(decoder: D?): Byte
 
-    fun decodeByteOrNull(message: M?): Byte?
+    fun decodeByteOrNull(decoder: D?): Byte?
 
-    fun decodeByteList(message: M?): List<Byte>
+    fun decodeByteList(decoder: D?): List<Byte>
 
-    fun decodeByteListOrNull(message: M?): List<Byte>?
+    fun decodeByteListOrNull(decoder: D?): List<Byte>?
     
     // ---------------------------------------------------------------------------
     // Long
@@ -110,13 +109,13 @@ interface Standalone<M> {
 
     fun encodeLongList(value: List<Long>?): ByteArray
 
-    fun decodeLong(message: M?): Long
+    fun decodeLong(decoder: D?): Long
 
-    fun decodeLongOrNull(message: M?): Long?
+    fun decodeLongOrNull(decoder: D?): Long?
 
-    fun decodeLongList(message: M?): List<Long>
+    fun decodeLongList(decoder: D?): List<Long>
 
-    fun decodeLongListOrNull(message: M?): List<Long>?
+    fun decodeLongListOrNull(decoder: D?): List<Long>?
 
     // ---------------------------------------------------------------------------
     // Float
@@ -126,13 +125,13 @@ interface Standalone<M> {
 
     fun encodeFloatList(value: List<Float>?): ByteArray
 
-    fun decodeFloat(message: M?): Float
+    fun decodeFloat(decoder: D?): Float
 
-    fun decodeFloatOrNull(message: M?): Float?
+    fun decodeFloatOrNull(decoder: D?): Float?
 
-    fun decodeFloatList(message: M?): List<Float>
+    fun decodeFloatList(decoder: D?): List<Float>
 
-    fun decodeFloatListOrNull(message: M?): List<Float>?
+    fun decodeFloatListOrNull(decoder: D?): List<Float>?
 
     // ---------------------------------------------------------------------------
     // Double
@@ -142,13 +141,13 @@ interface Standalone<M> {
 
     fun encodeDoubleList(value: List<Double>?): ByteArray
 
-    fun decodeDouble(message: M?): Double
+    fun decodeDouble(decoder: D?): Double
 
-    fun decodeDoubleOrNull(message: M?): Double?
+    fun decodeDoubleOrNull(decoder: D?): Double?
 
-    fun decodeDoubleList(message: M?): List<Double>
+    fun decodeDoubleList(decoder: D?): List<Double>
 
-    fun decodeDoubleListOrNull(message: M?): List<Double>?
+    fun decodeDoubleListOrNull(decoder: D?): List<Double>?
 
     // ---------------------------------------------------------------------------
     // Char
@@ -158,13 +157,13 @@ interface Standalone<M> {
 
     fun encodeCharList(value: List<Char>?): ByteArray
 
-    fun decodeChar(message: M?): Char
+    fun decodeChar(decoder: D?): Char
 
-    fun decodeCharOrNull(message: M?): Char?
+    fun decodeCharOrNull(decoder: D?): Char?
 
-    fun decodeCharList(message: M?): List<Char>
+    fun decodeCharList(decoder: D?): List<Char>
 
-    fun decodeCharListOrNull(message: M?): List<Char>?
+    fun decodeCharListOrNull(decoder: D?): List<Char>?
     
     // ---------------------------------------------------------------------------
     // String
@@ -174,13 +173,13 @@ interface Standalone<M> {
 
     fun encodeStringList(value: List<String>?): ByteArray
 
-    fun decodeString(message: M?): String
+    fun decodeString(decoder: D?): String
 
-    fun decodeStringOrNull(message: M?): String?
+    fun decodeStringOrNull(decoder: D?): String?
 
-    fun decodeStringList(message: M?): List<String>
+    fun decodeStringList(decoder: D?): List<String>
 
-    fun decodeStringListOrNull(message: M?): List<String>?
+    fun decodeStringListOrNull(decoder: D?): List<String>?
 
     // ---------------------------------------------------------------------------
     // ByteArray
@@ -190,13 +189,13 @@ interface Standalone<M> {
 
     fun encodeByteArrayList(value: List<ByteArray>?): ByteArray
 
-    fun decodeByteArray(message: M?): ByteArray
+    fun decodeByteArray(decoder: D?): ByteArray
 
-    fun decodeByteArrayOrNull(message: M?): ByteArray?
+    fun decodeByteArrayOrNull(decoder: D?): ByteArray?
 
-    fun decodeByteArrayList(message: M?): List<ByteArray>
+    fun decodeByteArrayList(decoder: D?): List<ByteArray>
 
-    fun decodeByteArrayListOrNull(message: M?): List<ByteArray>?
+    fun decodeByteArrayListOrNull(decoder: D?): List<ByteArray>?
 
     // ---------------------------------------------------------------------------
     // UUID
@@ -206,29 +205,29 @@ interface Standalone<M> {
 
     fun encodeUuidList(value: List<UUID<*>>?): ByteArray
 
-    fun decodeUuid(message: M?): UUID<Any>
+    fun decodeUuid(decoder: D?): UUID<Any>
 
-    fun decodeUuidOrNull(message: M?): UUID<Any>?
+    fun decodeUuidOrNull(decoder: D?): UUID<Any>?
 
-    fun decodeUuidList(message: M?): List<UUID<Any>>
+    fun decodeUuidList(decoder: D?): List<UUID<Any>>
 
-    fun decodeUuidListOrNull(message: M?): List<UUID<Any>>?
+    fun decodeUuidListOrNull(decoder: D?): List<UUID<Any>>?
 
     // ---------------------------------------------------------------------------
     // Instance
     // ---------------------------------------------------------------------------
 
-    fun <T> encodeInstance(value: T?, encoder: WireFormat<T>): ByteArray
+    fun <T> encodeInstance(value: T?, wireFormat: WireFormat<T>): ByteArray
 
-    fun <T> encodeInstanceList(value: List<T>?, encoder: WireFormat<T>): ByteArray
+    fun <T> encodeInstanceList(value: List<T>?, wireFormat: WireFormat<T>): ByteArray
 
-    fun <T> decodeInstance(message: M?, decoder: WireFormat<T>): T
+    fun <T> decodeInstance(decoder: D?, wireFormat: WireFormat<T>): T
 
-    fun <T> decodeInstanceOrNull(message: M?, decoder: WireFormat<T>): T?
+    fun <T> decodeInstanceOrNull(decoder: D?, wireFormat: WireFormat<T>): T?
 
-    fun <T> decodeInstanceList(message: M?, decoder: WireFormat<T>): List<T>
+    fun <T> decodeInstanceList(decoder: D?, wireFormat: WireFormat<T>): List<T>
 
-    fun <T> decodeInstanceListOrNull(message: M?, decoder: WireFormat<T>): List<T>?
+    fun <T> decodeInstanceListOrNull(decoder: D?, wireFormat: WireFormat<T>): List<T>?
 
     // ---------------------------------------------------------------------------
     // Enum
@@ -238,13 +237,13 @@ interface Standalone<M> {
 
     fun <E : Enum<E>> encodeEnumList(value: List<E>?, entries: EnumEntries<E>): ByteArray
 
-    fun <E : Enum<E>> decodeEnum(message: M?, entries: EnumEntries<E>): E
+    fun <E : Enum<E>> decodeEnum(decoder: D?, entries: EnumEntries<E>): E
 
-    fun <E : Enum<E>> decodeEnumOrNull(message: M?, entries: EnumEntries<E>): E?
+    fun <E : Enum<E>> decodeEnumOrNull(decoder: D?, entries: EnumEntries<E>): E?
 
-    fun <E : Enum<E>> decodeEnumList(message: M?, entries: EnumEntries<E>): List<E>
+    fun <E : Enum<E>> decodeEnumList(decoder: D?, entries: EnumEntries<E>): List<E>
 
-    fun <E : Enum<E>> decodeEnumListOrNull(message: M?, entries: EnumEntries<E>): List<E>?
+    fun <E : Enum<E>> decodeEnumListOrNull(decoder: D?, entries: EnumEntries<E>): List<E>?
 
     // ---------------------------------------------------------------------------
     // UInt
@@ -254,13 +253,13 @@ interface Standalone<M> {
 
     fun encodeUIntList(value: List<UInt>?): ByteArray
 
-    fun decodeUInt(message: M?): UInt
+    fun decodeUInt(decoder: D?): UInt
 
-    fun decodeUIntOrNull(message: M?): UInt?
+    fun decodeUIntOrNull(decoder: D?): UInt?
 
-    fun decodeUIntList(message: M?): List<UInt>
+    fun decodeUIntList(decoder: D?): List<UInt>
 
-    fun decodeUIntListOrNull(message: M?): List<UInt>?
+    fun decodeUIntListOrNull(decoder: D?): List<UInt>?
 
     // ---------------------------------------------------------------------------
     // UShort
@@ -270,13 +269,13 @@ interface Standalone<M> {
 
     fun encodeUShortList(value: List<UShort>?): ByteArray
 
-    fun decodeUShort(message: M?): UShort
+    fun decodeUShort(decoder: D?): UShort
 
-    fun decodeUShortOrNull(message: M?): UShort?
+    fun decodeUShortOrNull(decoder: D?): UShort?
 
-    fun decodeUShortList(message: M?): List<UShort>
+    fun decodeUShortList(decoder: D?): List<UShort>
 
-    fun decodeUShortListOrNull(message: M?): List<UShort>?
+    fun decodeUShortListOrNull(decoder: D?): List<UShort>?
 
     // ---------------------------------------------------------------------------
     // UByte
@@ -286,13 +285,13 @@ interface Standalone<M> {
 
     fun encodeUByteList(value: List<UByte>?): ByteArray
 
-    fun decodeUByte(message: M?): UByte
+    fun decodeUByte(decoder: D?): UByte
 
-    fun decodeUByteOrNull(message: M?): UByte?
+    fun decodeUByteOrNull(decoder: D?): UByte?
 
-    fun decodeUByteList(message: M?): List<UByte>
+    fun decodeUByteList(decoder: D?): List<UByte>
 
-    fun decodeUByteListOrNull(message: M?): List<UByte>?
+    fun decodeUByteListOrNull(decoder: D?): List<UByte>?
 
     // ---------------------------------------------------------------------------
     // ULong
@@ -302,12 +301,12 @@ interface Standalone<M> {
 
     fun encodeULongList(value: List<ULong>?): ByteArray
 
-    fun decodeULong(message: M?): ULong
+    fun decodeULong(decoder: D?): ULong
 
-    fun decodeULongOrNull(message: M?): ULong?
+    fun decodeULongOrNull(decoder: D?): ULong?
 
-    fun decodeULongList(message: M?): List<ULong>
+    fun decodeULongList(decoder: D?): List<ULong>
 
-    fun decodeULongListOrNull(message: M?): List<ULong>?
+    fun decodeULongListOrNull(decoder: D?): List<ULong>?
 
 }

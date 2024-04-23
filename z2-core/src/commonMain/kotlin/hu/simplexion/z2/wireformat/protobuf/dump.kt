@@ -2,7 +2,7 @@ package hu.simplexion.z2.wireformat.protobuf
 
 import hu.simplexion.z2.utility.toDotString
 
-fun ProtoMessage.dumpProto(lines: MutableList<String>, indent: String = "") {
+fun ProtoWireFormatDecoder.dumpProto(lines: MutableList<String>, indent: String = "") {
     for (record in records) {
         when (record) {
             is VarintProtoRecord -> record.dumpProto(lines, indent)
@@ -20,7 +20,7 @@ fun ByteArray.dumpProto(): String {
 }
 
 fun ByteArray.dumpProto(lines: MutableList<String>, indent: String = "") {
-    ProtoMessage(this).dumpProto(lines, indent)
+    ProtoWireFormatDecoder(this).dumpProto(lines, indent)
 }
 
 fun VarintProtoRecord.dumpProto(lines: MutableList<String>, indent: String = "") {

@@ -9,23 +9,21 @@ data class A(
 ) {
     companion object : WireFormat<A> {
 
-        override fun encodeInstance(builder: MessageBuilder, value: A) =
-            builder
-                .startInstance()
+        override fun wireFormatEncode(encoder: WireFormatEncoder, value: A) =
+            encoder
                 .boolean(1, "b", value.b)
                 .int(2, "i", value.i)
                 .string(3, "s", value.s)
                 .intList(4, "l", value.l)
-                .endInstance()
 
-        override fun decodeInstance(message: Message?): A {
-            if (message == null) return A()
+        override fun wireFormatDecode(decoder: WireFormatDecoder?): A {
+            if (decoder == null) return A()
 
             return A(
-                message.boolean(1, "b"),
-                message.int(2, "i"),
-                message.string(3, "s"),
-                message.intList(4, "l").toMutableList()
+                decoder.boolean(1, "b"),
+                decoder.int(2, "i"),
+                decoder.string(3, "s"),
+                decoder.intList(4, "l").toMutableList()
             )
         }
     }
@@ -37,19 +35,17 @@ data class B(
 ) {
     companion object : WireFormat<B> {
 
-        override fun encodeInstance(builder: MessageBuilder, value: B) =
-            builder
-                .startInstance()
-                .instance(1, "a", A, value.a)
+        override fun wireFormatEncode(encoder: WireFormatEncoder, value: B) =
+            encoder
+                .instance(1, "a", value.a, A)
                 .string(2, "s", value.s)
-                .endInstance()
 
-        override fun decodeInstance(message: Message?): B {
-            if (message == null) return B()
+        override fun wireFormatDecode(decoder: WireFormatDecoder?): B {
+            if (decoder == null) return B()
 
             return B(
-                message.instance(1, "a", A),
-                message.string(2, "s")
+                decoder.instance(1, "a", A),
+                decoder.string(2, "s")
             )
         }
     }

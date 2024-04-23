@@ -10,7 +10,7 @@ class ProtoReaderTest {
         get() = replace(" ", "")
 
     val String.value
-        get() = ProtoMessage(this.ns.hexToByteArray())[2] !!.value
+        get() = ProtoWireFormatDecoder(this.ns.hexToByteArray())[2] !!.value
 
     val String.int32: Int
         get() = value.int32()

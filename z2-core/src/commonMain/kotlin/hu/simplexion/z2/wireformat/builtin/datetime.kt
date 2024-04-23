@@ -1,8 +1,8 @@
 package hu.simplexion.z2.wireformat.builtin
 
-import hu.simplexion.z2.wireformat.Message
-import hu.simplexion.z2.wireformat.MessageBuilder
 import hu.simplexion.z2.wireformat.WireFormat
+import hu.simplexion.z2.wireformat.WireFormatDecoder
+import hu.simplexion.z2.wireformat.WireFormatEncoder
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -13,73 +13,66 @@ import kotlin.time.Duration.Companion.nanoseconds
 
 object DurationCoder : WireFormat<Duration> {
 
-    override fun decodeInstance(message: Message?): Duration {
-        if (message == null) return Duration.ZERO
-        return message.long(1, "inWholeNanoseconds").nanoseconds
+    override val fqName: String
+        get() = "kotlin.time.Duration"
+
+    override fun wireFormatEncode(encoder: WireFormatEncoder, value: Duration) =
+        encoder
+            .long(1, "inWholeNanoseconds", value.inWholeNanoseconds)
+
+    override fun wireFormatDecode(decoder: WireFormatDecoder?): Duration {
+        if (decoder == null) return Duration.ZERO
+        return decoder.long(1, "inWholeNanoseconds").nanoseconds
     }
 
-    override fun encodeInstance(builder: MessageBuilder, value: Duration) =
-        builder
-            .startInstance()
-            .long(1, "inWholeNanoseconds", value.inWholeNanoseconds)
-            .endInstance()
 }
 
 object InstantCoder : WireFormat<Instant> {
 
-    override fun decodeInstance(message: Message?): Instant {
-        if (message == null) return Instant.DISTANT_PAST
-        return Instant.fromEpochSeconds(message.long(1, "epochSeconds"), message.int(2, "nanosecondsOfSecond"))
+    override val fqName: String
+        get() = "kotlinx.datetime.Instant"
+
+    override fun wireFormatDecode(decoder: WireFormatDecoder?): Instant {
+        if (decoder == null) return Instant.DISTANT_PAST
+        return Instant.fromEpochSeconds(decoder.long(1, "epochSeconds"), decoder.int(2, "nanosecondsOfSecond"))
     }
 
-    override fun encodeInstance(builder: MessageBuilder, value: Instant) =
-        builder
-            .startInstance()
+    override fun wireFormatEncode(encoder: WireFormatEncoder, value: Instant) =
+        encoder
             .long(1, "epochSeconds", value.epochSeconds)
             .int(2, "nanosecondsOfSecond", value.nanosecondsOfSecond)
-            .endInstance()
 
 }
 
 object LocalDateCoder : WireFormat<LocalDate> {
 
-    override fun decodeInstance(message: Message?): LocalDate {
-        if (message == null) return LocalDate.fromEpochDays(0)
+    override val fqName: String
+        get() = "kotlinx.datetime.LocalDate"
+
+    override fun wireFormatDecode(decoder: WireFormatDecoder?): LocalDate {
+        if (decoder == null) return LocalDate.fromEpochDays(0)
         return LocalDate(
-            message.int(1, "year"),
-            message.int(2, "monthNumber"),
-            message.int(3, "dayOfMonth")
+            decoder.int(1, "year"),
+            decoder.int(2, "monthNumber"),
+            decoder.int(3, "dayOfMonth")
         )
     }
 
-    override fun encodeInstance(builder: MessageBuilder, value: LocalDate) =
-        builder
-            .startInstance()
+    override fun wireFormatEncode(encoder: WireFormatEncoder, value: LocalDate) =
+        encoder
             .int(1, "year", value.year)
             .int(2, "monthNumber", value.monthNumber)
             .int(3, "dayOfMonth", value.dayOfMonth)
-            .endInstance()
 
 }
 
 object LocalDateTimeCoder : WireFormat<LocalDateTime> {
 
-    override fun decodeInstance(message: Message?): LocalDateTime {
-        if (message == null) return LocalDateTime(0, 1, 1, 0, 0, 0, 0)
-        return LocalDateTime(
-            message.int(1, "year"),
-            message.int(2, "monthNumber"),
-            message.int(3, "dayOfMonth"),
-            message.int(4, "hour"),
-            message.int(5, "minute"),
-            message.int(6, "second"),
-            message.int(7, "nanosecond")
-        )
-    }
+    override val fqName: String
+        get() = "kotlinx.datetime.LocalDateTime"
 
-    override fun encodeInstance(builder: MessageBuilder, value: LocalDateTime) =
-        builder
-            .startInstance()
+    override fun wireFormatEncode(encoder: WireFormatEncoder, value: LocalDateTime) =
+        encoder
             .int(1, "year", value.year)
             .int(2, "monthNumber", value.monthNumber)
             .int(3, "dayOfMonth", value.dayOfMonth)
@@ -87,21 +80,34 @@ object LocalDateTimeCoder : WireFormat<LocalDateTime> {
             .int(5, "minute", value.minute)
             .int(6, "second", value.second)
             .int(7, "nanosecond", value.nanosecond)
-            .endInstance()
+
+    override fun wireFormatDecode(decoder: WireFormatDecoder?): LocalDateTime {
+        if (decoder == null) return LocalDateTime(0, 1, 1, 0, 0, 0, 0)
+        return LocalDateTime(
+            decoder.int(1, "year"),
+            decoder.int(2, "monthNumber"),
+            decoder.int(3, "dayOfMonth"),
+            decoder.int(4, "hour"),
+            decoder.int(5, "minute"),
+            decoder.int(6, "second"),
+            decoder.int(7, "nanosecond")
+        )
+    }
 
 }
 
 object LocalTimeCoder : WireFormat<LocalTime> {
 
-    override fun decodeInstance(message: Message?): LocalTime {
-        if (message == null) return LocalTime.fromSecondOfDay(0)
-        return LocalTime.fromNanosecondOfDay(message.long(1, "nanosecondOfDay"))
+    override val fqName: String
+        get() = "kotlinx.datetime.LocalTime"
+
+    override fun wireFormatDecode(decoder: WireFormatDecoder?): LocalTime {
+        if (decoder == null) return LocalTime.fromSecondOfDay(0)
+        return LocalTime.fromNanosecondOfDay(decoder.long(1, "nanosecondOfDay"))
     }
 
-    override fun encodeInstance(builder: MessageBuilder, value: LocalTime) =
-        builder
-            .startInstance()
+    override fun wireFormatEncode(encoder: WireFormatEncoder, value: LocalTime) =
+        encoder
             .long(1, "nanosecondOfDay", value.toNanosecondOfDay())
-            .endInstance()
 
 }

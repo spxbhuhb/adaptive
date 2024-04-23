@@ -11,209 +11,209 @@ abstract class AbstractStandaloneTest(
 
     val sv = wireFormatProvider.standalone()
 
-    fun message(wireFormat: () -> ByteArray): Message =
-        wireFormatProvider.toMessage(wireFormat())
+    fun decoder(wireFormat: () -> ByteArray): WireFormatDecoder =
+        wireFormatProvider.decoder(wireFormat())
 
     @Test
     fun testUnit() {
-        assertEquals(unitVal, sv.decodeUnit(message { sv.encodeUnit(unitVal) }))
-        assertEquals(null, sv.decodeUnitOrNull(message { sv.encodeUnit(null) }))
-        assertEquals(unitVal, sv.decodeUnitOrNull(message { sv.encodeUnit(unitVal) }))
+        assertEquals(unitVal, sv.decodeUnit(decoder { sv.encodeUnit(unitVal) }))
+        assertEquals(null, sv.decodeUnitOrNull(decoder { sv.encodeUnit(null) }))
+        assertEquals(unitVal, sv.decodeUnitOrNull(decoder { sv.encodeUnit(unitVal) }))
 
-        assertEquals(unitListVal, sv.decodeUnitList(message { sv.encodeUnitList(unitListVal) }))
-        assertEquals(null, sv.decodeUnitListOrNull(message { sv.encodeUnitList(null) }))
-        assertEquals(unitListVal, sv.decodeUnitListOrNull(message { sv.encodeUnitList(unitListVal) }))
+        assertEquals(unitListVal, sv.decodeUnitList(decoder { sv.encodeUnitList(unitListVal) }))
+        assertEquals(null, sv.decodeUnitListOrNull(decoder { sv.encodeUnitList(null) }))
+        assertEquals(unitListVal, sv.decodeUnitListOrNull(decoder { sv.encodeUnitList(unitListVal) }))
     }
 
     @Test
     fun testBoolean() {
-        assertEquals(booleanVal, sv.decodeBoolean(message { sv.encodeBoolean(booleanVal) }))
-        assertEquals(null, sv.decodeBooleanOrNull(message { sv.encodeBoolean(null) }))
-        assertEquals(booleanVal, sv.decodeBooleanOrNull(message { sv.encodeBoolean(booleanVal) }))
+        assertEquals(booleanVal, sv.decodeBoolean(decoder { sv.encodeBoolean(booleanVal) }))
+        assertEquals(null, sv.decodeBooleanOrNull(decoder { sv.encodeBoolean(null) }))
+        assertEquals(booleanVal, sv.decodeBooleanOrNull(decoder { sv.encodeBoolean(booleanVal) }))
 
-        assertEquals(booleanListVal, sv.decodeBooleanList(message { sv.encodeBooleanList(booleanListVal) }))
-        assertEquals(null, sv.decodeBooleanListOrNull(message { sv.encodeBooleanList(null) }))
-        assertEquals(booleanListVal, sv.decodeBooleanListOrNull(message { sv.encodeBooleanList(booleanListVal) }))
+        assertEquals(booleanListVal, sv.decodeBooleanList(decoder { sv.encodeBooleanList(booleanListVal) }))
+        assertEquals(null, sv.decodeBooleanListOrNull(decoder { sv.encodeBooleanList(null) }))
+        assertEquals(booleanListVal, sv.decodeBooleanListOrNull(decoder { sv.encodeBooleanList(booleanListVal) }))
     }
 
     @Test
     fun testInt() {
-        assertEquals(intVal, sv.decodeInt(message { sv.encodeInt(intVal) }))
-        assertEquals(null, sv.decodeIntOrNull(message { sv.encodeInt(null) }))
-        assertEquals(intVal, sv.decodeIntOrNull(message { sv.encodeInt(intVal) }))
+        assertEquals(intVal, sv.decodeInt(decoder { sv.encodeInt(intVal) }))
+        assertEquals(null, sv.decodeIntOrNull(decoder { sv.encodeInt(null) }))
+        assertEquals(intVal, sv.decodeIntOrNull(decoder { sv.encodeInt(intVal) }))
 
-        assertEquals(intListVal, sv.decodeIntList(message { sv.encodeIntList(intListVal) }))
-        assertEquals(null, sv.decodeIntListOrNull(message { sv.encodeIntList(null) }))
-        assertEquals(intListVal, sv.decodeIntListOrNull(message { sv.encodeIntList(intListVal) }))
+        assertEquals(intListVal, sv.decodeIntList(decoder { sv.encodeIntList(intListVal) }))
+        assertEquals(null, sv.decodeIntListOrNull(decoder { sv.encodeIntList(null) }))
+        assertEquals(intListVal, sv.decodeIntListOrNull(decoder { sv.encodeIntList(intListVal) }))
     }
 
     @Test
     fun testShort() {
-        assertEquals(shortVal, sv.decodeShort(message { sv.encodeShort(shortVal) }))
-        assertEquals(null, sv.decodeShortOrNull(message { sv.encodeShort(null) }))
-        assertEquals(shortVal, sv.decodeShortOrNull(message { sv.encodeShort(shortVal) }))
+        assertEquals(shortVal, sv.decodeShort(decoder { sv.encodeShort(shortVal) }))
+        assertEquals(null, sv.decodeShortOrNull(decoder { sv.encodeShort(null) }))
+        assertEquals(shortVal, sv.decodeShortOrNull(decoder { sv.encodeShort(shortVal) }))
 
-        assertEquals(shortListVal, sv.decodeShortList(message { sv.encodeShortList(shortListVal) }))
-        assertEquals(null, sv.decodeShortListOrNull(message { sv.encodeShortList(null) }))
-        assertEquals(shortListVal, sv.decodeShortListOrNull(message { sv.encodeShortList(shortListVal) }))
+        assertEquals(shortListVal, sv.decodeShortList(decoder { sv.encodeShortList(shortListVal) }))
+        assertEquals(null, sv.decodeShortListOrNull(decoder { sv.encodeShortList(null) }))
+        assertEquals(shortListVal, sv.decodeShortListOrNull(decoder { sv.encodeShortList(shortListVal) }))
     }
 
     @Test
     fun testByte() {
-        assertEquals(byteVal, sv.decodeByte(message { sv.encodeByte(byteVal) }))
-        assertEquals(null, sv.decodeByteOrNull(message { sv.encodeByte(null) }))
-        assertEquals(byteVal, sv.decodeByteOrNull(message { sv.encodeByte(byteVal) }))
+        assertEquals(byteVal, sv.decodeByte(decoder { sv.encodeByte(byteVal) }))
+        assertEquals(null, sv.decodeByteOrNull(decoder { sv.encodeByte(null) }))
+        assertEquals(byteVal, sv.decodeByteOrNull(decoder { sv.encodeByte(byteVal) }))
 
-        assertEquals(byteListVal, sv.decodeByteList(message { sv.encodeByteList(byteListVal) }))
-        assertEquals(null, sv.decodeByteListOrNull(message { sv.encodeByteList(null) }))
-        assertEquals(byteListVal, sv.decodeByteListOrNull(message { sv.encodeByteList(byteListVal) }))
+        assertEquals(byteListVal, sv.decodeByteList(decoder { sv.encodeByteList(byteListVal) }))
+        assertEquals(null, sv.decodeByteListOrNull(decoder { sv.encodeByteList(null) }))
+        assertEquals(byteListVal, sv.decodeByteListOrNull(decoder { sv.encodeByteList(byteListVal) }))
     }
 
     @Test
     fun testLong() {
-        assertEquals(longVal, sv.decodeLong(message { sv.encodeLong(longVal) }))
-        assertEquals(null, sv.decodeLongOrNull(message { sv.encodeLong(null) }))
-        assertEquals(longVal, sv.decodeLongOrNull(message { sv.encodeLong(longVal) }))
+        assertEquals(longVal, sv.decodeLong(decoder { sv.encodeLong(longVal) }))
+        assertEquals(null, sv.decodeLongOrNull(decoder { sv.encodeLong(null) }))
+        assertEquals(longVal, sv.decodeLongOrNull(decoder { sv.encodeLong(longVal) }))
 
-        assertEquals(longListVal, sv.decodeLongList(message { sv.encodeLongList(longListVal) }))
-        assertEquals(null, sv.decodeLongListOrNull(message { sv.encodeLongList(null) }))
-        assertEquals(longListVal, sv.decodeLongListOrNull(message { sv.encodeLongList(longListVal) }))
+        assertEquals(longListVal, sv.decodeLongList(decoder { sv.encodeLongList(longListVal) }))
+        assertEquals(null, sv.decodeLongListOrNull(decoder { sv.encodeLongList(null) }))
+        assertEquals(longListVal, sv.decodeLongListOrNull(decoder { sv.encodeLongList(longListVal) }))
     }
 
     @Test
     fun testFloat() {
-        assertEquals(floatVal, sv.decodeFloat(message { sv.encodeFloat(floatVal) }))
-        assertEquals(null, sv.decodeFloatOrNull(message { sv.encodeFloat(null) }))
-        assertEquals(floatVal, sv.decodeFloatOrNull(message { sv.encodeFloat(floatVal) }))
+        assertEquals(floatVal, sv.decodeFloat(decoder { sv.encodeFloat(floatVal) }))
+        assertEquals(null, sv.decodeFloatOrNull(decoder { sv.encodeFloat(null) }))
+        assertEquals(floatVal, sv.decodeFloatOrNull(decoder { sv.encodeFloat(floatVal) }))
 
-        assertEquals(floatListVal, sv.decodeFloatList(message { sv.encodeFloatList(floatListVal) }))
-        assertEquals(null, sv.decodeFloatListOrNull(message { sv.encodeFloatList(null) }))
-        assertEquals(floatListVal, sv.decodeFloatListOrNull(message { sv.encodeFloatList(floatListVal) }))
+        assertEquals(floatListVal, sv.decodeFloatList(decoder { sv.encodeFloatList(floatListVal) }))
+        assertEquals(null, sv.decodeFloatListOrNull(decoder { sv.encodeFloatList(null) }))
+        assertEquals(floatListVal, sv.decodeFloatListOrNull(decoder { sv.encodeFloatList(floatListVal) }))
     }
 
     @Test
     fun testDouble() {
-        assertEquals(doubleVal, sv.decodeDouble(message { sv.encodeDouble(doubleVal) }))
-        assertEquals(null, sv.decodeDoubleOrNull(message { sv.encodeDouble(null) }))
-        assertEquals(doubleVal, sv.decodeDoubleOrNull(message { sv.encodeDouble(doubleVal) }))
+        assertEquals(doubleVal, sv.decodeDouble(decoder { sv.encodeDouble(doubleVal) }))
+        assertEquals(null, sv.decodeDoubleOrNull(decoder { sv.encodeDouble(null) }))
+        assertEquals(doubleVal, sv.decodeDoubleOrNull(decoder { sv.encodeDouble(doubleVal) }))
 
-        assertEquals(doubleListVal, sv.decodeDoubleList(message { sv.encodeDoubleList(doubleListVal) }))
-        assertEquals(null, sv.decodeDoubleListOrNull(message { sv.encodeDoubleList(null) }))
-        assertEquals(doubleListVal, sv.decodeDoubleListOrNull(message { sv.encodeDoubleList(doubleListVal) }))
+        assertEquals(doubleListVal, sv.decodeDoubleList(decoder { sv.encodeDoubleList(doubleListVal) }))
+        assertEquals(null, sv.decodeDoubleListOrNull(decoder { sv.encodeDoubleList(null) }))
+        assertEquals(doubleListVal, sv.decodeDoubleListOrNull(decoder { sv.encodeDoubleList(doubleListVal) }))
     }
 
     @Test
     fun testChar() {
-        assertEquals(charVal, sv.decodeChar(message { sv.encodeChar(charVal) }))
-        assertEquals(null, sv.decodeCharOrNull(message { sv.encodeChar(null) }))
-        assertEquals(charVal, sv.decodeCharOrNull(message { sv.encodeChar(charVal) }))
+        assertEquals(charVal, sv.decodeChar(decoder { sv.encodeChar(charVal) }))
+        assertEquals(null, sv.decodeCharOrNull(decoder { sv.encodeChar(null) }))
+        assertEquals(charVal, sv.decodeCharOrNull(decoder { sv.encodeChar(charVal) }))
 
-        assertEquals(charListVal, sv.decodeCharList(message { sv.encodeCharList(charListVal) }))
-        assertEquals(null, sv.decodeCharListOrNull(message { sv.encodeCharList(null) }))
-        assertEquals(charListVal, sv.decodeCharListOrNull(message { sv.encodeCharList(charListVal) }))
+        assertEquals(charListVal, sv.decodeCharList(decoder { sv.encodeCharList(charListVal) }))
+        assertEquals(null, sv.decodeCharListOrNull(decoder { sv.encodeCharList(null) }))
+        assertEquals(charListVal, sv.decodeCharListOrNull(decoder { sv.encodeCharList(charListVal) }))
     }
 
     @Test
     fun testString() {
-        assertEquals(stringVal, sv.decodeString(message { sv.encodeString(stringVal) }))
-        assertEquals(null, sv.decodeStringOrNull(message { sv.encodeString(null) }))
-        assertEquals(stringVal, sv.decodeStringOrNull(message { sv.encodeString(stringVal) }))
+        assertEquals(stringVal, sv.decodeString(decoder { sv.encodeString(stringVal) }))
+        assertEquals(null, sv.decodeStringOrNull(decoder { sv.encodeString(null) }))
+        assertEquals(stringVal, sv.decodeStringOrNull(decoder { sv.encodeString(stringVal) }))
 
-        assertEquals(stringListVal, sv.decodeStringList(message { sv.encodeStringList(stringListVal) }))
-        assertEquals(null, sv.decodeStringListOrNull(message { sv.encodeStringList(null) }))
-        assertEquals(stringListVal, sv.decodeStringListOrNull(message { sv.encodeStringList(stringListVal) }))
+        assertEquals(stringListVal, sv.decodeStringList(decoder { sv.encodeStringList(stringListVal) }))
+        assertEquals(null, sv.decodeStringListOrNull(decoder { sv.encodeStringList(null) }))
+        assertEquals(stringListVal, sv.decodeStringListOrNull(decoder { sv.encodeStringList(stringListVal) }))
     }
 
     @Test
     fun testByteArray() {
-        assertContentEquals(byteArrayVal, sv.decodeByteArray(message { sv.encodeByteArray(byteArrayVal) }))
-        assertEquals(null, sv.decodeByteArrayOrNull(message { sv.encodeByteArray(null) }))
-        assertContentEquals(byteArrayVal, sv.decodeByteArrayOrNull(message { sv.encodeByteArray(byteArrayVal) }))
+        assertContentEquals(byteArrayVal, sv.decodeByteArray(decoder { sv.encodeByteArray(byteArrayVal) }))
+        assertEquals(null, sv.decodeByteArrayOrNull(decoder { sv.encodeByteArray(null) }))
+        assertContentEquals(byteArrayVal, sv.decodeByteArrayOrNull(decoder { sv.encodeByteArray(byteArrayVal) }))
 
-        sv.decodeByteArrayList(message { sv.encodeByteArrayList(byteArrayListVal) }).forEachIndexed { index, bytes ->
+        sv.decodeByteArrayList(decoder { sv.encodeByteArrayList(byteArrayListVal) }).forEachIndexed { index, bytes ->
             assertContentEquals(byteArrayListVal[index], bytes)
         }
-        assertEquals(null, sv.decodeByteArrayListOrNull(message { sv.encodeByteArrayList(null) }))
-        sv.decodeByteArrayListOrNull(message { sv.encodeByteArrayList(byteArrayListVal) }) !!.forEachIndexed { index, bytes ->
+        assertEquals(null, sv.decodeByteArrayListOrNull(decoder { sv.encodeByteArrayList(null) }))
+        sv.decodeByteArrayListOrNull(decoder { sv.encodeByteArrayList(byteArrayListVal) }) !!.forEachIndexed { index, bytes ->
             assertContentEquals(byteArrayListVal[index], bytes)
         }
     }
 
     @Test
     fun testUuid() {
-        assertEquals(uuidVal, sv.decodeUuid(message { sv.encodeUuid(uuidVal) }))
-        assertEquals(null, sv.decodeUuidOrNull(message { sv.encodeUuid(null as UUID<Any>?) }))
-        assertEquals(uuidVal, sv.decodeUuidOrNull(message { sv.encodeUuid(uuidVal) }))
+        assertEquals(uuidVal, sv.decodeUuid(decoder { sv.encodeUuid(uuidVal) }))
+        assertEquals(null, sv.decodeUuidOrNull(decoder { sv.encodeUuid(null as UUID<Any>?) }))
+        assertEquals(uuidVal, sv.decodeUuidOrNull(decoder { sv.encodeUuid(uuidVal) }))
 
-        assertEquals(uuidListVal, sv.decodeUuidList(message { sv.encodeUuidList(uuidListVal) }))
-        assertEquals(null, sv.decodeUuidListOrNull(message { sv.encodeUuidList(null) }))
-        assertEquals(uuidListVal, sv.decodeUuidListOrNull(message { sv.encodeUuidList(uuidListVal) }))
+        assertEquals(uuidListVal, sv.decodeUuidList(decoder { sv.encodeUuidList(uuidListVal) }))
+        assertEquals(null, sv.decodeUuidListOrNull(decoder { sv.encodeUuidList(null) }))
+        assertEquals(uuidListVal, sv.decodeUuidListOrNull(decoder { sv.encodeUuidList(uuidListVal) }))
     }
 
     @Test
     fun testInstance() {
-        assertEquals(instanceVal, sv.decodeInstance(message { sv.encodeInstance(instanceVal, A) }, A))
-        assertEquals(null, sv.decodeInstanceOrNull(message { sv.encodeInstance(null, A) }, A))
-        assertEquals(instanceVal, sv.decodeInstanceOrNull(message { sv.encodeInstance(instanceVal, A) }, A))
+        assertEquals(instanceVal, sv.decodeInstance(decoder { sv.encodeInstance(instanceVal, A) }, A))
+        assertEquals(null, sv.decodeInstanceOrNull(decoder { sv.encodeInstance(null, A) }, A))
+        assertEquals(instanceVal, sv.decodeInstanceOrNull(decoder { sv.encodeInstance(instanceVal, A) }, A))
 
-        assertEquals(instanceListVal, sv.decodeInstanceList(message { sv.encodeInstanceList(instanceListVal, B) }, B))
-        assertEquals(null, sv.decodeInstanceListOrNull(message { sv.encodeInstanceList(null, B) }, B))
-        assertEquals(instanceListVal, sv.decodeInstanceListOrNull(message { sv.encodeInstanceList(instanceListVal, B) }, B))
+        assertEquals(instanceListVal, sv.decodeInstanceList(decoder { sv.encodeInstanceList(instanceListVal, B) }, B))
+        assertEquals(null, sv.decodeInstanceListOrNull(decoder { sv.encodeInstanceList(null, B) }, B))
+        assertEquals(instanceListVal, sv.decodeInstanceListOrNull(decoder { sv.encodeInstanceList(instanceListVal, B) }, B))
     }
 
     @Test
     fun testEnum() {
-        assertEquals(enumVal, sv.decodeEnum(message { sv.encodeEnum(enumVal, E.entries) }, E.entries))
-        assertEquals(null, sv.decodeEnumOrNull(message { sv.encodeEnum(null, E.entries) }, E.entries))
-        assertEquals(enumVal, sv.decodeEnumOrNull(message { sv.encodeEnum(enumVal, E.entries) }, E.entries))
+        assertEquals(enumVal, sv.decodeEnum(decoder { sv.encodeEnum(enumVal, E.entries) }, E.entries))
+        assertEquals(null, sv.decodeEnumOrNull(decoder { sv.encodeEnum(null, E.entries) }, E.entries))
+        assertEquals(enumVal, sv.decodeEnumOrNull(decoder { sv.encodeEnum(enumVal, E.entries) }, E.entries))
 
-        assertEquals(enumListVal, sv.decodeEnumList(message { sv.encodeEnumList(enumListVal, E.entries) }, E.entries))
-        assertEquals(null, sv.decodeEnumListOrNull(message { sv.encodeEnumList(null, E.entries) }, E.entries))
-        assertEquals(enumListVal, sv.decodeEnumListOrNull(message { sv.encodeEnumList(enumListVal, E.entries) }, E.entries))
+        assertEquals(enumListVal, sv.decodeEnumList(decoder { sv.encodeEnumList(enumListVal, E.entries) }, E.entries))
+        assertEquals(null, sv.decodeEnumListOrNull(decoder { sv.encodeEnumList(null, E.entries) }, E.entries))
+        assertEquals(enumListVal, sv.decodeEnumListOrNull(decoder { sv.encodeEnumList(enumListVal, E.entries) }, E.entries))
     }
 
     @Test
     fun testUInt() {
-        assertEquals(uIntVal, sv.decodeUInt(message { sv.encodeUInt(uIntVal) }))
-        assertEquals(null, sv.decodeUIntOrNull(message { sv.encodeUInt(null) }))
-        assertEquals(uIntVal, sv.decodeUIntOrNull(message { sv.encodeUInt(uIntVal) }))
+        assertEquals(uIntVal, sv.decodeUInt(decoder { sv.encodeUInt(uIntVal) }))
+        assertEquals(null, sv.decodeUIntOrNull(decoder { sv.encodeUInt(null) }))
+        assertEquals(uIntVal, sv.decodeUIntOrNull(decoder { sv.encodeUInt(uIntVal) }))
 
-        assertEquals(uIntListVal, sv.decodeUIntList(message { sv.encodeUIntList(uIntListVal) }))
-        assertEquals(null, sv.decodeUIntListOrNull(message { sv.encodeUIntList(null) }))
-        assertEquals(uIntListVal, sv.decodeUIntListOrNull(message { sv.encodeUIntList(uIntListVal) }))
+        assertEquals(uIntListVal, sv.decodeUIntList(decoder { sv.encodeUIntList(uIntListVal) }))
+        assertEquals(null, sv.decodeUIntListOrNull(decoder { sv.encodeUIntList(null) }))
+        assertEquals(uIntListVal, sv.decodeUIntListOrNull(decoder { sv.encodeUIntList(uIntListVal) }))
     }
 
     @Test
     fun testUShort() {
-        assertEquals(uShortVal, sv.decodeUShort(message { sv.encodeUShort(uShortVal) }))
-        assertEquals(null, sv.decodeUShortOrNull(message { sv.encodeUShort(null) }))
-        assertEquals(uShortVal, sv.decodeUShortOrNull(message { sv.encodeUShort(uShortVal) }))
+        assertEquals(uShortVal, sv.decodeUShort(decoder { sv.encodeUShort(uShortVal) }))
+        assertEquals(null, sv.decodeUShortOrNull(decoder { sv.encodeUShort(null) }))
+        assertEquals(uShortVal, sv.decodeUShortOrNull(decoder { sv.encodeUShort(uShortVal) }))
 
-        assertEquals(uShortListVal, sv.decodeUShortList(message { sv.encodeUShortList(uShortListVal) }))
-        assertEquals(null, sv.decodeUShortListOrNull(message { sv.encodeUShortList(null) }))
-        assertEquals(uShortListVal, sv.decodeUShortListOrNull(message { sv.encodeUShortList(uShortListVal) }))
+        assertEquals(uShortListVal, sv.decodeUShortList(decoder { sv.encodeUShortList(uShortListVal) }))
+        assertEquals(null, sv.decodeUShortListOrNull(decoder { sv.encodeUShortList(null) }))
+        assertEquals(uShortListVal, sv.decodeUShortListOrNull(decoder { sv.encodeUShortList(uShortListVal) }))
     }
 
     @Test
     fun testUByte() {
-        assertEquals(uByteVal, sv.decodeUByte(message { sv.encodeUByte(uByteVal) }))
-        assertEquals(null, sv.decodeUByteOrNull(message { sv.encodeUByte(null) }))
-        assertEquals(uByteVal, sv.decodeUByteOrNull(message { sv.encodeUByte(uByteVal) }))
+        assertEquals(uByteVal, sv.decodeUByte(decoder { sv.encodeUByte(uByteVal) }))
+        assertEquals(null, sv.decodeUByteOrNull(decoder { sv.encodeUByte(null) }))
+        assertEquals(uByteVal, sv.decodeUByteOrNull(decoder { sv.encodeUByte(uByteVal) }))
 
-        assertEquals(uByteListVal, sv.decodeUByteList(message { sv.encodeUByteList(uByteListVal) }))
-        assertEquals(null, sv.decodeUByteListOrNull(message { sv.encodeUByteList(null) }))
-        assertEquals(uByteListVal, sv.decodeUByteListOrNull(message { sv.encodeUByteList(uByteListVal) }))
+        assertEquals(uByteListVal, sv.decodeUByteList(decoder { sv.encodeUByteList(uByteListVal) }))
+        assertEquals(null, sv.decodeUByteListOrNull(decoder { sv.encodeUByteList(null) }))
+        assertEquals(uByteListVal, sv.decodeUByteListOrNull(decoder { sv.encodeUByteList(uByteListVal) }))
     }
 
     @Test
     fun testULong() {
-        assertEquals(uLongVal, sv.decodeULong(message { sv.encodeULong(uLongVal) }))
-        assertEquals(null, sv.decodeULongOrNull(message { sv.encodeULong(null) }))
-        assertEquals(uLongVal, sv.decodeULongOrNull(message { sv.encodeULong(uLongVal) }))
+        assertEquals(uLongVal, sv.decodeULong(decoder { sv.encodeULong(uLongVal) }))
+        assertEquals(null, sv.decodeULongOrNull(decoder { sv.encodeULong(null) }))
+        assertEquals(uLongVal, sv.decodeULongOrNull(decoder { sv.encodeULong(uLongVal) }))
 
-        assertEquals(uLongListVal, sv.decodeULongList(message { sv.encodeULongList(uLongListVal) }))
-        assertEquals(null, sv.decodeULongListOrNull(message { sv.encodeULongList(null) }))
-        assertEquals(uLongListVal, sv.decodeULongListOrNull(message { sv.encodeULongList(uLongListVal) }))
+        assertEquals(uLongListVal, sv.decodeULongList(decoder { sv.encodeULongList(uLongListVal) }))
+        assertEquals(null, sv.decodeULongListOrNull(decoder { sv.encodeULongList(null) }))
+        assertEquals(uLongListVal, sv.decodeULongListOrNull(decoder { sv.encodeULongList(uLongListVal) }))
     }
 
 }

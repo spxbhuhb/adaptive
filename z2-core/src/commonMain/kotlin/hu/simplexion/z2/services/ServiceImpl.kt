@@ -2,7 +2,7 @@ package hu.simplexion.z2.services
 
 import hu.simplexion.z2.utility.UUID
 import hu.simplexion.z2.utility.pluginGenerated
-import hu.simplexion.z2.wireformat.Message
+import hu.simplexion.z2.wireformat.WireFormatDecoder
 
 interface ServiceImpl<T : ServiceImpl<T>> : Service {
 
@@ -34,7 +34,7 @@ interface ServiceImpl<T : ServiceImpl<T>> : Service {
      * Called by service transports to execute a service call. Actual code of this function is generated
      * by the plugin.
      */
-    suspend fun dispatch(funName: String, payload: Message): ByteArray {
+    suspend fun dispatch(funName: String, payload: WireFormatDecoder): ByteArray {
         pluginGenerated()
     }
 

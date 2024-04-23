@@ -1,4 +1,4 @@
-package hu.simplexion.z2.services.transport
+package hu.simplexion.z2.services.model
 
 enum class ServiceCallStatus(
     val value: Int

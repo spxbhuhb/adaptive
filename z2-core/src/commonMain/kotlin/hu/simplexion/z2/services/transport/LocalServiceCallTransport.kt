@@ -2,7 +2,7 @@ package hu.simplexion.z2.services.transport
 
 import hu.simplexion.z2.services.BasicServiceContext
 import hu.simplexion.z2.services.defaultServiceImplFactory
-import hu.simplexion.z2.wireformat.Message
+import hu.simplexion.z2.wireformat.WireFormatDecoder
 import hu.simplexion.z2.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
 
 /**
@@ -16,15 +16,15 @@ class LocalServiceCallTransport : ServiceCallTransport {
         val localServiceContext = BasicServiceContext()
     }
 
-    override suspend fun call(serviceName: String, funName: String, payload: ByteArray): Message {
+    override suspend fun call(serviceName: String, funName: String, payload: ByteArray): WireFormatDecoder {
 
         val service = requireNotNull(defaultServiceImplFactory[serviceName, localServiceContext])
 
         val wireFormatConfig = defaultWireFormatProvider
-        val message = wireFormatConfig.toMessage(payload)
+        val message = wireFormatConfig.decoder(payload)
 
         val responsePayload = service.dispatch(funName, message)
-        val responseMessage = wireFormatConfig.toMessage(responsePayload)
+        val responseMessage = wireFormatConfig.decoder(responsePayload)
 
         return responseMessage
     }

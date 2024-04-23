@@ -1,5 +1,7 @@
 package hu.simplexion.z2.services.transport
 
+import hu.simplexion.z2.services.model.ResponseEnvelope
+
 /**
  * Handle service error responses.
  */
