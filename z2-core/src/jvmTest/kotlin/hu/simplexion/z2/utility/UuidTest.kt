@@ -59,7 +59,7 @@ class UuidTest {
     fun toAndFromByteArray() {
         for (i in 0 .. 100) {
             val expected = UUID<Any>()
-            println(expected)
+            //println(expected)
             assertEquals(expected, expected.toByteArray().toUuid())
         }
     }

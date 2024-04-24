@@ -343,4 +343,50 @@ public class BoxTestGenerated extends AbstractBoxTest {
             }
         }
     }
+
+    @Nested
+    @TestMetadata("testData/box/services")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Services {
+        @Test
+        public void testAllFilesPresentInServices() throws Exception {
+            KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/services"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+        }
+
+        @Test
+        @TestMetadata("basic.kt")
+        public void testBasic() throws Exception {
+            runTest("testData/box/services/basic.kt");
+        }
+
+        @Test
+        @TestMetadata("context.kt")
+        public void testContext() throws Exception {
+            runTest("testData/box/services/context.kt");
+        }
+
+        @Test
+        @TestMetadata("direct.kt")
+        public void testDirect() throws Exception {
+            runTest("testData/box/services/direct.kt");
+        }
+
+        @Test
+        @TestMetadata("serviceName.kt")
+        public void testServiceName() throws Exception {
+            runTest("testData/box/services/serviceName.kt");
+        }
+
+        @Test
+        @TestMetadata("serviceTransport.kt")
+        public void testServiceTransport() throws Exception {
+            runTest("testData/box/services/serviceTransport.kt");
+        }
+
+        @Test
+        @TestMetadata("types.kt")
+        public void testTypes() throws Exception {
+            runTest("testData/box/services/types.kt");
+        }
+    }
 }

@@ -4,7 +4,7 @@ import hu.simplexion.z2.kotlin.adaptive.Indices
 import hu.simplexion.z2.kotlin.adaptive.Names
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptivePluginContext
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.*
-import hu.simplexion.z2.kotlin.util.property
+import hu.simplexion.z2.kotlin.common.property
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
@@ -25,6 +25,7 @@ import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.util.OperatorNameConventions
@@ -76,7 +77,7 @@ open class ClassBoundIrBuilder(
     fun irConstructorCallFromBuild(
         buildFun: IrSimpleFunction,
         target: FqName,
-        classSymbol: IrClassSymbol = pluginContext.irClasses[target]?.symbol ?: pluginContext.classSymbol(target),
+        classSymbol: IrClassSymbol = pluginContext.irClasses[target]?.symbol ?: pluginContext.irContext.referenceClass(ClassId(target.parent(), target.shortName())) !!,
         argumentCount: Int = Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
     ): IrConstructorCallImpl {
 

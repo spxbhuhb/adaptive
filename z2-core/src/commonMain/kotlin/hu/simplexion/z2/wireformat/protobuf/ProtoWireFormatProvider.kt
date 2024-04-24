@@ -13,8 +13,7 @@ class ProtoWireFormatProvider : WireFormatProvider() {
     override fun decoder(payload: ByteArray): WireFormatDecoder =
         ProtoWireFormatDecoder(payload)
 
-    @Suppress("UNCHECKED_CAST")
-    override fun standalone(): Standalone<WireFormatDecoder> =
-        ProtoStandalone as Standalone<WireFormatDecoder>
+    override fun standalone(): Standalone =
+        ProtoStandalone
 
 }

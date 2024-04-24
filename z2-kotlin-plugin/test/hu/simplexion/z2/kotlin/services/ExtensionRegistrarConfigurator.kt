@@ -3,6 +3,7 @@ package hu.simplexion.z2.kotlin.services
 import hu.simplexion.z2.kotlin.Z2Options
 import hu.simplexion.z2.kotlin.Z2PluginRegistrar
 import hu.simplexion.z2.kotlin.adaptive.ir.AdaptiveGenerationExtension
+import hu.simplexion.z2.kotlin.services.ir.ServicesGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration
@@ -26,6 +27,7 @@ class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentCo
 
         FirExtensionRegistrarAdapter.registerExtension(Z2PluginRegistrar())
 
+        IrGenerationExtension.registerExtension(ServicesGenerationExtension(options))
         IrGenerationExtension.registerExtension(AdaptiveGenerationExtension(options))
     }
 }

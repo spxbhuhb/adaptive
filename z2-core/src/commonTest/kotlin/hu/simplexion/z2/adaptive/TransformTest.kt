@@ -60,7 +60,7 @@ class TransformTest {
                     //@formatter:on
                 )
             ),
-            adapter.actual(dumpCode = true)
+            adapter.actual(dumpCode = false)
         )
     }
 }

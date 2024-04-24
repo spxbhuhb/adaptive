@@ -9,7 +9,7 @@ import hu.simplexion.z2.kotlin.adaptive.Strings
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmClosure
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmStateVariable
 import hu.simplexion.z2.kotlin.adaptive.ir.arm.ArmWhenStateVariable
-import hu.simplexion.z2.kotlin.util.property
+import hu.simplexion.z2.kotlin.common.property
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.backend.js.utils.valueArguments
 import org.jetbrains.kotlin.ir.expressions.*

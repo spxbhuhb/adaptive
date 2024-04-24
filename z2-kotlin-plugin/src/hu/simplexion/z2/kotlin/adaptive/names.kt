@@ -3,8 +3,7 @@
  */
 package hu.simplexion.z2.kotlin.adaptive
 
-import org.jetbrains.kotlin.name.CallableId
-import org.jetbrains.kotlin.name.ClassId
+import hu.simplexion.z2.kotlin.common.NamesBase
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
@@ -62,7 +61,7 @@ object Strings {
     const val HELPER_THIS_STATE = "thisState"
 
     const val MANUAL_IMPLEMENTATION = "manualImplementation"
-    
+
     const val SUPPORT_FUNCTION_INVOKE = "invoke"
 
     const val BT = "BT" // type parameter for fragment, Bridge Type
@@ -71,61 +70,46 @@ object Strings {
     const val KOTLIN_INVOKE = "invoke"
 }
 
-object Names {
-    val PARENT = Name.identifier(Strings.PARENT)
-    val INDEX = Name.identifier(Strings.INDEX)
-
-    val ADAPTER = Name.identifier(Strings.ADAPTER)
-
-    val HELPER_ADAPTER = Name.identifier(Strings.HELPER_ADAPTER)
-    val HELPER_FRAGMENT = Name.identifier(Strings.HELPER_FRAGMENT)
-    val HELPER_THIS_STATE = Name.identifier(Strings.HELPER_THIS_STATE)
-
-    val BT = Name.identifier(Strings.BT)
-
-    val KOTLIN_INVOKE = Name.identifier(Strings.KOTLIN_INVOKE)
-
-    val ADAPTIVE_STATE_VARIABLE_BINDING = Name.identifier(Strings.ADAPTIVE_STATE_VARIABLE_BINDING)
-    val ADAPTIVE_TRANSFORM_INTERFACE = Name.identifier(Strings.ADAPTIVE_TRANSFORM_INTERFACE)
-
-    val MANUAL_IMPLEMENTATION = Name.identifier(Strings.MANUAL_IMPLEMENTATION)
+object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
+    val PARENT = Strings.PARENT.name()
+    val INDEX = Strings.INDEX.name()
+    val ADAPTER = Strings.ADAPTER.name()
+    val HELPER_ADAPTER = Strings.HELPER_ADAPTER.name()
+    val BT = Strings.BT.name()
+    val KOTLIN_INVOKE = Strings.KOTLIN_INVOKE.name()
 }
 
 object FqNames {
-    val String.runtime
-        get() = FqName(Strings.RUNTIME_PACKAGE + "." + this)
+    fun String.runtime() = FqName(Strings.RUNTIME_PACKAGE + "." + this)
+    fun String.structural() = FqName(Strings.STRUCTURAL_PACKAGE + "." + this)
 
-    val String.structural
-        get() = FqName(Strings.STRUCTURAL_PACKAGE + "." + this)
+    val ADAPTIVE_ENTRY_FUNCTION = Strings.ENTRY_FUNCTION.runtime()
 
-    val ADAPTIVE_PACKAGE = FqName(Strings.RUNTIME_PACKAGE)
-    val BINDING_PACKAGE = FqName(Strings.BINDING_PACKAGE)
-
-    val ADAPTIVE_NAMESPACE = Strings.ADAPTIVE_NAMESPACE.runtime
-    val ADAPTIVE_CLOSURE = Strings.ADAPTIVE_CLOSURE.runtime
-    val ADAPTIVE_FRAGMENT = Strings.ADAPTIVE_FRAGMENT.runtime
-    val ADAPTIVE_ADAPTER = Strings.ADAPTIVE_ADAPTER.runtime
-
-    val ADAPTIVE_SEQUENCE = Strings.ADAPTIVE_SEQUENCE.structural
-    val ADAPTIVE_SELECT = Strings.ADAPTIVE_SELECT.structural
-    val ADAPTIVE_LOOP = Strings.ADAPTIVE_LOOP.structural
-    val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.structural
-
-    val ADAPTIVE_ENTRY_FUNCTION = Strings.ENTRY_FUNCTION.runtime
-    val ADAPTIVE_FRAGMENT_FACTORY = Strings.ADAPTIVE_FRAGMENT_FACTORY.runtime
-    val ADAPTIVE_SUPPORT_FUNCTION = Strings.ADAPTIVE_SUPPORT_FUNCTION.runtime
+    val ADAPTIVE_SEQUENCE = Strings.ADAPTIVE_SEQUENCE.structural()
+    val ADAPTIVE_SELECT = Strings.ADAPTIVE_SELECT.structural()
+    val ADAPTIVE_LOOP = Strings.ADAPTIVE_LOOP.structural()
+    val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.structural()
 }
 
-object ClassIds {
-    val ADAPTIVE_STATE_VARIABLE_BINDING = ClassId(FqNames.BINDING_PACKAGE, Names.ADAPTIVE_STATE_VARIABLE_BINDING)
-    val ADAPTIVE_TRANSFORM_INTERFACE = ClassId(FqNames.ADAPTIVE_PACKAGE, Names.ADAPTIVE_TRANSFORM_INTERFACE)
+object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
+
+    val ADAPTIVE_NAMESPACE = Strings.ADAPTIVE_NAMESPACE.classId()
+    val ADAPTIVE_CLOSURE = Strings.ADAPTIVE_CLOSURE.classId()
+    val ADAPTIVE_FRAGMENT = Strings.ADAPTIVE_FRAGMENT.classId()
+    val ADAPTIVE_ADAPTER = Strings.ADAPTIVE_ADAPTER.classId()
+
+    val ADAPTIVE_FRAGMENT_FACTORY = Strings.ADAPTIVE_FRAGMENT_FACTORY.classId()
+    val ADAPTIVE_SUPPORT_FUNCTION = Strings.ADAPTIVE_SUPPORT_FUNCTION.classId()
+    val ADAPTIVE_STATE_VARIABLE_BINDING = Strings.ADAPTIVE_STATE_VARIABLE_BINDING.classId { Strings.BINDING_PACKAGE.fqName() }
+    val ADAPTIVE_TRANSFORM_INTERFACE = Strings.ADAPTIVE_TRANSFORM_INTERFACE.classId()
+
 }
 
-object CallableIds {
-    val HELPER_FUNCTION_ADAPTER = CallableId(FqNames.ADAPTIVE_PACKAGE, Names.HELPER_ADAPTER)
-    val HELPER_FUNCTION_FRAGMENT = CallableId(FqNames.ADAPTIVE_PACKAGE, Names.HELPER_FRAGMENT)
-    val HELPER_FUNCTION_THIS_STATE = CallableId(FqNames.ADAPTIVE_PACKAGE, Names.HELPER_THIS_STATE)
-    val MANUAL_IMPLEMENTATION = CallableId(FqNames.ADAPTIVE_PACKAGE, Names.MANUAL_IMPLEMENTATION)
+object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {
+    val HELPER_FUNCTION_ADAPTER = Strings.HELPER_ADAPTER.callableId()
+    val HELPER_FUNCTION_FRAGMENT = Strings.HELPER_FRAGMENT.callableId()
+    val HELPER_FUNCTION_THIS_STATE = Strings.HELPER_THIS_STATE.callableId()
+    val MANUAL_IMPLEMENTATION = Strings.MANUAL_IMPLEMENTATION.callableId()
 }
 
 object Indices {

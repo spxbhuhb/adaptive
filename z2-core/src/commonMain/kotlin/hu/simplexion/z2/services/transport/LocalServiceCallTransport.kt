@@ -16,17 +16,12 @@ class LocalServiceCallTransport : ServiceCallTransport {
         val localServiceContext = BasicServiceContext()
     }
 
-    override suspend fun call(serviceName: String, funName: String, payload: ByteArray): WireFormatDecoder {
+    override suspend fun call(serviceName: String, funName: String, payload: ByteArray): ByteArray {
 
         val service = requireNotNull(defaultServiceImplFactory[serviceName, localServiceContext])
+        val message = defaultWireFormatProvider.decoder(payload)
 
-        val wireFormatConfig = defaultWireFormatProvider
-        val message = wireFormatConfig.decoder(payload)
-
-        val responsePayload = service.dispatch(funName, message)
-        val responseMessage = wireFormatConfig.decoder(responsePayload)
-
-        return responseMessage
+        return service.dispatch(funName, message)
     }
 
 }

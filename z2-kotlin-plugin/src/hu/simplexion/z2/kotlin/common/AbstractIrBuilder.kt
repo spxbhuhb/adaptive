@@ -1,4 +1,4 @@
-package hu.simplexion.z2.kotlin.util
+package hu.simplexion.z2.kotlin.common
 
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
@@ -340,6 +340,13 @@ interface AbstractIrBuilder {
 
     fun irCall(
         symbol: IrFunctionSymbol,
+        dispatchReceiver: IrExpression?,
+        vararg args: IrExpression
+    ): IrCallImpl =
+        irCall(symbol, dispatchReceiver = dispatchReceiver, *args)
+
+    fun irCall(
+        symbol: IrFunctionSymbol,
         origin: IrStatementOrigin? = null,
         dispatchReceiver: IrExpression? = null,
         extensionReceiver: IrExpression? = null,
@@ -369,8 +376,8 @@ interface AbstractIrBuilder {
     val String.name: Name
         get() = Name.identifier(this)
 
-    val IrType.isList
-        get() = isSubtypeOfClass(pluginContext.listClass)
+//    val IrType.isList
+//        get() = isSubtypeOfClass(pluginContext.listClass)
 
     fun <T> IrType.ifBoolean(result: () -> T): T? =
         if (isBoolean()) result() else null
@@ -383,11 +390,11 @@ interface AbstractIrBuilder {
         }
     }
 
-    fun <T> IrType.ifUuid(result: () -> T): T? {
-        return if (this.isSubtypeOfClass(pluginContext.uuidClass)) {
-            result()
-        } else {
-            null
-        }
-    }
+//    fun <T> IrType.ifUuid(result: () -> T): T? {
+//        return if (this.isSubtypeOfClass(pluginContext.uuidClass)) {
+//            result()
+//        } else {
+//            null
+//        }
+//    }
 }

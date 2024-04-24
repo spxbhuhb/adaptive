@@ -1,4 +1,4 @@
-package hu.simplexion.z2.kotlin.util
+package hu.simplexion.z2.kotlin.common
 
 import org.jetbrains.kotlin.name.FqName
 

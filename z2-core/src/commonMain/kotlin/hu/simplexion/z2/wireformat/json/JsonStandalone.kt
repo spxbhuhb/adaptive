@@ -9,7 +9,7 @@ import hu.simplexion.z2.wireformat.json.elements.JsonNull
 import hu.simplexion.z2.wireformat.json.elements.JsonObject
 import kotlin.enums.EnumEntries
 
-object JsonStandalone : Standalone<JsonWireFormatDecoder> {
+object JsonStandalone : Standalone {
 
     // ---------------------------------------------------------------------------
     // Any
@@ -21,16 +21,16 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun encodeAnyList(value: List<Any>?): ByteArray =
         TODO()
 
-    override fun decodeAny(decoder: JsonWireFormatDecoder?): Any =
+    override fun decodeAny(source: ByteArray): Any =
         TODO()
 
-    override fun decodeAnyOrNull(decoder: JsonWireFormatDecoder?): Any =
+    override fun decodeAnyOrNull(source: ByteArray): Any =
         TODO()
 
-    override fun decodeAnyList(decoder: JsonWireFormatDecoder?): List<Any> =
+    override fun decodeAnyList(source: ByteArray): List<Any> =
         TODO()
 
-    override fun decodeAnyListOrNull(decoder: JsonWireFormatDecoder?): List<Any> =
+    override fun decodeAnyListOrNull(source: ByteArray): List<Any> =
         TODO()
 
     // ---------------------------------------------------------------------------
@@ -43,17 +43,17 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun encodeUnitList(value: List<Unit>?): ByteArray =
         arrayOrNull(value) { bool(true) }
 
-    override fun decodeUnit(decoder: JsonWireFormatDecoder?): Unit =
-        requireNotNull(decodeUnitOrNull(decoder))
+    override fun decodeUnit(source: ByteArray): Unit =
+        requireNotNull(decodeUnitOrNull(source))
 
-    override fun decodeUnitOrNull(decoder: JsonWireFormatDecoder?): Unit? =
-        fromValueOrNull(decoder) { asUnit }
+    override fun decodeUnitOrNull(source: ByteArray): Unit? =
+        fromValueOrNull(source) { asUnit }
 
-    override fun decodeUnitList(decoder: JsonWireFormatDecoder?): List<Unit> =
-        requireNotNull(decodeUnitListOrNull(decoder))
+    override fun decodeUnitList(source: ByteArray): List<Unit> =
+        requireNotNull(decodeUnitListOrNull(source))
 
-    override fun decodeUnitListOrNull(decoder: JsonWireFormatDecoder?): List<Unit>? =
-        fromArray(decoder) { asUnit }
+    override fun decodeUnitListOrNull(source: ByteArray): List<Unit>? =
+        fromArray(source) { asUnit }
 
     // ---------------------------------------------------------------------------
     // Boolean
@@ -65,17 +65,17 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun encodeBooleanList(value: List<Boolean>?): ByteArray =
         arrayOrNull(value) { bool(it) }
 
-    override fun decodeBoolean(decoder: JsonWireFormatDecoder?): Boolean =
-        requireNotNull(decodeBooleanOrNull(decoder))
+    override fun decodeBoolean(source: ByteArray): Boolean =
+        requireNotNull(decodeBooleanOrNull(source))
 
-    override fun decodeBooleanOrNull(decoder: JsonWireFormatDecoder?): Boolean? =
-        fromValueOrNull(decoder) { asBoolean }
+    override fun decodeBooleanOrNull(source: ByteArray): Boolean? =
+        fromValueOrNull(source) { asBoolean }
 
-    override fun decodeBooleanList(decoder: JsonWireFormatDecoder?): List<Boolean> =
-        requireNotNull(decodeBooleanListOrNull(decoder))
+    override fun decodeBooleanList(source: ByteArray): List<Boolean> =
+        requireNotNull(decodeBooleanListOrNull(source))
 
-    override fun decodeBooleanListOrNull(decoder: JsonWireFormatDecoder?): List<Boolean>? =
-        fromArray(decoder) { asBoolean }
+    override fun decodeBooleanListOrNull(source: ByteArray): List<Boolean>? =
+        fromArray(source) { asBoolean }
 
     // ---------------------------------------------------------------------------
     // Int
@@ -87,17 +87,17 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun encodeIntList(value: List<Int>?): ByteArray =
         arrayOrNull(value) { number(it) }
 
-    override fun decodeInt(decoder: JsonWireFormatDecoder?): Int =
-        requireNotNull(decodeIntOrNull(decoder))
+    override fun decodeInt(source: ByteArray): Int =
+        requireNotNull(decodeIntOrNull(source))
 
-    override fun decodeIntOrNull(decoder: JsonWireFormatDecoder?): Int? =
-        fromValueOrNull(decoder) { asInt }
+    override fun decodeIntOrNull(source: ByteArray): Int? =
+        fromValueOrNull(source) { asInt }
 
-    override fun decodeIntList(decoder: JsonWireFormatDecoder?): List<Int> =
-        requireNotNull(decodeIntListOrNull(decoder))
+    override fun decodeIntList(source: ByteArray): List<Int> =
+        requireNotNull(decodeIntListOrNull(source))
 
-    override fun decodeIntListOrNull(decoder: JsonWireFormatDecoder?): List<Int>? =
-        fromArray(decoder) { asInt }
+    override fun decodeIntListOrNull(source: ByteArray): List<Int>? =
+        fromArray(source) { asInt }
 
     // ---------------------------------------------------------------------------
     // Short
@@ -109,17 +109,17 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun encodeShortList(value: List<Short>?): ByteArray =
         arrayOrNull(value) { number(it) }
 
-    override fun decodeShort(decoder: JsonWireFormatDecoder?): Short =
-        requireNotNull(decodeShortOrNull(decoder))
+    override fun decodeShort(source: ByteArray): Short =
+        requireNotNull(decodeShortOrNull(source))
 
-    override fun decodeShortOrNull(decoder: JsonWireFormatDecoder?): Short? =
-        fromValueOrNull(decoder) { asShort }
+    override fun decodeShortOrNull(source: ByteArray): Short? =
+        fromValueOrNull(source) { asShort }
 
-    override fun decodeShortList(decoder: JsonWireFormatDecoder?): List<Short> =
-        requireNotNull(decodeShortListOrNull(decoder))
+    override fun decodeShortList(source: ByteArray): List<Short> =
+        requireNotNull(decodeShortListOrNull(source))
 
-    override fun decodeShortListOrNull(decoder: JsonWireFormatDecoder?): List<Short>? =
-        fromArray(decoder) { asShort }
+    override fun decodeShortListOrNull(source: ByteArray): List<Short>? =
+        fromArray(source) { asShort }
 
     // ---------------------------------------------------------------------------
     // Byte
@@ -131,17 +131,17 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun encodeByteList(value: List<Byte>?): ByteArray =
         arrayOrNull(value) { number(it) }
 
-    override fun decodeByte(decoder: JsonWireFormatDecoder?): Byte =
-        requireNotNull(decodeByteOrNull(decoder))
+    override fun decodeByte(source: ByteArray): Byte =
+        requireNotNull(decodeByteOrNull(source))
 
-    override fun decodeByteOrNull(decoder: JsonWireFormatDecoder?): Byte? =
-        fromValueOrNull(decoder) { asByte }
+    override fun decodeByteOrNull(source: ByteArray): Byte? =
+        fromValueOrNull(source) { asByte }
 
-    override fun decodeByteList(decoder: JsonWireFormatDecoder?): List<Byte> =
-        requireNotNull(decodeByteListOrNull(decoder))
+    override fun decodeByteList(source: ByteArray): List<Byte> =
+        requireNotNull(decodeByteListOrNull(source))
 
-    override fun decodeByteListOrNull(decoder: JsonWireFormatDecoder?): List<Byte>? =
-        fromArray(decoder) { asByte }
+    override fun decodeByteListOrNull(source: ByteArray): List<Byte>? =
+        fromArray(source) { asByte }
     
     // ---------------------------------------------------------------------------
     // Long
@@ -153,17 +153,17 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun encodeLongList(value: List<Long>?): ByteArray =
         arrayOrNull(value) { number(it) }
 
-    override fun decodeLong(decoder: JsonWireFormatDecoder?): Long =
-        requireNotNull(decodeLongOrNull(decoder))
+    override fun decodeLong(source: ByteArray): Long =
+        requireNotNull(decodeLongOrNull(source))
 
-    override fun decodeLongOrNull(decoder: JsonWireFormatDecoder?): Long? =
-        fromValueOrNull(decoder) { asLong }
+    override fun decodeLongOrNull(source: ByteArray): Long? =
+        fromValueOrNull(source) { asLong }
 
-    override fun decodeLongList(decoder: JsonWireFormatDecoder?): List<Long> =
-        requireNotNull(decodeLongListOrNull(decoder))
+    override fun decodeLongList(source: ByteArray): List<Long> =
+        requireNotNull(decodeLongListOrNull(source))
 
-    override fun decodeLongListOrNull(decoder: JsonWireFormatDecoder?): List<Long>? =
-        fromArray(decoder) { asLong }
+    override fun decodeLongListOrNull(source: ByteArray): List<Long>? =
+        fromArray(source) { asLong }
 
     // ---------------------------------------------------------------------------
     // Float
@@ -175,17 +175,17 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun encodeFloatList(value: List<Float>?): ByteArray =
         arrayOrNull(value) { number(it) }
 
-    override fun decodeFloat(decoder: JsonWireFormatDecoder?): Float =
-        requireNotNull(decodeFloatOrNull(decoder))
+    override fun decodeFloat(source: ByteArray): Float =
+        requireNotNull(decodeFloatOrNull(source))
 
-    override fun decodeFloatOrNull(decoder: JsonWireFormatDecoder?): Float? =
-        fromValueOrNull(decoder) { asFloat }
+    override fun decodeFloatOrNull(source: ByteArray): Float? =
+        fromValueOrNull(source) { asFloat }
 
-    override fun decodeFloatList(decoder: JsonWireFormatDecoder?): List<Float> =
-        requireNotNull(decodeFloatListOrNull(decoder))
+    override fun decodeFloatList(source: ByteArray): List<Float> =
+        requireNotNull(decodeFloatListOrNull(source))
 
-    override fun decodeFloatListOrNull(decoder: JsonWireFormatDecoder?): List<Float>? =
-        fromArray(decoder) { asFloat }
+    override fun decodeFloatListOrNull(source: ByteArray): List<Float>? =
+        fromArray(source) { asFloat }
 
     // ---------------------------------------------------------------------------
     // Double
@@ -197,17 +197,17 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun encodeDoubleList(value: List<Double>?): ByteArray =
         arrayOrNull(value) { number(it) }
 
-    override fun decodeDouble(decoder: JsonWireFormatDecoder?): Double =
-        requireNotNull(decodeDoubleOrNull(decoder))
+    override fun decodeDouble(source: ByteArray): Double =
+        requireNotNull(decodeDoubleOrNull(source))
 
-    override fun decodeDoubleOrNull(decoder: JsonWireFormatDecoder?): Double? =
-        fromValueOrNull(decoder) { asDouble }
+    override fun decodeDoubleOrNull(source: ByteArray): Double? =
+        fromValueOrNull(source) { asDouble }
 
-    override fun decodeDoubleList(decoder: JsonWireFormatDecoder?): List<Double> =
-        requireNotNull(decodeDoubleListOrNull(decoder))
+    override fun decodeDoubleList(source: ByteArray): List<Double> =
+        requireNotNull(decodeDoubleListOrNull(source))
 
-    override fun decodeDoubleListOrNull(decoder: JsonWireFormatDecoder?): List<Double>? =
-        fromArray(decoder) { asDouble }
+    override fun decodeDoubleListOrNull(source: ByteArray): List<Double>? =
+        fromArray(source) { asDouble }
 
     // ---------------------------------------------------------------------------
     // Char
@@ -219,17 +219,17 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun encodeCharList(value: List<Char>?): ByteArray =
         arrayOrNull(value) { quotedString(it.toString()) }
 
-    override fun decodeChar(decoder: JsonWireFormatDecoder?): Char =
-        requireNotNull(decodeCharOrNull(decoder))
+    override fun decodeChar(source: ByteArray): Char =
+        requireNotNull(decodeCharOrNull(source))
 
-    override fun decodeCharOrNull(decoder: JsonWireFormatDecoder?): Char? =
-        fromValueOrNull(decoder) { asChar }
+    override fun decodeCharOrNull(source: ByteArray): Char? =
+        fromValueOrNull(source) { asChar }
 
-    override fun decodeCharList(decoder: JsonWireFormatDecoder?): List<Char> =
-        requireNotNull(decodeCharListOrNull(decoder))
+    override fun decodeCharList(source: ByteArray): List<Char> =
+        requireNotNull(decodeCharListOrNull(source))
 
-    override fun decodeCharListOrNull(decoder: JsonWireFormatDecoder?): List<Char>? =
-        fromArray(decoder) { asChar }
+    override fun decodeCharListOrNull(source: ByteArray): List<Char>? =
+        fromArray(source) { asChar }
     
     // ---------------------------------------------------------------------------
     // String
@@ -241,17 +241,17 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun encodeStringList(value: List<String>?): ByteArray =
         arrayOrNull(value) { quotedString(it) }
 
-    override fun decodeString(decoder: JsonWireFormatDecoder?): String =
-        requireNotNull(decodeStringOrNull(decoder))
+    override fun decodeString(source: ByteArray): String =
+        requireNotNull(decodeStringOrNull(source))
 
-    override fun decodeStringOrNull(decoder: JsonWireFormatDecoder?): String? =
-        fromValueOrNull(decoder) { asString }
+    override fun decodeStringOrNull(source: ByteArray): String? =
+        fromValueOrNull(source) { asString }
 
-    override fun decodeStringList(decoder: JsonWireFormatDecoder?): List<String> =
-        requireNotNull(decodeStringListOrNull(decoder))
+    override fun decodeStringList(source: ByteArray): List<String> =
+        requireNotNull(decodeStringListOrNull(source))
 
-    override fun decodeStringListOrNull(decoder: JsonWireFormatDecoder?): List<String>? =
-        fromArray(decoder) { asString }
+    override fun decodeStringListOrNull(source: ByteArray): List<String>? =
+        fromArray(source) { asString }
 
     // ---------------------------------------------------------------------------
     // ByteArray
@@ -263,17 +263,17 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun encodeByteArrayList(value: List<ByteArray>?): ByteArray =
         arrayOrNull(value) { bytes(it) }
 
-    override fun decodeByteArray(decoder: JsonWireFormatDecoder?): ByteArray =
-        requireNotNull(decodeByteArrayOrNull(decoder))
+    override fun decodeByteArray(source: ByteArray): ByteArray =
+        requireNotNull(decodeByteArrayOrNull(source))
 
-    override fun decodeByteArrayOrNull(decoder: JsonWireFormatDecoder?): ByteArray? =
-        fromValueOrNull(decoder) { asByteArray }
+    override fun decodeByteArrayOrNull(source: ByteArray): ByteArray? =
+        fromValueOrNull(source) { asByteArray }
 
-    override fun decodeByteArrayList(decoder: JsonWireFormatDecoder?): List<ByteArray> =
-        requireNotNull(decodeByteArrayListOrNull(decoder))
+    override fun decodeByteArrayList(source: ByteArray): List<ByteArray> =
+        requireNotNull(decodeByteArrayListOrNull(source))
 
-    override fun decodeByteArrayListOrNull(decoder: JsonWireFormatDecoder?): List<ByteArray>? =
-        fromArray(decoder) { asByteArray }
+    override fun decodeByteArrayListOrNull(source: ByteArray): List<ByteArray>? =
+        fromArray(source) { asByteArray }
 
     // ---------------------------------------------------------------------------
     // UUID
@@ -285,17 +285,17 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun encodeUuidList(value: List<UUID<*>>?): ByteArray =
         arrayOrNull(value) { uuid(it) }
 
-    override fun decodeUuid(decoder: JsonWireFormatDecoder?): UUID<Any> =
-        requireNotNull(decodeUuidOrNull(decoder))
+    override fun decodeUuid(source: ByteArray): UUID<Any> =
+        requireNotNull(decodeUuidOrNull(source))
 
-    override fun decodeUuidOrNull(decoder: JsonWireFormatDecoder?): UUID<Any>? =
-        fromValueOrNull(decoder) { asUuid() }
+    override fun decodeUuidOrNull(source: ByteArray): UUID<Any>? =
+        fromValueOrNull(source) { asUuid() }
 
-    override fun decodeUuidList(decoder: JsonWireFormatDecoder?): List<UUID<Any>> =
-        requireNotNull(decodeUuidListOrNull(decoder))
+    override fun decodeUuidList(source: ByteArray): List<UUID<Any>> =
+        requireNotNull(decodeUuidListOrNull(source))
 
-    override fun decodeUuidListOrNull(decoder: JsonWireFormatDecoder?): List<UUID<Any>>? =
-        fromArray(decoder) { asUuid() }
+    override fun decodeUuidListOrNull(source: ByteArray): List<UUID<Any>>? =
+        fromArray(source) { asUuid() }
 
     // ---------------------------------------------------------------------------
     // Instance
@@ -317,17 +317,17 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
             if (peekLast() == 0x2c.toByte()) rollback() // to remove the last colon
         }
 
-    override fun <T> decodeInstance(decoder: JsonWireFormatDecoder?, wireFormat: WireFormat<T>): T =
-        requireNotNull(decodeInstanceOrNull(decoder, wireFormat))
+    override fun <T> decodeInstance(source: ByteArray, wireFormat: WireFormat<T>): T =
+        requireNotNull(decodeInstanceOrNull(source, wireFormat))
 
-    override fun <T> decodeInstanceOrNull(decoder: JsonWireFormatDecoder?, wireFormat: WireFormat<T>): T? =
-        fromValueOrNull(decoder) { wireFormat.wireFormatDecode(JsonWireFormatDecoder(decoder?.root as JsonObject)) }
+    override fun <T> decodeInstanceOrNull(source: ByteArray, wireFormat: WireFormat<T>): T? =
+        fromValueOrNull(source) { wireFormat.wireFormatDecode(JsonWireFormatDecoder(source)) }
 
-    override fun <T> decodeInstanceList(decoder: JsonWireFormatDecoder?, wireFormat: WireFormat<T>): List<T> =
-        requireNotNull(decodeInstanceListOrNull(decoder, wireFormat))
+    override fun <T> decodeInstanceList(source: ByteArray, wireFormat: WireFormat<T>): List<T> =
+        requireNotNull(decodeInstanceListOrNull(source, wireFormat))
 
-    override fun <T> decodeInstanceListOrNull(decoder: JsonWireFormatDecoder?, wireFormat: WireFormat<T>): List<T>? =
-        fromArray(decoder) { wireFormat.wireFormatDecode(JsonWireFormatDecoder(this as JsonObject)) }
+    override fun <T> decodeInstanceListOrNull(source: ByteArray, wireFormat: WireFormat<T>): List<T>? =
+        fromArray(source) { wireFormat.wireFormatDecode(JsonWireFormatDecoder(this as JsonObject)) }
 
     // ---------------------------------------------------------------------------
     // Enum
@@ -339,21 +339,21 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun <E : Enum<E>> encodeEnumList(value: List<E>?, entries: EnumEntries<E>): ByteArray =
         arrayOrNull(value) { quotedString(it.name) }
 
-    override fun <E : Enum<E>> decodeEnum(decoder: JsonWireFormatDecoder?, entries: EnumEntries<E>): E =
-        requireNotNull(decodeEnumOrNull(decoder, entries))
+    override fun <E : Enum<E>> decodeEnum(source: ByteArray, entries: EnumEntries<E>): E =
+        requireNotNull(decodeEnumOrNull(source, entries))
 
-    override fun <E : Enum<E>> decodeEnumOrNull(decoder: JsonWireFormatDecoder?, entries: EnumEntries<E>): E? {
-        if (decoder == null) return null
+    override fun <E : Enum<E>> decodeEnumOrNull(source: ByteArray, entries: EnumEntries<E>): E? {
+        val decoder = JsonWireFormatDecoder(source)
         if (decoder.root is JsonNull) return null
         val name = decoder.root.asString
         return entries.first { it.name == name }
     }
 
-    override fun <E : Enum<E>> decodeEnumList(decoder: JsonWireFormatDecoder?, entries: EnumEntries<E>): List<E> =
-        requireNotNull(decodeEnumListOrNull(decoder, entries))
+    override fun <E : Enum<E>> decodeEnumList(source: ByteArray, entries: EnumEntries<E>): List<E> =
+        requireNotNull(decodeEnumListOrNull(source, entries))
 
-    override fun <E : Enum<E>> decodeEnumListOrNull(decoder: JsonWireFormatDecoder?, entries: EnumEntries<E>): List<E>? =
-        fromArray(decoder) {
+    override fun <E : Enum<E>> decodeEnumListOrNull(source: ByteArray, entries: EnumEntries<E>): List<E>? =
+        fromArray(source) {
             val name = asString
             entries.first { it.name == name }
         }
@@ -368,17 +368,17 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun encodeUIntList(value: List<UInt>?): ByteArray =
         arrayOrNull(value) { number(it) }
 
-    override fun decodeUInt(decoder: JsonWireFormatDecoder?): UInt =
-        requireNotNull(decodeUIntOrNull(decoder))
+    override fun decodeUInt(source: ByteArray): UInt =
+        requireNotNull(decodeUIntOrNull(source))
 
-    override fun decodeUIntOrNull(decoder: JsonWireFormatDecoder?): UInt? =
-        fromValueOrNull(decoder) { asUInt }
+    override fun decodeUIntOrNull(source: ByteArray): UInt? =
+        fromValueOrNull(source) { asUInt }
 
-    override fun decodeUIntList(decoder: JsonWireFormatDecoder?): List<UInt> =
-        requireNotNull(decodeUIntListOrNull(decoder))
+    override fun decodeUIntList(source: ByteArray): List<UInt> =
+        requireNotNull(decodeUIntListOrNull(source))
 
-    override fun decodeUIntListOrNull(decoder: JsonWireFormatDecoder?): List<UInt>? =
-        fromArray(decoder) { asUInt }
+    override fun decodeUIntListOrNull(source: ByteArray): List<UInt>? =
+        fromArray(source) { asUInt }
 
     // ---------------------------------------------------------------------------
     // UShort
@@ -390,17 +390,17 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun encodeUShortList(value: List<UShort>?): ByteArray =
         arrayOrNull(value) { number(it) }
 
-    override fun decodeUShort(decoder: JsonWireFormatDecoder?): UShort =
-        requireNotNull(decodeUShortOrNull(decoder))
+    override fun decodeUShort(source: ByteArray): UShort =
+        requireNotNull(decodeUShortOrNull(source))
 
-    override fun decodeUShortOrNull(decoder: JsonWireFormatDecoder?): UShort? =
-        fromValueOrNull(decoder) { asUShort }
+    override fun decodeUShortOrNull(source: ByteArray): UShort? =
+        fromValueOrNull(source) { asUShort }
 
-    override fun decodeUShortList(decoder: JsonWireFormatDecoder?): List<UShort> =
-        requireNotNull(decodeUShortListOrNull(decoder))
+    override fun decodeUShortList(source: ByteArray): List<UShort> =
+        requireNotNull(decodeUShortListOrNull(source))
 
-    override fun decodeUShortListOrNull(decoder: JsonWireFormatDecoder?): List<UShort>? =
-        fromArray(decoder) { asUShort }
+    override fun decodeUShortListOrNull(source: ByteArray): List<UShort>? =
+        fromArray(source) { asUShort }
 
     // ---------------------------------------------------------------------------
     // UByte
@@ -412,17 +412,17 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun encodeUByteList(value: List<UByte>?): ByteArray =
         arrayOrNull(value) { number(it) }
 
-    override fun decodeUByte(decoder: JsonWireFormatDecoder?): UByte =
-        requireNotNull(decodeUByteOrNull(decoder))
+    override fun decodeUByte(source: ByteArray): UByte =
+        requireNotNull(decodeUByteOrNull(source))
 
-    override fun decodeUByteOrNull(decoder: JsonWireFormatDecoder?): UByte? =
-        fromValueOrNull(decoder) { asUByte }
+    override fun decodeUByteOrNull(source: ByteArray): UByte? =
+        fromValueOrNull(source) { asUByte }
 
-    override fun decodeUByteList(decoder: JsonWireFormatDecoder?): List<UByte> =
-        requireNotNull(decodeUByteListOrNull(decoder))
+    override fun decodeUByteList(source: ByteArray): List<UByte> =
+        requireNotNull(decodeUByteListOrNull(source))
 
-    override fun decodeUByteListOrNull(decoder: JsonWireFormatDecoder?): List<UByte>? =
-        fromArray(decoder) { asUByte }
+    override fun decodeUByteListOrNull(source: ByteArray): List<UByte>? =
+        fromArray(source) { asUByte }
 
     // ---------------------------------------------------------------------------
     // ULong
@@ -434,17 +434,17 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
     override fun encodeULongList(value: List<ULong>?): ByteArray =
         arrayOrNull(value) { number(it) }
 
-    override fun decodeULong(decoder: JsonWireFormatDecoder?): ULong =
-        requireNotNull(decodeULongOrNull(decoder))
+    override fun decodeULong(source: ByteArray): ULong =
+        requireNotNull(decodeULongOrNull(source))
 
-    override fun decodeULongOrNull(decoder: JsonWireFormatDecoder?): ULong? =
-        fromValueOrNull(decoder) { asULong }
+    override fun decodeULongOrNull(source: ByteArray): ULong? =
+        fromValueOrNull(source) { asULong }
 
-    override fun decodeULongList(decoder: JsonWireFormatDecoder?): List<ULong> =
-        requireNotNull(decodeULongListOrNull(decoder))
+    override fun decodeULongList(source: ByteArray): List<ULong> =
+        requireNotNull(decodeULongListOrNull(source))
 
-    override fun decodeULongListOrNull(decoder: JsonWireFormatDecoder?): List<ULong>? =
-        fromArray(decoder) { asULong }
+    override fun decodeULongListOrNull(source: ByteArray): List<ULong>? =
+        fromArray(source) { asULong }
 
     // ---------------------------------------------------------------------------
     // Utility
@@ -477,16 +477,16 @@ object JsonStandalone : Standalone<JsonWireFormatDecoder> {
         return writer.pack()
     }
 
-    private fun <T> fromValueOrNull(decoder: JsonWireFormatDecoder?, valueFun: JsonElement.() -> T): T? {
-        if (decoder == null) return null
+    private fun <T> fromValueOrNull(source: ByteArray, valueFun: JsonElement.() -> T): T? {
+        val decoder = JsonWireFormatDecoder(source)
         if (decoder.root is JsonNull) return null
         return decoder.root.valueFun()
     }
 
-    private fun <T> fromArray(decoder: JsonWireFormatDecoder?, valueFun: JsonElement.() -> T): List<T>? {
-        val element = decoder?.root
+    private fun <T> fromArray(source: ByteArray, valueFun: JsonElement.() -> T): List<T>? {
 
-        if (element == null) return null
+        val element = JsonWireFormatDecoder(source).root
+
         if (element is JsonNull) return null
 
         require(element is JsonArray)

@@ -20,14 +20,7 @@ class DirectServiceCallTransport(
         val directServiceContext = BasicServiceContext()
     }
 
-    override suspend fun call(serviceName: String, funName: String, payload: ByteArray): WireFormatDecoder {
-        val wireFormatConfig = defaultWireFormatProvider
-
-        val message = wireFormatConfig.decoder(payload)
-
-        val responsePayload = implementation.newInstance(directServiceContext).dispatch(funName, message)
-
-        return wireFormatConfig.decoder(responsePayload)
-    }
+    override suspend fun call(serviceName: String, funName: String, payload: ByteArray): ByteArray =
+        implementation.newInstance(directServiceContext).dispatch(funName, defaultWireFormatProvider.decoder(payload))
 
 }

@@ -13,8 +13,7 @@ class JsonWireFormatProvider : WireFormatProvider() {
     override fun decoder(payload: ByteArray): WireFormatDecoder =
         JsonWireFormatDecoder(payload)
 
-    @Suppress("UNCHECKED_CAST")
-    override fun standalone(): Standalone<WireFormatDecoder> =
-        JsonStandalone as Standalone<WireFormatDecoder>
+    override fun standalone(): Standalone =
+        JsonStandalone
 
 }

@@ -19,8 +19,7 @@ abstract class AbstractDatetimeTest(
     fun testDuration() {
         val expected = 10.seconds
         val wireFormat = sv.encodeInstance(expected, DurationCoder)
-        val message = wireFormatProvider.decoder(wireFormat)
-        val actual = sv.decodeInstance(message, DurationCoder)
+        val actual = sv.decodeInstance(wireFormat, DurationCoder)
         assertEquals(expected, actual)
     }
 
@@ -28,8 +27,7 @@ abstract class AbstractDatetimeTest(
     fun testInstant() {
         val expected = Clock.System.now()
         val wireFormat = sv.encodeInstance(expected, InstantCoder)
-        val message = wireFormatProvider.decoder(wireFormat)
-        val actual = sv.decodeInstance(message, InstantCoder)
+        val actual = sv.decodeInstance(wireFormat, InstantCoder)
         assertEquals(expected, actual)
     }
 
@@ -37,8 +35,7 @@ abstract class AbstractDatetimeTest(
     fun testLocalDate() {
         val expected = LocalDate(2023, 7, 27)
         val wireFormat = sv.encodeInstance(expected, LocalDateCoder)
-        val message = wireFormatProvider.decoder(wireFormat)
-        val actual = sv.decodeInstance(message, LocalDateCoder)
+        val actual = sv.decodeInstance(wireFormat, LocalDateCoder)
         assertEquals(expected, actual)
     }
 
@@ -46,8 +43,7 @@ abstract class AbstractDatetimeTest(
     fun testLocalDateTime() {
         val expected = LocalDateTime(2023, 7, 27, 15, 35, 5, 11)
         val wireFormat = sv.encodeInstance(expected, LocalDateTimeCoder)
-        val message = wireFormatProvider.decoder(wireFormat)
-        val actual = sv.decodeInstance(message, LocalDateTimeCoder)
+        val actual = sv.decodeInstance(wireFormat, LocalDateTimeCoder)
         assertEquals(expected, actual)
     }
 
@@ -55,8 +51,7 @@ abstract class AbstractDatetimeTest(
     fun testLocalTime() {
         val expected = LocalTime(15, 35)
         val wireFormat = sv.encodeInstance(expected, LocalTimeCoder)
-        val message = wireFormatProvider.decoder(wireFormat)
-        val actual = sv.decodeInstance(message, LocalTimeCoder)
+        val actual = sv.decodeInstance(wireFormat, LocalTimeCoder)
         assertEquals(expected, actual)
     }
 }
