@@ -4,6 +4,7 @@
 package hu.simplexion.z2.kotlin.services.ir.impl
 
 import hu.simplexion.z2.kotlin.common.AbstractIrBuilder
+import hu.simplexion.z2.kotlin.common.functionByName
 import hu.simplexion.z2.kotlin.common.propertyGetter
 import hu.simplexion.z2.kotlin.services.Indices
 import hu.simplexion.z2.kotlin.services.Names
@@ -20,7 +21,9 @@ import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrBranch
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
+import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrDelegatingConstructorCallImpl
+import org.jetbrains.kotlin.ir.expressions.impl.IrElseBranchImpl
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.makeNullable
@@ -88,7 +91,7 @@ class ImplClassTransform(
 
     private fun IrSimpleFunctionSymbol.isServiceFunction(): Boolean {
         val parentClass = owner.parentClassOrNull ?: return false
-        return ! parentClass.isSubclassOf(pluginContext.serviceClass.owner)
+        return parentClass.isSubclassOf(pluginContext.serviceClass.owner)
     }
 
     fun transformConstructor() {
@@ -133,15 +136,18 @@ class ImplClassTransform(
         }
 
         dispatch.body = DeclarationIrBuilder(irContext, dispatch.symbol).irBlockBody {
-            + irBlock(
-                origin = IrStatementOrigin.WHEN
-            ) {
-                val funName = irTemporary(irGet(dispatch.valueParameters[Indices.DISPATCH_FUN_NAME]))
-                + irWhen(
-                    irBuiltIns.byteArray.defaultType,
-                    implementedServiceFunctions.map { dispatchBranch(dispatch, it, funName) }
-                )
-            }
+            + irReturn(
+                irBlock(
+                    origin = IrStatementOrigin.WHEN
+                ) {
+                    val funName = irTemporary(irGet(dispatch.valueParameters[Indices.DISPATCH_FUN_NAME]))
+                    + irWhen(
+                        irBuiltIns.byteArray.defaultType,
+                        implementedServiceFunctions.map { dispatchBranch(dispatch, it, funName) }
+                            + irInvalidIndexBranch(dispatch, irGet(dispatch.valueParameters[Indices.DISPATCH_FUN_NAME]))
+                    )
+                }
+            )
         }
     }
 
@@ -170,8 +176,23 @@ class ImplClassTransform(
             serviceFunction.valueParameters.forEachIndexed { fieldNumber, valueParameter ->
                 it.putValueArgument(
                     fieldNumber,
-                    pluginContext.wireFormatCache.decode(fieldNumber, valueParameter) { irGet(dispatch.valueParameters[Indices.DISPATCH_PAYLOAD]) }
+                    pluginContext.wireFormatCache.decode(fieldNumber + 1, valueParameter) { irGet(dispatch.valueParameters[Indices.DISPATCH_PAYLOAD]) }
                 )
             }
         }
+
+    private fun irInvalidIndexBranch(fromFun: IrSimpleFunction, getFunName: IrExpression) =
+        IrElseBranchImpl(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            irConst(true),
+            IrCallImpl(
+                SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                irBuiltIns.nothingType,
+                transformedClass.functionByName { "unknownFunction" },
+                0, 1
+            ).also {
+                it.dispatchReceiver = irGet(fromFun.dispatchReceiverParameter !!)
+                it.putValueArgument(0, getFunName)
+            }
+        )
 }

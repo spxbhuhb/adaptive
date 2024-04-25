@@ -59,7 +59,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
             return emptySet()
         }
 
-        if (classSymbol.name.identifier == "TestService") return emptySet() // FIXME debug code
+        // if (classSymbol.name.identifier == "TestService1") return emptySet() // FIXME debug code
         return setOf(Names.CONSUMER)
     }
 

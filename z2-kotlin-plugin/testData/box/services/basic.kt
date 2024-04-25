@@ -4,38 +4,15 @@ import hu.simplexion.z2.services.*
 import hu.simplexion.z2.services.transport.*
 import hu.simplexion.z2.services.testing.TestServiceTransport
 import kotlinx.coroutines.runBlocking
+import hu.simplexion.z2.wireformat.WireFormatDecoder
 
-interface BasicTestService : Service {
-
+interface TestService1 : Service {
     suspend fun testFun(arg1: Int, arg2: String): String
-
 }
 
-interface TestService : Service {
-    suspend fun testFun(arg1: Int, arg2: String): String
+val testServiceConsumer = getService<TestService1>()
 
-    class Consumer : TestService {
-
-        override var fqName = "TestService"
-
-        override var serviceCallTransport: ServiceCallTransport? = null
-
-        override suspend fun testFun(arg1: Int, arg2: String): String =
-            wireFormatStandalone.decodeString(
-                callService(
-                    "testFun",
-                    wireFormatEncoder
-                        .int(1, "arg1", arg1)
-                        .string(2, "arg2", arg2)
-                )
-            )
-
-    }
-}
-
-val testServiceConsumer = getService<BasicTestService>()
-
-class BasicTestServiceImpl : BasicTestService, ServiceImpl<BasicTestServiceImpl> {
+class TestService1Impl : TestService1, ServiceImpl<TestService1Impl> {
 
     override suspend fun testFun(arg1: Int, arg2: String) =
         "i:$arg1 s:$arg2 $serviceContext"
@@ -45,8 +22,7 @@ class BasicTestServiceImpl : BasicTestService, ServiceImpl<BasicTestServiceImpl>
 fun box(): String {
     var response: String
     runBlocking {
-        defaultServiceCallTransport = TestServiceTransport(BasicTestServiceImpl())
-        println(defaultServiceCallTransport)
+        defaultServiceCallTransport = TestServiceTransport(TestService1Impl())
         response = testServiceConsumer.testFun(1, "hello")
     }
     return if (response.startsWith("i:1 s:hello BasicServiceContext(")) "OK" else "Fail (response=$response)"

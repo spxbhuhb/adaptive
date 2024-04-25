@@ -18,7 +18,7 @@ class WireFormatPluginContext(
     val standalone = ClassIds.STANDALONE.classSymbol()
 
     val wireFormatEncoder = ClassIds.WIREFORMAT_ENCODER.classSymbol()
-    val wireFormatDecoder = ClassIds.WIREFORMAT_ENCODER.classSymbol()
+    val wireFormatDecoder = ClassIds.WIREFORMAT_DECODER.classSymbol()
 
     val wireFormatTypeTemplate =
         WireFormatType(

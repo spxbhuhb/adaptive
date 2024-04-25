@@ -19,6 +19,7 @@ import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.expressions.IrExpression
+import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 
@@ -91,14 +92,14 @@ class ConsumerClassTransform(
         var payload = irCall(
             consumerClass.propertyGetter { Strings.WIREFORMAT_ENCODER_PROPERTY },
             dispatchReceiver = irGet(function.dispatchReceiverParameter !!)
-        )
+        ).also { it.origin = IrStatementOrigin.GET_PROPERTY }
 
         val parameterCount = function.valueParameters.size
 
         function.valueParameters.forEachIndexed { fieldNumber, valueParameter ->
             payload = pluginContext.wireFormatCache.encode(
                 payload,
-                fieldNumber,
+                fieldNumber + 1,
                 valueParameter.name.identifier,
                 irGet(valueParameter)
             )

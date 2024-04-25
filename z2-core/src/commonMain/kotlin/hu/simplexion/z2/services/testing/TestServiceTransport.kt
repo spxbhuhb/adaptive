@@ -1,5 +1,6 @@
 package hu.simplexion.z2.services.testing
 
+import hu.simplexion.z2.services.BasicServiceContext
 import hu.simplexion.z2.services.ServiceImpl
 import hu.simplexion.z2.services.transport.ServiceCallTransport
 
@@ -16,7 +17,9 @@ class TestServiceTransport(
             println(payload.decodeToString())
         }
 
-        val responsePayload = serviceImpl.dispatch(funName, wireFormatDecoder(payload))
+        val responsePayload = serviceImpl
+            .newInstance(BasicServiceContext())
+            .dispatch(funName, wireFormatDecoder(payload))
 
         if (dump) {
             println("==== RESPONSE ====")

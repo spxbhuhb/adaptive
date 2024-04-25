@@ -30,6 +30,10 @@ interface ServiceImpl<T : ServiceImpl<T>> : Service {
         throw IllegalStateException("newInstance should be overridden by the compiler plugin, is tha plugin missing?")
     }
 
+    fun unknownFunction(funName: String): Nothing {
+        throw IllegalStateException("unknown function: $funName")
+    }
+
     /**
      * Called by service transports to execute a service call. Actual code of this function is generated
      * by the plugin.

@@ -3,9 +3,9 @@
 package hu.simplexion.z2.kotlin.runners;
 
 import com.intellij.testFramework.TestDataPath;
-import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.jetbrains.kotlin.test.TargetBackend;
 import org.jetbrains.kotlin.test.TestMetadata;
+import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -369,6 +369,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
         @TestMetadata("direct.kt")
         public void testDirect() throws Exception {
             runTest("testData/box/services/direct.kt");
+        }
+
+        @Test
+        @TestMetadata("manual.kt")
+        public void testManual() throws Exception {
+            runTest("testData/box/services/manual.kt");
         }
 
         @Test

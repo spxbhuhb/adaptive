@@ -1,11 +1,10 @@
 package hu.simplexion.z2.services
 
+import hu.simplexion.z2.services.*
+import hu.simplexion.z2.services.transport.*
 import hu.simplexion.z2.services.testing.TestServiceTransport
-import hu.simplexion.z2.services.transport.ServiceCallTransport
-import hu.simplexion.z2.wireformat.WireFormatDecoder
 import kotlinx.coroutines.runBlocking
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import hu.simplexion.z2.wireformat.WireFormatDecoder
 
 interface TestService1 : Service {
     suspend fun testFun(arg1: Int, arg2: String): String
@@ -29,16 +28,9 @@ interface TestService1 : Service {
     }
 }
 
-interface TestService2 : Service {
-
-    suspend fun testFun(arg1: Int, arg2: String): String
-
-}
-
-// val testServiceConsumer = getService<TestService2>()
 val testServiceConsumer = TestService1.Consumer()
 
-class TestService2Impl : TestService2, ServiceImpl<TestService2Impl> {
+class TestService1Impl : TestService1, ServiceImpl<TestService1Impl> {
 
     override val serviceContext = BasicServiceContext()
 
@@ -48,7 +40,7 @@ class TestService2Impl : TestService2, ServiceImpl<TestService2Impl> {
     override suspend fun dispatch(funName: String, payload: WireFormatDecoder): ByteArray =
         when (funName) {
             "testFun;IS" -> wireFormatStandalone.encodeString(testFun(payload.int(1, "arg1"), payload.string(2, "arg2")))
-            else -> throw IllegalStateException("unknown function: $funName")
+            else -> TODO()
         }
 
 }
@@ -56,17 +48,8 @@ class TestService2Impl : TestService2, ServiceImpl<TestService2Impl> {
 fun box(): String {
     var response: String
     runBlocking {
-        defaultServiceCallTransport = TestServiceTransport(TestService2Impl())
+        defaultServiceCallTransport = TestServiceTransport(TestService1Impl())
         response = testServiceConsumer.testFun(1, "hello")
     }
     return if (response.startsWith("i:1 s:hello BasicServiceContext(")) "OK" else "Fail (response=$response)"
-}
-
-class BasicServiceTest1 {
-
-    @Test
-    fun basicTest() {
-        assertEquals("OK", box())
-    }
-
 }
