@@ -3,12 +3,13 @@
  */
 package hu.simplexion.z2.kotlin.services.ir.impl
 
+import hu.simplexion.z2.kotlin.common.AbstractIrBuilder
+import hu.simplexion.z2.kotlin.common.propertyGetter
 import hu.simplexion.z2.kotlin.services.Indices
 import hu.simplexion.z2.kotlin.services.Names
 import hu.simplexion.z2.kotlin.services.Strings
 import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
 import hu.simplexion.z2.kotlin.services.ir.util.IrClassBaseBuilder
-import hu.simplexion.z2.kotlin.services.ir.util.ServiceBuilder
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
@@ -27,17 +28,12 @@ import org.jetbrains.kotlin.ir.util.*
 
 class ImplClassTransform(
     override val pluginContext: ServicesPluginContext
-) : IrElementTransformerVoidWithContext(), ServiceBuilder, IrClassBaseBuilder {
+) : IrElementTransformerVoidWithContext(), AbstractIrBuilder, IrClassBaseBuilder {
 
     lateinit var transformedClass: IrClass
 
     lateinit var constructor: IrConstructor
-    override lateinit var serviceNameGetter: IrSimpleFunctionSymbol
     lateinit var serviceContextGetter: IrSimpleFunctionSymbol
-
-    override val overriddenServiceFunctions = mutableListOf<IrSimpleFunctionSymbol>()
-
-    override val serviceNames = mutableListOf<String>()
 
     val implementedServiceFunctions = mutableListOf<ServiceFunctionEntry>()
 
@@ -50,24 +46,25 @@ class ImplClassTransform(
         if (::transformedClass.isInitialized) return declaration
 
         transformedClass = declaration
-        serviceNameGetter = checkNotNull(declaration.getPropertyGetter(Strings.SERVICE_NAME))
         serviceContextGetter = checkNotNull(declaration.getPropertyGetter(Strings.SERVICE_CONTEXT_PROPERTY))
 
         transformConstructor()
         NewInstance(pluginContext, this).build()
 
-        collectServiceFunctions(transformedClass)
-
         super.visitClassNew(declaration)
 
         generateDispatch()
+
+        if (pluginContext.options.dumpKotlinLike) {
+            pluginContext.debug("KOTLIN LIKE") { "\n\n" + transformedClass.dumpKotlinLike(KotlinLikeDumpOptions(printFakeOverridesStrategy = FakeOverridesStrategy.NONE)) }
+        }
 
         return declaration
     }
 
     override fun visitPropertyNew(declaration: IrProperty): IrStatement {
         when (declaration.name) {
-            Names.SERVICE_NAME -> ServiceNamePropertyTransform(pluginContext, this, transformedClass, declaration).build()
+            Names.FQ_NAME -> ServiceNamePropertyTransform(pluginContext, transformedClass, declaration).build()
             Names.SERVICE_CONTEXT_PROPERTY -> ServiceContextPropertyTransform(pluginContext, this, declaration).build()
         }
 
@@ -76,17 +73,22 @@ class ImplClassTransform(
 
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
 
-        // FIXME report an error when an implementation tries to override a non-abstract API function
-        val function = declaration.asServiceFun() ?: return declaration
-
-        if (function.isFakeOverride) return declaration
+        if (declaration !is IrSimpleFunction) return declaration
+        if (! declaration.isSuspend) return declaration
+        if (declaration.isFakeOverride) return declaration
+        if (declaration.overriddenSymbols.none { it.isServiceFunction() }) return declaration
 
         implementedServiceFunctions += ServiceFunctionEntry(
-            pluginContext.wireFormatCache.signature(function),
-            function
+            pluginContext.wireFormatCache.signature(declaration),
+            declaration
         )
 
-        return function
+        return declaration
+    }
+
+    private fun IrSimpleFunctionSymbol.isServiceFunction(): Boolean {
+        val parentClass = owner.parentClassOrNull ?: return false
+        return ! parentClass.isSubclassOf(pluginContext.serviceClass.owner)
     }
 
     fun transformConstructor() {
@@ -153,7 +155,7 @@ class ImplClassTransform(
             pluginContext.wireFormatCache.standaloneEncode(
                 targetType = serviceFunction.function.returnType,
                 standalone = irCall(
-                    pluginContext.getWireFormatStandalone,
+                    transformedClass.propertyGetter { Strings.WIREFORMAT_STANDALONE_PROPERTY },
                     dispatchReceiver = irGet(dispatch.dispatchReceiverParameter !!)
                 ),
                 value = callServiceFunction(dispatch, serviceFunction.function)

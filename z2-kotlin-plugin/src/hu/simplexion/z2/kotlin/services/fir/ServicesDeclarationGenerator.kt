@@ -1,8 +1,11 @@
 package hu.simplexion.z2.kotlin.services.fir
 
-import hu.simplexion.z2.kotlin.services.*
 import hu.simplexion.z2.kotlin.common.isFromPlugin
 import hu.simplexion.z2.kotlin.common.superTypeContains
+import hu.simplexion.z2.kotlin.services.ClassIds
+import hu.simplexion.z2.kotlin.services.Names
+import hu.simplexion.z2.kotlin.services.ServicesPluginKey
+import hu.simplexion.z2.kotlin.services.Strings
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.analysis.checkers.declaration.expandedClass
@@ -56,7 +59,8 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
             return emptySet()
         }
 
-        return setOf(classSymbol.name.serviceConsumerName)
+        if (classSymbol.name.identifier == "TestService") return emptySet() // FIXME debug code
+        return setOf(Names.CONSUMER)
     }
 
     override fun generateNestedClassLikeDeclaration(
@@ -65,7 +69,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         context: NestedClassGenerationContext
     ): FirClassLikeSymbol<*>? {
 
-        if (name != owner.name.serviceConsumerName) return null
+        if (name != Names.CONSUMER) return null
 
         val firClass = createNestedClass(owner, name, ServicesPluginKey) {
             superType(owner.defaultType())
@@ -78,7 +82,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         if (context.isForeign) return emptySet()
 
         return setOf(
-            Names.SERVICE_NAME,
+            Names.FQ_NAME,
             Names.SERVICE_CALL_TRANSPORT_PROPERTY,
             SpecialNames.INIT
         ) + collectFunctions(classSymbol.getContainingDeclarationSymbol(session) !!.classId)
@@ -93,7 +97,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         val symbols = expandedClass
             .declarationSymbols
             .filterIsInstance<FirNamedFunctionSymbol>()
-            .filter { it.isSuspend }
+            .filter { it.isSuspend && it.name.identifier != Strings.CALL_SERVICE }
             .map { it.name }
             .toMutableSet()
 
@@ -114,12 +118,12 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         if (context.isForeign) return emptyList()
 
         return when (callableId.callableName) {
-            Names.SERVICE_NAME -> {
+            Names.FQ_NAME -> {
                 listOf(
                     createMemberProperty(
                         context !!.owner,
                         ServicesPluginKey,
-                        Names.SERVICE_NAME,
+                        Names.FQ_NAME,
                         session.builtinTypes.stringType.coneType,
                         isVal = false,
                         hasBackingField = true
@@ -153,6 +157,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         val interfaceFunctions = context.owner.resolvedSuperTypeRefs
             .map { session.symbolProvider.getClassDeclaredFunctionSymbols(it.toClassLikeSymbol(session) !!.classId, functionName) }
             .flatten()
+            .filter { it.name.identifier != Strings.CALL_SERVICE }
 
         return interfaceFunctions.map { interfaceFunction ->
             createMemberFunction(context.owner, ServicesPluginKey, callableId.callableName, interfaceFunction.resolvedReturnType) {

@@ -11,7 +11,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.nanoseconds
 
 
-object DurationCoder : WireFormat<Duration> {
+object DurationWireFormat : WireFormat<Duration> {
 
     override val fqName: String
         get() = "kotlin.time.Duration"
@@ -27,7 +27,7 @@ object DurationCoder : WireFormat<Duration> {
 
 }
 
-object InstantCoder : WireFormat<Instant> {
+object InstantWireFormat : WireFormat<Instant> {
 
     override val fqName: String
         get() = "kotlinx.datetime.Instant"
@@ -44,7 +44,7 @@ object InstantCoder : WireFormat<Instant> {
 
 }
 
-object LocalDateCoder : WireFormat<LocalDate> {
+object LocalDateWireFormat : WireFormat<LocalDate> {
 
     override val fqName: String
         get() = "kotlinx.datetime.LocalDate"
@@ -66,7 +66,7 @@ object LocalDateCoder : WireFormat<LocalDate> {
 
 }
 
-object LocalDateTimeCoder : WireFormat<LocalDateTime> {
+object LocalDateTimeWireFormat : WireFormat<LocalDateTime> {
 
     override val fqName: String
         get() = "kotlinx.datetime.LocalDateTime"
@@ -96,7 +96,7 @@ object LocalDateTimeCoder : WireFormat<LocalDateTime> {
 
 }
 
-object LocalTimeCoder : WireFormat<LocalTime> {
+object LocalTimeWireFormat : WireFormat<LocalTime> {
 
     override val fqName: String
         get() = "kotlinx.datetime.LocalTime"

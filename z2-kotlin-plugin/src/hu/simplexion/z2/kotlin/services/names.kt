@@ -7,17 +7,14 @@ import hu.simplexion.z2.kotlin.common.NamesBase
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
-val Name.serviceConsumerName
-    get() = Name.identifier("${this.identifier}\$Consumer")
-
 object Strings {
     const val SERVICES_PACKAGE = "hu.simplexion.z2.services"
     const val SERVICES_TRANSPORT_PACKAGE = "hu.simplexion.z2.services.transport"
 
     const val SERVICE = "Service"
-    const val SERVICE_NAME = "serviceName"
-    const val WIREFORMAT_ENCODER = "wireFormatEncoder"
-    const val WIREFORMAT_STANDALONE = "wireFormatStandalone"
+    const val FQ_NAME = "fqName"
+    const val WIREFORMAT_ENCODER_PROPERTY = "wireFormatEncoder"
+    const val WIREFORMAT_STANDALONE_PROPERTY = "wireFormatStandalone"
     const val SERVICE_CALL_TRANSPORT_PROPERTY = "serviceCallTransport"
     const val CALL_SERVICE = "callService"
 
@@ -30,7 +27,7 @@ object Strings {
     const val CALL = "call"
 
     const val SERVICE_CONTEXT = "ServiceContext"
-    const val SERVICE_CONSUMER = "ServiceConsumer"
+    const val CONSUMER = "Consumer"
 
     const val GET_SERVICE = "getService"
     const val DEFAULT_SERVICE_CALL_TRANSPORT = "defaultServiceCallTransport"
@@ -43,7 +40,8 @@ object Strings {
 object Names {
     private fun String.name() = Name.identifier(this)
 
-    val SERVICE_NAME = Strings.SERVICE_NAME.name()
+    val FQ_NAME = Strings.FQ_NAME.name()
+    val CONSUMER = Strings.CONSUMER.name()
     val SERVICE_CONTEXT_PROPERTY = Strings.SERVICE_CONTEXT_PROPERTY.name()
     val SERVICE_CALL_TRANSPORT_PROPERTY = Strings.SERVICE_CALL_TRANSPORT_PROPERTY.name()
 }
@@ -62,7 +60,7 @@ object ClassIds : NamesBase(Strings.SERVICES_PACKAGE) {
 
 object CallableIds : NamesBase(Strings.SERVICES_PACKAGE) {
     val GET_SERVICE = Strings.GET_SERVICE.callableId()
-    val DEFAULT_SERVICE_CALL_TRANSPORT = Strings.DEFAULT_SERVICE_CALL_TRANSPORT.callableId { FqNames.SERVICES_TRANSPORT_PACKAGE }
+    val DEFAULT_SERVICE_CALL_TRANSPORT = Strings.DEFAULT_SERVICE_CALL_TRANSPORT.callableId()
 }
 
 object Indices {

@@ -8,6 +8,7 @@ import hu.simplexion.z2.kotlin.services.ir.consumer.GetConsumerTransform
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
+import org.jetbrains.kotlin.ir.util.dump
 import org.jetbrains.kotlin.ir.visitors.transformChildrenVoid
 
 class ServicesGenerationExtension(
@@ -15,10 +16,14 @@ class ServicesGenerationExtension(
 ) : IrGenerationExtension {
 
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
+        println("==== BEFORE ====")
+        println(moduleFragment.dump())
         ServicesPluginContext(pluginContext, options).apply {
             moduleFragment.transformChildrenVoid(ServicesClassTransform(this))
             moduleFragment.transformChildrenVoid(GetConsumerTransform(this))
         }
+        println("==== AFTER ====")
+        println(moduleFragment.dump())
     }
 
 }

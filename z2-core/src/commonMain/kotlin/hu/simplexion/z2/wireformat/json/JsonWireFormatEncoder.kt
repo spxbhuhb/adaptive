@@ -57,7 +57,7 @@ class JsonWireFormatEncoder(
     }
 
     override fun unitListOrNull(fieldNumber: Int, fieldName: String, values: List<Unit>?): JsonWireFormatEncoder {
-        array(fieldName, values) { v, i -> writer.bool(true) }
+        array(fieldName, values) { _, _ -> writer.bool(true) }
         return this
     }
 

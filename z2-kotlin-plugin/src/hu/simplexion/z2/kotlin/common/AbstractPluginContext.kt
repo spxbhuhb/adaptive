@@ -2,14 +2,12 @@ package hu.simplexion.z2.kotlin.common
 
 import hu.simplexion.z2.kotlin.Z2Options
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
-import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrFieldSymbol
-import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
-import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.util.constructors
+import org.jetbrains.kotlin.ir.util.fields
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
-import org.jetbrains.kotlin.types.checker.SimpleClassicTypeSystemContext.getClassFqNameUnsafe
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
@@ -41,21 +39,6 @@ abstract class AbstractPluginContext(
         checkNotNull(irContext.referenceFunctions(this).first()) {
             "Missing ${this.asSingleFqName()}, is the plugin added to gradle?"
         }
-
-    fun IrClassSymbol.property(nameFun: () -> String): IrProperty {
-        val name = nameFun()
-        return owner.properties.first { it.name.asString() == name }
-    }
-
-    fun IrClassSymbol.propertyGetter(nameFun: () -> String): IrSimpleFunctionSymbol {
-        val name = nameFun()
-        return checkNotNull(getPropertyGetter(name)) { "Missing property getter for in ${this.getClassFqNameUnsafe()} $name" }
-    }
-
-    fun IrClassSymbol.functionByName(nameFun: () -> String): IrSimpleFunctionSymbol {
-        val name = nameFun()
-        return functions.single { it.owner.name.asString() == name }
-    }
 
     fun IrClassSymbol.singleConstructor() =
         owner.constructors.single()

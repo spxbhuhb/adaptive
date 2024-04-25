@@ -5,8 +5,8 @@ package hu.simplexion.z2.kotlin.wireformat
 
 import hu.simplexion.z2.kotlin.Z2Options
 import hu.simplexion.z2.kotlin.common.AbstractPluginContext
+import hu.simplexion.z2.kotlin.common.functionByName
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
-import kotlin.math.sign
 
 class WireFormatPluginContext(
     irContext: IrPluginContext,
@@ -22,17 +22,17 @@ class WireFormatPluginContext(
 
     val wireFormatTypeTemplate =
         WireFormatType(
-            encode = wireFormatEncoder.functionByName { Strings.ENCODE_INSTANCE },
-            decode = wireFormatDecoder.functionByName { Strings.DECODE_INSTANCE },
+            encode = wireFormatEncoder.functionByName { Strings.INSTANCE },
+            decode = wireFormatDecoder.functionByName { Strings.INSTANCE },
 
-            encodeOrNull = wireFormatEncoder.functionByName { Strings.ENCODE_INSTANCE_OR_NULL },
-            decodeOrNull = wireFormatDecoder.functionByName { Strings.DECODE_INSTANCE_OR_NULL },
+            encodeOrNull = wireFormatEncoder.functionByName { Strings.INSTANCE_OR_NULL },
+            decodeOrNull = wireFormatDecoder.functionByName { Strings.INSTANCE_OR_NULL },
 
-            encodeList = wireFormatEncoder.functionByName { Strings.ENCODE_INSTANCE_LIST },
-            decodeList = wireFormatDecoder.functionByName { Strings.DECODE_INSTANCE_LIST },
+            encodeList = wireFormatEncoder.functionByName { Strings.INSTANCE_LIST },
+            decodeList = wireFormatDecoder.functionByName { Strings.INSTANCE_LIST },
 
-            encodeListOrNull = wireFormatEncoder.functionByName { Strings.ENCODE_INSTANCE_LIST_OR_NULL },
-            decodeListOrNull = wireFormatDecoder.functionByName { Strings.DECODE_INSTANCE_LIST_OR_NULL },
+            encodeListOrNull = wireFormatEncoder.functionByName { Strings.INSTANCE_LIST_OR_NULL },
+            decodeListOrNull = wireFormatDecoder.functionByName { Strings.INSTANCE_LIST_OR_NULL },
 
             standaloneEncode = standalone.functionByName { Strings.ENCODE_INSTANCE },
             standaloneDecode = standalone.functionByName { Strings.DECODE_INSTANCE },

@@ -3,7 +3,6 @@
  */
 package hu.simplexion.z2.kotlin.common
 
-import hu.simplexion.z2.kotlin.adaptive.ClassIds.name
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
@@ -16,6 +15,9 @@ const val KOTLIN = "kotlin"
 const val KOTLIN_COLLECTIONS = "kotlin.collections"
 const val LIST = "List"
 const val NOT_IMPLEMENTED_ERROR = "NotImplementedError"
+
+val String.asClassId: ClassId
+    get() = ClassId(FqName(this.substringBeforeLast('.')), Name.identifier(this.substringAfterLast('.')))
 
 val FqName.companionClassId
     get() = ClassId(parent(), shortName()).createNestedClassId(CommonNames.COMPANION_OBJECT)

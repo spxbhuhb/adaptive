@@ -17,17 +17,17 @@ class ServicesClassTransform(
 
     override fun visitClassNew(declaration: IrClass): IrStatement {
 
+        // transform implementation if subtype of `ServiceImpl`, must be before the `Service` transform
+
+        if (declaration.defaultType.isSubtypeOfClass(pluginContext.serviceImplClass)) {
+            return declaration.accept(ImplClassTransform(pluginContext), null) as IrStatement
+        }
+
         // create consumer class if subtype of `Service`
 
         if (declaration.defaultType.isSubtypeOfClass(pluginContext.serviceClass)) {
             ConsumerClassTransform(pluginContext, declaration).build()
             return declaration
-        }
-
-        // transform implementation if subtype of `ServiceImpl`
-
-        if (declaration.defaultType.isSubtypeOfClass(pluginContext.serviceImplClass)) {
-            return declaration.accept(ImplClassTransform(pluginContext), null) as IrStatement
         }
 
         return declaration

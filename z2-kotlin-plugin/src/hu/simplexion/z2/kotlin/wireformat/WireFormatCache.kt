@@ -9,7 +9,8 @@ import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
-import org.jetbrains.kotlin.ir.types.*
+import org.jetbrains.kotlin.ir.types.IrType
+import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.name.FqName
 
 class WireFormatCache(
@@ -40,11 +41,11 @@ class WireFormatCache(
         "kotlin.UByte" to "Int".toWireFormatType(pluginContext, "+B"),
         "kotlin.ULong" to "Long".toWireFormatType(pluginContext, "+J"),
 
-        "kotlin.time.Duration" to "${Strings.BUILTIN_PACKAGE}.Duration".toInstanceWireFormatType(pluginContext),
-        "kotlinx.datetime.Instant" to "${Strings.BUILTIN_PACKAGE}.Instant".toInstanceWireFormatType(pluginContext),
-        "kotlinx.datetime.LocalDateTime" to "${Strings.BUILTIN_PACKAGE}.LocalDateTime".toInstanceWireFormatType(pluginContext),
-        "kotlinx.datetime.LocalDate" to "${Strings.BUILTIN_PACKAGE}.LocalDate".toInstanceWireFormatType(pluginContext),
-        "kotlinx.datetime.LocalTime" to "${Strings.BUILTIN_PACKAGE}.LocalTime".toInstanceWireFormatType(pluginContext),
+        "kotlin.time.Duration" to Strings.DURATION_WIREFORMAT.toInstanceWireFormatType(pluginContext),
+        "kotlinx.datetime.Instant" to Strings.INSTANT_WIREFORMAT.toInstanceWireFormatType(pluginContext),
+        "kotlinx.datetime.LocalDateTime" to Strings.LOCALDATETIME_WIREFORMAT.toInstanceWireFormatType(pluginContext),
+        "kotlinx.datetime.LocalDate" to Strings.LOCALDATE_WIREFORMAT.toInstanceWireFormatType(pluginContext),
+        "kotlinx.datetime.LocalTime" to Strings.LOCALTIME_WIREFORMAT.toInstanceWireFormatType(pluginContext),
 
         "hu.simplexion.z2.utility.UUID" to "Uuid".toWireFormatType(pluginContext, "U")
     )

@@ -18,7 +18,6 @@ import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.getPrimitiveType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.types.isBoolean
-import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.ir.util.getPrimitiveArrayElementType
@@ -264,9 +263,7 @@ interface AbstractIrBuilder {
     fun irAnd(lhs: IrExpression, rhs: IrExpression): IrCallImpl {
         return irCall(
             lhs.type.binaryOperator(OperatorNameConventions.AND, rhs.type),
-            null,
             lhs,
-            null,
             rhs
         )
     }
@@ -275,9 +272,7 @@ interface AbstractIrBuilder {
         val int = irContext.irBuiltIns.intType
         return irCall(
             int.binaryOperator(OperatorNameConventions.OR, int),
-            null,
             lhs,
-            null,
             rhs
         )
     }
@@ -285,8 +280,6 @@ interface AbstractIrBuilder {
     fun irEqual(lhs: IrExpression, rhs: IrExpression): IrExpression {
         return irCall(
             this.irContext.irBuiltIns.eqeqSymbol,
-            null,
-            null,
             null,
             lhs,
             rhs
@@ -341,16 +334,7 @@ interface AbstractIrBuilder {
     fun irCall(
         symbol: IrFunctionSymbol,
         dispatchReceiver: IrExpression?,
-        vararg args: IrExpression
-    ): IrCallImpl =
-        irCall(symbol, dispatchReceiver = dispatchReceiver, *args)
-
-    fun irCall(
-        symbol: IrFunctionSymbol,
-        origin: IrStatementOrigin? = null,
-        dispatchReceiver: IrExpression? = null,
-        extensionReceiver: IrExpression? = null,
-        vararg args: IrExpression
+        vararg args: IrExpression,
     ): IrCallImpl {
         return IrCallImpl(
             UNDEFINED_OFFSET,
@@ -358,11 +342,9 @@ interface AbstractIrBuilder {
             symbol.owner.returnType,
             symbol as IrSimpleFunctionSymbol,
             symbol.owner.typeParameters.size,
-            symbol.owner.valueParameters.size,
-            origin
+            symbol.owner.valueParameters.size
         ).also {
             if (dispatchReceiver != null) it.dispatchReceiver = dispatchReceiver
-            if (extensionReceiver != null) it.extensionReceiver = extensionReceiver
             args.forEachIndexed { index, arg ->
                 it.putValueArgument(index, arg)
             }

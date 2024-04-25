@@ -1,5 +1,7 @@
 package hu.simplexion.z2.kotlin.wireformat
 
+import hu.simplexion.z2.kotlin.common.asClassId
+import hu.simplexion.z2.kotlin.common.functionByName
 import org.jetbrains.kotlin.ir.util.isSubclassOf
 import org.jetbrains.kotlin.name.ClassId
 
@@ -36,7 +38,7 @@ fun String.toWireFormatType(pluginContext: WireFormatPluginContext, signature: S
 }
 
 fun String.toInstanceWireFormatType(pluginContext: WireFormatPluginContext): WireFormatType =
-    ClassId.fromString(this).toInstanceWireFormatType(pluginContext)
+    this.asClassId.toInstanceWireFormatType(pluginContext)
 
 fun ClassId.toInstanceWireFormatType(pluginContext: WireFormatPluginContext): WireFormatType {
     val classId = this

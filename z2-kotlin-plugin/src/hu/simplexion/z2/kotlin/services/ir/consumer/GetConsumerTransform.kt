@@ -3,9 +3,9 @@
  */
 package hu.simplexion.z2.kotlin.services.ir.consumer
 
-import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
-import hu.simplexion.z2.kotlin.services.serviceConsumerName
 import hu.simplexion.z2.kotlin.common.AbstractIrBuilder
+import hu.simplexion.z2.kotlin.services.Names
+import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
@@ -37,7 +37,7 @@ class GetConsumerTransform(
         val interfaceClassFqName = requireNotNull(type.classFqName)
         val interfaceClassParent = requireNotNull(interfaceClassFqName.parentOrNull())
         val interfaceClassName = interfaceClassFqName.shortName()
-        val consumerClassId = ClassId(interfaceClassParent, interfaceClassName).createNestedClassId(interfaceClassName.serviceConsumerName)
+        val consumerClassId = ClassId(interfaceClassParent, interfaceClassName).createNestedClassId(Names.CONSUMER)
 
         val consumerClass = requireNotNull(irContext.referenceClass(consumerClassId)) {
             "missing consumer class (should be generated, this is a plugin error): $consumerClassId"

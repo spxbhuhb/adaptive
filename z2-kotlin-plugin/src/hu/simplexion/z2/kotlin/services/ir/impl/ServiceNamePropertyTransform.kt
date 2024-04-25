@@ -3,9 +3,8 @@
  */
 package hu.simplexion.z2.kotlin.services.ir.impl
 
-import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
-import hu.simplexion.z2.kotlin.services.ir.util.ServiceBuilder
 import hu.simplexion.z2.kotlin.common.AbstractIrBuilder
+import hu.simplexion.z2.kotlin.services.ir.ServicesPluginContext
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
@@ -14,12 +13,13 @@ import org.jetbrains.kotlin.ir.builders.declarations.buildField
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrSetFieldImpl
+import org.jetbrains.kotlin.ir.types.classFqName
+import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.ir.util.kotlinFqName
 
 class ServiceNamePropertyTransform(
     override val pluginContext: ServicesPluginContext,
-    val serviceBuilder: ServiceBuilder,
     val transformedClass: IrClass,
     var property: IrProperty
 ) : AbstractIrBuilder {
@@ -27,9 +27,17 @@ class ServiceNamePropertyTransform(
     fun build() {
         if (! property.isFakeOverride) return
 
-        require(serviceBuilder.serviceNames.isNotEmpty()) { "${transformedClass.kotlinFqName} missing service interface (probably ': Service' is missing)" }
-        require(serviceBuilder.serviceNames.size == 1) {
-            "${transformedClass.kotlinFqName} you have to set `serviceName` manually when more than one service is implemented (${serviceBuilder.serviceNames.joinToString()})"
+        val serviceNames = transformedClass.superTypes.mapNotNull { superType ->
+            if (superType.isSubtypeOfClass(pluginContext.serviceClass) && ! superType.isSubtypeOfClass(pluginContext.serviceImplClass)) {
+                superType.classFqName !!.asString()
+            } else {
+                null
+            }
+        }
+
+        require(serviceNames.isNotEmpty()) { "${transformedClass.kotlinFqName} missing service interface (probably ': Service' is missing)" }
+        require(serviceNames.size == 1) {
+            "${transformedClass.kotlinFqName} you have to set `serviceName` manually when more than one service is implemented (${serviceNames.joinToString()})"
         }
 
         property.isFakeOverride = false
@@ -42,7 +50,7 @@ class ServiceNamePropertyTransform(
             visibility = DescriptorVisibilities.PRIVATE
         }.apply {
             parent = property.parent
-            initializer = irFactory.createExpressionBody(irConst(serviceBuilder.serviceNames.first()))
+            initializer = irFactory.createExpressionBody(irConst(serviceNames.single()))
             correspondingPropertySymbol = property.symbol
         }
 

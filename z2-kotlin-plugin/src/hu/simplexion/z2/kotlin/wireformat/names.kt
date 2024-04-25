@@ -22,14 +22,23 @@ object Strings {
     const val ENCODE_INSTANCE = "encodeInstance"
     const val DECODE_INSTANCE = "decodeInstance"
 
-    const val ENCODE_INSTANCE_OR_NULL = "encodeInstanceOrNull"
     const val DECODE_INSTANCE_OR_NULL = "decodeInstanceOrNull"
 
     const val ENCODE_INSTANCE_LIST = "encodeInstanceList"
     const val DECODE_INSTANCE_LIST = "encodeInstanceList"
 
-    const val ENCODE_INSTANCE_LIST_OR_NULL = "encodeInstanceListOrNull"
-    const val DECODE_INSTANCE_LIST_OR_NULL = "encodeInstanceListOrNull"
+    const val DECODE_INSTANCE_LIST_OR_NULL = "decodeInstanceListOrNull"
+
+    const val INSTANCE = "instance"
+    const val INSTANCE_OR_NULL = "instanceOrNull"
+    const val INSTANCE_LIST = "instanceList"
+    const val INSTANCE_LIST_OR_NULL = "instanceListOrNull"
+
+    const val DURATION_WIREFORMAT = "$BUILTIN_PACKAGE.DurationWireFormat"
+    const val INSTANT_WIREFORMAT = "$BUILTIN_PACKAGE.InstantWireFormat"
+    const val LOCALDATE_WIREFORMAT = "$BUILTIN_PACKAGE.LocalDateWireFormat"
+    const val LOCALDATETIME_WIREFORMAT = "$BUILTIN_PACKAGE.LocalDateTimeWireFormat"
+    const val LOCALTIME_WIREFORMAT = "$BUILTIN_PACKAGE.LocalTimeWireFormat"
 }
 
 object FqNames {

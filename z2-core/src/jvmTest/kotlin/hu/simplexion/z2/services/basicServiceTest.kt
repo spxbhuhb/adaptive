@@ -33,7 +33,7 @@ interface TestService : Service {
         override var fqName = "TestService"
 
         override var serviceCallTransport: ServiceCallTransport? =
-            // defaultServiceCallTransport in actual code
+            // null in actual code
             TestServiceTransport(TestServiceImpl(BasicServiceContext()))
 
         override suspend fun testFun(arg1: Int, arg2: String): String =
@@ -54,7 +54,7 @@ class TestServiceImpl(override val serviceContext: ServiceContext) : TestService
     override var fqName = "TestService"
 
     override var serviceCallTransport: ServiceCallTransport? =
-        // defaultServiceCallTransport in actual code
+        // null in actual code
         LocalServiceCallTransport()
 
     override suspend fun dispatch(funName: String, payload: WireFormatDecoder): ByteArray =
