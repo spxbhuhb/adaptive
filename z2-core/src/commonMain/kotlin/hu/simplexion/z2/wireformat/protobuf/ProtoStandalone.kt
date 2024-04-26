@@ -5,6 +5,7 @@ import hu.simplexion.z2.wireformat.Standalone
 import hu.simplexion.z2.wireformat.WireFormat
 import kotlin.enums.EnumEntries
 
+@OptIn(ExperimentalUnsignedTypes::class)
 object ProtoStandalone : Standalone {
 
     fun encoder(): ProtoWireFormatEncoder =

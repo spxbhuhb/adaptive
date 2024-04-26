@@ -106,7 +106,7 @@ interface WireFormatDecoder<ST> {
 
     fun intArrayOrNull(fieldNumber: Int, fieldName: String): IntArray?
 
-    fun rawIntArray(fieldNumber: Int, fieldName: String): IntArray
+    fun rawIntArray(source: ST): IntArray
 
     // ----
 
@@ -134,7 +134,7 @@ interface WireFormatDecoder<ST> {
 
     // ----
 
-    fun floatArray(fieldNumber: Int, fieldName: String): Float
+    fun floatArray(fieldNumber: Int, fieldName: String): FloatArray
 
     fun floatArrayOrNull(fieldNumber: Int, fieldName: String): FloatArray?
 
@@ -200,7 +200,7 @@ interface WireFormatDecoder<ST> {
 
     fun <T> collectionOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): Collection<T>?
 
-    fun <T> rawCollection(source: ST, wireFormat: WireFormat<T>): Collection<T>
+    // fun <T> rawCollection(source: ST, wireFormat: WireFormat<T>): Collection<T>
 
     // -----------------------------------------------------------------------------------------
     // Unsigned Primitives

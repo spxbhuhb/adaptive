@@ -75,24 +75,6 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
-    override fun booleanArray(fieldNumber: Int, fieldName: String, values: BooleanArray): ProtoWireFormatEncoder {
-        sub(fieldNumber) {
-            for (value in values) {
-                it.bool(value)
-            }
-        }
-        return this
-    }
-
-    override fun booleanArrayOrNull(fieldNumber: Int, fieldName: String, values: BooleanArray?): ProtoWireFormatEncoder {
-        if (values == null) {
-            writer.bool(fieldNumber + NULL_SHIFT, true)
-        } else {
-            booleanArray(fieldNumber, fieldName, values)
-        }
-        return this
-    }
-
     override fun rawBoolean(value: Boolean): WireFormatEncoder {
         writer.bool(true)
         return this
@@ -112,24 +94,6 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
             writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             writer.sint32(fieldNumber, value)
-        }
-        return this
-    }
-
-    override fun intArray(fieldNumber: Int, fieldName: String, values: IntArray): ProtoWireFormatEncoder {
-        sub(fieldNumber) {
-            for (value in values) {
-                it.sint32(value)
-            }
-        }
-        return this
-    }
-
-    override fun intArrayOrNull(fieldNumber: Int, fieldName: String, values: IntArray?): ProtoWireFormatEncoder {
-        if (values == null) {
-            writer.bool(fieldNumber + NULL_SHIFT, true)
-        } else {
-            intArray(fieldNumber, fieldName, values)
         }
         return this
     }
@@ -157,24 +121,6 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
-    override fun shortArray(fieldNumber: Int, fieldName: String, values: ShortArray): ProtoWireFormatEncoder {
-        sub(fieldNumber) {
-            for (value in values) {
-                it.sint32(value.toInt())
-            }
-        }
-        return this
-    }
-
-    override fun shortArrayOrNull(fieldNumber: Int, fieldName: String, values: ShortArray?): ProtoWireFormatEncoder {
-        if (values == null) {
-            writer.bool(fieldNumber + NULL_SHIFT, true)
-        } else {
-            shortArray(fieldNumber, fieldName, values)
-        }
-        return this
-    }
-
     override fun rawShort(value: Short): WireFormatEncoder {
         writer.sint32(value.toInt())
         return this
@@ -198,25 +144,6 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
-    override fun byteArray(fieldNumber: Int, fieldName: String, value: ByteArray): ProtoWireFormatEncoder {
-        writer.bytes(fieldNumber, value)
-        return this
-    }
-
-    override fun byteArrayOrNull(fieldNumber: Int, fieldName: String, value: ByteArray?): ProtoWireFormatEncoder {
-        if (value == null) {
-            writer.bool(fieldNumber + NULL_SHIFT, true)
-        } else {
-            writer.bytes(fieldNumber, value)
-        }
-        return this
-    }
-
-    override fun rawByteArray(value: ByteArray): WireFormatEncoder {
-        writer.bytes(value)
-        return this
-    }
-
     override fun rawByte(value: Byte): WireFormatEncoder {
         writer.sint32(value.toInt())
         return this
@@ -236,24 +163,6 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
             writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             writer.sint64(fieldNumber, value)
-        }
-        return this
-    }
-
-    override fun longArray(fieldNumber: Int, fieldName: String, values: LongArray): ProtoWireFormatEncoder {
-        sub(fieldNumber) {
-            for (value in values) {
-                it.sint64(value)
-            }
-        }
-        return this
-    }
-
-    override fun longArrayOrNull(fieldNumber: Int, fieldName: String, values: LongArray?): ProtoWireFormatEncoder {
-        if (values == null) {
-            writer.bool(fieldNumber + NULL_SHIFT, true)
-        } else {
-            longArray(fieldNumber, fieldName, values)
         }
         return this
     }
@@ -281,24 +190,6 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
-    override fun floatArray(fieldNumber: Int, fieldName: String, values: FloatArray): ProtoWireFormatEncoder {
-        sub(fieldNumber) {
-            for (value in values) {
-                it.fixed32(value.toBits().toUInt())
-            }
-        }
-        return this
-    }
-
-    override fun floatArrayOrNull(fieldNumber: Int, fieldName: String, values: FloatArray?): ProtoWireFormatEncoder {
-        if (values == null) {
-            writer.bool(fieldNumber + NULL_SHIFT, true)
-        } else {
-            floatArray(fieldNumber, fieldName, values)
-        }
-        return this
-    }
-
     override fun rawFloat(value: Float): WireFormatEncoder {
         writer.fixed32(value.toBits().toUInt())
         return this
@@ -318,24 +209,6 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
             writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             writer.fixed64(fieldNumber, value.toBits().toULong())
-        }
-        return this
-    }
-
-    override fun doubleArray(fieldNumber: Int, fieldName: String, values: DoubleArray): ProtoWireFormatEncoder {
-        sub(fieldNumber) {
-            for (value in values) {
-                it.fixed64(value.toBits().toULong())
-            }
-        }
-        return this
-    }
-
-    override fun doubleArrayOrNull(fieldNumber: Int, fieldName: String, values: DoubleArray?): ProtoWireFormatEncoder {
-        if (values == null) {
-            writer.bool(fieldNumber + NULL_SHIFT, true)
-        } else {
-            doubleArray(fieldNumber, fieldName, values)
         }
         return this
     }
@@ -363,26 +236,234 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
-    override fun charArray(fieldNumber: Int, fieldName: String, values: CharArray): ProtoWireFormatEncoder {
+    override fun rawChar(value: Char): WireFormatEncoder {
+        writer.sint32(value.code)
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // BooleanArray
+    // ----------------------------------------------------------------------------
+
+    override fun booleanArray(fieldNumber: Int, fieldName: String, value: BooleanArray): ProtoWireFormatEncoder {
         sub(fieldNumber) {
-            for (value in values) {
-                it.sint32(value.code)
+            for (item in value) {
+                it.bool(item)
             }
         }
         return this
     }
 
-    override fun charArrayOrNull(fieldNumber: Int, fieldName: String, values: CharArray?): ProtoWireFormatEncoder {
-        if (values == null) {
+    override fun booleanArrayOrNull(fieldNumber: Int, fieldName: String, value: BooleanArray?): ProtoWireFormatEncoder {
+        if (value == null) {
             writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
-            charArray(fieldNumber, fieldName, values)
+            booleanArray(fieldNumber, fieldName, value)
         }
         return this
     }
 
-    override fun rawChar(value: Char): WireFormatEncoder {
-        writer.sint32(value.code)
+    override fun rawBooleanArray(value: BooleanArray): WireFormatEncoder {
+        for (item in value) {
+            writer.bool(item)
+        }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // IntArray
+    // ----------------------------------------------------------------------------
+
+    override fun intArray(fieldNumber: Int, fieldName: String, value: IntArray): ProtoWireFormatEncoder {
+        sub(fieldNumber) {
+            for (item in value) {
+                it.sint32(item)
+            }
+        }
+        return this
+    }
+
+    override fun intArrayOrNull(fieldNumber: Int, fieldName: String, value: IntArray?): ProtoWireFormatEncoder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            intArray(fieldNumber, fieldName, value)
+        }
+        return this
+    }
+
+    override fun rawIntArray(value: IntArray): WireFormatEncoder {
+        for (item in value) {
+            writer.sint32(item)
+        }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // ShortArray
+    // ----------------------------------------------------------------------------
+
+    override fun shortArray(fieldNumber: Int, fieldName: String, value: ShortArray): ProtoWireFormatEncoder {
+        sub(fieldNumber) {
+            for (item in value) {
+                it.sint32(item.toInt())
+            }
+        }
+        return this
+    }
+
+    override fun shortArrayOrNull(fieldNumber: Int, fieldName: String, value: ShortArray?): ProtoWireFormatEncoder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            shortArray(fieldNumber, fieldName, value)
+        }
+        return this
+    }
+
+    override fun rawShortArray(value: ShortArray): WireFormatEncoder {
+        for (item in value) {
+            writer.sint32(item.toInt())
+        }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // ByteArray
+    // ----------------------------------------------------------------------------
+
+    override fun byteArray(fieldNumber: Int, fieldName: String, value: ByteArray): ProtoWireFormatEncoder {
+        writer.bytes(fieldNumber, value)
+        return this
+    }
+
+    override fun byteArrayOrNull(fieldNumber: Int, fieldName: String, value: ByteArray?): ProtoWireFormatEncoder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            writer.bytes(fieldNumber, value)
+        }
+        return this
+    }
+
+    override fun rawByteArray(value: ByteArray): WireFormatEncoder {
+        writer.bytes(value)
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // LongArray
+    // ----------------------------------------------------------------------------
+
+    override fun longArray(fieldNumber: Int, fieldName: String, value: LongArray): ProtoWireFormatEncoder {
+        sub(fieldNumber) {
+            for (item in value) {
+                it.sint64(item)
+            }
+        }
+        return this
+    }
+
+    override fun longArrayOrNull(fieldNumber: Int, fieldName: String, value: LongArray?): ProtoWireFormatEncoder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            longArray(fieldNumber, fieldName, value)
+        }
+        return this
+    }
+
+    override fun rawLongArray(value: LongArray): WireFormatEncoder {
+        for (item in value) {
+            writer.sint64(item)
+        }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // FloatArray
+    // ----------------------------------------------------------------------------
+
+    override fun floatArray(fieldNumber: Int, fieldName: String, value: FloatArray): ProtoWireFormatEncoder {
+        sub(fieldNumber) {
+            for (item in value) {
+                it.fixed32(item.toBits().toUInt())
+            }
+        }
+        return this
+    }
+
+    override fun floatArrayOrNull(fieldNumber: Int, fieldName: String, value: FloatArray?): ProtoWireFormatEncoder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            floatArray(fieldNumber, fieldName, value)
+        }
+        return this
+    }
+
+    override fun rawFloatArray(value: FloatArray): WireFormatEncoder {
+        for (item in value) {
+            writer.fixed32(item.toBits().toUInt())
+        }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // DoubleArray
+    // ----------------------------------------------------------------------------
+
+    override fun doubleArray(fieldNumber: Int, fieldName: String, value: DoubleArray): ProtoWireFormatEncoder {
+        sub(fieldNumber) {
+            for (item in value) {
+                it.fixed64(item.toBits().toULong())
+            }
+        }
+        return this
+    }
+
+    override fun doubleArrayOrNull(fieldNumber: Int, fieldName: String, value: DoubleArray?): ProtoWireFormatEncoder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            doubleArray(fieldNumber, fieldName, value)
+        }
+        return this
+    }
+
+    override fun rawDoubleArray(value: DoubleArray): WireFormatEncoder {
+        for (item in value) {
+            writer.fixed64(item.toBits().toULong())
+        }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // CharArray
+    // ----------------------------------------------------------------------------
+
+    override fun charArray(fieldNumber: Int, fieldName: String, value: CharArray): ProtoWireFormatEncoder {
+        sub(fieldNumber) {
+            for (item in value) {
+                it.sint32(item.code)
+            }
+        }
+        return this
+    }
+
+    override fun charArrayOrNull(fieldNumber: Int, fieldName: String, value: CharArray?): ProtoWireFormatEncoder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            charArray(fieldNumber, fieldName, value)
+        }
+        return this
+    }
+
+    override fun rawCharArray(value: CharArray): WireFormatEncoder {
+        for (item in value) {
+            writer.sint32(item.code)
+        }
         return this
     }
 
@@ -410,13 +491,32 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
     }
 
     // ----------------------------------------------------------------------------
+    // Enum
+    // ----------------------------------------------------------------------------
+
+    override fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, value: E, entries: EnumEntries<E>): WireFormatEncoder {
+        writer.sint32(fieldNumber, value.ordinal)
+        return this
+    }
+
+    override fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, value: E?, entries: EnumEntries<E>): WireFormatEncoder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            writer.sint32(fieldNumber, value.ordinal)
+        }
+        return this
+    }
+
+    override fun <E : Enum<E>> rawEnum(value: E, entries: EnumEntries<E>): WireFormatEncoder {
+        writer.sint32(value.ordinal)
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
     // UUID
     // ----------------------------------------------------------------------------
 
-    /**
-     * Add a UUID to the message. Uses `bytes` to store the 16 raw bytes of
-     * the UUID.
-     */
     override fun uuid(fieldNumber: Int, fieldName: String, value: UUID<*>): ProtoWireFormatEncoder {
         writer.bytes(fieldNumber, value.toByteArray())
         return this
@@ -462,25 +562,24 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
     }
 
     // ----------------------------------------------------------------------------
-    // Int
+    // Collection
     // ----------------------------------------------------------------------------
 
-    override fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, value: E, entries: EnumEntries<E>): WireFormatEncoder {
-        writer.sint32(fieldNumber, value.ordinal)
-        return this
-    }
-
-    override fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, value: E?, entries: EnumEntries<E>): WireFormatEncoder {
-        if (value == null) {
-            writer.bool(fieldNumber + NULL_SHIFT, true)
-        } else {
-            writer.sint32(fieldNumber, value.ordinal)
+    override fun <T> collection(fieldNumber: Int, fieldName: String, value: Collection<T>, wireFormat: WireFormat<T>): ProtoWireFormatEncoder {
+        for (item in value) {
+            instance(fieldNumber, fieldName, item, wireFormat)
         }
         return this
     }
 
-    override fun <E : Enum<E>> rawEnum(value: E, entries: EnumEntries<E>): WireFormatEncoder {
-        writer.sint32(value.ordinal)
+    override fun <T> collectionOrNull(fieldNumber: Int, fieldName: String, value: Collection<T>?, wireFormat: WireFormat<T>): ProtoWireFormatEncoder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            for (item in value) {
+                instance(fieldNumber, fieldName, item, wireFormat)
+            }
+        }
         return this
     }
 
@@ -498,24 +597,6 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
             writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             writer.fixed32(fieldNumber, value)
-        }
-        return this
-    }
-
-    override fun uIntArray(fieldNumber: Int, fieldName: String, values: UIntArray): ProtoWireFormatEncoder {
-        sub(fieldNumber) {
-            for (value in values) {
-                it.fixed32(value)
-            }
-        }
-        return this
-    }
-
-    override fun uIntArrayOrNull(fieldNumber: Int, fieldName: String, values: UIntArray?): ProtoWireFormatEncoder {
-        if (values == null) {
-            writer.bool(fieldNumber + NULL_SHIFT, true)
-        } else {
-            uIntArray(fieldNumber, fieldName, values)
         }
         return this
     }
@@ -543,24 +624,6 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
-    override fun uShortArray(fieldNumber: Int, fieldName: String, values: UShortArray): ProtoWireFormatEncoder {
-        sub(fieldNumber) {
-            for (value in values) {
-                it.sint32(value.toInt())
-            }
-        }
-        return this
-    }
-
-    override fun uShortArrayOrNull(fieldNumber: Int, fieldName: String, values: UShortArray?): ProtoWireFormatEncoder {
-        if (values == null) {
-            writer.bool(fieldNumber + NULL_SHIFT, true)
-        } else {
-            uShortArray(fieldNumber, fieldName, values)
-        }
-        return this
-    }
-
     override fun rawUShort(value: UShort): WireFormatEncoder {
         writer.sint32(value.toInt())
         return this
@@ -580,24 +643,6 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
             writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
             writer.sint32(fieldNumber, value.toInt())
-        }
-        return this
-    }
-
-    override fun uByteArray(fieldNumber: Int, fieldName: String, values: UByteArray): ProtoWireFormatEncoder {
-        sub(fieldNumber) {
-            for (value in values) {
-                it.sint32(value.toInt())
-            }
-        }
-        return this
-    }
-
-    override fun uByteArrayOrNull(fieldNumber: Int, fieldName: String, values: UByteArray?): ProtoWireFormatEncoder {
-        if (values == null) {
-            writer.bool(fieldNumber + NULL_SHIFT, true)
-        } else {
-            uByteArray(fieldNumber, fieldName, values)
         }
         return this
     }
@@ -625,47 +670,124 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
-    override fun uLongArray(fieldNumber: Int, fieldName: String, values: ULongArray): ProtoWireFormatEncoder {
-        sub(fieldNumber) {
-            for (value in values) {
-                it.fixed64(value)
-            }
-        }
-        return this
-    }
-
-    override fun uLongArrayOrNull(fieldNumber: Int, fieldName: String, values: ULongArray?): ProtoWireFormatEncoder {
-        if (values == null) {
-            writer.bool(fieldNumber + NULL_SHIFT, true)
-        } else {
-            uLongArray(fieldNumber, fieldName, values)
-        }
-        return this
-    }
-
     override fun rawULong(value: ULong): WireFormatEncoder {
         writer.fixed64(value)
         return this
     }
 
     // ----------------------------------------------------------------------------
-    // Collection
+    // UIntArray
     // ----------------------------------------------------------------------------
 
-    override fun <T> collection(fieldNumber: Int, fieldName: String, values: Collection<T>, wireFormat: WireFormat<T>): ProtoWireFormatEncoder {
-        for (value in values) {
-            instance(fieldNumber, fieldName, value, wireFormat)
+    override fun uIntArray(fieldNumber: Int, fieldName: String, value: UIntArray): ProtoWireFormatEncoder {
+        sub(fieldNumber) {
+            for (item in value) {
+                it.fixed32(item)
+            }
         }
         return this
     }
 
-    override fun <T> collectionOrNull(fieldNumber: Int, fieldName: String, values: Collection<T>?, wireFormat: WireFormat<T>): ProtoWireFormatEncoder {
-        if (values == null) {
+    override fun uIntArrayOrNull(fieldNumber: Int, fieldName: String, value: UIntArray?): ProtoWireFormatEncoder {
+        if (value == null) {
             writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
-            for (value in values) {
-                instance(fieldNumber, fieldName, value, wireFormat)
+            uIntArray(fieldNumber, fieldName, value)
+        }
+        return this
+    }
+
+    override fun rawUIntArray(value: UIntArray): WireFormatEncoder {
+        for (item in value) {
+            writer.fixed32(item)
+        }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // UShortArray
+    // ----------------------------------------------------------------------------
+
+    override fun uShortArray(fieldNumber: Int, fieldName: String, value: UShortArray): ProtoWireFormatEncoder {
+        sub(fieldNumber) {
+            for (item in value) {
+                it.sint32(item.toInt())
             }
+        }
+        return this
+    }
+
+    override fun uShortArrayOrNull(fieldNumber: Int, fieldName: String, value: UShortArray?): ProtoWireFormatEncoder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            uShortArray(fieldNumber, fieldName, value)
+        }
+        return this
+    }
+
+    override fun rawUShortArray(value: UShortArray): WireFormatEncoder {
+        for (item in value) {
+            writer.sint32(item.toInt())
+        }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // UByteArray
+    // ----------------------------------------------------------------------------
+
+
+    override fun uByteArray(fieldNumber: Int, fieldName: String, value: UByteArray): ProtoWireFormatEncoder {
+        sub(fieldNumber) {
+            for (item in value) {
+                it.sint32(item.toInt())
+            }
+        }
+        return this
+    }
+
+    override fun uByteArrayOrNull(fieldNumber: Int, fieldName: String, value: UByteArray?): ProtoWireFormatEncoder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            uByteArray(fieldNumber, fieldName, value)
+        }
+        return this
+    }
+
+    override fun rawUByteArray(value: UByteArray): WireFormatEncoder {
+        for (item in value) {
+            writer.sint32(item.toInt())
+        }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
+    // ULongArray
+    // ----------------------------------------------------------------------------
+
+    override fun uLongArray(fieldNumber: Int, fieldName: String, value: ULongArray): ProtoWireFormatEncoder {
+        sub(fieldNumber) {
+            for (item in value) {
+                it.fixed64(item)
+            }
+        }
+        return this
+    }
+
+    override fun uLongArrayOrNull(fieldNumber: Int, fieldName: String, value: ULongArray?): ProtoWireFormatEncoder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            uLongArray(fieldNumber, fieldName, value)
+        }
+        return this
+    }
+
+    override fun rawULongArray(value: ULongArray): WireFormatEncoder {
+        for (item in value) {
+            writer.fixed64(item)
         }
         return this
     }

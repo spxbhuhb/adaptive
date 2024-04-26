@@ -100,66 +100,67 @@ interface WireFormatEncoder {
     // Arrays
     // -----------------------------------------------------------------------------------------
 
-    fun booleanArray(fieldNumber: Int, fieldName: String, values: BooleanArray): WireFormatEncoder
+    fun booleanArray(fieldNumber: Int, fieldName: String, value: BooleanArray): WireFormatEncoder
 
-    fun booleanArrayOrNull(fieldNumber: Int, fieldName: String, values: BooleanArray?): WireFormatEncoder
+    fun booleanArrayOrNull(fieldNumber: Int, fieldName: String, value: BooleanArray?): WireFormatEncoder
 
-    fun rawBooleanArray(values: BooleanArray): WireFormatEncoder
-
-    // ----
-
-    fun intArray(fieldNumber: Int, fieldName: String, values: IntArray): WireFormatEncoder
-
-    fun intArrayOrNull(fieldNumber: Int, fieldName: String, values: IntArray?): WireFormatEncoder
-
-    fun rawIntArray(values: IntArray): WireFormatEncoder
+    fun rawBooleanArray(value: BooleanArray): WireFormatEncoder
 
     // ----
 
-    fun shortArray(fieldNumber: Int, fieldName: String, values: ShortArray): WireFormatEncoder
+    fun intArray(fieldNumber: Int, fieldName: String, value: IntArray): WireFormatEncoder
 
-    fun shortArrayOrNull(fieldNumber: Int, fieldName: String, values: ShortArray?): WireFormatEncoder
+    fun intArrayOrNull(fieldNumber: Int, fieldName: String, value: IntArray?): WireFormatEncoder
 
-    fun rawShortArray(values: ShortArray): WireFormatEncoder
+    fun rawIntArray(value: IntArray): WireFormatEncoder
+
+    // ----
+
+    fun shortArray(fieldNumber: Int, fieldName: String, value: ShortArray): WireFormatEncoder
+
+    fun shortArrayOrNull(fieldNumber: Int, fieldName: String, value: ShortArray?): WireFormatEncoder
+
+    fun rawShortArray(value: ShortArray): WireFormatEncoder
+
     // ----
 
     fun byteArray(fieldNumber: Int, fieldName: String, value: ByteArray): WireFormatEncoder
 
     fun byteArrayOrNull(fieldNumber: Int, fieldName: String, value: ByteArray?): WireFormatEncoder
 
-    fun rawByteArray(values: ByteArray): WireFormatEncoder
+    fun rawByteArray(value: ByteArray): WireFormatEncoder
 
     // ----
 
-    fun longArray(fieldNumber: Int, fieldName: String, values: LongArray): WireFormatEncoder
+    fun longArray(fieldNumber: Int, fieldName: String, value: LongArray): WireFormatEncoder
 
-    fun longArrayOrNull(fieldNumber: Int, fieldName: String, values: LongArray?): WireFormatEncoder
+    fun longArrayOrNull(fieldNumber: Int, fieldName: String, value: LongArray?): WireFormatEncoder
 
-    fun rawLongArray(values: LongArray): WireFormatEncoder
-
-    // ----
-
-    fun floatArray(fieldNumber: Int, fieldName: String, values: FloatArray): WireFormatEncoder
-
-    fun floatArrayOrNull(fieldNumber: Int, fieldName: String, values: FloatArray?): WireFormatEncoder
-
-    fun rawFloatArray(values: FloatArray): WireFormatEncoder
+    fun rawLongArray(value: LongArray): WireFormatEncoder
 
     // ----
 
-    fun doubleArray(fieldNumber: Int, fieldName: String, values: DoubleArray): WireFormatEncoder
+    fun floatArray(fieldNumber: Int, fieldName: String, value: FloatArray): WireFormatEncoder
 
-    fun doubleArrayOrNull(fieldNumber: Int, fieldName: String, values: DoubleArray?): WireFormatEncoder
+    fun floatArrayOrNull(fieldNumber: Int, fieldName: String, value: FloatArray?): WireFormatEncoder
 
-    fun rawDoubleArray(values: DoubleArray): WireFormatEncoder
+    fun rawFloatArray(value: FloatArray): WireFormatEncoder
 
     // ----
 
-    fun charArray(fieldNumber: Int, fieldName: String, values: CharArray): WireFormatEncoder
+    fun doubleArray(fieldNumber: Int, fieldName: String, value: DoubleArray): WireFormatEncoder
 
-    fun charArrayOrNull(fieldNumber: Int, fieldName: String, values: CharArray?): WireFormatEncoder
+    fun doubleArrayOrNull(fieldNumber: Int, fieldName: String, value: DoubleArray?): WireFormatEncoder
 
-    fun rawCharArray(values: CharArray): WireFormatEncoder
+    fun rawDoubleArray(value: DoubleArray): WireFormatEncoder
+
+    // ----
+
+    fun charArray(fieldNumber: Int, fieldName: String, value: CharArray): WireFormatEncoder
+
+    fun charArrayOrNull(fieldNumber: Int, fieldName: String, value: CharArray?): WireFormatEncoder
+
+    fun rawCharArray(value: CharArray): WireFormatEncoder
 
     // ----------------------------------------------------------------------------
     // Built-in Types
@@ -201,9 +202,9 @@ interface WireFormatEncoder {
     // Collection
     // ----------------------------------------------------------------------------
 
-    fun <T> collection(fieldNumber: Int, fieldName: String, values: Collection<T>, wireFormat: WireFormat<T>): WireFormatEncoder
+    fun <T> collection(fieldNumber: Int, fieldName: String, value: Collection<T>, wireFormat: WireFormat<T>): WireFormatEncoder
 
-    fun <T> collectionOrNull(fieldNumber: Int, fieldName: String, values: Collection<T>?, wireFormat: WireFormat<T>): WireFormatEncoder
+    fun <T> collectionOrNull(fieldNumber: Int, fieldName: String, value: Collection<T>?, wireFormat: WireFormat<T>): WireFormatEncoder
 
     // -----------------------------------------------------------------------------------------
     // Unsigned Primitives
@@ -243,35 +244,34 @@ interface WireFormatEncoder {
     // Unsigned Arrays
     // -----------------------------------------------------------------------------------------
 
+    fun uIntArray(fieldNumber: Int, fieldName: String, value: UIntArray): WireFormatEncoder
 
-    fun uIntArray(fieldNumber: Int, fieldName: String, values: UIntArray): WireFormatEncoder
+    fun uIntArrayOrNull(fieldNumber: Int, fieldName: String, value: UIntArray?): WireFormatEncoder
 
-    fun uIntArrayOrNull(fieldNumber: Int, fieldName: String, values: UIntArray?): WireFormatEncoder
-
-    fun rawUIntArray(values: UIntArray): WireFormatEncoder
-
-    // ----
-
-    fun uShortArray(fieldNumber: Int, fieldName: String, values: UShortArray): WireFormatEncoder
-
-    fun uShortArrayOrNull(fieldNumber: Int, fieldName: String, values: UShortArray?): WireFormatEncoder
-
-    fun rawUShortArray(values: UShortArray): WireFormatEncoder
+    fun rawUIntArray(value: UIntArray): WireFormatEncoder
 
     // ----
 
-    fun uByteArray(fieldNumber: Int, fieldName: String, values: UByteArray): WireFormatEncoder
+    fun uShortArray(fieldNumber: Int, fieldName: String, value: UShortArray): WireFormatEncoder
 
-    fun uByteArrayOrNull(fieldNumber: Int, fieldName: String, values: UByteArray?): WireFormatEncoder
+    fun uShortArrayOrNull(fieldNumber: Int, fieldName: String, value: UShortArray?): WireFormatEncoder
+
+    fun rawUShortArray(value: UShortArray): WireFormatEncoder
+
+    // ----
+
+    fun uByteArray(fieldNumber: Int, fieldName: String, value: UByteArray): WireFormatEncoder
+
+    fun uByteArrayOrNull(fieldNumber: Int, fieldName: String, value: UByteArray?): WireFormatEncoder
 
     fun rawUByteArray(value: UByteArray): WireFormatEncoder
 
     // ----
 
-    fun uLongArray(fieldNumber: Int, fieldName: String, values: ULongArray): WireFormatEncoder
+    fun uLongArray(fieldNumber: Int, fieldName: String, value: ULongArray): WireFormatEncoder
 
-    fun uLongArrayOrNull(fieldNumber: Int, fieldName: String, values: ULongArray?): WireFormatEncoder
+    fun uLongArrayOrNull(fieldNumber: Int, fieldName: String, value: ULongArray?): WireFormatEncoder
 
-    fun rawULongArray(values: ULongArray): WireFormatEncoder
+    fun rawULongArray(value: ULongArray): WireFormatEncoder
 
 }

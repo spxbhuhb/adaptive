@@ -11,6 +11,7 @@ import kotlin.enums.EnumEntries
  * @param  wireFormat  The wire format message to parse. This buffer backs the parser, it should
  *                     not change until the message is in use.
  */
+@ExperimentalUnsignedTypes
 class ProtoWireFormatDecoder(
     wireFormat: ByteArray,
     offset: Int = 0,
@@ -61,12 +62,6 @@ class ProtoWireFormatDecoder(
     override fun booleanOrNull(fieldNumber: Int, fieldName: String): Boolean? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else boolean(fieldNumber, fieldName)
 
-    override fun booleanArray(fieldNumber: Int, fieldName: String): BooleanArray =
-        scalarList(fieldNumber, { value.bool() }, { varint().bool() })
-
-    override fun booleanArrayOrNull(fieldNumber: Int, fieldName: String): BooleanArray? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else booleanArray(fieldNumber, fieldName)
-
     override fun rawBoolean(source: ProtoRecord): Boolean {
         return source.value == 1UL
     }
@@ -80,12 +75,6 @@ class ProtoWireFormatDecoder(
 
     override fun intOrNull(fieldNumber: Int, fieldName: String): Int? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else int(fieldNumber, fieldName)
-
-    override fun intArray(fieldNumber: Int, fieldName: String): IntArray =
-        scalarList(fieldNumber, { value.sint32() }, { varint().sint32() })
-
-    override fun intArrayOrNull(fieldNumber: Int, fieldName: String): IntArray? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else intArray(fieldNumber, fieldName)
 
     override fun rawInt(source: ProtoRecord): Int {
         return source.value.sint32()
@@ -101,12 +90,6 @@ class ProtoWireFormatDecoder(
     override fun shortOrNull(fieldNumber: Int, fieldName: String): Short? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else short(fieldNumber, fieldName)
 
-    override fun shortArray(fieldNumber: Int, fieldName: String): ShortArray =
-        scalarList(fieldNumber, { value.sint32().toShort() }, { varint().sint32().toShort() })
-
-    override fun shortArrayOrNull(fieldNumber: Int, fieldName: String): ShortArray? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else shortArray(fieldNumber, fieldName)
-
     override fun rawShort(source: ProtoRecord): Short {
         return source.value.sint32().toShort()
     }
@@ -120,12 +103,6 @@ class ProtoWireFormatDecoder(
 
     override fun byteOrNull(fieldNumber: Int, fieldName: String): Byte? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else byte(fieldNumber, fieldName)
-
-    override fun byteArray(fieldNumber: Int, fieldName: String): ByteArray =
-        scalarList(fieldNumber, { value.sint32().toByte() }, { varint().sint32().toByte() })
-
-    override fun byteListOrNull(fieldNumber: Int, fieldName: String): List<Byte>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else byteArray(fieldNumber, fieldName)
 
     override fun rawByte(source: ProtoRecord): Byte {
         return source.value.sint32().toByte()
@@ -141,12 +118,6 @@ class ProtoWireFormatDecoder(
     override fun longOrNull(fieldNumber: Int, fieldName: String): Long? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else long(fieldNumber, fieldName)
 
-    override fun longArray(fieldNumber: Int, fieldName: String): LongArray =
-        scalarList(fieldNumber, { value.sint64() }, { varint().sint64() })
-
-    override fun longArrayOrNull(fieldNumber: Int, fieldName: String): LongArray? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else longArray(fieldNumber, fieldName)
-
     override fun rawLong(source: ProtoRecord): Long {
         return source.value.sint64()
     }
@@ -161,12 +132,6 @@ class ProtoWireFormatDecoder(
     override fun floatOrNull(fieldNumber: Int, fieldName: String): Float? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else float(fieldNumber, fieldName)
 
-    override fun floatArray(fieldNumber: Int, fieldName: String): Float =
-        scalarList(fieldNumber, { value.float() }, { i32().float() })
-
-    override fun floatArrayOrNull(fieldNumber: Int, fieldName: String): FloatArray? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else floatArray(fieldNumber, fieldName)
-
     override fun rawFloat(source: ProtoRecord): Float {
         return source.value.float()
     }
@@ -179,12 +144,6 @@ class ProtoWireFormatDecoder(
 
     override fun doubleOrNull(fieldNumber: Int, fieldName: String): Double? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else double(fieldNumber, fieldName)
-
-    override fun doubleArray(fieldNumber: Int, fieldName: String): DoubleArray =
-        scalarList(fieldNumber, { value.double() }, { i64().double() })
-
-    override fun doubleArrayOrNull(fieldNumber: Int, fieldName: String): DoubleArray? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else doubleArray(fieldNumber, fieldName)
 
     override fun rawDouble(source: ProtoRecord): Double {
         return source.value.double()
@@ -200,35 +159,48 @@ class ProtoWireFormatDecoder(
     override fun charOrNull(fieldNumber: Int, fieldName: String): Char? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else char(fieldNumber, fieldName)
 
-    override fun charArray(fieldNumber: Int, fieldName: String): CharArray =
-        scalarList(fieldNumber, { value.sint32().toChar() }, { varint().sint32().toChar() })
-
-    override fun charArrayOrNull(fieldNumber: Int, fieldName: String): CharArray? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else charArray(fieldNumber, fieldName)
-
     override fun rawChar(source: ProtoRecord): Char {
         return source.value.sint32().toChar()
     }
 
     // -----------------------------------------------------------------------------------------
-    // String
+    // BooleanArray
     // -----------------------------------------------------------------------------------------
 
-    override fun string(fieldNumber: Int, fieldName: String): String =
-        get(fieldNumber)?.string() ?: ""
+    override fun booleanArray(fieldNumber: Int, fieldName: String): BooleanArray =
+        scalarList(fieldNumber, { value.bool() }, { varint().bool() }).toBooleanArray()
 
-    override fun stringOrNull(fieldNumber: Int, fieldName: String): String? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else string(fieldNumber, fieldName)
+    override fun booleanArrayOrNull(fieldNumber: Int, fieldName: String): BooleanArray? =
+        if (get(fieldNumber + NULL_SHIFT) != null) null else booleanArray(fieldNumber, fieldName)
 
-    override fun stringList(fieldNumber: Int, fieldName: String) =
-        scalarList(fieldNumber, { string() }, { string() })
+    override fun rawBooleanArray(source: ProtoRecord): BooleanArray =
+        ProtoBufferReader(source as LenProtoRecord).packed { varint().bool() }.toBooleanArray()
 
-    override fun stringListOrNull(fieldNumber: Int, fieldName: String): List<String>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else stringList(fieldNumber, fieldName)
+    // -----------------------------------------------------------------------------------------
+    // IntArray
+    // -----------------------------------------------------------------------------------------
 
-    override fun rawString(source: ProtoRecord): String {
-        return source.string()
-    }
+    override fun intArray(fieldNumber: Int, fieldName: String): IntArray =
+        scalarList(fieldNumber, { value.sint32() }, { varint().sint32() }).toIntArray()
+
+    override fun intArrayOrNull(fieldNumber: Int, fieldName: String): IntArray? =
+        if (get(fieldNumber + NULL_SHIFT) != null) null else intArray(fieldNumber, fieldName)
+
+    override fun rawIntArray(source: ProtoRecord): IntArray =
+        ProtoBufferReader(source as LenProtoRecord).packed { varint().sint32() }.toIntArray()
+
+    // -----------------------------------------------------------------------------------------
+    // ShortArray
+    // -----------------------------------------------------------------------------------------
+
+    override fun shortArray(fieldNumber: Int, fieldName: String): ShortArray =
+        scalarList(fieldNumber, { value.sint32().toShort() }, { varint().sint32().toShort() }).toShortArray()
+
+    override fun shortArrayOrNull(fieldNumber: Int, fieldName: String): ShortArray? =
+        if (get(fieldNumber + NULL_SHIFT) != null) null else shortArray(fieldNumber, fieldName)
+
+    override fun rawShortArray(source: ProtoRecord): ShortArray =
+        ProtoBufferReader(source as LenProtoRecord).packed { varint().sint32().toShort() }.toShortArray()
 
     // -----------------------------------------------------------------------------------------
     // ByteArray
@@ -240,14 +212,88 @@ class ProtoWireFormatDecoder(
     override fun byteArrayOrNull(fieldNumber: Int, fieldName: String): ByteArray? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else byteArray(fieldNumber, fieldName)
 
-    override fun byteArrayList(fieldNumber: Int, fieldName: String) =
-        scalarList(fieldNumber, { bytes() }, { bytes() })
-
-    override fun byteArrayListOrNull(fieldNumber: Int, fieldName: String): List<ByteArray>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else byteArrayList(fieldNumber, fieldName)
-
     override fun rawByteArray(source: ProtoRecord): ByteArray {
         return source.bytes()
+    }
+
+    // -----------------------------------------------------------------------------------------
+    // LongArray
+    // -----------------------------------------------------------------------------------------
+
+    override fun longArray(fieldNumber: Int, fieldName: String): LongArray =
+        scalarList(fieldNumber, { value.sint64() }, { varint().sint64() }).toLongArray()
+
+    override fun longArrayOrNull(fieldNumber: Int, fieldName: String): LongArray? =
+        if (get(fieldNumber + NULL_SHIFT) != null) null else longArray(fieldNumber, fieldName)
+
+    override fun rawLongArray(source: ProtoRecord): LongArray =
+        ProtoBufferReader(source as LenProtoRecord).packed { varint().sint64() }.toLongArray()
+
+    // -----------------------------------------------------------------------------------------
+    // FloatArray
+    // -----------------------------------------------------------------------------------------
+
+    override fun floatArray(fieldNumber: Int, fieldName: String): FloatArray =
+        scalarList(fieldNumber, { value.float() }, { i32().float() }).toFloatArray()
+
+    override fun floatArrayOrNull(fieldNumber: Int, fieldName: String): FloatArray? =
+        if (get(fieldNumber + NULL_SHIFT) != null) null else floatArray(fieldNumber, fieldName)
+
+    override fun rawFloatArray(source: ProtoRecord): FloatArray =
+        ProtoBufferReader(source as LenProtoRecord).packed { i32().float() }.toFloatArray()
+
+    // -----------------------------------------------------------------------------------------
+    // DoubleArray
+    // -----------------------------------------------------------------------------------------
+
+    override fun doubleArray(fieldNumber: Int, fieldName: String): DoubleArray =
+        scalarList(fieldNumber, { value.double() }, { i64().double() }).toDoubleArray()
+
+    override fun doubleArrayOrNull(fieldNumber: Int, fieldName: String): DoubleArray? =
+        if (get(fieldNumber + NULL_SHIFT) != null) null else doubleArray(fieldNumber, fieldName)
+
+    override fun rawDoubleArray(source: ProtoRecord): DoubleArray =
+        ProtoBufferReader(source as LenProtoRecord).packed { i64().double() }.toDoubleArray()
+
+    // -----------------------------------------------------------------------------------------
+    // CharArray
+    // -----------------------------------------------------------------------------------------
+
+    override fun charArray(fieldNumber: Int, fieldName: String): CharArray =
+        scalarList(fieldNumber, { value.sint32().toChar() }, { varint().sint32().toChar() }).toCharArray()
+
+    override fun charArrayOrNull(fieldNumber: Int, fieldName: String): CharArray? =
+        if (get(fieldNumber + NULL_SHIFT) != null) null else charArray(fieldNumber, fieldName)
+
+    override fun rawCharArray(source: ProtoRecord): CharArray =
+        ProtoBufferReader(source as LenProtoRecord).packed { varint().sint32().toChar() }.toCharArray()
+
+    // -----------------------------------------------------------------------------------------
+    // String
+    // -----------------------------------------------------------------------------------------
+
+    override fun string(fieldNumber: Int, fieldName: String): String =
+        get(fieldNumber)?.string() ?: ""
+
+    override fun stringOrNull(fieldNumber: Int, fieldName: String): String? =
+        if (get(fieldNumber + NULL_SHIFT) != null) null else string(fieldNumber, fieldName)
+
+    override fun rawString(source: ProtoRecord): String {
+        return source.string()
+    }
+
+    // -----------------------------------------------------------------------------------------
+    // Enum
+    // -----------------------------------------------------------------------------------------
+
+    override fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): E =
+        entries[checkNotNull(get(fieldNumber)).value.toInt()]
+
+    override fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): E? =
+        get(fieldNumber)?.let { entries[it.value.toInt()] }
+
+    override fun <E : Enum<E>> rawEnum(source: ProtoRecord, entries: EnumEntries<E>): E {
+        return entries[source.value.toInt()]
     }
 
     // -----------------------------------------------------------------------------------------
@@ -259,12 +305,6 @@ class ProtoWireFormatDecoder(
 
     override fun <T> uuidOrNull(fieldNumber: Int, fieldName: String): UUID<T>? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else uuid(fieldNumber, fieldName)
-
-    override fun <T> uuidList(fieldNumber: Int, fieldName: String): List<UUID<T>> =
-        scalarList(fieldNumber, { uuid() }, { uuid() })
-
-    override fun <T> uuidListOrNull(fieldNumber: Int, fieldName: String): List<UUID<T>>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else uuidList(fieldNumber, fieldName)
 
     override fun rawUuid(source: ProtoRecord): UUID<*> {
         return source.uuid<Any>()
@@ -283,6 +323,15 @@ class ProtoWireFormatDecoder(
     override fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else instance(fieldNumber, fieldName, wireFormat)
 
+    override fun <T> rawInstance(source: ProtoRecord, wireFormat: WireFormat<T>): T {
+        check(source is LenProtoRecord)
+        return wireFormat.wireFormatDecode(source, source.decoder())
+    }
+
+    // -----------------------------------------------------------------------------------------
+    // Collection
+    // -----------------------------------------------------------------------------------------
+
     override fun <T> collection(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): Collection<T> {
         val list = mutableListOf<T>()
         for (record in records) {
@@ -296,31 +345,6 @@ class ProtoWireFormatDecoder(
     override fun <T> collectionOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): Collection<T>? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else collection(fieldNumber, fieldName, wireFormat)
 
-    override fun <T> rawInstance(source: ProtoRecord, wireFormat: WireFormat<T>): T {
-        check(source is LenProtoRecord)
-        return wireFormat.wireFormatDecode(source, source.decoder())
-    }
-
-    // -----------------------------------------------------------------------------------------
-    // Enum
-    // -----------------------------------------------------------------------------------------
-
-    override fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): E =
-        entries[checkNotNull(get(fieldNumber)).value.toInt()]
-
-    override fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): E? =
-        get(fieldNumber)?.let { entries[it.value.toInt()] }
-
-    override fun <E : Enum<E>> enumList(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): MutableList<E> =
-        intArray(fieldNumber, fieldName).map { entries[it] }.toMutableList()
-
-    override fun <E : Enum<E>> enumListOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): List<E>? =
-        intArrayOrNull(fieldNumber, fieldName)?.map { entries[it] }
-
-    override fun <E : Enum<E>> rawEnum(source: ProtoRecord, entries: EnumEntries<E>): E {
-        return entries[source.value.toInt()]
-    }
-
     // -----------------------------------------------------------------------------------------
     // UInt
     // -----------------------------------------------------------------------------------------
@@ -330,12 +354,6 @@ class ProtoWireFormatDecoder(
 
     override fun uIntOrNull(fieldNumber: Int, fieldName: String): UInt? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else uInt(fieldNumber, fieldName)
-
-    override fun uIntArray(fieldNumber: Int, fieldName: String): UIntArray =
-        scalarList(fieldNumber, { value.toUInt() }, { i32().toUInt() })
-
-    override fun uIntArrayOrNull(fieldNumber: Int, fieldName: String): UIntArray? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else uIntArray(fieldNumber, fieldName)
 
     override fun rawUInt(source: ProtoRecord): UInt {
         return source.value.toUInt()
@@ -351,12 +369,6 @@ class ProtoWireFormatDecoder(
     override fun uShortOrNull(fieldNumber: Int, fieldName: String): UShort? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else uShort(fieldNumber, fieldName)
 
-    override fun uShortArray(fieldNumber: Int, fieldName: String): UShortArray =
-        scalarList(fieldNumber, { value.sint32().toUShort() }, { varint().sint32().toUShort() })
-
-    override fun uShortArrayOrNull(fieldNumber: Int, fieldName: String): UShortArray? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else uShortArray(fieldNumber, fieldName)
-
     override fun rawUShort(source: ProtoRecord): UShort {
         return source.value.sint32().toUShort()
     }
@@ -370,12 +382,6 @@ class ProtoWireFormatDecoder(
 
     override fun uByteOrNull(fieldNumber: Int, fieldName: String): UByte? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else uByte(fieldNumber, fieldName)
-
-    override fun uByteArray(fieldNumber: Int, fieldName: String): UByteArray =
-        scalarList(fieldNumber, { value.sint32().toUByte() }, { varint().sint32().toUByte() })
-
-    override fun uByteArrayOrNull(fieldNumber: Int, fieldName: String): UByteArray? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else uByteArray(fieldNumber, fieldName)
 
     override fun rawUByte(source: ProtoRecord): UByte {
         return source.value.sint32().toUByte()
@@ -391,15 +397,61 @@ class ProtoWireFormatDecoder(
     override fun uLongOrNull(fieldNumber: Int, fieldName: String): ULong? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else uLong(fieldNumber, fieldName)
 
+    override fun rawULong(source: ProtoRecord): ULong {
+        return source.value
+    }
+
+    // -----------------------------------------------------------------------------------------
+    // UInt
+    // -----------------------------------------------------------------------------------------
+
+    override fun uIntArray(fieldNumber: Int, fieldName: String): UIntArray =
+        scalarList(fieldNumber, { value.toUInt() }, { i32().toUInt() }).toUIntArray()
+
+    override fun uIntArrayOrNull(fieldNumber: Int, fieldName: String): UIntArray? =
+        if (get(fieldNumber + NULL_SHIFT) != null) null else uIntArray(fieldNumber, fieldName)
+
+    override fun rawUIntArray(source: ProtoRecord): UIntArray =
+        ProtoBufferReader(source as LenProtoRecord).packed { i32().toUInt() }.toUIntArray()
+
+    // -----------------------------------------------------------------------------------------
+    // UShortArray
+    // -----------------------------------------------------------------------------------------
+
+    override fun uShortArray(fieldNumber: Int, fieldName: String): UShortArray =
+        scalarList(fieldNumber, { value.sint32().toUShort() }, { varint().sint32().toUShort() }).toUShortArray()
+
+    override fun uShortArrayOrNull(fieldNumber: Int, fieldName: String): UShortArray? =
+        if (get(fieldNumber + NULL_SHIFT) != null) null else uShortArray(fieldNumber, fieldName)
+
+    override fun rawUShortArray(source: ProtoRecord): UShortArray =
+        ProtoBufferReader(source as LenProtoRecord).packed { varint().sint32().toUShort() }.toUShortArray()
+
+    // -----------------------------------------------------------------------------------------
+    // UByteArray
+    // -----------------------------------------------------------------------------------------
+
+    override fun uByteArray(fieldNumber: Int, fieldName: String): UByteArray =
+        scalarList(fieldNumber, { value.sint32().toUByte() }, { varint().sint32().toUByte() }).toUByteArray()
+
+    override fun uByteArrayOrNull(fieldNumber: Int, fieldName: String): UByteArray? =
+        if (get(fieldNumber + NULL_SHIFT) != null) null else uByteArray(fieldNumber, fieldName)
+
+    override fun rawUByteArray(source: ProtoRecord): UByteArray =
+        ProtoBufferReader(source as LenProtoRecord).packed { varint().sint32().toUByte() }.toUByteArray()
+
+    // -----------------------------------------------------------------------------------------
+    // ULongArray
+    // -----------------------------------------------------------------------------------------
+
     override fun uLongArray(fieldNumber: Int, fieldName: String): ULongArray =
-        scalarList(fieldNumber, { value }, { i64() })
+        scalarList(fieldNumber, { value }, { i64() }).toULongArray()
 
     override fun uLongArrayOrNull(fieldNumber: Int, fieldName: String): ULongArray? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else uLongArray(fieldNumber, fieldName)
 
-    override fun rawULong(source: ProtoRecord): ULong {
-        return source.value
-    }
+    override fun rawULongArray(source: ProtoRecord): ULongArray =
+        ProtoBufferReader(source as LenProtoRecord).packed { i64() }.toULongArray()
 
     // --------------------------------------------------------------------------------------
     // Helpers
