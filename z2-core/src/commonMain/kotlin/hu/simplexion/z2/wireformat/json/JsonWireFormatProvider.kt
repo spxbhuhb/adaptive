@@ -10,7 +10,7 @@ class JsonWireFormatProvider : WireFormatProvider() {
     override fun encoder(): WireFormatEncoder =
         JsonWireFormatEncoder()
 
-    override fun decoder(payload: ByteArray): WireFormatDecoder =
+    override fun decoder(payload: ByteArray): WireFormatDecoder<*> =
         JsonWireFormatDecoder(payload)
 
     override fun standalone(): Standalone =

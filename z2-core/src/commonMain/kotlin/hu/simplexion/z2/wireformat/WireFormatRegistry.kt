@@ -4,7 +4,7 @@ class WireFormatRegistry {
 
     val formats = mutableMapOf<String, WireFormat<*>>()
 
-    fun decodeInstance(wireFormatDecoder: WireFormatDecoder, type: String): Any? =
-        checkNotNull(formats[type]) { "missing wire format for $type" }.wireFormatDecode(wireFormatDecoder)
+    fun <ST> decodeInstance(source: ST, wireFormatDecoder: WireFormatDecoder<ST>, type: String): Any? =
+        checkNotNull(formats[type]) { "missing wire format for $type" }.wireFormatDecode(source, wireFormatDecoder)
 
 }

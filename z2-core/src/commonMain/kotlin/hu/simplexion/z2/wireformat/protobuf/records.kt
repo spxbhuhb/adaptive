@@ -56,7 +56,7 @@ class LenProtoRecord(
     override val value: ULong
         get() = throw IllegalStateException("long value is not available for LEN record")
 
-    fun message() = ProtoWireFormatDecoder(byteArray, offset, length)
+    fun decoder() = ProtoWireFormatDecoder(byteArray, offset, length)
 }
 
 class I32ProtoRecord(

@@ -9,13 +9,13 @@ interface WireFormat<T> : FqNameAware {
 
     val wireFormatCompanion: WireFormat<T>
         get() {
-            throw UnsupportedOperationException("This code should be replaced by the Z2 plugin for classes and never be called for companions.")
+            throw UnsupportedOperationException("This code should be replaced by the Z2 plugin for classes and never be called for companions and objects.")
         }
 
     fun wireFormatEncode(encoder: WireFormatEncoder, value: T): WireFormatEncoder =
         wireFormatCompanion.wireFormatEncode(encoder, value)
 
-    fun wireFormatDecode(decoder: WireFormatDecoder?): T =
-        wireFormatCompanion.wireFormatDecode(decoder)
+    fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): T =
+        wireFormatCompanion.wireFormatDecode(source, decoder)
 
 }

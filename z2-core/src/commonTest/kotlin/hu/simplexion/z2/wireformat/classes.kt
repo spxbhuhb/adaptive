@@ -16,7 +16,7 @@ data class A(
                 .string(3, "s", value.s)
                 .intList(4, "l", value.l)
 
-        override fun wireFormatDecode(decoder: WireFormatDecoder?): A {
+        override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): A {
             if (decoder == null) return A()
 
             return A(
@@ -40,7 +40,7 @@ data class B(
                 .instance(1, "a", value.a, A)
                 .string(2, "s", value.s)
 
-        override fun wireFormatDecode(decoder: WireFormatDecoder?): B {
+        override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): B {
             if (decoder == null) return B()
 
             return B(

@@ -1,8 +1,9 @@
 package hu.simplexion.z2.wireformat
 
 import hu.simplexion.z2.utility.UUID
+import kotlin.enums.EnumEntries
 
-interface WireFormatDecoder {
+interface WireFormatDecoder<ST> {
 
     // -----------------------------------------------------------------------------------------
     // Any
@@ -164,14 +165,26 @@ interface WireFormatDecoder {
     // Instance
     // -----------------------------------------------------------------------------------------
 
-    fun <T> instance(fieldNumber: Int, fieldName: String, decoder: WireFormat<T>): T
+    fun <T> instance(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T
 
-    fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, decoder: WireFormat<T>): T?
+    fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T?
 
-    fun <T> instanceList(fieldNumber: Int, fieldName: String, decoder: WireFormat<T>): MutableList<T>
+    fun <T> instanceList(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): MutableList<T>
 
-    fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, decoder: WireFormat<T>): List<T>?
+    fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): List<T>?
 
+    // -----------------------------------------------------------------------------------------
+    // Enum
+    // -----------------------------------------------------------------------------------------
+
+    fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): E
+
+    fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): E?
+
+    fun <E : Enum<E>> enumList(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): MutableList<E>
+
+    fun <E : Enum<E>> enumListOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): List<E>?
+    
     // -----------------------------------------------------------------------------------------
     // UInt
     // -----------------------------------------------------------------------------------------
@@ -219,4 +232,38 @@ interface WireFormatDecoder {
     fun uLongList(fieldNumber: Int, fieldName: String): List<ULong>
 
     fun uLongListOrNull(fieldNumber: Int, fieldName: String): List<ULong>?
+
+    // ----------------------------------------------------------------------------
+    // Raw readers to support collections with primitive values
+    // ----------------------------------------------------------------------------
+
+    fun rawAny(source: ST): Any
+    fun rawUnit(source: ST)
+
+    fun rawBoolean(source: ST): Boolean
+
+    fun rawInt(source: ST): Int
+    fun rawShort(source: ST): Short
+    fun rawByte(source: ST): Byte
+    fun rawLong(source: ST): Long
+
+    fun rawFloat(source: ST): Float
+    fun rawDouble(source: ST): Double
+
+    fun rawChar(source: ST): Char
+    fun rawString(source: ST): String
+
+    fun rawByteArray(source: ST): ByteArray
+
+    fun rawUInt(source: ST): UInt
+    fun rawUShort(source: ST): UShort
+    fun rawUByte(source: ST): UByte
+    fun rawULong(source: ST): ULong
+
+    fun rawUuid(source: ST): UUID<*>
+
+    fun <E : Enum<E>> rawEnum(source: ST, entries: EnumEntries<E>): E
+
+    fun <T> rawInstance(source: ST, wireFormat: WireFormat<T>): T
+
 }

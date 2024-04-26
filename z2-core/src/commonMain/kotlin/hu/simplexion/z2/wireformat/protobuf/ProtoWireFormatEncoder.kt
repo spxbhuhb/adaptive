@@ -37,6 +37,10 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         TODO()
     }
 
+    override fun rawAny(value: Any): WireFormatEncoder {
+        TODO()
+    }
+
     // ----------------------------------------------------------------------------
     // Unit
     // ----------------------------------------------------------------------------
@@ -72,7 +76,12 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         }
         return this
     }
-    
+
+    override fun rawUnit(value: Unit): WireFormatEncoder {
+        writer.bool(true)
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // Boolean
     // ----------------------------------------------------------------------------
@@ -106,6 +115,11 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         } else {
             booleanList(fieldNumber, fieldName, values)
         }
+        return this
+    }
+
+    override fun rawBoolean(value: Boolean): WireFormatEncoder {
+        writer.bool(true)
         return this
     }
 
@@ -145,6 +159,11 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
+    override fun rawInt(value: Int): WireFormatEncoder {
+        writer.sint32(value)
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // Short
     // ----------------------------------------------------------------------------
@@ -178,6 +197,11 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         } else {
             shortList(fieldNumber, fieldName, values)
         }
+        return this
+    }
+
+    override fun rawShort(value: Short): WireFormatEncoder {
+        writer.sint32(value.toInt())
         return this
     }
 
@@ -217,6 +241,11 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
+    override fun rawByte(value: Byte): WireFormatEncoder {
+        writer.sint32(value.toInt())
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // Long
     // ----------------------------------------------------------------------------
@@ -250,6 +279,11 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         } else {
             longList(fieldNumber, fieldName, values)
         }
+        return this
+    }
+
+    override fun rawLong(value: Long): WireFormatEncoder {
+        writer.sint64(value)
         return this
     }
 
@@ -289,6 +323,11 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
+    override fun rawFloat(value: Float): WireFormatEncoder {
+        writer.fixed32(value.toBits().toUInt())
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // Double
     // ----------------------------------------------------------------------------
@@ -322,6 +361,11 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         } else {
             doubleList(fieldNumber, fieldName, values)
         }
+        return this
+    }
+
+    override fun rawDouble(value: Double): WireFormatEncoder {
+        writer.fixed64(value.toBits().toULong())
         return this
     }
 
@@ -361,6 +405,11 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
+    override fun rawChar(value: Char): WireFormatEncoder {
+        writer.sint32(value.code)
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // String
     // ----------------------------------------------------------------------------
@@ -397,6 +446,10 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
+    override fun rawString(value: String): WireFormatEncoder {
+        writer.string(value)
+        return this
+    }
 
     // ----------------------------------------------------------------------------
     // ByteArray
@@ -434,6 +487,10 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
+    override fun rawByteArray(value: ByteArray): WireFormatEncoder {
+        writer.bytes(value)
+        return this
+    }
 
     // ----------------------------------------------------------------------------
     // UUID
@@ -479,6 +536,11 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
+    override fun rawUuid(value: UUID<*>): WireFormatEncoder {
+        writer.bytes(value.toByteArray())
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // Instance
     // ----------------------------------------------------------------------------
@@ -513,6 +575,12 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
                 instance(fieldNumber, fieldName, value, encoder)
             }
         }
+        return this
+    }
+
+    override fun <T> rawInstance(value: T, wireFormat: WireFormat<T>): WireFormatEncoder {
+        val bytes = ProtoWireFormatEncoder().apply { wireFormat.wireFormatEncode(this, value) }.pack()
+        writer.bytes(bytes)
         return this
     }
 
@@ -552,6 +620,11 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
+    override fun <E : Enum<E>> rawEnum(value: E, entries: EnumEntries<E>): WireFormatEncoder {
+        writer.sint32(value.ordinal)
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // UInt
     // ----------------------------------------------------------------------------
@@ -585,6 +658,11 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         } else {
             uIntList(fieldNumber, fieldName, values)
         }
+        return this
+    }
+
+    override fun rawUInt(value: UInt): WireFormatEncoder {
+        writer.fixed32(value)
         return this
     }
 
@@ -624,6 +702,11 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
+    override fun rawUShort(value: UShort): WireFormatEncoder {
+        writer.sint32(value.toInt())
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // UByte
     // ----------------------------------------------------------------------------
@@ -657,6 +740,11 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         } else {
             uByteList(fieldNumber, fieldName, values)
         }
+        return this
+    }
+
+    override fun rawUByte(value: UByte): WireFormatEncoder {
+        writer.sint32(value.toInt())
         return this
     }
 
@@ -695,7 +783,12 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         }
         return this
     }
-    
+
+    override fun rawULong(value: ULong): WireFormatEncoder {
+        writer.fixed64(value)
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // Utility
     // ----------------------------------------------------------------------------

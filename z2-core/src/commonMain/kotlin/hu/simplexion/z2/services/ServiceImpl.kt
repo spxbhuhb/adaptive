@@ -38,7 +38,7 @@ interface ServiceImpl<T : ServiceImpl<T>> : Service {
      * Called by service transports to execute a service call. Actual code of this function is generated
      * by the plugin.
      */
-    suspend fun dispatch(funName: String, payload: WireFormatDecoder): ByteArray {
+    suspend fun dispatch(funName: String, payload: WireFormatDecoder<*>): ByteArray {
         pluginGenerated()
     }
 

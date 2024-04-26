@@ -7,8 +7,9 @@ import hu.simplexion.z2.wireformat.json.elements.JsonArray
 import hu.simplexion.z2.wireformat.json.elements.JsonElement
 import hu.simplexion.z2.wireformat.json.elements.JsonNull
 import hu.simplexion.z2.wireformat.json.elements.JsonObject
+import kotlin.enums.EnumEntries
 
-class JsonWireFormatDecoder : WireFormatDecoder {
+class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
     val root: JsonElement
     val map: MutableMap<String, JsonElement>?
@@ -45,6 +46,10 @@ class JsonWireFormatDecoder : WireFormatDecoder {
     override fun anyListOrNull(fieldNumber: Int, fieldName: String): List<Any>? =
         array(fieldName) { TODO() }
 
+    override fun rawAny(source: JsonElement): Any {
+        TODO("Not yet implemented")
+    }
+
     // -----------------------------------------------------------------------------------------
     // Unit
     // -----------------------------------------------------------------------------------------
@@ -62,6 +67,10 @@ class JsonWireFormatDecoder : WireFormatDecoder {
     override fun unitListOrNull(fieldNumber: Int, fieldName: String): List<Unit>? =
         array(fieldName) { it.asUnit }
 
+    override fun rawUnit(source: JsonElement) {
+        return source.asUnit
+    }
+
     // -----------------------------------------------------------------------------------------
     // Boolean
     // -----------------------------------------------------------------------------------------
@@ -77,6 +86,10 @@ class JsonWireFormatDecoder : WireFormatDecoder {
 
     override fun booleanListOrNull(fieldNumber: Int, fieldName: String): List<Boolean>? =
         array(fieldName) { it.asBoolean }
+
+    override fun rawBoolean(source: JsonElement): Boolean {
+        return source.asBoolean
+    }
 
     // -----------------------------------------------------------------------------------------
     // Int
@@ -94,6 +107,10 @@ class JsonWireFormatDecoder : WireFormatDecoder {
     override fun intListOrNull(fieldNumber: Int, fieldName: String): List<Int>? =
         array(fieldName) { it.asInt }
 
+    override fun rawInt(source: JsonElement): Int {
+        return source.asInt
+    }
+
     // -----------------------------------------------------------------------------------------
     // Short
     // -----------------------------------------------------------------------------------------
@@ -109,6 +126,10 @@ class JsonWireFormatDecoder : WireFormatDecoder {
 
     override fun shortListOrNull(fieldNumber: Int, fieldName: String): List<Short>? =
         array(fieldName) { it.asShort }
+
+    override fun rawShort(source: JsonElement): Short {
+        return source.asShort
+    }
 
     // -----------------------------------------------------------------------------------------
     // Byte
@@ -126,6 +147,10 @@ class JsonWireFormatDecoder : WireFormatDecoder {
     override fun byteListOrNull(fieldNumber: Int, fieldName: String): List<Byte>? =
         array(fieldName) { it.asByte }
 
+    override fun rawByte(source: JsonElement): Byte {
+        return source.asByte
+    }
+
     // -----------------------------------------------------------------------------------------
     // Long
     // -----------------------------------------------------------------------------------------
@@ -141,6 +166,10 @@ class JsonWireFormatDecoder : WireFormatDecoder {
 
     override fun longListOrNull(fieldNumber: Int, fieldName: String): List<Long>? =
         array(fieldName) { it.asLong }
+
+    override fun rawLong(source: JsonElement): Long {
+        return source.asLong
+    }
 
     // -----------------------------------------------------------------------------------------
     // Float
@@ -158,6 +187,10 @@ class JsonWireFormatDecoder : WireFormatDecoder {
     override fun floatListOrNull(fieldNumber: Int, fieldName: String): List<Float>? =
         array(fieldName) { it.asFloat }
 
+    override fun rawFloat(source: JsonElement): Float {
+        return source.asFloat
+    }
+
     // -----------------------------------------------------------------------------------------
     // Double
     // -----------------------------------------------------------------------------------------
@@ -173,6 +206,10 @@ class JsonWireFormatDecoder : WireFormatDecoder {
 
     override fun doubleListOrNull(fieldNumber: Int, fieldName: String): List<Double>? =
         array(fieldName) { it.asDouble }
+
+    override fun rawDouble(source: JsonElement): Double {
+        return source.asDouble
+    }
 
     // -----------------------------------------------------------------------------------------
     // Char
@@ -190,6 +227,10 @@ class JsonWireFormatDecoder : WireFormatDecoder {
     override fun charListOrNull(fieldNumber: Int, fieldName: String): List<Char>? =
         array(fieldName) { it.asChar }
 
+    override fun rawChar(source: JsonElement): Char {
+        return source.asChar
+    }
+
     // -----------------------------------------------------------------------------------------
     // String
     // -----------------------------------------------------------------------------------------
@@ -205,6 +246,10 @@ class JsonWireFormatDecoder : WireFormatDecoder {
 
     override fun stringListOrNull(fieldNumber: Int, fieldName: String): List<String>? =
         array(fieldName) { it.asString }
+
+    override fun rawString(source: JsonElement): String {
+        return source.asString
+    }
 
     // -----------------------------------------------------------------------------------------
     // ByteArray
@@ -222,6 +267,10 @@ class JsonWireFormatDecoder : WireFormatDecoder {
     override fun byteArrayListOrNull(fieldNumber: Int, fieldName: String): List<ByteArray>? =
         array(fieldName) { it.asByteArray }
 
+    override fun rawByteArray(source: JsonElement): ByteArray {
+        return source.asByteArray
+    }
+
     // -----------------------------------------------------------------------------------------
     // UUID
     // -----------------------------------------------------------------------------------------
@@ -238,24 +287,52 @@ class JsonWireFormatDecoder : WireFormatDecoder {
     override fun <T> uuidListOrNull(fieldNumber: Int, fieldName: String): List<UUID<T>>? =
         array(fieldName) { it.asUuid() }
 
+    override fun rawUuid(source: JsonElement): UUID<*> {
+        return source.asUuid<Any>()
+    }
+
     // -----------------------------------------------------------------------------------------
     // Instance
     // -----------------------------------------------------------------------------------------
 
-    override fun <T> instance(fieldNumber: Int, fieldName: String, decoder: WireFormat<T>): T {
+    override fun <T> instance(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T {
         val element = get(fieldName)
         check(element is JsonObject)
-        return decoder.wireFormatDecode(JsonWireFormatDecoder(element))
+        return wireFormat.wireFormatDecode(element, JsonWireFormatDecoder(element))
     }
 
-    override fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, decoder: WireFormat<T>): T? =
-        if (getOrNull(fieldName) == null) null else instance(fieldNumber, fieldName, decoder)
+    override fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T? =
+        if (getOrNull(fieldName) == null) null else instance(fieldNumber, fieldName, wireFormat)
 
-    override fun <T> instanceList(fieldNumber: Int, fieldName: String, decoder: WireFormat<T>): MutableList<T> =
-        requireNotNull(instanceListOrNull(fieldNumber, fieldName, decoder)) { "missing or null instance" }
+    override fun <T> instanceList(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): MutableList<T> =
+        requireNotNull(instanceListOrNull(fieldNumber, fieldName, wireFormat)) { "missing or null instance" }
 
-    override fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, decoder: WireFormat<T>): MutableList<T>? =
-        array(fieldName) { decoder.wireFormatDecode(JsonWireFormatDecoder(it as JsonObject)) }
+    override fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): MutableList<T>? =
+        array(fieldName) { wireFormat.wireFormatDecode(it, JsonWireFormatDecoder(it as JsonObject)) }
+
+    override fun <T> rawInstance(source: JsonElement, wireFormat: WireFormat<T>): T {
+        check(source is JsonObject)
+        return wireFormat.wireFormatDecode(source, JsonWireFormatDecoder(source))
+    }
+
+    // -----------------------------------------------------------------------------------------
+    // Enum
+    // -----------------------------------------------------------------------------------------
+
+    override fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): E =
+        entries.first { it.name == string(fieldNumber, fieldName) }
+
+    override fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): E? =
+        stringOrNull(fieldNumber, fieldName)?.let { s -> entries.first { it.name == s } }
+
+    override fun <E : Enum<E>> enumList(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): MutableList<E> =
+        checkNotNull(enumListOrNull(fieldNumber, fieldName, entries))
+
+    override fun <E : Enum<E>> enumListOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): MutableList<E>? =
+        stringListOrNull(fieldNumber, fieldName)?.map { s -> entries.first { it.name == s } }?.toMutableList()
+
+    override fun <E : Enum<E>> rawEnum(source: JsonElement, entries: EnumEntries<E>): E =
+        entries.first { it.name == rawString(source) }
 
     // -----------------------------------------------------------------------------------------
     // UInt
@@ -273,6 +350,10 @@ class JsonWireFormatDecoder : WireFormatDecoder {
     override fun uIntListOrNull(fieldNumber: Int, fieldName: String): List<UInt>? =
         array(fieldName) { it.asUInt }
 
+    override fun rawUInt(source: JsonElement): UInt {
+        return source.asUInt
+    }
+
     // -----------------------------------------------------------------------------------------
     // UShort
     // -----------------------------------------------------------------------------------------
@@ -288,6 +369,10 @@ class JsonWireFormatDecoder : WireFormatDecoder {
 
     override fun uShortListOrNull(fieldNumber: Int, fieldName: String): List<UShort>? =
         array(fieldName) { it.asUShort }
+
+    override fun rawUShort(source: JsonElement): UShort {
+        return source.asUShort
+    }
 
     // -----------------------------------------------------------------------------------------
     // UByte
@@ -305,6 +390,10 @@ class JsonWireFormatDecoder : WireFormatDecoder {
     override fun uByteListOrNull(fieldNumber: Int, fieldName: String): List<UByte>? =
         array(fieldName) { it.asUByte }
 
+    override fun rawUByte(source: JsonElement): UByte {
+        return source.asUByte
+    }
+
     // -----------------------------------------------------------------------------------------
     // ULong
     // -----------------------------------------------------------------------------------------
@@ -320,6 +409,10 @@ class JsonWireFormatDecoder : WireFormatDecoder {
 
     override fun uLongListOrNull(fieldNumber: Int, fieldName: String): List<ULong>? =
         array(fieldName) { it.asULong }
+
+    override fun rawULong(source: JsonElement): ULong {
+        return source.asULong
+    }
 
     // --------------------------------------------------------------------------------------
     // Helpers

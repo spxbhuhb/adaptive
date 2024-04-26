@@ -34,7 +34,7 @@ interface WireFormatEncoder {
     fun unitList(fieldNumber: Int, fieldName: String, values: List<Unit>): WireFormatEncoder
 
     fun unitListOrNull(fieldNumber: Int, fieldName: String, values: List<Unit>?): WireFormatEncoder
-    
+
     // ----------------------------------------------------------------------------
     // Boolean
     // ----------------------------------------------------------------------------
@@ -82,7 +82,7 @@ interface WireFormatEncoder {
     fun byteList(fieldNumber: Int, fieldName: String, values: List<Byte>): WireFormatEncoder
 
     fun byteListOrNull(fieldNumber: Int, fieldName: String, values: List<Byte>?): WireFormatEncoder
-    
+
     // ----------------------------------------------------------------------------
     // Long
     // ----------------------------------------------------------------------------
@@ -130,7 +130,7 @@ interface WireFormatEncoder {
     fun charList(fieldNumber: Int, fieldName: String, values: List<Char>): WireFormatEncoder
 
     fun charListOrNull(fieldNumber: Int, fieldName: String, values: List<Char>?): WireFormatEncoder
-    
+
     // ----------------------------------------------------------------------------
     // String
     // ----------------------------------------------------------------------------
@@ -238,5 +238,38 @@ interface WireFormatEncoder {
     fun uLongList(fieldNumber: Int, fieldName: String, values: List<ULong>): WireFormatEncoder
 
     fun uLongListOrNull(fieldNumber: Int, fieldName: String, values: List<ULong>?): WireFormatEncoder
-    
+
+    // ----------------------------------------------------------------------------
+    // Raw writers to support collections with primitive values
+    // ----------------------------------------------------------------------------
+
+    fun rawAny(value: Any): WireFormatEncoder
+    fun rawUnit(value: Unit): WireFormatEncoder
+
+    fun rawBoolean(value: Boolean): WireFormatEncoder
+
+    fun rawInt(value: Int): WireFormatEncoder
+    fun rawShort(value: Short): WireFormatEncoder
+    fun rawByte(value: Byte): WireFormatEncoder
+    fun rawLong(value: Long): WireFormatEncoder
+
+    fun rawFloat(value: Float): WireFormatEncoder
+    fun rawDouble(value: Double): WireFormatEncoder
+
+    fun rawChar(value: Char): WireFormatEncoder
+    fun rawString(value: String): WireFormatEncoder
+
+    fun rawByteArray(value: ByteArray): WireFormatEncoder
+
+    fun rawUInt(value: UInt): WireFormatEncoder
+    fun rawUShort(value: UShort): WireFormatEncoder
+    fun rawUByte(value: UByte): WireFormatEncoder
+    fun rawULong(value: ULong): WireFormatEncoder
+
+    fun rawUuid(value: UUID<*>): WireFormatEncoder
+
+    fun <E : Enum<E>> rawEnum(value: E, entries: EnumEntries<E>): WireFormatEncoder
+
+    fun <T> rawInstance(value: T, wireFormat: WireFormat<T>): WireFormatEncoder
+
 }

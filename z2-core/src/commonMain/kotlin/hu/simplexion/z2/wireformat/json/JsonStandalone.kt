@@ -305,15 +305,13 @@ object JsonStandalone : Standalone {
         if (value == null) {
             JsonBufferWriter().apply { nullValue() }.pack()
         } else {
-            JsonWireFormatEncoder().apply {
-                instance(value, wireFormat)
-            }.pack()
+            JsonWireFormatEncoder().rawInstance(value, wireFormat).pack()
         }
 
     override fun <T> encodeInstanceList(value: List<T>?, wireFormat: WireFormat<T>): ByteArray =
         arrayOrNull(value) {
             val encoder = JsonWireFormatEncoder(this)
-            encoder.instance(it, wireFormat)
+            encoder.rawInstance(it, wireFormat)
             if (peekLast() == 0x2c.toByte()) rollback() // to remove the last colon
         }
 
@@ -321,13 +319,23 @@ object JsonStandalone : Standalone {
         requireNotNull(decodeInstanceOrNull(source, wireFormat))
 
     override fun <T> decodeInstanceOrNull(source: ByteArray, wireFormat: WireFormat<T>): T? =
-        fromValueOrNull(source) { wireFormat.wireFormatDecode(JsonWireFormatDecoder(source)) }
+        fromValueOrNull(source) {
+            val encoder = JsonWireFormatDecoder(source)
+            if (encoder.root is JsonNull) {
+                null
+            } else {
+                encoder.rawInstance(encoder.root, wireFormat)
+            }
+        }
 
     override fun <T> decodeInstanceList(source: ByteArray, wireFormat: WireFormat<T>): List<T> =
         requireNotNull(decodeInstanceListOrNull(source, wireFormat))
 
     override fun <T> decodeInstanceListOrNull(source: ByteArray, wireFormat: WireFormat<T>): List<T>? =
-        fromArray(source) { wireFormat.wireFormatDecode(JsonWireFormatDecoder(this as JsonObject)) }
+        fromArray(source) {
+            val encoder = JsonWireFormatDecoder(this as JsonObject)
+            encoder.rawInstance(encoder.root, wireFormat)
+        }
 
     // ---------------------------------------------------------------------------
     // Enum

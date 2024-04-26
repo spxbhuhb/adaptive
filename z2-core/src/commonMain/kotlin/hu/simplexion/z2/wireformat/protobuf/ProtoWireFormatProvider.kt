@@ -10,7 +10,7 @@ class ProtoWireFormatProvider : WireFormatProvider() {
     override fun encoder(): WireFormatEncoder =
         ProtoWireFormatEncoder()
 
-    override fun decoder(payload: ByteArray): WireFormatDecoder =
+    override fun decoder(payload: ByteArray): WireFormatDecoder<*> =
         ProtoWireFormatDecoder(payload)
 
     override fun standalone(): Standalone =

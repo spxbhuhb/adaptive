@@ -20,7 +20,15 @@ class RequestEnvelope(
         override val fqName: String
             get() = "hu.simplexion.z2.services.model.RequestEnvelope"
 
-        override fun wireFormatDecode(decoder: WireFormatDecoder?): RequestEnvelope {
+
+        override fun wireFormatEncode(encoder: WireFormatEncoder, value: RequestEnvelope): WireFormatEncoder =
+            encoder
+                .uuid(1, "callId", value.callId)
+                .string(2, "serviceName", value.serviceName)
+                .string(3, "funName", value.funName)
+                .byteArray(4, "payload", value.payload)
+
+        override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): RequestEnvelope {
             requireNotNull(decoder)
             return RequestEnvelope(
                 decoder.uuid(1, "callId"),
@@ -29,13 +37,6 @@ class RequestEnvelope(
                 decoder.byteArray(4, "payload")
             )
         }
-
-        override fun wireFormatEncode(encoder: WireFormatEncoder, value: RequestEnvelope): WireFormatEncoder =
-            encoder
-                .uuid(1, "callId", value.callId)
-                .string(2, "serviceName", value.serviceName)
-                .string(3, "funName", value.funName)
-                .byteArray(4, "payload", value.payload)
     }
 
 

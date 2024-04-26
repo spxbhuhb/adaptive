@@ -37,6 +37,10 @@ class JsonWireFormatEncoder(
         TODO()
     }
 
+    override fun rawAny(value: Any): WireFormatEncoder {
+        TODO("Not yet implemented")
+    }
+
     // ----------------------------------------------------------------------------
     // Unit
     // ----------------------------------------------------------------------------
@@ -58,6 +62,11 @@ class JsonWireFormatEncoder(
 
     override fun unitListOrNull(fieldNumber: Int, fieldName: String, values: List<Unit>?): JsonWireFormatEncoder {
         array(fieldName, values) { _, _ -> writer.bool(true) }
+        return this
+    }
+
+    override fun rawUnit(value: Unit): WireFormatEncoder {
+        writer.bool(true)
         return this
     }
 
@@ -85,6 +94,11 @@ class JsonWireFormatEncoder(
         return this
     }
 
+    override fun rawBoolean(value: Boolean): WireFormatEncoder {
+        writer.bool(value)
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // Int
     // ----------------------------------------------------------------------------
@@ -106,6 +120,11 @@ class JsonWireFormatEncoder(
 
     override fun intListOrNull(fieldNumber: Int, fieldName: String, values: List<Int>?): JsonWireFormatEncoder {
         array(fieldName, values) { v, i -> writer.number(v[i]) }
+        return this
+    }
+
+    override fun rawInt(value: Int): WireFormatEncoder {
+        writer.number(value)
         return this
     }
 
@@ -133,6 +152,11 @@ class JsonWireFormatEncoder(
         return this
     }
 
+    override fun rawShort(value: Short): WireFormatEncoder {
+        writer.number(value)
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // Byte
     // ----------------------------------------------------------------------------
@@ -154,6 +178,11 @@ class JsonWireFormatEncoder(
 
     override fun byteListOrNull(fieldNumber: Int, fieldName: String, values: List<Byte>?): JsonWireFormatEncoder {
         array(fieldName, values) { v, i -> writer.number(v[i]) }
+        return this
+    }
+
+    override fun rawByte(value: Byte): WireFormatEncoder {
+        writer.number(value)
         return this
     }
 
@@ -181,6 +210,11 @@ class JsonWireFormatEncoder(
         return this
     }
 
+    override fun rawLong(value: Long): WireFormatEncoder {
+        writer.number(value)
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // Float
     // ----------------------------------------------------------------------------
@@ -202,6 +236,11 @@ class JsonWireFormatEncoder(
 
     override fun floatListOrNull(fieldNumber: Int, fieldName: String, values: List<Float>?): JsonWireFormatEncoder {
         array(fieldName, values) { v, i -> writer.number(v[i]) }
+        return this
+    }
+
+    override fun rawFloat(value: Float): WireFormatEncoder {
+        writer.number(value)
         return this
     }
 
@@ -229,6 +268,11 @@ class JsonWireFormatEncoder(
         return this
     }
 
+    override fun rawDouble(value: Double): WireFormatEncoder {
+        writer.number(value)
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // Char
     // ----------------------------------------------------------------------------
@@ -251,6 +295,12 @@ class JsonWireFormatEncoder(
     override fun charListOrNull(fieldNumber: Int, fieldName: String, values: List<Char>?): JsonWireFormatEncoder {
         array(fieldName, values) { v, i -> writer.quotedString(v[i].toString()) }
         return this
+    }
+
+    override fun rawChar(value: Char): WireFormatEncoder {
+        writer.quotedString(value.toString())
+        return this
+
     }
     
     // ----------------------------------------------------------------------------
@@ -277,6 +327,11 @@ class JsonWireFormatEncoder(
         return this
     }
 
+    override fun rawString(value: String): WireFormatEncoder {
+        writer.quotedString(value)
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // ByteArray
     // ----------------------------------------------------------------------------
@@ -298,6 +353,11 @@ class JsonWireFormatEncoder(
 
     override fun byteArrayListOrNull(fieldNumber: Int, fieldName: String, values: List<ByteArray>?): JsonWireFormatEncoder {
         array(fieldName, values) { v, i -> writer.bytes(v[i]) }
+        return this
+    }
+
+    override fun rawByteArray(value: ByteArray): WireFormatEncoder {
+        writer.bytes(value)
         return this
     }
 
@@ -333,15 +393,14 @@ class JsonWireFormatEncoder(
         return this
     }
 
+    override fun rawUuid(value: UUID<*>): WireFormatEncoder {
+        writer.uuid(value)
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // Instance
     // ----------------------------------------------------------------------------
-
-    internal fun <T> instance(value: T, encoder: WireFormat<T>) {
-        writer.openObject()
-        encoder.wireFormatEncode(this, value)
-        writer.closeObject()
-    }
 
     override fun <T> instance(fieldNumber: Int, fieldName: String, value: T, encoder: WireFormat<T>): JsonWireFormatEncoder {
         instanceOrNull(fieldNumber, fieldName, value, encoder)
@@ -353,7 +412,7 @@ class JsonWireFormatEncoder(
             writer.nullValue(fieldName)
         } else {
             writer.fieldName(fieldName)
-            instance(value, encoder)
+            rawInstance(value, encoder)
         }
         return this
     }
@@ -368,6 +427,13 @@ class JsonWireFormatEncoder(
             encoder.wireFormatEncode(this, v[i])
             writer.rollback() // array adds the separator
         }
+        return this
+    }
+
+    override fun <T> rawInstance(value: T, wireFormat: WireFormat<T>): WireFormatEncoder {
+        writer.openObject()
+        wireFormat.wireFormatEncode(this, value)
+        writer.closeObject()
         return this
     }
 
@@ -403,6 +469,11 @@ class JsonWireFormatEncoder(
         return this
     }
 
+    override fun <E : Enum<E>> rawEnum(value: E, entries: EnumEntries<E>): WireFormatEncoder {
+        writer.quotedString(value.name)
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // UInt
     // ----------------------------------------------------------------------------
@@ -424,6 +495,11 @@ class JsonWireFormatEncoder(
 
     override fun uIntListOrNull(fieldNumber: Int, fieldName: String, values: List<UInt>?): JsonWireFormatEncoder {
         array(fieldName, values) { v, i -> writer.number(v[i]) }
+        return this
+    }
+
+    override fun rawUInt(value: UInt): WireFormatEncoder {
+        writer.number(value)
         return this
     }
 
@@ -451,6 +527,11 @@ class JsonWireFormatEncoder(
         return this
     }
 
+    override fun rawUShort(value: UShort): WireFormatEncoder {
+        writer.number(value)
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // UByte
     // ----------------------------------------------------------------------------
@@ -475,6 +556,11 @@ class JsonWireFormatEncoder(
         return this
     }
 
+    override fun rawUByte(value: UByte): WireFormatEncoder {
+        writer.number(value)
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // ULong
     // ----------------------------------------------------------------------------
@@ -496,6 +582,11 @@ class JsonWireFormatEncoder(
 
     override fun uLongListOrNull(fieldNumber: Int, fieldName: String, values: List<ULong>?): JsonWireFormatEncoder {
         array(fieldName, values) { v, i -> writer.number(v[i]) }
+        return this
+    }
+
+    override fun rawULong(value: ULong): WireFormatEncoder {
+        writer.number(value)
         return this
     }
     

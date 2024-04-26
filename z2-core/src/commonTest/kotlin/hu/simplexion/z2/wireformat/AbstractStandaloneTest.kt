@@ -11,7 +11,7 @@ abstract class AbstractStandaloneTest(
 
     val sv = wireFormatProvider.standalone()
 
-    fun decoder(wireFormat: () -> ByteArray): WireFormatDecoder =
+    fun decoder(wireFormat: () -> ByteArray): WireFormatDecoder<*> =
         wireFormatProvider.decoder(wireFormat())
 
     @Test

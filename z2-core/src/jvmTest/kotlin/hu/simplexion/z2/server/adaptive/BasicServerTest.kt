@@ -1,7 +1,6 @@
 package hu.simplexion.z2.server.adaptive
 
 import hu.simplexion.z2.adaptive.adaptive
-import hu.simplexion.z2.adaptive.testing.AdaptiveTestAdapter
 import hu.simplexion.z2.server.adaptive.components.process
 import hu.simplexion.z2.server.adaptive.components.service
 import hu.simplexion.z2.server.adaptive.components.worker
@@ -14,9 +13,7 @@ class BasicServerTest {
 
     @Test
     fun basic() {
-        val adapter = AdaptiveTestAdapter()
-
-        adaptive {
+        adaptive(AdaptiveServerAdapter()) {
             service { TestServiceImpl() }
             worker { TestWorkerImpl() }
             process {  }

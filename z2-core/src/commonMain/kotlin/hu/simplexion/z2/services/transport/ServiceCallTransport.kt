@@ -15,7 +15,7 @@ interface ServiceCallTransport {
     val wireFormatStandalone: Standalone
         get() = defaultWireFormatProvider.standalone()
 
-    fun wireFormatDecoder(payload: ByteArray): WireFormatDecoder =
+    fun wireFormatDecoder(payload: ByteArray): WireFormatDecoder<*> =
         defaultWireFormatProvider.decoder(payload)
 
 }

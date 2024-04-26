@@ -20,7 +20,7 @@ object DurationWireFormat : WireFormat<Duration> {
         encoder
             .long(1, "inWholeNanoseconds", value.inWholeNanoseconds)
 
-    override fun wireFormatDecode(decoder: WireFormatDecoder?): Duration {
+    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Duration {
         if (decoder == null) return Duration.ZERO
         return decoder.long(1, "inWholeNanoseconds").nanoseconds
     }
@@ -32,7 +32,7 @@ object InstantWireFormat : WireFormat<Instant> {
     override val fqName: String
         get() = "kotlinx.datetime.Instant"
 
-    override fun wireFormatDecode(decoder: WireFormatDecoder?): Instant {
+    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Instant {
         if (decoder == null) return Instant.DISTANT_PAST
         return Instant.fromEpochSeconds(decoder.long(1, "epochSeconds"), decoder.int(2, "nanosecondsOfSecond"))
     }
@@ -49,7 +49,7 @@ object LocalDateWireFormat : WireFormat<LocalDate> {
     override val fqName: String
         get() = "kotlinx.datetime.LocalDate"
 
-    override fun wireFormatDecode(decoder: WireFormatDecoder?): LocalDate {
+    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): LocalDate {
         if (decoder == null) return LocalDate.fromEpochDays(0)
         return LocalDate(
             decoder.int(1, "year"),
@@ -81,7 +81,7 @@ object LocalDateTimeWireFormat : WireFormat<LocalDateTime> {
             .int(6, "second", value.second)
             .int(7, "nanosecond", value.nanosecond)
 
-    override fun wireFormatDecode(decoder: WireFormatDecoder?): LocalDateTime {
+    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): LocalDateTime {
         if (decoder == null) return LocalDateTime(0, 1, 1, 0, 0, 0, 0)
         return LocalDateTime(
             decoder.int(1, "year"),
@@ -101,7 +101,7 @@ object LocalTimeWireFormat : WireFormat<LocalTime> {
     override val fqName: String
         get() = "kotlinx.datetime.LocalTime"
 
-    override fun wireFormatDecode(decoder: WireFormatDecoder?): LocalTime {
+    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): LocalTime {
         if (decoder == null) return LocalTime.fromSecondOfDay(0)
         return LocalTime.fromNanosecondOfDay(decoder.long(1, "nanosecondOfDay"))
     }

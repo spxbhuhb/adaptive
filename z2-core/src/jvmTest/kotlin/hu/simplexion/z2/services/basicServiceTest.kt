@@ -57,7 +57,7 @@ class TestServiceImpl(override val serviceContext: ServiceContext) : TestService
         // null in actual code
         LocalServiceCallTransport()
 
-    override suspend fun dispatch(funName: String, payload: WireFormatDecoder): ByteArray =
+    override suspend fun dispatch(funName: String, payload: WireFormatDecoder<*>): ByteArray =
         when (funName) {
             "testFun" -> wireFormatStandalone.encodeString(testFun(payload.int(1, "arg1"), payload.string(2, "arg2")))
             else -> throw IllegalStateException("unknown function: $funName")
