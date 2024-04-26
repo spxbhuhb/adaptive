@@ -7,165 +7,185 @@ import kotlin.enums.EnumEntries
  * Interface for building serialized messages. Protobuf needs field number
  * JSON needs field name, hence passing both.
  */
+@OptIn(ExperimentalUnsignedTypes::class)
 interface WireFormatEncoder {
 
     fun pack(): ByteArray
 
     // ----------------------------------------------------------------------------
-    // Any
+    // Special Types
     // ----------------------------------------------------------------------------
 
     fun any(fieldNumber: Int, fieldName: String, value: Any): WireFormatEncoder
 
     fun anyOrNull(fieldNumber: Int, fieldName: String, value: Any?): WireFormatEncoder
 
-    fun anyList(fieldNumber: Int, fieldName: String, values: List<Any>): WireFormatEncoder
+    fun rawAny(value: Any): WireFormatEncoder
 
-    fun anyListOrNull(fieldNumber: Int, fieldName: String, values: List<Any>?): WireFormatEncoder
-
-    // ----------------------------------------------------------------------------
-    // Unit
-    // ----------------------------------------------------------------------------
+    // ----
 
     fun unit(fieldNumber: Int, fieldName: String, value: Unit): WireFormatEncoder
 
     fun unitOrNull(fieldNumber: Int, fieldName: String, value: Unit?): WireFormatEncoder
 
-    fun unitList(fieldNumber: Int, fieldName: String, values: List<Unit>): WireFormatEncoder
-
-    fun unitListOrNull(fieldNumber: Int, fieldName: String, values: List<Unit>?): WireFormatEncoder
+    fun rawUnit(value: Unit): WireFormatEncoder
 
     // ----------------------------------------------------------------------------
-    // Boolean
+    // Primitives
     // ----------------------------------------------------------------------------
 
     fun boolean(fieldNumber: Int, fieldName: String, value: Boolean): WireFormatEncoder
 
     fun booleanOrNull(fieldNumber: Int, fieldName: String, value: Boolean?): WireFormatEncoder
 
-    fun booleanList(fieldNumber: Int, fieldName: String, values: List<Boolean>): WireFormatEncoder
+    fun rawBoolean(value: Boolean): WireFormatEncoder
 
-    fun booleanListOrNull(fieldNumber: Int, fieldName: String, values: List<Boolean>?): WireFormatEncoder
-
-    // ----------------------------------------------------------------------------
-    // Int
-    // ----------------------------------------------------------------------------
+    // ----
 
     fun int(fieldNumber: Int, fieldName: String, value: Int): WireFormatEncoder
 
     fun intOrNull(fieldNumber: Int, fieldName: String, value: Int?): WireFormatEncoder
 
-    fun intList(fieldNumber: Int, fieldName: String, values: List<Int>): WireFormatEncoder
+    fun rawInt(value: Int): WireFormatEncoder
 
-    fun intListOrNull(fieldNumber: Int, fieldName: String, values: List<Int>?): WireFormatEncoder
-
-    // ----------------------------------------------------------------------------
-    // Short
-    // ----------------------------------------------------------------------------
+    // ----
 
     fun short(fieldNumber: Int, fieldName: String, value: Short): WireFormatEncoder
 
     fun shortOrNull(fieldNumber: Int, fieldName: String, value: Short?): WireFormatEncoder
 
-    fun shortList(fieldNumber: Int, fieldName: String, values: List<Short>): WireFormatEncoder
+    fun rawShort(value: Short): WireFormatEncoder
 
-    fun shortListOrNull(fieldNumber: Int, fieldName: String, values: List<Short>?): WireFormatEncoder
-
-    // ----------------------------------------------------------------------------
-    // Byte
-    // ----------------------------------------------------------------------------
+    // ----
 
     fun byte(fieldNumber: Int, fieldName: String, value: Byte): WireFormatEncoder
 
     fun byteOrNull(fieldNumber: Int, fieldName: String, value: Byte?): WireFormatEncoder
 
-    fun byteList(fieldNumber: Int, fieldName: String, values: List<Byte>): WireFormatEncoder
+    fun rawByte(value: Byte): WireFormatEncoder
 
-    fun byteListOrNull(fieldNumber: Int, fieldName: String, values: List<Byte>?): WireFormatEncoder
-
-    // ----------------------------------------------------------------------------
-    // Long
-    // ----------------------------------------------------------------------------
+    // ----
 
     fun long(fieldNumber: Int, fieldName: String, value: Long): WireFormatEncoder
 
     fun longOrNull(fieldNumber: Int, fieldName: String, value: Long?): WireFormatEncoder
 
-    fun longList(fieldNumber: Int, fieldName: String, values: List<Long>): WireFormatEncoder
+    fun rawLong(value: Long): WireFormatEncoder
 
-    fun longListOrNull(fieldNumber: Int, fieldName: String, values: List<Long>?): WireFormatEncoder
-
-    // ----------------------------------------------------------------------------
-    // Float
-    // ----------------------------------------------------------------------------
+    // ----
 
     fun float(fieldNumber: Int, fieldName: String, value: Float): WireFormatEncoder
 
     fun floatOrNull(fieldNumber: Int, fieldName: String, value: Float?): WireFormatEncoder
 
-    fun floatList(fieldNumber: Int, fieldName: String, values: List<Float>): WireFormatEncoder
+    fun rawFloat(value: Float): WireFormatEncoder
 
-    fun floatListOrNull(fieldNumber: Int, fieldName: String, values: List<Float>?): WireFormatEncoder
-
-    // ----------------------------------------------------------------------------
-    // Double
-    // ----------------------------------------------------------------------------
+    // ----
 
     fun double(fieldNumber: Int, fieldName: String, value: Double): WireFormatEncoder
 
     fun doubleOrNull(fieldNumber: Int, fieldName: String, value: Double?): WireFormatEncoder
 
-    fun doubleList(fieldNumber: Int, fieldName: String, values: List<Double>): WireFormatEncoder
+    fun rawDouble(value: Double): WireFormatEncoder
 
-    fun doubleListOrNull(fieldNumber: Int, fieldName: String, values: List<Double>?): WireFormatEncoder
-
-    // ----------------------------------------------------------------------------
-    // Char
-    // ----------------------------------------------------------------------------
+    // ----
 
     fun char(fieldNumber: Int, fieldName: String, value: Char): WireFormatEncoder
 
     fun charOrNull(fieldNumber: Int, fieldName: String, value: Char?): WireFormatEncoder
 
-    fun charList(fieldNumber: Int, fieldName: String, values: List<Char>): WireFormatEncoder
+    fun rawChar(value: Char): WireFormatEncoder
 
-    fun charListOrNull(fieldNumber: Int, fieldName: String, values: List<Char>?): WireFormatEncoder
+    // -----------------------------------------------------------------------------------------
+    // Arrays
+    // -----------------------------------------------------------------------------------------
+
+    fun booleanArray(fieldNumber: Int, fieldName: String, values: BooleanArray): WireFormatEncoder
+
+    fun booleanArrayOrNull(fieldNumber: Int, fieldName: String, values: BooleanArray?): WireFormatEncoder
+
+    fun rawBooleanArray(values: BooleanArray): WireFormatEncoder
+
+    // ----
+
+    fun intArray(fieldNumber: Int, fieldName: String, values: IntArray): WireFormatEncoder
+
+    fun intArrayOrNull(fieldNumber: Int, fieldName: String, values: IntArray?): WireFormatEncoder
+
+    fun rawIntArray(values: IntArray): WireFormatEncoder
+
+    // ----
+
+    fun shortArray(fieldNumber: Int, fieldName: String, values: ShortArray): WireFormatEncoder
+
+    fun shortArrayOrNull(fieldNumber: Int, fieldName: String, values: ShortArray?): WireFormatEncoder
+
+    fun rawShortArray(values: ShortArray): WireFormatEncoder
+    // ----
+
+    fun byteArray(fieldNumber: Int, fieldName: String, value: ByteArray): WireFormatEncoder
+
+    fun byteArrayOrNull(fieldNumber: Int, fieldName: String, value: ByteArray?): WireFormatEncoder
+
+    fun rawByteArray(values: ByteArray): WireFormatEncoder
+
+    // ----
+
+    fun longArray(fieldNumber: Int, fieldName: String, values: LongArray): WireFormatEncoder
+
+    fun longArrayOrNull(fieldNumber: Int, fieldName: String, values: LongArray?): WireFormatEncoder
+
+    fun rawLongArray(values: LongArray): WireFormatEncoder
+
+    // ----
+
+    fun floatArray(fieldNumber: Int, fieldName: String, values: FloatArray): WireFormatEncoder
+
+    fun floatArrayOrNull(fieldNumber: Int, fieldName: String, values: FloatArray?): WireFormatEncoder
+
+    fun rawFloatArray(values: FloatArray): WireFormatEncoder
+
+    // ----
+
+    fun doubleArray(fieldNumber: Int, fieldName: String, values: DoubleArray): WireFormatEncoder
+
+    fun doubleArrayOrNull(fieldNumber: Int, fieldName: String, values: DoubleArray?): WireFormatEncoder
+
+    fun rawDoubleArray(values: DoubleArray): WireFormatEncoder
+
+    // ----
+
+    fun charArray(fieldNumber: Int, fieldName: String, values: CharArray): WireFormatEncoder
+
+    fun charArrayOrNull(fieldNumber: Int, fieldName: String, values: CharArray?): WireFormatEncoder
+
+    fun rawCharArray(values: CharArray): WireFormatEncoder
 
     // ----------------------------------------------------------------------------
-    // String
+    // Built-in Types
     // ----------------------------------------------------------------------------
 
     fun string(fieldNumber: Int, fieldName: String, value: String): WireFormatEncoder
 
     fun stringOrNull(fieldNumber: Int, fieldName: String, value: String?): WireFormatEncoder
 
-    fun stringList(fieldNumber: Int, fieldName: String, values: List<String>): WireFormatEncoder
+    fun rawString(value: String): WireFormatEncoder
 
-    fun stringListOrNull(fieldNumber: Int, fieldName: String, values: List<String>?): WireFormatEncoder
+    // ----
 
-    // ----------------------------------------------------------------------------
-    // ByteArray
-    // ----------------------------------------------------------------------------
+    fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, value: E, entries: EnumEntries<E>): WireFormatEncoder
 
-    fun byteArray(fieldNumber: Int, fieldName: String, value: ByteArray): WireFormatEncoder
+    fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, value: E?, entries: EnumEntries<E>): WireFormatEncoder
 
-    fun byteArrayOrNull(fieldNumber: Int, fieldName: String, value: ByteArray?): WireFormatEncoder
+    fun <E : Enum<E>> rawEnum(value: E, entries: EnumEntries<E>): WireFormatEncoder
 
-    fun byteArrayList(fieldNumber: Int, fieldName: String, values: List<ByteArray>): WireFormatEncoder
-
-    fun byteArrayListOrNull(fieldNumber: Int, fieldName: String, values: List<ByteArray>?): WireFormatEncoder
-
-    // ----------------------------------------------------------------------------
-    // UUID
-    // ----------------------------------------------------------------------------
+    // ----
 
     fun uuid(fieldNumber: Int, fieldName: String, value: UUID<*>): WireFormatEncoder
 
     fun uuidOrNull(fieldNumber: Int, fieldName: String, value: UUID<*>?): WireFormatEncoder
 
-    fun uuidList(fieldNumber: Int, fieldName: String, values: List<UUID<*>>): WireFormatEncoder
-
-    fun uuidListOrNull(fieldNumber: Int, fieldName: String, values: List<UUID<*>>?): WireFormatEncoder
+    fun rawUuid(value: UUID<*>): WireFormatEncoder
 
     // ----------------------------------------------------------------------------
     // Instance
@@ -175,101 +195,83 @@ interface WireFormatEncoder {
 
     fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, value: T?, encoder: WireFormat<T>): WireFormatEncoder
 
-    fun <T> instanceList(fieldNumber: Int, fieldName: String, values: List<T>, encoder: WireFormat<T>): WireFormatEncoder
-
-    fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, values: List<T>?, encoder: WireFormat<T>): WireFormatEncoder
+    fun <T> rawInstance(value: T, wireFormat: WireFormat<T>): WireFormatEncoder
 
     // ----------------------------------------------------------------------------
-    // Enum
+    // Collection
     // ----------------------------------------------------------------------------
 
-    fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, value: E, entries: EnumEntries<E>): WireFormatEncoder
+    fun <T> collection(fieldNumber: Int, fieldName: String, values: Collection<T>, wireFormat: WireFormat<T>): WireFormatEncoder
 
-    fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, value: E?, entries: EnumEntries<E>): WireFormatEncoder
+    fun <T> collectionOrNull(fieldNumber: Int, fieldName: String, values: Collection<T>?, wireFormat: WireFormat<T>): WireFormatEncoder
 
-    fun <E : Enum<E>> enumList(fieldNumber: Int, fieldName: String, values: List<E>, entries: EnumEntries<E>): WireFormatEncoder
-
-    fun <E : Enum<E>> enumListOrNull(fieldNumber: Int, fieldName: String, values: List<E>?, entries: EnumEntries<E>): WireFormatEncoder
-
-    // ----------------------------------------------------------------------------
-    // UInt
-    // ----------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------
+    // Unsigned Primitives
+    // -----------------------------------------------------------------------------------------
 
     fun uInt(fieldNumber: Int, fieldName: String, value: UInt): WireFormatEncoder
 
     fun uIntOrNull(fieldNumber: Int, fieldName: String, value: UInt?): WireFormatEncoder
 
-    fun uIntList(fieldNumber: Int, fieldName: String, values: List<UInt>): WireFormatEncoder
+    fun rawUInt(value: UInt): WireFormatEncoder
 
-    fun uIntListOrNull(fieldNumber: Int, fieldName: String, values: List<UInt>?): WireFormatEncoder
-
-    // ----------------------------------------------------------------------------
-    // UShort
-    // ----------------------------------------------------------------------------
+    // ----
 
     fun uShort(fieldNumber: Int, fieldName: String, value: UShort): WireFormatEncoder
 
     fun uShortOrNull(fieldNumber: Int, fieldName: String, value: UShort?): WireFormatEncoder
 
-    fun uShortList(fieldNumber: Int, fieldName: String, values: List<UShort>): WireFormatEncoder
+    fun rawUShort(value: UShort): WireFormatEncoder
 
-    fun uShortListOrNull(fieldNumber: Int, fieldName: String, values: List<UShort>?): WireFormatEncoder
-
-    // ----------------------------------------------------------------------------
-    // UByte
-    // ----------------------------------------------------------------------------
+    // ----
 
     fun uByte(fieldNumber: Int, fieldName: String, value: UByte): WireFormatEncoder
 
     fun uByteOrNull(fieldNumber: Int, fieldName: String, value: UByte?): WireFormatEncoder
 
-    fun uByteList(fieldNumber: Int, fieldName: String, values: List<UByte>): WireFormatEncoder
+    fun rawUByte(value: UByte): WireFormatEncoder
 
-    fun uByteListOrNull(fieldNumber: Int, fieldName: String, values: List<UByte>?): WireFormatEncoder
-
-    // ----------------------------------------------------------------------------
-    // ULong
-    // ----------------------------------------------------------------------------
+    // ----
 
     fun uLong(fieldNumber: Int, fieldName: String, value: ULong): WireFormatEncoder
 
     fun uLongOrNull(fieldNumber: Int, fieldName: String, value: ULong?): WireFormatEncoder
 
-    fun uLongList(fieldNumber: Int, fieldName: String, values: List<ULong>): WireFormatEncoder
-
-    fun uLongListOrNull(fieldNumber: Int, fieldName: String, values: List<ULong>?): WireFormatEncoder
-
-    // ----------------------------------------------------------------------------
-    // Raw writers to support collections with primitive values
-    // ----------------------------------------------------------------------------
-
-    fun rawAny(value: Any): WireFormatEncoder
-    fun rawUnit(value: Unit): WireFormatEncoder
-
-    fun rawBoolean(value: Boolean): WireFormatEncoder
-
-    fun rawInt(value: Int): WireFormatEncoder
-    fun rawShort(value: Short): WireFormatEncoder
-    fun rawByte(value: Byte): WireFormatEncoder
-    fun rawLong(value: Long): WireFormatEncoder
-
-    fun rawFloat(value: Float): WireFormatEncoder
-    fun rawDouble(value: Double): WireFormatEncoder
-
-    fun rawChar(value: Char): WireFormatEncoder
-    fun rawString(value: String): WireFormatEncoder
-
-    fun rawByteArray(value: ByteArray): WireFormatEncoder
-
-    fun rawUInt(value: UInt): WireFormatEncoder
-    fun rawUShort(value: UShort): WireFormatEncoder
-    fun rawUByte(value: UByte): WireFormatEncoder
     fun rawULong(value: ULong): WireFormatEncoder
 
-    fun rawUuid(value: UUID<*>): WireFormatEncoder
+    // -----------------------------------------------------------------------------------------
+    // Unsigned Arrays
+    // -----------------------------------------------------------------------------------------
 
-    fun <E : Enum<E>> rawEnum(value: E, entries: EnumEntries<E>): WireFormatEncoder
 
-    fun <T> rawInstance(value: T, wireFormat: WireFormat<T>): WireFormatEncoder
+    fun uIntArray(fieldNumber: Int, fieldName: String, values: UIntArray): WireFormatEncoder
+
+    fun uIntArrayOrNull(fieldNumber: Int, fieldName: String, values: UIntArray?): WireFormatEncoder
+
+    fun rawUIntArray(values: UIntArray): WireFormatEncoder
+
+    // ----
+
+    fun uShortArray(fieldNumber: Int, fieldName: String, values: UShortArray): WireFormatEncoder
+
+    fun uShortArrayOrNull(fieldNumber: Int, fieldName: String, values: UShortArray?): WireFormatEncoder
+
+    fun rawUShortArray(values: UShortArray): WireFormatEncoder
+
+    // ----
+
+    fun uByteArray(fieldNumber: Int, fieldName: String, values: UByteArray): WireFormatEncoder
+
+    fun uByteArrayOrNull(fieldNumber: Int, fieldName: String, values: UByteArray?): WireFormatEncoder
+
+    fun rawUByteArray(value: UByteArray): WireFormatEncoder
+
+    // ----
+
+    fun uLongArray(fieldNumber: Int, fieldName: String, values: ULongArray): WireFormatEncoder
+
+    fun uLongArrayOrNull(fieldNumber: Int, fieldName: String, values: ULongArray?): WireFormatEncoder
+
+    fun rawULongArray(values: ULongArray): WireFormatEncoder
 
 }

@@ -11,6 +11,7 @@ import kotlin.enums.EnumEntries
  * Use the type-specific functions to add records and then use [pack] to get
  * the wire format message.
  */
+@OptIn(ExperimentalUnsignedTypes::class)
 class JsonWireFormatEncoder(
     private val writer: JsonBufferWriter = JsonBufferWriter()
 ) : WireFormatEncoder {
@@ -29,14 +30,6 @@ class JsonWireFormatEncoder(
         TODO()
     }
 
-    override fun anyList(fieldNumber: Int, fieldName: String, values: List<Any>): JsonWireFormatEncoder {
-        TODO()
-    }
-
-    override fun anyListOrNull(fieldNumber: Int, fieldName: String, values: List<Any>?): JsonWireFormatEncoder {
-        TODO()
-    }
-
     override fun rawAny(value: Any): WireFormatEncoder {
         TODO("Not yet implemented")
     }
@@ -52,16 +45,6 @@ class JsonWireFormatEncoder(
 
     override fun unitOrNull(fieldNumber: Int, fieldName: String, value: Unit?): JsonWireFormatEncoder {
         writer.bool(fieldName, if (value != null) true else null)
-        return this
-    }
-
-    override fun unitList(fieldNumber: Int, fieldName: String, values: List<Unit>): JsonWireFormatEncoder {
-        unitListOrNull(fieldNumber, fieldName, values)
-        return this
-    }
-
-    override fun unitListOrNull(fieldNumber: Int, fieldName: String, values: List<Unit>?): JsonWireFormatEncoder {
-        array(fieldName, values) { _, _ -> writer.bool(true) }
         return this
     }
 
@@ -84,13 +67,18 @@ class JsonWireFormatEncoder(
         return this
     }
 
-    override fun booleanList(fieldNumber: Int, fieldName: String, values: List<Boolean>): JsonWireFormatEncoder {
-        booleanListOrNull(fieldNumber, fieldName, values)
+    override fun booleanArray(fieldNumber: Int, fieldName: String, values: BooleanArray): JsonWireFormatEncoder {
+        booleanArrayOrNull(fieldNumber, fieldName, values)
         return this
     }
 
-    override fun booleanListOrNull(fieldNumber: Int, fieldName: String, values: List<Boolean>?): JsonWireFormatEncoder {
-        array(fieldName, values) { v, i -> writer.bool(v[i]) }
+    override fun booleanArrayOrNull(fieldNumber: Int, fieldName: String, values: BooleanArray?): JsonWireFormatEncoder {
+        array(fieldName, values) {
+            for (value in values !!) {
+                writer.bool(value)
+                writer.separator()
+            }
+        }
         return this
     }
 
@@ -113,13 +101,18 @@ class JsonWireFormatEncoder(
         return this
     }
 
-    override fun intList(fieldNumber: Int, fieldName: String, values: List<Int>): JsonWireFormatEncoder {
-        intListOrNull(fieldNumber, fieldName, values)
+    override fun intArray(fieldNumber: Int, fieldName: String, values: IntArray): JsonWireFormatEncoder {
+        intArrayOrNull(fieldNumber, fieldName, values)
         return this
     }
 
-    override fun intListOrNull(fieldNumber: Int, fieldName: String, values: List<Int>?): JsonWireFormatEncoder {
-        array(fieldName, values) { v, i -> writer.number(v[i]) }
+    override fun intArrayOrNull(fieldNumber: Int, fieldName: String, values: IntArray?): JsonWireFormatEncoder {
+        array(fieldName, values) {
+            for (value in values !!) {
+                writer.number(value)
+                writer.separator()
+            }
+        }
         return this
     }
 
@@ -142,13 +135,18 @@ class JsonWireFormatEncoder(
         return this
     }
 
-    override fun shortList(fieldNumber: Int, fieldName: String, values: List<Short>): JsonWireFormatEncoder {
-        shortListOrNull(fieldNumber, fieldName, values)
+    override fun shortArray(fieldNumber: Int, fieldName: String, values: ShortArray): JsonWireFormatEncoder {
+        shortArrayOrNull(fieldNumber, fieldName, values)
         return this
     }
 
-    override fun shortListOrNull(fieldNumber: Int, fieldName: String, values: List<Short>?): JsonWireFormatEncoder {
-        array(fieldName, values) { v, i -> writer.number(v[i]) }
+    override fun shortArrayOrNull(fieldNumber: Int, fieldName: String, values: ShortArray?): JsonWireFormatEncoder {
+        array(fieldName, values) {
+            for (value in values !!) {
+                writer.number(value)
+                writer.separator()
+            }
+        }
         return this
     }
 
@@ -171,15 +169,6 @@ class JsonWireFormatEncoder(
         return this
     }
 
-    override fun byteList(fieldNumber: Int, fieldName: String, values: List<Byte>): JsonWireFormatEncoder {
-        byteListOrNull(fieldNumber, fieldName, values)
-        return this
-    }
-
-    override fun byteListOrNull(fieldNumber: Int, fieldName: String, values: List<Byte>?): JsonWireFormatEncoder {
-        array(fieldName, values) { v, i -> writer.number(v[i]) }
-        return this
-    }
 
     override fun rawByte(value: Byte): WireFormatEncoder {
         writer.number(value)
@@ -200,13 +189,18 @@ class JsonWireFormatEncoder(
         return this
     }
 
-    override fun longList(fieldNumber: Int, fieldName: String, values: List<Long>): JsonWireFormatEncoder {
-        longListOrNull(fieldNumber, fieldName, values)
+    override fun longArray(fieldNumber: Int, fieldName: String, values: LongArray): JsonWireFormatEncoder {
+        longArrayOrNull(fieldNumber, fieldName, values)
         return this
     }
 
-    override fun longListOrNull(fieldNumber: Int, fieldName: String, values: List<Long>?): JsonWireFormatEncoder {
-        array(fieldName, values) { v, i -> writer.number(v[i]) }
+    override fun longArrayOrNull(fieldNumber: Int, fieldName: String, values: LongArray?): JsonWireFormatEncoder {
+        array(fieldName, values) {
+            for (value in values !!) {
+                writer.number(value)
+                writer.separator()
+            }
+        }
         return this
     }
 
@@ -229,13 +223,18 @@ class JsonWireFormatEncoder(
         return this
     }
 
-    override fun floatList(fieldNumber: Int, fieldName: String, values: List<Float>): JsonWireFormatEncoder {
-        floatListOrNull(fieldNumber, fieldName, values)
+    override fun floatArray(fieldNumber: Int, fieldName: String, values: FloatArray): JsonWireFormatEncoder {
+        floatArrayOrNull(fieldNumber, fieldName, values)
         return this
     }
 
-    override fun floatListOrNull(fieldNumber: Int, fieldName: String, values: List<Float>?): JsonWireFormatEncoder {
-        array(fieldName, values) { v, i -> writer.number(v[i]) }
+    override fun floatArrayOrNull(fieldNumber: Int, fieldName: String, values: FloatArray?): JsonWireFormatEncoder {
+        array(fieldName, values) {
+            for (value in values !!) {
+                writer.number(value)
+                writer.separator()
+            }
+        }
         return this
     }
 
@@ -258,13 +257,18 @@ class JsonWireFormatEncoder(
         return this
     }
 
-    override fun doubleList(fieldNumber: Int, fieldName: String, values: List<Double>): JsonWireFormatEncoder {
-        doubleListOrNull(fieldNumber, fieldName, values)
+    override fun doubleArray(fieldNumber: Int, fieldName: String, values: DoubleArray): JsonWireFormatEncoder {
+        doubleArrayOrNull(fieldNumber, fieldName, values)
         return this
     }
 
-    override fun doubleListOrNull(fieldNumber: Int, fieldName: String, values: List<Double>?): JsonWireFormatEncoder {
-        array(fieldName, values) { v, i -> writer.number(v[i]) }
+    override fun doubleArrayOrNull(fieldNumber: Int, fieldName: String, values: DoubleArray?): JsonWireFormatEncoder {
+        array(fieldName, values) {
+            for (value in values !!) {
+                writer.number(value)
+                writer.separator()
+            }
+        }
         return this
     }
 
@@ -287,13 +291,18 @@ class JsonWireFormatEncoder(
         return this
     }
 
-    override fun charList(fieldNumber: Int, fieldName: String, values: List<Char>): JsonWireFormatEncoder {
-        charListOrNull(fieldNumber, fieldName, values)
+    override fun charArray(fieldNumber: Int, fieldName: String, values: CharArray): JsonWireFormatEncoder {
+        charArrayOrNull(fieldNumber, fieldName, values)
         return this
     }
 
-    override fun charListOrNull(fieldNumber: Int, fieldName: String, values: List<Char>?): JsonWireFormatEncoder {
-        array(fieldName, values) { v, i -> writer.quotedString(v[i].toString()) }
+    override fun charArrayOrNull(fieldNumber: Int, fieldName: String, values: CharArray?): JsonWireFormatEncoder {
+        array(fieldName, values) {
+            for (value in values !!) {
+                writer.string(value.toString())
+                writer.separator()
+            }
+        }
         return this
     }
 
@@ -317,16 +326,6 @@ class JsonWireFormatEncoder(
         return this
     }
 
-    override fun stringList(fieldNumber: Int, fieldName: String, values: List<String>): JsonWireFormatEncoder {
-        stringListOrNull(fieldNumber, fieldName, values)
-        return this
-    }
-
-    override fun stringListOrNull(fieldNumber: Int, fieldName: String, values: List<String>?): JsonWireFormatEncoder {
-        array(fieldName, values) { v, i -> writer.quotedString(v[i]) }
-        return this
-    }
-
     override fun rawString(value: String): WireFormatEncoder {
         writer.quotedString(value)
         return this
@@ -343,16 +342,6 @@ class JsonWireFormatEncoder(
 
     override fun byteArrayOrNull(fieldNumber: Int, fieldName: String, value: ByteArray?): JsonWireFormatEncoder {
         writer.bytes(fieldName, value)
-        return this
-    }
-
-    override fun byteArrayList(fieldNumber: Int, fieldName: String, values: List<ByteArray>): JsonWireFormatEncoder {
-        byteArrayListOrNull(fieldNumber, fieldName, values)
-        return this
-    }
-
-    override fun byteArrayListOrNull(fieldNumber: Int, fieldName: String, values: List<ByteArray>?): JsonWireFormatEncoder {
-        array(fieldName, values) { v, i -> writer.bytes(v[i]) }
         return this
     }
 
@@ -379,20 +368,6 @@ class JsonWireFormatEncoder(
         return this
     }
 
-    /**
-     * Add a list of UUIDs to the message. Uses packed `bytes` to store the
-     * 16 raw bytes of the UUID.
-     */
-    override fun uuidList(fieldNumber: Int, fieldName: String, values: List<UUID<*>>): JsonWireFormatEncoder {
-        uuidListOrNull(fieldNumber, fieldName, values)
-        return this
-    }
-
-    override fun uuidListOrNull(fieldNumber: Int, fieldName: String, values: List<UUID<*>>?): JsonWireFormatEncoder {
-        array(fieldName, values) { v, i -> writer.uuid(v[i]) }
-        return this
-    }
-
     override fun rawUuid(value: UUID<*>): WireFormatEncoder {
         writer.uuid(value)
         return this
@@ -413,19 +388,6 @@ class JsonWireFormatEncoder(
         } else {
             writer.fieldName(fieldName)
             rawInstance(value, encoder)
-        }
-        return this
-    }
-
-    override fun <T> instanceList(fieldNumber: Int, fieldName: String, values: List<T>, encoder: WireFormat<T>): JsonWireFormatEncoder {
-        instanceListOrNull(fieldNumber, fieldName, values, encoder)
-        return this
-    }
-
-    override fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, values: List<T>?, encoder: WireFormat<T>): JsonWireFormatEncoder {
-        array(fieldName, values) { v, i ->
-            encoder.wireFormatEncode(this, v[i])
-            writer.rollback() // array adds the separator
         }
         return this
     }
@@ -456,19 +418,6 @@ class JsonWireFormatEncoder(
         return this
     }
 
-    override fun <E : Enum<E>> enumList(fieldNumber: Int, fieldName: String, values: List<E>, entries: EnumEntries<E>): WireFormatEncoder {
-        enumListOrNull(fieldNumber, fieldName, values, entries)
-        return this
-    }
-
-    override fun <E : Enum<E>> enumListOrNull(fieldNumber: Int, fieldName: String, values: List<E>?, entries: EnumEntries<E>): WireFormatEncoder {
-        array(fieldName, values) { v, i ->
-            writer.quotedString(v[i].name)
-            writer.rollback() // array adds the separator
-        }
-        return this
-    }
-
     override fun <E : Enum<E>> rawEnum(value: E, entries: EnumEntries<E>): WireFormatEncoder {
         writer.quotedString(value.name)
         return this
@@ -488,13 +437,18 @@ class JsonWireFormatEncoder(
         return this
     }
 
-    override fun uIntList(fieldNumber: Int, fieldName: String, values: List<UInt>): JsonWireFormatEncoder {
-        uIntListOrNull(fieldNumber, fieldName, values)
+    override fun uIntArray(fieldNumber: Int, fieldName: String, values: UIntArray): JsonWireFormatEncoder {
+        uIntArrayOrNull(fieldNumber, fieldName, values)
         return this
     }
 
-    override fun uIntListOrNull(fieldNumber: Int, fieldName: String, values: List<UInt>?): JsonWireFormatEncoder {
-        array(fieldName, values) { v, i -> writer.number(v[i]) }
+    override fun uIntArrayOrNull(fieldNumber: Int, fieldName: String, values: UIntArray?): JsonWireFormatEncoder {
+        array(fieldName, values) {
+            for (value in values !!) {
+                writer.number(value)
+                writer.separator()
+            }
+        }
         return this
     }
 
@@ -517,13 +471,18 @@ class JsonWireFormatEncoder(
         return this
     }
 
-    override fun uShortList(fieldNumber: Int, fieldName: String, values: List<UShort>): JsonWireFormatEncoder {
-        uShortListOrNull(fieldNumber, fieldName, values)
+    override fun uShortArray(fieldNumber: Int, fieldName: String, values: UShortArray): JsonWireFormatEncoder {
+        uShortArrayOrNull(fieldNumber, fieldName, values)
         return this
     }
 
-    override fun uShortListOrNull(fieldNumber: Int, fieldName: String, values: List<UShort>?): JsonWireFormatEncoder {
-        array(fieldName, values) { v, i -> writer.number(v[i]) }
+    override fun uShortArrayOrNull(fieldNumber: Int, fieldName: String, values: UShortArray?): JsonWireFormatEncoder {
+        array(fieldName, values) {
+            for (value in values !!) {
+                writer.number(value)
+                writer.separator()
+            }
+        }
         return this
     }
 
@@ -546,13 +505,18 @@ class JsonWireFormatEncoder(
         return this
     }
 
-    override fun uByteList(fieldNumber: Int, fieldName: String, values: List<UByte>): JsonWireFormatEncoder {
-        uByteListOrNull(fieldNumber, fieldName, values)
+    override fun uByteArray(fieldNumber: Int, fieldName: String, values: UByteArray): JsonWireFormatEncoder {
+        uByteArrayOrNull(fieldNumber, fieldName, values)
         return this
     }
 
-    override fun uByteListOrNull(fieldNumber: Int, fieldName: String, values: List<UByte>?): JsonWireFormatEncoder {
-        array(fieldName, values) { v, i -> writer.number(v[i]) }
+    override fun uByteArrayOrNull(fieldNumber: Int, fieldName: String, values: UByteArray?): JsonWireFormatEncoder {
+        array(fieldName, values) {
+            for (value in values !!) {
+                writer.number(value)
+                writer.separator()
+            }
+        }
         return this
     }
 
@@ -575,13 +539,18 @@ class JsonWireFormatEncoder(
         return this
     }
 
-    override fun uLongList(fieldNumber: Int, fieldName: String, values: List<ULong>): JsonWireFormatEncoder {
-        uLongListOrNull(fieldNumber, fieldName, values)
+    override fun uLongArray(fieldNumber: Int, fieldName: String, values: ULongArray): JsonWireFormatEncoder {
+        uLongArrayOrNull(fieldNumber, fieldName, values)
         return this
     }
 
-    override fun uLongListOrNull(fieldNumber: Int, fieldName: String, values: List<ULong>?): JsonWireFormatEncoder {
-        array(fieldName, values) { v, i -> writer.number(v[i]) }
+    override fun uLongArrayOrNull(fieldNumber: Int, fieldName: String, values: ULongArray?): JsonWireFormatEncoder {
+        array(fieldName, values) {
+            for (value in values !!) {
+                writer.number(value)
+                writer.separator()
+            }
+        }
         return this
     }
 
@@ -589,12 +558,32 @@ class JsonWireFormatEncoder(
         writer.number(value)
         return this
     }
-    
+
+    // ----------------------------------------------------------------------------
+    // Collection
+    // ----------------------------------------------------------------------------
+
+    override fun <T> collection(fieldNumber: Int, fieldName: String, values: Collection<T>, wireFormat: WireFormat<T>): JsonWireFormatEncoder {
+        collectionOrNull(fieldNumber, fieldName, values, wireFormat)
+        return this
+    }
+
+    override fun <T> collectionOrNull(fieldNumber: Int, fieldName: String, values: Collection<T>?, wireFormat: WireFormat<T>): JsonWireFormatEncoder {
+        array(fieldName, values) {
+            for (value in values !!) {
+                wireFormat.wireFormatEncode(this, value)
+                writer.separator()
+            }
+            writer.rollback() // array adds the separator
+        }
+        return this
+    }
+
     // ----------------------------------------------------------------------------
     // Utility
     // ----------------------------------------------------------------------------
 
-    fun <T> array(fieldName: String, values: List<T>?, block: (list: List<T>, index: Int) -> Unit) {
+    fun <T> array(fieldName: String, values: T?, block: (values: T) -> Unit) {
         if (values == null) {
             writer.nullValue(fieldName)
             return
@@ -602,10 +591,7 @@ class JsonWireFormatEncoder(
 
         writer.fieldName(fieldName)
         writer.openArray()
-        for (index in values.indices) {
-            block(values, index)
-            writer.separator()
-        }
+        block(values)
         writer.closeArray()
     }
 

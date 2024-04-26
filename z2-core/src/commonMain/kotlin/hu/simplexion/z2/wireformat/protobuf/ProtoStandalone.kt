@@ -65,7 +65,7 @@ object ProtoStandalone : Standalone {
         encoder().booleanOrNull(1, "", value).pack()
 
     override fun encodeBooleanList(value: List<Boolean>?): ByteArray =
-        encoder().booleanListOrNull(1, "", value).pack()
+        encoder().booleanArrayOrNull(1, "", value).pack()
 
     override fun decodeBoolean(source: ByteArray): Boolean =
         decoder(source).boolean(1, "")
@@ -74,10 +74,10 @@ object ProtoStandalone : Standalone {
         decoder(source).booleanOrNull(1, "")
 
     override fun decodeBooleanList(source: ByteArray): List<Boolean> =
-        decoder(source).booleanList(1, "")
+        decoder(source).booleanArray(1, "")
 
     override fun decodeBooleanListOrNull(source: ByteArray): List<Boolean>? =
-        decoder(source).booleanListOrNull(1, "")
+        decoder(source).booleanArrayOrNull(1, "")
 
     // ---------------------------------------------------------------------------
     // Int
@@ -87,7 +87,7 @@ object ProtoStandalone : Standalone {
         encoder().intOrNull(1, "", value).pack()
 
     override fun encodeIntList(value: List<Int>?): ByteArray =
-        encoder().intListOrNull(1, "", value).pack()
+        encoder().intArrayOrNull(1, "", value).pack()
 
     override fun decodeInt(source: ByteArray): Int =
         decoder(source).int(1, "")
@@ -96,10 +96,10 @@ object ProtoStandalone : Standalone {
         decoder(source).intOrNull(1, "")
 
     override fun decodeIntList(source: ByteArray): List<Int> =
-        decoder(source).intList(1, "")
+        decoder(source).intArray(1, "")
 
     override fun decodeIntListOrNull(source: ByteArray): List<Int>? =
-        decoder(source).intListOrNull(1, "")
+        decoder(source).intArrayOrNull(1, "")
 
     // ---------------------------------------------------------------------------
     // Short
@@ -109,7 +109,7 @@ object ProtoStandalone : Standalone {
         encoder().shortOrNull(1, "", value).pack()
 
     override fun encodeShortList(value: List<Short>?): ByteArray =
-        encoder().shortListOrNull(1, "", value).pack()
+        encoder().shortArrayOrNull(1, "", value).pack()
 
     override fun decodeShort(source: ByteArray): Short =
         decoder(source).short(1, "")
@@ -118,10 +118,10 @@ object ProtoStandalone : Standalone {
         decoder(source).shortOrNull(1, "")
 
     override fun decodeShortList(source: ByteArray): List<Short> =
-        decoder(source).shortList(1, "")
+        decoder(source).shortArray(1, "")
 
     override fun decodeShortListOrNull(source: ByteArray): List<Short>? =
-        decoder(source).shortListOrNull(1, "")
+        decoder(source).shortArrayOrNull(1, "")
 
     // ---------------------------------------------------------------------------
     // Byte
@@ -140,7 +140,7 @@ object ProtoStandalone : Standalone {
         decoder(source).byteOrNull(1, "")
 
     override fun decodeByteList(source: ByteArray): List<Byte> =
-        decoder(source).byteList(1, "")
+        decoder(source).byteArray(1, "")
 
     override fun decodeByteListOrNull(source: ByteArray): List<Byte>? =
         decoder(source).byteListOrNull(1, "")
@@ -153,7 +153,7 @@ object ProtoStandalone : Standalone {
         encoder().longOrNull(1, "", value).pack()
 
     override fun encodeLongList(value: List<Long>?): ByteArray =
-        encoder().longListOrNull(1, "", value).pack()
+        encoder().longArrayOrNull(1, "", value).pack()
 
     override fun decodeLong(source: ByteArray): Long =
         decoder(source).long(1, "")
@@ -162,10 +162,10 @@ object ProtoStandalone : Standalone {
         decoder(source).longOrNull(1, "")
 
     override fun decodeLongList(source: ByteArray): List<Long> =
-        decoder(source).longList(1, "")
+        decoder(source).longArray(1, "")
 
     override fun decodeLongListOrNull(source: ByteArray): List<Long>? =
-        decoder(source).longListOrNull(1, "")
+        decoder(source).longArrayOrNull(1, "")
 
     // ---------------------------------------------------------------------------
     // Float
@@ -175,7 +175,7 @@ object ProtoStandalone : Standalone {
         encoder().floatOrNull(1, "", value).pack()
 
     override fun encodeFloatList(value: List<Float>?): ByteArray =
-        encoder().floatListOrNull(1, "", value).pack()
+        encoder().floatArrayOrNull(1, "", value).pack()
 
     override fun decodeFloat(source: ByteArray): Float =
         decoder(source).float(1, "")
@@ -184,10 +184,10 @@ object ProtoStandalone : Standalone {
         decoder(source).floatOrNull(1, "")
 
     override fun decodeFloatList(source: ByteArray): List<Float> =
-        decoder(source).floatList(1, "")
+        decoder(source).floatArray(1, "")
 
     override fun decodeFloatListOrNull(source: ByteArray): List<Float>? =
-        decoder(source).floatListOrNull(1, "")
+        decoder(source).floatArrayOrNull(1, "")
 
     // ---------------------------------------------------------------------------
     // Double
@@ -197,7 +197,7 @@ object ProtoStandalone : Standalone {
         encoder().doubleOrNull(1, "", value).pack()
 
     override fun encodeDoubleList(value: List<Double>?): ByteArray =
-        encoder().doubleListOrNull(1, "", value).pack()
+        encoder().doubleArrayOrNull(1, "", value).pack()
 
     override fun decodeDouble(source: ByteArray): Double =
         decoder(source).double(1, "")
@@ -206,10 +206,10 @@ object ProtoStandalone : Standalone {
         decoder(source).doubleOrNull(1, "")
 
     override fun decodeDoubleList(source: ByteArray): List<Double> =
-        decoder(source).doubleList(1, "")
+        decoder(source).doubleArray(1, "")
 
     override fun decodeDoubleListOrNull(source: ByteArray): List<Double>? =
-        decoder(source).doubleListOrNull(1, "")
+        decoder(source).doubleArrayOrNull(1, "")
 
     // ---------------------------------------------------------------------------
     // Char
@@ -219,7 +219,7 @@ object ProtoStandalone : Standalone {
         encoder().charOrNull(1, "", value).pack()
 
     override fun encodeCharList(value: List<Char>?): ByteArray =
-        encoder().charListOrNull(1, "", value).pack()
+        encoder().charArrayOrNull(1, "", value).pack()
 
     override fun decodeChar(source: ByteArray): Char =
         decoder(source).char(1, "")
@@ -228,10 +228,10 @@ object ProtoStandalone : Standalone {
         decoder(source).charOrNull(1, "")
 
     override fun decodeCharList(source: ByteArray): List<Char> =
-        decoder(source).charList(1, "")
+        decoder(source).charArray(1, "")
 
     override fun decodeCharListOrNull(source: ByteArray): List<Char>? =
-        decoder(source).charListOrNull(1, "")
+        decoder(source).charArrayOrNull(1, "")
     
     // ---------------------------------------------------------------------------
     // String
@@ -316,10 +316,10 @@ object ProtoStandalone : Standalone {
         decoder(source).instanceOrNull(1, "", wireFormat)
 
     override fun <T> decodeInstanceList(source: ByteArray, wireFormat: WireFormat<T>): List<T> =
-        decoder(source).instanceList(1, "", wireFormat)
+        decoder(source).collection(1, "", wireFormat)
 
     override fun <T> decodeInstanceListOrNull(source: ByteArray, wireFormat: WireFormat<T>): List<T>? =
-        decoder(source).instanceListOrNull(1, "", wireFormat)
+        decoder(source).collectionOrNull(1, "", wireFormat)
 
     // ---------------------------------------------------------------------------
     // Enum
@@ -338,10 +338,10 @@ object ProtoStandalone : Standalone {
         decoder(source).intOrNull(1, "")?.let { entries[it] }
 
     override fun <E : Enum<E>> decodeEnumList(source: ByteArray, entries: EnumEntries<E>): List<E> =
-        decoder(source).intList(1, "").map { entries[it] }
+        decoder(source).intArray(1, "").map { entries[it] }
 
     override fun <E : Enum<E>> decodeEnumListOrNull(source: ByteArray, entries: EnumEntries<E>): List<E>? =
-        decoder(source).intListOrNull(1, "")?.map { entries[it] }
+        decoder(source).intArrayOrNull(1, "")?.map { entries[it] }
 
     // ---------------------------------------------------------------------------
     // UInt
@@ -351,7 +351,7 @@ object ProtoStandalone : Standalone {
         encoder().uIntOrNull(1, "", value).pack()
 
     override fun encodeUIntList(value: List<UInt>?): ByteArray =
-        encoder().uIntListOrNull(1, "", value).pack()
+        encoder().uIntArrayOrNull(1, "", value).pack()
 
     override fun decodeUInt(source: ByteArray): UInt =
         decoder(source).uInt(1, "")
@@ -360,10 +360,10 @@ object ProtoStandalone : Standalone {
         decoder(source).uIntOrNull(1, "")
 
     override fun decodeUIntList(source: ByteArray): List<UInt> =
-        decoder(source).uIntList(1, "")
+        decoder(source).uIntArray(1, "")
 
     override fun decodeUIntListOrNull(source: ByteArray): List<UInt>? =
-        decoder(source).uIntListOrNull(1, "")
+        decoder(source).uIntArrayOrNull(1, "")
 
     // ---------------------------------------------------------------------------
     // UShort
@@ -373,7 +373,7 @@ object ProtoStandalone : Standalone {
         encoder().uShortOrNull(1, "", value).pack()
 
     override fun encodeUShortList(value: List<UShort>?): ByteArray =
-        encoder().uShortListOrNull(1, "", value).pack()
+        encoder().uShortArrayOrNull(1, "", value).pack()
 
     override fun decodeUShort(source: ByteArray): UShort =
         decoder(source).uShort(1, "")
@@ -382,10 +382,10 @@ object ProtoStandalone : Standalone {
         decoder(source).uShortOrNull(1, "")
 
     override fun decodeUShortList(source: ByteArray): List<UShort> =
-        decoder(source).uShortList(1, "")
+        decoder(source).uShortArray(1, "")
 
     override fun decodeUShortListOrNull(source: ByteArray): List<UShort>? =
-        decoder(source).uShortListOrNull(1, "")
+        decoder(source).uShortArrayOrNull(1, "")
 
     // ---------------------------------------------------------------------------
     // UByte
@@ -395,7 +395,7 @@ object ProtoStandalone : Standalone {
         encoder().uByteOrNull(1, "", value).pack()
 
     override fun encodeUByteList(value: List<UByte>?): ByteArray =
-        encoder().uByteListOrNull(1, "", value).pack()
+        encoder().uByteArrayOrNull(1, "", value).pack()
 
     override fun decodeUByte(source: ByteArray): UByte =
         decoder(source).uByte(1, "")
@@ -404,10 +404,10 @@ object ProtoStandalone : Standalone {
         decoder(source).uByteOrNull(1, "")
 
     override fun decodeUByteList(source: ByteArray): List<UByte> =
-        decoder(source).uByteList(1, "")
+        decoder(source).uByteArray(1, "")
 
     override fun decodeUByteListOrNull(source: ByteArray): List<UByte>? =
-        decoder(source).uByteListOrNull(1, "")
+        decoder(source).uByteArrayOrNull(1, "")
 
     // ---------------------------------------------------------------------------
     // ULong
@@ -417,7 +417,7 @@ object ProtoStandalone : Standalone {
         encoder().uLongOrNull(1, "", value).pack()
 
     override fun encodeULongList(value: List<ULong>?): ByteArray =
-        encoder().uLongListOrNull(1, "", value).pack()
+        encoder().uLongArrayOrNull(1, "", value).pack()
 
     override fun decodeULong(source: ByteArray): ULong =
         decoder(source).uLong(1, "")
@@ -426,9 +426,9 @@ object ProtoStandalone : Standalone {
         decoder(source).uLongOrNull(1, "")
 
     override fun decodeULongList(source: ByteArray): List<ULong> =
-        decoder(source).uLongList(1, "")
+        decoder(source).uLongArray(1, "")
 
     override fun decodeULongListOrNull(source: ByteArray): List<ULong>? =
-        decoder(source).uLongListOrNull(1, "")
+        decoder(source).uLongArrayOrNull(1, "")
 
 }

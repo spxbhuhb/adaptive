@@ -81,10 +81,10 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     override fun booleanOrNull(fieldNumber: Int, fieldName: String): Boolean? =
         getOrNull(fieldName)?.asBoolean
 
-    override fun booleanList(fieldNumber: Int, fieldName: String) =
-        requireNotNull(booleanListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+    override fun booleanArray(fieldNumber: Int, fieldName: String): BooleanArray =
+        requireNotNull(booleanArrayOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
-    override fun booleanListOrNull(fieldNumber: Int, fieldName: String): List<Boolean>? =
+    override fun booleanArrayOrNull(fieldNumber: Int, fieldName: String): BooleanArray? =
         array(fieldName) { it.asBoolean }
 
     override fun rawBoolean(source: JsonElement): Boolean {
@@ -101,10 +101,10 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     override fun intOrNull(fieldNumber: Int, fieldName: String): Int? =
         getOrNull(fieldName)?.asInt
 
-    override fun intList(fieldNumber: Int, fieldName: String) =
-        requireNotNull(intListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+    override fun intArray(fieldNumber: Int, fieldName: String): IntArray =
+        requireNotNull(intArrayOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
-    override fun intListOrNull(fieldNumber: Int, fieldName: String): List<Int>? =
+    override fun intArrayOrNull(fieldNumber: Int, fieldName: String): IntArray? =
         array(fieldName) { it.asInt }
 
     override fun rawInt(source: JsonElement): Int {
@@ -121,10 +121,10 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     override fun shortOrNull(fieldNumber: Int, fieldName: String): Short? =
         getOrNull(fieldName)?.asShort
 
-    override fun shortList(fieldNumber: Int, fieldName: String) =
-        requireNotNull(shortListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+    override fun shortArray(fieldNumber: Int, fieldName: String): ShortArray =
+        requireNotNull(shortArrayOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
-    override fun shortListOrNull(fieldNumber: Int, fieldName: String): List<Short>? =
+    override fun shortArrayOrNull(fieldNumber: Int, fieldName: String): ShortArray? =
         array(fieldName) { it.asShort }
 
     override fun rawShort(source: JsonElement): Short {
@@ -141,7 +141,7 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     override fun byteOrNull(fieldNumber: Int, fieldName: String): Byte? =
         getOrNull(fieldName)?.asByte
 
-    override fun byteList(fieldNumber: Int, fieldName: String) =
+    override fun byteArray(fieldNumber: Int, fieldName: String): ByteArray =
         requireNotNull(byteListOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun byteListOrNull(fieldNumber: Int, fieldName: String): List<Byte>? =
@@ -161,10 +161,10 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     override fun longOrNull(fieldNumber: Int, fieldName: String): Long? =
         getOrNull(fieldName)?.asLong
 
-    override fun longList(fieldNumber: Int, fieldName: String) =
-        requireNotNull(longListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+    override fun longArray(fieldNumber: Int, fieldName: String): LongArray =
+        requireNotNull(longArrayOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
-    override fun longListOrNull(fieldNumber: Int, fieldName: String): List<Long>? =
+    override fun longArrayOrNull(fieldNumber: Int, fieldName: String): LongArray? =
         array(fieldName) { it.asLong }
 
     override fun rawLong(source: JsonElement): Long {
@@ -181,10 +181,10 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     override fun floatOrNull(fieldNumber: Int, fieldName: String): Float? =
         getOrNull(fieldName)?.asFloat
 
-    override fun floatList(fieldNumber: Int, fieldName: String) =
-        requireNotNull(floatListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+    override fun floatArray(fieldNumber: Int, fieldName: String): Float =
+        requireNotNull(floatArrayOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
-    override fun floatListOrNull(fieldNumber: Int, fieldName: String): List<Float>? =
+    override fun floatArrayOrNull(fieldNumber: Int, fieldName: String): FloatArray? =
         array(fieldName) { it.asFloat }
 
     override fun rawFloat(source: JsonElement): Float {
@@ -201,10 +201,10 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     override fun doubleOrNull(fieldNumber: Int, fieldName: String): Double? =
         getOrNull(fieldName)?.asDouble
 
-    override fun doubleList(fieldNumber: Int, fieldName: String) =
-        requireNotNull(doubleListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+    override fun doubleArray(fieldNumber: Int, fieldName: String): DoubleArray =
+        requireNotNull(doubleArrayOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
-    override fun doubleListOrNull(fieldNumber: Int, fieldName: String): List<Double>? =
+    override fun doubleArrayOrNull(fieldNumber: Int, fieldName: String): DoubleArray? =
         array(fieldName) { it.asDouble }
 
     override fun rawDouble(source: JsonElement): Double {
@@ -221,10 +221,10 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     override fun charOrNull(fieldNumber: Int, fieldName: String): Char? =
         getOrNull(fieldName)?.asChar
 
-    override fun charList(fieldNumber: Int, fieldName: String) =
-        requireNotNull(charListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+    override fun charArray(fieldNumber: Int, fieldName: String): CharArray =
+        requireNotNull(charArrayOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
-    override fun charListOrNull(fieldNumber: Int, fieldName: String): List<Char>? =
+    override fun charArrayOrNull(fieldNumber: Int, fieldName: String): CharArray? =
         array(fieldName) { it.asChar }
 
     override fun rawChar(source: JsonElement): Char {
@@ -304,10 +304,10 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     override fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T? =
         if (getOrNull(fieldName) == null) null else instance(fieldNumber, fieldName, wireFormat)
 
-    override fun <T> instanceList(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): MutableList<T> =
-        requireNotNull(instanceListOrNull(fieldNumber, fieldName, wireFormat)) { "missing or null instance" }
+    override fun <T> collection(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): Collection<T> =
+        requireNotNull(collectionOrNull(fieldNumber, fieldName, wireFormat)) { "missing or null instance" }
 
-    override fun <T> instanceListOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): MutableList<T>? =
+    override fun <T> collectionOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): Collection<T>? =
         array(fieldName) { wireFormat.wireFormatDecode(it, JsonWireFormatDecoder(it as JsonObject)) }
 
     override fun <T> rawInstance(source: JsonElement, wireFormat: WireFormat<T>): T {
@@ -344,10 +344,10 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     override fun uIntOrNull(fieldNumber: Int, fieldName: String): UInt? =
         getOrNull(fieldName)?.asUInt
 
-    override fun uIntList(fieldNumber: Int, fieldName: String) =
-        requireNotNull(uIntListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+    override fun uIntArray(fieldNumber: Int, fieldName: String): UIntArray =
+        requireNotNull(uIntArrayOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
-    override fun uIntListOrNull(fieldNumber: Int, fieldName: String): List<UInt>? =
+    override fun uIntArrayOrNull(fieldNumber: Int, fieldName: String): UIntArray? =
         array(fieldName) { it.asUInt }
 
     override fun rawUInt(source: JsonElement): UInt {
@@ -364,10 +364,10 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     override fun uShortOrNull(fieldNumber: Int, fieldName: String): UShort? =
         getOrNull(fieldName)?.asUShort
 
-    override fun uShortList(fieldNumber: Int, fieldName: String) =
-        requireNotNull(uShortListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+    override fun uShortArray(fieldNumber: Int, fieldName: String): UShortArray =
+        requireNotNull(uShortArrayOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
-    override fun uShortListOrNull(fieldNumber: Int, fieldName: String): List<UShort>? =
+    override fun uShortArrayOrNull(fieldNumber: Int, fieldName: String): UShortArray? =
         array(fieldName) { it.asUShort }
 
     override fun rawUShort(source: JsonElement): UShort {
@@ -384,10 +384,10 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     override fun uByteOrNull(fieldNumber: Int, fieldName: String): UByte? =
         getOrNull(fieldName)?.asUByte
 
-    override fun uByteList(fieldNumber: Int, fieldName: String) =
-        requireNotNull(uByteListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+    override fun uByteArray(fieldNumber: Int, fieldName: String): UByteArray =
+        requireNotNull(uByteArrayOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
-    override fun uByteListOrNull(fieldNumber: Int, fieldName: String): List<UByte>? =
+    override fun uByteArrayOrNull(fieldNumber: Int, fieldName: String): UByteArray? =
         array(fieldName) { it.asUByte }
 
     override fun rawUByte(source: JsonElement): UByte {
@@ -404,10 +404,10 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     override fun uLongOrNull(fieldNumber: Int, fieldName: String): ULong? =
         getOrNull(fieldName)?.asULong
 
-    override fun uLongList(fieldNumber: Int, fieldName: String) =
-        requireNotNull(uLongListOrNull(fieldNumber, fieldName)) { "missing or null array" }
+    override fun uLongArray(fieldNumber: Int, fieldName: String): ULongArray =
+        requireNotNull(uLongArrayOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
-    override fun uLongListOrNull(fieldNumber: Int, fieldName: String): List<ULong>? =
+    override fun uLongArrayOrNull(fieldNumber: Int, fieldName: String): ULongArray? =
         array(fieldName) { it.asULong }
 
     override fun rawULong(source: JsonElement): ULong {
