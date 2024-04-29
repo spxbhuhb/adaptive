@@ -8,6 +8,7 @@ includeBuild("../adaptive-core")
 includeBuild("../adaptive-kotlin-plugin")
 
 include("adaptive-settings")
+include("adaptive-exposed")
+include("adaptive-email")
 include("adaptive-browser")
-//include("adaptive-email")
 

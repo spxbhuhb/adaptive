@@ -5,17 +5,19 @@
 package hu.simplexion.adaptive.site
 
 import hu.simplexion.adaptive.base.adaptive
+import hu.simplexion.adaptive.exposed.HikariWorker
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
+import hu.simplexion.adaptive.server.components.worker
 import hu.simplexion.adaptive.settings.dsl.propertyFile
-import hu.simplexion.adaptive.settings.dsl.setting
 import hu.simplexion.adaptive.settings.dsl.settings
 
 fun main(args: Array<String>) {
 
     adaptive(AdaptiveServerAdapter()) {
-        settings { propertyFile { "./etc/site.properties" } }
-        val siteName = setting<String> { "SITE_NAME" }.value
-        println(siteName)
-    }
 
+        settings { propertyFile { "./etc/site.properties" } }
+
+        worker { HikariWorker() }
+
+    }
 }

@@ -10,8 +10,8 @@ plugins {
 }
 
 group = "hu.simplexion.adaptive"
-val baseName = "adaptive-settings"
-val pomName = "Adaptive Settings"
+val baseName = "adaptive-exposed"
+val pomName = "Adaptive Exposed"
 val scmPath = "spxbhuhb/adaptive"
 
 //tasks["build"].dependsOn(gradle.includedBuild("adaptive-kotlin-plugin").task(":publishToMavenLocal"))
@@ -39,7 +39,6 @@ kotlin {
         jvmToolchain(11)
         withJava()
     }
-
     js(IR) {
         browser()
         binaries.library()
@@ -55,7 +54,11 @@ kotlin {
         commonMain {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
+                api("io.ktor:ktor-client-websockets:$ktor_version")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:$datetime_version")
+
                 api("hu.simplexion.adaptive:adaptive-core:${version}")
+                api("hu.simplexion.adaptive:adaptive-settings:${version}")
             }
         }
 
@@ -63,6 +66,22 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
             }
+        }
+
+        sourceSets["jvmMain"].dependencies {
+            api("org.jetbrains.exposed:exposed-core:${exposed_version}")
+            api("org.jetbrains.exposed:exposed-jdbc:${exposed_version}")
+            api("org.jetbrains.exposed:exposed-kotlin-datetime:${exposed_version}")
+
+            api("com.zaxxer:HikariCP:3.4.2")
+
+            api("ch.qos.logback:logback-classic:${logback_version}")
+            api("org.apache.logging.log4j:log4j-core:2.20.0") // FFS
+        }
+
+        sourceSets["jvmTest"].dependencies {
+            implementation(kotlin("test"))
+            implementation("com.h2database:h2:2.1.214")
         }
     }
 }

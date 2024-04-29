@@ -21,4 +21,6 @@ abstract class AdaptiveServerFragment(
 
     override fun genPatchDescendant(fragment: AdaptiveFragment<AdaptiveServerBridgeReceiver>) = Unit
 
+    override fun genPatchInternal() = Unit
+
 }

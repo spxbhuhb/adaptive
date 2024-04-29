@@ -10,8 +10,8 @@ plugins {
 }
 
 group = "hu.simplexion.adaptive"
-val baseName = "adaptive-settings"
-val pomName = "Adaptive Settings"
+val baseName = "adaptive-email"
+val pomName = "Adaptive Email"
 val scmPath = "spxbhuhb/adaptive"
 
 //tasks["build"].dependsOn(gradle.includedBuild("adaptive-kotlin-plugin").task(":publishToMavenLocal"))
@@ -39,7 +39,6 @@ kotlin {
         jvmToolchain(11)
         withJava()
     }
-
     js(IR) {
         browser()
         binaries.library()
@@ -55,7 +54,13 @@ kotlin {
         commonMain {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
+                api("io.ktor:ktor-client-websockets:$ktor_version")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:$datetime_version")
+
                 api("hu.simplexion.adaptive:adaptive-core:${version}")
+                api("hu.simplexion.adaptive:adaptive-settings:${version}")
+                api("hu.simplexion.adaptive:adaptive-exposed:${version}")
+
             }
         }
 
@@ -63,6 +68,15 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
             }
+        }
+
+        sourceSets["jvmMain"].dependencies {
+            api("com.sun.mail:javax.mail:${javamail_version}")
+        }
+
+        sourceSets["jvmTest"].dependencies {
+            implementation(kotlin("test"))
+            implementation("org.subethamail:subethasmtp:3.1.7")
         }
     }
 }

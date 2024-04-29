@@ -7,7 +7,6 @@ package hu.simplexion.adaptive.server.components
 import hu.simplexion.adaptive.base.*
 import hu.simplexion.adaptive.server.AdaptiveServerBridgeReceiver
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
-import hu.simplexion.adaptive.server.worker.WorkerImpl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -25,13 +24,13 @@ class AdaptiveWorker(
     index: Int
 ) : AdaptiveServerFragment(adapter, parent, index, 1) {
 
-    private val impl : WorkerImpl<*>
-        get() = state[0] as WorkerImpl<*>
+    private val implFun : AdaptiveSupportFunction
+        get() = state[0] as AdaptiveSupportFunction
 
     private val scope = CoroutineScope(adapter.dispatcher)
 
     override fun innerMount(bridge: AdaptiveBridge<AdaptiveServerBridgeReceiver>) {
-        scope.launch { impl.run(this ) }
+        scope.launch { (implFun.invoke() as WorkerImpl<*>).run(scope) }
     }
 
     override fun innerUnmount(bridge: AdaptiveBridge<AdaptiveServerBridgeReceiver>) {
