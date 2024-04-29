@@ -5,7 +5,7 @@ package hu.simplexion.adaptive.base
 
 import hu.simplexion.adaptive.base.binding.AdaptivePropertyMetadata
 import hu.simplexion.adaptive.base.binding.AdaptiveStateVariableBinding
-import hu.simplexion.adaptive.base.worker.AdaptiveWorker
+import hu.simplexion.adaptive.base.producer.AdaptiveProducer
 
 abstract class AdaptiveFragment<BT>(
     val adapter: AdaptiveAdapter<BT>,
@@ -30,7 +30,7 @@ abstract class AdaptiveFragment<BT>(
 
     var containedFragment: AdaptiveFragment<BT>? = null
 
-    var workers: MutableList<AdaptiveWorker>? = null
+    var producers: MutableList<AdaptiveProducer>? = null
 
     var bindings: MutableList<AdaptiveStateVariableBinding<*>>? = null
 
@@ -149,7 +149,7 @@ abstract class AdaptiveFragment<BT>(
         containedFragment?.dispose()
 
         // converting to array so we can safely remove
-        workers?.toTypedArray()?.forEach { removeWorker(it) }
+        producers?.toTypedArray()?.forEach { removeProducer(it) }
         bindings?.toTypedArray()?.forEach { removeBinding(it) }
 
         if (trace) trace("after-Dispose")
@@ -194,31 +194,31 @@ abstract class AdaptiveFragment<BT>(
     }
 
     // --------------------------------------------------------------------------
-    // Worker management
+    // Producer management
     // --------------------------------------------------------------------------
 
-    fun addWorker(worker: AdaptiveWorker) {
-        if (trace) trace("before-Add-Worker", "worker", worker)
+    fun addProducer(producer: AdaptiveProducer) {
+        if (trace) trace("before-Add-Producer", "producer", producer)
 
-        val workers = workers ?: mutableListOf<AdaptiveWorker>().also { workers = it }
+        val producers = producers ?: mutableListOf<AdaptiveProducer>().also { producers = it }
 
-        workers.filter { worker.replaces(it) }.forEach { other ->
-            removeWorker(other)
+        producers.filter { producer.replaces(it) }.forEach { other ->
+            removeProducer(other)
         }
 
-        workers += worker
-        worker.start()
+        producers += producer
+        producer.start()
 
-        if (trace) trace("after-Add-Worker", "worker", worker)
+        if (trace) trace("after-Add-Producer", "producer", producer)
     }
 
-    fun removeWorker(worker: AdaptiveWorker) {
-        if (trace) trace("before-Remove-Worker", "worker", worker)
+    fun removeProducer(producer: AdaptiveProducer) {
+        if (trace) trace("before-Remove-Producer", "producer", producer)
 
-        requireNotNull(workers).remove(worker)
-        worker.stop()
+        requireNotNull(producers).remove(producer)
+        producer.stop()
 
-        if (trace) trace("after-Remove-Worker", "worker", worker)
+        if (trace) trace("after-Remove-Producer", "producer", producer)
     }
 
     // --------------------------------------------------------------------------

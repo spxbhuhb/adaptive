@@ -4,13 +4,13 @@
 
 @file:Suppress("UNUSED_PARAMETER")
 
-package hu.simplexion.adaptive.base.worker
+package hu.simplexion.adaptive.base.producer
 
 import hu.simplexion.adaptive.base.binding.AdaptiveStateVariableBinding
 import kotlin.time.Duration
 
 /**
- * Execute [pollFun] once in every [interval]. Adds an [AdaptivePoll] worker to
+ * Execute [pollFun] once in every [interval]. Adds an [AdaptivePoll] producer to
  * the given component.
  *
  * @param  interval  The interval of execution.
@@ -24,7 +24,7 @@ fun <VT> poll(
 ): VT {
     checkNotNull(binding)
 
-    binding.sourceFragment.addWorker(
+    binding.sourceFragment.addProducer(
         AdaptivePoll(binding, interval)
     )
 
@@ -32,8 +32,8 @@ fun <VT> poll(
 }
 
 /**
- * Cancels the worker by returning from the coroutine. Throws [AdaptiveWorkerCancel].
+ * Cancels the producer by returning from the coroutine. Throws [AdaptiveProducerCancel].
  */
-fun cancelWorker(message : String? = null) : Nothing {
-    throw AdaptiveWorkerCancel(message)
+fun cancelProducer(message : String? = null) : Nothing {
+    throw AdaptiveProducerCancel(message)
 }

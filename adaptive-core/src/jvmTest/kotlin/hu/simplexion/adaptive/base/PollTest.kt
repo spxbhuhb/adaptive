@@ -4,8 +4,8 @@
 package hu.simplexion.adaptive.base
 
 import hu.simplexion.adaptive.base.testing.*
-import hu.simplexion.adaptive.base.worker.cancelWorker
-import hu.simplexion.adaptive.base.worker.poll
+import hu.simplexion.adaptive.base.producer.cancelProducer
+import hu.simplexion.adaptive.base.producer.poll
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
@@ -21,7 +21,7 @@ fun Adaptive.pollTest() {
             counter++
         } else {
             (adapter() as AdaptiveTestAdapter).done = true
-            cancelWorker()
+            cancelProducer()
         }
     }
     T1(i)
@@ -53,8 +53,8 @@ class PollTest {
                         TraceEvent("AdaptivePollTest", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
                         TraceEvent("AdaptivePollTest", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
                         TraceEvent("AdaptivePollTest", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
-                        TraceEvent("AdaptivePollTest", 2, "before-Add-Worker", "worker: AdaptivePoll(AdaptiveStateVariableBinding(2, 0, 0, 2, 0, null, 0, AdaptivePropertyMetadata(kotlin.int)), 0s)"),
-                        TraceEvent("AdaptivePollTest", 2, "after-Add-Worker", "worker: AdaptivePoll(AdaptiveStateVariableBinding(2, 0, 0, 2, 0, null, 0, AdaptivePropertyMetadata(kotlin.int)), 0s)"),
+                        TraceEvent("AdaptivePollTest", 2, "before-Add-Producer", "producer: AdaptivePoll(AdaptiveStateVariableBinding(2, 0, 0, 2, 0, null, 0, AdaptivePropertyMetadata(kotlin.int)), 0s)"),
+                        TraceEvent("AdaptivePollTest", 2, "after-Add-Producer", "producer: AdaptivePoll(AdaptiveStateVariableBinding(2, 0, 0, 2, 0, null, 0, AdaptivePropertyMetadata(kotlin.int)), 0s)"),
                         TraceEvent("AdaptivePollTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [2]"),
                         TraceEvent("AdaptiveT1", 3, "before-Create", ""),
                         TraceEvent("AdaptiveT1", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
@@ -144,7 +144,7 @@ class AdaptivePollTest(
                     counter++
                 } else {
                     (adapter as AdaptiveTestAdapter).done = true
-                    cancelWorker()
+                    cancelProducer()
                 }
             }
             else -> invalidIndex(supportFunction.supportFunctionIndex)

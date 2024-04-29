@@ -5,7 +5,7 @@ package hu.simplexion.adaptive.kotlin.base.success
 
 import hu.simplexion.adaptive.base.*
 import hu.simplexion.adaptive.base.testing.*
-import hu.simplexion.adaptive.base.worker.*
+import hu.simplexion.adaptive.base.producer.*
 import kotlinx.coroutines.*
 import kotlin.time.Duration
 
@@ -19,7 +19,7 @@ fun Adaptive.pollTest() {
             counter - 1
         } else {
             (adapter() as AdaptiveTestAdapter).done = true
-            cancelWorker()
+            cancelProducer()
         }
     }
     T1(i)
@@ -59,8 +59,8 @@ fun box(): String {
             TraceEvent("AdaptivePollTest", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
             TraceEvent("AdaptivePollTest", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
             TraceEvent("AdaptivePollTest", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-            TraceEvent("AdaptivePollTest", 3, "before-Add-Worker", "worker: AdaptivePoll(AdaptiveStateVariableBinding(3, 0, 0, 3, 0, null, 0, AdaptivePropertyMetadata(kotlin.Int)), 0s)"),
-            TraceEvent("AdaptivePollTest", 3, "after-Add-Worker", "worker: AdaptivePoll(AdaptiveStateVariableBinding(3, 0, 0, 3, 0, null, 0, AdaptivePropertyMetadata(kotlin.Int)), 0s)"),
+            TraceEvent("AdaptivePollTest", 3, "before-Add-Producer", "producer: AdaptivePoll(AdaptiveStateVariableBinding(3, 0, 0, 3, 0, null, 0, AdaptivePropertyMetadata(kotlin.Int)), 0s)"),
+            TraceEvent("AdaptivePollTest", 3, "after-Add-Producer", "producer: AdaptivePoll(AdaptiveStateVariableBinding(3, 0, 0, 3, 0, null, 0, AdaptivePropertyMetadata(kotlin.Int)), 0s)"),
             TraceEvent("AdaptivePollTest", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [2]"),
             TraceEvent("AdaptiveT1", 4, "before-Create", ""),
             TraceEvent("AdaptiveT1", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),

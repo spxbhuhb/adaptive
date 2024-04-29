@@ -5,7 +5,7 @@ package hu.simplexion.adaptive.kotlin.base.success
 
 import hu.simplexion.adaptive.base.*
 import hu.simplexion.adaptive.base.testing.*
-import hu.simplexion.adaptive.base.worker.*
+import hu.simplexion.adaptive.base.producer.*
 import kotlinx.coroutines.*
 import kotlin.time.Duration
 
@@ -27,7 +27,7 @@ fun box(): String {
                 val j = poll(Duration.ZERO, i + 1) {
                     if (done) {
                         (adapter() as AdaptiveTestAdapter).done = true
-                        cancelWorker()
+                        cancelProducer()
                     } else {
                         done = true
                         mock(i)
@@ -50,8 +50,8 @@ fun box(): String {
             TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null, null]"),
             TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null, null]"),
             TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [null, null]"),
-            TraceEvent("<root>", 2, "before-Add-Worker", "worker: AdaptivePoll(AdaptiveStateVariableBinding(2, 1, 1, 2, 1, null, 0, AdaptivePropertyMetadata(kotlin.Int)), 0s)"),
-            TraceEvent("<root>", 2, "after-Add-Worker", "worker: AdaptivePoll(AdaptiveStateVariableBinding(2, 1, 1, 2, 1, null, 0, AdaptivePropertyMetadata(kotlin.Int)), 0s)"),
+            TraceEvent("<root>", 2, "before-Add-Producer", "producer: AdaptivePoll(AdaptiveStateVariableBinding(2, 1, 1, 2, 1, null, 0, AdaptivePropertyMetadata(kotlin.Int)), 0s)"),
+            TraceEvent("<root>", 2, "after-Add-Producer", "producer: AdaptivePoll(AdaptiveStateVariableBinding(2, 1, 1, 2, 1, null, 0, AdaptivePropertyMetadata(kotlin.Int)), 0s)"),
             TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12, 13]"),
             TraceEvent("AdaptiveT1", 3, "before-Create", ""),
             TraceEvent("AdaptiveT1", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),

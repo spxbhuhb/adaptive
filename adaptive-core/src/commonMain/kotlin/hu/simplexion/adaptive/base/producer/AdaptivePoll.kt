@@ -2,7 +2,7 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package hu.simplexion.adaptive.base.worker
+package hu.simplexion.adaptive.base.producer
 
 import hu.simplexion.adaptive.base.AdaptiveSupportFunction
 import hu.simplexion.adaptive.base.binding.AdaptiveStateVariableBinding
@@ -12,7 +12,7 @@ import kotlin.time.Duration
 class AdaptivePoll<VT>(
     val binding: AdaptiveStateVariableBinding<VT>,
     val interval: Duration
-) : AdaptiveWorker {
+) : AdaptiveProducer {
 
     val pollFunction = AdaptiveSupportFunction(
         binding.sourceFragment,
@@ -22,7 +22,7 @@ class AdaptivePoll<VT>(
 
     var scope: CoroutineScope? = null
 
-    override fun replaces(other: AdaptiveWorker): Boolean =
+    override fun replaces(other: AdaptiveProducer): Boolean =
         other is AdaptivePoll<*> && other.binding == this.binding
 
     override fun start() {
@@ -34,7 +34,7 @@ class AdaptivePoll<VT>(
                         binding.setValue(pollFunction.invokeSuspend(), false) // TODO check provider call in poll
                         delay(interval)
 
-                    } catch (e: AdaptiveWorkerCancel) {
+                    } catch (e: AdaptiveProducerCancel) {
                         cancel()
                         break
                     }

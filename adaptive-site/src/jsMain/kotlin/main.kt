@@ -10,7 +10,7 @@ import hu.simplexion.adaptive.html.button
 import hu.simplexion.adaptive.html.div
 import hu.simplexion.adaptive.html.grid
 import hu.simplexion.adaptive.html.text
-import hu.simplexion.adaptive.base.worker.poll
+import hu.simplexion.adaptive.base.producer.poll
 import kotlinx.browser.window
 import kotlinx.datetime.Clock
 import kotlin.time.Duration.Companion.seconds
@@ -27,7 +27,7 @@ fun main() {
             div { text(time.toString().replace("T", " ").substringBefore('.')) }
             div { text("Amount") }
             div { text("Time") }
-            div { text("Worker") }
+            div { text("producer") }
             div { text("Case") }
 
             for (state in states) {
