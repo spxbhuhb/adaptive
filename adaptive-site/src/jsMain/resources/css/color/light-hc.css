@@ -1,3 +1,7 @@
+/*
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ */
+
 .light-high-contrast {
   --md-sys-color-primary: rgb(41 34 0);
   --md-sys-color-surface-tint: rgb(109 94 15);

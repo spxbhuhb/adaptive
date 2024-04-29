@@ -1,12 +1,16 @@
-import hu.simplexion.z2.adaptive.Adaptive
-import hu.simplexion.z2.adaptive.adaptive
-import hu.simplexion.z2.adaptive.css.grid_gap_24
-import hu.simplexion.z2.adaptive.dom.AdaptiveDOMAdapter
-import hu.simplexion.z2.adaptive.html.button
-import hu.simplexion.z2.adaptive.html.div
-import hu.simplexion.z2.adaptive.html.grid
-import hu.simplexion.z2.adaptive.html.text
-import hu.simplexion.z2.adaptive.worker.poll
+/*
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ */
+
+import hu.simplexion.adaptive.base.Adaptive
+import hu.simplexion.adaptive.base.adaptive
+import hu.simplexion.adaptive.base.css.grid_gap_24
+import hu.simplexion.adaptive.base.dom.AdaptiveDOMAdapter
+import hu.simplexion.adaptive.base.html.button
+import hu.simplexion.adaptive.base.html.div
+import hu.simplexion.adaptive.base.html.grid
+import hu.simplexion.adaptive.base.html.text
+import hu.simplexion.adaptive.base.worker.poll
 import kotlinx.browser.window
 import kotlinx.datetime.Clock
 import kotlin.time.Duration.Companion.seconds

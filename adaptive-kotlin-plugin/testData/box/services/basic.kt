@@ -4,7 +4,7 @@ import hu.simplexion.z2.services.*
 import hu.simplexion.z2.services.transport.*
 import hu.simplexion.z2.services.testing.TestServiceTransport
 import kotlinx.coroutines.runBlocking
-import hu.simplexion.z2.wireformat.WireFormatDecoder
+import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 
 interface TestService1 : Service {
     suspend fun testFun(arg1: Int, arg2: String): String

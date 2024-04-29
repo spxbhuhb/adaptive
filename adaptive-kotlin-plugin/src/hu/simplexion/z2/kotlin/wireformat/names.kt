@@ -1,3 +1,7 @@
+/*
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ */
+
 package hu.simplexion.z2.kotlin.wireformat
 
 
@@ -5,8 +9,8 @@ import hu.simplexion.z2.kotlin.common.NamesBase
 import org.jetbrains.kotlin.name.FqName
 
 object Strings {
-    const val WIREFORMAT_PACKAGE = "hu.simplexion.z2.wireformat"
-    const val BUILTIN_PACKAGE = "hu.simplexion.z2.wireformat.builtin"
+    const val WIREFORMAT_PACKAGE = "hu.simplexion.adaptive.wireformat"
+    const val BUILTIN_PACKAGE = "hu.simplexion.adaptive.wireformat.builtin"
 
     const val PACK = "pack"
 

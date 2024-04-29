@@ -1,25 +1,25 @@
 /*
- * Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
 package hu.simplexion.z2.adaptive.html
 
-import hu.simplexion.z2.adaptive.Adaptive
-import hu.simplexion.z2.adaptive.AdaptiveAdapter
-import hu.simplexion.z2.adaptive.AdaptiveFragment
-import hu.simplexion.z2.adaptive.css.AdaptiveCssStyle
-import hu.simplexion.z2.adaptive.dom.AdaptiveDOMNodeFragment
-import hu.simplexion.z2.adaptive.manualImplementation
-import hu.simplexion.z2.adaptive.structural.AdaptiveAnonymous
+import hu.simplexion.adaptive.base.Adaptive
+import hu.simplexion.adaptive.base.AdaptiveAdapter
+import hu.simplexion.adaptive.base.AdaptiveFragment
+import hu.simplexion.adaptive.base.css.AdaptiveCssStyle
+import hu.simplexion.adaptive.base.dom.AdaptiveDOMNodeFragment
+import hu.simplexion.adaptive.base.manualImplementation
+import hu.simplexion.adaptive.base.structural.AdaptiveAnonymous
 import kotlinx.browser.document
 import org.w3c.dom.Node
 
-fun Adaptive.div(vararg styles : AdaptiveCssStyle, builder : Adaptive.() -> Unit) {
+fun Adaptive.div(vararg styles : AdaptiveCssStyle, builder : hu.simplexion.z2.base.Adaptive.() -> Unit) {
     manualImplementation(AdaptiveDiv::class, styles, builder)
 }
 
 class AdaptiveDiv(
-    adapter: AdaptiveAdapter<Node>,
+    adapter: hu.simplexion.z2.base.AdaptiveAdapter<Node>,
     parent : AdaptiveFragment<Node>,
     index : Int
 ) : AdaptiveDOMNodeFragment(adapter, parent, index, 2, false) {

@@ -3,10 +3,10 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.success
 
-import hu.simplexion.z2.adaptive.Adaptive
-import hu.simplexion.z2.adaptive.adaptive
-import hu.simplexion.z2.adaptive.AdaptiveAdapterRegistry
-import hu.simplexion.z2.adaptive.testing.*
+import hu.simplexion.adaptive.base.Adaptive
+import hu.simplexion.adaptive.base.adaptive
+import hu.simplexion.adaptive.base.AdaptiveAdapterRegistry
+import hu.simplexion.adaptive.base.testing.*
 
 fun Adaptive.Variables(i: Int, s: String) {
     val i2 = 12

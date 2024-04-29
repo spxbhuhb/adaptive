@@ -1,27 +1,27 @@
 /*
- * Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
 package hu.simplexion.z2.adaptive.html
 
-import hu.simplexion.z2.adaptive.Adaptive
-import hu.simplexion.z2.adaptive.AdaptiveAdapter
-import hu.simplexion.z2.adaptive.AdaptiveFragment
-import hu.simplexion.z2.adaptive.css.AdaptiveCssStyle
-import hu.simplexion.z2.adaptive.css.display_grid
-import hu.simplexion.z2.adaptive.dom.AdaptiveDOMNodeFragment
-import hu.simplexion.z2.adaptive.manualImplementation
-import hu.simplexion.z2.adaptive.structural.AdaptiveAnonymous
+import hu.simplexion.adaptive.base.Adaptive
+import hu.simplexion.adaptive.base.AdaptiveAdapter
+import hu.simplexion.adaptive.base.AdaptiveFragment
+import hu.simplexion.adaptive.base.css.AdaptiveCssStyle
+import hu.simplexion.adaptive.base.css.display_grid
+import hu.simplexion.adaptive.base.dom.AdaptiveDOMNodeFragment
+import hu.simplexion.adaptive.base.manualImplementation
+import hu.simplexion.adaptive.base.structural.AdaptiveAnonymous
 import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.Node
 
-fun Adaptive.grid(templateColumns: String, templateRows: String, vararg styles: AdaptiveCssStyle, builder: Adaptive.() -> Unit) {
+fun Adaptive.grid(templateColumns: String, templateRows: String, vararg styles: AdaptiveCssStyle, builder: hu.simplexion.z2.base.Adaptive.() -> Unit) {
     manualImplementation(AdaptiveGrid::class, templateColumns, templateColumns, templateRows, styles, builder)
 }
 
 class AdaptiveGrid(
-    adapter: AdaptiveAdapter<Node>,
+    adapter: hu.simplexion.z2.base.AdaptiveAdapter<Node>,
     parent: AdaptiveFragment<Node>,
     index: Int
 ) : AdaptiveDOMNodeFragment(adapter, parent, index, 4, false) {

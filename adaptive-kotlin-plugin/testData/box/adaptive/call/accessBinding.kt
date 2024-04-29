@@ -3,9 +3,9 @@
  */
 package hu.simplexion.z2.kotlin.adaptive.success
 
-import hu.simplexion.z2.adaptive.*
-import hu.simplexion.z2.adaptive.binding.*
-import hu.simplexion.z2.adaptive.testing.*
+import hu.simplexion.adaptive.base.*
+import hu.simplexion.adaptive.base.binding.*
+import hu.simplexion.adaptive.base.testing.*
 
 fun Adaptive.accessTest() {
     val a = 12

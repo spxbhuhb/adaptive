@@ -1,17 +1,5 @@
 /*
- * Copyright (C) 2020 Brian Norman
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
 package hu.simplexion.adaptive.gradle
@@ -69,5 +57,5 @@ open class AdaptiveGradleExtension(objects: ObjectFactory) {
 }
 
 @Suppress("unused")
-fun org.gradle.api.Project.z2(configure: Action<AdaptiveGradleExtension>): Unit =
+fun org.gradle.api.Project.adaptive(configure: Action<AdaptiveGradleExtension>): Unit =
     (this as org.gradle.api.plugins.ExtensionAware).extensions.configure("adaptive", configure)

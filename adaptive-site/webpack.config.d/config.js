@@ -1,7 +1,5 @@
 /*
- * Copyright © 2020-2023, Simplexion, Hungary. All rights reserved.
- * Unauthorized use of this code or any part of this code in any form, via any medium, is strictly prohibited.
- * Proprietary and confidential.
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
 // this file contains additions to the default Kotlin MPP webpack config

@@ -9,7 +9,7 @@ There are a few important benefits of using Adaptive on the server side:
 - state changes are applied to the server configuration
 
 ```kotlin
-import hu.simplexion.z2.adaptive.adaptive
+import hu.simplexion.adaptive.base.adaptive
 
 fun main() {
     adaptive {
