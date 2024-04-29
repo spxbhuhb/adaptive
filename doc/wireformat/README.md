@@ -1,6 +1,6 @@
 # WireFormat
 
-A simple serialization library for Kotlin, part of [Z2](../../README.md). Its main purpose is to
+A simple serialization library for Kotlin, part of [Adaptive](../../README.md). Its main purpose is to
 provide serialization for [Services](../services/README.md). It is optimized for handling function calls.
 
 WireFormat supports [JSON](https://json.org) and [Protobuf](https://protobuf.dev) out of the box, Protobuf being the

@@ -1,10 +1,10 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.z2.adaptive.html
+package hu.simplexion.adaptive.html
 
 import hu.simplexion.adaptive.base.*
-import hu.simplexion.adaptive.base.dom.AdaptiveDOMNodeFragment
+import hu.simplexion.adaptive.dom.AdaptiveDOMNodeFragment
 import kotlinx.browser.document
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.Node
@@ -14,7 +14,7 @@ fun Adaptive.button(title: String, onClick: () -> Unit) {
 }
 
 class AdaptiveButton(
-    adapter: hu.simplexion.z2.base.AdaptiveAdapter<Node>,
+    adapter: AdaptiveAdapter<Node>,
     parent: AdaptiveFragment<Node>,
     index: Int
 ) : AdaptiveDOMNodeFragment(adapter, parent, index, 2, true) {

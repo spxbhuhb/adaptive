@@ -10,10 +10,6 @@
 
 ## Getting started
 
-* [Overview](#Overview)
-* [Gradle Setup](#gradle-setup)
-* [Example Project](https://github.com/spxbhuhb/z2-service-example)
-
 If you refresh the plugin version you have to run `gradle clean` to force code refresh.
 
 Compressed example:
@@ -121,7 +117,7 @@ class HelloServiceImpl : HelloService, ServiceImpl<HelloServiceImpl> {
 
 Register the service implementation during application startup, so the server knows that they are available.
 
-Use [defaultServiceImplFactory](/z2-core/src/commonMain/kotlin/hu/simplexion/z2/services/globals.kt)
+Use [defaultServiceImplFactory](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/services/globals.kt)
 or implement your own way to store the services. These factories are used by the transports to find the service.
 
 ```kotlin
@@ -215,18 +211,18 @@ data class BasicServiceContext(
 Transports move the call arguments and the return values between the client and the server. The library uses Protocol Buffers as
 transport format, but it does not really care about how the packets reach the other side.
 
-There is a very basic transport implementation for Ktor in `z2-lib`.
+There is a very basic transport implementation for Ktor in `adaptive-lib`.
 
 #### Client Side
 
-The [defaultServiceCallTransport](../z2-core/src/commonMain/kotlin/hu/simplexion/z2/services/globals.kt)
+The [defaultServiceCallTransport](../adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/services/globals.kt)
 global variable contains the transport. Set this during application startup as the example shows below.
 
 ```kotlin
 defaultServiceCallTransport = BasicWebSocketServiceCallTransport(
     window.location.hostname,
     window.location.port.toInt(),
-    "/z2/services"
+    "/Adaptive/services"
 ).also {
     it.start()
 }
@@ -238,16 +234,16 @@ Each service consumer has a `serviceCallTransport` property which may be set to 
 val service = getService<TestApi>().also { it.serviceCallTransport = LocalServiceCallTransport() }
 ```
 
-[BasicWebSocketServiceCallTransport](../z2-lib/src/commonMain/kotlin/hu/simplexion/z2/ktor/BasicWebSocketServiceCallTransport.kt)
-from `z2-lib` provides a basic web socket transport implementation for clients.
+[BasicWebSocketServiceCallTransport](../adaptive-lib/src/commonMain/kotlin/hu/simplexion/adaptive/ktor/BasicWebSocketServiceCallTransport.kt)
+from `adaptive-lib` provides a basic web socket transport implementation for clients.
 
-[LocalServiceCallTransport](../z2-core/src/commonMain/kotlin/hu/simplexion/z2/services/transport/LocalServiceCallTransport.kt)
-from `z2-core` provides a basic web socket transport implementation for clients.
+[LocalServiceCallTransport](../adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/services/transport/LocalServiceCallTransport.kt)
+from `adaptive-core` provides a basic web socket transport implementation for clients.
 
 #### Server Side
 
-[Routing.basicWebSocketServiceDispatcher](z2-service-ktor/src/jvmMain/kotlin/hu/simplexion/z2/service/ktor/server/basic.kt)
-from `z2-service-ktor` provides a basic web socket dispatcher implementation for Ktor.
+[Routing.basicWebSocketServiceDispatcher](adaptive-service-ktor/src/jvmMain/kotlin/hu/simplexion/adaptive/service/ktor/server/basic.kt)
+from `adaptive-service-ktor` provides a basic web socket dispatcher implementation for Ktor.
 
 With other servers you can write your own service provider based on `basicWebSocketServiceDispatcher`.
 
@@ -270,7 +266,7 @@ fun Application.module() {
     defaultServiceImplFactory += HelloServiceImpl()
 
     routing {
-        basicWebsocketServiceCallTransport("/z2/services")
+        basicWebsocketServiceCallTransport("/adaptive/services")
     }
 }
 ```

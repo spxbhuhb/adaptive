@@ -14,15 +14,13 @@ Encode the service call parameters and decode the return value:
 
 ```kotlin
 suspend fun testFun(arg1: Int, arg2: String): String =
-    wireFormatStandalone.decodeString(
-        defaultServiceCallTransport.call(
-            serviceName,
+    wireFormatDecoder(
+        serviceCallTransport.call(
             "testFun",
             wireFormatEncoder
                 .int(1, "arg1", arg1)
                 .string(2, "arg2", arg2)
-                .pack()
-        )
+        ).asInstance(StringWireFormat)
     )
 ```
 
@@ -30,14 +28,18 @@ Decode `dispatch` arguments and encode the return value:
 
 ```kotlin
 fun dispatch(payload: Message): ByteArray {
-    return wireFormatStandalone.encodeString(
+    return wireFormatEncoder.rawInstance(
         testFun(
             payload.int(1, "arg1"),
             payload.string(2, "arg2")
-        )
+        ),
+        StringWireFormat
     )
 }
 ```
+
+
+## OLD STUFF - ALL LIES
 
 Cases depending on the value to encode/decode:
 

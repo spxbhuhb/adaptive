@@ -4,7 +4,7 @@
 
 @file:Suppress("unused")
 
-package hu.simplexion.z2.adaptive.css
+package hu.simplexion.adaptive.css
 
 val display_block = AdaptiveCssStyle("display_block")
 val display_inline = AdaptiveCssStyle("display_inline")
