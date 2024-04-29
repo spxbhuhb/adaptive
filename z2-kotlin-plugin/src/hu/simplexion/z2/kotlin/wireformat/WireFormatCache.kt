@@ -19,35 +19,49 @@ class WireFormatCache(
 
     override val pluginContext = WireFormatPluginContext(parentPluginContext.irContext, parentPluginContext.options)
 
-//    val messageClass = pluginContext.messageClass
-//    val messageBuilderClass = pluginContext.messageBuilderClass
-//    val standaloneClass = pluginContext.standaloneClass
+    val pack
+        get() = pluginContext.pack
+
+    val wireFormatEncoder
+        get() = pluginContext.wireFormatEncoder
 
     val types = mutableMapOf(
-        "kotlin.Boolean" to "Boolean".toWireFormatType(pluginContext, "Z"),
+//        "kotlin.Boolean" to "Boolean".toWireFormatType(pluginContext, "Z"),
         "kotlin.Int" to "Int".toWireFormatType(pluginContext, "I"),
-        "kotlin.Short" to "Short".toWireFormatType(pluginContext, "S"),
-        "kotlin.Byte" to "Byte".toWireFormatType(pluginContext, "B"),
-        "kotlin.Long" to "Long".toWireFormatType(pluginContext, "J"),
-        "kotlin.Float" to "Float".toWireFormatType(pluginContext, "F"),
-        "kotlin.Double" to "Double".toWireFormatType(pluginContext, "D"),
-        "kotlin.Char" to "Int".toWireFormatType(pluginContext, "C"),
+//        "kotlin.Short" to "Short".toWireFormatType(pluginContext, "S"),
+//        "kotlin.Byte" to "Byte".toWireFormatType(pluginContext, "B"),
+//        "kotlin.Long" to "Long".toWireFormatType(pluginContext, "J"),
+//        "kotlin.Float" to "Float".toWireFormatType(pluginContext, "F"),
+//        "kotlin.Double" to "Double".toWireFormatType(pluginContext, "D"),
+//        "kotlin.Char" to "Int".toWireFormatType(pluginContext, "C"),
+//
+//        "kotlin.ByteArray" to "ByteArray".toWireFormatType(pluginContext, "[Z"),
+//        "kotlin.IntArray" to "IntArray".toWireFormatType(pluginContext, "[I"),
+//        "kotlin.ShortArray" to "ShortArray".toWireFormatType(pluginContext, "[S"),
+//        "kotlin.ByteArray" to "ByteArray".toWireFormatType(pluginContext, "[B"),
+//        "kotlin.LongArray" to "LongArray".toWireFormatType(pluginContext, "[J"),
+//        "kotlin.FloatArray" to "FloatArray".toWireFormatType(pluginContext, "[F"),
+//        "kotlin.DoubleArray" to "DoubleArray".toWireFormatType(pluginContext, "[D"),
+//        "kotlin.CharArray" to "CharArray".toWireFormatType(pluginContext, "[C"),
+
         "kotlin.String" to "String".toWireFormatType(pluginContext, "S"),
-
-        "kotlin.ByteArray" to "ByteArray".toWireFormatType(pluginContext, "[B"),
-
-        "kotlin.UInt" to "Int".toWireFormatType(pluginContext, "+I"),
-        "kotlin.UShort" to "Int".toWireFormatType(pluginContext, "+S"),
-        "kotlin.UByte" to "Int".toWireFormatType(pluginContext, "+B"),
-        "kotlin.ULong" to "Long".toWireFormatType(pluginContext, "+J"),
+//        "hu.simplexion.z2.utility.UUID" to "Uuid".toWireFormatType(pluginContext, "U"),
+//
+//        "kotlin.UInt" to "Int".toWireFormatType(pluginContext, "+I"),
+//        "kotlin.UShort" to "Int".toWireFormatType(pluginContext, "+S"),
+//        "kotlin.UByte" to "Int".toWireFormatType(pluginContext, "+B"),
+//        "kotlin.ULong" to "Long".toWireFormatType(pluginContext, "+J"),
+//
+//        "kotlin.UIntArray" to "UIntArray".toWireFormatType(pluginContext, "[+I"),
+//        "kotlin.UShortArray" to "UShortArray".toWireFormatType(pluginContext, "[+S"),
+//        "kotlin.UByteArray" to "UByteArray".toWireFormatType(pluginContext, "[+B"),
+//        "kotlin.ULongArray" to "ULongArray".toWireFormatType(pluginContext, "[+J"),
 
         "kotlin.time.Duration" to Strings.DURATION_WIREFORMAT.toInstanceWireFormatType(pluginContext),
         "kotlinx.datetime.Instant" to Strings.INSTANT_WIREFORMAT.toInstanceWireFormatType(pluginContext),
         "kotlinx.datetime.LocalDateTime" to Strings.LOCALDATETIME_WIREFORMAT.toInstanceWireFormatType(pluginContext),
         "kotlinx.datetime.LocalDate" to Strings.LOCALDATE_WIREFORMAT.toInstanceWireFormatType(pluginContext),
-        "kotlinx.datetime.LocalTime" to Strings.LOCALTIME_WIREFORMAT.toInstanceWireFormatType(pluginContext),
-
-        "hu.simplexion.z2.utility.UUID" to "Uuid".toWireFormatType(pluginContext, "U")
+        "kotlinx.datetime.LocalTime" to Strings.LOCALTIME_WIREFORMAT.toInstanceWireFormatType(pluginContext)
     )
 
     //    fun primitive(type: IrType): WireFormatType? {
@@ -105,32 +119,20 @@ class WireFormatCache(
         return type
     }
 
-    fun standalone(targetType: IrType, standalone: IrExpression, value: IrExpression, encode: Boolean): IrExpression {
 
+    fun encodeReturnValue(targetType: IrType, encoder: IrExpression, value: IrExpression): IrExpression {
         val typeFqName = checkNotNull(targetType.classFqName) { "unsupported type: ${targetType.asString()}" }
         val wireFormatType = types[typeFqName.asString()] ?: loadType(typeFqName)
 
-        val wireFormat = wireFormatType.wireFormat
-
-        val wireFormatFun = if (encode) {
-            wireFormatType.standaloneEncode
-        } else {
-            wireFormatType.standaloneDecode
-        }
-
-        if (wireFormat == null) {
-            return irCall(wireFormatFun, standalone, value)
-        } else {
-            return irCall(wireFormatFun, standalone, value, irGetObject(wireFormat))
-        }
+        return irCall(pluginContext.rawInstance, encoder, value, irGetObject(wireFormatType.wireFormat))
     }
 
+    fun decodeReturnValue(targetType: IrType, decoder: IrExpression): IrExpression {
+        val typeFqName = checkNotNull(targetType.classFqName) { "unsupported type: ${targetType.asString()}" }
+        val wireFormatType = types[typeFqName.asString()] ?: loadType(typeFqName)
 
-    fun standaloneEncode(targetType: IrType, standalone: IrExpression, value: IrExpression): IrExpression =
-        standalone(targetType, standalone, value, encode = true)
-
-    fun standaloneDecode(targetType: IrType, standalone: IrExpression, value: IrExpression): IrExpression =
-        standalone(targetType, standalone, value, encode = false)
+        return irCall(pluginContext.asInstance, decoder, irGetObject(wireFormatType.wireFormat))
+    }
 
     fun encode(encoder: IrCall, fieldNumber: Int, fieldName: String, value: IrExpression): IrCallImpl {
         val targetType = value.type
@@ -138,11 +140,11 @@ class WireFormatCache(
         val typeFqName = checkNotNull(targetType.classFqName) { "unsupported type: ${targetType.asString()}" }
         val wireFormatType = types[typeFqName.asString()] ?: loadType(typeFqName)
 
-        val wireFormat = wireFormatType.wireFormat
 
-        if (wireFormat == null) {
+        if (wireFormatType.primitive) {
             return irCall(wireFormatType.encode, encoder, irConst(fieldNumber), irConst(fieldName), value)
         } else {
+            val wireFormat = checkNotNull(wireFormatType.wireFormat)
             return irCall(wireFormatType.encode, encoder, irConst(fieldNumber), irConst(fieldName), value, irGetObject(wireFormat))
         }
     }
@@ -154,12 +156,10 @@ class WireFormatCache(
         val typeFqName = checkNotNull(targetType.classFqName) { "unsupported type: ${targetType.asString()}" }
         val wireFormatType = types[typeFqName.asString()] ?: loadType(typeFqName)
 
-        val wireFormat = wireFormatType.wireFormat
-
-        if (wireFormat == null) {
+        if (wireFormatType.primitive) {
             return irCall(wireFormatType.decode, decoder(), irConst(fieldNumber), irConst(fieldName))
         } else {
-            return irCall(wireFormatType.decode, decoder(), irConst(fieldNumber), irConst(fieldName), irGetObject(wireFormat))
+            return irCall(wireFormatType.decode, decoder(), irConst(fieldNumber), irConst(fieldName), irGetObject(wireFormatType.wireFormat))
         }
     }
 }

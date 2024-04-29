@@ -4,25 +4,13 @@ import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 
 data class WireFormatType(
-    val encode: IrSimpleFunctionSymbol,
-    val decode: IrSimpleFunctionSymbol,
+    val encode: IrSimpleFunctionSymbol, // int
+    val decode: IrSimpleFunctionSymbol, // int
 
-    val encodeOrNull: IrSimpleFunctionSymbol,
-    val decodeOrNull: IrSimpleFunctionSymbol,
+    val encodeOrNull: IrSimpleFunctionSymbol, // intOrNull
+    val decodeOrNull: IrSimpleFunctionSymbol, // intOrNull
 
-    val encodeList: IrSimpleFunctionSymbol,
-    val decodeList: IrSimpleFunctionSymbol,
-
-    val encodeListOrNull: IrSimpleFunctionSymbol,
-    val decodeListOrNull: IrSimpleFunctionSymbol,
-
-    val standaloneEncode: IrSimpleFunctionSymbol,
-    val standaloneDecode: IrSimpleFunctionSymbol,
-    val standaloneDecodeOrNull: IrSimpleFunctionSymbol,
-
-    val standaloneEncodeList: IrSimpleFunctionSymbol,
-    val standaloneDecodeList: IrSimpleFunctionSymbol,
-    val standaloneDecodeListOrNull: IrSimpleFunctionSymbol,
+    val primitive: Boolean,
 
     /**
      * The signature of the given type.
@@ -34,6 +22,6 @@ data class WireFormatType(
      * [wireFormat] contains the class symbol of the class that implements
      * `WireFormat`.
      */
-    val wireFormat: IrClassSymbol? = null
+    val wireFormat: IrClassSymbol
 )
 

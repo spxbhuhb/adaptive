@@ -11,28 +11,22 @@ fun String.toWireFormatType(pluginContext: WireFormatPluginContext, signature: S
         val lcType = type.take(1).lowercase() + type.drop(1)
         val ucType = type.take(1).uppercase() + type.drop(1)
 
+        val className = Strings.BUILTIN_PACKAGE + "." + ucType + "WireFormat"
+        val classId = className.asClassId
+
+        val symbol = checkNotNull(pluginContext.irContext.referenceClass(classId)) { "missing class: ${classId.asFqNameString()}" }
+        check(symbol.owner.isSubclassOf(pluginContext.wireFormatClass.owner)) { "class ${classId.asFqNameString()} does not implement ${ClassIds.WIREFORMAT}" }
+
         WireFormatType(
-            encode = wireFormatEncoder.functionByName { lcType }, // MessageBuilder.boolean
-            decode = wireFormatDecoder.functionByName { lcType }, // Message.boolean
+            encode = wireFormatEncoder.functionByName { lcType }, // boolean
+            decode = wireFormatDecoder.functionByName { lcType }, // boolean
 
-            encodeOrNull = wireFormatEncoder.functionByName { "${lcType}OrNull" }, // MessageBuilder.booleanOrNull
-            decodeOrNull = wireFormatDecoder.functionByName { "${lcType}OrNull" }, // Message.booleanOrNull
+            encodeOrNull = wireFormatEncoder.functionByName { "${lcType}OrNull" }, // booleanOrNull
+            decodeOrNull = wireFormatDecoder.functionByName { "${lcType}OrNull" }, // booleanOrNull
 
-            encodeList = wireFormatEncoder.functionByName { "${lcType}List" },  // MessageBuilder.booleanList
-            decodeList = wireFormatDecoder.functionByName { "${lcType}List" }, // Message.booleanList
-
-            encodeListOrNull = wireFormatEncoder.functionByName { "${lcType}ListOrNull" }, // MessageBuilder.booleanListOrNull
-            decodeListOrNull = wireFormatDecoder.functionByName { "${lcType}ListOrNull" }, // Message.booleanListOrNull
-
-            standaloneEncode = standalone.functionByName { "encode${ucType}" }, // Standalone.encodeBoolean
-            standaloneDecode = standalone.functionByName { "decode${ucType}" }, // Standalone.decodeBoolean
-            standaloneDecodeOrNull = standalone.functionByName { "decode${ucType}OrNull" }, // Standalone.encodeBooleanOrNull
-
-            standaloneEncodeList = standalone.functionByName { "encode${ucType}List" }, // Standalone.encodeBooleanList
-            standaloneDecodeList = standalone.functionByName { "decode${ucType}List" }, // Standalone.decodeBooleanList
-            standaloneDecodeListOrNull = standalone.functionByName { "decode${ucType}ListOrNull" }, // Standalone.encodeBoolean
-
-            signature = signature
+            primitive = true,
+            signature = signature,
+            wireFormat = symbol
         )
     }
 }
@@ -46,5 +40,15 @@ fun ClassId.toInstanceWireFormatType(pluginContext: WireFormatPluginContext): Wi
     val symbol = checkNotNull(pluginContext.irContext.referenceClass(classId)) { "missing class: ${classId.asFqNameString()}" }
     check(symbol.owner.isSubclassOf(pluginContext.wireFormatClass.owner)) { "class ${classId.asFqNameString()} does not implement ${ClassIds.WIREFORMAT}" }
 
-    return pluginContext.wireFormatTypeTemplate.copy(wireFormat = symbol, signature = "L${classId.asFqNameString()};")
+    return WireFormatType(
+        encode = pluginContext.encodeInstance,
+        decode = pluginContext.decodeInstance,
+
+        encodeOrNull = pluginContext.encodeInstanceOrNull,
+        decodeOrNull = pluginContext.decodeInstanceOrNull,
+
+        primitive = false,
+        signature = "L${classId.asFqNameString()};",
+        wireFormat = symbol
+    )
 }

@@ -5,7 +5,6 @@ package hu.simplexion.z2.kotlin.services.ir.impl
 
 import hu.simplexion.z2.kotlin.common.AbstractIrBuilder
 import hu.simplexion.z2.kotlin.common.functionByName
-import hu.simplexion.z2.kotlin.common.propertyGetter
 import hu.simplexion.z2.kotlin.services.Indices
 import hu.simplexion.z2.kotlin.services.Names
 import hu.simplexion.z2.kotlin.services.Strings
@@ -141,10 +140,13 @@ class ImplClassTransform(
                     origin = IrStatementOrigin.WHEN
                 ) {
                     val funName = irTemporary(irGet(dispatch.valueParameters[Indices.DISPATCH_FUN_NAME]))
-                    + irWhen(
-                        irBuiltIns.byteArray.defaultType,
-                        implementedServiceFunctions.map { dispatchBranch(dispatch, it, funName) }
-                            + irInvalidIndexBranch(dispatch, irGet(dispatch.valueParameters[Indices.DISPATCH_FUN_NAME]))
+                    + irCall(
+                        pluginContext.wireFormatCache.pack,
+                        irWhen(
+                            pluginContext.wireFormatCache.wireFormatEncoder.defaultType,
+                            implementedServiceFunctions.map { dispatchBranch(dispatch, it, funName) }
+                                + irInvalidIndexBranch(dispatch, irGet(dispatch.valueParameters[Indices.DISPATCH_FUN_NAME]))
+                        )
                     )
                 }
             )
@@ -158,10 +160,10 @@ class ImplClassTransform(
                 irConst(serviceFunction.signature),
                 IrStatementOrigin.EQEQ
             ),
-            pluginContext.wireFormatCache.standaloneEncode(
+            pluginContext.wireFormatCache.encodeReturnValue(
                 targetType = serviceFunction.function.returnType,
-                standalone = irCall(
-                    transformedClass.propertyGetter { Strings.WIREFORMAT_STANDALONE_PROPERTY },
+                encoder = irCall(
+                    transformedClass.functionByName { Strings.WIREFORMAT_ENCODER },
                     dispatchReceiver = irGet(dispatch.dispatchReceiverParameter !!)
                 ),
                 value = callServiceFunction(dispatch, serviceFunction.function)

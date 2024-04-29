@@ -13,9 +13,10 @@ object Strings {
 
     const val SERVICE = "Service"
     const val FQ_NAME = "fqName"
-    const val WIREFORMAT_ENCODER_PROPERTY = "wireFormatEncoder"
-    const val WIREFORMAT_STANDALONE_PROPERTY = "wireFormatStandalone"
+
     const val SERVICE_CALL_TRANSPORT_PROPERTY = "serviceCallTransport"
+    const val WIREFORMAT_ENCODER = "wireFormatEncoder"
+    const val WIREFORMAT_DECODER = "wireFormatDecoder"
     const val CALL_SERVICE = "callService"
 
     const val SERVICE_IMPL = "ServiceImpl"
@@ -24,15 +25,12 @@ object Strings {
     const val DISPATCH = "dispatch"
 
     const val SERVICE_CALL_TRANSPORT = "ServiceCallTransport"
-    const val CALL = "call"
 
     const val SERVICE_CONTEXT = "ServiceContext"
     const val CONSUMER = "Consumer"
 
     const val GET_SERVICE = "getService"
     const val DEFAULT_SERVICE_CALL_TRANSPORT = "defaultServiceCallTransport"
-
-    const val CONSUMER_POSTFIX = "\$Consumer"
 
     val FUN_NAMES_TO_SKIP = listOf("equals", "hashCode", "toString", CALL_SERVICE)
 }

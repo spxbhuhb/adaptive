@@ -6,7 +6,6 @@ package hu.simplexion.z2.kotlin.services.ir.consumer
 import hu.simplexion.z2.kotlin.common.AbstractIrBuilder
 import hu.simplexion.z2.kotlin.common.functionByName
 import hu.simplexion.z2.kotlin.common.property
-import hu.simplexion.z2.kotlin.common.propertyGetter
 import hu.simplexion.z2.kotlin.services.Names
 import hu.simplexion.z2.kotlin.services.ServicesPluginKey
 import hu.simplexion.z2.kotlin.services.Strings
@@ -71,17 +70,17 @@ class ConsumerClassTransform(
     fun transformServiceFunction(function: IrSimpleFunction) {
         function.body = DeclarationIrBuilder(irContext, function.symbol).irBlockBody {
             + irReturn(
-                pluginContext.wireFormatCache.standaloneDecode(
+                pluginContext.wireFormatCache.decodeReturnValue(
                     targetType = function.returnType,
-                    standalone = irCall(
-                        consumerClass.propertyGetter { Strings.WIREFORMAT_STANDALONE_PROPERTY },
-                        irGet(function.dispatchReceiverParameter !!)
-                    ),
-                    value = irCall(
-                        consumerClass.functionByName { Strings.CALL_SERVICE },
+                    decoder = irCall(
+                        consumerClass.functionByName { Strings.WIREFORMAT_DECODER },
                         irGet(function.dispatchReceiverParameter !!),
-                        irConst(pluginContext.wireFormatCache.signature(function)),
-                        buildPayload(function)
+                        irCall(
+                            consumerClass.functionByName { Strings.CALL_SERVICE },
+                            irGet(function.dispatchReceiverParameter !!),
+                            irConst(pluginContext.wireFormatCache.signature(function)),
+                            buildPayload(function)
+                        )
                     )
                 )
             )
@@ -90,11 +89,9 @@ class ConsumerClassTransform(
 
     fun buildPayload(function: IrSimpleFunction): IrExpression {
         var payload = irCall(
-            consumerClass.propertyGetter { Strings.WIREFORMAT_ENCODER_PROPERTY },
+            consumerClass.functionByName { Strings.WIREFORMAT_ENCODER },
             dispatchReceiver = irGet(function.dispatchReceiverParameter !!)
         ).also { it.origin = IrStatementOrigin.GET_PROPERTY }
-
-        val parameterCount = function.valueParameters.size
 
         function.valueParameters.forEachIndexed { fieldNumber, valueParameter ->
             payload = pluginContext.wireFormatCache.encode(

@@ -15,35 +15,16 @@ class WireFormatPluginContext(
 
     val wireFormatClass = ClassIds.WIREFORMAT.classSymbol()
 
-    val standalone = ClassIds.STANDALONE.classSymbol()
-
     val wireFormatEncoder = ClassIds.WIREFORMAT_ENCODER.classSymbol()
     val wireFormatDecoder = ClassIds.WIREFORMAT_DECODER.classSymbol()
 
-    val wireFormatTypeTemplate =
-        WireFormatType(
-            encode = wireFormatEncoder.functionByName { Strings.INSTANCE },
-            decode = wireFormatDecoder.functionByName { Strings.INSTANCE },
+    val asInstance = wireFormatDecoder.functionByName { "asInstance" }
+    val rawInstance = wireFormatEncoder.functionByName { "rawInstance" }
+    val pack = wireFormatEncoder.functionByName { "pack" }
 
-            encodeOrNull = wireFormatEncoder.functionByName { Strings.INSTANCE_OR_NULL },
-            decodeOrNull = wireFormatDecoder.functionByName { Strings.INSTANCE_OR_NULL },
-
-            encodeList = wireFormatEncoder.functionByName { Strings.INSTANCE_LIST },
-            decodeList = wireFormatDecoder.functionByName { Strings.INSTANCE_LIST },
-
-            encodeListOrNull = wireFormatEncoder.functionByName { Strings.INSTANCE_LIST_OR_NULL },
-            decodeListOrNull = wireFormatDecoder.functionByName { Strings.INSTANCE_LIST_OR_NULL },
-
-            standaloneEncode = standalone.functionByName { Strings.ENCODE_INSTANCE },
-            standaloneDecode = standalone.functionByName { Strings.DECODE_INSTANCE },
-            standaloneDecodeOrNull = standalone.functionByName { Strings.DECODE_INSTANCE_OR_NULL },
-
-            standaloneEncodeList = standalone.functionByName { Strings.ENCODE_INSTANCE_LIST },
-            standaloneDecodeList = standalone.functionByName { Strings.DECODE_INSTANCE_LIST },
-            standaloneDecodeListOrNull = standalone.functionByName { Strings.DECODE_INSTANCE_LIST_OR_NULL },
-
-            signature = "L" // this will be extended when the template is actualized
-        )
-
+    val encodeInstance = wireFormatEncoder.functionByName { Strings.INSTANCE }
+    val decodeInstance = wireFormatDecoder.functionByName { Strings.INSTANCE }
+    val encodeInstanceOrNull = wireFormatEncoder.functionByName { Strings.INSTANCE_OR_NULL }
+    val decodeInstanceOrNull = wireFormatDecoder.functionByName { Strings.INSTANCE_OR_NULL }
 
 }
