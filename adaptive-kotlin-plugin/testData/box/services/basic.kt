@@ -1,8 +1,8 @@
-package hu.simplexion.z2.services
+package hu.simplexion.adaptive.services
 
-import hu.simplexion.z2.services.*
-import hu.simplexion.z2.services.transport.*
-import hu.simplexion.z2.services.testing.TestServiceTransport
+import hu.simplexion.adaptive.services.*
+import hu.simplexion.adaptive.services.transport.*
+import hu.simplexion.adaptive.services.testing.TestServiceTransport
 import kotlinx.coroutines.runBlocking
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 
