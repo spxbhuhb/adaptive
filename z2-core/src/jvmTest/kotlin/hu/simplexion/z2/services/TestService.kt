@@ -3,6 +3,7 @@ package hu.simplexion.z2.services
 import hu.simplexion.z2.services.testing.TestServiceTransport
 import hu.simplexion.z2.services.transport.ServiceCallTransport
 import hu.simplexion.z2.wireformat.WireFormatDecoder
+import hu.simplexion.z2.wireformat.builtin.StringWireFormat
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -17,15 +18,14 @@ interface TestService1 : Service {
         override var serviceCallTransport: ServiceCallTransport? = null
 
         override suspend fun testFun(arg1: Int, arg2: String): String =
-            wireFormatStandalone.decodeString(
+            wireFormatDecoder(
                 callService(
                     "testFun;IS",
-                    wireFormatEncoder
+                    wireFormatEncoder()
                         .int(1, "arg1", arg1)
                         .string(2, "arg2", arg2)
                 )
-            )
-
+            ).asInstance(StringWireFormat)
     }
 }
 
@@ -35,7 +35,6 @@ interface TestService2 : Service {
 
 }
 
-// val testServiceConsumer = getService<TestService2>()
 val testServiceConsumer = TestService1.Consumer()
 
 class TestService2Impl(
@@ -51,9 +50,9 @@ class TestService2Impl(
 
     override suspend fun dispatch(funName: String, payload: WireFormatDecoder<*>): ByteArray =
         when (funName) {
-            "testFun;IS" -> wireFormatStandalone.encodeString(testFun(payload.int(1, "arg1"), payload.string(2, "arg2")))
+            "testFun;IS" -> wireFormatEncoder().rawInstance(testFun(payload.int(1, "arg1"), payload.string(2, "arg2")), StringWireFormat)
             else -> throw IllegalStateException("unknown function: $funName")
-        }
+        }.pack()
 
 }
 

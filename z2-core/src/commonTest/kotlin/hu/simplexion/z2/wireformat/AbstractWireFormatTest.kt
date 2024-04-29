@@ -2,11 +2,43 @@ package hu.simplexion.z2.wireformat
 
 import hu.simplexion.z2.utility.UUID
 
-open class TestValues {
+abstract class AbstractWireFormatTest<ST>(
+    private val wireFormatProvider: WireFormatProvider
+) : TestHelpers<ST> {
+
+    // ------------------------------------------------------------
+    // Helper functions for tests
+    // ------------------------------------------------------------
+
+    val fieldName = "val"
+
+    fun e(f: WireFormatEncoder.() -> Unit): ByteArray =
+        packForTest(r(f))
+
+    fun r(f: WireFormatEncoder.() -> Unit): ByteArray =
+        wireFormatProvider.encoder()
+            .apply { f() }
+            .pack()
+
+    @Suppress("UNCHECKED_CAST")
+    infix fun <VT> ByteArray.d(f: WireFormatDecoder<ST>.(source: ST) -> VT): VT =
+        (wireFormatProvider.decoder(this) as WireFormatDecoder<ST>).let { f.invoke(it, single(it)) }
+
+    infix fun ByteArray.p(doPrint: Boolean): ByteArray =
+        apply { if (doPrint) println(dump(this)) }
+
+    fun <T> actual(value: T, wireFormat: WireFormat<T>) =
+        e { instance(1, fieldName, value, wireFormat) } d { instance(1, fieldName, wireFormat) }
+
+    // ------------------------------------------------------------
+    // Test values
+    // ------------------------------------------------------------
+
     val unitVal = Unit
     val unitListVal = listOf(Unit, Unit)
 
     val booleanVal = true
+    val booleanArrayVal = booleanArrayOf(true, false, true)
     val booleanListVal = listOf(true, false, true)
 
     val intVal = 123

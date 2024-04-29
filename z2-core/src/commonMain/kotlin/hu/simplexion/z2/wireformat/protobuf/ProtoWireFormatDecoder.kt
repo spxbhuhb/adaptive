@@ -3,6 +3,7 @@ package hu.simplexion.z2.wireformat.protobuf
 import hu.simplexion.z2.utility.UUID
 import hu.simplexion.z2.wireformat.WireFormat
 import hu.simplexion.z2.wireformat.WireFormatDecoder
+import hu.simplexion.z2.wireformat.WireFormatKind
 import kotlin.enums.EnumEntries
 
 /**
@@ -11,7 +12,7 @@ import kotlin.enums.EnumEntries
  * @param  wireFormat  The wire format message to parse. This buffer backs the parser, it should
  *                     not change until the message is in use.
  */
-@ExperimentalUnsignedTypes
+@OptIn(ExperimentalUnsignedTypes::class)
 class ProtoWireFormatDecoder(
     wireFormat: ByteArray,
     offset: Int = 0,
@@ -306,44 +307,9 @@ class ProtoWireFormatDecoder(
     override fun <T> uuidOrNull(fieldNumber: Int, fieldName: String): UUID<T>? =
         if (get(fieldNumber + NULL_SHIFT) != null) null else uuid(fieldNumber, fieldName)
 
-    override fun rawUuid(source: ProtoRecord): UUID<*> {
-        return source.uuid<Any>()
+    override fun <T> rawUuid(source: ProtoRecord): UUID<T> {
+        return source.uuid()
     }
-
-    // -----------------------------------------------------------------------------------------
-    // Instance
-    // -----------------------------------------------------------------------------------------
-
-    override fun <T> instance(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T {
-        val record = get(fieldNumber) ?: return wireFormat.wireFormatDecode(null, null)
-        check(record is LenProtoRecord)
-        return wireFormat.wireFormatDecode(record, record.decoder())
-    }
-
-    override fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else instance(fieldNumber, fieldName, wireFormat)
-
-    override fun <T> rawInstance(source: ProtoRecord, wireFormat: WireFormat<T>): T {
-        check(source is LenProtoRecord)
-        return wireFormat.wireFormatDecode(source, source.decoder())
-    }
-
-    // -----------------------------------------------------------------------------------------
-    // Collection
-    // -----------------------------------------------------------------------------------------
-
-    override fun <T> collection(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): Collection<T> {
-        val list = mutableListOf<T>()
-        for (record in records) {
-            if (record.fieldNumber != fieldNumber) continue
-            check(record is LenProtoRecord)
-            list += wireFormat.wireFormatDecode(record, record.decoder())
-        }
-        return list
-    }
-
-    override fun <T> collectionOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): Collection<T>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else collection(fieldNumber, fieldName, wireFormat)
 
     // -----------------------------------------------------------------------------------------
     // UInt
@@ -452,6 +418,52 @@ class ProtoWireFormatDecoder(
 
     override fun rawULongArray(source: ProtoRecord): ULongArray =
         ProtoBufferReader(source as LenProtoRecord).packed { i64() }.toULongArray()
+
+    // -----------------------------------------------------------------------------------------
+    // Instance
+    // -----------------------------------------------------------------------------------------
+
+    override fun <T> instance(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T {
+        val record = get(fieldNumber) ?: return wireFormat.wireFormatDecode(null, null)
+        return item(record, wireFormat)
+    }
+
+    override fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T? =
+        if (get(fieldNumber + NULL_SHIFT) != null) null else instance(fieldNumber, fieldName, wireFormat)
+
+    override fun <T> rawInstance(source: ProtoRecord, wireFormat: WireFormat<T>): T {
+        return item(source, wireFormat)
+    }
+
+    override fun <T> asInstance(wireFormat: WireFormat<T>): T =
+        rawInstance(records.single(), wireFormat)
+
+    override fun <T> asInstanceOrNull(wireFormat: WireFormat<T>): T? =
+        if (get(NULL_SHIFT) != null) null else rawInstance(records.single(), wireFormat)
+
+    // -----------------------------------------------------------------------------------------
+    // Utilities for classes that implement `WireFormat`
+    // -----------------------------------------------------------------------------------------
+
+    fun <T> item(source: ProtoRecord, wireFormat: WireFormat<T>): T =
+        when (wireFormat.kind) {
+            WireFormatKind.Primitive -> {
+                wireFormat.wireFormatDecode(source, this)
+            }
+
+            WireFormatKind.Collection -> {
+                check(source is LenProtoRecord)
+                wireFormat.wireFormatDecode(source, source.decoder())
+            }
+
+            WireFormatKind.Instance -> {
+                check(source is LenProtoRecord)
+                wireFormat.wireFormatDecode(source, source.decoder())
+            }
+        }
+
+    override fun <T> items(source: ProtoRecord, itemWireFormat: WireFormat<T>): MutableList<T> =
+        records.map { item(it, itemWireFormat) }.toMutableList()
 
     // --------------------------------------------------------------------------------------
     // Helpers

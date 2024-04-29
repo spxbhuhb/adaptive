@@ -14,7 +14,7 @@ data class A(
                 .boolean(1, "b", value.b)
                 .int(2, "i", value.i)
                 .string(3, "s", value.s)
-                .intArray(4, "l", value.l)
+                .intArray(4, "l", value.l.toIntArray())
 
         override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): A {
             if (decoder == null) return A()

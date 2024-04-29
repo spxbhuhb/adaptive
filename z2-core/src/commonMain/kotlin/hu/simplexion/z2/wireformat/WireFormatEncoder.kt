@@ -188,24 +188,6 @@ interface WireFormatEncoder {
 
     fun rawUuid(value: UUID<*>): WireFormatEncoder
 
-    // ----------------------------------------------------------------------------
-    // Instance
-    // ----------------------------------------------------------------------------
-
-    fun <T> instance(fieldNumber: Int, fieldName: String, value: T, encoder: WireFormat<T>): WireFormatEncoder
-
-    fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, value: T?, encoder: WireFormat<T>): WireFormatEncoder
-
-    fun <T> rawInstance(value: T, wireFormat: WireFormat<T>): WireFormatEncoder
-
-    // ----------------------------------------------------------------------------
-    // Collection
-    // ----------------------------------------------------------------------------
-
-    fun <T> collection(fieldNumber: Int, fieldName: String, value: Collection<T>, wireFormat: WireFormat<T>): WireFormatEncoder
-
-    fun <T> collectionOrNull(fieldNumber: Int, fieldName: String, value: Collection<T>?, wireFormat: WireFormat<T>): WireFormatEncoder
-
     // -----------------------------------------------------------------------------------------
     // Unsigned Primitives
     // -----------------------------------------------------------------------------------------
@@ -273,5 +255,21 @@ interface WireFormatEncoder {
     fun uLongArrayOrNull(fieldNumber: Int, fieldName: String, value: ULongArray?): WireFormatEncoder
 
     fun rawULongArray(value: ULongArray): WireFormatEncoder
+
+    // ----------------------------------------------------------------------------
+    // Instance
+    // ----------------------------------------------------------------------------
+
+    fun <T> instance(fieldNumber: Int, fieldName: String, value: T, wireFormat: WireFormat<T>): WireFormatEncoder
+
+    fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, value: T?, wireFormat: WireFormat<T>): WireFormatEncoder
+
+    fun <T> rawInstance(value: T, wireFormat: WireFormat<T>): WireFormatEncoder
+
+    // ----------------------------------------------------------------------------
+    // Utilities for classes that implement `WireFormat`
+    // ----------------------------------------------------------------------------
+
+    fun <T> items(value: Collection<T>, itemWireFormat: WireFormat<T>): WireFormatEncoder
 
 }

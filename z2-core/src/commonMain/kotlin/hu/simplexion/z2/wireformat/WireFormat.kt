@@ -7,6 +7,9 @@ interface WireFormat<T> : FqNameAware {
     override val fqName: String
         get() = wireFormatCompanion.fqName
 
+    val kind: WireFormatKind
+        get() = WireFormatKind.Instance
+
     val wireFormatCompanion: WireFormat<T>
         get() {
             throw UnsupportedOperationException("This code should be replaced by the Z2 plugin for classes and never be called for companions and objects.")

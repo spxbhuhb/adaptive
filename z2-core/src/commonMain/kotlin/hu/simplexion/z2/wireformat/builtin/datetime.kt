@@ -18,11 +18,16 @@ object DurationWireFormat : WireFormat<Duration> {
 
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Duration) =
         encoder
-            .long(1, "inWholeNanoseconds", value.inWholeNanoseconds)
+            .boolean(1, "isInfinite", value.isInfinite())
+            .long(2, "inWholeNanoseconds", value.inWholeNanoseconds)
 
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Duration {
         if (decoder == null) return Duration.ZERO
-        return decoder.long(1, "inWholeNanoseconds").nanoseconds
+        if (decoder.boolean(1, "isInfinite")) {
+            return Duration.INFINITE
+        } else {
+            return decoder.long(2, "inWholeNanoseconds").nanoseconds
+        }
     }
 
 }

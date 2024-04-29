@@ -13,13 +13,12 @@ import hu.simplexion.z2.wireformat.buffer.BufferWriter
  * @property  maximumBufferSize     Maximum total size of buffers. The writer throws an exception if
  *                                  this is not enough.
  */
+@OptIn(ExperimentalStdlibApi::class)
 class JsonBufferWriter(
     initialBufferSize: Int = 200,
     additionalBufferSize: Int = 10_000,
     maximumBufferSize: Int = 5_000_000 + initialBufferSize
 ) : BufferWriter(initialBufferSize, additionalBufferSize, maximumBufferSize) {
-
-    var level = 0
 
     // ------------------------------------------------------------------------
     // Public interface
@@ -27,7 +26,7 @@ class JsonBufferWriter(
 
     fun bool(fieldName: String, value: Boolean?) {
         fieldName(fieldName)
-        if (value == null) put(NULL) else bool(value)
+        if (value == null) put(NULL) else rawBool(value)
         separator()
     }
 
@@ -49,7 +48,6 @@ class JsonBufferWriter(
         separator()
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     fun bytes(fieldName: String, value: ByteArray?) {
         fieldName(fieldName)
         quotedString(value?.toHexString())
@@ -81,7 +79,7 @@ class JsonBufferWriter(
     }
 
     // ------------------------------------------------------------------------
-    // JSON primitives
+    // JSON structure
     // ------------------------------------------------------------------------
 
     fun fieldName(fieldName: String) {
@@ -91,80 +89,73 @@ class JsonBufferWriter(
 
     fun nullValue(fieldName: String) {
         fieldName(fieldName)
-        nullValue()
-        separator()
+        rawNullValue()
     }
 
     fun openArray() {
         put(0x5b) // '['
-        level++
     }
 
     fun closeArray() {
         if (peekLast() == 0x2c.toByte()) rollback()
         put(0x5d) // ']'
-        level--
-        separator()
     }
 
     fun openObject() {
         put(0x7b) // '}'
-        level++
     }
 
     fun closeObject() {
         if (peekLast() == 0x2c.toByte()) rollback()
         put(0x7d) // '}'
-        level--
-        separator()
     }
 
     fun separator() {
-        if (level > 0) put(0x2c) // ','
+        put(0x2c) // ','
     }
 
     // ------------------------------------------------------------------------
-    // Functions without field name use for arrays only
+    // Functions without field name
     // ------------------------------------------------------------------------
 
-    internal fun bool(value: Boolean) {
-        if (value) string("true") else string("false")
+    internal fun rawBool(value: Boolean) {
+        if (value) rawString("true") else rawString("false")
     }
 
-    internal fun number(value: Number) {
+    internal fun rawNumber(value: Number) {
         put(value.toString())
     }
 
-    internal fun string(value: String?) {
+    internal fun rawString(value: String?) {
         put(value?.encodeToByteArray() ?: NULL)
     }
 
-    internal fun uuid(value: UUID<*>) {
+    internal fun rawUuid(value: UUID<*>) {
         quotedString(value.toString())
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    internal fun bytes(value: ByteArray) {
+    internal fun rawBytes(value: ByteArray) {
         quotedString(value.toHexString())
     }
 
-    fun nullValue() {
+    fun rawNullValue() {
         put(NULL)
     }
 
-    internal fun number(value: UInt) {
+    internal fun rawNumber(value: UInt) {
         put(value.toString())
     }
 
-    internal fun number(value: UShort) {
+    internal fun rawNumber(value: UShort) {
         put(value.toString())
     }
 
-    internal fun number(value: UByte) {
+    internal fun rawNumber(value: UByte) {
         put(value.toString())
     }
 
-    internal fun number(value: ULong) {
+    internal fun rawNumber(value: ULong) {
         put(value.toString())
     }
 

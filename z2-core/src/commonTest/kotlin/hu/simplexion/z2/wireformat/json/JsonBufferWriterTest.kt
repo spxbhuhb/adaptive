@@ -8,19 +8,19 @@ class JsonBufferWriterTest {
 
     @Test
     fun primitives() {
-        test("false") { bool(false) }
-        test("true") { bool(true) }
-        test("1") { number(1) }
-        test("1.1") { number(1.1) }
-        test("-1") { number(- 1) }
-        test("abc") { string("abc") }
-        test("null") { string(null) }
+        test("false") { rawBool(false) }
+        test("true") { rawBool(true) }
+        test("1") { rawNumber(1) }
+        test("1.1") { rawNumber(1.1) }
+        test("-1") { rawNumber(- 1) }
+        test("abc") { rawString("abc") }
+        test("null") { rawString(null) }
 
         val uuidValue = UUID<Any>()
-        test("\"$uuidValue\"") { uuid(uuidValue) }
+        test("\"$uuidValue\"") { rawUuid(uuidValue) }
 
         val bytesValue = byteArrayOf(1, 2, 3)
-        test("\"010203\"") { bytes(bytesValue) }
+        test("\"010203\"") { rawBytes(bytesValue) }
     }
 
     @Test
@@ -62,6 +62,7 @@ class JsonBufferWriterTest {
     fun test(expected: String, write: JsonBufferWriter.() -> Unit) {
         val w = JsonBufferWriter()
         w.write()
+        if (w.peekLast() == 0x2c.toByte()) w.rollback()
         assertEquals(expected, w.pack().decodeToString())
     }
 }

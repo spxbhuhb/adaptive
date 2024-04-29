@@ -1,57 +1,43 @@
 package hu.simplexion.z2.wireformat
 
 import hu.simplexion.z2.wireformat.builtin.*
-import kotlinx.datetime.Clock
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalTime
+import kotlinx.datetime.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-abstract class AbstractDatetimeTest(
-    private val wireFormatProvider: WireFormatProvider
-) {
+abstract class AbstractDatetimeTest<ST>(
+    wireFormatProvider: WireFormatProvider
+) : AbstractWireFormatTest<ST>(wireFormatProvider) {
 
-    val sv = wireFormatProvider.standalone()
 
     @Test
     fun testDuration() {
-        val expected = 10.seconds
-        val wireFormat = sv.encodeInstance(expected, DurationWireFormat)
-        val actual = sv.decodeInstance(wireFormat, DurationWireFormat)
-        assertEquals(expected, actual)
+        Duration.ZERO.also { assertEquals(it, actual(it, DurationWireFormat)) }
+        Duration.INFINITE.also { assertEquals(it, actual(it, DurationWireFormat)) }
+        10.seconds.also { assertEquals(it, actual(it, DurationWireFormat)) }
     }
 
     @Test
     fun testInstant() {
-        val expected = Clock.System.now()
-        val wireFormat = sv.encodeInstance(expected, InstantWireFormat)
-        val actual = sv.decodeInstance(wireFormat, InstantWireFormat)
-        assertEquals(expected, actual)
+        Instant.DISTANT_PAST.also { assertEquals(it, actual(it, InstantWireFormat)) }
+        Instant.DISTANT_FUTURE.also { assertEquals(it, actual(it, InstantWireFormat)) }
+        Clock.System.now().also { assertEquals(it, actual(it, InstantWireFormat)) }
     }
 
     @Test
     fun testLocalDate() {
-        val expected = LocalDate(2023, 7, 27)
-        val wireFormat = sv.encodeInstance(expected, LocalDateWireFormat)
-        val actual = sv.decodeInstance(wireFormat, LocalDateWireFormat)
-        assertEquals(expected, actual)
+        LocalDate(2023, 7, 27).also { assertEquals(it, actual(it, LocalDateWireFormat)) }
     }
 
     @Test
     fun testLocalDateTime() {
-        val expected = LocalDateTime(2023, 7, 27, 15, 35, 5, 11)
-        val wireFormat = sv.encodeInstance(expected, LocalDateTimeWireFormat)
-        val actual = sv.decodeInstance(wireFormat, LocalDateTimeWireFormat)
-        assertEquals(expected, actual)
+        LocalDateTime(2023, 7, 27, 15, 35, 5, 11).also { assertEquals(it, actual(it, LocalDateTimeWireFormat)) }
     }
 
     @Test
     fun testLocalTime() {
-        val expected = LocalTime(15, 35)
-        val wireFormat = sv.encodeInstance(expected, LocalTimeWireFormat)
-        val actual = sv.decodeInstance(wireFormat, LocalTimeWireFormat)
-        assertEquals(expected, actual)
+        LocalTime(15, 35).also { assertEquals(it, actual(it, LocalTimeWireFormat)) }
     }
 }

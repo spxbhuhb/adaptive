@@ -9,7 +9,7 @@ import hu.simplexion.z2.wireformat.json.elements.JsonNull
 import hu.simplexion.z2.wireformat.json.elements.JsonObject
 import kotlin.enums.EnumEntries
 
-@ExperimentalUnsignedTypes
+@OptIn(ExperimentalUnsignedTypes::class)
 class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
     val root: JsonElement
@@ -20,9 +20,9 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
         map = (root as? JsonObject)?.entries
     }
 
-    constructor(root: JsonObject) {
+    constructor(root: JsonElement) {
         this.root = root
-        map = root.entries
+        map = (root as? JsonObject)?.entries
     }
 
     fun get(fieldName: String): JsonElement =
@@ -328,32 +328,8 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     override fun <T> uuidOrNull(fieldNumber: Int, fieldName: String): UUID<T>? =
         getOrNull(fieldName)?.asUuid()
 
-    override fun rawUuid(source: JsonElement): UUID<*> {
-        return source.asUuid<Any>()
-    }
-
-    // -----------------------------------------------------------------------------------------
-    // Instance
-    // -----------------------------------------------------------------------------------------
-
-    override fun <T> instance(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T {
-        val element = get(fieldName)
-        check(element is JsonObject)
-        return wireFormat.wireFormatDecode(element, JsonWireFormatDecoder(element))
-    }
-
-    override fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T? =
-        if (getOrNull(fieldName) == null) null else instance(fieldNumber, fieldName, wireFormat)
-
-    override fun <T> collection(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): Collection<T> =
-        requireNotNull(collectionOrNull(fieldNumber, fieldName, wireFormat)) { "missing or null instance" }
-
-    override fun <T> collectionOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): Collection<T>? =
-        array(fieldName) { wireFormat.wireFormatDecode(it, JsonWireFormatDecoder(it as JsonObject)) }
-
-    override fun <T> rawInstance(source: JsonElement, wireFormat: WireFormat<T>): T {
-        check(source is JsonObject)
-        return wireFormat.wireFormatDecode(source, JsonWireFormatDecoder(source))
+    override fun <T> rawUuid(source: JsonElement): UUID<T> {
+        return source.asUuid()
     }
 
     // -----------------------------------------------------------------------------------------
@@ -470,6 +446,44 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     override fun rawULongArray(source: JsonElement): ULongArray {
         source as JsonArray
         return source.items.map { it.asULong }.toULongArray()
+    }
+
+    // -----------------------------------------------------------------------------------------
+    // Instance
+    // -----------------------------------------------------------------------------------------
+
+    override fun <T> instance(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T {
+        val element = get(fieldName)
+        return wireFormat.wireFormatDecode(element, JsonWireFormatDecoder(element))
+    }
+
+    override fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T? =
+        if (getOrNull(fieldName) == null) null else instance(fieldNumber, fieldName, wireFormat)
+
+    override fun <T> rawInstance(source: JsonElement, wireFormat: WireFormat<T>): T {
+        return wireFormat.wireFormatDecode(source, JsonWireFormatDecoder(source))
+    }
+
+    override fun <T> asInstance(wireFormat: WireFormat<T>): T =
+        rawInstance(root, wireFormat)
+
+    override fun <T> asInstanceOrNull(wireFormat: WireFormat<T>): T? =
+        if (root is JsonNull) null else rawInstance(root, wireFormat)
+
+    // -----------------------------------------------------------------------------------------
+    // Utilities for classes that implement `WireFormat`
+    // -----------------------------------------------------------------------------------------
+
+    override fun <T> items(source: JsonElement, itemWireFormat: WireFormat<T>): MutableList<T> {
+        val result = mutableListOf<T>()
+
+        require(source is JsonArray) { "source is not an array" }
+
+        for (element in source.items) {
+            result += itemWireFormat.wireFormatDecode(element, JsonWireFormatDecoder(element))
+        }
+
+        return result
     }
 
     // --------------------------------------------------------------------------------------

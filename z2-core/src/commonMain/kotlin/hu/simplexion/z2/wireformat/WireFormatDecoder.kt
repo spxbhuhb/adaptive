@@ -180,27 +180,7 @@ interface WireFormatDecoder<ST> {
 
     fun <T> uuidOrNull(fieldNumber: Int, fieldName: String): UUID<T>?
 
-    fun rawUuid(source: ST): UUID<*>
-
-    // -----------------------------------------------------------------------------------------
-    // Instance
-    // -----------------------------------------------------------------------------------------
-
-    fun <T> instance(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T
-
-    fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T?
-
-    fun <T> rawInstance(source: ST, wireFormat: WireFormat<T>): T
-
-    // ----------------------------------------------------------------------------
-    // Collection
-    // ----------------------------------------------------------------------------
-
-    fun <T> collection(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): Collection<T>
-
-    fun <T> collectionOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): Collection<T>?
-
-    // fun <T> rawCollection(source: ST, wireFormat: WireFormat<T>): Collection<T>
+    fun <T> rawUuid(source: ST): UUID<T>
 
     // -----------------------------------------------------------------------------------------
     // Unsigned Primitives
@@ -269,5 +249,25 @@ interface WireFormatDecoder<ST> {
     fun uLongArrayOrNull(fieldNumber: Int, fieldName: String): ULongArray?
 
     fun rawULongArray(source: ST): ULongArray
+
+    // -----------------------------------------------------------------------------------------
+    // Instance
+    // -----------------------------------------------------------------------------------------
+
+    fun <T> instance(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T
+
+    fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T?
+
+    fun <T> rawInstance(source: ST, wireFormat: WireFormat<T>): T
+
+    fun <T> asInstance(wireFormat: WireFormat<T>): T
+
+    fun <T> asInstanceOrNull(wireFormat: WireFormat<T>): T?
+
+    // -----------------------------------------------------------------------------------------
+    // Utilities for classes that implement `WireFormat`
+    // -----------------------------------------------------------------------------------------
+
+    fun <T> items(source: ST, itemWireFormat: WireFormat<T>): MutableList<T>
 
 }
