@@ -345,18 +345,18 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Nested
-    @TestMetadata("testData/box/services")
+    @TestMetadata("testData/box/service")
     @TestDataPath("$PROJECT_ROOT")
-    public class Services {
+    public class Service {
         @Test
-        public void testAllFilesPresentInServices() throws Exception {
-            KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/services"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+        public void testAllFilesPresentInService() throws Exception {
+            KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/service"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
         }
 
         @Test
         @TestMetadata("basic.kt")
         public void testBasic() throws Exception {
-            runTest("testData/box/services/basic.kt");
+            runTest("testData/box/service/basic.kt");
         }
     }
 }

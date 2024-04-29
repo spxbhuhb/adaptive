@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.server.components
 
-import hu.simplexion.adaptive.services.ServiceImpl
+import hu.simplexion.adaptive.service.ServiceImpl
 import kotlinx.coroutines.CoroutineScope
 
 interface WorkerImpl<T : WorkerImpl<T>> {

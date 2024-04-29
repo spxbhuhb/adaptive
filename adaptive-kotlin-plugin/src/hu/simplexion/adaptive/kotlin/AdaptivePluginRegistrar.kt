@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.kotlin
 
-import hu.simplexion.adaptive.kotlin.services.fir.ServicesDeclarationGenerator
+import hu.simplexion.adaptive.kotlin.service.fir.ServicesDeclarationGenerator
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
 
 

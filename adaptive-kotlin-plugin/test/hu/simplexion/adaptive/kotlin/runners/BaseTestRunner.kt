@@ -4,8 +4,8 @@
 
 package hu.simplexion.adaptive.kotlin.runners
 
-import hu.simplexion.adaptive.kotlin.services.ExtensionRegistrarConfigurator
-import hu.simplexion.adaptive.kotlin.services.PluginAnnotationsProvider
+import hu.simplexion.adaptive.kotlin.service.ExtensionRegistrarConfigurator
+import hu.simplexion.adaptive.kotlin.service.PluginAnnotationsProvider
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives
 import org.jetbrains.kotlin.test.initIdeaConfiguration

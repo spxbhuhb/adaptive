@@ -1,7 +1,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/hu.simplexion.adaptive/adaptive-lib)](https://mvnrepository.com/artifact/hu.simplexion.adaptive/adaptive-lib)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
-Full-stack application development library, focusing on:
+Full-stack application development library for Kotlin, focusing on:
 
 * intentional coding (just write down what you want in a short, concise way)
 * clean code
@@ -14,7 +14,7 @@ Status: **migrating the code from the old proof-of-concept project**
 # Modules
 
 - [Base](doc/base/README.md) reactive software fragment library
-- [Services](doc/services/README.md) transparent client-server communication with simple function calls
+- [Services](doc/service/README.md) transparent client-server communication with simple function calls
 - [Schematic] data model definition
 - [WireFormat](doc/wireformat/README.md) lightweight serialization (JSON, Protobuf) optimized for RPC
 

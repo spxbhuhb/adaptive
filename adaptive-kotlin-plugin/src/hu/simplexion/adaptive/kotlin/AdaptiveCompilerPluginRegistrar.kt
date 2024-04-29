@@ -4,7 +4,7 @@
 package hu.simplexion.adaptive.kotlin
 
 import hu.simplexion.adaptive.kotlin.base.ir.AdaptiveGenerationExtension
-import hu.simplexion.adaptive.kotlin.services.ir.ServicesGenerationExtension
+import hu.simplexion.adaptive.kotlin.service.ir.ServicesGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi

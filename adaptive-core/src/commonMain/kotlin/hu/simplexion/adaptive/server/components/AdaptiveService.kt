@@ -7,8 +7,8 @@ package hu.simplexion.adaptive.server.components
 import hu.simplexion.adaptive.base.*
 import hu.simplexion.adaptive.server.AdaptiveServerBridgeReceiver
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
-import hu.simplexion.adaptive.services.ServiceImpl
-import hu.simplexion.adaptive.services.defaultServiceImplFactory
+import hu.simplexion.adaptive.service.ServiceImpl
+import hu.simplexion.adaptive.service.defaultServiceImplFactory
 
 fun Adaptive.service(impl : () -> ServiceImpl<*>) {
     manualImplementation(impl)
