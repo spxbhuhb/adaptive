@@ -51,7 +51,7 @@ kotlin {
 
     sourceSets["commonMain"].dependencies {
         implementation("hu.simplexion.adaptive:adaptive-core:$version")
-        implementation("hu.simplexion.adaptive:adaptive-lib:$version")
+        implementation("hu.simplexion.adaptive:adaptive-browser:$version")
     }
     sourceSets["jsMain"].dependencies {
         implementation("io.ktor:ktor-client-websockets:$ktor_version")

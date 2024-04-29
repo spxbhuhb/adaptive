@@ -10,15 +10,15 @@ plugins {
 }
 
 group = "hu.simplexion.adaptive"
-val baseName = "adaptive-lib"
-val pomName = "Adaptive Lib"
+val baseName = "adaptive-browser"
+val pomName = "Adaptive Browser"
 val scmPath = "spxbhuhb/adaptive"
 
-tasks["build"].dependsOn(gradle.includedBuild("adaptive-kotlin-plugin").task(":publishToMavenLocal"))
-tasks["build"].dependsOn(gradle.includedBuilds.map { it.task(":build") })
-tasks["clean"].dependsOn(gradle.includedBuilds.map { it.task(":clean") })
-tasks["publishToMavenLocal"].dependsOn(gradle.includedBuilds.map { it.task(":publishToMavenLocal") })
-tasks["publish"].dependsOn(gradle.includedBuilds.map { it.task(":publish") })
+//tasks["build"].dependsOn(gradle.includedBuild("adaptive-kotlin-plugin").task(":publishToMavenLocal"))
+//tasks["build"].dependsOn(gradle.includedBuilds.map { it.task(":build") })
+//tasks["clean"].dependsOn(gradle.includedBuilds.map { it.task(":clean") })
+//tasks["publishToMavenLocal"].dependsOn(gradle.includedBuilds.map { it.task(":publishToMavenLocal") })
+//tasks["publish"].dependsOn(gradle.includedBuilds.map { it.task(":publish") })
 
 repositories {
     mavenLocal()
