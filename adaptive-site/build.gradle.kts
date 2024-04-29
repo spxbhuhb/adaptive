@@ -28,7 +28,7 @@ repositories {
 }
 
 application {
-    mainClass.set("MainKt")
+    mainClass.set("hu.simplexion.adaptive.site.MainKt")
 }
 
 kotlin {
@@ -51,6 +51,7 @@ kotlin {
 
     sourceSets["commonMain"].dependencies {
         implementation("hu.simplexion.adaptive:adaptive-core:$version")
+        implementation("hu.simplexion.adaptive:adaptive-settings:$version")
         implementation("hu.simplexion.adaptive:adaptive-browser:$version")
     }
     sourceSets["jsMain"].dependencies {

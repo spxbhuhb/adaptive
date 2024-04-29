@@ -7,6 +7,7 @@ rootProject.name = "adaptive-lib"
 includeBuild("../adaptive-core")
 includeBuild("../adaptive-kotlin-plugin")
 
+include("adaptive-settings")
 include("adaptive-browser")
 //include("adaptive-email")
 
