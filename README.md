@@ -7,7 +7,7 @@ Adaptive is a consolidated application development library for Kotlin focusing o
 * clean code, close to no-boilerplate, minimal dependencies,
 * frontend and backend components with built-in lifecycle and state handling.
 
-Adaptive comes with a compiler plugin that performs many functions reach the goals above.
+Adaptive comes with a compiler plugin that performs many functions to reach the goals above.
 
 Status: **preview**
 
