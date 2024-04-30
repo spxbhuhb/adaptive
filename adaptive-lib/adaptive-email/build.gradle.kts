@@ -60,7 +60,6 @@ kotlin {
                 api("hu.simplexion.adaptive:adaptive-core:${version}")
                 api("hu.simplexion.adaptive:adaptive-settings:${version}")
                 api("hu.simplexion.adaptive:adaptive-exposed:${version}")
-
             }
         }
 
@@ -77,6 +76,7 @@ kotlin {
         sourceSets["jvmTest"].dependencies {
             implementation(kotlin("test"))
             implementation("org.subethamail:subethasmtp:3.1.7")
+            implementation("com.h2database:h2:2.1.214")
         }
     }
 }

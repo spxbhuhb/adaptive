@@ -5,8 +5,8 @@ import hu.simplexion.adaptive.email.model.EmailQueueEntry
 import hu.simplexion.adaptive.email.model.EmailStatus
 import hu.simplexion.adaptive.email.store.EmailQueue
 import hu.simplexion.adaptive.email.store.EmailTable
-import hu.simplexion.adaptive.server.components.WorkerImpl
-import hu.simplexion.adaptive.server.components.store
+import hu.simplexion.adaptive.server.component.WorkerImpl
+import hu.simplexion.adaptive.server.component.store
 import hu.simplexion.adaptive.settings.dsl.setting
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -35,8 +35,8 @@ class EmailWorker : WorkerImpl<EmailWorker> {
     val retryCheckInterval by setting<Long> { "EMAIL_RETRY_CHECK_INTERVAL" }
     val live by setting<Boolean> { "EMAIL_LIVE" }
 
-    val emailStore = store<EmailTable>()
-    val emailQueue = store<EmailQueue>()
+    val emailStore by store<EmailTable>()
+    val emailQueue by store<EmailQueue>()
 
     val normalQueue = Channel<EmailQueueEntry>(Channel.UNLIMITED)
 

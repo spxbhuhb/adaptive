@@ -7,9 +7,9 @@ import hu.simplexion.adaptive.email.store.EmailQueue
 import hu.simplexion.adaptive.email.store.EmailTable
 import hu.simplexion.adaptive.exposed.InMemoryDatabase
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
-import hu.simplexion.adaptive.server.components.service
-import hu.simplexion.adaptive.server.components.store
-import hu.simplexion.adaptive.server.components.worker
+import hu.simplexion.adaptive.server.component.service
+import hu.simplexion.adaptive.server.component.store
+import hu.simplexion.adaptive.server.component.worker
 import hu.simplexion.adaptive.service.getService
 import hu.simplexion.adaptive.settings.dsl.inline
 import hu.simplexion.adaptive.settings.dsl.settings
@@ -62,7 +62,8 @@ class EmailWorkerTest {
                     "EMAIL_PASSWORD" to "helloworld",
                     "EMAIL_PROTOCOL" to "smtp",
                     "EMAIL_TLS" to false,
-                    "EMAIL_AUTH" to true
+                    "EMAIL_AUTH" to true,
+                    "EMAIL_RETRY_CHECK_INTERVAL" to 5000
                 )
             }
 

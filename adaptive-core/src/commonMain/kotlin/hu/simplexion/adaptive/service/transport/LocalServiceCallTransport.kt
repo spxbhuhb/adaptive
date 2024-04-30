@@ -21,7 +21,7 @@ class LocalServiceCallTransport : ServiceCallTransport {
 
     override suspend fun call(serviceName: String, funName: String, payload: ByteArray): ByteArray {
 
-        val service = requireNotNull(defaultServiceImplFactory[serviceName, localServiceContext])
+        val service = requireNotNull(defaultServiceImplFactory[serviceName, localServiceContext]) { "missing service $serviceName" }
         val message = defaultWireFormatProvider.decoder(payload)
 
         return service.dispatch(funName, message)

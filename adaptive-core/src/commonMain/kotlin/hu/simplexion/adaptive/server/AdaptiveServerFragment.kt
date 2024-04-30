@@ -6,23 +6,37 @@ package hu.simplexion.adaptive.server
 import hu.simplexion.adaptive.base.AdaptiveAdapter
 import hu.simplexion.adaptive.base.AdaptiveFragment
 import hu.simplexion.adaptive.base.AdaptiveSupportFunction
-import hu.simplexion.adaptive.server.components.ServerFragmentImpl
+import hu.simplexion.adaptive.base.adaptiveInitStateMask
+import hu.simplexion.adaptive.server.component.ServerFragmentImpl
+import hu.simplexion.adaptive.service.ServiceImpl
 
-abstract class AdaptiveServerFragment(
-    adapter: AdaptiveAdapter<AdaptiveServerBridgeReceiver>,
-    parent: AdaptiveFragment<AdaptiveServerBridgeReceiver>?,
+abstract class AdaptiveServerFragment<BT,IT : ServerFragmentImpl>(
+    adapter: AdaptiveAdapter<BT>,
+    parent: AdaptiveFragment<BT>?,
     index: Int
-) : AdaptiveFragment<AdaptiveServerBridgeReceiver>(adapter, parent, index, 2) {
+) : AdaptiveFragment<BT>(adapter, parent, index, 2) {
 
     // -------------------------------------------------------------------------
     // Fragment overrides
     // -------------------------------------------------------------------------
 
-    override fun genBuild(parent: AdaptiveFragment<AdaptiveServerBridgeReceiver>, declarationIndex: Int): AdaptiveFragment<AdaptiveServerBridgeReceiver>? = null
+    override fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>? =
+        null
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<AdaptiveServerBridgeReceiver>) = Unit
+    override fun genPatchDescendant(fragment: AdaptiveFragment<BT>) = Unit
 
-    override fun genPatchInternal() = Unit
+    override fun genPatchInternal() {
+        if (getThisClosureDirtyMask() != adaptiveInitStateMask) return
+
+        check(impl == null) { "inconsistent server state innerMount with a non-null implementation" }
+
+        @Suppress("UNCHECKED_CAST")
+        (implFun.invoke() as IT).also {
+            impl = it
+            it.serverAdapter = adapter as AdaptiveServerAdapter
+            it.create()
+        }
+    }
 
     // -------------------------------------------------------------------------
     // Implementation support
@@ -31,8 +45,9 @@ abstract class AdaptiveServerFragment(
     val implFun : AdaptiveSupportFunction
         get() = state[0] as AdaptiveSupportFunction
 
-    var impl : ServerFragmentImpl?
-        get() = state[1] as ServerFragmentImpl?
+    @Suppress("UNCHECKED_CAST")
+    var impl : IT?
+        get() = state[1] as IT?
         set(value) { state[1] = value }
 
 }

@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.service
 
-import hu.simplexion.adaptive.server.components.ServerFragmentImpl
+import hu.simplexion.adaptive.server.component.ServerFragmentImpl
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.utility.manualOrPlugin
 import hu.simplexion.adaptive.utility.pluginGenerated

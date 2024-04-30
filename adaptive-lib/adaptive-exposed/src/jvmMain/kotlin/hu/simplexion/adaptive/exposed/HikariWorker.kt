@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.exposed
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import hu.simplexion.adaptive.server.components.WorkerImpl
+import hu.simplexion.adaptive.server.component.WorkerImpl
 import hu.simplexion.adaptive.settings.dsl.setting
 import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.exposed.sql.Database

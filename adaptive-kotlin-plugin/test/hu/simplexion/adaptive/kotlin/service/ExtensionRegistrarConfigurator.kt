@@ -7,6 +7,7 @@ package hu.simplexion.adaptive.kotlin.service
 import hu.simplexion.adaptive.kotlin.AdaptiveOptions
 import hu.simplexion.adaptive.kotlin.AdaptivePluginRegistrar
 import hu.simplexion.adaptive.kotlin.base.ir.AdaptiveGenerationExtension
+import hu.simplexion.adaptive.kotlin.server.ir.ServerGenerationExtension
 import hu.simplexion.adaptive.kotlin.service.ir.ServicesGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
@@ -33,5 +34,6 @@ class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentCo
 
         IrGenerationExtension.registerExtension(ServicesGenerationExtension(options))
         IrGenerationExtension.registerExtension(AdaptiveGenerationExtension(options))
+        IrGenerationExtension.registerExtension(ServerGenerationExtension(options))
     }
 }

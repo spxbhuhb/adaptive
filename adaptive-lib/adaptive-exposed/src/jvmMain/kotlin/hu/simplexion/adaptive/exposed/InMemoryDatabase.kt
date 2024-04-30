@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.exposed
 
-import hu.simplexion.adaptive.server.components.WorkerImpl
+import hu.simplexion.adaptive.server.component.WorkerImpl
 import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.exposed.sql.Database
 

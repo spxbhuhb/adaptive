@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.exposed
 
-import hu.simplexion.adaptive.server.components.StoreImpl
+import hu.simplexion.adaptive.server.component.StoreImpl
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.selectAll
@@ -15,7 +15,7 @@ interface ExposedStoreImpl<T : ExposedStoreImpl<T>> : StoreImpl<T> {
     override fun create() {
         if (this is Table) {
             transaction {
-                SchemaUtils.createMissingTablesAndColumns()
+                SchemaUtils.createMissingTablesAndColumns(this@ExposedStoreImpl)
             }
         }
     }
