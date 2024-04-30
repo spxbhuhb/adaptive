@@ -9,6 +9,21 @@ import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
 import hu.simplexion.adaptive.wireformat.WireFormatKind
 
+object UnitWireFormat : WireFormat<Unit> {
+
+    override val kind: WireFormatKind
+        get() = WireFormatKind.Primitive
+
+    override fun wireFormatEncode(encoder: WireFormatEncoder, value: Unit): WireFormatEncoder {
+        encoder.rawUnit(value)
+        return encoder
+    }
+
+    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Unit =
+        decoder !!.rawUnit(source)
+
+}
+
 object BooleanWireFormat : WireFormat<Boolean> {
 
     override val kind: WireFormatKind
@@ -36,6 +51,21 @@ object IntWireFormat : WireFormat<Int> {
 
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Int =
         decoder !!.rawInt(source)
+
+}
+
+object IntArrayWireFormat : WireFormat<IntArray> {
+
+    override val kind: WireFormatKind
+        get() = WireFormatKind.Primitive
+
+    override fun wireFormatEncode(encoder: WireFormatEncoder, value: IntArray): WireFormatEncoder {
+        encoder.rawIntArray(value)
+        return encoder
+    }
+
+    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): IntArray =
+        decoder !!.rawIntArray(source)
 
 }
 

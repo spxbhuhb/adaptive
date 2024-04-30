@@ -16,7 +16,7 @@ class AdaptiveProcess(
     adapter: AdaptiveAdapter<AdaptiveServerBridgeReceiver>,
     parent: AdaptiveFragment<AdaptiveServerBridgeReceiver>,
     index: Int
-) : AdaptiveServerFragment(adapter, parent, index, 1) {
+) : AdaptiveServerFragment(adapter, parent, index) {
 
     val command : String
         get() = state[2] as String

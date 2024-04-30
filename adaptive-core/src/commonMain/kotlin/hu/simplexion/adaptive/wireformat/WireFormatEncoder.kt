@@ -270,6 +270,8 @@ interface WireFormatEncoder {
 
     fun <T> rawInstance(value: T, wireFormat: WireFormat<T>): WireFormatEncoder
 
+    fun <T> rawInstanceOrNull(value: T?, wireFormat: WireFormat<T>): WireFormatEncoder
+
     // ----------------------------------------------------------------------------
     // Utilities for classes that implement `WireFormat`
     // ----------------------------------------------------------------------------

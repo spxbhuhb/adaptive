@@ -2,10 +2,12 @@ package hu.simplexion.adaptive.email.worker
 
 import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.email.api.EmailApi
-import hu.simplexion.adaptive.email.table.EmailQueue
-import hu.simplexion.adaptive.email.table.EmailTable
+import hu.simplexion.adaptive.email.service.EmailService
+import hu.simplexion.adaptive.email.store.EmailQueue
+import hu.simplexion.adaptive.email.store.EmailTable
 import hu.simplexion.adaptive.exposed.InMemoryDatabase
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
+import hu.simplexion.adaptive.server.components.service
 import hu.simplexion.adaptive.server.components.store
 import hu.simplexion.adaptive.server.components.worker
 import hu.simplexion.adaptive.service.getService
@@ -69,6 +71,7 @@ class EmailWorkerTest {
             store { EmailTable() }
             store { EmailQueue() }
             worker { EmailWorker() }
+            service { EmailService() }
 
         }
 

@@ -2,7 +2,7 @@
 
 ## Null Values
 
-Null values are encoded as booleans with `true` value, but the field number is increased by 30000.
+Null values are encoded as booleans with `true` value, but the field number is increased by 20000.
 
 ```kotlin
 fun a(i1 : Int?) {}
@@ -11,7 +11,7 @@ fun a(i1 : Int?) {}
 ```protobuf
 message A {
   optional sint32 i1 = 1;
-  optional bool i1IsNull = 30001;
+  optional bool i1IsNull = 20001;
 }
 ```
 
@@ -21,7 +21,7 @@ Otherwise, checks the record with the original field number (and throws an excep
 ## Standalone Values
 
 Standalone values (function return values and items of collections) are encoded with field number `1` or field number
-`30001` in case of nullable values.
+`20001` in case of nullable values.
 
 ## Collections
 

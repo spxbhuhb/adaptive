@@ -15,6 +15,7 @@ import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classFqName
+import org.jetbrains.kotlin.ir.types.isNullable
 import org.jetbrains.kotlin.name.FqName
 
 class WireFormatCache(
@@ -30,6 +31,8 @@ class WireFormatCache(
         get() = pluginContext.wireFormatEncoder
 
     val types = mutableMapOf(
+        "kotlin.Unit" to "Unit".toWireFormatType(pluginContext, "0"),
+
 //        "kotlin.Boolean" to "Boolean".toWireFormatType(pluginContext, "Z"),
         "kotlin.Int" to "Int".toWireFormatType(pluginContext, "I"),
 //        "kotlin.Short" to "Short".toWireFormatType(pluginContext, "S"),
@@ -40,7 +43,7 @@ class WireFormatCache(
 //        "kotlin.Char" to "Int".toWireFormatType(pluginContext, "C"),
 //
 //        "kotlin.ByteArray" to "ByteArray".toWireFormatType(pluginContext, "[Z"),
-//        "kotlin.IntArray" to "IntArray".toWireFormatType(pluginContext, "[I"),
+        "kotlin.IntArray" to "IntArray".toWireFormatType(pluginContext, "[I"),
 //        "kotlin.ShortArray" to "ShortArray".toWireFormatType(pluginContext, "[S"),
 //        "kotlin.ByteArray" to "ByteArray".toWireFormatType(pluginContext, "[B"),
 //        "kotlin.LongArray" to "LongArray".toWireFormatType(pluginContext, "[J"),
@@ -128,14 +131,26 @@ class WireFormatCache(
         val typeFqName = checkNotNull(targetType.classFqName) { "unsupported type: ${targetType.asString()}" }
         val wireFormatType = types[typeFqName.asString()] ?: loadType(typeFqName)
 
-        return irCall(pluginContext.rawInstance, encoder, value, irGetObject(wireFormatType.wireFormat))
+        val rawInstanceFunc = if (targetType.isNullable()) (
+            pluginContext.rawInstanceOrNull
+        ) else {
+            pluginContext.rawInstance
+        }
+
+        return irCall(rawInstanceFunc, encoder, value, irGetObject(wireFormatType.wireFormat))
     }
 
     fun decodeReturnValue(targetType: IrType, decoder: IrExpression): IrExpression {
         val typeFqName = checkNotNull(targetType.classFqName) { "unsupported type: ${targetType.asString()}" }
         val wireFormatType = types[typeFqName.asString()] ?: loadType(typeFqName)
 
-        return irCall(pluginContext.asInstance, decoder, irGetObject(wireFormatType.wireFormat))
+        val asInstanceFunc = if (targetType.isNullable()) (
+            pluginContext.asInstanceOrNull
+            ) else {
+            pluginContext.asInstance
+        }
+
+        return irCall(asInstanceFunc, decoder, irGetObject(wireFormatType.wireFormat))
     }
 
     fun encode(encoder: IrCall, fieldNumber: Int, fieldName: String, value: IrExpression): IrCallImpl {
@@ -145,11 +160,17 @@ class WireFormatCache(
         val wireFormatType = types[typeFqName.asString()] ?: loadType(typeFqName)
 
 
+        val encodeFunc = if (targetType.isNullable()) {
+            wireFormatType.encodeOrNull
+        } else {
+            wireFormatType.encode
+        }
+
         if (wireFormatType.primitive) {
-            return irCall(wireFormatType.encode, encoder, irConst(fieldNumber), irConst(fieldName), value)
+            return irCall(encodeFunc, encoder, irConst(fieldNumber), irConst(fieldName), value)
         } else {
             val wireFormat = checkNotNull(wireFormatType.wireFormat)
-            return irCall(wireFormatType.encode, encoder, irConst(fieldNumber), irConst(fieldName), value, irGetObject(wireFormat))
+            return irCall(encodeFunc, encoder, irConst(fieldNumber), irConst(fieldName), value, irGetObject(wireFormat))
         }
     }
 
@@ -160,10 +181,16 @@ class WireFormatCache(
         val typeFqName = checkNotNull(targetType.classFqName) { "unsupported type: ${targetType.asString()}" }
         val wireFormatType = types[typeFqName.asString()] ?: loadType(typeFqName)
 
-        if (wireFormatType.primitive) {
-            return irCall(wireFormatType.decode, decoder(), irConst(fieldNumber), irConst(fieldName))
+        val decodeFunc = if (targetType.isNullable()) {
+            wireFormatType.decodeOrNull
         } else {
-            return irCall(wireFormatType.decode, decoder(), irConst(fieldNumber), irConst(fieldName), irGetObject(wireFormatType.wireFormat))
+            wireFormatType.decode
+        }
+
+        if (wireFormatType.primitive) {
+            return irCall(decodeFunc, decoder(), irConst(fieldNumber), irConst(fieldName))
+        } else {
+            return irCall(decodeFunc, decoder(), irConst(fieldNumber), irConst(fieldName), irGetObject(wireFormatType.wireFormat))
         }
     }
 }

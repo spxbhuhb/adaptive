@@ -443,7 +443,7 @@ class ProtoWireFormatDecoder(
         rawInstance(records.single(), wireFormat)
 
     override fun <T> asInstanceOrNull(wireFormat: WireFormat<T>): T? =
-        if (get(NULL_SHIFT) != null) null else rawInstance(records.single(), wireFormat)
+        if (get(NULL_SHIFT + 1) != null) null else rawInstance(records.single(), wireFormat)
 
     // -----------------------------------------------------------------------------------------
     // Utilities for classes that implement `WireFormat`

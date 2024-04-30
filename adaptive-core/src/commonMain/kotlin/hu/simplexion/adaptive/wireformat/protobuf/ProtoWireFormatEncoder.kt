@@ -57,10 +57,8 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
-    override fun rawUnit(value: Unit): WireFormatEncoder {
-        writer.bool(true)
-        return this
-    }
+    override fun rawUnit(value: Unit): WireFormatEncoder =
+        boolean(1, "", true)
 
     // ----------------------------------------------------------------------------
     // Boolean
@@ -699,6 +697,11 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
 
     override fun <T> rawInstance(value: T, wireFormat: WireFormat<T>): WireFormatEncoder =
         instance(1, "", value, wireFormat)
+
+    override fun <T> rawInstanceOrNull(value: T?, wireFormat: WireFormat<T>): WireFormatEncoder {
+        instanceOrNull(1, "", value, wireFormat)
+        return this
+    }
 
     // -----------------------------------------------------------------------------------------
     // Utilities for classes that implement `WireFormat`

@@ -1,4 +1,4 @@
-package hu.simplexion.adaptive.email.table
+package hu.simplexion.adaptive.email.store
 
 import hu.simplexion.adaptive.email.model.Email
 import hu.simplexion.adaptive.email.model.EmailQueueEntry

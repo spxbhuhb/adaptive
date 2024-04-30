@@ -1,4 +1,4 @@
-package hu.simplexion.adaptive.email.table
+package hu.simplexion.adaptive.email.store
 
 import hu.simplexion.adaptive.email.model.Email
 import hu.simplexion.adaptive.email.model.EmailStatus
@@ -6,10 +6,8 @@ import hu.simplexion.adaptive.exposed.ExposedStoreImpl
 import hu.simplexion.adaptive.exposed.asCommon
 import hu.simplexion.adaptive.exposed.asJvm
 import hu.simplexion.adaptive.exposed.jeq
-import hu.simplexion.adaptive.server.components.StoreImpl
 import hu.simplexion.adaptive.utility.UUID
 import kotlinx.datetime.Clock.System.now
-import kotlinx.datetime.toJavaInstant
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp

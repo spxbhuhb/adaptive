@@ -1,4 +1,4 @@
-package hu.simplexion.adaptive.services
+package hu.simplexion.adaptive.service
 
 import hu.simplexion.adaptive.service.*
 import hu.simplexion.adaptive.service.transport.*

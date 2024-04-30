@@ -18,6 +18,7 @@ actual fun <T : Any> setting(kClass: KClass<T>, path: String): SettingDelegate<T
     when (kClass) {
         Boolean::class -> SettingDelegate(path, { it.toString() }, { it !!.toBoolean() })
         Int::class -> SettingDelegate(path, { it.toString() }, { it !!.toInt() })
+        Long::class -> SettingDelegate(path, { it.toString() }, { it !!.toLong() })
         Path::class -> SettingDelegate(path, { it.toString() }, { Paths.get(it !!) })
         String::class -> SettingDelegate(path, { it }, { it !! })
         else -> throw NotImplementedError("not implemented setting class: $kClass")

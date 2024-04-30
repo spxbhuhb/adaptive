@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.server.components
 
 import hu.simplexion.adaptive.base.*
+import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.AdaptiveServerBridgeReceiver
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
 import kotlinx.coroutines.CoroutineScope
@@ -22,16 +23,26 @@ class AdaptiveWorker(
     adapter: AdaptiveAdapter<AdaptiveServerBridgeReceiver>,
     parent: AdaptiveFragment<AdaptiveServerBridgeReceiver>,
     index: Int
-) : AdaptiveServerFragment(adapter, parent, index, 1) {
+) : AdaptiveServerFragment(adapter, parent, index) {
 
     private val scope = CoroutineScope(adapter.dispatcher)
 
-    override fun innerMount(bridge: AdaptiveBridge<AdaptiveServerBridgeReceiver>) {
-        check(impl == null) { "inconsistent server state innerMount with a non-null implementation" }
+    override fun create() {
+        super.create()
+        check(impl == null) { "inconsistent server state: create with a non-null implementation" }
         (implFun.invoke() as WorkerImpl<*>).also {
             impl = it
-            scope.launch { it.run(scope) }
+            it.serverAdapter = adapter as AdaptiveServerAdapter
+            it.create()
         }
+    }
+
+    override fun innerMount(bridge: AdaptiveBridge<AdaptiveServerBridgeReceiver>) {
+        checkNotNull(impl) { "inconsistent server state: innerMount with a null implementation" }
+            .let {
+                it.mount()
+                scope.launch { (it as WorkerImpl<*>).run(scope) }
+            }
     }
 
     override fun innerUnmount(bridge: AdaptiveBridge<AdaptiveServerBridgeReceiver>) {

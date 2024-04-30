@@ -3,8 +3,8 @@ package hu.simplexion.adaptive.email.worker
 import com.sun.mail.util.MailConnectException
 import hu.simplexion.adaptive.email.model.EmailQueueEntry
 import hu.simplexion.adaptive.email.model.EmailStatus
-import hu.simplexion.adaptive.email.table.EmailQueue
-import hu.simplexion.adaptive.email.table.EmailTable
+import hu.simplexion.adaptive.email.store.EmailQueue
+import hu.simplexion.adaptive.email.store.EmailTable
 import hu.simplexion.adaptive.server.components.WorkerImpl
 import hu.simplexion.adaptive.server.components.store
 import hu.simplexion.adaptive.settings.dsl.setting

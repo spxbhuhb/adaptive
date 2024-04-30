@@ -358,5 +358,33 @@ public class BoxTestGenerated extends AbstractBoxTest {
         public void testBasic() throws Exception {
             runTest("testData/box/service/basic.kt");
         }
+
+        @Nested
+        @TestMetadata("testData/box/service/types")
+        @TestDataPath("$PROJECT_ROOT")
+        public class Types {
+            @Test
+            public void testAllFilesPresentInTypes() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/service/types"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("int.kt")
+            public void testInt() throws Exception {
+                runTest("testData/box/service/types/int.kt");
+            }
+
+            @Test
+            @TestMetadata("string.kt")
+            public void testString() throws Exception {
+                runTest("testData/box/service/types/string.kt");
+            }
+
+            @Test
+            @TestMetadata("unit.kt")
+            public void testUnit() throws Exception {
+                runTest("testData/box/service/types/unit.kt");
+            }
+        }
     }
 }

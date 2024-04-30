@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.server.components
 
 import hu.simplexion.adaptive.base.*
+import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.AdaptiveServerBridgeReceiver
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
 import hu.simplexion.adaptive.service.ServiceImpl
@@ -18,12 +19,13 @@ class AdaptiveService(
     adapter: AdaptiveAdapter<AdaptiveServerBridgeReceiver>,
     parent: AdaptiveFragment<AdaptiveServerBridgeReceiver>,
     index: Int
-) : AdaptiveServerFragment(adapter, parent, index, 1) {
+) : AdaptiveServerFragment(adapter, parent, index) {
 
     override fun innerMount(bridge: AdaptiveBridge<AdaptiveServerBridgeReceiver>) {
         check(impl == null) { "inconsistent server state innerMount with a non-null implementation" }
         (implFun.invoke() as ServiceImpl<*>).also {
             impl = it
+            it.serverAdapter = adapter as AdaptiveServerAdapter
             defaultServiceImplFactory += it
         }
     }

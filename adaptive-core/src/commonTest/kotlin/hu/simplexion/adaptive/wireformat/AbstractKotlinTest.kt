@@ -4,10 +4,7 @@
 
 package hu.simplexion.adaptive.wireformat
 
-import hu.simplexion.adaptive.wireformat.builtin.BooleanWireFormat
-import hu.simplexion.adaptive.wireformat.builtin.IntWireFormat
-import hu.simplexion.adaptive.wireformat.builtin.ListWireFormat
-import hu.simplexion.adaptive.wireformat.builtin.StringWireFormat
+import hu.simplexion.adaptive.wireformat.builtin.*
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
@@ -16,6 +13,15 @@ abstract class AbstractKotlinTest<ST>(
     wireFormatProvider: WireFormatProvider
 ) : AbstractWireFormatTest<ST>(wireFormatProvider) {
 
+    @Test
+    fun testUnit() {
+        assertEquals(unitVal, e { unit(1, fieldName, unitVal) } d { unit(1, fieldName) })
+        assertEquals(null, e { unitOrNull(1, fieldName, null) } d { unitOrNull(1, fieldName) })
+        assertEquals(unitVal, e { unitOrNull(1, fieldName, unitVal) } d { unitOrNull(1, fieldName) })
+        assertEquals(unitVal, r { rawUnit(unitVal) } d { rawUnit(it) })
+        instance(unitVal, UnitWireFormat)
+    }
+    
     @Test
     fun testBoolean() {
         assertEquals(booleanVal, e { boolean(1, fieldName, booleanVal) } d { boolean(1, fieldName) })

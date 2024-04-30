@@ -11,9 +11,8 @@ import hu.simplexion.adaptive.server.components.ServerFragmentImpl
 abstract class AdaptiveServerFragment(
     adapter: AdaptiveAdapter<AdaptiveServerBridgeReceiver>,
     parent: AdaptiveFragment<AdaptiveServerBridgeReceiver>?,
-    index: Int,
-    stateSize : Int
-) : AdaptiveFragment<AdaptiveServerBridgeReceiver>(adapter, parent, index, stateSize) {
+    index: Int
+) : AdaptiveFragment<AdaptiveServerBridgeReceiver>(adapter, parent, index, 2) {
 
     // -------------------------------------------------------------------------
     // Fragment overrides

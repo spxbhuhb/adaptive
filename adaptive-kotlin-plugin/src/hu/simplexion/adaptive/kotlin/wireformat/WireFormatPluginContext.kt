@@ -19,7 +19,9 @@ class WireFormatPluginContext(
     val wireFormatDecoder = ClassIds.WIREFORMAT_DECODER.classSymbol()
 
     val asInstance = wireFormatDecoder.functionByName { "asInstance" }
+    val asInstanceOrNull = wireFormatDecoder.functionByName { "asInstanceOrNull" }
     val rawInstance = wireFormatEncoder.functionByName { "rawInstance" }
+    val rawInstanceOrNull = wireFormatEncoder.functionByName { "rawInstanceOrNull" }
     val pack = wireFormatEncoder.functionByName { "pack" }
 
     val encodeInstance = wireFormatEncoder.functionByName { Strings.INSTANCE }

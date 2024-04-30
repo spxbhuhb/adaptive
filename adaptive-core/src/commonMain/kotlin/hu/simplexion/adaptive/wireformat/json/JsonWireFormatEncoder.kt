@@ -725,6 +725,15 @@ class JsonWireFormatEncoder(
         return this
     }
 
+    override fun <T> rawInstanceOrNull(value: T?, wireFormat: WireFormat<T>): WireFormatEncoder {
+        if (value == null) {
+            writer.rawNullValue()
+        } else {
+            rawInstance(value, wireFormat)
+        }
+        return this
+    }
+
     // -----------------------------------------------------------------------------------------
     // Utilities for classes that implement `WireFormat`
     // -----------------------------------------------------------------------------------------

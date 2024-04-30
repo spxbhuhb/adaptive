@@ -5,8 +5,8 @@
 package hu.simplexion.adaptive.site
 
 import hu.simplexion.adaptive.base.adaptive
-import hu.simplexion.adaptive.email.table.EmailQueue
-import hu.simplexion.adaptive.email.table.EmailTable
+import hu.simplexion.adaptive.email.store.EmailQueue
+import hu.simplexion.adaptive.email.store.EmailTable
 import hu.simplexion.adaptive.email.worker.EmailWorker
 import hu.simplexion.adaptive.exposed.HikariWorker
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter

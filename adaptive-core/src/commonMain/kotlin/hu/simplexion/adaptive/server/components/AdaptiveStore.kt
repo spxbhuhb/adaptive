@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.server.components
 
 import hu.simplexion.adaptive.base.*
+import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.AdaptiveServerBridgeReceiver
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
 
@@ -16,10 +17,13 @@ class AdaptiveStore(
     adapter: AdaptiveAdapter<AdaptiveServerBridgeReceiver>,
     parent: AdaptiveFragment<AdaptiveServerBridgeReceiver>,
     index: Int
-) : AdaptiveServerFragment(adapter, parent, index, 0) {
+) : AdaptiveServerFragment(adapter, parent, index) {
 
     override fun innerMount(bridge: AdaptiveBridge<AdaptiveServerBridgeReceiver>) {
-        impl = implFun.invoke() as ServerFragmentImpl
+        (implFun.invoke() as ServerFragmentImpl).also {
+            impl = it
+            it.serverAdapter = adapter as AdaptiveServerAdapter
+        }
     }
 
     @OptIn(ExperimentalStdlibApi::class)
