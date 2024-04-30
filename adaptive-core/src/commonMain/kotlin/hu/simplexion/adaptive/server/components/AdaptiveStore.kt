@@ -8,28 +8,26 @@ import hu.simplexion.adaptive.base.*
 import hu.simplexion.adaptive.server.AdaptiveServerBridgeReceiver
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
 
-fun Adaptive.process(impl : ProcessBuilder.() -> Unit) {
+fun Adaptive.store(impl : () -> StoreImpl<*>) {
     manualImplementation(impl)
 }
 
-class AdaptiveProcess(
+class AdaptiveStore(
     adapter: AdaptiveAdapter<AdaptiveServerBridgeReceiver>,
     parent: AdaptiveFragment<AdaptiveServerBridgeReceiver>,
     index: Int
-) : AdaptiveServerFragment(adapter, parent, index, 1) {
-
-    val command : String
-        get() = state[2] as String
-
+) : AdaptiveServerFragment(adapter, parent, index, 0) {
 
     override fun innerMount(bridge: AdaptiveBridge<AdaptiveServerBridgeReceiver>) {
-        TODO()
+        impl = implFun.invoke() as ServerFragmentImpl
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     override fun innerUnmount(bridge: AdaptiveBridge<AdaptiveServerBridgeReceiver>) {
-        TODO()
+        impl?.let {
+            if (it is AutoCloseable) it.close()
+        }
+        impl = null
     }
 
 }
-
-class ProcessBuilder()

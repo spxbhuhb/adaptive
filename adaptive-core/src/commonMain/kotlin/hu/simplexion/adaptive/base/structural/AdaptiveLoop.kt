@@ -113,6 +113,15 @@ class AdaptiveLoop<BT, IT>(
         if (trace) trace("after-Dispose")
     }
 
+    override fun filter(result : MutableList<AdaptiveFragment<BT>>, filterFun : (it : AdaptiveFragment<BT>) -> Boolean) {
+        if (filterFun(this)) {
+            result += this
+        }
+        fragments.forEach {
+            it.filter(result, filterFun)
+        }
+    }
+
     override fun stateToTraceString(): String {
         val s0 = state[0]?.let { it::class.simpleName ?: "<iterator>" }
         val s1 = state[1]?.toString()

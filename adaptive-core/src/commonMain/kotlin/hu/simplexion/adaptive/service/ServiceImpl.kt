@@ -4,19 +4,19 @@
 
 package hu.simplexion.adaptive.service
 
+import hu.simplexion.adaptive.server.components.ServerFragmentImpl
 import hu.simplexion.adaptive.utility.UUID
+import hu.simplexion.adaptive.utility.manualOrPlugin
 import hu.simplexion.adaptive.utility.pluginGenerated
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 
-interface ServiceImpl<T : ServiceImpl<T>> : Service {
+interface ServiceImpl<T : ServiceImpl<T>> : Service, ServerFragmentImpl {
 
     /**
      * Context of a service call. Set by `dispatch` when the call goes through it.
      */
     val serviceContext: ServiceContext
-        get() {
-            throw IllegalStateException("ServiceContext should be overridden manually or by the compiler plugin, is the plugin missing?")
-        }
+        get() = manualOrPlugin("serviceContext")
 
     /**
      * The internal version of this service implementation. The context is [BasicServiceContext] with
@@ -30,10 +30,12 @@ interface ServiceImpl<T : ServiceImpl<T>> : Service {
      */
     operator fun invoke(context: ServiceContext): T = newInstance(context)
 
-    fun newInstance(serviceContext: ServiceContext): T {
-        throw IllegalStateException("newInstance should be overridden by the compiler plugin, is tha plugin missing?")
-    }
+    fun newInstance(serviceContext: ServiceContext): T =
+        manualOrPlugin("newInstance")
 
+    /**
+     * Called by the generated dispatch when the requested function name is unknown.
+     */
     fun unknownFunction(funName: String): Nothing {
         throw IllegalStateException("unknown function: $funName")
     }

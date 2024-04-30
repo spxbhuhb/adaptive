@@ -10,3 +10,10 @@ package hu.simplexion.adaptive.utility
 fun pluginGenerated(@Suppress("UNUSED_PARAMETER") vararg args: Any?): Nothing {
     throw IllegalStateException("This code should of been replaced automatically. Is the Adaptive plugin missing?")
 }
+
+/**
+ * Placeholder of optionally generated code. Throws [IllegalStateException] exception if called.
+ */
+fun manualOrPlugin(subject : String, @Suppress("UNUSED_PARAMETER") vararg args: Any?) : Nothing {
+    throw IllegalStateException("$subject should be overridden manually or by the compiler plugin, is the plugin missing?")
+}

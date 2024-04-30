@@ -20,15 +20,19 @@ class AdaptiveService(
     index: Int
 ) : AdaptiveServerFragment(adapter, parent, index, 1) {
 
-    val impl : ServiceImpl<*>
-        get() = state[0] as ServiceImpl<*>
-
     override fun innerMount(bridge: AdaptiveBridge<AdaptiveServerBridgeReceiver>) {
-        defaultServiceImplFactory += impl
+        check(impl == null) { "inconsistent server state innerMount with a non-null implementation" }
+        (implFun.invoke() as ServiceImpl<*>).also {
+            impl = it
+            defaultServiceImplFactory += it
+        }
     }
 
     override fun innerUnmount(bridge: AdaptiveBridge<AdaptiveServerBridgeReceiver>) {
-        defaultServiceImplFactory -= impl
+        checkNotNull(impl) { "inconsistent server state innerUnmount with a null implementation" }.also {
+            defaultServiceImplFactory -= it as ServiceImpl<*>
+        }
+        impl = null
     }
 
 }

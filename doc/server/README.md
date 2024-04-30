@@ -4,7 +4,7 @@ Adaptive provides a server-side adapter `AdaptiveServerAdapter` and few server s
 
 There are a few important benefits of using Adaptive on the server side:
 
-- lifecycle management is provided by Adaptive
+- lifecycle management works out of the box
 - server settings are state variables
 - state changes are applied to the server configuration
 
@@ -13,56 +13,23 @@ fun main() {
     
     adaptive(AdaptiveServerAdapter()) {
 
-        settings { environment() }
-        settings { propertyFile("./etc/email.properties") }
+        settings { 
+            environment()
+            propertyFile("./etc/email.properties") 
+        }
 
         module("sql") {
             worker { HikariWorker() }
         }
 
         module("email") {
-            table { EmailTable() }
-            table { EmailQueueTable() }
+            store { EmailTable() }
+            store { EmailQueueTable() }
             service { EmailService() }
             worker { EmailWorker() }
         }
 
     }
     
-}
-
-class HikariWorker : AdaptiveWorkerFragment<HikariWorker> {
-
-    val driver = setting<String>()
-    val url = setting<String>()
-    val user = setting<String>()
-    val password = setting<Secret>()
-
-    fun start() {
-
-    }
-
-    fun stop() {
-
-    }
-}
-
-class EmailTable : Table("email") {
-    val name = text("name").uniqueIndex()
-}
-
-class EmailService : EmailApi, AdaptiveServiceImpl<EmailServiceImpl> {
-
-}
-
-class EmailWorker : AdaptiveWorkerImpl<EmailWorker> {
-
-    val host by setting<String>()
-    val port by setting<Int>()
-
-    val emailTable by table<EmailTable>()
-    val emailQueueTable by table<EmailQueueTable>()
-
-    /* ... */
 }
 ```

@@ -61,6 +61,15 @@ class AdaptiveSequence<BT>(
         if (trace) trace("after-Dispose")
     }
 
+    override fun filter(result : MutableList<AdaptiveFragment<BT>>, filterFun : (it : AdaptiveFragment<BT>) -> Boolean) {
+        if (filterFun(this)) {
+            result += this
+        }
+        fragments.forEach {
+            it.filter(result, filterFun)
+        }
+    }
+
     override fun stateToTraceString(): String {
         return if (state[0] != null) indices.contentToString() else "[]"
     }

@@ -262,7 +262,7 @@ abstract class AdaptiveFragment<BT>(
             indexInTargetState = indexInTarget,
             path = path,
             metadata = AdaptivePropertyMetadata(boundType),
-            supportFunctionIndex = -1
+            supportFunctionIndex = - 1
         ).also {
             addBinding(it)
             descendant.setStateVariable(indexInTarget, it)
@@ -283,7 +283,7 @@ abstract class AdaptiveFragment<BT>(
     /**
      * Creates a binding for producer use.
      */
-    fun localBinding(indexInState : Int, supportFunctionIndex: Int, boundType : String) =
+    fun localBinding(indexInState: Int, supportFunctionIndex: Int, boundType: String) =
         AdaptiveStateVariableBinding<Int>(
             sourceFragment = this,
             indexInSourceState = indexInState,
@@ -294,6 +294,26 @@ abstract class AdaptiveFragment<BT>(
             metadata = AdaptivePropertyMetadata(boundType),
             supportFunctionIndex = supportFunctionIndex
         )
+
+    // --------------------------------------------------------------------------
+    // Fragment search
+    // --------------------------------------------------------------------------
+
+    inline fun <reified T> single(): AdaptiveFragment<BT> =
+        mutableListOf<AdaptiveFragment<BT>>().also { r -> filter(r) { it is T } }.single()
+
+    open fun single(filterFun: (it: AdaptiveFragment<BT>) -> Boolean): AdaptiveFragment<BT> =
+        mutableListOf<AdaptiveFragment<BT>>().also { filter(it, filterFun) }.single()
+
+    open fun filter(filterFun: (it: AdaptiveFragment<BT>) -> Boolean): List<AdaptiveFragment<BT>> =
+        mutableListOf<AdaptiveFragment<BT>>().also { filter(it, filterFun) }
+
+    open fun filter(result: MutableList<AdaptiveFragment<BT>>, filterFun: (it: AdaptiveFragment<BT>) -> Boolean) {
+        if (filterFun(this)) {
+            result += this
+        }
+        containedFragment?.filter(result, filterFun)
+    }
 
     // --------------------------------------------------------------------------
     // Utility functions

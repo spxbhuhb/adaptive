@@ -2,6 +2,7 @@ package hu.simplexion.adaptive.email.table
 
 import hu.simplexion.adaptive.email.model.Email
 import hu.simplexion.adaptive.email.model.EmailStatus
+import hu.simplexion.adaptive.exposed.ExposedStoreImpl
 import hu.simplexion.adaptive.exposed.asCommon
 import hu.simplexion.adaptive.exposed.asJvm
 import hu.simplexion.adaptive.exposed.jeq
@@ -10,13 +11,10 @@ import hu.simplexion.adaptive.utility.UUID
 import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.toJavaInstant
 import org.jetbrains.exposed.dao.id.UUIDTable
-import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.update
 
-open class EmailTable: UUIDTable("email", columnName = "uuid"), StoreImpl<EmailTable> {
+open class EmailTable: UUIDTable("email", columnName = "uuid"), ExposedStoreImpl<EmailTable> {
 
     val recipients = text("recipients")
     val subject = text("subject")
@@ -57,22 +55,26 @@ open class EmailTable: UUIDTable("email", columnName = "uuid"), StoreImpl<EmailT
 
     operator fun get(uuid: UUID<Email>) : Email =
         select { id jeq uuid }
-            .map {
-                Email(
-                    uuid = it[id].value.asCommon(),
-                    recipients = it[recipients],
-                    subject = it[subject],
-                    content = it[content],
-                    status = it[status],
-                    createdAt = it[createdAt],
-                    sentAt = it[sentAt],
-                    sensitive = it[sensitive],
-                    hasAttachment = it[hasAttachment],
-                    contentType = it[contentType]
-                )
-            }
             .single()
+            .toEmail()
 
+    fun all() : List<Email> =
+        selectAll()
+            .map { it.toEmail() }
+
+    fun ResultRow.toEmail(): Email =
+        Email(
+            uuid = this[id].value.asCommon(),
+            recipients = this[recipients],
+            subject = this[subject],
+            content = this[content],
+            status = this[status],
+            createdAt = this[createdAt],
+            sentAt = this[sentAt],
+            sensitive = this[sensitive],
+            hasAttachment = this[hasAttachment],
+            contentType = this[contentType]
+        )
 }
 
 

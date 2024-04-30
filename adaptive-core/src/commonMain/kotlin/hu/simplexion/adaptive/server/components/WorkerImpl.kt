@@ -4,23 +4,10 @@
 
 package hu.simplexion.adaptive.server.components
 
-import hu.simplexion.adaptive.service.ServiceImpl
 import kotlinx.coroutines.CoroutineScope
 
-interface WorkerImpl<T : WorkerImpl<T>> {
+interface WorkerImpl<T : WorkerImpl<T>> : ServerFragmentImpl {
 
     suspend fun run(scope: CoroutineScope)
-
-    fun <ST : StoreImpl<ST>> store(): ST {
-        TODO()
-    }
-
-    fun <ST : ServiceImpl<ST>> service(): ST {
-        TODO()
-    }
-
-    fun <WT : WorkerImpl<WT>> worker(): WT {
-        TODO()
-    }
 
 }

@@ -2,15 +2,15 @@ package hu.simplexion.adaptive.email.table
 
 import hu.simplexion.adaptive.email.model.Email
 import hu.simplexion.adaptive.email.model.EmailQueueEntry
+import hu.simplexion.adaptive.exposed.ExposedStoreImpl
 import hu.simplexion.adaptive.exposed.asCommon
 import hu.simplexion.adaptive.exposed.asJvm
 import hu.simplexion.adaptive.exposed.jeq
-import hu.simplexion.adaptive.server.components.StoreImpl
 import hu.simplexion.adaptive.utility.UUID
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 
-open class EmailQueueTable : Table("email_queue"), StoreImpl<EmailQueueTable> {
+open class EmailQueue : Table("email_queue"), ExposedStoreImpl<EmailQueue> {
 
     val email = reference("email", EmailTable())
     val tries = integer("tries")
@@ -41,7 +41,7 @@ open class EmailQueueTable : Table("email_queue"), StoreImpl<EmailQueueTable> {
     fun size(): Long =
         selectAll().count()
 
-    fun query(): List<EmailQueueEntry> =
+    fun all(): List<EmailQueueEntry> =
         selectAll().map { row ->
             EmailQueueEntry(
                 email = row[email].asCommon(),

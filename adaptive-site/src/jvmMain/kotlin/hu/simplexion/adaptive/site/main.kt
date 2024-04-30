@@ -5,8 +5,12 @@
 package hu.simplexion.adaptive.site
 
 import hu.simplexion.adaptive.base.adaptive
+import hu.simplexion.adaptive.email.table.EmailQueue
+import hu.simplexion.adaptive.email.table.EmailTable
+import hu.simplexion.adaptive.email.worker.EmailWorker
 import hu.simplexion.adaptive.exposed.HikariWorker
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
+import hu.simplexion.adaptive.server.components.store
 import hu.simplexion.adaptive.server.components.worker
 import hu.simplexion.adaptive.settings.dsl.propertyFile
 import hu.simplexion.adaptive.settings.dsl.settings
@@ -19,5 +23,9 @@ fun main(args: Array<String>) {
 
         worker { HikariWorker() }
 
+        store { EmailTable() }
+        store { EmailQueue() }
+        worker { EmailWorker() }
     }
+
 }

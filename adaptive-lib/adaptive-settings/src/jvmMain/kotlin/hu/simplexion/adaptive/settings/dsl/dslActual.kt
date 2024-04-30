@@ -1,5 +1,6 @@
 package hu.simplexion.adaptive.settings.dsl
 
+import hu.simplexion.adaptive.settings.provider.DelegatingSettingProvider
 import hu.simplexion.adaptive.settings.provider.EnvironmentSettingProvider
 import hu.simplexion.adaptive.settings.provider.PropertyFileSettingProvider
 import java.nio.file.Path
@@ -27,9 +28,11 @@ actual fun <T : Any> setting(kClass: KClass<T>, path: String): SettingDelegate<T
 // ---------------------------------------------------------------------
 
 
-fun environment(prefix: () -> String): EnvironmentSettingProvider =
-    EnvironmentSettingProvider(prefix())
+fun DelegatingSettingProvider.environment(prefix: () -> String) {
+    this += EnvironmentSettingProvider(prefix())
+}
 
 
-fun propertyFile(optional: Boolean = true, path: () -> String) =
-    PropertyFileSettingProvider(Paths.get(path()), optional)
+fun DelegatingSettingProvider.propertyFile(optional: Boolean = true, path: () -> String) {
+    this += PropertyFileSettingProvider(Paths.get(path()), optional)
+}

@@ -1,83 +1,117 @@
 package hu.simplexion.adaptive.email.worker
 
+import hu.simplexion.adaptive.base.adaptive
+import hu.simplexion.adaptive.email.api.EmailApi
+import hu.simplexion.adaptive.email.table.EmailQueue
+import hu.simplexion.adaptive.email.table.EmailTable
+import hu.simplexion.adaptive.exposed.InMemoryDatabase
+import hu.simplexion.adaptive.server.AdaptiveServerAdapter
+import hu.simplexion.adaptive.server.components.store
+import hu.simplexion.adaptive.server.components.worker
+import hu.simplexion.adaptive.service.getService
+import hu.simplexion.adaptive.settings.dsl.inline
+import hu.simplexion.adaptive.settings.dsl.settings
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withTimeout
+import org.junit.AfterClass
+import org.junit.BeforeClass
+import org.subethamail.wiser.Wiser
+import javax.mail.internet.MimeMultipart
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
+
 class EmailWorkerTest {
 
-//    companion object {
-//
-//        val wiser = Wiser()
-//
-//        @BeforeClass
-//        @JvmStatic
-//        fun setup() {
-//            wiser.setPort(2500) // Default is 25
-//            wiser.start()
-//        }
-//
-//        @AfterClass
-//        @JvmStatic
-//        fun teardown() {
-//            wiser.stop()
-//        }
-//
-//    }
-//
-//    @Test
-//    fun basic() {
-//        wiser.messages.clear()
-//
-//        integratedWithSo(debugExposed = true, withTransaction = false) { _, so ->
-//            prepare(so)
-//
-//            transaction {
-//                runBlocking {
-//                    emailImpl(so).send("noreply@simplexion.hu", "Hello", contentText = "World")
-//                }
-//            }
-//
-//            // withTimeout(1000) {
-//            while (wiser.messages.size == 0) {
-//                delay(30)
-//            }
-//            //  }
-//
-//            assertEquals(1, wiser.messages.size)
-//
-//            val message = wiser.messages.first()
-//            val mimeMessage = message.mimeMessage
-//            val content = mimeMessage.content as MimeMultipart
-//
-//            assertEquals("Hello", mimeMessage.subject)
-//            assertEquals(1, content.count)
-//
-//            val part = content.getBodyPart(0)
-//
-//            assertEquals("text/plain; charset=UTF-8", part.contentType)
-//            assertEquals("World", part.content)
-//        }
-//    }
-//
-//    suspend fun prepare(so: ServiceContext) {
-//        transaction {
-//            runBlocking {
-//                val workerUuid = workerImpl(so).add(WorkerRegistration().also {
-//                    it.provider = EmailWorkerProvider.PROVIDER_UUID
-//                    it.name = "Test Email Worker"
-//                    it.enabled = false
-//                })
-//
-//                putSystemSettings(workerUuid, EmailSettings().also {
-//                    it.host = "localhost"
-//                    it.port = 2500
-//                    it.username = "noreply@simplexion.hu"
-//                    it.password = "helloworld"
-//                    it.protocol = "smtp"
-//                    it.tls = false
-//                    it.auth = true
-//                })
-//
-//                workerImpl(so).enable(workerUuid)
-//            }
-//        }
-//    }
+    companion object {
+
+        val wiser = Wiser()
+
+        @BeforeClass
+        @JvmStatic
+        fun setup() {
+            wiser.setPort(2500) // Default is 25
+            wiser.start()
+        }
+
+        @AfterClass
+        @JvmStatic
+        fun teardown() {
+            wiser.stop()
+        }
+
+    }
+
+    @Test
+    fun basic() {
+        wiser.messages.clear()
+
+        val adapter = AdaptiveServerAdapter()
+
+        adaptive(adapter) {
+
+            settings {
+                inline(
+                    "EMAIL_HOST" to "localhost",
+                    "EMAIL_PORT" to 2500,
+                    "EMAIL_USERNAME" to "noreply@simplexion.hu",
+                    "EMAIL_PASSWORD" to "helloworld",
+                    "EMAIL_PROTOCOL" to "smtp",
+                    "EMAIL_TLS" to false,
+                    "EMAIL_AUTH" to true
+                )
+            }
+
+            worker { InMemoryDatabase() }
+
+            store { EmailTable() }
+            store { EmailQueue() }
+            worker { EmailWorker() }
+
+        }
+
+        val expectRecipient = "noreply@simplexion.hu"
+        val expectSubject = "Hello"
+        val expectContent = "World"
+
+        runBlocking {
+
+            getService<EmailApi>().send(expectRecipient, expectSubject, expectContent)
+
+            withTimeout(1.seconds) {
+                while (wiser.messages.size == 0) {
+                    delay(30.milliseconds)
+                }
+            }
+        }
+
+        assertEquals(1, wiser.messages.size)
+
+        val message = wiser.messages.first()
+        val mimeMessage = message.mimeMessage
+        val content = mimeMessage.content as MimeMultipart
+        val part = content.getBodyPart(0)
+
+        assertEquals(expectRecipient, message.envelopeReceiver)
+        assertEquals(expectSubject, mimeMessage.subject)
+        assertEquals(1, content.count)
+        assertEquals("text/plain; charset=UTF-8", part.contentType)
+        assertEquals(expectContent, part.content)
+
+        val emailTable = adapter.single<EmailTable>()
+
+        val emails = emailTable.all()
+        assertEquals(1, emails.size)
+
+        val email = emails[0]
+        assertEquals(expectRecipient, email.recipients)
+        assertEquals(expectSubject, email.subject)
+        assertEquals(expectContent, email.content)
+
+        val emailQueue = adapter.single<EmailQueue>()
+        assertEquals(0, emailQueue.count())
+    }
 
 }

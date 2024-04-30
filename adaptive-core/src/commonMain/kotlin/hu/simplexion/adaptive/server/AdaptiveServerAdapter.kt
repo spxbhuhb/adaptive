@@ -3,10 +3,7 @@
  */
 package hu.simplexion.adaptive.server
 
-import hu.simplexion.adaptive.base.AdaptiveAdapter
-import hu.simplexion.adaptive.base.AdaptiveAdapterRegistry
-import hu.simplexion.adaptive.base.AdaptiveBridge
-import hu.simplexion.adaptive.base.AdaptiveFragment
+import hu.simplexion.adaptive.base.*
 import hu.simplexion.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 /**
  * Adapter for server applications.
  */
-open class AdaptiveServerAdapter: AdaptiveAdapter<AdaptiveServerBridgeReceiver> {
+open class AdaptiveServerAdapter : AdaptiveAdapter<AdaptiveServerBridgeReceiver> {
 
     var nextId = 1L
 
@@ -34,11 +31,19 @@ open class AdaptiveServerAdapter: AdaptiveAdapter<AdaptiveServerBridgeReceiver> 
     }
 
     override fun newId(): Long =
-        nextId++
+        nextId ++
 
     companion object {
         init {
             AdaptiveAdapterRegistry.register(AdaptiveServerAdapterFactory)
         }
     }
+
+    inline fun <reified T> single(): T {
+        // TODO create fragment.filterIsInstance
+        val fragment = rootFragment.single { it is AdaptiveServerFragment && it.impl is T } as AdaptiveServerFragment
+        val implementation = fragment.impl as? T
+        return checkNotNull(implementation) { "fragment $fragment implementation is not set" }
+    }
+
 }

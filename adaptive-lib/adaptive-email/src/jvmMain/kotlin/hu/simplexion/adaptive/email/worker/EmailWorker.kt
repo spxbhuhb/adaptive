@@ -3,9 +3,10 @@ package hu.simplexion.adaptive.email.worker
 import com.sun.mail.util.MailConnectException
 import hu.simplexion.adaptive.email.model.EmailQueueEntry
 import hu.simplexion.adaptive.email.model.EmailStatus
-import hu.simplexion.adaptive.email.table.EmailQueueTable
+import hu.simplexion.adaptive.email.table.EmailQueue
 import hu.simplexion.adaptive.email.table.EmailTable
 import hu.simplexion.adaptive.server.components.WorkerImpl
+import hu.simplexion.adaptive.server.components.store
 import hu.simplexion.adaptive.settings.dsl.setting
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -35,7 +36,7 @@ class EmailWorker : WorkerImpl<EmailWorker> {
     val live by setting<Boolean> { "EMAIL_LIVE" }
 
     val emailStore = store<EmailTable>()
-    val emailQueue = store<EmailQueueTable>()
+    val emailQueue = store<EmailQueue>()
 
     val normalQueue = Channel<EmailQueueEntry>(Channel.UNLIMITED)
 
@@ -61,13 +62,13 @@ class EmailWorker : WorkerImpl<EmailWorker> {
 
     fun loadNormalQueue() {
         transaction {
-            emailQueue.query().filter { it.lastTry == null }.forEach { normalQueue.trySend(it) }
+            emailQueue.all().filter { it.lastTry == null }.forEach { normalQueue.trySend(it) }
         }
     }
 
     fun sendPending(): Int {
         val pending = transaction {
-            emailQueue.query().filter { it.lastTry == null }
+            emailQueue.all().filter { it.lastTry == null }
         }
 
         pending.forEach {
@@ -87,7 +88,7 @@ class EmailWorker : WorkerImpl<EmailWorker> {
             val now = Clock.System.now().minus(30.minutes)
 
             val entries = transaction {
-                emailQueue.query().filter { entry ->
+                emailQueue.all().filter { entry ->
                     entry.lastTry?.let { it < now } ?: false
                 }
             }

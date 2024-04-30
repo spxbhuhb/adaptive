@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 private val workerScope = CoroutineScope(Dispatchers.Default)
 
-fun Adaptive.worker(impl : () -> WorkerImpl<*>) {
+fun Adaptive.worker(impl: () -> WorkerImpl<*>) {
     manualImplementation(impl)
 }
 
@@ -24,17 +24,20 @@ class AdaptiveWorker(
     index: Int
 ) : AdaptiveServerFragment(adapter, parent, index, 1) {
 
-    private val implFun : AdaptiveSupportFunction
-        get() = state[0] as AdaptiveSupportFunction
-
     private val scope = CoroutineScope(adapter.dispatcher)
 
     override fun innerMount(bridge: AdaptiveBridge<AdaptiveServerBridgeReceiver>) {
-        scope.launch { (implFun.invoke() as WorkerImpl<*>).run(scope) }
+        check(impl == null) { "inconsistent server state innerMount with a non-null implementation" }
+        (implFun.invoke() as WorkerImpl<*>).also {
+            impl = it
+            scope.launch { it.run(scope) }
+        }
     }
 
     override fun innerUnmount(bridge: AdaptiveBridge<AdaptiveServerBridgeReceiver>) {
-        scope.cancel()
+        check(impl != null) { "inconsistent server state innerUnmount with a null implementation" }
+        scope.cancel() // TODO check Job docs about waiting
+        impl = null
     }
 
 }
