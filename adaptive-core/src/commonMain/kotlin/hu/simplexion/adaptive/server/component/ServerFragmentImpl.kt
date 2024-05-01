@@ -4,19 +4,37 @@
 
 package hu.simplexion.adaptive.server.component
 
+import hu.simplexion.adaptive.log.AdaptiveLogger
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
+import hu.simplexion.adaptive.server.AdaptiveServerFragment
+import hu.simplexion.adaptive.utility.FqNameAware
 import hu.simplexion.adaptive.utility.manualOrPlugin
 
-interface ServerFragmentImpl {
+interface ServerFragmentImpl<BT> : FqNameAware {
 
     /**
-     * Adapter of the adaptive server if the fragment is part of one. Replaced by
-     * the plugin with a field initialized to `null`. Set by the server builder
+     * Fragment of the adaptive server if the implementation belongs to one. Replaced
+     * by the plugin with a field initialized to `null`. Set by the server builder
      * functions such as `store`, `service` and `worker`.
      */
-    var serverAdapter : AdaptiveServerAdapter?
+    var fragment : AdaptiveServerFragment<BT,*>?
         get() = manualOrPlugin("serverAdapter")
         set(value) = manualOrPlugin("serverAdapter", value)
+
+    /**
+     * Adapter of the adaptive server if the fragment is part of one.
+     */
+    val adapter : AdaptiveServerAdapter<BT>?
+        get() = fragment?.adapter as? AdaptiveServerAdapter<BT>
+
+    /**
+     * A logger that belongs to the given fragment if it is part of an adaptive
+     * server. Replaced by the plugin with a field initialized to
+     * `adapter.getLogger(classFqName)`.
+     */
+    var logger : AdaptiveLogger
+        get() = manualOrPlugin("logger")
+        set(value) = manualOrPlugin("logger", value)
 
     /**
      * Called when the fragment that contains this implementation is created by

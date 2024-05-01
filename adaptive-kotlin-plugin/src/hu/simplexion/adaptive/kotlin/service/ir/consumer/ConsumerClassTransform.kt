@@ -36,7 +36,6 @@ class ConsumerClassTransform(
         } as IrClass
     }
 
-
     fun build() {
         addServiceNameInitializer()
         addServiceCallTransportInitializer()
@@ -54,7 +53,7 @@ class ConsumerClassTransform(
     }
 
     private fun addServiceNameInitializer() {
-        val property = consumerClass.property(Names.FQ_NAME)
+        val property = consumerClass.property(Names.SERVICE_NAME)
         val backingField = requireNotNull(property.backingField)
 
         backingField.initializer = irFactory.createExpressionBody(irConst(interfaceClass.kotlinFqName.asString()))

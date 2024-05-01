@@ -5,6 +5,7 @@ package hu.simplexion.adaptive.kotlin.service.ir.impl
 
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import hu.simplexion.adaptive.kotlin.common.functionByName
+import hu.simplexion.adaptive.kotlin.common.transformProperty
 import hu.simplexion.adaptive.kotlin.service.Indices
 import hu.simplexion.adaptive.kotlin.service.Names
 import hu.simplexion.adaptive.kotlin.service.Strings
@@ -24,7 +25,9 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrDelegatingConstructorCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrElseBranchImpl
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
+import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.types.defaultType
+import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.util.*
 
@@ -51,6 +54,7 @@ class ImplClassTransform(
         serviceContextGetter = checkNotNull(declaration.getPropertyGetter(Strings.SERVICE_CONTEXT_PROPERTY))
 
         transformConstructor()
+
         NewInstance(pluginContext, this).build()
 
         super.visitClassNew(declaration)
@@ -64,14 +68,12 @@ class ImplClassTransform(
         return declaration
     }
 
-    override fun visitPropertyNew(declaration: IrProperty): IrStatement {
+    override fun visitPropertyNew(declaration: IrProperty): IrStatement =
         when (declaration.name) {
-            Names.FQ_NAME -> ServiceNamePropertyTransform(pluginContext, transformedClass, declaration).build()
-            Names.SERVICE_CONTEXT_PROPERTY -> ServiceContextPropertyTransform(pluginContext, this, declaration).build()
+            Names.SERVICE_NAME -> transformServiceName(declaration)
+            Names.SERVICE_CONTEXT_PROPERTY -> transformServiceContext(declaration)
+            else -> declaration
         }
-
-        return declaration
-    }
 
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
 
@@ -197,4 +199,37 @@ class ImplClassTransform(
                 it.putValueArgument(0, getFunName)
             }
         )
+
+    fun transformServiceName(declaration: IrProperty) : IrStatement{
+        val serviceNames = transformedClass.superTypes.mapNotNull { superType ->
+            if (superType.isSubtypeOfClass(pluginContext.serviceClass) && ! superType.isSubtypeOfClass(pluginContext.serviceImplClass)) {
+                superType.classFqName !!.asString()
+            } else {
+                null
+            }
+        }
+
+        require(serviceNames.isNotEmpty()) { "${transformedClass.kotlinFqName} missing service interface (probably ': Service' is missing)" }
+        require(serviceNames.size == 1) {
+            "${transformedClass.kotlinFqName} you have to set `serviceName` manually when more than one service is implemented (${serviceNames.joinToString()})"
+        }
+
+        transformProperty(
+            pluginContext,
+            declaration,
+            backingField = false
+        ) { irConst(serviceNames.first()) }
+
+        return declaration
+    }
+
+    fun transformServiceContext(declaration: IrProperty) : IrStatement {
+        transformProperty(
+            pluginContext,
+            declaration,
+            backingField = true
+        ) { irGet(constructor.valueParameters.first()) }
+
+        return declaration
+    }
 }

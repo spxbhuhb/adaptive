@@ -10,7 +10,7 @@ import hu.simplexion.adaptive.utility.manualOrPlugin
 import hu.simplexion.adaptive.utility.pluginGenerated
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 
-interface ServiceImpl<T : ServiceImpl<T>> : Service, ServerFragmentImpl {
+interface ServiceImpl<T : ServiceImpl<T,BT>,BT> : Service, ServerFragmentImpl<BT> {
 
     /**
      * Context of a service call. Set by `dispatch` when the call goes through it.

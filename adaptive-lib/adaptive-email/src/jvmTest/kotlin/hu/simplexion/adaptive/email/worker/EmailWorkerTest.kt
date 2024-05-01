@@ -50,7 +50,7 @@ class EmailWorkerTest {
     fun basic() {
         wiser.messages.clear()
 
-        val adapter = AdaptiveServerAdapter()
+        val adapter = AdaptiveServerAdapter<Unit>()
 
         adaptive(adapter) {
 

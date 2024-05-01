@@ -116,16 +116,22 @@ interface AbstractIrBuilder {
         }
     }
 
-    fun transformGetter(irClass : IrClass, getter: IrSimpleFunction, field: IrField) {
-        getter.origin = IrDeclarationOrigin.DEFAULT_PROPERTY_ACCESSOR
+    fun transformGetter(irClass: IrClass, getter: IrSimpleFunction, field: IrField?, value: (AbstractIrBuilder.() -> IrExpression)? = null) {
+
         getter.isFakeOverride = false
+
+        getter.origin = if (field != null) {
+            IrDeclarationOrigin.DEFAULT_PROPERTY_ACCESSOR
+        } else {
+            IrDeclarationOrigin.DEFINED
+        }
 
         getter.addDispatchReceiver {
             type = irClass.defaultType
         }
 
-        getter.body = DeclarationIrBuilder(irContext, getter.symbol).irBlockBody {
-            + irReturn(
+        val returnValue =
+            if (field != null) {
                 IrGetFieldImpl(
                     UNDEFINED_OFFSET, UNDEFINED_OFFSET,
                     field.symbol,
@@ -136,6 +142,13 @@ interface AbstractIrBuilder {
                         getter.dispatchReceiverParameter !!.symbol
                     )
                 )
+            } else {
+                checkNotNull(value)()
+            }
+
+        getter.body = DeclarationIrBuilder(irContext, getter.symbol).irBlockBody {
+            + irReturn(
+                returnValue
             )
         }
     }

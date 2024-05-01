@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.server.component
 
 import kotlinx.coroutines.CoroutineScope
 
-interface WorkerImpl<T : WorkerImpl<T>> : ServerFragmentImpl {
+interface WorkerImpl<T : WorkerImpl<T,BT>,BT> : ServerFragmentImpl<BT> {
 
     suspend fun run(scope: CoroutineScope)
 

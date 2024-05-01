@@ -12,7 +12,7 @@ interface TestService1 : Service {
 
 val testServiceConsumer = getService<TestService1>()
 
-class TestService1Impl : TestService1, ServiceImpl<TestService1Impl> {
+class TestService1Impl : TestService1, ServiceImpl<TestService1Impl,Any> {
 
     override suspend fun testFun(arg1: Int, arg2: String) =
         "i:$arg1 s:$arg2 $serviceContext"

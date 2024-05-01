@@ -4,4 +4,4 @@
 
 package hu.simplexion.adaptive.server.component
 
-interface StoreImpl<T : StoreImpl<T>> : ServerFragmentImpl
+interface StoreImpl<T : StoreImpl<T,BT>,BT> : ServerFragmentImpl<BT>

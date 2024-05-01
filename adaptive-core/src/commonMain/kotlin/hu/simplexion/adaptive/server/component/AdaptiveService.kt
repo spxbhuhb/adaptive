@@ -6,20 +6,19 @@ package hu.simplexion.adaptive.server.component
 
 import hu.simplexion.adaptive.base.*
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
-import hu.simplexion.adaptive.server.AdaptiveServerBridgeReceiver
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
 import hu.simplexion.adaptive.service.ServiceImpl
 import hu.simplexion.adaptive.service.defaultServiceImplFactory
 
-fun Adaptive.service(impl: () -> ServiceImpl<*>) {
+fun Adaptive.service(impl: () -> ServiceImpl<*,*>) {
     manualImplementation(impl)
 }
 
 class AdaptiveService<BT>(
-    adapter: AdaptiveAdapter<BT>,
+    adapter: AdaptiveServerAdapter<BT>,
     parent: AdaptiveFragment<BT>,
     index: Int
-) : AdaptiveServerFragment<BT,ServiceImpl<*>>(adapter, parent, index) {
+) : AdaptiveServerFragment<BT,ServiceImpl<*,BT>>(adapter, parent, index) {
 
     override fun innerMount(bridge: AdaptiveBridge<BT>) {
         impl?.let {

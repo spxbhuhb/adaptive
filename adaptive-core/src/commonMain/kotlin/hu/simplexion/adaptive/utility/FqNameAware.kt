@@ -5,5 +5,16 @@
 package hu.simplexion.adaptive.utility
 
 interface FqNameAware {
-    val fqName: String
+
+    /**
+     * Fully qualified class name of the class that implements `FqNameAware`.
+     *
+     * ```kotlin
+     * override var classFqName
+     *     get() = "<fully qualified name of the service class>"
+     * ```
+     */
+    val classFqName: String
+        get() = pluginGenerated()
+
 }

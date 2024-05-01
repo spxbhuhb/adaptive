@@ -17,7 +17,7 @@ interface TestService1 : Service {
 
     class Consumer : TestService1 {
 
-        override var fqName = "hu.simplexion.adaptive.services.TestService1"
+        override var serviceName = "hu.simplexion.adaptive.services.TestService1"
 
         override var serviceCallTransport: ServiceCallTransport? = null
 
@@ -43,7 +43,7 @@ val testServiceConsumer = TestService1.Consumer()
 
 class TestService2Impl(
     override val serviceContext: ServiceContext
-) : TestService2, ServiceImpl<TestService2Impl> {
+) : TestService2, ServiceImpl<TestService2Impl,Any> {
 
     override fun newInstance(serviceContext: ServiceContext): TestService2Impl {
         return TestService2Impl(serviceContext)

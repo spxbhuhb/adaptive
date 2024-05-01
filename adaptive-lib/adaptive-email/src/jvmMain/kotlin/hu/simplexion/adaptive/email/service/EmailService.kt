@@ -12,16 +12,17 @@ import hu.simplexion.adaptive.service.ServiceContext
 import hu.simplexion.adaptive.service.ServiceImpl
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class EmailService : EmailApi, ServiceImpl<EmailService> {
+class EmailService : EmailApi, ServiceImpl<EmailService,Any> {
 
     // FIXME too expensive server fragment lookup in service implementation
     private val emailTable by store<EmailTable>()
     private val emailQueue by store<EmailQueue>()
     private val emailWorker by worker<EmailWorker>()
 
+    // FIXME newInstance fragment copy
     override fun newInstance(serviceContext: ServiceContext): EmailService {
         return EmailService().also {
-            it.serverAdapter = this.serverAdapter
+            it.fragment = this.fragment
         }
     }
 

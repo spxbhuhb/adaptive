@@ -86,7 +86,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         if (context.isForeign) return emptySet()
 
         return setOf(
-            Names.FQ_NAME,
+            Names.SERVICE_NAME,
             Names.SERVICE_CALL_TRANSPORT_PROPERTY,
             SpecialNames.INIT
         ) + collectFunctions(classSymbol.getContainingDeclarationSymbol(session) !!.classId)
@@ -122,12 +122,12 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         if (context.isForeign) return emptyList()
 
         return when (callableId.callableName) {
-            Names.FQ_NAME -> {
+            Names.SERVICE_NAME -> {
                 listOf(
                     createMemberProperty(
                         context !!.owner,
                         ServicesPluginKey,
-                        Names.FQ_NAME,
+                        Names.SERVICE_NAME,
                         session.builtinTypes.stringType.coneType,
                         isVal = false,
                         hasBackingField = true

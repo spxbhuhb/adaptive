@@ -17,9 +17,6 @@ import kotlin.time.Duration.Companion.nanoseconds
 
 object DurationWireFormat : WireFormat<Duration> {
 
-    override val fqName: String
-        get() = "kotlin.time.Duration"
-
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Duration) =
         encoder
             .boolean(1, "isInfinite", value.isInfinite())
@@ -38,9 +35,6 @@ object DurationWireFormat : WireFormat<Duration> {
 
 object InstantWireFormat : WireFormat<Instant> {
 
-    override val fqName: String
-        get() = "kotlinx.datetime.Instant"
-
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Instant {
         if (decoder == null) return Instant.DISTANT_PAST
         return Instant.fromEpochSeconds(decoder.long(1, "epochSeconds"), decoder.int(2, "nanosecondsOfSecond"))
@@ -54,9 +48,6 @@ object InstantWireFormat : WireFormat<Instant> {
 }
 
 object LocalDateWireFormat : WireFormat<LocalDate> {
-
-    override val fqName: String
-        get() = "kotlinx.datetime.LocalDate"
 
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): LocalDate {
         if (decoder == null) return LocalDate.fromEpochDays(0)
@@ -76,9 +67,6 @@ object LocalDateWireFormat : WireFormat<LocalDate> {
 }
 
 object LocalDateTimeWireFormat : WireFormat<LocalDateTime> {
-
-    override val fqName: String
-        get() = "kotlinx.datetime.LocalDateTime"
 
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: LocalDateTime) =
         encoder
@@ -106,9 +94,6 @@ object LocalDateTimeWireFormat : WireFormat<LocalDateTime> {
 }
 
 object LocalTimeWireFormat : WireFormat<LocalTime> {
-
-    override val fqName: String
-        get() = "kotlinx.datetime.LocalTime"
 
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): LocalTime {
         if (decoder == null) return LocalTime.fromSecondOfDay(0)

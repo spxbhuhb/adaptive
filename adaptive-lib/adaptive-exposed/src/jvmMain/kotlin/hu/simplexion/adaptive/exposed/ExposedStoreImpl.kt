@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
-interface ExposedStoreImpl<T : ExposedStoreImpl<T>> : StoreImpl<T> {
+interface ExposedStoreImpl<T : ExposedStoreImpl<T>> : StoreImpl<T, Any> {
 
     override fun create() {
         if (this is Table) {

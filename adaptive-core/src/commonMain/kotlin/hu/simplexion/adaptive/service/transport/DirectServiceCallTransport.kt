@@ -15,7 +15,7 @@ import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWir
  * as it avoids the encoding and decoding overhead.
  */
 class DirectServiceCallTransport(
-    val implementation: ServiceImpl<*>
+    val implementation: ServiceImpl<*,*>
 ) : ServiceCallTransport {
 
     companion object {

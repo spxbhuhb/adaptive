@@ -16,7 +16,7 @@ interface TestService : Service {
 
 val testServiceConsumer = getService<TestService>()
 
-class TestServiceImpl : TestService, ServiceImpl<TestServiceImpl> {
+class TestServiceImpl : TestService, ServiceImpl<TestServiceImpl,Any> {
     override suspend fun testValue(arg1: Int): Int = arg1
     override suspend fun testValueNull(arg1: Int?): Int? = arg1
     override suspend fun testArray(arg1: IntArray) : IntArray = arg1

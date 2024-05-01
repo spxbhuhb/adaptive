@@ -17,7 +17,7 @@ import hu.simplexion.adaptive.settings.dsl.settings
 
 fun main(args: Array<String>) {
 
-    adaptive(AdaptiveServerAdapter()) {
+    adaptive(AdaptiveServerAdapter<Unit>()) {
 
         settings { propertyFile { "./etc/site.properties" } }
 

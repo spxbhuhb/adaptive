@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.kotlin
 
+import hu.simplexion.adaptive.kotlin.fqnameaware.fir.FqNameAwareDeclarationGenerator
 import hu.simplexion.adaptive.kotlin.service.fir.ServicesDeclarationGenerator
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
 
@@ -11,5 +12,6 @@ import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
 class AdaptivePluginRegistrar : FirExtensionRegistrar() {
     override fun ExtensionRegistrarContext.configurePlugin() {
         + ::ServicesDeclarationGenerator
+        + ::FqNameAwareDeclarationGenerator
     }
 }

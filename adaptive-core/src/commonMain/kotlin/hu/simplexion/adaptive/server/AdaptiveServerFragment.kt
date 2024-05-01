@@ -3,15 +3,13 @@
  */
 package hu.simplexion.adaptive.server
 
-import hu.simplexion.adaptive.base.AdaptiveAdapter
 import hu.simplexion.adaptive.base.AdaptiveFragment
 import hu.simplexion.adaptive.base.AdaptiveSupportFunction
 import hu.simplexion.adaptive.base.adaptiveInitStateMask
 import hu.simplexion.adaptive.server.component.ServerFragmentImpl
-import hu.simplexion.adaptive.service.ServiceImpl
 
-abstract class AdaptiveServerFragment<BT,IT : ServerFragmentImpl>(
-    adapter: AdaptiveAdapter<BT>,
+abstract class AdaptiveServerFragment<BT,IT : ServerFragmentImpl<BT>>(
+    adapter: AdaptiveServerAdapter<BT>,
     parent: AdaptiveFragment<BT>?,
     index: Int
 ) : AdaptiveFragment<BT>(adapter, parent, index, 2) {
@@ -33,7 +31,8 @@ abstract class AdaptiveServerFragment<BT,IT : ServerFragmentImpl>(
         @Suppress("UNCHECKED_CAST")
         (implFun.invoke() as IT).also {
             impl = it
-            it.serverAdapter = adapter as AdaptiveServerAdapter
+            it.fragment = this
+            it.logger = (adapter as AdaptiveServerAdapter<BT>).getLogger(it.classFqName)
             it.create()
         }
     }

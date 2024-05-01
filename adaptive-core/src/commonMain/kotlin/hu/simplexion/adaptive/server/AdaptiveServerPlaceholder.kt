@@ -5,19 +5,20 @@ package hu.simplexion.adaptive.server
 
 import hu.simplexion.adaptive.base.AdaptiveBridge
 
-open class AdaptiveServerPlaceholder : AdaptiveBridge<AdaptiveServerBridgeReceiver> {
+open class AdaptiveServerPlaceholder<BT> : AdaptiveBridge<BT> {
 
-    override val receiver = AdaptiveServerBridgeReceiver()
+    override val receiver : BT
+        get() = throw UnsupportedOperationException()
 
-    override fun remove(child: AdaptiveBridge<AdaptiveServerBridgeReceiver>) {
-
-    }
-
-    override fun replace(oldChild: AdaptiveBridge<AdaptiveServerBridgeReceiver>, newChild: AdaptiveBridge<AdaptiveServerBridgeReceiver>) {
+    override fun remove(child: AdaptiveBridge<BT>) {
 
     }
 
-    override fun add(child: AdaptiveBridge<AdaptiveServerBridgeReceiver>) {
+    override fun replace(oldChild: AdaptiveBridge<BT>, newChild: AdaptiveBridge<BT>) {
+
+    }
+
+    override fun add(child: AdaptiveBridge<BT>) {
 
     }
 

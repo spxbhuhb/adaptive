@@ -15,16 +15,10 @@ class ServicesGenerationExtension(
 ) : IrGenerationExtension {
 
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
-//        println("==== BEFORE ====")
-//        println(moduleFragment.dump())
-
         ServicesPluginContext(pluginContext, options).apply {
             moduleFragment.transformChildrenVoid(ServicesClassTransform(this))
             moduleFragment.transformChildrenVoid(GetConsumerTransform(this))
         }
-
-//        println("==== AFTER ====")
-//        println(moduleFragment.dump())
     }
 
 }

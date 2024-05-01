@@ -15,6 +15,6 @@ class ServerPluginContext(
 ) : AbstractPluginContext(irContext, options) {
 
     val serverFragmentImplClass = ClassIds.SERVER_FRAGMENT_IMPL.classSymbol()
-    val serverAdapterType = ClassIds.ADAPTIVE_SERVER_ADAPTER.classSymbol().defaultType
+    val adaptiveServerFragmentType = ClassIds.ADAPTIVE_SERVER_FRAGMENT.classSymbol().defaultType
 
 }

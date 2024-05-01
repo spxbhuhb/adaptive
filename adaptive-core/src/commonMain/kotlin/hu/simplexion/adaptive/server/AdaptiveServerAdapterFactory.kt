@@ -9,7 +9,7 @@ import hu.simplexion.adaptive.base.AdaptiveAdapterFactory
 object AdaptiveServerAdapterFactory : AdaptiveAdapterFactory() {
 
     override fun accept(vararg args: Any?): AdaptiveAdapter<*>? {
-        if (args.isEmpty()) return AdaptiveServerAdapter()
+        if (args.isEmpty()) return AdaptiveServerAdapter<Any>()
         return null
     }
 

@@ -4,12 +4,7 @@
 
 package hu.simplexion.adaptive.wireformat
 
-import hu.simplexion.adaptive.utility.FqNameAware
-
-interface WireFormat<T> : FqNameAware {
-
-    override val fqName: String
-        get() = wireFormatCompanion.fqName
+interface WireFormat<T> {
 
     val kind: WireFormatKind
         get() = WireFormatKind.Instance

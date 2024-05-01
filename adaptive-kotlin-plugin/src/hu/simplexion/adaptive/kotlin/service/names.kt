@@ -12,7 +12,7 @@ object Strings {
     const val SERVICES_TRANSPORT_PACKAGE = "hu.simplexion.adaptive.service.transport"
 
     const val SERVICE = "Service"
-    const val FQ_NAME = "fqName"
+    const val SERVICE_NAME = "serviceName"
 
     const val SERVICE_CALL_TRANSPORT_PROPERTY = "serviceCallTransport"
     const val WIREFORMAT_ENCODER = "wireFormatEncoder"
@@ -38,7 +38,7 @@ object Strings {
 object Names {
     private fun String.name() = Name.identifier(this)
 
-    val FQ_NAME = Strings.FQ_NAME.name()
+    val SERVICE_NAME = Strings.SERVICE_NAME.name()
     val CONSUMER = Strings.CONSUMER.name()
     val SERVICE_CONTEXT_PROPERTY = Strings.SERVICE_CONTEXT_PROPERTY.name()
     val SERVICE_CALL_TRANSPORT_PROPERTY = Strings.SERVICE_CALL_TRANSPORT_PROPERTY.name()

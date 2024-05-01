@@ -6,25 +6,21 @@ package hu.simplexion.adaptive.service
 
 import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 import hu.simplexion.adaptive.utility.FqNameAware
+import hu.simplexion.adaptive.utility.manualOrPlugin
+import hu.simplexion.adaptive.utility.overrideManually
 import hu.simplexion.adaptive.utility.pluginGenerated
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
 
-interface Service : FqNameAware {
+interface Service {
 
     /**
-     * Name of the service. You can change this field at anytime in case you
-     * need multiple destinations for the same service API.
-     *
-     * Overridden by the plugin with:
-     *
-     * ```kotlin
-     * override var fqName : String = "<fully qualified name of the service class>"
-     * ```
+     * Name of the service, the fully qualified class name of the
+     * interface by default.
      */
-    override var fqName: String
-        get() = pluginGenerated() // so we don't have to override in the interface that extends Service
-        set(value) = pluginGenerated(value)
+    var serviceName : String
+        get() = pluginGenerated()
+        set(value) = overrideManually("serviceName", value)
 
     /**
      * The call transport to use when calling a service function. You can change this
@@ -40,7 +36,7 @@ interface Service : FqNameAware {
     var serviceCallTransport: ServiceCallTransport?
         get() = null
         set(value) {
-            throw UnsupportedOperationException()
+            manualOrPlugin("serviceCallTransport", value)
         }
 
     val serviceCallTransportOrDefault: ServiceCallTransport
@@ -57,5 +53,5 @@ interface Service : FqNameAware {
      * the plugin.
      */
     suspend fun callService(funName: String, payload: WireFormatEncoder): ByteArray =
-        serviceCallTransportOrDefault.call(fqName, funName, payload.pack())
+        serviceCallTransportOrDefault.call(serviceName, funName, payload.pack())
 }

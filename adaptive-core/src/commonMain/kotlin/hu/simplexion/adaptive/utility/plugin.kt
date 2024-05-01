@@ -17,3 +17,11 @@ fun pluginGenerated(@Suppress("UNUSED_PARAMETER") vararg args: Any?): Nothing {
 fun manualOrPlugin(subject : String, @Suppress("UNUSED_PARAMETER") vararg args: Any?) : Nothing {
     throw IllegalStateException("$subject should be overridden manually or by the compiler plugin, is the plugin missing?")
 }
+
+/**
+ * Placeholder of code that may be overridden, but should not be called if not overridden.
+ * Throws [UnsupportedOperationException] exception if called.
+ */
+fun overrideManually(subject : String, @Suppress("UNUSED_PARAMETER") vararg args: Any?) : Nothing {
+    throw UnsupportedOperationException("$subject should be overridden manually if you are using it")
+}

@@ -10,15 +10,19 @@ object Strings {
     const val SERVER_COMPONENT_PACKAGE = "hu.simplexion.adaptive.server.component"
 
     const val SERVER_FRAGMENT_IMPL = "ServerFragmentImpl"
-    const val ADAPTIVE_SERVER_ADAPTER = "AdaptiveServerAdapter"
-    const val SERVER_ADAPTER_PROPERTY = "serverAdapter"
+    const val ADAPTIVE_SERVER_FRAGMENT = "AdaptiveServerFragment"
+    const val FRAGMENT_PROPERTY = "fragment"
+    const val LOGGER_PROPERTY = "logger"
+
 }
 
 object Names : NamesBase(Strings.SERVER_PACKAGE) {
-    val SERVER_ADAPTER_PROPERTY = Strings.SERVER_ADAPTER_PROPERTY.name()
+    val FRAGMENT_PROPERTY = Strings.FRAGMENT_PROPERTY.name()
+    val LOGGER_PROPERTY = Strings.LOGGER_PROPERTY.name()
+
 }
 
 object ClassIds : NamesBase(Strings.SERVER_PACKAGE) {
     val SERVER_FRAGMENT_IMPL = Strings.SERVER_FRAGMENT_IMPL.classId { Strings.SERVER_COMPONENT_PACKAGE.fqName() }
-    val ADAPTIVE_SERVER_ADAPTER = Strings.ADAPTIVE_SERVER_ADAPTER.classId()
+    val ADAPTIVE_SERVER_FRAGMENT = Strings.ADAPTIVE_SERVER_FRAGMENT.classId()
 }

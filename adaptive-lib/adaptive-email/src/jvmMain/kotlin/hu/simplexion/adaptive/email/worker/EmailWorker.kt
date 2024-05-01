@@ -12,17 +12,12 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.slf4j.LoggerFactory
 import java.util.*
 import javax.mail.*
 import javax.mail.internet.*
 import kotlin.time.Duration.Companion.minutes
 
-class EmailWorker : WorkerImpl<EmailWorker> {
-
-    companion object {
-        val logger = LoggerFactory.getLogger(EmailWorker::class.java) !!
-    }
+class EmailWorker : WorkerImpl<EmailWorker, Any> {
 
     val host by setting<String> { "EMAIL_HOST" }
     val port by setting<String> { "EMAIL_PORT" }
@@ -32,6 +27,8 @@ class EmailWorker : WorkerImpl<EmailWorker> {
     val auth by setting<Boolean> { "EMAIL_AUTH" }
     val tls by setting<Boolean> { "EMAIL_TLS" }
     val debug by setting<Boolean> { "EMAIL_DEBUG" }
+    val retryInterval by setting<Long> { "EMAIL_RETRY_INTERVAL" }
+    val retryLimit by setting<Int> { "EMAIL_RETRY_LIMIT" }
     val retryCheckInterval by setting<Long> { "EMAIL_RETRY_CHECK_INTERVAL" }
     val live by setting<Boolean> { "EMAIL_LIVE" }
 
@@ -44,70 +41,43 @@ class EmailWorker : WorkerImpl<EmailWorker> {
 
         scope.launch { retry(scope) }
 
-        loadNormalQueue()
-
         try {
+
+            sendBatch(scope) { emailQueue.nextSendBatch() }
+
             for (entry in normalQueue) {
-                if (! scope.isActive) return
-                if (sendPending() == 0) {
-                    delay(500)
-                    sendPending()
-                }
+                if (! scope.isActive) break
+                sendBatch(scope) { emailQueue.nextSendBatch() }
             }
+
         } catch (ex: Exception) {
+
             ex.printStackTrace() // FIXME email processing exceptions
         }
 
     }
 
-    fun loadNormalQueue() {
-        transaction {
-            emailQueue.all().filter { it.lastTry == null }.forEach { normalQueue.trySend(it) }
-        }
-    }
-
-    fun sendPending(): Int {
-        val pending = transaction {
-            emailQueue.all().filter { it.lastTry == null }
-        }
-
-        pending.forEach {
-            try {
-                send(it)
-            } catch (ex: CancellationException) {
-                return 0
-            }
-        }
-
-        return pending.size
-    }
-
     suspend fun retry(scope: CoroutineScope) {
         while (scope.isActive) {
 
-            val now = Clock.System.now().minus(30.minutes)
+            val lastTryBefore = Clock.System.now().minus(retryInterval.minutes)
 
-            val entries = transaction {
-                emailQueue.all().filter { entry ->
-                    entry.lastTry?.let { it < now } ?: false
-                }
-            }
+            sendBatch(scope) { emailQueue.nextRetryBatch(lastTryBefore) }
 
-            if (entries.isEmpty()) {
-                delay(retryCheckInterval)
-                continue
-            }
+            delay(retryCheckInterval)
 
-            for (entry in entries) {
-                if (! scope.isActive) return
+        }
+    }
 
-                try {
-                    send(entry)
-                } catch (ex: CancellationException) {
-                    return
-                } catch (ex: Exception) {
-                    scope.cancel()
-                }
+    fun sendBatch(scope: CoroutineScope, readBatch: () -> List<EmailQueueEntry>) {
+        while (scope.isActive) {
+            val batch = transaction { readBatch() }
+
+            if (batch.isEmpty()) return
+
+            for (item in batch) {
+                if (! scope.isActive) break
+                send(item)
             }
         }
     }
@@ -198,9 +168,8 @@ class EmailWorker : WorkerImpl<EmailWorker> {
 
             } catch (ex: AuthenticationFailedException) {
 
-                // config error, keep the e-mail in the queue
+                // config error, keep the e-mail in the queue untouched
                 logger.error("email server authentication fail", ex)
-                update(EmailStatus.RetryWait)
 
             } catch (ex: MailConnectException) {
 
@@ -215,8 +184,8 @@ class EmailWorker : WorkerImpl<EmailWorker> {
 
             } catch (ex: MessagingException) {
 
-                // whatever erroe, keep the e-mail in the queue
-                logger.error("email send fail fail", ex)
+                // whatever error, keep the e-mail in the queue
+                logger.error("failed to send email ${email.uuid}", ex)
                 update(EmailStatus.RetryWait)
 
             }

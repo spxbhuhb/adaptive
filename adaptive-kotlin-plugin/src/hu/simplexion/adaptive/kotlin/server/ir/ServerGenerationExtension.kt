@@ -14,15 +14,9 @@ class ServerGenerationExtension(
 ) : IrGenerationExtension {
 
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
-//        println("==== BEFORE ====")
-//        println(moduleFragment.dump())
-
         ServerPluginContext(pluginContext, options).apply {
-            moduleFragment.transformChildrenVoid(ServerFragmentImplClassTransform(this))
+            moduleFragment.transformChildrenVoid(ServerFragmentImplTransform(this))
         }
-
-//        println("==== AFTER ====")
-//        println(moduleFragment.dump())
     }
 
 }

@@ -5,8 +5,6 @@
 package hu.simplexion.adaptive.server.component
 
 import hu.simplexion.adaptive.base.*
-import hu.simplexion.adaptive.server.AdaptiveServerBridgeReceiver
-import hu.simplexion.adaptive.server.AdaptiveServerFragment
 
 //fun Adaptive.process(impl : ProcessBuilder.() -> Unit) {
 //    manualImplementation(impl)

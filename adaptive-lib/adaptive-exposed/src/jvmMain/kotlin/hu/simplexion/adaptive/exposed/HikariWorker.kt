@@ -11,7 +11,7 @@ import hu.simplexion.adaptive.settings.dsl.setting
 import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.exposed.sql.Database
 
-class HikariWorker : WorkerImpl<HikariWorker> {
+class HikariWorker : WorkerImpl<HikariWorker,Any> {
 
     val driver by setting<String> { "JDBC_DRIVER" }
     val url by setting<String> { "JDBC_URL"}

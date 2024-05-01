@@ -11,24 +11,24 @@ import hu.simplexion.adaptive.utility.use
 
 class BasicServiceImplFactory : ServiceImplFactory {
 
-    private val templates = mutableMapOf<String, ServiceImpl<*>>()
+    private val templates = mutableMapOf<String, ServiceImpl<*,*>>()
 
     private val lock = Lock()
 
-    override fun plusAssign(template: ServiceImpl<*>) {
+    override fun plusAssign(template: ServiceImpl<*,*>) {
         lock.use {
-            check(template.fqName !in templates) { "duplicate registration of service ${template.fqName}" }
-            templates[template.fqName] = template
+            check(template.serviceName !in templates) { "duplicate registration of service ${template.serviceName}" }
+            templates[template.serviceName] = template
         }
     }
 
-    override fun minusAssign(template: ServiceImpl<*>) {
+    override fun minusAssign(template: ServiceImpl<*,*>) {
         lock.use {
-            templates.remove(template.fqName)
+            templates.remove(template.serviceName)
         }
     }
 
-    override fun get(serviceName: String, context: ServiceContext): ServiceImpl<*>? =
+    override fun get(serviceName: String, context: ServiceContext): ServiceImpl<*,*>? =
         lock.use {
             templates[serviceName]?.newInstance(context)
         }

@@ -21,10 +21,6 @@ class RequestEnvelope(
 
     companion object : WireFormat<RequestEnvelope> {
 
-        override val fqName: String
-            get() = "hu.simplexion.adaptive.services.model.RequestEnvelope"
-
-
         override fun wireFormatEncode(encoder: WireFormatEncoder, value: RequestEnvelope): WireFormatEncoder =
             encoder
                 .uuid(1, "callId", value.callId)

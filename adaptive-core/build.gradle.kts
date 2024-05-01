@@ -16,6 +16,7 @@ val scmPath = "spxbhuhb/adaptive"
 
 val coroutines_version: String by project
 val datetime_version: String by project
+val logback_version: String by project
 
 repositories {
     mavenLocal()
@@ -46,6 +47,11 @@ kotlin {
                 implementation(kotlin("test-junit"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version")
             }
+        }
+
+        sourceSets["jvmMain"].dependencies {
+            api("ch.qos.logback:logback-classic:${logback_version}")
+            api("org.apache.logging.log4j:log4j-core:2.20.0") // FFS
         }
     }
 }

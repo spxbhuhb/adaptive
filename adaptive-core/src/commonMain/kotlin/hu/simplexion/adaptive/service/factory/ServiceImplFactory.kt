@@ -9,10 +9,10 @@ import hu.simplexion.adaptive.service.ServiceImpl
 
 interface ServiceImplFactory {
 
-    operator fun plusAssign(template: ServiceImpl<*>)
+    operator fun plusAssign(template: ServiceImpl<*,*>)
 
-    operator fun minusAssign(template: ServiceImpl<*>)
+    operator fun minusAssign(template: ServiceImpl<*,*>)
 
-    operator fun get(serviceName: String, context: ServiceContext): ServiceImpl<*>?
+    operator fun get(serviceName: String, context: ServiceContext): ServiceImpl<*,*>?
 
 }
