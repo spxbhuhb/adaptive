@@ -4,17 +4,17 @@
 
 package hu.simplexion.adaptive.exposed
 
-import hu.simplexion.adaptive.server.component.WorkerImpl
+import hu.simplexion.adaptive.server.builtin.WorkerImpl
 import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.exposed.sql.Database
 
-class InMemoryDatabase : WorkerImpl<InMemoryDatabase,Any> {
+class InMemoryDatabase : WorkerImpl<InMemoryDatabase> {
 
     override fun create() {
         Database.connect("jdbc:h2:mem:regular;DB_CLOSE_DELAY=-1;", "org.h2.Driver")
     }
 
-    override suspend fun run(scope: CoroutineScope) {
+    override suspend fun run() {
 
     }
 }

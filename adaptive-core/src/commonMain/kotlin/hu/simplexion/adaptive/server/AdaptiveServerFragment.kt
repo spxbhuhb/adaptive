@@ -6,9 +6,9 @@ package hu.simplexion.adaptive.server
 import hu.simplexion.adaptive.base.AdaptiveFragment
 import hu.simplexion.adaptive.base.AdaptiveSupportFunction
 import hu.simplexion.adaptive.base.adaptiveInitStateMask
-import hu.simplexion.adaptive.server.component.ServerFragmentImpl
+import hu.simplexion.adaptive.server.builtin.ServerFragmentImpl
 
-abstract class AdaptiveServerFragment<BT,IT : ServerFragmentImpl<BT>>(
+abstract class AdaptiveServerFragment<BT>(
     adapter: AdaptiveServerAdapter<BT>,
     parent: AdaptiveFragment<BT>?,
     index: Int
@@ -29,7 +29,8 @@ abstract class AdaptiveServerFragment<BT,IT : ServerFragmentImpl<BT>>(
         check(impl == null) { "inconsistent server state innerMount with a non-null implementation" }
 
         @Suppress("UNCHECKED_CAST")
-        (implFun.invoke() as IT).also {
+        (implFun.invoke()).also {
+            it as ServerFragmentImpl<BT>
             impl = it
             it.fragment = this
             it.logger = (adapter as AdaptiveServerAdapter<BT>).getLogger(it.classFqName)
@@ -45,8 +46,8 @@ abstract class AdaptiveServerFragment<BT,IT : ServerFragmentImpl<BT>>(
         get() = state[0] as AdaptiveSupportFunction
 
     @Suppress("UNCHECKED_CAST")
-    var impl : IT?
-        get() = state[1] as IT?
+    var impl : ServerFragmentImpl<BT>?
+        get() = state[1] as ServerFragmentImpl<BT>?
         set(value) { state[1] = value }
 
 }

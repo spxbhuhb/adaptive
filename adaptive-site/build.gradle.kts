@@ -51,7 +51,6 @@ kotlin {
 
     sourceSets["commonMain"].dependencies {
         implementation("hu.simplexion.adaptive:adaptive-core:$version")
-        implementation("hu.simplexion.adaptive:adaptive-settings:$version")
         implementation("hu.simplexion.adaptive:adaptive-exposed:$version")
         implementation("hu.simplexion.adaptive:adaptive-email:$version")
         implementation("hu.simplexion.adaptive:adaptive-browser:$version")

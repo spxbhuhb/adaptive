@@ -5,9 +5,10 @@ import hu.simplexion.adaptive.email.model.EmailQueueEntry
 import hu.simplexion.adaptive.email.model.EmailStatus
 import hu.simplexion.adaptive.email.store.EmailQueue
 import hu.simplexion.adaptive.email.store.EmailTable
-import hu.simplexion.adaptive.server.component.WorkerImpl
-import hu.simplexion.adaptive.server.component.store
-import hu.simplexion.adaptive.settings.dsl.setting
+import hu.simplexion.adaptive.server.builtin.WorkerImpl
+import hu.simplexion.adaptive.server.builtin.launch
+import hu.simplexion.adaptive.server.builtin.store
+import hu.simplexion.adaptive.server.setting.dsl.setting
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.datetime.Clock
@@ -17,7 +18,7 @@ import javax.mail.*
 import javax.mail.internet.*
 import kotlin.time.Duration.Companion.minutes
 
-class EmailWorker : WorkerImpl<EmailWorker, Any> {
+class EmailWorker : WorkerImpl<EmailWorker> {
 
     val host by setting<String> { "EMAIL_HOST" }
     val port by setting<String> { "EMAIL_PORT" }
@@ -37,46 +38,39 @@ class EmailWorker : WorkerImpl<EmailWorker, Any> {
 
     val normalQueue = Channel<EmailQueueEntry>(Channel.UNLIMITED)
 
-    override suspend fun run(scope: CoroutineScope) {
+    override suspend fun run() {
 
-        scope.launch { retry(scope) }
+        launch { retry() }
 
-        try {
+        sendBatch { emailQueue.nextSendBatch() }
 
-            sendBatch(scope) { emailQueue.nextSendBatch() }
-
-            for (entry in normalQueue) {
-                if (! scope.isActive) break
-                sendBatch(scope) { emailQueue.nextSendBatch() }
-            }
-
-        } catch (ex: Exception) {
-
-            ex.printStackTrace() // FIXME email processing exceptions
+        for (entry in normalQueue) {
+            if (! isActive) break
+            sendBatch { emailQueue.nextSendBatch() }
         }
 
     }
 
-    suspend fun retry(scope: CoroutineScope) {
-        while (scope.isActive) {
+    suspend fun retry() {
+        while (isActive) {
 
             val lastTryBefore = Clock.System.now().minus(retryInterval.minutes)
 
-            sendBatch(scope) { emailQueue.nextRetryBatch(lastTryBefore) }
+            sendBatch { emailQueue.nextRetryBatch(lastTryBefore) }
 
             delay(retryCheckInterval)
 
         }
     }
 
-    fun sendBatch(scope: CoroutineScope, readBatch: () -> List<EmailQueueEntry>) {
-        while (scope.isActive) {
+    fun sendBatch(readBatch: () -> List<EmailQueueEntry>) {
+        while (isActive) {
             val batch = transaction { readBatch() }
 
             if (batch.isEmpty()) return
 
             for (item in batch) {
-                if (! scope.isActive) break
+                if (! isActive) break
                 send(item)
             }
         }

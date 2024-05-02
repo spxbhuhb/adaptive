@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.name.Name
 object Strings {
     const val SERVICES_PACKAGE = "hu.simplexion.adaptive.service"
     const val SERVICES_TRANSPORT_PACKAGE = "hu.simplexion.adaptive.service.transport"
+    const val SERVER_BUILTIN_PACKAGE = "hu.simplexion.adaptive.server.builtin"
 
     const val SERVICE = "Service"
     const val SERVICE_NAME = "serviceName"
@@ -30,7 +31,6 @@ object Strings {
     const val CONSUMER = "Consumer"
 
     const val GET_SERVICE = "getService"
-    const val DEFAULT_SERVICE_CALL_TRANSPORT = "defaultServiceCallTransport"
 
     val FUN_NAMES_TO_SKIP = listOf("equals", "hashCode", "toString", CALL_SERVICE)
 }
@@ -46,19 +46,18 @@ object Names {
 
 object FqNames : NamesBase(Strings.SERVICES_PACKAGE) {
     val SERVICES_TRANSPORT_PACKAGE = FqName.fromSegments(Strings.SERVICES_TRANSPORT_PACKAGE.split('.'))
-    val SERVICE_IMPL = Strings.SERVICE_IMPL.fqName()
+    val SERVER_BUILTIN_PACKAGE = FqName.fromSegments(Strings.SERVER_BUILTIN_PACKAGE.split('.'))
 }
 
 object ClassIds : NamesBase(Strings.SERVICES_PACKAGE) {
     val SERVICE = Strings.SERVICE.classId()
-    val SERVICE_IMPL = Strings.SERVICE_IMPL.classId()
+    val SERVICE_IMPL = Strings.SERVICE_IMPL.classId { FqNames.SERVER_BUILTIN_PACKAGE }
     val SERVICE_CONTEXT = Strings.SERVICE_CONTEXT.classId()
     val SERVICE_CALL_TRANSPORT = Strings.SERVICE_CALL_TRANSPORT.classId { FqNames.SERVICES_TRANSPORT_PACKAGE }
 }
 
 object CallableIds : NamesBase(Strings.SERVICES_PACKAGE) {
     val GET_SERVICE = Strings.GET_SERVICE.callableId()
-    val DEFAULT_SERVICE_CALL_TRANSPORT = Strings.DEFAULT_SERVICE_CALL_TRANSPORT.callableId()
 }
 
 object Indices {

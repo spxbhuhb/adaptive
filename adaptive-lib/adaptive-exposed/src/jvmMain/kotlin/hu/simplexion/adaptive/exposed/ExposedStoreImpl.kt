@@ -4,13 +4,13 @@
 
 package hu.simplexion.adaptive.exposed
 
-import hu.simplexion.adaptive.server.component.StoreImpl
+import hu.simplexion.adaptive.server.builtin.StoreImpl
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
-interface ExposedStoreImpl<T : ExposedStoreImpl<T>> : StoreImpl<T, Any> {
+interface ExposedStoreImpl<T : ExposedStoreImpl<T>> : StoreImpl<T> {
 
     override fun create() {
         if (this is Table) {

@@ -5,11 +5,11 @@
 package hu.simplexion.adaptive.service.testing
 
 import hu.simplexion.adaptive.service.BasicServiceContext
-import hu.simplexion.adaptive.service.ServiceImpl
+import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 
 class TestServiceTransport(
-    val serviceImpl: ServiceImpl<*,*>,
+    val serviceImpl: ServiceImpl<*>,
     val dump: Boolean = false
 ) : ServiceCallTransport {
 

@@ -58,7 +58,6 @@ kotlin {
                 api("org.jetbrains.kotlinx:kotlinx-datetime:$datetime_version")
 
                 api("hu.simplexion.adaptive:adaptive-core:${version}")
-                api("hu.simplexion.adaptive:adaptive-settings:${version}")
                 api("hu.simplexion.adaptive:adaptive-exposed:${version}")
             }
         }

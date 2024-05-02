@@ -5,30 +5,30 @@
 package hu.simplexion.adaptive.service.factory
 
 import hu.simplexion.adaptive.service.ServiceContext
-import hu.simplexion.adaptive.service.ServiceImpl
+import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import hu.simplexion.adaptive.utility.Lock
 import hu.simplexion.adaptive.utility.use
 
 class BasicServiceImplFactory : ServiceImplFactory {
 
-    private val templates = mutableMapOf<String, ServiceImpl<*,*>>()
+    private val templates = mutableMapOf<String, ServiceImpl<*>>()
 
     private val lock = Lock()
 
-    override fun plusAssign(template: ServiceImpl<*,*>) {
+    override fun plusAssign(template: ServiceImpl<*>) {
         lock.use {
             check(template.serviceName !in templates) { "duplicate registration of service ${template.serviceName}" }
             templates[template.serviceName] = template
         }
     }
 
-    override fun minusAssign(template: ServiceImpl<*,*>) {
+    override fun minusAssign(template: ServiceImpl<*>) {
         lock.use {
             templates.remove(template.serviceName)
         }
     }
 
-    override fun get(serviceName: String, context: ServiceContext): ServiceImpl<*,*>? =
+    override fun get(serviceName: String, context: ServiceContext): ServiceImpl<*>? =
         lock.use {
             templates[serviceName]?.newInstance(context)
         }

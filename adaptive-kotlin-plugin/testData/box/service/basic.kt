@@ -3,6 +3,7 @@ package hu.simplexion.adaptive.service
 import hu.simplexion.adaptive.service.*
 import hu.simplexion.adaptive.service.transport.*
 import hu.simplexion.adaptive.service.testing.TestServiceTransport
+import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import kotlinx.coroutines.runBlocking
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 
@@ -12,7 +13,7 @@ interface TestService1 : Service {
 
 val testServiceConsumer = getService<TestService1>()
 
-class TestService1Impl : TestService1, ServiceImpl<TestService1Impl,Any> {
+class TestService1Impl : TestService1, ServiceImpl<TestService1Impl> {
 
     override suspend fun testFun(arg1: Int, arg2: String) =
         "i:$arg1 s:$arg2 $serviceContext"

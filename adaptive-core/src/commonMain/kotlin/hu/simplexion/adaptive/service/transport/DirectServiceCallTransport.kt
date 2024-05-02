@@ -5,7 +5,7 @@
 package hu.simplexion.adaptive.service.transport
 
 import hu.simplexion.adaptive.service.BasicServiceContext
-import hu.simplexion.adaptive.service.ServiceImpl
+import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
 
 /**
@@ -15,7 +15,7 @@ import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWir
  * as it avoids the encoding and decoding overhead.
  */
 class DirectServiceCallTransport(
-    val implementation: ServiceImpl<*,*>
+    val implementation: ServiceImpl<*>
 ) : ServiceCallTransport {
 
     companion object {

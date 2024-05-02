@@ -6,13 +6,13 @@ import hu.simplexion.adaptive.email.model.EmailQueueEntry
 import hu.simplexion.adaptive.email.store.EmailQueue
 import hu.simplexion.adaptive.email.store.EmailTable
 import hu.simplexion.adaptive.email.worker.EmailWorker
-import hu.simplexion.adaptive.server.component.store
-import hu.simplexion.adaptive.server.component.worker
+import hu.simplexion.adaptive.server.builtin.store
+import hu.simplexion.adaptive.server.builtin.worker
 import hu.simplexion.adaptive.service.ServiceContext
-import hu.simplexion.adaptive.service.ServiceImpl
+import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class EmailService : EmailApi, ServiceImpl<EmailService,Any> {
+class EmailService : EmailApi, ServiceImpl<EmailService> {
 
     // FIXME too expensive server fragment lookup in service implementation
     private val emailTable by store<EmailTable>()

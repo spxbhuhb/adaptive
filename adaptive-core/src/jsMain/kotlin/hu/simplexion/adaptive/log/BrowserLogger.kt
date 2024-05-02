@@ -10,6 +10,11 @@ class BrowserLogger(
 
     val prefix = "[$name]"
 
+    override fun fine(exception: Exception) {
+        // TODO console.debug
+        console.info(prefix, exception)
+    }
+
     override fun info(message: String) {
         console.info(prefix, message)
     }

@@ -7,7 +7,7 @@ import hu.simplexion.adaptive.kotlin.common.NamesBase
 
 object Strings {
     const val SERVER_PACKAGE = "hu.simplexion.adaptive.server"
-    const val SERVER_COMPONENT_PACKAGE = "hu.simplexion.adaptive.server.component"
+    const val SERVER_COMPONENT_PACKAGE = "hu.simplexion.adaptive.server.builtin"
 
     const val SERVER_FRAGMENT_IMPL = "ServerFragmentImpl"
     const val ADAPTIVE_SERVER_FRAGMENT = "AdaptiveServerFragment"

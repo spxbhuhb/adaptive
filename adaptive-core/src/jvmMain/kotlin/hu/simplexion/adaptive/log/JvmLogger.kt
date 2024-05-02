@@ -13,6 +13,10 @@ class JvmLogger(name : String) : AdaptiveLogger {
 
     val platformLogger: Logger = getLogger(name)
 
+    override fun fine(exception: Exception) {
+        platformLogger.log(Level.FINE, exception.message, exception)
+    }
+
     override fun info(message: String) {
         platformLogger.log(Level.INFO, message)
     }

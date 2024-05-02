@@ -36,7 +36,7 @@ open class AdaptiveServerAdapter<BT> : AdaptiveAdapter<BT> {
 
     inline fun <reified T> single(): T {
         // TODO create fragment.filterIsInstance
-        val fragment = rootFragment.single { it is AdaptiveServerFragment<*,*> && it.impl is T } as AdaptiveServerFragment<*,*>
+        val fragment = rootFragment.single { it is AdaptiveServerFragment<*> && it.impl is T } as AdaptiveServerFragment<*>
         val implementation = fragment.impl as? T
         return checkNotNull(implementation) { "fragment $fragment implementation is not set" }
     }

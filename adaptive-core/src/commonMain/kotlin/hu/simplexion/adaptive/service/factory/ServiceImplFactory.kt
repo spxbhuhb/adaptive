@@ -5,14 +5,14 @@
 package hu.simplexion.adaptive.service.factory
 
 import hu.simplexion.adaptive.service.ServiceContext
-import hu.simplexion.adaptive.service.ServiceImpl
+import hu.simplexion.adaptive.server.builtin.ServiceImpl
 
 interface ServiceImplFactory {
 
-    operator fun plusAssign(template: ServiceImpl<*,*>)
+    operator fun plusAssign(template: ServiceImpl<*>)
 
-    operator fun minusAssign(template: ServiceImpl<*,*>)
+    operator fun minusAssign(template: ServiceImpl<*>)
 
-    operator fun get(serviceName: String, context: ServiceContext): ServiceImpl<*,*>?
+    operator fun get(serviceName: String, context: ServiceContext): ServiceImpl<*>?
 
 }

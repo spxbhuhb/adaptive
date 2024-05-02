@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.service
 
+import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import hu.simplexion.adaptive.service.testing.TestServiceTransport
 import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
@@ -43,7 +44,7 @@ val testServiceConsumer = TestService1.Consumer()
 
 class TestService2Impl(
     override val serviceContext: ServiceContext
-) : TestService2, ServiceImpl<TestService2Impl,Any> {
+) : TestService2, ServiceImpl<TestService2Impl> {
 
     override fun newInstance(serviceContext: ServiceContext): TestService2Impl {
         return TestService2Impl(serviceContext)
