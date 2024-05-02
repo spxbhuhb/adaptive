@@ -1,4 +1,4 @@
-[![Maven Central](https://img.shields.io/maven-central/v/hu.simplexion.adaptive/adaptive-lib)](https://mvnrepository.com/artifact/hu.simplexion.adaptive/adaptive-lib)
+[![Maven Central](https://img.shields.io/maven-central/v/hu.simplexion.adaptive/adaptive-core)](https://mvnrepository.com/artifact/hu.simplexion.adaptive/adaptive-core)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
 Adaptive is a consolidated application development library for Kotlin focusing on:
