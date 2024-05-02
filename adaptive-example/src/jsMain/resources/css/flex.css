@@ -1,0 +1,8 @@
+/*
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ */
+
+.flex_direction_row { flex-direction: row; }
+.flex_direction_row_reverse { flex-direction: row-reverse; }
+.flex_direction_column { flex-direction: column; }
+.flex_direction_column_reverse { flex-direction: column-reverse; }
