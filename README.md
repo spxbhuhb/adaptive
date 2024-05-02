@@ -3,7 +3,7 @@
 
 Adaptive is a consolidated application development library for Kotlin focusing on:
 
-* expressing our intention, not the semantics of the underlying library,
+* expressing our intention,
 * clean code, close to no-boilerplate, minimal dependencies,
 * frontend and backend components with built-in lifecycle and state handling.
 
@@ -13,6 +13,13 @@ Status: **preview**
 
 While the library already works and provides both client and server side functionality it
 is not ready for general production yet. I am working continuously to add improvements.
+
+Adaptive's core is platform antagonistic, pure Kotlin, it should work on whatever KMP is able
+to compile for. There are platform specific implementations (like for actual e-mail sending),
+but those are in the extension libraries.
+
+Note: As of now JVM and Browser works. It is quite easy to add support for whatever platform, 
+see [platforms](./doc/platforms/README.md) for details.
 
 ## Examples
 
@@ -126,6 +133,12 @@ Theoretically you don't need the executable, but for me, it was necessary, I hav
 
 * [H2](https://www.h2database.com/) (by multiple contributors, MPL 2.0 or EPL 1.0)
 * [SubEtha SMTP](https://github.com/voodoodyne/subethasmtp) (by SubEthaMail.org, Apache 2.0)
+
+**Inspiration**
+
+* [Svelte](https://svelte.dev) (the whole idea)
+* [KVision](https://kvision.io) (some service related ideas)
+* [Tailwindcss](https://tailwindcss.com) (style concept)
 
 ## License
 
