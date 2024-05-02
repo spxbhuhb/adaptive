@@ -66,10 +66,8 @@ kotlin {
         implementation("ch.qos.logback:logback-classic:$logback_version")
 
         implementation("org.postgresql:postgresql:42.2.2")
-        implementation("com.zaxxer:HikariCP:3.4.2")
-    }
-    sourceSets["jvmTest"].dependencies {
         implementation("com.h2database:h2:2.1.214")
+        implementation("com.zaxxer:HikariCP:3.4.2")
     }
 }
 

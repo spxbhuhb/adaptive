@@ -79,7 +79,6 @@ plugins {
 kotlin {
     sourceSets["commonMain"].dependencies {
         implementation("hu.simplexion.adaptive:adaptive-core:2024.04.19")
-        implementation("hu.simplexion.adaptive:adaptive-settings:2024.04.19")
         implementation("hu.simplexion.adaptive:adaptive-exposed:2024.04.19")
         implementation("hu.simplexion.adaptive:adaptive-email:2024.04.19")
         implementation("hu.simplexion.adaptive:adaptive-browser:2024.04.19")

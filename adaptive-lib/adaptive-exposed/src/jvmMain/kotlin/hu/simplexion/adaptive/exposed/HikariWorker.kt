@@ -18,7 +18,7 @@ class HikariWorker : WorkerImpl<HikariWorker> {
     val username by setting<String> { "JDBC_USERNAME" }
     val password by setting<String> { "JDBC_PASSWORD"} // TODO secret
 
-    override suspend fun run() {
+    override fun create() {
         val config = HikariConfig().also {
             it.driverClassName = driver
             it.jdbcUrl = url
@@ -29,5 +29,9 @@ class HikariWorker : WorkerImpl<HikariWorker> {
 
         val dataSource = HikariDataSource(config)
         Database.connect(dataSource)
+    }
+
+    override suspend fun run() {
+
     }
 }
