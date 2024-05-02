@@ -3,7 +3,7 @@
  */
 plugins {
     kotlin("multiplatform") version "1.9.10"
-    id("hu.simplexion.adaptive") version "2024.04.19"
+    id("hu.simplexion.adaptive") version "2024.05.02"
     java
     signing
     `maven-publish`
