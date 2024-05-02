@@ -25,9 +25,10 @@ fun main() {
         val time = poll(1.seconds, default = Clock.System.now()) { Clock.System.now() }
 
         div(display_flex, flex_direction_column, width_240_px) {
+
             div { text("incremented $counter times(s)") }
 
-            div { text(time.toString()) }
+            div { text("time is: $time") }
 
             button("Click to increment!") {
                 counter = counter + 1

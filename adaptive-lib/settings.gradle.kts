@@ -9,5 +9,6 @@ includeBuild("../adaptive-kotlin-plugin")
 
 include("adaptive-exposed")
 include("adaptive-email")
+include("adaptive-ktor")
 include("adaptive-browser")
 

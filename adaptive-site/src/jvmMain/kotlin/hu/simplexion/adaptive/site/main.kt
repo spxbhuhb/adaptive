@@ -24,6 +24,7 @@ fun main(args: Array<String>) {
     adaptive(AdaptiveServerAdapter<Any>()) {
 
         settings { propertyFile { "./etc/site.properties" } }
+
         val inMemoryDatabase = setting<Boolean> { "IN_MEMORY_DATABASE" }.value
 
         if (inMemoryDatabase) {
