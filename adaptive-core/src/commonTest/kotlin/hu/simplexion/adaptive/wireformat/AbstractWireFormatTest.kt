@@ -2,6 +2,8 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+@file:OptIn(ExperimentalUnsignedTypes::class)
+
 package hu.simplexion.adaptive.wireformat
 
 import hu.simplexion.adaptive.utility.UUID
@@ -43,34 +45,38 @@ abstract class AbstractWireFormatTest<ST>(
 
     val booleanVal = true
     val booleanArrayVal = booleanArrayOf(true, false, true)
-    val booleanListVal = listOf(true, false, true)
+    val booleanListVal = booleanArrayVal.toList()
 
     val intVal = 123
-    val intListVal = listOf(Int.MIN_VALUE, Int.MIN_VALUE + 1, - 2, - 1, 0, 1, 2, Int.MAX_VALUE - 1, Int.MAX_VALUE)
+    val intArrayVal = intArrayOf(Int.MIN_VALUE, Int.MIN_VALUE + 1, - 2, - 1, 0, 1, 2, Int.MAX_VALUE - 1, Int.MAX_VALUE)
+    val intListVal = intArrayVal.toList()
 
     val shortVal: Short = 123
-    val shortListVal = listOf(Short.MIN_VALUE, - 2, - 1, 0, 1, 2, Short.MAX_VALUE)
+    val shortArrayVal = shortArrayOf(Short.MIN_VALUE, - 2, - 1, 0, 1, 2, Short.MAX_VALUE)
+    val shortListVal = shortArrayVal.toList()
 
     val byteVal: Byte = 123
-    val byteListVal = listOf(Byte.MIN_VALUE, - 2, - 1, 0, 1, 2, Byte.MAX_VALUE)
+    val byteArrayVal = byteArrayOf(Byte.MIN_VALUE, - 2, - 1, 0, 1, 2, Byte.MAX_VALUE)
+    val byteListVal = byteArrayVal.toList()
 
     val longVal = 1234L
-    val longListVal = listOf(Long.MIN_VALUE, Long.MIN_VALUE + 1, - 2, - 1, 0, 1, 2, Long.MAX_VALUE - 1, Long.MAX_VALUE)
+    val longArrayVal = longArrayOf(Long.MIN_VALUE, Long.MIN_VALUE + 1, - 2, - 1, 0, 1, 2, Long.MAX_VALUE - 1, Long.MAX_VALUE)
+    val longListVal = longArrayVal.toList()
 
     val floatVal = 12.34f
-    val floatListVal = listOf(Float.NaN, Float.NEGATIVE_INFINITY, Float.MIN_VALUE, 1.0f, 2.0f, 3.0f, Float.MAX_VALUE, Float.POSITIVE_INFINITY)
+    val floatArrayVal = floatArrayOf(Float.NaN, Float.NEGATIVE_INFINITY, Float.MIN_VALUE, 1.0f, 2.0f, 3.0f, Float.MAX_VALUE, Float.POSITIVE_INFINITY)
+    val floatListVal = floatArrayVal.toList()
 
     val doubleVal = 12.34
-    val doubleListVal = listOf(Double.NaN, Double.NEGATIVE_INFINITY, Double.MIN_VALUE, 1.0, 2.0, 3.0, Double.MIN_VALUE, Double.POSITIVE_INFINITY)
+    val doubleArrayVal = doubleArrayOf(Double.NaN, Double.NEGATIVE_INFINITY, Double.MIN_VALUE, 1.0, 2.0, 3.0, Double.MIN_VALUE, Double.POSITIVE_INFINITY)
+    val doubleListVal = doubleArrayVal.toList()
 
     val charVal = 'a'
-    val charListVal = listOf('a', 'b', 'c')
+    val charArrayVal = charArrayOf('a', 'b', 'c')
+    val charListVal = charArrayVal.toList()
 
     val stringVal = "abc"
     val stringListVal = listOf("a", "b", "c")
-
-    val byteArrayVal = byteArrayOf(9, 8, 7)
-    val byteArrayListVal = listOf(byteArrayOf(1), byteArrayOf(2), byteArrayOf(3))
 
     val uuidVal = UUID<Any>()
     val uuidListVal = listOf(UUID<Any>(), UUID(), UUID())
@@ -82,18 +88,35 @@ abstract class AbstractWireFormatTest<ST>(
         B(A(true, 789, "c", mutableListOf(7, 8, 9)), "CC")
     )
 
+    val instanceListValWithNull = listOf(
+        null,
+        B(A(true, 123, "a", mutableListOf(1, 2, 3)), "AA"),
+        null,
+        B(A(false, 456, "b", mutableListOf(4, 5, 6)), "BB"),
+        null,
+        B(A(true, 789, "c", mutableListOf(7, 8, 9)), "CC"),
+        null
+    )
+
     val enumVal = E.V1
     val enumListVal = listOf(E.V2, E.V1)
 
     val uIntVal = 123.toUInt()
-    val uIntListVal = listOf(UInt.MIN_VALUE, (- 1).toUInt(), 0.toUInt(), 1.toUInt(), UInt.MAX_VALUE)
+    val uIntArrayVal = uintArrayOf(UInt.MIN_VALUE, (- 1).toUInt(), 0.toUInt(), 1.toUInt(), UInt.MAX_VALUE)
+    val uIntListVal = uIntArrayVal.toList()
 
     val uShortVal = 123.toUShort()
-    val uShortListVal = listOf(UShort.MIN_VALUE, (- 1).toUShort(), 0.toUShort(), 1.toUShort(), UShort.MAX_VALUE)
+    val uShortArrayVal = ushortArrayOf(UShort.MIN_VALUE, (- 1).toUShort(), 0.toUShort(), 1.toUShort(), UShort.MAX_VALUE)
+    val uShortListVal = uShortArrayVal.toList()
 
     val uByteVal = 123.toUByte()
-    val uByteListVal = listOf(UByte.MIN_VALUE, (- 1).toUByte(), 0.toUByte(), 1.toUByte(), UByte.MAX_VALUE)
+    val uByteArrayVal = ubyteArrayOf(UByte.MIN_VALUE, (- 1).toUByte(), 0.toUByte(), 1.toUByte(), UByte.MAX_VALUE)
+    val uByteListVal = uByteArrayVal.toList()
 
     val uLongVal = 123.toULong()
-    val uLongListVal = listOf(ULong.MIN_VALUE, (- 1).toULong(), 0.toULong(), 1.toULong(), ULong.MAX_VALUE)
+    val uLongArrayVal = ulongArrayOf(ULong.MIN_VALUE, (- 1).toULong(), 0.toULong(), 1.toULong(), ULong.MAX_VALUE)
+    val uLongListVal = uLongArrayVal.toList()
+
+    val pairVal = Pair(1, "a")
+    val pairListVal = listOf(Pair(1, "a"), Pair(2, "b"))
 }

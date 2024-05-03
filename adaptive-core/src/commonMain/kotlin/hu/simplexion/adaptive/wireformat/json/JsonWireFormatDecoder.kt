@@ -226,13 +226,14 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     // -----------------------------------------------------------------------------------------
 
     override fun byteArray(fieldNumber: Int, fieldName: String): ByteArray =
-        get(fieldName).asByteArray
+        requireNotNull(byteArrayOrNull(fieldNumber, fieldName)) { "missing or null array" }
 
     override fun byteArrayOrNull(fieldNumber: Int, fieldName: String): ByteArray? =
-        getOrNull(fieldName)?.asByteArray
+        array(fieldName) { it.asByte }?.toByteArray()
 
     override fun rawByteArray(source: JsonElement): ByteArray {
-        return source.asByteArray
+        source as JsonArray
+        return source.items.map { it.asByte }.toByteArray()
     }
 
     // -----------------------------------------------------------------------------------------
@@ -475,16 +476,66 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
         if (root is JsonNull) null else rawInstance(root, wireFormat)
 
     // -----------------------------------------------------------------------------------------
+    // Pair
+    // -----------------------------------------------------------------------------------------
+
+    override fun <T1, T2> pair(
+        fieldNumber: Int,
+        fieldName: String,
+        firstWireFormat: WireFormat<T1>,
+        secondWireFormat: WireFormat<T2>,
+        firstNullable : Boolean,
+        secondNullable : Boolean
+    ): Pair<T1?, T2?> =
+        rawPair(get(fieldName), firstWireFormat, secondWireFormat, firstNullable, secondNullable)
+
+    override fun <T1, T2> pairOrNull(
+        fieldNumber: Int,
+        fieldName: String,
+        firstWireFormat: WireFormat<T1>,
+        secondWireFormat: WireFormat<T2>,
+        firstNullable : Boolean,
+        secondNullable : Boolean
+    ): Pair<T1?, T2?>? =
+        if (getOrNull(fieldName) == null) null else pair(fieldNumber, fieldName, firstWireFormat, secondWireFormat, firstNullable, secondNullable)
+
+    override fun <T1, T2> rawPair(
+        source: JsonElement,
+        firstWireFormat: WireFormat<T1>,
+        secondWireFormat: WireFormat<T2>,
+        firstNullable: Boolean,
+        secondNullable: Boolean
+    ): Pair<T1?, T2?> {
+        require(source is JsonArray && source.items.size == 2) { "wrong pair format (must be array with 2 items)" }
+
+        val first = source.items[0]
+        val second = source.items[1]
+
+        val firstValue = if (first is JsonNull) null else firstWireFormat.wireFormatDecode(first, JsonWireFormatDecoder(first))
+        val secondValue = if (second is JsonNull) null else secondWireFormat.wireFormatDecode(second, JsonWireFormatDecoder(second))
+
+        check(firstValue != null || firstNullable)
+        check(secondValue != null || secondNullable)
+
+        return firstValue to secondValue
+    }
+
+    // -----------------------------------------------------------------------------------------
     // Utilities for classes that implement `WireFormat`
     // -----------------------------------------------------------------------------------------
 
-    override fun <T> items(source: JsonElement, itemWireFormat: WireFormat<T>): MutableList<T> {
-        val result = mutableListOf<T>()
+    override fun <T> items(source: JsonElement, itemWireFormat: WireFormat<T>, nullable: Boolean): MutableList<T?> {
+        val result = mutableListOf<T?>()
 
         require(source is JsonArray) { "source is not an array" }
 
         for (element in source.items) {
-            result += itemWireFormat.wireFormatDecode(element, JsonWireFormatDecoder(element))
+            if (element is JsonNull) {
+                check(nullable) { "null item in a non-nullable collection" }
+                result += null
+            } else {
+                result += itemWireFormat.wireFormatDecode(element, JsonWireFormatDecoder(element))
+            }
         }
 
         return result

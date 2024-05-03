@@ -273,9 +273,42 @@ interface WireFormatEncoder {
     fun <T> rawInstanceOrNull(value: T?, wireFormat: WireFormat<T>): WireFormatEncoder
 
     // ----------------------------------------------------------------------------
+    // Pair
+    // ----------------------------------------------------------------------------
+
+    fun <T1,T2> pair(
+        fieldNumber: Int,
+        fieldName: String,
+        value: Pair<T1?, T2?>,
+        firstWireFormat: WireFormat<T1>,
+        secondWireFormat: WireFormat<T2>,
+        firstNullable: Boolean,
+        secondNullable: Boolean
+    ): WireFormatEncoder
+
+    fun <T1,T2> pairOrNull(
+        fieldNumber: Int,
+        fieldName: String,
+        value: Pair<T1?, T2?>?,
+        firstWireFormat: WireFormat<T1>,
+        secondWireFormat: WireFormat<T2>,
+        firstNullable: Boolean,
+        secondNullable: Boolean
+    ): WireFormatEncoder
+
+    fun <T1,T2> rawPair(
+        value: Pair<T1?, T2?>,
+        firstWireFormat: WireFormat<T1>,
+        secondWireFormat: WireFormat<T2>,
+        firstNullable: Boolean,
+        secondNullable: Boolean
+    ): WireFormatEncoder
+
+    // ----------------------------------------------------------------------------
     // Utilities for classes that implement `WireFormat`
     // ----------------------------------------------------------------------------
 
-    fun <T> items(value: Collection<T>, itemWireFormat: WireFormat<T>): WireFormatEncoder
+    fun <T> items(value: Collection<T?>, itemWireFormat: WireFormat<T>, nullable : Boolean): WireFormatEncoder
+
 
 }

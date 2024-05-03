@@ -34,6 +34,9 @@ open class BufferWriter(
 
     private val buffers = mutableListOf(ByteArray(initialBufferSize))
 
+    // FIXME write unit tests for buffer recycle
+    private val recycle = mutableListOf<ByteArray>()
+
     private var buffer = buffers.last()
 
     /**
@@ -41,6 +44,26 @@ open class BufferWriter(
      */
     val size
         get() = pastBufferByteCount + writeOffset
+
+    /**
+     * Reset the writer:
+     *
+     * - moves all but the first buffer to [recycle]
+     * - sets offsets to 0
+     * - fills the first buffer with zeros
+     *
+     * Meant for optimization, so the same writer can be reused without allocating the
+     * buffers again and again.
+     */
+    fun reset() {
+        pastBufferByteCount = 0
+        writeOffset = 0
+        recycle += buffers.drop(1)
+        val first = buffers.first()
+        buffers.clear()
+        buffers += first
+        first.fill(0) // this is for security, just in case
+    }
 
     /**
      * Pack all the buffers into one.
@@ -99,7 +122,13 @@ open class BufferWriter(
 
         check(pastBufferByteCount + requestedSize < maximumBufferSize) { "ProtoBufferWriter buffer overflow" }
 
-        buffer = ByteArray(requestedSize)
+        if (recycle.isNotEmpty()) {
+            buffer = recycle.removeLast()
+            buffer.fill(0)
+        } else {
+            buffer = ByteArray(requestedSize)
+        }
+
         buffers.add(buffer)
         writeOffset = 0
     }

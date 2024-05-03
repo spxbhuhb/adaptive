@@ -303,18 +303,26 @@ class JsonWireFormatEncoder(
     // ----------------------------------------------------------------------------
 
     override fun byteArray(fieldNumber: Int, fieldName: String, value: ByteArray): JsonWireFormatEncoder {
-        writer.bytes(fieldName, value)
+        byteArrayOrNull(fieldNumber, fieldName, value)
         return this
     }
 
     override fun byteArrayOrNull(fieldNumber: Int, fieldName: String, value: ByteArray?): JsonWireFormatEncoder {
-        writer.bytes(fieldName, value)
+        array(fieldName, value) {
+            for (item in value !!) {
+                writer.rawNumber(item)
+                writer.separator()
+            }
+        }
         return this
     }
 
     override fun rawByteArray(value: ByteArray): WireFormatEncoder {
         array(null, value) {
-            writer.rawBytes(value)
+            for (item in value) {
+                writer.rawNumber(item)
+                writer.separator()
+            }
         }
         return this
     }
@@ -416,7 +424,7 @@ class JsonWireFormatEncoder(
     override fun charArrayOrNull(fieldNumber: Int, fieldName: String, value: CharArray?): JsonWireFormatEncoder {
         array(fieldName, value) {
             for (item in value !!) {
-                writer.rawString(item.toString())
+                writer.quotedString(item.toString())
                 writer.separator()
             }
         }
@@ -426,7 +434,7 @@ class JsonWireFormatEncoder(
     override fun rawCharArray(value: CharArray): WireFormatEncoder {
         array(null, value) {
             for (item in value) {
-                writer.rawString(item.toString())
+                writer.quotedString(item.toString())
                 writer.separator()
             }
         }
@@ -734,13 +742,77 @@ class JsonWireFormatEncoder(
         return this
     }
 
+    // ----------------------------------------------------------------------------
+    // Pair
+    // ----------------------------------------------------------------------------
+
+    override fun <T1, T2> pair(
+        fieldNumber: Int,
+        fieldName: String,
+        value: Pair<T1?, T2?>,
+        firstWireFormat: WireFormat<T1>,
+        secondWireFormat: WireFormat<T2>,
+        firstNullable: Boolean,
+        secondNullable: Boolean
+    ): WireFormatEncoder {
+        writer.fieldName(fieldName)
+        rawPair(value, firstWireFormat, secondWireFormat, firstNullable, secondNullable)
+        return this
+    }
+
+    override fun <T1, T2> pairOrNull(
+        fieldNumber: Int,
+        fieldName: String,
+        value: Pair<T1?, T2?>?,
+        firstWireFormat: WireFormat<T1>,
+        secondWireFormat: WireFormat<T2>,
+        firstNullable: Boolean,
+        secondNullable: Boolean
+    ): WireFormatEncoder {
+        if (value == null) {
+            writer.nullValue(fieldName)
+        } else {
+            pair(fieldNumber, fieldName, value, firstWireFormat, secondWireFormat, firstNullable, secondNullable)
+        }
+        return this
+    }
+
+    override fun <T1, T2> rawPair(
+        value: Pair<T1?, T2?>,
+        firstWireFormat: WireFormat<T1>,
+        secondWireFormat: WireFormat<T2>,
+        firstNullable: Boolean,
+        secondNullable: Boolean
+    ): WireFormatEncoder {
+        writer.openArray()
+        valueOrNull(value.first, firstWireFormat, firstNullable)
+        writer.separator()
+        valueOrNull(value.second, secondWireFormat, secondNullable)
+        writer.closeArray()
+        return this
+    }
+
+    fun <T> valueOrNull(value: T?, wireFormat: WireFormat<T>, nullable: Boolean) {
+        if (value == null) {
+            check(nullable)
+            writer.rawNullValue()
+        } else {
+            rawInstance(value, wireFormat)
+        }
+    }
+
     // -----------------------------------------------------------------------------------------
     // Utilities for classes that implement `WireFormat`
     // -----------------------------------------------------------------------------------------
 
-    override fun <T> items(value: Collection<T>, itemWireFormat: WireFormat<T>): WireFormatEncoder {
+    override fun <T> items(value: Collection<T?>, itemWireFormat: WireFormat<T>, nullable : Boolean): WireFormatEncoder {
         for (item in value) {
-            rawInstance(item, itemWireFormat)
+            if (item == null) {
+                check(nullable)
+                writer.rawNullValue()
+            } else {
+                rawInstance(item, itemWireFormat)
+            }
             writer.separator()
         }
         return this

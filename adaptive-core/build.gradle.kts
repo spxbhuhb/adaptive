@@ -36,16 +36,16 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$datetime_version")
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:$datetime_version")
             }
         }
         commonTest {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
-                implementation(kotlin("test-junit"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version")
+                api(kotlin("test-common"))
+                api(kotlin("test-annotations-common"))
+                api(kotlin("test-junit"))
+                api("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version")
             }
         }
 

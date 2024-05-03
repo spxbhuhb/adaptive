@@ -21,6 +21,19 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
 
     val writer = ProtoBufferWriter()
 
+    // make only one sub encoder and re-use it, this avoids allocating the
+    // buffers for each tiny piece of data again and again
+
+    var subEncoderInner: ProtoWireFormatEncoder? = null
+
+    val subEncoder: ProtoWireFormatEncoder
+        get() = subEncoderInner?.reset() ?: ProtoWireFormatEncoder().also { subEncoderInner = it }
+
+    fun reset(): ProtoWireFormatEncoder {
+        writer.reset()
+        return this
+    }
+
     override fun pack() = writer.pack()
 
     // ----------------------------------------------------------------------------
@@ -680,7 +693,7 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         if (wireFormat.kind == WireFormatKind.Primitive) {
             wireFormat.wireFormatEncode(this, value)
         } else {
-            val bytes = ProtoWireFormatEncoder().apply { wireFormat.wireFormatEncode(this, value) }.pack()
+            val bytes = subEncoder.apply { wireFormat.wireFormatEncode(this, value) }.pack()
             writer.bytes(fieldNumber, bytes)
         }
         return this
@@ -703,6 +716,71 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
+    // ----------------------------------------------------------------------------
+    // Pair
+    // ----------------------------------------------------------------------------
+
+    override fun <T1, T2> pair(
+        fieldNumber: Int,
+        fieldName: String,
+        value: Pair<T1?, T2?>,
+        firstWireFormat: WireFormat<T1>,
+        secondWireFormat: WireFormat<T2>,
+        firstNullable: Boolean,
+        secondNullable: Boolean
+    ): WireFormatEncoder {
+        val bytes1 = value.first?.let { subEncoder.apply { firstWireFormat.wireFormatEncode(this, it) }.pack() }
+        val bytes2 = value.second?.let { subEncoder.apply { secondWireFormat.wireFormatEncode(this, it) }.pack() }
+
+        val bytes = subEncoder.apply {
+
+            if (bytes1 == null) {
+                check(firstNullable)
+                writer.bool(1 + NULL_SHIFT, true)
+            } else {
+                byteArray(1, "", bytes1)
+            }
+
+            if (bytes2 == null) {
+                check(secondNullable)
+                writer.bool(2 + NULL_SHIFT, true)
+            } else {
+                byteArray(2, "", bytes2)
+            }
+
+        }.pack()
+
+        writer.bytes(fieldNumber, bytes)
+
+        return this
+    }
+
+    override fun <T1, T2> pairOrNull(
+        fieldNumber: Int,
+        fieldName: String,
+        value: Pair<T1?, T2?>?,
+        firstWireFormat: WireFormat<T1>,
+        secondWireFormat: WireFormat<T2>,
+        firstNullable: Boolean,
+        secondNullable: Boolean
+    ): WireFormatEncoder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            pair(fieldNumber, fieldName, value, firstWireFormat, secondWireFormat, firstNullable, secondNullable)
+        }
+        return this
+    }
+
+    override fun <T1, T2> rawPair(
+        value: Pair<T1?, T2?>,
+        firstWireFormat: WireFormat<T1>,
+        secondWireFormat: WireFormat<T2>,
+        firstNullable: Boolean,
+        secondNullable: Boolean
+    ): WireFormatEncoder =
+        pair(1, "", value, firstWireFormat, secondWireFormat, firstNullable, secondNullable)
+
     // -----------------------------------------------------------------------------------------
     // Utilities for classes that implement `WireFormat`
     // -----------------------------------------------------------------------------------------
@@ -715,8 +793,14 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         }
     }
 
-    override fun <T> items(value: Collection<T>, itemWireFormat: WireFormat<T>): WireFormatEncoder {
-        value.forEach { item(it, itemWireFormat) }
+    override fun <T> items(value: Collection<T?>, itemWireFormat: WireFormat<T>, nullable : Boolean): WireFormatEncoder {
+        value.forEach {
+            if (it == null) {
+                writer.bool(1 + NULL_SHIFT, true)
+            } else {
+                item(it, itemWireFormat)
+            }
+        }
         return this
     }
 

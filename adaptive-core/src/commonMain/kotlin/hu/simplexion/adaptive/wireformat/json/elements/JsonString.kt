@@ -14,10 +14,6 @@ class JsonString(val value: String) : JsonElement {
     override val asChar
         get() = value.single()
 
-    @OptIn(ExperimentalStdlibApi::class)
-    override val asByteArray
-        get() = value.hexToByteArray()
-
     override fun <T> asUuid(): UUID<T> {
         return UUID(value)
     }

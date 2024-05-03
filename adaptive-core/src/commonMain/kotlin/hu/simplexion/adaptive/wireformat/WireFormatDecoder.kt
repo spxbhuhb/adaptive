@@ -267,11 +267,41 @@ interface WireFormatDecoder<ST> {
     fun <T> asInstance(wireFormat: WireFormat<T>): T
 
     fun <T> asInstanceOrNull(wireFormat: WireFormat<T>): T?
+    
+    // -----------------------------------------------------------------------------------------
+    // Pair
+    // -----------------------------------------------------------------------------------------
+
+    fun <T1,T2> pair(
+        fieldNumber: Int,
+        fieldName: String,
+        firstWireFormat: WireFormat<T1>,
+        secondWireFormat : WireFormat<T2>,
+        firstNullable : Boolean,
+        secondNullable : Boolean
+    ): Pair<T1?,T2?>
+
+    fun <T1,T2> pairOrNull(
+        fieldNumber: Int,
+        fieldName: String,
+        firstWireFormat: WireFormat<T1>,
+        secondWireFormat : WireFormat<T2>,
+        firstNullable : Boolean,
+        secondNullable : Boolean
+    ): Pair<T1?,T2?>?
+
+    fun <T1,T2> rawPair(
+        source: ST,
+        firstWireFormat: WireFormat<T1>,
+        secondWireFormat : WireFormat<T2>,
+        firstNullable : Boolean,
+        secondNullable : Boolean
+    ): Pair<T1?,T2?>
 
     // -----------------------------------------------------------------------------------------
     // Utilities for classes that implement `WireFormat`
     // -----------------------------------------------------------------------------------------
 
-    fun <T> items(source: ST, itemWireFormat: WireFormat<T>): MutableList<T>
+    fun <T> items(source: ST, itemWireFormat: WireFormat<T>, nullable : Boolean): MutableList<T?>
 
 }
