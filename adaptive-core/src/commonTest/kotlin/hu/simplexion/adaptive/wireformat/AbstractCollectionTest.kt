@@ -88,7 +88,7 @@ abstract class AbstractCollectionTest<ST>(
     }
 
     fun <K,V> map(value: Map<K?,V?>, keyWireFormat: WireFormat<K>, valueWireFormat: WireFormat<V>, keyNullable : Boolean = false, valueNullable : Boolean = false) {
-        val mapWireFormat = MapWireFormat(keyWireFormat, valueWireFormat, keyNullable, valueNullable)
+        val mapWireFormat = MapWireFormat(keyWireFormat, keyNullable, valueWireFormat, valueNullable)
 
         assertEquals(value, e { instance(1, fieldName, value, mapWireFormat) } d { instance(1, fieldName, mapWireFormat) })
         assertEquals(null, e { instanceOrNull(1, fieldName, null, mapWireFormat) } d { instanceOrNull(1, fieldName, mapWireFormat) })

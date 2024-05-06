@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.service.model
 
 import hu.simplexion.adaptive.utility.UUID
+import hu.simplexion.adaptive.wireformat.Wire
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
@@ -16,14 +17,12 @@ import hu.simplexion.adaptive.wireformat.WireFormatEncoder
  * @property  [status]   Result status of the call.
  * @property  [payload]  Return value of the called service function.
  */
+@Wire
 class ResponseEnvelope(
     val callId: UUID<RequestEnvelope>,
     val status: ServiceCallStatus,
     val payload: ByteArray,
-) : WireFormat<ResponseEnvelope> {
-
-    override val wireFormatCompanion: WireFormat<ResponseEnvelope>
-        get() = ResponseEnvelope
+) {
 
     companion object : WireFormat<ResponseEnvelope> {
 

@@ -716,7 +716,7 @@ class JsonWireFormatEncoder(
 
     override fun <T> rawInstance(value: T, wireFormat: WireFormat<T>): WireFormatEncoder {
 
-        when (wireFormat.kind) {
+        when (wireFormat.wireFormatKind) {
             WireFormatKind.Primitive -> Unit
             WireFormatKind.Collection -> writer.openArray()
             WireFormatKind.Instance -> writer.openObject()
@@ -724,7 +724,7 @@ class JsonWireFormatEncoder(
 
         wireFormat.wireFormatEncode(this, value)
 
-        when (wireFormat.kind) {
+        when (wireFormat.wireFormatKind) {
             WireFormatKind.Primitive -> Unit
             WireFormatKind.Collection -> writer.closeArray()
             WireFormatKind.Instance -> writer.closeObject()
@@ -751,12 +751,12 @@ class JsonWireFormatEncoder(
         fieldName: String,
         value: Pair<T1?, T2?>,
         firstWireFormat: WireFormat<T1>,
-        secondWireFormat: WireFormat<T2>,
         firstNullable: Boolean,
+        secondWireFormat: WireFormat<T2>,
         secondNullable: Boolean
     ): WireFormatEncoder {
         writer.fieldName(fieldName)
-        rawPair(value, firstWireFormat, secondWireFormat, firstNullable, secondNullable)
+        rawPair(value, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
         return this
     }
 
@@ -765,14 +765,14 @@ class JsonWireFormatEncoder(
         fieldName: String,
         value: Pair<T1?, T2?>?,
         firstWireFormat: WireFormat<T1>,
-        secondWireFormat: WireFormat<T2>,
         firstNullable: Boolean,
+        secondWireFormat: WireFormat<T2>,
         secondNullable: Boolean
     ): WireFormatEncoder {
         if (value == null) {
             writer.nullValue(fieldName)
         } else {
-            pair(fieldNumber, fieldName, value, firstWireFormat, secondWireFormat, firstNullable, secondNullable)
+            pair(fieldNumber, fieldName, value, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
         }
         return this
     }
@@ -780,8 +780,8 @@ class JsonWireFormatEncoder(
     override fun <T1, T2> rawPair(
         value: Pair<T1?, T2?>,
         firstWireFormat: WireFormat<T1>,
-        secondWireFormat: WireFormat<T2>,
         firstNullable: Boolean,
+        secondWireFormat: WireFormat<T2>,
         secondNullable: Boolean
     ): WireFormatEncoder {
         writer.openArray()

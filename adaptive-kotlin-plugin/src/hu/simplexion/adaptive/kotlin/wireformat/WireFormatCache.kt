@@ -6,17 +6,21 @@ package hu.simplexion.adaptive.kotlin.wireformat
 
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import hu.simplexion.adaptive.kotlin.common.AbstractPluginContext
+import hu.simplexion.adaptive.kotlin.common.asClassId
 import hu.simplexion.adaptive.kotlin.common.companionClassId
+import hu.simplexion.adaptive.kotlin.wireformat.Signature.typeSignature
 import org.jetbrains.kotlin.ir.backend.js.utils.asString
-import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
-import org.jetbrains.kotlin.ir.types.IrType
-import org.jetbrains.kotlin.ir.types.classFqName
-import org.jetbrains.kotlin.ir.types.isNullable
+import org.jetbrains.kotlin.ir.types.*
+import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
+import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.types.checker.SimpleClassicTypeSystemContext.argumentsCount
+import org.jetbrains.kotlin.types.checker.SimpleClassicTypeSystemContext.getArguments
 
 class WireFormatCache(
     parentPluginContext: AbstractPluginContext
@@ -30,119 +34,119 @@ class WireFormatCache(
     val wireFormatEncoder
         get() = pluginContext.wireFormatEncoder
 
-    val types = mutableMapOf(
-        "kotlin.Unit" to "Unit".toWireFormatType(pluginContext, "0"),
+    val basicFormats = /* mutableMapOf, see below */ listOf(
+        PrimitiveWireFormat(pluginContext, "Unit", "0"),
 
-//        "kotlin.Boolean" to "Boolean".toWireFormatType(pluginContext, "Z"),
-        "kotlin.Int" to "Int".toWireFormatType(pluginContext, "I"),
-//        "kotlin.Short" to "Short".toWireFormatType(pluginContext, "S"),
-//        "kotlin.Byte" to "Byte".toWireFormatType(pluginContext, "B"),
-//        "kotlin.Long" to "Long".toWireFormatType(pluginContext, "J"),
-//        "kotlin.Float" to "Float".toWireFormatType(pluginContext, "F"),
-//        "kotlin.Double" to "Double".toWireFormatType(pluginContext, "D"),
-//        "kotlin.Char" to "Int".toWireFormatType(pluginContext, "C"),
-//
-//        "kotlin.ByteArray" to "ByteArray".toWireFormatType(pluginContext, "[Z"),
-        "kotlin.IntArray" to "IntArray".toWireFormatType(pluginContext, "[I"),
-//        "kotlin.ShortArray" to "ShortArray".toWireFormatType(pluginContext, "[S"),
-//        "kotlin.ByteArray" to "ByteArray".toWireFormatType(pluginContext, "[B"),
-//        "kotlin.LongArray" to "LongArray".toWireFormatType(pluginContext, "[J"),
-//        "kotlin.FloatArray" to "FloatArray".toWireFormatType(pluginContext, "[F"),
-//        "kotlin.DoubleArray" to "DoubleArray".toWireFormatType(pluginContext, "[D"),
-//        "kotlin.CharArray" to "CharArray".toWireFormatType(pluginContext, "[C"),
+        PrimitiveWireFormat(pluginContext, "Boolean", "Z"),
+        PrimitiveWireFormat(pluginContext, "Int", "I"),
+        PrimitiveWireFormat(pluginContext, "Short", "S"),
+        PrimitiveWireFormat(pluginContext, "Byte", "B"),
+        PrimitiveWireFormat(pluginContext, "Long", "J"),
+        PrimitiveWireFormat(pluginContext, "Float", "F"),
+        PrimitiveWireFormat(pluginContext, "Double", "D"),
+        PrimitiveWireFormat(pluginContext, "Char", "C"),
 
-        "kotlin.String" to "String".toWireFormatType(pluginContext, "S"),
-//        "hu.simplexion.adaptive.utility.UUID" to "Uuid".toWireFormatType(pluginContext, "U"),
-//
-//        "kotlin.UInt" to "Int".toWireFormatType(pluginContext, "+I"),
-//        "kotlin.UShort" to "Int".toWireFormatType(pluginContext, "+S"),
-//        "kotlin.UByte" to "Int".toWireFormatType(pluginContext, "+B"),
-//        "kotlin.ULong" to "Long".toWireFormatType(pluginContext, "+J"),
-//
-//        "kotlin.UIntArray" to "UIntArray".toWireFormatType(pluginContext, "[+I"),
-//        "kotlin.UShortArray" to "UShortArray".toWireFormatType(pluginContext, "[+S"),
-//        "kotlin.UByteArray" to "UByteArray".toWireFormatType(pluginContext, "[+B"),
-//        "kotlin.ULongArray" to "ULongArray".toWireFormatType(pluginContext, "[+J"),
+        PrimitiveWireFormat(pluginContext, "BooleanArray", "[Z"),
+        PrimitiveWireFormat(pluginContext, "IntArray", "[I"),
+        PrimitiveWireFormat(pluginContext, "ShortArray", "[S"),
+        PrimitiveWireFormat(pluginContext, "ByteArray", "[B"),
+        PrimitiveWireFormat(pluginContext, "LongArray", "[J"),
+        PrimitiveWireFormat(pluginContext, "FloatArray", "[F"),
+        PrimitiveWireFormat(pluginContext, "DoubleArray", "[D"),
+        PrimitiveWireFormat(pluginContext, "CharArray", "[C"),
 
-        "kotlin.time.Duration" to Strings.DURATION_WIREFORMAT.toInstanceWireFormatType(pluginContext),
-        "kotlinx.datetime.Instant" to Strings.INSTANT_WIREFORMAT.toInstanceWireFormatType(pluginContext),
-        "kotlinx.datetime.LocalDateTime" to Strings.LOCALDATETIME_WIREFORMAT.toInstanceWireFormatType(pluginContext),
-        "kotlinx.datetime.LocalDate" to Strings.LOCALDATE_WIREFORMAT.toInstanceWireFormatType(pluginContext),
-        "kotlinx.datetime.LocalTime" to Strings.LOCALTIME_WIREFORMAT.toInstanceWireFormatType(pluginContext)
+        PrimitiveWireFormat(pluginContext, "String", "S"),
+
+        PrimitiveWireFormat(pluginContext, "UInt", "+I"),
+        PrimitiveWireFormat(pluginContext, "UShort", "+S"),
+        PrimitiveWireFormat(pluginContext, "UByte", "+B"),
+        PrimitiveWireFormat(pluginContext, "ULong", "+J"),
+
+        PrimitiveWireFormat(pluginContext, "UIntArray", "[+I"),
+        PrimitiveWireFormat(pluginContext, "UShortArray", "[+S"),
+        PrimitiveWireFormat(pluginContext, "UByteArray", "[+B"),
+        PrimitiveWireFormat(pluginContext, "ULongArray", "[+J"),
+
+        PrimitiveWireFormat(pluginContext, "Uuid", "U"),
+
+        ClassWireFormat(pluginContext, Strings.DURATION_WIREFORMAT, "kotlin.time.Duration"),
+        ClassWireFormat(pluginContext, Strings.INSTANT_WIREFORMAT, "kotlinx.datetime.Instant"),
+        ClassWireFormat(pluginContext, Strings.LOCALDATETIME_WIREFORMAT, "kotlinx.datetime.LocalDateTime"),
+        ClassWireFormat(pluginContext, Strings.LOCALDATE_WIREFORMAT, "kotlinx.datetime.LocalDate"),
+        ClassWireFormat(pluginContext, Strings.LOCALTIME_WIREFORMAT, "kotlinx.datetime.LocalTime")
+    ).associateBy { it.representedClass }.toMutableMap()
+
+    val genericFormats = mutableMapOf(
+        "kotlin.collections.List" to loadBuiltinGenericFormat(Strings.LIST_WIREFORMAT.asClassId)
     )
 
-    //    fun primitive(type: IrType): WireFormatType? {
-//        val fqName = (type.classifierOrNull as? IrClassSymbol)?.owner?.fqNameWhenAvailable ?: return null
-//        return protoPrimitives[fqName.asString()]
-//    }
-//
-//    fun list(type: IrType): WireFormatType? {
-//        if (! type.isSubtypeOfClass(pluginContext.listClass)) return null
-//
-//        // FIXME hackish list item type retrieval
-//        val itemType = (type as IrSimpleTypeImpl).arguments.first() as IrType
-//        check(! itemType.isNullable()) { "nullable items in lists are not supported" }
-//
-//        return primitive(itemType)
-//    }
-//
-//    operator fun get(type: IrType) =
-//        protoCoders.getOrPut(type) { add(type) }
-//
-//    fun add(type: IrType): IrClass? {
-//
-//        val companion = type.getClass()?.companionObject() ?: tryLoadCompanion(type) ?: return null
-//
-//        if (! companion.isSubclassOf(protoEncoderClass)) return null
-//        if (! companion.isSubclassOf(protoDecoderClass)) return null
-//
-//        pluginContext.debug("service") { "protoCache add $type $companion" }
-//        return companion
-//    }
-//
-//    fun add(type: IrType, companion: IrClass) {
-//        pluginContext.debug("service") { "protoCache add $type $companion" }
-//        protoCoders[type] = companion
-//    }
-//
+    val signatureFormats = basicFormats.values
+        .associate { it.signature to SignatureWireFormat(it) }
+        .toMutableMap()
 
-    fun signature(function: IrFunction): String {
-        val parts = mutableListOf<String>()
+    fun getSignatureFormat(targetType: IrType): SignatureWireFormat =
+        typeSignature(targetType).let { signatureFormats[it] ?: loadSignatureFormat(it, targetType) }
 
-        parts += function.name.identifier + ";"
+    private fun loadSignatureFormat(signature: String, irType: IrType): SignatureWireFormat {
+        val typeFqName = checkNotNull(irType.classFqName) { "type without null classFqName: ${irType.asString()}" }
+        val classFqName = typeFqName.asString()
 
-        function.valueParameters.mapTo(parts) {
-            val typeFqName = checkNotNull(it.type.classFqName) { "unsupported type: ${it.type.asString()}" }
-            val wireFormatType = types[typeFqName.asString()] ?: loadType(typeFqName)
-            wireFormatType.signature
+        // null and non-null formats are the same on the top level
+
+        if (signature.endsWith('?')) {
+            val nonNullSignature = signature.dropLast(1)
+            val nonNullFormat = signatureFormats[nonNullSignature]
+            if (nonNullFormat != null) {
+                return nonNullFormat.copy(nullable = true).also { signatureFormats[signature] = it }
+            }
         }
 
-        return parts.joinToString("")
+        check(irType is IrSimpleTypeImpl) { "not a simple type: ${irType.asString()}" }
+
+        // without type arguments we can load the companion directly as a class format
+
+        if (irType.arguments.isEmpty()) {
+            val basicFormat = basicFormats[classFqName] ?: loadClassFormat(typeFqName)
+            return SignatureWireFormat(basicFormat).also { signatureFormats[signature] = it }
+        }
+
+        // with type arguments we have a class and have to create an instance
+
+        val arguments = mutableListOf<SignatureWireFormat>()
+
+        irType.arguments.forEach {
+            check(it is IrType) { "invalid type argument in : ${irType.asString()} $signature" }
+            arguments += getSignatureFormat(it as IrType)
+        }
+
+        val genericFormat = genericFormats[classFqName] ?: loadGeneratedGenericFormat(classFqName.asClassId)
+
+        return SignatureWireFormat(genericFormat = genericFormat)
     }
 
-    private fun loadType(typeFqName: FqName): WireFormatType {
-        val type = typeFqName.companionClassId.toInstanceWireFormatType(pluginContext)
-        types[typeFqName.asString()] = type
-        return type
-    }
+    fun loadClassFormat(typeFqName: FqName): ClassWireFormat =
+        ClassWireFormat(pluginContext, typeFqName.companionClassId, typeFqName.asString())
+            .also { basicFormats[typeFqName.asString()] = it }
 
+    fun loadBuiltinGenericFormat(classId: ClassId): GenericWireFormat =
+        GenericWireFormat(pluginContext, classId)
+
+    fun loadGeneratedGenericFormat(classId: ClassId): GenericWireFormat =
+        GenericWireFormat(pluginContext, classId.createNestedClassId(Name.identifier("WireFormat")))
+            .also { genericFormats[classId.asString()] = it }
 
     fun encodeReturnValue(targetType: IrType, encoder: IrExpression, value: IrExpression): IrExpression {
-        val typeFqName = checkNotNull(targetType.classFqName) { "unsupported type: ${targetType.asString()}" }
-        val wireFormatType = types[typeFqName.asString()] ?: loadType(typeFqName)
 
         val rawInstanceFunc = if (targetType.isNullable()) (
             pluginContext.rawInstanceOrNull
-        ) else {
+            ) else {
             pluginContext.rawInstance
         }
 
-        return irCall(rawInstanceFunc, encoder, value, irGetObject(wireFormatType.wireFormat))
+        return irCall(rawInstanceFunc, encoder, value, getSignatureFormat(targetType).buildWireFormat(this))
     }
 
     fun decodeReturnValue(targetType: IrType, decoder: IrExpression): IrExpression {
-        val typeFqName = checkNotNull(targetType.classFqName) { "unsupported type: ${targetType.asString()}" }
-        val wireFormatType = types[typeFqName.asString()] ?: loadType(typeFqName)
 
         val asInstanceFunc = if (targetType.isNullable()) (
             pluginContext.asInstanceOrNull
@@ -150,47 +154,49 @@ class WireFormatCache(
             pluginContext.asInstance
         }
 
-        return irCall(asInstanceFunc, decoder, irGetObject(wireFormatType.wireFormat))
+        return irCall(asInstanceFunc, decoder, getSignatureFormat(targetType).buildWireFormat(this))
     }
 
     fun encode(encoder: IrCall, fieldNumber: Int, fieldName: String, value: IrExpression): IrCallImpl {
-        val targetType = value.type
 
-        val typeFqName = checkNotNull(targetType.classFqName) { "unsupported type: ${targetType.asString()}" }
-        val wireFormatType = types[typeFqName.asString()] ?: loadType(typeFqName)
+        val signatureFormat = getSignatureFormat(value.type)
 
-
-        val encodeFunc = if (targetType.isNullable()) {
-            wireFormatType.encodeOrNull
-        } else {
-            wireFormatType.encode
-        }
-
-        if (wireFormatType.primitive) {
+        if (signatureFormat.isPrimitive) {
+            val encodeFunc = if (value.type.isNullable()) {
+                (signatureFormat.basicFormat as PrimitiveWireFormat).encodeOrNull
+            } else {
+                (signatureFormat.basicFormat as PrimitiveWireFormat).encode
+            }
             return irCall(encodeFunc, encoder, irConst(fieldNumber), irConst(fieldName), value)
         } else {
-            val wireFormat = checkNotNull(wireFormatType.wireFormat)
-            return irCall(encodeFunc, encoder, irConst(fieldNumber), irConst(fieldName), value, irGetObject(wireFormat))
+            val encodeFunc = if (value.type.isNullable()) {
+                pluginContext.encodeInstanceOrNull
+            } else {
+                pluginContext.encodeInstance
+            }
+            return irCall(encodeFunc, encoder, irConst(fieldNumber), irConst(fieldName), value, signatureFormat.buildWireFormat(this))
         }
     }
 
     fun decode(fieldNumber: Int, valueParameter: IrValueParameter, decoder: () -> IrExpression): IrCallImpl {
-        val targetType = valueParameter.type
         val fieldName = valueParameter.name.identifier
 
-        val typeFqName = checkNotNull(targetType.classFqName) { "unsupported type: ${targetType.asString()}" }
-        val wireFormatType = types[typeFqName.asString()] ?: loadType(typeFqName)
+        val signatureFormat = getSignatureFormat(valueParameter.type)
 
-        val decodeFunc = if (targetType.isNullable()) {
-            wireFormatType.decodeOrNull
-        } else {
-            wireFormatType.decode
-        }
-
-        if (wireFormatType.primitive) {
+        if (signatureFormat.isPrimitive) {
+            val decodeFunc = if (valueParameter.type.isNullable()) {
+                (signatureFormat.basicFormat as PrimitiveWireFormat).decodeOrNull
+            } else {
+                (signatureFormat.basicFormat as PrimitiveWireFormat).decode
+            }
             return irCall(decodeFunc, decoder(), irConst(fieldNumber), irConst(fieldName))
         } else {
-            return irCall(decodeFunc, decoder(), irConst(fieldNumber), irConst(fieldName), irGetObject(wireFormatType.wireFormat))
+            val decodeFunc = if (valueParameter.type.isNullable()) {
+                pluginContext.decodeInstanceOrNull
+            } else {
+                pluginContext.decodeInstance
+            }
+            return irCall(decodeFunc, decoder(), irConst(fieldNumber), irConst(fieldName), signatureFormat.buildWireFormat(this))
         }
     }
 }

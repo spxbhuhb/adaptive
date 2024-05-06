@@ -5,19 +5,18 @@
 package hu.simplexion.adaptive.service.model
 
 import hu.simplexion.adaptive.utility.UUID
+import hu.simplexion.adaptive.wireformat.Wire
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
 
+@Wire
 class RequestEnvelope(
     val callId: UUID<RequestEnvelope>,
     val serviceName: String,
     val funName: String,
     val payload: ByteArray
-) : WireFormat<RequestEnvelope> {
-
-    override val wireFormatCompanion: WireFormat<RequestEnvelope>
-        get() = RequestEnvelope
+) {
 
     companion object : WireFormat<RequestEnvelope> {
 
@@ -38,6 +37,5 @@ class RequestEnvelope(
             )
         }
     }
-
 
 }

@@ -8,7 +8,6 @@ import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatKind
-import hu.simplexion.adaptive.wireformat.json.elements.JsonElement
 import kotlin.enums.EnumEntries
 
 /**
@@ -454,29 +453,29 @@ class ProtoWireFormatDecoder(
         fieldNumber: Int,
         fieldName: String,
         firstWireFormat: WireFormat<T1>,
+        firstNullable: Boolean,
         secondWireFormat: WireFormat<T2>,
-        firstNullable : Boolean,
-        secondNullable : Boolean
+        secondNullable: Boolean
     ): Pair<T1?, T2?> {
         val record = checkNotNull(get(fieldNumber)) { "missing field: $fieldNumber $fieldName" }
-        return rawPair(record, firstWireFormat, secondWireFormat, firstNullable, secondNullable)
+        return rawPair(record, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
     }
 
     override fun <T1, T2> pairOrNull(
         fieldNumber: Int,
         fieldName: String,
         firstWireFormat: WireFormat<T1>,
+        firstNullable: Boolean,
         secondWireFormat: WireFormat<T2>,
-        firstNullable : Boolean,
-        secondNullable : Boolean
+        secondNullable: Boolean
     ): Pair<T1?, T2?>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else pair(fieldNumber, fieldName, firstWireFormat, secondWireFormat, firstNullable, secondNullable)
+        if (get(fieldNumber + NULL_SHIFT) != null) null else pair(fieldNumber, fieldName, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
 
     override fun <T1, T2> rawPair(
         source: ProtoRecord,
         firstWireFormat: WireFormat<T1>,
-        secondWireFormat: WireFormat<T2>,
         firstNullable: Boolean,
+        secondWireFormat: WireFormat<T2>,
         secondNullable: Boolean
     ): Pair<T1?, T2?> {
         check(source is LenProtoRecord)
@@ -506,7 +505,7 @@ class ProtoWireFormatDecoder(
     // -----------------------------------------------------------------------------------------
 
     fun <T> item(source: ProtoRecord, wireFormat: WireFormat<T>): T =
-        when (wireFormat.kind) {
+        when (wireFormat.wireFormatKind) {
             WireFormatKind.Primitive -> {
                 wireFormat.wireFormatDecode(source, this)
             }

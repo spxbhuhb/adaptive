@@ -14,7 +14,7 @@ class ArrayWireFormat<T>(
     val nullable : Boolean = false
 ) : WireFormat<Array<T?>> {
 
-    override val kind: WireFormatKind
+    override val wireFormatKind: WireFormatKind
         get() = WireFormatKind.Collection
 
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Array<T?>): WireFormatEncoder =
@@ -33,7 +33,7 @@ class ListWireFormat<T>(
     val nullable : Boolean = false
 ) : WireFormat<List<T?>> {
 
-    override val kind: WireFormatKind
+    override val wireFormatKind: WireFormatKind
         get() = WireFormatKind.Collection
 
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: List<T?>): WireFormatEncoder =
@@ -49,7 +49,7 @@ class SetWireFormat<T>(
     val nullable : Boolean = false
 ) : WireFormat<Set<T?>> {
 
-    override val kind: WireFormatKind
+    override val wireFormatKind: WireFormatKind
         get() = WireFormatKind.Collection
 
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Set<T?>): WireFormatEncoder =
@@ -61,20 +61,20 @@ class SetWireFormat<T>(
 }
 
 class MapWireFormat<K,V>(
-    val keyWireFormat : WireFormat<K>,
+    val keyWireFormat: WireFormat<K>,
+    val keyNullable: Boolean = false,
     val valueWireFormat: WireFormat<V>,
-    val keyNullable : Boolean = false,
     val valueNullable: Boolean = false,
 ) : WireFormat<Map<K?,V?>> {
 
-    override val kind: WireFormatKind
+    override val wireFormatKind: WireFormatKind
         get() = WireFormatKind.Collection
 
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Map<K?,V?>): WireFormatEncoder =
-        encoder.items(value.toList(), PairWireFormat(keyWireFormat, valueWireFormat, keyNullable, valueNullable), false)
+        encoder.items(value.toList(), PairWireFormat(keyWireFormat, keyNullable, valueWireFormat, valueNullable), false)
 
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Map<K?,V?> {
-        val list = decoder?.items(source, PairWireFormat(keyWireFormat, valueWireFormat, keyNullable, valueNullable), false)
+        val list = decoder?.items(source, PairWireFormat(keyWireFormat, keyNullable, valueWireFormat, valueNullable), false)
         @Suppress("UNCHECKED_CAST") // nullable parameter of `items` is false
         list as List<Pair<K,V>>
         return list.toMap()

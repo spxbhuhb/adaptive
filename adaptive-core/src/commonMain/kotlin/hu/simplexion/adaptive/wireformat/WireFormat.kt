@@ -6,18 +6,18 @@ package hu.simplexion.adaptive.wireformat
 
 interface WireFormat<T> {
 
-    val kind: WireFormatKind
+    val wireFormatKind: WireFormatKind
         get() = WireFormatKind.Instance
 
-    val wireFormatCompanion: WireFormat<T>
-        get() {
-            throw UnsupportedOperationException("This code should be replaced by the Adaptive plugin for classes and never be called for companions and objects.")
-        }
+    fun wireFormatEncode(encoder: WireFormatEncoder, value: T): WireFormatEncoder
 
-    fun wireFormatEncode(encoder: WireFormatEncoder, value: T): WireFormatEncoder =
-        wireFormatCompanion.wireFormatEncode(encoder, value)
+    fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): T
 
-    fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): T =
-        wireFormatCompanion.wireFormatDecode(source, decoder)
+    @Suppress("UNCHECKED_CAST")
+    fun wireFormatEncode(encoder: WireFormatEncoder, fieldNumber : Int, fieldName : String, value : T?) =
+        encoder.instanceOrNull(fieldNumber, fieldName, this as T?, this)
+
+    fun <ST> wireFormatDecode(decoder: WireFormatDecoder<ST>, fieldNumber : Int, fieldName : String) =
+        decoder.instanceOrNull(fieldNumber,fieldName, this)
 
 }

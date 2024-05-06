@@ -9,6 +9,7 @@ import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
+@OptIn(ExperimentalUnsignedTypes::class)
 abstract class AbstractKotlinTest<ST>(
     wireFormatProvider: WireFormatProvider
 ) : AbstractWireFormatTest<ST>(wireFormatProvider) {
@@ -100,6 +101,7 @@ abstract class AbstractKotlinTest<ST>(
         assertEquals(null, e { booleanArrayOrNull(1, fieldName, null) } d { booleanArrayOrNull(1, fieldName) })
         assertContentEquals(booleanArrayVal, e { booleanArrayOrNull(1, fieldName, booleanArrayVal) } d { booleanArrayOrNull(1, fieldName) })
         assertContentEquals(booleanArrayVal, r { rawBooleanArray(booleanArrayVal) } d { rawBooleanArray(it) })
+        assertContentEquals(booleanArrayVal, e { instance(1, fieldName, booleanArrayVal, BooleanArrayWireFormat) } d { instance(1, fieldName, BooleanArrayWireFormat) })
     }
 
     @Test
@@ -108,6 +110,7 @@ abstract class AbstractKotlinTest<ST>(
         assertEquals(null, e { intArrayOrNull(1, fieldName, null) } d { intArrayOrNull(1, fieldName) })
         assertContentEquals(intArrayVal, e { intArrayOrNull(1, fieldName, intArrayVal) } d { intArrayOrNull(1, fieldName) })
         assertContentEquals(intArrayVal, r { rawIntArray(intArrayVal) } d { rawIntArray(it) })
+        assertContentEquals(intArrayVal, e { instance(1, fieldName, intArrayVal, IntArrayWireFormat) } d { instance(1, fieldName, IntArrayWireFormat) })
     }
 
     @Test
@@ -116,6 +119,7 @@ abstract class AbstractKotlinTest<ST>(
         assertEquals(null, e { shortArrayOrNull(1, fieldName, null) } d { shortArrayOrNull(1, fieldName) })
         assertContentEquals(shortArrayVal, e { shortArrayOrNull(1, fieldName, shortArrayVal) } d { shortArrayOrNull(1, fieldName) })
         assertContentEquals(shortArrayVal, r { rawShortArray(shortArrayVal) } d { rawShortArray(it) })
+        assertContentEquals(shortArrayVal, e { instance(1, fieldName, shortArrayVal, ShortArrayWireFormat) } d { instance(1, fieldName, ShortArrayWireFormat) })
     }
 
     @Test
@@ -124,6 +128,7 @@ abstract class AbstractKotlinTest<ST>(
         assertEquals(null, e { byteArrayOrNull(1, fieldName, null) } d { byteArrayOrNull(1, fieldName) })
         assertContentEquals(byteArrayVal, e { byteArrayOrNull(1, fieldName, byteArrayVal) } d { byteArrayOrNull(1, fieldName) })
         assertContentEquals(byteArrayVal, r { rawByteArray(byteArrayVal) } d { rawByteArray(it) })
+        assertContentEquals(byteArrayVal, e { instance(1, fieldName, byteArrayVal, ByteArrayWireFormat) } d { instance(1, fieldName, ByteArrayWireFormat) })
     }
 
     @Test
@@ -132,6 +137,7 @@ abstract class AbstractKotlinTest<ST>(
         assertEquals(null, e { longArrayOrNull(1, fieldName, null) } d { longArrayOrNull(1, fieldName) })
         assertContentEquals(longArrayVal, e { longArrayOrNull(1, fieldName, longArrayVal) } d { longArrayOrNull(1, fieldName) })
         assertContentEquals(longArrayVal, r { rawLongArray(longArrayVal) } d { rawLongArray(it) })
+        assertContentEquals(longArrayVal, e { instance(1, fieldName, longArrayVal, LongArrayWireFormat) } d { instance(1, fieldName, LongArrayWireFormat) })
     }
 
     @Test
@@ -140,6 +146,7 @@ abstract class AbstractKotlinTest<ST>(
         assertEquals(null, e { floatArrayOrNull(1, fieldName, null) } d { floatArrayOrNull(1, fieldName) })
         assertContentEquals(floatArrayVal, e { floatArrayOrNull(1, fieldName, floatArrayVal) } d { floatArrayOrNull(1, fieldName) })
         assertContentEquals(floatArrayVal, r { rawFloatArray(floatArrayVal) } d { rawFloatArray(it) })
+        assertContentEquals(floatArrayVal, e { instance(1, fieldName, floatArrayVal, FloatArrayWireFormat) } d { instance(1, fieldName, FloatArrayWireFormat) })
     }
 
     @Test
@@ -148,6 +155,7 @@ abstract class AbstractKotlinTest<ST>(
         assertEquals(null, e { doubleArrayOrNull(1, fieldName, null) } d { doubleArrayOrNull(1, fieldName) })
         assertContentEquals(doubleArrayVal, e { doubleArrayOrNull(1, fieldName, doubleArrayVal) } d { doubleArrayOrNull(1, fieldName) })
         assertContentEquals(doubleArrayVal, r { rawDoubleArray(doubleArrayVal) } d { rawDoubleArray(it) })
+        assertContentEquals(doubleArrayVal, e { instance(1, fieldName, doubleArrayVal, DoubleArrayWireFormat) } d { instance(1, fieldName, DoubleArrayWireFormat) })
     }
 
     @Test
@@ -156,6 +164,7 @@ abstract class AbstractKotlinTest<ST>(
         assertEquals(null, e { charArrayOrNull(1, fieldName, null) } d { charArrayOrNull(1, fieldName) })
         assertContentEquals(charArrayVal, e { charArrayOrNull(1, fieldName, charArrayVal) } d { charArrayOrNull(1, fieldName) })
         assertContentEquals(charArrayVal, r { rawCharArray(charArrayVal) } d { rawCharArray(it) })
+        assertContentEquals(charArrayVal, e { instance(1, fieldName, charArrayVal, CharArrayWireFormat) } d { instance(1, fieldName, CharArrayWireFormat) })
     }
 
     @Test
@@ -222,6 +231,42 @@ abstract class AbstractKotlinTest<ST>(
     }
 
     @Test
+    fun testUIntArray() {
+        assertContentEquals(uIntArrayVal, e { uIntArray(1, fieldName, uIntArrayVal) } d { uIntArray(1, fieldName) })
+        assertEquals(null, e { uIntArrayOrNull(1, fieldName, null) } d { uIntArrayOrNull(1, fieldName) })
+        assertContentEquals(uIntArrayVal, e { uIntArrayOrNull(1, fieldName, uIntArrayVal) } d { uIntArrayOrNull(1, fieldName) })
+        assertContentEquals(uIntArrayVal, r { rawUIntArray(uIntArrayVal) } d { rawUIntArray(it) })
+        assertContentEquals(uIntArrayVal, e { instance(1, fieldName, uIntArrayVal, UIntArrayWireFormat) } d { instance(1, fieldName, UIntArrayWireFormat) })
+    }
+    
+    @Test
+    fun testUByteArray() {
+        assertContentEquals(uByteArrayVal, e { uByteArray(1, fieldName, uByteArrayVal) } d { uByteArray(1, fieldName) })
+        assertEquals(null, e { uByteArrayOrNull(1, fieldName, null) } d { uByteArrayOrNull(1, fieldName) })
+        assertContentEquals(uByteArrayVal, e { uByteArrayOrNull(1, fieldName, uByteArrayVal) } d { uByteArrayOrNull(1, fieldName) })
+        assertContentEquals(uByteArrayVal, r { rawUByteArray(uByteArrayVal) } d { rawUByteArray(it) })
+        assertContentEquals(uByteArrayVal, e { instance(1, fieldName, uByteArrayVal, UByteArrayWireFormat) } d { instance(1, fieldName, UByteArrayWireFormat) })
+    }
+    
+    @Test
+    fun testUShortArray() {
+        assertContentEquals(uShortArrayVal, e { uShortArray(1, fieldName, uShortArrayVal) } d { uShortArray(1, fieldName) })
+        assertEquals(null, e { uShortArrayOrNull(1, fieldName, null) } d { uShortArrayOrNull(1, fieldName) })
+        assertContentEquals(uShortArrayVal, e { uShortArrayOrNull(1, fieldName, uShortArrayVal) } d { uShortArrayOrNull(1, fieldName) })
+        assertContentEquals(uShortArrayVal, r { rawUShortArray(uShortArrayVal) } d { rawUShortArray(it) })
+        assertContentEquals(uShortArrayVal, e { instance(1, fieldName, uShortArrayVal, UShortArrayWireFormat) } d { instance(1, fieldName, UShortArrayWireFormat) })
+    }
+    
+    @Test
+    fun testULongArray() {
+        assertContentEquals(uLongArrayVal, e { uLongArray(1, fieldName, uLongArrayVal) } d { uLongArray(1, fieldName) })
+        assertEquals(null, e { uLongArrayOrNull(1, fieldName, null) } d { uLongArrayOrNull(1, fieldName) })
+        assertContentEquals(uLongArrayVal, e { uLongArrayOrNull(1, fieldName, uLongArrayVal) } d { uLongArrayOrNull(1, fieldName) })
+        assertContentEquals(uLongArrayVal, r { rawULongArray(uLongArrayVal) } d { rawULongArray(it) })
+        assertContentEquals(uLongArrayVal, e { instance(1, fieldName, uLongArrayVal, ULongArrayWireFormat) } d { instance(1, fieldName, ULongArrayWireFormat) })
+    }
+
+    @Test
     fun testInstance() {
         assertEquals(instanceVal, e { instance(1, fieldName, instanceVal, A) } d { instance(1, fieldName, A) })
         assertEquals(null, e { instanceOrNull(1, fieldName, null, A) } d { instanceOrNull(1, fieldName, A) })
@@ -231,11 +276,11 @@ abstract class AbstractKotlinTest<ST>(
 
     @Test
     fun testPair() {
-        assertEquals(pairVal, e { pair(1, fieldName, pairVal, IntWireFormat, StringWireFormat, false, false) } d { pair(1, fieldName, IntWireFormat, StringWireFormat, false, false) })
-        assertEquals(null, e { pairOrNull(1, fieldName, null, IntWireFormat, StringWireFormat, false, false) } d { pairOrNull(1, fieldName, IntWireFormat, StringWireFormat, false, false) })
-        assertEquals(pairVal, e { pairOrNull(1, fieldName, pairVal, IntWireFormat, StringWireFormat, false, false) } d { pairOrNull(1, fieldName, IntWireFormat, StringWireFormat, false, false) })
-        assertEquals(pairVal, r { rawPair(pairVal, IntWireFormat, StringWireFormat, false, false) } d { rawPair(it, IntWireFormat, StringWireFormat, false, false) })
-        instance(pairVal, PairWireFormat(IntWireFormat, StringWireFormat, false, false))
+        assertEquals(pairVal, e { pair(1, fieldName, pairVal, IntWireFormat, false, StringWireFormat, false) } d { pair(1, fieldName, IntWireFormat, false, StringWireFormat, false) })
+        assertEquals(null, e { pairOrNull(1, fieldName, null, IntWireFormat, false, StringWireFormat, false) } d { pairOrNull(1, fieldName, IntWireFormat, false, StringWireFormat, false) })
+        assertEquals(pairVal, e { pairOrNull(1, fieldName, pairVal, IntWireFormat, false, StringWireFormat, false) } d { pairOrNull(1, fieldName, IntWireFormat, false, StringWireFormat, false) })
+        assertEquals(pairVal, r { rawPair(pairVal, IntWireFormat, false, StringWireFormat, false) } d { rawPair(it, IntWireFormat, false, StringWireFormat, false) })
+        instance(pairVal, PairWireFormat(IntWireFormat, false, StringWireFormat, false))
     }
 
     @Test

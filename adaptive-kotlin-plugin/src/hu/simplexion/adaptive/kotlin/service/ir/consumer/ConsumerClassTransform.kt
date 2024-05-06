@@ -11,6 +11,7 @@ import hu.simplexion.adaptive.kotlin.service.ServicesPluginKey
 import hu.simplexion.adaptive.kotlin.service.Strings
 import hu.simplexion.adaptive.kotlin.service.ir.ServicesPluginContext
 import hu.simplexion.adaptive.kotlin.service.ir.util.IrClassBaseBuilder
+import hu.simplexion.adaptive.kotlin.wireformat.Signature
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
@@ -77,7 +78,7 @@ class ConsumerClassTransform(
                         irCall(
                             consumerClass.functionByName { Strings.CALL_SERVICE },
                             irGet(function.dispatchReceiverParameter !!),
-                            irConst(pluginContext.wireFormatCache.signature(function)),
+                            irConst(Signature.functionSignature(function)),
                             buildPayload(function)
                         )
                     )

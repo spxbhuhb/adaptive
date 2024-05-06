@@ -690,7 +690,7 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
     // ----------------------------------------------------------------------------
 
     override fun <T> instance(fieldNumber: Int, fieldName: String, value: T, wireFormat: WireFormat<T>): ProtoWireFormatEncoder {
-        if (wireFormat.kind == WireFormatKind.Primitive) {
+        if (wireFormat.wireFormatKind == WireFormatKind.Primitive) {
             wireFormat.wireFormatEncode(this, value)
         } else {
             val bytes = subEncoder.apply { wireFormat.wireFormatEncode(this, value) }.pack()
@@ -725,8 +725,8 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         fieldName: String,
         value: Pair<T1?, T2?>,
         firstWireFormat: WireFormat<T1>,
-        secondWireFormat: WireFormat<T2>,
         firstNullable: Boolean,
+        secondWireFormat: WireFormat<T2>,
         secondNullable: Boolean
     ): WireFormatEncoder {
         val bytes1 = value.first?.let { subEncoder.apply { firstWireFormat.wireFormatEncode(this, it) }.pack() }
@@ -760,14 +760,14 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         fieldName: String,
         value: Pair<T1?, T2?>?,
         firstWireFormat: WireFormat<T1>,
-        secondWireFormat: WireFormat<T2>,
         firstNullable: Boolean,
+        secondWireFormat: WireFormat<T2>,
         secondNullable: Boolean
     ): WireFormatEncoder {
         if (value == null) {
             writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
-            pair(fieldNumber, fieldName, value, firstWireFormat, secondWireFormat, firstNullable, secondNullable)
+            pair(fieldNumber, fieldName, value, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
         }
         return this
     }
@@ -775,18 +775,18 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
     override fun <T1, T2> rawPair(
         value: Pair<T1?, T2?>,
         firstWireFormat: WireFormat<T1>,
-        secondWireFormat: WireFormat<T2>,
         firstNullable: Boolean,
+        secondWireFormat: WireFormat<T2>,
         secondNullable: Boolean
     ): WireFormatEncoder =
-        pair(1, "", value, firstWireFormat, secondWireFormat, firstNullable, secondNullable)
+        pair(1, "", value, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
 
     // -----------------------------------------------------------------------------------------
     // Utilities for classes that implement `WireFormat`
     // -----------------------------------------------------------------------------------------
 
     fun <T> item(value: T, wireFormat: WireFormat<T>) {
-        when (wireFormat.kind) {
+        when (wireFormat.wireFormatKind) {
             WireFormatKind.Primitive -> wireFormat.wireFormatEncode(this, value)
             WireFormatKind.Collection -> instance(1, "", value, wireFormat)
             WireFormatKind.Instance -> instance(1, "", value, wireFormat)

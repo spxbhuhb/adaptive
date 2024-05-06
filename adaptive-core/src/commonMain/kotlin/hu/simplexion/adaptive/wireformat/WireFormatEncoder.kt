@@ -281,8 +281,8 @@ interface WireFormatEncoder {
         fieldName: String,
         value: Pair<T1?, T2?>,
         firstWireFormat: WireFormat<T1>,
-        secondWireFormat: WireFormat<T2>,
         firstNullable: Boolean,
+        secondWireFormat: WireFormat<T2>,
         secondNullable: Boolean
     ): WireFormatEncoder
 
@@ -291,16 +291,16 @@ interface WireFormatEncoder {
         fieldName: String,
         value: Pair<T1?, T2?>?,
         firstWireFormat: WireFormat<T1>,
-        secondWireFormat: WireFormat<T2>,
         firstNullable: Boolean,
+        secondWireFormat: WireFormat<T2>,
         secondNullable: Boolean
     ): WireFormatEncoder
 
     fun <T1,T2> rawPair(
         value: Pair<T1?, T2?>,
         firstWireFormat: WireFormat<T1>,
-        secondWireFormat: WireFormat<T2>,
         firstNullable: Boolean,
+        secondWireFormat: WireFormat<T2>,
         secondNullable: Boolean
     ): WireFormatEncoder
 

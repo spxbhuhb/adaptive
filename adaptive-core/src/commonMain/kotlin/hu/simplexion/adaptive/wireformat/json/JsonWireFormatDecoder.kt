@@ -483,27 +483,27 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
         fieldNumber: Int,
         fieldName: String,
         firstWireFormat: WireFormat<T1>,
+        firstNullable: Boolean,
         secondWireFormat: WireFormat<T2>,
-        firstNullable : Boolean,
-        secondNullable : Boolean
+        secondNullable: Boolean
     ): Pair<T1?, T2?> =
-        rawPair(get(fieldName), firstWireFormat, secondWireFormat, firstNullable, secondNullable)
+        rawPair(get(fieldName), firstWireFormat, firstNullable, secondWireFormat, secondNullable)
 
     override fun <T1, T2> pairOrNull(
         fieldNumber: Int,
         fieldName: String,
         firstWireFormat: WireFormat<T1>,
+        firstNullable: Boolean,
         secondWireFormat: WireFormat<T2>,
-        firstNullable : Boolean,
-        secondNullable : Boolean
+        secondNullable: Boolean
     ): Pair<T1?, T2?>? =
-        if (getOrNull(fieldName) == null) null else pair(fieldNumber, fieldName, firstWireFormat, secondWireFormat, firstNullable, secondNullable)
+        if (getOrNull(fieldName) == null) null else pair(fieldNumber, fieldName, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
 
     override fun <T1, T2> rawPair(
         source: JsonElement,
         firstWireFormat: WireFormat<T1>,
-        secondWireFormat: WireFormat<T2>,
         firstNullable: Boolean,
+        secondWireFormat: WireFormat<T2>,
         secondNullable: Boolean
     ): Pair<T1?, T2?> {
         require(source is JsonArray && source.items.size == 2) { "wrong pair format (must be array with 2 items)" }

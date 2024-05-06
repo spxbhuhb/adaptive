@@ -37,6 +37,8 @@ object Strings {
     const val INSTANCE_LIST = "instanceList"
     const val INSTANCE_LIST_OR_NULL = "instanceListOrNull"
 
+    const val LIST_WIREFORMAT = "$BUILTIN_PACKAGE.ListWireFormat"
+
     const val DURATION_WIREFORMAT = "$BUILTIN_PACKAGE.DurationWireFormat"
     const val INSTANT_WIREFORMAT = "$BUILTIN_PACKAGE.InstantWireFormat"
     const val LOCALDATE_WIREFORMAT = "$BUILTIN_PACKAGE.LocalDateWireFormat"

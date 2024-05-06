@@ -11,6 +11,7 @@ import hu.simplexion.adaptive.kotlin.service.Names
 import hu.simplexion.adaptive.kotlin.service.Strings
 import hu.simplexion.adaptive.kotlin.service.ir.ServicesPluginContext
 import hu.simplexion.adaptive.kotlin.service.ir.util.IrClassBaseBuilder
+import hu.simplexion.adaptive.kotlin.wireformat.Signature
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
@@ -83,7 +84,7 @@ class ImplClassTransform(
         if (declaration.overriddenSymbols.none { it.isServiceFunction() }) return declaration
 
         implementedServiceFunctions += ServiceFunctionEntry(
-            pluginContext.wireFormatCache.signature(declaration),
+            Signature.functionSignature(declaration),
             declaration
         )
 
