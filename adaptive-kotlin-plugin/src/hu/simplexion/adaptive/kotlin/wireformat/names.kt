@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.name.FqName
 object Strings {
     const val WIREFORMAT_PACKAGE = "hu.simplexion.adaptive.wireformat"
     const val BUILTIN_PACKAGE = "hu.simplexion.adaptive.wireformat.builtin"
+    const val SIGNATURE_PACKAGE = "hu.simplexion.adaptive.wireformat.signature"
 
     const val PACK = "pack"
 
@@ -37,6 +38,8 @@ object Strings {
     const val INSTANCE_LIST = "instanceList"
     const val INSTANCE_LIST_OR_NULL = "instanceListOrNull"
 
+    const val WIREFORMAT_TYPE_ARGUMENT = "WireFormatTypeArgument"
+
     const val LIST_WIREFORMAT = "$BUILTIN_PACKAGE.ListWireFormat"
 
     const val DURATION_WIREFORMAT = "$BUILTIN_PACKAGE.DurationWireFormat"
@@ -47,7 +50,7 @@ object Strings {
 }
 
 object FqNames {
-    val WIREFORMAT_PACKAGE = FqName(Strings.WIREFORMAT_PACKAGE)
+    val SIGNATURE_PACKAGE = FqName(Strings.SIGNATURE_PACKAGE)
 }
 
 object ClassIds : NamesBase(Strings.WIREFORMAT_PACKAGE) {
@@ -58,6 +61,7 @@ object ClassIds : NamesBase(Strings.WIREFORMAT_PACKAGE) {
     val WIREFORMAT_DECODER = Strings.WIREFORMAT_DECODER.classId()
 
     val WIREFORMAT_PROVIDER = Strings.WIREFORMAT_PROVIDER.classId()
+    val WIREFORMAT_TYPE_ARGUMENT = Strings.WIREFORMAT_TYPE_ARGUMENT.classId { FqNames.SIGNATURE_PACKAGE }
 }
 
 object CallableIds : NamesBase(Strings.WIREFORMAT_PACKAGE) {

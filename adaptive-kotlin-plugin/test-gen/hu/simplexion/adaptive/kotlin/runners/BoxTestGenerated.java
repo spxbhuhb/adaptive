@@ -23,6 +23,22 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Nested
+    @TestMetadata("testData/box/adat")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Adat {
+        @Test
+        public void testAllFilesPresentInAdat() throws Exception {
+            KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adat"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+        }
+
+        @Test
+        @TestMetadata("basic.kt")
+        public void testBasic() throws Exception {
+            runTest("testData/box/adat/basic.kt");
+        }
+    }
+
+    @Nested
     @TestMetadata("testData/box/base")
     @TestDataPath("$PROJECT_ROOT")
     public class Base {

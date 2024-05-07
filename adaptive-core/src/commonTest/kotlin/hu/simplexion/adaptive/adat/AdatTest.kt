@@ -16,7 +16,7 @@ class AdatTest {
 
     @Test
     fun basic() {
-        val meta = TestClass.adatMetadata
+        val meta = TestClass.adatMetaData
         assertEquals(testMeta, meta)
 
         val sl = setOf(listOf(1,2),listOf(3,4))
@@ -59,19 +59,19 @@ class TestClass(
     override val adatCompanion = Companion
 
     override fun equals(other: Any?): Boolean =
-        sEquals(this, other as? TestClass)
+        adatEquals(this, other as? TestClass)
 
     override fun hashCode(): Int =
-        adatValues.contentHashCode()
+        adatHashCode()
 
     companion object : AdatCompanion<TestClass> {
 
         // encoded metadata would be static string here, but I did not want to write it manually
-        override val adatMetadata = decodeMetaData(encodedTestMeta)
-        override val adatWireFormat = AdatClassWireFormat(this, adatMetadata)
+        override val adatMetaData = decodeMetaData(encodedTestMeta)
+        override val adatWireFormat = AdatClassWireFormat(this, adatMetaData)
 
-        override fun newInstance(values: Array<Any?>) =
-            TestClass(values)
+        override fun newInstance(adatValues: Array<Any?>) =
+            TestClass(adatValues)
 
     }
 

@@ -15,11 +15,14 @@ interface AdatClass<S : AdatClass<S>> {
 
     fun copy() = adatCompanion.newInstance(adatValues)
 
-    fun sEquals(s1 : AdatClass<*>, s2: AdatClass<*>?): Boolean {
+    fun adatEquals(s1 : AdatClass<*>, s2: AdatClass<*>?): Boolean {
         if (s1 === s2) return true
         if (s2 == null) return false
         return s1.adatValues.contentEquals(s2.adatValues)
     }
+
+    fun adatHashCode() : Int =
+        adatValues.contentHashCode()
 
     fun toJson() : ByteArray =
         @Suppress("UNCHECKED_CAST")

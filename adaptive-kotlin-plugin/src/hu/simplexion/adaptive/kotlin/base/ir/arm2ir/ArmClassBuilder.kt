@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.kotlin.base.ir.arm2ir
 
-import hu.simplexion.adaptive.kotlin.base.AdaptivePluginKey
+import hu.simplexion.adaptive.kotlin.base.BasePluginKey
 import hu.simplexion.adaptive.kotlin.base.Indices
 import hu.simplexion.adaptive.kotlin.base.Names
 import hu.simplexion.adaptive.kotlin.base.Strings
@@ -52,7 +52,7 @@ class ArmClassBuilder(
         irClass = pluginContext.irContext.irFactory.buildClass {
             startOffset = originalFunction.startOffset
             endOffset = originalFunction.endOffset
-            origin = AdaptivePluginKey.origin
+            origin = BasePluginKey.origin
             name = armClass.name
             kind = ClassKind.CLASS
             visibility = originalFunction.visibility

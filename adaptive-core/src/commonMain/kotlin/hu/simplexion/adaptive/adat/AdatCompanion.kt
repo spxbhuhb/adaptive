@@ -13,11 +13,11 @@ import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatDecoder
 
 interface AdatCompanion<S : AdatClass<S>> : WireFormat<S> {
 
-    val adatMetadata : AdatClassMetaData<S>
+    val adatMetaData : AdatClassMetaData<S>
 
     val adatWireFormat : WireFormat<S>
 
-    fun newInstance(values: Array<Any?>): S
+    fun newInstance(adatValues: Array<Any?>): S
 
     fun fromJson(byteArray: ByteArray): S =
         JsonWireFormatDecoder(byteArray).asInstance(adatWireFormat)

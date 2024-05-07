@@ -29,4 +29,5 @@ class WireFormatPluginContext(
     val encodeInstanceOrNull = wireFormatEncoder.functionByName { Strings.INSTANCE_OR_NULL }
     val decodeInstanceOrNull = wireFormatDecoder.functionByName { Strings.INSTANCE_OR_NULL }
 
+    val wireFormatTypeArgument = ClassIds.WIREFORMAT_TYPE_ARGUMENT.classSymbol()
 }

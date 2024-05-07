@@ -45,14 +45,8 @@ class GenericWireFormat(
         val symbol = checkNotNull(pluginContext.irContext.referenceClass(classId)) { "missing class: ${classId.asFqNameString()}" }
         check(symbol.owner.isSubclassOf(pluginContext.wireFormatClass.owner)) { "class ${classId.asFqNameString()} does not implement ${ClassIds.WIREFORMAT}" }
 
-        val constructors = symbol.constructors
-        check(constructors.count() == 1) { "generic WireFormat implementations must have exactly 1 constructor" }
-
-        constructor = symbol.constructors.first { it.owner.isPrimary }
-        check(constructor.owner.valueParameters.size == symbol.owner.typeParameters.size * 2) {
-            "generic WireFormat constructor should have twice as many parameters as types"
-        }
-
+        val typeParameterCount = symbol.owner.typeParameters.size
+        constructor = symbol.constructors.first { it.owner.valueParameters.size == typeParameterCount }
     }
 
     fun buildWireFormat(builder: AbstractIrBuilder, arguments: List<SignatureWireFormat>): IrExpression =
@@ -62,16 +56,23 @@ class GenericWireFormat(
             constructor,
             typeArgumentsCount = 0,
             constructorTypeArgumentsCount = 0,
-            valueArgumentsCount = arguments.size * 2
+            valueArgumentsCount = arguments.size
         ).also {
-
-            check(constructor.owner.valueParameters.size == arguments.size * 2) {
-                "WireFormat constructor call parameter count mismatch"
-            }
-
             arguments.forEachIndexed { index, argument ->
-                it.putValueArgument(index * 2, argument.buildWireFormat(builder))
-                it.putValueArgument(index * 2 + 1, builder.irConst(argument.nullable))
+                it.putValueArgument(
+                    index,
+                    IrConstructorCallImpl(
+                        SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                        pluginContext.wireFormatTypeArgument.defaultType,
+                        pluginContext.wireFormatTypeArgument.constructors.first(),
+                        typeArgumentsCount = 0,
+                        constructorTypeArgumentsCount = 0,
+                        valueArgumentsCount = 2
+                    ).also {
+                        it.putValueArgument(0, argument.buildWireFormat(builder))
+                        it.putValueArgument(1, builder.irConst(argument.nullable))
+                    }
+                )
             }
         }
 }
