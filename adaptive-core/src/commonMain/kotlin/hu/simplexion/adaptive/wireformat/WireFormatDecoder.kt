@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.wireformat
 
 import hu.simplexion.adaptive.utility.UUID
+import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 import kotlin.enums.EnumEntries
 
 @OptIn(ExperimentalUnsignedTypes::class)
@@ -275,33 +276,27 @@ interface WireFormatDecoder<ST> {
     fun <T1,T2> pair(
         fieldNumber: Int,
         fieldName: String,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>
     ): Pair<T1?,T2?>
 
     fun <T1,T2> pairOrNull(
         fieldNumber: Int,
         fieldName: String,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>
     ): Pair<T1?,T2?>?
 
     fun <T1,T2> rawPair(
         source: ST,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>
     ): Pair<T1?,T2?>
 
     // -----------------------------------------------------------------------------------------
     // Utilities for classes that implement `WireFormat`
     // -----------------------------------------------------------------------------------------
 
-    fun <T> items(source: ST, itemWireFormat: WireFormat<T>, nullable : Boolean): MutableList<T?>
+    fun <T> items(source: ST, typeArgument: WireFormatTypeArgument<T>): MutableList<T?>
 
 }

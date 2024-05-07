@@ -4,6 +4,8 @@
 
 package hu.simplexion.adaptive.wireformat
 
+import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
+
 interface WireFormat<T> {
 
     val wireFormatKind: WireFormatKind
@@ -13,11 +15,12 @@ interface WireFormat<T> {
 
     fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): T
 
-    @Suppress("UNCHECKED_CAST")
     fun wireFormatEncode(encoder: WireFormatEncoder, fieldNumber : Int, fieldName : String, value : T?) =
-        encoder.instanceOrNull(fieldNumber, fieldName, this as T?, this)
+        encoder.instanceOrNull(fieldNumber, fieldName, value, this)
 
     fun <ST> wireFormatDecode(decoder: WireFormatDecoder<ST>, fieldNumber : Int, fieldName : String) =
         decoder.instanceOrNull(fieldNumber,fieldName, this)
+
+    fun wireFormatCopy(typeArguments : List<WireFormatTypeArgument<*>>) : WireFormat<*> = this
 
 }

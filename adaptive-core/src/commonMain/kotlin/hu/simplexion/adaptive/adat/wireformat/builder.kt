@@ -7,21 +7,25 @@ package hu.simplexion.adaptive.adat.wireformat
 import hu.simplexion.adaptive.adat.AdatCompanion
 import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetaData
 import hu.simplexion.adaptive.wireformat.WireFormat
+import hu.simplexion.adaptive.wireformat.WireFormatRegistry
+import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 import hu.simplexion.adaptive.wireformat.builtin.BooleanWireFormat
 import hu.simplexion.adaptive.wireformat.builtin.IntWireFormat
 import hu.simplexion.adaptive.wireformat.signature.Type
 import hu.simplexion.adaptive.wireformat.signature.parseSignature
 
-fun AdatPropertyMetaData.toPropertyWireFormat(dependencies: List<AdatCompanion<*>>): AdatPropertyWireFormat<*> =
-    AdatPropertyWireFormat(this, parseSignature(signature).toWireFormat(dependencies))
+fun AdatPropertyMetaData.toPropertyWireFormat(): AdatPropertyWireFormat<*> =
+    AdatPropertyWireFormat(this, parseSignature(signature).toWireFormat())
 
-fun Type.toWireFormat(dependencies: List<AdatCompanion<*>>): WireFormat<*> =
-    if (generics.isEmpty()) {
-        when (name) {
-            "Z", "Z?" -> BooleanWireFormat
-            "I", "I?" -> IntWireFormat
-            else -> dependencies.first { it.adatMetadata.name == name }
-        }
+fun Type.toWireFormat(): WireFormat<*> =
+    if (generics.isNotEmpty()) {
+        val args = generics.map { WireFormatTypeArgument(it.toWireFormat(), it.nullable)  }
+        val genericFormat = checkNotNull(WireFormatRegistry[name]) { "WireFormat for type $name not found" }
+        genericFormat.wireFormatCopy(args)
     } else {
-
+        when (name) {
+            "Z" -> BooleanWireFormat
+            "I" -> IntWireFormat
+            else -> checkNotNull(WireFormatRegistry[name]) { "WireFormat for type $name not found" }
+        }
     }

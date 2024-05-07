@@ -8,75 +8,93 @@ import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
 import hu.simplexion.adaptive.wireformat.WireFormatKind
+import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 
 class ArrayWireFormat<T>(
-    val itemWireFormat: WireFormat<T>,
-    val nullable : Boolean = false
+    val typeArgument: WireFormatTypeArgument<T>
 ) : WireFormat<Array<T?>> {
 
     override val wireFormatKind: WireFormatKind
         get() = WireFormatKind.Collection
 
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Array<T?>): WireFormatEncoder =
-        encoder.items(value.toList(), itemWireFormat, nullable)
+        encoder.items(value.toList(), typeArgument)
 
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Array<T?> {
-        val list = (decoder?.items(source, itemWireFormat, nullable) ?: emptyList()) as List<Any?>
+        val list = (decoder?.items(source, typeArgument) ?: emptyList()) as List<Any?>
         @Suppress("UNCHECKED_CAST") // I have no idea why it doesn't let me create an array from the list directly
         return Array(list.size) { list[it] } as Array<T?>
+    }
+
+    override fun wireFormatCopy(typeArguments: List<WireFormatTypeArgument<*>>) : ArrayWireFormat<*> {
+        check(typeArguments.size == 1)
+        return ArrayWireFormat(typeArguments[0])
     }
 
 }
 
 class ListWireFormat<T>(
-    val itemWireFormat: WireFormat<T>,
-    val nullable : Boolean = false
+    val typeArgument: WireFormatTypeArgument<T>
 ) : WireFormat<List<T?>> {
+
+    constructor(wireFormat: WireFormat<T>) : this(WireFormatTypeArgument(wireFormat, false))
 
     override val wireFormatKind: WireFormatKind
         get() = WireFormatKind.Collection
 
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: List<T?>): WireFormatEncoder =
-        encoder.items(value, itemWireFormat, nullable)
+        encoder.items(value, typeArgument)
 
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): List<T?> =
-        decoder?.items(source, itemWireFormat, nullable) ?: emptyList()
+        decoder?.items(source, typeArgument) ?: emptyList()
 
+    override fun wireFormatCopy(typeArguments: List<WireFormatTypeArgument<*>>) : ListWireFormat<*> {
+        check(typeArguments.size == 1)
+        return ListWireFormat(typeArguments[0])
+    }
 }
 
 class SetWireFormat<T>(
-    val itemWireFormat: WireFormat<T>,
-    val nullable : Boolean = false
+    val typeArgument: WireFormatTypeArgument<T>
 ) : WireFormat<Set<T?>> {
 
     override val wireFormatKind: WireFormatKind
         get() = WireFormatKind.Collection
 
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Set<T?>): WireFormatEncoder =
-        encoder.items(value, itemWireFormat, nullable)
+        encoder.items(value, typeArgument)
 
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Set<T?> =
-        decoder?.items(source, itemWireFormat, nullable)?.toSet() ?: emptySet()
+        decoder?.items(source, typeArgument)?.toSet() ?: emptySet()
 
+    override fun wireFormatCopy(typeArguments: List<WireFormatTypeArgument<*>>) : SetWireFormat<*> {
+        check(typeArguments.size == 1)
+        return SetWireFormat(typeArguments[0])
+    }
 }
 
-class MapWireFormat<K,V>(
-    val keyWireFormat: WireFormat<K>,
-    val keyNullable: Boolean = false,
-    val valueWireFormat: WireFormat<V>,
-    val valueNullable: Boolean = false,
-) : WireFormat<Map<K?,V?>> {
+class MapWireFormat<K, V>(
+    keyTypeArgument: WireFormatTypeArgument<K>,
+    valueTypeArgument: WireFormatTypeArgument<V>
+) : WireFormat<Map<K?, V?>> {
 
     override val wireFormatKind: WireFormatKind
         get() = WireFormatKind.Collection
 
-    override fun wireFormatEncode(encoder: WireFormatEncoder, value: Map<K?,V?>): WireFormatEncoder =
-        encoder.items(value.toList(), PairWireFormat(keyWireFormat, keyNullable, valueWireFormat, valueNullable), false)
+    val itemTypeArgument = WireFormatTypeArgument(PairWireFormat(keyTypeArgument, valueTypeArgument), false)
 
-    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Map<K?,V?> {
-        val list = decoder?.items(source, PairWireFormat(keyWireFormat, keyNullable, valueWireFormat, valueNullable), false)
+    override fun wireFormatEncode(encoder: WireFormatEncoder, value: Map<K?, V?>): WireFormatEncoder =
+        encoder.items(value.toList(), itemTypeArgument)
+
+    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Map<K?, V?> {
+        val list = decoder?.items(source, itemTypeArgument)
         @Suppress("UNCHECKED_CAST") // nullable parameter of `items` is false
-        list as List<Pair<K,V>>
+        list as List<Pair<K, V>>
         return list.toMap()
+    }
+
+    override fun wireFormatCopy(typeArguments: List<WireFormatTypeArgument<*>>) : MapWireFormat<*,*> {
+        check(typeArguments.size == 2)
+        return MapWireFormat(typeArguments[0], typeArguments[1])
     }
 }

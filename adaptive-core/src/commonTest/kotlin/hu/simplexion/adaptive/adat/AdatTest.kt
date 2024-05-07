@@ -19,11 +19,13 @@ class AdatTest {
         val meta = TestClass.adatMetadata
         assertEquals(testMeta, meta)
 
-        val t1 = TestClass(12, false)
+        val sl = setOf(listOf(1,2),listOf(3,4))
+
+        val t1 = TestClass(12, false, sl)
 
         assertEquals(t1, t1)
         assertEquals(t1, t1.copy())
-        assertNotEquals(t1, TestClass(12, true))
+        assertNotEquals(t1, TestClass(12, true, sl))
 
         assertEquals(t1, TestClass.fromJson(t1.toJson()))
         assertEquals(t1, TestClass.fromProto(t1.toProto()))
@@ -31,14 +33,28 @@ class AdatTest {
 
 }
 
+/**
+ * This class would be generated from:
+ *
+ * ```kotlin
+ * @Adat
+ * class TestClass(
+ *     val someInt : Int,
+ *     var someBoolean : Boolean,
+ *     var someIntListSet : Set<List<Int>>
+ * )
+ * ```
+ */
 @Adat
 class TestClass(
     override val adatValues: Array<Any?>
 ) : AdatClass<TestClass> {
 
-    constructor() : this(arrayOfNulls(2))
+    constructor() : this(arrayOfNulls(3))
 
-    constructor(someInt: Int, someBoolean: Boolean) : this(arrayOf<Any?>(someInt, someBoolean))
+    constructor(someInt: Int, someBoolean: Boolean, someIntListSet : Set<List<Int>>) : this(
+        arrayOf<Any?>(someInt, someBoolean, someIntListSet)
+    )
 
     override val adatCompanion = Companion
 
@@ -50,6 +66,7 @@ class TestClass(
 
     companion object : AdatCompanion<TestClass> {
 
+        // encoded metadata would be static string here, but I did not want to write it manually
         override val adatMetadata = decodeMetaData(encodedTestMeta)
         override val adatWireFormat = AdatClassWireFormat(this, adatMetadata)
 
@@ -67,6 +84,13 @@ class TestClass(
             adatValues[1] = value
         }
 
+    @Suppress("UNCHECKED_CAST")
+    var someIntListSet
+        get() = adatValues[2] as Set<List<Int>>
+        set(value) {
+            adatValues[2] = value
+        }
+
 }
 
 val testMeta =
@@ -75,7 +99,8 @@ val testMeta =
         name = "hu.simplexion.adaptive.sign.TestClass",
         properties = listOf(
             AdatPropertyMetaData("someInt", 0, "I"),
-            AdatPropertyMetaData("someBoolean", 1, "Z")
+            AdatPropertyMetaData("someBoolean", 1, "Z"),
+            AdatPropertyMetaData("someIntListSet", 2, "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
         )
     )
 

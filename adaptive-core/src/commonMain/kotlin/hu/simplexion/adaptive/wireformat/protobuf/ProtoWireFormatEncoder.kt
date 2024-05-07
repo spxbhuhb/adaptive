@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
 import hu.simplexion.adaptive.wireformat.WireFormatKind
+import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 import kotlin.enums.EnumEntries
 
 /**
@@ -724,25 +725,23 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         fieldNumber: Int,
         fieldName: String,
         value: Pair<T1?, T2?>,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>,
     ): WireFormatEncoder {
-        val bytes1 = value.first?.let { subEncoder.apply { firstWireFormat.wireFormatEncode(this, it) }.pack() }
-        val bytes2 = value.second?.let { subEncoder.apply { secondWireFormat.wireFormatEncode(this, it) }.pack() }
+        val bytes1 = value.first?.let { subEncoder.apply { typeArgument1.wireFormat.wireFormatEncode(this, it) }.pack() }
+        val bytes2 = value.second?.let { subEncoder.apply { typeArgument2.wireFormat.wireFormatEncode(this, it) }.pack() }
 
         val bytes = subEncoder.apply {
 
             if (bytes1 == null) {
-                check(firstNullable)
+                check(typeArgument1.nullable)
                 writer.bool(1 + NULL_SHIFT, true)
             } else {
                 byteArray(1, "", bytes1)
             }
 
             if (bytes2 == null) {
-                check(secondNullable)
+                check(typeArgument2.nullable)
                 writer.bool(2 + NULL_SHIFT, true)
             } else {
                 byteArray(2, "", bytes2)
@@ -759,27 +758,23 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         fieldNumber: Int,
         fieldName: String,
         value: Pair<T1?, T2?>?,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>,
     ): WireFormatEncoder {
         if (value == null) {
             writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
-            pair(fieldNumber, fieldName, value, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
+            pair(fieldNumber, fieldName, value, typeArgument1, typeArgument2)
         }
         return this
     }
 
     override fun <T1, T2> rawPair(
         value: Pair<T1?, T2?>,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>,
     ): WireFormatEncoder =
-        pair(1, "", value, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
+        pair(1, "", value, typeArgument1, typeArgument2)
 
     // -----------------------------------------------------------------------------------------
     // Utilities for classes that implement `WireFormat`
@@ -793,12 +788,12 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         }
     }
 
-    override fun <T> items(value: Collection<T?>, itemWireFormat: WireFormat<T>, nullable : Boolean): WireFormatEncoder {
+    override fun <T> items(value: Collection<T?>, typeArgument: WireFormatTypeArgument<T>): WireFormatEncoder {
         value.forEach {
             if (it == null) {
                 writer.bool(1 + NULL_SHIFT, true)
             } else {
-                item(it, itemWireFormat)
+                item(it, typeArgument.wireFormat)
             }
         }
         return this

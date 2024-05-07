@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.wireformat
 
 import hu.simplexion.adaptive.wireformat.builtin.*
+import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
@@ -276,11 +277,13 @@ abstract class AbstractKotlinTest<ST>(
 
     @Test
     fun testPair() {
-        assertEquals(pairVal, e { pair(1, fieldName, pairVal, IntWireFormat, false, StringWireFormat, false) } d { pair(1, fieldName, IntWireFormat, false, StringWireFormat, false) })
-        assertEquals(null, e { pairOrNull(1, fieldName, null, IntWireFormat, false, StringWireFormat, false) } d { pairOrNull(1, fieldName, IntWireFormat, false, StringWireFormat, false) })
-        assertEquals(pairVal, e { pairOrNull(1, fieldName, pairVal, IntWireFormat, false, StringWireFormat, false) } d { pairOrNull(1, fieldName, IntWireFormat, false, StringWireFormat, false) })
-        assertEquals(pairVal, r { rawPair(pairVal, IntWireFormat, false, StringWireFormat, false) } d { rawPair(it, IntWireFormat, false, StringWireFormat, false) })
-        instance(pairVal, PairWireFormat(IntWireFormat, false, StringWireFormat, false))
+        val ita = WireFormatTypeArgument(IntWireFormat, false)
+        val sta = WireFormatTypeArgument(StringWireFormat, false)
+        assertEquals(pairVal, e { pair(1, fieldName, pairVal, ita, sta) } d { pair(1, fieldName, ita, sta) })
+        assertEquals(null, e { pairOrNull(1, fieldName, null, ita, sta) } d { pairOrNull(1, fieldName, ita, sta) })
+        assertEquals(pairVal, e { pairOrNull(1, fieldName, pairVal, ita, sta) } d { pairOrNull(1, fieldName, ita, sta) })
+        assertEquals(pairVal, r { rawPair(pairVal, ita, sta) } d { rawPair(it, ita, sta) })
+        instance(pairVal, PairWireFormat(ita, sta))
     }
 
     @Test
@@ -301,7 +304,7 @@ abstract class AbstractKotlinTest<ST>(
     }
 
     fun <T> list(value: List<T>, itemWireFormat: WireFormat<T>) {
-        instance(value, ListWireFormat(itemWireFormat))
+        instance(value, ListWireFormat(WireFormatTypeArgument(itemWireFormat, false)))
     }
 
 }

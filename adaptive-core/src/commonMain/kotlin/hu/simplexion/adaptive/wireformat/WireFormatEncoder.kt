@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.wireformat
 
 import hu.simplexion.adaptive.utility.UUID
+import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 import kotlin.enums.EnumEntries
 
 /**
@@ -280,35 +281,29 @@ interface WireFormatEncoder {
         fieldNumber: Int,
         fieldName: String,
         value: Pair<T1?, T2?>,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>,
     ): WireFormatEncoder
 
     fun <T1,T2> pairOrNull(
         fieldNumber: Int,
         fieldName: String,
         value: Pair<T1?, T2?>?,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>,
     ): WireFormatEncoder
 
     fun <T1,T2> rawPair(
         value: Pair<T1?, T2?>,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>,
     ): WireFormatEncoder
 
     // ----------------------------------------------------------------------------
     // Utilities for classes that implement `WireFormat`
     // ----------------------------------------------------------------------------
 
-    fun <T> items(value: Collection<T?>, itemWireFormat: WireFormat<T>, nullable : Boolean): WireFormatEncoder
+    fun <T> items(value: Collection<T?>, typeArgument: WireFormatTypeArgument<T>): WireFormatEncoder
 
 
 }

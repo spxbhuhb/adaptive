@@ -25,78 +25,16 @@ These classes introduce some computational overhead, but they provide many utili
   * `getValue` - get a value based on its name or its index
   * `getCompanion` - get the companion object of this instance
   * `getMetadata` - get metadata of the class
-  * `newInstance` - get a new instance (from Companion)
+  * `adatInstance` - get a new instance (from Companion)
 
 
-All these functions are **NOT** generated for these classes, they are implemented in `Schematic` and
-`SchematicCompanion`.
+All these functions are **NOT** generated for these classes, they are implemented in `AdatClass` and
+`AdatCompanion`.
 
 What **IS** generated:
 
-* a private `values` property, a `getValues` and a `getCompanion` function
-* a companion object with `sMetadata` and `sWireFormat` properties and a `newInstance` function
+* an `adatValues` and an `adatCompanion` property
+* a companion object with `adatMetadata`, `adatWireFormat` properties and a `newInstance` function
 * property getters and setters for the declared properties
 
-```kotlin
-class SomeClass(
-    private val adatValues: Array<Any?>
-) : AdatClass {
-
-    constructor(someInt : Int, someBoolean : Boolean) : this(arrayOf<Any?>(someInt, someBoolean))
-
-    override fun getValues(): Array<Any?> = values
-
-    override fun getCompanion() = Companion
-  
-    companion object : SignatureBasedCompanion<SomeClass> {
-        
-        override val adatMetadata = decodeMetaData(encodedTestMetaData)
-        override val aWireFormat = SignatureBasedClassWireFormat(sMetadata)
-      
-        override fun newInstance(values : Array<Any?>) =
-            SomeClass(value)
-      
-    }
-
-    val someInt : Int
-        get() = getInt(0)
-
-    var someBoolean : Boolean
-        get() = getBoolean(1)
-        set(value) = setBoolean(1, value)   
-  
-}
-
-// These are not in the actual code, the code contains only the value of
-// `encodedTestMetaData` as a static string.
-
-val testMetaData =
-    AdatClassMetaData<TestClass>(
-        version = 1,
-        name = "hu.simplexion.adaptive.adat.TestClass",
-        properties = listOf(
-            AdatPropertyMetaData("someInt", 0, "I"),
-            AdatPropertyMetaData("someBoolean", 0, "Z")
-        )
-    )
-
-val encodedTestMetaData =
-    JsonWireFormatProvider().encoder().rawInstance(testMeta, AdatClassMetaData).pack().decodeToString()
-```
-
-The meta-data classes are quite simple, they are simply meant to store the information.
-
-```kotlin
-class AdatClassMetaData(
-    val version : Int = 1,
-    val name : String,
-    val properties : List<AdatPropertyMetaData>
-)
-
-class AdatPropertyMetaData(
-    val name : String,
-    val index : Int,
-    val signature : String
-)
-```
-
+Check [AdatTest](/adaptive-core/src/commonTest/kotlin/hu/simplexion/adaptive/adat/AdatTest.kt) for details.

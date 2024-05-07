@@ -9,7 +9,17 @@ import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
 import hu.simplexion.adaptive.wireformat.WireFormatKind
+import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 import kotlin.enums.EnumEntries
+
+object NothingWireFormat : WireFormat<Nothing> {
+    override fun wireFormatEncode(encoder: WireFormatEncoder, value: Nothing): WireFormatEncoder = error()
+    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Nothing = error()
+
+    fun error() : Nothing {
+        throw IllegalStateException("NothingWireFormat should be never be called. This is most probably an error in Adaptive. Please open an issue at https://github.com/spxbhuhb/adaptive")
+    }
+}
 
 object UnitWireFormat : WireFormat<Unit> {
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
@@ -240,24 +250,22 @@ object ULongArrayWireFormat : WireFormat<ULongArray> {
 }
 
 class PairWireFormat<T1, T2>(
-    val firstWireFormat: WireFormat<T1>,
-    val firstNullable: Boolean,
-    val secondWireFormat: WireFormat<T2>,
-    val secondNullable: Boolean
+   val typeArgument1: WireFormatTypeArgument<T1>,
+   val typeArgument2: WireFormatTypeArgument<T2>,
 ) : WireFormat<Pair<T1?, T2?>> {
 
     override val wireFormatKind: WireFormatKind
         get() = WireFormatKind.Primitive
 
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Pair<T1?, T2?>): WireFormatEncoder =
-        encoder.rawPair(value, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
+        encoder.rawPair(value, typeArgument1, typeArgument2)
 
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Pair<T1?, T2?> =
-        decoder !!.rawPair(source, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
+        decoder !!.rawPair(source, typeArgument1, typeArgument2)
 
     override fun wireFormatEncode(encoder: WireFormatEncoder, fieldNumber: Int, fieldName: String, value: Pair<T1?, T2?>?) =
-        encoder.pairOrNull(fieldNumber, fieldName, value, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
+        encoder.pairOrNull(fieldNumber, fieldName, value, typeArgument1, typeArgument2)
 
     override fun <ST> wireFormatDecode(decoder: WireFormatDecoder<ST>, fieldNumber: Int, fieldName: String) =
-        decoder.pairOrNull(fieldNumber, fieldName, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
+        decoder.pairOrNull(fieldNumber, fieldName, typeArgument1, typeArgument2)
 }

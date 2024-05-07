@@ -11,6 +11,7 @@ import hu.simplexion.adaptive.wireformat.json.elements.JsonArray
 import hu.simplexion.adaptive.wireformat.json.elements.JsonElement
 import hu.simplexion.adaptive.wireformat.json.elements.JsonNull
 import hu.simplexion.adaptive.wireformat.json.elements.JsonObject
+import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 import kotlin.enums.EnumEntries
 
 @OptIn(ExperimentalUnsignedTypes::class)
@@ -482,40 +483,34 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     override fun <T1, T2> pair(
         fieldNumber: Int,
         fieldName: String,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>
     ): Pair<T1?, T2?> =
-        rawPair(get(fieldName), firstWireFormat, firstNullable, secondWireFormat, secondNullable)
+        rawPair(get(fieldName), typeArgument1, typeArgument2)
 
     override fun <T1, T2> pairOrNull(
         fieldNumber: Int,
         fieldName: String,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>
     ): Pair<T1?, T2?>? =
-        if (getOrNull(fieldName) == null) null else pair(fieldNumber, fieldName, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
+        if (getOrNull(fieldName) == null) null else pair(fieldNumber, fieldName, typeArgument1, typeArgument2)
 
     override fun <T1, T2> rawPair(
         source: JsonElement,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>
     ): Pair<T1?, T2?> {
         require(source is JsonArray && source.items.size == 2) { "wrong pair format (must be array with 2 items)" }
 
         val first = source.items[0]
         val second = source.items[1]
 
-        val firstValue = if (first is JsonNull) null else firstWireFormat.wireFormatDecode(first, JsonWireFormatDecoder(first))
-        val secondValue = if (second is JsonNull) null else secondWireFormat.wireFormatDecode(second, JsonWireFormatDecoder(second))
+        val firstValue = if (first is JsonNull) null else typeArgument1.wireFormat.wireFormatDecode(first, JsonWireFormatDecoder(first))
+        val secondValue = if (second is JsonNull) null else typeArgument2.wireFormat.wireFormatDecode(second, JsonWireFormatDecoder(second))
 
-        check(firstValue != null || firstNullable)
-        check(secondValue != null || secondNullable)
+        check(firstValue != null || typeArgument1.nullable)
+        check(secondValue != null || typeArgument2.nullable)
 
         return firstValue to secondValue
     }
@@ -524,10 +519,13 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     // Utilities for classes that implement `WireFormat`
     // -----------------------------------------------------------------------------------------
 
-    override fun <T> items(source: JsonElement, itemWireFormat: WireFormat<T>, nullable: Boolean): MutableList<T?> {
+    override fun <T> items(source: JsonElement, typeArgument: WireFormatTypeArgument<T>): MutableList<T?> {
         val result = mutableListOf<T?>()
 
         require(source is JsonArray) { "source is not an array" }
+
+        val nullable = typeArgument.nullable
+        val itemWireFormat = typeArgument.wireFormat
 
         for (element in source.items) {
             if (element is JsonNull) {

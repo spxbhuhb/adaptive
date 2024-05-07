@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatKind
+import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 import kotlin.enums.EnumEntries
 
 /**
@@ -452,50 +453,44 @@ class ProtoWireFormatDecoder(
     override fun <T1, T2> pair(
         fieldNumber: Int,
         fieldName: String,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>
     ): Pair<T1?, T2?> {
         val record = checkNotNull(get(fieldNumber)) { "missing field: $fieldNumber $fieldName" }
-        return rawPair(record, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
+        return rawPair(record, typeArgument1, typeArgument2)
     }
 
     override fun <T1, T2> pairOrNull(
         fieldNumber: Int,
         fieldName: String,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>
     ): Pair<T1?, T2?>? =
-        if (get(fieldNumber + NULL_SHIFT) != null) null else pair(fieldNumber, fieldName, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
+        if (get(fieldNumber + NULL_SHIFT) != null) null else pair(fieldNumber, fieldName, typeArgument1, typeArgument2)
 
     override fun <T1, T2> rawPair(
         source: ProtoRecord,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>
     ): Pair<T1?, T2?> {
         check(source is LenProtoRecord)
 
         val decoder = source.decoder()
 
-        val first = if (firstNullable && decoder[1 + NULL_SHIFT] != null) {
+        val first = if (typeArgument1.nullable && decoder[1 + NULL_SHIFT] != null) {
             null
         } else {
             (decoder[1] as LenProtoRecord).decoder()
         }
 
-        val second = if (firstNullable && decoder[2 + NULL_SHIFT] != null) {
+        val second = if (typeArgument2.nullable && decoder[2 + NULL_SHIFT] != null) {
             null
         } else {
             (decoder[2] as LenProtoRecord).decoder()
         }
 
-        val firstValue = first?.let { firstWireFormat.wireFormatDecode(first[1]!!, first) }
-        val secondValue = second?.let { secondWireFormat.wireFormatDecode(second[1]!!, second) }
+        val firstValue = first?.let { typeArgument1.wireFormat.wireFormatDecode(first[1]!!, first) }
+        val secondValue = second?.let { typeArgument2.wireFormat.wireFormatDecode(second[1]!!, second) }
 
         return Pair(firstValue, secondValue)
     }
@@ -521,13 +516,13 @@ class ProtoWireFormatDecoder(
             }
         }
 
-    override fun <T> items(source: ProtoRecord, itemWireFormat: WireFormat<T>, nullable : Boolean): MutableList<T?> =
+    override fun <T> items(source: ProtoRecord, typeArgument: WireFormatTypeArgument<T>): MutableList<T?> =
         records.map {
             if (it.fieldNumber > NULL_SHIFT) {
-                check(nullable)
+                check(typeArgument.nullable)
                 null
             } else {
-                item(it, itemWireFormat)
+                item(it, typeArgument.wireFormat)
             }
         }.toMutableList()
 

@@ -48,7 +48,7 @@ class GenericWireFormat(
         val constructors = symbol.constructors
         check(constructors.count() == 1) { "generic WireFormat implementations must have exactly 1 constructor" }
 
-        constructor = symbol.constructors.first()
+        constructor = symbol.constructors.first { it.owner.isPrimary }
         check(constructor.owner.valueParameters.size == symbol.owner.typeParameters.size * 2) {
             "generic WireFormat constructor should have twice as many parameters as types"
         }

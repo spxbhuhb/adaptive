@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.wireformat
 
 import hu.simplexion.adaptive.wireformat.builtin.*
+import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
@@ -15,7 +16,7 @@ abstract class AbstractCollectionTest<ST>(
 ) : AbstractWireFormatTest<ST>(wireFormatProvider) {
 
     fun <T> array(value: Array<T?>, itemWireFormat: WireFormat<T>) {
-        val arrayWireFormat = ArrayWireFormat(itemWireFormat)
+        val arrayWireFormat = ArrayWireFormat(WireFormatTypeArgument(itemWireFormat, false))
 
         assertContentEquals(value, e { instance(1, fieldName, value, arrayWireFormat) } d { instance(1, fieldName, arrayWireFormat) })
         assertEquals(null, e { instanceOrNull(1, fieldName, null, arrayWireFormat) } d { instanceOrNull(1, fieldName, arrayWireFormat) })
@@ -33,8 +34,8 @@ abstract class AbstractCollectionTest<ST>(
         array(instanceListVal.toTypedArray(), B)
     }
 
-    fun <T> list(value: List<T?>, itemWireFormat: WireFormat<T>, nullable : Boolean = false) {
-        val listWireFormat = ListWireFormat(itemWireFormat, nullable)
+    fun <T> list(value: List<T?>, itemWireFormat: WireFormat<T>, nullable: Boolean = false) {
+        val listWireFormat = ListWireFormat(WireFormatTypeArgument(itemWireFormat, nullable))
 
         assertEquals(value, e { instance(1, fieldName, value, listWireFormat) } d { instance(1, fieldName, listWireFormat) })
         assertEquals(null, e { instanceOrNull(1, fieldName, null, listWireFormat) } d { instanceOrNull(1, fieldName, listWireFormat) })
@@ -60,8 +61,8 @@ abstract class AbstractCollectionTest<ST>(
         }
     }
 
-    fun <T> set(value: Set<T?>, itemWireFormat: WireFormat<T>, nullable : Boolean = false) {
-        val setWireFormat = SetWireFormat(itemWireFormat, nullable)
+    fun <T> set(value: Set<T?>, itemWireFormat: WireFormat<T>, nullable: Boolean = false) {
+        val setWireFormat = SetWireFormat(WireFormatTypeArgument(itemWireFormat, nullable))
 
         assertEquals(value, e { instance(1, fieldName, value, setWireFormat) } d { instance(1, fieldName, setWireFormat) })
         assertEquals(null, e { instanceOrNull(1, fieldName, null, setWireFormat) } d { instanceOrNull(1, fieldName, setWireFormat) })
@@ -87,8 +88,11 @@ abstract class AbstractCollectionTest<ST>(
         }
     }
 
-    fun <K,V> map(value: Map<K?,V?>, keyWireFormat: WireFormat<K>, valueWireFormat: WireFormat<V>, keyNullable : Boolean = false, valueNullable : Boolean = false) {
-        val mapWireFormat = MapWireFormat(keyWireFormat, keyNullable, valueWireFormat, valueNullable)
+    fun <K, V> map(value: Map<K?, V?>, keyWireFormat: WireFormat<K>, valueWireFormat: WireFormat<V>, keyNullable: Boolean = false, valueNullable: Boolean = false) {
+        val mapWireFormat = MapWireFormat(
+            WireFormatTypeArgument(keyWireFormat, keyNullable),
+            WireFormatTypeArgument(valueWireFormat, valueNullable)
+        )
 
         assertEquals(value, e { instance(1, fieldName, value, mapWireFormat) } d { instance(1, fieldName, mapWireFormat) })
         assertEquals(null, e { instanceOrNull(1, fieldName, null, mapWireFormat) } d { instanceOrNull(1, fieldName, mapWireFormat) })

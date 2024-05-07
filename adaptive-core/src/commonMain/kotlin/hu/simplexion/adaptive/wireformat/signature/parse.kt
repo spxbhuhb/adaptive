@@ -10,13 +10,15 @@ import hu.simplexion.adaptive.utility.push
 
 data class Type(
     var name: String = "",
+    var nullable: Boolean = false,
     val generics: MutableList<Type> = mutableListOf()
 )
 
 enum class TokenType {
     Name,
     Open,
-    Close
+    Close,
+    Nullable
 }
 
 data class Token(
@@ -69,6 +71,11 @@ fun tokenizeSignature(signature: String): List<Token> {
                 currentName.append(char)
             }
 
+            '?' -> {
+                check(!inName)
+                tokens.add(Token(TokenType.Nullable, ""))
+            }
+
             else -> {
                 if (inName) {
                     currentName.append(char)
@@ -92,6 +99,7 @@ fun parseSignature(signature: String): Type {
             TokenType.Name -> stack.peek().generics += (Type(token.value))
             TokenType.Open -> stack.push(stack.peek().generics.last())
             TokenType.Close -> stack.pop()
+            TokenType.Nullable -> stack.peek().nullable = true
         }
     }
 

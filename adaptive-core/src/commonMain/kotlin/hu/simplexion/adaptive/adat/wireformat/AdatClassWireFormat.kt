@@ -16,7 +16,7 @@ class AdatClassWireFormat<T : AdatClass<T>>(
     metadata: AdatClassMetaData<T>
 ) : WireFormat<T> {
 
-    val propertyWireFormats = metadata.properties.map { it.toPropertyWireFormat(companion.adatDependencies) }
+    val propertyWireFormats = metadata.properties.map { it.toPropertyWireFormat() }
 
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: T): WireFormatEncoder {
         val values = value.adatValues

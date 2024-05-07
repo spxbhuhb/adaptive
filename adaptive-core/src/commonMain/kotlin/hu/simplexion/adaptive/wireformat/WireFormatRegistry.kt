@@ -4,11 +4,17 @@
 
 package hu.simplexion.adaptive.wireformat
 
-class WireFormatRegistry {
+import hu.simplexion.adaptive.registry.Registry
+import hu.simplexion.adaptive.wireformat.builtin.*
+import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 
-    val formats = mutableMapOf<String, WireFormat<*>>()
+object WireFormatRegistry : Registry<WireFormat<*>>() {
+    init {
+        val n = WireFormatTypeArgument(NothingWireFormat, true)
 
-    fun <ST> decodeInstance(source: ST, wireFormatDecoder: WireFormatDecoder<ST>, type: String): Any? =
-        checkNotNull(formats[type]) { "missing wire format for $type" }.wireFormatDecode(source, wireFormatDecoder)
-
+        entries["kotlin.Array"] = ArrayWireFormat(n)
+        entries["kotlin.collections.List"] = ListWireFormat(n)
+        entries["kotlin.collections.Set"] = SetWireFormat(n)
+        entries["kotlin.collections.Map"] = MapWireFormat(n, n)
+    }
 }

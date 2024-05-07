@@ -17,9 +17,6 @@ interface AdatCompanion<S : AdatClass<S>> : WireFormat<S> {
 
     val adatWireFormat : WireFormat<S>
 
-    val adatDependencies : List<AdatCompanion<*>>
-        get() = emptyList()
-
     fun newInstance(values: Array<Any?>): S
 
     fun fromJson(byteArray: ByteArray): S =

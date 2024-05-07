@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
 import hu.simplexion.adaptive.wireformat.WireFormatKind
+import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 import kotlin.enums.EnumEntries
 
 /**
@@ -750,13 +751,11 @@ class JsonWireFormatEncoder(
         fieldNumber: Int,
         fieldName: String,
         value: Pair<T1?, T2?>,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>,
     ): WireFormatEncoder {
         writer.fieldName(fieldName)
-        rawPair(value, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
+        rawPair(value, typeArgument1, typeArgument2)
         return this
     }
 
@@ -764,40 +763,36 @@ class JsonWireFormatEncoder(
         fieldNumber: Int,
         fieldName: String,
         value: Pair<T1?, T2?>?,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>,
     ): WireFormatEncoder {
         if (value == null) {
             writer.nullValue(fieldName)
         } else {
-            pair(fieldNumber, fieldName, value, firstWireFormat, firstNullable, secondWireFormat, secondNullable)
+            pair(fieldNumber, fieldName, value, typeArgument1, typeArgument2)
         }
         return this
     }
 
     override fun <T1, T2> rawPair(
         value: Pair<T1?, T2?>,
-        firstWireFormat: WireFormat<T1>,
-        firstNullable: Boolean,
-        secondWireFormat: WireFormat<T2>,
-        secondNullable: Boolean
+        typeArgument1: WireFormatTypeArgument<T1>,
+        typeArgument2: WireFormatTypeArgument<T2>,
     ): WireFormatEncoder {
         writer.openArray()
-        valueOrNull(value.first, firstWireFormat, firstNullable)
+        valueOrNull(value.first, typeArgument1)
         writer.separator()
-        valueOrNull(value.second, secondWireFormat, secondNullable)
+        valueOrNull(value.second, typeArgument2)
         writer.closeArray()
         return this
     }
 
-    fun <T> valueOrNull(value: T?, wireFormat: WireFormat<T>, nullable: Boolean) {
+    fun <T> valueOrNull(value: T?, typeArgument: WireFormatTypeArgument<T>) {
         if (value == null) {
-            check(nullable)
+            check(typeArgument.nullable)
             writer.rawNullValue()
         } else {
-            rawInstance(value, wireFormat)
+            rawInstance(value, typeArgument.wireFormat)
         }
     }
 
@@ -805,7 +800,10 @@ class JsonWireFormatEncoder(
     // Utilities for classes that implement `WireFormat`
     // -----------------------------------------------------------------------------------------
 
-    override fun <T> items(value: Collection<T?>, itemWireFormat: WireFormat<T>, nullable : Boolean): WireFormatEncoder {
+    override fun <T> items(value: Collection<T?>, typeArgument: WireFormatTypeArgument<T>): WireFormatEncoder {
+        val nullable = typeArgument.nullable
+        val itemWireFormat = typeArgument.wireFormat
+
         for (item in value) {
             if (item == null) {
                 check(nullable)
