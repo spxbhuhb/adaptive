@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.kotlin.wireformat
 
 import org.jetbrains.kotlin.ir.backend.js.utils.asString
 import org.jetbrains.kotlin.ir.declarations.IrFunction
+import org.jetbrains.kotlin.ir.types.IrSimpleType
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.types.isNullable
@@ -69,12 +70,13 @@ object Signature {
         val builtin = shorthands[typeFqName.asString()]
         if (builtin != null) return builtin.addNull(irType)
 
-        if (irType.argumentsCount() == 0) {
+        check(irType is IrSimpleType)
+        if (irType.arguments.isEmpty()) {
             return "L$typeName;".addNull(irType)
         }
 
         val argumentSignatures =
-            irType.getArguments().joinToString(";") {
+            irType.arguments.joinToString(";") {
                 check(it is IrType) { "type argument $it is not an IrType type: ${irType.asString()}" }
                 typeSignature(it as IrType)
             }

@@ -15,5 +15,7 @@ class TestAdat(
 )
 
 fun box(): String {
-    return "OK"
+    val t1 = TestAdat()
+    t1.someBoolean = true
+    return if (t1.someBoolean) "OK" else "Fail"
 }

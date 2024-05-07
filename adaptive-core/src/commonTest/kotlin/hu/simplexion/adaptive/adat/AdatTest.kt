@@ -66,8 +66,7 @@ class TestClass(
 
     companion object : AdatCompanion<TestClass> {
 
-        // encoded metadata would be static string here, but I did not want to write it manually
-        override val adatMetaData = decodeMetaData(encodedTestMeta)
+        override val adatMetaData = decodeMetaData("1/hu.simplexion.adaptive.adat.TestClass/someInt/0/I/someBoolean/1/Z/someIntListSet/2/Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
         override val adatWireFormat = AdatClassWireFormat(this, adatMetaData)
 
         override fun newInstance(adatValues: Array<Any?>) =
@@ -96,7 +95,7 @@ class TestClass(
 val testMeta =
     AdatClassMetaData<TestClass>(
         version = 1,
-        name = "hu.simplexion.adaptive.sign.TestClass",
+        name = "hu.simplexion.adaptive.adat.TestClass",
         properties = listOf(
             AdatPropertyMetaData("someInt", 0, "I"),
             AdatPropertyMetaData("someBoolean", 1, "Z"),
@@ -104,5 +103,3 @@ val testMeta =
         )
     )
 
-val encodedTestMeta =
-    JsonWireFormatProvider().encoder().rawInstance(testMeta, AdatClassMetaData).pack().decodeToString()

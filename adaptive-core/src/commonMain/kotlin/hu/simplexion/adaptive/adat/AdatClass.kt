@@ -32,6 +32,13 @@ interface AdatClass<S : AdatClass<S>> {
         @Suppress("UNCHECKED_CAST")
         ProtoWireFormatEncoder().rawInstance(this as S, adatCompanion.adatWireFormat).pack()
 
+    fun any(index : Int) = adatValues[index]
+
+    fun setAny(index : Int, value: Any?) {
+        adatValues[index] = value
+    }
+
     fun int(index : Int) = adatValues[index] as Int
+
     fun boolean(index : Int) = adatValues[index] as Boolean
 }

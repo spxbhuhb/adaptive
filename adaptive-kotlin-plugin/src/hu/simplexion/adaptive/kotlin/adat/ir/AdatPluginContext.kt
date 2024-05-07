@@ -4,8 +4,8 @@
 package hu.simplexion.adaptive.kotlin.adat.ir
 
 import hu.simplexion.adaptive.kotlin.AdaptiveOptions
+import hu.simplexion.adaptive.kotlin.adat.ClassIds
 import hu.simplexion.adaptive.kotlin.common.AbstractPluginContext
-import hu.simplexion.adaptive.kotlin.fqnameaware.ClassIds
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 
 class AdatPluginContext(
@@ -13,4 +13,7 @@ class AdatPluginContext(
     options: AdaptiveOptions
 ) : AbstractPluginContext(irContext, options) {
 
+    val adatClass = ClassIds.ADAT_CLASS.classSymbol()
+    val adatCompanion = ClassIds.ADAT_COMPANION.classSymbol()
+    val adatClassWireFormat = ClassIds.ADAT_CLASS_WIREFORMAT.classSymbol()
 }

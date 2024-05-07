@@ -80,15 +80,15 @@ fun main() {
 ```text
 plugins {
     kotlin("multiplatform") version "1.9.10"
-    id("hu.simplexion.adaptive") version "2024.05.02"
+    id("hu.simplexion.adaptive") version "2024.05.07-SNAPSHOT"
 }
 
 kotlin {
     sourceSets["commonMain"].dependencies {
-        implementation("hu.simplexion.adaptive:adaptive-core:2024.05.02")
-        implementation("hu.simplexion.adaptive:adaptive-exposed:2024.05.02")
-        implementation("hu.simplexion.adaptive:adaptive-email:2024.05.02")
-        implementation("hu.simplexion.adaptive:adaptive-browser:2024.05.02")
+        implementation("hu.simplexion.adaptive:adaptive-core:2024.05.07-SNAPSHOT")
+        implementation("hu.simplexion.adaptive:adaptive-exposed:2024.05.07-SNAPSHOT")
+        implementation("hu.simplexion.adaptive:adaptive-email:2024.05.07-SNAPSHOT")
+        implementation("hu.simplexion.adaptive:adaptive-browser:2024.05.07-SNAPSHOT")
     }
 }
 ```

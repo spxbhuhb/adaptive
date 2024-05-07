@@ -13,11 +13,9 @@ import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.analysis.checkers.getContainingClassSymbol
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
 import org.jetbrains.kotlin.fir.declarations.utils.isCompanion
-import org.jetbrains.kotlin.fir.extensions.FirDeclarationGenerationExtension
-import org.jetbrains.kotlin.fir.extensions.MemberGenerationContext
-import org.jetbrains.kotlin.fir.extensions.NestedClassGenerationContext
+import org.jetbrains.kotlin.fir.extensions.*
 import org.jetbrains.kotlin.fir.extensions.predicate.DeclarationPredicate
-import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
+import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
 import org.jetbrains.kotlin.fir.plugin.createCompanionObject
 import org.jetbrains.kotlin.fir.plugin.createConstructor
 import org.jetbrains.kotlin.fir.plugin.createMemberFunction
@@ -34,7 +32,11 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
     val nullableAnyType = ClassIds.KOTLIN_ANY.constructClassLikeType(emptyArray(), true)
     val adatValuesType = ClassIds.KOTLIN_ARRAY.constructClassLikeType(arrayOf(nullableAnyType), false)
 
-    val ADAT_PREDICATE = DeclarationPredicate.create { annotated(FqNames.ADAT_ANNOTATION) }
+    val ADAT_PREDICATE = LookupPredicate.create { annotated(FqNames.ADAT_ANNOTATION) }
+
+    override fun FirDeclarationPredicateRegistrar.registerPredicates() {
+        register(ADAT_PREDICATE)
+    }
 
     override fun getNestedClassifiersNames(classSymbol: FirClassSymbol<*>, context: NestedClassGenerationContext): Set<Name> {
         if (classSymbol.isAdatClass) {
@@ -72,7 +74,13 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
     override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> {
         return when {
             classSymbol.isAdatClass -> {
-                setOf(SpecialNames.INIT)
+                setOf(
+                    Names.EQUALS,
+                    Names.HASHCODE,
+                    Names.ADAT_COMPANION,
+                    Names.ADAT_VALUES,
+                    SpecialNames.INIT
+                )
             }
 
             classSymbol.isAdatCompanion -> {
@@ -92,9 +100,9 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         when {
             context.isAdatClass -> {
                 return listOf(
-                    createConstructor(context.owner, AdatPluginKey, isPrimary = true, generateDelegatedNoArgConstructorCall = true)
+                    createConstructor(context.owner, AdatPluginKey, isPrimary = false, generateDelegatedNoArgConstructorCall = true)
                         .symbol,
-                    createConstructor(context.owner, AdatPluginKey, isPrimary = true, generateDelegatedNoArgConstructorCall = true) {
+                    createConstructor(context.owner, AdatPluginKey, isPrimary = false, generateDelegatedNoArgConstructorCall = true) {
                         valueParameter(Names.ADAT_VALUES, adatValuesType)
                     }.symbol
                 )
@@ -122,6 +130,19 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                         adatValuesType,
                         isVal = true,
                         hasBackingField = true
+                    ).symbol
+                )
+            }
+
+            Names.ADAT_COMPANION -> {
+                listOf(
+                    createMemberProperty(
+                        context !!.owner,
+                        AdatPluginKey,
+                        Names.ADAT_COMPANION,
+                        ClassIds.ADAT_COMPANION.constructClassLikeType(arrayOf(context.adatClassType), false),
+                        isVal = true,
+                        hasBackingField = false
                     ).symbol
                 )
             }
@@ -187,6 +208,10 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         get() = isFromPlugin(AdatPluginKey)
 
     val MemberGenerationContext.adatClassType
-        get() = owner.getContainingClassSymbol(session) !!.classId.constructClassLikeType(emptyArray(), false)
+        get() = if (isAdatClass) {
+            owner.classId.constructClassLikeType(emptyArray(), false)
+        } else {
+            owner.getContainingClassSymbol(session) !!.classId.constructClassLikeType(emptyArray(), false)
+        }
 
 }
