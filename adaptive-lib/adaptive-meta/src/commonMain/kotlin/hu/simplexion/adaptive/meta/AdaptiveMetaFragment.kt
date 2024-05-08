@@ -54,7 +54,7 @@ class AdaptiveMetaFragment<BT>(
         val fragment = buildFun.invoke(adapter, parent, declarationIndex)
 
         patchInstructions[declarationIndex] = data.patchInstructions.map {
-            (patchFunRegistry[it.impl] ?: missingImpl(data.impl)).invoke(it)
+            (patchFunRegistry[it.impl] ?: missingImpl(data.impl)).invoke(it.data)
         }
 
         fragment.create()

@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.meta.model
 
 import hu.simplexion.adaptive.adat.AdatClass
 
-class AdaptivePatchInstruction<T : AdatClass<T>>(
+class AdaptivePatchInstruction(
     val impl: String,
-    val data: T
+    val data: Any
 )

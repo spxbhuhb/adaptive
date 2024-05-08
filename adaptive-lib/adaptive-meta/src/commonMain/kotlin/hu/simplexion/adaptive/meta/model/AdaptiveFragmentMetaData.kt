@@ -6,6 +6,6 @@ package hu.simplexion.adaptive.meta.model
 
 class AdaptiveFragmentMetaData(
     val impl: String,
-    val patchInstructions: List<AdaptivePatchInstruction<*>>
+    val patchInstructions: List<AdaptivePatchInstruction>
 )
 

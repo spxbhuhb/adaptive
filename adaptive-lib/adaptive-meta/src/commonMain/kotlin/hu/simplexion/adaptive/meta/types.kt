@@ -7,7 +7,6 @@ package hu.simplexion.adaptive.meta
 import hu.simplexion.adaptive.base.AdaptiveAdapter
 import hu.simplexion.adaptive.base.AdaptiveFragment
 import hu.simplexion.adaptive.meta.model.AdaptiveFragmentMetaData
-import hu.simplexion.adaptive.meta.model.AdaptivePatchInstruction
 
 typealias AdaptiveMetaBuildFunRegistry<BT> = Map<String,AdaptiveMetaBuildFun<BT>>
 
@@ -17,4 +16,4 @@ typealias AdaptiveMetaFragmentData = Map<Int, AdaptiveFragmentMetaData>
 
 typealias AdaptiveMetaBuildFun<BT> = (adapter : AdaptiveAdapter<BT>, parent : AdaptiveFragment<BT>, index : Int) -> AdaptiveFragment<BT>
 
-typealias AdaptiveMetaPatchFun = (data : AdaptivePatchInstruction<*>) -> AdaptivePatchInstructionImpl
+typealias AdaptiveMetaPatchFun = (data : Any) -> AdaptivePatchInstructionImpl
