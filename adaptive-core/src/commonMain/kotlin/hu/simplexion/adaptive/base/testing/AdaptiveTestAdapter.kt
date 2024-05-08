@@ -14,7 +14,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
 
-class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
+class AdaptiveTestAdapter(
+    var printTrace : Boolean = false
+) : AdaptiveAdapter<TestNode> {
 
     var nextId = 1L
 
@@ -50,7 +52,7 @@ class AdaptiveTestAdapter : AdaptiveAdapter<TestNode> {
 
     override fun trace(fragment: AdaptiveFragment<TestNode>, point: String, data: String) {
         lock.use {
-            traceEvents += TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data) //.println(startedAt)
+            traceEvents += TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).also { if (printTrace) it.println(startedAt) }
         }
     }
 

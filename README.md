@@ -109,6 +109,18 @@ signing.gnupg.keyName=<your-key-short-name>
 
 Theoretically you don't need the executable, but for me, it was necessary, I have no idea why.
 
+## Debugging Adaptive
+
+To see what the plugin does, add this to `build.gradle.kts`. When `pluginDebug` is true, the plugin creates
+files for each compilation in the `pluginLogDir` directory.
+
+```kotlin
+adaptive {
+    pluginDebug = true
+    pluginLogDir = projectDir.toPath()
+}
+```
+
 ## Credits
 
 **Multiplatform**

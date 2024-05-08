@@ -2,12 +2,11 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-@file:OptIn(ExperimentalUnsignedTypes::class)
-
 package hu.simplexion.adaptive.wireformat
 
 import hu.simplexion.adaptive.utility.UUID
 
+@OptIn(ExperimentalUnsignedTypes::class)
 abstract class AbstractWireFormatTest<ST>(
     private val wireFormatProvider: WireFormatProvider
 ) : TestHelpers<ST> {

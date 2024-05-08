@@ -114,7 +114,7 @@ class JsonBufferReader(
                     value.append(char)
                     while (currentPosition + 1 < json.length) {
                         val nextChar = json[currentPosition + 1]
-                        if (nextChar in '0' .. '9' || nextChar == '.' || nextChar == 'E' || nextChar == 'e' || nextChar == '-') {
+                        if (nextChar in '0' .. '9' || nextChar == '.' || nextChar == 'E' || nextChar == 'e' || nextChar == '-' || nextChar == '+') {
                             value.append(nextChar)
                             currentPosition ++
                         } else if (nextChar == 'I') {

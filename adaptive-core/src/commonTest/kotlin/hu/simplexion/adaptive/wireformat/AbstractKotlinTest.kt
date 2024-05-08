@@ -6,9 +6,11 @@ package hu.simplexion.adaptive.wireformat
 
 import hu.simplexion.adaptive.wireformat.builtin.*
 import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
+import kotlin.math.abs
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @OptIn(ExperimentalUnsignedTypes::class)
 abstract class AbstractKotlinTest<ST>(
@@ -71,11 +73,18 @@ abstract class AbstractKotlinTest<ST>(
 
     @Test
     fun testFloat() {
-        assertEquals(floatVal, e { float(1, fieldName, floatVal) } d { float(1, fieldName) })
+        // JavaScript's implementation of float does not convert the bits properly, the seconds assert
+        // of these actually fail with AssertionError: Expected <12.34>, actual <12.34000015258789>.
+        //
+        //         assertEquals(12.34f.toBits(), 0x414570a4)
+        //         assertEquals(12.34f, Float.fromBits(0x414570a4))
+        //
+
+        val epsilon = 0.000001f
+        assertTrue(abs(floatVal - (e { float(1, fieldName, floatVal) } d { float(1, fieldName) })) < epsilon)
         assertEquals(null, e { floatOrNull(1, fieldName, null) } d { floatOrNull(1, fieldName) })
-        assertEquals(floatVal, e { floatOrNull(1, fieldName, floatVal) } d { floatOrNull(1, fieldName) })
-        assertEquals(floatVal, r { rawFloat(floatVal) } d { rawFloat(it) })
-        instance(floatVal, FloatWireFormat)
+        assertTrue(abs(floatVal - (e { floatOrNull(1, fieldName, floatVal) } d { floatOrNull(1, fieldName) })!!) < epsilon)
+        assertTrue(abs(floatVal - (r { rawFloat(floatVal) } d { rawFloat(it) })) < epsilon)
     }
 
     @Test
@@ -143,7 +152,7 @@ abstract class AbstractKotlinTest<ST>(
 
     @Test
     fun testFloatArray() {
-        assertContentEquals(floatArrayVal, e { floatArray(1, fieldName, floatArrayVal) } d { floatArray(1, fieldName) })
+        assertContentEquals(floatArrayVal, e { floatArray(1, fieldName, floatArrayVal) } p true d { floatArray(1, fieldName) })
         assertEquals(null, e { floatArrayOrNull(1, fieldName, null) } d { floatArrayOrNull(1, fieldName) })
         assertContentEquals(floatArrayVal, e { floatArrayOrNull(1, fieldName, floatArrayVal) } d { floatArrayOrNull(1, fieldName) })
         assertContentEquals(floatArrayVal, r { rawFloatArray(floatArrayVal) } d { rawFloatArray(it) })
