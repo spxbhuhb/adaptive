@@ -6,6 +6,8 @@ package hu.simplexion.adaptive.base.testing
 import hu.simplexion.adaptive.base.AdaptiveAdapter
 import hu.simplexion.adaptive.base.AdaptiveBridge
 import hu.simplexion.adaptive.base.AdaptiveFragment
+import hu.simplexion.adaptive.base.registry.AdaptiveBindingImplRegistry
+import hu.simplexion.adaptive.base.registry.AdaptiveFragmentImplRegistry
 import hu.simplexion.adaptive.utility.Lock
 import hu.simplexion.adaptive.utility.use
 import hu.simplexion.adaptive.utility.vmNowMicro
@@ -20,9 +22,9 @@ class AdaptiveTestAdapter(
 
     var nextId = 1L
 
-    override val trace = true
+    override val fragmentImplRegistry = AdaptiveFragmentImplRegistry<TestNode>()
 
-    override fun newId(): Long = nextId ++ // This is not thread safe, OK for testing, but beware.
+    override val bindingImplRegistry = AdaptiveBindingImplRegistry<TestNode>()
 
     override lateinit var rootFragment: AdaptiveFragment<TestNode>
 
@@ -30,11 +32,13 @@ class AdaptiveTestAdapter(
 
     override var dispatcher: CoroutineDispatcher = Dispatchers.Main
 
+    override val trace = true
+
+    override val startedAt = vmNowMicro()
+
     val lock = Lock()
 
     val traceEvents = mutableListOf<TraceEvent>()
-
-    override val startedAt = vmNowMicro()
 
     var done: Boolean = false
         get() = lock.use { field }
@@ -42,9 +46,7 @@ class AdaptiveTestAdapter(
             lock.use { field = value }
         }
 
-    init {
-        lastTrace = traceEvents
-    }
+    override fun newId(): Long = nextId ++ // This is not thread safe, OK for testing, but beware.
 
     override fun createPlaceholder(): AdaptiveBridge<TestNode> {
         return AdaptiveTestBridge(newId())
@@ -73,27 +75,18 @@ class AdaptiveTestAdapter(
         }
     }
 
-    companion object {
-        // Unit tests use this property when they run the generated fragment.
-        // The trace of the last created adapter is here, unit tests should
-        // clear this field before running the generated code.
-        var lastTrace: MutableList<TraceEvent> = mutableListOf()
-
-        fun actual(): String =
-            lastTrace.joinToString("\n")
-
-        fun expected(expected: List<TraceEvent>): String =
-            expected.joinToString("\n")
-
-        fun toCode(): String =
-            lastTrace.joinToString(",\n") { it.toCode() }
-
-        fun assert(expected: List<TraceEvent>): String {
-            return if (expected == lastTrace) {
-                "OK"
-            } else {
-                "Fail:\n==== expected ====\n${expected.joinToString("\n")}\n==== actual ====\n${lastTrace.joinToString("\n")}\n==== code ====\n${toCode()}"
-            }
+    fun assert(expected: List<TraceEvent>): String {
+        return if (expected == traceEvents) {
+            "OK"
+        } else {
+            "Fail:\n==== expected ====\n${expected.joinToString("\n")}\n==== actual ====\n${traceEvents.joinToString("\n")}\n==== code ====\n${toCode()}"
         }
     }
+
+    fun actual(): String =
+        traceEvents.joinToString("\n")
+
+    fun toCode(): String =
+        traceEvents.joinToString(",\n") { it.toCode() }
+
 }

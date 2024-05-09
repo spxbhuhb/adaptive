@@ -5,7 +5,6 @@ package hu.simplexion.adaptive.kotlin.base.success
 
 import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
-import hu.simplexion.adaptive.base.AdaptiveAdapterRegistry
 import hu.simplexion.adaptive.base.testing.*
 
 fun Adaptive.ManyVariables(
@@ -45,9 +44,9 @@ fun Adaptive.ManyVariables(
 
 fun box(): String {
 
-    AdaptiveAdapterRegistry.register(AdaptiveTestAdapterFactory)
+    val adapter = AdaptiveTestAdapter()
 
-    adaptive {
+    adaptive(adapter) {
         ManyVariables(
             0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
             10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
@@ -55,7 +54,7 @@ fun box(): String {
         )
     }
 
-    return AdaptiveTestAdapter.assert(
+    return adapter.assert(
         listOf(
             TraceEvent("<root>", 2, "before-Create", ""),
             TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),

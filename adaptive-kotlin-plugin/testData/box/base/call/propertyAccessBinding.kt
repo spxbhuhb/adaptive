@@ -70,16 +70,16 @@ fun <T> Adaptive.propertyAccessor(
 
 fun box() : String {
 
-    AdaptiveAdapterRegistry.register(AdaptiveTestAdapterFactory)
+    val adapter = AdaptiveTestAdapter()
 
-    adaptive {
+    adaptive(adapter) {
         propertyAccessTest()
     }
 
     testBinding.setValue(23, true)
     testProvider.i = 45
 
-    return AdaptiveTestAdapter.assert(listOf(
+    return adapter.assert(listOf(
         //@formatter:off
         TraceEvent("<root>", 2, "before-Create", ""),
         TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),

@@ -8,15 +8,7 @@ package hu.simplexion.adaptive.base
  *
  * **IMPORTANT** variables declared outside the block are **NOT** reactive
  */
-fun adaptive(block: Adaptive.() -> Unit) : AdaptiveAdapter<*> {
-    return AdaptiveAdapterRegistry.adapterFor().apply { block() }
-}
-
-/**
- * Entry point of an Adaptive component tree.
- *
- * **IMPORTANT** variables declared outside the block are **NOT** reactive
- */
-fun <BT> adaptive(adapter: AdaptiveAdapter<BT>, block: Adaptive.() -> Unit) {
+fun <BT, AT : AdaptiveAdapter<BT>> adaptive(adapter: AT, block: Adaptive.() -> Unit) : AT {
     adapter.block()
+    return adapter
 }

@@ -22,13 +22,13 @@ interface TestState: AdaptiveTransformInterface {
 
 fun box() : String {
 
-    val testAdapter = AdaptiveTestAdapter()
+    val adapter = AdaptiveTestAdapter()
 
-    adaptive(testAdapter) {
+    adaptive(adapter) {
         transformTest()
     }
 
-    return AdaptiveTestAdapter.assert(listOf(
+    return adapter.assert(listOf(
         TraceEvent("<root>", 2, "before-Create", ""),
         TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
         TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),

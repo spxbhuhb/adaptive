@@ -5,7 +5,6 @@ package hu.simplexion.adaptive.kotlin.base.success
 
 import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
-import hu.simplexion.adaptive.base.AdaptiveAdapterRegistry
 import hu.simplexion.adaptive.base.testing.*
 
 
@@ -15,13 +14,13 @@ fun Adaptive.Empty() {
 
 fun box() : String {
 
-    AdaptiveAdapterRegistry.register(AdaptiveTestAdapterFactory)
+    val adapter = AdaptiveTestAdapter()
 
-    adaptive {
+    adaptive(adapter) {
         Empty()
     }
 
-    return AdaptiveTestAdapter.assert(listOf(
+    return adapter.assert(listOf(
         TraceEvent("<root>", 2, "before-Create", ""),
         TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
         TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),

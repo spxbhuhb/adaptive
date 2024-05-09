@@ -10,13 +10,12 @@ var a = 0
 
 fun box() : String {
 
-    AdaptiveAdapterRegistry.register(AdaptiveTestAdapterFactory)
+    val adapter = AdaptiveTestAdapter()
 
-    @Suppress("UNCHECKED_CAST")
-    val adapter = adaptive {
+    adaptive(adapter) {
         val b = 12
         S1 { a = it + b }
-    } as AdaptiveAdapter<TestNode>
+    }
 
     val s1 = adapter.rootFragment.containedFragment as AdaptiveS1<TestNode>
 

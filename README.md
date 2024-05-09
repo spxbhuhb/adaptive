@@ -56,7 +56,7 @@ Shows the current time and increments a counter:
 ```kotlin
 fun main() {
     
-    adaptive(AdaptiveDOMAdapter(window.document.body !!)) {
+    adaptive(AdaptiveDOMAdapter()) {
 
         var counter = 0
         val time = poll(1.seconds, default = Clock.System.now()) { Clock.System.now() }

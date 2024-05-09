@@ -8,20 +8,19 @@ import hu.simplexion.adaptive.base.testing.*
 
 fun box(): String {
 
-    AdaptiveAdapterRegistry.register(AdaptiveTestAdapterFactory)
+    val adapter = AdaptiveTestAdapter()
 
-    @Suppress("UNCHECKED_CAST")
-    val adapter = adaptive {
+    adaptive(adapter) {
         var a = 12
         S1 { a = a + it + 1 }
-    } as AdaptiveAdapter<TestNode>
+    }
 
     val s1 = adapter.rootFragment.containedFragment as AdaptiveS1<TestNode>
 
     s1.s0.invoke(45)
     s1.s0.declaringFragment.patchInternal()
 
-    return AdaptiveTestAdapter.assert(
+    return adapter.assert(
         listOf(
             TraceEvent("<root>", 2, "before-Create", ""),
             TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),

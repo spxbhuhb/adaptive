@@ -5,14 +5,13 @@ package hu.simplexion.adaptive.kotlin.base.success
 
 import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
-import hu.simplexion.adaptive.base.AdaptiveAdapterRegistry
 import hu.simplexion.adaptive.base.testing.*
 
 fun box() : String {
 
-    AdaptiveAdapterRegistry.register(AdaptiveTestAdapterFactory)
+    val adapter = AdaptiveTestAdapter()
 
-    val adapter = adaptive {
+    adaptive(adapter) {
 
     }
 

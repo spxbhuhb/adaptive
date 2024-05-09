@@ -152,7 +152,7 @@ abstract class AbstractKotlinTest<ST>(
 
     @Test
     fun testFloatArray() {
-        assertContentEquals(floatArrayVal, e { floatArray(1, fieldName, floatArrayVal) } p true d { floatArray(1, fieldName) })
+        assertContentEquals(floatArrayVal, e { floatArray(1, fieldName, floatArrayVal) } d { floatArray(1, fieldName) })
         assertEquals(null, e { floatArrayOrNull(1, fieldName, null) } d { floatArrayOrNull(1, fieldName) })
         assertContentEquals(floatArrayVal, e { floatArrayOrNull(1, fieldName, floatArrayVal) } d { floatArrayOrNull(1, fieldName) })
         assertContentEquals(floatArrayVal, r { rawFloatArray(floatArrayVal) } d { rawFloatArray(it) })

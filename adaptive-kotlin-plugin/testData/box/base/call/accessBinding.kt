@@ -22,13 +22,13 @@ fun <T> Adaptive.accessor(
 
 fun box() : String {
 
-    AdaptiveAdapterRegistry.register(AdaptiveTestAdapterFactory)
+    val adapter = AdaptiveTestAdapter()
 
-    adaptive {
+    adaptive(adapter) {
         accessTest()
     }
 
-    return AdaptiveTestAdapter.assert(listOf(
+    return adapter.assert(listOf(
         //@formatter:off
         TraceEvent("<root>", 2, "before-Create", ""),
         TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),

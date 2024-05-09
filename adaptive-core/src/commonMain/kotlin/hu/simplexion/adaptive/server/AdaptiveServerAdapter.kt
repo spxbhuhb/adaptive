@@ -3,7 +3,9 @@
  */
 package hu.simplexion.adaptive.server
 
-import hu.simplexion.adaptive.base.*
+import hu.simplexion.adaptive.base.AdaptiveAdapter
+import hu.simplexion.adaptive.base.AdaptiveBridge
+import hu.simplexion.adaptive.base.AdaptiveFragment
 import hu.simplexion.adaptive.log.logger
 import hu.simplexion.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
@@ -42,11 +44,5 @@ open class AdaptiveServerAdapter<BT> : AdaptiveAdapter<BT> {
     }
 
     open fun getLogger(name : String) = logger(name)
-
-    companion object {
-        init {
-            AdaptiveAdapterRegistry.register(AdaptiveServerAdapterFactory)
-        }
-    }
 
 }

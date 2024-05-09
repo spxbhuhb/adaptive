@@ -8,13 +8,12 @@ import hu.simplexion.adaptive.base.testing.*
 
 fun box(): String {
 
-    AdaptiveAdapterRegistry.register(AdaptiveTestAdapterFactory)
+    val adapter = AdaptiveTestAdapter()
 
-    @Suppress("UNCHECKED_CAST")
-    val adapter = adaptive {
+    adaptive(adapter) {
         val b = 12
         S1R { mock(b) }
-    } as AdaptiveAdapter<TestNode>
+    }
 
     val s1r = adapter.rootFragment.containedFragment as AdaptiveS1R<TestNode>
 

@@ -4,7 +4,6 @@
 package hu.simplexion.adaptive.dom
 
 import hu.simplexion.adaptive.base.AdaptiveAdapter
-import hu.simplexion.adaptive.base.AdaptiveAdapterRegistry
 import hu.simplexion.adaptive.base.AdaptiveBridge
 import hu.simplexion.adaptive.base.AdaptiveFragment
 import hu.simplexion.adaptive.utility.vmNowMicro
@@ -42,9 +41,4 @@ open class AdaptiveDOMAdapter(
     override fun newId(): Long =
         nextId++
 
-    companion object {
-        init {
-            AdaptiveAdapterRegistry.register(AdaptiveDOMAdapterFactory)
-        }
-    }
 }

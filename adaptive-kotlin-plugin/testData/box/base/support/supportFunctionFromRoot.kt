@@ -15,14 +15,14 @@ fun mock(i: Int) = i + 100
 @Suppress("OPT_IN_USAGE")
 fun box(): String {
 
-    val testAdapter = AdaptiveTestAdapter()
-    testAdapter.dispatcher = newSingleThreadContext("test thread")
+    val adapter = AdaptiveTestAdapter()
+    adapter.dispatcher = newSingleThreadContext("test thread")
 
     try {
 
-        runBlocking(testAdapter.dispatcher) {
+        runBlocking(adapter.dispatcher) {
 
-            adaptive(testAdapter) {
+            adaptive(adapter) {
                 val i = 12
                 val j = poll(Duration.ZERO, i + 1) {
                     if (done) {
@@ -36,14 +36,14 @@ fun box(): String {
                 T1(j)
             }
 
-            testAdapter.waitFor()
+            adapter.waitFor()
         }
 
     } finally {
-        (testAdapter.dispatcher as CloseableCoroutineDispatcher).close()
+        (adapter.dispatcher as CloseableCoroutineDispatcher).close()
     }
 
-    return AdaptiveTestAdapter.assert(
+    return adapter.assert(
         listOf(
             //@formatter:off
             TraceEvent("<root>", 2, "before-Create", ""),

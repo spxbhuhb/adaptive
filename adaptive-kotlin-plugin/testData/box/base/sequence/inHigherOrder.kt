@@ -5,7 +5,6 @@ package hu.simplexion.adaptive.kotlin.base.success
 
 import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
-import hu.simplexion.adaptive.base.AdaptiveAdapterRegistry
 import hu.simplexion.adaptive.base.testing.*
 
 fun Adaptive.inHigherOrder(i: Int) {
@@ -21,9 +20,9 @@ fun Adaptive.inner(builder: Adaptive.() -> Unit) {
 
 fun box(): String {
 
-    AdaptiveAdapterRegistry.register(AdaptiveTestAdapterFactory)
+    val adapter = AdaptiveTestAdapter()
 
-    adaptive {
+    adaptive(adapter) {
         val i = 12
         inHigherOrder(i)
     }.apply {
@@ -31,7 +30,7 @@ fun box(): String {
         rootFragment.patchInternal()
     }
 
-    return AdaptiveTestAdapter.assert(
+    return adapter.assert(
         listOf(
             //@formatter:off
             TraceEvent("<root>", 2, "before-Create", ""),

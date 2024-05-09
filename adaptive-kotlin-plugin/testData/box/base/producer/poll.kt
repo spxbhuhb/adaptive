@@ -47,7 +47,7 @@ fun box(): String {
         (adapter.dispatcher as CloseableCoroutineDispatcher).close()
     }
 
-    return AdaptiveTestAdapter.assert(
+    return adapter.assert(
         listOf(
             //@formatter:off
             TraceEvent("<root>", 2, "before-Create", ""),

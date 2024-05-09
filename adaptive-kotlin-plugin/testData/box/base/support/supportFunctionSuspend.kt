@@ -9,13 +9,12 @@ import kotlinx.coroutines.*
 
 fun box(): String {
 
-    AdaptiveAdapterRegistry.register(AdaptiveTestAdapterFactory)
+    val adapter = AdaptiveTestAdapter()
 
-    @Suppress("UNCHECKED_CAST")
-    val adapter = adaptive {
+    adaptive(adapter) {
         var a = 12
         SuspendS1 { a = a + it + 1 }
-    } as AdaptiveAdapter<TestNode>
+    }
 
     val s1 = adapter.rootFragment.containedFragment as AdaptiveSuspendS1<TestNode>
 
@@ -24,7 +23,7 @@ fun box(): String {
         s1.s0.declaringFragment.patchInternal()
     }
 
-    return AdaptiveTestAdapter.assert(
+    return adapter.assert(
         listOf(
             TraceEvent("<root>", 2, "before-Create", ""),
             TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
