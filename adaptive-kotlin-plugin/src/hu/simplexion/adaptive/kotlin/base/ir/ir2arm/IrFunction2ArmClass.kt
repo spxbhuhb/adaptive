@@ -116,7 +116,7 @@ class IrFunction2ArmClass(
                 when (statement.origin) {
                     IrStatementOrigin.FOR_LOOP -> transformLoop(statement)
                     IrStatementOrigin.WHEN -> transformWhen(statement)
-                    else -> throw IllegalStateException("unsupported rendering structure")
+                    else -> transformBlock(statement.statements)
                 }
             }
 
