@@ -77,6 +77,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                 setOf(
                     Names.EQUALS,
                     Names.HASHCODE,
+                    Names.TO_STRING,
                     Names.ADAT_COMPANION,
                     Names.ADAT_VALUES,
                     SpecialNames.INIT
@@ -180,7 +181,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
     }
 
     override fun generateFunctions(callableId: CallableId, context: MemberGenerationContext?): List<FirNamedFunctionSymbol> {
-        if (! context.isAdatCompanion) return emptyList()
+        if (! context.isAdatCompanion && !context.isAdatClass) return emptyList()
 
         return when (callableId.callableName) {
             Names.NEW_INSTANCE -> {
@@ -190,7 +191,23 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                     }.symbol
                 )
             }
-
+            Names.EQUALS -> {
+                listOf(
+                    createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.booleanType.type) {
+                        valueParameter(Names.OTHER, session.builtinTypes.nullableAnyType.type)
+                    }.symbol
+                )
+            }
+            Names.HASHCODE -> {
+                listOf(
+                    createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.intType.type).symbol
+                )
+            }
+            Names.TO_STRING -> {
+                listOf(
+                    createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.stringType.type).symbol
+                )
+            }
             else -> emptyList()
         }
     }
@@ -201,8 +218,8 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
     val FirClassSymbol<*>.isAdatCompanion
         get() = ((origin as? FirDeclarationOrigin.Plugin)?.key == AdatPluginKey)
 
-    val MemberGenerationContext.isAdatClass
-        get() = owner.isAdatClass
+    val MemberGenerationContext?.isAdatClass
+        get() = if (this == null) false else owner.isAdatClass
 
     val MemberGenerationContext?.isAdatCompanion
         get() = isFromPlugin(AdatPluginKey)

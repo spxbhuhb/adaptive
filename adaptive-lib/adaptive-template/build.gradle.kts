@@ -10,8 +10,8 @@ plugins {
 }
 
 group = "hu.simplexion.adaptive"
-val baseName = "adaptive-engine"
-val pomName = "Adaptive Engine"
+val baseName = "adaptive-template"
+val pomName = "Adaptive Template"
 val scmPath = "spxbhuhb/adaptive"
 
 //tasks["build"].dependsOn(gradle.includedBuild("adaptive-kotlin-plugin").task(":publishToMavenLocal"))

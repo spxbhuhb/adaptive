@@ -12,9 +12,9 @@ object WireFormatRegistry : Registry<WireFormat<*>>() {
     init {
         val n = WireFormatTypeArgument(NothingWireFormat, true)
 
-        entries["kotlin.Array"] = ArrayWireFormat(n)
-        entries["kotlin.collections.List"] = ListWireFormat(n)
-        entries["kotlin.collections.Set"] = SetWireFormat(n)
-        entries["kotlin.collections.Map"] = MapWireFormat(n, n)
+        set("kotlin.Array", ArrayWireFormat(n))
+        set("kotlin.collections.List", ListWireFormat(n))
+        set("kotlin.collections.Set", SetWireFormat(n))
+        set("kotlin.collections.Map", MapWireFormat(n, n))
     }
 }

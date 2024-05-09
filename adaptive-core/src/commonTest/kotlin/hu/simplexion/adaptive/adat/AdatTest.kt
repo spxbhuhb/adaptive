@@ -59,7 +59,7 @@ class TestClass(
     override val adatCompanion = Companion
 
     override fun equals(other: Any?): Boolean =
-        adatEquals(this, other as? TestClass)
+        adatEquals(other as? TestClass)
 
     override fun hashCode(): Int =
         adatHashCode()

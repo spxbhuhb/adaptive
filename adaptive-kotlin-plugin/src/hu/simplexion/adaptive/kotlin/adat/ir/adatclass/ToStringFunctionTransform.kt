@@ -3,35 +3,28 @@
  */
 package hu.simplexion.adaptive.kotlin.adat.ir.adatclass
 
-import hu.simplexion.adaptive.kotlin.adat.AdatPluginKey
 import hu.simplexion.adaptive.kotlin.adat.Names
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatPluginContext
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
-import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
-import org.jetbrains.kotlin.ir.builders.irBlockBody
-import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrFunction
-import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
-import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.util.getSimpleFunction
 
-class EqualsFunctionTransform(
+class ToStringFunctionTransform(
     override val pluginContext: AdatPluginContext,
     val adatClass: IrClass,
-    val equalsFunction: IrFunction
+    val toStringFunction: IrFunction
 ) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
 
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
-        equalsFunction.body = irFactory.createExpressionBody(
+        toStringFunction.body = irFactory.createExpressionBody(
             irCall(
-                adatClass.getSimpleFunction(Names.ADAT_EQUALS.identifier) !!,
-                irGet(equalsFunction.dispatchReceiverParameter !!),
-                irGet(equalsFunction.valueParameters.first())
+                adatClass.getSimpleFunction(Names.ADAT_TO_STRING.identifier) !!,
+                irGet(toStringFunction.dispatchReceiverParameter !!)
             )
         )
-
         return declaration
     }
 }

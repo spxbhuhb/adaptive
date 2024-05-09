@@ -4,21 +4,27 @@
 
 package hu.simplexion.adaptive.adat
 
+import hu.simplexion.adaptive.utility.pluginGenerated
 import hu.simplexion.adaptive.wireformat.json.JsonWireFormatEncoder
 import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatEncoder
 
 interface AdatClass<S : AdatClass<S>> {
 
     val adatValues : Array<Any?>
+        get() = pluginGenerated()
 
     val adatCompanion : AdatCompanion<S>
+        get() = pluginGenerated()
 
     fun copy() = adatCompanion.newInstance(adatValues)
 
-    fun adatEquals(s1 : AdatClass<*>, s2: AdatClass<*>?): Boolean {
-        if (s1 === s2) return true
+    fun adatToString() =
+        this::class.simpleName
+
+    fun adatEquals(s2: AdatClass<*>?): Boolean {
+        if (this === s2) return true
         if (s2 == null) return false
-        return s1.adatValues.contentEquals(s2.adatValues)
+        return adatValues.contentEquals(s2.adatValues)
     }
 
     fun adatHashCode() : Int =

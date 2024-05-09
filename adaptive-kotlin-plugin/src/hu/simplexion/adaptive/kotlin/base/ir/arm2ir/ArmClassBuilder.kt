@@ -14,10 +14,7 @@ import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.builders.*
-import org.jetbrains.kotlin.ir.builders.declarations.UNDEFINED_PARAMETER_INDEX
-import org.jetbrains.kotlin.ir.builders.declarations.addConstructor
-import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
-import org.jetbrains.kotlin.ir.builders.declarations.buildClass
+import org.jetbrains.kotlin.ir.builders.declarations.*
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.declarations.impl.IrTypeParameterImpl
 import org.jetbrains.kotlin.ir.expressions.IrConstKind

@@ -19,5 +19,8 @@ class AdaptiveFragmentImplRegistry<BT> {
         checkNotNull(entries[name]) { "No implementation found for $name" }
             .build(adapter, parent, index)
 
+    operator fun plusAssign(entry: AdaptiveFragmentImplRegistryEntry<BT>) {
+        entries[entry.name] = entry
+    }
 }
 

@@ -60,7 +60,7 @@ class AdaptiveTestAdapter(
 
     fun actual(dumpCode: Boolean = false): String =
         lock.use {
-            traceEvents.joinToString("\n").also { if (dumpCode) println(toCode()) }
+            traceEvents.joinToString("\n") { it.toActualString() }.also { if (dumpCode) println(toCode()) }
         }
 
     fun expected(expected: List<TraceEvent>): String =

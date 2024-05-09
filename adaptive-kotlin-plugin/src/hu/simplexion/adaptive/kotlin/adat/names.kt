@@ -19,9 +19,18 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_COMPANION = "adatCompanion".name()
     val ADAT_METADATA = Strings.ADAT_METADATA.name()
     val ADAT_WIREFORMAT = "adatWireFormat".name()
+
     val NEW_INSTANCE = "newInstance".name()
+
+    val ADAT_EQUALS = "adatEquals".name()
+    val ADAT_HASHCODE = "adatHashCode".name()
+    val ADAT_TO_STRING = "adatToString".name()
+
     val EQUALS = "equals".name()
     val HASHCODE = "hashCode".name()
+    val TO_STRING = "toString".name()
+
+    val OTHER = "other".name()
 }
 
 object FqNames {
@@ -37,6 +46,8 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
 
     val KOTLIN_ARRAY = "Array".classId { "kotlin".fqName() }
     val KOTLIN_ANY = "Any".classId { "kotlin".fqName() }
+
+    val WIREFORMAT_REGISTRY = "WireFormatRegistry".classId { "hu.simplexion.adaptive.wireformat".fqName() }
 }
 
 object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {

@@ -179,10 +179,7 @@ class JsonBufferReader(
                 }
 
                 else -> {
-                    if (char.isWhitespace()) {
-                        // Ignore whitespace characters
-                        currentPosition ++
-                    } else {
+                    if (!char.isWhitespace()) {
                         throw IllegalArgumentException("invalid character: $char")
                     }
                 }

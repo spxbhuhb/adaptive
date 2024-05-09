@@ -5,17 +5,46 @@ package hu.simplexion.adaptive.kotlin.adat.ir.adatcompanion
 
 import hu.simplexion.adaptive.kotlin.adat.Names
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatPluginContext
+import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
+import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
+import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrProperty
+import org.jetbrains.kotlin.ir.symbols.impl.IrAnonymousInitializerSymbolImpl
+import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.util.classId
 import org.jetbrains.kotlin.ir.util.isFakeOverride
+import org.jetbrains.kotlin.ir.util.parentAsClass
 
 class AdatCompanionTransform(
-    private val pluginContext: AdatPluginContext,
-    val companionClass : IrClass
-) : IrElementTransformerVoidWithContext() {
+    override val pluginContext: AdatPluginContext,
+    val companionClass: IrClass
+) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
+
+    init {
+        irFactory.createAnonymousInitializer(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            origin = IrDeclarationOrigin.DEFINED,
+            symbol = IrAnonymousInitializerSymbolImpl(),
+            isStatic = false
+        ).also { initFun ->
+            initFun.parent = companionClass
+            companionClass.declarations += initFun
+
+            initFun.body = DeclarationIrBuilder(irContext, initFun.symbol).irBlockBody {
+                + irCall(
+                    pluginContext.wireFormatRegistrySet,
+                    irGetObject(pluginContext.wireFormatRegistry),
+                    irConst(companionClass.parentAsClass.classId !!.asFqNameString()),
+                    irGet(companionClass.thisReceiver !!)
+                )
+            }
+        }
+    }
 
     override fun visitPropertyNew(declaration: IrProperty): IrStatement {
 

@@ -20,6 +20,11 @@ class TraceEvent(
         return "[ ${name.padEnd(30)} ${id.toString().padStart(4)} ]  ${point.padEnd(25)}  |  ${data.joinToString(" ")}"
     }
 
+    fun toActualString(): String {
+        val n = if (name.startsWith("AdaptiveRoot")) "<root>" else name
+        return "[ ${n.padEnd(30)} ${id.toString().padStart(4)} ]  ${point.padEnd(25)}  |  ${data.joinToString(" ")}"
+    }
+
     fun toCode(): String {
         val nameOrRoot = if (name.startsWith("AdaptiveRoot")) "<root>" else name
         return "TraceEvent(\"$nameOrRoot\", ${id}, \"${point}\"${if (data.isNotEmpty()) ", " else ""}${data.joinToString(", ") { "\"$it\"" }})"

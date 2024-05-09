@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.registry
 
 open class Registry<T> {
 
-    val entries = mutableMapOf<String, T>()
+    private val entries = mutableMapOf<String, T>()
 
     operator fun set(key: String, value: T) {
         entries[key] = value

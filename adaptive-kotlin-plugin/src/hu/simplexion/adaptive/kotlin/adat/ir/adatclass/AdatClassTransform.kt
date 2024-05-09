@@ -27,7 +27,7 @@ class AdatClassTransform(
     override fun visitClassNew(declaration: IrClass): IrStatement {
         when {
             declaration.isSubclassOf(pluginContext.adatCompanion.owner) -> {
-                declaration.transformChildrenVoid(AdatCompanionTransform(pluginContext, declaration))
+                declaration.transform(AdatCompanionTransform(pluginContext, declaration), null)
             }
         }
 
@@ -51,6 +51,7 @@ class AdatClassTransform(
         when (declaration.name) {
             Names.EQUALS -> declaration.transform(EqualsFunctionTransform(pluginContext, adatClass, declaration), null)
             Names.HASHCODE -> declaration.transform(HashCodeFunctionTransform(pluginContext, adatClass, declaration), null)
+            Names.TO_STRING -> declaration.transform(ToStringFunctionTransform(pluginContext, adatClass, declaration), null)
         }
 
         return declaration

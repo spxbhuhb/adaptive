@@ -11,12 +11,24 @@ import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
 
+/**
+ * WireFormat generated from [AdatClassMetaData]. Intended use of this class is to add
+ * wire format to companion objects during compilation type by the compiler plugin.
+ *
+ * To construct and use WireFormats dynamically during runtime use [AdatValuesWireFormat].
+ *
+ * [propertyWireFormats] is lazy to support cross-references between Adat classes. Adat
+ * companions create their WireFormat when the companion is initialized and register
+ * themselves in the `WireFormatRegistry` after. When they contain another Adat
+ * class it is possible that the companion of that class is not loaded yet, resulting
+ * the [toPropertyWireFormat] call to fail with a missing WireFormat.
+ */
 class AdatClassWireFormat<T : AdatClass<T>>(
     val companion : AdatCompanion<T>,
     metadata: AdatClassMetaData<T>
 ) : WireFormat<T> {
 
-    val propertyWireFormats = metadata.properties.map { it.toPropertyWireFormat() }
+    val propertyWireFormats by lazy { metadata.properties.map { it.toPropertyWireFormat() } }
 
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: T): WireFormatEncoder {
         val values = value.adatValues
