@@ -55,7 +55,7 @@ class WireFormatCache(
         PrimitiveWireFormat(pluginContext, "DoubleArray", "[D"),
         PrimitiveWireFormat(pluginContext, "CharArray", "[C"),
 
-        PrimitiveWireFormat(pluginContext, "String", "S"),
+        PrimitiveWireFormat(pluginContext, "String", "T"),
 
         PrimitiveWireFormat(pluginContext, "UInt", "+I"),
         PrimitiveWireFormat(pluginContext, "UShort", "+S"),

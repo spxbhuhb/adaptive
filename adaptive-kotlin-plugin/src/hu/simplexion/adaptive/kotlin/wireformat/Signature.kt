@@ -36,7 +36,7 @@ object Signature {
         "kotlin.DoubleArray" to "[D",
         "kotlin.CharArray" to "[C",
 
-        "kotlin.String" to "S",
+        "kotlin.String" to "T",
 
         "kotlin.UInt" to "+I",
         "kotlin.UShort" to "+S",
