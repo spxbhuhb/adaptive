@@ -2,47 +2,46 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package hu.simplexion.adaptive.meta
+package hu.simplexion.adaptive.engine
 
 import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.AdaptiveAdapter
 import hu.simplexion.adaptive.base.AdaptiveFragment
 import hu.simplexion.adaptive.base.manualImplementation
+import hu.simplexion.adaptive.engine.model.AdaptiveEngineOperation
+import hu.simplexion.adaptive.engine.model.AddFragment
 
-fun Adaptive.metaFragment(
-    buildFunRegistry: AdaptiveMetaBuildFunRegistry<Any?>,
-    patchFunRegistry: AdaptiveMetaPatchFunRegistry,
-    metadata: AdaptiveMetaFragmentData
+
+
+fun Adaptive.engine(
+    operations: List<AdaptiveEngineOperation>
 ) {
-    manualImplementation(buildFunRegistry, patchFunRegistry, metadata)
+    manualImplementation(operations)
 }
 
-class AdaptiveMetaFragment<BT>(
+class AdaptiveEngine<BT>(
     adapter: AdaptiveAdapter<BT>,
     parent: AdaptiveFragment<BT>?,
     index: Int
-) : AdaptiveFragment<BT>(adapter, parent, index, 3) {
+) : AdaptiveFragment<BT>(adapter, parent, index, 31) {
 
     @Suppress("UNCHECKED_CAST")
     fun <T> get(index: Int): T = state[index] as T
 
-    val buildFunRegistry: AdaptiveMetaBuildFunRegistry<BT>
+    val operations: List<AdaptiveEngineOperation>
         get() = get(0)
-
-    val patchFunRegistry: AdaptiveMetaPatchFunRegistry
-        get() = get(1)
-
-    val metadata: AdaptiveMetaFragmentData
-        get() = get(2)
-
-    val patchInstructions = mutableMapOf<Int, List<AdaptivePatchInstructionImpl>>()
 
     val fragments = mutableMapOf<Int, AdaptiveFragment<BT>>()
 
     override fun create() {
         if (trace) trace("before-Create")
+
         patch()
-        metadata.keys.forEach { fragments[it] = genBuild(this, it) }
+
+        operations.forEach {
+            if (it is AddFragment) adapter.fragmentImplRegistry.build(it.impl, adapter, this, it.index)
+        }
+
         if (trace) trace("after-Create")
     }
 
