@@ -24,8 +24,6 @@ class AdaptiveTestAdapter(
 
     override val fragmentImplRegistry = AdaptiveFragmentImplRegistry<TestNode>()
 
-    override val bindingImplRegistry = AdaptiveBindingImplRegistry<TestNode>()
-
     override lateinit var rootFragment: AdaptiveFragment<TestNode>
 
     override val rootBridge = AdaptiveTestBridge(newId())

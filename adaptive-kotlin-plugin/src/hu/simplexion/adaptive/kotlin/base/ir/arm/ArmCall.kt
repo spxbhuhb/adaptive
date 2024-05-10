@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.kotlin.base.ir.arm2ir.BranchBuilder
 import hu.simplexion.adaptive.kotlin.base.ir.arm2ir.ClassBoundIrBuilder
 import hu.simplexion.adaptive.kotlin.base.ir.util.adaptiveClassFqName
 import org.jetbrains.kotlin.ir.expressions.IrCall
+import org.jetbrains.kotlin.ir.util.hasAnnotation
 
 open class ArmCall(
     armClass: ArmClass,
@@ -15,6 +16,7 @@ open class ArmCall(
     closure: ArmClosure,
     val isDirect: Boolean,
     val irCall: IrCall,
+    val isDelegated : Boolean
 ) : ArmRenderingStatement(armClass, index, closure, irCall.startOffset) {
 
     val target = irCall.symbol.owner.adaptiveClassFqName()

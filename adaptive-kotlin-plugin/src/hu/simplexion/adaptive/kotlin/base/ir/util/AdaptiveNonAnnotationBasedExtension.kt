@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
+import org.jetbrains.kotlin.ir.util.hasAnnotation
 import org.jetbrains.kotlin.ir.util.isFunctionOrKFunction
 
 interface AdaptiveNonAnnotationBasedExtension {
@@ -25,6 +26,9 @@ interface AdaptiveNonAnnotationBasedExtension {
             if (receiver !is IrType) return false
             return receiver.isSubtypeOfClass(adaptiveContext.adaptiveNamespaceClass)
         }
+
+    val IrCall.isDelegated: Boolean
+        get() = symbol.owner.hasAnnotation(adaptiveContext.delegatedClass)
 
     val IrCall.isDirectAdaptiveCall : Boolean
         get() = (symbol.owner.extensionReceiverParameter?.let { it.type == adaptiveContext.adaptiveNamespaceClass.defaultType } ?: false)

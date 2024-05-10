@@ -60,6 +60,8 @@ object Strings {
     const val HELPER_THIS_STATE = "thisState"
 
     const val MANUAL_IMPLEMENTATION = "manualImplementation"
+    const val DELEGATED = "Delegated"
+    const val BUILD = "build"
 
     const val SUPPORT_FUNCTION_INVOKE = "invoke"
 
@@ -101,6 +103,8 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAPTIVE_SUPPORT_FUNCTION = Strings.ADAPTIVE_SUPPORT_FUNCTION.classId()
     val ADAPTIVE_STATE_VARIABLE_BINDING = Strings.ADAPTIVE_STATE_VARIABLE_BINDING.classId { Strings.BINDING_PACKAGE.fqName() }
     val ADAPTIVE_TRANSFORM_INTERFACE = Strings.ADAPTIVE_TRANSFORM_INTERFACE.classId()
+
+    val DELEGATED = Strings.DELEGATED.classId()
 
 }
 

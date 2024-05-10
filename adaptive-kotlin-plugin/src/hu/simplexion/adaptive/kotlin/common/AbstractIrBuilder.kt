@@ -166,7 +166,7 @@ interface AbstractIrBuilder {
     fun irGetValue(irProperty: IrProperty, receiver: IrExpression?): IrCall =
         IrCallImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irProperty.backingField !!.type,
+            irProperty.getter !!.returnType,
             irProperty.getter !!.symbol,
             0, 0,
             origin = IrStatementOrigin.GET_PROPERTY
@@ -351,7 +351,7 @@ interface AbstractIrBuilder {
     fun irCall(
         symbol: IrFunctionSymbol,
         dispatchReceiver: IrExpression?,
-        vararg args: IrExpression,
+        vararg args: IrExpression
     ): IrCallImpl {
         return IrCallImpl(
             UNDEFINED_OFFSET,

@@ -242,7 +242,7 @@ class IrFunction2ArmClass(
         }
 
     fun transformDirectCall(irCall: IrCall): ArmRenderingStatement {
-        val armCall = ArmCall(armClass, nextFragmentIndex, closure, true, irCall)
+        val armCall = ArmCall(armClass, nextFragmentIndex, closure, true, irCall, irCall.isDelegated)
         val valueParameters = irCall.symbol.owner.valueParameters
 
         for (argumentIndex in 0 until irCall.valueArgumentsCount) {
@@ -266,7 +266,7 @@ class IrFunction2ArmClass(
     }
 
     fun transformArgumentCall(irCall: IrCall): ArmRenderingStatement {
-        val armCall = ArmCall(armClass, nextFragmentIndex, closure, false, irCall)
+        val armCall = ArmCall(armClass, nextFragmentIndex, closure, false, irCall, false)
         val arguments = (irCall.dispatchReceiver !!.type as IrSimpleTypeImpl).arguments
 
         // $this: GET_VAR 'lowerFun: @[ExtensionFunctionType]

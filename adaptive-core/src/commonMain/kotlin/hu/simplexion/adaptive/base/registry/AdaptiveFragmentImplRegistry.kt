@@ -7,7 +7,8 @@ package hu.simplexion.adaptive.base.registry
 import hu.simplexion.adaptive.base.AdaptiveAdapter
 import hu.simplexion.adaptive.base.AdaptiveFragment
 
-class AdaptiveFragmentImplRegistry<BT> {
+open class AdaptiveFragmentImplRegistry<BT> {
+
     val entries = mutableMapOf<String, AdaptiveFragmentImplRegistryEntry<BT>>()
 
     fun build(

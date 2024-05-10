@@ -76,6 +76,9 @@ class AdaptivePluginContext(
 
     val manualImplementation = irContext.referenceFunctions(CallableIds.MANUAL_IMPLEMENTATION).single()
 
+    val delegatedClass = ClassIds.DELEGATED.classSymbol()
+    val adapterBuildFun = adaptiveAdapterClass.functionByName { Strings.BUILD }
+
     private fun String.fragmentPropertyList() =
         adaptiveFragmentClass.owner.properties.filter { it.name.asString() == this }.map { it.symbol }.toList()
 

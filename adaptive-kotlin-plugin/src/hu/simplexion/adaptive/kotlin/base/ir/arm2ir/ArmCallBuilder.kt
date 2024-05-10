@@ -6,9 +6,11 @@ package hu.simplexion.adaptive.kotlin.base.ir.arm2ir
 
 import hu.simplexion.adaptive.kotlin.base.FqNames
 import hu.simplexion.adaptive.kotlin.base.Indices
+import hu.simplexion.adaptive.kotlin.base.Names
 import hu.simplexion.adaptive.kotlin.base.Strings
 import hu.simplexion.adaptive.kotlin.base.ir.arm.ArmCall
 import hu.simplexion.adaptive.kotlin.base.ir.arm.ArmSupportFunctionArgument
+import hu.simplexion.adaptive.kotlin.common.property
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.declarations.impl.IrValueParameterImpl
@@ -27,16 +29,30 @@ class ArmCallBuilder(
 ) : ClassBoundIrBuilder(parent), BranchBuilder {
 
     override fun genBuildConstructorCall(buildFun: IrSimpleFunction): IrExpression =
-        if (armCall.isDirect) {
-            irConstructorCallFromBuild(buildFun, armCall.target)
-        } else {
-            irConstructorCallFromBuild(
-                buildFun,
-                FqNames.ADAPTIVE_ANONYMOUS,
-                argumentCount = Indices.ADAPTIVE_ANONYMOUS_FRAGMENT_ARGUMENT_COUNT
-            ).apply {
-                putValueArgument(Indices.ADAPTIVE_FRAGMENT_STATE_SIZE, irConst(armCall.arguments.count()))
-                putValueArgument(Indices.ADAPTIVE_FRAGMENT_FACTORY, irGetFragmentFactory(buildFun))
+        when {
+            armCall.isDelegated -> {
+                irCall(
+                    pluginContext.adapterBuildFun,
+                    irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)),
+                    irConst(armCall.target.asString()),
+                    irGet(buildFun.valueParameters[Indices.BUILD_PARENT]),
+                    irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX])
+                )
+            }
+
+            armCall.isDirect -> {
+                irConstructorCallFromBuild(buildFun, armCall.target)
+            }
+
+            else -> {
+                irConstructorCallFromBuild(
+                    buildFun,
+                    FqNames.ADAPTIVE_ANONYMOUS,
+                    argumentCount = Indices.ADAPTIVE_ANONYMOUS_FRAGMENT_ARGUMENT_COUNT
+                ).apply {
+                    putValueArgument(Indices.ADAPTIVE_FRAGMENT_STATE_SIZE, irConst(armCall.arguments.count()))
+                    putValueArgument(Indices.ADAPTIVE_FRAGMENT_FACTORY, irGetFragmentFactory(buildFun))
+                }
             }
         }
 

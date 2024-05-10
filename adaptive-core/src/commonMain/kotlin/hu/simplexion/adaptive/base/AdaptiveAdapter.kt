@@ -3,7 +3,6 @@
  */
 package hu.simplexion.adaptive.base
 
-import hu.simplexion.adaptive.base.registry.AdaptiveBindingImplRegistry
 import hu.simplexion.adaptive.base.registry.AdaptiveFragmentImplRegistry
 import hu.simplexion.adaptive.base.testing.TraceEvent
 import kotlinx.coroutines.CoroutineDispatcher
@@ -12,9 +11,6 @@ interface AdaptiveAdapter<BT> : Adaptive {
 
     val fragmentImplRegistry : AdaptiveFragmentImplRegistry<BT>
         get() = throw UnsupportedOperationException("This adapter does not provide a fragment registry.")
-
-    val bindingImplRegistry : AdaptiveBindingImplRegistry<BT>
-        get() = throw UnsupportedOperationException("This adapter does not provide a binding registry.")
 
     var rootFragment : AdaptiveFragment<BT>
 
@@ -25,6 +21,9 @@ interface AdaptiveAdapter<BT> : Adaptive {
     val trace : Boolean
 
     val startedAt: Long
+
+    fun build(name : String, parent : AdaptiveFragment<BT>, index: Int) =
+        fragmentImplRegistry.build(name, this, parent, index)
 
     fun createPlaceholder(): AdaptiveBridge<BT>
 
