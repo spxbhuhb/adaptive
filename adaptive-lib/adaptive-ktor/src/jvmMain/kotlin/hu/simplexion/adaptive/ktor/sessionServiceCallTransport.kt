@@ -95,22 +95,22 @@ fun Routing.sessionWebsocketServiceCallTransport(
                                 ServiceCallStatus.Exception,
                                 byteArrayOf() // FIXME
                             ).also {
-                                errorLog.warn(
-                                    "${requestEnvelope.serviceName} ${requestEnvelope.funName} ${requestEnvelope.payload.size} ${it.status} ${it.payload.size} ${context.principalOrNull}",
-                                    ex
-                                )
+//                                errorLog.warn(
+//                                    "${requestEnvelope.serviceName} ${requestEnvelope.funName} ${requestEnvelope.payload.size} ${it.status} ${it.payload.size} ${context.principalOrNull}",
+//                                    ex
+//                                )
                             }
                         }
                     }
                 }
 
-                accessLog(context, requestEnvelope, responseEnvelope)
+                //accessLog(context, requestEnvelope, responseEnvelope)
 
-                send(Frame.Binary(true, ResponseEnvelope.encodeProto(responseEnvelope)))
-
-                if (context.data[LOGOUT_TOKEN_UUID] == true) {
-                    close(ServiceCallStatus.Logout)
-                }
+//                send(Frame.Binary(true, ResponseEnvelope.encodeProto(responseEnvelope)))
+//
+//                if (context.data[LOGOUT_TOKEN_UUID] == true) {
+//                    close(ServiceCallStatus.Logout)
+//                }
             }
         } catch (ex : SessionClose) {
             // intentionally left empty, nothing to do when we simply close the session

@@ -1,18 +1,13 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-
-rootProject.name = "adaptive-example"
+rootProject.name = "adaptive-ui"
 
 pluginManagement {
+    includeBuild("../../adaptive-gradle-plugin")
     repositories {
+        google()
+        gradlePluginPortal()
         mavenCentral()
-        mavenLocal()
     }
 }
-
-include("common")
-include("server")
-include("browser")
-//include("android")
-//include("ios")
