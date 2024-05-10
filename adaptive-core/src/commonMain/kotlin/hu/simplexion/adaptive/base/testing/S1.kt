@@ -10,8 +10,9 @@ import hu.simplexion.adaptive.base.AdaptiveAdapter
 import hu.simplexion.adaptive.base.AdaptiveFragment
 import hu.simplexion.adaptive.base.AdaptiveSupportFunction
 
-@Suppress("unused", "FunctionName", "UNUSED_PARAMETER", "UnusedReceiverParameter")
-fun Adaptive.S1(supportFun : (i : Int) -> Unit) {
+@Adaptive
+@Suppress("unused", "FunctionName")
+fun S1(supportFun : (i : Int) -> Unit) {
 
 }
 

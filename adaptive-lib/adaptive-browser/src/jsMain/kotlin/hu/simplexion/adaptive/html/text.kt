@@ -7,7 +7,8 @@ import hu.simplexion.adaptive.base.*
 import hu.simplexion.adaptive.dom.AdaptiveDOMNodeFragment
 import org.w3c.dom.Node
 
-fun Adaptive.text(content: Any?) {
+@Adaptive
+fun text(content: Any?) {
     manualImplementation(AdaptiveText::class, content)
 }
 

@@ -15,7 +15,7 @@ import kotlin.time.Duration
 var counter = 12
 
 @Suppress("unused")
-fun Adaptive.pollTest() {
+fun pollTest() {
     val i = poll(Duration.ZERO, 2) {
         if (counter < 14) {
             counter++

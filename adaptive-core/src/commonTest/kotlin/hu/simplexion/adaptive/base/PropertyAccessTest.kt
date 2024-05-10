@@ -53,13 +53,15 @@ class TestProvider : AdaptivePropertyProvider {
 lateinit var testBinding : AdaptiveStateVariableBinding<Int>
 lateinit var testProvider: TestProvider
 
+@Adaptive
 @Suppress("unused")
-fun Adaptive.propertyAccessTest() {
+fun propertyAccessTest() {
     val p = TestProvider().also { testProvider = it }
     propertyAccessor { p.i }
 }
 
-fun <T> Adaptive.propertyAccessor(
+@Adaptive
+fun <T> propertyAccessor(
     binding: AdaptiveStateVariableBinding<T>? = null,
     @Suppress("UNUSED_PARAMETER") selector: () -> T
 ) {

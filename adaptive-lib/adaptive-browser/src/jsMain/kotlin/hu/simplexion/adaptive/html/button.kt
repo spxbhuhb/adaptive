@@ -9,7 +9,8 @@ import kotlinx.browser.document
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.Node
 
-fun Adaptive.button(title: String, onClick: () -> Unit) {
+@Adaptive
+fun button(title: String, onClick: () -> Unit) {
     manualImplementation(AdaptiveButton::class, title, onClick)
 }
 

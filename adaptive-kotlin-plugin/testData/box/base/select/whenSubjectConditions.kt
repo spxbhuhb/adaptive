@@ -7,7 +7,8 @@ import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.base.testing.*
 
-fun Adaptive.WhenSubjectConditions(item: Number) {
+@Adaptive
+fun WhenSubjectConditions(item: Number) {
     when (item) {
         in listOf(1) -> T1(12)
         is Int -> T1(23)

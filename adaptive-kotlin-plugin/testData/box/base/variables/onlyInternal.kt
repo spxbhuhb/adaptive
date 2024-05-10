@@ -7,7 +7,8 @@ import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.base.testing.*
 
-fun Adaptive.OnlyInternal() {
+@Adaptive
+fun OnlyInternal() {
     var i = 23
     var s = "Hello"
     T1(i)

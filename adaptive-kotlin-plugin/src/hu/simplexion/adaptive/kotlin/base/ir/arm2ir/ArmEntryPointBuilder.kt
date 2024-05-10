@@ -29,10 +29,7 @@ class ArmEntryPointBuilder(
             val adapter = irTemporary(
                 irImplicitAs(
                     classBoundAdapterType,
-                    IrGetValueImpl(
-                        SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                        function.extensionReceiverParameter !!.symbol
-                    )
+                    irGet(function.valueParameters.first())
                 )
             )
 

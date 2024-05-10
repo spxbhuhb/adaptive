@@ -36,9 +36,10 @@ import org.jetbrains.kotlin.ir.util.*
  * Calls [DependencyVisitor] to build dependencies for each block.
  */
 class IrFunction2ArmClass(
-    override val adaptiveContext: AdaptivePluginContext,
-    val irFunction: IrFunction
-) : AdaptiveNonAnnotationBasedExtension {
+    override val pluginContext: AdaptivePluginContext,
+    val irFunction: IrFunction,
+    val skipParameters : Int
+) : AdaptiveAnnotationBasedExtension {
 
     lateinit var armClass: ArmClass
 
@@ -56,9 +57,9 @@ class IrFunction2ArmClass(
         get() = closures.peek()
 
     fun transform(): ArmClass {
-        armClass = ArmClass(adaptiveContext, irFunction)
+        armClass = ArmClass(pluginContext, irFunction)
 
-        val definitionTransform = StateDefinitionTransform(adaptiveContext, armClass).apply { transform() }
+        val definitionTransform = StateDefinitionTransform(pluginContext, armClass, skipParameters).apply { transform() }
         supportIndex = definitionTransform.supportFunctionIndex
 
         states.push(armClass.stateVariables)
@@ -70,7 +71,7 @@ class IrFunction2ArmClass(
 
         armClass.rendering.sortBy { it.index }
 
-        adaptiveContext.armClasses += armClass
+        pluginContext.armClasses += armClass
 
         return armClass
     }
@@ -269,6 +270,9 @@ class IrFunction2ArmClass(
         val armCall = ArmCall(armClass, nextFragmentIndex, closure, false, irCall, false)
         val arguments = (irCall.dispatchReceiver !!.type as IrSimpleTypeImpl).arguments
 
+        // CALL 'public abstract fun invoke (): R of kotlin.Function0 [operator] declared in kotlin.Function0' type=kotlin.Unit origin=INVOKE
+        //          $this: GET_VAR 'builder: kotlin.Function0<kotlin.Unit> declared in hu.simplexion.adaptive.kotlin.base.success.inner' type=kotlin.Function0<kotlin.Unit> origin=VARIABLE_AS_FUNCTION
+
         // $this: GET_VAR 'lowerFun: @[ExtensionFunctionType]
         //     kotlin.Function2<
         //         hu.simplexion.adaptive.adaptive.Adaptive,
@@ -304,7 +308,7 @@ class IrFunction2ArmClass(
                     armClass,
                     armCall.arguments.size,
                     parameterType,
-                    IrConstImpl.defaultValueForType(0, 0, adaptiveContext.irContext.irBuiltIns.nothingType)
+                    IrConstImpl.defaultValueForType(0, 0, pluginContext.irContext.irBuiltIns.nothingType)
                 )
             }
 
@@ -395,7 +399,7 @@ class IrFunction2ArmClass(
             expression.function.returnType,
             - 1,
             path.dropLast(1),
-            adaptiveContext.adaptiveStateVariableBindingClass.defaultType,
+            pluginContext.adaptiveStateVariableBindingClass.defaultType,
             expression,
             expression.dependencies()
         )
@@ -566,18 +570,18 @@ class IrFunction2ArmClass(
 
     fun transformReturn(statement: IrStatement) : ArmRenderingStatement? {
         check(statement is IrReturn)
-        if (statement.type == adaptiveContext.irBuiltIns.unitType) return placeholder(statement)
+        if (statement.type == pluginContext.irBuiltIns.unitType) return placeholder(statement)
         return null
     }
 
     fun returnValue() {
         val type = irFunction.returnType
 
-        if (type == adaptiveContext.irContext.irBuiltIns.unitType) return
+        if (type == pluginContext.irContext.irBuiltIns.unitType) return
 
         val classSymbol = checkNotNull(type.classOrNull) { "missing class: ${type.asString()} in ${irFunction.name}" }
 
-        check(type.isSubtypeOfClass(adaptiveContext.adaptiveTransformInterfaceClass)) { "return type is not subclass of ${Strings.ADAPTIVE_TRANSFORM_INTERFACE} in ${irFunction.name}" }
+        check(type.isSubtypeOfClass(pluginContext.adaptiveTransformInterfaceClass)) { "return type is not subclass of ${Strings.ADAPTIVE_TRANSFORM_INTERFACE} in ${irFunction.name}" }
         check(classSymbol.owner.isInterface) { "${type.asString()} is not an interface" }
 
         armClass.stateInterface = classSymbol
@@ -590,7 +594,7 @@ class IrFunction2ArmClass(
     fun irNull() = IrConstImpl(
         UNDEFINED_OFFSET,
         UNDEFINED_OFFSET,
-        adaptiveContext.irBuiltIns.anyNType,
+        pluginContext.irBuiltIns.anyNType,
         IrConstKind.Null,
         null
     )

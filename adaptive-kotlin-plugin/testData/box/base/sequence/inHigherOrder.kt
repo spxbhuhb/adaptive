@@ -7,14 +7,16 @@ import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.base.testing.*
 
-fun Adaptive.inHigherOrder(i: Int) {
+@Adaptive
+fun inHigherOrder(i: Int) {
     inner {
         T1(i)
         T1(i + 1)
     }
 }
 
-fun Adaptive.inner(builder: Adaptive.() -> Unit) {
+@Adaptive
+fun inner(@Adaptive builder: () -> Unit) {
     builder()
 }
 

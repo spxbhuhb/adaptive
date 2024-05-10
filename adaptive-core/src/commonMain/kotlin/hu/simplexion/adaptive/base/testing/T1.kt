@@ -8,10 +8,12 @@ package hu.simplexion.adaptive.base.testing
 import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.AdaptiveAdapter
 import hu.simplexion.adaptive.base.AdaptiveFragment
+import hu.simplexion.adaptive.base.manualImplementation
 
-@Suppress("unused", "FunctionName", "UNUSED_PARAMETER", "UnusedReceiverParameter")
-fun Adaptive.T1(p0: Int) {
-
+@Adaptive
+@Suppress("unused", "FunctionName")
+fun T1(p0: Int) {
+    manualImplementation(p0)
 }
 
 class AdaptiveT1<BT>(

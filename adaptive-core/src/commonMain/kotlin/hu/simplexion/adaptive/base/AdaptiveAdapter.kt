@@ -7,7 +7,7 @@ import hu.simplexion.adaptive.base.registry.AdaptiveFragmentImplRegistry
 import hu.simplexion.adaptive.base.testing.TraceEvent
 import kotlinx.coroutines.CoroutineDispatcher
 
-interface AdaptiveAdapter<BT> : Adaptive {
+interface AdaptiveAdapter<BT> {
 
     val fragmentImplRegistry : AdaptiveFragmentImplRegistry<BT>
         get() = throw UnsupportedOperationException("This adapter does not provide a fragment registry.")

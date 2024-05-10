@@ -8,11 +8,11 @@ import hu.simplexion.adaptive.base.*
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
-fun Adaptive.worker(impl: () -> WorkerImpl<*>) {
+@Adaptive
+fun worker(impl: () -> WorkerImpl<*>) {
     manualImplementation(impl)
 }
 

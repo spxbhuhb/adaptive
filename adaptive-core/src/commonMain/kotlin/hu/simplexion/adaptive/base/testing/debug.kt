@@ -8,10 +8,11 @@ package hu.simplexion.adaptive.base.testing
 import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.AdaptiveAdapter
 import hu.simplexion.adaptive.base.AdaptiveFragment
+import hu.simplexion.adaptive.base.manualImplementation
 
-@Suppress("unused", "FunctionName", "UNUSED_PARAMETER", "UnusedReceiverParameter")
-fun Adaptive.debug(vararg out: Any?) {
-
+@Adaptive
+fun debug(vararg out: Any?) {
+    manualImplementation(out)
 }
 
 class AdaptiveDebug<BT>(

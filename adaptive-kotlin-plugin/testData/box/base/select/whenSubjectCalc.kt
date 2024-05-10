@@ -7,7 +7,8 @@ import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.base.testing.*
 
-fun Adaptive.WhenSubjectCalc(item : String) {
+@Adaptive
+fun WhenSubjectCalc(item : String) {
     when(item + "X") {
         "aX" -> T1(12)
         "bX" -> T1(23)

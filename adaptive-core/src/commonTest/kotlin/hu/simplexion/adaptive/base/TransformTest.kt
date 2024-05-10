@@ -10,12 +10,14 @@ import hu.simplexion.adaptive.base.testing.TraceEvent
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+@Adaptive
 @Suppress("unused")
-fun Adaptive.transformTest() {
+fun transformTest() {
     transformed() transform 23
 }
 
-fun Adaptive.transformed(@Suppress("UNUSED_PARAMETER") i : Int = 12): TestState {
+@Adaptive
+fun transformed(@Suppress("UNUSED_PARAMETER") i : Int = 12): TestState {
     return thisState()
 }
 

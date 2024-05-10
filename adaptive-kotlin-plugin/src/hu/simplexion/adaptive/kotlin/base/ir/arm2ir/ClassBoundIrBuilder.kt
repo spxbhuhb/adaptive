@@ -73,7 +73,7 @@ open class ClassBoundIrBuilder(
     fun irConstructorCallFromBuild(
         buildFun: IrSimpleFunction,
         target: FqName,
-        classSymbol: IrClassSymbol = pluginContext.irClasses[target]?.symbol ?: pluginContext.irContext.referenceClass(ClassId(target.parent(), target.shortName())) !!,
+        classSymbol: IrClassSymbol = getSymbol(target),
         argumentCount: Int = Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
     ): IrConstructorCallImpl {
 
@@ -95,6 +95,11 @@ open class ClassBoundIrBuilder(
 
         return constructorCall
     }
+
+    fun getSymbol(target: FqName) =
+        pluginContext.irClasses[target]?.symbol
+            ?: pluginContext.irContext.referenceClass(ClassId(target.parent(), target.shortName()))
+            ?: throw IllegalArgumentException("cannot find class $target")
 
     fun irFragmentFactoryFromPatch(patchFun: IrSimpleFunction, index: Int): IrExpression {
         val constructorCall =
