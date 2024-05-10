@@ -11,7 +11,7 @@ object Strings {
     const val BINDING_PACKAGE = "hu.simplexion.adaptive.base.binding"
     const val STRUCTURAL_PACKAGE = "hu.simplexion.adaptive.base.structural"
 
-    const val ADAPTIVE_NAMESPACE = "Adaptive"
+    const val ADAPTIVE = "Adaptive"
     const val ENTRY_FUNCTION = "adaptive"
 
     const val ADAPTIVE_ROOT = "AdaptiveRoot"
@@ -94,7 +94,7 @@ object FqNames {
 
 object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
 
-    val ADAPTIVE_NAMESPACE = Strings.ADAPTIVE_NAMESPACE.classId()
+    val ADAPTIVE = Strings.ADAPTIVE.classId()
     val ADAPTIVE_CLOSURE = Strings.ADAPTIVE_CLOSURE.classId()
     val ADAPTIVE_FRAGMENT = Strings.ADAPTIVE_FRAGMENT.classId()
     val ADAPTIVE_ADAPTER = Strings.ADAPTIVE_ADAPTER.classId()

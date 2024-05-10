@@ -24,7 +24,7 @@ internal class AdaptiveGenerationExtension(
             options,
         ).apply {
 
-             debug("DUMP BEFORE") { "\n\n" + moduleFragment.dump() }
+            // debug("DUMP BEFORE") { "\n\n" + moduleFragment.dump() }
 
             moduleFragment.accept(OriginalFunctionTransform(this), null)
             moduleFragment.accept(EntryPointTransform(this), null)

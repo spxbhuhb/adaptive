@@ -7,7 +7,9 @@ import hu.simplexion.adaptive.kotlin.base.Names
 import hu.simplexion.adaptive.kotlin.base.ir.AdaptivePluginContext
 import org.jetbrains.kotlin.backend.jvm.codegen.isExtensionFunctionType
 import org.jetbrains.kotlin.ir.declarations.IrFunction
+import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrCall
+import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
@@ -19,23 +21,28 @@ interface AdaptiveAnnotationBasedExtension {
     val pluginContext: AdaptivePluginContext
 
     val IrFunction.isAdaptive: Boolean
-        get() = symbol.owner.hasAnnotation(pluginContext.adaptiveNamespaceClass)
+        get() = symbol.owner.hasAnnotation(pluginContext.adaptiveClass)
 
     val IrType.isAdaptive: Boolean
         get() {
             if (! isExtensionFunctionType) return false
             if (this !is IrSimpleTypeImpl) return false
-           return this.hasAnnotation(pluginContext.adaptiveNamespaceClass)
+           return this.hasAnnotation(pluginContext.adaptiveClass)
         }
 
+    val IrValueParameter.isAdaptive: Boolean
+        get() = this.hasAnnotation(pluginContext.adaptiveClass
+        )
     val IrCall.isDelegated: Boolean
         get() = symbol.owner.hasAnnotation(pluginContext.delegatedClass)
 
     val IrCall.isDirectAdaptiveCall : Boolean
-        get() = symbol.owner.hasAnnotation(pluginContext.adaptiveNamespaceClass)
+        get() = symbol.owner.hasAnnotation(pluginContext.adaptiveClass)
 
     val IrCall.isArgumentAdaptiveCall: Boolean
-        get() = symbol.owner.name == Names.KOTLIN_INVOKE && dispatchReceiver !!.type.isAdaptive // TODO better check for kotlin invoke
+        get() = symbol.owner.name == Names.KOTLIN_INVOKE && dispatchReceiver?.let {
+            it is IrGetValue && it.symbol.owner.hasAnnotation(pluginContext.adaptiveClass)
+        } ?: false
 
     val IrCall.isTransformInterfaceCall: Boolean
         get() = dispatchReceiver !!.type.isSubtypeOfClass(pluginContext.adaptiveTransformInterfaceClass)
