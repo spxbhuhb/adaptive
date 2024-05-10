@@ -7,7 +7,8 @@ import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.base.testing.*
 
-fun Adaptive.IfElsePatch(i : Int) {
+@Adaptive
+fun IfElsePatch(i : Int) {
     if (i % 2 == 0) {
         T1(i + 200)
         T1(i + 300)

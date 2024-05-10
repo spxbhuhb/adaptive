@@ -29,7 +29,7 @@ class AdaptivePluginContext(
     val irBuiltIns
         get() = irContext.irBuiltIns
 
-    val adaptiveNamespaceClass = ClassIds.ADAPTIVE_NAMESPACE.classSymbol()
+    val adaptiveClass = ClassIds.ADAPTIVE.classSymbol()
 
     val armClasses = mutableListOf<ArmClass>()
     val irClasses = mutableMapOf<FqName, IrClass>()

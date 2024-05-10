@@ -3,4 +3,4 @@
  */
 package hu.simplexion.adaptive.base
 
-interface Adaptive
+annotation class Adaptive

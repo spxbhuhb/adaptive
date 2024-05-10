@@ -7,7 +7,7 @@ import hu.simplexion.adaptive.kotlin.base.ADAPTIVE_STATE_VARIABLE_LIMIT
 import hu.simplexion.adaptive.kotlin.base.ClassIds
 import hu.simplexion.adaptive.kotlin.base.ir.AdaptivePluginContext
 import hu.simplexion.adaptive.kotlin.base.ir.arm.*
-import hu.simplexion.adaptive.kotlin.base.ir.util.AdaptiveNonAnnotationBasedExtension
+import hu.simplexion.adaptive.kotlin.base.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrVariable
@@ -26,9 +26,10 @@ import org.jetbrains.kotlin.ir.util.isSuspendFunction
  * state variables.
  */
 class StateDefinitionTransform(
-    override val adaptiveContext: AdaptivePluginContext,
-    private val armClass: ArmClass
-) : AdaptiveNonAnnotationBasedExtension {
+    override val pluginContext: AdaptivePluginContext,
+    private val armClass: ArmClass,
+    val skipParameters : Int
+) : AdaptiveAnnotationBasedExtension {
 
     val names = mutableListOf<String>()
 
@@ -50,6 +51,10 @@ class StateDefinitionTransform(
 
     fun transformParameters() {
         armClass.originalFunction.valueParameters.forEach { valueParameter ->
+
+            // for entry points the first parameter of the function is the adapter which
+            // we don't want to add to the root fragment as a state variable
+            if (valueParameter.index < skipParameters) return@forEach
 
             // access selector function is not part of the state, it is for the plugin to know
             // which state variable to access

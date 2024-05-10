@@ -7,7 +7,8 @@ import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.base.testing.*
 
-fun Adaptive.IfOnlyTrue(i : Int) {
+@Adaptive
+fun IfOnlyTrue(i : Int) {
     if (i % 2 == 0) {
         T0()
     }

@@ -7,7 +7,8 @@ import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.base.testing.*
 
-fun Adaptive.ManyVariables(
+@Adaptive
+fun ManyVariables(
     i0: Int,
     i1: Int,
     i2: Int,

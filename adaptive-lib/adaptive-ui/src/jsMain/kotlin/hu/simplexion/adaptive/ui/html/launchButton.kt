@@ -12,7 +12,8 @@ import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.Node
 
-fun Adaptive.launchButton(title: String, onClick: suspend () -> Unit) {
+@Adaptive
+fun launchButton(title: String, onClick: suspend () -> Unit) {
     manualImplementation(AdaptiveButton::class, title, onClick)
 }
 

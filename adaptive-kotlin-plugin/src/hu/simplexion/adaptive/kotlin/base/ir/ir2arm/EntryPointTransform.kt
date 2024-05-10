@@ -22,7 +22,7 @@ class EntryPointTransform(
     val irBuiltIns = adaptiveContext.irContext.irBuiltIns
 
     /**
-     * Transforms Adaptive entry points (calls to the function `adaptive`) into a
+     * Transforms Adaptive entry points (calls to the function `adaptive`) into an
      * Adaptive root class and modifies the last parameter of the function (which
      * has to be a lambda) so it gets an adapter and creates a new instance
      * of the root class.
@@ -40,7 +40,7 @@ class EntryPointTransform(
 
         val function = block.function
 
-        val armClass = IrFunction2ArmClass(adaptiveContext, block.function).transform()
+        val armClass = IrFunction2ArmClass(adaptiveContext, block.function, 1).transform()
 
         ArmEntryPoint(armClass, function).also {
             adaptiveContext.armEntryPoints += it

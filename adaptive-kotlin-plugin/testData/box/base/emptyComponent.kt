@@ -8,7 +8,8 @@ import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.base.testing.*
 
 
-fun Adaptive.Empty() {
+@Adaptive
+fun Empty() {
 
 }
 

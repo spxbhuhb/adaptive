@@ -8,7 +8,8 @@ import hu.simplexion.adaptive.base.*
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
 
-fun Adaptive.store(impl : () -> StoreImpl<*>) {
+@Adaptive
+fun store(impl : () -> StoreImpl<*>) {
     manualImplementation(impl)
 }
 

@@ -9,12 +9,14 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 @Suppress("unused")
-fun Adaptive.accessTest() {
+@Adaptive
+fun accessTest() {
     val a = 12
     accessor { a }
 }
 
-fun <T> Adaptive.accessor(
+@Adaptive
+fun <T> accessor(
     binding: AdaptiveStateVariableBinding<T>? = null,
     @Suppress("UNUSED_PARAMETER") selector: () -> T
 ) {

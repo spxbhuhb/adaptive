@@ -11,7 +11,8 @@ import kotlin.time.Duration
 
 var counter = 12
 
-fun Adaptive.pollTest() {
+@Adaptive
+fun pollTest() {
     val i = poll(Duration.ZERO, 2) {
         if (counter < 14) {
             // this is counter++ but ++ is not supported yet

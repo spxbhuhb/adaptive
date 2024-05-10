@@ -5,14 +5,12 @@
 
 package hu.simplexion.adaptive.base.testing
 
-import hu.simplexion.adaptive.base.Adaptive
-import hu.simplexion.adaptive.base.AdaptiveAdapter
-import hu.simplexion.adaptive.base.AdaptiveFragment
-import hu.simplexion.adaptive.base.AdaptiveSupportFunction
+import hu.simplexion.adaptive.base.*
 
-@Suppress("unused", "FunctionName", "UNUSED_PARAMETER", "UnusedReceiverParameter")
-fun Adaptive.SuspendS1(supportFun : suspend (i : Int) -> Unit) {
-
+@Adaptive
+@Suppress("unused", "FunctionName")
+fun SuspendS1(supportFun : suspend (i : Int) -> Unit) {
+    manualImplementation(supportFun)
 }
 
 @Suppress("unused")

@@ -16,7 +16,8 @@ import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.Node
 
-fun Adaptive.grid(templateColumns: String, templateRows: String, vararg styles: AdaptiveCssStyle, builder: Adaptive.() -> Unit) {
+@Adaptive
+fun grid(templateColumns: String, templateRows: String, vararg styles: AdaptiveCssStyle, @Adaptive builder: () -> Unit) {
     manualImplementation(AdaptiveGrid::class, templateColumns, templateColumns, templateRows, styles, builder)
 }
 

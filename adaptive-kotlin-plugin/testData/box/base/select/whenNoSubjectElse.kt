@@ -7,7 +7,8 @@ import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.base.testing.*
 
-fun Adaptive.WhenNoSubjectElse(item : String) {
+@Adaptive
+fun WhenNoSubjectElse(item : String) {
     when {
         item == "a" -> T1(12)
         item == "b" -> T1(23)

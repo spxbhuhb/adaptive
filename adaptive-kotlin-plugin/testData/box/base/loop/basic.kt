@@ -7,7 +7,8 @@ import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.base.testing.*
 
-fun Adaptive.loopTest(count : Int) {
+@Adaptive
+fun loopTest(count : Int) {
     for (i in 0..count) {
         T1(i + 10)
     }

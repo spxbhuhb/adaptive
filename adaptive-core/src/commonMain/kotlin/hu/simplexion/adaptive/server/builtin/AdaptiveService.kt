@@ -9,7 +9,8 @@ import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
 import hu.simplexion.adaptive.service.defaultServiceImplFactory
 
-fun Adaptive.service(impl: () -> ServerFragmentImpl<*>) {
+@Adaptive
+fun service(impl: () -> ServerFragmentImpl<*>) {
     manualImplementation(impl)
 }
 

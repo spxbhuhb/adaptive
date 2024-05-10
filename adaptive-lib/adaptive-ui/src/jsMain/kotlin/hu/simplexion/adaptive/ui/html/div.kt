@@ -14,7 +14,8 @@ import hu.simplexion.adaptive.base.structural.AdaptiveAnonymous
 import kotlinx.browser.document
 import org.w3c.dom.Node
 
-fun Adaptive.div(vararg styles : AdaptiveCssStyle, builder : Adaptive.() -> Unit) {
+@Adaptive
+fun div(vararg styles : AdaptiveCssStyle, @Adaptive builder : () -> Unit) {
     manualImplementation(AdaptiveDiv::class, styles, builder)
 }
 

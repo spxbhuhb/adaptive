@@ -11,15 +11,16 @@ import hu.simplexion.adaptive.base.testing.TraceEvent
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-
+@Adaptive
 @Suppress("unused")
-fun Adaptive.supportFunctionTest() {
+fun supportFunctionTest() {
     var i = 13
     supportFunctionInner(12) { i += 11 + it }
 }
 
+@Adaptive
 @Suppress("UnusedReceiverParameter")
-fun Adaptive.supportFunctionInner(i: Int, supportFun: (i: Int) -> Unit) {
+fun supportFunctionInner(i: Int, supportFun: (i: Int) -> Unit) {
     supportFun(i)
 }
 
