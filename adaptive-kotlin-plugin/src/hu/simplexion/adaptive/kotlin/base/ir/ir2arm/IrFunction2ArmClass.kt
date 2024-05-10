@@ -38,7 +38,7 @@ import org.jetbrains.kotlin.ir.util.*
 class IrFunction2ArmClass(
     override val pluginContext: AdaptivePluginContext,
     val irFunction: IrFunction,
-    val skipParameters : Int
+    val isRoot: Boolean
 ) : AdaptiveAnnotationBasedExtension {
 
     lateinit var armClass: ArmClass
@@ -57,9 +57,9 @@ class IrFunction2ArmClass(
         get() = closures.peek()
 
     fun transform(): ArmClass {
-        armClass = ArmClass(pluginContext, irFunction)
+        armClass = ArmClass(pluginContext, irFunction, isRoot)
 
-        val definitionTransform = StateDefinitionTransform(pluginContext, armClass, skipParameters).apply { transform() }
+        val definitionTransform = StateDefinitionTransform(pluginContext, armClass, if (isRoot) 1 else 0).apply { transform() }
         supportIndex = definitionTransform.supportFunctionIndex
 
         states.push(armClass.stateVariables)
@@ -304,7 +304,7 @@ class IrFunction2ArmClass(
     fun transformValueArgument(
         armCall: ArmCall,
         parameterType: IrType,
-        isAdaptive : Boolean,
+        isAdaptive: Boolean,
         expression: IrExpression?
     ): ArmValueArgument? =
         when {
@@ -499,17 +499,19 @@ class IrFunction2ArmClass(
                             .transforms = transforms
                     }
                 }
+
                 receiver.isTransformInterfaceCall -> {
                     transforms += transformTransformCall(receiver)
                     current = receiver
                 }
+
                 else -> {
-                    error {"invalid transform chain: ${expression.dumpKotlinLike()}" }
+                    error { "invalid transform chain: ${expression.dumpKotlinLike()}" }
                 }
             }
         }
 
-        error {"invalid transform chain: ${expression.dumpKotlinLike()}" }
+        error { "invalid transform chain: ${expression.dumpKotlinLike()}" }
     }
 
     fun transformTransformCall(irCall: IrCall): ArmTransformCall {
@@ -573,7 +575,7 @@ class IrFunction2ArmClass(
     // Return
     // ---------------------------------------------------------------------------
 
-    fun transformReturn(statement: IrStatement) : ArmRenderingStatement? {
+    fun transformReturn(statement: IrStatement): ArmRenderingStatement? {
         check(statement is IrReturn)
         if (statement.type == pluginContext.irBuiltIns.unitType) return placeholder(statement)
         return null

@@ -40,7 +40,7 @@ class EntryPointTransform(
 
         val function = block.function
 
-        val armClass = IrFunction2ArmClass(adaptiveContext, block.function, 1).transform()
+        val armClass = IrFunction2ArmClass(adaptiveContext, block.function, true).transform()
 
         ArmEntryPoint(armClass, function).also {
             adaptiveContext.armEntryPoints += it

@@ -35,7 +35,9 @@ internal class AdaptiveGenerationExtension(
                 }
                 .forEach {
                     it.buildGenFunctionBodies()
-                    it.armClass.originalFunction.file.addChild(it.irClass)
+                    if (it.armClass.isRoot) {
+                        it.armClass.originalFunction.file.addChild(it.irClass)
+                    }
                     if (options.dumpKotlinLike) {
                         debug("KOTLIN LIKE") { "\n\n" + it.irClass.dumpKotlinLike(KotlinLikeDumpOptions(printFakeOverridesStrategy = FakeOverridesStrategy.NONE)) }
                     }

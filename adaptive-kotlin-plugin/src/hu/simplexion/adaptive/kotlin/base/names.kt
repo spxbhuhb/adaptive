@@ -3,6 +3,8 @@
  */
 package hu.simplexion.adaptive.kotlin.base
 
+import hu.simplexion.adaptive.kotlin.adat.ClassIds.classId
+import hu.simplexion.adaptive.kotlin.adat.ClassIds.fqName
 import hu.simplexion.adaptive.kotlin.common.NamesBase
 import org.jetbrains.kotlin.name.FqName
 
@@ -52,6 +54,9 @@ object Strings {
     const val PARENT = "parent"
     const val INDEX = "index"
     const val STATE = "state"
+    const val FRAGMENT = "fragment"
+    const val SUPPORT_FUNCTION = "supportFunction"
+    const val ARGUMENTS = "arguments"
     const val SUPPORT_FUNCTION_INDEX = "supportFunctionIndex"
     const val SUPPORT_FUNCTION_RECEIVING_FRAGMENT = "receivingFragment"
 
@@ -75,9 +80,17 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val PARENT = Strings.PARENT.name()
     val INDEX = Strings.INDEX.name()
     val ADAPTER = Strings.ADAPTER.name()
+    val FRAGMENT = Strings.FRAGMENT.name()
+    val SUPPORT_FUNCTION = Strings.SUPPORT_FUNCTION.name()
+    val ARGUMENTS = Strings.ARGUMENTS.name()
     val HELPER_ADAPTER = Strings.HELPER_ADAPTER.name()
     val BT = Strings.BT.name()
     val KOTLIN_INVOKE = Strings.KOTLIN_INVOKE.name()
+
+    val GEN_BUILD = Strings.GEN_BUILD.name()
+    val GEN_PATCH_DESCENDANT = Strings.GEN_PATCH_DESCENDANT.name()
+    val GEN_INVOKE = Strings.GEN_INVOKE.name()
+    val GEN_INVOKE_SUSPEND = Strings.GEN_INVOKE_SUSPEND.name()
 }
 
 object FqNames {
@@ -106,6 +119,8 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
 
     val DELEGATED = Strings.DELEGATED.classId()
 
+    val KOTLIN_ARRAY = "Array".classId { "kotlin".fqName() }
+    val KOTLIN_ANY = "Any".classId { "kotlin".fqName() }
 }
 
 object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {

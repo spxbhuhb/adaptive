@@ -47,7 +47,7 @@ class OriginalFunctionTransform(
         }
 
         // this is the actual transform
-        IrFunction2ArmClass(pluginContext, declaration, 0).transform()
+        IrFunction2ArmClass(pluginContext, declaration, false).transform()
 
         // replace the body of the original function with an empty one
         declaration.body = IrBlockBodyImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET)
