@@ -36,10 +36,9 @@ internal class AdaptiveGenerationExtension(
                 .forEach {
                     it.buildGenFunctionBodies()
                     it.armClass.originalFunction.file.addChild(it.irClass)
-                    if (options.dumpKotlinLike) {
-                        debug("KOTLIN LIKE") { "\n\n" + it.irClass.dumpKotlinLike(KotlinLikeDumpOptions(printFakeOverridesStrategy = FakeOverridesStrategy.NONE)) }
-                    }
                 }
+
+            moduleFragment.accept(ClassFunctionTransform(this), null)
 
             armEntryPoints
                 .forEach { ArmEntryPointBuilder(this, it).entryPointBody() }

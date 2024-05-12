@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.kotlin.AdaptiveOptions
 import hu.simplexion.adaptive.kotlin.AdaptivePluginRegistrar
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatGenerationExtension
 import hu.simplexion.adaptive.kotlin.base.ir.AdaptiveGenerationExtension
+import hu.simplexion.adaptive.kotlin.debug.ir.DebugGenerationExtension
 import hu.simplexion.adaptive.kotlin.fqnameaware.ir.FqNameAwareGenerationExtension
 import hu.simplexion.adaptive.kotlin.server.ir.ServerGenerationExtension
 import hu.simplexion.adaptive.kotlin.service.ir.ServicesGenerationExtension
@@ -39,6 +40,7 @@ class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentCo
         IrGenerationExtension.registerExtension(ServerGenerationExtension(options))
         IrGenerationExtension.registerExtension(FqNameAwareGenerationExtension(options))
         IrGenerationExtension.registerExtension(AdatGenerationExtension(options))
+        IrGenerationExtension.registerExtension(DebugGenerationExtension(options))
 
     }
 }

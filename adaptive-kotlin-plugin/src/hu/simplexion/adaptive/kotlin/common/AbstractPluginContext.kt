@@ -65,11 +65,10 @@ abstract class AbstractPluginContext(
         throw IllegalStateException("cannot create plugin log file, too many exists, dir: $pluginLogDir")
     }
 
-    fun debug(label: String, message: () -> Any?) {
+    fun debug(label: String? = null, message: () -> Any?) {
         if (! options.pluginDebug) return
 
-        val paddedLabel = "[$label]".padEnd(30)
-        val output = "$paddedLabel  ${message()}\n"
+        val output = (if (label != null) "[$label]".padEnd(30) else "") + "${message()}\n"
 
         if (pluginLogFile != null) {
             Files.write(pluginLogFile, output.encodeToByteArray(), StandardOpenOption.APPEND, StandardOpenOption.CREATE)

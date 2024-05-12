@@ -4,8 +4,10 @@
 
 package hu.simplexion.adaptive.kotlin.base.ir.arm2ir
 
+import hu.simplexion.adaptive.kotlin.base.CallableIds
 import hu.simplexion.adaptive.kotlin.base.Indices
 import hu.simplexion.adaptive.kotlin.base.Names
+import hu.simplexion.adaptive.kotlin.base.Strings
 import hu.simplexion.adaptive.kotlin.base.ir.AdaptivePluginContext
 import hu.simplexion.adaptive.kotlin.base.ir.arm.*
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
@@ -30,6 +32,7 @@ import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
@@ -70,10 +73,34 @@ open class ClassBoundIrBuilder(
     // Build, patch and invoke helpers
     // --------------------------------------------------------------------------------------------------------
 
-    fun irConstructorCallFromBuild(
+    fun irCallFromBuild(
         buildFun: IrSimpleFunction,
         target: FqName,
-        classSymbol: IrClassSymbol = getSymbol(target),
+        classSymbol: IrClassSymbol? = pluginContext.getSymbol(target),
+        argumentCount: Int = Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
+    ): IrExpression {
+
+        if (classSymbol != null) {
+            return irConstructorCallFromBuild(buildFun, classSymbol, argumentCount)
+        }
+
+        val callableId = CallableId(target.parent(), Name.identifier(Strings.CLASS_FUNCTION_PREFIX + target.shortName().identifier))
+        val functionSymbol = pluginContext.irContext.referenceFunctions(callableId).firstOrNull()
+
+        check(functionSymbol != null) { "cannot find class or class function for $target" }
+
+        return irCall(
+            functionSymbol,
+            null,
+            irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)),
+            irGet(buildFun.valueParameters[Indices.BUILD_PARENT]),
+            irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX])
+        )
+    }
+
+    fun irConstructorCallFromBuild(
+        buildFun: IrSimpleFunction,
+        classSymbol: IrClassSymbol,
         argumentCount: Int = Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
     ): IrConstructorCallImpl {
 
@@ -95,11 +122,6 @@ open class ClassBoundIrBuilder(
 
         return constructorCall
     }
-
-    fun getSymbol(target: FqName) =
-        pluginContext.irClasses[target]?.symbol
-            ?: pluginContext.irContext.referenceClass(ClassId(target.parent(), target.shortName()))
-            ?: throw IllegalArgumentException("cannot find class $target")
 
     fun irFragmentFactoryFromPatch(patchFun: IrSimpleFunction, index: Int): IrExpression {
         val constructorCall =
@@ -260,6 +282,6 @@ open class ClassBoundIrBuilder(
         inInitializer: IrExpression? = null,
         overridden: List<IrPropertySymbol>? = null
     ): IrProperty =
-        irClass.addIrProperty( inName, inType, inIsVar, inInitializer, overridden)
+        irClass.addIrProperty(inName, inType, inIsVar, inInitializer, overridden)
 
 }

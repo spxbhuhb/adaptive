@@ -20,8 +20,6 @@ class AdatGenerationExtension(
         AdatPluginContext(pluginContext, options).apply {
             moduleFragment.transformChildrenVoid(AdatModuleTransform(this))
         }
-
-        println(moduleFragment.dumpKotlinLike(KotlinLikeDumpOptions(printFakeOverridesStrategy = FakeOverridesStrategy.NONE)))
     }
 
 
