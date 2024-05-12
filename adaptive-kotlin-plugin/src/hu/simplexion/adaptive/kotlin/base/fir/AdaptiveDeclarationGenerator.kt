@@ -68,8 +68,4 @@ class AdaptiveDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         )
     }
 
-    override fun hasPackage(packageFqName: FqName): Boolean {
-        return true
-    }
-
 }
