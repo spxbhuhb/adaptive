@@ -46,11 +46,8 @@ class ArmClassBuilder(
     fun buildIrClassWithoutGenBodies() {
 
         val originalFunction = armClass.originalFunction
-        val classId = ClassId(armClass.fqName.parent(), armClass.name)
-        val fromFirClass = irContext.referenceClass(classId)?.owner
 
-        irClass = fromFirClass
-            ?: irContext.irFactory.buildClass {
+        irClass = irContext.irFactory.buildClass {
                 startOffset = originalFunction.startOffset
                 endOffset = originalFunction.endOffset
                 origin = BasePluginKey.origin
@@ -60,14 +57,12 @@ class ArmClassBuilder(
                 modality = Modality.OPEN
             }
 
-        if (fromFirClass == null) {
-            typeParameters()
-            irClass.superTypes = listOf(pluginContext.adaptiveFragmentClass.typeWith(irClass.typeParameters.first().defaultType))
-            irClass.metadata = armClass.originalFunction.metadata
-            thisReceiver()
-            constructor()
-            initializer()
-        }
+        typeParameters()
+        irClass.superTypes = listOf(pluginContext.adaptiveFragmentClass.typeWith(irClass.typeParameters.first().defaultType))
+        irClass.metadata = armClass.originalFunction.metadata
+        thisReceiver()
+        constructor()
+        initializer()
 
         irClass.parent = originalFunction.file
 
@@ -77,9 +72,7 @@ class ArmClassBuilder(
             irClass.superTypes += it.defaultType
         }
 
-        if (fromFirClass == null) {
-            irClass.addFakeOverrides(IrTypeSystemContextImpl(irContext.irBuiltIns))
-        }
+        irClass.addFakeOverrides(IrTypeSystemContextImpl(irContext.irBuiltIns))
 
         pluginContext.irClasses[armClass.fqName] = irClass
     }

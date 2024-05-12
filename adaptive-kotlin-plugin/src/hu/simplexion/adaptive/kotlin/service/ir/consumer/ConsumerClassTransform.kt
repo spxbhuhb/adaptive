@@ -47,10 +47,6 @@ class ConsumerClassTransform(
 
             transformServiceFunction(serviceFunction)
         }
-
-        if (pluginContext.options.dumpKotlinLike) {
-            pluginContext.debug("KOTLIN LIKE") { "\n\n" + consumerClass.dumpKotlinLike(KotlinLikeDumpOptions(printFakeOverridesStrategy = FakeOverridesStrategy.NONE)) }
-        }
     }
 
     private fun addServiceNameInitializer() {

@@ -21,7 +21,7 @@ fun IrFunction.adaptiveClassFqName(): FqName {
         val postfix = this.file.name.replace(".kt", "").capitalizeFirstChar() + startOffset.toString()
         parent.child(Name.identifier(Strings.ADAPTIVE_ROOT + postfix))
     } else {
-        parent.child(Name.identifier("Adaptive" + name.identifier.capitalizeFirstChar()))
+        parent.child(Name.identifier("Adaptive" + name.identifier.removePrefix(Strings.CLASS_FUNCTION_PREFIX).capitalizeFirstChar()))
     }
 }
 

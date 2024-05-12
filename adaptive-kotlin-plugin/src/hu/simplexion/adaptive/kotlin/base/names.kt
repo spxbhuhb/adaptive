@@ -74,6 +74,8 @@ object Strings {
     const val ROOT_BRIDGE = "rootBridge" // property name of the root bridge in the adapter
 
     const val KOTLIN_INVOKE = "invoke"
+
+    const val CLASS_FUNCTION_PREFIX = "acf_"
 }
 
 object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
@@ -91,6 +93,8 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val GEN_PATCH_DESCENDANT = Strings.GEN_PATCH_DESCENDANT.name()
     val GEN_INVOKE = Strings.GEN_INVOKE.name()
     val GEN_INVOKE_SUSPEND = Strings.GEN_INVOKE_SUSPEND.name()
+
+    val CLASS_FUNCTION_PREFIX = Strings.CLASS_FUNCTION_PREFIX.name()
 }
 
 object FqNames {
@@ -112,15 +116,14 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAPTIVE_FRAGMENT = Strings.ADAPTIVE_FRAGMENT.classId()
     val ADAPTIVE_ADAPTER = Strings.ADAPTIVE_ADAPTER.classId()
 
+    val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.classId { Strings.STRUCTURAL_PACKAGE.fqName() }
+
     val ADAPTIVE_FRAGMENT_FACTORY = Strings.ADAPTIVE_FRAGMENT_FACTORY.classId()
     val ADAPTIVE_SUPPORT_FUNCTION = Strings.ADAPTIVE_SUPPORT_FUNCTION.classId()
     val ADAPTIVE_STATE_VARIABLE_BINDING = Strings.ADAPTIVE_STATE_VARIABLE_BINDING.classId { Strings.BINDING_PACKAGE.fqName() }
     val ADAPTIVE_TRANSFORM_INTERFACE = Strings.ADAPTIVE_TRANSFORM_INTERFACE.classId()
 
     val DELEGATED = Strings.DELEGATED.classId()
-
-    val KOTLIN_ARRAY = "Array".classId { "kotlin".fqName() }
-    val KOTLIN_ANY = "Any".classId { "kotlin".fqName() }
 }
 
 object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {

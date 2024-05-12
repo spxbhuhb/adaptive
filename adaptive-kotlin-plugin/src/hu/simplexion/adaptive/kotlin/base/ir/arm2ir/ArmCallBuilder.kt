@@ -41,13 +41,13 @@ class ArmCallBuilder(
             }
 
             armCall.isDirect -> {
-                irConstructorCallFromBuild(buildFun, armCall.target)
+                irCallFromBuild(buildFun, armCall.target)
             }
 
             else -> {
                 irConstructorCallFromBuild(
                     buildFun,
-                    FqNames.ADAPTIVE_ANONYMOUS,
+                    pluginContext.adaptiveAnonymousClass,
                     argumentCount = Indices.ADAPTIVE_ANONYMOUS_FRAGMENT_ARGUMENT_COUNT
                 ).apply {
                     putValueArgument(Indices.ADAPTIVE_FRAGMENT_STATE_SIZE, irConst(armCall.arguments.count()))

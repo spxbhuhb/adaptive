@@ -62,10 +62,6 @@ class ImplClassTransform(
 
         generateDispatch()
 
-        if (pluginContext.options.dumpKotlinLike) {
-            pluginContext.debug("KOTLIN LIKE") { "\n\n" + transformedClass.dumpKotlinLike(KotlinLikeDumpOptions(printFakeOverridesStrategy = FakeOverridesStrategy.NONE)) }
-        }
-
         return declaration
     }
 
