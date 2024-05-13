@@ -9,7 +9,7 @@ Adaptive is a consolidated application development library for Kotlin focusing o
 
 Adaptive comes with a compiler plugin that performs many functions to reach the goals above.
 
-Status: **everything is broken (seriously, upgraded to 1.9.23 and all plugin tests fail, working on it)**
+Status: **initial development**
 
 While the library already works and provides both client and server side functionality it
 is not ready for general production yet. I am working continuously to add improvements.
@@ -79,7 +79,7 @@ fun main() {
 
 ```text
 plugins {
-    kotlin("multiplatform") version "1.9.23"
+    kotlin("multiplatform") version "1.9.10"
     id("hu.simplexion.adaptive") version "2024.05.07-SNAPSHOT"
 }
 
