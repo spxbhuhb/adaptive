@@ -19,9 +19,7 @@ Supported platforms:
 * JVM
 * Browser/JS
 * Android
-* iOS Arm64
-* iOS Simulator Arm64
-* iOS X64
+* iOS (Arm64, Simulator Arm64, X64)
 
 See [platforms](./doc/platforms/README.md) for details.
 
@@ -41,7 +39,7 @@ fun main() {
     
     adaptive(AdaptiveServerAdapter<Any>(true)) {
     
-        settings { propertyFile { "./etc/example.properties "} }
+        settings { propertyFile { "./etc/example.properties"} }
 
         service { CounterService() }
         worker { CounterWorker() }
@@ -55,6 +53,7 @@ fun main() {
 
 ```kotlin
 defaultServiceCallTransport = BasicWebSocketServiceCallTransport()
+
 val counterService = getService<CounterApi>()
 
 fun main() {
