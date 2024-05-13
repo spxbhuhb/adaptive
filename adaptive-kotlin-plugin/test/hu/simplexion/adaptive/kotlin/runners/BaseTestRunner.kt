@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.kotlin.service.ExtensionRegistrarConfigurator
 import hu.simplexion.adaptive.kotlin.service.PluginAnnotationsProvider
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives
+import org.jetbrains.kotlin.test.directives.JvmEnvironmentConfigurationDirectives
 import org.jetbrains.kotlin.test.initIdeaConfiguration
 import org.jetbrains.kotlin.test.runners.AbstractKotlinCompilerTest
 import org.jetbrains.kotlin.test.runners.baseFirDiagnosticTestConfiguration
@@ -35,6 +36,7 @@ fun TestConfigurationBuilder.commonFirWithPluginFrontendConfiguration(dumpFir : 
     defaultDirectives {
         + FirDiagnosticsDirectives.ENABLE_PLUGIN_PHASES
         if (dumpFir) + FirDiagnosticsDirectives.FIR_DUMP
+        + JvmEnvironmentConfigurationDirectives.FULL_JDK
     }
 
     useConfigurators(

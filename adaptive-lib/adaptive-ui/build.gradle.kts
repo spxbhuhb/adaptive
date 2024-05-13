@@ -25,6 +25,7 @@ val datetime_version: String by project
 val ktor_version: String by project
 
 kotlin {
+
     jvm {
         jvmToolchain(11)
         withJava()
@@ -33,6 +34,17 @@ kotlin {
     js(IR) {
         browser()
         binaries.library()
+    }
+
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "Shared"
+            isStatic = true
+        }
     }
 
     sourceSets.all {

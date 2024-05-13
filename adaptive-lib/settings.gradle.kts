@@ -4,6 +4,13 @@
 
 rootProject.name = "adaptive-lib"
 
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+}
+
 includeBuild("../adaptive-core")
 includeBuild("../adaptive-kotlin-plugin")
 

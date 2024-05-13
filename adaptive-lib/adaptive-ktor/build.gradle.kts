@@ -33,13 +33,26 @@ val ktor_version: String by project
 val logback_version: String by project
 
 kotlin {
+
     jvm {
         jvmToolchain(11)
         withJava()
     }
+
     js(IR) {
         browser()
         binaries.library()
+    }
+
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "Shared"
+            isStatic = true
+        }
     }
 
     sourceSets.all {
