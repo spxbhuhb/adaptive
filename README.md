@@ -39,7 +39,7 @@ fun main() {
     
     adaptive(AdaptiveServerAdapter<Any>(true)) {
     
-        settings { propertyFile { "./etc/example.properties"} }
+        settings { propertyFile { "./etc/example.properties" } }
 
         service { CounterService() }
         worker { CounterWorker() }
@@ -70,7 +70,9 @@ fun counterWithTime(time : Instant) {
 }
 ```
 
-# Gradle Dependencies
+## Gradle Dependencies
+
+**Note**: The snapshot version is not on Maven Central. I'll update this when an actual preview is released.
 
 ```text
 plugins {
@@ -111,8 +113,8 @@ kotlin {
 | &nbsp;&nbsp;[email](adaptive-lib/adaptive-email)      | Email worker (JavaMail), tables (Exposed) and service to send emails.                   |
 | &nbsp;&nbsp;[exposed](adaptive-lib/adaptive-exposed)  | Integration with Exposed, HikariPool worker.                                            |
 | &nbsp;&nbsp;[ktor](adaptive-lib/adaptive-ktor)        | Ktor Worker with websockets and static directory serving. Transport for services.       |
-| &nbsp;&nbsp;[email](adaptive-lib/adaptive-template)   | Build adaptive structures from templates (no-code/low-code).                            |
-| &nbsp;&nbsp;[email](adaptive-lib/adaptive-ui)         | Basic UI fragments for the supported platforms.                                         |
+| &nbsp;&nbsp;[template](adaptive-lib/adaptive-template)| Build adaptive structures from templates (no-code/low-code).                            |
+| &nbsp;&nbsp;[ui](adaptive-lib/adaptive-ui)            | Basic UI fragments for the supported platforms.                                         |
 | sandbox                                               | Project used during development to try things our without booting up the whole example. |
 
 ## Building Adaptive
