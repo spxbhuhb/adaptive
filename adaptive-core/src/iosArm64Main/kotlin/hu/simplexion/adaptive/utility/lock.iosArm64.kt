@@ -4,13 +4,13 @@
 
 package hu.simplexion.adaptive.utility
 
-import platform.Foundation.NSLock
+import platform.Foundation.NSRecursiveLock
 
 actual fun getLock(): Lock =
     IOSLock()
 
 internal class IOSLock : Lock {
-    val lock = NSLock()
+    val lock = NSRecursiveLock()
 
     override fun lock() {
         lock.lock()

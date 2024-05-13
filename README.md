@@ -14,64 +14,60 @@ Status: **initial development**
 While the library already works and provides both client and server side functionality it
 is not ready for general production yet. I am working continuously to add improvements.
 
-Adaptive's core is platform antagonistic, pure Kotlin, it should work on whatever KMP is able
-to compile for. There are platform specific implementations (like for actual e-mail sending),
-but those are in the extension libraries.
+Supported platforms:
 
-Note: As of now JVM and Browser works. It is quite easy to add support for whatever platform, 
-see [platforms](./doc/platforms/README.md) for details.
+* JVM
+* Browser/JS
+* Android
+* iOS Arm64
+* iOS Simulator Arm64
+* iOS X64
 
-## Examples
+See [platforms](./doc/platforms/README.md) for details.
 
-### Server side
+## Basic Concept
 
-A very simple e-mail server:
+Adaptive has been inspired by [Svelte](https://svelte.dev) and it basically serves the same purpose as other 
+reactive frameworks such as Compose or React. However, there are a few key differences:
+
+* also supports building of servers, not just user interfaces
+* all variables are reactive by default (there is no `remember`)
+* there is no recomposition/re-rendering, instead fragments are "patched"
+
+Here is a very simple server and a very simple client:
 
 ```kotlin
 fun main() {
     
-    adaptive(AdaptiveServerAdapter()) {
+    adaptive(AdaptiveServerAdapter<Any>(true)) {
+    
+        settings { propertyFile { "./etc/example.properties "} }
 
-        settings { 
-            environment()
-            propertyFile("./etc/test.properties")
-        }
-        
-        worker { InMemoryDatabase() }
+        service { CounterService() }
+        worker { CounterWorker() }
 
-        store { EmailTable() }
-        store { EmailQueue() }
-        worker { EmailWorker() }
-        service { EmailService() }
+        worker { KtorWorker() }
 
     }
     
 }
 ```
 
-### Client side
-
-Shows the current time and increments a counter:
-
 ```kotlin
+defaultServiceCallTransport = BasicWebSocketServiceCallTransport()
+val counterService = getService<CounterApi>()
+
 fun main() {
-    
     adaptive(AdaptiveDOMAdapter()) {
-
-        var counter = 0
-        val time = poll(1.seconds, default = Clock.System.now()) { Clock.System.now() }
-
-        div {
-            div { text("incremented $counter times(s)") }
-            div { text(time.toString()) }
-        }
-
-        button("Click to increment!") {
-            counter = counter + 1
-        }
-
+        val time = poll(1.seconds, now()) { now() }
+        counterWithTime(time)
     }
-    
+}
+
+@Adaptive
+fun counterWithTime(time : Instant) {
+    val counter = poll(1.seconds, 0) { counterService.incrementAndGet() }
+    text("$time $counter")
 }
 ```
 
@@ -86,12 +82,39 @@ plugins {
 kotlin {
     sourceSets["commonMain"].dependencies {
         implementation("hu.simplexion.adaptive:adaptive-core:2024.05.07-SNAPSHOT")
+        implementation("hu.simplexion.adaptive:adaptive-ktor:2024.05.07-SNAPSHOT")        
         implementation("hu.simplexion.adaptive:adaptive-exposed:2024.05.07-SNAPSHOT")
         implementation("hu.simplexion.adaptive:adaptive-email:2024.05.07-SNAPSHOT")
-        implementation("hu.simplexion.adaptive:adaptive-browser:2024.05.07-SNAPSHOT")
+        implementation("hu.simplexion.adaptive:adaptive-ui:2024.05.07-SNAPSHOT")
     }
 }
 ```
+
+## Project Structure
+
+| Component                                             | Content                                                                                 |
+|-------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| core                                                  | The fundamental core of the library.                                                    |
+| &nbsp;&nbsp;[adat](doc/adat/README.md)                | Data classes with many convenience functions, metadata and serialization support.       |
+| &nbsp;&nbsp;[base](doc/base/README.md)                | Base definitions for defining adaptive structures.                                      |
+| &nbsp;&nbsp;[server](doc/server/README.md)            | Server side adaptive fragments: workers, services, stores, settings.                    |
+| &nbsp;&nbsp;[service](doc/service/README.md)          | Client-server communication with simple function calls.                                 |
+| &nbsp;&nbsp;[wireformat](doc/wireformat/README.md)    | Serialization (protobuf and Json).                                                      |
+| example                                               | A complete example project. Its Gradle setup is independent from the main project.      |
+| &nbsp;&nbsp;[androidApp](adaptive-example/androidApp) | Example application for Android.                                                        |
+| &nbsp;&nbsp;[browserApp](adaptive-example/browserApp) | Example application for web browsers (JS).                                              |
+| &nbsp;&nbsp;[iosApp](adaptive-example/iosApp)         | Example application for iOS devices.                                                    |
+| &nbsp;&nbsp;[server](adaptive-example/server)         | Example server application.                                                             |
+| &nbsp;&nbsp;[shared](adaptive-example/shared)         | Code shared between the example applications.                                           |
+| gradle-plugin                                         | The Gradle plugin.                                                                      |
+| kotlin-plugin                                         | The Kotlin compiler plugin.                                                             |
+| lib                                                   | Application level libraries such as UI, E-mail, etc.                                    |
+| &nbsp;&nbsp;[email](adaptive-lib/adaptive-email)      | Email worker (JavaMail), tables (Exposed) and service to send emails.                   |
+| &nbsp;&nbsp;[exposed](adaptive-lib/adaptive-exposed)  | Integration with Exposed, HikariPool worker.                                            |
+| &nbsp;&nbsp;[ktor](adaptive-lib/adaptive-ktor)        | Ktor Worker with websockets and static directory serving. Transport for services.       |
+| &nbsp;&nbsp;[email](adaptive-lib/adaptive-template)   | Build adaptive structures from templates (no-code/low-code).                            |
+| &nbsp;&nbsp;[email](adaptive-lib/adaptive-ui)         | Basic UI fragments for the supported platforms.                                         |
+| sandbox                                               | Project used during development to try things our without booting up the whole example. |
 
 ## Building Adaptive
 
