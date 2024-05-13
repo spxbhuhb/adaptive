@@ -7,13 +7,14 @@ package hu.simplexion.adaptive.service.factory
 import hu.simplexion.adaptive.service.ServiceContext
 import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import hu.simplexion.adaptive.utility.Lock
+import hu.simplexion.adaptive.utility.getLock
 import hu.simplexion.adaptive.utility.use
 
 class BasicServiceImplFactory : ServiceImplFactory {
 
     private val templates = mutableMapOf<String, ServiceImpl<*>>()
 
-    private val lock = Lock()
+    private val lock = getLock()
 
     override fun plusAssign(template: ServiceImpl<*>) {
         lock.use {

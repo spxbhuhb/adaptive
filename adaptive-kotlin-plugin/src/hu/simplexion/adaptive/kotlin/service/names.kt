@@ -4,6 +4,7 @@
 package hu.simplexion.adaptive.kotlin.service
 
 import hu.simplexion.adaptive.kotlin.common.NamesBase
+import hu.simplexion.adaptive.kotlin.service.ClassIds.classId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
@@ -12,7 +13,9 @@ object Strings {
     const val SERVICES_TRANSPORT_PACKAGE = "hu.simplexion.adaptive.service.transport"
     const val SERVER_BUILTIN_PACKAGE = "hu.simplexion.adaptive.server.builtin"
 
-    const val SERVICE = "Service"
+    const val SERVICE_API = "ServiceApi"
+
+    const val SERVICE_CONSUMER = "ServiceConsumer"
     const val SERVICE_NAME = "serviceName"
 
     const val SERVICE_CALL_TRANSPORT_PROPERTY = "serviceCallTransport"
@@ -45,12 +48,14 @@ object Names {
 }
 
 object FqNames : NamesBase(Strings.SERVICES_PACKAGE) {
-    val SERVICES_TRANSPORT_PACKAGE = FqName.fromSegments(Strings.SERVICES_TRANSPORT_PACKAGE.split('.'))
-    val SERVER_BUILTIN_PACKAGE = FqName.fromSegments(Strings.SERVER_BUILTIN_PACKAGE.split('.'))
+    val SERVICES_TRANSPORT_PACKAGE = Strings.SERVICES_TRANSPORT_PACKAGE.fqName()
+    val SERVER_BUILTIN_PACKAGE = Strings.SERVER_BUILTIN_PACKAGE.fqName()
+    val SERVICE_API = defaultPackage.child(Strings.SERVICE_API.name())
 }
 
 object ClassIds : NamesBase(Strings.SERVICES_PACKAGE) {
-    val SERVICE = Strings.SERVICE.classId()
+    val SERVICE_API = Strings.SERVICE_API.classId()
+    val SERVICE_CONSUMER = Strings.SERVICE_CONSUMER.classId()
     val SERVICE_IMPL = Strings.SERVICE_IMPL.classId { FqNames.SERVER_BUILTIN_PACKAGE }
     val SERVICE_CONTEXT = Strings.SERVICE_CONTEXT.classId()
     val SERVICE_CALL_TRANSPORT = Strings.SERVICE_CALL_TRANSPORT.classId { FqNames.SERVICES_TRANSPORT_PACKAGE }

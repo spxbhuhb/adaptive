@@ -10,10 +10,12 @@ package hu.simplexion.adaptive.utility
  *
  * https://github.com/ktorio/ktor/blob/master/ktor-utils/posix/src/io/ktor/util/LockNative.kt
  */
-expect class Lock() {
+interface Lock {
     fun lock()
     fun unlock()
 }
+
+expect fun getLock() : Lock
 
 inline fun <R> Lock.use(block: () -> R): R {
     try {

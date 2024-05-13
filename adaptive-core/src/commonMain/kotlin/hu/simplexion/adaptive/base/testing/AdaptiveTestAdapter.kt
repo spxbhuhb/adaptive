@@ -9,6 +9,7 @@ import hu.simplexion.adaptive.base.AdaptiveFragment
 import hu.simplexion.adaptive.base.registry.AdaptiveBindingImplRegistry
 import hu.simplexion.adaptive.base.registry.AdaptiveFragmentImplRegistry
 import hu.simplexion.adaptive.utility.Lock
+import hu.simplexion.adaptive.utility.getLock
 import hu.simplexion.adaptive.utility.use
 import hu.simplexion.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
@@ -34,7 +35,7 @@ class AdaptiveTestAdapter(
 
     override val startedAt = vmNowMicro()
 
-    val lock = Lock()
+    val lock = getLock()
 
     val traceEvents = mutableListOf<TraceEvent>()
 

@@ -64,7 +64,7 @@ object Signature {
     }
 
     fun typeSignature(irType: IrType): String {
-        val typeFqName = checkNotNull(irType.classFqName) { "type without null classFqName: ${irType.asString()}" }
+        val typeFqName = checkNotNull(irType.classFqName) { "type without null classFqName: $irType" }
         val typeName = typeFqName.asString()
 
         val builtin = shorthands[typeFqName.asString()]
@@ -77,7 +77,7 @@ object Signature {
 
         val argumentSignatures =
             irType.arguments.joinToString(";") {
-                check(it is IrType) { "type argument $it is not an IrType type: ${irType.asString()}" }
+                check(it is IrType) { "type argument $it is not an IrType type: $irType" }
                 typeSignature(it as IrType)
             }
 

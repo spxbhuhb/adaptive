@@ -7,7 +7,7 @@ import hu.simplexion.adaptive.base.registry.AdaptiveFragmentImplRegistry
 import hu.simplexion.adaptive.base.testing.TraceEvent
 import kotlinx.coroutines.CoroutineDispatcher
 
-interface AdaptiveAdapter<BT> : Adaptive {
+interface AdaptiveAdapter<BT> {
 
     val fragmentImplRegistry : AdaptiveFragmentImplRegistry<BT>
         get() = throw UnsupportedOperationException("This adapter does not provide a fragment registry.")
@@ -31,6 +31,13 @@ interface AdaptiveAdapter<BT> : Adaptive {
 
     fun trace(fragment: AdaptiveFragment<BT>, point: String, data : String) {
         TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).println(startedAt)
+    }
+
+    /**
+     * Called by the `adaptive` entry point function after the root fragment is mounted.
+     */
+    fun mounted() {
+
     }
 
 }

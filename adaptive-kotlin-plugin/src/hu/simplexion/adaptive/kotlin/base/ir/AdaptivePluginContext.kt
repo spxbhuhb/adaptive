@@ -19,6 +19,7 @@ import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.getSimpleFunction
 import org.jetbrains.kotlin.ir.util.properties
+import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 
 class AdaptivePluginContext(
@@ -29,7 +30,7 @@ class AdaptivePluginContext(
     val irBuiltIns
         get() = irContext.irBuiltIns
 
-    val adaptiveNamespaceClass = ClassIds.ADAPTIVE_NAMESPACE.classSymbol()
+    val adaptiveClass = ClassIds.ADAPTIVE.classSymbol()
 
     val armClasses = mutableListOf<ArmClass>()
     val irClasses = mutableMapOf<FqName, IrClass>()
@@ -38,6 +39,8 @@ class AdaptivePluginContext(
     val adaptiveFragmentClass = ClassIds.ADAPTIVE_FRAGMENT.classSymbol()
     val adaptiveAdapterClass = ClassIds.ADAPTIVE_ADAPTER.classSymbol()
     val adaptiveClosureClass = ClassIds.ADAPTIVE_CLOSURE.classSymbol()
+
+    val adaptiveAnonymousClass = ClassIds.ADAPTIVE_ANONYMOUS.classSymbol()
 
     val adaptiveFragmentFactoryClass = ClassIds.ADAPTIVE_FRAGMENT_FACTORY.classSymbol()
     val adaptiveFragmentFactoryConstructor = adaptiveFragmentFactoryClass.constructors.single()
@@ -84,6 +87,10 @@ class AdaptivePluginContext(
 
     private fun String.fragmentFunction(filter: (IrSimpleFunctionSymbol) -> Boolean = { true }) =
         adaptiveFragmentClass.functions.single { it.owner.name.asString() == this && filter(it) }
+
+    fun getSymbol(target: FqName) =
+        irClasses[target]?.symbol
+            ?: irContext.referenceClass(ClassId(target.parent(), target.shortName()))
 
 }
 

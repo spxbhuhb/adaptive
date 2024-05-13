@@ -9,11 +9,8 @@ import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
+import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.builders.declarations.*
-import org.jetbrains.kotlin.ir.builders.irBlockBody
-import org.jetbrains.kotlin.ir.builders.irGet
-import org.jetbrains.kotlin.ir.builders.irReturn
-import org.jetbrains.kotlin.ir.builders.irSetField
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.*
@@ -183,6 +180,18 @@ interface AbstractIrBuilder {
         ).apply {
             dispatchReceiver = receiver
             putValueArgument(0, value)
+        }
+
+    // --------------------------------------------------------------------------------------------------------
+    // Functions
+    // --------------------------------------------------------------------------------------------------------
+
+    fun IrFunction.irBlockBody(builder : IrBlockBodyBuilder.() -> Unit) =
+        DeclarationIrBuilder(pluginContext.irContext, symbol).irBlockBody(startOffset, endOffset, builder)
+
+    fun IrFunction.irReturnBody(builder : IrBlockBodyBuilder.() -> IrExpression) =
+        DeclarationIrBuilder(pluginContext.irContext, symbol).irBlockBody(startOffset, endOffset) {
+            + irReturn(builder())
         }
 
     // --------------------------------------------------------------------------------------------------------

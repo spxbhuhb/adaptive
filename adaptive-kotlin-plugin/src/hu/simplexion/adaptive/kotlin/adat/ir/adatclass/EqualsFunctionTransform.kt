@@ -25,6 +25,7 @@ class EqualsFunctionTransform(
 
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
         equalsFunction.body = irFactory.createExpressionBody(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irCall(
                 adatClass.getSimpleFunction(Names.ADAT_EQUALS.identifier) !!,
                 irGet(equalsFunction.dispatchReceiverParameter !!),

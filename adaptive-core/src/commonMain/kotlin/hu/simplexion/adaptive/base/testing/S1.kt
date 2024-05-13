@@ -5,14 +5,12 @@
 
 package hu.simplexion.adaptive.base.testing
 
-import hu.simplexion.adaptive.base.Adaptive
-import hu.simplexion.adaptive.base.AdaptiveAdapter
-import hu.simplexion.adaptive.base.AdaptiveFragment
-import hu.simplexion.adaptive.base.AdaptiveSupportFunction
+import hu.simplexion.adaptive.base.*
 
-@Suppress("unused", "FunctionName", "UNUSED_PARAMETER", "UnusedReceiverParameter")
-fun Adaptive.S1(supportFun : (i : Int) -> Unit) {
-
+@Adaptive
+@Suppress("unused", "FunctionName")
+fun S1(supportFun: (i: Int) -> Unit) {
+    manualImplementation(supportFun)
 }
 
 @Suppress("unused")
@@ -30,6 +28,8 @@ class AdaptiveS1<BT>(
 
     var s0: AdaptiveSupportFunction
         get() = state[0] as AdaptiveSupportFunction
-        set(v) { state[0] = v }
+        set(v) {
+            state[0] = v
+        }
 
 }

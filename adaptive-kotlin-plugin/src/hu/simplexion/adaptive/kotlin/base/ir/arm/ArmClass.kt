@@ -13,7 +13,8 @@ import org.jetbrains.kotlin.ir.util.statements
 
 class ArmClass(
     adaptiveContext: AdaptivePluginContext,
-    val originalFunction: IrFunction
+    val originalFunction: IrFunction,
+    val isRoot : Boolean
 ) : ArmElement {
 
     val fqName = originalFunction.adaptiveClassFqName()

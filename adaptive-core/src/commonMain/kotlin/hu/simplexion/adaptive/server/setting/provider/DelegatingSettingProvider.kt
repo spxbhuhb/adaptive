@@ -5,7 +5,7 @@
 package hu.simplexion.adaptive.server.setting.provider
 
 import hu.simplexion.adaptive.server.setting.model.Setting
-import hu.simplexion.adaptive.utility.Lock
+import hu.simplexion.adaptive.utility.getLock
 import hu.simplexion.adaptive.utility.use
 
 
@@ -14,7 +14,7 @@ import hu.simplexion.adaptive.utility.use
  */
 class DelegatingSettingProvider : SettingProvider {
 
-    private val lock = Lock()
+    private val lock = getLock()
 
     private var providers = emptyList<SettingProvider>()
 

@@ -7,7 +7,8 @@ import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.base.testing.*
 
-fun Adaptive.IfElse(i : Int) {
+@Adaptive
+fun IfElse(i : Int) {
     if (i % 2 == 0) {
         T0()
     } else {

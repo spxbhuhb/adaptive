@@ -5,7 +5,7 @@ package hu.simplexion.adaptive.kotlin.base.ir.ir2arm
 
 import hu.simplexion.adaptive.kotlin.base.ir.AdaptivePluginContext
 import hu.simplexion.adaptive.kotlin.base.ir.arm.ArmBoundary
-import hu.simplexion.adaptive.kotlin.base.ir.util.AdaptiveNonAnnotationBasedExtension
+import hu.simplexion.adaptive.kotlin.base.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.expressions.IrCall
@@ -20,8 +20,8 @@ import org.jetbrains.kotlin.ir.visitors.acceptVoid
  * Entry point is [findBoundary].
  */
 class BoundaryVisitor(
-    override val adaptiveContext: AdaptivePluginContext
-) : IrElementVisitorVoid, AdaptiveNonAnnotationBasedExtension {
+    override val pluginContext: AdaptivePluginContext
+) : IrElementVisitorVoid, AdaptiveAnnotationBasedExtension {
 
     var found: Boolean = false
 

@@ -4,6 +4,7 @@
 package hu.simplexion.adaptive.kotlin.base.ir.ir2arm
 
 import hu.simplexion.adaptive.kotlin.base.ir.AdaptivePluginContext
+import hu.simplexion.adaptive.kotlin.base.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.expressions.IrCall
@@ -20,19 +21,19 @@ import org.jetbrains.kotlin.name.SpecialNames
  * - replaces the body of each original function with an empty one
  */
 class OriginalFunctionTransform(
-    private val pluginContext: AdaptivePluginContext
-) : IrElementTransformerVoidWithContext() {
+    override val pluginContext: AdaptivePluginContext
+) : IrElementTransformerVoidWithContext(), AdaptiveAnnotationBasedExtension {
 
     val irBuiltIns = pluginContext.irContext.irBuiltIns
 
     /**
-     * Transforms a function annotated with `@Adaptive` into a Adaptive fragment class.
+     * Transforms a function annotated with `@Adaptive` into an Adaptive fragment class.
      */
     override fun visitFunctionNew(declaration: IrFunction): IrFunction {
         if (declaration.isAnonymousFunction || declaration.name == SpecialNames.ANONYMOUS) return declaration
 
-        if (! declaration.isAdaptiveFunction()) {
-            return super.visitFunctionNew(declaration) as IrFunction
+        if (! declaration.isAdaptive) {
+            return declaration
         }
 
         val body = checkNotNull(declaration.body) { "missing function body\${declaration.dumpKotlinLike()}\n${declaration.dump()}" }
@@ -46,17 +47,12 @@ class OriginalFunctionTransform(
         }
 
         // this is the actual transform
-        IrFunction2ArmClass(pluginContext, declaration).transform()
+        IrFunction2ArmClass(pluginContext, declaration, false).transform()
 
         // replace the body of the original function with an empty one
         declaration.body = IrBlockBodyImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET)
 
         return declaration
     }
-
-    fun IrFunction.isAdaptiveFunction(): Boolean =
-        // FIXME recognition of adaptive function calls
-        (extensionReceiverParameter?.let { it.type == pluginContext.adaptiveNamespaceClass.defaultType } ?: false)
-
 
 }

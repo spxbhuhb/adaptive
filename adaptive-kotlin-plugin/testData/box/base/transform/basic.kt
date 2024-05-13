@@ -6,11 +6,13 @@ package hu.simplexion.adaptive.kotlin.base.success
 import hu.simplexion.adaptive.base.*
 import hu.simplexion.adaptive.base.testing.*
 
-fun Adaptive.transformTest() {
+@Adaptive
+fun transformTest() {
     transformed() transform 23
 }
 
-fun Adaptive.transformed(i : Int = 12): TestState {
+@Adaptive
+fun transformed(i : Int = 12): TestState {
     return thisState()
 }
 

@@ -9,11 +9,10 @@ Adaptive is a consolidated application development library for Kotlin focusing o
 
 Adaptive comes with a compiler plugin that performs many functions to reach the goals above.
 
-Status: **in-development, the examples below might crash**
+Status: **initial development**
 
 While the library already works and provides both client and server side functionality it
-is not ready for general production yet, many things are still broken. I am working 
-continuously to add improvements.
+is not ready for general production yet. I am working continuously to add improvements.
 
 Adaptive's core is platform antagonistic, pure Kotlin, it should work on whatever KMP is able
 to compile for. There are platform specific implementations (like for actual e-mail sending),

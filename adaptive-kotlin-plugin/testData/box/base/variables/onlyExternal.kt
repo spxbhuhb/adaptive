@@ -7,7 +7,8 @@ import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.base.testing.*
 
-fun Adaptive.OnlyExternal(i: Int, s: String) {
+@Adaptive
+fun OnlyExternal(i: Int, s: String) {
     T1(i)
 }
 

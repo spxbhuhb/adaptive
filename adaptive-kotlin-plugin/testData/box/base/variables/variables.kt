@@ -7,7 +7,8 @@ import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.base.testing.*
 
-fun Adaptive.Variables(i: Int, s: String) {
+@Adaptive
+fun Variables(i: Int, s: String) {
     val i2 = 12
 
     T1(0)

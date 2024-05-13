@@ -9,8 +9,9 @@ import hu.simplexion.adaptive.adat.wireformat.toPropertyWireFormat
 import hu.simplexion.adaptive.base.*
 import hu.simplexion.adaptive.wireformat.json.JsonWireFormatDecoder
 
-fun Adaptive.templateRealization(template: AdaptiveTemplateData) {
-    manualImplementation(this)
+@Adaptive
+fun templateRealization(template: AdaptiveTemplateData) {
+    manualImplementation(template)
 }
 
 class AdaptiveTemplateRealization<BT>(

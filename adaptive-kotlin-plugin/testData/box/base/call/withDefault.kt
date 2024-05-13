@@ -7,7 +7,8 @@ import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.base.testing.*
 
-fun Adaptive.WithDefault(a : Int = 12) {
+@Adaptive
+fun WithDefault(a : Int = 12) {
     T1(a)
 }
 

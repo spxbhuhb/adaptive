@@ -29,10 +29,23 @@ kotlin {
         jvmToolchain(11)
         withJava()
     }
+
     js(IR) {
         browser()
         binaries.library()
     }
+
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "Shared"
+            isStatic = true
+        }
+    }
+
     sourceSets {
         commonMain {
             dependencies {

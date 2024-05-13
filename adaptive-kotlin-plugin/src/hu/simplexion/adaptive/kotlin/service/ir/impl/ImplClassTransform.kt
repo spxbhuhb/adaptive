@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.kotlin.service.ir.impl
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import hu.simplexion.adaptive.kotlin.common.functionByName
 import hu.simplexion.adaptive.kotlin.common.transformProperty
+import hu.simplexion.adaptive.kotlin.service.FqNames
 import hu.simplexion.adaptive.kotlin.service.Indices
 import hu.simplexion.adaptive.kotlin.service.Names
 import hu.simplexion.adaptive.kotlin.service.Strings
@@ -26,10 +27,7 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrDelegatingConstructorCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrElseBranchImpl
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
-import org.jetbrains.kotlin.ir.types.classFqName
-import org.jetbrains.kotlin.ir.types.defaultType
-import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
-import org.jetbrains.kotlin.ir.types.makeNullable
+import org.jetbrains.kotlin.ir.types.*
 import org.jetbrains.kotlin.ir.util.*
 
 class ImplClassTransform(
@@ -62,10 +60,6 @@ class ImplClassTransform(
 
         generateDispatch()
 
-        if (pluginContext.options.dumpKotlinLike) {
-            pluginContext.debug("KOTLIN LIKE") { "\n\n" + transformedClass.dumpKotlinLike(KotlinLikeDumpOptions(printFakeOverridesStrategy = FakeOverridesStrategy.NONE)) }
-        }
-
         return declaration
     }
 
@@ -93,7 +87,7 @@ class ImplClassTransform(
 
     private fun IrSimpleFunctionSymbol.isServiceFunction(): Boolean {
         val parentClass = owner.parentClassOrNull ?: return false
-        return parentClass.isSubclassOf(pluginContext.serviceClass.owner)
+        return parentClass.hasAnnotation(FqNames.SERVICE_API)
     }
 
     fun transformConstructor() {
@@ -201,9 +195,9 @@ class ImplClassTransform(
             }
         )
 
-    fun transformServiceName(declaration: IrProperty) : IrStatement{
+    fun transformServiceName(declaration: IrProperty): IrStatement {
         val serviceNames = transformedClass.superTypes.mapNotNull { superType ->
-            if (superType.isSubtypeOfClass(pluginContext.serviceClass) && ! superType.isSubtypeOfClass(pluginContext.serviceImplClass)) {
+            if (superType.classOrNull?.owner?.hasAnnotation(FqNames.SERVICE_API) == true) {
                 superType.classFqName !!.asString()
             } else {
                 null
@@ -224,7 +218,7 @@ class ImplClassTransform(
         return declaration
     }
 
-    fun transformServiceContext(declaration: IrProperty) : IrStatement {
+    fun transformServiceContext(declaration: IrProperty): IrStatement {
         transformProperty(
             pluginContext,
             declaration,

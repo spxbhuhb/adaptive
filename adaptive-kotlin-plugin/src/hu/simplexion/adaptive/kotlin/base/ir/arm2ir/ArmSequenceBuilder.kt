@@ -21,7 +21,7 @@ class ArmSequenceBuilder(
 ) : ClassBoundIrBuilder(parent), BranchBuilder {
 
     override fun genBuildConstructorCall(buildFun : IrSimpleFunction) : IrExpression =
-        irConstructorCallFromBuild(buildFun, armSequence.target)
+        irCallFromBuild(buildFun, armSequence.target)
 
     override fun genPatchDescendantBranch(patchFun: IrSimpleFunction, closureMask: IrVariable): IrExpression =
         irSetDescendantStateVariable(

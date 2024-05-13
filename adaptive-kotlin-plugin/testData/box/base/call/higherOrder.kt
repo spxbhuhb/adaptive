@@ -7,7 +7,8 @@ import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.base.testing.*
 
-fun Adaptive.higherOrderTest(i : Int) {
+@Adaptive
+fun higherOrderTest(i : Int) {
     higherFun(i) { lowerFunI1 ->
         higherFun(lowerFunI1) { lowerFunI2 ->
             T1(lowerFunI1 + lowerFunI2)
@@ -15,13 +16,15 @@ fun Adaptive.higherOrderTest(i : Int) {
     }
 }
 
-fun Adaptive.higherFun(higherI: Int, lowerFun: Adaptive.(lowerFunI: Int) -> Unit) {
+@Adaptive
+fun higherFun(higherI: Int, @Adaptive lowerFun: (lowerFunI: Int) -> Unit) {
     higherFunInner(higherI * 2) { lowerFunInnerI ->
         lowerFun(higherI + lowerFunInnerI)
     }
 }
 
-fun Adaptive.higherFunInner(innerI: Int, lowerFunInner: Adaptive.(lowerFunInnerI: Int) -> Unit) {
+@Adaptive
+fun higherFunInner(innerI: Int, @Adaptive lowerFunInner: (lowerFunInnerI: Int) -> Unit) {
     lowerFunInner(innerI + 1)
 }
 

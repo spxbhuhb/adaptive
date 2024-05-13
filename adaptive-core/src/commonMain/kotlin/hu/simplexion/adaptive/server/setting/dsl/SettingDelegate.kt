@@ -1,11 +1,11 @@
 package hu.simplexion.adaptive.server.setting.dsl
 
-import hu.simplexion.adaptive.utility.Lock
+import hu.simplexion.adaptive.utility.getLock
 import hu.simplexion.adaptive.utility.use
 import kotlin.reflect.KProperty
 
 
- class SettingDelegate<T>(
+class SettingDelegate<T>(
      val path: String,
     val encoder: (value: T) -> String,
     val decoder: (value: String?) -> T
@@ -19,7 +19,7 @@ import kotlin.reflect.KProperty
     // FIXME settings default mess
     var default: T? = null
 
-    val lock = Lock()
+    val lock = getLock()
 
      var valueOrNull: T? = null
         get() {

@@ -7,10 +7,7 @@ import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 import hu.simplexion.adaptive.service.transport.ServiceErrorHandler
 import hu.simplexion.adaptive.service.transport.ServiceResultException
 import hu.simplexion.adaptive.service.transport.ServiceTimeoutException
-import hu.simplexion.adaptive.utility.Lock
-import hu.simplexion.adaptive.utility.UUID
-import hu.simplexion.adaptive.utility.use
-import hu.simplexion.adaptive.utility.vmNowMicro
+import hu.simplexion.adaptive.utility.*
 import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.decode
 import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.encode
 import io.ktor.client.*
@@ -37,7 +34,7 @@ open class BasicWebSocketServiceCallTransport(
     var retryDelay = 200L // milliseconds
     val scope = CoroutineScope(Dispatchers.Default)
 
-    val outgoingLock = Lock()
+    val outgoingLock = getLock()
     private val outgoingCalls = Channel<OutgoingCall>(Channel.UNLIMITED)
     val pendingCalls = mutableMapOf<UUID<RequestEnvelope>, OutgoingCall>()
 

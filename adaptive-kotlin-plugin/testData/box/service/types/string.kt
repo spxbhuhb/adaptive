@@ -1,13 +1,14 @@
 package hu.simplexion.adaptive.service
 
-import hu.simplexion.adaptive.service.Service
+import hu.simplexion.adaptive.service.ServiceApi
 import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import hu.simplexion.adaptive.service.defaultServiceCallTransport
 import hu.simplexion.adaptive.service.getService
 import hu.simplexion.adaptive.service.testing.TestServiceTransport
 import kotlinx.coroutines.runBlocking
 
-interface TestService : Service {
+@ServiceApi
+interface TestService {
     suspend fun testValue(arg1: String): String
     suspend fun testValueNull(arg1: String?): String?
 }

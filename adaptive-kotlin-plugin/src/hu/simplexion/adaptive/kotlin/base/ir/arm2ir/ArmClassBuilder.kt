@@ -30,6 +30,7 @@ import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.SpecialNames
 import org.jetbrains.kotlin.types.Variance
 
@@ -46,29 +47,30 @@ class ArmClassBuilder(
 
         val originalFunction = armClass.originalFunction
 
-        irClass = pluginContext.irContext.irFactory.buildClass {
-            startOffset = originalFunction.startOffset
-            endOffset = originalFunction.endOffset
-            origin = BasePluginKey.origin
-            name = armClass.name
-            kind = ClassKind.CLASS
-            visibility = originalFunction.visibility
-            modality = Modality.OPEN
-        }
+        irClass = irContext.irFactory.buildClass {
+                startOffset = originalFunction.startOffset
+                endOffset = originalFunction.endOffset
+                origin = BasePluginKey.origin
+                name = armClass.name
+                kind = ClassKind.CLASS
+                visibility = originalFunction.visibility
+                modality = Modality.OPEN
+            }
 
         typeParameters()
+        irClass.superTypes = listOf(pluginContext.adaptiveFragmentClass.typeWith(irClass.typeParameters.first().defaultType))
+        irClass.metadata = armClass.originalFunction.metadata
+        thisReceiver()
+        constructor()
+        initializer()
 
         irClass.parent = originalFunction.file
-        irClass.metadata = armClass.originalFunction.metadata
-        irClass.superTypes = listOf(pluginContext.adaptiveFragmentClass.typeWith(irClass.typeParameters.first().defaultType))
+
+        constructorBody()
 
         armClass.stateInterface?.let {
             irClass.superTypes += it.defaultType
         }
-
-        thisReceiver()
-        constructor()
-        initializer()
 
         irClass.addFakeOverrides(IrTypeSystemContextImpl(irContext.irBuiltIns))
 
@@ -104,10 +106,10 @@ class ArmClassBuilder(
             SYNTHETIC_OFFSET,
             SYNTHETIC_OFFSET,
             IrDeclarationOrigin.INSTANCE_RECEIVER,
-            IrValueParameterSymbolImpl(),
-            SpecialNames.THIS,
-            UNDEFINED_PARAMETER_INDEX,
-            IrSimpleTypeImpl(irClass.symbol, false, emptyList(), emptyList()),
+            symbol = IrValueParameterSymbolImpl(),
+            name = SpecialNames.THIS,
+            index = UNDEFINED_PARAMETER_INDEX,
+            type = IrSimpleTypeImpl(irClass.symbol, false, emptyList(), emptyList()),
             varargElementType = null,
             isCrossinline = false,
             isNoinline = false,
@@ -119,53 +121,56 @@ class ArmClassBuilder(
         }
 
     private fun constructor(): IrConstructor =
-
         irClass.addConstructor {
             isPrimary = true
             returnType = irClass.typeWith()
         }.apply {
             parent = irClass
 
-            val adapter = addValueParameter {
+            addValueParameter {
                 name = Names.ADAPTER
                 type = classBoundAdapterType
             }
 
-            val parent = addValueParameter {
+            addValueParameter {
                 name = Names.PARENT
                 type = classBoundFragmentType.makeNullable()
             }
 
-            val index = addValueParameter {
+            addValueParameter {
                 name = Names.INDEX
                 type = irBuiltIns.intType
             }
-
-            body = irFactory.createBlockBody(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET).apply {
-
-                statements += IrDelegatingConstructorCallImpl.fromSymbolOwner(
-                    SYNTHETIC_OFFSET,
-                    SYNTHETIC_OFFSET,
-                    pluginContext.adaptiveFragmentClass.typeWith(classBoundFragmentType),
-                    pluginContext.adaptiveFragmentClass.constructors.first(),
-                    typeArgumentsCount = 1,
-                    valueArgumentsCount = Indices.ADAPTIVE_FRAGMENT_ARGUMENT_COUNT
-                ).apply {
-                    putTypeArgument(0, classBoundFragmentType)
-                    putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGet(adapter))
-                    putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(parent))
-                    putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(index))
-                    putValueArgument(Indices.ADAPTIVE_FRAGMENT_STATE_SIZE, irConst(armClass.stateVariables.size))
-                }
-
-                statements += IrInstanceInitializerCallImpl(
-                    SYNTHETIC_OFFSET,
-                    SYNTHETIC_OFFSET,
-                    irClass.symbol,
-                    irBuiltIns.unitType
-                )
-            }
         }
+
+    private fun constructorBody() {
+        val constructor = irClass.constructors.first()
+
+        constructor.body = irFactory.createBlockBody(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET).apply {
+
+            statements += IrDelegatingConstructorCallImpl.fromSymbolOwner(
+                SYNTHETIC_OFFSET,
+                SYNTHETIC_OFFSET,
+                pluginContext.adaptiveFragmentClass.typeWith(classBoundFragmentType),
+                pluginContext.adaptiveFragmentClass.constructors.first(),
+                typeArgumentsCount = 1,
+                valueArgumentsCount = Indices.ADAPTIVE_FRAGMENT_ARGUMENT_COUNT
+            ).apply {
+                putTypeArgument(0, classBoundFragmentType)
+                putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGet(constructor.valueParameters[0]))
+                putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(constructor.valueParameters[1]))
+                putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(constructor.valueParameters[2]))
+                putValueArgument(Indices.ADAPTIVE_FRAGMENT_STATE_SIZE, irConst(armClass.stateVariables.size))
+            }
+
+            statements += IrInstanceInitializerCallImpl(
+                SYNTHETIC_OFFSET,
+                SYNTHETIC_OFFSET,
+                irClass.symbol,
+                irBuiltIns.unitType
+            )
+        }
+    }
 
     private fun initializer(): IrAnonymousInitializer =
         irFactory.createAnonymousInitializer(
@@ -316,10 +321,10 @@ class ArmClassBuilder(
     // Invoke and Invoke Suspend
     // ---------------------------------------------------------------------------
 
-    fun genInvokeBody(funName : String) {
+    fun genInvokeBody(funName: String) {
         val invokeFun = irClass.getSimpleFunction(funName) !!.owner
 
-        if (!invokeFun.isSuspend && ! armClass.hasInvokeBranch) return
+        if (! invokeFun.isSuspend && ! armClass.hasInvokeBranch) return
         if (invokeFun.isSuspend && ! armClass.hasInvokeSuspendBranch) return
 
         invokeFun.isFakeOverride = false
@@ -351,7 +356,7 @@ class ArmClassBuilder(
                 irGet(invokeFun.valueParameters[Indices.INVOKE_ARGUMENTS])
             )
 
-            +irReturn(genInvokeWhen(invokeFun, supportFunctionIndex, receivingFragment, arguments))
+            + irReturn(genInvokeWhen(invokeFun, supportFunctionIndex, receivingFragment, arguments))
         }
     }
 
@@ -364,13 +369,13 @@ class ArmClassBuilder(
 
             armClass.stateVariables.forEach { stateVariable ->
                 val producer = (stateVariable as? ArmInternalStateVariable)?.producer ?: return@forEach
-                if ((invokeFun.isSuspend && producer.isSuspend) || (!invokeFun.isSuspend && !producer.isSuspend)) {
+                if ((invokeFun.isSuspend && producer.isSuspend) || (! invokeFun.isSuspend && ! producer.isSuspend)) {
                     branches += producer.branchBuilder(this@ArmClassBuilder).genInvokeBranches(invokeFun, supportFunctionIndex, receivingFragment, arguments)
                 }
             }
 
             armClass.rendering.forEach { branch ->
-                if ((invokeFun.isSuspend && branch.hasInvokeSuspendBranch) || (!invokeFun.isSuspend && branch.hasInvokeBranch)) {
+                if ((invokeFun.isSuspend && branch.hasInvokeSuspendBranch) || (! invokeFun.isSuspend && branch.hasInvokeBranch)) {
                     branches += branch.branchBuilder(this@ArmClassBuilder).genInvokeBranches(invokeFun, supportFunctionIndex, receivingFragment, arguments)
                 }
             }

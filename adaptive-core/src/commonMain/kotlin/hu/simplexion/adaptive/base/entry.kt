@@ -8,7 +8,8 @@ package hu.simplexion.adaptive.base
  *
  * **IMPORTANT** variables declared outside the block are **NOT** reactive
  */
-fun <BT, AT : AdaptiveAdapter<BT>> adaptive(adapter: AT, block: Adaptive.() -> Unit) : AT {
-    adapter.block()
+fun <BT, AT : AdaptiveAdapter<BT>> adaptive(adapter: AT, @Adaptive block: (adapter : AdaptiveAdapter<BT>) -> Unit) : AT {
+    block(adapter)
+    adapter.mounted()
     return adapter
 }

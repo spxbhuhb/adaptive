@@ -4,10 +4,15 @@
 
 tasks.register("clean") {
     group = "build"
-    dependsOn(gradle.includedBuild("adaptive-site").task(":clean"))
-}
+    dependsOn(gradle.includedBuild("adaptive-core").task(":clean"))
+    dependsOn(gradle.includedBuild("adaptive-gradle-plugin").task(":clean"))
+    dependsOn(gradle.includedBuild("adaptive-kotlin-plugin").task(":clean"))
+    dependsOn(gradle.includedBuild("adaptive-lib").task(":clean"))}
 
-tasks.register("build") {
-    group = "build"
-    dependsOn(gradle.includedBuild("adaptive-site").task(":build"))
+tasks.register("publishToMavenLocal") {
+    group = "publishing"
+    dependsOn(gradle.includedBuild("adaptive-core").task(":publishToMavenLocal"))
+    dependsOn(gradle.includedBuild("adaptive-gradle-plugin").task(":publishToMavenLocal"))
+    dependsOn(gradle.includedBuild("adaptive-kotlin-plugin").task(":publishToMavenLocal"))
+    dependsOn(gradle.includedBuild("adaptive-lib").task(":publishToMavenLocal"))
 }

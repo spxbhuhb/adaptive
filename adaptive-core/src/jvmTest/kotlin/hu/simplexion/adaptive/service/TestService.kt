@@ -13,10 +13,11 @@ import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-interface TestService1 : Service {
+@ServiceApi
+interface TestService1 {
     suspend fun testFun(arg1: Int, arg2: String): String
 
-    class Consumer : TestService1 {
+    class Consumer : TestService1, ServiceConsumer {
 
         override var serviceName = "hu.simplexion.adaptive.services.TestService1"
 
@@ -34,7 +35,8 @@ interface TestService1 : Service {
     }
 }
 
-interface TestService2 : Service {
+@ServiceApi
+interface TestService2 {
 
     suspend fun testFun(arg1: Int, arg2: String): String
 

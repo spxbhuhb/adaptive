@@ -1,8 +1,9 @@
 package hu.simplexion.adaptive.email.api
 
-import hu.simplexion.adaptive.service.Service
+import hu.simplexion.adaptive.service.ServiceApi
 
-interface EmailApi : Service {
+@ServiceApi
+interface EmailApi {
 
     /**
      * Send an e-mail from the system. This API is not meant for

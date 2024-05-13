@@ -7,14 +7,16 @@ import hu.simplexion.adaptive.base.AdaptiveAdapter
 import hu.simplexion.adaptive.base.AdaptiveBridge
 import hu.simplexion.adaptive.base.AdaptiveFragment
 import hu.simplexion.adaptive.log.logger
-import hu.simplexion.adaptive.utility.vmNowMicro
+import hu.simplexion.adaptive.utility.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
 /**
  * Adapter for server applications.
  */
-open class AdaptiveServerAdapter<BT> : AdaptiveAdapter<BT> {
+open class AdaptiveServerAdapter<BT>(
+    wait : Boolean = false
+) : AdaptiveAdapter<BT> {
 
     var nextId = 1L
 
@@ -28,6 +30,12 @@ open class AdaptiveServerAdapter<BT> : AdaptiveAdapter<BT> {
         get() = Dispatchers.Default
 
     override var trace = false
+
+    val lock = getLock()
+
+    var wait : Boolean = wait
+        get() = lock.use { field }
+        set(v) { lock.use { field = v } }
 
     override fun createPlaceholder(): AdaptiveBridge<BT> {
         return AdaptiveServerPlaceholder()
@@ -44,5 +52,11 @@ open class AdaptiveServerAdapter<BT> : AdaptiveAdapter<BT> {
     }
 
     open fun getLogger(name : String) = logger(name)
+
+    override fun mounted() {
+        while (wait) {
+            sleep(1000)
+        }
+    }
 
 }

@@ -7,7 +7,8 @@ import hu.simplexion.adaptive.base.Adaptive
 import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.base.testing.*
 
-fun Adaptive.SequenceTestComponent() {
+@Adaptive
+fun SequenceTestComponent() {
     T0()
     T0()
 }
