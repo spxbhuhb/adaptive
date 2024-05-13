@@ -4,5 +4,8 @@
 
 package hu.simplexion.adaptive.utility
 
+import platform.posix.exit
+
 actual fun exitProcessCommon(status: Int) {
+    exit(status)
 }

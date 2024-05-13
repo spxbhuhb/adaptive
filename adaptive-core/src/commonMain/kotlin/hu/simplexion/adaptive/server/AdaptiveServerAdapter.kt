@@ -7,10 +7,7 @@ import hu.simplexion.adaptive.base.AdaptiveAdapter
 import hu.simplexion.adaptive.base.AdaptiveBridge
 import hu.simplexion.adaptive.base.AdaptiveFragment
 import hu.simplexion.adaptive.log.logger
-import hu.simplexion.adaptive.utility.Lock
-import hu.simplexion.adaptive.utility.use
-import hu.simplexion.adaptive.utility.vmNowMicro
-import hu.simplexion.adaptive.utility.sleep
+import hu.simplexion.adaptive.utility.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
@@ -34,7 +31,7 @@ open class AdaptiveServerAdapter<BT>(
 
     override var trace = false
 
-    val lock = Lock()
+    val lock = getLock()
 
     var wait : Boolean = wait
         get() = lock.use { field }

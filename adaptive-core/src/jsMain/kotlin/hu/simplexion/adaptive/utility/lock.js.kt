@@ -4,5 +4,13 @@
 
 package hu.simplexion.adaptive.utility
 
-actual fun exitProcessCommon(status: Int) {
+actual fun getLock(): Lock =
+    BrowserLock()
+
+internal class BrowserLock : Lock {
+    override fun lock() {
+    }
+
+    override fun unlock() {
+    }
 }
