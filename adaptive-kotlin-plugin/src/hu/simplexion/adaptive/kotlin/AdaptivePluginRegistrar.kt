@@ -18,6 +18,7 @@ class AdaptivePluginRegistrar : FirExtensionRegistrar() {
         + ::FqNameAwareDeclarationGenerator
         + ::AdatDeclarationGenerator
         + ::AdatSupertypeGenerator
-        + ::AdaptiveDeclarationGenerator
+        // TODO The number of source files (19) does not match the number of IrFiles (20)
+        //  - + ::AdaptiveDeclarationGenerator
     }
 }
