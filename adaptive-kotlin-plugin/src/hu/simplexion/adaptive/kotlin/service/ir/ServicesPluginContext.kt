@@ -18,7 +18,7 @@ class ServicesPluginContext(
     options: AdaptiveOptions
 ) : AbstractPluginContext(irContext, options) {
 
-    val serviceClass = ClassIds.SERVICE.classSymbol()
+    val serviceConsumerClass = ClassIds.SERVICE_CONSUMER.classSymbol()
 
     val serviceImplClass = ClassIds.SERVICE_IMPL.classSymbol()
     val serviceImplNewInstance = serviceImplClass.functionByName { Strings.NEW_INSTANCE }

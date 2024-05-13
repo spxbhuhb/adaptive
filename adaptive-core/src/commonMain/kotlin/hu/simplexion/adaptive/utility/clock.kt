@@ -14,3 +14,5 @@ package hu.simplexion.adaptive.utility
 expect fun vmNowMicro(): Long
 
 expect fun vmNowSecond() : Long
+
+expect fun sleep(millis: Long)

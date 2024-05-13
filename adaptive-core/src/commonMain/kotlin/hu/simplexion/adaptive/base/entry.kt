@@ -10,5 +10,6 @@ package hu.simplexion.adaptive.base
  */
 fun <BT, AT : AdaptiveAdapter<BT>> adaptive(adapter: AT, @Adaptive block: (adapter : AdaptiveAdapter<BT>) -> Unit) : AT {
     block(adapter)
+    adapter.mounted()
     return adapter
 }

@@ -88,7 +88,7 @@ class WireFormatCache(
         typeSignature(targetType).let { signatureFormats[it] ?: loadSignatureFormat(it, targetType) }
 
     private fun loadSignatureFormat(signature: String, irType: IrType): SignatureWireFormat {
-        val typeFqName = checkNotNull(irType.classFqName) { "type without null classFqName: ${irType.asString()}" }
+        val typeFqName = checkNotNull(irType.classFqName) { "type without null classFqName: $irType" }
         val classFqName = typeFqName.asString()
 
         // null and non-null formats are the same on the top level
@@ -101,7 +101,7 @@ class WireFormatCache(
             }
         }
 
-        check(irType is IrSimpleTypeImpl) { "not a simple type: ${irType.asString()}" }
+        check(irType is IrSimpleTypeImpl) { "not a simple type: $irType" }
 
         // without type arguments we can load the companion directly as a class format
 
@@ -115,7 +115,7 @@ class WireFormatCache(
         val arguments = mutableListOf<SignatureWireFormat>()
 
         irType.arguments.forEach {
-            check(it is IrType) { "invalid type argument in : ${irType.asString()} $signature" }
+            check(it is IrType) { "invalid type argument in : $irType $signature" }
             arguments += getSignatureFormat(it as IrType)
         }
 

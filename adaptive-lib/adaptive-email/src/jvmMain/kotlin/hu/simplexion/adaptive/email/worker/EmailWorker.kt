@@ -21,7 +21,7 @@ import kotlin.time.Duration.Companion.minutes
 class EmailWorker : WorkerImpl<EmailWorker> {
 
     val host by setting<String> { "EMAIL_HOST" }
-    val port by setting<String> { "EMAIL_PORT" }
+    val port by setting<Int> { "EMAIL_PORT" }
     val username by setting<String> { "EMAIL_USERNAME" }
     val password by setting<String> { "EMAIL_PASSWORD" } // TODO secret
     val protocol by setting<String> { "EMAIL_PROTOCOL" }

@@ -12,7 +12,9 @@ import hu.simplexion.adaptive.kotlin.service.Strings
 import hu.simplexion.adaptive.kotlin.service.ir.ServicesPluginContext
 import hu.simplexion.adaptive.kotlin.service.ir.util.IrClassBaseBuilder
 import hu.simplexion.adaptive.kotlin.wireformat.Signature
+import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
+import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrClass
@@ -27,17 +29,22 @@ import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
  * Add initializers and function bodies to the consumer class.
  */
 class ConsumerClassTransform(
-    override val pluginContext: ServicesPluginContext,
-    val interfaceClass: IrClass
-) : IrElementVisitorVoid, AbstractIrBuilder, IrClassBaseBuilder {
+    override val pluginContext: ServicesPluginContext
+) : IrElementTransformerVoidWithContext(), AbstractIrBuilder, IrClassBaseBuilder {
 
-    val consumerClass = interfaceClass.declarations.let {
-        requireNotNull(interfaceClass.declarations.firstOrNull { it is IrClass && it.name == Names.CONSUMER }) {
-            "missing consumer class for ${interfaceClass.classId}"
-        } as IrClass
+    lateinit var interfaceClass: IrClass
+
+    val consumerClass by lazy {
+        requireNotNull(
+            interfaceClass.declarations.firstOrNull { it is IrClass && it.name == Names.CONSUMER }
+        ) { "missing consumer class for ${interfaceClass.classId}" } as IrClass
     }
 
-    fun build() {
+    override fun visitClassNew(declaration: IrClass): IrStatement {
+        check(! ::interfaceClass.isInitialized)
+
+        interfaceClass = declaration
+
         addServiceNameInitializer()
         addServiceCallTransportInitializer()
 
@@ -47,20 +54,28 @@ class ConsumerClassTransform(
 
             transformServiceFunction(serviceFunction)
         }
+
+        return declaration
     }
 
     private fun addServiceNameInitializer() {
         val property = consumerClass.property(Names.SERVICE_NAME)
         val backingField = requireNotNull(property.backingField)
 
-        backingField.initializer = irFactory.createExpressionBody(irConst(interfaceClass.kotlinFqName.asString()))
+        backingField.initializer = irFactory.createExpressionBody(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            irConst(interfaceClass.kotlinFqName.asString())
+        )
     }
 
     private fun addServiceCallTransportInitializer() {
         val property = consumerClass.property(Names.SERVICE_CALL_TRANSPORT_PROPERTY)
         val backingField = requireNotNull(property.backingField)
 
-        backingField.initializer = irFactory.createExpressionBody(irNull())
+        backingField.initializer = irFactory.createExpressionBody(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            irNull()
+        )
     }
 
     fun transformServiceFunction(function: IrSimpleFunction) {

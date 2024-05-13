@@ -33,4 +33,11 @@ interface AdaptiveAdapter<BT> {
         TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).println(startedAt)
     }
 
+    /**
+     * Called by the `adaptive` entry point function after the root fragment is mounted.
+     */
+    fun mounted() {
+
+    }
+
 }

@@ -5,20 +5,16 @@
 package hu.simplexion.adaptive.kotlin.service.fir
 
 import hu.simplexion.adaptive.kotlin.common.isFromPlugin
-import hu.simplexion.adaptive.kotlin.common.superTypeContains
-import hu.simplexion.adaptive.kotlin.service.ClassIds
-import hu.simplexion.adaptive.kotlin.service.Names
-import hu.simplexion.adaptive.kotlin.service.ServicesPluginKey
-import hu.simplexion.adaptive.kotlin.service.Strings
+import hu.simplexion.adaptive.kotlin.service.*
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.fir.FirSession
-import org.jetbrains.kotlin.fir.analysis.checkers.declaration.expandedClass
 import org.jetbrains.kotlin.fir.analysis.checkers.getContainingDeclarationSymbol
 import org.jetbrains.kotlin.fir.analysis.checkers.toClassLikeSymbol
+import org.jetbrains.kotlin.fir.declarations.fullyExpandedClass
+import org.jetbrains.kotlin.fir.declarations.hasAnnotation
 import org.jetbrains.kotlin.fir.declarations.utils.isSuspend
-import org.jetbrains.kotlin.fir.extensions.FirDeclarationGenerationExtension
-import org.jetbrains.kotlin.fir.extensions.MemberGenerationContext
-import org.jetbrains.kotlin.fir.extensions.NestedClassGenerationContext
+import org.jetbrains.kotlin.fir.extensions.*
+import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
 import org.jetbrains.kotlin.fir.plugin.createConstructor
 import org.jetbrains.kotlin.fir.plugin.createMemberFunction
 import org.jetbrains.kotlin.fir.plugin.createMemberProperty
@@ -36,19 +32,30 @@ import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.SpecialNames
 
 /**
- * Add declarations for service interfaces (interfaces that extend `Service`).
+ * Add declarations for service interfaces (interfaces annotated with `@ServiceApi`).
  *
- * - a nested class with name `<service-interface-name>$Consumer`:
- *   - implements the service interface (added as supertype)
+ * - a nested class with name `Consumer`:
+ *   - implements the `ServiceConsumer` interface (added as supertype)
  *   - has an empty constructor
- *   - has a `serviceFqName : String` property
+ *   - has a `serviceName : String` property
  *   - has overrides for all functions defined in the service interface
  */
 class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
-    companion object {
-        // this is here in case a refactoring puts in the fully qualified name, it happens sometimes
-        val SERVICES_FQ = Strings.SERVICES_PACKAGE + "." + Strings.SERVICE
+    val SERVICE_API_PREDICATE = LookupPredicate.create { annotated(FqNames.SERVICE_API) }
+
+    override fun FirDeclarationPredicateRegistrar.registerPredicates() {
+        register(SERVICE_API_PREDICATE)
+    }
+
+    private val matchedInterfaces by lazy {
+        session.predicateBasedProvider
+            .getSymbolsByPredicate(SERVICE_API_PREDICATE)
+            .filterIsInstance<FirClassSymbol<*>>()
+    }
+
+    val serviceConsumerType by lazy {
+        session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.SERVICE_CONSUMER) !!.constructType(emptyArray(), true)
     }
 
     val serviceCallTransportType by lazy {
@@ -58,12 +65,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
     @OptIn(SymbolInternals::class)
     override fun getNestedClassifiersNames(classSymbol: FirClassSymbol<*>, context: NestedClassGenerationContext): Set<Name> {
         if (classSymbol.fir.classKind != ClassKind.INTERFACE) return emptySet()
-
-        if (! classSymbol.superTypeContains(Strings.SERVICE, SERVICES_FQ)) {
-            return emptySet()
-        }
-
-        // if (classSymbol.name.identifier == "TestService1") return emptySet() // FIXME debug code
+        if (!session.predicateBasedProvider.matches(SERVICE_API_PREDICATE, classSymbol)) return emptySet()
         return setOf(Names.CONSUMER)
     }
 
@@ -75,11 +77,10 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
 
         if (name != Names.CONSUMER) return null
 
-        val firClass = createNestedClass(owner, name, ServicesPluginKey) {
+        return createNestedClass(owner, name, ServicesPluginKey) {
             superType(owner.defaultType())
-        }
-
-        return firClass.symbol
+            superType(serviceConsumerType)
+        }.symbol
     }
 
     override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> {
@@ -96,7 +97,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         collectFunctions(session.symbolProvider.getClassLikeSymbolByClassId(classId) !!)
 
     private fun collectFunctions(classLikeSymbol: FirClassLikeSymbol<*>): Set<Name> {
-        val expandedClass = classLikeSymbol.expandedClass(session) !!
+        val expandedClass = classLikeSymbol.fullyExpandedClass(session) !!
 
         val symbols = expandedClass
             .declarationSymbols

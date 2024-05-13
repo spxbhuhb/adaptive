@@ -7,7 +7,8 @@ import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import kotlinx.coroutines.runBlocking
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 
-interface TestService1 : Service {
+@ServiceApi
+interface TestService1 {
     suspend fun testFun(arg1: Int, arg2: String): String
 }
 

@@ -18,3 +18,7 @@ actual fun vmNowMicro(): Long {
 actual fun vmNowSecond(): Long {
     TODO("Not yet implemented")
 }
+
+actual fun sleep(millis: Long) {
+    TODO("Not yet implemented")
+}

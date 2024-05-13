@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrFunction
+import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.getSimpleFunction
 
 class ToStringFunctionTransform(
@@ -20,6 +21,7 @@ class ToStringFunctionTransform(
 
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
         toStringFunction.body = irFactory.createExpressionBody(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irCall(
                 adatClass.getSimpleFunction(Names.ADAT_TO_STRING.identifier) !!,
                 irGet(toStringFunction.dispatchReceiverParameter !!)

@@ -5,14 +5,17 @@
 package hu.simplexion.adaptive.server.builtin
 
 import hu.simplexion.adaptive.service.BasicServiceContext
-import hu.simplexion.adaptive.service.Service
+import hu.simplexion.adaptive.service.ServiceBase
 import hu.simplexion.adaptive.service.ServiceContext
+import hu.simplexion.adaptive.service.defaultServiceCallTransport
+import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.utility.manualOrPlugin
+import hu.simplexion.adaptive.utility.overrideManually
 import hu.simplexion.adaptive.utility.pluginGenerated
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 
-interface ServiceImpl<T : ServiceImpl<T>> : Service, ServerFragmentImpl<Any> {
+interface ServiceImpl<T : ServiceImpl<T>> : ServiceBase, ServerFragmentImpl<Any> {
 
     /**
      * Context of a service call. Set by `dispatch` when the call goes through it.

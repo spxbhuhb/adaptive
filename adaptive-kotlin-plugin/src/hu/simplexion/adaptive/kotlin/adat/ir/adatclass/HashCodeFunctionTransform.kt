@@ -13,6 +13,7 @@ import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrFunction
+import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.getSimpleFunction
 
 class HashCodeFunctionTransform(
@@ -23,6 +24,7 @@ class HashCodeFunctionTransform(
 
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
         hashCodeFunction.body = irFactory.createExpressionBody(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irCall(
                 adatClass.getSimpleFunction(Names.ADAT_HASHCODE.identifier) !!,
                 irGet(hashCodeFunction.dispatchReceiverParameter !!)

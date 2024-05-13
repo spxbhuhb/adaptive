@@ -586,10 +586,10 @@ class IrFunction2ArmClass(
 
         if (type == pluginContext.irContext.irBuiltIns.unitType) return
 
-        val classSymbol = checkNotNull(type.classOrNull) { "missing class: ${type.asString()} in ${irFunction.name}" }
+        val classSymbol = checkNotNull(type.classOrNull) { "missing class: $type in ${irFunction.name}" }
 
         check(type.isSubtypeOfClass(pluginContext.adaptiveTransformInterfaceClass)) { "return type is not subclass of ${Strings.ADAPTIVE_TRANSFORM_INTERFACE} in ${irFunction.name}" }
-        check(classSymbol.owner.isInterface) { "${type.asString()} is not an interface" }
+        check(classSymbol.owner.isInterface) { "$type is not an interface" }
 
         armClass.stateInterface = classSymbol
     }
