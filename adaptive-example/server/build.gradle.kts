@@ -7,6 +7,7 @@ plugins {
 
 group = "hu.simplexion.adaptive.example"
 version = "1.0.0"
+
 application {
     mainClass.set("hu.simplexion.adaptive.example.ApplicationKt")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=${extra["io.ktor.development"] ?: "false"}")

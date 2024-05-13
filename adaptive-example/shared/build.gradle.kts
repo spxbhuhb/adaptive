@@ -16,7 +16,12 @@ kotlin {
     }
     
     jvm()
-    
+
+    js(IR) {
+        browser()
+        binaries.executable()
+    }
+
     listOf(
         iosX64(),
         iosArm64(),

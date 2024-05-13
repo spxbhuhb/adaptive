@@ -18,7 +18,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlin.collections.set
 
 open class BasicWebSocketServiceCallTransport(
-    val path: String = "/z2/service",
+    val path: String = "/adaptive/service",
     var errorHandler: ServiceErrorHandler? = null,
     val trace: Boolean = false,
 ) : ServiceCallTransport {
