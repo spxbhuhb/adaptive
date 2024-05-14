@@ -1,6 +1,9 @@
+import com.android.build.gradle.internal.ide.kmp.KotlinAndroidSourceSetMarker.Companion.android
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
+    id("hu.simplexion.adaptive")
 }
 
 kotlin {
@@ -11,6 +14,12 @@ kotlin {
             }
         }
     }
+
+    sourceSets.all {
+        languageSettings {
+            languageVersion = "2.0"
+        }
+    }
     
     sourceSets {
 
@@ -19,6 +28,7 @@ kotlin {
                 implementation("androidx.appcompat:appcompat:1.6.1")
                 implementation("androidx.constraintlayout:constraintlayout:2.1.4")
                 implementation("com.google.android.material:material:1.12.0")
+                implementation(project.libs.ktor.client.okhttp)
                 implementation(projects.shared)
             }
         }

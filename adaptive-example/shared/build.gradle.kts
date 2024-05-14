@@ -2,7 +2,7 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
-    id("hu.simplexion.adaptive")
+    alias(libs.plugins.adaptive)
 }
 
 kotlin {
