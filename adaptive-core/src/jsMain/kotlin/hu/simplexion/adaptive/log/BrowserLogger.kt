@@ -4,8 +4,10 @@
 
 package hu.simplexion.adaptive.log
 
+import hu.simplexion.adaptive.utility.exitProcessCommon
+
 class BrowserLogger(
-    name : String
+    name: String
 ) : AdaptiveLogger {
 
     val prefix = "[$name]"
@@ -23,12 +25,31 @@ class BrowserLogger(
         console.warn(prefix, exception)
     }
 
+    override fun error(message: String) {
+        console.error(prefix, message)
+    }
+
     override fun error(exception: Exception) {
         console.error(prefix, exception)
     }
 
     override fun error(message: String, exception: Exception) {
         console.error(prefix, message, exception)
+    }
+
+    override fun fatal(message: String): Nothing {
+        println("FATAL: [$prefix] $message")
+        exitProcessCommon(3210)
+    }
+
+    override fun fatal(exception: Exception): Nothing {
+        println("FATAL: [$prefix] ${exception.stackTraceToString()}")
+        exitProcessCommon(3210)
+    }
+
+    override fun fatal(message: String, exception: Exception): Nothing {
+        println("FATAL: [$prefix] $message ${exception.stackTraceToString()}")
+        exitProcessCommon(3210)
     }
 
 }

@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.utility
 
 import platform.posix.exit
 
-actual fun exitProcessCommon(status: Int) {
+actual fun exitProcessCommon(status: Int): Nothing {
     exit(status)
+    throw RuntimeException("exiting process")
 }

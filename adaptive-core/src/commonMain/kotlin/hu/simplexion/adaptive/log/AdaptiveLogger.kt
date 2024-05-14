@@ -12,8 +12,16 @@ interface AdaptiveLogger {
 
     fun warning(exception: Exception)
 
+    fun error(message : String)
+
     fun error(exception: Exception)
 
     fun error(message : String, exception: Exception)
+
+    fun fatal(message: String) : Nothing
+
+    fun fatal(exception: Exception) : Nothing
+
+    fun fatal(message : String, exception: Exception) : Nothing
 
 }

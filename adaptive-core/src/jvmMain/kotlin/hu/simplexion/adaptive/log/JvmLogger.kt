@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.log
 
+import hu.simplexion.adaptive.utility.exitProcessCommon
 import java.util.logging.Level
 import java.util.logging.Logger
 import java.util.logging.Logger.getLogger
@@ -25,12 +26,31 @@ class JvmLogger(name : String) : AdaptiveLogger {
         platformLogger.log(Level.WARNING, exception.toString(), exception)
     }
 
+    override fun error(message: String) {
+        platformLogger.log(Level.SEVERE, message)
+    }
+
     override fun error(exception: Exception) {
         platformLogger.log(Level.SEVERE, exception.toString(), exception)
     }
 
     override fun error(message: String, exception: Exception) {
         platformLogger.log(Level.SEVERE, message, exception)
+    }
+
+    override fun fatal(message: String) : Nothing {
+        platformLogger.log(Level.SEVERE, message)
+        exitProcessCommon(3210)
+    }
+
+    override fun fatal(exception: Exception) : Nothing  {
+        platformLogger.log(Level.SEVERE, exception.toString(), exception)
+        exitProcessCommon(3210)
+    }
+
+    override fun fatal(message: String, exception: Exception) : Nothing  {
+        platformLogger.log(Level.SEVERE, message, exception)
+        exitProcessCommon(3210)
     }
 
 }

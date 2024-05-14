@@ -4,4 +4,4 @@
 
 package hu.simplexion.adaptive.utility
 
-expect fun exitProcessCommon(status: Int)
+expect fun exitProcessCommon(status: Int): Nothing

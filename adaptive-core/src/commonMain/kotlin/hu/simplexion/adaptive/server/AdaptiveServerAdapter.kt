@@ -6,7 +6,6 @@ package hu.simplexion.adaptive.server
 import hu.simplexion.adaptive.base.AdaptiveAdapter
 import hu.simplexion.adaptive.base.AdaptiveBridge
 import hu.simplexion.adaptive.base.AdaptiveFragment
-import hu.simplexion.adaptive.log.logger
 import hu.simplexion.adaptive.utility.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -51,7 +50,7 @@ open class AdaptiveServerAdapter<BT>(
         return checkNotNull(implementation) { "fragment $fragment implementation is not set" }
     }
 
-    open fun getLogger(name : String) = logger(name)
+    open fun getLogger(name : String) = hu.simplexion.adaptive.log.getLogger(name)
 
     override fun mounted() {
         while (wait) {

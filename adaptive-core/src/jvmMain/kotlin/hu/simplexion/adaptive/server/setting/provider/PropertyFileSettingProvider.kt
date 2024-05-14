@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.server.setting.provider
 
+import hu.simplexion.adaptive.log.getLogger
 import hu.simplexion.adaptive.server.setting.model.Setting
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
@@ -14,16 +15,17 @@ import kotlin.io.path.inputStream
 
 /**
  * Get settings from a property file. Supports only [get], [put] throws an
- * exception. Must be security officer or internal call.
+ * exception.
  *
  * @property  path  The file system path to the property file.
  * @property  optional  When true a missing file is treated as empty
- * @property  owner  The owner of the settings in this property file.
  */
 class PropertyFileSettingProvider(
     val path: Path,
     val optional: Boolean
 ) : SettingProvider {
+
+    val logger = getLogger("PropertyFileSettingProvider")
 
     override val isReadOnly: Boolean
         get() = true
@@ -31,11 +33,19 @@ class PropertyFileSettingProvider(
     val prop = Properties()
 
     init {
-        prop.clear()
-        if (path.exists() || ! optional) {
+        val absPath = path.toAbsolutePath()
+
+        if ( !path.exists() && ! optional) {
+            logger.fatal("mandatory property file does not exists: $absPath")
+        }
+
+        if (path.exists()) {
+            logger.info("loading properties from: $absPath")
             path.inputStream().use {
                 prop.load(InputStreamReader(it, StandardCharsets.UTF_8))
             }
+        } else {
+            logger.info("optional property file does not exists: $absPath")
         }
     }
 

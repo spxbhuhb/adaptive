@@ -6,7 +6,8 @@ package hu.simplexion.adaptive.utility
 
 import kotlinx.browser.window
 
-actual fun exitProcessCommon(status: Int) {
+actual fun exitProcessCommon(status: Int): Nothing {
     // FIXME add exitProcess for node in Js target
     window.location.pathname = "/exitProcess"
+    throw RuntimeException("exiting process")
 }

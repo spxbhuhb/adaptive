@@ -6,6 +6,6 @@ package hu.simplexion.adaptive.utility
 
 import kotlin.system.exitProcess
 
-actual fun exitProcessCommon(status: Int) {
+actual fun exitProcessCommon(status: Int): Nothing {
     exitProcess(status)
 }

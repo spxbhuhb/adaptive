@@ -4,6 +4,8 @@
 
 package hu.simplexion.adaptive.log
 
+import hu.simplexion.adaptive.utility.exitProcessCommon
+
 // FIXME IOS logger
 class IOSLogger(
     name: String
@@ -23,12 +25,31 @@ class IOSLogger(
         println("WARNING: [$prefix] ${exception.stackTraceToString()}")
     }
 
+    override fun error(message: String) {
+        println("ERROR: [$prefix] $message")
+    }
+
     override fun error(exception: Exception) {
         println("ERROR: [$prefix] ${exception.stackTraceToString()}")
     }
 
     override fun error(message: String, exception: Exception) {
         println("ERROR: [$prefix] $message ${exception.stackTraceToString()}")
+    }
+
+    override fun fatal(message: String) {
+        println("FATAL: [$prefix] $message")
+        exitProcessCommon(3210)
+    }
+
+    override fun fatal(exception: Exception) {
+        println("FATAL: [$prefix] ${exception.stackTraceToString()}")
+        exitProcessCommon(3210)
+    }
+
+    override fun fatal(message: String, exception: Exception) {
+        println("FATAL: [$prefix] $message ${exception.stackTraceToString()}")
+        exitProcessCommon(3210)
     }
 
 }

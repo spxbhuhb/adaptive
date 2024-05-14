@@ -4,4 +4,4 @@
 
 package hu.simplexion.adaptive.log
 
-expect fun logger(name : String): AdaptiveLogger
+expect fun getLogger(name : String): AdaptiveLogger

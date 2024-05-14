@@ -4,5 +4,5 @@
 
 package hu.simplexion.adaptive.log
 
-actual fun logger(name: String): AdaptiveLogger =
+actual fun getLogger(name: String): AdaptiveLogger =
     JvmLogger(name)
