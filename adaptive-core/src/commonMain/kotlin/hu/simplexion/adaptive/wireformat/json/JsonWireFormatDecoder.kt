@@ -21,7 +21,11 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     val map: MutableMap<String, JsonElement>?
 
     constructor(wireFormat: ByteArray, offset: Int = 0, length: Int = wireFormat.size) {
-        root = JsonBufferReader(wireFormat, offset, length).read()
+        root = if (length == 0) {
+            JsonElement()
+        } else {
+            JsonBufferReader(wireFormat, offset, length).read()
+        }
         map = (root as? JsonObject)?.entries
     }
 

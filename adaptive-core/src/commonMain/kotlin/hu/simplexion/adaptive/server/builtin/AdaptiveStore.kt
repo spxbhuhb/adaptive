@@ -20,12 +20,16 @@ class AdaptiveStore<BT>(
 ) : AdaptiveServerFragment<BT>(adapter, parent, index) {
 
     override fun innerMount(bridge: AdaptiveBridge<BT>) {
-        impl?.mount()
+        impl?.let {
+            it.mount()
+            serverAdapter.storeCache[it.classFqName] = this
+        }
     }
 
     @OptIn(ExperimentalStdlibApi::class)
     override fun innerUnmount(bridge: AdaptiveBridge<BT>) {
         impl?.let {
+            serverAdapter.storeCache.remove(it.classFqName)
             if (it is AutoCloseable) it.close()
         }
         impl = null

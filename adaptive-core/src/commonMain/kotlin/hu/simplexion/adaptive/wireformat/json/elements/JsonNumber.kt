@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.wireformat.json.elements
 
-class JsonNumber(val value: String) : JsonElement {
+class JsonNumber(val value: String) : JsonElement() {
 
     override val asInt
         get() = value.toInt()

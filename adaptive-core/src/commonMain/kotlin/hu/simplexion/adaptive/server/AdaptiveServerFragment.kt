@@ -14,6 +14,9 @@ abstract class AdaptiveServerFragment<BT>(
     index: Int
 ) : AdaptiveFragment<BT>(adapter, parent, index, 2) {
 
+    val serverAdapter
+        get() = adapter as AdaptiveServerAdapter<BT>
+
     // -------------------------------------------------------------------------
     // Fragment overrides
     // -------------------------------------------------------------------------
@@ -33,7 +36,7 @@ abstract class AdaptiveServerFragment<BT>(
             it as ServerFragmentImpl<BT>
             impl = it
             it.fragment = this
-            it.logger = (adapter as AdaptiveServerAdapter<BT>).getLogger(it.classFqName)
+            it.logger = serverAdapter.getLogger(it.classFqName)
             it.create()
         }
     }

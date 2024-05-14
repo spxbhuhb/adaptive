@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.wireformat.json.elements
 
 import hu.simplexion.adaptive.utility.UUID
 
-class JsonString(val value: String) : JsonElement {
+class JsonString(val value: String) : JsonElement() {
 
     override val asString
         get() = value

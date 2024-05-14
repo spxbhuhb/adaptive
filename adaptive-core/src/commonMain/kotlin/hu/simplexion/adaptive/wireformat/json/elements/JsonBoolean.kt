@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.wireformat.json.elements
 
 class JsonBoolean(
     val value: Boolean
-) : JsonElement {
+) : JsonElement() {
 
     override val asBoolean: Boolean
         get() = value

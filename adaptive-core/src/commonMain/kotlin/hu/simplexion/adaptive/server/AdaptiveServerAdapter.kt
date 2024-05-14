@@ -6,6 +6,9 @@ package hu.simplexion.adaptive.server
 import hu.simplexion.adaptive.base.AdaptiveAdapter
 import hu.simplexion.adaptive.base.AdaptiveBridge
 import hu.simplexion.adaptive.base.AdaptiveFragment
+import hu.simplexion.adaptive.server.builtin.AdaptiveService
+import hu.simplexion.adaptive.server.builtin.AdaptiveStore
+import hu.simplexion.adaptive.server.builtin.AdaptiveWorker
 import hu.simplexion.adaptive.utility.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +32,12 @@ open class AdaptiveServerAdapter<BT>(
         get() = Dispatchers.Default
 
     override var trace = false
+
+    // TODO implement cache synchronization
+
+    val storeCache = mutableMapOf<String, AdaptiveStore<BT>>()
+    val serviceCache = mutableMapOf<String,AdaptiveService<BT>>()
+    val workerCache = mutableMapOf<String, AdaptiveWorker<BT>>()
 
     val lock = getLock()
 

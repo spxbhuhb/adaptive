@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.wireformat.json.elements
 
-class JsonArray : JsonElement {
+class JsonArray : JsonElement() {
 
     val items = mutableListOf<JsonElement>()
 

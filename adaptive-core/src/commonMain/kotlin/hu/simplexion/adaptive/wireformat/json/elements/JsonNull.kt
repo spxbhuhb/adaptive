@@ -4,4 +4,4 @@
 
 package hu.simplexion.adaptive.wireformat.json.elements
 
-class JsonNull : JsonElement
+class JsonNull : JsonElement()

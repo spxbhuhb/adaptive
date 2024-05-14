@@ -6,51 +6,51 @@ package hu.simplexion.adaptive.wireformat.json.elements
 
 import hu.simplexion.adaptive.utility.UUID
 
-interface JsonElement {
+open class JsonElement {
 
-    val asUnit: Unit
+    open val asUnit: Unit
         get() = throw IllegalStateException()
 
-    val asBoolean: Boolean
+    open val asBoolean: Boolean
         get() = throw IllegalStateException()
 
-    val asInt: Int
+    open val asInt: Int
         get() = throw IllegalStateException()
 
-    val asShort: Short
+    open val asShort: Short
         get() = throw IllegalStateException()
 
-    val asByte: Byte
+    open val asByte: Byte
         get() = throw IllegalStateException()
 
-    val asLong: Long
+    open val asLong: Long
         get() = throw IllegalStateException()
 
-    val asFloat: Float
+    open val asFloat: Float
         get() = throw IllegalStateException()
 
-    val asDouble: Double
+    open val asDouble: Double
         get() = throw IllegalStateException()
 
-    val asChar: Char
+    open val asChar: Char
         get() = throw IllegalStateException()
 
-    val asString: String
+    open val asString: String
         get() = throw IllegalStateException()
 
-    fun <T> asUuid(): UUID<T> {
+    open fun <T> asUuid(): UUID<T> {
         throw IllegalStateException()
     }
 
-    val asUInt: UInt
+    open val asUInt: UInt
         get() = throw IllegalStateException()
 
-    val asUShort: UShort
+    open val asUShort: UShort
         get() = throw IllegalStateException()
 
-    val asUByte: UByte
+    open val asUByte: UByte
         get() = throw IllegalStateException()
 
-    val asULong: ULong
+    open val asULong: ULong
         get() = throw IllegalStateException()
 }

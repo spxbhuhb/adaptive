@@ -40,7 +40,7 @@ class KtorWorker : WorkerImpl<KtorWorker> {
 
         routing {
             session()
-            sessionWebsocketServiceCallTransport()
+            sessionWebsocketServiceCallTransport(this@KtorWorker)
             staticFiles("/", File(static)) {
                 this.default("index.html")
             }

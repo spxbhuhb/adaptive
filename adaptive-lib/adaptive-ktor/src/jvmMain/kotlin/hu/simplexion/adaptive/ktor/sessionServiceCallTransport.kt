@@ -17,6 +17,7 @@ import io.ktor.websocket.*
 
 // FIXME flood detection, session id brute force attack detection
 fun Routing.sessionWebsocketServiceCallTransport(
+    worker : KtorWorker,
     path: String = "/adaptive/service",
     newContext: (uuid: UUID<ServiceContext>) -> ServiceContext = { BasicServiceContext(it) }
 ) {
@@ -54,7 +55,7 @@ fun Routing.sessionWebsocketServiceCallTransport(
 
                 val responseEnvelope = try {
 
-                    val service = defaultServiceImplFactory[requestEnvelope.serviceName, context]
+                    val service = worker.adapter?.serviceCache?.get(requestEnvelope.serviceName)?.newInstance(context)
 
                     if (service != null) {
 

@@ -1,13 +1,3 @@
-## Implementation Status
-
-| Platform | Status                                                                                   |
-|----------|------------------------------------------------------------------------------------------|
-| JVM      | **experimental**                                                                         |
-| JS       | **experimental**                                                                         |
-| Android  | **unverified** probably works                                                            |
-| iOS      | **not yet** `fourRandomInt` should be implemented, no idea if IR works on iOS or not.    |
-| Native   | **not yet** `fourRandomInt` should be implemented, no idea if IR works on Native or not. |
-
 ## Getting started
 
 If you refresh the plugin version you have to run `gradle clean` to force code refresh.
