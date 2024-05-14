@@ -4,33 +4,16 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.adaptive)
-//    java
     signing
     `maven-publish`
 }
 
 group = "hu.simplexion.adaptive"
+version = libs.versions.adaptive
+
 val baseName = "adaptive-ktor"
 val pomName = "Adaptive Ktor"
 val scmPath = "spxbhuhb/adaptive"
-
-//tasks["build"].dependsOn(gradle.includedBuild("adaptive-kotlin-plugin").task(":publishToMavenLocal"))
-//tasks["build"].dependsOn(gradle.includedBuilds.map { it.task(":build") })
-//tasks["clean"].dependsOn(gradle.includedBuilds.map { it.task(":clean") })
-//tasks["publishToMavenLocal"].dependsOn(gradle.includedBuilds.map { it.task(":publishToMavenLocal") })
-//tasks["publish"].dependsOn(gradle.includedBuilds.map { it.task(":publish") })
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-    google()
-}
-
-val coroutines_version: String by project
-val datetime_version: String by project
-
-val ktor_version: String by project
-val logback_version: String by project
 
 kotlin {
 
@@ -44,17 +27,6 @@ kotlin {
         binaries.library()
     }
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "Shared"
-            isStatic = true
-        }
-    }
-
     sourceSets.all {
         languageSettings {
             languageVersion = "2.0"
@@ -64,11 +36,8 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
-                api("io.ktor:ktor-client-websockets:$ktor_version")
-                api("org.jetbrains.kotlinx:kotlinx-datetime:$datetime_version")
-
-                api("hu.simplexion.adaptive:adaptive-core:${version}")
+                implementation(libs.adaptive.core)
+                implementation(libs.ktor.client.websockets)
             }
         }
 
@@ -79,9 +48,9 @@ kotlin {
         }
 
         sourceSets["jvmMain"].dependencies {
-            api("io.ktor:ktor-server-core-jvm:$ktor_version")
-            api("io.ktor:ktor-server-netty-jvm:$ktor_version")
-            api("io.ktor:ktor-server-websockets:$ktor_version")
+            implementation(libs.ktor.server.core)
+            implementation(libs.ktor.server.netty)
+            implementation(libs.ktor.server.websockets)
         }
     }
 }

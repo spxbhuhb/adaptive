@@ -4,41 +4,22 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.adaptive)
-//    java
     signing
     `maven-publish`
 }
 
 group = "hu.simplexion.adaptive"
+version = libs.versions.adaptive
+
 val baseName = "adaptive-email"
 val pomName = "Adaptive Email"
 val scmPath = "spxbhuhb/adaptive"
 
-//tasks["build"].dependsOn(gradle.includedBuild("adaptive-kotlin-plugin").task(":publishToMavenLocal"))
-//tasks["build"].dependsOn(gradle.includedBuilds.map { it.task(":build") })
-//tasks["clean"].dependsOn(gradle.includedBuilds.map { it.task(":clean") })
-//tasks["publishToMavenLocal"].dependsOn(gradle.includedBuilds.map { it.task(":publishToMavenLocal") })
-//tasks["publish"].dependsOn(gradle.includedBuilds.map { it.task(":publish") })
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-    google()
-}
-
-val coroutines_version: String by project
-val datetime_version: String by project
-
-val ktor_version: String by project
-val logback_version: String by project
-val exposed_version: String by project
-val javamail_version: String by project
-
 kotlin {
-    jvm {
-        jvmToolchain(11)
-        withJava()
-    }
+    jvmToolchain(11)
+
+    jvm()
+
     js(IR) {
         browser()
         binaries.library()
@@ -53,12 +34,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
-                api("io.ktor:ktor-client-websockets:$ktor_version")
-                api("org.jetbrains.kotlinx:kotlinx-datetime:$datetime_version")
-
-                api("hu.simplexion.adaptive:adaptive-core:${version}")
-                api("hu.simplexion.adaptive:adaptive-exposed:${version}")
+                implementation(libs.adaptive.core)
             }
         }
 
@@ -69,13 +45,14 @@ kotlin {
         }
 
         sourceSets["jvmMain"].dependencies {
-            api("com.sun.mail:javax.mail:${javamail_version}")
+            implementation(libs.adaptive.exposed)
+            implementation(libs.javamail)
         }
 
         sourceSets["jvmTest"].dependencies {
             implementation(kotlin("test"))
-            implementation("org.subethamail:subethasmtp:3.1.7")
-            implementation("com.h2database:h2:2.1.214")
+            implementation(libs.subethamail)
+            implementation(libs.h2database)
         }
     }
 }

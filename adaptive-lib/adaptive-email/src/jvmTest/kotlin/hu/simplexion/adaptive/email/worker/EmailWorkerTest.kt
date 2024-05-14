@@ -10,9 +10,12 @@ import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.builtin.service
 import hu.simplexion.adaptive.server.builtin.store
 import hu.simplexion.adaptive.server.builtin.worker
+import hu.simplexion.adaptive.server.server
 import hu.simplexion.adaptive.service.getService
 import hu.simplexion.adaptive.server.setting.dsl.inline
 import hu.simplexion.adaptive.server.setting.dsl.settings
+import hu.simplexion.adaptive.service.defaultServiceCallTransport
+import hu.simplexion.adaptive.service.defaultServiceImplFactory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
@@ -51,9 +54,7 @@ class EmailWorkerTest {
     fun basic() {
         wiser.messages.clear()
 
-        val adapter = AdaptiveServerAdapter<Unit>()
-
-        adaptive(adapter) {
+        val adapter = server {
 
             settings {
                 inline(
@@ -86,6 +87,8 @@ class EmailWorkerTest {
         val expectContent = "World"
 
         runBlocking {
+
+            defaultServiceImplFactory += adapter.single<EmailService>()
 
             getService<EmailApi>().send(expectRecipient, expectSubject, expectContent)
 

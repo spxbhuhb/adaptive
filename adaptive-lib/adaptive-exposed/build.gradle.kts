@@ -4,45 +4,21 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.adaptive)
-//    java
     signing
     `maven-publish`
 }
 
 group = "hu.simplexion.adaptive"
+version = libs.versions.adaptive
+
 val baseName = "adaptive-exposed"
 val pomName = "Adaptive Exposed"
 val scmPath = "spxbhuhb/adaptive"
 
-//tasks["build"].dependsOn(gradle.includedBuild("adaptive-kotlin-plugin").task(":publishToMavenLocal"))
-//tasks["build"].dependsOn(gradle.includedBuilds.map { it.task(":build") })
-//tasks["clean"].dependsOn(gradle.includedBuilds.map { it.task(":clean") })
-//tasks["publishToMavenLocal"].dependsOn(gradle.includedBuilds.map { it.task(":publishToMavenLocal") })
-//tasks["publish"].dependsOn(gradle.includedBuilds.map { it.task(":publish") })
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-    google()
-}
-
-val coroutines_version: String by project
-val datetime_version: String by project
-
-val ktor_version: String by project
-val logback_version: String by project
-val exposed_version: String by project
-val javamail_version: String by project
-
 kotlin {
-    jvm {
-        jvmToolchain(11)
-        withJava()
-    }
-    js(IR) {
-        browser()
-        binaries.library()
-    }
+    jvmToolchain(11)
+
+    jvm()
 
     sourceSets.all {
         languageSettings {
@@ -53,11 +29,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
-                api("io.ktor:ktor-client-websockets:$ktor_version")
-                api("org.jetbrains.kotlinx:kotlinx-datetime:$datetime_version")
-
-                api("hu.simplexion.adaptive:adaptive-core:${version}")
+                implementation(libs.adaptive.core)
             }
         }
 
@@ -68,19 +40,16 @@ kotlin {
         }
 
         sourceSets["jvmMain"].dependencies {
-            api("org.jetbrains.exposed:exposed-core:${exposed_version}")
-            api("org.jetbrains.exposed:exposed-jdbc:${exposed_version}")
-            api("org.jetbrains.exposed:exposed-kotlin-datetime:${exposed_version}")
+            api(libs.exposed.core)
+            api(libs.exposed.jdbc)
+            api(libs.exposed.kotlin.datetime)
 
-            api("com.zaxxer:HikariCP:3.4.2")
-
-            api("ch.qos.logback:logback-classic:${logback_version}")
-            api("org.apache.logging.log4j:log4j-core:2.20.0") // FFS
+            api(libs.hikaricp)
         }
 
         sourceSets["jvmTest"].dependencies {
             implementation(kotlin("test"))
-            implementation("com.h2database:h2:2.1.214")
+            implementation(libs.h2database)
         }
     }
 }

@@ -5,21 +5,20 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.adaptive)
-//    java
     signing
     `maven-publish`
 }
 
 group = "hu.simplexion.adaptive"
+version = libs.versions.adaptive
+
 val baseName = "adaptive-ui"
 val pomName = "Adaptive User Interface"
 val scmPath = "spxbhuhb/adaptive"
 
-val coroutines_version: String by project
-val datetime_version: String by project
-val ktor_version: String by project
-
 kotlin {
+
+    jvmToolchain(11)
 
     androidTarget {
         compilations.all {
@@ -36,16 +35,16 @@ kotlin {
         binaries.library()
     }
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "Shared"
-            isStatic = true
-        }
-    }
+//    listOf(
+//        iosX64(),
+//        iosArm64(),
+//        iosSimulatorArm64()
+//    ).forEach { iosTarget ->
+//        iosTarget.binaries.framework {
+//            baseName = "Shared"
+//            isStatic = true
+//        }
+//    }
 
     sourceSets.all {
         languageSettings {
@@ -56,10 +55,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
-                api("io.ktor:ktor-client-websockets:$ktor_version")
-                api("org.jetbrains.kotlinx:kotlinx-datetime:$datetime_version")
-                api("hu.simplexion.adaptive:adaptive-core:${version}")
+                api(libs.adaptive.core)
             }
         }
 
@@ -72,17 +68,14 @@ kotlin {
         val androidMain by getting {
             dependsOn(commonMain)
             dependencies {
-                implementation("androidx.appcompat:appcompat:1.6.1")
-                implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-                implementation("com.google.android.material:material:1.12.0")
+                implementation(libs.androidx.appcompat)
+                implementation(libs.androidx.constraintlayout)
+                implementation(libs.android.material)
             }
         }
 
         val jvmMain by getting {
             dependsOn(androidMain)
-            dependencies {
-                api("hu.simplexion.adaptive:adaptive-core:${version}")
-            }
         }
     }
 }
