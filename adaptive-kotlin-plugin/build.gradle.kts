@@ -4,8 +4,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    alias(libs.plugins.kotlinJvm)
     java
-    kotlin("jvm") version "1.9.10"
     signing
     `maven-publish`
 }
@@ -39,17 +39,15 @@ sourceSets {
 }
 
 dependencies {
-    "org.jetbrains.kotlin:kotlin-compiler:$kotlin_version".let {
-        compileOnly(it)
-        testImplementation(it)
-    }
+    compileOnly(libs.kotlin.compiler)
+    testImplementation(libs.kotlin.compiler)
 
-    testRuntimeOnly("org.jetbrains.kotlin:kotlin-test:$kotlin_version")
-    testRuntimeOnly("org.jetbrains.kotlin:kotlin-script-runtime:$kotlin_version")
-    testRuntimeOnly("org.jetbrains.kotlin:kotlin-annotations-jvm:$kotlin_version")
+    testRuntimeOnly(libs.kotlin.test)
+    testRuntimeOnly(libs.kotlin.script.runtime)
+    testRuntimeOnly(libs.kotlin.annotations.jvm)
 
-    testImplementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
-    testImplementation("org.jetbrains.kotlin:kotlin-compiler-internal-test-framework:$kotlin_version")
+    testImplementation(libs.kotlin.reflect)
+    testImplementation(libs.kotlin.compiler.internal.test.framework)
     testImplementation("junit:junit:4.13.2")
 
     testImplementation(platform("org.junit:junit-bom:5.8.0"))
