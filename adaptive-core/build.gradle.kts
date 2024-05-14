@@ -2,21 +2,19 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 plugins {
-    kotlin("multiplatform") version "1.9.10"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.shadow)
     java
     signing
     `maven-publish`
 }
 
 group = "hu.simplexion.adaptive"
+version = libs.versions.adaptive
+
 val baseName = "adaptive-core"
 val pomName = "Adaptive Core"
 val scmPath = "spxbhuhb/adaptive"
-
-val coroutines_version: String by project
-val datetime_version: String by project
-val logback_version: String by project
 
 repositories {
     mavenLocal()
@@ -35,22 +33,22 @@ kotlin {
         binaries.library()
     }
 
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "Shared"
-            isStatic = true
-        }
-    }
+//    listOf(
+//        iosX64(),
+//        iosArm64(),
+//        iosSimulatorArm64()
+//    ).forEach { iosTarget ->
+//        iosTarget.binaries.framework {
+//            baseName = "Shared"
+//            isStatic = true
+//        }
+//    }
 
     sourceSets {
         commonMain {
             dependencies {
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
-                api("org.jetbrains.kotlinx:kotlinx-datetime:$datetime_version")
+                api(libs.kotlinx.coroutines.core)
+                api(libs.kotlinx.datetime)
             }
         }
         commonTest {
@@ -58,13 +56,13 @@ kotlin {
                 api(kotlin("test-common"))
                 api(kotlin("test-annotations-common"))
                 api(kotlin("test-junit"))
-                api("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version")
+                api(libs.kotlinx.coroutines.test)
             }
         }
 
         sourceSets["jvmMain"].dependencies {
-            api("ch.qos.logback:logback-classic:${logback_version}")
-            api("org.apache.logging.log4j:log4j-core:2.20.0") // FFS
+            api(libs.logback)
+            api(libs.log4j.core) // FFS
         }
     }
 }
