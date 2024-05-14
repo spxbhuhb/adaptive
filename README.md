@@ -52,11 +52,13 @@ fun main() {
 ```
 
 ```kotlin
-defaultServiceCallTransport = BasicWebSocketServiceCallTransport()
-
 val counterService = getService<CounterApi>()
 
+fun now() = Clock.System.now()
+
 fun main() {
+    defaultServiceCallTransport = BasicWebSocketServiceCallTransport()
+
     adaptive(AdaptiveDOMAdapter()) {
         val time = poll(1.seconds, now()) { now() }
         counterWithTime(time)

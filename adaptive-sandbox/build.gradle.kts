@@ -26,8 +26,13 @@ repositories {
 }
 
 application {
-    mainClass.set("hu.simplexion.adaptive.sandbox.MainKt")
+    mainClass.set("MainKt")
 }
+
+//adaptive {
+//    pluginDebug = true
+//    pluginLogDir = projectDir.toPath()
+//}
 
 kotlin {
     sourceSets.all {
@@ -52,11 +57,15 @@ kotlin {
         implementation("hu.simplexion.adaptive:adaptive-exposed:$version")
         implementation("hu.simplexion.adaptive:adaptive-email:$version")
         implementation("hu.simplexion.adaptive:adaptive-ui:$version")
+        implementation("hu.simplexion.adaptive:adaptive-ktor:$version")
     }
+
     sourceSets["jsMain"].dependencies {
         implementation("io.ktor:ktor-client-websockets:$ktor_version")
     }
+
     sourceSets["jvmMain"].dependencies {
+
         implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
         implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
         implementation("io.ktor:ktor-server-websockets:$ktor_version")

@@ -10,10 +10,10 @@ Adaptive needs these functions/classes implemented on a given platform:
 Platform specific files and functions:
 
 * [clock](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/utility/clock.kt) - `vmNowMicro`, `vmNowSecond`
-* [lock](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/utility/lock.kt) - `Lock`
+* [lock](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/utility/lock.kt) - `getLock`
 * [process](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/utility/process.kt) - `exitProcessCommon`
 * [random](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/utility/random.kt) - `fourRandomInt`
-* [logger](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/log/logger.kt) - `logger`
+* [logger](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/log/logger.kt) - `getLogger`
 
 | Platform   | `clock`                  | `lock`            | `process`                                   | `random`                        | `logger`                   |
 |------------|--------------------------|-------------------|---------------------------------------------|---------------------------------|----------------------------|

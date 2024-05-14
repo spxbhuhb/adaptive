@@ -1,5 +1,6 @@
 package hu.simplexion.adaptive.ktor
 
+import hu.simplexion.adaptive.log.getLogger
 import hu.simplexion.adaptive.service.BasicServiceContext
 import hu.simplexion.adaptive.service.ServiceContext
 import hu.simplexion.adaptive.service.defaultServiceImplFactory
@@ -21,6 +22,9 @@ fun Routing.sessionWebsocketServiceCallTransport(
 ) {
     webSocket(path) {
 
+        val logger = getLogger("websocket")
+        logger.info("connection opened from ${call.request.local.remoteAddress}:${call.request.local.remotePort}")
+
         class SessionClose : RuntimeException()
 
         suspend fun close(status: ServiceCallStatus) : Nothing {
@@ -38,11 +42,15 @@ fun Routing.sessionWebsocketServiceCallTransport(
 //            }
 
             for (frame in incoming) {
-                frame as? Frame.Binary ?: continue
+                val data = when (frame) {
+                    is Frame.Binary -> frame.data
+                    is Frame.Text -> frame.data
+                    else -> continue
+                }
 
                 // if this throws an exception there is an error in the service framework
                 // better to close the connection then
-                val requestEnvelope = decode(frame.data, RequestEnvelope)
+                val requestEnvelope = decode(data, RequestEnvelope)
 
                 val responseEnvelope = try {
 
@@ -72,7 +80,9 @@ fun Routing.sessionWebsocketServiceCallTransport(
                     }
 
                 } catch (ex: Exception) {
+                    logger.error(ex)
                     when (ex) {
+
 //                        is AccessDenied -> {
 //                            ResponseEnvelope(
 //                                requestEnvelope.callId,
@@ -106,7 +116,7 @@ fun Routing.sessionWebsocketServiceCallTransport(
 
                 //accessLog(context, requestEnvelope, responseEnvelope)
 
-//                send(Frame.Binary(true, ResponseEnvelope.encodeProto(responseEnvelope)))
+                send(Frame.Binary(true, encode(responseEnvelope, ResponseEnvelope)))
 //
 //                if (context.data[LOGOUT_TOKEN_UUID] == true) {
 //                    close(ServiceCallStatus.Logout)

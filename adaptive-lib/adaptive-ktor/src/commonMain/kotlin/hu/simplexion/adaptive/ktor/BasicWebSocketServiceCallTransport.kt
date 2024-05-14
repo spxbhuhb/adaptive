@@ -21,6 +21,7 @@ open class BasicWebSocketServiceCallTransport(
     val path: String = "/adaptive/service",
     var errorHandler: ServiceErrorHandler? = null,
     val trace: Boolean = false,
+    val useTextFrame : Boolean = false
 ) : ServiceCallTransport {
 
     val callTimeout = 20_000_000
@@ -60,7 +61,11 @@ open class BasicWebSocketServiceCallTransport(
                         try {
                             for (call in outgoingCalls) {
                                 try {
-                                    send(Frame.Binary(true, encode(call.request, RequestEnvelope)))
+                                    if (useTextFrame) {
+                                        send(Frame.Text(true, encode(call.request, RequestEnvelope)))
+                                    } else {
+                                        send(Frame.Binary(true, encode(call.request, RequestEnvelope)))
+                                    }
                                     pendingCalls[call.request.callId] = call
                                 } catch (ex: CancellationException) {
                                     postponeAfterCancel(call)
@@ -148,6 +153,7 @@ open class BasicWebSocketServiceCallTransport(
     }
 
     override suspend fun call(serviceName: String, funName: String, payload: ByteArray): ByteArray {
+        println("+++" + payload.size)
         OutgoingCall(RequestEnvelope(UUID(), serviceName, funName, payload)).let { outgoingCall ->
 
             outgoingLock.use {
