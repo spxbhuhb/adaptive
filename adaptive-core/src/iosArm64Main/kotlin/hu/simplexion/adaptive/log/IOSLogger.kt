@@ -21,8 +21,16 @@ class IOSLogger(
         println("INFO: $prefix $message")
     }
 
+    override fun warning(message: String) {
+        println("WARNING: [$prefix] $message")
+    }
+
     override fun warning(exception: Exception) {
         println("WARNING: [$prefix] ${exception.stackTraceToString()}")
+    }
+
+    override fun warning(message: String, exception: Exception) {
+        println("WARNING: [$prefix] $message ${exception.stackTraceToString()}")
     }
 
     override fun error(message: String) {
@@ -37,17 +45,17 @@ class IOSLogger(
         println("ERROR: [$prefix] $message ${exception.stackTraceToString()}")
     }
 
-    override fun fatal(message: String) {
+    override fun fatal(message: String) : Nothing {
         println("FATAL: [$prefix] $message")
         exitProcessCommon(3210)
     }
 
-    override fun fatal(exception: Exception) {
+    override fun fatal(exception: Exception) : Nothing {
         println("FATAL: [$prefix] ${exception.stackTraceToString()}")
         exitProcessCommon(3210)
     }
 
-    override fun fatal(message: String, exception: Exception) {
+    override fun fatal(message: String, exception: Exception) : Nothing {
         println("FATAL: [$prefix] $message ${exception.stackTraceToString()}")
         exitProcessCommon(3210)
     }

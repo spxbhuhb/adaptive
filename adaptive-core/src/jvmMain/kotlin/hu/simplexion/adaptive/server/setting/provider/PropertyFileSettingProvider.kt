@@ -8,10 +8,13 @@ import hu.simplexion.adaptive.log.getLogger
 import hu.simplexion.adaptive.server.setting.model.Setting
 import java.io.InputStreamReader
 import java.nio.charset.StandardCharsets
+import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 import java.util.*
 import kotlin.io.path.exists
 import kotlin.io.path.inputStream
+import kotlin.math.abs
 
 /**
  * Get settings from a property file. Supports only [get], [put] throws an
@@ -33,15 +36,19 @@ class PropertyFileSettingProvider(
     val prop = Properties()
 
     init {
-        val absPath = path.toAbsolutePath()
+        val absPath = path.toAbsolutePath().normalize()
 
-        if ( !path.exists() && ! optional) {
-            logger.fatal("mandatory property file does not exists: $absPath")
+        if (absPath.toString().let { it.trim() != it }) {
+            logger.warning("property file name ends with a space: >$absPath<")
         }
 
-        if (path.exists()) {
+        if (! absPath.exists() && ! optional) {
+            logger.fatal("mandatory property file does not exists: >$absPath<")
+        }
+
+        if (absPath.exists()) {
             logger.info("loading properties from: $absPath")
-            path.inputStream().use {
+            absPath.inputStream().use {
                 prop.load(InputStreamReader(it, StandardCharsets.UTF_8))
             }
         } else {

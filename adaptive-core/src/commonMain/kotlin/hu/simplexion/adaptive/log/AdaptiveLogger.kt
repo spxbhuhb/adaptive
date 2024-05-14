@@ -10,7 +10,11 @@ interface AdaptiveLogger {
 
     fun info(message: String)
 
+    fun warning(message : String)
+
     fun warning(exception: Exception)
+
+    fun warning(message : String, exception: Exception)
 
     fun error(message : String)
 

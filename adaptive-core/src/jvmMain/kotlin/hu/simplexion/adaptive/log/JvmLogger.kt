@@ -22,8 +22,16 @@ class JvmLogger(name : String) : AdaptiveLogger {
         platformLogger.log(Level.INFO, message)
     }
 
+    override fun warning(message: String) {
+        platformLogger.log(Level.WARNING, message)
+    }
+
     override fun warning(exception: Exception) {
         platformLogger.log(Level.WARNING, exception.toString(), exception)
+    }
+
+    override fun warning(message: String, exception: Exception) {
+        platformLogger.log(Level.WARNING, message, exception)
     }
 
     override fun error(message: String) {

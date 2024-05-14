@@ -21,9 +21,18 @@ class BrowserLogger(
         console.info(prefix, message)
     }
 
-    override fun warning(exception: Exception) {
-        console.warn(prefix, exception)
+    override fun warning(message: String) {
+        console.error(prefix, message)
     }
+
+    override fun warning(exception: Exception) {
+        console.error(prefix, exception)
+    }
+
+    override fun warning(message: String, exception: Exception) {
+        console.error(prefix, message, exception)
+    }
+
 
     override fun error(message: String) {
         console.error(prefix, message)
