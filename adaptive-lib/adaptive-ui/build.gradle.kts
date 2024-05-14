@@ -2,9 +2,10 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 plugins {
-    kotlin("multiplatform") version "1.9.10"
-    id("hu.simplexion.adaptive") version "2024.05.07-SNAPSHOT"
-    java
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.adaptive)
+//    java
     signing
     `maven-publish`
 }
@@ -14,22 +15,21 @@ val baseName = "adaptive-ui"
 val pomName = "Adaptive User Interface"
 val scmPath = "spxbhuhb/adaptive"
 
-repositories {
-    mavenLocal()
-    mavenCentral()
-    google()
-}
-
 val coroutines_version: String by project
 val datetime_version: String by project
 val ktor_version: String by project
 
 kotlin {
 
-    jvm {
-        jvmToolchain(11)
-        withJava()
+    androidTarget {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "11"
+            }
+        }
     }
+
+    jvm()
 
     js(IR) {
         browser()
@@ -54,7 +54,7 @@ kotlin {
     }
 
     sourceSets {
-        commonMain {
+        val commonMain by getting {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
                 api("io.ktor:ktor-client-websockets:$ktor_version")
@@ -68,8 +68,37 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
+
+        val androidMain by getting {
+            dependsOn(commonMain)
+            dependencies {
+                implementation("androidx.appcompat:appcompat:1.6.1")
+                implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+                implementation("com.google.android.material:material:1.12.0")
+            }
+        }
+
+        val jvmMain by getting {
+            dependsOn(androidMain)
+            dependencies {
+                api("hu.simplexion.adaptive:adaptive-core:${version}")
+            }
+        }
     }
 }
+
+android {
+    namespace = "hu.simplexion.adaptive.ui"
+    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    defaultConfig {
+        minSdk = libs.versions.android.minSdk.get().toInt()
+    }
+}
+
 
 // ----------------------------------------------------------------
 // DO NOT EDIT BELOW THIS, ASK FIRST!

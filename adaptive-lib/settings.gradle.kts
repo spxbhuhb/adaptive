@@ -4,18 +4,43 @@
 
 rootProject.name = "adaptive-lib"
 
+pluginManagement {
+    repositories {
+        google {
+            mavenContent {
+                includeGroupAndSubgroups("androidx")
+                includeGroupAndSubgroups("com.android")
+                includeGroupAndSubgroups("com.google")
+            }
+        }
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
 dependencyResolutionManagement {
     repositories {
+        google {
+            mavenContent {
+                includeGroupAndSubgroups("androidx")
+                includeGroupAndSubgroups("com.android")
+                includeGroupAndSubgroups("com.google")
+            }
+        }
         mavenCentral()
-        mavenLocal()
+    }
+    versionCatalogs {
+        create("libs") {
+            from(files("../gradle/libs.versions.toml"))
+        }
     }
 }
 
 includeBuild("../adaptive-core")
 includeBuild("../adaptive-kotlin-plugin")
 
-include("adaptive-exposed")
-include("adaptive-email")
-include("adaptive-ktor")
-include("adaptive-ui")
-include("adaptive-template")
+include(":adaptive-exposed")
+include(":adaptive-email")
+include(":adaptive-ktor")
+include(":adaptive-ui")
+include(":adaptive-template")
