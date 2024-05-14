@@ -10,6 +10,6 @@ import org.w3c.dom.Node
 
 object BasicRegistry : AdaptiveFragmentImplRegistry<Node>() {
     init {
-        this += AdaptiveFragmentImplRegistryEntry("text") { a, p, i -> AdaptiveText(a, p, i) }
+        this += AdaptiveFragmentImplRegistryEntry("hu.simplexion.adaptive.ui.basic.AdaptiveText") { a, p, i -> AdaptiveText(a, p, i) }
     }
 }

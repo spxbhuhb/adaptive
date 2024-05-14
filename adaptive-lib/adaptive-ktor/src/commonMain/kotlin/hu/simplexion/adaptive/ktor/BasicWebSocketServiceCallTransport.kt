@@ -153,7 +153,6 @@ open class BasicWebSocketServiceCallTransport(
     }
 
     override suspend fun call(serviceName: String, funName: String, payload: ByteArray): ByteArray {
-        println("+++" + payload.size)
         OutgoingCall(RequestEnvelope(UUID(), serviceName, funName, payload)).let { outgoingCall ->
 
             outgoingLock.use {
@@ -162,7 +161,7 @@ open class BasicWebSocketServiceCallTransport(
             if (trace) println("outgoing call: $serviceName.$funName")
 
             val responseEnvelope = outgoingCall.responseChannel.receive()
-            if (trace) println("response for $serviceName.$funName\n${responseEnvelope}")
+            if (trace) println("response for $serviceName.$funName\n${responseEnvelope.status}")
 
             when (responseEnvelope.status) {
                 ServiceCallStatus.Ok -> {

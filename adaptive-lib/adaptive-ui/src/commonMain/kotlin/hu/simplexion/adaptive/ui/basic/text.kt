@@ -9,6 +9,7 @@ import hu.simplexion.adaptive.base.Delegated
 import hu.simplexion.adaptive.base.manualImplementation
 
 @Delegated
-fun Adaptive.text(text: String) {
+@Adaptive
+fun text(text: String) {
     manualImplementation(text)
 }
