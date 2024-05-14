@@ -4,10 +4,11 @@
 package hu.simplexion.adaptive.base
 
 /**
- * Entry point of an Adaptive component tree.
+ * The general entry point of an Adaptive component tree.
  *
  * **IMPORTANT** variables declared outside the block are **NOT** reactive
  */
+@AdaptiveEntry
 fun <BT, AT : AdaptiveAdapter<BT>> adaptive(adapter: AT, @Adaptive block: (adapter : AdaptiveAdapter<BT>) -> Unit) : AT {
     block(adapter)
     adapter.mounted()

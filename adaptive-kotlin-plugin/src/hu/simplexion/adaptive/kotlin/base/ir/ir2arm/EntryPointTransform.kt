@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
+import org.jetbrains.kotlin.ir.util.hasAnnotation
 import org.jetbrains.kotlin.ir.util.kotlinFqName
 
 /**
@@ -28,7 +29,7 @@ class EntryPointTransform(
      * of the root class.
      */
     override fun visitCall(expression: IrCall): IrExpression {
-        if (expression.symbol.owner.kotlinFqName != FqNames.ADAPTIVE_ENTRY_FUNCTION) {
+        if (!expression.symbol.owner.hasAnnotation(FqNames.ADAPTIVE_ENTRY)) {
             return super.visitCall(expression)
         }
 

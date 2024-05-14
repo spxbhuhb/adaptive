@@ -14,7 +14,7 @@ object Strings {
     const val STRUCTURAL_PACKAGE = "hu.simplexion.adaptive.base.structural"
 
     const val ADAPTIVE = "Adaptive"
-    const val ENTRY_FUNCTION = "adaptive"
+    const val ADAPTIVE_ENTRY = "AdaptiveEntry"
 
     const val ADAPTIVE_ROOT = "AdaptiveRoot"
     const val ADAPTIVE_ANONYMOUS = "AdaptiveAnonymous"
@@ -101,7 +101,7 @@ object FqNames {
     fun String.runtime() = FqName(Strings.RUNTIME_PACKAGE + "." + this)
     fun String.structural() = FqName(Strings.STRUCTURAL_PACKAGE + "." + this)
 
-    val ADAPTIVE_ENTRY_FUNCTION = Strings.ENTRY_FUNCTION.runtime()
+    val ADAPTIVE_ENTRY = Strings.ADAPTIVE_ENTRY.runtime()
 
     val ADAPTIVE_SEQUENCE = Strings.ADAPTIVE_SEQUENCE.structural()
     val ADAPTIVE_SELECT = Strings.ADAPTIVE_SELECT.structural()
