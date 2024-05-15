@@ -26,6 +26,19 @@ kotlin {
         binaries.library()
     }
 
+    if (libs.versions.ios.support.get() != "none") {
+        listOf(
+            iosX64(),
+            iosArm64(),
+            iosSimulatorArm64()
+        ).forEach { iosTarget ->
+            iosTarget.binaries.framework {
+                baseName = "Shared"
+                isStatic = true
+            }
+        }
+    }
+
     sourceSets.all {
         languageSettings {
             languageVersion = "2.0"

@@ -128,19 +128,23 @@ kotlin {
 
 ## Building Adaptive
 
+If you are building with iOS targets you have to run the build on Mac OS X. This is a requirement from Apple,
+see [Multiplatform Setup](https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-setup.html) for details.
+
+To disable iOS targets set the version of `ios-support` to `none` in [libs.versions.toml](gradle/libs.versions.toml). Any
+value other than `none` adds support for iOS.
+
+This is also useful when you don't want to wait for the iOS linking during development.
+
 Run the `build` task of the root project.
 
-Building the project publishes the Kotlin compiler plugin into the local Maven repository. This is necessary as `adaptive-lib`
-needs the Kotlin plugin to compile. To publish into Maven local you have to set up the signing as documented in
-[The Signing Plugin](https://docs.gradle.org/current/userguide/signing_plugin.html). Long story short, put the
-following info into your `gradle.properties`:
+Adaptive uses a composite Gradle build. These tasks are defined for the root project and run the appropriate task for
+each included project:
 
-```properties
-signing.gnupg.executable=/usr/local/bin/gpg
-signing.gnupg.keyName=<your-key-short-name>
-```
-
-Theoretically you don't need the executable, but for me, it was necessary, I have no idea why.
+- `build`
+- `clean`
+- `publishToMavenLocal`
+- `kotlinUpgradeYarnLock`
 
 ## Debugging Adaptive
 

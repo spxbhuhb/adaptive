@@ -1,5 +1,7 @@
 [versions]
 
+ios-support = "none"
+
 adaptive = "2024.05.15-SNAPSHOT"
 agp = "8.2.0"
 android-compileSdk = "34"
@@ -18,7 +20,7 @@ hikaricp = "3.4.2"
 exposed = "0.41.1"
 javamail = "1.6.2"
 junit = "4.13.2"
-kotlin = "2.0.0-RC2"
+kotlin = "1.9.10"
 ktor = "2.3.10"
 log4j = "2.20.0"
 logback = "1.5.6"

@@ -21,7 +21,7 @@ import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
-@OptIn(ExperimentalTopLevelDeclarationsGenerationApi::class)
+// @OptIn(ExperimentalTopLevelDeclarationsGenerationApi::class) // uncomment for 2.0.0-RC2
 class AdaptiveDeclarationGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
     val adapterType = ClassIds.ADAPTIVE_ADAPTER.constructClassLikeType(arrayOf(ConeStarProjection), false)

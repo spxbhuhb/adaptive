@@ -22,6 +22,10 @@ repositories {
     maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
 }
 
+kotlin {
+    jvmToolchain(11) // this is not needed for 2.0.0-RC2, but have to have in 1.9.10
+}
+
 sourceSets {
     main {
         java.setSrcDirs(listOf("src"))
@@ -71,6 +75,9 @@ tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
         useK2 = true
         freeCompilerArgs += "-opt-in=org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi"
+        if (libs.versions.kotlin.get().startsWith("1.9")) {
+            freeCompilerArgs += "-Xcontext-receivers" // not needed for 2.0.0-RC2 but needed for 1.9.10
+        }
     }
 }
 
