@@ -1,6 +1,6 @@
 [versions]
 
-adaptive = "2024.05.07-SNAPSHOT"
+adaptive = "2024.05.15-SNAPSHOT"
 agp = "8.2.0"
 android-compileSdk = "34"
 android-minSdk = "26"
@@ -19,7 +19,6 @@ exposed = "0.41.1"
 javamail = "1.6.2"
 junit = "4.13.2"
 kotlin = "2.0.0-RC2"
-kotlin-junit = "2.0.0-RC2"
 ktor = "2.3.10"
 log4j = "2.20.0"
 logback = "1.5.6"
@@ -51,7 +50,7 @@ javamail = { module = "com.sun.mail:javax.mail", version.ref = "javamail" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
-kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin-junit" }
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 kotlin-compiler = { module = "org.jetbrains.kotlin:kotlin-compiler", version.ref = "kotlin" }
 kotlin-compiler-internal-test-framework = { module = "org.jetbrains.kotlin:kotlin-compiler-internal-test-framework", version.ref = "kotlin" }
 kotlin-script-runtime = { module = "org.jetbrains.kotlin:kotlin-script-runtime", version.ref = "kotlin" }

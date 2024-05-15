@@ -17,7 +17,6 @@ val pomName = "Adaptive Core"
 val scmPath = "spxbhuhb/adaptive"
 
 repositories {
-    mavenLocal()
     mavenCentral()
     google()
 }
@@ -25,7 +24,9 @@ repositories {
 kotlin {
     jvmToolchain(11)
 
-    jvm()
+    jvm {
+        withJava()
+    }
 
     js(IR) {
         browser()
@@ -50,6 +51,7 @@ kotlin {
                 api(libs.kotlinx.datetime)
             }
         }
+
         commonTest {
             dependencies {
                 api(libs.kotlin.test)
