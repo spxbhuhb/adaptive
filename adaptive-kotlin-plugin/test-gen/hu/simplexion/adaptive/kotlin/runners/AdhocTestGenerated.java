@@ -6,6 +6,7 @@ import com.intellij.testFramework.TestDataPath;
 import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.jetbrains.kotlin.test.TargetBackend;
 import org.jetbrains.kotlin.test.TestMetadata;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -16,8 +17,8 @@ import java.util.regex.Pattern;
 @TestMetadata("testData/adhoc")
 @TestDataPath("$PROJECT_ROOT")
 public class AdhocTestGenerated extends AbstractAdhocTest {
-  @Test
-  public void testAllFilesPresentInAdhoc() {
-    KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/adhoc"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
-  }
+    @Test
+    public void testAllFilesPresentInAdhoc() throws Exception {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/adhoc"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+    }
 }

@@ -64,6 +64,10 @@ open class AbstractBoxTest : BaseTestRunner(), RunnerWithTargetBackendForTestGen
                     ::IrTextDumpHandler,
                     ::IrTreeVerifierHandler,
                 )
+            } else {
+                useHandlers(
+                    ::IrTreeVerifierHandler
+                )
             }
         }
         facadeStep(::JvmIrBackendFacade)
