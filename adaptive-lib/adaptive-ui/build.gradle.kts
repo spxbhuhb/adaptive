@@ -18,9 +18,8 @@ val scmPath = "spxbhuhb/adaptive"
 
 kotlin {
 
-    jvmToolchain(11)
-
     androidTarget {
+        publishLibraryVariants("release", "debug")
         compilations.all {
             kotlinOptions {
                 jvmTarget = "11"
@@ -35,16 +34,18 @@ kotlin {
         binaries.library()
     }
 
-//    listOf(
-//        iosX64(),
-//        iosArm64(),
-//        iosSimulatorArm64()
-//    ).forEach { iosTarget ->
-//        iosTarget.binaries.framework {
-//            baseName = "Shared"
-//            isStatic = true
-//        }
-//    }
+    if (libs.versions.ios.support.get() != "none") {
+        listOf(
+            iosX64(),
+            iosArm64(),
+            iosSimulatorArm64()
+        ).forEach { iosTarget ->
+            iosTarget.binaries.framework {
+                baseName = "Shared"
+                isStatic = true
+            }
+        }
+    }
 
     sourceSets.all {
         languageSettings {
@@ -53,29 +54,24 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 api(libs.adaptive.core)
             }
         }
 
-        commonTest {
-            dependencies {
-                implementation(kotlin("test"))
-            }
-        }
+//        commonTest {
+//            dependencies {
+//                implementation(kotlin("test"))
+//            }
+//        }
 
-        val androidMain by getting {
-            dependsOn(commonMain)
+        androidMain {
             dependencies {
                 implementation(libs.androidx.appcompat)
                 implementation(libs.androidx.constraintlayout)
                 implementation(libs.android.material)
             }
-        }
-
-        val jvmMain by getting {
-            dependsOn(androidMain)
         }
     }
 }

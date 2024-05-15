@@ -3,7 +3,7 @@
  */
 plugins {
     id("com.gradle.plugin-publish") version "1.1.0"
-    kotlin("jvm") version "1.9.10"
+    alias(libs.plugins.kotlinJvm)
     signing
     `maven-publish`
 }
@@ -17,6 +17,7 @@ repositories {
 }
 
 group = "hu.simplexion.adaptive"
+version = libs.versions.adaptive.get()
 
 val scmPath = "spxbhuhb/adaptive"
 val pomName = "Adaptive Gradle Plugin"

@@ -7,5 +7,5 @@ rootProject.name = "adaptive-lib"
 includeBuild("adaptive-exposed")
 includeBuild("adaptive-email")
 includeBuild("adaptive-ktor")
-//includeBuild("adaptive-ui")
+includeBuild("adaptive-ui")
 //includeBuild(":adaptive-template")

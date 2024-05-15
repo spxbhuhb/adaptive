@@ -11,7 +11,7 @@ fun register(name: String, js : Boolean = true) {
             dependsOn(gradle.includedBuild("adaptive-exposed").task(":$taskName"))
         }
         dependsOn(gradle.includedBuild("adaptive-ktor").task(":$taskName"))
-        //dependsOn(gradle.includedBuild("adaptive-ui").task(":$taskName"))
+        dependsOn(gradle.includedBuild("adaptive-ui").task(":$taskName"))
     }
 }
 

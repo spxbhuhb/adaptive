@@ -9,6 +9,8 @@ Adaptive is a consolidated application development library for Kotlin focusing o
 
 Adaptive comes with a compiler plugin that performs many functions to reach the goals above.
 
+Example project using Adaptive: [adaptive-example](https://github.com/spxbhuhb/adaptive-example)
+
 Status: **initial development**
 
 While the library already works and provides both client and server side functionality it
@@ -145,6 +147,13 @@ each included project:
 - `clean`
 - `publishToMavenLocal`
 - `kotlinUpgradeYarnLock`
+
+Everything uses the dependencies defined in [libs.versions.toml](gradle/libs.versions.toml).
+
+To bump Adaptive version number:
+
+- change `adaptive` version in  [libs.versions.toml](gradle/libs.versions.toml)
+- change `PLUGIN_VERSION` in [AdaptiveGradlePlugin](adaptive-gradle-plugin/src/main/kotlin/hu/simplexion/adaptive/gradle/AdaptiveGradlePlugin.kt) (also see https://github.com/spxbhuhb/adaptive/issues/7)
 
 ## Debugging Adaptive
 
