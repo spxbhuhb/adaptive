@@ -8,10 +8,9 @@ import hu.simplexion.adaptive.kotlin.common.isFromPlugin
 import hu.simplexion.adaptive.kotlin.service.*
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.fir.FirSession
-import org.jetbrains.kotlin.fir.analysis.checkers.getContainingDeclarationSymbol
+import org.jetbrains.kotlin.fir.analysis.checkers.getContainingClassSymbol
 import org.jetbrains.kotlin.fir.analysis.checkers.toClassLikeSymbol
 import org.jetbrains.kotlin.fir.declarations.fullyExpandedClass
-import org.jetbrains.kotlin.fir.declarations.hasAnnotation
 import org.jetbrains.kotlin.fir.declarations.utils.isSuspend
 import org.jetbrains.kotlin.fir.extensions.*
 import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
@@ -90,7 +89,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
             Names.SERVICE_NAME,
             Names.SERVICE_CALL_TRANSPORT_PROPERTY,
             SpecialNames.INIT
-        ) + collectFunctions(classSymbol.getContainingDeclarationSymbol(session) !!.classId)
+        ) + collectFunctions(classSymbol.getContainingClassSymbol(session) !!.classId)
     }
 
     private fun collectFunctions(classId: ClassId) =

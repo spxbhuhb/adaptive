@@ -17,10 +17,9 @@ val scmPath = "spxbhuhb/adaptive"
 
 kotlin {
 
-    jvm {
-        jvmToolchain(11)
-        withJava()
-    }
+    jvmToolchain(11)
+
+    jvm()
 
     js(IR) {
         browser()

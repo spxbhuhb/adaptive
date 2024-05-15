@@ -19,11 +19,7 @@ val kotlin_version: String by project.properties
 
 repositories {
     mavenCentral()
-    mavenLocal()
-}
-
-kotlin {
-    jvmToolchain(11)
+    maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
 }
 
 sourceSets {
@@ -73,9 +69,8 @@ tasks.test {
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
-        languageVersion = "2.0"
+        useK2 = true
         freeCompilerArgs += "-opt-in=org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi"
-        freeCompilerArgs += "-Xcontext-receivers"
     }
 }
 

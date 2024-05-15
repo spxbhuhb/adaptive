@@ -10,11 +10,8 @@ import hu.simplexion.adaptive.kotlin.base.Names
 import hu.simplexion.adaptive.kotlin.base.Strings
 import hu.simplexion.adaptive.kotlin.base.ir.util.capitalizeFirstChar
 import org.jetbrains.kotlin.fir.FirSession
-import org.jetbrains.kotlin.fir.extensions.FirDeclarationGenerationExtension
-import org.jetbrains.kotlin.fir.extensions.FirDeclarationPredicateRegistrar
-import org.jetbrains.kotlin.fir.extensions.MemberGenerationContext
+import org.jetbrains.kotlin.fir.extensions.*
 import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
-import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 import org.jetbrains.kotlin.fir.plugin.createTopLevelFunction
 import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
 import org.jetbrains.kotlin.fir.types.ConeStarProjection
@@ -24,6 +21,7 @@ import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
+@OptIn(ExperimentalTopLevelDeclarationsGenerationApi::class)
 class AdaptiveDeclarationGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
     val adapterType = ClassIds.ADAPTIVE_ADAPTER.constructClassLikeType(arrayOf(ConeStarProjection), false)

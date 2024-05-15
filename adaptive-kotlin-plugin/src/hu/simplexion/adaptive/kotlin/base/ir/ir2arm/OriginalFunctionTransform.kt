@@ -5,6 +5,7 @@ package hu.simplexion.adaptive.kotlin.base.ir.ir2arm
 
 import hu.simplexion.adaptive.kotlin.base.ir.AdaptivePluginContext
 import hu.simplexion.adaptive.kotlin.base.ir.util.AdaptiveAnnotationBasedExtension
+import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.expressions.IrCall
@@ -22,9 +23,7 @@ import org.jetbrains.kotlin.name.SpecialNames
  */
 class OriginalFunctionTransform(
     override val pluginContext: AdaptivePluginContext
-) : IrElementTransformerVoidWithContext(), AdaptiveAnnotationBasedExtension {
-
-    val irBuiltIns = pluginContext.irContext.irBuiltIns
+) : IrElementTransformerVoidWithContext(), AdaptiveAnnotationBasedExtension, AbstractIrBuilder {
 
     /**
      * Transforms a function annotated with `@Adaptive` into an Adaptive fragment class.
@@ -50,7 +49,7 @@ class OriginalFunctionTransform(
         IrFunction2ArmClass(pluginContext, declaration, false).transform()
 
         // replace the body of the original function with an empty one
-        declaration.body = IrBlockBodyImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET)
+        declaration.body = irFactory.createBlockBody(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET)
 
         return declaration
     }

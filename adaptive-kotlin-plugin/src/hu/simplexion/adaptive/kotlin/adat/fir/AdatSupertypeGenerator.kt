@@ -21,10 +21,10 @@ class AdatSupertypeGenerator(session: FirSession) : FirSupertypeGenerationExtens
         register(ADAT_PREDICATE)
     }
 
-    context(TypeResolveServiceContainer)
     override fun computeAdditionalSupertypes(
         classLikeDeclaration: FirClassLikeDeclaration,
-        resolvedSupertypes: List<FirResolvedTypeRef>
+        resolvedSupertypes: List<FirResolvedTypeRef>,
+        typeResolver: TypeResolveService
     ): List<FirResolvedTypeRef> {
         if (!session.predicateBasedProvider.matches(ADAT_PREDICATE, classLikeDeclaration.symbol)) return emptyList()
 

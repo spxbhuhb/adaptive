@@ -23,10 +23,9 @@ repositories {
 }
 
 kotlin {
-    jvm {
-        jvmToolchain(11)
-        withJava()
-    }
+    jvmToolchain(11)
+
+    jvm()
 
     js(IR) {
         browser()
@@ -53,9 +52,9 @@ kotlin {
         }
         commonTest {
             dependencies {
+                api(libs.kotlin.test)
                 api(kotlin("test-common"))
                 api(kotlin("test-annotations-common"))
-                api(kotlin("test-junit"))
                 api(libs.kotlinx.coroutines.test)
             }
         }
@@ -63,6 +62,10 @@ kotlin {
         sourceSets["jvmMain"].dependencies {
             api(libs.logback)
             api(libs.log4j.core) // FFS
+        }
+
+        sourceSets["jvmTest"].dependencies {
+            api(libs.kotlin.test.junit)
         }
     }
 }

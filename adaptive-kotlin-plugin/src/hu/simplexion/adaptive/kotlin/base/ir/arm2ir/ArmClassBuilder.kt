@@ -83,16 +83,15 @@ class ArmClassBuilder(
 
     private fun typeParameters() {
         irClass.typeParameters = listOf(
-            IrTypeParameterImpl(
+            irFactory.createTypeParameter(
                 SYNTHETIC_OFFSET,
                 SYNTHETIC_OFFSET,
                 IrDeclarationOrigin.BRIDGE_SPECIAL,
-                IrTypeParameterSymbolImpl(),
-                Names.BT,
+                symbol = IrTypeParameterSymbolImpl(),
+                name = Names.BT,
                 index = 0,
                 isReified = false,
-                variance = Variance.IN_VARIANCE,
-                factory = irFactory
+                variance = Variance.IN_VARIANCE
             ).also {
                 it.parent = irClass
                 it.superTypes = listOf(irBuiltIns.anyNType)
