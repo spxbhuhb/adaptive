@@ -6,10 +6,10 @@ fun register(name: String) {
     val (groupName, taskName) = name.split(":")
     tasks.register(taskName) {
         group = groupName
-        dependsOn(gradle.includedBuild("adaptive-core").task(":$taskName"))
-        dependsOn(gradle.includedBuild("adaptive-gradle-plugin").task(":$taskName"))
-        dependsOn(gradle.includedBuild("adaptive-kotlin-plugin").task(":$taskName"))
-        dependsOn(gradle.includedBuild("adaptive-lib").task(":$taskName"))
+        dependsOn(gradle.includedBuild("adaptive-email").task(":$taskName"))
+        dependsOn(gradle.includedBuild("adaptive-exposed").task(":$taskName"))
+        dependsOn(gradle.includedBuild("adaptive-ktor").task(":$taskName"))
+        //dependsOn(gradle.includedBuild("adaptive-ui").task(":$taskName"))
     }
 }
 

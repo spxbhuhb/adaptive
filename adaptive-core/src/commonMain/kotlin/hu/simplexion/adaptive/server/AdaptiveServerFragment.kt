@@ -36,7 +36,7 @@ abstract class AdaptiveServerFragment<BT>(
             it as ServerFragmentImpl<BT>
             impl = it
             it.fragment = this
-            it.logger = serverAdapter.getLogger(it.classFqName)
+            it.logger = serverAdapter.getLogger(it::class.simpleName!!) // FIXME using class simpleName
             it.create()
         }
     }

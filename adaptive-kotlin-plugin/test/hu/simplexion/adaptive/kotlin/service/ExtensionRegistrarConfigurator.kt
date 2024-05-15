@@ -9,7 +9,6 @@ import hu.simplexion.adaptive.kotlin.AdaptivePluginRegistrar
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatGenerationExtension
 import hu.simplexion.adaptive.kotlin.base.ir.AdaptiveGenerationExtension
 import hu.simplexion.adaptive.kotlin.debug.ir.DebugGenerationExtension
-import hu.simplexion.adaptive.kotlin.fqnameaware.ir.FqNameAwareGenerationExtension
 import hu.simplexion.adaptive.kotlin.server.ir.ServerGenerationExtension
 import hu.simplexion.adaptive.kotlin.service.ir.ServicesGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
@@ -30,7 +29,7 @@ class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentCo
             resourceOutputDir = File("testData/generated"),
             pluginDebug = true,
             pluginLogDir = null, //File("testData/log"),
-            dumpKotlinLike = true
+            dumpKotlinLike = false
         )
 
         FirExtensionRegistrarAdapter.registerExtension(AdaptivePluginRegistrar())
@@ -38,7 +37,6 @@ class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentCo
         IrGenerationExtension.registerExtension(ServicesGenerationExtension(options))
         IrGenerationExtension.registerExtension(AdaptiveGenerationExtension(options))
         IrGenerationExtension.registerExtension(ServerGenerationExtension(options))
-        IrGenerationExtension.registerExtension(FqNameAwareGenerationExtension(options))
         IrGenerationExtension.registerExtension(AdatGenerationExtension(options))
         IrGenerationExtension.registerExtension(DebugGenerationExtension(options))
 

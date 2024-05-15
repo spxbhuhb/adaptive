@@ -7,10 +7,9 @@ package hu.simplexion.adaptive.server.builtin
 import hu.simplexion.adaptive.log.AdaptiveLogger
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
-import hu.simplexion.adaptive.utility.FqNameAware
 import hu.simplexion.adaptive.utility.manualOrPlugin
 
-interface ServerFragmentImpl<BT> : FqNameAware {
+interface ServerFragmentImpl<BT> {
 
     /**
      * Fragment of the adaptive server if the implementation belongs to one. Replaced

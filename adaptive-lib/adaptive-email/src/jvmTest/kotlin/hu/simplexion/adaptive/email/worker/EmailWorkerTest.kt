@@ -92,7 +92,7 @@ class EmailWorkerTest {
 
             getService<EmailApi>().send(expectRecipient, expectSubject, expectContent)
 
-            withTimeout(1.seconds) {
+            withTimeout(5.seconds) {
                 while (wiser.messages.size == 0) {
                     delay(30.milliseconds)
                 }

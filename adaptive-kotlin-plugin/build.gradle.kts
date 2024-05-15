@@ -14,7 +14,6 @@ group = "hu.simplexion.adaptive"
 val scmPath = "spxbhuhb/adaptive"
 
 tasks["clean"].dependsOn(gradle.includedBuild("adaptive-core").task(":clean"))
-tasks["build"].dependsOn(gradle.includedBuild("adaptive-core").task(":shadowJar"))
 
 val kotlin_version: String by project.properties
 
@@ -59,6 +58,7 @@ dependencies {
 }
 
 tasks.test {
+    dependsOn(gradle.includedBuild("adaptive-core").task(":shadowJar"))
     testLogging.showStandardStreams = true
     useJUnitPlatform()
     doFirst {

@@ -17,7 +17,6 @@ class ServicesGenerationExtension(
 
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
         ServicesPluginContext(pluginContext, options).apply {
-            debug { moduleFragment.dumpKotlinLike() }
             moduleFragment.transformChildrenVoid(ServicesClassTransform(this))
             moduleFragment.transformChildrenVoid(GetConsumerTransform(this))
         }

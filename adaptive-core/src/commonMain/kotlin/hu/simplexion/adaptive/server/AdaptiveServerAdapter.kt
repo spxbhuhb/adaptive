@@ -35,9 +35,7 @@ open class AdaptiveServerAdapter<BT>(
 
     // TODO implement cache synchronization
 
-    val storeCache = mutableMapOf<String, AdaptiveStore<BT>>()
     val serviceCache = mutableMapOf<String,AdaptiveService<BT>>()
-    val workerCache = mutableMapOf<String, AdaptiveWorker<BT>>()
 
     val lock = getLock()
 

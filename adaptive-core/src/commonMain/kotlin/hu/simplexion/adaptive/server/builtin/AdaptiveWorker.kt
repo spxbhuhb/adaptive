@@ -31,7 +31,6 @@ class AdaptiveWorker<BT>(
         checkNotNull(workerImpl) { "inconsistent server state: innerMount with a null implementation" }
             .let {
                 it.mount()
-                serverAdapter.workerCache[it.classFqName] = this
                 scope.launch {
                     try {
                         it.run()
@@ -44,9 +43,6 @@ class AdaptiveWorker<BT>(
 
     override fun innerUnmount(bridge: AdaptiveBridge<BT>) {
         checkNotNull(impl) { "inconsistent server state innerUnmount with a null implementation" }
-            .let {
-                serverAdapter.workerCache.remove(it.classFqName)
-            }
         scope.cancel() // TODO check Job docs about waiting
         impl = null
     }
