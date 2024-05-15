@@ -47,12 +47,6 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         register(SERVICE_API_PREDICATE)
     }
 
-    private val matchedInterfaces by lazy {
-        session.predicateBasedProvider
-            .getSymbolsByPredicate(SERVICE_API_PREDICATE)
-            .filterIsInstance<FirClassSymbol<*>>()
-    }
-
     val serviceConsumerType by lazy {
         session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.SERVICE_CONSUMER) !!.constructType(emptyArray(), true)
     }

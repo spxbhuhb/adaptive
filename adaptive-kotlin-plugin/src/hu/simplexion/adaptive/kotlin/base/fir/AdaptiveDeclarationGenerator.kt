@@ -29,6 +29,7 @@ class AdaptiveDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
     val intType = session.builtinTypes.intType.coneType
 
     val ADAPTIVE_PREDICATE = LookupPredicate.create { annotated(ClassIds.ADAPTIVE.asSingleFqName()) }
+    val DELEGATED_PREDICATE = LookupPredicate.create { annotated(ClassIds.DELEGATED.asSingleFqName()) }
 
     private val predicateBasedProvider = session.predicateBasedProvider
 
@@ -39,17 +40,23 @@ class AdaptiveDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
     }
 
     private val callableIdsForMatchedFunctions: Set<CallableId> by lazy {
-        matchedFunctions.map {
-            CallableId(it.callableId.packageName, Name.identifier(Strings.CLASS_FUNCTION_PREFIX + it.name.identifier.capitalizeFirstChar()))
+        matchedFunctions.mapNotNull {
+            // do not generate class function for delegated, those are supposed to be manually coded
+            if (session.predicateBasedProvider.matches(DELEGATED_PREDICATE, it)) {
+                null
+            } else {
+                CallableId(it.callableId.packageName, Name.identifier(Strings.CLASS_FUNCTION_PREFIX + it.name.identifier.capitalizeFirstChar()))
+            }
         }.toSet()
     }
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(ADAPTIVE_PREDICATE)
+        register(DELEGATED_PREDICATE)
     }
 
     override fun getTopLevelCallableIds(): Set<CallableId> {
-        return if (matchedFunctions.isEmpty()) emptySet() else callableIdsForMatchedFunctions
+        return callableIdsForMatchedFunctions
     }
 
     override fun generateFunctions(callableId: CallableId, context: MemberGenerationContext?): List<FirNamedFunctionSymbol> {
