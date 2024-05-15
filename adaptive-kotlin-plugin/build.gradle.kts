@@ -11,11 +11,11 @@ plugins {
 }
 
 group = "hu.simplexion.adaptive"
+version = libs.versions.adaptive.get()
+
 val scmPath = "spxbhuhb/adaptive"
 
 tasks["clean"].dependsOn(gradle.includedBuild("adaptive-core").task(":clean"))
-
-val kotlin_version: String by project.properties
 
 repositories {
     mavenCentral()

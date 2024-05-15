@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "hu.simplexion.adaptive"
-version = libs.versions.adaptive
+version = libs.versions.adaptive.get()
 
 val baseName = "adaptive-exposed"
 val pomName = "Adaptive Exposed"

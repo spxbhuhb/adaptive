@@ -54,24 +54,24 @@ class EmailWorkerTest {
     fun basic() {
         wiser.messages.clear()
 
-        val adapter = server {
+        settings {
+            inline(
+                "EMAIL_HOST" to "localhost",
+                "EMAIL_PORT" to 2500,
+                "EMAIL_USERNAME" to "noreply@simplexion.hu",
+                "EMAIL_PASSWORD" to "helloworld",
+                "EMAIL_PROTOCOL" to "smtp",
+                "EMAIL_TLS" to false,
+                "EMAIL_AUTH" to true,
+                "EMAIL_RETRY_INTERVAL" to 5,
+                "EMAIL_RETRY_CHECK_INTERVAL" to 5000,
+                "EMAIL_LIVE" to false,
+                "EMAIL_DEBUG" to false,
+                "TEST_EMAIL" to "noreply@simplexion.hu"
+            )
+        }
 
-            settings {
-                inline(
-                    "EMAIL_HOST" to "localhost",
-                    "EMAIL_PORT" to 2500,
-                    "EMAIL_USERNAME" to "noreply@simplexion.hu",
-                    "EMAIL_PASSWORD" to "helloworld",
-                    "EMAIL_PROTOCOL" to "smtp",
-                    "EMAIL_TLS" to false,
-                    "EMAIL_AUTH" to true,
-                    "EMAIL_RETRY_INTERVAL" to 5,
-                    "EMAIL_RETRY_CHECK_INTERVAL" to 5000,
-                    "EMAIL_LIVE" to false,
-                    "EMAIL_DEBUG" to false,
-                    "TEST_EMAIL" to "noreply@simplexion.hu"
-                )
-            }
+        val adapter = server {
 
             worker { InMemoryDatabase() }
 
