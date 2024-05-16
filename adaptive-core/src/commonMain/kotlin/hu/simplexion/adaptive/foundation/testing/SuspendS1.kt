@@ -31,4 +31,12 @@ class AdaptiveSuspendS1<BT>(
         get() = state[0] as BoundSupportFunction
         set(v) { state[0] = v }
 
+    companion object : AdaptiveFragmentCompanion<TestNode> {
+
+        override val name = "hu.simplexion.adaptive.foundation.testing.AdaptiveSuspendS1"
+
+        override fun newInstance(parent: AdaptiveFragment<TestNode>, index: Int): AdaptiveFragment<TestNode> =
+            AdaptiveSuspendS1(parent.adapter, parent, index)
+
+    }
 }

@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.server
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveBridge
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
 import hu.simplexion.adaptive.server.builtin.AdaptiveService
 import hu.simplexion.adaptive.server.builtin.AdaptiveStore
 import hu.simplexion.adaptive.server.builtin.AdaptiveWorker
@@ -19,6 +20,8 @@ import kotlinx.coroutines.Dispatchers
 open class AdaptiveServerAdapter<BT>(
     wait : Boolean = false
 ) : AdaptiveAdapter<BT> {
+
+    override val fragmentFactory = AdaptiveFragmentFactory<BT>()
 
     var nextId = 1L
 

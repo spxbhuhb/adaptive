@@ -6,8 +6,7 @@ package hu.simplexion.adaptive.ui.dom
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveBridge
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.registry.AdaptiveFragmentImplRegistry
-import hu.simplexion.adaptive.ui.basic.BasicRegistry
+import hu.simplexion.adaptive.ui.basic.NodeFragmentFactory
 import hu.simplexion.adaptive.utility.vmNowMicro
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineDispatcher
@@ -21,7 +20,7 @@ open class AdaptiveDOMAdapter(
     val node: Node = requireNotNull(window.document.body) { "window.document.body is null or undefined" }
 ) : AdaptiveAdapter<Node> {
 
-    override val fragmentImplRegistry = BasicRegistry
+    override val fragmentFactory = NodeFragmentFactory
 
     var nextId = 1L
 

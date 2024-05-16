@@ -7,8 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import hu.simplexion.adaptive.foundation.AdaptiveAdapter
-import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.ui.android.adapter.AdaptiveViewFragment
 
 class AdaptiveText(
@@ -32,6 +31,15 @@ class AdaptiveText(
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
         }
+    }
+
+    companion object : AdaptiveFragmentCompanion<View> {
+
+        override val name = "hu.simplexion.adaptive.ui.basic.AdaptiveText"
+
+        override fun newInstance(parent: AdaptiveFragment<View>, index: Int): AdaptiveFragment<View> =
+            AdaptiveText(parent.adapter, parent, index)
+
     }
 
 }

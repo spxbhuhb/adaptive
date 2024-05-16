@@ -4,7 +4,6 @@
 package stuff
 
 import hu.simplexion.adaptive.foundation.*
-import hu.simplexion.adaptive.foundation.registry.*
 import hu.simplexion.adaptive.foundation.testing.*
 
 @AdaptiveExpect
@@ -24,6 +23,14 @@ class AdaptiveText<BT>(
 
     override fun genPatchInternal() = Unit
 
+    companion object : AdaptiveFragmentCompanion<TestNode> {
+
+        override val name = "stuff.AdaptiveText"
+
+        override fun newInstance(parent: AdaptiveFragment<TestNode>, index: Int): AdaptiveFragment<TestNode> =
+            AdaptiveText(parent.adapter, parent, index)
+
+    }
 }
 
 
@@ -31,7 +38,7 @@ fun box() : String {
 
     val adapter = AdaptiveTestAdapter()
 
-    adapter.fragmentImplRegistry += AdaptiveFragmentImplRegistryEntry("stuff.AdaptiveText") { a, p, i -> AdaptiveText(a, p, i) }
+    adapter.fragmentFactory.addAll(AdaptiveText)
 
     adaptive(adapter) {
         text()

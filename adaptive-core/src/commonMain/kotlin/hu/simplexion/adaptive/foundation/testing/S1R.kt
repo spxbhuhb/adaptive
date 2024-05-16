@@ -33,4 +33,12 @@ class AdaptiveS1R<BT>(
             state[0] = v
         }
 
+    companion object : AdaptiveFragmentCompanion<TestNode> {
+
+        override val name = "hu.simplexion.adaptive.foundation.testing.AdaptiveS1R"
+
+        override fun newInstance(parent: AdaptiveFragment<TestNode>, index: Int): AdaptiveFragment<TestNode> =
+            AdaptiveS1R(parent.adapter, parent, index)
+
+    }
 }

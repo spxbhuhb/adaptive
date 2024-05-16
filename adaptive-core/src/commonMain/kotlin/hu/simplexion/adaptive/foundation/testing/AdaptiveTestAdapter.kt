@@ -6,9 +6,7 @@ package hu.simplexion.adaptive.foundation.testing
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveBridge
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.registry.AdaptiveBindingImplRegistry
-import hu.simplexion.adaptive.foundation.registry.AdaptiveFragmentImplRegistry
-import hu.simplexion.adaptive.utility.Lock
+import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
 import hu.simplexion.adaptive.utility.getLock
 import hu.simplexion.adaptive.utility.use
 import hu.simplexion.adaptive.utility.vmNowMicro
@@ -23,7 +21,7 @@ class AdaptiveTestAdapter(
 
     var nextId = 1L
 
-    override val fragmentImplRegistry = AdaptiveFragmentImplRegistry<TestNode>()
+    override val fragmentFactory = TestNodeFragmentFactory
 
     override lateinit var rootFragment: AdaptiveFragment<TestNode>
 

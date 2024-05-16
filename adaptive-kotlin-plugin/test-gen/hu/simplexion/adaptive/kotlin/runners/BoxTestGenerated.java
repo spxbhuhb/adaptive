@@ -39,339 +39,339 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Nested
-    @TestMetadata("testData/box/base")
+    @TestMetadata("testData/box/foundation")
     @TestDataPath("$PROJECT_ROOT")
-    public class Base {
+    public class Foundation {
         @Test
-        public void testAllFilesPresentInBase() throws Exception {
-            KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/base"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+        public void testAllFilesPresentInFoundation() throws Exception {
+            KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
         }
 
         @Test
         @TestMetadata("basic.kt")
         public void testBasic() throws Exception {
-            runTest("testData/box/base/basic.kt");
+            runTest("testData/box/foundation/basic.kt");
         }
 
         @Test
         @TestMetadata("emptyComponent.kt")
         public void testEmptyComponent() throws Exception {
-            runTest("testData/box/base/emptyComponent.kt");
+            runTest("testData/box/foundation/emptyComponent.kt");
         }
 
         @Test
         @TestMetadata("emptyEntry.kt")
         public void testEmptyEntry() throws Exception {
-            runTest("testData/box/base/emptyEntry.kt");
+            runTest("testData/box/foundation/emptyEntry.kt");
         }
 
         @Test
         @TestMetadata("root.kt")
         public void testRoot() throws Exception {
-            runTest("testData/box/base/root.kt");
+            runTest("testData/box/foundation/root.kt");
         }
 
         @Nested
-        @TestMetadata("testData/box/base/call")
+        @TestMetadata("testData/box/foundation/call")
         @TestDataPath("$PROJECT_ROOT")
         public class Call {
             @Test
             @TestMetadata("accessBinding.kt")
             public void testAccessBinding() throws Exception {
-                runTest("testData/box/base/call/accessBinding.kt");
+                runTest("testData/box/foundation/call/accessBinding.kt");
             }
 
             @Test
             public void testAllFilesPresentInCall() throws Exception {
-                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/base/call"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/call"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
             }
 
             @Test
             @TestMetadata("higherOrder.kt")
             public void testHigherOrder() throws Exception {
-                runTest("testData/box/base/call/higherOrder.kt");
+                runTest("testData/box/foundation/call/higherOrder.kt");
             }
 
             @Test
             @TestMetadata("propertyAccessBinding.kt")
             public void testPropertyAccessBinding() throws Exception {
-                runTest("testData/box/base/call/propertyAccessBinding.kt");
+                runTest("testData/box/foundation/call/propertyAccessBinding.kt");
             }
 
             @Test
             @TestMetadata("withDefault.kt")
             public void testWithDefault() throws Exception {
-                runTest("testData/box/base/call/withDefault.kt");
+                runTest("testData/box/foundation/call/withDefault.kt");
             }
         }
 
         @Nested
-        @TestMetadata("testData/box/base/expect")
+        @TestMetadata("testData/box/foundation/expect")
         @TestDataPath("$PROJECT_ROOT")
         public class Expect {
             @Test
             public void testAllFilesPresentInExpect() throws Exception {
-                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/base/expect"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/expect"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
             }
 
             @Test
             @TestMetadata("basic.kt")
             public void testBasic() throws Exception {
-                runTest("testData/box/base/expect/basic.kt");
+                runTest("testData/box/foundation/expect/basic.kt");
             }
         }
 
         @Nested
-        @TestMetadata("testData/box/base/helpers")
+        @TestMetadata("testData/box/foundation/helpers")
         @TestDataPath("$PROJECT_ROOT")
         public class Helpers {
             @Test
             @TestMetadata("adapter.kt")
             public void testAdapter() throws Exception {
-                runTest("testData/box/base/helpers/adapter.kt");
+                runTest("testData/box/foundation/helpers/adapter.kt");
             }
 
             @Test
             public void testAllFilesPresentInHelpers() throws Exception {
-                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/base/helpers"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/helpers"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
             }
 
             @Test
             @TestMetadata("fragment.kt")
             public void testFragment() throws Exception {
-                runTest("testData/box/base/helpers/fragment.kt");
+                runTest("testData/box/foundation/helpers/fragment.kt");
             }
 
             @Test
             @TestMetadata("thisState.kt")
             public void testThisState() throws Exception {
-                runTest("testData/box/base/helpers/thisState.kt");
+                runTest("testData/box/foundation/helpers/thisState.kt");
             }
         }
 
         @Nested
-        @TestMetadata("testData/box/base/loop")
+        @TestMetadata("testData/box/foundation/loop")
         @TestDataPath("$PROJECT_ROOT")
         public class Loop {
             @Test
             public void testAllFilesPresentInLoop() throws Exception {
-                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/base/loop"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/loop"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
             }
 
             @Test
             @TestMetadata("basic.kt")
             public void testBasic() throws Exception {
-                runTest("testData/box/base/loop/basic.kt");
+                runTest("testData/box/foundation/loop/basic.kt");
             }
 
             @Test
             @TestMetadata("list.kt")
             public void testList() throws Exception {
-                runTest("testData/box/base/loop/list.kt");
+                runTest("testData/box/foundation/loop/list.kt");
             }
 
             @Test
             @TestMetadata("patch.kt")
             public void testPatch() throws Exception {
-                runTest("testData/box/base/loop/patch.kt");
+                runTest("testData/box/foundation/loop/patch.kt");
             }
         }
 
         @Nested
-        @TestMetadata("testData/box/base/producer")
+        @TestMetadata("testData/box/foundation/producer")
         @TestDataPath("$PROJECT_ROOT")
         public class Producer {
             @Test
             public void testAllFilesPresentInProducer() throws Exception {
-                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/base/producer"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/producer"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
             }
 
             @Test
             @TestMetadata("poll.kt")
             public void testPoll() throws Exception {
-                runTest("testData/box/base/producer/poll.kt");
+                runTest("testData/box/foundation/producer/poll.kt");
             }
         }
 
         @Nested
-        @TestMetadata("testData/box/base/select")
+        @TestMetadata("testData/box/foundation/select")
         @TestDataPath("$PROJECT_ROOT")
         public class Select {
             @Test
             public void testAllFilesPresentInSelect() throws Exception {
-                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/base/select"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/select"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
             }
 
             @Test
             @TestMetadata("ifElse.kt")
             public void testIfElse() throws Exception {
-                runTest("testData/box/base/select/ifElse.kt");
+                runTest("testData/box/foundation/select/ifElse.kt");
             }
 
             @Test
             @TestMetadata("ifElsePatch.kt")
             public void testIfElsePatch() throws Exception {
-                runTest("testData/box/base/select/ifElsePatch.kt");
+                runTest("testData/box/foundation/select/ifElsePatch.kt");
             }
 
             @Test
             @TestMetadata("ifOnlyFalse.kt")
             public void testIfOnlyFalse() throws Exception {
-                runTest("testData/box/base/select/ifOnlyFalse.kt");
+                runTest("testData/box/foundation/select/ifOnlyFalse.kt");
             }
 
             @Test
             @TestMetadata("ifOnlyTrue.kt")
             public void testIfOnlyTrue() throws Exception {
-                runTest("testData/box/base/select/ifOnlyTrue.kt");
+                runTest("testData/box/foundation/select/ifOnlyTrue.kt");
             }
 
             @Test
             @TestMetadata("whenNoSubjectElse.kt")
             public void testWhenNoSubjectElse() throws Exception {
-                runTest("testData/box/base/select/whenNoSubjectElse.kt");
+                runTest("testData/box/foundation/select/whenNoSubjectElse.kt");
             }
 
             @Test
             @TestMetadata("whenNoSubjectNoElse.kt")
             public void testWhenNoSubjectNoElse() throws Exception {
-                runTest("testData/box/base/select/whenNoSubjectNoElse.kt");
+                runTest("testData/box/foundation/select/whenNoSubjectNoElse.kt");
             }
 
             @Test
             @TestMetadata("whenSubjectCalc.kt")
             public void testWhenSubjectCalc() throws Exception {
-                runTest("testData/box/base/select/whenSubjectCalc.kt");
+                runTest("testData/box/foundation/select/whenSubjectCalc.kt");
             }
 
             @Test
             @TestMetadata("whenSubjectConditions.kt")
             public void testWhenSubjectConditions() throws Exception {
-                runTest("testData/box/base/select/whenSubjectConditions.kt");
+                runTest("testData/box/foundation/select/whenSubjectConditions.kt");
             }
         }
 
         @Nested
-        @TestMetadata("testData/box/base/sequence")
+        @TestMetadata("testData/box/foundation/sequence")
         @TestDataPath("$PROJECT_ROOT")
         public class Sequence {
             @Test
             public void testAllFilesPresentInSequence() throws Exception {
-                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/base/sequence"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/sequence"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
             }
 
             @Test
             @TestMetadata("inHigherOrder.kt")
             public void testInHigherOrder() throws Exception {
-                runTest("testData/box/base/sequence/inHigherOrder.kt");
+                runTest("testData/box/foundation/sequence/inHigherOrder.kt");
             }
 
             @Test
             @TestMetadata("sequence.kt")
             public void testSequence() throws Exception {
-                runTest("testData/box/base/sequence/sequence.kt");
+                runTest("testData/box/foundation/sequence/sequence.kt");
             }
         }
 
         @Nested
-        @TestMetadata("testData/box/base/support")
+        @TestMetadata("testData/box/foundation/support")
         @TestDataPath("$PROJECT_ROOT")
         public class Support {
             @Test
             public void testAllFilesPresentInSupport() throws Exception {
-                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/base/support"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/support"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
             }
 
             @Test
             @TestMetadata("supportFunctionCallOut.kt")
             public void testSupportFunctionCallOut() throws Exception {
-                runTest("testData/box/base/support/supportFunctionCallOut.kt");
+                runTest("testData/box/foundation/support/supportFunctionCallOut.kt");
             }
 
             @Test
             @TestMetadata("supportFunctionFromRoot.kt")
             public void testSupportFunctionFromRoot() throws Exception {
-                runTest("testData/box/base/support/supportFunctionFromRoot.kt");
+                runTest("testData/box/foundation/support/supportFunctionFromRoot.kt");
             }
 
             @Test
             @TestMetadata("supportFunctionOutreach.kt")
             public void testSupportFunctionOutreach() throws Exception {
-                runTest("testData/box/base/support/supportFunctionOutreach.kt");
+                runTest("testData/box/foundation/support/supportFunctionOutreach.kt");
             }
 
             @Test
             @TestMetadata("supportFunctionReturn.kt")
             public void testSupportFunctionReturn() throws Exception {
-                runTest("testData/box/base/support/supportFunctionReturn.kt");
+                runTest("testData/box/foundation/support/supportFunctionReturn.kt");
             }
 
             @Test
             @TestMetadata("supportFunctionStateUpdate.kt")
             public void testSupportFunctionStateUpdate() throws Exception {
-                runTest("testData/box/base/support/supportFunctionStateUpdate.kt");
+                runTest("testData/box/foundation/support/supportFunctionStateUpdate.kt");
             }
 
             @Test
             @TestMetadata("supportFunctionSuspend.kt")
             public void testSupportFunctionSuspend() throws Exception {
-                runTest("testData/box/base/support/supportFunctionSuspend.kt");
+                runTest("testData/box/foundation/support/supportFunctionSuspend.kt");
             }
         }
 
         @Nested
-        @TestMetadata("testData/box/base/transform")
+        @TestMetadata("testData/box/foundation/transform")
         @TestDataPath("$PROJECT_ROOT")
         public class Transform {
             @Test
             public void testAllFilesPresentInTransform() throws Exception {
-                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/base/transform"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/transform"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
             }
 
             @Test
             @TestMetadata("basic.kt")
             public void testBasic() throws Exception {
-                runTest("testData/box/base/transform/basic.kt");
+                runTest("testData/box/foundation/transform/basic.kt");
             }
         }
 
         @Nested
-        @TestMetadata("testData/box/base/variables")
+        @TestMetadata("testData/box/foundation/variables")
         @TestDataPath("$PROJECT_ROOT")
         public class Variables {
             @Test
             public void testAllFilesPresentInVariables() throws Exception {
-                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/base/variables"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/variables"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
             }
 
             @Test
             @TestMetadata("basic.kt")
             public void testBasic() throws Exception {
-                runTest("testData/box/base/variables/basic.kt");
+                runTest("testData/box/foundation/variables/basic.kt");
             }
 
             @Test
             @TestMetadata("many.kt")
             public void testMany() throws Exception {
-                runTest("testData/box/base/variables/many.kt");
+                runTest("testData/box/foundation/variables/many.kt");
             }
 
             @Test
             @TestMetadata("onlyExternal.kt")
             public void testOnlyExternal() throws Exception {
-                runTest("testData/box/base/variables/onlyExternal.kt");
+                runTest("testData/box/foundation/variables/onlyExternal.kt");
             }
 
             @Test
             @TestMetadata("onlyInternal.kt")
             public void testOnlyInternal() throws Exception {
-                runTest("testData/box/base/variables/onlyInternal.kt");
+                runTest("testData/box/foundation/variables/onlyInternal.kt");
             }
 
             @Test
             @TestMetadata("variables.kt")
             public void testVariables() throws Exception {
-                runTest("testData/box/base/variables/variables.kt");
+                runTest("testData/box/foundation/variables/variables.kt");
             }
         }
     }

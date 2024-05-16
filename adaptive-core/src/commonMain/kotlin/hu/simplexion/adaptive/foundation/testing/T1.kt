@@ -5,10 +5,7 @@
 
 package hu.simplexion.adaptive.foundation.testing
 
-import hu.simplexion.adaptive.foundation.Adaptive
-import hu.simplexion.adaptive.foundation.AdaptiveAdapter
-import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.manualImplementation
+import hu.simplexion.adaptive.foundation.*
 
 @Adaptive
 @Suppress("unused", "FunctionName")
@@ -27,5 +24,14 @@ class AdaptiveT1<BT>(
     override fun genPatchDescendant(fragment: AdaptiveFragment<BT>) = Unit
 
     override fun genPatchInternal() = Unit
+
+    companion object : AdaptiveFragmentCompanion<TestNode> {
+
+        override val name = "hu.simplexion.adaptive.foundation.testing.AdaptiveT1"
+
+        override fun newInstance(parent: AdaptiveFragment<TestNode>, index: Int): AdaptiveFragment<TestNode> =
+            AdaptiveT1(parent.adapter, parent, index)
+
+    }
 
 }
