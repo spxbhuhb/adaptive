@@ -27,7 +27,7 @@ class AdaptiveText(
 
     companion object : AdaptiveFragmentCompanion<Node> {
 
-        override val name = "hu.simplexion.adaptive.ui.basic.AdaptiveText"
+        override val fragmentType = "hu.simplexion.adaptive.ui.basic.AdaptiveText"
 
         override fun newInstance(parent: AdaptiveFragment<Node>, index: Int): AdaptiveFragment<Node> =
             AdaptiveText(parent.adapter, parent, index)

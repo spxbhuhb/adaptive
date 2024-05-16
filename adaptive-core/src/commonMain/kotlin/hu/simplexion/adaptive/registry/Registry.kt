@@ -14,4 +14,6 @@ open class Registry<T> {
 
     operator fun get(key: String): T? = entries[key]
 
+    operator fun contains(key: String): Boolean = key in entries
+
 }

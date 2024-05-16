@@ -4,6 +4,7 @@
 package hu.simplexion.adaptive.kotlin.foundation
 
 import hu.simplexion.adaptive.kotlin.common.NamesBase
+import hu.simplexion.adaptive.kotlin.service.FqNames.fqName
 import org.jetbrains.kotlin.name.FqName
 
 object Strings {
@@ -18,6 +19,7 @@ object Strings {
     const val ADAPTIVE_ROOT = "AdaptiveRoot"
     const val ADAPTIVE_ANONYMOUS = "AdaptiveAnonymous"
     const val ADAPTIVE_FRAGMENT = "AdaptiveFragment"
+    const val ADAPTIVE_FRAGMENT_COMPANION = "AdaptiveFragmentCompanion"
     const val ADAPTIVE_CLOSURE = "AdaptiveClosure"
     const val ADAPTIVE_ADAPTER = "AdaptiveAdapter"
     const val ADAPTIVE_SEQUENCE = "AdaptiveSequence"
@@ -64,6 +66,7 @@ object Strings {
     const val HELPER_THIS_STATE = "thisState"
 
     const val ADAPTIVE_EXPECT = "AdaptiveExpect"
+    const val ADAPTIVE_FRAGMENT_COMPANION_COLLECTOR = "AdaptiveFragmentCompanionCollector"
     const val MANUAL_IMPLEMENTATION = "manualImplementation"
     const val ACTUALIZE = "actualize"
 
@@ -74,26 +77,21 @@ object Strings {
 
     const val KOTLIN_INVOKE = "invoke"
 
-    const val CLASS_FUNCTION_PREFIX = "acf_"
+    const val COMPANION = "Companion"
+    const val ADD_ALL = "addAll"
+    const val FRAGMENT_TYPE = "fragmentType"
+    const val NEW_INSTANCE = "newInstance"
 }
 
 object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val PARENT = Strings.PARENT.name()
     val INDEX = Strings.INDEX.name()
     val ADAPTER = Strings.ADAPTER.name()
-    val FRAGMENT = Strings.FRAGMENT.name()
-    val SUPPORT_FUNCTION = Strings.SUPPORT_FUNCTION.name()
-    val ARGUMENTS = Strings.ARGUMENTS.name()
     val HELPER_ADAPTER = Strings.HELPER_ADAPTER.name()
     val BT = Strings.BT.name()
     val KOTLIN_INVOKE = Strings.KOTLIN_INVOKE.name()
-
-    val GEN_BUILD = Strings.GEN_BUILD.name()
-    val GEN_PATCH_DESCENDANT = Strings.GEN_PATCH_DESCENDANT.name()
-    val GEN_INVOKE = Strings.GEN_INVOKE.name()
-    val GEN_INVOKE_SUSPEND = Strings.GEN_INVOKE_SUSPEND.name()
-
-    val CLASS_FUNCTION_PREFIX = Strings.CLASS_FUNCTION_PREFIX.name()
+    val FRAGMENT_TYPE = Strings.FRAGMENT_TYPE.name()
+    val COMPANION = Strings.COMPANION.name()
 }
 
 object FqNames {
@@ -105,6 +103,8 @@ object FqNames {
     val ADAPTIVE_SEQUENCE = Strings.ADAPTIVE_SEQUENCE.structural()
     val ADAPTIVE_SELECT = Strings.ADAPTIVE_SELECT.structural()
     val ADAPTIVE_LOOP = Strings.ADAPTIVE_LOOP.structural()
+
+    val ADAPTIVE_FRAGMENT_COMPANION_COLLECTOR = Strings.ADAPTIVE_FRAGMENT_COMPANION_COLLECTOR.runtime()
 }
 
 object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
@@ -114,6 +114,7 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
 
     val ADAPTIVE = Strings.ADAPTIVE.classId()
     val ADAPTIVE_FRAGMENT = Strings.ADAPTIVE_FRAGMENT.classId()
+    val ADAPTIVE_FRAGMENT_COMPANION = Strings.ADAPTIVE_FRAGMENT_COMPANION.classId()
     val ADAPTIVE_ADAPTER = Strings.ADAPTIVE_ADAPTER.classId()
 
     val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.classId { STRUCTURAL }
@@ -127,6 +128,7 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAPTIVE_TRANSFORM_INTERFACE = Strings.ADAPTIVE_TRANSFORM_INTERFACE.classId()
 
     val ADAPTIVE_EXPECT = Strings.ADAPTIVE_EXPECT.classId()
+    val ADAPTIVE_FRAGMENT_COMPANION_COLLECTOR = Strings.ADAPTIVE_FRAGMENT_COMPANION_COLLECTOR.classId()
 }
 
 object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {

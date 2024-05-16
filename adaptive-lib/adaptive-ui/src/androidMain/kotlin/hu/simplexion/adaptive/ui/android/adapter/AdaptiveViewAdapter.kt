@@ -10,7 +10,7 @@ import android.view.ViewStub
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveBridge
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.ui.android.basic.BasicRegistry
+import hu.simplexion.adaptive.ui.android.basic.ViewFragmentFactory
 import hu.simplexion.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +21,7 @@ open class AdaptiveViewAdapter(
     override val trace : Boolean = false
 ) : AdaptiveAdapter<View> {
 
-    override val fragmentImplRegistry = BasicRegistry
+    override val fragmentFactory = ViewFragmentFactory
 
     var nextId = 1L
 

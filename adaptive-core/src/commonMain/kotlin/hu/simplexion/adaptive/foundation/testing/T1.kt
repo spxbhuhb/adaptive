@@ -27,7 +27,7 @@ class AdaptiveT1<BT>(
 
     companion object : AdaptiveFragmentCompanion<TestNode> {
 
-        override val name = "hu.simplexion.adaptive.foundation.testing.AdaptiveT1"
+        override val fragmentType = "hu.simplexion.adaptive.foundation.testing.AdaptiveT1"
 
         override fun newInstance(parent: AdaptiveFragment<TestNode>, index: Int): AdaptiveFragment<TestNode> =
             AdaptiveT1(parent.adapter, parent, index)

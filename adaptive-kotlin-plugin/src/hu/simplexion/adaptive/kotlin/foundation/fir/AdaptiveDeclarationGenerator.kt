@@ -4,72 +4,57 @@
 
 package hu.simplexion.adaptive.kotlin.foundation.fir
 
-import hu.simplexion.adaptive.kotlin.foundation.FoundationPluginKey
 import hu.simplexion.adaptive.kotlin.foundation.ClassIds
-import hu.simplexion.adaptive.kotlin.foundation.Names
-import hu.simplexion.adaptive.kotlin.foundation.Strings
-import hu.simplexion.adaptive.kotlin.foundation.ir.util.capitalizeFirstChar
+import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.fir.FirSession
-import org.jetbrains.kotlin.fir.extensions.*
+import org.jetbrains.kotlin.fir.declarations.utils.visibility
+import org.jetbrains.kotlin.fir.extensions.FirDeclarationGenerationExtension
+import org.jetbrains.kotlin.fir.extensions.FirDeclarationPredicateRegistrar
 import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
-import org.jetbrains.kotlin.fir.plugin.createTopLevelFunction
+import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
+import org.jetbrains.kotlin.fir.symbols.impl.FirClassSymbol
 import org.jetbrains.kotlin.fir.symbols.impl.FirNamedFunctionSymbol
-import org.jetbrains.kotlin.fir.types.ConeStarProjection
-import org.jetbrains.kotlin.fir.types.coneType
-import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.name.CallableId
-import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.name.ClassId
 
 // @OptIn(ExperimentalTopLevelDeclarationsGenerationApi::class) // uncomment for 2.0.0-RC2
 class AdaptiveDeclarationGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
-    val adapterType = ClassIds.ADAPTIVE_ADAPTER.constructClassLikeType(arrayOf(ConeStarProjection), false)
-    val fragmentType = ClassIds.ADAPTIVE_FRAGMENT.constructClassLikeType(arrayOf(ConeStarProjection), false)
-    val intType = session.builtinTypes.intType.coneType
+    companion object {
+        // TODO verify that collecting functions in FIR for companion collector is correct
+        //
+        // https://kotlinlang.slack.com/archives/C7L3JB43G/p1704374619907359
+        //
+        // Q: Would it be safe to pass data between the FIR and backend IR parts of a plugin? Are there any considerations to pay attention to? My plugin builds a representation of the code and it would be a waste to build it twice.
+        // A: It's safe if you can guarantee that you definitely collect all the information before reading it at the backend
+        //
+        // However, I don't know if collecting it with the predicate provides that guarantee or not.
+
+        val adaptiveFunctions = mutableSetOf<CallableId>()
+
+    }
 
     val ADAPTIVE_PREDICATE = LookupPredicate.create { annotated(ClassIds.ADAPTIVE.asSingleFqName()) }
     val ADAPTIVE_EXPECT_PREDICATE = LookupPredicate.create { annotated(ClassIds.ADAPTIVE_EXPECT.asSingleFqName()) }
 
     private val predicateBasedProvider = session.predicateBasedProvider
 
-    private val matchedFunctions by lazy {
-        predicateBasedProvider
-            .getSymbolsByPredicate(ADAPTIVE_PREDICATE)
-            .filterIsInstance<FirNamedFunctionSymbol>()
-    }
-
-    private val callableIdsForMatchedFunctions: Set<CallableId> by lazy {
-        matchedFunctions.mapNotNull {
-            // do not generate class function for expect fragment definitions, those are supposed to be manually coded
-            if (session.predicateBasedProvider.matches(ADAPTIVE_EXPECT_PREDICATE, it)) {
-                null
-            } else {
-                CallableId(it.callableId.packageName, Name.identifier(Strings.CLASS_FUNCTION_PREFIX + it.name.identifier.capitalizeFirstChar()))
-            }
-        }.toSet()
-    }
-
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(ADAPTIVE_PREDICATE)
         register(ADAPTIVE_EXPECT_PREDICATE)
     }
 
-    override fun getTopLevelCallableIds(): Set<CallableId> {
-        return callableIdsForMatchedFunctions
-    }
+    override fun getTopLevelClassIds(): Set<ClassId> {
 
-    override fun generateFunctions(callableId: CallableId, context: MemberGenerationContext?): List<FirNamedFunctionSymbol> {
-        return listOf(
-            createTopLevelFunction(
-                FoundationPluginKey,
-                callableId,
-                fragmentType,
-            ) {
-                valueParameter(Names.ADAPTER, adapterType)
-                valueParameter(Names.PARENT, fragmentType)
-                valueParameter(Names.INDEX, intType)
-            }.symbol
+        adaptiveFunctions.addAll(
+            predicateBasedProvider
+                .getSymbolsByPredicate(ADAPTIVE_PREDICATE)
+                .filterNot { predicateBasedProvider.matches(ADAPTIVE_EXPECT_PREDICATE, it) }
+                .filterIsInstance<FirNamedFunctionSymbol>()
+                .map { it.callableId }
         )
+
+        return emptySet()
     }
 
 }

@@ -25,7 +25,7 @@ class AdaptiveText<BT>(
 
     companion object : AdaptiveFragmentCompanion<TestNode> {
 
-        override val name = "stuff.AdaptiveText"
+        override val fragmentType = "stuff.AdaptiveText"
 
         override fun newInstance(parent: AdaptiveFragment<TestNode>, index: Int): AdaptiveFragment<TestNode> =
             AdaptiveText(parent.adapter, parent, index)

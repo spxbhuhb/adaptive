@@ -33,30 +33,9 @@ interface IrClassBaseBuilder : AbstractIrBuilder {
             modality = Modality.FINAL
             customizer()
         }.also {
-            thisReceiver(it)
+            it.thisReceiver()
             constructor(it)
             initializer(it)
-        }
-
-
-    private fun thisReceiver(klass: IrClass): IrValueParameter =
-
-        irFactory.createValueParameter(
-            SYNTHETIC_OFFSET,
-            SYNTHETIC_OFFSET,
-            IrDeclarationOrigin.INSTANCE_RECEIVER,
-            symbol = IrValueParameterSymbolImpl(),
-            name = SpecialNames.THIS,
-            index = UNDEFINED_PARAMETER_INDEX,
-            type = IrSimpleTypeImpl(klass.symbol, false, emptyList(), emptyList()),
-            varargElementType = null,
-            isCrossinline = false,
-            isNoinline = false,
-            isHidden = false,
-            isAssignable = false
-        ).also {
-            it.parent = klass
-            klass.thisReceiver = it
         }
 
     fun constructor(klass: IrClass): IrConstructor =

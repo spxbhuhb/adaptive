@@ -10,7 +10,7 @@ open class AdaptiveFragmentFactory<BT> : Registry<AdaptiveFragmentCompanion<BT>>
 
     fun addAll(vararg companions : AdaptiveFragmentCompanion<BT>) {
         for (companion in companions) {
-            set(companion.name, companion)
+            set(companion.fragmentType, companion)
         }
     }
 

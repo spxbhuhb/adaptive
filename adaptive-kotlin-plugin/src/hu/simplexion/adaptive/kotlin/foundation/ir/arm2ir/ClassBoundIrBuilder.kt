@@ -72,15 +72,10 @@ open class ClassBoundIrBuilder(
             return irConstructorCallFromBuild(buildFun, classSymbol, argumentCount)
         }
 
-        val callableId = CallableId(target.parent(), Name.identifier(Strings.CLASS_FUNCTION_PREFIX + target.shortName().identifier))
-        val functionSymbol = pluginContext.irContext.referenceFunctions(callableId).firstOrNull()
-
-        check(functionSymbol != null) { "cannot find class or class function for $target" }
-
         return irCall(
-            functionSymbol,
-            null,
+            pluginContext.adapterActualizeFun,
             irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)),
+            irConst(target.asString()),
             irGet(buildFun.valueParameters[Indices.BUILD_PARENT]),
             irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX])
         )

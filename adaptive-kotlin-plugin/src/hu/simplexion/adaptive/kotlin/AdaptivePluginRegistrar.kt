@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.kotlin
 
 import hu.simplexion.adaptive.kotlin.adat.fir.AdatDeclarationGenerator
 import hu.simplexion.adaptive.kotlin.adat.fir.AdatSupertypeGenerator
+import hu.simplexion.adaptive.kotlin.foundation.fir.AdaptiveDeclarationGenerator
 import hu.simplexion.adaptive.kotlin.service.fir.ServicesDeclarationGenerator
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
 
@@ -14,7 +15,6 @@ class AdaptivePluginRegistrar : FirExtensionRegistrar() {
         + ::ServicesDeclarationGenerator
         + ::AdatDeclarationGenerator
         + ::AdatSupertypeGenerator
-        // TODO The number of source files (19) does not match the number of IrFiles (20)
-        //  - + ::AdaptiveDeclarationGenerator
+        // + ::AdaptiveDeclarationGenerator
     }
 }

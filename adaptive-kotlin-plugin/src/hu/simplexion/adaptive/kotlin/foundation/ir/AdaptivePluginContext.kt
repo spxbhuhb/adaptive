@@ -11,6 +11,7 @@ import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmClass
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmEntryPoint
 import hu.simplexion.adaptive.kotlin.common.AbstractPluginContext
 import hu.simplexion.adaptive.kotlin.common.functionByName
+import hu.simplexion.adaptive.kotlin.common.property
 import hu.simplexion.adaptive.kotlin.common.propertyGetter
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrClass
@@ -40,6 +41,10 @@ class AdaptivePluginContext(
     val adaptiveAdapterClass = ClassIds.ADAPTIVE_ADAPTER.classSymbol()
     val adaptiveClosureClass = ClassIds.ADAPTIVE_CLOSURE.classSymbol()
 
+    val adaptiveFragmentCompanionClass = ClassIds.ADAPTIVE_FRAGMENT_COMPANION.classSymbol()
+    val fragmentType = adaptiveFragmentCompanionClass.property { Strings.FRAGMENT_TYPE }.symbol
+    val newInstance = adaptiveFragmentCompanionClass.functionByName { Strings.NEW_INSTANCE }
+
     val adaptiveAnonymousClass = ClassIds.ADAPTIVE_ANONYMOUS.classSymbol()
 
     val boundFragmentFactoryClass = ClassIds.ADAPTIVE_FRAGMENT_FACTORY.classSymbol()
@@ -54,6 +59,7 @@ class AdaptivePluginContext(
 
     val adaptiveTransformInterfaceClass = ClassIds.ADAPTIVE_TRANSFORM_INTERFACE.classSymbol()
 
+    val adapter = Strings.ADAPTER.fragmentPropertyList().single().owner
     val index = Strings.INDEX.fragmentPropertyList()
     val parent = Strings.PARENT.fragmentPropertyList()
 

@@ -7,6 +7,7 @@ import hu.simplexion.adaptive.kotlin.foundation.ir.AdaptivePluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm.BoundaryVisitor
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.adaptiveClassFqName
 import org.jetbrains.kotlin.ir.IrStatement
+import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.util.statements
@@ -16,6 +17,8 @@ class ArmClass(
     val originalFunction: IrFunction,
     val isRoot : Boolean
 ) : ArmElement {
+
+    lateinit var irClass: IrClass
 
     val fqName = originalFunction.adaptiveClassFqName()
     val name = fqName.shortName()
@@ -35,4 +38,5 @@ class ArmClass(
     var hasInvokeSuspendBranch = false
 
     var stateInterface : IrClassSymbol? = null
+
 }

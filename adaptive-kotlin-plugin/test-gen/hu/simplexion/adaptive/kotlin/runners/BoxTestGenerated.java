@@ -106,6 +106,28 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Nested
+        @TestMetadata("testData/box/foundation/collector")
+        @TestDataPath("$PROJECT_ROOT")
+        public class Collector {
+            @Test
+            public void testAllFilesPresentInCollector() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/collector"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            }
+
+            @Test
+            @TestMetadata("basic.kt")
+            public void testBasic() throws Exception {
+                runTest("testData/box/foundation/collector/basic.kt");
+            }
+
+            @Test
+            @TestMetadata("visibility.kt")
+            public void testVisibility() throws Exception {
+                runTest("testData/box/foundation/collector/visibility.kt");
+            }
+        }
+
+        @Nested
         @TestMetadata("testData/box/foundation/expect")
         @TestDataPath("$PROJECT_ROOT")
         public class Expect {
@@ -115,9 +137,9 @@ public class BoxTestGenerated extends AbstractBoxTest {
             }
 
             @Test
-            @TestMetadata("basic.kt")
-            public void testBasic() throws Exception {
-                runTest("testData/box/foundation/expect/basic.kt");
+            @TestMetadata("expect.kt")
+            public void testExpect() throws Exception {
+                runTest("testData/box/foundation/expect/expect.kt");
             }
         }
 

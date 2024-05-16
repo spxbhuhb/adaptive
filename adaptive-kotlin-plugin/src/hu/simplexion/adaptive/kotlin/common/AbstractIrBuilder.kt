@@ -15,6 +15,7 @@ import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.*
 import org.jetbrains.kotlin.ir.symbols.*
+import org.jetbrains.kotlin.ir.symbols.impl.IrValueParameterSymbolImpl
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.getPrimitiveType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
@@ -24,6 +25,7 @@ import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.ir.util.getPrimitiveArrayElementType
 import org.jetbrains.kotlin.ir.util.parentAsClass
 import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.name.SpecialNames
 import org.jetbrains.kotlin.util.OperatorNameConventions
 
 interface AbstractIrBuilder {
@@ -38,6 +40,29 @@ interface AbstractIrBuilder {
 
     val irBuiltIns
         get() = irContext.irBuiltIns
+
+    // --------------------------------------------------------------------------------------------------------
+    // Classes
+    // --------------------------------------------------------------------------------------------------------
+
+    fun IrClass.thisReceiver(): IrValueParameter =
+        irFactory.createValueParameter(
+            SYNTHETIC_OFFSET,
+            SYNTHETIC_OFFSET,
+            IrDeclarationOrigin.INSTANCE_RECEIVER,
+            symbol = IrValueParameterSymbolImpl(),
+            name = SpecialNames.THIS,
+            index = UNDEFINED_PARAMETER_INDEX,
+            type = IrSimpleTypeImpl(symbol, false, emptyList(), emptyList()),
+            varargElementType = null,
+            isCrossinline = false,
+            isNoinline = false,
+            isHidden = false,
+            isAssignable = false
+        ).also {
+            it.parent = this
+            this.thisReceiver = it
+        }
 
     // --------------------------------------------------------------------------------------------------------
     // Properties

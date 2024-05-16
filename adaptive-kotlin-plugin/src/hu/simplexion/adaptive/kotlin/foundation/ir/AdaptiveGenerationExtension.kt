@@ -38,7 +38,7 @@ internal class AdaptiveGenerationExtension(
                     it.armClass.originalFunction.file.addChild(it.irClass)
                 }
 
-            moduleFragment.accept(ClassFunctionTransform(this), null)
+            moduleFragment.accept(FragmentCollectorTransform(this), null)
 
             armEntryPoints
                 .forEach { ArmEntryPointBuilder(this, it).entryPointBody() }
