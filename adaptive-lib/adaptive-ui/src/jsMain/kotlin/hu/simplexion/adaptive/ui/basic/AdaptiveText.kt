@@ -25,16 +25,4 @@ class AdaptiveText(
         }
     }
 
-    override fun remove(child: AdaptiveBridge<Node>) {
-        throw IllegalStateException()
-    }
-
-    override fun replace(oldChild: AdaptiveBridge<Node>, newChild: AdaptiveBridge<Node>) {
-        throw IllegalStateException()
-    }
-
-    override fun add(child: AdaptiveBridge<Node>) {
-        throw IllegalStateException()
-    }
-
 }

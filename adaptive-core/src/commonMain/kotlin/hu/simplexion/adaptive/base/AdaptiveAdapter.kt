@@ -23,7 +23,7 @@ interface AdaptiveAdapter<BT> {
     val startedAt: Long
 
     fun actualize(name : String, parent : AdaptiveFragment<BT>, index: Int) =
-        fragmentImplRegistry.actualize(name, this, parent, index)
+        fragmentImplRegistry.actualize(name, parent, index)
 
     fun createPlaceholder(): AdaptiveBridge<BT>
 

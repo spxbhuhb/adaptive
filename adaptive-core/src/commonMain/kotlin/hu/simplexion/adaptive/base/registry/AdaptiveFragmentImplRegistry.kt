@@ -13,12 +13,11 @@ open class AdaptiveFragmentImplRegistry<BT> {
 
     fun actualize(
         name : String,
-        adapter: AdaptiveAdapter<BT>,
         parent : AdaptiveFragment<BT>,
         index : Int
     ): AdaptiveFragment<BT> =
         checkNotNull(entries[name]) { "No implementation found for $name" }
-            .build(adapter, parent, index)
+            .build(parent.adapter, parent, index)
 
     operator fun plusAssign(entry: AdaptiveFragmentImplRegistryEntry<BT>) {
         entries[entry.name] = entry

@@ -3,18 +3,12 @@
  */
 
 import hu.simplexion.adaptive.base.Adaptive
-import hu.simplexion.adaptive.base.adaptive
 import hu.simplexion.adaptive.base.producer.poll
-import hu.simplexion.adaptive.ktor.BasicWebSocketServiceCallTransport
 import hu.simplexion.adaptive.ktor.withWebSocketTransport
 import hu.simplexion.adaptive.sandbox.api.CounterApi
-import hu.simplexion.adaptive.service.defaultServiceCallTransport
 import hu.simplexion.adaptive.service.getService
-import hu.simplexion.adaptive.ui.dom.AdaptiveDOMAdapter
 import hu.simplexion.adaptive.ui.dom.browserJs
-import hu.simplexion.adaptive.ui.html.text
-import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
-import hu.simplexion.adaptive.wireformat.json.JsonWireFormatProvider
+import hu.simplexion.adaptive.ui.basic.text
 import hu.simplexion.adaptive.wireformat.withJson
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
