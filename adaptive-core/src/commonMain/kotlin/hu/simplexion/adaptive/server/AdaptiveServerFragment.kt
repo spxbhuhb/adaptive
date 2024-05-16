@@ -4,8 +4,8 @@
 package hu.simplexion.adaptive.server
 
 import hu.simplexion.adaptive.base.AdaptiveFragment
-import hu.simplexion.adaptive.base.AdaptiveSupportFunction
-import hu.simplexion.adaptive.base.adaptiveInitStateMask
+import hu.simplexion.adaptive.base.internal.BoundSupportFunction
+import hu.simplexion.adaptive.base.internal.initStateMask
 import hu.simplexion.adaptive.server.builtin.ServerFragmentImpl
 
 abstract class AdaptiveServerFragment<BT>(
@@ -27,7 +27,7 @@ abstract class AdaptiveServerFragment<BT>(
     override fun genPatchDescendant(fragment: AdaptiveFragment<BT>) = Unit
 
     override fun genPatchInternal() {
-        if (getThisClosureDirtyMask() != adaptiveInitStateMask) return
+        if (getThisClosureDirtyMask() != initStateMask) return
 
         check(impl == null) { "inconsistent server state innerMount with a non-null implementation" }
 
@@ -45,8 +45,8 @@ abstract class AdaptiveServerFragment<BT>(
     // Implementation support
     // -------------------------------------------------------------------------
 
-    val implFun : AdaptiveSupportFunction
-        get() = state[0] as AdaptiveSupportFunction
+    val implFun : BoundSupportFunction
+        get() = state[0] as BoundSupportFunction
 
     @Suppress("UNCHECKED_CAST")
     var impl : ServerFragmentImpl<BT>?

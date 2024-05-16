@@ -3,6 +3,7 @@
  */
 package hu.simplexion.adaptive.base
 
+import hu.simplexion.adaptive.base.internal.BoundSupportFunction
 import hu.simplexion.adaptive.base.structural.AdaptivePlaceholder
 import hu.simplexion.adaptive.base.testing.AdaptiveTestAdapter
 import hu.simplexion.adaptive.base.testing.AdaptiveTestBridge
@@ -48,11 +49,11 @@ class SupportFunctionTest {
                     TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [13]"),
                     TraceEvent("AdaptiveSupportFunctionInner", 3, "before-Create", ""),
                     TraceEvent("AdaptiveSupportFunctionInner", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null]"),
-                    TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, AdaptiveSupportFunction(2, 3, 0)]"),
-                    TraceEvent("AdaptiveSupportFunctionInner", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, AdaptiveSupportFunction(2, 3, 0)]"),
-                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Invoke", "AdaptiveSupportFunction(2, 3, 0) arguments: [12]"),
+                    TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, BoundSupportFunction(2, 3, 0)]"),
+                    TraceEvent("AdaptiveSupportFunctionInner", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, BoundSupportFunction(2, 3, 0)]"),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Invoke", "BoundSupportFunction(2, 3, 0) arguments: [12]"),
                     TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Invoke", "index: 0 result: kotlin.Unit"),
-                    TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [12, AdaptiveSupportFunction(2, 3, 0)]"),
+                    TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [12, BoundSupportFunction(2, 3, 0)]"),
                     TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Create", ""),
                     TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Create", ""),
                     TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Mount", "bridge: 1"),
@@ -97,7 +98,7 @@ class AdaptiveSupportFunctionTest(
                     fragment.setStateVariable(0, 12)
                 }
                 if (fragment.haveToPatch(closureMask, dependencyMask_0_1)) {
-                    fragment.setStateVariable(1, AdaptiveSupportFunction(this, fragment, 0))
+                    fragment.setStateVariable(1, BoundSupportFunction(this, fragment, 0))
                 }
             }
         }
@@ -113,7 +114,7 @@ class AdaptiveSupportFunctionTest(
 
     @Suppress("RedundantNullableReturnType")
     override fun genInvoke(
-        supportFunction: AdaptiveSupportFunction,
+        supportFunction: BoundSupportFunction,
         arguments: Array<out Any?>
     ): Any? {
 
@@ -144,7 +145,7 @@ class AdaptiveSupportFunctionInner(
     }
 
     override fun genPatchInternal() {
-        (getThisClosureVariable(1) as AdaptiveSupportFunction).invoke(getThisClosureVariable(0))
+        (getThisClosureVariable(1) as BoundSupportFunction).invoke(getThisClosureVariable(0))
     }
 
 }

@@ -3,6 +3,8 @@
  */
 package hu.simplexion.adaptive.base
 
+import hu.simplexion.adaptive.base.internal.BoundSupportFunction
+import hu.simplexion.adaptive.base.internal.initStateMask
 import hu.simplexion.adaptive.base.testing.*
 import hu.simplexion.adaptive.base.producer.cancelProducer
 import hu.simplexion.adaptive.base.producer.poll
@@ -67,7 +69,7 @@ class PollTest {
                         TraceEvent("AdaptiveT1", 3, "before-Mount", "bridge: 1"),
                         TraceEvent("AdaptiveT1", 3, "after-Mount", "bridge: 1"),
                         TraceEvent("AdaptivePollTest", 2, "after-Mount", "bridge: 1"),
-                        TraceEvent("AdaptivePollTest", 2, "before-Invoke-Suspend", "AdaptiveSupportFunction(2, 2, 0) arguments: []"),
+                        TraceEvent("AdaptivePollTest", 2, "before-Invoke-Suspend", "BoundSupportFunction(2, 2, 0) arguments: []"),
                         TraceEvent("AdaptivePollTest", 2, "after-Invoke-Suspend", "index: 0 result: 12"),
                         TraceEvent("AdaptivePollTest", 2, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [12]"),
                         TraceEvent("AdaptiveT1", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [2]"),
@@ -75,7 +77,7 @@ class PollTest {
                         TraceEvent("AdaptiveT1", 3, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [12]"),
                         TraceEvent("AdaptiveT1", 3, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [12]"),
                         TraceEvent("AdaptivePollTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
-                        TraceEvent("AdaptivePollTest", 2, "before-Invoke-Suspend", "AdaptiveSupportFunction(2, 2, 0) arguments: []"),
+                        TraceEvent("AdaptivePollTest", 2, "before-Invoke-Suspend", "BoundSupportFunction(2, 2, 0) arguments: []"),
                         TraceEvent("AdaptivePollTest", 2, "after-Invoke-Suspend", "index: 0 result: 13"),
                         TraceEvent("AdaptivePollTest", 2, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [13]"),
                         TraceEvent("AdaptiveT1", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [12]"),
@@ -83,7 +85,7 @@ class PollTest {
                         TraceEvent("AdaptiveT1", 3, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [13]"),
                         TraceEvent("AdaptiveT1", 3, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [13]"),
                         TraceEvent("AdaptivePollTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [13]"),
-                        TraceEvent("AdaptivePollTest", 2, "before-Invoke-Suspend", "AdaptiveSupportFunction(2, 2, 0) arguments: []")
+                        TraceEvent("AdaptivePollTest", 2, "before-Invoke-Suspend", "BoundSupportFunction(2, 2, 0) arguments: []")
                         //@formatter:on
                     )
                 ),
@@ -127,14 +129,14 @@ class AdaptivePollTest(
     }
 
     override fun genPatchInternal() {
-        if (getThisClosureDirtyMask() == adaptiveInitStateMask) {
+        if (getThisClosureDirtyMask() == initStateMask) {
             this.setStateVariable(0, poll(Duration.ZERO, 2, localBinding(0, 0, "kotlin.int"), null))
         }
     }
 
     @Suppress("RedundantNullableReturnType")
     override suspend fun genInvokeSuspend(
-        supportFunction: AdaptiveSupportFunction,
+        supportFunction: BoundSupportFunction,
         arguments: Array<out Any?>
     ): Any? {
 

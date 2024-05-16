@@ -4,6 +4,8 @@
 package hu.simplexion.adaptive.base.structural
 
 import hu.simplexion.adaptive.base.*
+import hu.simplexion.adaptive.base.internal.AdaptiveClosure
+import hu.simplexion.adaptive.base.internal.BoundFragmentFactory
 
 class AdaptiveLoop<BT, IT>(
     adapter: AdaptiveAdapter<BT>,
@@ -20,7 +22,7 @@ class AdaptiveLoop<BT, IT>(
 
     @Suppress("UNCHECKED_CAST")
     val builder
-        get() = state[1] as AdaptiveFragmentFactory<BT>
+        get() = state[1] as BoundFragmentFactory<BT>
 
     val fragments = mutableListOf<AdaptiveFragment<BT>>()
 

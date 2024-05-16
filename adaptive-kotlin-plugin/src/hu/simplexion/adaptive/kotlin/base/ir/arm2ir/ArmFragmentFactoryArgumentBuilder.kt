@@ -31,7 +31,7 @@ class ArmFragmentFactoryArgumentBuilder(
             IrConstructorCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 classBoundFragmentFactoryType,
-                pluginContext.adaptiveFragmentFactoryClass.constructors.first(),
+                pluginContext.boundFragmentFactoryClass.constructors.first(),
                 1, 0,
                 Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_COUNT,
             ).apply {

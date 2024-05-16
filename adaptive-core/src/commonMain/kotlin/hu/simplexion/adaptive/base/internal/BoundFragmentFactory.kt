@@ -1,9 +1,11 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.adaptive.base
+package hu.simplexion.adaptive.base.internal
 
-class AdaptiveFragmentFactory<BT>(
+import hu.simplexion.adaptive.base.AdaptiveFragment
+
+class BoundFragmentFactory<BT>(
     val declaringFragment: AdaptiveFragment<BT>,
     val declarationIndex : Int
 ) {
@@ -12,5 +14,5 @@ class AdaptiveFragmentFactory<BT>(
     }
 
     override fun toString() =
-        "AdaptiveFragmentFactory(${declaringFragment.id},$declarationIndex)"
+        "BoundFragmentFactory(${declaringFragment.id},$declarationIndex)"
 }

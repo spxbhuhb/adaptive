@@ -64,7 +64,7 @@ fun box(): String {
             TraceEvent("AdaptiveT1", 3, "before-Mount", "bridge: 1"),
             TraceEvent("AdaptiveT1", 3, "after-Mount", "bridge: 1"),
             TraceEvent("<root>", 2, "after-Mount", "bridge: 1"),
-            TraceEvent("<root>", 2, "before-Invoke-Suspend", "AdaptiveSupportFunction(2, 2, 0) arguments: []"),
+            TraceEvent("<root>", 2, "before-Invoke-Suspend", "BoundSupportFunction(2, 2, 0) arguments: []"),
             TraceEvent("<root>", 2, "after-Invoke-Suspend", "index: 0 result: 112"),
             TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000002 thisMask: 0x00000002 state: [12, 112]"),
             TraceEvent("AdaptiveT1", 3, "before-Patch-External", "createMask: 0x00000002 thisMask: 0x00000000 state: [13]"),
@@ -72,7 +72,7 @@ fun box(): String {
             TraceEvent("AdaptiveT1", 3, "before-Patch-Internal", "createMask: 0x00000002 thisMask: 0x00000001 state: [112]"),
             TraceEvent("AdaptiveT1", 3, "after-Patch-Internal", "createMask: 0x00000002 thisMask: 0x00000000 state: [112]"),
             TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12, 112]"),
-            TraceEvent("<root>", 2, "before-Invoke-Suspend", "AdaptiveSupportFunction(2, 2, 0) arguments: []")
+            TraceEvent("<root>", 2, "before-Invoke-Suspend", "BoundSupportFunction(2, 2, 0) arguments: []")
             //@formatter:on
         )
     )

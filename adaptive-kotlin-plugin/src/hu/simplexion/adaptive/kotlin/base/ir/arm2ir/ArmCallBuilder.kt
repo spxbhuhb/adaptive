@@ -72,7 +72,7 @@ class ArmCallBuilder(
         )
 
         return irImplicitAs(
-            pluginContext.adaptiveFragmentFactoryClass.defaultType,
+            pluginContext.boundFragmentFactoryClass.defaultType,
             getStateVariable
         )
     }

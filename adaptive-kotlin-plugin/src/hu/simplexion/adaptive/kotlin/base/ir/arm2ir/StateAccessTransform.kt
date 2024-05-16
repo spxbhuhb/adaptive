@@ -133,7 +133,7 @@ class StateAccessTransform(
         return IrCallImpl(
             expression.startOffset, expression.endOffset,
             expression.type,
-            pluginContext.adaptiveSupportFunctionInvoke,
+            pluginContext.boundSupportFunctionInvoke,
             0, 1
         ).apply {
             dispatchReceiver = getStateVariable(stateVariable)

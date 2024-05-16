@@ -6,6 +6,7 @@
 package hu.simplexion.adaptive.base.testing
 
 import hu.simplexion.adaptive.base.*
+import hu.simplexion.adaptive.base.internal.BoundSupportFunction
 
 @Adaptive
 @Suppress("unused", "FunctionName")
@@ -26,8 +27,8 @@ class AdaptiveS1<BT>(
 
     override fun genPatchInternal() = Unit
 
-    var s0: AdaptiveSupportFunction
-        get() = state[0] as AdaptiveSupportFunction
+    var s0: BoundSupportFunction
+        get() = state[0] as BoundSupportFunction
         set(v) {
             state[0] = v
         }

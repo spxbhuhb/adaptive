@@ -61,10 +61,10 @@ open class ClassBoundIrBuilder(
         get() = pluginContext.adaptiveClosureClass.typeWith(classBoundBridgeType.defaultType)
 
     val classBoundSupportFunctionType: IrType
-        get() = pluginContext.adaptiveSupportFunctionClass.typeWith(classBoundBridgeType.defaultType)
+        get() = pluginContext.boundSupportFunctionClass.typeWith(classBoundBridgeType.defaultType)
 
     val classBoundFragmentFactoryType: IrType
-        get() = pluginContext.adaptiveFragmentFactoryClass.typeWith(classBoundBridgeType.defaultType)
+        get() = pluginContext.boundFragmentFactoryClass.typeWith(classBoundBridgeType.defaultType)
 
     val classBoundAdapterType: IrType
         get() = pluginContext.adaptiveAdapterClass.typeWith(classBoundBridgeType.defaultType)
@@ -128,7 +128,7 @@ open class ClassBoundIrBuilder(
             IrConstructorCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 classBoundFragmentType,
-                pluginContext.adaptiveFragmentFactoryConstructor,
+                pluginContext.boundFragmentFactoryConstructor,
                 typeArgumentsCount = 1, // bridge type
                 constructorTypeArgumentsCount = 0,
                 Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_COUNT

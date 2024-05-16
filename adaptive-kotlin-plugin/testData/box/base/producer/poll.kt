@@ -77,7 +77,7 @@ fun box(): String {
             TraceEvent("AdaptiveT1", 4, "after-Mount", "bridge: 1"),
             TraceEvent("AdaptivePollTest", 3, "after-Mount", "bridge: 1"),
             TraceEvent("<root>", 2, "after-Mount", "bridge: 1"),
-            TraceEvent("AdaptivePollTest", 3, "before-Invoke-Suspend", "AdaptiveSupportFunction(3, 3, 0) arguments: []"),
+            TraceEvent("AdaptivePollTest", 3, "before-Invoke-Suspend", "BoundSupportFunction(3, 3, 0) arguments: []"),
             TraceEvent("AdaptivePollTest", 3, "after-Invoke-Suspend", "index: 0 result: 12"),
             TraceEvent("AdaptivePollTest", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000001 state: [12]"),
             TraceEvent("AdaptiveT1", 4, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [2]"),
@@ -85,7 +85,7 @@ fun box(): String {
             TraceEvent("AdaptiveT1", 4, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [12]"),
             TraceEvent("AdaptiveT1", 4, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [12]"),
             TraceEvent("AdaptivePollTest", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
-            TraceEvent("AdaptivePollTest", 3, "before-Invoke-Suspend", "AdaptiveSupportFunction(3, 3, 0) arguments: []"),
+            TraceEvent("AdaptivePollTest", 3, "before-Invoke-Suspend", "BoundSupportFunction(3, 3, 0) arguments: []"),
             TraceEvent("AdaptivePollTest", 3, "after-Invoke-Suspend", "index: 0 result: 13"),
             TraceEvent("AdaptivePollTest", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000001 state: [13]"),
             TraceEvent("AdaptiveT1", 4, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [12]"),
@@ -93,7 +93,7 @@ fun box(): String {
             TraceEvent("AdaptiveT1", 4, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [13]"),
             TraceEvent("AdaptiveT1", 4, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [13]"),
             TraceEvent("AdaptivePollTest", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [13]"),
-            TraceEvent("AdaptivePollTest", 3, "before-Invoke-Suspend", "AdaptiveSupportFunction(3, 3, 0) arguments: []")
+            TraceEvent("AdaptivePollTest", 3, "before-Invoke-Suspend", "BoundSupportFunction(3, 3, 0) arguments: []")
             //@formatter:on
         )
     )

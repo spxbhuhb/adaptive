@@ -5,6 +5,7 @@ package hu.simplexion.adaptive.base
 
 import hu.simplexion.adaptive.base.binding.AdaptivePropertyMetadata
 import hu.simplexion.adaptive.base.binding.AdaptiveStateVariableBinding
+import hu.simplexion.adaptive.base.internal.*
 import hu.simplexion.adaptive.base.producer.AdaptiveProducer
 
 abstract class AdaptiveFragment<BT>(
@@ -26,7 +27,7 @@ abstract class AdaptiveFragment<BT>(
     open val createClosure: AdaptiveClosure<BT>
         get() = parent?.thisClosure ?: thisClosure
 
-    var dirtyMask: AdaptiveStateVariableMask = adaptiveInitStateMask
+    var dirtyMask: StateVariableMask = initStateMask
 
     var containedFragment: AdaptiveFragment<BT>? = null
 
@@ -46,7 +47,7 @@ abstract class AdaptiveFragment<BT>(
         pluginGenerated("genPatchDescendant")
     }
 
-    open fun invoke(supportFunction: AdaptiveSupportFunction, arguments: Array<out Any?>): Any? {
+    open fun invoke(supportFunction: BoundSupportFunction, arguments: Array<out Any?>): Any? {
         if (trace) traceSupport("before-Invoke", supportFunction, arguments)
 
         val result = genInvoke(supportFunction, arguments)
@@ -56,11 +57,11 @@ abstract class AdaptiveFragment<BT>(
         return result
     }
 
-    open fun genInvoke(supportFunction: AdaptiveSupportFunction, arguments: Array<out Any?>): Any? {
+    open fun genInvoke(supportFunction: BoundSupportFunction, arguments: Array<out Any?>): Any? {
         pluginGenerated("genInvoke")
     }
 
-    open suspend fun invokeSuspend(supportFunction: AdaptiveSupportFunction, arguments: Array<out Any?>): Any? {
+    open suspend fun invokeSuspend(supportFunction: BoundSupportFunction, arguments: Array<out Any?>): Any? {
         if (trace) traceSupport("before-Invoke-Suspend", supportFunction, arguments)
 
         val result = genInvokeSuspend(supportFunction, arguments)
@@ -70,7 +71,7 @@ abstract class AdaptiveFragment<BT>(
         return result
     }
 
-    open suspend fun genInvokeSuspend(supportFunction: AdaptiveSupportFunction, arguments: Array<out Any?>): Any? {
+    open suspend fun genInvokeSuspend(supportFunction: BoundSupportFunction, arguments: Array<out Any?>): Any? {
         pluginGenerated("genInvokeSuspend")
     }
 
@@ -122,7 +123,7 @@ abstract class AdaptiveFragment<BT>(
 
         containedFragment?.patch()
 
-        dirtyMask = adaptiveCleanStateMask
+        dirtyMask = cleanStateMask
 
         if (trace) traceWithState("after-Patch-Internal")
     }
@@ -159,13 +160,13 @@ abstract class AdaptiveFragment<BT>(
     // State and closure functions
     // --------------------------------------------------------------------------
 
-    fun haveToPatch(closureDirtyMask: AdaptiveStateVariableMask, dependencyMask: AdaptiveStateVariableMask): Boolean =
-        (dirtyMask == adaptiveInitStateMask) || (closureDirtyMask and dependencyMask) != adaptiveCleanStateMask
+    fun haveToPatch(closureDirtyMask: StateVariableMask, dependencyMask: StateVariableMask): Boolean =
+        (dirtyMask == initStateMask) || (closureDirtyMask and dependencyMask) != cleanStateMask
 
-    fun getThisClosureDirtyMask(): AdaptiveStateVariableMask =
+    fun getThisClosureDirtyMask(): StateVariableMask =
         thisClosure.closureDirtyMask()
 
-    fun getCreateClosureDirtyMask(): AdaptiveStateVariableMask =
+    fun getCreateClosureDirtyMask(): StateVariableMask =
         createClosure.closureDirtyMask()
 
     fun getCreateClosureVariable(variableIndex: Int): Any? =
@@ -345,11 +346,11 @@ abstract class AdaptiveFragment<BT>(
     open fun stateToTraceString(): String =
         this.state.contentToString()
 
-    fun traceSupport(point: String, supportFunction: AdaptiveSupportFunction, arguments: Array<out Any?>) {
+    fun traceSupport(point: String, supportFunction: BoundSupportFunction, arguments: Array<out Any?>) {
         adapter.trace(this, point, "$supportFunction arguments: ${arguments.contentToString()}")
     }
 
-    fun traceSupport(point: String, supportFunction: AdaptiveSupportFunction, result: Any?) {
+    fun traceSupport(point: String, supportFunction: BoundSupportFunction, result: Any?) {
         adapter.trace(this, point, "index: ${supportFunction.supportFunctionIndex} result: $result")
     }
 

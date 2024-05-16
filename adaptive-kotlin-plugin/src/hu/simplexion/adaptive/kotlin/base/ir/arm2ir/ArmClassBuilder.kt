@@ -334,7 +334,7 @@ class ArmClassBuilder(
                 IrCallImpl(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                     irBuiltIns.intType,
-                    pluginContext.adaptiveSupportFunctionIndex,
+                    pluginContext.boundSupportFunctionIndex,
                     0, 0
                 ).also {
                     it.dispatchReceiver = irGet(invokeFun.valueParameters[Indices.INVOKE_SUPPORT_FUNCTION])
@@ -345,7 +345,7 @@ class ArmClassBuilder(
                 IrCallImpl(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                     classBoundFragmentType,
-                    pluginContext.adaptiveSupportFunctionReceivingFragment,
+                    pluginContext.boundSupportFunctionReceivingFragment,
                     0, 0
                 ).also {
                     it.dispatchReceiver = irGet(invokeFun.valueParameters[Indices.INVOKE_SUPPORT_FUNCTION])

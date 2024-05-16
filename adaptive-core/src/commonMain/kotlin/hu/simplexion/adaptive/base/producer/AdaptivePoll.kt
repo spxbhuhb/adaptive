@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.base.producer
 
-import hu.simplexion.adaptive.base.AdaptiveSupportFunction
+import hu.simplexion.adaptive.base.internal.BoundSupportFunction
 import hu.simplexion.adaptive.base.binding.AdaptiveStateVariableBinding
 import kotlinx.coroutines.*
 import kotlin.time.Duration
@@ -14,7 +14,7 @@ class AdaptivePoll<VT>(
     val interval: Duration
 ) : AdaptiveProducer {
 
-    val pollFunction = AdaptiveSupportFunction(
+    val pollFunction = BoundSupportFunction(
         binding.sourceFragment,
         binding.sourceFragment,
         binding.supportFunctionIndex

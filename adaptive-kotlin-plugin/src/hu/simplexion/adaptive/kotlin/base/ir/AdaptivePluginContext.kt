@@ -42,13 +42,13 @@ class AdaptivePluginContext(
 
     val adaptiveAnonymousClass = ClassIds.ADAPTIVE_ANONYMOUS.classSymbol()
 
-    val adaptiveFragmentFactoryClass = ClassIds.ADAPTIVE_FRAGMENT_FACTORY.classSymbol()
-    val adaptiveFragmentFactoryConstructor = adaptiveFragmentFactoryClass.constructors.single()
+    val boundFragmentFactoryClass = ClassIds.ADAPTIVE_FRAGMENT_FACTORY.classSymbol()
+    val boundFragmentFactoryConstructor = boundFragmentFactoryClass.constructors.single()
 
-    val adaptiveSupportFunctionClass = ClassIds.ADAPTIVE_SUPPORT_FUNCTION.classSymbol()
-    val adaptiveSupportFunctionInvoke = adaptiveSupportFunctionClass.functionByName { Strings.SUPPORT_FUNCTION_INVOKE }
-    val adaptiveSupportFunctionIndex = adaptiveSupportFunctionClass.propertyGetter { Strings.SUPPORT_FUNCTION_INDEX }
-    val adaptiveSupportFunctionReceivingFragment = adaptiveSupportFunctionClass.propertyGetter { Strings.SUPPORT_FUNCTION_RECEIVING_FRAGMENT }
+    val boundSupportFunctionClass = ClassIds.ADAPTIVE_SUPPORT_FUNCTION.classSymbol()
+    val boundSupportFunctionInvoke = boundSupportFunctionClass.functionByName { Strings.SUPPORT_FUNCTION_INVOKE }
+    val boundSupportFunctionIndex = boundSupportFunctionClass.propertyGetter { Strings.SUPPORT_FUNCTION_INDEX }
+    val boundSupportFunctionReceivingFragment = boundSupportFunctionClass.propertyGetter { Strings.SUPPORT_FUNCTION_RECEIVING_FRAGMENT }
 
     val adaptiveStateVariableBindingClass = ClassIds.ADAPTIVE_STATE_VARIABLE_BINDING.classSymbol()
 

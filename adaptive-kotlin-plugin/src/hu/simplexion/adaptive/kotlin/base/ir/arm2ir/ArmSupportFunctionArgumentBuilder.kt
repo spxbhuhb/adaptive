@@ -31,7 +31,7 @@ class ArmSupportFunctionArgumentBuilder(
             IrConstructorCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 classBoundSupportFunctionType,
-                pluginContext.adaptiveSupportFunctionClass.constructors.first(),
+                pluginContext.boundSupportFunctionClass.constructors.first(),
                 1, 0,
                 Indices.ADAPTIVE_SUPPORT_FUNCTION_ARGUMENT_COUNT,
             ).apply {

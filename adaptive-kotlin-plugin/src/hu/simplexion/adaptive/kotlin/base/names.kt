@@ -8,6 +8,7 @@ import org.jetbrains.kotlin.name.FqName
 
 object Strings {
     const val RUNTIME_PACKAGE = "hu.simplexion.adaptive.base"
+    const val INTERNAL_PACKAGE = "hu.simplexion.adaptive.base.internal"
     const val BINDING_PACKAGE = "hu.simplexion.adaptive.base.binding"
     const val STRUCTURAL_PACKAGE = "hu.simplexion.adaptive.base.structural"
 
@@ -22,8 +23,8 @@ object Strings {
     const val ADAPTIVE_SEQUENCE = "AdaptiveSequence"
     const val ADAPTIVE_SELECT = "AdaptiveSelect"
     const val ADAPTIVE_LOOP = "AdaptiveLoop"
-    const val ADAPTIVE_FRAGMENT_FACTORY = "AdaptiveFragmentFactory"
-    const val ADAPTIVE_SUPPORT_FUNCTION = "AdaptiveSupportFunction"
+    const val BOUND_FRAGMENT_FACTORY = "BoundFragmentFactory"
+    const val ADAPTIVE_SUPPORT_FUNCTION = "BoundSupportFunction"
     const val ADAPTIVE_STATE_VARIABLE_BINDING = "AdaptiveStateVariableBinding"
     const val ADAPTIVE_TRANSFORM_INTERFACE = "AdaptiveTransformInterface"
 
@@ -104,21 +105,25 @@ object FqNames {
     val ADAPTIVE_SEQUENCE = Strings.ADAPTIVE_SEQUENCE.structural()
     val ADAPTIVE_SELECT = Strings.ADAPTIVE_SELECT.structural()
     val ADAPTIVE_LOOP = Strings.ADAPTIVE_LOOP.structural()
-    val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.structural()
 }
 
 object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
+    private val STRUCTURAL = Strings.STRUCTURAL_PACKAGE.fqName()
+    private val BINDING = Strings.BINDING_PACKAGE.fqName()
+    private val INTERNAL = Strings.INTERNAL_PACKAGE.fqName()
 
     val ADAPTIVE = Strings.ADAPTIVE.classId()
-    val ADAPTIVE_CLOSURE = Strings.ADAPTIVE_CLOSURE.classId()
     val ADAPTIVE_FRAGMENT = Strings.ADAPTIVE_FRAGMENT.classId()
     val ADAPTIVE_ADAPTER = Strings.ADAPTIVE_ADAPTER.classId()
 
-    val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.classId { Strings.STRUCTURAL_PACKAGE.fqName() }
+    val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.classId { STRUCTURAL }
 
-    val ADAPTIVE_FRAGMENT_FACTORY = Strings.ADAPTIVE_FRAGMENT_FACTORY.classId()
-    val ADAPTIVE_SUPPORT_FUNCTION = Strings.ADAPTIVE_SUPPORT_FUNCTION.classId()
-    val ADAPTIVE_STATE_VARIABLE_BINDING = Strings.ADAPTIVE_STATE_VARIABLE_BINDING.classId { Strings.BINDING_PACKAGE.fqName() }
+    val ADAPTIVE_CLOSURE = Strings.ADAPTIVE_CLOSURE.classId { INTERNAL }
+    val ADAPTIVE_FRAGMENT_FACTORY = Strings.BOUND_FRAGMENT_FACTORY.classId { INTERNAL }
+    val ADAPTIVE_SUPPORT_FUNCTION = Strings.ADAPTIVE_SUPPORT_FUNCTION.classId { INTERNAL }
+
+    val ADAPTIVE_STATE_VARIABLE_BINDING = Strings.ADAPTIVE_STATE_VARIABLE_BINDING.classId { BINDING }
+
     val ADAPTIVE_TRANSFORM_INTERFACE = Strings.ADAPTIVE_TRANSFORM_INTERFACE.classId()
 
     val ADAPTIVE_EXPECT = Strings.ADAPTIVE_EXPECT.classId()
@@ -158,7 +163,7 @@ object Indices {
     const val PATCH_DESCENDANT_FRAGMENT = 0
 
     /**
-     * `invoke(supportFunction: AdaptiveSupportFunction<BT>, arguments: Array<out Any?>): Any?` arguments
+     * `invoke(supportFunction: BoundSupportFunction<BT>, arguments: Array<out Any?>): Any?` arguments
      */
     const val INVOKE_SUPPORT_FUNCTION = 0
     const val INVOKE_ARGUMENTS = 1
@@ -185,7 +190,7 @@ object Indices {
     const val ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE = 0
 
     /**
-     * AdaptiveFragmentFactory constructor arguments
+     * BoundFragmentFactory constructor arguments
      */
     const val ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_COUNT = 2
 
@@ -193,7 +198,7 @@ object Indices {
     const val ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARATION_INDEX = 1
 
     /**
-     * AdaptiveSupportFunction constructor arguments
+     * BoundSupportFunction constructor arguments
      */
     const val ADAPTIVE_SUPPORT_FUNCTION_ARGUMENT_COUNT = 3
 

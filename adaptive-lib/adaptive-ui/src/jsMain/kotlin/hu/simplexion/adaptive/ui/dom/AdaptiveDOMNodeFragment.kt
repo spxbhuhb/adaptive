@@ -4,6 +4,8 @@
 package hu.simplexion.adaptive.ui.dom
 
 import hu.simplexion.adaptive.base.*
+import hu.simplexion.adaptive.base.internal.BoundFragmentFactory
+import hu.simplexion.adaptive.base.internal.initStateMask
 import hu.simplexion.adaptive.ui.css.AdaptiveCssStyle
 import kotlinx.dom.hasClass
 import org.w3c.dom.HTMLElement
@@ -23,10 +25,10 @@ abstract class AdaptiveDOMNodeFragment(
 
     @Suppress("UNCHECKED_CAST")
     fun getFragmentFactory(variableIndex : Int) =
-        state[variableIndex] as AdaptiveFragmentFactory<Node>
+        state[variableIndex] as BoundFragmentFactory<Node>
 
     val firstTimeInit
-        get() = (dirtyMask == adaptiveInitStateMask)
+        get() = (dirtyMask == initStateMask)
 
     fun addClass(styles: Array<out AdaptiveCssStyle>) {
         with(receiver as HTMLElement) {

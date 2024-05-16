@@ -5,7 +5,7 @@ package hu.simplexion.adaptive.base.structural
 
 import hu.simplexion.adaptive.base.AdaptiveAdapter
 import hu.simplexion.adaptive.base.AdaptiveBridge
-import hu.simplexion.adaptive.base.AdaptiveClosure
+import hu.simplexion.adaptive.base.internal.AdaptiveClosure
 import hu.simplexion.adaptive.base.AdaptiveFragment
 
 class AdaptiveSequence<BT>(

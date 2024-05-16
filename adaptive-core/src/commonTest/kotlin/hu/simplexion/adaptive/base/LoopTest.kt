@@ -3,6 +3,7 @@
  */
 package hu.simplexion.adaptive.base
 
+import hu.simplexion.adaptive.base.internal.BoundFragmentFactory
 import hu.simplexion.adaptive.base.structural.AdaptiveLoop
 import hu.simplexion.adaptive.base.testing.*
 import kotlin.test.Test
@@ -40,8 +41,8 @@ class LoopTest {
                     TraceEvent("AdaptiveLoopTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [3]"),
                     TraceEvent("AdaptiveLoop", 3, "before-Create", ""),
                     TraceEvent("AdaptiveLoop", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null,null]"),
-                    TraceEvent("AdaptiveLoop", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [IntProgressionIterator,AdaptiveFragmentFactory(2,1)]"),
-                    TraceEvent("AdaptiveLoop", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [IntProgressionIterator,AdaptiveFragmentFactory(2,1)]"),
+                    TraceEvent("AdaptiveLoop", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [IntProgressionIterator,BoundFragmentFactory(2,1)]"),
+                    TraceEvent("AdaptiveLoop", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [IntProgressionIterator,BoundFragmentFactory(2,1)]"),
                     TraceEvent("AdaptiveAnonymous", 5, "before-Create", ""),
                     TraceEvent("AdaptiveAnonymous", 5, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [0]"),
                     TraceEvent("AdaptiveAnonymous", 5, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [0]"),
@@ -106,7 +107,7 @@ class LoopTest {
                     TraceEvent("AdaptiveT1", 12, "before-Mount", "bridge: 4"),
                     TraceEvent("AdaptiveT1", 12, "after-Mount", "bridge: 4"),
                     TraceEvent("AdaptiveAnonymous", 11, "after-Mount", "bridge: 4"),
-                    TraceEvent("AdaptiveLoop", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [IntProgressionIterator,AdaptiveFragmentFactory(2,1)]"),
+                    TraceEvent("AdaptiveLoop", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [IntProgressionIterator,BoundFragmentFactory(2,1)]"),
                     TraceEvent("AdaptiveLoop", 3, "after-Create", ""),
                     TraceEvent("AdaptiveLoopTest", 2, "after-Create", ""),
                     TraceEvent("AdaptiveLoopTest", 2, "before-Mount", "bridge: 1"),
@@ -172,7 +173,7 @@ class AdaptiveLoopTest(
                     fragment.setStateVariable(0, (0 .. (this.getThisClosureVariable(0) as Int)).iterator())
                 }
                 if (fragment.haveToPatch(closureMask, dependencyMask_0_1)) {
-                    fragment.setStateVariable(1, AdaptiveFragmentFactory(this, 1))
+                    fragment.setStateVariable(1, BoundFragmentFactory(this, 1))
                 }
             }
             1 -> {

@@ -1,7 +1,9 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.adaptive.base
+package hu.simplexion.adaptive.base.internal
+
+import hu.simplexion.adaptive.base.AdaptiveFragment
 
 /**
  * @property  closureSize  The total number of state variables in this closure. This is the sum of the number
@@ -66,12 +68,12 @@ class AdaptiveClosure<BT>(
     /**
      * Calculate the complete closure mask (or of components masks).
      */
-    fun closureDirtyMask(): AdaptiveStateVariableMask {
+    fun closureDirtyMask(): StateVariableMask {
         var mask = 0
         var position = 0
         for (component in components) {
-            if (component.dirtyMask == adaptiveInitStateMask) {
-                mask = adaptiveInitStateMask
+            if (component.dirtyMask == initStateMask) {
+                mask = initStateMask
             } else {
                 mask = mask or (component.dirtyMask shl position)
             }

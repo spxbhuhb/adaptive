@@ -4,16 +4,16 @@
 package hu.simplexion.adaptive.base.structural
 
 import hu.simplexion.adaptive.base.AdaptiveAdapter
-import hu.simplexion.adaptive.base.AdaptiveClosure
+import hu.simplexion.adaptive.base.internal.AdaptiveClosure
 import hu.simplexion.adaptive.base.AdaptiveFragment
-import hu.simplexion.adaptive.base.AdaptiveFragmentFactory
+import hu.simplexion.adaptive.base.internal.BoundFragmentFactory
 
 class AdaptiveAnonymous<BT>(
     adapter: AdaptiveAdapter<BT>,
     parent: AdaptiveFragment<BT>,
     index: Int,
     stateSize: Int,
-    val factory: AdaptiveFragmentFactory<BT>,
+    val factory: BoundFragmentFactory<BT>,
 ) : AdaptiveFragment<BT>(adapter, parent, index, stateSize) {
 
     override val createClosure : AdaptiveClosure<BT>
