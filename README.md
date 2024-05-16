@@ -9,16 +9,25 @@ Adaptive is a consolidated application development library for Kotlin focusing o
 
 Adaptive comes with a compiler plugin that performs many functions to reach the goals above.
 
-Example project using Adaptive: [adaptive-example](https://github.com/spxbhuhb/adaptive-example)
+## Important
 
-Status: **initial development**
+> Status: **preview**
+>
+> While library already works and provides both client and server side functionality,
+> it is not even close to be ready for general production.
+>
+> Please note that this is just a preview release, many basic things you would expect to 
+> work are still broken, especially around the code transformation.
+> 
+> For example, a simple `{ counter++ }` at the right place can result in a compiler plugin
+> error.
+> 
+> I will clean everything up eventually, but for now I consider these low priority issues, 
+> ones I can live with. If anyone starts to play around with the project I'll try to
+> spend some time on these problems. Feel free to open an issue for any error or even 
+> inconvenience you experience.
 
-While the library already works and provides both client and server side functionality it
-is not ready for general production yet. I am working continuously to add improvements.
-
-**NOTE**: The `doc` is rather obsolete at the moment, see issue #12
-
-Supported platforms:
+## Supported platforms
 
 * JVM
 * Browser/JS
@@ -27,61 +36,38 @@ Supported platforms:
 
 See [platforms](./doc/platforms/README.md) for details.
 
-## Basic Concept
+## Getting Started
 
-Adaptive has been inspired by [Svelte](https://svelte.dev), it basically serves the same purpose as other 
-reactive frameworks such as Compose or React. However, there are a few key differences:
+Check out the [adaptive-example](https://github.com/spxbhuhb/adaptive-example) project, or jump to the
+* [API](https://github.com/spxbhuhb/adaptive-example/blob/main/shared/src/commonMain/kotlin/hu/simplexion/adaptive/example/api/CounterApi.kt) (defines the API between the clients and the server)
+* server
+  * [server main](https://github.com/spxbhuhb/adaptive-example/blob/main/server/src/main/kotlin/hu/simplexion/adaptive/example/Application.kt) (server entry point)
+  * [service implementation](https://github.com/spxbhuhb/adaptive-example/blob/main/server/src/main/kotlin/hu/simplexion/adaptive/example/service/CounterService.kt) (client request handler, one instance per request)
+  * [worker implementation](https://github.com/spxbhuhb/adaptive-example/blob/main/server/src/main/kotlin/hu/simplexion/adaptive/example/worker/CounterWorker.kt) (background worker, one (or few) instances per server)
+* client
+  * [shared code](https://github.com/spxbhuhb/adaptive-example/blob/main/shared/src/commonMain/kotlin/hu/simplexion/adaptive/example) (shared between all client platforms)
+  * [browser main](https://github.com/spxbhuhb/adaptive-example/blob/main/browserApp/src/jsMain/kotlin/main.kt)
+  * [android main](https://github.com/spxbhuhb/adative-example/blob/main/androidApp/src/androidMain/kotlin/hu/simplexion/adaptive/example/MainActivity.kt)
 
-* also supports building of servers, not just user interfaces
-* all variables are reactive by default (there is no `remember`)
-* there is no recomposition/re-rendering, instead fragments are "patched"
+## Project Structure
 
-Here is a very simple server and a very simple client:
-
-```kotlin
-fun main() {
-
-    withJson()
-
-    server(wait = true) {
-
-        settings {
-            propertyFile(optional = false) { "./etc/sandbox.properties" }
-        }
-
-        service { CounterService() }
-        worker { CounterWorker() }
-
-        worker { KtorWorker() }
-
-    }
-
-}
-```
-
-```kotlin
-val counterService = getService<CounterApi>()
-
-fun now() = Clock.System.now()
-
-fun main() {
-
-    withJson()
-    withWebSocketTransport()
-
-    browserJs {
-        val time = poll(1.seconds, now()) { now() }
-        counterWithTime(time)
-    }
-
-}
-
-@Adaptive
-fun counterWithTime(time : Instant) {
-    val counter = poll(1.seconds, 0) { counterService.incrementAndGet() }
-    text("$time $counter")
-}
-```
+| Component                                              | Content                                                                                 |
+|--------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| core                                                   | The fundamental core of the library.                                                    |
+| &nbsp;&nbsp;[adat](doc/adat/README.md)                 | Data classes with many convenience functions, metadata and serialization support.       |
+| &nbsp;&nbsp;[foundation](doc/foundation/README.md)     | Fundamental classes and interfaces for building adaptive structures.                    |
+| &nbsp;&nbsp;[server](doc/server/README.md)             | Server side adaptive fragments: workers, services, stores, settings.                    |
+| &nbsp;&nbsp;[service](doc/service/README.md)           | Client-server communication with simple function calls.                                 |
+| &nbsp;&nbsp;[wireformat](doc/wireformat/README.md)     | Serialization (protobuf and Json).                                                      |
+| gradle-plugin                                          | The Gradle plugin.                                                                      |
+| kotlin-plugin                                          | The Kotlin compiler plugin.                                                             |
+| lib                                                    | Application level libraries such as UI, E-mail, etc.                                    |
+| &nbsp;&nbsp;[email](adaptive-lib/adaptive-email)       | Email worker (JavaMail), tables (Exposed) and service to send emails.                   |
+| &nbsp;&nbsp;[exposed](adaptive-lib/adaptive-exposed)   | Integration with Exposed, HikariPool worker.                                            |
+| &nbsp;&nbsp;[ktor](adaptive-lib/adaptive-ktor)         | Ktor Worker with websockets and static directory serving. Transport for services.       |
+| &nbsp;&nbsp;[template](adaptive-lib/adaptive-template) | Build adaptive structures from templates (no-code/low-code).                            |
+| &nbsp;&nbsp;[ui](adaptive-lib/adaptive-ui)             | Basic UI fragments for the supported platforms.                                         |
+| sandbox                                                | Project used during development to try things our without booting up the whole example. |
 
 ## Gradle Dependencies
 
@@ -103,32 +89,6 @@ kotlin {
     }
 }
 ```
-
-## Project Structure
-
-| Component                                              | Content                                                                                 |
-|--------------------------------------------------------|-----------------------------------------------------------------------------------------|
-| core                                                   | The fundamental core of the library.                                                    |
-| &nbsp;&nbsp;[adat](doc/adat/README.md)                 | Data classes with many convenience functions, metadata and serialization support.       |
-| &nbsp;&nbsp;[base](doc/base/README.md)                 | Base definitions for defining adaptive structures.                                      |
-| &nbsp;&nbsp;[server](doc/server/README.md)             | Server side adaptive fragments: workers, services, stores, settings.                    |
-| &nbsp;&nbsp;[service](doc/service/README.md)           | Client-server communication with simple function calls.                                 |
-| &nbsp;&nbsp;[wireformat](doc/wireformat/README.md)     | Serialization (protobuf and Json).                                                      |
-| example                                                | A complete example project. Its Gradle setup is independent from the main project.      |
-| &nbsp;&nbsp;[androidApp](adaptive-example/androidApp)  | Example application for Android.                                                        |
-| &nbsp;&nbsp;[browserApp](adaptive-example/browserApp)  | Example application for web browsers (JS).                                              |
-| &nbsp;&nbsp;[iosApp](adaptive-example/iosApp)          | Example application for iOS devices.                                                    |
-| &nbsp;&nbsp;[server](adaptive-example/server)          | Example server application.                                                             |
-| &nbsp;&nbsp;[shared](adaptive-example/shared)          | Code shared between the example applications.                                           |
-| gradle-plugin                                          | The Gradle plugin.                                                                      |
-| kotlin-plugin                                          | The Kotlin compiler plugin.                                                             |
-| lib                                                    | Application level libraries such as UI, E-mail, etc.                                    |
-| &nbsp;&nbsp;[email](adaptive-lib/adaptive-email)       | Email worker (JavaMail), tables (Exposed) and service to send emails.                   |
-| &nbsp;&nbsp;[exposed](adaptive-lib/adaptive-exposed)   | Integration with Exposed, HikariPool worker.                                            |
-| &nbsp;&nbsp;[ktor](adaptive-lib/adaptive-ktor)         | Ktor Worker with websockets and static directory serving. Transport for services.       |
-| &nbsp;&nbsp;[template](adaptive-lib/adaptive-template) | Build adaptive structures from templates (no-code/low-code).                            |
-| &nbsp;&nbsp;[ui](adaptive-lib/adaptive-ui)             | Basic UI fragments for the supported platforms.                                         |
-| [sandbox](adaptive-sandbox/README.md)                  | Project used during development to try things our without booting up the whole example. |
 
 ## Building Adaptive
 
