@@ -11,7 +11,7 @@ open class AdaptiveFragmentImplRegistry<BT> {
 
     val entries = mutableMapOf<String, AdaptiveFragmentImplRegistryEntry<BT>>()
 
-    fun build(
+    fun actualize(
         name : String,
         adapter: AdaptiveAdapter<BT>,
         parent : AdaptiveFragment<BT>,

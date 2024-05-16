@@ -7,8 +7,7 @@ import hu.simplexion.adaptive.base.*
 import hu.simplexion.adaptive.base.registry.*
 import hu.simplexion.adaptive.base.testing.*
 
-@Delegated
-@Adaptive
+@AdaptiveExpect
 fun text() {
     manualImplementation()
 }

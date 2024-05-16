@@ -3,8 +3,6 @@
  */
 package hu.simplexion.adaptive.kotlin.base
 
-import hu.simplexion.adaptive.kotlin.adat.ClassIds.classId
-import hu.simplexion.adaptive.kotlin.adat.ClassIds.fqName
 import hu.simplexion.adaptive.kotlin.common.NamesBase
 import org.jetbrains.kotlin.name.FqName
 
@@ -64,9 +62,9 @@ object Strings {
     const val HELPER_FRAGMENT = "fragment"
     const val HELPER_THIS_STATE = "thisState"
 
+    const val ADAPTIVE_EXPECT = "AdaptiveExpect"
     const val MANUAL_IMPLEMENTATION = "manualImplementation"
-    const val DELEGATED = "Delegated"
-    const val BUILD = "build"
+    const val ACTUALIZE = "actualize"
 
     const val SUPPORT_FUNCTION_INVOKE = "invoke"
 
@@ -123,7 +121,7 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAPTIVE_STATE_VARIABLE_BINDING = Strings.ADAPTIVE_STATE_VARIABLE_BINDING.classId { Strings.BINDING_PACKAGE.fqName() }
     val ADAPTIVE_TRANSFORM_INTERFACE = Strings.ADAPTIVE_TRANSFORM_INTERFACE.classId()
 
-    val DELEGATED = Strings.DELEGATED.classId()
+    val ADAPTIVE_EXPECT = Strings.ADAPTIVE_EXPECT.classId()
 }
 
 object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {

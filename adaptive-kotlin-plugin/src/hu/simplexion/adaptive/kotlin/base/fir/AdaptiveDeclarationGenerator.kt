@@ -29,7 +29,7 @@ class AdaptiveDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
     val intType = session.builtinTypes.intType.coneType
 
     val ADAPTIVE_PREDICATE = LookupPredicate.create { annotated(ClassIds.ADAPTIVE.asSingleFqName()) }
-    val DELEGATED_PREDICATE = LookupPredicate.create { annotated(ClassIds.DELEGATED.asSingleFqName()) }
+    val ADAPTIVE_EXPECT_PREDICATE = LookupPredicate.create { annotated(ClassIds.ADAPTIVE_EXPECT.asSingleFqName()) }
 
     private val predicateBasedProvider = session.predicateBasedProvider
 
@@ -41,8 +41,8 @@ class AdaptiveDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
 
     private val callableIdsForMatchedFunctions: Set<CallableId> by lazy {
         matchedFunctions.mapNotNull {
-            // do not generate class function for delegated, those are supposed to be manually coded
-            if (session.predicateBasedProvider.matches(DELEGATED_PREDICATE, it)) {
+            // do not generate class function for expect fragment definitions, those are supposed to be manually coded
+            if (session.predicateBasedProvider.matches(ADAPTIVE_EXPECT_PREDICATE, it)) {
                 null
             } else {
                 CallableId(it.callableId.packageName, Name.identifier(Strings.CLASS_FUNCTION_PREFIX + it.name.identifier.capitalizeFirstChar()))
@@ -52,7 +52,7 @@ class AdaptiveDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(ADAPTIVE_PREDICATE)
-        register(DELEGATED_PREDICATE)
+        register(ADAPTIVE_EXPECT_PREDICATE)
     }
 
     override fun getTopLevelCallableIds(): Set<CallableId> {

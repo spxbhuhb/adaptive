@@ -106,18 +106,18 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Nested
-        @TestMetadata("testData/box/base/delegated")
+        @TestMetadata("testData/box/base/expect")
         @TestDataPath("$PROJECT_ROOT")
-        public class Delegated {
+        public class Expect {
             @Test
-            public void testAllFilesPresentInDelegated() throws Exception {
-                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/base/delegated"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+            public void testAllFilesPresentInExpect() throws Exception {
+                KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/base/expect"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
             }
 
             @Test
             @TestMetadata("basic.kt")
             public void testBasic() throws Exception {
-                runTest("testData/box/base/delegated/basic.kt");
+                runTest("testData/box/base/expect/basic.kt");
             }
         }
 

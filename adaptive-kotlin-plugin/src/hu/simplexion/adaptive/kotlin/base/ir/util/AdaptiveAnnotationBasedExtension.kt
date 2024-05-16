@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.kotlin.base.ir.util
 import hu.simplexion.adaptive.kotlin.base.Names
 import hu.simplexion.adaptive.kotlin.base.ir.AdaptivePluginContext
 import org.jetbrains.kotlin.backend.jvm.codegen.isExtensionFunctionType
+import org.jetbrains.kotlin.ir.declarations.IrAnnotationContainer
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrCall
@@ -33,14 +34,15 @@ interface AdaptiveAnnotationBasedExtension {
     val IrValueParameter.isAdaptive: Boolean
         get() = this.hasAnnotation(pluginContext.adaptiveClass
         )
-    val IrCall.isDelegated: Boolean
-        get() = symbol.owner.hasAnnotation(pluginContext.delegatedClass)
+    val IrCall.isExpectCall: Boolean
+        get() = symbol.owner.hasAnnotation(pluginContext.adaptiveExpectClass)
 
     val IrCall.isDirectAdaptiveCall : Boolean
-        get() = symbol.owner.hasAnnotation(pluginContext.adaptiveClass)
+        get() = symbol.owner.hasAnnotation(pluginContext.adaptiveClass) || symbol.owner.hasAnnotation(pluginContext.adaptiveExpectClass)
 
     val IrCall.isArgumentAdaptiveCall: Boolean
         get() = symbol.owner.name == Names.KOTLIN_INVOKE && dispatchReceiver?.let {
+            // expect annotation on a parameter is meaningless, so we don't have to check it here
             it is IrGetValue && it.symbol.owner.hasAnnotation(pluginContext.adaptiveClass)
         } ?: false
 

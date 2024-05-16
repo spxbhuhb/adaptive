@@ -4,4 +4,5 @@
 
 package hu.simplexion.adaptive.base
 
-annotation class Delegated
+@Adaptive
+annotation class AdaptiveExpect

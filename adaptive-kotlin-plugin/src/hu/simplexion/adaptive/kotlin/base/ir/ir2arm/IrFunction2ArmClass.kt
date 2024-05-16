@@ -243,7 +243,7 @@ class IrFunction2ArmClass(
         }
 
     fun transformDirectCall(irCall: IrCall): ArmRenderingStatement {
-        val armCall = ArmCall(armClass, nextFragmentIndex, closure, true, irCall, irCall.isDelegated)
+        val armCall = ArmCall(armClass, nextFragmentIndex, closure, true, irCall, irCall.isExpectCall)
         val valueParameters = irCall.symbol.owner.valueParameters
 
         for (argumentIndex in 0 until irCall.valueArgumentsCount) {

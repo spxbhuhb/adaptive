@@ -4,7 +4,6 @@
 
 package hu.simplexion.adaptive.kotlin.base.ir.arm2ir
 
-import hu.simplexion.adaptive.kotlin.base.FqNames
 import hu.simplexion.adaptive.kotlin.base.Indices
 import hu.simplexion.adaptive.kotlin.base.Names
 import hu.simplexion.adaptive.kotlin.base.Strings
@@ -30,9 +29,9 @@ class ArmCallBuilder(
 
     override fun genBuildConstructorCall(buildFun: IrSimpleFunction): IrExpression =
         when {
-            armCall.isDelegated -> {
+            armCall.isExpectCall -> {
                 irCall(
-                    pluginContext.adapterBuildFun,
+                    pluginContext.adapterActualizeFun,
                     irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)),
                     irConst(armCall.target.asString()),
                     irGet(buildFun.valueParameters[Indices.BUILD_PARENT]),

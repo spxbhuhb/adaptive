@@ -22,8 +22,8 @@ interface AdaptiveAdapter<BT> {
 
     val startedAt: Long
 
-    fun build(name : String, parent : AdaptiveFragment<BT>, index: Int) =
-        fragmentImplRegistry.build(name, this, parent, index)
+    fun actualize(name : String, parent : AdaptiveFragment<BT>, index: Int) =
+        fragmentImplRegistry.actualize(name, this, parent, index)
 
     fun createPlaceholder(): AdaptiveBridge<BT>
 

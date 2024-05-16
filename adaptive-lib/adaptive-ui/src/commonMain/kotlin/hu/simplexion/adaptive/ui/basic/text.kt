@@ -4,12 +4,10 @@
 
 package hu.simplexion.adaptive.ui.basic
 
-import hu.simplexion.adaptive.base.Adaptive
-import hu.simplexion.adaptive.base.Delegated
+import hu.simplexion.adaptive.base.AdaptiveExpect
 import hu.simplexion.adaptive.base.manualImplementation
 
-@Delegated
-@Adaptive
+@AdaptiveExpect
 fun text(text: String) {
     manualImplementation(text)
 }
