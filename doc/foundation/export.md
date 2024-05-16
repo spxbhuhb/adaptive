@@ -17,7 +17,7 @@ The name and the place of this object is not important (I think...), the annotat
 
 ```kotlin
 @AdaptiveFragmentCompanionCollector
-object SomeExport : AdaptiveFragmentFactory<TestNode>()
+object SomeExport : AdaptiveFragmentFactory<Any>()
 ```
 
 ## Import

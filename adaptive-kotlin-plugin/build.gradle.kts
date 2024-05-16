@@ -73,7 +73,7 @@ tasks.test {
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
-        useK2 = true
+        languageVersion = "2.0"
         freeCompilerArgs += "-opt-in=org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi"
         if (libs.versions.kotlin.get().startsWith("1.9")) {
             freeCompilerArgs += "-Xcontext-receivers" // not needed for 2.0.0-RC2 but needed for 1.9.10

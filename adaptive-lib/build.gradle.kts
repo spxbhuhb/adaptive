@@ -6,12 +6,12 @@ fun register(name: String, js : Boolean = true) {
     val (groupName, taskName) = name.split(":")
     tasks.register(taskName) {
         group = groupName
-        dependsOn(gradle.includedBuild("adaptive-email").task(":$taskName"))
+        dependsOn(gradle.includedBuild("adaptive-lib-email").task(":$taskName"))
         if (!js) {
-            dependsOn(gradle.includedBuild("adaptive-exposed").task(":$taskName"))
+            dependsOn(gradle.includedBuild("adaptive-lib-exposed").task(":$taskName"))
         }
-        dependsOn(gradle.includedBuild("adaptive-ktor").task(":$taskName"))
-        dependsOn(gradle.includedBuild("adaptive-ui").task(":$taskName"))
+        dependsOn(gradle.includedBuild("adaptive-lib-ktor").task(":$taskName"))
+        dependsOn(gradle.includedBuild("adaptive-lib-sandbox").task(":$taskName"))
     }
 }
 

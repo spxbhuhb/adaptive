@@ -30,23 +30,24 @@ subethamail = "3.1.7"
 [libraries]
 
 adaptive-core = { module = "hu.simplexion.adaptive:adaptive-core", version.ref = "adaptive" }
-adaptive-email = { module = "hu.simplexion.adaptive:adaptive-email", version.ref = "adaptive" }
-adaptive-exposed = { module = "hu.simplexion.adaptive:adaptive-exposed", version.ref = "adaptive" }
-adaptive-ktor = { module = "hu.simplexion.adaptive:adaptive-ktor", version.ref = "adaptive" }
-adaptive-ui = { module = "hu.simplexion.adaptive:adaptive-ui", version.ref = "adaptive" }
+adaptive-lib-email = { module = "hu.simplexion.adaptive:adaptive-lib-email", version.ref = "adaptive" }
+adaptive-lib-exposed = { module = "hu.simplexion.adaptive:adaptive-lib-exposed", version.ref = "adaptive" }
+adaptive-lib-ktor = { module = "hu.simplexion.adaptive:adaptive-lib-ktor", version.ref = "adaptive" }
+adaptive-lib-sandbox = { module = "hu.simplexion.adaptive:adaptive-lib-sandbox", version.ref = "adaptive" }
+adaptive-ui-common = { module = "hu.simplexion.adaptive:adaptive-ui-common", version.ref = "adaptive" }
 
-android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material"}
+android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
 androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-junit" }
 
-exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref="exposed" }
-exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref="exposed" }
-exposed-kotlin-datetime = { module = "org.jetbrains.exposed:exposed-kotlin-datetime", version.ref="exposed" }
+exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
+exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+exposed-kotlin-datetime = { module = "org.jetbrains.exposed:exposed-kotlin-datetime", version.ref = "exposed" }
 
-h2database = { module = "com.h2database:h2", version.ref="h2" }
+h2database = { module = "com.h2database:h2", version.ref = "h2" }
 hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
 javamail = { module = "com.sun.mail:javax.mail", version.ref = "javamail" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

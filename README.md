@@ -51,23 +51,25 @@ Check out the [adaptive-example](https://github.com/spxbhuhb/adaptive-example) p
 
 ## Project Structure
 
-| Component                                              | Content                                                                                 |
-|--------------------------------------------------------|-----------------------------------------------------------------------------------------|
-| core                                                   | The fundamental core of the library.                                                    |
-| &nbsp;&nbsp;[adat](doc/adat/README.md)                 | Data classes with many convenience functions, metadata and serialization support.       |
-| &nbsp;&nbsp;[foundation](doc/foundation/README.md)     | Fundamental classes and interfaces for building adaptive structures.                    |
-| &nbsp;&nbsp;[server](doc/server/README.md)             | Server side adaptive fragments: workers, services, stores, settings.                    |
-| &nbsp;&nbsp;[service](doc/service/README.md)           | Client-server communication with simple function calls.                                 |
-| &nbsp;&nbsp;[wireformat](doc/wireformat/README.md)     | Serialization (protobuf and Json).                                                      |
-| gradle-plugin                                          | The Gradle plugin.                                                                      |
-| kotlin-plugin                                          | The Kotlin compiler plugin.                                                             |
-| lib                                                    | Application level libraries such as UI, E-mail, etc.                                    |
-| &nbsp;&nbsp;[email](adaptive-lib/adaptive-email)       | Email worker (JavaMail), tables (Exposed) and service to send emails.                   |
-| &nbsp;&nbsp;[exposed](adaptive-lib/adaptive-exposed)   | Integration with Exposed, HikariPool worker.                                            |
-| &nbsp;&nbsp;[ktor](adaptive-lib/adaptive-ktor)         | Ktor Worker with websockets and static directory serving. Transport for services.       |
-| &nbsp;&nbsp;[template](adaptive-lib/adaptive-template) | Build adaptive structures from templates (no-code/low-code).                            |
-| &nbsp;&nbsp;[ui](adaptive-lib/adaptive-ui)             | Basic UI fragments for the supported platforms.                                         |
-| sandbox                                                | Project used during development to try things our without booting up the whole example. |
+| Component                                                  | Content                                                                                 |
+|------------------------------------------------------------|-----------------------------------------------------------------------------------------|
+| core                                                       | The fundamental core of the library.                                                    |
+| &nbsp;&nbsp;[adat](doc/adat/README.md)                     | Data classes with many convenience functions, metadata and serialization support.       |
+| &nbsp;&nbsp;[foundation](doc/foundation/README.md)         | Fundamental classes and interfaces for building adaptive structures.                    |
+| &nbsp;&nbsp;[server](doc/server/README.md)                 | Server side adaptive fragments: workers, services, stores, settings.                    |
+| &nbsp;&nbsp;[service](doc/service/README.md)               | Client-server communication with simple function calls.                                 |
+| &nbsp;&nbsp;[wireformat](doc/wireformat/README.md)         | Serialization (protobuf and Json).                                                      |
+| gradle-plugin                                              | The Gradle plugin.                                                                      |
+| kotlin-plugin                                              | The Kotlin compiler plugin.                                                             |
+| lib                                                        | Application level libraries such as UI, E-mail, etc.                                    |
+| &nbsp;&nbsp;[email](adaptive-lib/adaptive-lib-email)       | Email worker (JavaMail), tables (Exposed) and service to send emails.                   |
+| &nbsp;&nbsp;[exposed](adaptive-lib/adaptive-lib-exposed)   | Integration with Exposed, HikariPool worker.                                            |
+| &nbsp;&nbsp;[ktor](adaptive-lib/adaptive-lib-ktor)         | Ktor Worker with websockets and static directory serving. Transport for services.       |
+| sandbox                                                    | Project used during development to try things our without booting up the whole example. |
+| &nbsp;&nbsp;[lib](adaptive-sandbox/adaptive-sandbox-lib)   | Library sandbox.                                                                        |
+| &nbsp;&nbsp;[app](adaptive-sandbox/adaptive-sandbox-app)   | Application sandbox.                                                                    |
+| ui                                                         | User interface modules.                                                                 |
+| &nbsp;&nbsp;[common](adaptive-ui/adaptive-ui-common)       | Basic UI fragments for the supported platforms.                                         |
 
 ## Gradle Dependencies
 

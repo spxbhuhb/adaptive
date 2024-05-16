@@ -46,15 +46,16 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.adaptive.core)
-                implementation(libs.adaptive.email)
-                implementation(libs.adaptive.ktor)
-                implementation(libs.adaptive.ui)
+                implementation(libs.adaptive.lib.email)
+                implementation(libs.adaptive.lib.ktor)
+                implementation(libs.adaptive.ui.common)
+                implementation(libs.adaptive.lib.sandbox)
             }
         }
 
         jvmMain {
             dependencies {
-                implementation(libs.adaptive.exposed)
+                implementation(libs.adaptive.lib.exposed)
             }
         }
     }

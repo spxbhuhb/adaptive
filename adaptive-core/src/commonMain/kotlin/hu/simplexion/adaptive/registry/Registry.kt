@@ -16,4 +16,7 @@ open class Registry<T> {
 
     operator fun contains(key: String): Boolean = key in entries
 
+    operator fun plusAssign(others: Array<out Registry<T>>) {
+        others.forEach { entries.putAll(it.entries) }
+    }
 }
