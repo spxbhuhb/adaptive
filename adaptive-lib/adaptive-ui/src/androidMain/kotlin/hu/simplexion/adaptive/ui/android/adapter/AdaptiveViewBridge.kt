@@ -5,7 +5,7 @@ package hu.simplexion.adaptive.ui.android.adapter
 
 import android.view.View
 import android.view.ViewGroup
-import hu.simplexion.adaptive.base.AdaptiveBridge
+import hu.simplexion.adaptive.foundation.AdaptiveBridge
 import org.w3c.dom.Node
 
 interface AdaptiveViewBridge : AdaptiveBridge<View> {

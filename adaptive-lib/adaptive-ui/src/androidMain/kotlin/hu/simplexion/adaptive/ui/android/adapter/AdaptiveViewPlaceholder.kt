@@ -5,7 +5,7 @@ package hu.simplexion.adaptive.ui.android.adapter
 
 import android.view.View
 import androidx.constraintlayout.widget.Placeholder
-import hu.simplexion.adaptive.base.AdaptiveBridge
+import hu.simplexion.adaptive.foundation.AdaptiveBridge
 import org.w3c.dom.Node
 
 class AdaptiveViewPlaceholder(

@@ -4,9 +4,9 @@
 
 package hu.simplexion.adaptive.ui.basic
 
-import hu.simplexion.adaptive.base.Adaptive
-import hu.simplexion.adaptive.base.AdaptiveExpect
-import hu.simplexion.adaptive.base.manualImplementation
+import hu.simplexion.adaptive.foundation.Adaptive
+import hu.simplexion.adaptive.foundation.AdaptiveExpect
+import hu.simplexion.adaptive.foundation.manualImplementation
 
 @AdaptiveExpect
 fun grid(colSpec : TrackSpec, rowSpec : TrackSpec, @Adaptive content : () -> Unit) {

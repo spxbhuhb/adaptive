@@ -3,7 +3,7 @@
  */
 package hu.simplexion.adaptive.ui.dom
 
-import hu.simplexion.adaptive.base.AdaptiveBridge
+import hu.simplexion.adaptive.foundation.AdaptiveBridge
 import org.w3c.dom.Node
 
 /**

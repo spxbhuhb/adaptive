@@ -3,9 +3,9 @@
  */
 package hu.simplexion.adaptive.server
 
-import hu.simplexion.adaptive.base.AdaptiveAdapter
-import hu.simplexion.adaptive.base.AdaptiveBridge
-import hu.simplexion.adaptive.base.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.AdaptiveAdapter
+import hu.simplexion.adaptive.foundation.AdaptiveBridge
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.server.builtin.AdaptiveService
 import hu.simplexion.adaptive.server.builtin.AdaptiveStore
 import hu.simplexion.adaptive.server.builtin.AdaptiveWorker

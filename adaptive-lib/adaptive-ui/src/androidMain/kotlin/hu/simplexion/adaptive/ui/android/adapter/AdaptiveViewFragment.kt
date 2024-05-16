@@ -5,7 +5,7 @@ package hu.simplexion.adaptive.ui.android.adapter
 
 import android.view.View
 import android.view.ViewGroup
-import hu.simplexion.adaptive.base.*
+import hu.simplexion.adaptive.foundation.*
 
 abstract class AdaptiveViewFragment(
     adapter: AdaptiveAdapter<View>,

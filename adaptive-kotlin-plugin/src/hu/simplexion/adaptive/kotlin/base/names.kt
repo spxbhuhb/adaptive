@@ -7,10 +7,10 @@ import hu.simplexion.adaptive.kotlin.common.NamesBase
 import org.jetbrains.kotlin.name.FqName
 
 object Strings {
-    const val RUNTIME_PACKAGE = "hu.simplexion.adaptive.base"
-    const val INTERNAL_PACKAGE = "hu.simplexion.adaptive.base.internal"
-    const val BINDING_PACKAGE = "hu.simplexion.adaptive.base.binding"
-    const val STRUCTURAL_PACKAGE = "hu.simplexion.adaptive.base.structural"
+    const val RUNTIME_PACKAGE = "hu.simplexion.adaptive.foundation"
+    const val INTERNAL_PACKAGE = "hu.simplexion.adaptive.foundation.internal"
+    const val BINDING_PACKAGE = "hu.simplexion.adaptive.foundation.binding"
+    const val STRUCTURAL_PACKAGE = "hu.simplexion.adaptive.foundation.structural"
 
     const val ADAPTIVE = "Adaptive"
     const val ADAPTIVE_ENTRY = "AdaptiveEntry"

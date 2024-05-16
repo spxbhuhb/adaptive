@@ -3,7 +3,7 @@
  */
 package hu.simplexion.adaptive.server
 
-import hu.simplexion.adaptive.base.AdaptiveBridge
+import hu.simplexion.adaptive.foundation.AdaptiveBridge
 
 open class AdaptiveServerPlaceholder<BT> : AdaptiveBridge<BT> {
 

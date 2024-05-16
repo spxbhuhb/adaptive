@@ -3,9 +3,9 @@
  */
 package hu.simplexion.adaptive.kotlin.base.success
 
-import hu.simplexion.adaptive.base.Adaptive
-import hu.simplexion.adaptive.base.adaptive
-import hu.simplexion.adaptive.base.testing.*
+import hu.simplexion.adaptive.foundation.Adaptive
+import hu.simplexion.adaptive.foundation.adaptive
+import hu.simplexion.adaptive.foundation.testing.*
 
 @Adaptive
 fun IfOnlyFalse(i : Int) {

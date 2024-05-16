@@ -1,6 +1,6 @@
 package hu.simplexion.adaptive.email.worker
 
-import hu.simplexion.adaptive.base.adaptive
+import hu.simplexion.adaptive.foundation.adaptive
 import hu.simplexion.adaptive.email.api.EmailApi
 import hu.simplexion.adaptive.email.service.EmailService
 import hu.simplexion.adaptive.email.store.EmailQueue

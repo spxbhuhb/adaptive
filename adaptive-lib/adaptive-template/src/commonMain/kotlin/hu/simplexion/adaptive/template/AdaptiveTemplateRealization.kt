@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.template
 
 import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetaData
 import hu.simplexion.adaptive.adat.wireformat.toPropertyWireFormat
-import hu.simplexion.adaptive.base.*
+import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.wireformat.json.JsonWireFormatDecoder
 
 @Adaptive

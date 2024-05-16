@@ -7,9 +7,9 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStub
-import hu.simplexion.adaptive.base.AdaptiveAdapter
-import hu.simplexion.adaptive.base.AdaptiveBridge
-import hu.simplexion.adaptive.base.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.AdaptiveAdapter
+import hu.simplexion.adaptive.foundation.AdaptiveBridge
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.android.basic.BasicRegistry
 import hu.simplexion.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher

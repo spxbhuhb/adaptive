@@ -3,12 +3,12 @@
  */
 package hu.simplexion.adaptive.template
 
-import hu.simplexion.adaptive.base.adaptive
-import hu.simplexion.adaptive.base.registry.AdaptiveFragmentImplRegistryEntry
-import hu.simplexion.adaptive.base.testing.AdaptiveT0
-import hu.simplexion.adaptive.base.testing.AdaptiveT1
-import hu.simplexion.adaptive.base.testing.AdaptiveTestAdapter
-import hu.simplexion.adaptive.base.testing.TraceEvent
+import hu.simplexion.adaptive.foundation.adaptive
+import hu.simplexion.adaptive.foundation.registry.AdaptiveFragmentImplRegistryEntry
+import hu.simplexion.adaptive.foundation.testing.AdaptiveT0
+import hu.simplexion.adaptive.foundation.testing.AdaptiveT1
+import hu.simplexion.adaptive.foundation.testing.AdaptiveTestAdapter
+import hu.simplexion.adaptive.foundation.testing.TraceEvent
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.wireformat.WireFormatRegistry
 import kotlin.test.Test

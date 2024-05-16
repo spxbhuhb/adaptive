@@ -4,8 +4,8 @@
 
 package hu.simplexion.adaptive.ui.basic
 
-import hu.simplexion.adaptive.base.registry.AdaptiveFragmentImplRegistry
-import hu.simplexion.adaptive.base.registry.AdaptiveFragmentImplRegistryEntry
+import hu.simplexion.adaptive.foundation.registry.AdaptiveFragmentImplRegistry
+import hu.simplexion.adaptive.foundation.registry.AdaptiveFragmentImplRegistryEntry
 import org.w3c.dom.Node
 
 object BasicRegistry : AdaptiveFragmentImplRegistry<Node>() {

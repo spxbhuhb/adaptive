@@ -3,11 +3,14 @@
  */
 package hu.simplexion.adaptive.base
 
-import hu.simplexion.adaptive.base.internal.BoundSupportFunction
-import hu.simplexion.adaptive.base.internal.initStateMask
-import hu.simplexion.adaptive.base.testing.*
-import hu.simplexion.adaptive.base.producer.cancelProducer
-import hu.simplexion.adaptive.base.producer.poll
+import hu.simplexion.adaptive.foundation.AdaptiveAdapter
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.adapter
+import hu.simplexion.adaptive.foundation.internal.BoundSupportFunction
+import hu.simplexion.adaptive.foundation.internal.initStateMask
+import hu.simplexion.adaptive.foundation.testing.*
+import hu.simplexion.adaptive.foundation.producer.cancelProducer
+import hu.simplexion.adaptive.foundation.producer.poll
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test

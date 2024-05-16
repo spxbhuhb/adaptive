@@ -3,9 +3,9 @@
  */
 package hu.simplexion.adaptive.ui.dom
 
-import hu.simplexion.adaptive.base.*
-import hu.simplexion.adaptive.base.internal.BoundFragmentFactory
-import hu.simplexion.adaptive.base.internal.initStateMask
+import hu.simplexion.adaptive.foundation.*
+import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
+import hu.simplexion.adaptive.foundation.internal.initStateMask
 import hu.simplexion.adaptive.ui.css.AdaptiveCssStyle
 import kotlinx.dom.hasClass
 import org.w3c.dom.HTMLElement

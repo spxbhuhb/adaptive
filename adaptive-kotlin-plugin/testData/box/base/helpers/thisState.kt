@@ -3,8 +3,8 @@
  */
 package hu.simplexion.adaptive.kotlin.base.success
 
-import hu.simplexion.adaptive.base.*
-import hu.simplexion.adaptive.base.testing.*
+import hu.simplexion.adaptive.foundation.*
+import hu.simplexion.adaptive.foundation.testing.*
 
 var actual : AdaptiveFragment<*>? = null
 

@@ -5,9 +5,9 @@ package hu.simplexion.adaptive.ui.android.adapter
 
 import android.content.Context
 import android.view.ViewGroup
-import hu.simplexion.adaptive.base.Adaptive
-import hu.simplexion.adaptive.base.AdaptiveAdapter
-import hu.simplexion.adaptive.base.AdaptiveEntry
+import hu.simplexion.adaptive.foundation.Adaptive
+import hu.simplexion.adaptive.foundation.AdaptiveAdapter
+import hu.simplexion.adaptive.foundation.AdaptiveEntry
 
 /**
  * The entry point of an Adaptive Android component tree.

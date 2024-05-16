@@ -3,7 +3,7 @@
  */
 package hu.simplexion.adaptive.ui.basic
 
-import hu.simplexion.adaptive.base.*
+import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.ui.dom.AdaptiveDOMNodeFragment
 import org.w3c.dom.Node
 

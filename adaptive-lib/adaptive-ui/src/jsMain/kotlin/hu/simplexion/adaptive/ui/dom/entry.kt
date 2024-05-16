@@ -3,9 +3,9 @@
  */
 package hu.simplexion.adaptive.ui.dom
 
-import hu.simplexion.adaptive.base.Adaptive
-import hu.simplexion.adaptive.base.AdaptiveAdapter
-import hu.simplexion.adaptive.base.AdaptiveEntry
+import hu.simplexion.adaptive.foundation.Adaptive
+import hu.simplexion.adaptive.foundation.AdaptiveAdapter
+import hu.simplexion.adaptive.foundation.AdaptiveEntry
 
 /**
  * The entry point of an Adaptive browser component tree.

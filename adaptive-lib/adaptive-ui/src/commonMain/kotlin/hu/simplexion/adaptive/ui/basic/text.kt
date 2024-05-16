@@ -4,8 +4,8 @@
 
 package hu.simplexion.adaptive.ui.basic
 
-import hu.simplexion.adaptive.base.AdaptiveExpect
-import hu.simplexion.adaptive.base.manualImplementation
+import hu.simplexion.adaptive.foundation.AdaptiveExpect
+import hu.simplexion.adaptive.foundation.manualImplementation
 
 @AdaptiveExpect
 fun text(text: String) {

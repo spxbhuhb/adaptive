@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.server.builtin
 
-import hu.simplexion.adaptive.base.*
+import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
 import hu.simplexion.adaptive.service.ServiceContext

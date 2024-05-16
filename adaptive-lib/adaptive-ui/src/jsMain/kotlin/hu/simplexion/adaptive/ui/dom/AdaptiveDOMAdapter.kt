@@ -3,10 +3,10 @@
  */
 package hu.simplexion.adaptive.ui.dom
 
-import hu.simplexion.adaptive.base.AdaptiveAdapter
-import hu.simplexion.adaptive.base.AdaptiveBridge
-import hu.simplexion.adaptive.base.AdaptiveFragment
-import hu.simplexion.adaptive.base.registry.AdaptiveFragmentImplRegistry
+import hu.simplexion.adaptive.foundation.AdaptiveAdapter
+import hu.simplexion.adaptive.foundation.AdaptiveBridge
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.registry.AdaptiveFragmentImplRegistry
 import hu.simplexion.adaptive.ui.basic.BasicRegistry
 import hu.simplexion.adaptive.utility.vmNowMicro
 import kotlinx.browser.window

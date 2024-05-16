@@ -2,8 +2,8 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-import hu.simplexion.adaptive.base.Adaptive
-import hu.simplexion.adaptive.base.producer.poll
+import hu.simplexion.adaptive.foundation.Adaptive
+import hu.simplexion.adaptive.foundation.producer.poll
 import hu.simplexion.adaptive.ktor.withWebSocketTransport
 import hu.simplexion.adaptive.sandbox.api.CounterApi
 import hu.simplexion.adaptive.service.getService

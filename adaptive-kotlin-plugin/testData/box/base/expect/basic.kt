@@ -3,9 +3,9 @@
  */
 package stuff
 
-import hu.simplexion.adaptive.base.*
-import hu.simplexion.adaptive.base.registry.*
-import hu.simplexion.adaptive.base.testing.*
+import hu.simplexion.adaptive.foundation.*
+import hu.simplexion.adaptive.foundation.registry.*
+import hu.simplexion.adaptive.foundation.testing.*
 
 @AdaptiveExpect
 fun text() {

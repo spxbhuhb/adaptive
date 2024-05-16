@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.ui.css
 
-import hu.simplexion.adaptive.base.marker.AdaptiveStyle
+import hu.simplexion.adaptive.foundation.marker.AdaptiveStyle
 
 class AdaptiveCssStyle(
     val name: String
