@@ -8,11 +8,11 @@ Adaptive is a consolidated application development library for Kotlin focusing o
 * frontend and backend components with built-in lifecycle and state handling.
 
 Adaptive comes with a compiler plugin that performs many functions to reach the goals above.
-
-## Important
-
-> Status: **preview**
+ 
+> [!IMPORTANT]
 >
+> Project status: **preview**
+> 
 > While library already works and provides both client and server side functionality,
 > it is not even close to be ready for general production.
 >
@@ -92,15 +92,17 @@ kotlin {
 
 ## Building Adaptive
 
-If you are building with iOS targets you have to run the build on Mac OS X. This is a requirement from Apple,
-see [Multiplatform Setup](https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-setup.html) for details.
-
-To disable iOS targets set the version of `ios-support` to `none` in [libs.versions.toml](gradle/libs.versions.toml). Any
-value other than `none` adds support for iOS.
-
-This is also useful when you don't want to wait for the iOS linking during development.
-
 Run the `build` task of the root project.
+
+> [!Note]
+>
+> If you are building with iOS targets you have to run the build on Mac OS X. This is a requirement from Apple,
+> see [Multiplatform Setup](https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-setup.html) for details.
+>
+> To disable iOS targets set the version of `ios-support` to `none` in [libs.versions.toml](gradle/libs.versions.toml). Any
+> value other than `none` adds support for iOS.
+>
+> This is also useful when you don't want to wait for the iOS linking during development.
 
 Adaptive uses a composite Gradle build. These tasks are defined for the root project and run the appropriate task for
 each included project:
