@@ -2,28 +2,18 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 plugins {
-    kotlin("multiplatform") version "1.9.10"
-    id("hu.simplexion.adaptive") version "2024.05.07-SNAPSHOT"
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.adaptive)
     java
     application
 }
 
 group = "hu.simplexion.adaptive"
+version = libs.versions.adaptive.get()
+
 val baseName = "adaptive-sandbox"
 val pomName = "Adaptive Sandbox"
 val scmPath = "spxbhuhb/adaptive"
-
-tasks["build"].dependsOn(gradle.includedBuilds.map { it.task(":build") })
-tasks["clean"].dependsOn(gradle.includedBuilds.map { it.task(":clean") })
-
-val ktor_version: String by project
-val logback_version: String by project
-
-repositories {
-    mavenLocal()
-    mavenCentral()
-    google()
-}
 
 application {
     mainClass.set("MainKt")
@@ -52,30 +42,23 @@ kotlin {
         binaries.executable()
     }
 
-    sourceSets["commonMain"].dependencies {
-        implementation("hu.simplexion.adaptive:adaptive-core:$version")
-        implementation("hu.simplexion.adaptive:adaptive-exposed:$version")
-        implementation("hu.simplexion.adaptive:adaptive-email:$version")
-        implementation("hu.simplexion.adaptive:adaptive-ui:$version")
-        implementation("hu.simplexion.adaptive:adaptive-ktor:$version")
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(libs.adaptive.core)
+                implementation(libs.adaptive.email)
+                implementation(libs.adaptive.ktor)
+                implementation(libs.adaptive.ui)
+            }
+        }
+
+        jvmMain {
+            dependencies {
+                implementation(libs.adaptive.exposed)
+            }
+        }
     }
 
-    sourceSets["jsMain"].dependencies {
-        implementation("io.ktor:ktor-client-websockets:$ktor_version")
-    }
-
-    sourceSets["jvmMain"].dependencies {
-
-        implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
-        implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
-        implementation("io.ktor:ktor-server-websockets:$ktor_version")
-
-        implementation("ch.qos.logback:logback-classic:$logback_version")
-
-        implementation("org.postgresql:postgresql:42.2.2")
-        implementation("com.h2database:h2:2.1.214")
-        implementation("com.zaxxer:HikariCP:3.4.2")
-    }
 }
 
 tasks.withType<Jar> {

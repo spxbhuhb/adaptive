@@ -128,7 +128,7 @@ kotlin {
 | &nbsp;&nbsp;[ktor](adaptive-lib/adaptive-ktor)         | Ktor Worker with websockets and static directory serving. Transport for services.       |
 | &nbsp;&nbsp;[template](adaptive-lib/adaptive-template) | Build adaptive structures from templates (no-code/low-code).                            |
 | &nbsp;&nbsp;[ui](adaptive-lib/adaptive-ui)             | Basic UI fragments for the supported platforms.                                         |
-| sandbox                                                | Project used during development to try things our without booting up the whole example. |
+| [sandbox](adaptive-sandbox/README.md)                  | Project used during development to try things our without booting up the whole example. |
 
 ## Building Adaptive
 

@@ -19,3 +19,4 @@ register("build:clean")
 register("build:build")
 register("publishing:publishToMavenLocal")
 register("other:kotlinUpgradeYarnLock", js = true)
+register("nodejs:rootPackageJson", js = true) // the sandbox uses this one
