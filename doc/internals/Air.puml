@@ -1,0 +1,73 @@
+@startuml
+
+left to right direction
+
+class AirClass {
+    armElement : ArmClass
+
+    irClass : IrClass
+
+    adapter : IrProperty
+    parent : IrProperty
+    index : IrProperty
+    containedFragment : IrProperty
+
+    constructor : IrConstructor
+    initializer : IrAnonymousInitializer
+
+    build : IrSimpleFunction
+    patch : IrSimpleFunction
+    invoke : IrSimpleFunction
+
+    stateVariableMap : AirStateVariable {}
+    stateVariableList : AirStateVariable []
+
+    dirtyMasks : AirDirtyMask []
+}
+AirElement <|-- AirClass
+
+class AirEntryPoint {
+    armElement : ArmClass
+    airClass : AirClass
+}
+AirElement <|-- AirEntryPoint
+
+class AirBuilder {
+    index : Int
+}
+AirFunction <|-- AirBuilder
+
+interface AirFragmentFactory {
+    armElement : ArmWhen,
+    subBuilders: AirBuilder[]
+}
+AirFunction <|-- AirFragmentFactory
+
+class AirSelect {
+    armElement : ArmWhen
+}
+AirFunction <|-- AirSelect
+
+interface AirFunction {
+    armElement: ArmRenderingStatement
+    symbolMap : RuiClassSymbols
+    irFunction : IrSimpleFunction
+}
+AirElement <|-- AirFunction
+
+class AirStateVariable {
+    armElement : ArmStateVariable
+}
+AirElement <|-- AirStateVariable
+
+class AirDirtyMask {
+    armElement : ArmDirtyMask
+    invalidate : IrSimpleFunction
+}
+AirElement <|-- AirDirtyMask
+
+interface AirElement {
+    armElement : ArmElement
+}
+
+@enduml

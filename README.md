@@ -16,6 +16,8 @@ Status: **initial development**
 While the library already works and provides both client and server side functionality it
 is not ready for general production yet. I am working continuously to add improvements.
 
+**NOTE**: The `doc` is rather obsolete at the moment, see issue #12
+
 Supported platforms:
 
 * JVM
