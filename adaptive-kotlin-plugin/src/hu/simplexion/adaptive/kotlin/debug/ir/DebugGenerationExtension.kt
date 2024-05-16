@@ -4,10 +4,6 @@
 package hu.simplexion.adaptive.kotlin.debug.ir
 
 import hu.simplexion.adaptive.kotlin.AdaptiveOptions
-import hu.simplexion.adaptive.kotlin.base.ir.arm2ir.ArmClassBuilder
-import hu.simplexion.adaptive.kotlin.base.ir.arm2ir.ArmEntryPointBuilder
-import hu.simplexion.adaptive.kotlin.base.ir.ir2arm.EntryPointTransform
-import hu.simplexion.adaptive.kotlin.base.ir.ir2arm.OriginalFunctionTransform
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment

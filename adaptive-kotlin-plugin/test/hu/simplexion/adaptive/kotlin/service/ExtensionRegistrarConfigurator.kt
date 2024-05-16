@@ -7,7 +7,7 @@ package hu.simplexion.adaptive.kotlin.service
 import hu.simplexion.adaptive.kotlin.AdaptiveOptions
 import hu.simplexion.adaptive.kotlin.AdaptivePluginRegistrar
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatGenerationExtension
-import hu.simplexion.adaptive.kotlin.base.ir.AdaptiveGenerationExtension
+import hu.simplexion.adaptive.kotlin.foundation.ir.AdaptiveGenerationExtension
 import hu.simplexion.adaptive.kotlin.debug.ir.DebugGenerationExtension
 import hu.simplexion.adaptive.kotlin.server.ir.ServerGenerationExtension
 import hu.simplexion.adaptive.kotlin.service.ir.ServicesGenerationExtension
