@@ -8,9 +8,9 @@ import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import hu.simplexion.adaptive.foundation.internal.*
 import hu.simplexion.adaptive.foundation.producer.AdaptiveProducer
 
-abstract class AdaptiveFragment<BT>(
-    val adapter: AdaptiveAdapter<BT>,
-    val parent: AdaptiveFragment<BT>?,
+abstract class AdaptiveFragment(
+    val adapter: AdaptiveAdapter,
+    val parent: AdaptiveFragment?,
     val index: Int,
     stateSize: Int
 ) {
@@ -22,14 +22,14 @@ abstract class AdaptiveFragment<BT>(
     val state: Array<Any?> = arrayOfNulls<Any?>(stateSize)
 
     @Suppress("LeakingThis") // closure won't do anything with components during init
-    open val thisClosure: AdaptiveClosure<BT> = AdaptiveClosure(arrayOf(this), stateSize)
+    open val thisClosure: AdaptiveClosure = AdaptiveClosure(arrayOf(this), stateSize)
 
-    open val createClosure: AdaptiveClosure<BT>
+    open val createClosure: AdaptiveClosure
         get() = parent?.thisClosure ?: thisClosure
 
     var dirtyMask: StateVariableMask = initStateMask
 
-    var containedFragment: AdaptiveFragment<BT>? = null
+    var containedFragment: AdaptiveFragment? = null
 
     var producers: MutableList<AdaptiveProducer>? = null
 
@@ -39,11 +39,11 @@ abstract class AdaptiveFragment<BT>(
     // Functions that support the descendants of this fragment
     // --------------------------------------------------------------------------
 
-    open fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>? {
+    open fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
         pluginGenerated("genBuild")
     }
 
-    open fun genPatchDescendant(fragment: AdaptiveFragment<BT>) {
+    open fun genPatchDescendant(fragment: AdaptiveFragment) {
         pluginGenerated("genPatchDescendant")
     }
 
@@ -75,6 +75,28 @@ abstract class AdaptiveFragment<BT>(
         pluginGenerated("genInvokeSuspend")
     }
 
+    open fun addActual(fragment: AdaptiveFragment) {
+        ops(
+            "addActual",
+            """
+                unhandled addActual call,
+                probably a bug in a manually implemented fragment,
+                this: $this, fragment: $fragment
+            """
+        )
+    }
+
+    open fun removeActual(fragment: AdaptiveFragment) {
+        ops(
+            "removeActual",
+            """
+                unhandled addActual call,
+                probably a bug in a manually implemented fragment,
+                this: $this, fragment: $fragment
+            """
+        )
+    }
+
     // --------------------------------------------------------------------------
     // Functions that operate on the fragment itself
     // --------------------------------------------------------------------------
@@ -89,16 +111,12 @@ abstract class AdaptiveFragment<BT>(
         if (trace) trace("after-Create")
     }
 
-    open fun mount(bridge: AdaptiveBridge<BT>) {
-        if (trace) trace("before-Mount", "bridge", bridge)
+    open fun mount() {
+        if (trace) trace("before-Mount")
 
-        innerMount(bridge)
+        containedFragment?.mount()
 
-        if (trace) trace("after-Mount", "bridge", bridge)
-    }
-
-    open fun innerMount(bridge: AdaptiveBridge<BT>) {
-        containedFragment?.mount(bridge)
+        if (trace) trace("after-Mount")
     }
 
     open fun patch() {
@@ -132,16 +150,12 @@ abstract class AdaptiveFragment<BT>(
         pluginGenerated("genPatchInternal")
     }
 
-    open fun unmount(bridge: AdaptiveBridge<BT>) {
-        if (trace) trace("before-Unmount", "bridge", bridge)
+    open fun unmount() {
+        if (trace) trace("before-Unmount")
 
-        innerUnmount(bridge)
+        containedFragment?.unmount()
 
-        if (trace) trace("after-Unmount", "bridge", bridge)
-    }
-
-    open fun innerUnmount(bridge: AdaptiveBridge<BT>) {
-        containedFragment?.unmount(bridge)
+        if (trace) trace("after-Unmount")
     }
 
     open fun dispose() {
@@ -249,7 +263,7 @@ abstract class AdaptiveFragment<BT>(
      */
     fun setBinding(
         indexInThis: Int,
-        descendant: AdaptiveFragment<BT>,
+        descendant: AdaptiveFragment,
         indexInTarget: Int,
         path: Array<String>? = null,
         boundType: String,
@@ -300,16 +314,16 @@ abstract class AdaptiveFragment<BT>(
     // Fragment search
     // --------------------------------------------------------------------------
 
-    inline fun <reified T> single(): AdaptiveFragment<BT> =
-        mutableListOf<AdaptiveFragment<BT>>().also { r -> filter(r) { it is T } }.single()
+    inline fun <reified T> single(): AdaptiveFragment =
+        mutableListOf<AdaptiveFragment>().also { r -> filter(r) { it is T } }.single()
 
-    open fun single(filterFun: (it: AdaptiveFragment<BT>) -> Boolean): AdaptiveFragment<BT> =
-        mutableListOf<AdaptiveFragment<BT>>().also { filter(it, filterFun) }.single()
+    open fun single(filterFun: (it: AdaptiveFragment) -> Boolean): AdaptiveFragment =
+        mutableListOf<AdaptiveFragment>().also { filter(it, filterFun) }.single()
 
-    open fun filter(filterFun: (it: AdaptiveFragment<BT>) -> Boolean): List<AdaptiveFragment<BT>> =
-        mutableListOf<AdaptiveFragment<BT>>().also { filter(it, filterFun) }
+    open fun filter(filterFun: (it: AdaptiveFragment) -> Boolean): List<AdaptiveFragment> =
+        mutableListOf<AdaptiveFragment>().also { filter(it, filterFun) }
 
-    open fun filter(result: MutableList<AdaptiveFragment<BT>>, filterFun: (it: AdaptiveFragment<BT>) -> Boolean) {
+    open fun filter(result: MutableList<AdaptiveFragment>, filterFun: (it: AdaptiveFragment) -> Boolean) {
         if (filterFun(this)) {
             result += this
         }
@@ -321,11 +335,27 @@ abstract class AdaptiveFragment<BT>(
     // --------------------------------------------------------------------------
 
     fun pluginGenerated(point: String): Nothing {
-        throw IllegalStateException("this code should be replaced by the compiler plugin, please open a bug report, fragment: $this, point: $point")
+        ops(
+            "pluginGenerated",
+            """
+                this code should be replaced by the compiler plugin,
+                this is probably a bug in Adaptive,
+                please open a bug report on GitHub,
+                fragment: $this, point: $point
+            """
+        )
     }
 
     fun invalidIndex(index: Int): Nothing {
-        throw IllegalStateException("invalid index: $index")
+        ops(
+            "invalidIndex",
+            """
+                theoretically this should never happen,
+                this is probably a bug in Adaptive (or you've been naughty),
+                please open a bug report on GitHub,
+                fragment: $this, index: $index
+            """
+        )
     }
 
     fun trace(point: String) {

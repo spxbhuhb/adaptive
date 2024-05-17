@@ -4,13 +4,14 @@
 package hu.simplexion.adaptive.foundation.internal
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.ops
 
 /**
  * @property  closureSize  The total number of state variables in this closure. This is the sum of the number
  *                         of state variables in [owner] and all [components].
  */
-class AdaptiveClosure<BT>(
-    val components: Array<AdaptiveFragment<BT>>,
+class AdaptiveClosure(
+    val components: Array<AdaptiveFragment>,
     val closureSize: Int
 ) {
     val owner
@@ -41,7 +42,7 @@ class AdaptiveClosure<BT>(
             }
         }
 
-        throw IndexOutOfBoundsException("Invalid state variable index: $stateVariableIndex")
+        invalidIndex("get", stateVariableIndex)
     }
 
     /**
@@ -62,7 +63,7 @@ class AdaptiveClosure<BT>(
             }
         }
 
-        throw IndexOutOfBoundsException("Invalid state variable index: $stateVariableIndex")
+        invalidIndex("set", stateVariableIndex)
     }
 
     /**
@@ -97,4 +98,16 @@ class AdaptiveClosure<BT>(
         return builder.toString()
     }
 
+    private fun invalidIndex(point: String, index : Int) : Nothing {
+        ops(
+            "invalidStateVariableIndex",
+            """
+                the code tried to reach a data that is simply not there,
+                this might be an error in Adaptive or in your code,
+                if this is a manually implemented fragment, check it for bugs,
+                otherwise, please open a GitHub issue or contact me on Slack,
+                point: $point closure: ${this.dump()}
+            """
+        )
+    }
 }

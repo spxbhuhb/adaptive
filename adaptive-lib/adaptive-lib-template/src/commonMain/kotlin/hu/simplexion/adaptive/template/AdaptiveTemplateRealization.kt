@@ -15,7 +15,7 @@ fun templateRealization(template: AdaptiveTemplateData) {
 }
 
 class AdaptiveTemplateRealization<BT>(
-    adapter: AdaptiveAdapter<BT>,
+    adapter: AdaptiveAdapter,
     parent: AdaptiveFragment<BT>?,
     index: Int
 ) : AdaptiveFragment<BT>(adapter, parent, index, 31) {
@@ -49,7 +49,7 @@ class AdaptiveTemplateRealization<BT>(
         if (trace) trace("after-Create")
     }
 
-    override fun mount(bridge: AdaptiveBridge<BT>) {
+    override fun mount() {
         if (adapter.trace) trace("before-Mount", "bridge", bridge)
 
         for (fragment in fragments) {
@@ -79,7 +79,7 @@ class AdaptiveTemplateRealization<BT>(
 
     }
 
-    override fun unmount(bridge: AdaptiveBridge<BT>) {
+    override fun unmount() {
         if (trace) trace("before-Unmount", "bridge", bridge)
 
         for (fragment in fragments) {

@@ -4,10 +4,7 @@
 package hu.simplexion.adaptive.foundation
 
 import hu.simplexion.adaptive.foundation.internal.BoundSupportFunction
-import hu.simplexion.adaptive.foundation.structural.AdaptivePlaceholder
 import hu.simplexion.adaptive.foundation.testing.AdaptiveTestAdapter
-import hu.simplexion.adaptive.foundation.testing.AdaptiveTestBridge
-import hu.simplexion.adaptive.foundation.testing.TestNode
 import hu.simplexion.adaptive.foundation.testing.TraceEvent
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -29,11 +26,10 @@ class SupportFunctionTest {
     @Test
     fun test() {
         val adapter = AdaptiveTestAdapter()
-        val root = AdaptiveTestBridge(1)
 
         AdaptiveSupportFunctionTest(adapter, null, 0).apply {
             create()
-            mount(root)
+            mount()
         }.also {
             assertEquals(11 + 12 + 13, it.state[0])
         }
@@ -55,10 +51,12 @@ class SupportFunctionTest {
                     TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [12, BoundSupportFunction(2, 3, 0)]"),
                     TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Create", ""),
                     TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Create", ""),
-                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveSupportFunctionInner", 3, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Mount", "bridge: 1")
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Mount"),
+                    TraceEvent("AdaptiveSupportFunctionInner", 3, "before-Mount"),
+                    TraceEvent("TestPlaceholder", 4, "before-Mount"),
+                    TraceEvent("TestPlaceholder", 4, "after-Mount"),
+                    TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Mount"),
+                    TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Mount")
                 )
             ),
             adapter.actual(dumpCode = false)
@@ -67,15 +65,15 @@ class SupportFunctionTest {
 }
 
 class AdaptiveSupportFunctionTest(
-    adapter: AdaptiveAdapter<TestNode>,
-    parent: AdaptiveFragment<TestNode>?,
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<TestNode>(adapter, parent, index, 1) {
+) : AdaptiveFragment(adapter, parent, index, 1) {
 
     val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
     val dependencyMask_0_1 = 0x00 // fragment index: 1, state variable index: 1
 
-    override fun genBuild(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
 
         val fragment = when (declarationIndex) {
             0 -> AdaptiveSupportFunctionInner(adapter, parent, declarationIndex)
@@ -87,7 +85,7 @@ class AdaptiveSupportFunctionTest(
         return fragment
     }
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<TestNode>) {
+    override fun genPatchDescendant(fragment: AdaptiveFragment) {
 
         val closureMask = fragment.getCreateClosureDirtyMask()
 
@@ -134,13 +132,13 @@ class AdaptiveSupportFunctionTest(
 }
 
 class AdaptiveSupportFunctionInner(
-    adapter: AdaptiveAdapter<TestNode>,
-    parent: AdaptiveFragment<TestNode>?,
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<TestNode>(adapter, parent, index, 2) {
+) : AdaptiveFragment(adapter, parent, index, 2) {
 
-    override fun genBuild(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
-        return AdaptivePlaceholder(adapter, this, - 1)
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
+        return adapter.createPlaceholder(this, 0)
     }
 
     override fun genPatchInternal() {

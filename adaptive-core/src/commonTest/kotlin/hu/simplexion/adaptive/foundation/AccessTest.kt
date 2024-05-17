@@ -29,11 +29,10 @@ class AccessTest {
     @Test
     fun test() {
         val adapter = AdaptiveTestAdapter()
-        val root = AdaptiveTestBridge(1)
 
         AdaptiveAccessBindingTest(adapter, null, 0).apply {
             create()
-            mount(root)
+            mount()
         }
 
         assertEquals(
@@ -60,12 +59,12 @@ class AccessTest {
                     TraceEvent("AdaptiveT1", 4, "after-Create", ""),
                     TraceEvent("AdaptiveAccessor", 3, "after-Create", ""),
                     TraceEvent("AdaptiveAccessBindingTest", 2, "after-Create", ""),
-                    TraceEvent("AdaptiveAccessBindingTest", 2, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveAccessor", 3, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveT1", 4, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveT1", 4, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveAccessor", 3, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveAccessBindingTest", 2, "after-Mount", "bridge: 1")
+                    TraceEvent("AdaptiveAccessBindingTest", 2, "before-Mount"),
+                    TraceEvent("AdaptiveAccessor", 3, "before-Mount"),
+                    TraceEvent("AdaptiveT1", 4, "before-Mount"),
+                    TraceEvent("AdaptiveT1", 4, "after-Mount"),
+                    TraceEvent("AdaptiveAccessor", 3, "after-Mount"),
+                    TraceEvent("AdaptiveAccessBindingTest", 2, "after-Mount")
                     //@formatter:on
                 )
             ),
@@ -75,14 +74,14 @@ class AccessTest {
 }
 
 class AdaptiveAccessBindingTest(
-    adapter: AdaptiveAdapter<TestNode>,
-    parent: AdaptiveFragment<TestNode>?,
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<TestNode>(adapter, parent, index, 1) {
+) : AdaptiveFragment(adapter, parent, index, 1) {
 
     val dependencyMask_0_0 = 0x01 // fragment index: 0, state variable index: 0
 
-    override fun genBuild(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
 
         val fragment = when (declarationIndex) {
             0 -> AdaptiveAccessor(adapter, parent, declarationIndex)
@@ -94,7 +93,7 @@ class AdaptiveAccessBindingTest(
         return fragment
     }
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<TestNode>) {
+    override fun genPatchDescendant(fragment: AdaptiveFragment) {
 
         val closureMask = fragment.getCreateClosureDirtyMask()
 
@@ -114,14 +113,14 @@ class AdaptiveAccessBindingTest(
 }
 
 class AdaptiveAccessor(
-    adapter: AdaptiveAdapter<TestNode>,
-    parent: AdaptiveFragment<TestNode>?,
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<TestNode>(adapter, parent, index, 1) {
+) : AdaptiveFragment(adapter, parent, index, 1) {
 
     val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
 
-    override fun genBuild(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
 
         val fragment = when (declarationIndex) {
             0 -> AdaptiveT1(adapter, parent, declarationIndex)
@@ -133,7 +132,7 @@ class AdaptiveAccessor(
         return fragment
     }
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<TestNode>) {
+    override fun genPatchDescendant(fragment: AdaptiveFragment) {
 
         val closureMask = fragment.getCreateClosureDirtyMask()
 

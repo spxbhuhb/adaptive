@@ -12,7 +12,7 @@ fun text() {
 }
 
 class AdaptiveText<BT>(
-    adapter: AdaptiveAdapter<BT>,
+    adapter: AdaptiveAdapter,
     parent: AdaptiveFragment<BT>?,
     index: Int
 ) : AdaptiveFragment<BT>(adapter, parent, index, 0) {

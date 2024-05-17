@@ -182,7 +182,7 @@ class AdaptiveHigherFun<BT> : AdaptiveFragment<BT> {
         containedFragment = build(thisClosure, this, 0) // 0 is the index of the `builder` call
     }
 
-    fun build(declarationClosure: AdaptiveClosure<BT>, parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
+    fun build(declarationClosure: AdaptiveClosure, parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
         
         val fragment = when (declarationIndex) {
             0 -> state[1].build(declarationClosure, parent, declarationIndex)

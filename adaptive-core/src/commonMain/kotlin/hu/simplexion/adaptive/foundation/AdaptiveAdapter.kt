@@ -6,13 +6,13 @@ package hu.simplexion.adaptive.foundation
 import hu.simplexion.adaptive.foundation.testing.TraceEvent
 import kotlinx.coroutines.CoroutineDispatcher
 
-interface AdaptiveAdapter<BT> {
+interface AdaptiveAdapter {
 
-    val fragmentFactory : AdaptiveFragmentFactory<BT>
+    val fragmentFactory : AdaptiveFragmentFactory
 
-    var rootFragment : AdaptiveFragment<BT>
+    var rootFragment : AdaptiveFragment
 
-    val rootBridge: AdaptiveBridge<BT>
+    val rootContainer: Any
 
     val dispatcher: CoroutineDispatcher
 
@@ -20,14 +20,14 @@ interface AdaptiveAdapter<BT> {
 
     val startedAt: Long
 
-    fun actualize(name : String, parent : AdaptiveFragment<BT>, index: Int) =
+    fun actualize(name : String, parent : AdaptiveFragment, index: Int) =
         fragmentFactory.newInstance(name, parent, index)
 
-    fun createPlaceholder(): AdaptiveBridge<BT>
+    fun createPlaceholder(parent : AdaptiveFragment, index : Int): AdaptiveFragment
 
     fun newId(): Long
 
-    fun trace(fragment: AdaptiveFragment<BT>, point: String, data : String) {
+    fun trace(fragment: AdaptiveFragment, point: String, data : String) {
         TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).println(startedAt)
     }
 

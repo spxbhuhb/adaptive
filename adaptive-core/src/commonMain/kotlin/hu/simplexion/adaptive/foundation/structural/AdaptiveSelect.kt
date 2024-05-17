@@ -4,17 +4,16 @@
 package hu.simplexion.adaptive.foundation.structural
 
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
-import hu.simplexion.adaptive.foundation.AdaptiveBridge
-import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
 
-class AdaptiveSelect<BT>(
-    adapter: AdaptiveAdapter<BT>,
-    parent: AdaptiveFragment<BT>?,
+class AdaptiveSelect(
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int,
-) : AdaptiveFragment<BT>(adapter, parent, index, 2) {
+) : AdaptiveFragment(adapter, parent, index, 2) {
 
-    override val createClosure : AdaptiveClosure<BT>
+    override val createClosure : AdaptiveClosure
         get() = parent!!.thisClosure
 
     override val thisClosure = AdaptiveClosure(
@@ -22,7 +21,7 @@ class AdaptiveSelect<BT>(
         createClosure.closureSize + state.size
     )
 
-    val placeholder: AdaptiveBridge<BT> = adapter.createPlaceholder()
+    val placeholder: AdaptiveFragment = adapter.createPlaceholder(this, -1)
 
     val stateBranch
         get() = state[0] as Int
@@ -36,7 +35,7 @@ class AdaptiveSelect<BT>(
     /**
      * The fragment that is currently shown.
      */
-    var shownFragment: AdaptiveFragment<BT>? = null
+    var shownFragment: AdaptiveFragment? = null
 
     override fun create() {
         if (trace) trace("before-Create")
@@ -48,42 +47,44 @@ class AdaptiveSelect<BT>(
         if (trace) trace("after-Create")
     }
 
-    override fun mount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) trace("before-Mount", "bridge", bridge)
+    override fun mount() {
+        if (adapter.trace) trace("before-Mount")
 
         mounted = true
-        bridge.add(placeholder)
-        shownFragment?.mount(placeholder)
 
-        if (adapter.trace) trace("after-Mount", "bridge", bridge)
+        placeholder.mount()
+        shownFragment?.mount()
+
+        if (adapter.trace) trace("after-Mount")
     }
 
     override fun genPatchInternal() {
         if (stateBranch == shownBranch) {
             shownFragment?.patch()
         } else {
-            if (mounted) shownFragment?.unmount(placeholder)
+            if (mounted) shownFragment?.unmount()
             shownFragment?.dispose()
 
             if (stateBranch == - 1) {
                 shownFragment = null
             } else {
                 shownFragment = createClosure.owner.genBuild(this, stateBranch)
-                if (mounted) shownFragment?.mount(placeholder)
+                if (mounted) shownFragment?.mount()
             }
 
             shownBranch = stateBranch
         }
     }
 
-    override fun unmount(bridge: AdaptiveBridge<BT>) {
-        if (trace) trace("before-Unmount", "bridge", bridge)
+    override fun unmount() {
+        if (trace) trace("before-Unmount")
 
-        shownFragment?.unmount(placeholder)
-        bridge.remove(placeholder)
+        shownFragment?.unmount()
+        placeholder.unmount()
+
         mounted = false
 
-        if (trace) trace("after-Unmount", "bridge", bridge)
+        if (trace) trace("after-Unmount")
     }
 
     override fun dispose() {

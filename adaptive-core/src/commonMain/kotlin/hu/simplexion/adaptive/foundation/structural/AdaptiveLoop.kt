@@ -7,35 +7,42 @@ import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
 
-class AdaptiveLoop<BT, IT>(
-    adapter: AdaptiveAdapter<BT>,
-    parent: AdaptiveFragment<BT>?,
+class AdaptiveLoop<IT>(
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int,
-) : AdaptiveFragment<BT>(adapter, parent, index, 2) {
+) : AdaptiveFragment(adapter, parent, index, 2) {
 
-    override val createClosure : AdaptiveClosure<BT>
+    override val createClosure : AdaptiveClosure
         get() = parent!!.thisClosure
 
     @Suppress("UNCHECKED_CAST")
     val iterator
         get() = state[0] as Iterator<IT>
 
-    @Suppress("UNCHECKED_CAST")
     val builder
-        get() = state[1] as BoundFragmentFactory<BT>
+        get() = state[1] as BoundFragmentFactory
 
-    val fragments = mutableListOf<AdaptiveFragment<BT>>()
+    val fragments = mutableListOf<AdaptiveFragment>()
 
-    val placeholder: AdaptiveBridge<BT> = adapter.createPlaceholder()
+    val placeholder: AdaptiveFragment = adapter.createPlaceholder(this, -1)
 
-    fun addAnonymous(iteratorValue: IT): AdaptiveFragment<BT> =
+    fun addAnonymous(iteratorValue: IT): AdaptiveFragment =
         AdaptiveAnonymous(adapter, this, 0, 1, builder).also {
             fragments.add(it)
             it.setStateVariable(0, iteratorValue)
         }
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<BT>) {
+    override fun genPatchDescendant(fragment: AdaptiveFragment) {
         // anonymous fragment iterator is read only, and it is set during create
+    }
+
+    override fun addActual(fragment: AdaptiveFragment) {
+        parent!!.addActual(fragment)
+    }
+
+    override fun removeActual(fragment: AdaptiveFragment) {
+        parent!!.removeActual(fragment)
     }
 
     override fun create() {
@@ -44,16 +51,16 @@ class AdaptiveLoop<BT, IT>(
         if (trace) trace("after-Create")
     }
 
-    override fun mount(bridge: AdaptiveBridge<BT>) {
-        if (adapter.trace) trace("before-Mount", "bridge", bridge)
+    override fun mount() {
+        if (adapter.trace) trace("before-Mount")
 
-        bridge.add(placeholder)
+        placeholder.mount()
 
         for (fragment in fragments) {
-            fragment.mount(placeholder)
+            fragment.mount()
         }
 
-        if (adapter.trace) trace("after-Mount", "bridge", bridge)
+        if (adapter.trace) trace("after-Mount")
     }
 
     override fun genPatchInternal() {
@@ -71,7 +78,7 @@ class AdaptiveLoop<BT, IT>(
             if (index >= fragments.size) {
                 val f = addAnonymous(loopVariable)
                 f.create()
-                f.mount(placeholder)
+                f.mount()
             } else {
                 fragments[index].also {
                     it.setStateVariable(0, loopVariable)
@@ -82,7 +89,7 @@ class AdaptiveLoop<BT, IT>(
         }
         while (index < fragments.size) {
             val f = fragments.removeLast()
-            f.unmount(placeholder)
+            f.unmount()
             f.dispose()
             index ++
         }
@@ -94,15 +101,16 @@ class AdaptiveLoop<BT, IT>(
         }
     }
 
-    override fun unmount(bridge: AdaptiveBridge<BT>) {
-        if (trace) trace("before-Unmount", "bridge", bridge)
+    override fun unmount() {
+        if (trace) trace("before-Unmount")
 
         for (fragment in fragments) {
-            fragment.unmount(placeholder)
+            fragment.unmount()
         }
 
-        bridge.remove(placeholder)
-        if (trace) trace("after-Unmount", "bridge", bridge)
+        placeholder.unmount()
+
+        if (trace) trace("after-Unmount")
     }
 
     override fun dispose() {
@@ -115,7 +123,7 @@ class AdaptiveLoop<BT, IT>(
         if (trace) trace("after-Dispose")
     }
 
-    override fun filter(result : MutableList<AdaptiveFragment<BT>>, filterFun : (it : AdaptiveFragment<BT>) -> Boolean) {
+    override fun filter(result : MutableList<AdaptiveFragment>, filterFun : (it : AdaptiveFragment) -> Boolean) {
         if (filterFun(this)) {
             result += this
         }

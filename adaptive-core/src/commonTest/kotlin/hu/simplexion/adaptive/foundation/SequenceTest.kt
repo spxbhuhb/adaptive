@@ -19,11 +19,10 @@ class SequenceTest {
     @Test
     fun test() {
         val adapter = AdaptiveTestAdapter()
-        val root = AdaptiveTestBridge(1)
 
         AdaptiveSequenceTest(adapter, null, 0).apply {
             create()
-            mount(root)
+            mount()
         }
 
         assertEquals(
@@ -53,14 +52,14 @@ class SequenceTest {
                     TraceEvent("AdaptiveT1", 5, "after-Create", ""),
                     TraceEvent("AdaptiveSequence", 3, "after-Create", ""),
                     TraceEvent("AdaptiveSequenceTest", 2, "after-Create", ""),
-                    TraceEvent("AdaptiveSequenceTest", 2, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveSequence", 3, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveT0", 4, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveT0", 4, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveT1", 5, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveT1", 5, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveSequence", 3, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveSequenceTest", 2, "after-Mount", "bridge: 1")
+                    TraceEvent("AdaptiveSequenceTest", 2, "before-Mount"),
+                    TraceEvent("AdaptiveSequence", 3, "before-Mount"),
+                    TraceEvent("AdaptiveT0", 4, "before-Mount"),
+                    TraceEvent("AdaptiveT0", 4, "after-Mount"),
+                    TraceEvent("AdaptiveT1", 5, "before-Mount"),
+                    TraceEvent("AdaptiveT1", 5, "after-Mount"),
+                    TraceEvent("AdaptiveSequence", 3, "after-Mount"),
+                    TraceEvent("AdaptiveSequenceTest", 2, "after-Mount")
                 )
             ),
             adapter.actual(dumpCode = false)
@@ -69,15 +68,15 @@ class SequenceTest {
 }
 
 class AdaptiveSequenceTest(
-    adapter: AdaptiveAdapter<TestNode>,
-    parent: AdaptiveFragment<TestNode>?,
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<TestNode>(adapter, parent, index, 0) {
+) : AdaptiveFragment(adapter, parent, index, 0) {
 
     val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
     val dependencyMask_1_0 = 0x00 // fragment index: 1, state variable index: 0
 
-    override fun genBuild(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
 
         val fragment = when (declarationIndex) {
             0 -> AdaptiveSequence(adapter, parent, declarationIndex)
@@ -91,7 +90,7 @@ class AdaptiveSequenceTest(
         return fragment
     }
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<TestNode>) {
+    override fun genPatchDescendant(fragment: AdaptiveFragment) {
 
         val closureMask = fragment.getCreateClosureDirtyMask()
 

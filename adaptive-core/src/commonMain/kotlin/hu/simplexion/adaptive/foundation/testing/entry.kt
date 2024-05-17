@@ -13,7 +13,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveEntry
  * **IMPORTANT** variables declared outside the block are **NOT** reactive
  */
 @AdaptiveEntry
-fun test(printTrace : Boolean = false, @Adaptive block: (adapter : AdaptiveAdapter<*>) -> Unit) : AdaptiveTestAdapter =
+fun test(printTrace : Boolean = false, @Adaptive block: (adapter : AdaptiveAdapter) -> Unit) : AdaptiveTestAdapter =
     AdaptiveTestAdapter(printTrace).also {
         block(it)
         it.mounted()

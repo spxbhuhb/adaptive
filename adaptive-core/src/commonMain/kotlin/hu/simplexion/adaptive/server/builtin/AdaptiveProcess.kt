@@ -9,8 +9,8 @@ package hu.simplexion.adaptive.server.builtin
 //}
 //
 //class AdaptiveProcess(
-//    adapter: AdaptiveAdapter<BT>,
-//    parent: AdaptiveFragment<BT>,
+//    adapter: AdaptiveAdapter,
+//    parent: AdaptiveFragment,
 //    index: Int
 //) : AdaptiveServerFragment<BT>(adapter, parent, index) {
 //

@@ -6,10 +6,10 @@ package hu.simplexion.adaptive.foundation.binding
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 
 class AdaptiveStateVariableBinding<VT>(
-    val sourceFragment: AdaptiveFragment<*>,
+    val sourceFragment: AdaptiveFragment,
     val indexInSourceState: Int,
     val indexInSourceClosure: Int,
-    val targetFragment: AdaptiveFragment<*>,
+    val targetFragment: AdaptiveFragment,
     val indexInTargetState: Int,
     val path: Array<String>?,
     val supportFunctionIndex: Int,

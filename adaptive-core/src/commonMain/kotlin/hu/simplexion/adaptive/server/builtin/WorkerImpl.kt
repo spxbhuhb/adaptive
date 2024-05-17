@@ -9,11 +9,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-interface WorkerImpl<T : WorkerImpl<T>> : ServerFragmentImpl<Any> {
+interface WorkerImpl<T : WorkerImpl<T>> : ServerFragmentImpl {
 
     // FIXME scope change in adaptive worker (this does not respect the change)
     val isActive: Boolean
-        get() =(fragment as AdaptiveWorker<*>).scope.isActive
+        get() =(fragment as AdaptiveWorker).scope.isActive
 
     suspend fun run()
 
@@ -23,7 +23,7 @@ interface WorkerImpl<T : WorkerImpl<T>> : ServerFragmentImpl<Any> {
  * Launches a function in the scope of this worker.
  */
 fun WorkerImpl<*>.launch(function: suspend CoroutineScope.() -> Unit) {
-    (fragment as AdaptiveWorker<*>)
+    (fragment as AdaptiveWorker)
         .scope.launch {
             try {
                 function(this)

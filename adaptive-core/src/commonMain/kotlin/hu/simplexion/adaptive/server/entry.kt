@@ -13,8 +13,8 @@ import hu.simplexion.adaptive.foundation.AdaptiveEntry
  * **IMPORTANT** variables declared outside the block are **NOT** reactive
  */
 @AdaptiveEntry
-fun server(wait : Boolean = false, @Adaptive block: (adapter : AdaptiveAdapter<*>) -> Unit) : AdaptiveServerAdapter<*> =
-    AdaptiveServerAdapter<Any>(wait).also {
+fun server(wait : Boolean = false, @Adaptive block: (adapter : AdaptiveAdapter) -> Unit) : AdaptiveServerAdapter =
+    AdaptiveServerAdapter(wait).also {
         block(it)
         it.mounted()
     }

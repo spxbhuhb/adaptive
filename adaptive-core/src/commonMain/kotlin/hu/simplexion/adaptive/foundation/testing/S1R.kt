@@ -15,15 +15,15 @@ fun S1R(supportFun: (i: Int) -> Int) {
 }
 
 @Suppress("unused")
-class AdaptiveS1R<BT>(
-    adapter: AdaptiveAdapter<BT>,
-    parent: AdaptiveFragment<BT>?,
+class AdaptiveS1R(
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<BT>(adapter, parent, index, 1) {
+) : AdaptiveFragment(adapter, parent, index, 1) {
 
-    override fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>? = null
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<BT>) = Unit
+    override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
     override fun genPatchInternal() = Unit
 
@@ -33,11 +33,11 @@ class AdaptiveS1R<BT>(
             state[0] = v
         }
 
-    companion object : AdaptiveFragmentCompanion<TestNode> {
+    companion object : AdaptiveFragmentCompanion {
 
         override val fragmentType = "hu.simplexion.adaptive.foundation.testing.AdaptiveS1R"
 
-        override fun newInstance(parent: AdaptiveFragment<TestNode>, index: Int): AdaptiveFragment<TestNode> =
+        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
             AdaptiveS1R(parent.adapter, parent, index)
 
     }

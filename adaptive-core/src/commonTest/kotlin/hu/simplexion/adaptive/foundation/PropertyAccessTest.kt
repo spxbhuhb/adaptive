@@ -79,11 +79,10 @@ class PropertyAccessTest {
     @Test
     fun test() {
         val adapter = AdaptiveTestAdapter()
-        val root = AdaptiveTestBridge(1)
 
         AdaptivePropertyAccessBindingTest(adapter, null, 0).apply {
             create()
-            mount(root)
+            mount()
         }
 
         testBinding.setValue(23, true)
@@ -113,12 +112,12 @@ class PropertyAccessTest {
                     TraceEvent("AdaptiveT1", 4, "after-Create", ""),
                     TraceEvent("AdaptivePropertyAccessor", 3, "after-Create", ""),
                     TraceEvent("AdaptivePropertyAccessBindingTest", 2, "after-Create", ""),
-                    TraceEvent("AdaptivePropertyAccessBindingTest", 2, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptivePropertyAccessor", 3, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveT1", 4, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveT1", 4, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptivePropertyAccessor", 3, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptivePropertyAccessBindingTest", 2, "after-Mount", "bridge: 1"),
+                    TraceEvent("AdaptivePropertyAccessBindingTest", 2, "before-Mount"),
+                    TraceEvent("AdaptivePropertyAccessor", 3, "before-Mount"),
+                    TraceEvent("AdaptiveT1", 4, "before-Mount"),
+                    TraceEvent("AdaptiveT1", 4, "after-Mount"),
+                    TraceEvent("AdaptivePropertyAccessor", 3, "after-Mount"),
+                    TraceEvent("AdaptivePropertyAccessBindingTest", 2, "after-Mount"),
                     TraceEvent("AdaptivePropertyAccessor", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000001 state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], -1, AdaptivePropertyMetadata(kotlin.Int))]"),
                     TraceEvent("AdaptiveT1", 4, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [12]"),
                     TraceEvent("AdaptiveT1", 4, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [23]"),
@@ -140,14 +139,14 @@ class PropertyAccessTest {
 }
 
 class AdaptivePropertyAccessBindingTest(
-    adapter: AdaptiveAdapter<TestNode>,
-    parent: AdaptiveFragment<TestNode>?,
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<TestNode>(adapter, parent, index, 1) {
+) : AdaptiveFragment(adapter, parent, index, 1) {
 
     val dependencyMask_0_0 = 0x01 // fragment index: 0, state variable index: 0
 
-    override fun genBuild(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
 
         val fragment = when (declarationIndex) {
             0 -> AdaptivePropertyAccessor(adapter, parent, declarationIndex)
@@ -159,7 +158,7 @@ class AdaptivePropertyAccessBindingTest(
         return fragment
     }
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<TestNode>) {
+    override fun genPatchDescendant(fragment: AdaptiveFragment) {
 
         val closureMask = fragment.getCreateClosureDirtyMask()
 
@@ -184,14 +183,14 @@ class AdaptivePropertyAccessBindingTest(
 }
 
 class AdaptivePropertyAccessor(
-    adapter: AdaptiveAdapter<TestNode>,
-    parent: AdaptiveFragment<TestNode>?,
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<TestNode>(adapter, parent, index, 1) {
+) : AdaptiveFragment(adapter, parent, index, 1) {
 
     val dependencyMask_0_0 = 0x01 // fragment index: 0, state variable index: 0
 
-    override fun genBuild(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
 
         val fragment = when (declarationIndex) {
             0 -> AdaptiveT1(adapter, parent, declarationIndex)
@@ -203,7 +202,7 @@ class AdaptivePropertyAccessor(
         return fragment
     }
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<TestNode>) {
+    override fun genPatchDescendant(fragment: AdaptiveFragment) {
 
         val closureMask = fragment.getCreateClosureDirtyMask()
 

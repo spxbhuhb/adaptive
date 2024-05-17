@@ -4,9 +4,7 @@
 package hu.simplexion.adaptive.foundation.testing
 
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
-import hu.simplexion.adaptive.foundation.AdaptiveBridge
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
 import hu.simplexion.adaptive.utility.getLock
 import hu.simplexion.adaptive.utility.use
 import hu.simplexion.adaptive.utility.vmNowMicro
@@ -17,15 +15,15 @@ import kotlinx.coroutines.withTimeout
 
 class AdaptiveTestAdapter(
     var printTrace : Boolean = false
-) : AdaptiveAdapter<TestNode> {
+) : AdaptiveAdapter {
 
-    var nextId = 1L
+    var nextId = 2L
 
     override val fragmentFactory = TestNodeFragmentFactory
 
-    override lateinit var rootFragment: AdaptiveFragment<TestNode>
+    override lateinit var rootFragment: AdaptiveFragment
 
-    override val rootBridge = AdaptiveTestBridge(newId())
+    override val rootContainer = TestNode()
 
     override var dispatcher: CoroutineDispatcher = Dispatchers.Main
 
@@ -45,11 +43,10 @@ class AdaptiveTestAdapter(
 
     override fun newId(): Long = nextId ++ // This is not thread safe, OK for testing, but beware.
 
-    override fun createPlaceholder(): AdaptiveBridge<TestNode> {
-        return AdaptiveTestBridge(newId())
-    }
+    override fun createPlaceholder(parent : AdaptiveFragment, index : Int) =
+        TestPlaceholder(this, parent, index)
 
-    override fun trace(fragment: AdaptiveFragment<TestNode>, point: String, data: String) {
+    override fun trace(fragment: AdaptiveFragment, point: String, data: String) {
         lock.use {
             traceEvents += TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).also { if (printTrace) it.println(startedAt) }
         }

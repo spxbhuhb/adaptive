@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.foundation.testing
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
 
-object TestNodeFragmentFactory : AdaptiveFragmentFactory<TestNode>() {
+object TestNodeFragmentFactory : AdaptiveFragmentFactory() {
     init {
         addAll(AdaptiveT0, AdaptiveT1, AdaptiveS1, AdaptiveS1R, AdaptiveSuspendS1)
     }

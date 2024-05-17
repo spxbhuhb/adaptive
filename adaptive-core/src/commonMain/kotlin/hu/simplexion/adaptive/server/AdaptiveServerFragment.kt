@@ -8,32 +8,31 @@ import hu.simplexion.adaptive.foundation.internal.BoundSupportFunction
 import hu.simplexion.adaptive.foundation.internal.initStateMask
 import hu.simplexion.adaptive.server.builtin.ServerFragmentImpl
 
-abstract class AdaptiveServerFragment<BT>(
-    adapter: AdaptiveServerAdapter<BT>,
-    parent: AdaptiveFragment<BT>?,
+abstract class AdaptiveServerFragment(
+    adapter: AdaptiveServerAdapter,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<BT>(adapter, parent, index, 2) {
+) : AdaptiveFragment(adapter, parent, index, 2) {
 
     val serverAdapter
-        get() = adapter as AdaptiveServerAdapter<BT>
+        get() = adapter as AdaptiveServerAdapter
 
     // -------------------------------------------------------------------------
     // Fragment overrides
     // -------------------------------------------------------------------------
 
-    override fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>? =
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? =
         null
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<BT>) = Unit
+    override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
     override fun genPatchInternal() {
         if (getThisClosureDirtyMask() != initStateMask) return
 
         check(impl == null) { "inconsistent server state innerMount with a non-null implementation" }
 
-        @Suppress("UNCHECKED_CAST")
         (implFun.invoke()).also {
-            it as ServerFragmentImpl<BT>
+            it as ServerFragmentImpl
             impl = it
             it.fragment = this
             it.logger = serverAdapter.getLogger(it::class.simpleName!!) // FIXME using class simpleName
@@ -48,9 +47,8 @@ abstract class AdaptiveServerFragment<BT>(
     val implFun : BoundSupportFunction
         get() = state[0] as BoundSupportFunction
 
-    @Suppress("UNCHECKED_CAST")
-    var impl : ServerFragmentImpl<BT>?
-        get() = state[1] as ServerFragmentImpl<BT>?
+    var impl : ServerFragmentImpl?
+        get() = state[1] as ServerFragmentImpl?
         set(value) { state[1] = value }
 
 }

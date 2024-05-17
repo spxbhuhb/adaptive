@@ -38,14 +38,13 @@ class PollTest {
     @Test
     fun test() {
         val adapter = AdaptiveTestAdapter()
-        val root = AdaptiveTestBridge(1)
 
         adapter.dispatcher = newSingleThreadContext("test thread")
 
         runBlocking(adapter.dispatcher) {
             AdaptivePollTest(adapter, null, 0).apply {
                 create()
-                mount(root)
+                mount()
             }
 
             adapter.waitFor()
@@ -68,10 +67,10 @@ class PollTest {
                         TraceEvent("AdaptiveT1", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [2]"),
                         TraceEvent("AdaptiveT1", 3, "after-Create", ""),
                         TraceEvent("AdaptivePollTest", 2, "after-Create", ""),
-                        TraceEvent("AdaptivePollTest", 2, "before-Mount", "bridge: 1"),
-                        TraceEvent("AdaptiveT1", 3, "before-Mount", "bridge: 1"),
-                        TraceEvent("AdaptiveT1", 3, "after-Mount", "bridge: 1"),
-                        TraceEvent("AdaptivePollTest", 2, "after-Mount", "bridge: 1"),
+                        TraceEvent("AdaptivePollTest", 2, "before-Mount"),
+                        TraceEvent("AdaptiveT1", 3, "before-Mount"),
+                        TraceEvent("AdaptiveT1", 3, "after-Mount"),
+                        TraceEvent("AdaptivePollTest", 2, "after-Mount"),
                         TraceEvent("AdaptivePollTest", 2, "before-Invoke-Suspend", "BoundSupportFunction(2, 2, 0) arguments: []"),
                         TraceEvent("AdaptivePollTest", 2, "after-Invoke-Suspend", "index: 0 result: 12"),
                         TraceEvent("AdaptivePollTest", 2, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [12]"),
@@ -99,14 +98,14 @@ class PollTest {
 }
 
 class AdaptivePollTest(
-    adapter: AdaptiveAdapter<TestNode>,
-    parent: AdaptiveFragment<TestNode>?,
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<TestNode>(adapter, parent, index, 1) {
+) : AdaptiveFragment(adapter, parent, index, 1) {
 
     val dependencyMask_0_0 = 0x01 // fragment index: 0, state variable index: 0
 
-    override fun genBuild(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
 
         val fragment = when (declarationIndex) {
             0 -> AdaptiveT1(adapter, parent, declarationIndex)
@@ -118,7 +117,7 @@ class AdaptivePollTest(
         return fragment
     }
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<TestNode>) {
+    override fun genPatchDescendant(fragment: AdaptiveFragment) {
 
         val closureMask = fragment.getCreateClosureDirtyMask()
 

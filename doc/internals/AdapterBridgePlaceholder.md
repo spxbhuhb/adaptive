@@ -40,7 +40,7 @@ Bridge independent fragments use type parameter for the bridge receiver type:
 
 ```kotlin
 open class AdaptiveSequence<BT>(
-    override val adapter: AdaptiveAdapter<BT>,
+    override val adapter: AdaptiveAdapter,
     /* ... */
 ) : AdaptiveFragment<BT> {
     /* ... */

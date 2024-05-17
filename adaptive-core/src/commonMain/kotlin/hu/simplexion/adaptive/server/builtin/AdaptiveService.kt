@@ -11,38 +11,45 @@ import hu.simplexion.adaptive.service.ServiceContext
 import hu.simplexion.adaptive.service.defaultServiceImplFactory
 
 @Adaptive
-fun service(impl: () -> ServerFragmentImpl<*>) {
+fun service(impl: () -> ServerFragmentImpl) {
     manualImplementation(impl)
 }
 
-class AdaptiveService<BT>(
-    adapter: AdaptiveServerAdapter<BT>,
-    parent: AdaptiveFragment<BT>,
+class AdaptiveService(
+    adapter: AdaptiveServerAdapter,
+    parent: AdaptiveFragment,
     index: Int
-) : AdaptiveServerFragment<BT>(adapter, parent, index) {
+) : AdaptiveServerFragment(adapter, parent, index) {
 
     val serviceImpl : ServiceImpl<*>?
         get() = impl as ServiceImpl<*>?
 
-    override fun innerMount(bridge: AdaptiveBridge<BT>) {
+    override fun mount() {
+        if (trace) trace("before-Mount")
+
         serviceImpl?.let {
             it.mount()
             serverAdapter.serviceCache[it.serviceName] = this
         }
+
+        if (trace) trace("after-Mount")
     }
 
-    override fun innerUnmount(bridge: AdaptiveBridge<BT>) {
+    override fun unmount() {
+        if (trace) trace("before-Unmount")
+
         checkNotNull(serviceImpl) { "inconsistent server state innerUnmount with a null implementation" }
             .let {
                 serverAdapter.serviceCache.remove(it.serviceName)
             }
         impl = null
+
+        if (trace) trace("after-Unmount")
     }
 
     fun newInstance(context : ServiceContext) : ServiceImpl<*> {
         return serviceImpl!!.newInstance(context).also {
-            @Suppress("UNCHECKED_CAST")
-            it.fragment = this as AdaptiveServerFragment<Any>
+            it.fragment = this
         }
     }
 

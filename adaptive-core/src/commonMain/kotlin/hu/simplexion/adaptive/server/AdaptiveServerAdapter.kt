@@ -3,13 +3,11 @@
  */
 package hu.simplexion.adaptive.server
 
-import hu.simplexion.adaptive.foundation.AdaptiveAdapter
-import hu.simplexion.adaptive.foundation.AdaptiveBridge
-import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
+import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.server.builtin.AdaptiveService
 import hu.simplexion.adaptive.server.builtin.AdaptiveStore
 import hu.simplexion.adaptive.server.builtin.AdaptiveWorker
+import hu.simplexion.adaptive.server.builtin.ServerPlaceholder
 import hu.simplexion.adaptive.utility.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -17,19 +15,20 @@ import kotlinx.coroutines.Dispatchers
 /**
  * Adapter for server applications.
  */
-open class AdaptiveServerAdapter<BT>(
+open class AdaptiveServerAdapter(
     wait : Boolean = false
-) : AdaptiveAdapter<BT> {
+) : AdaptiveAdapter {
 
-    override val fragmentFactory = AdaptiveFragmentFactory<BT>()
+    override val fragmentFactory = AdaptiveFragmentFactory()
 
     var nextId = 1L
 
     override val startedAt = vmNowMicro()
 
-    override lateinit var rootFragment: AdaptiveFragment<BT>
+    override lateinit var rootFragment: AdaptiveFragment
 
-    override val rootBridge = AdaptiveServerPlaceholder<BT>()
+    override val rootContainer
+        get() = throw NotImplementedError()
 
     override val dispatcher: CoroutineDispatcher
         get() = Dispatchers.Default
@@ -38,7 +37,7 @@ open class AdaptiveServerAdapter<BT>(
 
     // TODO implement cache synchronization
 
-    val serviceCache = mutableMapOf<String,AdaptiveService<BT>>()
+    val serviceCache = mutableMapOf<String,AdaptiveService>()
 
     val lock = getLock()
 
@@ -46,8 +45,8 @@ open class AdaptiveServerAdapter<BT>(
         get() = lock.use { field }
         set(v) { lock.use { field = v } }
 
-    override fun createPlaceholder(): AdaptiveBridge<BT> {
-        return AdaptiveServerPlaceholder()
+    override fun createPlaceholder(parent: AdaptiveFragment, index: Int): AdaptiveFragment {
+        return ServerPlaceholder(this, parent, index)
     }
 
     override fun newId(): Long =
@@ -55,7 +54,7 @@ open class AdaptiveServerAdapter<BT>(
 
     inline fun <reified T> single(): T {
         // TODO create fragment.filterIsInstance
-        val fragment = rootFragment.single { it is AdaptiveServerFragment<*> && it.impl is T } as AdaptiveServerFragment<*>
+        val fragment = rootFragment.single { it is AdaptiveServerFragment && it.impl is T } as AdaptiveServerFragment
         val implementation = fragment.impl as? T
         return checkNotNull(implementation) { "fragment $fragment implementation is not set" }
     }

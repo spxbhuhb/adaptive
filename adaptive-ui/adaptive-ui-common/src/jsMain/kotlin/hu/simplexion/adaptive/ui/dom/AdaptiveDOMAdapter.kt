@@ -28,7 +28,7 @@ open class AdaptiveDOMAdapter(
 
     override lateinit var rootFragment: AdaptiveFragment<Node>
 
-    override val rootBridge = AdaptiveDOMPlaceholder().also {
+    val rootContainer = AdaptiveDOMPlaceholder().also {
         node.appendChild(it.receiver)
     }
 

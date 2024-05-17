@@ -5,11 +5,11 @@ package hu.simplexion.adaptive.foundation.internal
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 
-class BoundFragmentFactory<BT>(
-    val declaringFragment: AdaptiveFragment<BT>,
+class BoundFragmentFactory(
+    val declaringFragment: AdaptiveFragment,
     val declarationIndex : Int
 ) {
-    fun build(parent: AdaptiveFragment<BT>) : AdaptiveFragment<BT>? {
+    fun build(parent: AdaptiveFragment) : AdaptiveFragment? {
         return declaringFragment.genBuild(parent, declarationIndex)
     }
 

@@ -16,18 +16,20 @@ fun worker(impl: () -> WorkerImpl<*>) {
     manualImplementation(impl)
 }
 
-class AdaptiveWorker<BT>(
-    adapter: AdaptiveServerAdapter<BT>,
-    parent: AdaptiveFragment<BT>,
+class AdaptiveWorker(
+    adapter: AdaptiveServerAdapter,
+    parent: AdaptiveFragment,
     index: Int
-) : AdaptiveServerFragment<BT>(adapter, parent, index) {
+) : AdaptiveServerFragment(adapter, parent, index) {
 
     val workerImpl : WorkerImpl<*>?
         get() = impl as WorkerImpl<*>?
 
     val scope = CoroutineScope(adapter.dispatcher)
 
-    override fun innerMount(bridge: AdaptiveBridge<BT>) {
+    override fun mount() {
+        if (trace) trace("before-Mount")
+
         checkNotNull(workerImpl) { "inconsistent server state: innerMount with a null implementation" }
             .let {
                 it.mount()
@@ -39,12 +41,18 @@ class AdaptiveWorker<BT>(
                     }
                 }
             }
+
+        if (trace) trace("after-Mount")
     }
 
-    override fun innerUnmount(bridge: AdaptiveBridge<BT>) {
+    override fun unmount() {
+        if (trace) trace("before-Unmount")
+
         checkNotNull(impl) { "inconsistent server state innerUnmount with a null implementation" }
         scope.cancel() // TODO check Job docs about waiting
         impl = null
+
+        if (trace) trace("after-Unmount")
     }
 
 }

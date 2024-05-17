@@ -4,10 +4,10 @@
 
 package hu.simplexion.adaptive.foundation
 
-interface AdaptiveFragmentCompanion<BT> {
+interface AdaptiveFragmentCompanion{
 
     val fragmentType : String
 
-    fun newInstance(parent : AdaptiveFragment<BT>, index : Int): AdaptiveFragment<BT>
+    fun newInstance(parent : AdaptiveFragment, index : Int): AdaptiveFragment
 
 }

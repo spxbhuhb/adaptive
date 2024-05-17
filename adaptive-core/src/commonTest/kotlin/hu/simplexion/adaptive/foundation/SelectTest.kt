@@ -24,13 +24,12 @@ class SelectTest {
     @Test
     fun testWithEmptyStart() {
         val adapter = AdaptiveTestAdapter()
-        val root = AdaptiveTestBridge(1)
 
         AdaptiveSelectTest(adapter, null, 0).apply {
             v0 = 0 // start with empty
 
             create()
-            mount(root)
+            mount()
 
             fun v(value: Int) {
                 v0 = value
@@ -60,10 +59,12 @@ class SelectTest {
                     TraceEvent("AdaptiveSelect", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [-1, -1]"),
                     TraceEvent("AdaptiveSelect", 3, "after-Create", ""),
                     TraceEvent("AdaptiveSelectTest", 2, "after-Create", ""),
-                    TraceEvent("AdaptiveSelectTest", 2, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveSelect", 3, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveSelect", 3, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveSelectTest", 2, "after-Mount", "bridge: 1"),
+                    TraceEvent("AdaptiveSelectTest", 2, "before-Mount"),
+                    TraceEvent("AdaptiveSelect", 3, "before-Mount"),
+                    TraceEvent("TestPlaceholder", 4, "before-Mount"),
+                    TraceEvent("TestPlaceholder", 4, "after-Mount"),
+                    TraceEvent("AdaptiveSelect", 3, "after-Mount"),
+                    TraceEvent("AdaptiveSelectTest", 2, "after-Mount"),
                     TraceEvent("AdaptiveSelectTest", 2, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [1]"),
                     TraceEvent("AdaptiveSelect", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [-1, -1]"),
                     TraceEvent("AdaptiveSelect", 3, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000003 state: [2, -1]"),
@@ -74,16 +75,16 @@ class SelectTest {
                     TraceEvent("AdaptiveT1", 5, "before-Patch-Internal", "createMask: 0x00000003 thisMask: 0xffffffff state: [21]"),
                     TraceEvent("AdaptiveT1", 5, "after-Patch-Internal", "createMask: 0x00000003 thisMask: 0x00000000 state: [21]"),
                     TraceEvent("AdaptiveT1", 5, "after-Create", ""),
-                    TraceEvent("AdaptiveT1", 5, "before-Mount", "bridge: 4"),
-                    TraceEvent("AdaptiveT1", 5, "after-Mount", "bridge: 4"),
+                    TraceEvent("AdaptiveT1", 5, "before-Mount"),
+                    TraceEvent("AdaptiveT1", 5, "after-Mount"),
                     TraceEvent("AdaptiveSelect", 3, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [2, 2]"),
                     TraceEvent("AdaptiveSelectTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [1]"),
                     TraceEvent("AdaptiveSelectTest", 2, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [2]"),
                     TraceEvent("AdaptiveSelect", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [2, 2]"),
                     TraceEvent("AdaptiveSelect", 3, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000003 state: [1, 2]"),
                     TraceEvent("AdaptiveSelect", 3, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000003 state: [1, 2]"),
-                    TraceEvent("AdaptiveT1", 5, "before-Unmount", "bridge: 4"),
-                    TraceEvent("AdaptiveT1", 5, "after-Unmount", "bridge: 4"),
+                    TraceEvent("AdaptiveT1", 5, "before-Unmount"),
+                    TraceEvent("AdaptiveT1", 5, "after-Unmount"),
                     TraceEvent("AdaptiveT1", 5, "before-Dispose", ""),
                     TraceEvent("AdaptiveT1", 5, "after-Dispose", ""),
                     TraceEvent("AdaptiveT1", 6, "before-Create", ""),
@@ -92,16 +93,16 @@ class SelectTest {
                     TraceEvent("AdaptiveT1", 6, "before-Patch-Internal", "createMask: 0x00000003 thisMask: 0xffffffff state: [12]"),
                     TraceEvent("AdaptiveT1", 6, "after-Patch-Internal", "createMask: 0x00000003 thisMask: 0x00000000 state: [12]"),
                     TraceEvent("AdaptiveT1", 6, "after-Create", ""),
-                    TraceEvent("AdaptiveT1", 6, "before-Mount", "bridge: 4"),
-                    TraceEvent("AdaptiveT1", 6, "after-Mount", "bridge: 4"),
+                    TraceEvent("AdaptiveT1", 6, "before-Mount"),
+                    TraceEvent("AdaptiveT1", 6, "after-Mount"),
                     TraceEvent("AdaptiveSelect", 3, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [1, 1]"),
                     TraceEvent("AdaptiveSelectTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [2]"),
                     TraceEvent("AdaptiveSelectTest", 2, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [3]"),
                     TraceEvent("AdaptiveSelect", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [1, 1]"),
                     TraceEvent("AdaptiveSelect", 3, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000003 state: [2, 1]"),
                     TraceEvent("AdaptiveSelect", 3, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000003 state: [2, 1]"),
-                    TraceEvent("AdaptiveT1", 6, "before-Unmount", "bridge: 4"),
-                    TraceEvent("AdaptiveT1", 6, "after-Unmount", "bridge: 4"),
+                    TraceEvent("AdaptiveT1", 6, "before-Unmount"),
+                    TraceEvent("AdaptiveT1", 6, "after-Unmount"),
                     TraceEvent("AdaptiveT1", 6, "before-Dispose", ""),
                     TraceEvent("AdaptiveT1", 6, "after-Dispose", ""),
                     TraceEvent("AdaptiveT1", 7, "before-Create", ""),
@@ -110,8 +111,8 @@ class SelectTest {
                     TraceEvent("AdaptiveT1", 7, "before-Patch-Internal", "createMask: 0x00000003 thisMask: 0xffffffff state: [23]"),
                     TraceEvent("AdaptiveT1", 7, "after-Patch-Internal", "createMask: 0x00000003 thisMask: 0x00000000 state: [23]"),
                     TraceEvent("AdaptiveT1", 7, "after-Create", ""),
-                    TraceEvent("AdaptiveT1", 7, "before-Mount", "bridge: 4"),
-                    TraceEvent("AdaptiveT1", 7, "after-Mount", "bridge: 4"),
+                    TraceEvent("AdaptiveT1", 7, "before-Mount"),
+                    TraceEvent("AdaptiveT1", 7, "after-Mount"),
                     TraceEvent("AdaptiveSelect", 3, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [2, 2]"),
                     TraceEvent("AdaptiveSelectTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [3]"),
                     TraceEvent("AdaptiveSelectTest", 2, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [1]"),
@@ -128,8 +129,8 @@ class SelectTest {
                     TraceEvent("AdaptiveSelect", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [2, 2]"),
                     TraceEvent("AdaptiveSelect", 3, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000003 state: [-1, 2]"),
                     TraceEvent("AdaptiveSelect", 3, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000003 state: [-1, 2]"),
-                    TraceEvent("AdaptiveT1", 7, "before-Unmount", "bridge: 4"),
-                    TraceEvent("AdaptiveT1", 7, "after-Unmount", "bridge: 4"),
+                    TraceEvent("AdaptiveT1", 7, "before-Unmount"),
+                    TraceEvent("AdaptiveT1", 7, "after-Unmount"),
                     TraceEvent("AdaptiveT1", 7, "before-Dispose", ""),
                     TraceEvent("AdaptiveT1", 7, "after-Dispose", ""),
                     TraceEvent("AdaptiveSelect", 3, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [-1, -1]"),
@@ -144,12 +145,11 @@ class SelectTest {
     @Test
     fun testWithNonEmptyStart() {
         val adapter = AdaptiveTestAdapter()
-        val root = AdaptiveTestBridge(1)
 
         AdaptiveSelectTest(adapter, null, 0).apply {
             state[0] = 1
             create()
-            mount(root)
+            mount()
         }
 
         assertEquals(
@@ -173,12 +173,14 @@ class SelectTest {
                     TraceEvent("AdaptiveSelect", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [2, 2]"),
                     TraceEvent("AdaptiveSelect", 3, "after-Create", ""),
                     TraceEvent("AdaptiveSelectTest", 2, "after-Create", ""),
-                    TraceEvent("AdaptiveSelectTest", 2, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveSelect", 3, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveT1", 5, "before-Mount", "bridge: 4"),
-                    TraceEvent("AdaptiveT1", 5, "after-Mount", "bridge: 4"),
-                    TraceEvent("AdaptiveSelect", 3, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveSelectTest", 2, "after-Mount", "bridge: 1")
+                    TraceEvent("AdaptiveSelectTest", 2, "before-Mount"),
+                    TraceEvent("AdaptiveSelect", 3, "before-Mount"),
+                    TraceEvent("TestPlaceholder", 4, "before-Mount"),
+                    TraceEvent("TestPlaceholder", 4, "after-Mount"),
+                    TraceEvent("AdaptiveT1", 5, "before-Mount"),
+                    TraceEvent("AdaptiveT1", 5, "after-Mount"),
+                    TraceEvent("AdaptiveSelect", 3, "after-Mount"),
+                    TraceEvent("AdaptiveSelectTest", 2, "after-Mount")
                 )
             ),
             adapter.actual(dumpCode = false)
@@ -188,10 +190,10 @@ class SelectTest {
 }
 
 class AdaptiveSelectTest(
-    adapter: AdaptiveAdapter<TestNode>,
-    parent: AdaptiveFragment<TestNode>?,
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<TestNode>(adapter, parent, index, 1) {
+) : AdaptiveFragment(adapter, parent, index, 1) {
 
     var v0: Int
         get() = state[0] as Int
@@ -203,7 +205,7 @@ class AdaptiveSelectTest(
     val dependencyMask_1_0 = 0x01 // fragment index: 1, state variable index: 0
     val dependencyMask_2_0 = 0x01 // fragment index: 2, state variable index: 0
 
-    override fun genBuild(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         val fragment = when (declarationIndex) {
             0 -> AdaptiveSelect(adapter, parent, declarationIndex)
             1 -> AdaptiveT1(adapter, parent, declarationIndex)
@@ -216,7 +218,7 @@ class AdaptiveSelectTest(
         return fragment
     }
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<TestNode>) {
+    override fun genPatchDescendant(fragment: AdaptiveFragment) {
 
         val closureMask = fragment.getCreateClosureDirtyMask()
 

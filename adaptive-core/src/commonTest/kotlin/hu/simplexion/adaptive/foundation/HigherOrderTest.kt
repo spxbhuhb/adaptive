@@ -35,11 +35,10 @@ class HigherOrderTest {
     @Test
     fun test() {
         val adapter = AdaptiveTestAdapter()
-        val root = AdaptiveTestBridge(1)
 
         AdaptiveHigherOrderTest(adapter, null, 0).apply {
             create()
-            mount(root)
+            mount()
         }
 
         assertEquals(
@@ -105,26 +104,26 @@ class HigherOrderTest {
                     TraceEvent("AdaptiveHigherFunInner", 4, "after-Create", ""),
                     TraceEvent("AdaptiveHigherFun", 3, "after-Create", ""),
                     TraceEvent("AdaptiveHigherOrderTest", 2, "after-Create", ""),
-                    TraceEvent("AdaptiveHigherOrderTest", 2, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveHigherFun", 3, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveHigherFunInner", 4, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveAnonymous", 5, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveAnonymous", 6, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveHigherFun", 7, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveHigherFunInner", 8, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveAnonymous", 9, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveAnonymous", 10, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveT1", 11, "before-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveT1", 11, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveAnonymous", 10, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveAnonymous", 9, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveHigherFunInner", 8, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveHigherFun", 7, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveAnonymous", 6, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveAnonymous", 5, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveHigherFunInner", 4, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveHigherFun", 3, "after-Mount", "bridge: 1"),
-                    TraceEvent("AdaptiveHigherOrderTest", 2, "after-Mount", "bridge: 1")
+                    TraceEvent("AdaptiveHigherOrderTest", 2, "before-Mount"),
+                    TraceEvent("AdaptiveHigherFun", 3, "before-Mount"),
+                    TraceEvent("AdaptiveHigherFunInner", 4, "before-Mount"),
+                    TraceEvent("AdaptiveAnonymous", 5, "before-Mount"),
+                    TraceEvent("AdaptiveAnonymous", 6, "before-Mount"),
+                    TraceEvent("AdaptiveHigherFun", 7, "before-Mount"),
+                    TraceEvent("AdaptiveHigherFunInner", 8, "before-Mount"),
+                    TraceEvent("AdaptiveAnonymous", 9, "before-Mount"),
+                    TraceEvent("AdaptiveAnonymous", 10, "before-Mount"),
+                    TraceEvent("AdaptiveT1", 11, "before-Mount"),
+                    TraceEvent("AdaptiveT1", 11, "after-Mount"),
+                    TraceEvent("AdaptiveAnonymous", 10, "after-Mount"),
+                    TraceEvent("AdaptiveAnonymous", 9, "after-Mount"),
+                    TraceEvent("AdaptiveHigherFunInner", 8, "after-Mount"),
+                    TraceEvent("AdaptiveHigherFun", 7, "after-Mount"),
+                    TraceEvent("AdaptiveAnonymous", 6, "after-Mount"),
+                    TraceEvent("AdaptiveAnonymous", 5, "after-Mount"),
+                    TraceEvent("AdaptiveHigherFunInner", 4, "after-Mount"),
+                    TraceEvent("AdaptiveHigherFun", 3, "after-Mount"),
+                    TraceEvent("AdaptiveHigherOrderTest", 2, "after-Mount")
                 )
             ),
             adapter.actual(dumpCode = false)
@@ -133,10 +132,10 @@ class HigherOrderTest {
 }
 
 class AdaptiveHigherOrderTest(
-    adapter: AdaptiveAdapter<TestNode>,
-    parent: AdaptiveFragment<TestNode>?,
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<TestNode>(adapter, parent, index, 0) {
+) : AdaptiveFragment(adapter, parent, index, 0) {
 
     val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
     val dependencyMask_0_1 = 0x00 // fragment index: 0, state variable index: 1
@@ -146,7 +145,7 @@ class AdaptiveHigherOrderTest(
 
     val dependencyMask_2_0 = 0x00 // fragment index: 2, state variable index: 0
 
-    override fun genBuild(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         val fragment = when (declarationIndex) {
             0 -> AdaptiveHigherFun(adapter, parent, declarationIndex)
             1 -> AdaptiveHigherFun(adapter, parent, declarationIndex)
@@ -159,7 +158,7 @@ class AdaptiveHigherOrderTest(
         return fragment
     }
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<TestNode>) {
+    override fun genPatchDescendant(fragment: AdaptiveFragment) {
         val closureMask = fragment.getCreateClosureDirtyMask()
 
         when (fragment.index) {
@@ -197,19 +196,19 @@ class AdaptiveHigherOrderTest(
 }
 
 class AdaptiveHigherFun(
-    adapter: AdaptiveAdapter<TestNode>,
-    parent: AdaptiveFragment<TestNode>?,
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<TestNode>(adapter, parent, index, 2) {
+) : AdaptiveFragment(adapter, parent, index, 2) {
 
     val higherI
         get() = state[0] as Int
 
     @Suppress("UNCHECKED_CAST")
     val builder
-        get() = state[1] as BoundFragmentFactory<TestNode>
+        get() = state[1] as BoundFragmentFactory
 
-    override fun genBuild(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         val fragment = when (declarationIndex) {
             0 -> AdaptiveHigherFunInner(adapter, parent, declarationIndex)
             1 -> AdaptiveAnonymous(adapter, parent, declarationIndex, 1, builder)
@@ -221,7 +220,7 @@ class AdaptiveHigherFun(
         return fragment
     }
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<TestNode>) {
+    override fun genPatchDescendant(fragment: AdaptiveFragment) {
         when (fragment.index) {
             0 -> {
                 // TODO haveToPatch
@@ -246,19 +245,19 @@ class AdaptiveHigherFun(
 }
 
 class AdaptiveHigherFunInner(
-    adapter: AdaptiveAdapter<TestNode>,
-    parent: AdaptiveFragment<TestNode>?,
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<TestNode>(adapter, parent, index, 2) {
+) : AdaptiveFragment(adapter, parent, index, 2) {
 
     val innerI
         get() = state[0] as Int
 
     @Suppress("UNCHECKED_CAST")
     val builder
-        get() = state[1] as BoundFragmentFactory<TestNode>
+        get() = state[1] as BoundFragmentFactory
 
-    override fun genBuild(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         val fragment = when (declarationIndex) {
             0 -> AdaptiveAnonymous(adapter, parent, declarationIndex, 1, builder)
             else -> invalidIndex(declarationIndex) // throws exception
@@ -269,7 +268,7 @@ class AdaptiveHigherFunInner(
         return fragment
     }
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<TestNode>) {
+    override fun genPatchDescendant(fragment: AdaptiveFragment) {
         when (fragment.index) {
             0 -> {
                 fragment.state[0] = innerI + 1

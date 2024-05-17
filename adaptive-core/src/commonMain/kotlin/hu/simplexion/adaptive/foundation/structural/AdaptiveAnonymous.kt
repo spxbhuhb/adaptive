@@ -8,24 +8,24 @@ import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
 
-class AdaptiveAnonymous<BT>(
-    adapter: AdaptiveAdapter<BT>,
-    parent: AdaptiveFragment<BT>,
+class AdaptiveAnonymous(
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment,
     index: Int,
     stateSize: Int,
-    val factory: BoundFragmentFactory<BT>,
-) : AdaptiveFragment<BT>(adapter, parent, index, stateSize) {
+    val factory: BoundFragmentFactory
+) : AdaptiveFragment(adapter, parent, index, stateSize) {
 
-    override val createClosure : AdaptiveClosure<BT>
+    override val createClosure : AdaptiveClosure
         get() = parent!!.thisClosure
 
     override val thisClosure = extendWith(this, factory.declaringFragment) //.also { println(it.dump()) }
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<BT>) {
+    override fun genPatchDescendant(fragment: AdaptiveFragment) {
         factory.declaringFragment.genPatchDescendant(fragment)
     }
 
-    override fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>? {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
         return factory.build(this)
     }
 
@@ -39,7 +39,7 @@ class AdaptiveAnonymous<BT>(
      *
      * Anonymous components use this function to find their declaring closure and extend it with themselves.
      */
-    fun extendWith(component: AdaptiveFragment<BT>, declaringComponent: AdaptiveFragment<BT>): AdaptiveClosure<BT> {
+    fun extendWith(component: AdaptiveFragment, declaringComponent: AdaptiveFragment): AdaptiveClosure {
         var ancestor = component.parent
 
         while (ancestor != null && ancestor.thisClosure.owner !== declaringComponent) {

@@ -6,15 +6,15 @@ package hu.simplexion.adaptive.foundation
 
 import hu.simplexion.adaptive.registry.Registry
 
-open class AdaptiveFragmentFactory<BT> : Registry<AdaptiveFragmentCompanion<BT>>() {
+open class AdaptiveFragmentFactory : Registry<AdaptiveFragmentCompanion>() {
 
-    fun addAll(vararg companions : AdaptiveFragmentCompanion<BT>) {
+    fun addAll(vararg companions : AdaptiveFragmentCompanion) {
         for (companion in companions) {
             set(companion.fragmentType, companion)
         }
     }
 
-    fun newInstance(name: String, parent: AdaptiveFragment<BT>, index: Int): AdaptiveFragment<BT> {
+    fun newInstance(name: String, parent: AdaptiveFragment, index: Int): AdaptiveFragment {
         return checkNotNull(get(name)) { "Unknown fragment type: $name" }.newInstance(parent, index)
     }
 

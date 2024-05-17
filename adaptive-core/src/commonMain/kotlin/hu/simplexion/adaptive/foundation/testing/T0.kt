@@ -13,23 +13,23 @@ fun T0() {
 }
 
 @Suppress("unused")
-class AdaptiveT0<BT>(
-    adapter: AdaptiveAdapter<BT>,
-    parent: AdaptiveFragment<BT>?,
+class AdaptiveT0(
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<BT>(adapter, parent, index, 0) {
+) : AdaptiveFragment(adapter, parent, index, 0) {
 
-    override fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>? = null
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<BT>) = Unit
+    override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
     override fun genPatchInternal() = Unit
 
-    companion object : AdaptiveFragmentCompanion<TestNode> {
+    companion object : AdaptiveFragmentCompanion {
 
         override val fragmentType = "hu.simplexion.adaptive.foundation.testing.AdaptiveT0"
 
-        override fun newInstance(parent: AdaptiveFragment<TestNode>, index: Int): AdaptiveFragment<TestNode> =
+        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
             AdaptiveT0(parent.adapter, parent, index)
 
     }

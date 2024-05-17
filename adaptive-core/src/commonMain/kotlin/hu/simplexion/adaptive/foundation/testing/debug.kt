@@ -16,14 +16,14 @@ fun debug(vararg out: Any?) {
 }
 
 class AdaptiveDebug<BT>(
-    adapter: AdaptiveAdapter<BT>,
-    parent: AdaptiveFragment<BT>?,
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<BT>(adapter, parent, index, 1) {
+) : AdaptiveFragment(adapter, parent, index, 1) {
 
-    override fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>? = null
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<BT>) = Unit
+    override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
     override fun genPatchInternal() {
         @Suppress("UNCHECKED_CAST")

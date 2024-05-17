@@ -6,8 +6,8 @@ package hu.simplexion.adaptive.foundation.internal
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 
 class BoundSupportFunction(
-    val declaringFragment: AdaptiveFragment<*>,
-    val receivingFragment: AdaptiveFragment<*>,
+    val declaringFragment: AdaptiveFragment,
+    val receivingFragment: AdaptiveFragment,
     val supportFunctionIndex : Int
 ) {
 

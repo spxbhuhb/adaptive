@@ -15,15 +15,15 @@ fun SuspendS1(supportFun : suspend (i : Int) -> Unit) {
 }
 
 @Suppress("unused")
-class AdaptiveSuspendS1<BT>(
-    adapter: AdaptiveAdapter<BT>,
-    parent: AdaptiveFragment<BT>?,
+class AdaptiveSuspendS1(
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<BT>(adapter, parent, index, 1) {
+) : AdaptiveFragment(adapter, parent, index, 1) {
 
-    override fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>? = null
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<BT>) = Unit
+    override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
     override fun genPatchInternal() = Unit
 
@@ -31,11 +31,11 @@ class AdaptiveSuspendS1<BT>(
         get() = state[0] as BoundSupportFunction
         set(v) { state[0] = v }
 
-    companion object : AdaptiveFragmentCompanion<TestNode> {
+    companion object : AdaptiveFragmentCompanion {
 
         override val fragmentType = "hu.simplexion.adaptive.foundation.testing.AdaptiveSuspendS1"
 
-        override fun newInstance(parent: AdaptiveFragment<TestNode>, index: Int): AdaptiveFragment<TestNode> =
+        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
             AdaptiveSuspendS1(parent.adapter, parent, index)
 
     }

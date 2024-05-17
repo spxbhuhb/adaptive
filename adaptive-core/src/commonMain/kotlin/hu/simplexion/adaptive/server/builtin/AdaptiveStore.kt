@@ -13,22 +13,30 @@ fun store(impl : () -> StoreImpl<*>) {
     manualImplementation(impl)
 }
 
-class AdaptiveStore<BT>(
-    adapter: AdaptiveServerAdapter<BT>,
-    parent: AdaptiveFragment<BT>,
+class AdaptiveStore(
+    adapter: AdaptiveServerAdapter,
+    parent: AdaptiveFragment,
     index: Int
-) : AdaptiveServerFragment<BT>(adapter, parent, index) {
+) : AdaptiveServerFragment(adapter, parent, index) {
 
-    override fun innerMount(bridge: AdaptiveBridge<BT>) {
+    override fun mount() {
+        if (trace) trace("before-Mount")
+
         impl?.mount()
+
+        if (trace) trace("after-Mount")
     }
 
     @OptIn(ExperimentalStdlibApi::class)
-    override fun innerUnmount(bridge: AdaptiveBridge<BT>) {
+    override fun unmount() {
+        if (trace) trace("before-Unmount")
+
         impl?.let {
             if (it is AutoCloseable) it.close()
         }
         impl = null
+
+        if (trace) trace("after-Unmount")
     }
 
 }

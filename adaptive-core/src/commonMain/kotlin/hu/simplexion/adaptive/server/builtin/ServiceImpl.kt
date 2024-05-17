@@ -15,7 +15,7 @@ import hu.simplexion.adaptive.utility.overrideManually
 import hu.simplexion.adaptive.utility.pluginGenerated
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 
-interface ServiceImpl<T : ServiceImpl<T>> : ServiceBase, ServerFragmentImpl<Any> {
+interface ServiceImpl<T : ServiceImpl<T>> : ServiceBase, ServerFragmentImpl {
 
     /**
      * Context of a service call. Set by `dispatch` when the call goes through it.

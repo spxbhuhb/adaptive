@@ -4,17 +4,16 @@
 package hu.simplexion.adaptive.foundation.structural
 
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
-import hu.simplexion.adaptive.foundation.AdaptiveBridge
-import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
 
-class AdaptiveSequence<BT>(
-    adapter: AdaptiveAdapter<BT>,
-    parent: AdaptiveFragment<BT>?,
+class AdaptiveSequence(
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int,
-) : AdaptiveFragment<BT>(adapter, parent, index, 1) {
+) : AdaptiveFragment(adapter, parent, index, 1) {
 
-    override val createClosure : AdaptiveClosure<BT>
+    override val createClosure : AdaptiveClosure
         get() = parent!!.thisClosure
 
     override val thisClosure = AdaptiveClosure(
@@ -22,7 +21,7 @@ class AdaptiveSequence<BT>(
         createClosure.closureSize + state.size
     )
 
-    val fragments = mutableListOf<hu.simplexion.adaptive.foundation.AdaptiveFragment<BT>>()
+    val fragments = mutableListOf<AdaptiveFragment>()
 
     val indices : IntArray
         get() = state[0] as IntArray
@@ -39,20 +38,20 @@ class AdaptiveSequence<BT>(
         if (trace) trace("after-Create")
     }
 
-    override fun mount(bridge: AdaptiveBridge<BT>) {
-        if (trace) trace("before-Mount", "bridge", bridge)
-        fragments.forEach { it.mount(bridge) }
-        if (trace) trace("after-Mount", "bridge", bridge)
+    override fun mount() {
+        if (trace) trace("before-Mount")
+        fragments.forEach { it.mount() }
+        if (trace) trace("after-Mount")
     }
 
     override fun genPatchInternal() {
         fragments.forEach { it.patch() }
     }
 
-    override fun unmount(bridge: AdaptiveBridge<BT>) {
-        if (trace) trace("before-Unmount", "bridge", bridge)
-        fragments.forEach { it.unmount(bridge) }
-        if (trace) trace("after-Unmount", "bridge", bridge)
+    override fun unmount() {
+        if (trace) trace("before-Unmount")
+        fragments.forEach { it.unmount() }
+        if (trace) trace("after-Unmount")
     }
 
     override fun dispose() {
@@ -61,7 +60,7 @@ class AdaptiveSequence<BT>(
         if (trace) trace("after-Dispose")
     }
 
-    override fun filter(result : MutableList<hu.simplexion.adaptive.foundation.AdaptiveFragment<BT>>, filterFun : (it : AdaptiveFragment<BT>) -> Boolean) {
+    override fun filter(result : MutableList<AdaptiveFragment>, filterFun : (it : AdaptiveFragment) -> Boolean) {
         if (filterFun(this)) {
             result += this
         }

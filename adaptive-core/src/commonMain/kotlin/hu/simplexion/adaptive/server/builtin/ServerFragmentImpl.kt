@@ -9,22 +9,22 @@ import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
 import hu.simplexion.adaptive.utility.manualOrPlugin
 
-interface ServerFragmentImpl<BT> {
+interface ServerFragmentImpl {
 
     /**
      * Fragment of the adaptive server if the implementation belongs to one. Replaced
      * by the plugin with a field initialized to `null`. Set by the server builder
      * functions such as `store`, `service` and `worker`.
      */
-    var fragment : AdaptiveServerFragment<BT>?
+    var fragment : AdaptiveServerFragment?
         get() = manualOrPlugin("serverAdapter")
         set(value) = manualOrPlugin("serverAdapter", value)
 
     /**
      * Adapter of the adaptive server if the fragment is part of one.
      */
-    val adapter : AdaptiveServerAdapter<BT>?
-        get() = fragment?.adapter as? AdaptiveServerAdapter<BT>
+    val adapter : AdaptiveServerAdapter?
+        get() = fragment?.adapter as? AdaptiveServerAdapter
 
     /**
      * A logger that belongs to the given fragment if it is part of an adaptive
