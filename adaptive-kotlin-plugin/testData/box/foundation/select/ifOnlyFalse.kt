@@ -41,11 +41,11 @@ fun box() : String {
         TraceEvent("AdaptiveSelect", 4, "after-Create", ""),
         TraceEvent("AdaptiveIfOnlyFalse", 3, "after-Create", ""),
         TraceEvent("<root>", 2, "after-Create", ""),
-        TraceEvent("<root>", 2, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveIfOnlyFalse", 3, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveSelect", 4, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveSelect", 4, "after-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveIfOnlyFalse", 3, "after-Mount", "bridge: 1"),
-        TraceEvent("<root>", 2, "after-Mount", "bridge: 1")
+        TraceEvent("<root>", 2, "before-Mount", ""),
+        TraceEvent("AdaptiveIfOnlyFalse", 3, "before-Mount", ""),
+        TraceEvent("AdaptiveSelect", 4, "before-Mount", ""),
+        TraceEvent("AdaptiveSelect", 4, "after-Mount", ""),
+        TraceEvent("AdaptiveIfOnlyFalse", 3, "after-Mount", ""),
+        TraceEvent("<root>", 2, "after-Mount", "")
     ))
 }

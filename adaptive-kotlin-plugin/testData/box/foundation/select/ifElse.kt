@@ -49,13 +49,13 @@ fun box() : String {
         TraceEvent("AdaptiveSelect", 4, "after-Create", ""),
         TraceEvent("AdaptiveIfElse", 3, "after-Create", ""),
         TraceEvent("<root>", 2, "after-Create", ""),
-        TraceEvent("<root>", 2, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveIfElse", 3, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveSelect", 4, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveT1", 6, "before-Mount", "bridge: 5"),
-        TraceEvent("AdaptiveT1", 6, "after-Mount", "bridge: 5"),
-        TraceEvent("AdaptiveSelect", 4, "after-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveIfElse", 3, "after-Mount", "bridge: 1"),
-        TraceEvent("<root>", 2, "after-Mount", "bridge: 1")
+        TraceEvent("<root>", 2, "before-Mount", ""),
+        TraceEvent("AdaptiveIfElse", 3, "before-Mount", ""),
+        TraceEvent("AdaptiveSelect", 4, "before-Mount", ""),
+        TraceEvent("AdaptiveT1", 6, "before-Mount", ""),
+        TraceEvent("AdaptiveT1", 6, "after-Mount", ""),
+        TraceEvent("AdaptiveSelect", 4, "after-Mount", ""),
+        TraceEvent("AdaptiveIfElse", 3, "after-Mount", ""),
+        TraceEvent("<root>", 2, "after-Mount", "")
     ))
 }

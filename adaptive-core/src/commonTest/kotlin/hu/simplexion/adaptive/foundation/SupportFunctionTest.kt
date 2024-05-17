@@ -53,8 +53,6 @@ class SupportFunctionTest {
                     TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Create", ""),
                     TraceEvent("AdaptiveSupportFunctionTest", 2, "before-Mount"),
                     TraceEvent("AdaptiveSupportFunctionInner", 3, "before-Mount"),
-                    TraceEvent("TestPlaceholder", 4, "before-Mount"),
-                    TraceEvent("TestPlaceholder", 4, "after-Mount"),
                     TraceEvent("AdaptiveSupportFunctionInner", 3, "after-Mount"),
                     TraceEvent("AdaptiveSupportFunctionTest", 2, "after-Mount")
                 )

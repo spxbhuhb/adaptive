@@ -16,7 +16,6 @@ import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.descriptors.Modality
-import org.jetbrains.kotlin.descriptors.Visibilities
 import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.builders.declarations.addConstructor
 import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
@@ -59,8 +58,7 @@ class ArmClassBuilder(
             modality = Modality.OPEN
         }
 
-        typeParameters()
-        irClass.superTypes = listOf(pluginContext.adaptiveFragmentClass.typeWith(irClass.typeParameters.first().defaultType))
+        irClass.superTypes = listOf(pluginContext.adaptiveFragmentType)
         irClass.metadata = armClass.originalFunction.metadata
         irClass.thisReceiver()
         constructor()
@@ -86,24 +84,6 @@ class ArmClassBuilder(
     // Declaration and initialization
     // --------------------------------------------------------------------------------------------------------
 
-    private fun typeParameters() {
-        irClass.typeParameters = listOf(
-            irFactory.createTypeParameter(
-                SYNTHETIC_OFFSET,
-                SYNTHETIC_OFFSET,
-                IrDeclarationOrigin.BRIDGE_SPECIAL,
-                symbol = IrTypeParameterSymbolImpl(),
-                name = Names.BT,
-                index = 0,
-                isReified = false,
-                variance = Variance.IN_VARIANCE
-            ).also {
-                it.parent = irClass
-                it.superTypes = listOf(irBuiltIns.anyNType)
-            }
-        )
-    }
-
     private fun constructor(): IrConstructor =
         irClass.addConstructor {
             isPrimary = true
@@ -113,12 +93,12 @@ class ArmClassBuilder(
 
             addValueParameter {
                 name = Names.ADAPTER
-                type = classBoundAdapterType
+                type = pluginContext.adaptiveAdapterType
             }
 
             addValueParameter {
                 name = Names.PARENT
-                type = classBoundFragmentType.makeNullable()
+                type = pluginContext.adaptiveFragmentNType
             }
 
             addValueParameter {
@@ -135,12 +115,11 @@ class ArmClassBuilder(
             statements += IrDelegatingConstructorCallImpl.fromSymbolOwner(
                 SYNTHETIC_OFFSET,
                 SYNTHETIC_OFFSET,
-                pluginContext.adaptiveFragmentClass.typeWith(classBoundFragmentType),
+                pluginContext.adaptiveFragmentType,
                 pluginContext.adaptiveFragmentClass.constructors.first(),
-                typeArgumentsCount = 1,
+                typeArgumentsCount = 0,
                 valueArgumentsCount = Indices.ADAPTIVE_FRAGMENT_ARGUMENT_COUNT
             ).apply {
-                putTypeArgument(0, classBoundFragmentType)
                 putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGet(constructor.valueParameters[0]))
                 putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(constructor.valueParameters[1]))
                 putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(constructor.valueParameters[2]))
@@ -218,7 +197,7 @@ class ArmClassBuilder(
 
         IrWhenImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            classBoundFragmentType,
+            pluginContext.adaptiveFragmentType,
             IrStatementOrigin.WHEN
         ).apply {
 
@@ -329,7 +308,7 @@ class ArmClassBuilder(
             val receivingFragment = irTemporary(
                 IrCallImpl(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                    classBoundFragmentType,
+                    pluginContext.adaptiveFragmentType,
                     pluginContext.boundSupportFunctionReceivingFragment,
                     0, 0
                 ).also {
@@ -476,13 +455,13 @@ class ArmClassBuilder(
             visibility = irClass.visibility
             modality = Modality.FINAL
         }.also { companion ->
-            companion.superTypes = listOf(pluginContext.adaptiveFragmentCompanionClass.owner.typeWith(irBuiltIns.anyType))
+            companion.superTypes = listOf(pluginContext.adaptiveFragmentCompanionType)
 
             companion.thisReceiver()
 
             companion.addConstructor {
                 isPrimary = true
-                returnType = companion.typeWith()
+                returnType = companion.defaultType
             }.also {
                 it.body = DeclarationIrBuilder(pluginContext.irContext, it.symbol).irBlockBody {
 
@@ -547,11 +526,10 @@ class ArmClassBuilder(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 irClass.defaultType,
                 irClass.constructors.first().symbol,
-                typeArgumentsCount = 1, // bridge type
+                typeArgumentsCount = 0,
                 constructorTypeArgumentsCount = 0,
                 Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
             ).also { call ->
-                call.putTypeArgument(0, classBoundFragmentType)
                 call.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, getAdapter)
                 call.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(valueParameters[0]))
                 call.putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(valueParameters[1]))

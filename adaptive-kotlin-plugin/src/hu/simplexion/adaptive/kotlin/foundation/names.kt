@@ -4,7 +4,6 @@
 package hu.simplexion.adaptive.kotlin.foundation
 
 import hu.simplexion.adaptive.kotlin.common.NamesBase
-import hu.simplexion.adaptive.kotlin.service.FqNames.fqName
 import org.jetbrains.kotlin.name.FqName
 
 object Strings {
@@ -55,9 +54,6 @@ object Strings {
     const val PARENT = "parent"
     const val INDEX = "index"
     const val STATE = "state"
-    const val FRAGMENT = "fragment"
-    const val SUPPORT_FUNCTION = "supportFunction"
-    const val ARGUMENTS = "arguments"
     const val SUPPORT_FUNCTION_INDEX = "supportFunctionIndex"
     const val SUPPORT_FUNCTION_RECEIVING_FRAGMENT = "receivingFragment"
 
@@ -120,7 +116,7 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.classId { STRUCTURAL }
 
     val ADAPTIVE_CLOSURE = Strings.ADAPTIVE_CLOSURE.classId { INTERNAL }
-    val ADAPTIVE_FRAGMENT_FACTORY = Strings.BOUND_FRAGMENT_FACTORY.classId { INTERNAL }
+    val BOUND_FRAGMENT_FACTORY = Strings.BOUND_FRAGMENT_FACTORY.classId { INTERNAL }
     val ADAPTIVE_SUPPORT_FUNCTION = Strings.ADAPTIVE_SUPPORT_FUNCTION.classId { INTERNAL }
 
     val ADAPTIVE_STATE_VARIABLE_BINDING = Strings.ADAPTIVE_STATE_VARIABLE_BINDING.classId { BINDING }
@@ -128,7 +124,6 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAPTIVE_TRANSFORM_INTERFACE = Strings.ADAPTIVE_TRANSFORM_INTERFACE.classId()
 
     val ADAPTIVE_EXPECT = Strings.ADAPTIVE_EXPECT.classId()
-    val ADAPTIVE_FRAGMENT_COMPANION_COLLECTOR = Strings.ADAPTIVE_FRAGMENT_COMPANION_COLLECTOR.classId()
 }
 
 object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {

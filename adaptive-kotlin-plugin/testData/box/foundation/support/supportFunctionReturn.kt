@@ -15,7 +15,7 @@ fun box(): String {
         S1R { it + b }
     }
 
-    val s1r = adapter.rootFragment.containedFragment as AdaptiveS1R<TestNode>
+    val s1r = adapter.rootFragment.containedFragment as AdaptiveS1R
 
     val a = s1r.s0.invoke(13)
 

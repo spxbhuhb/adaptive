@@ -27,7 +27,7 @@ class ArmEntryPointBuilder(
 
             val adapter = irTemporary(
                 irImplicitAs(
-                    classBoundAdapterType,
+                    pluginContext.adaptiveAdapterType,
                     irGet(function.valueParameters.first())
                 )
             )
@@ -61,13 +61,7 @@ class ArmEntryPointBuilder(
 
             + irCall(
                 pluginContext.mount,
-                dispatchReceiver = irGet(root),
-                args = arrayOf(
-                    irCall(
-                        pluginContext.adaptiveAdapterClass.getPropertyGetter(Strings.ROOT_BRIDGE) !!.owner.symbol,
-                        dispatchReceiver = irGet(adapter)
-                    )
-                )
+                dispatchReceiver = irGet(root)
             )
         }
 

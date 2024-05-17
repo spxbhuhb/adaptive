@@ -28,4 +28,12 @@ class TestPlaceholder(
 
     }
 
+    override fun mount() {
+        // skip trace messages
+    }
+
+    override fun unmount() {
+        // skip trace messages
+    }
+
 }

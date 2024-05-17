@@ -22,7 +22,7 @@ private fun Private() {
 }
 
 @AdaptiveFragmentCompanionCollector
-object testFactory : AdaptiveFragmentFactory<TestNode>()
+object testFactory : AdaptiveFragmentFactory()
 
 fun box() : String {
 
@@ -67,16 +67,16 @@ fun box() : String {
         TraceEvent("AdaptiveInternal", 4, "after-Create", ""),
         TraceEvent("AdaptivePublic", 3, "after-Create", ""),
         TraceEvent("<root>", 2, "after-Create", ""),
-        TraceEvent("<root>", 2, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptivePublic", 3, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveInternal", 4, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptivePrivate", 5, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveT0", 6, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveT0", 6, "after-Mount", "bridge: 1"),
-        TraceEvent("AdaptivePrivate", 5, "after-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveInternal", 4, "after-Mount", "bridge: 1"),
-        TraceEvent("AdaptivePublic", 3, "after-Mount", "bridge: 1"),
-        TraceEvent("<root>", 2, "after-Mount", "bridge: 1")
+        TraceEvent("<root>", 2, "before-Mount", ""),
+        TraceEvent("AdaptivePublic", 3, "before-Mount", ""),
+        TraceEvent("AdaptiveInternal", 4, "before-Mount", ""),
+        TraceEvent("AdaptivePrivate", 5, "before-Mount", ""),
+        TraceEvent("AdaptiveT0", 6, "before-Mount", ""),
+        TraceEvent("AdaptiveT0", 6, "after-Mount", ""),
+        TraceEvent("AdaptivePrivate", 5, "after-Mount", ""),
+        TraceEvent("AdaptiveInternal", 4, "after-Mount", ""),
+        TraceEvent("AdaptivePublic", 3, "after-Mount", ""),
+        TraceEvent("<root>", 2, "after-Mount", "")
     ))
 
     return "OK"

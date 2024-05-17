@@ -40,11 +40,11 @@ fun box() : String {
         TraceEvent("AdaptiveSequence", 4, "after-Create", ""),
         TraceEvent("AdaptiveEmpty", 3, "after-Create", ""),
         TraceEvent("<root>", 2, "after-Create", ""),
-        TraceEvent("<root>", 2, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveEmpty", 3, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveSequence", 4, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveSequence", 4, "after-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveEmpty", 3, "after-Mount", "bridge: 1"),
-        TraceEvent("<root>", 2, "after-Mount", "bridge: 1")
+        TraceEvent("<root>", 2, "before-Mount", ""),
+        TraceEvent("AdaptiveEmpty", 3, "before-Mount", ""),
+        TraceEvent("AdaptiveSequence", 4, "before-Mount", ""),
+        TraceEvent("AdaptiveSequence", 4, "after-Mount", ""),
+        TraceEvent("AdaptiveEmpty", 3, "after-Mount", ""),
+        TraceEvent("<root>", 2, "after-Mount", "")
     ))
 }

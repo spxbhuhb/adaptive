@@ -53,16 +53,16 @@ fun box(): String {
             TraceEvent("AdaptiveSequence", 4, "after-Create", ""),
             TraceEvent("AdaptiveSequenceTestComponent", 3, "after-Create", ""),
             TraceEvent("<root>", 2, "after-Create", ""),
-            TraceEvent("<root>", 2, "before-Mount", "bridge: 1"),
-            TraceEvent("AdaptiveSequenceTestComponent", 3, "before-Mount", "bridge: 1"),
-            TraceEvent("AdaptiveSequence", 4, "before-Mount", "bridge: 1"),
-            TraceEvent("AdaptiveT0", 5, "before-Mount", "bridge: 1"),
-            TraceEvent("AdaptiveT0", 5, "after-Mount", "bridge: 1"),
-            TraceEvent("AdaptiveT0", 8, "before-Mount", "bridge: 1"),
-            TraceEvent("AdaptiveT0", 8, "after-Mount", "bridge: 1"),
-            TraceEvent("AdaptiveSequence", 4, "after-Mount", "bridge: 1"),
-            TraceEvent("AdaptiveSequenceTestComponent", 3, "after-Mount", "bridge: 1"),
-            TraceEvent("<root>", 2, "after-Mount", "bridge: 1")
+            TraceEvent("<root>", 2, "before-Mount", ""),
+            TraceEvent("AdaptiveSequenceTestComponent", 3, "before-Mount", ""),
+            TraceEvent("AdaptiveSequence", 4, "before-Mount", ""),
+            TraceEvent("AdaptiveT0", 5, "before-Mount", ""),
+            TraceEvent("AdaptiveT0", 5, "after-Mount", ""),
+            TraceEvent("AdaptiveT0", 8, "before-Mount", ""),
+            TraceEvent("AdaptiveT0", 8, "after-Mount", ""),
+            TraceEvent("AdaptiveSequence", 4, "after-Mount", ""),
+            TraceEvent("AdaptiveSequenceTestComponent", 3, "after-Mount", ""),
+            TraceEvent("<root>", 2, "after-Mount", "")
         )
     )
 }

@@ -6,7 +6,6 @@ package hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir
 
 import hu.simplexion.adaptive.kotlin.foundation.Indices
 import hu.simplexion.adaptive.kotlin.foundation.Names
-import hu.simplexion.adaptive.kotlin.foundation.Strings
 import hu.simplexion.adaptive.kotlin.foundation.ir.AdaptivePluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.*
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
@@ -19,10 +18,8 @@ import org.jetbrains.kotlin.ir.symbols.*
 import org.jetbrains.kotlin.ir.transformStatement
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.defaultType
-import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.*
-import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
@@ -35,27 +32,6 @@ open class ClassBoundIrBuilder(
     }
 
     lateinit var irClass: IrClass
-
-    val classBoundBridgeType: IrTypeParameter
-        get() = irClass.typeParameters.first()
-
-    val classBoundFragmentType: IrType
-        get() = pluginContext.adaptiveFragmentClass.typeWith(classBoundBridgeType.defaultType)
-
-    val classBoundNullableFragmentType: IrType
-        get() = classBoundFragmentType.makeNullable()
-
-    val classBoundClosureType: IrType
-        get() = pluginContext.adaptiveClosureClass.typeWith(classBoundBridgeType.defaultType)
-
-    val classBoundSupportFunctionType: IrType
-        get() = pluginContext.boundSupportFunctionClass.typeWith(classBoundBridgeType.defaultType)
-
-    val classBoundFragmentFactoryType: IrType
-        get() = pluginContext.boundFragmentFactoryClass.typeWith(classBoundBridgeType.defaultType)
-
-    val classBoundAdapterType: IrType
-        get() = pluginContext.adaptiveAdapterClass.typeWith(classBoundBridgeType.defaultType)
 
     // --------------------------------------------------------------------------------------------------------
     // Build, patch and invoke helpers
@@ -92,12 +68,10 @@ open class ClassBoundIrBuilder(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 classSymbol.defaultType,
                 classSymbol.constructors.single(),
-                typeArgumentsCount = 1, // bridge type
+                typeArgumentsCount = 0,
                 constructorTypeArgumentsCount = 0,
                 argumentCount
             )
-
-        constructorCall.putTypeArgument(Indices.ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE, classBoundBridgeType.defaultType)
 
         constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)))
         constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(buildFun.valueParameters[Indices.BUILD_PARENT]))
@@ -110,14 +84,12 @@ open class ClassBoundIrBuilder(
         val constructorCall =
             IrConstructorCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                classBoundFragmentType,
+                pluginContext.boundFragmentFactoryType,
                 pluginContext.boundFragmentFactoryConstructor,
-                typeArgumentsCount = 1, // bridge type
+                typeArgumentsCount = 0,
                 constructorTypeArgumentsCount = 0,
                 Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_COUNT
             )
-
-        constructorCall.putTypeArgument(Indices.ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE, classBoundBridgeType.defaultType)
 
         constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARING_FRAGMENT, irGet(patchFun.dispatchReceiverParameter !!))
         constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARATION_INDEX, irConst(index))
@@ -249,7 +221,7 @@ open class ClassBoundIrBuilder(
     }
 
     fun stateVariableType(variable: ArmStateVariable): IrType =
-        if (variable.type.isFunction()) classBoundSupportFunctionType else variable.type
+        if (variable.type.isFunction()) pluginContext.boundSupportFunctionType else variable.type
 
     // --------------------------------------------------------------------------------------------------------
     // Properties

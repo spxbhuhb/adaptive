@@ -11,23 +11,23 @@ fun text() {
     manualImplementation()
 }
 
-class AdaptiveText<BT>(
+class AdaptiveText(
     adapter: AdaptiveAdapter,
-    parent: AdaptiveFragment<BT>?,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment<BT>(adapter, parent, index, 0) {
+) : AdaptiveFragment(adapter, parent, index, 0) {
 
-    override fun genBuild(parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT>? = null
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<BT>) = Unit
+    override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
     override fun genPatchInternal() = Unit
 
-    companion object : AdaptiveFragmentCompanion<TestNode> {
+    companion object : AdaptiveFragmentCompanion {
 
         override val fragmentType = "stuff.AdaptiveText"
 
-        override fun newInstance(parent: AdaptiveFragment<TestNode>, index: Int): AdaptiveFragment<TestNode> =
+        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
             AdaptiveText(parent.adapter, parent, index)
 
     }
@@ -57,9 +57,9 @@ fun box() : String {
         TraceEvent("AdaptiveText", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
         TraceEvent("AdaptiveText", 3, "after-Create", ""),
         TraceEvent("<root>", 2, "after-Create", ""),
-        TraceEvent("<root>", 2, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveText", 3, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveText", 3, "after-Mount", "bridge: 1"),
-        TraceEvent("<root>", 2, "after-Mount", "bridge: 1")
+        TraceEvent("<root>", 2, "before-Mount", ""),
+        TraceEvent("AdaptiveText", 3, "before-Mount", ""),
+        TraceEvent("AdaptiveText", 3, "after-Mount", ""),
+        TraceEvent("<root>", 2, "after-Mount", "")
     ))
 }

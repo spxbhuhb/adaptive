@@ -12,7 +12,6 @@ import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
-import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.constructors
 
@@ -30,12 +29,11 @@ class ArmSupportFunctionArgumentBuilder(
             argument.argumentIndex,
             IrConstructorCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                classBoundSupportFunctionType,
+                pluginContext.boundSupportFunctionType,
                 pluginContext.boundSupportFunctionClass.constructors.first(),
-                1, 0,
+                0, 0,
                 Indices.ADAPTIVE_SUPPORT_FUNCTION_ARGUMENT_COUNT,
             ).apply {
-                putTypeArgument(0, classBoundBridgeType.defaultType)
                 putValueArgument(Indices.ADAPTIVE_SUPPORT_FUNCTION_DECLARING_FRAGMENT, irGet(patchFun.dispatchReceiverParameter!!))
                 putValueArgument(Indices.ADAPTIVE_SUPPORT_FUNCTION_RECEIVING_FRAGMENT, irGet(patchFun.valueParameters[Indices.PATCH_DESCENDANT_FRAGMENT]))
                 putValueArgument(Indices.ADAPTIVE_SUPPORT_FUNCTION_INDEX, irConst(argument.supportFunctionIndex))

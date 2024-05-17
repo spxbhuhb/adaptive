@@ -12,7 +12,7 @@ fun Basic() {
 }
 
 @AdaptiveFragmentCompanionCollector
-object testFactory : AdaptiveFragmentFactory<TestNode>()
+object testFactory : AdaptiveFragmentFactory()
 
 fun box() : String {
 

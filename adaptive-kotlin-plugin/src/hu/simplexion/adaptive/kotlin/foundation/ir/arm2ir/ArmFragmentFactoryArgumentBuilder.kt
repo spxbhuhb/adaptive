@@ -30,12 +30,11 @@ class ArmFragmentFactoryArgumentBuilder(
             argument.argumentIndex,
             IrConstructorCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                classBoundFragmentFactoryType,
+                pluginContext.boundFragmentFactoryType,
                 pluginContext.boundFragmentFactoryClass.constructors.first(),
-                1, 0,
+                0, 0,
                 Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_COUNT,
             ).apply {
-                putTypeArgument(0, classBoundBridgeType.defaultType)
                 putValueArgument(
                     Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARING_FRAGMENT,
                     irGet(patchFun.dispatchReceiverParameter!!)

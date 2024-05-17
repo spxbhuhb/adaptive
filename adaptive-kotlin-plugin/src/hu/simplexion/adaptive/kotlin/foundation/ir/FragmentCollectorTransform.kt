@@ -7,7 +7,6 @@ import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import hu.simplexion.adaptive.kotlin.common.functionByName
 import hu.simplexion.adaptive.kotlin.foundation.FqNames
 import hu.simplexion.adaptive.kotlin.foundation.Strings
-import hu.simplexion.adaptive.kotlin.foundation.fir.AdaptiveDeclarationGenerator
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.adaptiveClassFqName
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext

@@ -58,14 +58,14 @@ fun box() : String {
         TraceEvent("AdaptiveAccessor", 4, "after-Create", ""),
         TraceEvent("AdaptiveAccessTest", 3, "after-Create", ""),
         TraceEvent("<root>", 2, "after-Create", ""),
-        TraceEvent("<root>", 2, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveAccessTest", 3, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveAccessor", 4, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveT1", 5, "before-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveT1", 5, "after-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveAccessor", 4, "after-Mount", "bridge: 1"),
-        TraceEvent("AdaptiveAccessTest", 3, "after-Mount", "bridge: 1"),
-        TraceEvent("<root>", 2, "after-Mount", "bridge: 1")
+        TraceEvent("<root>", 2, "before-Mount", ""),
+        TraceEvent("AdaptiveAccessTest", 3, "before-Mount", ""),
+        TraceEvent("AdaptiveAccessor", 4, "before-Mount", ""),
+        TraceEvent("AdaptiveT1", 5, "before-Mount", ""),
+        TraceEvent("AdaptiveT1", 5, "after-Mount", ""),
+        TraceEvent("AdaptiveAccessor", 4, "after-Mount", ""),
+        TraceEvent("AdaptiveAccessTest", 3, "after-Mount", ""),
+        TraceEvent("<root>", 2, "after-Mount", "")
         //@formatter:on
     ))
 }

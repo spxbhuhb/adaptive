@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.kotlin.base.success
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.foundation.testing.*
 
-var actual : AdaptiveAdapter<*>? = null
+var actual : AdaptiveAdapter? = null
 
 fun box() : String {
 

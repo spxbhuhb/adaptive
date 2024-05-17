@@ -111,8 +111,6 @@ class LoopTest {
                     TraceEvent("AdaptiveLoopTest", 2, "after-Create", ""),
                     TraceEvent("AdaptiveLoopTest", 2, "before-Mount"),
                     TraceEvent("AdaptiveLoop", 3, "before-Mount"),
-                    TraceEvent("TestPlaceholder", 4, "before-Mount"),
-                    TraceEvent("TestPlaceholder", 4, "after-Mount"),
                     TraceEvent("AdaptiveAnonymous", 5, "before-Mount"),
                     TraceEvent("AdaptiveT1", 6, "before-Mount"),
                     TraceEvent("AdaptiveT1", 6, "after-Mount"),

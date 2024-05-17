@@ -15,7 +15,7 @@ fun box(): String {
         S1 { a = a + it + 1 }
     }
 
-    val s1 = adapter.rootFragment.containedFragment as AdaptiveS1<TestNode>
+    val s1 = adapter.rootFragment.containedFragment as AdaptiveS1
 
     s1.s0.invoke(45)
     s1.s0.declaringFragment.patchInternal()
@@ -34,10 +34,10 @@ fun box(): String {
             TraceEvent("AdaptiveS1", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [BoundSupportFunction(2, 3, 0)]"),
             TraceEvent("AdaptiveS1", 3, "after-Create", ""),
             TraceEvent("<root>", 2, "after-Create", ""),
-            TraceEvent("<root>", 2, "before-Mount", "bridge: 1"),
-            TraceEvent("AdaptiveS1", 3, "before-Mount", "bridge: 1"),
-            TraceEvent("AdaptiveS1", 3, "after-Mount", "bridge: 1"),
-            TraceEvent("<root>", 2, "after-Mount", "bridge: 1"),
+            TraceEvent("<root>", 2, "before-Mount", ""),
+            TraceEvent("AdaptiveS1", 3, "before-Mount", ""),
+            TraceEvent("AdaptiveS1", 3, "after-Mount", ""),
+            TraceEvent("<root>", 2, "after-Mount", ""),
             TraceEvent("<root>", 2, "before-Invoke", "BoundSupportFunction(2, 3, 0) arguments: [45]"),
             TraceEvent("<root>", 2, "after-Invoke", "index: 0 result: kotlin.Unit"),
             TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [58]"),

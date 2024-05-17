@@ -11,11 +11,12 @@ import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmClass
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmEntryPoint
 import hu.simplexion.adaptive.kotlin.common.AbstractPluginContext
 import hu.simplexion.adaptive.kotlin.common.functionByName
-import hu.simplexion.adaptive.kotlin.common.property
 import hu.simplexion.adaptive.kotlin.common.propertyGetter
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
+import org.jetbrains.kotlin.ir.types.defaultType
+import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.getSimpleFunction
@@ -38,19 +39,23 @@ class AdaptivePluginContext(
     val armEntryPoints = mutableListOf<ArmEntryPoint>()
 
     val adaptiveFragmentClass = ClassIds.ADAPTIVE_FRAGMENT.classSymbol()
+    val adaptiveFragmentType = adaptiveFragmentClass.defaultType
+    val adaptiveFragmentNType = adaptiveFragmentType.makeNullable()
+
     val adaptiveAdapterClass = ClassIds.ADAPTIVE_ADAPTER.classSymbol()
-    val adaptiveClosureClass = ClassIds.ADAPTIVE_CLOSURE.classSymbol()
+    val adaptiveAdapterType = adaptiveAdapterClass.defaultType
 
     val adaptiveFragmentCompanionClass = ClassIds.ADAPTIVE_FRAGMENT_COMPANION.classSymbol()
-    val fragmentType = adaptiveFragmentCompanionClass.property { Strings.FRAGMENT_TYPE }.symbol
-    val newInstance = adaptiveFragmentCompanionClass.functionByName { Strings.NEW_INSTANCE }
+    val adaptiveFragmentCompanionType = adaptiveFragmentCompanionClass.defaultType
 
     val adaptiveAnonymousClass = ClassIds.ADAPTIVE_ANONYMOUS.classSymbol()
 
-    val boundFragmentFactoryClass = ClassIds.ADAPTIVE_FRAGMENT_FACTORY.classSymbol()
+    val boundFragmentFactoryClass = ClassIds.BOUND_FRAGMENT_FACTORY.classSymbol()
+    val boundFragmentFactoryType = boundFragmentFactoryClass.defaultType
     val boundFragmentFactoryConstructor = boundFragmentFactoryClass.constructors.single()
 
     val boundSupportFunctionClass = ClassIds.ADAPTIVE_SUPPORT_FUNCTION.classSymbol()
+    val boundSupportFunctionType = boundSupportFunctionClass.defaultType
     val boundSupportFunctionInvoke = boundSupportFunctionClass.functionByName { Strings.SUPPORT_FUNCTION_INVOKE }
     val boundSupportFunctionIndex = boundSupportFunctionClass.propertyGetter { Strings.SUPPORT_FUNCTION_INDEX }
     val boundSupportFunctionReceivingFragment = boundSupportFunctionClass.propertyGetter { Strings.SUPPORT_FUNCTION_RECEIVING_FRAGMENT }
