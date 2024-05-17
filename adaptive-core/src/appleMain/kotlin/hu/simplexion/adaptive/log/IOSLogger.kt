@@ -13,6 +13,10 @@ class IOSLogger(
 
     val prefix = "[$name]"
 
+    override fun fine(message: String) {
+        println("FINE: [$prefix] $message")
+    }
+
     override fun fine(exception: Exception) {
         println("FINE: [$prefix] ${exception.stackTraceToString()}")
     }
