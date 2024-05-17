@@ -3,15 +3,18 @@
  */
 package hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir
 
+import hu.simplexion.adaptive.kotlin.common.property
 import hu.simplexion.adaptive.kotlin.foundation.Indices
 import hu.simplexion.adaptive.kotlin.foundation.Names
 import hu.simplexion.adaptive.kotlin.foundation.Strings
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmClosure
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmStateVariable
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmWhenStateVariable
-import hu.simplexion.adaptive.kotlin.common.property
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
+import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.backend.js.utils.valueArguments
+import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
+import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrVarargImpl
@@ -21,11 +24,13 @@ import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.name.Name
 
+// uncomment for 2.0.0. @OptIn(UnsafeDuringIrConstructionAPI::class)
 class StateAccessTransform(
     private val irBuilder: ClassBoundIrBuilder,
     private val closure: ArmClosure,
     private val getVariableFunction: IrSimpleFunctionSymbol,
     private val transformSupportCalls: Boolean,
+    private val newParent : IrFunction?,
     private val irGetFragment: () -> IrExpression
 ) : IrElementTransformerVoidWithContext() {
 
@@ -171,4 +176,17 @@ class StateAccessTransform(
     fun getPropertyValue(name: Name) =
         irBuilder.irGetValue(irBuilder.irClass.property(name), irGetFragment())
 
+    /**
+     * Move top-level lambda functions in state definition under the new parent.
+     */
+    override fun visitFunctionNew(declaration: IrFunction): IrStatement {
+
+        if (declaration.origin == IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA) {
+            if (declaration.parent == irBuilder.armClass.originalFunction) {
+                declaration.parent = checkNotNull(newParent) { "should not be null here" }
+            }
+        }
+
+        return super.visitFunctionNew(declaration)
+    }
 }

@@ -2,6 +2,7 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+
 package hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir
 
 import hu.simplexion.adaptive.kotlin.common.functionByName
@@ -26,19 +27,17 @@ import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.expressions.impl.*
 import org.jetbrains.kotlin.ir.symbols.impl.IrAnonymousInitializerSymbolImpl
-import org.jetbrains.kotlin.ir.symbols.impl.IrTypeParameterSymbolImpl
 import org.jetbrains.kotlin.ir.types.IrTypeSystemContextImpl
 import org.jetbrains.kotlin.ir.types.defaultType
-import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.name.SpecialNames
-import org.jetbrains.kotlin.types.Variance
 
+// uncomment for 2.0.0 @OptIn(UnsafeDuringIrConstructionAPI::class)
 class ArmClassBuilder(
     context: AdaptivePluginContext,
-    val armClass: ArmClass
-) : ClassBoundIrBuilder(context) {
+    armClass: ArmClass
+) : ClassBoundIrBuilder(context, armClass) {
 
     // --------------------------------------------------------------------------------------------------------
     // First step of class generation: everything without generated function bodies
@@ -376,7 +375,8 @@ class ArmClassBuilder(
                     else -> statement.irStatement as IrExpression
                 }
 
-                val transformedExpression = originalExpression.transformThisStateAccess(armClass.stateVariables) { irGet(patchFun.dispatchReceiverParameter !!) }
+                val transformedExpression = originalExpression
+                    .transformThisStateAccess(armClass.stateVariables, newParent = patchFun) { irGet(patchFun.dispatchReceiverParameter !!) }
 
                 // optimize out null default values
                 if (transformedExpression is IrConstImpl<*> && transformedExpression.kind == IrConstKind.Null) continue
@@ -455,6 +455,10 @@ class ArmClassBuilder(
             visibility = irClass.visibility
             modality = Modality.FINAL
         }.also { companion ->
+
+            companion.parent = irClass
+            irClass.declarations += companion
+
             companion.superTypes = listOf(pluginContext.adaptiveFragmentCompanionType)
 
             companion.thisReceiver()
@@ -488,8 +492,6 @@ class ArmClassBuilder(
             fixCompanionFragmentType(companion)
             fixCompanionNewInstance(companion)
 
-            companion.parent = irClass
-            irClass.declarations += companion
         }
     }
 

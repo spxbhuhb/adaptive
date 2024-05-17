@@ -9,7 +9,7 @@ default, JSON is provided for the faint-hearted.
 To switch to JSON put this somewhere into your bootstrap:
 
 ```properties
-defaultWireFormatProvider = JsonWireFormatProvider()
+withJson()
 ```
 
 ## Polymorphism

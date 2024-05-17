@@ -104,7 +104,7 @@ class ArmCallBuilder(
                                     irGet(patchFun.valueParameters.first())
                                 )
                         }
-                        .transformCreateStateAccess(armCall.closure) { irGet(patchFun.dispatchReceiverParameter!!) }
+                        .transformCreateStateAccess(armCall.closure, patchFun) { irGet(patchFun.dispatchReceiverParameter!!) }
                 }
             }
     }

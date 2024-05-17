@@ -64,7 +64,7 @@ class ArmSelectBuilder(
     private fun irConditionBranchNoSubject(patchFun: IrSimpleFunction, branch: ArmBranch) =
         IrBranchImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            branch.condition.irExpression.transformCreateStateAccess(armSelect.closure) { irGet(patchFun.valueParameters.first()) },
+            branch.condition.irExpression.transformCreateStateAccess(armSelect.closure, patchFun) { irGet(patchFun.valueParameters.first()) },
             irConst(branch.index)
         )
 
@@ -75,7 +75,7 @@ class ArmSelectBuilder(
         return DeclarationIrBuilder(irContext, patchFun.symbol).irComposite(subject, resultType = subject.type) {
 
             val subjectVariable = irTemporary(
-                subject.transformCreateStateAccess(armSelect.closure) { irGet(patchFun.valueParameters.first()) },
+                subject.transformCreateStateAccess(armSelect.closure, patchFun) { irGet(patchFun.valueParameters.first()) },
             )
 
             val transformClosure =
@@ -104,7 +104,7 @@ class ArmSelectBuilder(
     private fun irConditionBranchWithSubject(patchFun: IrSimpleFunction, branch: ArmBranch, transformClosure: ArmClosure) =
         IrBranchImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            branch.condition.irExpression.transformCreateStateAccess(transformClosure) { irGet(patchFun.valueParameters.first()) },
+            branch.condition.irExpression.transformCreateStateAccess(transformClosure, patchFun) { irGet(patchFun.valueParameters.first()) },
             irConst(branch.index)
         )
 

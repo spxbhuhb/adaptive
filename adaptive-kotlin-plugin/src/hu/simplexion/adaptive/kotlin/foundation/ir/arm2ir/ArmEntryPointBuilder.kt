@@ -17,7 +17,7 @@ import org.jetbrains.kotlin.ir.util.*
 class ArmEntryPointBuilder(
     context: AdaptivePluginContext,
     val entryPoint: ArmEntryPoint
-) : ClassBoundIrBuilder(context) {
+) : ClassBoundIrBuilder(context, entryPoint.armClass) {
 
     fun entryPointBody() {
         val function = entryPoint.irFunction

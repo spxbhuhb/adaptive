@@ -39,6 +39,6 @@ open class ArmValueArgumentBuilder(
         irSetDescendantStateVariable(
             patchFun,
             valueArgument.argumentIndex,
-            valueArgument.irExpression.transformCreateStateAccess(closure) { irGet(fragment) }
+            valueArgument.irExpression.transformCreateStateAccess(closure, patchFun) { irGet(fragment) }
         )
 }

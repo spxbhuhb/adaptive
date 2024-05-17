@@ -24,10 +24,11 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
 open class ClassBoundIrBuilder(
-    override val pluginContext: AdaptivePluginContext
+    override val pluginContext: AdaptivePluginContext,
+    val armClass : ArmClass
 ) : AbstractIrBuilder {
 
-    constructor(parent: ClassBoundIrBuilder) : this(parent.pluginContext) {
+    constructor(parent: ClassBoundIrBuilder) : this(parent.pluginContext, parent.armClass) {
         this.irClass = parent.irClass
     }
 
@@ -208,11 +209,38 @@ open class ClassBoundIrBuilder(
         }
     }
 
-    fun IrExpression.transformCreateStateAccess(closure: ArmClosure, irGetFragment: () -> IrExpression): IrExpression =
-        transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, pluginContext.getCreateClosureVariable, false, irGetFragment), null)
+    fun IrExpression.transformCreateStateAccess(
+        closure: ArmClosure,
+        newParent : IrFunction,
+        irGetFragment: () -> IrExpression
+    ): IrExpression =
+        transform(
+            StateAccessTransform(
+                this@ClassBoundIrBuilder,
+                closure,
+                pluginContext.getCreateClosureVariable,
+                false,
+                newParent,
+                irGetFragment
+            ),
+            null
+        )
 
-    fun IrStatement.transformThisStateAccess(closure: ArmClosure, transformInvoke: Boolean = true, irGetFragment: () -> IrExpression): IrExpression =
-        transform(StateAccessTransform(this@ClassBoundIrBuilder, closure, pluginContext.getThisClosureVariable, transformInvoke, irGetFragment), null) as IrExpression
+    fun IrStatement.transformThisStateAccess(
+        closure: ArmClosure,
+        transformInvoke: Boolean = true,
+        newParent : IrFunction,
+        irGetFragment: () -> IrExpression
+    ): IrExpression =
+        transform(
+            StateAccessTransform(
+                this@ClassBoundIrBuilder,
+                closure,
+                pluginContext.getThisClosureVariable,
+                transformInvoke,
+                newParent,
+                irGetFragment
+            ), null) as IrExpression
 
     fun ArmDependencies.toDirtyMask(): IrExpression {
         var mask = 0
