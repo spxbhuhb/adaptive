@@ -20,10 +20,12 @@ hikaricp = "3.4.2"
 exposed = "0.41.1"
 javamail = "1.6.2"
 junit = "4.13.2"
+junit-bom = "5.8.0"
 kotlin = "1.9.24"
 ktor = "2.3.10"
 log4j = "2.20.0"
 logback = "1.2.11" # newer versions are incompatible with Android, see https://youtrack.jetbrains.com/issue/KTOR-5227
+plugin-publish = "1.1.0"
 shadow = "7.1.2"
 subethamail = "3.1.7"
 
@@ -51,6 +53,7 @@ h2database = { module = "com.h2database:h2", version.ref = "h2" }
 hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
 javamail = { module = "com.sun.mail:javax.mail", version.ref = "javamail" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit-bom" }
 
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
@@ -86,3 +89,4 @@ kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
+pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publish" }

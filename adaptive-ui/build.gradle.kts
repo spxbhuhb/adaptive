@@ -13,5 +13,6 @@ fun register(name: String) {
 register("build:clean")
 register("build:build")
 register("publishing:publishToMavenLocal")
+register("publishing:publish")
 register("other:kotlinUpgradeYarnLock")
 register("nodejs:rootPackageJson")

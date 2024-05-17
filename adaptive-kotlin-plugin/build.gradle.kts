@@ -47,9 +47,9 @@ dependencies {
 
     testImplementation(libs.kotlin.reflect)
     testImplementation(libs.kotlin.compiler.internal.test.framework)
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(libs.junit)
 
-    testImplementation(platform("org.junit:junit-bom:5.8.0"))
+    testImplementation(platform(libs.junit.bom))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.junit.platform:junit-platform-commons")
     testImplementation("org.junit.platform:junit-platform-launcher")

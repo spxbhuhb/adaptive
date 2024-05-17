@@ -106,7 +106,7 @@ class AdaptiveClosure(
                 this might be an error in Adaptive or in your code,
                 if this is a manually implemented fragment, check it for bugs,
                 otherwise, please open a GitHub issue or contact me on Slack,
-                point: $point closure: ${this.dump()}
+                point: $point index: $index closure: ${this.dump()}
             """
         )
     }
