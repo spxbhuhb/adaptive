@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
@@ -41,6 +43,29 @@ gradlePlugin {
     }
 }
 
+// ====  Automatic update of the Kotlin plugin version  ========================================================
+
+val fileWithVersion = file("${projectDir}/src/main/kotlin/hu/simplexion/adaptive/gradle/AdaptiveGradlePlugin.kt")
+val versionRegex = """const val PLUGIN_VERSION\s*=\s*\"(\d+\.\d+\.\d+(-SNAPSHOT)?)\"""".toRegex()
+
+tasks.register("updateVersion") {
+    doFirst {
+        val sourceFile = fileWithVersion
+        val fileContent = sourceFile.readText()
+
+        val currentVersionMatch = versionRegex.find(fileContent)
+        val currentVersion = currentVersionMatch?.groups?.get(1)?.value
+
+        if (currentVersion != version) {
+            val updatedContent = versionRegex.replace(fileContent, """const val PLUGIN_VERSION = "$version"""")
+            sourceFile.writeText(updatedContent)
+        }
+    }
+}
+
+tasks["checkKotlinGradlePluginConfigurationErrors"].dependsOn("updateVersion")
+
+// ====  Publishing  ========================================================
 
 val String.propValue
     get() = (System.getenv(this.uppercase().replace('.', '_')) ?: project.findProperty(this))?.toString() ?: ""
