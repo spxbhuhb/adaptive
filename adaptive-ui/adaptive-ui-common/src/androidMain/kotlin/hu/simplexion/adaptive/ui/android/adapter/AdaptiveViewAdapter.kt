@@ -32,13 +32,17 @@ open class AdaptiveViewAdapter(
         get() = Dispatchers.Main
 
     override fun addActual(fragment: AdaptiveFragment) {
-        check(fragment is AdaptiveViewFragment) { "invalid fragment type" } // TODO user ops
-        rootContainer.addView(fragment.receiver)
+        if(fragment is AdaptiveViewFragment) {
+            rootContainer.addView(fragment.receiver)
+        }
+        // TODO check if the fragment is root, throw exc otherwise
     }
 
     override fun removeActual(fragment: AdaptiveFragment) {
-        check(fragment is AdaptiveViewFragment) { "invalid fragment type" } // TODO user ops
-        rootContainer.removeView(fragment.receiver)
+        if(fragment is AdaptiveViewFragment) {
+            rootContainer.removeView(fragment.receiver)
+        }
+        // TODO check if the fragment is root, throw exc otherwise
     }
 
     override fun createPlaceholder(parent : AdaptiveFragment, index : Int): AdaptiveFragment {

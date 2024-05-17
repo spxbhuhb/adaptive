@@ -6,6 +6,10 @@ package hu.simplexion.adaptive.ktor
 
 import hu.simplexion.adaptive.service.defaultServiceCallTransport
 
-fun withWebSocketTransport(path : String = "/adaptive/service") {
-    defaultServiceCallTransport = BasicWebSocketServiceCallTransport(path = path, useTextFrame = true).also { it.start() }
-}
+fun withWebSocketTransport(path : String = "/adaptive/service", trace : Boolean = false) =
+   BasicWebSocketServiceCallTransport(path = path, useTextFrame = true, trace = trace)
+       .also {
+           defaultServiceCallTransport = it
+           it.start()
+       }
+

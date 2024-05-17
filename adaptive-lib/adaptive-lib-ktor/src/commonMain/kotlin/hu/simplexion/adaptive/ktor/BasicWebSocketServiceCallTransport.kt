@@ -1,5 +1,6 @@
 package hu.simplexion.adaptive.ktor
 
+import hu.simplexion.adaptive.log.getLogger
 import hu.simplexion.adaptive.service.model.RequestEnvelope
 import hu.simplexion.adaptive.service.model.ResponseEnvelope
 import hu.simplexion.adaptive.service.model.ServiceCallStatus
@@ -24,13 +25,18 @@ open class BasicWebSocketServiceCallTransport(
     val useTextFrame : Boolean = false
 ) : ServiceCallTransport {
 
+    val logger = getLogger("hu.simplexion.adaptive.ktor.BasicWebSocketServiceCallTransport")
+
     val callTimeout = 20_000_000
 
     class OutgoingCall(
         val request: RequestEnvelope,
         val createdMicros: Long = vmNowMicro(),
         val responseChannel: Channel<ResponseEnvelope> = Channel(1)
-    )
+    ) {
+        override fun toString() : String =
+            "$createdMicros ${request.callId} ${request.serviceName} ${request.funName} ${request.payload.size}"
+    }
 
     var retryDelay = 200L // milliseconds
     val scope = CoroutineScope(Dispatchers.Default)
@@ -53,13 +59,19 @@ open class BasicWebSocketServiceCallTransport(
     suspend fun run() {
         while (scope.isActive) {
             try {
-                retryDelay = 200 // reset the retry delay as we have a working connection
+                if (trace) logger.fine("connecting (retryDelay=$retryDelay)")
 
                 client.webSocket(path) {
+
+                    if (trace) logger.fine("connected")
+
+                    retryDelay = 200 // reset the retry delay as we have a working connection
 
                     launch {
                         try {
                             for (call in outgoingCalls) {
+                                if (trace) logger.fine("send $call")
+
                                 try {
                                     if (useTextFrame) {
                                         send(Frame.Text(true, encode(call.request, RequestEnvelope)))
@@ -84,13 +96,16 @@ open class BasicWebSocketServiceCallTransport(
 
                         val responseEnvelope = decode(frame.data, ResponseEnvelope)
 
+                        if (trace) logger.fine("receive ${responseEnvelope.callId} ${responseEnvelope.status}")
+
                         val call = pendingCalls.remove(responseEnvelope.callId)
                         if (call != null) {
-                            call.responseChannel.trySend(responseEnvelope)
+                            call.responseChannel.send(responseEnvelope)
                         } else {
                             errorHandler?.callError("", "", responseEnvelope)
                         }
                     }
+
                 }
 
             } catch (ex: Exception) {
@@ -158,10 +173,9 @@ open class BasicWebSocketServiceCallTransport(
             outgoingLock.use {
                 outgoingCalls.send(outgoingCall)
             }
-            if (trace) println("outgoing call: $serviceName.$funName")
 
             val responseEnvelope = outgoingCall.responseChannel.receive()
-            if (trace) println("response for $serviceName.$funName\n${responseEnvelope.status}")
+            if (trace) logger.fine("response for $serviceName.$funName ${responseEnvelope.status}")
 
             when (responseEnvelope.status) {
                 ServiceCallStatus.Ok -> {

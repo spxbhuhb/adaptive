@@ -6,6 +6,8 @@ package hu.simplexion.adaptive.foundation.producer
 
 import hu.simplexion.adaptive.foundation.internal.BoundSupportFunction
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import hu.simplexion.adaptive.service.transport.ServiceResultException
+import hu.simplexion.adaptive.service.transport.ServiceTimeoutException
 import kotlinx.coroutines.*
 import kotlin.time.Duration
 
@@ -26,18 +28,24 @@ class AdaptivePoll<VT>(
         other is AdaptivePoll<*> && other.binding == this.binding
 
     override fun start() {
-        scope = CoroutineScope(binding.sourceFragment.adapter.dispatcher).apply {
-            launch {
+        CoroutineScope(binding.sourceFragment.adapter.dispatcher).also {
+            scope = it
+            it.launch {
                 while (isActive) {
-
                     try {
                         binding.setValue(pollFunction.invokeSuspend(), false) // TODO check provider call in poll
-                        delay(interval)
-
                     } catch (e: AdaptiveProducerCancel) {
-                        cancel()
+                        it.cancel()
                         break
+                    } catch (e: ServiceTimeoutException) {
+                        // TODO indicate the problem somehow
+                        println(e)
+                    } catch (e : ServiceResultException) {
+                        // TODO indicate the problem somehow
+                        println(e)
                     }
+                    // TODO this delays after errors as well, maybe consider a bit more sophisticated scheduling
+                    delay(interval)
                 }
             }
         }

@@ -6,6 +6,8 @@ package hu.simplexion.adaptive.log
 
 interface AdaptiveLogger {
 
+    fun fine(message: String)
+
     fun fine(exception: Exception)
 
     fun info(message: String)
