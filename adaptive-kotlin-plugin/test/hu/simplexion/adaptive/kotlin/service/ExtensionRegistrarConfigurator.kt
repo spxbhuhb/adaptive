@@ -29,7 +29,7 @@ class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentCo
             resourceOutputDir = File("testData/generated"),
             pluginDebug = true,
             pluginLogDir = null, //File("testData/log"),
-            dumpKotlinLike = true
+            dumpKotlinLike = false
         )
 
         FirExtensionRegistrarAdapter.registerExtension(AdaptivePluginRegistrar())
