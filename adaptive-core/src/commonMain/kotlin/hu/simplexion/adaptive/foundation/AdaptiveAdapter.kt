@@ -20,6 +20,10 @@ interface AdaptiveAdapter {
 
     val startedAt: Long
 
+    fun addActual(fragment: AdaptiveFragment)
+
+    fun removeActual(fragment: AdaptiveFragment)
+
     fun actualize(name : String, parent : AdaptiveFragment, index: Int) =
         fragmentFactory.newInstance(name, parent, index)
 

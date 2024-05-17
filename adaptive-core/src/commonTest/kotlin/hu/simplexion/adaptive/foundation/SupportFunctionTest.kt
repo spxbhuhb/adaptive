@@ -5,6 +5,7 @@ package hu.simplexion.adaptive.foundation
 
 import hu.simplexion.adaptive.foundation.internal.BoundSupportFunction
 import hu.simplexion.adaptive.foundation.testing.AdaptiveTestAdapter
+import hu.simplexion.adaptive.foundation.testing.AdaptiveTestFragment
 import hu.simplexion.adaptive.foundation.testing.TraceEvent
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -66,7 +67,7 @@ class AdaptiveSupportFunctionTest(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, 1) {
+) : AdaptiveTestFragment(adapter, parent, index, 1) {
 
     val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
     val dependencyMask_0_1 = 0x00 // fragment index: 1, state variable index: 1
@@ -133,7 +134,7 @@ class AdaptiveSupportFunctionInner(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, 2) {
+) : AdaptiveTestFragment(adapter, parent, index, 2) {
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         return adapter.createPlaceholder(this, 0)

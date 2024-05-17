@@ -76,25 +76,27 @@ abstract class AdaptiveFragment(
     }
 
     open fun addActual(fragment: AdaptiveFragment) {
-        ops(
-            "addActual",
-            """
-                unhandled addActual call,
-                probably a bug in a manually implemented fragment,
-                this: $this, fragment: $fragment
-            """
-        )
+        parent?.addActual(fragment) ?: adapter.addActual(fragment)
+//        ops(
+//            "addActual",
+//            """
+//                unhandled addActual call,
+//                probably a bug in a manually implemented fragment,
+//                this: $this, fragment: $fragment
+//            """
+//        )
     }
 
     open fun removeActual(fragment: AdaptiveFragment) {
-        ops(
-            "removeActual",
-            """
-                unhandled addActual call,
-                probably a bug in a manually implemented fragment,
-                this: $this, fragment: $fragment
-            """
-        )
+        parent?.removeActual(fragment) ?: adapter.removeActual(fragment)
+//        ops(
+//            "removeActual",
+//            """
+//                unhandled addActual call,
+//                probably a bug in a manually implemented fragment,
+//                this: $this, fragment: $fragment
+//            """
+//        )
     }
 
     // --------------------------------------------------------------------------
@@ -114,6 +116,7 @@ abstract class AdaptiveFragment(
     open fun mount() {
         if (trace) trace("before-Mount")
 
+        parent?.addActual(this) ?: adapter.addActual(this)
         containedFragment?.mount()
 
         if (trace) trace("after-Mount")
@@ -154,6 +157,7 @@ abstract class AdaptiveFragment(
         if (trace) trace("before-Unmount")
 
         containedFragment?.unmount()
+        parent?.removeActual(this) ?: adapter.removeActual(this)
 
         if (trace) trace("after-Unmount")
     }

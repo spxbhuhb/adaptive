@@ -4,6 +4,7 @@
 package hu.simplexion.adaptive.foundation
 
 import hu.simplexion.adaptive.foundation.testing.AdaptiveTestAdapter
+import hu.simplexion.adaptive.foundation.testing.AdaptiveTestFragment
 import hu.simplexion.adaptive.foundation.testing.TraceEvent
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -68,7 +69,7 @@ class AdaptiveTransformTest(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, 0) {
+) : AdaptiveTestFragment(adapter, parent, index, 0) {
 
     val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
 

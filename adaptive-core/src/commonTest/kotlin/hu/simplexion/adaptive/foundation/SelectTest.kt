@@ -189,7 +189,7 @@ class AdaptiveSelectTest(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, 1) {
+) : AdaptiveTestFragment(adapter, parent, index, 1) {
 
     var v0: Int
         get() = state[0] as Int

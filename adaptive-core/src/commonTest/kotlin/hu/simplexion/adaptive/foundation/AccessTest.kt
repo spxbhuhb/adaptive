@@ -77,7 +77,7 @@ class AdaptiveAccessBindingTest(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, 1) {
+) : AdaptiveTestFragment(adapter, parent, index, 1) {
 
     val dependencyMask_0_0 = 0x01 // fragment index: 0, state variable index: 0
 

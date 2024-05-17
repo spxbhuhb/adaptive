@@ -15,7 +15,7 @@ fun debug(vararg out: Any?) {
     manualImplementation(out)
 }
 
-class AdaptiveDebug<BT>(
+class AdaptiveDebug(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int

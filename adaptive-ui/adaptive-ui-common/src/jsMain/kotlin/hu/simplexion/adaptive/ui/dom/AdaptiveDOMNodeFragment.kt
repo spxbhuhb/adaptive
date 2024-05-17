@@ -12,20 +12,20 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.Node
 
 abstract class AdaptiveDOMNodeFragment(
-    adapter: AdaptiveAdapter<Node>,
-    parent: AdaptiveFragment<Node>?,
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
     index: Int,
-    stateSize : Int,
-    val leaf : Boolean
-) : AdaptiveFragment<Node>(adapter, parent, index, stateSize), AdaptiveBridge<Node> {
+    stateSize : Int
+) : AdaptiveFragment(adapter, parent, index, stateSize) {
+
+    abstract val receiver : Node
 
     @Suppress("UNCHECKED_CAST")
     fun getStyles(variableIndex : Int) =
         state[variableIndex] as? Array<out AdaptiveCssStyle> ?: emptyArray()
 
-    @Suppress("UNCHECKED_CAST")
     fun getFragmentFactory(variableIndex : Int) =
-        state[variableIndex] as BoundFragmentFactory<Node>
+        state[variableIndex] as BoundFragmentFactory
 
     val firstTimeInit
         get() = (dirtyMask == initStateMask)
@@ -47,40 +47,21 @@ abstract class AdaptiveDOMNodeFragment(
     }
 
     // -------------------------------------------------------------------------
-    // Bridge overrides
-    // -------------------------------------------------------------------------
-
-    override fun remove(child: AdaptiveBridge<Node>) {
-        check(!leaf)
-        (receiver as HTMLElement).removeChild(child.receiver)
-    }
-
-    override fun replace(oldChild: AdaptiveBridge<Node>, newChild: AdaptiveBridge<Node>) {
-        check(!leaf)
-        throw IllegalStateException()
-    }
-
-    override fun add(child: AdaptiveBridge<Node>) {
-        check(!leaf)
-        (receiver as HTMLElement).appendChild(child.receiver)
-    }
-
-    // -------------------------------------------------------------------------
     // Fragment overrides
     // -------------------------------------------------------------------------
 
-    override fun genBuild(parent: AdaptiveFragment<Node>, declarationIndex: Int): AdaptiveFragment<Node>? = null
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment<Node>) = Unit
+    override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
-    override fun innerMount(bridge: AdaptiveBridge<Node>) {
-        bridge.add(this)
-        containedFragment?.mount(this)
+    override fun addActual(fragment: AdaptiveFragment) {
+        check(fragment is AdaptiveDOMNodeFragment) { "invalid fragment type" } // TODO user ops
+        receiver.appendChild(fragment.receiver)
     }
 
-    override fun innerUnmount(bridge: AdaptiveBridge<Node>) {
-        containedFragment?.unmount(this)
-        bridge.remove(this)
+    override fun removeActual(fragment: AdaptiveFragment) {
+        check(fragment is AdaptiveDOMNodeFragment) { "invalid fragment type" } // TODO user ops
+        receiver.removeChild(fragment.receiver)
     }
 
 }

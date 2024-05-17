@@ -31,6 +31,18 @@ class AdaptiveTestAdapter(
 
     override val startedAt = vmNowMicro()
 
+    override fun addActual(fragment: AdaptiveFragment) {
+        if(fragment is AdaptiveTestFragment) {
+            rootContainer.appendChild(fragment.receiver)
+        }
+    }
+
+    override fun removeActual(fragment: AdaptiveFragment) {
+        if (fragment is AdaptiveTestFragment) {
+            rootContainer.removeChild(fragment.receiver)
+        }
+    }
+
     val lock = getLock()
 
     val traceEvents = mutableListOf<TraceEvent>()

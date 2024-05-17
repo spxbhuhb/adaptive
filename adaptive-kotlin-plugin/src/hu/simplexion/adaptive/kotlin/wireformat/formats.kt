@@ -31,7 +31,7 @@ data class SignatureWireFormat(
         when {
             basicFormat != null -> builder.irGetObject(basicFormat.classWireFormat)
             genericFormat != null -> genericFormat.buildWireFormat(builder, arguments)
-            else -> throw IllegalStateException()
+            else -> throw IllegalStateException("unknown wireformat")
         }
 }
 

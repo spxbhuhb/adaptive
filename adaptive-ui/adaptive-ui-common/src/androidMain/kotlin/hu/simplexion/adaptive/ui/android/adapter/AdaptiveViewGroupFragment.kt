@@ -6,19 +6,15 @@ package hu.simplexion.adaptive.ui.android.adapter
 import android.view.View
 import android.view.ViewGroup
 import hu.simplexion.adaptive.foundation.*
-import java.lang.UnsupportedOperationException
 
-abstract class AdaptiveViewFragment(
+abstract class AdaptiveViewGroupFragment(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int,
     stateSize : Int
-) : AdaptiveFragment(adapter, parent, index, stateSize) {
+) : AdaptiveViewFragment(adapter, parent, index, stateSize) {
 
-    abstract val receiver : View
-
-    val viewAdapter
-        get() = adapter as AdaptiveViewAdapter
+    abstract override val receiver : ViewGroup
 
     // -------------------------------------------------------------------------
     // Fragment overrides
@@ -29,10 +25,12 @@ abstract class AdaptiveViewFragment(
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
     override fun addActual(fragment: AdaptiveFragment) {
-        throw UnsupportedOperationException() // TODO ops instead of Unsupported
+        check(fragment is AdaptiveViewFragment) { "invalid fragment type" } // TODO user ops
+        receiver.addView(fragment.receiver)
     }
 
     override fun removeActual(fragment: AdaptiveFragment) {
-        throw UnsupportedOperationException() // TODO ops instead of Unsupported
+        check(fragment is AdaptiveViewFragment) { "invalid fragment type" } // TODO user ops
+        receiver.removeView(fragment.receiver)
     }
 }

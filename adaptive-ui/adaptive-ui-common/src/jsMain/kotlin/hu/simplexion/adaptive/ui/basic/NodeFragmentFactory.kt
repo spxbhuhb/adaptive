@@ -7,7 +7,7 @@ package hu.simplexion.adaptive.ui.basic
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
 import org.w3c.dom.Node
 
-object NodeFragmentFactory : AdaptiveFragmentFactory<Node>() {
+object NodeFragmentFactory : AdaptiveFragmentFactory() {
     init {
         addAll(AdaptiveText)
     }

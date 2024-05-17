@@ -8,4 +8,4 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanionCollector
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
 
 @AdaptiveFragmentCompanionCollector
-object SandboxExports : AdaptiveFragmentFactory<Any>()
+object SandboxExports : AdaptiveFragmentFactory()

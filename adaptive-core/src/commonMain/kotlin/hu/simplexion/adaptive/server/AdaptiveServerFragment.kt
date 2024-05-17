@@ -40,6 +40,14 @@ abstract class AdaptiveServerFragment(
         }
     }
 
+    override fun addActual(fragment: AdaptiveFragment) {
+        // there is no actual UI for server fragments
+    }
+
+    override fun removeActual(fragment: AdaptiveFragment) {
+        // there is no actual UI for server fragments
+    }
+
     // -------------------------------------------------------------------------
     // Implementation support
     // -------------------------------------------------------------------------

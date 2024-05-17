@@ -9,48 +9,48 @@ import hu.simplexion.adaptive.utility.UUID
 open class JsonElement {
 
     open val asUnit: Unit
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("JsonElement.asUnit")
 
     open val asBoolean: Boolean
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("JsonElement.asBoolean")
 
     open val asInt: Int
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("JsonElement.asInt")
 
     open val asShort: Short
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("JsonElement.asShort")
 
     open val asByte: Byte
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("JsonElement.asByte")
 
     open val asLong: Long
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("JsonElement.asLong")
 
     open val asFloat: Float
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("JsonElement.asFloat")
 
     open val asDouble: Double
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("JsonElement.asDouble")
 
     open val asChar: Char
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("JsonElement.asChar")
 
     open val asString: String
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("JsonElement.asString")
 
     open fun <T> asUuid(): UUID<T> {
-        throw IllegalStateException()
+        throw IllegalStateException("JsonElement.asUuid")
     }
 
     open val asUInt: UInt
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("JsonElement.asUInt")
 
     open val asUShort: UShort
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("JsonElement.asUShort")
 
     open val asUByte: UByte
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("JsonElement.asUByte")
 
     open val asULong: ULong
-        get() = throw IllegalStateException()
+        get() = throw IllegalStateException("JsonElement.asULong")
 }

@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStub
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
-import hu.simplexion.adaptive.foundation.AdaptiveBridge
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.android.basic.ViewFragmentFactory
 import hu.simplexion.adaptive.utility.vmNowMicro
@@ -17,9 +16,9 @@ import kotlinx.coroutines.Dispatchers
 
 open class AdaptiveViewAdapter(
     val context: Context,
-    rootView : ViewGroup,
+    override val rootContainer : ViewGroup,
     override val trace : Boolean = false
-) : AdaptiveAdapter<View> {
+) : AdaptiveAdapter {
 
     override val fragmentFactory = ViewFragmentFactory
 
@@ -27,15 +26,23 @@ open class AdaptiveViewAdapter(
 
     override val startedAt = vmNowMicro()
 
-    override lateinit var rootFragment: AdaptiveFragment<View>
-
-    override val rootBridge = AdaptiveViewPlaceholder(rootView)
+    override lateinit var rootFragment: AdaptiveFragment
 
     override val dispatcher: CoroutineDispatcher
         get() = Dispatchers.Main
 
-    override fun createPlaceholder(): AdaptiveBridge<View> {
-        return AdaptiveViewPlaceholder(ViewStub(context))
+    override fun addActual(fragment: AdaptiveFragment) {
+        check(fragment is AdaptiveViewFragment) { "invalid fragment type" } // TODO user ops
+        rootContainer.addView(fragment.receiver)
+    }
+
+    override fun removeActual(fragment: AdaptiveFragment) {
+        check(fragment is AdaptiveViewFragment) { "invalid fragment type" } // TODO user ops
+        rootContainer.removeView(fragment.receiver)
+    }
+
+    override fun createPlaceholder(parent : AdaptiveFragment, index : Int): AdaptiveFragment {
+        return AdaptiveViewPlaceholder(ViewStub(context), this, parent, index)
     }
 
     override fun newId(): Long =

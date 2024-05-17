@@ -16,11 +16,13 @@ import org.w3c.dom.Node
  */
 @AdaptiveEntry
 fun browser(
-    vararg imports : AdaptiveFragmentFactory<Node>,
-    @Adaptive block: (adapter : AdaptiveAdapter<*>) -> Unit
+    vararg imports : AdaptiveFragmentFactory,
+    trace : Boolean = false,
+    @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
 ) : AdaptiveDOMAdapter {
 
     return AdaptiveDOMAdapter().also {
+        it.trace = trace
         it.fragmentFactory += imports
         block(it)
         it.mounted()

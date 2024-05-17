@@ -27,7 +27,7 @@ fun main() {
     withJson()
     withWebSocketTransport()
 
-    browser(SandboxExports as AdaptiveFragmentFactory<Node>) {
+    browser(SandboxExports, trace = true) {
         val time = poll(1.seconds, now()) { now() }
         counterWithTime(time)
         publicFun()

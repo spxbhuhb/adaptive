@@ -140,7 +140,7 @@ class AdaptiveLoopTest(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, 1) {
+) : AdaptiveTestFragment(adapter, parent, index, 1) {
 
     var count : Int
         get() = state[0] as Int

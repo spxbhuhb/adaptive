@@ -3,23 +3,31 @@
  */
 package hu.simplexion.adaptive.ui.dom
 
-import hu.simplexion.adaptive.foundation.AdaptiveBridge
-import org.w3c.dom.Node
+import hu.simplexion.adaptive.foundation.AdaptiveAdapter
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 
-open class AdaptiveDOMPlaceholder : AdaptiveBridge<Node> {
+open class AdaptiveDOMPlaceholder(
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
+    index: Int
+) : AdaptiveDOMNodeFragment(adapter, parent, index, 0) {
 
     override val receiver = org.w3c.dom.Text()
 
-    override fun remove(child: AdaptiveBridge<Node>) {
-        receiver.parentNode?.removeChild(child.receiver)
-    }
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
 
-    override fun replace(oldChild: AdaptiveBridge<Node>, newChild: AdaptiveBridge<Node>) {
-        receiver.parentNode?.replaceChild(newChild.receiver, oldChild.receiver)
-    }
+    override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
-    override fun add(child: AdaptiveBridge<Node>) {
-        receiver.parentNode?.appendChild(child.receiver)
+    override fun genPatchInternal() = Unit
+
+    companion object : AdaptiveFragmentCompanion {
+
+        override val fragmentType = "hu.simplexion.adaptive.server.builtin.AdaptiveDOMPlaceholder"
+
+        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
+            AdaptiveDOMPlaceholder(parent.adapter, parent, index)
+
     }
 
 }

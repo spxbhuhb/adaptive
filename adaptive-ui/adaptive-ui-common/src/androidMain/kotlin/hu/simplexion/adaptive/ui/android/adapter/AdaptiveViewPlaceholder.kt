@@ -4,10 +4,21 @@
 package hu.simplexion.adaptive.ui.android.adapter
 
 import android.view.View
-import androidx.constraintlayout.widget.Placeholder
-import hu.simplexion.adaptive.foundation.AdaptiveBridge
-import org.w3c.dom.Node
+import hu.simplexion.adaptive.foundation.AdaptiveAdapter
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 
 class AdaptiveViewPlaceholder(
-    override val receiver : View
-) : AdaptiveViewBridge
+    override val receiver : View,
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
+    index: Int
+) : AdaptiveViewFragment(adapter, parent, index, 0) {
+
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
+
+    override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
+
+    override fun genPatchInternal() = Unit
+
+}

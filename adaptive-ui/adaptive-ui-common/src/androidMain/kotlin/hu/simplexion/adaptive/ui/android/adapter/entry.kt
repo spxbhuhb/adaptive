@@ -19,7 +19,7 @@ fun android(
     context : Context,
     rootView : ViewGroup,
     trace : Boolean = false,
-    @Adaptive block: (adapter : AdaptiveAdapter<*>) -> Unit
+    @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
 ) : AdaptiveViewAdapter =
     AdaptiveViewAdapter(
         context, rootView, trace

@@ -8,10 +8,10 @@ import hu.simplexion.adaptive.ui.dom.AdaptiveDOMNodeFragment
 import org.w3c.dom.Node
 
 class AdaptiveText(
-    adapter: AdaptiveAdapter<Node>,
-    parent : AdaptiveFragment<Node>,
+    adapter: AdaptiveAdapter,
+    parent : AdaptiveFragment,
     index : Int
-) : AdaptiveDOMNodeFragment(adapter, parent, index, 1, true) {
+) : AdaptiveDOMNodeFragment(adapter, parent, index, 1) {
 
     override val receiver = org.w3c.dom.Text()
 
@@ -25,11 +25,11 @@ class AdaptiveText(
         }
     }
 
-    companion object : AdaptiveFragmentCompanion<Node> {
+    companion object : AdaptiveFragmentCompanion {
 
         override val fragmentType = "hu.simplexion.adaptive.ui.basic.AdaptiveText"
 
-        override fun newInstance(parent: AdaptiveFragment<Node>, index: Int): AdaptiveFragment<Node> =
+        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
             AdaptiveText(parent.adapter, parent, index)
 
     }

@@ -45,6 +45,14 @@ open class AdaptiveServerAdapter(
         get() = lock.use { field }
         set(v) { lock.use { field = v } }
 
+    override fun addActual(fragment: AdaptiveFragment) {
+        // there is no actual UI for server fragments
+    }
+
+    override fun removeActual(fragment: AdaptiveFragment) {
+        // there is no actual UI for server fragments
+    }
+
     override fun createPlaceholder(parent: AdaptiveFragment, index: Int): AdaptiveFragment {
         return ServerPlaceholder(this, parent, index)
     }

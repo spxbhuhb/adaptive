@@ -17,7 +17,7 @@ class AdaptiveT0(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, 0) {
+) : AdaptiveTestFragment(adapter, parent, index, 0) {
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
 
