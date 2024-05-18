@@ -20,14 +20,13 @@ Available entry functions (bridge is used to connect Adaptive to the underlying 
 | androidMain | `android`           | `AdaptiveViewAdapter`    | `android.view.View` |                                                  |
 | iosMain     | not implemented yet | not implemented yet      | `UiView`            |                                                  |
 
-Points of interest:
+Notes:
 
 * entry functions return with an instance of the adapter class
 * the returned adapter instance contains everything built by the block passed to the entry function
 * the adapter never starts background tasks for itself
 * the adapter may have background tasks, if you create them some way, details in [background tasks](#background-tasks)
 * to shut down everything properly call the `unmount` and `dispose` functions of the adapter, details in [lifecycle](#lifecycle)
-
 
 ## Basics: Fragments
 
@@ -38,7 +37,7 @@ Add the `@Adaptive` annotation to tell the compiler to turn the function into a 
 ```kotlin
 @Adaptive
 fun helloWorld() {
-    text { "Hello World!" }
+    text("Hello World!")
 }
 ```
 
@@ -51,9 +50,10 @@ Defined variables are part of the component state, and they are *reactive by def
 We call these *internal state variables*.
 
 ```kotlin
-fun Adaptive.counter() {
+@Adaptive
+fun counter() {
     var counter = 0
-    filledButton { "Click count: $counter" } onClick { counter++ }
+    button("Click count: $counter") { counter++ }
 }
 ```
 
@@ -71,9 +71,10 @@ the component. However, it may happen that the parameter changes
 on the outside. In that case the component updates the UI automatically.
 
 ```kotlin
-fun Adaptive.counter(label: String) {
+@Adaptive
+fun counter(label: String) {
     var counter = 0
-    filledButton { "$label: $counter" } onClick { counter++ }
+    button("$label: $counter") { counter++ }
 }
 ```
 
@@ -96,10 +97,11 @@ Adaptive automatically finds the *boundary*: the first call to another Adaptive 
 function marks the *boundary*.
 
 ```kotlin
-fun Adaptive.counter() {
+@Adaptive
+fun counter() {
     var counter = 0
     // ---- boundary ----
-    filledButton { "Click count: $counter" } onClick { counter++ }
+    button("Click count: $counter") { counter++ }
 }
 ```
 

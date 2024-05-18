@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import platform.UIKit.UILabel
 import platform.UIKit.UIView
 
-open class AdaptiveViewAdapter(
+open class AdaptiveUIViewAdapter(
     override val rootContainer: UIView,
     override val trace: Boolean = false
 ) : AdaptiveAdapter {
@@ -29,16 +29,28 @@ open class AdaptiveViewAdapter(
         get() = Dispatchers.Main
 
     override fun addActual(fragment: AdaptiveFragment) {
+        if (trace) trace(fragment, "before-adapter-addActual", "")
+
         if (fragment is AdaptiveUIViewFragment) {
             rootContainer.addSubview(fragment.receiver)
+        } else {
+            if (trace) trace(fragment, "warning-adapter-addActual", "not an AdaptiveUIViewFragment")
         }
+
+        if (trace) trace(fragment, "after-adapter-addActual", "")
         // TODO check if the fragment is root, throw exc otherwise
     }
 
     override fun removeActual(fragment: AdaptiveFragment) {
+        if (trace) trace(fragment, "before-adapter-removeActual", "")
+
         if (fragment is AdaptiveUIViewFragment) {
             fragment.receiver.removeFromSuperview()
+        } else {
+            if (trace) trace(fragment, "warning-adapter-removeActual", "not an AdaptiveUIViewFragment")
         }
+
+        if (trace) trace(fragment, "after-adapter-removeActual", "")
         // TODO check if the fragment is root, throw exc otherwise
     }
 

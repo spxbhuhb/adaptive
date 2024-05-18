@@ -19,6 +19,14 @@ class AdaptiveTestAdapter(
 
     var nextId = 2L
 
+    // these would break a lot of tests for as they are not in the expected list
+    val skipTracePoints = mutableListOf(
+        "before-addActual",
+        "after-addActual",
+        "before-removeActual",
+        "after-removeActual"
+    )
+
     override val fragmentFactory = TestNodeFragmentFactory
 
     override lateinit var rootFragment: AdaptiveFragment
@@ -59,6 +67,8 @@ class AdaptiveTestAdapter(
         TestPlaceholder(this, parent, index)
 
     override fun trace(fragment: AdaptiveFragment, point: String, data: String) {
+        if (point in skipTracePoints) return
+
         lock.use {
             traceEvents += TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).also { if (printTrace) it.println(startedAt) }
         }

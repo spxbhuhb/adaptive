@@ -76,27 +76,19 @@ abstract class AdaptiveFragment(
     }
 
     open fun addActual(fragment: AdaptiveFragment) {
+        if (trace) trace("before-addActual")
+
         parent?.addActual(fragment) ?: adapter.addActual(fragment)
-//        ops(
-//            "addActual",
-//            """
-//                unhandled addActual call,
-//                probably a bug in a manually implemented fragment,
-//                this: $this, fragment: $fragment
-//            """
-//        )
+
+        if (trace) trace("after-addActual")
     }
 
     open fun removeActual(fragment: AdaptiveFragment) {
+        if (trace) trace("before-removeActual")
+
         parent?.removeActual(fragment) ?: adapter.removeActual(fragment)
-//        ops(
-//            "removeActual",
-//            """
-//                unhandled addActual call,
-//                probably a bug in a manually implemented fragment,
-//                this: $this, fragment: $fragment
-//            """
-//        )
+
+        if (trace) trace("after-removeActual")
     }
 
     // --------------------------------------------------------------------------

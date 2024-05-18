@@ -7,12 +7,13 @@ import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.adapter.AdaptiveUIViewFragment
+import platform.UIKit.NSTextAlignmentCenter
 import platform.UIKit.UILabel
 
 class AdaptiveText(
     adapter: AdaptiveAdapter,
-    parent : AdaptiveFragment,
-    index : Int
+    parent: AdaptiveFragment,
+    index: Int
 ) : AdaptiveUIViewFragment(adapter, parent, index, 1) {
 
     override val receiver = UILabel()
@@ -24,6 +25,8 @@ class AdaptiveText(
 
         if (haveToPatch(closureMask, 1)) {
             receiver.text = content
+            receiver.textAlignment = NSTextAlignmentCenter
+            receiver.translatesAutoresizingMaskIntoConstraints = false
         }
     }
 
