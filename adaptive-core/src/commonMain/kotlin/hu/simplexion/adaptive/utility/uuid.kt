@@ -3,6 +3,9 @@
  */
 package hu.simplexion.adaptive.utility
 
+import kotlin.experimental.ExperimentalObjCName
+import kotlin.native.ObjCName
+
 const val versionMask = 0xffff0fff.toInt()
 const val version = 0x00004000
 const val variantMask = 0x3fffffff
@@ -30,7 +33,9 @@ class UUID<T> : Comparable<UUID<T>> {
         val mask = 0xffffffff.toULong()
         val NIL = UUID<Any>(IntArray(4) { 0 }, 0)
 
+        @OptIn(ExperimentalObjCName::class)
         @Suppress("UNCHECKED_CAST")
+        @ObjCName("getNil")
         fun <T> nil() = NIL as UUID<T>
 
         fun <T> String.toUuidOrNull(): UUID<T>? {
