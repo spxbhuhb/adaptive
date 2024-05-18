@@ -21,7 +21,7 @@ abstract class AdaptiveFragment(
 
     val state: Array<Any?> = arrayOfNulls<Any?>(stateSize)
 
-    @Suppress("LeakingThis") // closure won't do anything with components during init
+    @Suppress("LeakingThis") // closure won't do anything with fragments during init
     open val thisClosure: AdaptiveClosure = AdaptiveClosure(arrayOf(this), stateSize)
 
     open val createClosure: AdaptiveClosure

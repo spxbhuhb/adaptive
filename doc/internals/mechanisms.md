@@ -1,5 +1,10 @@
 # Mechanisms
 
+> [!NOTE]
+> 
+> This might be a bit outdated, I'll check later.
+> 
+
 ## Declaration vs. Creation
 
 When talking about mechanism, there is a very important distinction between the **declaration** and the  **creation**

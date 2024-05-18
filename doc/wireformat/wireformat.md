@@ -1,20 +1,20 @@
 # WireFormat
 
-A simple serialization library for Kotlin, part of [Adaptive](../../README.md). Its main purpose is to
-provide serialization for [services](../service/README.md). It is optimized for handling function calls.
+A simple serialization library for Kotlin. Its main purpose is to provide serialization 
+for [services](../service/service.md). It is optimized for handling function calls.
 
 WireFormat supports [JSON](https://json.org) and [Protobuf](https://protobuf.dev) out of the box, Protobuf being the
 default, JSON is provided for the faint-hearted.
 
 To switch to JSON put this somewhere into your bootstrap:
 
-```properties
+```kotlin
 withJson()
 ```
 
 ## Polymorphism
 
-WireFormat does not support polymorphism.
+WireFormat does not support polymorphism (now, I'll have to write it sooner or later).
 
 ## Supported Data Types
 

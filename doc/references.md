@@ -1,9 +1,11 @@
-How to set up Xcode:
+Description of FIR: https://github.com/JetBrains/kotlin/blob/master/docs/fir
 
-https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-integrate-in-existing-app.html#make-your-cross-platform-application-work-on-ios
+FIR plugin prototype: https://github.com/JetBrains/kotlin/blob/master/plugins/fir-plugin-prototype
 
-Apple Framework
+Kotlin spec: https://github.com/JetBrains/kotlin/blob/master/spec-docs
 
-https://kotlinlang.org/docs/apple-framework.html
+Test infrastructure: https://github.com/JetBrains/kotlin/blob/master/compiler/test-infrastructure/ReadMe.me
 
+How to set up Xcode: https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-integrate-in-existing-app.html#make-your-cross-platform-application-work-on-ios
 
+Apple Framework: https://kotlinlang.org/docs/apple-framework.html

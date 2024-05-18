@@ -30,7 +30,7 @@ browser(SomeExport) {
 }
 ```
 
-## Background
+## Internals
 
 The compiler plugin creates a companion object for each `public` adaptive function.
 `internal` and `private` functions don't have a companion object as they cannot be exported. You

@@ -38,59 +38,39 @@ See [platforms](./doc/platforms/README.md) for details.
 
 ## Getting Started
 
+There is some [documentation](doc/toc.md).
+
 Check out the [adaptive-example](https://github.com/spxbhuhb/adaptive-example) project, or jump to the
-* [API](https://github.com/spxbhuhb/adaptive-example/blob/main/shared/src/commonMain/kotlin/hu/simplexion/adaptive/example/api/CounterApi.kt) (defines the API between the clients and the server)
+* [API](https://github.com/spxbhuhb/adaptive-example/blob/main/shared/src/commonMain/kotlin/CounterApi.kt) (defines the API between the clients and the server)
 * server
-  * [server main](https://github.com/spxbhuhb/adaptive-example/blob/main/server/src/main/kotlin/hu/simplexion/adaptive/example/Application.kt) (server entry point)
-  * [service implementation](https://github.com/spxbhuhb/adaptive-example/blob/main/server/src/main/kotlin/hu/simplexion/adaptive/example/service/CounterService.kt) (client request handler, one instance per request)
-  * [worker implementation](https://github.com/spxbhuhb/adaptive-example/blob/main/server/src/main/kotlin/hu/simplexion/adaptive/example/worker/CounterWorker.kt) (background worker, one (or few) instances per server)
+  * [server main](https://github.com/spxbhuhb/adaptive-example/blob/main/server/src/main/kotlin/Application.kt) (server entry point)
+  * [service implementation](https://github.com/spxbhuhb/adaptive-example/blob/main/server/src/main/kotlin/CounterService.kt) (client request handler, one instance per request)
+  * [worker implementation](https://github.com/spxbhuhb/adaptive-example/blob/main/server/src/main/kotlin/CounterWorker.kt) (background worker, one (or few) instances per server)
 * client
-  * [shared code](https://github.com/spxbhuhb/adaptive-example/blob/main/shared/src/commonMain/kotlin/hu/simplexion/adaptive/example) (shared between all client platforms)
+  * [shared code](https://github.com/spxbhuhb/adaptive-example/blob/main/shared/src/commonMain/kotlin/counter.kt) (shared between all client platforms)
   * [browser main](https://github.com/spxbhuhb/adaptive-example/blob/main/browserApp/src/jsMain/kotlin/main.kt)
-  * [android main](https://github.com/spxbhuhb/adative-example/blob/main/androidApp/src/androidMain/kotlin/hu/simplexion/adaptive/example/MainActivity.kt)
+  * [android main](https://github.com/spxbhuhb/adaptive-example/blob/main/androidApp/src/androidMain/kotlin/hu/simplexion/adaptive/example/MainActivity.kt)
 
 ## Project Structure
 
-| Component                                                  | Content                                                                                 |
-|------------------------------------------------------------|-----------------------------------------------------------------------------------------|
-| core                                                       | The fundamental core of the library.                                                    |
-| &nbsp;&nbsp;[adat](doc/adat/README.md)                     | Data classes with many convenience functions, metadata and serialization support.       |
-| &nbsp;&nbsp;[foundation](doc/foundation/README.md)         | Fundamental classes and interfaces for building adaptive structures.                    |
-| &nbsp;&nbsp;[server](doc/server/README.md)                 | Server side adaptive fragments: workers, services, stores, settings.                    |
-| &nbsp;&nbsp;[service](doc/service/README.md)               | Client-server communication with simple function calls.                                 |
-| &nbsp;&nbsp;[wireformat](doc/wireformat/README.md)         | Serialization (protobuf and Json).                                                      |
-| gradle-plugin                                              | The Gradle plugin.                                                                      |
-| kotlin-plugin                                              | The Kotlin compiler plugin.                                                             |
-| lib                                                        | Application level libraries such as UI, E-mail, etc.                                    |
-| &nbsp;&nbsp;[email](adaptive-lib/adaptive-lib-email)       | Email worker (JavaMail), tables (Exposed) and service to send emails.                   |
-| &nbsp;&nbsp;[exposed](adaptive-lib/adaptive-lib-exposed)   | Integration with Exposed, HikariPool worker.                                            |
-| &nbsp;&nbsp;[ktor](adaptive-lib/adaptive-lib-ktor)         | Ktor Worker with websockets and static directory serving. Transport for services.       |
-| sandbox                                                    | Project used during development to try things our without booting up the whole example. |
-| &nbsp;&nbsp;[lib](adaptive-sandbox/adaptive-sandbox-lib)   | Library sandbox.                                                                        |
-| &nbsp;&nbsp;[app](adaptive-sandbox/adaptive-sandbox-app)   | Application sandbox.                                                                    |
-| ui                                                         | User interface modules.                                                                 |
-| &nbsp;&nbsp;[common](adaptive-ui/adaptive-ui-common)       | Basic UI fragments for the supported platforms.                                         |
-
-## Gradle Dependencies
-
-**Note**: The snapshot version is not on Maven Central. I'll update this when an actual preview is released.
-
-```text
-plugins {
-    kotlin("multiplatform") version "1.9.10"
-    id("hu.simplexion.adaptive") version "2024.05.07-SNAPSHOT"
-}
-
-kotlin {
-    sourceSets["commonMain"].dependencies {
-        implementation("hu.simplexion.adaptive:adaptive-core:2024.05.07-SNAPSHOT")
-        implementation("hu.simplexion.adaptive:adaptive-ktor:2024.05.07-SNAPSHOT")        
-        implementation("hu.simplexion.adaptive:adaptive-exposed:2024.05.07-SNAPSHOT")
-        implementation("hu.simplexion.adaptive:adaptive-email:2024.05.07-SNAPSHOT")
-        implementation("hu.simplexion.adaptive:adaptive-ui:2024.05.07-SNAPSHOT")
-    }
-}
-```
+| Component                                                | Content                                                                           |
+|----------------------------------------------------------|-----------------------------------------------------------------------------------|
+| core                                                     | The fundamental core of the library.                                              |
+| &nbsp;&nbsp;[adat](doc/adat/adat.md)                     | Data classes with many convenience functions, metadata and serialization support. |
+| &nbsp;&nbsp;[foundation](doc/foundation/foundation.md)   | Fundamental classes and interfaces for building adaptive structures.              |
+| &nbsp;&nbsp;[server](doc/server/server.md)               | Server side adaptive fragments: workers, services, stores, settings.              |
+| &nbsp;&nbsp;service                                      | Client-server communication with simple function calls.                           |
+| &nbsp;&nbsp;wireformat                                   | Serialization (protobuf and Json).                                                |
+| gradle-plugin                                            | The Gradle plugin.                                                                |
+| kotlin-plugin                                            | The Kotlin compiler plugin.                                                       |
+| lib                                                      | Application level libraries such as UI, E-mail, etc.                              |
+| &nbsp;&nbsp;[email](adaptive-lib/adaptive-lib-email)     | Email worker (JavaMail), tables (Exposed) and service to send emails.             |
+| &nbsp;&nbsp;[exposed](adaptive-lib/adaptive-lib-exposed) | Integration with Exposed, HikariPool worker.                                      |
+| &nbsp;&nbsp;[ktor](adaptive-lib/adaptive-lib-ktor)       | Ktor Worker with websockets and static directory serving. Transport for services. |
+| &nbsp;&nbsp;[lib](adaptive-lib/adaptive-lib-sandbox)     | Library sandbox.                                                                  |
+| sandbox                                                  | Sandbox project to try things our without booting up the whole example.           |
+| ui                                                       | User interface modules.                                                           |
+| &nbsp;&nbsp;[common](adaptive-ui/adaptive-ui-common)     | Basic UI fragments for the supported platforms.                                   |
 
 ## Building Adaptive
 

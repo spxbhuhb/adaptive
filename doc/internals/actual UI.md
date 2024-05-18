@@ -70,6 +70,7 @@ _container_) to an actual UI _container_.
   * `mount`/`unmount` calls `mount`/`unmount` of the child fragments
   * `addActual`/`removeActual` passes the call to the parent fragment
 
+
 ```text
 fun implicit() {
                         // implicit AdaptiveSequence, independent, container       

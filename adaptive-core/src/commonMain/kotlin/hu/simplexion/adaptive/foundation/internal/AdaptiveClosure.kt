@@ -11,11 +11,11 @@ import hu.simplexion.adaptive.foundation.ops
  *                         of state variables in [owner] and all [components].
  */
 class AdaptiveClosure(
-    val components: Array<AdaptiveFragment>,
+    val fragments: Array<AdaptiveFragment>,
     val closureSize: Int
 ) {
     val owner
-        get() = components[0]
+        get() = fragments[0]
 
     var declarationScopeSize = owner.state.size
 
@@ -35,7 +35,7 @@ class AdaptiveClosure(
         // index of the first variable of ANONYMOUS-2 in the closure: 3 = closure size - state size
         // index of the requested variable of ANONYMOUS-2 in the state of ANONYMOUS-2: requested index - ANONYMOUS-2 index
 
-        for (anonymousScope in components) {
+        for (anonymousScope in fragments) {
             val extendedClosureSize = anonymousScope.thisClosure.closureSize
             if (extendedClosureSize > stateVariableIndex) {
                 return anonymousScope.state[stateVariableIndex - (extendedClosureSize - anonymousScope.state.size)]
@@ -55,7 +55,7 @@ class AdaptiveClosure(
             return
         }
 
-        for (anonymousScope in components) {
+        for (anonymousScope in fragments) {
             val extendedClosureSize = anonymousScope.thisClosure.closureSize
             if (extendedClosureSize > stateVariableIndex) {
                 anonymousScope.setStateVariable(stateVariableIndex - (extendedClosureSize - anonymousScope.state.size), value)
@@ -67,18 +67,18 @@ class AdaptiveClosure(
     }
 
     /**
-     * Calculate the complete closure mask (or of components masks).
+     * Calculate the complete closure mask (or of fragments masks).
      */
     fun closureDirtyMask(): StateVariableMask {
         var mask = 0
         var position = 0
-        for (component in components) {
-            if (component.dirtyMask == initStateMask) {
+        for (fragment in fragments) {
+            if (fragment.dirtyMask == initStateMask) {
                 mask = initStateMask
             } else {
-                mask = mask or (component.dirtyMask shl position)
+                mask = mask or (fragment.dirtyMask shl position)
             }
-            position += component.state.size
+            position += fragment.state.size
         }
         return mask
     }
@@ -91,9 +91,9 @@ class AdaptiveClosure(
         val builder = StringBuilder()
         builder.append("AdaptiveClosure:\n")
         builder.append("Owner: $owner\n")
-        builder.append("Components:\n")
-        for (component in components) {
-            builder.append("\t$component  ${component.state.contentToString()}\n")
+        builder.append("Fragments:\n")
+        for (fragment in fragments) {
+            builder.append("\t$fragment  ${fragment.state.contentToString()}\n")
         }
         return builder.toString()
     }

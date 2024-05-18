@@ -51,7 +51,7 @@ class AdaptiveAnonymous(
         val declaringClosure = ancestor.thisClosure
 
         return AdaptiveClosure(
-            declaringClosure.components + component,
+            declaringClosure.fragments + component,
             declaringClosure.closureSize + component.state.size
         )
     }

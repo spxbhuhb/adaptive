@@ -16,7 +16,7 @@ interface AdatClass<S : AdatClass<S>> {
     val adatCompanion : AdatCompanion<S>
         get() = pluginGenerated()
 
-    fun copy() = adatCompanion.newInstance(adatValues)
+    fun copy() = adatCompanion.newInstance(adatValues.copyOf())
 
     fun adatToString() =
         this::class.simpleName
@@ -38,13 +38,27 @@ interface AdatClass<S : AdatClass<S>> {
         @Suppress("UNCHECKED_CAST")
         ProtoWireFormatEncoder().rawInstance(this as S, adatCompanion.adatWireFormat).pack()
 
-    fun any(index : Int) = adatValues[index]
+    fun adatIndexOf(name : String) : Int =
+        getMetadata().properties.first { it.name == name }.index
 
-    fun setAny(index : Int, value: Any?) {
+    fun getValue(name : String) =
+        getValue(adatIndexOf(name))
+
+    fun getValue(index : Int) = adatValues[index]
+
+    fun setValue(name : String, value: Any?) {
+        setValue(adatIndexOf(name), value)
+    }
+
+    fun setValue(index : Int, value: Any?) {
         adatValues[index] = value
     }
 
     fun int(index : Int) = adatValues[index] as Int
 
     fun boolean(index : Int) = adatValues[index] as Boolean
+
+    fun getMetadata() =
+        adatCompanion.adatMetaData
+
 }

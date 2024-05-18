@@ -17,7 +17,7 @@ class AdaptiveSequence(
         get() = parent!!.thisClosure
 
     override val thisClosure = AdaptiveClosure(
-        createClosure.components + this,
+        createClosure.fragments + this,
         createClosure.closureSize + state.size
     )
 
