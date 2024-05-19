@@ -4,8 +4,10 @@
 package hu.simplexion.adaptive.kotlin.adat.ir.adatclass
 
 import hu.simplexion.adaptive.kotlin.adat.AdatPluginKey
+import hu.simplexion.adaptive.kotlin.adat.Names
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatPluginContext
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
+import hu.simplexion.adaptive.kotlin.common.functionByName
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
@@ -14,6 +16,7 @@ import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrProperty
+import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.getSimpleFunction
 
 class PropertyTransform(
@@ -36,7 +39,7 @@ class PropertyTransform(
                 irImplicitAs(
                     getter.returnType,
                     irCall(
-                        adatClass.getSimpleFunction("any")!!,
+                        adatClass.getValueByIndex.symbol,
                         irGet(getter.dispatchReceiverParameter!!),
                         irConst(propertyIndex)
                     )
@@ -51,7 +54,7 @@ class PropertyTransform(
 
             setter.body = DeclarationIrBuilder(pluginContext.irContext, setter.symbol).irBlockBody {
                 + irCall(
-                    adatClass.getSimpleFunction("setAny")!!,
+                    adatClass.setValueByIndex.symbol,
                     irGet(setter.dispatchReceiverParameter!!),
                     irConst(propertyIndex),
                     irGet(setter.valueParameters[0])
@@ -61,5 +64,20 @@ class PropertyTransform(
 
         return declaration
     }
+
+    val IrClass.getValueByIndex
+        get() = functions.first { f ->
+            f.name == Names.GET_VALUE && f.valueParameters.let { it.size == 1 && it.first().type == irBuiltIns.intType }
+        }
+
+    val IrClass.setValueByIndex
+        get() = functions.first { f ->
+            f.name == Names.SET_VALUE
+                && f.valueParameters.let {
+                    it.size == 2
+                        && it.first().type == irBuiltIns.intType
+                        && it[1].type == irBuiltIns.anyNType
+                }
+        }
 
 }

@@ -26,6 +26,9 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_HASHCODE = "adatHashCode".name()
     val ADAT_TO_STRING = "adatToString".name()
 
+    val GET_VALUE = "getValue".name()
+    val SET_VALUE = "setValue".name()
+
     val EQUALS = "equals".name()
     val HASHCODE = "hashCode".name()
     val TO_STRING = "toString".name()
