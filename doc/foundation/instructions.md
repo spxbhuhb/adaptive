@@ -1,10 +1,5 @@
 # Instructions
 
-> [!NOTE]
-> 
-> At the moment the instruction system is simply a convention, there is no enforcement whatsoever. 
->
-
 A fragment may have so-called instructions. The best example is styling of UI fragments, but
 instructions are not limited to styles.
 
@@ -50,3 +45,16 @@ fun blueTextWithPadding(content : String) {
 }
 ```
 
+## Manual Implementation
+
+To access instructions of another fragment from your manual implementation
+use `AdaptiveFragment.instruction`.
+
+The value of this property is the current instruction set from the state 
+of the component, type is `Array<out AdaptiveInstruction>`.
+
+If a given fragment does not have instructions (no parameter with the name
+and type) you get an empty array.
+
+The index of the instruction state variable is stored in the `instructionIndex`
+property of the fragment.
