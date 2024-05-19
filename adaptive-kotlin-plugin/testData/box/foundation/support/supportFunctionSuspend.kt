@@ -16,7 +16,7 @@ fun box(): String {
         SuspendS1 { a = a + it + 1 }
     }
 
-    val s1 = adapter.rootFragment.containedFragment as AdaptiveSuspendS1
+    val s1 = adapter.rootFragment.children.first() as AdaptiveSuspendS1
 
     runBlocking {
         s1.s0.invokeSuspend(45)

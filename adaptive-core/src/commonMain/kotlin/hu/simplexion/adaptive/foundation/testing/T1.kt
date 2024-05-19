@@ -23,7 +23,7 @@ class AdaptiveT1(
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
-    override fun genPatchInternal() = Unit
+    override fun genPatchInternal(): Boolean = true
 
     companion object : AdaptiveFragmentCompanion {
 

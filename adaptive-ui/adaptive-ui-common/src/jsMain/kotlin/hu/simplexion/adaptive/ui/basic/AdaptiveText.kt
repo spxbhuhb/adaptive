@@ -5,7 +5,6 @@ package hu.simplexion.adaptive.ui.basic
 
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.ui.dom.AdaptiveDOMNodeFragment
-import org.w3c.dom.Node
 
 class AdaptiveText(
     adapter: AdaptiveAdapter,
@@ -17,12 +16,14 @@ class AdaptiveText(
 
     private val content: String get() = state[0]?.toString() ?: ""
 
-    override fun genPatchInternal() {
+    override fun genPatchInternal(): Boolean {
         val closureMask = getThisClosureDirtyMask()
 
         if (haveToPatch(closureMask, 1)) {
             receiver.data = content
         }
+
+        return false
     }
 
     companion object : AdaptiveFragmentCompanion {

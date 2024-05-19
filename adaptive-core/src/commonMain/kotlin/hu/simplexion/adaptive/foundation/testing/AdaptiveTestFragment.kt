@@ -20,7 +20,7 @@ abstract class AdaptiveTestFragment(
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
-    override fun genPatchInternal() = Unit
+    override fun genPatchInternal(): Boolean = true
 
     override fun addActual(fragment: AdaptiveFragment) {
         // test fragments have no actual UI

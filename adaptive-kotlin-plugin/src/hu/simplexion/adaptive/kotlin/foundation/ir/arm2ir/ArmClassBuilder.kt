@@ -394,7 +394,7 @@ class ArmClassBuilder(
                 )
             }
 
-            + irReturn(irUnit())
+            + irReturn(irConst(true))
         }
     }
 

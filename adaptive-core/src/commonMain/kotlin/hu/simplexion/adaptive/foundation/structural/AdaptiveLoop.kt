@@ -13,8 +13,8 @@ class AdaptiveLoop<IT>(
     index: Int,
 ) : AdaptiveFragment(adapter, parent, index, 2) {
 
-    override val createClosure : AdaptiveClosure
-        get() = parent!!.thisClosure
+    override val createClosure: AdaptiveClosure
+        get() = parent !!.thisClosure
 
     @Suppress("UNCHECKED_CAST")
     val iterator
@@ -23,72 +23,55 @@ class AdaptiveLoop<IT>(
     val builder
         get() = state[1] as BoundFragmentFactory
 
-    val fragments = mutableListOf<AdaptiveFragment>()
-
-    val placeholder: AdaptiveFragment = adapter.createPlaceholder(this, -1)
-
     fun addAnonymous(iteratorValue: IT): AdaptiveFragment =
         AdaptiveAnonymous(adapter, this, 0, 1, builder).also {
-            fragments.add(it)
+            children.add(it)
             it.setStateVariable(0, iteratorValue)
         }
+
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
+        return null
+    }
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) {
         // anonymous fragment iterator is read only, and it is set during create
     }
 
     override fun addActual(fragment: AdaptiveFragment) {
-        parent!!.addActual(fragment)
+        parent !!.addActual(fragment)
     }
 
     override fun removeActual(fragment: AdaptiveFragment) {
-        parent!!.removeActual(fragment)
+        parent !!.removeActual(fragment)
     }
 
-    override fun create() {
-        if (trace) trace("before-Create")
-        patch()
-        if (trace) trace("after-Create")
-    }
-
-    override fun mount() {
-        if (adapter.trace) trace("before-Mount")
-
-        placeholder.mount()
-
-        for (fragment in fragments) {
-            fragment.mount()
-        }
-
-        if (adapter.trace) trace("after-Mount")
-    }
-
-    override fun genPatchInternal() {
+    override fun genPatchInternal(): Boolean {
         // TODO think about re-running iterators, we should not do that
         if (dirtyMask != 0) {
             patchStructure()
         } else {
             patchContent()
         }
+        return false
     }
 
     fun patchStructure() {
         var index = 0
         for (loopVariable in iterator) {
-            if (index >= fragments.size) {
+            if (index >= children.size) {
                 val f = addAnonymous(loopVariable)
                 f.create()
                 f.mount()
             } else {
-                fragments[index].also {
+                children[index].also {
                     it.setStateVariable(0, loopVariable)
                     it.patch()
                 }
             }
             index ++
         }
-        while (index < fragments.size) {
-            val f = fragments.removeLast()
+        while (index < children.size) {
+            val f = children.removeLast()
             f.unmount()
             f.dispose()
             index ++
@@ -96,40 +79,7 @@ class AdaptiveLoop<IT>(
     }
 
     fun patchContent() {
-        for (fragment in fragments) {
-            fragment.patch()
-        }
-    }
-
-    override fun unmount() {
-        if (trace) trace("before-Unmount")
-
-        for (fragment in fragments) {
-            fragment.unmount()
-        }
-
-        placeholder.unmount()
-
-        if (trace) trace("after-Unmount")
-    }
-
-    override fun dispose() {
-        if (trace) trace("before-Dispose")
-
-        for (f in fragments) {
-            f.dispose()
-        }
-
-        if (trace) trace("after-Dispose")
-    }
-
-    override fun filter(result : MutableList<AdaptiveFragment>, filterFun : (it : AdaptiveFragment) -> Boolean) {
-        if (filterFun(this)) {
-            result += this
-        }
-        fragments.forEach {
-            it.filter(result, filterFun)
-        }
+        children.forEach { it.patch() }
     }
 
     override fun stateToTraceString(): String {

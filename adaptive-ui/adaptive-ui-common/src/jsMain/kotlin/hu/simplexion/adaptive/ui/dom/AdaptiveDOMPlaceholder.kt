@@ -19,7 +19,7 @@ open class AdaptiveDOMPlaceholder(
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
-    override fun genPatchInternal() = Unit
+    override fun genPatchInternal(): Boolean = Unit
 
     companion object : AdaptiveFragmentCompanion {
 

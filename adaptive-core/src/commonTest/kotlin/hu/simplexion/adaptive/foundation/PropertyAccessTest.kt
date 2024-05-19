@@ -177,8 +177,9 @@ class AdaptivePropertyAccessBindingTest(
         }
     }
 
-    override fun genPatchInternal() {
+    override fun genPatchInternal(): Boolean {
         state[0] = TestProvider().also { testProvider = it }
+        return true
     }
 }
 
@@ -216,9 +217,10 @@ class AdaptivePropertyAccessor(
         }
     }
 
-    override fun genPatchInternal() {
+    override fun genPatchInternal(): Boolean {
         @Suppress("UNCHECKED_CAST")
         testBinding = state[0] as AdaptiveStateVariableBinding<Int>
+        return true
     }
 
 }

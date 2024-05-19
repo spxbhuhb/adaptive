@@ -63,9 +63,6 @@ class AdaptiveTestAdapter(
 
     override fun newId(): Long = nextId ++ // This is not thread safe, OK for testing, but beware.
 
-    override fun createPlaceholder(parent : AdaptiveFragment, index : Int) =
-        TestPlaceholder(this, parent, index)
-
     override fun trace(fragment: AdaptiveFragment, point: String, data: String) {
         if (point in skipTracePoints) return
 

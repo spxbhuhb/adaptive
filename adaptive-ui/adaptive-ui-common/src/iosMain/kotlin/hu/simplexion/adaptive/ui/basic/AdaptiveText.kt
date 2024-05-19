@@ -28,6 +28,8 @@ class AdaptiveText(
             receiver.textAlignment = NSTextAlignmentCenter
             receiver.translatesAutoresizingMaskIntoConstraints = false
         }
+
+        return false
     }
 
     companion object : AdaptiveFragmentCompanion {

@@ -98,9 +98,7 @@ class AdaptiveTransformTest(
         }
     }
 
-    override fun genPatchInternal() {
-
-    }
+    override fun genPatchInternal(): Boolean = true
 
 }
 
@@ -120,8 +118,9 @@ class AdaptiveTransformed(
 
     }
 
-    override fun genPatchInternal() {
+    override fun genPatchInternal(): Boolean {
         // here should be the internal patch for the default, but it is not important for this test
+        return true
     }
 
 }

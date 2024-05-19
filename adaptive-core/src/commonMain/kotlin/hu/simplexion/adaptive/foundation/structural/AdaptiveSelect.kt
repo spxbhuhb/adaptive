@@ -13,84 +13,70 @@ class AdaptiveSelect(
     index: Int,
 ) : AdaptiveFragment(adapter, parent, index, 2) {
 
-    override val createClosure : AdaptiveClosure
-        get() = parent!!.thisClosure
+    override val createClosure: AdaptiveClosure
+        get() = parent !!.thisClosure
 
     override val thisClosure = AdaptiveClosure(
         createClosure.fragments + this,
         createClosure.closureSize + state.size
     )
 
-    val placeholder: AdaptiveFragment = adapter.createPlaceholder(this, -1)
-
     val stateBranch
         get() = state[0] as Int
 
     var shownBranch // -1 means that there is nothing shown, like: `if (condition) div {  }`
         get() = state[1] as Int
-        set(v) { state[1] = v }
+        set(v) {
+            state[1] = v
+        }
 
-    var mounted = false
+    init {
+        shownBranch = - 1
+    }
 
     /**
      * The fragment that is currently shown.
      */
-    var shownFragment: AdaptiveFragment? = null
-
-    override fun create() {
-        if (trace) trace("before-Create")
-
-        state[1] = -1 // initialize showBranch so that we don't have a shown branch
-
-        patch()
-
-        if (trace) trace("after-Create")
-    }
-
-    override fun mount() {
-        if (adapter.trace) trace("before-Mount")
-
-        mounted = true
-
-        placeholder.mount()
-        shownFragment?.mount()
-
-        if (adapter.trace) trace("after-Mount")
-    }
-
-    override fun genPatchInternal() {
-        if (stateBranch == shownBranch) {
-            shownFragment?.patch()
-        } else {
-            if (mounted) shownFragment?.unmount()
-            shownFragment?.dispose()
-
-            if (stateBranch == - 1) {
-                shownFragment = null
-            } else {
-                shownFragment = createClosure.owner.genBuild(this, stateBranch)
-                if (mounted) shownFragment?.mount()
+    var shownFragment: AdaptiveFragment?
+        get() = children.firstOrNull()
+        set(v) {
+            when {
+                v == null -> children.clear()
+                children.isEmpty() -> children.add(v)
+                else -> children[0] = v
             }
-
-            shownBranch = stateBranch
         }
+
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? =
+        null // genPatchInternal will create the child fragment if necessary
+
+    override fun genPatchInternal(): Boolean {
+
+
+        if (stateBranch == shownBranch) {
+            return true // no change, let patchInternal patch the child
+        }
+
+        shownBranch = stateBranch  // new branch
+
+        shownFragment?.let { // drop old branch
+            if (mounted) it.unmount()
+            it.dispose()
+        }
+
+        if (shownBranch == -1) { // nothing should be shown
+            shownFragment = null
+            return false
+        }
+
+        createClosure.owner.genBuild(this, shownBranch)?.also { // there is something to sow
+            if (mounted) it.mount()
+            shownFragment = it
+        }
+
+        return false
+
     }
 
-    override fun unmount() {
-        if (trace) trace("before-Unmount")
-
-        shownFragment?.unmount()
-        placeholder.unmount()
-
-        mounted = false
-
-        if (trace) trace("after-Unmount")
-    }
-
-    override fun dispose() {
-        if (trace) trace("before-Dispose")
-        shownFragment?.dispose()
-        if (trace) trace("after-Dispose")
-    }
 
 }

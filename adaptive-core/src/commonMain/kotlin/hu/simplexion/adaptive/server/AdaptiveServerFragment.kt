@@ -26,8 +26,8 @@ abstract class AdaptiveServerFragment(
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
-    override fun genPatchInternal() {
-        if (getThisClosureDirtyMask() != initStateMask) return
+    override fun genPatchInternal(): Boolean {
+        if (getThisClosureDirtyMask() != initStateMask) return true
 
         check(impl == null) { "inconsistent server state innerMount with a non-null implementation" }
 
@@ -38,6 +38,8 @@ abstract class AdaptiveServerFragment(
             it.logger = serverAdapter.getLogger(it::class.simpleName!!) // FIXME using class simpleName
             it.create()
         }
+
+        return true
     }
 
     override fun addActual(fragment: AdaptiveFragment) {

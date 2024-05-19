@@ -25,8 +25,9 @@ class AdaptiveDebug(
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
-    override fun genPatchInternal() {
+    override fun genPatchInternal(): Boolean {
         @Suppress("UNCHECKED_CAST")
         println("debug: " + (state[0] as Array<out Any>).contentToString())
+        return false
     }
 }

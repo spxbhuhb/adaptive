@@ -21,52 +21,23 @@ class AdaptiveSequence(
         createClosure.closureSize + state.size
     )
 
-    val fragments = mutableListOf<AdaptiveFragment>()
-
     val indices : IntArray
         get() = state[0] as IntArray
 
-    override fun create() {
-        if (trace) trace("before-Create")
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
+        return null
+    }
 
-        patch()
-
-        for (itemIndex in indices) {
-            createClosure.owner.genBuild(this, itemIndex)?.let { fragments += it }
+    override fun genPatchInternal(): Boolean {
+        // FIXME sequence genPatchInternal does not handle state changes properly
+        if (children.size != indices.size) {
+            for (itemIndex in indices) {
+                createClosure.owner.genBuild(this, itemIndex)?.let { children.add(it) }
+            }
+            return false
         }
 
-        if (trace) trace("after-Create")
-    }
-
-    override fun mount() {
-        if (trace) trace("before-Mount")
-        fragments.forEach { it.mount() }
-        if (trace) trace("after-Mount")
-    }
-
-    override fun genPatchInternal() {
-        fragments.forEach { it.patch() }
-    }
-
-    override fun unmount() {
-        if (trace) trace("before-Unmount")
-        fragments.forEach { it.unmount() }
-        if (trace) trace("after-Unmount")
-    }
-
-    override fun dispose() {
-        if (trace) trace("before-Dispose")
-        fragments.forEach { it.dispose() }
-        if (trace) trace("after-Dispose")
-    }
-
-    override fun filter(result : MutableList<AdaptiveFragment>, filterFun : (it : AdaptiveFragment) -> Boolean) {
-        if (filterFun(this)) {
-            result += this
-        }
-        fragments.forEach {
-            it.filter(result, filterFun)
-        }
+        return true
     }
 
     override fun stateToTraceString(): String {

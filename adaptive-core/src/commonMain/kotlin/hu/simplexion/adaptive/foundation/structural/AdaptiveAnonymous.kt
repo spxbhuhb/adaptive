@@ -29,9 +29,7 @@ class AdaptiveAnonymous(
         return factory.build(this)
     }
 
-    override fun genPatchInternal() {
-
-    }
+    override fun genPatchInternal(): Boolean = true
 
     /**
      * Finds the first parent with `thisClosure` owned by [declaringComponent]. Then extends that closure with

@@ -15,7 +15,7 @@ fun box(): String {
         S1 { a = a + it + 1 }
     }
 
-    val s1 = adapter.rootFragment.containedFragment as AdaptiveS1
+    val s1 = adapter.rootFragment.children.first() as AdaptiveS1
 
     s1.s0.invoke(45)
     s1.s0.declaringFragment.patchInternal()

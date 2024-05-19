@@ -37,19 +37,19 @@ class SequenceTest {
                     TraceEvent("AdaptiveSequence", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
                     TraceEvent("AdaptiveSequence", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [1, 2]"),
                     TraceEvent("AdaptiveSequence", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [1, 2]"),
-                    TraceEvent("AdaptiveSequence", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [1, 2]"),
                     TraceEvent("AdaptiveT0", 4, "before-Create", ""),
-                    TraceEvent("AdaptiveT0", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-                    TraceEvent("AdaptiveT0", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-                    TraceEvent("AdaptiveT0", 4, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-                    TraceEvent("AdaptiveT0", 4, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
+                    TraceEvent("AdaptiveT0", 4, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
+                    TraceEvent("AdaptiveT0", 4, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
+                    TraceEvent("AdaptiveT0", 4, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
+                    TraceEvent("AdaptiveT0", 4, "after-Patch-Internal", "createMask: 0xffffffff thisMask: 0x00000000 state: []"),
                     TraceEvent("AdaptiveT0", 4, "after-Create", ""),
                     TraceEvent("AdaptiveT1", 5, "before-Create", ""),
-                    TraceEvent("AdaptiveT1", 5, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-                    TraceEvent("AdaptiveT1", 5, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
-                    TraceEvent("AdaptiveT1", 5, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
-                    TraceEvent("AdaptiveT1", 5, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
+                    TraceEvent("AdaptiveT1", 5, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
+                    TraceEvent("AdaptiveT1", 5, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [12]"),
+                    TraceEvent("AdaptiveT1", 5, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [12]"),
+                    TraceEvent("AdaptiveT1", 5, "after-Patch-Internal", "createMask: 0xffffffff thisMask: 0x00000000 state: [12]"),
                     TraceEvent("AdaptiveT1", 5, "after-Create", ""),
+                    TraceEvent("AdaptiveSequence", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [1, 2]"),
                     TraceEvent("AdaptiveSequence", 3, "after-Create", ""),
                     TraceEvent("AdaptiveSequenceTest", 2, "after-Create", ""),
                     TraceEvent("AdaptiveSequenceTest", 2, "before-Mount"),
@@ -109,8 +109,6 @@ class AdaptiveSequenceTest(
         }
     }
 
-    override fun genPatchInternal() {
-
-    }
+    override fun genPatchInternal(): Boolean = true
 
 }

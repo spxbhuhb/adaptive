@@ -102,7 +102,7 @@ override fun build(parent: AdaptiveFragment<BT>, declarationIndex: Int): Adaptiv
 ## Create
 
 * computes the initial state of the component
-* builds `containedFragment`
+* builds children
 
 ```kotlin
 fun create() {
@@ -110,7 +110,7 @@ fun create() {
     patch()
   
     // build the contained fragment
-    containedFragment = build(this, 0)
+    genBuild(this, 0)?.let { children.add(it) }
 }
 ```
 
@@ -120,7 +120,7 @@ There are four patch methods for each fragment:
 
 * `patch` patches the fragment itself, calls `patchExternal` and `patchInternal`
 * `patchExternal` patches the external state variables of the fragment, calls `createClosure.owner.patchDescendant`
-* `patchInternal` patches the internal state variables of the fragment and calls `patch` of its `containedFragment`
+* `patchInternal` patches the internal state variables of the fragment and calls `patch` of its children
 * `patchDescendant` patches the external variables of a descendant fragment
 
 Notes:
@@ -138,7 +138,7 @@ fun patchInternal() {
     TODO("update internal state variables if necessary")
 
     // at this point all variables that have been updated are set to dirty
-    containedFragment?.patch()
+    children.forEach { it.patch() }
   
     // clear the state, the UI and the state should be in sync now
     thisClosure.clear()
@@ -184,7 +184,7 @@ class AdaptiveHigherFun<BT> : AdaptiveFragment<BT> {
 
         state[0].execute(this) // executes `callback` 
 
-        containedFragment = build(thisClosure, this, 0) // 0 is the index of the `builder` call
+        genBuild(thisClosure, this, 0)?.let { children.add(it) } // 0 is the index of the `builder` call
     }
 
     fun build(declarationClosure: AdaptiveClosure, parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {

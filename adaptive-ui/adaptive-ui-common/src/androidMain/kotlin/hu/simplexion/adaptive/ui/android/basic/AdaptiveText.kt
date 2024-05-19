@@ -3,7 +3,6 @@
  */
 package hu.simplexion.adaptive.ui.android.basic
 
-import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -21,7 +20,7 @@ class AdaptiveText(
     private val content: String
         get() = state[0]?.toString() ?: ""
 
-    override fun genPatchInternal() {
+    override fun genPatchInternal(): Boolean {
         val closureMask = getThisClosureDirtyMask()
 
         if (haveToPatch(closureMask, 1)) {
@@ -31,6 +30,8 @@ class AdaptiveText(
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
         }
+
+        return false
     }
 
     companion object : AdaptiveFragmentCompanion {

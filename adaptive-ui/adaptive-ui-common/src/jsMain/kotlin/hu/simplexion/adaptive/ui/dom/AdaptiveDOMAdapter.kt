@@ -46,9 +46,6 @@ open class AdaptiveDOMAdapter(
         // FIXME check(fragment is AdaptiveRootFragment)
     }
 
-    override fun createPlaceholder(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-        AdaptiveDOMPlaceholder(this, parent, index)
-
     override fun newId(): Long =
         nextId++
 

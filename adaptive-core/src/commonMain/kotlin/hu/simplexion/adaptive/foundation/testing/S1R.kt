@@ -25,7 +25,7 @@ class AdaptiveS1R(
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
-    override fun genPatchInternal() = Unit
+    override fun genPatchInternal(): Boolean = true
 
     var s0: BoundSupportFunction
         get() = state[0] as BoundSupportFunction

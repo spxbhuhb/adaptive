@@ -130,10 +130,11 @@ class AdaptivePollTest(
         }
     }
 
-    override fun genPatchInternal() {
+    override fun genPatchInternal(): Boolean {
         if (getThisClosureDirtyMask() == initStateMask) {
             this.setStateVariable(0, poll(Duration.ZERO, 2, localBinding(0, 0, "kotlin.int"), null))
         }
+        return true
     }
 
     @Suppress("RedundantNullableReturnType")

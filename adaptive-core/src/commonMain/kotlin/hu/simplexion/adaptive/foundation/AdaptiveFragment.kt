@@ -14,8 +14,23 @@ abstract class AdaptiveFragment(
     val index: Int,
     stateSize: Int
 ) {
+    companion object {
+        const val MOUNTED_MASK = 0x01
+    }
 
     val id: Long = adapter.newId()
+
+    var flags : Int = 0
+
+    var mounted : Boolean
+        get() = (flags and MOUNTED_MASK) != 0
+        set(v) {
+            if (v) {
+                flags = flags or MOUNTED_MASK
+            } else {
+                flags = flags and MOUNTED_MASK.inv()
+            }
+        }
 
     var trace: Boolean = adapter.trace
 
@@ -29,7 +44,7 @@ abstract class AdaptiveFragment(
 
     var dirtyMask: StateVariableMask = initStateMask
 
-    var containedFragment: AdaptiveFragment? = null
+    var children = mutableListOf<AdaptiveFragment>()
 
     var producers: MutableList<AdaptiveProducer>? = null
 
@@ -100,7 +115,7 @@ abstract class AdaptiveFragment(
 
         patch()
 
-        containedFragment = genBuild(this, 0)
+        genBuild(this, 0)?.let { children.add(it) }
 
         if (trace) trace("after-Create")
     }
@@ -108,8 +123,9 @@ abstract class AdaptiveFragment(
     open fun mount() {
         if (trace) trace("before-Mount")
 
+        mounted = true
         parent?.addActual(this) ?: adapter.addActual(this)
-        containedFragment?.mount()
+        children.forEach { it.mount() }
 
         if (trace) trace("after-Mount")
     }
@@ -132,24 +148,29 @@ abstract class AdaptiveFragment(
     open fun patchInternal() {
         if (trace) traceWithState("before-Patch-Internal")
 
-        genPatchInternal()
-
-        containedFragment?.patch()
+        if (genPatchInternal()) {
+            children.forEach { it.patch() }
+        }
 
         dirtyMask = cleanStateMask
 
         if (trace) traceWithState("after-Patch-Internal")
     }
 
-    open fun genPatchInternal() {
+    /**
+     * @return  When true, the children will be also patched, when false they won't.
+     *          Generated fragments return with true.
+     */
+    open fun genPatchInternal(): Boolean {
         pluginGenerated("genPatchInternal")
     }
 
     open fun unmount() {
         if (trace) trace("before-Unmount")
 
-        containedFragment?.unmount()
+        children.forEach { it.unmount() }
         parent?.removeActual(this) ?: adapter.removeActual(this)
+        mounted = false
 
         if (trace) trace("after-Unmount")
     }
@@ -157,7 +178,7 @@ abstract class AdaptiveFragment(
     open fun dispose() {
         if (trace) trace("before-Dispose")
 
-        containedFragment?.dispose()
+        children.forEach { it.dispose() }
 
         // converting to array so we can safely remove
         producers?.toTypedArray()?.forEach { removeProducer(it) }
@@ -323,7 +344,7 @@ abstract class AdaptiveFragment(
         if (filterFun(this)) {
             result += this
         }
-        containedFragment?.filter(result, filterFun)
+        children.forEach { it.filter(result, filterFun) }
     }
 
     // --------------------------------------------------------------------------

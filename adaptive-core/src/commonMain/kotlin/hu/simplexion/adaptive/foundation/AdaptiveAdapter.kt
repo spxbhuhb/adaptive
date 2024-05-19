@@ -27,8 +27,6 @@ interface AdaptiveAdapter {
     fun actualize(name : String, parent : AdaptiveFragment, index: Int) =
         fragmentFactory.newInstance(name, parent, index)
 
-    fun createPlaceholder(parent : AdaptiveFragment, index : Int): AdaptiveFragment
-
     fun newId(): Long
 
     fun trace(fragment: AdaptiveFragment, point: String, data : String) {

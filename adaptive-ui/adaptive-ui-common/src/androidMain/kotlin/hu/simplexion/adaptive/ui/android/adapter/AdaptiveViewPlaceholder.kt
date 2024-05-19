@@ -6,7 +6,6 @@ package hu.simplexion.adaptive.ui.android.adapter
 import android.view.View
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 
 class AdaptiveViewPlaceholder(
     override val receiver : View,
@@ -19,6 +18,6 @@ class AdaptiveViewPlaceholder(
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
-    override fun genPatchInternal() = Unit
+    override fun genPatchInternal(): Boolean = Unit
 
 }

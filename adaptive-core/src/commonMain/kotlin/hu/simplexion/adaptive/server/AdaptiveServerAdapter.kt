@@ -5,9 +5,6 @@ package hu.simplexion.adaptive.server
 
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.server.builtin.AdaptiveService
-import hu.simplexion.adaptive.server.builtin.AdaptiveStore
-import hu.simplexion.adaptive.server.builtin.AdaptiveWorker
-import hu.simplexion.adaptive.server.builtin.ServerPlaceholder
 import hu.simplexion.adaptive.utility.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -51,10 +48,6 @@ open class AdaptiveServerAdapter(
 
     override fun removeActual(fragment: AdaptiveFragment) {
         // there is no actual UI for server fragments
-    }
-
-    override fun createPlaceholder(parent: AdaptiveFragment, index: Int): AdaptiveFragment {
-        return ServerPlaceholder(this, parent, index)
     }
 
     override fun newId(): Long =

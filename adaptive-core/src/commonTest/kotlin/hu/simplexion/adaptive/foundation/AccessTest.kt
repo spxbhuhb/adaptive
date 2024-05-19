@@ -106,8 +106,9 @@ class AdaptiveAccessBindingTest(
         }
     }
 
-    override fun genPatchInternal() {
+    override fun genPatchInternal(): Boolean {
         state[0] = 12
+        return true
     }
 
 }
@@ -146,8 +147,6 @@ class AdaptiveAccessor(
         }
     }
 
-    override fun genPatchInternal() {
-
-    }
+    override fun genPatchInternal(): Boolean = true
 
 }

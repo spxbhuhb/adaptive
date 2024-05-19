@@ -15,7 +15,7 @@ fun box(): String {
         S1R { mock(b) }
     }
 
-    val s1r = adapter.rootFragment.containedFragment as AdaptiveS1R
+    val s1r = adapter.rootFragment.children.first() as AdaptiveS1R
 
     val a = s1r.s0.invoke(13)
 

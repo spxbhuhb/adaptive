@@ -100,12 +100,14 @@ class AdaptiveSupportFunctionTest(
         }
     }
 
-    override fun genPatchInternal() {
+    override fun genPatchInternal(): Boolean {
         val closureMask = getThisClosureDirtyMask()
 
         if (haveToPatch(closureMask, 0)) {
             setStateVariable(0, 13)
         }
+
+        return true
     }
 
     @Suppress("RedundantNullableReturnType")
@@ -136,12 +138,11 @@ class AdaptiveSupportFunctionInner(
     index: Int
 ) : AdaptiveTestFragment(adapter, parent, index, 2) {
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
-        return adapter.createPlaceholder(this, 0)
-    }
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
 
-    override fun genPatchInternal() {
+    override fun genPatchInternal(): Boolean {
         (getThisClosureVariable(1) as BoundSupportFunction).invoke(getThisClosureVariable(0))
+        return true
     }
 
 }
