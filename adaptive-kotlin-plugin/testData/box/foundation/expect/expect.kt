@@ -6,12 +6,19 @@ package stuff
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.foundation.testing.*
 
-@AdaptiveExpect
-fun text() {
+@AdaptiveExpect("c")
+fun test() {
     manualImplementation()
 }
 
-class AdaptiveText(
+@AdaptiveExpect(commonUI)
+fun otherTest() {
+    manualImplementation()
+}
+
+const val commonUI = "c"
+
+open class AdaptiveTest(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int
@@ -25,10 +32,25 @@ class AdaptiveText(
 
     companion object : AdaptiveFragmentCompanion {
 
-        override val fragmentType = "stuff.AdaptiveText"
+        override val fragmentType = "c:AdaptiveTest"
 
         override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveText(parent.adapter, parent, index)
+            AdaptiveTest(parent.adapter, parent, index)
+
+    }
+}
+
+class AdaptiveOtherTest(
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
+    index: Int
+) : AdaptiveTest(adapter, parent, index) {
+    companion object : AdaptiveFragmentCompanion {
+
+        override val fragmentType = "$commonUI:AdaptiveOtherTest"
+
+        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
+            AdaptiveTest(parent.adapter, parent, index)
 
     }
 }
@@ -38,10 +60,11 @@ fun box() : String {
 
     val adapter = AdaptiveTestAdapter()
 
-    adapter.fragmentFactory.addAll(AdaptiveText)
+    adapter.fragmentFactory.addAll(AdaptiveTest, AdaptiveOtherTest)
 
     adaptive(adapter) {
-        text()
+        test()
+        otherTest()
     }
 
     return adapter.assert(listOf(
@@ -50,16 +73,32 @@ fun box() : String {
         TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
         TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
         TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
-        TraceEvent("AdaptiveText", 3, "before-Create", ""),
-        TraceEvent("AdaptiveText", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-        TraceEvent("AdaptiveText", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-        TraceEvent("AdaptiveText", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-        TraceEvent("AdaptiveText", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
-        TraceEvent("AdaptiveText", 3, "after-Create", ""),
+        TraceEvent("AdaptiveSequence", 3, "before-Create", ""),
+        TraceEvent("AdaptiveSequence", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("AdaptiveSequence", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [1, 2]"),
+        TraceEvent("AdaptiveSequence", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [1, 2]"),
+        TraceEvent("AdaptiveSequence", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [1, 2]"),
+        TraceEvent("AdaptiveTest", 4, "before-Create", ""),
+        TraceEvent("AdaptiveTest", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("AdaptiveTest", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("AdaptiveTest", 4, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("AdaptiveTest", 4, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
+        TraceEvent("AdaptiveTest", 4, "after-Create", ""),
+        TraceEvent("AdaptiveTest", 5, "before-Create", ""),
+        TraceEvent("AdaptiveTest", 5, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("AdaptiveTest", 5, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("AdaptiveTest", 5, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
+        TraceEvent("AdaptiveTest", 5, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
+        TraceEvent("AdaptiveTest", 5, "after-Create", ""),
+        TraceEvent("AdaptiveSequence", 3, "after-Create", ""),
         TraceEvent("<root>", 2, "after-Create", ""),
         TraceEvent("<root>", 2, "before-Mount", ""),
-        TraceEvent("AdaptiveText", 3, "before-Mount", ""),
-        TraceEvent("AdaptiveText", 3, "after-Mount", ""),
+        TraceEvent("AdaptiveSequence", 3, "before-Mount", ""),
+        TraceEvent("AdaptiveTest", 4, "before-Mount", ""),
+        TraceEvent("AdaptiveTest", 4, "after-Mount", ""),
+        TraceEvent("AdaptiveTest", 5, "before-Mount", ""),
+        TraceEvent("AdaptiveTest", 5, "after-Mount", ""),
+        TraceEvent("AdaptiveSequence", 3, "after-Mount", ""),
         TraceEvent("<root>", 2, "after-Mount", "")
     ))
 }

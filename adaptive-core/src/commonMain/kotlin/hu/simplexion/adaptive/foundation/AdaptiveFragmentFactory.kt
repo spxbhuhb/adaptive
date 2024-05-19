@@ -14,8 +14,8 @@ open class AdaptiveFragmentFactory : Registry<AdaptiveFragmentCompanion>() {
         }
     }
 
-    fun newInstance(name: String, parent: AdaptiveFragment, index: Int): AdaptiveFragment {
-        return checkNotNull(get(name)) { "Unknown fragment type: $name" }.newInstance(parent, index)
+    fun newInstance(key: String, parent: AdaptiveFragment, index: Int): AdaptiveFragment {
+        return checkNotNull(get(key)) { "Unknown fragment type: $key" }.newInstance(parent, index)
     }
 
 }

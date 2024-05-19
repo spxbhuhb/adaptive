@@ -5,4 +5,4 @@
 package hu.simplexion.adaptive.foundation
 
 @Adaptive
-annotation class AdaptiveExpect
+annotation class AdaptiveExpect(val namespace : String)

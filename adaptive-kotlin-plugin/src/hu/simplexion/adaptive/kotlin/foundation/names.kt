@@ -100,6 +100,7 @@ object FqNames {
     val ADAPTIVE_SELECT = Strings.ADAPTIVE_SELECT.structural()
     val ADAPTIVE_LOOP = Strings.ADAPTIVE_LOOP.structural()
 
+    val ADAPTIVE_EXPECT = Strings.ADAPTIVE_EXPECT.runtime()
     val ADAPTIVE_FRAGMENT_COMPANION_COLLECTOR = Strings.ADAPTIVE_FRAGMENT_COMPANION_COLLECTOR.runtime()
 }
 

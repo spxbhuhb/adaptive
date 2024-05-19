@@ -3,11 +3,15 @@
  */
 package hu.simplexion.adaptive.kotlin.foundation.ir.arm
 
+import hu.simplexion.adaptive.kotlin.foundation.FqNames
+import hu.simplexion.adaptive.kotlin.foundation.Strings
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir.ArmCallBuilder
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir.BranchBuilder
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir.ClassBoundIrBuilder
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.adaptiveClassFqName
 import org.jetbrains.kotlin.ir.expressions.IrCall
+import org.jetbrains.kotlin.ir.expressions.IrConst
+import org.jetbrains.kotlin.ir.util.getAnnotation
 
 open class ArmCall(
     armClass: ArmClass,
@@ -15,12 +19,17 @@ open class ArmCall(
     closure: ArmClosure,
     val isDirect: Boolean,
     val irCall: IrCall,
-    val isExpectCall : Boolean
+    val isExpectCall: Boolean
 ) : ArmRenderingStatement(armClass, index, closure, irCall.startOffset) {
 
     val target = irCall.symbol.owner.adaptiveClassFqName()
 
     val arguments = mutableListOf<ArmValueArgument>()
+
+    fun getExpectName(): String =
+        checkNotNull(irCall.symbol.owner.getAnnotation(FqNames.ADAPTIVE_EXPECT)) { "missing ${Strings.ADAPTIVE_EXPECT} annotation" }
+            .getValueArgument(0)
+            .let { (it  as IrConst<*>).value as String } + ":" + target.shortName().identifier
 
     override fun branchBuilder(parent: ClassBoundIrBuilder): BranchBuilder =
         ArmCallBuilder(parent, this)

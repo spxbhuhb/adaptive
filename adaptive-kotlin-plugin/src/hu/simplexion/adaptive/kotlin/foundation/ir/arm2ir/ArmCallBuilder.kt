@@ -33,7 +33,7 @@ class ArmCallBuilder(
                 irCall(
                     pluginContext.adapterActualizeFun,
                     irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)),
-                    irConst(armCall.target.asString()),
+                    irConst(armCall.getExpectName()),
                     irGet(buildFun.valueParameters[Indices.BUILD_PARENT]),
                     irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX])
                 )
