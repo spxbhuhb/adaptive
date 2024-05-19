@@ -1,16 +1,17 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.adaptive.ui.basic
+package hu.simplexion.adaptive.ui.common.browser.fragment
 
 import hu.simplexion.adaptive.foundation.*
-import hu.simplexion.adaptive.ui.dom.AdaptiveDOMNodeFragment
+import hu.simplexion.adaptive.ui.common.browser.adapter.AdaptiveBrowserFragment
+import hu.simplexion.adaptive.ui.common.commonUI
 
 class AdaptiveText(
     adapter: AdaptiveAdapter,
     parent : AdaptiveFragment,
     index : Int
-) : AdaptiveDOMNodeFragment(adapter, parent, index, 1) {
+) : AdaptiveBrowserFragment(adapter, parent, index, 1) {
 
     override val receiver = org.w3c.dom.Text()
 
@@ -28,7 +29,7 @@ class AdaptiveText(
 
     companion object : AdaptiveFragmentCompanion {
 
-        override val fragmentType = "hu.simplexion.adaptive.ui.basic.AdaptiveText"
+        override val fragmentType = "$commonUI:AdaptiveText"
 
         override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
             AdaptiveText(parent.adapter, parent, index)

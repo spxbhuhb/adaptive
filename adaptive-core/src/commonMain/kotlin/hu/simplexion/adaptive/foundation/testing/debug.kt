@@ -19,7 +19,7 @@ class AdaptiveDebug(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, 1) {
+) : AdaptiveFragment(adapter, parent, index, -1, 1) {
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
 

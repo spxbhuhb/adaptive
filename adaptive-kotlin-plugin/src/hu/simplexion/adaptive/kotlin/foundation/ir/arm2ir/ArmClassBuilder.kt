@@ -27,9 +27,7 @@ import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.expressions.impl.*
 import org.jetbrains.kotlin.ir.symbols.impl.IrAnonymousInitializerSymbolImpl
-import org.jetbrains.kotlin.ir.types.IrTypeSystemContextImpl
-import org.jetbrains.kotlin.ir.types.defaultType
-import org.jetbrains.kotlin.ir.types.typeWith
+import org.jetbrains.kotlin.ir.types.*
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.name.SpecialNames
 
@@ -101,7 +99,7 @@ class ArmClassBuilder(
             }
 
             addValueParameter {
-                name = Names.INDEX
+                name = Names.DECLARATION_INDEX
                 type = irBuiltIns.intType
             }
         }
@@ -117,12 +115,13 @@ class ArmClassBuilder(
                 pluginContext.adaptiveFragmentType,
                 pluginContext.adaptiveFragmentClass.constructors.first(),
                 typeArgumentsCount = 0,
-                valueArgumentsCount = Indices.ADAPTIVE_FRAGMENT_ARGUMENT_COUNT
+                valueArgumentsCount = 5
             ).apply {
-                putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGet(constructor.valueParameters[0]))
-                putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(constructor.valueParameters[1]))
-                putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(constructor.valueParameters[2]))
-                putValueArgument(Indices.ADAPTIVE_FRAGMENT_STATE_SIZE, irConst(armClass.stateVariables.size))
+                putValueArgument(0, irGet(constructor.valueParameters[0]))
+                putValueArgument(1, irGet(constructor.valueParameters[1]))
+                putValueArgument(2, irGet(constructor.valueParameters[2]))
+                putValueArgument(3, irConst(instructionIndex()))
+                putValueArgument(4, irConst(armClass.stateVariables.size))
             }
 
             statements += IrInstanceInitializerCallImpl(
@@ -133,6 +132,13 @@ class ArmClassBuilder(
             )
         }
     }
+
+    private fun instructionIndex() : Int =
+        armClass.stateVariables.firstOrNull {
+            it.name == Strings.INSTRUCTIONS
+                && it.type.isArray()
+                && it.type.getArrayElementType(irBuiltIns).isSubtypeOfClass(pluginContext.adaptiveInstructionClass)
+        }?.indexInState ?: -1
 
     private fun initializer(): IrAnonymousInitializer =
         irFactory.createAnonymousInitializer(

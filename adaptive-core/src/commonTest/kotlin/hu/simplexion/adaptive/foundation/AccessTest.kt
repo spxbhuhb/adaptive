@@ -97,7 +97,7 @@ class AdaptiveAccessBindingTest(
 
         val closureMask = fragment.getCreateClosureDirtyMask()
 
-        when (fragment.index) {
+        when (fragment.declarationIndex) {
             0 -> {
                 if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
                     setBinding(0, fragment, 0, null, "kotlin.Int")
@@ -117,7 +117,7 @@ class AdaptiveAccessor(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, 1) {
+) : AdaptiveFragment(adapter, parent, index, -1, 1) {
 
     val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
 
@@ -137,7 +137,7 @@ class AdaptiveAccessor(
 
         val closureMask = fragment.getCreateClosureDirtyMask()
 
-        when (fragment.index) {
+        when (fragment.declarationIndex) {
             0 -> {
                 if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
                     @Suppress("UNCHECKED_CAST")

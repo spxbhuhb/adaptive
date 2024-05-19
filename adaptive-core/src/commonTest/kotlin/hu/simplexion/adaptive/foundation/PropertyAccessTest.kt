@@ -162,7 +162,7 @@ class AdaptivePropertyAccessBindingTest(
 
         val closureMask = fragment.getCreateClosureDirtyMask()
 
-        when (fragment.index) {
+        when (fragment.declarationIndex) {
             0 -> {
                 if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
                     setBinding(
@@ -207,7 +207,7 @@ class AdaptivePropertyAccessor(
 
         val closureMask = fragment.getCreateClosureDirtyMask()
 
-        when (fragment.index) {
+        when (fragment.declarationIndex) {
             0 -> {
                 if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
                     @Suppress("UNCHECKED_CAST")

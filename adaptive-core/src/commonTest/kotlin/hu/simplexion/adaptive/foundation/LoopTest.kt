@@ -166,7 +166,7 @@ class AdaptiveLoopTest(
 
         val closureMask = fragment.getCreateClosureDirtyMask()
 
-        when (fragment.index) {
+        when (fragment.declarationIndex) {
             0 -> {
                 if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
                     fragment.setStateVariable(0, (0 .. (this.getThisClosureVariable(0) as Int)).iterator())
@@ -181,7 +181,7 @@ class AdaptiveLoopTest(
                     fragment.setStateVariable(0, (fragment.getCreateClosureVariable(1) as Int) + 10)
                 }
             }
-            else -> invalidIndex(fragment.index)
+            else -> invalidIndex(fragment.declarationIndex)
         }
     }
 

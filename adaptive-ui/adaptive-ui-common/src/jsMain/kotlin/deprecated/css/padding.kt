@@ -4,7 +4,7 @@
 
 @file:Suppress("unused")
 
-package hu.simplexion.adaptive.ui.css
+package deprecated.css
 
 val padding_0 = AdaptiveCssStyle("padding_0")
 val padding_1 = AdaptiveCssStyle("padding_1")

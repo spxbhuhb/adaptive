@@ -4,7 +4,7 @@
 
 @file:Suppress("unused")
 
-package hu.simplexion.adaptive.ui.css
+package deprecated.css
 
 val display_block = AdaptiveCssStyle("display_block")
 val display_inline = AdaptiveCssStyle("display_inline")

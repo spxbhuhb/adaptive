@@ -21,8 +21,8 @@ const val commonUI = "c"
 open class AdaptiveTest(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
-    index: Int
-) : AdaptiveFragment(adapter, parent, index, 0) {
+    declarationIndex: Int
+) : AdaptiveFragment(adapter, parent, declarationIndex, -1, 0) {
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
 
@@ -43,8 +43,8 @@ open class AdaptiveTest(
 class AdaptiveOtherTest(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
-    index: Int
-) : AdaptiveTest(adapter, parent, index) {
+    declarationIndex: Int
+) : AdaptiveTest(adapter, parent, declarationIndex) {
     companion object : AdaptiveFragmentCompanion {
 
         override val fragmentType = "$commonUI:AdaptiveOtherTest"

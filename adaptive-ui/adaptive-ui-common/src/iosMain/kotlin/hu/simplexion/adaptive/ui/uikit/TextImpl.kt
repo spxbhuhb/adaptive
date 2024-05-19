@@ -5,9 +5,11 @@
 package hu.simplexion.adaptive.ui.uikit
 
 
-import kotlinx.cinterop.BetaInteropApi
-import kotlinx.cinterop.ExportObjCClass
+import kotlinx.cinterop.*
+import platform.CoreGraphics.CGRect
+import platform.CoreGraphics.CGRectZero
 import platform.UIKit.UILabel
+import platform.UIKit.UIView
 import platform.UIKit.UIViewController
 
 @OptIn(BetaInteropApi::class)

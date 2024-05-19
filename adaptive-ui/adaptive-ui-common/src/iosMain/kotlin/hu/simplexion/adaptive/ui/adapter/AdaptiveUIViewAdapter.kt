@@ -54,10 +54,6 @@ open class AdaptiveUIViewAdapter(
         // TODO check if the fragment is root, throw exc otherwise
     }
 
-    override fun createPlaceholder(parent: AdaptiveFragment, index: Int): AdaptiveFragment {
-        return AdaptiveUIViewPlaceholder(UILabel(), this, parent, index)
-    }
-
     override fun newId(): Long =
         nextId ++
 

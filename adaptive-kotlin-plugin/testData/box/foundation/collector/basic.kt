@@ -22,7 +22,7 @@ fun box() : String {
 
     if (fragment.adapter != adapter) return "Fail: adapter"
     if (fragment.parent != parent) return "Fail: parent"
-    if (fragment.index != 123) return "Fail: index"
+    if (fragment.declarationIndex != 123) return "Fail: index"
 
     return "OK"
 }

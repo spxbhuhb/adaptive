@@ -4,7 +4,6 @@
 package hu.simplexion.adaptive.ui.android.adapter
 
 import android.view.View
-import android.view.ViewGroup
 import hu.simplexion.adaptive.foundation.*
 import java.lang.UnsupportedOperationException
 
@@ -13,7 +12,7 @@ abstract class AdaptiveViewFragment(
     parent: AdaptiveFragment?,
     index: Int,
     stateSize : Int
-) : AdaptiveFragment(adapter, parent, index, stateSize) {
+) : AdaptiveFragment(adapter, parent, index, -1, stateSize) {
 
     abstract val receiver : View
 

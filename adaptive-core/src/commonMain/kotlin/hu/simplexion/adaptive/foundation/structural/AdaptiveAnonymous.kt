@@ -14,7 +14,7 @@ class AdaptiveAnonymous(
     index: Int,
     stateSize: Int,
     val factory: BoundFragmentFactory
-) : AdaptiveFragment(adapter, parent, index, stateSize) {
+) : AdaptiveFragment(adapter, parent, index, -1, stateSize) {
 
     override val createClosure : AdaptiveClosure
         get() = parent!!.thisClosure

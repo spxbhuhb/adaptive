@@ -5,7 +5,7 @@
 package hu.simplexion.adaptive.lib.sandbox
 
 import hu.simplexion.adaptive.foundation.Adaptive
-import hu.simplexion.adaptive.ui.basic.text
+import hu.simplexion.adaptive.ui.common.fragment.text
 
 @Adaptive
 fun publicFun() {

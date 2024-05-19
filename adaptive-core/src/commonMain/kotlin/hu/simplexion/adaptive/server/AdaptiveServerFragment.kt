@@ -12,7 +12,7 @@ abstract class AdaptiveServerFragment(
     adapter: AdaptiveServerAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, 2) {
+) : AdaptiveFragment(adapter, parent, index, -1, 2) {
 
     val serverAdapter
         get() = adapter as AdaptiveServerAdapter

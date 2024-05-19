@@ -4,7 +4,7 @@
 
 @file:Suppress("unused")
 
-package hu.simplexion.adaptive.ui.css
+package deprecated.css
 
 val grid_gap_4 = AdaptiveCssStyle("grid-gap-4")
 val grid_gap_8 = AdaptiveCssStyle("grid-gap-8")

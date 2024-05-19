@@ -5,13 +5,15 @@ package hu.simplexion.adaptive.foundation
 
 import hu.simplexion.adaptive.foundation.binding.AdaptivePropertyMetadata
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.internal.*
 import hu.simplexion.adaptive.foundation.producer.AdaptiveProducer
 
 abstract class AdaptiveFragment(
     val adapter: AdaptiveAdapter,
     val parent: AdaptiveFragment?,
-    val index: Int,
+    val declarationIndex: Int,
+    val instructionIndex: Int,
     stateSize: Int
 ) {
     companion object {
@@ -49,6 +51,16 @@ abstract class AdaptiveFragment(
     var producers: MutableList<AdaptiveProducer>? = null
 
     var bindings: MutableList<AdaptiveStateVariableBinding<*>>? = null
+
+    val instructions : Array<out AdaptiveInstruction>
+        get() =
+            if (instructionIndex == -1) {
+                null
+            } else {
+                @Suppress("UNCHECKED_CAST")
+                state[instructionIndex] as? Array<out AdaptiveInstruction>
+            }
+                ?: emptyArray()
 
     // --------------------------------------------------------------------------
     // Functions that support the descendants of this fragment

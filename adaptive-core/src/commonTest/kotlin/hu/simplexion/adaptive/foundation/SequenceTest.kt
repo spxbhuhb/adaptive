@@ -94,7 +94,7 @@ class AdaptiveSequenceTest(
 
         val closureMask = fragment.getCreateClosureDirtyMask()
 
-        when (fragment.index) {
+        when (fragment.declarationIndex) {
             0 -> {
                 if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
                     fragment.setStateVariable(0, intArrayOf(1, 2)) // indices of T0 and T1

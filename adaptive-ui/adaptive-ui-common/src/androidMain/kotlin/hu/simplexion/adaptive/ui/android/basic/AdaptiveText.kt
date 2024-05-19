@@ -6,8 +6,11 @@ package hu.simplexion.adaptive.ui.android.basic
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import hu.simplexion.adaptive.foundation.*
+import hu.simplexion.adaptive.foundation.AdaptiveAdapter
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.android.adapter.AdaptiveViewFragment
+import hu.simplexion.adaptive.ui.common.commonUI
 
 class AdaptiveText(
     adapter: AdaptiveAdapter,
@@ -36,7 +39,7 @@ class AdaptiveText(
 
     companion object : AdaptiveFragmentCompanion {
 
-        override val fragmentType = "hu.simplexion.adaptive.ui.basic.AdaptiveText"
+        override val fragmentType = "$commonUI:AdaptiveText"
 
         override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
             AdaptiveText(parent.adapter, parent, index)

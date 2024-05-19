@@ -4,7 +4,7 @@
 
 @file:Suppress("unused")
 
-package hu.simplexion.adaptive.ui.css
+package deprecated.css
 
 val flex_direction_row = AdaptiveCssStyle("flex_direction_row")
 val flex_direction_row_reverse = AdaptiveCssStyle("flex_direction_row_reverse")

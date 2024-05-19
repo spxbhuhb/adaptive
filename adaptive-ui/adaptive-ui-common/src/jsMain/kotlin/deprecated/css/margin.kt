@@ -4,7 +4,7 @@
 
 @file:Suppress("unused")
 
-package hu.simplexion.adaptive.ui.css
+package deprecated.css
 
 val margin_0 = AdaptiveCssStyle("margin_0")
 val margin_1 = AdaptiveCssStyle("margin_1")

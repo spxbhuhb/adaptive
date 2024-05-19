@@ -11,7 +11,7 @@ class AdaptiveLoop<IT>(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int,
-) : AdaptiveFragment(adapter, parent, index, 2) {
+) : AdaptiveFragment(adapter, parent, index, -1, 2) {
 
     override val createClosure: AdaptiveClosure
         get() = parent !!.thisClosure

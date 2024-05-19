@@ -52,7 +52,7 @@ object Strings {
 
     const val ADAPTER = "adapter"
     const val PARENT = "parent"
-    const val INDEX = "index"
+    const val DECLARATION_INDEX = "declarationIndex"
     const val STATE = "state"
     const val SUPPORT_FUNCTION_INDEX = "supportFunctionIndex"
     const val SUPPORT_FUNCTION_RECEIVING_FRAGMENT = "receivingFragment"
@@ -77,11 +77,14 @@ object Strings {
     const val ADD_ALL = "addAll"
     const val FRAGMENT_TYPE = "fragmentType"
     const val NEW_INSTANCE = "newInstance"
+
+    const val INSTRUCTIONS = "instructions" // instruction parameter name
+
 }
 
 object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val PARENT = Strings.PARENT.name()
-    val INDEX = Strings.INDEX.name()
+    val DECLARATION_INDEX = Strings.DECLARATION_INDEX.name()
     val ADAPTER = Strings.ADAPTER.name()
     val HELPER_ADAPTER = Strings.HELPER_ADAPTER.name()
     val BT = Strings.BT.name()
@@ -108,6 +111,7 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     private val STRUCTURAL = Strings.STRUCTURAL_PACKAGE.fqName()
     private val BINDING = Strings.BINDING_PACKAGE.fqName()
     private val INTERNAL = Strings.INTERNAL_PACKAGE.fqName()
+    private val INSTRUCTION = "hu.simplexion.adaptive.foundation.instruction".fqName()
 
     val ADAPTIVE = Strings.ADAPTIVE.classId()
     val ADAPTIVE_FRAGMENT = Strings.ADAPTIVE_FRAGMENT.classId()
@@ -125,6 +129,7 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAPTIVE_TRANSFORM_INTERFACE = Strings.ADAPTIVE_TRANSFORM_INTERFACE.classId()
 
     val ADAPTIVE_EXPECT = Strings.ADAPTIVE_EXPECT.classId()
+    val ADAPTIVE_INSTRUCTION = "AdaptiveInstruction".classId { INSTRUCTION }
 }
 
 object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {
@@ -140,14 +145,10 @@ object Indices {
      * Fragment constructor arguments.
      */
     const val ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT = 3
-    const val ADAPTIVE_FRAGMENT_ARGUMENT_COUNT = 4
-    const val ADAPTIVE_ANONYMOUS_FRAGMENT_ARGUMENT_COUNT = 5
 
     const val ADAPTIVE_FRAGMENT_ADAPTER = 0
     const val ADAPTIVE_FRAGMENT_PARENT = 1
     const val ADAPTIVE_FRAGMENT_INDEX = 2
-    const val ADAPTIVE_FRAGMENT_STATE_SIZE = 3
-    const val ADAPTIVE_FRAGMENT_FACTORY = 4
 
     /**
      * `build(parent, declarationIndex)` arguments

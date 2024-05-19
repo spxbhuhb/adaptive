@@ -164,7 +164,7 @@ class HigherOrderTest {
                     TraceEvent("AdaptiveHigherFun", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [120, BoundFragmentFactory(2,1)]")
                 )
             ),
-            adapter.actual(dumpCode = true)
+            adapter.actual(dumpCode = false)
         )
     }
 }
@@ -199,7 +199,7 @@ class AdaptiveHigherOrderTest(
     override fun genPatchDescendant(fragment: AdaptiveFragment) {
         val closureMask = fragment.getCreateClosureDirtyMask()
 
-        when (fragment.index) {
+        when (fragment.declarationIndex) {
             0 -> {
                 if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
                     fragment.setStateVariable(0, 12)
@@ -224,7 +224,7 @@ class AdaptiveHigherOrderTest(
                 }
             }
 
-            else -> invalidIndex(fragment.index)
+            else -> invalidIndex(fragment.declarationIndex)
         }
     }
 
@@ -256,7 +256,7 @@ class AdaptiveHigherFun(
     }
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) {
-        when (fragment.index) {
+        when (fragment.declarationIndex) {
             0 -> {
                 // TODO haveToPatch
                 fragment.setStateVariable(0, higherI * 2)
@@ -269,7 +269,7 @@ class AdaptiveHigherFun(
                 fragment.setStateVariable(0, (fragment.getCreateClosureVariable(0) as Int) + (fragment.getCreateClosureVariable(2) as Int))
             }
 
-            else -> invalidIndex(fragment.index)
+            else -> invalidIndex(fragment.declarationIndex)
         }
     }
 
@@ -301,12 +301,12 @@ class AdaptiveHigherFunInner(
     }
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) {
-        when (fragment.index) {
+        when (fragment.declarationIndex) {
             0 -> {
                 fragment.setStateVariable(0, innerI + 1)
             }
 
-            else -> invalidIndex(fragment.index)
+            else -> invalidIndex(fragment.declarationIndex)
         }
     }
 

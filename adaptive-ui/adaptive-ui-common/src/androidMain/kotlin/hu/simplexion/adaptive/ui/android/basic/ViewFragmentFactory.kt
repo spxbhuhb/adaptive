@@ -4,7 +4,6 @@
 
 package hu.simplexion.adaptive.ui.android.basic
 
-import android.view.View
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
 
 object ViewFragmentFactory : AdaptiveFragmentFactory() {

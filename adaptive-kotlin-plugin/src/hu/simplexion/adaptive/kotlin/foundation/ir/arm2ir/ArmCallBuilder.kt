@@ -18,8 +18,10 @@ import org.jetbrains.kotlin.ir.expressions.IrBranch
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.expressions.impl.IrBlockImpl
+import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.getPropertyGetter
 
 class ArmCallBuilder(
@@ -44,13 +46,19 @@ class ArmCallBuilder(
             }
 
             else -> {
-                irConstructorCallFromBuild(
-                    buildFun,
-                    pluginContext.adaptiveAnonymousClass,
-                    argumentCount = Indices.ADAPTIVE_ANONYMOUS_FRAGMENT_ARGUMENT_COUNT
-                ).apply {
-                    putValueArgument(Indices.ADAPTIVE_FRAGMENT_STATE_SIZE, irConst(armCall.arguments.count()))
-                    putValueArgument(Indices.ADAPTIVE_FRAGMENT_FACTORY, irGetFragmentFactory(buildFun))
+                IrConstructorCallImpl(
+                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                    pluginContext.adaptiveAnonymousClass.defaultType,
+                    pluginContext.adaptiveAnonymousClass.constructors.single(),
+                    typeArgumentsCount = 0,
+                    constructorTypeArgumentsCount = 0,
+                    valueArgumentsCount = 5
+                ).also {
+                    it.putValueArgument(0, irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)))
+                    it.putValueArgument(1, irGet(buildFun.valueParameters[Indices.BUILD_PARENT]))
+                    it.putValueArgument(2, irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]))
+                    it.putValueArgument(3, irConst(armCall.arguments.count()))
+                    it.putValueArgument(4, irGetFragmentFactory(buildFun))
                 }
             }
         }

@@ -4,7 +4,7 @@
 
 @file:Suppress("unused")
 
-package hu.simplexion.adaptive.ui.css
+package deprecated.css
 
 val width_0 = AdaptiveCssStyle("width_0")
 val width_1_px = AdaptiveCssStyle("width_1_px")

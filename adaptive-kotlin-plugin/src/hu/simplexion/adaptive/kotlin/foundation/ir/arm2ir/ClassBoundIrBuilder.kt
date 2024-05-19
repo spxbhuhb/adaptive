@@ -41,12 +41,25 @@ open class ClassBoundIrBuilder(
     fun irCallFromBuild(
         buildFun: IrSimpleFunction,
         target: FqName,
-        classSymbol: IrClassSymbol? = pluginContext.getSymbol(target),
-        argumentCount: Int = Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
+        classSymbol: IrClassSymbol? = pluginContext.getSymbol(target)
     ): IrExpression {
 
         if (classSymbol != null) {
-            return irConstructorCallFromBuild(buildFun, classSymbol, argumentCount)
+            val constructorCall =
+                IrConstructorCallImpl(
+                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                    classSymbol.defaultType,
+                    classSymbol.constructors.single(),
+                    typeArgumentsCount = 0,
+                    constructorTypeArgumentsCount = 0,
+                    Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
+                )
+
+            constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)))
+            constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(buildFun.valueParameters[Indices.BUILD_PARENT]))
+            constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]))
+
+            return constructorCall
         }
 
         return irCall(
@@ -56,29 +69,6 @@ open class ClassBoundIrBuilder(
             irGet(buildFun.valueParameters[Indices.BUILD_PARENT]),
             irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX])
         )
-    }
-
-    fun irConstructorCallFromBuild(
-        buildFun: IrSimpleFunction,
-        classSymbol: IrClassSymbol,
-        argumentCount: Int = Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
-    ): IrConstructorCallImpl {
-
-        val constructorCall =
-            IrConstructorCallImpl(
-                SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                classSymbol.defaultType,
-                classSymbol.constructors.single(),
-                typeArgumentsCount = 0,
-                constructorTypeArgumentsCount = 0,
-                argumentCount
-            )
-
-        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)))
-        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(buildFun.valueParameters[Indices.BUILD_PARENT]))
-        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]))
-
-        return constructorCall
     }
 
     fun irFragmentFactoryFromPatch(patchFun: IrSimpleFunction, index: Int): IrExpression {

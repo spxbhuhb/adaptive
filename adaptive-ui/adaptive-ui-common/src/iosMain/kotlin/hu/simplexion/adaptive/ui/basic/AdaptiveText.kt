@@ -7,6 +7,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.adapter.AdaptiveUIViewFragment
+import hu.simplexion.adaptive.ui.common.commonUI
 import platform.UIKit.NSTextAlignmentCenter
 import platform.UIKit.UILabel
 
@@ -20,7 +21,7 @@ class AdaptiveText(
 
     private val content: String get() = state[0]?.toString() ?: ""
 
-    override fun genPatchInternal() {
+    override fun genPatchInternal() : Boolean {
         val closureMask = getThisClosureDirtyMask()
 
         if (haveToPatch(closureMask, 1)) {
@@ -34,7 +35,7 @@ class AdaptiveText(
 
     companion object : AdaptiveFragmentCompanion {
 
-        override val fragmentType = "hu.simplexion.adaptive.ui.basic.AdaptiveText"
+        override val fragmentType = "$commonUI:AdaptiveText"
 
         override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
             AdaptiveText(parent.adapter, parent, index)

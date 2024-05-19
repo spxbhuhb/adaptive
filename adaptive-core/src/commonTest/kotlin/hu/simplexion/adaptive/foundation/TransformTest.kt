@@ -89,7 +89,7 @@ class AdaptiveTransformTest(
 
         val closureMask = fragment.getCreateClosureDirtyMask()
 
-        when (fragment.index) {
+        when (fragment.declarationIndex) {
             0 -> {
                 if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
                     (fragment as TestState).transform(23)
@@ -106,7 +106,7 @@ class AdaptiveTransformed(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, 1), TestState {
+) : AdaptiveFragment(adapter, parent, index, -1, 1), TestState {
 
     val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
 

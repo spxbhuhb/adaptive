@@ -48,6 +48,8 @@ class AdaptivePluginContext(
     val adaptiveFragmentCompanionClass = ClassIds.ADAPTIVE_FRAGMENT_COMPANION.classSymbol()
     val adaptiveFragmentCompanionType = adaptiveFragmentCompanionClass.defaultType
 
+    val adaptiveInstructionClass = ClassIds.ADAPTIVE_INSTRUCTION.classSymbol()
+
     val adaptiveAnonymousClass = ClassIds.ADAPTIVE_ANONYMOUS.classSymbol()
 
     val boundFragmentFactoryClass = ClassIds.BOUND_FRAGMENT_FACTORY.classSymbol()
@@ -65,7 +67,7 @@ class AdaptivePluginContext(
     val adaptiveTransformInterfaceClass = ClassIds.ADAPTIVE_TRANSFORM_INTERFACE.classSymbol()
 
     val adapter = Strings.ADAPTER.fragmentPropertyList().single().owner
-    val index = Strings.INDEX.fragmentPropertyList()
+    val index = Strings.DECLARATION_INDEX.fragmentPropertyList()
     val parent = Strings.PARENT.fragmentPropertyList()
 
     val create = Strings.CREATE.fragmentFunction()
