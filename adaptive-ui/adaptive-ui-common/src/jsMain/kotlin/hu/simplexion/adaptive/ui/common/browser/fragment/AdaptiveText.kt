@@ -6,22 +6,24 @@ package hu.simplexion.adaptive.ui.common.browser.fragment
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.ui.common.browser.adapter.AdaptiveBrowserFragment
 import hu.simplexion.adaptive.ui.common.commonUI
+import kotlinx.browser.document
 
-class AdaptiveText(
+open class AdaptiveText(
     adapter: AdaptiveAdapter,
     parent : AdaptiveFragment,
     index : Int
-) : AdaptiveBrowserFragment(adapter, parent, index, 1) {
+) : AdaptiveBrowserFragment(adapter, parent, index, 1, 2) {
 
-    override val receiver = org.w3c.dom.Text()
+    override val receiver = document.createElement("span")
 
-    private val content: String get() = state[0]?.toString() ?: ""
+    private val content: String
+        get() = state[0]?.toString() ?: ""
 
     override fun genPatchInternal(): Boolean {
         val closureMask = getThisClosureDirtyMask()
 
         if (haveToPatch(closureMask, 1)) {
-            receiver.data = content
+            receiver.textContent = content
         }
 
         return false

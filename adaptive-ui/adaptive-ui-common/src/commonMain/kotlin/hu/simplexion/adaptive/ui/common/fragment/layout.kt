@@ -11,12 +11,17 @@ import hu.simplexion.adaptive.foundation.manualImplementation
 import hu.simplexion.adaptive.ui.common.commonUI
 
 @AdaptiveExpect(commonUI)
+fun stack(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
+    manualImplementation(instructions, content)
+}
+
+@AdaptiveExpect(commonUI)
 fun grid(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
     manualImplementation(instructions, content)
 }
 
 @AdaptiveExpect(commonUI)
-fun manualLayout(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
-    manualImplementation(instructions)
+fun pixel(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
+    manualImplementation(instructions, content)
 }
 

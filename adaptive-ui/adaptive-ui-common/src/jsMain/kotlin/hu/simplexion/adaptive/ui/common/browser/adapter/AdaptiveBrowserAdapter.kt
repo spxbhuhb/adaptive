@@ -29,7 +29,7 @@ open class AdaptiveBrowserAdapter(
 
     override var trace = false
 
-    override fun addActual(fragment: AdaptiveFragment) {
+    override fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
         if (fragment is AdaptiveBrowserFragment) {
             rootContainer.appendChild(fragment.receiver)
         }

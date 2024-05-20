@@ -4,12 +4,16 @@
 
 package hu.simplexion.adaptive.ui.common.fragment
 
+import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.AdaptiveExpect
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.manualImplementation
 import hu.simplexion.adaptive.ui.common.commonUI
 
 @AdaptiveExpect(commonUI)
-fun text(content: Any?, vararg instructions : AdaptiveInstruction) {
-    manualImplementation(content, instructions)
+fun group(
+    vararg instructions: AdaptiveInstruction,
+    @Adaptive content : () -> Unit
+) {
+    manualImplementation(instructions, content)
 }

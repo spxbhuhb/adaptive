@@ -4,12 +4,11 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
-import hu.simplexion.adaptive.foundation.instruction.AdaptiveExpectInstruction
-import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 
 class BoundingRect(
     val x : Float,
     val y : Float,
     val width : Float,
     val height : Float
-) : AdaptiveExpectInstruction("$commonUI:BoundingRect")
+) : AdaptiveInstruction

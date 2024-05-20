@@ -62,6 +62,12 @@ abstract class AdaptiveFragment(
             }
                 ?: emptyArray()
 
+    /**
+     * True when this is the initial create call of the fragment.
+     */
+    val isInit
+        get() = (dirtyMask == initStateMask)
+
     // --------------------------------------------------------------------------
     // Functions that support the descendants of this fragment
     // --------------------------------------------------------------------------
@@ -102,10 +108,14 @@ abstract class AdaptiveFragment(
         pluginGenerated("genInvokeSuspend")
     }
 
-    open fun addActual(fragment: AdaptiveFragment) {
+    // --------------------------------------------------------------------------
+    // Actual UI support
+    // --------------------------------------------------------------------------
+
+    open fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
         if (trace) trace("before-addActual")
 
-        parent?.addActual(fragment) ?: adapter.addActual(fragment)
+        parent?.addActual(fragment, anchor) ?: adapter.addActual(fragment, anchor)
 
         if (trace) trace("after-addActual")
     }
@@ -116,6 +126,22 @@ abstract class AdaptiveFragment(
         parent?.removeActual(fragment) ?: adapter.removeActual(fragment)
 
         if (trace) trace("after-removeActual")
+    }
+
+    open fun addAnchor(fragment: AdaptiveFragment, higherAnchor : AdaptiveFragment?) {
+        if (trace) trace("before-addAnchor")
+
+        parent?.addAnchor(fragment, higherAnchor) ?: adapter.addAnchor(fragment, higherAnchor)
+
+        if (trace) trace("after-addAnchor")
+    }
+
+    open fun removeAnchor(fragment: AdaptiveFragment) {
+        if (trace) trace("before-removeAnchor")
+
+        parent?.removeAnchor(fragment)?: adapter.removeAnchor(fragment)
+
+        if (trace) trace("after-removeAnchor")
     }
 
     // --------------------------------------------------------------------------
@@ -135,12 +161,19 @@ abstract class AdaptiveFragment(
     open fun mount() {
         if (trace) trace("before-Mount")
 
+        beforeMount()
+
         mounted = true
-        parent?.addActual(this) ?: adapter.addActual(this)
         children.forEach { it.mount() }
+
+        afterMount()
 
         if (trace) trace("after-Mount")
     }
+
+    open fun beforeMount() = Unit
+
+    open fun afterMount() = Unit
 
     open fun patch() {
         patchExternal()
@@ -180,12 +213,19 @@ abstract class AdaptiveFragment(
     open fun unmount() {
         if (trace) trace("before-Unmount")
 
+        beforeUnmount()
+
         children.forEach { it.unmount() }
-        parent?.removeActual(this) ?: adapter.removeActual(this)
         mounted = false
+
+        afterUnmount()
 
         if (trace) trace("after-Unmount")
     }
+
+    open fun beforeUnmount() = Unit
+
+    open fun afterUnmount() = Unit
 
     open fun dispose() {
         if (trace) trace("before-Dispose")

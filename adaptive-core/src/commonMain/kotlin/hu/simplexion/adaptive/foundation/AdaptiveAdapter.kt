@@ -8,36 +8,35 @@ import kotlinx.coroutines.CoroutineDispatcher
 
 interface AdaptiveAdapter {
 
-    val fragmentFactory : AdaptiveFragmentFactory
+    val fragmentFactory: AdaptiveFragmentFactory
 
-    var rootFragment : AdaptiveFragment
+    var rootFragment: AdaptiveFragment
 
     val rootContainer: Any
 
     val dispatcher: CoroutineDispatcher
 
-    val trace : Boolean
+    val trace: Boolean
 
     val startedAt: Long
 
-    fun addActual(fragment: AdaptiveFragment)
-
-    fun removeActual(fragment: AdaptiveFragment)
-
-    fun actualize(name : String, parent : AdaptiveFragment, index: Int) =
-        fragmentFactory.newInstance(name, parent, index)
-
     fun newId(): Long
 
-    fun trace(fragment: AdaptiveFragment, point: String, data : String) {
-        TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).println(startedAt)
-    }
+    fun actualize(name: String, parent: AdaptiveFragment, index: Int) =
+        fragmentFactory.newInstance(name, parent, index)
+
+    fun addActual(fragment: AdaptiveFragment, anchor: AdaptiveFragment?) = Unit
+    fun removeActual(fragment: AdaptiveFragment) = Unit
+    fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) = Unit
+    fun removeAnchor(fragment: AdaptiveFragment) = Unit
 
     /**
      * Called by the `adaptive` entry point function after the root fragment is mounted.
      */
-    fun mounted() {
+    fun mounted() = Unit
 
+    fun trace(fragment: AdaptiveFragment, point: String, data: String) {
+        TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).println(startedAt)
     }
 
 }

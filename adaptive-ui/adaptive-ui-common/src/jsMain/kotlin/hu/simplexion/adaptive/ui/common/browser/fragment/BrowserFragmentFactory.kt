@@ -8,6 +8,11 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
 
 object BrowserFragmentFactory : AdaptiveFragmentFactory() {
     init {
-        addAll(AdaptiveText)
+        addAll(
+            AdaptiveText,
+            AdaptivePixel,
+            AdaptiveGroup,
+            AdaptiveStack
+        )
     }
 }

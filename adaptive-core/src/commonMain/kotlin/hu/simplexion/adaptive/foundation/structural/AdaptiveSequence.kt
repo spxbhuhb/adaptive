@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.foundation.structural
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
+import hu.simplexion.adaptive.utility.checkIfInstance
 
 class AdaptiveSequence(
     adapter: AdaptiveAdapter,
@@ -22,7 +23,7 @@ class AdaptiveSequence(
     )
 
     val indices : IntArray
-        get() = state[0] as IntArray
+        get() = state[0].checkIfInstance()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
         return null

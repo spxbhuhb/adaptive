@@ -23,26 +23,12 @@ class AdaptiveLoop<IT>(
     val builder
         get() = state[1] as BoundFragmentFactory
 
-    fun addAnonymous(iteratorValue: IT): AdaptiveFragment =
-        AdaptiveAnonymous(adapter, this, 0, 1, builder).also {
-            children.add(it)
-            it.setStateVariable(0, iteratorValue)
-        }
-
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
         return null
     }
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) {
         // anonymous fragment iterator is read only, and it is set during create
-    }
-
-    override fun addActual(fragment: AdaptiveFragment) {
-        parent !!.addActual(fragment)
-    }
-
-    override fun removeActual(fragment: AdaptiveFragment) {
-        parent !!.removeActual(fragment)
     }
 
     override fun genPatchInternal(): Boolean {
@@ -81,6 +67,43 @@ class AdaptiveLoop<IT>(
     fun patchContent() {
         children.forEach { it.patch() }
     }
+
+
+    fun addAnonymous(iteratorValue: IT): AdaptiveFragment =
+        AdaptiveAnonymous(adapter, this, 0, 1, builder).also {
+            children.add(it)
+            it.setStateVariable(0, iteratorValue)
+        }
+
+    // ---- Actual UI support --------------------------------------------
+
+    override fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
+        if (trace) trace("before-addActual")
+
+        parent?.addActual(fragment, anchor ?: this)
+            ?: adapter.addActual(fragment, anchor ?: this)
+
+        if (trace) trace("after-addActual")
+    }
+
+    override fun addAnchor(fragment: AdaptiveFragment, higherAnchor : AdaptiveFragment?) {
+        if (trace) trace("before-addAnchor")
+
+        parent?.addAnchor(fragment, higherAnchor ?: this)
+            ?: adapter.addAnchor(fragment, higherAnchor ?: this)
+
+        if (trace) trace("after-addAnchor")
+    }
+
+    override fun beforeMount() {
+        addAnchor(this, null)
+    }
+
+    override fun afterUnmount() {
+        removeAnchor(this)
+    }
+
+    // ---- Development support --------------------------------------------
 
     override fun stateToTraceString(): String {
         val s0 = state[0]?.let { it::class.simpleName ?: "<iterator>" }

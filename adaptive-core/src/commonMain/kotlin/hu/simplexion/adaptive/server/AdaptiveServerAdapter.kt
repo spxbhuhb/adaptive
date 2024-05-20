@@ -42,7 +42,7 @@ open class AdaptiveServerAdapter(
         get() = lock.use { field }
         set(v) { lock.use { field = v } }
 
-    override fun addActual(fragment: AdaptiveFragment) {
+    override fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
         // there is no actual UI for server fragments
     }
 

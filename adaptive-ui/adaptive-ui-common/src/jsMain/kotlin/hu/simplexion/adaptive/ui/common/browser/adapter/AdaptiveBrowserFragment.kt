@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
 import hu.simplexion.adaptive.foundation.internal.initStateMask
 import deprecated.css.AdaptiveCssStyle
+import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.dom.hasClass
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.Node
@@ -15,54 +16,25 @@ import org.w3c.dom.Node
 abstract class AdaptiveBrowserFragment(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
-    index: Int,
+    declarationIndex: Int,
+    instructionsIndex: Int,
     stateSize : Int
-) : AdaptiveFragment(adapter, parent, index, -1, stateSize) {
+) : AdaptiveFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize) {
 
     abstract val receiver : Node
 
-    @Suppress("UNCHECKED_CAST")
-    fun getInstructions(variableIndex : Int) =
-        state[variableIndex] as? Array<out AdaptiveInstruction> ?: emptyArray()
-
-    fun getFragmentFactory(variableIndex : Int) =
-        state[variableIndex] as BoundFragmentFactory
-
-    val firstTimeInit
-        get() = (dirtyMask == initStateMask)
-
-    fun addClass(styles: Array<out AdaptiveCssStyle>) {
-        with(receiver as HTMLElement) {
-            val missingClasses = styles.filterNot { hasClass(it.name) }
-            if (missingClasses.isNotEmpty()) {
-                val presentClasses = className.trim()
-                className = buildString {
-                    append(presentClasses)
-                    if (presentClasses.isNotEmpty()) {
-                        append(" ")
-                    }
-                    missingClasses.joinTo(this, " ") { it.name }
-                }
-            }
-        }
-    }
-
-    // -------------------------------------------------------------------------
-    // Fragment overrides
-    // -------------------------------------------------------------------------
+    fun fragmentFactory(index : Int) : BoundFragmentFactory =
+        state[index].checkIfInstance()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
-    override fun addActual(fragment: AdaptiveFragment) {
-        check(fragment is AdaptiveBrowserFragment) { "invalid fragment type" } // TODO user ops
-        receiver.appendChild(fragment.receiver)
+    override fun beforeMount() {
+        parent?.addActual(this, null) ?: adapter.addActual(this, null)
     }
 
-    override fun removeActual(fragment: AdaptiveFragment) {
-        check(fragment is AdaptiveBrowserFragment) { "invalid fragment type" } // TODO user ops
-        receiver.removeChild(fragment.receiver)
+    override fun afterUnmount() {
+        parent?.removeActual(this) ?: adapter.removeActual(this)
     }
-
 }

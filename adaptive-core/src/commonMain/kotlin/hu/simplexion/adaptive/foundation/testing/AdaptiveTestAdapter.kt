@@ -39,7 +39,7 @@ class AdaptiveTestAdapter(
 
     override val startedAt = vmNowMicro()
 
-    override fun addActual(fragment: AdaptiveFragment) {
+    override fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
         if(fragment is AdaptiveTestFragment) {
             rootContainer.appendChild(fragment.receiver)
         }

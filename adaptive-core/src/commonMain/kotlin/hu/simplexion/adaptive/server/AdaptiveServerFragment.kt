@@ -42,7 +42,7 @@ abstract class AdaptiveServerFragment(
         return true
     }
 
-    override fun addActual(fragment: AdaptiveFragment) {
+    override fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
         // there is no actual UI for server fragments
     }
 

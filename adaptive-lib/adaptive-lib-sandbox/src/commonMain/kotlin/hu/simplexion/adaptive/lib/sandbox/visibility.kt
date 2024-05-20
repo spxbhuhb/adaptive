@@ -19,5 +19,5 @@ internal fun internalFun() {
 
 @Adaptive
 private fun privateFun() {
-    text("Hello world!")
+    text("private fun")
 }
