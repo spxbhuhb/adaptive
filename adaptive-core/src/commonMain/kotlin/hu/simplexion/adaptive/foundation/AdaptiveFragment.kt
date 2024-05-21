@@ -24,7 +24,7 @@ abstract class AdaptiveFragment(
 
     var flags : Int = 0
 
-    var mounted : Boolean
+    var isMounted : Boolean
         get() = (flags and MOUNTED_MASK) != 0
         set(v) {
             if (v) {
@@ -163,7 +163,7 @@ abstract class AdaptiveFragment(
 
         beforeMount()
 
-        mounted = true
+        isMounted = true
         children.forEach { it.mount() }
 
         afterMount()
@@ -216,7 +216,7 @@ abstract class AdaptiveFragment(
         beforeUnmount()
 
         children.forEach { it.unmount() }
-        mounted = false
+        isMounted = false
 
         afterUnmount()
 

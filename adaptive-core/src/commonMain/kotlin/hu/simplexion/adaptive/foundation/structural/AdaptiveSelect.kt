@@ -60,7 +60,7 @@ class AdaptiveSelect(
         shownBranch = stateBranch  // new branch
 
         shownFragment?.let { // drop old branch
-            if (mounted) it.unmount()
+            if (isMounted) it.unmount()
             it.dispose()
         }
 
@@ -70,7 +70,7 @@ class AdaptiveSelect(
         }
 
         createClosure.owner.genBuild(this, shownBranch)?.also { // there is something to sow
-            if (mounted) it.mount()
+            if (isMounted) it.mount()
             shownFragment = it
         }
 

@@ -12,3 +12,58 @@ class BoundingRect(
     val width : Float,
     val height : Float
 ) : AdaptiveInstruction
+
+class ColumnTemplate(
+    vararg val tracks : Track
+) {
+    fun expand() {
+
+    }
+}
+
+class RowTemplate(
+    vararg val tracks : Track
+)
+
+interface Track {
+
+    val isIntrinsic : Boolean
+        get() = true
+
+    val isFix : Boolean
+
+    val value : Float
+
+    fun expand(out : MutableList<Track>) {
+        out.add(this)
+    }
+
+}
+
+/**
+ * Repeat [track] [count] times.
+ *
+ * IMPORTANT Assumes that the tracks are immutable.
+ */
+class Repeat(val count : Int, val track : Track) : Track {
+
+    override val isIntrinsic : Boolean
+        get() = false
+
+    override val isFix: Boolean
+        get() = throw UnsupportedOperationException()
+
+    override val value: Float
+        get() = throw UnsupportedOperationException()
+
+    override fun expand(out : MutableList<Track>) {
+        for (i in 0 until count) {
+            if (track.isIntrinsic) {
+                out.add(track)
+            } else {
+                track.expand(out)
+            }
+        }
+    }
+
+}

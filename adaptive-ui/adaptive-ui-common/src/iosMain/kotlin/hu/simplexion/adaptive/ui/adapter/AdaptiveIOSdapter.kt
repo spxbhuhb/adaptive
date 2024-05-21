@@ -9,10 +9,9 @@ import hu.simplexion.adaptive.ui.basic.ViewFragmentFactory
 import hu.simplexion.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import platform.UIKit.UILabel
 import platform.UIKit.UIView
 
-open class AdaptiveUIViewAdapter(
+open class AdaptiveIOSdapter(
     override val rootContainer: UIView,
     override val trace: Boolean = false
 ) : AdaptiveAdapter {
@@ -28,13 +27,13 @@ open class AdaptiveUIViewAdapter(
     override val dispatcher: CoroutineDispatcher
         get() = Dispatchers.Main
 
-    override fun addActual(fragment: AdaptiveFragment) {
+    override fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
         if (trace) trace(fragment, "before-adapter-addActual", "")
 
-        if (fragment is AdaptiveUIViewFragment) {
+        if (fragment is AdaptiveIOSFragment) {
             rootContainer.addSubview(fragment.receiver)
         } else {
-            if (trace) trace(fragment, "warning-adapter-addActual", "not an AdaptiveUIViewFragment")
+            if (trace) trace(fragment, "warning-adapter-addActual", "not an AdaptiveIOSFragment")
         }
 
         if (trace) trace(fragment, "after-adapter-addActual", "")
@@ -44,10 +43,10 @@ open class AdaptiveUIViewAdapter(
     override fun removeActual(fragment: AdaptiveFragment) {
         if (trace) trace(fragment, "before-adapter-removeActual", "")
 
-        if (fragment is AdaptiveUIViewFragment) {
+        if (fragment is AdaptiveIOSFragment) {
             fragment.receiver.removeFromSuperview()
         } else {
-            if (trace) trace(fragment, "warning-adapter-removeActual", "not an AdaptiveUIViewFragment")
+            if (trace) trace(fragment, "warning-adapter-removeActual", "not an AdaptiveIOSFragment")
         }
 
         if (trace) trace(fragment, "after-adapter-removeActual", "")

@@ -7,12 +7,13 @@ import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import platform.UIKit.UIView
 
-abstract class AdaptiveUIViewFragment(
+abstract class AdaptiveIOSFragment(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
-    index: Int,
+    declarationIndex: Int,
+    instructionIndex: Int,
     stateSize : Int
-) : AdaptiveFragment(adapter, parent, index, stateSize) {
+) : AdaptiveFragment(adapter, parent, declarationIndex, instructionIndex, stateSize) {
 
     abstract val receiver : UIView
 
@@ -24,13 +25,22 @@ abstract class AdaptiveUIViewFragment(
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
-    override fun addActual(fragment: AdaptiveFragment) {
-        check(fragment is AdaptiveUIViewFragment) { "invalid fragment type" } // TODO user ops
+    override fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
+        check(fragment is AdaptiveIOSFragment) { "invalid fragment type" } // TODO user ops
         receiver.addSubview(fragment.receiver)
     }
 
     override fun removeActual(fragment: AdaptiveFragment) {
-        check(fragment is AdaptiveUIViewFragment) { "invalid fragment type" } // TODO user ops
+        check(fragment is AdaptiveIOSFragment) { "invalid fragment type" } // TODO user ops
         fragment.receiver.removeFromSuperview()
     }
+
+    override fun beforeMount() {
+        parent?.addActual(this, null) ?: adapter.addActual(this, null)
+    }
+
+    override fun afterUnmount() {
+        parent?.removeActual(this) ?: adapter.removeActual(this)
+    }
+
 }

@@ -37,30 +37,3 @@ class AbsoluteLayoutImpl(private val controller: UIViewController) {
     }
 
 }
-
-class CustomLayoutView : UIView() {
-    private var positions = mutableMapOf<UIView, CGRect>()
-
-    fun setFrame(subview: UIView, frame: CGRect) {
-        positions[subview] = frame
-        setNeedsLayout()
-    }
-
-    @OptIn(ExperimentalForeignApi::class)
-    override fun layoutSubviews() {
-        super.layoutSubviews()
-        positions.forEach { (subview, frame) ->
-            subview.setFrame(frame.readValue())
-        }
-    }
-
-    override fun addSubview(view: UIView) {
-        super.addSubview(view)
-        positions[view] = CGRectZero
-    }
-
-    override fun willRemoveSubview(subview: UIView) {
-        super.willRemoveSubview(subview)
-        positions.remove(subview)
-    }
-}

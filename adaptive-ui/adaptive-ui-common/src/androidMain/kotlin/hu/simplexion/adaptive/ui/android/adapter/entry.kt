@@ -22,8 +22,8 @@ fun android(
     vararg imports : AdaptiveFragmentFactory,
     trace : Boolean = false,
     @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
-) : AdaptiveViewAdapter =
-    AdaptiveViewAdapter(
+) : AdaptiveAndroidAdapter =
+    AdaptiveAndroidAdapter(
         context, rootView, trace
     ).also {
         it.fragmentFactory += imports

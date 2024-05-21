@@ -3,16 +3,15 @@
  */
 package hu.simplexion.adaptive.ui.android.adapter
 
-import android.view.View
 import android.view.ViewGroup
 import hu.simplexion.adaptive.foundation.*
 
-abstract class AdaptiveViewGroupFragment(
+abstract class AdaptiveAndroidGroupFragment(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int,
     stateSize : Int
-) : AdaptiveViewFragment(adapter, parent, index, stateSize) {
+) : AdaptiveAndroidFragment(adapter, parent, index, stateSize) {
 
     abstract override val receiver : ViewGroup
 
@@ -24,13 +23,13 @@ abstract class AdaptiveViewGroupFragment(
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
-    override fun addActual(fragment: AdaptiveFragment) {
-        check(fragment is AdaptiveViewFragment) { "invalid fragment type" } // TODO user ops
+    override fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
+        check(fragment is AdaptiveAndroidFragment) { "invalid fragment type" } // TODO user ops
         receiver.addView(fragment.receiver)
     }
 
     override fun removeActual(fragment: AdaptiveFragment) {
-        check(fragment is AdaptiveViewFragment) { "invalid fragment type" } // TODO user ops
+        check(fragment is AdaptiveAndroidFragment) { "invalid fragment type" } // TODO user ops
         receiver.removeView(fragment.receiver)
     }
 }

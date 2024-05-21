@@ -32,6 +32,8 @@ class AdaptivePoll<VT>(
             scope = it
             it.launch {
                 while (isActive) {
+                    // TODO do not poll when the fragment is not mounted
+
                     try {
                         binding.setValue(pollFunction.invokeSuspend(), false) // TODO check provider call in poll
                     } catch (e: AdaptiveProducerCancel) {
@@ -40,10 +42,11 @@ class AdaptivePoll<VT>(
                     } catch (e: ServiceTimeoutException) {
                         // TODO indicate the problem somehow
                         println(e)
-                    } catch (e : ServiceResultException) {
+                    } catch (e: ServiceResultException) {
                         // TODO indicate the problem somehow
                         println(e)
                     }
+
                     // TODO this delays after errors as well, maybe consider a bit more sophisticated scheduling
                     delay(interval)
                 }
