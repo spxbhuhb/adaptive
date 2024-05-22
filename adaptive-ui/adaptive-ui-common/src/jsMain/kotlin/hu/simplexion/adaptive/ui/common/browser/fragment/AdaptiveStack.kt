@@ -6,11 +6,8 @@ package hu.simplexion.adaptive.ui.common.browser.fragment
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
-import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
 import hu.simplexion.adaptive.ui.common.browser.adapter.HTMLLayoutFragment
 import hu.simplexion.adaptive.ui.common.commonUI
-import kotlinx.browser.document
-import org.w3c.dom.HTMLDivElement
 
 open class AdaptiveStack(
     adapter: AdaptiveAdapter,

@@ -1,7 +1,7 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.adaptive.ui.adapter
+package hu.simplexion.adaptive.ui.common.uikit.adapter
 
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
@@ -30,6 +30,7 @@ abstract class IOSLayoutFragment(
     )
 
     val items = mutableListOf<LayoutItem>()
+    val anchors = mutableMapOf<Long, UIView>()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         return AdaptiveAnonymous(adapter, this, declarationIndex, 0, fragmentFactory(state.size - 1)).apply { create() }
@@ -51,19 +52,18 @@ abstract class IOSLayoutFragment(
     }
 
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
-//        (document.createElement("div") as HTMLDivElement).also {
-//            it.style.display = "contents"
-//            it.id = fragment.id.toString()
-//            if (higherAnchor != null) {
-//                checkNotNull(document.getElementById(higherAnchor.id.toString())) { "missing higher anchor" }.appendChild(it)
-//            } else {
-//                receiver.appendChild(it)
-//            }
-//        }
+        UIView().also {
+            if (higherAnchor != null) {
+                checkNotNull(anchors[higherAnchor.id]) { "missing higher anchor $fragment $higherAnchor" }.addSubview(it)
+            } else {
+                receiver.addSubview(it)
+            }
+            anchors[fragment.id] = it
+        }
     }
 
     override fun removeAnchor(fragment: AdaptiveFragment) {
-//        checkNotNull(document.getElementById(fragment.id.toString())) { "missing anchor" }.remove()
+        anchors[fragment.id]?.removeFromSuperview()
     }
 
     override fun addActual(fragment: AdaptiveFragment, anchor: AdaptiveFragment?) {
@@ -77,8 +77,8 @@ abstract class IOSLayoutFragment(
                 if (anchor == null) {
                     receiver.addSubview(uiViewReceiver)
                 } else {
-//                    checkNotNull(document.getElementById(anchor.id.toString())) { "missing anchor" }
-//                        .appendChild(uiViewReceiver)
+                    checkNotNull(anchors[anchor.id]) { "missing anchor $anchor" }
+                        .addSubview(uiViewReceiver)
                 }
 
             }
