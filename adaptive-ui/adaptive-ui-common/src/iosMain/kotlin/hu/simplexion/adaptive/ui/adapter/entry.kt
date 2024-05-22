@@ -20,8 +20,8 @@ fun ios(
     vararg imports : AdaptiveFragmentFactory,
     trace : Boolean = false,
     @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
-) : AdaptiveIOSdapter =
-    AdaptiveIOSdapter(
+) : AdaptiveIOSAdapter =
+    AdaptiveIOSAdapter(
         rootView, trace
     ).also {
         it.fragmentFactory += imports

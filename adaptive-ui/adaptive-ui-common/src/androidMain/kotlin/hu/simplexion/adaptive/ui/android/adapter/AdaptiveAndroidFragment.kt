@@ -35,11 +35,13 @@ abstract class AdaptiveAndroidFragment(
         throw UnsupportedOperationException() // TODO ops instead of Unsupported
     }
 
-    override fun beforeMount() {
+    override fun mount() {
         parent?.addActual(this, null) ?: adapter.addActual(this, null)
+        super.mount()
     }
 
-    override fun afterUnmount() {
+    override fun unmount() {
+        super.unmount()
         parent?.removeActual(this) ?: adapter.removeActual(this)
     }
 }

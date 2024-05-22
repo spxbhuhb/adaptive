@@ -3,21 +3,16 @@
  */
 
 import hu.simplexion.adaptive.foundation.Adaptive
-import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.producer.poll
-import hu.simplexion.adaptive.ktor.withWebSocketTransport
 import hu.simplexion.adaptive.lib.sandbox.SandboxExports
-import hu.simplexion.adaptive.lib.sandbox.publicFun
 import hu.simplexion.adaptive.sandbox.api.CounterApi
 import hu.simplexion.adaptive.service.getService
 import hu.simplexion.adaptive.ui.common.browser.adapter.browser
-import hu.simplexion.adaptive.ui.common.fragment.group
 import hu.simplexion.adaptive.ui.common.fragment.pixel
 import hu.simplexion.adaptive.ui.common.fragment.stack
 import hu.simplexion.adaptive.ui.common.fragment.text
 import hu.simplexion.adaptive.ui.common.instruction.BoundingRect
 import hu.simplexion.adaptive.wireformat.withJson
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -33,7 +28,7 @@ fun main() {
     withJson()
     //withWebSocketTransport()
 
-    browser(SandboxExports) {
+    browser(SandboxExports, trace = false) {
         val time = poll(1.seconds, now()) { now() }
 
         pixel {
@@ -50,7 +45,7 @@ fun main() {
 
             text("$time", BoundingRect(150f, 150f, 250f, 20f))
 
-            group(BoundingRect(200f, 200f, 200f, 200f)) {
+            stack(BoundingRect(200f, 200f, 200f, 200f)) {
                 text("Hello World at 200!")
             }
 

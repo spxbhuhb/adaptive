@@ -3,16 +3,18 @@
  */
 package hu.simplexion.adaptive.ui.common.browser.fragment
 
-import hu.simplexion.adaptive.foundation.*
-import hu.simplexion.adaptive.ui.common.browser.adapter.AdaptiveBrowserFragment
+import hu.simplexion.adaptive.foundation.AdaptiveAdapter
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.fragment.AdaptiveUIFragment
 import kotlinx.browser.document
 
 open class AdaptiveText(
     adapter: AdaptiveAdapter,
     parent : AdaptiveFragment,
     index : Int
-) : AdaptiveBrowserFragment(adapter, parent, index, 1, 2) {
+) : AdaptiveUIFragment(adapter, parent, index, 1, 2) {
 
     override val receiver = document.createElement("span")
 

@@ -102,11 +102,13 @@ class AdaptiveSelect(
         parent !!.removeActual(fragment)
     }
 
-    override fun beforeMount() {
+    override fun mount() {
         parent!!.addAnchor(this, null)
+        super.mount()
     }
 
-    override fun afterUnmount() {
+    override fun unmount() {
+        super.unmount()
         parent!!.removeAnchor(this)
     }
 

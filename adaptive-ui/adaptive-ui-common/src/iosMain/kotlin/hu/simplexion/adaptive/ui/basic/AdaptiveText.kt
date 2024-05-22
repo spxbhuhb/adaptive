@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.ui.basic
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
-import hu.simplexion.adaptive.ui.adapter.AdaptiveIOSFragment
+import hu.simplexion.adaptive.ui.adapter.IOSLayoutFragment
 import hu.simplexion.adaptive.ui.common.commonUI
 import platform.UIKit.NSTextAlignmentCenter
 import platform.UIKit.UILabel
@@ -15,7 +15,7 @@ class AdaptiveText(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AdaptiveIOSFragment(adapter, parent, index, 1, 2) {
+) : IOSLayoutFragment(adapter, parent, index, 1, 2) {
 
     override val receiver = UILabel()
 

@@ -11,7 +11,6 @@ object BrowserFragmentFactory : AdaptiveFragmentFactory() {
         addAll(
             AdaptiveText,
             AdaptivePixel,
-            AdaptiveGroup,
             AdaptiveStack
         )
     }

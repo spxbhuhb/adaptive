@@ -95,11 +95,13 @@ class AdaptiveLoop<IT>(
         if (trace) trace("after-addAnchor")
     }
 
-    override fun beforeMount() {
+    override fun mount() {
         addAnchor(this, null)
+        super.mount()
     }
 
-    override fun afterUnmount() {
+    override fun unmount() {
+        super.unmount()
         removeAnchor(this)
     }
 

@@ -11,13 +11,18 @@ import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
 import hu.simplexion.adaptive.ui.common.instruction.BoundingRect
 import hu.simplexion.adaptive.utility.checkIfInstance
 
-open class AdaptiveUIFragment(
+abstract class AdaptiveUIFragment(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
     instructionsIndex: Int,
     stateSize : Int
 ) : AdaptiveFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize) {
+
+    abstract val receiver : Any
+
+    val frame
+        get() = uiInstructions.frame
 
     // FIXME uiInstructions should be bound to instructions
     var uiInstructions = UIInstructions.DEFAULT
@@ -29,13 +34,19 @@ open class AdaptiveUIFragment(
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
-    override fun beforeMount() {
+    override fun mount() {
         uiInstructions = UIInstructions(instructions)
         parent?.addActual(this, null) ?: adapter.addActual(this, null)
+        super.mount()
     }
 
-    override fun afterUnmount() {
+    override fun unmount() {
+        super.unmount()
         parent?.removeActual(this) ?: adapter.removeActual(this)
+    }
+
+    open fun setFrame(frame : BoundingRect) {
+        uiInstructions.frame = frame
     }
 
     /**
@@ -45,14 +56,14 @@ open class AdaptiveUIFragment(
         instructions : Array<out AdaptiveInstruction>
     ) {
 
-        var boundingRect : BoundingRect? = null
+        var frame : BoundingRect? = null
         val minSize : Float? = null
         val maxSize : Float? = null
 
         init {
             for (instruction in instructions) {
                 when (instruction) {
-                    is BoundingRect -> boundingRect = instruction
+                    is BoundingRect -> frame = instruction
                 }
             }
         }

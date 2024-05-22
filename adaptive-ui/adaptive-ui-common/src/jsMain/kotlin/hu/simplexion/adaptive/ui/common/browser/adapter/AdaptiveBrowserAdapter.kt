@@ -6,10 +6,15 @@ package hu.simplexion.adaptive.ui.common.browser.adapter
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.browser.fragment.BrowserFragmentFactory
+import hu.simplexion.adaptive.ui.common.fragment.alsoIfReceiver
+import hu.simplexion.adaptive.ui.common.instruction.BoundingRect
+import hu.simplexion.adaptive.utility.alsoIfInstance
 import hu.simplexion.adaptive.utility.vmNowMicro
+import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.Node
 
 open class AdaptiveBrowserAdapter(
@@ -30,16 +35,19 @@ open class AdaptiveBrowserAdapter(
     override var trace = false
 
     override fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
-        if (fragment is AdaptiveBrowserFragment) {
-            rootContainer.appendChild(fragment.receiver)
+        if (trace) fragment.trace("adapter-AddActual")
+
+        fragment.alsoIfReceiver<HTMLElement> { rootContainer.appendChild(it) }
+        fragment.alsoIfInstance<HTMLLayoutFragment> {
+            it.setFrame(BoundingRect(0f, 0f, document.body!!.clientWidth.toFloat(), document.body!!.clientHeight.toFloat()))
         }
         // FIXME check(fragment is AdaptiveRootFragment)
     }
 
     override fun removeActual(fragment: AdaptiveFragment) {
-        if (fragment is AdaptiveBrowserFragment) {
-            rootContainer.removeChild(fragment.receiver)
-        }
+        if (trace) fragment.trace("adapter-RemoveActual}")
+
+        fragment.alsoIfReceiver<HTMLElement> { rootContainer.removeChild(it) }
         // FIXME check(fragment is AdaptiveRootFragment)
     }
 

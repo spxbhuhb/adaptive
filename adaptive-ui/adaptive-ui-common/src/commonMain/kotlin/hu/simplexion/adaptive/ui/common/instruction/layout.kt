@@ -6,12 +6,14 @@ package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 
-class BoundingRect(
+data class BoundingRect(
     val x : Float,
     val y : Float,
     val width : Float,
     val height : Float
-) : AdaptiveInstruction
+) : AdaptiveInstruction {
+    override fun toString(): String = "BoundingRect(x=$x, y=$y, width=$width, height=$height)"
+}
 
 class ColumnTemplate(
     vararg val tracks : Track
