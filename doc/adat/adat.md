@@ -23,7 +23,7 @@ These classes introduce some computational overhead, but they provide many utili
 | `equals`       | ready         | same as for standard Kotlin data classes                                                  |
 | `hashCode`     | ready         | same as for standard Kotlin data classes                                                  |
 | `deepCopy`     | to be written | like `copy` but it creates a new copy of each array, collection and `@Adat` class as well |
-| `diff`         | to be written | calculates the difference between two `@Adat` classes                                     |
+| `diff`         | ready         | calculates the difference between two `@Adat` classes                                     |
 | `setValue`     | ready         | set a value based on its name or its index                                                |
 | `getValue`     | ready         | get a value based on its name or its index                                                |
 | `getMetadata`  | ready         | get metadata of the class                                                                 |

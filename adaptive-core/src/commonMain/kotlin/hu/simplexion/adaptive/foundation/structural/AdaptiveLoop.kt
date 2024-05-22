@@ -78,21 +78,13 @@ class AdaptiveLoop<IT>(
     // ---- Actual UI support --------------------------------------------
 
     override fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
-        if (trace) trace("before-addActual")
-
         parent?.addActual(fragment, anchor ?: this)
             ?: adapter.addActual(fragment, anchor ?: this)
-
-        if (trace) trace("after-addActual")
     }
 
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor : AdaptiveFragment?) {
-        if (trace) trace("before-addAnchor")
-
         parent?.addAnchor(fragment, higherAnchor ?: this)
             ?: adapter.addAnchor(fragment, higherAnchor ?: this)
-
-        if (trace) trace("after-addAnchor")
     }
 
     override fun mount() {
