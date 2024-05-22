@@ -1,24 +1,22 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.adaptive.ui.android.basic
+package hu.simplexion.adaptive.ui.common.android.fragment
 
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
-import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
-import hu.simplexion.adaptive.ui.android.adapter.AdaptiveAndroidFragment
+import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveAndroidAdapter
 import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.fragment.AdaptiveUIFragment
 
 class AdaptiveText(
-    adapter: AdaptiveAdapter,
+    adapter: AdaptiveAndroidAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AdaptiveAndroidFragment(adapter, parent, index, 1) {
+) : AdaptiveUIFragment(adapter, parent, index, 1, 2) {
 
-    override val receiver = TextView(viewAdapter.context)
+    override val receiver = TextView(adapter.context)
 
     private val content: String
         get() = state[0]?.toString() ?: ""
@@ -28,10 +26,6 @@ class AdaptiveText(
 
         if (haveToPatch(closureMask, 1)) {
             receiver.text = content
-            receiver.layoutParams = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
         }
 
         return false
@@ -42,7 +36,7 @@ class AdaptiveText(
         override val fragmentType = "$commonUI:AdaptiveText"
 
         override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveText(parent.adapter, parent, index)
+            AdaptiveText(parent.adapter as AdaptiveAndroidAdapter, parent, index)
 
     }
 

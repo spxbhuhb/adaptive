@@ -39,17 +39,11 @@ abstract class IOSLayoutFragment(
     override fun genPatchInternal(): Boolean = true
 
     override fun mount() {
-        parent?.addActual(this, null)
         super.mount()
         layout()
     }
 
     abstract fun layout()
-
-    override fun unmount() {
-        super.unmount()
-        parent?.removeActual(this)
-    }
 
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
         UIView().also {
