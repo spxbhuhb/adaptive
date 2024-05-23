@@ -8,6 +8,8 @@ import android.content.Context.WINDOW_SERVICE
 import android.util.DisplayMetrics
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.LinearLayout
+import androidx.core.view.updateLayoutParams
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.opsCheck
 import hu.simplexion.adaptive.ui.common.android.fragment.ViewFragmentFactory
@@ -27,6 +29,7 @@ open class AdaptiveAndroidAdapter(
 
         fragment.ifIsInstanceOrRoot<AndroidLayoutFragment> {
             it.frame = BoundingRect(0f, 0f, rootContainer.width.toFloat(), rootContainer.height.toFloat())
+            it.receiver.layoutParams = LinearLayout.LayoutParams(rootContainer.width, rootContainer.height)
             rootContainer.addView(it.receiver)
         }
 

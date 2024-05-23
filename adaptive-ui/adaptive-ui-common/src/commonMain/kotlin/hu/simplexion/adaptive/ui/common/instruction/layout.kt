@@ -4,14 +4,19 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
-import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.ui.common.fragment.AdaptiveUIFragment
 
 data class BoundingRect(
     val x : Float,
     val y : Float,
     val width : Float,
     val height : Float
-) : AdaptiveInstruction {
+) : AdaptiveUIInstruction {
+
+    override fun apply(uiInstructions: AdaptiveUIFragment.UIInstructions) {
+        uiInstructions.frame = this
+    }
+
     override fun toString(): String = "BoundingRect(x=$x, y=$y, width=$width, height=$height)"
 
     companion object {

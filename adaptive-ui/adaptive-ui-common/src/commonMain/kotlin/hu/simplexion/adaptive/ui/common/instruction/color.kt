@@ -6,9 +6,7 @@ package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 
-class Color(val value: Int) : AdaptiveInstruction {
-
-    constructor(value: String) : this(value.trimStart('#').toInt(16))
+data class Color(val value: Int) : AdaptiveInstruction {
 
     /**
      * @return [value] in "#ffffff" format

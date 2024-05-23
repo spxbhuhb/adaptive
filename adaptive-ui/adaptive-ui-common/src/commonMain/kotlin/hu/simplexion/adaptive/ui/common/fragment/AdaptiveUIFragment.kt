@@ -8,9 +8,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
-import hu.simplexion.adaptive.ui.common.instruction.BoundingRect
-import hu.simplexion.adaptive.ui.common.instruction.Font
-import hu.simplexion.adaptive.ui.common.instruction.FontSize
+import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.utility.checkIfInstance
 
 abstract class AdaptiveUIFragment(
@@ -33,8 +31,14 @@ abstract class AdaptiveUIFragment(
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
+    override fun genPatchInternal(): Boolean {
+        if (instructionIndex != -1 && haveToPatch(getThisClosureDirtyMask(), instructionIndex)) {
+            uiInstructions = UIInstructions(instructions)
+        }
+        return true
+    }
+
     override fun mount() {
-        uiInstructions = UIInstructions(instructions)
         parent?.addActual(this, null) ?: adapter.addActual(this)
         super.mount()
     }
@@ -60,18 +64,17 @@ abstract class AdaptiveUIFragment(
     ) {
 
         var frame : BoundingRect = BoundingRect.DEFAULT
+        var color : Color? = null
         var minSize : Float? = null
         var maxSize : Float? = null
         var fontName: String? = null
         var fontSize: Float? = null
+        var borderRadius: Float? = null
+        var backgroundGradient : BackgroundGradient? = null
 
         init {
-            for (instruction in instructions) {
-                when (instruction) {
-                    is BoundingRect -> frame = instruction
-                    is Font -> fontName = instruction.fontName
-                    is FontSize -> fontSize = instruction.fontSize
-                }
+            instructions.forEach{
+                if (it is AdaptiveUIInstruction) it.apply(this)
             }
         }
 

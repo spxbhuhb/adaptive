@@ -25,14 +25,14 @@ abstract class HTMLLayoutFragment(
     parent: AdaptiveFragment?,
     declarationIndex: Int,
     instructionsIndex: Int,
-    stateSize : Int
+    stateSize: Int
 ) : AdaptiveUIFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize) {
 
     override val receiver: HTMLDivElement = document.createElement("div") as HTMLDivElement
 
     class LayoutItem(
-        val fragment : AdaptiveUIFragment,
-        val receiver : HTMLElement
+        val fragment: AdaptiveUIFragment,
+        val receiver: HTMLElement
     )
 
     val items = mutableListOf<LayoutItem>()
@@ -41,28 +41,14 @@ abstract class HTMLLayoutFragment(
         return AdaptiveAnonymous(adapter, this, declarationIndex, 0, fragmentFactory(state.size - 1)).apply { create() }
     }
 
-    override fun genPatchInternal(): Boolean {
-        if (!haveToPatch(getThisClosureDirtyMask(), instructionIndex)) return true
-
-        for (instruction in instructions) {
-            when (instruction) {
-                is Color -> {
-                    receiver.style.color = instruction.toHexColor()
-                }
-                is BackgroundGradient -> {
-                    receiver.style.background = "linear-gradient(${instruction.degree}deg, ${instruction.start.toHexColor()}, ${instruction.end.toHexColor()})"
-                }
-                is BorderRadius -> {
-                    receiver.style.borderRadius = "${instruction.radius}px"
-                }
-            }
-        }
-
-        return true
-    }
-
     override fun mount() {
+        // FIXME ui instruction update (should be called from genPatchInternal and also should clear actual UI settings when null)
+        uiInstructions.color?.let { receiver.style.color = it.toHexColor() }
+        uiInstructions.backgroundGradient?.let { receiver.style.background = "linear-gradient(${it.degree}deg, ${it.start.toHexColor()}, ${it.end.toHexColor()})" }
+        uiInstructions.borderRadius?.let { receiver.style.borderRadius = "${it}px" }
+
         parent?.addActual(this, null)
+
         super.mount()
         layout()
     }

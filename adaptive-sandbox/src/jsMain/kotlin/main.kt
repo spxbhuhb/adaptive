@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.lib.sandbox.SandboxExports
 import hu.simplexion.adaptive.sandbox.api.CounterApi
 import hu.simplexion.adaptive.service.getService
 import hu.simplexion.adaptive.ui.common.browser.adapter.browser
+import hu.simplexion.adaptive.ui.common.fragment.clickable
 import hu.simplexion.adaptive.ui.common.fragment.pixel
 import hu.simplexion.adaptive.ui.common.fragment.stack
 import hu.simplexion.adaptive.ui.common.fragment.text
@@ -43,11 +44,15 @@ fun main() {
         pixel {
 
             stack(greenGradient, borderRadius, BoundingRect(50f, 50f, 400f, 50f)) {
-                text("> ")
-                if (time.toLocalDateTime(TimeZone.currentSystemDefault()).second % 2 == 1) {
-                    text("what an odd second")
+
+                clickable(onClick = { console.log("hello") }) {
+                    text("> ")
+                    if (time.toLocalDateTime(TimeZone.currentSystemDefault()).second % 2 == 1) {
+                        text("what an odd second")
+                    }
+                    text(" <")
                 }
-                text(" <")
+
             }
 
             //counterWithTime(time)
