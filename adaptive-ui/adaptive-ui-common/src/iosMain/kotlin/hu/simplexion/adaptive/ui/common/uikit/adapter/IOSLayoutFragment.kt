@@ -24,6 +24,14 @@ abstract class IOSLayoutFragment(
 
     override val receiver = UIView()
 
+    @OptIn(ExperimentalForeignApi::class)
+    override var frame
+        get() = uiInstructions.frame
+        set(v) {
+            uiInstructions.frame = v
+            receiver.setFrame(v.toCGRect())
+        }
+
     class LayoutItem(
         val fragment : AdaptiveUIFragment,
         val receiver : UIView
@@ -71,8 +79,7 @@ abstract class IOSLayoutFragment(
                 if (anchor == null) {
                     receiver.addSubview(uiViewReceiver)
                 } else {
-                    checkNotNull(anchors[anchor.id]) { "missing anchor $anchor" }
-                        .addSubview(uiViewReceiver)
+                    checkNotNull(anchors[anchor.id]) { "missing anchor $anchor" }.addSubview(uiViewReceiver)
                 }
 
             }
@@ -99,11 +106,5 @@ abstract class IOSLayoutFragment(
 
         if (trace) trace("after-removeActual")
     }
-
-    @OptIn(ExperimentalForeignApi::class)
-    override fun setFrame(frame : BoundingRect) {
-        receiver.setFrame(CGRectMake(frame.x.toDouble(), frame.y.toDouble(), frame.width.toDouble(), frame.height.toDouble()))
-    }
-
 
 }

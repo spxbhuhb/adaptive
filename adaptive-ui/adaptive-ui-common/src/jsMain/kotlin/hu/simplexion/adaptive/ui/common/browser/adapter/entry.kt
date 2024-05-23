@@ -7,16 +7,18 @@ import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveEntry
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
+import kotlinx.browser.window
+import org.w3c.dom.HTMLElement
 
 @AdaptiveEntry
 fun browser(
     vararg imports : AdaptiveFragmentFactory,
+    rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
     trace : Boolean = false,
     @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
 ) : AdaptiveBrowserAdapter {
 
-    return AdaptiveBrowserAdapter().also {
-        it.trace = trace
+    return AdaptiveBrowserAdapter(rootContainer, trace).also {
         it.fragmentFactory += imports
         block(it)
         it.mounted()

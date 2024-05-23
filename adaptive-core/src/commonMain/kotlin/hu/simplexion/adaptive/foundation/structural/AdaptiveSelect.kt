@@ -81,13 +81,11 @@ class AdaptiveSelect(
     // ---- Actual UI support --------------------------------------------
 
     override fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
-        parent?.addActual(fragment, anchor ?: this)
-            ?: adapter.addActual(fragment, anchor ?: this)
+        parent!!.addActual(fragment, anchor ?: this)
     }
 
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor : AdaptiveFragment?) {
-        parent?.addAnchor(fragment, higherAnchor ?: this)
-            ?: adapter.addAnchor(fragment, higherAnchor ?: this)
+        parent!!.addAnchor(fragment, higherAnchor ?: this)
     }
 
     override fun removeActual(fragment: AdaptiveFragment) {

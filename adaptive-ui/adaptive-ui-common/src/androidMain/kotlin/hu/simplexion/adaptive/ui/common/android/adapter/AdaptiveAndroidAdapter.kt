@@ -8,56 +8,37 @@ import android.content.Context.WINDOW_SERVICE
 import android.util.DisplayMetrics
 import android.view.ViewGroup
 import android.view.WindowManager
-import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.opsCheck
 import hu.simplexion.adaptive.ui.common.android.fragment.ViewFragmentFactory
+import hu.simplexion.adaptive.ui.common.fragment.AdaptiveUIAdapter
 import hu.simplexion.adaptive.ui.common.instruction.BoundingRect
-import hu.simplexion.adaptive.utility.vmNowMicro
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 
 open class AdaptiveAndroidAdapter(
     val context: Context,
     override val rootContainer: ViewGroup,
     override val trace: Boolean = false
-) : AdaptiveAdapter {
+) : AdaptiveUIAdapter() {
 
     override val fragmentFactory = ViewFragmentFactory
 
-    var nextId = 1L
+    override fun addActual(fragment: AdaptiveFragment) {
+        traceAddActual(fragment)
 
-    override val startedAt = vmNowMicro()
-
-    override lateinit var rootFragment: AdaptiveFragment
-
-    override val dispatcher: CoroutineDispatcher
-        get() = Dispatchers.Main
-
-    override fun addActual(fragment: AdaptiveFragment, anchor: AdaptiveFragment?) {
-
-        val windowManager = context.getSystemService(WINDOW_SERVICE) as WindowManager
-        val display = windowManager.defaultDisplay
-        val displayMetrics = DisplayMetrics()
-        display.getMetrics(displayMetrics)
-
-        val screenWidth = displayMetrics.widthPixels
-        val screenHeight = displayMetrics.heightPixels
-
-        if (fragment is AndroidLayoutFragment) {
-            fragment.setFrame(BoundingRect(0f, 0f, screenWidth.toFloat(), screenHeight.toFloat()))
-            rootContainer.addView(fragment.receiver)
+        fragment.ifIsInstanceOrRoot<AndroidLayoutFragment> {
+            it.frame = BoundingRect(0f, 0f, rootContainer.width.toFloat(), rootContainer.height.toFloat())
+            rootContainer.addView(it.receiver)
         }
-        // TODO check if the fragment is root, throw exc otherwise
+
     }
 
     override fun removeActual(fragment: AdaptiveFragment) {
-        if (fragment is AndroidLayoutFragment) {
-            rootContainer.removeView(fragment.receiver)
-        }
-        // TODO check if the fragment is root, throw exc otherwise
-    }
+        traceRemoveActual(fragment)
 
-    override fun newId(): Long =
-        nextId ++
+        fragment.ifIsInstanceOrRoot<AndroidLayoutFragment> {
+            rootContainer.removeView(it.receiver)
+        }
+
+    }
 
 }

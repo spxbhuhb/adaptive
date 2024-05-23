@@ -13,6 +13,10 @@ data class BoundingRect(
     val height : Float
 ) : AdaptiveInstruction {
     override fun toString(): String = "BoundingRect(x=$x, y=$y, width=$width, height=$height)"
+
+    companion object {
+        val DEFAULT = BoundingRect(100f, 100f, 100f, 100f)
+    }
 }
 
 class ColumnTemplate(

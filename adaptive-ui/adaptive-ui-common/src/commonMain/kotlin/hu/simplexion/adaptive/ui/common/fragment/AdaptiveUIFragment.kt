@@ -9,6 +9,8 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
 import hu.simplexion.adaptive.ui.common.instruction.BoundingRect
+import hu.simplexion.adaptive.ui.common.instruction.Font
+import hu.simplexion.adaptive.ui.common.instruction.FontSize
 import hu.simplexion.adaptive.utility.checkIfInstance
 
 abstract class AdaptiveUIFragment(
@@ -20,9 +22,6 @@ abstract class AdaptiveUIFragment(
 ) : AdaptiveFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize) {
 
     abstract val receiver : Any
-
-    val frame
-        get() = uiInstructions.frame
 
     // FIXME uiInstructions should be bound to instructions
     var uiInstructions = UIInstructions.DEFAULT
@@ -36,7 +35,7 @@ abstract class AdaptiveUIFragment(
 
     override fun mount() {
         uiInstructions = UIInstructions(instructions)
-        parent?.addActual(this, null) ?: adapter.addActual(this, null)
+        parent?.addActual(this, null) ?: adapter.addActual(this)
         super.mount()
     }
 
@@ -45,9 +44,13 @@ abstract class AdaptiveUIFragment(
         parent?.removeActual(this) ?: adapter.removeActual(this)
     }
 
-    open fun setFrame(frame : BoundingRect) {
-        uiInstructions.frame = frame
-    }
+    // ---------------------------------------------------------------------------------
+    // Instruction support
+    // ---------------------------------------------------------------------------------
+
+    open var frame
+        get() = uiInstructions.frame
+        set(v) { uiInstructions.frame = v }
 
     /**
      * A pre-processed version of fragment instructions to make access from layout easier.
@@ -56,14 +59,18 @@ abstract class AdaptiveUIFragment(
         instructions : Array<out AdaptiveInstruction>
     ) {
 
-        var frame : BoundingRect? = null
-        val minSize : Float? = null
-        val maxSize : Float? = null
+        var frame : BoundingRect = BoundingRect.DEFAULT
+        var minSize : Float? = null
+        var maxSize : Float? = null
+        var fontName: String? = null
+        var fontSize: Float? = null
 
         init {
             for (instruction in instructions) {
                 when (instruction) {
                     is BoundingRect -> frame = instruction
+                    is Font -> fontName = instruction.fontName
+                    is FontSize -> fontSize = instruction.fontSize
                 }
             }
         }

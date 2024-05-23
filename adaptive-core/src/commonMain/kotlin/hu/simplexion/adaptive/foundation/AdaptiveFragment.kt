@@ -22,9 +22,9 @@ abstract class AdaptiveFragment(
 
     val id: Long = adapter.newId()
 
-    var flags : Int = 0
+    var flags: Int = 0
 
-    var isMounted : Boolean
+    var isMounted: Boolean
         get() = (flags and MOUNTED_MASK) != 0
         set(v) {
             if (v) {
@@ -52,9 +52,9 @@ abstract class AdaptiveFragment(
 
     var bindings: MutableList<AdaptiveStateVariableBinding<*>>? = null
 
-    val instructions : Array<out AdaptiveInstruction>
+    val instructions: Array<out AdaptiveInstruction>
         get() =
-            if (instructionIndex == -1) {
+            if (instructionIndex == - 1) {
                 null
             } else {
                 @Suppress("UNCHECKED_CAST")
@@ -112,20 +112,28 @@ abstract class AdaptiveFragment(
     // Actual UI support
     // --------------------------------------------------------------------------
 
-    open fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
-        parent?.addActual(fragment, anchor) ?: adapter.addActual(fragment, anchor)
+    open fun addActual(fragment: AdaptiveFragment, anchor: AdaptiveFragment?) {
+        parent?.addActual(fragment, anchor) ?: adapter.addActual(fragment)
     }
 
     open fun removeActual(fragment: AdaptiveFragment) {
         parent?.removeActual(fragment) ?: adapter.removeActual(fragment)
     }
 
-    open fun addAnchor(fragment: AdaptiveFragment, higherAnchor : AdaptiveFragment?) {
-        parent?.addAnchor(fragment, higherAnchor) ?: adapter.addAnchor(fragment, higherAnchor)
+    open fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
+        if (parent != null) {
+            parent.addAnchor(fragment, higherAnchor)
+        } else {
+            ops(nonLayoutTopLevelPath, nonLayoutTopLevelMessage)
+        }
     }
 
     open fun removeAnchor(fragment: AdaptiveFragment) {
-        parent?.removeAnchor(fragment)?: adapter.removeAnchor(fragment)
+        if (parent != null) {
+            parent.removeAnchor(fragment)
+        } else {
+            ops(nonLayoutTopLevelPath, nonLayoutTopLevelMessage)
+        }
     }
 
     // --------------------------------------------------------------------------

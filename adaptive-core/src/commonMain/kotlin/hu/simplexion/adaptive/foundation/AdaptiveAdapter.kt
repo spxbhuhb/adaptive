@@ -25,10 +25,9 @@ interface AdaptiveAdapter {
     fun actualize(name: String, parent: AdaptiveFragment, index: Int) =
         fragmentFactory.newInstance(name, parent, index)
 
-    fun addActual(fragment: AdaptiveFragment, anchor: AdaptiveFragment?) = Unit
+    fun addActual(fragment: AdaptiveFragment) = Unit
+
     fun removeActual(fragment: AdaptiveFragment) = Unit
-    fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) = Unit
-    fun removeAnchor(fragment: AdaptiveFragment) = Unit
 
     /**
      * Called by the `adaptive` entry point function after the root fragment is mounted.
@@ -37,6 +36,10 @@ interface AdaptiveAdapter {
 
     fun trace(fragment: AdaptiveFragment, point: String, data: String) {
         TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).println(startedAt)
+    }
+
+    fun trace(point: String, data: String) {
+        TraceEvent("<adapter>", -1, point, data).println(startedAt)
     }
 
 }

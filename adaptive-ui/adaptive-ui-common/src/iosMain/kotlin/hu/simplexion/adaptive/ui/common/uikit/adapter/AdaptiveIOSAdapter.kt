@@ -3,40 +3,28 @@
  */
 package hu.simplexion.adaptive.ui.common.uikit.adapter
 
-import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.ui.common.uikit.fragment.UiKitFragmentFactory
+import hu.simplexion.adaptive.ui.common.fragment.AdaptiveUIAdapter
 import hu.simplexion.adaptive.ui.common.instruction.BoundingRect
-import hu.simplexion.adaptive.utility.vmNowMicro
+import hu.simplexion.adaptive.ui.common.uikit.fragment.UiKitFragmentFactory
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import platform.UIKit.UIScreen
 import platform.UIKit.UIView
 
 open class AdaptiveIOSAdapter(
     override val rootContainer: UIView,
     override val trace: Boolean = false
-) : AdaptiveAdapter {
+) : AdaptiveUIAdapter() {
 
     override val fragmentFactory = UiKitFragmentFactory
 
-    var nextId = 1L
-
-    override val startedAt = vmNowMicro()
-
-    override lateinit var rootFragment: AdaptiveFragment
-
-    override val dispatcher: CoroutineDispatcher
-        get() = Dispatchers.Main
-
     @OptIn(ExperimentalForeignApi::class)
-    override fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
-        if (trace) trace(fragment, "before-adapter-addActual", "")
+    override fun addActual(fragment: AdaptiveFragment) {
+        traceAddActual(fragment)
 
-        if (fragment is IOSLayoutFragment) {
-            val frame = UIScreen.mainScreen().bounds.useContents {
+        fragment.ifIsInstanceOrRoot<IOSLayoutFragment> {
+
+            it.frame = rootContainer.frame.useContents {
                 BoundingRect(
                     origin.x.toFloat(),
                     origin.y.toFloat(),
@@ -45,31 +33,17 @@ open class AdaptiveIOSAdapter(
                 )
             }
 
-            fragment.setFrame(frame)
-
-            rootContainer.addSubview(fragment.receiver)
-        } else {
-            if (trace) trace(fragment, "warning-adapter-addActual", "not an IOSLayoutFragment")
+            rootContainer.addSubview(it.receiver)
         }
-
-        if (trace) trace(fragment, "after-adapter-addActual", "")
-        // TODO check if the fragment is root, throw exc otherwise
     }
 
     override fun removeActual(fragment: AdaptiveFragment) {
         if (trace) trace(fragment, "before-adapter-removeActual", "")
 
-        if (fragment is IOSLayoutFragment) {
-            fragment.receiver.removeFromSuperview()
-        } else {
-            if (trace) trace(fragment, "warning-adapter-removeActual", "not an IOSLayoutFragment")
+        fragment.ifIsInstanceOrRoot<IOSLayoutFragment> {
+            it.receiver.removeFromSuperview()
         }
 
-        if (trace) trace(fragment, "after-adapter-removeActual", "")
-        // TODO check if the fragment is root, throw exc otherwise
     }
-
-    override fun newId(): Long =
-        nextId ++
 
 }

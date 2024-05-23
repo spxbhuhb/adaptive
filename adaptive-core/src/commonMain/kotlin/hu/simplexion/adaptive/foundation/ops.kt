@@ -4,10 +4,16 @@
 
 package hu.simplexion.adaptive.foundation
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
+
 /**
  * The document root for [ops].
  */
 var opsDocRoot = "https://github.com/spxbhuhb/adaptive/blob/main/doc/problems"
+
+const val nonLayoutTopLevelPath = "nonLayoutTopLevel"
+const val nonLayoutTopLevelMessage = "non-layout top-level fragment"
 
 /**
  * Throws an exception that points to an url under [opsDocRoot], specified by [docPath].
@@ -43,6 +49,29 @@ fun ops(docPath: String, message: String): Nothing {
     val trimmedMessage = message.trimIndent().replace("\n", " ").replace("\r", " ").replace("\t", " ")
 
     throw IllegalStateException("$trimmedMessage (For more information see: $mdPath)")
+}
+
+@OptIn(ExperimentalContracts::class)
+inline fun opsCheck(value: Boolean, docPath: String, lazyMessage: () -> Any) {
+    contract {
+        returns() implies value
+    }
+    if (! value) {
+        ops(docPath, lazyMessage().toString())
+    }
+}
+
+@OptIn(ExperimentalContracts::class)
+inline fun <T : Any> opsCheckNotNull(value: T?, docPath: String, lazyMessage: () -> Any): T {
+    contract {
+        returns() implies (value != null)
+    }
+
+    if (value == null) {
+        ops(docPath, lazyMessage().toString())
+    } else {
+        return value
+    }
 }
 
 /**

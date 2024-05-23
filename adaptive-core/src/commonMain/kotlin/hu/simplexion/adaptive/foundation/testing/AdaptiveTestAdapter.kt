@@ -14,7 +14,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
 
 class AdaptiveTestAdapter(
-    var printTrace : Boolean = false
+    var printTrace: Boolean = false
 ) : AdaptiveAdapter {
 
     var nextId = 2L
@@ -39,8 +39,8 @@ class AdaptiveTestAdapter(
 
     override val startedAt = vmNowMicro()
 
-    override fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
-        if(fragment is AdaptiveTestFragment) {
+    override fun addActual(fragment: AdaptiveFragment) {
+        if (fragment is AdaptiveTestFragment) {
             rootContainer.appendChild(fragment.receiver)
         }
     }
