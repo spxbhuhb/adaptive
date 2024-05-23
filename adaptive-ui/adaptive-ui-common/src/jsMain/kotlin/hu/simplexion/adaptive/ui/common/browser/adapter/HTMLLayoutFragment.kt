@@ -7,9 +7,11 @@ import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
 import hu.simplexion.adaptive.ui.common.fragment.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.fragment.checkReceiver
+import hu.simplexion.adaptive.ui.common.instruction.BackgroundGradient
+import hu.simplexion.adaptive.ui.common.instruction.BorderRadius
+import hu.simplexion.adaptive.ui.common.instruction.Color
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.browser.document
-import org.w3c.dom.Element
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
@@ -39,7 +41,25 @@ abstract class HTMLLayoutFragment(
         return AdaptiveAnonymous(adapter, this, declarationIndex, 0, fragmentFactory(state.size - 1)).apply { create() }
     }
 
-    override fun genPatchInternal(): Boolean = true
+    override fun genPatchInternal(): Boolean {
+        if (!haveToPatch(getThisClosureDirtyMask(), instructionIndex)) return true
+
+        for (instruction in instructions) {
+            when (instruction) {
+                is Color -> {
+                    receiver.style.color = instruction.toHexColor()
+                }
+                is BackgroundGradient -> {
+                    receiver.style.background = "linear-gradient(${instruction.degree}deg, ${instruction.start.toHexColor()}, ${instruction.end.toHexColor()})"
+                }
+                is BorderRadius -> {
+                    receiver.style.borderRadius = "${instruction.radius}px"
+                }
+            }
+        }
+
+        return true
+    }
 
     override fun mount() {
         parent?.addActual(this, null)
