@@ -6,12 +6,10 @@ package hu.simplexion.adaptive.ui.common.uikit.adapter
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
-import hu.simplexion.adaptive.ui.common.fragment.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.fragment.checkReceiver
-import hu.simplexion.adaptive.ui.common.instruction.BoundingRect
+import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.logic.checkReceiver
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.cinterop.ExperimentalForeignApi
-import platform.CoreGraphics.CGRectMake
 import platform.UIKit.UIView
 
 abstract class IOSLayoutFragment(

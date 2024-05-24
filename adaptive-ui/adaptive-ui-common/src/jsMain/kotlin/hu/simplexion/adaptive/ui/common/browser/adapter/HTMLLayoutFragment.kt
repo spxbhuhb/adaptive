@@ -5,11 +5,9 @@ package hu.simplexion.adaptive.ui.common.browser.adapter
 
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
-import hu.simplexion.adaptive.ui.common.fragment.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.fragment.checkReceiver
-import hu.simplexion.adaptive.ui.common.instruction.BackgroundGradient
-import hu.simplexion.adaptive.ui.common.instruction.BorderRadius
-import hu.simplexion.adaptive.ui.common.instruction.Color
+import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.logic.GridCell
+import hu.simplexion.adaptive.ui.common.logic.checkReceiver
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
@@ -31,9 +29,24 @@ abstract class HTMLLayoutFragment(
     override val receiver: HTMLDivElement = document.createElement("div") as HTMLDivElement
 
     class LayoutItem(
-        val fragment: AdaptiveUIFragment,
-        val receiver: HTMLElement
-    )
+        override val fragment: AdaptiveUIFragment,
+        val receiver: HTMLElement,
+        override var row: Int,
+        override var col: Int
+    ) : GridCell {
+
+        fun setAbsolutePosition() {
+            val frame = fragment.frame
+            val style = receiver.style
+
+            style.position = "absolute"
+            style.top = "${frame.y}px"
+            style.left = "${frame.x}px"
+            style.width = "${frame.width}px"
+            style.height = "${frame.height}px"
+        }
+
+    }
 
     val items = mutableListOf<LayoutItem>()
 
@@ -82,7 +95,7 @@ abstract class HTMLLayoutFragment(
         fragment.checkIfInstance<AdaptiveUIFragment>().also { uiFragment ->
             uiFragment.receiver.checkIfInstance<HTMLElement>().also { htmlElementReceiver ->
 
-                items += LayoutItem(uiFragment, htmlElementReceiver)
+                items += LayoutItem(uiFragment, htmlElementReceiver, -1, -1)
 
                 if (anchor == null) {
                     receiver.appendChild(htmlElementReceiver)

@@ -10,7 +10,7 @@ import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
 import hu.simplexion.adaptive.foundation.internal.BoundSupportFunction
 import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.fragment.alsoIfReceiver
+import hu.simplexion.adaptive.ui.common.logic.alsoIfReceiver
 import hu.simplexion.adaptive.ui.common.uikit.adapter.GestureTarget
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.cinterop.ExperimentalForeignApi

@@ -4,14 +4,12 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
-import hu.simplexion.adaptive.ui.common.fragment.AdaptiveUIFragment
-
 data class BorderRadius(val radius: Float) : AdaptiveUIInstruction {
 
     constructor(radius: Int) : this(radius.toFloat())
     constructor(radius: Double) : this(radius.toFloat())
 
-    override fun apply(uiInstructions: AdaptiveUIFragment.UIInstructions) {
+    override fun apply(uiInstructions: UIInstructions) {
         uiInstructions.borderRadius = radius
     }
 }
@@ -21,7 +19,7 @@ data class BackgroundGradient(val degree: Float, val start: Color, val end: Colo
     constructor(degree: Int, start : Color, end : Color) : this(degree.toFloat(), start, end)
     constructor(degree: Double, start : Color, end : Color) : this(degree.toFloat(), start, end)
 
-    override fun apply(uiInstructions: AdaptiveUIFragment.UIInstructions) {
+    override fun apply(uiInstructions: UIInstructions) {
         uiInstructions.backgroundGradient = this
     }
 }

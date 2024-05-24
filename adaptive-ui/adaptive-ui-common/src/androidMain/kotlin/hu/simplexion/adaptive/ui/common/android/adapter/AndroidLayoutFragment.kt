@@ -8,10 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
-import hu.simplexion.adaptive.ui.common.fragment.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.instruction.BackgroundGradient
-import hu.simplexion.adaptive.ui.common.instruction.BorderRadius
-import hu.simplexion.adaptive.ui.common.instruction.Color
+import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.utility.checkIfInstance
 
 abstract class AndroidLayoutFragment(

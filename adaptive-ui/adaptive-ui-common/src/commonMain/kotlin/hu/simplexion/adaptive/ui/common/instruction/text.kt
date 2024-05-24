@@ -4,11 +4,9 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
-import hu.simplexion.adaptive.ui.common.fragment.AdaptiveUIFragment
-
 class Font(val fontName: String) : AdaptiveUIInstruction {
 
-    override fun apply(uiInstructions: AdaptiveUIFragment.UIInstructions) {
+    override fun apply(uiInstructions: UIInstructions) {
         uiInstructions.fontName = fontName
     }
 
@@ -16,7 +14,7 @@ class Font(val fontName: String) : AdaptiveUIInstruction {
 
 class FontSize(val fontSize: Float) : AdaptiveUIInstruction{
 
-    override fun apply(uiInstructions: AdaptiveUIFragment.UIInstructions) {
+    override fun apply(uiInstructions: UIInstructions) {
         uiInstructions.fontSize = fontSize
     }
 

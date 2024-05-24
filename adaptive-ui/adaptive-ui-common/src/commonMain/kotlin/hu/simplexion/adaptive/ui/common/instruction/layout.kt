@@ -4,16 +4,37 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
-import hu.simplexion.adaptive.ui.common.fragment.AdaptiveUIFragment
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 
-data class BoundingRect(
+
+enum class AlignSelf : AdaptiveUIInstruction {
+    Start,
+    Center,
+    End;
+
+    override fun apply(uiInstructions: UIInstructions) {
+        uiInstructions.alignSelf = this
+    }
+}
+
+enum class JustifySelf : AdaptiveUIInstruction {
+    Start,
+    Center,
+    End;
+
+    override fun apply(uiInstructions: UIInstructions) {
+        uiInstructions.justifySelf = this
+    }
+}
+
+class BoundingRect(
     val x : Float,
     val y : Float,
     val width : Float,
     val height : Float
 ) : AdaptiveUIInstruction {
 
-    override fun apply(uiInstructions: AdaptiveUIFragment.UIInstructions) {
+    override fun apply(uiInstructions: UIInstructions) {
         uiInstructions.frame = this
     }
 
@@ -24,17 +45,9 @@ data class BoundingRect(
     }
 }
 
-class ColumnTemplate(
-    vararg val tracks : Track
-) {
-    fun expand() {
+class ColTemplate(vararg val tracks : Track) : AdaptiveInstruction
 
-    }
-}
-
-class RowTemplate(
-    vararg val tracks : Track
-)
+class RowTemplate(vararg val tracks : Track) : AdaptiveInstruction
 
 interface Track {
 

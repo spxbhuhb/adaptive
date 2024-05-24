@@ -2,7 +2,7 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package hu.simplexion.adaptive.ui.common.fragment
+package hu.simplexion.adaptive.ui.common.adapter
 
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.utility.vmNowMicro

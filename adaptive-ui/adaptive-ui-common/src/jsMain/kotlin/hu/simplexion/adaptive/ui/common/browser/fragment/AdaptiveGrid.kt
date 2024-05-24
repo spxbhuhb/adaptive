@@ -8,11 +8,12 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.browser.adapter.HTMLLayoutFragment
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.fragment.distribute
-import hu.simplexion.adaptive.ui.common.fragment.expand
-import hu.simplexion.adaptive.ui.common.instruction.BoundingRect
-import hu.simplexion.adaptive.ui.common.instruction.ColumnTemplate
+import hu.simplexion.adaptive.ui.common.instruction.ColTemplate
 import hu.simplexion.adaptive.ui.common.instruction.RowTemplate
+import hu.simplexion.adaptive.ui.common.logic.distribute
+import hu.simplexion.adaptive.ui.common.logic.expand
+import hu.simplexion.adaptive.ui.common.logic.placeFragments
+import hu.simplexion.adaptive.ui.common.logic.setFrame
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 
 open class AdaptiveGrid(
@@ -22,13 +23,18 @@ open class AdaptiveGrid(
 ) : HTMLLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
     override fun layout() {
-        val frame = frame ?: BoundingRect(0f, 0f, 100f, 100f)
-
-        val colTemp = checkNotNull(instructions.firstOrNullIfInstance<ColumnTemplate>()) { "missing column template in $this" }
+        val colTemp = checkNotNull(instructions.firstOrNullIfInstance<ColTemplate>()) { "missing column template in $this" }
         val rowTemp = checkNotNull(instructions.firstOrNullIfInstance<RowTemplate>()) { "missing row template in $this" }
 
-        val columnSizes = distribute(frame.width, expand(colTemp.tracks))
-        val rowSizes = distribute(frame.height, expand(rowTemp.tracks))
+        val colOffsets = distribute(frame.width, expand(colTemp.tracks))
+        val rowOffsets = distribute(frame.height, expand(rowTemp.tracks))
+
+        placeFragments(items, colOffsets.size, rowOffsets.size)
+
+        for (item in items) {
+            setFrame(item, colOffsets, rowOffsets)
+            item.setAbsolutePosition()
+        }
 
     }
 

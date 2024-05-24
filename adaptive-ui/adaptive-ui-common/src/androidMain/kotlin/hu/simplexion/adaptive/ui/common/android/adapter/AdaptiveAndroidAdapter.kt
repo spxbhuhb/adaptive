@@ -4,16 +4,11 @@
 package hu.simplexion.adaptive.ui.common.android.adapter
 
 import android.content.Context
-import android.content.Context.WINDOW_SERVICE
-import android.util.DisplayMetrics
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.LinearLayout
-import androidx.core.view.updateLayoutParams
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.opsCheck
 import hu.simplexion.adaptive.ui.common.android.fragment.ViewFragmentFactory
-import hu.simplexion.adaptive.ui.common.fragment.AdaptiveUIAdapter
+import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
 import hu.simplexion.adaptive.ui.common.instruction.BoundingRect
 
 open class AdaptiveAndroidAdapter(
