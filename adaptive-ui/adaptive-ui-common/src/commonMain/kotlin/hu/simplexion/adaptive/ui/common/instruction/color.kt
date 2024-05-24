@@ -4,15 +4,17 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
-import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
-
-data class Color(val value: Int) : AdaptiveInstruction {
+class Color(val value: Int) : AdaptiveUIInstruction {
 
     /**
      * @return [value] in "#ffffff" format
      */
     fun toHexColor() : String =
         "#${value.toString(16).padStart(6, '0')}"
+
+    override fun apply(uiInstructions: UIInstructions) {
+        uiInstructions.color = this
+    }
 
 }
 

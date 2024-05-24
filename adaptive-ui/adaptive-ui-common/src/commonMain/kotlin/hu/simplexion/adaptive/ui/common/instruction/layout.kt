@@ -7,17 +7,17 @@ package hu.simplexion.adaptive.ui.common.instruction
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 
 
-enum class AlignSelf : AdaptiveUIInstruction {
+enum class Horizontal : AdaptiveUIInstruction {
     Start,
     Center,
     End;
 
     override fun apply(uiInstructions: UIInstructions) {
-        uiInstructions.alignSelf = this
+        uiInstructions.horizontal = this
     }
 }
 
-enum class JustifySelf : AdaptiveUIInstruction {
+enum class Vertical : AdaptiveUIInstruction {
     Start,
     Center,
     End;
@@ -42,6 +42,53 @@ class BoundingRect(
 
     companion object {
         val DEFAULT = BoundingRect(100f, 100f, 100f, 100f)
+    }
+}
+
+val Number.gridCol
+    inline get() = GridCol(this.toInt())
+
+val Number.gridRow
+    inline get() = GridRow(this.toInt())
+
+val Number.rowSpan
+    inline get() = RowSpan(this.toInt())
+
+val Number.colSpan
+    inline get() = ColSpan(this.toInt())
+
+class RowSpan(val span : Int) : AdaptiveUIInstruction {
+    override fun apply(uiInstructions: UIInstructions) {
+        uiInstructions.rowSpan = span
+    }
+}
+
+class ColSpan(val span : Int) : AdaptiveUIInstruction {
+    override fun apply(uiInstructions: UIInstructions) {
+        uiInstructions.colSpan = span
+    }
+}
+
+class GridPos(val row : Int, val col : Int, val rowSpan : Int = 1, val colSpan: Int = 1) : AdaptiveUIInstruction {
+    override fun apply(uiInstructions: UIInstructions) {
+        uiInstructions.gridRow = row
+        uiInstructions.gridCol = col
+        uiInstructions.rowSpan = rowSpan
+        uiInstructions.colSpan = colSpan
+    }
+}
+
+class GridRow(val row : Int, val span : Int = 1) : AdaptiveUIInstruction {
+    override fun apply(uiInstructions: UIInstructions) {
+        uiInstructions.gridRow = row
+        uiInstructions.rowSpan = span
+    }
+}
+
+class GridCol(val col : Int, val span: Int = 1) : AdaptiveUIInstruction {
+    override fun apply(uiInstructions: UIInstructions) {
+        uiInstructions.gridCol = col
+        uiInstructions.colSpan = span
     }
 }
 

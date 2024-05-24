@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
-class Pixel(
+class DIPixel(
     override val value : Float
 ) : Track {
 
@@ -22,14 +22,14 @@ class Fraction(
 
 }
 
-val Int.px : Pixel
-    get() = Pixel(this.toFloat())
+val Int.dp : DIPixel
+    get() = DIPixel(this.toFloat())
 
-val Float.px : Pixel
-    get() = Pixel(this)
+val Float.px : DIPixel
+    get() = DIPixel(this)
 
-val Double.px : Pixel
-    get() = Pixel(this.toFloat())
+val Double.px : DIPixel
+    get() = DIPixel(this.toFloat())
 
 val Int.fr : Fraction
     get() = Fraction(this.toFloat())

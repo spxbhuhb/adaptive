@@ -4,20 +4,23 @@
 
 package hu.simplexion.adaptive.ui.common.logic
 
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.instruction.BoundingRect
 import hu.simplexion.adaptive.ui.common.instruction.Track
 
 interface GridCell {
-    val fragment: AdaptiveUIFragment
-    var row: Int
-    var col: Int
+    var rowIndex: Int
+    var colIndex: Int
+
+    val gridRow : Int?
+    val gridCol : Int?
+
+    val rowSpan : Int
+    val colSpan : Int
 }
 
 /**
  * Expand track list, replaces "repeat" with N copy of the track for example.
  */
-fun expand(tracks : Array<out Track>) : Array<Track> {
+fun expand(tracks: Array<out Track>): Array<Track> {
     val out = mutableListOf<Track>()
     for (track in tracks) {
         track.expand(out)
@@ -33,36 +36,45 @@ fun expand(tracks : Array<out Track>) : Array<Track> {
  *
  * @return Offsets of the tracks in the available space. Size of a track
  *         can be calculated by subtracting the offset of the track from
- *         the offset of the next track or available space if it is the
- *         last track.
+ *         the offset of the next track. The return array is one item
+ *         longer than [tracks] as it contains the offset of the "end"
+ *         as well.
  */
-fun distribute(availableSpace : Float, tracks: Array<Track>) : FloatArray {
-    var remainingSpace = availableSpace
+fun distribute(availableSpace: Float, tracks: Array<out Track>): FloatArray {
+
+    var usedSpace = 0f
     var fractionSum = 0f
-    val result = FloatArray(tracks.size)
 
     for (i in tracks.indices) {
         val track = tracks[i]
         if (track.isFix) {
-            result[i] = track.value
-            remainingSpace -= track.value
+            usedSpace += track.value
         } else {
             fractionSum += track.value
         }
     }
 
-    val piece = remainingSpace / fractionSum
-    val offset = 0f
+    val piece = (availableSpace - usedSpace) / fractionSum
+
+    var offset = 0f
     var previous = 0f // size of the previous track
 
+    val result = FloatArray(tracks.size + 1)
+
     for (i in tracks.indices) {
-        if (! tracks[i].isFix) {
-            result[i] = offset + previous
+        offset += previous
+        result[i] = offset
+
+        if (tracks[i].isFix) {
+            previous = tracks[i].value
+        } else {
             previous = tracks[i].value * piece
         }
     }
 
-    check(availableSpace >= offset + previous) { "negative remaining space: available=$availableSpace remaining:$remainingSpace tracks: ${tracks.contentToString()}" }
+    result[tracks.size] = offset + previous
+
+    check(availableSpace >= result.last()) { "grid track overflow: available=$availableSpace result:${result.contentToString()} tracks: ${tracks.contentToString()}" }
 
     return result
 }
@@ -90,28 +102,27 @@ fun placeFragments(cells: List<GridCell>, rows: Int, cols: Int): List<GridCell> 
         return true
     }
 
-    fun placeFragment(cell: GridCell, rowSpan : Int, colSpan: Int, r: Int, c: Int) {
+    fun placeFragment(cell: GridCell, rowSpan: Int, colSpan: Int, r: Int, c: Int) {
         for (i in r until r + rowSpan) {
             for (j in c until c + colSpan) {
                 grid[i][j] = cell
             }
         }
-        cell.row = r
-        cell.col = c
+        cell.rowIndex = r
+        cell.colIndex = c
     }
 
     for (cell in cells) {
-        val fragment = cell.fragment
-        val row = fragment.uiInstructions.gridRow
-        val col = fragment.uiInstructions.gridCol
-        val rowSpan = fragment.uiInstructions.rowSpan
-        val colSpan = fragment.uiInstructions.colSpan
+        val row = cell.gridRow?.let { it - 1 }
+        val col = cell.gridCol?.let { it - 1 }
+        val rowSpan = cell.rowSpan
+        val colSpan = cell.colSpan
 
         if (row != null && col != null) {
             if (canPlaceFragment(row, col, rowSpan, colSpan)) {
                 placeFragment(cell, rowSpan, colSpan, row, col)
             } else {
-                throw IllegalStateException("Cannot place fragment ${fragment.id} at ($row, $col)")
+                throw IllegalStateException("Cannot place fragment $cell at ($row, $col)")
             }
         } else if (row != null) {
             for (c in 0 until cols) {
@@ -132,21 +143,10 @@ fun placeFragments(cells: List<GridCell>, rows: Int, cols: Int): List<GridCell> 
             if (canPlaceFragment(r, c, rowSpan, colSpan)) {
                 placeFragment(cell, rowSpan, colSpan, r, c)
             } else {
-                throw IllegalStateException("Cannot place fragment ${fragment.id} at implicit position")
+                throw IllegalStateException("Cannot place fragment $cell at implicit position")
             }
         }
     }
 
     return cells
-}
-
-fun setFrame(cell : GridCell, colOffsets : FloatArray, rowOffsets : FloatArray) {
-
-    val uiInstructions = cell.fragment.uiInstructions
-    val rowSpan = cell.fragment.uiInstructions.rowSpan
-    val colSpan = cell.fragment.uiInstructions.colSpan
-
-
- //   uiInstructions.frame = BoundingRect(0f, 0f, colSpanWidth, rowSpanWidth)
-
 }

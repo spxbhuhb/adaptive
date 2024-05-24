@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.browser.adapter.HTMLLayoutFragment
 import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.instruction.Horizontal
 
 open class AdaptiveStack(
     adapter: AdaptiveAdapter,
@@ -16,7 +17,21 @@ open class AdaptiveStack(
 ) : HTMLLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
     override fun layout() {
-        // just use the client sizes for now, might want to add gap
+        receiver.style.display = "flex"
+
+        if (uiInstructions.horizontal != null) {
+
+        }
+
+        for (item in items) {
+            val uiInstructions = item.fragment.uiInstructions
+
+            when (uiInstructions.horizontal) {
+                null -> Unit
+                Horizontal.Start ->
+            }
+        }
+
     }
 
     companion object : AdaptiveFragmentCompanion {

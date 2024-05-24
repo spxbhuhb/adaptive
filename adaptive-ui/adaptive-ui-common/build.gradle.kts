@@ -60,6 +60,12 @@ kotlin {
             }
         }
 
+        commonTest {
+            dependencies {
+                api(libs.kotlin.test)
+            }
+        }
+
         androidMain {
             dependencies {
                 implementation(libs.androidx.appcompat)

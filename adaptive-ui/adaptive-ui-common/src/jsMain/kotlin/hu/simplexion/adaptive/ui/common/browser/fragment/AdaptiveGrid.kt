@@ -13,7 +13,6 @@ import hu.simplexion.adaptive.ui.common.instruction.RowTemplate
 import hu.simplexion.adaptive.ui.common.logic.distribute
 import hu.simplexion.adaptive.ui.common.logic.expand
 import hu.simplexion.adaptive.ui.common.logic.placeFragments
-import hu.simplexion.adaptive.ui.common.logic.setFrame
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 
 open class AdaptiveGrid(
@@ -29,10 +28,10 @@ open class AdaptiveGrid(
         val colOffsets = distribute(frame.width, expand(colTemp.tracks))
         val rowOffsets = distribute(frame.height, expand(rowTemp.tracks))
 
-        placeFragments(items, colOffsets.size, rowOffsets.size)
+        placeFragments(items, rowOffsets.size - 1, colOffsets.size - 1)
 
         for (item in items) {
-            setFrame(item, colOffsets, rowOffsets)
+            item.setFrame(colOffsets, rowOffsets)
             item.setAbsolutePosition()
         }
 

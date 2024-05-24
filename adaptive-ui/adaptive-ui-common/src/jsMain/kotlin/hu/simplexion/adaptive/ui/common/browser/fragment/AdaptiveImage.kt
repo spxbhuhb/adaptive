@@ -10,27 +10,30 @@ import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.instruction.UIInstructions
 import kotlinx.browser.document
+import org.w3c.dom.HTMLImageElement
 
-open class AdaptiveText(
+open class AdaptiveImage(
     adapter: AdaptiveAdapter,
     parent : AdaptiveFragment,
     index : Int
 ) : AdaptiveUIFragment(adapter, parent, index, 1, 2) {
 
-    override val receiver = document.createElement("span")
+    override val receiver = document.createElement("img") as HTMLImageElement
 
-    private val content: String
+    private val href: String
         get() = state[0]?.toString() ?: ""
 
     override fun genPatchInternal(): Boolean {
         val closureMask = getThisClosureDirtyMask()
 
         if (haveToPatch(closureMask, 1)) {
-            receiver.textContent = content
+            receiver.src = href
         }
 
         if (haveToPatch(closureMask, instructionIndex)) {
             applyUIInstructions()
+            receiver.width = uiInstructions.frame.width.toInt()
+            receiver.height = uiInstructions.frame.height.toInt()
         }
 
         return false
@@ -38,10 +41,10 @@ open class AdaptiveText(
 
     companion object : AdaptiveFragmentCompanion {
 
-        override val fragmentType = "$commonUI:AdaptiveText"
+        override val fragmentType = "$commonUI:AdaptiveImage"
 
         override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveText(parent.adapter, parent, index)
+            AdaptiveImage(parent.adapter, parent, index)
 
     }
 

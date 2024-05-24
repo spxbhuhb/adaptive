@@ -9,10 +9,12 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
 object BrowserFragmentFactory : AdaptiveFragmentFactory() {
     init {
         addAll(
-            AdaptiveText,
+            AdaptiveClickable,
+            AdaptiveGrid,
+            AdaptiveImage,
             AdaptivePixel,
             AdaptiveStack,
-            AdaptiveClickable
+            AdaptiveText
         )
     }
 }

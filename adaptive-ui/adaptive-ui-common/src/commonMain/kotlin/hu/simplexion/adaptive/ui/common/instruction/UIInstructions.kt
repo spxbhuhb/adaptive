@@ -19,14 +19,20 @@ class UIInstructions(
     var maxSize : Float? = null
     var fontName: String? = null
     var fontSize: Float? = null
+
+    var border: Border? = null
     var borderRadius: Float? = null
+
+    var backgroundColor: Color? = null
     var backgroundGradient : BackgroundGradient? = null
-    var alignSelf : AlignSelf? = null
-    var justifySelf: JustifySelf? = null
+
+    var horizontal : Horizontal? = null
+    var justifySelf: Vertical? = null
+
     var gridRow: Int? = null
-    val gridCol: Int? = null
-    val rowSpan: Int = 1
-    val colSpan: Int = 1
+    var gridCol: Int? = null
+    var rowSpan: Int = 1
+    var colSpan: Int = 1
 
     init {
         instructions.forEach{

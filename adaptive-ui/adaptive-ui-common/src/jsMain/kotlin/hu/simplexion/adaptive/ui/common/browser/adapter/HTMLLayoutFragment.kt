@@ -6,6 +6,8 @@ package hu.simplexion.adaptive.ui.common.browser.adapter
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.browser.fragment.applyUIInstructions
+import hu.simplexion.adaptive.ui.common.instruction.BoundingRect
 import hu.simplexion.adaptive.ui.common.logic.GridCell
 import hu.simplexion.adaptive.ui.common.logic.checkReceiver
 import hu.simplexion.adaptive.utility.checkIfInstance
@@ -28,26 +30,6 @@ abstract class HTMLLayoutFragment(
 
     override val receiver: HTMLDivElement = document.createElement("div") as HTMLDivElement
 
-    class LayoutItem(
-        override val fragment: AdaptiveUIFragment,
-        val receiver: HTMLElement,
-        override var row: Int,
-        override var col: Int
-    ) : GridCell {
-
-        fun setAbsolutePosition() {
-            val frame = fragment.frame
-            val style = receiver.style
-
-            style.position = "absolute"
-            style.top = "${frame.y}px"
-            style.left = "${frame.x}px"
-            style.width = "${frame.width}px"
-            style.height = "${frame.height}px"
-        }
-
-    }
-
     val items = mutableListOf<LayoutItem>()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
@@ -56,22 +38,12 @@ abstract class HTMLLayoutFragment(
 
     override fun mount() {
         // FIXME ui instruction update (should be called from genPatchInternal and also should clear actual UI settings when null)
-        uiInstructions.color?.let { receiver.style.color = it.toHexColor() }
-        uiInstructions.backgroundGradient?.let { receiver.style.background = "linear-gradient(${it.degree}deg, ${it.start.toHexColor()}, ${it.end.toHexColor()})" }
-        uiInstructions.borderRadius?.let { receiver.style.borderRadius = "${it}px" }
-
-        parent?.addActual(this, null)
-
+        applyUIInstructions()
         super.mount()
         layout()
     }
 
     abstract fun layout()
-
-    override fun unmount() {
-        super.unmount()
-        parent?.removeActual(this)
-    }
 
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
         (document.createElement("div") as HTMLDivElement).also {
