@@ -12,8 +12,7 @@ import kotlinx.cinterop.useContents
 import platform.UIKit.UIView
 
 open class AdaptiveIOSAdapter(
-    override val rootContainer: UIView,
-    override val trace: Boolean = false
+    override val rootContainer: UIView
 ) : AdaptiveUIAdapter() {
 
     override val fragmentFactory = UiKitFragmentFactory
@@ -38,12 +37,11 @@ open class AdaptiveIOSAdapter(
     }
 
     override fun removeActual(fragment: AdaptiveFragment) {
-        if (trace) trace(fragment, "before-adapter-removeActual", "")
+        traceRemoveActual(fragment)
 
         fragment.ifIsInstanceOrRoot<IOSLayoutFragment> {
             it.receiver.removeFromSuperview()
         }
-
     }
 
 }

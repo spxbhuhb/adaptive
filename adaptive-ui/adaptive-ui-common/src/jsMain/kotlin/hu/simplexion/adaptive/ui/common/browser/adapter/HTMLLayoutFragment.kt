@@ -45,12 +45,6 @@ abstract class HTMLLayoutFragment(
         return true // TODO optimize layout fragment child patch
     }
 
-    override fun mount() {
-        super.mount()
-        measure()
-        layout()
-    }
-
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
         (document.createElement("div") as HTMLDivElement).also {
             it.style.display = "contents"
@@ -139,14 +133,6 @@ abstract class HTMLLayoutFragment(
         }
     }
 
-    // measure is layout specific
-
-    override fun layout() {
-        for (item in items) {
-            item.layout()
-        }
-    }
-
     fun LayoutItem.layout() {
         val layoutFrame = fragment.renderInstructions.layoutFrame
         val style = receiver.style
@@ -159,7 +145,5 @@ abstract class HTMLLayoutFragment(
         style.left = "${layoutFrame.left}px"
         style.width = "${layoutFrame.width}px"
         style.height = "${layoutFrame.height}px"
-
-        fragment.layout()
     }
 }

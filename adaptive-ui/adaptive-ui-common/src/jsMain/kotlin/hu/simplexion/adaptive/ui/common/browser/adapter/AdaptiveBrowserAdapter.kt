@@ -15,7 +15,6 @@ import org.w3c.dom.HTMLElement
 
 open class AdaptiveBrowserAdapter(
     override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
-    override val trace: Boolean = false
 ) : AdaptiveUIAdapter() {
 
     override val fragmentFactory = BrowserFragmentFactory
@@ -28,8 +27,10 @@ open class AdaptiveBrowserAdapter(
 
         fragment.alsoIfInstance<HTMLLayoutFragment> {
 
-            it.frame = rootContainer.getBoundingClientRect().let { r ->
-                Frame(0f, 0f, r.width.toFloat(), r.height.toFloat())
+            if (it.frame == null) {
+                it.frame = rootContainer.getBoundingClientRect().let { r ->
+                    Frame(0f, 0f, r.width.toFloat(), r.height.toFloat())
+                }
             }
 
             rootContainer.appendChild(it.receiver)

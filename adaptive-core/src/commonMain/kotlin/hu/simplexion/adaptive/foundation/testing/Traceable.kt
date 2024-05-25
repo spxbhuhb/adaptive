@@ -5,5 +5,5 @@
 package hu.simplexion.adaptive.foundation.testing
 
 interface Traceable {
-    var trace : Boolean
+    var tracePatterns : Array<out Regex>
 }

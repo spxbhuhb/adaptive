@@ -33,21 +33,22 @@ val greenGradient = BackgroundGradient(90, lightGreen, mediumGreen)
 val borderRadius = BorderRadius(8)
 val whiteBorder = Border(white)
 
+val traceLayout = Trace(Regex("layout"), Regex("measure.*"))
+
 fun main() {
 
     withJson()
     //withWebSocketTransport()
 
-    browser(SandboxExports, trace = false) {
+    browser(SandboxExports) {
 
         box(Frame(0f, 0f, 375f, 812f)) {
 
             image("/background.jpg")
 
             grid(
-                RowTemplate(1.fr, 50.dp, 50.dp),
-                ColTemplate(1.fr),
-                Trace()
+                RowTemplate(1.fr, 100.dp, 100.dp),
+                ColTemplate(1.fr)
             ) {
 
                 row(AlignItems.Center, JustifyContent.Center) {
@@ -56,22 +57,21 @@ fun main() {
 
                 grid(
                     RowTemplate(50.dp),
-                    ColTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp),
-                    Trace()
+                    ColTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
                 ) {
 
-                    row(greenGradient, borderRadius, AlignContent.Center, GridCol(2)) {
+                    row(greenGradient, borderRadius, AlignItems.Center, JustifyContent.Center, GridCol(2)) {
                         text("Sign Up", white)
                     }
 
-                    row(whiteBorder, borderRadius, AlignContent.Center, GridCol(4)) {
+                    row(whiteBorder, borderRadius, AlignItems.Center, JustifyContent.Center, GridCol(4)) {
                         text("Sign In", white)
                     }
 
                 }
 
-                row(AlignContent.Center) {
-                    text("By joining you agree to our Terms of Service and Privacy Policy", white)
+                row(AlignContent.Center, Padding(right = 32f, left = 32f)) {
+                    text("By joining you agree to our Terms of Service and Privacy Policy", white, TextAlign.Center)
                 }
             }
 

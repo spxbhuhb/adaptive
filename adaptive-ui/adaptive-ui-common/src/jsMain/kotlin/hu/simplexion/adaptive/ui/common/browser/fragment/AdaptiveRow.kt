@@ -16,6 +16,7 @@ open class AdaptiveRow(
 ) : HTMLLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
     override fun layout() {
+        super.layout()
         receiver.style.display = "flex"
         align()
     }

@@ -13,6 +13,8 @@ abstract class AdaptiveUIAdapter : AdaptiveAdapter {
 
     var nextId = 1L
 
+    override var trace = emptyArray<Regex>()
+
     override fun newId(): Long =
         nextId ++
 
@@ -24,11 +26,13 @@ abstract class AdaptiveUIAdapter : AdaptiveAdapter {
         get() = Dispatchers.Main
 
     fun traceAddActual(fragment: AdaptiveFragment) {
-        if (trace) trace("addActual", "fragment: $fragment")
+        if (trace.isEmpty()) return
+        trace("addActual", "fragment: $fragment")
     }
 
     fun traceRemoveActual(fragment: AdaptiveFragment) {
-        if (trace) trace("removeActual", "fragment: $fragment")
+        if (trace.isEmpty()) return
+        trace("removeActual", "fragment: $fragment")
     }
 
     inline fun <reified T> AdaptiveFragment.ifIsInstanceOrRoot(block : (it : T) -> Unit) {

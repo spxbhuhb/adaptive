@@ -24,3 +24,13 @@ class FontWeight(val weight: Int) : AdaptiveInstruction {
         subject.alsoIfInstance<RenderInstructions> { it.fontWeight = weight }
     }
 }
+
+enum class TextAlign : AdaptiveInstruction {
+    Start,
+    Center,
+    End;
+
+    override fun apply(subject: Any) {
+        subject.alsoIfInstance<RenderInstructions> { it.textAlign = this }
+    }
+}

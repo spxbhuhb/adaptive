@@ -16,7 +16,7 @@ interface AdaptiveAdapter {
 
     val dispatcher: CoroutineDispatcher
 
-    val trace: Boolean
+    var trace: Array<Regex>
 
     val startedAt: Long
 
@@ -35,11 +35,15 @@ interface AdaptiveAdapter {
     fun mounted() = Unit
 
     fun trace(fragment: AdaptiveFragment, point: String, data: String) {
-        TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).println(startedAt)
+        if (fragment.trace && fragment.tracePatterns.any { it.matches(point) }) {
+            TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).println(startedAt)
+        }
     }
 
     fun trace(point: String, data: String) {
-        TraceEvent("<adapter>", -1, point, data).println(startedAt)
+        if (trace.any { it.matches(point) }) {
+            TraceEvent("<adapter>", - 1, point, data).println(startedAt)
+        }
     }
 
 }

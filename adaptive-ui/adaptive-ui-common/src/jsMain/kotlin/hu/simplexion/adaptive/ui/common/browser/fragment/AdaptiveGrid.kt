@@ -24,6 +24,8 @@ open class AdaptiveGrid(
 ) : HTMLLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
     override fun measure() {
+        super.measure()
+
         val colTemp = checkNotNull(instructions.firstOrNullIfInstance<ColTemplate>()) { "missing column template in $this" }
         val rowTemp = checkNotNull(instructions.firstOrNullIfInstance<RowTemplate>()) { "missing row template in $this" }
 
@@ -31,17 +33,22 @@ open class AdaptiveGrid(
         val rowOffsets = distribute(renderInstructions.layoutFrame.height, expand(rowTemp.tracks))
 
         if (trace) {
-            trace("layout", "layoutFrame", renderInstructions.layoutFrame)
-            trace("layout", "colOffsets", colOffsets.contentToString())
-            trace("layout", "rowOffsets", rowOffsets.contentToString())
+            trace("measure-layoutFrame", renderInstructions.layoutFrame)
+            trace("measure-colOffsets", colOffsets.contentToString())
+            trace("measure-rowOffsets", rowOffsets.contentToString())
         }
 
         placeFragments(items, rowOffsets.size - 1, colOffsets.size - 1)
 
         for (item in items) {
-            if (trace) trace("layout", "setFrame", item)
             item.setFrame(colOffsets, rowOffsets)
-            item.measure()
+        }
+    }
+
+    override fun layout() {
+        super.layout()
+        for (item in items) {
+            item.layout()
         }
     }
 

@@ -30,7 +30,7 @@ open class AdaptiveServerAdapter(
     override val dispatcher: CoroutineDispatcher
         get() = Dispatchers.Default
 
-    override var trace = false
+    override var trace = emptyArray<Regex>()
 
     // TODO implement cache synchronization
 

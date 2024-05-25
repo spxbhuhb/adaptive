@@ -17,9 +17,16 @@ open class AdaptiveBox(
 ) : HTMLLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
     override fun measure() {
+        super.measure()
         for (item in items) {
             item.layoutFrame = item.frame ?: this.frame ?: Frame.NaF
-            item.measure()
+        }
+    }
+
+    override fun layout() {
+        super.layout()
+        for (item in items) {
+            item.layout()
         }
     }
 

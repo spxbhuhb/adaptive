@@ -39,10 +39,6 @@ class LayoutItem(
     override fun toString(): String =
         "$fragment row[index,spec,span]=[$rowIndex,$gridRow,$rowSpan] col[index,spec,span]=[$colIndex,$gridCol,$colSpan]"
 
-    fun measure() {
-        fragment.measure()
-    }
-
     fun setFrame(colOffsets: FloatArray, rowOffsets: FloatArray) {
 
         val uiInstructions = fragment.renderInstructions

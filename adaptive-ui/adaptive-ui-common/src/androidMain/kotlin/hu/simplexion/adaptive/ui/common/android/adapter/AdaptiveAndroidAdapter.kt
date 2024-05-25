@@ -13,8 +13,7 @@ import hu.simplexion.adaptive.ui.common.instruction.Frame
 
 open class AdaptiveAndroidAdapter(
     val context: Context,
-    override val rootContainer: ViewGroup,
-    override val trace: Boolean = false
+    override val rootContainer: ViewGroup
 ) : AdaptiveUIAdapter() {
 
     override val fragmentFactory = ViewFragmentFactory

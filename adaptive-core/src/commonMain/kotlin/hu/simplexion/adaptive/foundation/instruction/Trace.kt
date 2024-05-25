@@ -8,10 +8,13 @@ import hu.simplexion.adaptive.foundation.testing.Traceable
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 /**
- * Switch tracing on/off for the subject of this instruction.
+ * Set trace for the given fragment.
+ *
+ * @patterns The point names to look for. Default is everything, but you can easily
+ *           specify a single point like: `Trace(Regex("layout"))`
  */
-class Trace(val on : Boolean = true) : AdaptiveInstruction {
+class Trace(vararg val patterns : Regex = arrayOf(Regex(".*"))) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<Traceable> { it.trace = true }
+        subject.alsoIfInstance<Traceable> { it.tracePatterns = patterns }
     }
 }

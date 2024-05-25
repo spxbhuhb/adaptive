@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.internal.*
 import hu.simplexion.adaptive.foundation.producer.AdaptiveProducer
+import hu.simplexion.adaptive.foundation.testing.AdaptiveTestAdapter
 
 abstract class AdaptiveFragment(
     val adapter: AdaptiveAdapter,
@@ -34,7 +35,13 @@ abstract class AdaptiveFragment(
             }
         }
 
-    var trace: Boolean = adapter.trace
+    var tracePatterns : Array<out Regex> = adapter.trace
+        set(v) {
+            field = v
+            trace = v.isNotEmpty()
+        }
+
+    var trace : Boolean = tracePatterns.isNotEmpty()
 
     val state: Array<Any?> = arrayOfNulls<Any?>(stateSize)
 
@@ -124,7 +131,7 @@ abstract class AdaptiveFragment(
         if (parent != null) {
             parent.addAnchor(fragment, higherAnchor)
         } else {
-            ops(nonLayoutTopLevelPath, nonLayoutTopLevelMessage)
+            if (adapter !is AdaptiveTestAdapter) ops(nonLayoutTopLevelPath, nonLayoutTopLevelMessage)
         }
     }
 
@@ -132,7 +139,7 @@ abstract class AdaptiveFragment(
         if (parent != null) {
             parent.removeAnchor(fragment)
         } else {
-            ops(nonLayoutTopLevelPath, nonLayoutTopLevelMessage)
+            if (adapter !is AdaptiveTestAdapter) ops(nonLayoutTopLevelPath, nonLayoutTopLevelMessage)
         }
     }
 
@@ -404,15 +411,23 @@ abstract class AdaptiveFragment(
     }
 
     fun trace(point: String) {
+        if (tracePatterns.none { it.matches(point) }) return
         adapter.trace(this, point, "")
     }
 
+    fun trace(point: String, data: Any?) {
+        if (tracePatterns.none { it.matches(point) }) return
+        adapter.trace(this, point, data.toString())
+    }
+
     fun trace(point: String, label: String, value: Any?) {
+        if (tracePatterns.none { it.matches(point) }) return
         adapter.trace(this, point, "$label: $value")
     }
 
     @OptIn(ExperimentalStdlibApi::class)
     open fun traceWithState(point: String) {
+        if (tracePatterns.none { it.matches(point) }) return
         val thisMask = getThisClosureDirtyMask().toHexString()
         val createMask = getCreateClosureDirtyMask().toHexString()
         adapter.trace(this, point, "createMask: 0x$createMask thisMask: 0x$thisMask state: ${stateToTraceString()}")
@@ -422,10 +437,12 @@ abstract class AdaptiveFragment(
         this.state.contentToString()
 
     fun traceSupport(point: String, supportFunction: BoundSupportFunction, arguments: Array<out Any?>) {
+        if (tracePatterns.none { it.matches(point) }) return
         adapter.trace(this, point, "$supportFunction arguments: ${arguments.contentToString()}")
     }
 
     fun traceSupport(point: String, supportFunction: BoundSupportFunction, result: Any?) {
+        if (tracePatterns.none { it.matches(point) }) return
         adapter.trace(this, point, "index: ${supportFunction.supportFunctionIndex} result: $result")
     }
 

@@ -14,7 +14,7 @@ class RenderInstructions(
     instructions : Array<out AdaptiveInstruction>
 ) : Traceable {
 
-    override var trace : Boolean = false
+    override var tracePatterns : Array<out Regex> = emptyArray()
 
     /**
      * This field is set by the layouts to place the fragment. When [frame] is
@@ -35,6 +35,7 @@ class RenderInstructions(
     var fontName: String? = null
     var fontSize: Float? = null
     var fontWeight: Int? = null
+    var textAlign : TextAlign? = null
 
     var border: Border? = null
     var borderRadius: Float? = null

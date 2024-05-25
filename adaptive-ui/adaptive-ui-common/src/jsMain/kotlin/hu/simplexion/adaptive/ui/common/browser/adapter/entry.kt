@@ -14,11 +14,10 @@ import org.w3c.dom.HTMLElement
 fun browser(
     vararg imports : AdaptiveFragmentFactory,
     rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
-    trace : Boolean = false,
     @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
 ) : AdaptiveBrowserAdapter {
 
-    return AdaptiveBrowserAdapter(rootContainer, trace).also {
+    return AdaptiveBrowserAdapter(rootContainer).also {
         it.fragmentFactory += imports
         block(it)
         it.mounted()

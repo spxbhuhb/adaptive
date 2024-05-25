@@ -37,22 +37,28 @@ abstract class AdaptiveUIFragment(
         return true
     }
 
-    override fun mount() {
+    override fun create() {
+        super.create()
         parent?.addActual(this, null) ?: adapter.addActual(this)
-        super.mount()
     }
 
-    override fun unmount() {
-        super.unmount()
+    override fun mount() {
+        measure()
+        super.mount()
+        layout()
+    }
+
+    override fun dispose() {
+        super.dispose()
         parent?.removeActual(this) ?: adapter.removeActual(this)
     }
 
     open fun measure() {
-
+        trace("measure", "layoutFrame=${renderInstructions.layoutFrame} frame=${renderInstructions.frame}")
     }
 
     open fun layout() {
-
+        trace("layout", "layoutFrame=${renderInstructions.layoutFrame}")
     }
 
     // ---------------------------------------------------------------------------------

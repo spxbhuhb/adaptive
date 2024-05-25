@@ -12,7 +12,7 @@ fun AdaptiveUIFragment.applyRenderInstructions() {
     renderInstructions = RenderInstructions(instructions)
     // FIXME should clear actual UI settings when null
 
-    trace = renderInstructions.trace
+    tracePatterns = renderInstructions.tracePatterns
 
     val style = (receiver as HTMLElement).style
 
@@ -23,7 +23,15 @@ fun AdaptiveUIFragment.applyRenderInstructions() {
         border?.let { style.border = "${it.width}px solid ${it.color.toHexColor()}" }
         borderRadius?.let { style.borderRadius = "${it}px" }
         color?.let { style.color = it.toHexColor() }
-        padding?.let { style.padding = "${it}px" }
+        padding?.let { p ->
+            p.left?.let { style.paddingLeft = "${it}px"}
+            p.top?.let { style.paddingTop = "${it}px"}
+            p.right?.let { style.paddingRight = "${it}px"}
+            p.bottom?.let { style.paddingBottom = "${it}px"}
+        }
+        textAlign?.let {
+            style.textAlign = it.name.lowercase()
+        }
     }
 
 }

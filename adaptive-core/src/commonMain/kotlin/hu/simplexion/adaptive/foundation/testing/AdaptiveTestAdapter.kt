@@ -19,14 +19,6 @@ class AdaptiveTestAdapter(
 
     var nextId = 2L
 
-    // these would break a lot of tests for as they are not in the expected list
-    val skipTracePoints = mutableListOf(
-        "before-addActual",
-        "after-addActual",
-        "before-removeActual",
-        "after-removeActual"
-    )
-
     override val fragmentFactory = TestNodeFragmentFactory
 
     override lateinit var rootFragment: AdaptiveFragment
@@ -35,7 +27,9 @@ class AdaptiveTestAdapter(
 
     override var dispatcher: CoroutineDispatcher = Dispatchers.Main
 
-    override val trace = true
+    override var trace = arrayOf(
+        Regex(".*(?!addActual|removeActual)") // anything that does not end with addActual/ removeActual
+    )
 
     override val startedAt = vmNowMicro()
 
@@ -64,8 +58,7 @@ class AdaptiveTestAdapter(
     override fun newId(): Long = nextId ++ // This is not thread safe, OK for testing, but beware.
 
     override fun trace(fragment: AdaptiveFragment, point: String, data: String) {
-        if (point in skipTracePoints) return
-
+        if (trace.none { it.matches(point) }) return
         lock.use {
             traceEvents += TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).also { if (printTrace) it.println(startedAt) }
         }

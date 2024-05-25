@@ -13,7 +13,9 @@ class Padding(
     val bottom: Float? = null,
     val left: Float? = null
 ) : AdaptiveInstruction {
+
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderInstructions> { it.padding = this }
     }
+
 }

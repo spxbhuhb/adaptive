@@ -19,7 +19,8 @@ open class AdaptiveColumn(
     declarationIndex: Int
 ) : HTMLLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
-    override fun measure() {
+    override fun layout() {
+        super.layout()
         with (receiver.style) {
             display = "flex"
             flexDirection = "column"
