@@ -5,7 +5,7 @@ package hu.simplexion.adaptive.ui.common.uikit.adapter
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
-import hu.simplexion.adaptive.ui.common.instruction.BoundingRect
+import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.uikit.fragment.UiKitFragmentFactory
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
@@ -25,9 +25,9 @@ open class AdaptiveIOSAdapter(
         fragment.ifIsInstanceOrRoot<IOSLayoutFragment> {
 
             it.frame = rootContainer.frame.useContents {
-                BoundingRect(
-                    origin.x.toFloat(),
+                Frame(
                     origin.y.toFloat(),
+                    origin.x.toFloat(),
                     size.width.toFloat(),
                     size.height.toFloat()
                 )

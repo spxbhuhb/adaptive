@@ -4,4 +4,7 @@
 
 package hu.simplexion.adaptive.foundation.instruction
 
-interface AdaptiveInstruction
+interface AdaptiveInstruction {
+    fun apply(subject: Any) = Unit
+}
+

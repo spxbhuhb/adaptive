@@ -4,10 +4,10 @@
 
 package hu.simplexion.adaptive.ui.common.uikit.adapter
 
-import hu.simplexion.adaptive.ui.common.instruction.BoundingRect
+import hu.simplexion.adaptive.ui.common.instruction.Frame
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreGraphics.CGRectMake
 
 @OptIn(ExperimentalForeignApi::class)
-fun BoundingRect.toCGRect() =
-    CGRectMake(x.toDouble(), y.toDouble(), width.toDouble(), height.toDouble())
+fun Frame.toCGRect() =
+    CGRectMake(left.toDouble(), top.toDouble(), width.toDouble(), height.toDouble())

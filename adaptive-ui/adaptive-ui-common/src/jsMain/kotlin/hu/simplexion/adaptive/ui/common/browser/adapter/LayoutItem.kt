@@ -5,7 +5,7 @@
 package hu.simplexion.adaptive.ui.common.browser.adapter
 
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.instruction.BoundingRect
+import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.logic.GridCell
 import org.w3c.dom.HTMLElement
 
@@ -16,44 +16,46 @@ class LayoutItem(
     override var colIndex: Int
 ) : GridCell {
 
+    var layoutFrame
+        get() = fragment.renderInstructions.layoutFrame
+        set(v) { fragment.renderInstructions.layoutFrame = v }
+
+    var frame
+        get() = fragment.renderInstructions.frame
+        set(v) { fragment.renderInstructions.frame = v }
+
+    override val gridRow: Int?
+        get() = fragment.renderInstructions.gridRow
+
+    override val gridCol: Int?
+        get() = fragment.renderInstructions.gridCol
+
+    override val rowSpan: Int
+        get() = fragment.renderInstructions.rowSpan
+
+    override val colSpan: Int
+        get() = fragment.renderInstructions.colSpan
+
+    override fun toString(): String =
+        "$fragment row[index,spec,span]=[$rowIndex,$gridRow,$rowSpan] col[index,spec,span]=[$colIndex,$gridCol,$colSpan]"
+
+    fun measure() {
+        fragment.measure()
+    }
+
     fun setFrame(colOffsets: FloatArray, rowOffsets: FloatArray) {
 
-        val uiInstructions = fragment.uiInstructions
+        val uiInstructions = fragment.renderInstructions
         val row = rowIndex
         val col = colIndex
-        val rowSpan = fragment.uiInstructions.rowSpan
-        val colSpan = fragment.uiInstructions.colSpan
+        val rowSpan = uiInstructions.rowSpan
+        val colSpan = uiInstructions.colSpan
 
-        uiInstructions.frame = BoundingRect(
-            colOffsets[col],
+        layoutFrame = Frame(
             rowOffsets[row],
+            colOffsets[col],
             colOffsets[col + colSpan] - colOffsets[col],
             rowOffsets[row + rowSpan] - rowOffsets[row]
         )
     }
-
-    fun setAbsolutePosition() {
-        val frame = fragment.frame
-        val style = receiver.style
-
-        style.position = "absolute"
-        style.boxSizing = "border-box"
-        style.top = "${frame.y}px"
-        style.left = "${frame.x}px"
-        style.width = "${frame.width}px"
-        style.height = "${frame.height}px"
-    }
-
-    override val gridRow: Int?
-        get() = fragment.uiInstructions.gridRow
-    override val gridCol: Int?
-        get() = fragment.uiInstructions.gridCol
-    override val rowSpan: Int
-        get() = fragment.uiInstructions.rowSpan
-    override val colSpan: Int
-        get() = fragment.uiInstructions.colSpan
-
-    override fun toString(): String =
-        "$fragment row:$rowIndex col:$colIndex"
-
 }

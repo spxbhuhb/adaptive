@@ -7,16 +7,13 @@ package hu.simplexion.adaptive.ui.common.instruction
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
-class Color(val value: Int) : AdaptiveInstruction {
-
+class Padding(
+    val top: Float? = null,
+    val right: Float? = null,
+    val bottom: Float? = null,
+    val left: Float? = null
+) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.color = this }
+        subject.alsoIfInstance<RenderInstructions> { it.padding = this }
     }
-
-    /**
-     * @return [value] in "#ffffff" format
-     */
-    fun toHexColor() : String =
-        "#${value.toString(16).padStart(6, '0')}"
-
 }

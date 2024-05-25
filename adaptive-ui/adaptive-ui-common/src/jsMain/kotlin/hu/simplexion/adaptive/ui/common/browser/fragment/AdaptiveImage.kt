@@ -8,7 +8,6 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.instruction.UIInstructions
 import kotlinx.browser.document
 import org.w3c.dom.HTMLImageElement
 
@@ -31,12 +30,15 @@ open class AdaptiveImage(
         }
 
         if (haveToPatch(closureMask, instructionIndex)) {
-            applyUIInstructions()
-            receiver.width = uiInstructions.frame.width.toInt()
-            receiver.height = uiInstructions.frame.height.toInt()
+            applyRenderInstructions()
         }
 
         return false
+    }
+
+    override fun layout() {
+        receiver.width = renderInstructions.layoutFrame.width.toInt()
+        receiver.height = renderInstructions.layoutFrame.height.toInt()
     }
 
     companion object : AdaptiveFragmentCompanion {

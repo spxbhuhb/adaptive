@@ -7,8 +7,10 @@ import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.browser.adapter.HTMLLayoutFragment
+import hu.simplexion.adaptive.ui.common.browser.adapter.LayoutItem
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.instruction.ColTemplate
+import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.instruction.RowTemplate
 import hu.simplexion.adaptive.ui.common.logic.distribute
 import hu.simplexion.adaptive.ui.common.logic.expand
@@ -21,20 +23,26 @@ open class AdaptiveGrid(
     declarationIndex: Int
 ) : HTMLLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
-    override fun layout() {
+    override fun measure() {
         val colTemp = checkNotNull(instructions.firstOrNullIfInstance<ColTemplate>()) { "missing column template in $this" }
         val rowTemp = checkNotNull(instructions.firstOrNullIfInstance<RowTemplate>()) { "missing row template in $this" }
 
-        val colOffsets = distribute(frame.width, expand(colTemp.tracks))
-        val rowOffsets = distribute(frame.height, expand(rowTemp.tracks))
+        val colOffsets = distribute(renderInstructions.layoutFrame.width, expand(colTemp.tracks))
+        val rowOffsets = distribute(renderInstructions.layoutFrame.height, expand(rowTemp.tracks))
+
+        if (trace) {
+            trace("layout", "layoutFrame", renderInstructions.layoutFrame)
+            trace("layout", "colOffsets", colOffsets.contentToString())
+            trace("layout", "rowOffsets", rowOffsets.contentToString())
+        }
 
         placeFragments(items, rowOffsets.size - 1, colOffsets.size - 1)
 
         for (item in items) {
+            if (trace) trace("layout", "setFrame", item)
             item.setFrame(colOffsets, rowOffsets)
-            item.setAbsolutePosition()
+            item.measure()
         }
-
     }
 
     companion object : AdaptiveFragmentCompanion {

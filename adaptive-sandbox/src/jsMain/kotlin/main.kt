@@ -3,6 +3,7 @@
  */
 
 import hu.simplexion.adaptive.foundation.Adaptive
+import hu.simplexion.adaptive.foundation.instruction.Trace
 import hu.simplexion.adaptive.foundation.producer.poll
 import hu.simplexion.adaptive.lib.sandbox.SandboxExports
 import hu.simplexion.adaptive.sandbox.api.CounterApi
@@ -13,14 +14,14 @@ import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.wireformat.withJson
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration.Companion.seconds
 
 val counterService = getService<CounterApi>()
 
 fun now() = Clock.System.now()
 
+val black = Color(0x000000)
+val white = Color(0xffffff)
 val lightGreen = Color(0xA0DE6F)
 val mediumGreen = Color(0x53C282)
 val lightGray = Color(0xd8d8d8)
@@ -39,39 +40,47 @@ fun main() {
 
     browser(SandboxExports, trace = false) {
 
-        pixel {
+        box(Frame(0f, 0f, 375f, 812f)) {
 
-            image("/background.jpg", BoundingRect(0f, 0f, 375f, 812f))
+            image("/background.jpg")
 
             grid(
-                BoundingRect(0f, 0f, 375f, 812f),
                 RowTemplate(1.fr, 50.dp, 50.dp),
-                ColTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
+                ColTemplate(1.fr),
+                Trace()
             ) {
 
-                stack(ColSpan(5)) {
-                    // image
+                row(AlignItems.Center, JustifyContent.Center) {
                     text("Bonsai Care", white)
                 }
 
-                stack(greenGradient, borderRadius, GridPos(2,2)) {
-                    text("Sign Up", white)
+                grid(
+                    RowTemplate(50.dp),
+                    ColTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp),
+                    Trace()
+                ) {
+
+                    row(greenGradient, borderRadius, AlignContent.Center, GridCol(2)) {
+                        text("Sign Up", white)
+                    }
+
+                    row(whiteBorder, borderRadius, AlignContent.Center, GridCol(4)) {
+                        text("Sign In", white)
+                    }
+
                 }
 
-                stack(whiteBorder, borderRadius, GridPos(2,4)) {
-                    text("Sign In", white)
-                }
-
-                stack(GridPos(3,2, colSpan = 3)) {
+                row(AlignContent.Center) {
                     text("By joining you agree to our Terms of Service and Privacy Policy", white)
                 }
-
             }
+
         }
+
 //
 //        pixel {
 //
-//            stack(greenGradient, borderRadius, BoundingRect(50f, 50f, 400f, 50f)) {
+//            stack(greenGradient, borderRadius, Frame(50f, 50f, 400f, 50f)) {
 //
 //                clickable(onClick = { console.log("hello") }) {
 //                    text("> ")
@@ -85,16 +94,16 @@ fun main() {
 //
 //            //counterWithTime(time)
 //
-//            text("$time", BoundingRect(150f, 150f, 250f, 20f))
+//            text("$time", Frame(150f, 150f, 250f, 20f))
 //
-//            stack(BoundingRect(200f, 200f, 200f, 200f)) {
+//            stack(Frame(200f, 200f, 200f, 200f)) {
 //                text("Hello World at 200!")
 //            }
 //
 //            grid(
 //                ColTemplate(Repeat(2, 50.dp)),
 //                RowTemplate(1.fr, 50.dp),
-//                BoundingRect(400f, 400f, 400f, 400f)
+//                Frame(400f, 400f, 400f, 400f)
 //            ) {
 //                text("1", greenGradient, borderRadius, white)
 //                text("2", grayBorder, borderRadius)
@@ -111,5 +120,5 @@ fun main() {
 @Adaptive
 fun counterWithTime(time: Instant) {
     val counter = poll(1.seconds, 0) { counterService.incrementAndGet() }
-    text("$time $counter", BoundingRect(150f, 150f, 250f, 20f))
+    text("$time $counter", Frame(150f, 150f, 250f, 20f))
 }

@@ -8,7 +8,6 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.instruction.UIInstructions
 import kotlinx.browser.document
 
 open class AdaptiveText(
@@ -30,7 +29,7 @@ open class AdaptiveText(
         }
 
         if (haveToPatch(closureMask, instructionIndex)) {
-            applyUIInstructions()
+            applyRenderInstructions()
         }
 
         return false

@@ -5,22 +5,25 @@
 package hu.simplexion.adaptive.ui.common.browser.fragment
 
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.instruction.UIInstructions
+import hu.simplexion.adaptive.ui.common.instruction.RenderInstructions
 import org.w3c.dom.HTMLElement
 
-fun AdaptiveUIFragment.applyUIInstructions() {
-    uiInstructions = UIInstructions(instructions)
+fun AdaptiveUIFragment.applyRenderInstructions() {
+    renderInstructions = RenderInstructions(instructions)
+    // FIXME should clear actual UI settings when null
+
+    trace = renderInstructions.trace
 
     val style = (receiver as HTMLElement).style
 
-    uiInstructions.color?.let { style.color = it.toHexColor() }
-
-    uiInstructions.backgroundColor?.let { style.backgroundColor = it.toHexColor() }
-
-    uiInstructions.backgroundGradient?.let { style.background = "linear-gradient(${it.degree}deg, ${it.start.toHexColor()}, ${it.end.toHexColor()})" }
-
-    uiInstructions.border?.let { style.border = "${it.width}px solid ${it.color.toHexColor()}" }
-
-    uiInstructions.borderRadius?.let { style.borderRadius = "${it}px" }
+    with(renderInstructions) {
+        // FIXME use classes (when possible) when applying render instructions to HTML element
+        backgroundColor?.let { style.backgroundColor = it.toHexColor() }
+        backgroundGradient?.let { style.background = "linear-gradient(${it.degree}deg, ${it.start.toHexColor()}, ${it.end.toHexColor()})" }
+        border?.let { style.border = "${it.width}px solid ${it.color.toHexColor()}" }
+        borderRadius?.let { style.borderRadius = "${it}px" }
+        color?.let { style.color = it.toHexColor() }
+        padding?.let { style.padding = "${it}px" }
+    }
 
 }

@@ -9,8 +9,8 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
 object UiKitFragmentFactory : AdaptiveFragmentFactory() {
     init {
         addAll(
+            AdaptiveBox,
             AdaptiveClickable,
-            AdaptivePixel,
             AdaptiveText
         )
     }

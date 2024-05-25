@@ -9,7 +9,7 @@ import android.widget.LinearLayout
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.android.fragment.ViewFragmentFactory
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
-import hu.simplexion.adaptive.ui.common.instruction.BoundingRect
+import hu.simplexion.adaptive.ui.common.instruction.Frame
 
 open class AdaptiveAndroidAdapter(
     val context: Context,
@@ -23,7 +23,7 @@ open class AdaptiveAndroidAdapter(
         traceAddActual(fragment)
 
         fragment.ifIsInstanceOrRoot<AndroidLayoutFragment> {
-            it.frame = BoundingRect(0f, 0f, rootContainer.width.toFloat(), rootContainer.height.toFloat())
+            it.frame = Frame(0f, 0f, rootContainer.width.toFloat(), rootContainer.height.toFloat())
             it.receiver.layoutParams = LinearLayout.LayoutParams(rootContainer.width, rootContainer.height)
             rootContainer.addView(it.receiver)
         }

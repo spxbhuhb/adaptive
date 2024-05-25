@@ -30,17 +30,17 @@ class AdaptiveViewGroup(
 
     override fun generateDefaultLayoutParams(): LayoutParams {
         val frame = layoutFragment.frame
-        return LayoutParams(frame.width.toInt(), frame.height.toInt(), frame.x.toInt(), frame.y.toInt())
+        return LayoutParams(frame.width.toInt(), frame.height.toInt(), frame.left.toInt(), frame.top.toInt())
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         for (item in layoutFragment.items) {
             val rect = item.fragment.frame
             item.receiver.layout(
-                rect.x.toInt(),
-                rect.y.toInt(),
-                rect.x.toInt() + rect.width.toInt(),
-                rect.y.toInt() + rect.height.toInt()
+                rect.left.toInt(),
+                rect.top.toInt(),
+                rect.left.toInt() + rect.width.toInt(),
+                rect.top.toInt() + rect.height.toInt()
             )
         }
 

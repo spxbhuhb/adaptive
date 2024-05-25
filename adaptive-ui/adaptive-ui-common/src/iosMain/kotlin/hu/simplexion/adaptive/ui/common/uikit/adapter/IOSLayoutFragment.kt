@@ -24,9 +24,9 @@ abstract class IOSLayoutFragment(
 
     @OptIn(ExperimentalForeignApi::class)
     override var frame
-        get() = uiInstructions.frame
+        get() = renderInstructions.frame
         set(v) {
-            uiInstructions.frame = v
+            renderInstructions.frame = v
             receiver.setFrame(v.toCGRect())
         }
 
@@ -46,7 +46,7 @@ abstract class IOSLayoutFragment(
 
     override fun mount() {
         super.mount()
-        layout()
+        measure()
     }
 
     abstract fun layout()
@@ -84,7 +84,7 @@ abstract class IOSLayoutFragment(
         }
 
         if (isMounted) {
-            layout()
+            measure()
         }
 
         if (trace) trace("after-addActual")
@@ -99,7 +99,7 @@ abstract class IOSLayoutFragment(
         }
 
         if (isMounted) {
-            layout()
+            measure()
         }
 
         if (trace) trace("after-removeActual")

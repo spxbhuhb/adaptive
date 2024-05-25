@@ -9,20 +9,23 @@ import hu.simplexion.adaptive.foundation.AdaptiveExpect
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.manualImplementation
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.instruction.Repeat
-import hu.simplexion.adaptive.ui.common.instruction.Track
 
 @AdaptiveExpect(commonUI)
-fun stack(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
+fun box(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
+    manualImplementation(instructions, content)
+}
+
+@AdaptiveExpect(commonUI)
+fun row(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
+    manualImplementation(instructions, content)
+}
+
+@AdaptiveExpect(commonUI)
+fun column(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
     manualImplementation(instructions, content)
 }
 
 @AdaptiveExpect(commonUI)
 fun grid(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
-    manualImplementation(instructions, content)
-}
-
-@AdaptiveExpect(commonUI)
-fun pixel(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
     manualImplementation(instructions, content)
 }

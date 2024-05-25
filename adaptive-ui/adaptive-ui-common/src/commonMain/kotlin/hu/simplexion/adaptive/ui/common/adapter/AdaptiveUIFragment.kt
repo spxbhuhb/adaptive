@@ -7,7 +7,7 @@ package hu.simplexion.adaptive.ui.common.adapter
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
-import hu.simplexion.adaptive.ui.common.instruction.UIInstructions
+import hu.simplexion.adaptive.ui.common.instruction.RenderInstructions
 import hu.simplexion.adaptive.utility.checkIfInstance
 
 abstract class AdaptiveUIFragment(
@@ -20,8 +20,8 @@ abstract class AdaptiveUIFragment(
 
     abstract val receiver : Any
 
-    // FIXME uiInstructions should be bound to instructions
-    var uiInstructions = UIInstructions.DEFAULT
+    // FIXME renderInstructions should be bound to instructions
+    var renderInstructions = RenderInstructions.DEFAULT
 
     fun fragmentFactory(index : Int) : BoundFragmentFactory =
         state[index].checkIfInstance()
@@ -32,7 +32,7 @@ abstract class AdaptiveUIFragment(
 
     override fun genPatchInternal(): Boolean {
         if (instructionIndex != -1 && haveToPatch(getThisClosureDirtyMask(), instructionIndex)) {
-            uiInstructions = UIInstructions(instructions)
+            renderInstructions = RenderInstructions(instructions)
         }
         return true
     }
@@ -47,12 +47,20 @@ abstract class AdaptiveUIFragment(
         parent?.removeActual(this) ?: adapter.removeActual(this)
     }
 
+    open fun measure() {
+
+    }
+
+    open fun layout() {
+
+    }
+
     // ---------------------------------------------------------------------------------
     // Instruction support
     // ---------------------------------------------------------------------------------
 
     open var frame
-        get() = uiInstructions.frame
-        set(v) { uiInstructions.frame = v }
+        get() = renderInstructions.frame
+        set(v) { renderInstructions.frame = v }
 
 }

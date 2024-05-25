@@ -10,7 +10,7 @@ object ViewFragmentFactory : AdaptiveFragmentFactory() {
     init {
         addAll(
             AdaptiveClickable,
-            AdaptivePixel,
+            AdaptiveBox,
             AdaptiveText
         )
     }

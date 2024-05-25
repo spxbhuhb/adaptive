@@ -4,18 +4,23 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
-class Font(val fontName: String) : AdaptiveUIInstruction {
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.utility.alsoIfInstance
 
-    override fun apply(uiInstructions: UIInstructions) {
-        uiInstructions.fontName = fontName
+class FontName(val fontName: String) : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        subject.alsoIfInstance<RenderInstructions> { it.fontName = fontName }
     }
-
 }
 
-class FontSize(val fontSize: Float) : AdaptiveUIInstruction{
-
-    override fun apply(uiInstructions: UIInstructions) {
-        uiInstructions.fontSize = fontSize
+class FontSize(val fontSize: Float) : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        subject.alsoIfInstance<RenderInstructions> { it.fontSize = fontSize }
     }
+}
 
+class FontWeight(val weight: Int) : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        subject.alsoIfInstance<RenderInstructions> { it.fontWeight = weight }
+    }
 }

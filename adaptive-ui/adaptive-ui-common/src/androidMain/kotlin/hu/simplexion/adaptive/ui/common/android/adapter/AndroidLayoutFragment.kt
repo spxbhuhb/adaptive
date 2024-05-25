@@ -36,14 +36,14 @@ abstract class AndroidLayoutFragment(
     override fun mount() {
         // FIXME ui instruction update (should be called from genPatchInternal and also should clear actual UI settings when null)
 
-        uiInstructions.backgroundGradient?.let { gradient ->
+        renderInstructions.backgroundGradient?.let { gradient ->
 
             val gradientDrawable = GradientDrawable(
                 GradientDrawable.Orientation.LEFT_RIGHT,
                 intArrayOf(gradient.start.toAndroidColor(), gradient.end.toAndroidColor())
             )
 
-            uiInstructions.borderRadius?.let { radius ->
+            renderInstructions.borderRadius?.let { radius ->
                 gradientDrawable.cornerRadius = radius
             }
 
@@ -51,7 +51,7 @@ abstract class AndroidLayoutFragment(
         }
 
         super.mount()
-        layout()
+        measure()
     }
 
     abstract fun layout()
@@ -81,7 +81,7 @@ abstract class AndroidLayoutFragment(
                 items += LayoutItem(uiFragment, viewReceiver)
 
                 if (isMounted) {
-                    layout()
+                    measure()
                 }
 
                 if (anchor == null) {
@@ -107,7 +107,7 @@ abstract class AndroidLayoutFragment(
 //            }
 
         if (isMounted) {
-            layout()
+            measure()
         }
 
         if (trace) trace("after-removeActual")

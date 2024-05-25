@@ -6,9 +6,8 @@ package hu.simplexion.adaptive.ui.common.browser.adapter
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.browser.fragment.applyUIInstructions
-import hu.simplexion.adaptive.ui.common.instruction.BoundingRect
-import hu.simplexion.adaptive.ui.common.logic.GridCell
+import hu.simplexion.adaptive.ui.common.browser.fragment.applyRenderInstructions
+import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.logic.checkReceiver
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.browser.document
@@ -36,14 +35,21 @@ abstract class HTMLLayoutFragment(
         return AdaptiveAnonymous(adapter, this, declarationIndex, 0, fragmentFactory(state.size - 1)).apply { create() }
     }
 
-    override fun mount() {
-        // FIXME ui instruction update (should be called from genPatchInternal and also should clear actual UI settings when null)
-        applyUIInstructions()
-        super.mount()
-        layout()
+    override fun genPatchInternal(): Boolean {
+        val closureMask = getThisClosureDirtyMask()
+
+        if (haveToPatch(closureMask, instructionIndex)) {
+            applyRenderInstructions()
+        }
+
+        return true // TODO optimize layout fragment child patch
     }
 
-    abstract fun layout()
+    override fun mount() {
+        super.mount()
+        measure()
+        layout()
+    }
 
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
         (document.createElement("div") as HTMLDivElement).also {
@@ -80,7 +86,7 @@ abstract class HTMLLayoutFragment(
         }
 
         if (isMounted) {
-            layout()
+            measure()
         }
 
         if (trace) trace("after-addActual")
@@ -95,9 +101,65 @@ abstract class HTMLLayoutFragment(
         }
 
         if (isMounted) {
-            layout()
+            measure()
         }
 
         if (trace) trace("after-removeActual")
+    }
+
+    fun align() {
+        val style = receiver.style
+
+        when (renderInstructions.alignItems) {
+            null -> Unit
+            AlignItems.Center -> style.alignItems = "center"
+            AlignItems.End -> style.alignItems = "end"
+            AlignItems.Start -> style.alignItems = "start"
+        }
+
+        when (renderInstructions.justifyItems) {
+            null -> Unit
+            JustifyItems.Center -> style.setProperty("justify-items", "center")
+            JustifyItems.End -> style.setProperty("justify-items", "end")
+            JustifyItems.Start -> style.setProperty("justify-items", "start")
+        }
+
+        when (renderInstructions.alignContent) {
+            null -> Unit
+            AlignContent.Center -> style.alignContent = "center"
+            AlignContent.End -> style.alignContent = "end"
+            AlignContent.Start -> style.alignContent = "start"
+        }
+
+        when (renderInstructions.justifyContent) {
+            null -> Unit
+            JustifyContent.Center -> style.setProperty("justify-content", "center")
+            JustifyContent.End -> style.setProperty("justify-content", "end")
+            JustifyContent.Start -> style.setProperty("justify-content", "start")
+        }
+    }
+
+    // measure is layout specific
+
+    override fun layout() {
+        for (item in items) {
+            item.layout()
+        }
+    }
+
+    fun LayoutItem.layout() {
+        val layoutFrame = fragment.renderInstructions.layoutFrame
+        val style = receiver.style
+
+        check(layoutFrame !== Frame.NaF) // ops
+
+        style.position = "absolute"
+        style.boxSizing = "border-box"
+        style.top = "${layoutFrame.top}px"
+        style.left = "${layoutFrame.left}px"
+        style.width = "${layoutFrame.width}px"
+        style.height = "${layoutFrame.height}px"
+
+        fragment.layout()
     }
 }
