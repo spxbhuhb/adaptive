@@ -30,3 +30,9 @@ data class Frame(
         val NaF = Frame(Float.NaN, Float.NaN, Float.NaN, Float.NaN)
     }
 }
+
+data class Size(val width: Float, val height: Float) : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        subject.alsoIfInstance<RenderInstructions> { it.size = this }
+    }
+}

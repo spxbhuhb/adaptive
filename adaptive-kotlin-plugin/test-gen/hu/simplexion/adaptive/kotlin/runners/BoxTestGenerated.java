@@ -411,6 +411,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
             }
 
             @Test
+            @TestMetadata("inline.kt")
+            public void testInline() throws Exception {
+                runTest("testData/box/foundation/variables/inline.kt");
+            }
+
+            @Test
             @TestMetadata("many.kt")
             public void testMany() throws Exception {
                 runTest("testData/box/foundation/variables/many.kt");

@@ -3,6 +3,7 @@
  */
 
 import hu.simplexion.adaptive.foundation.Adaptive
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.Trace
 import hu.simplexion.adaptive.foundation.producer.poll
 import hu.simplexion.adaptive.lib.sandbox.SandboxExports
@@ -31,8 +32,13 @@ val purple = Color(0xA644FF)
 val blackBackground = BackgroundColor(black)
 val greenGradient = BackgroundGradient(90, lightGreen, mediumGreen)
 val borderRadius = BorderRadius(8)
-val whiteBorder = Border(white)
 
+val textSmall = FontSize(13f)
+val whiteBorder = Border(white)
+val bold = FontWeight(700)
+val smallWhiteNoWrap = arrayOf(white, textSmall, TextWrap.NoWrap)
+
+val center = arrayOf<AdaptiveInstruction>(AlignItems.Center, JustifyContent.Center)
 val traceLayout = Trace(Regex("layout"), Regex("measure.*"))
 
 fun main() {
@@ -42,39 +48,8 @@ fun main() {
 
     browser(SandboxExports) {
 
-        box(Frame(0f, 0f, 375f, 812f)) {
-
-            image("/background.jpg")
-
-            grid(
-                RowTemplate(1.fr, 100.dp, 100.dp),
-                ColTemplate(1.fr)
-            ) {
-
-                row(AlignItems.Center, JustifyContent.Center) {
-                    text("Bonsai Care", white)
-                }
-
-                grid(
-                    RowTemplate(50.dp),
-                    ColTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
-                ) {
-
-                    row(greenGradient, borderRadius, AlignItems.Center, JustifyContent.Center, GridCol(2)) {
-                        text("Sign Up", white)
-                    }
-
-                    row(whiteBorder, borderRadius, AlignItems.Center, JustifyContent.Center, GridCol(4)) {
-                        text("Sign In", white)
-                    }
-
-                }
-
-                row(AlignContent.Center, Padding(right = 32f, left = 32f)) {
-                    text("By joining you agree to our Terms of Service and Privacy Policy", white, TextAlign.Center)
-                }
-            }
-
+        row {
+            login()
         }
 
 //
@@ -116,9 +91,71 @@ fun main() {
 
 }
 
+@Adaptive
+fun login() {
+    box(Frame(0f, 0f, 375f, 812f)) {
+
+        image("/background.jpg")
+
+        grid(
+            RowTemplate(260.dp, 1.fr, 100.dp, 100.dp),
+            ColTemplate(1.fr)
+        ) {
+
+            row(AlignItems.End, JustifyContent.Center, Padding(bottom = 30f)) {
+                image("/logo.png", Size(92f, 92f))
+            }
+
+            row(AlignItems.Start, JustifyContent.Center) {
+                text("Good Morning", white, FontSize(40f), LetterSpacing(- 1f))
+            }
+
+            grid(
+                RowTemplate(50.dp),
+                ColTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
+            ) {
+
+                row(2.gridCol, greenGradient, borderRadius, *center) {
+                    text("Sign Up", white)
+                }
+
+                row(4.gridCol, whiteBorder, borderRadius, *center) {
+                    text("Sign In", white)
+                }
+
+            }
+
+            column(AlignItems.Center, Padding(right = 32f, left = 32f)) {
+                row {
+                    text("By joining you agree to our", *smallWhiteNoWrap, Padding(right = 6f))
+                    text("Terms of Service", *smallWhiteNoWrap, bold, Padding(right = 6f), onClick { println("terms yays") })
+                    text("and", *smallWhiteNoWrap)
+                }
+                text("Privacy Policy", *smallWhiteNoWrap, bold, onClick { println("policy") })
+            }
+        }
+    }
+}
 
 @Adaptive
 fun counterWithTime(time: Instant) {
     val counter = poll(1.seconds, 0) { counterService.incrementAndGet() }
     text("$time $counter", Frame(150f, 150f, 250f, 20f))
+}
+
+fun chess(size : Int, cellSize : DIPixel) =
+    arrayOf(ColTemplate(Repeat(size, cellSize)), RowTemplate(Repeat(size, cellSize)))
+
+fun cellColor(r : Int, c: Int) =
+    if (((r * 8) + c) % 2 == 0) white else black
+
+@Adaptive
+fun chessBoard() {
+    grid(*chess(8, 20.dp)) {
+        for (r in 1 .. 8) {
+            for (c in 1 .. 8) {
+                row(cellColor(r, c)) { text(r * 8 + c) }
+            }
+        }
+    }
 }

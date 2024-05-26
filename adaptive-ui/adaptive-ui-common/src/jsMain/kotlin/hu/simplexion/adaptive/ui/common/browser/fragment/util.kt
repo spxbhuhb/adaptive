@@ -20,17 +20,40 @@ fun AdaptiveUIFragment.applyRenderInstructions() {
         // FIXME use classes (when possible) when applying render instructions to HTML element
         backgroundColor?.let { style.backgroundColor = it.toHexColor() }
         backgroundGradient?.let { style.background = "linear-gradient(${it.degree}deg, ${it.start.toHexColor()}, ${it.end.toHexColor()})" }
+
         border?.let { style.border = "${it.width}px solid ${it.color.toHexColor()}" }
         borderRadius?.let { style.borderRadius = "${it}px" }
+
         color?.let { style.color = it.toHexColor() }
+
+        fontSize?.let { style.fontSize = "${it}px" }
+        fontWeight?.let { style.fontWeight = it.toString() }
+        letterSpacing?.let { style.letterSpacing = "${it}px" }
+
         padding?.let { p ->
             p.left?.let { style.paddingLeft = "${it}px"}
             p.top?.let { style.paddingTop = "${it}px"}
             p.right?.let { style.paddingRight = "${it}px"}
             p.bottom?.let { style.paddingBottom = "${it}px"}
         }
+
         textAlign?.let {
             style.textAlign = it.name.lowercase()
+        }
+
+        textWrap?.let {
+            style.setProperty("text-wrap", it.toString().lowercase())
+        }
+
+        size?.let {
+            style.width = "${it.width}px"
+            style.height = "${it.height}px"
+        }
+
+        onClick?.let {
+            // FIXME handling of onClick is wrong on so many levels
+            (receiver as HTMLElement).addEventListener("click", { onClick!!.handler() })
+            style.cursor = "pointer"
         }
     }
 

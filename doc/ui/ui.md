@@ -7,25 +7,41 @@
 
 ## Layouts
 
-| Function | Supported Adapters | Description                                      |
-|----------|--------------------|--------------------------------------------------|
-| `stack`  |                    | Horizontal or vertical stack of fragments.       |
-| `grid`   |                    | CSS grid wannabe (grid of fragments).            |                                                
-| `pixel`  |                    | Position each fragment with x and y coordinates. |
+| Function | Supported Adapters    | Description                                      |
+|----------|-----------------------|--------------------------------------------------|
+| `box`    | browser, android, ios | Position each fragment with x and y coordinates. |
+| `row`    | browser               | Stack fragments next to each other.              |                                                
+| `column` | browser               | Stack fragments below each other.                |
+| `grid`   | browser               |                                                  |
 
-## Stack
+## Box
 
-Stack simply positions elements below or next to each other. Default positioning is vertical.
+The box layout position the fragments directly with x and y coordinates.
 
 ```kotlin
-stack {
+box {
+    text("a", Frame(0,0,100,100))
+    text("b", Frame(0,0,100,120))
+}
+```
+
+## Row
+
+Row simply positions fragments next to each other.
+
+```kotlin
+row {
     text("a")
     text("b")
 }
 ```
 
+## Column
+
+Column simply positions fragments below to each other.
+
 ```kotlin
-stack(horizontal) {
+column {
     text("a")
     text("b")
 }
@@ -37,20 +53,39 @@ Grid provides a partial implementation of the [CSS grid layout](https://develope
 
 ```kotlin
 grid(
-    colTemplate(10.px, 1.fr, repeat(5, 10.px)),
-    rowTemplate(20.px)
+    ColTemplate(10.dp, 1.dp, repeat(5, 10.dp)),
+    RowTemplate(20.dp)
 ) {
     /* ... */
 }
 ```
 
-## Pixel
+To put a fragment at a given grid position and/or make it span columns/rows use one or a combination of
+these:
 
-Pixel layouts position the components directly with x and y coordinates.
+- `Number.gridCol`
+- `Number.gridRow`
+- `Number.colSpan`
+- `Number.rowSpan`
+- `GridCol(col : Int, span : Int = 1)`
+- `GridRow(row : Int, span : Int = 1)`
+- `RowSpan(span : Int)`
+- `ColSpan(span : Int)`
+- `GridPos(row : Int, col : Int, rowSpan : Int = 1, colSpan: Int = 1)`
 
 ```kotlin
-pixel {
-    text("a", coords(100,100))
-    text("b", coords(100,120))
+ grid(
+    RowTemplate(50.dp),
+    ColTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
+) {
+
+    row(2.gridCol) {
+        text("Sign Up", white)
+    }
+
+    row(4.gridCol) {
+        text("Sign In", white)
+    }
+
 }
 ```

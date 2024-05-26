@@ -5,12 +5,13 @@
 package hu.simplexion.adaptive.server.builtin
 
 import hu.simplexion.adaptive.foundation.*
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
 
 @Adaptive
-fun store(impl : () -> StoreImpl<*>) {
-    manualImplementation(impl)
+fun store(vararg instructions : AdaptiveInstruction, impl : () -> StoreImpl<*>) {
+    manualImplementation(instructions, impl)
 }
 
 class AdaptiveStore(

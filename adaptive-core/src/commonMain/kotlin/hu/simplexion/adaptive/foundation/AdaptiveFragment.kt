@@ -434,7 +434,7 @@ abstract class AdaptiveFragment(
     }
 
     open fun stateToTraceString(): String =
-        this.state.contentToString()
+        this.state.contentDeepToString()
 
     fun traceSupport(point: String, supportFunction: BoundSupportFunction, arguments: Array<out Any?>) {
         if (tracePatterns.none { it.matches(point) }) return

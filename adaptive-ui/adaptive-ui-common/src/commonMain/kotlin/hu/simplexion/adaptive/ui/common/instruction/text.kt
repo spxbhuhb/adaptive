@@ -25,6 +25,21 @@ class FontWeight(val weight: Int) : AdaptiveInstruction {
     }
 }
 
+class LetterSpacing(val value: Float) : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        subject.alsoIfInstance<RenderInstructions> { it.letterSpacing = value }
+    }
+}
+
+enum class TextWrap : AdaptiveInstruction {
+    Wrap,
+    NoWrap;
+
+    override fun apply(subject: Any) {
+        subject.alsoIfInstance<RenderInstructions> { it.textWrap = this }
+    }
+}
+
 enum class TextAlign : AdaptiveInstruction {
     Start,
     Center,

@@ -1,14 +1,14 @@
 # Documentation
 
 * [Foundation](foundation/foundation.md) - getting started with Adaptive fragments
-    * [Expect fragments](foundation/expect.md) - how to define platform independent fragments
-    * [Exporting fragments](foundation/export.md) - how to export fragments into other projects
-    * [Instructions](foundation/instructions.md) - how to add styling and other customization to fragments
-    * [Producers](foundation/producer.md) - how to fetch data in an adaptive fragment
+    * [Instructions](foundation/instructions.md) - add styling and other customization to fragments
+    * [Producers](foundation/producer.md) - fetch data in an adaptive fragment
+    * [Expect fragments](foundation/expect.md) - define platform independent fragments
+    * [Exporting fragments](foundation/export.md) - export fragments into other projects
 * [Server](server/server.md) - building "servers" (applies to clients as well)
-  * [Settings](server/settings.md) - how to declare setting providers and get setting values
+  * [Settings](server/settings.md) - declare setting providers and get setting values
 * [Adat](adat/adat.md) - improved data classes
-* [Service](service/service.md) - how to write a service (API, consumer, implementation)
+* [Service](service/service.md) - write a service (API, consumer, implementation)
 * [WireFormat](wireformat/wireformat.md) - simple serialization optimized for function call transport
   * [Protobuf](wireformat/protobuf.md) - protobuf implementation details
 * Misc

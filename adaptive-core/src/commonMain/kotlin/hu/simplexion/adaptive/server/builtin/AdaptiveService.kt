@@ -5,14 +5,14 @@
 package hu.simplexion.adaptive.server.builtin
 
 import hu.simplexion.adaptive.foundation.*
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
 import hu.simplexion.adaptive.service.ServiceContext
-import hu.simplexion.adaptive.service.defaultServiceImplFactory
 
 @Adaptive
-fun service(impl: () -> ServerFragmentImpl) {
-    manualImplementation(impl)
+fun service(vararg instructions : AdaptiveInstruction, impl: () -> ServerFragmentImpl) {
+    manualImplementation(instructions, impl)
 }
 
 class AdaptiveService(

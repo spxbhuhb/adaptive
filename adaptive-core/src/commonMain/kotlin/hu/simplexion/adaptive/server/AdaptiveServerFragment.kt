@@ -4,15 +4,17 @@
 package hu.simplexion.adaptive.server
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.internal.BoundSupportFunction
 import hu.simplexion.adaptive.foundation.internal.initStateMask
 import hu.simplexion.adaptive.server.builtin.ServerFragmentImpl
+import hu.simplexion.adaptive.utility.checkIfInstance
 
 abstract class AdaptiveServerFragment(
     adapter: AdaptiveServerAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, -1, 2) {
+) : AdaptiveFragment(adapter, parent, index, 0, 3) {
 
     val serverAdapter
         get() = adapter as AdaptiveServerAdapter
@@ -54,11 +56,13 @@ abstract class AdaptiveServerFragment(
     // Implementation support
     // -------------------------------------------------------------------------
 
+    // 0 : instructions
+
     val implFun : BoundSupportFunction
-        get() = state[0] as BoundSupportFunction
+        get() = state[1].checkIfInstance()
 
     var impl : ServerFragmentImpl?
-        get() = state[1] as ServerFragmentImpl?
-        set(value) { state[1] = value }
+        get() = state[2].checkIfInstance()
+        set(value) { state[2] = value }
 
 }

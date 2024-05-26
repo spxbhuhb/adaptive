@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.server.builtin
 
 import hu.simplexion.adaptive.foundation.*
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
 import kotlinx.coroutines.CoroutineScope
@@ -12,8 +13,8 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 @Adaptive
-fun worker(impl: () -> WorkerImpl<*>) {
-    manualImplementation(impl)
+fun worker(vararg instructions : AdaptiveInstruction, impl: () -> WorkerImpl<*>) {
+    manualImplementation(instructions, impl)
 }
 
 class AdaptiveWorker(

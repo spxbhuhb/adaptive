@@ -27,6 +27,7 @@ class RenderInstructions(
      * The frame specified in the code by the programmer.
      */
     var frame : Frame? = null
+    var size : Size? = null
 
     var color : Color? = null
 
@@ -35,7 +36,9 @@ class RenderInstructions(
     var fontName: String? = null
     var fontSize: Float? = null
     var fontWeight: Int? = null
+    var letterSpacing: Float? = null
     var textAlign : TextAlign? = null
+    var textWrap : TextWrap? = null
 
     var border: Border? = null
     var borderRadius: Float? = null
@@ -55,6 +58,9 @@ class RenderInstructions(
     var gridCol: Int? = null
     var rowSpan: Int = 1
     var colSpan: Int = 1
+
+    // TODO proper event handler management for UI fragments
+    var onClick: OnClick? = null
 
     init {
         instructions.forEach{ it.apply(this) }
