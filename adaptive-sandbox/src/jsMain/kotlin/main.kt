@@ -115,7 +115,7 @@ fun login() {
                 ColTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
             ) {
 
-                row(2.gridCol, greenGradient, borderRadius, *center) {
+                row(2.gridCol, greenGradient, borderRadius, *center, onClick { println("Sign Up") }) {
                     text("Sign Up", white)
                 }
 
@@ -128,10 +128,10 @@ fun login() {
             column(AlignItems.Center, Padding(right = 32f, left = 32f)) {
                 row {
                     text("By joining you agree to our", *smallWhiteNoWrap, Padding(right = 6f))
-                    text("Terms of Service", *smallWhiteNoWrap, bold, Padding(right = 6f), onClick { println("terms yays") })
+                    text("Terms of Service", externalLink("/terms.txt"), *smallWhiteNoWrap, bold, Padding(right = 6f))
                     text("and", *smallWhiteNoWrap)
                 }
-                text("Privacy Policy", *smallWhiteNoWrap, bold, onClick { println("policy") })
+                text("Privacy Policy", externalLink("/policy.txt"), *smallWhiteNoWrap, bold)
             }
         }
     }

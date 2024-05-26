@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.ui.common.browser.fragment
 
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.instruction.AdaptiveUIEvent
 import hu.simplexion.adaptive.ui.common.instruction.RenderInstructions
 import org.w3c.dom.HTMLElement
 
@@ -52,7 +53,10 @@ fun AdaptiveUIFragment.applyRenderInstructions() {
 
         onClick?.let {
             // FIXME handling of onClick is wrong on so many levels
-            (receiver as HTMLElement).addEventListener("click", { onClick!!.handler() })
+            (receiver as HTMLElement).addEventListener(
+                "click",
+                { onClick!!.handler(AdaptiveUIEvent(this@applyRenderInstructions, it)) }
+            )
             style.cursor = "pointer"
         }
     }

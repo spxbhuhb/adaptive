@@ -5,11 +5,17 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
-fun onClick(handler : () -> Unit) = OnClick(handler)
+class AdaptiveUIEvent(
+    val fragment: AdaptiveUIFragment,
+    val nativeEvent : Any?
+)
 
-class OnClick(val handler : () -> Unit) : AdaptiveInstruction {
+fun onClick(handler : (event : AdaptiveUIEvent) -> Unit) = OnClick(handler)
+
+class OnClick(val handler : (event : AdaptiveUIEvent) -> Unit) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderInstructions> { it.onClick = this }

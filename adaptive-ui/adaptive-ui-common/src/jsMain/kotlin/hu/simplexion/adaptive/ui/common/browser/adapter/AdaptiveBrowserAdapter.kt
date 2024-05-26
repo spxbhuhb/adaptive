@@ -46,4 +46,7 @@ open class AdaptiveBrowserAdapter(
 
     }
 
+    override fun openExternalLink(href: String) {
+        window.open(href, "_blank")
+    }
 }

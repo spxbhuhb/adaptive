@@ -43,4 +43,8 @@ abstract class AdaptiveUIAdapter : AdaptiveAdapter {
         }
     }
 
+    open fun openExternalLink(href : String) {
+        throw UnsupportedOperationException("openExternalLink($href)")
+    }
+
 }
