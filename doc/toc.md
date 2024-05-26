@@ -5,6 +5,7 @@
     * [Producers](foundation/producer.md) - fetch data in an adaptive fragment
     * [Expect fragments](foundation/expect.md) - define platform independent fragments
     * [Exporting fragments](foundation/export.md) - export fragments into other projects
+* [UI](ui/ui.md) - building user interfaces
 * [Server](server/server.md) - building "servers" (applies to clients as well)
   * [Settings](server/settings.md) - declare setting providers and get setting values
 * [Adat](adat/adat.md) - improved data classes
