@@ -18,11 +18,10 @@ import platform.UIKit.UIView
 fun ios(
     rootView : UIView,
     vararg imports : AdaptiveFragmentFactory,
-    trace : Boolean = false,
     @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
 ) : AdaptiveIOSAdapter =
     AdaptiveIOSAdapter(
-        rootView, trace
+        rootView
     ).also {
         it.fragmentFactory += imports
         block(it)
