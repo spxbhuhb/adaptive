@@ -13,6 +13,7 @@ interface ArmStateVariable : ArmElement {
     val indexInClosure: Int
     val name: String
     val type : IrType
+    val isInstructions : Boolean
 
     fun matches(symbol: IrSymbol): Boolean
 

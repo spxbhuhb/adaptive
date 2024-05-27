@@ -2,8 +2,8 @@
 
 Related documentation:
 
-* [Rendering Transformation](../internals/RenderingTransformation.md)
-* [Higher Order Functions](../internals/HigherOrder.md)
+* [Rendering Transformation](../internals/rendering-transformation.md)
+* [Higher Order Functions](../internals/mechanisms.md#higher-order-arguments)
 * [Problems with manualImplementation](./manualImplementation.md)
  
 This error means that the code tried to overreach the state of the fragment.

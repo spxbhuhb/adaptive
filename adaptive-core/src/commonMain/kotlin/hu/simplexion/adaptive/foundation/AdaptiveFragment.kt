@@ -366,8 +366,9 @@ abstract class AdaptiveFragment(
     // Fragment search
     // --------------------------------------------------------------------------
 
-    inline fun <reified T> single(): AdaptiveFragment =
-        mutableListOf<AdaptiveFragment>().also { r -> filter(r) { it is T } }.single()
+    @Suppress("UNCHECKED_CAST") // TODO clean up the casting mess in AdaptiveFragment.single
+    inline fun <reified T> single(): T =
+        mutableListOf<T>().also { r -> filter(r as MutableList<AdaptiveFragment>) { it is T } }.single()
 
     open fun single(filterFun: (it: AdaptiveFragment) -> Boolean): AdaptiveFragment =
         mutableListOf<AdaptiveFragment>().also { filter(it, filterFun) }.single()

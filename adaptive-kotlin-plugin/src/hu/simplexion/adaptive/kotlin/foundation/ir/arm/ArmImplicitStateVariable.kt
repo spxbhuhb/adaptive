@@ -23,6 +23,8 @@ class ArmImplicitStateVariable(
     override val type: IrType
         get() = throw IllegalStateException("should not be called")
 
+    override val isInstructions = false
+
     override fun matches(symbol: IrSymbol): Boolean = false
 
 }

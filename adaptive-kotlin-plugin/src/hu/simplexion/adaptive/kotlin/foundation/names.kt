@@ -11,6 +11,7 @@ object Strings {
     const val INTERNAL_PACKAGE = "hu.simplexion.adaptive.foundation.internal"
     const val BINDING_PACKAGE = "hu.simplexion.adaptive.foundation.binding"
     const val STRUCTURAL_PACKAGE = "hu.simplexion.adaptive.foundation.structural"
+    const val INSTRUCTION_PACKAGE = "hu.simplexion.adaptive.foundation.instruction"
 
     const val ADAPTIVE = "Adaptive"
     const val ADAPTIVE_ENTRY = "AdaptiveEntry"
@@ -80,6 +81,7 @@ object Strings {
 
     const val INSTRUCTIONS = "instructions" // instruction parameter name
 
+    const val DETACH = "detach"
 }
 
 object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
@@ -129,7 +131,11 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAPTIVE_TRANSFORM_INTERFACE = Strings.ADAPTIVE_TRANSFORM_INTERFACE.classId()
 
     val ADAPTIVE_EXPECT = Strings.ADAPTIVE_EXPECT.classId()
+
     val ADAPTIVE_INSTRUCTION = "AdaptiveInstruction".classId { INSTRUCTION }
+    val ADAPTIVE_DETACH = "AdaptiveDetach".classId { INSTRUCTION }
+    val DETACH_HANDLER = "DetachHandler".classId { INSTRUCTION }
+
 }
 
 object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {

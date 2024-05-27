@@ -21,6 +21,8 @@ class ArmWhenStateVariable(
     override val type: IrType
         get() = irVariable.type
 
+    override val isInstructions = false
+
     override fun matches(symbol: IrSymbol): Boolean = (symbol == irVariable.symbol)
 
 }

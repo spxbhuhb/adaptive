@@ -205,6 +205,7 @@ class IrFunction2ArmClass(
                 indexInClosure = closure.size,
                 name = irLoopVariable.name.identifier,
                 type = irLoopVariable.type,
+                isInstructions = false,
                 symbol = irLoopVariable.symbol
             )
         )
@@ -248,7 +249,7 @@ class IrFunction2ArmClass(
         for (argumentIndex in 0 until irCall.valueArgumentsCount) {
             val parameter = valueParameters[argumentIndex]
             val expression = irCall.getValueArgument(argumentIndex)
-            val argument = transformValueArgument(armCall, parameter.type, parameter.isAdaptive, expression)
+            val argument = transformValueArgument(armCall, parameter.type, parameter, expression)
             if (argument != null) armCall.arguments += argument
         }
 
@@ -288,7 +289,7 @@ class IrFunction2ArmClass(
         for (argumentIndex in 0 until arguments.size - 1) {  // skip the return type
             val parameter = (arguments[argumentIndex] as IrSimpleTypeImpl)
             val expression = irCall.getValueArgument(argumentIndex) ?: continue
-            val argument = transformValueArgument(armCall, parameter.type, false, expression)
+            val argument = transformValueArgument(armCall, parameter.type, null, expression)
 
             if (argument != null) armCall.arguments += argument
         }
@@ -303,7 +304,7 @@ class IrFunction2ArmClass(
     fun transformValueArgument(
         armCall: ArmCall,
         parameterType: IrType,
-        isAdaptive: Boolean,
+        parameter: IrValueParameter?,
         expression: IrExpression?
     ): ArmValueArgument? =
         when {
@@ -316,7 +317,7 @@ class IrFunction2ArmClass(
                 )
             }
 
-            isAdaptive -> {
+            parameter.isAdaptive -> {
                 if (expression is IrFunctionExpression) {
                     val renderingStatement = transformFragmentFactoryArgument(expression)
 
@@ -357,6 +358,11 @@ class IrFunction2ArmClass(
                 }
             }
 
+            parameter.isInstructions -> {
+                val detachExpressions = transformDetachExpressions(expression)
+                ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies(), detachExpressions)
+            }
+
             else -> {
                 ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies())
             }
@@ -376,6 +382,7 @@ class IrFunction2ArmClass(
                 stateVariableIndex ++,
                 parameter.name.identifier,
                 parameter.type,
+                parameter.isInstructions,
                 parameter.symbol
             )
         }
@@ -515,6 +522,52 @@ class IrFunction2ArmClass(
 
     fun transformTransformCall(irCall: IrCall): ArmTransformCall {
         return ArmTransformCall(irCall)
+    }
+
+    fun transformDetachExpressions(expression: IrExpression) : List<ArmDetachExpression> {
+        check(expression is IrVararg)
+
+        val result = mutableListOf<ArmDetachExpression>()
+
+        expression.elements.forEachIndexed { index, element ->
+            when (element) {
+                is IrCall -> {
+                    for (parameter in element.symbol.owner.valueParameters) {
+                        if (parameter.isDetach) {
+                            result +=transformDetach(element.getValueArgument(parameter.index))
+                        }
+                    }
+                }
+
+                is IrConstructorCall -> {
+                    for (parameter in element.symbol.owner.valueParameters) {
+                        if (parameter.isDetach) {
+                            result +=transformDetach(element.getValueArgument(parameter.index))
+                        }
+                    }
+                }
+            }
+
+        }
+
+        return result
+    }
+
+    fun transformDetach(expression: IrExpression?) : ArmDetachExpression {
+        check(expression != null) { "detach: cannot be defaulted" }
+        check(expression is IrFunctionExpression) { "detach: non-function expression" }
+        check(expression.origin == IrStatementOrigin.LAMBDA) { "detach: non-lambda expression" }
+
+        val body = checkNotNull(expression.function.body) { "detach: missing function body" }
+        check(body.statements.size == 1) { "detach: non-single-statement body" }
+
+        val call = body.statements.first()
+        check(call is IrCall) { "detach: non-call body statement" }
+        check(call.isDirectAdaptiveCall) { "detach: not a direct adaptive call" }
+
+        val armCall = transformDirectCall(call) as ArmCall
+
+        return ArmDetachExpression(expression, armCall)
     }
 
     // ---------------------------------------------------------------------------

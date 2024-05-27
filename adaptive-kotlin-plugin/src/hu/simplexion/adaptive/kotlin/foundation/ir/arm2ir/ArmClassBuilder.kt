@@ -133,12 +133,8 @@ class ArmClassBuilder(
         }
     }
 
-    private fun instructionIndex() : Int =
-        armClass.stateVariables.firstOrNull {
-            it.name == Strings.INSTRUCTIONS
-                && it.type.isArray()
-                && it.type.getArrayElementType(irBuiltIns).isSubtypeOfClass(pluginContext.adaptiveInstructionClass)
-        }?.indexInState ?: -1
+    private fun instructionIndex(): Int =
+        armClass.stateVariables.firstOrNull { it.isInstructions }?.indexInState ?: - 1
 
     private fun initializer(): IrAnonymousInitializer =
         irFactory.createAnonymousInitializer(

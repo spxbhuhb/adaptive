@@ -95,6 +95,10 @@ class AdaptivePluginContext(
     val adaptiveExpectClass = ClassIds.ADAPTIVE_EXPECT.classSymbol()
     val adapterActualizeFun = adaptiveAdapterClass.functionByName { Strings.ACTUALIZE }
 
+    val adaptiveDetachClass = ClassIds.ADAPTIVE_DETACH.classSymbol()
+    val detachHandlerClass = ClassIds.DETACH_HANDLER.classSymbol()
+    val detachFun = detachHandlerClass.owner.functionByName { Strings.DETACH }
+
     private fun String.fragmentPropertyList() =
         adaptiveFragmentClass.owner.properties.filter { it.name.asString() == this }.map { it.symbol }.toList()
 

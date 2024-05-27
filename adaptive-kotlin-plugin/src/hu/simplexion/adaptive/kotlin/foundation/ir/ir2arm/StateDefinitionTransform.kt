@@ -65,6 +65,7 @@ class StateDefinitionTransform(
                 stateVariableIndex,
                 valueParameter.name.identifier,
                 valueParameter.type,
+                valueParameter.isInstructions,
                 valueParameter.symbol
             ).apply {
                 register(valueParameter)

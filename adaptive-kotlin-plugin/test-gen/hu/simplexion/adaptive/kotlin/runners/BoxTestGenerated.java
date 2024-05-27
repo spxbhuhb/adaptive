@@ -185,6 +185,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
             public void testBasic() throws Exception {
                 runTest("testData/box/foundation/instruction/basic.kt");
             }
+
+            @Test
+            @TestMetadata("detach.kt")
+            public void testDetach() throws Exception {
+                runTest("testData/box/foundation/instruction/detach.kt");
+            }
         }
 
         @Nested
@@ -438,6 +444,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
             @TestMetadata("variables.kt")
             public void testVariables() throws Exception {
                 runTest("testData/box/foundation/variables/variables.kt");
+            }
+
+            @Test
+            @TestMetadata("withFunction.kt")
+            public void testWithFunction() throws Exception {
+                runTest("testData/box/foundation/variables/withFunction.kt");
             }
         }
     }

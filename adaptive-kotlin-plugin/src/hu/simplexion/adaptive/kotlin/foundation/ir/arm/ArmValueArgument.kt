@@ -16,7 +16,8 @@ open class ArmValueArgument(
     val argumentIndex: Int,
     val type : IrType,
     open val value: IrExpression,
-    dependencies: ArmDependencies
+    dependencies: ArmDependencies,
+    val detachExpressions : List<ArmDetachExpression> = emptyList()
 ) : ArmExpression(armClass, value, dependencies) {
 
     open fun toPatchExpression(

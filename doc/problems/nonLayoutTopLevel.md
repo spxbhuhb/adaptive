@@ -1,7 +1,6 @@
 # Non-Layout top-level fragment
 
-The top level fragments of an adaptive UI must be a layout fragment such as [stack](../ui/ui.md#stack),
-[grid](../ui/ui.md#grid) or [pixel](../ui/ui.md#pixel).
+The top level fragments of an adaptive UI must be a layout fragment from [Layout Fragments](../ui/layout-fragments.md).
 
 For example this code will throw an exception:
 

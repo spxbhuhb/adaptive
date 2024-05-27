@@ -2,8 +2,10 @@
 
 Related documentation:
 
-* [Rendering Transformation](../internals/RenderingTransformation.md)
+* [Rendering Transformation](../internals/rendering-transformation.md)
 * [Problems with manualImplementation](./manualImplementation.md)
+
+Possible causes:
 
 If the fragment indicated in the error message is a normal fragment:
 
