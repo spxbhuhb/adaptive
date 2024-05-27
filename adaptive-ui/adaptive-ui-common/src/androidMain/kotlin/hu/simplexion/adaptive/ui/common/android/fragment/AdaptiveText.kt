@@ -9,6 +9,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveAndroidAdapter
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.android.adapter.applyRenderInstructions
 
 class AdaptiveText(
     adapter: AdaptiveAndroidAdapter,
@@ -26,6 +27,10 @@ class AdaptiveText(
 
         if (haveToPatch(closureMask, 1)) {
             receiver.text = content
+        }
+
+        if (haveToPatch(closureMask, instructionIndex)) {
+            applyRenderInstructions()
         }
 
         return false

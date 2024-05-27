@@ -31,19 +31,19 @@ fun AdaptiveUIFragment.applyRenderInstructions() {
         fontWeight?.let { style.fontWeight = it.toString() }
         letterSpacing?.let { style.letterSpacing = "${it}px" }
 
-        padding?.let { p ->
-            p.left?.let { style.paddingLeft = "${it}px"}
-            p.top?.let { style.paddingTop = "${it}px"}
-            p.right?.let { style.paddingRight = "${it}px"}
-            p.bottom?.let { style.paddingBottom = "${it}px"}
-        }
-
         textAlign?.let {
             style.textAlign = it.name.lowercase()
         }
 
         textWrap?.let {
             style.setProperty("text-wrap", it.toString().lowercase())
+        }
+
+        padding?.let { p ->
+            p.left?.let { style.paddingLeft = "${it}px"}
+            p.top?.let { style.paddingTop = "${it}px"}
+            p.right?.let { style.paddingRight = "${it}px"}
+            p.bottom?.let { style.paddingBottom = "${it}px"}
         }
 
         size?.let {

@@ -25,7 +25,7 @@ open class AdaptiveBrowserAdapter(
     override fun addActual(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 
-        fragment.alsoIfInstance<HTMLLayoutFragment> {
+        fragment.alsoIfInstance<BrowserLayoutFragment> {
 
             if (it.frame == null) {
                 it.frame = rootContainer.getBoundingClientRect().let { r ->
@@ -40,7 +40,7 @@ open class AdaptiveBrowserAdapter(
     override fun removeActual(fragment: AdaptiveFragment) {
         traceRemoveActual(fragment)
 
-        fragment.alsoIfInstance<HTMLLayoutFragment> {
+        fragment.alsoIfInstance<BrowserLayoutFragment> {
             rootContainer.removeChild(it.receiver)
         }
 

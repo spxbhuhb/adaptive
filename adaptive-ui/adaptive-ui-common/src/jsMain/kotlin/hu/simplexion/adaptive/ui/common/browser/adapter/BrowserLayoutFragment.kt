@@ -19,7 +19,7 @@ import org.w3c.dom.HTMLElement
  *
  * IMPORTANT last state variable should be the fragment factory (see [genBuild])
  */
-abstract class HTMLLayoutFragment(
+abstract class BrowserLayoutFragment(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
@@ -29,7 +29,7 @@ abstract class HTMLLayoutFragment(
 
     override val receiver: HTMLDivElement = document.createElement("div") as HTMLDivElement
 
-    val items = mutableListOf<LayoutItem>()
+    val items = mutableListOf<BrowserLayoutItem>()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         return AdaptiveAnonymous(adapter, this, declarationIndex, 0, fragmentFactory(state.size - 1)).apply { create() }
@@ -67,7 +67,7 @@ abstract class HTMLLayoutFragment(
         fragment.checkIfInstance<AdaptiveUIFragment>().also { uiFragment ->
             uiFragment.receiver.checkIfInstance<HTMLElement>().also { htmlElementReceiver ->
 
-                items += LayoutItem(uiFragment, htmlElementReceiver, -1, -1)
+                items += BrowserLayoutItem(uiFragment, htmlElementReceiver, -1, -1)
 
                 if (anchor == null) {
                     receiver.appendChild(htmlElementReceiver)
@@ -133,17 +133,4 @@ abstract class HTMLLayoutFragment(
         }
     }
 
-    fun LayoutItem.layout() {
-        val layoutFrame = fragment.renderInstructions.layoutFrame
-        val style = receiver.style
-
-        check(layoutFrame !== Frame.NaF) // ops
-
-        style.position = "absolute"
-        style.boxSizing = "border-box"
-        style.top = "${layoutFrame.top}px"
-        style.left = "${layoutFrame.left}px"
-        style.width = "${layoutFrame.width}px"
-        style.height = "${layoutFrame.height}px"
-    }
 }

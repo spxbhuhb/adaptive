@@ -6,11 +6,9 @@ package hu.simplexion.adaptive.ui.common.browser.fragment
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
-import hu.simplexion.adaptive.ui.common.browser.adapter.HTMLLayoutFragment
-import hu.simplexion.adaptive.ui.common.browser.adapter.LayoutItem
+import hu.simplexion.adaptive.ui.common.browser.adapter.BrowserLayoutFragment
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.instruction.ColTemplate
-import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.instruction.RowTemplate
 import hu.simplexion.adaptive.ui.common.logic.distribute
 import hu.simplexion.adaptive.ui.common.logic.expand
@@ -21,7 +19,7 @@ open class AdaptiveGrid(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : HTMLLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
+) : BrowserLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
     override fun measure() {
         super.measure()

@@ -2,16 +2,14 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package hu.simplexion.adaptive.ui.common.browser.adapter
+package hu.simplexion.adaptive.ui.common.adapter
 
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.logic.GridCell
-import org.w3c.dom.HTMLElement
 
-class LayoutItem(
+open class LayoutItem(
     val fragment: AdaptiveUIFragment,
-    val receiver: HTMLElement,
     override var rowIndex: Int,
     override var colIndex: Int
 ) : GridCell {

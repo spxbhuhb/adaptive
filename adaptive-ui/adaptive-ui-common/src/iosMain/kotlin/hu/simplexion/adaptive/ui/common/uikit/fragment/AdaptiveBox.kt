@@ -27,9 +27,9 @@ open class AdaptiveBox(
 
             val rect = item.fragment.renderInstructions.frame
 
-            item.receiver.setFrame(
-                CGRectMake(rect.left.toDouble(), rect.top.toDouble(), rect.width.toDouble(), rect.height.toDouble()),
-            )
+//            item.receiver.setFrame(
+//                CGRectMake(rect.left.toDouble(), rect.top.toDouble(), rect.width.toDouble(), rect.height.toDouble()),
+//            )
         }
     }
 

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.utility.checkIfInstance
 
 abstract class AndroidLayoutFragment(
@@ -19,42 +20,31 @@ abstract class AndroidLayoutFragment(
     stateSize: Int
 ) : AdaptiveUIFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize) {
 
-    @Suppress("LeakingThis") // view group won't do anything during initialization
-    override val receiver: ViewGroup = AdaptiveViewGroup(adapter.context, this)
+    val androidAdapter
+        get() = adapter as AdaptiveAndroidAdapter
 
-    class LayoutItem(
-        val fragment: AdaptiveUIFragment,
-        val receiver: View
-    )
+    override lateinit var receiver: ViewGroup
 
-    val items = mutableListOf<LayoutItem>()
+    val items = mutableListOf<AndroidLayoutItem>()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         return AdaptiveAnonymous(adapter, this, declarationIndex, 0, fragmentFactory(state.size - 1)).apply { create() }
     }
 
-    override fun mount() {
-        // FIXME ui instruction update (should be called from genPatchInternal and also should clear actual UI settings when null)
+    override fun genPatchInternal(): Boolean {
+        val closureMask = getThisClosureDirtyMask()
 
-        renderInstructions.backgroundGradient?.let { gradient ->
-
-            val gradientDrawable = GradientDrawable(
-                GradientDrawable.Orientation.LEFT_RIGHT,
-                intArrayOf(gradient.start.toAndroidColor(), gradient.end.toAndroidColor())
-            )
-
-            renderInstructions.borderRadius?.let { radius ->
-                gradientDrawable.cornerRadius = radius
-            }
-
-            receiver.background = gradientDrawable
+        if (haveToPatch(closureMask, instructionIndex)) {
+            applyRenderInstructions()
         }
 
-        super.mount()
-        measure()
+        return true // TODO optimize layout fragment child patch
     }
 
-    abstract fun layout()
+    override fun create() {
+        receiver = AdaptiveViewGroup(androidAdapter.context, this)
+        super.create()
+    }
 
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
 //            (document.createElement("div") as HTMLDivElement).also {
@@ -73,16 +63,12 @@ abstract class AndroidLayoutFragment(
     }
 
     override fun addActual(fragment: AdaptiveFragment, anchor: AdaptiveFragment?) {
-        if (trace) trace("before-addActual")
+        if (trace) trace("addActual", "$fragment $anchor")
 
         fragment.checkIfInstance<AdaptiveUIFragment>().also { uiFragment ->
             uiFragment.receiver.checkIfInstance<View>().also { viewReceiver ->
 
-                items += LayoutItem(uiFragment, viewReceiver)
-
-                if (isMounted) {
-                    measure()
-                }
+                items += AndroidLayoutItem(uiFragment, viewReceiver, -1, -1)
 
                 if (anchor == null) {
                     receiver.addView(viewReceiver)
@@ -90,12 +76,12 @@ abstract class AndroidLayoutFragment(
 //                        checkNotNull(document.getElementById(anchor.id.toString())) { "missing anchor" }
 //                            .appendChild(htmlElementReceiver)
                 }
-
             }
         }
 
-
-        if (trace) trace("after-addActual")
+        if (isMounted) {
+            measure()
+        }
     }
 
     override fun removeActual(fragment: AdaptiveFragment) {

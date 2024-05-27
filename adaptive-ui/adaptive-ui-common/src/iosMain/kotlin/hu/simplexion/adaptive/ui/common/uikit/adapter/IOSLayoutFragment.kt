@@ -27,7 +27,7 @@ abstract class IOSLayoutFragment(
         get() = renderInstructions.frame
         set(v) {
             renderInstructions.frame = v
-            receiver.setFrame(v.toCGRect())
+            //receiver.setFrame(v?.toCGRect())
         }
 
     class LayoutItem(
@@ -48,8 +48,6 @@ abstract class IOSLayoutFragment(
         super.mount()
         measure()
     }
-
-    abstract fun layout()
 
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
         UIView().also {

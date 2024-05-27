@@ -16,20 +16,18 @@ open class AdaptiveBox(
     declarationIndex: Int
 ) : AndroidLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
-    override fun layout() {
-        if (trace) trace("layout", "frame", frame)
+    override fun measure() {
+        super.measure()
+        for (item in items) {
+            item.layoutFrame = item.frame ?: this.frame ?: Frame.NaF
+        }
+    }
 
-//        for (item in items) {
-//
-//            val rect = item.fragment.renderInstructions.frame ?: DEFAULT_RECT
-//
-//            item.receiver.layout(
-//                rect.x.toInt(),
-//                rect.y.toInt(),
-//                rect.width.toInt(),
-//                rect.height.toInt()
-//            )
-//        }
+    override fun layout() {
+        super.layout()
+        for (item in items) {
+            item.layout()
+        }
     }
 
     companion object : AdaptiveFragmentCompanion {

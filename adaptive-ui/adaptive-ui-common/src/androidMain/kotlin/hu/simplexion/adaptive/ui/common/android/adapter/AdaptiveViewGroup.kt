@@ -24,24 +24,18 @@ class AdaptiveViewGroup(
         // this is necessary, without this the child does not appear
         measureChildren(widthMeasureSpec, heightMeasureSpec)
 
-        val frame = layoutFragment.frame
+        val frame = layoutFragment.renderInstructions.layoutFrame
         setMeasuredDimension(resolveSize(frame.width.toInt(), widthMeasureSpec), resolveSize(frame.height.toInt(), heightMeasureSpec))
     }
 
     override fun generateDefaultLayoutParams(): LayoutParams {
-        val frame = layoutFragment.frame
+        val frame = layoutFragment.renderInstructions.layoutFrame
         return LayoutParams(frame.width.toInt(), frame.height.toInt(), frame.left.toInt(), frame.top.toInt())
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         for (item in layoutFragment.items) {
-            val rect = item.fragment.frame
-            item.receiver.layout(
-                rect.left.toInt(),
-                rect.top.toInt(),
-                rect.left.toInt() + rect.width.toInt(),
-                rect.top.toInt() + rect.height.toInt()
-            )
+            item.layout()
         }
 
 //        val count = childCount
