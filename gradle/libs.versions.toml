@@ -21,11 +21,13 @@ exposed = "0.41.1"
 javamail = "1.6.2"
 junit = "4.13.2"
 junit-bom = "5.8.0"
-kotlin = "1.9.24"
+kotlin = "2.0.0"
+kotlinpoet = "1.16.0"
 ktor = "2.3.10"
 log4j = "2.20.0"
 logback = "1.2.11" # newer versions are incompatible with Android, see https://youtrack.jetbrains.com/issue/KTOR-5227
 plugin-publish = "1.1.0"
+plugin-android = "7.3.0"
 shadow = "7.1.2"
 subethamail = "3.1.7"
 
@@ -63,6 +65,8 @@ kotlin-script-runtime = { module = "org.jetbrains.kotlin:kotlin-script-runtime",
 kotlin-annotations-jvm = { module = "org.jetbrains.kotlin:kotlin-annotations-jvm", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 
+kotlinpoet = { module = "com.squareup:kotlinpoet", version.ref = "kotlinpoet" }
+
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
@@ -77,6 +81,9 @@ ktor-server-websockets = { module = "io.ktor:ktor-server-websockets", version.re
 
 log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+
+plugin-android = { module = "com.android.tools.build:gradle", version.ref = "plugin-android" }
+plugin-android-api = { module = "com.android.tools.build:gradle-api", version.ref = "plugin-android" }
 
 subethamail = { module = "org.subethamail:subethasmtp", version.ref = "subethamail" }
 

@@ -1,6 +1,8 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -24,6 +26,7 @@ repositories {
 
 kotlin {
     jvmToolchain(11) // this is not needed for 2.0.0-RC2, but have to have in 1.9.10
+    compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
 }
 
 sourceSets {
@@ -75,9 +78,6 @@ tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
         languageVersion = "2.0"
         freeCompilerArgs += "-opt-in=org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi"
-        if (libs.versions.kotlin.get().startsWith("1.9")) {
-            freeCompilerArgs += "-Xcontext-receivers" // not needed for 2.0.0-RC2 but needed for 1.9.10
-        }
     }
 }
 

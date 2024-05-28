@@ -11,7 +11,6 @@ import hu.simplexion.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedE
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrVariable
-import org.jetbrains.kotlin.ir.deepCopyWithVariables
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
 import org.jetbrains.kotlin.ir.types.isClassType
@@ -75,8 +74,8 @@ class StateDefinitionTransform(
                 armClass.stateDefinitionStatements +=
                     ArmDefaultValueStatement(
                         indexInState,
-                        defaultValue.expression.deepCopyWithVariables(), // comment out for 2.0.0-RC2
-                        // defaultValue.expression.deepCopyWithoutPatchingParents(), // uncomment for 2.0.0-RC2
+                        // defaultValue.expression.deepCopyWithVariables(), // comment out for 2.0.0-RC2
+                        defaultValue.expression.deepCopyWithoutPatchingParents(), // uncomment for 2.0.0-RC2
                         defaultValue.expression.dependencies()
                     )
             }
