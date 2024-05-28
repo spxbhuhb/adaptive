@@ -6,6 +6,9 @@ package hu.simplexion.adaptive.kotlin.runners
 
 import hu.simplexion.adaptive.kotlin.service.ExtensionRegistrarConfigurator
 import hu.simplexion.adaptive.kotlin.service.PluginAnnotationsProvider
+import org.jetbrains.kotlin.config.JvmTarget
+import org.jetbrains.kotlin.platform.jvm.JvmPlatforms
+import org.jetbrains.kotlin.test.TestJdkKind
 import org.jetbrains.kotlin.test.backend.ir.JvmIrBackendFacade
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives
@@ -36,6 +39,7 @@ abstract class BaseTestRunner : AbstractKotlinCompilerTest() {
 }
 
 fun TestConfigurationBuilder.commonFirWithPluginFrontendConfiguration(dumpFir : Boolean = true) {
+
     baseFirDiagnosticTestConfiguration()
 
     commonConfigurationForTest(
@@ -49,6 +53,7 @@ fun TestConfigurationBuilder.commonFirWithPluginFrontendConfiguration(dumpFir : 
     defaultDirectives {
         + FirDiagnosticsDirectives.ENABLE_PLUGIN_PHASES
         if (dumpFir) + FirDiagnosticsDirectives.FIR_DUMP
+        JvmEnvironmentConfigurationDirectives.JVM_TARGET with JvmTarget.JVM_11
         + JvmEnvironmentConfigurationDirectives.FULL_JDK
     }
 
