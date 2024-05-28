@@ -15,6 +15,7 @@ kotlin {
 }
 
 repositories {
+    google()
     mavenCentral()
 }
 
@@ -25,8 +26,29 @@ val scmPath = "spxbhuhb/adaptive"
 val pomName = "Adaptive Gradle Plugin"
 val pluginDescription = "Kotlin Multiplatform compiler plugin for the Adaptive library."
 
+val embeddedDependencies by configurations.creating {
+    isTransitive = false
+}
+
 dependencies {
+    // By default, Gradle resolves plugins only via Gradle Plugin Portal.
+    // To avoid declaring an additional repo, all dependencies must:
+    // 1. Either be provided by Gradle at runtime (e.g. gradleApi());
+    // 2. Or be included and optionally relocated.
+    // Use `embedded` helper to include a dependency.
+    fun embedded(dep: Any) {
+        compileOnly(dep)
+        testCompileOnly(dep)
+        embeddedDependencies(dep)
+    }
+
+    compileOnly(gradleApi())
+    compileOnly(kotlin("gradle-plugin"))
     implementation(kotlin("gradle-plugin-api"))
+    compileOnly(libs.plugin.android)
+    compileOnly(libs.plugin.android.api)
+
+    embedded(libs.kotlinpoet)
 }
 
 gradlePlugin {

@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.gradle
 
+import hu.simplexion.adaptive.gradle.resources.configureAdaptiveResources
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
 import org.jetbrains.kotlin.gradle.plugin.KotlinCompilation
@@ -32,7 +33,9 @@ class AdaptiveGradlePlugin : KotlinCompilerPluginSupportPlugin {
     }
 
     override fun apply(target: Project): Unit = with(target) {
-        extensions.create(GRADLE_EXTENSION_NAME, AdaptiveGradleExtension::class.java)
+        val adaptiveExtension = extensions.create(GRADLE_EXTENSION_NAME, AdaptiveGradleExtension::class.java)
+
+        project.configureAdaptiveResources(adaptiveExtension.resources.get())
     }
 
     override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean =
@@ -70,7 +73,6 @@ class AdaptiveGradlePlugin : KotlinCompilerPluginSupportPlugin {
 
         val options = mutableListOf<SubpluginOption>()
 
-        options += SubpluginOption(key = "resource-dir", extension.resourceDir.get().toString())
         options += SubpluginOption(key = "plugin-debug", extension.pluginDebug.get().toString())
 
         extension.pluginLogDir.get().let {

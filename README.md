@@ -9,7 +9,7 @@ Adaptive is a consolidated application development library for Kotlin focusing o
 
 Adaptive comes with a compiler plugin that performs many functions to reach the goals above.
  
-> [!IMPORTANT]
+> [!CAUTION]
 >
 > Project status: **preview**
 > 
@@ -137,6 +137,12 @@ adaptive {
 
 * [H2](https://www.h2database.com/) (by multiple contributors, MPL 2.0 or EPL 1.0)
 * [SubEtha SMTP](https://github.com/voodoodyne/subethasmtp) (by SubEthaMail.org, Apache 2.0)
+
+**Copied code from**
+
+* [Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform) (by JetBrains, Apache 2.0)
+  * parts of the resources module
+  * the resources part of the Gradle plugin
 
 **Inspiration**
 
