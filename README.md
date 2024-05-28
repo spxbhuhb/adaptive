@@ -72,9 +72,13 @@ Check out the [adaptive-example](https://github.com/spxbhuhb/adaptive-example) p
 | ui                                                       | User interface modules.                                                           |
 | &nbsp;&nbsp;[common](adaptive-ui/adaptive-ui-common)     | Basic UI fragments for the supported platforms.                                   |
 
-## Building Adaptive
+## Build
 
-Run the `build` task of the root project.
+1. Add `local.propeties` file to
+   1. `adaptive-core`
+   2. `adaptive-ui/adaptive-ui-common`
+   3. `adaptive-sandbox`
+1. Run the `build` task of the root project.
 
 > [!Note]
 >
@@ -101,7 +105,7 @@ To bump Adaptive version number:
 - change `adaptive` version in  [libs.versions.toml](gradle/libs.versions.toml)
 - change `PLUGIN_VERSION` in [AdaptiveGradlePlugin](adaptive-gradle-plugin/src/main/kotlin/hu/simplexion/adaptive/gradle/AdaptiveGradlePlugin.kt) (also see https://github.com/spxbhuhb/adaptive/issues/7)
 
-## Debugging Adaptive
+## Debug
 
 To see what the plugin does, add this to `build.gradle.kts`. When `pluginDebug` is true, the plugin creates
 files for each compilation in the `pluginLogDir` directory.

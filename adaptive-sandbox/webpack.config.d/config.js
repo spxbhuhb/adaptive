@@ -13,13 +13,14 @@ if (config.devServer) {
         // open: false, // comment this out to disable opening new browser windows at startup
         port: 3000,
         host: "127.0.0.1", // comment this out to have the dev server listen on all interfaces
-        proxy: [{
-            '/adaptive/service': {  // proxy to the development backend
+        proxy: [
+            {
+                context: ['/adaptive/service'],
                 target: 'ws://127.0.0.1:8080',
                 ws: true,
                 secure: false
             }
-        }],
+        ],
         historyApiFallback: {
             index: 'index.html',
             disableDotRule: true

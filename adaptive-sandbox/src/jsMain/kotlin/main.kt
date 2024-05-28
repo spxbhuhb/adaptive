@@ -2,10 +2,16 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import hu.simplexion.adaptive.adaptive_sandbox.generated.resources.*
+import hu.simplexion.adaptive.adaptive_sandbox.generated.resources.Res
+import hu.simplexion.adaptive.adaptive_sandbox.generated.resources.background
+import hu.simplexion.adaptive.adaptive_sandbox.generated.resources.logo
+import hu.simplexion.adaptive.adaptive_sandbox.generated.resources.terms
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.Trace
 import hu.simplexion.adaptive.foundation.producer.poll
+import hu.simplexion.adaptive.ktor.withWebSocketTransport
 import hu.simplexion.adaptive.lib.sandbox.SandboxExports
 import hu.simplexion.adaptive.sandbox.api.CounterApi
 import hu.simplexion.adaptive.service.getService
@@ -44,7 +50,7 @@ val traceLayout = Trace(Regex("layout"), Regex("measure.*"))
 fun main() {
 
     withJson()
-    //withWebSocketTransport()
+    withWebSocketTransport()
 
     browser(SandboxExports) {
 
@@ -95,7 +101,7 @@ fun main() {
 fun login() {
     box(Frame(0f, 0f, 375f, 812f)) {
 
-        image("/background.jpg")
+        image(Res.drawable.background)
 
         grid(
             RowTemplate(260.dp, 1.fr, 100.dp, 100.dp),
@@ -103,7 +109,7 @@ fun login() {
         ) {
 
             row(AlignItems.End, JustifyContent.Center, Padding(bottom = 30f)) {
-                image("/logo.png", Size(92f, 92f))
+                image(Res.drawable.logo, Size(92f, 92f))
             }
 
             row(AlignItems.Start, JustifyContent.Center) {
@@ -128,10 +134,10 @@ fun login() {
             column(AlignItems.Center, Padding(right = 32f, left = 32f)) {
                 row {
                     text("By joining you agree to our", *smallWhiteNoWrap, Padding(right = 6f))
-                    text("Terms of Service", externalLink("/terms.txt"), *smallWhiteNoWrap, bold, Padding(right = 6f))
+                    text("Terms of Service", externalLink(Res.file.terms), *smallWhiteNoWrap, bold, Padding(right = 6f))
                     text("and", *smallWhiteNoWrap)
                 }
-                text("Privacy Policy", externalLink("/policy.txt"), *smallWhiteNoWrap, bold)
+                text("Privacy Policy", externalLink(Res.file.policy), *smallWhiteNoWrap, bold)
             }
         }
     }

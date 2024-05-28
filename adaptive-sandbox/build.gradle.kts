@@ -19,10 +19,10 @@ application {
     mainClass.set("MainKt")
 }
 
-//adaptive {
+adaptive {
 //    pluginDebug = true
 //    pluginLogDir = projectDir.toPath()
-//}
+}
 
 kotlin {
     sourceSets.all {

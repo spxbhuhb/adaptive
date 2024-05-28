@@ -26,11 +26,15 @@ open class Resource (
     override fun hashCode(): Int {
         return id.hashCode()
     }
+
+    val uri : String
+        get() = DefaultResourceReader.getUri(items.single().path)
+
 }
 
 data class ResourceItem(
-    internal val qualifiers: Set<Qualifier>,
-    internal val path: String,
-    internal val offset: Long,
-    internal val size: Long,
+    val qualifiers: Set<Qualifier>,
+    val path: String,
+    val offset: Long,
+    val size: Long,
 )

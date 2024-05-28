@@ -14,7 +14,8 @@ internal enum class ResourceType(val typeName: String, val accessorName: String)
     STRING("string", "string"),
     STRING_ARRAY("string-array", "array"),
     PLURAL_STRING("plurals", "plurals"),
-    FONT("font", "font");
+    FONT("font", "font"),
+    FILE("file", "file");
 
     override fun toString(): String = typeName
 
@@ -39,6 +40,7 @@ private fun ResourceType.getClassName(): ClassName = when (this) {
     ResourceType.STRING -> ClassName("hu.simplexion.adaptive.resource", "StringResource")
     ResourceType.STRING_ARRAY -> ClassName("hu.simplexion.adaptive.resource", "StringArrayResource")
     ResourceType.PLURAL_STRING -> ClassName("hu.simplexion.adaptive.resource", "PluralStringResource")
+    ResourceType.FILE -> ClassName("hu.simplexion.adaptive.resource", "FileResource")
 }
 
 private fun ResourceType.requiresKeyName() =
