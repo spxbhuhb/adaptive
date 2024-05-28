@@ -15,7 +15,7 @@ fun register(name: String, skipPlugins : Boolean = false) {
             dependsOn(gradle.includedBuild("adaptive-kotlin-plugin").task(":$taskName"))
         }
         dependsOn(gradle.includedBuild("adaptive-ui").task(":$taskName"))
-        //dependsOn(gradle.includedBuild("adaptive-lib").task(":$taskName"))
+        dependsOn(gradle.includedBuild("adaptive-lib").task(":$taskName"))
     }
 }
 

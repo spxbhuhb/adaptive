@@ -1,10 +1,5 @@
 /*
- * Copyright 2020-2024 JetBrains s.r.o. and respective authors and developers.
- * Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE.txt file.
- *
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
- *
- * This code has been copied from Compose Multiplatform: https://github.com/JetBrains/compose-multiplatform
  */
 package hu.simplexion.adaptive.gradle.resources
 
@@ -127,12 +122,12 @@ internal fun getResFileSpec(
 ): FileSpec {
     val resModifier = if (isPublic) KModifier.PUBLIC else KModifier.INTERNAL
     return FileSpec.builder(packageName, fileName).also { file ->
-        file.addAnnotation(
-            AnnotationSpec.builder(ClassName("kotlin", "OptIn"))
-                .addMember("hu.simplexion.adaptive.resource.InternalResourceApi::class")
-                .addMember("hu.simplexion.adaptive.resource.ExperimentalResourceApi::class")
-                .build()
-        )
+//        file.addAnnotation(
+//            AnnotationSpec.builder(ClassName("kotlin", "OptIn"))
+//                .addMember("hu.simplexion.adaptive.resource.InternalResourceApi::class")
+//                .addMember("hu.simplexion.adaptive.resource.ExperimentalResourceApi::class")
+//                .build()
+//        )
         file.addType(TypeSpec.objectBuilder("Res").also { resObject ->
             resObject.addModifiers(resModifier)
 
@@ -150,7 +145,7 @@ internal fun getResFileSpec(
                     @return The content of the file as a byte array.
                 """.trimIndent()
                     )
-                    .addAnnotation(experimentalAnnotation)
+                    // .addAnnotation(experimentalAnnotation)
                     .addParameter("path", String::class)
                     .addModifiers(KModifier.SUSPEND)
                     .returns(ByteArray::class)
@@ -172,7 +167,7 @@ internal fun getResFileSpec(
                     @return The URI string of the file.
                 """.trimIndent()
                     )
-                    .addAnnotation(experimentalAnnotation)
+                    //.addAnnotation(experimentalAnnotation)
                     .addParameter("path", String::class)
                     .returns(String::class)
                     .addStatement("""return %M("$moduleDir" + path)""", getResourceUri)
@@ -238,11 +233,11 @@ private fun getChunkFileSpec(
     idToResources: Map<String, List<ResourceItem>>
 ): FileSpec {
     return FileSpec.builder(packageName, fileName).also { chunkFile ->
-        chunkFile.addAnnotation(
-            AnnotationSpec.builder(ClassName("kotlin", "OptIn"))
-                .addMember("hu.simplexion.adaptive.resource.InternalResourceApi::class")
-                .build()
-        )
+//        chunkFile.addAnnotation(
+//            AnnotationSpec.builder(ClassName("kotlin", "OptIn"))
+//                .addMember("hu.simplexion.adaptive.resource.InternalResourceApi::class")
+//                .build()
+//        )
 
         val objectSpec = TypeSpec.objectBuilder(chunkClassName).also { typeObject ->
             typeObject.addModifiers(KModifier.PRIVATE)

@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.kotlinJvm)
     signing
     `maven-publish`
+    alias(libs.plugins.download)
+    alias(libs.plugins.shadow)
 }
 
 kotlin {
@@ -49,6 +51,26 @@ dependencies {
     compileOnly(libs.plugin.android.api)
 
     embedded(libs.kotlinpoet)
+}
+
+val packagesToRelocate = listOf("de.undercouch", "com.squareup.kotlinpoet")
+
+val shadow = tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
+    for (packageToRelocate in packagesToRelocate) {
+        relocate(packageToRelocate, "hu.simplexion.adaptive.gradle.internal.$packageToRelocate")
+    }
+    archiveBaseName.set("shadow")
+    archiveClassifier.set("")
+    archiveVersion.set("")
+    configurations = listOf(embeddedDependencies)
+    exclude("META-INF/gradle-plugins/de.undercouch.download.properties")
+    exclude("META-INF/versions/**")
+}
+
+val jar = tasks.named<Jar>("jar") {
+    dependsOn(shadow)
+    from(zipTree(shadow.get().archiveFile))
+    this.duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 gradlePlugin {

@@ -6,6 +6,6 @@ rootProject.name = "adaptive"
 includeBuild("adaptive-core")
 includeBuild("adaptive-kotlin-plugin")
 includeBuild("adaptive-gradle-plugin")
-//includeBuild("adaptive-lib")
-//includeBuild("adaptive-sandbox")
+includeBuild("adaptive-lib")
+includeBuild("adaptive-sandbox")
 includeBuild("adaptive-ui")

@@ -17,8 +17,6 @@ version = libs.versions.adaptive.get()
 
 val scmPath = "spxbhuhb/adaptive"
 
-tasks["clean"].dependsOn(gradle.includedBuild("adaptive-core").task(":clean"))
-
 repositories {
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
@@ -52,6 +50,9 @@ dependencies {
     testImplementation(libs.kotlin.compiler.internal.test.framework)
     testImplementation(libs.junit)
 
+    testRuntimeOnly(libs.kotlinx.coroutines.core)
+    testRuntimeOnly(libs.kotlinx.datetime)
+
     testImplementation(platform(libs.junit.bom))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.junit.platform:junit-platform-commons")
@@ -61,7 +62,6 @@ dependencies {
 }
 
 tasks.test {
-    dependsOn(gradle.includedBuild("adaptive-core").task(":shadowJar"))
     testLogging.showStandardStreams = true
     useJUnitPlatform()
     doFirst {
@@ -71,6 +71,9 @@ tasks.test {
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-test", "kotlin-test")
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-script-runtime", "kotlin-script-runtime")
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-annotations-jvm", "kotlin-annotations-jvm")
+        setLibraryProperty("org.jetbrains.kotlin.test.kotlin-annotations-jvm", "kotlin-annotations-jvm")
+        setLibraryProperty("adaptive.kotlin.test.kotlinx-coroutines-core", "kotlinx-coroutines-core-jvm")
+        setLibraryProperty("adaptive.kotlin.test.kotlinx-datetime", "kotlinx-datetime-jvm")
     }
 }
 

@@ -11,11 +11,22 @@ import kotlin.io.path.getLastModifiedTime
 import kotlin.io.path.name
 import kotlin.streams.toList
 
-fun runtimeClassPath() : List<File> =
-    listOf(
-        Files.list(Paths.get("../adaptive-core/build/libs/"))
-            .filter { it.name.startsWith("adaptive-core-") && it.name.endsWith("-all.jar") }
-            .toList()
-            .maxBy { it.getLastModifiedTime() }
-            .toFile()
-    )
+fun runtimeClassPath() : List<File> {
+    val result = mutableListOf<File>()
+
+    Files.list(Paths.get("../adaptive-core/build/libs/"))
+        .filter { it.name.startsWith("adaptive-core-jvm-") && it.name.endsWith(".jar") }
+        .forEach { result += it.toFile() }
+
+    check(result.isNotEmpty()) { "Runtime JAR does not exist. Please run :adaptive-core:build" }
+
+    val latest = result.maxBy { it.lastModified() }
+
+    result.clear()
+    result += latest
+
+    result += File(System.getProperty("adaptive.kotlin.test.kotlinx-coroutines-core"))
+    result += File(System.getProperty("adaptive.kotlin.test.kotlinx-datetime"))
+
+    return result
+}

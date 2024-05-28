@@ -10,7 +10,7 @@ package hu.simplexion.adaptive.resource
  * @property id The ID of the resource.
  * @property items The set of resource items associated with the resource.
  */
-class Resource (
+open class Resource (
     val id: String,
     val items: Set<ResourceItem>
 ) {

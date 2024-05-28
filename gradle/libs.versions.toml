@@ -15,6 +15,7 @@ androidx-espresso-core = "3.5.1"
 androidx-test-junit = "1.1.5"
 coroutines = "1.7.3"
 datetime = "0.4.0"
+gradle-download-plugin = "5.5.0"
 h2 = "2.1.214"
 hikaricp = "3.4.2"
 exposed = "0.41.1"
@@ -28,7 +29,7 @@ log4j = "2.20.0"
 logback = "1.2.11" # newer versions are incompatible with Android, see https://youtrack.jetbrains.com/issue/KTOR-5227
 plugin-publish = "1.1.0"
 plugin-android = "7.3.0"
-shadow = "7.1.2"
+shadow = "8.1.1"
 subethamail = "3.1.7"
 
 [libraries]
@@ -92,6 +93,7 @@ subethamail = { module = "org.subethamail:subethasmtp", version.ref = "subethama
 adaptive = { id = "hu.simplexion.adaptive", version.ref = "adaptive" }
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
+download = { id = "de.undercouch.download", version.ref = "gradle-download-plugin" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }

@@ -90,4 +90,4 @@ Thumbs.db
 /.run/*
 /.run/
 **/.kotlin
-/local.properties
+**/local.properties

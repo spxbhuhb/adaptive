@@ -1,10 +1,5 @@
 /*
- * Copyright 2020-2024 JetBrains s.r.o. and respective authors and developers.
- * Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE.txt file.
- *
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
- *
- * This code has been copied from Compose Multiplatform: https://github.com/JetBrains/compose-multiplatform
  */
 
 package hu.simplexion.adaptive.gradle.resources
@@ -46,15 +41,23 @@ private fun Project.onKgpApplied(config: Provider<ResourcesExtension>, kgp: Kotl
     val kmpResourcesAreAvailable = hasKmpResources && currentGradleVersion >= minGradleVersion
 
     if (kmpResourcesAreAvailable) {
-        configureKmpResources(kotlinExtension, extraProperties.get(KMP_RES_EXT)!!, config)
-        onAgpApplied { fixAndroidLintTaskDependencies() }
+        configureKmpResources(kotlinExtension, extraProperties.get(KMP_RES_EXT) !!, config)
+        try {
+            onAgpApplied { fixAndroidLintTaskDependencies() }
+        } catch (ex: NoClassDefFoundError) {
+            // this means that the android plugin is not there
+        }
     } else {
         val commonMain = KotlinSourceSet.COMMON_MAIN_SOURCE_SET_NAME
         configureAdaptiveResources(kotlinExtension, commonMain, config)
 
-        onAgpApplied { androidExtension ->
-            configureAndroidAdaptiveResources(kotlinExtension, androidExtension)
-            fixAndroidLintTaskDependencies()
+        try {
+            onAgpApplied { androidExtension ->
+                configureAndroidAdaptiveResources(kotlinExtension, androidExtension)
+                fixAndroidLintTaskDependencies()
+            }
+        } catch (ex: NoClassDefFoundError) {
+            // this means that the android plugin is not there
         }
     }
 
@@ -64,7 +67,6 @@ private fun Project.onKgpApplied(config: Provider<ResourcesExtension>, kgp: Kotl
 private fun Project.onAgpApplied(block: (androidExtension: BaseExtension) -> Unit) {
     androidPluginIds.forEach { pluginId ->
         plugins.withId(pluginId) {
-            logger.warn("${project.name} onAgpApplied $pluginId")
             val androidExtension = project.extensions.getByType(BaseExtension::class.java)
             block(androidExtension)
         }
