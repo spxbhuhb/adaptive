@@ -38,7 +38,7 @@ See [platforms](./doc/platforms/README.md) for details.
 
 ## Getting Started
 
-There is some [documentation](doc/toc.md).
+There is some [documentation](doc/README).
 
 Check out the [adaptive-example](https://github.com/spxbhuhb/adaptive-example) project, or jump to the
 * [API](https://github.com/spxbhuhb/adaptive-example/blob/main/shared/src/commonMain/kotlin/CounterApi.kt) (defines the API between the clients and the server)
@@ -56,9 +56,9 @@ Check out the [adaptive-example](https://github.com/spxbhuhb/adaptive-example) p
 | Component                                                | Content                                                                           |
 |----------------------------------------------------------|-----------------------------------------------------------------------------------|
 | core                                                     | The fundamental core of the library.                                              |
-| &nbsp;&nbsp;[adat](doc/adat/adat.md)                     | Data classes with many convenience functions, metadata and serialization support. |
-| &nbsp;&nbsp;[foundation](doc/foundation/foundation.md)   | Fundamental classes and interfaces for building adaptive structures.              |
-| &nbsp;&nbsp;[server](doc/server/server.md)               | Server side adaptive fragments: workers, services, stores, settings.              |
+| &nbsp;&nbsp;[adat](doc/adat/README)                     | Data classes with many convenience functions, metadata and serialization support. |
+| &nbsp;&nbsp;[foundation](doc/foundation/README)   | Fundamental classes and interfaces for building adaptive structures.              |
+| &nbsp;&nbsp;[server](doc/server/README)               | Server side adaptive fragments: workers, services, stores, settings.              |
 | &nbsp;&nbsp;service                                      | Client-server communication with simple function calls.                           |
 | &nbsp;&nbsp;wireformat                                   | Serialization (protobuf and Json).                                                |
 | gradle-plugin                                            | The Gradle plugin.                                                                |

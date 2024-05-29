@@ -173,11 +173,11 @@ data class BasicServiceContext(
 ### Service Transports
 
 Transports move the call arguments and the return values between the client and the server. The library 
-uses [WireFormat](../wireformat/wireformat.md) for transport.
+uses [WireFormat](../wireformat/README) for transport.
 
 There is a very basic transport implementation for Ktor in `adaptive-lib` which is automatically
 included with `KtorWorker` and can be added on the client side with `withWebSocketTransport()`
 
 ## Supported Parameter and Return Types
 
-Whatever [WireFormat](../wireformat/wireformat.md) supports.
+Whatever [WireFormat](../wireformat/README) supports.

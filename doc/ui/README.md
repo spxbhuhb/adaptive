@@ -25,3 +25,5 @@
 
 [Event Instructions](./event-instructions.md)
 - [OnClick](./event-instructions.md#onclick)
+
+[Resources](../resource/README)
