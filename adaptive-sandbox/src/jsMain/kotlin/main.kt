@@ -11,6 +11,7 @@ import hu.simplexion.adaptive.lib.sandbox.SandboxExports
 import hu.simplexion.adaptive.sandbox.api.CounterApi
 import hu.simplexion.adaptive.service.getService
 import hu.simplexion.adaptive.ui.common.browser.adapter.browser
+import hu.simplexion.adaptive.ui.common.browser.resource.withJsResources
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.wireformat.withJson
@@ -47,6 +48,7 @@ fun main() {
 
     withJson()
     withWebSocketTransport()
+    withJsResources()
 
     browser(SandboxExports) {
 

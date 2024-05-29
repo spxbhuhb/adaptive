@@ -31,7 +31,7 @@ open class AdaptiveImage(
             receiver.src = res.uri
         }
 
-        if (haveToPatch(closureMask, instructionIndex)) {
+        if (haveToPatch(closureMask, 1 shl instructionIndex)) {
             applyRenderInstructions()
         }
 

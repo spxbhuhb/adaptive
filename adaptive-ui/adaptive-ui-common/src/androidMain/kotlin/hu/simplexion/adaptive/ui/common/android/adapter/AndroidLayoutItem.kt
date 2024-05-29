@@ -19,7 +19,7 @@ class AndroidLayoutItem(
     fun layout() {
         val layoutFrame = fragment.renderInstructions.layoutFrame
 
-        check(layoutFrame !== Frame.NaF) // ops
+        check(layoutFrame !== Frame.NaF) { "Missing layout frame in $fragment"}
 
         receiver.layout(
             layoutFrame.left.toInt(),

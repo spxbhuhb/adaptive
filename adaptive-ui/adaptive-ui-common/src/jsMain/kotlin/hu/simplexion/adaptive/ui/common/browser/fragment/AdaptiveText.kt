@@ -28,7 +28,7 @@ open class AdaptiveText(
             receiver.textContent = content
         }
 
-        if (haveToPatch(closureMask, instructionIndex)) {
+        if (haveToPatch(closureMask, 1 shl instructionIndex)) {
             applyRenderInstructions()
         }
 

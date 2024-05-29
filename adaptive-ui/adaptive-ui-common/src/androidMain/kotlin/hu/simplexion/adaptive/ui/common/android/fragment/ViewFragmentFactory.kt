@@ -9,8 +9,9 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
 object ViewFragmentFactory : AdaptiveFragmentFactory() {
     init {
         addAll(
-            AdaptiveClickable,
             AdaptiveBox,
+            AdaptiveClickable,
+            AdaptiveImage,
             AdaptiveText
         )
     }

@@ -3,30 +3,43 @@
  */
 package hu.simplexion.adaptive.ui.common.android.fragment
 
+import android.graphics.BitmapFactory
+import android.widget.ImageView
 import android.widget.TextView
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
+import hu.simplexion.adaptive.resource.DrawableResource
+import hu.simplexion.adaptive.resource.defaultResourceReader
 import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveAndroidAdapter
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.android.adapter.applyRenderInstructions
+import hu.simplexion.adaptive.utility.checkIfInstance
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
-class AdaptiveText(
+class AdaptiveImage(
     adapter: AdaptiveAndroidAdapter,
     parent: AdaptiveFragment,
     index: Int
 ) : AdaptiveUIFragment(adapter, parent, index, 1, 2) {
 
-    override val receiver = TextView(adapter.context)
+    override val receiver = ImageView(adapter.context)
 
-    private val content: String
-        get() = state[0]?.toString() ?: ""
+    private val content: DrawableResource
+        get() = state[0].checkIfInstance()
 
     override fun genPatchInternal(): Boolean {
         val closureMask = getThisClosureDirtyMask()
+        if (closureMask == 0) return false
 
         if (haveToPatch(closureMask, 1)) {
-            receiver.text = content
+            // FIXME start image read in a different thread and during mount maybe?
+            CoroutineScope(adapter.dispatcher).launch {
+                val data = defaultResourceReader.read(content.path)
+                val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+                receiver.setImageBitmap(bitmap)
+            }
         }
 
         if (haveToPatch(closureMask, 1 shl instructionIndex)) {
@@ -38,10 +51,10 @@ class AdaptiveText(
 
     companion object : AdaptiveFragmentCompanion {
 
-        override val fragmentType = "$commonUI:AdaptiveText"
+        override val fragmentType = "$commonUI:AdaptiveImage"
 
         override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveText(parent.adapter as AdaptiveAndroidAdapter, parent, index)
+            AdaptiveImage(parent.adapter as AdaptiveAndroidAdapter, parent, index)
 
     }
 

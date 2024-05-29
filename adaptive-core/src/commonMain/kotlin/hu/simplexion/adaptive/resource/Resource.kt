@@ -32,8 +32,11 @@ open class Resource (
         return id.hashCode()
     }
 
+    val path : String
+        get() = items.single().path
+
     val uri : String
-        get() = defaultResourceReader.getUri(items.single().path)
+        get() = defaultResourceReader.getUri(path)
 
 }
 

@@ -13,7 +13,7 @@ import org.jetbrains.kotlin.gradle.plugin.SubpluginArtifact
 import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 import java.io.File
 
-const val PLUGIN_VERSION = "2024.05.29-SNAPSHOT"
+const val PLUGIN_VERSION = "2024.05.29.1-SNAPSHOT"
 const val KOTLIN_COMPILER_PLUGIN_ID = "adaptive"  // this is how the compiler identifies the plugin
 const val KOTLIN_COMPILER_PLUGIN_ARTIFACT_GROUP = "hu.simplexion.adaptive"
 const val KOTLIN_COMPILER_PLUGIN_ARTIFACT_NAME = "adaptive-kotlin-plugin"
