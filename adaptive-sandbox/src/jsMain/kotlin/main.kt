@@ -2,11 +2,6 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-import hu.simplexion.adaptive.adaptive_sandbox.generated.resources.*
-import hu.simplexion.adaptive.adaptive_sandbox.generated.resources.Res
-import hu.simplexion.adaptive.adaptive_sandbox.generated.resources.background
-import hu.simplexion.adaptive.adaptive_sandbox.generated.resources.logo
-import hu.simplexion.adaptive.adaptive_sandbox.generated.resources.terms
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.Trace
@@ -21,6 +16,7 @@ import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.wireformat.withJson
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import sandbox.*
 import kotlin.time.Duration.Companion.seconds
 
 val counterService = getService<CounterApi>()
@@ -143,16 +139,17 @@ fun login() {
     }
 }
 
+
 @Adaptive
 fun counterWithTime(time: Instant) {
     val counter = poll(1.seconds, 0) { counterService.incrementAndGet() }
     text("$time $counter", Frame(150f, 150f, 250f, 20f))
 }
 
-fun chess(size : Int, cellSize : DIPixel) =
+fun chess(size: Int, cellSize: DIPixel) =
     arrayOf(ColTemplate(Repeat(size, cellSize)), RowTemplate(Repeat(size, cellSize)))
 
-fun cellColor(r : Int, c: Int) =
+fun cellColor(r: Int, c: Int) =
     if (((r * 8) + c) % 2 == 0) white else black
 
 @Adaptive

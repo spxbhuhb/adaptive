@@ -28,7 +28,7 @@ internal fun Project.configureAdaptiveResourcesGeneration(
 
     //lazy check a dependency on the Resources library
     val shouldGenerateCode = config.map {
-        when (it.generateResClass.get()) {
+        when (it.generateResClass) {
             ResourcesExtension.ResourceClassGeneration.Auto -> {
 // this would be useful if resources would be a dependency, however, it is in core, so no need to use auto
 //                configurations.run {
@@ -58,7 +58,7 @@ internal fun Project.configureAdaptiveResourcesGeneration(
                 sourceSet,
                 shouldGenerateCode,
                 packageName,
-                makeAccessorsPublic.get(),
+                makeAccessorsPublic,
                 packagingDir,
                 generateModulePath
             )
@@ -72,7 +72,7 @@ internal fun Project.configureAdaptiveResourcesGeneration(
             preparedResources,
             shouldGenerateCode,
             packageName,
-            makeAccessorsPublic.get(),
+            makeAccessorsPublic,
             packagingDir,
             generateModulePath
         )

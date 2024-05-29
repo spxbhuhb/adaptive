@@ -35,7 +35,7 @@ class AdaptiveGradlePlugin : KotlinCompilerPluginSupportPlugin {
     override fun apply(target: Project): Unit = with(target) {
         val adaptiveExtension = extensions.create(GRADLE_EXTENSION_NAME, AdaptiveGradleExtension::class.java)
 
-        project.configureAdaptiveResources(adaptiveExtension.resources.get())
+        project.configureAdaptiveResources(adaptiveExtension.resources)
     }
 
     override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean =
@@ -73,9 +73,9 @@ class AdaptiveGradlePlugin : KotlinCompilerPluginSupportPlugin {
 
         val options = mutableListOf<SubpluginOption>()
 
-        options += SubpluginOption(key = "plugin-debug", extension.pluginDebug.get().toString())
+        options += SubpluginOption(key = "plugin-debug", extension.pluginDebug.toString())
 
-        extension.pluginLogDir.get().let {
+        extension.pluginLogDir.let {
             options += SubpluginOption(key = "plugin-log-dir", it.toString())
         }
 

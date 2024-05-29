@@ -6,22 +6,20 @@ package hu.simplexion.adaptive.gradle
 
 import hu.simplexion.adaptive.gradle.resources.ResourcesExtension
 import org.gradle.api.Action
-import org.gradle.api.model.ObjectFactory
-import org.gradle.api.provider.Property
 import java.nio.file.Path
 import java.nio.file.Paths
 
 /**
  * Settings for the Adaptive compiler plugin.
  */
-open class AdaptiveGradleExtension(objects: ObjectFactory) {
+open class AdaptiveGradleExtension {
 
     /**
      * When `true` the plugin generates output into [pluginLogDir]
      *
      * Default: `false`
      */
-    val pluginDebug: Property<Boolean> = objects.property(Boolean::class.java).also { it.set(false) }
+    var pluginDebug: Boolean = false
 
     /**
      * When [pluginDebug] is true the plugin saves logs into this directory. Each run creates a file named
@@ -34,12 +32,16 @@ open class AdaptiveGradleExtension(objects: ObjectFactory) {
      *
      * `/Users/<username>/Library/Application Support/kotlin/daemon`
      */
-    val pluginLogDir: Property<Path> = objects.property(Path::class.java).also { it.set(Paths.get(".")) }
+    var pluginLogDir: Path = Paths.get(".")
 
     /**
-     * Configuration for resources.
+     * Configuration of resource handling.
      */
-    val resources : Property<ResourcesExtension> = objects.property(ResourcesExtension::class.java).also { it.set(ResourcesExtension(objects)) }
+    val resources: ResourcesExtension = ResourcesExtension()
+
+    fun resources(action: ResourcesExtension.() -> Unit) {
+        resources.action()
+    }
 }
 
 @Suppress("unused")

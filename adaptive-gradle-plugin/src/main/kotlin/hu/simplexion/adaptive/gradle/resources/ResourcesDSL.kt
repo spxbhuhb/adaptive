@@ -15,13 +15,14 @@ import org.gradle.api.provider.Provider
 import java.io.File
 import org.gradle.api.provider.Property
 
-open class ResourcesExtension(objects: ObjectFactory) {
+open class ResourcesExtension {
+
     /**
      * Whether the generated resources accessors class should be public or not.
      *
      * Default is false.
      */
-    var publicResClass: Property<Boolean> = objects.property(Boolean::class.java).also { it.set(false) }
+    var publicResClass: Boolean = false
 
     /**
      * The unique identifier of the resources in the current project.
@@ -30,7 +31,7 @@ open class ResourcesExtension(objects: ObjectFactory) {
      * If it is empty then `{group name}.{module name}.generated.resources` will be used.
      *
      */
-    var packageOfResClass: Property<String> = objects.property(String::class.java).also { it.set("") }
+    var packageOfResClass: String = ""
 
     enum class ResourceClassGeneration { Auto, Always, Never }
 
@@ -46,17 +47,18 @@ open class ResourcesExtension(objects: ObjectFactory) {
      * - `always`: Unconditionally generate the Res class. This may be useful when the resources library is available transitively.
      * - `never`: Never generate the Res class.
      */
-    var generateResClass: Property<ResourceClassGeneration> = objects.property(ResourceClassGeneration::class.java).also { it.set(auto) }
+    var generateResClass: ResourceClassGeneration = auto
 }
 
 internal fun Provider<ResourcesExtension>.getResourcePackage(project: Project) = map { config ->
-    config.packageOfResClass.get().takeIf { it.isNotEmpty() } ?: run {
+    config.packageOfResClass.takeIf { it.isNotEmpty() } ?: run {
         val groupName = project.group.toString().lowercase().asUnderscoredIdentifier()
         val moduleName = project.name.lowercase().asUnderscoredIdentifier()
         val id = if (groupName.isNotEmpty()) "$groupName.$moduleName" else moduleName
         "$id.generated.resources"
     }
 }
+
 //the dir where resources must be placed in the final artefact
 internal fun Provider<ResourcesExtension>.getModuleResourcesDir(project: Project) =
     getResourcePackage(project).map { packageName -> File("$ADAPTIVE_RESOURCES_DIR/$packageName") }

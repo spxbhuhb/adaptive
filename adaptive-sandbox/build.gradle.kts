@@ -22,6 +22,11 @@ application {
 adaptive {
 //    pluginDebug = true
 //    pluginLogDir = projectDir.toPath()
+    resources {
+        publicResClass = true
+        packageOfResClass = "sandbox"
+        generateResClass = always
+    }
 }
 
 kotlin {

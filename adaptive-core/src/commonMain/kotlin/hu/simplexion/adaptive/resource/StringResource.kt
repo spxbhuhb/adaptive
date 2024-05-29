@@ -4,4 +4,4 @@
 
 package hu.simplexion.adaptive.resource
 
-class StringResource(id: String, items: Set<ResourceItem>) : Resource(id, items)
+class StringResource(id: String, val key : String, items: Set<ResourceItem>) : Resource(id, items)

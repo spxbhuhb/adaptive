@@ -9,23 +9,18 @@
 
 package hu.simplexion.adaptive.resource
 
-import kotlinx.browser.window
-
-private external class Intl {
-    class Locale(locale: String) {
-        val language: String
-        val region: String
-    }
-}
+import android.content.res.Configuration
+import android.content.res.Resources
+import java.util.*
 
 internal actual fun getSystemEnvironment(): ResourceEnvironment {
-    val locale = Intl.Locale(window.navigator.language)
-    val isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-    //96 - standard browser DPI https://developer.mozilla.org/en-US/docs/Web/API/Window/devicePixelRatio
-    val dpi: Int = (window.devicePixelRatio * 96).toInt()
+    val locale = Locale.getDefault()
+    val configuration = Resources.getSystem().configuration
+    val isDarkTheme = configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+    val dpi = configuration.densityDpi
     return ResourceEnvironment(
         language = LanguageQualifier(locale.language),
-        region = RegionQualifier(locale.region),
+        region = RegionQualifier(locale.country),
         theme = ThemeQualifier.selectByValue(isDarkTheme),
         density = DensityQualifier.selectByValue(dpi)
     )

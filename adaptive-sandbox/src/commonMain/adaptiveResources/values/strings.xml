@@ -1,0 +1,13 @@
+<!--
+  ~ Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+  -->
+
+<resources>
+    <string name="app_name">"Good Morning"</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_in">Sign In</string>
+    <string name="by_joining">By joining you agree to our</string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="and">and</string>
+    <string name="privacy_policy">Privacy Policy</string>
+</resources>
