@@ -9,6 +9,12 @@
 
 package hu.simplexion.adaptive.resource
 
+interface ResourceReader {
+    suspend fun read(path: String): ByteArray
+    suspend fun readPart(path: String, offset: Long, size: Long): ByteArray
+    fun getUri(path: String): String
+}
+
 class MissingResourceException(path: String) : Exception("Missing resource with path: $path")
 
 /**
@@ -17,7 +23,7 @@ class MissingResourceException(path: String) : Exception("Missing resource with 
  * @param path The path of the file to read in the resource's directory.
  * @return The content of the file as a byte array.
  */
-suspend fun readResourceBytes(path: String): ByteArray = DefaultResourceReader.read(path)
+suspend fun readResourceBytes(path: String): ByteArray = defaultResourceReader.read(path)
 
 /**
  * Provides the platform dependent URI for a given resource path.
@@ -25,14 +31,9 @@ suspend fun readResourceBytes(path: String): ByteArray = DefaultResourceReader.r
  * @param path The path to the file in the resource's directory.
  * @return The URI string of the specified resource.
  */
-fun getResourceUri(path: String): String = DefaultResourceReader.getUri(path)
+fun getResourceUri(path: String): String = defaultResourceReader.getUri(path)
 
-interface ResourceReader {
-    suspend fun read(path: String): ByteArray
-    suspend fun readPart(path: String, offset: Long, size: Long): ByteArray
-    fun getUri(path: String): String
-}
+val defaultResourceReader: ResourceReader
+    get() = checkNotNull(defaultResourceReaderOrNull) { "no resource reader has been set, use withResources() in your bootstrap to set the default one for the given platform" }
 
-expect fun getPlatformResourceReader(): ResourceReader
-
-val DefaultResourceReader = getPlatformResourceReader()
+var defaultResourceReaderOrNull : ResourceReader? = null

@@ -33,7 +33,7 @@ open class Resource (
     }
 
     val uri : String
-        get() = DefaultResourceReader.getUri(items.single().path)
+        get() = defaultResourceReader.getUri(items.single().path)
 
 }
 

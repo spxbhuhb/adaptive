@@ -7,16 +7,46 @@
  * This code has been copied from Compose Multiplatform: https://github.com/JetBrains/compose-multiplatform
  */
 
-package hu.simplexion.adaptive.resource
+package hu.simplexion.adaptive.ui.common.uikit.resource
 
+import hu.simplexion.adaptive.resource.*
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
 import platform.Foundation.*
+import platform.UIKit.UIScreen
+import platform.UIKit.UIUserInterfaceStyle
 import platform.posix.memcpy
 
+fun withIosResources() {
+    defaultResourceEnvironmentOrNull = getSystemEnvironment()
+    defaultResourceReaderOrNull = getPlatformResourceReader()
+}
+
+private fun getSystemEnvironment(): ResourceEnvironment {
+    val locale = NSLocale.preferredLanguages.firstOrNull()
+        ?.let { NSLocale(it as String) }
+        ?: NSLocale.currentLocale
+
+    val languageCode = locale.languageCode
+    val regionCode = locale.objectForKey(NSLocaleCountryCode) as? String
+    val mainScreen = UIScreen.mainScreen
+    val isDarkTheme = mainScreen.traitCollection().userInterfaceStyle == UIUserInterfaceStyle.UIUserInterfaceStyleDark
+
+    //there is no an API to get a physical screen size and calculate a real DPI
+    val density = mainScreen.scale.toFloat()
+    return ResourceEnvironment(
+        language = LanguageQualifier(languageCode),
+        region = RegionQualifier(regionCode.orEmpty()),
+        theme = ThemeQualifier.selectByValue(isDarkTheme),
+        density = DensityQualifier.selectByDensity(density)
+    )
+}
+
+
 @OptIn(ExperimentalForeignApi::class)
-actual fun getPlatformResourceReader(): ResourceReader = object : ResourceReader {
+private fun getPlatformResourceReader(): ResourceReader = object : ResourceReader {
+
     override suspend fun read(path: String): ByteArray {
         val data = readData(getPathInBundle(path))
         return ByteArray(data.length.toInt()).apply {
@@ -51,4 +81,5 @@ actual fun getPlatformResourceReader(): ResourceReader = object : ResourceReader
         // todo: support fallback path at bundle root?
         return NSBundle.mainBundle.resourcePath + "/adaptive-resources/" + path
     }
+
 }

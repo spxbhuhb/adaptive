@@ -45,7 +45,6 @@ internal fun Project.configureAdaptiveResourcesGeneration(
 
             ResourcesExtension.ResourceClassGeneration.Always -> true
             ResourcesExtension.ResourceClassGeneration.Never -> false
-            null -> true
         }
     }
     val packageName = config.getResourcePackage(project)

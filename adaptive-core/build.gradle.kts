@@ -7,7 +7,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
     signing
     `maven-publish`
 }
@@ -26,12 +25,6 @@ repositories {
 
 kotlin {
     jvmToolchain(11)
-
-    androidTarget {
-        publishLibraryVariants("release", "debug")
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
-    }
 
     jvm {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
@@ -81,18 +74,6 @@ kotlin {
         sourceSets["jvmTest"].dependencies {
             api(libs.kotlin.test.junit)
         }
-    }
-}
-
-android {
-    namespace = "hu.simplexion.adaptive"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
     }
 }
 

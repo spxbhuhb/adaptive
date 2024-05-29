@@ -52,7 +52,7 @@ fun configureWebResources(configure: WebResourcesConfiguration.() -> Unit) {
     WebResourcesConfiguration.configure()
 }
 
-internal fun getResourceUrl(windowOrigin: String, windowPathname: String, resourcePath: String): String {
+fun getResourceUrl(windowOrigin: String, windowPathname: String, resourcePath: String): String {
     val path = WebResourcesConfiguration.getResourcePath(resourcePath)
     return when {
         path.startsWith("/") -> windowOrigin + path

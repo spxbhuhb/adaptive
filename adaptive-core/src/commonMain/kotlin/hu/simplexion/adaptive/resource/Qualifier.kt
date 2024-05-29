@@ -20,6 +20,7 @@ data class RegionQualifier(
 ) : Qualifier
 
 enum class ThemeQualifier : Qualifier {
+    INVALID,
     LIGHT,
     DARK;
 
@@ -31,6 +32,7 @@ enum class ThemeQualifier : Qualifier {
 
 //https://developer.android.com/guide/topics/resources/providing-resources
 enum class DensityQualifier(val dpi: Int) : Qualifier {
+    INVALID(-1),
     LDPI(120),
     MDPI(160),
     HDPI(240),

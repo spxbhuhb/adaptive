@@ -9,11 +9,11 @@
 
 package hu.simplexion.adaptive.resource
 
-class ResourceEnvironment internal constructor(
-    internal val language: LanguageQualifier,
-    internal val region: RegionQualifier,
-    internal val theme: ThemeQualifier,
-    internal val density: DensityQualifier
+class ResourceEnvironment(
+    val language: LanguageQualifier,
+    val region: RegionQualifier,
+    val theme: ThemeQualifier,
+    val density: DensityQualifier
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -38,20 +38,12 @@ class ResourceEnvironment internal constructor(
     }
 }
 
+val defaultResourceEnvironment: ResourceEnvironment
+    get() = checkNotNull(defaultResourceEnvironmentOrNull) { "no resource environment has been set, use with<platform>Resources() in your bootstrap to set the default one for the given platform" }
 
-internal expect fun getSystemEnvironment(): ResourceEnvironment
+var defaultResourceEnvironmentOrNull : ResourceEnvironment? = null
 
-//the function reference will be overridden for tests
-//@TestOnly
-internal var getResourceEnvironment = ::getSystemEnvironment
-
-/**
- * Provides the resource environment for non-composable access to resources.
- * It is an expensive operation! Don't use it in composable functions with no cache!
- */
-fun getSystemResourceEnvironment(): ResourceEnvironment = getResourceEnvironment()
-
-internal fun Resource.getResourceItemByEnvironment(environment: ResourceEnvironment): ResourceItem {
+fun Resource.getResourceItemByEnvironment(environment: ResourceEnvironment): ResourceItem {
     //Priority of environments: https://developer.android.com/guide/topics/resources/providing-resources#table2
     items.toList()
         .filterByLocale(environment.language, environment.region)

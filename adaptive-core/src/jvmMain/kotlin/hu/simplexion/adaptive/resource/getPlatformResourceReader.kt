@@ -12,7 +12,8 @@ package hu.simplexion.adaptive.resource
 import java.io.File
 import java.io.InputStream
 
-actual fun getPlatformResourceReader(): ResourceReader = object : ResourceReader {
+fun getPlatformResourceReader(): ResourceReader = object : ResourceReader {
+
     override suspend fun read(path: String): ByteArray {
         val resource = getResourceAsStream(path)
         return resource.readBytes()
