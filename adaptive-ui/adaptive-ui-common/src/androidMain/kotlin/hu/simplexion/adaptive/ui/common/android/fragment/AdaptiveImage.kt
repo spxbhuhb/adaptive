@@ -38,6 +38,7 @@ class AdaptiveImage(
             CoroutineScope(adapter.dispatcher).launch {
                 val data = defaultResourceReader.read(content.path)
                 val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+                receiver.setScaleType(ImageView.ScaleType.CENTER_CROP)
                 receiver.setImageBitmap(bitmap)
             }
         }

@@ -3,13 +3,16 @@
  */
 package hu.simplexion.adaptive.ui.common.android.fragment
 
+import android.view.View
 import android.widget.TextView
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
-import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveAndroidAdapter
-import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveAndroidAdapter
 import hu.simplexion.adaptive.ui.common.android.adapter.applyRenderInstructions
+import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.instruction.Frame
+
 
 class AdaptiveText(
     adapter: AdaptiveAndroidAdapter,
@@ -27,6 +30,16 @@ class AdaptiveText(
 
         if (haveToPatch(closureMask, 1)) {
             receiver.text = content
+
+            val widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            val heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            receiver.measure(widthSpec, heightSpec)
+
+            if (renderInstructions.layoutFrame === Frame.NaF) {
+                renderInstructions.layoutFrame = Frame(
+                    0f, 0f, receiver.measuredWidth.toFloat(), receiver.measuredHeight.toFloat()
+                )
+            }
         }
 
         if (haveToPatch(closureMask, 1 shl instructionIndex)) {

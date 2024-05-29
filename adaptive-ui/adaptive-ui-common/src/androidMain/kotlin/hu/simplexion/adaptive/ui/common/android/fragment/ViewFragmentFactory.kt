@@ -11,7 +11,10 @@ object ViewFragmentFactory : AdaptiveFragmentFactory() {
         addAll(
             AdaptiveBox,
             AdaptiveClickable,
+            AdaptiveColumn,
+            AdaptiveGrid,
             AdaptiveImage,
+            AdaptiveRow,
             AdaptiveText
         )
     }

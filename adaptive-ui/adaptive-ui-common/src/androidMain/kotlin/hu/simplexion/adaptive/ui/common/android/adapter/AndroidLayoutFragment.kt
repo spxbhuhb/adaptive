@@ -42,9 +42,11 @@ abstract class AndroidLayoutFragment(
     }
 
     override fun create() {
-        receiver = AdaptiveViewGroup(androidAdapter.context, this)
+        receiver = makeReceiver()
         super.create()
     }
+
+    abstract fun makeReceiver() : ViewGroup
 
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
 //            (document.createElement("div") as HTMLDivElement).also {

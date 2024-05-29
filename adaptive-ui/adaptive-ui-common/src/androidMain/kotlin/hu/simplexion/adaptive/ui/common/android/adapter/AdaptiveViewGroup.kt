@@ -16,10 +16,6 @@ class AdaptiveViewGroup(
     val layoutFragment: AndroidLayoutFragment
 ) : ViewGroup(context, null, 0) {
 
-    init {
-        background = ColorDrawable(Color.BLUE)
-    }
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         // this is necessary, without this the child does not appear
         measureChildren(widthMeasureSpec, heightMeasureSpec)
