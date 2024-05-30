@@ -9,6 +9,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.browser.adapter.BrowserLayoutFragment
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.instruction.Frame
+import hu.simplexion.adaptive.ui.common.instruction.Size
 
 open class AdaptiveRow(
     adapter: AdaptiveAdapter,
@@ -18,8 +19,13 @@ open class AdaptiveRow(
 
     override fun layout(proposedFrame : Frame) {
         super.layout(proposedFrame)
+
         receiver.style.display = "flex"
         align()
+
+        for (item in items) {
+            item.layout(Frame.NaF)
+        }
     }
 
     companion object : AdaptiveFragmentCompanion {

@@ -16,7 +16,7 @@ interface AdaptiveAdapter {
 
     val dispatcher: CoroutineDispatcher
 
-    var trace: Array<Regex>
+    var trace: Array<out Regex>
 
     val startedAt: Long
 

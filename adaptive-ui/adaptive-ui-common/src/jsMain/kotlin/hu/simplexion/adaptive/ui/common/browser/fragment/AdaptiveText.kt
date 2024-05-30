@@ -10,6 +10,7 @@ import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.browser.adapter.BrowserUIFragment
 import hu.simplexion.adaptive.ui.common.instruction.Frame
+import hu.simplexion.adaptive.ui.common.instruction.RenderInstructions
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 
@@ -30,6 +31,7 @@ open class AdaptiveText(
         }
 
         if (haveToPatch(closureMask, 1 shl instructionIndex)) {
+            renderInstructions = RenderInstructions(instructions)
             applyRenderInstructions()
         }
 
@@ -43,6 +45,26 @@ open class AdaptiveText(
      * In web browsers measuring text is not the usual way.
      */
     override fun measure() = Unit
+
+    override fun layout(proposedFrame: Frame) {
+        applyRenderInstructions()
+
+        val layoutFrame = renderInstructions.layoutFrame
+
+        if (layoutFrame !== Frame.NaF) {
+            val style = receiver.style
+
+            val point = layoutFrame.point
+            val size = layoutFrame.size
+
+            style.position = "absolute"
+            style.boxSizing = "border-box"
+            style.top = "${point.top}px"
+            style.left = "${point.left}px"
+            style.width = "${size.width}px"
+            style.height = "${size.height}px"
+        }
+    }
 
     companion object : AdaptiveFragmentCompanion {
 

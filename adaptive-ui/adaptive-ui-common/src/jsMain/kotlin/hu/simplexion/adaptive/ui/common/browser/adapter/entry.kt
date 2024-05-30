@@ -7,6 +7,7 @@ import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveEntry
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
+import hu.simplexion.adaptive.foundation.instruction.Trace
 import kotlinx.browser.window
 import org.w3c.dom.HTMLElement
 
@@ -14,11 +15,13 @@ import org.w3c.dom.HTMLElement
 fun browser(
     vararg imports : AdaptiveFragmentFactory,
     rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
+    trace : Trace? = null,
     @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
 ) : AdaptiveBrowserAdapter {
 
     return AdaptiveBrowserAdapter(rootContainer).also {
         it.fragmentFactory += imports
+        if (trace != null) { it.trace = trace.patterns }
         block(it)
         it.mounted()
     }

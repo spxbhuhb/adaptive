@@ -50,7 +50,7 @@ fun main() {
     //withWebSocketTransport()
     withJsResources()
 
-    browser(SandboxExports) {
+    browser(SandboxExports, trace = traceLayout) {
 
         row {
             login()

@@ -49,7 +49,6 @@ abstract class AdaptiveUIFragment(
     override fun mount() {
         measure()
         super.mount()
-        layout(Frame.NaF)
     }
 
     override fun dispose() {
@@ -94,7 +93,7 @@ abstract class AdaptiveUIFragment(
                     layoutFrame=${renderInstructions.layoutFrame}
                     measuredSize=${renderInstructions.measuredSize}
                     instructedPoint=${renderInstructions.instructedPoint}
-                    instructedSize=${renderInstructions.instructedPoint}
+                    instructedSize=${renderInstructions.instructedSize}
                 """.trimIndent().replace("\n", " ")
             )
         }
@@ -102,7 +101,7 @@ abstract class AdaptiveUIFragment(
 
     fun toFrame(colOffsets: FloatArray, rowOffsets: FloatArray): Frame {
         val row = renderInstructions.rowIndex
-        val col = renderInstructions.rowIndex
+        val col = renderInstructions.colIndex
 
         return Frame(
             rowOffsets[row],

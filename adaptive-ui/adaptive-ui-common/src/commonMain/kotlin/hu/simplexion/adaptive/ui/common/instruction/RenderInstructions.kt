@@ -73,6 +73,7 @@ class RenderInstructions(
     var onClick: OnClick? = null
 
     init {
+        println(instructions.contentToString())
         instructions.forEach{ it.apply(this) }
     }
 

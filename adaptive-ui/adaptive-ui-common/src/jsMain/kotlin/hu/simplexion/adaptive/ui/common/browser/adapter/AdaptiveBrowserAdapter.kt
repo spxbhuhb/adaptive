@@ -29,7 +29,7 @@ open class AdaptiveBrowserAdapter(
         fragment.alsoIfInstance<BrowserLayoutFragment> {
 
             rootContainer.getBoundingClientRect().let { r ->
-                it.renderInstructions.layoutFrame = Frame(0f, 0f, r.width.toFloat(), r.height.toFloat())
+                it.layout(Frame(0f, 0f, r.width.toFloat(), r.height.toFloat()))
             }
 
             rootContainer.appendChild(it.receiver)

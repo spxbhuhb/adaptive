@@ -50,7 +50,9 @@ abstract class BrowserUIFragment(
     }
 
     fun applyRenderInstructions() {
-        tracePatterns = renderInstructions.tracePatterns
+        if (renderInstructions.tracePatterns.isNotEmpty()) {
+            tracePatterns = renderInstructions.tracePatterns
+        }
 
         val style = receiver.style
 

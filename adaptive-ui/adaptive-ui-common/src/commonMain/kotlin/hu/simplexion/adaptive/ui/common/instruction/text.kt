@@ -7,25 +7,25 @@ package hu.simplexion.adaptive.ui.common.instruction
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
-class FontName(val fontName: String) : AdaptiveInstruction {
+data class FontName(val fontName: String) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderInstructions> { it.fontName = fontName }
     }
 }
 
-class FontSize(val fontSize: Float) : AdaptiveInstruction {
+data class FontSize(val fontSize: Float) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderInstructions> { it.fontSize = fontSize }
     }
 }
 
-class FontWeight(val weight: Int) : AdaptiveInstruction {
+data class FontWeight(val weight: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderInstructions> { it.fontWeight = weight }
     }
 }
 
-class LetterSpacing(val value: Float) : AdaptiveInstruction {
+data class LetterSpacing(val value: Float) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderInstructions> { it.letterSpacing = value }
     }

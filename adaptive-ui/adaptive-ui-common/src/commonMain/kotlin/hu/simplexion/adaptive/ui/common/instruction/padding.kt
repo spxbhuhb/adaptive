@@ -7,7 +7,7 @@ package hu.simplexion.adaptive.ui.common.instruction
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
-class Padding(
+data class Padding(
     val top: Float? = null,
     val right: Float? = null,
     val bottom: Float? = null,

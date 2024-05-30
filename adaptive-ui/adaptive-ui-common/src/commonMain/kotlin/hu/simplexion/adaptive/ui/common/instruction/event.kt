@@ -21,4 +21,7 @@ class OnClick(val handler : (event : AdaptiveUIEvent) -> Unit) : AdaptiveInstruc
         subject.alsoIfInstance<RenderInstructions> { it.onClick = this }
     }
 
+    override fun toString(): String {
+        return "OnClick"
+    }
 }

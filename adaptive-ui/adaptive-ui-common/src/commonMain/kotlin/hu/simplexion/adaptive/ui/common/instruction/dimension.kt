@@ -4,22 +4,28 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
-class DIPixel(
+data class DIPixel(
     override val value : Float
 ) : Track {
 
     override val isFix
         get() = true
 
+    override fun toString(): String {
+        return "${value}dp"
+    }
 }
 
-class Fraction(
+data class Fraction(
     override val value : Float
 ) : Track {
 
     override val isFix
         get() = false
 
+    override fun toString(): String {
+        return "${value}fr"
+    }
 }
 
 val Int.dp : DIPixel

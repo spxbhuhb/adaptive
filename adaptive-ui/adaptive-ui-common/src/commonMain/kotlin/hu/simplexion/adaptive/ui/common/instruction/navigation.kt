@@ -13,7 +13,7 @@ fun externalLink(res : FileResource) = ExternalLink(res.uri)
 
 fun externalLink(href : String) = ExternalLink(href)
 
-class ExternalLink(val href : String) : AdaptiveInstruction {
+data class ExternalLink(val href : String) : AdaptiveInstruction {
 
     fun openLink(event : AdaptiveUIEvent) {
         (event.fragment.adapter as AdaptiveUIAdapter).openExternalLink(href)

@@ -13,7 +13,7 @@ abstract class AdaptiveUIAdapter : AdaptiveAdapter {
 
     var nextId = 1L
 
-    override var trace = emptyArray<Regex>()
+    override var trace : Array<out Regex> = emptyArray()
 
     override fun newId(): Long =
         nextId ++

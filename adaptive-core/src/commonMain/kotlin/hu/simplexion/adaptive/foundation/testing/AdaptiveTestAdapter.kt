@@ -27,7 +27,7 @@ class AdaptiveTestAdapter(
 
     override var dispatcher: CoroutineDispatcher = Dispatchers.Main
 
-    override var trace = arrayOf(
+    override var trace : Array<out Regex> = arrayOf(
         Regex(".*(?!addActual|removeActual)") // anything that does not end with addActual/ removeActual
     )
 
