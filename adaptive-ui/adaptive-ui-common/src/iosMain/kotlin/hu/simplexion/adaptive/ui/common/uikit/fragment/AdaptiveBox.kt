@@ -6,28 +6,25 @@ package hu.simplexion.adaptive.ui.common.uikit.fragment
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
-import hu.simplexion.adaptive.ui.common.uikit.adapter.IOSLayoutFragment
+import hu.simplexion.adaptive.ui.common.uikit.adapter.IosLayoutFragment
 import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.instruction.Frame
 import kotlinx.cinterop.ExperimentalForeignApi
+import platform.UIKit.UIView
 
 open class AdaptiveBox(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : IOSLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
+) : IosLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
+    override fun makeReceiver(): UIView = UIView()
 
-    @OptIn(ExperimentalForeignApi::class)
-    override fun layout() {
-        if (trace) trace("layout", "frame", frame)
-
+    override fun layout(proposedFrame : Frame) {
+        super.layout(proposedFrame)
+        val boxFrame = renderInstructions.layoutFrame
         for (item in items) {
-
-            val rect = item.fragment.renderInstructions.instructedPoint
-
-//            item.receiver.setFrame(
-//                CGRectMake(rect.left.toDouble(), rect.top.toDouble(), rect.width.toDouble(), rect.height.toDouble()),
-//            )
+            item.layout(boxFrame)
         }
     }
 

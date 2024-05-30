@@ -57,7 +57,6 @@ abstract class AbstractPluginContext(
             val name = "adaptive-log-${this::class.simpleName !!.removeSuffix("PluginContext")}-$pluginLogTimestamp-$postFix"
             val path = pluginLogDir.resolve("$name.txt")
             if (! path.exists()) {
-                println("plugin debug log file: ${pluginLogFile?.toAbsolutePath()}")
                 return path
             }
             postFix ++

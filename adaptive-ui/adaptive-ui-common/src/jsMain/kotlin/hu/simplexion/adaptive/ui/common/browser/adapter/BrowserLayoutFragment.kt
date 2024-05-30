@@ -5,8 +5,6 @@ package hu.simplexion.adaptive.ui.common.browser.adapter
 
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.browser.fragment.applyRenderInstructions
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.logic.checkReceiver
 import hu.simplexion.adaptive.utility.checkIfInstance
@@ -31,16 +29,6 @@ abstract class BrowserLayoutFragment(
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         return AdaptiveAnonymous(adapter, this, declarationIndex, 0, fragmentFactory(state.size - 1)).apply { create() }
-    }
-
-    override fun genPatchInternal(): Boolean {
-        val closureMask = getThisClosureDirtyMask()
-
-        if (haveToPatch(closureMask, instructionIndex)) {
-            applyRenderInstructions()
-        }
-
-        return true // TODO optimize layout fragment child patch
     }
 
     override fun makeReceiver(): HTMLElement =

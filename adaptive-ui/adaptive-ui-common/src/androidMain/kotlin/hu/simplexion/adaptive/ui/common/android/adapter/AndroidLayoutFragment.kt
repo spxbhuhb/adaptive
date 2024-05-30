@@ -24,16 +24,6 @@ abstract class AndroidLayoutFragment(
         return AdaptiveAnonymous(adapter, this, declarationIndex, 0, fragmentFactory(state.size - 1)).apply { create() }
     }
 
-    override fun genPatchInternal(): Boolean {
-        val closureMask = getThisClosureDirtyMask()
-
-        if (haveToPatch(closureMask, instructionIndex)) {
-            applyRenderInstructions()
-        }
-
-        return true // TODO optimize layout fragment child patch
-    }
-
     override fun measure() {
         for (item in items) {
             item.measure()

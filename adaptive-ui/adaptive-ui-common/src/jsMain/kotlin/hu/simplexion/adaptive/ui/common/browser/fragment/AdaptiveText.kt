@@ -8,15 +8,16 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.browser.adapter.BrowserUIFragment
+import hu.simplexion.adaptive.ui.common.instruction.Frame
 import kotlinx.browser.document
+import org.w3c.dom.HTMLElement
 
 open class AdaptiveText(
     adapter: AdaptiveAdapter,
     parent : AdaptiveFragment,
     index : Int
-) : AdaptiveUIFragment(adapter, parent, index, 1, 2) {
-
-    override val receiver = document.createElement("span")
+) : BrowserUIFragment(adapter, parent, index, 1, 2) {
 
     private val content: String
         get() = state[0]?.toString() ?: ""
@@ -34,6 +35,9 @@ open class AdaptiveText(
 
         return false
     }
+
+    override fun makeReceiver(): HTMLElement =
+        document.createElement("span") as HTMLElement
 
     /**
      * In web browsers measuring text is not the usual way.

@@ -30,8 +30,14 @@ class AdaptiveText(
             receiver.translatesAutoresizingMaskIntoConstraints = false
         }
 
+        if (haveToPatch(closureMask, 1 shl instructionIndex)) {
+            // TODO apply text instructions
+        }
+
         return false
     }
+
+    override fun measure() = Unit
 
     companion object : AdaptiveFragmentCompanion {
 

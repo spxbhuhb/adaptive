@@ -12,41 +12,27 @@ import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.UIKit.UIView
 
-abstract class IOSLayoutFragment(
+abstract class IosLayoutFragment(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
     instructionIndex: Int,
     stateSize: Int
-) : AdaptiveUIFragment(adapter, parent, declarationIndex, instructionIndex, stateSize) {
+) : IosUIFragment(adapter, parent, declarationIndex, instructionIndex, stateSize) {
 
-    override val receiver = UIView()
+    override var receiver = UIView()
 
-    @OptIn(ExperimentalForeignApi::class)
-    override var frame
-        get() = renderInstructions.instructedPoint
-        set(v) {
-            renderInstructions.instructedPoint = v
-            //receiver.setFrame(v?.toCGRect())
-        }
-
-    class LayoutItem(
-        val fragment : AdaptiveUIFragment,
-        val receiver : UIView
-    )
-
-    val items = mutableListOf<LayoutItem>()
+    val items = mutableListOf<IosUIFragment>()
     val anchors = mutableMapOf<Long, UIView>()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         return AdaptiveAnonymous(adapter, this, declarationIndex, 0, fragmentFactory(state.size - 1)).apply { create() }
     }
 
-    override fun genPatchInternal(): Boolean = true
-
-    override fun mount() {
-        super.mount()
-        measure()
+    override fun measure() {
+        for (item in items) {
+            item.measure()
+        }
     }
 
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
@@ -67,17 +53,14 @@ abstract class IOSLayoutFragment(
     override fun addActual(fragment: AdaptiveFragment, anchor: AdaptiveFragment?) {
         if (trace) trace("before-addActual")
 
-        fragment.checkIfInstance<AdaptiveUIFragment>().also { uiFragment ->
-            uiFragment.receiver.checkIfInstance<UIView>().also { uiViewReceiver ->
+        fragment.checkIfInstance<IosUIFragment>().also {
 
-                items += LayoutItem(uiFragment, uiViewReceiver)
+            items += it
 
-                if (anchor == null) {
-                    receiver.addSubview(uiViewReceiver)
-                } else {
-                    checkNotNull(anchors[anchor.id]) { "missing anchor $anchor" }.addSubview(uiViewReceiver)
-                }
-
+            if (anchor == null) {
+                receiver.addSubview(it.receiver)
+            } else {
+                checkNotNull(anchors[anchor.id]) { "missing anchor $anchor" }.addSubview(it.receiver)
             }
         }
 
@@ -92,7 +75,7 @@ abstract class IOSLayoutFragment(
         if (trace) trace("before-removeActual")
 
         fragment.checkReceiver<UIView>().also { uiViewReceiver ->
-            items.removeAt(items.indexOfFirst { it.fragment.id == fragment.id })
+            items.removeAt(items.indexOfFirst { it.id == fragment.id })
             uiViewReceiver.removeFromSuperview()
         }
 

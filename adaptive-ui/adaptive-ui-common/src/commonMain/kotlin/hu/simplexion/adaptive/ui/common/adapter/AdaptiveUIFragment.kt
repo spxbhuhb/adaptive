@@ -33,8 +33,10 @@ abstract class AdaptiveUIFragment(
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
     override fun genPatchInternal(): Boolean {
-        if (instructionIndex != - 1 && haveToPatch(getThisClosureDirtyMask(), instructionIndex)) {
-            renderInstructions = RenderInstructions(instructions)
+        if (instructionIndex != - 1) {
+            if (haveToPatch(getThisClosureDirtyMask(), 1 shl instructionIndex)) {
+                renderInstructions = RenderInstructions(instructions)
+            }
         }
         return true
     }
@@ -47,7 +49,7 @@ abstract class AdaptiveUIFragment(
     override fun mount() {
         measure()
         super.mount()
-//        layout()
+        layout(Frame.NaF)
     }
 
     override fun dispose() {
@@ -98,7 +100,7 @@ abstract class AdaptiveUIFragment(
         }
     }
 
-    fun toFrame(colOffsets: FloatArray, rowOffsets: FloatArray) : Frame {
+    fun toFrame(colOffsets: FloatArray, rowOffsets: FloatArray): Frame {
         val row = renderInstructions.rowIndex
         val col = renderInstructions.rowIndex
 

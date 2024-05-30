@@ -19,8 +19,8 @@ fun ios(
     rootView : UIView,
     vararg imports : AdaptiveFragmentFactory,
     @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
-) : AdaptiveIOSAdapter =
-    AdaptiveIOSAdapter(
+) : AdaptiveIosAdapter =
+    AdaptiveIosAdapter(
         rootView
     ).also {
         it.fragmentFactory += imports

@@ -9,18 +9,41 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.browser.adapter.BrowserUIFragment
 import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.browser.document
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLImageElement
 
 open class AdaptiveImage(
     adapter: AdaptiveAdapter,
-    parent : AdaptiveFragment,
-    index : Int
-) : AdaptiveUIFragment(adapter, parent, index, 1, 2) {
+    parent: AdaptiveFragment,
+    index: Int
+) : BrowserUIFragment(adapter, parent, index, 1, 2) {
 
-    override val receiver = document.createElement("img") as HTMLImageElement
+    val imgReceiver
+        get() = receiver as HTMLImageElement
+
+    private val res: DrawableResource
+        get() = state[0].checkIfInstance()
+
+    override fun genPatchInternal(): Boolean {
+        val closureMask = getThisClosureDirtyMask()
+
+        if (haveToPatch(closureMask, 1)) {
+            imgReceiver.src = res.uri
+        }
+
+        if (haveToPatch(closureMask, 1 shl instructionIndex)) {
+            applyRenderInstructions()
+        }
+
+        return false
+    }
+
+    override fun makeReceiver(): HTMLElement =
+        document.createElement("img") as HTMLElement
 
     /**
      * Measured size of images is unknown at the time measure is called, mostly because
@@ -31,30 +54,13 @@ open class AdaptiveImage(
      */
     override fun measure() = Unit
 
-    private val res: DrawableResource
-        get() = state[0].checkIfInstance()
-
-    override fun genPatchInternal(): Boolean {
-        val closureMask = getThisClosureDirtyMask()
-
-        if (haveToPatch(closureMask, 1)) {
-            receiver.src = res.uri
-        }
-
-        if (haveToPatch(closureMask, 1 shl instructionIndex)) {
-            applyRenderInstructions()
-        }
-
-        return false
-    }
-
     override fun layout(proposedFrame: Frame) {
         super.layout(proposedFrame)
 
         val size = renderInstructions.layoutFrame.size
 
-        receiver.width = size.width.toInt()
-        receiver.height = size.height.toInt()
+        imgReceiver.width = size.width.toInt()
+        imgReceiver.height = size.height.toInt()
     }
 
     companion object : AdaptiveFragmentCompanion {

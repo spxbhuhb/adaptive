@@ -47,7 +47,7 @@ val traceLayout = Trace(Regex("layout"), Regex("measure.*"))
 fun main() {
 
     withJson()
-    withWebSocketTransport()
+    //withWebSocketTransport()
     withJsResources()
 
     browser(SandboxExports) {
@@ -97,7 +97,7 @@ fun main() {
 
 @Adaptive
 fun login() {
-    box(Point(0f, 0f, 375f, 812f)) {
+    box(Frame(0f, 0f, 375f, 812f)) {
 
         image(Res.drawable.background)
 
@@ -144,8 +144,8 @@ fun login() {
 
 @Adaptive
 fun counterWithTime(time: Instant) {
-    val counter = poll(1.seconds, 0) { counterService.incrementAndGet() }
-    text("$time $counter", Point(150f, 150f, 250f, 20f))
+    val counter = poll(1000.seconds, 0) { counterService.incrementAndGet() }
+    text("$time $counter", Frame(150f, 150f, 250f, 20f))
 }
 
 fun chess(size: Int, cellSize: DIPixel) =

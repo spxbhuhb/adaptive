@@ -25,6 +25,9 @@ repositories {
 kotlin {
     jvmToolchain(11) // this is not needed for 2.0.0-RC2, but have to have in 1.9.10
     compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
+    // this opt in is OK, according to:
+    // https://kotlinlang.slack.com/archives/C7L3JB43G/p1700429910462239
+    compilerOptions.freeCompilerArgs.add("-opt-in=org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAP")
 }
 
 sourceSets {
