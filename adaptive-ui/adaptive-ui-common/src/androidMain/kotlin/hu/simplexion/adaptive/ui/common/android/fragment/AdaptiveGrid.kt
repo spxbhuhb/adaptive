@@ -11,9 +11,11 @@ import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveViewGroup
 import hu.simplexion.adaptive.ui.common.android.adapter.AndroidLayoutFragment
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.instruction.ColTemplate
+import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.instruction.RowTemplate
 import hu.simplexion.adaptive.ui.common.logic.distribute
 import hu.simplexion.adaptive.ui.common.logic.expand
+import hu.simplexion.adaptive.ui.common.logic.layoutGrid
 import hu.simplexion.adaptive.ui.common.logic.placeFragments
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 
@@ -23,36 +25,15 @@ open class AdaptiveGrid(
     declarationIndex: Int
 ) : AndroidLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
+    override val viewGroup: ViewGroup
+        get() = receiver as ViewGroup
+
     override fun makeReceiver(): ViewGroup =
         AdaptiveViewGroup(androidAdapter.context, this)
 
-    override fun measure() {
-        super.measure()
-
-        val colTemp = checkNotNull(instructions.firstOrNullIfInstance<ColTemplate>()) { "missing column template in $this" }
-        val rowTemp = checkNotNull(instructions.firstOrNullIfInstance<RowTemplate>()) { "missing row template in $this" }
-
-        val colOffsets = distribute(renderInstructions.layoutFrame.width, expand(colTemp.tracks))
-        val rowOffsets = distribute(renderInstructions.layoutFrame.height, expand(rowTemp.tracks))
-
-        if (trace) {
-            trace("measure-layoutFrame", renderInstructions.layoutFrame)
-            trace("measure-colOffsets", colOffsets.contentToString())
-            trace("measure-rowOffsets", rowOffsets.contentToString())
-        }
-
-        placeFragments(items, rowOffsets.size - 1, colOffsets.size - 1)
-
-        for (item in items) {
-            item.setFrame(colOffsets, rowOffsets)
-        }
-    }
-
-    override fun layout() {
-        super.layout()
-        for (item in items) {
-            item.layout()
-        }
+    override fun layout(proposedFrame : Frame) {
+        super.layout(proposedFrame)
+        layoutGrid(items)
     }
 
     companion object : AdaptiveFragmentCompanion {

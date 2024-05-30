@@ -6,28 +6,36 @@ package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.testing.Traceable
+import hu.simplexion.adaptive.ui.common.logic.GridCell
 
 /**
  * A pre-processed version of fragment instructions to make access from layout easier.
  */
 class RenderInstructions(
     instructions : Array<out AdaptiveInstruction>
-) : Traceable {
+) : Traceable, GridCell {
 
     override var tracePatterns : Array<out Regex> = emptyArray()
 
     /**
-     * This field is set by the layouts to place the fragment. When [frame] is
-     * not null, it is typically the copy of it. Otherwise, it is the
-     * responsibility of the layout to set it.
+     * The actual frame of the fragment in the actual UI. Result of layout
+     * calculations.
      */
     var layoutFrame : Frame = Frame.NaF
 
     /**
-     * The frame specified in the code by the programmer.
+     * The result of `measure` if the frame can calculate it. The basic fragments
+     * such as images and text can calculate their own size which then can be
+     * used for layout calculations or for resizing.
      */
-    var frame : Frame? = null
-    var size : Size? = null
+    var measuredSize : Size = Size.NaS
+
+    /**
+     * The frame specified by the instructions.
+     */
+    var instructedPoint : Point? = null
+
+    var instructedSize : Size? = null
 
     var color : Color? = null
 
@@ -54,10 +62,12 @@ class RenderInstructions(
     var justifyItems : JustifyItems? = null
     var justifySelf: JustifySelf? = null
 
-    var gridRow: Int? = null
-    var gridCol: Int? = null
-    var rowSpan: Int = 1
-    var colSpan: Int = 1
+    override var gridRow: Int? = null
+    override var gridCol: Int? = null
+    override var rowSpan: Int = 1
+    override var colSpan: Int = 1
+    override var rowIndex: Int = -1
+    override var colIndex: Int = -1
 
     // TODO proper event handler management for UI fragments
     var onClick: OnClick? = null

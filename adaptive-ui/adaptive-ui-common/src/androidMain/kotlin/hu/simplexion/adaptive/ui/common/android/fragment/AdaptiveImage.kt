@@ -29,6 +29,15 @@ class AdaptiveImage(
     private val content: DrawableResource
         get() = state[0].checkIfInstance()
 
+    /**
+     * Measured size of images is unknown at the time measure is called, mostly because
+     * the image is loaded asynchronously.
+     *
+     * Also, it is rare to use the actual size of the image for the layout, it is far
+     * more usual to have a space and scale the image to fit that space.
+     */
+    override fun measure() = Unit
+
     override fun genPatchInternal(): Boolean {
         val closureMask = getThisClosureDirtyMask()
         if (closureMask == 0) return false

@@ -7,6 +7,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.browser.fragment.BrowserFragmentFactory
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
 import hu.simplexion.adaptive.ui.common.instruction.Frame
+import hu.simplexion.adaptive.ui.common.instruction.Point
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineDispatcher
@@ -27,10 +28,8 @@ open class AdaptiveBrowserAdapter(
 
         fragment.alsoIfInstance<BrowserLayoutFragment> {
 
-            if (it.frame == null) {
-                it.frame = rootContainer.getBoundingClientRect().let { r ->
-                    Frame(0f, 0f, r.width.toFloat(), r.height.toFloat())
-                }
+            rootContainer.getBoundingClientRect().let { r ->
+                it.renderInstructions.layoutFrame = Frame(0f, 0f, r.width.toFloat(), r.height.toFloat())
             }
 
             rootContainer.appendChild(it.receiver)

@@ -8,9 +8,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.uikit.adapter.IOSLayoutFragment
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.instruction.Frame
 import kotlinx.cinterop.ExperimentalForeignApi
-import platform.CoreGraphics.CGRectMake
 
 open class AdaptiveBox(
     adapter: AdaptiveAdapter,
@@ -25,7 +23,7 @@ open class AdaptiveBox(
 
         for (item in items) {
 
-            val rect = item.fragment.renderInstructions.frame
+            val rect = item.fragment.renderInstructions.instructedPoint
 
 //            item.receiver.setFrame(
 //                CGRectMake(rect.left.toDouble(), rect.top.toDouble(), rect.width.toDouble(), rect.height.toDouble()),

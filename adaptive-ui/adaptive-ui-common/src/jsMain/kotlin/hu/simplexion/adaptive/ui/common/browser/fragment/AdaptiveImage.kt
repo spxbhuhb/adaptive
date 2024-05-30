@@ -9,6 +9,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.browser.document
 import org.w3c.dom.HTMLImageElement
@@ -20,6 +21,15 @@ open class AdaptiveImage(
 ) : AdaptiveUIFragment(adapter, parent, index, 1, 2) {
 
     override val receiver = document.createElement("img") as HTMLImageElement
+
+    /**
+     * Measured size of images is unknown at the time measure is called, mostly because
+     * the image is loaded asynchronously.
+     *
+     * Also, it is rare to use the actual size of the image for the layout, it is far
+     * more usual to have a space and scale the image to fit that space.
+     */
+    override fun measure() = Unit
 
     private val res: DrawableResource
         get() = state[0].checkIfInstance()
@@ -38,9 +48,13 @@ open class AdaptiveImage(
         return false
     }
 
-    override fun layout() {
-        receiver.width = renderInstructions.layoutFrame.width.toInt()
-        receiver.height = renderInstructions.layoutFrame.height.toInt()
+    override fun layout(proposedFrame: Frame) {
+        super.layout(proposedFrame)
+
+        val size = renderInstructions.layoutFrame.size
+
+        receiver.width = size.width.toInt()
+        receiver.height = size.height.toInt()
     }
 
     companion object : AdaptiveFragmentCompanion {

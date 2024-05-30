@@ -4,7 +4,12 @@
 
 package hu.simplexion.adaptive.ui.common.logic
 
+import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.instruction.ColTemplate
+import hu.simplexion.adaptive.ui.common.instruction.Frame
+import hu.simplexion.adaptive.ui.common.instruction.RowTemplate
 import hu.simplexion.adaptive.ui.common.instruction.Track
+import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 
 interface GridCell {
     var rowIndex: Int
@@ -149,4 +154,26 @@ fun placeFragments(cells: List<GridCell>, rows: Int, cols: Int): List<GridCell> 
     }
 
     return cells
+}
+
+fun AdaptiveUIFragment.layoutGrid(items : List<AdaptiveUIFragment>) {
+
+    val colTemp = checkNotNull(instructions.firstOrNullIfInstance<ColTemplate>()) { "missing column template in $this" }
+    val rowTemp = checkNotNull(instructions.firstOrNullIfInstance<RowTemplate>()) { "missing row template in $this" }
+
+    val size = renderInstructions.layoutFrame.size
+    val colOffsets = distribute(size.width, expand(colTemp.tracks))
+    val rowOffsets = distribute(size.height, expand(rowTemp.tracks))
+
+    if (trace) {
+        trace("measure-layoutFrame", renderInstructions.layoutFrame)
+        trace("measure-colOffsets", colOffsets.contentToString())
+        trace("measure-rowOffsets", rowOffsets.contentToString())
+    }
+
+    placeFragments(items.map { it.renderInstructions }, rowOffsets.size - 1, colOffsets.size - 1)
+
+    for (item in items) {
+        item.layout(item.toFrame(colOffsets, rowOffsets))
+    }
 }

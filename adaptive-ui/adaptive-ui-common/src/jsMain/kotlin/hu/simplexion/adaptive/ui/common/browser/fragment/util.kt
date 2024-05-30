@@ -46,7 +46,7 @@ fun AdaptiveUIFragment.applyRenderInstructions() {
             p.bottom?.let { style.paddingBottom = "${it}px"}
         }
 
-        size?.let {
+        instructedSize?.let {
             style.width = "${it.width}px"
             style.height = "${it.height}px"
         }

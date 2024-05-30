@@ -3,13 +3,9 @@
  */
 package hu.simplexion.adaptive.ui.common.android.adapter
 
-import android.graphics.drawable.GradientDrawable
-import android.view.View
 import android.view.ViewGroup
-import hu.simplexion.adaptive.foundation.*
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.utility.checkIfInstance
 
 abstract class AndroidLayoutFragment(
@@ -18,14 +14,11 @@ abstract class AndroidLayoutFragment(
     declarationIndex: Int,
     instructionsIndex: Int,
     stateSize: Int
-) : AdaptiveUIFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize) {
+) : AndroidUIFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize) {
 
-    val androidAdapter
-        get() = adapter as AdaptiveAndroidAdapter
+    abstract val viewGroup: ViewGroup
 
-    override lateinit var receiver: ViewGroup
-
-    val items = mutableListOf<AndroidLayoutItem>()
+    val items = mutableListOf<AndroidUIFragment>()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         return AdaptiveAnonymous(adapter, this, declarationIndex, 0, fragmentFactory(state.size - 1)).apply { create() }
@@ -41,12 +34,11 @@ abstract class AndroidLayoutFragment(
         return true // TODO optimize layout fragment child patch
     }
 
-    override fun create() {
-        receiver = makeReceiver()
-        super.create()
+    override fun measure() {
+        for (item in items) {
+            item.measure()
+        }
     }
-
-    abstract fun makeReceiver() : ViewGroup
 
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
 //            (document.createElement("div") as HTMLDivElement).also {
@@ -67,17 +59,14 @@ abstract class AndroidLayoutFragment(
     override fun addActual(fragment: AdaptiveFragment, anchor: AdaptiveFragment?) {
         if (trace) trace("addActual", "$fragment $anchor")
 
-        fragment.checkIfInstance<AdaptiveUIFragment>().also { uiFragment ->
-            uiFragment.receiver.checkIfInstance<View>().also { viewReceiver ->
+        fragment.checkIfInstance<AndroidUIFragment>().also {
+            items += it
 
-                items += AndroidLayoutItem(uiFragment, viewReceiver, -1, -1)
-
-                if (anchor == null) {
-                    receiver.addView(viewReceiver)
-                } else {
+            if (anchor == null) {
+                viewGroup.addView(it.receiver)
+            } else {
 //                        checkNotNull(document.getElementById(anchor.id.toString())) { "missing anchor" }
 //                            .appendChild(htmlElementReceiver)
-                }
             }
         }
 

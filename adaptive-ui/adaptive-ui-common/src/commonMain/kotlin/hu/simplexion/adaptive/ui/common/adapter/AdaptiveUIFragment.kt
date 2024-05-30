@@ -7,7 +7,9 @@ package hu.simplexion.adaptive.ui.common.adapter
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
+import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.instruction.RenderInstructions
+import hu.simplexion.adaptive.ui.common.instruction.Size
 import hu.simplexion.adaptive.utility.checkIfInstance
 
 abstract class AdaptiveUIFragment(
@@ -15,15 +17,15 @@ abstract class AdaptiveUIFragment(
     parent: AdaptiveFragment?,
     declarationIndex: Int,
     instructionsIndex: Int,
-    stateSize : Int
+    stateSize: Int
 ) : AdaptiveFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize) {
 
-    abstract val receiver : Any
+    abstract val receiver: Any
 
     // FIXME renderInstructions should be bound to instructions
     var renderInstructions = RenderInstructions.DEFAULT
 
-    fun fragmentFactory(index : Int) : BoundFragmentFactory =
+    fun fragmentFactory(index: Int): BoundFragmentFactory =
         state[index].checkIfInstance()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
@@ -31,7 +33,7 @@ abstract class AdaptiveUIFragment(
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
     override fun genPatchInternal(): Boolean {
-        if (instructionIndex != -1 && haveToPatch(getThisClosureDirtyMask(), instructionIndex)) {
+        if (instructionIndex != - 1 && haveToPatch(getThisClosureDirtyMask(), instructionIndex)) {
             renderInstructions = RenderInstructions(instructions)
         }
         return true
@@ -45,7 +47,7 @@ abstract class AdaptiveUIFragment(
     override fun mount() {
         measure()
         super.mount()
-        layout()
+//        layout()
     }
 
     override fun dispose() {
@@ -53,20 +55,59 @@ abstract class AdaptiveUIFragment(
         parent?.removeActual(this) ?: adapter.removeActual(this)
     }
 
-    open fun measure() {
-        trace("measure", "layoutFrame=${renderInstructions.layoutFrame} frame=${renderInstructions.frame}")
+    abstract fun measure()
+
+    fun traceMeasure() {
+        if (trace) trace("measure", "measuredSize=${renderInstructions.measuredSize}")
     }
 
-    open fun layout() {
-        trace("layout", "layoutFrame=${renderInstructions.layoutFrame}")
+    open fun layout(proposedFrame: Frame) {
+        val instructedPoint = renderInstructions.instructedPoint
+        val instructedSize = renderInstructions.instructedSize
+
+        renderInstructions.layoutFrame =
+
+            if (instructedPoint != null) {
+                if (instructedSize != null) {
+                    Frame(instructedPoint, instructedSize)
+                } else {
+                    Frame(instructedPoint, proposedFrame.size)
+                }
+            } else {
+                if (instructedSize != null) {
+                    Frame(proposedFrame.point, instructedSize)
+                } else {
+                    proposedFrame
+                }
+            }
+
+        traceLayout()
     }
 
-    // ---------------------------------------------------------------------------------
-    // Instruction support
-    // ---------------------------------------------------------------------------------
+    fun traceLayout() {
+        if (trace) {
+            trace(
+                "layout",
+                """
+                    layoutFrame=${renderInstructions.layoutFrame}
+                    measuredSize=${renderInstructions.measuredSize}
+                    instructedPoint=${renderInstructions.instructedPoint}
+                    instructedSize=${renderInstructions.instructedPoint}
+                """.trimIndent().replace("\n", " ")
+            )
+        }
+    }
 
-    open var frame
-        get() = renderInstructions.frame
-        set(v) { renderInstructions.frame = v }
+    fun toFrame(colOffsets: FloatArray, rowOffsets: FloatArray) : Frame {
+        val row = renderInstructions.rowIndex
+        val col = renderInstructions.rowIndex
+
+        return Frame(
+            rowOffsets[row],
+            colOffsets[col],
+            colOffsets[col + renderInstructions.colSpan] - colOffsets[col],
+            rowOffsets[row + renderInstructions.rowSpan] - rowOffsets[row]
+        )
+    }
 
 }

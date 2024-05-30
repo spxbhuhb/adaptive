@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.browser.adapter.BrowserLayoutFragment
 import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.instruction.Frame
 
 open class AdaptiveColumn(
     adapter: AdaptiveAdapter,
@@ -15,13 +16,13 @@ open class AdaptiveColumn(
     declarationIndex: Int
 ) : BrowserLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
-    override fun layout() {
-        super.layout()
+    override fun layout(proposedFrame : Frame) {
+        super.layout(proposedFrame)
+        receiver.style.display = "flex"
         with (receiver.style) {
             display = "flex"
             flexDirection = "column"
         }
-        align()
     }
 
     companion object : AdaptiveFragmentCompanion {

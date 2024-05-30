@@ -24,9 +24,9 @@ abstract class IOSLayoutFragment(
 
     @OptIn(ExperimentalForeignApi::class)
     override var frame
-        get() = renderInstructions.frame
+        get() = renderInstructions.instructedPoint
         set(v) {
-            renderInstructions.frame = v
+            renderInstructions.instructedPoint = v
             //receiver.setFrame(v?.toCGRect())
         }
 

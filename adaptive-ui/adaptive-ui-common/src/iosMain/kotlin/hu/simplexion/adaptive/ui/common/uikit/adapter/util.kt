@@ -4,10 +4,10 @@
 
 package hu.simplexion.adaptive.ui.common.uikit.adapter
 
-import hu.simplexion.adaptive.ui.common.instruction.Frame
+import hu.simplexion.adaptive.ui.common.instruction.Point
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreGraphics.CGRectMake
 
 @OptIn(ExperimentalForeignApi::class)
-fun Frame.toCGRect() =
+fun Point.toCGRect() =
     CGRectMake(left.toDouble(), top.toDouble(), width.toDouble(), height.toDouble())

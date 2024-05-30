@@ -59,7 +59,7 @@ fun main() {
 //
 //        pixel {
 //
-//            stack(greenGradient, borderRadius, Frame(50f, 50f, 400f, 50f)) {
+//            stack(greenGradient, borderRadius, Point(50f, 50f, 400f, 50f)) {
 //
 //                clickable(onClick = { console.log("hello") }) {
 //                    text("> ")
@@ -73,16 +73,16 @@ fun main() {
 //
 //            //counterWithTime(time)
 //
-//            text("$time", Frame(150f, 150f, 250f, 20f))
+//            text("$time", Point(150f, 150f, 250f, 20f))
 //
-//            stack(Frame(200f, 200f, 200f, 200f)) {
+//            stack(Point(200f, 200f, 200f, 200f)) {
 //                text("Hello World at 200!")
 //            }
 //
 //            grid(
 //                ColTemplate(Repeat(2, 50.dp)),
 //                RowTemplate(1.fr, 50.dp),
-//                Frame(400f, 400f, 400f, 400f)
+//                Point(400f, 400f, 400f, 400f)
 //            ) {
 //                text("1", greenGradient, borderRadius, white)
 //                text("2", grayBorder, borderRadius)
@@ -97,7 +97,7 @@ fun main() {
 
 @Adaptive
 fun login() {
-    box(Frame(0f, 0f, 375f, 812f)) {
+    box(Point(0f, 0f, 375f, 812f)) {
 
         image(Res.drawable.background)
 
@@ -145,7 +145,7 @@ fun login() {
 @Adaptive
 fun counterWithTime(time: Instant) {
     val counter = poll(1.seconds, 0) { counterService.incrementAndGet() }
-    text("$time $counter", Frame(150f, 150f, 250f, 20f))
+    text("$time $counter", Point(150f, 150f, 250f, 20f))
 }
 
 fun chess(size: Int, cellSize: DIPixel) =

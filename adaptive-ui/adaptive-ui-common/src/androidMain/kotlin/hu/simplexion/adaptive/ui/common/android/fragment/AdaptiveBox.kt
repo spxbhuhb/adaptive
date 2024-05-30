@@ -18,21 +18,17 @@ open class AdaptiveBox(
     declarationIndex: Int
 ) : AndroidLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
+    override val viewGroup: ViewGroup
+        get() = receiver as ViewGroup
 
     override fun makeReceiver(): ViewGroup =
         AdaptiveViewGroup(androidAdapter.context, this)
 
-    override fun measure() {
-        super.measure()
+    override fun layout(proposedFrame : Frame) {
+        super.layout(proposedFrame)
+        val boxFrame = renderInstructions.layoutFrame
         for (item in items) {
-            item.layoutFrame = item.frame ?: this.frame ?: Frame.NaF
-        }
-    }
-
-    override fun layout() {
-        super.layout()
-        for (item in items) {
-            item.layout()
+            item.layout(boxFrame)
         }
     }
 

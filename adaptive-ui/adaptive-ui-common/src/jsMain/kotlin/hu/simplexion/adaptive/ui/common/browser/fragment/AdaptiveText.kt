@@ -35,6 +35,11 @@ open class AdaptiveText(
         return false
     }
 
+    /**
+     * In web browsers measuring text is not the usual way.
+     */
+    override fun measure() = Unit
+
     companion object : AdaptiveFragmentCompanion {
 
         override val fragmentType = "$commonUI:AdaptiveText"

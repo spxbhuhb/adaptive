@@ -18,6 +18,9 @@ open class AdaptiveColumn(
     declarationIndex: Int
 ) : AndroidLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
+    override val viewGroup: ViewGroup
+        get() = receiver as ViewGroup
+
     override fun makeReceiver(): ViewGroup =
         LinearLayout(androidAdapter.context).also {
             it.orientation = LinearLayout.VERTICAL

@@ -25,11 +25,9 @@ abstract class BrowserLayoutFragment(
     declarationIndex: Int,
     instructionsIndex: Int,
     stateSize: Int
-) : AdaptiveUIFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize) {
+) : BrowserUIFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize) {
 
-    override val receiver: HTMLDivElement = document.createElement("div") as HTMLDivElement
-
-    val items = mutableListOf<BrowserLayoutItem>()
+    val items = mutableListOf<BrowserUIFragment>()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         return AdaptiveAnonymous(adapter, this, declarationIndex, 0, fragmentFactory(state.size - 1)).apply { create() }
@@ -43,6 +41,15 @@ abstract class BrowserLayoutFragment(
         }
 
         return true // TODO optimize layout fragment child patch
+    }
+
+    override fun makeReceiver(): HTMLElement =
+        document.createElement("div") as HTMLElement
+
+    override fun measure() {
+        for (item in items) {
+            item.measure()
+        }
     }
 
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
@@ -64,19 +71,17 @@ abstract class BrowserLayoutFragment(
     override fun addActual(fragment: AdaptiveFragment, anchor: AdaptiveFragment?) {
         if (trace) trace("before-addActual")
 
-        fragment.checkIfInstance<AdaptiveUIFragment>().also { uiFragment ->
-            uiFragment.receiver.checkIfInstance<HTMLElement>().also { htmlElementReceiver ->
+        fragment.checkIfInstance<BrowserUIFragment>().also {
 
-                items += BrowserLayoutItem(uiFragment, htmlElementReceiver, -1, -1)
+            items += it
 
-                if (anchor == null) {
-                    receiver.appendChild(htmlElementReceiver)
-                } else {
-                    checkNotNull(document.getElementById(anchor.id.toString())) { "missing anchor" }
-                        .appendChild(htmlElementReceiver)
-                }
-
+            if (anchor == null) {
+                receiver.appendChild(it.receiver)
+            } else {
+                checkNotNull(document.getElementById(anchor.id.toString())) { "missing anchor" }
+                    .appendChild(it.receiver)
             }
+
         }
 
         if (isMounted) {
@@ -90,7 +95,7 @@ abstract class BrowserLayoutFragment(
         if (trace) trace("before-removeActual")
 
         fragment.checkReceiver<HTMLElement>().also { htmlElementReceiver ->
-            items.removeAt(items.indexOfFirst { it.fragment.id == fragment.id })
+            items.removeAt(items.indexOfFirst { it.id == fragment.id })
             htmlElementReceiver.remove()
         }
 
