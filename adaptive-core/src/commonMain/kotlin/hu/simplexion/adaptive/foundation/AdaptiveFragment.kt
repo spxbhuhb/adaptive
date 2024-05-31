@@ -11,7 +11,7 @@ import hu.simplexion.adaptive.foundation.producer.AdaptiveProducer
 import hu.simplexion.adaptive.foundation.testing.AdaptiveTestAdapter
 
 abstract class AdaptiveFragment(
-    open val adapter: AdaptiveAdapter,
+    val adapter: AdaptiveAdapter,
     val parent: AdaptiveFragment?,
     val declarationIndex: Int,
     val instructionIndex: Int,

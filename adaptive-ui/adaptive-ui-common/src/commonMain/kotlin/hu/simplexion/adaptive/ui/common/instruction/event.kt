@@ -10,7 +10,7 @@ import hu.simplexion.adaptive.ui.common.adapter.RenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 class AdaptiveUIEvent(
-    val fragment: AdaptiveUIFragment,
+    val fragment: AdaptiveUIFragment<*>,
     val nativeEvent : Any?
 )
 

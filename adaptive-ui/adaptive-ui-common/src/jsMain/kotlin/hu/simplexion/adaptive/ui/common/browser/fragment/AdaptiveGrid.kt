@@ -3,31 +3,26 @@
  */
 package hu.simplexion.adaptive.ui.common.browser.fragment
 
-import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
-import hu.simplexion.adaptive.ui.common.browser.adapter.BrowserLayoutFragment
+import hu.simplexion.adaptive.ui.common.browser.adapter.AdaptiveBrowserAdapter
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.layout.layoutGrid
+import hu.simplexion.adaptive.ui.common.layout.AbstractGrid
+import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLElement
 
 open class AdaptiveGrid(
-    adapter: AdaptiveAdapter,
+    adapter: AdaptiveBrowserAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : BrowserLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
-
-    override fun layout(proposedFrame : Frame) {
-        super.layout(proposedFrame)
-        layoutGrid(items)
-    }
+) : AbstractGrid<HTMLDivElement, HTMLElement>(adapter, parent, declarationIndex) {
 
     companion object : AdaptiveFragmentCompanion {
 
         override val fragmentType = "$commonUI:AdaptiveGrid"
 
         override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveGrid(parent.adapter, parent, index)
+            AdaptiveGrid(parent.adapter as AdaptiveBrowserAdapter, parent, index)
 
     }
 

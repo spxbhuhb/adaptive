@@ -11,6 +11,9 @@ object UiKitFragmentFactory : AdaptiveFragmentFactory() {
         addAll(
             AdaptiveBox,
             AdaptiveClickable,
+            AdaptiveColumn,
+            AdaptiveGrid,
+            AdaptiveRow,
             AdaptiveText
         )
     }

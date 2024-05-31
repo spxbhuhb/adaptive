@@ -42,6 +42,7 @@ val bold = FontWeight(700)
 val smallWhiteNoWrap = arrayOf(white, textSmall, TextWrap.NoWrap)
 
 val center = arrayOf<AdaptiveInstruction>(AlignItems.Center, JustifyContent.Center)
+val traceAll = Trace(Regex(".*"))
 val traceLayout = Trace(Regex("layout"), Regex("measure.*"))
 
 fun main() {

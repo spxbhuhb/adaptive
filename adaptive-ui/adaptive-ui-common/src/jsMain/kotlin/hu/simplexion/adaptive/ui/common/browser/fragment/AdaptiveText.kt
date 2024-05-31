@@ -3,21 +3,25 @@
  */
 package hu.simplexion.adaptive.ui.common.browser.fragment
 
-import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
-import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.browser.adapter.BrowserUIFragment
-import hu.simplexion.adaptive.ui.common.instruction.Frame
+import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.adapter.RenderData
+import hu.simplexion.adaptive.ui.common.browser.adapter.AdaptiveBrowserAdapter
+import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.instruction.Size
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLSpanElement
 
 open class AdaptiveText(
-    adapter: AdaptiveAdapter,
+    adapter: AdaptiveBrowserAdapter,
     parent : AdaptiveFragment,
     index : Int
-) : BrowserUIFragment(adapter, parent, index, 1, 2) {
+) : AdaptiveUIFragment<HTMLElement>(adapter, parent, index, 1, 2) {
+
+    override val receiver: HTMLSpanElement =
+        document.createElement("span") as HTMLSpanElement
 
     private val content: String
         get() = state[0]?.toString() ?: ""
@@ -31,38 +35,19 @@ open class AdaptiveText(
 
         if (haveToPatch(closureMask, 1 shl instructionIndex)) {
             renderData = RenderData(instructions)
-            applyRenderInstructions()
+            uiAdapter.applyRenderInstructions(this)
         }
 
         return false
     }
 
-    override fun makeReceiver(): HTMLElement =
-        document.createElement("span") as HTMLElement
 
     /**
      * In web browsers measuring text is not the usual way.
      */
-    override fun measure() = Unit
-
-    override fun layout(proposedFrame: Frame) {
-        applyRenderInstructions()
-
-        val layoutFrame = renderData.layoutFrame
-
-        if (layoutFrame !== Frame.NaF) {
-            val style = receiver.style
-
-            val point = layoutFrame.point
-            val size = layoutFrame.size
-
-            style.position = "absolute"
-            style.boxSizing = "border-box"
-            style.top = "${point.top}px"
-            style.left = "${point.left}px"
-            style.width = "${size.width}px"
-            style.height = "${size.height}px"
-        }
+    override fun measure() : Size? {
+        traceMeasure()
+        return Size(0f,0f)
     }
 
     companion object : AdaptiveFragmentCompanion {
@@ -70,7 +55,7 @@ open class AdaptiveText(
         override val fragmentType = "$commonUI:AdaptiveText"
 
         override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveText(parent.adapter, parent, index)
+            AdaptiveText(parent.adapter as AdaptiveBrowserAdapter, parent, index)
 
     }
 

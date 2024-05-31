@@ -4,25 +4,25 @@
 package hu.simplexion.adaptive.ui.common.android.fragment
 
 import android.graphics.BitmapFactory
+import android.view.View
 import android.widget.ImageView
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.resource.defaultResourceReader
+import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveAndroidAdapter
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.android.adapter.applyRenderInstructions
 import hu.simplexion.adaptive.ui.common.instruction.Size
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class AdaptiveImage(
-    adapter: AdaptiveAndroidAdapter,
+    override val adapter: AdaptiveAndroidAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AdaptiveUIFragment(adapter, parent, index, 1, 2) {
+) : AdaptiveUIFragment<View>(adapter, parent, index, 1, 2) {
 
     override val receiver = ImageView(adapter.context)
 
@@ -57,9 +57,7 @@ class AdaptiveImage(
             }
         }
 
-        if (haveToPatch(closureMask, 1 shl instructionIndex)) {
-            applyRenderInstructions()
-        }
+        patchInstructions(closureMask)
 
         return false
     }

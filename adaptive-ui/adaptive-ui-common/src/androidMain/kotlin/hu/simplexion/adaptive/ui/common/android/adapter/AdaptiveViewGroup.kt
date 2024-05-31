@@ -6,12 +6,14 @@ package hu.simplexion.adaptive.ui.common.android.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.view.View
 import android.view.ViewGroup
+import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
 
 @SuppressLint("ViewConstructor") // not a general Android view group, you are not supposed to use it in general Android code
 class AdaptiveViewGroup(
     context: Context,
-    val layoutFragment: AndroidLayoutFragment
+    val layoutFragment: AdaptiveUIContainerFragment<AdaptiveViewGroup, View>
 ) : ViewGroup(context, null, 0) {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -31,9 +33,7 @@ class AdaptiveViewGroup(
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        for (item in layoutFragment.items) {
-            item.layout(layoutFragment.renderData.layoutFrame)
-        }
+
     }
 
 }

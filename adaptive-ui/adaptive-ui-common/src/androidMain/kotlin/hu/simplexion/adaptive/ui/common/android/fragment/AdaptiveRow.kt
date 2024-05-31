@@ -3,29 +3,19 @@
  */
 package hu.simplexion.adaptive.ui.common.android.fragment
 
+import android.view.View
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveAndroidAdapter
-import hu.simplexion.adaptive.ui.common.android.adapter.AndroidLayoutFragment
+import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveViewGroup
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.Size
-import hu.simplexion.adaptive.ui.common.layout.layoutRow
-import hu.simplexion.adaptive.ui.common.layout.measureRow
+import hu.simplexion.adaptive.ui.common.layout.AbstractRow
 
-open class AdaptiveRow(
+class AdaptiveRow(
     adapter: AdaptiveAndroidAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AndroidLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
-
-    override fun measure(): Size =
-        measureRow(items)
-
-    override fun layout(proposedFrame : Frame) {
-        super.layout(proposedFrame)
-        layoutRow(items)
-    }
+) : AbstractRow<AdaptiveViewGroup, View>(adapter, parent, declarationIndex) {
 
     companion object : AdaptiveFragmentCompanion {
 

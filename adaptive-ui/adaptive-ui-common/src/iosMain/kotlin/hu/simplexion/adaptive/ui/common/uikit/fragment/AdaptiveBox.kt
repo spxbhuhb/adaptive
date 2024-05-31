@@ -6,35 +6,25 @@ package hu.simplexion.adaptive.ui.common.uikit.fragment
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
-import hu.simplexion.adaptive.ui.common.uikit.adapter.IosLayoutFragment
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.instruction.Size
-import hu.simplexion.adaptive.ui.common.layout.Box
+import hu.simplexion.adaptive.ui.common.layout.AbstractBox
+import hu.simplexion.adaptive.ui.common.uikit.adapter.AdaptiveIosAdapter
 import platform.UIKit.UIView
 
 class AdaptiveBox(
-    adapter: AdaptiveAdapter,
+    adapter: AdaptiveIosAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : IosLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
-
-    val layoutImpl = Box(this)
-
-    override fun measure(): Size =
-        layoutImpl.measure(items)
-
-    override fun layout(proposedFrame : Frame) {
-        super.layout(proposedFrame)
-        layoutImpl.layout(items)
-    }
+) : AbstractBox<UIView, UIView>(adapter, parent, declarationIndex) {
 
     companion object : AdaptiveFragmentCompanion {
 
         override val fragmentType = "$commonUI:AdaptiveBox"
 
         override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveBox(parent.adapter, parent, index)
+            AdaptiveBox(parent.adapter as AdaptiveIosAdapter, parent, index)
 
     }
 

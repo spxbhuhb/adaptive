@@ -4,22 +4,27 @@
 
 package hu.simplexion.adaptive.ui.common.adapter
 
-import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
+import hu.simplexion.adaptive.foundation.internal.StateVariableMask
 import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.instruction.Size
 import hu.simplexion.adaptive.utility.checkIfInstance
 
-abstract class AdaptiveUIFragment(
-    adapter: AdaptiveAdapter,
+abstract class AdaptiveUIFragment<RT>(
+    adapter: AdaptiveUIAdapter<*, RT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
     instructionsIndex: Int,
     stateSize: Int
 ) : AdaptiveFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize) {
 
-    abstract val receiver: Any
+    abstract val receiver: RT
+
+    /**
+     * Use this field when accessing actual UI specific adapter functions.
+     */
+    open val uiAdapter = adapter
 
     // FIXME renderData should be bound to instructions
     var renderData = RenderData.DEFAULT
@@ -27,17 +32,26 @@ abstract class AdaptiveUIFragment(
     fun fragmentFactory(index: Int): BoundFragmentFactory =
         state[index].checkIfInstance()
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? =
+        null
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
+    override fun genPatchDescendant(fragment: AdaptiveFragment) =
+        Unit
 
     override fun genPatchInternal(): Boolean {
+        val closureMask = getThisClosureDirtyMask()
+        if (closureMask == 0) return false
+        patchInstructions(closureMask)
+        return true
+    }
+
+    fun patchInstructions(closureMask: StateVariableMask) {
         if (instructionIndex != - 1) {
-            if (haveToPatch(getThisClosureDirtyMask(), 1 shl instructionIndex)) {
+            if (haveToPatch(closureMask, 1 shl instructionIndex)) {
                 renderData = RenderData(instructions)
+                uiAdapter.applyRenderInstructions(this)
             }
         }
-        return true
     }
 
     override fun create() {
@@ -45,23 +59,22 @@ abstract class AdaptiveUIFragment(
         parent?.addActual(this, null) ?: adapter.addActual(this)
     }
 
-//    override fun mount() {
-//        measure()
-//        super.mount()
-//    }
-
     override fun dispose() {
         super.dispose()
         parent?.removeActual(this) ?: adapter.removeActual(this)
     }
 
-    abstract fun measure() : Size?
+    abstract fun measure(): Size?
 
     fun traceMeasure() {
         if (trace) trace("measure", "measuredSize=${renderData.measuredSize}")
     }
 
     open fun layout(proposedFrame: Frame) {
+        uiAdapter.actualLayout(this, proposedFrame)
+    }
+
+    open fun setLayoutFrame(proposedFrame: Frame) {
         val instructedPoint = renderData.instructedPoint
         val instructedSize = renderData.instructedSize
         val measuredSize = renderData.measuredSize

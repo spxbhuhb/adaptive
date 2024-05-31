@@ -6,43 +6,130 @@ package hu.simplexion.adaptive.ui.common.browser.adapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.browser.fragment.BrowserFragmentFactory
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
-import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.Point
+import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
+import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.utility.alsoIfInstance
+import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
 open class AdaptiveBrowserAdapter(
     override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
-) : AdaptiveUIAdapter() {
+) : AdaptiveUIAdapter<HTMLDivElement, HTMLElement>() {
 
     override val fragmentFactory = BrowserFragmentFactory
 
     override val dispatcher: CoroutineDispatcher
         get() = Dispatchers.Default
 
+    override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<HTMLDivElement, HTMLElement>): HTMLDivElement =
+        document.createElement("div") as HTMLDivElement
+
     override fun addActual(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 
-        fragment.alsoIfInstance<BrowserLayoutFragment> {
-
+        fragment.alsoIfInstance<AdaptiveUIContainerFragment<HTMLDivElement, HTMLElement>> {
             rootContainer.getBoundingClientRect().let { r ->
-                it.layout(Frame(0f, 0f, r.width.toFloat(), r.height.toFloat()))
+                val frame = Frame(0f, 0f, r.width.toFloat(), r.height.toFloat())
+                it.renderData.layoutFrame = frame
+                it.measure()
+                it.layout(frame)
+                rootContainer.appendChild(it.receiver)
             }
-
-            rootContainer.appendChild(it.receiver)
         }
     }
 
     override fun removeActual(fragment: AdaptiveFragment) {
         traceRemoveActual(fragment)
 
-        fragment.alsoIfInstance<BrowserLayoutFragment> {
+        fragment.alsoIfInstance<AdaptiveUIContainerFragment<HTMLDivElement, HTMLElement>> {
             rootContainer.removeChild(it.receiver)
         }
+    }
 
+    override fun addActual(containerReceiver: HTMLDivElement, itemReceiver: HTMLElement) {
+        containerReceiver.appendChild(itemReceiver)
+    }
+
+    override fun removeActual(itemReceiver: HTMLElement) {
+        itemReceiver.remove()
+    }
+
+    override fun actualLayout(fragment: AdaptiveUIFragment<HTMLElement>, proposedFrame: Frame) {
+        fragment.setLayoutFrame(proposedFrame)
+
+        val layoutFrame = fragment.renderData.layoutFrame
+
+        if (layoutFrame !== Frame.NaF) {
+            val point = layoutFrame.point
+            val size = layoutFrame.size
+            val style = fragment.receiver.style
+
+            style.position = "absolute"
+            style.boxSizing = "border-box"
+            style.top = "${point.top}px"
+            style.left = "${point.left}px"
+            style.width = "${size.width}px"
+            style.height = "${size.height}px"
+        }
+    }
+
+    override fun applyRenderInstructions(fragment: AdaptiveUIFragment<HTMLElement>) {
+        with (fragment) {
+            if (renderData.tracePatterns.isNotEmpty()) {
+                tracePatterns = renderData.tracePatterns
+            }
+
+            val style = receiver.style
+
+            with(renderData) {
+                // FIXME use classes (when possible) when applying render instructions to HTML element
+                backgroundColor?.let { style.backgroundColor = it.toHexColor() }
+                backgroundGradient?.let { style.background = "linear-gradient(${it.degree}deg, ${it.start.toHexColor()}, ${it.end.toHexColor()})" }
+
+                border?.let { style.border = "${it.width}px solid ${it.color.toHexColor()}" }
+                borderRadius?.let { style.borderRadius = "${it}px" }
+
+                color?.let { style.color = it.toHexColor() }
+
+                fontSize?.let { style.fontSize = "${it}px" }
+                fontWeight?.let { style.fontWeight = it.toString() }
+                letterSpacing?.let { style.letterSpacing = "${it}px" }
+
+                textAlign?.let {
+                    style.textAlign = it.name.lowercase()
+                }
+
+                textWrap?.let {
+                    style.setProperty("text-wrap", it.toString().lowercase())
+                }
+
+                padding?.let { p ->
+                    p.left?.let { style.paddingLeft = "${it}px" }
+                    p.top?.let { style.paddingTop = "${it}px" }
+                    p.right?.let { style.paddingRight = "${it}px" }
+                    p.bottom?.let { style.paddingBottom = "${it}px" }
+                }
+
+                instructedSize?.let {
+                    style.width = "${it.width}px"
+                    style.height = "${it.height}px"
+                }
+
+                onClick?.let {
+                    // FIXME handling of onClick is wrong on so many levels
+                    receiver.addEventListener(
+                        "click",
+                        { onClick !!.handler(AdaptiveUIEvent(fragment, it)) }
+                    )
+                    style.cursor = "pointer"
+                }
+            }
+        }
     }
 
     override fun openExternalLink(href: String) {

@@ -17,7 +17,7 @@ fun externalLink(href : String) = ExternalLink(href)
 data class ExternalLink(val href : String) : AdaptiveInstruction {
 
     fun openLink(event : AdaptiveUIEvent) {
-        (event.fragment.adapter as AdaptiveUIAdapter).openExternalLink(href)
+        event.fragment.uiAdapter.openExternalLink(href)
     }
 
     override fun apply(subject: Any) {

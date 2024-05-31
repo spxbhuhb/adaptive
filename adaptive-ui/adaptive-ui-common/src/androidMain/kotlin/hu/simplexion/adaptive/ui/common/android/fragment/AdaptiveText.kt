@@ -9,16 +9,14 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveAndroidAdapter
-import hu.simplexion.adaptive.ui.common.android.adapter.applyRenderInstructions
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.instruction.Size
 
-
 class AdaptiveText(
-    adapter: AdaptiveAndroidAdapter,
+    override val adapter: AdaptiveAndroidAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AdaptiveUIFragment(adapter, parent, index, 1, 2) {
+) : AdaptiveUIFragment<View>(adapter, parent, index, 1, 2) {
 
     override val receiver = TextView(adapter.context)
 
@@ -33,7 +31,7 @@ class AdaptiveText(
         }
 
         if (haveToPatch(closureMask, 1 shl instructionIndex)) {
-            applyRenderInstructions()
+            adapter.applyRenderInstructions(this)
         }
 
         return false

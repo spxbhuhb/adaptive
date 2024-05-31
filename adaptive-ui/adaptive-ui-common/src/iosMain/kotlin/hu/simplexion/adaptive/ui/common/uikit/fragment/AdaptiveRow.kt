@@ -1,34 +1,27 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.adaptive.ui.common.browser.fragment
+package hu.simplexion.adaptive.ui.common.uikit.fragment
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
-import hu.simplexion.adaptive.ui.common.browser.adapter.AdaptiveBrowserAdapter
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.layout.AbstractRow
-import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLElement
+import hu.simplexion.adaptive.ui.common.uikit.adapter.AdaptiveIosAdapter
+import platform.UIKit.UIView
 
-open class AdaptiveRow(
-    adapter: AdaptiveBrowserAdapter,
+class AdaptiveRow(
+    adapter: AdaptiveIosAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractRow<HTMLDivElement, HTMLElement>(adapter, parent, declarationIndex) {
+) : AbstractRow<UIView, UIView>(adapter, parent, declarationIndex) {
 
-    override fun layout(proposedFrame: Frame) {
-        super.layout(proposedFrame)
-        align()
-    }
-    
     companion object : AdaptiveFragmentCompanion {
 
         override val fragmentType = "$commonUI:AdaptiveRow"
 
         override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveRow(parent.adapter as AdaptiveBrowserAdapter, parent, index)
+            AdaptiveRow(parent.adapter as AdaptiveIosAdapter, parent, index)
 
     }
 
