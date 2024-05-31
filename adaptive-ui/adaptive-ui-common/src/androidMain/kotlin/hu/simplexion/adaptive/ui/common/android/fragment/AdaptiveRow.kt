@@ -3,13 +3,15 @@
  */
 package hu.simplexion.adaptive.ui.common.android.fragment
 
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveAndroidAdapter
 import hu.simplexion.adaptive.ui.common.android.adapter.AndroidLayoutFragment
 import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.instruction.Frame
+import hu.simplexion.adaptive.ui.common.instruction.Size
+import hu.simplexion.adaptive.ui.common.layout.layoutRow
+import hu.simplexion.adaptive.ui.common.layout.measureRow
 
 open class AdaptiveRow(
     adapter: AdaptiveAndroidAdapter,
@@ -17,11 +19,13 @@ open class AdaptiveRow(
     declarationIndex: Int
 ) : AndroidLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
-    override val viewGroup: ViewGroup
-        get() = receiver as ViewGroup
+    override fun measure(): Size =
+        measureRow(items)
 
-    override fun makeReceiver(): ViewGroup =
-        LinearLayout(androidAdapter.context)
+    override fun layout(proposedFrame : Frame) {
+        super.layout(proposedFrame)
+        layoutRow(items)
+    }
 
     companion object : AdaptiveFragmentCompanion {
 

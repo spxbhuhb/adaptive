@@ -9,23 +9,24 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.uikit.adapter.IosLayoutFragment
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.instruction.Frame
-import kotlinx.cinterop.ExperimentalForeignApi
+import hu.simplexion.adaptive.ui.common.instruction.Size
+import hu.simplexion.adaptive.ui.common.layout.Box
 import platform.UIKit.UIView
 
-open class AdaptiveBox(
+class AdaptiveBox(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
 ) : IosLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
-    override fun makeReceiver(): UIView = UIView()
+    val layoutImpl = Box(this)
+
+    override fun measure(): Size =
+        layoutImpl.measure(items)
 
     override fun layout(proposedFrame : Frame) {
         super.layout(proposedFrame)
-        val boxFrame = renderInstructions.layoutFrame
-        for (item in items) {
-            item.layout(boxFrame)
-        }
+        layoutImpl.layout(items)
     }
 
     companion object : AdaptiveFragmentCompanion {

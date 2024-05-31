@@ -13,18 +13,18 @@ import android.view.View.*
 import android.widget.TextView
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.instruction.AdaptiveUIEvent
-import hu.simplexion.adaptive.ui.common.instruction.RenderInstructions
+import hu.simplexion.adaptive.ui.common.adapter.RenderData
 import hu.simplexion.adaptive.ui.common.instruction.TextAlign
 
 fun AdaptiveUIFragment.applyRenderInstructions() {
-    renderInstructions = RenderInstructions(instructions)
+    renderData = RenderData(instructions)
     // FIXME should clear actual UI settings when null
 
-    tracePatterns = renderInstructions.tracePatterns
+    tracePatterns = renderData.tracePatterns
 
     val view = (receiver as View)
 
-    with(renderInstructions) {
+    with(renderData) {
 
         val drawables = mutableListOf<Drawable>()
         val insets = mutableListOf<Int>()

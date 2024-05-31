@@ -3,14 +3,15 @@
  */
 package hu.simplexion.adaptive.ui.common.android.fragment
 
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveAndroidAdapter
-import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveViewGroup
 import hu.simplexion.adaptive.ui.common.android.adapter.AndroidLayoutFragment
 import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.instruction.Frame
+import hu.simplexion.adaptive.ui.common.instruction.Size
+import hu.simplexion.adaptive.ui.common.layout.layoutColumn
+import hu.simplexion.adaptive.ui.common.layout.measureColumn
 
 open class AdaptiveColumn(
     adapter: AdaptiveAndroidAdapter,
@@ -18,13 +19,13 @@ open class AdaptiveColumn(
     declarationIndex: Int
 ) : AndroidLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
-    override val viewGroup: ViewGroup
-        get() = receiver as ViewGroup
+    override fun measure(): Size =
+        measureColumn(items)
 
-    override fun makeReceiver(): ViewGroup =
-        LinearLayout(androidAdapter.context).also {
-            it.orientation = LinearLayout.VERTICAL
-        }
+    override fun layout(proposedFrame : Frame) {
+        super.layout(proposedFrame)
+        layoutColumn(items)
+    }
 
     companion object : AdaptiveFragmentCompanion {
 

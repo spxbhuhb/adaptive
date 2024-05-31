@@ -7,6 +7,7 @@ package hu.simplexion.adaptive.ui.common.instruction
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.resource.FileResource
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
+import hu.simplexion.adaptive.ui.common.adapter.RenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 fun externalLink(res : FileResource) = ExternalLink(res.uri)
@@ -20,7 +21,7 @@ data class ExternalLink(val href : String) : AdaptiveInstruction {
     }
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> {
+        subject.alsoIfInstance<RenderData> {
             it.onClick = OnClick(this::openLink)
         }
     }

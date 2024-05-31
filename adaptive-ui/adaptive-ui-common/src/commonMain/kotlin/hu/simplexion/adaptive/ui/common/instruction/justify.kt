@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.ui.common.adapter.RenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 enum class JustifyContent : AdaptiveInstruction {
@@ -13,7 +14,7 @@ enum class JustifyContent : AdaptiveInstruction {
     End;
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.justifyContent = this }
+        subject.alsoIfInstance<RenderData> { it.justifyContent = this }
     }
 }
 
@@ -23,7 +24,7 @@ enum class JustifyItems : AdaptiveInstruction {
     End;
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.justifyItems = this }
+        subject.alsoIfInstance<RenderData> { it.justifyItems = this }
     }
 }
 
@@ -33,6 +34,6 @@ enum class JustifySelf : AdaptiveInstruction {
     End;
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.justifySelf = this }
+        subject.alsoIfInstance<RenderData> { it.justifySelf = this }
     }
 }

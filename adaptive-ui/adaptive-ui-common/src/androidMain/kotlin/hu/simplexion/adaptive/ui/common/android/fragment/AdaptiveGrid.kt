@@ -3,21 +3,14 @@
  */
 package hu.simplexion.adaptive.ui.common.android.fragment
 
-import android.view.ViewGroup
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveAndroidAdapter
-import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveViewGroup
 import hu.simplexion.adaptive.ui.common.android.adapter.AndroidLayoutFragment
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.instruction.ColTemplate
 import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.RowTemplate
-import hu.simplexion.adaptive.ui.common.logic.distribute
-import hu.simplexion.adaptive.ui.common.logic.expand
-import hu.simplexion.adaptive.ui.common.logic.layoutGrid
-import hu.simplexion.adaptive.ui.common.logic.placeFragments
-import hu.simplexion.adaptive.utility.firstOrNullIfInstance
+import hu.simplexion.adaptive.ui.common.instruction.Size
+import hu.simplexion.adaptive.ui.common.layout.*
 
 open class AdaptiveGrid(
     adapter: AdaptiveAndroidAdapter,
@@ -25,15 +18,12 @@ open class AdaptiveGrid(
     declarationIndex: Int
 ) : AndroidLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
-    override val viewGroup: ViewGroup
-        get() = receiver as ViewGroup
-
-    override fun makeReceiver(): ViewGroup =
-        AdaptiveViewGroup(androidAdapter.context, this)
+    override fun measure(): Size? =
+        measureGrid()
 
     override fun layout(proposedFrame : Frame) {
         super.layout(proposedFrame)
-        layoutGrid(items)
+        layoutGrid()
     }
 
     companion object : AdaptiveFragmentCompanion {

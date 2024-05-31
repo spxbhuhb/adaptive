@@ -9,22 +9,23 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.browser.adapter.BrowserLayoutFragment
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.Point
-import org.w3c.dom.HTMLDivElement
-import org.w3c.dom.HTMLElement
+import hu.simplexion.adaptive.ui.common.instruction.Size
+import hu.simplexion.adaptive.ui.common.layout.Box
 
-open class AdaptiveBox(
+class AdaptiveBox(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
 ) : BrowserLayoutFragment(adapter, parent, declarationIndex, 0, 2) {
 
+    val layoutImpl = Box(this)
+
+    override fun measure(): Size =
+        layoutImpl.measure(items)
+
     override fun layout(proposedFrame : Frame) {
         super.layout(proposedFrame)
-        val boxFrame = renderInstructions.layoutFrame
-        for (item in items) {
-            item.layout(boxFrame)
-        }
+        layoutImpl.layout(items)
     }
 
     companion object : AdaptiveFragmentCompanion {

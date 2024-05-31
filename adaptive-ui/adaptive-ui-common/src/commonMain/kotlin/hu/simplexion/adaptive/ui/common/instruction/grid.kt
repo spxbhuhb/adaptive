@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.ui.common.adapter.RenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 // ---- Shorthands --------------------------------------------------------
@@ -25,20 +26,20 @@ val Number.colSpan
 
 data class RowSpan(val span : Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.rowSpan = span }
+        subject.alsoIfInstance<RenderData> { it.rowSpan = span }
     }
 }
 
 data class ColSpan(val span : Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.colSpan = span }
+        subject.alsoIfInstance<RenderData> { it.colSpan = span }
     }
 }
 
 data class GridPos(val row : Int, val col : Int, val rowSpan : Int = 1, val colSpan: Int = 1) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> {
+        subject.alsoIfInstance<RenderData> {
             it.gridRow = row
             it.gridCol = col
             it.rowSpan = rowSpan
@@ -51,7 +52,7 @@ data class GridPos(val row : Int, val col : Int, val rowSpan : Int = 1, val colS
 data class GridRow(val row : Int, val span : Int = 1) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> {
+        subject.alsoIfInstance<RenderData> {
             it.gridRow = row
             it.rowSpan = span
         }
@@ -62,7 +63,7 @@ data class GridRow(val row : Int, val span : Int = 1) : AdaptiveInstruction {
 data class GridCol(val col : Int, val span: Int = 1) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> {
+        subject.alsoIfInstance<RenderData> {
             it.gridCol = col
             it.colSpan = span
         }

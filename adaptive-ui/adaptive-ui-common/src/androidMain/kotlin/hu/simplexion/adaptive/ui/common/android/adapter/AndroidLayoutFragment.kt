@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.ui.common.android.adapter
 import android.view.ViewGroup
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
+import hu.simplexion.adaptive.ui.common.adapter.AdaptiveLayoutFragment
 import hu.simplexion.adaptive.utility.checkIfInstance
 
 abstract class AndroidLayoutFragment(
@@ -14,20 +15,15 @@ abstract class AndroidLayoutFragment(
     declarationIndex: Int,
     instructionsIndex: Int,
     stateSize: Int
-) : AndroidUIFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize) {
+) : AndroidUIFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize), AdaptiveLayoutFragment<AndroidUIFragment> {
 
-    abstract val viewGroup: ViewGroup
+    @Suppress("LeakingThis") // nothing happens during instance creation
+    override val receiver = AdaptiveViewGroup(adapter.context, this)
 
-    val items = mutableListOf<AndroidUIFragment>()
+    override val items = mutableListOf<AndroidUIFragment>()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         return AdaptiveAnonymous(adapter, this, declarationIndex, 0, fragmentFactory(state.size - 1)).apply { create() }
-    }
-
-    override fun measure() {
-        for (item in items) {
-            item.measure()
-        }
     }
 
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
@@ -53,7 +49,7 @@ abstract class AndroidLayoutFragment(
             items += it
 
             if (anchor == null) {
-                viewGroup.addView(it.receiver)
+                receiver.addView(it.receiver)
             } else {
 //                        checkNotNull(document.getElementById(anchor.id.toString())) { "missing anchor" }
 //                            .appendChild(htmlElementReceiver)

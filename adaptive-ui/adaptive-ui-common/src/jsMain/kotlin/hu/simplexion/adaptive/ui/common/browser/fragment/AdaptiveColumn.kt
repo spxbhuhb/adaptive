@@ -19,14 +19,14 @@ open class AdaptiveColumn(
     override fun layout(proposedFrame : Frame) {
         super.layout(proposedFrame)
 
-        receiver.style.display = "flex"
         with (receiver.style) {
             display = "flex"
             flexDirection = "column"
         }
+        align()
 
         for (item in items) {
-            item.layout(this.renderInstructions.layoutFrame)
+            item.layout(Frame.NaF)
         }
     }
 

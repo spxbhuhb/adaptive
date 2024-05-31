@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.ui.common.adapter.RenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 data class BorderRadius(val radius: Float) : AdaptiveInstruction {
@@ -12,12 +13,12 @@ data class BorderRadius(val radius: Float) : AdaptiveInstruction {
     constructor(radius: Int) : this(radius.toFloat())
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.borderRadius = radius }
+        subject.alsoIfInstance<RenderData> { it.borderRadius = radius }
     }
 }
 
 data class Border(val color: Color, val width: Float = 1f) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.border = this }
+        subject.alsoIfInstance<RenderData> { it.border = this }
     }
 }

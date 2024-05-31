@@ -5,7 +5,6 @@ package hu.simplexion.adaptive.ui.common.android.fragment
 
 import android.graphics.BitmapFactory
 import android.widget.ImageView
-import android.widget.TextView
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.resource.DrawableResource
@@ -14,6 +13,7 @@ import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveAndroidAdapter
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.android.adapter.applyRenderInstructions
+import hu.simplexion.adaptive.ui.common.instruction.Size
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -36,7 +36,12 @@ class AdaptiveImage(
      * Also, it is rare to use the actual size of the image for the layout, it is far
      * more usual to have a space and scale the image to fit that space.
      */
-    override fun measure() = Unit
+    override fun measure() : Size {
+        renderData.instructedSize?.let {
+            return it
+        }
+        return Size.NaS
+    }
 
     override fun genPatchInternal(): Boolean {
         val closureMask = getThisClosureDirtyMask()

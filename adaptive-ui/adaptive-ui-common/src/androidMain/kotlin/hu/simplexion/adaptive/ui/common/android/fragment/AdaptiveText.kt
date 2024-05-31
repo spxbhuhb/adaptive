@@ -39,15 +39,19 @@ class AdaptiveText(
         return false
     }
 
-    override fun measure() {
+    override fun measure() : Size {
+        renderData.instructedSize?.let {
+            return it
+        }
+
         val widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         val heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
 
         receiver.measure(widthSpec, heightSpec)
 
-        renderInstructions.measuredSize = Size(
-            receiver.measuredWidth, receiver.measuredHeight
-        )
+        return Size(receiver.measuredWidth, receiver.measuredHeight).also {
+            renderData.measuredSize = it
+        }
     }
 
     companion object : AdaptiveFragmentCompanion {

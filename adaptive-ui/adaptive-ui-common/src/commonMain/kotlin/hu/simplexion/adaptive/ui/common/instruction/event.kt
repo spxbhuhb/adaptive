@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.adapter.RenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 class AdaptiveUIEvent(
@@ -18,7 +19,7 @@ fun onClick(handler : (event : AdaptiveUIEvent) -> Unit) = OnClick(handler)
 class OnClick(val handler : (event : AdaptiveUIEvent) -> Unit) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.onClick = this }
+        subject.alsoIfInstance<RenderData> { it.onClick = this }
     }
 
     override fun toString(): String {

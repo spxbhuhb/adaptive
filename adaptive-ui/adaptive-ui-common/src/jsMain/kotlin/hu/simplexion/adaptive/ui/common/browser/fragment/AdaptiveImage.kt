@@ -8,10 +8,9 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.browser.adapter.BrowserUIFragment
 import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.RenderInstructions
+import hu.simplexion.adaptive.ui.common.adapter.RenderData
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
@@ -37,7 +36,7 @@ open class AdaptiveImage(
         }
 
         if (haveToPatch(closureMask, 1 shl instructionIndex)) {
-            renderInstructions = RenderInstructions(instructions)
+            renderData = RenderData(instructions)
             applyRenderInstructions()
         }
 
@@ -59,7 +58,7 @@ open class AdaptiveImage(
     override fun layout(proposedFrame: Frame) {
         super.layout(proposedFrame)
 
-        val size = renderInstructions.layoutFrame.size
+        val size = renderData.layoutFrame.size
 
         imgReceiver.width = size.width.toInt()
         imgReceiver.height = size.height.toInt()

@@ -2,16 +2,17 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package hu.simplexion.adaptive.ui.common.instruction
+package hu.simplexion.adaptive.ui.common.adapter
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.testing.Traceable
-import hu.simplexion.adaptive.ui.common.logic.GridCell
+import hu.simplexion.adaptive.ui.common.instruction.*
+import hu.simplexion.adaptive.ui.common.layout.GridCell
 
 /**
  * A pre-processed version of fragment instructions to make access from layout easier.
  */
-class RenderInstructions(
+open class RenderData(
     instructions : Array<out AdaptiveInstruction>
 ) : Traceable, GridCell {
 
@@ -73,11 +74,10 @@ class RenderInstructions(
     var onClick: OnClick? = null
 
     init {
-        println(instructions.contentToString())
         instructions.forEach{ it.apply(this) }
     }
 
     companion object {
-        val DEFAULT = RenderInstructions(emptyArray())
+        val DEFAULT = RenderData(emptyArray())
     }
 }

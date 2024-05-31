@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.ui.common.adapter.RenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 /**
@@ -22,7 +23,7 @@ data class Frame(
     constructor(top: Float, left: Float, width: Float, height: Float) : this(Point(top, left), Size(width, height))
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> {
+        subject.alsoIfInstance<RenderData> {
             it.instructedPoint = this.point
             it.instructedSize = this.size
         }
@@ -49,12 +50,14 @@ data class Point(
     constructor(top: Int, left: Int) : this(top.toFloat(), left.toFloat())
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.instructedPoint = this }
+        subject.alsoIfInstance<RenderData> { it.instructedPoint = this }
     }
 
     companion object {
         /** Not a point, indicates the that the point is not set. **/
         val NaP = Point(Float.NaN, Float.NaN)
+
+        val ORIGIN = Point(0f, 0f)
     }
 }
 
@@ -70,7 +73,7 @@ data class Size(val width: Float, val height: Float) : AdaptiveInstruction {
     constructor(width: Int, height: Int) : this(width.toFloat(), height.toFloat())
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.instructedSize = this }
+        subject.alsoIfInstance<RenderData> { it.instructedSize = this }
     }
 
     companion object {

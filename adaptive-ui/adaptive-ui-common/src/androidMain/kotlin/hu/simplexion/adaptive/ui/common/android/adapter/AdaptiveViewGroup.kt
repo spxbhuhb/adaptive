@@ -19,12 +19,12 @@ class AdaptiveViewGroup(
         // TODO check if we do double measure here
         measureChildren(widthMeasureSpec, heightMeasureSpec)
 
-        val size = layoutFragment.renderInstructions.layoutFrame.size
+        val size = layoutFragment.renderData.layoutFrame.size
         setMeasuredDimension(resolveSize(size.width.toInt(), widthMeasureSpec), resolveSize(size.height.toInt(), heightMeasureSpec))
     }
 
     override fun generateDefaultLayoutParams(): LayoutParams {
-        val frame = layoutFragment.renderInstructions.layoutFrame
+        val frame = layoutFragment.renderData.layoutFrame
         val size = frame.size
 
         return LayoutParams(size.width.toInt(), size.height.toInt())
@@ -32,7 +32,7 @@ class AdaptiveViewGroup(
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         for (item in layoutFragment.items) {
-            item.layout(layoutFragment.renderInstructions.layoutFrame)
+            item.layout(layoutFragment.renderData.layoutFrame)
         }
     }
 

@@ -2,13 +2,10 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package hu.simplexion.adaptive.ui.common.logic
+package hu.simplexion.adaptive.ui.common.layout
 
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.instruction.ColTemplate
-import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.RowTemplate
-import hu.simplexion.adaptive.ui.common.instruction.Track
+import hu.simplexion.adaptive.ui.common.adapter.AdaptiveLayoutFragment
+import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 
 interface GridCell {
@@ -156,22 +153,26 @@ fun placeFragments(cells: List<GridCell>, rows: Int, cols: Int): List<GridCell> 
     return cells
 }
 
-fun AdaptiveUIFragment.layoutGrid(items : List<AdaptiveUIFragment>) {
+fun AdaptiveLayoutFragment<*>.measureGrid() : Size {
+
+}
+
+fun AdaptiveLayoutFragment<*>.layoutGrid() {
 
     val colTemp = checkNotNull(instructions.firstOrNullIfInstance<ColTemplate>()) { "missing column template in $this" }
     val rowTemp = checkNotNull(instructions.firstOrNullIfInstance<RowTemplate>()) { "missing row template in $this" }
 
-    val size = renderInstructions.layoutFrame.size
+    val size = renderData.layoutFrame.size
     val colOffsets = distribute(size.width, expand(colTemp.tracks))
     val rowOffsets = distribute(size.height, expand(rowTemp.tracks))
 
     if (trace) {
-        trace("measure-layoutFrame", renderInstructions.layoutFrame)
+        trace("measure-layoutFrame", renderData.layoutFrame)
         trace("measure-colOffsets", colOffsets.contentToString())
         trace("measure-rowOffsets", rowOffsets.contentToString())
     }
 
-    placeFragments(items.map { it.renderInstructions }, rowOffsets.size - 1, colOffsets.size - 1)
+    placeFragments(items.map { it.renderData }, rowOffsets.size - 1, colOffsets.size - 1)
 
     for (item in items) {
         item.layout(item.toFrame(colOffsets, rowOffsets))

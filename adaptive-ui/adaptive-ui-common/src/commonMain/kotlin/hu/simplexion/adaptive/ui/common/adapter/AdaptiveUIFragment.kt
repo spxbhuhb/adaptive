@@ -8,7 +8,6 @@ import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
 import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.RenderInstructions
 import hu.simplexion.adaptive.ui.common.instruction.Size
 import hu.simplexion.adaptive.utility.checkIfInstance
 
@@ -22,8 +21,8 @@ abstract class AdaptiveUIFragment(
 
     abstract val receiver: Any
 
-    // FIXME renderInstructions should be bound to instructions
-    var renderInstructions = RenderInstructions.DEFAULT
+    // FIXME renderData should be bound to instructions
+    var renderData = RenderData.DEFAULT
 
     fun fragmentFactory(index: Int): BoundFragmentFactory =
         state[index].checkIfInstance()
@@ -35,7 +34,7 @@ abstract class AdaptiveUIFragment(
     override fun genPatchInternal(): Boolean {
         if (instructionIndex != - 1) {
             if (haveToPatch(getThisClosureDirtyMask(), 1 shl instructionIndex)) {
-                renderInstructions = RenderInstructions(instructions)
+                renderData = RenderData(instructions)
             }
         }
         return true
@@ -46,39 +45,48 @@ abstract class AdaptiveUIFragment(
         parent?.addActual(this, null) ?: adapter.addActual(this)
     }
 
-    override fun mount() {
-        measure()
-        super.mount()
-    }
+//    override fun mount() {
+//        measure()
+//        super.mount()
+//    }
 
     override fun dispose() {
         super.dispose()
         parent?.removeActual(this) ?: adapter.removeActual(this)
     }
 
-    abstract fun measure()
+    abstract fun measure() : Size?
 
     fun traceMeasure() {
-        if (trace) trace("measure", "measuredSize=${renderInstructions.measuredSize}")
+        if (trace) trace("measure", "measuredSize=${renderData.measuredSize}")
     }
 
     open fun layout(proposedFrame: Frame) {
-        val instructedPoint = renderInstructions.instructedPoint
-        val instructedSize = renderInstructions.instructedSize
+        val instructedPoint = renderData.instructedPoint
+        val instructedSize = renderData.instructedSize
+        val measuredSize = renderData.measuredSize
 
-        renderInstructions.layoutFrame =
+        renderData.layoutFrame =
 
             if (instructedPoint != null) {
                 if (instructedSize != null) {
                     Frame(instructedPoint, instructedSize)
                 } else {
-                    Frame(instructedPoint, proposedFrame.size)
+                    if (proposedFrame.size === Size.NaS && measuredSize !== Size.NaS) {
+                        Frame(instructedPoint, measuredSize)
+                    } else {
+                        Frame(instructedPoint, proposedFrame.size)
+                    }
                 }
             } else {
                 if (instructedSize != null) {
                     Frame(proposedFrame.point, instructedSize)
                 } else {
-                    proposedFrame
+                    if (proposedFrame.size === Size.NaS && measuredSize !== Size.NaS) {
+                        Frame(proposedFrame.point, measuredSize)
+                    } else {
+                        proposedFrame
+                    }
                 }
             }
 
@@ -90,24 +98,24 @@ abstract class AdaptiveUIFragment(
             trace(
                 "layout",
                 """
-                    layoutFrame=${renderInstructions.layoutFrame}
-                    measuredSize=${renderInstructions.measuredSize}
-                    instructedPoint=${renderInstructions.instructedPoint}
-                    instructedSize=${renderInstructions.instructedSize}
+                    layoutFrame=${renderData.layoutFrame}
+                    measuredSize=${renderData.measuredSize}
+                    instructedPoint=${renderData.instructedPoint}
+                    instructedSize=${renderData.instructedSize}
                 """.trimIndent().replace("\n", " ")
             )
         }
     }
 
     fun toFrame(colOffsets: FloatArray, rowOffsets: FloatArray): Frame {
-        val row = renderInstructions.rowIndex
-        val col = renderInstructions.colIndex
+        val row = renderData.rowIndex
+        val col = renderData.colIndex
 
         return Frame(
             rowOffsets[row],
             colOffsets[col],
-            colOffsets[col + renderInstructions.colSpan] - colOffsets[col],
-            rowOffsets[row + renderInstructions.rowSpan] - rowOffsets[row]
+            colOffsets[col + renderData.colSpan] - colOffsets[col],
+            rowOffsets[row + renderData.rowSpan] - rowOffsets[row]
         )
     }
 

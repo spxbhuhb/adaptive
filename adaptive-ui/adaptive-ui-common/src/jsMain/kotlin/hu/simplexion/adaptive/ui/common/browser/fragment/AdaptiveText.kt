@@ -7,10 +7,9 @@ import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.browser.adapter.BrowserUIFragment
 import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.RenderInstructions
+import hu.simplexion.adaptive.ui.common.adapter.RenderData
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 
@@ -31,7 +30,7 @@ open class AdaptiveText(
         }
 
         if (haveToPatch(closureMask, 1 shl instructionIndex)) {
-            renderInstructions = RenderInstructions(instructions)
+            renderData = RenderData(instructions)
             applyRenderInstructions()
         }
 
@@ -49,7 +48,7 @@ open class AdaptiveText(
     override fun layout(proposedFrame: Frame) {
         applyRenderInstructions()
 
-        val layoutFrame = renderInstructions.layoutFrame
+        val layoutFrame = renderData.layoutFrame
 
         if (layoutFrame !== Frame.NaF) {
             val style = receiver.style

@@ -20,43 +20,36 @@ abstract class BrowserUIFragment(
 
     override lateinit var receiver: HTMLElement
 
-    abstract fun makeReceiver(): HTMLElement
-
-    override fun create() {
-        receiver = makeReceiver()
-        super.create()
-    }
-
     override fun layout(proposedFrame : Frame) {
         super.layout(proposedFrame)
 
         applyRenderInstructions()
 
-        val layoutFrame = renderInstructions.layoutFrame
+        val layoutFrame = renderData.layoutFrame
 
-        check(layoutFrame !== Frame.NaF) { "Missing layout frame in $this" }
+        if (layoutFrame !== Frame.NaF) {
+            val style = receiver.style
 
-        val style = receiver.style
+            val point = layoutFrame.point
+            val size = layoutFrame.size
 
-        val point = layoutFrame.point
-        val size = layoutFrame.size
-
-        style.position = "absolute"
-        style.boxSizing = "border-box"
-        style.top = "${point.top}px"
-        style.left = "${point.left}px"
-        style.width = "${size.width}px"
-        style.height = "${size.height}px"
+            style.position = "absolute"
+            style.boxSizing = "border-box"
+            style.top = "${point.top}px"
+            style.left = "${point.left}px"
+            style.width = "${size.width}px"
+            style.height = "${size.height}px"
+        }
     }
 
     fun applyRenderInstructions() {
-        if (renderInstructions.tracePatterns.isNotEmpty()) {
-            tracePatterns = renderInstructions.tracePatterns
+        if (renderData.tracePatterns.isNotEmpty()) {
+            tracePatterns = renderData.tracePatterns
         }
 
         val style = receiver.style
 
-        with(renderInstructions) {
+        with(renderData) {
             // FIXME use classes (when possible) when applying render instructions to HTML element
             backgroundColor?.let { style.backgroundColor = it.toHexColor() }
             backgroundGradient?.let { style.background = "linear-gradient(${it.degree}deg, ${it.start.toHexColor()}, ${it.end.toHexColor()})" }

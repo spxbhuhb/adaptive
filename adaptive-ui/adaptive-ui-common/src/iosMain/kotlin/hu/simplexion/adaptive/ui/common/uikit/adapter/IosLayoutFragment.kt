@@ -6,10 +6,8 @@ package hu.simplexion.adaptive.ui.common.uikit.adapter
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.logic.checkReceiver
+import hu.simplexion.adaptive.ui.common.checkReceiver
 import hu.simplexion.adaptive.utility.checkIfInstance
-import kotlinx.cinterop.ExperimentalForeignApi
 import platform.UIKit.UIView
 
 abstract class IosLayoutFragment(
@@ -27,12 +25,6 @@ abstract class IosLayoutFragment(
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         return AdaptiveAnonymous(adapter, this, declarationIndex, 0, fragmentFactory(state.size - 1)).apply { create() }
-    }
-
-    override fun measure() {
-        for (item in items) {
-            item.measure()
-        }
     }
 
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {

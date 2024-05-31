@@ -5,11 +5,8 @@ package hu.simplexion.adaptive.ui.common.uikit.adapter
 
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.logic.checkReceiver
-import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreGraphics.CGRectMake
 import platform.UIKit.UIView
@@ -35,7 +32,7 @@ abstract class IosUIFragment(
     override fun layout(proposedFrame : Frame) {
         super.layout(proposedFrame)
 
-        val layoutFrame = renderInstructions.layoutFrame
+        val layoutFrame = renderData.layoutFrame
 
         check(layoutFrame !== Frame.NaF) { "Missing layout frame in $this" }
 

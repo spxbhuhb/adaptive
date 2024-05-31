@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.ui.common.browser.adapter
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
 import hu.simplexion.adaptive.ui.common.instruction.*
-import hu.simplexion.adaptive.ui.common.logic.checkReceiver
+import hu.simplexion.adaptive.ui.common.checkReceiver
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.browser.document
 import org.w3c.dom.HTMLDivElement
@@ -25,6 +25,7 @@ abstract class BrowserLayoutFragment(
     stateSize: Int
 ) : BrowserUIFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize) {
 
+
     val items = mutableListOf<BrowserUIFragment>()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
@@ -33,12 +34,6 @@ abstract class BrowserLayoutFragment(
 
     override fun makeReceiver(): HTMLElement =
         document.createElement("div") as HTMLElement
-
-    override fun measure() {
-        for (item in items) {
-            item.measure()
-        }
-    }
 
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
         (document.createElement("div") as HTMLDivElement).also {
@@ -97,28 +92,28 @@ abstract class BrowserLayoutFragment(
     fun align() {
         val style = receiver.style
 
-        when (renderInstructions.alignItems) {
+        when (renderData.alignItems) {
             null -> Unit
             AlignItems.Center -> style.alignItems = "center"
             AlignItems.End -> style.alignItems = "end"
             AlignItems.Start -> style.alignItems = "start"
         }
 
-        when (renderInstructions.justifyItems) {
+        when (renderData.justifyItems) {
             null -> Unit
             JustifyItems.Center -> style.setProperty("justify-items", "center")
             JustifyItems.End -> style.setProperty("justify-items", "end")
             JustifyItems.Start -> style.setProperty("justify-items", "start")
         }
 
-        when (renderInstructions.alignContent) {
+        when (renderData.alignContent) {
             null -> Unit
             AlignContent.Center -> style.alignContent = "center"
             AlignContent.End -> style.alignContent = "end"
             AlignContent.Start -> style.alignContent = "start"
         }
 
-        when (renderInstructions.justifyContent) {
+        when (renderData.justifyContent) {
             null -> Unit
             JustifyContent.Center -> style.setProperty("justify-content", "center")
             JustifyContent.End -> style.setProperty("justify-content", "end")

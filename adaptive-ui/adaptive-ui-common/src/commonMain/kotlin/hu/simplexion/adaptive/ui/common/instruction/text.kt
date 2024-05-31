@@ -5,29 +5,30 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.ui.common.adapter.RenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 data class FontName(val fontName: String) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.fontName = fontName }
+        subject.alsoIfInstance<RenderData> { it.fontName = fontName }
     }
 }
 
 data class FontSize(val fontSize: Float) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.fontSize = fontSize }
+        subject.alsoIfInstance<RenderData> { it.fontSize = fontSize }
     }
 }
 
 data class FontWeight(val weight: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.fontWeight = weight }
+        subject.alsoIfInstance<RenderData> { it.fontWeight = weight }
     }
 }
 
 data class LetterSpacing(val value: Float) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.letterSpacing = value }
+        subject.alsoIfInstance<RenderData> { it.letterSpacing = value }
     }
 }
 
@@ -36,7 +37,7 @@ enum class TextWrap : AdaptiveInstruction {
     NoWrap;
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.textWrap = this }
+        subject.alsoIfInstance<RenderData> { it.textWrap = this }
     }
 }
 
@@ -46,6 +47,6 @@ enum class TextAlign : AdaptiveInstruction {
     End;
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.textAlign = this }
+        subject.alsoIfInstance<RenderData> { it.textAlign = this }
     }
 }
