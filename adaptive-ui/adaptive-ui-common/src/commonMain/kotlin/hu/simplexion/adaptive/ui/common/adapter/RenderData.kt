@@ -29,7 +29,7 @@ open class RenderData(
      * such as images and text can calculate their own size which then can be
      * used for layout calculations or for resizing.
      */
-    var measuredSize : Size = Size.NaS
+    var measuredSize : Size? = null
 
     /**
      * The frame specified by the instructions.

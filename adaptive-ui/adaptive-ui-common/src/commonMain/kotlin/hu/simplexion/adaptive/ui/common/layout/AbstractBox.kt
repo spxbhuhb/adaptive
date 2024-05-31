@@ -19,7 +19,7 @@ abstract class AbstractBox<CRT : RT,RT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 
-    override fun measure() : Size =
+    override fun measure(): Size =
         measure(
             { w : Float, p : Point, s : Size -> maxOf(w, p.top + s.width)},
             { h : Float, p : Point, s : Size -> maxOf(h, p.left + s.height)}

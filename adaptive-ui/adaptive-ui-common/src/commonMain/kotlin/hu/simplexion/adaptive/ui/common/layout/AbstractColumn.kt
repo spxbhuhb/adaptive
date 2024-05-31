@@ -10,7 +10,6 @@ import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
 import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.instruction.Point
 import hu.simplexion.adaptive.ui.common.instruction.Size
-import kotlin.math.max
 
 abstract class AbstractColumn<CRT : RT,RT>(
     adapter: AdaptiveUIAdapter<CRT, RT>,
@@ -20,7 +19,7 @@ abstract class AbstractColumn<CRT : RT,RT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 
-    override fun measure() : Size =
+    override fun measure(): Size =
         measure(
             { w : Float, _ : Point, s : Size -> maxOf(w, s.width)},
             { h : Float, _ : Point, s : Size -> h + s.height }

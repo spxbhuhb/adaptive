@@ -25,9 +25,9 @@ interface AdaptiveAdapter {
     fun actualize(name: String, parent: AdaptiveFragment, index: Int) =
         fragmentFactory.newInstance(name, parent, index)
 
-    fun addActual(fragment: AdaptiveFragment) = Unit
+    fun addActualRoot(fragment: AdaptiveFragment) = Unit
 
-    fun removeActual(fragment: AdaptiveFragment) = Unit
+    fun removeActualRoot(fragment: AdaptiveFragment) = Unit
 
     /**
      * Called by the `adaptive` entry point function after the root fragment is mounted.

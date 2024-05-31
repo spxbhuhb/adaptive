@@ -56,13 +56,13 @@ abstract class AdaptiveUIAdapter<CRT : RT, RT> : AdaptiveAdapter {
     }
 
     /**
-     * Layouts call [addActual] to perform whatever platform call is needed
+     * Layouts call [addActualRoot] to perform whatever platform call is needed
      * to add the item to the container on actual UI level.
      */
     abstract fun addActual(containerReceiver: CRT, itemReceiver: RT)
 
     /**
-     * Layouts call [removeActual] to perform whatever platform call is needed
+     * Layouts call [removeActualRoot] to perform whatever platform call is needed
      * to remove the item from the container on actual UI level.
      */
     abstract fun removeActual(itemReceiver: RT)

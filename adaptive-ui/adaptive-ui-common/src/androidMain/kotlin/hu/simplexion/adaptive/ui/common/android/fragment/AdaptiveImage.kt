@@ -19,7 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class AdaptiveImage(
-    override val adapter: AdaptiveAndroidAdapter,
+    adapter: AdaptiveAndroidAdapter,
     parent: AdaptiveFragment,
     index: Int
 ) : AdaptiveUIFragment<View>(adapter, parent, index, 1, 2) {
@@ -36,11 +36,9 @@ class AdaptiveImage(
      * Also, it is rare to use the actual size of the image for the layout, it is far
      * more usual to have a space and scale the image to fit that space.
      */
-    override fun measure() : Size {
-        renderData.instructedSize?.let {
-            return it
-        }
-        return Size.NaS
+    override fun measure(): Size {
+        traceMeasure()
+        return renderData.instructedSize ?: Size(0f, 0f)
     }
 
     override fun genPatchInternal(): Boolean {

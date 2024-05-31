@@ -9,7 +9,7 @@ In any actual UIs there are typically _leaf_ types and _container_ types, the tw
 
 | Target      | Leaf Type | Container Type | Add                 | Remove                       |
 |-------------|-----------|----------------|---------------------|------------------------------|
-| jsMain      | `Node`    | `Node`         | `Node.appendChild`  | `Node.removeChild`           |
+| jsMain      | `Node`    | `Node`         | `Node.appendChild`  | `Node.remove`                |
 | androidMain | `View`    | `ViewGroup`    | `ViewGroup.addView` | `ViewGroup.removeView`       |
 | iosMain     | `UIView`  | `UIView`       | `UIView.addSubview` | `UIView.removeFromSuperview` | 
 
@@ -50,9 +50,9 @@ of the actual UI.
 
 ## Mount and Unmount
 
-`AdaptiveFragment.mount` and `AdaptiveFragment.unmount` functions connect the fragment tree and the actual UI.
+`AdaptiveFragment.mount` and `AdaptiveFragment.unmount` functions connect the fragment tree to the actual UI.
 
-`AdaptiveFragment.addActual` and `AdaptiveFragment.removeActual` functions add/remove actual UI elements (_leaf_ or
+`AdaptiveAdapter.addActual` and `AdaptiveAdapter.removeActual` functions add/remove actual UI elements (_leaf_ or
 _container_) to an actual UI _container_.
 
 **dependent fragments**
@@ -125,3 +125,11 @@ to which anchor the fragment belongs to.
   - checks if there is a higher anchor specified
       - if so, forwards the call with the specified anchor
       - if not, forwards the call with itself (the `if` or `for`) as the higher anchor
+
+## Measure and layout
+
+When a container fragment is added to the adapter:
+
+- the adapter sets the `layoutFrame` of the container fragment
+- calls `measure` of the container fragment
+- calls `layout` of the container fragment

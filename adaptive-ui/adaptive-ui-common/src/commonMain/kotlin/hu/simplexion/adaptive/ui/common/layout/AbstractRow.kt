@@ -10,29 +10,30 @@ import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
 import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.instruction.Point
 import hu.simplexion.adaptive.ui.common.instruction.Size
-import kotlin.math.max
 
-abstract class AbstractRow<CRT : RT,RT>(
+abstract class AbstractRow<CRT : RT, RT>(
     adapter: AdaptiveUIAdapter<CRT, RT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int
-) : AdaptiveUIContainerFragment<CRT,RT>(
+) : AdaptiveUIContainerFragment<CRT, RT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 
-    override fun measure() : Size =
+    override fun measure(): Size =
         measure(
-            { w : Float, p : Point, s : Size -> w + s.width},
-            { h : Float, p : Point, s : Size -> maxOf(h, s.height)}
+            { w: Float, _: Point, s: Size -> w + s.width },
+            { h: Float, _: Point, s: Size -> maxOf(h, s.height) }
         )
 
-    override fun layout(proposedFrame : Frame) {
+    override fun layout(proposedFrame: Frame) {
         setLayoutFrame(proposedFrame)
 
-        val layoutFrame = renderData.layoutFrame
+        var left = 0f
 
         for (item in items) {
-            item.layout(layoutFrame)
+            val measuredSize = checkNotNull(item.renderData.measuredSize) { "measured size should not be null" } // TODO ops
+            item.layout(Frame(Point(0f, left), measuredSize))
+            left += measuredSize.width
         }
     }
 

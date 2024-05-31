@@ -120,11 +120,11 @@ abstract class AdaptiveFragment(
     // --------------------------------------------------------------------------
 
     open fun addActual(fragment: AdaptiveFragment, anchor: AdaptiveFragment?) {
-        parent?.addActual(fragment, anchor) ?: adapter.addActual(fragment)
+        parent?.addActual(fragment, anchor) ?: adapter.addActualRoot(fragment)
     }
 
     open fun removeActual(fragment: AdaptiveFragment) {
-        parent?.removeActual(fragment) ?: adapter.removeActual(fragment)
+        parent?.removeActual(fragment) ?: adapter.removeActualRoot(fragment)
     }
 
     open fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
@@ -361,27 +361,6 @@ abstract class AdaptiveFragment(
             metadata = AdaptivePropertyMetadata(boundType),
             supportFunctionIndex = supportFunctionIndex
         )
-
-    // --------------------------------------------------------------------------
-    // Fragment search
-    // --------------------------------------------------------------------------
-
-    @Suppress("UNCHECKED_CAST") // TODO clean up the casting mess in AdaptiveFragment.single
-    inline fun <reified T> single(): T =
-        mutableListOf<T>().also { r -> filter(r as MutableList<AdaptiveFragment>) { it is T } }.single()
-
-    open fun single(filterFun: (it: AdaptiveFragment) -> Boolean): AdaptiveFragment =
-        mutableListOf<AdaptiveFragment>().also { filter(it, filterFun) }.single()
-
-    open fun filter(filterFun: (it: AdaptiveFragment) -> Boolean): List<AdaptiveFragment> =
-        mutableListOf<AdaptiveFragment>().also { filter(it, filterFun) }
-
-    open fun filter(result: MutableList<AdaptiveFragment>, filterFun: (it: AdaptiveFragment) -> Boolean) {
-        if (filterFun(this)) {
-            result += this
-        }
-        children.forEach { it.filter(result, filterFun) }
-    }
 
     // --------------------------------------------------------------------------
     // Utility functions

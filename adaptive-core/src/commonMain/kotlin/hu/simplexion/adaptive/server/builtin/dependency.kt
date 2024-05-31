@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.server.builtin
 
+import hu.simplexion.adaptive.foundation.select.single
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
 
 /**
@@ -18,9 +19,7 @@ import hu.simplexion.adaptive.server.AdaptiveServerFragment
 inline fun <reified T : StoreImpl<T>> ServerFragmentImpl.store(): Lazy<T> =
     lazy {
         checkNotNull(adapter) { "this implementation is not part of an adaptive server" }
-            .rootFragment
-            .filter { it is AdaptiveServerFragment && it.impl is T }
-            .single()
+            .single(deep = true) { it is AdaptiveServerFragment && it.impl is T}
             .let { (it as AdaptiveServerFragment) }
             .impl as T
     }
@@ -37,9 +36,7 @@ inline fun <reified T : StoreImpl<T>> ServerFragmentImpl.store(): Lazy<T> =
 inline fun <reified T : ServiceImpl<T>> ServerFragmentImpl.service(): Lazy<T> =
     lazy {
         checkNotNull(adapter) { "this implementation is not part of an adaptive server" }
-            .rootFragment
-            .filter { it is AdaptiveServerFragment && it.impl is T }
-            .single()
+            .single(deep = true) { it is AdaptiveServerFragment && it.impl is T}
             .let { (it as AdaptiveServerFragment) }
             .impl as T
     }
@@ -56,9 +53,7 @@ inline fun <reified T : ServiceImpl<T>> ServerFragmentImpl.service(): Lazy<T> =
 inline fun <reified T : WorkerImpl<T>> ServerFragmentImpl.worker(): Lazy<T> =
     lazy {
         checkNotNull(adapter) { "this implementation is not part of an adaptive server" }
-            .rootFragment
-            .filter { it is AdaptiveServerFragment && it.impl is T }
-            .single()
+            .single(deep = true) { it is AdaptiveServerFragment && it.impl is T}
             .let { (it as AdaptiveServerFragment) }
             .impl as T
     }

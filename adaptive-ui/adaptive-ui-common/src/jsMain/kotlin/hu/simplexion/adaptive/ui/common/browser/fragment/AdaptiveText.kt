@@ -45,7 +45,7 @@ open class AdaptiveText(
     /**
      * In web browsers measuring text is not the usual way.
      */
-    override fun measure() : Size? {
+    override fun measure(): Size {
         traceMeasure()
         return Size(0f,0f)
     }

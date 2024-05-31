@@ -56,15 +56,15 @@ abstract class AdaptiveUIFragment<RT>(
 
     override fun create() {
         super.create()
-        parent?.addActual(this, null) ?: adapter.addActual(this)
+        parent?.addActual(this, null) ?: adapter.addActualRoot(this)
     }
 
     override fun dispose() {
         super.dispose()
-        parent?.removeActual(this) ?: adapter.removeActual(this)
+        parent?.removeActual(this) ?: adapter.removeActualRoot(this)
     }
 
-    abstract fun measure(): Size?
+    abstract fun measure(): Size
 
     fun traceMeasure() {
         if (trace) trace("measure", "measuredSize=${renderData.measuredSize}")
@@ -85,7 +85,7 @@ abstract class AdaptiveUIFragment<RT>(
                 if (instructedSize != null) {
                     Frame(instructedPoint, instructedSize)
                 } else {
-                    if (proposedFrame.size === Size.NaS && measuredSize !== Size.NaS) {
+                    if (proposedFrame.size === Size.NaS && measuredSize != null) {
                         Frame(instructedPoint, measuredSize)
                     } else {
                         Frame(instructedPoint, proposedFrame.size)
@@ -95,7 +95,7 @@ abstract class AdaptiveUIFragment<RT>(
                 if (instructedSize != null) {
                     Frame(proposedFrame.point, instructedSize)
                 } else {
-                    if (proposedFrame.size === Size.NaS && measuredSize !== Size.NaS) {
+                    if (proposedFrame.size === Size.NaS && measuredSize != null) {
                         Frame(proposedFrame.point, measuredSize)
                     } else {
                         proposedFrame

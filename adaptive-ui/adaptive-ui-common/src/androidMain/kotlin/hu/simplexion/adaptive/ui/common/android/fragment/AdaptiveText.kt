@@ -13,7 +13,7 @@ import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.instruction.Size
 
 class AdaptiveText(
-    override val adapter: AdaptiveAndroidAdapter,
+    adapter: AdaptiveAndroidAdapter,
     parent: AdaptiveFragment,
     index: Int
 ) : AdaptiveUIFragment<View>(adapter, parent, index, 1, 2) {
@@ -31,13 +31,15 @@ class AdaptiveText(
         }
 
         if (haveToPatch(closureMask, 1 shl instructionIndex)) {
-            adapter.applyRenderInstructions(this)
+            uiAdapter.applyRenderInstructions(this)
         }
 
         return false
     }
 
-    override fun measure() : Size {
+    override fun measure(): Size {
+        traceMeasure()
+
         renderData.instructedSize?.let {
             return it
         }

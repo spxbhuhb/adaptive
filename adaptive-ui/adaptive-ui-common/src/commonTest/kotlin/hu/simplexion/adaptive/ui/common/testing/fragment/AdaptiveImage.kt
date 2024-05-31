@@ -1,29 +1,26 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.adaptive.ui.common.browser.fragment
+package hu.simplexion.adaptive.ui.common.testing.fragment
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.browser.adapter.AdaptiveBrowserAdapter
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.instruction.Size
+import hu.simplexion.adaptive.ui.common.testing.adapter.AdaptiveUITestAdapter
+import hu.simplexion.adaptive.ui.common.testing.adapter.TestReceiver
 import hu.simplexion.adaptive.utility.checkIfInstance
-import kotlinx.browser.document
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLImageElement
 
 open class AdaptiveImage(
-    adapter: AdaptiveBrowserAdapter,
+    adapter: AdaptiveUITestAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AdaptiveUIFragment<HTMLElement>(adapter, parent, index, 1, 2) {
+) : AdaptiveUIFragment<TestReceiver>(adapter, parent, index, 1, 2) {
 
-    override val receiver: HTMLImageElement =
-        document.createElement("img") as HTMLImageElement
+    override val receiver = TestReceiver()
 
     private val res: DrawableResource
         get() = state[0].checkIfInstance()
@@ -32,7 +29,7 @@ open class AdaptiveImage(
         val closureMask = getThisClosureDirtyMask()
 
         if (haveToPatch(closureMask, 1)) {
-            receiver.src = res.uri
+            res.uri
         }
 
         patchInstructions(closureMask)
@@ -57,8 +54,8 @@ open class AdaptiveImage(
 
         val size = renderData.layoutFrame.size
 
-        receiver.width = size.width.toInt()
-        receiver.height = size.height.toInt()
+//        receiver.width = size.width.toInt()
+//        receiver.height = size.height.toInt()
     }
 
     companion object : AdaptiveFragmentCompanion {
@@ -66,7 +63,7 @@ open class AdaptiveImage(
         override val fragmentType = "$commonUI:AdaptiveImage"
 
         override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveImage(parent.adapter as AdaptiveBrowserAdapter, parent, index)
+            AdaptiveImage(parent.adapter as AdaptiveUITestAdapter, parent, index)
 
     }
 

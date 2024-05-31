@@ -176,11 +176,14 @@ abstract class AbstractGrid<CRT : RT,RT>(
         return cells
     }
 
-    override fun measure() : Size? {
+    override fun measure(): Size {
+        traceMeasure()
+
         for (item in items) {
             item.measure()
         }
-        return null
+
+        return Size(0f, 0f) // FIXME GRID MEASURED SIZE
     }
 
     override fun layout(proposedFrame : Frame) {
