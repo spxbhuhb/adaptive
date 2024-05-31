@@ -12,20 +12,17 @@ Adaptive comes with a compiler plugin that performs many functions to reach the 
 > [!CAUTION]
 >
 > Project status: **preview**
-> 
-> While library already works and provides both client and server side functionality,
-> it is not even close to be ready for general production.
 >
-> Please note that this is just a preview release, many basic things you would expect to 
-> work are still broken, especially around the code transformation.
+> Please note the project status, many basic things you would expect to work are still
+> broken, especially around the code transformation. 
 > 
-> For example, a simple `{ counter++ }` at the right place can result in a compiler plugin
-> error.
+> That said, the library works, and it is already possible to run the resulting code on all
+> focus platforms (browser, Android, iOS, JVM for server).
 > 
-> I will clean everything up eventually, but for now I consider these low priority issues, 
-> ones I can live with. If anyone starts to play around with the project I'll try to
-> spend some time on these problems. Feel free to open an issue for any error or even 
-> inconvenience you experience.
+> I try to keep the `main` branch of this and the example repo compile and working all the time.
+> 
+> The `bleeding-edge` branch is where the day-to-day development happens, that one is unpredictable.
+> 
 
 ## Supported platforms
 
@@ -50,15 +47,16 @@ Check out the [adaptive-example](https://github.com/spxbhuhb/adaptive-example) p
   * [shared code](https://github.com/spxbhuhb/adaptive-example/blob/main/shared/src/commonMain/kotlin/counter.kt) (shared between all client platforms)
   * [browser main](https://github.com/spxbhuhb/adaptive-example/blob/main/browserApp/src/jsMain/kotlin/main.kt)
   * [android main](https://github.com/spxbhuhb/adaptive-example/blob/main/androidApp/src/androidMain/kotlin/hu/simplexion/adaptive/example/MainActivity.kt)
+  * [ios main](https://github.com/spxbhuhb/adaptive-example/blob/main/shared/src/iosSimulatorArm64Main/kotlin/main.kt)
 
 ## Project Structure
 
 | Component                                                | Content                                                                           |
 |----------------------------------------------------------|-----------------------------------------------------------------------------------|
 | core                                                     | The fundamental core of the library.                                              |
-| &nbsp;&nbsp;[adat](doc/adat/README)                     | Data classes with many convenience functions, metadata and serialization support. |
-| &nbsp;&nbsp;[foundation](doc/foundation/README)   | Fundamental classes and interfaces for building adaptive structures.              |
-| &nbsp;&nbsp;[server](doc/server/README)               | Server side adaptive fragments: workers, services, stores, settings.              |
+| &nbsp;&nbsp;[adat](doc/adat/README)                      | Data classes with many convenience functions, metadata and serialization support. |
+| &nbsp;&nbsp;[foundation](doc/foundation/README)          | Fundamental classes and interfaces for building adaptive structures.              |
+| &nbsp;&nbsp;[server](doc/server/README)                  | Server side adaptive fragments: workers, services, stores, settings.              |
 | &nbsp;&nbsp;service                                      | Client-server communication with simple function calls.                           |
 | &nbsp;&nbsp;wireformat                                   | Serialization (protobuf and Json).                                                |
 | gradle-plugin                                            | The Gradle plugin.                                                                |
