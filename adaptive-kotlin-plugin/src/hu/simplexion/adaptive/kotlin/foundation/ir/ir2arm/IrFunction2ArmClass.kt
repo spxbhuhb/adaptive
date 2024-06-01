@@ -14,6 +14,7 @@ import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
+import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.defaultType
@@ -34,6 +35,7 @@ import org.jetbrains.kotlin.ir.util.*
  *
  * Calls [DependencyVisitor] to build dependencies for each block.
  */
+@OptIn(UnsafeDuringIrConstructionAPI::class)
 class IrFunction2ArmClass(
     override val pluginContext: AdaptivePluginContext,
     val irFunction: IrFunction,
@@ -368,6 +370,9 @@ class IrFunction2ArmClass(
             }
         }
 
+    /**
+     * The hhigher-order function transform.
+     */
     fun transformFragmentFactoryArgument(
         expression: IrFunctionExpression
     ): ArmRenderingStatement {
@@ -529,7 +534,7 @@ class IrFunction2ArmClass(
 
         val result = mutableListOf<ArmDetachExpression>()
 
-        expression.elements.forEachIndexed { index, element ->
+        expression.elements.forEach { element ->
             when (element) {
                 is IrCall -> {
                     for (parameter in element.symbol.owner.valueParameters) {

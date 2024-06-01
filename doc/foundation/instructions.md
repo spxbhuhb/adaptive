@@ -11,26 +11,50 @@ import hu.simplexion.adaptive.foundation.Adaptive
 
 @Adaptive
 fun someFun() {
-    row(2.column, greenGradient, borderRadius8, AlignItems.Center, JustifyContent.Center) {
+    row(2.gridCol, greenGradient, borderRadius8, AlignItems.Center, JustifyContent.Center) {
         text("Hello World!", white)
     }
 }
 ```
 
-Instructions are simple classes, you can store them if you use them at different places:
+## Inner instructions
 
-> [!NOTE]
-> 
-> It is good practice to make all instruction classes immutable. This is not enforced now
-> but it might be in the future.
 >
+> [!WARNING]
+>
+> I really, really, really want this feature, but I haven't yet had the time to code it yet.
+> There should be (and will be) rules about where and how one can use inner instructions.
+>
+
+You can put the instructions inside builder blocks, at the beginning, before any rendering instructions.
+This results in much more readable code:
+
+```kotlin
+import hu.simplexion.adaptive.foundation.Adaptive
+
+@Adaptive
+fun someFun() {
+    grid {
+        rowTemplate(260.dp, 1.fr, 100.dp, 100.dp)
+        colTemplate(1.fr)
+        
+        text("Hello World!", white)
+    }
+}
+```
+
+## Instructions used more than once
+
+You can store instructions if you use them at different places:
 
 ```kotlin
 val greenGradient = BackgroundGradient(90, lightGreen, mediumGreen)
 val borderRadius8 = BorderRadius(8)
 ```
 
-You can organize your instructions into arrays:
+## Instruction sets
+
+You can organize your instructions into arrays to make instruction sets:
 
 ```kotlin
 val someStyles = arrayOf<AdaptiveInstriction>(greenGradient, borderRadius8, AlignItems.Center, JustifyContent.Center)
@@ -60,6 +84,8 @@ fun someFun() {
 }
 ```
 
+## Non-UI instructions
+
 Instructions are not limited to styling nor to UI fragments. This is a server side
 instruction:
 
@@ -79,6 +105,55 @@ fun main() {
         worker(DelayStart(5.minutes)) { SomeWorker() }
     }
 
+}
+```
+
+## Defining your own
+
+> [!NOTE]
+>
+> It is good practice to make all instruction classes immutable. This is not enforced now
+> but it might be in the future.
+>
+
+Simply create a class or an object that implements `AdaptiveInstruction`:
+
+```kotlin
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+
+class SomeInstruction(val someString: String)
+
+object SomeOtherInstruction : AdaptiveInstruction
+```
+
+## Finding fragments with a given instruction
+
+Use on of:
+
+- `firstWith`
+- `firstOrNullWith`
+- `singleWith`
+- `filterWith`
+
+```kotlin
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+
+object A : AdaptiveInstruction
+object B : AdaptiveInstruction
+
+@Adaptive
+fun someFun() {
+    row {
+        onClick { 
+            println(adapter().firstWith<A>())
+            println(adapter().firstOrNullWith<A>())
+            println(adapter().singleWith<A>())
+            println(adapter().filterWith<A>())
+        }
+        
+        text("a", A)
+        text("a", B)
+    }
 }
 ```
 
@@ -105,7 +180,7 @@ For example `Trace("layout.*")` adds all trace lines with points that start with
 > This is a regular expression, not a string. `*` does not match everything, use `.*`
 >
 
-## Manual Implementation
+## Use in manually implemented fragments
 
 To let a fragment accept instructions add a `vararg` parameter called `instructions` with
 the type `AdaptiveInstruction`.
@@ -121,22 +196,3 @@ and type) you get an empty array.
 
 The index of the instruction state variable is stored in the `instructionIndex`
 property of the fragment.
-
-## Future Plans
-
-Issue: #18
-
-Add support for inner instructions. The code below does not have the parenthesis
-and comma from being an argument, it is much more readable.
-
-This needs plugin support as these calls are in the rendering part and have
-to be moved into the state-definition part.
-
-```kotlin
-grid {
-    RowTemplate(260.dp, 1.fr, 100.dp, 100.dp)
-    ColTemplate(1.fr)
-
-    /* ... */
-}
-```

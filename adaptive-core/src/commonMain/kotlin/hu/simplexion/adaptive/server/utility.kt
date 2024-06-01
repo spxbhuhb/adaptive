@@ -8,7 +8,7 @@ import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.server.builtin.ServerFragmentImpl
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 
-
+// TODO move server utilities to the general query package
 inline fun <reified T : AdaptiveInstruction> ServerFragmentImpl.has() : Boolean =
     fragment?.instructions?.any { it is T } ?: false
 

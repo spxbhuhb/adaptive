@@ -25,7 +25,7 @@ open class AdaptiveIosAdapter(
         UIView()
 
     @OptIn(ExperimentalForeignApi::class)
-    override fun addActual(fragment: AdaptiveFragment) {
+    override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 
         fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<UIView, UIView>> {
@@ -45,7 +45,7 @@ open class AdaptiveIosAdapter(
         }
     }
 
-    override fun removeActual(fragment: AdaptiveFragment) {
+    override fun removeActualRoot(fragment: AdaptiveFragment) {
         traceRemoveActual(fragment)
 
         fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<UIView, UIView>> {

@@ -7,6 +7,7 @@ import hu.simplexion.adaptive.foundation.instruction.*
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.foundation.testing.*
 import hu.simplexion.adaptive.foundation.structural.*
+import hu.simplexion.adaptive.foundation.select.*
 
 @Adaptive
 fun text(content : String, vararg instructions : AdaptiveInstruction) {
@@ -22,7 +23,7 @@ class Replace(
     }
 
     override fun detach(origin: AdaptiveFragment, detachIndex: Int) {
-        origin.single<AdaptiveSlot>().replace(origin, detachIndex)
+        origin.single<AdaptiveSlot>(true).replace(origin, detachIndex)
     }
 
     override fun toString(): String {
@@ -44,11 +45,7 @@ fun box(): String {
         text("Label", replace { T1(23) })
     }
 
-    val ri = adapter.rootFragment.filter { it.instructions.firstOrNull() is Replace }.first().instructions.first() as Replace
-    ri.execute()
-
-    val ri2 = adapter.rootFragment.filter { it.instructions.firstOrNull() is Replace }[1].instructions.first() as Replace
-    ri2.execute()
+    adapter.collect<Replace>().forEach { it.execute() }
 
     return return adapter.assert(listOf(
         TraceEvent("<root>", 2, "before-Create", ""),

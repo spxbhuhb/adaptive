@@ -106,7 +106,6 @@ fun login() {
             RowTemplate(260.dp, 1.fr, 100.dp, 100.dp),
             ColTemplate(1.fr)
         ) {
-
             row(AlignItems.End, JustifyContent.Center, Padding(bottom = 30f)) {
                 image(Res.drawable.logo, Size(92f, 92f))
             }

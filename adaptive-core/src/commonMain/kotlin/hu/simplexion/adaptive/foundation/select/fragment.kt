@@ -36,6 +36,21 @@ fun AdaptiveFragment.firstOrNull(
 }
 
 /**
+ * Find the first fragment of a given class [T], throws an exception if no such
+ * fragment exists.
+ *
+ * @param deep Deep search, go down in the fragment tree.
+ * @param horizontal When [deep] is true, check a given level first, children second.
+ *
+ * @throws NoSuchElementException
+ */
+inline fun <reified T : Any> AdaptiveFragment.first(
+    deep: Boolean = false,
+    horizontal: Boolean = true
+): T =
+    firstOrNull(deep, horizontal) { it is T } as T? ?: throw NoSuchElementException()
+
+/**
  * Find the first fragment of a given class [T].
  *
  * @param deep Deep search, go down in the fragment tree.
@@ -105,3 +120,32 @@ fun AdaptiveFragment.single(
     condition: (AdaptiveFragment) -> Boolean
 ): AdaptiveFragment =
     filter(mutableListOf(), deep, horizontal, condition).single()
+
+/**
+ * Collect data from fragments.
+ *
+ * @param deep Deep collection, go down in the fragment tree.
+ * @param horizontal When [deep] is true, filter a given level first, children second.
+ */
+fun <T> AdaptiveFragment.collect(
+    matches: MutableList<T> = mutableListOf(),
+    deep: Boolean = false,
+    horizontal: Boolean = true,
+    collector: (AdaptiveFragment, MutableList<T>) -> Unit
+): MutableList<T> {
+
+    for (child in children) {
+        collector(child, matches)
+        if (deep && ! horizontal) {
+            child.collect(matches, deep, horizontal, collector)
+        }
+    }
+
+    if (deep && horizontal) {
+        for (child in children) {
+            child.collect(matches, deep, horizontal, collector)
+        }
+    }
+
+    return matches
+}

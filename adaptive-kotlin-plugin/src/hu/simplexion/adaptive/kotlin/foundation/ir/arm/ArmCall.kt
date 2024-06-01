@@ -11,8 +11,10 @@ import hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir.ClassBoundIrBuilder
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.adaptiveClassFqName
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrConst
+import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.util.getAnnotation
 
+@OptIn(UnsafeDuringIrConstructionAPI::class)
 open class ArmCall(
     armClass: ArmClass,
     index: Int,
