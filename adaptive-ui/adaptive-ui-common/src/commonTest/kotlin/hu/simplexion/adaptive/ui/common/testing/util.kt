@@ -12,10 +12,10 @@ import hu.simplexion.adaptive.ui.common.instruction.Frame
 
 
 inline fun <reified T : AdaptiveInstruction> AdaptiveAdapter.assertEquals(
-    top: Float,
-    left: Float,
-    width: Float,
-    height: Float
+    top: Int,
+    left: Int,
+    width: Int,
+    height: Int
 ) {
     kotlin.test.assertEquals(Frame(top, left, width, height), (firstOrNullWith<T>() as AdaptiveUIFragment<*>).renderData.layoutFrame)
 }

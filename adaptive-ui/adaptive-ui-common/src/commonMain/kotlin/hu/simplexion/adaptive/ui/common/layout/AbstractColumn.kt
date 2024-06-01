@@ -7,32 +7,27 @@ package hu.simplexion.adaptive.ui.common.layout
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
-import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.Point
-import hu.simplexion.adaptive.ui.common.instruction.Size
+import hu.simplexion.adaptive.ui.common.instruction.*
+import kotlin.math.max
 
-abstract class AbstractColumn<CRT : RT,RT>(
+abstract class AbstractColumn<CRT : RT, RT>(
     adapter: AdaptiveUIAdapter<CRT, RT>,
     parent: AdaptiveFragment?,
-    declarationIndex: Int
-) : AdaptiveUIContainerFragment<CRT,RT>(
+    declarationIndex: Int,
+    val autoSizing: Boolean
+) : AdaptiveUIContainerFragment<CRT, RT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 
     override fun measure(): Size =
         measure(
-            { w : Float, _ : Point, s : Size -> maxOf(w, s.width)},
-            { h : Float, _ : Point, s : Size -> h + s.height }
+            { w: Float, _: Point, s: Size -> maxOf(w, s.width) },
+            { h: Float, _: Point, s: Size -> h + s.height }
         )
 
-    override fun layout(proposedFrame : Frame) {
-        setLayoutFrame(proposedFrame)
-
-        val layoutFrame = renderData.layoutFrame
-
-        for (item in items) {
-            item.layout(layoutFrame)
-        }
+    override fun layout(proposedFrame: Frame) {
+        super.layout(proposedFrame)
+        layoutStack(horizontal = false, autoSizing)
     }
 
 }

@@ -15,7 +15,7 @@ open class AdaptiveColumn(
     adapter: AdaptiveUITestAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractColumn<TestReceiver, TestReceiver>(adapter, parent, declarationIndex) {
+) : AbstractColumn<TestReceiver, TestReceiver>(adapter, parent, declarationIndex, false) {
 
     override fun layout(proposedFrame: Frame) {
         super.layout(proposedFrame)

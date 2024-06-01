@@ -15,7 +15,7 @@ class AdaptiveRow(
     adapter: AdaptiveAndroidAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractRow<AdaptiveViewGroup, View>(adapter, parent, declarationIndex) {
+) : AbstractRow<AdaptiveViewGroup, View>(adapter, parent, declarationIndex, false) {
 
     companion object : AdaptiveFragmentCompanion {
 

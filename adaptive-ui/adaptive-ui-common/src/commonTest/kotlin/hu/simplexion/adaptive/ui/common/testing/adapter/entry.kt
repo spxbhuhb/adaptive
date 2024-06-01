@@ -12,10 +12,10 @@ import hu.simplexion.adaptive.ui.common.instruction.Frame
 
 @AdaptiveEntry
 fun uiTest(
-    top: Float,
-    left: Float,
-    width: Float,
-    height: Float,
+    top: Int,
+    left: Int,
+    width: Int,
+    height: Int,
     vararg imports : AdaptiveFragmentFactory,
     trace : Trace? = null,
     @Adaptive block: (adapter : AdaptiveAdapter) -> Unit

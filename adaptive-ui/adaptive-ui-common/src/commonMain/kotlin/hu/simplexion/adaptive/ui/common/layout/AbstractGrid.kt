@@ -21,6 +21,26 @@ abstract class AbstractGrid<CRT : RT,RT>(
     var colOffsets = FloatArray(0)
     var rowOffsets = FloatArray(0)
 
+    override fun measure(): Size {
+        traceMeasure()
+
+        for (item in items) {
+            item.measure()
+        }
+
+        return Size(0f, 0f) // FIXME GRID MEASURED SIZE
+    }
+
+    override fun layout(proposedFrame : Frame) {
+        super.layout(proposedFrame)
+
+        prepare()
+
+        for (item in items) {
+            item.layout(item.toFrame(colOffsets, rowOffsets))
+        }
+    }
+
     /**
      * Prepares the grid for layout. Calculates all track sizes and places all items
      * in the grid. This method requires `layoutFrame` to be set.
@@ -176,22 +196,4 @@ abstract class AbstractGrid<CRT : RT,RT>(
         return cells
     }
 
-    override fun measure(): Size {
-        traceMeasure()
-
-        for (item in items) {
-            item.measure()
-        }
-
-        return Size(0f, 0f) // FIXME GRID MEASURED SIZE
-    }
-
-    override fun layout(proposedFrame : Frame) {
-        setLayoutFrame(proposedFrame)
-        prepare()
-
-        for (item in items) {
-            item.layout(item.toFrame(colOffsets, rowOffsets))
-        }
-    }
 }

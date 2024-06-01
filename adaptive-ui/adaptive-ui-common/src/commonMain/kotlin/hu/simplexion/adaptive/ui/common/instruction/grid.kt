@@ -71,6 +71,8 @@ data class GridCol(val col : Int, val span: Int = 1) : AdaptiveInstruction {
 
 }
 
+fun colTemplate(vararg tracks : Track) = ColTemplate(*tracks)
+
 class ColTemplate(vararg val tracks : Track) : AdaptiveInstruction {
 
     override fun equals(other: Any?): Boolean {
@@ -87,6 +89,8 @@ class ColTemplate(vararg val tracks : Track) : AdaptiveInstruction {
         return "ColTemplate(tracks=${tracks.contentToString()})"
     }
 }
+
+fun rowTemplate(vararg tracks : Track) = RowTemplate(*tracks)
 
 class RowTemplate(vararg val tracks : Track) : AdaptiveInstruction {
 

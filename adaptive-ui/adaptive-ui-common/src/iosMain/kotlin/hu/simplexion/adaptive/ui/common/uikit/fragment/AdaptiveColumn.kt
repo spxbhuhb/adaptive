@@ -14,7 +14,7 @@ class AdaptiveColumn(
     adapter: AdaptiveIosAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractColumn<UIView, UIView>(adapter, parent, declarationIndex) {
+) : AbstractColumn<UIView, UIView>(adapter, parent, declarationIndex, false) {
 
     companion object : AdaptiveFragmentCompanion {
 

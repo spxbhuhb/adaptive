@@ -29,7 +29,7 @@ open class AdaptiveBrowserAdapter(
     override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<HTMLDivElement, HTMLElement>): HTMLDivElement =
         document.createElement("div") as HTMLDivElement
 
-    override fun addActual(fragment: AdaptiveFragment) {
+    override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 
         fragment.alsoIfInstance<AdaptiveUIContainerFragment<HTMLDivElement, HTMLElement>> {
@@ -43,7 +43,7 @@ open class AdaptiveBrowserAdapter(
         }
     }
 
-    override fun removeActual(fragment: AdaptiveFragment) {
+    override fun removeActualRoot(fragment: AdaptiveFragment) {
         traceRemoveActual(fragment)
 
         fragment.alsoIfInstance<AdaptiveUIContainerFragment<HTMLDivElement, HTMLElement>> {
@@ -63,16 +63,19 @@ open class AdaptiveBrowserAdapter(
         fragment.setLayoutFrame(proposedFrame)
 
         val layoutFrame = fragment.renderData.layoutFrame
+        val point = layoutFrame.point
+        val size = layoutFrame.size
+        val style = fragment.receiver.style
 
-        if (layoutFrame !== Frame.NaF) {
-            val point = layoutFrame.point
-            val size = layoutFrame.size
-            val style = fragment.receiver.style
+        style.boxSizing = "border-box"
 
+        if (layoutFrame.point != Point.NaP) {
             style.position = "absolute"
-            style.boxSizing = "border-box"
             style.top = "${point.top}px"
             style.left = "${point.left}px"
+        }
+
+        if (layoutFrame.size != Size.NaS) {
             style.width = "${size.width}px"
             style.height = "${size.height}px"
         }

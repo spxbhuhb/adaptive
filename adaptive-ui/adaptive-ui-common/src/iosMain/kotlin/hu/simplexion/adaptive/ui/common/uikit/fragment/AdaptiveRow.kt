@@ -14,7 +14,7 @@ class AdaptiveRow(
     adapter: AdaptiveIosAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractRow<UIView, UIView>(adapter, parent, declarationIndex) {
+) : AbstractRow<UIView, UIView>(adapter, parent, declarationIndex, false) {
 
     companion object : AdaptiveFragmentCompanion {
 

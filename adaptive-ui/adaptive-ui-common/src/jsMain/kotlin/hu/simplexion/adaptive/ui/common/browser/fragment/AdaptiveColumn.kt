@@ -16,10 +16,14 @@ open class AdaptiveColumn(
     adapter: AdaptiveBrowserAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractColumn<HTMLDivElement, HTMLElement>(adapter, parent, declarationIndex) {
+) : AbstractColumn<HTMLDivElement, HTMLElement>(adapter, parent, declarationIndex, true) {
 
     override fun layout(proposedFrame: Frame) {
         super.layout(proposedFrame)
+        with (receiver.style) {
+            display = "flex"
+            flexDirection = "column"
+        }
         align()
     }
 

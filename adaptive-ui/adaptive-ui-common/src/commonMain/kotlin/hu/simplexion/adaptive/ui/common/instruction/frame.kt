@@ -22,6 +22,8 @@ data class Frame(
 
     constructor(top: Float, left: Float, width: Float, height: Float) : this(Point(top, left), Size(width, height))
 
+    constructor(top: Int, left: Int, width: Int, height: Int) : this(Point(top, left), Size(width, height))
+
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> {
             it.instructedPoint = this.point

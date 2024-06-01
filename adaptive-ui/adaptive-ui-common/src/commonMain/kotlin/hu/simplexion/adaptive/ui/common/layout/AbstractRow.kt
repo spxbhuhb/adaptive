@@ -11,10 +11,15 @@ import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.instruction.Point
 import hu.simplexion.adaptive.ui.common.instruction.Size
 
+/**
+ * @param autoSizing When true, the row accepts unknown item sizes. This is useful for browser when the size of
+ *                   text items is unknown.
+ */
 abstract class AbstractRow<CRT : RT, RT>(
     adapter: AdaptiveUIAdapter<CRT, RT>,
     parent: AdaptiveFragment?,
-    declarationIndex: Int
+    declarationIndex: Int,
+    val autoSizing: Boolean
 ) : AdaptiveUIContainerFragment<CRT, RT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
@@ -26,15 +31,8 @@ abstract class AbstractRow<CRT : RT, RT>(
         )
 
     override fun layout(proposedFrame: Frame) {
-        setLayoutFrame(proposedFrame)
-
-        var left = 0f
-
-        for (item in items) {
-            val measuredSize = checkNotNull(item.renderData.measuredSize) { "measured size should not be null" } // TODO ops
-            item.layout(Frame(Point(0f, left), measuredSize))
-            left += measuredSize.width
-        }
+        super.layout(proposedFrame)
+        layoutStack(horizontal = true, autoSizing)
     }
 
 }

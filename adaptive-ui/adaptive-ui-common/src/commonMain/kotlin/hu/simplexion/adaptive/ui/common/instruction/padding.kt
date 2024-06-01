@@ -15,6 +15,13 @@ data class Padding(
     val left: Float? = null
 ) : AdaptiveInstruction {
 
+    constructor(
+        top : Int? = null,
+        right : Int? = null,
+        bottom : Int? = null,
+        left: Int? = null
+    ) : this(top?.toFloat(), right?.toFloat(), bottom?.toFloat(), left?.toFloat())
+
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> { it.padding = this }
     }

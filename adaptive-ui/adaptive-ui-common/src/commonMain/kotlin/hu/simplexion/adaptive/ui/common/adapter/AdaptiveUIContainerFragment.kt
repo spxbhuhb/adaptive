@@ -6,8 +6,7 @@ package hu.simplexion.adaptive.ui.common.adapter
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
-import hu.simplexion.adaptive.ui.common.instruction.Point
-import hu.simplexion.adaptive.ui.common.instruction.Size
+import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
@@ -69,7 +68,7 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
         }
     }
 
-    inline fun measure(widthFun : (Float, Point, Size) -> Float, heightFun : (Float, Point, Size) -> Float) : Size {
+    inline fun measure(widthFun: (Float, Point, Size) -> Float, heightFun: (Float, Point, Size) -> Float): Size {
         traceMeasure()
 
         val instructedSize = renderData.instructedSize
@@ -94,5 +93,99 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
         }
 
         return Size(width, height)
+    }
+
+    fun calcPrefixAndGap(horizontal: Boolean): Pair<Float, Float> {
+        val instructedGap = renderData.gap ?: 0f
+
+        if (items.isEmpty()) return (0f to instructedGap)
+
+        val size = renderData.layoutFrame.size
+        val available = if (horizontal) size.width else size.height
+        val used = calcUsedSpace(horizontal)
+
+        val gapCount = items.size - 1
+        val usedByInstructedGap = gapCount * instructedGap
+        val remaining = available - (used + usedByInstructedGap)
+
+        if (remaining <= 0) return (0f to instructedGap)
+
+        return when (renderData.justifyContent) {
+            JustifyContent.Start -> (0f to instructedGap)
+            JustifyContent.Center -> ((remaining / 2) to instructedGap)
+            JustifyContent.End -> (remaining to instructedGap)
+            null -> (0f to instructedGap)
+        }
+    }
+
+    fun calcUsedSpace(horizontal: Boolean): Float {
+
+        var usedSpace = 0f
+
+        for (item in items) {
+            val measuredSize = checkNotNull(item.renderData.measuredSize) { "measured size should not be null, container:$this item:$item)" }
+            if (horizontal) {
+                usedSpace += measuredSize.width
+            } else {
+                usedSpace += measuredSize.height
+            }
+        }
+
+        return usedSpace
+    }
+
+    fun calcAlign(alignItems: AlignItems?, alignSelf: AlignSelf?, availableSpace: Float, usedSpace: Float) =
+        if (alignSelf != null) {
+            when (alignSelf) {
+                AlignSelf.Center -> (availableSpace - usedSpace) / 2
+                AlignSelf.Start -> 0f
+                AlignSelf.End -> availableSpace - usedSpace
+            }
+        } else {
+            when (alignItems) {
+                AlignItems.Center -> (availableSpace - usedSpace) / 2
+                AlignItems.Start -> 0f
+                AlignItems.End -> availableSpace - usedSpace
+                null -> 0f
+            }
+        }
+
+    /**
+     * Common layout func for row and column layouts.
+     */
+    fun layoutStack(horizontal: Boolean, autoSizing : Boolean) {
+
+        if (autoSizing) {
+            for (item in items) {
+                item.layout(Frame.NaF)
+            }
+            return
+        }
+
+        val (prefix, gap) = calcPrefixAndGap(horizontal)
+
+        var offset = prefix
+        val stackSize = renderData.layoutFrame.size
+        val spaceForAlign = if (horizontal) stackSize.height else stackSize.width
+        val alignItems = renderData.alignItems
+
+        for (item in items) {
+            val renderData = item.renderData
+
+            val measuredSize = checkNotNull(renderData.measuredSize) { "measured size should not be null, container:$this item:$item)" }
+            val alignSelf = renderData.alignSelf
+
+            val frame = if (horizontal) {
+                val top = calcAlign(alignItems, alignSelf, spaceForAlign, measuredSize.height)
+                Frame(Point(top, offset), measuredSize)
+            } else {
+                val left = calcAlign(alignItems, alignSelf, spaceForAlign, measuredSize.width)
+                Frame(Point(left, offset), measuredSize)
+            }
+
+            item.layout(frame)
+
+            offset += gap + (if (horizontal) measuredSize.width else measuredSize.height)
+        }
     }
 }

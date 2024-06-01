@@ -4,7 +4,6 @@
 
 package hu.simplexion.adaptive.ui.common.layout
 
-import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.fragment.grid
 import hu.simplexion.adaptive.ui.common.fragment.row
 import hu.simplexion.adaptive.ui.common.fragment.text
@@ -15,19 +14,45 @@ import kotlin.test.Test
 
 class GridTest {
 
-    object gridTag : AdaptiveInstruction
-    object textTag1 : AdaptiveInstruction
-
     @Test
     fun basicGridAsRoot() {
 
-        val adapter = uiTest(0f, 0f, 400f, 100f) {
-            grid(ColTemplate(100.dp, 0.25.fr, 0.75.fr), RowTemplate(1.fr), gridTag) {
-                text("a", textTag1)
-            }
-        }
+        uiTest(0, 0, 400, 100) {
 
-        adapter.assertEquals<gridTag>(0f, 0f, 400f, 100f)
-        adapter.assertEquals<textTag1>(0f, 0f, 100f, 100f)
+            grid(colTemplate(100.dp, 0.25.fr, 0.75.fr), rowTemplate(1.fr), Grid1) {
+                text("a", Grid1)
+            }
+
+        }.also { adapter ->
+
+            adapter.assertEquals<Grid1>(0, 0, 400, 100)
+            adapter.assertEquals<Text1>(0, 0, 100, 100)
+
+        }
     }
+
+    @Test
+    fun gridWithRow() {
+
+        uiTest(0, 0, 375, 812) {
+
+            grid(
+                rowTemplate(260.dp, 1.fr, 100.dp, 100.dp),
+                colTemplate(1.fr),
+                Grid1
+            ) {
+                row(Row1) {
+                    text("a", Size(92, 92), Text1)
+                }
+            }
+
+        }.also { adapter ->
+
+            adapter.assertEquals<Grid1>(0, 0, 375, 812)
+            adapter.assertEquals<Grid1>(0, 0, 375, 812)
+            adapter.assertEquals<Text1>(0, 0, 92, 92)
+
+        }
+    }
+
 }

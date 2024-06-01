@@ -16,10 +16,11 @@ open class AdaptiveRow(
     adapter: AdaptiveBrowserAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractRow<HTMLDivElement, HTMLElement>(adapter, parent, declarationIndex) {
+) : AbstractRow<HTMLDivElement, HTMLElement>(adapter, parent, declarationIndex, true) {
 
     override fun layout(proposedFrame: Frame) {
         super.layout(proposedFrame)
+        receiver.style.display = "flex"
         align()
     }
     
