@@ -27,7 +27,8 @@ kotlin {
     compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
     // this opt in is OK, according to:
     // https://kotlinlang.slack.com/archives/C7L3JB43G/p1700429910462239
-    compilerOptions.freeCompilerArgs.add("-opt-in=org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAP")
+    compilerOptions.freeCompilerArgs.add("-opt-in=org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI")
+    compilerOptions.freeCompilerArgs.add("-opt-in=org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi")
 }
 
 sourceSets {
@@ -80,13 +81,6 @@ tasks.test {
     }
 }
 
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        languageVersion = "2.0"
-        freeCompilerArgs += "-opt-in=org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi"
-    }
-}
-
 tasks.create<JavaExec>("generateTests") {
     classpath = sourceSets.test.get().runtimeClasspath
     mainClass.set("hu.simplexion.adaptive.kotlin.GenerateTestsKt")
@@ -101,6 +95,8 @@ fun Test.setLibraryProperty(propName: String, jarName: String) {
         ?: return
     systemProperty(propName, path)
 }
+
+tasks["build"].dependsOn(gradle.includedBuild("adaptive-core").task(":build"))
 
 // ---- Publishing -----
 

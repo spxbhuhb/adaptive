@@ -20,7 +20,7 @@ class GridTest {
         uiTest(0, 0, 400, 100) {
 
             grid(colTemplate(100.dp, 0.25.fr, 0.75.fr), rowTemplate(1.fr), Grid1) {
-                text("a", Grid1)
+                text("a", Text1)
             }
 
         }.also { adapter ->

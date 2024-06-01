@@ -2,7 +2,7 @@
 
 ios-support = "yes"
 
-adaptive = "2024.05.29.1-SNAPSHOT"
+adaptive = "2024.06.01-SNAPSHOT"
 agp = "8.2.0"
 android-compileSdk = "34"
 android-minSdk = "26"

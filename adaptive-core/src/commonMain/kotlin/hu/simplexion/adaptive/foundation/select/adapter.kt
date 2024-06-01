@@ -183,7 +183,7 @@ inline fun <reified T : Any> AdaptiveAdapter.firstImpl(
  * @param horizontal When [deep] is true, filter a given level first, children second.
  */
 inline fun <reified T : Any> AdaptiveAdapter.singleImpl(
-    deep: Boolean = false,
+    deep: Boolean = true, // with server, we typically want deep search
     horizontal: Boolean = true
 ): T =
     rootFragment.single(deep, horizontal) { f -> (f as? AdaptiveServerFragment)?.let { it.impl is T } ?: false }

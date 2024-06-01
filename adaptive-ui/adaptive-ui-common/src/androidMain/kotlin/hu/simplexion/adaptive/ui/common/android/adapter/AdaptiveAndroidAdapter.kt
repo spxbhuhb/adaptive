@@ -33,7 +33,7 @@ open class AdaptiveAndroidAdapter(
     override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<AdaptiveViewGroup, View>): AdaptiveViewGroup =
         AdaptiveViewGroup(context, fragment)
 
-    override fun addActual(fragment: AdaptiveFragment) {
+    override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 
         fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<AdaptiveViewGroup, View>> {
@@ -43,7 +43,7 @@ open class AdaptiveAndroidAdapter(
         }
     }
 
-    override fun removeActual(fragment: AdaptiveFragment) {
+    override fun removeActualRoot(fragment: AdaptiveFragment) {
         traceRemoveActual(fragment)
 
         fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<AdaptiveViewGroup, View>> {
