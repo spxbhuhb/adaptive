@@ -35,9 +35,11 @@ open class AdaptiveBrowserAdapter(
         fragment.alsoIfInstance<AdaptiveUIContainerFragment<HTMLDivElement, HTMLElement>> {
             rootContainer.getBoundingClientRect().let { r ->
                 val frame = Frame(0f, 0f, r.width.toFloat(), r.height.toFloat())
+
                 it.renderData.layoutFrame = frame
                 it.measure()
                 it.layout(frame)
+
                 rootContainer.appendChild(it.receiver)
             }
         }
@@ -59,9 +61,7 @@ open class AdaptiveBrowserAdapter(
         itemReceiver.remove()
     }
 
-    override fun actualLayout(fragment: AdaptiveUIFragment<HTMLElement>, proposedFrame: Frame) {
-        fragment.setLayoutFrame(proposedFrame)
-
+    override fun applyLayoutToActual(fragment: AdaptiveUIFragment<HTMLElement>) {
         val layoutFrame = fragment.renderData.layoutFrame
         val point = layoutFrame.point
         val size = layoutFrame.size
@@ -101,7 +101,7 @@ open class AdaptiveBrowserAdapter(
 
                 fontSize?.let { style.fontSize = "${it}px" }
                 fontWeight?.let { style.fontWeight = it.toString() }
-                letterSpacing?.let { style.letterSpacing = "${it}px" }
+                letterSpacing?.let { style.letterSpacing = "${it}em" }
 
                 textAlign?.let {
                     style.textAlign = it.name.lowercase()

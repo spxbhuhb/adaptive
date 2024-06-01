@@ -5,7 +5,6 @@
 package hu.simplexion.adaptive.ui.common.adapter
 
 import hu.simplexion.adaptive.foundation.*
-import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -70,7 +69,7 @@ abstract class AdaptiveUIAdapter<CRT : RT, RT> : AdaptiveAdapter {
     /**
      * Perform the layout on the actual UI.
      */
-    abstract fun actualLayout(fragment: AdaptiveUIFragment<RT>, proposedFrame: Frame)
+    abstract fun applyLayoutToActual(fragment: AdaptiveUIFragment<RT>)
 
     /**
      * Apply render instructions to the fragment such as coloring, border etc.

@@ -33,7 +33,9 @@ class AdaptiveViewGroup(
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-
+        for (item in layoutFragment.items) {
+            (item.adapter as AdaptiveAndroidAdapter).applyLayoutToActual(item)
+        }
     }
 
 }

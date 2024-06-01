@@ -81,5 +81,7 @@ data class Size(val width: Float, val height: Float) : AdaptiveInstruction {
     companion object {
         /** Not a size, indicates the that the size is not set. **/
         val NaS = Size(Float.NaN, Float.NaN)
+
+        val ZERO = Size(0f, 0f)
     }
 }

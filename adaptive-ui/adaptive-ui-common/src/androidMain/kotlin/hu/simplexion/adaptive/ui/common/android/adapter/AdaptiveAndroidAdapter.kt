@@ -8,17 +8,18 @@ import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
+import android.util.DisplayMetrics
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.ui.common.android.fragment.ViewFragmentFactory
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
+import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.adapter.RenderData
+import hu.simplexion.adaptive.ui.common.android.fragment.ViewFragmentFactory
 import hu.simplexion.adaptive.ui.common.instruction.AdaptiveUIEvent
 import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.instruction.TextAlign
@@ -30,6 +31,8 @@ open class AdaptiveAndroidAdapter(
 
     override val fragmentFactory = ViewFragmentFactory
 
+    val displayMetrics: DisplayMetrics = context.resources.displayMetrics
+
     override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<AdaptiveViewGroup, View>): AdaptiveViewGroup =
         AdaptiveViewGroup(context, fragment)
 
@@ -37,7 +40,12 @@ open class AdaptiveAndroidAdapter(
         traceAddActual(fragment)
 
         fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<AdaptiveViewGroup, View>> {
-            it.renderData.layoutFrame = Frame(0f, 0f, rootContainer.width.toFloat(), rootContainer.height.toFloat())
+            val frame = Frame(0f, 0f, rootContainer.width.toFloat(), rootContainer.height.toFloat())
+
+            it.renderData.layoutFrame = frame
+            it.measure()
+            it.layout(frame)
+
             it.receiver.layoutParams = LinearLayout.LayoutParams(rootContainer.width, rootContainer.height)
             rootContainer.addView(it.receiver)
         }
@@ -59,18 +67,17 @@ open class AdaptiveAndroidAdapter(
         (itemReceiver.parent as AdaptiveViewGroup).removeView(itemReceiver)
     }
 
-    override fun actualLayout(fragment: AdaptiveUIFragment<View>, proposedFrame: Frame) {
-        fragment.setLayoutFrame(proposedFrame)
-
+    override fun applyLayoutToActual(fragment: AdaptiveUIFragment<View>) {
         val layoutFrame = fragment.renderData.layoutFrame
 
-        check(layoutFrame !== Frame.NaF) { "Missing layout frame in $this" }
+        check(layoutFrame !== Frame.NaF) { "Missing layout frame in $fragment $layoutFrame" }
 
         val point = layoutFrame.point
         val size = layoutFrame.size
         val top = point.top.toInt()
         val left = point.left.toInt()
 
+        fragment.receiver.layoutParams = ViewGroup.LayoutParams(size.width.toInt(), size.height.toInt())
         fragment.receiver.layout(
             left,
             top,
@@ -84,7 +91,9 @@ open class AdaptiveAndroidAdapter(
             renderData = RenderData(instructions)
             // FIXME should clear actual UI settings when null
 
-            tracePatterns = renderData.tracePatterns
+            if (renderData.tracePatterns.isNotEmpty()) {
+                tracePatterns = renderData.tracePatterns
+            }
 
             val view = receiver
 
@@ -145,6 +154,7 @@ open class AdaptiveAndroidAdapter(
                     color?.let { view.setTextColor(it.toAndroidColor()) }
 
                     fontSize?.let { view.textSize = it }
+
                     fontWeight?.let {
                         // FIXME proper typeface mapping
                         if (it > 500) view.setTypeface(null, Typeface.BOLD)
@@ -166,5 +176,9 @@ open class AdaptiveAndroidAdapter(
                 }
             }
         }
+    }
+
+    fun pxToSp(px: Float): Float {
+        return px / context.resources.displayMetrics.scaledDensity
     }
 }

@@ -13,6 +13,7 @@ import hu.simplexion.adaptive.resource.defaultResourceReader
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveAndroidAdapter
 import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.instruction.Size
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.coroutines.CoroutineScope
@@ -28,18 +29,6 @@ class AdaptiveImage(
 
     private val content: DrawableResource
         get() = state[0].checkIfInstance()
-
-    /**
-     * Measured size of images is unknown at the time measure is called, mostly because
-     * the image is loaded asynchronously.
-     *
-     * Also, it is rare to use the actual size of the image for the layout, it is far
-     * more usual to have a space and scale the image to fit that space.
-     */
-    override fun measure(): Size {
-        traceMeasure()
-        return renderData.instructedSize ?: Size(0f, 0f)
-    }
 
     override fun genPatchInternal(): Boolean {
         val closureMask = getThisClosureDirtyMask()
@@ -58,6 +47,26 @@ class AdaptiveImage(
         patchInstructions(closureMask)
 
         return false
+    }
+
+
+    /**
+     * Measured size of images is unknown at the time measure is called, mostly because
+     * the image is loaded asynchronously.
+     *
+     * Also, it is rare to use the actual size of the image for the layout, it is far
+     * more usual to have a space and scale the image to fit that space.
+     */
+    override fun measure(): Size {
+        val size = renderData.instructedSize ?: Size(0f, 0f)
+        measuredSize = size
+        traceMeasure()
+        return size
+    }
+
+    override fun layout(proposedFrame: Frame) {
+        setLayoutFrame(proposedFrame)
+        uiAdapter.applyLayoutToActual(this)
     }
 
     companion object : AdaptiveFragmentCompanion {

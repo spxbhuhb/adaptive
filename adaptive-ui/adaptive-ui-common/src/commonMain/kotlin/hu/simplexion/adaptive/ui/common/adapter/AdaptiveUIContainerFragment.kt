@@ -92,7 +92,7 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
             height = heightFun(height, point, size)
         }
 
-        return Size(width, height)
+        return  Size(width, height).also { measuredSize = it }
     }
 
     fun calcPrefixAndGap(horizontal: Boolean): Pair<Float, Float> {
@@ -123,7 +123,7 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
         var usedSpace = 0f
 
         for (item in items) {
-            val measuredSize = checkNotNull(item.renderData.measuredSize) { "measured size should not be null, container:$this item:$item)" }
+            val measuredSize = checkNotNull(item.measuredSize) { "measured size should not be null, container:$this item:$item)" }
             if (horizontal) {
                 usedSpace += measuredSize.width
             } else {
@@ -172,7 +172,7 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
         for (item in items) {
             val renderData = item.renderData
 
-            val measuredSize = checkNotNull(renderData.measuredSize) { "measured size should not be null, container:$this item:$item)" }
+            val measuredSize = checkNotNull(item.measuredSize) { "measured size should not be null, container:$this item:$item)" }
             val alignSelf = renderData.alignSelf
 
             val frame = if (horizontal) {

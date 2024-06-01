@@ -9,6 +9,7 @@ import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveEntry
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
+import hu.simplexion.adaptive.foundation.instruction.Trace
 
 /**
  * The entry point of an Adaptive Android component tree.
@@ -20,12 +21,14 @@ fun android(
     context : Context,
     rootView : ViewGroup,
     vararg imports : AdaptiveFragmentFactory,
+    trace : Trace? = null,
     @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
 ) : AdaptiveAndroidAdapter =
     AdaptiveAndroidAdapter(
         context, rootView
     ).also {
         it.fragmentFactory += imports
+        if (trace != null) { it.trace = trace.patterns }
         block(it)
         it.mounted()
     }

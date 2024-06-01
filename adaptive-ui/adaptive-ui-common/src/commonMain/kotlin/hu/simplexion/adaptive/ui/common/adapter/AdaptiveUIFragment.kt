@@ -29,6 +29,13 @@ abstract class AdaptiveUIFragment<RT>(
     // FIXME renderData should be bound to instructions
     var renderData = RenderData.DEFAULT
 
+    /**
+     * The result of `measure` if the frame can calculate it. The basic fragments
+     * such as images and text can calculate their own size which then can be
+     * used for layout calculations or for resizing.
+     */
+    var measuredSize : Size? = null
+
     fun fragmentFactory(index: Int): BoundFragmentFactory =
         state[index].checkIfInstance()
 
@@ -54,30 +61,28 @@ abstract class AdaptiveUIFragment<RT>(
         }
     }
 
-    override fun create() {
-        super.create()
+    override fun mount() {
+        super.mount()
         parent?.addActual(this, null) ?: adapter.addActualRoot(this)
     }
 
-    override fun dispose() {
-        super.dispose()
+    override fun unmount() {
         parent?.removeActual(this) ?: adapter.removeActualRoot(this)
+        super.unmount()
     }
 
     abstract fun measure(): Size
 
     fun traceMeasure() {
-        if (trace) trace("measure", "measuredSize=${renderData.measuredSize}")
+        if (trace) trace("measure", "measuredSize=${measuredSize}")
     }
 
-    open fun layout(proposedFrame: Frame) {
-        uiAdapter.actualLayout(this, proposedFrame)
-    }
+    abstract fun layout(proposedFrame: Frame)
 
     open fun setLayoutFrame(proposedFrame: Frame) {
         val instructedPoint = renderData.instructedPoint
         val instructedSize = renderData.instructedSize
-        val measuredSize = renderData.measuredSize
+        val measuredSize = this.measuredSize
 
         renderData.layoutFrame =
 
@@ -112,7 +117,7 @@ abstract class AdaptiveUIFragment<RT>(
                 "layout",
                 """
                     layoutFrame=${renderData.layoutFrame}
-                    measuredSize=${renderData.measuredSize}
+                    measuredSize=${measuredSize}
                     instructedPoint=${renderData.instructedPoint}
                     instructedSize=${renderData.instructedSize}
                 """.trimIndent().replace("\n", " ")

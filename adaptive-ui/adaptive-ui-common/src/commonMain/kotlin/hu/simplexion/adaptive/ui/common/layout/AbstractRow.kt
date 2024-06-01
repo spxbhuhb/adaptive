@@ -31,8 +31,11 @@ abstract class AbstractRow<CRT : RT, RT>(
         )
 
     override fun layout(proposedFrame: Frame) {
-        super.layout(proposedFrame)
+        setLayoutFrame(proposedFrame)
+
         layoutStack(horizontal = true, autoSizing)
+
+        uiAdapter.applyLayoutToActual(this)
     }
 
 }

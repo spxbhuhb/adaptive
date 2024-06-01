@@ -8,7 +8,6 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
 import hu.simplexion.adaptive.ui.common.instruction.*
-import kotlin.math.max
 
 abstract class AbstractColumn<CRT : RT, RT>(
     adapter: AdaptiveUIAdapter<CRT, RT>,
@@ -26,8 +25,11 @@ abstract class AbstractColumn<CRT : RT, RT>(
         )
 
     override fun layout(proposedFrame: Frame) {
-        super.layout(proposedFrame)
+        setLayoutFrame(proposedFrame)
+
         layoutStack(horizontal = false, autoSizing)
+
+        uiAdapter.applyLayoutToActual(this)
     }
 
 }

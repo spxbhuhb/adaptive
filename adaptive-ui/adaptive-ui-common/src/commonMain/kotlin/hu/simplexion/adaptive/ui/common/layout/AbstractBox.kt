@@ -33,6 +33,8 @@ abstract class AbstractBox<CRT : RT,RT>(
         for (item in items) {
             item.layout(layoutFrame)
         }
+
+        uiAdapter.applyLayoutToActual(this)
     }
 
 }

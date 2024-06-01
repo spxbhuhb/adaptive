@@ -54,7 +54,7 @@ open class AdaptiveUITestAdapter(
         rootContainer.children.remove(itemReceiver)
     }
 
-    override fun actualLayout(fragment: AdaptiveUIFragment<TestReceiver>, proposedFrame: Frame) {
+    override fun actualLayout(fragment: AdaptiveUIFragment<TestReceiver>) {
         fragment.setLayoutFrame(proposedFrame)
 
         val layoutFrame = fragment.renderData.layoutFrame

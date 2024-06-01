@@ -30,16 +30,18 @@ open class AdaptiveIosAdapter(
 
         fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<UIView, UIView>> {
 
-            it.renderData.layoutFrame =
+            val frame = rootContainer.frame.useContents {
+                Frame(
+                    origin.y.toFloat(),
+                    origin.x.toFloat(),
+                    size.width.toFloat(),
+                    size.height.toFloat()
+                )
+            }
 
-                rootContainer.frame.useContents {
-                    Frame(
-                        origin.y.toFloat(),
-                        origin.x.toFloat(),
-                        size.width.toFloat(),
-                        size.height.toFloat()
-                    )
-                }
+            it.renderData.layoutFrame = frame
+            it.measure()
+            it.layout(frame)
 
             rootContainer.addSubview(it.receiver)
         }
@@ -62,12 +64,10 @@ open class AdaptiveIosAdapter(
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    override fun actualLayout(fragment: AdaptiveUIFragment<UIView>, proposedFrame: Frame) {
-        fragment.setLayoutFrame(proposedFrame)
-
+    override fun applyLayoutToActual(fragment: AdaptiveUIFragment<UIView>) {
         val layoutFrame = fragment.renderData.layoutFrame
 
-        check(layoutFrame !== Frame.NaF) { "Missing layout frame in $this" }
+        check(layoutFrame !== Frame.NaF) { "Missing layout frame in $fragment $layoutFrame" }
 
         val point = layoutFrame.point
         val size = layoutFrame.size
@@ -84,7 +84,9 @@ open class AdaptiveIosAdapter(
             renderData = RenderData(instructions)
             // FIXME should clear actual UI settings when null
 
-            tracePatterns = renderData.tracePatterns
+            if (renderData.tracePatterns.isNotEmpty()) {
+                tracePatterns = renderData.tracePatterns
+            }
 
             val view = receiver
 

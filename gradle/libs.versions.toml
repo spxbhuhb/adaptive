@@ -1,6 +1,6 @@
 [versions]
 
-ios-support = "yes"
+ios-support = "no"
 
 adaptive = "2024.06.01-SNAPSHOT"
 agp = "8.2.0"

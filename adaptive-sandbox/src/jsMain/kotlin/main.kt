@@ -111,7 +111,7 @@ fun login() {
             }
 
             row(AlignItems.Start, JustifyContent.Center) {
-                text("Good Morning", white, FontSize(40f), LetterSpacing(- 1f))
+                text("Good Morning", white, FontSize(40f), LetterSpacing(- 0.02f))
             }
 
             grid(

@@ -25,13 +25,6 @@ open class RenderData(
     var layoutFrame : Frame = Frame.NaF
 
     /**
-     * The result of `measure` if the frame can calculate it. The basic fragments
-     * such as images and text can calculate their own size which then can be
-     * used for layout calculations or for resizing.
-     */
-    var measuredSize : Size? = null
-
-    /**
      * The frame specified by the instructions.
      */
     var instructedPoint : Point? = null

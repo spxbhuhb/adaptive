@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.adapter.RenderData
 import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.instruction.Size
 import hu.simplexion.adaptive.ui.common.testing.adapter.AdaptiveUITestAdapter
 import hu.simplexion.adaptive.ui.common.testing.adapter.TestReceiver
@@ -45,8 +46,13 @@ open class AdaptiveText(
     override fun measure(): Size {
         traceMeasure()
         val size = Size(content.length * 20f, 20f)
-        renderData.measuredSize = size
+        measuredSize = size
         return size
+    }
+
+    override fun layout(proposedFrame: Frame) {
+        setLayoutFrame(proposedFrame)
+        uiAdapter.applyLayoutToActual(this)
     }
 
     companion object : AdaptiveFragmentCompanion {

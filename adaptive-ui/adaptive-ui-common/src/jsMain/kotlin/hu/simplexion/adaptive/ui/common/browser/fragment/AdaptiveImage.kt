@@ -48,17 +48,21 @@ open class AdaptiveImage(
      * more usual to have a space and scale the image to fit that space.
      */
     override fun measure(): Size {
+        val size = Size.NaS
+        measuredSize = size
         traceMeasure()
-        return Size(0f,0f)
+        return size
     }
 
-    override fun setLayoutFrame(proposedFrame: Frame) {
-        super.setLayoutFrame(proposedFrame)
+    override fun layout(proposedFrame: Frame) {
+        setLayoutFrame(proposedFrame)
 
         val size = renderData.layoutFrame.size
 
         receiver.width = size.width.toInt()
         receiver.height = size.height.toInt()
+
+        uiAdapter.applyLayoutToActual(this)
     }
 
     companion object : AdaptiveFragmentCompanion {

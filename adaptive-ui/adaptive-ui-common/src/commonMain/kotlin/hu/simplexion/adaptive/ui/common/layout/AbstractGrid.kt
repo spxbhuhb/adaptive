@@ -32,13 +32,15 @@ abstract class AbstractGrid<CRT : RT,RT>(
     }
 
     override fun layout(proposedFrame : Frame) {
-        super.layout(proposedFrame)
+        setLayoutFrame(proposedFrame)
 
         prepare()
 
         for (item in items) {
             item.layout(item.toFrame(colOffsets, rowOffsets))
         }
+
+        uiAdapter.applyLayoutToActual(this)
     }
 
     /**
