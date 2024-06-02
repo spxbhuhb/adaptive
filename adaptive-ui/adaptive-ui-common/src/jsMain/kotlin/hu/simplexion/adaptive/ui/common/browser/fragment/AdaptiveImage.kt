@@ -9,8 +9,8 @@ import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.browser.adapter.AdaptiveBrowserAdapter
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.Size
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
@@ -47,17 +47,12 @@ open class AdaptiveImage(
      * Also, it is rare to use the actual size of the image for the layout, it is far
      * more usual to have a space and scale the image to fit that space.
      */
-    override fun measure(): Size {
-        val size = Size.NaS
-        measuredSize = size
-        traceMeasure()
-        return size
-    }
+    override fun measure(): RawSize = instructedOr { RawSize.NaS }
 
-    override fun layout(proposedFrame: Frame) {
-        setLayoutFrame(proposedFrame)
+    override fun layout(proposedFrame: RawFrame) {
+        calcLayoutFrame(proposedFrame)
 
-        val size = renderData.layoutFrame.size
+        val size = layoutFrame.size
 
         receiver.width = size.width.toInt()
         receiver.height = size.height.toInt()

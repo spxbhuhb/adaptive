@@ -13,8 +13,8 @@ import hu.simplexion.adaptive.resource.defaultResourceReader
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveAndroidAdapter
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.Size
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -57,15 +57,10 @@ class AdaptiveImage(
      * Also, it is rare to use the actual size of the image for the layout, it is far
      * more usual to have a space and scale the image to fit that space.
      */
-    override fun measure(): Size {
-        val size = renderData.instructedSize ?: Size(0f, 0f)
-        measuredSize = size
-        traceMeasure()
-        return size
-    }
+    override fun measure(): RawSize = instructedOr { RawSize.ZERO }
 
-    override fun layout(proposedFrame: Frame) {
-        setLayoutFrame(proposedFrame)
+    override fun layout(proposedFrame: RawFrame) {
+        calcLayoutFrame(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
     }
 

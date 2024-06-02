@@ -10,7 +10,6 @@ object UiKitFragmentFactory : AdaptiveFragmentFactory() {
     init {
         addAll(
             AdaptiveBox,
-            AdaptiveClickable,
             AdaptiveColumn,
             AdaptiveGrid,
             AdaptiveRow,

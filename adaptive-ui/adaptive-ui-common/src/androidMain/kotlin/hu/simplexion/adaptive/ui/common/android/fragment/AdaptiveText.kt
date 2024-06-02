@@ -10,8 +10,8 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.android.adapter.AdaptiveAndroidAdapter
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.Size
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.layout.RawSize
 
 class AdaptiveText(
     adapter: AdaptiveAndroidAdapter,
@@ -38,21 +38,17 @@ class AdaptiveText(
                 val widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
                 val heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
                 receiver.measure(widthSpec, heightSpec)
-                measuredSize = Size(receiver.measuredWidth, receiver.measuredHeight)
+                measuredSize = RawSize(receiver.measuredWidth.toFloat(), receiver.measuredHeight.toFloat())
             }
         }
 
         return false
     }
 
-    override fun measure(): Size {
-        val size = renderData.instructedSize ?: measuredSize!!
-        traceMeasure()
-        return size
-    }
+    override fun measure(): RawSize = instructedOr { measuredSize !! }
 
-    override fun layout(proposedFrame: Frame) {
-        setLayoutFrame(proposedFrame)
+    override fun layout(proposedFrame: RawFrame) {
+        calcLayoutFrame(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
     }
 

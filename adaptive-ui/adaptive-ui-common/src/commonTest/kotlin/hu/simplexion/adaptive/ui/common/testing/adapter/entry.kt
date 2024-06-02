@@ -9,6 +9,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveEntry
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
 import hu.simplexion.adaptive.foundation.instruction.Trace
 import hu.simplexion.adaptive.ui.common.instruction.Frame
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
 
 @AdaptiveEntry
 fun uiTest(
@@ -21,7 +22,9 @@ fun uiTest(
     @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
 ) : AdaptiveUITestAdapter {
 
-    return AdaptiveUITestAdapter(TestReceiver(Frame(top, left, width, height))).also {
+    return AdaptiveUITestAdapter(
+        TestReceiver(RawFrame(top.toFloat(), left.toFloat(), width.toFloat(), height.toFloat()))
+    ).also {
         it.fragmentFactory += imports
         if (trace != null) { it.trace = trace.patterns }
         block(it)

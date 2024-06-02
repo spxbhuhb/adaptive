@@ -9,20 +9,21 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
 import android.util.DisplayMetrics
+import android.util.TypedValue.*
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.graphics.toColorInt
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.adapter.RenderData
 import hu.simplexion.adaptive.ui.common.android.fragment.ViewFragmentFactory
-import hu.simplexion.adaptive.ui.common.instruction.AdaptiveUIEvent
-import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.TextAlign
+import hu.simplexion.adaptive.ui.common.instruction.*
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
 
 open class AdaptiveAndroidAdapter(
     val context: Context,
@@ -40,9 +41,9 @@ open class AdaptiveAndroidAdapter(
         traceAddActual(fragment)
 
         fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<AdaptiveViewGroup, View>> {
-            val frame = Frame(0f, 0f, rootContainer.width.toFloat(), rootContainer.height.toFloat())
+            val frame = RawFrame(0f, 0f, rootContainer.width.toFloat(), rootContainer.height.toFloat())
 
-            it.renderData.layoutFrame = frame
+            it.layoutFrame = frame
             it.measure()
             it.layout(frame)
 
@@ -68,26 +69,27 @@ open class AdaptiveAndroidAdapter(
     }
 
     override fun applyLayoutToActual(fragment: AdaptiveUIFragment<View>) {
-        val layoutFrame = fragment.renderData.layoutFrame
-
-        check(layoutFrame !== Frame.NaF) { "Missing layout frame in $fragment $layoutFrame" }
+        val layoutFrame = fragment.layoutFrame
 
         val point = layoutFrame.point
         val size = layoutFrame.size
-        val top = point.top.toInt()
-        val left = point.left.toInt()
+
+        val top = point.top
+        val left = point.left
+        val width = size.width
+        val height = size.height
 
         fragment.receiver.layoutParams = ViewGroup.LayoutParams(size.width.toInt(), size.height.toInt())
         fragment.receiver.layout(
-            left,
-            top,
-            left + size.width.toInt(),
-            top + size.height.toInt()
+            left.toInt(),
+            top.toInt(),
+            (left + width).toInt(),
+            (top + height).toInt()
         )
     }
 
     override fun applyRenderInstructions(fragment: AdaptiveUIFragment<View>) {
-        with (fragment) {
+        with(fragment) {
             renderData = RenderData(instructions)
             // FIXME should clear actual UI settings when null
 
@@ -106,8 +108,8 @@ open class AdaptiveAndroidAdapter(
                     drawables += GradientDrawable().apply {
                         shape = GradientDrawable.RECTANGLE
                         setColor(android.graphics.Color.TRANSPARENT)
-                        setStroke(it.width.toInt(), it.color.toAndroidColor())
-                        borderRadius?.let { radius -> cornerRadius = radius }
+                        setStroke(it.width.px, it.color.androidColor)
+                        borderRadius?.let { radius -> cornerRadius = toPx(radius) }
                     }
                     insets += 0
                 }
@@ -115,20 +117,20 @@ open class AdaptiveAndroidAdapter(
                 backgroundColor?.let {
                     drawables += GradientDrawable().apply {
                         shape = GradientDrawable.RECTANGLE
-                        setColor(it.toAndroidColor())
-                        borderRadius?.let { radius -> cornerRadius = radius }
+                        setColor(it.androidColor)
+                        borderRadius?.let { radius -> cornerRadius = toPx(radius) }
                     }
-                    insets += border?.width?.toInt() ?: 0
+                    insets += border?.width.px
                 }
 
                 backgroundGradient?.let {
                     drawables += GradientDrawable(
                         GradientDrawable.Orientation.LEFT_RIGHT, //
-                        intArrayOf(it.start.toAndroidColor(), it.end.toAndroidColor()),
+                        intArrayOf(it.start.androidColor, it.end.androidColor),
                     ).apply {
-                        borderRadius?.let { radius -> cornerRadius = radius }
+                        borderRadius?.let { radius -> cornerRadius = toPx(radius) }
                     }
-                    insets += border?.width?.toInt() ?: 0
+                    insets += border?.width.px
                 }
 
                 if (drawables.isNotEmpty()) {
@@ -143,17 +145,17 @@ open class AdaptiveAndroidAdapter(
 
                 padding?.let {
                     view.setPadding(
-                        it.left?.toInt() ?: 0,
-                        it.top?.toInt() ?: 0,
-                        it.right?.toInt() ?: 0,
-                        it.bottom?.toInt() ?: 0
+                        it.left.px,
+                        it.top.px,
+                        it.right.px,
+                        it.bottom.px
                     )
                 }
 
                 if (view is TextView) {
-                    color?.let { view.setTextColor(it.toAndroidColor()) }
+                    color?.let { view.setTextColor(it.androidColor) }
 
-                    fontSize?.let { view.textSize = it }
+                    fontSize?.let { view.textSize = it.value }
 
                     fontWeight?.let {
                         // FIXME proper typeface mapping
@@ -178,7 +180,20 @@ open class AdaptiveAndroidAdapter(
         }
     }
 
-    fun pxToSp(px: Float): Float {
-        return px / context.resources.displayMetrics.scaledDensity
-    }
+    override fun toPx(dPixel: DPixel): Float =
+        applyDimension(COMPLEX_UNIT_DIP, dPixel.value, displayMetrics)
+
+    val DPixel?.px: Int
+        get() = this?.let { applyDimension(COMPLEX_UNIT_DIP, value, displayMetrics).toInt() } ?: 0
+
+    // TODO do we need this conversion? TextView.textSize is in SP
+    override fun toPx(sPixel: SPixel): Float =
+        applyDimension(COMPLEX_UNIT_SP, sPixel.value, displayMetrics)
+
+    val Color.androidColor
+        get() = android.graphics.Color.pack(
+            ((value shr 16) and 0xFF).toFloat() / 255f,
+            ((value shr 8) and 0xFF).toFloat() / 255f,
+            (value and 0xFF).toFloat() / 255f
+        ).toColorInt()
 }

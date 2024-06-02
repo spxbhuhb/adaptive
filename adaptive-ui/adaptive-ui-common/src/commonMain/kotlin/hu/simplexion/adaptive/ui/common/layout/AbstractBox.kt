@@ -7,9 +7,6 @@ package hu.simplexion.adaptive.ui.common.layout
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
-import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.Point
-import hu.simplexion.adaptive.ui.common.instruction.Size
 
 abstract class AbstractBox<CRT : RT,RT>(
     adapter: AdaptiveUIAdapter<CRT, RT>,
@@ -19,16 +16,16 @@ abstract class AbstractBox<CRT : RT,RT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 
-    override fun measure(): Size =
+    override fun measure(): RawSize =
         measure(
-            { w : Float, p : Point, s : Size -> maxOf(w, p.top + s.width)},
-            { h : Float, p : Point, s : Size -> maxOf(h, p.left + s.height)}
+            { w : Float, p : RawPoint, s : RawSize -> maxOf(w, p.top + s.width)},
+            { h : Float, p : RawPoint, s : RawSize -> maxOf(h, p.left + s.height)}
         )
 
-    override fun layout(proposedFrame : Frame) {
-        setLayoutFrame(proposedFrame)
+    override fun layout(proposedFrame : RawFrame) {
+        calcLayoutFrame(proposedFrame)
 
-        val layoutFrame = renderData.layoutFrame
+        val layoutFrame = this.layoutFrame
 
         for (item in items) {
             item.layout(layoutFrame)

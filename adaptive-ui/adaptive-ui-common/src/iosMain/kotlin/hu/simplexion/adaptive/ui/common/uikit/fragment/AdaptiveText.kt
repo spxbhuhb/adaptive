@@ -7,8 +7,8 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.Size
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.ui.common.uikit.adapter.AdaptiveIosAdapter
 import platform.UIKit.NSTextAlignmentCenter
 import platform.UIKit.UILabel
@@ -40,13 +40,13 @@ class AdaptiveText(
         return false
     }
 
-    override fun measure(): Size {
+    override fun measure(): RawSize {
         traceMeasure()
         TODO()
     }
 
-    override fun layout(proposedFrame: Frame) {
-        setLayoutFrame(proposedFrame)
+    override fun layout(proposedFrame: RawFrame) {
+        calcLayoutFrame(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
     }
 

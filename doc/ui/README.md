@@ -26,4 +26,8 @@
 [Event Instructions](./event-instructions.md)
 - [OnClick](./event-instructions.md#onclick)
 
+[Foundation Instructions](../foundation/foundation-instructions.md)
+- [Name](../foundation/foundation-instructions.md#name)
+- [Trace](../foundation/foundation-instructions.md#trace)
+
 [Resources](../resource/README)

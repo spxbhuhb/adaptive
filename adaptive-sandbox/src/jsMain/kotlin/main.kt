@@ -6,7 +6,6 @@ import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.Trace
 import hu.simplexion.adaptive.foundation.producer.poll
-import hu.simplexion.adaptive.ktor.withWebSocketTransport
 import hu.simplexion.adaptive.lib.sandbox.SandboxExports
 import hu.simplexion.adaptive.sandbox.api.CounterApi
 import hu.simplexion.adaptive.service.getService
@@ -34,9 +33,10 @@ val purple = Color(0xA644FF)
 
 val blackBackground = BackgroundColor(black)
 val greenGradient = BackgroundGradient(90, lightGreen, mediumGreen)
-val borderRadius = BorderRadius(8)
+val borderRadius = BorderRadius(8.dp)
 
-val textSmall = FontSize(13f)
+val textSmall = FontSize(13.sp)
+val textMedium = FontSize(15.sp)
 val whiteBorder = Border(white)
 val bold = FontWeight(700)
 val smallWhiteNoWrap = arrayOf(white, textSmall, TextWrap.NoWrap)
@@ -98,7 +98,8 @@ fun main() {
 
 @Adaptive
 fun login() {
-    box(Frame(0f, 0f, 375f, 812f)) {
+//    box(Frame(0.dp, 0.dp, 375.dp, 812.dp)) {
+    box(Frame(0.dp, 0.dp, 393.dp, (808 - 24 -24).dp)) {
 
         image(Res.drawable.background)
 
@@ -106,12 +107,12 @@ fun login() {
             RowTemplate(260.dp, 1.fr, 100.dp, 100.dp),
             ColTemplate(1.fr)
         ) {
-            row(AlignItems.End, JustifyContent.Center, Padding(bottom = 30f)) {
-                image(Res.drawable.logo, Size(92f, 92f))
+            row(AlignItems.End, JustifyContent.Center, Padding(bottom = 30.dp)) {
+                image(Res.drawable.logo, Size(92.dp, 92.dp))
             }
 
             row(AlignItems.Start, JustifyContent.Center) {
-                text("Good Morning", white, FontSize(40f), LetterSpacing(- 0.02f))
+                text("Good Morning", white, FontSize(40.sp), LetterSpacing(- 0.02f))
             }
 
             grid(
@@ -120,19 +121,19 @@ fun login() {
             ) {
 
                 row(2.gridCol, greenGradient, borderRadius, *center, onClick { println("Sign Up") }) {
-                    text("Sign Up", white)
+                    text("Sign Up", white, textMedium)
                 }
 
                 row(4.gridCol, whiteBorder, borderRadius, *center) {
-                    text("Sign In", white)
+                    text("Sign In", white, textMedium)
                 }
 
             }
 
-            column(AlignItems.Center, Padding(right = 32f, left = 32f)) {
+            column(AlignItems.Center, Padding(right = 32.dp, left = 32.dp)) {
                 row {
-                    text("By joining you agree to our", *smallWhiteNoWrap, Padding(right = 6f))
-                    text("Terms of Service", externalLink(Res.file.terms), *smallWhiteNoWrap, bold, Padding(right = 6f))
+                    text("By joining you agree to our", *smallWhiteNoWrap, Padding(right = 6.dp))
+                    text("Terms of Service", externalLink(Res.file.terms), *smallWhiteNoWrap, bold, Padding(right = 6.dp))
                     text("and", *smallWhiteNoWrap)
                 }
                 text("Privacy Policy", externalLink(Res.file.policy), *smallWhiteNoWrap, bold)
@@ -145,10 +146,10 @@ fun login() {
 @Adaptive
 fun counterWithTime(time: Instant) {
     val counter = poll(1000.seconds, 0) { counterService.incrementAndGet() }
-    text("$time $counter", Frame(150f, 150f, 250f, 20f))
+    text("$time $counter", Frame(150.dp, 150.dp, 250.dp, 20.dp))
 }
 
-fun chess(size: Int, cellSize: DIPixel) =
+fun chess(size: Int, cellSize: DPixel) =
     arrayOf(ColTemplate(Repeat(size, cellSize)), RowTemplate(Repeat(size, cellSize)))
 
 fun cellColor(r: Int, c: Int) =

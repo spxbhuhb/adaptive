@@ -8,7 +8,9 @@ import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.adapter.RenderData
-import hu.simplexion.adaptive.ui.common.instruction.Frame
+import hu.simplexion.adaptive.ui.common.instruction.DPixel
+import hu.simplexion.adaptive.ui.common.instruction.SPixel
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.uikit.fragment.UiKitFragmentFactory
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
@@ -31,7 +33,7 @@ open class AdaptiveIosAdapter(
         fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<UIView, UIView>> {
 
             val frame = rootContainer.frame.useContents {
-                Frame(
+                RawFrame(
                     origin.y.toFloat(),
                     origin.x.toFloat(),
                     size.width.toFloat(),
@@ -39,7 +41,7 @@ open class AdaptiveIosAdapter(
                 )
             }
 
-            it.renderData.layoutFrame = frame
+            it.layoutFrame = frame
             it.measure()
             it.layout(frame)
 
@@ -65,9 +67,7 @@ open class AdaptiveIosAdapter(
 
     @OptIn(ExperimentalForeignApi::class)
     override fun applyLayoutToActual(fragment: AdaptiveUIFragment<UIView>) {
-        val layoutFrame = fragment.renderData.layoutFrame
-
-        check(layoutFrame !== Frame.NaF) { "Missing layout frame in $fragment $layoutFrame" }
+        val layoutFrame = fragment.layoutFrame
 
         val point = layoutFrame.point
         val size = layoutFrame.size
@@ -94,4 +94,11 @@ open class AdaptiveIosAdapter(
         }
     }
 
+    override fun toPx(dPixel: DPixel): Float {
+        TODO("Not yet implemented")
+    }
+
+    override fun toPx(sPixel: SPixel): Float {
+        TODO("Not yet implemented")
+    }
 }

@@ -7,7 +7,6 @@ package hu.simplexion.adaptive.ui.common.layout
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
-import hu.simplexion.adaptive.ui.common.instruction.*
 
 abstract class AbstractColumn<CRT : RT, RT>(
     adapter: AdaptiveUIAdapter<CRT, RT>,
@@ -18,14 +17,14 @@ abstract class AbstractColumn<CRT : RT, RT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 
-    override fun measure(): Size =
+    override fun measure(): RawSize =
         measure(
-            { w: Float, _: Point, s: Size -> maxOf(w, s.width) },
-            { h: Float, _: Point, s: Size -> h + s.height }
+            { w: Float, _, s: RawSize -> maxOf(w, s.width) },
+            { h: Float, _, s: RawSize -> h + s.height }
         )
 
-    override fun layout(proposedFrame: Frame) {
-        setLayoutFrame(proposedFrame)
+    override fun layout(proposedFrame: RawFrame) {
+        calcLayoutFrame(proposedFrame)
 
         layoutStack(horizontal = false, autoSizing)
 

@@ -10,29 +10,40 @@ import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 
-abstract class AbstractGrid<CRT : RT,RT>(
+abstract class AbstractGrid<CRT : RT, RT>(
     adapter: AdaptiveUIAdapter<CRT, RT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int
-) : AdaptiveUIContainerFragment<CRT,RT>(
+) : AdaptiveUIContainerFragment<CRT, RT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
+
+    inner class PreparedTrack(
+        track: Track
+    ) {
+        val isFix: Boolean = track.isFix
+        val rawValue: Float = track.toRawValue(uiAdapter)
+    }
+
+    // TODO track preparation can be done only once
+    var colTracksPrepared = emptyList<PreparedTrack>()
+    var rowTracksPrepared = emptyList<PreparedTrack>()
 
     var colOffsets = FloatArray(0)
     var rowOffsets = FloatArray(0)
 
-    override fun measure(): Size {
+    override fun measure(): RawSize {
         traceMeasure()
 
         for (item in items) {
             item.measure()
         }
 
-        return Size(0f, 0f) // FIXME GRID MEASURED SIZE
+        return RawSize(0f, 0f) // FIXME GRID MEASURED SIZE
     }
 
-    override fun layout(proposedFrame : Frame) {
-        setLayoutFrame(proposedFrame)
+    override fun layout(proposedFrame: RawFrame) {
+        calcLayoutFrame(proposedFrame)
 
         prepare()
 
@@ -51,12 +62,16 @@ abstract class AbstractGrid<CRT : RT,RT>(
         val colTemp = checkNotNull(instructions.firstOrNullIfInstance<ColTemplate>()) { "missing column template in $this" }
         val rowTemp = checkNotNull(instructions.firstOrNullIfInstance<RowTemplate>()) { "missing row template in $this" }
 
-        val size = renderData.layoutFrame.size
-        colOffsets = distribute(size.width, expand(colTemp.tracks))
-        rowOffsets = distribute(size.height, expand(rowTemp.tracks))
+        val size = this.layoutFrame.size
+
+        colTracksPrepared = expand(colTemp.tracks).map { PreparedTrack(it) }
+        rowTracksPrepared = expand(rowTemp.tracks).map { PreparedTrack(it) }
+
+        colOffsets = distribute(size.width, colTracksPrepared)
+        rowOffsets = distribute(size.height, rowTracksPrepared)
 
         if (trace) {
-            trace("measure-layoutFrame", renderData.layoutFrame)
+            trace("measure-layoutFrame", this.layoutFrame)
             trace("measure-colOffsets", colOffsets.contentToString())
             trace("measure-rowOffsets", rowOffsets.contentToString())
         }
@@ -87,7 +102,7 @@ abstract class AbstractGrid<CRT : RT,RT>(
      *         longer than [tracks] as it contains the offset of the "end"
      *         as well.
      */
-    fun distribute(availableSpace: Float, tracks: Array<out Track>): FloatArray {
+    fun distribute(availableSpace: Float, tracks: List<PreparedTrack>): FloatArray {
 
         var usedSpace = 0f
         var fractionSum = 0f
@@ -95,9 +110,9 @@ abstract class AbstractGrid<CRT : RT,RT>(
         for (i in tracks.indices) {
             val track = tracks[i]
             if (track.isFix) {
-                usedSpace += track.value
+                usedSpace += track.rawValue
             } else {
-                fractionSum += track.value
+                fractionSum += track.rawValue
             }
         }
 
@@ -113,15 +128,15 @@ abstract class AbstractGrid<CRT : RT,RT>(
             result[i] = offset
 
             if (tracks[i].isFix) {
-                previous = tracks[i].value
+                previous = tracks[i].rawValue
             } else {
-                previous = tracks[i].value * piece
+                previous = tracks[i].rawValue * piece
             }
         }
 
         result[tracks.size] = offset + previous
 
-        check(availableSpace >= result.last()) { "grid track overflow: available=$availableSpace result:${result.contentToString()} tracks: ${tracks.contentToString()}" }
+        check(availableSpace >= result.last()) { "grid track overflow: available=$availableSpace result:${result.contentToString()} tracks: $tracks" }
 
         return result
     }

@@ -7,6 +7,10 @@ package hu.simplexion.adaptive.ui.common.adapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
 import hu.simplexion.adaptive.ui.common.instruction.*
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.layout.RawPadding
+import hu.simplexion.adaptive.ui.common.layout.RawPoint
+import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
@@ -68,15 +72,15 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
         }
     }
 
-    inline fun measure(widthFun: (Float, Point, Size) -> Float, heightFun: (Float, Point, Size) -> Float): Size {
-        traceMeasure()
-
-        val instructedSize = renderData.instructedSize
+    fun measure(widthFun: (Float, RawPoint, RawSize) -> Float, heightFun: (Float, RawPoint, RawSize) -> Float): RawSize {
+        val instructedSize = renderData.instructedSize?.let { RawSize(it, uiAdapter) }
+        val padding = RawPadding(renderData.padding ?: Padding.ZERO, uiAdapter)
 
         if (instructedSize != null) {
             for (item in items) {
                 item.measure()
             }
+            traceMeasure()
             return instructedSize
         }
 
@@ -86,22 +90,37 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
         for (item in items) {
             val size = checkNotNull(item.measure()) { "unable to measure, cannot get size of: $item" }
 
-            val point = item.renderData.instructedPoint ?: Point.ORIGIN
+            val point = item.renderData.instructedPoint?.let { RawPoint(it, uiAdapter) } ?: RawPoint.ORIGIN
 
             width = widthFun(width, point, size)
             height = heightFun(height, point, size)
         }
 
-        return  Size(width, height).also { measuredSize = it }
+        return RawSize(
+            width + padding.left + padding.right,
+            height + padding.top + padding.bottom
+        ).also {
+            measuredSize = it
+            traceMeasure()
+        }
     }
 
     fun calcPrefixAndGap(horizontal: Boolean): Pair<Float, Float> {
         val instructedGap = renderData.gap ?: 0f
+        val padding = RawPadding(renderData.padding ?: Padding.ZERO, uiAdapter)
 
         if (items.isEmpty()) return (0f to instructedGap)
 
-        val size = renderData.layoutFrame.size
-        val available = if (horizontal) size.width else size.height
+        val size = this.layoutFrame.size
+
+        val available = if (horizontal) {
+            size.width - padding.left - padding.right
+        } else {
+            size.height - padding.top - padding.bottom
+        }
+
+        val prefixPadding = if (horizontal) padding.left else padding.top
+
         val used = calcUsedSpace(horizontal)
 
         val gapCount = items.size - 1
@@ -111,10 +130,10 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
         if (remaining <= 0) return (0f to instructedGap)
 
         return when (renderData.justifyContent) {
-            JustifyContent.Start -> (0f to instructedGap)
-            JustifyContent.Center -> ((remaining / 2) to instructedGap)
-            JustifyContent.End -> (remaining to instructedGap)
-            null -> (0f to instructedGap)
+            JustifyContent.Start -> (prefixPadding + 0f to instructedGap)
+            JustifyContent.Center -> (prefixPadding + (remaining / 2) to instructedGap)
+            JustifyContent.End -> (prefixPadding + remaining to instructedGap)
+            null -> (prefixPadding + 0f to instructedGap)
         }
     }
 
@@ -152,21 +171,31 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
 
     /**
      * Common layout func for row and column layouts.
+     *
+     * @param horizontal True the items should be next to each other (row), false if they should be below each other (column).
      */
-    fun layoutStack(horizontal: Boolean, autoSizing : Boolean) {
+    fun layoutStack(horizontal: Boolean, autoSizing: Boolean) {
 
         if (autoSizing) {
             for (item in items) {
-                item.layout(Frame.NaF)
+                item.layout(RawFrame.NaF)
             }
             return
         }
 
+        val padding = RawPadding(renderData.padding ?: Padding.ZERO, uiAdapter)
+
         val (prefix, gap) = calcPrefixAndGap(horizontal)
 
         var offset = prefix
-        val stackSize = renderData.layoutFrame.size
-        val spaceForAlign = if (horizontal) stackSize.height else stackSize.width
+        val stackSize = this.layoutFrame.size
+
+        val spaceForAlign = if (horizontal) {
+            stackSize.height - padding.top - padding.bottom
+        } else{
+            stackSize.width - padding.left - padding.right
+        }
+
         val alignItems = renderData.alignItems
 
         for (item in items) {
@@ -177,10 +206,10 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
 
             val frame = if (horizontal) {
                 val top = calcAlign(alignItems, alignSelf, spaceForAlign, measuredSize.height)
-                Frame(Point(top, offset), measuredSize)
+                RawFrame(RawPoint(padding.top + top, offset), measuredSize)
             } else {
                 val left = calcAlign(alignItems, alignSelf, spaceForAlign, measuredSize.width)
-                Frame(Point(left, offset), measuredSize)
+                RawFrame(RawPoint(offset, padding.left + left), measuredSize)
             }
 
             item.layout(frame)

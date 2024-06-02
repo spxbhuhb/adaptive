@@ -4,10 +4,10 @@
 
 package hu.simplexion.adaptive.ui.common.testing.adapter
 
-import hu.simplexion.adaptive.ui.common.instruction.Frame
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
 
 class TestReceiver(
-    val testFrame : Frame = Frame.NaF
+    val testFrame : RawFrame = RawFrame.NaF
 ) {
     val children = mutableListOf<TestReceiver>()
 

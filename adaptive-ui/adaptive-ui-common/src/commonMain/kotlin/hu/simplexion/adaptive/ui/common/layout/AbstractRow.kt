@@ -7,9 +7,6 @@ package hu.simplexion.adaptive.ui.common.layout
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
-import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.Point
-import hu.simplexion.adaptive.ui.common.instruction.Size
 
 /**
  * @param autoSizing When true, the row accepts unknown item sizes. This is useful for browser when the size of
@@ -24,14 +21,14 @@ abstract class AbstractRow<CRT : RT, RT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 
-    override fun measure(): Size =
+    override fun measure(): RawSize =
         measure(
-            { w: Float, _: Point, s: Size -> w + s.width },
-            { h: Float, _: Point, s: Size -> maxOf(h, s.height) }
+            { w: Float, _, s: RawSize -> w + s.width },
+            { h: Float, _, s: RawSize -> maxOf(h, s.height) }
         )
 
-    override fun layout(proposedFrame: Frame) {
-        setLayoutFrame(proposedFrame)
+    override fun layout(proposedFrame: RawFrame) {
+        calcLayoutFrame(proposedFrame)
 
         layoutStack(horizontal = true, autoSizing)
 

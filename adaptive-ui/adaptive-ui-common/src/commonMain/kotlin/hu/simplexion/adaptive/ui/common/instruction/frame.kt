@@ -12,17 +12,14 @@ import hu.simplexion.adaptive.utility.alsoIfInstance
  * Represents a frame on the UI.
  *
  * This class is fully immutable, and we should keep it that way.
- *
- * Use [Frame.NaF] to indicate that the point is invalid (Not a Point).
  */
 data class Frame(
     val point: Point,
     val size: Size
 ) : AdaptiveInstruction {
 
-    constructor(top: Float, left: Float, width: Float, height: Float) : this(Point(top, left), Size(width, height))
-
-    constructor(top: Int, left: Int, width: Int, height: Int) : this(Point(top, left), Size(width, height))
+    constructor(top: DPixel, left: DPixel, width: DPixel, height: DPixel) :
+        this(Point(top, left), Size(width, height))
 
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> {
@@ -30,36 +27,24 @@ data class Frame(
             it.instructedSize = this.size
         }
     }
-
-    companion object {
-        /** Not a frame, indicates the that the frame is not set. **/
-        val NaF = Frame(Point.NaP, Size.NaS)
-    }
 }
 
 /**
  * Represents a point on the UI.
  *
  * This class is fully immutable, and we should keep it that way.
- *
- * Use [Point.NaP] to indicate that the point is invalid (Not a Point).
  */
 data class Point(
-    val top: Float,
-    val left: Float
+    val top: DPixel,
+    val left: DPixel
 ) : AdaptiveInstruction {
-
-    constructor(top: Int, left: Int) : this(top.toFloat(), left.toFloat())
 
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> { it.instructedPoint = this }
     }
 
     companion object {
-        /** Not a point, indicates the that the point is not set. **/
-        val NaP = Point(Float.NaN, Float.NaN)
-
-        val ORIGIN = Point(0f, 0f)
+        val ORIGIN = Point(0.dp, 0.dp)
     }
 }
 
@@ -70,18 +55,16 @@ data class Point(
  *
  * Use [Size.NaS] to indicate that the size is invalid (Not a Size).
  */
-data class Size(val width: Float, val height: Float) : AdaptiveInstruction {
-
-    constructor(width: Int, height: Int) : this(width.toFloat(), height.toFloat())
+data class Size(
+    val width: DPixel,
+    val height: DPixel
+) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> { it.instructedSize = this }
     }
 
     companion object {
-        /** Not a size, indicates the that the size is not set. **/
-        val NaS = Size(Float.NaN, Float.NaN)
-
-        val ZERO = Size(0f, 0f)
+        val ZERO = Size(0.dp, 0.dp)
     }
 }

@@ -5,6 +5,10 @@
 package hu.simplexion.adaptive.ui.common.adapter
 
 import hu.simplexion.adaptive.foundation.*
+import hu.simplexion.adaptive.ui.common.instruction.DPixel
+import hu.simplexion.adaptive.ui.common.instruction.Point
+import hu.simplexion.adaptive.ui.common.instruction.SPixel
+import hu.simplexion.adaptive.ui.common.layout.RawPoint
 import hu.simplexion.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -87,5 +91,9 @@ abstract class AdaptiveUIAdapter<CRT : RT, RT> : AdaptiveAdapter {
     open fun openExternalLink(href: String) {
         throw UnsupportedOperationException("openExternalLink($href)")
     }
+
+    abstract fun toPx(dPixel : DPixel) : Float
+
+    abstract fun toPx(sPixel : SPixel) : Float
 
 }

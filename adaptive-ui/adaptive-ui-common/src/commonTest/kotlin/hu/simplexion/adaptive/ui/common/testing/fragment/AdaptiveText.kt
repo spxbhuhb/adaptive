@@ -8,8 +8,8 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.adapter.RenderData
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.Size
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.ui.common.testing.adapter.AdaptiveUITestAdapter
 import hu.simplexion.adaptive.ui.common.testing.adapter.TestReceiver
 
@@ -43,15 +43,10 @@ open class AdaptiveText(
     /**
      * In web browsers measuring text is not the usual way.
      */
-    override fun measure(): Size {
-        traceMeasure()
-        val size = Size(content.length * 20f, 20f)
-        measuredSize = size
-        return size
-    }
+    override fun measure(): RawSize = instructedOr { RawSize(content.length * 20f, 20f) }
 
-    override fun layout(proposedFrame: Frame) {
-        setLayoutFrame(proposedFrame)
+    override fun layout(proposedFrame: RawFrame) {
+        calcLayoutFrame(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
     }
 

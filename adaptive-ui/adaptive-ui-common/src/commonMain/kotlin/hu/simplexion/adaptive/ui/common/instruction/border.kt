@@ -8,16 +8,14 @@ import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.adapter.RenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
-data class BorderRadius(val radius: Float) : AdaptiveInstruction {
-
-    constructor(radius: Int) : this(radius.toFloat())
+data class BorderRadius(val radius: DPixel) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> { it.borderRadius = radius }
     }
 }
 
-data class Border(val color: Color, val width: Float = 1f) : AdaptiveInstruction {
+data class Border(val color: Color, val width: DPixel = 1.dp) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> { it.border = this }
     }

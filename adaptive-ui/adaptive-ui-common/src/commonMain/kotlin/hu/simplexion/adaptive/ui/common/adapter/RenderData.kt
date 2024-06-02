@@ -8,6 +8,8 @@ import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.testing.Traceable
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.layout.GridCell
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.layout.RawSize
 
 /**
  * A pre-processed version of fragment instructions to make access from layout easier.
@@ -18,15 +20,6 @@ open class RenderData(
 
     override var tracePatterns : Array<out Regex> = emptyArray()
 
-    /**
-     * The actual frame of the fragment in the actual UI. Result of layout
-     * calculations.
-     */
-    var layoutFrame : Frame = Frame.NaF
-
-    /**
-     * The frame specified by the instructions.
-     */
     var instructedPoint : Point? = null
 
     var instructedSize : Size? = null
@@ -36,14 +29,14 @@ open class RenderData(
     var padding : Padding? = null
 
     var fontName: String? = null
-    var fontSize: Float? = null
+    var fontSize: SPixel? = null
     var fontWeight: Int? = null
     var letterSpacing: Float? = null
     var textAlign : TextAlign? = null
     var textWrap : TextWrap? = null
 
     var border: Border? = null
-    var borderRadius: Float? = null
+    var borderRadius: DPixel? = null
 
     var backgroundColor: Color? = null
     var backgroundGradient : BackgroundGradient? = null

@@ -9,6 +9,7 @@ import hu.simplexion.adaptive.ui.common.browser.adapter.AdaptiveBrowserAdapter
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.layout.AbstractColumn
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
@@ -18,7 +19,7 @@ open class AdaptiveColumn(
     declarationIndex: Int
 ) : AbstractColumn<HTMLDivElement, HTMLElement>(adapter, parent, declarationIndex, true) {
 
-    override fun layout(proposedFrame: Frame) {
+    override fun layout(proposedFrame: RawFrame) {
         super.layout(proposedFrame)
         with (receiver.style) {
             display = "flex"

@@ -17,10 +17,6 @@ open class AdaptiveColumn(
     declarationIndex: Int
 ) : AbstractColumn<TestReceiver, TestReceiver>(adapter, parent, declarationIndex, false) {
 
-    override fun layout(proposedFrame: Frame) {
-        super.layout(proposedFrame)
-    }
-
     companion object : AdaptiveFragmentCompanion {
 
         override val fragmentType = "$commonUI:AdaptiveColumn"

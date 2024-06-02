@@ -8,8 +8,8 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.Size
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.ui.common.testing.adapter.AdaptiveUITestAdapter
 import hu.simplexion.adaptive.ui.common.testing.adapter.TestReceiver
 import hu.simplexion.adaptive.utility.checkIfInstance
@@ -44,18 +44,11 @@ open class AdaptiveImage(
      * Also, it is rare to use the actual size of the image for the layout, it is far
      * more usual to have a space and scale the image to fit that space.
      */
-    override fun measure(): Size {
-        traceMeasure()
-        return Size(0f,0f)
-    }
+    override fun measure(): RawSize = instructedOr { RawSize.ZERO }
 
-    override fun setLayoutFrame(proposedFrame: Frame) {
-        super.setLayoutFrame(proposedFrame)
-
-        val size = renderData.layoutFrame.size
-
-//        receiver.width = size.width.toInt()
-//        receiver.height = size.height.toInt()
+    override fun layout(proposedFrame: RawFrame) {
+        super.calcLayoutFrame(proposedFrame)
+        uiAdapter.applyLayoutToActual(this)
     }
 
     companion object : AdaptiveFragmentCompanion {

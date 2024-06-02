@@ -9,21 +9,17 @@ import hu.simplexion.adaptive.ui.common.adapter.RenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 data class Padding(
-    val top: Float? = null,
-    val right: Float? = null,
-    val bottom: Float? = null,
-    val left: Float? = null
+    val top: DPixel = DPixel.ZERO,
+    val right: DPixel = DPixel.ZERO,
+    val bottom: DPixel = DPixel.ZERO,
+    val left: DPixel = DPixel.ZERO
 ) : AdaptiveInstruction {
-
-    constructor(
-        top : Int? = null,
-        right : Int? = null,
-        bottom : Int? = null,
-        left: Int? = null
-    ) : this(top?.toFloat(), right?.toFloat(), bottom?.toFloat(), left?.toFloat())
 
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> { it.padding = this }
     }
 
+    companion object {
+        val ZERO = Padding()
+    }
 }

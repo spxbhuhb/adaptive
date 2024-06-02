@@ -9,8 +9,8 @@ import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.adapter.RenderData
 import hu.simplexion.adaptive.ui.common.browser.adapter.AdaptiveBrowserAdapter
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.Size
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.layout.RawSize
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLSpanElement
@@ -46,15 +46,10 @@ open class AdaptiveText(
     /**
      * In web browsers measuring text is not the usual way.
      */
-    override fun measure(): Size {
-        val size = Size.NaS
-        measuredSize = size
-        traceMeasure()
-        return size
-    }
+    override fun measure() = instructedOr { RawSize.NaS }
 
-    override fun layout(proposedFrame: Frame) {
-        setLayoutFrame(proposedFrame)
+    override fun layout(proposedFrame: RawFrame) {
+        calcLayoutFrame(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
     }
 

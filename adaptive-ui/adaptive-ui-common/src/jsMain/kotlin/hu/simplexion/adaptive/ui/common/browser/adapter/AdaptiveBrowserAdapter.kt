@@ -9,6 +9,9 @@ import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.instruction.*
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.layout.RawPoint
+import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -34,9 +37,9 @@ open class AdaptiveBrowserAdapter(
 
         fragment.alsoIfInstance<AdaptiveUIContainerFragment<HTMLDivElement, HTMLElement>> {
             rootContainer.getBoundingClientRect().let { r ->
-                val frame = Frame(0f, 0f, r.width.toFloat(), r.height.toFloat())
+                val frame = RawFrame(0f, 0f, r.width.toFloat(), r.height.toFloat())
 
-                it.renderData.layoutFrame = frame
+                it.layoutFrame = frame
                 it.measure()
                 it.layout(frame)
 
@@ -62,27 +65,28 @@ open class AdaptiveBrowserAdapter(
     }
 
     override fun applyLayoutToActual(fragment: AdaptiveUIFragment<HTMLElement>) {
-        val layoutFrame = fragment.renderData.layoutFrame
+        val layoutFrame = fragment.layoutFrame
+
         val point = layoutFrame.point
         val size = layoutFrame.size
         val style = fragment.receiver.style
 
         style.boxSizing = "border-box"
 
-        if (layoutFrame.point != Point.NaP) {
+        if (layoutFrame.point != RawPoint.NaP) {
             style.position = "absolute"
             style.top = "${point.top}px"
             style.left = "${point.left}px"
         }
 
-        if (layoutFrame.size != Size.NaS) {
+        if (layoutFrame.size != RawSize.NaS) {
             style.width = "${size.width}px"
             style.height = "${size.height}px"
         }
     }
 
     override fun applyRenderInstructions(fragment: AdaptiveUIFragment<HTMLElement>) {
-        with (fragment) {
+        with(fragment) {
             if (renderData.tracePatterns.isNotEmpty()) {
                 tracePatterns = renderData.tracePatterns
             }
@@ -94,12 +98,12 @@ open class AdaptiveBrowserAdapter(
                 backgroundColor?.let { style.backgroundColor = it.toHexColor() }
                 backgroundGradient?.let { style.background = "linear-gradient(${it.degree}deg, ${it.start.toHexColor()}, ${it.end.toHexColor()})" }
 
-                border?.let { style.border = "${it.width}px solid ${it.color.toHexColor()}" }
-                borderRadius?.let { style.borderRadius = "${it}px" }
+                border?.let { style.border = "${it.width.value}px solid ${it.color.toHexColor()}" }
+                borderRadius?.let { style.borderRadius = "${it.value}px" }
 
                 color?.let { style.color = it.toHexColor() }
 
-                fontSize?.let { style.fontSize = "${it}px" }
+                fontSize?.let { style.fontSize = "${it.value}px" }
                 fontWeight?.let { style.fontWeight = it.toString() }
                 letterSpacing?.let { style.letterSpacing = "${it}em" }
 
@@ -112,10 +116,10 @@ open class AdaptiveBrowserAdapter(
                 }
 
                 padding?.let { p ->
-                    p.left?.let { style.paddingLeft = "${it}px" }
-                    p.top?.let { style.paddingTop = "${it}px" }
-                    p.right?.let { style.paddingRight = "${it}px" }
-                    p.bottom?.let { style.paddingBottom = "${it}px" }
+                    p.left?.let { style.paddingLeft = "${it.value}px" }
+                    p.top?.let { style.paddingTop = "${it.value}px" }
+                    p.right?.let { style.paddingRight = "${it.value}px" }
+                    p.bottom?.let { style.paddingBottom = "${it.value}px" }
                 }
 
                 instructedSize?.let {
@@ -138,4 +142,10 @@ open class AdaptiveBrowserAdapter(
     override fun openExternalLink(href: String) {
         window.open(href, "_blank")
     }
+
+    override fun toPx(dPixel: DPixel): Float =
+        dPixel.value
+
+    override fun toPx(sPixel: SPixel): Float =
+        sPixel.value
 }

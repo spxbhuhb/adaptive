@@ -7,6 +7,7 @@ import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveEntry
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
+import hu.simplexion.adaptive.foundation.instruction.Trace
 import platform.UIKit.UIView
 
 /**
@@ -18,12 +19,14 @@ import platform.UIKit.UIView
 fun ios(
     rootView : UIView,
     vararg imports : AdaptiveFragmentFactory,
+    trace: Trace? = null,
     @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
 ) : AdaptiveIosAdapter =
     AdaptiveIosAdapter(
         rootView
     ).also {
         it.fragmentFactory += imports
+        if (trace != null) { it.trace = trace.patterns }
         block(it)
         it.mounted()
     }

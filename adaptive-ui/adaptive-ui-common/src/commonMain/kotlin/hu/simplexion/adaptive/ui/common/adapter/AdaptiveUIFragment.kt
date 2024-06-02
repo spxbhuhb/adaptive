@@ -7,8 +7,9 @@ package hu.simplexion.adaptive.ui.common.adapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
 import hu.simplexion.adaptive.foundation.internal.StateVariableMask
-import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.Size
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.layout.RawPoint
+import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.utility.checkIfInstance
 
 abstract class AdaptiveUIFragment<RT>(
@@ -30,11 +31,27 @@ abstract class AdaptiveUIFragment<RT>(
     var renderData = RenderData.DEFAULT
 
     /**
+     * The actual frame of the fragment in the actual UI. Result of layout
+     * calculations.
+     */
+    var layoutFrame: RawFrame
+        get() = checkNotNull(layoutFrameOrNull) { "missing layout frame, probably an error in $this" }
+        set(v) {
+            layoutFrameOrNull = v
+        }
+
+    /**
+     * The actual frame of the fragment in the actual UI. Result of layout
+     * calculations.
+     */
+    var layoutFrameOrNull: RawFrame? = null
+
+    /**
      * The result of `measure` if the frame can calculate it. The basic fragments
      * such as images and text can calculate their own size which then can be
      * used for layout calculations or for resizing.
      */
-    var measuredSize : Size? = null
+    var measuredSize: RawSize? = null
 
     fun fragmentFactory(index: Int): BoundFragmentFactory =
         state[index].checkIfInstance()
@@ -71,37 +88,44 @@ abstract class AdaptiveUIFragment<RT>(
         super.unmount()
     }
 
-    abstract fun measure(): Size
+    abstract fun measure(): RawSize
+
+    inline fun instructedOr(measured: () -> RawSize): RawSize {
+        val size = renderData.instructedSize?.let { RawSize(it, uiAdapter) } ?: measured()
+        measuredSize = size
+        traceMeasure()
+        return size
+    }
 
     fun traceMeasure() {
         if (trace) trace("measure", "measuredSize=${measuredSize}")
     }
 
-    abstract fun layout(proposedFrame: Frame)
+    abstract fun layout(proposedFrame: RawFrame)
 
-    open fun setLayoutFrame(proposedFrame: Frame) {
-        val instructedPoint = renderData.instructedPoint
-        val instructedSize = renderData.instructedSize
+    open fun calcLayoutFrame(proposedFrame: RawFrame) {
+        val instructedPoint = renderData.instructedPoint?.let { RawPoint(it, uiAdapter) }
+        val instructedSize = renderData.instructedSize?.let { RawSize(it, uiAdapter) }
         val measuredSize = this.measuredSize
 
-        renderData.layoutFrame =
+        layoutFrame =
 
             if (instructedPoint != null) {
                 if (instructedSize != null) {
-                    Frame(instructedPoint, instructedSize)
+                    RawFrame(instructedPoint, instructedSize)
                 } else {
-                    if (proposedFrame.size === Size.NaS && measuredSize != null) {
-                        Frame(instructedPoint, measuredSize)
+                    if (proposedFrame.size === RawSize.NaS && measuredSize != null) {
+                        RawFrame(instructedPoint, measuredSize)
                     } else {
-                        Frame(instructedPoint, proposedFrame.size)
+                        RawFrame(instructedPoint, proposedFrame.size)
                     }
                 }
             } else {
                 if (instructedSize != null) {
-                    Frame(proposedFrame.point, instructedSize)
+                    RawFrame(proposedFrame.point, instructedSize)
                 } else {
-                    if (proposedFrame.size === Size.NaS && measuredSize != null) {
-                        Frame(proposedFrame.point, measuredSize)
+                    if (proposedFrame.size === RawSize.NaS && measuredSize != null) {
+                        RawFrame(proposedFrame.point, measuredSize)
                     } else {
                         proposedFrame
                     }
@@ -116,7 +140,7 @@ abstract class AdaptiveUIFragment<RT>(
             trace(
                 "layout",
                 """
-                    layoutFrame=${renderData.layoutFrame}
+                    layoutFrame=${layoutFrame}
                     measuredSize=${measuredSize}
                     instructedPoint=${renderData.instructedPoint}
                     instructedSize=${renderData.instructedSize}
@@ -125,11 +149,11 @@ abstract class AdaptiveUIFragment<RT>(
         }
     }
 
-    fun toFrame(colOffsets: FloatArray, rowOffsets: FloatArray): Frame {
+    fun toFrame(colOffsets: FloatArray, rowOffsets: FloatArray): RawFrame {
         val row = renderData.rowIndex
         val col = renderData.colIndex
 
-        return Frame(
+        return RawFrame(
             rowOffsets[row],
             colOffsets[col],
             colOffsets[col + renderData.colSpan] - colOffsets[col],

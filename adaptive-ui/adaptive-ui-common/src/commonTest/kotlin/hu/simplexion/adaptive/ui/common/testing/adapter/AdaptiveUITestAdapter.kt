@@ -7,7 +7,9 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
 import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.instruction.Frame
+import hu.simplexion.adaptive.ui.common.instruction.DPixel
+import hu.simplexion.adaptive.ui.common.instruction.SPixel
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.testing.fragment.TestFragmentFactory
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import kotlinx.coroutines.CoroutineDispatcher
@@ -30,7 +32,7 @@ open class AdaptiveUITestAdapter(
 
         fragment.alsoIfInstance<AdaptiveUIContainerFragment<TestReceiver, TestReceiver>> {
             rootContainer.testFrame.let { tf ->
-                it.renderData.layoutFrame = tf
+                it.calcLayoutFrame = tf
                 it.measure()
                 it.layout(tf)
                 rootContainer.children += it.receiver
@@ -54,12 +56,10 @@ open class AdaptiveUITestAdapter(
         rootContainer.children.remove(itemReceiver)
     }
 
-    override fun actualLayout(fragment: AdaptiveUIFragment<TestReceiver>) {
-        fragment.setLayoutFrame(proposedFrame)
+    override fun applyLayoutToActual(fragment: AdaptiveUIFragment<TestReceiver>) {
+        val layoutFrame = fragment.layoutFrame
 
-        val layoutFrame = fragment.renderData.layoutFrame
-
-        if (layoutFrame !== Frame.NaF) {
+        if (layoutFrame !== RawFrame.NaF) {
             val point = layoutFrame.point
             val size = layoutFrame.size
 
@@ -81,4 +81,10 @@ open class AdaptiveUITestAdapter(
     override fun openExternalLink(href: String) {
 
     }
+
+    override fun toPx(dPixel: DPixel): Float =
+        dPixel.value
+
+    override fun toPx(sPixel: SPixel): Float =
+        sPixel.value
 }

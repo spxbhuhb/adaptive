@@ -157,29 +157,6 @@ fun someFun() {
 }
 ```
 
-## Trace
-
-The `Trace` instruction may be used to switch on trace locally for a fragment:
-
-```kotlin
-@Adaptive
-fun someFun() {
-
-    row(2.gridCol, *someStyles, Trace(Regex(".*"))) {
-        text("Hello World!", white)
-    }
-
-}
-```
-
-Parameters of `Trace` are regular expressions to filter the trace by the point of the trace. 
-For example `Trace("layout.*")` adds all trace lines with points that start with "layout".
-
-> [!IMPORTANT]
->
-> This is a regular expression, not a string. `*` does not match everything, use `.*`
->
-
 ## Use in manually implemented fragments
 
 To let a fragment accept instructions add a `vararg` parameter called `instructions` with

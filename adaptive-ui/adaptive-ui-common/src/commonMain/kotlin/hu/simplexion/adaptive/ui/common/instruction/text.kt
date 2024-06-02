@@ -14,7 +14,7 @@ data class FontName(val fontName: String) : AdaptiveInstruction {
     }
 }
 
-data class FontSize(val fontSize: Float) : AdaptiveInstruction {
+data class FontSize(val fontSize: SPixel) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> { it.fontSize = fontSize }
     }
