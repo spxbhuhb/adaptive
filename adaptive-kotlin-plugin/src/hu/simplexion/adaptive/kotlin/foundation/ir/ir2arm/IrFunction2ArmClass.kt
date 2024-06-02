@@ -5,7 +5,7 @@ package hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm
 
 import hu.simplexion.adaptive.kotlin.foundation.ADAPTIVE_STATE_VARIABLE_LIMIT
 import hu.simplexion.adaptive.kotlin.foundation.Strings
-import hu.simplexion.adaptive.kotlin.foundation.ir.AdaptivePluginContext
+import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.*
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.*
 import org.jetbrains.kotlin.ir.IrElement
@@ -37,7 +37,7 @@ import org.jetbrains.kotlin.ir.util.*
  */
 @OptIn(UnsafeDuringIrConstructionAPI::class)
 class IrFunction2ArmClass(
-    override val pluginContext: AdaptivePluginContext,
+    override val pluginContext: FoundationPluginContext,
     val irFunction: IrFunction,
     val isRoot: Boolean
 ) : AdaptiveAnnotationBasedExtension {

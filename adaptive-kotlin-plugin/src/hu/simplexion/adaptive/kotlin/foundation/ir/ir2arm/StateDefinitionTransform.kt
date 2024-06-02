@@ -5,7 +5,7 @@ package hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm
 
 import hu.simplexion.adaptive.kotlin.foundation.ADAPTIVE_STATE_VARIABLE_LIMIT
 import hu.simplexion.adaptive.kotlin.foundation.ClassIds
-import hu.simplexion.adaptive.kotlin.foundation.ir.AdaptivePluginContext
+import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.*
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.ir.IrElement
@@ -22,7 +22,7 @@ import org.jetbrains.kotlin.ir.util.*
  * state variables.
  */
 class StateDefinitionTransform(
-    override val pluginContext: AdaptivePluginContext,
+    override val pluginContext: FoundationPluginContext,
     private val armClass: ArmClass,
     val skipParameters : Int
 ) : AdaptiveAnnotationBasedExtension {

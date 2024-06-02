@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir
 
 import hu.simplexion.adaptive.kotlin.foundation.Indices
 import hu.simplexion.adaptive.kotlin.foundation.Names
-import hu.simplexion.adaptive.kotlin.foundation.ir.AdaptivePluginContext
+import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.*
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import hu.simplexion.adaptive.kotlin.common.property
@@ -18,13 +18,12 @@ import org.jetbrains.kotlin.ir.symbols.*
 import org.jetbrains.kotlin.ir.transformStatement
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.defaultType
-import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
 open class ClassBoundIrBuilder(
-    override val pluginContext: AdaptivePluginContext,
+    override val pluginContext: FoundationPluginContext,
     val armClass : ArmClass
 ) : AbstractIrBuilder {
 

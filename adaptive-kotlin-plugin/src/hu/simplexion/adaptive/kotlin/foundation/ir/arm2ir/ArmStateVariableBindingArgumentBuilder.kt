@@ -24,7 +24,7 @@ class ArmStateVariableBindingArgumentBuilder(
     closureDirtyMask: IrVariable
 ) : ArmValueArgumentBuilder(parent, argument, closure, fragment, closureDirtyMask) {
 
-    override fun patchBody(patchFun: IrSimpleFunction): IrExpression =
+    override fun patchVariableValue(patchFun: IrSimpleFunction): IrExpression =
         irCall(
             pluginContext.setBinding,
             dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!),

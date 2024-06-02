@@ -25,7 +25,7 @@ open class ArmValueArgumentBuilder(
     open fun genPatchDescendantExpression(patchFun: IrSimpleFunction): IrExpression? =
         irIf(
             patchCondition(),
-            patchBody(patchFun)
+            patchVariableValue(patchFun)
         )
 
     fun patchCondition(): IrExpression =
@@ -38,8 +38,7 @@ open class ArmValueArgumentBuilder(
             )
         )
 
-    // TODO rename patchBody, the `body` is confusing
-    open fun patchBody(patchFun: IrSimpleFunction): IrExpression {
+    open fun patchVariableValue(patchFun: IrSimpleFunction): IrExpression {
         valueArgument.detachExpressions.forEach { transformDetachExpression(patchFun, it) }
 
         return irSetDescendantStateVariable(

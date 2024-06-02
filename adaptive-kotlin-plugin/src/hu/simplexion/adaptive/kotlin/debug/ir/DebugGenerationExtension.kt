@@ -23,6 +23,14 @@ internal class DebugGenerationExtension(
                     moduleFragment.dumpKotlinLike(KotlinLikeDumpOptions(printFakeOverridesStrategy = FakeOverridesStrategy.NONE))
                 }
             }
+            if (options.dumpIR) {
+                debug {
+                    pluginContext.platform
+                }
+                debug {
+                    moduleFragment.dump()
+                }
+            }
         }
     }
 

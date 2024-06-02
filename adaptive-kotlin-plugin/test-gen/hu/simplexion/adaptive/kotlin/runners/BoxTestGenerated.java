@@ -193,6 +193,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
+      @TestMetadata("eventHandler.kt")
+      public void testEventHandler() {
+        runTest("testData/box/foundation/instruction/eventHandler.kt");
+      }
+
+      @Test
       @TestMetadata("variations.kt")
       public void testVariations() {
         runTest("testData/box/foundation/instruction/variations.kt");

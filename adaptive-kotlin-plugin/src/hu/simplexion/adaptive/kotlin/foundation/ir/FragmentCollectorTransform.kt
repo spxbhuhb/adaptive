@@ -8,15 +8,11 @@ import hu.simplexion.adaptive.kotlin.common.functionByName
 import hu.simplexion.adaptive.kotlin.foundation.FqNames
 import hu.simplexion.adaptive.kotlin.foundation.Strings
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
-import hu.simplexion.adaptive.kotlin.foundation.ir.util.adaptiveClassFqName
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
-import org.jetbrains.kotlin.descriptors.Visibilities
-import org.jetbrains.kotlin.fir.declarations.utils.visibility
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.builders.irBlockBody
-import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
@@ -29,7 +25,7 @@ import org.jetbrains.kotlin.ir.util.companionObject
 import org.jetbrains.kotlin.ir.util.hasAnnotation
 
 class FragmentCollectorTransform(
-    override val pluginContext: AdaptivePluginContext
+    override val pluginContext: FoundationPluginContext
 ) : IrElementTransformerVoidWithContext(), AdaptiveAnnotationBasedExtension, AbstractIrBuilder {
 
     override fun visitClassNew(declaration: IrClass): IrStatement {

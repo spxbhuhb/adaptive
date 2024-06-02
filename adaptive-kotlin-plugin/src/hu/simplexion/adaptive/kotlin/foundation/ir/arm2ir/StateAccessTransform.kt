@@ -160,7 +160,6 @@ class StateAccessTransform(
 
     }
 
-    // TODO merge StateAccessTransform with SupportFunctionTransform
     fun transformNonSupportCall(expression: IrCall): IrExpression {
         if (expression.symbol !in pluginContext.helperFunctions) {
             return super.visitCall(expression)
@@ -178,16 +177,36 @@ class StateAccessTransform(
         irBuilder.irGetValue(irBuilder.irClass.property(name), irGetFragment())
 
     /**
-     * Move top-level lambda functions in state definition under the new parent.
+     * Set parent of lambda functions:
+     *
+     * - when in state definition
+     *   - sets parent to `genPatchInternal`
+     * - when in rendering
+     *   - sets parent to `genPatchDescendant`
      */
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
 
-        if (declaration.origin == IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA) {
-            if (declaration.parent == irBuilder.armClass.originalFunction) {
-                declaration.parent = checkNotNull(newParent) { "should not be null here" }
-            }
+        if (declaration.origin != IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA) {
+            return super.visitFunctionNew(declaration)
         }
+
+        declaration.parent = checkNotNull(newParent) { "should not be null here" }
 
         return super.visitFunctionNew(declaration)
     }
+
+//    fun debugParents(label: String, declaration: IrDeclaration) {
+//        pluginContext.debug(label) {
+//            declaration.parentsWithSelf.toList().reversed().joinToString {
+//                it::class.simpleName + ": " +
+//                    when (it) {
+//                        is IrFileImpl -> it.name
+//                        is IrClassImpl -> it.name.toString()
+//                        is IrFunctionImpl -> it.name.toString()
+//                        is IrFunctionWithLateBindingImpl -> it.name.toString()
+//                        else -> it.toString()
+//                    }
+//            }
+//        }
+//    }
 }

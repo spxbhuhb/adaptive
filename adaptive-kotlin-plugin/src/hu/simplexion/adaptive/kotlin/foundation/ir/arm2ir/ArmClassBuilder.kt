@@ -11,7 +11,7 @@ import hu.simplexion.adaptive.kotlin.foundation.FoundationPluginKey
 import hu.simplexion.adaptive.kotlin.foundation.Indices
 import hu.simplexion.adaptive.kotlin.foundation.Names
 import hu.simplexion.adaptive.kotlin.foundation.Strings
-import hu.simplexion.adaptive.kotlin.foundation.ir.AdaptivePluginContext
+import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.*
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.ClassKind
@@ -34,7 +34,7 @@ import org.jetbrains.kotlin.name.SpecialNames
 
 @OptIn(UnsafeDuringIrConstructionAPI::class) // uncomment for 2.0.0
 class ArmClassBuilder(
-    context: AdaptivePluginContext,
+    context: FoundationPluginContext,
     armClass: ArmClass
 ) : ClassBoundIrBuilder(context, armClass) {
 

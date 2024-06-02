@@ -12,6 +12,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinCompilerPluginSupportPlugin
 import org.jetbrains.kotlin.gradle.plugin.SubpluginArtifact
 import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 import java.io.File
+import java.nio.file.Files
 
 const val PLUGIN_VERSION = "2024.06.01-SNAPSHOT"
 const val KOTLIN_COMPILER_PLUGIN_ID = "adaptive"  // this is how the compiler identifies the plugin
@@ -75,9 +76,11 @@ class AdaptiveGradlePlugin : KotlinCompilerPluginSupportPlugin {
 
         options += SubpluginOption(key = "plugin-debug", extension.pluginDebug.toString())
 
-        extension.pluginLogDir.let {
-            options += SubpluginOption(key = "plugin-log-dir", it.toString())
-        }
+        val pluginLogDir = extension.pluginLogDir
+            ?: project.layout.buildDirectory.get().asFile.toPath().resolve("adaptive")
+                .also { Files.createDirectories(it) }
+
+        options += SubpluginOption(key = "plugin-log-dir", pluginLogDir.toString())
 
         return project.provider { options }
     }

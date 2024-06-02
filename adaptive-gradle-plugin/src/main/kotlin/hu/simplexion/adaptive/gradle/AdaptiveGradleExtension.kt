@@ -28,11 +28,9 @@ open class AdaptiveGradleExtension {
      *
      * Generates large amount of data, be careful with it.
      *
-     * Relative paths save the data into the gradle daemons log directory. On my machine it is:
-     *
-     * `/Users/<username>/Library/Application Support/kotlin/daemon`
+     * Default is `<project-dir>\build\adaptive`
      */
-    var pluginLogDir: Path = Paths.get(".")
+    var pluginLogDir: Path? = null
 
     /**
      * Configuration of resource handling.

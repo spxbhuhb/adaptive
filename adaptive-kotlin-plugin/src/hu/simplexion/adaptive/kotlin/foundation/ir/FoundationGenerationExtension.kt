@@ -13,13 +13,13 @@ import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.util.*
 
-internal class AdaptiveGenerationExtension(
+internal class FoundationGenerationExtension(
     val options: AdaptiveOptions
 ) : IrGenerationExtension {
 
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
 
-        AdaptivePluginContext(
+        FoundationPluginContext(
             pluginContext,
             options,
         ).apply {

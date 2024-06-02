@@ -1,9 +1,7 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.kotlinJvm)
@@ -54,6 +52,7 @@ dependencies {
     testImplementation(libs.kotlin.compiler.internal.test.framework)
     testImplementation(libs.junit)
 
+    testRuntimeOnly(libs.adaptive.core)
     testRuntimeOnly(libs.kotlinx.coroutines.core)
     testRuntimeOnly(libs.kotlinx.datetime)
 
@@ -95,8 +94,6 @@ fun Test.setLibraryProperty(propName: String, jarName: String) {
         ?: return
     systemProperty(propName, path)
 }
-
-tasks["build"].dependsOn(gradle.includedBuild("adaptive-core").task(":build"))
 
 // ---- Publishing -----
 

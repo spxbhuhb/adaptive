@@ -3,7 +3,7 @@
  */
 package hu.simplexion.adaptive.kotlin.foundation.ir.arm
 
-import hu.simplexion.adaptive.kotlin.foundation.ir.AdaptivePluginContext
+import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm.BoundaryVisitor
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.adaptiveClassFqName
 import org.jetbrains.kotlin.ir.IrStatement
@@ -13,7 +13,7 @@ import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.util.statements
 
 class ArmClass(
-    adaptiveContext: AdaptivePluginContext,
+    adaptiveContext: FoundationPluginContext,
     val originalFunction: IrFunction,
     val isRoot : Boolean
 ) : ArmElement {

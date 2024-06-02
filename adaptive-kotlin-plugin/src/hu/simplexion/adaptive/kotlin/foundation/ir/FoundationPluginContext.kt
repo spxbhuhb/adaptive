@@ -24,7 +24,7 @@ import org.jetbrains.kotlin.ir.util.properties
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 
-class AdaptivePluginContext(
+class FoundationPluginContext(
     irContext: IrPluginContext,
     options: AdaptiveOptions
 ) : AbstractPluginContext(irContext, options) {

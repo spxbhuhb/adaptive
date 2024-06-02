@@ -14,14 +14,12 @@ class AdaptiveCommandLineProcessor : CommandLineProcessor {
     override val pluginId = "adaptive"
 
     override val pluginOptions = listOf(
-        OPTION_RESOURCE_DIR,
         OPTION_PLUGIN_DEBUG,
         OPTION_PLUGIN_LOG_DIR
     )
 
     override fun processOption(option: AbstractCliOption, value: String, configuration: CompilerConfiguration) {
         when (option) {
-            OPTION_RESOURCE_DIR -> configuration.put(CONFIG_KEY_RESOURCE_DIR, value.toWritableDirectory())
             OPTION_PLUGIN_DEBUG -> configuration.put(CONFIG_KEY_PLUGIN_DEBUG, value.toBooleanStrictOrNull() ?: false)
             OPTION_PLUGIN_LOG_DIR -> configuration.put(CONFIG_KEY_PLUGIN_LOG_DIR, value.toWritableDirectory())
             else -> throw CliOptionProcessingException("Unknown option: ${option.optionName}")
@@ -32,19 +30,6 @@ class AdaptiveCommandLineProcessor : CommandLineProcessor {
         File(this).also { require(it.isDirectory && it.canWrite()) { "missing or non-writable directory: >$this<" } }
 
     companion object {
-
-        // -------------------------------------------------------------------------------------------------
-        // Resource directory
-        // -------------------------------------------------------------------------------------------------
-
-        const val OPTION_NAME_RESOURCE_DIR = "resource-dir"
-
-        val CONFIG_KEY_RESOURCE_DIR = CompilerConfigurationKey.create<File>(OPTION_NAME_RESOURCE_DIR)
-
-        val OPTION_RESOURCE_DIR = CliOption(
-            OPTION_NAME_RESOURCE_DIR, "string", "Path to the directory to write generated resources into.",
-            required = false, allowMultipleOccurrences = false
-        )
 
         // -------------------------------------------------------------------------------------------------
         // Plugin debug
