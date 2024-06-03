@@ -30,6 +30,9 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
 
     val items = mutableListOf<AdaptiveUIFragment<RT>>()
 
+    /**
+     * anchor fragment id : container receiver
+     */
     val anchors = mutableMapOf<Long, CRT>()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
@@ -69,6 +72,26 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
             if (isMounted) {
                 TODO("update layout")
             }
+        }
+    }
+
+    override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
+        val anchorReceiver = uiAdapter.makeAnchorReceiver()
+        anchors[fragment.id] = anchorReceiver
+
+        if (higherAnchor == null) {
+            uiAdapter.addActual(receiver, anchorReceiver)
+        } else {
+            uiAdapter.addActual(
+                checkNotNull(anchors[higherAnchor.id]) { "missing higher anchor: $higherAnchor" },
+                anchorReceiver
+            )
+        }
+    }
+
+    override fun removeAnchor(fragment: AdaptiveFragment) {
+        anchors.remove(fragment.id)?.let {
+            uiAdapter.removeActual(it)
         }
     }
 

@@ -15,6 +15,8 @@ data class Padding(
     val left: DPixel = DPixel.ZERO
 ) : AdaptiveInstruction {
 
+    constructor(all : DPixel) : this(all, all, all, all)
+
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> { it.padding = this }
     }

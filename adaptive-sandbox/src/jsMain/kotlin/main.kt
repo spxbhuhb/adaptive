@@ -17,12 +17,18 @@ import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.wireformat.withJson
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import sandbox.*
 import kotlin.time.Duration.Companion.seconds
 
 val counterService = getService<CounterApi>()
 
-fun now() = Clock.System.now()
+val Int.twoDigits
+    get() = toString().padStart(2, '0')
+
+fun now() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+    .let { "${it.hour.twoDigits}:${it.minute.twoDigits}:${it.second.twoDigits}" }
 
 val black = Color(0x000000)
 val white = Color(0xffffff)
@@ -101,16 +107,17 @@ fun main() {
 fun login() {
 
     var counter = 0
+    val time = poll(1000.seconds, now()) { now() }
 
-    box(Frame(0.dp, 0.dp, 393.dp, (808 - 24 -24).dp)) { // android Pixel 3 dimensions
+    box(Frame(0.dp, 0.dp, 393.dp, (808 - 24 - 24).dp)) { // android Pixel 3 dimensions
 
         image(Res.drawable.background)
 
         grid(
-            RowTemplate(260.dp, 1.fr, 100.dp, 100.dp),
+            RowTemplate(140.dp, 50.dp, 1.fr, 50.dp, 50.dp, 100.dp),
             ColTemplate(1.fr)
         ) {
-            row(AlignItems.End, JustifyContent.Center, Padding(bottom = 30.dp)) {
+            row(AlignItems.End, JustifyContent.Center, Padding(bottom = 20.dp)) {
                 image(Res.drawable.logo, Size(92.dp, 92.dp))
             }
 
@@ -118,22 +125,31 @@ fun login() {
                 text("Good Morning", white, FontSize(40.sp), LetterSpacing(- 0.02f))
             }
 
+            row(AlignItems.Start, JustifyContent.Center) {
+                text(time, white, FontSize(80.sp), LetterSpacing(- 0.02f))
+            }
+
             grid(
                 RowTemplate(50.dp),
                 ColTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
             ) {
 
-                row(2.gridCol, greenGradient, borderRadius, *center, onClick {
-                    println("Clicked: $counter")
-                    counter += 1
-                }) {
+                row(2.gridCol, greenGradient, borderRadius, *center, onClick { counter ++ }) {
                     text("Snooze", white, textMedium)
                 }
 
                 row(4.gridCol, whiteBorder, borderRadius, *center) {
-                    text("Count: $counter", white, textMedium)
+                    text("Sleepiness: $counter", white, textMedium)
                 }
 
+            }
+
+            row(AlignItems.Center, JustifyContent.Center, Padding(8.dp)) {
+                if (counter > 3) {
+                    row(greenGradient, borderRadius, Padding(16.dp)) {
+                        text("You are really sleepy today!", white, textMedium)
+                    }
+                }
             }
 
             column(AlignItems.Center, Padding(right = 32.dp, left = 32.dp)) {
