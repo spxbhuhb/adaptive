@@ -7,6 +7,7 @@ package hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir
 
 import hu.simplexion.adaptive.kotlin.common.functionByName
 import hu.simplexion.adaptive.kotlin.common.property
+import hu.simplexion.adaptive.kotlin.common.propertyGetter
 import hu.simplexion.adaptive.kotlin.foundation.FoundationPluginKey
 import hu.simplexion.adaptive.kotlin.foundation.Indices
 import hu.simplexion.adaptive.kotlin.foundation.Names
@@ -359,11 +360,11 @@ class ArmClassBuilder(
 
         patchFun.body = DeclarationIrBuilder(irContext, patchFun.symbol).irBlockBody {
 
-            val closureMask = irTemporary(
+            val dirtyMask = irTemporary(
                 IrCallImpl(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                     irBuiltIns.intType,
-                    pluginContext.getThisClosureDirtyMask,
+                    irClass.propertyGetter { "dirtyMask" },
                     0, 0
                 ).also {
                     it.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!)
@@ -387,7 +388,7 @@ class ArmClassBuilder(
                 + irIf(
                     when (statement) {
                         is ArmDefaultValueStatement -> genPatchInternalConditionForDefault(patchFun, statement)
-                        else -> genPatchInternalConditionForMask(patchFun, closureMask, statement.dependencies)
+                        else -> genPatchInternalConditionForMask(patchFun, dirtyMask, statement.dependencies)
                     },
                     when (statement) {
                         is ArmInternalStateVariable -> irSetStateVariable(patchFun, statement.indexInState, transformedExpression)
@@ -407,12 +408,12 @@ class ArmClassBuilder(
             irNull()
         )
 
-    fun genPatchInternalConditionForMask(patchFun: IrSimpleFunction, closureMask: IrVariable, dependencies: ArmDependencies): IrExpression =
+    fun genPatchInternalConditionForMask(patchFun: IrSimpleFunction, dirtyMask: IrVariable, dependencies: ArmDependencies): IrExpression =
         irCall(
             symbol = pluginContext.haveToPatch,
             dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!),
             args = arrayOf(
-                irGet(closureMask),
+                irGet(dirtyMask),
                 dependencies.toDirtyMask()
             )
         )

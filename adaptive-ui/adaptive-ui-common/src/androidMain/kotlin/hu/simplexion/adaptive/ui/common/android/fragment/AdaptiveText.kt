@@ -25,14 +25,10 @@ class AdaptiveText(
         get() = state[0]?.toString() ?: ""
 
     override fun genPatchInternal(): Boolean {
-        val closureMask = getThisClosureDirtyMask()
 
-        // this has to be done first, so text styled (font, size, etc.) are applied during measure
-        if (haveToPatch(closureMask, 1 shl instructionIndex)) {
-            uiAdapter.applyRenderInstructions(this)
-        }
+        patchInstructions()
 
-        if (haveToPatch(closureMask, 1)) {
+        if (haveToPatch(dirtyMask, 1)) {
             if (receiver.text != content || measuredSize == null) {
                 receiver.text = content
                 val widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)

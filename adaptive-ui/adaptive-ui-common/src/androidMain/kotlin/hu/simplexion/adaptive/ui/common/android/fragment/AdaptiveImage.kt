@@ -31,10 +31,10 @@ class AdaptiveImage(
         get() = state[0].checkIfInstance()
 
     override fun genPatchInternal(): Boolean {
-        val closureMask = getThisClosureDirtyMask()
-        if (closureMask == 0) return false
 
-        if (haveToPatch(closureMask, 1)) {
+        patchInstructions()
+
+        if (haveToPatch(dirtyMask, 1)) {
             // FIXME start image read in a different thread and during mount maybe?
             CoroutineScope(adapter.dispatcher).launch {
                 val data = defaultResourceReader.read(content.path)
@@ -43,8 +43,6 @@ class AdaptiveImage(
                 receiver.setImageBitmap(bitmap)
             }
         }
-
-        patchInstructions(closureMask)
 
         return false
     }

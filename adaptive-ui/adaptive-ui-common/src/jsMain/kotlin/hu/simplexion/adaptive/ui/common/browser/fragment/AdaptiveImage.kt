@@ -30,11 +30,11 @@ open class AdaptiveImage(
 
     override fun genPatchInternal(): Boolean {
 
+        patchInstructions()
+
         if (haveToPatch(dirtyMask, 1)) {
             receiver.src = res.uri
         }
-
-        patchInstructions()
 
         return false
     }

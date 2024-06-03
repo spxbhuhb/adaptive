@@ -28,14 +28,10 @@ class AdaptiveText(
 
     @OptIn(ExperimentalForeignApi::class)
     override fun genPatchInternal(): Boolean {
-        val closureMask = getThisClosureDirtyMask()
 
-        // this has to be done first, so text styled (font, size, etc.) are applied during measure
-        if (haveToPatch(closureMask, 1 shl instructionIndex)) {
-            uiAdapter.applyRenderInstructions(this)
-        }
+        patchInstructions()
 
-        if (haveToPatch(closureMask, 1)) {
+        if (haveToPatch(dirtyMask, 1)) {
             receiver.text = content
             receiver.textAlignment = NSTextAlignmentCenter
             receiver.translatesAutoresizingMaskIntoConstraints = false

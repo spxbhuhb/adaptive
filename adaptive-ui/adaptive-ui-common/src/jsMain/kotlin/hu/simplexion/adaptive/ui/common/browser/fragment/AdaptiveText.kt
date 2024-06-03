@@ -29,13 +29,10 @@ open class AdaptiveText(
 
     override fun genPatchInternal(): Boolean {
 
+        patchInstructions()
+
         if (haveToPatch(dirtyMask, 1)) {
             receiver.textContent = content
-        }
-
-        if (haveToPatch(dirtyMask, 1 shl instructionIndex)) {
-            renderData = RenderData(instructions)
-            uiAdapter.applyRenderInstructions(this)
         }
 
         return false
