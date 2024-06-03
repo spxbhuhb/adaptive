@@ -20,7 +20,7 @@ application {
 }
 
 adaptive {
-//    pluginDebug = true
+    pluginDebug = true
 //    pluginLogDir = projectDir.toPath()
     resources {
         publicResClass = true

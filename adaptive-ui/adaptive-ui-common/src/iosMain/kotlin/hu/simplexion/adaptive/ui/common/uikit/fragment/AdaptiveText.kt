@@ -27,7 +27,7 @@ class AdaptiveText(
     private val content: String get() = state[0]?.toString() ?: ""
 
     @OptIn(ExperimentalForeignApi::class)
-    override fun genPatchInternal() : Boolean {
+    override fun genPatchInternal(): Boolean {
         val closureMask = getThisClosureDirtyMask()
 
         // this has to be done first, so text styled (font, size, etc.) are applied during measure

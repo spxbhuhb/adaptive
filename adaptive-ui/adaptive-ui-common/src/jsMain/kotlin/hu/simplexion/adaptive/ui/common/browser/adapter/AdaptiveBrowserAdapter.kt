@@ -131,7 +131,7 @@ open class AdaptiveBrowserAdapter(
                     // FIXME handling of onClick is wrong on so many levels
                     receiver.addEventListener(
                         "click",
-                        { oc.handler(AdaptiveUIEvent(fragment, it)) }
+                        { oc.execute(AdaptiveUIEvent(fragment, it)) }
                     )
                     style.cursor = "pointer"
                 }

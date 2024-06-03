@@ -77,8 +77,8 @@ class IrFunction2ArmClass(
         return armClass
     }
 
-    fun IrElement.dependencies(): List<ArmStateVariable> {
-        val visitor = DependencyVisitor(closure)
+    fun IrElement.dependencies(skipLambdas : Boolean = false): List<ArmStateVariable> {
+        val visitor = DependencyVisitor(closure, skipLambdas)
         accept(visitor, null)
         return visitor.dependencies
     }
@@ -362,7 +362,7 @@ class IrFunction2ArmClass(
 
             parameter.isInstructions -> {
                 val detachExpressions = transformDetachExpressions(expression)
-                ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies(), detachExpressions)
+                ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies(skipLambdas = true), detachExpressions)
             }
 
             else -> {

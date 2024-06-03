@@ -3,6 +3,7 @@
  */
 package hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir
 
+import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import hu.simplexion.adaptive.kotlin.common.property
 import hu.simplexion.adaptive.kotlin.foundation.Indices
 import hu.simplexion.adaptive.kotlin.foundation.Names
@@ -33,13 +34,9 @@ class StateAccessTransform(
     private val transformSupportCalls: Boolean,
     private val newParent : IrFunction?,
     private val irGetFragment: () -> IrExpression
-) : IrElementTransformerVoidWithContext() {
+) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
 
-    val pluginContext = irBuilder.pluginContext
-
-    val irContext = irBuilder.irContext
-
-    val irBuiltIns = irContext.irBuiltIns
+    override val pluginContext = irBuilder.pluginContext
 
     override fun visitGetValue(expression: IrGetValue): IrExpression {
         val name = expression.symbol.owner.name
@@ -93,7 +90,7 @@ class StateAccessTransform(
             Indices.SET_STATE_VARIABLE_ARGUMENT_COUNT
         ).also {
 
-            it.dispatchReceiver = irGetFragment()
+            it.dispatchReceiver = irGet(newParent!!.dispatchReceiverParameter!!)
 
             it.putValueArgument(
                 Indices.SET_STATE_VARIABLE_INDEX,
@@ -176,6 +173,12 @@ class StateAccessTransform(
     fun getPropertyValue(name: Name) =
         irBuilder.irGetValue(irBuilder.irClass.property(name), irGetFragment())
 
+
+    override fun visitFunctionNew(declaration: IrFunction): IrStatement {
+        setLambdaParent(declaration)
+        return super.visitFunctionNew(declaration)
+    }
+
     /**
      * Set parent of lambda functions:
      *
@@ -184,15 +187,10 @@ class StateAccessTransform(
      * - when in rendering
      *   - sets parent to `genPatchDescendant`
      */
-    override fun visitFunctionNew(declaration: IrFunction): IrStatement {
-
-        if (declaration.origin != IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA) {
-            return super.visitFunctionNew(declaration)
+    fun setLambdaParent(declaration: IrFunction) {
+        if (declaration.origin == IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA) {
+            declaration.parent = checkNotNull(newParent) { "should not be null here" }
         }
-
-        declaration.parent = checkNotNull(newParent) { "should not be null here" }
-
-        return super.visitFunctionNew(declaration)
     }
 
 //    fun debugParents(label: String, declaration: IrDeclaration) {
@@ -209,4 +207,5 @@ class StateAccessTransform(
 //            }
 //        }
 //    }
+
 }

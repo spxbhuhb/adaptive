@@ -91,9 +91,10 @@ class AdaptiveClosure(
         val builder = StringBuilder()
         builder.append("AdaptiveClosure:\n")
         builder.append("Owner: $owner\n")
+        builder.append("DirtyMask: ${closureDirtyMask()}\n")
         builder.append("Fragments:\n")
         for (fragment in fragments) {
-            builder.append("\t$fragment  ${fragment.state.contentToString()}\n")
+            builder.append("\t$fragment        mask:${fragment.dirtyMask.toString(16)}\n")
         }
         return builder.toString()
     }

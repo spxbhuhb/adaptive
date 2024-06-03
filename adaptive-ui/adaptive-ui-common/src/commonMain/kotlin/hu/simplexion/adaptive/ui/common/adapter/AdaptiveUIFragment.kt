@@ -6,7 +6,6 @@ package hu.simplexion.adaptive.ui.common.adapter
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
-import hu.simplexion.adaptive.foundation.internal.StateVariableMask
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.layout.RawPoint
 import hu.simplexion.adaptive.ui.common.layout.RawSize
@@ -63,18 +62,14 @@ abstract class AdaptiveUIFragment<RT>(
         Unit
 
     override fun genPatchInternal(): Boolean {
-        val closureMask = getThisClosureDirtyMask()
-        if (closureMask == 0) return false
-        patchInstructions(closureMask)
+        patchInstructions()
         return true
     }
 
-    fun patchInstructions(closureMask: StateVariableMask) {
-        if (instructionIndex != - 1) {
-            if (haveToPatch(closureMask, 1 shl instructionIndex)) {
-                renderData = RenderData(instructions)
-                uiAdapter.applyRenderInstructions(this)
-            }
+    fun patchInstructions() {
+        if (instructionIndex != - 1 && haveToPatch(dirtyMask, 1 shl instructionIndex)) {
+            renderData = RenderData(instructions)
+            uiAdapter.applyRenderInstructions(this)
         }
     }
 

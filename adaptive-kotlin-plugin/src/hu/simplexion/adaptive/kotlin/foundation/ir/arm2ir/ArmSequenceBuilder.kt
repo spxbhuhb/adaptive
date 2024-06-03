@@ -5,7 +5,10 @@
 package hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir
 
 import hu.simplexion.adaptive.kotlin.foundation.Indices
+import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmDetachExpression
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmSequence
+import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
+import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrExpression
@@ -24,6 +27,22 @@ class ArmSequenceBuilder(
         irCallFromBuild(buildFun, armSequence.target)
 
     override fun genPatchDescendantBranch(patchFun: IrSimpleFunction, closureMask: IrVariable): IrExpression =
+        irIf(
+            patchCondition(patchFun, closureMask),
+            patchVariableValue(patchFun)
+        )
+
+    fun patchCondition(patchFun: IrSimpleFunction, closureMask: IrVariable): IrExpression =
+        irCall(
+            symbol = pluginContext.haveToPatch,
+            dispatchReceiver = irGet(patchFun.valueParameters[0]),
+            args = arrayOf(
+                irGet(closureMask),
+                irConst(0) // sequence is hard-coded (for now)
+            )
+        )
+
+    fun patchVariableValue(patchFun: IrSimpleFunction): IrExpression =
         irSetDescendantStateVariable(
             patchFun,
             Indices.ADAPTIVE_SEQUENCE_ITEM_INDICES,

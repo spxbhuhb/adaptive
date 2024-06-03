@@ -28,13 +28,12 @@ open class AdaptiveText(
         get() = state[0]?.toString() ?: ""
 
     override fun genPatchInternal(): Boolean {
-        val closureMask = getThisClosureDirtyMask()
 
-        if (haveToPatch(closureMask, 1)) {
+        if (haveToPatch(dirtyMask, 1)) {
             receiver.textContent = content
         }
 
-        if (haveToPatch(closureMask, 1 shl instructionIndex)) {
+        if (haveToPatch(dirtyMask, 1 shl instructionIndex)) {
             renderData = RenderData(instructions)
             uiAdapter.applyRenderInstructions(this)
         }

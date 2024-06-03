@@ -52,7 +52,6 @@ class AdaptiveSelect(
 
     override fun genPatchInternal(): Boolean {
 
-
         if (stateBranch == shownBranch) {
             return true // no change, let patchInternal patch the child
         }
@@ -74,6 +73,7 @@ class AdaptiveSelect(
             shownFragment = it
         }
 
+        // do not patch the newly built fragment, it has been patched already by create
         return false
 
     }

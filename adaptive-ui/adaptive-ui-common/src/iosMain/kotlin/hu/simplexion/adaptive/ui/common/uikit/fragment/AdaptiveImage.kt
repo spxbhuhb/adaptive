@@ -15,7 +15,6 @@ import hu.simplexion.adaptive.ui.common.uikit.adapter.AdaptiveIosAdapter
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
-import kotlinx.cinterop.useContents
 import kotlinx.cinterop.usePinned
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

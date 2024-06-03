@@ -4,6 +4,7 @@
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.foundation.instruction.Name
 import hu.simplexion.adaptive.foundation.instruction.Trace
 import hu.simplexion.adaptive.foundation.producer.poll
 import hu.simplexion.adaptive.lib.sandbox.SandboxExports
@@ -51,7 +52,7 @@ fun main() {
     //withWebSocketTransport()
     withJsResources()
 
-    browser(SandboxExports, trace = traceLayout) {
+    browser(SandboxExports, trace = traceAll) {
 
         row {
             login()
@@ -98,8 +99,10 @@ fun main() {
 
 @Adaptive
 fun login() {
-//    box(Frame(0.dp, 0.dp, 375.dp, 812.dp)) {
-    box(Frame(0.dp, 0.dp, 393.dp, (808 - 24 -24).dp)) {
+
+    var counter = 0
+
+    box(Frame(0.dp, 0.dp, 393.dp, (808 - 24 -24).dp)) { // android Pixel 3 dimensions
 
         image(Res.drawable.background)
 
@@ -120,12 +123,15 @@ fun login() {
                 ColTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
             ) {
 
-                row(2.gridCol, greenGradient, borderRadius, *center, onClick { println("Sign Up") }) {
-                    text("Sign Up", white, textMedium)
+                row(2.gridCol, greenGradient, borderRadius, *center, onClick {
+                    println("Clicked: $counter")
+                    counter += 1
+                }) {
+                    text("Snooze", white, textMedium)
                 }
 
                 row(4.gridCol, whiteBorder, borderRadius, *center) {
-                    text("Sign In", white, textMedium)
+                    text("Count: $counter", white, textMedium)
                 }
 
             }
