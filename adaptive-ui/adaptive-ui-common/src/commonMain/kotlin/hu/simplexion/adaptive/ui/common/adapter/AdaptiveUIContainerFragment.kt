@@ -56,7 +56,8 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
             }
 
             if (isMounted) {
-                TODO("update layout")
+                itemFragment.measure()
+                layout(layoutFrame)
             }
         }
     }
@@ -70,7 +71,7 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
             uiAdapter.removeActual(itemFragment.receiver)
 
             if (isMounted) {
-                TODO("update layout")
+                layout(layoutFrame)
             }
         }
     }

@@ -20,6 +20,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import sandbox.*
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 val counterService = getService<CounterApi>()
@@ -27,8 +28,10 @@ val counterService = getService<CounterApi>()
 val Int.twoDigits
     get() = toString().padStart(2, '0')
 
+val Int.threeDigits
+    get() = toString().padStart(3, '0')
+
 fun now() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-    .let { "${it.hour.twoDigits}:${it.minute.twoDigits}:${it.second.twoDigits}" }
 
 val black = Color(0x000000)
 val white = Color(0xffffff)
@@ -58,7 +61,7 @@ fun main() {
     //withWebSocketTransport()
     withJsResources()
 
-    browser(SandboxExports, trace = traceAll) {
+    browser(SandboxExports) {
 
         row {
             login()
@@ -107,14 +110,16 @@ fun main() {
 fun login() {
 
     var counter = 0
-    val time = poll(1000.seconds, now()) { now() }
+    val time = poll(10.milliseconds, now()) { now() }
+    val timeText = "${time.hour.twoDigits}:${time.minute.twoDigits}:${time.second.twoDigits}"
+    val milliText = (time.nanosecond / 1_000_000).threeDigits
 
     box(Frame(0.dp, 0.dp, 393.dp, (808 - 24 - 24).dp)) { // android Pixel 3 dimensions
 
         image(Res.drawable.background)
 
         grid(
-            RowTemplate(140.dp, 50.dp, 1.fr, 50.dp, 50.dp, 100.dp),
+            RowTemplate(140.dp, 50.dp, 1.fr, 120.dp, 60.dp, 30.dp, 100.dp),
             ColTemplate(1.fr)
         ) {
             row(AlignItems.End, JustifyContent.Center, Padding(bottom = 20.dp)) {
@@ -125,8 +130,17 @@ fun login() {
                 text("Good Morning", white, FontSize(40.sp), LetterSpacing(- 0.02f))
             }
 
+            column(AlignItems.Center, JustifyContent.Start, Padding(top = 12.dp)) {
+                text(timeText, white, FontSize(80.sp), LetterSpacing(- 0.02f))
+                text(milliText, white, FontSize(60.sp), LetterSpacing(- 0.02f))
+            }
+
             row(AlignItems.Start, JustifyContent.Center) {
-                text(time, white, FontSize(80.sp), LetterSpacing(- 0.02f))
+                row(AlignItems.Start, JustifyContent.Center, greenGradient, borderRadius, Padding(8.dp)) {
+                    if (time.second % 2 == 1) {
+                        text("What an odd second!", white)
+                    }
+                }
             }
 
             grid(
@@ -144,15 +158,15 @@ fun login() {
 
             }
 
-            row(AlignItems.Center, JustifyContent.Center, Padding(8.dp)) {
+            row(AlignItems.Center, JustifyContent.Center) {
                 if (counter > 3) {
-                    row(greenGradient, borderRadius, Padding(16.dp)) {
+                    row(greenGradient, borderRadius, Padding(8.dp)) {
                         text("You are really sleepy today!", white, textMedium)
                     }
                 }
             }
 
-            column(AlignItems.Center, Padding(right = 32.dp, left = 32.dp)) {
+            column(AlignItems.Center, Padding(right = 32.dp, left = 32.dp, top = 12.dp)) {
                 row {
                     text("By joining you agree to our", *smallWhiteNoWrap, Padding(right = 6.dp))
                     text("Terms of Service", externalLink(Res.file.terms), *smallWhiteNoWrap, bold, Padding(right = 6.dp))
