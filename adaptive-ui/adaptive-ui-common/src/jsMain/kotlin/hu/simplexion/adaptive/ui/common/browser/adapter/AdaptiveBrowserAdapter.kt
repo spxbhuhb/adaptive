@@ -116,10 +116,10 @@ open class AdaptiveBrowserAdapter(
                 }
 
                 padding?.let { p ->
-                    p.left?.let { style.paddingLeft = "${it.value}px" }
-                    p.top?.let { style.paddingTop = "${it.value}px" }
-                    p.right?.let { style.paddingRight = "${it.value}px" }
-                    p.bottom?.let { style.paddingBottom = "${it.value}px" }
+                    style.paddingLeft = "${p.left.value}px"
+                    style.paddingTop = "${p.top.value}px"
+                    style.paddingRight = "${p.right.value}px"
+                    style.paddingBottom = "${p.bottom.value}px"
                 }
 
                 instructedSize?.let {
@@ -127,11 +127,11 @@ open class AdaptiveBrowserAdapter(
                     style.height = "${it.height}px"
                 }
 
-                onClick?.let {
+                onClick?.let { oc ->
                     // FIXME handling of onClick is wrong on so many levels
                     receiver.addEventListener(
                         "click",
-                        { onClick !!.handler(AdaptiveUIEvent(fragment, it)) }
+                        { oc.handler(AdaptiveUIEvent(fragment, it)) }
                     )
                     style.cursor = "pointer"
                 }

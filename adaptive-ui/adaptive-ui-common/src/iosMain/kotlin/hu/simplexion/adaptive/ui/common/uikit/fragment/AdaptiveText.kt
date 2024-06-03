@@ -10,6 +10,8 @@ import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.ui.common.uikit.adapter.AdaptiveIosAdapter
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.useContents
 import platform.UIKit.NSTextAlignmentCenter
 import platform.UIKit.UILabel
 import platform.UIKit.UIView
@@ -24,26 +26,28 @@ class AdaptiveText(
 
     private val content: String get() = state[0]?.toString() ?: ""
 
+    @OptIn(ExperimentalForeignApi::class)
     override fun genPatchInternal() : Boolean {
         val closureMask = getThisClosureDirtyMask()
+
+        // this has to be done first, so text styled (font, size, etc.) are applied during measure
+        if (haveToPatch(closureMask, 1 shl instructionIndex)) {
+            uiAdapter.applyRenderInstructions(this)
+        }
 
         if (haveToPatch(closureMask, 1)) {
             receiver.text = content
             receiver.textAlignment = NSTextAlignmentCenter
             receiver.translatesAutoresizingMaskIntoConstraints = false
-        }
-
-        if (haveToPatch(closureMask, 1 shl instructionIndex)) {
-            // TODO apply text instructions
+            measuredSize = receiver.intrinsicContentSize.useContents {
+                RawSize(this.width.toFloat(), this.height.toFloat())
+            }
         }
 
         return false
     }
 
-    override fun measure(): RawSize {
-        traceMeasure()
-        TODO()
-    }
+    override fun measure() = instructedOr { measuredSize !! }
 
     override fun layout(proposedFrame: RawFrame) {
         calcLayoutFrame(proposedFrame)
