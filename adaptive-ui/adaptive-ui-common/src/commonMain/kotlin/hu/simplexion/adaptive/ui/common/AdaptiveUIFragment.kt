@@ -52,9 +52,6 @@ abstract class AdaptiveUIFragment<RT>(
      */
     var measuredSize: RawSize? = null
 
-    fun fragmentFactory(index: Int): BoundFragmentFactory =
-        state[index].checkIfInstance()
-
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? =
         null
 

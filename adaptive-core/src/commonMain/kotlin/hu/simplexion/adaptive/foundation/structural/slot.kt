@@ -5,9 +5,11 @@
 package hu.simplexion.adaptive.foundation.structural
 
 import hu.simplexion.adaptive.foundation.Adaptive
+import hu.simplexion.adaptive.foundation.TestedInPlugin
 import hu.simplexion.adaptive.foundation.manualImplementation
 
 @Adaptive
-fun slot() {
-    manualImplementation()
+@TestedInPlugin
+fun slot(name : String, @Adaptive initialContent : () -> Unit) {
+    manualImplementation(name, initialContent)
 }

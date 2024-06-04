@@ -12,7 +12,7 @@ class AdaptiveLoop<IT>(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int,
-) : AdaptiveFragment(adapter, parent, index, -1, 2) {
+) : AdaptiveFragment(adapter, parent, index, - 1, 2) {
 
     override val createClosure: AdaptiveClosure
         get() = parent !!.thisClosure
@@ -35,8 +35,10 @@ class AdaptiveLoop<IT>(
     override fun genPatchInternal(): Boolean {
         if (dirtyMask != cleanStateMask) {
             patchStructure()
+        } else {
+            patchContent()
         }
-        return true
+        return false
     }
 
     fun patchStructure() {
@@ -66,6 +68,10 @@ class AdaptiveLoop<IT>(
         }
     }
 
+    fun patchContent() {
+        children.forEach { it.patch() }
+    }
+
     fun addAnonymous(iteratorValue: IT): AdaptiveFragment =
         AdaptiveAnonymous(adapter, this, 0, 1, builder).also {
             children.add(it)
@@ -74,22 +80,22 @@ class AdaptiveLoop<IT>(
 
     // ---- Actual UI support --------------------------------------------
 
-    override fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
-        parent!!.addActual(fragment, anchor ?: this)
+    override fun addActual(fragment: AdaptiveFragment, anchor: AdaptiveFragment?) {
+        parent !!.addActual(fragment, anchor ?: this)
     }
 
-    override fun addAnchor(fragment: AdaptiveFragment, higherAnchor : AdaptiveFragment?) {
-        parent!!.addAnchor(fragment, higherAnchor ?: this)
+    override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
+        parent !!.addAnchor(fragment, higherAnchor ?: this)
     }
 
     override fun mount() {
-        parent!!.addAnchor(this, null)
+        parent !!.addAnchor(this, null)
         super.mount()
     }
 
     override fun unmount() {
         super.unmount()
-        parent!!.removeAnchor(this)
+        parent !!.removeAnchor(this)
     }
 
     // ---- Development support --------------------------------------------

@@ -2,13 +2,12 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package hu.simplexion.adaptive.foundation.select
+package hu.simplexion.adaptive.foundation.query
 
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
-import hu.simplexion.adaptive.server.builtin.ServerFragmentImpl
 
 // -------------------------------------------------------------
 // With general condition
@@ -156,7 +155,6 @@ inline fun <reified T : AdaptiveInstruction> AdaptiveAdapter.collect(deep: Boole
     rootFragment.collect(mutableListOf(), deep, horizontal) { fragment, matches ->
         matches += fragment.instructions.filterIsInstance<T>()
     }
-
 
 // -------------------------------------------------------------
 // Inline with server implementation class

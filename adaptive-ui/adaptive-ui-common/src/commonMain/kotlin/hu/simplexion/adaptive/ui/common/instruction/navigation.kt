@@ -4,10 +4,44 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveDetach
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.foundation.instruction.DetachHandler
+import hu.simplexion.adaptive.foundation.query.single
+import hu.simplexion.adaptive.foundation.structural.AdaptiveSlot
 import hu.simplexion.adaptive.resource.FileResource
 import hu.simplexion.adaptive.ui.common.RenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
+
+// --------------------------------------------------------------------
+// Replace
+// --------------------------------------------------------------------
+
+fun replace(
+    @AdaptiveDetach slotEntry: (handler: DetachHandler) -> Unit
+) = Replace(slotEntry)
+
+class Replace(
+    @AdaptiveDetach val slotEntry: (handler: DetachHandler) -> Unit
+) : DetachHandler, AdaptiveInstruction {
+
+    override fun execute() {
+        slotEntry(this)
+    }
+
+    override fun detach(origin: AdaptiveFragment, detachIndex: Int) {
+        origin.single<AdaptiveSlot>(true).setContent(origin, detachIndex)
+    }
+
+    override fun toString(): String {
+        return "Replace"
+    }
+}
+
+// --------------------------------------------------------------------
+// ExternalLink
+// --------------------------------------------------------------------
 
 fun externalLink(res : FileResource) = ExternalLink(res.uri)
 

@@ -108,6 +108,25 @@ fun main() {
 }
 ```
 
+## Executable instructions
+
+If you implement `AdaptiveInstruction.execute` in your instruction you can call it very easily.
+
+Check the `onClick` in the following example. It calls the `execute` method of `Replace` if
+there is a `Replace` instruction.
+
+This invoke is no-op when there is no such instruction.
+
+```kotlin
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.foundation.instruction.invoke
+
+@Adaptive
+fun link(label: String, vararg instructions: AdaptiveInstruction) {
+    text(label, onClick { instructions<Replace>() })
+}
+```
+
 ## Defining your own
 
 > [!NOTE]

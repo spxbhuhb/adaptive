@@ -26,9 +26,9 @@ data class FontWeight(val weight: Int) : AdaptiveInstruction {
     }
 }
 
-val noSelect = NoSelect
+val noSelect = NoSelect()
 
-object NoSelect : AdaptiveInstruction {
+class NoSelect : AdaptiveInstruction {
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> { it.noSelect = true }
     }

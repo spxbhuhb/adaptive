@@ -5,7 +5,7 @@ package stuff
 
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.foundation.instruction.*
-import hu.simplexion.adaptive.foundation.select.*
+import hu.simplexion.adaptive.foundation.query.*
 import hu.simplexion.adaptive.foundation.structural.*
 import hu.simplexion.adaptive.foundation.testing.*
 
@@ -43,7 +43,7 @@ fun onClick(handler: (event: AdaptiveUIEvent) -> Unit) = OnClick(handler)
 
 class OnClick(val handler: (event: AdaptiveUIEvent) -> Unit) : AdaptiveInstruction {
 
-    fun execute() {
+    override fun execute() {
         click ++
     }
 

@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
 import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
@@ -12,6 +13,7 @@ import hu.simplexion.adaptive.ui.common.layout.RawPadding
 import hu.simplexion.adaptive.ui.common.layout.RawPoint
 import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.utility.alsoIfInstance
+import hu.simplexion.adaptive.utility.checkIfInstance
 
 abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
     adapter: AdaptiveUIAdapter<CRT, RT>,
@@ -30,13 +32,17 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
 
     val items = mutableListOf<AdaptiveUIFragment<RT>>()
 
+    val content : BoundFragmentFactory
+        get() = state[state.size - 1].checkIfInstance()
+
     /**
      * anchor fragment id : container receiver
      */
     val anchors = mutableMapOf<Long, CRT>()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
-        return AdaptiveAnonymous(adapter, this, declarationIndex, 0, fragmentFactory(state.size - 1)).apply { create() }
+        if (declarationIndex != 0) invalidIndex(declarationIndex)
+        return AdaptiveAnonymous(adapter, this, declarationIndex, 0, content).apply { create() }
     }
 
     override fun addActual(fragment: AdaptiveFragment, anchor: AdaptiveFragment?) {

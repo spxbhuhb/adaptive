@@ -7,7 +7,7 @@ import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.adaptive
 import hu.simplexion.adaptive.foundation.testing.*
-import hu.simplexion.adaptive.foundation.select.*
+import hu.simplexion.adaptive.foundation.query.*
 
 @Adaptive
 fun tf(vararg instructions: AdaptiveInstruction) {

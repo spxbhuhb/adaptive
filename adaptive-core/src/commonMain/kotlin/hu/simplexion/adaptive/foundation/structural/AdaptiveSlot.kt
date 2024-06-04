@@ -6,29 +6,53 @@ package hu.simplexion.adaptive.foundation.structural
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.TestedInPlugin
+import hu.simplexion.adaptive.foundation.instruction.Trace
+import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
+import hu.simplexion.adaptive.utility.checkIfInstance
+import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 
+@TestedInPlugin
 class AdaptiveSlot(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, - 1, 0) {
+) : AdaptiveFragment(adapter, parent, index, 0, 2) {
 
-    override val createClosure: AdaptiveClosure
-        get() = parent !!.thisClosure
+    override val createClosure : AdaptiveClosure
+        get() = parent!!.thisClosure
 
     override val thisClosure = createClosure
 
-    override fun genPatchDescendant(fragment: AdaptiveFragment) {
-        // the fragment state is set by `replace`, otherwise slot children are detached
-    }
+    val name : String?
+        get() = state[0].checkIfInstance()
+
+    val initialContent: BoundFragmentFactory
+        get() = state[1].checkIfInstance()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
-        return null //
+        return initialContent.build(this)
+    }
+    
+    override fun genPatchDescendant(fragment: AdaptiveFragment) {
+        // slot children are detached
+        // the child state is set by the `setContent`
     }
 
-    override fun genPatchInternal(): Boolean = false // do not propagate changes, descendants are detached
+    override fun genPatchInternal() : Boolean {
+        val trace = instructions.firstOrNullIfInstance<Trace>()
+        if (trace != null && trace.patterns.isNotEmpty()) {
+            tracePatterns = trace.patterns
+        }
 
-    fun replace(origin: AdaptiveFragment, detachIndex: Int) {
+        // descendants are detached, so we should changes after the initial patch
+        return isInit
+    }
+
+    @TestedInPlugin
+    fun setContent(origin: AdaptiveFragment, detachIndex: Int) {
+        if (trace) trace("setContent", "origin: $origin, detachIndex: $detachIndex")
+
         if (children.isNotEmpty()) {
             if (isMounted) children.forEach { it.unmount() }
             children.forEach { it.dispose() }
@@ -36,9 +60,12 @@ class AdaptiveSlot(
         }
 
         val fragment = origin.genBuild(this, detachIndex)
-        // genBuild calls create
-        // create calls declaringFragment.genPatchDescendant
-        // so the external state is correct at this point
+
+        // genBuild calls `create`
+        // `create` calls
+        // - declaringFragment.genPatchDescendant
+        // - genInternalPatch
+        // so the state is correct at this point
 
         checkNotNull(fragment) { "${origin}.genBuild(this, $detachIndex) returned with null" }
 

@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.server.builtin
 
-import hu.simplexion.adaptive.foundation.select.single
+import hu.simplexion.adaptive.foundation.query.single
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
 
 /**
