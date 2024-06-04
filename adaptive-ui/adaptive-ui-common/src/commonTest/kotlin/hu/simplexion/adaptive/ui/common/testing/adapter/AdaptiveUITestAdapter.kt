@@ -4,9 +4,9 @@
 package hu.simplexion.adaptive.ui.common.testing.adapter
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.AdaptiveUIAdapter
+import hu.simplexion.adaptive.ui.common.AdaptiveUIContainerFragment
+import hu.simplexion.adaptive.ui.common.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
 import hu.simplexion.adaptive.ui.common.layout.RawFrame

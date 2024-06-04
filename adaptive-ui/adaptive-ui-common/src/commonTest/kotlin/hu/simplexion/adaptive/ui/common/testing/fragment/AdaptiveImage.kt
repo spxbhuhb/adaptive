@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.ui.common.testing.fragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.resource.DrawableResource
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.layout.RawSize

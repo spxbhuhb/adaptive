@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.ui.common.browser.fragment
 
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.instruction.AlignContent
 import hu.simplexion.adaptive.ui.common.instruction.AlignItems
 import hu.simplexion.adaptive.ui.common.instruction.JustifyContent

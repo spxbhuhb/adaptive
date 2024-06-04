@@ -5,7 +5,6 @@
 package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import hu.simplexion.adaptive.utility.checkIfInstance
 

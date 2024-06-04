@@ -4,20 +4,18 @@
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
-import hu.simplexion.adaptive.foundation.instruction.Name
 import hu.simplexion.adaptive.foundation.instruction.Trace
 import hu.simplexion.adaptive.foundation.producer.poll
 import hu.simplexion.adaptive.lib.sandbox.SandboxExports
 import hu.simplexion.adaptive.sandbox.api.CounterApi
 import hu.simplexion.adaptive.service.getService
-import hu.simplexion.adaptive.ui.common.browser.adapter.browser
+import hu.simplexion.adaptive.ui.common.browser.browser
 import hu.simplexion.adaptive.ui.common.browser.resource.withJsResources
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.wireformat.withJson
 import kotlinx.datetime.*
 import sandbox.*
-import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 val counterService = getService<CounterApi>()

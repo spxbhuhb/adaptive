@@ -3,14 +3,11 @@
  */
 package hu.simplexion.adaptive.ui.common.uikit.fragment
 
-import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.instruction.Frame
-import hu.simplexion.adaptive.ui.common.instruction.Size
 import hu.simplexion.adaptive.ui.common.layout.AbstractBox
-import hu.simplexion.adaptive.ui.common.uikit.adapter.AdaptiveIosAdapter
+import hu.simplexion.adaptive.ui.common.uikit.AdaptiveIosAdapter
 import platform.UIKit.UIView
 
 class AdaptiveBox(

@@ -5,14 +5,14 @@
 package hu.simplexion.adaptive.ui.common.layout
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
+import hu.simplexion.adaptive.ui.common.AdaptiveUIAdapter
+import hu.simplexion.adaptive.ui.common.AdaptiveUIContainerFragment
 
 abstract class AbstractBox<CRT : RT,RT>(
     adapter: AdaptiveUIAdapter<CRT, RT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int
-) : AdaptiveUIContainerFragment<CRT,RT>(
+) : AdaptiveUIContainerFragment<CRT, RT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 

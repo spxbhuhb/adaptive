@@ -2,13 +2,13 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package hu.simplexion.adaptive.ui.common.android.adapter
+package hu.simplexion.adaptive.ui.common.android
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
+import hu.simplexion.adaptive.ui.common.AdaptiveUIContainerFragment
 
 @SuppressLint("ViewConstructor") // not a general Android view group, you are not supposed to use it in general Android code
 class AdaptiveViewGroup(

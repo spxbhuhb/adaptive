@@ -5,9 +5,8 @@ package hu.simplexion.adaptive.ui.common.browser.fragment
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
-import hu.simplexion.adaptive.ui.common.browser.adapter.AdaptiveBrowserAdapter
+import hu.simplexion.adaptive.ui.common.browser.AdaptiveBrowserAdapter
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.instruction.Frame
 import hu.simplexion.adaptive.ui.common.layout.AbstractColumn
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import org.w3c.dom.HTMLDivElement

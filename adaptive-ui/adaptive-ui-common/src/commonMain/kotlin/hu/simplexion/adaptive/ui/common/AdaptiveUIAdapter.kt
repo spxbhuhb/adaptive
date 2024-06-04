@@ -2,13 +2,11 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package hu.simplexion.adaptive.ui.common.adapter
+package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
-import hu.simplexion.adaptive.ui.common.instruction.Point
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
-import hu.simplexion.adaptive.ui.common.layout.RawPoint
 import hu.simplexion.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

@@ -5,8 +5,8 @@
 package hu.simplexion.adaptive.ui.common.layout
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIContainerFragment
+import hu.simplexion.adaptive.ui.common.AdaptiveUIAdapter
+import hu.simplexion.adaptive.ui.common.AdaptiveUIContainerFragment
 
 /**
  * @param autoSizing When true, the row accepts unknown item sizes. This is useful for browser when the size of

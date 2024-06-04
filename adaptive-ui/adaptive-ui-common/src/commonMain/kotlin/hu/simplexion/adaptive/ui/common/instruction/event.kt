@@ -6,8 +6,8 @@ package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.internal.cleanStateMask
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.adapter.RenderData
+import hu.simplexion.adaptive.ui.common.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.RenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 class AdaptiveUIEvent(

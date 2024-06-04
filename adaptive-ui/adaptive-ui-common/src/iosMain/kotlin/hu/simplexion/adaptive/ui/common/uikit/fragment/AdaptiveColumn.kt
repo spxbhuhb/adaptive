@@ -7,7 +7,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.layout.AbstractColumn
-import hu.simplexion.adaptive.ui.common.uikit.adapter.AdaptiveIosAdapter
+import hu.simplexion.adaptive.ui.common.uikit.AdaptiveIosAdapter
 import platform.UIKit.UIView
 
 class AdaptiveColumn(

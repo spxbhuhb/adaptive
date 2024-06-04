@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
+import hu.simplexion.adaptive.ui.common.AdaptiveUIAdapter
 
 // -----------------------------------------------------------
 // Device independent pixel
