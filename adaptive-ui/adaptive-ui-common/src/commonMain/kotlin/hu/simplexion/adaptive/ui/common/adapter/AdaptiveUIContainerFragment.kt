@@ -77,6 +77,8 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
     }
 
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
+        if (trace) trace("addAnchor", "fragment=$fragment, higherAnchor=$higherAnchor")
+
         val anchorReceiver = uiAdapter.makeAnchorReceiver()
         anchors[fragment.id] = anchorReceiver
 
@@ -91,6 +93,8 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
     }
 
     override fun removeAnchor(fragment: AdaptiveFragment) {
+        if (trace) trace("removeAnchor", "fragment=$fragment")
+
         anchors.remove(fragment.id)?.let {
             uiAdapter.removeActual(it)
         }
@@ -216,7 +220,7 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
 
         val spaceForAlign = if (horizontal) {
             stackSize.height - padding.top - padding.bottom
-        } else{
+        } else {
             stackSize.width - padding.left - padding.right
         }
 

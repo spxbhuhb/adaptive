@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.foundation.structural
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
+import hu.simplexion.adaptive.foundation.internal.cleanStateMask
 
 class AdaptiveLoop<IT>(
     adapter: AdaptiveAdapter,
@@ -32,22 +33,20 @@ class AdaptiveLoop<IT>(
     }
 
     override fun genPatchInternal(): Boolean {
-        // TODO think about re-running iterators, we should not do that
-        if (dirtyMask != 0) {
+        if (dirtyMask != cleanStateMask) {
             patchStructure()
-        } else {
-            patchContent()
         }
-        return false
+        return true
     }
 
     fun patchStructure() {
         var index = 0
+
         for (loopVariable in iterator) {
             if (index >= children.size) {
                 val f = addAnonymous(loopVariable)
                 f.create()
-                f.mount()
+                if (isMounted) f.mount()
             } else {
                 children[index].also {
                     it.setStateVariable(0, loopVariable)
@@ -56,18 +55,16 @@ class AdaptiveLoop<IT>(
             }
             index ++
         }
-        while (index < children.size) {
+
+        val originalSize = children.size
+
+        while (index < originalSize) {
             val f = children.removeLast()
-            f.unmount()
+            if (isMounted) f.unmount()
             f.dispose()
             index ++
         }
     }
-
-    fun patchContent() {
-        children.forEach { it.patch() }
-    }
-
 
     fun addAnonymous(iteratorValue: IT): AdaptiveFragment =
         AdaptiveAnonymous(adapter, this, 0, 1, builder).also {
@@ -86,13 +83,13 @@ class AdaptiveLoop<IT>(
     }
 
     override fun mount() {
-        addAnchor(this, null)
+        parent!!.addAnchor(this, null)
         super.mount()
     }
 
     override fun unmount() {
         super.unmount()
-        removeAnchor(this)
+        parent!!.removeAnchor(this)
     }
 
     // ---- Development support --------------------------------------------

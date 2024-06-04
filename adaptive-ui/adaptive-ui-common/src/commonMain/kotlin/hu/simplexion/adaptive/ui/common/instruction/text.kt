@@ -26,6 +26,14 @@ data class FontWeight(val weight: Int) : AdaptiveInstruction {
     }
 }
 
+val noSelect = NoSelect
+
+object NoSelect : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        subject.alsoIfInstance<RenderData> { it.noSelect = true }
+    }
+}
+
 data class LetterSpacing(val value: Float) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> { it.letterSpacing = value }

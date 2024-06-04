@@ -49,7 +49,9 @@ open class RenderData(
     var justifyItems : JustifyItems? = null
     var justifySelf: JustifySelf? = null
 
-    val gap : Float? = null
+    var gap : Float? = null
+
+    var noSelect : Boolean = false
 
     override var gridRow: Int? = null
     override var gridCol: Int? = null

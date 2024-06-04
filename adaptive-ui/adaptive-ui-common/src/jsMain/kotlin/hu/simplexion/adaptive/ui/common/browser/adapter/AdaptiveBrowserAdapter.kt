@@ -33,7 +33,7 @@ open class AdaptiveBrowserAdapter(
         document.createElement("div") as HTMLDivElement
 
     override fun makeAnchorReceiver(): HTMLDivElement =
-        document.createElement("div") as HTMLDivElement
+        (document.createElement("div") as HTMLDivElement).also { it.style.display = "contents" }
 
     override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
@@ -128,6 +128,11 @@ open class AdaptiveBrowserAdapter(
                 instructedSize?.let {
                     style.width = "${it.width}px"
                     style.height = "${it.height}px"
+                }
+
+                if (noSelect) {
+                    style.setProperty("-webkit-user-select", "none")
+                    style.setProperty("user-select", "none")
                 }
 
                 onClick?.let { oc ->
