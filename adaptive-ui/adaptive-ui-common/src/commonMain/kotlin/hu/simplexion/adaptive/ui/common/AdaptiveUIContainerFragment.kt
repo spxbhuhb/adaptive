@@ -45,6 +45,7 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
         return AdaptiveAnonymous(adapter, this, declarationIndex, 0, content).apply { create() }
     }
 
+
     override fun addActual(fragment: AdaptiveFragment, anchor: AdaptiveFragment?) {
         if (trace) trace("addActual", "fragment=$fragment, anchor=$anchor")
 
@@ -85,7 +86,7 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
     override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
         if (trace) trace("addAnchor", "fragment=$fragment, higherAnchor=$higherAnchor")
 
-        val anchorReceiver = uiAdapter.makeAnchorReceiver()
+        val anchorReceiver = uiAdapter.makeAnchorReceiver(this)
         anchors[fragment.id] = anchorReceiver
 
         if (higherAnchor == null) {

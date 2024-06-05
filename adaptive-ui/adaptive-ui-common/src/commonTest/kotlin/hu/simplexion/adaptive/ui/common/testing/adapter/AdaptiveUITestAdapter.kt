@@ -27,12 +27,15 @@ open class AdaptiveUITestAdapter(
     override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<TestReceiver, TestReceiver>): TestReceiver =
         TestReceiver()
 
+    override fun makeAnchorReceiver(containerFragment: AdaptiveUIContainerFragment<TestReceiver, TestReceiver>): TestReceiver =
+        TestReceiver()
+
     override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 
         fragment.alsoIfInstance<AdaptiveUIContainerFragment<TestReceiver, TestReceiver>> {
             rootContainer.testFrame.let { tf ->
-                it.calcLayoutFrame = tf
+                it.layoutFrame = tf
                 it.measure()
                 it.layout(tf)
                 rootContainer.children += it.receiver

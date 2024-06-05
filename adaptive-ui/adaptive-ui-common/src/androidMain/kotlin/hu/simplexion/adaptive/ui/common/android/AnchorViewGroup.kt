@@ -11,31 +11,19 @@ import android.view.ViewGroup
 import hu.simplexion.adaptive.ui.common.AdaptiveUIContainerFragment
 
 @SuppressLint("ViewConstructor") // not a general Android view group, you are not supposed to use it in general Android code
-class AdaptiveViewGroup(
+class AnchorViewGroup(
     context: Context,
-    val layoutFragment: AdaptiveUIContainerFragment<AdaptiveViewGroup, View>
-) : ViewGroup(context, null, 0) {
+    layoutFragment: AdaptiveUIContainerFragment<ContainerViewGroup, View>
+) : ContainerViewGroup(context, layoutFragment) {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        // this is necessary, without this the child does not appear
-        // TODO check if we do double measure here
-        measureChildren(widthMeasureSpec, heightMeasureSpec)
-
+        // no measureChildren here, that is done by the container view group
         val size = layoutFragment.layoutFrame.size
-
         setMeasuredDimension(resolveSize(size.width.toInt(), widthMeasureSpec), resolveSize(size.height.toInt(), heightMeasureSpec))
     }
 
-    override fun generateDefaultLayoutParams(): LayoutParams {
-        val size = layoutFragment.layoutFrameOrNull?.size ?: return LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-
-        return LayoutParams(size.width.toInt(), size.height.toInt())
-    }
-
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        for (item in layoutFragment.items) {
-            (item.adapter as AdaptiveAndroidAdapter).applyLayoutToActual(item)
-        }
+        // this is a no-op, the container group will handle the layout
     }
 
 }

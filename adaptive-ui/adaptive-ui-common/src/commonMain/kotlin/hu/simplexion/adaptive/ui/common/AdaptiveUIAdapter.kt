@@ -46,7 +46,7 @@ abstract class AdaptiveUIAdapter<CRT : RT, RT> : AdaptiveAdapter {
 
     abstract fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<CRT, RT>): CRT
 
-    abstract fun makeAnchorReceiver(): CRT
+    abstract fun makeAnchorReceiver(containerFragment: AdaptiveUIContainerFragment<CRT, RT>): CRT
 
     fun traceAddActual(fragment: AdaptiveFragment) {
         if (trace.isEmpty()) return

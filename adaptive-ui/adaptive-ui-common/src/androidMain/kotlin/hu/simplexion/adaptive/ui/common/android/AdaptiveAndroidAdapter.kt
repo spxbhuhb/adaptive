@@ -3,6 +3,7 @@
  */
 package hu.simplexion.adaptive.ui.common.android
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
@@ -28,19 +29,22 @@ import hu.simplexion.adaptive.ui.common.layout.RawFrame
 open class AdaptiveAndroidAdapter(
     val context: Context,
     override val rootContainer: ViewGroup
-) : AdaptiveUIAdapter<AdaptiveViewGroup, View>() {
+) : AdaptiveUIAdapter<ContainerViewGroup, View>() {
 
     override val fragmentFactory = ViewFragmentFactory
 
     val displayMetrics: DisplayMetrics = context.resources.displayMetrics
 
-    override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<AdaptiveViewGroup, View>): AdaptiveViewGroup =
-        AdaptiveViewGroup(context, fragment)
+    override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<ContainerViewGroup, View>): ContainerViewGroup =
+        ContainerViewGroup(context, fragment)
+
+    override fun makeAnchorReceiver(containerFragment : AdaptiveUIContainerFragment<ContainerViewGroup, View>): ContainerViewGroup =
+        AnchorViewGroup(context, containerFragment)
 
     override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 
-        fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<AdaptiveViewGroup, View>> {
+        fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<ContainerViewGroup, View>> {
             val frame = RawFrame(0f, 0f, rootContainer.width.toFloat(), rootContainer.height.toFloat())
 
             it.layoutFrame = frame
@@ -55,37 +59,40 @@ open class AdaptiveAndroidAdapter(
     override fun removeActualRoot(fragment: AdaptiveFragment) {
         traceRemoveActual(fragment)
 
-        fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<AdaptiveViewGroup, View>> {
+        fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<ContainerViewGroup, View>> {
             rootContainer.removeView(it.receiver)
         }
     }
 
-    override fun addActual(containerReceiver: AdaptiveViewGroup, itemReceiver: View) {
+    override fun addActual(containerReceiver: ContainerViewGroup, itemReceiver: View) {
         containerReceiver.addView(itemReceiver)
     }
 
     override fun removeActual(itemReceiver: View) {
-        (itemReceiver.parent as AdaptiveViewGroup).removeView(itemReceiver)
+        (itemReceiver.parent as ContainerViewGroup).removeView(itemReceiver)
     }
 
     override fun applyLayoutToActual(fragment: AdaptiveUIFragment<View>) {
-        val layoutFrame = fragment.layoutFrame
+        applyLayoutToActual(fragment.layoutFrame, fragment.receiver)
+    }
 
-        val point = layoutFrame.point
-        val size = layoutFrame.size
+    fun applyLayoutToActual(frame : RawFrame, receiver: View) {
+        val point = frame.point
+        val size = frame.size
 
         val top = point.top
         val left = point.left
         val width = size.width
         val height = size.height
 
-        fragment.receiver.layoutParams = ViewGroup.LayoutParams(size.width.toInt(), size.height.toInt())
-        fragment.receiver.layout(
+        receiver.layoutParams = ViewGroup.LayoutParams(size.width.toInt(), size.height.toInt())
+        receiver.layout(
             left.toInt(),
             top.toInt(),
             (left + width).toInt(),
             (top + height).toInt()
         )
+        receiver.invalidate()
     }
 
     override fun applyRenderInstructions(fragment: AdaptiveUIFragment<View>) {
@@ -171,9 +178,10 @@ open class AdaptiveAndroidAdapter(
                     }
                 }
 
-                onClick?.let {
+                val onClick = this.onClick
+                if (onClick != null) {
                     view.setOnClickListener {
-                        onClick !!.handler(AdaptiveUIEvent(fragment, it))
+                        onClick.execute(AdaptiveUIEvent(fragment, it))
                     }
                 }
             }
