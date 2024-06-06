@@ -4,7 +4,6 @@
 package hu.simplexion.adaptive.server
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.internal.BoundSupportFunction
 import hu.simplexion.adaptive.foundation.internal.initStateMask
 import hu.simplexion.adaptive.server.builtin.ServerFragmentImpl
@@ -44,11 +43,11 @@ abstract class AdaptiveServerFragment(
         return true
     }
 
-    override fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
+    override fun addActual(fragment: AdaptiveFragment, direct: Boolean?) {
         // there is no actual UI for server fragments
     }
 
-    override fun removeActual(fragment: AdaptiveFragment) {
+    override fun removeActual(fragment: AdaptiveFragment, direct: Boolean?) {
         // there is no actual UI for server fragments
     }
 

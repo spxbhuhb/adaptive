@@ -15,7 +15,7 @@ open class AdaptiveGrid(
     adapter: AdaptiveBrowserAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractGrid<HTMLDivElement, HTMLElement>(adapter, parent, declarationIndex) {
+) : AbstractGrid<HTMLElement, HTMLDivElement>(adapter, parent, declarationIndex) {
 
     companion object : AdaptiveFragmentCompanion {
 

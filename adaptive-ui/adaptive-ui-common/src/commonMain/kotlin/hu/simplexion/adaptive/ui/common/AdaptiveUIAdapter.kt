@@ -27,7 +27,7 @@ import kotlinx.coroutines.Dispatchers
  * @param CRT Container receiver type
  * @param RT Receiver type
  */
-abstract class AdaptiveUIAdapter<CRT : RT, RT> : AdaptiveAdapter {
+abstract class AdaptiveUIAdapter<RT, CRT : RT> : AdaptiveAdapter {
 
     var nextId = 1L
 
@@ -43,10 +43,13 @@ abstract class AdaptiveUIAdapter<CRT : RT, RT> : AdaptiveAdapter {
     override val dispatcher: CoroutineDispatcher
         get() = Dispatchers.Main
 
+    override fun newSelect(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
+        AdaptiveUISelect(this, parent, index)
 
-    abstract fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<CRT, RT>): CRT
+    override fun newLoop(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
+        AdaptiveUILoop(this, parent, index)
 
-    abstract fun makeAnchorReceiver(containerFragment: AdaptiveUIContainerFragment<CRT, RT>): CRT
+    abstract fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<RT, CRT>): CRT
 
     fun traceAddActual(fragment: AdaptiveFragment) {
         if (trace.isEmpty()) return
@@ -92,8 +95,8 @@ abstract class AdaptiveUIAdapter<CRT : RT, RT> : AdaptiveAdapter {
         throw UnsupportedOperationException("openExternalLink($href)")
     }
 
-    abstract fun toPx(dPixel : DPixel) : Float
+    abstract fun toPx(dPixel: DPixel): Float
 
-    abstract fun toPx(sPixel : SPixel) : Float
+    abstract fun toPx(sPixel: SPixel): Float
 
 }

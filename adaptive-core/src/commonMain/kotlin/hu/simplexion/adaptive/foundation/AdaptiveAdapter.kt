@@ -4,6 +4,9 @@
 package hu.simplexion.adaptive.foundation
 
 import hu.simplexion.adaptive.foundation.instruction.Name
+import hu.simplexion.adaptive.foundation.structural.AdaptiveLoop
+import hu.simplexion.adaptive.foundation.structural.AdaptiveSelect
+import hu.simplexion.adaptive.foundation.structural.AdaptiveSequence
 import hu.simplexion.adaptive.foundation.testing.TraceEvent
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 import kotlinx.coroutines.CoroutineDispatcher
@@ -23,6 +26,15 @@ interface AdaptiveAdapter {
     val startedAt: Long
 
     fun newId(): Long
+
+    fun newSequence(parent : AdaptiveFragment, index : Int) : AdaptiveFragment =
+        AdaptiveSequence(parent.adapter, parent, index)
+
+    fun newSelect(parent : AdaptiveFragment, index : Int) : AdaptiveFragment =
+        AdaptiveSelect(parent.adapter, parent, index)
+
+    fun newLoop(parent : AdaptiveFragment, index : Int) : AdaptiveFragment =
+        AdaptiveLoop<Any>(parent.adapter, parent, index)
 
     fun actualize(name: String, parent: AdaptiveFragment, index: Int) =
         fragmentFactory.newInstance(name, parent, index)

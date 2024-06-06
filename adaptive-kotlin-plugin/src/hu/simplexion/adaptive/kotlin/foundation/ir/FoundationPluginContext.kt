@@ -93,6 +93,10 @@ class FoundationPluginContext(
     val manualImplementation = irContext.referenceFunctions(CallableIds.MANUAL_IMPLEMENTATION).single()
 
     val adaptiveExpectClass = ClassIds.ADAPTIVE_EXPECT.classSymbol()
+
+    val adapterNewSequenceFun = adaptiveAdapterClass.functionByName { Strings.NEW_SEQUENCE }
+    val adapterNewSelectFun = adaptiveAdapterClass.functionByName { Strings.NEW_SELECT }
+    val adapterNewLoopFun = adaptiveAdapterClass.functionByName { Strings.NEW_LOOP }
     val adapterActualizeFun = adaptiveAdapterClass.functionByName { Strings.ACTUALIZE }
 
     val adaptiveDetachClass = ClassIds.ADAPTIVE_DETACH.classSymbol()

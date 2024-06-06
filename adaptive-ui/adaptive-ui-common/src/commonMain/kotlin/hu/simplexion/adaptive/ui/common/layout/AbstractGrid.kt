@@ -10,11 +10,11 @@ import hu.simplexion.adaptive.ui.common.AdaptiveUIContainerFragment
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 
-abstract class AbstractGrid<CRT : RT, RT>(
-    adapter: AdaptiveUIAdapter<CRT, RT>,
+abstract class AbstractGrid<RT, CRT : RT>(
+    adapter: AdaptiveUIAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int
-) : AdaptiveUIContainerFragment<CRT, RT>(
+) : AdaptiveUIContainerFragment<RT, CRT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 
@@ -35,7 +35,7 @@ abstract class AbstractGrid<CRT : RT, RT>(
     override fun measure(): RawSize {
         traceMeasure()
 
-        for (item in items) {
+        for (item in layoutItems) {
             item.measure()
         }
 
@@ -47,8 +47,12 @@ abstract class AbstractGrid<CRT : RT, RT>(
 
         prepare()
 
-        for (item in items) {
+        for (item in layoutItems) {
             item.layout(item.toFrame(colOffsets, rowOffsets))
+        }
+
+        for (item in structuralItems) {
+            item.layout(layoutFrame)
         }
 
         uiAdapter.applyLayoutToActual(this)
@@ -76,7 +80,7 @@ abstract class AbstractGrid<CRT : RT, RT>(
             trace("measure-rowOffsets", rowOffsets.contentToString())
         }
 
-        placeFragments(items.map { it.renderData }, rowOffsets.size - 1, colOffsets.size - 1)
+        placeFragments(layoutItems.map { it.renderData }, rowOffsets.size - 1, colOffsets.size - 1)
     }
 
     /**

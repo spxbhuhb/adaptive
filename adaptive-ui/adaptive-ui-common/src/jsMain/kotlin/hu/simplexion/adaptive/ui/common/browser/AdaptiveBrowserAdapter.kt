@@ -22,23 +22,20 @@ import org.w3c.dom.HTMLElement
 
 open class AdaptiveBrowserAdapter(
     override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
-) : AdaptiveUIAdapter<HTMLDivElement, HTMLElement>() {
+) : AdaptiveUIAdapter<HTMLElement, HTMLDivElement>() {
 
     override val fragmentFactory = BrowserFragmentFactory
 
     override val dispatcher: CoroutineDispatcher
         get() = Dispatchers.Default
 
-    override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<HTMLDivElement, HTMLElement>): HTMLDivElement =
+    override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<HTMLElement, HTMLDivElement>): HTMLDivElement =
         document.createElement("div") as HTMLDivElement
-
-    override fun makeAnchorReceiver(containerFragment : AdaptiveUIContainerFragment<HTMLDivElement, HTMLElement>): HTMLDivElement =
-        (document.createElement("div") as HTMLDivElement).also { it.style.display = "contents" }
 
     override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 
-        fragment.alsoIfInstance<AdaptiveUIContainerFragment<HTMLDivElement, HTMLElement>> {
+        fragment.alsoIfInstance<AdaptiveUIContainerFragment<HTMLElement, HTMLDivElement>> {
             rootContainer.getBoundingClientRect().let { r ->
                 val frame = RawFrame(0f, 0f, r.width.toFloat(), r.height.toFloat())
 
@@ -54,7 +51,7 @@ open class AdaptiveBrowserAdapter(
     override fun removeActualRoot(fragment: AdaptiveFragment) {
         traceRemoveActual(fragment)
 
-        fragment.alsoIfInstance<AdaptiveUIContainerFragment<HTMLDivElement, HTMLElement>> {
+        fragment.alsoIfInstance<AdaptiveUIContainerFragment<HTMLElement, HTMLDivElement>> {
             rootContainer.removeChild(it.receiver)
         }
     }

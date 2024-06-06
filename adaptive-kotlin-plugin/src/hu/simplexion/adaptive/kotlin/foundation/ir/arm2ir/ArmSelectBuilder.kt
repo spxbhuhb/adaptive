@@ -29,7 +29,7 @@ class ArmSelectBuilder(
 ) : ClassBoundIrBuilder(parent), BranchBuilder {
 
     override fun genBuildConstructorCall(buildFun: IrSimpleFunction): IrExpression =
-        irCallFromBuild(buildFun, armSelect.target)
+        irCallFromBuild(buildFun, pluginContext.adapterNewSelectFun)
 
     override fun genPatchDescendantBranch(patchFun: IrSimpleFunction, closureMask: IrVariable): IrExpression =
         irSetDescendantStateVariable(

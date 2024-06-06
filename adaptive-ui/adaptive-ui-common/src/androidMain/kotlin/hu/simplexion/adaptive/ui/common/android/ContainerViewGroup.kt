@@ -13,7 +13,7 @@ import hu.simplexion.adaptive.ui.common.AdaptiveUIContainerFragment
 @SuppressLint("ViewConstructor") // not a general Android view group, you are not supposed to use it in general Android code
 open class ContainerViewGroup(
     context: Context,
-    val layoutFragment: AdaptiveUIContainerFragment<ContainerViewGroup, View>
+    val owner: AdaptiveUIContainerFragment<View, ContainerViewGroup>
 ) : ViewGroup(context, null, 0) {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -21,25 +21,21 @@ open class ContainerViewGroup(
         // TODO check if we do double measure here
         measureChildren(widthMeasureSpec, heightMeasureSpec)
 
-        val size = layoutFragment.layoutFrame.size
+        val size = owner.layoutFrame.size
 
         setMeasuredDimension(resolveSize(size.width.toInt(), widthMeasureSpec), resolveSize(size.height.toInt(), heightMeasureSpec))
     }
 
     override fun generateDefaultLayoutParams(): LayoutParams {
-        val size = layoutFragment.layoutFrameOrNull?.size ?: return LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        val size = owner.layoutFrameOrNull?.size ?: return LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
         return LayoutParams(size.width.toInt(), size.height.toInt())
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        val uiAdapter = layoutFragment.uiAdapter as AdaptiveAndroidAdapter
-        val frame = layoutFragment.layoutFrame
+        val uiAdapter = owner.uiAdapter as AdaptiveAndroidAdapter
+        val frame = owner.layoutFrame
 
-        for (anchor in layoutFragment.anchors) {
-            uiAdapter.applyLayoutToActual(frame, anchor.value)
-        }
-
-        for (item in layoutFragment.items) {
+        for (item in owner.layoutItems) {
             uiAdapter.applyLayoutToActual(item)
         }
     }

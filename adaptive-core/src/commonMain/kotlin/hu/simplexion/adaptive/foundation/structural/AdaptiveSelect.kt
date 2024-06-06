@@ -7,32 +7,28 @@ import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
 
-class AdaptiveSelect(
-    adapter: AdaptiveAdapter,
-    parent: AdaptiveFragment?,
-    index: Int,
-) : AdaptiveFragment(adapter, parent, index, -1, 2) {
+interface AdaptiveSelectLogic {
 
-    override val createClosure: AdaptiveClosure
-        get() = parent !!.thisClosure
+    fun makeBranch() : AdaptiveFragment?
 
-    override val thisClosure = AdaptiveClosure(
-        createClosure.fragments + this,
-        createClosure.closureSize + state.size
-    )
+    val createClosure: AdaptiveClosure
+
+    val state : Array<Any?>
+
+    val dirtyMask : Int
+
+    val children : MutableList<AdaptiveFragment>
+
+    val isMounted : Boolean
 
     val stateBranch
         get() = state[0] as Int
 
     var shownBranch // -1 means that there is nothing shown, like: `if (condition) div {  }`
-        get() = state[1] as Int
+        get() = (state[1] as? Int) ?: -1
         set(v) {
             state[1] = v
         }
-
-    init {
-        shownBranch = - 1
-    }
 
     /**
      * The fragment that is currently shown.
@@ -47,10 +43,7 @@ class AdaptiveSelect(
             }
         }
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? =
-        null // genPatchInternal will create the child fragment if necessary
-
-    override fun genPatchInternal(): Boolean {
+    fun genPatchInternal() : Boolean {
 
         if (stateBranch == shownBranch) {
             return true // no change, let patchInternal patch the child
@@ -68,38 +61,37 @@ class AdaptiveSelect(
             return false
         }
 
-        createClosure.owner.genBuild(this, shownBranch)?.also { // there is something to sow
+        makeBranch()?.also { // there is something to show
             if (isMounted) it.mount()
             shownFragment = it
         }
 
         // do not patch the newly built fragment, it has been patched already by create
         return false
-
     }
+}
 
-    // ---- Actual UI support --------------------------------------------
+class AdaptiveSelect(
+    adapter: AdaptiveAdapter,
+    parent: AdaptiveFragment?,
+    index: Int,
+) : AdaptiveFragment(adapter, parent, index, -1, 2), AdaptiveSelectLogic {
 
-    override fun addActual(fragment: AdaptiveFragment, anchor : AdaptiveFragment?) {
-        parent!!.addActual(fragment, anchor ?: this)
-    }
+    override val createClosure: AdaptiveClosure
+        get() = parent !!.thisClosure
 
-    override fun addAnchor(fragment: AdaptiveFragment, higherAnchor : AdaptiveFragment?) {
-        parent!!.addAnchor(fragment, higherAnchor ?: this)
-    }
+    override val thisClosure = AdaptiveClosure(
+        createClosure.fragments + this,
+        createClosure.closureSize + state.size
+    )
 
-    override fun removeActual(fragment: AdaptiveFragment) {
-        parent !!.removeActual(fragment)
-    }
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? =
+        null // genPatchInternal will create the child fragment if necessary
 
-    override fun mount() {
-        parent!!.addAnchor(this, null)
-        super.mount()
-    }
+    override fun genPatchInternal(): Boolean =
+        super<AdaptiveSelectLogic>.genPatchInternal()
 
-    override fun unmount() {
-        super.unmount()
-        parent!!.removeAnchor(this)
-    }
+    override fun makeBranch(): AdaptiveFragment? =
+        createClosure.owner.genBuild(this, shownBranch)
 
 }

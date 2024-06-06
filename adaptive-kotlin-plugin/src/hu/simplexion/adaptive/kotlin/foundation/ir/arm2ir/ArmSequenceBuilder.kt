@@ -24,7 +24,7 @@ class ArmSequenceBuilder(
 ) : ClassBoundIrBuilder(parent), BranchBuilder {
 
     override fun genBuildConstructorCall(buildFun : IrSimpleFunction) : IrExpression =
-        irCallFromBuild(buildFun, armSequence.target)
+        irCallFromBuild(buildFun, pluginContext.adapterNewSequenceFun)
 
     override fun genPatchDescendantBranch(patchFun: IrSimpleFunction, closureMask: IrVariable): IrExpression =
         irIf(

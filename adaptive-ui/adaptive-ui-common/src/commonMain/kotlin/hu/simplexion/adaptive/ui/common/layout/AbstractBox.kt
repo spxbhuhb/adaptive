@@ -8,26 +8,26 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AdaptiveUIAdapter
 import hu.simplexion.adaptive.ui.common.AdaptiveUIContainerFragment
 
-abstract class AbstractBox<CRT : RT,RT>(
-    adapter: AdaptiveUIAdapter<CRT, RT>,
+abstract class AbstractBox<RT, CRT : RT>(
+    adapter: AdaptiveUIAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int
-) : AdaptiveUIContainerFragment<CRT, RT>(
+) : AdaptiveUIContainerFragment<RT, CRT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 
     override fun measure(): RawSize =
         measure(
-            { w : Float, p : RawPoint, s : RawSize -> maxOf(w, p.top + s.width)},
-            { h : Float, p : RawPoint, s : RawSize -> maxOf(h, p.left + s.height)}
+            { w: Float, p: RawPoint, s: RawSize -> maxOf(w, p.top + s.width) },
+            { h: Float, p: RawPoint, s: RawSize -> maxOf(h, p.left + s.height) }
         )
 
-    override fun layout(proposedFrame : RawFrame) {
+    override fun layout(proposedFrame: RawFrame) {
         calcLayoutFrame(proposedFrame)
 
         val layoutFrame = this.layoutFrame
 
-        for (item in items) {
+        for (item in layoutItems) {
             item.layout(layoutFrame)
         }
 

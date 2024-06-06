@@ -10,8 +10,8 @@ import hu.simplexion.adaptive.ui.common.RenderData
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.layout.RawSize
-import hu.simplexion.adaptive.ui.common.testing.adapter.AdaptiveUITestAdapter
-import hu.simplexion.adaptive.ui.common.testing.adapter.TestReceiver
+import hu.simplexion.adaptive.ui.common.testing.AdaptiveUITestAdapter
+import hu.simplexion.adaptive.ui.common.testing.TestReceiver
 
 open class AdaptiveText(
     adapter: AdaptiveUITestAdapter,

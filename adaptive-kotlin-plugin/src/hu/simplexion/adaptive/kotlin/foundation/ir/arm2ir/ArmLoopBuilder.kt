@@ -18,7 +18,7 @@ class ArmLoopBuilder(
 ) : ClassBoundIrBuilder(parent), BranchBuilder {
 
     override fun genBuildConstructorCall(buildFun : IrSimpleFunction) : IrExpression =
-        irCallFromBuild(buildFun, armLoop.target)
+        irCallFromBuild(buildFun, pluginContext.adapterNewLoopFun)
 
     override fun genPatchDescendantBranch(patchFun: IrSimpleFunction, closureMask: IrVariable): IrExpression =
          IrBlockImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.irContext.irBuiltIns.unitType)

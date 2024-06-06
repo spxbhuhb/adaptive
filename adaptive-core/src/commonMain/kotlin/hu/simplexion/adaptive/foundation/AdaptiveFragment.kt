@@ -8,7 +8,6 @@ import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.internal.*
 import hu.simplexion.adaptive.foundation.producer.AdaptiveProducer
-import hu.simplexion.adaptive.foundation.testing.AdaptiveTestAdapter
 
 abstract class AdaptiveFragment(
     val adapter: AdaptiveAdapter,
@@ -35,13 +34,13 @@ abstract class AdaptiveFragment(
             }
         }
 
-    var tracePatterns : Array<out Regex> = adapter.trace
+    var tracePatterns: Array<out Regex> = adapter.trace
         set(v) {
             field = v
             trace = v.isNotEmpty()
         }
 
-    var trace : Boolean = tracePatterns.isNotEmpty()
+    var trace: Boolean = tracePatterns.isNotEmpty()
 
     val state: Array<Any?> = arrayOfNulls<Any?>(stateSize)
 
@@ -119,28 +118,23 @@ abstract class AdaptiveFragment(
     // Actual UI support
     // --------------------------------------------------------------------------
 
-    open fun addActual(fragment: AdaptiveFragment, anchor: AdaptiveFragment?) {
-        parent?.addActual(fragment, anchor) ?: adapter.addActualRoot(fragment)
+    /**
+     * Add a fragment to the actual UI.
+     *
+     * [direct] is:
+     * - null, when the fragment is a structural (loop or select)
+     * - true, when there is no structural between [fragment] and `this`
+     * - false, when there is a structural between [fragment] and `this`
+     */
+    open fun addActual(fragment: AdaptiveFragment, direct: Boolean?) {
+        parent?.addActual(fragment, direct) ?: adapter.addActualRoot(fragment)
     }
 
-    open fun removeActual(fragment: AdaptiveFragment) {
-        parent?.removeActual(fragment) ?: adapter.removeActualRoot(fragment)
-    }
-
-    open fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
-        if (parent != null) {
-            parent.addAnchor(fragment, higherAnchor)
-        } else {
-            if (adapter !is AdaptiveTestAdapter) ops(nonLayoutTopLevelPath, nonLayoutTopLevelMessage)
-        }
-    }
-
-    open fun removeAnchor(fragment: AdaptiveFragment) {
-        if (parent != null) {
-            parent.removeAnchor(fragment)
-        } else {
-            if (adapter !is AdaptiveTestAdapter) ops(nonLayoutTopLevelPath, nonLayoutTopLevelMessage)
-        }
+    /**
+     * See [addActual].
+     */
+    open fun removeActual(fragment: AdaptiveFragment, direct: Boolean?) {
+        parent?.removeActual(fragment, direct) ?: adapter.removeActualRoot(fragment)
     }
 
     // --------------------------------------------------------------------------

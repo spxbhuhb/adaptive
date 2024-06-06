@@ -39,6 +39,17 @@ open class ClassBoundIrBuilder(
 
     fun irCallFromBuild(
         buildFun: IrSimpleFunction,
+        target: IrSimpleFunctionSymbol
+    ) =
+        irCall(
+            target,
+            irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)),
+            irGet(buildFun.valueParameters[Indices.BUILD_PARENT]),
+            irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX])
+        )
+
+    fun irCallFromBuild(
+        buildFun: IrSimpleFunction,
         target: FqName,
         classSymbol: IrClassSymbol? = pluginContext.getSymbol(target)
     ): IrExpression {

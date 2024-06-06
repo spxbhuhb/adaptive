@@ -15,8 +15,12 @@ import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import hu.simplexion.adaptive.utility.checkIfInstance
 
-abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
-    adapter: AdaptiveUIAdapter<CRT, RT>,
+/**
+ * Two uses: layouts and loop/select containers.
+ *
+ */
+abstract class AdaptiveUIContainerFragment<RT, CRT : RT>(
+    adapter: AdaptiveUIAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
     instructionsIndex: Int,
@@ -30,36 +34,37 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
 
     override val uiAdapter = adapter
 
-    val items = mutableListOf<AdaptiveUIFragment<RT>>()
+    val layoutItems = mutableListOf<AdaptiveUIFragment<RT>>() // Items to consider during layout.
 
-    val content : BoundFragmentFactory
+    val directItems = mutableListOf<AdaptiveUIFragment<RT>>() // Items to update directly, see class docs.
+
+    val structuralItems = mutableListOf<AdaptiveUIFragment<RT>>() // Items to update directly, see class docs.
+
+    val content: BoundFragmentFactory
         get() = state[state.size - 1].checkIfInstance()
 
-    /**
-     * anchor fragment id : container receiver
-     */
-    val anchors = mutableMapOf<Long, CRT>()
-
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
         if (declarationIndex != 0) invalidIndex(declarationIndex)
         return AdaptiveAnonymous(adapter, this, declarationIndex, 0, content).apply { create() }
     }
 
-
-    override fun addActual(fragment: AdaptiveFragment, anchor: AdaptiveFragment?) {
-        if (trace) trace("addActual", "fragment=$fragment, anchor=$anchor")
+    override fun addActual(fragment: AdaptiveFragment, direct: Boolean?) {
+        if (trace) trace("addActual", "fragment=$fragment, direct=$direct")
 
         fragment.alsoIfInstance<AdaptiveUIFragment<RT>> { itemFragment ->
 
-            items += itemFragment
-
-            if (anchor == null) {
-                uiAdapter.addActual(receiver, itemFragment.receiver)
-            } else {
-                uiAdapter.addActual(
-                    checkNotNull(anchors[anchor.id]) { "missing anchor: $anchor" },
-                    itemFragment.receiver
-                )
+            when (direct) {
+                true -> {
+                    layoutItems += itemFragment
+                    directItems += itemFragment
+                    uiAdapter.addActual(receiver, itemFragment.receiver)
+                }
+                false -> {
+                    layoutItems += itemFragment
+                }
+                null -> {
+                    structuralItems += itemFragment
+                }
             }
 
             if (isMounted) {
@@ -69,41 +74,28 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
         }
     }
 
-    override fun removeActual(fragment: AdaptiveFragment) {
+    override fun removeActual(fragment: AdaptiveFragment, direct: Boolean?) {
         if (trace) trace("removeActual", "fragment=$fragment")
 
         fragment.alsoIfInstance<AdaptiveUIFragment<RT>> { itemFragment ->
 
-            items.removeAt(items.indexOfFirst { it.id == fragment.id })
-            uiAdapter.removeActual(itemFragment.receiver)
+            when (direct) {
+                true -> {
+                    layoutItems.removeAt(layoutItems.indexOfFirst { it.id == fragment.id })
+                    directItems.removeAt(directItems.indexOfFirst { it.id == fragment.id })
+                    uiAdapter.addActual(receiver, itemFragment.receiver)
+                }
+                false -> {
+                    layoutItems.removeAt(layoutItems.indexOfFirst { it.id == fragment.id })
+                }
+                null -> {
+                    structuralItems.removeAt(structuralItems.indexOfFirst { it.id == fragment.id })
+                }
+            }
 
             if (isMounted) {
                 layout(layoutFrame)
             }
-        }
-    }
-
-    override fun addAnchor(fragment: AdaptiveFragment, higherAnchor: AdaptiveFragment?) {
-        if (trace) trace("addAnchor", "fragment=$fragment, higherAnchor=$higherAnchor")
-
-        val anchorReceiver = uiAdapter.makeAnchorReceiver(this)
-        anchors[fragment.id] = anchorReceiver
-
-        if (higherAnchor == null) {
-            uiAdapter.addActual(receiver, anchorReceiver)
-        } else {
-            uiAdapter.addActual(
-                checkNotNull(anchors[higherAnchor.id]) { "missing higher anchor: $higherAnchor" },
-                anchorReceiver
-            )
-        }
-    }
-
-    override fun removeAnchor(fragment: AdaptiveFragment) {
-        if (trace) trace("removeAnchor", "fragment=$fragment")
-
-        anchors.remove(fragment.id)?.let {
-            uiAdapter.removeActual(it)
         }
     }
 
@@ -112,7 +104,7 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
         val padding = RawPadding(renderData.padding ?: Padding.ZERO, uiAdapter)
 
         if (instructedSize != null) {
-            for (item in items) {
+            for (item in layoutItems) {
                 item.measure()
             }
             traceMeasure()
@@ -122,7 +114,7 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
         var width = 0f
         var height = 0f
 
-        for (item in items) {
+        for (item in layoutItems) {
             val size = checkNotNull(item.measure()) { "unable to measure, cannot get size of: $item" }
 
             val point = item.renderData.instructedPoint?.let { RawPoint(it, uiAdapter) } ?: RawPoint.ORIGIN
@@ -144,7 +136,7 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
         val instructedGap = renderData.gap ?: 0f
         val padding = RawPadding(renderData.padding ?: Padding.ZERO, uiAdapter)
 
-        if (items.isEmpty()) return (0f to instructedGap)
+        if (layoutItems.isEmpty()) return (0f to instructedGap)
 
         val size = this.layoutFrame.size
 
@@ -158,7 +150,7 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
 
         val used = calcUsedSpace(horizontal)
 
-        val gapCount = items.size - 1
+        val gapCount = layoutItems.size - 1
         val usedByInstructedGap = gapCount * instructedGap
         val remaining = available - (used + usedByInstructedGap)
 
@@ -176,7 +168,7 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
 
         var usedSpace = 0f
 
-        for (item in items) {
+        for (item in layoutItems) {
             val measuredSize = checkNotNull(item.measuredSize) { "measured size should not be null, container:$this item:$item)" }
             if (horizontal) {
                 usedSpace += measuredSize.width
@@ -212,7 +204,7 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
     fun layoutStack(horizontal: Boolean, autoSizing: Boolean) {
 
         if (autoSizing) {
-            for (item in items) {
+            for (item in layoutItems) {
                 item.layout(RawFrame.NaF)
             }
             return
@@ -233,7 +225,7 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
 
         val alignItems = renderData.alignItems
 
-        for (item in items) {
+        for (item in layoutItems) {
             val renderData = item.renderData
 
             val measuredSize = checkNotNull(item.measuredSize) { "measured size should not be null, container:$this item:$item)" }
@@ -250,6 +242,10 @@ abstract class AdaptiveUIContainerFragment<CRT : RT, RT>(
             item.layout(frame)
 
             offset += gap + (if (horizontal) measuredSize.width else measuredSize.height)
+        }
+
+        for (item in structuralItems) {
+            item.layout(layoutFrame)
         }
     }
 }

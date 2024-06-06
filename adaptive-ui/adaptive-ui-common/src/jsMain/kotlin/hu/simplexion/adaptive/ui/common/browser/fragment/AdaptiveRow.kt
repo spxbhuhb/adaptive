@@ -16,7 +16,7 @@ open class AdaptiveRow(
     adapter: AdaptiveBrowserAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractRow<HTMLDivElement, HTMLElement>(adapter, parent, declarationIndex, true) {
+) : AbstractRow<HTMLElement, HTMLDivElement>(adapter, parent, declarationIndex, true) {
 
     override fun layout(proposedFrame: RawFrame) {
         super.layout(proposedFrame)

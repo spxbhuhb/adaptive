@@ -16,7 +16,7 @@ open class AdaptiveColumn(
     adapter: AdaptiveBrowserAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractColumn<HTMLDivElement, HTMLElement>(adapter, parent, declarationIndex, true) {
+) : AbstractColumn<HTMLElement, HTMLDivElement>(adapter, parent, declarationIndex, true) {
 
     override fun layout(proposedFrame: RawFrame) {
         super.layout(proposedFrame)

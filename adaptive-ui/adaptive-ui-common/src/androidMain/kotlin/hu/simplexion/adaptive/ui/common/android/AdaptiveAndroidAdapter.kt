@@ -3,7 +3,6 @@
  */
 package hu.simplexion.adaptive.ui.common.android
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
@@ -29,22 +28,19 @@ import hu.simplexion.adaptive.ui.common.layout.RawFrame
 open class AdaptiveAndroidAdapter(
     val context: Context,
     override val rootContainer: ViewGroup
-) : AdaptiveUIAdapter<ContainerViewGroup, View>() {
+) : AdaptiveUIAdapter<View, ContainerViewGroup>() {
 
     override val fragmentFactory = ViewFragmentFactory
 
     val displayMetrics: DisplayMetrics = context.resources.displayMetrics
 
-    override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<ContainerViewGroup, View>): ContainerViewGroup =
+    override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<View, ContainerViewGroup>): ContainerViewGroup =
         ContainerViewGroup(context, fragment)
-
-    override fun makeAnchorReceiver(containerFragment : AdaptiveUIContainerFragment<ContainerViewGroup, View>): ContainerViewGroup =
-        AnchorViewGroup(context, containerFragment)
 
     override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 
-        fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<ContainerViewGroup, View>> {
+        fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<View, ContainerViewGroup>> {
             val frame = RawFrame(0f, 0f, rootContainer.width.toFloat(), rootContainer.height.toFloat())
 
             it.layoutFrame = frame
@@ -59,7 +55,7 @@ open class AdaptiveAndroidAdapter(
     override fun removeActualRoot(fragment: AdaptiveFragment) {
         traceRemoveActual(fragment)
 
-        fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<ContainerViewGroup, View>> {
+        fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<View, ContainerViewGroup>> {
             rootContainer.removeView(it.receiver)
         }
     }
@@ -86,13 +82,13 @@ open class AdaptiveAndroidAdapter(
         val height = size.height
 
         receiver.layoutParams = ViewGroup.LayoutParams(size.width.toInt(), size.height.toInt())
+
         receiver.layout(
             left.toInt(),
             top.toInt(),
             (left + width).toInt(),
             (top + height).toInt()
         )
-        receiver.invalidate()
     }
 
     override fun applyRenderInstructions(fragment: AdaptiveUIFragment<View>) {

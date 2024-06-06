@@ -8,12 +8,12 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AdaptiveUIAdapter
 import hu.simplexion.adaptive.ui.common.AdaptiveUIContainerFragment
 
-abstract class AbstractColumn<CRT : RT, RT>(
-    adapter: AdaptiveUIAdapter<CRT, RT>,
+abstract class AbstractColumn<RT, CRT : RT>(
+    adapter: AdaptiveUIAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
     val autoSizing: Boolean
-) : AdaptiveUIContainerFragment<CRT, RT>(
+) : AdaptiveUIContainerFragment<RT, CRT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 

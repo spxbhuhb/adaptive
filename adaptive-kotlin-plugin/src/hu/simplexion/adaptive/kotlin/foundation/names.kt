@@ -65,6 +65,11 @@ object Strings {
     const val ADAPTIVE_EXPECT = "AdaptiveExpect"
     const val ADAPTIVE_FRAGMENT_COMPANION_COLLECTOR = "AdaptiveFragmentCompanionCollector"
     const val MANUAL_IMPLEMENTATION = "manualImplementation"
+
+    const val NEW_SEQUENCE = "newSequence"
+    const val NEW_SELECT = "newSelect"
+    const val NEW_LOOP = "newLoop"
+
     const val ACTUALIZE = "actualize"
 
     const val SUPPORT_FUNCTION_INVOKE = "invoke"

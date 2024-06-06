@@ -15,7 +15,7 @@ class AdaptiveBox(
     adapter: AdaptiveBrowserAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractBox<HTMLDivElement, HTMLElement>(adapter, parent, declarationIndex) {
+) : AbstractBox<HTMLElement, HTMLDivElement>(adapter, parent, declarationIndex) {
 
     companion object : AdaptiveFragmentCompanion {
 

@@ -5,14 +5,12 @@
 package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.layout.RawPoint
 import hu.simplexion.adaptive.ui.common.layout.RawSize
-import hu.simplexion.adaptive.utility.checkIfInstance
 
 abstract class AdaptiveUIFragment<RT>(
-    adapter: AdaptiveUIAdapter<*, RT>,
+    adapter: AdaptiveUIAdapter<RT, *>,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
     instructionsIndex: Int,
@@ -72,11 +70,11 @@ abstract class AdaptiveUIFragment<RT>(
 
     override fun mount() {
         super.mount()
-        parent?.addActual(this, null) ?: adapter.addActualRoot(this)
+        parent?.addActual(this, true) ?: adapter.addActualRoot(this)
     }
 
     override fun unmount() {
-        parent?.removeActual(this) ?: adapter.removeActualRoot(this)
+        parent?.removeActual(this, true) ?: adapter.removeActualRoot(this)
         super.unmount()
     }
 

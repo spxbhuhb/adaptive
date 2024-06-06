@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.ui.common.layout
 
 import hu.simplexion.adaptive.ui.common.fragment.row
 import hu.simplexion.adaptive.ui.common.fragment.text
-import hu.simplexion.adaptive.ui.common.testing.adapter.uiTest
+import hu.simplexion.adaptive.ui.common.testing.uiTest
 import hu.simplexion.adaptive.ui.common.testing.assertEquals
 import kotlin.test.Test
 

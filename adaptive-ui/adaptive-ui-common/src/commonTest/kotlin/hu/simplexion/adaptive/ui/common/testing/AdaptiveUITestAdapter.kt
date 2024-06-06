@@ -1,7 +1,7 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.adaptive.ui.common.testing.adapter
+package hu.simplexion.adaptive.ui.common.testing
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AdaptiveUIAdapter
@@ -25,9 +25,6 @@ open class AdaptiveUITestAdapter(
         get() = Dispatchers.Default
 
     override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<TestReceiver, TestReceiver>): TestReceiver =
-        TestReceiver()
-
-    override fun makeAnchorReceiver(containerFragment: AdaptiveUIContainerFragment<TestReceiver, TestReceiver>): TestReceiver =
         TestReceiver()
 
     override fun addActualRoot(fragment: AdaptiveFragment) {

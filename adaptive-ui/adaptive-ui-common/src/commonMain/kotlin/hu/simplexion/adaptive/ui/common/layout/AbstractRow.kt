@@ -12,12 +12,12 @@ import hu.simplexion.adaptive.ui.common.AdaptiveUIContainerFragment
  * @param autoSizing When true, the row accepts unknown item sizes. This is useful for browser when the size of
  *                   text items is unknown.
  */
-abstract class AbstractRow<CRT : RT, RT>(
-    adapter: AdaptiveUIAdapter<CRT, RT>,
+abstract class AbstractRow<RT, CRT : RT>(
+    adapter: AdaptiveUIAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
     val autoSizing: Boolean
-) : AdaptiveUIContainerFragment<CRT, RT>(
+) : AdaptiveUIContainerFragment<RT, CRT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 
