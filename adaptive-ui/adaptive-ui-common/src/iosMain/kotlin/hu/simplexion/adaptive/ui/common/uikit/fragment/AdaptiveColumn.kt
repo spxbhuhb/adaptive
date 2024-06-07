@@ -8,13 +8,14 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.layout.AbstractColumn
 import hu.simplexion.adaptive.ui.common.uikit.AdaptiveIosAdapter
+import hu.simplexion.adaptive.ui.common.uikit.ContainerView
 import platform.UIKit.UIView
 
 class AdaptiveColumn(
     adapter: AdaptiveIosAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractColumn<UIView, UIView>(adapter, parent, declarationIndex, false) {
+) : AbstractColumn<UIView, ContainerView>(adapter, parent, declarationIndex, false) {
 
     companion object : AdaptiveFragmentCompanion {
 

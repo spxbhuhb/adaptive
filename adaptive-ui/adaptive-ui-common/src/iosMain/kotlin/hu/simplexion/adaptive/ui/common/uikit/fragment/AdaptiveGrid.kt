@@ -8,13 +8,14 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.layout.AbstractGrid
 import hu.simplexion.adaptive.ui.common.uikit.AdaptiveIosAdapter
+import hu.simplexion.adaptive.ui.common.uikit.ContainerView
 import platform.UIKit.UIView
 
 class AdaptiveGrid(
     adapter: AdaptiveIosAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractGrid<UIView, UIView>(adapter, parent, declarationIndex) {
+) : AbstractGrid<UIView, ContainerView>(adapter, parent, declarationIndex) {
 
     companion object : AdaptiveFragmentCompanion {
 

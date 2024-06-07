@@ -122,3 +122,15 @@ fun bg() {
     image(R.drawable.background)
 }
 ```
+
+## iOS
+
+As of now, we have to copy the resources directory into the iOS app manually. This could be automatized with 
+a Gradle task quite easily. 
+
+The source is `build/kotlin-multiplatform-resources/aggregated-resources/iosArm64`.
+
+This is how it should look like:
+
+<img alt="iOS resources" height="192" src="ios-resources.png" width="500"/>
+

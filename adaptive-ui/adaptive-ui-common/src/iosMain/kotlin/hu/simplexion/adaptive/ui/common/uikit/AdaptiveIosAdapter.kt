@@ -21,21 +21,21 @@ import platform.UIKit.*
 
 open class AdaptiveIosAdapter(
     override val rootContainer: UIView
-) : AdaptiveUIAdapter<UIView, UIView>() {
+) : AdaptiveUIAdapter<UIView, ContainerView>() {
 
     override val fragmentFactory = UiKitFragmentFactory
 
-    override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<UIView, UIView>): UIView =
-        UIView()
+    override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<UIView, ContainerView>): ContainerView =
+        ContainerView(fragment)
 
-    override fun makeStructuralReceiver(fragment: AdaptiveUIContainerFragment<UIView, UIView>): UIView =
-        UIView()
+    override fun makeStructuralReceiver(fragment: AdaptiveUIContainerFragment<UIView, ContainerView>): ContainerView =
+        ContainerView(fragment)
 
     @OptIn(ExperimentalForeignApi::class)
     override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 
-        fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<UIView, UIView>> {
+        fragment.ifIsInstanceOrRoot<AdaptiveUIContainerFragment<UIView, ContainerView>> {
 
             val frame = rootContainer.frame.useContents {
                 RawFrame(
@@ -62,7 +62,7 @@ open class AdaptiveIosAdapter(
         }
     }
 
-    override fun addActual(containerReceiver: UIView, itemReceiver: UIView) {
+    override fun addActual(containerReceiver: ContainerView, itemReceiver: UIView) {
         containerReceiver.addSubview(itemReceiver)
     }
 
