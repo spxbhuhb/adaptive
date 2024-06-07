@@ -15,7 +15,7 @@ class AdaptiveColumn(
     adapter: AdaptiveAndroidAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractColumn<ContainerViewGroup, View>(adapter, parent, declarationIndex, false) {
+) : AbstractColumn<View, ContainerViewGroup>(adapter, parent, declarationIndex, false) {
 
     companion object : AdaptiveFragmentCompanion {
 

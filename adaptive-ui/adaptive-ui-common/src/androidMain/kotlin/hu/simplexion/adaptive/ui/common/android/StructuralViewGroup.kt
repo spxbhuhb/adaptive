@@ -21,8 +21,4 @@ class StructuralViewGroup(
         setMeasuredDimension(resolveSize(size.width.toInt(), widthMeasureSpec), resolveSize(size.height.toInt(), heightMeasureSpec))
     }
 
-    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        // this is a no-op, the container group will handle the layout
-    }
-
 }

@@ -15,7 +15,7 @@ class AdaptiveBox(
     adapter: AdaptiveAndroidAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractBox<ContainerViewGroup, View>(adapter, parent, declarationIndex) {
+) : AbstractBox<View, ContainerViewGroup>(adapter, parent, declarationIndex) {
 
     companion object : AdaptiveFragmentCompanion {
 

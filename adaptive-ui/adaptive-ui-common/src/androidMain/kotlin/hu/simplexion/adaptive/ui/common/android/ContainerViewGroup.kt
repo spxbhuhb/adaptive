@@ -33,9 +33,12 @@ open class ContainerViewGroup(
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         val uiAdapter = owner.uiAdapter as AdaptiveAndroidAdapter
-        val frame = owner.layoutFrame
 
-        for (item in owner.layoutItems) {
+        for (item in owner.directItems) {
+            uiAdapter.applyLayoutToActual(item)
+        }
+
+        for (item in owner.structuralItems) {
             uiAdapter.applyLayoutToActual(item)
         }
     }

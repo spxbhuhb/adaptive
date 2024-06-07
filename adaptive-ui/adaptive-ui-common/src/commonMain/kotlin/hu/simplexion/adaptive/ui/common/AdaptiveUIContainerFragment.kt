@@ -14,7 +14,6 @@ import hu.simplexion.adaptive.ui.common.layout.RawPoint
 import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import hu.simplexion.adaptive.utility.checkIfInstance
-import kotlin.time.measureTime
 
 /**
  * Two uses: layouts and loop/select containers.
@@ -70,7 +69,7 @@ abstract class AdaptiveUIContainerFragment<RT, CRT : RT>(
             // that time, therefore it is a no-op. So, we have to call it manually.
             // FIXME manual remove actual after actual batch
             // I think this is somewhat incorrect because it may call adapter.removeActualRoot twice
-            parent?.removeActual(this, true)
+            parent?.removeActual(this, if (isStructural) null else true)
         }
     }
 
@@ -143,7 +142,7 @@ abstract class AdaptiveUIContainerFragment<RT, CRT : RT>(
     }
 
     fun measure(widthFun: (Float, RawPoint, RawSize) -> Float, heightFun: (Float, RawPoint, RawSize) -> Float): RawSize {
-        val padding = RawPadding(renderData.padding ?: Padding.ZERO, uiAdapter)
+        val padding = RawPadding(renderData.padding, uiAdapter)
 
         var width = 0f
         var height = 0f
@@ -279,7 +278,7 @@ abstract class AdaptiveUIContainerFragment<RT, CRT : RT>(
         }
 
         for (item in structuralItems) {
-            item.layout(layoutFrame)
+            item.layout(RawFrame(RawPoint.ORIGIN, layoutFrame.size))
         }
     }
 }

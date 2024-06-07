@@ -37,6 +37,9 @@ open class AdaptiveAndroidAdapter(
     override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<View, ContainerViewGroup>): ContainerViewGroup =
         ContainerViewGroup(context, fragment)
 
+    override fun makeStructuralReceiver(fragment: AdaptiveUIContainerFragment<View, ContainerViewGroup>): ContainerViewGroup =
+        StructuralViewGroup(context, fragment)
+
     override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 
@@ -72,7 +75,7 @@ open class AdaptiveAndroidAdapter(
         applyLayoutToActual(fragment.layoutFrame, fragment.receiver)
     }
 
-    fun applyLayoutToActual(frame : RawFrame, receiver: View) {
+    fun applyLayoutToActual(frame: RawFrame, receiver: View) {
         val point = frame.point
         val size = frame.size
 
@@ -92,93 +95,92 @@ open class AdaptiveAndroidAdapter(
     }
 
     override fun applyRenderInstructions(fragment: AdaptiveUIFragment<View>) {
-        with(fragment) {
-            renderData = RenderData(instructions)
-            // FIXME should clear actual UI settings when null
 
-            if (renderData.tracePatterns.isNotEmpty()) {
-                tracePatterns = renderData.tracePatterns
+        val renderData = RenderData(fragment.instructions)
+        // FIXME should clear actual UI settings when null
+
+        if (renderData.tracePatterns.isNotEmpty()) {
+            fragment.tracePatterns = renderData.tracePatterns
+        }
+
+        val view = fragment.receiver
+
+        with(fragment.renderData) {
+
+            val drawables = mutableListOf<Drawable>()
+            val insets = mutableListOf<Int>()
+
+            border?.let {
+                drawables += GradientDrawable().apply {
+                    shape = GradientDrawable.RECTANGLE
+                    setColor(android.graphics.Color.TRANSPARENT)
+                    setStroke(it.width.px, it.color.androidColor)
+                    borderRadius?.let { radius -> cornerRadius = toPx(radius) }
+                }
+                insets += 0
             }
 
-            val view = receiver
-
-            with(renderData) {
-
-                val drawables = mutableListOf<Drawable>()
-                val insets = mutableListOf<Int>()
-
-                border?.let {
-                    drawables += GradientDrawable().apply {
-                        shape = GradientDrawable.RECTANGLE
-                        setColor(android.graphics.Color.TRANSPARENT)
-                        setStroke(it.width.px, it.color.androidColor)
-                        borderRadius?.let { radius -> cornerRadius = toPx(radius) }
-                    }
-                    insets += 0
+            backgroundColor?.let {
+                drawables += GradientDrawable().apply {
+                    shape = GradientDrawable.RECTANGLE
+                    setColor(it.androidColor)
+                    borderRadius?.let { radius -> cornerRadius = toPx(radius) }
                 }
+                insets += border?.width.px
+            }
 
-                backgroundColor?.let {
-                    drawables += GradientDrawable().apply {
-                        shape = GradientDrawable.RECTANGLE
-                        setColor(it.androidColor)
-                        borderRadius?.let { radius -> cornerRadius = toPx(radius) }
-                    }
-                    insets += border?.width.px
+            backgroundGradient?.let {
+                drawables += GradientDrawable(
+                    GradientDrawable.Orientation.LEFT_RIGHT, //
+                    intArrayOf(it.start.androidColor, it.end.androidColor),
+                ).apply {
+                    borderRadius?.let { radius -> cornerRadius = toPx(radius) }
                 }
+                insets += border?.width.px
+            }
 
-                backgroundGradient?.let {
-                    drawables += GradientDrawable(
-                        GradientDrawable.Orientation.LEFT_RIGHT, //
-                        intArrayOf(it.start.androidColor, it.end.androidColor),
-                    ).apply {
-                        borderRadius?.let { radius -> cornerRadius = toPx(radius) }
-                    }
-                    insets += border?.width.px
-                }
-
-                if (drawables.isNotEmpty()) {
-                    view.background = LayerDrawable(drawables.toTypedArray()).apply {
-                        insets.forEachIndexed { index, inset ->
-                            if (inset != 0) {
-                                setLayerInset(index, inset, inset, inset, inset)
-                            }
+            if (drawables.isNotEmpty()) {
+                view.background = LayerDrawable(drawables.toTypedArray()).apply {
+                    insets.forEachIndexed { index, inset ->
+                        if (inset != 0) {
+                            setLayerInset(index, inset, inset, inset, inset)
                         }
                     }
                 }
+            }
 
-                padding?.let {
-                    view.setPadding(
-                        it.left.px,
-                        it.top.px,
-                        it.right.px,
-                        it.bottom.px
-                    )
+            if (padding != Padding.ZERO) {
+                view.setPadding(
+                    padding.left.px,
+                    padding.top.px,
+                    padding.right.px,
+                    padding.bottom.px
+                )
+            }
+
+            if (view is TextView) {
+                color?.let { view.setTextColor(it.androidColor) }
+
+                fontSize?.let { view.textSize = it.value }
+
+                fontWeight?.let {
+                    // FIXME proper typeface mapping
+                    if (it > 500) view.setTypeface(null, Typeface.BOLD)
                 }
+                letterSpacing?.let { view.letterSpacing = it }
 
-                if (view is TextView) {
-                    color?.let { view.setTextColor(it.androidColor) }
-
-                    fontSize?.let { view.textSize = it.value }
-
-                    fontWeight?.let {
-                        // FIXME proper typeface mapping
-                        if (it > 500) view.setTypeface(null, Typeface.BOLD)
-                    }
-                    letterSpacing?.let { view.letterSpacing = it }
-
-                    when (textAlign) {
-                        TextAlign.Start -> view.textAlignment = TEXT_ALIGNMENT_VIEW_START
-                        TextAlign.Center -> view.textAlignment = TEXT_ALIGNMENT_CENTER
-                        TextAlign.End -> view.textAlignment = TEXT_ALIGNMENT_VIEW_END
-                        null -> Unit
-                    }
+                when (textAlign) {
+                    TextAlign.Start -> view.textAlignment = TEXT_ALIGNMENT_VIEW_START
+                    TextAlign.Center -> view.textAlignment = TEXT_ALIGNMENT_CENTER
+                    TextAlign.End -> view.textAlignment = TEXT_ALIGNMENT_VIEW_END
+                    null -> Unit
                 }
+            }
 
-                val onClick = this.onClick
-                if (onClick != null) {
-                    view.setOnClickListener {
-                        onClick.execute(AdaptiveUIEvent(fragment, it))
-                    }
+            val onClick = this.onClick
+            if (onClick != null) {
+                view.setOnClickListener {
+                    onClick.execute(AdaptiveUIEvent(fragment, it))
                 }
             }
         }

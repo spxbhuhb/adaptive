@@ -4,6 +4,7 @@
 package hu.simplexion.adaptive.ui.common.android.fragment
 
 import android.view.View
+import android.view.View.TEXT_ALIGNMENT_CENTER
 import android.widget.TextView
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
@@ -31,9 +32,12 @@ class AdaptiveText(
         if (haveToPatch(dirtyMask, 1)) {
             if (receiver.text != content || measuredSize == null) {
                 receiver.text = content
+
                 val widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
                 val heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+
                 receiver.measure(widthSpec, heightSpec)
+
                 measuredSize = RawSize(receiver.measuredWidth.toFloat(), receiver.measuredHeight.toFloat())
             }
         }
@@ -45,6 +49,7 @@ class AdaptiveText(
 
     override fun layout(proposedFrame: RawFrame) {
         calcLayoutFrame(proposedFrame)
+        receiver.textAlignment = TEXT_ALIGNMENT_CENTER // FIXME hard coded text alignment
         uiAdapter.applyLayoutToActual(this)
     }
 

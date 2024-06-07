@@ -28,6 +28,9 @@ open class AdaptiveIosAdapter(
     override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<UIView, UIView>): UIView =
         UIView()
 
+    override fun makeStructuralReceiver(fragment: AdaptiveUIContainerFragment<UIView, UIView>): UIView =
+        UIView()
+
     @OptIn(ExperimentalForeignApi::class)
     override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)

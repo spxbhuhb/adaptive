@@ -118,11 +118,11 @@ open class AdaptiveBrowserAdapter(
                     style.setProperty("text-wrap", it.toString().lowercase())
                 }
 
-                padding?.let { p ->
-                    style.paddingLeft = "${p.left.value}px"
-                    style.paddingTop = "${p.top.value}px"
-                    style.paddingRight = "${p.right.value}px"
-                    style.paddingBottom = "${p.bottom.value}px"
+                if (padding != Padding.ZERO) {
+                    style.paddingLeft = "${padding.left.value}px"
+                    style.paddingTop = "${padding.top.value}px"
+                    style.paddingRight = "${padding.right.value}px"
+                    style.paddingBottom = "${padding.bottom.value}px"
                 }
 
                 instructedSize?.let {

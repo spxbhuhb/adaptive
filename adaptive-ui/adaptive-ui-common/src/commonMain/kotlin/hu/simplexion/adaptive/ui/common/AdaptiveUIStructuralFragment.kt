@@ -18,6 +18,9 @@ open class AdaptiveUIStructuralFragment<RT, CRT : RT>(
     @Suppress("LeakingThis")
     override val receiver = adapter.makeStructuralReceiver(this)
 
+    override val isStructural
+        get() = true
+
     override fun addActual(fragment: AdaptiveFragment, direct: Boolean?) {
         if (trace) trace("addActual", "fragment=$fragment, structural=$this, direct=$direct")
 
@@ -51,7 +54,8 @@ open class AdaptiveUIStructuralFragment<RT, CRT : RT>(
     }
 
     override fun layout(proposedFrame: RawFrame) {
-        layoutFrame = proposedFrame
         // layout calculation is handled by the actual layouts, structural only applies to the actual UI
+        layoutFrame = proposedFrame
+        traceLayout()
     }
 }

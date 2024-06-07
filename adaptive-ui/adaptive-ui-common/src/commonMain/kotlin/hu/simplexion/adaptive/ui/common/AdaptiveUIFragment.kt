@@ -5,10 +5,10 @@
 package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.layout.RawPoint
 import hu.simplexion.adaptive.ui.common.layout.RawSize
-import kotlin.time.measureTime
 
 abstract class AdaptiveUIFragment<RT>(
     adapter: AdaptiveUIAdapter<RT, *>,
@@ -51,6 +51,12 @@ abstract class AdaptiveUIFragment<RT>(
      */
     var measuredSize: RawSize? = null
 
+    /**
+     * Structural fragments (loop and select) set this to true to modify behaviour.
+     */
+    open val isStructural
+        get() = false
+
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? =
         null
 
@@ -71,11 +77,11 @@ abstract class AdaptiveUIFragment<RT>(
 
     override fun mount() {
         super.mount()
-        parent?.addActual(this, true) ?: adapter.addActualRoot(this)
+        parent?.addActual(this, if (isStructural) null else true) ?: adapter.addActualRoot(this)
     }
 
     override fun unmount() {
-        parent?.removeActual(this, true) ?: adapter.removeActualRoot(this)
+        parent?.removeActual(this, if (isStructural) null else true) ?: adapter.removeActualRoot(this)
         super.unmount()
     }
 
@@ -151,5 +157,8 @@ abstract class AdaptiveUIFragment<RT>(
             rowOffsets[row + renderData.rowSpan] - rowOffsets[row]
         )
     }
+
+    val DPixel.px
+        get() = uiAdapter.toPx(this)
 
 }

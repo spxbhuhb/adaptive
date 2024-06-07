@@ -24,7 +24,7 @@ open class RenderData(
 
     var color : Color? = null
 
-    var padding : Padding? = null
+    var padding : Padding = Padding.ZERO
 
     var fontName: String? = null
     var fontSize: SPixel? = null
