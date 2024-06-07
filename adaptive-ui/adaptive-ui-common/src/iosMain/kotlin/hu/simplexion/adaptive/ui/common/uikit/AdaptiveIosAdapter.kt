@@ -16,6 +16,7 @@ import hu.simplexion.adaptive.ui.common.uikit.fragment.UiKitFragmentFactory
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import platform.CoreGraphics.CGRectMake
+import platform.Foundation.NSSelectorFromString
 import platform.QuartzCore.CAGradientLayer
 import platform.UIKit.*
 
@@ -111,13 +112,13 @@ open class AdaptiveIosAdapter(
             gradientLayer.frame = frame
             gradientLayer.colors = listOf(backgroundGradient.start.uiColor, backgroundGradient.end.uiColor)
 
-            val rectangle = UIView(frame)
-            rectangle.layer.insertSublayer(gradientLayer, 0u)
-            rectangle.layer.cornerRadius = borderRadius.px
-            rectangle.layer.masksToBounds = true
+            view.layer.insertSublayer(gradientLayer, 0u)
+            view.layer.cornerRadius = borderRadius.px
+            view.layer.masksToBounds = true
         }
     }
 
+    @OptIn(ExperimentalForeignApi::class)
     override fun applyRenderInstructions(fragment: AdaptiveUIFragment<UIView>) {
         with(fragment) {
             renderData = RenderData(instructions)
@@ -153,6 +154,15 @@ open class AdaptiveIosAdapter(
 //                        TextAlign.End -> view.textAlignment = TEXT_ALIGNMENT_VIEW_END
 //                        null -> Unit
 //                    }
+                }
+            }
+
+            val onClick = renderData.onClick
+            if (onClick != null) {
+                if (view.gestureRecognizers?.isEmpty() == true) {
+                    // FIXME for some reason this point is reached twice
+                    view.addGestureRecognizer(UITapGestureRecognizer(GestureTarget(fragment, onClick), NSSelectorFromString("viewTapped")))
+                    view.setUserInteractionEnabled(true)
                 }
             }
         }

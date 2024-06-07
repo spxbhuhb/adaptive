@@ -134,3 +134,10 @@ This is how it should look like:
 
 <img alt="iOS resources" height="192" src="ios-resources.png" width="500"/>
 
+To include a folder in the iOS application bundle as-is, follow these steps:
+
+* Xcode, open the project
+* Right-click on the project in the Project Navigator and select "Add Files to ..."
+* In the file dialog, navigate to and select the folder you want to add.
+* In the options dialog, ensure the "Create folder references" option is selected instead of "Create groups". This keeps the folder structure intact.
+* Click "Add".

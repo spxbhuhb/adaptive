@@ -19,7 +19,7 @@ Adaptive comes with a compiler plugin that performs many functions to reach the 
 > That said, the library works, and it is already possible to run the resulting code on all
 > focus platforms (browser, Android, iOS, JVM for server).
 > 
-> I try to keep the `main` branch of this and the example repo compile and working all the time.
+> I try to keep the `main` branch of this and the example repo compile and work all the time (no guarantees tho).
 > 
 > The `bleeding-edge` branch is where the day-to-day development happens, that one is unpredictable.
 > 

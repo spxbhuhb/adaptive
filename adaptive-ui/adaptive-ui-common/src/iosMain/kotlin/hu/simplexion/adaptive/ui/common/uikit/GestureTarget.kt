@@ -4,22 +4,29 @@
 
 package hu.simplexion.adaptive.ui.common.uikit
 
-import hu.simplexion.adaptive.foundation.internal.BoundSupportFunction
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.ui.common.AdaptiveUIFragment
+import hu.simplexion.adaptive.ui.common.instruction.AdaptiveUIEvent
+import hu.simplexion.adaptive.ui.common.instruction.OnClick
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExportObjCClass
 import kotlinx.cinterop.ObjCAction
+import platform.UIKit.UIView
 import platform.darwin.NSObject
 
 @OptIn(BetaInteropApi::class)
 @ExportObjCClass
 class GestureTarget(
-    val supportFunction: BoundSupportFunction
+    val fragment : AdaptiveUIFragment<UIView>,
+    val instruction: AdaptiveInstruction
 ) : NSObject() {
 
     @OptIn(BetaInteropApi::class)
     @ObjCAction
     fun viewTapped() {
-        supportFunction.invoke()
+        if (instruction is OnClick) {
+            instruction.execute(AdaptiveUIEvent(fragment, null))
+        }
     }
 
 }
