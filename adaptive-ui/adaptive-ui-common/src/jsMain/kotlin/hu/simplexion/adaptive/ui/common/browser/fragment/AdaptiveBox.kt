@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.browser.AdaptiveBrowserAdapter
 import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.layout.AbstractBox
+import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
@@ -16,6 +17,11 @@ class AdaptiveBox(
     parent: AdaptiveFragment,
     declarationIndex: Int
 ) : AbstractBox<HTMLElement, HTMLDivElement>(adapter, parent, declarationIndex) {
+
+    override fun layout(proposedFrame: RawFrame) {
+        super.layout(proposedFrame)
+        uiAdapter.applyLayoutToActual(this)
+    }
 
     companion object : AdaptiveFragmentCompanion {
 

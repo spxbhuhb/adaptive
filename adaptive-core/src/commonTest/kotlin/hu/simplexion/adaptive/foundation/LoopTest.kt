@@ -4,7 +4,7 @@
 package hu.simplexion.adaptive.foundation
 
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
-import hu.simplexion.adaptive.foundation.structural.AdaptiveLoop
+import hu.simplexion.adaptive.foundation.fragment.AdaptiveLoop
 import hu.simplexion.adaptive.foundation.testing.*
 import kotlin.test.Test
 import kotlin.test.assertEquals

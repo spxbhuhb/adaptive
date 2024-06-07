@@ -22,8 +22,9 @@ open class AdaptiveRow(
         super.layout(proposedFrame)
         receiver.style.display = "flex"
         align()
+        uiAdapter.applyLayoutToActual(this)
     }
-    
+
     companion object : AdaptiveFragmentCompanion {
 
         override val fragmentType = "$commonUI:AdaptiveRow"

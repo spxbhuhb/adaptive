@@ -26,6 +26,9 @@ import kotlinx.coroutines.Dispatchers
  *
  * @param CRT Container receiver type
  * @param RT Receiver type
+ *
+ * @property  actualBatch  When true, removeActual is a no-op. Used by layout fragments to group
+ *                         remove operations, so they can remove a whole actual subtree at once.
  */
 abstract class AdaptiveUIAdapter<RT, CRT : RT> : AdaptiveAdapter {
 
@@ -43,6 +46,8 @@ abstract class AdaptiveUIAdapter<RT, CRT : RT> : AdaptiveAdapter {
     override val dispatcher: CoroutineDispatcher
         get() = Dispatchers.Main
 
+    var actualBatch : Boolean = false
+
     override fun newSelect(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
         AdaptiveUISelect(this, parent, index)
 
@@ -50,6 +55,8 @@ abstract class AdaptiveUIAdapter<RT, CRT : RT> : AdaptiveAdapter {
         AdaptiveUILoop(this, parent, index)
 
     abstract fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<RT, CRT>): CRT
+
+    abstract fun makeStructuralReceiver(fragment: AdaptiveUIContainerFragment<RT, CRT>): CRT
 
     fun traceAddActual(fragment: AdaptiveFragment) {
         if (trace.isEmpty()) return

@@ -15,7 +15,7 @@ class AdaptiveGrid(
     adapter: AdaptiveAndroidAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractGrid<ContainerViewGroup, View>(adapter, parent, declarationIndex) {
+) : AbstractGrid<View, ContainerViewGroup>(adapter, parent, declarationIndex) {
 
     companion object : AdaptiveFragmentCompanion {
 

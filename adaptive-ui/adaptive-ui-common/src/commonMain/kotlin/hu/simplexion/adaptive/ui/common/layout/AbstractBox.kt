@@ -17,7 +17,7 @@ abstract class AbstractBox<RT, CRT : RT>(
 ) {
 
     override fun measure(): RawSize =
-        measure(
+        instructed() ?: measure(
             { w: Float, p: RawPoint, s: RawSize -> maxOf(w, p.top + s.width) },
             { h: Float, p: RawPoint, s: RawSize -> maxOf(h, p.left + s.height) }
         )
@@ -30,8 +30,6 @@ abstract class AbstractBox<RT, CRT : RT>(
         for (item in layoutItems) {
             item.layout(layoutFrame)
         }
-
-        uiAdapter.applyLayoutToActual(this)
     }
 
 }

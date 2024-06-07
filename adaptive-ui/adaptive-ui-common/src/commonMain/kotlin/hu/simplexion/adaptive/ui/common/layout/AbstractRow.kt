@@ -22,7 +22,7 @@ abstract class AbstractRow<RT, CRT : RT>(
 ) {
 
     override fun measure(): RawSize =
-        measure(
+        instructed() ?: measure(
             { w: Float, _, s: RawSize -> w + s.width },
             { h: Float, _, s: RawSize -> maxOf(h, s.height) }
         )
@@ -31,8 +31,6 @@ abstract class AbstractRow<RT, CRT : RT>(
         calcLayoutFrame(proposedFrame)
 
         layoutStack(horizontal = true, autoSizing)
-
-        uiAdapter.applyLayoutToActual(this)
     }
 
 }

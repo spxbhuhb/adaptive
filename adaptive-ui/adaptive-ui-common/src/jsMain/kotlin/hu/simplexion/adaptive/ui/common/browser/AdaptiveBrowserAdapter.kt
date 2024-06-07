@@ -32,6 +32,9 @@ open class AdaptiveBrowserAdapter(
     override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<HTMLElement, HTMLDivElement>): HTMLDivElement =
         document.createElement("div") as HTMLDivElement
 
+    override fun makeStructuralReceiver(fragment: AdaptiveUIContainerFragment<HTMLElement, HTMLDivElement>): HTMLDivElement =
+        (document.createElement("div") as HTMLDivElement).also { it.style.display = "contents" }
+
     override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 

@@ -4,9 +4,9 @@
 package hu.simplexion.adaptive.foundation
 
 import hu.simplexion.adaptive.foundation.instruction.Name
-import hu.simplexion.adaptive.foundation.structural.AdaptiveLoop
-import hu.simplexion.adaptive.foundation.structural.AdaptiveSelect
-import hu.simplexion.adaptive.foundation.structural.AdaptiveSequence
+import hu.simplexion.adaptive.foundation.fragment.AdaptiveLoop
+import hu.simplexion.adaptive.foundation.fragment.AdaptiveSelect
+import hu.simplexion.adaptive.foundation.fragment.AdaptiveSequence
 import hu.simplexion.adaptive.foundation.testing.TraceEvent
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 import kotlinx.coroutines.CoroutineDispatcher
@@ -58,6 +58,14 @@ interface AdaptiveAdapter {
         if (trace.any { it.matches(point) }) {
             TraceEvent("<adapter>", - 1, point, data).println(startedAt)
         }
+    }
+
+    fun log(fragment: AdaptiveFragment, point: String, data: String) {
+        TraceEvent(fragment.name(), fragment.id, point, data).println(startedAt)
+    }
+
+    fun log(point: String, data: String) {
+        TraceEvent("<adapter>", -1, point, data).println(startedAt)
     }
 
     fun AdaptiveFragment.name() =

@@ -3,7 +3,7 @@
  */
 package hu.simplexion.adaptive.foundation
 
-import hu.simplexion.adaptive.foundation.structural.AdaptiveSequence
+import hu.simplexion.adaptive.foundation.fragment.AdaptiveSequence
 import hu.simplexion.adaptive.foundation.testing.*
 import kotlin.test.Test
 import kotlin.test.assertEquals

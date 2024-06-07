@@ -6,7 +6,7 @@ import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.Trace
 import hu.simplexion.adaptive.foundation.instruction.invoke
-import hu.simplexion.adaptive.foundation.structural.slot
+import hu.simplexion.adaptive.foundation.fragment.slot
 import hu.simplexion.adaptive.lib.sandbox.SandboxLibExports
 import hu.simplexion.adaptive.sandbox.api.CounterApi
 import hu.simplexion.adaptive.service.getService
@@ -52,7 +52,7 @@ val smallWhiteNoWrap = arrayOf(white, textSmall, TextWrap.NoWrap)
 
 val center = arrayOf<AdaptiveInstruction>(AlignItems.Center, JustifyContent.Center)
 val traceAll = Trace(Regex(".*"))
-val traceLayout = Trace(Regex("layout"), Regex("measure.*"))
+val traceLayout = Trace(Regex("layout.*"), Regex("measure.*"))
 
 
 fun main() {
@@ -61,15 +61,16 @@ fun main() {
     //withWebSocketTransport()
     withJsResources()
 
-    browser(SandboxLibExports, exports, trace = traceLayout) {
+    browser(SandboxLibExports, exports) {
         grid(colTemplate(100.dp, 1.fr), rowTemplate(1.fr)) {
 
             column(BackgroundColor(lightGray)) {
                 button("Login", replace { login() })
                 button("Sandbox", replace { stuff() })
+                button("Chessboard", replace { chessBoard() })
             }
 
-            slot("mainContent") { login() }
+            slot("mainContent") { chessBoard() }
 
         }
     }

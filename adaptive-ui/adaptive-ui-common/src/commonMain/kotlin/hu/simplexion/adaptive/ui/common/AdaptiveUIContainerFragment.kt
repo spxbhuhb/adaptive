@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
-import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
+import hu.simplexion.adaptive.foundation.fragment.AdaptiveAnonymous
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.layout.RawPadding
@@ -14,6 +14,7 @@ import hu.simplexion.adaptive.ui.common.layout.RawPoint
 import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import hu.simplexion.adaptive.utility.checkIfInstance
+import kotlin.time.measureTime
 
 /**
  * Two uses: layouts and loop/select containers.
@@ -45,7 +46,32 @@ abstract class AdaptiveUIContainerFragment<RT, CRT : RT>(
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
         if (declarationIndex != 0) invalidIndex(declarationIndex)
+        // FIXME I think this anonymous fragment is superfluous
         return AdaptiveAnonymous(adapter, this, declarationIndex, 0, content).apply { create() }
+    }
+
+    /**
+     * An optimization to remove the whole subtree of fragments from the actual UI at once.
+     * See [AdaptiveUIAdapter.actualBatch].
+     */
+    override fun unmount() {
+        if (uiAdapter.actualBatch) {
+            super.unmount()
+            return
+        }
+
+        try {
+            uiAdapter.actualBatch = true
+            super.unmount()
+        } finally {
+            uiAdapter.actualBatch = false
+
+            // Unmount calls this, but it is useless as actualBatch is true at
+            // that time, therefore it is a no-op. So, we have to call it manually.
+            // FIXME manual remove actual after actual batch
+            // I think this is somewhat incorrect because it may call adapter.removeActualRoot twice
+            parent?.removeActual(this, true)
+        }
     }
 
     override fun addActual(fragment: AdaptiveFragment, direct: Boolean?) {
@@ -64,6 +90,7 @@ abstract class AdaptiveUIContainerFragment<RT, CRT : RT>(
                 }
                 null -> {
                     structuralItems += itemFragment
+                    uiAdapter.addActual(receiver, itemFragment.receiver)
                 }
             }
 
@@ -77,19 +104,23 @@ abstract class AdaptiveUIContainerFragment<RT, CRT : RT>(
     override fun removeActual(fragment: AdaptiveFragment, direct: Boolean?) {
         if (trace) trace("removeActual", "fragment=$fragment")
 
+        // when in a batch, everything will be removed at once
+        if (uiAdapter.actualBatch) return
+
         fragment.alsoIfInstance<AdaptiveUIFragment<RT>> { itemFragment ->
 
             when (direct) {
                 true -> {
                     layoutItems.removeAt(layoutItems.indexOfFirst { it.id == fragment.id })
                     directItems.removeAt(directItems.indexOfFirst { it.id == fragment.id })
-                    uiAdapter.addActual(receiver, itemFragment.receiver)
+                    uiAdapter.removeActual(itemFragment.receiver)
                 }
                 false -> {
                     layoutItems.removeAt(layoutItems.indexOfFirst { it.id == fragment.id })
                 }
                 null -> {
                     structuralItems.removeAt(structuralItems.indexOfFirst { it.id == fragment.id })
+                    uiAdapter.removeActual(itemFragment.receiver)
                 }
             }
 
@@ -99,17 +130,20 @@ abstract class AdaptiveUIContainerFragment<RT, CRT : RT>(
         }
     }
 
-    fun measure(widthFun: (Float, RawPoint, RawSize) -> Float, heightFun: (Float, RawPoint, RawSize) -> Float): RawSize {
-        val instructedSize = renderData.instructedSize?.let { RawSize(it, uiAdapter) }
-        val padding = RawPadding(renderData.padding ?: Padding.ZERO, uiAdapter)
+    fun instructed() : RawSize? {
+        val instructedSize = renderData.instructedSize?.let { RawSize(it, uiAdapter) } ?: return null
 
-        if (instructedSize != null) {
-            for (item in layoutItems) {
-                item.measure()
-            }
-            traceMeasure()
-            return instructedSize
+        for (item in layoutItems) {
+            item.measure()
         }
+
+        measuredSize = instructedSize
+        traceMeasure()
+        return instructedSize
+    }
+
+    fun measure(widthFun: (Float, RawPoint, RawSize) -> Float, heightFun: (Float, RawPoint, RawSize) -> Float): RawSize {
+        val padding = RawPadding(renderData.padding ?: Padding.ZERO, uiAdapter)
 
         var width = 0f
         var height = 0f

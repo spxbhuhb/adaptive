@@ -19,15 +19,19 @@
 - [Padding](./basic-instructions.md#padding)
 
 [Navigation Instructions](./navigation-instructions.md)
-- [Slot](./navigation.md#navigation)
 - [Replace](./navigation.md#navigation)
 - [ExternalLink](./navigation-instructions.md#externallink)
 
 [Event Instructions](./event-instructions.md)
 - [OnClick](./event-instructions.md#onclick)
 
+[Foundation Fragments]()
+- [Slot](./navigation.md#navigation)
+- [MeasureInitTime](./performance.md#measureinittime)
+
 [Foundation Instructions](../foundation/foundation-instructions.md)
 - [Name](../foundation/foundation-instructions.md#name)
 - [Trace](../foundation/foundation-instructions.md#trace)
 
+[Performance](performance.md)
 [Resources](../resource/README)

@@ -15,26 +15,35 @@ open class AdaptiveUIStructuralFragment<RT, CRT : RT>(
     stateSize: Int
 ) : AdaptiveUIContainerFragment<RT, CRT>(adapter, parent, index, - 1, stateSize) {
 
+    @Suppress("LeakingThis")
+    override val receiver = adapter.makeStructuralReceiver(this)
+
     override fun addActual(fragment: AdaptiveFragment, direct: Boolean?) {
         if (trace) trace("addActual", "fragment=$fragment, structural=$this, direct=$direct")
 
         if (direct == true) {
             fragment.alsoIfInstance<AdaptiveUIFragment<RT>> { itemFragment ->
                 directItems += itemFragment
+                uiAdapter.addActual(receiver, itemFragment.receiver)
             }
         }
 
-        super.addActual(fragment, false)
+        parent!!.addActual(fragment, false)
     }
 
     override fun removeActual(fragment: AdaptiveFragment, direct: Boolean?) {
         if (trace) trace("removeActual", "fragment=$fragment, structural=$this, direct=$direct")
 
+        // when in a batch, everything will be removed at once
+        if (uiAdapter.actualBatch) return
+
         if (direct == true) {
-            directItems.removeAt(directItems.indexOfFirst { it.id == fragment.id })
+            directItems.removeAt(directItems.indexOfFirst { it.id == fragment.id }).also {
+                uiAdapter.removeActual(it.receiver)
+            }
         }
 
-        super.removeActual(fragment, false)
+        parent!!.removeActual(fragment, false)
     }
 
     override fun measure(): RawSize {

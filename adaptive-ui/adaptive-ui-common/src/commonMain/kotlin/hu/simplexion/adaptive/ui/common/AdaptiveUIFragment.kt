@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.layout.RawPoint
 import hu.simplexion.adaptive.ui.common.layout.RawSize
+import kotlin.time.measureTime
 
 abstract class AdaptiveUIFragment<RT>(
     adapter: AdaptiveUIAdapter<RT, *>,

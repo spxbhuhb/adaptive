@@ -5,7 +5,7 @@ package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
-import hu.simplexion.adaptive.foundation.structural.AdaptiveSelectLogic
+import hu.simplexion.adaptive.foundation.fragment.AdaptiveSelectLogic
 
 class AdaptiveUISelect<RT, CRT : RT>(
     adapter: AdaptiveUIAdapter<RT, CRT>,

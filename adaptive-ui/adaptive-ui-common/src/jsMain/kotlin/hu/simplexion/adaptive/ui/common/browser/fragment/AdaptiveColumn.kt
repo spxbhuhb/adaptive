@@ -25,6 +25,7 @@ open class AdaptiveColumn(
             flexDirection = "column"
         }
         align()
+        uiAdapter.applyLayoutToActual(this)
     }
 
     companion object : AdaptiveFragmentCompanion {

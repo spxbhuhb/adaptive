@@ -10,7 +10,7 @@ object Strings {
     const val RUNTIME_PACKAGE = "hu.simplexion.adaptive.foundation"
     const val INTERNAL_PACKAGE = "hu.simplexion.adaptive.foundation.internal"
     const val BINDING_PACKAGE = "hu.simplexion.adaptive.foundation.binding"
-    const val STRUCTURAL_PACKAGE = "hu.simplexion.adaptive.foundation.structural"
+    const val STRUCTURAL_PACKAGE = "hu.simplexion.adaptive.foundation.fragment"
     const val INSTRUCTION_PACKAGE = "hu.simplexion.adaptive.foundation.instruction"
 
     const val ADAPTIVE = "Adaptive"

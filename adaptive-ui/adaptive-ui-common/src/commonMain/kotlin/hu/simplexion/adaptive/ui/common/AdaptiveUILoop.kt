@@ -5,8 +5,8 @@ package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
-import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
-import hu.simplexion.adaptive.foundation.structural.AdaptiveLoopLogic
+import hu.simplexion.adaptive.foundation.fragment.AdaptiveAnonymous
+import hu.simplexion.adaptive.foundation.fragment.AdaptiveLoopLogic
 
 class AdaptiveUILoop<RT, CRT : RT>(
     adapter: AdaptiveUIAdapter<RT, CRT>,

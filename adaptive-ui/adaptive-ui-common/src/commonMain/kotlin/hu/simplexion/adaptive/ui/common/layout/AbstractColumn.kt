@@ -18,7 +18,7 @@ abstract class AbstractColumn<RT, CRT : RT>(
 ) {
 
     override fun measure(): RawSize =
-        measure(
+        instructed() ?: measure(
             { w: Float, _, s: RawSize -> maxOf(w, s.width) },
             { h: Float, _, s: RawSize -> h + s.height }
         )
@@ -27,8 +27,6 @@ abstract class AbstractColumn<RT, CRT : RT>(
         calcLayoutFrame(proposedFrame)
 
         layoutStack(horizontal = false, autoSizing)
-
-        uiAdapter.applyLayoutToActual(this)
     }
 
 }

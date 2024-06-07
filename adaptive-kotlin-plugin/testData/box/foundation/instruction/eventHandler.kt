@@ -6,7 +6,7 @@ package stuff
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.foundation.instruction.*
 import hu.simplexion.adaptive.foundation.query.*
-import hu.simplexion.adaptive.foundation.structural.*
+import hu.simplexion.adaptive.foundation.fragment.*
 import hu.simplexion.adaptive.foundation.testing.*
 
 @Adaptive

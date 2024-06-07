@@ -33,13 +33,15 @@ abstract class AbstractGrid<RT, CRT : RT>(
     var rowOffsets = FloatArray(0)
 
     override fun measure(): RawSize {
+        instructed()?.also { return it }
+
         traceMeasure()
 
         for (item in layoutItems) {
             item.measure()
         }
 
-        return RawSize(0f, 0f) // FIXME GRID MEASURED SIZE
+        return RawSize.NaS
     }
 
     override fun layout(proposedFrame: RawFrame) {
@@ -54,8 +56,6 @@ abstract class AbstractGrid<RT, CRT : RT>(
         for (item in structuralItems) {
             item.layout(layoutFrame)
         }
-
-        uiAdapter.applyLayoutToActual(this)
     }
 
     /**
@@ -140,7 +140,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
 
         result[tracks.size] = offset + previous
 
-        check(availableSpace >= result.last()) { "grid track overflow: available=$availableSpace result:${result.contentToString()} tracks: $tracks" }
+        check(availableSpace >= result.last()) { "grid track overflow: available=$availableSpace result:${result.contentToString()} tracks: $tracks in $this" }
 
         return result
     }
@@ -188,7 +188,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
                 if (canPlaceFragment(row, col, rowSpan, colSpan)) {
                     placeFragment(cell, rowSpan, colSpan, row, col)
                 } else {
-                    throw IllegalStateException("Cannot place fragment $cell at ($row, $col)")
+                    throw IllegalStateException("Cannot place fragment $cell at ($row, $col) in $this")
                 }
             } else if (row != null) {
                 for (c in 0 until cols) {
@@ -205,11 +205,11 @@ abstract class AbstractGrid<RT, CRT : RT>(
                     }
                 }
             } else {
-                val (r, c) = findNextEmptyCell() ?: throw IllegalStateException("Grid is full")
+                val (r, c) = findNextEmptyCell() ?: throw IllegalStateException("Grid is full in $this")
                 if (canPlaceFragment(r, c, rowSpan, colSpan)) {
                     placeFragment(cell, rowSpan, colSpan, r, c)
                 } else {
-                    throw IllegalStateException("Cannot place fragment $cell at implicit position")
+                    throw IllegalStateException("Cannot place fragment $cell at implicit position in $this")
                 }
             }
         }
