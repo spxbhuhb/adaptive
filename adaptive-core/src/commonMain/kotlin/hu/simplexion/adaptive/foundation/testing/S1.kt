@@ -6,7 +6,6 @@
 package hu.simplexion.adaptive.foundation.testing
 
 import hu.simplexion.adaptive.foundation.*
-import hu.simplexion.adaptive.foundation.internal.BoundSupportFunction
 import hu.simplexion.adaptive.utility.checkIfInstance
 
 @Adaptive

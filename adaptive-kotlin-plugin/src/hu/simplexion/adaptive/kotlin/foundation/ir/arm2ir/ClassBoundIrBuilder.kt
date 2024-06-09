@@ -24,7 +24,7 @@ import org.jetbrains.kotlin.name.Name
 
 open class ClassBoundIrBuilder(
     override val pluginContext: FoundationPluginContext,
-    val armClass : ArmClass
+    val armClass: ArmClass
 ) : AbstractIrBuilder {
 
     constructor(parent: ClassBoundIrBuilder) : this(parent.pluginContext, parent.armClass) {
@@ -161,57 +161,19 @@ open class ClassBoundIrBuilder(
             )
         }
 
-//    fun genInvokeBranch(
-//        invokeFun: IrSimpleFunction,
-//        supportFunctionIndex: IrVariable,
-//        callingFragment: IrVariable,
-//        arguments: IrVariable,
-//        armSupportFunctionArgument: ArmSupportFunctionArgument
-//    ): IrBranch =
-//        IrBranchImpl(
-//            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-//            irEqual(
-//                irGet(supportFunctionIndex),
-//                irConst(armSupportFunctionArgument.supportFunctionIndex)
-//            ),
-//            genInvokeBranchBody(invokeFun, callingFragment, arguments, armSupportFunctionArgument)
-//        )
-//
-//    private fun genInvokeBranchBody(
-//        invokeFun: IrSimpleFunction,
-//        callingFragment: IrVariable,
-//        arguments: IrVariable,
-//        armSupportFunctionArgument: ArmSupportFunctionArgument
-//    ): IrExpression {
-//        val functionToTransform = (armSupportFunctionArgument.irExpression as IrFunctionExpression).function
-//        val originalClosure = armSupportFunctionArgument.supportFunctionClosure
-//
-//        val transformClosure =
-//            originalClosure + functionToTransform.valueParameters.mapIndexed { indexInState, parameter ->
-//                ArmSupportStateVariable(
-//                    armSupportFunctionArgument.armClass,
-//                    indexInState,
-//                    originalClosure.size + indexInState,
-//                    parameter
-//                )
-//            }
-//
-//        return IrBlockImpl(
-//            functionToTransform.startOffset,
-//            functionToTransform.endOffset,
-//            functionToTransform.returnType
-//        ).apply {
-//            val transform = SupportFunctionTransform(this@ClassBoundIrBuilder, transformClosure, { irGet(invokeFun.dispatchReceiverParameter !!) }, callingFragment, arguments)
-//
-//            functionToTransform.body !!.statements.forEach {
-//                statements += it.transformStatement(transform)
-//            }
-//        }
-//    }
+    fun genPatchInternalConditionForMask(patchFun: IrSimpleFunction, dirtyMask: IrVariable, dependencies: ArmDependencies): IrExpression =
+        irCall(
+            symbol = pluginContext.haveToPatch,
+            dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!),
+            args = arrayOf(
+                irGet(dirtyMask),
+                dependencies.toDirtyMask()
+            )
+        )
 
     fun IrExpression.transformCreateStateAccess(
         closure: ArmClosure,
-        newParent : IrFunction,
+        newParent: IrFunction,
         irGetFragment: () -> IrExpression
     ): IrExpression =
         transform(
@@ -219,7 +181,6 @@ open class ClassBoundIrBuilder(
                 this@ClassBoundIrBuilder,
                 closure,
                 pluginContext.getCreateClosureVariable,
-                false,
                 newParent,
                 irGetFragment
             ),
@@ -228,8 +189,8 @@ open class ClassBoundIrBuilder(
 
     fun IrStatement.transformThisStateAccess(
         closure: ArmClosure,
-        transformInvoke: Boolean = true,
-        newParent : IrFunction,
+        newParent: IrFunction,
+        stateVariable: ArmInternalStateVariable? = null,
         irGetFragment: () -> IrExpression
     ): IrExpression =
         transform(
@@ -237,19 +198,17 @@ open class ClassBoundIrBuilder(
                 this@ClassBoundIrBuilder,
                 closure,
                 pluginContext.getThisClosureVariable,
-                transformInvoke,
                 newParent,
-                irGetFragment
-            ), null) as IrExpression
+                irGetFragment,
+                stateVariable
+            ), null
+        ) as IrExpression
 
     fun ArmDependencies.toDirtyMask(): IrExpression {
         var mask = 0
         this.forEach { mask = mask or (1 shl it.indexInClosure) }
         return irConst(mask)
     }
-
-    fun stateVariableType(variable: ArmStateVariable): IrType =
-        if (variable.type.isFunction()) pluginContext.boundSupportFunctionType else variable.type
 
     // --------------------------------------------------------------------------------------------------------
     // Properties

@@ -3,12 +3,12 @@
  */
 package hu.simplexion.adaptive.kotlin.foundation.ir.arm
 
-import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
+import org.jetbrains.kotlin.ir.declarations.IrVariable
+import org.jetbrains.kotlin.ir.expressions.IrCall
 
 open class ArmValueProducer(
     val armClass: ArmClass,
-    val argumentIndex: Int, // argument index of the support function
-    val supportFunctionIndex: Int,
-    var irExpression: IrFunctionExpression,
-    val dependencies: ArmDependencies
+    val producerCall : IrCall,
+    val producerDependencies : ArmDependencies,
+    val postProcess : IrVariable
 ) : ArmElement

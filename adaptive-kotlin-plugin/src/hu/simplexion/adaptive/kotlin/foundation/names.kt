@@ -12,6 +12,7 @@ object Strings {
     const val BINDING_PACKAGE = "hu.simplexion.adaptive.foundation.binding"
     const val STRUCTURAL_PACKAGE = "hu.simplexion.adaptive.foundation.fragment"
     const val INSTRUCTION_PACKAGE = "hu.simplexion.adaptive.foundation.instruction"
+    const val PRODUCER_PACKAGE = "hu.simplexion.adaptive.foundation.producer"
 
     const val ADAPTIVE = "Adaptive"
     const val ADAPTIVE_ENTRY = "AdaptiveEntry"
@@ -47,6 +48,7 @@ object Strings {
     const val INVALID_INDEX = "invalidIndex"
     const val LOCAL_BINDING = "localBinding"
     const val SET_BINDING = "setBinding"
+    const val GET_PRODUCED_VALUE = "getProducedValue"
 
     const val ADAPTER = "adapter"
     const val PARENT = "parent"
@@ -109,7 +111,8 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     private val STRUCTURAL = Strings.STRUCTURAL_PACKAGE.fqName()
     private val BINDING = Strings.BINDING_PACKAGE.fqName()
     private val INTERNAL = Strings.INTERNAL_PACKAGE.fqName()
-    private val INSTRUCTION = "hu.simplexion.adaptive.foundation.instruction".fqName()
+    private val INSTRUCTION = Strings.INSTRUCTION_PACKAGE.fqName()
+    private val PRODUCER_PACKAGE = Strings.PRODUCER_PACKAGE.fqName()
 
     val ADAPTIVE = Strings.ADAPTIVE.classId()
     val ADAPTIVE_FRAGMENT = Strings.ADAPTIVE_FRAGMENT.classId()
@@ -131,6 +134,7 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAPTIVE_DETACH = "AdaptiveDetach".classId { INSTRUCTION }
     val DETACH_HANDLER = "DetachHandler".classId { INSTRUCTION }
 
+    val PRODUCER = "Producer".classId { PRODUCER_PACKAGE }
 }
 
 object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {

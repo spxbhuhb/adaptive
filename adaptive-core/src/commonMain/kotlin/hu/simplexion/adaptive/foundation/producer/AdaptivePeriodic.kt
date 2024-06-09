@@ -10,29 +10,28 @@ import hu.simplexion.adaptive.service.transport.ServiceTimeoutException
 import kotlinx.coroutines.*
 import kotlin.time.Duration
 
-class AdaptivePoll<VT>(
+class AdaptivePeriodic<VT>(
     val binding: AdaptiveStateVariableBinding<VT>,
     val interval: Duration,
-    val pollFunction: suspend () -> VT
+    val producerFun: () -> VT
 ) : AdaptiveProducer {
 
     var scope: CoroutineScope? = null
 
-    var latestValue : VT? = null
+    var latestValue : Any? = null
 
     override fun replaces(other: AdaptiveProducer): Boolean =
-        other is AdaptivePoll<*> && other.binding == this.binding
+        other is AdaptivePeriodic<*> && other.binding == this.binding
 
     override fun start() {
         CoroutineScope(binding.sourceFragment.adapter.dispatcher).also {
             scope = it
             it.launch {
                 while (isActive) {
-                    // TODO do not poll when the fragment is not mounted
-
+                    // TODO do not run when the fragment is not mounted
                     try {
-                        latestValue = pollFunction()
-                        binding.targetFragment.setDirty(binding.indexInTargetState, true) // TODO make a separate binding for producers
+                        latestValue = producerFun()
+                        binding.targetFragment.setDirty(binding.indexInTargetState, true)
                     } catch (e: AdaptiveProducerCancel) {
                         it.cancel()
                         break
@@ -63,7 +62,7 @@ class AdaptivePoll<VT>(
         latestValue
 
     override fun toString(): String {
-        return "AdaptivePoll($binding, $interval)"
+        return "AdaptivePeriodic($binding, $interval)"
     }
 
 }

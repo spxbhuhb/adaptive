@@ -4,16 +4,12 @@
 package hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm
 
 import hu.simplexion.adaptive.kotlin.foundation.ADAPTIVE_STATE_VARIABLE_LIMIT
-import hu.simplexion.adaptive.kotlin.foundation.ClassIds
 import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.*
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrVariable
-import org.jetbrains.kotlin.ir.expressions.IrCall
-import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
-import org.jetbrains.kotlin.ir.types.isClassType
 import org.jetbrains.kotlin.ir.util.*
 
 
@@ -31,8 +27,6 @@ class StateDefinitionTransform(
 
     // incremented by `register`
     var stateVariableIndex = 0
-
-    var supportFunctionIndex = 0
 
     fun IrElement.dependencies(): List<ArmStateVariable> {
         val visitor = DependencyVisitor(armClass.stateVariables, skipLambdas = true)
@@ -86,15 +80,17 @@ class StateDefinitionTransform(
         armClass.originalStatements.forEach { statement ->
             when {
                 statement is IrVariable -> {
+                    val producer = transformProducer(statement)
+
                     armClass.stateDefinitionStatements +=
 
                         ArmInternalStateVariable(
                             armClass,
                             stateVariableIndex,
                             stateVariableIndex,
-                            statement,
-                            getValueProducer(statement),
-                            statement.dependencies()
+                            producer?.postProcess ?: statement,
+                            producer,
+                            producer?.postProcess?.dependencies() ?: statement.dependencies() // check ProducerTransform also
                         ).apply {
                             register(statement)
                         }
@@ -111,31 +107,18 @@ class StateDefinitionTransform(
         }
     }
 
-    private fun getValueProducer(statement: IrVariable): ArmValueProducer? {
-        val originalInitializer = statement.initializer!!
+    private fun transformProducer(statement: IrVariable): ArmValueProducer? {
 
-        if (originalInitializer !is IrCall) return null
+        val visitor = ProducerTransform(pluginContext, armClass.stateVariables)
+        val postProcess = statement.accept(visitor, null)
 
-        val calledFun = originalInitializer.symbol.owner
-        val parameterCount = calledFun.valueParameters.size
-
-        if (parameterCount < 2) return null
-
-        val binding = calledFun.valueParameters[parameterCount - 2]
-        val function = calledFun.valueParameters[parameterCount - 1]
-
-        if (!binding.type.isClassType(ClassIds.ADAPTIVE_STATE_VARIABLE_BINDING.asSingleFqName().toUnsafe(), true)) return null
-        if (!function.type.isFunction() && !function.type.isSuspendFunction()) return null
-
-        val functionExpression = originalInitializer.getValueArgument(parameterCount - 1)!!
-        if (functionExpression !is IrFunctionExpression) return null
+        if (visitor.producerCall == null) return null
 
         return ArmValueProducer(
             armClass,
-            parameterCount - 1,
-            supportFunctionIndex++,
-            functionExpression,
-            functionExpression.dependencies()
+            visitor.producerCall!!,
+            visitor.producerDependencies!!,
+            postProcess as IrVariable
         )
     }
 

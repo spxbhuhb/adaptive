@@ -22,8 +22,7 @@ val Number.testClass
 
 @Adaptive
 fun tc(vararg instructions : AdaptiveInstruction) {
-    T1(34)
-    // T1(instructions.firstOrNullIfInstance<Test>()?.i ?: 999)
+    T1(instructions.firstOrNullIfInstance<Test>()?.i ?: 999)
 }
 
 @Adaptive

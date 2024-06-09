@@ -304,15 +304,22 @@ class ArmClassBuilder(
             )
 
             for (statement in armClass.stateDefinitionStatements) {
+                when (statement) {
+                    is ArmInternalStateVariable -> {
+                        statement.builder(this@ArmClassBuilder).genPatchInternal(this, dirtyMask, patchFun)
+                        continue
+                    }
+                }
+
                 // FIXME casting a statement into an expression in internal patch
-                val originalExpression = when (statement) {
-                    is ArmInternalStateVariable -> statement.builder(this@ArmClassBuilder).genInitializer(patchFun)
-                    is ArmDefaultValueStatement -> statement.defaultValue
-                    else -> statement.irStatement as IrExpression
+                // FIXME apply the same pattern as for ArmInternalStateVariable
+                val (originalExpression, stateVariable) = when (statement) {
+                    is ArmDefaultValueStatement -> statement.defaultValue to null
+                    else -> statement.irStatement as IrExpression to null
                 }
 
                 val transformedExpression = originalExpression
-                    .transformThisStateAccess(armClass.stateVariables, newParent = patchFun) { irGet(patchFun.dispatchReceiverParameter !!) }
+                    .transformThisStateAccess(armClass.stateVariables, newParent = patchFun, stateVariable = stateVariable) { irGet(patchFun.dispatchReceiverParameter !!) }
 
                 // optimize out null default values
                 if (transformedExpression is IrConstImpl<*> && transformedExpression.kind == IrConstKind.Null) continue
@@ -323,7 +330,6 @@ class ArmClassBuilder(
                         else -> genPatchInternalConditionForMask(patchFun, dirtyMask, statement.dependencies)
                     },
                     when (statement) {
-                        is ArmInternalStateVariable -> irSetStateVariable(patchFun, statement.indexInState, transformedExpression)
                         is ArmDefaultValueStatement -> irSetStateVariable(patchFun, statement.indexInState, transformedExpression)
                         else -> transformedExpression
                     }
@@ -338,16 +344,6 @@ class ArmClassBuilder(
         irEqual(
             irGetThisStateVariable(patchFun, statement.indexInState),
             irNull()
-        )
-
-    fun genPatchInternalConditionForMask(patchFun: IrSimpleFunction, dirtyMask: IrVariable, dependencies: ArmDependencies): IrExpression =
-        irCall(
-            symbol = pluginContext.haveToPatch,
-            dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!),
-            args = arrayOf(
-                irGet(dirtyMask),
-                dependencies.toDirtyMask()
-            )
         )
 
     // ---------------------------------------------------------------------------

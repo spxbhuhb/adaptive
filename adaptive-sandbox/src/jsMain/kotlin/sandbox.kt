@@ -25,6 +25,6 @@ fun stuff() {
 
 @Adaptive
 fun counterWithTime(time: Instant) {
-    val counter = poll(1000.seconds, 0) { counterService.incrementAndGet() }
+    val counter = poll(1000.seconds) { counterService.incrementAndGet() } ?: 0
     text("$time $counter", Frame(150.dp, 150.dp, 250.dp, 20.dp))
 }

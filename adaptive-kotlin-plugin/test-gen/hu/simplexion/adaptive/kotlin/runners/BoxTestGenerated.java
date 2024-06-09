@@ -206,6 +206,52 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Nested
+    @TestMetadata("testData/box/foundation/lambda")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Lambda {
+      @Test
+      public void testAllFilesPresentInLambda() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/lambda"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+      }
+
+      @Test
+      @TestMetadata("fromRoot.kt")
+      public void testFromRoot() {
+        runTest("testData/box/foundation/lambda/fromRoot.kt");
+      }
+
+      @Test
+      @TestMetadata("lambdaCallOut.kt")
+      public void testLambdaCallOut() {
+        runTest("testData/box/foundation/lambda/lambdaCallOut.kt");
+      }
+
+      @Test
+      @TestMetadata("outreach.kt")
+      public void testOutreach() {
+        runTest("testData/box/foundation/lambda/outreach.kt");
+      }
+
+      @Test
+      @TestMetadata("return.kt")
+      public void testReturn() {
+        runTest("testData/box/foundation/lambda/return.kt");
+      }
+
+      @Test
+      @TestMetadata("stateUpdate.kt")
+      public void testStateUpdate() {
+        runTest("testData/box/foundation/lambda/stateUpdate.kt");
+      }
+
+      @Test
+      @TestMetadata("suspend.kt")
+      public void testSuspend() {
+        runTest("testData/box/foundation/lambda/suspend.kt");
+      }
+    }
+
+    @Nested
     @TestMetadata("testData/box/foundation/loop")
     @TestDataPath("$PROJECT_ROOT")
     public class Loop {
@@ -348,52 +394,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
       @TestMetadata("lambdaPatchInternal.kt")
       public void testLambdaPatchInternal() {
         runTest("testData/box/foundation/stateAccess/lambdaPatchInternal.kt");
-      }
-    }
-
-    @Nested
-    @TestMetadata("testData/box/foundation/support")
-    @TestDataPath("$PROJECT_ROOT")
-    public class Support {
-      @Test
-      public void testAllFilesPresentInSupport() {
-        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/support"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
-      }
-
-      @Test
-      @TestMetadata("supportFunctionCallOut.kt")
-      public void testSupportFunctionCallOut() {
-        runTest("testData/box/foundation/support/supportFunctionCallOut.kt");
-      }
-
-      @Test
-      @TestMetadata("supportFunctionFromRoot.kt")
-      public void testSupportFunctionFromRoot() {
-        runTest("testData/box/foundation/support/supportFunctionFromRoot.kt");
-      }
-
-      @Test
-      @TestMetadata("supportFunctionOutreach.kt")
-      public void testSupportFunctionOutreach() {
-        runTest("testData/box/foundation/support/supportFunctionOutreach.kt");
-      }
-
-      @Test
-      @TestMetadata("supportFunctionReturn.kt")
-      public void testSupportFunctionReturn() {
-        runTest("testData/box/foundation/support/supportFunctionReturn.kt");
-      }
-
-      @Test
-      @TestMetadata("supportFunctionStateUpdate.kt")
-      public void testSupportFunctionStateUpdate() {
-        runTest("testData/box/foundation/support/supportFunctionStateUpdate.kt");
-      }
-
-      @Test
-      @TestMetadata("supportFunctionSuspend.kt")
-      public void testSupportFunctionSuspend() {
-        runTest("testData/box/foundation/support/supportFunctionSuspend.kt");
       }
     }
 

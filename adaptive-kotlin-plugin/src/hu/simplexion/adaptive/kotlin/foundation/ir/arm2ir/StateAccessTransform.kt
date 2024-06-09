@@ -5,25 +5,28 @@ package hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir
 
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import hu.simplexion.adaptive.kotlin.common.property
+import hu.simplexion.adaptive.kotlin.foundation.ClassIds
 import hu.simplexion.adaptive.kotlin.foundation.Indices
 import hu.simplexion.adaptive.kotlin.foundation.Names
 import hu.simplexion.adaptive.kotlin.foundation.Strings
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmClosure
+import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmInternalStateVariable
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmStateVariable
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmWhenStateVariable
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.IrStatement
-import org.jetbrains.kotlin.ir.backend.js.utils.valueArguments
+import org.jetbrains.kotlin.ir.declarations.IrDeclarationBase
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrFunction
+import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
-import org.jetbrains.kotlin.ir.expressions.impl.IrVarargImpl
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
-import org.jetbrains.kotlin.ir.symbols.IrValueParameterSymbol
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
-import org.jetbrains.kotlin.ir.types.typeWith
-import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.types.classFqName
+import org.jetbrains.kotlin.ir.types.isClassType
+import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
+import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.name.Name
 
 @OptIn(UnsafeDuringIrConstructionAPI::class) // uncomment for 2.0.0.
@@ -31,9 +34,9 @@ class StateAccessTransform(
     private val irBuilder: ClassBoundIrBuilder,
     private val closure: ArmClosure,
     private val getVariableFunction: IrSimpleFunctionSymbol,
-    private val transformSupportCalls: Boolean,
-    private val newParent : IrFunction?,
-    private val irGetFragment: () -> IrExpression
+    private val newParent: IrFunction?,
+    private val irGetFragment: () -> IrExpression,
+    private val stateVariable: ArmInternalStateVariable? = null
 ) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
 
     override val pluginContext = irBuilder.pluginContext
@@ -53,11 +56,9 @@ class StateAccessTransform(
         }
     }
 
-    fun getStateVariable(stateVariable: ArmStateVariable): IrExpression {
-        val type = irBuilder.stateVariableType(stateVariable)
-
-        return irBuilder.irImplicitAs(
-            type,
+    fun getStateVariable(stateVariable: ArmStateVariable): IrExpression =
+        irBuilder.irImplicitAs(
+            stateVariable.type,
             IrCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 irBuiltIns.anyNType,
@@ -74,7 +75,6 @@ class StateAccessTransform(
                 )
             }
         )
-    }
 
     override fun visitSetValue(expression: IrSetValue): IrExpression {
 
@@ -90,7 +90,7 @@ class StateAccessTransform(
             Indices.SET_STATE_VARIABLE_ARGUMENT_COUNT
         ).also {
 
-            it.dispatchReceiver = irGet(newParent!!.dispatchReceiverParameter!!)
+            it.dispatchReceiver = irGet(newParent !!.dispatchReceiverParameter !!)
 
             it.putValueArgument(
                 Indices.SET_STATE_VARIABLE_INDEX,
@@ -104,79 +104,31 @@ class StateAccessTransform(
         }
     }
 
-    /**
-     * Transform calls in `genPatchInternal`:
-     *
-     * ```kotlin
-     * fun Adaptive.Basic(i : Int, supportFun : (i : Int) -> Unit) {
-     *     supportFun(i)
-     * }
-     * ```
-     *
-     * ```kotlin
-     * fun patchInternal() {
-     *     getThisStateVariable(1).invoke(getThisStateVariable(0))
-     * }
-     * ```
-     */
     override fun visitCall(expression: IrCall): IrExpression {
-        if (! transformSupportCalls) {
-            return transformNonSupportCall(expression)
+        if (expression.symbol in pluginContext.helperFunctions) {
+            return transformHelper(expression)
         }
 
-        val getValue = expression.dispatchReceiver as? IrGetValue ?: return transformNonSupportCall(expression)
-        val valueParameterSymbol = getValue.symbol as? IrValueParameterSymbol ?: return transformNonSupportCall(expression)
-
-        val name = valueParameterSymbol.owner.name
-
-        if (name.isSpecial) return transformNonSupportCall(expression)
-
-        val stateVariable = closure.first { it.name == name.identifier }
-
-        return IrCallImpl(
-            expression.startOffset, expression.endOffset,
-            expression.type,
-            pluginContext.boundSupportFunctionInvoke,
-            0, 1
-        ).apply {
-            dispatchReceiver = getStateVariable(stateVariable)
-
-            putValueArgument(0,
-                IrVarargImpl(
-                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                    irBuiltIns.arrayClass.typeWith(irBuiltIns.anyNType),
-                    irBuiltIns.anyNType
-                ).apply {
-                    for (argument in expression.valueArguments) {
-                        // FIXME null handling in StateAccessTransform
-                        elements += (argument ?: irBuilder.irNull()).accept(this@StateAccessTransform, null) as IrVarargElement
-                    }
-                }
-            )
-        }
-
+        return super.visitCall(expression)
     }
 
-    fun transformNonSupportCall(expression: IrCall): IrExpression {
-        if (expression.symbol !in pluginContext.helperFunctions) {
-            return super.visitCall(expression)
-        }
-
-        return when (expression.symbol.owner.name.identifier) {
+    fun transformHelper(expression: IrCall) =
+        when (expression.symbol.owner.name.identifier) {
             Strings.HELPER_ADAPTER -> getPropertyValue(Names.HELPER_ADAPTER)
             Strings.HELPER_FRAGMENT -> irGetFragment()
             Strings.HELPER_THIS_STATE -> irGetFragment()
             else -> throw IllegalStateException("unknown helper function: ${expression.symbol}")
         }
-    }
+
 
     fun getPropertyValue(name: Name) =
         irBuilder.irGetValue(irBuilder.irClass.property(name), irGetFragment())
 
-
-    override fun visitFunctionNew(declaration: IrFunction): IrStatement {
-        setLambdaParent(declaration)
-        return super.visitFunctionNew(declaration)
+    override fun visitDeclaration(declaration: IrDeclarationBase): IrStatement {
+        if (declaration.parent == irBuilder.armClass.originalFunction) {
+            declaration.parent = checkNotNull(newParent) { "cannot transform parent: $declaration" }
+        }
+        return super.visitDeclaration(declaration)
     }
 
     /**
@@ -187,10 +139,11 @@ class StateAccessTransform(
      * - when in rendering
      *   - sets parent to `genPatchDescendant`
      */
-    fun setLambdaParent(declaration: IrFunction) {
+    override fun visitFunctionNew(declaration: IrFunction): IrStatement {
         if (declaration.origin == IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA) {
             declaration.parent = checkNotNull(newParent) { "should not be null here" }
         }
+        return super.visitFunctionNew(declaration)
     }
 
 //    fun debugParents(label: String, declaration: IrDeclaration) {

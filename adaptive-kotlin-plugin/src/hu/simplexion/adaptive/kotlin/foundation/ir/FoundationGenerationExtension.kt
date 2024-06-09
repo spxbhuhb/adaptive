@@ -43,6 +43,7 @@ internal class FoundationGenerationExtension(
             armEntryPoints
                 .forEach { ArmEntryPointBuilder(this, it).entryPointBody() }
 
+            // debug("DUMP AFTER") { "\n\n" + moduleFragment.dumpKotlinLike(KotlinLikeDumpOptions(printFakeOverridesStrategy = FakeOverridesStrategy.NONE)) }
             // debug("DUMP AFTER") { "\n\n" + moduleFragment.dump() }
         }
     }

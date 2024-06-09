@@ -33,6 +33,7 @@ class FoundationPluginContext(
         get() = irContext.irBuiltIns
 
     val adaptiveClass = ClassIds.ADAPTIVE.classSymbol()
+    val producerAnnotation = ClassIds.PRODUCER.classSymbol()
 
     val armClasses = mutableListOf<ArmClass>()
     val irClasses = mutableMapOf<FqName, IrClass>()
@@ -56,12 +57,6 @@ class FoundationPluginContext(
     val boundFragmentFactoryType = boundFragmentFactoryClass.defaultType
     val boundFragmentFactoryConstructor = boundFragmentFactoryClass.constructors.single()
 
-    val boundSupportFunctionClass = ClassIds.ADAPTIVE_SUPPORT_FUNCTION.classSymbol()
-    val boundSupportFunctionType = boundSupportFunctionClass.defaultType
-    val boundSupportFunctionInvoke = boundSupportFunctionClass.functionByName { Strings.SUPPORT_FUNCTION_INVOKE }
-    val boundSupportFunctionIndex = boundSupportFunctionClass.propertyGetter { Strings.SUPPORT_FUNCTION_INDEX }
-    val boundSupportFunctionReceivingFragment = boundSupportFunctionClass.propertyGetter { Strings.SUPPORT_FUNCTION_RECEIVING_FRAGMENT }
-
     val adaptiveStateVariableBindingClass = ClassIds.ADAPTIVE_STATE_VARIABLE_BINDING.classSymbol()
 
     val adaptiveTransformInterfaceClass = ClassIds.ADAPTIVE_TRANSFORM_INTERFACE.classSymbol()
@@ -81,6 +76,7 @@ class FoundationPluginContext(
     val setStateVariable = Strings.SET_STATE_VARIABLE.fragmentFunction { it.owner.valueParameters.size == 2 }
     val localBinding = Strings.LOCAL_BINDING.fragmentFunction()
     val setBinding = Strings.SET_BINDING.fragmentFunction()
+    val getProducedValue = Strings.GET_PRODUCED_VALUE.fragmentFunction()
 
     val arrayGet = checkNotNull(irContext.irBuiltIns.arrayClass.getSimpleFunction("get"))
 

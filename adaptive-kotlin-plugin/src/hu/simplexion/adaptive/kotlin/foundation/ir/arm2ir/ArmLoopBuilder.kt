@@ -31,8 +31,7 @@ class ArmLoopBuilder(
                      Indices.ADAPTIVE_LOOP_ITERATOR,
                      iteratorInitializer.transformThisStateAccess(
                          armLoop.closure,
-                         newParent = patchFun,
-                         transformInvoke = false
+                         newParent = patchFun
                      ) { irGet(patchFun.dispatchReceiverParameter !!) }
                  )
 

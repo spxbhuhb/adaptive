@@ -60,8 +60,7 @@ class IrFunction2ArmClass(
     fun transform(): ArmClass {
         armClass = ArmClass(pluginContext, irFunction)
 
-        val definitionTransform = StateDefinitionTransform(pluginContext, armClass, if (isRoot) 1 else 0).apply { transform() }
-        supportIndex = definitionTransform.supportFunctionIndex
+        StateDefinitionTransform(pluginContext, armClass, if (isRoot) 1 else 0).apply { transform() }
 
         states.push(armClass.stateVariables)
         closures.push(armClass.stateVariables)

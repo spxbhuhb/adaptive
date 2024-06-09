@@ -24,7 +24,7 @@ fun box(): String {
 
             adaptive(adapter) {
                 val i = 12
-                val j = poll(Duration.ZERO, i + 1) {
+                val j = poll(Duration.ZERO) {
                     if (done) {
                         (adapter() as AdaptiveTestAdapter).done = true
                         cancelProducer()
@@ -32,7 +32,7 @@ fun box(): String {
                         done = true
                         mock(i)
                     }
-                }
+                } ?: (i + 1)
                 T1(j)
             }
 
@@ -64,7 +64,7 @@ fun box(): String {
             TraceEvent("AdaptiveT1", 3, "before-Mount", ""),
             TraceEvent("AdaptiveT1", 3, "after-Mount", ""),
             TraceEvent("<root>", 2, "after-Mount", ""),
-            TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000002 thisMask: 0x00000002 state: [12, 112]"),
+            TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0x00000002 thisMask: 0x00000002 state: [12, 13]"),
             TraceEvent("AdaptiveT1", 3, "before-Patch-External", "createMask: 0x00000002 thisMask: 0x00000000 state: [13]"),
             TraceEvent("AdaptiveT1", 3, "after-Patch-External", "createMask: 0x00000002 thisMask: 0x00000001 state: [112]"),
             TraceEvent("AdaptiveT1", 3, "before-Patch-Internal", "createMask: 0x00000002 thisMask: 0x00000001 state: [112]"),
