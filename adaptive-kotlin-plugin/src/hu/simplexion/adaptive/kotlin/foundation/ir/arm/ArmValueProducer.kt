@@ -3,9 +3,6 @@
  */
 package hu.simplexion.adaptive.kotlin.foundation.ir.arm
 
-import hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir.ArmValueProducerBuilder
-import hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir.BranchBuilder
-import hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir.ClassBoundIrBuilder
 import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
 
 open class ArmValueProducer(
@@ -14,12 +11,4 @@ open class ArmValueProducer(
     val supportFunctionIndex: Int,
     var irExpression: IrFunctionExpression,
     val dependencies: ArmDependencies
-) : ArmElement {
-
-    val isSuspend
-        get() = irExpression.function.isSuspend
-
-    fun branchBuilder(parent: ClassBoundIrBuilder): BranchBuilder =
-        ArmValueProducerBuilder(parent, this)
-
-}
+) : ArmElement

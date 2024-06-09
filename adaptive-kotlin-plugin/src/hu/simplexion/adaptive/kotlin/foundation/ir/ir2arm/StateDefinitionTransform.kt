@@ -127,21 +127,15 @@ class StateDefinitionTransform(
         if (!binding.type.isClassType(ClassIds.ADAPTIVE_STATE_VARIABLE_BINDING.asSingleFqName().toUnsafe(), true)) return null
         if (!function.type.isFunction() && !function.type.isSuspendFunction()) return null
 
-        val supportFunction = originalInitializer.getValueArgument(parameterCount - 1)!!
-        if (supportFunction !is IrFunctionExpression) return null
-
-        if (function.type.isSuspendFunction()) {
-            armClass.hasInvokeSuspendBranch = true
-        } else {
-            armClass.hasInvokeBranch = true
-        }
+        val functionExpression = originalInitializer.getValueArgument(parameterCount - 1)!!
+        if (functionExpression !is IrFunctionExpression) return null
 
         return ArmValueProducer(
             armClass,
             parameterCount - 1,
             supportFunctionIndex++,
-            supportFunction,
-            supportFunction.dependencies()
+            functionExpression,
+            functionExpression.dependencies()
         )
     }
 

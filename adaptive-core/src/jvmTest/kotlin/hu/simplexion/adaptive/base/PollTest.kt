@@ -57,8 +57,8 @@ class PollTest {
                         TraceEvent("AdaptivePollTest", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
                         TraceEvent("AdaptivePollTest", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
                         TraceEvent("AdaptivePollTest", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
-                        TraceEvent("AdaptivePollTest", 2, "before-Add-Producer", "producer: AdaptivePoll(AdaptiveStateVariableBinding(2, 0, 0, 2, 0, null, 0, AdaptivePropertyMetadata(kotlin.int)), 0s)"),
-                        TraceEvent("AdaptivePollTest", 2, "after-Add-Producer", "producer: AdaptivePoll(AdaptiveStateVariableBinding(2, 0, 0, 2, 0, null, 0, AdaptivePropertyMetadata(kotlin.int)), 0s)"),
+                        TraceEvent("AdaptivePollTest", 2, "before-Add-Producer", "producer: AdaptivePoll(AdaptiveStateVariableBinding(2, 0, 0, 2, 0, null, AdaptivePropertyMetadata(kotlin.int)), 0s)"),
+                        TraceEvent("AdaptivePollTest", 2, "after-Add-Producer", "producer: AdaptivePoll(AdaptiveStateVariableBinding(2, 0, 0, 2, 0, null, AdaptivePropertyMetadata(kotlin.int)), 0s)"),
                         TraceEvent("AdaptivePollTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [2]"),
                         TraceEvent("AdaptiveT1", 3, "before-Create", ""),
                         TraceEvent("AdaptiveT1", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
@@ -67,27 +67,22 @@ class PollTest {
                         TraceEvent("AdaptiveT1", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [2]"),
                         TraceEvent("AdaptiveT1", 3, "after-Create", ""),
                         TraceEvent("AdaptivePollTest", 2, "after-Create", ""),
-                        TraceEvent("AdaptivePollTest", 2, "before-Mount"),
-                        TraceEvent("AdaptiveT1", 3, "before-Mount"),
-                        TraceEvent("AdaptiveT1", 3, "after-Mount"),
-                        TraceEvent("AdaptivePollTest", 2, "after-Mount"),
-                        TraceEvent("AdaptivePollTest", 2, "before-Invoke-Suspend", "BoundSupportFunction(2, 2, 0) arguments: []"),
-                        TraceEvent("AdaptivePollTest", 2, "after-Invoke-Suspend", "index: 0 result: 12"),
+                        TraceEvent("AdaptivePollTest", 2, "before-Mount", ""),
+                        TraceEvent("AdaptiveT1", 3, "before-Mount", ""),
+                        TraceEvent("AdaptiveT1", 3, "after-Mount", ""),
+                        TraceEvent("AdaptivePollTest", 2, "after-Mount", ""),
                         TraceEvent("AdaptivePollTest", 2, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [12]"),
                         TraceEvent("AdaptiveT1", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [2]"),
                         TraceEvent("AdaptiveT1", 3, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [12]"),
                         TraceEvent("AdaptiveT1", 3, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [12]"),
                         TraceEvent("AdaptiveT1", 3, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [12]"),
                         TraceEvent("AdaptivePollTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
-                        TraceEvent("AdaptivePollTest", 2, "before-Invoke-Suspend", "BoundSupportFunction(2, 2, 0) arguments: []"),
-                        TraceEvent("AdaptivePollTest", 2, "after-Invoke-Suspend", "index: 0 result: 13"),
                         TraceEvent("AdaptivePollTest", 2, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [13]"),
                         TraceEvent("AdaptiveT1", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [12]"),
                         TraceEvent("AdaptiveT1", 3, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [13]"),
                         TraceEvent("AdaptiveT1", 3, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [13]"),
                         TraceEvent("AdaptiveT1", 3, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [13]"),
-                        TraceEvent("AdaptivePollTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [13]"),
-                        TraceEvent("AdaptivePollTest", 2, "before-Invoke-Suspend", "BoundSupportFunction(2, 2, 0) arguments: []")
+                        TraceEvent("AdaptivePollTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [13]")
                         //@formatter:on
                     )
                 ),
@@ -132,7 +127,14 @@ class AdaptivePollTest(
 
     override fun genPatchInternal(): Boolean {
         if (getThisClosureDirtyMask() == initStateMask) {
-            this.setStateVariable(0, poll(Duration.ZERO, 2, localBinding(0, 0, "kotlin.int"), null))
+            this.setStateVariable(0, poll(Duration.ZERO, 2, localBinding(0, "kotlin.int"), {
+                if (counter < 14) {
+                    counter++
+                } else {
+                    (adapter as AdaptiveTestAdapter).done = true
+                    cancelProducer()
+                }
+            }))
         }
         return true
     }

@@ -14,8 +14,7 @@ import org.jetbrains.kotlin.ir.util.statements
 
 class ArmClass(
     adaptiveContext: FoundationPluginContext,
-    val originalFunction: IrFunction,
-    val isRoot : Boolean
+    val originalFunction: IrFunction
 ) : ArmElement {
 
     lateinit var irClass: IrClass
@@ -33,9 +32,6 @@ class ArmClass(
     val stateVariables = mutableListOf<ArmStateVariable>()
 
     val rendering = mutableListOf<ArmRenderingStatement>()
-
-    var hasInvokeBranch = false
-    var hasInvokeSuspendBranch = false
 
     var stateInterface : IrClassSymbol? = null
 

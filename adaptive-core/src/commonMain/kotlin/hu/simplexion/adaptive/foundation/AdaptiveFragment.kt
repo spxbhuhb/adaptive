@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.internal.*
 import hu.simplexion.adaptive.foundation.producer.AdaptiveProducer
+import kotlin.reflect.KFunction
 
 abstract class AdaptiveFragment(
     val adapter: AdaptiveAdapter,
@@ -322,8 +323,7 @@ abstract class AdaptiveFragment(
             targetFragment = descendant,
             indexInTargetState = indexInTarget,
             path = path,
-            metadata = AdaptivePropertyMetadata(boundType),
-            supportFunctionIndex = - 1
+            metadata = AdaptivePropertyMetadata(boundType)
         ).also {
             addBinding(it)
             descendant.setStateVariable(indexInTarget, it)
@@ -344,7 +344,7 @@ abstract class AdaptiveFragment(
     /**
      * Creates a binding for producer use.
      */
-    fun localBinding(indexInState: Int, supportFunctionIndex: Int, boundType: String) =
+    fun localBinding(indexInState: Int, boundType: String) =
         AdaptiveStateVariableBinding<Int>(
             sourceFragment = this,
             indexInSourceState = indexInState,
@@ -352,8 +352,7 @@ abstract class AdaptiveFragment(
             targetFragment = this,
             indexInTargetState = indexInState,
             path = null,
-            metadata = AdaptivePropertyMetadata(boundType),
-            supportFunctionIndex = supportFunctionIndex
+            metadata = AdaptivePropertyMetadata(boundType)
         )
 
     // --------------------------------------------------------------------------
@@ -408,7 +407,16 @@ abstract class AdaptiveFragment(
     }
 
     open fun stateToTraceString(): String =
-        this.state.contentDeepToString()
+        "[" + this.state.contentToString() + "]"
+
+    private fun Array<Any?>.contentToString() =
+        this.joinToString(", ") {
+            when (it) {
+                is Function<*> -> "Function"
+                is Array<*> -> it.contentDeepToString()
+                else -> it.toString()
+            }
+        }
 
     fun traceSupport(point: String, supportFunction: BoundSupportFunction, arguments: Array<out Any?>) {
         if (tracePatterns.none { it.matches(point) }) return

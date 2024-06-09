@@ -58,7 +58,7 @@ class IrFunction2ArmClass(
         get() = closures.peek()
 
     fun transform(): ArmClass {
-        armClass = ArmClass(pluginContext, irFunction, isRoot)
+        armClass = ArmClass(pluginContext, irFunction)
 
         val definitionTransform = StateDefinitionTransform(pluginContext, armClass, if (isRoot) 1 else 0).apply { transform() }
         supportIndex = definitionTransform.supportFunctionIndex
@@ -255,16 +255,6 @@ class IrFunction2ArmClass(
             if (argument != null) armCall.arguments += argument
         }
 
-        if (armCall.arguments.any { it is ArmSupportFunctionArgument && ! it.isSuspend }) {
-            armClass.hasInvokeBranch = true
-            armCall.hasInvokeBranch = true
-        }
-
-        if (armCall.arguments.any { it is ArmSupportFunctionArgument && it.isSuspend }) {
-            armClass.hasInvokeSuspendBranch = true
-            armCall.hasInvokeSuspendBranch = true
-        }
-
         return armCall.add()
     }
 
@@ -295,10 +285,6 @@ class IrFunction2ArmClass(
 
             if (argument != null) armCall.arguments += argument
         }
-
-        // FIXME do we need invoke branch for argument call?
-        armCall.hasInvokeBranch = armCall.arguments.any { it is ArmSupportFunctionArgument && ! it.isSuspend }
-        armCall.hasInvokeSuspendBranch = armCall.arguments.any { it is ArmSupportFunctionArgument && it.isSuspend }
 
         return armCall.add()
     }
@@ -342,22 +328,6 @@ class IrFunction2ArmClass(
                 transformAccessSelector(armCall, expression)
                 // selector is not transformed into a state variable
                 null
-            }
-
-            parameterType.isFunction() || parameterType.isSuspendFunction() -> {
-                if (expression is IrFunctionExpression) {
-                    ArmSupportFunctionArgument(
-                        armClass,
-                        armCall.arguments.size,
-                        supportIndex ++,
-                        closure,
-                        parameterType,
-                        expression,
-                        expression.dependencies()
-                    )
-                } else {
-                    ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies())
-                }
             }
 
             parameter.isInstructions -> {

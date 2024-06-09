@@ -160,8 +160,6 @@ class ArmClassBuilder(
     fun buildGenFunctionBodies() {
         genBuildBody()
         genPatchDescendantBody()
-        genInvokeBody(Strings.GEN_INVOKE)
-        genInvokeBody(Strings.GEN_INVOKE_SUSPEND)
         genPatchInternalBody()
     }
 
@@ -282,72 +280,6 @@ class ArmClassBuilder(
             ),
             branch.branchBuilder(this).genPatchDescendantBranch(patchFun, closureMask)
         )
-
-    // ---------------------------------------------------------------------------
-    // Invoke and Invoke Suspend
-    // ---------------------------------------------------------------------------
-
-    fun genInvokeBody(funName: String) {
-        val invokeFun = irClass.getSimpleFunction(funName) !!.owner
-
-        if (! invokeFun.isSuspend && ! armClass.hasInvokeBranch) return
-        if (invokeFun.isSuspend && ! armClass.hasInvokeSuspendBranch) return
-
-        invokeFun.isFakeOverride = false
-
-        invokeFun.body = DeclarationIrBuilder(irContext, invokeFun.symbol).irBlockBody {
-
-            val supportFunctionIndex = irTemporary(
-                IrCallImpl(
-                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                    irBuiltIns.intType,
-                    pluginContext.boundSupportFunctionIndex,
-                    0, 0
-                ).also {
-                    it.dispatchReceiver = irGet(invokeFun.valueParameters[Indices.INVOKE_SUPPORT_FUNCTION])
-                }
-            )
-
-            val receivingFragment = irTemporary(
-                IrCallImpl(
-                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                    pluginContext.adaptiveFragmentType,
-                    pluginContext.boundSupportFunctionReceivingFragment,
-                    0, 0
-                ).also {
-                    it.dispatchReceiver = irGet(invokeFun.valueParameters[Indices.INVOKE_SUPPORT_FUNCTION])
-                }
-            )
-            val arguments = irTemporary(
-                irGet(invokeFun.valueParameters[Indices.INVOKE_ARGUMENTS])
-            )
-
-            + irReturn(genInvokeWhen(invokeFun, supportFunctionIndex, receivingFragment, arguments))
-        }
-    }
-
-    private fun genInvokeWhen(invokeFun: IrSimpleFunction, supportFunctionIndex: IrVariable, receivingFragment: IrVariable, arguments: IrVariable): IrExpression =
-        IrWhenImpl(
-            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irBuiltIns.anyNType,
-            IrStatementOrigin.WHEN
-        ).apply {
-
-            armClass.stateVariables.forEach { stateVariable ->
-                val producer = (stateVariable as? ArmInternalStateVariable)?.producer ?: return@forEach
-                if ((invokeFun.isSuspend && producer.isSuspend) || (! invokeFun.isSuspend && ! producer.isSuspend)) {
-                    branches += producer.branchBuilder(this@ArmClassBuilder).genInvokeBranches(invokeFun, supportFunctionIndex, receivingFragment, arguments)
-                }
-            }
-
-            armClass.rendering.forEach { branch ->
-                if ((invokeFun.isSuspend && branch.hasInvokeSuspendBranch) || (! invokeFun.isSuspend && branch.hasInvokeBranch)) {
-                    branches += branch.branchBuilder(this@ArmClassBuilder).genInvokeBranches(invokeFun, supportFunctionIndex, receivingFragment, arguments)
-                }
-            }
-
-            branches += irInvalidIndexBranch(invokeFun, irGet(supportFunctionIndex))
-        }
 
     // ---------------------------------------------------------------------------
     // Patch Internal

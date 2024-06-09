@@ -161,53 +161,53 @@ open class ClassBoundIrBuilder(
             )
         }
 
-    fun genInvokeBranch(
-        invokeFun: IrSimpleFunction,
-        supportFunctionIndex: IrVariable,
-        callingFragment: IrVariable,
-        arguments: IrVariable,
-        armSupportFunctionArgument: ArmSupportFunctionArgument
-    ): IrBranch =
-        IrBranchImpl(
-            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irEqual(
-                irGet(supportFunctionIndex),
-                irConst(armSupportFunctionArgument.supportFunctionIndex)
-            ),
-            genInvokeBranchBody(invokeFun, callingFragment, arguments, armSupportFunctionArgument)
-        )
-
-    private fun genInvokeBranchBody(
-        invokeFun: IrSimpleFunction,
-        callingFragment: IrVariable,
-        arguments: IrVariable,
-        armSupportFunctionArgument: ArmSupportFunctionArgument
-    ): IrExpression {
-        val functionToTransform = (armSupportFunctionArgument.irExpression as IrFunctionExpression).function
-        val originalClosure = armSupportFunctionArgument.supportFunctionClosure
-
-        val transformClosure =
-            originalClosure + functionToTransform.valueParameters.mapIndexed { indexInState, parameter ->
-                ArmSupportStateVariable(
-                    armSupportFunctionArgument.armClass,
-                    indexInState,
-                    originalClosure.size + indexInState,
-                    parameter
-                )
-            }
-
-        return IrBlockImpl(
-            functionToTransform.startOffset,
-            functionToTransform.endOffset,
-            functionToTransform.returnType
-        ).apply {
-            val transform = SupportFunctionTransform(this@ClassBoundIrBuilder, transformClosure, { irGet(invokeFun.dispatchReceiverParameter !!) }, callingFragment, arguments)
-
-            functionToTransform.body !!.statements.forEach {
-                statements += it.transformStatement(transform)
-            }
-        }
-    }
+//    fun genInvokeBranch(
+//        invokeFun: IrSimpleFunction,
+//        supportFunctionIndex: IrVariable,
+//        callingFragment: IrVariable,
+//        arguments: IrVariable,
+//        armSupportFunctionArgument: ArmSupportFunctionArgument
+//    ): IrBranch =
+//        IrBranchImpl(
+//            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+//            irEqual(
+//                irGet(supportFunctionIndex),
+//                irConst(armSupportFunctionArgument.supportFunctionIndex)
+//            ),
+//            genInvokeBranchBody(invokeFun, callingFragment, arguments, armSupportFunctionArgument)
+//        )
+//
+//    private fun genInvokeBranchBody(
+//        invokeFun: IrSimpleFunction,
+//        callingFragment: IrVariable,
+//        arguments: IrVariable,
+//        armSupportFunctionArgument: ArmSupportFunctionArgument
+//    ): IrExpression {
+//        val functionToTransform = (armSupportFunctionArgument.irExpression as IrFunctionExpression).function
+//        val originalClosure = armSupportFunctionArgument.supportFunctionClosure
+//
+//        val transformClosure =
+//            originalClosure + functionToTransform.valueParameters.mapIndexed { indexInState, parameter ->
+//                ArmSupportStateVariable(
+//                    armSupportFunctionArgument.armClass,
+//                    indexInState,
+//                    originalClosure.size + indexInState,
+//                    parameter
+//                )
+//            }
+//
+//        return IrBlockImpl(
+//            functionToTransform.startOffset,
+//            functionToTransform.endOffset,
+//            functionToTransform.returnType
+//        ).apply {
+//            val transform = SupportFunctionTransform(this@ClassBoundIrBuilder, transformClosure, { irGet(invokeFun.dispatchReceiverParameter !!) }, callingFragment, arguments)
+//
+//            functionToTransform.body !!.statements.forEach {
+//                statements += it.transformStatement(transform)
+//            }
+//        }
+//    }
 
     fun IrExpression.transformCreateStateAccess(
         closure: ArmClosure,

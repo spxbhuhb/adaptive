@@ -20,12 +20,12 @@ fun <VT> poll(
     interval: Duration,
     default: VT,
     binding: AdaptiveStateVariableBinding<VT>? = null,
-    pollFun: (suspend () -> VT)?
+    pollFun: suspend () -> VT
 ): VT {
     checkNotNull(binding)
 
     binding.sourceFragment.addProducer(
-        AdaptivePoll(binding, interval)
+        AdaptivePoll(binding, interval, pollFun)
     )
 
     return default

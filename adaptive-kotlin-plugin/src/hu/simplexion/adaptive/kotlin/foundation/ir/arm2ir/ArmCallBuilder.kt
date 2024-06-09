@@ -4,17 +4,15 @@
 
 package hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir
 
+import hu.simplexion.adaptive.kotlin.common.property
 import hu.simplexion.adaptive.kotlin.foundation.Indices
 import hu.simplexion.adaptive.kotlin.foundation.Names
 import hu.simplexion.adaptive.kotlin.foundation.Strings
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmCall
-import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmSupportFunctionArgument
-import hu.simplexion.adaptive.kotlin.common.property
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.declarations.impl.IrValueParameterImpl
 import org.jetbrains.kotlin.ir.expressions.IrBlock
-import org.jetbrains.kotlin.ir.expressions.IrBranch
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.expressions.impl.IrBlockImpl
@@ -118,15 +116,5 @@ class ArmCallBuilder(
                 }
             }
     }
-
-    override fun genInvokeBranches(
-        invokeFun: IrSimpleFunction,
-        supportFunctionIndex: IrVariable,
-        callingFragment: IrVariable,
-        arguments: IrVariable
-    ): List<IrBranch> =
-        armCall.arguments
-            .filterIsInstance<ArmSupportFunctionArgument>()
-            .map { genInvokeBranch(invokeFun, supportFunctionIndex, callingFragment, arguments, it) }
 
 }

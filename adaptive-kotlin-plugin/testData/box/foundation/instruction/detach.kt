@@ -6,7 +6,7 @@ package stuff
 import hu.simplexion.adaptive.foundation.instruction.*
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.foundation.testing.*
-import hu.simplexion.adaptive.foundation.structural.*
+import hu.simplexion.adaptive.foundation.fragment.*
 import hu.simplexion.adaptive.foundation.query.*
 
 @Adaptive
@@ -113,7 +113,7 @@ fun box(): String {
         TraceEvent("AdaptiveText", 8, "after-Mount", ""),
         TraceEvent("AdaptiveSequence", 3, "after-Mount", ""),
         TraceEvent("<root>", 2, "after-Mount", ""),
-        TraceEvent("AdaptiveSlot", 4, "setContent", "origin: AdaptiveRootDetach1113 @ 2, detachIndex: 4"),
+        TraceEvent("AdaptiveSlot", 4, "setContent", "origin: AdaptiveRootDetach1111 @ 2, detachIndex: 4"),
         TraceEvent("AdaptiveT0", 5, "before-Unmount", ""),
         TraceEvent("AdaptiveT0", 5, "after-Unmount", ""),
         TraceEvent("AdaptiveT0", 5, "before-Dispose", ""),
@@ -126,7 +126,7 @@ fun box(): String {
         TraceEvent("AdaptiveT1", 10, "after-Create", ""),
         TraceEvent("AdaptiveT1", 10, "before-Mount", ""),
         TraceEvent("AdaptiveT1", 10, "after-Mount", ""),
-        TraceEvent("AdaptiveSlot", 4, "setContent", "origin: AdaptiveRootDetach1113 @ 2, detachIndex: 6"),
+        TraceEvent("AdaptiveSlot", 4, "setContent", "origin: AdaptiveRootDetach1111 @ 2, detachIndex: 6"),
         TraceEvent("AdaptiveT1", 10, "before-Unmount", ""),
         TraceEvent("AdaptiveT1", 10, "after-Unmount", ""),
         TraceEvent("AdaptiveT1", 10, "before-Dispose", ""),

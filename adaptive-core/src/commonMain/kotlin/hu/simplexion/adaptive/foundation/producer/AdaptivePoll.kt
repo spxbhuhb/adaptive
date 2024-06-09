@@ -13,14 +13,9 @@ import kotlin.time.Duration
 
 class AdaptivePoll<VT>(
     val binding: AdaptiveStateVariableBinding<VT>,
-    val interval: Duration
+    val interval: Duration,
+    val pollFunction: suspend () -> VT
 ) : AdaptiveProducer {
-
-    val pollFunction = BoundSupportFunction(
-        binding.sourceFragment,
-        binding.sourceFragment,
-        binding.supportFunctionIndex
-    )
 
     var scope: CoroutineScope? = null
 
@@ -35,7 +30,7 @@ class AdaptivePoll<VT>(
                     // TODO do not poll when the fragment is not mounted
 
                     try {
-                        binding.setValue(pollFunction.invokeSuspend(), false) // TODO check provider call in poll
+                        binding.setValue(pollFunction(), false) // TODO check provider call in poll
                     } catch (e: AdaptiveProducerCancel) {
                         it.cancel()
                         break

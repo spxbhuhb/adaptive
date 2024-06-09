@@ -7,6 +7,7 @@ package hu.simplexion.adaptive.foundation.testing
 
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.foundation.internal.BoundSupportFunction
+import hu.simplexion.adaptive.utility.checkIfInstance
 
 @Adaptive
 @Suppress("unused", "FunctionName")
@@ -27,8 +28,8 @@ class AdaptiveS1(
 
     override fun genPatchInternal(): Boolean = true
 
-    var s0: BoundSupportFunction
-        get() = state[0] as BoundSupportFunction
+    var s0: ((Int) -> Unit)
+        get() = state[0].checkIfInstance()
         set(v) {
             state[0] = v
         }

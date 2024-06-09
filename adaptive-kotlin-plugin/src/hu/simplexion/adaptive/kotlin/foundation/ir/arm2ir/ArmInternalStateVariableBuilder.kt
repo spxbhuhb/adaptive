@@ -37,13 +37,12 @@ open class ArmInternalStateVariableBuilder(
                 dispatchReceiver = irGet(internalPatchFun.dispatchReceiverParameter!!),
                 args = arrayOf(
                     irConst(stateVariable.indexInState),
-                    irConst(producer.supportFunctionIndex),
                     irConst(stateVariable.type.classFqName !!.asString())
                 )
             )
         )
 
-        call.putValueArgument(producer.argumentIndex, irNull())
+        call.putValueArgument(producer.argumentIndex, producer.irExpression)
 
         return call
     }
