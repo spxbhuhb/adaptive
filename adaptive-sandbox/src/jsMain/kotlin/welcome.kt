@@ -1,46 +1,46 @@
 import hu.simplexion.adaptive.foundation.Adaptive
-import hu.simplexion.adaptive.foundation.instruction.Name
-import hu.simplexion.adaptive.foundation.instruction.name
 import hu.simplexion.adaptive.sandbox.api.SignUp
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
 
 @Adaptive
-fun editors() {
-    val signUp = SignUp(name = "Hello")
+fun welcome() {
+    val signUp = SignUp("name", "email", "password", "verification")
 
     grid(
         colTemplate(1.fr),
-        rowTemplate(1.fr, 381.dp, 1.fr),
-        padding(32.dp)
+        paddingLeft(32.dp),
+        paddingRight(32.dp),
     ) {
-        row(AlignItems.Center) {
+
+        row { }
+
+        row(AlignItems.Start) {
             text("Welcome", *titleMedium)
         }
 
-        column {
-            text("Sign up to join", *bodyMedium)
+        text("Sign up to join", *bodyMedium)
 
+        grid(
+            colTemplate(1.fr),
+            rowTemplate(Repeat(4, 52.dp))
+        ) {
             stringEditor(*editor) { signUp.name }
             stringEditor(*editor) { signUp.email }
             stringEditor(*editor) { signUp.password }
             stringEditor(*editor) { signUp.verification }
-
-            button("Sign Up", *button, onClick { println("sing up") })
         }
 
-        row(*center) {
+        text("Agreement")
+
+        button("Sign Up", Height(50.dp), onClick { println("sing up") })
+
+        row(JustifyContent.Center) {
             text("Have an account?", *bodyMedium)
             text("Sign in", *bodyMedium, onClick { println("sign in") })
         }
     }
 }
-
-val button = arrayOf(
-    greenGradient,
-    borderRadius,
-    *center
-)
 
 val titleMedium = arrayOf(
     FontSize(40.sp),
@@ -53,7 +53,8 @@ val bodyMedium = arrayOf(
 )
 
 val editor = arrayOf(
-    Color(0x8A8A8F),
+    // PlaceholderColor(0x8A8A8F),
+    Color(0x000000),
     BackgroundColor(Color(0xEFEFF4)),
     BorderRadius(8.dp),
     Border.NONE,

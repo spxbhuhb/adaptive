@@ -11,6 +11,8 @@ import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.testing.uiTest
 import hu.simplexion.adaptive.ui.common.testing.assertEquals
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
 
 class GridTest {
 
@@ -42,7 +44,7 @@ class GridTest {
                 Grid1
             ) {
                 row(Row1) {
-                    text("a", Size(92, 92), Text1)
+                    text("a", Size(92.dp, 92.dp), Text1)
                 }
             }
 
@@ -55,4 +57,8 @@ class GridTest {
         }
     }
 
+    @Test
+    fun rowOffsetsTest() {
+        assertEquals(rowTemplate(10.fr, 20.fr, 10.fr, 10.fr), rowOffsets(total = 50f, 10f, 30f, 40f))
+    }
 }

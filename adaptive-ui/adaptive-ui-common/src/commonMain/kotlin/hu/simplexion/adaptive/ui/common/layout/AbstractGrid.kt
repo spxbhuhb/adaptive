@@ -33,15 +33,13 @@ abstract class AbstractGrid<RT, CRT : RT>(
     var rowOffsets = FloatArray(0)
 
     override fun measure(): RawSize {
-        instructed()?.also { return it }
-
         traceMeasure()
 
         for (item in layoutItems) {
             item.measure()
         }
 
-        return RawSize.NaS
+        return instructed()
     }
 
     override fun layout(proposedFrame: RawFrame) {
@@ -72,13 +70,18 @@ abstract class AbstractGrid<RT, CRT : RT>(
         rowTracksPrepared = expand(rowTemp.tracks).map { PreparedTrack(it) }
 
         val padding = renderData.padding
-        val paddingTop = padding.top.toPx(uiAdapter)
-        val paddingRight = padding.right.toPx(uiAdapter)
-        val paddingBottom = padding.bottom.toPx(uiAdapter)
-        val paddingLeft = padding.left.toPx(uiAdapter)
+        val paddingTop = padding.top.toPxOrZero(uiAdapter)
+        val paddingRight = padding.right.toPxOrZero(uiAdapter)
+        val paddingBottom = padding.bottom.toPxOrZero(uiAdapter)
+        val paddingLeft = padding.left.toPxOrZero(uiAdapter)
 
-        colOffsets = distribute(size.width - paddingLeft - paddingRight, paddingLeft, colTracksPrepared)
-        rowOffsets = distribute(size.height - paddingTop - paddingBottom, paddingTop, rowTracksPrepared)
+        val gap = renderData.gap.toPxOrZero(uiAdapter)
+
+        val availableWidth = size.width - paddingRight
+        val availableHeight = size.height - paddingBottom
+
+        colOffsets = distribute(availableWidth, paddingLeft, gap, colTracksPrepared)
+        rowOffsets = distribute(availableHeight, paddingTop, gap, rowTracksPrepared)
 
         if (trace) {
             trace("measure-layoutFrame", this.layoutFrame)
@@ -112,9 +115,9 @@ abstract class AbstractGrid<RT, CRT : RT>(
      *         longer than [tracks] as it contains the offset of the "end"
      *         as well.
      */
-    fun distribute(availableSpace: Float, startOffset : Float, tracks: List<PreparedTrack>): FloatArray {
+    fun distribute(availableSpace: Float, startOffset: Float, gap: Float, tracks: List<PreparedTrack>): FloatArray {
 
-        var usedSpace = startOffset
+        var usedSpace = startOffset + (tracks.size - 1) * gap
         var fractionSum = 0f
 
         for (i in tracks.indices) {
@@ -142,9 +145,11 @@ abstract class AbstractGrid<RT, CRT : RT>(
             } else {
                 previous = tracks[i].rawValue * piece
             }
+
+            offset += gap
         }
 
-        result[tracks.size] = offset + previous
+        result[tracks.size] = offset + previous - gap // the last gap is not there
 
         // floating point calculations may result in small fractional values, for example:
         // available=852.0 result:[0.0, 140.0, 190.0, 360.6667, 531.3334, 702.00006, 752.00006, 852.00006]

@@ -27,6 +27,9 @@ open class AdaptiveUITestAdapter(
     override fun makeContainerReceiver(fragment: AdaptiveUIContainerFragment<TestReceiver, TestReceiver>): TestReceiver =
         TestReceiver()
 
+    override fun makeStructuralReceiver(fragment: AdaptiveUIContainerFragment<TestReceiver, TestReceiver>): TestReceiver =
+        TestReceiver()
+
     override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 

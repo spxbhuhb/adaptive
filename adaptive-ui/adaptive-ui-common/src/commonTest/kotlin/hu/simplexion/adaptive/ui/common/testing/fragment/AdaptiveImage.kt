@@ -26,13 +26,12 @@ open class AdaptiveImage(
         get() = state[0].checkIfInstance()
 
     override fun genPatchInternal(): Boolean {
-        val closureMask = getThisClosureDirtyMask()
 
-        if (haveToPatch(closureMask, 1)) {
+        if (haveToPatch(dirtyMask, 1)) {
             res.uri
         }
 
-        patchInstructions(closureMask)
+        patchInstructions()
 
         return false
     }

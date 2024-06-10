@@ -129,8 +129,8 @@ abstract class AdaptiveUIContainerFragment<RT, CRT : RT>(
         }
     }
 
-    fun instructed() : RawSize? {
-        val instructedSize = renderData.instructedSize?.let { RawSize(it, uiAdapter) } ?: return null
+    fun instructed() : RawSize {
+        val instructedSize = RawSize(renderData.instructedSize, uiAdapter)
 
         for (item in layoutItems) {
             item.measure()
@@ -150,7 +150,7 @@ abstract class AdaptiveUIContainerFragment<RT, CRT : RT>(
         for (item in layoutItems) {
             val size = checkNotNull(item.measure()) { "unable to measure, cannot get size of: $item" }
 
-            val point = item.renderData.instructedPoint?.let { RawPoint(it, uiAdapter) } ?: RawPoint.ORIGIN
+            val point = RawPoint(item.renderData.instructedPoint, uiAdapter)
 
             width = widthFun(width, point, size)
             height = heightFun(height, point, size)
@@ -166,8 +166,8 @@ abstract class AdaptiveUIContainerFragment<RT, CRT : RT>(
     }
 
     fun calcPrefixAndGap(horizontal: Boolean): Pair<Float, Float> {
-        val instructedGap = renderData.gap ?: 0f
-        val padding = RawPadding(renderData.padding ?: Padding.ZERO, uiAdapter)
+        val instructedGap = renderData.gap.toPx(uiAdapter)
+        val padding = RawPadding(renderData.padding, uiAdapter)
 
         if (layoutItems.isEmpty()) return (0f to instructedGap)
 

@@ -26,17 +26,33 @@ data class DPixel(
     override val isFix
         get() = true
 
-    infix fun or(other : DPixel) : DPixel =
+    infix fun or(other: DPixel): DPixel =
         if (this === NaP) other else this
 
+    /**
+     * Convert the device-independent point into device-dependent pixel value.
+     * [NaP] is converted to [Float.NaN].
+     */
     fun toPx(adapter: AdaptiveUIAdapter<*, *>): Float =
+        when {
+            this == NaP -> Float.NaN
+            this === ZERO -> 0f
+            else -> adapter.toPx(this)
+        }
+
+    /**
+     * Convert the device-independent point into device-dependent pixel value.
+     * [NaP] is converted to 0f. If you want to keep the information that the
+     * value is invalid use [toPx].
+     */
+    fun toPxOrZero(adapter: AdaptiveUIAdapter<*, *>): Float =
         if (this === ZERO || this === NaP) 0f else adapter.toPx(this)
 
     override fun toRawValue(adapter: AdaptiveUIAdapter<*, *>): Float =
         this.toPx(adapter)
 
     override fun toString(): String {
-        return "${value}dp"
+        return if (value.isNaN()) "NaP" else "${value}dp"
     }
 
     companion object {

@@ -3,11 +3,8 @@
  */
 
 import hu.simplexion.adaptive.foundation.Adaptive
-import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
-import hu.simplexion.adaptive.foundation.instruction.Trace
-import hu.simplexion.adaptive.foundation.instruction.invoke
 import hu.simplexion.adaptive.foundation.fragment.slot
-import hu.simplexion.adaptive.foundation.instruction.name
+import hu.simplexion.adaptive.foundation.instruction.*
 import hu.simplexion.adaptive.lib.sandbox.SandboxLibExports
 import hu.simplexion.adaptive.sandbox.api.CounterApi
 import hu.simplexion.adaptive.service.getService
@@ -59,22 +56,31 @@ fun main() {
     //withWebSocketTransport()
     withJsResources()
 
-    browser(SandboxLibExports, exports, trace = traceLayout) {
+    browser(SandboxLibExports, exports) {
 
-        grid(colTemplate(100.dp, 1.fr), rowTemplate(1.fr)) {
+        var width = 393 // 375 // pixel: 393
+        var height = 760 // 812 // pixel: 808 - 24 - 24 = 760
 
-            column(BackgroundColor(lightGray)) {
-                button("Login", replace { login() })
-                button("Editors", replace { editors() })
-                button("Sandbox", replace { stuff() })
-                button("Chessboard", replace { chessBoard() })
+        grid(colTemplate(100.dp, 1.fr), rowTemplate(50.dp, 1.fr)) {
+
+            row {  }
+
+            row {
+                button("393 x 760", onClick { width = 393; height = 760 })
+                button("375 x 812", onClick { width = 375; height = 812 })
             }
 
+            column(BackgroundColor(lightGray)) {
+                navButton("Login", replace { login() })
+                navButton("Welcome", replace { welcome() })
+                navButton("Sandbox", replace { stuff() })
+                navButton("Chessboard", replace { chessBoard() })
+            }
 
-            box(Size((393 + 2 + 16).dp, (808 - 24 - 24 + 2 + 16).dp)) {
-                column(Point(16.dp, 16.dp), Width((393 + 2).dp), Border(lightGray, 1.dp), name("stuff")) {
-                    box(Size(393.dp, (808 - 24 - 24).dp)) {
-                        slot("mainContent") { editors() }
+            box(Size((width + 2 + 16).dp, (height + 2 + 16).dp), name("box1")) {
+                column(Point(16.dp, 16.dp), Size((width + 2).dp, (height + 2).dp), Border(lightGray, 1.dp)) {
+                    box(Size(width.dp, height.dp), name("box2")) {
+                        slot("mainContent") { welcome() }
                     }
                 }
             }
@@ -83,9 +89,22 @@ fun main() {
 
 }
 
+val button = arrayOf(
+    greenGradient,
+    borderRadius,
+    *center,
+    Padding(8.dp),
+    Height(44.dp)
+)
+
+@Adaptive
+fun navButton(label: String, vararg instructions: AdaptiveInstruction) {
+    button(label, *instructions, onClick { instructions<Replace>() })
+}
+
 @Adaptive
 fun button(label: String, vararg instructions: AdaptiveInstruction) {
-    row(greenGradient, borderRadius, *center, Padding(top = 8.dp, bottom = 8.dp), onClick { instructions<Replace>() }) {
+    row(*button, *instructions) {
         text(label, white, textMedium, noSelect)
     }
 }

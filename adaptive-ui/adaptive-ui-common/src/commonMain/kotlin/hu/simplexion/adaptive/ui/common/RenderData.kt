@@ -18,9 +18,8 @@ open class RenderData(
 
     override var tracePatterns : Array<out Regex> = emptyArray()
 
-    var instructedPoint : Point? = null
-
-    var instructedSize : Size? = null
+    var instructedPoint : Point = Point.NaP
+    var instructedSize : Size = Size.NaS
 
     var color : Color? = null
 
@@ -47,7 +46,7 @@ open class RenderData(
     var justifyItems : JustifyItems? = null
     var justifySelf: JustifySelf? = null
 
-    var gap : Float? = null
+    var gap : DPixel = DPixel.ZERO
 
     var noSelect : Boolean = false
 

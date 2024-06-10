@@ -25,19 +25,19 @@ val Number.colSpan
 
 // ---- Instructions --------------------------------------------------------
 
-data class RowSpan(val span : Int) : AdaptiveInstruction {
+data class RowSpan(val span: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> { it.rowSpan = span }
     }
 }
 
-data class ColSpan(val span : Int) : AdaptiveInstruction {
+data class ColSpan(val span: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> { it.colSpan = span }
     }
 }
 
-data class GridPos(val row : Int, val col : Int, val rowSpan : Int = 1, val colSpan: Int = 1) : AdaptiveInstruction {
+data class GridPos(val row: Int, val col: Int, val rowSpan: Int = 1, val colSpan: Int = 1) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> {
@@ -50,7 +50,7 @@ data class GridPos(val row : Int, val col : Int, val rowSpan : Int = 1, val colS
 
 }
 
-data class GridRow(val row : Int, val span : Int = 1) : AdaptiveInstruction {
+data class GridRow(val row: Int, val span: Int = 1) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> {
@@ -61,7 +61,7 @@ data class GridRow(val row : Int, val span : Int = 1) : AdaptiveInstruction {
 
 }
 
-data class GridCol(val col : Int, val span: Int = 1) : AdaptiveInstruction {
+data class GridCol(val col: Int, val span: Int = 1) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> {
@@ -72,9 +72,11 @@ data class GridCol(val col : Int, val span: Int = 1) : AdaptiveInstruction {
 
 }
 
-fun colTemplate(vararg tracks : Track) = ColTemplate(*tracks)
+fun colTemplate(vararg tracks: Track) = ColTemplate(*tracks)
 
-class ColTemplate(vararg val tracks : Track) : AdaptiveInstruction {
+class ColTemplate(val tracks: Array<out Track>) : AdaptiveInstruction {
+
+    constructor(vararg tracks: Track) : this(tracks)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -91,13 +93,15 @@ class ColTemplate(vararg val tracks : Track) : AdaptiveInstruction {
     }
 }
 
-fun rowTemplate(vararg tracks : Track) = RowTemplate(*tracks)
+fun rowTemplate(vararg tracks: Track) = RowTemplate(*tracks)
 
-class RowTemplate(vararg val tracks : Track) : AdaptiveInstruction {
+class RowTemplate(val tracks: Array<out Track>) : AdaptiveInstruction {
+
+    constructor(vararg tracks: Track) : this(tracks)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other == null || other !is ColTemplate) return false
+        if (other == null || other !is RowTemplate) return false
         return tracks.contentEquals(other.tracks)
     }
 
@@ -117,14 +121,14 @@ class RowTemplate(vararg val tracks : Track) : AdaptiveInstruction {
  */
 interface Track {
 
-    val isIntrinsic : Boolean
+    val isIntrinsic: Boolean
         get() = true
 
-    val isFix : Boolean
+    val isFix: Boolean
 
-    val value : Float
+    val value: Float
 
-    fun expand(out : MutableList<Track>) {
+    fun expand(out: MutableList<Track>) {
         out.add(this)
     }
 
@@ -135,9 +139,9 @@ interface Track {
 /**
  * Repeat [track] [count] times.
  */
-data class Repeat(val count : Int, val track : Track) : Track {
+data class Repeat(val count: Int, val track: Track) : Track {
 
-    override val isIntrinsic : Boolean
+    override val isIntrinsic: Boolean
         get() = false
 
     override val isFix: Boolean
@@ -146,7 +150,7 @@ data class Repeat(val count : Int, val track : Track) : Track {
     override val value: Float
         get() = throw UnsupportedOperationException()
 
-    override fun expand(out : MutableList<Track>) {
+    override fun expand(out: MutableList<Track>) {
         for (i in 0 until count) {
             if (track.isIntrinsic) {
                 out.add(track)

@@ -5,7 +5,9 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.ui.common.AdaptiveUIAdapter
 import hu.simplexion.adaptive.ui.common.RenderData
+import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 /**
@@ -45,6 +47,7 @@ data class Point(
 
     companion object {
         val ORIGIN = Point(0.dp, 0.dp)
+        val NaP = Point(DPixel.NaP, DPixel.NaP)
     }
 }
 
@@ -64,6 +67,12 @@ data class Size(
         subject.alsoIfInstance<RenderData> { it.instructedSize = this }
     }
 
+    fun toRaw(adapter : AdaptiveUIAdapter<*,*>) : RawSize =
+        RawSize(width.toPx(adapter), height.toPx(adapter))
+
+    fun isNaS() : Boolean =
+        (this === NaS)
+
     companion object {
         val ZERO = Size(0.dp, 0.dp)
         val NaS = Size(DPixel.NaP, DPixel.NaP)
@@ -82,12 +91,9 @@ data class Height(
 ) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> {
-            it.instructedSize = this or (it.instructedSize ?: Size.NaS)
+            it.instructedSize = Size(it.instructedSize.width, this.height)
         }
     }
-
-    infix fun or(size : Size) =
-        Size(size.width, height or size.height)
 }
 
 /**
@@ -102,10 +108,8 @@ data class Width(
 ) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> {
-            it.instructedSize = this or (it.instructedSize ?: Size.NaS)
+            it.instructedSize = Size(width, it.instructedSize.height)
         }
     }
 
-    infix fun or(size : Size) =
-        Size(width or size.width, size.height)
 }

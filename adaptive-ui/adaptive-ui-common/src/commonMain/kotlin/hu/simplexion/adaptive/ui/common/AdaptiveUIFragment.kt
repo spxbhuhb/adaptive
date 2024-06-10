@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
+import hu.simplexion.adaptive.ui.common.instruction.Size
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.layout.RawPoint
 import hu.simplexion.adaptive.ui.common.layout.RawSize
@@ -49,7 +50,7 @@ abstract class AdaptiveUIFragment<RT>(
      * such as images and text can calculate their own size which then can be
      * used for layout calculations or for resizing.
      */
-    var measuredSize: RawSize? = null
+    var measuredSize: RawSize = RawSize.NaS
 
     /**
      * Structural fragments (loop and select) set this to true to modify behaviour.
@@ -87,8 +88,18 @@ abstract class AdaptiveUIFragment<RT>(
 
     abstract fun measure(): RawSize
 
-    inline fun instructedOr(measured: () -> RawSize): RawSize {
-        val size = renderData.instructedSize?.let { RawSize(it, uiAdapter) } ?: measured()
+    protected fun instructedOr(measure: () -> RawSize): RawSize {
+        val instructed = renderData.instructedSize
+
+        if ( ! instructed.isNaS()) return instructed.toRaw(uiAdapter)
+
+        val measured = measure()
+
+        val size = RawSize(
+            instructed.width.toPx(uiAdapter) or measured.width,
+            instructed.height.toPx(uiAdapter) or measured.height
+        )
+
         measuredSize = size
         traceMeasure()
         return size
@@ -100,34 +111,22 @@ abstract class AdaptiveUIFragment<RT>(
 
     abstract fun layout(proposedFrame: RawFrame)
 
+    protected infix fun Float.or(other : Float) =
+        if (this.isNaN()) other else this
+
     open fun calcLayoutFrame(proposedFrame: RawFrame) {
-        val instructedPoint = renderData.instructedPoint?.let { RawPoint(it, uiAdapter) }
-        val instructedSize = renderData.instructedSize?.let { RawSize(it, uiAdapter) }
-        val measuredSize = this.measuredSize
+        val instructedTop = renderData.instructedPoint.top.toPx(uiAdapter)
+        val instructedLeft = renderData.instructedPoint.left.toPx(uiAdapter)
 
-        layoutFrame =
+        val instructedWidth = renderData.instructedSize.width.toPx(uiAdapter)
+        val instructedHeight = renderData.instructedSize.height.toPx(uiAdapter)
 
-            if (instructedPoint != null) {
-                if (instructedSize != null) {
-                    RawFrame(instructedPoint, instructedSize)
-                } else {
-                    if (proposedFrame.size === RawSize.NaS && measuredSize != null) {
-                        RawFrame(instructedPoint, measuredSize)
-                    } else {
-                        RawFrame(instructedPoint, proposedFrame.size)
-                    }
-                }
-            } else {
-                if (instructedSize != null) {
-                    RawFrame(proposedFrame.point, instructedSize)
-                } else {
-                    if (proposedFrame.size === RawSize.NaS && measuredSize != null) {
-                        RawFrame(proposedFrame.point, measuredSize)
-                    } else {
-                        proposedFrame
-                    }
-                }
-            }
+        layoutFrame = RawFrame(
+            instructedTop or proposedFrame.point.top,
+            instructedLeft or proposedFrame.point.left,
+            instructedWidth or proposedFrame.size.width,
+            instructedHeight or proposedFrame.size.height
+        )
 
         traceLayout()
     }
