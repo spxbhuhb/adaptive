@@ -71,8 +71,14 @@ abstract class AbstractGrid<RT, CRT : RT>(
         colTracksPrepared = expand(colTemp.tracks).map { PreparedTrack(it) }
         rowTracksPrepared = expand(rowTemp.tracks).map { PreparedTrack(it) }
 
-        colOffsets = distribute(size.width, colTracksPrepared)
-        rowOffsets = distribute(size.height, rowTracksPrepared)
+        val padding = renderData.padding
+        val paddingTop = padding.top.toPx(uiAdapter)
+        val paddingRight = padding.right.toPx(uiAdapter)
+        val paddingBottom = padding.bottom.toPx(uiAdapter)
+        val paddingLeft = padding.left.toPx(uiAdapter)
+
+        colOffsets = distribute(size.width - paddingLeft - paddingRight, paddingLeft, colTracksPrepared)
+        rowOffsets = distribute(size.height - paddingTop - paddingBottom, paddingTop, rowTracksPrepared)
 
         if (trace) {
             trace("measure-layoutFrame", this.layoutFrame)
@@ -106,9 +112,9 @@ abstract class AbstractGrid<RT, CRT : RT>(
      *         longer than [tracks] as it contains the offset of the "end"
      *         as well.
      */
-    fun distribute(availableSpace: Float, tracks: List<PreparedTrack>): FloatArray {
+    fun distribute(availableSpace: Float, startOffset : Float, tracks: List<PreparedTrack>): FloatArray {
 
-        var usedSpace = 0f
+        var usedSpace = startOffset
         var fractionSum = 0f
 
         for (i in tracks.indices) {
@@ -122,7 +128,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
 
         val piece = (availableSpace - usedSpace) / fractionSum
 
-        var offset = 0f
+        var offset = startOffset
         var previous = 0f // size of the previous track
 
         val result = FloatArray(tracks.size + 1)

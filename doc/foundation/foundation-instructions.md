@@ -2,8 +2,10 @@
 
 ## Name
 
-To give a fragment a name use `Name`. This might be useful for a few reasons. For example trace checks if a fragment has
-a name and uses it instead of the class name.
+To give a fragment a name use `Name`. This might be useful for a few reasons:
+
+- trace checks if a fragment has a name and uses it instead of the class name
+- for browser, the `id` of the HTML node is set to the name
 
 ```kotlin
 row(4.gridCol, whiteBorder, borderRadius, *center, Name("sign-in")) {

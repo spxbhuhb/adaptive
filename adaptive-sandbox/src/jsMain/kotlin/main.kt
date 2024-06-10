@@ -7,15 +7,13 @@ import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.Trace
 import hu.simplexion.adaptive.foundation.instruction.invoke
 import hu.simplexion.adaptive.foundation.fragment.slot
+import hu.simplexion.adaptive.foundation.instruction.name
 import hu.simplexion.adaptive.lib.sandbox.SandboxLibExports
 import hu.simplexion.adaptive.sandbox.api.CounterApi
 import hu.simplexion.adaptive.service.getService
 import hu.simplexion.adaptive.ui.common.browser.browser
 import hu.simplexion.adaptive.ui.common.browser.resource.withJsResources
-import hu.simplexion.adaptive.ui.common.fragment.column
-import hu.simplexion.adaptive.ui.common.fragment.grid
-import hu.simplexion.adaptive.ui.common.fragment.row
-import hu.simplexion.adaptive.ui.common.fragment.text
+import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.wireformat.withJson
 import kotlinx.datetime.Clock
@@ -61,24 +59,32 @@ fun main() {
     //withWebSocketTransport()
     withJsResources()
 
-    browser(SandboxLibExports, exports) {
+    browser(SandboxLibExports, exports, trace = traceLayout) {
+
         grid(colTemplate(100.dp, 1.fr), rowTemplate(1.fr)) {
 
             column(BackgroundColor(lightGray)) {
                 button("Login", replace { login() })
+                button("Editors", replace { editors() })
                 button("Sandbox", replace { stuff() })
                 button("Chessboard", replace { chessBoard() })
             }
 
-            slot("mainContent") { chessBoard() }
 
+            box(Size((393 + 2 + 16).dp, (808 - 24 - 24 + 2 + 16).dp)) {
+                column(Point(16.dp, 16.dp), Width((393 + 2).dp), Border(lightGray, 1.dp), name("stuff")) {
+                    box(Size(393.dp, (808 - 24 - 24).dp)) {
+                        slot("mainContent") { editors() }
+                    }
+                }
+            }
         }
     }
 
 }
 
 @Adaptive
-fun button(label : String, vararg instructions: AdaptiveInstruction) {
+fun button(label: String, vararg instructions: AdaptiveInstruction) {
     row(greenGradient, borderRadius, *center, Padding(top = 8.dp, bottom = 8.dp), onClick { instructions<Replace>() }) {
         text(label, white, textMedium, noSelect)
     }

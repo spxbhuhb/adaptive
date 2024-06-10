@@ -26,11 +26,14 @@ data class DPixel(
     override val isFix
         get() = true
 
+    infix fun or(other : DPixel) : DPixel =
+        if (this === NaP) other else this
+
     fun toPx(adapter: AdaptiveUIAdapter<*, *>): Float =
-        if (this === ZERO) 0f else adapter.toPx(this)
+        if (this === ZERO || this === NaP) 0f else adapter.toPx(this)
 
     override fun toRawValue(adapter: AdaptiveUIAdapter<*, *>): Float =
-        if (this === ZERO) 0f else adapter.toPx(this)
+        this.toPx(adapter)
 
     override fun toString(): String {
         return "${value}dp"
@@ -38,6 +41,11 @@ data class DPixel(
 
     companion object {
         val ZERO = DPixel(0f)
+
+        /**
+         * Means that this value is unspecified.
+         */
+        val NaP = DPixel(Float.NaN)
     }
 }
 

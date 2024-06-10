@@ -17,7 +17,7 @@ fun login() {
     val time = poll(1.seconds) { now() } ?: now()
     val timeText = "${time.hour.twoDigits}:${time.minute.twoDigits}:${time.second.twoDigits}"
 
-    box(Size(393.dp, (808 - 24 - 24).dp)) { // android Pixel 3 dimensions
+    box {
 
         image(Res.drawable.background)
 

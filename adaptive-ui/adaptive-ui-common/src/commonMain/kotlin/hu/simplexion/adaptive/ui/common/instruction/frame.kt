@@ -49,11 +49,11 @@ data class Point(
 }
 
 /**
- * Represents a size of an element.
+ * Represents a size of a fragment.
  *
  * This class is fully immutable, and we should keep it that way.
  *
- * Use [Size.NaS] to indicate that the size is invalid (Not a Size).
+ * Use [Size.NaS] to indicate that the size is unspecified (Not a Size).
  */
 data class Size(
     val width: DPixel,
@@ -66,5 +66,46 @@ data class Size(
 
     companion object {
         val ZERO = Size(0.dp, 0.dp)
+        val NaS = Size(DPixel.NaP, DPixel.NaP)
     }
+}
+
+/**
+ * Set height of a fragment.
+ *
+ * This class is fully immutable, and we should keep it that way.
+ *
+ * Use [DPixel.NaP] to indicate that the height is unspecified.
+ */
+data class Height(
+    val height: DPixel
+) : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        subject.alsoIfInstance<RenderData> {
+            it.instructedSize = this or (it.instructedSize ?: Size.NaS)
+        }
+    }
+
+    infix fun or(size : Size) =
+        Size(size.width, height or size.height)
+}
+
+/**
+ * Set width of a fragment.
+ *
+ * This class is fully immutable, and we should keep it that way.
+ *
+ * Use [DPixel.NaP] to indicate that the width is unspecified.
+ */
+data class Width(
+    val width: DPixel
+) : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        subject.alsoIfInstance<RenderData> {
+            it.instructedSize = this or (it.instructedSize ?: Size.NaS)
+        }
+    }
+
+    infix fun or(size : Size) =
+        Size(width or size.width, size.height)
 }

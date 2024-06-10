@@ -4,6 +4,7 @@
 package hu.simplexion.adaptive.ui.common.browser
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.instruction.Name
 import hu.simplexion.adaptive.ui.common.browser.fragment.BrowserFragmentFactory
 import hu.simplexion.adaptive.ui.common.AdaptiveUIAdapter
 import hu.simplexion.adaptive.ui.common.AdaptiveUIContainerFragment
@@ -13,6 +14,7 @@ import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.layout.RawPoint
 import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.utility.alsoIfInstance
+import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineDispatcher
@@ -96,6 +98,10 @@ open class AdaptiveBrowserAdapter(
 
             val style = receiver.style
 
+            instructions.firstOrNullIfInstance<Name>()?.let {
+                receiver.id = it.name
+            }
+
             with(renderData) {
                 // FIXME use classes (when possible) when applying render instructions to HTML element
                 backgroundColor?.let { style.backgroundColor = it.toHexColor() }
@@ -126,8 +132,12 @@ open class AdaptiveBrowserAdapter(
                 }
 
                 instructedSize?.let {
-                    style.width = "${it.width}px"
-                    style.height = "${it.height}px"
+                    if (it.width != DPixel.NaP) {
+                        style.width = "${it.width}px"
+                    }
+                    if (it.height != DPixel.NaP) {
+                        style.height = "${it.height}px"
+                    }
                 }
 
                 if (noSelect) {

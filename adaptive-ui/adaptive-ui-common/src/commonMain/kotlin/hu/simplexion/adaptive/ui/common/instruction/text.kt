@@ -7,6 +7,7 @@ package hu.simplexion.adaptive.ui.common.instruction
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.RenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
+import kotlinx.coroutines.channels.Channel
 
 data class FontName(val fontName: String) : AdaptiveInstruction {
     override fun apply(subject: Any) {
@@ -23,6 +24,18 @@ data class FontSize(val fontSize: SPixel) : AdaptiveInstruction {
 data class FontWeight(val weight: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> { it.fontWeight = weight }
+    }
+
+    companion object {
+        val THIN = FontWeight(100)
+        val EXTRA_LIGHT = FontWeight(200)
+        val LIGHT = FontWeight(300)
+        val NORMAL = FontWeight(400)
+        val MEDIUM = FontWeight(500)
+        val SEMI_BOLD = FontWeight(600)
+        val BOLD = FontWeight(700)
+        val EXTRA_BOLD = FontWeight(800)
+        val BLACK = FontWeight(900)
     }
 }
 

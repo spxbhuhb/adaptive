@@ -25,7 +25,7 @@ abstract class AbstractBox<RT, CRT : RT>(
     override fun layout(proposedFrame: RawFrame) {
         calcLayoutFrame(proposedFrame)
 
-        val layoutFrame = this.layoutFrame
+        val layoutFrame = RawFrame(RawPoint.ORIGIN, this.layoutFrame.size)
 
         for (item in layoutItems) {
             item.layout(layoutFrame)

@@ -298,7 +298,7 @@ abstract class AdaptiveFragment(
         AdaptiveStateVariableBinding<Int>(
             sourceFragment = this,
             indexInSourceState = indexInThis,
-            indexInSourceClosure = indexInTarget,
+            indexInSourceClosure = indexInThis,
             targetFragment = descendant,
             indexInTargetState = indexInTarget,
             path = path,

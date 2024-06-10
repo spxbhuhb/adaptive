@@ -19,4 +19,9 @@ data class Border(val color: Color, val width: DPixel = 1.dp) : AdaptiveInstruct
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> { it.border = this }
     }
+
+    companion object {
+        // FIXME make Border.NONE transparent
+        val NONE = Border(Color(0x000000), 0.dp)
+    }
 }
