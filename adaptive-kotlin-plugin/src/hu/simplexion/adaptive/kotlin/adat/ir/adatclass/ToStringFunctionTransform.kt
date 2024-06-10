@@ -7,7 +7,10 @@ import hu.simplexion.adaptive.kotlin.adat.Names
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatPluginContext
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
+import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
+import org.jetbrains.kotlin.ir.builders.irBlockBody
+import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
@@ -20,13 +23,14 @@ class ToStringFunctionTransform(
 ) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
 
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
-        toStringFunction.body = irFactory.createExpressionBody(
-            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irCall(
-                adatClass.getSimpleFunction(Names.ADAT_TO_STRING.identifier) !!,
-                irGet(toStringFunction.dispatchReceiverParameter !!)
+        toStringFunction.body = DeclarationIrBuilder(irContext, toStringFunction.symbol).irBlockBody {
+            + irReturn(
+                irCall(
+                    adatClass.getSimpleFunction(Names.ADAT_TO_STRING.identifier) !!,
+                    irGet(toStringFunction.dispatchReceiverParameter !!)
+                )
             )
-        )
+        }
         return declaration
     }
 }

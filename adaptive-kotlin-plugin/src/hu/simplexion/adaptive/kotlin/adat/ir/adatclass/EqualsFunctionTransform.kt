@@ -24,14 +24,15 @@ class EqualsFunctionTransform(
 ) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
 
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
-        equalsFunction.body = irFactory.createExpressionBody(
-            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irCall(
-                adatClass.getSimpleFunction(Names.ADAT_EQUALS.identifier) !!,
-                irGet(equalsFunction.dispatchReceiverParameter !!),
-                irGet(equalsFunction.valueParameters.first())
+        equalsFunction.body = DeclarationIrBuilder(irContext, equalsFunction.symbol).irBlockBody {
+            + irReturn(
+                irCall(
+                    adatClass.getSimpleFunction(Names.ADAT_EQUALS.identifier) !!,
+                    irGet(equalsFunction.dispatchReceiverParameter !!),
+                    irGet(equalsFunction.valueParameters.first())
+                )
             )
-        )
+        }
 
         return declaration
     }

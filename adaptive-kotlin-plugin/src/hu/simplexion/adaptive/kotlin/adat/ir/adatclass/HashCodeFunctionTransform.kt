@@ -23,14 +23,14 @@ class HashCodeFunctionTransform(
 ) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
 
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
-        hashCodeFunction.body = irFactory.createExpressionBody(
-            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irCall(
-                adatClass.getSimpleFunction(Names.ADAT_HASHCODE.identifier) !!,
-                irGet(hashCodeFunction.dispatchReceiverParameter !!)
+        hashCodeFunction.body = DeclarationIrBuilder(irContext, hashCodeFunction.symbol).irBlockBody {
+            + irReturn(
+                irCall(
+                    adatClass.getSimpleFunction(Names.ADAT_HASHCODE.identifier) !!,
+                    irGet(hashCodeFunction.dispatchReceiverParameter !!)
+                )
             )
-        )
-
+        }
         return declaration
     }
 }
