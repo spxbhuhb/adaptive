@@ -31,6 +31,7 @@ open class RenderData(
     var letterSpacing: Float? = null
     var textAlign : TextAlign? = null
     var textWrap : TextWrap? = null
+    var textDecoration : TextDecoration = TextDecoration.None
 
     var border: Border? = null
     var borderRadius: DPixel? = null

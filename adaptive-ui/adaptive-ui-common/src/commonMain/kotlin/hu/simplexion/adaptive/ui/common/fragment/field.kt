@@ -10,7 +10,14 @@ import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.manualImplementation
 import hu.simplexion.adaptive.ui.common.commonUI
 
+/**
+ * Editor for simple string.
+ */
 @AdaptiveExpect(commonUI)
-fun text(content: Any?, vararg instructions : AdaptiveInstruction) {
-    manualImplementation(content, instructions)
+fun input(
+    vararg instructions : AdaptiveInstruction,
+    binding: AdaptiveStateVariableBinding<String>? = null,
+    selector: () -> String
+) {
+    manualImplementation(instructions, binding, selector)
 }

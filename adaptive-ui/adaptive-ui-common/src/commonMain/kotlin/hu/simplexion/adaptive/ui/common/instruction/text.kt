@@ -39,6 +39,15 @@ data class FontWeight(val weight: Int) : AdaptiveInstruction {
     }
 }
 
+enum class TextDecoration(val value : String) : AdaptiveInstruction {
+    None("none"),
+    Underline("underline");
+
+    override fun apply(subject: Any) {
+        subject.alsoIfInstance<RenderData> { it.textDecoration = this }
+    }
+}
+
 val noSelect = NoSelect()
 
 class NoSelect : AdaptiveInstruction {

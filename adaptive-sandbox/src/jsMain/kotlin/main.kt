@@ -58,24 +58,24 @@ fun main() {
 
     browser(SandboxLibExports, exports) {
 
-        var width = 393 // 375 // pixel: 393
-        var height = 760 // 812 // pixel: 808 - 24 - 24 = 760
+        var width = 375 // 375 // pixel: 393
+        var height = 812 // 812 // pixel: 808 - 24 - 24 = 760
 
-        grid(colTemplate(100.dp, 1.fr), rowTemplate(50.dp, 1.fr)) {
-
-            row {  }
-
-            row {
-                button("393 x 760", onClick { width = 393; height = 760 })
-                button("375 x 812", onClick { width = 375; height = 812 })
-            }
-
-            column(BackgroundColor(lightGray)) {
-                navButton("Login", replace { login() })
-                navButton("Welcome", replace { welcome() })
-                navButton("Sandbox", replace { stuff() })
-                navButton("Chessboard", replace { chessBoard() })
-            }
+//        grid(colTemplate(100.dp, 1.fr), rowTemplate(50.dp, 1.fr)) {
+//
+//            row {  }
+//
+//            row {
+//                button("393 x 760", onClick { width = 393; height = 760 })
+//                button("375 x 812", onClick { width = 375; height = 812 })
+//            }
+//
+//            column(BackgroundColor(lightGray)) {
+//                navButton("Login", replace { login() })
+//                navButton("Welcome", replace { welcome() })
+//                navButton("Sandbox", replace { stuff() })
+//                navButton("Chessboard", replace { chessBoard() })
+//            }
 
             box(Size((width + 2 + 16).dp, (height + 2 + 16).dp), name("box1")) {
                 column(Point(16.dp, 16.dp), Size((width + 2).dp, (height + 2).dp), Border(lightGray, 1.dp)) {
@@ -84,7 +84,7 @@ fun main() {
                     }
                 }
             }
-        }
+//        }
     }
 
 }
@@ -94,7 +94,7 @@ val button = arrayOf(
     borderRadius,
     *center,
     Padding(8.dp),
-    Height(44.dp)
+    Height(50.dp)
 )
 
 @Adaptive

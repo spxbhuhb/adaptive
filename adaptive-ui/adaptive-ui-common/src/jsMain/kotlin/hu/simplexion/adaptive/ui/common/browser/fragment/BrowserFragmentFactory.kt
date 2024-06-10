@@ -14,7 +14,7 @@ object BrowserFragmentFactory : AdaptiveFragmentFactory() {
             AdaptiveGrid,
             AdaptiveImage,
             AdaptiveRow,
-            AdaptiveStringEditor,
+            AdaptiveInput,
             AdaptiveText
         )
     }

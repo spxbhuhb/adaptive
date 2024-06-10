@@ -9,19 +9,17 @@ import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import hu.simplexion.adaptive.ui.common.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.browser.AdaptiveBrowserAdapter
 import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.instruction.onClick
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
-import org.w3c.dom.HTMLSpanElement
 
-open class AdaptiveStringEditor(
+open class AdaptiveInput(
     adapter: AdaptiveBrowserAdapter,
-    parent : AdaptiveFragment,
-    index : Int
+    parent: AdaptiveFragment,
+    index: Int
 ) : AdaptiveUIFragment<HTMLElement>(adapter, parent, index, 0, 2) {
 
     // 0 - instructions
@@ -35,20 +33,23 @@ open class AdaptiveStringEditor(
 
     override fun genPatchInternal(): Boolean {
 
+        val b = binding
+
         patchInstructions()
 
         if (haveToPatch(dirtyMask, 1)) {
-            receiver.value = binding.value
+            receiver.value = b.value
         }
 
         if (isInit) {
             receiver.addEventListener("input", {
-                if (receiver.value != binding.value) {
-                    binding.setValue(receiver.value, true)
+                if (receiver.value != b.value) {
+                    b.setValue(receiver.value, true)
                 }
             })
 
             receiver.style.outline = "none"
+            b.path?.let { receiver.placeholder = it.last() }
         }
 
         return false
@@ -66,10 +67,10 @@ open class AdaptiveStringEditor(
 
     companion object : AdaptiveFragmentCompanion {
 
-        override val fragmentType = "$commonUI:AdaptiveStringEditor"
+        override val fragmentType = "$commonUI:AdaptiveInput"
 
         override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveStringEditor(parent.adapter as AdaptiveBrowserAdapter, parent, index)
+            AdaptiveInput(parent.adapter as AdaptiveBrowserAdapter, parent, index)
 
     }
 

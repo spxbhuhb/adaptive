@@ -21,6 +21,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.Text
 
 open class AdaptiveBrowserAdapter(
     override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
@@ -82,6 +83,8 @@ open class AdaptiveBrowserAdapter(
             style.position = "absolute"
             style.top = "${point.top}px"
             style.left = "${point.left}px"
+        } else {
+            style.position = "relative"
         }
 
         if (layoutFrame.size != RawSize.NaS) {
@@ -124,6 +127,10 @@ open class AdaptiveBrowserAdapter(
                     style.setProperty("text-wrap", it.toString().lowercase())
                 }
 
+                if (textDecoration != TextDecoration.None) {
+                    style.textDecoration = textDecoration.value
+                }
+
                 if (padding != Padding.ZERO) {
                     style.paddingLeft = "${padding.left.value}px"
                     style.paddingTop = "${padding.top.value}px"
@@ -131,12 +138,12 @@ open class AdaptiveBrowserAdapter(
                     style.paddingBottom = "${padding.bottom.value}px"
                 }
 
-                instructedSize?.let {
-                    if (it.width != DPixel.NaP) {
-                        style.width = "${it.width}px"
+                with (instructedSize) {
+                    if (instructedSize.width != DPixel.NaP) {
+                        style.width = "${width}px"
                     }
-                    if (it.height != DPixel.NaP) {
-                        style.height = "${it.height}px"
+                    if (instructedSize.height != DPixel.NaP) {
+                        style.height = "${height}px"
                     }
                 }
 

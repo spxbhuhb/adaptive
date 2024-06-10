@@ -10,6 +10,9 @@ import hu.simplexion.adaptive.ui.common.RenderData
 import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
+fun frame(top: DPixel, left: DPixel, width: DPixel, height: DPixel) =
+    Frame(top, left, width, height)
+
 /**
  * Represents a frame on the UI.
  *
@@ -51,6 +54,9 @@ data class Point(
     }
 }
 
+fun size(width: DPixel, height: DPixel): Size =
+    Size(width, height)
+
 /**
  * Represents a size of a fragment.
  *
@@ -78,6 +84,8 @@ data class Size(
         val NaS = Size(DPixel.NaP, DPixel.NaP)
     }
 }
+
+fun height(height: DPixel) : Height = Height(height)
 
 /**
  * Set height of a fragment.

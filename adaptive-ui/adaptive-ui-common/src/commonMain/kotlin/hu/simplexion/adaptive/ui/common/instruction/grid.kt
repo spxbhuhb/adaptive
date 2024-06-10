@@ -117,7 +117,7 @@ class RowTemplate(val tracks: Array<out Track>) : AdaptiveInstruction {
 // ---- Track --------------------------------------------------------
 
 /**
- * IMPORTANT Tracks must be are immutable (or [Repeat] won't work).
+ * IMPORTANT Tracks must be are immutable (or [Replicate] won't work).
  */
 interface Track {
 
@@ -136,10 +136,13 @@ interface Track {
 
 }
 
+fun replicate(count : Int, track : Track) : Replicate =
+    Replicate(count, track)
+
 /**
- * Repeat [track] [count] times.
+ * Replicate [track] [count] times.
  */
-data class Repeat(val count: Int, val track: Track) : Track {
+data class Replicate(val count: Int, val track: Track) : Track {
 
     override val isIntrinsic: Boolean
         get() = false

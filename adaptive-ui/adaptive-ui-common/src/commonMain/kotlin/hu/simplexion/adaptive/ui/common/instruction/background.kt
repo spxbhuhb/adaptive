@@ -8,6 +8,8 @@ import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.RenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
+fun backgroundColor(color: Color) = BackgroundColor(color)
+
 data class BackgroundColor(val color: Color) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         subject.alsoIfInstance<RenderData> { it.backgroundColor = color }
