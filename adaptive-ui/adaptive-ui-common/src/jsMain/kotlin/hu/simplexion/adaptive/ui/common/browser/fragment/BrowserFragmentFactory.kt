@@ -10,6 +10,7 @@ object BrowserFragmentFactory : AdaptiveFragmentFactory() {
     init {
         addAll(
             AdaptiveBox,
+            AdaptiveCanvas,
             AdaptiveColumn,
             AdaptiveGrid,
             AdaptiveImage,

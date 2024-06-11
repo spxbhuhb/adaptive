@@ -46,7 +46,7 @@ abstract class AdaptiveUIContainerFragment<RT, CRT : RT>(
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
         if (declarationIndex != 0) invalidIndex(declarationIndex)
         // FIXME I think this anonymous fragment is superfluous
-        return AdaptiveAnonymous(adapter, this, declarationIndex, 0, content).apply { create() }
+        return AdaptiveAnonymous(this, declarationIndex, 0, content).apply { create() }
     }
 
     /**

@@ -84,7 +84,7 @@ class AdaptiveAccessBindingTest(
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
 
         val fragment = when (declarationIndex) {
-            0 -> AdaptiveAccessor(adapter, parent, declarationIndex)
+            0 -> AdaptiveAccessor(parent.adapter, parent, declarationIndex)
             else -> invalidIndex(declarationIndex) // throws exception
         }
 
@@ -124,7 +124,7 @@ class AdaptiveAccessor(
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
 
         val fragment = when (declarationIndex) {
-            0 -> AdaptiveT1(adapter, parent, declarationIndex)
+            0 -> AdaptiveT1(parent.adapter, parent, declarationIndex)
             else -> invalidIndex(declarationIndex) // throws exception
         }
 

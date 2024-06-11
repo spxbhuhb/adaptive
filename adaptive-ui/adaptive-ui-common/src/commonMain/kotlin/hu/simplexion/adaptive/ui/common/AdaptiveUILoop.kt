@@ -25,6 +25,6 @@ class AdaptiveUILoop<RT, CRT : RT>(
 
     override fun stateToTraceString(): String = super<AdaptiveLoopLogic>.stateToTraceString()
 
-    override fun makeAnonymous() = AdaptiveAnonymous(adapter, this, 0, 1, builder)
+    override fun makeAnonymous() = AdaptiveAnonymous(this, 0, 1, builder)
 
 }

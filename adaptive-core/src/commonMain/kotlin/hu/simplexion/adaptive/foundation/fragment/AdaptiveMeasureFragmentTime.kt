@@ -21,7 +21,7 @@ open class AdaptiveMeasureFragmentTime(
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
         if (declarationIndex != 0) invalidIndex(declarationIndex)
-        return AdaptiveAnonymous(adapter, this, declarationIndex, 0, content).apply { create() }
+        return AdaptiveAnonymous(this, declarationIndex, 0, content).apply { create() }
     }
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit

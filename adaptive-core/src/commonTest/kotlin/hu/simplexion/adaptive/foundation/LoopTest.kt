@@ -136,8 +136,8 @@ class AdaptiveLoopTest(
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         val fragment = when (declarationIndex) {
-            0 -> AdaptiveLoop<Int>(adapter, parent, declarationIndex)
-            1 -> AdaptiveT1(adapter, parent, declarationIndex)
+            0 -> AdaptiveLoop<Int>(parent.adapter, parent, declarationIndex)
+            1 -> AdaptiveT1(parent.adapter, parent, declarationIndex)
             else -> invalidIndex(declarationIndex) // throws exception
         }
 

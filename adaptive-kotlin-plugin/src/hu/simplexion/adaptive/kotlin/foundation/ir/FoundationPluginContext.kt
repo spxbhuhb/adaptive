@@ -52,6 +52,7 @@ class FoundationPluginContext(
     val adaptiveInstructionClass = ClassIds.ADAPTIVE_INSTRUCTION.classSymbol()
 
     val adaptiveAnonymousClass = ClassIds.ADAPTIVE_ANONYMOUS.classSymbol()
+    val anonymousConstructor = adaptiveAnonymousClass.constructors.first { it.owner.valueParameters.size == 4 }
 
     val boundFragmentFactoryClass = ClassIds.BOUND_FRAGMENT_FACTORY.classSymbol()
     val boundFragmentFactoryType = boundFragmentFactoryClass.defaultType

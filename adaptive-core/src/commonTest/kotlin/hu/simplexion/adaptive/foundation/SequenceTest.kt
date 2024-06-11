@@ -79,9 +79,9 @@ class AdaptiveSequenceTest(
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
 
         val fragment = when (declarationIndex) {
-            0 -> AdaptiveSequence(adapter, parent, declarationIndex)
-            1 -> AdaptiveT0(adapter, parent, declarationIndex)
-            2 -> AdaptiveT1(adapter, parent, declarationIndex)
+            0 -> AdaptiveSequence(parent.adapter, parent, declarationIndex)
+            1 -> AdaptiveT0(parent.adapter, parent, declarationIndex)
+            2 -> AdaptiveT1(parent.adapter, parent, declarationIndex)
             else -> invalidIndex(declarationIndex) // throws exception
         }
 

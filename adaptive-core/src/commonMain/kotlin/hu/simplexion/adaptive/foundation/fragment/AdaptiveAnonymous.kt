@@ -4,20 +4,27 @@
 package hu.simplexion.adaptive.foundation.fragment
 
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
-import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
 
-class AdaptiveAnonymous(
+class AdaptiveAnonymous private constructor(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment,
     index: Int,
     stateSize: Int,
     val factory: BoundFragmentFactory
-) : AdaptiveFragment(adapter, parent, index, -1, stateSize) {
+) : AdaptiveFragment(adapter, parent, index, - 1, stateSize) {
 
-    override val createClosure : AdaptiveClosure
-        get() = parent!!.thisClosure
+    constructor(
+        parent: AdaptiveFragment,
+        index: Int,
+        stateSize: Int,
+        factory: BoundFragmentFactory
+    ) : this(parent.adapter, parent, index, stateSize, factory)
+
+    override val createClosure: AdaptiveClosure
+        get() = parent !!.thisClosure
 
     override val thisClosure = extendWith(this, factory.declaringFragment) //.also { println(it.dump()) }
 
@@ -54,4 +61,17 @@ class AdaptiveAnonymous(
         )
     }
 
+    companion object {
+        /**
+         * Make an anonymous fragment with a new adapter. This function can be used
+         * to build a subtree with a different adapter than the current one.
+         */
+        fun switchAdapter(
+            adapter: AdaptiveAdapter,
+            parent: AdaptiveFragment,
+            index: Int,
+            stateSize: Int,
+            factory: BoundFragmentFactory
+        ) = AdaptiveAnonymous(adapter, parent, index, stateSize, factory)
+    }
 }

@@ -101,7 +101,7 @@ class AdaptiveLoop<IT>(
 
     override fun genPatchInternal(): Boolean = super<AdaptiveLoopLogic>.genPatchInternal()
 
-    override fun makeAnonymous() = AdaptiveAnonymous(adapter, this, 0, 1, builder)
+    override fun makeAnonymous() = AdaptiveAnonymous(this, 0, 1, builder)
 
     // ---- Development support --------------------------------------------
 

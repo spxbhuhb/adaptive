@@ -65,7 +65,7 @@ open class ClassBoundIrBuilder(
                     Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
                 )
 
-            constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)))
+            constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGetValue(pluginContext.adapter, irGet(buildFun.valueParameters[Indices.BUILD_PARENT])))
             constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(buildFun.valueParameters[Indices.BUILD_PARENT]))
             constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]))
 
