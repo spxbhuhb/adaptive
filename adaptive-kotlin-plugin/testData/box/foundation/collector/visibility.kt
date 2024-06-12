@@ -21,7 +21,7 @@ private fun Private() {
     T0()
 }
 
-@AdaptiveFragmentCompanionCollector
+@Collect
 object testFactory : AdaptiveFragmentFactory()
 
 fun box() : String {

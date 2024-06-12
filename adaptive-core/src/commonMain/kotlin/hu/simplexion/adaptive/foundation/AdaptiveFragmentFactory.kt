@@ -4,18 +4,17 @@
 
 package hu.simplexion.adaptive.foundation
 
+import hu.simplexion.adaptive.foundation.internal.NamedFragmentFactory
 import hu.simplexion.adaptive.registry.Registry
 
-open class AdaptiveFragmentFactory : Registry<AdaptiveFragmentCompanion>() {
+open class AdaptiveFragmentFactory : Registry<NamedFragmentFactory>() {
 
-    fun addAll(vararg companions : AdaptiveFragmentCompanion) {
-        for (companion in companions) {
-            set(companion.fragmentType, companion)
-        }
+    fun set(key : String, buildFun : (parent : AdaptiveFragment, index : Int) -> AdaptiveFragment) {
+        set(key, NamedFragmentFactory(key, buildFun))
     }
 
     fun newInstance(key: String, parent: AdaptiveFragment, index: Int): AdaptiveFragment {
-        return checkNotNull(get(key)) { "Unknown fragment type: $key" }.newInstance(parent, index)
+        return checkNotNull(get(key)) { "Unknown fragment type: $key" }.build(parent, index)
     }
 
 }

@@ -6,12 +6,14 @@ package hu.simplexion.adaptive.kotlin.foundation.ir
 import hu.simplexion.adaptive.kotlin.AdaptiveOptions
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir.ArmClassBuilder
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir.ArmEntryPointBuilder
+import hu.simplexion.adaptive.kotlin.foundation.ir.export.CollectorTransform
 import hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm.EntryPointTransform
 import hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm.OriginalFunctionTransform
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
 import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.visitors.acceptVoid
 
 internal class FoundationGenerationExtension(
     val options: AdaptiveOptions
@@ -38,7 +40,7 @@ internal class FoundationGenerationExtension(
                     it.armClass.originalFunction.file.addChild(it.irClass)
                 }
 
-            moduleFragment.accept(FragmentCollectorTransform(this), null)
+            moduleFragment.accept(CollectorTransform(this), null)
 
             armEntryPoints
                 .forEach { ArmEntryPointBuilder(this, it).entryPointBody() }

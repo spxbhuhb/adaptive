@@ -5,18 +5,18 @@
 
 package hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir
 
-import hu.simplexion.adaptive.kotlin.common.functionByName
-import hu.simplexion.adaptive.kotlin.common.property
 import hu.simplexion.adaptive.kotlin.common.propertyGetter
 import hu.simplexion.adaptive.kotlin.foundation.FoundationPluginKey
 import hu.simplexion.adaptive.kotlin.foundation.Indices
 import hu.simplexion.adaptive.kotlin.foundation.Names
 import hu.simplexion.adaptive.kotlin.foundation.Strings
 import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
-import hu.simplexion.adaptive.kotlin.foundation.ir.arm.*
+import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmClass
+import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmDefaultValueStatement
+import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmInternalStateVariable
+import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmRenderingStatement
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.ClassKind
-import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.builders.declarations.addConstructor
@@ -29,9 +29,10 @@ import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.expressions.impl.*
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.symbols.impl.IrAnonymousInitializerSymbolImpl
-import org.jetbrains.kotlin.ir.types.*
+import org.jetbrains.kotlin.ir.types.IrTypeSystemContextImpl
+import org.jetbrains.kotlin.ir.types.defaultType
+import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.*
-import org.jetbrains.kotlin.name.SpecialNames
 
 @OptIn(UnsafeDuringIrConstructionAPI::class) // uncomment for 2.0.0
 class ArmClassBuilder(
@@ -72,8 +73,6 @@ class ArmClassBuilder(
         }
 
         irClass.addFakeOverrides(IrTypeSystemContextImpl(irContext.irBuiltIns))
-
-        addCompanion()
 
         armClass.irClass = irClass
         pluginContext.irClasses[armClass.fqName] = irClass
@@ -368,107 +367,4 @@ class ArmClassBuilder(
             }
         )
 
-    // ---------------------------------------------------------------------------
-    // Companion
-    // ---------------------------------------------------------------------------
-
-    private fun addCompanion() {
-
-        if (armClass.originalFunction.isAnonymousFunction) return
-        if (armClass.originalFunction.visibility != DescriptorVisibilities.PUBLIC) return
-
-        irFactory.buildClass {
-            startOffset = irClass.endOffset
-            endOffset = irClass.endOffset
-            origin = FoundationPluginKey.origin
-            name = SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT
-            kind = ClassKind.OBJECT
-            isCompanion = true
-            visibility = irClass.visibility
-            modality = Modality.FINAL
-        }.also { companion ->
-
-            companion.parent = irClass
-            irClass.declarations += companion
-
-            companion.superTypes = listOf(pluginContext.adaptiveFragmentCompanionType)
-
-            companion.thisReceiver()
-
-            companion.addConstructor {
-                isPrimary = true
-                returnType = companion.defaultType
-            }.also {
-                it.body = DeclarationIrBuilder(pluginContext.irContext, it.symbol).irBlockBody {
-
-                    + IrDelegatingConstructorCallImpl.fromSymbolOwner(
-                        SYNTHETIC_OFFSET,
-                        SYNTHETIC_OFFSET,
-                        irBuiltIns.anyType,
-                        irBuiltIns.anyClass.constructors.first(),
-                        typeArgumentsCount = 0,
-                        valueArgumentsCount = 0
-                    )
-
-                    + IrInstanceInitializerCallImpl(
-                        SYNTHETIC_OFFSET,
-                        SYNTHETIC_OFFSET,
-                        irClass.symbol,
-                        irBuiltIns.unitType
-                    )
-                }
-            }
-
-            companion.addFakeOverrides(IrTypeSystemContextImpl(irContext.irBuiltIns))
-
-            fixCompanionFragmentType(companion)
-            fixCompanionNewInstance(companion)
-
-        }
-    }
-
-    private fun fixCompanionFragmentType(companion: IrClass) {
-        val property = companion.property(Names.FRAGMENT_TYPE)
-
-        property.isFakeOverride = false
-        property.origin = IrDeclarationOrigin.DEFINED
-        property.modality = Modality.FINAL
-
-        val getter = checkNotNull(property.getter)
-        getter.isFakeOverride = false
-        getter.origin = IrDeclarationOrigin.GENERATED_SETTER_GETTER
-        getter.modality = Modality.FINAL
-
-        getter.body = getter.irReturnBody {
-            irConst(irClass.classId !!.asFqNameString())
-        }
-    }
-
-    private fun fixCompanionNewInstance(companion: IrClass) {
-        val newInstanceFun = companion.functionByName { Strings.NEW_INSTANCE }.owner
-
-        newInstanceFun.isFakeOverride = false
-        newInstanceFun.origin = IrDeclarationOrigin.DEFINED
-        newInstanceFun.modality = Modality.FINAL
-
-        val valueParameters = newInstanceFun.valueParameters
-        val getAdapter = irGetValue(pluginContext.adapter, irGet(valueParameters[0]))
-
-        newInstanceFun.body = newInstanceFun.irReturnBody {
-
-            IrConstructorCallImpl(
-                SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                irClass.defaultType,
-                irClass.constructors.first().symbol,
-                typeArgumentsCount = 0,
-                constructorTypeArgumentsCount = 0,
-                Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
-            ).also { call ->
-                call.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, getAdapter)
-                call.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(valueParameters[0]))
-                call.putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(valueParameters[1]))
-            }
-
-        }
-    }
 }

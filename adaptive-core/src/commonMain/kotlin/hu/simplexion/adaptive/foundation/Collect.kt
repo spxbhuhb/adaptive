@@ -4,10 +4,4 @@
 
 package hu.simplexion.adaptive.foundation
 
-interface AdaptiveFragmentCompanion{
-
-    val fragmentType : String
-
-    fun newInstance(parent : AdaptiveFragment, index : Int): AdaptiveFragment
-
-}
+annotation class Collect

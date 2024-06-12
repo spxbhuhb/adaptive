@@ -11,14 +11,15 @@ fun Basic() {
     T0()
 }
 
-@AdaptiveFragmentCompanionCollector
+@Collect
 object testFactory : AdaptiveFragmentFactory()
 
 fun box() : String {
 
     val adapter = AdaptiveTestAdapter()
     val parent = AdaptiveT1(adapter, null, 0)
-    val fragment = testFactory.newInstance("stuff.AdaptiveBasic", parent, 123)
+
+    val fragment = testFactory.newInstance("stuff.Basic", parent, 123)
 
     if (fragment.adapter != adapter) return "Fail: adapter"
     if (fragment.parent != parent) return "Fail: parent"

@@ -12,6 +12,7 @@ import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmEntryPoint
 import hu.simplexion.adaptive.kotlin.common.AbstractPluginContext
 import hu.simplexion.adaptive.kotlin.common.functionByName
 import hu.simplexion.adaptive.kotlin.common.propertyGetter
+import hu.simplexion.adaptive.kotlin.foundation.ir.export.AdaptiveActualClass
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
@@ -45,9 +46,6 @@ class FoundationPluginContext(
 
     val adaptiveAdapterClass = ClassIds.ADAPTIVE_ADAPTER.classSymbol()
     val adaptiveAdapterType = adaptiveAdapterClass.defaultType
-
-    val adaptiveFragmentCompanionClass = ClassIds.ADAPTIVE_FRAGMENT_COMPANION.classSymbol()
-    val adaptiveFragmentCompanionType = adaptiveFragmentCompanionClass.defaultType
 
     val adaptiveInstructionClass = ClassIds.ADAPTIVE_INSTRUCTION.classSymbol()
 

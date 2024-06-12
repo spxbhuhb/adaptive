@@ -20,7 +20,6 @@ object Strings {
     const val ADAPTIVE_ROOT = "AdaptiveRoot"
     const val ADAPTIVE_ANONYMOUS = "AdaptiveAnonymous"
     const val ADAPTIVE_FRAGMENT = "AdaptiveFragment"
-    const val ADAPTIVE_FRAGMENT_COMPANION = "AdaptiveFragmentCompanion"
     const val ADAPTIVE_ADAPTER = "AdaptiveAdapter"
     const val ADAPTIVE_SEQUENCE = "AdaptiveSequence"
     const val ADAPTIVE_SELECT = "AdaptiveSelect"
@@ -62,7 +61,8 @@ object Strings {
     const val HELPER_THIS_STATE = "thisState"
 
     const val ADAPTIVE_EXPECT = "AdaptiveExpect"
-    const val ADAPTIVE_FRAGMENT_COMPANION_COLLECTOR = "AdaptiveFragmentCompanionCollector"
+    const val ADAPTIVE_ACTUAL = "AdaptiveActual"
+    const val COLLECT = "Collect"
     const val MANUAL_IMPLEMENTATION = "manualImplementation"
 
     const val NEW_SEQUENCE = "newSequence"
@@ -75,7 +75,7 @@ object Strings {
 
     const val KOTLIN_INVOKE = "invoke"
 
-    const val ADD_ALL = "addAll"
+    const val SET = "set"
     const val FRAGMENT_TYPE = "fragmentType"
     const val NEW_INSTANCE = "newInstance"
 
@@ -104,7 +104,9 @@ object FqNames {
     val ADAPTIVE_LOOP = Strings.ADAPTIVE_LOOP.structural()
 
     val ADAPTIVE_EXPECT = Strings.ADAPTIVE_EXPECT.runtime()
-    val ADAPTIVE_FRAGMENT_COMPANION_COLLECTOR = Strings.ADAPTIVE_FRAGMENT_COMPANION_COLLECTOR.runtime()
+    val ADAPTIVE_ACTUAL = Strings.ADAPTIVE_ACTUAL.runtime()
+
+    val COLLECT = Strings.COLLECT.runtime()
 }
 
 object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
@@ -116,7 +118,6 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
 
     val ADAPTIVE = Strings.ADAPTIVE.classId()
     val ADAPTIVE_FRAGMENT = Strings.ADAPTIVE_FRAGMENT.classId()
-    val ADAPTIVE_FRAGMENT_COMPANION = Strings.ADAPTIVE_FRAGMENT_COMPANION.classId()
     val ADAPTIVE_ADAPTER = Strings.ADAPTIVE_ADAPTER.classId()
 
     val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.classId { STRUCTURAL }

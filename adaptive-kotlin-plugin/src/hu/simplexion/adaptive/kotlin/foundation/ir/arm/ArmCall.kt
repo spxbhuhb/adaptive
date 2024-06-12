@@ -13,6 +13,7 @@ import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrConst
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.util.getAnnotation
+import org.jetbrains.kotlin.ir.util.getAnnotationStringValue
 
 @OptIn(UnsafeDuringIrConstructionAPI::class)
 open class ArmCall(
@@ -30,8 +31,7 @@ open class ArmCall(
 
     fun getExpectName(): String =
         checkNotNull(irCall.symbol.owner.getAnnotation(FqNames.ADAPTIVE_EXPECT)) { "missing ${Strings.ADAPTIVE_EXPECT} annotation" }
-            .getValueArgument(0)
-            .let { (it  as IrConst<*>).value as String } + ":" + target.shortName().identifier
+            .getAnnotationStringValue() + ":" + target.shortName().identifier.removePrefix("Adaptive")
 
     override fun branchBuilder(parent: ClassBoundIrBuilder): BranchBuilder =
         ArmCallBuilder(parent, this)
