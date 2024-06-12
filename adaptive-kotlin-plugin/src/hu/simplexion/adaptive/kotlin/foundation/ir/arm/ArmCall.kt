@@ -31,7 +31,7 @@ open class ArmCall(
 
     fun getExpectName(): String =
         checkNotNull(irCall.symbol.owner.getAnnotation(FqNames.ADAPTIVE_EXPECT)) { "missing ${Strings.ADAPTIVE_EXPECT} annotation" }
-            .getAnnotationStringValue() + ":" + target.shortName().identifier.removePrefix("Adaptive")
+            .getAnnotationStringValue() + ":" + target.shortName().identifier.removePrefix("Adaptive").lowercase()
 
     override fun branchBuilder(parent: ClassBoundIrBuilder): BranchBuilder =
         ArmCallBuilder(parent, this)

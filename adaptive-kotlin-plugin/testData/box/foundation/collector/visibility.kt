@@ -21,14 +21,14 @@ private fun Private() {
     T0()
 }
 
-@Collect
+@Collect("")
 object testFactory : AdaptiveFragmentFactory()
 
 fun box() : String {
 
-    if ("stuff.AdaptivePublic" !in testFactory) return "Fail: public"
-    if ("stuff.AdaptiveInternal" in testFactory) return "Fail: internal"
-    if ("stuff.AdaptivePrivate" in testFactory) return "Fail: private"
+    if (":stuff.public" !in testFactory) return "Fail: public"
+    if (":stuff.internal" in testFactory) return "Fail: internal"
+    if (":stuff.private" in testFactory) return "Fail: private"
 
     val adapter = AdaptiveTestAdapter()
 

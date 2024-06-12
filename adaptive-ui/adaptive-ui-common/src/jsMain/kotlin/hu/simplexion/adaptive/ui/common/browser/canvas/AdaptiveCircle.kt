@@ -3,22 +3,13 @@
  */
 package hu.simplexion.adaptive.ui.common.browser.canvas
 
+import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
-import hu.simplexion.adaptive.resource.DrawableResource
-import hu.simplexion.adaptive.ui.common.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.browser.AdaptiveBrowserAdapter
-import hu.simplexion.adaptive.ui.common.commonUI
-import hu.simplexion.adaptive.ui.common.layout.RawFrame
-import hu.simplexion.adaptive.ui.common.layout.RawSize
-import hu.simplexion.adaptive.utility.checkIfInstance
-import kotlinx.browser.document
+import hu.simplexion.adaptive.ui.common.canvas
 import org.w3c.dom.CanvasRenderingContext2D
-import org.w3c.dom.HTMLCanvasElement
-import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLImageElement
 import kotlin.math.PI
 
+@AdaptiveActual(canvas)
 open class AdaptiveCircle(
     adapter: AdaptiveCanvasAdapter,
     parent: AdaptiveFragment,
@@ -34,15 +25,6 @@ open class AdaptiveCircle(
         ctx.arc(centerX, centerY, radius, 0.0, 2 * PI)
         ctx.fillStyle = "gray"
         ctx.fill()
-    }
-
-    companion object : AdaptiveFragmentCompanion {
-
-        override val fragmentType = "$commonUI:AdaptiveCircle"
-
-        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveCircle(parent.adapter as AdaptiveCanvasAdapter, parent, index)
-
     }
 
 }

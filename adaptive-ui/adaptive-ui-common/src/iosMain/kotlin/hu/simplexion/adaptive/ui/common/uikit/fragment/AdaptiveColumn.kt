@@ -3,27 +3,17 @@
  */
 package hu.simplexion.adaptive.ui.common.uikit.fragment
 
+import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
-import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.common
 import hu.simplexion.adaptive.ui.common.layout.AbstractColumn
 import hu.simplexion.adaptive.ui.common.uikit.AdaptiveIosAdapter
 import hu.simplexion.adaptive.ui.common.uikit.ContainerView
 import platform.UIKit.UIView
 
+@AdaptiveActual(common)
 class AdaptiveColumn(
     adapter: AdaptiveIosAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractColumn<UIView, ContainerView>(adapter, parent, declarationIndex, false) {
-
-    companion object : AdaptiveFragmentCompanion {
-
-        override val fragmentType = "$commonUI:AdaptiveColumn"
-
-        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveColumn(parent.adapter as AdaptiveIosAdapter, parent, index)
-
-    }
-
-}
+) : AbstractColumn<UIView, ContainerView>(adapter, parent, declarationIndex, false)

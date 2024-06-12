@@ -30,7 +30,7 @@ class AdaptiveCompilerPluginRegistrar : CompilerPluginRegistrar() {
             pluginDebug = debug,
             pluginLogDir = configuration.get(AdaptiveCommandLineProcessor.CONFIG_KEY_PLUGIN_LOG_DIR),
             dumpKotlinLike = debug,
-            dumpIR = debug
+            dumpIR = true
         )
 
         FirExtensionRegistrarAdapter.registerExtension(AdaptivePluginRegistrar())

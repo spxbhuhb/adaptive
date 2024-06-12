@@ -3,10 +3,10 @@
  */
 package hu.simplexion.adaptive.ui.common.uikit.fragment
 
+import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.common
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.ui.common.uikit.AdaptiveIosAdapter
@@ -16,6 +16,7 @@ import platform.UIKit.NSTextAlignmentCenter
 import platform.UIKit.UILabel
 import platform.UIKit.UIView
 
+@AdaptiveActual(common)
 class AdaptiveText(
     adapter: AdaptiveIosAdapter,
     parent: AdaptiveFragment,
@@ -43,20 +44,11 @@ class AdaptiveText(
         return false
     }
 
-    override fun measure() = instructedOr { measuredSize !! }
+    override fun measure() = instructedOr { measuredSize }
 
     override fun layout(proposedFrame: RawFrame) {
         calcLayoutFrame(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
-    }
-
-    companion object : AdaptiveFragmentCompanion {
-
-        override val fragmentType = "$commonUI:AdaptiveText"
-
-        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveText(parent.adapter as AdaptiveIosAdapter, parent, index)
-
     }
 
 }

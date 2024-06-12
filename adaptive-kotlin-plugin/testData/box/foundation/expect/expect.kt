@@ -45,8 +45,8 @@ fun box() : String {
 
     val adapter = AdaptiveTestAdapter()
 
-    adapter.fragmentFactory.set("c:Test") { p,i -> AdaptiveTest(p.adapter as AdaptiveTestAdapter, p, i) }
-    adapter.fragmentFactory.set("c:OtherTest") { p,i -> AdaptiveTest(p.adapter as AdaptiveTestAdapter, p, i) }
+    adapter.fragmentFactory.add("c:test") { p,i -> AdaptiveTest(p.adapter as AdaptiveTestAdapter, p, i) }
+    adapter.fragmentFactory.add("c:othertest") { p,i -> AdaptiveTest(p.adapter as AdaptiveTestAdapter, p, i) }
 
     adaptive(adapter) {
         test()

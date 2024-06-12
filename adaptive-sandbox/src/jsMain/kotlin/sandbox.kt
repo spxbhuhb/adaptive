@@ -3,8 +3,8 @@
  */
 
 import hu.simplexion.adaptive.foundation.Adaptive
+import hu.simplexion.adaptive.ui.canvas.fragment.circle
 import hu.simplexion.adaptive.ui.common.fragment.canvas
-import hu.simplexion.adaptive.ui.common.fragment.circle
 
 @Adaptive
 fun stuff() {

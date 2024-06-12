@@ -3,15 +3,16 @@
  */
 package hu.simplexion.adaptive.ui.common.browser.fragment
 
+import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.browser.AdaptiveBrowserAdapter
-import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.common
 import hu.simplexion.adaptive.ui.common.layout.AbstractColumn
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
+@AdaptiveActual(common)
 open class AdaptiveColumn(
     adapter: AdaptiveBrowserAdapter,
     parent: AdaptiveFragment,
@@ -26,15 +27,6 @@ open class AdaptiveColumn(
         }
         align()
         uiAdapter.applyLayoutToActual(this)
-    }
-
-    companion object : AdaptiveFragmentCompanion {
-
-        override val fragmentType = "$commonUI:AdaptiveColumn"
-
-        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveColumn(parent.adapter as AdaptiveBrowserAdapter, parent, index)
-
     }
 
 }

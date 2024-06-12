@@ -3,12 +3,12 @@
  */
 package hu.simplexion.adaptive.ui.common.browser.fragment
 
+import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import hu.simplexion.adaptive.ui.common.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.browser.AdaptiveBrowserAdapter
-import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.common
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.utility.checkIfInstance
@@ -16,6 +16,7 @@ import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 
+@AdaptiveActual(common)
 open class AdaptiveInput(
     adapter: AdaptiveBrowserAdapter,
     parent: AdaptiveFragment,
@@ -63,15 +64,6 @@ open class AdaptiveInput(
     override fun layout(proposedFrame: RawFrame) {
         calcLayoutFrame(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
-    }
-
-    companion object : AdaptiveFragmentCompanion {
-
-        override val fragmentType = "$commonUI:AdaptiveInput"
-
-        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveInput(parent.adapter as AdaptiveBrowserAdapter, parent, index)
-
     }
 
 }

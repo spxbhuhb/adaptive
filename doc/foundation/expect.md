@@ -30,7 +30,7 @@ The code above results in a `genBuild` like this:
 fun genBuild(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
 
     val fragment = when (declarationIndex) {
-        0 -> adapter.actiualize("c:AdaptiveText", this, 0)
+        0 -> adapter.actiualize("common:text", this, 0)
         else -> invalidIndex(declarationIndex) // throws exception
     }
 

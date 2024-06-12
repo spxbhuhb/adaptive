@@ -3,12 +3,12 @@
  */
 package hu.simplexion.adaptive.ui.common.uikit.fragment
 
+import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.resource.defaultResourceReader
 import hu.simplexion.adaptive.ui.common.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.common
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.ui.common.uikit.AdaptiveIosAdapter
@@ -20,8 +20,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import platform.Foundation.NSData
 import platform.Foundation.dataWithBytes
-import platform.UIKit.*
+import platform.UIKit.UIImage
+import platform.UIKit.UIImageView
+import platform.UIKit.UIView
+import platform.UIKit.UIViewContentMode
 
+@AdaptiveActual(common)
 class AdaptiveImage(
     adapter: AdaptiveIosAdapter,
     parent: AdaptiveFragment,
@@ -67,15 +71,6 @@ class AdaptiveImage(
     override fun layout(proposedFrame: RawFrame) {
         calcLayoutFrame(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
-    }
-
-    companion object : AdaptiveFragmentCompanion {
-
-        override val fragmentType = "$commonUI:AdaptiveImage"
-
-        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveImage(parent.adapter as AdaptiveIosAdapter, parent, index)
-
     }
 
 }

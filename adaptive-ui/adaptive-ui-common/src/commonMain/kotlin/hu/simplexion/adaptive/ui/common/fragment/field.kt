@@ -8,12 +8,12 @@ import hu.simplexion.adaptive.foundation.AdaptiveExpect
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.manualImplementation
-import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.common
 
 /**
  * Editor for simple string.
  */
-@AdaptiveExpect(commonUI)
+@AdaptiveExpect(common)
 fun input(
     vararg instructions : AdaptiveInstruction,
     binding: AdaptiveStateVariableBinding<String>? = null,

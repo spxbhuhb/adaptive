@@ -3,17 +3,17 @@
  */
 package hu.simplexion.adaptive.ui.common.testing.fragment
 
+import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.ui.common.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.commonUI
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.ui.common.testing.AdaptiveUITestAdapter
 import hu.simplexion.adaptive.ui.common.testing.TestReceiver
 import hu.simplexion.adaptive.utility.checkIfInstance
 
+@AdaptiveActual("test")
 open class AdaptiveImage(
     adapter: AdaptiveUITestAdapter,
     parent: AdaptiveFragment,
@@ -48,15 +48,6 @@ open class AdaptiveImage(
     override fun layout(proposedFrame: RawFrame) {
         super.calcLayoutFrame(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
-    }
-
-    companion object : AdaptiveFragmentCompanion {
-
-        override val fragmentType = "$commonUI:AdaptiveImage"
-
-        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveImage(parent.adapter as AdaptiveUITestAdapter, parent, index)
-
     }
 
 }

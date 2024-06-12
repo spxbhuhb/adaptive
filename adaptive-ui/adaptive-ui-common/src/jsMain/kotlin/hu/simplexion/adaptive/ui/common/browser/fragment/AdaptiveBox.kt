@@ -3,15 +3,16 @@
  */
 package hu.simplexion.adaptive.ui.common.browser.fragment
 
+import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.ui.common.browser.AdaptiveBrowserAdapter
-import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.common
 import hu.simplexion.adaptive.ui.common.layout.AbstractBox
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
+@AdaptiveActual(common)
 class AdaptiveBox(
     adapter: AdaptiveBrowserAdapter,
     parent: AdaptiveFragment,
@@ -21,15 +22,6 @@ class AdaptiveBox(
     override fun layout(proposedFrame: RawFrame) {
         super.layout(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
-    }
-
-    companion object : AdaptiveFragmentCompanion {
-
-        override val fragmentType = "$commonUI:AdaptiveBox"
-
-        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveBox(parent.adapter as AdaptiveBrowserAdapter, parent, index)
-
     }
 
 }

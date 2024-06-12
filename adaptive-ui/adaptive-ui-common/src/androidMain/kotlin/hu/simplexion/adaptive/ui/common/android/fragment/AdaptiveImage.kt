@@ -6,19 +6,20 @@ package hu.simplexion.adaptive.ui.common.android.fragment
 import android.graphics.BitmapFactory
 import android.view.View
 import android.widget.ImageView
+import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanion
 import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.resource.defaultResourceReader
 import hu.simplexion.adaptive.ui.common.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.android.AdaptiveAndroidAdapter
-import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.common
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@AdaptiveActual(common)
 class AdaptiveImage(
     adapter: AdaptiveAndroidAdapter,
     parent: AdaptiveFragment,
@@ -60,15 +61,6 @@ class AdaptiveImage(
     override fun layout(proposedFrame: RawFrame) {
         calcLayoutFrame(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
-    }
-
-    companion object : AdaptiveFragmentCompanion {
-
-        override val fragmentType = "$commonUI:AdaptiveImage"
-
-        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveImage(parent.adapter as AdaptiveAndroidAdapter, parent, index)
-
     }
 
 }

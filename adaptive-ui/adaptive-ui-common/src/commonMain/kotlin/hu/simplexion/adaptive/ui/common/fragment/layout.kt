@@ -8,24 +8,24 @@ import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.AdaptiveExpect
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.manualImplementation
-import hu.simplexion.adaptive.ui.common.commonUI
+import hu.simplexion.adaptive.ui.common.common
 
-@AdaptiveExpect(commonUI)
+@AdaptiveExpect(common)
 fun box(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
     manualImplementation(instructions, content)
 }
 
-@AdaptiveExpect(commonUI)
+@AdaptiveExpect(common)
 fun row(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
     manualImplementation(instructions, content)
 }
 
-@AdaptiveExpect(commonUI)
+@AdaptiveExpect(common)
 fun column(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
     manualImplementation(instructions, content)
 }
 
-@AdaptiveExpect(commonUI)
+@AdaptiveExpect(common)
 fun grid(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
     manualImplementation(instructions, content)
 }

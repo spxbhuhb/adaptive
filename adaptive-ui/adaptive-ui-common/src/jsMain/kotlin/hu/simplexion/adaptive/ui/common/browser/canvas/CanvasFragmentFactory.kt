@@ -8,8 +8,6 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
 
 object CanvasFragmentFactory : AdaptiveFragmentFactory() {
     init {
-        addAll(
-            AdaptiveCircle
-        )
+        add("canvas:circle") { p,i -> AdaptiveCircle(p.adapter as AdaptiveCanvasAdapter, p, i) }
     }
 }

@@ -5,16 +5,15 @@
 package hu.simplexion.adaptive.ui.common.testing.fragment
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
+import hu.simplexion.adaptive.ui.common.testing.AdaptiveUITestAdapter
 
 object TestFragmentFactory : AdaptiveFragmentFactory() {
     init {
-        addAll(
-            AdaptiveBox,
-            AdaptiveColumn,
-            AdaptiveGrid,
-            AdaptiveImage,
-            AdaptiveRow,
-            AdaptiveText
-        )
+        add("common:box") { p, i -> AdaptiveBox(p.adapter as AdaptiveUITestAdapter, p, i) }
+        add("common:column") { p, i -> AdaptiveColumn(p.adapter as AdaptiveUITestAdapter, p, i) }
+        add("common:grid") { p, i -> AdaptiveGrid(p.adapter as AdaptiveUITestAdapter, p, i) }
+        add("common:image") { p, i -> AdaptiveImage(p.adapter as AdaptiveUITestAdapter, p, i) }
+        add("common:row") { p, i -> AdaptiveRow(p.adapter as AdaptiveUITestAdapter, p, i) }
+        add("common:text") { p, i -> AdaptiveText(p.adapter as AdaptiveUITestAdapter, p, i) }
     }
 }

@@ -62,7 +62,6 @@ object Strings {
 
     const val ADAPTIVE_EXPECT = "AdaptiveExpect"
     const val ADAPTIVE_ACTUAL = "AdaptiveActual"
-    const val COLLECT = "Collect"
     const val MANUAL_IMPLEMENTATION = "manualImplementation"
 
     const val NEW_SEQUENCE = "newSequence"
@@ -75,7 +74,7 @@ object Strings {
 
     const val KOTLIN_INVOKE = "invoke"
 
-    const val SET = "set"
+    const val ADD = "add"
     const val FRAGMENT_TYPE = "fragmentType"
     const val NEW_INSTANCE = "newInstance"
 
@@ -105,8 +104,6 @@ object FqNames {
 
     val ADAPTIVE_EXPECT = Strings.ADAPTIVE_EXPECT.runtime()
     val ADAPTIVE_ACTUAL = Strings.ADAPTIVE_ACTUAL.runtime()
-
-    val COLLECT = Strings.COLLECT.runtime()
 }
 
 object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
