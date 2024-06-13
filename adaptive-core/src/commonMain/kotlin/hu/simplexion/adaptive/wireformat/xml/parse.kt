@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.wireformat.xml
 
+import hu.simplexion.adaptive.utility.skipWhile
 import hu.simplexion.adaptive.utility.peek
 import hu.simplexion.adaptive.utility.pop
 import hu.simplexion.adaptive.utility.push
@@ -20,8 +21,14 @@ fun parseXml(source: String, skipContent: Boolean = false, skipBlankContent: Boo
 
         when (token.type) {
             TokenType.STag -> {
+                val tag = token.value.substringBefore(' ')
+
+                require(tag.isNotEmpty()) { "empty tag" }
+                val firstChar = tag[0]
+                if (firstChar == '?' || firstChar == '!') continue
+
                 val attributes = attributes(token.value)
-                val element = XmlElement(token.value.substringBefore(' '), attributes, mutableListOf())
+                val element = XmlElement(tag, attributes, mutableListOf())
                 stack.push(element)
             }
 
@@ -70,12 +77,6 @@ fun parseXml(source: String, skipContent: Boolean = false, skipBlankContent: Boo
     return null
 }
 
-private inline fun String.findNext(startIndex: Int, len: Int, condition: (it: Char) -> Boolean): Int? {
-    var index = startIndex
-    while (index < len && condition(this[index])) index ++
-    return if (index == len) null else index
-}
-
 internal fun attributes(tag: String): List<XmlAttribute> {
     val attributes = mutableListOf<XmlAttribute>()
     var index = tag.indexOf(' ')
@@ -86,15 +87,15 @@ internal fun attributes(tag: String): List<XmlAttribute> {
 
     while (index < len) {
         // find the start of the next attribute name (if there are any)
-        index = tag.findNext(index, len) { it.isWhitespace() } ?: break
+        index = tag.skipWhile(index, len) { it.isWhitespace() } ?: break
         val startName = index
 
         // find the end of the attribute name
-        index = tag.findNext(startName, len) { ! it.isWhitespace() && it != '=' } ?: break
+        index = tag.skipWhile(startName, len) { ! it.isWhitespace() && it != '=' } ?: break
         val attributeName = tag.substring(startName, index)
 
         // skip any spaces between the name and the equal sign
-        index = tag.findNext(index, len) { it.isWhitespace() } ?: break
+        index = tag.skipWhile(index, len) { it.isWhitespace() } ?: break
 
         // any non '-' character is the next tag name
         if (tag[index] != '=') continue
@@ -102,7 +103,7 @@ internal fun attributes(tag: String): List<XmlAttribute> {
         index ++ // move past the '='
 
         // skip any spaces between '=' and the quote
-        index = tag.findNext(index, len) { it.isWhitespace() } ?: break
+        index = tag.skipWhile(index, len) { it.isWhitespace() } ?: break
 
         val quote = tag[index]
         require(quote == '"' || quote == '\'') { "non quote character after '='" }
@@ -110,7 +111,7 @@ internal fun attributes(tag: String): List<XmlAttribute> {
         index ++ // move past the starting quote
         val startValue = index
 
-        index = tag.findNext(index, len) { it != quote } ?: throw IllegalArgumentException("missing closing quote")
+        index = tag.skipWhile(index, len) { it != quote } ?: throw IllegalArgumentException("missing closing quote")
 
         val attributeValue = tag.substring(startValue, index)
         index ++ // Move past the ending quote

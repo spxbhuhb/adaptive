@@ -4,23 +4,17 @@
 
 package hu.simplexion.adaptive.wireformat.xml
 
-interface XmlNode {
-    val isElement : Boolean
-}
+interface XmlNode
 
 data class XmlContent(
     val content : String
-) : XmlNode {
-    override val isElement get() = false
-}
+) : XmlNode
 
 data class XmlElement(
     val tag : String,
     val attributes : List<XmlAttribute>,
     val children : MutableList<XmlNode>
-) : XmlNode {
-    override val isElement get() = true
-}
+) : XmlNode
 
 data class XmlAttribute(
     val name : String,

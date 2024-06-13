@@ -1,13 +1,18 @@
-import hu.simplexion.adaptive.lib.grapics.canvas.ClosePath
-import hu.simplexion.adaptive.lib.grapics.canvas.LineTo
-import hu.simplexion.adaptive.lib.grapics.canvas.MoveTo
-import hu.simplexion.adaptive.lib.grapics.canvas.parsePath
+/*
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ */
+
+package hu.simplexion.adaptive.lib.grapics.svg.parse
+
+import hu.simplexion.adaptive.lib.grapics.svg.ClosePath
+import hu.simplexion.adaptive.lib.grapics.svg.LineTo
+import hu.simplexion.adaptive.lib.grapics.svg.MoveTo
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
-class PathKtTest {
+class ParsePathKtTest {
     @Test
     fun testParsePath() {
         val path = "M 10 10 l 20 20 m 5 5 L 5 5 Z"

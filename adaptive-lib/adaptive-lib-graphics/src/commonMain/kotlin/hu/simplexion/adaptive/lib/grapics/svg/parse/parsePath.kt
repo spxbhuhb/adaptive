@@ -2,14 +2,16 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package hu.simplexion.adaptive.lib.grapics.canvas
+package hu.simplexion.adaptive.lib.grapics.svg.parse
 
-fun parsePath(path: String): List<Command> {
+import hu.simplexion.adaptive.lib.grapics.svg.*
 
-    if (path.isEmpty()) return emptyList()
+fun parsePath(source: String): List<SvgPathCommand> {
 
-    val commands = mutableListOf<Command>()
-    val end = path.length
+    if (source.isEmpty()) return emptyList()
+
+    val commands = mutableListOf<SvgPathCommand>()
+    val end = source.length
     var index = 0
 
     var command: Char? = null
@@ -21,14 +23,23 @@ fun parsePath(path: String): List<Command> {
 
     while (index < end) {
 
-        val char = path[index ++]
+        val char = source[index ++]
 
-        when (char) {
-            in '0' .. '9', '.', 'e', 'E', '-' -> {
-                parameter.append(char)
+        when  {
+            char in FLOAT_CHARS -> {
+                if ((char == '-' && parameter.isNotEmpty()) || (char == '.' && parameter.contains('.'))) {
+                    parameterIndex ++
+                    if (parameterIndex == parameters.size) {
+                        parameters.add(StringBuilder())
+                    }
+                    parameter = parameters[parameterIndex]
+                    parameter.clear()
+                } else {
+                    parameter.append(char)
+                }
             }
 
-            ' ', ',' -> {
+            char.isWhitespace() || char == ',' -> {
                 if (parameter.isNotEmpty()) {
                     parameterIndex ++
                     if (parameterIndex == parameters.size) {
@@ -53,8 +64,6 @@ fun parsePath(path: String): List<Command> {
                 parameter.clear()
             }
         }
-
-
     }
 
     if (command != null) {
@@ -70,7 +79,7 @@ private fun build(
     parameterCount: Int,
     position: Pair<Float, Float>,
     subPathStart: Pair<Float, Float>,
-    commands: MutableList<Command>
+    commands: MutableList<SvgPathCommand>
 ): Pair<Float, Float> =
     when (command) {
         'M' -> moveToAbsolute(parameters, parameterCount, commands)
@@ -107,13 +116,8 @@ private fun build(
         else -> throw IllegalArgumentException("unknown SVG path command: $command")
     }
 
-private inline fun List<StringBuilder>.toFloat(index: Int): Float =
-    this[index].toString().toFloat()
 
-private inline fun List<StringBuilder>.toInt(index: Int): Int =
-    this[index].toString().toInt()
-
-private fun moveToAbsolute(parameters: List<StringBuilder>, parameterCount: Int, commands: MutableList<Command>): Pair<Float, Float> {
+private fun moveToAbsolute(parameters: List<StringBuilder>, parameterCount: Int, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     var parameterIndex = 0
 
     check(parameterCount % 2 == 0) { "invalid number of parameters" }
@@ -134,7 +138,7 @@ private fun moveToAbsolute(parameters: List<StringBuilder>, parameterCount: Int,
     return x to y
 }
 
-private fun moveToRelative(parameters: List<StringBuilder>, parameterCount: Int, point: Pair<Float, Float>, commands: MutableList<Command>): Pair<Float, Float> {
+private fun moveToRelative(parameters: List<StringBuilder>, parameterCount: Int, point: Pair<Float, Float>, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     var parameterIndex = 0
 
     check(parameterCount % 2 == 0) { "invalid number of parameters" }
@@ -155,12 +159,12 @@ private fun moveToRelative(parameters: List<StringBuilder>, parameterCount: Int,
     return x to y
 }
 
-private fun closePath(point: Pair<Float, Float>, subPathStart: Pair<Float, Float>, commands: MutableList<Command>): Pair<Float, Float> {
+private fun closePath(point: Pair<Float, Float>, subPathStart: Pair<Float, Float>, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     commands += ClosePath(point.first, point.second, subPathStart.first, subPathStart.second)
     return subPathStart
 }
 
-private fun lineToAbsolute(parameters: List<StringBuilder>, parameterCount: Int, commands: MutableList<Command>): Pair<Float, Float> {
+private fun lineToAbsolute(parameters: List<StringBuilder>, parameterCount: Int, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     var parameterIndex = 0
 
     check(parameterCount >= 2 && parameterCount % 2 == 0) { "invalid number of parameters" }
@@ -179,7 +183,7 @@ private fun lineToAbsolute(parameters: List<StringBuilder>, parameterCount: Int,
     return x to y
 }
 
-private fun lineToRelative(parameters: List<StringBuilder>, parameterCount: Int, point: Pair<Float, Float>, commands: MutableList<Command>): Pair<Float, Float> {
+private fun lineToRelative(parameters: List<StringBuilder>, parameterCount: Int, point: Pair<Float, Float>, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     var parameterIndex = 0
 
     check(parameterCount >= 2 && parameterCount % 2 == 0) { "invalid number of parameters" }
@@ -198,7 +202,7 @@ private fun lineToRelative(parameters: List<StringBuilder>, parameterCount: Int,
     return x to y
 }
 
-private fun horizontalLineToAbsolute(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<Command>): Pair<Float, Float> {
+private fun horizontalLineToAbsolute(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     var lastIndex = position.first
 
     for (i in 0 until parameterCount) {
@@ -210,7 +214,7 @@ private fun horizontalLineToAbsolute(parameters: List<StringBuilder>, parameterC
     return lastIndex to position.second
 }
 
-private fun horizontalLineToRelative(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<Command>): Pair<Float, Float> {
+private fun horizontalLineToRelative(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     var lastRelativeValue = position.first
 
     for (i in 0 until parameterCount) {
@@ -221,7 +225,7 @@ private fun horizontalLineToRelative(parameters: List<StringBuilder>, parameterC
     return lastRelativeValue to position.second
 }
 
-private fun verticalLineToAbsolute(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<Command>): Pair<Float, Float> {
+private fun verticalLineToAbsolute(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     var lastY = position.second
 
     for (i in 0 until parameterCount) {
@@ -233,7 +237,7 @@ private fun verticalLineToAbsolute(parameters: List<StringBuilder>, parameterCou
     return position.first to lastY
 }
 
-private fun verticalLineToRelative(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<Command>): Pair<Float, Float> {
+private fun verticalLineToRelative(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     var lastRelativeValue = position.second
 
     for (i in 0 until parameterCount) {
@@ -244,7 +248,7 @@ private fun verticalLineToRelative(parameters: List<StringBuilder>, parameterCou
     return position.first to lastRelativeValue
 }
 
-private fun cubicCurveAbsolute(parameters: List<StringBuilder>, parameterCount: Int, commands: MutableList<Command>): Pair<Float, Float> {
+private fun cubicCurveAbsolute(parameters: List<StringBuilder>, parameterCount: Int, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     check(parameterCount >= 6 && parameterCount % 6 == 0) { "invalid number of parameters" }
 
     var parameterIndex = 0
@@ -265,7 +269,7 @@ private fun cubicCurveAbsolute(parameters: List<StringBuilder>, parameterCount: 
     return lastCommand !!.let { it.x to it.y }
 }
 
-private fun cubicCurveRelative(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<Command>): Pair<Float, Float> {
+private fun cubicCurveRelative(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     check(parameterCount >= 6 && parameterCount % 6 == 0) { "invalid number of parameters" }
 
     var parameterIndex = 0
@@ -290,7 +294,7 @@ private fun cubicCurveRelative(parameters: List<StringBuilder>, parameterCount: 
     return x to y
 }
 
-private fun cubicCurveSmoothAbsolute(parameters: List<StringBuilder>, parameterCount: Int, commands: MutableList<Command>): Pair<Float, Float> {
+private fun cubicCurveSmoothAbsolute(parameters: List<StringBuilder>, parameterCount: Int, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     check(parameterCount >= 4 && parameterCount % 4 == 0) { "invalid number of parameters" }
 
     var parameterIndex = 0
@@ -309,7 +313,7 @@ private fun cubicCurveSmoothAbsolute(parameters: List<StringBuilder>, parameterC
     return lastCommand !!.let { it.x to it.y }
 }
 
-private fun cubicCurveSmoothRelative(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<Command>): Pair<Float, Float> {
+private fun cubicCurveSmoothRelative(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     check(parameterCount >= 4 && parameterCount % 4 == 0) { "invalid number of parameters" }
 
     var parameterIndex = 0
@@ -330,7 +334,7 @@ private fun cubicCurveSmoothRelative(parameters: List<StringBuilder>, parameterC
     return x to y
 }
 
-private fun quadraticCurveAbsolute(parameters: List<StringBuilder>, parameterCount: Int, commands: MutableList<Command>): Pair<Float, Float> {
+private fun quadraticCurveAbsolute(parameters: List<StringBuilder>, parameterCount: Int, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     check(parameterCount >= 4 && parameterCount % 4 == 0) { "invalid number of parameters" }
 
     var parameterIndex = 0
@@ -349,7 +353,7 @@ private fun quadraticCurveAbsolute(parameters: List<StringBuilder>, parameterCou
     return lastCommand !!.let { it.x to it.y }
 }
 
-private fun quadraticCurveRelative(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<Command>): Pair<Float, Float> {
+private fun quadraticCurveRelative(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     check(parameterCount >= 4 && parameterCount % 4 == 0) { "invalid number of parameters" }
 
     var parameterIndex = 0
@@ -370,7 +374,7 @@ private fun quadraticCurveRelative(parameters: List<StringBuilder>, parameterCou
     return x to y
 }
 
-private fun quadraticCurveSmoothAbsolute(parameters: List<StringBuilder>, parameterCount: Int, commands: MutableList<Command>): Pair<Float, Float> {
+private fun quadraticCurveSmoothAbsolute(parameters: List<StringBuilder>, parameterCount: Int, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     check(parameterCount >= 2 && parameterCount % 2 == 0) { "invalid number of parameters" }
 
     var parameterIndex = 0
@@ -387,7 +391,7 @@ private fun quadraticCurveSmoothAbsolute(parameters: List<StringBuilder>, parame
     return lastCommand !!.let { it.x to it.y }
 }
 
-private fun quadraticCurveSmoothRelative(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<Command>): Pair<Float, Float> {
+private fun quadraticCurveSmoothRelative(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     check(parameterCount >= 2 && parameterCount % 2 == 0) { "invalid number of parameters" }
 
     var parameterIndex = 0
@@ -399,7 +403,7 @@ private fun quadraticCurveSmoothRelative(parameters: List<StringBuilder>, parame
     return x to y
 }
 
-private fun arcAbsolute(parameters: List<StringBuilder>, parameterCount: Int, commands: MutableList<Command>): Pair<Float, Float> {
+private fun arcAbsolute(parameters: List<StringBuilder>, parameterCount: Int, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
     check(parameterCount >= 7 && parameterCount % 7 == 0) { "invalid number of parameters" }
     var parameterIndex = 0
     var lastCommand: Arc? = null
@@ -418,8 +422,8 @@ private fun arcAbsolute(parameters: List<StringBuilder>, parameterCount: Int, co
     return lastCommand !!.let { it.x to it.y }
 }
 
-private fun arcRelative(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<Command>): Pair<Float, Float> {
-    check(parameterCount >= 7 && parameterCount % 7 == 0) { "invalid number of parameters" }
+private fun arcRelative(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Float, Float>, commands: MutableList<SvgPathCommand>): Pair<Float, Float> {
+    check(parameterCount >= 7 && parameterCount % 7 == 0) { "invalid number of parameters $parameters" }
     var parameterIndex = 0
     var lastCommand: Arc? = null
     val x = position.first
