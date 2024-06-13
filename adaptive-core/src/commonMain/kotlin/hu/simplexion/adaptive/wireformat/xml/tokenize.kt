@@ -17,27 +17,26 @@ internal data class Token(
     val value: String
 )
 
-internal fun tokenizeXml(source: String): List<Token> {
+internal fun tokenize(source: String): List<Token> {
 
     val tokens = mutableListOf<Token>()
 
-    val chars = source.toCharArray()
-    val end = chars.size
+    val end = source.length
     var index = 0
     var start = 0
 
     while (index < end) {
-        val char = chars[index]
+        val char = source[index]
 
         when (char) {
             '<' -> {
                 if (start != index) {
-                    tokens += Token(TokenType.Content, chars.concatToString(start, index))
+                    tokens += Token(TokenType.Content, source.substring(start, index))
                 }
 
                 start = ++index
 
-                val type = when (chars[index]) {
+                val type = when (source[index]) {
                     '!' -> TokenType.Other
                     '?' -> TokenType.Other
                     '/' -> {
@@ -47,17 +46,17 @@ internal fun tokenizeXml(source: String): List<Token> {
                     else -> TokenType.STag
                 }
 
-                while (index < end && chars[index] != '>') {
+                while (index < end && source[index] != '>') {
                     index ++
                 }
 
                 check(index != end) { "missing '>'" }
 
-                if (chars[index - 1] == '/') {
+                if (source[index - 1] == '/') {
                     check(type == TokenType.STag) { "Invalid XML structure at $index" }
-                    tokens += Token(TokenType.EmptyElemTag, chars.concatToString(start, index ))
+                    tokens += Token(TokenType.EmptyElemTag, source.substring(start, index ))
                 } else {
-                    tokens += Token(type, chars.concatToString(start, index))
+                    tokens += Token(type, source.substring(start, index))
                 }
 
                 start = index + 1

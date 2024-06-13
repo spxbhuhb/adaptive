@@ -9,8 +9,7 @@ fun parsePath(path: String): List<Command> {
     if (path.isEmpty()) return emptyList()
 
     val commands = mutableListOf<Command>()
-    val chars = path.toCharArray()
-    val end = chars.size
+    val end = path.length
     var index = 0
 
     var command: Char? = null
@@ -21,7 +20,9 @@ fun parsePath(path: String): List<Command> {
     var subPathStart = Pair(0f, 0f)
 
     while (index < end) {
-        val char = chars[index ++]
+
+        val char = path[index ++]
+
         when (char) {
             in '0' .. '9', '.', 'e', 'E', '-' -> {
                 parameter.append(char)

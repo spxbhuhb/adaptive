@@ -8,75 +8,37 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-private val basic = """
-<people>
-    <person id="1">
-        <name>John Doe</name>
-        <age>30</age>
-    </person>
-    <person id="2">
-        <name>Jane Doe</name>
-        <age>25</age>
-    </person>
-</people>
-""".trimIndent()
-
-private val svg = """
-<svg id="thermometer-temperature-svgrepo-com" xmlns="http://www.w3.org/2000/svg" width="9.744" height="18.343" viewBox="0 0 9.744 18.343">
-    <g id="Group_4" transform="translate(2.257)">
-        <g id="Group_3">
-            <path id="Path_1" d="M189.244,11.813V2.5a2.5,2.5,0,1,0-5,0v9.314a3.743,3.743,0,1,0,5,0ZM187.9,8.2h-2.313V2.5a1.156,1.156,0,1,1,2.313,0V8.2Z" transform="translate(-183.002)" fill="#1ad598"/>
-        </g>
-    </g>
-    <g id="Group_6" transform="translate(0 8.501)">
-        <g id="Group_5">
-            <path id="Path_2" d="M121.815,237.268h-1.128a.671.671,0,0,0,0,1.342h1.128a.671.671,0,0,0,0-1.342Z" transform="translate(-120.016 -237.268)" fill="#1ad598"/>
-        </g>
-    </g>
-    <g id="Group_8" transform="translate(0 6.29)">
-        <g id="Group_7">
-            <path id="Path_3" d="M121.815,175.566h-1.128a.671.671,0,1,0,0,1.342h1.128a.671.671,0,1,0,0-1.342Z" transform="translate(-120.016 -175.566)" fill="#1ad598"/>
-        </g>
-    </g>
-    <g id="Group_10" transform="translate(0 4.079)">
-        <g id="Group_9">
-            <path id="Path_4" d="M121.815,113.864h-1.128a.671.671,0,0,0,0,1.342h1.128a.671.671,0,0,0,0-1.342Z" transform="translate(-120.016 -113.864)" fill="#1ad598"/>
-        </g>
-    </g>
-</svg>
-""".trimIndent()
-
 class TokenizeTest {
 
     @Test
     fun basic() {
-        val tokens = tokenizeXml(basic)
+        val tokens = tokenize(basic)
 
         var index = 0
 
-        fun List<Token>.sTag(content : String): List<Token>  {
-            assertEquals(Token(TokenType.STag, content), this[index++])
+        fun List<Token>.sTag(content: String): List<Token> {
+            assertEquals(Token(TokenType.STag, content), this[index ++])
             return this
         }
 
-        fun List<Token>.eTag(content : String) : List<Token>  {
-            assertEquals(Token(TokenType.ETag, content), this[index++])
+        fun List<Token>.eTag(content: String): List<Token> {
+            assertEquals(Token(TokenType.ETag, content), this[index ++])
             return this
         }
 
-        fun List<Token>.emptyElemTag(content : String) : List<Token>  {
-            assertEquals(Token(TokenType.EmptyElemTag, content), this[index++])
+        fun List<Token>.emptyElemTag(content: String): List<Token> {
+            assertEquals(Token(TokenType.EmptyElemTag, content), this[index ++])
             return this
         }
 
-        fun List<Token>.content(content : String) : List<Token>  {
-            assertEquals(Token(TokenType.Content, content), this[index++])
+        fun List<Token>.content(content: String): List<Token> {
+            assertEquals(Token(TokenType.Content, content), this[index ++])
             return this
         }
 
-        fun List<Token>.spaces() : List<Token> {
+        fun List<Token>.spaces(): List<Token> {
             assertTrue(this[index].value.isBlank())
-            assertEquals(TokenType.Content, this[index++].type)
+            assertEquals(TokenType.Content, this[index ++].type)
             return this
         }
 
@@ -107,6 +69,55 @@ class TokenizeTest {
 
     @Test
     fun svg() {
-        tokenizeXml(svg)
+        tokenize(svg)
+    }
+
+    @Test
+    fun testContentBeforeTag() {
+        val source = "Pre-content<tag>Post-content</tag>"
+        val tokens = tokenize(source)
+
+        assertEquals(4, tokens.size, "Should have 4 tokens (Content, STag, Content, ETag)")
+
+        assertEquals(Token(TokenType.Content, "Pre-content"), tokens[0], "First token should be a Content type with 'Pre-content' value")
+        assertEquals(Token(TokenType.STag, "tag"), tokens[1], "Second token should be a STag with 'tag' value")
+        assertEquals(Token(TokenType.Content, "Post-content"), tokens[2], "Third token should be a Content type with 'Post-content' value")
+        assertEquals(Token(TokenType.ETag, "tag"), tokens[3], "Fourth token should be an ETag with 'tag' value")
+    }
+
+    @Test
+    fun testSlashesNotFollowedByAngleBracket() {
+        val source = "<tag/ someAttribute=\"value\">Content</tag>"
+        val tokens = tokenize(source)
+
+        assertEquals(3, tokens.size, "Should have 3 tokens (STag, Content, ETag)")
+
+        assertEquals(Token(TokenType.STag, "tag/ someAttribute=\"value\""), tokens[0], "First token should be a STag with 'tag/ someAttribute=\"value\"' value")
+        assertEquals(Token(TokenType.Content, "Content"), tokens[1], "Second token should be a Content type with 'Content' value")
+        assertEquals(Token(TokenType.ETag, "tag"), tokens[2], "Third token should be an ETag with 'tag' value")
+    }
+
+    @Test
+    fun testContentBetweenTags() {
+        val source = "<tag>Content</tag>ContentBetweenTag<tag>"
+        val tokens = tokenize(source)
+
+        assertEquals(5, tokens.size, "Should have 5 tokens (STag, Content, ETag, Content, STag)")
+
+        assertEquals(Token(TokenType.STag, "tag"), tokens[0], "First token should be a STag with 'tag' value")
+        assertEquals(Token(TokenType.Content, "Content"), tokens[1], "Second token should be a Content type with 'Content' value")
+        assertEquals(Token(TokenType.ETag, "tag"), tokens[2], "Third token should be a ETag with 'tag' value")
+        assertEquals(Token(TokenType.Content, "ContentBetweenTag"), tokens[3], "Fourth token should be a Content type with 'ContentBetweenTag' value")
+        assertEquals(Token(TokenType.STag, "tag"), tokens[4], "Fifth token should be a STag with 'tag' value")
+    }
+
+    @Test
+    fun testSelfClosingTag() {
+        val source = "<tag/>"
+        val tokens = tokenize(source)
+
+        assertEquals(1, tokens.size, "Should have 1 token (EmptyElemTag)")
+
+        assertEquals(Token(TokenType.EmptyElemTag, "tag/"), tokens[0], "The only token should be an EmptyElemTag with 'tag/' value")
     }
 }
