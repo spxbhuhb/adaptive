@@ -1,13 +1,11 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.adaptive)
     signing
     `maven-publish`
 }
@@ -15,17 +13,11 @@ plugins {
 group = "hu.simplexion.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-ui-common"
-val pomName = "Adaptive UI common"
+val baseName = "adaptive-lib-graphics"
+val pomName = "Adaptive Lib Graphics"
 val scmPath = "spxbhuhb/adaptive"
 
 kotlin {
-
-    androidTarget {
-        publishLibraryVariants("release", "debug")
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
-    }
 
     jvm {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
@@ -42,12 +34,7 @@ kotlin {
             iosX64(),
             iosArm64(),
             iosSimulatorArm64()
-        ).forEach { iosTarget ->
-            iosTarget.binaries.framework {
-                baseName = "Shared"
-                isStatic = true
-            }
-        }
+        )
     }
 
     sourceSets.all {
@@ -60,7 +47,6 @@ kotlin {
         commonMain {
             dependencies {
                 api(libs.adaptive.core)
-                api(libs.adaptive.lib.graphics)
             }
         }
 
@@ -69,29 +55,8 @@ kotlin {
                 api(libs.kotlin.test)
             }
         }
-
-        androidMain {
-            dependencies {
-                implementation(libs.androidx.appcompat)
-                implementation(libs.androidx.constraintlayout)
-                implementation(libs.android.material)
-            }
-        }
     }
 }
-
-android {
-    namespace = "hu.simplexion.adaptive.ui"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-    }
-}
-
 
 // ----------------------------------------------------------------
 // DO NOT EDIT BELOW THIS, ASK FIRST!

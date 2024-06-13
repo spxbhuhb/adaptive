@@ -5,7 +5,7 @@
 package hu.simplexion.adaptive.ui.svg
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.ui.canvas.AdaptiveCanvasContext
+import hu.simplexion.adaptive.ui.canvas.ActualCanvas
 
 abstract class SvgFragment(
     adapter: SvgAdapter,
@@ -35,6 +35,6 @@ abstract class SvgFragment(
         super.unmount()
     }
 
-    abstract fun draw(ctx : AdaptiveCanvasContext)
+    abstract fun draw(ctx : ActualCanvas)
 
 }

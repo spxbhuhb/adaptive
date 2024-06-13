@@ -16,6 +16,7 @@ fun register(name: String) {
             dependsOn(gradle.includedBuild("adaptive-lib-exposed").task(":$taskName"))
         }
 
+        dependsOn(gradle.includedBuild("adaptive-lib-graphics").task(":$taskName"))
         dependsOn(gradle.includedBuild("adaptive-lib-ktor").task(":$taskName"))
 
         if (name !in publishTasks) {
