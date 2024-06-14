@@ -22,8 +22,8 @@ fun login() {
         image(Res.drawable.background)
 
         grid(
-            RowTemplate(140.dp, 50.dp, 1.fr, 1.fr, 1.fr, 50.dp, 100.dp),
-            ColTemplate(1.fr)
+            rowTemplate(140.dp, 50.dp, 1.fr, 1.fr, 1.fr, 50.dp, 100.dp),
+            colTemplate(1.fr)
         ) {
             logo()
             title()
@@ -32,8 +32,8 @@ fun login() {
             messages(time, counter)
 
             grid(
-                RowTemplate(50.dp),
-                ColTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
+                rowTemplate(50.dp),
+                colTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
             ) {
 
                 row(2.gridCol, greenGradient, borderRadius, *center, onClick { counter ++ }) {

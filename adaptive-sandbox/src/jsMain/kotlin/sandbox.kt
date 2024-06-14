@@ -3,12 +3,11 @@
  */
 
 import hu.simplexion.adaptive.foundation.Adaptive
-import hu.simplexion.adaptive.ui.canvas.fragment.circle
-import hu.simplexion.adaptive.ui.common.fragment.canvas
+import hu.simplexion.adaptive.ui.common.fragment.svg
+import sandbox.Res
+import sandbox.thermometer
 
 @Adaptive
 fun stuff() {
-    canvas {
-        circle()
-    }
+    svg(Res.drawable.thermometer)
 }

@@ -17,5 +17,6 @@ object BrowserFragmentFactory : AdaptiveFragmentFactory() {
         add("common:input") { p,i -> AdaptiveInput(p.adapter as AdaptiveBrowserAdapter, p, i) }
         add("common:row") { p,i -> AdaptiveRow(p.adapter as AdaptiveBrowserAdapter, p, i) }
         add("common:text") { p,i -> AdaptiveText(p.adapter as AdaptiveBrowserAdapter, p, i) }
+        add("common:svg") { p, i -> CommonSvg(p.adapter as AdaptiveBrowserAdapter, p, i) }
     }
 }

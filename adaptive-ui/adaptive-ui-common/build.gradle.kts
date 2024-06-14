@@ -60,7 +60,6 @@ kotlin {
         commonMain {
             dependencies {
                 api(libs.adaptive.core)
-                api(libs.adaptive.lib.graphics)
             }
         }
 

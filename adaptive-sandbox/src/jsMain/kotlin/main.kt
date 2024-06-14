@@ -56,7 +56,7 @@ fun main() {
     //withWebSocketTransport()
     withJsResources()
 
-    browser(trace = traceAll) {
+    browser {
 
         var width = 375 // 375 // pixel: 393
         var height = 812 // 812 // pixel: 808 - 24 - 24 = 760

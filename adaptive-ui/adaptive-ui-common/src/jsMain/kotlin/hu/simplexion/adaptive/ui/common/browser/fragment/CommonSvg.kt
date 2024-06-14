@@ -9,6 +9,9 @@ import hu.simplexion.adaptive.foundation.fragment.AdaptiveAnonymous
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
 import hu.simplexion.adaptive.graphics.canvas.ActualBrowserCanvas
 import hu.simplexion.adaptive.grapics.canvas.CanvasAdapter
+import hu.simplexion.adaptive.grapics.canvas.fragment.CanvasSvg
+import hu.simplexion.adaptive.grapics.svg.SvgAdapter
+import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.ui.common.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.browser.AdaptiveBrowserAdapter
 import hu.simplexion.adaptive.ui.common.common
@@ -19,11 +22,11 @@ import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLElement
 
 @AdaptiveActual(common)
-class AdaptiveCanvas(
+class CommonSvg(
     adapter: AdaptiveBrowserAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AdaptiveUIFragment<HTMLElement>(adapter, parent, index, 0, 2) {
+) : AdaptiveUIFragment<HTMLElement>(adapter, parent, index, 1, 2) {
 
     val canvas = ActualBrowserCanvas()
 
@@ -31,12 +34,16 @@ class AdaptiveCanvas(
 
     val canvasAdapter = CanvasAdapter(adapter, canvas, this)
 
-    val content: BoundFragmentFactory
-        get() = state[state.size - 1].checkIfInstance()
+    val resource: DrawableResource
+        get() = state[0].checkIfInstance()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         if (declarationIndex != 0) invalidIndex(declarationIndex)
-        return AdaptiveAnonymous.switchAdapter(canvasAdapter, this, declarationIndex, 0, content).apply { create() }
+        return CanvasSvg(canvasAdapter, this, declarationIndex).also { it.create() }
+    }
+
+    override fun genPatchDescendant(fragment: AdaptiveFragment) {
+        (fragment as CanvasSvg).resource = resource
     }
 
     override fun genPatchInternal(): Boolean {
@@ -52,7 +59,6 @@ class AdaptiveCanvas(
         canvas.setSize(layoutFrame.size)
 
         uiAdapter.applyLayoutToActual(this)
-        canvasAdapter.draw()
     }
 
 }

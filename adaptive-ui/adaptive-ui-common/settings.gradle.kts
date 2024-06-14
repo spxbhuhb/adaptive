@@ -37,4 +37,3 @@ dependencyResolutionManagement {
 }
 
 includeBuild("../../adaptive-core")
-includeBuild("../../adaptive-lib/adaptive-lib-graphics")

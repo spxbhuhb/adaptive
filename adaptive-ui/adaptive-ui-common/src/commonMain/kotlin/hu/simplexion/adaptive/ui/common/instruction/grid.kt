@@ -72,11 +72,9 @@ data class GridCol(val col: Int, val span: Int = 1) : AdaptiveInstruction {
 
 }
 
-fun colTemplate(vararg tracks: Track) = ColTemplate(*tracks)
+fun colTemplate(vararg tracks: Track) = ColTemplate(tracks)
 
 class ColTemplate(val tracks: Array<out Track>) : AdaptiveInstruction {
-
-    constructor(vararg tracks: Track) : this(tracks)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -93,11 +91,9 @@ class ColTemplate(val tracks: Array<out Track>) : AdaptiveInstruction {
     }
 }
 
-fun rowTemplate(vararg tracks: Track) = RowTemplate(*tracks)
+fun rowTemplate(vararg tracks: Track) = RowTemplate(tracks)
 
 class RowTemplate(val tracks: Array<out Track>) : AdaptiveInstruction {
-
-    constructor(vararg tracks: Track) : this(tracks)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
