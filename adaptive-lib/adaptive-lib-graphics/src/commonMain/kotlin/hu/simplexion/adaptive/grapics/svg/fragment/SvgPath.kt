@@ -8,18 +8,37 @@ import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.grapics.svg.SvgAdapter
 import hu.simplexion.adaptive.grapics.svg.SvgFragment
+import hu.simplexion.adaptive.grapics.svg.render.SvgPathRenderData
+import hu.simplexion.adaptive.grapics.svg.render.SvgRenderData
 
 @AdaptiveActual
 class SvgPath(
     adapter: SvgAdapter,
     parent : AdaptiveFragment?,
     declarationIndex : Int
-) : SvgFragment(adapter, parent, declarationIndex, 0, 1) {
+) : SvgFragment<SvgPathRenderData>(adapter, parent, declarationIndex, 0, 1) {
+
+    val path = canvas.newPath()
+
+    override fun newRenderData() = SvgPathRenderData()
+
+    override fun genPatchInternal(): Boolean {
+        super.genPatchInternal()
+        renderData.commands.forEach { it.apply(path) }
+        return false
+    }
 
     override fun draw() {
-        for (instruction in instructions) {
-            instruction.apply(canvas)
+        renderData.transform {
+            canvas.save(id)
+            it.forEach { t -> canvas.transform(t) }
         }
+
+        renderData.fill {
+            canvas.fill(path)
+        }
+
+        canvas.restore(id)
     }
 
 }

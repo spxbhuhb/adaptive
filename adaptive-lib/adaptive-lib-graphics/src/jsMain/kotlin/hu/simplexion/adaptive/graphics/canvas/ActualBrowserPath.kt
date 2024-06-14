@@ -9,19 +9,19 @@ import hu.simplexion.adaptive.grapics.svg.instruction.Arc
 import org.w3c.dom.Path2D
 import kotlin.math.*
 
-class BrowserPath : ActualPath {
+class ActualBrowserPath : ActualPath {
 
     val receiver = Path2D()
 
-    override fun moveTo(x: Float, y: Float) {
-        receiver.moveTo(x.toDouble(),y.toDouble())
+    override fun moveTo(x: Double, y: Double) {
+        receiver.moveTo(x,y)
     }
 
-    override fun lineTo(x: Float, y: Float) {
-        receiver.lineTo(x.toDouble(),y.toDouble())
+    override fun lineTo(x: Double, y: Double) {
+        receiver.lineTo(x,y)
     }
 
-    override fun closePath(x1: Float, y1: Float, x2: Float, y2: Float) {
+    override fun closePath(x1: Double, y1: Double, x2: Double, y2: Double) {
         receiver.closePath()
     }
 
@@ -43,7 +43,7 @@ class BrowserPath : ActualPath {
 
         val radiiCheck = (x1p2 / rx2) + (y1p2 / ry2)
         if (radiiCheck > 1) {
-            val radiiScale = sqrt(radiiCheck).toFloat()
+            val radiiScale = sqrt(radiiCheck)
             rx *= radiiScale
             ry *= radiiScale
         }
@@ -63,26 +63,26 @@ class BrowserPath : ActualPath {
 
         val endAngle = startAngle + deltaTheta
 
-        receiver.arc(cx, cy, rx.toDouble(), startAngle, endAngle, arc.sweepFlag == 0)
+        receiver.arc(cx, cy, rx, startAngle, endAngle, arc.sweepFlag == 0)
     }
 
     fun angle(vector: Double): Double {
         return atan2(vector, sqrt(1.0 - vector * vector))
     }
 
-    override fun cubicCurve(x1: Float, y1: Float, x2: Float, y2: Float, x: Float, y: Float) {
+    override fun cubicCurve(x1: Double, y1: Double, x2: Double, y2: Double, x: Double, y: Double) {
         TODO("Not yet implemented")
     }
 
-    override fun smoothCubicCurve(x2: Float, y2: Float, x: Float, y: Float) {
+    override fun smoothCubicCurve(x2: Double, y2: Double, x: Double, y: Double) {
         TODO("Not yet implemented")
     }
 
-    override fun quadraticCurve(x1: Float, y1: Float, x: Float, y: Float) {
+    override fun quadraticCurve(x1: Double, y1: Double, x: Double, y: Double) {
         TODO("Not yet implemented")
     }
 
-    override fun smoothQuadraticCurve(x: Float, y: Float) {
+    override fun smoothQuadraticCurve(x: Double, y: Double) {
         TODO("Not yet implemented")
     }
 }

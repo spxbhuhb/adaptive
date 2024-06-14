@@ -7,79 +7,79 @@ package hu.simplexion.adaptive.grapics.svg.instruction
 import hu.simplexion.adaptive.grapics.canvas.ActualPath
 
 interface SvgPathCommand {
-    fun draw(path: ActualPath)
+    fun apply(path: ActualPath)
 }
 
 class MoveTo(
-    val x: Float,
-    val y: Float
+    val x: Double,
+    val y: Double
 ) : SvgPathCommand {
-    override fun draw(path: ActualPath) = path.moveTo(x, y)
+    override fun apply(path: ActualPath) = path.moveTo(x, y)
 }
 
 class ClosePath(
-    val x1: Float,
-    val y1: Float,
-    val x2: Float,
-    val y2: Float
+    val x1: Double,
+    val y1: Double,
+    val x2: Double,
+    val y2: Double
 ) : SvgPathCommand {
-    override fun draw(path: ActualPath) = path.closePath(x1, y1, x2, y2)
+    override fun apply(path: ActualPath) = path.closePath(x1, y1, x2, y2)
 }
 
 class LineTo(
-    val x: Float,
-    val y: Float
+    val x: Double,
+    val y: Double
 ) : SvgPathCommand {
-    override fun draw(path: ActualPath) = path.lineTo(x, y)
+    override fun apply(path: ActualPath) = path.lineTo(x, y)
 }
 
 class CubicCurve(
-    val x1: Float,
-    val y1: Float,
-    val x2: Float,
-    val y2: Float,
-    val x: Float,
-    val y: Float
+    val x1: Double,
+    val y1: Double,
+    val x2: Double,
+    val y2: Double,
+    val x: Double,
+    val y: Double
 ) : SvgPathCommand {
-    override fun draw(path: ActualPath) = path.cubicCurve(x1, y1, x2, y2, x, y)
+    override fun apply(path: ActualPath) = path.cubicCurve(x1, y1, x2, y2, x, y)
 }
 
 class CubicCurveSmooth(
-    val x2: Float,
-    val y2: Float,
-    val x: Float,
-    val y: Float
+    val x2: Double,
+    val y2: Double,
+    val x: Double,
+    val y: Double
 ) : SvgPathCommand {
-    override fun draw(path: ActualPath) = path.smoothCubicCurve(x2, y2, x, y)
+    override fun apply(path: ActualPath) = path.smoothCubicCurve(x2, y2, x, y)
 }
 
 class QuadraticCurve(
-    val x1: Float,
-    val y1: Float,
-    val x: Float,
-    val y: Float
+    val x1: Double,
+    val y1: Double,
+    val x: Double,
+    val y: Double
 ) : SvgPathCommand {
-    override fun draw(path: ActualPath) = path.quadraticCurve(x1, y1, x, y)
+    override fun apply(path: ActualPath) = path.quadraticCurve(x1, y1, x, y)
 }
 
 class QuadraticCurveSmooth(
-    val x: Float,
-    val y: Float
+    val x: Double,
+    val y: Double
 ) : SvgPathCommand {
-    override fun draw(path: ActualPath) = path.smoothQuadraticCurve(x, y)
+    override fun apply(path: ActualPath) = path.smoothQuadraticCurve(x, y)
 }
 
 class Arc(
-    val rx: Float,
-    val ry: Float,
-    val xAxisRotation: Float,
+    val rx: Double,
+    val ry: Double,
+    val xAxisRotation: Double,
     val largeArcFlag: Int,
     val sweepFlag: Int,
-    val x1: Float,
-    val y1: Float,
-    val x2: Float,
-    val y2: Float,
+    val x1: Double,
+    val y1: Double,
+    val x2: Double,
+    val y2: Double,
 ) : SvgPathCommand {
-    override fun draw(path: ActualPath) = path.arcTo(this)
+    override fun apply(path: ActualPath) = path.arcTo(this)
 }
 

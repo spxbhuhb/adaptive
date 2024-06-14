@@ -4,15 +4,15 @@
 
 package hu.simplexion.adaptive.grapics.svg.parse
 
-const val FLOAT_CHARS = "0123456789.eE-"
+const val DOUBLE_CHARS = "0123456789.eE-"
 
-internal inline fun List<StringBuilder>.toFloat(index: Int): Float =
-    this[index].toString().toFloat()
+internal inline fun List<StringBuilder>.toDouble(index: Int): Double =
+    this[index].toString().toDouble()
 
 internal inline fun List<StringBuilder>.toInt(index: Int): Int =
     this[index].toString().toInt()
 
 private val COMMA_WSP = Regex("[\\s,]")
 
-fun String.toFloats(): List<Float> =
-    split(COMMA_WSP).map { it.trim().toFloat() }
+fun String.toDoubles(): List<Double> =
+    split(COMMA_WSP).map { it.trim().toDouble() }

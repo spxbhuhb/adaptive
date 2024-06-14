@@ -5,26 +5,52 @@
 package hu.simplexion.adaptive.grapics.svg.instruction
 
 import hu.simplexion.adaptive.grapics.svg.parse.SvgInstruction
+import hu.simplexion.adaptive.grapics.svg.render.SvgPathRenderData
+import hu.simplexion.adaptive.grapics.svg.render.SvgRenderData
+import hu.simplexion.adaptive.grapics.svg.render.SvgRootRenderData
+import hu.simplexion.adaptive.utility.alsoIfInstance
 
 class ViewBox(
-    val minX : Float,
-    val minY : Float,
-    val width : Float,
-    val height : Float
-) : SvgInstruction
+    val minX : Double,
+    val minY : Double,
+    val width : Double,
+    val height : Double
+) : SvgInstruction {
+    override fun apply(subject: Any) {
+        subject.alsoIfInstance<SvgRootRenderData> {
+            it.viewBox = this
+        }
+    }
+}
 
 class Height(
     val height : String
-) : SvgInstruction
+) : SvgInstruction {
+    // TODO string to pixel width conversion with whatever exotic units, not sure if I want this
+}
 
 class Width(
     val width : String
-) : SvgInstruction
+) : SvgInstruction {
+    // TODO string to pixel width conversion with whatever exotic units, not sure if I want this
+}
 
 class Fill(
     val fill : String
-) : SvgInstruction
+) : SvgInstruction {
+    override fun apply(subject: Any) {
+        subject.alsoIfInstance<SvgRenderData> {
+            it.fill = this
+        }
+    }
+}
 
 class D(
     val commands : List<SvgPathCommand>
-) : SvgInstruction
+) : SvgInstruction {
+    override fun apply(subject: Any) {
+        subject.alsoIfInstance<SvgPathRenderData> {
+            it.commands = commands
+        }
+    }
+}

@@ -24,7 +24,7 @@ open class CanvasCircle(
     index: Int
 ) : CanvasFragment(adapter, parent, index, -1, 0) {
 
-    override fun draw(canvas : ActualCanvas) {
+    override fun draw() {
 //        val centerX = 200.0
 //        val centerY = 200.0
 //        val radius = 100.0

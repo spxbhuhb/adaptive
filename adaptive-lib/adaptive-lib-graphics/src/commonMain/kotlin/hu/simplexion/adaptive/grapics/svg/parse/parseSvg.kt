@@ -17,13 +17,13 @@ import hu.simplexion.adaptive.wireformat.xml.parseXml
 
 interface SvgInstruction : AdaptiveInstruction
 
-fun parseSvg(adapter : SvgAdapter, source: String): SvgFragment {
+fun parseSvg(adapter : SvgAdapter, source: String): SvgFragment<*> {
     val xmlRoot = parseXml(source, skipBlankContent = true)
     requireNotNull(xmlRoot) { "could not parse XML: $source" }
     return toSvg(xmlRoot, adapter, null)
 }
 
-private fun toSvg(xmlElement: XmlElement, adapter : SvgAdapter, parent : SvgFragment?): SvgFragment {
+private fun toSvg(xmlElement: XmlElement, adapter : SvgAdapter, parent : SvgFragment<*>?): SvgFragment<*> {
 
     val instructions = mutableListOf<SvgInstruction>()
     xmlElement.attributes.forEach { toSvg(it, instructions) }
@@ -84,7 +84,7 @@ private fun width(value: String, instructions: MutableList<SvgInstruction>) {
 }
 
 private fun viewBox(value: String, instructions: MutableList<SvgInstruction>) {
-    val params = value.toFloats()
+    val params = value.toDoubles()
     require(params.size == 4) { "invalid viewBox parameter number ${params.size} (should be 4)" }
     instructions += ViewBox(params[0], params[1], params[2], params[3])
 }

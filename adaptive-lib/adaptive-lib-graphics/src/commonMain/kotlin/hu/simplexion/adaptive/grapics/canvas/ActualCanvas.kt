@@ -4,10 +4,19 @@
 
 package hu.simplexion.adaptive.grapics.canvas
 
+import hu.simplexion.adaptive.grapics.svg.instruction.SvgTransform
+
 /**
  * Implemented by bridge classes to connect common code with the actual UI canvas implementation.
+ *
+ * @param  PT  Path type
  */
 interface ActualCanvas {
+
+    /**
+     * Get an empty path that may be used for drawing, clipping etc.
+     */
+    fun newPath(): ActualPath
 
     /**
      * Called by [CanvasAdapter] to indicate that drawing on the canvas is about to begin.
@@ -20,12 +29,27 @@ interface ActualCanvas {
     fun endDraw()
 
     /**
-     * Get an empty path that may be used for drawing, clipping etc.
+     * Save the current state of the canvas. Use [restore] to get back to the last save state.
+     *
+     * @param  id   Identifies the fragment that calls save. Subsequent calls of the same id are no-op.
      */
-    fun newPath() : ActualPath
+    fun save(id: Long)
+
+    /**
+     * Restore the last saved state of the canvas.
+     *
+     * @param  id   Identifies the fragment that calls restore. Restores only if the most recent save
+     *              is from the same id.
+     */
+    fun restore(id: Long)
 
     /**
      * Fill a path
      */
-    fun fill(path : ActualPath)
+    fun fill(path: ActualPath)
+
+    /**
+     * Add a transform to the canvas.
+     */
+    fun transform(t: SvgTransform)
 }

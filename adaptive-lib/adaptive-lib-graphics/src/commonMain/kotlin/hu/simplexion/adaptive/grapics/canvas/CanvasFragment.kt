@@ -16,7 +16,7 @@ abstract class CanvasFragment(
 
     val canvasAdapter = adapter
 
-    val canvas: ActualCanvas
+    val canvas: ActualCanvas<*>
         get() = canvasAdapter.rootContainer
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? =

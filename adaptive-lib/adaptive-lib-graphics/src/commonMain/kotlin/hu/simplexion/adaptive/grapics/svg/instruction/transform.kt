@@ -9,35 +9,35 @@ import hu.simplexion.adaptive.grapics.svg.parse.SvgInstruction
 interface SvgTransform : SvgInstruction
 
 data class Matrix(
-    val a: Float,
-    val b: Float,
-    val c: Float,
-    val d: Float,
-    val e: Float,
-    val f: Float
+    val a: Double,
+    val b: Double,
+    val c: Double,
+    val d: Double,
+    val e: Double,
+    val f: Double
 ) : SvgTransform
 
 data class Translate(
-    val tx: Float,
-    val ty: Float,
+    val tx: Double,
+    val ty: Double,
 ) : SvgTransform
 
 data class Scale(
-    val sx: Float,
-    val sy: Float
+    val sx: Double,
+    val sy: Double
 ) : SvgTransform
 
 data class Rotate(
-    val rotateAngle : Float,
-    val cx : Float,
-    val cy : Float
+    val rotateAngle : Double,
+    val cx : Double,
+    val cy : Double
 ) : SvgTransform
 
 data class SkewX(
-    val skewAngle : Float
+    val skewAngle : Double
 ) : SvgTransform
 
 data class SkewY(
-    val skewAngle : Float
+    val skewAngle : Double
 ) : SvgTransform
 

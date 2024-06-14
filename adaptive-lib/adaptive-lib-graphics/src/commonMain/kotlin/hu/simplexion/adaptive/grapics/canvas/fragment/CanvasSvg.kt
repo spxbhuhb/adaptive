@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 @AdaptiveExpect(canvas)
 fun svg(resource : DrawableResource, vararg instructions: AdaptiveInstruction) {
-    manualImplementation(resource)
+    manualImplementation(resource, instructions)
 }
 
 @AdaptiveActual(canvas)

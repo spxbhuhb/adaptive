@@ -5,8 +5,10 @@
 package hu.simplexion.adaptive.grapics.svg
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.grapics.svg.render.SvgRenderData
+import hu.simplexion.adaptive.utility.applyIfInstance
 
-abstract class SvgFragment(
+abstract class SvgFragment<T : SvgRenderData>(
     adapter: SvgAdapter,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
@@ -15,6 +17,8 @@ abstract class SvgFragment(
 ) : AdaptiveFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize) {
 
     val svgAdapter = adapter
+
+    lateinit var renderData: T
 
     val canvas
         get() = svgAdapter.rootContainer
@@ -26,7 +30,20 @@ abstract class SvgFragment(
         Unit
 
     override fun genPatchInternal(): Boolean {
+        patchInstructions()
         return false
+    }
+
+    abstract fun newRenderData() : T
+
+    inline operator fun <reified T : Any> T?.invoke(function : (it : T) -> Unit) {
+        if (this != null) function(this)
+    }
+
+    fun patchInstructions() {
+        if (instructionIndex != - 1 && haveToPatch(dirtyMask, 1 shl instructionIndex)) {
+            renderData = newRenderData().also { rd -> instructions.forEach { it.apply(rd) } }
+        }
     }
 
     // TODO Should we optimize crate and dispose of SVG fragments? They are mostly no-op.
@@ -36,7 +53,9 @@ abstract class SvgFragment(
         adapter.addActualRoot(this)
     }
 
-    abstract fun draw()
+    open fun draw() {
+        children.forEach { it.applyIfInstance<SvgFragment<*>> { draw() } }
+    }
 
     override fun unmount() {
         adapter.removeActualRoot(this)

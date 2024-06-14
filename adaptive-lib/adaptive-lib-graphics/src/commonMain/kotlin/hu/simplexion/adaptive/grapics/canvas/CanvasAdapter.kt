@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 
 class CanvasAdapter(
     val parentAdapter : AdaptiveAdapter,
-    override val rootContainer: ActualCanvas,
+    override val rootContainer: ActualCanvas<*>,
     override var rootFragment : AdaptiveFragment
 ) : AdaptiveAdapter {
 
@@ -46,7 +46,7 @@ class CanvasAdapter(
     fun draw() {
         trace("draw", "drawItems.size = ${drawItems.size}")
         rootContainer.startDraw()
-        drawItems.forEach { it.draw(rootContainer) }
+        drawItems.forEach { it.draw() }
         rootContainer.endDraw()
     }
 

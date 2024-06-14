@@ -32,19 +32,19 @@ class ParseTransformKtTest {
         assertEquals(9, result.size)
 
         var index = 0
-        assertEquals(Translate(- 10f, - 20f), result[index ++])
-        assertEquals(Translate(15f, 0f), result[index ++])
+        assertEquals(Translate(- 10.0, - 20.0), result[index ++])
+        assertEquals(Translate(15.0, 0.0), result[index ++])
 
-        assertEquals(Scale(2f, 2f), result[index ++])
-        assertEquals(Scale(3f, 4f), result[index ++])
+        assertEquals(Scale(2.0, 2.0), result[index ++])
+        assertEquals(Scale(3.0, 4.0), result[index ++])
 
-        assertEquals(Rotate(45f, 0f, 0f), result[index ++])
-        assertEquals(Rotate(45f, 46f, 47f), result[index ++])
+        assertEquals(Rotate(45.0, 0.0, 0.0), result[index ++])
+        assertEquals(Rotate(45.0, 46.0, 47.0), result[index ++])
 
-        assertEquals(Matrix(0f, 1f, 2f, 3f, 4f, 5f), result[index++])
+        assertEquals(Matrix(0.0, 1.0, 2.0, 3.0, 4.0, 5.0), result[index++])
 
-        assertEquals(SkewX(12f), result[index ++])
-        assertEquals(SkewY(13f), result[index])
+        assertEquals(SkewX(12.0), result[index ++])
+        assertEquals(SkewY(13.0), result[index])
     }
 
 

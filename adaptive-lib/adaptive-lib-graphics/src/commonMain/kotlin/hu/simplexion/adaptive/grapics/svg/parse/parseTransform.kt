@@ -5,7 +5,6 @@
 package hu.simplexion.adaptive.grapics.svg.parse
 
 import hu.simplexion.adaptive.grapics.svg.instruction.*
-import hu.simplexion.adaptive.lib.grapics.svg.instruction.*
 import hu.simplexion.adaptive.utility.skipWhile
 
 fun parseTransform(source: String): List<SvgTransform> {
@@ -26,7 +25,7 @@ fun parseTransform(source: String): List<SvgTransform> {
         val char = source[index ++]
 
         when {
-            char in FLOAT_CHARS -> {
+            char in DOUBLE_CHARS -> {
                 if ((char == '-' && parameter.isNotEmpty()) || (char == '.' && parameter.contains('.'))) {
                     parameterIndex ++
                     if (parameterIndex == parameters.size) {
@@ -92,8 +91,8 @@ private fun build(
 
 fun translate(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<SvgTransform>) {
     transforms += when (parameterCount) {
-        1 -> Translate(parameters.toFloat(0), 0f)
-        2 -> Translate(parameters.toFloat(0), parameters.toFloat(1))
+        1 -> Translate(parameters.toDouble(0), 0.0)
+        2 -> Translate(parameters.toDouble(0), parameters.toDouble(1))
         else -> throw IllegalArgumentException("invalid parameter count $parameterCount for 'translate'")
     }
 }
@@ -101,19 +100,19 @@ fun translate(parameters: List<StringBuilder>, parameterCount: Int, transforms: 
 fun scale(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<SvgTransform>) {
     transforms += when (parameterCount) {
         1 -> {
-            val amount = parameters.toFloat(0)
+            val amount = parameters.toDouble(0)
             Scale(amount, amount)
         }
 
-        2 -> Scale(parameters.toFloat(0), parameters.toFloat(1))
+        2 -> Scale(parameters.toDouble(0), parameters.toDouble(1))
         else -> throw IllegalArgumentException("invalid parameter count $parameterCount for 'scale'")
     }
 }
 
 fun rotate(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<SvgTransform>) {
     transforms += when (parameterCount) {
-        1 -> Rotate(parameters.toFloat(0), 0f, 0f)
-        3 -> Rotate(parameters.toFloat(0), parameters.toFloat(1), parameters.toFloat(2))
+        1 -> Rotate(parameters.toDouble(0), 0.0, 0.0)
+        3 -> Rotate(parameters.toDouble(0), parameters.toDouble(1), parameters.toDouble(2))
         else -> throw IllegalArgumentException("invalid parameter count $parameterCount for 'rotate'")
     }
 }
@@ -121,22 +120,22 @@ fun rotate(parameters: List<StringBuilder>, parameterCount: Int, transforms: Mut
 fun matrix(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<SvgTransform>) {
     if (parameterCount != 6) throw IllegalArgumentException("invalid parameter count $parameterCount for 'rotate'")
     transforms += Matrix(
-        parameters.toFloat(0),
-        parameters.toFloat(1),
-        parameters.toFloat(2),
-        parameters.toFloat(3),
-        parameters.toFloat(4),
-        parameters.toFloat(5)
+        parameters.toDouble(0),
+        parameters.toDouble(1),
+        parameters.toDouble(2),
+        parameters.toDouble(3),
+        parameters.toDouble(4),
+        parameters.toDouble(5)
     )
 }
 
 fun skewX(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<SvgTransform>) {
     if (parameterCount != 1) throw IllegalArgumentException("invalid parameter count $parameterCount for 'skewX'")
-    transforms += SkewX(parameters.toFloat(0))
+    transforms += SkewX(parameters.toDouble(0))
 }
 
 fun skewY(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<SvgTransform>) {
     if (parameterCount != 1) throw IllegalArgumentException("invalid parameter count $parameterCount for 'skewY'")
-    transforms += SkewY(parameters.toFloat(0))
+    transforms += SkewY(parameters.toDouble(0))
 }
 

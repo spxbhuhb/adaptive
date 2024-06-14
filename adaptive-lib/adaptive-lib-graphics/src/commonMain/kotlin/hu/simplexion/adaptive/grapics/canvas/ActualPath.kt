@@ -7,12 +7,12 @@ package hu.simplexion.adaptive.grapics.canvas
 import hu.simplexion.adaptive.grapics.svg.instruction.Arc
 
 interface ActualPath {
-    fun moveTo(x: Float, y: Float)
-    fun lineTo(x: Float, y: Float)
-    fun closePath(x1: Float, y1: Float, x2: Float, y2: Float)
+    fun moveTo(x: Double, y: Double)
+    fun lineTo(x: Double, y: Double)
+    fun closePath(x1: Double, y1: Double, x2: Double, y2: Double)
     fun arcTo(arc : Arc)
-    fun cubicCurve(x1: Float, y1: Float, x2: Float, y2: Float, x: Float, y: Float)
-    fun smoothCubicCurve(x2: Float, y2: Float, x: Float, y: Float)
-    fun quadraticCurve(x1: Float, y1: Float, x: Float, y: Float)
-    fun smoothQuadraticCurve(x: Float, y: Float)
+    fun cubicCurve(x1: Double, y1: Double, x2: Double, y2: Double, x: Double, y: Double)
+    fun smoothCubicCurve(x2: Double, y2: Double, x: Double, y: Double)
+    fun quadraticCurve(x1: Double, y1: Double, x: Double, y: Double)
+    fun smoothQuadraticCurve(x: Double, y: Double)
 }

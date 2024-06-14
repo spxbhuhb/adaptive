@@ -7,14 +7,14 @@ import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.fragment.AdaptiveAnonymous
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
+import hu.simplexion.adaptive.graphics.canvas.ActualBrowserCanvas
+import hu.simplexion.adaptive.grapics.canvas.CanvasAdapter
 import hu.simplexion.adaptive.ui.common.AdaptiveUIFragment
 import hu.simplexion.adaptive.ui.common.browser.AdaptiveBrowserAdapter
-import hu.simplexion.adaptive.grapics.canvas.CanvasAdapter
 import hu.simplexion.adaptive.ui.common.common
 import hu.simplexion.adaptive.ui.common.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.layout.RawSize
 import hu.simplexion.adaptive.utility.checkIfInstance
-import kotlinx.browser.document
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLElement
 
@@ -25,10 +25,11 @@ class AdaptiveCanvas(
     index: Int
 ) : AdaptiveUIFragment<HTMLElement>(adapter, parent, index, 0, 2) {
 
-    override val receiver: HTMLCanvasElement =
-        document.createElement("canvas") as HTMLCanvasElement
+    val canvas = ActualBrowserCanvas()
 
-    val canvasAdapter = CanvasAdapter(adapter, receiver, this)
+    override val receiver: HTMLCanvasElement = canvas.receiver
+
+    val canvasAdapter = CanvasAdapter(adapter, canvas, this)
 
     val content: BoundFragmentFactory
         get() = state[state.size - 1].checkIfInstance()

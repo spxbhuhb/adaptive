@@ -19,11 +19,11 @@ class ParsePathKtTest {
         val path = "M 10 10 l 20 20 m 5 5 L 5 5 Z"
 
         val expectedCommands = listOf(
-            MoveTo(10f, 10f),
-            LineTo(30f, 30f),
-            MoveTo(35f, 35f),
-            LineTo(5f, 5f),
-            ClosePath(5f, 5f, 35f, 35f)
+            MoveTo(10.0, 10.0),
+            LineTo(30.0, 30.0),
+            MoveTo(35.0, 35.0),
+            LineTo(5.0, 5.0),
+            ClosePath(5.0, 5.0, 35.0, 35.0)
         )
 
         val commands = parsePath(path)
