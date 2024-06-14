@@ -25,6 +25,9 @@
 | Arc                | absolute           | A rx ry x-axis-rotation large-arc-flag sweep-flag x y   |
 | Arc                | relative           | a rx ry x-axis-rotation large-arc-flag sweep-flag dx dy |
 
+SVG:
+* https://www.w3.org/TR/SVG11/
+
 Android:
 * https://developer.android.com/reference/android/graphics/Canvas
 * https://developer.android.com/reference/android/graphics/Path
