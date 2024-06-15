@@ -4,6 +4,7 @@
 package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.ui.common.instruction.BorderRadius
 import hu.simplexion.adaptive.ui.common.platform.ContainerView
 import hu.simplexion.adaptive.ui.common.platform.GestureTarget
 import hu.simplexion.adaptive.ui.common.render.CommonRenderData
@@ -100,8 +101,9 @@ open class CommonAdapter(
             view.layer.masksToBounds = true
         }
 
-        if (borderRadius != null) {
-            view.layer.cornerRadius = borderRadius.px
+        if (borderRadius !== BorderRadius.ZERO) {
+            // FIXME individual radii for corners
+            borderRadius.topLeft.set { view.layer.cornerRadius = it }
         }
 
         val backgroundGradient = renderData.backgroundGradient
@@ -112,7 +114,8 @@ open class CommonAdapter(
             gradientLayer.colors = listOf(backgroundGradient.start.uiColor, backgroundGradient.end.uiColor)
 
             view.layer.insertSublayer(gradientLayer, 0u)
-            view.layer.cornerRadius = borderRadius.px
+            // FIXME individual radii for corners
+            borderRadius.topLeft.set { view.layer.cornerRadius = it }
             view.layer.masksToBounds = true
         }
     }
@@ -179,6 +182,12 @@ open class CommonAdapter(
 
     val DPixel?.px: Double
         inline get() = this?.value?.toDouble() ?: 0.0
+
+    inline fun DPixel.set(setter: (it: Double) -> Unit) {
+        if (this !== DPixel.NaP) {
+            setter(value.toDouble())
+        }
+    }
 
     val Color.uiColor: UIColor
         get() {

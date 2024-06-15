@@ -114,7 +114,7 @@ open class CommonAdapter(
                     shape = GradientDrawable.RECTANGLE
                     setColor(android.graphics.Color.TRANSPARENT)
                     setStroke(it.width.px, it.color.androidColor)
-                    borderRadius?.let { radius -> cornerRadius = toPx(radius) }
+                    if (borderRadius !== BorderRadius.ZERO) cornerRadii = borderRadius.toFloatArray()
                 }
                 insets += 0
             }
@@ -123,7 +123,7 @@ open class CommonAdapter(
                 drawables += GradientDrawable().apply {
                     shape = GradientDrawable.RECTANGLE
                     setColor(it.androidColor)
-                    borderRadius?.let { radius -> cornerRadius = toPx(radius) }
+                    if (borderRadius !== BorderRadius.ZERO) cornerRadii = borderRadius.toFloatArray()
                 }
                 insets += border?.width.px
             }
@@ -133,7 +133,7 @@ open class CommonAdapter(
                     GradientDrawable.Orientation.LEFT_RIGHT, //
                     intArrayOf(it.start.androidColor, it.end.androidColor),
                 ).apply {
-                    borderRadius?.let { radius -> cornerRadius = toPx(radius) }
+                    if (borderRadius !== BorderRadius.ZERO) cornerRadii = borderRadius.toFloatArray()
                 }
                 insets += border?.width.px
             }
@@ -194,6 +194,21 @@ open class CommonAdapter(
     // TODO do we need this conversion? TextView.textSize is in SP
     override fun toPx(sPixel: SPixel): Float =
         applyDimension(COMPLEX_UNIT_SP, sPixel.value, displayMetrics)
+
+    inline fun DPixel.set(setter: (it: Float) -> Unit) {
+        if (this !== DPixel.NaP) {
+            setter(applyDimension(COMPLEX_UNIT_DIP, value, displayMetrics))
+        }
+    }
+
+    fun BorderRadius.toFloatArray(): FloatArray {
+        return floatArrayOf(
+            applyDimension(COMPLEX_UNIT_SP, topLeft.value, displayMetrics),
+            applyDimension(COMPLEX_UNIT_SP, topRight.value, displayMetrics),
+            applyDimension(COMPLEX_UNIT_SP, bottomRight.value, displayMetrics),
+            applyDimension(COMPLEX_UNIT_SP, bottomLeft.value, displayMetrics)
+        )
+    }
 
     val Color.androidColor
         get() = android.graphics.Color.pack(
