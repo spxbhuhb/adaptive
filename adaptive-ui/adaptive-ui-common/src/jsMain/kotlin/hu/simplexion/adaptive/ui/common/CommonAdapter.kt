@@ -117,6 +117,10 @@ open class CommonAdapter(
                     }
                 }
 
+                dropShadow {
+                    style.filter = "drop-shadow(${it.color.toHexColor()} ${it.offsetX.pxs} ${it.offsetY.pxs} ${it.standardDeviation.pxs})"
+                }
+
                 color?.let { style.color = it.toHexColor() }
 
                 fontSize?.let { style.fontSize = "${it.value}px" }
@@ -168,6 +172,12 @@ open class CommonAdapter(
         }
     }
 
+    inline operator fun <reified T : Any> T?.invoke(function : (it : T) -> Unit) {
+        if (this != null) {
+            function(this)
+        }
+    }
+
     override fun openExternalLink(href: String) {
         window.open(href, "_blank")
     }
@@ -180,6 +190,9 @@ open class CommonAdapter(
 
     override fun toPx(dPixel: DPixel): Float =
         dPixel.value
+
+    val DPixel.pxs
+        get() = "${value}px"
 
     override fun toPx(sPixel: SPixel): Float =
         sPixel.value

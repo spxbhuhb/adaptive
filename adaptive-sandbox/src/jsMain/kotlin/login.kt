@@ -20,7 +20,7 @@ fun login() {
 
     box {
 
-        image(Res.drawable.background)
+        image(Res.drawable.background, dropShadow(black, 10.dp, 10.dp, 10.dp))
 
         grid {
             rowTemplate(140.dp, 50.dp, 1.fr, 1.fr, 1.fr, 50.dp, 100.dp)

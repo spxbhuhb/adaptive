@@ -38,6 +38,7 @@ open class CommonRenderData(
 
     var backgroundColor: Color? = null
     var backgroundGradient : BackgroundGradient? = null
+    var dropShadow : DropShadow? = null
 
     var alignContent : AlignContent? = null
     var alignItems : AlignItems? = null
