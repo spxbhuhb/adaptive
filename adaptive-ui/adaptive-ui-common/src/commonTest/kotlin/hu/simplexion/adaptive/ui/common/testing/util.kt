@@ -7,8 +7,8 @@ package hu.simplexion.adaptive.ui.common.testing
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.query.firstOrNullWith
-import hu.simplexion.adaptive.ui.common.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
+import hu.simplexion.adaptive.ui.common.support.RawFrame
 
 
 inline fun <reified T : AdaptiveInstruction> AdaptiveAdapter.assertEquals(
@@ -19,6 +19,6 @@ inline fun <reified T : AdaptiveInstruction> AdaptiveAdapter.assertEquals(
 ) {
     kotlin.test.assertEquals(
         RawFrame(top.toFloat(), left.toFloat(), width.toFloat(), height.toFloat()),
-        (firstOrNullWith<T>() as AdaptiveUIFragment<*>).layoutFrame
+        (firstOrNullWith<T>() as AbstractCommonFragment<*>).layoutFrame
     )
 }

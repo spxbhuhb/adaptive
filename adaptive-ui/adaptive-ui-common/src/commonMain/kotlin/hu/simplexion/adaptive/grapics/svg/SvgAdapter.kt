@@ -5,10 +5,7 @@ package hu.simplexion.adaptive.grapics.svg
 
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.grapics.canvas.ActualCanvas
-import hu.simplexion.adaptive.grapics.canvas.ActualPath
-import hu.simplexion.adaptive.grapics.svg.fragment.SvgRoot
-import hu.simplexion.adaptive.utility.alsoIfInstance
+import hu.simplexion.adaptive.grapics.canvas.platform.ActualCanvas
 import hu.simplexion.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

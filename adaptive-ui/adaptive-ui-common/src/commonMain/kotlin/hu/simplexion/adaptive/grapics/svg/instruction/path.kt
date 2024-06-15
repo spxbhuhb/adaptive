@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.grapics.svg.instruction
 
-import hu.simplexion.adaptive.grapics.canvas.ActualPath
+import hu.simplexion.adaptive.grapics.canvas.platform.ActualPath
 
 interface SvgPathCommand {
     fun apply(path: ActualPath)

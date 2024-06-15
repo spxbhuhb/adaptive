@@ -11,7 +11,7 @@ import hu.simplexion.adaptive.foundation.instruction.DetachHandler
 import hu.simplexion.adaptive.foundation.query.single
 import hu.simplexion.adaptive.foundation.fragment.AdaptiveSlot
 import hu.simplexion.adaptive.resource.FileResource
-import hu.simplexion.adaptive.ui.common.RenderData
+import hu.simplexion.adaptive.ui.common.render.CommonRenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 // --------------------------------------------------------------------
@@ -54,7 +54,7 @@ data class ExternalLink(val href : String) : AdaptiveInstruction {
     }
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> {
+        subject.alsoIfInstance<CommonRenderData> {
             it.onClick = OnClick(this::openLink)
         }
     }

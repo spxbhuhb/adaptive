@@ -8,7 +8,6 @@ import hu.simplexion.adaptive.foundation.AdaptiveExpect
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.manualImplementation
-import hu.simplexion.adaptive.grapics.canvas.ActualCanvas
 import hu.simplexion.adaptive.grapics.canvas.CanvasAdapter
 import hu.simplexion.adaptive.grapics.canvas.CanvasFragment
 import hu.simplexion.adaptive.grapics.canvas.canvas

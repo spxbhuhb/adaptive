@@ -6,19 +6,19 @@ package hu.simplexion.adaptive.ui.common.testing.fragment
 import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.resource.DrawableResource
-import hu.simplexion.adaptive.ui.common.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.layout.RawFrame
-import hu.simplexion.adaptive.ui.common.layout.RawSize
-import hu.simplexion.adaptive.ui.common.testing.AdaptiveUITestAdapter
+import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
+import hu.simplexion.adaptive.ui.common.support.RawFrame
+import hu.simplexion.adaptive.ui.common.support.RawSize
+import hu.simplexion.adaptive.ui.common.testing.CommonTestAdapter
 import hu.simplexion.adaptive.ui.common.testing.TestReceiver
 import hu.simplexion.adaptive.utility.checkIfInstance
 
 @AdaptiveActual("test")
 open class AdaptiveImage(
-    adapter: AdaptiveUITestAdapter,
+    adapter: CommonTestAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AdaptiveUIFragment<TestReceiver>(adapter, parent, index, 1, 2) {
+) : AbstractCommonFragment<TestReceiver>(adapter, parent, index, 1, 2) {
 
     override val receiver = TestReceiver()
 

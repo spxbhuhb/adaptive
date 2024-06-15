@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.grapics.canvas
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.grapics.canvas.platform.ActualCanvas
 
 abstract class CanvasFragment(
     adapter: CanvasAdapter,

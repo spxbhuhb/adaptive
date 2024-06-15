@@ -5,6 +5,7 @@ package hu.simplexion.adaptive.grapics.canvas
 
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.grapics.canvas.platform.ActualCanvas
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import hu.simplexion.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher

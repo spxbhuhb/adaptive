@@ -5,11 +5,10 @@
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.fragment.slot
 import hu.simplexion.adaptive.foundation.instruction.*
-import hu.simplexion.adaptive.lib.sandbox.SandboxLibExports
 import hu.simplexion.adaptive.sandbox.api.CounterApi
 import hu.simplexion.adaptive.service.getService
-import hu.simplexion.adaptive.ui.common.browser.browser
-import hu.simplexion.adaptive.ui.common.browser.resource.withJsResources
+import hu.simplexion.adaptive.ui.common.browser
+import hu.simplexion.adaptive.ui.common.platform.withJsResources
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.wireformat.withJson

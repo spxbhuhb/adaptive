@@ -5,7 +5,7 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
-import hu.simplexion.adaptive.ui.common.RenderData
+import hu.simplexion.adaptive.ui.common.render.CommonRenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 fun color(value : Int) = Color(value)
@@ -13,7 +13,7 @@ fun color(value : Int) = Color(value)
 data class Color(val value: Int) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { it.color = this }
+        subject.alsoIfInstance<CommonRenderData> { it.color = this }
     }
 
     /**

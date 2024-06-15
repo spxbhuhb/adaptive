@@ -6,12 +6,12 @@ package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.internal.cleanStateMask
-import hu.simplexion.adaptive.ui.common.AdaptiveUIFragment
-import hu.simplexion.adaptive.ui.common.RenderData
+import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
+import hu.simplexion.adaptive.ui.common.render.CommonRenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 class AdaptiveUIEvent(
-    val fragment: AdaptiveUIFragment<*>,
+    val fragment: AbstractCommonFragment<*>,
     val nativeEvent : Any?
 ) {
     fun patchIfDirty() {
@@ -29,7 +29,7 @@ class OnClick(
 ) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { it.onClick = this }
+        subject.alsoIfInstance<CommonRenderData> { it.onClick = this }
     }
 
     fun execute(event : AdaptiveUIEvent) {

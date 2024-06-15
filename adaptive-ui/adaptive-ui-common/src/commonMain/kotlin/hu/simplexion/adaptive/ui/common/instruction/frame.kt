@@ -5,9 +5,9 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
-import hu.simplexion.adaptive.ui.common.AdaptiveUIAdapter
-import hu.simplexion.adaptive.ui.common.RenderData
-import hu.simplexion.adaptive.ui.common.layout.RawSize
+import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
+import hu.simplexion.adaptive.ui.common.render.CommonRenderData
+import hu.simplexion.adaptive.ui.common.support.RawSize
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 fun frame(top: DPixel, left: DPixel, width: DPixel, height: DPixel) =
@@ -27,7 +27,7 @@ data class Frame(
         this(Point(top, left), Size(width, height))
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> {
+        subject.alsoIfInstance<CommonRenderData> {
             it.instructedPoint = this.point
             it.instructedSize = this.size
         }
@@ -45,7 +45,7 @@ data class Point(
 ) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { it.instructedPoint = this }
+        subject.alsoIfInstance<CommonRenderData> { it.instructedPoint = this }
     }
 
     companion object {
@@ -70,10 +70,10 @@ data class Size(
 ) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { it.instructedSize = this }
+        subject.alsoIfInstance<CommonRenderData> { it.instructedSize = this }
     }
 
-    fun toRaw(adapter : AdaptiveUIAdapter<*,*>) : RawSize =
+    fun toRaw(adapter : AbstractCommonAdapter<*,*>) : RawSize =
         RawSize(width.toPx(adapter), height.toPx(adapter))
 
     fun isNaS() : Boolean =
@@ -98,11 +98,14 @@ data class Height(
     val height: DPixel
 ) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> {
+        subject.alsoIfInstance<CommonRenderData> {
             it.instructedSize = Size(it.instructedSize.width, this.height)
         }
     }
 }
+
+fun width(width: DPixel) : Width = Width(width)
+
 
 /**
  * Set width of a fragment.
@@ -115,7 +118,7 @@ data class Width(
     val width: DPixel
 ) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> {
+        subject.alsoIfInstance<CommonRenderData> {
             it.instructedSize = Size(width, it.instructedSize.height)
         }
     }

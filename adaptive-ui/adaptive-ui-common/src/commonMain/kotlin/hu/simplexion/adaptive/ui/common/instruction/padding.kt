@@ -5,10 +5,11 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
-import hu.simplexion.adaptive.ui.common.RenderData
+import hu.simplexion.adaptive.ui.common.render.CommonRenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 fun padding(all: DPixel) = Padding(all)
+fun padding(top: DPixel = DPixel.NaP, right: DPixel = DPixel.NaP, bottom: DPixel = DPixel.NaP, left: DPixel = DPixel.NaP) = Padding(top, right, bottom, left)
 fun paddingTop(top: DPixel) = Padding(top = top)
 fun paddingRight(right: DPixel) = Padding(right = right)
 fun paddingBottom(bottom: DPixel) = Padding(bottom = bottom)
@@ -24,7 +25,7 @@ data class Padding(
     constructor(all: DPixel) : this(all, all, all, all)
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { renderData ->
+        subject.alsoIfInstance<CommonRenderData> { renderData ->
             renderData.padding = this or renderData.padding
         }
     }

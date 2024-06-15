@@ -4,6 +4,8 @@
 
 package hu.simplexion.adaptive.grapics.canvas
 
+import hu.simplexion.adaptive.grapics.canvas.platform.ActualCanvas
+import hu.simplexion.adaptive.grapics.canvas.platform.ActualPath
 import hu.simplexion.adaptive.grapics.svg.instruction.SvgTransform
 
 class TestCanvas : ActualCanvas {

@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.ui.common.testing
 
-import hu.simplexion.adaptive.ui.common.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.support.RawFrame
 
 class TestReceiver(
     val testFrame : RawFrame = RawFrame.NaF

@@ -5,25 +5,24 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
-import hu.simplexion.adaptive.ui.common.RenderData
+import hu.simplexion.adaptive.ui.common.render.CommonRenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
-import kotlinx.coroutines.channels.Channel
 
 data class FontName(val fontName: String) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { it.fontName = fontName }
+        subject.alsoIfInstance<CommonRenderData> { it.fontName = fontName }
     }
 }
 
 data class FontSize(val fontSize: SPixel) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { it.fontSize = fontSize }
+        subject.alsoIfInstance<CommonRenderData> { it.fontSize = fontSize }
     }
 }
 
 data class FontWeight(val weight: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { it.fontWeight = weight }
+        subject.alsoIfInstance<CommonRenderData> { it.fontWeight = weight }
     }
 
     companion object {
@@ -44,7 +43,7 @@ enum class TextDecoration(val value : String) : AdaptiveInstruction {
     Underline("underline");
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { it.textDecoration = this }
+        subject.alsoIfInstance<CommonRenderData> { it.textDecoration = this }
     }
 }
 
@@ -52,13 +51,13 @@ val noSelect = NoSelect()
 
 class NoSelect : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { it.noSelect = true }
+        subject.alsoIfInstance<CommonRenderData> { it.noSelect = true }
     }
 }
 
 data class LetterSpacing(val value: Float) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { it.letterSpacing = value }
+        subject.alsoIfInstance<CommonRenderData> { it.letterSpacing = value }
     }
 }
 
@@ -67,7 +66,7 @@ enum class TextWrap : AdaptiveInstruction {
     NoWrap;
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { it.textWrap = this }
+        subject.alsoIfInstance<CommonRenderData> { it.textWrap = this }
     }
 }
 
@@ -77,6 +76,6 @@ enum class TextAlign : AdaptiveInstruction {
     End;
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { it.textAlign = this }
+        subject.alsoIfInstance<CommonRenderData> { it.textAlign = this }
     }
 }

@@ -5,8 +5,8 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
-import hu.simplexion.adaptive.ui.common.AdaptiveUIAdapter
-import hu.simplexion.adaptive.ui.common.RenderData
+import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
+import hu.simplexion.adaptive.ui.common.render.CommonRenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 // ---- Shorthands --------------------------------------------------------
@@ -27,20 +27,20 @@ val Number.colSpan
 
 data class RowSpan(val span: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { it.rowSpan = span }
+        subject.alsoIfInstance<CommonRenderData> { it.rowSpan = span }
     }
 }
 
 data class ColSpan(val span: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { it.colSpan = span }
+        subject.alsoIfInstance<CommonRenderData> { it.colSpan = span }
     }
 }
 
 data class GridPos(val row: Int, val col: Int, val rowSpan: Int = 1, val colSpan: Int = 1) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> {
+        subject.alsoIfInstance<CommonRenderData> {
             it.gridRow = row
             it.gridCol = col
             it.rowSpan = rowSpan
@@ -53,7 +53,7 @@ data class GridPos(val row: Int, val col: Int, val rowSpan: Int = 1, val colSpan
 data class GridRow(val row: Int, val span: Int = 1) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> {
+        subject.alsoIfInstance<CommonRenderData> {
             it.gridRow = row
             it.rowSpan = span
         }
@@ -64,7 +64,7 @@ data class GridRow(val row: Int, val span: Int = 1) : AdaptiveInstruction {
 data class GridCol(val col: Int, val span: Int = 1) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> {
+        subject.alsoIfInstance<CommonRenderData> {
             it.gridCol = col
             it.colSpan = span
         }
@@ -128,7 +128,7 @@ interface Track {
         out.add(this)
     }
 
-    fun toRawValue(adapter: AdaptiveUIAdapter<*, *>): Float
+    fun toRawValue(adapter: AbstractCommonAdapter<*, *>): Float
 
 }
 
@@ -159,7 +159,7 @@ data class Replicate(val count: Int, val track: Track) : Track {
         }
     }
 
-    override fun toRawValue(adapter: AdaptiveUIAdapter<*, *>): Float {
+    override fun toRawValue(adapter: AbstractCommonAdapter<*, *>): Float {
         throw UnsupportedOperationException()
     }
 

@@ -5,7 +5,7 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
-import hu.simplexion.adaptive.ui.common.RenderData
+import hu.simplexion.adaptive.ui.common.render.CommonRenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 enum class AlignContent : AdaptiveInstruction {
@@ -14,7 +14,7 @@ enum class AlignContent : AdaptiveInstruction {
     End;
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { it.alignContent = this }
+        subject.alsoIfInstance<CommonRenderData> { it.alignContent = this }
     }
 }
 
@@ -24,7 +24,7 @@ enum class AlignItems : AdaptiveInstruction {
     End;
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { it.alignItems = this }
+        subject.alsoIfInstance<CommonRenderData> { it.alignItems = this }
     }
 }
 
@@ -34,6 +34,6 @@ enum class AlignSelf : AdaptiveInstruction {
     End;
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderData> { it.alignSelf = this }
+        subject.alsoIfInstance<CommonRenderData> { it.alignSelf = this }
     }
 }

@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
-import hu.simplexion.adaptive.ui.common.AdaptiveUIAdapter
+import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 
 // -----------------------------------------------------------
 // Device independent pixel
@@ -33,7 +33,7 @@ data class DPixel(
      * Convert the device-independent point into device-dependent pixel value.
      * [NaP] is converted to [Float.NaN].
      */
-    fun toPx(adapter: AdaptiveUIAdapter<*, *>): Float =
+    fun toPx(adapter: AbstractCommonAdapter<*, *>): Float =
         when {
             this == NaP -> Float.NaN
             this === ZERO -> 0f
@@ -45,10 +45,10 @@ data class DPixel(
      * [NaP] is converted to 0f. If you want to keep the information that the
      * value is invalid use [toPx].
      */
-    fun toPxOrZero(adapter: AdaptiveUIAdapter<*, *>): Float =
+    fun toPxOrZero(adapter: AbstractCommonAdapter<*, *>): Float =
         if (this === ZERO || this === NaP) 0f else adapter.toPx(this)
 
-    override fun toRawValue(adapter: AdaptiveUIAdapter<*, *>): Float =
+    override fun toRawValue(adapter: AbstractCommonAdapter<*, *>): Float =
         this.toPx(adapter)
 
     override fun toString(): String {
@@ -107,7 +107,7 @@ data class Fraction(
     override val isFix
         get() = false
 
-    override fun toRawValue(adapter: AdaptiveUIAdapter<*, *>): Float = value
+    override fun toRawValue(adapter: AbstractCommonAdapter<*, *>): Float = value
 
     override fun toString(): String {
         return "${value}fr"
