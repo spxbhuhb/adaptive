@@ -6,10 +6,10 @@ package hu.simplexion.adaptive.grapics.svg.parse
 
 const val DOUBLE_CHARS = "0123456789.eE-"
 
-internal inline fun List<StringBuilder>.toDouble(index: Int): Double =
+internal fun List<StringBuilder>.toDouble(index: Int): Double =
     this[index].toString().toDouble()
 
-internal inline fun List<StringBuilder>.toInt(index: Int): Int =
+internal fun List<StringBuilder>.toInt(index: Int): Int =
     this[index].toString().toInt()
 
 private val COMMA_WSP = Regex("[\\s,]")

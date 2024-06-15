@@ -3,6 +3,7 @@
  */
 
 import hu.simplexion.adaptive.foundation.Adaptive
+import hu.simplexion.adaptive.foundation.instruction.name
 import hu.simplexion.adaptive.foundation.producer.poll
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
@@ -21,20 +22,19 @@ fun login() {
 
         image(Res.drawable.background)
 
-        grid(
-            rowTemplate(140.dp, 50.dp, 1.fr, 1.fr, 1.fr, 50.dp, 100.dp),
+        grid {
+            rowTemplate(140.dp, 50.dp, 1.fr, 1.fr, 1.fr, 50.dp, 100.dp)
             colTemplate(1.fr)
-        ) {
+
             logo()
             title()
             time(timeText)
             progress(time)
             messages(time, counter)
 
-            grid(
-                rowTemplate(50.dp),
+            grid {
+                rowTemplate(50.dp)
                 colTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
-            ) {
 
                 row(2.gridCol, greenGradient, borderRadius, *center, onClick { counter ++ }) {
                     text("Snooze", white, textMedium, noSelect)

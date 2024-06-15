@@ -19,15 +19,16 @@ fun someFun() {
 
 ## Inner instructions
 
+You can put the instructions inside builder blocks, at the beginning, before any rendering instructions.
+This results in much more readable code.
+
 >
 > [!WARNING]
 >
-> I really, really, really want this feature, but I haven't yet had the time to code it yet.
-> There should be (and will be) rules about where and how one can use inner instructions.
+> The placement is very strict. You cannot use `if`, `for` or other structures to add inner instructions
+> conditionally.
 >
 
-You can put the instructions inside builder blocks, at the beginning, before any rendering instructions.
-This results in much more readable code:
 
 ```kotlin
 import hu.simplexion.adaptive.foundation.Adaptive

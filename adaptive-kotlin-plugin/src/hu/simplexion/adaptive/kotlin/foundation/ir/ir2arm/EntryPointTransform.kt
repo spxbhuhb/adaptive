@@ -16,10 +16,10 @@ import org.jetbrains.kotlin.ir.util.hasAnnotation
  * Creates an `ArmClass` and a `ArmEntryPoint` for each call of the `adaptive` function (defined in the runtime).
  */
 class EntryPointTransform(
-    private val adaptiveContext: FoundationPluginContext
+    private val pluginContext: FoundationPluginContext
 ) : IrElementTransformerVoidWithContext() {
 
-    val irBuiltIns = adaptiveContext.irContext.irBuiltIns
+    val irBuiltIns = pluginContext.irContext.irBuiltIns
 
     /**
      * Transforms Adaptive entry points (calls to the function `adaptive`) into an
@@ -40,10 +40,10 @@ class EntryPointTransform(
 
         val function = block.function
 
-        val armClass = IrFunction2ArmClass(adaptiveContext, block.function, true).transform()
+        val armClass = IrFunction2ArmClass(pluginContext, block.function, true).transform()
 
         ArmEntryPoint(armClass, function).also {
-            adaptiveContext.armEntryPoints += it
+            pluginContext.armEntryPoints += it
         }
 
         return expression

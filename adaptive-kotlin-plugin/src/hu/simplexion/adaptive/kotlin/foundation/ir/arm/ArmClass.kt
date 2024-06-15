@@ -13,16 +13,14 @@ import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.util.statements
 
 class ArmClass(
-    adaptiveContext: FoundationPluginContext,
-    val originalFunction: IrFunction
+    val originalFunction: IrFunction,
+    val boundary: ArmBoundary
 ) : ArmElement {
 
     lateinit var irClass: IrClass
 
     val fqName = originalFunction.adaptiveClassFqName()
     val name = fqName.shortName()
-
-    val boundary: ArmBoundary = BoundaryVisitor(adaptiveContext).findBoundary(originalFunction)
 
     val originalStatements = checkNotNull(originalFunction.body?.statements) { "missing function body" }
 

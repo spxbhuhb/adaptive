@@ -46,6 +46,7 @@ class FoundationPluginContext(
     val adaptiveAdapterType = adaptiveAdapterClass.defaultType
 
     val adaptiveInstructionClass = ClassIds.ADAPTIVE_INSTRUCTION.classSymbol()
+    val adaptiveInstructionType = adaptiveInstructionClass.defaultType
 
     val adaptiveAnonymousClass = ClassIds.ADAPTIVE_ANONYMOUS.classSymbol()
     val anonymousConstructor = adaptiveAnonymousClass.constructors.first { it.owner.valueParameters.size == 4 }

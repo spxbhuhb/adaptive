@@ -49,6 +49,19 @@ fun AdaptiveAdapter.firstOrNull(
  * @param horizontal When [deep] is true, filter a given level first, children second.
  */
 fun AdaptiveAdapter.filter(
+    deep: Boolean = false,
+    horizontal: Boolean = true,
+    condition: (AdaptiveFragment) -> Boolean
+): MutableList<AdaptiveFragment> =
+    mutableListOf<AdaptiveFragment>().also { rootFragment.filter(it, deep, horizontal, condition) }
+
+/**
+ * Find the all fragments that matches the given condition.
+ *
+ * @param deep Deep search, go down in the fragment tree.
+ * @param horizontal When [deep] is true, filter a given level first, children second.
+ */
+fun AdaptiveAdapter.filter(
     matches: MutableList<AdaptiveFragment> = mutableListOf(),
     deep: Boolean = false,
     horizontal: Boolean = true,

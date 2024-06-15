@@ -21,6 +21,7 @@ import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.visitors.acceptVoid
 
 /**
  * Transforms an original function into a [ArmClass]. This is a somewhat complex transformation.
@@ -49,8 +50,6 @@ class IrFunction2ArmClass(
     val nextFragmentIndex
         get() = fragmentIndex ++
 
-    var supportIndex = 0
-
     val states: Stack<ArmState> = mutableListOf()
     val closures: Stack<ArmClosure> = mutableListOf()
 
@@ -58,9 +57,14 @@ class IrFunction2ArmClass(
         get() = closures.peek()
 
     fun transform(): ArmClass {
-        armClass = ArmClass(pluginContext, irFunction)
+        val boundary = BoundaryVisitor(pluginContext).findBoundary(irFunction)
+
+        armClass = ArmClass(irFunction, boundary)
 
         StateDefinitionTransform(pluginContext, armClass, if (isRoot) 1 else 0).apply { transform() }
+
+        val innerInstructionLowering = InnerInstructionLowering(pluginContext)
+        armClass.originalRenderingStatements.forEach { it.acceptVoid(innerInstructionLowering) }
 
         states.push(armClass.stateVariables)
         closures.push(armClass.stateVariables)

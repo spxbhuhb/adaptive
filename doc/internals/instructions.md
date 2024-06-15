@@ -11,7 +11,7 @@ import hu.simplexion.adaptive.foundation.Adaptive
 @Adaptive
 fun someFun() {
     grid {
-        RowTemplate(260.dp, 1.fr, 100.dp, 100.dp)
+        rowTemplate(260.dp, 1.fr, 100.dp, 100.dp)
         colTemplate()
         traceLayout
         
@@ -27,12 +27,19 @@ For this to work:
 
 Processing:
 
-- happens in `IrFunction2ArmClass`
-- `transformStatement` may encounter
-  - call to a function that returns with an instruction, handled by `transformCall`
-    - normal function call that returns with an AdaptiveInstruction
-    - getter with type of `AdaptiveInstruction`
-    - getter with type of `Array<AdaptiveInstruction>`
-  - call to an instruction constructor, handled by `transformInstructionConstructor`
-- all of these cases should check if th
-
+- `InnerInstructionLowering` called in `IrFunction2ArmClass.transform`
+- lowering may happen on calls which
+    - have a `vararg instructions : AdaptiveInstruction` parameter
+    - have a function parameter annotated with `@Adaptive`
+- `InnerInstructionLowering` calls `extractInnerInstructions` on the last function parameter argument
+    - `extractInnerInstructions` transforms the function parameter argument
+        - when a call is
+            - normal function call that returns with
+                - an AdaptiveInstruction
+                - an array of AdaptiveInstruction
+            - getter with type of `AdaptiveInstruction`
+            - getter with type of `Array<AdaptiveInstruction>`
+        - it is removed from the function body and added to the result list
+    - if the argument for the `instructions` parameter is missing and there are extracted instructions
+      - add an empty vararg argument
+    - add the extracted instructions to the `instructions` argument

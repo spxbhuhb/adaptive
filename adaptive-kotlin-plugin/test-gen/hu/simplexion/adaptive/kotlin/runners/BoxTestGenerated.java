@@ -106,28 +106,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Nested
-    @TestMetadata("testData/box/foundation/collector")
-    @TestDataPath("$PROJECT_ROOT")
-    public class Collector {
-      @Test
-      public void testAllFilesPresentInCollector() {
-        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/collector"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
-      }
-
-      @Test
-      @TestMetadata("basic.kt")
-      public void testBasic() {
-        runTest("testData/box/foundation/collector/basic.kt");
-      }
-
-      @Test
-      @TestMetadata("visibility.kt")
-      public void testVisibility() {
-        runTest("testData/box/foundation/collector/visibility.kt");
-      }
-    }
-
-    @Nested
     @TestMetadata("testData/box/foundation/expect")
     @TestDataPath("$PROJECT_ROOT")
     public class Expect {
@@ -196,6 +174,24 @@ public class BoxTestGenerated extends AbstractBoxTest {
       @TestMetadata("eventHandler.kt")
       public void testEventHandler() {
         runTest("testData/box/foundation/instruction/eventHandler.kt");
+      }
+
+      @Test
+      @TestMetadata("innerBasic.kt")
+      public void testInnerBasic() {
+        runTest("testData/box/foundation/instruction/innerBasic.kt");
+      }
+
+      @Test
+      @TestMetadata("innerDeep.kt")
+      public void testInnerDeep() {
+        runTest("testData/box/foundation/instruction/innerDeep.kt");
+      }
+
+      @Test
+      @TestMetadata("innerVariations.kt")
+      public void testInnerVariations() {
+        runTest("testData/box/foundation/instruction/innerVariations.kt");
       }
 
       @Test
