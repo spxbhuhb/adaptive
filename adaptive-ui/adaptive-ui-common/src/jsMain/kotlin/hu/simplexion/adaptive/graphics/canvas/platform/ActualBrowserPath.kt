@@ -83,7 +83,7 @@ class ActualBrowserPath : ActualPath {
             acos((ux * vx + uy * vy) / (sqrt(ux * ux + uy * uy) * sqrt(vx * vx + vy * vy)))
 
     override fun cubicCurve(x1: Double, y1: Double, x2: Double, y2: Double, x: Double, y: Double) {
-        TODO("Not yet implemented")
+        receiver.bezierCurveTo(x1, y1, x2, y2, x, y)
     }
 
     override fun smoothCubicCurve(x2: Double, y2: Double, x: Double, y: Double) {

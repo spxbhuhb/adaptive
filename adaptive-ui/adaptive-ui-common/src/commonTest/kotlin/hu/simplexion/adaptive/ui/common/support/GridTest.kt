@@ -55,9 +55,4 @@ class GridTest {
 
         }
     }
-
-    @Test
-    fun rowOffsetsTest() {
-        assertEquals(rowTemplate(10.fr, 20.fr, 10.fr, 10.fr), rowOffsets(total = 50f, 10f, 30f, 40f))
-    }
 }

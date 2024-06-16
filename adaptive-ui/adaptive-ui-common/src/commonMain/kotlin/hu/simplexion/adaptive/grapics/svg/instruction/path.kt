@@ -33,7 +33,13 @@ data class LineTo(
     override fun apply(path: ActualPath) = path.lineTo(x, y)
 }
 
-data class CubicCurve(
+enum class BezierCurveType {
+    Cubic,
+    Quadratic
+}
+
+data class BezierCurve(
+    val type : BezierCurveType,
     val x1: Double,
     val y1: Double,
     val x2: Double,
@@ -44,15 +50,6 @@ data class CubicCurve(
     override fun apply(path: ActualPath) = path.cubicCurve(x1, y1, x2, y2, x, y)
 }
 
-data class CubicCurveSmooth(
-    val x2: Double,
-    val y2: Double,
-    val x: Double,
-    val y: Double
-) : SvgPathCommand {
-    override fun apply(path: ActualPath) = path.smoothCubicCurve(x2, y2, x, y)
-}
-
 data class QuadraticCurve(
     val x1: Double,
     val y1: Double,
@@ -60,13 +57,6 @@ data class QuadraticCurve(
     val y: Double
 ) : SvgPathCommand {
     override fun apply(path: ActualPath) = path.quadraticCurve(x1, y1, x, y)
-}
-
-data class QuadraticCurveSmooth(
-    val x: Double,
-    val y: Double
-) : SvgPathCommand {
-    override fun apply(path: ActualPath) = path.smoothQuadraticCurve(x, y)
 }
 
 data class Arc(
