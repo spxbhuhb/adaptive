@@ -9,6 +9,8 @@ import hu.simplexion.adaptive.ui.common.fragment.CommonLoop
 import hu.simplexion.adaptive.ui.common.fragment.CommonSelect
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
+import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
+import hu.simplexion.adaptive.ui.common.platform.MediaMetricsProducer
 import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
 import hu.simplexion.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
@@ -49,7 +51,9 @@ abstract class AbstractCommonAdapter<RT, CRT : RT> : AdaptiveAdapter {
     override val dispatcher: CoroutineDispatcher
         get() = Dispatchers.Main
 
-    var actualBatch : Boolean = false
+    var actualBatch: Boolean = false
+
+    protected val mediaMetricsProducers = mutableListOf<MediaMetricsProducer>()
 
     override fun newSelect(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
         CommonSelect(this, parent, index)
@@ -108,5 +112,29 @@ abstract class AbstractCommonAdapter<RT, CRT : RT> : AdaptiveAdapter {
     abstract fun toPx(dPixel: DPixel): Double
 
     abstract fun toPx(sPixel: SPixel): Double
+
+    // ------------------------------------------------------------------------------
+    // Media metrics support
+    // ------------------------------------------------------------------------------
+
+    abstract var mediaMetrics: MediaMetrics
+
+    protected fun updateMediaMetrics() {
+        mediaMetricsProducers.forEach { it.update(mediaMetrics) }
+    }
+
+    /**
+     * Add a media metrics producer that will be notified of media changes.
+     */
+    open fun addMediaMetricsProducer(producer: MediaMetricsProducer) {
+        mediaMetricsProducers += producer
+    }
+
+    /**
+     * Remove a previously added media metrics producer.
+     */
+    open fun removeMediaMetricsProducer(producer: MediaMetricsProducer) {
+        mediaMetricsProducers -= producer
+    }
 
 }

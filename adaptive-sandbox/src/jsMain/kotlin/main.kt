@@ -3,10 +3,11 @@
  */
 
 import hu.simplexion.adaptive.foundation.Adaptive
-import hu.simplexion.adaptive.foundation.instruction.name
 import hu.simplexion.adaptive.ui.common.browser
-import hu.simplexion.adaptive.ui.common.fragment.*
+import hu.simplexion.adaptive.ui.common.fragment.column
+import hu.simplexion.adaptive.ui.common.fragment.text
 import hu.simplexion.adaptive.ui.common.instruction.*
+import hu.simplexion.adaptive.ui.common.platform.mediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.withJsResources
 
 fun main() {
@@ -14,60 +15,19 @@ fun main() {
     withJsResources()
 
     browser {
-        column(name("outer-column"), padding(10.dp)) {
-            gap(10.dp)
-            column()
-            row()
-            grid1fr()
-        }
+        resize()
     }
 
 }
 
 private val black = Color(0x0u)
 
-private val cyan = Color(0x32e3dau)
-private val cyanBackground = backgroundColor(cyan)
-private val orange = Color(0xfcba03u)
-private val orangeBackground = backgroundColor(orange)
-
 @Adaptive
-private fun layoutExample(@Adaptive example: () -> Unit) {
-    box(size(202.dp, 152.dp), border(black, 1.dp), name("example-container")) {
-        example()
-    }
-}
+fun resize() {
+    val media = mediaMetrics()
 
-
-@Adaptive
-private fun column() {
-    layoutExample {
-        column {
-            gap(10.dp)
-            text("AAA", orangeBackground)
-            text("BBB", cyanBackground)
-        }
+    column(padding(10.dp), size((media.viewPortWidth / 2).dp, (media.viewPortHeight / 2).dp), border(black, 1.dp)) {
+        text("${media.viewPortWidth} x ${media.viewPortHeight}")
     }
-}
 
-@Adaptive
-private fun row() {
-    layoutExample {
-        row {
-            gap(10.dp)
-            text("AAA", orangeBackground)
-            text("BBB", cyanBackground)
-        }
-    }
-}
-
-@Adaptive
-private fun grid1fr() {
-    layoutExample {
-        grid {
-            rowTemplate(1.fr)
-            colTemplate(1.fr)
-            orangeBackground
-        }
-    }
 }

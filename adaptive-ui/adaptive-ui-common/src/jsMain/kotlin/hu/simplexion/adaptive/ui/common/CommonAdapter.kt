@@ -9,6 +9,8 @@ import hu.simplexion.adaptive.ui.common.instruction.AdaptiveUIEvent
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
 import hu.simplexion.adaptive.ui.common.platform.BrowserEventListener
+import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
+import hu.simplexion.adaptive.ui.common.platform.ResizeObserver
 import hu.simplexion.adaptive.ui.common.render.DecorationRenderData
 import hu.simplexion.adaptive.ui.common.render.EventRenderData
 import hu.simplexion.adaptive.ui.common.render.LayoutRenderData
@@ -26,7 +28,7 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.css.CSSStyleDeclaration
 
 open class CommonAdapter(
-    override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
+    final override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
 ) : AbstractCommonAdapter<HTMLElement, HTMLDivElement>() {
 
     override val fragmentFactory = CommonFragmentFactory
@@ -219,4 +221,21 @@ open class CommonAdapter(
 
     val SPixel.pxs
         get() = "${value}px"
+
+    // ------------------------------------------------------------------------------
+    // Media metrics support
+    // ------------------------------------------------------------------------------
+
+    override var mediaMetrics = rootContainer.getBoundingClientRect().let { r -> MediaMetrics(r.width, r.height) }
+
+    // FIXME disconnect media observer on adapter dispose
+    val resizeObserver = ResizeObserver { entries, _ ->
+        entries.firstOrNull()?.let {
+            mediaMetrics = MediaMetrics(it.contentRect.width, it.contentRect.height)
+            updateMediaMetrics()
+        }
+    }.also {
+        it.observe(rootContainer)
+    }
+
 }

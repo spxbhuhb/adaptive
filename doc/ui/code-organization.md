@@ -25,6 +25,7 @@ may be omitted.
 `platform`
 * platform specific UI classes (container views, UI abstraction implementations such as `ActualCanvas`)
 * resource support (`with<platform>Resources`)
+* media support (`mediaMetrics`)
 
 `render`
 * render data class declarations
