@@ -198,7 +198,7 @@ abstract class AbstractCommonFragment<RT>(
         return RawSurrounding(
             padding.top + border.top + margin.top,
             padding.left + border.left + margin.left,
-            padding.left + border.right + margin.right,
+            padding.right + border.right + margin.right,
             padding.bottom + border.bottom + margin.bottom
         )
     }

@@ -3,16 +3,16 @@
  */
 
 import hu.simplexion.adaptive.foundation.Adaptive
+import hu.simplexion.adaptive.foundation.instruction.Trace
 import hu.simplexion.adaptive.foundation.instruction.name
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
 
 private val black = Color(0x0u)
 
-private val cyan = Color(0x32e3dau)
-private val cyanBackground = backgroundColor(cyan)
-private val orange = Color(0xfcba03u)
-private val orangeBackground = backgroundColor(orange)
+private val blueishBackground = backgroundColor(Color(0xB0C4DEu))
+private val greenishBackground = backgroundColor(Color(0xB4E7B4u))
+private val trace = Trace()
 
 @Adaptive
 fun layouts() {
@@ -21,6 +21,8 @@ fun layouts() {
         column()
         row()
         grid1fr()
+        gridMargin()
+        gridPadding()
     }
 }
 
@@ -37,8 +39,8 @@ private fun column() {
     layoutExample {
         column {
             gap(10.dp)
-            text("AAA", orangeBackground)
-            text("BBB", cyanBackground)
+            text("AAA", greenishBackground)
+            text("BBB", blueishBackground)
         }
     }
 }
@@ -48,8 +50,8 @@ private fun row() {
     layoutExample {
         row {
             gap(10.dp)
-            text("AAA", orangeBackground)
-            text("BBB", cyanBackground)
+            text("AAA", greenishBackground)
+            text("BBB", blueishBackground)
         }
     }
 }
@@ -60,7 +62,39 @@ private fun grid1fr() {
         grid {
             rowTemplate(1.fr)
             colTemplate(1.fr)
-            orangeBackground
+            greenishBackground
+        }
+    }
+}
+
+
+@Adaptive
+private fun gridMargin() {
+    layoutExample {
+        grid {
+            rowTemplate(1.fr)
+            colTemplate(1.fr)
+            greenishBackground
+            margin(10.dp)
+            border(black, 1.dp)
+        }
+    }
+}
+
+@Adaptive
+private fun gridPadding() {
+    layoutExample {
+        grid(trace) {
+            rowTemplate(1.fr)
+            colTemplate(1.fr)
+            greenishBackground
+            margin(10.dp)
+            border(black, 1.dp)
+            padding(10.dp)
+
+            box {
+                blueishBackground
+            }
         }
     }
 }

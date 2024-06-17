@@ -81,8 +81,8 @@ abstract class AbstractGrid<RT, CRT : RT>(
         val rowGap = renderData.container?.gapWidth ?: 0.0
 
         val surrounding = surrounding()
-        val availableWidth = layoutFrame.width - surrounding.left - surrounding.right
-        val availableHeight = layoutFrame.height - surrounding.top - surrounding.bottom
+        val availableWidth = layoutFrame.width - surrounding.right
+        val availableHeight = layoutFrame.height - surrounding.bottom
 
         colOffsets = distribute(availableWidth, surrounding.left, colGap, colTracksPrepared)
         rowOffsets = distribute(availableHeight, surrounding.top, rowGap, rowTracksPrepared)
