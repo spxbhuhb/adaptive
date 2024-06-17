@@ -23,6 +23,7 @@ import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.StructuralViewGroup
 import hu.simplexion.adaptive.ui.common.render.*
 import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.RawCornerRadius
 import hu.simplexion.adaptive.ui.common.support.RawFrame
 
 open class CommonAdapter(
@@ -120,13 +121,14 @@ open class CommonAdapter(
 
         val borderWidth = layout?.border?.top // FIXME individual border widths for android
         val borderColor = this.borderColor
+        val cornerRadius = this.cornerRadius
 
         if (borderWidth != null && borderColor != null) {
             drawables += GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
                 setColor(android.graphics.Color.TRANSPARENT)
                 setStroke(borderWidth.toInt(), borderColor.androidColor)
-                borderRadius { cornerRadii = it.toFloatArray() }
+                cornerRadius { cornerRadii = it.toFloatArray() }
             }
             insets += 0
         }
@@ -135,7 +137,7 @@ open class CommonAdapter(
             drawables += GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
                 setColor(it.androidColor)
-                borderRadius { cornerRadii = it.toFloatArray() }
+                cornerRadius { cornerRadii = it.toFloatArray() }
             }
             borderWidth { b -> insets += b.px }
         }
@@ -146,7 +148,7 @@ open class CommonAdapter(
                 intArrayOf(it.start.androidColor, it.end.androidColor),
 
                 ).apply {
-                borderRadius { b -> cornerRadii = b.toFloatArray() }
+                cornerRadius { b -> cornerRadii = b.toFloatArray() }
             }
             borderWidth { b -> insets += b.px }
         }
@@ -205,22 +207,21 @@ open class CommonAdapter(
     val Double.px: Int
         inline get() = toInt()
 
-    val DPixel?.px: Int
-        get() = this?.let { applyDimension(COMPLEX_UNIT_DIP, value.toFloat(), displayMetrics).toInt() } ?: 0
-
-    val DPixel?.floatToZero: Float
-        get() = this?.value?.toFloat() ?: 0f
-
     // TODO do we need this conversion? TextView.textSize is in SP
     override fun toPx(sPixel: SPixel): Double =
         applyDimension(COMPLEX_UNIT_SP, sPixel.value.toFloat(), displayMetrics).toDouble()
 
-    fun BorderRadius.toFloatArray(): FloatArray {
+    fun RawCornerRadius.toFloatArray(): FloatArray {
+        val topRight = this.topRight.toFloat()
+        val topLeft = this.topLeft.toFloat()
+        val bottomRight = this.bottomRight.toFloat()
+        val bottomLeft = this.bottomLeft.toFloat()
+
         return floatArrayOf(
-            applyDimension(COMPLEX_UNIT_SP, topLeft.floatToZero, displayMetrics),
-            applyDimension(COMPLEX_UNIT_SP, topRight.floatToZero, displayMetrics),
-            applyDimension(COMPLEX_UNIT_SP, bottomRight.floatToZero, displayMetrics),
-            applyDimension(COMPLEX_UNIT_SP, bottomLeft.floatToZero, displayMetrics)
+            topLeft, topLeft,
+            topRight, topRight,
+            bottomRight, bottomRight,
+            bottomLeft, bottomLeft
         )
     }
 

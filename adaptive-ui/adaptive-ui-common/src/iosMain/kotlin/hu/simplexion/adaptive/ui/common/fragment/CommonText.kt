@@ -6,10 +6,9 @@ package hu.simplexion.adaptive.ui.common.fragment
 import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
+import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
 import hu.simplexion.adaptive.ui.common.support.RawFrame
-import hu.simplexion.adaptive.ui.common.support.RawSize
-import hu.simplexion.adaptive.ui.common.CommonAdapter
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import platform.UIKit.NSTextAlignmentCenter
@@ -36,15 +35,14 @@ class CommonText(
             receiver.text = content
             receiver.textAlignment = NSTextAlignmentCenter
             receiver.translatesAutoresizingMaskIntoConstraints = false
-            measuredSize = receiver.intrinsicContentSize.useContents {
-                RawSize(this.width, this.height)
+            receiver.intrinsicContentSize.useContents {
+                renderData.measuredWidth = this.width
+                renderData.measuredHeight = this.height
             }
         }
 
         return false
     }
-
-    override fun measure() = instructedOr { measuredSize ?: RawSize.UNKNOWN }
 
     override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)

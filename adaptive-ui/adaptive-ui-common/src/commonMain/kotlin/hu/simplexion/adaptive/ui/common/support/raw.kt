@@ -5,10 +5,7 @@
 package hu.simplexion.adaptive.ui.common.support
 
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
-import hu.simplexion.adaptive.ui.common.instruction.Position
-import hu.simplexion.adaptive.ui.common.instruction.Size
-import hu.simplexion.adaptive.ui.common.instruction.Surrounding
-import hu.simplexion.adaptive.ui.common.instruction.toPx
+import hu.simplexion.adaptive.ui.common.instruction.*
 
 operator fun Double.plus(other: Double?): Double =
     if (other == null) this else other + this
@@ -72,6 +69,25 @@ data class RawSurrounding(
 
     companion object {
         val ZERO = RawSurrounding(0.0, 0.0, 0.0, 0.0)
+    }
+}
+
+data class RawCornerRadius(
+    val topLeft: Double,
+    val topRight: Double,
+    val bottomLeft: Double,
+    val bottomRight: Double
+) {
+    constructor(cornerRadius: CornerRadius, previous: RawCornerRadius, adapter: AbstractCommonAdapter<*, *>) :
+        this(
+            cornerRadius.topLeft.toPx(adapter) ?: previous.topLeft,
+            cornerRadius.topRight.toPx(adapter) ?: previous.topRight,
+            cornerRadius.bottomLeft.toPx(adapter) ?: previous.bottomLeft,
+            cornerRadius.bottomRight.toPx(adapter) ?: previous.bottomRight
+        )
+
+    companion object {
+        val ZERO = RawCornerRadius(0.0, 0.0, 0.0, 0.0)
     }
 }
 

@@ -156,7 +156,7 @@ open class CommonAdapter(
 
         borderColor { style.borderColor = it.toHexColor() }
 
-        borderRadius { br ->
+        cornerRadius { br ->
             br.topLeft { style.borderTopLeftRadius = it.pxs }
             br.topRight { style.borderTopRightRadius = it.pxs }
             br.bottomLeft { style.borderBottomLeftRadius = it.pxs }

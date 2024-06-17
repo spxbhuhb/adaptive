@@ -109,7 +109,7 @@ open class CommonAdapter(
             view.layer.borderColor = borderColor.uiColor.CGColor()
             view.layer.masksToBounds = true
 
-            borderRadius { br -> view.layer.cornerRadius = br.topLeft.px } // FIXME individual radii for corners
+            cornerRadius { br -> view.layer.cornerRadius = br.topLeft } // FIXME individual radii for corners
         }
 
         // FIXME individual radii for corners
@@ -124,7 +124,7 @@ open class CommonAdapter(
             view.layer.insertSublayer(gradientLayer, 0u)
             view.layer.masksToBounds = true
 
-            borderRadius { br -> view.layer.cornerRadius = br.topLeft.px } // FIXME individual radii for corners
+            cornerRadius { br -> view.layer.cornerRadius = br.topLeft } // FIXME individual radii for corners
         }
     }
 

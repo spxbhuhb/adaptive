@@ -7,6 +7,7 @@ package hu.simplexion.adaptive.ui.common.instruction
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.render.decoration
 import hu.simplexion.adaptive.ui.common.render.layout
+import hu.simplexion.adaptive.ui.common.support.RawCornerRadius
 import hu.simplexion.adaptive.ui.common.support.RawPosition
 import hu.simplexion.adaptive.ui.common.support.RawSurrounding
 import kotlin.math.PI
@@ -23,17 +24,17 @@ fun borderRight(color: Color, width: DPixel = 1.dp) = Border(color, null, width,
 fun borderBottom(color: Color, width: DPixel = 1.dp) = Border(color, null, null, width, null)
 fun borderLeft(color: Color, width: DPixel = 1.dp) = Border(color, null, null, null, width)
 
-fun borderRadius(all: DPixel) = BorderRadius(all)
+fun cornerRadius(all: DPixel) = CornerRadius(all)
 
-fun borderTopRadius(top: DPixel) = borderRadius(topLeft = top, topRight = top)
-fun borderBottomRadius(bottom: DPixel) = borderRadius(bottomLeft = bottom, bottomRight = bottom)
+fun cornerTopRadius(top: DPixel) = cornerRadius(topLeft = top, topRight = top)
+fun cornerBottomRadius(bottom: DPixel) = cornerRadius(bottomLeft = bottom, bottomRight = bottom)
 
-fun borderTopLeftRadius(topLeft: DPixel) = borderRadius(topLeft = topLeft)
-fun borderTopRightRadius(topRight: DPixel) = borderRadius(topRight = topRight)
-fun borderBottomLeftRadius(bottomLeft: DPixel) = borderRadius(bottomLeft = bottomLeft)
-fun borderBottomRightRadius(bottomRight: DPixel) = borderRadius(bottomRight = bottomRight)
+fun cornerTopLeftRadius(topLeft: DPixel) = cornerRadius(topLeft = topLeft)
+fun cornerTopRightRadius(topRight: DPixel) = cornerRadius(topRight = topRight)
+fun cornerBottomLeftRadius(bottomLeft: DPixel) = cornerRadius(bottomLeft = bottomLeft)
+fun cornerBottomRightRadius(bottomRight: DPixel) = cornerRadius(bottomRight = bottomRight)
 
-fun borderRadius(topLeft: DPixel? = null, topRight: DPixel? = null, bottomLeft: DPixel? = null, bottomRight: DPixel? = null) = BorderRadius(topLeft, topRight, bottomLeft, bottomRight)
+fun cornerRadius(topLeft: DPixel? = null, topRight: DPixel? = null, bottomLeft: DPixel? = null, bottomRight: DPixel? = null) = CornerRadius(topLeft, topRight, bottomLeft, bottomRight)
 
 fun color(value: UInt) = Color(value)
 
@@ -111,7 +112,7 @@ data class Border(
     }
 }
 
-data class BorderRadius(
+data class CornerRadius(
     val topLeft: DPixel?,
     val topRight: DPixel?,
     val bottomLeft: DPixel?,
@@ -121,7 +122,9 @@ data class BorderRadius(
     constructor(all: DPixel) : this(all, all, all, all)
 
     override fun apply(subject: Any) {
-        decoration(subject) { it.borderRadius = this }
+        decoration(subject) {
+            it.cornerRadius = RawCornerRadius(this, it.cornerRadius ?: RawCornerRadius.ZERO, it.adapter)
+        }
     }
 
 }

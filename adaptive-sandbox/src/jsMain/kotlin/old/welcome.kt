@@ -108,7 +108,7 @@ val input = arrayOf(
     // PlaceholderColor(0x8A8A8F),
     Color(0x000000u),
     BackgroundColor(Color(0xEFEFF4u)),
-    BorderRadius(8.dp),
+    CornerRadius(8.dp),
     Border.NONE,
     Height(44.dp),
     FontSize(17.sp),

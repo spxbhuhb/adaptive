@@ -8,8 +8,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
+import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
 
 @SuppressLint("ViewConstructor") // not a general Android view group, you are not supposed to use it in general Android code
 open class ContainerViewGroup(
@@ -22,14 +22,21 @@ open class ContainerViewGroup(
         // TODO check if we do double measure here
         measureChildren(widthMeasureSpec, heightMeasureSpec)
 
-        val size = owner.layoutFrame.size
+        val layout = owner.layoutFrame
 
-        setMeasuredDimension(resolveSize(size.width.toInt(), widthMeasureSpec), resolveSize(size.height.toInt(), heightMeasureSpec))
+        setMeasuredDimension(
+            resolveSize(layout.width.toInt(), widthMeasureSpec),
+            resolveSize(layout.height.toInt(), heightMeasureSpec)
+        )
     }
 
     override fun generateDefaultLayoutParams(): LayoutParams {
-        val size = owner.layoutFrameOrNull?.size ?: return LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-        return LayoutParams(size.width.toInt(), size.height.toInt())
+        val layout = owner.layoutFrameOrNull
+        if (layout == null) {
+            return LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        } else {
+            return LayoutParams(layout.width.toInt(), layout.height.toInt())
+        }
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {

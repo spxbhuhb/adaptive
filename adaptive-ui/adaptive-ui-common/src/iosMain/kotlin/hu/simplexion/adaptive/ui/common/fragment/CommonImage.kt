@@ -8,10 +8,9 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.resource.defaultResourceReader
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
+import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
 import hu.simplexion.adaptive.ui.common.support.RawFrame
-import hu.simplexion.adaptive.ui.common.support.RawSize
-import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
@@ -58,15 +57,6 @@ class CommonImage(
 
         return false
     }
-
-    /**
-     * Measured size of images is unknown at the time measure is called, mostly because
-     * the image is loaded asynchronously.
-     *
-     * Also, it is rare to use the actual size of the image for the layout, it is far
-     * more usual to have a space and scale the image to fit that space.
-     */
-    override fun measure() = instructedOr { RawSize(40.0, 40.0) }
 
     override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)

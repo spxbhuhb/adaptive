@@ -5,14 +5,16 @@
 package hu.simplexion.adaptive.ui.common.render
 
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
-import hu.simplexion.adaptive.ui.common.instruction.*
-import hu.simplexion.adaptive.ui.common.support.RawSurrounding
+import hu.simplexion.adaptive.ui.common.instruction.BackgroundGradient
+import hu.simplexion.adaptive.ui.common.instruction.Color
+import hu.simplexion.adaptive.ui.common.instruction.DropShadow
+import hu.simplexion.adaptive.ui.common.support.RawCornerRadius
 
 class DecorationRenderData(
     val adapter : AbstractCommonAdapter<*, *>
 ) {
     var borderColor: Color? = null
-    var borderRadius: BorderRadius? = null
+    var cornerRadius: RawCornerRadius? = null
 
     var backgroundColor: Color? = null
     var backgroundGradient : BackgroundGradient? = null
