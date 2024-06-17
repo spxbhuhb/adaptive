@@ -8,7 +8,7 @@ To give a fragment a name use `Name`. This might be useful for a few reasons:
 - for browser, the `id` of the HTML node is set to the name
 
 ```kotlin
-row(4.gridCol, whiteBorder, borderRadius, *center, Name("sign-in")) {
+row(4.gridCol, whiteBorder, cornerRadius, *center, Name("sign-in")) {
     text("Sign In", white)
 }
 ```

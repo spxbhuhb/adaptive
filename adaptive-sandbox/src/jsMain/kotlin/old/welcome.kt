@@ -118,13 +118,13 @@ val input = arrayOf(
 
 var activeCheckBox = arrayOf(
     size(20.dp,20.dp),
-    borderRadius(10.dp),
+    cornerRadius(10.dp),
     backgroundColor(purple),
     white
 )
 
 var inactiveCheckBox = arrayOf(
     size(20.dp,20.dp),
-    borderRadius(10.dp),
+    cornerRadius(10.dp),
     border(purple, 1.dp)
 )

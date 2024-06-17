@@ -29,6 +29,13 @@ fun paddingRight(right: DPixel) = padding(right = right)
 fun paddingBottom(bottom: DPixel) = padding(bottom = bottom)
 fun paddingLeft(left: DPixel) = padding(left = left)
 
+fun margin(top: DPixel? = null, right: DPixel? = null, bottom: DPixel? = null, left: DPixel? = null) = Margin(top, right, bottom, left)
+fun margin(all: DPixel) = Margin(all)
+fun marginTop(top: DPixel) = margin(top = top)
+fun marginRight(right: DPixel) = margin(right = right)
+fun marginBottom(bottom: DPixel) = margin(bottom = bottom)
+fun marginLeft(left: DPixel) = margin(left = left)
+
 data class Frame(
     val top: DPixel,
     val left: DPixel,
@@ -128,6 +135,8 @@ data class Margin(
     override val bottom: DPixel?,
     override val left: DPixel?
 ) : AdaptiveInstruction, Surrounding {
+
+    constructor(all: DPixel) : this(all, all, all, all)
 
     override fun apply(subject: Any) {
         layout(subject) {

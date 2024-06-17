@@ -1,40 +1,92 @@
 # Basic Instructions
 
-## BackgroundColor
+## Sizing
 
-```kotlin
-row(BackgroundColor(Color(0xffffff)))
+```text
+frame(top: DPixel, left: DPixel, width: DPixel, height: DPixel)
+position(top: DPixel, left: DPixel)
+size(width: DPixel, height: DPixel)
+height(height: DPixel)
+width(width: DPixel)
+
+sizeFull
+heightFull
+widthFull
 ```
 
-## BackgroundGradient
+## backgroundColor
 
-```kotlin
-BackgroundGradient(90, Color(0xA0DE6F), Color(0x53C282))
+```text
+backgroundColor(color : Color)
 ```
 
-## Border
+## backgroundGradient
 
-```kotlin
-Border(Color(0xffffff))
-Border(Color(0xffffff), width = 2f)
+```text
+leftToRightGradient(leftColor : Color, rightColor: Color)
+backgroundGradient(startPosition: RawPosition, endPosition : RawPosition, start: Color, end: Color)
 ```
 
-## BorderRadius
+## border
 
-```kotlin
-BorderRadius(4f)
+```text
+border(color: Color, width: DPixel = 1.dp)
+borderTop(color: Color, width: DPixel = 1.dp)
+borderRight(color: Color, width: DPixel = 1.dp)
+borderBottom(color: Color, width: DPixel = 1.dp)
+borderLeft(color: Color, width: DPixel = 1.dp
 ```
 
-## Color
+## cornerRadius
 
-```kotlin
-Color(0xffffff)
+```text
+cornerRadius(all: DPixel)
+cornerRadius(topLeft: DPixel? = null, topRight: DPixel? = null, bottomLeft: DPixel? = null, bottomRight: DPixel? = null)
+
+cornerTopRadius(top: DPixel)
+cornerBottomRadius(bottom: DPixel)
+
+cornerTopLeftRadius(topLeft: DPixel)
+cornerTopRightRadius(topRight: DPixel)
+cornerBottomLeftRadius(bottomLeft: DPixel)
+cornerBottomRightRadius(bottomRight: DPixel)
 ```
 
-## Padding
+## color
 
-```kotlin
-Padding()
-Padding(left = 12f)
-Padding(left = 13f, top = 14f, bottom = 15f, right = 16f)
+```text
+color(value: UInt)
+```
+
+## dropShadow
+
+dropShadow(color: Color, offsetX: DPixel, offsetY: DPixel, standardDeviation: DPixel)
+
+## gap
+
+```text
+gap(both: DPixel)
+gap(width: DPixel? = null, height: DPixel? = null)
+```
+
+## margin
+
+```text
+margin(top: DPixel? = null, right: DPixel? = null, bottom: DPixel? = null, left: DPixel? = null)
+margin(all: DPixel)
+marginTop(top: DPixel)
+marginRight(right: DPixel)
+marginBottom(bottom: DPixel)
+marginLeft(left: DPixel)
+```
+
+## padding
+
+```text
+padding(top: DPixel? = null, right: DPixel? = null, bottom: DPixel? = null, left: DPixel? = null)
+padding(all: DPixel)
+paddingTop(top: DPixel)
+paddingRight(right: DPixel)
+paddingBottom(bottom: DPixel)
+paddingLeft(left: DPixel)
 ```

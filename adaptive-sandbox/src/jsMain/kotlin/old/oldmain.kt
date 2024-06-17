@@ -43,7 +43,7 @@ val purple = color(0xA644FFu)
 
 val blackBackground = backgroundColor(black)
 val greenGradient = leftToRightGradient(lightGreen, mediumGreen)
-val borderRadius = borderRadius(8.dp)
+val cornerRadius = cornerRadius(8.dp)
 
 val textSmall = fontSize(13.sp)
 val textMedium = fontSize(15.sp)
@@ -97,7 +97,7 @@ fun main() {
 
 val button = arrayOf(
     greenGradient,
-    borderRadius,
+    cornerRadius,
     *center,
     Padding(8.dp),
     Height(50.dp)

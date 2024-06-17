@@ -11,7 +11,7 @@ import hu.simplexion.adaptive.foundation.Adaptive
 
 @Adaptive
 fun someFun() {
-    row(2.gridCol, greenGradient, borderRadius8, AlignItems.Center, JustifyContent.Center) {
+    row(2.gridCol, greenGradient, cornerRadius8, AlignItems.Center, JustifyContent.Center) {
         text("Hello World!", white)
     }
 }
@@ -49,8 +49,8 @@ fun someFun() {
 You can store instructions if you use them at different places:
 
 ```kotlin
-val greenGradient = BackgroundGradient(90, lightGreen, mediumGreen)
-val borderRadius8 = BorderRadius(8)
+val greenGradient = backgroundGradient(90, lightGreen, mediumGreen)
+val cornerRadius8 = cornerRadius(8)
 ```
 
 ## Instruction sets
@@ -58,7 +58,7 @@ val borderRadius8 = BorderRadius(8)
 You can organize your instructions into arrays to make instruction sets:
 
 ```kotlin
-val someStyles = arrayOf<AdaptiveInstriction>(greenGradient, borderRadius8, AlignItems.Center, JustifyContent.Center)
+val someStyles = arrayOf<AdaptiveInstriction>(greenGradient, cornerRadius8, AlignItems.Center, JustifyContent.Center)
 
 @Adaptive
 fun someFun() {
@@ -78,7 +78,7 @@ val centered = arrayOf<AdaptiveInstriction>(AlignItems.Center, JustifyContent.Ce
 @Adaptive
 fun someFun() {
 
-    row(2.gridCol, *centered, greenGradient, borderRadius8) {
+    row(2.gridCol, *centered, greenGradient, cornerRadius8) {
         text("Hello World!", white)
     }
 

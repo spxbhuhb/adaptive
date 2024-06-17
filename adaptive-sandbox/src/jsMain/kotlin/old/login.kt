@@ -39,11 +39,11 @@ fun login() {
                 rowTemplate(50.dp)
                 colTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
 
-                row(2.gridCol, greenGradient, borderRadius, *center, onClick { counter ++ }) {
+                row(2.gridCol, greenGradient, cornerRadius, *center, onClick { counter ++ }) {
                     text("Snooze", white, textMedium, noSelect)
                 }
 
-                row(4.gridCol, whiteBorder, borderRadius, *center) {
+                row(4.gridCol, whiteBorder, cornerRadius, *center) {
                     text("Sleepiness: $counter", white, textMedium)
                 }
             }
@@ -87,13 +87,13 @@ private fun progress(time: LocalDateTime) {
 private fun messages(time: LocalDateTime, counter: Int) {
     column(AlignItems.Center, JustifyContent.Center) {
         if (time.second % 2 == 1) {
-            row(AlignItems.Start, JustifyContent.Center, greenGradient, borderRadius, Padding(8.dp)) {
+            row(AlignItems.Start, JustifyContent.Center, greenGradient, cornerRadius, Padding(8.dp)) {
                 text("What an odd second!", white)
             }
         }
 
         if (counter > 3) {
-            row(greenGradient, borderRadius, Padding(8.dp)) {
+            row(greenGradient, cornerRadius, Padding(8.dp)) {
                 text("You are really sleepy today!", white, textMedium)
             }
         }
