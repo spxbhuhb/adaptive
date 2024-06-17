@@ -17,16 +17,17 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.graphics.toColorInt
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.ui.common.platform.ContainerViewGroup
-import hu.simplexion.adaptive.ui.common.platform.StructuralViewGroup
 import hu.simplexion.adaptive.ui.common.instruction.*
+import hu.simplexion.adaptive.ui.common.platform.ContainerViewGroup
+import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
+import hu.simplexion.adaptive.ui.common.platform.StructuralViewGroup
 import hu.simplexion.adaptive.ui.common.render.*
 import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
 import hu.simplexion.adaptive.ui.common.support.RawFrame
 
 open class CommonAdapter(
     val context: Context,
-    override val rootContainer: ViewGroup
+    final override val rootContainer: ViewGroup
 ) : AbstractCommonAdapter<View, ContainerViewGroup>() {
 
     override val fragmentFactory = CommonFragmentFactory
@@ -75,15 +76,12 @@ open class CommonAdapter(
     }
 
     fun applyLayoutToActual(frame: RawFrame, receiver: View) {
-        val point = frame.point
-        val size = frame.size
+        val top = frame.top
+        val left = frame.left
+        val width = frame.width
+        val height = frame.height
 
-        val top = point.top
-        val left = point.left
-        val width = size.width
-        val height = size.height
-
-        receiver.layoutParams = ViewGroup.LayoutParams(size.width.toInt(), size.height.toInt())
+        receiver.layoutParams = ViewGroup.LayoutParams(width.toInt(), height.toInt())
 
         receiver.layout(
             left.toInt(),
@@ -95,7 +93,7 @@ open class CommonAdapter(
 
     override fun applyRenderInstructions(fragment: AbstractCommonFragment<View>) {
 
-        val renderData = CommonRenderData(fragment.instructions)
+        val renderData = CommonRenderData(this, fragment.instructions)
         val view = fragment.receiver
 
         // FIXME should clear actual UI settings when null
@@ -105,7 +103,7 @@ open class CommonAdapter(
         }
 
         renderData.layout { it.apply(view) }
-        renderData.decoration { it.apply(view) }
+        renderData.decoration { it.apply(view, renderData.layout) }
         renderData.text { it.apply(view) }
         renderData.event { it.apply(view, fragment) }
     }
@@ -116,16 +114,19 @@ open class CommonAdapter(
         }
     }
 
-    fun DecorationRenderData.apply(view: View) {
+    fun DecorationRenderData.apply(view: View, layout: LayoutRenderData?) {
         val drawables = mutableListOf<Drawable>()
         val insets = mutableListOf<Int>()
 
-        border {
+        val borderWidth = layout?.border?.top // FIXME individual border widths for android
+        val borderColor = this.borderColor
+
+        if (borderWidth != null && borderColor != null) {
             drawables += GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
                 setColor(android.graphics.Color.TRANSPARENT)
-                setStroke(it.width.px, it.color.androidColor)
-                borderRadius { cornerRadii = it.toFloatArray() } // FIXME individual corner radius for android
+                setStroke(borderWidth.toInt(), borderColor.androidColor)
+                borderRadius { cornerRadii = it.toFloatArray() }
             }
             insets += 0
         }
@@ -136,7 +137,7 @@ open class CommonAdapter(
                 setColor(it.androidColor)
                 borderRadius { cornerRadii = it.toFloatArray() }
             }
-            border { b -> insets += b.width.px }
+            borderWidth { b -> insets += b.px }
         }
 
         backgroundGradient?.let {
@@ -147,7 +148,7 @@ open class CommonAdapter(
                 ).apply {
                 borderRadius { b -> cornerRadii = b.toFloatArray() }
             }
-            border { b -> insets += b.width.px }
+            borderWidth { b -> insets += b.px }
         }
 
         if (drawables.isNotEmpty()) {
@@ -201,6 +202,9 @@ open class CommonAdapter(
     override fun toPx(dPixel: DPixel): Double =
         applyDimension(COMPLEX_UNIT_DIP, dPixel.value.toFloat(), displayMetrics).toDouble()
 
+    val Double.px: Int
+        inline get() = toInt()
+
     val DPixel?.px: Int
         get() = this?.let { applyDimension(COMPLEX_UNIT_DIP, value.toFloat(), displayMetrics).toInt() } ?: 0
 
@@ -226,4 +230,6 @@ open class CommonAdapter(
             ((value shr 8) and 0xFFu).toFloat() / 255f,
             (value and 0xFFu).toFloat() / 255f
         ).toColorInt()
+
+    override var mediaMetrics = MediaMetrics(rootContainer.width.toDouble(), rootContainer.height.toDouble())
 }

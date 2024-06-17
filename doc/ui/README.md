@@ -29,6 +29,10 @@
 [Event Instructions](./event-instructions.md)
 - [OnClick](./event-instructions.md#onclick)
 
+Producers
+
+- [mediaMetrics](./basic-producers.md#mediametrics)
+
 Foundation Fragments
 - [slot](./navigation.md#navigation)
 - [measureInitTime](./performance.md#measurefragmenttime)

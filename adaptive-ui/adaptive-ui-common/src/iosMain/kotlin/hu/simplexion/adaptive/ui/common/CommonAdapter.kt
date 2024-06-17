@@ -4,12 +4,15 @@
 package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.ui.common.instruction.*
+import hu.simplexion.adaptive.ui.common.instruction.Color
+import hu.simplexion.adaptive.ui.common.instruction.DPixel
+import hu.simplexion.adaptive.ui.common.instruction.SPixel
 import hu.simplexion.adaptive.ui.common.platform.ContainerView
 import hu.simplexion.adaptive.ui.common.platform.GestureTarget
-import hu.simplexion.adaptive.ui.common.render.CommonRenderData
+import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
 import hu.simplexion.adaptive.ui.common.render.DecorationRenderData
 import hu.simplexion.adaptive.ui.common.render.EventRenderData
+import hu.simplexion.adaptive.ui.common.render.LayoutRenderData
 import hu.simplexion.adaptive.ui.common.render.TextRenderData
 import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
 import hu.simplexion.adaptive.ui.common.support.RawFrame
@@ -22,7 +25,7 @@ import platform.QuartzCore.CAGradientLayer
 import platform.UIKit.*
 
 open class CommonAdapter(
-    override val rootContainer: UIView
+    final override val rootContainer: UIView
 ) : AbstractCommonAdapter<UIView, ContainerView>() {
 
     override val fragmentFactory = CommonFragmentFactory
@@ -71,14 +74,8 @@ open class CommonAdapter(
     override fun applyLayoutToActual(fragment: AbstractCommonFragment<UIView>) {
         val layoutFrame = fragment.layoutFrame
 
-        val point = layoutFrame.point
-        val size = layoutFrame.size
-        val top = point.top.toInt()
-        val left = point.left.toInt()
-
         val view = fragment.receiver
-        val frame = CGRectMake(left.toDouble(), top.toDouble(), size.width.toDouble(), size.height.toDouble())
-        val renderData = fragment.renderData
+        val frame = CGRectMake(layoutFrame.left, layoutFrame.top, layoutFrame.width, layoutFrame.height)
 
         view.setFrame(frame)
     }
@@ -94,19 +91,22 @@ open class CommonAdapter(
             fragment.tracePatterns = renderData.tracePatterns
         }
 
-        renderData.decoration { it.apply(receiver) }
+        renderData.decoration { it.apply(receiver, renderData.layout) }
         renderData.text { it.apply(receiver) }
         renderData.event { it.apply(receiver, fragment) }
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    fun DecorationRenderData.apply(view: UIView) {
+    fun DecorationRenderData.apply(view: UIView, layoutRenderData: LayoutRenderData?) {
 
         backgroundColor { view.backgroundColor = it.uiColor }
 
-        border {
-            view.layer.borderWidth = it.width.px
-            view.layer.borderColor = it.color.uiColor.CGColor()
+        val borderWidth = layoutRenderData?.border?.top // FIXME individual border widths
+        val borderColor = this.borderColor
+
+        if (borderWidth != null && borderColor != null) {
+            view.layer.borderWidth = borderWidth
+            view.layer.borderColor = borderColor.uiColor.CGColor()
             view.layer.masksToBounds = true
 
             borderRadius { br -> view.layer.cornerRadius = br.topLeft.px } // FIXME individual radii for corners
@@ -200,4 +200,9 @@ open class CommonAdapter(
 
             return UIColor.colorWithRed(red, green, blue, 1.0)
         }
+
+    @OptIn(ExperimentalForeignApi::class)
+    override var mediaMetrics = rootContainer.frame.useContents {
+        MediaMetrics(size.width, size.height)
+    }
 }

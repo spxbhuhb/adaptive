@@ -13,9 +13,18 @@ import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
  * Contains information about the current media.
  */
 class MediaMetrics(
-    val viewPortWidth: Double,
-    val viewPortHeight: Double,
-)
+    val viewWidth: Double,
+    val viewHeight: Double,
+) {
+    val isSmall
+        get() = viewWidth < 600.0 || viewHeight < 600.0
+
+    val isMedium
+        get() = ! isSmall && ! isLarge
+
+    val isLarge
+        get() = viewWidth > 1024.0 || viewHeight > 1024.0
+}
 
 /**
  * Set the value of the given state variable to the current media metrics.
