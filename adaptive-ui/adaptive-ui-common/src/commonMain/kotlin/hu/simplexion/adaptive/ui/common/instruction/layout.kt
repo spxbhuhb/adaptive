@@ -15,6 +15,10 @@ fun size(width: DPixel, height: DPixel) = Size(width, height)
 fun height(height: DPixel) = Height(height)
 fun width(width: DPixel) = Width(width)
 
+val sizeFull = Size(DPixel.FULL, DPixel.FULL)
+val heightFull = Height(DPixel.FULL)
+val widthFull = Width(DPixel.FULL)
+
 fun gap(both: DPixel) = Gap(both, both)
 fun gap(width: DPixel? = null, height: DPixel? = null) = Gap(width, height)
 
@@ -62,11 +66,9 @@ data class Size(
 ) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         layout(subject) {
-            layout(subject) {
-                val adapter = it.adapter
-                it.width = adapter.toPx(width)
-                it.height = adapter.toPx(height)
-            }
+            val adapter = it.adapter
+            it.width = adapter.toPx(width)
+            it.height = adapter.toPx(height)
         }
     }
 }
@@ -114,7 +116,7 @@ data class Padding(
 
     override fun apply(subject: Any) {
         layout(subject) {
-            RawSurrounding(this, it.padding ?: RawSurrounding.ZERO, it.adapter)
+            it.padding = RawSurrounding(this, it.padding ?: RawSurrounding.ZERO, it.adapter)
         }
     }
 
@@ -127,11 +129,9 @@ data class Margin(
     override val left: DPixel?
 ) : AdaptiveInstruction, Surrounding {
 
-    constructor(all: DPixel) : this(all, all, all, all)
-
     override fun apply(subject: Any) {
         layout(subject) {
-            RawSurrounding(this, it.margin ?: RawSurrounding.ZERO, it.adapter)
+            it.margin = RawSurrounding(this, it.margin ?: RawSurrounding.ZERO, it.adapter)
         }
     }
 

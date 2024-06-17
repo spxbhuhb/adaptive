@@ -5,10 +5,9 @@ package hu.simplexion.adaptive.ui.common.fragment
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
-import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
+import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
 import hu.simplexion.adaptive.ui.common.support.RawFrame
-import hu.simplexion.adaptive.ui.common.support.RawSize
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 open class CommonStructuralFragment<RT, CRT : RT>(
@@ -50,10 +49,6 @@ open class CommonStructuralFragment<RT, CRT : RT>(
         }
 
         parent!!.removeActual(fragment, false)
-    }
-
-    override fun measure(): RawSize {
-        return RawSize.UNKNOWN
     }
 
     override fun layout(proposedFrame: RawFrame?) {

@@ -6,7 +6,9 @@ package hu.simplexion.adaptive.ui.common.support
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
-import hu.simplexion.adaptive.ui.common.instruction.*
+import hu.simplexion.adaptive.ui.common.instruction.ColTemplate
+import hu.simplexion.adaptive.ui.common.instruction.RowTemplate
+import hu.simplexion.adaptive.ui.common.instruction.Track
 import hu.simplexion.adaptive.ui.common.render.GridRenderData
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 
@@ -37,14 +39,18 @@ abstract class AbstractGrid<RT, CRT : RT>(
             item.measure()
         }
 
-        val width = renderData.layout?.width.pxOrZero
-        val height = renderData.layout?.height.pxOrZero
+        renderData.measuredWidth = size(renderData.layout?.width, colTracksPrepared)
+        renderData.measuredHeight = size(renderData.layout?.height, rowTracksPrepared)
 
-        return RawSize(width, height).also {
-            measuredSize = it
-            traceMeasure()
-        }
+        super.measure()
     }
+
+    fun size(instructed: Double?, tracks: List<PreparedTrack>) =
+        when {
+            instructed != null -> instructed
+            tracks.any { ! it.isFix } -> Double.POSITIVE_INFINITY
+            else -> Double.NaN
+        }
 
     override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)
@@ -68,23 +74,18 @@ abstract class AbstractGrid<RT, CRT : RT>(
         val colTemp = checkNotNull(instructions.firstOrNullIfInstance<ColTemplate>()) { "missing column template in $this" }
         val rowTemp = checkNotNull(instructions.firstOrNullIfInstance<RowTemplate>()) { "missing row template in $this" }
 
-        val size = this.layoutFrame.size
-
         colTracksPrepared = expand(colTemp.tracks).map { PreparedTrack(it) }
         rowTracksPrepared = expand(rowTemp.tracks).map { PreparedTrack(it) }
 
         val colGap = renderData.container?.gapHeight ?: 0.0
         val rowGap = renderData.container?.gapWidth ?: 0.0
 
-        val padding = renderData.layout.paddingOrZero
-        val border = renderData.decoration.borderWidthOrZero
-        val margin = renderData.layout.marginOrZero
+        val surrounding = surrounding()
+        val availableWidth = layoutFrame.width - surrounding.left - surrounding.right
+        val availableHeight = layoutFrame.height - surrounding.top - surrounding.bottom
 
-        val availableWidth = size.width - padding.right - padding.left - border - margin.left - margin.right
-        val availableHeight = size.height - padding.top - padding.bottom - border - margin.top - margin.bottom
-
-        colOffsets = distribute(availableWidth, padding.left, colGap, colTracksPrepared)
-        rowOffsets = distribute(availableHeight, padding.top, rowGap, rowTracksPrepared)
+        colOffsets = distribute(availableWidth, surrounding.left, colGap, colTracksPrepared)
+        rowOffsets = distribute(availableHeight, surrounding.top, rowGap, rowTracksPrepared)
 
         if (trace) {
             trace("measure-layoutFrame", this.layoutFrame)
@@ -93,7 +94,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
         }
 
         placeFragments(
-            layoutItems.map { it.renderData.grid ?: GridRenderData().apply { it.renderData.grid = this } },
+            layoutItems.map { it.renderData.grid ?: GridRenderData(uiAdapter).apply { it.renderData.grid = this } },
             rowOffsets.size - 1,
             colOffsets.size - 1
         )

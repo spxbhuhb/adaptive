@@ -5,15 +5,10 @@
 package hu.simplexion.adaptive.ui.common.support
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
-import hu.simplexion.adaptive.foundation.fragment.AdaptiveAnonymous
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
-import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
-import hu.simplexion.adaptive.ui.common.instruction.*
-import hu.simplexion.adaptive.ui.common.render.DecorationRenderData
-import hu.simplexion.adaptive.ui.common.render.LayoutRenderData
-import hu.simplexion.adaptive.utility.alsoIfInstance
-import hu.simplexion.adaptive.utility.checkIfInstance
+import hu.simplexion.adaptive.ui.common.instruction.AlignItems
+import hu.simplexion.adaptive.ui.common.instruction.AlignSelf
+import hu.simplexion.adaptive.ui.common.instruction.JustifyContent
 
 /**
  * Two uses: layouts and loop/select containers.

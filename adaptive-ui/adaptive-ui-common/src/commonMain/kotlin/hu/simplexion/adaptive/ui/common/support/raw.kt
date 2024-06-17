@@ -5,7 +5,10 @@
 package hu.simplexion.adaptive.ui.common.support
 
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
-import hu.simplexion.adaptive.ui.common.instruction.*
+import hu.simplexion.adaptive.ui.common.instruction.Position
+import hu.simplexion.adaptive.ui.common.instruction.Size
+import hu.simplexion.adaptive.ui.common.instruction.Surrounding
+import hu.simplexion.adaptive.ui.common.instruction.toPx
 
 operator fun Double.plus(other: Double?): Double =
     if (other == null) this else other + this
@@ -19,7 +22,11 @@ data class RawFrame(
     val left : Double,
     val width : Double,
     val height : Double
-)
+) {
+    companion object {
+        val AUTO = RawFrame(Double.NaN, Double.NaN, Double.NaN, Double.NaN)
+    }
+}
 
 /**
  * Position where the values are actual device dependent pixel values. All measurements and

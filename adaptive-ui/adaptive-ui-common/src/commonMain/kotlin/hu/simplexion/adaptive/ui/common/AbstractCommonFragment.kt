@@ -8,7 +8,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.render.CommonRenderData
 import hu.simplexion.adaptive.ui.common.support.RawFrame
-import hu.simplexion.adaptive.ui.common.support.RawSize
+import hu.simplexion.adaptive.ui.common.support.RawSurrounding
 
 abstract class AbstractCommonFragment<RT>(
     adapter: AbstractCommonAdapter<RT, *>,
@@ -94,11 +94,11 @@ abstract class AbstractCommonFragment<RT>(
 
         layoutFrame =
             if (instructedLayout == null) {
-                proposedFrame ?: RawFrame(0.0, 0.0, Double.NaN, Double.NaN)
+                proposedFrame ?: RawFrame.AUTO
             } else {
                 RawFrame(
-                    instructedLayout.top ?: proposedFrame?.top ?: 0.0,
-                    instructedLayout.left ?: proposedFrame?.left ?: 0.0,
+                    instructedLayout.top ?: proposedFrame?.top ?: Double.NaN,
+                    instructedLayout.left ?: proposedFrame?.left ?: Double.NaN,
                     instructedLayout.width ?: proposedFrame?.width ?: Double.NaN,
                     instructedLayout.height ?: proposedFrame?.height ?: Double.NaN
                 )
@@ -190,4 +190,16 @@ abstract class AbstractCommonFragment<RT>(
         return height
     }
 
+    fun surrounding(): RawSurrounding {
+        val padding = renderData.layout?.padding ?: RawSurrounding.ZERO
+        val border = renderData.layout?.border ?: RawSurrounding.ZERO
+        val margin = renderData.layout?.margin ?: RawSurrounding.ZERO
+
+        return RawSurrounding(
+            padding.top + border.top + margin.top,
+            padding.left + border.left + margin.left,
+            padding.left + border.right + margin.right,
+            padding.bottom + border.bottom + margin.bottom
+        )
+    }
 }

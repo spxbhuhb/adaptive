@@ -10,7 +10,6 @@ import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
 import hu.simplexion.adaptive.ui.common.support.RawFrame
-import hu.simplexion.adaptive.ui.common.support.RawSize
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
@@ -40,22 +39,11 @@ open class CommonImage(
         return false
     }
 
-    /**
-     * Measured size of images is unknown at the time measure is called, mostly because
-     * the image is loaded asynchronously.
-     *
-     * Also, it is rare to use the actual size of the image for the layout, it is far
-     * more usual to have a space and scale the image to fit that space.
-     */
-    override fun measure(): RawSize = instructedOr { RawSize.UNKNOWN }
-
     override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)
 
-        val size = layoutFrame.size
-
-        receiver.width = size.width.toInt()
-        receiver.height = size.height.toInt()
+        receiver.width = layoutFrame.width.toInt()
+        receiver.height = layoutFrame.height.toInt()
 
         uiAdapter.applyLayoutToActual(this)
     }

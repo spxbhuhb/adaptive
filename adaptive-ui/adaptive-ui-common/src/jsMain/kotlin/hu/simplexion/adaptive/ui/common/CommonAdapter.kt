@@ -5,7 +5,9 @@ package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.instruction.Name
-import hu.simplexion.adaptive.ui.common.instruction.*
+import hu.simplexion.adaptive.ui.common.instruction.AdaptiveUIEvent
+import hu.simplexion.adaptive.ui.common.instruction.DPixel
+import hu.simplexion.adaptive.ui.common.instruction.SPixel
 import hu.simplexion.adaptive.ui.common.platform.BrowserEventListener
 import hu.simplexion.adaptive.ui.common.render.DecorationRenderData
 import hu.simplexion.adaptive.ui.common.render.EventRenderData
@@ -73,26 +75,36 @@ open class CommonAdapter(
     override fun applyLayoutToActual(fragment: AbstractCommonFragment<HTMLElement>) {
         val layoutFrame = fragment.layoutFrame
 
-        val point = layoutFrame.point
-        val size = layoutFrame.size
+        val top = layoutFrame.top
+        val left = layoutFrame.left
+        val height = layoutFrame.height
+        val width = layoutFrame.width
+
         val style = fragment.receiver.style
+        var absolute = false
 
         style.boxSizing = "border-box"
 
-        if (! layoutFrame.point.top.isNaN()) {
-            style.position = "absolute"
-            style.top = "${point.top}px"
-            style.left = "${point.left}px"
-        } else {
-            style.position = "relative"
+        if (! top.isNaN()) {
+            absolute = true
+            style.top = top.pxs
         }
 
-        if (! layoutFrame.size.width.isNaN()) {
-            style.width = "${size.width}px"
+        if (! left.isNaN()) {
+            absolute = true
+            style.left = left.pxs
         }
 
-        if (! layoutFrame.size.height.isNaN()) {
-            style.height = "${size.height}px"
+        style.position = if (absolute) "absolute" else "relative"
+
+        when {
+            width == Double.POSITIVE_INFINITY -> style.width = "100%"
+            ! width.isNaN() -> style.width = width.pxs
+        }
+
+        when {
+            height == Double.POSITIVE_INFINITY -> style.height = "100%"
+            ! height.isNaN() -> style.height = height.pxs
         }
     }
 
@@ -121,26 +133,34 @@ open class CommonAdapter(
             p.right { style.paddingRight = it.pxs }
             p.bottom { style.paddingBottom = it.pxs }
         }
+        margin { m ->
+            m.left { style.marginLeft = it.pxs }
+            m.top { style.marginTop = it.pxs }
+            m.right { style.marginRight = it.pxs }
+            m.bottom { style.marginBottom = it.pxs }
+        }
+        border { b ->
+            style.borderStyle = "solid"
+            b.left { style.borderLeftWidth = it.pxs }
+            b.top { style.borderTopWidth = it.pxs }
+            b.right { style.borderRightWidth = it.pxs }
+            b.bottom { style.borderBottomWidth = it.pxs }
+        }
     }
 
     fun DecorationRenderData.apply(style: CSSStyleDeclaration) {
         backgroundColor { style.backgroundColor = it.toHexColor() }
         backgroundGradient { style.background = "linear-gradient(${it.degree}deg, ${it.start.toHexColor()}, ${it.end.toHexColor()})" }
-        border { b ->
-            b.color { c ->
-                val hc = c.toHexColor()
-                b.top { style.borderTop = "${it.pxs} solid $hc" }
-                b.right { style.borderRight = "${it.pxs} solid $hc" }
-                b.bottom { style.borderBottom = "${it.pxs} solid $hc" }
-                b.left { style.borderLeft = "${it.pxs} solid $hc" }
-            }
-        }
+
+        borderColor { style.borderColor = it.toHexColor() }
+
         borderRadius { br ->
             br.topLeft { style.borderTopLeftRadius = it.pxs }
             br.topRight { style.borderTopRightRadius = it.pxs }
             br.bottomLeft { style.borderBottomLeftRadius = it.pxs }
             br.bottomRight { style.borderBottomRightRadius = it.pxs }
         }
+
         dropShadow { style.filter = "drop-shadow(${it.color.toHexColor()} ${it.offsetX.pxs} ${it.offsetY.pxs} ${it.standardDeviation.pxs})" }
     }
 
@@ -190,6 +210,9 @@ open class CommonAdapter(
 
     val DPixel.pxs
         get() = "${value}px"
+
+    val Double.pxs
+        inline get() = "${this}px"
 
     override fun toPx(sPixel: SPixel): Double =
         sPixel.value

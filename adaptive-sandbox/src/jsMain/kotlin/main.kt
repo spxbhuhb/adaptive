@@ -3,107 +3,71 @@
  */
 
 import hu.simplexion.adaptive.foundation.Adaptive
-import hu.simplexion.adaptive.foundation.fragment.slot
-import hu.simplexion.adaptive.foundation.instruction.*
-import hu.simplexion.adaptive.sandbox.api.CounterApi
-import hu.simplexion.adaptive.service.getService
+import hu.simplexion.adaptive.foundation.instruction.name
 import hu.simplexion.adaptive.ui.common.browser
-import hu.simplexion.adaptive.ui.common.platform.withJsResources
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
-import hu.simplexion.adaptive.wireformat.withJson
-import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
-
-val counterService = getService<CounterApi>()
-
-val Int.twoDigits
-    get() = toString().padStart(2, '0')
-
-val Int.threeDigits
-    get() = toString().padStart(3, '0')
-
-fun now() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
-
-val black = color(0x000000u)
-val white = color(0xffffffu)
-val lightGreen = color(0xA0DE6Fu)
-val mediumGreen = color(0x53C282u)
-val lightGray = color(0xd8d8d8u)
-val mediumGray = color(0x666666u)
-val purple = color(0xA644FFu)
-
-val blackBackground = backgroundColor(black)
-val greenGradient = leftToRightGradient(lightGreen, mediumGreen)
-val borderRadius = borderRadius(8.dp)
-
-val textSmall = fontSize(13.sp)
-val textMedium = fontSize(15.sp)
-val whiteBorder = border(white)
-val bold = FontWeight(700)
-val smallWhiteNoWrap = arrayOf(white, textSmall, TextWrap.NoWrap)
-
-val center = arrayOf<AdaptiveInstruction>(AlignItems.Center, JustifyContent.Center)
-val traceAll = Trace(Regex(".*"))
-val traceLayout = Trace(Regex("layout.*"), Regex("measure.*"))
-
+import hu.simplexion.adaptive.ui.common.platform.withJsResources
 
 fun main() {
 
-    withJson()
-    //withWebSocketTransport()
     withJsResources()
 
     browser {
-
-        var width = 375 // 375 // pixel: 393
-        var height = 812 // 812 // pixel: 808 - 24 - 24 = 760
-
-        grid(colTemplate(100.dp, 1.fr), rowTemplate(50.dp, 1.fr)) {
-
-            row {  }
-
-            row {
-                button("393 x 760", onClick { width = 393; height = 760 })
-                button("375 x 812", onClick { width = 375; height = 812 })
-            }
-
-            column(BackgroundColor(lightGray)) {
-                navButton("Login", replace { login() })
-                navButton("Welcome", replace { welcome() })
-                navButton("Sandbox", replace { stuff() })
-                navButton("Chessboard", replace { chessBoard() })
-            }
-
-            box(Size((width + 2 + 16).dp, (height + 2 + 16).dp), name("box1")) {
-                column(Position(16.dp, 16.dp), Size((width + 2).dp, (height + 2).dp), Border(lightGray, 1.dp)) {
-                    box(Size(width.dp, height.dp), name("box2")) {
-                        slot("mainContent") { stuff() }
-                    }
-                }
-            }
+        column(name("outer-column"), padding(10.dp)) {
+            gap(10.dp)
+            column()
+            row()
+            grid1fr()
         }
     }
 
 }
 
-val button = arrayOf(
-    greenGradient,
-    borderRadius,
-    *center,
-    Padding(8.dp),
-    Height(50.dp)
-)
+private val black = Color(0x0u)
+
+private val cyan = Color(0x32e3dau)
+private val cyanBackground = backgroundColor(cyan)
+private val orange = Color(0xfcba03u)
+private val orangeBackground = backgroundColor(orange)
 
 @Adaptive
-fun navButton(label: String, vararg instructions: AdaptiveInstruction) {
-    button(label, *instructions, onClick { instructions<Replace>() })
+private fun layoutExample(@Adaptive example: () -> Unit) {
+    box(size(202.dp, 152.dp), border(black, 1.dp), name("example-container")) {
+        example()
+    }
+}
+
+
+@Adaptive
+private fun column() {
+    layoutExample {
+        column {
+            gap(10.dp)
+            text("AAA", orangeBackground)
+            text("BBB", cyanBackground)
+        }
+    }
 }
 
 @Adaptive
-fun button(label: String, vararg instructions: AdaptiveInstruction) {
-    row(*button, *instructions) {
-        text(label, white, textMedium, noSelect)
+private fun row() {
+    layoutExample {
+        row {
+            gap(10.dp)
+            text("AAA", orangeBackground)
+            text("BBB", cyanBackground)
+        }
+    }
+}
+
+@Adaptive
+private fun grid1fr() {
+    layoutExample {
+        grid {
+            rowTemplate(1.fr)
+            colTemplate(1.fr)
+            orangeBackground
+        }
     }
 }

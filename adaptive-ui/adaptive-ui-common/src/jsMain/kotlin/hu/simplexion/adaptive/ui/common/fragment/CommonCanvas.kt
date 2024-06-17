@@ -13,7 +13,6 @@ import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
 import hu.simplexion.adaptive.ui.common.support.RawFrame
-import hu.simplexion.adaptive.ui.common.support.RawSize
 import hu.simplexion.adaptive.utility.checkIfInstance
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLElement
@@ -44,12 +43,10 @@ class CommonCanvas(
         return false
     }
 
-    override fun measure(): RawSize = instructedOr { RawSize.UNKNOWN }
-
     override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)
 
-        canvas.setSize(layoutFrame.size)
+        canvas.setSize(layoutFrame.width, layoutFrame.height)
 
         uiAdapter.applyLayoutToActual(this)
         canvasAdapter.draw()

@@ -7,9 +7,9 @@ import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
+import hu.simplexion.adaptive.ui.common.platform.align
 import hu.simplexion.adaptive.ui.common.support.AbstractRow
 import hu.simplexion.adaptive.ui.common.support.RawFrame
-import hu.simplexion.adaptive.ui.common.platform.align
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
@@ -22,7 +22,17 @@ open class CommonRow(
 
     override fun layout(proposedFrame: RawFrame?) {
         super.layout(proposedFrame)
-        receiver.style.display = "flex"
+
+        with(receiver.style) {
+            display = "grid"
+            renderData.container?.gapWidth?.let {
+                if (! it.isNaN()) setProperty("column-gap", "${it}px")
+            }
+            setProperty("grid-auto-flow", "column")
+            setProperty("grid-auto-columns", "min-content")
+            setProperty("grid-template-rows", "1fr")
+        }
+
         align()
         uiAdapter.applyLayoutToActual(this)
     }

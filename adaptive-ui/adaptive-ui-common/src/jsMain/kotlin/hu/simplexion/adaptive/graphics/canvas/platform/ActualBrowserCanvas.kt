@@ -7,7 +7,6 @@ package hu.simplexion.adaptive.graphics.canvas.platform
 import hu.simplexion.adaptive.grapics.canvas.platform.ActualCanvas
 import hu.simplexion.adaptive.grapics.canvas.platform.ActualPath
 import hu.simplexion.adaptive.grapics.svg.instruction.*
-import hu.simplexion.adaptive.ui.common.support.RawSize
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.CanvasRenderingContext2D
@@ -25,10 +24,10 @@ class ActualBrowserCanvas : ActualCanvas {
 
     var saveIds = mutableListOf<Long>()
 
-    fun setSize(size : RawSize) {
+    fun setSize(width: Double, height: Double) {
         val scale = window.devicePixelRatio
-        receiver.width = (size.width * scale).toInt()
-        receiver.height = (size.height * scale).toInt()
+        receiver.width = (width * scale).toInt()
+        receiver.height = (height * scale).toInt()
         context.scale(scale, scale)
     }
 
