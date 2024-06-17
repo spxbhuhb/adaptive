@@ -12,19 +12,20 @@ abstract class AbstractColumn<RT, CRT : RT>(
     parent: AdaptiveFragment?,
     declarationIndex: Int,
     val autoSizing: Boolean
-) : AbstractContainerFragment<RT, CRT>(
+) : AbstractStackFragment<RT, CRT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 
-    override fun measure(): RawSize =
-        instructed() ?: measure(
-            { w: Float, _, s: RawSize -> maxOf(w, s.width) },
-            { h: Float, _, s: RawSize -> h + s.height }
+    override fun measure() {
+        measure(
+            { width, _, itemWidth -> maxOf(width, itemWidth) },
+            { height, _, itemHeight -> height + itemHeight }
         )
+        super.measure()
+    }
 
-    override fun layout(proposedFrame: RawFrame) {
+    override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)
-
         layoutStack(horizontal = false, autoSizing)
     }
 

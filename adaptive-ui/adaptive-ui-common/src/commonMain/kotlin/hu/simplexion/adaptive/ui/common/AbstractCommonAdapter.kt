@@ -105,8 +105,8 @@ abstract class AbstractCommonAdapter<RT, CRT : RT> : AdaptiveAdapter {
         throw UnsupportedOperationException("openExternalLink($href)")
     }
 
-    abstract fun toPx(dPixel: DPixel): Float
+    abstract fun toPx(dPixel: DPixel): Double
 
-    abstract fun toPx(sPixel: SPixel): Float
+    abstract fun toPx(sPixel: SPixel): Double
 
 }

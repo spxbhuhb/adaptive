@@ -7,43 +7,30 @@ package hu.simplexion.adaptive.ui.common.support
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 import hu.simplexion.adaptive.ui.common.instruction.*
 
+operator fun Double.plus(other: Double?): Double =
+    if (other == null) this else other + this
+
 /**
  * Frame where the values are actual device dependent pixel values. All measurements and
  * layout calculations should use this frame.
  */
 data class RawFrame(
-    val point: RawPoint,
-    val size: RawSize
-) {
-    constructor(frame: Frame, adapter: AbstractCommonAdapter<*, *>) :
-        this(RawPoint(frame.point, adapter), RawSize(frame.size, adapter))
-
-    constructor(top: Float, left: Float, width: Float, height: Float) :
-        this(RawPoint(top, left), RawSize(width, height))
-
-    companion object {
-        /** Not a frame, indicates the that the frame is not set. **/
-        val NaF = RawFrame(RawPoint.NaP, RawSize.NaS)
-    }
-}
+    val top : Double,
+    val left : Double,
+    val width : Double,
+    val height : Double
+)
 
 /**
- * Point where the values are actual device dependent pixel values. All measurements and
- * layout calculations should use this point.
+ * Position where the values are actual device dependent pixel values. All measurements and
+ * layout calculations should use this position.
  */
-data class RawPoint(
-    val top: Float,
-    val left: Float
+data class RawPosition(
+    val top: Double,
+    val left: Double
 ) {
-    constructor(point: Point, adapter: AbstractCommonAdapter<*, *>) :
-        this(point.top.toPx(adapter), point.left.toPx(adapter))
-
-    companion object {
-        /** Not a point, indicates the that the point is not set. **/
-        val NaP = RawPoint(Float.NaN, Float.NaN)
-
-        val ORIGIN = RawPoint(0f, 0f)
-    }
+    constructor(position: Position, adapter: AbstractCommonAdapter<*, *>) :
+        this(position.top.toPx(adapter), position.left.toPx(adapter))
 }
 
 /**
@@ -51,31 +38,33 @@ data class RawPoint(
  * layout calculations should use this size.
  */
 data class RawSize(
-    val width: Float,
-    val height: Float
+    val width: Double,
+    val height: Double
 ) {
     constructor(point: Size, adapter: AbstractCommonAdapter<*, *>) :
         this(point.width.toPx(adapter), point.height.toPx(adapter))
 
     companion object {
-        /** Not a size, indicates the that the size is not set. **/
-        val NaS = RawSize(Float.NaN, Float.NaN)
-
-        val ZERO = RawSize(0f, 0f)
+        val UNKNOWN = RawSize(Double.NaN, Double.NaN)
     }
 }
 
-data class RawPadding(
-    val top: Float,
-    val right: Float,
-    val bottom: Float,
-    val left: Float
+data class RawSurrounding(
+    val top: Double,
+    val right: Double,
+    val bottom: Double,
+    val left: Double
 ) {
-    constructor(padding: Padding, adapter: AbstractCommonAdapter<*, *>) :
+    constructor(surrounding: Surrounding, previous: RawSurrounding, adapter: AbstractCommonAdapter<*, *>) :
         this(
-            padding.top.toPx(adapter),
-            padding.right.toPx(adapter),
-            padding.bottom.toPx(adapter),
-            padding.left.toPx(adapter)
+            surrounding.top.toPx(adapter) ?: previous.top,
+            surrounding.right.toPx(adapter) ?: previous.right,
+            surrounding.bottom.toPx(adapter) ?: previous.bottom,
+            surrounding.left.toPx(adapter) ?: previous.left
         )
+
+    companion object {
+        val ZERO = RawSurrounding(0.0, 0.0, 0.0, 0.0)
+    }
 }
+

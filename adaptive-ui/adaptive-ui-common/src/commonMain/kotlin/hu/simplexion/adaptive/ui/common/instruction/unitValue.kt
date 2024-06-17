@@ -11,57 +11,66 @@ import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 // -----------------------------------------------------------
 
 val Int.dp: DPixel
-    get() = DPixel(this.toFloat())
-
-val Float.dp: DPixel
-    get() = DPixel(this)
+    get() = DPixel(this.toDouble())
 
 val Double.dp: DPixel
-    get() = DPixel(this.toFloat())
+    get() = DPixel(this)
+
+/**
+ * Convert the device-independent position into device-dependent pixel value.
+ *
+ * - values between 0.000001 and 0.000001 are converted to 0.0
+ *
+ * https://stackoverflow.com/questions/21260776/how-to-compare-double-numbers
+ */
+fun DPixel.toPx(adapter: AbstractCommonAdapter<*, *>): Double =
+    when {
+        (- 0.000001 < this.value && this.value < 0.000001) -> 0.0
+        else -> adapter.toPx(this)
+    }
+
+/**
+ * Convert the device-independent position into device-dependent pixel value.
+ *
+ * - null stays null
+ * - values between 0.000001 and 0.000001 are converted to 0.0
+ *
+ * https://stackoverflow.com/questions/21260776/how-to-compare-double-numbers
+ */
+fun DPixel?.toPx(adapter: AbstractCommonAdapter<*, *>): Double? =
+    when {
+        this == null -> null
+        (- 0.000001 < this.value && this.value < 0.000001) -> 0.0
+        else -> adapter.toPx(this)
+    }
+
+/**
+ * Convert the device-independent position into device-dependent pixel value.
+ *
+ * - null is converted to 0.0
+ * - values between 0.000001 and 0.000001 are converted to 0.0
+ *
+ * https://stackoverflow.com/questions/21260776/how-to-compare-double-numbers
+ */
+fun DPixel?.toPxOrZero(adapter: AbstractCommonAdapter<*, *>): Double =
+    if (this == null || (- 0.000001 < this.value && this.value < 0.000001)) 0.0 else adapter.toPx(this)
 
 data class DPixel(
-    override val value: Float
+    override val value: Double
 ) : Track {
 
     override val isFix
         get() = true
 
-    infix fun or(other: DPixel): DPixel =
-        if (this === NaP) other else this
-
-    /**
-     * Convert the device-independent point into device-dependent pixel value.
-     * [NaP] is converted to [Float.NaN].
-     */
-    fun toPx(adapter: AbstractCommonAdapter<*, *>): Float =
-        when {
-            this == NaP -> Float.NaN
-            this === ZERO -> 0f
-            else -> adapter.toPx(this)
-        }
-
-    /**
-     * Convert the device-independent point into device-dependent pixel value.
-     * [NaP] is converted to 0f. If you want to keep the information that the
-     * value is invalid use [toPx].
-     */
-    fun toPxOrZero(adapter: AbstractCommonAdapter<*, *>): Float =
-        if (this === ZERO || this === NaP) 0f else adapter.toPx(this)
-
-    override fun toRawValue(adapter: AbstractCommonAdapter<*, *>): Float =
-        this.toPx(adapter)
+    override fun toRawValue(adapter: AbstractCommonAdapter<*, *>): Double =
+        this.toPxOrZero(adapter)
 
     override fun toString(): String {
         return if (value.isNaN()) "NaP" else "${value}dp"
     }
 
     companion object {
-        val ZERO = DPixel(0f)
-
-        /**
-         * Means that this value is unspecified.
-         */
-        val NaP = DPixel(Float.NaN)
+        val ZERO = DPixel(0.0)
     }
 }
 
@@ -70,16 +79,13 @@ data class DPixel(
 // -----------------------------------------------------------
 
 val Int.sp: SPixel
-    get() = SPixel(this.toFloat())
-
-val Float.sp: SPixel
-    get() = SPixel(this)
+    get() = SPixel(this.toDouble())
 
 val Double.sp: SPixel
-    get() = SPixel(this.toFloat())
+    get() = SPixel(this)
 
 data class SPixel(
-    val value: Float
+    val value: Double
 ) {
 
     override fun toString(): String {
@@ -92,24 +98,32 @@ data class SPixel(
 // -----------------------------------------------------------
 
 val Int.fr: Fraction
-    get() = Fraction(this.toFloat())
-
-val Float.fr: Fraction
-    get() = Fraction(this)
+    get() = Fraction(this.toDouble())
 
 val Double.fr: Fraction
-    get() = Fraction(this.toFloat())
+    get() = Fraction(this)
 
 data class Fraction(
-    override val value: Float
+    override val value: Double
 ) : Track {
 
     override val isFix
         get() = false
 
-    override fun toRawValue(adapter: AbstractCommonAdapter<*, *>): Float = value
+    override fun toRawValue(adapter: AbstractCommonAdapter<*, *>): Double = value
 
     override fun toString(): String {
         return "${value}fr"
     }
+}
+
+// -----------------------------------------------------------
+// Surrounding
+// -----------------------------------------------------------
+
+interface Surrounding{
+    val top: DPixel?
+    val right: DPixel?
+    val bottom: DPixel?
+    val left: DPixel?
 }

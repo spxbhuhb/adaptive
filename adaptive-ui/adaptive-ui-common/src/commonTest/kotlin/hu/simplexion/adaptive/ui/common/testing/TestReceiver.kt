@@ -7,13 +7,13 @@ package hu.simplexion.adaptive.ui.common.testing
 import hu.simplexion.adaptive.ui.common.support.RawFrame
 
 class TestReceiver(
-    val testFrame : RawFrame = RawFrame.NaF
+    val testFrame : RawFrame? = null
 ) {
     val children = mutableListOf<TestReceiver>()
 
-    var testTop = 0f
-    var testLeft = 0f
-    var testWidth = 0f
-    var testHeight = 0f
+    var testTop = 0.0
+    var testLeft = 0.0
+    var testWidth = 0.0
+    var testHeight = 0.0
 
 }

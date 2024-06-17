@@ -85,7 +85,7 @@ fun checkbox(
     }
 }
 
-val spaceAround = Padding(left = 6.dp, right = 6.dp)
+val spaceAround = padding(left = 6.dp, right = 6.dp)
 val spaceAfter = paddingRight(6.dp)
 
 val titleLarge = arrayOf(
@@ -95,19 +95,19 @@ val titleLarge = arrayOf(
 
 val bodyMedium = arrayOf(
     FontSize(17.sp),
-    Color(0x666666)
+    Color(0x666666u)
 )
 
 val input = arrayOf(
     // PlaceholderColor(0x8A8A8F),
-    Color(0x000000),
-    BackgroundColor(Color(0xEFEFF4)),
+    Color(0x000000u),
+    BackgroundColor(Color(0xEFEFF4u)),
     BorderRadius(8.dp),
     Border.NONE,
     Height(44.dp),
     FontSize(17.sp),
     FontWeight.LIGHT,
-    Padding(left = 16.dp, right = 16.dp)
+    padding(left = 16.dp, right = 16.dp)
 )
 
 var activeCheckBox = arrayOf(

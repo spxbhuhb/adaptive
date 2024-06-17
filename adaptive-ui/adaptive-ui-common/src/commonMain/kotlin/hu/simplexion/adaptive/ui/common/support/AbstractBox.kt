@@ -11,20 +11,22 @@ abstract class AbstractBox<RT, CRT : RT>(
     adapter: AbstractCommonAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int
-) : AbstractContainerFragment<RT, CRT>(
+) : AbstractStackFragment<RT, CRT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 
-    override fun measure(): RawSize =
-        instructed() ?: measure(
-            { w: Float, p: RawPoint, s: RawSize -> maxOf(w, p.top + s.width) },
-            { h: Float, p: RawPoint, s: RawSize -> maxOf(h, p.left + s.height) }
+    override fun measure() {
+        measure(
+            { width, itemLeft, itemWidth -> maxOf(width, itemLeft + itemWidth) },
+            { height, itemTop, itemHeight -> maxOf(height, itemTop + itemHeight) }
         )
+        super.measure()
+    }
 
-    override fun layout(proposedFrame: RawFrame) {
+    override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)
 
-        val layoutFrame = RawFrame(RawPoint.ORIGIN, this.layoutFrame.size)
+        val layoutFrame = RawFrame(0.0, 0.0, this.layoutFrame.width, this.layoutFrame.height)
 
         for (item in layoutItems) {
             item.layout(layoutFrame)

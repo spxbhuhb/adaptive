@@ -6,9 +6,9 @@ package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
+import hu.simplexion.adaptive.ui.common.render.CommonRenderData
 import hu.simplexion.adaptive.ui.common.support.RawFrame
 import hu.simplexion.adaptive.ui.common.support.RawSize
-import hu.simplexion.adaptive.ui.common.render.CommonRenderData
 
 abstract class AbstractCommonFragment<RT>(
     adapter: AbstractCommonAdapter<RT, *>,
@@ -25,8 +25,7 @@ abstract class AbstractCommonFragment<RT>(
      */
     open val uiAdapter = adapter
 
-    // FIXME renderData should be bound to instructions
-    var renderData = CommonRenderData.DEFAULT
+    var renderData = CommonRenderData(adapter)
 
     /**
      * The actual frame of the fragment in the actual UI. Result of layout
@@ -43,13 +42,6 @@ abstract class AbstractCommonFragment<RT>(
      * calculations.
      */
     var layoutFrameOrNull: RawFrame? = null
-
-    /**
-     * The result of `measure` if the frame can calculate it. The basic fragments
-     * such as images and text can calculate their own size which then can be
-     * used for layout calculations or for resizing.
-     */
-    var measuredSize: RawSize = RawSize.NaS
 
     /**
      * Structural fragments (loop and select) set this to true to modify behaviour.
@@ -70,7 +62,7 @@ abstract class AbstractCommonFragment<RT>(
 
     fun patchInstructions() {
         if (instructionIndex != - 1 && haveToPatch(dirtyMask, 1 shl instructionIndex)) {
-            renderData = CommonRenderData(instructions)
+            renderData = CommonRenderData(uiAdapter, instructions)
             uiAdapter.applyRenderInstructions(this)
         }
     }
@@ -85,47 +77,32 @@ abstract class AbstractCommonFragment<RT>(
         super.unmount()
     }
 
-    abstract fun measure(): RawSize
+    open fun measure() {
+        val instructedWidth = renderData.layout?.width
+        val instructedHeight = renderData.layout?.height
 
-    protected fun instructedOr(measure: () -> RawSize): RawSize {
-        val instructed = renderData.instructedSize
+        renderData.boxWidth = instructedWidth ?: renderData.calcBoxWidth()
+        renderData.boxHeight = instructedHeight ?: renderData.calcBoxHeight()
 
-        if ( ! instructed.isNaS()) return instructed.toRaw(uiAdapter)
-
-        val measured = measure()
-
-        val size = RawSize(
-            instructed.width.toPx(uiAdapter) or measured.width,
-            instructed.height.toPx(uiAdapter) or measured.height
-        )
-
-        measuredSize = size
-        traceMeasure()
-        return size
+        if (trace) trace("measure", "measuredSize=(${renderData.boxWidth},${renderData.boxHeight})")
     }
 
-    fun traceMeasure() {
-        if (trace) trace("measure", "measuredSize=${measuredSize}")
-    }
+    abstract fun layout(proposedFrame: RawFrame?)
 
-    abstract fun layout(proposedFrame: RawFrame)
+    open fun calcLayoutFrame(proposedFrame: RawFrame?) {
+        val instructedLayout = renderData.layout
 
-    protected infix fun Float.or(other : Float) =
-        if (this.isNaN()) other else this
-
-    open fun calcLayoutFrame(proposedFrame: RawFrame) {
-        val instructedTop = renderData.instructedPoint.top.toPx(uiAdapter)
-        val instructedLeft = renderData.instructedPoint.left.toPx(uiAdapter)
-
-        val instructedWidth = renderData.instructedSize.width.toPx(uiAdapter)
-        val instructedHeight = renderData.instructedSize.height.toPx(uiAdapter)
-
-        layoutFrame = RawFrame(
-            instructedTop or proposedFrame.point.top,
-            instructedLeft or proposedFrame.point.left,
-            instructedWidth or proposedFrame.size.width,
-            instructedHeight or proposedFrame.size.height
-        )
+        layoutFrame =
+            if (instructedLayout == null) {
+                proposedFrame ?: RawFrame(0.0, 0.0, Double.NaN, Double.NaN)
+            } else {
+                RawFrame(
+                    instructedLayout.top ?: proposedFrame?.top ?: 0.0,
+                    instructedLayout.left ?: proposedFrame?.left ?: 0.0,
+                    instructedLayout.width ?: proposedFrame?.width ?: Double.NaN,
+                    instructedLayout.height ?: proposedFrame?.height ?: Double.NaN
+                )
+            }
 
         traceLayout()
     }
@@ -136,27 +113,81 @@ abstract class AbstractCommonFragment<RT>(
                 "layout",
                 """
                     layoutFrame=${layoutFrame}
-                    measuredSize=${measuredSize}
-                    instructedPoint=${renderData.instructedPoint}
-                    instructedSize=${renderData.instructedSize}
+                    measuredSize=(${renderData.measuredWidth},${renderData.measuredHeight})
+                    instructedTop=${renderData.layout?.top}
+                    instructedLeft=${renderData.layout?.left}
+                    instructedWidth=${renderData.layout?.width}
+                    instructedHeight=${renderData.layout?.height}
                 """.trimIndent().replace("\n", " ")
             )
         }
     }
 
-    fun toFrame(colOffsets: FloatArray, rowOffsets: FloatArray): RawFrame {
-        val row = renderData.rowIndex
-        val col = renderData.colIndex
+    fun toFrame(colOffsets: DoubleArray, rowOffsets: DoubleArray): RawFrame {
+        val grid = checkNotNull(renderData.grid) { "missing grid data at $this" }
+
+        val row = grid.rowIndex
+        val col = grid.colIndex
 
         return RawFrame(
             rowOffsets[row],
             colOffsets[col],
-            colOffsets[col + renderData.colSpan] - colOffsets[col],
-            rowOffsets[row + renderData.rowSpan] - rowOffsets[row]
+            colOffsets[col + grid.colSpan] - colOffsets[col],
+            rowOffsets[row + grid.rowSpan] - rowOffsets[row]
         )
     }
 
     val DPixel.px
         get() = uiAdapter.toPx(this)
+
+    val DPixel?.pxOrZero
+        get() = if (this == null) 0.0 else uiAdapter.toPx(this)
+
+    fun CommonRenderData.calcBoxWidth(): Double {
+
+        var width = measuredWidth
+
+        val layout = layout ?: return width
+
+        layout.padding?.let {
+            width += it.left
+            width += it.right
+        }
+
+        layout.border?.let {
+            width += it.left
+            width += it.right
+        }
+
+        layout.margin?.let {
+            width += it.left
+            width += it.right
+        }
+
+        return width
+    }
+
+    fun CommonRenderData.calcBoxHeight(): Double {
+        var height = measuredHeight
+
+        val layout = layout ?: return height
+
+        layout.padding?.let {
+            height += it.top
+            height += it.bottom
+        }
+
+        layout.border?.let {
+            height += it.top
+            height += it.bottom
+        }
+
+        layout.margin?.let {
+            height += it.top
+            height += it.bottom
+        }
+
+        return height
+    }
 
 }

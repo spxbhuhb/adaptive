@@ -19,8 +19,8 @@ import androidx.core.graphics.toColorInt
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.platform.ContainerViewGroup
 import hu.simplexion.adaptive.ui.common.platform.StructuralViewGroup
-import hu.simplexion.adaptive.ui.common.render.CommonRenderData
 import hu.simplexion.adaptive.ui.common.instruction.*
+import hu.simplexion.adaptive.ui.common.render.*
 import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
 import hu.simplexion.adaptive.ui.common.support.RawFrame
 
@@ -43,7 +43,7 @@ open class CommonAdapter(
         traceAddActual(fragment)
 
         fragment.ifIsInstanceOrRoot<AbstractContainerFragment<View, ContainerViewGroup>> {
-            val frame = RawFrame(0f, 0f, rootContainer.width.toFloat(), rootContainer.height.toFloat())
+            val frame = RawFrame(0.0, 0.0, rootContainer.width.toDouble(), rootContainer.height.toDouble())
 
             it.layoutFrame = frame
             it.measure()
@@ -96,124 +96,134 @@ open class CommonAdapter(
     override fun applyRenderInstructions(fragment: AbstractCommonFragment<View>) {
 
         val renderData = CommonRenderData(fragment.instructions)
+        val view = fragment.receiver
+
         // FIXME should clear actual UI settings when null
 
         if (renderData.tracePatterns.isNotEmpty()) {
             fragment.tracePatterns = renderData.tracePatterns
         }
 
-        val view = fragment.receiver
+        renderData.layout { it.apply(view) }
+        renderData.decoration { it.apply(view) }
+        renderData.text { it.apply(view) }
+        renderData.event { it.apply(view, fragment) }
+    }
 
-        with(fragment.renderData) {
+    fun LayoutRenderData.apply(view: View) {
+        padding {
+            view.setPadding(it.left.px, it.top.px, it.right.px, it.bottom.px)
+        }
+    }
 
-            val drawables = mutableListOf<Drawable>()
-            val insets = mutableListOf<Int>()
+    fun DecorationRenderData.apply(view: View) {
+        val drawables = mutableListOf<Drawable>()
+        val insets = mutableListOf<Int>()
 
-            border?.let {
-                drawables += GradientDrawable().apply {
-                    shape = GradientDrawable.RECTANGLE
-                    setColor(android.graphics.Color.TRANSPARENT)
-                    setStroke(it.width.px, it.color.androidColor)
-                    if (borderRadius !== BorderRadius.ZERO) cornerRadii = borderRadius.toFloatArray()
-                }
-                insets += 0
+        border {
+            drawables += GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                setColor(android.graphics.Color.TRANSPARENT)
+                setStroke(it.width.px, it.color.androidColor)
+                borderRadius { cornerRadii = it.toFloatArray() } // FIXME individual corner radius for android
             }
+            insets += 0
+        }
 
-            backgroundColor?.let {
-                drawables += GradientDrawable().apply {
-                    shape = GradientDrawable.RECTANGLE
-                    setColor(it.androidColor)
-                    if (borderRadius !== BorderRadius.ZERO) cornerRadii = borderRadius.toFloatArray()
-                }
-                insets += border?.width.px
+        backgroundColor {
+            drawables += GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                setColor(it.androidColor)
+                borderRadius { cornerRadii = it.toFloatArray() }
             }
+            border { b -> insets += b.width.px }
+        }
 
-            backgroundGradient?.let {
-                drawables += GradientDrawable(
-                    GradientDrawable.Orientation.LEFT_RIGHT, //
-                    intArrayOf(it.start.androidColor, it.end.androidColor),
+        backgroundGradient?.let {
+            drawables += GradientDrawable(
+                GradientDrawable.Orientation.LEFT_RIGHT, //
+                intArrayOf(it.start.androidColor, it.end.androidColor),
+
                 ).apply {
-                    if (borderRadius !== BorderRadius.ZERO) cornerRadii = borderRadius.toFloatArray()
-                }
-                insets += border?.width.px
+                borderRadius { b -> cornerRadii = b.toFloatArray() }
             }
+            border { b -> insets += b.width.px }
+        }
 
-            if (drawables.isNotEmpty()) {
-                view.background = LayerDrawable(drawables.toTypedArray()).apply {
-                    insets.forEachIndexed { index, inset ->
-                        if (inset != 0) {
-                            setLayerInset(index, inset, inset, inset, inset)
-                        }
+        if (drawables.isNotEmpty()) {
+            view.background = LayerDrawable(drawables.toTypedArray()).apply {
+                insets.forEachIndexed { index, inset ->
+                    if (inset != 0) {
+                        setLayerInset(index, inset, inset, inset, inset)
                     }
                 }
             }
+        }
+    }
 
-            if (padding != Padding.ZERO) {
-                view.setPadding(
-                    padding.left.px,
-                    padding.top.px,
-                    padding.right.px,
-                    padding.bottom.px
-                )
-            }
+    fun TextRenderData.apply(view: View) {
+        if (view !is TextView) return
 
-            if (view is TextView) {
-                color?.let { view.setTextColor(it.androidColor) }
+        color { view.setTextColor(it.androidColor) }
+        fontSize { view.textSize = it.value.toFloat() }
+        fontWeight {
+            // FIXME proper typeface mapping
+            if (it > 500) view.setTypeface(null, Typeface.BOLD)
+        }
+        letterSpacing { view.letterSpacing = it.toFloat() }
 
-                fontSize?.let { view.textSize = it.value }
+        when (align) {
+            TextAlign.Start -> view.textAlignment = TEXT_ALIGNMENT_VIEW_START
+            TextAlign.Center -> view.textAlignment = TEXT_ALIGNMENT_CENTER
+            TextAlign.End -> view.textAlignment = TEXT_ALIGNMENT_VIEW_END
+            null -> view.textAlignment = TEXT_ALIGNMENT_CENTER
+        }
+    }
 
-                fontWeight?.let {
-                    // FIXME proper typeface mapping
-                    if (it > 500) view.setTypeface(null, Typeface.BOLD)
-                }
-                letterSpacing?.let { view.letterSpacing = it }
+    fun EventRenderData.apply(view: View, fragment: AbstractCommonFragment<View>) {
+        onClickListener {
+            // TODO How to remove an event listener on android?
+        }
 
-                when (textAlign) {
-                    TextAlign.Start -> view.textAlignment = TEXT_ALIGNMENT_VIEW_START
-                    TextAlign.Center -> view.textAlignment = TEXT_ALIGNMENT_CENTER
-                    TextAlign.End -> view.textAlignment = TEXT_ALIGNMENT_VIEW_END
-                    null -> Unit
-                }
-            }
-
-            val onClick = this.onClick
-            if (onClick != null) {
-                view.setOnClickListener {
-                    onClick.execute(AdaptiveUIEvent(fragment, it))
-                }
+        onClick { oc ->
+            view.setOnClickListener {
+                oc.execute(AdaptiveUIEvent(fragment, it))
             }
         }
     }
 
-    override fun toPx(dPixel: DPixel): Float =
-        applyDimension(COMPLEX_UNIT_DIP, dPixel.value, displayMetrics)
+    inline operator fun <reified T : Any> T?.invoke(function: (it: T) -> Unit) {
+        if (this != null) {
+            function(this)
+        }
+    }
+
+    override fun toPx(dPixel: DPixel): Double =
+        applyDimension(COMPLEX_UNIT_DIP, dPixel.value.toFloat(), displayMetrics).toDouble()
 
     val DPixel?.px: Int
-        get() = this?.let { applyDimension(COMPLEX_UNIT_DIP, value, displayMetrics).toInt() } ?: 0
+        get() = this?.let { applyDimension(COMPLEX_UNIT_DIP, value.toFloat(), displayMetrics).toInt() } ?: 0
+
+    val DPixel?.floatToZero: Float
+        get() = this?.value?.toFloat() ?: 0f
 
     // TODO do we need this conversion? TextView.textSize is in SP
-    override fun toPx(sPixel: SPixel): Float =
-        applyDimension(COMPLEX_UNIT_SP, sPixel.value, displayMetrics)
-
-    inline fun DPixel.set(setter: (it: Float) -> Unit) {
-        if (this !== DPixel.NaP) {
-            setter(applyDimension(COMPLEX_UNIT_DIP, value, displayMetrics))
-        }
-    }
+    override fun toPx(sPixel: SPixel): Double =
+        applyDimension(COMPLEX_UNIT_SP, sPixel.value.toFloat(), displayMetrics).toDouble()
 
     fun BorderRadius.toFloatArray(): FloatArray {
         return floatArrayOf(
-            applyDimension(COMPLEX_UNIT_SP, topLeft.value, displayMetrics),
-            applyDimension(COMPLEX_UNIT_SP, topRight.value, displayMetrics),
-            applyDimension(COMPLEX_UNIT_SP, bottomRight.value, displayMetrics),
-            applyDimension(COMPLEX_UNIT_SP, bottomLeft.value, displayMetrics)
+            applyDimension(COMPLEX_UNIT_SP, topLeft.floatToZero, displayMetrics),
+            applyDimension(COMPLEX_UNIT_SP, topRight.floatToZero, displayMetrics),
+            applyDimension(COMPLEX_UNIT_SP, bottomRight.floatToZero, displayMetrics),
+            applyDimension(COMPLEX_UNIT_SP, bottomLeft.floatToZero, displayMetrics)
         )
     }
 
     val Color.androidColor
         get() = android.graphics.Color.pack(
-            ((value shr 16) and 0xFF).toFloat() / 255f,
-            ((value shr 8) and 0xFF).toFloat() / 255f,
-            (value and 0xFF).toFloat() / 255f
+            ((value shr 16) and 0xFFu).toFloat() / 255f,
+            ((value shr 8) and 0xFFu).toFloat() / 255f,
+            (value and 0xFFu).toFloat() / 255f
         ).toColorInt()
 }

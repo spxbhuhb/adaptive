@@ -7,15 +7,22 @@ package hu.simplexion.adaptive.ui.common.instruction
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 import hu.simplexion.adaptive.ui.common.render.CommonRenderData
+import hu.simplexion.adaptive.ui.common.render.grid
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
-// ---- Shorthands --------------------------------------------------------
+fun colSpan(span : Int) = ColSpan(span)
+fun rowSpan(span : Int) = RowSpan(span)
+
+fun gridCol(col: Int, span : Int = 1) = GridCol(col, span)
+fun gridRow(row : Int, span : Int = 1) = GridRow(row, span)
+
+fun gridPos(row : Int, col : Int, rowSpan : Int = 1, colSpan : Int = 1) = GridPos(row, col, rowSpan, colSpan)
 
 val Number.gridCol
-    inline get() = GridCol(this.toInt())
+    inline get() = GridCol(this.toInt(), 1)
 
 val Number.gridRow
-    inline get() = GridRow(this.toInt())
+    inline get() = GridRow(this.toInt(), 1)
 
 val Number.rowSpan
     inline get() = RowSpan(this.toInt())
@@ -23,53 +30,45 @@ val Number.rowSpan
 val Number.colSpan
     inline get() = ColSpan(this.toInt())
 
-// ---- Instructions --------------------------------------------------------
-
 data class RowSpan(val span: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<CommonRenderData> { it.rowSpan = span }
+        grid(subject) { it.rowSpan = span }
     }
 }
 
 data class ColSpan(val span: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<CommonRenderData> { it.colSpan = span }
+        grid(subject) { it.colSpan = span }
     }
 }
 
-data class GridPos(val row: Int, val col: Int, val rowSpan: Int = 1, val colSpan: Int = 1) : AdaptiveInstruction {
-
+data class GridPos(val row: Int, val col: Int, val rowSpan: Int, val colSpan: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<CommonRenderData> {
+        grid(subject) {
             it.gridRow = row
             it.gridCol = col
             it.rowSpan = rowSpan
             it.colSpan = colSpan
         }
     }
-
 }
 
-data class GridRow(val row: Int, val span: Int = 1) : AdaptiveInstruction {
-
+data class GridRow(val row: Int, val span: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<CommonRenderData> {
+        grid(subject) {
             it.gridRow = row
             it.rowSpan = span
         }
     }
-
 }
 
-data class GridCol(val col: Int, val span: Int = 1) : AdaptiveInstruction {
-
+data class GridCol(val col: Int, val span: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<CommonRenderData> {
+        grid(subject) {
             it.gridCol = col
             it.colSpan = span
         }
     }
-
 }
 
 fun colTemplate(vararg tracks: Track) = ColTemplate(tracks)
@@ -122,13 +121,13 @@ interface Track {
 
     val isFix: Boolean
 
-    val value: Float
+    val value: Double
 
     fun expand(out: MutableList<Track>) {
         out.add(this)
     }
 
-    fun toRawValue(adapter: AbstractCommonAdapter<*, *>): Float
+    fun toRawValue(adapter: AbstractCommonAdapter<*, *>): Double
 
 }
 
@@ -146,7 +145,7 @@ data class Replicate(val count: Int, val track: Track) : Track {
     override val isFix: Boolean
         get() = throw UnsupportedOperationException()
 
-    override val value: Float
+    override val value: Double
         get() = throw UnsupportedOperationException()
 
     override fun expand(out: MutableList<Track>) {
@@ -159,7 +158,7 @@ data class Replicate(val count: Int, val track: Track) : Track {
         }
     }
 
-    override fun toRawValue(adapter: AbstractCommonAdapter<*, *>): Float {
+    override fun toRawValue(adapter: AbstractCommonAdapter<*, *>): Double {
         throw UnsupportedOperationException()
     }
 

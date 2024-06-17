@@ -26,21 +26,21 @@ val Int.threeDigits
 
 fun now() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
-val black = Color(0x000000)
-val white = Color(0xffffff)
-val lightGreen = Color(0xA0DE6F)
-val mediumGreen = Color(0x53C282)
-val lightGray = Color(0xd8d8d8)
-val mediumGray = Color(0x666666)
-val purple = Color(0xA644FF)
+val black = color(0x000000u)
+val white = color(0xffffffu)
+val lightGreen = color(0xA0DE6Fu)
+val mediumGreen = color(0x53C282u)
+val lightGray = color(0xd8d8d8u)
+val mediumGray = color(0x666666u)
+val purple = color(0xA644FFu)
 
-val blackBackground = BackgroundColor(black)
-val greenGradient = BackgroundGradient(90, lightGreen, mediumGreen)
-val borderRadius = BorderRadius(8.dp)
+val blackBackground = backgroundColor(black)
+val greenGradient = leftToRightGradient(lightGreen, mediumGreen)
+val borderRadius = borderRadius(8.dp)
 
-val textSmall = FontSize(13.sp)
-val textMedium = FontSize(15.sp)
-val whiteBorder = Border(white)
+val textSmall = fontSize(13.sp)
+val textMedium = fontSize(15.sp)
+val whiteBorder = border(white)
 val bold = FontWeight(700)
 val smallWhiteNoWrap = arrayOf(white, textSmall, TextWrap.NoWrap)
 
@@ -77,7 +77,7 @@ fun main() {
             }
 
             box(Size((width + 2 + 16).dp, (height + 2 + 16).dp), name("box1")) {
-                column(Point(16.dp, 16.dp), Size((width + 2).dp, (height + 2).dp), Border(lightGray, 1.dp)) {
+                column(Position(16.dp, 16.dp), Size((width + 2).dp, (height + 2).dp), Border(lightGray, 1.dp)) {
                     box(Size(width.dp, height.dp), name("box2")) {
                         slot("mainContent") { stuff() }
                     }

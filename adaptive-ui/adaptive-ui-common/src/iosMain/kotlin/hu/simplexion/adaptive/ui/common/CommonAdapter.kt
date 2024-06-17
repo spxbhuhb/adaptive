@@ -4,17 +4,18 @@
 package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.ui.common.instruction.BorderRadius
+import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.platform.ContainerView
 import hu.simplexion.adaptive.ui.common.platform.GestureTarget
 import hu.simplexion.adaptive.ui.common.render.CommonRenderData
-import hu.simplexion.adaptive.ui.common.instruction.Color
-import hu.simplexion.adaptive.ui.common.instruction.DPixel
-import hu.simplexion.adaptive.ui.common.instruction.SPixel
+import hu.simplexion.adaptive.ui.common.render.DecorationRenderData
+import hu.simplexion.adaptive.ui.common.render.EventRenderData
+import hu.simplexion.adaptive.ui.common.render.TextRenderData
 import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
 import hu.simplexion.adaptive.ui.common.support.RawFrame
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
+import platform.CoreGraphics.CGPointMake
 import platform.CoreGraphics.CGRectMake
 import platform.Foundation.NSSelectorFromString
 import platform.QuartzCore.CAGradientLayer
@@ -39,12 +40,7 @@ open class CommonAdapter(
         fragment.ifIsInstanceOrRoot<AbstractContainerFragment<UIView, ContainerView>> {
 
             val frame = rootContainer.frame.useContents {
-                RawFrame(
-                    origin.y.toFloat(),
-                    origin.x.toFloat(),
-                    size.width.toFloat(),
-                    size.height.toFloat()
-                )
+                RawFrame(origin.y, origin.x, size.width, size.height)
             }
 
             it.layoutFrame = frame
@@ -85,69 +81,69 @@ open class CommonAdapter(
         val renderData = fragment.renderData
 
         view.setFrame(frame)
-
-        val backgroundColor = renderData.backgroundColor
-
-        if (backgroundColor != null) {
-            view.backgroundColor = backgroundColor.uiColor
-        }
-
-        val border = renderData.border
-        val borderRadius = renderData.borderRadius
-
-        if (border != null) {
-            view.layer.borderWidth = border.width.px
-            view.layer.borderColor = border.color.uiColor.CGColor()
-            view.layer.masksToBounds = true
-        }
-
-        if (borderRadius !== BorderRadius.ZERO) {
-            // FIXME individual radii for corners
-            borderRadius.topLeft.set { view.layer.cornerRadius = it }
-        }
-
-        val backgroundGradient = renderData.backgroundGradient
-
-        if (backgroundGradient != null) {
-            val gradientLayer = CAGradientLayer()
-            gradientLayer.frame = frame
-            gradientLayer.colors = listOf(backgroundGradient.start.uiColor, backgroundGradient.end.uiColor)
-
-            view.layer.insertSublayer(gradientLayer, 0u)
-            // FIXME individual radii for corners
-            borderRadius.topLeft.set { view.layer.cornerRadius = it }
-            view.layer.masksToBounds = true
-        }
     }
 
     @OptIn(ExperimentalForeignApi::class)
     override fun applyRenderInstructions(fragment: AbstractCommonFragment<UIView>) {
-        with(fragment) {
-            renderData = CommonRenderData(instructions)
-            // FIXME should clear actual UI settings when null
+        val renderData = fragment.renderData
+        val receiver = fragment.receiver
 
-            if (renderData.tracePatterns.isNotEmpty()) {
-                tracePatterns = renderData.tracePatterns
-            }
+        // FIXME should clear actual UI settings when null
 
-            val view = receiver
+        if (renderData.tracePatterns.isNotEmpty()) {
+            fragment.tracePatterns = renderData.tracePatterns
+        }
 
-            with(renderData) {
+        renderData.decoration { it.apply(receiver) }
+        renderData.text { it.apply(receiver) }
+        renderData.event { it.apply(receiver, fragment) }
+    }
 
-                if (view is UILabel) {
-                    color?.let { view.setTextColor(it.uiColor) }
+    @OptIn(ExperimentalForeignApi::class)
+    fun DecorationRenderData.apply(view: UIView) {
 
-                    val fontSize = this.fontSize
-                    val fontWeight = this.fontWeight
+        backgroundColor { view.backgroundColor = it.uiColor }
 
-                    // FIXME font handling in iOS
-                    view.font = when {
-                        fontSize != null && fontWeight != null -> UIFont.boldSystemFontOfSize(toPx(fontSize).toDouble())
-                        fontSize != null -> UIFont.systemFontOfSize(toPx(fontSize).toDouble())
-                        else -> UIFont.boldSystemFontOfSize(UIFont.systemFontSize)
-                    }
+        border {
+            view.layer.borderWidth = it.width.px
+            view.layer.borderColor = it.color.uiColor.CGColor()
+            view.layer.masksToBounds = true
 
-                    // FIXME text attributes in iOS
+            borderRadius { br -> view.layer.cornerRadius = br.topLeft.px } // FIXME individual radii for corners
+        }
+
+        // FIXME individual radii for corners
+
+        backgroundGradient {
+            val gradientLayer = CAGradientLayer()
+            gradientLayer.frame = view.layer.frame
+            gradientLayer.colors = listOf(it.start.uiColor, it.end.uiColor)
+            gradientLayer.startPoint = it.startPosition.let { p -> CGPointMake(p.left, p.top) }
+            gradientLayer.endPoint = it.endPosition.let { p -> CGPointMake(p.left, p.top) }
+
+            view.layer.insertSublayer(gradientLayer, 0u)
+            view.layer.masksToBounds = true
+
+            borderRadius { br -> view.layer.cornerRadius = br.topLeft.px } // FIXME individual radii for corners
+        }
+    }
+
+    fun TextRenderData.apply(view: UIView) {
+        if (view !is UILabel) return
+
+        color { view.setTextColor(it.uiColor) }
+
+        val fontSize = this.fontSize
+        val fontWeight = this.fontWeight
+
+        // FIXME font handling in iOS
+        view.font = when {
+            fontSize != null && fontWeight != null -> UIFont.boldSystemFontOfSize(toPx(fontSize))
+            fontSize != null -> UIFont.systemFontOfSize(toPx(fontSize))
+            else -> UIFont.boldSystemFontOfSize(UIFont.systemFontSize)
+        }
+
+        // FIXME text attributes in iOS
 //                    letterSpacing?.let { view.letterSpacing = it }
 //
 //                    when (textAlign) {
@@ -156,45 +152,51 @@ open class CommonAdapter(
 //                        TextAlign.End -> view.textAlignment = TEXT_ALIGNMENT_VIEW_END
 //                        null -> Unit
 //                    }
-                }
-            }
+    }
 
-            val onClick = renderData.onClick
-            if (onClick != null) {
-                if (view.gestureRecognizers?.isEmpty() == true) {
-                    // FIXME for some reason this point is reached twice
-                    view.addGestureRecognizer(UITapGestureRecognizer(GestureTarget(fragment, onClick), NSSelectorFromString("viewTapped")))
-                    view.setUserInteractionEnabled(true)
-                }
+    @OptIn(ExperimentalForeignApi::class)
+    fun EventRenderData.apply(view : UIView, fragment: AbstractCommonFragment<UIView>) {
+        onClickListener {
+            it as UITapGestureRecognizer
+            view.removeGestureRecognizer(it)
+            view.setUserInteractionEnabled(false)
+        }
+
+        onClick { oc ->
+            UITapGestureRecognizer(GestureTarget(fragment, oc), NSSelectorFromString("viewTapped")).also {
+                onClickListener = it
+                view.addGestureRecognizer(it)
+                view.setUserInteractionEnabled(true)
             }
         }
     }
 
-    override fun toPx(dPixel: DPixel): Float {
+    inline operator fun <reified T : Any> T?.invoke(function: (it: T) -> Unit) {
+        if (this != null) {
+            function(this)
+        }
+    }
+
+
+    override fun toPx(dPixel: DPixel): Double {
         // FIXME dpixel to pixel for iOS
         return dPixel.value
     }
 
-    override fun toPx(sPixel: SPixel): Float {
+    override fun toPx(sPixel: SPixel): Double {
         // FIXME DPixel to pixel for iOS
         return sPixel.value
     }
 
     val DPixel?.px: Double
-        inline get() = this?.value?.toDouble() ?: 0.0
-
-    inline fun DPixel.set(setter: (it: Double) -> Unit) {
-        if (this !== DPixel.NaP) {
-            setter(value.toDouble())
-        }
-    }
+        inline get() = this?.value ?: 0.0
 
     val Color.uiColor: UIColor
         get() {
             // TODO val alpha = ((value shr 24) and 0xFF) / 255.0
-            val red = ((value shr 16) and 0xFF) / 255.0
-            val green = ((value shr 8) and 0xFF) / 255.0
-            val blue = (value and 0xFF) / 255.0
+            val red = ((value shr 16) and 0xFFu).toInt() / 255.0
+            val green = ((value shr 8) and 0xFFu).toInt() / 255.0
+            val blue = (value and 0xFFu).toInt() / 255.0
 
             return UIColor.colorWithRed(red, green, blue, 1.0)
         }

@@ -47,9 +47,9 @@ open class CommonImage(
      * Also, it is rare to use the actual size of the image for the layout, it is far
      * more usual to have a space and scale the image to fit that space.
      */
-    override fun measure(): RawSize = instructedOr { RawSize.NaS }
+    override fun measure(): RawSize = instructedOr { RawSize.UNKNOWN }
 
-    override fun layout(proposedFrame: RawFrame) {
+    override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)
 
         val size = layoutFrame.size

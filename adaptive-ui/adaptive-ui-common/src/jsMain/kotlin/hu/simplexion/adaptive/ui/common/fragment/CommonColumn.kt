@@ -20,7 +20,7 @@ open class CommonColumn(
     declarationIndex: Int
 ) : AbstractColumn<HTMLElement, HTMLDivElement>(adapter, parent, declarationIndex, true) {
 
-    override fun layout(proposedFrame: RawFrame) {
+    override fun layout(proposedFrame: RawFrame?) {
         super.layout(proposedFrame)
         with (receiver.style) {
             display = "flex"

@@ -59,9 +59,9 @@ open class CommonInput(
     /**
      * In web browsers measuring text is not the usual way.
      */
-    override fun measure() = instructedOr { RawSize.NaS }
+    override fun measure() = instructedOr { RawSize.UNKNOWN }
 
-    override fun layout(proposedFrame: RawFrame) {
+    override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
     }

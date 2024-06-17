@@ -44,9 +44,9 @@ class CommonCanvas(
         return false
     }
 
-    override fun measure(): RawSize = instructedOr { RawSize.NaS }
+    override fun measure(): RawSize = instructedOr { RawSize.UNKNOWN }
 
-    override fun layout(proposedFrame: RawFrame) {
+    override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)
 
         canvas.setSize(layoutFrame.size)

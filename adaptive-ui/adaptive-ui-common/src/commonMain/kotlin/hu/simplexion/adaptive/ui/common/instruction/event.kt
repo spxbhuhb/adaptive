@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.internal.cleanStateMask
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.render.CommonRenderData
+import hu.simplexion.adaptive.ui.common.render.event
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 class AdaptiveUIEvent(
@@ -29,7 +30,7 @@ class OnClick(
 ) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<CommonRenderData> { it.onClick = this }
+        event(subject) { it.onClick = this }
     }
 
     fun execute(event : AdaptiveUIEvent) {

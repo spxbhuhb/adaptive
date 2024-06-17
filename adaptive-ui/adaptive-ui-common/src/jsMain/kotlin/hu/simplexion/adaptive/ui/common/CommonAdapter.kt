@@ -6,10 +6,13 @@ package hu.simplexion.adaptive.ui.common
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.instruction.Name
 import hu.simplexion.adaptive.ui.common.instruction.*
+import hu.simplexion.adaptive.ui.common.platform.BrowserEventListener
+import hu.simplexion.adaptive.ui.common.render.DecorationRenderData
+import hu.simplexion.adaptive.ui.common.render.EventRenderData
+import hu.simplexion.adaptive.ui.common.render.LayoutRenderData
+import hu.simplexion.adaptive.ui.common.render.TextRenderData
 import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
 import hu.simplexion.adaptive.ui.common.support.RawFrame
-import hu.simplexion.adaptive.ui.common.support.RawPoint
-import hu.simplexion.adaptive.ui.common.support.RawSize
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 import kotlinx.browser.document
@@ -18,6 +21,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.css.CSSStyleDeclaration
 
 open class CommonAdapter(
     override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
@@ -39,7 +43,7 @@ open class CommonAdapter(
 
         fragment.alsoIfInstance<AbstractContainerFragment<HTMLElement, HTMLDivElement>> {
             rootContainer.getBoundingClientRect().let { r ->
-                val frame = RawFrame(0f, 0f, r.width.toFloat(), r.height.toFloat())
+                val frame = RawFrame(0.0, 0.0, r.width, r.height)
 
                 it.layoutFrame = frame
                 it.measure()
@@ -75,7 +79,7 @@ open class CommonAdapter(
 
         style.boxSizing = "border-box"
 
-        if (layoutFrame.point != RawPoint.NaP) {
+        if (! layoutFrame.point.top.isNaN()) {
             style.position = "absolute"
             style.top = "${point.top}px"
             style.left = "${point.left}px"
@@ -83,96 +87,95 @@ open class CommonAdapter(
             style.position = "relative"
         }
 
-        if (layoutFrame.size != RawSize.NaS) {
+        if (! layoutFrame.size.width.isNaN()) {
             style.width = "${size.width}px"
+        }
+
+        if (! layoutFrame.size.height.isNaN()) {
             style.height = "${size.height}px"
         }
     }
 
     override fun applyRenderInstructions(fragment: AbstractCommonFragment<HTMLElement>) {
-        with(fragment) {
-            if (renderData.tracePatterns.isNotEmpty()) {
-                tracePatterns = renderData.tracePatterns
-            }
+        val renderData = fragment.renderData
+        val style = fragment.receiver.style
 
-            val style = receiver.style
+        if (renderData.tracePatterns.isNotEmpty()) {
+            fragment.tracePatterns = renderData.tracePatterns
+        }
 
-            instructions.firstOrNullIfInstance<Name>()?.let {
-                receiver.id = it.name
-            }
+        fragment.instructions.firstOrNullIfInstance<Name>()?.let {
+            fragment.receiver.id = it.name
+        }
 
-            with(renderData) {
-                // FIXME use classes (when possible) when applying render instructions to HTML element
-                backgroundColor?.let { style.backgroundColor = it.toHexColor() }
-                backgroundGradient?.let { style.background = "linear-gradient(${it.degree}deg, ${it.start.toHexColor()}, ${it.end.toHexColor()})" }
+        renderData.layout { it.apply(style) }
+        renderData.decoration { it.apply(style) }
+        renderData.text { it.apply(style) }
+        renderData.event { it.apply(style, fragment) }
+    }
 
-                border?.let { style.border = "${it.width.value}px solid ${it.color.toHexColor()}" }
-
-                if (borderRadius !== BorderRadius.ZERO) {
-                    with(borderRadius) {
-                        topLeft.set { style.borderTopLeftRadius = it }
-                        topRight.set { style.borderTopRightRadius = it }
-                        bottomLeft.set { style.borderBottomLeftRadius = it }
-                        bottomRight.set { style.borderBottomRightRadius = it }
-                    }
-                }
-
-                dropShadow {
-                    style.filter = "drop-shadow(${it.color.toHexColor()} ${it.offsetX.pxs} ${it.offsetY.pxs} ${it.standardDeviation.pxs})"
-                }
-
-                color?.let { style.color = it.toHexColor() }
-
-                fontSize?.let { style.fontSize = "${it.value}px" }
-                fontWeight?.let { style.fontWeight = it.toString() }
-                letterSpacing?.let { style.letterSpacing = "${it}em" }
-
-                textAlign?.let {
-                    style.textAlign = it.name.lowercase()
-                }
-
-                textWrap?.let {
-                    style.setProperty("text-wrap", it.toString().lowercase())
-                }
-
-                if (textDecoration != TextDecoration.None) {
-                    style.textDecoration = textDecoration.value
-                }
-
-                if (padding !== Padding.ZERO) {
-                    style.paddingLeft = "${padding.left.value}px"
-                    style.paddingTop = "${padding.top.value}px"
-                    style.paddingRight = "${padding.right.value}px"
-                    style.paddingBottom = "${padding.bottom.value}px"
-                }
-
-                with (instructedSize) {
-                    if (instructedSize.width != DPixel.NaP) {
-                        style.width = "${width}px"
-                    }
-                    if (instructedSize.height != DPixel.NaP) {
-                        style.height = "${height}px"
-                    }
-                }
-
-                if (noSelect) {
-                    style.setProperty("-webkit-user-select", "none")
-                    style.setProperty("user-select", "none")
-                }
-
-                onClick?.let { oc ->
-                    // FIXME handling of onClick is wrong on so many levels
-                    receiver.addEventListener(
-                        "click",
-                        { oc.execute(AdaptiveUIEvent(fragment, it)) }
-                    )
-                    style.cursor = "pointer"
-                }
-            }
+    fun LayoutRenderData.apply(style: CSSStyleDeclaration) {
+        padding { p ->
+            p.left { style.paddingLeft = it.pxs }
+            p.top { style.paddingTop = it.pxs }
+            p.right { style.paddingRight = it.pxs }
+            p.bottom { style.paddingBottom = it.pxs }
         }
     }
 
-    inline operator fun <reified T : Any> T?.invoke(function : (it : T) -> Unit) {
+    fun DecorationRenderData.apply(style: CSSStyleDeclaration) {
+        backgroundColor { style.backgroundColor = it.toHexColor() }
+        backgroundGradient { style.background = "linear-gradient(${it.degree}deg, ${it.start.toHexColor()}, ${it.end.toHexColor()})" }
+        border { b ->
+            b.color { c ->
+                val hc = c.toHexColor()
+                b.top { style.borderTop = "${it.pxs} solid $hc" }
+                b.right { style.borderRight = "${it.pxs} solid $hc" }
+                b.bottom { style.borderBottom = "${it.pxs} solid $hc" }
+                b.left { style.borderLeft = "${it.pxs} solid $hc" }
+            }
+        }
+        borderRadius { br ->
+            br.topLeft { style.borderTopLeftRadius = it.pxs }
+            br.topRight { style.borderTopRightRadius = it.pxs }
+            br.bottomLeft { style.borderBottomLeftRadius = it.pxs }
+            br.bottomRight { style.borderBottomRightRadius = it.pxs }
+        }
+        dropShadow { style.filter = "drop-shadow(${it.color.toHexColor()} ${it.offsetX.pxs} ${it.offsetY.pxs} ${it.standardDeviation.pxs})" }
+    }
+
+    fun TextRenderData.apply(style: CSSStyleDeclaration) {
+        fontSize { style.fontSize = it.pxs }
+        fontWeight { style.fontWeight = it.toString() }
+        letterSpacing { style.letterSpacing = "${it}em" }
+        align { style.textAlign = it.name.lowercase() }
+        wrap { style.setProperty("text-wrap", it.toString().lowercase()) }
+        decoration { style.textDecoration = it.value }
+        color { style.color = it.toHexColor() }
+
+        if (noSelect == true) {
+            style.setProperty("-webkit-user-select", "none")
+            style.setProperty("user-select", "none")
+        }
+    }
+
+    fun EventRenderData.apply(style: CSSStyleDeclaration, fragment: AbstractCommonFragment<HTMLElement>) {
+
+        onClickListener {
+            it as BrowserEventListener
+            fragment.receiver.removeEventListener("click", it)
+        }
+
+        onClick { oc ->
+            BrowserEventListener { oc.execute(AdaptiveUIEvent(fragment, it)) }.also {
+                onClickListener = it
+                fragment.receiver.addEventListener("click", it)
+            }
+            style.cursor = "pointer"
+        }
+    }
+
+    inline operator fun <reified T : Any> T?.invoke(function: (it: T) -> Unit) {
         if (this != null) {
             function(this)
         }
@@ -182,18 +185,15 @@ open class CommonAdapter(
         window.open(href, "_blank")
     }
 
-    inline fun DPixel.set(setter : (it : String) -> Unit) {
-        if (this !== DPixel.NaP) {
-            setter("${value}px")
-        }
-    }
-
-    override fun toPx(dPixel: DPixel): Float =
+    override fun toPx(dPixel: DPixel): Double =
         dPixel.value
 
     val DPixel.pxs
         get() = "${value}px"
 
-    override fun toPx(sPixel: SPixel): Float =
+    override fun toPx(sPixel: SPixel): Double =
         sPixel.value
+
+    val SPixel.pxs
+        get() = "${value}px"
 }

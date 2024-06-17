@@ -43,9 +43,9 @@ open class AdaptiveImage(
      * Also, it is rare to use the actual size of the image for the layout, it is far
      * more usual to have a space and scale the image to fit that space.
      */
-    override fun measure(): RawSize = instructedOr { RawSize.ZERO }
+    override fun measure(): RawSize = instructedOr { RawSize(0.0, 0.0) }
 
-    override fun layout(proposedFrame: RawFrame) {
+    override fun layout(proposedFrame: RawFrame?) {
         super.calcLayoutFrame(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
     }

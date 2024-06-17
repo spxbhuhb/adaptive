@@ -15,28 +15,28 @@ import org.w3c.dom.HTMLElement
 fun AbstractCommonFragment<HTMLElement>.align() {
     val style = receiver.style
 
-    when (renderData.alignItems) {
+    when (renderData.container?.alignItems) {
         null -> Unit
         AlignItems.Center -> style.alignItems = "center"
         AlignItems.End -> style.alignItems = "end"
         AlignItems.Start -> style.alignItems = "start"
     }
 
-    when (renderData.justifyItems) {
+    when (renderData.container?.justifyItems) {
         null -> Unit
         JustifyItems.Center -> style.setProperty("justify-items", "center")
         JustifyItems.End -> style.setProperty("justify-items", "end")
         JustifyItems.Start -> style.setProperty("justify-items", "start")
     }
 
-    when (renderData.alignContent) {
+    when (renderData.container?.alignContent) {
         null -> Unit
         AlignContent.Center -> style.alignContent = "center"
         AlignContent.End -> style.alignContent = "end"
         AlignContent.Start -> style.alignContent = "start"
     }
 
-    when (renderData.justifyContent) {
+    when (renderData.container?.justifyContent) {
         null -> Unit
         JustifyContent.Center -> style.setProperty("justify-content", "center")
         JustifyContent.End -> style.setProperty("justify-content", "end")

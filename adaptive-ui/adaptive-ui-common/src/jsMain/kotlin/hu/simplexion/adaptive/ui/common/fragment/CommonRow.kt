@@ -20,7 +20,7 @@ open class CommonRow(
     declarationIndex: Int
 ) : AbstractRow<HTMLElement, HTMLDivElement>(adapter, parent, declarationIndex, true) {
 
-    override fun layout(proposedFrame: RawFrame) {
+    override fun layout(proposedFrame: RawFrame?) {
         super.layout(proposedFrame)
         receiver.style.display = "flex"
         align()

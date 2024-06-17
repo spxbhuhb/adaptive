@@ -7,6 +7,7 @@ package hu.simplexion.adaptive.ui.common.support
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 import hu.simplexion.adaptive.ui.common.instruction.*
+import hu.simplexion.adaptive.ui.common.render.GridRenderData
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 
 abstract class AbstractGrid<RT, CRT : RT>(
@@ -21,27 +22,31 @@ abstract class AbstractGrid<RT, CRT : RT>(
         track: Track
     ) {
         val isFix: Boolean = track.isFix
-        val rawValue: Float = track.toRawValue(uiAdapter)
+        val rawValue: Double = track.toRawValue(uiAdapter)
     }
 
     // TODO track preparation can be done only once
     var colTracksPrepared = emptyList<PreparedTrack>()
     var rowTracksPrepared = emptyList<PreparedTrack>()
 
-    var colOffsets = FloatArray(0)
-    var rowOffsets = FloatArray(0)
+    var colOffsets = DoubleArray(0)
+    var rowOffsets = DoubleArray(0)
 
-    override fun measure(): RawSize {
-        traceMeasure()
-
+    override fun measure() {
         for (item in layoutItems) {
             item.measure()
         }
 
-        return instructed()
+        val width = renderData.layout?.width.pxOrZero
+        val height = renderData.layout?.height.pxOrZero
+
+        return RawSize(width, height).also {
+            measuredSize = it
+            traceMeasure()
+        }
     }
 
-    override fun layout(proposedFrame: RawFrame) {
+    override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)
 
         prepare()
@@ -68,19 +73,18 @@ abstract class AbstractGrid<RT, CRT : RT>(
         colTracksPrepared = expand(colTemp.tracks).map { PreparedTrack(it) }
         rowTracksPrepared = expand(rowTemp.tracks).map { PreparedTrack(it) }
 
-        val padding = renderData.padding
-        val paddingTop = padding.top.toPxOrZero(uiAdapter)
-        val paddingRight = padding.right.toPxOrZero(uiAdapter)
-        val paddingBottom = padding.bottom.toPxOrZero(uiAdapter)
-        val paddingLeft = padding.left.toPxOrZero(uiAdapter)
+        val colGap = renderData.container?.gapHeight ?: 0.0
+        val rowGap = renderData.container?.gapWidth ?: 0.0
 
-        val gap = renderData.gap.toPxOrZero(uiAdapter)
+        val padding = renderData.layout.paddingOrZero
+        val border = renderData.decoration.borderWidthOrZero
+        val margin = renderData.layout.marginOrZero
 
-        val availableWidth = size.width - paddingRight
-        val availableHeight = size.height - paddingBottom
+        val availableWidth = size.width - padding.right - padding.left - border - margin.left - margin.right
+        val availableHeight = size.height - padding.top - padding.bottom - border - margin.top - margin.bottom
 
-        colOffsets = distribute(availableWidth, paddingLeft, gap, colTracksPrepared)
-        rowOffsets = distribute(availableHeight, paddingTop, gap, rowTracksPrepared)
+        colOffsets = distribute(availableWidth, padding.left, colGap, colTracksPrepared)
+        rowOffsets = distribute(availableHeight, padding.top, rowGap, rowTracksPrepared)
 
         if (trace) {
             trace("measure-layoutFrame", this.layoutFrame)
@@ -88,7 +92,11 @@ abstract class AbstractGrid<RT, CRT : RT>(
             trace("measure-rowOffsets", rowOffsets.contentToString())
         }
 
-        placeFragments(layoutItems.map { it.renderData }, rowOffsets.size - 1, colOffsets.size - 1)
+        placeFragments(
+            layoutItems.map { it.renderData.grid ?: GridRenderData().apply { it.renderData.grid = this } },
+            rowOffsets.size - 1,
+            colOffsets.size - 1
+        )
     }
 
     /**
@@ -114,10 +122,10 @@ abstract class AbstractGrid<RT, CRT : RT>(
      *         longer than [tracks] as it contains the offset of the "end"
      *         as well.
      */
-    fun distribute(availableSpace: Float, startOffset: Float, gap: Float, tracks: List<PreparedTrack>): FloatArray {
+    fun distribute(availableSpace: Double, startOffset: Double, gap: Double, tracks: List<PreparedTrack>): DoubleArray {
 
         var usedSpace = startOffset + (tracks.size - 1) * gap
-        var fractionSum = 0f
+        var fractionSum = 0.0
 
         for (i in tracks.indices) {
             val track = tracks[i]
@@ -131,9 +139,9 @@ abstract class AbstractGrid<RT, CRT : RT>(
         val piece = (availableSpace - usedSpace) / fractionSum
 
         var offset = startOffset
-        var previous = 0f // size of the previous track
+        var previous = 0.0 // size of the previous track
 
-        val result = FloatArray(tracks.size + 1)
+        val result = DoubleArray(tracks.size + 1)
 
         for (i in tracks.indices) {
             offset += previous
@@ -150,7 +158,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
 
         result[tracks.size] = offset + previous - gap // the last gap is not there
 
-        // floating point calculations may result in small fractional values, for example:
+        // Doubleing position calculations may result in small fractional values, for example:
         // available=852.0 result:[0.0, 140.0, 190.0, 360.6667, 531.3334, 702.00006, 752.00006, 852.00006]
         check(availableSpace + 0.0001 >= result.last()) { "grid track overflow: available=$availableSpace result:${result.contentToString()} tracks: $tracks in $this" }
 

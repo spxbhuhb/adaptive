@@ -53,12 +53,12 @@ open class CommonStructuralFragment<RT, CRT : RT>(
     }
 
     override fun measure(): RawSize {
-        return RawSize.NaS
+        return RawSize.UNKNOWN
     }
 
-    override fun layout(proposedFrame: RawFrame) {
+    override fun layout(proposedFrame: RawFrame?) {
         // layout calculation is handled by the actual layouts, structural only applies to the actual UI
-        layoutFrame = proposedFrame
+        layoutFrameOrNull = proposedFrame
         traceLayout()
     }
 }

@@ -10,7 +10,6 @@ import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
 import hu.simplexion.adaptive.ui.common.support.RawFrame
-import hu.simplexion.adaptive.ui.common.testing.fragment.TestFragmentFactory
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +34,7 @@ open class CommonTestAdapter(
 
         fragment.alsoIfInstance<AbstractContainerFragment<TestReceiver, TestReceiver>> {
             rootContainer.testFrame.let { tf ->
-                it.layoutFrame = tf
+                it.layoutFrameOrNull = tf
                 it.measure()
                 it.layout(tf)
                 rootContainer.children += it.receiver
@@ -60,9 +59,9 @@ open class CommonTestAdapter(
     }
 
     override fun applyLayoutToActual(fragment: AbstractCommonFragment<TestReceiver>) {
-        val layoutFrame = fragment.layoutFrame
+        val layoutFrame = fragment.layoutFrameOrNull
 
-        if (layoutFrame !== RawFrame.NaF) {
+        if (layoutFrame != null) {
             val point = layoutFrame.point
             val size = layoutFrame.size
 
@@ -85,9 +84,9 @@ open class CommonTestAdapter(
 
     }
 
-    override fun toPx(dPixel: DPixel): Float =
+    override fun toPx(dPixel: DPixel): Double =
         dPixel.value
 
-    override fun toPx(sPixel: SPixel): Float =
+    override fun toPx(sPixel: SPixel): Double =
         sPixel.value
 }

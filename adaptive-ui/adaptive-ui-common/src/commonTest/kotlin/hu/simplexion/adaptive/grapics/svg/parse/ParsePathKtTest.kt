@@ -63,7 +63,7 @@ class ParsePathKtTest {
         assertEquals(end.x1, 30.0, "Incorrect new x position")
         assertEquals(end.y1, 40.0, "Incorrect new y position")
 
-        // Since there was no previous command, the coordinates for the existing point
+        // Since there was no previous command, the coordinates for the existing position
         // (x1,y1) would be same as position's x and y coordinates.
 
         val expectedCommand = BezierCurve(BezierCurveType.Cubic, 15.0, 25.0, 10.0, 20.0, 30.0, 40.0)
@@ -79,8 +79,8 @@ class ParsePathKtTest {
         assertEquals(end.x1, 30.0, "Incorrect new x position")
         assertEquals(end.y1, 40.0, "Incorrect new y position")
 
-        // Since there was a previous command, the coordinates for the existing point (x1,y1)
-        // would be calculated from position's x and y coordinates and last point in the previous command
+        // Since there was a previous command, the coordinates for the existing position (x1,y1)
+        // would be calculated from position's x and y coordinates and last position in the previous command
 
         val expectedCommand = BezierCurve(BezierCurveType.Cubic, (2 * 10) - 3.0, (2 * 20) - 4.0, 10.0, 20.0, 30.0, 40.0)
         assertTrue(path[1] is BezierCurve)

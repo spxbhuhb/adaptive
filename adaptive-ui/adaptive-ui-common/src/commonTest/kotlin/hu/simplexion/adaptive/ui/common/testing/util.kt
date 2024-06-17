@@ -18,7 +18,7 @@ inline fun <reified T : AdaptiveInstruction> AdaptiveAdapter.assertEquals(
     height: Int
 ) {
     kotlin.test.assertEquals(
-        RawFrame(top.toFloat(), left.toFloat(), width.toFloat(), height.toFloat()),
+        RawFrame(top.toDouble(), left.toDouble(), width.toDouble(), height.toDouble()),
         (firstOrNullWith<T>() as AbstractCommonFragment<*>).layoutFrame
     )
 }

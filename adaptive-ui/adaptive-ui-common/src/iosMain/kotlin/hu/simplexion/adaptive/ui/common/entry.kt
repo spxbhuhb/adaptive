@@ -11,7 +11,7 @@ import hu.simplexion.adaptive.foundation.instruction.Trace
 import platform.UIKit.UIView
 
 /**
- * The entry point of an Adaptive iOS component tree.
+ * The entry position of an Adaptive iOS component tree.
  *
  * **IMPORTANT** variables declared outside the block are **NOT** reactive
  */

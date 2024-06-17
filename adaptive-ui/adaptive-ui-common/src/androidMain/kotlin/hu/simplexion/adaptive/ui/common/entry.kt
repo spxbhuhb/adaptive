@@ -12,7 +12,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
 import hu.simplexion.adaptive.foundation.instruction.Trace
 
 /**
- * The entry point of an Adaptive Android component tree.
+ * The entry position of an Adaptive Android component tree.
  *
  * **IMPORTANT** variables declared outside the block are **NOT** reactive
  */

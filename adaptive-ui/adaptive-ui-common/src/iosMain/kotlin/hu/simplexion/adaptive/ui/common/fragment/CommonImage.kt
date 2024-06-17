@@ -66,9 +66,9 @@ class CommonImage(
      * Also, it is rare to use the actual size of the image for the layout, it is far
      * more usual to have a space and scale the image to fit that space.
      */
-    override fun measure() = instructedOr { RawSize.ZERO }
+    override fun measure() = instructedOr { RawSize(40.0, 40.0) }
 
-    override fun layout(proposedFrame: RawFrame) {
+    override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
     }

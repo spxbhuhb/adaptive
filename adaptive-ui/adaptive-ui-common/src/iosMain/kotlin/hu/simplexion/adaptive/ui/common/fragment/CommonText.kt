@@ -37,16 +37,16 @@ class CommonText(
             receiver.textAlignment = NSTextAlignmentCenter
             receiver.translatesAutoresizingMaskIntoConstraints = false
             measuredSize = receiver.intrinsicContentSize.useContents {
-                RawSize(this.width.toFloat(), this.height.toFloat())
+                RawSize(this.width, this.height)
             }
         }
 
         return false
     }
 
-    override fun measure() = instructedOr { measuredSize }
+    override fun measure() = instructedOr { measuredSize ?: RawSize.UNKNOWN }
 
-    override fun layout(proposedFrame: RawFrame) {
+    override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
     }

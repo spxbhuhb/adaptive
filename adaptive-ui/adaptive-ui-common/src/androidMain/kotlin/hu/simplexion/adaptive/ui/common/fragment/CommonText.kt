@@ -31,7 +31,7 @@ class CommonText(
         patchInstructions()
 
         if (haveToPatch(dirtyMask, 1)) {
-            if (receiver.text != content && measuredSize != RawSize.NaS) {
+            if (receiver.text != content && measuredSize != RawSize.UNKNOWN) {
                 receiver.text = content
 
                 val widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
@@ -39,18 +39,17 @@ class CommonText(
 
                 receiver.measure(widthSpec, heightSpec)
 
-                measuredSize = RawSize(receiver.measuredWidth.toFloat(), receiver.measuredHeight.toFloat())
+                measuredSize = RawSize(receiver.measuredWidth.toDouble(), receiver.measuredHeight.toDouble())
             }
         }
 
         return false
     }
 
-    override fun measure(): RawSize = instructedOr { measuredSize }
+    override fun measure(): RawSize = instructedOr { measuredSize ?: RawSize.UNKNOWN }
 
-    override fun layout(proposedFrame: RawFrame) {
+    override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)
-        receiver.textAlignment = TEXT_ALIGNMENT_CENTER // FIXME hard coded text alignment
         uiAdapter.applyLayoutToActual(this)
     }
 

@@ -19,7 +19,7 @@ open class CommonGrid(
     declarationIndex: Int
 ) : AbstractGrid<HTMLElement, HTMLDivElement>(adapter, parent, declarationIndex) {
 
-    override fun layout(proposedFrame: RawFrame) {
+    override fun layout(proposedFrame: RawFrame?) {
         super.layout(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
     }

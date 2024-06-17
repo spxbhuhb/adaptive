@@ -52,22 +52,22 @@ fun login() {
 
 @Adaptive
 private fun logo() {
-    row(AlignItems.End, JustifyContent.Center, Padding(bottom = 20.dp)) {
-        image(Res.drawable.logo, Size(92.dp, 92.dp))
+    row(AlignItems.End, JustifyContent.Center, paddingBottom(20.dp)) {
+        image(Res.drawable.logo, size(92.dp, 92.dp))
     }
 }
 
 @Adaptive
 private fun title() {
     row(AlignItems.Start, JustifyContent.Center) {
-        text("Good Morning", white, FontSize(40.sp), LetterSpacing(- 0.02f))
+        text("Good Morning", white, fontSize(40.sp), letterSpacing(- 0.02))
     }
 }
 
 @Adaptive
 private fun time(timeText: String) {
-    column(AlignItems.Center, JustifyContent.Start, Padding(top = 12.dp)) {
-        text(timeText, white, FontSize(80.sp), LetterSpacing(- 0.02f))
+    column(AlignItems.Center, JustifyContent.Start, padding(top = 12.dp)) {
+        text(timeText, white, fontSize(80.sp), letterSpacing(- 0.02))
     }
 }
 
@@ -99,10 +99,10 @@ private fun messages(time: LocalDateTime, counter: Int) {
 
 @Adaptive
 private fun terms() {
-    column(AlignItems.Center, Padding(right = 32.dp, left = 32.dp, top = 12.dp)) {
+    column(AlignItems.Center, padding(right = 32.dp, left = 32.dp, top = 12.dp)) {
         row {
-            text("By joining you agree to our", *smallWhiteNoWrap, Padding(right = 6.dp))
-            text("Terms of Service", externalLink(Res.file.terms), *smallWhiteNoWrap, bold, Padding(right = 6.dp))
+            text("By joining you agree to our", *smallWhiteNoWrap, paddingRight(6.dp))
+            text("Terms of Service", externalLink(Res.file.terms), *smallWhiteNoWrap, bold, paddingRight(right = 6.dp))
             text("and", *smallWhiteNoWrap)
         }
         text("Privacy Policy", externalLink(Res.file.policy), *smallWhiteNoWrap, bold)

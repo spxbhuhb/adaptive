@@ -42,9 +42,9 @@ open class AdaptiveText(
     /**
      * In web browsers measuring text is not the usual way.
      */
-    override fun measure(): RawSize = instructedOr { RawSize(content.length * 20f, 20f) }
+    override fun measure(): RawSize = instructedOr { RawSize(content.length * 20.0, 20.0) }
 
-    override fun layout(proposedFrame: RawFrame) {
+    override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
     }
