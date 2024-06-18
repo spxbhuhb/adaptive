@@ -5,8 +5,7 @@
 package hu.simplexion.adaptive.ui.common.render
 
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
-import hu.simplexion.adaptive.ui.common.instruction.AlignSelf
-import hu.simplexion.adaptive.ui.common.instruction.JustifySelf
+import hu.simplexion.adaptive.ui.common.instruction.Alignment
 import hu.simplexion.adaptive.ui.common.support.RawSurrounding
 
 class LayoutRenderData(
@@ -21,6 +20,6 @@ class LayoutRenderData(
     var margin: RawSurrounding? = null
     var border: RawSurrounding? = null
 
-    var alignSelf: AlignSelf? = null
-    var justifySelf: JustifySelf? = null
+    var verticalAlignment: Alignment? = null
+    var horizontalAlignment: Alignment? = null
 }

@@ -8,11 +8,10 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 import hu.simplexion.adaptive.ui.common.instruction.AlignItems
 import hu.simplexion.adaptive.ui.common.instruction.AlignSelf
-import hu.simplexion.adaptive.ui.common.instruction.JustifyContent
+import hu.simplexion.adaptive.ui.common.instruction.Alignment
 
 /**
  * Two uses: layouts and loop/select containers.
- *
  */
 abstract class AbstractStackFragment<RT, CRT : RT>(
     adapter: AbstractCommonAdapter<RT, CRT>,
@@ -44,11 +43,63 @@ abstract class AbstractStackFragment<RT, CRT : RT>(
         renderData.measuredHeight = height
     }
 
+    /**
+     * Common layout func for row and column layouts.
+     *
+     * @param horizontal True the items should be next to each other (row), false if they should be below each other (column).
+     */
+    fun layoutStack(horizontal: Boolean, autoSizing: Boolean) {
+        val container = renderData.container
+
+        if (autoSizing) {
+            for (item in layoutItems) {
+                item.layout(null)
+            }
+            return
+        }
+
+        val padding = renderData.layout?.padding ?: RawSurrounding.ZERO
+
+        val mainAxisAvailableSpace = if (horizontal) renderData.measuredWidth else renderData.measuredHeight
+
+        val (prefix, gap) = calcPrefixAndGap(horizontal, mainAxisAvailableSpace, if (horizontal) padding.left else padding.top)
+
+        var offset = prefix
+
+        val crossAxisAvailableSpace = if (horizontal) renderData.measuredHeight else renderData.measuredWidth
+        val crossAxisItemAlignment = if (horizontal) container?.verticalAlignment else container?.horizontalAlignment
+
+        for (item in layoutItems) {
+            val renderData = item.renderData
+            val layout = item.renderData.layout
+
+            val crossAxisSelfAlignment = if (horizontal) layout?.verticalAlignment else layout?.horizontalAlignment
+
+            val frame = if (horizontal) {
+                val top = calcAlign(crossAxisItemAlignment, crossAxisSelfAlignment, crossAxisAvailableSpace, renderData.boxHeight)
+                RawFrame(padding.top + top, offset, renderData.boxWidth, renderData.boxHeight)
+            } else {
+                val left = calcAlign(crossAxisItemAlignment, crossAxisSelfAlignment, crossAxisAvailableSpace, renderData.boxWidth)
+                RawFrame(offset, padding.left + left, renderData.boxWidth, renderData.boxHeight)
+            }
+
+            item.layout(frame)
+
+            offset += gap + (if (horizontal) renderData.boxWidth else renderData.boxHeight)
+        }
+
+        for (item in structuralItems) {
+            item.layout(RawFrame(0.0, 0.0, layoutFrame.width, layoutFrame.height))
+        }
+    }
+
     fun calcPrefixAndGap(horizontal: Boolean, availableSpace: Double, prefixPadding: Double): Pair<Double, Double> {
+        val container = renderData.container
+
         val gap = if (horizontal) {
-            renderData.container?.gapWidth ?: 0.0
+            container?.gapWidth ?: 0.0
         } else {
-            renderData.container?.gapHeight ?: 0.0
+            container?.gapHeight ?: 0.0
         }
 
         if (layoutItems.isEmpty()) return (0.0 to gap)
@@ -61,10 +112,12 @@ abstract class AbstractStackFragment<RT, CRT : RT>(
 
         if (remaining <= 0) return (0.0 to gap)
 
-        return when (renderData.container?.justifyContent) {
-            JustifyContent.Start -> (prefixPadding + 0.0 to gap)
-            JustifyContent.Center -> (prefixPadding + (remaining / 2) to gap)
-            JustifyContent.End -> (prefixPadding + remaining to gap)
+        val alignment = if (horizontal) container?.horizontalAlignment else container?.verticalAlignment
+
+        return when (alignment) {
+            Alignment.Start -> (prefixPadding + 0.0 to gap)
+            Alignment.Center -> (prefixPadding + (remaining / 2) to gap)
+            Alignment.End -> (prefixPadding + remaining to gap)
             null -> (prefixPadding + 0.0 to gap)
         }
     }
@@ -100,55 +153,6 @@ abstract class AbstractStackFragment<RT, CRT : RT>(
             }
         }
 
-    /**
-     * Common layout func for row and column layouts.
-     *
-     * @param horizontal True the items should be next to each other (row), false if they should be below each other (column).
-     */
-    fun layoutStack(horizontal: Boolean, autoSizing: Boolean) {
 
-        if (autoSizing) {
-            for (item in layoutItems) {
-                item.layout(null)
-            }
-            return
-        }
-
-        val padding = renderData.layout?.padding ?: RawSurrounding.ZERO
-
-        val spaceForAlign = if (horizontal) {
-            renderData.measuredWidth
-        } else {
-            renderData.measuredHeight
-        }
-
-        val (prefix, gap) = calcPrefixAndGap(horizontal, spaceForAlign, if (horizontal) padding.left else padding.top)
-
-        var offset = prefix
-
-        val alignItems = renderData.container?.alignItems
-
-        for (item in layoutItems) {
-            val renderData = item.renderData
-
-            val alignSelf = renderData.layout?.alignSelf
-
-            val frame = if (horizontal) {
-                val top = calcAlign(alignItems, alignSelf, spaceForAlign, renderData.boxHeight)
-                RawFrame(padding.top + top, offset, renderData.boxWidth, renderData.boxHeight)
-            } else {
-                val left = calcAlign(alignItems, alignSelf, spaceForAlign, renderData.boxWidth)
-                RawFrame(offset, padding.left + left, renderData.boxWidth, renderData.boxHeight)
-            }
-
-            item.layout(frame)
-
-            offset += gap + (if (horizontal) renderData.boxWidth else renderData.boxHeight)
-        }
-
-        for (item in structuralItems) {
-            item.layout(RawFrame(0.0, 0.0, layoutFrame.width, layoutFrame.height))
-        }
-    }
 
 }

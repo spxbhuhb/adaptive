@@ -3,6 +3,9 @@
  */
 
 import hu.simplexion.adaptive.ui.common.browser
+import hu.simplexion.adaptive.ui.common.fragment.row
+import hu.simplexion.adaptive.ui.common.instruction.dp
+import hu.simplexion.adaptive.ui.common.instruction.gap
 import hu.simplexion.adaptive.ui.common.platform.withJsResources
 
 fun main() {
@@ -10,7 +13,12 @@ fun main() {
     withJsResources()
 
     browser {
-        layouts()
+        row {
+            gap(10.dp)
+            gridTest()
+            rowTest()
+            columnTest()
+        }
     }
 
 }

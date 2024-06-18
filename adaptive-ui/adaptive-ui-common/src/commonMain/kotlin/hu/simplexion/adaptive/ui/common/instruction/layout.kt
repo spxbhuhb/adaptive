@@ -36,6 +36,25 @@ fun marginRight(right: DPixel) = margin(right = right)
 fun marginBottom(bottom: DPixel) = margin(bottom = bottom)
 fun marginLeft(left: DPixel) = margin(left = left)
 
+val alignItemsTop = AlignItems(vertical = Alignment.Start, horizontal = null)
+val alignItemsStart = AlignItems(vertical = null, horizontal = Alignment.Start)
+val alignItemsEnd = AlignItems(vertical = null, horizontal = Alignment.End)
+val alignItemsBottom = AlignItems(vertical = Alignment.End, horizontal = null)
+val centerItemsVertically = AlignItems(vertical = Alignment.Center, horizontal = null)
+val centerItemsHorizontally = AlignItems(vertical = null, horizontal = Alignment.Center)
+val centerItems = AlignItems(vertical = Alignment.Center, horizontal = Alignment.Center)
+
+val spaceAroundItems = DistributeSpace(SpaceDistribution.Around)
+val spaceBetweenItems = DistributeSpace(SpaceDistribution.Between)
+
+val alignSelfTop = AlignSelf(vertical = Alignment.Start, horizontal = null)
+val alignSelfStart = AlignSelf(vertical = null, horizontal = Alignment.Start)
+val alignSelfEnd = AlignSelf(vertical = null, horizontal = Alignment.End)
+val alignSelfBottom = AlignSelf(vertical = Alignment.End, horizontal = null)
+val centerSelfVertically = AlignSelf(vertical = Alignment.Center, horizontal = null)
+val centerSelfHorizontally = AlignSelf(vertical = null, horizontal = Alignment.Center)
+val centerSelf = AlignSelf(vertical = Alignment.Center, horizontal = Alignment.Center)
+
 data class Frame(
     val top: DPixel,
     val left: DPixel,
@@ -144,4 +163,49 @@ data class Margin(
         }
     }
 
+}
+
+enum class Alignment {
+    Start,
+    Center,
+    End
+}
+
+data class AlignItems(
+    val vertical: Alignment?,
+    val horizontal: Alignment?,
+) : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        container(subject) {
+            if (vertical != null) it.verticalAlignment = vertical
+            if (horizontal != null) it.horizontalAlignment = horizontal
+        }
+    }
+}
+
+data class AlignSelf(
+    val vertical: Alignment?,
+    val horizontal: Alignment?,
+) : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        layout(subject) {
+            if (vertical != null) it.verticalAlignment = vertical
+            if (horizontal != null) it.horizontalAlignment = horizontal
+        }
+    }
+}
+
+enum class SpaceDistribution {
+    Between,
+    Around
+}
+
+data class DistributeSpace(
+    val distribution: SpaceDistribution
+) : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        container(subject) {
+            it.spaceDistribution = distribution
+        }
+    }
 }
