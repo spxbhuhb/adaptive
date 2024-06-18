@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.ui.common.support
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
+import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.instruction.ColTemplate
 import hu.simplexion.adaptive.ui.common.instruction.RowTemplate
 import hu.simplexion.adaptive.ui.common.instruction.Track
@@ -57,13 +58,41 @@ abstract class AbstractGrid<RT, CRT : RT>(
 
         prepare()
 
+        val offsets = toFrameOffsets()
+
         for (item in layoutItems) {
-            item.layout(item.toFrame(colOffsets, rowOffsets))
+            item.layout(toFrame(item, offsets))
         }
 
         for (item in structuralItems) {
             item.layout(layoutFrame)
         }
+    }
+
+    /**
+     * There is a difference between browser and other targets. Browser handles margin
+     * and padding in its own way. `toFrameOffsets` lets the browser grid implementation
+     * to adjust the positions of items as needed.
+     */
+    open fun toFrameOffsets() : RawPosition {
+        val border = renderData.layout?.border ?: RawSurrounding.ZERO
+        val padding = renderData.layout?.padding ?: RawSurrounding.ZERO
+
+        return RawPosition(border.top + padding.top, border.left + padding.left)
+    }
+
+    fun toFrame(fragment: AbstractCommonFragment<RT>, offsets : RawPosition): RawFrame {
+        val grid = checkNotNull(fragment.renderData.grid) { "missing grid data at $this" }
+
+        val row = grid.rowIndex
+        val col = grid.colIndex
+
+        return RawFrame(
+            rowOffsets[row] + offsets.top,
+            colOffsets[col] + offsets.left,
+            colOffsets[col + grid.colSpan] - colOffsets[col],
+            rowOffsets[row + grid.rowSpan] - rowOffsets[row]
+        )
     }
 
     /**
@@ -81,11 +110,11 @@ abstract class AbstractGrid<RT, CRT : RT>(
         val rowGap = renderData.container?.gapWidth ?: 0.0
 
         val surrounding = surrounding()
-        val availableWidth = layoutFrame.width - surrounding.right
-        val availableHeight = layoutFrame.height - surrounding.bottom
+        val availableWidth = layoutFrame.width - surrounding.right - surrounding.left
+        val availableHeight = layoutFrame.height - surrounding.bottom - surrounding.top
 
-        colOffsets = distribute(availableWidth, surrounding.left, colGap, colTracksPrepared)
-        rowOffsets = distribute(availableHeight, surrounding.top, rowGap, rowTracksPrepared)
+        colOffsets = distribute(availableWidth, colGap, colTracksPrepared)
+        rowOffsets = distribute(availableHeight, rowGap, rowTracksPrepared)
 
         if (trace) {
             trace("measure-layoutFrame", this.layoutFrame)
@@ -123,9 +152,9 @@ abstract class AbstractGrid<RT, CRT : RT>(
      *         longer than [tracks] as it contains the offset of the "end"
      *         as well.
      */
-    fun distribute(availableSpace: Double, startOffset: Double, gap: Double, tracks: List<PreparedTrack>): DoubleArray {
+    fun distribute(availableSpace: Double, gap: Double, tracks: List<PreparedTrack>): DoubleArray {
 
-        var usedSpace = startOffset + (tracks.size - 1) * gap
+        var usedSpace = (tracks.size - 1) * gap
         var fractionSum = 0.0
 
         for (i in tracks.indices) {
@@ -139,7 +168,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
 
         val piece = (availableSpace - usedSpace) / fractionSum
 
-        var offset = startOffset
+        var offset = 0.0
         var previous = 0.0 // size of the previous track
 
         val result = DoubleArray(tracks.size + 1)

@@ -9,6 +9,8 @@ import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
 
 private val black = Color(0x0u)
+private val outerBorder = Color(0xF08080u)
+private val innerBorder = Color(0xFFBF00u)
 
 private val blueishBackground = backgroundColor(Color(0xB0C4DEu))
 private val greenishBackground = backgroundColor(Color(0xB4E7B4u))
@@ -22,13 +24,15 @@ fun layouts() {
         row()
         grid1fr()
         gridMargin()
+        gridBorder()
         gridPadding()
+        gridMarginBorderPadding()
     }
 }
 
 @Adaptive
 private fun layoutExample(@Adaptive example: () -> Unit) {
-    box(size(202.dp, 152.dp), border(black, 1.dp), name("example-container")) {
+    box(size(208.dp, 158.dp), border(outerBorder, 4.dp), name("example-container")) {
         example()
     }
 }
@@ -76,7 +80,26 @@ private fun gridMargin() {
             colTemplate(1.fr)
             greenishBackground
             margin(10.dp)
-            border(black, 1.dp)
+
+            box {
+                blueishBackground
+            }
+        }
+    }
+}
+
+@Adaptive
+private fun gridBorder() {
+    layoutExample {
+        grid(trace) {
+            rowTemplate(1.fr)
+            colTemplate(1.fr)
+            greenishBackground
+            border(innerBorder, 4.dp)
+
+            box(trace) {
+                blueishBackground
+            }
         }
     }
 }
@@ -84,12 +107,28 @@ private fun gridMargin() {
 @Adaptive
 private fun gridPadding() {
     layoutExample {
-        grid(trace) {
+        grid {
+            rowTemplate(1.fr)
+            colTemplate(1.fr)
+            greenishBackground
+            padding(10.dp)
+
+            box {
+                blueishBackground
+            }
+        }
+    }
+}
+
+@Adaptive
+private fun gridMarginBorderPadding() {
+    layoutExample {
+        grid {
             rowTemplate(1.fr)
             colTemplate(1.fr)
             greenishBackground
             margin(10.dp)
-            border(black, 1.dp)
+            border(innerBorder, 4.dp)
             padding(10.dp)
 
             box {

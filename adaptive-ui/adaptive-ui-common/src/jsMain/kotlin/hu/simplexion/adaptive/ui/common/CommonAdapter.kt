@@ -17,6 +17,7 @@ import hu.simplexion.adaptive.ui.common.render.LayoutRenderData
 import hu.simplexion.adaptive.ui.common.render.TextRenderData
 import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
 import hu.simplexion.adaptive.ui.common.support.RawFrame
+import hu.simplexion.adaptive.ui.common.support.RawSurrounding
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 import kotlinx.browser.document
@@ -86,6 +87,7 @@ open class CommonAdapter(
         var absolute = false
 
         style.boxSizing = "border-box"
+        val margin = fragment.renderData.layout?.margin ?: RawSurrounding.ZERO
 
         if (! top.isNaN()) {
             absolute = true
@@ -101,12 +103,12 @@ open class CommonAdapter(
 
         when {
             width == Double.POSITIVE_INFINITY -> style.width = "100%"
-            ! width.isNaN() -> style.width = width.pxs
+            ! width.isNaN() -> style.width = (width - margin.left - margin.right).pxs
         }
 
         when {
             height == Double.POSITIVE_INFINITY -> style.height = "100%"
-            ! height.isNaN() -> style.height = height.pxs
+            ! height.isNaN() -> style.height = (height - margin.left - margin.right).pxs
         }
     }
 

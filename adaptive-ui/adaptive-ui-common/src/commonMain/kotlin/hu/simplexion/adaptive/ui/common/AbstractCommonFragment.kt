@@ -123,20 +123,6 @@ abstract class AbstractCommonFragment<RT>(
         }
     }
 
-    fun toFrame(colOffsets: DoubleArray, rowOffsets: DoubleArray): RawFrame {
-        val grid = checkNotNull(renderData.grid) { "missing grid data at $this" }
-
-        val row = grid.rowIndex
-        val col = grid.colIndex
-
-        return RawFrame(
-            rowOffsets[row],
-            colOffsets[col],
-            colOffsets[col + grid.colSpan] - colOffsets[col],
-            rowOffsets[row + grid.rowSpan] - rowOffsets[row]
-        )
-    }
-
     val DPixel.px
         get() = uiAdapter.toPx(this)
 

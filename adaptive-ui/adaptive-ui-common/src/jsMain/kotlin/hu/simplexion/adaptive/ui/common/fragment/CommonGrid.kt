@@ -5,10 +5,13 @@ package hu.simplexion.adaptive.ui.common.fragment
 
 import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
 import hu.simplexion.adaptive.ui.common.support.AbstractGrid
 import hu.simplexion.adaptive.ui.common.support.RawFrame
+import hu.simplexion.adaptive.ui.common.support.RawPosition
+import hu.simplexion.adaptive.ui.common.support.RawSurrounding
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
@@ -22,6 +25,15 @@ open class CommonGrid(
     override fun layout(proposedFrame: RawFrame?) {
         super.layout(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
+    }
+
+    /**
+     * In browsers border is not counted when positioning absolutely.
+     */
+    override fun toFrameOffsets() : RawPosition {
+        val padding = renderData.layout?.padding ?: RawSurrounding.ZERO
+
+        return RawPosition(padding.top, padding.left)
     }
 
 }
