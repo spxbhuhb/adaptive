@@ -29,6 +29,12 @@ adaptive {
     }
 }
 
+// this is ugly but there I don't use JS dependencies anyway, see
+// https://youtrack.jetbrains.com/issue/KT-50848/Kotlin-JS-inner-build-routines-are-using-vulnerable-NPM-dependencies-and-now-that-we-have-kotlin-js-store-github-audit-this
+rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin> {
+    rootProject.the<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension>().lockFileName = "skip-yarn-lock"
+}
+
 kotlin {
     sourceSets.all {
         languageSettings {

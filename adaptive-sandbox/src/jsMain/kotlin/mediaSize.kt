@@ -4,10 +4,7 @@
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.ui.common.fragment.text
-import hu.simplexion.adaptive.ui.common.instruction.Color
 import hu.simplexion.adaptive.ui.common.platform.mediaMetrics
-
-private val black = Color(0x0u)
 
 @Adaptive
 fun mediaSize() {

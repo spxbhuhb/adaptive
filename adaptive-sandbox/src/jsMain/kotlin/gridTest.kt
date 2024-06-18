@@ -3,20 +3,11 @@
  */
 
 import hu.simplexion.adaptive.foundation.Adaptive
-import hu.simplexion.adaptive.foundation.instruction.Trace
 import hu.simplexion.adaptive.foundation.instruction.name
 import hu.simplexion.adaptive.ui.common.fragment.box
 import hu.simplexion.adaptive.ui.common.fragment.column
 import hu.simplexion.adaptive.ui.common.fragment.grid
 import hu.simplexion.adaptive.ui.common.instruction.*
-
-private val black = Color(0x0u)
-private val outerBorder = Color(0xF08080u)
-private val innerBorder = Color(0xFFBF00u)
-
-private val blueishBackground = backgroundColor(Color(0xB0C4DEu))
-private val greenishBackground = backgroundColor(Color(0xB4E7B4u))
-private val trace = Trace()
 
 @Adaptive
 fun gridTest() {
@@ -27,13 +18,6 @@ fun gridTest() {
         gridBorder()
         gridPadding()
         gridMarginBorderPadding()
-    }
-}
-
-@Adaptive
-private fun layoutExample(@Adaptive example: () -> Unit) {
-    box(size(208.dp, 158.dp), border(outerBorder, 4.dp), name("example-container")) {
-        example()
     }
 }
 
