@@ -33,11 +33,11 @@ open class CommonColumn(
             setProperty("grid-auto-rows", "min-content")
         }
 
-        align()
+        browserAlign()
         uiAdapter.applyLayoutToActual(this)
     }
 
-    fun align() {
+    fun browserAlign() {
         val style = receiver.style
         val container = renderData.container ?: return
 

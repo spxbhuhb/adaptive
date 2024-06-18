@@ -39,11 +39,11 @@ fun login() {
                 rowTemplate(50.dp)
                 colTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
 
-                row(2.gridCol, greenGradient, cornerRadius, *center, onClick { counter ++ }) {
+                row(2.gridCol, greenGradient, cornerRadius, AlignItems.center, onClick { counter ++ }) {
                     text("Snooze", white, textMedium, noSelect)
                 }
 
-                row(4.gridCol, whiteBorder, cornerRadius, *center) {
+                row(4.gridCol, whiteBorder, cornerRadius, AlignItems.center) {
                     text("Sleepiness: $counter", white, textMedium)
                 }
             }
@@ -55,28 +55,38 @@ fun login() {
 
 @Adaptive
 private fun logo() {
-    row(AlignItems.End, JustifyContent.Center, paddingBottom(20.dp)) {
+    row {
+        AlignItems.topCenter
+        paddingBottom(20.dp)
+
         image(Res.drawable.logo, size(92.dp, 92.dp))
     }
 }
 
 @Adaptive
 private fun title() {
-    row(AlignItems.Start, JustifyContent.Center) {
+    row {
+        AlignItems.startCenter
+
         text("Good Morning", white, fontSize(40.sp), letterSpacing(- 0.02))
     }
 }
 
 @Adaptive
 private fun time(timeText: String) {
-    column(AlignItems.Center, JustifyContent.Start, padding(top = 12.dp)) {
+    column {
+        AlignItems.startCenter
+        paddingTop(12.dp)
+
         text(timeText, white, fontSize(80.sp), letterSpacing(- 0.02))
     }
 }
 
 @Adaptive
 private fun progress(time: LocalDateTime) {
-    row(*center) {
+    row {
+        AlignItems.center
+
         for (i in 0 .. time.second) {
             text(if (i % 10 == 0) "|" else ".", white)
         }
@@ -85,9 +95,11 @@ private fun progress(time: LocalDateTime) {
 
 @Adaptive
 private fun messages(time: LocalDateTime, counter: Int) {
-    column(AlignItems.Center, JustifyContent.Center) {
+    column {
+        AlignItems.center
+
         if (time.second % 2 == 1) {
-            row(AlignItems.Start, JustifyContent.Center, greenGradient, cornerRadius, Padding(8.dp)) {
+            row(AlignItems.startCenter, greenGradient, cornerRadius, Padding(8.dp)) {
                 text("What an odd second!", white)
             }
         }
@@ -102,7 +114,7 @@ private fun messages(time: LocalDateTime, counter: Int) {
 
 @Adaptive
 private fun terms() {
-    column(AlignItems.Center, padding(right = 32.dp, left = 32.dp, top = 12.dp)) {
+    column(AlignItems.center, padding(right = 32.dp, left = 32.dp, top = 12.dp)) {
         row {
             text("By joining you agree to our", *smallWhiteNoWrap, paddingRight(6.dp))
             text("Terms of Service", externalLink(Res.file.terms), *smallWhiteNoWrap, bold, paddingRight(right = 6.dp))

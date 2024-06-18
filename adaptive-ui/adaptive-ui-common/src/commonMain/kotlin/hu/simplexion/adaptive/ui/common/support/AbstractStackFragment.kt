@@ -6,8 +6,6 @@ package hu.simplexion.adaptive.ui.common.support
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
-import hu.simplexion.adaptive.ui.common.instruction.AlignItems
-import hu.simplexion.adaptive.ui.common.instruction.AlignSelf
 import hu.simplexion.adaptive.ui.common.instruction.Alignment
 
 /**
@@ -137,18 +135,18 @@ abstract class AbstractStackFragment<RT, CRT : RT>(
         return usedSpace
     }
 
-    fun calcAlign(alignItems: AlignItems?, alignSelf: AlignSelf?, availableSpace: Double, usedSpace: Double): Double =
+    fun calcAlign(alignItems: Alignment?, alignSelf: Alignment?, availableSpace: Double, usedSpace: Double): Double =
         if (alignSelf != null) {
             when (alignSelf) {
-                AlignSelf.Center -> (availableSpace - usedSpace) / 2
-                AlignSelf.Start -> 0.0
-                AlignSelf.End -> availableSpace - usedSpace
+                Alignment.Center -> (availableSpace - usedSpace) / 2
+                Alignment.Start -> 0.0
+                Alignment.End -> availableSpace - usedSpace
             }
         } else {
             when (alignItems) {
-                AlignItems.Center -> (availableSpace - usedSpace) / 2
-                AlignItems.Start -> 0.0
-                AlignItems.End -> availableSpace - usedSpace
+                Alignment.Center -> (availableSpace - usedSpace) / 2
+                Alignment.Start -> 0.0
+                Alignment.End -> availableSpace - usedSpace
                 null -> 0.0
             }
         }

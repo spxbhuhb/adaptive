@@ -62,7 +62,7 @@ fun subTitle(text : String) {
 
 @Adaptive
 fun footerLink(normalText : String, linkText : String, href : String) {
-    row(JustifyContent.Center) {
+    row(AlignItems.center) {
         text(normalText, *bodyMedium, spaceAfter)
         text(linkText, FontSize(17.sp), black, TextDecoration.Underline, externalLink(href))
     }

@@ -22,7 +22,7 @@ private val trace = Trace()
 fun columnTest() {
     column(name("outer-column"), padding(10.dp)) {
         gap(10.dp)
-        column()
+        columnBasic()
     }
 }
 
@@ -35,7 +35,7 @@ private fun layoutExample(@Adaptive example: () -> Unit) {
 
 
 @Adaptive
-private fun column() {
+private fun columnBasic() {
     layoutExample {
         column {
             gap(10.dp)

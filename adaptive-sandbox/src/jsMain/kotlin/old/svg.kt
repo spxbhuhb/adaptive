@@ -8,6 +8,6 @@ import sandbox.Res
 import sandbox.thermometer
 
 @Adaptive
-fun stuff() {
+fun svgTest() {
     svg(Res.drawable.thermometer)
 }

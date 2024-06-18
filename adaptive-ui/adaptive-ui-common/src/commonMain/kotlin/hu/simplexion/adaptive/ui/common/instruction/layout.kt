@@ -36,14 +36,6 @@ fun marginRight(right: DPixel) = margin(right = right)
 fun marginBottom(bottom: DPixel) = margin(bottom = bottom)
 fun marginLeft(left: DPixel) = margin(left = left)
 
-val alignItemsTop = AlignItems(vertical = Alignment.Start, horizontal = null)
-val alignItemsStart = AlignItems(vertical = null, horizontal = Alignment.Start)
-val alignItemsEnd = AlignItems(vertical = null, horizontal = Alignment.End)
-val alignItemsBottom = AlignItems(vertical = Alignment.End, horizontal = null)
-val centerItemsVertically = AlignItems(vertical = Alignment.Center, horizontal = null)
-val centerItemsHorizontally = AlignItems(vertical = null, horizontal = Alignment.Center)
-val centerItems = AlignItems(vertical = Alignment.Center, horizontal = Alignment.Center)
-
 val spaceAroundItems = DistributeSpace(SpaceDistribution.Around)
 val spaceBetweenItems = DistributeSpace(SpaceDistribution.Between)
 
@@ -175,11 +167,24 @@ data class AlignItems(
     val vertical: Alignment?,
     val horizontal: Alignment?,
 ) : AdaptiveInstruction {
+
     override fun apply(subject: Any) {
         container(subject) {
             if (vertical != null) it.verticalAlignment = vertical
             if (horizontal != null) it.horizontalAlignment = horizontal
         }
+    }
+
+    companion object {
+        val top = AlignItems(vertical = Alignment.Start, horizontal = null)
+        val topCenter = AlignItems(vertical = Alignment.Start, horizontal = Alignment.Center)
+        val start = AlignItems(vertical = null, horizontal = Alignment.Start)
+        val startCenter = AlignItems(vertical = Alignment.Center, horizontal = Alignment.Start)
+        val end = AlignItems(vertical = null, horizontal = Alignment.End)
+        val endCenter = AlignItems(vertical = Alignment.Center, horizontal = Alignment.End)
+        val bottom = AlignItems(vertical = Alignment.End, horizontal = null)
+        val bottomCenter = AlignItems(vertical = Alignment.End, horizontal = Alignment.Center)
+        val center = AlignItems(vertical = Alignment.Center, horizontal = Alignment.Center)
     }
 }
 

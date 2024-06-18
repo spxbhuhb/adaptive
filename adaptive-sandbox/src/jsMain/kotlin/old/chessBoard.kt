@@ -11,6 +11,7 @@ import hu.simplexion.adaptive.foundation.fragment.measureFragmentTime
 import hu.simplexion.adaptive.ui.common.fragment.column
 import hu.simplexion.adaptive.ui.common.fragment.row
 import hu.simplexion.adaptive.ui.common.fragment.text
+import hu.simplexion.adaptive.ui.common.instruction.AlignItems
 import hu.simplexion.adaptive.ui.common.instruction.BackgroundColor
 import hu.simplexion.adaptive.ui.common.instruction.Size
 import hu.simplexion.adaptive.ui.common.instruction.dp
@@ -39,7 +40,7 @@ fun chessBoard() {
             for (r in 0 until size) {
                 row {
                     for (c in 1 .. size) {
-                        row(*colors(r, c), *center) { text(r * size + c, Size(40.dp, 40.dp)) }
+                        row(*colors(r, c), AlignItems.center) { text(r * size + c, Size(40.dp, 40.dp)) }
                     }
                 }
             }

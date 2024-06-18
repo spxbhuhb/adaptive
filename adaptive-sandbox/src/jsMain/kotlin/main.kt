@@ -16,8 +16,6 @@ fun main() {
         row {
             gap(10.dp)
             gridTest()
-            rowTest()
-            columnTest()
         }
     }
 

@@ -34,11 +34,11 @@ open class CommonRow(
             setProperty("grid-template-rows", "1fr")
         }
 
-        align()
+        browserAlign()
         uiAdapter.applyLayoutToActual(this)
     }
 
-    fun align() {
+    fun browserAlign() {
         val style = receiver.style
         val container = renderData.container ?: return
 
