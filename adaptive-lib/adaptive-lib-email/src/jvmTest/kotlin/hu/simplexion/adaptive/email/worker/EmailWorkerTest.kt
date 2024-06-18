@@ -1,12 +1,11 @@
 package hu.simplexion.adaptive.email.worker
 
-import hu.simplexion.adaptive.foundation.adaptive
 import hu.simplexion.adaptive.email.api.EmailApi
 import hu.simplexion.adaptive.email.service.EmailService
 import hu.simplexion.adaptive.email.store.EmailQueue
 import hu.simplexion.adaptive.email.store.EmailTable
 import hu.simplexion.adaptive.exposed.InMemoryDatabase
-import hu.simplexion.adaptive.server.AdaptiveServerAdapter
+import hu.simplexion.adaptive.foundation.query.singleImpl
 import hu.simplexion.adaptive.server.builtin.service
 import hu.simplexion.adaptive.server.builtin.store
 import hu.simplexion.adaptive.server.builtin.worker
@@ -14,7 +13,6 @@ import hu.simplexion.adaptive.server.server
 import hu.simplexion.adaptive.service.getService
 import hu.simplexion.adaptive.server.setting.dsl.inline
 import hu.simplexion.adaptive.server.setting.dsl.settings
-import hu.simplexion.adaptive.service.defaultServiceCallTransport
 import hu.simplexion.adaptive.service.defaultServiceImplFactory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -88,7 +86,7 @@ class EmailWorkerTest {
 
         runBlocking {
 
-            defaultServiceImplFactory += adapter.single<EmailService>()
+            defaultServiceImplFactory += adapter.singleImpl<EmailService>()
 
             getService<EmailApi>().send(expectRecipient, expectSubject, expectContent)
 
@@ -113,7 +111,7 @@ class EmailWorkerTest {
         assertEquals(expectContent, part.content)
 
         transaction {
-            val emailTable = adapter.single<EmailTable>()
+            val emailTable = adapter.singleImpl<EmailTable>()
 
             val emails = emailTable.all()
             assertEquals(1, emails.size)
@@ -123,7 +121,7 @@ class EmailWorkerTest {
             assertEquals(expectSubject, email.subject)
             assertEquals(expectContent, email.content)
 
-            val emailQueue = adapter.single<EmailQueue>()
+            val emailQueue = adapter.singleImpl<EmailQueue>()
             assertEquals(0, emailQueue.count())
         }
     }

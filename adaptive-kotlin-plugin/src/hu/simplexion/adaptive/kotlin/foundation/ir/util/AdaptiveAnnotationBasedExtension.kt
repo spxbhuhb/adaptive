@@ -5,7 +5,7 @@ package hu.simplexion.adaptive.kotlin.foundation.ir.util
 
 import hu.simplexion.adaptive.kotlin.foundation.Names
 import hu.simplexion.adaptive.kotlin.foundation.Strings
-import hu.simplexion.adaptive.kotlin.foundation.ir.AdaptivePluginContext
+import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import org.jetbrains.kotlin.backend.jvm.codegen.isExtensionFunctionType
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
@@ -21,7 +21,7 @@ import org.jetbrains.kotlin.ir.util.isFunctionOrKFunction
 
 interface AdaptiveAnnotationBasedExtension {
 
-    val pluginContext: AdaptivePluginContext
+    val pluginContext: FoundationPluginContext
 
     val IrFunction.isAdaptive: Boolean
         get() = symbol.owner.hasAnnotation(pluginContext.adaptiveClass)

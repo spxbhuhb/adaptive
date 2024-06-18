@@ -2,7 +2,7 @@
 
 ios-support = "yes"
 
-adaptive = "2024.05.29.1-SNAPSHOT"
+adaptive = "2024.06.01-SNAPSHOT"
 agp = "8.2.0"
 android-compileSdk = "34"
 android-minSdk = "26"
@@ -24,7 +24,7 @@ junit = "4.13.2"
 junit-bom = "5.8.0"
 kotlin = "2.0.0"
 kotlinpoet = "1.16.0"
-ktor = "2.3.10"
+ktor = "2.3.11"
 log4j = "2.20.0"
 logback = "1.2.11" # newer versions are incompatible with Android, see https://youtrack.jetbrains.com/issue/KTOR-5227
 plugin-publish = "1.1.0"
@@ -37,6 +37,7 @@ subethamail = "3.1.7"
 adaptive-core = { module = "hu.simplexion.adaptive:adaptive-core", version.ref = "adaptive" }
 adaptive-lib-email = { module = "hu.simplexion.adaptive:adaptive-lib-email", version.ref = "adaptive" }
 adaptive-lib-exposed = { module = "hu.simplexion.adaptive:adaptive-lib-exposed", version.ref = "adaptive" }
+adaptive-lib-graphics = { module = "hu.simplexion.adaptive:adaptive-lib-graphics", version.ref = "adaptive" }
 adaptive-lib-ktor = { module = "hu.simplexion.adaptive:adaptive-lib-ktor", version.ref = "adaptive" }
 adaptive-lib-sandbox = { module = "hu.simplexion.adaptive:adaptive-lib-sandbox", version.ref = "adaptive" }
 adaptive-ui-common = { module = "hu.simplexion.adaptive:adaptive-ui-common", version.ref = "adaptive" }

@@ -7,12 +7,12 @@ package hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir
 import hu.simplexion.adaptive.kotlin.foundation.Indices
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmClosure
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmFragmentFactoryArgument
+import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
-import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.constructors
 
@@ -24,7 +24,18 @@ class ArmFragmentFactoryArgumentBuilder(
     closureDirtyMask: IrVariable
 ) : ArmValueArgumentBuilder(parent, argument, closure, fragment, closureDirtyMask) {
 
-    override fun patchBody(patchFun: IrSimpleFunction): IrExpression =
+    /**
+     * When the declaration is a hard-coded lambda, we do not have to patch it as
+     * it cannot change.
+     */
+    override fun patchDirtyMask(): IrExpression =
+        if (argument.irExpression.function.origin == IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA) {
+            irConst(0)
+        } else {
+            super.patchDirtyMask()
+        }
+
+    override fun patchVariableValue(patchFun: IrSimpleFunction): IrExpression =
         irSetDescendantStateVariable(
             patchFun,
             argument.argumentIndex,

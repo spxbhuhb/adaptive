@@ -3,7 +3,7 @@
  */
 package hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm
 
-import hu.simplexion.adaptive.kotlin.foundation.ir.AdaptivePluginContext
+import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
@@ -20,7 +20,7 @@ import org.jetbrains.kotlin.name.SpecialNames
  * - replaces the body of each original function with an empty one
  */
 class OriginalFunctionTransform(
-    override val pluginContext: AdaptivePluginContext
+    override val pluginContext: FoundationPluginContext
 ) : IrElementTransformerVoidWithContext(), AdaptiveAnnotationBasedExtension, AbstractIrBuilder {
 
     /**

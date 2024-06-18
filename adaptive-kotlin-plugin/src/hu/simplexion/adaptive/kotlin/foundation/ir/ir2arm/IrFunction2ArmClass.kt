@@ -5,7 +5,7 @@ package hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm
 
 import hu.simplexion.adaptive.kotlin.foundation.ADAPTIVE_STATE_VARIABLE_LIMIT
 import hu.simplexion.adaptive.kotlin.foundation.Strings
-import hu.simplexion.adaptive.kotlin.foundation.ir.AdaptivePluginContext
+import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.*
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.*
 import org.jetbrains.kotlin.ir.IrElement
@@ -14,12 +14,14 @@ import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
+import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.visitors.acceptVoid
 
 /**
  * Transforms an original function into a [ArmClass]. This is a somewhat complex transformation.
@@ -34,8 +36,9 @@ import org.jetbrains.kotlin.ir.util.*
  *
  * Calls [DependencyVisitor] to build dependencies for each block.
  */
+@OptIn(UnsafeDuringIrConstructionAPI::class)
 class IrFunction2ArmClass(
-    override val pluginContext: AdaptivePluginContext,
+    override val pluginContext: FoundationPluginContext,
     val irFunction: IrFunction,
     val isRoot: Boolean
 ) : AdaptiveAnnotationBasedExtension {
@@ -47,8 +50,6 @@ class IrFunction2ArmClass(
     val nextFragmentIndex
         get() = fragmentIndex ++
 
-    var supportIndex = 0
-
     val states: Stack<ArmState> = mutableListOf()
     val closures: Stack<ArmClosure> = mutableListOf()
 
@@ -56,10 +57,14 @@ class IrFunction2ArmClass(
         get() = closures.peek()
 
     fun transform(): ArmClass {
-        armClass = ArmClass(pluginContext, irFunction, isRoot)
+        val boundary = BoundaryVisitor(pluginContext).findBoundary(irFunction)
 
-        val definitionTransform = StateDefinitionTransform(pluginContext, armClass, if (isRoot) 1 else 0).apply { transform() }
-        supportIndex = definitionTransform.supportFunctionIndex
+        armClass = ArmClass(irFunction, boundary)
+
+        StateDefinitionTransform(pluginContext, armClass, if (isRoot) 1 else 0).apply { transform() }
+
+        val innerInstructionLowering = InnerInstructionLowering(pluginContext)
+        armClass.originalRenderingStatements.forEach { it.acceptVoid(innerInstructionLowering) }
 
         states.push(armClass.stateVariables)
         closures.push(armClass.stateVariables)
@@ -75,8 +80,8 @@ class IrFunction2ArmClass(
         return armClass
     }
 
-    fun IrElement.dependencies(): List<ArmStateVariable> {
-        val visitor = DependencyVisitor(closure)
+    fun IrElement.dependencies(skipLambdas : Boolean = false): List<ArmStateVariable> {
+        val visitor = DependencyVisitor(closure, skipLambdas)
         accept(visitor, null)
         return visitor.dependencies
     }
@@ -253,16 +258,6 @@ class IrFunction2ArmClass(
             if (argument != null) armCall.arguments += argument
         }
 
-        if (armCall.arguments.any { it is ArmSupportFunctionArgument && ! it.isSuspend }) {
-            armClass.hasInvokeBranch = true
-            armCall.hasInvokeBranch = true
-        }
-
-        if (armCall.arguments.any { it is ArmSupportFunctionArgument && it.isSuspend }) {
-            armClass.hasInvokeSuspendBranch = true
-            armCall.hasInvokeSuspendBranch = true
-        }
-
         return armCall.add()
     }
 
@@ -293,10 +288,6 @@ class IrFunction2ArmClass(
 
             if (argument != null) armCall.arguments += argument
         }
-
-        // FIXME do we need invoke branch for argument call?
-        armCall.hasInvokeBranch = armCall.arguments.any { it is ArmSupportFunctionArgument && ! it.isSuspend }
-        armCall.hasInvokeSuspendBranch = armCall.arguments.any { it is ArmSupportFunctionArgument && it.isSuspend }
 
         return armCall.add()
     }
@@ -342,25 +333,9 @@ class IrFunction2ArmClass(
                 null
             }
 
-            parameterType.isFunction() || parameterType.isSuspendFunction() -> {
-                if (expression is IrFunctionExpression) {
-                    ArmSupportFunctionArgument(
-                        armClass,
-                        armCall.arguments.size,
-                        supportIndex ++,
-                        closure,
-                        parameterType,
-                        expression,
-                        expression.dependencies()
-                    )
-                } else {
-                    ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies())
-                }
-            }
-
             parameter.isInstructions -> {
                 val detachExpressions = transformDetachExpressions(expression)
-                ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies(), detachExpressions)
+                ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies(skipLambdas = true), detachExpressions)
             }
 
             else -> {
@@ -368,6 +343,9 @@ class IrFunction2ArmClass(
             }
         }
 
+    /**
+     * The hhigher-order function transform.
+     */
     fun transformFragmentFactoryArgument(
         expression: IrFunctionExpression
     ): ArmRenderingStatement {
@@ -529,7 +507,7 @@ class IrFunction2ArmClass(
 
         val result = mutableListOf<ArmDetachExpression>()
 
-        expression.elements.forEachIndexed { index, element ->
+        expression.elements.forEach { element ->
             when (element) {
                 is IrCall -> {
                     for (parameter in element.symbol.owner.valueParameters) {

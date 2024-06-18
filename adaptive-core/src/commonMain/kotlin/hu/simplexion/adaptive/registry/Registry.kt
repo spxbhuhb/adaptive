@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.registry
 
 open class Registry<T> {
 
-    private val entries = mutableMapOf<String, T>()
+    protected val entries = mutableMapOf<String, T>()
 
     operator fun set(key: String, value: T) {
         entries[key] = value
@@ -18,5 +18,9 @@ open class Registry<T> {
 
     operator fun plusAssign(others: Array<out Registry<T>>) {
         others.forEach { entries.putAll(it.entries) }
+    }
+
+    override fun toString(): String {
+        return entries.toString()
     }
 }

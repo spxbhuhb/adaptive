@@ -15,7 +15,7 @@ import hu.simplexion.adaptive.wireformat.signature.parseSignature
 fun AdatPropertyMetaData.toPropertyWireFormat(): AdatPropertyWireFormat<*> =
     AdatPropertyWireFormat(this, parseSignature(signature).toWireFormat())
 
-fun Type.toWireFormat(): WireFormat<*> =
+internal fun Type.toWireFormat(): WireFormat<*> =
     when {
         generics.isNotEmpty() -> {
             val args = generics.map { WireFormatTypeArgument(it.toWireFormat(), it.nullable) }

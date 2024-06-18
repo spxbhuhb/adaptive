@@ -3,7 +3,7 @@
  */
 package hu.simplexion.adaptive.foundation
 
-import hu.simplexion.adaptive.foundation.structural.AdaptiveSelect
+import hu.simplexion.adaptive.foundation.fragment.AdaptiveSelect
 import hu.simplexion.adaptive.foundation.testing.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -53,10 +53,10 @@ class SelectTest {
                     TraceEvent("AdaptiveSelectTest", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [0]"),
                     TraceEvent("AdaptiveSelectTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [0]"),
                     TraceEvent("AdaptiveSelect", 3, "before-Create", ""),
-                    TraceEvent("AdaptiveSelect", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, -1]"),
-                    TraceEvent("AdaptiveSelect", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [-1, -1]"),
-                    TraceEvent("AdaptiveSelect", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [-1, -1]"),
-                    TraceEvent("AdaptiveSelect", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [-1, -1]"),
+                    TraceEvent("AdaptiveSelect", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null]"),
+                    TraceEvent("AdaptiveSelect", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [-1, null]"),
+                    TraceEvent("AdaptiveSelect", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [-1, null]"),
+                    TraceEvent("AdaptiveSelect", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [-1, null]"),
                     TraceEvent("AdaptiveSelect", 3, "after-Create", ""),
                     TraceEvent("AdaptiveSelectTest", 2, "after-Create", ""),
                     TraceEvent("AdaptiveSelectTest", 2, "before-Mount"),
@@ -64,9 +64,9 @@ class SelectTest {
                     TraceEvent("AdaptiveSelect", 3, "after-Mount"),
                     TraceEvent("AdaptiveSelectTest", 2, "after-Mount"),
                     TraceEvent("AdaptiveSelectTest", 2, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [1]"),
-                    TraceEvent("AdaptiveSelect", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [-1, -1]"),
-                    TraceEvent("AdaptiveSelect", 3, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000003 state: [2, -1]"),
-                    TraceEvent("AdaptiveSelect", 3, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000003 state: [2, -1]"),
+                    TraceEvent("AdaptiveSelect", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [-1, null]"),
+                    TraceEvent("AdaptiveSelect", 3, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000003 state: [2, null]"),
+                    TraceEvent("AdaptiveSelect", 3, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000003 state: [2, null]"),
                     TraceEvent("AdaptiveT1", 4, "before-Create", ""),
                     TraceEvent("AdaptiveT1", 4, "before-Patch-External", "createMask: 0x00000003 thisMask: 0xffffffff state: [null]"),
                     TraceEvent("AdaptiveT1", 4, "after-Patch-External", "createMask: 0x00000003 thisMask: 0xffffffff state: [21]"),
@@ -159,9 +159,9 @@ class SelectTest {
                     TraceEvent("AdaptiveSelectTest", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [1]"),
                     TraceEvent("AdaptiveSelectTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [1]"),
                     TraceEvent("AdaptiveSelect", 3, "before-Create", ""),
-                    TraceEvent("AdaptiveSelect", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, -1]"),
-                    TraceEvent("AdaptiveSelect", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [2, -1]"),
-                    TraceEvent("AdaptiveSelect", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [2, -1]"),
+                    TraceEvent("AdaptiveSelect", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null]"),
+                    TraceEvent("AdaptiveSelect", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [2, null]"),
+                    TraceEvent("AdaptiveSelect", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [2, null]"),
                     TraceEvent("AdaptiveT1", 4, "before-Create", ""),
                     TraceEvent("AdaptiveT1", 4, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
                     TraceEvent("AdaptiveT1", 4, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [21]"),
@@ -203,9 +203,9 @@ class AdaptiveSelectTest(
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         val fragment = when (declarationIndex) {
-            0 -> AdaptiveSelect(adapter, parent, declarationIndex)
-            1 -> AdaptiveT1(adapter, parent, declarationIndex)
-            2 -> AdaptiveT1(adapter, parent, declarationIndex)
+            0 -> AdaptiveSelect(parent.adapter, parent, declarationIndex)
+            1 -> AdaptiveT1(parent.adapter, parent, declarationIndex)
+            2 -> AdaptiveT1(parent.adapter, parent, declarationIndex)
             else -> invalidIndex(declarationIndex) // throws exception
         }
 

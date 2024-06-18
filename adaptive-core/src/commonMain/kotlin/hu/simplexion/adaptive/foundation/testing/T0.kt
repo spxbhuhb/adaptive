@@ -2,17 +2,18 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+@file:Suppress("FunctionName", "unused")
+
 package hu.simplexion.adaptive.foundation.testing
 
 import hu.simplexion.adaptive.foundation.*
 
-@Adaptive
-@Suppress("FunctionName")
+@AdaptiveExpect("test")
 fun T0() {
     manualImplementation()
 }
 
-@Suppress("unused")
+@AdaptiveActual("test")
 class AdaptiveT0(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
@@ -25,12 +26,4 @@ class AdaptiveT0(
 
     override fun genPatchInternal(): Boolean = true
 
-    companion object : AdaptiveFragmentCompanion {
-
-        override val fragmentType = "hu.simplexion.adaptive.foundation.testing.AdaptiveT0"
-
-        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveT0(parent.adapter, parent, index)
-
-    }
 }

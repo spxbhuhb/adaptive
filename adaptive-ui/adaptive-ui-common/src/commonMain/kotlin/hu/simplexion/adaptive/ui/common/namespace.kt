@@ -4,4 +4,4 @@
 
 package hu.simplexion.adaptive.ui.common
 
-const val commonUI = "c"
+internal const val common = "common"

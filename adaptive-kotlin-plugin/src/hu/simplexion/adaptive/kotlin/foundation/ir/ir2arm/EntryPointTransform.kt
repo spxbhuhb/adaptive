@@ -4,7 +4,7 @@
 package hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm
 
 import hu.simplexion.adaptive.kotlin.foundation.FqNames
-import hu.simplexion.adaptive.kotlin.foundation.ir.AdaptivePluginContext
+import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmEntryPoint
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.expressions.IrCall
@@ -16,10 +16,10 @@ import org.jetbrains.kotlin.ir.util.hasAnnotation
  * Creates an `ArmClass` and a `ArmEntryPoint` for each call of the `adaptive` function (defined in the runtime).
  */
 class EntryPointTransform(
-    private val adaptiveContext: AdaptivePluginContext
+    private val pluginContext: FoundationPluginContext
 ) : IrElementTransformerVoidWithContext() {
 
-    val irBuiltIns = adaptiveContext.irContext.irBuiltIns
+    val irBuiltIns = pluginContext.irContext.irBuiltIns
 
     /**
      * Transforms Adaptive entry points (calls to the function `adaptive`) into an
@@ -40,10 +40,10 @@ class EntryPointTransform(
 
         val function = block.function
 
-        val armClass = IrFunction2ArmClass(adaptiveContext, block.function, true).transform()
+        val armClass = IrFunction2ArmClass(pluginContext, block.function, true).transform()
 
         ArmEntryPoint(armClass, function).also {
-            adaptiveContext.armEntryPoints += it
+            pluginContext.armEntryPoints += it
         }
 
         return expression

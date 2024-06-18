@@ -5,17 +5,18 @@
 
 package hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir
 
-import hu.simplexion.adaptive.kotlin.common.functionByName
-import hu.simplexion.adaptive.kotlin.common.property
+import hu.simplexion.adaptive.kotlin.common.propertyGetter
 import hu.simplexion.adaptive.kotlin.foundation.FoundationPluginKey
 import hu.simplexion.adaptive.kotlin.foundation.Indices
 import hu.simplexion.adaptive.kotlin.foundation.Names
 import hu.simplexion.adaptive.kotlin.foundation.Strings
-import hu.simplexion.adaptive.kotlin.foundation.ir.AdaptivePluginContext
-import hu.simplexion.adaptive.kotlin.foundation.ir.arm.*
+import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
+import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmClass
+import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmDefaultValueStatement
+import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmInternalStateVariable
+import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmRenderingStatement
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.ClassKind
-import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.builders.declarations.addConstructor
@@ -28,13 +29,14 @@ import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.expressions.impl.*
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.symbols.impl.IrAnonymousInitializerSymbolImpl
-import org.jetbrains.kotlin.ir.types.*
+import org.jetbrains.kotlin.ir.types.IrTypeSystemContextImpl
+import org.jetbrains.kotlin.ir.types.defaultType
+import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.*
-import org.jetbrains.kotlin.name.SpecialNames
 
 @OptIn(UnsafeDuringIrConstructionAPI::class) // uncomment for 2.0.0
 class ArmClassBuilder(
-    context: AdaptivePluginContext,
+    context: FoundationPluginContext,
     armClass: ArmClass
 ) : ClassBoundIrBuilder(context, armClass) {
 
@@ -71,8 +73,6 @@ class ArmClassBuilder(
         }
 
         irClass.addFakeOverrides(IrTypeSystemContextImpl(irContext.irBuiltIns))
-
-        addCompanion()
 
         armClass.irClass = irClass
         pluginContext.irClasses[armClass.fqName] = irClass
@@ -159,8 +159,6 @@ class ArmClassBuilder(
     fun buildGenFunctionBodies() {
         genBuildBody()
         genPatchDescendantBody()
-        genInvokeBody(Strings.GEN_INVOKE)
-        genInvokeBody(Strings.GEN_INVOKE_SUSPEND)
         genPatchInternalBody()
     }
 
@@ -283,72 +281,6 @@ class ArmClassBuilder(
         )
 
     // ---------------------------------------------------------------------------
-    // Invoke and Invoke Suspend
-    // ---------------------------------------------------------------------------
-
-    fun genInvokeBody(funName: String) {
-        val invokeFun = irClass.getSimpleFunction(funName) !!.owner
-
-        if (! invokeFun.isSuspend && ! armClass.hasInvokeBranch) return
-        if (invokeFun.isSuspend && ! armClass.hasInvokeSuspendBranch) return
-
-        invokeFun.isFakeOverride = false
-
-        invokeFun.body = DeclarationIrBuilder(irContext, invokeFun.symbol).irBlockBody {
-
-            val supportFunctionIndex = irTemporary(
-                IrCallImpl(
-                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                    irBuiltIns.intType,
-                    pluginContext.boundSupportFunctionIndex,
-                    0, 0
-                ).also {
-                    it.dispatchReceiver = irGet(invokeFun.valueParameters[Indices.INVOKE_SUPPORT_FUNCTION])
-                }
-            )
-
-            val receivingFragment = irTemporary(
-                IrCallImpl(
-                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                    pluginContext.adaptiveFragmentType,
-                    pluginContext.boundSupportFunctionReceivingFragment,
-                    0, 0
-                ).also {
-                    it.dispatchReceiver = irGet(invokeFun.valueParameters[Indices.INVOKE_SUPPORT_FUNCTION])
-                }
-            )
-            val arguments = irTemporary(
-                irGet(invokeFun.valueParameters[Indices.INVOKE_ARGUMENTS])
-            )
-
-            + irReturn(genInvokeWhen(invokeFun, supportFunctionIndex, receivingFragment, arguments))
-        }
-    }
-
-    private fun genInvokeWhen(invokeFun: IrSimpleFunction, supportFunctionIndex: IrVariable, receivingFragment: IrVariable, arguments: IrVariable): IrExpression =
-        IrWhenImpl(
-            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irBuiltIns.anyNType,
-            IrStatementOrigin.WHEN
-        ).apply {
-
-            armClass.stateVariables.forEach { stateVariable ->
-                val producer = (stateVariable as? ArmInternalStateVariable)?.producer ?: return@forEach
-                if ((invokeFun.isSuspend && producer.isSuspend) || (! invokeFun.isSuspend && ! producer.isSuspend)) {
-                    branches += producer.branchBuilder(this@ArmClassBuilder).genInvokeBranches(invokeFun, supportFunctionIndex, receivingFragment, arguments)
-                }
-            }
-
-            armClass.rendering.forEach { branch ->
-                if ((invokeFun.isSuspend && branch.hasInvokeSuspendBranch) || (! invokeFun.isSuspend && branch.hasInvokeBranch)) {
-                    branches += branch.branchBuilder(this@ArmClassBuilder).genInvokeBranches(invokeFun, supportFunctionIndex, receivingFragment, arguments)
-                }
-            }
-
-            branches += irInvalidIndexBranch(invokeFun, irGet(supportFunctionIndex))
-        }
-
-    // ---------------------------------------------------------------------------
     // Patch Internal
     // ---------------------------------------------------------------------------
 
@@ -359,11 +291,11 @@ class ArmClassBuilder(
 
         patchFun.body = DeclarationIrBuilder(irContext, patchFun.symbol).irBlockBody {
 
-            val closureMask = irTemporary(
+            val dirtyMask = irTemporary(
                 IrCallImpl(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                     irBuiltIns.intType,
-                    pluginContext.getThisClosureDirtyMask,
+                    irClass.propertyGetter { "dirtyMask" },
                     0, 0
                 ).also {
                     it.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!)
@@ -371,15 +303,22 @@ class ArmClassBuilder(
             )
 
             for (statement in armClass.stateDefinitionStatements) {
+                when (statement) {
+                    is ArmInternalStateVariable -> {
+                        statement.builder(this@ArmClassBuilder).genPatchInternal(this, dirtyMask, patchFun)
+                        continue
+                    }
+                }
+
                 // FIXME casting a statement into an expression in internal patch
-                val originalExpression = when (statement) {
-                    is ArmInternalStateVariable -> statement.builder(this@ArmClassBuilder).genInitializer(patchFun)
-                    is ArmDefaultValueStatement -> statement.defaultValue
-                    else -> statement.irStatement as IrExpression
+                // FIXME apply the same pattern as for ArmInternalStateVariable
+                val (originalExpression, stateVariable) = when (statement) {
+                    is ArmDefaultValueStatement -> statement.defaultValue to null
+                    else -> statement.irStatement as IrExpression to null
                 }
 
                 val transformedExpression = originalExpression
-                    .transformThisStateAccess(armClass.stateVariables, newParent = patchFun) { irGet(patchFun.dispatchReceiverParameter !!) }
+                    .transformThisStateAccess(armClass.stateVariables, newParent = patchFun, stateVariable = stateVariable) { irGet(patchFun.dispatchReceiverParameter !!) }
 
                 // optimize out null default values
                 if (transformedExpression is IrConstImpl<*> && transformedExpression.kind == IrConstKind.Null) continue
@@ -387,10 +326,9 @@ class ArmClassBuilder(
                 + irIf(
                     when (statement) {
                         is ArmDefaultValueStatement -> genPatchInternalConditionForDefault(patchFun, statement)
-                        else -> genPatchInternalConditionForMask(patchFun, closureMask, statement.dependencies)
+                        else -> genPatchInternalConditionForMask(patchFun, dirtyMask, statement.dependencies)
                     },
                     when (statement) {
-                        is ArmInternalStateVariable -> irSetStateVariable(patchFun, statement.indexInState, transformedExpression)
                         is ArmDefaultValueStatement -> irSetStateVariable(patchFun, statement.indexInState, transformedExpression)
                         else -> transformedExpression
                     }
@@ -405,16 +343,6 @@ class ArmClassBuilder(
         irEqual(
             irGetThisStateVariable(patchFun, statement.indexInState),
             irNull()
-        )
-
-    fun genPatchInternalConditionForMask(patchFun: IrSimpleFunction, closureMask: IrVariable, dependencies: ArmDependencies): IrExpression =
-        irCall(
-            symbol = pluginContext.haveToPatch,
-            dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!),
-            args = arrayOf(
-                irGet(closureMask),
-                dependencies.toDirtyMask()
-            )
         )
 
     // ---------------------------------------------------------------------------
@@ -439,107 +367,4 @@ class ArmClassBuilder(
             }
         )
 
-    // ---------------------------------------------------------------------------
-    // Companion
-    // ---------------------------------------------------------------------------
-
-    private fun addCompanion() {
-
-        if (armClass.originalFunction.isAnonymousFunction) return
-        if (armClass.originalFunction.visibility != DescriptorVisibilities.PUBLIC) return
-
-        irFactory.buildClass {
-            startOffset = irClass.endOffset
-            endOffset = irClass.endOffset
-            origin = FoundationPluginKey.origin
-            name = SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT
-            kind = ClassKind.OBJECT
-            isCompanion = true
-            visibility = irClass.visibility
-            modality = Modality.FINAL
-        }.also { companion ->
-
-            companion.parent = irClass
-            irClass.declarations += companion
-
-            companion.superTypes = listOf(pluginContext.adaptiveFragmentCompanionType)
-
-            companion.thisReceiver()
-
-            companion.addConstructor {
-                isPrimary = true
-                returnType = companion.defaultType
-            }.also {
-                it.body = DeclarationIrBuilder(pluginContext.irContext, it.symbol).irBlockBody {
-
-                    + IrDelegatingConstructorCallImpl.fromSymbolOwner(
-                        SYNTHETIC_OFFSET,
-                        SYNTHETIC_OFFSET,
-                        irBuiltIns.anyType,
-                        irBuiltIns.anyClass.constructors.first(),
-                        typeArgumentsCount = 0,
-                        valueArgumentsCount = 0
-                    )
-
-                    + IrInstanceInitializerCallImpl(
-                        SYNTHETIC_OFFSET,
-                        SYNTHETIC_OFFSET,
-                        irClass.symbol,
-                        irBuiltIns.unitType
-                    )
-                }
-            }
-
-            companion.addFakeOverrides(IrTypeSystemContextImpl(irContext.irBuiltIns))
-
-            fixCompanionFragmentType(companion)
-            fixCompanionNewInstance(companion)
-
-        }
-    }
-
-    private fun fixCompanionFragmentType(companion: IrClass) {
-        val property = companion.property(Names.FRAGMENT_TYPE)
-
-        property.isFakeOverride = false
-        property.origin = IrDeclarationOrigin.DEFINED
-        property.modality = Modality.FINAL
-
-        val getter = checkNotNull(property.getter)
-        getter.isFakeOverride = false
-        getter.origin = IrDeclarationOrigin.GENERATED_SETTER_GETTER
-        getter.modality = Modality.FINAL
-
-        getter.body = getter.irReturnBody {
-            irConst(irClass.classId !!.asFqNameString())
-        }
-    }
-
-    private fun fixCompanionNewInstance(companion: IrClass) {
-        val newInstanceFun = companion.functionByName { Strings.NEW_INSTANCE }.owner
-
-        newInstanceFun.isFakeOverride = false
-        newInstanceFun.origin = IrDeclarationOrigin.DEFINED
-        newInstanceFun.modality = Modality.FINAL
-
-        val valueParameters = newInstanceFun.valueParameters
-        val getAdapter = irGetValue(pluginContext.adapter, irGet(valueParameters[0]))
-
-        newInstanceFun.body = newInstanceFun.irReturnBody {
-
-            IrConstructorCallImpl(
-                SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                irClass.defaultType,
-                irClass.constructors.first().symbol,
-                typeArgumentsCount = 0,
-                constructorTypeArgumentsCount = 0,
-                Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
-            ).also { call ->
-                call.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, getAdapter)
-                call.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(valueParameters[0]))
-                call.putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(valueParameters[1]))
-            }
-
-        }
-    }
 }

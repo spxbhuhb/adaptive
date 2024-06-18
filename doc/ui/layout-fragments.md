@@ -3,9 +3,9 @@
 | Function | Supported Adapters    | Description                                      |
 |----------|-----------------------|--------------------------------------------------|
 | `box`    | browser, android, ios | Position each fragment with x and y coordinates. |
-| `row`    | browser               | Stack fragments next to each other.              |                                                
-| `column` | browser               | Stack fragments below each other.                |
-| `grid`   | browser               |                                                  |
+| `row`    | browser, android, ios | Stack fragments next to each other.              |                                                
+| `column` | browser, android, ios | Stack fragments below each other.                |
+| `grid`   | browser, android, ios |                                                  |
 
 ## Box
 

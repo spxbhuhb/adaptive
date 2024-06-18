@@ -4,7 +4,7 @@
 package hu.simplexion.adaptive.foundation
 
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
-import hu.simplexion.adaptive.foundation.structural.AdaptiveAnonymous
+import hu.simplexion.adaptive.foundation.fragment.AdaptiveAnonymous
 import hu.simplexion.adaptive.foundation.testing.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -185,9 +185,9 @@ class AdaptiveHigherOrderTest(
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         val fragment = when (declarationIndex) {
-            0 -> AdaptiveHigherFun(adapter, parent, declarationIndex)
-            1 -> AdaptiveHigherFun(adapter, parent, declarationIndex)
-            2 -> AdaptiveT1(adapter, parent, declarationIndex)
+            0 -> AdaptiveHigherFun(parent.adapter, parent, declarationIndex)
+            1 -> AdaptiveHigherFun(parent.adapter, parent, declarationIndex)
+            2 -> AdaptiveT1(parent.adapter, parent, declarationIndex)
             else -> invalidIndex(declarationIndex) // throws exception
         }
 
@@ -245,8 +245,8 @@ class AdaptiveHigherFun(
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         val fragment = when (declarationIndex) {
-            0 -> AdaptiveHigherFunInner(adapter, parent, declarationIndex)
-            1 -> AdaptiveAnonymous(adapter, parent, declarationIndex, 1, builder)
+            0 -> AdaptiveHigherFunInner(parent.adapter, parent, declarationIndex)
+            1 -> AdaptiveAnonymous(parent, declarationIndex, 1, builder)
             else -> invalidIndex(declarationIndex) // throws exception
         }
 
@@ -291,7 +291,7 @@ class AdaptiveHigherFunInner(
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
         val fragment = when (declarationIndex) {
-            0 -> AdaptiveAnonymous(adapter, parent, declarationIndex, 1, builder)
+            0 -> AdaptiveAnonymous(parent, declarationIndex, 1, builder)
             else -> invalidIndex(declarationIndex) // throws exception
         }
 

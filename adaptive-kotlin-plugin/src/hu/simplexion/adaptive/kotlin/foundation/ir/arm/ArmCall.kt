@@ -11,8 +11,11 @@ import hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir.ClassBoundIrBuilder
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.adaptiveClassFqName
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrConst
+import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.util.getAnnotation
+import org.jetbrains.kotlin.ir.util.getAnnotationStringValue
 
+@OptIn(UnsafeDuringIrConstructionAPI::class)
 open class ArmCall(
     armClass: ArmClass,
     index: Int,
@@ -28,8 +31,7 @@ open class ArmCall(
 
     fun getExpectName(): String =
         checkNotNull(irCall.symbol.owner.getAnnotation(FqNames.ADAPTIVE_EXPECT)) { "missing ${Strings.ADAPTIVE_EXPECT} annotation" }
-            .getValueArgument(0)
-            .let { (it  as IrConst<*>).value as String } + ":" + target.shortName().identifier
+            .getAnnotationStringValue() + ":" + target.shortName().identifier.removePrefix("Adaptive").lowercase()
 
     override fun branchBuilder(parent: ClassBoundIrBuilder): BranchBuilder =
         ArmCallBuilder(parent, this)

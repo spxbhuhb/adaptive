@@ -5,8 +5,11 @@ package hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm
 
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmState
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmStateVariable
+import hu.simplexion.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.ir.IrElement
+import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.expressions.IrCall
+import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 
@@ -16,9 +19,14 @@ import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
  * - [IrCall]: variable getter
  * - [IrGetValue]: access a parameter of the original function
  *
+ * @param  skipLambdas  Used for instructions where lambdas should not count in the dependencies.
+ *                      They will be transformed by StateAccessTransform, so when they access state
+ *                      variables they'll get the current values. However, counting them as dependencies
+ *                      would patch instructions every time unnecessarily.
  */
 class DependencyVisitor(
-    private val closure: ArmState
+    private val closure: ArmState,
+    private val skipLambdas : Boolean
 ) : IrElementVisitorVoid {
 
     var dependencies = mutableListOf<ArmStateVariable>()
@@ -45,5 +53,12 @@ class DependencyVisitor(
             dependencies += it
         }
         super.visitGetValue(expression)
+    }
+
+    override fun visitFunctionExpression(expression: IrFunctionExpression) {
+        if (skipLambdas && expression.function.origin == IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA) {
+            return // see skipLambdas description
+        }
+        super.visitFunctionExpression(expression)
     }
 }

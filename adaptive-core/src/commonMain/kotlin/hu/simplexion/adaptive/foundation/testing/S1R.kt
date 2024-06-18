@@ -1,20 +1,20 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-@file:Suppress("FunctionName")
+@file:Suppress("FunctionName", "unused")
 
 package hu.simplexion.adaptive.foundation.testing
 
 import hu.simplexion.adaptive.foundation.*
-import hu.simplexion.adaptive.foundation.internal.BoundSupportFunction
 
-@Adaptive
-@Suppress("unused", "FunctionName")
+import hu.simplexion.adaptive.utility.checkIfInstance
+
+@AdaptiveExpect("test")
 fun S1R(supportFun: (i: Int) -> Int) {
     manualImplementation(supportFun)
 }
 
-@Suppress("unused")
+@AdaptiveActual("test")
 class AdaptiveS1R(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
@@ -27,18 +27,10 @@ class AdaptiveS1R(
 
     override fun genPatchInternal(): Boolean = true
 
-    var s0: BoundSupportFunction
-        get() = state[0] as BoundSupportFunction
+    var s0: ((Int) -> Int)
+        get() = state[0].checkIfInstance()
         set(v) {
             state[0] = v
         }
 
-    companion object : AdaptiveFragmentCompanion {
-
-        override val fragmentType = "hu.simplexion.adaptive.foundation.testing.AdaptiveS1R"
-
-        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveS1R(parent.adapter, parent, index)
-
-    }
 }

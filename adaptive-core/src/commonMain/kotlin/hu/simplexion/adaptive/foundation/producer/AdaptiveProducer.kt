@@ -15,4 +15,15 @@ interface AdaptiveProducer {
      * this worker is created and mounted.
      */
     fun replaces(other : AdaptiveProducer) : Boolean
+
+    /**
+     * Return with true if this producer has a value for the given state variable index.
+     */
+    fun hasValueFor(stateVariableIndex : Int): Boolean
+
+    /**
+     * Return with the latest produced value.
+     */
+    fun value() : Any?
+
 }

@@ -5,25 +5,22 @@
 package hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir
 
 import hu.simplexion.adaptive.kotlin.foundation.Indices
-import hu.simplexion.adaptive.kotlin.foundation.Names
 import hu.simplexion.adaptive.kotlin.foundation.Strings
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmCall
-import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmSupportFunctionArgument
-import hu.simplexion.adaptive.kotlin.common.property
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.declarations.impl.IrValueParameterImpl
 import org.jetbrains.kotlin.ir.expressions.IrBlock
-import org.jetbrains.kotlin.ir.expressions.IrBranch
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.expressions.impl.IrBlockImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
+import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
-import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.getPropertyGetter
 
+@OptIn(UnsafeDuringIrConstructionAPI::class)
 class ArmCallBuilder(
     parent: ClassBoundIrBuilder,
     val armCall: ArmCall
@@ -34,7 +31,7 @@ class ArmCallBuilder(
             armCall.isExpectCall -> {
                 irCall(
                     pluginContext.adapterActualizeFun,
-                    irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)),
+                    irGetValue(pluginContext.adapter, irGet(buildFun.valueParameters[Indices.BUILD_PARENT])),
                     irConst(armCall.getExpectName()),
                     irGet(buildFun.valueParameters[Indices.BUILD_PARENT]),
                     irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX])
@@ -49,16 +46,15 @@ class ArmCallBuilder(
                 IrConstructorCallImpl(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                     pluginContext.adaptiveAnonymousClass.defaultType,
-                    pluginContext.adaptiveAnonymousClass.constructors.single(),
+                    pluginContext.anonymousConstructor,
                     typeArgumentsCount = 0,
                     constructorTypeArgumentsCount = 0,
-                    valueArgumentsCount = 5
+                    valueArgumentsCount = 4
                 ).also {
-                    it.putValueArgument(0, irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)))
-                    it.putValueArgument(1, irGet(buildFun.valueParameters[Indices.BUILD_PARENT]))
-                    it.putValueArgument(2, irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]))
-                    it.putValueArgument(3, irConst(armCall.arguments.count()))
-                    it.putValueArgument(4, irGetFragmentFactory(buildFun))
+                    it.putValueArgument(0, irGet(buildFun.valueParameters[Indices.BUILD_PARENT]))
+                    it.putValueArgument(1, irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]))
+                    it.putValueArgument(2, irConst(armCall.arguments.count()))
+                    it.putValueArgument(3, irGetFragmentFactory(buildFun))
                 }
             }
         }
@@ -116,15 +112,5 @@ class ArmCallBuilder(
                 }
             }
     }
-
-    override fun genInvokeBranches(
-        invokeFun: IrSimpleFunction,
-        supportFunctionIndex: IrVariable,
-        callingFragment: IrVariable,
-        arguments: IrVariable
-    ): List<IrBranch> =
-        armCall.arguments
-            .filterIsInstance<ArmSupportFunctionArgument>()
-            .map { genInvokeBranch(invokeFun, supportFunctionIndex, callingFragment, arguments, it) }
 
 }

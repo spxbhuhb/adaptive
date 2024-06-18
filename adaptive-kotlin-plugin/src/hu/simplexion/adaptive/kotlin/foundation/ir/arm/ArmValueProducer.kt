@@ -3,23 +3,12 @@
  */
 package hu.simplexion.adaptive.kotlin.foundation.ir.arm
 
-import hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir.ArmValueProducerBuilder
-import hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir.BranchBuilder
-import hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir.ClassBoundIrBuilder
-import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
+import org.jetbrains.kotlin.ir.declarations.IrVariable
+import org.jetbrains.kotlin.ir.expressions.IrCall
 
 open class ArmValueProducer(
     val armClass: ArmClass,
-    val argumentIndex: Int, // argument index of the support function
-    val supportFunctionIndex: Int,
-    var irExpression: IrFunctionExpression,
-    val dependencies: ArmDependencies
-) : ArmElement {
-
-    val isSuspend
-        get() = irExpression.function.isSuspend
-
-    fun branchBuilder(parent: ClassBoundIrBuilder): BranchBuilder =
-        ArmValueProducerBuilder(parent, this)
-
-}
+    val producerCall : IrCall,
+    val producerDependencies : ArmDependencies,
+    val postProcess : IrVariable
+) : ArmElement

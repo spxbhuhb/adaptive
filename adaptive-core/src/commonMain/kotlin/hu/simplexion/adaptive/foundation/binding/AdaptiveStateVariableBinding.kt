@@ -12,7 +12,6 @@ class AdaptiveStateVariableBinding<VT>(
     val targetFragment: AdaptiveFragment,
     val indexInTargetState: Int,
     val path: Array<String>?,
-    val supportFunctionIndex: Int,
     val metadata: AdaptivePropertyMetadata,
 ) {
 
@@ -54,7 +53,7 @@ class AdaptiveStateVariableBinding<VT>(
         }
 
     override fun toString(): String {
-        return "AdaptiveStateVariableBinding(${sourceFragment.id}, $indexInSourceState, $indexInSourceState, ${targetFragment.id}, ${indexInTargetState}, ${path.contentToString()}, $supportFunctionIndex, $metadata)"
+        return "AdaptiveStateVariableBinding(${sourceFragment.id}, $indexInSourceState, $indexInSourceState, ${targetFragment.id}, ${indexInTargetState}, ${path.contentToString()}, $metadata)"
     }
 
 }

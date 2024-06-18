@@ -1,5 +1,15 @@
 # Basic Fragments
 
+## Canvas
+
+Creates a canvas for drawing. For more detailed information check: [Graphics](../graphics)
+
+```kotlin
+canvas {
+    
+}
+```
+
 ## Image
 
 Displays an image with the given size:
@@ -8,6 +18,21 @@ Displays an image with the given size:
 
 ```kotlin
 image("/background.jpg", Size(92f, 92f))
+```
+
+## SVG
+
+Creates a canvas and adds a `canvas:svg` fragment to it. Check [Graphics](../graphics) for details.
+
+```kotlin
+svg(R.drawable.thermometer)
+```
+
+You can perform customizations on the SVG, check [Graphics](../graphics) for details.
+An example (switched the color of the icon to blue):
+
+```kotlin
+svg(R.drawable.thermometer, blue)
 ```
 
 ## Text

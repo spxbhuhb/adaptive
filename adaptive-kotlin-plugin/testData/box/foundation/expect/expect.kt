@@ -18,6 +18,7 @@ fun otherTest() {
 
 const val commonUI = "c"
 
+@AdaptiveActual("c")
 open class AdaptiveTest(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
@@ -30,37 +31,22 @@ open class AdaptiveTest(
 
     override fun genPatchInternal() = true
 
-    companion object : AdaptiveFragmentCompanion {
-
-        override val fragmentType = "c:AdaptiveTest"
-
-        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveTest(parent.adapter, parent, index)
-
-    }
 }
 
+@AdaptiveActual(commonUI)
 class AdaptiveOtherTest(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     declarationIndex: Int
-) : AdaptiveTest(adapter, parent, declarationIndex) {
-    companion object : AdaptiveFragmentCompanion {
-
-        override val fragmentType = "$commonUI:AdaptiveOtherTest"
-
-        override fun newInstance(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
-            AdaptiveTest(parent.adapter, parent, index)
-
-    }
-}
+) : AdaptiveTest(adapter, parent, declarationIndex)
 
 
 fun box() : String {
 
     val adapter = AdaptiveTestAdapter()
 
-    adapter.fragmentFactory.addAll(AdaptiveTest, AdaptiveOtherTest)
+    adapter.fragmentFactory.add("c:test") { p,i -> AdaptiveTest(p.adapter as AdaptiveTestAdapter, p, i) }
+    adapter.fragmentFactory.add("c:othertest") { p,i -> AdaptiveTest(p.adapter as AdaptiveTestAdapter, p, i) }
 
     adaptive(adapter) {
         test()

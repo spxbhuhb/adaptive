@@ -76,7 +76,7 @@ class AdaptiveTransformTest(
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
 
         val fragment = when (declarationIndex) {
-            0 -> AdaptiveTransformed(adapter, parent, declarationIndex)
+            0 -> AdaptiveTransformed(parent.adapter, parent, declarationIndex)
             else -> invalidIndex(declarationIndex) // throws exception
         }
 

@@ -4,10 +4,45 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveDetach
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.foundation.instruction.DetachHandler
+import hu.simplexion.adaptive.foundation.query.single
+import hu.simplexion.adaptive.foundation.fragment.AdaptiveSlot
 import hu.simplexion.adaptive.resource.FileResource
-import hu.simplexion.adaptive.ui.common.adapter.AdaptiveUIAdapter
+import hu.simplexion.adaptive.ui.common.render.CommonRenderData
+import hu.simplexion.adaptive.ui.common.render.event
 import hu.simplexion.adaptive.utility.alsoIfInstance
+
+// --------------------------------------------------------------------
+// Replace
+// --------------------------------------------------------------------
+
+fun replace(
+    @AdaptiveDetach slotEntry: (handler: DetachHandler) -> Unit
+) = Replace(slotEntry)
+
+class Replace(
+    @AdaptiveDetach val slotEntry: (handler: DetachHandler) -> Unit
+) : DetachHandler, AdaptiveInstruction {
+
+    override fun execute() {
+        slotEntry(this)
+    }
+
+    override fun detach(origin: AdaptiveFragment, detachIndex: Int) {
+        origin.single<AdaptiveSlot>(true).setContent(origin, detachIndex)
+    }
+
+    override fun toString(): String {
+        return "Replace"
+    }
+}
+
+// --------------------------------------------------------------------
+// ExternalLink
+// --------------------------------------------------------------------
 
 fun externalLink(res : FileResource) = ExternalLink(res.uri)
 
@@ -16,13 +51,11 @@ fun externalLink(href : String) = ExternalLink(href)
 data class ExternalLink(val href : String) : AdaptiveInstruction {
 
     fun openLink(event : AdaptiveUIEvent) {
-        (event.fragment.adapter as AdaptiveUIAdapter).openExternalLink(href)
+        event.fragment.uiAdapter.openExternalLink(href)
     }
 
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> {
-            it.onClick = OnClick(this::openLink)
-        }
+        event(subject) { it.onClick = OnClick(this::openLink) }
     }
 
 }

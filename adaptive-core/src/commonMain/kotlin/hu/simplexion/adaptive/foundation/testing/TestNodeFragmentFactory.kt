@@ -8,6 +8,10 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
 
 object TestNodeFragmentFactory : AdaptiveFragmentFactory() {
     init {
-        addAll(AdaptiveT0, AdaptiveT1, AdaptiveS1, AdaptiveS1R, AdaptiveSuspendS1)
+        add("test:t0") { p,i -> AdaptiveT0(p.adapter as AdaptiveTestAdapter, p, i) }
+        add("test:t1") { p,i -> AdaptiveT1(p.adapter as AdaptiveTestAdapter, p, i) }
+        add("test:s1") { p,i -> AdaptiveS1(p.adapter as AdaptiveTestAdapter, p, i) }
+        add("test:s1r") { p,i -> AdaptiveS1R(p.adapter as AdaptiveTestAdapter, p, i) }
+        add("test:suspends1") { p,i -> AdaptiveSuspendS1(p.adapter as AdaptiveTestAdapter, p, i) }
     }
 }

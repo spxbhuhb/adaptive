@@ -4,11 +4,13 @@
 
 package hu.simplexion.adaptive.adat
 
+import hu.simplexion.adaptive.foundation.binding.AdaptivePropertyProvider
+import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import hu.simplexion.adaptive.utility.pluginGenerated
 import hu.simplexion.adaptive.wireformat.json.JsonWireFormatEncoder
 import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatEncoder
 
-interface AdatClass<S : AdatClass<S>> {
+interface AdatClass<S : AdatClass<S>> : AdaptivePropertyProvider {
 
     val adatValues : Array<Any?>
         get() = pluginGenerated()
@@ -60,5 +62,21 @@ interface AdatClass<S : AdatClass<S>> {
 
     fun getMetadata() =
         adatCompanion.adatMetaData
+
+    // FIXME AdatClass.addBinding
+    override fun addBinding(binding: AdaptiveStateVariableBinding<*>) = Unit
+
+    // FIXME AdatClass.removeBinding
+    override fun removeBinding(binding: AdaptiveStateVariableBinding<*>) = Unit
+
+    override fun getValue(path : Array<String>) : Any? {
+        check(path.size == 1) {"nested property access is not supported yet"}
+        return getValue(adatIndexOf(path[0]))
+    }
+
+    override fun setValue(path : Array<String>, value : Any?, fromBinding: AdaptiveStateVariableBinding<*>) {
+        check(path.size == 1) {"nested property access is not supported yet"}
+        setValue(adatIndexOf(path[0]), value)
+    }
 
 }

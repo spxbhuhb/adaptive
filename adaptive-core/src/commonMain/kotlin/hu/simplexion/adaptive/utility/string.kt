@@ -29,3 +29,9 @@ fun ByteArray.toDotString(limit: Int = this.size, offset: Int = 0): String {
 
     return chars.concatToString()
 }
+
+inline fun String.skipWhile(startIndex: Int, len: Int, condition: (it: Char) -> Boolean): Int? {
+    var index = startIndex
+    while (index < len && condition(this[index])) index ++
+    return if (index == len) null else index
+}

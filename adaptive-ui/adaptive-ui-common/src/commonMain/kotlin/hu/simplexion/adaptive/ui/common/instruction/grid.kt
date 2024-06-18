@@ -5,15 +5,24 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
+import hu.simplexion.adaptive.ui.common.render.CommonRenderData
+import hu.simplexion.adaptive.ui.common.render.grid
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
-// ---- Shorthands --------------------------------------------------------
+fun colSpan(span : Int) = ColSpan(span)
+fun rowSpan(span : Int) = RowSpan(span)
+
+fun gridCol(col: Int, span : Int = 1) = GridCol(col, span)
+fun gridRow(row : Int, span : Int = 1) = GridRow(row, span)
+
+fun gridPos(row : Int, col : Int, rowSpan : Int = 1, colSpan : Int = 1) = GridPos(row, col, rowSpan, colSpan)
 
 val Number.gridCol
-    inline get() = GridCol(this.toInt())
+    inline get() = GridCol(this.toInt(), 1)
 
 val Number.gridRow
-    inline get() = GridRow(this.toInt())
+    inline get() = GridRow(this.toInt(), 1)
 
 val Number.rowSpan
     inline get() = RowSpan(this.toInt())
@@ -21,56 +30,50 @@ val Number.rowSpan
 val Number.colSpan
     inline get() = ColSpan(this.toInt())
 
-// ---- Instructions --------------------------------------------------------
-
-data class RowSpan(val span : Int) : AdaptiveInstruction {
+data class RowSpan(val span: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.rowSpan = span }
+        grid(subject) { it.rowSpan = span }
     }
 }
 
-data class ColSpan(val span : Int) : AdaptiveInstruction {
+data class ColSpan(val span: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> { it.colSpan = span }
+        grid(subject) { it.colSpan = span }
     }
 }
 
-data class GridPos(val row : Int, val col : Int, val rowSpan : Int = 1, val colSpan: Int = 1) : AdaptiveInstruction {
-
+data class GridPos(val row: Int, val col: Int, val rowSpan: Int, val colSpan: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> {
+        grid(subject) {
             it.gridRow = row
             it.gridCol = col
             it.rowSpan = rowSpan
             it.colSpan = colSpan
         }
     }
-
 }
 
-data class GridRow(val row : Int, val span : Int = 1) : AdaptiveInstruction {
-
+data class GridRow(val row: Int, val span: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> {
+        grid(subject) {
             it.gridRow = row
             it.rowSpan = span
         }
     }
-
 }
 
-data class GridCol(val col : Int, val span: Int = 1) : AdaptiveInstruction {
-
+data class GridCol(val col: Int, val span: Int) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<RenderInstructions> {
+        grid(subject) {
             it.gridCol = col
             it.colSpan = span
         }
     }
-
 }
 
-class ColTemplate(vararg val tracks : Track) : AdaptiveInstruction {
+fun colTemplate(vararg tracks: Track) = ColTemplate(tracks)
+
+class ColTemplate(val tracks: Array<out Track>) : AdaptiveInstruction {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -87,11 +90,13 @@ class ColTemplate(vararg val tracks : Track) : AdaptiveInstruction {
     }
 }
 
-class RowTemplate(vararg val tracks : Track) : AdaptiveInstruction {
+fun rowTemplate(vararg tracks: Track) = RowTemplate(tracks)
+
+class RowTemplate(val tracks: Array<out Track>) : AdaptiveInstruction {
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other == null || other !is ColTemplate) return false
+        if (other == null || other !is RowTemplate) return false
         return tracks.contentEquals(other.tracks)
     }
 
@@ -107,38 +112,43 @@ class RowTemplate(vararg val tracks : Track) : AdaptiveInstruction {
 // ---- Track --------------------------------------------------------
 
 /**
- * IMPORTANT Tracks must be are immutable (or [Repeat] won't work).
+ * IMPORTANT Tracks must be are immutable (or [Replicate] won't work).
  */
 interface Track {
 
-    val isIntrinsic : Boolean
+    val isIntrinsic: Boolean
         get() = true
 
-    val isFix : Boolean
+    val isFix: Boolean
 
-    val value : Float
+    val value: Double
 
-    fun expand(out : MutableList<Track>) {
+    fun expand(out: MutableList<Track>) {
         out.add(this)
     }
 
+    fun toRawValue(adapter: AbstractCommonAdapter<*, *>): Double
+
 }
 
-/**
- * Repeat [track] [count] times.
- */
-data class Repeat(val count : Int, val track : Track) : Track {
+fun replicate(count : Int, track : Track) : Replicate =
+    Replicate(count, track)
 
-    override val isIntrinsic : Boolean
+/**
+ * Replicate [track] [count] times.
+ */
+data class Replicate(val count: Int, val track: Track) : Track {
+
+    override val isIntrinsic: Boolean
         get() = false
 
     override val isFix: Boolean
         get() = throw UnsupportedOperationException()
 
-    override val value: Float
+    override val value: Double
         get() = throw UnsupportedOperationException()
 
-    override fun expand(out : MutableList<Track>) {
+    override fun expand(out: MutableList<Track>) {
         for (i in 0 until count) {
             if (track.isIntrinsic) {
                 out.add(track)
@@ -146,6 +156,10 @@ data class Repeat(val count : Int, val track : Track) : Track {
                 track.expand(out)
             }
         }
+    }
+
+    override fun toRawValue(adapter: AbstractCommonAdapter<*, *>): Double {
+        throw UnsupportedOperationException()
     }
 
 }

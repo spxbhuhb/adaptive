@@ -4,7 +4,6 @@
 
 package hu.simplexion.adaptive.foundation.producer
 
-import hu.simplexion.adaptive.foundation.internal.BoundSupportFunction
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import hu.simplexion.adaptive.service.transport.ServiceResultException
 import hu.simplexion.adaptive.service.transport.ServiceTimeoutException
@@ -13,16 +12,13 @@ import kotlin.time.Duration
 
 class AdaptivePoll<VT>(
     val binding: AdaptiveStateVariableBinding<VT>,
-    val interval: Duration
+    val interval: Duration,
+    val pollFunction: suspend () -> VT
 ) : AdaptiveProducer {
 
-    val pollFunction = BoundSupportFunction(
-        binding.sourceFragment,
-        binding.sourceFragment,
-        binding.supportFunctionIndex
-    )
-
     var scope: CoroutineScope? = null
+
+    var latestValue : VT? = null
 
     override fun replaces(other: AdaptiveProducer): Boolean =
         other is AdaptivePoll<*> && other.binding == this.binding
@@ -35,7 +31,8 @@ class AdaptivePoll<VT>(
                     // TODO do not poll when the fragment is not mounted
 
                     try {
-                        binding.setValue(pollFunction.invokeSuspend(), false) // TODO check provider call in poll
+                        latestValue = pollFunction()
+                        binding.targetFragment.setDirty(binding.indexInTargetState, true) // TODO make a separate binding for producers
                     } catch (e: AdaptiveProducerCancel) {
                         it.cancel()
                         break
@@ -58,6 +55,12 @@ class AdaptivePoll<VT>(
         checkNotNull(scope).cancel()
         scope = null
     }
+
+    override fun hasValueFor(stateVariableIndex : Int) =
+        binding.indexInTargetState == stateVariableIndex
+
+    override fun value() =
+        latestValue
 
     override fun toString(): String {
         return "AdaptivePoll($binding, $interval)"

@@ -130,7 +130,7 @@ Notes:
   * is **call site dependent**, it uses the `index` of the fragment to identify the call site
   * always uses `createClosure` to calculate the value of state variables
 * `patchInternal`
-  * always uses `thisClosure` to calculate the value of state variables
+  * always uses `dirtyMask` directly to calculate the value of state variables
 
 ```kotlin
 fun patchInternal() {
@@ -141,7 +141,7 @@ fun patchInternal() {
     children.forEach { it.patch() }
   
     // clear the state, the UI and the state should be in sync now
-    thisClosure.clear()
+    dirtyMask = cleanStateMask
 }
 ```
 

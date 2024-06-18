@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir
 
 import hu.simplexion.adaptive.kotlin.foundation.Indices
 import hu.simplexion.adaptive.kotlin.foundation.Names
-import hu.simplexion.adaptive.kotlin.foundation.ir.AdaptivePluginContext
+import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.*
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import hu.simplexion.adaptive.kotlin.common.property
@@ -18,14 +18,13 @@ import org.jetbrains.kotlin.ir.symbols.*
 import org.jetbrains.kotlin.ir.transformStatement
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.defaultType
-import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 
 open class ClassBoundIrBuilder(
-    override val pluginContext: AdaptivePluginContext,
-    val armClass : ArmClass
+    override val pluginContext: FoundationPluginContext,
+    val armClass: ArmClass
 ) : AbstractIrBuilder {
 
     constructor(parent: ClassBoundIrBuilder) : this(parent.pluginContext, parent.armClass) {
@@ -37,6 +36,17 @@ open class ClassBoundIrBuilder(
     // --------------------------------------------------------------------------------------------------------
     // Build, patch and invoke helpers
     // --------------------------------------------------------------------------------------------------------
+
+    fun irCallFromBuild(
+        buildFun: IrSimpleFunction,
+        target: IrSimpleFunctionSymbol
+    ) =
+        irCall(
+            target,
+            irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)),
+            irGet(buildFun.valueParameters[Indices.BUILD_PARENT]),
+            irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX])
+        )
 
     fun irCallFromBuild(
         buildFun: IrSimpleFunction,
@@ -55,7 +65,7 @@ open class ClassBoundIrBuilder(
                     Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
                 )
 
-            constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)))
+            constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGetValue(pluginContext.adapter, irGet(buildFun.valueParameters[Indices.BUILD_PARENT])))
             constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(buildFun.valueParameters[Indices.BUILD_PARENT]))
             constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]))
 
@@ -151,57 +161,19 @@ open class ClassBoundIrBuilder(
             )
         }
 
-    fun genInvokeBranch(
-        invokeFun: IrSimpleFunction,
-        supportFunctionIndex: IrVariable,
-        callingFragment: IrVariable,
-        arguments: IrVariable,
-        armSupportFunctionArgument: ArmSupportFunctionArgument
-    ): IrBranch =
-        IrBranchImpl(
-            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irEqual(
-                irGet(supportFunctionIndex),
-                irConst(armSupportFunctionArgument.supportFunctionIndex)
-            ),
-            genInvokeBranchBody(invokeFun, callingFragment, arguments, armSupportFunctionArgument)
+    fun genPatchInternalConditionForMask(patchFun: IrSimpleFunction, dirtyMask: IrVariable, dependencies: ArmDependencies): IrExpression =
+        irCall(
+            symbol = pluginContext.haveToPatch,
+            dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!),
+            args = arrayOf(
+                irGet(dirtyMask),
+                dependencies.toDirtyMask()
+            )
         )
-
-    private fun genInvokeBranchBody(
-        invokeFun: IrSimpleFunction,
-        callingFragment: IrVariable,
-        arguments: IrVariable,
-        armSupportFunctionArgument: ArmSupportFunctionArgument
-    ): IrExpression {
-        val functionToTransform = (armSupportFunctionArgument.irExpression as IrFunctionExpression).function
-        val originalClosure = armSupportFunctionArgument.supportFunctionClosure
-
-        val transformClosure =
-            originalClosure + functionToTransform.valueParameters.mapIndexed { indexInState, parameter ->
-                ArmSupportStateVariable(
-                    armSupportFunctionArgument.armClass,
-                    indexInState,
-                    originalClosure.size + indexInState,
-                    parameter
-                )
-            }
-
-        return IrBlockImpl(
-            functionToTransform.startOffset,
-            functionToTransform.endOffset,
-            functionToTransform.returnType
-        ).apply {
-            val transform = SupportFunctionTransform(this@ClassBoundIrBuilder, transformClosure, { irGet(invokeFun.dispatchReceiverParameter !!) }, callingFragment, arguments)
-
-            functionToTransform.body !!.statements.forEach {
-                statements += it.transformStatement(transform)
-            }
-        }
-    }
 
     fun IrExpression.transformCreateStateAccess(
         closure: ArmClosure,
-        newParent : IrFunction,
+        newParent: IrFunction,
         irGetFragment: () -> IrExpression
     ): IrExpression =
         transform(
@@ -209,7 +181,6 @@ open class ClassBoundIrBuilder(
                 this@ClassBoundIrBuilder,
                 closure,
                 pluginContext.getCreateClosureVariable,
-                false,
                 newParent,
                 irGetFragment
             ),
@@ -218,8 +189,8 @@ open class ClassBoundIrBuilder(
 
     fun IrStatement.transformThisStateAccess(
         closure: ArmClosure,
-        transformInvoke: Boolean = true,
-        newParent : IrFunction,
+        newParent: IrFunction,
+        stateVariable: ArmInternalStateVariable? = null,
         irGetFragment: () -> IrExpression
     ): IrExpression =
         transform(
@@ -227,19 +198,17 @@ open class ClassBoundIrBuilder(
                 this@ClassBoundIrBuilder,
                 closure,
                 pluginContext.getThisClosureVariable,
-                transformInvoke,
                 newParent,
-                irGetFragment
-            ), null) as IrExpression
+                irGetFragment,
+                stateVariable
+            ), null
+        ) as IrExpression
 
     fun ArmDependencies.toDirtyMask(): IrExpression {
         var mask = 0
         this.forEach { mask = mask or (1 shl it.indexInClosure) }
         return irConst(mask)
     }
-
-    fun stateVariableType(variable: ArmStateVariable): IrType =
-        if (variable.type.isFunction()) pluginContext.boundSupportFunctionType else variable.type
 
     // --------------------------------------------------------------------------------------------------------
     // Properties

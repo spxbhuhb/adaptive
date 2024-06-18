@@ -8,7 +8,7 @@ import hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir.ClassBoundIrBuilder
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrVariable
-import org.jetbrains.kotlin.ir.expressions.IrExpression
+import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
 import org.jetbrains.kotlin.ir.types.IrType
 
 class ArmFragmentFactoryArgument(
@@ -17,13 +17,13 @@ class ArmFragmentFactoryArgument(
     val fragmentIndex: Int,
     val closure: ArmClosure,
     type : IrType,
-    value: IrExpression,
+    override val irExpression: IrFunctionExpression,
     dependencies: ArmDependencies
 ) : ArmValueArgument(
     armClass,
     argumentIndex,
     type,
-    value,
+    irExpression,
     dependencies
 ) {
 

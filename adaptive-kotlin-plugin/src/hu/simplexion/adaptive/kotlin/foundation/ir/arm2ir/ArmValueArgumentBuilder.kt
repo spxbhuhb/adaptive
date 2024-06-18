@@ -25,7 +25,7 @@ open class ArmValueArgumentBuilder(
     open fun genPatchDescendantExpression(patchFun: IrSimpleFunction): IrExpression? =
         irIf(
             patchCondition(),
-            patchBody(patchFun)
+            patchVariableValue(patchFun)
         )
 
     fun patchCondition(): IrExpression =
@@ -34,12 +34,21 @@ open class ArmValueArgumentBuilder(
             dispatchReceiver = irGet(fragment),
             args = arrayOf(
                 irGet(closureDirtyMask),
-                valueArgument.dependencies.toDirtyMask()
+                patchDirtyMask()
             )
         )
 
-    // TODO rename patchBody, the `body` is confusing
-    open fun patchBody(patchFun: IrSimpleFunction): IrExpression {
+    /**
+     * Calculate the dirty mask for this argument. Special cases may override to ensure that
+     * there is no unnecessary patching:
+     *
+     * - hard-coded sequence (this might change in the future)
+     * - lambda fragment factories
+     */
+    open fun patchDirtyMask() =
+        valueArgument.dependencies.toDirtyMask()
+
+    open fun patchVariableValue(patchFun: IrSimpleFunction): IrExpression {
         valueArgument.detachExpressions.forEach { transformDetachExpression(patchFun, it) }
 
         return irSetDescendantStateVariable(

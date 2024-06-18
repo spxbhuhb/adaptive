@@ -15,10 +15,10 @@ open class ArmValueArgument(
     armClass: ArmClass,
     val argumentIndex: Int,
     val type : IrType,
-    open val value: IrExpression,
+    override val irExpression: IrExpression,
     dependencies: ArmDependencies,
     val detachExpressions : List<ArmDetachExpression> = emptyList()
-) : ArmExpression(armClass, value, dependencies) {
+) : ArmExpression(armClass, irExpression, dependencies) {
 
     open fun toPatchExpression(
         classBuilder: ClassBoundIrBuilder,

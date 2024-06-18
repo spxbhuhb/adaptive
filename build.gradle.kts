@@ -5,7 +5,7 @@
 val jsOnlyTasks = listOf("other:kotlinUpgradeYarnLock", "nodejs:rootPackageJson")
 val publishTasks = listOf("publishing:publishToMavenLocal", "publishing:publish")
 
-fun register(name: String, skipPlugins : Boolean = false) {
+fun register(name: String) {
     val (groupName, taskName) = name.split(":")
     tasks.register(taskName) {
         group = groupName

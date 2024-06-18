@@ -3,7 +3,12 @@
  */
 package hu.simplexion.adaptive.foundation
 
+import hu.simplexion.adaptive.foundation.instruction.Name
+import hu.simplexion.adaptive.foundation.fragment.AdaptiveLoop
+import hu.simplexion.adaptive.foundation.fragment.AdaptiveSelect
+import hu.simplexion.adaptive.foundation.fragment.AdaptiveSequence
 import hu.simplexion.adaptive.foundation.testing.TraceEvent
+import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 import kotlinx.coroutines.CoroutineDispatcher
 
 interface AdaptiveAdapter {
@@ -22,12 +27,21 @@ interface AdaptiveAdapter {
 
     fun newId(): Long
 
+    fun newSequence(parent : AdaptiveFragment, index : Int) : AdaptiveFragment =
+        AdaptiveSequence(parent.adapter, parent, index)
+
+    fun newSelect(parent : AdaptiveFragment, index : Int) : AdaptiveFragment =
+        AdaptiveSelect(parent.adapter, parent, index)
+
+    fun newLoop(parent : AdaptiveFragment, index : Int) : AdaptiveFragment =
+        AdaptiveLoop<Any>(parent.adapter, parent, index)
+
     fun actualize(name: String, parent: AdaptiveFragment, index: Int) =
         fragmentFactory.newInstance(name, parent, index)
 
-    fun addActual(fragment: AdaptiveFragment) = Unit
+    fun addActualRoot(fragment: AdaptiveFragment) = Unit
 
-    fun removeActual(fragment: AdaptiveFragment) = Unit
+    fun removeActualRoot(fragment: AdaptiveFragment) = Unit
 
     /**
      * Called by the `adaptive` entry point function after the root fragment is mounted.
@@ -36,7 +50,7 @@ interface AdaptiveAdapter {
 
     fun trace(fragment: AdaptiveFragment, point: String, data: String) {
         if (fragment.trace && fragment.tracePatterns.any { it.matches(point) }) {
-            TraceEvent(fragment::class.simpleName ?: "", fragment.id, point, data).println(startedAt)
+            TraceEvent(fragment.name(), fragment.id, point, data).println(startedAt)
         }
     }
 
@@ -46,4 +60,16 @@ interface AdaptiveAdapter {
         }
     }
 
+    fun log(fragment: AdaptiveFragment, point: String, data: String) {
+        TraceEvent(fragment.name(), fragment.id, point, data).println(startedAt)
+    }
+
+    fun log(point: String, data: String) {
+        TraceEvent("<adapter>", -1, point, data).println(startedAt)
+    }
+
+    fun AdaptiveFragment.name() =
+        instructions.firstOrNullIfInstance<Name>()?.name
+            ?: this::class.simpleName
+            ?: "<unknown>"
 }

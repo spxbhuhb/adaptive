@@ -4,8 +4,6 @@
 
 package hu.simplexion.adaptive.lib.sandbox
 
-import hu.simplexion.adaptive.foundation.AdaptiveFragmentCompanionCollector
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
 
-@AdaptiveFragmentCompanionCollector
-object SandboxExports : AdaptiveFragmentFactory()
+object SandboxLibExports : AdaptiveFragmentFactory()

@@ -7,7 +7,7 @@ package hu.simplexion.adaptive.kotlin.service
 import hu.simplexion.adaptive.kotlin.AdaptiveOptions
 import hu.simplexion.adaptive.kotlin.AdaptivePluginRegistrar
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatGenerationExtension
-import hu.simplexion.adaptive.kotlin.foundation.ir.AdaptiveGenerationExtension
+import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationGenerationExtension
 import hu.simplexion.adaptive.kotlin.debug.ir.DebugGenerationExtension
 import hu.simplexion.adaptive.kotlin.server.ir.ServerGenerationExtension
 import hu.simplexion.adaptive.kotlin.service.ir.ServicesGenerationExtension
@@ -26,16 +26,16 @@ class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentCo
         configuration: CompilerConfiguration
     ) {
         val options = AdaptiveOptions(
-            resourceOutputDir = File("testData/generated"),
             pluginDebug = true,
-            pluginLogDir = null, //File("testData/log"),
-            dumpKotlinLike = false
+            pluginLogDir = null, // File("testData/log"),
+            dumpKotlinLike = false,
+            dumpIR = false
         )
 
         FirExtensionRegistrarAdapter.registerExtension(AdaptivePluginRegistrar())
 
         IrGenerationExtension.registerExtension(ServicesGenerationExtension(options))
-        IrGenerationExtension.registerExtension(AdaptiveGenerationExtension(options))
+        IrGenerationExtension.registerExtension(FoundationGenerationExtension(options))
         IrGenerationExtension.registerExtension(ServerGenerationExtension(options))
         IrGenerationExtension.registerExtension(AdatGenerationExtension(options))
         IrGenerationExtension.registerExtension(DebugGenerationExtension(options))

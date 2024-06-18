@@ -7,8 +7,8 @@ package hu.simplexion.adaptive.kotlin
 import java.io.File
 
 class AdaptiveOptions(
-    val resourceOutputDir : File?,
-    val pluginDebug : Boolean,
-    val pluginLogDir : File?,
-    val dumpKotlinLike : Boolean
+    val pluginDebug: Boolean,
+    val pluginLogDir: File?,
+    val dumpKotlinLike: Boolean,
+    val dumpIR: Boolean
 )
