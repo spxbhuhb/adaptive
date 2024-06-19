@@ -12,7 +12,10 @@ import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irTemporary
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
-import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.util.constructors
+import org.jetbrains.kotlin.ir.util.defaultType
+import org.jetbrains.kotlin.ir.util.getPropertySetter
 
 class ArmEntryPointBuilder(
     context: FoundationPluginContext,
@@ -24,6 +27,8 @@ class ArmEntryPointBuilder(
         irClass = pluginContext.irClasses[entryPoint.armClass.fqName]!!
 
         function.body = DeclarationIrBuilder(irContext, function.symbol).irBlockBody {
+
+            + irClass
 
             val adapter = irTemporary(
                 irImplicitAs(

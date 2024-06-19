@@ -3,13 +3,12 @@
  */
 package hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm
 
+import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
-import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.expressions.IrCall
-import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.dump
 import org.jetbrains.kotlin.ir.util.isAnonymousFunction
 import org.jetbrains.kotlin.ir.util.statements
@@ -45,9 +44,6 @@ class OriginalFunctionTransform(
 
         // this is the actual transform
         IrFunction2ArmClass(pluginContext, declaration, false).transform()
-
-        // replace the body of the original function with an empty one
-        declaration.body = irFactory.createBlockBody(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET)
 
         return declaration
     }

@@ -20,7 +20,10 @@ import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
-import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.util.dump
+import org.jetbrains.kotlin.ir.util.dumpKotlinLike
+import org.jetbrains.kotlin.ir.util.isInterface
+import org.jetbrains.kotlin.ir.util.statements
 import org.jetbrains.kotlin.ir.visitors.acceptVoid
 
 /**
@@ -59,7 +62,7 @@ class IrFunction2ArmClass(
     fun transform(): ArmClass {
         val boundary = BoundaryVisitor(pluginContext).findBoundary(irFunction)
 
-        armClass = ArmClass(irFunction, boundary)
+        armClass = ArmClass(irFunction, boundary, isRoot)
 
         StateDefinitionTransform(pluginContext, armClass, if (isRoot) 1 else 0).apply { transform() }
 

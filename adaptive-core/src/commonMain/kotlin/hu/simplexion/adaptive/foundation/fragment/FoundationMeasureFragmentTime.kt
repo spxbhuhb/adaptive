@@ -4,13 +4,15 @@
 
 package hu.simplexion.adaptive.foundation.fragment
 
+import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlin.time.measureTime
 
-open class AdaptiveMeasureFragmentTime(
+@AdaptiveActual
+open class FoundationMeasureFragmentTime(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment,
     index: Int

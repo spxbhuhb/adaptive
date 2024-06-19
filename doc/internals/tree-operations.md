@@ -9,9 +9,9 @@ Components:
 | Name             | Kind              | Purpose                                                                      |
 |------------------|-------------------|------------------------------------------------------------------------------|
 | `slot`           | `@Adaptive fun`   | Declare a slot which let's you replace its child fragment.                   |
-| `AdaptiveSlot`   | fragment class    | The manual implementation of `slot`.                                         |
+| `FoundationSlot` | fragment class    | The manual implementation of `slot`.                                         |
 | `AdaptiveDetach` | annotation class  | Marks lambdas that detach children.                                          |
-| `DetachHandler`  | interface         | Bridge between lambda and `AdaptiveSlot`.                                    |
+| `DetachHandler`  | interface         | Bridge between lambda and `FoundationSlot`.                                  |
 | `replace`        | helper function   | Makes a `Replace` instance (declared in `ui-common`).                        |
 | `Replace`        | instruction class | An instruction that actually performs the replace (declared in `ui-common`). |
 
@@ -22,7 +22,7 @@ interface DetachHandler {
 
 class Replace(@AdaptiveDetach val slotEntry: (handler: DetachHandler) -> Unit) : DetachHandler {
     override fun detach(origin: AdaptiveFragment, detachIndex: Int) {
-        // find the AdaptiveSlot by whatever means
+        // find the FoundationSlot by whatever means
         // call `replace` of the slot with the two parameters
     }
 }

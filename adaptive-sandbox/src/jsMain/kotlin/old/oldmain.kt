@@ -18,7 +18,6 @@ import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.platform.withJsResources
 import hu.simplexion.adaptive.wireformat.withJson
 
-
 fun main() {
 
     withJson()

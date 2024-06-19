@@ -4,10 +4,10 @@
 
 package hu.simplexion.adaptive.ui.common
 
-import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
+import hu.simplexion.adaptive.foundation.fragment.FoundationFragmentFactory
 import hu.simplexion.adaptive.ui.common.fragment.*
 
-object CommonFragmentFactory : AdaptiveFragmentFactory() {
+object CommonFragmentFactory : FoundationFragmentFactory() {
     init {
         add("common:box") { p,i -> CommonBox(p.adapter as CommonAdapter, p, i) }
         add("common:column") { p,i -> CommonColumn(p.adapter as CommonAdapter, p, i) }

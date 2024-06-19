@@ -5,15 +5,13 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.fragment.FoundationSlot
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveDetach
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.DetachHandler
 import hu.simplexion.adaptive.foundation.query.single
-import hu.simplexion.adaptive.foundation.fragment.AdaptiveSlot
 import hu.simplexion.adaptive.resource.FileResource
-import hu.simplexion.adaptive.ui.common.render.CommonRenderData
 import hu.simplexion.adaptive.ui.common.render.event
-import hu.simplexion.adaptive.utility.alsoIfInstance
 
 // --------------------------------------------------------------------
 // Replace
@@ -32,7 +30,7 @@ class Replace(
     }
 
     override fun detach(origin: AdaptiveFragment, detachIndex: Int) {
-        origin.single<AdaptiveSlot>(true).setContent(origin, detachIndex)
+        origin.single<FoundationSlot>(true).setContent(origin, detachIndex)
     }
 
     override fun toString(): String {

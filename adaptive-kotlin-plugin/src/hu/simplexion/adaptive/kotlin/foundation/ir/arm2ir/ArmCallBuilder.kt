@@ -7,6 +7,7 @@ package hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir
 import hu.simplexion.adaptive.kotlin.foundation.Indices
 import hu.simplexion.adaptive.kotlin.foundation.Strings
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmCall
+import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.declarations.impl.IrValueParameterImpl
@@ -39,7 +40,14 @@ class ArmCallBuilder(
             }
 
             armCall.isDirect -> {
-                irCallFromBuild(buildFun, armCall.target)
+                // FIXME remove fixValueParameters as soon as KT-58886 is solved, it's really hackish
+                fixValueParameters(armCall.irCall.symbol.owner)
+                irCall(
+                    armCall.irCall.symbol,
+                    dispatchReceiver = null,
+                    irGet(buildFun.valueParameters[Indices.BUILD_PARENT]),
+                    irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX])
+                )
             }
 
             else -> {
@@ -59,14 +67,25 @@ class ArmCallBuilder(
             }
         }
 
+    private fun fixValueParameters(owner: IrSimpleFunction) {
+        if (owner.valueParameters.size == 2
+            && owner.valueParameters[0].type == pluginContext.adaptiveFragmentType
+            && owner.valueParameters[1].type == irBuiltIns.intType
+        ) return
+
+        owner.valueParameters = emptyList()
+        owner.addValueParameter(Strings.PARENT, pluginContext.adaptiveFragmentType)
+        owner.addValueParameter(Strings.DECLARATION_INDEX, irBuiltIns.intType)
+    }
+
     fun irGetFragmentFactory(buildFun: IrSimpleFunction): IrExpression {
 
         val valueParameter = (armCall.irCall.dispatchReceiver as IrGetValue).symbol.owner as IrValueParameterImpl
         val argumentIndex = valueParameter.index
 
         val getState = irCall(
-            irClass.getPropertyGetter(Strings.STATE)!!,
-            dispatchReceiver = irGet(buildFun.dispatchReceiverParameter!!)
+            irClass.getPropertyGetter(Strings.STATE) !!,
+            dispatchReceiver = irGet(buildFun.dispatchReceiverParameter !!)
         )
 
         val getStateVariable = irCall(
@@ -104,11 +123,11 @@ class ArmCallBuilder(
                         .also {
                             it.dispatchReceiver =
                                 irImplicitAs(
-                                    it.dispatchReceiver!!.type,
+                                    it.dispatchReceiver !!.type,
                                     irGet(patchFun.valueParameters.first())
                                 )
                         }
-                        .transformCreateStateAccess(armCall.closure, patchFun) { irGet(patchFun.dispatchReceiverParameter!!) }
+                        .transformCreateStateAccess(armCall.closure, patchFun) { irGet(patchFun.dispatchReceiverParameter !!) }
                 }
             }
     }

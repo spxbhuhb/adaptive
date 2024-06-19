@@ -5,16 +5,18 @@
 package hu.simplexion.adaptive.foundation.fragment
 
 import hu.simplexion.adaptive.foundation.Adaptive
+import hu.simplexion.adaptive.foundation.AdaptiveExpect
 import hu.simplexion.adaptive.foundation.TestedInPlugin
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.manualImplementation
 
-@Adaptive
+@AdaptiveExpect(foundation)
 @TestedInPlugin
 fun slot(name : String, @Adaptive initialContent : () -> Unit) {
     manualImplementation(name, initialContent)
 }
 
+@AdaptiveExpect(foundation)
 @Adaptive
 fun measureFragmentTime(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit) {
     manualImplementation(instructions, content)

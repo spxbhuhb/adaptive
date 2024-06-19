@@ -49,19 +49,19 @@ fun welcome() {
 }
 
 @Adaptive
-fun titleLarge(text : String) {
+fun titleLarge(text: String) {
     row(height(213.dp), paddingTop(117.dp)) {
         text(text, *titleLarge)
     }
 }
 
 @Adaptive
-fun subTitle(text : String) {
+fun subTitle(text: String) {
     text(text, *bodyMedium, FontWeight.LIGHT, paddingTop(15.dp))
 }
 
 @Adaptive
-fun footerLink(normalText : String, linkText : String, href : String) {
+fun footerLink(normalText: String, linkText: String, href: String) {
     row(AlignItems.center) {
         text(normalText, *bodyMedium, spaceAfter)
         text(linkText, FontSize(17.sp), black, TextDecoration.Underline, externalLink(href))
@@ -78,7 +78,7 @@ fun checkbox(
 ) {
     checkNotNull(binding)
 
-    row(onClick { binding.setValue(!binding.value, true) }) {
+    row(onClick { binding.setValue(! binding.value, true) }) {
         if (binding.value) {
             box(*activeCheckBox) {
                 image(Res.drawable.check, frame(1.dp, 1.dp, 18.dp, 18.dp))
@@ -117,14 +117,14 @@ val input = arrayOf(
 )
 
 var activeCheckBox = arrayOf(
-    size(20.dp,20.dp),
+    size(20.dp, 20.dp),
     cornerRadius(10.dp),
     backgroundColor(purple),
     white
 )
 
 var inactiveCheckBox = arrayOf(
-    size(20.dp,20.dp),
+    size(20.dp, 20.dp),
     cornerRadius(10.dp),
     border(purple, 1.dp)
 )

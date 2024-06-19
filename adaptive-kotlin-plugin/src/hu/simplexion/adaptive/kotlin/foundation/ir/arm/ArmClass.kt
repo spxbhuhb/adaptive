@@ -3,8 +3,6 @@
  */
 package hu.simplexion.adaptive.kotlin.foundation.ir.arm
 
-import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
-import hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm.BoundaryVisitor
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.adaptiveClassFqName
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
@@ -14,7 +12,8 @@ import org.jetbrains.kotlin.ir.util.statements
 
 class ArmClass(
     val originalFunction: IrFunction,
-    val boundary: ArmBoundary
+    val boundary: ArmBoundary,
+    val isRoot: Boolean
 ) : ArmElement {
 
     lateinit var irClass: IrClass
