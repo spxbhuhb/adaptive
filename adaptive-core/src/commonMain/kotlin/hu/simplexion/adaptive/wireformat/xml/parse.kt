@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.wireformat.xml
 
-import hu.simplexion.adaptive.utility.skipWhile
+import hu.simplexion.adaptive.utility.firstNotOrNull
 import hu.simplexion.adaptive.utility.peek
 import hu.simplexion.adaptive.utility.pop
 import hu.simplexion.adaptive.utility.push
@@ -87,15 +87,15 @@ internal fun attributes(tag: String): List<XmlAttribute> {
 
     while (index < len) {
         // find the start of the next attribute name (if there are any)
-        index = tag.skipWhile(index, len) { it.isWhitespace() } ?: break
+        index = tag.firstNotOrNull(index, len) { it.isWhitespace() } ?: break
         val startName = index
 
         // find the end of the attribute name
-        index = tag.skipWhile(startName, len) { ! it.isWhitespace() && it != '=' } ?: break
+        index = tag.firstNotOrNull(startName, len) { ! it.isWhitespace() && it != '=' } ?: break
         val attributeName = tag.substring(startName, index)
 
         // skip any spaces between the name and the equal sign
-        index = tag.skipWhile(index, len) { it.isWhitespace() } ?: break
+        index = tag.firstNotOrNull(index, len) { it.isWhitespace() } ?: break
 
         // any non '-' character is the next tag name
         if (tag[index] != '=') continue
@@ -103,7 +103,7 @@ internal fun attributes(tag: String): List<XmlAttribute> {
         index ++ // move past the '='
 
         // skip any spaces between '=' and the quote
-        index = tag.skipWhile(index, len) { it.isWhitespace() } ?: break
+        index = tag.firstNotOrNull(index, len) { it.isWhitespace() } ?: break
 
         val quote = tag[index]
         require(quote == '"' || quote == '\'') { "non quote character after '='" }
@@ -111,7 +111,7 @@ internal fun attributes(tag: String): List<XmlAttribute> {
         index ++ // move past the starting quote
         val startValue = index
 
-        index = tag.skipWhile(index, len) { it != quote } ?: throw IllegalArgumentException("missing closing quote")
+        index = tag.firstNotOrNull(index, len) { it != quote } ?: throw IllegalArgumentException("missing closing quote")
 
         val attributeValue = tag.substring(startValue, index)
         index ++ // Move past the ending quote

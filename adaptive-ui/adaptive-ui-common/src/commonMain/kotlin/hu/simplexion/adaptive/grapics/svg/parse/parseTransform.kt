@@ -5,7 +5,7 @@
 package hu.simplexion.adaptive.grapics.svg.parse
 
 import hu.simplexion.adaptive.grapics.svg.instruction.*
-import hu.simplexion.adaptive.utility.skipWhile
+import hu.simplexion.adaptive.utility.firstNotOrNull
 
 fun parseTransform(source: String): List<SvgTransform> {
 
@@ -52,10 +52,10 @@ fun parseTransform(source: String): List<SvgTransform> {
                 val parameterCount = if (parameter.isNotEmpty()) parameterIndex + 1 else parameterIndex
                 build(transform, parameters, parameterCount, transforms)
 
-                index = source.skipWhile(index, end) { it.isWhitespace() || it == ',' } ?: break
+                index = source.firstNotOrNull(index, end) { it.isWhitespace() || it == ',' } ?: break
                 val startIndex = if (transform == null) index - 1 else index
 
-                index = source.skipWhile(index, end) { it != '(' } ?: break
+                index = source.firstNotOrNull(index, end) { it != '(' } ?: break
 
                 transform = source.substring(startIndex, index)
                 index ++ // step over '('

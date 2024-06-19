@@ -30,8 +30,105 @@ fun ByteArray.toDotString(limit: Int = this.size, offset: Int = 0): String {
     return chars.concatToString()
 }
 
-inline fun String.skipWhile(startIndex: Int, len: Int, condition: (it: Char) -> Boolean): Int? {
-    var index = startIndex
-    while (index < len && condition(this[index])) index ++
-    return if (index == len) null else index
+/**
+ * Find the first character for which [condition] is false.
+ *
+ * @return  [end] if no such character is in the remaining part of the string
+ *          the index of the character if there is such character
+ */
+inline fun String.firstNot(start: Int, end: Int, condition: (it: Char) -> Boolean): Int {
+    var index = start
+    while (index < end && condition(this[index])) index ++
+    return if (index < end) index else end
 }
+
+/**
+ * Find the first character for which [condition] is false.
+ *
+ * @return  null if no such character is in the remaining part of the string
+ *          the index of the character if there is such character
+ */
+inline fun String.firstNotOrNull(start: Int, end: Int, condition: (it: Char) -> Boolean): Int? {
+    var index = start
+    while (index < end && condition(this[index])) index ++
+    return if (index < end) index else null
+}
+
+/**
+ * Find the first character for which [condition] is true.
+ *
+ * @return  null if no such character is in the remaining part of the string
+ *          the index of the character if there is such character
+ */
+inline fun String.firstOrNull(start: Int, end: Int, condition: (it: Char) -> Boolean): Int? {
+    var index = start
+    while (index < end && ! condition(this[index])) index ++
+    return if (index < end) index else null
+}
+
+/**
+ * Find the first character for which [condition] is true.
+ *
+ * @return  [end] if no such character is in the remaining part of the string
+ *          the index of the character if there is such character
+ */
+inline fun String.first(start: Int, end: Int, condition: (it: Char) -> Boolean): Int {
+    var index = start
+    while (index < end && ! condition(this[index])) index ++
+    return if (index < end) index else end
+}
+
+/**
+ * Find the first **not** [isSpace] character in the string.
+ *
+ * @return  null if no such character is in the remaining part of the string
+ *          the index of the character if there is such character
+ */
+inline fun String.firstNotSpaceOrNull(start: Int, end: Int): Int? {
+    var index = start
+    while (index < end && this[index].isSpace()) index ++
+    return if (index < end) index else null
+}
+
+/**
+ * Find the first **not** [isSpace] character in the string.
+ *
+ * @return  [end] if no such character is in the remaining part of the string
+ *          the index of the character if there is such character
+ */
+inline fun String.firstNotSpace(start: Int, end: Int): Int {
+    var index = start
+    while (index < end && this[index].isSpace()) index ++
+    return if (index < end) index else end
+}
+
+/**
+ * Find the last **not** [isSpace] character in the string **before** the [start] position
+ * up until the [until] position (exclusive).
+ *
+ * @return  [until] if no such character is in the remaining part of the string
+ *          the index of the character if there is such character
+ */
+inline fun String.firstNotSpaceBefore(start: Int, until: Int): Int {
+    var index = start
+    while (until < index && this[index].isSpace()) index --
+    return if (index > until) index else until
+}
+
+/**
+ * True when the character:
+ *
+ * - is in Unicode "Separator,Space" category
+ * - is a tab character
+ */
+fun Char.isSpace() =
+    (
+        this == ' '
+            || this == '\t'
+            || this == '\u00A0'
+            || this == '\u1680'
+            || (this in ' ' .. ' ')
+            || this == '\u202F'
+            || this == '\u205F'
+            || this == '\u3000'
+        )

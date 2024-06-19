@@ -5,7 +5,6 @@
 package hu.simplexion.adaptive.grapics.svg.parse
 
 import hu.simplexion.adaptive.grapics.svg.instruction.*
-import kotlin.math.abs
 
 fun parsePath(source: String): List<SvgPathCommand> {
 
@@ -28,6 +27,7 @@ fun parsePath(source: String): List<SvgPathCommand> {
 
         when {
             char in DOUBLE_CHARS -> {
+                // TODO merge SVG parser codes where possible
                 if ((char == '-' && parameter.isNotEmpty()) || (char == '.' && parameter.contains('.'))) {
                     parameterIndex ++
                     if (parameterIndex == parameters.size) {
