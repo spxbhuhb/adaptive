@@ -2,13 +2,12 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package old
+package mobile
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
-import hu.simplexion.adaptive.foundation.instruction.Trace
-import hu.simplexion.adaptive.sandbox.api.CounterApi
-import hu.simplexion.adaptive.service.getService
+import hu.simplexion.adaptive.ui.common.fragment.box
+import hu.simplexion.adaptive.ui.common.fragment.column
 import hu.simplexion.adaptive.ui.common.fragment.row
 import hu.simplexion.adaptive.ui.common.fragment.text
 import hu.simplexion.adaptive.ui.common.instruction.*
@@ -16,7 +15,26 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
-val counterService = getService<CounterApi>()
+@Adaptive
+fun mobileExample(title: String, @Adaptive body: () -> Unit) {
+    val borderWidth = 1 + 1
+    val width = 375 + borderWidth // 375 // pixel: 393
+    val height = 812 + borderWidth // 812 // pixel: 808 - 24 - 24 = 760
+
+    column {
+        AlignItems.start
+        gap(10.dp)
+
+        text(title)
+
+        box {
+            size(width.dp, height.dp)
+            border(lightGray, 1.dp)
+
+            body()
+        }
+    }
+}
 
 val Int.twoDigits
     get() = toString().padStart(2, '0')
@@ -43,9 +61,6 @@ val textMedium = fontSize(15.sp)
 val whiteBorder = border(white)
 val bold = FontWeight(700)
 val smallWhiteNoWrap = arrayOf(white, textSmall, TextWrap.NoWrap)
-
-val traceAll = Trace(Regex(".*"))
-val traceLayout = Trace(Regex("layout.*"), Regex("measure.*"))
 
 val button = arrayOf(
     greenGradient,

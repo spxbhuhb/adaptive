@@ -12,15 +12,20 @@ import hu.simplexion.adaptive.ui.common.support.RawSurrounding
 fun frame(top: DPixel, left: DPixel, width: DPixel, height: DPixel) = Frame(top, left, width, height)
 fun position(top: DPixel, left: DPixel) = Position(left, top)
 fun size(width: DPixel, height: DPixel) = Size(width, height)
-fun height(height: DPixel) = Height(height)
-fun width(width: DPixel) = Width(width)
+
+inline fun height(height: DPixel) = Height(height)
+inline fun height(calc: () -> DPixel) = Height(calc())
+
+inline fun width(width: DPixel) = Width(width)
+inline fun width(calc: () -> DPixel) = Width(calc())
 
 val sizeFull = Size(DPixel.FULL, DPixel.FULL)
 val heightFull = Height(DPixel.FULL)
 val widthFull = Width(DPixel.FULL)
 
-fun gap(both: DPixel) = Gap(both, both)
-fun gap(width: DPixel? = null, height: DPixel? = null) = Gap(width, height)
+inline fun gap(calcBoth: () -> DPixel) = calcBoth().let { Gap(it, it) }
+inline fun gap(both: DPixel) = Gap(both, both)
+inline fun gap(width: DPixel? = null, height: DPixel? = null) = Gap(width, height)
 
 fun padding(top: DPixel? = null, right: DPixel? = null, bottom: DPixel? = null, left: DPixel? = null) = Padding(top, right, bottom, left)
 fun padding(all: DPixel) = Padding(all)

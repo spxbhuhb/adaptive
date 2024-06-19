@@ -14,6 +14,9 @@ import hu.simplexion.adaptive.utility.alsoIfInstance
  *           specify a single point like: `Trace(Regex("layout"))`
  */
 class Trace(vararg val patterns : Regex = arrayOf(Regex(".*"))) : AdaptiveInstruction {
+
+    constructor(vararg patterns: String) : this(*patterns.map { Regex(it) }.toTypedArray())
+
     override fun apply(subject: Any) {
         subject.alsoIfInstance<Traceable> { it.tracePatterns = patterns }
     }

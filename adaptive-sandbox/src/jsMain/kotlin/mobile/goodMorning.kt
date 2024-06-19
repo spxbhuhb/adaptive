@@ -2,7 +2,7 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package old/*
+package mobile/*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
@@ -15,15 +15,15 @@ import sandbox.*
 import kotlin.time.Duration.Companion.seconds
 
 @Adaptive
-fun login() {
+fun goodMorning() {
 
     var counter = 0
     val time = poll(1.seconds) { now() } ?: now()
     val timeText = "${time.hour.twoDigits}:${time.minute.twoDigits}:${time.second.twoDigits}"
 
-    box {
+    mobileExample("Good Morning") {
 
-        image(Res.drawable.background, dropShadow(black, 10.dp, 10.dp, 10.dp))
+        image(Res.drawable.background)
 
         grid {
             rowTemplate(140.dp, 50.dp, 1.fr, 1.fr, 1.fr, 50.dp, 100.dp)
@@ -50,13 +50,14 @@ fun login() {
 
             terms()
         }
+
     }
 }
 
 @Adaptive
 private fun logo() {
     row {
-        AlignItems.topCenter
+        AlignItems.bottomCenter
         paddingBottom(20.dp)
 
         image(Res.drawable.logo, size(92.dp, 92.dp))
@@ -66,7 +67,7 @@ private fun logo() {
 @Adaptive
 private fun title() {
     row {
-        AlignItems.startCenter
+        AlignItems.bottomCenter
 
         text("Good Morning", white, fontSize(40.sp), letterSpacing(- 0.02))
     }
@@ -75,7 +76,7 @@ private fun title() {
 @Adaptive
 private fun time(timeText: String) {
     column {
-        AlignItems.startCenter
+        AlignItems.bottomCenter
         paddingTop(12.dp)
 
         text(timeText, white, fontSize(80.sp), letterSpacing(- 0.02))
@@ -97,6 +98,7 @@ private fun progress(time: LocalDateTime) {
 private fun messages(time: LocalDateTime, counter: Int) {
     column {
         AlignItems.center
+        gap { 10.dp }
 
         if (time.second % 2 == 1) {
             row(AlignItems.startCenter, greenGradient, cornerRadius, Padding(8.dp)) {
