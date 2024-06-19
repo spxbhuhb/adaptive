@@ -6,10 +6,13 @@ package layout
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.ui.common.fragment.row
+import hu.simplexion.adaptive.ui.common.instruction.AlignItems
 
 @Adaptive
 fun layoutMain() {
     row {
+        AlignItems.start
+
         gridTest()
         rowTest()
         colTest()

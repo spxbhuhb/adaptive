@@ -9,41 +9,46 @@ import hu.simplexion.adaptive.foundation.instruction.name
 import hu.simplexion.adaptive.ui.common.fragment.column
 import hu.simplexion.adaptive.ui.common.fragment.row
 import hu.simplexion.adaptive.ui.common.fragment.text
-import hu.simplexion.adaptive.ui.common.instruction.AlignItems
-import hu.simplexion.adaptive.ui.common.instruction.dp
-import hu.simplexion.adaptive.ui.common.instruction.gap
-import hu.simplexion.adaptive.ui.common.instruction.padding
+import hu.simplexion.adaptive.ui.common.instruction.*
 
 @Adaptive
 fun rowTest() {
     column(name("outer-column"), padding(10.dp)) {
         gap(10.dp)
+
+        text("Row Tests")
+
         rowBasic()
-        rowAlign(AlignItems.topCenter)
-        rowAlign(AlignItems.endCenter)
-        rowAlign(AlignItems.bottomCenter)
-        rowAlign(AlignItems.startCenter)
+
+        for (v in Alignment.entries) {
+            column {
+                gap(10.dp)
+                for (h in Alignment.entries) {
+                    rowAlign(AlignItems(v, h))
+                }
+            }
+        }
     }
 }
 
 @Adaptive
 private fun rowBasic() {
-    layoutExample {
+    layoutExample("Basic") {
         row {
             gap(10.dp)
-            text("AAA", greenishBackground)
-            text("BBB", blueishBackground)
+            text("A A", greenishBackground)
+            text("B B", blueishBackground)
         }
     }
 }
 
 @Adaptive
 private fun rowAlign(alignItems: AlignItems) {
-    layoutExample {
+    layoutExample("v ${alignItems.vertical} h ${alignItems.horizontal}") {
         row(alignItems) {
             gap(10.dp)
-            text("AAA", greenishBackground)
-            text("BBB", blueishBackground)
+            text("A A", greenishBackground)
+            text("B B", blueishBackground)
         }
     }
 }

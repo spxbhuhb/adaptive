@@ -30,7 +30,7 @@ open class CommonRow(
                 if (! it.isNaN()) setProperty("column-gap", "${it}px")
             }
             setProperty("grid-auto-flow", "column")
-            setProperty("grid-auto-columns", "min-content")
+            setProperty("grid-auto-columns", "auto")
             setProperty("grid-template-rows", "1fr")
         }
 
@@ -48,18 +48,18 @@ open class CommonRow(
         when {
             distribution == null && horizontal != null -> {
                 when (horizontal) {
-                    Alignment.Center -> style.setProperty("justify-items", "center")
-                    Alignment.End -> style.setProperty("justify-items", "end")
-                    Alignment.Start -> style.setProperty("justify-items", "start")
+                    Alignment.Center -> style.setProperty("justify-content", "center")
+                    Alignment.End -> style.setProperty("justify-content", "end")
+                    Alignment.Start -> style.setProperty("justify-content", "start")
                 }
             }
 
             distribution == SpaceDistribution.Between -> {
-                style.setProperty("justify-items", "space-between")
+                TODO()
             }
 
             distribution == SpaceDistribution.Around -> {
-                style.setProperty("justify-items", "space-around")
+                TODO()
             }
         }
 

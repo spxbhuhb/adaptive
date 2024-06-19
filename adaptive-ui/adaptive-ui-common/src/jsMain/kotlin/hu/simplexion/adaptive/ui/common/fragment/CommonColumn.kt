@@ -29,8 +29,9 @@ open class CommonColumn(
             renderData.container?.gapHeight?.let {
                 if (! it.isNaN()) setProperty("row-gap", "${it}px")
             }
-            setProperty("grid-template-columns", "1fr")
+            setProperty("grid-auto-flow", "row")
             setProperty("grid-auto-rows", "min-content")
+            setProperty("grid-template-columns", "1fr")
         }
 
         browserAlign()
@@ -42,11 +43,11 @@ open class CommonColumn(
         val container = renderData.container ?: return
 
         val distribution = container.spaceDistribution
-        val vertical = container.verticalAlignment
+        val horizontal = container.horizontalAlignment
 
         when {
-            distribution == null && vertical != null -> {
-                when (vertical) {
+            distribution == null && horizontal != null -> {
+                when (horizontal) {
                     Alignment.Center -> style.setProperty("justify-items", "center")
                     Alignment.End -> style.setProperty("justify-items", "end")
                     Alignment.Start -> style.setProperty("justify-items", "start")
@@ -54,19 +55,19 @@ open class CommonColumn(
             }
 
             distribution == SpaceDistribution.Between -> {
-                style.setProperty("justify-items", "space-between")
+                TODO()
             }
 
             distribution == SpaceDistribution.Around -> {
-                style.setProperty("justify-items", "space-around")
+                TODO()
             }
         }
 
-        when (container.horizontalAlignment) {
+        when (container.verticalAlignment) {
             null -> Unit
-            Alignment.Center -> style.alignItems = "center"
-            Alignment.End -> style.alignItems = "end"
-            Alignment.Start -> style.alignItems = "start"
+            Alignment.Center -> style.alignContent = "center"
+            Alignment.End -> style.alignContent = "end"
+            Alignment.Start -> style.alignContent = "start"
         }
     }
 }
