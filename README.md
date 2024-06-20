@@ -1,13 +1,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/hu.simplexion.adaptive/adaptive-core)](https://mvnrepository.com/artifact/hu.simplexion.adaptive/adaptive-core)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
-Adaptive is a consolidated application development library for Kotlin focusing on:
-
-* expressing our intention,
-* clean code, close to no-boilerplate, minimal dependencies,
-* frontend and backend components with built-in lifecycle and state handling.
-
-Adaptive comes with a compiler plugin that performs many functions to reach the goals above.
+Please read [What is this about](./doc/what-is-this-about.md) for a short introduction.
  
 > [!CAUTION]
 >
