@@ -84,7 +84,7 @@ inline fun String.first(start: Int, end: Int, condition: (it: Char) -> Boolean):
  * @return  null if no such character is in the remaining part of the string
  *          the index of the character if there is such character
  */
-inline fun String.firstNotSpaceOrNull(start: Int, end: Int): Int? {
+fun String.firstNotSpaceOrNull(start: Int, end: Int): Int? {
     var index = start
     while (index < end && this[index].isSpace()) index ++
     return if (index < end) index else null
@@ -96,7 +96,7 @@ inline fun String.firstNotSpaceOrNull(start: Int, end: Int): Int? {
  * @return  [end] if no such character is in the remaining part of the string
  *          the index of the character if there is such character
  */
-inline fun String.firstNotSpace(start: Int, end: Int): Int {
+fun String.firstNotSpace(start: Int, end: Int): Int {
     var index = start
     while (index < end && this[index].isSpace()) index ++
     return if (index < end) index else end
@@ -109,7 +109,7 @@ inline fun String.firstNotSpace(start: Int, end: Int): Int {
  * @return  [until] if no such character is in the remaining part of the string
  *          the index of the character if there is such character
  */
-inline fun String.firstNotSpaceBefore(start: Int, until: Int): Int {
+fun String.firstNotSpaceBefore(start: Int, until: Int): Int {
     var index = start
     while (until < index && this[index].isSpace()) index --
     return if (index > until) index else until

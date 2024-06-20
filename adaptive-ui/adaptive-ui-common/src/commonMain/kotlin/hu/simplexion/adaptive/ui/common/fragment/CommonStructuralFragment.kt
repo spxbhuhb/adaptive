@@ -26,10 +26,21 @@ open class CommonStructuralFragment<RT, CRT : RT>(
     override fun addActual(fragment: AdaptiveFragment, direct: Boolean?) {
         if (trace) trace("addActual", "fragment=$fragment, structural=$this, direct=$direct")
 
-        if (direct == true) {
-            fragment.alsoIfInstance<AbstractCommonFragment<RT>> { itemFragment ->
-                directItems += itemFragment
-                uiAdapter.addActual(receiver, itemFragment.receiver)
+        fragment.alsoIfInstance<AbstractCommonFragment<RT>> { itemFragment ->
+            when (direct) {
+                true -> {
+                    directItems += itemFragment
+                    uiAdapter.addActual(receiver, itemFragment.receiver)
+                }
+
+                false -> {
+                    // do nothing, this does not concern us
+                }
+
+                null -> {
+                    structuralItems += itemFragment
+                    uiAdapter.addActual(receiver, itemFragment.receiver)
+                }
             }
         }
 
@@ -42,9 +53,22 @@ open class CommonStructuralFragment<RT, CRT : RT>(
         // when in a batch, everything will be removed at once
         if (uiAdapter.actualBatch) return
 
-        if (direct == true) {
-            directItems.removeAt(directItems.indexOfFirst { it.id == fragment.id }).also {
-                uiAdapter.removeActual(it.receiver)
+        fragment.alsoIfInstance<AbstractCommonFragment<RT>> { itemFragment ->
+
+            when (direct) {
+                true -> {
+                    directItems.removeAt(directItems.indexOfFirst { it.id == fragment.id })
+                    uiAdapter.removeActual(itemFragment.receiver)
+                }
+
+                false -> {
+                    // do nothing, this does not concern us
+                }
+
+                null -> {
+                    structuralItems.removeAt(structuralItems.indexOfFirst { it.id == fragment.id })
+                    uiAdapter.removeActual(itemFragment.receiver)
+                }
             }
         }
 

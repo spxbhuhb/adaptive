@@ -14,7 +14,7 @@ class TokenizeTest {
         val source = "# Header"
         val expectedTokens = listOf(
             MarkdownToken(MarkdownTokenType.Header, "#"),
-            MarkdownToken(MarkdownTokenType.Text, " Header")
+            MarkdownToken(MarkdownTokenType.Text, "Header")
         )
         val actualTokens = tokenize(source)
         assertEquals(expectedTokens, actualTokens)
@@ -25,7 +25,7 @@ class TokenizeTest {
         val source = "#### Header"
         val expectedTokens = listOf(
             MarkdownToken(MarkdownTokenType.Header, "####"),
-            MarkdownToken(MarkdownTokenType.Text, " Header")
+            MarkdownToken(MarkdownTokenType.Text, "Header")
         )
         val actualTokens = tokenize(source)
         assertEquals(expectedTokens, actualTokens)
@@ -39,10 +39,10 @@ class TokenizeTest {
         """.trimIndent()
         val expectedTokens = listOf(
             MarkdownToken(MarkdownTokenType.Header, "#"),
-            MarkdownToken(MarkdownTokenType.Text, " Header"),
+            MarkdownToken(MarkdownTokenType.Text, "Header"),
             MarkdownToken(MarkdownTokenType.NewLine, ""),
             MarkdownToken(MarkdownTokenType.Header, "##"),
-            MarkdownToken(MarkdownTokenType.Text, " Header 2"),
+            MarkdownToken(MarkdownTokenType.Text, "Header 2"),
         )
         val actualTokens = tokenize(source)
         assertEquals(expectedTokens, actualTokens)
@@ -71,22 +71,22 @@ class TokenizeTest {
 
         val expectedTokens = listOf(
             MarkdownToken(MarkdownTokenType.BulletList, "*"),
-            MarkdownToken(MarkdownTokenType.Text, " item 1"),
+            MarkdownToken(MarkdownTokenType.Text, "item 1"),
             MarkdownToken(MarkdownTokenType.NewLine, ""),
             MarkdownToken(MarkdownTokenType.Spaces, "  "),
             MarkdownToken(MarkdownTokenType.BulletList, "*"),
-            MarkdownToken(MarkdownTokenType.Text, " item 1.1"),
+            MarkdownToken(MarkdownTokenType.Text, "item 1.1"),
             MarkdownToken(MarkdownTokenType.NewLine, ""),
             MarkdownToken(MarkdownTokenType.Spaces, "      "),
             MarkdownToken(MarkdownTokenType.BulletList, "*"),
-            MarkdownToken(MarkdownTokenType.Text, " item 1.1.1"),
+            MarkdownToken(MarkdownTokenType.Text, "item 1.1.1"),
             MarkdownToken(MarkdownTokenType.NewLine, ""),
             MarkdownToken(MarkdownTokenType.Spaces, "  "),
             MarkdownToken(MarkdownTokenType.BulletList, "*"),
-            MarkdownToken(MarkdownTokenType.Text, " item 1.2"),
+            MarkdownToken(MarkdownTokenType.Text, "item 1.2"),
             MarkdownToken(MarkdownTokenType.NewLine, ""),
             MarkdownToken(MarkdownTokenType.BulletList, "*"),
-            MarkdownToken(MarkdownTokenType.Text, " item 2")
+            MarkdownToken(MarkdownTokenType.Text, "item 2")
         )
         val actualTokens = tokenize(source)
         assertEquals(expectedTokens, actualTokens)
@@ -104,22 +104,22 @@ class TokenizeTest {
 
         val expectedTokens = listOf(
             MarkdownToken(MarkdownTokenType.NumberedList, "1"),
-            MarkdownToken(MarkdownTokenType.Text, " item 1"),
+            MarkdownToken(MarkdownTokenType.Text, "item 1"),
             MarkdownToken(MarkdownTokenType.NewLine, ""),
             MarkdownToken(MarkdownTokenType.Spaces, "  "),
             MarkdownToken(MarkdownTokenType.NumberedList, "1"),
-            MarkdownToken(MarkdownTokenType.Text, " item 1.1"),
+            MarkdownToken(MarkdownTokenType.Text, "item 1.1"),
             MarkdownToken(MarkdownTokenType.NewLine, ""),
             MarkdownToken(MarkdownTokenType.Spaces, "      "),
             MarkdownToken(MarkdownTokenType.NumberedList, "1"),
-            MarkdownToken(MarkdownTokenType.Text, " item 1.1.1"),
+            MarkdownToken(MarkdownTokenType.Text, "item 1.1.1"),
             MarkdownToken(MarkdownTokenType.NewLine, ""),
             MarkdownToken(MarkdownTokenType.Spaces, "  "),
             MarkdownToken(MarkdownTokenType.NumberedList, "2"),
-            MarkdownToken(MarkdownTokenType.Text, " item 1.2"),
+            MarkdownToken(MarkdownTokenType.Text, "item 1.2"),
             MarkdownToken(MarkdownTokenType.NewLine, ""),
             MarkdownToken(MarkdownTokenType.NumberedList, "2"),
-            MarkdownToken(MarkdownTokenType.Text, " item 2")
+            MarkdownToken(MarkdownTokenType.Text, "item 2")
         )
         val actualTokens = tokenize(source)
         assertEquals(expectedTokens, actualTokens)
@@ -159,9 +159,23 @@ class TokenizeTest {
     }
 
     @Test
-    fun testQuotes() {
-        val source = ">This is a quote"
-        val expectedResult = listOf(Pair(MarkdownTokenType.Quote, ">This is a quote"))
+    fun quote() {
+        val source = ">This is a quote\n>and another quote"
+        val expectedResult = listOf(
+            Pair(MarkdownTokenType.Quote, "This is a quote\nand another quote")
+        )
+
+        val result = tokenize(source).map { Pair(it.type, it.text) }
+
+        assertEquals(expectedResult, result)
+    }
+
+    @Test
+    fun quotes() {
+        val source = ">This is a quote\n> > and an inner quote"
+        val expectedResult = listOf(
+            Pair(MarkdownTokenType.Quote, "This is a quote\n > and an inner quote")
+        )
 
         val result = tokenize(source).map { Pair(it.type, it.text) }
 

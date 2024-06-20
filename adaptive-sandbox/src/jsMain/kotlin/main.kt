@@ -9,11 +9,13 @@ import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.invoke
 import hu.simplexion.adaptive.ui.common.browser
 import hu.simplexion.adaptive.ui.common.fragment.column
+import hu.simplexion.adaptive.ui.common.fragment.grid
 import hu.simplexion.adaptive.ui.common.fragment.row
 import hu.simplexion.adaptive.ui.common.fragment.text
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.platform.withJsResources
 import layout.layoutMain
+import markdown.markdown
 import misc.chessBoard
 import mobile.goodMorning
 import mobile.welcome
@@ -22,13 +24,14 @@ fun main() {
 
     withJsResources()
 
+    //(trace = Trace(".*"))
     browser {
-        row {
-            AlignItems.start
+        grid {
+            colTemplate(200.dp, 1.fr)
+            rowTemplate(1.fr)
 
             column {
                 padding(10.dp)
-                width(200.dp)
                 gap(4.dp)
 
                 navButton("Good Morning", replace { goodMorning() })
@@ -36,6 +39,7 @@ fun main() {
                 navButton("SVG", replace { svgExample() })
                 navButton("Layouts", replace { layoutMain() })
                 navButton("Chessboard", replace { chessBoard() })
+                navButton("Markdown", replace { markdown() })
             }
 
             column {

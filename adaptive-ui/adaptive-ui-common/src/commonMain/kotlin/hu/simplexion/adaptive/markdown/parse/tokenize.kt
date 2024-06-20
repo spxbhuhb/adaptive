@@ -66,12 +66,13 @@ private fun line(source: String, start: Int, end: Int, tokens: MutableList<Markd
     }
 }
 
-
 private fun header(source: String, start: Int, end: Int, tokens: MutableList<MarkdownToken>): Int {
 
-    val textStart = source.firstNotOrNull(start, end) { it == '#' } ?: return end
+    val hashEnd = source.firstNotOrNull(start, end) { it == '#' } ?: return end
 
-    tokens += MarkdownToken(MarkdownTokenType.Header, source.substring(start, textStart))
+    tokens += MarkdownToken(MarkdownTokenType.Header, source.substring(start, hashEnd))
+
+    val textStart = source.firstNotSpace(hashEnd, end)
 
     return text(source, textStart, end, tokens)
 }
@@ -81,6 +82,7 @@ private fun maybeList(source: String, start: Int, end: Int, tokens: MutableList<
 
     if (index < end && source[index].isSpace()) {
         tokens += MarkdownToken(MarkdownTokenType.BulletList, "*")
+        index ++ // skip the first space
     } else {
         index = start
     }
@@ -88,20 +90,31 @@ private fun maybeList(source: String, start: Int, end: Int, tokens: MutableList<
     return text(source, index, end, tokens)
 }
 
+private val quoteLineRegex = "\\s?>([^\\n\\r]*)[\\n\\r]?".toRegex()
+
 private fun quote(source: String, start: Int, end: Int, tokens: MutableList<MarkdownToken>): Int {
-    val index = source.first(start + 1, end) { it.isNewLine() }
+    var index = start
+    val quoteContent = StringBuilder()
 
-    tokens += MarkdownToken(MarkdownTokenType.Quote, source.substring(start, index))
+    while (index < end) {
+        quoteLineRegex.matchAt(source, index)?.let {
+            quoteContent.append(it.groupValues[1])
+            quoteContent.append('\n')
+            index = it.range.last + 1
+        } ?: break
+    }
 
-    return end
+    tokens += MarkdownToken(MarkdownTokenType.Quote, quoteContent.toString().trimEnd())
+
+    return index
 }
 
 private fun number(source: String, start: Int, end: Int, tokens: MutableList<MarkdownToken>): Int {
     var index = source.firstNot(start, end) { it.isDigit() }
 
-    if (index < end && source[index] == '.') {
+    if (index + 1 < end && source[index] == '.' && source[index + 1].isSpace()) {
         tokens += MarkdownToken(MarkdownTokenType.NumberedList, source.substring(start, index))
-        index += 1 // skip the '.'
+        index += 2 // skip the '.' and the following space
     } else {
         index = start
     }
@@ -109,9 +122,9 @@ private fun number(source: String, start: Int, end: Int, tokens: MutableList<Mar
     return text(source, index, end, tokens)
 }
 
-private fun backtick(source: String, start: Int, end: Int, tokens: MutableList<MarkdownToken>): Int {
+val codeFenceRegex = "(```|~~~)\\s*(\\w+)?\\s*\\n([\\s\\S]*?)\\n\\1".toRegex()
 
-    val codeFenceRegex = "(```|~~~)\\s*(\\w+)?\\s*\\n([\\s\\S]*?)\\n\\1".toRegex()
+private fun backtick(source: String, start: Int, end: Int, tokens: MutableList<MarkdownToken>): Int {
 
     codeFenceRegex.matchAt(source, start)?.let {
         val language = it.groupValues[2]
@@ -231,10 +244,11 @@ private fun text(source: String, start: Int, end: Int, tokens: MutableList<Markd
     return end
 }
 
-private fun code(source: String, start: Int, end: Int, tokens: MutableList<MarkdownToken>): Int {
-    val regex = "(`{1,2}) ?([^`]*?[^\\\\])? ?\\1".toRegex()
+private val codeRegex = "(`{1,2}) ?([^`]*?[^\\\\])? ?\\1".toRegex()
 
-    val matchResult = regex.matchAt(source, start)
+private fun code(source: String, start: Int, end: Int, tokens: MutableList<MarkdownToken>): Int {
+
+    val matchResult = codeRegex.matchAt(source, start)
 
     if (matchResult == null) {
         tokens += MarkdownToken(MarkdownTokenType.CodeSpan, source.substring(start, end))
@@ -247,10 +261,11 @@ private fun code(source: String, start: Int, end: Int, tokens: MutableList<Markd
     return matchResult.range.last + 1
 }
 
-private fun maybeImage(source: String, start: Int, tokens: MutableList<MarkdownToken>): Int {
-    val inlineLinkRegex = "!\\[[^\\[]+]\\([^)]+\\)".toRegex()
+private val imageLinkRegex = "!\\[[^\\[]+\\]\\([^)]+\\)".toRegex()
 
-    inlineLinkRegex.matchAt(source, start)?.let {
+private fun maybeImage(source: String, start: Int, tokens: MutableList<MarkdownToken>): Int {
+
+    imageLinkRegex.matchAt(source, start)?.let {
         tokens += MarkdownToken(MarkdownTokenType.InlineLink, it.value)
         return it.range.last + 1
     }
@@ -258,11 +273,11 @@ private fun maybeImage(source: String, start: Int, tokens: MutableList<MarkdownT
     return start
 }
 
-private fun maybeReference(source: String, start: Int, tokens: MutableList<MarkdownToken>): Int {
+private val inlineLinkRegex = "\\[[^\\[]+\\]\\([^)]+\\)".toRegex()
+private val referenceLinkRegex = "\\[[^\\[]+\\]\\[[^\\]]+\\]".toRegex()
+private val referenceDefRegex = "^\\[[^\\[]+\\]:\\s*(.+)$".toRegex(RegexOption.MULTILINE)
 
-    val inlineLinkRegex = "\\[[^\\[]+]\\([^)]+\\)".toRegex()
-    val referenceLinkRegex = "\\[[^\\[]+]\\[[^]]+]".toRegex()
-    val referenceDefRegex = "^\\[[^\\[]+]:\\s*(.+)$".toRegex(RegexOption.MULTILINE)
+private fun maybeReference(source: String, start: Int, tokens: MutableList<MarkdownToken>): Int {
 
     inlineLinkRegex.matchAt(source, start)?.let {
         tokens += MarkdownToken(MarkdownTokenType.InlineLink, it.value)

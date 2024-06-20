@@ -13,19 +13,19 @@ fun frame(top: DPixel, left: DPixel, width: DPixel, height: DPixel) = Frame(top,
 fun position(top: DPixel, left: DPixel) = Position(left, top)
 fun size(width: DPixel, height: DPixel) = Size(width, height)
 
-inline fun height(height: DPixel) = Height(height)
-inline fun height(calc: () -> DPixel) = Height(calc())
+fun height(height: DPixel) = Height(height)
+fun height(calc: () -> DPixel) = Height(calc())
 
-inline fun width(width: DPixel) = Width(width)
-inline fun width(calc: () -> DPixel) = Width(calc())
+fun width(width: DPixel) = Width(width)
+fun width(calc: () -> DPixel) = Width(calc())
 
 val sizeFull = Size(DPixel.FULL, DPixel.FULL)
 val heightFull = Height(DPixel.FULL)
 val widthFull = Width(DPixel.FULL)
 
-inline fun gap(calcBoth: () -> DPixel) = calcBoth().let { Gap(it, it) }
-inline fun gap(both: DPixel) = Gap(both, both)
-inline fun gap(width: DPixel? = null, height: DPixel? = null) = Gap(width, height)
+fun gap(calcBoth: () -> DPixel) = calcBoth().let { Gap(it, it) }
+fun gap(both: DPixel) = Gap(both, both)
+fun gap(width: DPixel? = null, height: DPixel? = null) = Gap(width, height)
 
 fun padding(top: DPixel? = null, right: DPixel? = null, bottom: DPixel? = null, left: DPixel? = null) = Padding(top, right, bottom, left)
 fun padding(all: DPixel) = Padding(all)
