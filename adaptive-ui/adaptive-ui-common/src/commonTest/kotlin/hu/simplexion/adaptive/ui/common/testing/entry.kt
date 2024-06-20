@@ -22,7 +22,7 @@ fun uiTest(
 ) : CommonTestAdapter {
 
     return CommonTestAdapter(
-        TestReceiver(RawFrame(top.toFloat(), left.toFloat(), width.toFloat(), height.toFloat()))
+        TestReceiver(RawFrame(top.toDouble(), left.toDouble(), width.toDouble(), height.toDouble()))
     ).also {
         it.fragmentFactory += imports
         if (trace != null) { it.trace = trace.patterns }

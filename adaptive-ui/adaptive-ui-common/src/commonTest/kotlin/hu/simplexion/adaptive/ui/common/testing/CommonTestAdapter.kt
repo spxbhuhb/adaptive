@@ -5,11 +5,11 @@ package hu.simplexion.adaptive.ui.common.testing
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
-import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
-import hu.simplexion.adaptive.ui.common.support.RawFrame
+import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
+import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -62,13 +62,10 @@ open class CommonTestAdapter(
         val layoutFrame = fragment.layoutFrameOrNull
 
         if (layoutFrame != null) {
-            val point = layoutFrame.point
-            val size = layoutFrame.size
-
-            fragment.receiver.testTop = point.top
-            fragment.receiver.testLeft = point.left
-            fragment.receiver.testWidth = size.width
-            fragment.receiver.testHeight = size.height
+            fragment.receiver.testTop = layoutFrame.top
+            fragment.receiver.testLeft = layoutFrame.left
+            fragment.receiver.testWidth = layoutFrame.width
+            fragment.receiver.testHeight = layoutFrame.height
         }
     }
 
@@ -89,4 +86,8 @@ open class CommonTestAdapter(
 
     override fun toPx(sPixel: SPixel): Double =
         sPixel.value
+
+    override var mediaMetrics: MediaMetrics
+        get() = TODO("Not yet implemented")
+        set(value) {}
 }

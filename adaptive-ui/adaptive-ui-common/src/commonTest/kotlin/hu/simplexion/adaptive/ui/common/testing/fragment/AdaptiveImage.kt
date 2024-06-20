@@ -8,7 +8,6 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.support.RawFrame
-import hu.simplexion.adaptive.ui.common.support.RawSize
 import hu.simplexion.adaptive.ui.common.testing.CommonTestAdapter
 import hu.simplexion.adaptive.ui.common.testing.TestReceiver
 import hu.simplexion.adaptive.utility.checkIfInstance
@@ -35,15 +34,6 @@ open class AdaptiveImage(
 
         return false
     }
-
-    /**
-     * Measured size of images is unknown at the time measure is called, mostly because
-     * the image is loaded asynchronously.
-     *
-     * Also, it is rare to use the actual size of the image for the layout, it is far
-     * more usual to have a space and scale the image to fit that space.
-     */
-    override fun measure(): RawSize = instructedOr { RawSize(0.0, 0.0) }
 
     override fun layout(proposedFrame: RawFrame?) {
         super.calcLayoutFrame(proposedFrame)

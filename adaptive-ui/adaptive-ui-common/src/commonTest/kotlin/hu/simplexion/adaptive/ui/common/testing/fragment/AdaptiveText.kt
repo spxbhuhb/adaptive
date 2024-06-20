@@ -8,7 +8,6 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.render.CommonRenderData
 import hu.simplexion.adaptive.ui.common.support.RawFrame
-import hu.simplexion.adaptive.ui.common.support.RawSize
 import hu.simplexion.adaptive.ui.common.testing.CommonTestAdapter
 import hu.simplexion.adaptive.ui.common.testing.TestReceiver
 
@@ -32,17 +31,12 @@ open class AdaptiveText(
         }
 
         if (haveToPatch(closureMask, 1 shl instructionIndex)) {
-            renderData = CommonRenderData(instructions)
+            renderData = CommonRenderData(uiAdapter, instructions)
             uiAdapter.applyRenderInstructions(this)
         }
 
         return false
     }
-
-    /**
-     * In web browsers measuring text is not the usual way.
-     */
-    override fun measure(): RawSize = instructedOr { RawSize(content.length * 20.0, 20.0) }
 
     override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)

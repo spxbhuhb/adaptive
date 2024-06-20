@@ -132,3 +132,19 @@ fun Char.isSpace() =
             || this == '\u205F'
             || this == '\u3000'
         )
+
+/**
+ * True when the character:
+ *
+ * - is `\n`
+ * - is `\r`
+ * - is `\u2028`
+ * - is `\u2029`
+ */
+fun Char.isNewLine() =
+    (
+        this == '\n'
+            || this == '\r'
+            || this == '\u2028'
+            || this == '\u2029'
+        )
