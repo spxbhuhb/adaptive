@@ -17,6 +17,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.graphics.toColorInt
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.resource.defaultResourceEnvironment
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.platform.ContainerViewGroup
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
@@ -232,5 +233,9 @@ open class CommonAdapter(
             (value and 0xFFu).toFloat() / 255f
         ).toColorInt()
 
-    override var mediaMetrics = MediaMetrics(rootContainer.width.toDouble(), rootContainer.height.toDouble())
+    override var mediaMetrics = MediaMetrics(
+        rootContainer.width.toDouble(),
+        rootContainer.height.toDouble(),
+        defaultResourceEnvironment.theme
+    )
 }

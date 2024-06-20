@@ -5,6 +5,7 @@ package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.instruction.Name
+import hu.simplexion.adaptive.resource.defaultResourceEnvironment
 import hu.simplexion.adaptive.ui.common.instruction.AdaptiveUIEvent
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
@@ -229,12 +230,18 @@ open class CommonAdapter(
     // Media metrics support
     // ------------------------------------------------------------------------------
 
-    override var mediaMetrics = rootContainer.getBoundingClientRect().let { r -> MediaMetrics(r.width, r.height) }
+    override var mediaMetrics = rootContainer.getBoundingClientRect().let { r ->
+        MediaMetrics(r.width, r.height, defaultResourceEnvironment.theme)
+    }
 
     // FIXME disconnect media observer on adapter dispose
     val resizeObserver = ResizeObserver { entries, _ ->
         entries.firstOrNull()?.let {
-            mediaMetrics = MediaMetrics(it.contentRect.width, it.contentRect.height)
+            mediaMetrics = MediaMetrics(
+                it.contentRect.width,
+                it.contentRect.height,
+                defaultResourceEnvironment.theme
+            )
             updateMediaMetrics()
         }
     }.also {

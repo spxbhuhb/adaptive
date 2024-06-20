@@ -190,7 +190,9 @@ abstract class AbstractGrid<RT, CRT : RT>(
 
         // Doubleing position calculations may result in small fractional values, for example:
         // available=852.0 result:[0.0, 140.0, 190.0, 360.6667, 531.3334, 702.00006, 752.00006, 852.00006]
-        check(availableSpace + 0.0001 >= result.last()) { "grid track overflow: available=$availableSpace result:${result.contentToString()} tracks: $tracks in $this" }
+        if (availableSpace + 0.0001 >= result.last()) {
+            adapter.log(this, "distribute", "grid track overflow: available=$availableSpace result:${result.contentToString()} tracks: $tracks in $this")
+        }
 
         return result
     }

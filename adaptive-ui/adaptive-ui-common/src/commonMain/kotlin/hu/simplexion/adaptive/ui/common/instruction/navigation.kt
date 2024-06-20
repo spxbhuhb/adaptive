@@ -9,6 +9,7 @@ import hu.simplexion.adaptive.foundation.fragment.FoundationSlot
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveDetach
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.DetachHandler
+import hu.simplexion.adaptive.foundation.query.firstOrNull
 import hu.simplexion.adaptive.foundation.query.single
 import hu.simplexion.adaptive.resource.FileResource
 import hu.simplexion.adaptive.ui.common.render.event
@@ -18,10 +19,12 @@ import hu.simplexion.adaptive.ui.common.render.event
 // --------------------------------------------------------------------
 
 fun replace(
+    slotName: String? = null,
     @AdaptiveDetach slotEntry: (handler: DetachHandler) -> Unit
-) = Replace(slotEntry)
+) = Replace(slotName, slotEntry)
 
 class Replace(
+    val slotName: String? = null,
     @AdaptiveDetach val slotEntry: (handler: DetachHandler) -> Unit
 ) : DetachHandler, AdaptiveInstruction {
 
@@ -30,7 +33,16 @@ class Replace(
     }
 
     override fun detach(origin: AdaptiveFragment, detachIndex: Int) {
-        origin.single<FoundationSlot>(true).setContent(origin, detachIndex)
+        if (slotName == null) {
+            origin.single<FoundationSlot>(true).setContent(origin, detachIndex)
+        } else {
+            // FIXME expensive slot search, should create a slot map in the adapter perhaps
+            val root = origin.adapter.rootFragment
+            val slot = root.firstOrNull(deep = true) { it is FoundationSlot && it.name == slotName } ?: return
+
+            slot as FoundationSlot
+            slot.setContent(origin, detachIndex)
+        }
     }
 
     override fun toString(): String {
@@ -42,13 +54,13 @@ class Replace(
 // ExternalLink
 // --------------------------------------------------------------------
 
-fun externalLink(res : FileResource) = ExternalLink(res.uri)
+fun externalLink(res: FileResource) = ExternalLink(res.uri)
 
-fun externalLink(href : String) = ExternalLink(href)
+fun externalLink(href: String) = ExternalLink(href)
 
-data class ExternalLink(val href : String) : AdaptiveInstruction {
+data class ExternalLink(val href: String) : AdaptiveInstruction {
 
-    fun openLink(event : AdaptiveUIEvent) {
+    fun openLink(event: AdaptiveUIEvent) {
         event.fragment.uiAdapter.openExternalLink(href)
     }
 

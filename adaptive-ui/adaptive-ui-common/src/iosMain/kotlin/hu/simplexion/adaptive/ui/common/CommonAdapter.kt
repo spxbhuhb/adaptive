@@ -4,6 +4,7 @@
 package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.resource.defaultResourceEnvironment
 import hu.simplexion.adaptive.ui.common.instruction.Color
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
@@ -203,6 +204,6 @@ open class CommonAdapter(
 
     @OptIn(ExperimentalForeignApi::class)
     override var mediaMetrics = rootContainer.frame.useContents {
-        MediaMetrics(size.width, size.height)
+        MediaMetrics(size.width, size.height, defaultResourceEnvironment.theme)
     }
 }

@@ -7,6 +7,7 @@ package hu.simplexion.adaptive.ui.common.platform
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import hu.simplexion.adaptive.foundation.producer.AdaptiveProducer
 import hu.simplexion.adaptive.foundation.producer.Producer
+import hu.simplexion.adaptive.resource.ThemeQualifier
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 
 /**
@@ -15,6 +16,7 @@ import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 class MediaMetrics(
     val viewWidth: Double,
     val viewHeight: Double,
+    val theme: ThemeQualifier,
 ) {
     val isSmall
         get() = viewWidth < 600.0 || viewHeight < 600.0
@@ -24,6 +26,13 @@ class MediaMetrics(
 
     val isLarge
         get() = viewWidth > 1024.0 || viewHeight > 1024.0
+
+    val isLight
+        get() = (theme == ThemeQualifier.LIGHT)
+
+    val isDark
+        get() = (theme == ThemeQualifier.DARK)
+
 }
 
 /**
