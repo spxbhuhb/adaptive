@@ -11,8 +11,6 @@ import hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm.OriginalFunctionTransf
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
-import org.jetbrains.kotlin.ir.util.addChild
-import org.jetbrains.kotlin.ir.util.file
 
 internal class FoundationGenerationExtension(
     val options: AdaptiveOptions
@@ -34,9 +32,15 @@ internal class FoundationGenerationExtension(
                 .map {
                     ArmClassBuilder(this, it).apply { buildIrClassWithoutGenBodies() }
                 }
+                .onEach {
+                    if (! it.armClass.isRoot) { // root lambda have to stay the same
+                        // this has to be before `buildGenFunctionBodies` or call transforms will fail
+                        // because the function parameters are not fixed yet
+                        it.buildOriginalFunctionBody()
+                    }
+                }
                 .forEach {
                     it.buildGenFunctionBodies()
-                    it.armClass.originalFunction.file.addChild(it.irClass)
                 }
 
             armEntryPoints

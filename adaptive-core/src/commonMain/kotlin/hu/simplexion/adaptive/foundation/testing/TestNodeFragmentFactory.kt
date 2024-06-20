@@ -4,9 +4,9 @@
 
 package hu.simplexion.adaptive.foundation.testing
 
-import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
+import hu.simplexion.adaptive.foundation.fragment.FoundationFragmentFactory
 
-object TestNodeFragmentFactory : AdaptiveFragmentFactory() {
+object TestNodeFragmentFactory : FoundationFragmentFactory() {
     init {
         add("test:t0") { p,i -> AdaptiveT0(p.adapter as AdaptiveTestAdapter, p, i) }
         add("test:t1") { p,i -> AdaptiveT1(p.adapter as AdaptiveTestAdapter, p, i) }

@@ -17,6 +17,7 @@ import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmInternalStateVariable
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmRenderingStatement
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.ClassKind
+import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.builders.declarations.addConstructor
@@ -54,8 +55,8 @@ class ArmClassBuilder(
             origin = FoundationPluginKey.origin
             name = armClass.name
             kind = ClassKind.CLASS
-            visibility = originalFunction.visibility
-            modality = Modality.OPEN
+            visibility = DescriptorVisibilities.LOCAL
+            modality = Modality.FINAL
         }
 
         irClass.superTypes = listOf(pluginContext.adaptiveFragmentType)
@@ -64,7 +65,7 @@ class ArmClassBuilder(
         constructor()
         initializer()
 
-        irClass.parent = originalFunction.file
+        irClass.parent = armClass.originalFunction
 
         constructorBody()
 
@@ -367,4 +368,44 @@ class ArmClassBuilder(
             }
         )
 
+    // ---------------------------------------------------------------------------
+    // Original function body
+    // ---------------------------------------------------------------------------
+
+    fun buildOriginalFunctionBody() {
+        // transform the original function
+        // - replace the parameters with parent, index
+        // - change return type to AdaptiveFragment
+        // - replace the body with:
+        //    - armClass declaration
+        //    - create an instance of the class
+        //    - return with the created instance
+
+        val irClass = armClass.irClass
+
+        with(armClass.originalFunction) {
+            valueParameters = emptyList()
+
+            val parent = addValueParameter(Strings.PARENT, pluginContext.adaptiveFragmentType)
+            val index = addValueParameter(Strings.DECLARATION_INDEX, irBuiltIns.intType)
+
+            returnType = pluginContext.adaptiveFragmentType
+
+            body = DeclarationIrBuilder(pluginContext.irContext, originalFunction.symbol).irBlockBody {
+                + irClass
+                + irReturn(
+                    IrConstructorCallImpl(
+                        SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                        irClass.defaultType,
+                        irClass.constructors.first().symbol,
+                        0, 0, 3
+                    ).also {
+                        it.putValueArgument(0, irGetValue(pluginContext.adapter, irGet(parent)))
+                        it.putValueArgument(1, irGet(parent))
+                        it.putValueArgument(2, irGet(index))
+                    }
+                )
+            }
+        }
+    }
 }

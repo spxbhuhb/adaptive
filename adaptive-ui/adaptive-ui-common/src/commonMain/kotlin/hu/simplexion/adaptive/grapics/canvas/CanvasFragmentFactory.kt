@@ -4,11 +4,11 @@
 
 package hu.simplexion.adaptive.grapics.canvas
 
-import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
+import hu.simplexion.adaptive.foundation.fragment.FoundationFragmentFactory
 import hu.simplexion.adaptive.grapics.canvas.fragment.CanvasCircle
 import hu.simplexion.adaptive.grapics.canvas.fragment.CanvasSvg
 
-object CanvasFragmentFactory : AdaptiveFragmentFactory() {
+object CanvasFragmentFactory : FoundationFragmentFactory() {
     init {
         add("canvas:circle") { p,i -> CanvasCircle(p.adapter as CanvasAdapter, p, i) }
         add("canvas:svg") { p,i -> CanvasSvg(p.adapter as CanvasAdapter, p, i) }

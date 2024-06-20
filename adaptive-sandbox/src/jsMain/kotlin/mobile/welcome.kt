@@ -2,7 +2,7 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package old
+package mobile
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
@@ -16,54 +16,61 @@ import sandbox.check
 fun welcome() {
     val signUp = SignUp()
 
-    grid(
-        colTemplate(1.fr),
-        rowTemplate(213.dp, 78.dp, 1.fr, 81.dp),
-        paddingLeft(32.dp),
-        paddingRight(32.dp),
-    ) {
-        titleLarge("Welcome")
+    mobileExample("Welcome") {
+        grid {
+            colTemplate(1.fr)
+            rowTemplate(213.dp, 78.dp, 1.fr, 81.dp)
+            paddingLeft(32.dp)
+            paddingRight(32.dp)
 
-        subTitle("Sign up to join")
+            titleLarge("Welcome")
 
-        grid(
-            colTemplate(1.fr),
-            rowTemplate(replicate(4, 52.dp), 60.dp, 50.dp)
-        ) {
-            input(*input) { signUp.name }
-            input(*input) { signUp.email }
-            input(*input) { signUp.password }
-            input(*input) { signUp.verification }
+            subTitle("Sign up to join")
 
-            row(paddingTop(15.dp)) {
-                checkbox { signUp.agreement }
-                text("I agree to the", FontSize(15.sp), mediumGray, spaceAround)
-                text("Terms of Service", FontSize(15.sp), black, bold, externalLink("/terms.txt"))
+            grid {
+                colTemplate(1.fr)
+                rowTemplate(replicate(4, 52.dp), 60.dp, 50.dp)
+
+                input(*input) { signUp.name }
+                input(*input) { signUp.email }
+                input(*input) { signUp.password }
+                input(*input) { signUp.verification }
+
+                row {
+                    paddingTop(15.dp)
+                    AlignItems.start
+                    gap(10.dp)
+
+                    checkbox { signUp.agreement }
+                    text("I agree to the", fontSize(15.sp), mediumGray)
+                    text("Terms of Service", fontSize(15.sp), black, bold, externalLink("/terms.txt"))
+                }
+
+                button("Sign Up", onClick { println("sing up") })
             }
 
-            button("Sign Up", onClick { println("sing up") })
+            footerLink("Have an account?", "Sign in", "/")
         }
-
-        footerLink("Have an account?", "Sign in", "/")
     }
 }
 
 @Adaptive
-fun titleLarge(text : String) {
+fun titleLarge(text: String) {
     row(height(213.dp), paddingTop(117.dp)) {
         text(text, *titleLarge)
     }
 }
 
 @Adaptive
-fun subTitle(text : String) {
+fun subTitle(text: String) {
     text(text, *bodyMedium, FontWeight.LIGHT, paddingTop(15.dp))
 }
 
 @Adaptive
-fun footerLink(normalText : String, linkText : String, href : String) {
+fun footerLink(normalText: String, linkText: String, href: String) {
     row(AlignItems.center) {
-        text(normalText, *bodyMedium, spaceAfter)
+        gap(6.dp)
+        text(normalText, *bodyMedium)
         text(linkText, FontSize(17.sp), black, TextDecoration.Underline, externalLink(href))
     }
 }
@@ -78,7 +85,7 @@ fun checkbox(
 ) {
     checkNotNull(binding)
 
-    row(onClick { binding.setValue(!binding.value, true) }) {
+    row(onClick { binding.setValue(! binding.value, true) }) {
         if (binding.value) {
             box(*activeCheckBox) {
                 image(Res.drawable.check, frame(1.dp, 1.dp, 18.dp, 18.dp))
@@ -90,9 +97,6 @@ fun checkbox(
         }
     }
 }
-
-val spaceAround = padding(left = 6.dp, right = 6.dp)
-val spaceAfter = paddingRight(6.dp)
 
 val titleLarge = arrayOf(
     FontSize(40.sp),
@@ -117,14 +121,14 @@ val input = arrayOf(
 )
 
 var activeCheckBox = arrayOf(
-    size(20.dp,20.dp),
+    size(20.dp, 20.dp),
     cornerRadius(10.dp),
     backgroundColor(purple),
     white
 )
 
 var inactiveCheckBox = arrayOf(
-    size(20.dp,20.dp),
+    size(20.dp, 20.dp),
     cornerRadius(10.dp),
     border(purple, 1.dp)
 )

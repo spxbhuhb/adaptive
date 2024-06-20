@@ -182,10 +182,10 @@ abstract class AbstractCommonFragment<RT>(
         val margin = renderData.layout?.margin ?: RawSurrounding.ZERO
 
         return RawSurrounding(
-            padding.top + border.top + margin.top,
-            padding.left + border.left + margin.left,
-            padding.right + border.right + margin.right,
-            padding.bottom + border.bottom + margin.bottom
+            top = padding.top + border.top + margin.top,
+            right = padding.right + border.right + margin.right,
+            bottom = padding.bottom + border.bottom + margin.bottom,
+            left = padding.left + border.left + margin.left
         )
     }
 }

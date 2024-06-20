@@ -20,12 +20,12 @@ application {
 }
 
 adaptive {
-    pluginDebug = true
+    pluginDebug = false
 //    pluginLogDir = projectDir.toPath()
     resources {
         publicResClass = true
         packageOfResClass = "sandbox"
-        generateResClass = always
+        generateResClass = auto
     }
 }
 

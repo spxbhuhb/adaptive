@@ -3,17 +3,19 @@
  */
 package hu.simplexion.adaptive.foundation.fragment
 
+import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
-import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.TestedInPlugin
 import hu.simplexion.adaptive.foundation.instruction.Trace
+import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
 import hu.simplexion.adaptive.utility.checkIfInstance
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 
+@AdaptiveActual
 @TestedInPlugin
-class AdaptiveSlot(
+class FoundationSlot(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment,
     index: Int
