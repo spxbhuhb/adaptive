@@ -1,7 +1,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/hu.simplexion.adaptive/adaptive-core)](https://mvnrepository.com/artifact/hu.simplexion.adaptive/adaptive-core)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
-Please read [What is this about](./doc/what-is-this-about.md) for a short introduction.
+Please read [What is this about](./doc/what-is-adaptive.md) for a short introduction.
  
 > [!CAUTION]
 >
