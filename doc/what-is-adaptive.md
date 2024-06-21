@@ -1,100 +1,188 @@
 # What is Adaptive
 
-Adaptive is a Kotlin Multiplatform library for full-stack (server + Browser/JS, Android, iOS) application development.
+Adaptive is a Kotlin Multiplatform library for full-stack application development.
+
+Client platforms:
+
+* browser (JS)
+* Android
+* iOS
+
+Server platforms:
+
+* all platforms supported by Kotlin Multiplatform
+  * some modules may be platform dependent, but
+  * the core is pure Kotlin
+
+## Let's write a small application
+
+### Step 1. - Define an API
+
+Source set: **commonMain**
+
+```kotlin
+@ServiceApi
+interface CounterApi {
+    
+    suspend fun incrementAndGet() : Int
+
+}
+```
+
+### Step 2. - Implement the service
+
+Source set: **jvmMain**
+
+```kotlin
+class CounterService : CounterApi, ServiceImpl<CounterService> {
+
+  companion object {
+    val counter = AtomicInteger(0)
+  }
+
+  override suspend fun incrementAndGet(): Int {
+    return counter.incrementAndGet()
+  }
+
+}
+```
+
+### Step 3. - Write the server main
+
+Source set: **jvmMain**
+
+```kotlin
+fun main() {
+
+  server(wait = true) {
+
+    settings {
+      propertyFile(optional = false) { "./etc/sandbox.properties" }
+    }
+
+    service { CounterService() }
+
+    worker { KtorWorker() }
+
+  }
+
+}
+```
+
+### Step 4. - Write the common UI main
+
+Source set: **commonMain**
+
+```kotlin
+val black = color(0x0u)
+val white = color(0xffffffu)
+val counterService = getService<CounterApi>()
+
+@Adaptive
+fun commonMain() {
+  var counter = counterService.get()
+
+  row {
+    leftToRightGradient(black, white)
+    padding { 16.dp }
+    onClick { counter = counterService.incrementAnGet() }
+
+    text("Counter: $counter")
+  }
+}
+```
+
+### Step 5. - Call common UI main from platform main
+
+Source set: **jsMain**
+
+Note: this is the only platform-dependent part of the UI.
+
+```kotlin
+fun main() {
+  withWebSocketTransport()
+
+  browser {
+    commonMain()
+  }
+}
+```
+
+### Summary
+
+There are quite a few points in the example above that worth mentioning.
+
+**functions marked with @Adaptive are fragments**
+
+Fragments are the building blocks in adaptive. The system creates a so-called fragment
+tree from these fragments. The fragment tree contains the UI or the server structure.
+
+**fragments are reactive by default**
+
+If you check the common UI main you'll see that when the user clicks on the row
+the counter increments and then the text is updated automatically on the UI.
+
+This is how Adaptive fragments work in general. When the data changes, variables
+are update accordingly.
+
+**server and client are both reactive**
+
+The technological foundation is the same for client and server. There is no real difference
+between the two, you only use different fragments.
+
+This also means that Adaptive servers can react/reconfigure themselves on configuration
+change, just as any reactive UI does it.
 
 ## Main concept
 
 Adaptive differs from existing libraries in how it approaches reactivity. Originally it has been inspired
 by [Svelte](https://svelte.io), but the idea has grown and turned into something much more interesting.
 
-The soul of Adaptive is the so-called foundation transformation and the so-called instructions.
+### Fragments
 
-The transformation turns the functions marked with the `@Adaptive` annotation into stateful classes
-that are **reactive** by default. During runtime these classes are used to build a tree of fragments
-that reflect the current state of the application.
+The building blocks of an Adaptive application are fragments.
 
-Something like this (a very simplified version of course):
+Under the hood, the library:
 
-<img alt="Adaptive Transform" height="764" src="transform.png" width="580"/>
+- converts `@Adaptive` functions into stateful classes
+- uses these classes to build a tree from these classes
 
-**Instructions** may be added to fragments to modify them in many ways. `backgroundColor`, `onClick`, and `black`
+All of these classes are able to handle state changes and update themselves
+or their descendants accordingly.
+
+So, if you change something at the top, the change is propagated down to
+all fragments which depends on that specific piece of data.
+
+### Instructions
+
+Instructions may be added to fragments to modify them in many ways. `backgroundColor`, `onClick`, and `black`
 are instructions in the code example below.
 
 ```kotlin
 @Adaptive
 fun helloWorld() {
-  row {
-    backgroundColor(cyan)
-    onClick {
-      println("hello world!")
+    row {
+        backgroundColor(cyan)
+        onClick { println("You clicked on me!") }
 
-      text("Click on me!", black)
+        text("Click on me!", black)
     }
-  }
-```
-
-The interesting thing about instructions is that they are added to the state of the fragment. And this leads us to
-the features Adaptive provides.
-
-## More than UI
-
-The base technology behind adaptive can be used on the server side as well. You can build reactive servers
-that automatically react/reconfigure themselves on configuration changes.
-
-An example server main:
-
-```kotlin
-fun main() {
-
-    withJson()
-
-    server(wait = true) {
-
-        settings {
-            propertyFile(optional = false) { "./etc/sandbox.properties" }
-        }
-
-        service { CounterService() }
-        worker { CounterWorker() }
-
-        worker { KtorWorker() }
-
-    }
-
 }
 ```
 
-### Seamless Services
+**instructions are NOT specific to UI**
 
-In Adaptive services are used for client - server interaction. You can define an API an implementation and
-simply call the functions on the client side:
+While most styling are made with instructions UI is just a subset of meaningful instructions.
 
-```kotlin
-// API
+For example, there are instructions such as `name` which sets the name of a fragment, or `trace` which
+switches on tracing.
 
-@ServiceApi
-interface CounterApi {
-    suspend fun incrementAndGet() : Int
-}
+These are general instructions which can be used in any context and are very-very powerful.
 
-// client side
+**instructions are part of the state**
 
-suspend fun count() {
-    getService<CounterApi>().incrementAndGet()
-}
-
-// server side
-
-class CounterService : CounterApi, ServiceImpl<CounterService> {
-
-  val worker by worker<CounterWorker>()
-
-  override suspend fun incrementAndGet(): Int {
-    return worker.counter.incrementAndGet()
-  }
-
-}
-```
+The interesting thing about instructions is that they are added to the state of the fragment.
+This has many consequences and leads us to an impressive feature list.
 
 ## Features
 
@@ -110,7 +198,7 @@ The fragment/instruction approach provides a quite interesting toolset:
 - inspection and modification of the fragment tree during runtime
 - replace fragment implementations globally
   - for example, you can say: whenever the `text` function called, use the `MyText` class instead of `CommonText`
-- serialize/deserialize tree automatically
+- serialize/deserialize the fragment tree automatically
 - can be easily used to build a UI editor
 
 **instructions**
@@ -122,7 +210,7 @@ The fragment/instruction approach provides a quite interesting toolset:
 
 **develop without simulators**
 
-- write and test **all** UI code for mobile using a web browser
+- write and test almost all UI code for mobile using a web browser
 - navigation, resources, layouts all can be transparent
 
 **testing**
