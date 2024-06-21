@@ -36,9 +36,9 @@ fun helloWorld() {
 The interesting thing about instructions is that they are added to the state of the fragment. And this leads us to
 the features Adaptive provides.
 
-## Unique Features
+## Features
 
-This approach provides a quite unique toolset:
+The fragment/instruction approach provides a quite interesting toolset:
 
 **the code**
 
