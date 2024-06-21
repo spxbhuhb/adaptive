@@ -92,6 +92,20 @@ fun AdaptiveAdapter.single(
  *
  * @param deep Deep search, go down in the fragment tree.
  * @param horizontal When [deep] is true, check a given level first, children second.
+ *
+ * @throws NoSuchElementException if there is no fragment of class [T]
+ */
+inline fun <reified T : AdaptiveFragment> AdaptiveAdapter.first(
+    deep: Boolean = false,
+    horizontal: Boolean = true
+): T =
+    firstOrNull(deep, horizontal) { it is T } as? T ?: throw NoSuchElementException()
+
+/**
+ * Find the first fragment of a given class [T].
+ *
+ * @param deep Deep search, go down in the fragment tree.
+ * @param horizontal When [deep] is true, check a given level first, children second.
  */
 inline fun <reified T : AdaptiveFragment> AdaptiveAdapter.firstOrNull(
     deep: Boolean = false,

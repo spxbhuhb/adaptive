@@ -17,49 +17,49 @@ import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 @TestedInPlugin
 class FoundationSlot(
     adapter: AdaptiveAdapter,
-    parent: AdaptiveFragment,
+    parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, 0, 2) {
+) : AdaptiveFragment(adapter, parent, index, - 1, 3) {
 
-    override val createClosure : AdaptiveClosure
-        get() = parent!!.thisClosure
+    override val createClosure: AdaptiveClosure
+        get() = parent !!.thisClosure
 
     override val thisClosure = createClosure
 
-    val name : String?
+    val name: String?
         get() = state[0].checkIfInstance()
 
     val initialContent: BoundFragmentFactory
         get() = state[1].checkIfInstance()
 
+    val historySize: Int
+        get() = state[2].checkIfInstance()
+
+    val backHistory = mutableListOf<List<AdaptiveFragment>>()
+
+    val forwardHistory = mutableListOf<List<AdaptiveFragment>>()
+
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
         return initialContent.build(this)
     }
-    
+
     override fun genPatchDescendant(fragment: AdaptiveFragment) {
         // slot children are detached
         // the child state is set by the `setContent`
     }
 
-    override fun genPatchInternal() : Boolean {
+    override fun genPatchInternal(): Boolean {
         val trace = instructions.firstOrNullIfInstance<Trace>()
         if (trace != null && trace.patterns.isNotEmpty()) {
             tracePatterns = trace.patterns
         }
-
         // descendants are detached, so we should changes after the initial patch
         return isInit
     }
 
-    @TestedInPlugin
-    fun setContent(origin: AdaptiveFragment, detachIndex: Int) {
-        if (trace) trace("setContent", "origin: $origin, detachIndex: $detachIndex")
-
-        if (children.isNotEmpty()) {
-            if (isMounted) children.forEach { it.unmount() }
-            children.forEach { it.dispose() }
-            children.clear()
-        }
+    fun setContent(origin: AdaptiveFragment, detachIndex: Int): AdaptiveFragment {
+        saveOrDisposeChildren()
+        forwardHistory.clear()
 
         val fragment = origin.genBuild(this, detachIndex)
 
@@ -73,9 +73,91 @@ class FoundationSlot(
 
         children.add(fragment)
 
-        if (isMounted) {
-            fragment.mount()
-        }
+        if (isMounted) fragment.mount()
+
+        if (trace) trace("setContent", "origin: $origin, detachIndex: $detachIndex fragment=$fragment")
+
+        return fragment
     }
 
+    /**
+     * Saves the children into the back history or disposes them if the history
+     * is disabled ([historySize] == 0).
+     */
+    fun saveOrDisposeChildren() {
+        if (children.isEmpty()) return
+
+        if (isMounted) children.forEach { it.unmount() }
+
+        if (historySize == 0) {
+
+            children.forEach { it.dispose() }
+            children.clear()
+
+        } else {
+
+            backHistory += children.toList()
+
+            while (backHistory.size > historySize) {
+                backHistory.removeFirst().forEach { it.dispose() }
+            }
+
+        }
+
+        children.clear()
+    }
+
+    /**
+     * Restore children from the back history if there are any.
+     * Adds current children to the forward history.
+     *
+     * @return  true if children have been restored, false if the back history is empty
+     */
+    fun back(): Boolean {
+        if (backHistory.isEmpty()) return false
+
+        if (isMounted) children.forEach { it.unmount() }
+
+        forwardHistory.add(0, children.toList())
+
+        while (forwardHistory.size > historySize) {
+            forwardHistory.removeLast().forEach { it.dispose() }
+        }
+
+        children.clear()
+        children += backHistory.removeLast()
+
+        if (isMounted) children.forEach { it.mount() }
+
+        if (trace) trace("back", "${children.first()}")
+
+        return true
+    }
+
+    /**
+     * Restore children from the forward history if there are any.
+     * Adds current children to the back history.
+     *
+     * @return  true if children have been restored, false if the forward history is empty
+     */
+    fun forward(): Boolean {
+        if (forwardHistory.isEmpty()) return false
+
+        if (isMounted) children.forEach { it.unmount() }
+
+        backHistory.add(children.toList())
+
+        while (backHistory.size > historySize) {
+            backHistory.removeFirst().forEach { it.dispose() }
+        }
+
+        children.clear()
+        children += forwardHistory.removeFirst()
+
+        if (isMounted) children.forEach { it.mount() }
+
+        if (trace) trace("forward", "${children.first()}")
+
+        return true
+    }
 }

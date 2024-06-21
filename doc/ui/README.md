@@ -61,8 +61,9 @@ Producers
 - [mediaMetrics](./basic-producers.md#mediametrics)
 
 Foundation Fragments
-- [slot](./navigation.md#navigation)
-- [measureInitTime](./performance.md#measurefragmenttime)
+
+- [slot](../foundation/foundation-fragments.md#slot)
+- [measureInitTime](../foundation/foundation-fragments.md#slot)
 
 [Foundation Instructions](../foundation/foundation-instructions.md)
 - [Name](../foundation/foundation-instructions.md#name)

@@ -4,10 +4,13 @@
 
 package hu.simplexion.adaptive.foundation
 
+import kotlin.js.JsName
+
 fun adapter(): AdaptiveAdapter {
     replacedByPlugin("gets the adapter of the fragment")
 }
 
+@JsName("getFragment") // to avoid compiler warning with the fragment package
 fun fragment(): AdaptiveFragment {
     replacedByPlugin("gets the fragment")
 }

@@ -6,18 +6,25 @@ package hu.simplexion.adaptive.foundation.fragment
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.AdaptiveExpect
-import hu.simplexion.adaptive.foundation.TestedInPlugin
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.manualImplementation
 
 @AdaptiveExpect(foundation)
-@TestedInPlugin
-fun slot(name : String, @Adaptive initialContent : () -> Unit) {
-    manualImplementation(name, initialContent)
+fun delegate(
+    buildFun: (AdaptiveFragment.(parent: AdaptiveFragment, declarationIndex: Int) -> AdaptiveFragment?)? = null,
+    patchDescendantFun: (AdaptiveFragment.(fragment: AdaptiveFragment) -> Unit)? = null,
+    patchInternalFun: (AdaptiveFragment.() -> Boolean)? = null
+) {
+    manualImplementation(buildFun, patchDescendantFun, patchInternalFun)
 }
 
 @AdaptiveExpect(foundation)
-@Adaptive
 fun measureFragmentTime(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit) {
     manualImplementation(instructions, content)
+}
+
+@AdaptiveExpect(foundation)
+fun slot(name: String, historySize: Int = 0, @Adaptive initialContent: () -> Unit) {
+    manualImplementation(name, initialContent)
 }
