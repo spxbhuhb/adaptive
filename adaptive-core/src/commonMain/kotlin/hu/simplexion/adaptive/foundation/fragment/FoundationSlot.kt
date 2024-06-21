@@ -29,10 +29,10 @@ class FoundationSlot(
     val name: String?
         get() = state[0].checkIfInstance()
 
-    val initialContent: BoundFragmentFactory
+    val historySize: Int
         get() = state[1].checkIfInstance()
 
-    val historySize: Int
+    val initialContent: BoundFragmentFactory
         get() = state[2].checkIfInstance()
 
     val backHistory = mutableListOf<List<AdaptiveFragment>>()
@@ -53,7 +53,13 @@ class FoundationSlot(
         if (trace != null && trace.patterns.isNotEmpty()) {
             tracePatterns = trace.patterns
         }
-        // descendants are detached, so we should changes after the initial patch
+
+        if (isInit) {
+            // init history size if it's on default
+            if (state[1] == null) state[1] = 0
+        }
+
+        // descendants are detached, so we should not propagate changes after the initial patch
         return isInit
     }
 

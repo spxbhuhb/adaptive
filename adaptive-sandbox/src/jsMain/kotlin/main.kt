@@ -46,7 +46,8 @@ fun main() {
                 padding(10.dp)
 
                 slot("mainContent") {
-                    text("Click on the left to load a demo!")
+                    //text("Click on the left to load a demo!")
+                    markdown()
                 }
             }
         }

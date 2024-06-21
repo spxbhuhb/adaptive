@@ -10,7 +10,10 @@ import hu.simplexion.adaptive.ui.common.render.text
 fun fontName(fontName: String) = FontName(fontName)
 fun fontSize(fontSize: SPixel) = FontSize(fontSize)
 fun fontWeight(weight: Int) = FontWeight(weight)
+
 val noSelect = NoSelect()
+val bold = FontWeight.BOLD
+
 fun letterSpacing(value : Double) = LetterSpacing(value)
 
 data class FontName(val fontName: String) : AdaptiveInstruction {

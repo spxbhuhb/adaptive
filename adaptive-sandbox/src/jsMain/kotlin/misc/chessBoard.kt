@@ -8,6 +8,7 @@ package misc/*
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.fragment.measureFragmentTime
+import hu.simplexion.adaptive.ui.common.fragment.box
 import hu.simplexion.adaptive.ui.common.fragment.column
 import hu.simplexion.adaptive.ui.common.fragment.row
 import hu.simplexion.adaptive.ui.common.fragment.text
@@ -36,11 +37,17 @@ const val size = 8
 @Adaptive
 fun chessBoard() {
     measureFragmentTime {
-        column {
-            for (r in 0 until size) {
-                row {
-                    for (c in 1 .. size) {
-                        row(*colors(r, c), AlignItems.center) { text(r * size + c, Size(40.dp, 40.dp)) }
+        box {
+            height { (size * 40 + 2).dp }
+            width { (size * 40 + 2).dp }
+            border(black)
+
+            column {
+                for (r in 0 until size) {
+                    row {
+                        for (c in 1 .. size) {
+                            row(*colors(r, c), AlignItems.center) { text(r * size + c, Size(40.dp, 40.dp)) }
+                        }
                     }
                 }
             }

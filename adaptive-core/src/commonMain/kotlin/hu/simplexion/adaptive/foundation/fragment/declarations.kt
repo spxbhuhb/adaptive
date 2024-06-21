@@ -26,5 +26,5 @@ fun measureFragmentTime(vararg instructions: AdaptiveInstruction, @Adaptive cont
 
 @AdaptiveExpect(foundation)
 fun slot(name: String, historySize: Int = 0, @Adaptive initialContent: () -> Unit) {
-    manualImplementation(name, initialContent)
+    manualImplementation(name, historySize, initialContent)
 }

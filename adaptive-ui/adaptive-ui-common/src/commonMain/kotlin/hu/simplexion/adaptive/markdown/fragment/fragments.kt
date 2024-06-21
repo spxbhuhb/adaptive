@@ -13,6 +13,7 @@ import hu.simplexion.adaptive.ui.common.fragment.text
 import hu.simplexion.adaptive.ui.common.instruction.*
 
 val linkColor = color(0x0000ffu)
+val textColor = color(0x333333u)
 val headerSizes = arrayOf(28.sp, 24.sp, 20.sp, 16.sp, 14.sp)
 
 val codeStyles = arrayOf(
@@ -21,6 +22,10 @@ val codeStyles = arrayOf(
     backgroundColor(color(0xe0e0e0u)),
     cornerRadius(2.dp),
     fontName("Courier New")
+)
+
+val textStyles = arrayOf(
+    textColor
 )
 
 fun headerSize(level: Int) =
@@ -51,9 +56,11 @@ fun document(source: String) {
 @Adaptive
 fun header(entry: MarkdownHeaderAstEntry) {
     row {
-        AlignItems.start
+        AlignItems.bottom
+        marginBottom(20.dp)
+
         for (child in entry.children) {
-            inline(child, mutableListOf(headerSize(entry.level)))
+            inline(child, mutableListOf(headerSize(entry.level), bold))
         }
     }
 }
@@ -62,6 +69,8 @@ fun header(entry: MarkdownHeaderAstEntry) {
 fun paragraph(entry: MarkdownParagraphAstEntry) {
     row {
         AlignItems.start
+        marginBottom(20.dp)
+
         for (child in entry.children) {
             inline(child)
         }
@@ -82,10 +91,9 @@ fun inline(
         }
 
         entry.inlineLink -> {
-            inlineLink(entry, formatting)
         }
 
-        else -> text(entry.text, *formatting.toTypedArray())
+        else -> text(entry.text, *formatting.toTypedArray(), *textStyles)
         // TODO reflink, refdef
     }
 }

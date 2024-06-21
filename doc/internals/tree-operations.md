@@ -35,13 +35,20 @@ text("Label", Replace { another() })
 text("Label", replace { another() })
 ```
 
-When the plugin encounters `@AdaptiveDetach` it treats the content of the lambda as a normal rendering 
-function call.
+### Processing
 
-This means that the call will get an index and branches in `genBuild` and `genPatchDescendant`.
-
-Then the content of the lambda is replaced with a call to the `detach` function of the handler:
+- `InnerInstructionLowering` moves all inner instructions into the `instructions` vararg
+- `IrFunction2ArmClass.transformDetachExpressions` transforms detach instructions
+- `transformDetachExpressions` treats the content of the lambda as a normal rendering function call
+- the call will get an index and branches in `genBuild` and `genPatchDescendant`.
+- the content of the lambda is replaced with a call to the `detach` function of the handler:
 
 ```kotlin
 handler.detach(this, detachIndex)
 ```
+
+**IMPORTANT**
+
+Whatever code gets the origin fragment and `detachIndex`, it has to call `genBuild` and then leave the
+origin fragment alone. This is necessary, so we won't keep inactive stuff alive. Probably we should
+check that there are leftover connections because of parameters.
