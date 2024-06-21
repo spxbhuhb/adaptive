@@ -13,11 +13,11 @@ The transformation turns the functions marked with the `@Adaptive` annotation in
 that are **reactive** by default. During runtime these classes are used to build a tree of fragments
 that reflect the current state of the application.
 
-Something like this:
+Something like this (a very simplified version of course):
 
-![Adaptive Transform](adaptive-transform.png)
+<img alt="Adaptive Transform" height="764" src="transform.png" width="580"/>
 
-Instructions may be added to fragments to modify them in many ways. `backgroundColor`, `onClick`, and `black`
+**Instructions** may be added to fragments to modify them in many ways. `backgroundColor`, `onClick`, and `black`
 are instructions in the code example below.
 
 ```kotlin
@@ -35,6 +35,66 @@ fun helloWorld() {
 
 The interesting thing about instructions is that they are added to the state of the fragment. And this leads us to
 the features Adaptive provides.
+
+## More than UI
+
+The base technology behind adaptive can be used on the server side as well. You can build reactive servers
+that automatically react/reconfigure themselves on configuration changes.
+
+An example server main:
+
+```kotlin
+fun main() {
+
+    withJson()
+
+    server(wait = true) {
+
+        settings {
+            propertyFile(optional = false) { "./etc/sandbox.properties" }
+        }
+
+        service { CounterService() }
+        worker { CounterWorker() }
+
+        worker { KtorWorker() }
+
+    }
+
+}
+```
+
+### Seamless Services
+
+In Adaptive services are used for client - server interaction. You can define an API an implementation and
+simply call the functions on the client side:
+
+```kotlin
+// API
+
+@ServiceApi
+interface CounterApi {
+    suspend fun incrementAndGet() : Int
+}
+
+// client side
+
+suspend fun count() {
+    getService<CounterApi>().incrementAndGet()
+}
+
+// server side
+
+class CounterService : CounterApi, ServiceImpl<CounterService> {
+
+  val worker by worker<CounterWorker>()
+
+  override suspend fun incrementAndGet(): Int {
+    return worker.counter.incrementAndGet()
+  }
+
+}
+```
 
 ## Features
 

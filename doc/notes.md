@@ -114,3 +114,47 @@ fun select(query: (suspend () -> List<String>)? = null): SelectTransformApi {
     return thisState()
 }
 ```
+
+## Example for what is
+
+```kotlin
+    @Adaptive
+fun subTitle(content: String) {
+    text(content, *mediumTitle)
+}
+
+class AdaptiveSubTitle {
+
+    val content by state<String>()
+
+    fun genBuild(parent: AdaptiveFragment, index: Int) =
+        CommonText(parent.adapter, parent, index)
+
+    fun genPatchDescendant(fragment: AdaptiveFragment) {
+        val child = children[0] as CommonText
+
+        if (child.haveToPatch(content)) {
+            child.setStateVariable(0, content)
+        }
+
+        if (child.haveToPatch(instructions)) {
+            child.setStateVariable(1, arrayOf(mediumTitle))
+        }
+    }
+
+}
+```
+
+## Generate pictures with ChatGPT
+
+```text
+Adaptive is a friendly leaf. He is in a park, in a rain of many small colorful question marks, holding a big umbrella. Add visible, sharp environment. Make the question marks small.
+Make a manga-like, colored picture of this with 1792x1024 resolution. 
+
+Make him look like on the attached example picture.
+
+Adaptive is a friendly leaf, who is standing in front of a chasm, looking down into the deepness.
+Make a manga-like, colored picture of this with 1792x1024 resolution.
+
+Make him look like on the attached example picture.
+```
