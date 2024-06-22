@@ -58,9 +58,6 @@ interface AdaptiveAnnotationBasedExtension {
             it is IrGetValue && it.symbol.owner.hasAnnotation(pluginContext.adaptiveClass)
         } ?: false
 
-    val IrCall.isTransformInterfaceCall: Boolean
-        get() = dispatchReceiver !!.type.isSubtypeOfClass(pluginContext.adaptiveTransformInterfaceClass)
-
     fun IrType.isAccessSelector(previousType: IrType?): Boolean {
         if (previousType == null) return false
         if (! isFunctionOrKFunction()) return false

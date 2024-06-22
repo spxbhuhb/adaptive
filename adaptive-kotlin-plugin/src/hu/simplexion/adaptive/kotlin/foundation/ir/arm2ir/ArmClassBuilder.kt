@@ -31,7 +31,6 @@ import org.jetbrains.kotlin.ir.expressions.impl.*
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.symbols.impl.IrAnonymousInitializerSymbolImpl
 import org.jetbrains.kotlin.ir.types.IrTypeSystemContextImpl
-import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.*
 
@@ -68,10 +67,6 @@ class ArmClassBuilder(
         irClass.parent = armClass.originalFunction
 
         constructorBody()
-
-        armClass.stateInterface?.let {
-            irClass.superTypes += it.defaultType
-        }
 
         irClass.addFakeOverrides(IrTypeSystemContextImpl(irContext.irBuiltIns))
 

@@ -4,13 +4,13 @@
 package hu.simplexion.adaptive.kotlin.foundation.ir
 
 import hu.simplexion.adaptive.kotlin.AdaptiveOptions
+import hu.simplexion.adaptive.kotlin.common.AbstractPluginContext
+import hu.simplexion.adaptive.kotlin.common.functionByName
 import hu.simplexion.adaptive.kotlin.foundation.CallableIds
 import hu.simplexion.adaptive.kotlin.foundation.ClassIds
 import hu.simplexion.adaptive.kotlin.foundation.Strings
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmClass
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmEntryPoint
-import hu.simplexion.adaptive.kotlin.common.AbstractPluginContext
-import hu.simplexion.adaptive.kotlin.common.functionByName
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
@@ -68,7 +68,6 @@ class FoundationPluginContext(
 
     val haveToPatch = Strings.HAVE_TO_PATCH.fragmentFunction()
     val getCreateClosureDirtyMask = Strings.GET_CREATE_CLOSURE_DIRTY_MASK.fragmentFunction()
-    val getThisClosureDirtyMask = Strings.GET_THIS_CLOSURE_DIRTY_MASK.fragmentFunction()
     val getCreateClosureVariable = Strings.GET_CREATE_CLOSURE_VARIABLE.fragmentFunction()
     val getThisClosureVariable = Strings.GET_THIS_CLOSURE_VARIABLE.fragmentFunction()
     val setStateVariable = Strings.SET_STATE_VARIABLE.fragmentFunction { it.owner.valueParameters.size == 2 }

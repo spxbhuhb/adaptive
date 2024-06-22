@@ -117,18 +117,6 @@ class ArmCallBuilder(
                         block.statements += it
                     }
                 }
-
-                armCall.transforms?.forEach { transform ->
-                    block.statements += transform.irCall
-                        .also {
-                            it.dispatchReceiver =
-                                irImplicitAs(
-                                    it.dispatchReceiver !!.type,
-                                    irGet(patchFun.valueParameters.first())
-                                )
-                        }
-                        .transformCreateStateAccess(armCall.closure, patchFun) { irGet(patchFun.dispatchReceiverParameter !!) }
-                }
             }
     }
 

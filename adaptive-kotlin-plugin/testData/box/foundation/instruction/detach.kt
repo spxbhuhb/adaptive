@@ -59,10 +59,10 @@ fun box(): String {
         TraceEvent("AdaptiveSequence", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [1, 3, 5]"),
         TraceEvent("AdaptiveSequence", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [1, 3, 5]"),
         TraceEvent("FoundationSlot", 4, "before-Create", ""),
-        TraceEvent("FoundationSlot", 4, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null, null]"),
-        TraceEvent("FoundationSlot", 4, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [content, BoundFragmentFactory(2,2)]"),
-        TraceEvent("FoundationSlot", 4, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [content, BoundFragmentFactory(2,2)]"),
-        TraceEvent("FoundationSlot", 4, "after-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [content, BoundFragmentFactory(2,2)]"),
+        TraceEvent("FoundationSlot", 4, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null, null, null]"),
+        TraceEvent("FoundationSlot", 4, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [content, null, BoundFragmentFactory(2,2)]"),
+        TraceEvent("FoundationSlot", 4, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [content, null, BoundFragmentFactory(2,2)]"),
+        TraceEvent("FoundationSlot", 4, "after-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [content, 0, BoundFragmentFactory(2,2)]"),
         TraceEvent("AdaptiveT0", 5, "before-Create", ""),
         TraceEvent("AdaptiveT0", 5, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
         TraceEvent("AdaptiveT0", 5, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
@@ -113,7 +113,6 @@ fun box(): String {
         TraceEvent("AdaptiveText", 8, "after-Mount", ""),
         TraceEvent("AdaptiveSequence", 3, "after-Mount", ""),
         TraceEvent("<root>", 2, "after-Mount", ""),
-        TraceEvent("FoundationSlot", 4, "setContent", "origin: AdaptiveRootDetach1113 @ 2, detachIndex: 4"),
         TraceEvent("AdaptiveT0", 5, "before-Unmount", ""),
         TraceEvent("AdaptiveT0", 5, "after-Unmount", ""),
         TraceEvent("AdaptiveT0", 5, "before-Dispose", ""),
@@ -126,7 +125,7 @@ fun box(): String {
         TraceEvent("AdaptiveT1", 10, "after-Create", ""),
         TraceEvent("AdaptiveT1", 10, "before-Mount", ""),
         TraceEvent("AdaptiveT1", 10, "after-Mount", ""),
-        TraceEvent("FoundationSlot", 4, "setContent", "origin: AdaptiveRootDetach1113 @ 2, detachIndex: 6"),
+        TraceEvent("FoundationSlot", 4, "setContent", "origin: AdaptiveRootDetach1113 @ 2, detachIndex: 4 fragment=AdaptiveT1 @ 10"),
         TraceEvent("AdaptiveT1", 10, "before-Unmount", ""),
         TraceEvent("AdaptiveT1", 10, "after-Unmount", ""),
         TraceEvent("AdaptiveT1", 10, "before-Dispose", ""),
@@ -138,6 +137,7 @@ fun box(): String {
         TraceEvent("AdaptiveT1", 11, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [23]"),
         TraceEvent("AdaptiveT1", 11, "after-Create", ""),
         TraceEvent("AdaptiveT1", 11, "before-Mount", ""),
-        TraceEvent("AdaptiveT1", 11, "after-Mount", "")
+        TraceEvent("AdaptiveT1", 11, "after-Mount", ""),
+        TraceEvent("FoundationSlot", 4, "setContent", "origin: AdaptiveRootDetach1113 @ 2, detachIndex: 6 fragment=AdaptiveT1 @ 11")
     ))
 }

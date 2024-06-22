@@ -25,7 +25,6 @@ object Strings {
     const val ADAPTIVE_SELECT = "AdaptiveSelect"
     const val ADAPTIVE_LOOP = "AdaptiveLoop"
     const val BOUND_FRAGMENT_FACTORY = "BoundFragmentFactory"
-    const val ADAPTIVE_SUPPORT_FUNCTION = "BoundSupportFunction"
     const val ADAPTIVE_STATE_VARIABLE_BINDING = "AdaptiveStateVariableBinding"
     const val ADAPTIVE_TRANSFORM_INTERFACE = "AdaptiveTransformInterface"
 
@@ -40,7 +39,6 @@ object Strings {
 
     const val HAVE_TO_PATCH = "haveToPatch"
     const val GET_CREATE_CLOSURE_DIRTY_MASK = "getCreateClosureDirtyMask"
-    const val GET_THIS_CLOSURE_DIRTY_MASK = "getThisClosureDirtyMask"
     const val SET_STATE_VARIABLE = "setStateVariable"
     const val GET_CREATE_CLOSURE_VARIABLE = "getCreateClosureVariable"
     const val GET_THIS_CLOSURE_VARIABLE = "getThisClosureVariable"
@@ -53,15 +51,12 @@ object Strings {
     const val PARENT = "parent"
     const val DECLARATION_INDEX = "declarationIndex"
     const val STATE = "state"
-    const val SUPPORT_FUNCTION_INDEX = "supportFunctionIndex"
-    const val SUPPORT_FUNCTION_RECEIVING_FRAGMENT = "receivingFragment"
 
     const val HELPER_ADAPTER = "adapter"
     const val HELPER_FRAGMENT = "fragment"
     const val HELPER_THIS_STATE = "thisState"
 
     const val ADAPTIVE_EXPECT = "AdaptiveExpect"
-    const val ADAPTIVE_ACTUAL = "AdaptiveActual"
     const val MANUAL_IMPLEMENTATION = "manualImplementation"
 
     const val NEW_SEQUENCE = "newSequence"
@@ -70,17 +65,12 @@ object Strings {
 
     const val ACTUALIZE = "actualize"
 
-    const val SUPPORT_FUNCTION_INVOKE = "invoke"
-
     const val KOTLIN_INVOKE = "invoke"
-
-    const val ADD = "add"
-    const val FRAGMENT_TYPE = "fragmentType"
-    const val NEW_INSTANCE = "newInstance"
 
     const val INSTRUCTIONS = "instructions" // instruction parameter name
 
     const val DETACH = "detach"
+    const val RANGE_TO = "rangeTo"
 }
 
 object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
@@ -89,7 +79,7 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAPTER = Strings.ADAPTER.name()
     val HELPER_ADAPTER = Strings.HELPER_ADAPTER.name()
     val KOTLIN_INVOKE = Strings.KOTLIN_INVOKE.name()
-    val FRAGMENT_TYPE = Strings.FRAGMENT_TYPE.name()
+    val RANGE_TO = Strings.RANGE_TO.name()
 }
 
 object FqNames {
@@ -103,7 +93,6 @@ object FqNames {
     val ADAPTIVE_LOOP = Strings.ADAPTIVE_LOOP.structural()
 
     val ADAPTIVE_EXPECT = Strings.ADAPTIVE_EXPECT.runtime()
-    val ADAPTIVE_ACTUAL = Strings.ADAPTIVE_ACTUAL.runtime()
 }
 
 object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
@@ -120,7 +109,6 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.classId { STRUCTURAL }
 
     val BOUND_FRAGMENT_FACTORY = Strings.BOUND_FRAGMENT_FACTORY.classId { INTERNAL }
-    val ADAPTIVE_SUPPORT_FUNCTION = Strings.ADAPTIVE_SUPPORT_FUNCTION.classId { INTERNAL }
 
     val ADAPTIVE_STATE_VARIABLE_BINDING = Strings.ADAPTIVE_STATE_VARIABLE_BINDING.classId { BINDING }
 
@@ -179,11 +167,6 @@ object Indices {
     const val GET_CLOSURE_VARIABLE_ARGUMENT_COUNT = 1
 
     const val GET_CLOSURE_VARIABLE_INDEX = 0
-
-    /**
-     * Bridge type parameter for classes.
-     */
-    const val ADAPTIVE_FRAGMENT_TYPE_INDEX_BRIDGE = 0
 
     /**
      * BoundFragmentFactory constructor arguments

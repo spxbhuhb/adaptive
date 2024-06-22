@@ -3,9 +3,9 @@
 package hu.simplexion.adaptive.kotlin.runners;
 
 import com.intellij.testFramework.TestDataPath;
-import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.jetbrains.kotlin.test.TargetBackend;
 import org.jetbrains.kotlin.test.TestMetadata;
+import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -193,6 +193,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testInnerVariations() {
         runTest("testData/box/foundation/instruction/innerVariations.kt");
       }
+
+        @Test
+        @TestMetadata("outerBasic.kt")
+        public void testOuterBasic() {
+            runTest("testData/box/foundation/instruction/outerBasic.kt");
+        }
 
       @Test
       @TestMetadata("variations.kt")
@@ -390,22 +396,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
       @TestMetadata("lambdaPatchInternal.kt")
       public void testLambdaPatchInternal() {
         runTest("testData/box/foundation/stateAccess/lambdaPatchInternal.kt");
-      }
-    }
-
-    @Nested
-    @TestMetadata("testData/box/foundation/transform")
-    @TestDataPath("$PROJECT_ROOT")
-    public class Transform {
-      @Test
-      public void testAllFilesPresentInTransform() {
-        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/transform"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
-      }
-
-      @Test
-      @TestMetadata("basic.kt")
-      public void testBasic() {
-        runTest("testData/box/foundation/transform/basic.kt");
       }
     }
 

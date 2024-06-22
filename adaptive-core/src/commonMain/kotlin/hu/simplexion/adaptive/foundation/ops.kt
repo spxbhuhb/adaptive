@@ -94,7 +94,7 @@ fun replacedByPlugin(message: String): Nothing {
  * manually. This is typical for bridge-dependent classes that interact directly with
  * the underlying UI. Most probably you'll find the class right under the function.
  */
-fun manualImplementation(vararg arguments: Any?) {
+fun manualImplementation(vararg arguments: Any?): Nothing {
     ops(
         "manualImplementation",
         """

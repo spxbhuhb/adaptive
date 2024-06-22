@@ -7,7 +7,6 @@ import hu.simplexion.adaptive.kotlin.foundation.ir.util.adaptiveClassFqName
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrFunction
-import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.util.statements
 
 class ArmClass(
@@ -29,7 +28,5 @@ class ArmClass(
     val stateVariables = mutableListOf<ArmStateVariable>()
 
     val rendering = mutableListOf<ArmRenderingStatement>()
-
-    var stateInterface : IrClassSymbol? = null
 
 }

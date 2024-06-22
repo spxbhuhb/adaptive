@@ -29,7 +29,6 @@ This results in much more readable code.
 > conditionally.
 >
 
-
 ```kotlin
 import hu.simplexion.adaptive.foundation.Adaptive
 
@@ -41,6 +40,21 @@ fun someFun() {
         
         text("Hello World!", white)
     }
+}
+```
+
+## Outer instructions
+
+You can put instructions after rendering statements with the `..` (rangeTo) operator.
+This also results in much readable code.
+
+```kotlin
+import hu.simplexion.adaptive.foundation.Adaptive
+import hu.simplexion.adaptive.foundation.rangeTo
+
+@Adaptive
+fun someFun() {
+    text("Hello World!") .. white .. titleMedium .. bold
 }
 ```
 

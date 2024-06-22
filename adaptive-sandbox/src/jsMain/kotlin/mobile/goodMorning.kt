@@ -8,6 +8,7 @@ package mobile/*
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.producer.poll
+import hu.simplexion.adaptive.foundation.rangeTo
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
 import kotlinx.datetime.LocalDateTime
@@ -40,11 +41,11 @@ fun goodMorning() {
                 colTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
 
                 row(2.gridCol, greenGradient, cornerRadius, AlignItems.center, onClick { counter ++ }) {
-                    text("Snooze", white, textMedium, noSelect)
+                    text("Snooze") .. white .. textMedium .. noSelect
                 }
 
                 row(4.gridCol, whiteBorder, cornerRadius, AlignItems.center) {
-                    text("Sleepiness: $counter", white, textMedium)
+                    text("Sleepiness: $counter") .. white .. textMedium
                 }
             }
 

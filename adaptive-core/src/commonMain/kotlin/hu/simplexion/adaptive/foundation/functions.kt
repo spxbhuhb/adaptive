@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.foundation
 
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import kotlin.js.JsName
 
 fun adapter(): AdaptiveAdapter {
@@ -17,4 +18,8 @@ fun fragment(): AdaptiveFragment {
 
 fun <T : AdaptiveTransformInterface> thisState(): T {
     replacedByPlugin("gets the fragment as a transform interface")
+}
+
+operator fun AdaptiveFragment.rangeTo(instruction: AdaptiveInstruction): AdaptiveFragment {
+    replacedByPlugin("adds the instruction to the instruction parameter value")
 }

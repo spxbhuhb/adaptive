@@ -4,9 +4,10 @@
 package hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm
 
 import hu.simplexion.adaptive.kotlin.foundation.ADAPTIVE_STATE_VARIABLE_LIMIT
-import hu.simplexion.adaptive.kotlin.foundation.Strings
 import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.*
+import hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm.instruction.InnerInstructionLowering
+import hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm.instruction.OuterInstructionLowering
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.*
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrStatement
@@ -16,13 +17,10 @@ import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.types.IrType
-import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
-import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.dump
 import org.jetbrains.kotlin.ir.util.dumpKotlinLike
-import org.jetbrains.kotlin.ir.util.isInterface
 import org.jetbrains.kotlin.ir.util.statements
 import org.jetbrains.kotlin.ir.visitors.acceptVoid
 
@@ -67,14 +65,16 @@ class IrFunction2ArmClass(
         StateDefinitionTransform(pluginContext, armClass, if (isRoot) 1 else 0).apply { transform() }
 
         val innerInstructionLowering = InnerInstructionLowering(pluginContext)
-        armClass.originalRenderingStatements.forEach { it.acceptVoid(innerInstructionLowering) }
+        val outerInstructionLowering = OuterInstructionLowering(pluginContext)
+
+        val renderingStatements = armClass.originalRenderingStatements
+            .onEach { it.acceptVoid(innerInstructionLowering) }
+            .map { it.transform(outerInstructionLowering, null) as IrStatement }
 
         states.push(armClass.stateVariables)
         closures.push(armClass.stateVariables)
 
-        returnValue()
-
-        transformBlock(armClass.originalRenderingStatements)
+        transformBlock(renderingStatements)
 
         armClass.rendering.sortBy { it.index }
 
@@ -134,7 +134,9 @@ class IrFunction2ArmClass(
 
             is IrReturn -> transformReturn(statement)
 
-            else -> throw IllegalStateException("invalid rendering statement: ${statement.dumpKotlinLike()}")
+            is IrTypeOperatorCall -> transformStatement(statement.removeImplicitCoercion())
+
+            else -> throw IllegalStateException("invalid rendering statement: ${statement.dumpKotlinLike()}\n${statement.dump()}")
         }
 
 
@@ -197,10 +199,11 @@ class IrFunction2ArmClass(
         check(body.statements.size == 2)
 
         val irLoopVariable = body.statements[0]
-        val block = body.statements[1]
-
         check(irLoopVariable is IrVariable)
-        check((block is IrBlock && block.origin == null) || block is IrCall) // TODO think for loop check details
+
+        // TODO think for loop check details
+        val block = body.statements[1].removeImplicitCoercion()
+        check((block is IrBlock && block.origin == null) || block is IrCall) { "not a block in loop: ${statement.dumpKotlinLike()}\n${statement.dump()}" }
 
         val iterator = transformDeclaration(irIterator)
 
@@ -246,7 +249,6 @@ class IrFunction2ArmClass(
         when {
             irCall.isDirectAdaptiveCall -> transformDirectCall(irCall)
             irCall.isArgumentAdaptiveCall -> transformArgumentCall(irCall)
-            irCall.isTransformInterfaceCall -> transformTransformCallChain(irCall)
             else -> throw IllegalStateException("non-adaptive call in rendering: ${irCall.dumpKotlinLike()}")
         }
 
@@ -450,61 +452,6 @@ class IrFunction2ArmClass(
         return result
     }
 
-    fun transformTransformCallChain(irCall: IrCall): ArmRenderingStatement? {
-        return flattenTransformCalls(irCall)
-    }
-
-    /**
-     * Flatten a call chain for transforms. For example: `editor { a } readOnly true validate { }`
-     *
-     * These should be like this in IR:
-     *
-     * ```text
-     * irCall                -- validate
-     *   irCall              -- readOnly
-     *     irCall            -- editor
-     * ```
-     *
-     * The dispatch receiver of all calls but the last must be an `AdaptiveTransformSubject`
-     */
-    fun flattenTransformCalls(expression: IrExpression): ArmRenderingStatement? {
-        check(expression is IrCall)
-
-        val transforms = mutableListOf(transformTransformCall(expression))
-
-        var current: IrCall? = expression
-
-        while (current != null) {
-
-            val receiver = current.dispatchReceiver
-            check(receiver is IrCall) { "invalid transform chain: ${expression.dumpKotlinLike()}" }
-
-            when {
-                receiver.isDirectAdaptiveCall || receiver.isArgumentAdaptiveCall -> {
-                    return transformCall(receiver).also {
-                        checkNotNull(it) { "illegal transform chain: ${expression.dumpKotlinLike()}" }
-                            .transforms = transforms
-                    }
-                }
-
-                receiver.isTransformInterfaceCall -> {
-                    transforms += transformTransformCall(receiver)
-                    current = receiver
-                }
-
-                else -> {
-                    error { "invalid transform chain: ${expression.dumpKotlinLike()}" }
-                }
-            }
-        }
-
-        error { "invalid transform chain: ${expression.dumpKotlinLike()}" }
-    }
-
-    fun transformTransformCall(irCall: IrCall): ArmTransformCall {
-        return ArmTransformCall(irCall)
-    }
-
     fun transformDetachExpressions(expression: IrExpression) : List<ArmDetachExpression> {
         check(expression is IrVararg)
 
@@ -612,19 +559,6 @@ class IrFunction2ArmClass(
         check(statement is IrReturn)
         if (statement.type == pluginContext.irBuiltIns.unitType) return placeholder(statement)
         return null
-    }
-
-    fun returnValue() {
-        val type = irFunction.returnType
-
-        if (type == pluginContext.irContext.irBuiltIns.unitType) return
-
-        val classSymbol = checkNotNull(type.classOrNull) { "missing class: $type in ${irFunction.name}" }
-
-        check(type.isSubtypeOfClass(pluginContext.adaptiveTransformInterfaceClass)) { "return type is not subclass of ${Strings.ADAPTIVE_TRANSFORM_INTERFACE} in ${irFunction.name}" }
-        check(classSymbol.owner.isInterface) { "$type is not an interface" }
-
-        armClass.stateInterface = classSymbol
     }
 
     // ---------------------------------------------------------------------------

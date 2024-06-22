@@ -1,17 +1,17 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm
+package hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm.instruction
 
 import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.HigherOrderProcessing
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.expressions.*
-import org.jetbrains.kotlin.ir.expressions.impl.IrSpreadElementImpl
-import org.jetbrains.kotlin.ir.expressions.impl.IrVarargImpl
-import org.jetbrains.kotlin.ir.types.*
-import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.types.IrType
+import org.jetbrains.kotlin.ir.types.getArrayElementType
+import org.jetbrains.kotlin.ir.types.isArray
+import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.isFunction
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
@@ -33,19 +33,10 @@ class InnerInstructionLowering(
 
         @HigherOrderProcessing
         val adaptiveParameter = valueParameters.lastOrNull { it.isAdaptive && it.type.isFunction() } ?: return
-        val instructionParameter = valueParameters.firstOrNull { it.isInstructions }
 
-        val innerInstructions = extractInnerInstructions(expression.getValueArgument(adaptiveParameter.index))
+        val instructions = extractInnerInstructions(expression.getValueArgument(adaptiveParameter.index))
 
-        if (innerInstructions.isEmpty()) return
-        check(instructionParameter != null) { "inner instructions specified but there is no instructions parameter for the higher order fragment" }
-
-        val instructionsArgument = expression.getValueArgument(instructionParameter.index)
-            ?: addInstructionsArgument(expression, instructionParameter.index)
-
-        instructionsArgument as IrVarargImpl
-
-        innerInstructions.forEach { instructionsArgument.elements += spreadIfArray(it) }
+        addInstructions(expression, valueParameters, instructions)
     }
 
     private fun extractInnerInstructions(irExpression: IrExpression?): List<IrExpression> {
@@ -71,24 +62,5 @@ class InnerInstructionLowering(
     private val IrType.isInstruction
         get() = isSubtypeOfClass(pluginContext.adaptiveInstructionClass) ||
             (isArray() && getArrayElementType(pluginContext.irBuiltIns).isSubtypeOfClass(pluginContext.adaptiveInstructionClass))
-
-    private fun addInstructionsArgument(expression: IrCall, index: Int): IrExpression =
-        IrVarargImpl(
-            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            pluginContext.irBuiltIns.arrayClass.typeWith(pluginContext.adaptiveInstructionType),
-            pluginContext.adaptiveInstructionType
-        ).also {
-            expression.putValueArgument(index, it)
-        }
-
-    private fun spreadIfArray(instruction: IrExpression): IrVarargElement =
-        if (instruction.type.isArray()) {
-            IrSpreadElementImpl(
-                instruction.startOffset, instruction.endOffset,
-                instruction
-            )
-        } else {
-            instruction
-        }
 
 }

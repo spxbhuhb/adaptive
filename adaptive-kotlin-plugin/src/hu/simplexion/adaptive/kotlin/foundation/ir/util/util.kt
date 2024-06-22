@@ -4,8 +4,11 @@
 package hu.simplexion.adaptive.kotlin.foundation.ir.util
 
 import hu.simplexion.adaptive.kotlin.foundation.Strings
+import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.name
+import org.jetbrains.kotlin.ir.expressions.IrTypeOperator
+import org.jetbrains.kotlin.ir.expressions.IrTypeOperatorCall
 import org.jetbrains.kotlin.ir.util.file
 import org.jetbrains.kotlin.ir.util.isAnonymousFunction
 import org.jetbrains.kotlin.ir.util.kotlinFqName
@@ -30,5 +33,12 @@ fun CallableId.adaptiveClassFqName(): FqName {
     val parent = asSingleFqName().parentOrNull() ?: FqName.ROOT
     return parent.child(Name.identifier("Adaptive" + this.callableName.identifier.capitalizeFirstChar()))
 }
+
+fun IrStatement.removeImplicitCoercion(): IrStatement =
+    if (this is IrTypeOperatorCall && this.operator == IrTypeOperator.IMPLICIT_COERCION_TO_UNIT) {
+        argument
+    } else {
+        this
+    }
 
 fun String.capitalizeFirstChar() = replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
