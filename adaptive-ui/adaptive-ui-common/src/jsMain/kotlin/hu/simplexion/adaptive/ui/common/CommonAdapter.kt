@@ -78,6 +78,7 @@ open class CommonAdapter(
 
     override fun applyLayoutToActual(fragment: AbstractCommonFragment<HTMLElement>) {
         val layoutFrame = fragment.layoutFrame
+        val renderData = fragment.renderData
 
         val top = layoutFrame.top
         val left = layoutFrame.left
@@ -88,7 +89,7 @@ open class CommonAdapter(
         var absolute = false
 
         style.boxSizing = "border-box"
-        val margin = fragment.renderData.layout?.margin ?: RawSurrounding.ZERO
+        val margin = renderData.layout?.margin ?: RawSurrounding.ZERO
 
         if (! top.isNaN()) {
             absolute = true
@@ -110,6 +111,11 @@ open class CommonAdapter(
         when {
             height == Double.POSITIVE_INFINITY -> style.height = "100%"
             ! height.isNaN() -> style.height = (height - margin.left - margin.right).pxs
+        }
+
+        renderData.container {
+            if (it.horizontalScroll) style.overflowX = "auto"
+            if (it.verticalScroll) style.overflowY = "auto"
         }
     }
 

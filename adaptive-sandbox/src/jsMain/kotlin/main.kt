@@ -43,11 +43,12 @@ fun main() {
             }
 
             column {
+                verticalScroll
                 padding(10.dp)
 
                 slot("mainContent") {
                     //text("Click on the left to load a demo!")
-                    markdown()
+                    layoutMain()
                 }
             }
         }

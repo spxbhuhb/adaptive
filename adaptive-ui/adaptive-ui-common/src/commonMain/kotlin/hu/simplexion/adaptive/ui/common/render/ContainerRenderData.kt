@@ -16,5 +16,9 @@ class ContainerRenderData(
 
     var verticalAlignment: Alignment? = null
     var horizontalAlignment: Alignment? = null
+
     var spaceDistribution: SpaceDistribution? = null
+
+    var verticalScroll: Boolean = false
+    var horizontalScroll: Boolean = false
 }

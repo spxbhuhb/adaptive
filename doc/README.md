@@ -1,10 +1,14 @@
 # Documentation
 
-* [Foundation](foundation/README.md)
+* Tutorials
+  * [Project Setup](tutorials/project-setup.md)
+  * [Foundation](tutorials/foundation.md)
+  * [Navigation](tutorials/navigation.md)
+
+* Foundation
   * [Instructions](foundation/instructions.md)
   * [Producers](foundation/producer.md)
   * [Expect fragments](foundation/expect.md)
-  * [Exporting fragments](foundation/export.md)
 
 * [UI](ui/README.md)
 

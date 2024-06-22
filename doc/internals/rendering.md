@@ -68,17 +68,6 @@ Each fragment has a:
 
 - The fragment box is all these sizes added together.
 - dp sizes are converted into px by the instruction itself
-
-### Measure
-
-The first step of layout is to call `measure` on the top-level layout fragment. This call
-calls `measure` of all child fragments.
-
-`measure` tries to determine the **minimum** **intrinsic** size of the fragment without 
-padding, margin and border.
-
-When the minimum is unknown it should return with `RawSize.UNKNOWN`.
-
-### Layout
-
+- `CommonAdapter.applyLayoutToActual` applies the layout to the actual UI instance
+- `CommonAdapter.applyRenderInstructions` applies the non-layout parts of the render data to the actual UI instance
 

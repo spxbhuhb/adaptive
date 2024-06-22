@@ -52,6 +52,10 @@ val centerSelfVertically = AlignSelf(vertical = Alignment.Center, horizontal = n
 val centerSelfHorizontally = AlignSelf(vertical = null, horizontal = Alignment.Center)
 val centerSelf = AlignSelf(vertical = Alignment.Center, horizontal = Alignment.Center)
 
+val scroll = Scroll(horizontal = true, vertical = true)
+val verticalScroll = Scroll(horizontal = true, vertical = true)
+val horizontalScroll = Scroll(horizontal = true, vertical = true)
+
 data class Frame(
     val top: DPixel,
     val left: DPixel,
@@ -216,6 +220,18 @@ data class DistributeSpace(
     override fun apply(subject: Any) {
         container(subject) {
             it.spaceDistribution = distribution
+        }
+    }
+}
+
+data class Scroll(
+    val horizontal: Boolean? = null,
+    val vertical: Boolean? = null
+) : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        container(subject) {
+            if (vertical != null) it.verticalScroll = vertical
+            if (horizontal != null) it.horizontalScroll = horizontal
         }
     }
 }

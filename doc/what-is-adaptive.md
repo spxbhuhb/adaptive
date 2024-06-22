@@ -14,6 +14,13 @@ Server platforms:
   * some modules may be platform dependent, but
   * the core is pure Kotlin
 
+## Adaptive in action
+
+To see Adaptive in action:
+
+* check out the demo
+* continue to browse, this site is 100% Adaptive
+
 ## Let's write a small application
 
 ### Step 1. - Define an API
