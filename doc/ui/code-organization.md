@@ -31,4 +31,5 @@ may be omitted.
 * render data class declarations
 
 `support`
-* abstract fragment classes that store common functionality for platform-specific implementations
+
+* classes that store common functionality for platform-specific implementations

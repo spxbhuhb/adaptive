@@ -4,14 +4,10 @@
 
 import graphics.svgExample
 import hu.simplexion.adaptive.foundation.Adaptive
-import hu.simplexion.adaptive.foundation.fragment.slot
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.invoke
 import hu.simplexion.adaptive.ui.common.browser
-import hu.simplexion.adaptive.ui.common.fragment.column
-import hu.simplexion.adaptive.ui.common.fragment.grid
-import hu.simplexion.adaptive.ui.common.fragment.row
-import hu.simplexion.adaptive.ui.common.fragment.text
+import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.platform.withJsResources
 import layout.layoutMain
@@ -19,6 +15,8 @@ import markdown.markdown
 import misc.chessBoard
 import mobile.goodMorning
 import mobile.welcome
+import navigation.slotOne
+import navigation.slotTwo
 
 fun main() {
 
@@ -34,21 +32,31 @@ fun main() {
                 padding(10.dp)
                 gap(4.dp)
 
-                navButton("Good Morning", replace { goodMorning() })
-                navButton("Welcome", replace { welcome() })
-                navButton("SVG", replace { svgExample() })
-                navButton("Layouts", replace { layoutMain() })
-                navButton("Chessboard", replace { chessBoard() })
-                navButton("Markdown", replace { markdown() })
+                navButton("Good Morning", navClick { goodMorning() })
+                navButton("Welcome", navClick { welcome() })
+                navButton("SVG", navClick { svgExample() })
+                navButton("Layouts", navClick { layoutMain() })
+                navButton("Chessboard", navClick { chessBoard() })
+                navButton("Markdown", navClick { markdown() })
+                navButton("Slot One", navClick { slotOne() })
+                navButton("Slot Two", navClick { slotTwo() })
             }
 
             column {
                 verticalScroll
                 padding(10.dp)
 
-                slot("mainContent") {
-                    //text("Click on the left to load a demo!")
-                    layoutMain()
+                slot {
+                    route { goodMorning() }
+                    route { layoutMain() }
+                    route { welcome() }
+                    route { chessBoard() }
+                    route { svgExample() }
+                    route { markdown() }
+                    route { slotOne() }
+                    route { slotTwo() }
+
+                    text("Click on the left to load a demo!")
                 }
             }
         }
@@ -65,7 +73,7 @@ val button = arrayOf(
 
 @Adaptive
 fun navButton(label: String, vararg instructions: AdaptiveInstruction) {
-    row(*button, onClick { instructions<Replace>() }, *instructions) {
+    row(*button, onClick { instructions<NavClick>() }, *instructions) {
         text(label, color(0xffffffu), fontSize(15.sp), noSelect)
     }
 }

@@ -23,8 +23,3 @@ fun delegate(
 fun measureFragmentTime(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit) {
     manualImplementation(instructions, content)
 }
-
-@AdaptiveExpect(foundation)
-fun slot(name: String, historySize: Int = 0, @Adaptive initialContent: () -> Unit) {
-    manualImplementation(name, historySize, initialContent)
-}

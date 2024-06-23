@@ -1,12 +1,12 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.adaptive.ui.common.fragment
+package hu.simplexion.adaptive.ui.common.fragment.structural
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
 import hu.simplexion.adaptive.foundation.fragment.AdaptiveAnonymous
 import hu.simplexion.adaptive.foundation.fragment.AdaptiveLoopLogic
+import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 
 class CommonLoop<RT, CRT : RT>(

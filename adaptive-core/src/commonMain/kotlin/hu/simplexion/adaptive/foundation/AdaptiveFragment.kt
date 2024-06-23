@@ -6,9 +6,11 @@ package hu.simplexion.adaptive.foundation
 import hu.simplexion.adaptive.foundation.binding.AdaptivePropertyMetadata
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
-import hu.simplexion.adaptive.foundation.internal.*
+import hu.simplexion.adaptive.foundation.internal.AdaptiveClosure
+import hu.simplexion.adaptive.foundation.internal.StateVariableMask
+import hu.simplexion.adaptive.foundation.internal.cleanStateMask
+import hu.simplexion.adaptive.foundation.internal.initStateMask
 import hu.simplexion.adaptive.foundation.producer.AdaptiveProducer
-import kotlin.reflect.KFunction
 
 abstract class AdaptiveFragment(
     val adapter: AdaptiveAdapter,
@@ -55,7 +57,7 @@ abstract class AdaptiveFragment(
 
     var children = mutableListOf<AdaptiveFragment>()
 
-    var producers: MutableList<AdaptiveProducer>? = null
+    var producers: MutableList<AdaptiveProducer<*>>? = null
 
     var bindings: MutableList<AdaptiveStateVariableBinding<*>>? = null
 
@@ -231,22 +233,24 @@ abstract class AdaptiveFragment(
     // Producer support
     // --------------------------------------------------------------------------
 
-    fun addProducer(producer: AdaptiveProducer) {
+    fun addProducer(producer: AdaptiveProducer<*>) {
         if (trace) trace("before-Add-Producer", "producer", producer)
 
-        val producers = producers ?: mutableListOf<AdaptiveProducer>().also { producers = it }
+        val producers = producers ?: mutableListOf<AdaptiveProducer<*>>().also { producers = it }
 
-        producers.filter { producer.replaces(it) }.forEach { other ->
+        producers.filter { producer.replaces(it) }.forEach { other: AdaptiveProducer<*> ->
             removeProducer(other)
         }
 
         producers += producer
+        // TODO think about starting producers before the fragment is mounted
+        // don't forget CommonSlot and NavSegment where the vakue should be initialized quite early
         producer.start()
 
         if (trace) trace("after-Add-Producer", "producer", producer)
     }
 
-    fun removeProducer(producer: AdaptiveProducer) {
+    fun removeProducer(producer: AdaptiveProducer<*>) {
         if (trace) trace("before-Remove-Producer", "producer", producer)
 
         requireNotNull(producers).remove(producer)

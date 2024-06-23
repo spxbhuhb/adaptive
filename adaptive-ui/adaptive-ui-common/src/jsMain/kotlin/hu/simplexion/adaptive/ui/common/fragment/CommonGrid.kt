@@ -5,13 +5,12 @@ package hu.simplexion.adaptive.ui.common.fragment
 
 import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
-import hu.simplexion.adaptive.ui.common.support.AbstractGrid
-import hu.simplexion.adaptive.ui.common.support.RawFrame
-import hu.simplexion.adaptive.ui.common.support.RawPosition
-import hu.simplexion.adaptive.ui.common.support.RawSurrounding
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractGrid
+import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.support.layout.RawPosition
+import hu.simplexion.adaptive.ui.common.support.layout.RawSurrounding
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 

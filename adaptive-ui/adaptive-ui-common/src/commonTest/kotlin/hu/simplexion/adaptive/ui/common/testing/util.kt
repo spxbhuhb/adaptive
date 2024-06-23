@@ -8,7 +8,7 @@ import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.query.firstOrNullWith
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
-import hu.simplexion.adaptive.ui.common.support.RawFrame
+import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 
 
 inline fun <reified T : AdaptiveInstruction> AdaptiveAdapter.assertEquals(

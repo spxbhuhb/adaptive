@@ -48,37 +48,26 @@ fun mediaMetrics(
 
     val metrics = MediaMetricsProducer(binding)
 
-    binding.sourceFragment.addProducer(metrics)
+    binding.targetFragment.addProducer(metrics)
 
-    return metrics.latestValue
+    return metrics.latestValue !!
 }
 
 class MediaMetricsProducer(
-    val binding: AdaptiveStateVariableBinding<MediaMetrics>
-) : AdaptiveProducer {
+    override val binding: AdaptiveStateVariableBinding<MediaMetrics>
+) : AdaptiveProducer<MediaMetrics> {
 
-    var uiAdapter = binding.sourceFragment.adapter as AbstractCommonAdapter<*, *>
+    var uiAdapter = binding.targetFragment.adapter as AbstractCommonAdapter<*, *>
 
-    var latestValue = uiAdapter.mediaMetrics
-
-    override fun replaces(other: AdaptiveProducer): Boolean =
-        other is MediaMetricsProducer && other.binding == this.binding
+    override var latestValue: MediaMetrics? = uiAdapter.mediaMetrics
 
     override fun start() {
-        val adapter = binding.sourceFragment.adapter as AbstractCommonAdapter<*, *>
-        adapter.addMediaMetricsProducer(this)
+        uiAdapter.addMediaMetricsProducer(this)
     }
 
     override fun stop() {
-        val adapter = binding.sourceFragment.adapter as AbstractCommonAdapter<*, *>
-        adapter.removeMediaMetricsProducer(this)
+        uiAdapter.removeMediaMetricsProducer(this)
     }
-
-    override fun hasValueFor(stateVariableIndex: Int) =
-        binding.indexInTargetState == stateVariableIndex
-
-    override fun value() =
-        latestValue
 
     override fun toString(): String {
         return "MediaMetrics($binding)"

@@ -9,7 +9,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import hu.simplexion.adaptive.ui.common.CommonAdapter
-import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainerFragment
 
 @SuppressLint("ViewConstructor") // not a general Android view group, you are not supposed to use it in general Android code
 open class ContainerViewGroup(

@@ -8,7 +8,6 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
 
 open class FoundationFragmentFactory : AdaptiveFragmentFactory() {
     init {
-        add("foundation:slot") { p, i -> FoundationSlot(p.adapter, p, i) }
         add("foundation:measurefragmenttime") { p, i -> FoundationMeasureFragmentTime(p.adapter, p, i) }
     }
 }

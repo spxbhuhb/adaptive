@@ -9,8 +9,8 @@ import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
 import hu.simplexion.adaptive.ui.common.instruction.Alignment
 import hu.simplexion.adaptive.ui.common.instruction.SpaceDistribution
-import hu.simplexion.adaptive.ui.common.support.AbstractRow
-import hu.simplexion.adaptive.ui.common.support.RawFrame
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractRow
+import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 

@@ -5,50 +5,101 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.fragment.FoundationSlot
-import hu.simplexion.adaptive.foundation.instruction.AdaptiveDetach
-import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
-import hu.simplexion.adaptive.foundation.instruction.DetachHandler
+import hu.simplexion.adaptive.foundation.instruction.*
 import hu.simplexion.adaptive.foundation.query.firstOrNull
-import hu.simplexion.adaptive.foundation.query.single
 import hu.simplexion.adaptive.resource.FileResource
+import hu.simplexion.adaptive.ui.common.fragment.structural.CommonSlot
 import hu.simplexion.adaptive.ui.common.render.event
+import hu.simplexion.adaptive.ui.common.render.text
 
 // --------------------------------------------------------------------
-// Replace
+// NavClick
 // --------------------------------------------------------------------
 
-fun replace(
-    slotName: String? = null,
-    @AdaptiveDetach slotEntry: (handler: DetachHandler) -> Unit
-) = Replace(slotName, slotEntry)
+fun navClick(
+    slotName: Name = Name.ANONYMOUS,
+    @DetachName segment: String? = null,
+    @AdaptiveDetach detachFun: (handler: DetachHandler) -> Unit
+) = NavClick(slotName, segment, detachFun)
 
-class Replace(
-    val slotName: String? = null,
-    @AdaptiveDetach val slotEntry: (handler: DetachHandler) -> Unit
+class NavClick(
+    val slotName: Name,
+    @DetachName val segment: String?,
+    @AdaptiveDetach val detachFun: (handler: DetachHandler) -> Unit
 ) : DetachHandler, AdaptiveInstruction {
 
     override fun execute() {
-        slotEntry(this)
+        detachFun(this)
     }
 
     override fun detach(origin: AdaptiveFragment, detachIndex: Int) {
-        if (slotName == null) {
-            origin.single<FoundationSlot>(true).setContent(origin, detachIndex)
-        } else {
-            // FIXME expensive slot search, should create a slot map in the adapter perhaps
-            val root = origin.adapter.rootFragment
-            val slot = root.firstOrNull(deep = true) { it is FoundationSlot && it.name == slotName } ?: return
+        // FIXME expensive slot search, should create a slot map in the adapter perhaps
+        val root = origin.adapter.rootFragment
+        val slot = root.firstOrNull(deep = true) { it is CommonSlot && it.name == slotName } ?: return
 
-            slot as FoundationSlot
-            slot.setContent(origin, detachIndex)
+        slot as CommonSlot
+        slot.setContent(origin, detachIndex, segment)
+    }
+
+    override fun apply(subject: Any) {
+        event(subject) {
+            it.onClick = OnClick { execute() }
+        }
+        text(subject) {
+            it.noSelect = true
         }
     }
 
     override fun toString(): String {
-        return "Replace"
+        return "NavClick"
     }
 }
+
+// --------------------------------------------------------------------
+// Route
+// --------------------------------------------------------------------
+
+/**
+ * Defines a route for `slot` fragments. See the navigation
+ * tutorial for details.
+ */
+fun route(
+    @DetachName segment: String? = null,
+    @AdaptiveDetach detachFun: (handler: DetachHandler) -> Unit
+) = Route(segment, detachFun)
+
+/**
+ * Defines a route for `slot` fragments. See the navigation
+ * tutorial for details.
+ */
+data class Route(
+    @DetachName val segment: String?,
+    @AdaptiveDetach val detachFun: (detachFun: DetachHandler) -> Unit
+) : AdaptiveInstruction, DetachHandler {
+
+    lateinit var slot: CommonSlot
+
+    override fun detach(origin: AdaptiveFragment, detachIndex: Int) {
+        slot.setContent(origin, detachIndex, segment)
+    }
+
+}
+
+// --------------------------------------------------------------------
+// HistorySize
+// --------------------------------------------------------------------
+
+/**
+ * Sets history size for `slot` fragments. See the navigation
+ * tutorial for details.
+ */
+inline fun historySize(sizeFun: () -> Int) = HistorySize(sizeFun())
+
+/**
+ * Sets history size route for `slot` fragments. See the navigation
+ * tutorial for details.
+ */
+data class HistorySize(val size: Int) : AdaptiveInstruction
 
 // --------------------------------------------------------------------
 // ExternalLink

@@ -24,6 +24,7 @@ junit = "4.13.2"
 junit-bom = "5.8.0"
 kotlin = "2.0.0"
 kotlinpoet = "1.16.0"
+kotlin-wrappers = "1.0.0-pre.760"
 ktor = "2.3.11"
 log4j = "2.20.0"
 logback = "1.2.11" # newer versions are incompatible with Android, see https://youtrack.jetbrains.com/issue/KTOR-5227
@@ -68,6 +69,8 @@ kotlin-annotations-jvm = { module = "org.jetbrains.kotlin:kotlin-annotations-jvm
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 
 kotlinpoet = { module = "com.squareup:kotlinpoet", version.ref = "kotlinpoet" }
+
+kotlin-wrappers-web = { module = "org.jetbrains.kotlin-wrappers:kotlin-web", version.ref = "kotlin-wrappers" }
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }

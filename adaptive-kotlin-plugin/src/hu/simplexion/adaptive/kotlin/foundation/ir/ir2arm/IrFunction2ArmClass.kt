@@ -4,6 +4,7 @@
 package hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm
 
 import hu.simplexion.adaptive.kotlin.foundation.ADAPTIVE_STATE_VARIABLE_LIMIT
+import hu.simplexion.adaptive.kotlin.foundation.FqNames
 import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.*
 import hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm.instruction.InnerInstructionLowering
@@ -19,9 +20,8 @@ import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
-import org.jetbrains.kotlin.ir.util.dump
-import org.jetbrains.kotlin.ir.util.dumpKotlinLike
-import org.jetbrains.kotlin.ir.util.statements
+import org.jetbrains.kotlin.ir.types.makeNullable
+import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.ir.visitors.acceptVoid
 
 /**
@@ -57,6 +57,9 @@ class IrFunction2ArmClass(
     val closure: ArmClosure
         get() = closures.peek()
 
+    val stringType = pluginContext.irBuiltIns.stringType
+    val stringNType = pluginContext.irBuiltIns.stringType.makeNullable()
+
     fun transform(): ArmClass {
         val boundary = BoundaryVisitor(pluginContext).findBoundary(irFunction)
 
@@ -83,7 +86,7 @@ class IrFunction2ArmClass(
         return armClass
     }
 
-    fun IrElement.dependencies(skipLambdas : Boolean = false): List<ArmStateVariable> {
+    fun IrElement.dependencies(skipLambdas: Boolean = false): List<ArmStateVariable> {
         val visitor = DependencyVisitor(closure, skipLambdas)
         accept(visitor, null)
         return visitor.dependencies
@@ -452,28 +455,15 @@ class IrFunction2ArmClass(
         return result
     }
 
-    fun transformDetachExpressions(expression: IrExpression) : List<ArmDetachExpression> {
+    fun transformDetachExpressions(expression: IrExpression): List<ArmDetachExpression> {
         check(expression is IrVararg)
 
         val result = mutableListOf<ArmDetachExpression>()
 
         expression.elements.forEach { element ->
             when (element) {
-                is IrCall -> {
-                    for (parameter in element.symbol.owner.valueParameters) {
-                        if (parameter.isDetach) {
-                            result +=transformDetach(element.getValueArgument(parameter.index))
-                        }
-                    }
-                }
-
-                is IrConstructorCall -> {
-                    for (parameter in element.symbol.owner.valueParameters) {
-                        if (parameter.isDetach) {
-                            result +=transformDetach(element.getValueArgument(parameter.index))
-                        }
-                    }
-                }
+                is IrCall -> transformDetach(element.symbol.owner.valueParameters, element, result)
+                is IrConstructorCall -> transformDetach(element.symbol.owner.valueParameters, element, result)
             }
 
         }
@@ -481,7 +471,29 @@ class IrFunction2ArmClass(
         return result
     }
 
-    fun transformDetach(expression: IrExpression?) : ArmDetachExpression {
+    fun transformDetach(valueParameters: List<IrValueParameter>, accessExpression: IrMemberAccessExpression<*>, result: MutableList<ArmDetachExpression>) {
+        valueParameters.forEachIndexed { index, parameter ->
+            if (parameter.isDetach) {
+                result += transformDetach(accessExpression.getValueArgument(parameter.index))
+
+                val nameIndex = index - 1
+
+                if (nameIndex >= 0 && valueParameters[nameIndex].hasAnnotation(FqNames.DETACH_NAME)) {
+                    val nameParam = valueParameters[nameIndex]
+                    check(nameParam.type == stringType || nameParam.type == stringNType) { "@DetachName annotation on a non-String parameter" }
+                    val nameArg = accessExpression.getValueArgument(nameIndex)
+                    if (nameArg != null) return@forEachIndexed
+
+                    accessExpression.putValueArgument(
+                        nameIndex,
+                        IrConstImpl.string(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.irBuiltIns.stringType, result.last().armCall.target.asString())
+                    )
+                }
+            }
+        }
+    }
+
+    fun transformDetach(expression: IrExpression?): ArmDetachExpression {
         check(expression != null) { "detach: cannot be defaulted" }
         check(expression is IrFunctionExpression) { "detach: non-function expression" }
         check(expression.origin == IrStatementOrigin.LAMBDA) { "detach: non-lambda expression" }

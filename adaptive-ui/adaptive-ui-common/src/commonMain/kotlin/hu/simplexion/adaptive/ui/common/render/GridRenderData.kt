@@ -5,11 +5,7 @@
 package hu.simplexion.adaptive.ui.common.render
 
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
-import hu.simplexion.adaptive.ui.common.instruction.SPixel
-import hu.simplexion.adaptive.ui.common.instruction.TextAlign
-import hu.simplexion.adaptive.ui.common.instruction.TextDecoration
-import hu.simplexion.adaptive.ui.common.instruction.TextWrap
-import hu.simplexion.adaptive.ui.common.support.GridCell
+import hu.simplexion.adaptive.ui.common.support.layout.GridCell
 
 class GridRenderData(
     val adapter : AbstractCommonAdapter<*, *>

@@ -23,9 +23,10 @@ import hu.simplexion.adaptive.ui.common.platform.ContainerViewGroup
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.StructuralViewGroup
 import hu.simplexion.adaptive.ui.common.render.*
-import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
-import hu.simplexion.adaptive.ui.common.support.RawCornerRadius
-import hu.simplexion.adaptive.ui.common.support.RawFrame
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.layout.RawCornerRadius
+import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
 
 open class CommonAdapter(
     val context: Context,
@@ -238,4 +239,7 @@ open class CommonAdapter(
         rootContainer.height.toDouble(),
         defaultResourceEnvironment.theme
     )
+
+    override val navSupport: AbstractNavSupport
+        get() = TODO("Not yet implemented")
 }

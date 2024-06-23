@@ -94,7 +94,7 @@ fun commonMain() {
     padding { 16.dp }
     onClick { counter = counterService.incrementAnGet() }
 
-    text("Counter: $counter")
+    text("Counter: $counter") .. bold
   }
 }
 ```
@@ -166,13 +166,15 @@ Instructions may be added to fragments to modify them in many ways. `backgroundC
 are instructions in the code example below.
 
 ```kotlin
+import hu.simplexion.adaptive.foundation.rangeTo
+
 @Adaptive
 fun helloWorld() {
     row {
         backgroundColor(cyan)
         onClick { println("You clicked on me!") }
 
-        text("Click on me!", black)
+      text("Click on me!") .. black .. bold
     }
 }
 ```
@@ -190,6 +192,15 @@ These are general instructions which can be used in any context and are very-ver
 
 The interesting thing about instructions is that they are added to the state of the fragment.
 This has many consequences and leads us to an impressive feature list.
+
+**well-placed instructions results in readable code**
+
+Instead of parameters Adaptive mostly uses instructions to change fragment behaviour. While you can
+pass the instructions as a parameter as well, that sometimes results in cluttered, very hard to read
+code.
+
+With the help of [inner](foundation/instructions.md#inner-instructions) and [outer](foundation/instructions.md#outer-instructions)
+instructions code becomes very easy to read (and write).
 
 ## Features
 

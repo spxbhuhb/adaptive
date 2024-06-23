@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.fragment.FoundationFragmentFactory
 import hu.simplexion.adaptive.ui.common.fragment.*
+import hu.simplexion.adaptive.ui.common.fragment.structural.CommonSlot
 
 object CommonFragmentFactory : FoundationFragmentFactory() {
     init {
@@ -17,6 +18,7 @@ object CommonFragmentFactory : FoundationFragmentFactory() {
         add("common:input") { p,i -> CommonInput(p.adapter as CommonAdapter, p, i) }
         add("common:row") { p,i -> CommonRow(p.adapter as CommonAdapter, p, i) }
         add("common:text") { p,i -> CommonText(p.adapter as CommonAdapter, p, i) }
+        add("common:slot") { p, i -> CommonSlot(p.adapter as CommonAdapter, p, i) }
         add("common:svg") { p, i -> CommonSvg(p.adapter as CommonAdapter, p, i) }
     }
 }

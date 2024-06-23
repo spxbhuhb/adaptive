@@ -12,19 +12,16 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class AdaptiveFetch<VT>(
-    val binding: AdaptiveStateVariableBinding<VT>,
+    override val binding: AdaptiveStateVariableBinding<VT>,
     val fetchFunction: suspend () -> VT
-) : AdaptiveProducer {
+) : AdaptiveProducer<VT> {
 
     var scope: CoroutineScope? = null
 
-    var latestValue : VT? = null
-
-    override fun replaces(other: AdaptiveProducer): Boolean =
-        other is AdaptiveFetch<*> && other.binding == this.binding
+    override var latestValue: VT? = null
 
     override fun start() {
-        CoroutineScope(binding.sourceFragment.adapter.dispatcher).also {
+        CoroutineScope(binding.targetFragment.adapter.dispatcher).also {
             scope = it
             it.launch {
                 try {
@@ -47,12 +44,6 @@ class AdaptiveFetch<VT>(
         checkNotNull(scope).cancel()
         scope = null
     }
-
-    override fun hasValueFor(stateVariableIndex : Int) =
-        binding.indexInTargetState == stateVariableIndex
-
-    override fun value() =
-        latestValue
 
     override fun toString(): String {
         return "AdaptiveFetch($binding)"

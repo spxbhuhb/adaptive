@@ -8,7 +8,7 @@ import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 import hu.simplexion.adaptive.ui.common.instruction.BackgroundGradient
 import hu.simplexion.adaptive.ui.common.instruction.Color
 import hu.simplexion.adaptive.ui.common.instruction.DropShadow
-import hu.simplexion.adaptive.ui.common.support.RawCornerRadius
+import hu.simplexion.adaptive.ui.common.support.layout.RawCornerRadius
 
 class DecorationRenderData(
     val adapter : AbstractCommonAdapter<*, *>

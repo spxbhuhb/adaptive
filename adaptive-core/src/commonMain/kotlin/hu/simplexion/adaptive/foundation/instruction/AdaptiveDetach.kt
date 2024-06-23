@@ -4,4 +4,5 @@
 
 package hu.simplexion.adaptive.foundation.instruction
 
+@Target(AnnotationTarget.VALUE_PARAMETER)
 annotation class AdaptiveDetach

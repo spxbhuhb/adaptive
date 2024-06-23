@@ -5,13 +5,14 @@
 package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.*
-import hu.simplexion.adaptive.ui.common.fragment.CommonLoop
-import hu.simplexion.adaptive.ui.common.fragment.CommonSelect
+import hu.simplexion.adaptive.ui.common.fragment.structural.CommonLoop
+import hu.simplexion.adaptive.ui.common.fragment.structural.CommonSelect
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.MediaMetricsProducer
-import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
 import hu.simplexion.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -137,4 +138,13 @@ abstract class AbstractCommonAdapter<RT, CRT : RT> : AdaptiveAdapter {
         mediaMetricsProducers -= producer
     }
 
+    // ------------------------------------------------------------------------------
+    // Navigation support
+    // ------------------------------------------------------------------------------
+
+    abstract val navSupport: AbstractNavSupport
+
+    fun navChange() {
+        trace("nav-change", navSupport.root.toString())
+    }
 }

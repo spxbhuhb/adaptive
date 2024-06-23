@@ -2,15 +2,19 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package hu.simplexion.adaptive.foundation.fragment
+package hu.simplexion.adaptive.ui.common.fragment
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.fragment.FoundationDelegate
 import hu.simplexion.adaptive.foundation.internal.BoundFragmentFactory
 import hu.simplexion.adaptive.foundation.query.first
 import hu.simplexion.adaptive.foundation.query.firstOrNull
 import hu.simplexion.adaptive.foundation.testing.AdaptiveT0
 import hu.simplexion.adaptive.foundation.testing.AdaptiveT1
-import hu.simplexion.adaptive.foundation.testing.AdaptiveTestAdapter
+import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
+import hu.simplexion.adaptive.ui.common.fragment.structural.CommonSlot
+import hu.simplexion.adaptive.ui.common.instruction.HistorySize
+import hu.simplexion.adaptive.ui.common.testing.CommonTestAdapter
 import kotlin.test.*
 
 class SlotTest {
@@ -24,7 +28,7 @@ class SlotTest {
 
     @Test
     fun testHistoryBasic() {
-        val adapter = AdaptiveTestAdapter()
+        val adapter = CommonTestAdapter()
         val slot = setup(adapter)
         val delegate = slot.parent !!
 
@@ -63,7 +67,7 @@ class SlotTest {
 
     @Test
     fun testBackAndForward() {
-        val adapter = AdaptiveTestAdapter()
+        val adapter = CommonTestAdapter()
         val slot = setup(adapter)
         val delegate = slot.parent !!
 
@@ -105,7 +109,7 @@ class SlotTest {
         }
     }
 
-    fun FoundationSlot.assertState(
+    fun CommonSlot.assertState(
         backHistory: List<AdaptiveFragment>,
         current: AdaptiveFragment,
         forwardHistory: List<AdaptiveFragment>
@@ -124,13 +128,13 @@ class SlotTest {
         }
     }
 
-    fun setup(adapter: AdaptiveTestAdapter): FoundationSlot {
+    fun setup(adapter: CommonTestAdapter): CommonSlot {
         FoundationDelegate(
             adapter, null, 0,
 
             buildFun = { parent, index ->
                 when (index) {
-                    SLOT -> FoundationSlot(parent.adapter, parent, index)
+                    SLOT -> CommonSlot(parent.adapter as AbstractCommonAdapter<*, *>, parent, index)
                     T0 -> AdaptiveT0(parent.adapter, parent, index)
                     T12 -> AdaptiveT1(parent.adapter, parent, index)
                     T23 -> AdaptiveT1(parent.adapter, parent, index)
@@ -143,8 +147,8 @@ class SlotTest {
             patchDescendantFun = {
                 when (it.declarationIndex) {
                     SLOT -> {
+                        it.setStateVariable(0, arrayOf(HistorySize(2)))
                         it.setStateVariable(1, BoundFragmentFactory(this, T0)) // initialContent
-                        it.setStateVariable(2, 2) // historySize
                     }
 
                     T0 -> Unit
@@ -163,7 +167,7 @@ class SlotTest {
 
         }
 
-        return adapter.first<FoundationSlot>()
+        return adapter.first<CommonSlot>()
     }
 
 }

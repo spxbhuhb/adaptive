@@ -4,4 +4,5 @@
 
 package hu.simplexion.adaptive.foundation
 
+@Target(AnnotationTarget.FUNCTION)
 annotation class AdaptiveEntry

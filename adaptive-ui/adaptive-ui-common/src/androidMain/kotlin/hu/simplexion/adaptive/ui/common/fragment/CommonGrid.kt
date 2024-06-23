@@ -7,9 +7,9 @@ import android.view.View
 import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
-import hu.simplexion.adaptive.ui.common.platform.ContainerViewGroup
 import hu.simplexion.adaptive.ui.common.common
-import hu.simplexion.adaptive.ui.common.support.AbstractGrid
+import hu.simplexion.adaptive.ui.common.platform.ContainerViewGroup
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractGrid
 
 @AdaptiveActual(common)
 class CommonGrid(

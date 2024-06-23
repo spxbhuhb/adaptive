@@ -11,14 +11,15 @@ import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
 import hu.simplexion.adaptive.ui.common.platform.BrowserEventListener
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
+import hu.simplexion.adaptive.ui.common.platform.NavSupport
 import hu.simplexion.adaptive.ui.common.platform.ResizeObserver
 import hu.simplexion.adaptive.ui.common.render.DecorationRenderData
 import hu.simplexion.adaptive.ui.common.render.EventRenderData
 import hu.simplexion.adaptive.ui.common.render.LayoutRenderData
 import hu.simplexion.adaptive.ui.common.render.TextRenderData
-import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
-import hu.simplexion.adaptive.ui.common.support.RawFrame
-import hu.simplexion.adaptive.ui.common.support.RawSurrounding
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.support.layout.RawSurrounding
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 import kotlinx.browser.document
@@ -29,8 +30,8 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.css.CSSStyleDeclaration
 
-open class CommonAdapter(
-    final override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
+class CommonAdapter(
+    override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
 ) : AbstractCommonAdapter<HTMLElement, HTMLDivElement>() {
 
     override val fragmentFactory = CommonFragmentFactory
@@ -254,4 +255,9 @@ open class CommonAdapter(
         it.observe(rootContainer)
     }
 
+    // ------------------------------------------------------------------------------
+    // Nav Support
+    // ------------------------------------------------------------------------------
+
+    override val navSupport = NavSupport(this)
 }

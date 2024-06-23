@@ -76,6 +76,13 @@ kotlin {
                 implementation(libs.android.material)
             }
         }
+
+        jsMain {
+            dependencies {
+                implementation(libs.kotlin.wrappers.web)
+            }
+        }
+
     }
 }
 

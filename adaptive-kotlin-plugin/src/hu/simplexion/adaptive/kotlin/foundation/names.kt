@@ -70,6 +70,7 @@ object Strings {
     const val INSTRUCTIONS = "instructions" // instruction parameter name
 
     const val DETACH = "detach"
+    const val DETACH_NAME = "DetachName"
     const val RANGE_TO = "rangeTo"
 }
 
@@ -85,6 +86,8 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
 object FqNames {
     fun String.runtime() = FqName(Strings.RUNTIME_PACKAGE + "." + this)
     fun String.structural() = FqName(Strings.STRUCTURAL_PACKAGE + "." + this)
+    fun String.instruction() = FqName(Strings.INSTRUCTION_PACKAGE + "." + this)
+
 
     val ADAPTIVE_ENTRY = Strings.ADAPTIVE_ENTRY.runtime()
 
@@ -93,6 +96,8 @@ object FqNames {
     val ADAPTIVE_LOOP = Strings.ADAPTIVE_LOOP.structural()
 
     val ADAPTIVE_EXPECT = Strings.ADAPTIVE_EXPECT.runtime()
+
+    val DETACH_NAME = Strings.DETACH_NAME.instruction()
 }
 
 object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {

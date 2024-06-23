@@ -11,20 +11,17 @@ import kotlinx.coroutines.*
 import kotlin.time.Duration
 
 class AdaptivePeriodic<VT>(
-    val binding: AdaptiveStateVariableBinding<VT>,
+    override val binding: AdaptiveStateVariableBinding<VT>,
     val interval: Duration,
     val producerFun: () -> VT
-) : AdaptiveProducer {
+) : AdaptiveProducer<VT> {
 
     var scope: CoroutineScope? = null
 
-    var latestValue : Any? = null
-
-    override fun replaces(other: AdaptiveProducer): Boolean =
-        other is AdaptivePeriodic<*> && other.binding == this.binding
+    override var latestValue: VT? = null
 
     override fun start() {
-        CoroutineScope(binding.sourceFragment.adapter.dispatcher).also {
+        CoroutineScope(binding.targetFragment.adapter.dispatcher).also {
             scope = it
             it.launch {
                 while (isActive) {
@@ -54,12 +51,6 @@ class AdaptivePeriodic<VT>(
         checkNotNull(scope).cancel()
         scope = null
     }
-
-    override fun hasValueFor(stateVariableIndex : Int) =
-        binding.indexInTargetState == stateVariableIndex
-
-    override fun value() =
-        latestValue
 
     override fun toString(): String {
         return "AdaptivePeriodic($binding, $interval)"

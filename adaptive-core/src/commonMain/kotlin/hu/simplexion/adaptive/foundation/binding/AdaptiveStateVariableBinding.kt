@@ -6,18 +6,29 @@ package hu.simplexion.adaptive.foundation.binding
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 
 class AdaptiveStateVariableBinding<VT>(
-    val sourceFragment: AdaptiveFragment,
+    val sourceFragment: AdaptiveFragment?,
     val indexInSourceState: Int,
     val indexInSourceClosure: Int,
     val targetFragment: AdaptiveFragment,
     val indexInTargetState: Int,
     val path: Array<String>?,
-    val metadata: AdaptivePropertyMetadata,
+    val metadata: AdaptivePropertyMetadata?,
 ) {
+
+    constructor(targetFragment: AdaptiveFragment, indexInTargetState: Int) : this(
+        sourceFragment = null,
+        indexInSourceState = - 1,
+        indexInSourceClosure = - 1,
+        targetFragment,
+        indexInTargetState,
+        emptyArray<String>(),
+        null
+    )
 
     @Suppress("UNCHECKED_CAST")
     val value: VT
         get() {
+            checkNotNull(sourceFragment)
             val stateValue = sourceFragment.getThisClosureVariable(indexInSourceClosure)
             if (path == null) {
                 return stateValue as VT
@@ -28,6 +39,7 @@ class AdaptiveStateVariableBinding<VT>(
         }
 
     fun setValue(value: Any?, setProviderValue : Boolean) {
+        checkNotNull(sourceFragment)
         if (path == null) {
             sourceFragment.setStateVariable(indexInSourceState, value, this)
         } else {
@@ -48,12 +60,13 @@ class AdaptiveStateVariableBinding<VT>(
 
     val propertyProvider: AdaptivePropertyProvider
         get() {
+            checkNotNull(sourceFragment)
             check(path != null) { "this binding does not have a property provider" }
             return sourceFragment.getThisClosureVariable(indexInSourceClosure) as AdaptivePropertyProvider
         }
 
     override fun toString(): String {
-        return "AdaptiveStateVariableBinding(${sourceFragment.id}, $indexInSourceState, $indexInSourceState, ${targetFragment.id}, ${indexInTargetState}, ${path.contentToString()}, $metadata)"
+        return "AdaptiveStateVariableBinding(${sourceFragment?.id}, $indexInSourceState, $indexInSourceState, ${targetFragment.id}, ${indexInTargetState}, ${path.contentToString()}, $metadata)"
     }
 
 }

@@ -9,13 +9,14 @@ import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
-import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
 open class CommonTestAdapter(
-    override val rootContainer: TestReceiver
+    override val rootContainer: TestReceiver = TestReceiver(),
 ) : AbstractCommonAdapter<TestReceiver, TestReceiver>() {
 
     override val fragmentFactory = TestFragmentFactory
@@ -90,4 +91,7 @@ open class CommonTestAdapter(
     override var mediaMetrics: MediaMetrics
         get() = TODO("Not yet implemented")
         set(value) {}
+
+    override val navSupport: AbstractNavSupport
+        get() = TODO("Not yet implemented")
 }

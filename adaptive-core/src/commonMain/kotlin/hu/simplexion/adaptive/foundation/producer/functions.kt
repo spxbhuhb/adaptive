@@ -6,7 +6,6 @@ package hu.simplexion.adaptive.foundation.producer
 
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.seconds
 
 /**
  * Execute [producerFun]. When the result is ready, set the state variable
@@ -29,7 +28,7 @@ fun <VT> fetch(
 ): VT? {
     checkNotNull(binding)
 
-    binding.sourceFragment.addProducer(
+    binding.targetFragment.addProducer(
         AdaptiveFetch(binding, producerFun)
     )
 
@@ -61,7 +60,7 @@ fun <VT> poll(
 ): VT? {
     checkNotNull(binding)
 
-    binding.sourceFragment.addProducer(
+    binding.targetFragment.addProducer(
         AdaptivePoll(binding, interval, producerFun)
     )
 
@@ -92,7 +91,7 @@ fun <VT> periodic(
 ): VT {
     checkNotNull(binding)
 
-    binding.sourceFragment.addProducer(
+    binding.targetFragment.addProducer(
         AdaptivePoll(binding, interval, producerFun)
     )
 

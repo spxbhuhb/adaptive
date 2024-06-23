@@ -4,17 +4,21 @@
 
 package hu.simplexion.adaptive.ui.common.platform
 
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
+import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
+import hu.simplexion.adaptive.ui.common.support.navigation.NavData
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.w3c.dom.events.Event
 import org.w3c.dom.get
 import org.w3c.dom.set
+import web.url.URLSearchParams
 
 class NavSupport(
     val adapter: CommonAdapter
-) {
+) : AbstractNavSupport() {
 
     val lastCounterKey = "adaptive-nav-counter"
     val lastShownKey = "adaptive-nav-last-shown"
@@ -22,6 +26,8 @@ class NavSupport(
     var pendingModificationsEnabled = false
     var pendingModifications = false
     var pendingModificationsConfirm: suspend () -> Boolean = { true }
+
+    override var root = parseLocation()
 
     fun start() {
         window.addEventListener("popstate", ::onPopState)
@@ -32,8 +38,6 @@ class NavSupport(
         } else {
             window.sessionStorage[lastShownKey] = current
         }
-
-        // FIXME browserOpen(window.location.pathname, window.location.search, window.location.hash)
     }
 
     /**
@@ -54,12 +58,8 @@ class NavSupport(
             val current = (window.history.state as? Int) ?: 0
             window.sessionStorage[lastShownKey] = current.toString()
 
-            val path = decodeURIComponent(window.location.pathname)
-
-            adapter.trace("nav-pop-state", path)
-
-
-            // FIXME browserOpen(path, window.location.search, window.location.hash, false)
+            root = parseLocation()
+            adapter.navChange()
         }
     }
 
@@ -86,5 +86,25 @@ class NavSupport(
         window.sessionStorage[lastCounterKey] = navCounter.toString()
         window.sessionStorage[lastShownKey] = navCounter.toString()
         return navCounter
+    }
+
+    fun parseLocation(): NavData {
+        val params = URLSearchParams(window.location.search)
+
+        val navParams: MutableMap<String, Array<out String>> = mutableMapOf()
+
+        for (key in params.keys()) {
+            navParams[key] = params.getAll(key)
+        }
+
+        return NavData(
+            decodeURIComponent(window.location.pathname).trim('/').split("/"),
+            navParams,
+            window.location.hash
+        )
+    }
+
+    override fun segmentChange(owner: AdaptiveFragment, segment: String?) {
+        window.history.replaceState(incrementNavCounter(), "", if (segment == null) "" else "/$segment")
     }
 }

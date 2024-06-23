@@ -4,4 +4,5 @@
 
 package hu.simplexion.adaptive.foundation.producer
 
+@Target(AnnotationTarget.FUNCTION)
 annotation class Producer

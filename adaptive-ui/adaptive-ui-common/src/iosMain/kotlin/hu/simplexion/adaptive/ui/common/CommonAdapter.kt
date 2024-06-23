@@ -15,8 +15,9 @@ import hu.simplexion.adaptive.ui.common.render.DecorationRenderData
 import hu.simplexion.adaptive.ui.common.render.EventRenderData
 import hu.simplexion.adaptive.ui.common.render.LayoutRenderData
 import hu.simplexion.adaptive.ui.common.render.TextRenderData
-import hu.simplexion.adaptive.ui.common.support.AbstractContainerFragment
-import hu.simplexion.adaptive.ui.common.support.RawFrame
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import platform.CoreGraphics.CGPointMake
@@ -206,4 +207,7 @@ open class CommonAdapter(
     override var mediaMetrics = rootContainer.frame.useContents {
         MediaMetrics(size.width, size.height, defaultResourceEnvironment.theme)
     }
+
+    override val navSupport: AbstractNavSupport
+        get() = TODO("Not yet implemented")
 }
