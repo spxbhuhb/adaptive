@@ -16,4 +16,4 @@ class CommonColumn(
     adapter: CommonAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractColumn<UIView, ContainerView>(adapter, parent, declarationIndex, false)
+) : AbstractColumn<UIView, ContainerView>(adapter, parent, declarationIndex)

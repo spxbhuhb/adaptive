@@ -14,4 +14,4 @@ open class AdaptiveColumn(
     adapter: CommonTestAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractColumn<TestReceiver, TestReceiver>(adapter, parent, declarationIndex, false)
+) : AbstractColumn<TestReceiver, TestReceiver>(adapter, parent, declarationIndex)

@@ -6,21 +6,34 @@ package hu.simplexion.adaptive.ui.common.support.layout
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
+import kotlin.math.max
 
 abstract class AbstractBox<RT, CRT : RT>(
     adapter: AbstractCommonAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int
-) : AbstractStackFragment<RT, CRT>(
+) : AbstractFixStack<RT, CRT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 
-    override fun measure() {
-        measure(
-            { width, itemLeft, itemWidth -> maxOf(width, itemLeft + itemWidth) },
-            { height, itemTop, itemHeight -> maxOf(height, itemTop + itemHeight) }
-        )
-        super.measure()
+    override fun measure(): RawFrame {
+        val frames = measureItems()
+
+        var width = 0.0
+        var height = 0.0
+
+        for (frame in frames) {
+            val right = if (frame.left.isNaN()) frame.width else frame.left + frame.width
+            val bottom = if (frame.top.isNaN()) frame.height else frame.top + frame.height
+
+            width = max(width, right)
+            height = max(height, bottom)
+        }
+
+        renderData.measuredWidth = width
+        renderData.measuredHeight = height
+
+        return super.measure()
     }
 
     override fun layout(proposedFrame: RawFrame?) {

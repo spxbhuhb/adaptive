@@ -12,7 +12,7 @@ class CommonSelect<RT, CRT : RT>(
     adapter: AbstractCommonAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     index: Int,
-) : CommonStructuralFragment<RT, CRT>(adapter, parent, index, 2), AdaptiveSelectLogic {
+) : CommonStructural<RT, CRT>(adapter, parent, index, 2), AdaptiveSelectLogic {
 
     override val createClosure: AdaptiveClosure
         get() = parent !!.thisClosure

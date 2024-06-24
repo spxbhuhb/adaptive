@@ -17,7 +17,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
     adapter: AbstractCommonAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int
-) : AbstractContainerFragment<RT, CRT>(
+) : AbstractContainer<RT, CRT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 
@@ -35,7 +35,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
     var colOffsets = DoubleArray(0)
     var rowOffsets = DoubleArray(0)
 
-    override fun measure() {
+    override fun measure(): RawFrame {
         for (item in layoutItems) {
             item.measure()
         }
@@ -43,7 +43,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
         renderData.measuredWidth = size(renderData.layout?.width, colTracksPrepared)
         renderData.measuredHeight = size(renderData.layout?.height, rowTracksPrepared)
 
-        super.measure()
+        return super.measure()
     }
 
     fun size(instructed: Double?, tracks: List<PreparedTrack>) =

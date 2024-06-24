@@ -14,9 +14,8 @@ import hu.simplexion.adaptive.utility.checkIfInstance
 
 /**
  * Two uses: layouts and loop/select containers.
- *
  */
-abstract class AbstractContainerFragment<RT, CRT : RT>(
+abstract class AbstractContainer<RT, CRT : RT>(
     adapter: AbstractCommonAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
@@ -129,5 +128,19 @@ abstract class AbstractContainerFragment<RT, CRT : RT>(
             }
         }
     }
+
+    /**
+     * Calls `measure` on all items in [layoutItems] and returns with their box frame.
+     *
+     * @return  [RawFrame] for each item where:
+     *          - top and left is the instructed top and left or zero
+     *          - width is `boxWidth`
+     *          - height is `boxHeight`
+     */
+    fun measureItems() =
+        layoutItems.map {
+            it.measure()
+            it.renderData.box
+        }
 
 }

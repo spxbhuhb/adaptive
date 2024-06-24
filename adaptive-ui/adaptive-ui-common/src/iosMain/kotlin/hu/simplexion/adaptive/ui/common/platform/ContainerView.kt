@@ -5,14 +5,14 @@
 package hu.simplexion.adaptive.ui.common.platform
 
 import hu.simplexion.adaptive.ui.common.CommonAdapter
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreGraphics.CGRectMake
 import platform.UIKit.UIView
 
 @OptIn(ExperimentalForeignApi::class)
 class ContainerView(
-    val owner: AbstractContainerFragment<UIView, ContainerView>
+    val owner: AbstractContainer<UIView, ContainerView>
 ) : UIView(CGRectMake(0.0, 0.0, 0.0, 0.0)) {
 
     override fun layoutSubviews() {

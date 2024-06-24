@@ -9,12 +9,12 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import hu.simplexion.adaptive.ui.common.CommonAdapter
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
 
 @SuppressLint("ViewConstructor") // not a general Android view group, you are not supposed to use it in general Android code
 open class ContainerViewGroup(
     context: Context,
-    val owner: AbstractContainerFragment<View, ContainerViewGroup>
+    val owner: AbstractContainer<View, ContainerViewGroup>
 ) : ViewGroup(context, null, 0) {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

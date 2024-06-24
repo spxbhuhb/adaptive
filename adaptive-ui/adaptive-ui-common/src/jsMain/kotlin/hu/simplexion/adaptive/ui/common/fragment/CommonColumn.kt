@@ -19,7 +19,7 @@ open class CommonColumn(
     adapter: CommonAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractColumn<HTMLElement, HTMLDivElement>(adapter, parent, declarationIndex, true) {
+) : AbstractColumn<HTMLElement, HTMLDivElement>(adapter, parent, declarationIndex) {
 
     override fun layout(proposedFrame: RawFrame?) {
         super.layout(proposedFrame)

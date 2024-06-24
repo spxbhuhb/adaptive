@@ -19,7 +19,7 @@ open class CommonRow(
     adapter: CommonAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractRow<HTMLElement, HTMLDivElement>(adapter, parent, declarationIndex, true) {
+) : AbstractRow<HTMLElement, HTMLDivElement>(adapter, parent, declarationIndex) {
 
     override fun layout(proposedFrame: RawFrame?) {
         super.layout(proposedFrame)

@@ -23,7 +23,7 @@ import hu.simplexion.adaptive.ui.common.platform.ContainerViewGroup
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.StructuralViewGroup
 import hu.simplexion.adaptive.ui.common.render.*
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
 import hu.simplexion.adaptive.ui.common.support.layout.RawCornerRadius
 import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
@@ -37,16 +37,16 @@ open class CommonAdapter(
 
     val displayMetrics: DisplayMetrics = context.resources.displayMetrics
 
-    override fun makeContainerReceiver(fragment: AbstractContainerFragment<View, ContainerViewGroup>): ContainerViewGroup =
+    override fun makeContainerReceiver(fragment: AbstractContainer<View, ContainerViewGroup>): ContainerViewGroup =
         ContainerViewGroup(context, fragment)
 
-    override fun makeStructuralReceiver(fragment: AbstractContainerFragment<View, ContainerViewGroup>): ContainerViewGroup =
+    override fun makeStructuralReceiver(fragment: AbstractContainer<View, ContainerViewGroup>): ContainerViewGroup =
         StructuralViewGroup(context, fragment)
 
     override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 
-        fragment.ifIsInstanceOrRoot<AbstractContainerFragment<View, ContainerViewGroup>> {
+        fragment.ifIsInstanceOrRoot<AbstractContainer<View, ContainerViewGroup>> {
             val frame = RawFrame(0.0, 0.0, rootContainer.width.toDouble(), rootContainer.height.toDouble())
 
             it.layoutFrame = frame
@@ -61,7 +61,7 @@ open class CommonAdapter(
     override fun removeActualRoot(fragment: AdaptiveFragment) {
         traceRemoveActual(fragment)
 
-        fragment.ifIsInstanceOrRoot<AbstractContainerFragment<View, ContainerViewGroup>> {
+        fragment.ifIsInstanceOrRoot<AbstractContainer<View, ContainerViewGroup>> {
             rootContainer.removeView(it.receiver)
         }
     }

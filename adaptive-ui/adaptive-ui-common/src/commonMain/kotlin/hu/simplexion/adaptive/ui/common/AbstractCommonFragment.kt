@@ -77,14 +77,20 @@ abstract class AbstractCommonFragment<RT>(
         super.unmount()
     }
 
-    open fun measure() {
-        val instructedWidth = renderData.layout?.width
-        val instructedHeight = renderData.layout?.height
+    open fun measure(): RawFrame {
+        // TODO we could skip recalculation if nothing has changed
+        val layout = renderData.layout
 
-        renderData.boxWidth = instructedWidth ?: renderData.calcBoxWidth()
-        renderData.boxHeight = instructedHeight ?: renderData.calcBoxHeight()
+        renderData.box = RawFrame(
+            top = layout?.top ?: Double.NaN,
+            left = layout?.left ?: Double.NaN,
+            width = layout?.width ?: renderData.calcBoxWidth(),
+            height = layout?.height ?: renderData.calcBoxHeight(),
+        )
 
-        if (trace) trace("measure", "measuredSize=(${renderData.boxWidth},${renderData.boxHeight})")
+        if (trace) trace("measure", "${renderData.box}")
+
+        return renderData.box
     }
 
     abstract fun layout(proposedFrame: RawFrame?)

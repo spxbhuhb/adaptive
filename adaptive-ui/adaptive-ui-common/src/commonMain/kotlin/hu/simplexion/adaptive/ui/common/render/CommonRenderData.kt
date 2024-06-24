@@ -7,9 +7,14 @@ package hu.simplexion.adaptive.ui.common.render
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.testing.Traceable
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
+import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 
 /**
  * A pre-processed version of fragment instructions to make access from layout easier.
+ *
+ * @property measuredWidth the intrinsic width of the inner content of the fragment without padding, border width and margin
+ * @property measuredHeight the intrinsic height of the inner content of the fragment without padding, border width and margin
+ * @property box instructed top and left (or NaN) and the measured size + padding + border width + margin
  */
 class CommonRenderData(
     val adapter : AbstractCommonAdapter<*,*>
@@ -27,8 +32,7 @@ class CommonRenderData(
     var measuredWidth = Double.NaN
     var measuredHeight = Double.NaN
 
-    var boxWidth = Double.NaN
-    var boxHeight = Double.NaN
+    var box: RawFrame = RawFrame.AUTO
 
     var layout : LayoutRenderData? = null
     var decoration : DecorationRenderData? = null

@@ -7,12 +7,12 @@ package hu.simplexion.adaptive.ui.common.platform
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
 
 @SuppressLint("ViewConstructor") // not a general Android view group, you are not supposed to use it in general Android code
 class StructuralViewGroup(
     context: Context,
-    owner: AbstractContainerFragment<View, ContainerViewGroup>
+    owner: AbstractContainer<View, ContainerViewGroup>
 ) : ContainerViewGroup(context, owner) {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

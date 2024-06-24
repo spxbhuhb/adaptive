@@ -15,7 +15,7 @@ import hu.simplexion.adaptive.ui.common.render.DecorationRenderData
 import hu.simplexion.adaptive.ui.common.render.EventRenderData
 import hu.simplexion.adaptive.ui.common.render.LayoutRenderData
 import hu.simplexion.adaptive.ui.common.render.TextRenderData
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
 import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -32,17 +32,17 @@ open class CommonAdapter(
 
     override val fragmentFactory = CommonFragmentFactory
 
-    override fun makeContainerReceiver(fragment: AbstractContainerFragment<UIView, ContainerView>): ContainerView =
+    override fun makeContainerReceiver(fragment: AbstractContainer<UIView, ContainerView>): ContainerView =
         ContainerView(fragment)
 
-    override fun makeStructuralReceiver(fragment: AbstractContainerFragment<UIView, ContainerView>): ContainerView =
+    override fun makeStructuralReceiver(fragment: AbstractContainer<UIView, ContainerView>): ContainerView =
         ContainerView(fragment)
 
     @OptIn(ExperimentalForeignApi::class)
     override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 
-        fragment.ifIsInstanceOrRoot<AbstractContainerFragment<UIView, ContainerView>> {
+        fragment.ifIsInstanceOrRoot<AbstractContainer<UIView, ContainerView>> {
 
             val frame = rootContainer.frame.useContents {
                 RawFrame(origin.y, origin.x, size.width, size.height)
@@ -59,7 +59,7 @@ open class CommonAdapter(
     override fun removeActualRoot(fragment: AdaptiveFragment) {
         traceRemoveActual(fragment)
 
-        fragment.ifIsInstanceOrRoot<AbstractContainerFragment<UIView, UIView>> {
+        fragment.ifIsInstanceOrRoot<AbstractContainer<UIView, UIView>> {
             it.receiver.removeFromSuperview()
         }
     }

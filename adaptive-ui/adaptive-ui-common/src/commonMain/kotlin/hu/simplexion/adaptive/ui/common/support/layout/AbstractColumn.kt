@@ -6,27 +6,36 @@ package hu.simplexion.adaptive.ui.common.support.layout
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
+import kotlin.math.max
 
 abstract class AbstractColumn<RT, CRT : RT>(
     adapter: AbstractCommonAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
-    declarationIndex: Int,
-    val autoSizing: Boolean
-) : AbstractStackFragment<RT, CRT>(
+    declarationIndex: Int
+) : AbstractFixStack<RT, CRT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 
-    override fun measure() {
-        measure(
-            { width, _, itemWidth -> maxOf(width, itemWidth) },
-            { height, _, itemHeight -> height + itemHeight }
-        )
-        super.measure()
+    override fun measure(): RawFrame {
+        val frames = measureItems()
+
+        var width = 0.0
+        var height = 0.0
+
+        for (frame in frames) {
+            width = max(width, frame.width)
+            height += frame.height
+        }
+
+        renderData.measuredWidth = width
+        renderData.measuredHeight = height
+
+        return super.measure()
     }
 
     override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)
-        layoutStack(horizontal = false, autoSizing)
+        layoutStack(horizontal = false)
     }
 
 }

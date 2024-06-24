@@ -14,4 +14,4 @@ open class AdaptiveRow(
     adapter: CommonTestAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractRow<TestReceiver, TestReceiver>(adapter, parent, declarationIndex, false)
+) : AbstractRow<TestReceiver, TestReceiver>(adapter, parent, declarationIndex)

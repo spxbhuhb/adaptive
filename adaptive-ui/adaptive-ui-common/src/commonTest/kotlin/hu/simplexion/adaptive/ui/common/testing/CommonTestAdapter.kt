@@ -9,7 +9,7 @@ import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
 import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import kotlinx.coroutines.CoroutineDispatcher
@@ -24,16 +24,16 @@ open class CommonTestAdapter(
     override val dispatcher: CoroutineDispatcher
         get() = Dispatchers.Default
 
-    override fun makeContainerReceiver(fragment: AbstractContainerFragment<TestReceiver, TestReceiver>): TestReceiver =
+    override fun makeContainerReceiver(fragment: AbstractContainer<TestReceiver, TestReceiver>): TestReceiver =
         TestReceiver()
 
-    override fun makeStructuralReceiver(fragment: AbstractContainerFragment<TestReceiver, TestReceiver>): TestReceiver =
+    override fun makeStructuralReceiver(fragment: AbstractContainer<TestReceiver, TestReceiver>): TestReceiver =
         TestReceiver()
 
     override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 
-        fragment.alsoIfInstance<AbstractContainerFragment<TestReceiver, TestReceiver>> {
+        fragment.alsoIfInstance<AbstractContainer<TestReceiver, TestReceiver>> {
             rootContainer.testFrame.let { tf ->
                 it.layoutFrameOrNull = tf
                 it.measure()
@@ -46,7 +46,7 @@ open class CommonTestAdapter(
     override fun removeActualRoot(fragment: AdaptiveFragment) {
         traceRemoveActual(fragment)
 
-        fragment.alsoIfInstance<AbstractContainerFragment<TestReceiver, TestReceiver>> {
+        fragment.alsoIfInstance<AbstractContainer<TestReceiver, TestReceiver>> {
             rootContainer.children.remove(it.receiver)
         }
     }

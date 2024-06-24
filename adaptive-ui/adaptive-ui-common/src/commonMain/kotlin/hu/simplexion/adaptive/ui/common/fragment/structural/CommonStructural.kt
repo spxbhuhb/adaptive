@@ -6,16 +6,16 @@ package hu.simplexion.adaptive.ui.common.fragment.structural
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
 import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
-open class CommonStructuralFragment<RT, CRT : RT>(
+open class CommonStructural<RT, CRT : RT>(
     adapter: AbstractCommonAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     index: Int,
     stateSize: Int
-) : AbstractContainerFragment<RT, CRT>(adapter, parent, index, - 1, stateSize) {
+) : AbstractContainer<RT, CRT>(adapter, parent, index, - 1, stateSize) {
 
     @Suppress("LeakingThis")
     override val receiver = adapter.makeStructuralReceiver(this)

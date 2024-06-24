@@ -17,7 +17,7 @@ import hu.simplexion.adaptive.ui.common.render.DecorationRenderData
 import hu.simplexion.adaptive.ui.common.render.EventRenderData
 import hu.simplexion.adaptive.ui.common.render.LayoutRenderData
 import hu.simplexion.adaptive.ui.common.render.TextRenderData
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
 import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.support.layout.RawSurrounding
 import hu.simplexion.adaptive.utility.alsoIfInstance
@@ -39,16 +39,16 @@ class CommonAdapter(
     override val dispatcher: CoroutineDispatcher
         get() = Dispatchers.Default
 
-    override fun makeContainerReceiver(fragment: AbstractContainerFragment<HTMLElement, HTMLDivElement>): HTMLDivElement =
+    override fun makeContainerReceiver(fragment: AbstractContainer<HTMLElement, HTMLDivElement>): HTMLDivElement =
         document.createElement("div") as HTMLDivElement
 
-    override fun makeStructuralReceiver(fragment: AbstractContainerFragment<HTMLElement, HTMLDivElement>): HTMLDivElement =
+    override fun makeStructuralReceiver(fragment: AbstractContainer<HTMLElement, HTMLDivElement>): HTMLDivElement =
         (document.createElement("div") as HTMLDivElement).also { it.style.display = "contents" }
 
     override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 
-        fragment.alsoIfInstance<AbstractContainerFragment<HTMLElement, HTMLDivElement>> {
+        fragment.alsoIfInstance<AbstractContainer<HTMLElement, HTMLDivElement>> {
             rootContainer.getBoundingClientRect().let { r ->
                 val frame = RawFrame(0.0, 0.0, r.width, r.height)
 
@@ -64,7 +64,7 @@ class CommonAdapter(
     override fun removeActualRoot(fragment: AdaptiveFragment) {
         traceRemoveActual(fragment)
 
-        fragment.alsoIfInstance<AbstractContainerFragment<HTMLElement, HTMLDivElement>> {
+        fragment.alsoIfInstance<AbstractContainer<HTMLElement, HTMLDivElement>> {
             rootContainer.removeChild(it.receiver)
         }
     }

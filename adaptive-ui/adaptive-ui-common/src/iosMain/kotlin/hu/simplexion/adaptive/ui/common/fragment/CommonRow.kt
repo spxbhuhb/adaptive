@@ -16,4 +16,4 @@ class CommonRow(
     adapter: CommonAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractRow<UIView, ContainerView>(adapter, parent, declarationIndex, false)
+) : AbstractRow<UIView, ContainerView>(adapter, parent, declarationIndex)

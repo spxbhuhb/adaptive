@@ -11,7 +11,7 @@ import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.MediaMetricsProducer
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainerFragment
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
 import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
 import hu.simplexion.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
@@ -33,6 +33,10 @@ import kotlinx.coroutines.Dispatchers
  * @param CRT Container receiver type
  * @param RT Receiver type
  *
+ * @property  autoSizing   When `true`, browser layouts will use the browsers built-in layout methods.
+ *                         When `false` they will use the same algorithm as mobile. This seconds option
+ *                         is useful when you use browsers to develop for mobile.
+ *
  * @property  actualBatch  When true, removeActual is a no-op. Used by layout fragments to group
  *                         remove operations, so they can remove a whole actual subtree at once.
  */
@@ -52,6 +56,8 @@ abstract class AbstractCommonAdapter<RT, CRT : RT> : AdaptiveAdapter {
     override val dispatcher: CoroutineDispatcher
         get() = Dispatchers.Main
 
+    var autoSizing: Boolean = true
+
     var actualBatch: Boolean = false
 
     protected val mediaMetricsProducers = mutableListOf<MediaMetricsProducer>()
@@ -62,9 +68,9 @@ abstract class AbstractCommonAdapter<RT, CRT : RT> : AdaptiveAdapter {
     override fun newLoop(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
         CommonLoop(this, parent, index)
 
-    abstract fun makeContainerReceiver(fragment: AbstractContainerFragment<RT, CRT>): CRT
+    abstract fun makeContainerReceiver(fragment: AbstractContainer<RT, CRT>): CRT
 
-    abstract fun makeStructuralReceiver(fragment: AbstractContainerFragment<RT, CRT>): CRT
+    abstract fun makeStructuralReceiver(fragment: AbstractContainer<RT, CRT>): CRT
 
     fun traceAddActual(fragment: AdaptiveFragment) {
         if (trace.isEmpty()) return

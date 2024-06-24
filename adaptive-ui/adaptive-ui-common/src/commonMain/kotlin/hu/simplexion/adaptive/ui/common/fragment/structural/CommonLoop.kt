@@ -13,7 +13,7 @@ class CommonLoop<RT, CRT : RT>(
     adapter: AbstractCommonAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     index: Int,
-) : CommonStructuralFragment<RT, CRT>(adapter, parent, index, 2), AdaptiveLoopLogic<Any> {
+) : CommonStructural<RT, CRT>(adapter, parent, index, 2), AdaptiveLoopLogic<Any> {
 
     override val createClosure: AdaptiveClosure
         get() = parent !!.thisClosure

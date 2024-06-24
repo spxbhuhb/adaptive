@@ -29,3 +29,8 @@ fun column(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> 
 fun grid(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
     manualImplementation(instructions, content)
 }
+
+@AdaptiveExpect(common)
+fun stack(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit) {
+    manualImplementation(instructions, content)
+}

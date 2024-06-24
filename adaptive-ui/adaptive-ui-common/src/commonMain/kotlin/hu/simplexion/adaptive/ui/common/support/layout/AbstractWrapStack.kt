@@ -9,47 +9,27 @@ import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 import hu.simplexion.adaptive.ui.common.instruction.Alignment
 
 /**
- * Two uses: layouts and loop/select containers.
+ * Base class for wrapping stack: wrapRow (and maybe later wrapColumn)
  */
-abstract class AbstractStackFragment<RT, CRT : RT>(
+abstract class AbstractWrapStack<RT, CRT : RT>(
     adapter: AbstractCommonAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
     instructionsIndex: Int,
     stateSize: Int
-) : AbstractContainerFragment<RT, CRT>(
+) : AbstractContainer<RT, CRT>(
     adapter, parent, declarationIndex, instructionsIndex, stateSize
 ) {
-
-    fun measure(
-        widthFun: (width: Double, itemLeft: Double, itemWidth: Double) -> Double,
-        heightFun: (height: Double, itemTop: Double, itemHeight: Double) -> Double
-    ) {
-        var width = 0.0
-        var height = 0.0
-
-        for (item in layoutItems) {
-            item.measure()
-
-            val layout = item.renderData.layout
-
-            width = widthFun(width, layout?.left ?: 0.0, item.renderData.boxWidth)
-            height = heightFun(height, layout?.top ?: 0.0, item.renderData.boxHeight)
-        }
-
-        renderData.measuredWidth = width
-        renderData.measuredHeight = height
-    }
 
     /**
      * Common layout func for row and column layouts.
      *
      * @param horizontal True the items should be next to each other (row), false if they should be below each other (column).
      */
-    fun layoutStack(horizontal: Boolean, autoSizing: Boolean) {
+    fun layoutStack(horizontal: Boolean) {
         val container = renderData.container
 
-        if (autoSizing) {
+        if (uiAdapter.autoSizing) {
             for (item in layoutItems) {
                 item.layout(null)
             }
@@ -70,20 +50,21 @@ abstract class AbstractStackFragment<RT, CRT : RT>(
         for (item in layoutItems) {
             val renderData = item.renderData
             val layout = item.renderData.layout
+            val box = renderData.box
 
             val crossAxisSelfAlignment = if (horizontal) layout?.verticalAlignment else layout?.horizontalAlignment
 
             val frame = if (horizontal) {
-                val top = calcAlign(crossAxisItemAlignment, crossAxisSelfAlignment, crossAxisAvailableSpace, renderData.boxHeight)
-                RawFrame(padding.top + top, offset, renderData.boxWidth, renderData.boxHeight)
+                val top = calcAlign(crossAxisItemAlignment, crossAxisSelfAlignment, crossAxisAvailableSpace, box.height)
+                RawFrame(padding.top + top, offset, box.width, box.height)
             } else {
-                val left = calcAlign(crossAxisItemAlignment, crossAxisSelfAlignment, crossAxisAvailableSpace, renderData.boxWidth)
-                RawFrame(offset, padding.left + left, renderData.boxWidth, renderData.boxHeight)
+                val left = calcAlign(crossAxisItemAlignment, crossAxisSelfAlignment, crossAxisAvailableSpace, box.width)
+                RawFrame(offset, padding.left + left, box.width, box.height)
             }
 
             item.layout(frame)
 
-            offset += gap + (if (horizontal) renderData.boxWidth else renderData.boxHeight)
+            offset += gap + (if (horizontal) box.width else box.height)
         }
 
         for (item in structuralItems) {
@@ -125,10 +106,11 @@ abstract class AbstractStackFragment<RT, CRT : RT>(
         var usedSpace = 0.0
 
         for (item in layoutItems) {
+            val box = item.renderData.box
             if (horizontal) {
-                usedSpace += item.renderData.boxWidth
+                usedSpace += box.width
             } else {
-                usedSpace += item.renderData.boxHeight
+                usedSpace += box.height
             }
         }
 
@@ -150,7 +132,6 @@ abstract class AbstractStackFragment<RT, CRT : RT>(
                 null -> 0.0
             }
         }
-
 
 
 }
