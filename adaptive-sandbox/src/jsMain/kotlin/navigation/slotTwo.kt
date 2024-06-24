@@ -26,10 +26,10 @@ fun slotTwo() {
 
 @Adaptive
 private fun content3() {
-    text("this is content 3 (click to change)") .. navClick(slotTwoKey) { content3() }
+    text("this is content 3 (click to change)") .. navClick(slotTwoKey) { content4() }
 }
 
 @Adaptive
-fun content4() {
-    text("this is content 4 (click to change)") .. navClick(slotTwoKey) { content4() }
+private fun content4() {
+    text("this is content 4 (click to change)") .. navClick(slotTwoKey) { content3() }
 }

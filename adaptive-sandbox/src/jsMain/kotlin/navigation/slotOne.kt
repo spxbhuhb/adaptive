@@ -24,6 +24,6 @@ private fun content1() {
 }
 
 @Adaptive
-fun content2() {
+private fun content2() {
     text("this is content 2 (click to change)") .. navClick(slotOneKey) { content1() }
 }

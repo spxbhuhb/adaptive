@@ -13,6 +13,9 @@ abstract class AbstractNavSupport {
     val nodes = mutableListOf<NavNode>()
 
     fun consume(owner: AdaptiveFragment): String {
+        println("consume.root $root")
+        println("consume.nodes $nodes")
+
         val indexOfExisting = nodes.indexOfFirst { it.owner === owner }
 
         if (indexOfExisting != - 1) {
@@ -29,9 +32,10 @@ abstract class AbstractNavSupport {
             return newNode.last()
         }
 
-        val newNode = NavNode(owner, parentNode.navData.sub(parentNode.consumed), 1)
+        val newData = parentNode.navData.sub(parentNode.consumed)
+        val newNode = NavNode(owner, newData, if (newData.segments.isEmpty()) 0 else 1)
         nodes += newNode
-        return newNode.last()
+        return if (newNode.consumed == 1) newNode.last() else ""
     }
 
     fun removeNode(owner: AdaptiveFragment) {

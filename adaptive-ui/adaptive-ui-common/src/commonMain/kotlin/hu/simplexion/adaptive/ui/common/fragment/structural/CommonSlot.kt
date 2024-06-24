@@ -127,10 +127,17 @@ class CommonSlot(
     }
 
     fun setContent(origin: AdaptiveFragment, detachIndex: Int, segment: String?): AdaptiveFragment {
+        if (trace) trace("setContent", "origin: $origin, detachIndex: $detachIndex segment: $segment")
+
+        if (segment != navSegment) {
+            // this is a navigation state change, we have to update the window URI accordingly
+            navSegment = segment
+            activeSegment = segment
+            uiAdapter.navSupport.segmentChange(this, segment)
+        }
+
         val fragment = origin.genBuild(this, detachIndex)
         checkNotNull(fragment) { "${origin}.genBuild(this, $detachIndex) returned with null" }
-
-        if (trace) trace("setContent", "origin: $origin, detachIndex: $detachIndex")
 
         return setContent(fragment, segment)
     }
@@ -153,13 +160,6 @@ class CommonSlot(
 
         if (routes.isEmpty()) {
             return fragment
-        }
-
-        if (segment != navSegment) {
-            // this is a navigation state change, we have to update the window URI accordingly
-            navSegment = segment
-            activeSegment = segment
-            uiAdapter.navSupport.segmentChange(this, segment)
         }
 
         return fragment

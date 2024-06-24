@@ -7,6 +7,8 @@ package hu.simplexion.adaptive.foundation.instruction
 import hu.simplexion.adaptive.foundation.testing.Traceable
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
+fun trace(vararg patterns: String) = Trace(*patterns.map { Regex(it) }.toTypedArray())
+
 /**
  * Set trace for the given fragment.
  *
