@@ -18,6 +18,7 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrBlockImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.types.defaultType
+import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.getPropertyGetter
 
@@ -41,7 +42,7 @@ class ArmCallBuilder(
 
             armCall.isDirect -> {
                 // FIXME remove fixValueParameters as soon as KT-58886 is solved, it's really hackish
-                fixValueParameters(armCall.irCall.symbol.owner)
+                fixFunSignature(armCall.irCall.symbol.owner)
                 irCall(
                     armCall.irCall.symbol,
                     dispatchReceiver = null,
@@ -67,7 +68,7 @@ class ArmCallBuilder(
             }
         }
 
-    private fun fixValueParameters(owner: IrSimpleFunction) {
+    private fun fixFunSignature(owner: IrSimpleFunction) {
         if (owner.valueParameters.size == 2
             && owner.valueParameters[0].type == pluginContext.adaptiveFragmentType
             && owner.valueParameters[1].type == irBuiltIns.intType
@@ -76,6 +77,10 @@ class ArmCallBuilder(
         owner.valueParameters = emptyList()
         owner.addValueParameter(Strings.PARENT, pluginContext.adaptiveFragmentType)
         owner.addValueParameter(Strings.DECLARATION_INDEX, irBuiltIns.intType)
+
+        if (! owner.returnType.isSubtypeOfClass(pluginContext.adaptiveFragmentClass)) {
+            owner.returnType = pluginContext.adaptiveFragmentType
+        }
     }
 
     fun irGetFragmentFactory(buildFun: IrSimpleFunction): IrExpression {

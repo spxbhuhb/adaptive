@@ -6,13 +6,13 @@ import graphics.svgExample
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.invoke
+import hu.simplexion.adaptive.lib.sandbox.misc.chessBoard
 import hu.simplexion.adaptive.ui.common.browser
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.platform.withJsResources
 import layout.layoutMain
 import markdown.markdown
-import misc.chessBoard
 import mobile.goodMorning
 import mobile.welcome
 import navigation.slotOne
