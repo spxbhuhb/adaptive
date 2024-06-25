@@ -8,8 +8,16 @@ import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.render.text
 
 fun fontName(fontName: String) = FontName(fontName)
+inline fun fontName(fontName: () -> String) = FontName(fontName())
+
 fun fontSize(fontSize: SPixel) = FontSize(fontSize)
+inline fun fontSize(fontSize: () -> SPixel) = FontSize(fontSize())
+
 fun fontWeight(weight: Int) = FontWeight(weight)
+inline fun fontWeight(fontWeight: () -> Int) = FontWeight(fontWeight())
+
+fun lineHeight(height: DPixel) = LineHeight(height)
+inline fun lineHeight(height: () -> DPixel) = LineHeight(height())
 
 val noSelect = NoSelect()
 val bold = FontWeight.BOLD
@@ -46,6 +54,24 @@ data class FontWeight(val weight: Int) : AdaptiveInstruction {
     }
 }
 
+enum class FontStyle(val value: String) : AdaptiveInstruction {
+    Normal("normal"),
+    Italic("italic");
+
+    override fun apply(subject: Any) {
+        text(subject) { it.fontStyle = this }
+    }
+}
+
+enum class FontVariant(val value: String) : AdaptiveInstruction {
+    Normal("normal"),
+    SmallCaps("small-caps");
+
+    override fun apply(subject: Any) {
+        text(subject) { it.fontVariant = this }
+    }
+}
+
 enum class TextDecoration(val value : String) : AdaptiveInstruction {
     None("none"),
     Underline("underline");
@@ -64,6 +90,12 @@ class NoSelect : AdaptiveInstruction {
 data class LetterSpacing(val value: Double) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         text(subject) { it.letterSpacing = value }
+    }
+}
+
+data class LineHeight(val height: DPixel) : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        text(subject) { it.lineHeight = it.adapter.toPx(height) }
     }
 }
 

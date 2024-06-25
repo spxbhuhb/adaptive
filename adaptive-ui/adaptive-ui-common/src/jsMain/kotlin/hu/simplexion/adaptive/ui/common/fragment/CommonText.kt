@@ -10,14 +10,16 @@ import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
 import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import kotlinx.browser.document
+import org.w3c.dom.CanvasRenderingContext2D
+import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLSpanElement
 
 @AdaptiveActual(common)
 open class CommonText(
     adapter: CommonAdapter,
-    parent : AdaptiveFragment,
-    index : Int
+    parent: AdaptiveFragment,
+    index: Int
 ) : AbstractCommonFragment<HTMLElement>(adapter, parent, index, 1, 2) {
 
     override val receiver: HTMLSpanElement =
@@ -31,15 +33,41 @@ open class CommonText(
         patchInstructions()
 
         if (haveToPatch(dirtyMask, 1)) {
-            receiver.textContent = content
+            val content = this.content
+
+            if (receiver.textContent != content) {
+                receiver.textContent = content
+
+                if (uiAdapter.autoSizing) {
+                    measureText(content)
+                } else {
+                    renderData.measuredWidth = Double.NaN
+                    renderData.measuredHeight = Double.NaN
+                }
+            }
         }
 
         return false
     }
 
+    fun measureText(content: String) {
+        val text = renderData.text
+        measureContext.font = text?.toCssString() ?: ""
+
+        val metrics = measureContext.measureText(content)
+
+        renderData.measuredWidth = metrics.width
+        renderData.measuredHeight = text?.lineHeight ?: (metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent)
+    }
+
     override fun layout(proposedFrame: RawFrame?) {
         calcLayoutFrame(proposedFrame)
         uiAdapter.applyLayoutToActual(this)
+    }
+
+    companion object {
+        val measureCanvas = document.createElement("canvas") as HTMLCanvasElement
+        val measureContext = measureCanvas.getContext("2d") as CanvasRenderingContext2D
     }
 
 }
