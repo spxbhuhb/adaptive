@@ -250,6 +250,16 @@ class CommonAdapter(
                 defaultResourceEnvironment.theme
             )
             updateMediaMetrics()
+
+            rootContainer.getBoundingClientRect().let { r ->
+                val frame = RawFrame(0.0, 0.0, r.width, r.height)
+                for (fragment in rootFragment.children) {
+                    fragment as AbstractCommonFragment<*>
+                    fragment.layoutFrame = frame
+                    fragment.measure()
+                    fragment.layout(frame)
+                }
+            }
         }
     }.also {
         it.observe(rootContainer)

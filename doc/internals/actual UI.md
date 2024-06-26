@@ -126,10 +126,3 @@ to which anchor the fragment belongs to.
       - if so, forwards the call with the specified anchor
       - if not, forwards the call with itself (the `if` or `for`) as the higher anchor
 
-## Measure and layout
-
-When a container fragment is added to the adapter:
-
-- the adapter sets the `layoutFrame` of the container fragment
-- calls `measure` of the container fragment
-- calls `layout` of the container fragment
