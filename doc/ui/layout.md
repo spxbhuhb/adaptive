@@ -14,6 +14,13 @@ The difference between the two directions comes from the fact that arabic langua
 do stick to right-to-left writing while easter ones use left-to-right instead of their traditional
 top-to-down.
 
+> [!IMPORTANT]
+>
+> When talking about child fragments in this document they **DO NOT** mean `AdaptiveFragment.children`,
+> but rather the **children in the actual UI scope**. These are descendants in the fragment tree, but
+> not necessarily children.
+>
+
 ## Values
 
 `sp` - Scaled Pixel
@@ -22,9 +29,15 @@ top-to-down.
 - `SPixel` class
 - conversion is adapter dependent
 
+`fr` - Fraction
+
+- for space distribution
+- `Fraction` class
+- used in calculations, no conversion
+
 `dp` - Device Independent Pixel
 
-- position, dimensions (width and height)
+- position, sizes in dimensions (width and height)
 - `DPixel` class
 - converted into `raw`
     - before any layout calculation (typically in `AdaptiveInstruction.apply`)
@@ -32,24 +45,24 @@ top-to-down.
 
 `raw` - RawPixel
 
-- position, dimensions (width and height)
+- position, sizes in dimensions (width and height)
 - `Double`
 - all layout calculations use `raw` values
 - `RenderData` contains only `raw` values
-- `+Inf` is used to indicate an "unbound" dimension (`Double.POSITIVE_INFINITY`)
+- `+Inf` is used to indicate an "unbound" size (`Double.POSITIVE_INFINITY`)
 
 ## Layout data
 
 Layout calculations work with these data:
 
-- `instructed` = the position and dimensions specified by instructions such as `width` or `position`
-- `inner` = dimensions of the inner content when measurable
+- `instructed` = the position and sizes specified by instructions such as `width` or `position`
+- `inner` = sizes of the inner content when measurable
 - `surrounding` = `padding` + `border-width` + `margin`, directional (meaning each direction has its own value)
 - `outer` = `measured` + `surrounding`
-- `proposed` = position and dimensions proposed by the parent layout
-- `computed` = final result of the layout calculations
+- `proposed` = position and sizes proposed by the parent layout
+- `final` = final result of the layout calculations
 
-The `computed` data set is applied to the actual UI, but the exact application is adapter dependent.
+The `actual` data set is applied to the actual UI, but the exact application is adapter dependent.
 For example, in browsers to have the `margin` effect (that is, no background), you have to use an
 actual CSS margin but that does not count to width and height in the browser box model.
 
@@ -63,7 +76,7 @@ All layout data use `raw` values.
 
 ## Basic rules
 
-All layout calculations start with known fixed dimensions. This is typically the dimensions of the root
+All layout calculations start with known fixed sizes. This is typically the sizes of the root
 container passed to the adapter.
 
 When a top level container is added to the adapter (`AdaptiveAdapter.addActualRoot`):
@@ -71,7 +84,7 @@ When a top level container is added to the adapter (`AdaptiveAdapter.addActualRo
 - a `proposedSize` size is created: `RawSize(rootContainer.width, rootContainer.height)`
 - `layout(proposedSize)` is called to
     - perform the layout calculations
-    - apply the `computed` values to the contained fragments
+  - apply the `final` values to the contained fragments
 - the fragment is added to the actual UI (to `rootContainer`)
 
 `instructed` values
@@ -80,16 +93,16 @@ When a top level container is added to the adapter (`AdaptiveAdapter.addActualRo
 - when a value is instructed, that one is used, no matter the calculations
 - if only one value is instructed (width for example), the others (height for example) will be computed
 
-## Proposed dimensions and overflow
+## Proposed sizes and overflow
 
-- Proposed dimensions are container type dependent.
+- `proposed` sizes are container type dependent
 - A container is **unbound** in a direction when
-    - its `proposedFrame` is unbound in that direction, **or**
+  - the `proposed` size is unbound in that direction, **or**
     - it has a scroll instruction in that direction
 - When a container is **unbound** in a direction
-    - `+Inf` is passed as the proposed value for the dimension
+  - `+Inf` is passed as the `proposed` value for the size
 
-Overflow happens when `outer > proposed`. This means that the size the parent is willing to give
+Overflow happens when `final < outer`. This means that the size the parent is willing to give
 to the fragment is not enough to for the fragment.
 
 An overflow is **always a programming error**. There is no easy way to around it.
@@ -149,29 +162,137 @@ The layout process starts with calling `computeLayout`:
 - computes `outer` of the fragment
 - calls `placeLayout` of all child fragments
 
-`placeLayout(proposedPosition: RawPosition)`
+`placeLayout(proposedTop: Double, proposedLeft: Double)`
 
 - places the fragment relative to its container
 
+## Type dependent calculations
+
 ### Box
 
-measured:
+Box has two modes:
 
-- width: `max(child.start + child.width)`
-- height is `max(child.top + child.height)`
+- `absolute` which means that all items have instructed positions or self-alignment
+- `horizontalFlow` which means that items are placed in a flow horizontally
+- `verticalFlow` which means that the items are placed in a flow vertically
+
+#### Absolute
+
+final height =
+
+- instructed, if present
+- proposed, if not unbound
+- outer = `max(child.instructedTop + child.finalHeight)` + surrounding
+
+final width =
+
+- instructed, if present
+- proposed, if not unbound
+- outer = `max(child.instructedLeft + child.finalWidth)` + surrounding
+
+#### Horizontal Flow
+
+The horizontal flow box places the children in rows.
+
+**bound** horizontally
+
+- children are put into rows until there is available space in the row, the rows are **bound**
+- final width = `instructed` or `proposed` width
+
+**unbound** horizontally
+
+- there is only one row that contains all children
+- final width = `sum(child.finalWidth) + gapWidth * (children.count - 1)` + surrounding
+
+final height =
+
+- instructed, if present
+- proposed, if not unbound vertically
+- outer = `sum(row.finalHeight) + gapHeight * (row.count - 1)` + surrounding
+
+#### Vertical Flow
+
+The vertical flow box places the children in columns.
+
+**bound** vertically
+
+- children are put into columns until there is available space in the column, the columns are **bound**
+- final height = `instructed` or `proposed` height
+
+**unbound** vertically
+
+- there is only one column that contains all children
+- final height = `sum(child.finalHeight) + gapHeight * (children.count - 1)` + surrounding
+
+final width =
+
+- instructed, if present
+- proposed, if not unbound vertically
+- outer = `sum(column.finalWidth) + gapWidth * (column.count - 1)` + surrounding
 
 ### Row
 
-measured
+final height =
 
-- width: `sum(child.box.width) + (gapWidth * children.size - 1)`
-- height: `max(child.box.height)`
+- instructed, if present
+- proposed, if not unbound
+- outer = `max(child.finalHeight)` + surrounding
+
+final width =
+
+- instructed, if present
+- proposed, if not unbound
+- outer = `sum(child.finalWidth) + gapWidth * (children.count - 1)` + surrounding
 
 ### Column
 
-measured
+final height =
 
-- width: `max(child.box.width)`
-- height: `sum(child.box.height) + (gapHeight * children.size - 1)`
- 
+- instructed, if present
+- proposed, if not unbound
+- outer = `sum(child.finalHeight) + gapHeight * (children.count - 1)` + surrounding
 
+final width =
+
+- instructed, if present
+- proposed, if not unbound
+- outer = `max(child.finalWidth)` + surrounding
+
+### Grid
+
+A grid track is:
+
+- **bound** when it has a fix size (like `20.dp`)
+- **unbound** when
+  - it is a fraction (like `1.fr`) **or**
+  - is a `minContent` track
+
+#### Cell assignment
+
+The first step of grid layout is to assign children to grid cells.
+This is used during space distribution.
+
+#### Distributable space
+
+`availableSpace` is the space the grid have in a given direction:
+
+- instructed, if present
+- proposed (both bound and unbound)
+
+When the available space is **unbound**:
+
+- all **bound tracks**
+  - use their instructed size
+- `minContent` tracks use
+  - `max(track.fragments.outer)`
+- all fraction track use
+  - `max(track.fragments.outer)`
+
+When the available space is **bound**:
+
+- all **bound tracks**
+  - use their instructed size
+- `minContent` tracks use
+  - `max(track.fragments.outer)`
+- fraction tracks use
+  - `availableSpace - sum(bound-tracks) - sum(minContent-tracks)`
