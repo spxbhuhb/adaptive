@@ -6,10 +6,19 @@ package hu.simplexion.adaptive.ui.common.support.layout
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
+import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.instruction.Alignment
+import hu.simplexion.adaptive.ui.common.instruction.SpaceDistribution
 
 /**
- * Base class for stack which do not wrap: box, row, column.
+ * Base class for stack which do not wrap: row, column.
+ *
+ * I've decided to go with this abstract function approach to have one algorithm that is direction
+ * independent. I'm not 100% sure, but I hope the performance impact is negligible and this way
+ * fixing bugs in the algorithm itself carries automatically to the descendant classes.
+ *
+ * Other way would be to pass a "horizontal" flag, but that would make [computeLayout] much harder
+ * to read because of the many `if (horizontal)` branching.
  */
 abstract class AbstractStack<RT, CRT : RT>(
     adapter: AbstractCommonAdapter<RT, CRT>,
@@ -21,48 +30,116 @@ abstract class AbstractStack<RT, CRT : RT>(
     adapter, parent, declarationIndex, instructionsIndex, stateSize
 ) {
 
-    /**
-     * Common layout func for row and column layouts.
-     *
-     * @param horizontal True the items should be next to each other (row), false if they should be below each other (column).
-     */
-    fun placeItems(horizontal: Boolean) {
+    abstract fun itemsWidthCalc(itemsWidth: Double, item: AbstractCommonFragment<RT>): Double
+
+    abstract fun itemsHeightCalc(itemsHeight: Double, item: AbstractCommonFragment<RT>): Double
+
+    abstract fun instructedGap(): Double
+
+    abstract fun freeSpace(innerWidth: Double, itemsWidth: Double, innerHeight: Double, itemsHeight: Double): Double
+
+    abstract fun startOffset(): Double
+
+    abstract fun mainAxisAlignment(): Alignment?
+
+    abstract fun crossAxisAlignment(): Alignment?
+
+    abstract fun crossAxisSize(innerWidth: Double, innerHeight: Double): Double
+
+    abstract fun AbstractCommonFragment<RT>.crossAxisAlignment(): Alignment?
+
+    abstract fun AbstractCommonFragment<RT>.place(crossAxisAlignment: Alignment?, crossAxisSize: Double, offset: Double)
+
+    abstract fun AbstractCommonFragment<RT>.mainAxisFinal(): Double
+
+    override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
+
+        val data = renderData
+        val layout = renderData.layout
         val container = renderData.container
 
-        if (uiAdapter.autoSizing) {
-            for (item in layoutItems) {
-                item.placeLayout(Double.NaN, Double.NaN)
-            }
-            return
-        }
+        // ----  calculate layout of all items  ---------------------------------------
 
-        val padding = renderData.layout?.padding ?: RawSurrounding.ZERO
-
-        val mainAxisAvailableSpace = (if (horizontal) renderData.innerWidth else renderData.innerHeight) ?: 0.0 // FIXME stack layout main axis available
-
-        val (prefix, gap) = calcPrefixAndGap(horizontal, mainAxisAvailableSpace, if (horizontal) padding.start else padding.top)
-
-        var offset = prefix
-
-        val crossAxisAvailableSpace = (if (horizontal) renderData.innerHeight else renderData.innerWidth) ?: 0.0 // FIXME stack layout cross axis available
-        val crossAxisItemAlignment = if (horizontal) container?.verticalAlignment else container?.horizontalAlignment
+        var itemsWidth = 0.0
+        var itemsHeight = 0.0
 
         for (item in layoutItems) {
-            val renderData = item.renderData
-            val layout = renderData.layout
-            val box = renderData.box
+            item.computeLayout(unbound, proposedHeight)
+            itemsWidth = itemsWidthCalc(itemsWidth, item)
+            itemsHeight = itemsHeightCalc(itemsHeight, item)
+        }
 
-            val crossAxisSelfAlignment = (if (horizontal) layout?.verticalAlignment else layout?.horizontalAlignment) ?: Alignment.Start // FIXME cross axis alignment
+        // ----  calculate sizes of this fragment  ------------------------------------
 
-            if (horizontal) {
-                val top = calcAlign(crossAxisItemAlignment, crossAxisSelfAlignment, crossAxisAvailableSpace, box.height)
-                item.placeLayout(padding.top + top, offset)
-            } else {
-                val left = calcAlign(crossAxisItemAlignment, crossAxisSelfAlignment, crossAxisAvailableSpace, box.width)
-                item.placeLayout(offset, padding.start + left)
+        val innerWidth = when {
+            layout?.instructedWidth != null -> layout.instructedWidth !! - data.surroundingHorizontal
+            proposedWidth.isFinite() -> proposedWidth - data.surroundingHorizontal
+            else -> itemsWidth
+        }
+
+        val innerHeight = when {
+            layout?.instructedHeight != null -> layout.instructedHeight !! - data.surroundingVertical
+            proposedHeight.isFinite() -> proposedHeight - data.surroundingVertical
+            else -> itemsHeight
+        }
+
+        data.innerWidth = innerWidth
+        data.innerHeight = innerHeight
+
+        data.finalWidth = innerWidth + data.surroundingHorizontal
+        data.finalHeight = innerHeight + data.surroundingVertical
+
+        if (trace) trace("compute-layout", "width: ${data.finalWidth}, height: ${data.finalHeight}")
+
+        // ---- calculate starting offset and gap based on instructions  --------------
+
+        val itemCount = layoutItems.size
+        val instructedGap = instructedGap()
+        val freeSpace = freeSpace(innerWidth, itemsWidth, innerHeight, itemsHeight)
+
+        val gap: Double
+        var offset = startOffset()
+
+        when (container?.spaceDistribution) {
+
+            SpaceDistribution.Around -> {
+                gap = freeSpace / (itemCount + 1)
+                offset += gap
             }
 
-            offset += gap + (if (horizontal) box.width else box.height)
+            SpaceDistribution.Between -> {
+                gap = freeSpace / (itemCount - 1)
+            }
+
+            else -> when (mainAxisAlignment()) {
+                Alignment.Start -> {
+                    gap = instructedGap
+                }
+
+                Alignment.Center -> {
+                    gap = instructedGap
+                    offset += (freeSpace - (instructedGap * (itemCount - 1))) / 2.0
+                }
+
+                Alignment.End -> {
+                    gap = instructedGap
+                    offset += freeSpace - (instructedGap * (itemCount - 1))
+                }
+
+                null -> {
+                    gap = instructedGap
+                }
+            }
+        }
+
+        // ----  place the items  -----------------------------------------------------
+
+        val crossAxisAlignment = crossAxisAlignment()
+        val crossAxisSize = crossAxisSize(innerWidth, innerHeight)
+
+        for (item in layoutItems) {
+            item.place(crossAxisAlignment, crossAxisSize, offset)
+            offset += gap + item.mainAxisFinal()
         }
 
         for (item in structuralItems) {
@@ -70,67 +147,16 @@ abstract class AbstractStack<RT, CRT : RT>(
         }
     }
 
-    fun calcPrefixAndGap(horizontal: Boolean, availableSpace: Double, prefixPadding: Double): Pair<Double, Double> {
-        val container = renderData.container
-
-        val gap = if (horizontal) {
-            container?.gapWidth ?: 0.0
-        } else {
-            container?.gapHeight ?: 0.0
-        }
-
-        if (layoutItems.isEmpty()) return (0.0 to gap)
-
-        val used = calcUsedSpace(horizontal)
-
-        val gapCount = layoutItems.size - 1
-        val usedByInstructedGap = gapCount * gap
-        val remaining = availableSpace - (used + usedByInstructedGap)
-
-        if (remaining <= 0) return (0.0 to gap)
-
-        val alignment = if (horizontal) container?.horizontalAlignment else container?.verticalAlignment
-
-        return when (alignment) {
-            Alignment.Start -> (prefixPadding + 0.0 to gap)
-            Alignment.Center -> (prefixPadding + (remaining / 2) to gap)
-            Alignment.End -> (prefixPadding + remaining to gap)
-            null -> (prefixPadding + 0.0 to gap)
-        }
-    }
-
-    fun calcUsedSpace(horizontal: Boolean): Double {
-
-        var usedSpace = 0.0
-
-        for (item in layoutItems) {
-            val box = item.renderData.box
-            if (horizontal) {
-                usedSpace += box.width
-            } else {
-                usedSpace += box.height
-            }
-        }
-
-        return usedSpace
-    }
-
-    fun calcAlign(alignItems: Alignment?, alignSelf: Alignment?, availableSpace: Double, usedSpace: Double): Double =
-        if (alignSelf != null) {
-            when (alignSelf) {
-                Alignment.Center -> (availableSpace - usedSpace) / 2
+    fun AbstractCommonFragment<RT>.crossAxisPosition(layoutCrossAxisAlignment: Alignment?, innerSize: Double, itemSize: Double) =
+        when (crossAxisAlignment()) {
+            Alignment.Center -> (innerSize - itemSize) / 2
+            Alignment.Start -> 0.0
+            Alignment.End -> innerSize - itemSize
+            else -> when (layoutCrossAxisAlignment) {
+                Alignment.Center -> (innerSize - itemSize) / 2
                 Alignment.Start -> 0.0
-                Alignment.End -> availableSpace - usedSpace
-            }
-        } else {
-            when (alignItems) {
-                Alignment.Center -> (availableSpace - usedSpace) / 2
-                Alignment.Start -> 0.0
-                Alignment.End -> availableSpace - usedSpace
+                Alignment.End -> innerSize - itemSize
                 null -> 0.0
             }
         }
-
-
-
 }

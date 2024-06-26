@@ -58,7 +58,6 @@ Layout calculations work with these data:
 - `instructed` = the position and sizes specified by instructions such as `width` or `position`
 - `inner` = sizes of the inner content when measurable
 - `surrounding` = `padding` + `border-width` + `margin`, directional (meaning each direction has its own value)
-- `outer` = `measured` + `surrounding`
 - `proposed` = position and sizes proposed by the parent layout
 - `final` = final result of the layout calculations
 
@@ -101,7 +100,7 @@ When a top level container is added to the adapter (`AdaptiveAdapter.addActualRo
 - When a container is **unbound** in a direction
   - `+Inf` is passed to its children as the `proposed` value for the size
 
-Overflow happens when `final < outer`. This means that the size the parent is willing to give
+Overflow happens when `final > proposed`. This means that the size the parent is willing to give
 to the fragment is not enough to for the fragment.
 
 An overflow is **always a programming error**. There is no easy way to around it.
@@ -110,7 +109,7 @@ When a fragment
 
 - is **unbound** in a direction, **and**
 - is **not instructed** in that direction, **then**
-- it uses the **minimum** space in that direction, which is `outer` for that given fragment
+- it uses the **minimum** space in that direction, which is `inner` + `surrounding` for that given fragment
 
 ## Alignment
 
@@ -158,7 +157,7 @@ The layout process starts with calling `computeLayout`:
 
 - computes the inner layout of the fragment if needed (`grid` for example)
 - calls `computeLayout` of all child fragments
-- computes `outer` of the fragment
+- computes `final` of the fragment
 - calls `placeLayout` of all child fragments
 
 `placeLayout(proposedTop: Double, proposedLeft: Double)`
@@ -184,14 +183,14 @@ final height =
 - instructed, if present
 - `inner` + surrounding, if possible to measure
 - proposed, if not unbound
-- outer = surrounding
+- surrounding
 
 final width =
 
 - instructed, if present
 - `inner` + surrounding, if possible to measure
 - proposed, if not unbound
-- outer = surrounding
+- surrounding
 
 ### Box
 
@@ -207,13 +206,13 @@ final height =
 
 - instructed, if present
 - proposed, if not unbound
-- outer = `max(child.instructedTop + child.finalHeight)` + surrounding
+- `max(child.instructedTop + child.finalHeight)` + surrounding
 
 final width =
 
 - instructed, if present
 - proposed, if not unbound
-- outer = `max(child.instructedLeft + child.finalWidth)` + surrounding
+- `max(child.instructedLeft + child.finalWidth)` + surrounding
 
 #### Horizontal Flow
 
@@ -233,7 +232,7 @@ final height =
 
 - instructed, if present
 - proposed, if not unbound vertically
-- outer = `sum(row.finalHeight) + gapHeight * (row.count - 1)` + surrounding
+- `sum(row.finalHeight) + gapHeight * (row.count - 1)` + surrounding
 
 #### Vertical Flow
 
@@ -253,7 +252,7 @@ final width =
 
 - instructed, if present
 - proposed, if not unbound vertically
-- outer = `sum(column.finalWidth) + gapWidth * (column.count - 1)` + surrounding
+- `sum(column.finalWidth) + gapWidth * (column.count - 1)` + surrounding
 
 ### Row
 
@@ -261,13 +260,13 @@ final height =
 
 - instructed, if present
 - proposed, if not unbound
-- outer = `max(child.finalHeight)` + surrounding
+- `max(child.finalHeight)` + surrounding
 
 final width =
 
 - instructed, if present
 - proposed, if not unbound
-- outer = `sum(child.finalWidth) + gapWidth * (children.count - 1)` + surrounding
+- `sum(child.finalWidth) + gapWidth * (children.count - 1)` + surrounding
 
 ### Column
 
@@ -275,13 +274,13 @@ final height =
 
 - instructed, if present
 - proposed, if not unbound
-- outer = `sum(child.finalHeight) + gapHeight * (children.count - 1)` + surrounding
+- `sum(child.finalHeight) + gapHeight * (children.count - 1)` + surrounding
 
 final width =
 
 - instructed, if present
 - proposed, if not unbound
-- outer = `max(child.finalWidth)` + surrounding
+- `max(child.finalWidth)` + surrounding
 
 ### Grid
 
@@ -309,15 +308,15 @@ When the available space is **unbound**:
 - all **bound tracks**
   - use their instructed size
 - `minContent` tracks use
-  - `max(track.fragments.outer)`
+  - `max(track.fragments.final)`
 - all fraction track use
-  - `max(track.fragments.outer)`
+  - `max(track.fragments.final)`
 
 When the available space is **bound**:
 
 - all **bound tracks**
   - use their instructed size
 - `minContent` tracks use
-  - `max(track.fragments.outer)`
+  - `max(track.fragments.final)`
 - fraction tracks use
   - `availableSpace - sum(bound-tracks) - sum(minContent-tracks)`

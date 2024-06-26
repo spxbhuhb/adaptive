@@ -96,7 +96,7 @@ abstract class AbstractContainer<RT, CRT : RT>(
 
             if (isMounted) {
                 // FIXME layout with late additions may affect higher level layouts
-                computeLayout(renderData.outerWidth, renderData.outerHeight)
+                computeLayout(renderData.finalWidth, renderData.finalHeight)
             }
         }
     }
@@ -127,7 +127,7 @@ abstract class AbstractContainer<RT, CRT : RT>(
             }
 
             if (isMounted) {// FIXME layout with late removals may affect higher level layouts
-                computeLayout(renderData.outerWidth, renderData.outerHeight)
+                computeLayout(renderData.finalWidth, renderData.finalHeight)
             }
         }
     }

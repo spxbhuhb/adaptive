@@ -28,6 +28,7 @@ fun gap(both: DPixel) = Gap(both, both)
 fun gap(width: DPixel? = null, height: DPixel? = null) = Gap(width, height)
 
 fun padding(top: DPixel? = null, right: DPixel? = null, bottom: DPixel? = null, left: DPixel? = null) = Padding(top, right, bottom, left)
+fun padding(all: () -> DPixel) = Padding(all())
 fun padding(all: DPixel) = Padding(all)
 fun paddingTop(top: DPixel) = padding(top = top)
 fun paddingRight(right: DPixel) = padding(right = right)
@@ -35,14 +36,15 @@ fun paddingBottom(bottom: DPixel) = padding(bottom = bottom)
 fun paddingLeft(left: DPixel) = padding(left = left)
 
 fun margin(top: DPixel? = null, right: DPixel? = null, bottom: DPixel? = null, left: DPixel? = null) = Margin(top, right, bottom, left)
+fun margin(all: () -> DPixel) = Margin(all())
 fun margin(all: DPixel) = Margin(all)
 fun marginTop(top: DPixel) = margin(top = top)
 fun marginRight(right: DPixel) = margin(right = right)
 fun marginBottom(bottom: DPixel) = margin(bottom = bottom)
 fun marginLeft(left: DPixel) = margin(left = left)
 
-val spaceAroundItems = DistributeSpace(SpaceDistribution.Around)
-val spaceBetweenItems = DistributeSpace(SpaceDistribution.Between)
+val spaceAround = DistributeSpace(SpaceDistribution.Around)
+val spaceBetween = DistributeSpace(SpaceDistribution.Between)
 
 val alignSelfTop = AlignSelf(vertical = Alignment.Start, horizontal = null)
 val alignSelfStart = AlignSelf(vertical = null, horizontal = Alignment.Start)
@@ -185,15 +187,33 @@ data class AlignItems(
     }
 
     companion object {
-        val top = AlignItems(vertical = Alignment.Start, horizontal = null)
-        val topCenter = AlignItems(vertical = Alignment.Start, horizontal = Alignment.Center)
-        val start = AlignItems(vertical = null, horizontal = Alignment.Start)
-        val startCenter = AlignItems(vertical = Alignment.Center, horizontal = Alignment.Start)
-        val end = AlignItems(vertical = null, horizontal = Alignment.End)
-        val endCenter = AlignItems(vertical = Alignment.Center, horizontal = Alignment.End)
-        val bottom = AlignItems(vertical = Alignment.End, horizontal = null)
-        val bottomCenter = AlignItems(vertical = Alignment.End, horizontal = Alignment.Center)
+        val alignItems = AlignItems
+
         val center = AlignItems(vertical = Alignment.Center, horizontal = Alignment.Center)
+
+        val top = AlignItems(vertical = Alignment.Start, horizontal = null)
+
+        val topStart = AlignItems(vertical = Alignment.Start, horizontal = Alignment.Start)
+        val topCenter = AlignItems(vertical = Alignment.Start, horizontal = Alignment.Center)
+        val topEnd = AlignItems(vertical = Alignment.Start, horizontal = Alignment.End)
+
+        val start = AlignItems(vertical = null, horizontal = Alignment.Start)
+
+        val startTop = AlignItems(vertical = Alignment.Start, horizontal = Alignment.Start)
+        val startCenter = AlignItems(vertical = Alignment.Center, horizontal = Alignment.Start)
+        val startBottom = AlignItems(vertical = Alignment.End, horizontal = Alignment.Start)
+
+        val end = AlignItems(vertical = null, horizontal = Alignment.End)
+
+        val endTop = AlignItems(vertical = Alignment.Start, horizontal = Alignment.End)
+        val endCenter = AlignItems(vertical = Alignment.Center, horizontal = Alignment.End)
+        val endBottom = AlignItems(vertical = Alignment.End, horizontal = Alignment.End)
+
+        val bottom = AlignItems(vertical = Alignment.End, horizontal = null)
+
+        val bottomStart = AlignItems(vertical = Alignment.End, horizontal = Alignment.Start)
+        val bottomCenter = AlignItems(vertical = Alignment.End, horizontal = Alignment.Center)
+        val bottomEnd = AlignItems(vertical = Alignment.End, horizontal = Alignment.End)
     }
 }
 

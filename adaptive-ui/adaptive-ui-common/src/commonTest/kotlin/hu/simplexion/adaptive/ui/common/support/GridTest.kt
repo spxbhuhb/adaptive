@@ -9,9 +9,7 @@ import hu.simplexion.adaptive.ui.common.fragment.row
 import hu.simplexion.adaptive.ui.common.fragment.text
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.testing.uiTest
-import hu.simplexion.adaptive.ui.common.testing.assertEquals
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 class GridTest {
 
@@ -21,13 +19,13 @@ class GridTest {
         uiTest(0, 0, 400, 100) {
 
             grid(colTemplate(100.dp, 0.25.fr, 0.75.fr), rowTemplate(1.fr), Grid1) {
-                text("a", Text1)
+                text("a", F1)
             }
 
         }.also { adapter ->
 
-            adapter.assertEquals<Grid1>(0, 0, 400, 100)
-            adapter.assertEquals<Text1>(0, 0, 100, 100)
+            adapter.assertFinal(Grid1, 0, 0, 400, 100)
+            adapter.assertFinal(F1, 0, 0, 100, 100)
 
         }
     }
@@ -42,16 +40,16 @@ class GridTest {
                 colTemplate(1.fr),
                 Grid1
             ) {
-                row(Row1) {
-                    text("a", Size(92.dp, 92.dp), Text1)
+                row(C1) {
+                    text("a", Size(92.dp, 92.dp), F1)
                 }
             }
 
         }.also { adapter ->
 
-            adapter.assertEquals<Grid1>(0, 0, 375, 812)
-            adapter.assertEquals<Grid1>(0, 0, 375, 812)
-            adapter.assertEquals<Text1>(0, 0, 92, 92)
+            adapter.assertFinal(Grid1, 0, 0, 375, 812)
+            adapter.assertFinal(Grid1, 0, 0, 375, 812)
+            adapter.assertFinal(F1, 0, 0, 92, 92)
 
         }
     }

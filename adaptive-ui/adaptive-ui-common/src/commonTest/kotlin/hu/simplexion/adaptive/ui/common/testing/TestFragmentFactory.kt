@@ -14,6 +14,7 @@ object TestFragmentFactory : AdaptiveFragmentFactory() {
         add("common:grid") { p, i -> AdaptiveGrid(p.adapter as CommonTestAdapter, p, i) }
         add("common:image") { p, i -> AdaptiveImage(p.adapter as CommonTestAdapter, p, i) }
         add("common:row") { p, i -> AdaptiveRow(p.adapter as CommonTestAdapter, p, i) }
+        add("common:space") { p, i -> CommonSpace(p.adapter as CommonTestAdapter, p, i) }
         add("common:text") { p, i -> AdaptiveText(p.adapter as CommonTestAdapter, p, i) }
     }
 }

@@ -11,7 +11,7 @@ abstract class AbstractBox<RT, CRT : RT>(
     adapter: AbstractCommonAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int
-) : AbstractStack<RT, CRT>(
+) : AbstractContainer<RT, CRT>(
     adapter, parent, declarationIndex, 0, 2
 ) {
 

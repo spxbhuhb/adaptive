@@ -4,6 +4,8 @@
 package hu.simplexion.adaptive.ui.common.testing
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.foundation.query.first
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
@@ -14,6 +16,7 @@ import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlin.test.assertEquals
 
 open class CommonTestAdapter(
     override val rootContainer: TestReceiver = TestReceiver(),
@@ -35,9 +38,8 @@ open class CommonTestAdapter(
 
         fragment.alsoIfInstance<AbstractContainer<TestReceiver, TestReceiver>> {
             rootContainer.testFrame.let { tf ->
-                it.layoutFrameOrNull = tf
-                it.measure()
-                it.layout(tf)
+                it.computeLayout(tf !!.width, tf.height)
+                it.placeLayout(0.0, 0.0)
                 rootContainer.children += it.receiver
             }
         }
@@ -60,18 +62,16 @@ open class CommonTestAdapter(
     }
 
     override fun applyLayoutToActual(fragment: AbstractCommonFragment<TestReceiver>) {
-        val layoutFrame = fragment.layoutFrameOrNull
+        val data = fragment.renderData
 
-        if (layoutFrame != null) {
-            fragment.receiver.testTop = layoutFrame.top
-            fragment.receiver.testLeft = layoutFrame.left
-            fragment.receiver.testWidth = layoutFrame.width
-            fragment.receiver.testHeight = layoutFrame.height
-        }
+        fragment.receiver.testTop = data.finalTop
+        fragment.receiver.testLeft = data.finalLeft
+        fragment.receiver.testWidth = data.finalHeight
+        fragment.receiver.testHeight = data.finalWidth
     }
 
     override fun applyRenderInstructions(fragment: AbstractCommonFragment<TestReceiver>) {
-        with (fragment) {
+        with(fragment) {
             if (renderData.tracePatterns.isNotEmpty()) {
                 tracePatterns = renderData.tracePatterns
             }
@@ -94,4 +94,39 @@ open class CommonTestAdapter(
 
     override val navSupport: AbstractNavSupport
         get() = TODO("Not yet implemented")
+
+    fun assertFinal(
+        selector: AdaptiveInstruction,
+        top: Int,
+        left: Int,
+        width: Int,
+        height: Int
+    ) {
+        val renderData = (first(true) { selector in it.instructions } as AbstractCommonFragment<*>).renderData
+
+        assertEquals(
+            AssertFrame(
+                selector::class.simpleName,
+                top.toDouble(),
+                left.toDouble(),
+                width.toDouble(),
+                height.toDouble()
+            ),
+            AssertFrame(
+                selector::class.simpleName,
+                renderData.finalTop,
+                renderData.finalLeft,
+                renderData.finalWidth,
+                renderData.finalHeight
+            )
+        )
+    }
+
+    data class AssertFrame(
+        val selector: String?,
+        val top: Double,
+        val left: Double,
+        val width: Double,
+        val height: Double
+    )
 }

@@ -10,25 +10,16 @@ import hu.simplexion.adaptive.ui.common.testing.CommonTestAdapter
 import hu.simplexion.adaptive.ui.common.testing.TestReceiver
 
 @AdaptiveActual("test")
-open class AdaptiveText(
+open class CommonSpace(
     adapter: CommonTestAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractCommonFragment<TestReceiver>(adapter, parent, index, 1, 2) {
+) : AbstractCommonFragment<TestReceiver>(adapter, parent, index, 0, 1) {
 
     override val receiver = TestReceiver()
 
-    private val content: String
-        get() = state[0]?.toString() ?: ""
-
     override fun genPatchInternal(): Boolean {
         patchInstructions()
-
-        if (haveToPatch(dirtyMask, 1)) {
-            renderData.innerWidth = content.length.toDouble() * 20.0
-            renderData.innerHeight = 20.0
-        }
-
         return false
     }
 

@@ -120,14 +120,14 @@ abstract class AbstractGrid<RT, CRT : RT>(
         val colGap = container?.gapHeight ?: 0.0
         val rowGap = container?.gapWidth ?: 0.0
 
-        val availableWidth = layoutFrame.width - data.surroundingStart - data.surroundingEnd
-        val availableHeight = layoutFrame.height - data.surroundingTop - data.surroundingBottom
+        val availableWidth = data.finalWidth - data.surroundingHorizontal
+        val availableHeight = data.finalHeight - data.surroundingVertical
 
         colOffsets = distribute(availableWidth, colGap, colTracksPrepared)
         rowOffsets = distribute(availableHeight, rowGap, rowTracksPrepared)
 
         if (trace) {
-            trace("measure-layoutFrame", this.layoutFrame)
+            trace("measure-layoutFrame", "width: ${data.finalWidth}, height: ${data.finalHeight}")
             trace("measure-colOffsets", colOffsets.contentToString())
             trace("measure-rowOffsets", rowOffsets.contentToString())
         }

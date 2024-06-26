@@ -31,12 +31,8 @@ open class ContainerViewGroup(
     }
 
     override fun generateDefaultLayoutParams(): LayoutParams {
-        val layout = owner.layoutFrameOrNull
-        if (layout == null) {
-            return LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-        } else {
-            return LayoutParams(layout.width.toInt(), layout.height.toInt())
-        }
+        val layout = owner.renderData
+        return LayoutParams(layout.finalWidth.toInt(), layout.finalHeight.toInt())
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {

@@ -7,7 +7,6 @@ package hu.simplexion.adaptive.ui.common
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.render.CommonRenderData
-import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 
 abstract class AbstractCommonFragment<RT>(
     adapter: AbstractCommonAdapter<RT, *>,
@@ -25,22 +24,6 @@ abstract class AbstractCommonFragment<RT>(
     open val uiAdapter = adapter
 
     var renderData = CommonRenderData(adapter)
-
-    /**
-     * The actual frame of the fragment in the actual UI. Result of layout
-     * calculations.
-     */
-    var layoutFrame: RawFrame
-        get() = checkNotNull(layoutFrameOrNull) { "missing layout frame, probably an error in $this" }
-        set(v) {
-            layoutFrameOrNull = v
-        }
-
-    /**
-     * The actual frame of the fragment in the actual UI. Result of layout
-     * calculations.
-     */
-    var layoutFrameOrNull: RawFrame? = null
 
     /**
      * Structural fragments (loop and select) set this to true to modify behaviour.
@@ -84,20 +67,26 @@ abstract class AbstractCommonFragment<RT>(
         val data = renderData
         val layout = data.layout
 
-        data.outerWidth = select(layout?.instructedWidth, data.innerWidth, proposedWidth) + data.surroundingHorizontal
-        data.outerHeight = select(layout?.instructedHeight, data.innerHeight, proposedHeight) + data.surroundingVertical
+        data.finalWidth = select(layout?.instructedWidth, data.innerWidth, proposedWidth, data.surroundingHorizontal)
+        data.finalHeight = select(layout?.instructedHeight, data.innerHeight, proposedHeight, data.surroundingVertical)
 
-        if (trace) trace("compute-layout", "width: ${data.outerWidth}, height: ${data.outerHeight}")
+        if (trace) trace("compute-layout", "width: ${data.finalWidth}, height: ${data.finalHeight}")
     }
 
     open fun placeLayout(top: Double, left: Double) {
         renderData.finalTop = top
         renderData.finalLeft = left
+        renderData.finalWidth = renderData.finalWidth
         uiAdapter.applyLayoutToActual(this)
     }
 
-    fun select(instructed: Double?, inner: Double?, proposed: Double) =
-        instructed ?: inner ?: (if (proposed.isFinite()) proposed else 0.0)
+    fun select(instructed: Double?, inner: Double?, proposed: Double, surrounding: Double) =
+        when {
+            instructed != null -> instructed
+            inner != null -> inner + surrounding
+            proposed.isFinite() -> proposed
+            else -> surrounding
+        }
 
     val DPixel.px
         get() = uiAdapter.toPx(this)

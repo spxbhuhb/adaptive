@@ -7,7 +7,6 @@ package hu.simplexion.adaptive.ui.common.render
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.testing.Traceable
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
-import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.support.layout.RawSurrounding
 
 /**
@@ -15,7 +14,6 @@ import hu.simplexion.adaptive.ui.common.support.layout.RawSurrounding
  *
  * @property innerWidth the intrinsic width of the inner content of the fragment without padding, border width and margin
  * @property innerHeight the intrinsic height of the inner content of the fragment without padding, border width and margin
- * @property box instructed top and left (or NaN) and the measured size + padding + border width + margin
  */
 class CommonRenderData(
     val adapter : AbstractCommonAdapter<*,*>
@@ -34,9 +32,6 @@ class CommonRenderData(
     var innerWidth: Double? = null
     var innerHeight: Double? = null
 
-    var outerWidth = 0.0
-    var outerHeight = 0.0
-
     var surroundingTop = 0.0
     var surroundingStart = 0.0
     var surroundingBottom = 0.0
@@ -47,8 +42,8 @@ class CommonRenderData(
 
     var finalTop = 0.0
     var finalLeft = 0.0
-
-    var box: RawFrame = RawFrame.AUTO
+    var finalWidth = 0.0
+    var finalHeight = 0.0
 
     var layout : LayoutRenderData? = null
     var decoration : DecorationRenderData? = null

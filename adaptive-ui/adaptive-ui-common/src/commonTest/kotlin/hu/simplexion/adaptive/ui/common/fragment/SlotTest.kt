@@ -37,7 +37,7 @@ class SlotTest {
         assertTrue(slot.backHistory.isEmpty())
         assertTrue(slot.forwardHistory.isEmpty())
 
-        slot.setContent(delegate, 2)
+        slot.setContent(delegate, 2, "")
 
         var content: AdaptiveFragment? = slot.firstOrNull<AdaptiveT0>(true)
         assertNull(content)
@@ -50,7 +50,7 @@ class SlotTest {
         assertEquals(t0, slot.backHistory[0][0])
         assertTrue(slot.forwardHistory.isEmpty())
 
-        slot.setContent(delegate, 3)
+        slot.setContent(delegate, 3, "")
 
         content = slot.firstOrNull { it is AdaptiveT1 && it.state[0] == 12 }
         assertNull(content)
@@ -72,8 +72,8 @@ class SlotTest {
         val delegate = slot.parent !!
 
         val t0 = slot.first<AdaptiveT0>(true)
-        val t12 = slot.setContent(delegate, 2)
-        val t23 = slot.setContent(delegate, 3)
+        val t12 = slot.setContent(delegate, 2, "")
+        val t23 = slot.setContent(delegate, 3, "")
 
         with(slot) {
             assertState(listOf(t0, t12), t23, listOf())
@@ -99,10 +99,10 @@ class SlotTest {
             back()
             assertState(listOf(t0), t12, listOf(t23))
 
-            val t45 = setContent(delegate, T45) // setting content clears forward
+            val t45 = setContent(delegate, T45, "") // setting content clears forward
             assertState(listOf(t0, t12), t45, listOf())
 
-            val t56 = setContent(delegate, T56) // backward history is cut to max size
+            val t56 = setContent(delegate, T56, "") // backward history is cut to max size
             assertState(listOf(t12, t45), t56, listOf())
 
             // I don't think it is possible to overextend forward history

@@ -7,7 +7,6 @@ import hu.simplexion.adaptive.foundation.AdaptiveActual
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
-import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.testing.CommonTestAdapter
 import hu.simplexion.adaptive.ui.common.testing.TestReceiver
 import hu.simplexion.adaptive.utility.checkIfInstance
@@ -33,11 +32,6 @@ open class AdaptiveImage(
         patchInstructions()
 
         return false
-    }
-
-    override fun layout(proposedFrame: RawFrame?) {
-        super.calcLayoutFrame(proposedFrame)
-        uiAdapter.applyLayoutToActual(this)
     }
 
 }

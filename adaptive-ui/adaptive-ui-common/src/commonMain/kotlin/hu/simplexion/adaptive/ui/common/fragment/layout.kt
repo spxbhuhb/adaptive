@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.ui.common.fragment
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.AdaptiveExpect
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.manualImplementation
 import hu.simplexion.adaptive.ui.common.common
@@ -33,4 +34,9 @@ fun grid(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Un
 @AdaptiveExpect(common)
 fun stack(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit) {
     manualImplementation(instructions, content)
+}
+
+@AdaptiveExpect(common)
+fun space(vararg instructions: AdaptiveInstruction): AdaptiveFragment {
+    manualImplementation(instructions)
 }

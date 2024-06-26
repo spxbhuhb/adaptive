@@ -7,7 +7,7 @@ package hu.simplexion.adaptive.ui.common.support
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 
 object Grid1 : AdaptiveInstruction
-object Text1 : AdaptiveInstruction
-object Text2 : AdaptiveInstruction
-object Row1 : AdaptiveInstruction
+object F1 : AdaptiveInstruction
+object F2 : AdaptiveInstruction
+object C1 : AdaptiveInstruction
 
