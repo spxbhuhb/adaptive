@@ -12,7 +12,6 @@ import hu.simplexion.adaptive.grapics.canvas.CanvasAdapter
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
-import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import hu.simplexion.adaptive.utility.checkIfInstance
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLElement
@@ -43,10 +42,10 @@ class CommonCanvas(
         return false
     }
 
-    override fun layout(proposedFrame: RawFrame?) {
-        calcLayoutFrame(proposedFrame)
+    override fun placeLayout(top: Double, left: Double) {
+        val data = renderData
 
-        canvas.setSize(layoutFrame.width, layoutFrame.height)
+        canvas.setSize(data.innerWidth ?: 0.0, data.innerHeight ?: 0.0)
 
         uiAdapter.applyLayoutToActual(this)
         canvasAdapter.draw()

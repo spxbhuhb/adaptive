@@ -68,8 +68,8 @@ data class Frame(
             val adapter = it.adapter
             it.top = adapter.toPx(top)
             it.left = adapter.toPx(left)
-            it.width = adapter.toPx(width)
-            it.height = adapter.toPx(height)
+            it.instructedWidth = adapter.toPx(width)
+            it.instructedHeight = adapter.toPx(height)
         }
     }
 }
@@ -94,8 +94,8 @@ data class Size(
     override fun apply(subject: Any) {
         layout(subject) {
             val adapter = it.adapter
-            it.width = adapter.toPx(width)
-            it.height = adapter.toPx(height)
+            it.instructedWidth = adapter.toPx(width)
+            it.instructedHeight = adapter.toPx(height)
         }
     }
 }
@@ -105,7 +105,7 @@ data class Height(
 ) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         layout(subject) {
-            it.height = it.adapter.toPx(height)
+            it.instructedHeight = it.adapter.toPx(height)
         }
     }
 }
@@ -115,7 +115,7 @@ data class Width(
 ) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         layout(subject) {
-            it.width = it.adapter.toPx(width)
+            it.instructedWidth = it.adapter.toPx(width)
         }
     }
 }

@@ -41,8 +41,8 @@ open class CommonText(
                 if (uiAdapter.autoSizing) {
                     measureText(content)
                 } else {
-                    renderData.measuredWidth = Double.NaN
-                    renderData.measuredHeight = Double.NaN
+                    renderData.innerWidth = Double.NaN
+                    renderData.innerHeight = Double.NaN
                 }
             }
         }
@@ -56,8 +56,8 @@ open class CommonText(
 
         val metrics = measureContext.measureText(content)
 
-        renderData.measuredWidth = metrics.width
-        renderData.measuredHeight = text?.lineHeight ?: (metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent)
+        renderData.innerWidth = metrics.width
+        renderData.innerHeight = text?.lineHeight ?: (metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent)
     }
 
     override fun layout(proposedFrame: RawFrame?) {

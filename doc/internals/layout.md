@@ -3,12 +3,12 @@
 The main goal of the layout system - apart providing layouts - is to be deterministic across
 different platforms.
 
-The layout system is Adaptive is writing direction dependent horizontally, but fixed vertically.
+Adaptive layouts are writing direction dependent horizontally, but fixed vertically.
 
 This means that surrounding values (padding, border and margin) use `start` and `end` instead
 of `left` and `right`. The actual mapping to `left` and `right` depends on instructions.
 
-Vertical surroundings use `top` and `bottom`.
+Vertical surroundings always use `top` and `bottom`.
 
 The difference between the two directions comes from the fact that arabic languages actually
 do stick to right-to-left writing while easter ones use left-to-right instead of their traditional
@@ -62,7 +62,7 @@ Layout calculations work with these data:
 - `proposed` = position and sizes proposed by the parent layout
 - `final` = final result of the layout calculations
 
-The `actual` data set is applied to the actual UI, but the exact application is adapter dependent.
+The `final` data set is applied to the actual UI, but the exact application is adapter dependent.
 For example, in browsers to have the `margin` effect (that is, no background), you have to use an
 actual CSS margin but that does not count to width and height in the browser box model.
 
@@ -81,9 +81,8 @@ container passed to the adapter.
 
 When a top level container is added to the adapter (`AdaptiveAdapter.addActualRoot`):
 
-- a `proposedSize` size is created: `RawSize(rootContainer.width, rootContainer.height)`
-- `layout(proposedSize)` is called to
-    - perform the layout calculations
+- `computeLayout(rootContainer.width, rootContainer.height)` is called to
+  - perform the layout calculations
   - apply the `final` values to the contained fragments
 - the fragment is added to the actual UI (to `rootContainer`)
 
@@ -100,7 +99,7 @@ When a top level container is added to the adapter (`AdaptiveAdapter.addActualRo
   - the `proposed` size is unbound in that direction, **or**
     - it has a scroll instruction in that direction
 - When a container is **unbound** in a direction
-  - `+Inf` is passed as the `proposed` value for the size
+  - `+Inf` is passed to its children as the `proposed` value for the size
 
 Overflow happens when `final < outer`. This means that the size the parent is willing to give
 to the fragment is not enough to for the fragment.
@@ -147,7 +146,7 @@ Gap and space distribution is:
 
 A few examples when alignment is ignored:
 
-- gap has no meaning in `box`
+- gap has no meaning in `box` with `absolute` mode
 - gap height has no meaning in `row`
 - `column` cannot distribute space horizontally
 
@@ -168,9 +167,35 @@ The layout process starts with calling `computeLayout`:
 
 ## Type dependent calculations
 
+### Intrinsic UI fragments
+
+Intrinsic UI fragments are fragments that
+
+- have actual UI representation, **and**
+- do not have any descendant fragments **under the same adapter** that has actual UI representation.
+
+Examples: are `text`, `image`, `canvas`. Canvas is tricky here because it has fragments with actual UI
+representation but those have a canvas specific adapter.
+
+Intrinsic fragments may or may not be able to measure their own `inner` content.
+
+final height =
+
+- instructed, if present
+- `inner` + surrounding, if possible to measure
+- proposed, if not unbound
+- outer = surrounding
+
+final width =
+
+- instructed, if present
+- `inner` + surrounding, if possible to measure
+- proposed, if not unbound
+- outer = surrounding
+
 ### Box
 
-Box has two modes:
+Box has three modes:
 
 - `absolute` which means that all items have instructed positions or self-alignment
 - `horizontalFlow` which means that items are placed in a flow horizontally

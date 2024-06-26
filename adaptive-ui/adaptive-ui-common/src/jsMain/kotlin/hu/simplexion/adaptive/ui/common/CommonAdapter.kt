@@ -106,12 +106,12 @@ class CommonAdapter(
 
         when {
             width == Double.POSITIVE_INFINITY -> style.width = "100%"
-            ! width.isNaN() -> style.width = (width - margin.left - margin.right).pxs
+            ! width.isNaN() -> style.width = (width - margin.start - margin.end).pxs
         }
 
         when {
             height == Double.POSITIVE_INFINITY -> style.height = "100%"
-            ! height.isNaN() -> style.height = (height - margin.left - margin.right).pxs
+            ! height.isNaN() -> style.height = (height - margin.start - margin.end).pxs
         }
 
         renderData.container {
@@ -140,22 +140,22 @@ class CommonAdapter(
 
     fun LayoutRenderData.apply(style: CSSStyleDeclaration) {
         padding { p ->
-            p.left { style.paddingLeft = it.pxs }
+            p.start { style.paddingLeft = it.pxs }
             p.top { style.paddingTop = it.pxs }
-            p.right { style.paddingRight = it.pxs }
+            p.end { style.paddingRight = it.pxs }
             p.bottom { style.paddingBottom = it.pxs }
         }
         margin { m ->
-            m.left { style.marginLeft = it.pxs }
+            m.start { style.marginLeft = it.pxs }
             m.top { style.marginTop = it.pxs }
-            m.right { style.marginRight = it.pxs }
+            m.end { style.marginRight = it.pxs }
             m.bottom { style.marginBottom = it.pxs }
         }
         border { b ->
             style.borderStyle = "solid"
-            b.left { style.borderLeftWidth = it.pxs }
+            b.start { style.borderLeftWidth = it.pxs }
             b.top { style.borderTopWidth = it.pxs }
-            b.right { style.borderRightWidth = it.pxs }
+            b.end { style.borderRightWidth = it.pxs }
             b.bottom { style.borderBottomWidth = it.pxs }
         }
     }

@@ -35,16 +35,24 @@ abstract class AbstractGrid<RT, CRT : RT>(
     var colOffsets = DoubleArray(0)
     var rowOffsets = DoubleArray(0)
 
-    override fun measure(): RawFrame {
-        for (item in layoutItems) {
-            item.measure()
-        }
-
-        renderData.measuredWidth = size(renderData.layout?.width, colTracksPrepared)
-        renderData.measuredHeight = size(renderData.layout?.height, rowTracksPrepared)
-
-        return super.measure()
+    override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
+        TODO()
     }
+
+    override fun placeLayout(top: Double, left: Double) {
+        TODO()
+    }
+
+//    override fun measure(): RawFrame {
+//        for (item in layoutItems) {
+//            item.measure()
+//        }
+//
+//        renderData.innerWidth = size(renderData.layout?.instructedWidth, colTracksPrepared)
+//        renderData.innerHeight = size(renderData.layout?.instructedHeight, rowTracksPrepared)
+//
+//        return super.measure()
+//    }
 
     fun size(instructed: Double?, tracks: List<PreparedTrack>) =
         when {
@@ -53,21 +61,21 @@ abstract class AbstractGrid<RT, CRT : RT>(
             else -> Double.NaN
         }
 
-    override fun layout(proposedFrame: RawFrame?) {
-        calcLayoutFrame(proposedFrame)
-
-        prepare()
-
-        val offsets = toFrameOffsets()
-
-        for (item in layoutItems) {
-            item.layout(toFrame(item, offsets))
-        }
-
-        for (item in structuralItems) {
-            item.layout(layoutFrame)
-        }
-    }
+//    override fun layout(proposedFrame: RawFrame?) {
+//        calcLayoutFrame(proposedFrame)
+//
+//        prepare()
+//
+//        val offsets = toFrameOffsets()
+//
+//        for (item in layoutItems) {
+//            item.layout(toFrame(item, offsets))
+//        }
+//
+//        for (item in structuralItems) {
+//            item.layout(layoutFrame)
+//        }
+//    }
 
     /**
      * There is a difference between browser and other targets. Browser handles margin
@@ -78,7 +86,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
         val border = renderData.layout?.border ?: RawSurrounding.ZERO
         val padding = renderData.layout?.padding ?: RawSurrounding.ZERO
 
-        return RawPosition(border.top + padding.top, border.left + padding.left)
+        return RawPosition(border.top + padding.top, border.start + padding.start)
     }
 
     fun toFrame(fragment: AbstractCommonFragment<RT>, offsets : RawPosition): RawFrame {
@@ -100,18 +108,20 @@ abstract class AbstractGrid<RT, CRT : RT>(
      * in the grid. This method requires `layoutFrame` to be set.
      */
     fun prepare() {
+        val data = renderData
+        val container = data.container
+
         val colTemp = checkNotNull(instructions.firstOrNullIfInstance<ColTemplate>()) { "missing column template in $this" }
         val rowTemp = checkNotNull(instructions.firstOrNullIfInstance<RowTemplate>()) { "missing row template in $this" }
 
         colTracksPrepared = expand(colTemp.tracks).map { PreparedTrack(it) }
         rowTracksPrepared = expand(rowTemp.tracks).map { PreparedTrack(it) }
 
-        val colGap = renderData.container?.gapHeight ?: 0.0
-        val rowGap = renderData.container?.gapWidth ?: 0.0
+        val colGap = container?.gapHeight ?: 0.0
+        val rowGap = container?.gapWidth ?: 0.0
 
-        val surrounding = surrounding()
-        val availableWidth = layoutFrame.width - surrounding.right - surrounding.left
-        val availableHeight = layoutFrame.height - surrounding.bottom - surrounding.top
+        val availableWidth = layoutFrame.width - data.surroundingStart - data.surroundingEnd
+        val availableHeight = layoutFrame.height - data.surroundingTop - data.surroundingBottom
 
         colOffsets = distribute(availableWidth, colGap, colTracksPrepared)
         rowOffsets = distribute(availableHeight, rowGap, rowTracksPrepared)

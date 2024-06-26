@@ -36,8 +36,8 @@ class CommonText(
             receiver.textAlignment = NSTextAlignmentCenter
             receiver.translatesAutoresizingMaskIntoConstraints = false
             receiver.intrinsicContentSize.useContents {
-                renderData.measuredWidth = this.width
-                renderData.measuredHeight = this.height
+                renderData.innerWidth = this.width
+                renderData.innerHeight = this.height
             }
         }
 

@@ -13,8 +13,8 @@ class LayoutRenderData(
 ) {
     var top: Double? = null
     var left : Double? = null
-    var width: Double? = null
-    var height: Double? = null
+    var instructedWidth: Double? = null
+    var instructedHeight: Double? = null
 
     var padding: RawSurrounding? = null
     var margin: RawSurrounding? = null

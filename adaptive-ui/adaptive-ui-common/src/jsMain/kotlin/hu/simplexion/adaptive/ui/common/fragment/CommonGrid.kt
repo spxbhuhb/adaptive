@@ -32,7 +32,7 @@ open class CommonGrid(
     override fun toFrameOffsets() : RawPosition {
         val padding = renderData.layout?.padding ?: RawSurrounding.ZERO
 
-        return RawPosition(padding.top, padding.left)
+        return RawPosition(padding.top, padding.start)
     }
 
 }

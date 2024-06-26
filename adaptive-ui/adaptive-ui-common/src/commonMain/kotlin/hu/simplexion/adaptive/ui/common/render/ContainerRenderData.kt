@@ -11,8 +11,8 @@ import hu.simplexion.adaptive.ui.common.instruction.SpaceDistribution
 class ContainerRenderData(
     val adapter : AbstractCommonAdapter<*,*>
 ) {
-    var gapWidth : Double? = null
-    var gapHeight : Double? = null
+    var gapWidth = 0.0
+    var gapHeight = 0.0
 
     var verticalAlignment: Alignment? = null
     var horizontalAlignment: Alignment? = null

@@ -7,7 +7,6 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
-import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 open class CommonStructural<RT, CRT : RT>(
@@ -75,9 +74,17 @@ open class CommonStructural<RT, CRT : RT>(
         parent!!.removeActual(fragment, false)
     }
 
-    override fun layout(proposedFrame: RawFrame?) {
-        // layout calculation is handled by the actual layouts, structural only applies to the actual UI
-        layoutFrameOrNull = proposedFrame
-        traceLayout()
+    override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
+        TODO()
     }
+
+    override fun placeLayout(top: Double, left: Double) {
+        TODO()
+    }
+
+//    override fun layout(proposedFrame: RawFrame?) {
+//        // layout calculation is handled by the actual layouts, structural only applies to the actual UI
+//        layoutFrameOrNull = proposedFrame
+//        traceLayout()
+//    }
 }

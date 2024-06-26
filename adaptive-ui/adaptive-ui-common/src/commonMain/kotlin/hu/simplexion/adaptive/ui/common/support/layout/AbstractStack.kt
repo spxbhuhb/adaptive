@@ -9,9 +9,9 @@ import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 import hu.simplexion.adaptive.ui.common.instruction.Alignment
 
 /**
- * Base class for wrapping stack: wrapRow (and maybe later wrapColumn)
+ * Base class for stack which do not wrap: box, row, column.
  */
-abstract class AbstractWrapStack<RT, CRT : RT>(
+abstract class AbstractStack<RT, CRT : RT>(
     adapter: AbstractCommonAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
@@ -26,49 +26,47 @@ abstract class AbstractWrapStack<RT, CRT : RT>(
      *
      * @param horizontal True the items should be next to each other (row), false if they should be below each other (column).
      */
-    fun layoutStack(horizontal: Boolean) {
+    fun placeItems(horizontal: Boolean) {
         val container = renderData.container
 
         if (uiAdapter.autoSizing) {
             for (item in layoutItems) {
-                item.layout(null)
+                item.placeLayout(Double.NaN, Double.NaN)
             }
             return
         }
 
         val padding = renderData.layout?.padding ?: RawSurrounding.ZERO
 
-        val mainAxisAvailableSpace = if (horizontal) renderData.measuredWidth else renderData.measuredHeight
+        val mainAxisAvailableSpace = (if (horizontal) renderData.innerWidth else renderData.innerHeight) ?: 0.0 // FIXME stack layout main axis available
 
-        val (prefix, gap) = calcPrefixAndGap(horizontal, mainAxisAvailableSpace, if (horizontal) padding.left else padding.top)
+        val (prefix, gap) = calcPrefixAndGap(horizontal, mainAxisAvailableSpace, if (horizontal) padding.start else padding.top)
 
         var offset = prefix
 
-        val crossAxisAvailableSpace = if (horizontal) renderData.measuredHeight else renderData.measuredWidth
+        val crossAxisAvailableSpace = (if (horizontal) renderData.innerHeight else renderData.innerWidth) ?: 0.0 // FIXME stack layout cross axis available
         val crossAxisItemAlignment = if (horizontal) container?.verticalAlignment else container?.horizontalAlignment
 
         for (item in layoutItems) {
             val renderData = item.renderData
-            val layout = item.renderData.layout
+            val layout = renderData.layout
             val box = renderData.box
 
-            val crossAxisSelfAlignment = if (horizontal) layout?.verticalAlignment else layout?.horizontalAlignment
+            val crossAxisSelfAlignment = (if (horizontal) layout?.verticalAlignment else layout?.horizontalAlignment) ?: Alignment.Start // FIXME cross axis alignment
 
-            val frame = if (horizontal) {
+            if (horizontal) {
                 val top = calcAlign(crossAxisItemAlignment, crossAxisSelfAlignment, crossAxisAvailableSpace, box.height)
-                RawFrame(padding.top + top, offset, box.width, box.height)
+                item.placeLayout(padding.top + top, offset)
             } else {
                 val left = calcAlign(crossAxisItemAlignment, crossAxisSelfAlignment, crossAxisAvailableSpace, box.width)
-                RawFrame(offset, padding.left + left, box.width, box.height)
+                item.placeLayout(offset, padding.start + left)
             }
-
-            item.layout(frame)
 
             offset += gap + (if (horizontal) box.width else box.height)
         }
 
         for (item in structuralItems) {
-            item.layout(RawFrame(0.0, 0.0, layoutFrame.width, layoutFrame.height))
+            item.placeLayout(0.0, 0.0)
         }
     }
 
@@ -132,6 +130,7 @@ abstract class AbstractWrapStack<RT, CRT : RT>(
                 null -> 0.0
             }
         }
+
 
 
 }

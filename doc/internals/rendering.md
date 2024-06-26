@@ -55,19 +55,4 @@ the fragments by absolute coordinates calculated by the `layout` call in the abo
 - nothing for browser
 - `ContainerView` for iOS
 
-### Box Model
-
-Each fragment has a:
-
-| size      | unit | description                                      |
-|-----------|------|--------------------------------------------------|
-| intrinsic | px   | size of the inner content                        |
-| padding   | dp   | space between the inner content and the border   |
-| border    | dp   |                                                  |
-| margin    | dp   | space outside the border, without the background |
-
-- The fragment box is all these sizes added together.
-- dp sizes are converted into px by the instruction itself
-- `CommonAdapter.applyLayoutToActual` applies the layout to the actual UI instance
-- `CommonAdapter.applyRenderInstructions` applies the non-layout parts of the render data to the actual UI instance
 

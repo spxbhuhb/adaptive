@@ -55,16 +55,16 @@ data class RawSize(
 
 data class RawSurrounding(
     val top: Double,
-    val right: Double,
+    val end: Double,
     val bottom: Double,
-    val left: Double
+    val start: Double
 ) {
     constructor(surrounding: Surrounding, previous: RawSurrounding, adapter: AbstractCommonAdapter<*, *>) :
         this(
             surrounding.top.toPx(adapter) ?: previous.top,
-            surrounding.right.toPx(adapter) ?: previous.right,
+            surrounding.right.toPx(adapter) ?: previous.end,
             surrounding.bottom.toPx(adapter) ?: previous.bottom,
-            surrounding.left.toPx(adapter) ?: previous.left
+            surrounding.left.toPx(adapter) ?: previous.start
         )
 
     companion object {

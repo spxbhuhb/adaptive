@@ -113,7 +113,7 @@ open class CommonAdapter(
 
     fun LayoutRenderData.apply(view: View) {
         padding {
-            view.setPadding(it.left.px, it.top.px, it.right.px, it.bottom.px)
+            view.setPadding(it.start.px, it.top.px, it.end.px, it.bottom.px)
         }
     }
 

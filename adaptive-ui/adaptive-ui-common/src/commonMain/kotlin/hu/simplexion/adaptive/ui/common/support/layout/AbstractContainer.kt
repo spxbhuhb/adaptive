@@ -25,6 +25,9 @@ abstract class AbstractContainer<RT, CRT : RT>(
     adapter, parent, declarationIndex, instructionsIndex, stateSize
 ) {
 
+    val unbound
+        get() = Double.POSITIVE_INFINITY
+
     @Suppress("LeakingThis") // instance construction should not perform any actions
     override val receiver: CRT = adapter.makeContainerReceiver(this)
 
@@ -92,8 +95,8 @@ abstract class AbstractContainer<RT, CRT : RT>(
             }
 
             if (isMounted) {
-                itemFragment.measure()
-                layout(layoutFrame)
+                // FIXME layout with late additions may affect higher level layouts
+                computeLayout(renderData.outerWidth, renderData.outerHeight)
             }
         }
     }
@@ -123,24 +126,10 @@ abstract class AbstractContainer<RT, CRT : RT>(
                 }
             }
 
-            if (isMounted) {
-                layout(layoutFrame)
+            if (isMounted) {// FIXME layout with late removals may affect higher level layouts
+                computeLayout(renderData.outerWidth, renderData.outerHeight)
             }
         }
     }
-
-    /**
-     * Calls `measure` on all items in [layoutItems] and returns with their box frame.
-     *
-     * @return  [RawFrame] for each item where:
-     *          - top and left is the instructed top and left or zero
-     *          - width is `boxWidth`
-     *          - height is `boxHeight`
-     */
-    fun measureItems() =
-        layoutItems.map {
-            it.measure()
-            it.renderData.box
-        }
 
 }

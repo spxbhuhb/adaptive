@@ -10,7 +10,6 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
-import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 
 @AdaptiveActual(common)
 class CommonText(
@@ -37,17 +36,12 @@ class CommonText(
 
                 receiver.measure(widthSpec, heightSpec)
 
-                renderData.measuredWidth = receiver.measuredWidth.toDouble()
-                renderData.measuredHeight = receiver.measuredHeight.toDouble()
+                renderData.innerWidth = receiver.measuredWidth.toDouble()
+                renderData.innerHeight = receiver.measuredHeight.toDouble()
             }
         }
 
         return false
-    }
-
-    override fun layout(proposedFrame: RawFrame?) {
-        calcLayoutFrame(proposedFrame)
-        uiAdapter.applyLayoutToActual(this)
     }
 
 }

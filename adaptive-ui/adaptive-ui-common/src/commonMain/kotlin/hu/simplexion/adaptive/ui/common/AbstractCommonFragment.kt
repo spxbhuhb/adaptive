@@ -8,7 +8,6 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.render.CommonRenderData
 import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
-import hu.simplexion.adaptive.ui.common.support.layout.RawSurrounding
 
 abstract class AbstractCommonFragment<RT>(
     adapter: AbstractCommonAdapter<RT, *>,
@@ -77,57 +76,28 @@ abstract class AbstractCommonFragment<RT>(
         super.unmount()
     }
 
-    open fun measure(): RawFrame {
-        // TODO we could skip recalculation if nothing has changed
-        val layout = renderData.layout
+    /**
+     * Basic layout computation that is used for intrinsic UI fragments. Layout fragments
+     * override this method to implement their own calculation algorithm.
+     */
+    open fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
+        val data = renderData
+        val layout = data.layout
 
-        renderData.box = RawFrame(
-            top = layout?.top ?: Double.NaN,
-            left = layout?.left ?: Double.NaN,
-            width = layout?.width ?: renderData.calcBoxWidth(),
-            height = layout?.height ?: renderData.calcBoxHeight(),
-        )
+        data.outerWidth = select(layout?.instructedWidth, data.innerWidth, proposedWidth) + data.surroundingHorizontal
+        data.outerHeight = select(layout?.instructedHeight, data.innerHeight, proposedHeight) + data.surroundingVertical
 
-        if (trace) trace("measure", "${renderData.box}")
-
-        return renderData.box
+        if (trace) trace("compute-layout", "width: ${data.outerWidth}, height: ${data.outerHeight}")
     }
 
-    abstract fun layout(proposedFrame: RawFrame?)
-
-    open fun calcLayoutFrame(proposedFrame: RawFrame?) {
-        val instructedLayout = renderData.layout
-
-        layoutFrame =
-            if (instructedLayout == null) {
-                proposedFrame ?: RawFrame.AUTO
-            } else {
-                RawFrame(
-                    instructedLayout.top ?: proposedFrame?.top ?: Double.NaN,
-                    instructedLayout.left ?: proposedFrame?.left ?: Double.NaN,
-                    instructedLayout.width ?: proposedFrame?.width ?: Double.NaN,
-                    instructedLayout.height ?: proposedFrame?.height ?: Double.NaN
-                )
-            }
-
-        traceLayout()
+    open fun placeLayout(top: Double, left: Double) {
+        renderData.finalTop = top
+        renderData.finalLeft = left
+        uiAdapter.applyLayoutToActual(this)
     }
 
-    fun traceLayout() {
-        if (trace) {
-            trace(
-                "layout",
-                """
-                    layoutFrame=${layoutFrame}
-                    measuredSize=(${renderData.measuredWidth},${renderData.measuredHeight})
-                    instructedTop=${renderData.layout?.top}
-                    instructedLeft=${renderData.layout?.left}
-                    instructedWidth=${renderData.layout?.width}
-                    instructedHeight=${renderData.layout?.height}
-                """.trimIndent().replace("\n", " ")
-            )
-        }
-    }
+    fun select(instructed: Double?, inner: Double?, proposed: Double) =
+        instructed ?: inner ?: (if (proposed.isFinite()) proposed else 0.0)
 
     val DPixel.px
         get() = uiAdapter.toPx(this)
@@ -135,63 +105,4 @@ abstract class AbstractCommonFragment<RT>(
     val DPixel?.pxOrZero
         get() = if (this == null) 0.0 else uiAdapter.toPx(this)
 
-    fun CommonRenderData.calcBoxWidth(): Double {
-
-        var width = measuredWidth
-
-        val layout = layout ?: return width
-
-        layout.padding?.let {
-            width += it.left
-            width += it.right
-        }
-
-        layout.border?.let {
-            width += it.left
-            width += it.right
-        }
-
-        layout.margin?.let {
-            width += it.left
-            width += it.right
-        }
-
-        return width
-    }
-
-    fun CommonRenderData.calcBoxHeight(): Double {
-        var height = measuredHeight
-
-        val layout = layout ?: return height
-
-        layout.padding?.let {
-            height += it.top
-            height += it.bottom
-        }
-
-        layout.border?.let {
-            height += it.top
-            height += it.bottom
-        }
-
-        layout.margin?.let {
-            height += it.top
-            height += it.bottom
-        }
-
-        return height
-    }
-
-    fun surrounding(): RawSurrounding {
-        val padding = renderData.layout?.padding ?: RawSurrounding.ZERO
-        val border = renderData.layout?.border ?: RawSurrounding.ZERO
-        val margin = renderData.layout?.margin ?: RawSurrounding.ZERO
-
-        return RawSurrounding(
-            top = padding.top + border.top + margin.top,
-            right = padding.right + border.right + margin.right,
-            bottom = padding.bottom + border.bottom + margin.bottom,
-            left = padding.left + border.left + margin.left
-        )
-    }
 }
