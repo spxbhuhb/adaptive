@@ -6,9 +6,9 @@ package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
-import hu.simplexion.adaptive.ui.common.render.CommonRenderData
+import hu.simplexion.adaptive.ui.common.render.container
 import hu.simplexion.adaptive.ui.common.render.grid
-import hu.simplexion.adaptive.utility.alsoIfInstance
+import hu.simplexion.adaptive.ui.common.support.layout.RawTrack
 
 fun colSpan(span : Int) = ColSpan(span)
 fun rowSpan(span : Int) = RowSpan(span)
@@ -75,6 +75,12 @@ fun colTemplate(vararg tracks: Track) = ColTemplate(tracks)
 
 class ColTemplate(val tracks: Array<out Track>) : AdaptiveInstruction {
 
+    override fun apply(subject: Any) {
+        container(subject) { container ->
+            expand(tracks).map { RawTrack(it.isFix, it.isFraction, it.isMinContent, it.toRawValue(container.adapter)) }
+        }
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || other !is ColTemplate) return false
@@ -94,6 +100,12 @@ fun rowTemplate(vararg tracks: Track) = RowTemplate(tracks)
 
 class RowTemplate(val tracks: Array<out Track>) : AdaptiveInstruction {
 
+    override fun apply(subject: Any) {
+        container(subject) { container ->
+            expand(tracks).map { RawTrack(it.isFix, it.isFraction, it.isMinContent, it.toRawValue(container.adapter)) }
+        }
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || other !is RowTemplate) return false
@@ -112,7 +124,7 @@ class RowTemplate(val tracks: Array<out Track>) : AdaptiveInstruction {
 // ---- Track --------------------------------------------------------
 
 /**
- * IMPORTANT Tracks must be are immutable (or [Replicate] won't work).
+ * IMPORTANT Tracks must be are immutable (or [Repeat] won't work).
  */
 interface Track {
 
@@ -120,6 +132,13 @@ interface Track {
         get() = true
 
     val isFix: Boolean
+        get() = false
+
+    val isFraction: Boolean
+        get() = false
+
+    val isMinContent: Boolean
+        get() = false
 
     val value: Double
 
@@ -131,19 +150,26 @@ interface Track {
 
 }
 
-fun replicate(count : Int, track : Track) : Replicate =
-    Replicate(count, track)
+/**
+ * Expand track list, replaces "repeat" with N copy of the track for example.
+ */
+private fun expand(tracks: Array<out Track>): Array<Track> {
+    val out = mutableListOf<Track>()
+    for (track in tracks) {
+        track.expand(out)
+    }
+    return out.toTypedArray()
+}
+
+infix fun Track.repeat(count: Int): Repeat = Repeat(count, this)
 
 /**
- * Replicate [track] [count] times.
+ * Repeat [track] [count] times.
  */
-data class Replicate(val count: Int, val track: Track) : Track {
+data class Repeat(val count: Int, val track: Track) : Track {
 
     override val isIntrinsic: Boolean
         get() = false
-
-    override val isFix: Boolean
-        get() = throw UnsupportedOperationException()
 
     override val value: Double
         get() = throw UnsupportedOperationException()

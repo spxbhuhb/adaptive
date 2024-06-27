@@ -308,15 +308,31 @@ When the available space is **unbound**:
 - all **bound tracks**
   - use their instructed size
 - `minContent` tracks use
-  - `max(track.fragments.final)`
+  - `max(track.fragments.final)` with unbound proposed size (to make them minimal sized)
 - all fraction track use
-  - `max(track.fragments.final)`
+  - `max(track.fragments.final)` with unbound proposed size (to make them minimal sized)
 
 When the available space is **bound**:
 
 - all **bound tracks**
   - use their instructed size
 - `minContent` tracks use
-  - `max(track.fragments.final)`
+  - `max(track.fragments.final)` with proposed size unbound (to make them minimal sized)
 - fraction tracks use
-  - `availableSpace - sum(bound-tracks) - sum(minContent-tracks)`
+  - `availableSpace - sum(bound-tracks) - sum(minContent-tracks) - surrounding`
+
+#### Distributing spanned tracks
+
+Spanned track distribution:
+
+- assigns **bound** tracks to their fix size
+- assigns `0` to `minContent` tracks
+- splits the remaining space between fraction tracks
+
+In the following example the height of the min-content track is unknown.
+
+```text
+1.fr           1   2
+minContent     1   2   3
+1.fr           1       3
+```

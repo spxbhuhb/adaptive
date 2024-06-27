@@ -91,3 +91,9 @@ data class RawCornerRadius(
     }
 }
 
+data class RawTrack(
+    val isFix: Boolean,
+    val isFraction: Boolean,
+    val isMinContent: Boolean,
+    val rawValue: Double
+)

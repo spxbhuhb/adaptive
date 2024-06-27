@@ -108,8 +108,8 @@ data class Fraction(
     override val value: Double
 ) : Track {
 
-    override val isFix
-        get() = false
+    override val isFraction: Boolean
+        get() = true
 
     override fun toRawValue(adapter: AbstractCommonAdapter<*, *>): Double = value
 
