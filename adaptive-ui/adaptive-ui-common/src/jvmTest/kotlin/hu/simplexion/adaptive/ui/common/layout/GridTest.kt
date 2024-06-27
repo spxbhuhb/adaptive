@@ -5,9 +5,9 @@
 package hu.simplexion.adaptive.ui.common.layout
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.foundation.instruction.name
 import hu.simplexion.adaptive.foundation.rangeTo
-import hu.simplexion.adaptive.ui.common.fragment.grid
-import hu.simplexion.adaptive.ui.common.fragment.space
+import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.support.C1
 import hu.simplexion.adaptive.ui.common.support.F1
@@ -19,7 +19,7 @@ import kotlin.test.Test
 class GridTest {
 
     @Test
-    fun basic() {
+    fun `basic fixed fixed`() {
         cff(
             colTemplate(120.dp, 160.dp),
             rowTemplate(20.dp)
@@ -27,6 +27,18 @@ class GridTest {
             assertFinal(C1, 0, 0, 400, 400)
             assertFinal(F1, 0, 0, 120, 20)
             assertFinal(F2, 0, 120, 160, 20)
+        }
+    }
+
+    @Test
+    fun `basic fixed fraction`() {
+        cff(
+            colTemplate(140.dp, 1.fr),
+            rowTemplate(20.dp)
+        ) {
+            assertFinal(C1, 0, 0, 400, 400)
+            assertFinal(F1, 0, 0, 140, 20)
+            assertFinal(F2, 0, 140, 400 - 140, 20)
         }
     }
 
@@ -56,8 +68,6 @@ class GridTest {
         }
     }
 
-    fun AdaptiveInstruction.asArray() = arrayOf(this)
-
     fun cff(
         vararg instructions: AdaptiveInstruction,
         f1: Array<AdaptiveInstruction> = emptyArray(),
@@ -72,5 +82,40 @@ class GridTest {
             }
 
         }.checks()
+    }
+
+    @Test
+    fun sidebar() {
+        uiTest(0, 0, 400, 400) {
+            grid {
+                colTemplate(200.dp, 1.fr) .. rowTemplate(1.fr) .. name("grid-1")
+
+                column {
+                    fillSpace .. padding(10.dp) .. gap(4.dp) .. name("column-1")
+
+                    text("Hello") .. fillHorizontal .. name("hello")
+                    text("World") .. fillHorizontal .. name("world")
+                }
+
+                column {
+                    fillSpace .. verticalScroll .. padding { 10.dp } .. name("column-2")
+
+                    slot {
+                        text("Click") .. fillHorizontal .. name("slot-text")
+                    }
+                }
+            }
+        }.apply {
+
+            assertFinal(name("grid-1"), 0, 0, 400, 400)
+
+            assertFinal(name("column-1"), 0, 0, 200, 400)
+            assertFinal(name("hello"), 10, 10, 100, 20)
+            assertFinal(name("world"), 34, 10, 100, 20)
+
+            assertFinal(name("column-2"), 0, 200, 200, 400)
+            assertFinal(name("slot-text"), 10, 10, 100, 20)
+
+        }
     }
 }

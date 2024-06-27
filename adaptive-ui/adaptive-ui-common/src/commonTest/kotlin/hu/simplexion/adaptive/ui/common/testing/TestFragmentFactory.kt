@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.ui.common.testing
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragmentFactory
+import hu.simplexion.adaptive.ui.common.fragment.structural.CommonSlot
 import hu.simplexion.adaptive.ui.common.testing.fragment.*
 
 object TestFragmentFactory : AdaptiveFragmentFactory() {
@@ -15,6 +16,7 @@ object TestFragmentFactory : AdaptiveFragmentFactory() {
         add("common:image") { p, i -> AdaptiveImage(p.adapter as CommonTestAdapter, p, i) }
         add("common:row") { p, i -> AdaptiveRow(p.adapter as CommonTestAdapter, p, i) }
         add("common:space") { p, i -> CommonSpace(p.adapter as CommonTestAdapter, p, i) }
+        add("common:slot") { p, i -> CommonSlot(p.adapter as CommonTestAdapter, p, i) }
         add("common:text") { p, i -> AdaptiveText(p.adapter as CommonTestAdapter, p, i) }
     }
 }

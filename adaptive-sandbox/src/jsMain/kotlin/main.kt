@@ -6,6 +6,7 @@ import graphics.svgExample
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.invoke
+import hu.simplexion.adaptive.foundation.rangeTo
 import hu.simplexion.adaptive.lib.sandbox.misc.chessBoard
 import hu.simplexion.adaptive.ui.common.browser
 import hu.simplexion.adaptive.ui.common.fragment.*
@@ -24,16 +25,11 @@ fun main() {
 
     //(trace = Trace(".*"))
     browser {
-//        box {
-//            chessBoard()
-//        }
         grid {
-            colTemplate(200.dp, 1.fr)
-            rowTemplate(1.fr)
+            fillSpace .. colTemplate(200.dp, 1.fr) .. rowTemplate(1.fr)
 
             column {
-                padding(10.dp)
-                gap(4.dp)
+                fillSpace .. padding(10.dp) .. gap(4.dp)
 
                 navButton("Good Morning", navClick { goodMorning() })
                 navButton("Welcome", navClick { welcome() })
@@ -46,8 +42,7 @@ fun main() {
             }
 
             column {
-                verticalScroll
-                padding(10.dp)
+                fillSpace .. verticalScroll .. padding(10.dp)
 
                 slot {
                     route { goodMorning() }
@@ -70,6 +65,7 @@ fun main() {
 }
 
 val button = arrayOf(
+    fillHorizontal,
     leftToRightGradient(color(0xA0DE6Fu), color(0x53C282u)),
     cornerRadius(8.dp),
     AlignItems.startCenter,

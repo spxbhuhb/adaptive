@@ -19,7 +19,7 @@ fun height(calc: () -> DPixel) = Height(calc())
 fun width(width: DPixel) = Width(width)
 fun width(calc: () -> DPixel) = Width(calc())
 
-object fill : AdaptiveInstruction {
+object fillSpace : AdaptiveInstruction {
     override fun apply(subject: Any) {
         layout(subject) {
             it.fillHorizontal = true

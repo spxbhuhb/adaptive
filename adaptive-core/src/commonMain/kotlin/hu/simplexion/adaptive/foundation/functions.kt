@@ -23,3 +23,9 @@ fun <T : AdaptiveTransformInterface> thisState(): T {
 operator fun AdaptiveFragment.rangeTo(instruction: AdaptiveInstruction): AdaptiveFragment {
     replacedByPlugin("adds the instruction to the instruction parameter value")
 }
+
+operator fun AdaptiveInstruction.rangeTo(instruction: AdaptiveInstruction): Array<AdaptiveInstruction> =
+    arrayOf(this, instruction)
+
+operator fun Array<AdaptiveInstruction>.rangeTo(instruction: AdaptiveInstruction): Array<AdaptiveInstruction> =
+    this + instruction

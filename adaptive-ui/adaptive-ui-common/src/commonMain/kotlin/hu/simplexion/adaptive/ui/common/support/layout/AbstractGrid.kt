@@ -58,14 +58,8 @@ abstract class AbstractGrid<RT, CRT : RT>(
 
         // ----  calculate size of tracks, cannot be unbound  -------------------------
 
-        val colFractionSpace = innerWidth - colTracks.boundSpace(colGap)
-        val rowFractionSpace = innerHeight - rowTracks.boundSpace(rowGap)
-
-        check(colFractionSpace.isFinite()) { "grid cannot be used without size information" }
-        check(rowFractionSpace.isFinite()) { "grid cannot be used without size information" }
-
-        val colOffsets = distribute(colFractionSpace, colGap, colTracks)
-        val rowOffsets = distribute(rowFractionSpace, rowGap, rowTracks)
+        val colOffsets = distribute(innerWidth, colGap, colTracks)
+        val rowOffsets = distribute(innerHeight, rowGap, rowTracks)
 
         // ----  layout and place items -----------------------------------------------
 
@@ -85,19 +79,6 @@ abstract class AbstractGrid<RT, CRT : RT>(
                 colOffsets[col] + data.surroundingStart
             )
         }
-    }
-
-    fun List<RawTrack>.boundSpace(gap: Double): Double {
-        var usedSpace = (size - 1) * gap
-
-        for (i in indices) {
-            val track = this[i]
-            if (track.isFix) {
-                usedSpace += track.rawValue
-            }
-        }
-
-        return usedSpace
     }
 
     fun proposeItemSize(offsets: DoubleArray, gap: Double, start: Int, span: Int): Double =
@@ -132,6 +113,8 @@ abstract class AbstractGrid<RT, CRT : RT>(
      *         as well.
      */
     fun distribute(availableSpace: Double, gap: Double, tracks: List<RawTrack>): DoubleArray {
+
+        check(availableSpace.isFinite()) { "grid cannot be used without size information" }
 
         var usedSpace = (tracks.size - 1) * gap
         var fractionSum = 0.0
