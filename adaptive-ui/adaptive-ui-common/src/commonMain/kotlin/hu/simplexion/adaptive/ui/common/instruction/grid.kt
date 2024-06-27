@@ -10,6 +10,11 @@ import hu.simplexion.adaptive.ui.common.render.container
 import hu.simplexion.adaptive.ui.common.render.grid
 import hu.simplexion.adaptive.ui.common.support.layout.RawTrack
 
+fun colTemplate(vararg tracks: Track) = ColTemplate(tracks)
+fun rowTemplate(vararg tracks: Track) = RowTemplate(tracks)
+
+infix fun Track.repeat(count: Int): Repeat = Repeat(count, this)
+
 fun colSpan(span : Int) = ColSpan(span)
 fun rowSpan(span : Int) = RowSpan(span)
 
@@ -71,13 +76,11 @@ data class GridCol(val col: Int, val span: Int) : AdaptiveInstruction {
     }
 }
 
-fun colTemplate(vararg tracks: Track) = ColTemplate(tracks)
-
 class ColTemplate(val tracks: Array<out Track>) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
         container(subject) { container ->
-            expand(tracks).map { RawTrack(it.isFix, it.isFraction, it.isMinContent, it.toRawValue(container.adapter)) }
+            container.colTracks = expand(tracks).map { RawTrack(it.isFix, it.isFraction, it.toRawValue(container.adapter)) }
         }
     }
 
@@ -96,13 +99,11 @@ class ColTemplate(val tracks: Array<out Track>) : AdaptiveInstruction {
     }
 }
 
-fun rowTemplate(vararg tracks: Track) = RowTemplate(tracks)
-
 class RowTemplate(val tracks: Array<out Track>) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
         container(subject) { container ->
-            expand(tracks).map { RawTrack(it.isFix, it.isFraction, it.isMinContent, it.toRawValue(container.adapter)) }
+            container.rowTracks = expand(tracks).map { RawTrack(it.isFix, it.isFraction, it.toRawValue(container.adapter)) }
         }
     }
 
@@ -160,8 +161,6 @@ private fun expand(tracks: Array<out Track>): Array<Track> {
     }
     return out.toTypedArray()
 }
-
-infix fun Track.repeat(count: Int): Repeat = Repeat(count, this)
 
 /**
  * Repeat [track] [count] times.

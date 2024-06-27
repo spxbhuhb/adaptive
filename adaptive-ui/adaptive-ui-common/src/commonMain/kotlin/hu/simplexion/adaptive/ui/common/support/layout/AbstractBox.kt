@@ -21,13 +21,18 @@ abstract class AbstractBox<RT, CRT : RT>(
         val data = renderData
         val container = renderData.container
 
+        // ----  calculate height and width proposed to items  ------------------------
+
+        val proposedItemWidth = data.layout?.instructedWidth ?: proposedWidth
+        val proposedItemHeight = data.layout?.instructedHeight ?: proposedHeight
+
         // ----  calculate layout of all items  ---------------------------------------
 
         var itemsWidth = 0.0
         var itemsHeight = 0.0
 
         for (item in layoutItems) {
-            item.computeLayout(unbound, proposedHeight)
+            item.computeLayout(proposedItemWidth, proposedItemHeight)
             itemsWidth = max(item.renderData.finalWidth, itemsWidth)
             itemsHeight = max(item.renderData.finalHeight, itemsHeight)
         }

@@ -10,7 +10,6 @@ import hu.simplexion.adaptive.ui.common.common
 import hu.simplexion.adaptive.ui.common.instruction.Alignment
 import hu.simplexion.adaptive.ui.common.instruction.SpaceDistribution
 import hu.simplexion.adaptive.ui.common.support.layout.AbstractRow
-import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
@@ -21,8 +20,8 @@ open class CommonRow(
     declarationIndex: Int
 ) : AbstractRow<HTMLElement, HTMLDivElement>(adapter, parent, declarationIndex) {
 
-    override fun layout(proposedFrame: RawFrame?) {
-        super.layout(proposedFrame)
+    override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
+        super.computeLayout(proposedWidth, proposedHeight)
 
         with(receiver.style) {
             display = "grid"
@@ -34,8 +33,7 @@ open class CommonRow(
             setProperty("grid-template-rows", "1fr")
         }
 
-        browserAlign()
-        uiAdapter.applyLayoutToActual(this)
+        // browserAlign()
     }
 
     fun browserAlign() {

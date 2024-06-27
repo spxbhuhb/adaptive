@@ -5,15 +5,15 @@
 package hu.simplexion.adaptive.ui.common.layout
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.foundation.instruction.Name
+import hu.simplexion.adaptive.foundation.instruction.name
+import hu.simplexion.adaptive.foundation.query.firstWith
 import hu.simplexion.adaptive.foundation.rangeTo
-import hu.simplexion.adaptive.ui.common.fragment.box
-import hu.simplexion.adaptive.ui.common.fragment.space
+import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
+import hu.simplexion.adaptive.ui.common.fragment.*
+import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.instruction.AlignItems.Companion.alignItems
 import hu.simplexion.adaptive.ui.common.instruction.AlignSelf.Companion.alignSelf
-import hu.simplexion.adaptive.ui.common.instruction.dp
-import hu.simplexion.adaptive.ui.common.instruction.height
-import hu.simplexion.adaptive.ui.common.instruction.position
-import hu.simplexion.adaptive.ui.common.instruction.width
 import hu.simplexion.adaptive.ui.common.support.C1
 import hu.simplexion.adaptive.ui.common.support.F1
 import hu.simplexion.adaptive.ui.common.support.F2
@@ -93,10 +93,52 @@ class BoxTest {
         uiTest(0, 0, 400, 400) {
 
             box(C1, *instructions) {
+                fill
+
                 space(*f1) .. F1 .. width { 120.dp } .. height { 20.dp }
                 space(*f2) .. F2 .. width { 160.dp } .. height { 20.dp }
             }
 
         }.checks()
     }
+
+    @Test
+    fun chessBoard() {
+        uiTest(0, 0, 400, 400) {
+            val size = 2
+            box {
+                name("box")
+                height { (size * 40).dp }
+                width { (size * 40).dp }
+
+                column {
+                    name("col")
+
+                    for (r in 0 until size) {
+                        row {
+                            name("row-$r")
+
+                            for (c in 1 .. size) {
+                                row(AlignItems.center) {
+                                    name("row-$r-$c")
+                                    text(r * size + c) .. Size(40.dp, 40.dp) .. name("cell-$r-$c")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }.apply {
+            println((firstWith<Name>() as AbstractCommonFragment<*>).dumpLayout(""))
+
+            assertFinal(name("box"), 0, 0, 80, 80)
+            assertFinal(name("col"), 0, 0, 80, 80)
+            assertFinal(name("row-0"), 0, 0, 80, 40)
+            assertFinal(name("row-0-1"), 0, 0, 40, 40)
+            assertFinal(name("cell-0-1"), 0, 0, 40, 40)
+            assertFinal(name("row-0-2"), 0, 40, 40, 40)
+            assertFinal(name("cell-0-2"), 0, 0, 40, 40)
+        }
+    }
+
 }

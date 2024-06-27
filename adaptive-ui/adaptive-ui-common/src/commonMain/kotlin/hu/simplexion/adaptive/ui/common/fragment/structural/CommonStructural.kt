@@ -75,11 +75,8 @@ open class CommonStructural<RT, CRT : RT>(
     }
 
     override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
-        TODO()
-    }
-
-    override fun placeLayout(top: Double, left: Double) {
-        TODO()
+        renderData.finalWidth = proposedWidth
+        renderData.finalHeight = proposedHeight
     }
 
 //    override fun layout(proposedFrame: RawFrame?) {

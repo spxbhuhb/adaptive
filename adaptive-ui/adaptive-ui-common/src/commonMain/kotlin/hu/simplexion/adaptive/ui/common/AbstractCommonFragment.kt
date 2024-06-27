@@ -5,8 +5,11 @@
 package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.instruction.Name
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.render.CommonRenderData
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
+import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 
 abstract class AbstractCommonFragment<RT>(
     adapter: AbstractCommonAdapter<RT, *>,
@@ -96,4 +99,21 @@ abstract class AbstractCommonFragment<RT>(
     val DPixel?.pxOrZero
         get() = if (this == null) 0.0 else uiAdapter.toPx(this)
 
+
+    private val Double.padded
+        get() = toString().padStart(4, ' ')
+
+    fun dumpLayout(indent: String): String {
+        return buildString {
+            val name = (indent + (instructions.firstOrNullIfInstance<Name>()?.name ?: this@AbstractCommonFragment::class.simpleName !!)).padEnd(40, ' ')
+            val data = renderData
+
+            appendLine("$name  top: ${data.finalTop.padded}    left: ${data.finalLeft.padded}    width: ${data.finalWidth.padded}    height: ${data.finalHeight.padded}")
+            if (this@AbstractCommonFragment is AbstractContainer<*, *>) {
+                layoutItems.forEach {
+                    append(it.dumpLayout("$indent  "))
+                }
+            }
+        }
+    }
 }

@@ -22,4 +22,7 @@ class LayoutRenderData(
 
     var verticalAlignment: Alignment? = null
     var horizontalAlignment: Alignment? = null
+
+    var fillHorizontal: Boolean = false
+    var fillVertical: Boolean = false
 }

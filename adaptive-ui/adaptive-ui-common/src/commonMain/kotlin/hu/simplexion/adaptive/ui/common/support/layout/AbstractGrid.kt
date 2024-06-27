@@ -22,13 +22,9 @@ abstract class AbstractGrid<RT, CRT : RT>(
          * When `colTemplate` or `rowTemplate` is missing we use `singleTrack`.
          */
         val singleTrack = listOf(
-            RawTrack(isFix = false, isFraction = false, isMinContent = true, rawValue = 1.0)
+            RawTrack(isFix = false, isFraction = true, rawValue = 1.0)
         )
     }
-
-    var colOffsets = DoubleArray(0)
-    var rowOffsets = DoubleArray(0)
-
 
     override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
         val data = renderData
@@ -41,30 +37,53 @@ abstract class AbstractGrid<RT, CRT : RT>(
         val colGap = container?.gapWidth ?: 0.0 // gap between columns
         val rowGap = container?.gapHeight ?: 0.0 // gap between rows
 
-        // ----  place the items in cells  --------------------------------------------
+        // ----  assign the items to cells  -------------------------------------------
 
         layoutItems.forEach { it.renderData.grid ?: GridRenderData(uiAdapter).apply { it.renderData.grid = this } }
-        val placement = placeItemsInCells(colTracks.size, rowTracks.size)
+        placeItemsInCells(colTracks.size, rowTracks.size)
 
-        // ----  calculate available space, might be NaN
+        // ----  calculate and set inner and final sizes  -----------------------------
 
-        val colAvailableSpace = (layout?.instructedWidth ?: proposedWidth) - data.surroundingHorizontal - colTracks.boundSpace(colGap)
-        val rowAvailableSpace = (layout?.instructedHeight ?: proposedHeight) - data.surroundingVertical - rowTracks.boundSpace(rowGap)
+        val finalWidth = layout?.instructedWidth ?: proposedWidth
+        val finalHeight = layout?.instructedHeight ?: proposedHeight
 
-        // ----  compute item layouts and column/row sizes
+        data.finalWidth = finalWidth
+        data.finalHeight = finalHeight
 
-        val colSizes = DoubleArray(colTracks.size + 1)
-        val rowSizes = DoubleArray(rowTracks.size + 1)
+        val innerWidth = finalWidth - data.surroundingHorizontal
+        val innerHeight = finalHeight - data.surroundingVertical
+
+        data.innerWidth = innerWidth
+        data.innerHeight = innerHeight
+
+        // ----  calculate size of tracks, cannot be unbound  -------------------------
+
+        val colFractionSpace = innerWidth - colTracks.boundSpace(colGap)
+        val rowFractionSpace = innerHeight - rowTracks.boundSpace(rowGap)
+
+        check(colFractionSpace.isFinite()) { "grid cannot be used without size information" }
+        check(rowFractionSpace.isFinite()) { "grid cannot be used without size information" }
+
+        val colOffsets = distribute(colFractionSpace, colGap, colTracks)
+        val rowOffsets = distribute(rowFractionSpace, rowGap, rowTracks)
+
+        // ----  layout and place items -----------------------------------------------
 
         for (item in layoutItems) {
             val g = item.renderData.grid !!
 
-            val proposedItemWidth = proposedItemSize(colTracks, g.colIndex, g.colSpan)
-            val proposedItemHeight = proposedItemSize(rowTracks, g.rowIndex, g.rowSpan)
+            item.computeLayout(
+                proposeItemSize(colOffsets, colGap, g.colIndex, g.colSpan),
+                proposeItemSize(rowOffsets, rowGap, g.rowIndex, g.rowSpan)
+            )
 
-            item.computeLayout(proposedItemWidth, proposedItemHeight)
+            val row = g.rowIndex
+            val col = g.colIndex
 
-            applyItemSizes(item, colSizes)
+            item.placeLayout(
+                rowOffsets[row] + data.surroundingTop,
+                colOffsets[col] + data.surroundingStart
+            )
         }
     }
 
@@ -81,79 +100,12 @@ abstract class AbstractGrid<RT, CRT : RT>(
         return usedSpace
     }
 
-    fun List<RawTrack>.fractionSum(): Double {
-        var fractionSum = 0.0
-
-        for (i in indices) {
-            val track = this[i]
-            if (track.isFraction) {
-                fractionSum += track.rawValue
-            }
+    fun proposeItemSize(offsets: DoubleArray, gap: Double, start: Int, span: Int): Double =
+        if (start + span < offsets.size - 1) {
+            offsets[start + span] - offsets[start] - gap
+        } else {
+            offsets[start + span] - offsets[start]
         }
-
-        return fractionSum
-    }
-
-    fun proposedItemSize(tracks: List<RawTrack>, start: Int, span: Int): Double {
-        var index = start
-        val end = index + span
-
-        var width = 0.0
-
-        while (index < end) {
-            val track = tracks[index]
-            if (track.isFix) {
-                width += track.rawValue
-            } else {
-                width = unbound
-            }
-            index ++
-        }
-
-        return width
-    }
-
-    fun applyItemSizes(tracks: List<RawTrack>, sizes: DoubleArray, itemSize: Double) {
-
-
-    }
-
-
-
-
-//    override fun measure(): RawFrame {
-//        for (item in layoutItems) {
-//            item.measure()
-//        }
-//
-//        renderData.innerWidth = size(renderData.layout?.instructedWidth, colTracksPrepared)
-//        renderData.innerHeight = size(renderData.layout?.instructedHeight, rowTracksPrepared)
-//
-//        return super.measure()
-//    }
-
-    fun size(instructed: Double?, tracks: List<RawTrack>) =
-        when {
-            instructed != null -> instructed
-            tracks.any { ! it.isFix } -> Double.POSITIVE_INFINITY
-            else -> Double.NaN
-        }
-
-//    override fun layout(proposedFrame: RawFrame?) {
-//        calcLayoutFrame(proposedFrame)
-//
-//        prepare()
-//
-//        val offsets = toFrameOffsets()
-//
-//        for (item in layoutItems) {
-//            item.layout(toFrame(item, offsets))
-//        }
-//
-//        for (item in structuralItems) {
-//            item.layout(layoutFrame)
-//        }
-//    }
 
     /**
      * There is a difference between browser and other targets. Browser handles margin
@@ -165,47 +117,6 @@ abstract class AbstractGrid<RT, CRT : RT>(
         val padding = renderData.layout?.padding ?: RawSurrounding.ZERO
 
         return RawPosition(border.top + padding.top, border.start + padding.start)
-    }
-
-    fun toFrame(fragment: AbstractCommonFragment<RT>, offsets: RawPosition): RawFrame {
-        val grid = checkNotNull(fragment.renderData.grid) { "missing grid data at $this" }
-
-        val row = grid.rowIndex
-        val col = grid.colIndex
-
-        return RawFrame(
-            rowOffsets[row] + offsets.top,
-            colOffsets[col] + offsets.left,
-            colOffsets[col + grid.colSpan] - colOffsets[col],
-            rowOffsets[row + grid.rowSpan] - rowOffsets[row]
-        )
-    }
-
-    /**
-     * Prepares the grid for layout. Calculates all track sizes and places all items
-     * in the grid. This method requires `layoutFrame` to be set.
-     */
-    fun prepare() {
-        val data = renderData
-        val container = data.container !!
-
-
-        val colGap = container.gapHeight
-        val rowGap = container.gapWidth
-
-        val availableWidth = data.finalWidth - data.surroundingHorizontal
-        val availableHeight = data.finalHeight - data.surroundingVertical
-
-        colOffsets = distribute(availableWidth, colGap, container.colTracks !!)
-        rowOffsets = distribute(availableHeight, rowGap, container.rowTracks !!)
-
-        if (trace) {
-            trace("measure-layoutFrame", "width: ${data.finalWidth}, height: ${data.finalHeight}")
-            trace("measure-colOffsets", colOffsets.contentToString())
-            trace("measure-rowOffsets", rowOffsets.contentToString())
-        }
-
-
     }
 
     /**
@@ -256,16 +167,10 @@ abstract class AbstractGrid<RT, CRT : RT>(
 
         result[tracks.size] = offset + previous - gap // the last gap is not there
 
-        // Doubleing position calculations may result in small fractional values, for example:
-        // available=852.0 result:[0.0, 140.0, 190.0, 360.6667, 531.3334, 702.00006, 752.00006, 852.00006]
-        if (availableSpace + 0.0001 < result.last()) {
-            adapter.log(this, "distribute", "grid track overflow: available=$availableSpace result:${result.contentToString()} tracks: $tracks in $this")
-        }
-
         return result
     }
 
-    fun placeItemsInCells(rows: Int, cols: Int): Array<Array<AbstractCommonFragment<RT>?>> {
+    fun placeItemsInCells(cols: Int, rows: Int): Array<Array<AbstractCommonFragment<RT>?>> {
 
         val grid = Array(rows) { arrayOfNulls<AbstractCommonFragment<RT>?>(cols) }
 
@@ -288,7 +193,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
             return true
         }
 
-        fun placeFragment(fragment: AbstractCommonFragment<RT>, cell: GridCell, rowSpan: Int, colSpan: Int, r: Int, c: Int) {
+        fun placeFragment(fragment: AbstractCommonFragment<RT>, cell: GridRenderData, rowSpan: Int, colSpan: Int, r: Int, c: Int) {
             for (i in r until r + rowSpan) {
                 for (j in c until c + colSpan) {
                     grid[i][j] = fragment

@@ -19,13 +19,40 @@ fun height(calc: () -> DPixel) = Height(calc())
 fun width(width: DPixel) = Width(width)
 fun width(calc: () -> DPixel) = Width(calc())
 
-val sizeFull = Size(DPixel.FULL, DPixel.FULL)
-val heightFull = Height(DPixel.FULL)
-val widthFull = Width(DPixel.FULL)
+object fill : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        layout(subject) {
+            it.fillHorizontal = true
+            it.fillVertical = true
+        }
+    }
+}
+
+object fillHorizontal : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        layout(subject) {
+            it.fillHorizontal = true
+        }
+    }
+}
+
+object fillVertical : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        layout(subject) {
+            it.fillVertical = true
+        }
+    }
+}
 
 fun gap(calcBoth: () -> DPixel) = calcBoth().let { Gap(it, it) }
 fun gap(both: DPixel) = Gap(both, both)
 fun gap(width: DPixel? = null, height: DPixel? = null) = Gap(width, height)
+
+fun gapHeight(height: () -> DPixel) = Gap(height = height(), width = null)
+fun gapHeight(height: DPixel) = Gap(height = height, width = null)
+
+fun gapWidth(width: () -> DPixel) = Gap(width = width(), height = null)
+fun gapWidth(width: DPixel) = Gap(width = width, height = null)
 
 fun padding(top: DPixel? = null, right: DPixel? = null, bottom: DPixel? = null, left: DPixel? = null) = Padding(top, right, bottom, left)
 fun padding(all: () -> DPixel) = Padding(all())

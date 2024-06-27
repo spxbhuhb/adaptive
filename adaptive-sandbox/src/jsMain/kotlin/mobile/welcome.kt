@@ -29,7 +29,7 @@ fun welcome() {
 
             grid {
                 colTemplate(1.fr)
-                rowTemplate(replicate(4, 52.dp), 60.dp, 50.dp)
+                rowTemplate(52.dp repeat 4, 60.dp, 50.dp)
 
                 input(*input) { signUp.name }
                 input(*input) { signUp.email }

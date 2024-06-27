@@ -8,7 +8,6 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
-import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import kotlinx.browser.document
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
@@ -38,12 +37,12 @@ open class CommonText(
             if (receiver.textContent != content) {
                 receiver.textContent = content
 
-                if (uiAdapter.autoSizing) {
-                    measureText(content)
-                } else {
-                    renderData.innerWidth = Double.NaN
-                    renderData.innerHeight = Double.NaN
-                }
+//                if (uiAdapter.autoSizing) {
+//                  renderData.innerWidth = Double.NaN
+//                  renderData.innerHeight = Double.NaN
+//                }
+                measureText(content)
+//                }
             }
         }
 
@@ -58,11 +57,6 @@ open class CommonText(
 
         renderData.innerWidth = metrics.width
         renderData.innerHeight = text?.lineHeight ?: (metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent)
-    }
-
-    override fun layout(proposedFrame: RawFrame?) {
-        calcLayoutFrame(proposedFrame)
-        uiAdapter.applyLayoutToActual(this)
     }
 
     companion object {

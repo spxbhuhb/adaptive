@@ -18,7 +18,6 @@ import hu.simplexion.adaptive.ui.common.render.EventRenderData
 import hu.simplexion.adaptive.ui.common.render.LayoutRenderData
 import hu.simplexion.adaptive.ui.common.render.TextRenderData
 import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
-import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.support.layout.RawSurrounding
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
@@ -50,12 +49,8 @@ class CommonAdapter(
 
         fragment.alsoIfInstance<AbstractContainer<HTMLElement, HTMLDivElement>> {
             rootContainer.getBoundingClientRect().let { r ->
-                val frame = RawFrame(0.0, 0.0, r.width, r.height)
-
-                it.layoutFrame = frame
-                it.measure()
-                it.layout(frame)
-
+                it.computeLayout(r.width, r.height)
+                it.placeLayout(0.0, 0.0)
                 rootContainer.appendChild(it.receiver)
             }
         }
@@ -78,19 +73,18 @@ class CommonAdapter(
     }
 
     override fun applyLayoutToActual(fragment: AbstractCommonFragment<HTMLElement>) {
-        val layoutFrame = fragment.layoutFrame
-        val renderData = fragment.renderData
+        val data = fragment.renderData
 
-        val top = layoutFrame.top
-        val left = layoutFrame.left
-        val height = layoutFrame.height
-        val width = layoutFrame.width
+        val top = data.finalTop
+        val left = data.finalLeft
+        val height = data.finalHeight
+        val width = data.finalWidth
 
         val style = fragment.receiver.style
         var absolute = false
 
         style.boxSizing = "border-box"
-        val margin = renderData.layout?.margin ?: RawSurrounding.ZERO
+        val margin = data.layout?.margin ?: RawSurrounding.ZERO
 
         if (! top.isNaN()) {
             absolute = true
@@ -114,7 +108,7 @@ class CommonAdapter(
             ! height.isNaN() -> style.height = (height - margin.start - margin.end).pxs
         }
 
-        renderData.container {
+        data.container {
             if (it.horizontalScroll) style.overflowX = "auto"
             if (it.verticalScroll) style.overflowY = "auto"
         }
@@ -252,12 +246,10 @@ class CommonAdapter(
             updateMediaMetrics()
 
             rootContainer.getBoundingClientRect().let { r ->
-                val frame = RawFrame(0.0, 0.0, r.width, r.height)
                 for (fragment in rootFragment.children) {
                     fragment as AbstractCommonFragment<*>
-                    fragment.layoutFrame = frame
-                    fragment.measure()
-                    fragment.layout(frame)
+                    fragment.computeLayout(r.width, r.height)
+                    fragment.placeLayout(0.0, 0.0)
                 }
             }
         }

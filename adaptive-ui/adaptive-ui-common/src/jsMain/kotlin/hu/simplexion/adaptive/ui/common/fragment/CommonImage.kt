@@ -9,7 +9,6 @@ import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
-import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
@@ -39,13 +38,9 @@ open class CommonImage(
         return false
     }
 
-    override fun layout(proposedFrame: RawFrame?) {
-        calcLayoutFrame(proposedFrame)
-
-        receiver.width = layoutFrame.width.toInt()
-        receiver.height = layoutFrame.height.toInt()
-
-        uiAdapter.applyLayoutToActual(this)
+    override fun placeLayout(top: Double, left: Double) {
+        receiver.width = renderData.finalWidth.toInt()
+        receiver.height = renderData.finalHeight.toInt()
+        super.placeLayout(top, left)
     }
-
 }

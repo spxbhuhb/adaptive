@@ -24,6 +24,9 @@ fun main() {
 
     //(trace = Trace(".*"))
     browser {
+//        box {
+//            chessBoard()
+//        }
         grid {
             colTemplate(200.dp, 1.fr)
             rowTemplate(1.fr)
@@ -61,6 +64,9 @@ fun main() {
             }
         }
     }
+//        .also {
+//            println(it.first<AbstractBox<*, *>>().dumpLayout(""))
+//        }
 }
 
 val button = arrayOf(

@@ -8,7 +8,6 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
 import hu.simplexion.adaptive.ui.common.support.layout.AbstractGrid
-import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.support.layout.RawPosition
 import hu.simplexion.adaptive.ui.common.support.layout.RawSurrounding
 import org.w3c.dom.HTMLDivElement
@@ -20,11 +19,6 @@ open class CommonGrid(
     parent: AdaptiveFragment,
     declarationIndex: Int
 ) : AbstractGrid<HTMLElement, HTMLDivElement>(adapter, parent, declarationIndex) {
-
-    override fun layout(proposedFrame: RawFrame?) {
-        super.layout(proposedFrame)
-        uiAdapter.applyLayoutToActual(this)
-    }
 
     /**
      * In browsers border is not counted when positioning absolutely.

@@ -284,55 +284,23 @@ final width =
 
 ### Grid
 
-A grid track is:
-
-- **bound** when it has a fix size (like `20.dp`)
-- **unbound** when
-  - it is a fraction (like `1.fr`) **or**
-  - is a `minContent` track
-
-#### Cell assignment
-
-The first step of grid layout is to assign children to grid cells.
-This is used during space distribution.
-
-#### Distributable space
-
-`availableSpace` is the space the grid have in a given direction:
+final height =
 
 - instructed, if present
-- proposed (both bound and unbound)
+- proposed, if not unbound
+- **throws exception** otherwise
 
-When the available space is **unbound**:
+final width =
 
-- all **bound tracks**
-  - use their instructed size
-- `minContent` tracks use
-  - `max(track.fragments.final)` with unbound proposed size (to make them minimal sized)
-- all fraction track use
-  - `max(track.fragments.final)` with unbound proposed size (to make them minimal sized)
+- instructed, if present
+- proposed, if not unbound
+- **throws exception** otherwise
 
-When the available space is **bound**:
+`availableSpace` is the space the grid have in a given direction.
 
-- all **bound tracks**
-  - use their instructed size
-- `minContent` tracks use
-  - `max(track.fragments.final)` with proposed size unbound (to make them minimal sized)
-- fraction tracks use
-  - `availableSpace - sum(bound-tracks) - sum(minContent-tracks) - surrounding`
-
-#### Distributing spanned tracks
-
-Spanned track distribution:
-
-- assigns **bound** tracks to their fix size
-- assigns `0` to `minContent` tracks
-- splits the remaining space between fraction tracks
-
-In the following example the height of the min-content track is unknown.
-
-```text
-1.fr           1   2
-minContent     1   2   3
-1.fr           1       3
-```
+Grid throws an exception when `availableSpace` is unbound. While it is surely possible
+to create grid algorithms for such situations (CSS Grid has one), it complicates the
+algorithm too much and actually introduces some confusion. I decided to drop this,
+as for mobile it feels useless and for web we can fall back to the implementation
+provided by the browser. Better to do one thing and do it well. There are other
+tools for handling unbound space.

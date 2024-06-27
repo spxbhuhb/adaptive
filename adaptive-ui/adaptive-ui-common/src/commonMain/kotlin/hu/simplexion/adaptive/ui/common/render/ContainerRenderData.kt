@@ -24,5 +24,5 @@ class ContainerRenderData(
     var horizontalScroll: Boolean = false
 
     var colTracks: List<RawTrack>? = null
-    val rowTracks: List<RawTrack>? = null
+    var rowTracks: List<RawTrack>? = null
 }

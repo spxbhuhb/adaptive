@@ -5,6 +5,7 @@ package hu.simplexion.adaptive.ui.common.testing
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.foundation.instruction.Name
 import hu.simplexion.adaptive.foundation.query.first
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
@@ -106,14 +107,14 @@ open class CommonTestAdapter(
 
         assertEquals(
             AssertFrame(
-                selector::class.simpleName,
+                if (selector is Name) selector.name else selector::class.simpleName,
                 top.toDouble(),
                 left.toDouble(),
                 width.toDouble(),
                 height.toDouble()
             ),
             AssertFrame(
-                selector::class.simpleName,
+                if (selector is Name) selector.name else selector::class.simpleName,
                 renderData.finalTop,
                 renderData.finalLeft,
                 renderData.finalWidth,
