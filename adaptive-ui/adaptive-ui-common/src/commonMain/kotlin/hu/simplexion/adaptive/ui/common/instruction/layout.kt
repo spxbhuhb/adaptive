@@ -10,7 +10,7 @@ import hu.simplexion.adaptive.ui.common.render.layout
 import hu.simplexion.adaptive.ui.common.support.layout.RawSurrounding
 
 fun frame(top: DPixel, left: DPixel, width: DPixel, height: DPixel) = Frame(top, left, width, height)
-fun position(top: DPixel, left: DPixel) = Position(left, top)
+fun position(top: DPixel, left: DPixel) = Position(top, left)
 fun size(width: DPixel, height: DPixel) = Size(width, height)
 
 fun height(height: DPixel) = Height(height)
@@ -46,14 +46,6 @@ fun marginLeft(left: DPixel) = margin(left = left)
 val spaceAround = DistributeSpace(SpaceDistribution.Around)
 val spaceBetween = DistributeSpace(SpaceDistribution.Between)
 
-val alignSelfTop = AlignSelf(vertical = Alignment.Start, horizontal = null)
-val alignSelfStart = AlignSelf(vertical = null, horizontal = Alignment.Start)
-val alignSelfEnd = AlignSelf(vertical = null, horizontal = Alignment.End)
-val alignSelfBottom = AlignSelf(vertical = Alignment.End, horizontal = null)
-val centerSelfVertically = AlignSelf(vertical = Alignment.Center, horizontal = null)
-val centerSelfHorizontally = AlignSelf(vertical = null, horizontal = Alignment.Center)
-val centerSelf = AlignSelf(vertical = Alignment.Center, horizontal = Alignment.Center)
-
 val scroll = Scroll(horizontal = true, vertical = true)
 val verticalScroll = Scroll(horizontal = true, vertical = true)
 val horizontalScroll = Scroll(horizontal = true, vertical = true)
@@ -68,8 +60,8 @@ data class Frame(
     override fun apply(subject: Any) {
         layout(subject) {
             val adapter = it.adapter
-            it.top = adapter.toPx(top)
-            it.left = adapter.toPx(left)
+            it.instructedTop = adapter.toPx(top)
+            it.instructedLeft = adapter.toPx(left)
             it.instructedWidth = adapter.toPx(width)
             it.instructedHeight = adapter.toPx(height)
         }
@@ -83,8 +75,8 @@ data class Position(
     override fun apply(subject: Any) {
         layout(subject) {
             val adapter = it.adapter
-            it.top = adapter.toPx(top)
-            it.left = adapter.toPx(left)
+            it.instructedTop = adapter.toPx(top)
+            it.instructedLeft = adapter.toPx(left)
         }
     }
 }
@@ -221,11 +213,42 @@ data class AlignSelf(
     val vertical: Alignment?,
     val horizontal: Alignment?,
 ) : AdaptiveInstruction {
+
     override fun apply(subject: Any) {
         layout(subject) {
             if (vertical != null) it.verticalAlignment = vertical
             if (horizontal != null) it.horizontalAlignment = horizontal
         }
+    }
+
+    companion object {
+        val alignSelf = AlignSelf
+
+        val center = AlignSelf(vertical = Alignment.Center, horizontal = Alignment.Center)
+
+        val top = AlignSelf(vertical = Alignment.Start, horizontal = null)
+
+        val topStart = AlignSelf(vertical = Alignment.Start, horizontal = Alignment.Start)
+        val topCenter = AlignSelf(vertical = Alignment.Start, horizontal = Alignment.Center)
+        val topEnd = AlignSelf(vertical = Alignment.Start, horizontal = Alignment.End)
+
+        val start = AlignSelf(vertical = null, horizontal = Alignment.Start)
+
+        val startTop = AlignSelf(vertical = Alignment.Start, horizontal = Alignment.Start)
+        val startCenter = AlignSelf(vertical = Alignment.Center, horizontal = Alignment.Start)
+        val startBottom = AlignSelf(vertical = Alignment.End, horizontal = Alignment.Start)
+
+        val end = AlignSelf(vertical = null, horizontal = Alignment.End)
+
+        val endTop = AlignSelf(vertical = Alignment.Start, horizontal = Alignment.End)
+        val endCenter = AlignSelf(vertical = Alignment.Center, horizontal = Alignment.End)
+        val endBottom = AlignSelf(vertical = Alignment.End, horizontal = Alignment.End)
+
+        val bottom = AlignSelf(vertical = Alignment.End, horizontal = null)
+
+        val bottomStart = AlignSelf(vertical = Alignment.End, horizontal = Alignment.Start)
+        val bottomCenter = AlignSelf(vertical = Alignment.End, horizontal = Alignment.Center)
+        val bottomEnd = AlignSelf(vertical = Alignment.End, horizontal = Alignment.End)
     }
 }
 

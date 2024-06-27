@@ -69,14 +69,16 @@ abstract class AbstractCommonFragment<RT>(
 
         data.finalWidth = select(layout?.instructedWidth, data.innerWidth, proposedWidth, data.surroundingHorizontal)
         data.finalHeight = select(layout?.instructedHeight, data.innerHeight, proposedHeight, data.surroundingVertical)
-
-        if (trace) trace("compute-layout", "width: ${data.finalWidth}, height: ${data.finalHeight}")
     }
 
     open fun placeLayout(top: Double, left: Double) {
-        renderData.finalTop = top
-        renderData.finalLeft = left
-        renderData.finalWidth = renderData.finalWidth
+        val data = renderData
+
+        data.finalTop = top
+        data.finalLeft = left
+
+        if (trace) trace("layout", "top: ${data.finalTop}, left: ${data.finalLeft}, width: ${data.finalWidth}, height: ${data.finalHeight}")
+
         uiAdapter.applyLayoutToActual(this)
     }
 

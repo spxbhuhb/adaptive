@@ -46,16 +46,11 @@ abstract class AbstractStack<RT, CRT : RT>(
 
     abstract fun crossAxisSize(innerWidth: Double, innerHeight: Double): Double
 
-    abstract fun AbstractCommonFragment<RT>.crossAxisAlignment(): Alignment?
-
-    abstract fun AbstractCommonFragment<RT>.place(crossAxisAlignment: Alignment?, crossAxisSize: Double, offset: Double)
-
-    abstract fun AbstractCommonFragment<RT>.mainAxisFinal(): Double
+    abstract fun AbstractCommonFragment<RT>.place(crossAxisAlignment: Alignment?, crossAxisSize: Double, offset: Double): Double
 
     override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
 
         val data = renderData
-        val layout = renderData.layout
         val container = renderData.container
 
         // ----  calculate layout of all items  ---------------------------------------
@@ -71,25 +66,10 @@ abstract class AbstractStack<RT, CRT : RT>(
 
         // ----  calculate sizes of this fragment  ------------------------------------
 
-        val innerWidth = when {
-            layout?.instructedWidth != null -> layout.instructedWidth !! - data.surroundingHorizontal
-            proposedWidth.isFinite() -> proposedWidth - data.surroundingHorizontal
-            else -> itemsWidth
-        }
+        computeFinal(proposedWidth, itemsWidth, proposedHeight, itemsHeight)
 
-        val innerHeight = when {
-            layout?.instructedHeight != null -> layout.instructedHeight !! - data.surroundingVertical
-            proposedHeight.isFinite() -> proposedHeight - data.surroundingVertical
-            else -> itemsHeight
-        }
-
-        data.innerWidth = innerWidth
-        data.innerHeight = innerHeight
-
-        data.finalWidth = innerWidth + data.surroundingHorizontal
-        data.finalHeight = innerHeight + data.surroundingVertical
-
-        if (trace) trace("compute-layout", "width: ${data.finalWidth}, height: ${data.finalHeight}")
+        val innerWidth = data.innerWidth !!
+        val innerHeight = data.innerHeight !!
 
         // ---- calculate starting offset and gap based on instructions  --------------
 
@@ -138,8 +118,7 @@ abstract class AbstractStack<RT, CRT : RT>(
         val crossAxisSize = crossAxisSize(innerWidth, innerHeight)
 
         for (item in layoutItems) {
-            item.place(crossAxisAlignment, crossAxisSize, offset)
-            offset += gap + item.mainAxisFinal()
+            offset += gap + item.place(crossAxisAlignment, crossAxisSize, offset)
         }
 
         for (item in structuralItems) {
@@ -147,16 +126,4 @@ abstract class AbstractStack<RT, CRT : RT>(
         }
     }
 
-    fun AbstractCommonFragment<RT>.crossAxisPosition(layoutCrossAxisAlignment: Alignment?, innerSize: Double, itemSize: Double) =
-        when (crossAxisAlignment()) {
-            Alignment.Center -> (innerSize - itemSize) / 2
-            Alignment.Start -> 0.0
-            Alignment.End -> innerSize - itemSize
-            else -> when (layoutCrossAxisAlignment) {
-                Alignment.Center -> (innerSize - itemSize) / 2
-                Alignment.Start -> 0.0
-                Alignment.End -> innerSize - itemSize
-                null -> 0.0
-            }
-        }
 }

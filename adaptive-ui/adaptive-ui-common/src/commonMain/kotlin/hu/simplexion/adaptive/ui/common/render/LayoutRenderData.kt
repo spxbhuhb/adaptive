@@ -11,8 +11,8 @@ import hu.simplexion.adaptive.ui.common.support.layout.RawSurrounding
 class LayoutRenderData(
     val adapter : AbstractCommonAdapter<*, *>
 ) {
-    var top: Double? = null
-    var left : Double? = null
+    var instructedTop: Double? = null
+    var instructedLeft: Double? = null
     var instructedWidth: Double? = null
     var instructedHeight: Double? = null
 

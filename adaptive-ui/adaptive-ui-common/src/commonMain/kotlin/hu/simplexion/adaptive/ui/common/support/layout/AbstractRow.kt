@@ -42,14 +42,18 @@ abstract class AbstractRow<RT, CRT : RT>(
     override fun crossAxisSize(innerWidth: Double, innerHeight: Double): Double =
         innerHeight
 
-    override fun AbstractCommonFragment<RT>.crossAxisAlignment(): Alignment? =
-        renderData.layout?.verticalAlignment
 
-    override fun AbstractCommonFragment<RT>.mainAxisFinal() =
-        renderData.finalWidth
+    override fun AbstractCommonFragment<RT>.place(crossAxisAlignment: Alignment?, crossAxisSize: Double, offset: Double): Double {
 
-    override fun AbstractCommonFragment<RT>.place(crossAxisAlignment: Alignment?, crossAxisSize: Double, offset: Double) {
-        val innerTop = this.crossAxisPosition(crossAxisAlignment, crossAxisSize, renderData.finalHeight)
+        val innerTop = alignOnAxis(
+            verticalAlignment,
+            crossAxisAlignment,
+            crossAxisSize,
+            renderData.finalHeight
+        )
+
         placeLayout(innerTop + this@AbstractRow.renderData.surroundingTop, offset)
+
+        return renderData.finalWidth
     }
 }

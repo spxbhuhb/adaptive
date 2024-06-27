@@ -42,14 +42,17 @@ abstract class AbstractColumn<RT, CRT : RT>(
     override fun crossAxisSize(innerWidth: Double, innerHeight: Double): Double =
         innerWidth
 
-    override fun AbstractCommonFragment<RT>.crossAxisAlignment(): Alignment? =
-        renderData.layout?.horizontalAlignment
+    override fun AbstractCommonFragment<RT>.place(crossAxisAlignment: Alignment?, crossAxisSize: Double, offset: Double): Double {
 
-    override fun AbstractCommonFragment<RT>.mainAxisFinal() =
-        renderData.finalHeight
+        val innerLeft = alignOnAxis(
+            horizontalAlignment,
+            crossAxisAlignment,
+            crossAxisSize,
+            renderData.finalWidth
+        )
 
-    override fun AbstractCommonFragment<RT>.place(crossAxisAlignment: Alignment?, crossAxisSize: Double, offset: Double) {
-        val innerLeft = this.crossAxisPosition(crossAxisAlignment, crossAxisSize, renderData.finalWidth)
         placeLayout(offset, innerLeft + this@AbstractColumn.renderData.surroundingStart)
+
+        return renderData.finalHeight
     }
 }
