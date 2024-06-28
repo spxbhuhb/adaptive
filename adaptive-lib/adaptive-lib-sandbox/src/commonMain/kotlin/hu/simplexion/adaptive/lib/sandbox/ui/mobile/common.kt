@@ -2,9 +2,11 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package mobile
+package hu.simplexion.adaptive.lib.sandbox.ui.mobile
 
 import hu.simplexion.adaptive.foundation.Adaptive
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.fragment
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.fragment.box
 import hu.simplexion.adaptive.ui.common.fragment.column
@@ -71,8 +73,9 @@ val button = arrayOf(
 )
 
 @Adaptive
-fun button(label: String, vararg instructions: AdaptiveInstruction) {
+fun button(label: String, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
     row(*button, *instructions) {
         text(label, white, textMedium, noSelect)
     }
+    return fragment()
 }

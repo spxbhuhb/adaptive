@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.render.text
+import hu.simplexion.adaptive.ui.common.render.textAndAdapter
 
 fun fontName(fontName: String) = FontName(fontName)
 inline fun fontName(fontName: () -> String) = FontName(fontName())
@@ -95,7 +96,7 @@ data class LetterSpacing(val value: Double) : AdaptiveInstruction {
 
 data class LineHeight(val height: DPixel) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        text(subject) { it.lineHeight = it.adapter.toPx(height) }
+        textAndAdapter(subject) { t, a -> t.lineHeight = a.toPx(height) }
     }
 }
 

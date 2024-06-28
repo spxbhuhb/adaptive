@@ -2,15 +2,16 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package mobile
+package hu.simplexion.adaptive.lib.sandbox.ui.mobile
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
-import hu.simplexion.adaptive.sandbox.api.SignUp
+import hu.simplexion.adaptive.foundation.rangeTo
+import hu.simplexion.adaptive.lib.sandbox.model.SignUp
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
-import sandbox.Res
-import sandbox.check
+import sandbox.lib.Res
+import sandbox.lib.check
 
 @Adaptive
 fun welcome() {
@@ -36,20 +37,22 @@ fun welcome() {
                 input(*input) { signUp.password }
                 input(*input) { signUp.verification }
 
-                row {
+                grid {
                     paddingTop(15.dp)
                     AlignItems.start
-                    gap(10.dp)
+                    colTemplate(40.dp, 1.fr)
 
                     checkbox { signUp.agreement }
-                    text("I agree to the", fontSize(15.sp), mediumGray)
-                    text("Terms of Service", fontSize(15.sp), black, bold, externalLink("/terms.txt"))
+                    row {
+                        text("I agree to the ", fontSize(15.sp), FontName("Noto Sans"), mediumGray)
+                        text("Terms of Service", fontSize(15.sp), FontName("Noto Sans"), black, bold, externalLink("/terms.txt"))
+                    }
                 }
 
-                button("Sign Up", onClick { println("sing up") })
+                button("Sign Up", onClick { println("sing up") }) .. maxWidth
             }
 
-            footerLink("Have an account?", "Sign in", "/")
+            footerLink("Have an account? ", "Sign in", "/")
         }
     }
 }
@@ -68,10 +71,9 @@ fun subTitle(text: String) {
 
 @Adaptive
 fun footerLink(normalText: String, linkText: String, href: String) {
-    row(AlignItems.center) {
-        gap(6.dp)
+    row(AlignItems.center, maxWidth) {
         text(normalText, *bodyMedium)
-        text(linkText, FontSize(17.sp), black, TextDecoration.Underline, externalLink(href))
+        text(linkText, FontSize(17.sp), FontName("Noto Sans"), black, TextDecoration.Underline, externalLink(href))
     }
 }
 
@@ -105,6 +107,7 @@ val titleLarge = arrayOf(
 
 val bodyMedium = arrayOf(
     FontSize(17.sp),
+    FontName("Noto Sans"),
     Color(0x666666u)
 )
 

@@ -51,7 +51,7 @@ open class CommonText(
 
     fun measureText(content: String) {
         val text = renderData.text
-        measureContext.font = text?.toCssString() ?: ""
+        measureContext.font = text?.toCssString(uiAdapter) ?: ""
 
         val metrics = measureContext.measureText(content)
 

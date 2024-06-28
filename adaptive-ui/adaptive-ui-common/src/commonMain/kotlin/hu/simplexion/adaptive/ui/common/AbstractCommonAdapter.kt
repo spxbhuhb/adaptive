@@ -11,6 +11,7 @@ import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.MediaMetricsProducer
+import hu.simplexion.adaptive.ui.common.render.TextRenderData
 import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
 import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
 import hu.simplexion.adaptive.utility.vmNowMicro
@@ -59,6 +60,8 @@ abstract class AbstractCommonAdapter<RT, CRT : RT> : AdaptiveAdapter {
     var autoSizing: Boolean = true
 
     var actualBatch: Boolean = false
+
+    var defaultTextRenderData = TextRenderData()
 
     protected val mediaMetricsProducers = mutableListOf<MediaMetricsProducer>()
 

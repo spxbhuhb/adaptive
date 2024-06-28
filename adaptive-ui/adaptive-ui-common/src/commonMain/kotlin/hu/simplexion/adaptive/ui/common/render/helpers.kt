@@ -4,6 +4,8 @@
 
 package hu.simplexion.adaptive.ui.common.render
 
+import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
+
 internal inline fun layout(subject: Any, setter: (data: LayoutRenderData) -> Unit) {
     if (subject is CommonRenderData) {
         setter((subject.layout ?: LayoutRenderData(subject.adapter).also { subject.layout = it }))
@@ -24,7 +26,13 @@ internal inline fun container(subject: Any, setter: (data : ContainerRenderData)
 
 internal inline fun text(subject: Any, setter: (data: TextRenderData) -> Unit) {
     if (subject is CommonRenderData) {
-        setter((subject.text ?: TextRenderData(subject.adapter).also { subject.text = it }))
+        setter((subject.text ?: TextRenderData().also { subject.text = it }))
+    }
+}
+
+internal inline fun textAndAdapter(subject: Any, setter: (data: TextRenderData, adapter: AbstractCommonAdapter<*, *>) -> Unit) {
+    if (subject is CommonRenderData) {
+        setter((subject.text ?: TextRenderData().also { subject.text = it }), subject.adapter)
     }
 }
 

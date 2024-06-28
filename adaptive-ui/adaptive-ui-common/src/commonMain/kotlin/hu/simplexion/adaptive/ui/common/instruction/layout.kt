@@ -57,10 +57,18 @@ fun gapWidth(width: DPixel) = Gap(width = width, height = null)
 fun padding(top: DPixel? = null, right: DPixel? = null, bottom: DPixel? = null, left: DPixel? = null) = Padding(top, right, bottom, left)
 fun padding(all: () -> DPixel) = Padding(all())
 fun padding(all: DPixel) = Padding(all)
+
+fun paddingHorizontal(horizontal: DPixel) = Padding(null, horizontal, null, horizontal)
+fun paddingHorizontal(horizontal: () -> DPixel) = horizontal().let { Padding(null, it, null, it) }
+
+fun paddingVertical(vertical: DPixel) = Padding(null, vertical, null, vertical)
+fun paddingVertical(vertical: () -> DPixel) = vertical().let { Padding(it, null, it, null) }
+
 fun paddingTop(top: DPixel) = padding(top = top)
 fun paddingRight(right: DPixel) = padding(right = right)
 fun paddingBottom(bottom: DPixel) = padding(bottom = bottom)
 fun paddingLeft(left: DPixel) = padding(left = left)
+
 
 fun margin(top: DPixel? = null, right: DPixel? = null, bottom: DPixel? = null, left: DPixel? = null) = Margin(top, right, bottom, left)
 fun margin(all: () -> DPixel) = Margin(all())

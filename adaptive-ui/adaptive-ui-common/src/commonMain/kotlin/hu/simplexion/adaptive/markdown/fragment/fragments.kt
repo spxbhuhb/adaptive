@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.markdown.fragment
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.foundation.instruction.name
 import hu.simplexion.adaptive.markdown.parse.*
 import hu.simplexion.adaptive.ui.common.fragment.column
 import hu.simplexion.adaptive.ui.common.fragment.row
@@ -42,8 +43,6 @@ fun document(source: String) {
     val entries = ast(tokenize(source))
 
     column {
-        AlignItems.start
-
         for (entry in entries) {
             when (entry) {
                 is MarkdownParagraphAstEntry -> paragraph(entry)
@@ -56,11 +55,11 @@ fun document(source: String) {
 @Adaptive
 fun header(entry: MarkdownHeaderAstEntry) {
     row {
-        AlignItems.bottom
+        name("markdown-header")
         marginBottom(20.dp)
 
         for (child in entry.children) {
-            inline(child, mutableListOf(headerSize(entry.level), bold))
+            inline(entry.children[0], mutableListOf(headerSize(entry.level), bold))
         }
     }
 }
@@ -68,9 +67,7 @@ fun header(entry: MarkdownHeaderAstEntry) {
 @Adaptive
 fun paragraph(entry: MarkdownParagraphAstEntry) {
     row {
-        AlignItems.start
         marginBottom(20.dp)
-
         for (child in entry.children) {
             inline(child)
         }

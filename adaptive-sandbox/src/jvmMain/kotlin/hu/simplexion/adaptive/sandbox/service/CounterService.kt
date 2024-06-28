@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.sandbox.service
 
-import hu.simplexion.adaptive.sandbox.api.CounterApi
+import hu.simplexion.adaptive.lib.sandbox.api.CounterApi
 import hu.simplexion.adaptive.sandbox.worker.CounterWorker
 import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import hu.simplexion.adaptive.server.builtin.worker

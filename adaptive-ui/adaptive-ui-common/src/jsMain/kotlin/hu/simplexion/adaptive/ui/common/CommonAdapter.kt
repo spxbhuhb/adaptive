@@ -75,6 +75,10 @@ class CommonAdapter(
     override fun applyLayoutToActual(fragment: AbstractCommonFragment<HTMLElement>) {
         val data = fragment.renderData
 
+        if (fragment.isStructural) {
+            return
+        }
+
         val top = data.finalTop
         val left = data.finalLeft
         val height = data.finalHeight
@@ -157,8 +161,9 @@ class CommonAdapter(
     }
 
     fun TextRenderData.apply(style: CSSStyleDeclaration) {
-        fontName { style.fontFamily = it }
-        fontSize { style.fontSize = it.pxs }
+        (fontName ?: defaultTextRenderData.fontName) { style.fontFamily = it }
+        (fontSize ?: defaultTextRenderData.fontSize) { style.fontSize = it.pxs }
+
         fontWeight { style.fontWeight = it.toString() }
         letterSpacing { style.letterSpacing = "${it}em" }
         align { style.textAlign = it.name.lowercase() }

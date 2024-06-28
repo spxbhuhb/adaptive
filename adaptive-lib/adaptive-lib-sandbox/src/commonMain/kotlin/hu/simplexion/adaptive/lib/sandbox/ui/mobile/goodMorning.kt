@@ -2,9 +2,7 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package mobile/*
- * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
- */
+package hu.simplexion.adaptive.lib.sandbox.ui.mobile
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.producer.poll
@@ -12,7 +10,7 @@ import hu.simplexion.adaptive.foundation.rangeTo
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
 import kotlinx.datetime.LocalDateTime
-import sandbox.*
+import sandbox.lib.*
 import kotlin.time.Duration.Companion.seconds
 
 @Adaptive
@@ -37,14 +35,17 @@ fun goodMorning() {
             messages(time, counter)
 
             grid {
+                maxSize
                 rowTemplate(50.dp)
                 colTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
 
                 row(2.gridCol, greenGradient, cornerRadius, AlignItems.center, onClick { counter ++ }) {
+                    maxSize
                     text("Snooze") .. white .. textMedium .. noSelect
                 }
 
                 row(4.gridCol, whiteBorder, cornerRadius, AlignItems.center) {
+                    maxSize
                     text("Sleepiness: $counter") .. white .. textMedium
                 }
             }
@@ -60,6 +61,7 @@ private fun logo() {
     row {
         AlignItems.bottomCenter
         paddingBottom(20.dp)
+        maxSize
 
         image(Res.drawable.logo, size(92.dp, 92.dp))
     }
@@ -69,6 +71,7 @@ private fun logo() {
 private fun title() {
     row {
         AlignItems.bottomCenter
+        maxSize
 
         text("Good Morning", white, fontSize(40.sp), letterSpacing(- 0.02))
     }
@@ -77,10 +80,11 @@ private fun title() {
 @Adaptive
 private fun time(timeText: String) {
     column {
+        maxSize
         AlignItems.bottomCenter
         paddingTop(12.dp)
 
-        text(timeText, white, fontSize(80.sp), letterSpacing(- 0.02))
+        text(timeText, white, fontSize(80.sp), letterSpacing(- 0.02), FontName("Noto Sans"))
     }
 }
 
@@ -88,6 +92,7 @@ private fun time(timeText: String) {
 private fun progress(time: LocalDateTime) {
     row {
         AlignItems.center
+        maxSize
 
         for (i in 0 .. time.second) {
             text(if (i % 10 == 0) "|" else ".", white)
@@ -99,10 +104,13 @@ private fun progress(time: LocalDateTime) {
 private fun messages(time: LocalDateTime, counter: Int) {
     column {
         AlignItems.center
+        maxWidth
         gap { 10.dp }
 
         if (time.second % 2 == 1) {
-            row(AlignItems.startCenter, greenGradient, cornerRadius, Padding(8.dp)) {
+            row(greenGradient, cornerRadius) {
+                paddingHorizontal { 16.dp } .. paddingVertical { 8.dp }
+
                 text("What an odd second!", white)
             }
         }

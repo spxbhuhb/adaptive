@@ -7,9 +7,8 @@ package hu.simplexion.adaptive.ui.common.render
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 import hu.simplexion.adaptive.ui.common.instruction.*
 
-class TextRenderData(
-    val adapter : AbstractCommonAdapter<*, *>
-) {
+class TextRenderData {
+
     var fontName: String? = null
     var fontSize: SPixel? = null
     var fontWeight: Int? = null
@@ -23,13 +22,14 @@ class TextRenderData(
     var noSelect : Boolean? = null
     var color : Color? = null
 
-    fun toCssString(): String {
+    fun toCssString(adapter: AbstractCommonAdapter<*, *>): String {
         val s = mutableListOf<String>()
         decoration?.let { s += it.value }
         fontVariant?.let { s += it.value }
         fontWeight?.let { s += it.toString() }
-        fontSize?.let { s += it.value.toString() + "px" } // FIXME font size in toCSSString does not care about scaling
-        fontName?.let { s += "'$it'" }
+        // FIXME font size in toCSSString does not care about scaling
+        (fontSize ?: adapter.defaultTextRenderData.fontSize)?.let { s += it.value.toString() + "px" }
+        (fontName ?: adapter.defaultTextRenderData.fontName)?.let { s += "'$it'" }
         return s.joinToString(" ")
     }
 

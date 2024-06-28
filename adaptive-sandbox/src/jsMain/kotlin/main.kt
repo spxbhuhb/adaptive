@@ -2,7 +2,6 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-import graphics.svgExample
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.fragment
@@ -10,18 +9,20 @@ import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.invoke
 import hu.simplexion.adaptive.foundation.query.first
 import hu.simplexion.adaptive.foundation.rangeTo
-import hu.simplexion.adaptive.lib.sandbox.layout.layoutMain
-import hu.simplexion.adaptive.lib.sandbox.misc.chessBoard
+import hu.simplexion.adaptive.lib.sandbox.ui.graphics.svgExample
+import hu.simplexion.adaptive.lib.sandbox.ui.layout.layoutMain
+import hu.simplexion.adaptive.lib.sandbox.ui.markdown.markdown
+import hu.simplexion.adaptive.lib.sandbox.ui.misc.chessBoard
+import hu.simplexion.adaptive.lib.sandbox.ui.mobile.goodMorning
+import hu.simplexion.adaptive.lib.sandbox.ui.mobile.welcome
+import hu.simplexion.adaptive.lib.sandbox.ui.navigation.slotOne
+import hu.simplexion.adaptive.lib.sandbox.ui.navigation.slotTwo
+import hu.simplexion.adaptive.lib.sandbox.ui.withSandbox
 import hu.simplexion.adaptive.ui.common.browser
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.platform.withJsResources
 import hu.simplexion.adaptive.ui.common.support.layout.AbstractGrid
-import markdown.markdown
-import mobile.goodMorning
-import mobile.welcome
-import navigation.slotOne
-import navigation.slotTwo
 
 fun main() {
 
@@ -29,6 +30,8 @@ fun main() {
 
     //(trace = Trace(".*"))
     browser {
+        withSandbox(it) // to set default font name
+
         grid {
             maxSize .. colTemplate(200.dp, 1.fr)
 

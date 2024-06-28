@@ -15,6 +15,15 @@ val baseName = "adaptive-lib-sandbox"
 val pomName = "Adaptive Lib Sandbox"
 val scmPath = "spxbhuhb/adaptive"
 
+adaptive {
+    pluginDebug = false
+    resources {
+        publicResClass = true
+        packageOfResClass = "sandbox.lib"
+        generateResClass = auto
+    }
+}
+
 kotlin {
 
     jvmToolchain(11)
