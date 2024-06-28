@@ -11,6 +11,7 @@ import hu.simplexion.adaptive.ui.common.fragment.structural.CommonSlot
 object CommonFragmentFactory : FoundationFragmentFactory() {
     init {
         add("common:box") { p,i -> CommonBox(p.adapter as CommonAdapter, p, i) }
+        add("common:flowbox") { p, i -> CommonFlowBox(p.adapter as CommonAdapter, p, i) }
         add("common:canvas") { p,i -> CommonCanvas(p.adapter as CommonAdapter, p, i) }
         add("common:column") { p,i -> CommonColumn(p.adapter as CommonAdapter, p, i) }
         add("common:grid") { p,i -> CommonGrid(p.adapter as CommonAdapter, p, i) }

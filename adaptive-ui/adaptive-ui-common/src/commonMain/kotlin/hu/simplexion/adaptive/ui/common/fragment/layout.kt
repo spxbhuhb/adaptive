@@ -17,6 +17,11 @@ fun box(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Uni
 }
 
 @AdaptiveExpect(common)
+fun flowBox(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit) {
+    manualImplementation(instructions, content)
+}
+
+@AdaptiveExpect(common)
 fun row(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
     manualImplementation(instructions, content)
 }

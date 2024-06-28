@@ -3,7 +3,10 @@
  */
 
 import hu.simplexion.adaptive.foundation.Adaptive
-import hu.simplexion.adaptive.foundation.instruction.*
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveDetach
+import hu.simplexion.adaptive.foundation.instruction.DetachHandler
+import hu.simplexion.adaptive.foundation.instruction.DetachName
+import hu.simplexion.adaptive.foundation.instruction.name
 import hu.simplexion.adaptive.foundation.rangeTo
 import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.site.*
@@ -87,81 +90,84 @@ fun hello() {
 fun cards() {
     val media = mediaMetrics()
 
-    grid {
-        maxSize
-        colTemplate(1.fr, 360.dp, 360.dp, 1.fr)
-        rowTemplate(424.dp repeat 4)
-        gap(24.dp)
+    row {
+        maxWidth
+        AlignItems.topCenter
 
-        card(Res.drawable.what_is_adaptive, Color(0x87CEFAu), 2.gridCol) {
-            column {
-                largeTitle("What is Adaptive")
-                mediumTitle("main concept")
-                mediumTitle("features")
-                mediumTitle("goals")
+        flowBox {
+            flowItemLimit { 4 }
+            gap(24.dp)
+
+            card(Res.drawable.what_is_adaptive, Color(0x87CEFAu)) {
+                column {
+                    largeTitle("What is Adaptive")
+                    mediumTitle("main concept")
+                    mediumTitle("features")
+                    mediumTitle("goals")
+                }
             }
-        }
 
-        card(Res.drawable.preview_status, Color(0xF08080u), 3.gridCol) {
-            column {
-                largeTitle("Status")
-                mediumTitle("initial development")
-                mediumTitle("preview ready")
-                mediumTitle("web, Android, iOS - PoC works")
+            card(Res.drawable.preview_status, Color(0xF08080u)) {
+                column {
+                    largeTitle("Status")
+                    mediumTitle("initial development")
+                    mediumTitle("preview ready")
+                    mediumTitle("web, Android, iOS - PoC works")
+                }
             }
-        }
 
-        card(Res.drawable.getting_started, Color(0xFFF7E1u), 2.gridCol) {
-            column {
-                largeTitle("Getting Started")
-                mediumTitle("demo")
-                mediumTitle("tutorial")
-                mediumTitle("documentation")
+            card(Res.drawable.getting_started, Color(0xFFF7E1u)) {
+                column {
+                    largeTitle("Getting Started")
+                    mediumTitle("demo")
+                    mediumTitle("tutorial")
+                    mediumTitle("documentation")
+                }
             }
-        }
 
-        card(Res.drawable.tools, Color(0xE6E6FAu), 3.gridCol) {
-            column {
-                largeTitle("Tools")
-                inactiveFeature("project wizard", "2024.08")
-                inactiveFeature("UI designer", "2024.10")
-                inactiveFeature("AI integration", "christmas")
+            card(Res.drawable.tools, Color(0xE6E6FAu)) {
+                column {
+                    largeTitle("Tools")
+                    inactiveFeature("project wizard", "2024.08")
+                    inactiveFeature("UI designer", "2024.10")
+                    inactiveFeature("AI integration", "christmas")
+                }
             }
-        }
 
-        card(Res.drawable.ui, Color(0xFFDAB9u), 2.gridCol) {
-            column {
-                largeTitle("User Interface")
-                mediumTitle("multiplatform")
-                mediumTitle("reactive")
-                mediumTitle("pretty")
+            card(Res.drawable.ui, Color(0xFFDAB9u)) {
+                column {
+                    largeTitle("User Interface")
+                    mediumTitle("multiplatform")
+                    mediumTitle("reactive")
+                    mediumTitle("pretty")
+                }
             }
-        }
 
-        card(Res.drawable.server, Color(0xB4E7B4u), 3.gridCol) {
-            column {
-                largeTitle("Server & Cloud")
-                mediumTitle("multiplatform")
-                mediumTitle("reactive")
-                mediumTitle("API driven")
+            card(Res.drawable.server, Color(0xB4E7B4u)) {
+                column {
+                    largeTitle("Server & Cloud")
+                    mediumTitle("multiplatform")
+                    mediumTitle("reactive")
+                    mediumTitle("API driven")
+                }
             }
-        }
 
-        card(Res.drawable.impressum, Color(0xFFBF00u), 2.gridCol) {
-            column {
-                largeTitle("Impressum")
-                mediumTitle("motivation")
-                mediumTitle("credits")
-                mediumTitle("license")
+            card(Res.drawable.impressum, Color(0xFFBF00u)) {
+                column {
+                    largeTitle("Impressum")
+                    mediumTitle("motivation")
+                    mediumTitle("credits")
+                    mediumTitle("license")
+                }
             }
-        }
 
-        card(Res.drawable.deep_waters, Color(0xB0C4DEu), 3.gridCol) {
-            column {
-                largeTitle("Deep Waters")
-                mediumTitle("internals")
-                mediumTitle("compiler plugin")
-                mediumTitle("source code")
+            card(Res.drawable.deep_waters, Color(0xB0C4DEu)) {
+                column {
+                    largeTitle("Deep Waters")
+                    mediumTitle("internals")
+                    mediumTitle("compiler plugin")
+                    mediumTitle("source code")
+                }
             }
         }
     }
@@ -171,13 +177,12 @@ fun cards() {
 fun card(
     image: DrawableResource,
     background: Color,
-    vararg instructions: AdaptiveInstruction,
     @Adaptive content: () -> Unit
 ) {
     val media = mediaMetrics()
     val shadowIfLight = if (media.isLight) arrayOf(shadow) else emptyArray()
 
-    column(*shadowIfLight, *instructions) {
+    column(*shadowIfLight) {
         grid(size(360.dp, 214.dp)) {
             grid1fr
             padding(32.dp)

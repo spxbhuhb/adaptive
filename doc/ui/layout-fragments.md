@@ -1,20 +1,51 @@
 # Layouts
 
-| Function | Supported Adapters    | Description                                      |
-|----------|-----------------------|--------------------------------------------------|
-| `box`    | browser, android, ios | Position each fragment with x and y coordinates. |
-| `row`    | browser, android, ios | Stack fragments next to each other.              |                                                
-| `column` | browser, android, ios | Stack fragments below each other.                |
-| `grid`   | browser, android, ios |                                                  |
+| Function  | Supported Adapters    | Description                                                                                 |
+|-----------|-----------------------|---------------------------------------------------------------------------------------------|
+| `box`     | browser, android, ios | Position each fragment with x and y coordinates.                                            |
+| `boxFlow` | browser               | Stack fragments in a row next to each other until space is available, then start a new row. |
+| `row`     | browser, android, ios | Stack fragments next to each other.                                                         |                                                
+| `column`  | browser, android, ios | Stack fragments below each other.                                                           |
+| `grid`    | browser, android, ios |                                                                                             |
 
 ## Box
 
-The box layout position the fragments directly with x and y coordinates.
+The box layout position the fragments:
+
+- directly with x and y coordinates **or**
+- by aligning them with standard alignment instructions
 
 ```kotlin
 box {
     text("a", Frame(0,0,100,100))
     text("b", Frame(0,0,100,120))
+    text("c", AlignSelf.center)
+}
+```
+
+## Flow Box
+
+The box flow layout positions fragments in a row next to each other until there is available space.
+When the is no more space, opens a new row below.
+
+```kotlin
+flowBox {
+    text("a")
+    text("b")
+}
+```
+
+You can limit the number of fragments in a row:
+
+```kotlin
+flowBox {
+    flowItemLimit { 3 }
+    text("a")
+    text("b")
+    text("c")
+    // this item will start in a new row
+    // even if there would be enough space
+    text("d") 
 }
 ```
 

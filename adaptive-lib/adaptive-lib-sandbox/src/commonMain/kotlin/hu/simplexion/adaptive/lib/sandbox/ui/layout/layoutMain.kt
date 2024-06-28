@@ -16,5 +16,6 @@ fun layoutMain() {
         gridTest()
         rowTest()
         colTest()
+        flowBoxTest()
     }
 }
