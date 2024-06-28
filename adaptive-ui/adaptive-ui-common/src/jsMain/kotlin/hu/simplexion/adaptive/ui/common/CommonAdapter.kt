@@ -81,15 +81,18 @@ class CommonAdapter(
         val width = data.finalWidth
 
         val margin = data.layout?.margin ?: RawSurrounding.ZERO
+        val parentLayout = data.layoutFragment?.renderData?.layout
+        val parentMargin = parentLayout?.margin ?: RawSurrounding.ZERO
+        val parentBorder = parentLayout?.border ?: RawSurrounding.ZERO
 
         val style = fragment.receiver.style
 
         style.position = "absolute"
         style.boxSizing = "border-box"
-        style.top = top.pxs
-        style.left = left.pxs
+        style.top = (top - parentBorder.top - parentMargin.top).pxs
+        style.left = (left - parentBorder.start - parentMargin.start).pxs
         style.width = (width - margin.start - margin.end).pxs
-        style.height = (height - margin.start - margin.end).pxs
+        style.height = (height - margin.top - margin.bottom).pxs
 
         data.container {
             if (it.horizontalScroll) style.overflowX = "auto"

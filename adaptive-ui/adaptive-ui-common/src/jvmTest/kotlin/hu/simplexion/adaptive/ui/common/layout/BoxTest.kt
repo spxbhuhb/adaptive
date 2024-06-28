@@ -105,7 +105,7 @@ class BoxTest {
         uiTest(0, 0, 400, 400) {
 
             box(C1, *instructions) {
-                fillSpace
+                maxSize
 
                 space(*f1) .. F1 .. width { 120.dp } .. height { 20.dp }
                 space(*f2) .. F2 .. width { 160.dp } .. height { 20.dp }

@@ -77,6 +77,8 @@ abstract class AbstractContainer<RT, CRT : RT>(
 
         fragment.alsoIfInstance<AbstractCommonFragment<RT>> { itemFragment ->
 
+            itemFragment.renderData.layoutFragment = this
+
             when (direct) {
                 true -> {
                     layoutItems += itemFragment
@@ -108,6 +110,8 @@ abstract class AbstractContainer<RT, CRT : RT>(
         if (uiAdapter.actualBatch) return
 
         fragment.alsoIfInstance<AbstractCommonFragment<RT>> { itemFragment ->
+
+            itemFragment.renderData.layoutFragment = null
 
             when (direct) {
                 true -> {

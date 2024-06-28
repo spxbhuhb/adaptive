@@ -1,27 +1,30 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package layout
+
+package hu.simplexion.adaptive.lib.sandbox.layout
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.instruction.name
+import hu.simplexion.adaptive.foundation.rangeTo
 import hu.simplexion.adaptive.ui.common.fragment.column
+import hu.simplexion.adaptive.ui.common.fragment.row
 import hu.simplexion.adaptive.ui.common.fragment.text
 import hu.simplexion.adaptive.ui.common.instruction.*
 
 @Adaptive
-fun colTest() {
+fun rowTest() {
     column(name("outer-column"), padding(10.dp)) {
         gap(10.dp)
 
-        text("Column Tests")
-        columnBasic()
+        text("Row Tests")
+        rowBasic()
 
         for (v in Alignment.entries) {
             column {
                 gap(10.dp)
                 for (h in Alignment.entries) {
-                    colAlign(AlignItems(v, h))
+                    rowAlign(AlignItems(v, h))
                 }
             }
         }
@@ -29,9 +32,9 @@ fun colTest() {
 }
 
 @Adaptive
-private fun columnBasic() {
+private fun rowBasic() {
     layoutExample("Basic") {
-        column {
+        row {
             gap(10.dp)
             text("A A", greenishBackground)
             text("B B", blueishBackground)
@@ -40,10 +43,10 @@ private fun columnBasic() {
 }
 
 @Adaptive
-private fun colAlign(alignItems: AlignItems) {
+private fun rowAlign(alignItems: AlignItems) {
     layoutExample("v ${alignItems.vertical} h ${alignItems.horizontal}") {
-        column(alignItems) {
-            gap(10.dp)
+        row(alignItems) {
+            gap(10.dp) .. maxSize
             text("A A", greenishBackground)
             text("B B", blueishBackground)
         }

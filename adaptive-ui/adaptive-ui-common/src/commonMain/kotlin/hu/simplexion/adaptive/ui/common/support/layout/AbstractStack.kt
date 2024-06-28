@@ -53,10 +53,14 @@ abstract class AbstractStack<RT, CRT : RT>(
         val data = renderData
         val container = renderData.container
 
+        val instructedGap = instructedGap()
+        val itemCount = layoutItems.size
+
         // ----  calculate layout of all items  ---------------------------------------
 
-        var itemsWidth = 0.0
-        var itemsHeight = 0.0
+        val totalGap = instructedGap() * (itemCount - 1)
+        var itemsWidth = totalGap
+        var itemsHeight = totalGap
 
         val proposedItemWidth = proposedWidth - data.surroundingHorizontal
         val proposedItemHeight = proposedHeight - data.surroundingVertical
@@ -76,8 +80,6 @@ abstract class AbstractStack<RT, CRT : RT>(
 
         // ---- calculate starting offset and gap based on instructions  --------------
 
-        val itemCount = layoutItems.size
-        val instructedGap = instructedGap()
         val freeSpace = freeSpace(innerWidth, itemsWidth, innerHeight, itemsHeight)
 
         val gap: Double
@@ -101,12 +103,12 @@ abstract class AbstractStack<RT, CRT : RT>(
 
                 Alignment.Center -> {
                     gap = instructedGap
-                    offset += (freeSpace - (instructedGap * (itemCount - 1))) / 2.0
+                    offset += freeSpace / 2.0
                 }
 
                 Alignment.End -> {
                     gap = instructedGap
-                    offset += freeSpace - (instructedGap * (itemCount - 1))
+                    offset += freeSpace
                 }
 
                 null -> {

@@ -19,7 +19,7 @@ fun height(calc: () -> DPixel) = Height(calc())
 fun width(width: DPixel) = Width(width)
 fun width(calc: () -> DPixel) = Width(calc())
 
-object fillSpace : AdaptiveInstruction {
+object maxSize : AdaptiveInstruction {
     override fun apply(subject: Any) {
         layout(subject) {
             it.fillHorizontal = true
@@ -28,7 +28,7 @@ object fillSpace : AdaptiveInstruction {
     }
 }
 
-object fillHorizontal : AdaptiveInstruction {
+object maxWidth : AdaptiveInstruction {
     override fun apply(subject: Any) {
         layout(subject) {
             it.fillHorizontal = true
@@ -36,7 +36,7 @@ object fillHorizontal : AdaptiveInstruction {
     }
 }
 
-object fillVertical : AdaptiveInstruction {
+object maxHeight : AdaptiveInstruction {
     override fun apply(subject: Any) {
         layout(subject) {
             it.fillVertical = true

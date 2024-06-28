@@ -23,8 +23,8 @@ abstract class AbstractBox<RT, CRT : RT>(
 
         // ----  calculate height and width proposed to items  ------------------------
 
-        val proposedItemWidth = data.layout?.instructedWidth ?: proposedWidth
-        val proposedItemHeight = data.layout?.instructedHeight ?: proposedHeight
+        val proposedItemWidth = (data.layout?.instructedWidth ?: proposedWidth) - data.surroundingHorizontal
+        val proposedItemHeight = (data.layout?.instructedHeight ?: proposedHeight) - data.surroundingVertical
 
         // ----  calculate layout of all items  ---------------------------------------
 

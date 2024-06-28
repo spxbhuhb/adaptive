@@ -88,21 +88,21 @@ class GridTest {
     fun sidebar() {
         uiTest(0, 0, 500, 400) {
             grid {
-                fillSpace
+                maxSize
                 colTemplate(200.dp, 1.fr) .. name("grid-1")
 
                 column {
-                    fillSpace .. padding(10.dp) .. gap(4.dp) .. name("column-1")
+                    maxSize .. padding(10.dp) .. gap(4.dp) .. name("column-1")
 
-                    text("Hello") .. fillHorizontal .. name("hello")
-                    text("World") .. fillHorizontal .. name("world")
+                    text("Hello") .. maxWidth .. name("hello")
+                    text("World") .. maxWidth .. name("world")
                 }
 
                 column {
-                    fillSpace .. verticalScroll .. padding { 10.dp } .. name("column-2")
+                    maxSize .. verticalScroll .. padding { 10.dp } .. name("column-2")
 
                     slot {
-                        text("Click") .. fillHorizontal .. name("slot-text")
+                        text("Click") .. maxWidth .. name("slot-text")
                     }
                 }
             }

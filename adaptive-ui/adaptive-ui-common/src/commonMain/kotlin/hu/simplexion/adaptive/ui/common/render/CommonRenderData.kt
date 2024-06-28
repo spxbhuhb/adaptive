@@ -7,6 +7,7 @@ package hu.simplexion.adaptive.ui.common.render
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.testing.Traceable
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
 import hu.simplexion.adaptive.ui.common.support.layout.RawSurrounding
 
 /**
@@ -28,6 +29,8 @@ class CommonRenderData(
     }
 
     override var tracePatterns : Array<out Regex> = emptyArray()
+
+    var layoutFragment: AbstractContainer<*, *>? = null
 
     var innerWidth: Double? = null
     var innerHeight: Double? = null

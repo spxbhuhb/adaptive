@@ -10,13 +10,13 @@ import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.invoke
 import hu.simplexion.adaptive.foundation.query.first
 import hu.simplexion.adaptive.foundation.rangeTo
+import hu.simplexion.adaptive.lib.sandbox.layout.layoutMain
 import hu.simplexion.adaptive.lib.sandbox.misc.chessBoard
 import hu.simplexion.adaptive.ui.common.browser
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.platform.withJsResources
 import hu.simplexion.adaptive.ui.common.support.layout.AbstractGrid
-import layout.layoutMain
 import markdown.markdown
 import mobile.goodMorning
 import mobile.welcome
@@ -30,10 +30,10 @@ fun main() {
     //(trace = Trace(".*"))
     browser {
         grid {
-            fillSpace .. colTemplate(200.dp, 1.fr)
+            maxSize .. colTemplate(200.dp, 1.fr)
 
             column {
-                fillSpace .. padding(10.dp) .. gap(4.dp)
+                maxSize .. padding(10.dp) .. gap(4.dp)
 
                 navButton("Good Morning") .. navClick { goodMorning() }
                 navButton("Welcome") .. navClick { welcome() }
@@ -46,7 +46,7 @@ fun main() {
             }
 
             column {
-                fillSpace .. verticalScroll .. padding(10.dp)
+                maxSize .. verticalScroll .. padding(10.dp)
 
                 slot {
                     route { goodMorning() }
@@ -69,7 +69,7 @@ fun main() {
 }
 
 val button = arrayOf(
-    fillHorizontal,
+    maxWidth,
     leftToRightGradient(color(0xA0DE6Fu), color(0x53C282u)),
     cornerRadius(8.dp),
     AlignItems.startCenter,
