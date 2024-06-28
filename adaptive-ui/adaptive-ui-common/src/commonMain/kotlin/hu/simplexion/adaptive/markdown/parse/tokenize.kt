@@ -255,8 +255,16 @@ private fun code(source: String, start: Int, end: Int, tokens: MutableList<Markd
         return end
     }
 
-    val codeSpan = matchResult.groupValues[2]
-    tokens += MarkdownToken(MarkdownTokenType.CodeSpan, codeSpan.replace("\\`", "`").trim('`', ' '))
+    val ticks = matchResult.groupValues[1]
+    val rawText = matchResult.groupValues[2].replace("\\`", "`").replace("\\\\", "\\")
+
+    val text = if (ticks.length == 2) {
+        rawText.trim()
+    } else {
+        rawText
+    }
+
+    tokens += MarkdownToken(MarkdownTokenType.CodeSpan, text)
 
     return matchResult.range.last + 1
 }

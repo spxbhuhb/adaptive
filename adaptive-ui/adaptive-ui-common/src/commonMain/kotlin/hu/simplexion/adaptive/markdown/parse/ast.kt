@@ -113,6 +113,7 @@ private fun CompileContext.text(start: Int): Int {
     val last = entries.lastOrNull()
 
     val paragraph = if (last != null && last is MarkdownParagraphAstEntry && ! last.closed) {
+        last.children += MarkdownInlineAstEntry(" ", bold = false, italic = false) // TODO think about in-paragraph newline in markdown
         last
     } else {
         MarkdownParagraphAstEntry(mutableListOf(), false).also { entries += it }

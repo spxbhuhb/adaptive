@@ -43,7 +43,7 @@ open class CommonStructural<RT, CRT : RT>(
             }
         }
 
-        parent!!.addActual(fragment, false)
+        parent !!.addActual(fragment, if (direct == null) null else false)
     }
 
     override fun removeActual(fragment: AdaptiveFragment, direct: Boolean?) {
@@ -71,7 +71,7 @@ open class CommonStructural<RT, CRT : RT>(
             }
         }
 
-        parent!!.removeActual(fragment, false)
+        parent !!.removeActual(fragment, if (direct == null) null else false)
     }
 
     override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {

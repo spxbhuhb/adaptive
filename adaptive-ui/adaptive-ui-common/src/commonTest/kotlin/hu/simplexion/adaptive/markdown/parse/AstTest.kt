@@ -205,6 +205,19 @@ class AstTest {
     }
 
     @Test
+    fun crazyCodeSpan() {
+        val source = "`` ` ``"
+        val expected = listOf(
+            MarkdownParagraphAstEntry(
+                mutableListOf(MarkdownInlineAstEntry("`", bold = false, italic = false, code = true)),
+                false
+            )
+        )
+        val actual = ast(tokenize(source))
+        assertEquals(expected, actual)
+    }
+
+    @Test
     fun multipleInlineFormats() {
         val source = "This **text** is *partially* `formatted`"
         val expected = listOf(

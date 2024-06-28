@@ -18,11 +18,12 @@ val textColor = color(0x333333u)
 val headerSizes = arrayOf(28.sp, 24.sp, 20.sp, 16.sp, 14.sp)
 
 val codeStyles = arrayOf(
-    paddingLeft(4.dp),
-    paddingRight(4.dp),
-    backgroundColor(color(0xe0e0e0u)),
-    cornerRadius(2.dp),
-    fontName("Courier New")
+    paddingLeft(6.dp),
+    paddingRight(6.dp),
+    backgroundColor(color(0xe8e8e8u)),
+    cornerRadius(6.dp),
+    fontName("ui-monospace"),
+    textColor
 )
 
 val textStyles = arrayOf(
@@ -67,6 +68,7 @@ fun header(entry: MarkdownHeaderAstEntry) {
 @Adaptive
 fun paragraph(entry: MarkdownParagraphAstEntry) {
     row {
+        AlignItems.bottom
         marginBottom(20.dp)
         for (child in entry.children) {
             inline(child)

@@ -194,6 +194,7 @@ class RowTest {
         uiTest(0, 0, 400, 400) {
 
             row(C1, *instructions) {
+                maxSize
                 space() .. F1 .. width { 120.dp } .. height { 20.dp }
                 space() .. F2 .. width { 160.dp } .. height { 20.dp }
             }

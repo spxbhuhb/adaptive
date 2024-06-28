@@ -49,7 +49,18 @@ open class CommonText(
         return false
     }
 
+    override fun placeLayout(top: Double, left: Double) {
+        super.placeLayout(top, left)
+        receiver.style.whiteSpace = "pre"
+    }
+
     fun measureText(content: String) {
+        if (content.isEmpty()) {
+            renderData.innerWidth = 0.0
+            renderData.innerHeight = 0.0
+            return
+        }
+
         val text = renderData.text
         measureContext.font = text?.toCssString(uiAdapter) ?: ""
 

@@ -233,6 +233,17 @@ class TokenizeTest {
     }
 
     @Test
+    fun crazyCodeSpan() {
+        val input = "`` ` ``"
+        val expected = listOf(
+            MarkdownToken(MarkdownTokenType.CodeSpan, "`")
+        )
+
+        val actual = tokenize(input)
+        assertEquals(expected, actual)
+    }
+
+    @Test
     fun inlineLink() {
         val input = "[IntelliJ IDEA](https://www.jetbrains.com/idea/)"
         val expected = listOf(

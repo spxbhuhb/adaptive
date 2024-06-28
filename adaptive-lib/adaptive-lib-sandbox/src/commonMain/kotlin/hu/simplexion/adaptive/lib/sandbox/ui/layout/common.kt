@@ -7,6 +7,9 @@ package hu.simplexion.adaptive.lib.sandbox.ui.layout/*
  */
 
 import hu.simplexion.adaptive.foundation.Adaptive
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.fragment
+import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.Trace
 import hu.simplexion.adaptive.foundation.instruction.name
 import hu.simplexion.adaptive.foundation.rangeTo
@@ -21,15 +24,20 @@ val innerBorder = Color(0xFFBF00u)
 
 val blueishBackground = backgroundColor(Color(0xB0C4DEu))
 val greenishBackground = backgroundColor(Color(0xB4E7B4u))
+val orangeBackground = backgroundColor(Color(0xFFBF00u))
+
 val trace = Trace()
 
+// TODO remove = emptyArray() when #29 is fixed
 @Adaptive
-fun layoutExample(title: String, @Adaptive example: () -> Unit) {
-    column {
+fun layoutExample(title: String, vararg instructions: AdaptiveInstruction = emptyArray(), @Adaptive example: () -> Unit): AdaptiveFragment {
+    column(*instructions) {
         text(title)
         box {
             size(208.dp, 158.dp) .. border(outerBorder, 4.dp) .. name("example-container")
             example()
         }
     }
+
+    return fragment()
 }
