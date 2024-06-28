@@ -77,7 +77,7 @@ class AdaptiveGradlePlugin : KotlinCompilerPluginSupportPlugin {
         options += SubpluginOption(key = "plugin-debug", extension.pluginDebug.toString())
 
         val pluginLogDir = extension.pluginLogDir
-            ?: project.layout.buildDirectory.get().asFile.toPath().resolve("adaptive")
+            ?: project.layout.buildDirectory.get().asFile.toPath().resolve("adaptive/debug")
                 .also { Files.createDirectories(it) }
 
         options += SubpluginOption(key = "plugin-log-dir", pluginLogDir.toString())

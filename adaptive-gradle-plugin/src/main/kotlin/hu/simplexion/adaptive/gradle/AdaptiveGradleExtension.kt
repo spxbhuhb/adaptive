@@ -7,7 +7,6 @@ package hu.simplexion.adaptive.gradle
 import hu.simplexion.adaptive.gradle.resources.ResourcesExtension
 import org.gradle.api.Action
 import java.nio.file.Path
-import java.nio.file.Paths
 
 /**
  * Settings for the Adaptive compiler plugin.
@@ -28,7 +27,7 @@ open class AdaptiveGradleExtension {
      *
      * Generates large amount of data, be careful with it.
      *
-     * Default is `<project-dir>\build\adaptive`
+     * Default is `<project-dir>/build/adaptive/debug`
      */
     var pluginLogDir: Path? = null
 

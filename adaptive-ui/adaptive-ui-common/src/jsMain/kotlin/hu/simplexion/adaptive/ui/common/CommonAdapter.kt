@@ -91,8 +91,9 @@ class CommonAdapter(
 
         val style = fragment.receiver.style
 
-        style.position = "absolute"
-        style.boxSizing = "border-box"
+        // these two are in index.html for now
+        // style.boxSizing = "border-box"
+        // style.position = "absolute"
         style.top = (top - parentBorder.top - parentMargin.top).pxs
         style.left = (left - parentBorder.start - parentMargin.start).pxs
         style.width = (width - margin.start - margin.end).pxs

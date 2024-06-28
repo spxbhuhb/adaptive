@@ -16,10 +16,7 @@ Server platforms:
 
 ## Adaptive in action
 
-To see Adaptive in action:
-
-* check out the demo
-* continue to browse, this site is 100% Adaptive
+Coming soon on: [https://adaptive.fun](https://adaptive.fun)
 
 ## Let's write a small application
 

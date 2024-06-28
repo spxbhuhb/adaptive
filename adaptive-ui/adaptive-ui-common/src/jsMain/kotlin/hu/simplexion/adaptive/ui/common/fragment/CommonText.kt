@@ -67,7 +67,10 @@ open class CommonText(
         val metrics = measureContext.measureText(content)
 
         renderData.innerWidth = metrics.width
-        renderData.innerHeight = text?.lineHeight ?: (metrics.fontBoundingBoxAscent + metrics.fontBoundingBoxDescent)
+        renderData.innerHeight =
+            text?.lineHeight
+                ?: (text?.fontSize ?: uiAdapter.defaultTextRenderData.fontSize)?.value?.let { it * 1.5 }
+                    ?: (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)
     }
 
     companion object {

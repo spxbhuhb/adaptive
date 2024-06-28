@@ -21,7 +21,6 @@ application {
 
 adaptive {
     pluginDebug = false
-//    pluginLogDir = projectDir.toPath()
     resources {
         publicResClass = true
         packageOfResClass = "hu.simplexion.adaptive.site"

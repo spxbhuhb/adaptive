@@ -20,7 +20,7 @@ import hu.simplexion.adaptive.wireformat.withJson
 
 val black = Color(0x000000u)
 val white = Color(0xffffffu)
-val gray = Color(0xa0a0a0u)
+val gray = Color(0x606060u)
 
 val whiteBackground = BackgroundColor(black)
 val blackBackground = BackgroundColor(black)
@@ -98,8 +98,9 @@ fun cards() {
             flowItemLimit { 4 }
             gap(24.dp)
 
-            card(Res.drawable.what_is_adaptive, Color(0x87CEFAu)) {
+            card(Res.drawable.what_is_adaptive, Color(0xFFF7E1u)) {
                 column {
+                    externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/what-is-adaptive.md")
                     largeTitle("What is Adaptive")
                     mediumTitle("main concept")
                     mediumTitle("features")
@@ -107,17 +108,19 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.preview_status, Color(0xF08080u)) {
+            card(Res.drawable.preview_status, Color(0xFF6347u)) {
                 column {
+                    externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/status.md")
                     largeTitle("Status")
-                    mediumTitle("initial development")
-                    mediumTitle("preview ready")
+                    mediumTitle("preview")
                     mediumTitle("web, Android, iOS - PoC works")
+                    mediumTitle("roadmap")
                 }
             }
 
-            card(Res.drawable.getting_started, Color(0xFFF7E1u)) {
+            card(Res.drawable.getting_started, Color(0x87CEFAu)) {
                 column {
+                    externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/getting-started.md")
                     largeTitle("Getting Started")
                     mediumTitle("demo")
                     mediumTitle("tutorial")
@@ -125,17 +128,19 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.tools, Color(0xE6E6FAu)) {
+            card(Res.drawable.tools, Color(0xFFB07Cu)) {
                 column {
+                    externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/tools.md")
                     largeTitle("Tools")
                     inactiveFeature("project wizard", "2024.08")
                     inactiveFeature("UI designer", "2024.10")
-                    inactiveFeature("AI integration", "christmas")
+                    inactiveFeature("AI integration", "Christmas")
                 }
             }
 
-            card(Res.drawable.ui, Color(0xFFDAB9u)) {
+            card(Res.drawable.ui, Color(0xFFBF00u)) {
                 column {
+                    externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/ui/README.md")
                     largeTitle("User Interface")
                     mediumTitle("multiplatform")
                     mediumTitle("reactive")
@@ -143,8 +148,9 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.server, Color(0xB4E7B4u)) {
+            card(Res.drawable.server, Color(0x3CB371u)) {
                 column {
+                    externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/server/README.md")
                     largeTitle("Server & Cloud")
                     mediumTitle("multiplatform")
                     mediumTitle("reactive")
@@ -152,8 +158,9 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.impressum, Color(0xFFBF00u)) {
+            card(Res.drawable.impressum, Color(0xAEE1E1u)) {
                 column {
+                    externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/impressum.md")
                     largeTitle("Impressum")
                     mediumTitle("motivation")
                     mediumTitle("credits")
@@ -161,8 +168,9 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.deep_waters, Color(0xB0C4DEu)) {
+            card(Res.drawable.deep_waters, Color(0x6495EDu)) {
                 column {
+                    externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/internals")
                     largeTitle("Deep Waters")
                     mediumTitle("internals")
                     mediumTitle("compiler plugin")
