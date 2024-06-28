@@ -4,8 +4,10 @@
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.instruction.*
+import hu.simplexion.adaptive.foundation.rangeTo
 import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.site.*
+import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 import hu.simplexion.adaptive.ui.common.browser
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
@@ -15,7 +17,7 @@ import hu.simplexion.adaptive.wireformat.withJson
 
 val black = Color(0x000000u)
 val white = Color(0xffffffu)
-val gray = Color(0xc0c0c0u)
+val gray = Color(0xa0a0a0u)
 
 val whiteBackground = BackgroundColor(black)
 val blackBackground = BackgroundColor(black)
@@ -32,6 +34,11 @@ fun main() {
     withJsResources()
 
     browser {
+        with(it as AbstractCommonAdapter<*, *>) {
+            defaultTextRenderData.fontName = "Noto Sans"
+            defaultTextRenderData.fontSize = 16.sp
+        }
+
         val media = mediaMetrics()
         val background = if (media.isLight) whiteBackground else blackBackground
 
@@ -41,8 +48,8 @@ fun main() {
 
             header()
             row { }
-            column(name("hello")) {
-                verticalScroll
+            column {
+                maxSize .. verticalScroll
 
                 slot(mainContent) { cards() }
             }
@@ -65,8 +72,7 @@ private val grid1fr = arrayOf(
 @Adaptive
 fun header() {
     row {
-        blackBackground
-        AlignItems.center
+        maxSize .. AlignItems.center .. blackBackground
 
         text("Adaptive", white)
     }
@@ -82,10 +88,10 @@ fun cards() {
     val media = mediaMetrics()
 
     grid {
+        maxSize
         colTemplate(1.fr, 360.dp, 360.dp, 1.fr)
-        rowTemplate(replicate(4, 424.dp))
+        rowTemplate(424.dp repeat 4)
         gap(24.dp)
-        width { media.viewWidth.dp }
 
         card(Res.drawable.what_is_adaptive, Color(0x87CEFAu), 2.gridCol) {
             column {
@@ -200,10 +206,10 @@ fun mediumTitle(content: String) {
 @Adaptive
 fun inactiveFeature(name: String, eta: String) {
     row {
+        maxWidth .. spaceBetween
         gap(10.dp)
-        AlignItems.bottom
 
         text(name, titleMedium, gray, TextWrap.NoWrap)
-        text("ETA: $eta", titleSmall, gray, TextWrap.NoWrap)
+        text("ETA: $eta", titleSmall, gray, TextWrap.NoWrap) .. AlignSelf.bottom
     }
 }

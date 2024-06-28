@@ -8,7 +8,6 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
-import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import platform.UIKit.NSTextAlignmentCenter
@@ -42,11 +41,6 @@ class CommonText(
         }
 
         return false
-    }
-
-    override fun layout(proposedFrame: RawFrame?) {
-        calcLayoutFrame(proposedFrame)
-        uiAdapter.applyLayoutToActual(this)
     }
 
 }

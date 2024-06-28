@@ -17,11 +17,11 @@ class StructuralViewGroup(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         // no measureChildren here, that is done by the container view group
-        val layout = owner.layoutFrame
+        val data = owner.renderData
 
         setMeasuredDimension(
-            resolveSize(layout.width.toInt(), widthMeasureSpec),
-            resolveSize(layout.height.toInt(), heightMeasureSpec)
+            resolveSize(data.finalWidth.toInt(), widthMeasureSpec),
+            resolveSize(data.finalHeight.toInt(), heightMeasureSpec)
         )
     }
 

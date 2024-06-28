@@ -22,11 +22,11 @@ open class ContainerViewGroup(
         // TODO check if we do double measure here
         measureChildren(widthMeasureSpec, heightMeasureSpec)
 
-        val layout = owner.layoutFrame
+        val data = owner.renderData
 
         setMeasuredDimension(
-            resolveSize(layout.width.toInt(), widthMeasureSpec),
-            resolveSize(layout.height.toInt(), heightMeasureSpec)
+            resolveSize(data.finalWidth.toInt(), widthMeasureSpec),
+            resolveSize(data.finalHeight.toInt(), heightMeasureSpec)
         )
     }
 

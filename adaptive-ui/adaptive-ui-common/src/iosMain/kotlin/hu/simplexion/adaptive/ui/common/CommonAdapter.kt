@@ -16,7 +16,7 @@ import hu.simplexion.adaptive.ui.common.render.EventRenderData
 import hu.simplexion.adaptive.ui.common.render.LayoutRenderData
 import hu.simplexion.adaptive.ui.common.render.TextRenderData
 import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
-import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
+import hu.simplexion.adaptive.ui.common.support.layout.RawSize
 import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
@@ -44,13 +44,12 @@ open class CommonAdapter(
 
         fragment.ifIsInstanceOrRoot<AbstractContainer<UIView, ContainerView>> {
 
-            val frame = rootContainer.frame.useContents {
-                RawFrame(origin.y, origin.x, size.width, size.height)
+            val size = rootContainer.frame.useContents {
+                RawSize(size.width, size.height)
             }
 
-            it.layoutFrame = frame
-            it.measure()
-            it.layout(frame)
+            it.computeLayout(size.width, size.height)
+            it.placeLayout(0.0, 0.0)
 
             rootContainer.addSubview(it.receiver)
         }
@@ -74,10 +73,10 @@ open class CommonAdapter(
 
     @OptIn(ExperimentalForeignApi::class)
     override fun applyLayoutToActual(fragment: AbstractCommonFragment<UIView>) {
-        val layoutFrame = fragment.layoutFrame
+        val data = fragment.renderData
 
         val view = fragment.receiver
-        val frame = CGRectMake(layoutFrame.left, layoutFrame.top, layoutFrame.width, layoutFrame.height)
+        val frame = CGRectMake(data.finalLeft, data.finalTop, data.finalWidth, data.finalHeight)
 
         view.setFrame(frame)
     }

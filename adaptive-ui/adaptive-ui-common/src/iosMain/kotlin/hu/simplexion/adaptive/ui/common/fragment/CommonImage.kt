@@ -10,7 +10,6 @@ import hu.simplexion.adaptive.resource.defaultResourceReader
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
-import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import hu.simplexion.adaptive.utility.checkIfInstance
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
@@ -56,11 +55,6 @@ class CommonImage(
         }
 
         return false
-    }
-
-    override fun layout(proposedFrame: RawFrame?) {
-        calcLayoutFrame(proposedFrame)
-        uiAdapter.applyLayoutToActual(this)
     }
 
 }
