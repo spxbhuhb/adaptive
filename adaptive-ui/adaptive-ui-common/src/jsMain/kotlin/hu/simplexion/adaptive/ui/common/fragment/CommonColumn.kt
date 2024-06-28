@@ -23,15 +23,15 @@ open class CommonColumn(
     override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
         super.computeLayout(proposedWidth, proposedHeight)
 
-        with(receiver.style) {
-            display = "grid"
-            renderData.container?.gapHeight?.let {
-                if (! it.isNaN()) setProperty("row-gap", "${it}px")
-            }
-            setProperty("grid-auto-flow", "row")
-            setProperty("grid-auto-rows", "min-content")
-            setProperty("grid-template-columns", "1fr")
-        }
+//        with(receiver.style) {
+//            display = "grid"
+//            renderData.container?.gapHeight?.let {
+//                if (! it.isNaN()) setProperty("row-gap", "${it}px")
+//            }
+//            setProperty("grid-auto-flow", "row")
+//            setProperty("grid-auto-rows", "min-content")
+//            setProperty("grid-template-columns", "1fr")
+//        }
 
         //browserAlign()
     }

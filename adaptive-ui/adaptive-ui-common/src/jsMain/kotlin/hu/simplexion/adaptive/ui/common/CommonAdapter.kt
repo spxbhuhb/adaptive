@@ -80,33 +80,16 @@ class CommonAdapter(
         val height = data.finalHeight
         val width = data.finalWidth
 
-        val style = fragment.receiver.style
-        var absolute = false
-
-        style.boxSizing = "border-box"
         val margin = data.layout?.margin ?: RawSurrounding.ZERO
 
-        if (! top.isNaN()) {
-            absolute = true
-            style.top = top.pxs
-        }
+        val style = fragment.receiver.style
 
-        if (! left.isNaN()) {
-            absolute = true
-            style.left = left.pxs
-        }
-
-        style.position = if (absolute) "absolute" else "relative"
-
-        when {
-            width == Double.POSITIVE_INFINITY -> style.width = "100%"
-            ! width.isNaN() -> style.width = (width - margin.start - margin.end).pxs
-        }
-
-        when {
-            height == Double.POSITIVE_INFINITY -> style.height = "100%"
-            ! height.isNaN() -> style.height = (height - margin.start - margin.end).pxs
-        }
+        style.position = "absolute"
+        style.boxSizing = "border-box"
+        style.top = top.pxs
+        style.left = left.pxs
+        style.width = (width - margin.start - margin.end).pxs
+        style.height = (height - margin.start - margin.end).pxs
 
         data.container {
             if (it.horizontalScroll) style.overflowX = "auto"

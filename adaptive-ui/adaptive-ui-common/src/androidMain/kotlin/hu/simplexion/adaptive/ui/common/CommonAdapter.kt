@@ -25,7 +25,6 @@ import hu.simplexion.adaptive.ui.common.platform.StructuralViewGroup
 import hu.simplexion.adaptive.ui.common.render.*
 import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
 import hu.simplexion.adaptive.ui.common.support.layout.RawCornerRadius
-import hu.simplexion.adaptive.ui.common.support.layout.RawFrame
 import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
 
 open class CommonAdapter(
@@ -47,12 +46,8 @@ open class CommonAdapter(
         traceAddActual(fragment)
 
         fragment.ifIsInstanceOrRoot<AbstractContainer<View, ContainerViewGroup>> {
-            val frame = RawFrame(0.0, 0.0, rootContainer.width.toDouble(), rootContainer.height.toDouble())
-
-            it.layoutFrame = frame
-            it.measure()
-            it.layout(frame)
-
+            it.computeLayout(rootContainer.width.toDouble(), rootContainer.height.toDouble())
+            it.placeLayout(0.0, 0.0)
             it.receiver.layoutParams = LinearLayout.LayoutParams(rootContainer.width, rootContainer.height)
             rootContainer.addView(it.receiver)
         }
@@ -75,14 +70,14 @@ open class CommonAdapter(
     }
 
     override fun applyLayoutToActual(fragment: AbstractCommonFragment<View>) {
-        applyLayoutToActual(fragment.layoutFrame, fragment.receiver)
-    }
+        val data = fragment.renderData
 
-    fun applyLayoutToActual(frame: RawFrame, receiver: View) {
-        val top = frame.top
-        val left = frame.left
-        val width = frame.width
-        val height = frame.height
+        val top = data.finalTop
+        val left = data.finalLeft
+        val width = data.finalWidth
+        val height = data.finalHeight
+
+        val receiver = fragment.receiver
 
         receiver.layoutParams = ViewGroup.LayoutParams(width.toInt(), height.toInt())
 

@@ -4,14 +4,18 @@
 
 import graphics.svgExample
 import hu.simplexion.adaptive.foundation.Adaptive
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.fragment
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.invoke
+import hu.simplexion.adaptive.foundation.query.first
 import hu.simplexion.adaptive.foundation.rangeTo
 import hu.simplexion.adaptive.lib.sandbox.misc.chessBoard
 import hu.simplexion.adaptive.ui.common.browser
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.platform.withJsResources
+import hu.simplexion.adaptive.ui.common.support.layout.AbstractGrid
 import layout.layoutMain
 import markdown.markdown
 import mobile.goodMorning
@@ -26,19 +30,19 @@ fun main() {
     //(trace = Trace(".*"))
     browser {
         grid {
-            fillSpace .. colTemplate(200.dp, 1.fr) .. rowTemplate(1.fr)
+            fillSpace .. colTemplate(200.dp, 1.fr)
 
             column {
                 fillSpace .. padding(10.dp) .. gap(4.dp)
 
-                navButton("Good Morning", navClick { goodMorning() })
-                navButton("Welcome", navClick { welcome() })
-                navButton("SVG", navClick { svgExample() })
-                navButton("Layouts", navClick { layoutMain() })
-                navButton("Chessboard", navClick { chessBoard() })
-                navButton("Markdown", navClick { markdown() })
-                navButton("Slot One", navClick { slotOne() })
-                navButton("Slot Two", navClick { slotTwo() })
+                navButton("Good Morning") .. navClick { goodMorning() }
+                navButton("Welcome") .. navClick { welcome() }
+                navButton("SVG") .. navClick { svgExample() }
+                navButton("Layouts") .. navClick { layoutMain() }
+                navButton("Chessboard") .. navClick { chessBoard() }
+                navButton("Markdown") .. navClick { markdown() }
+                navButton("Slot One") .. navClick { slotOne() }
+                navButton("Slot Two") .. navClick { slotTwo() }
             }
 
             column {
@@ -59,9 +63,9 @@ fun main() {
             }
         }
     }
-//        .also {
-//            println(it.first<AbstractBox<*, *>>().dumpLayout(""))
-//        }
+        .also {
+            println(it.first<AbstractGrid<*, *>>().dumpLayout(""))
+        }
 }
 
 val button = arrayOf(
@@ -74,8 +78,9 @@ val button = arrayOf(
 )
 
 @Adaptive
-fun navButton(label: String, vararg instructions: AdaptiveInstruction) {
+fun navButton(label: String, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
     row(*button, onClick { instructions<NavClick>() }, *instructions) {
-        text(label, color(0xffffffu), fontSize(15.sp), noSelect)
+        text(label, color(0xffffffu), fontSize(15.sp), fontName("Noto Sans"), noSelect, TextWrap.NoWrap)
     }
+    return fragment()
 }

@@ -58,6 +58,28 @@ fun someFun() {
 }
 ```
 
+You might want to use outer instructions on your own fragments. To do so, you have to:
+
+- add the instructions parameter to the fragment
+- add a return type
+- add a return statement
+
+> [!IMPORTANT]
+>
+> Adding instructions to your fragments **DOES NOT** apply the UI effect on the fragment
+> itself. You have to pass them to an actual UI fragment to have coloring, background, etc.
+>
+
+```kotlin
+@Adaptive
+fun navButton(label: String, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
+    row(*button, *instructions) {
+        text(label, color(0xffffffu), fontSize(15.sp), noSelect)
+    }
+    return fragment()
+}
+```
+
 ## Instructions used more than once
 
 You can store instructions if you use them at different places:

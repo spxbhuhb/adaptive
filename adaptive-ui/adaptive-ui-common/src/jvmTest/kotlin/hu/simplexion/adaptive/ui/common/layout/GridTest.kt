@@ -86,9 +86,10 @@ class GridTest {
 
     @Test
     fun sidebar() {
-        uiTest(0, 0, 400, 400) {
+        uiTest(0, 0, 500, 400) {
             grid {
-                colTemplate(200.dp, 1.fr) .. rowTemplate(1.fr) .. name("grid-1")
+                fillSpace
+                colTemplate(200.dp, 1.fr) .. name("grid-1")
 
                 column {
                     fillSpace .. padding(10.dp) .. gap(4.dp) .. name("column-1")
@@ -107,14 +108,14 @@ class GridTest {
             }
         }.apply {
 
-            assertFinal(name("grid-1"), 0, 0, 400, 400)
+            assertFinal(name("grid-1"), 0, 0, 500, 400)
 
             assertFinal(name("column-1"), 0, 0, 200, 400)
-            assertFinal(name("hello"), 10, 10, 100, 20)
-            assertFinal(name("world"), 34, 10, 100, 20)
+            assertFinal(name("hello"), 10, 10, 180, 20)
+            assertFinal(name("world"), 34, 10, 180, 20)
 
-            assertFinal(name("column-2"), 0, 200, 200, 400)
-            assertFinal(name("slot-text"), 10, 10, 100, 20)
+            assertFinal(name("column-2"), 0, 200, 300, 400)
+            assertFinal(name("slot-text"), 10, 10, 280, 20)
 
         }
     }

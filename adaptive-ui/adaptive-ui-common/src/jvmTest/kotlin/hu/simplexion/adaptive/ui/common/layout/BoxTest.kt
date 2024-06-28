@@ -82,6 +82,18 @@ class BoxTest {
         }
     }
 
+    @Test
+    fun `box border`() {
+        cff(
+            border(color(0u)),
+            f2 = alignSelf.bottomEnd.asArray(),
+        ) {
+            assertFinal(C1, 0, 0, 400, 400)
+            assertFinal(F1, 1, 1, 120, 20)
+            assertFinal(F2, 400 - 20 - 1, 400 - 160 - 1, 160, 20)
+        }
+    }
+
     fun AdaptiveInstruction.asArray() = arrayOf(this)
 
     fun cff(

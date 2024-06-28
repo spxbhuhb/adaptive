@@ -58,8 +58,11 @@ abstract class AbstractStack<RT, CRT : RT>(
         var itemsWidth = 0.0
         var itemsHeight = 0.0
 
+        val proposedItemWidth = proposedWidth - data.surroundingHorizontal
+        val proposedItemHeight = proposedHeight - data.surroundingVertical
+
         for (item in layoutItems) {
-            item.computeLayout(unbound, proposedHeight)
+            item.computeLayout(proposedItemWidth, proposedItemHeight)
             itemsWidth = itemsWidthCalc(itemsWidth, item)
             itemsHeight = itemsHeightCalc(itemsHeight, item)
         }

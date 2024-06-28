@@ -70,8 +70,27 @@ abstract class AbstractCommonFragment<RT>(
         val data = renderData
         val layout = data.layout
 
-        data.finalWidth = select(layout?.instructedWidth, data.innerWidth, proposedWidth, data.surroundingHorizontal)
-        data.finalHeight = select(layout?.instructedHeight, data.innerHeight, proposedHeight, data.surroundingVertical)
+        val instructedWidth = layout?.instructedWidth
+        val innerWidth = data.innerWidth
+
+        data.finalWidth = when {
+            instructedWidth != null -> instructedWidth
+            layout?.fillHorizontal == true -> proposedWidth
+            innerWidth != null -> innerWidth + data.surroundingHorizontal
+            proposedWidth.isFinite() -> proposedWidth
+            else -> data.surroundingHorizontal
+        }
+
+        val instructedHeight = layout?.instructedHeight
+        val innerHeight = data.innerHeight
+
+        data.finalHeight = when {
+            instructedHeight != null -> instructedHeight
+            layout?.fillVertical == true -> proposedHeight
+            innerHeight != null -> innerHeight + data.surroundingVertical
+            proposedHeight.isFinite() -> proposedHeight
+            else -> data.surroundingVertical
+        }
     }
 
     open fun placeLayout(top: Double, left: Double) {
@@ -85,13 +104,6 @@ abstract class AbstractCommonFragment<RT>(
         uiAdapter.applyLayoutToActual(this)
     }
 
-    fun select(instructed: Double?, inner: Double?, proposed: Double, surrounding: Double) =
-        when {
-            instructed != null -> instructed
-            inner != null -> inner + surrounding
-            proposed.isFinite() -> proposed
-            else -> surrounding
-        }
 
     val DPixel.px
         get() = uiAdapter.toPx(this)
