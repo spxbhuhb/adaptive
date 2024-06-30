@@ -9,15 +9,18 @@ import hu.simplexion.adaptive.foundation.producer.poll
 import hu.simplexion.adaptive.foundation.rangeTo
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import sandbox.lib.*
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.milliseconds
 
 @Adaptive
 fun goodMorning() {
 
     var counter = 0
-    val time = poll(1.seconds) { now() } ?: now()
+    val millis = poll(20.milliseconds) { Clock.System.now() } ?: Clock.System.now()
+    val time = poll(1.milliseconds) { now() } ?: now()
     val timeText = "${time.hour.twoDigits}:${time.minute.twoDigits}:${time.second.twoDigits}"
 
     image(Res.drawable.background)
@@ -29,7 +32,10 @@ fun goodMorning() {
         logo()
         title()
         time(timeText)
-        progress(time)
+        column {
+            progress(time)
+            milliProgress(millis)
+        }
         messages(time, counter)
 
         grid {
@@ -93,6 +99,20 @@ private fun progress(time: LocalDateTime) {
 
         for (i in 0 .. time.second) {
             text(if (i % 10 == 0) "|" else ".", white)
+        }
+    }
+}
+
+@Adaptive
+private fun milliProgress(instant: Instant) {
+    row {
+        AlignItems.center
+        maxSize
+
+        for (i in 0 .. (instant.nanosecondsOfSecond / (20 * 1_000_000))) {
+            box(greenGradient) {
+                text(if (i % 10 == 0) "|" else ".", white)
+            }
         }
     }
 }
