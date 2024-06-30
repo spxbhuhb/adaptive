@@ -1,5 +1,32 @@
 # What is Adaptive
 
+## TL;DR
+
+**Do check [Motivation](./impressum.md#motivation) and [Status](./status.md) before you blow up.**
+
+```kotlin
+object Adaptive {
+    
+    override val dependencyHell
+        get() = throw UnsupportedOperationException()
+
+    val svelte = Adaptive.ui
+
+    override val compose = Adaptive.ui
+    override val react = Adaptive.ui
+    
+    override val serialization = Adaptive.wireformat
+    
+    override val rpc = Adaptive.services
+    override val rest = Adaptive.services
+
+    override val resources = Adaptive.resources
+  
+}
+```
+
+## A bit longer
+
 Adaptive is a Kotlin Multiplatform library for full-stack application development.
 
 Client platforms:

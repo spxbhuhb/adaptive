@@ -136,4 +136,11 @@ abstract class AbstractContainer<RT, CRT : RT>(
         }
     }
 
+    fun placeStructural() {
+        for (item in structuralItems) {
+            item.computeLayout(renderData.finalWidth, renderData.finalHeight)
+            item.placeLayout(0.0, 0.0)
+        }
+    }
+
 }

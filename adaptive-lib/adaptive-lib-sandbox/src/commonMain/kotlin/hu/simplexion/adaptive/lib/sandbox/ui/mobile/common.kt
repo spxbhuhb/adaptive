@@ -18,7 +18,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 
 @Adaptive
-fun mobileExample(title: String, @Adaptive body: () -> Unit) {
+fun mobileExample(@Adaptive body: () -> Unit) {
     val borderWidth = 1 + 1
     val width = 375 + borderWidth // 375 // pixel: 393
     val height = 812 + borderWidth // 812 // pixel: 808 - 24 - 24 = 760
@@ -26,8 +26,6 @@ fun mobileExample(title: String, @Adaptive body: () -> Unit) {
     column {
         AlignItems.start
         gap(10.dp)
-
-        text(title)
 
         box {
             size(width.dp, height.dp)

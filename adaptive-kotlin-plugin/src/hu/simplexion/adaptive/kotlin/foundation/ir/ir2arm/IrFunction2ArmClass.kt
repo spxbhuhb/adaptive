@@ -3,6 +3,7 @@
  */
 package hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm
 
+import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import hu.simplexion.adaptive.kotlin.foundation.ADAPTIVE_STATE_VARIABLE_LIMIT
 import hu.simplexion.adaptive.kotlin.foundation.FqNames
 import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
@@ -12,7 +13,6 @@ import hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm.instruction.OuterInstr
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.*
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrStatement
-import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
@@ -42,7 +42,7 @@ class IrFunction2ArmClass(
     override val pluginContext: FoundationPluginContext,
     val irFunction: IrFunction,
     val isRoot: Boolean
-) : AdaptiveAnnotationBasedExtension {
+) : AdaptiveAnnotationBasedExtension, AbstractIrBuilder {
 
     lateinit var armClass: ArmClass
 
@@ -573,15 +573,4 @@ class IrFunction2ArmClass(
         return null
     }
 
-    // ---------------------------------------------------------------------------
-    // Utility
-    // ---------------------------------------------------------------------------
-
-    fun irNull() = IrConstImpl(
-        UNDEFINED_OFFSET,
-        UNDEFINED_OFFSET,
-        pluginContext.irBuiltIns.anyNType,
-        IrConstKind.Null,
-        null
-    )
 }

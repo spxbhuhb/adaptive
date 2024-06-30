@@ -79,6 +79,8 @@ abstract class AbstractGrid<RT, CRT : RT>(
                 colOffsets[col] + data.surroundingStart
             )
         }
+
+        placeStructural()
     }
 
     fun proposeItemSize(offsets: DoubleArray, gap: Double, start: Int, span: Int): Double =

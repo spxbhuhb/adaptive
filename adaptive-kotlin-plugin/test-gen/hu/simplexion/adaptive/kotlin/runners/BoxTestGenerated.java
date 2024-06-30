@@ -170,11 +170,11 @@ public class BoxTestGenerated extends AbstractBoxTest {
         runTest("testData/box/foundation/instruction/detach.kt");
       }
 
-        @Test
-        @TestMetadata("detachWithName.kt")
-        public void testDetachWithName() {
-            runTest("testData/box/foundation/instruction/detachWithName.kt");
-        }
+      @Test
+      @TestMetadata("detachWithName.kt")
+      public void testDetachWithName() {
+        runTest("testData/box/foundation/instruction/detachWithName.kt");
+      }
 
       @Test
       @TestMetadata("eventHandler.kt")
@@ -200,11 +200,17 @@ public class BoxTestGenerated extends AbstractBoxTest {
         runTest("testData/box/foundation/instruction/innerVariations.kt");
       }
 
-        @Test
-        @TestMetadata("outerBasic.kt")
-        public void testOuterBasic() {
-            runTest("testData/box/foundation/instruction/outerBasic.kt");
-        }
+      @Test
+      @TestMetadata("outerBasic.kt")
+      public void testOuterBasic() {
+        runTest("testData/box/foundation/instruction/outerBasic.kt");
+      }
+
+      @Test
+      @TestMetadata("passEmpty.kt")
+      public void testPassEmpty() {
+        runTest("testData/box/foundation/instruction/passEmpty.kt");
+      }
 
       @Test
       @TestMetadata("variations.kt")

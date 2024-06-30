@@ -95,6 +95,8 @@ abstract class AbstractFlowBox<RT, CRT : RT>(
             topOffset += row.height + rowGap
             leftOffset = data.surroundingStart
         }
+
+        placeStructural()
     }
 
 }

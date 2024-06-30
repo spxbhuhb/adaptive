@@ -126,9 +126,7 @@ abstract class AbstractStack<RT, CRT : RT>(
             offset += gap + item.place(crossAxisAlignment, crossAxisSize, offset)
         }
 
-        for (item in structuralItems) {
-            item.placeLayout(0.0, 0.0)
-        }
+        placeStructural()
     }
 
 }

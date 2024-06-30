@@ -17,44 +17,43 @@ import sandbox.lib.check
 fun welcome() {
     val signUp = SignUp()
 
-    mobileExample("Welcome") {
+    grid {
+        colTemplate(1.fr)
+        rowTemplate(213.dp, 78.dp, 1.fr, 81.dp)
+        paddingLeft(32.dp)
+        paddingRight(32.dp)
+
+        titleLarge("Welcome")
+
+        subTitle("Sign up to join")
+
         grid {
             colTemplate(1.fr)
-            rowTemplate(213.dp, 78.dp, 1.fr, 81.dp)
-            paddingLeft(32.dp)
-            paddingRight(32.dp)
+            rowTemplate(52.dp repeat 4, 60.dp, 50.dp)
 
-            titleLarge("Welcome")
-
-            subTitle("Sign up to join")
+            input(*input) { signUp.name }
+            input(*input) { signUp.email }
+            input(*input) { signUp.password }
+            input(*input) { signUp.verification }
 
             grid {
-                colTemplate(1.fr)
-                rowTemplate(52.dp repeat 4, 60.dp, 50.dp)
+                paddingTop(15.dp)
+                AlignItems.start
+                colTemplate(40.dp, 1.fr)
 
-                input(*input) { signUp.name }
-                input(*input) { signUp.email }
-                input(*input) { signUp.password }
-                input(*input) { signUp.verification }
-
-                grid {
-                    paddingTop(15.dp)
-                    AlignItems.start
-                    colTemplate(40.dp, 1.fr)
-
-                    checkbox { signUp.agreement }
-                    row {
-                        text("I agree to the ", fontSize(15.sp), FontName("Noto Sans"), mediumGray)
-                        text("Terms of Service", fontSize(15.sp), FontName("Noto Sans"), black, bold, externalLink("/terms.txt"))
-                    }
+                checkbox { signUp.agreement }
+                row {
+                    text("I agree to the ", fontSize(15.sp), FontName("Noto Sans"), mediumGray)
+                    text("Terms of Service", fontSize(15.sp), FontName("Noto Sans"), black, bold, externalLink("/terms.txt"))
                 }
-
-                button("Sign Up", onClick { println("sing up") }) .. maxWidth
             }
 
-            footerLink("Have an account? ", "Sign in", "/")
+            button("Sign Up", onClick { println("sing up") }) .. maxWidth
         }
+
+        footerLink("Have an account? ", "Sign in", "/")
     }
+
 }
 
 @Adaptive

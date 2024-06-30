@@ -34,6 +34,7 @@ open class NamesBase(
     defaultPackage: String
 ) {
     val defaultPackage = FqName(defaultPackage)
+    val kotlin = FqName(KOTLIN)
 
     protected fun String.name() = Name.identifier(this)
 

@@ -3,14 +3,21 @@
  */
 package hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm
 
+import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import hu.simplexion.adaptive.kotlin.foundation.ADAPTIVE_STATE_VARIABLE_LIMIT
 import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.*
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.ir.IrElement
+import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrVariable
-import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
+import org.jetbrains.kotlin.ir.types.typeWith
+import org.jetbrains.kotlin.ir.util.deepCopyWithoutPatchingParents
+import org.jetbrains.kotlin.ir.util.dump
+import org.jetbrains.kotlin.ir.util.dumpKotlinLike
+import org.jetbrains.kotlin.ir.util.isVararg
 
 
 /**
@@ -21,7 +28,7 @@ class StateDefinitionTransform(
     override val pluginContext: FoundationPluginContext,
     private val armClass: ArmClass,
     val skipParameters : Int
-) : AdaptiveAnnotationBasedExtension {
+) : AdaptiveAnnotationBasedExtension, AbstractIrBuilder {
 
     val names = mutableListOf<String>()
 
@@ -63,15 +70,40 @@ class StateDefinitionTransform(
             ).apply {
                 register(valueParameter)
 
-                val defaultValue = valueParameter.defaultValue ?: return@forEach
+                //        EXPRESSION_BODY
+                //          CALL 'public final fun emptyArray <T> (): kotlin.Array<T of kotlin.emptyArray> [inline] declared in kotlin' type=kotlin.Array<hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction> origin=null
+                //            <T>: hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 
-                armClass.stateDefinitionStatements +=
-                    ArmDefaultValueStatement(
-                        indexInState,
-                        // defaultValue.expression.deepCopyWithVariables(), // comment out for 2.0.0-RC2
-                        defaultValue.expression.deepCopyWithoutPatchingParents(), // uncomment for 2.0.0-RC2
-                        defaultValue.expression.dependencies()
-                    )
+
+                if (valueParameter.isVararg && valueParameter.defaultValue == null) {
+                    val call = IrCallImpl(
+                        UNDEFINED_OFFSET,
+                        UNDEFINED_OFFSET,
+                        irBuiltIns.arrayClass.typeWith(valueParameter.varargElementType !!),
+                        pluginContext.emptyArray,
+                        1, 0
+                    ).also {
+                        it.putTypeArgument(0, valueParameter.varargElementType !!)
+                    }
+
+                    armClass.stateDefinitionStatements +=
+                        ArmDefaultValueStatement(
+                            indexInState,
+                            call,
+                            emptyList()
+                        )
+
+                } else {
+                    val defaultValue = valueParameter.defaultValue ?: return@forEach
+
+                    armClass.stateDefinitionStatements +=
+                        ArmDefaultValueStatement(
+                            indexInState,
+                            defaultValue.expression.deepCopyWithoutPatchingParents(),
+                            defaultValue.expression.dependencies()
+                        )
+                }
+
             }
         }
     }

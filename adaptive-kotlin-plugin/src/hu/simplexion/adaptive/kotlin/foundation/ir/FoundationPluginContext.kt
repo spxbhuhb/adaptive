@@ -57,8 +57,6 @@ class FoundationPluginContext(
 
     val adaptiveStateVariableBindingClass = ClassIds.ADAPTIVE_STATE_VARIABLE_BINDING.classSymbol()
 
-    val adaptiveTransformInterfaceClass = ClassIds.ADAPTIVE_TRANSFORM_INTERFACE.classSymbol()
-
     val adapter = Strings.ADAPTER.fragmentPropertyList().single().owner
     val index = Strings.DECLARATION_INDEX.fragmentPropertyList()
     val parent = Strings.PARENT.fragmentPropertyList()
@@ -76,6 +74,7 @@ class FoundationPluginContext(
     val getProducedValue = Strings.GET_PRODUCED_VALUE.fragmentFunction()
 
     val arrayGet = checkNotNull(irContext.irBuiltIns.arrayClass.getSimpleFunction("get"))
+    val emptyArray = irContext.referenceFunctions(CallableIds.EMPTY_ARRAY).single()
 
     val helperFunctions = listOf(
         irContext.referenceFunctions(CallableIds.HELPER_FUNCTION_ADAPTER).single(),

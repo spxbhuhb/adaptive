@@ -20,40 +20,37 @@ fun goodMorning() {
     val time = poll(1.seconds) { now() } ?: now()
     val timeText = "${time.hour.twoDigits}:${time.minute.twoDigits}:${time.second.twoDigits}"
 
-    mobileExample("Good Morning") {
+    image(Res.drawable.background)
 
-        image(Res.drawable.background)
+    grid {
+        rowTemplate(140.dp, 50.dp, 1.fr, 1.fr, 1.fr, 50.dp, 100.dp)
+        colTemplate(1.fr)
+
+        logo()
+        title()
+        time(timeText)
+        progress(time)
+        messages(time, counter)
 
         grid {
-            rowTemplate(140.dp, 50.dp, 1.fr, 1.fr, 1.fr, 50.dp, 100.dp)
-            colTemplate(1.fr)
+            maxSize
+            rowTemplate(50.dp)
+            colTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
 
-            logo()
-            title()
-            time(timeText)
-            progress(time)
-            messages(time, counter)
-
-            grid {
+            row(2.gridCol, greenGradient, cornerRadius, AlignItems.center, onClick { counter ++ }) {
                 maxSize
-                rowTemplate(50.dp)
-                colTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
-
-                row(2.gridCol, greenGradient, cornerRadius, AlignItems.center, onClick { counter ++ }) {
-                    maxSize
-                    text("Snooze") .. white .. textMedium .. noSelect
-                }
-
-                row(4.gridCol, whiteBorder, cornerRadius, AlignItems.center) {
-                    maxSize
-                    text("Sleepiness: $counter") .. white .. textMedium
-                }
+                text("Snooze") .. white .. textMedium .. noSelect
             }
 
-            terms()
+            row(4.gridCol, whiteBorder, cornerRadius, AlignItems.center) {
+                maxSize
+                text("Sleepiness: $counter") .. white .. textMedium
+            }
         }
 
+        terms()
     }
+
 }
 
 @Adaptive

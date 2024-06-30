@@ -57,6 +57,8 @@ abstract class AbstractBox<RT, CRT : RT>(
 
             item.placeLayout(innerTop + data.surroundingTop, innerLeft + data.surroundingStart)
         }
+
+        placeStructural()
     }
 
 }

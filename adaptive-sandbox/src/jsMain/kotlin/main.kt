@@ -14,6 +14,7 @@ import hu.simplexion.adaptive.lib.sandbox.ui.layout.layoutMain
 import hu.simplexion.adaptive.lib.sandbox.ui.markdown.markdown
 import hu.simplexion.adaptive.lib.sandbox.ui.misc.chessBoard
 import hu.simplexion.adaptive.lib.sandbox.ui.mobile.goodMorning
+import hu.simplexion.adaptive.lib.sandbox.ui.mobile.mobileExample
 import hu.simplexion.adaptive.lib.sandbox.ui.mobile.welcome
 import hu.simplexion.adaptive.lib.sandbox.ui.navigation.slotOne
 import hu.simplexion.adaptive.lib.sandbox.ui.navigation.slotTwo
@@ -38,8 +39,8 @@ fun main() {
             column {
                 maxSize .. padding(10.dp) .. gap(4.dp)
 
-                navButton("Good Morning") .. navClick { goodMorning() }
-                navButton("Welcome") .. navClick { welcome() }
+                navButton("Good Morning") .. navClick { mobileExample { goodMorning() } }
+                navButton("Welcome") .. navClick { mobileExample { welcome() } }
                 navButton("SVG") .. navClick { svgExample() }
                 navButton("Layouts") .. navClick { layoutMain() }
                 navButton("Chessboard") .. navClick { chessBoard() }
