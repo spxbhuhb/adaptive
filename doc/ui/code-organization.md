@@ -18,12 +18,14 @@ may be omitted.
 * declarations of platform-independent fragments (`@Adaptive`)
 * expect declarations for manually implemented fragments (`@AdaptiveExpect`)
 * actual declarations for manually implemented fragments (`@AdaptiveActual`)
+* abstract fragment classes to be extended at platform level
 
 `instruction`
 * instruction classes and helper functions
 
 `platform`
-* platform specific UI classes (container views, UI abstraction implementations such as `ActualCanvas`)
+
+* platform specific UI classes (UI abstraction implementations such as `ActualCanvas`)
 * resource support (`with<platform>Resources`)
 * media support (`mediaMetrics`)
 

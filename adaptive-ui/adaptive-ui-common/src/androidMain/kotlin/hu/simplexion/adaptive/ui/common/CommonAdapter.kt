@@ -18,13 +18,13 @@ import android.widget.TextView
 import androidx.core.graphics.toColorInt
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.resource.defaultResourceEnvironment
+import hu.simplexion.adaptive.ui.common.fragment.layout.AbstractContainer
+import hu.simplexion.adaptive.ui.common.fragment.layout.RawCornerRadius
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.platform.ContainerViewGroup
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.StructuralViewGroup
 import hu.simplexion.adaptive.ui.common.render.*
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
-import hu.simplexion.adaptive.ui.common.support.layout.RawCornerRadius
 import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
 
 open class CommonAdapter(

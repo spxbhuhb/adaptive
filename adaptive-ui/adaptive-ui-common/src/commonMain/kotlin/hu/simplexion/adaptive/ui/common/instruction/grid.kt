@@ -6,9 +6,9 @@ package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
+import hu.simplexion.adaptive.ui.common.fragment.layout.RawTrack
 import hu.simplexion.adaptive.ui.common.render.container
 import hu.simplexion.adaptive.ui.common.render.grid
-import hu.simplexion.adaptive.ui.common.support.layout.RawTrack
 
 fun colTemplate(vararg tracks: Track) = ColTemplate(tracks)
 fun rowTemplate(vararg tracks: Track) = RowTemplate(tracks)

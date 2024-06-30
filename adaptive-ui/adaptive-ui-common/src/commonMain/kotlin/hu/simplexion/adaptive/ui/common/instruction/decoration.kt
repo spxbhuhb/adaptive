@@ -5,11 +5,11 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.ui.common.fragment.layout.RawCornerRadius
+import hu.simplexion.adaptive.ui.common.fragment.layout.RawPosition
+import hu.simplexion.adaptive.ui.common.fragment.layout.RawSurrounding
 import hu.simplexion.adaptive.ui.common.render.decoration
 import hu.simplexion.adaptive.ui.common.render.layout
-import hu.simplexion.adaptive.ui.common.support.layout.RawCornerRadius
-import hu.simplexion.adaptive.ui.common.support.layout.RawPosition
-import hu.simplexion.adaptive.ui.common.support.layout.RawSurrounding
 import kotlin.math.PI
 import kotlin.math.atan2
 

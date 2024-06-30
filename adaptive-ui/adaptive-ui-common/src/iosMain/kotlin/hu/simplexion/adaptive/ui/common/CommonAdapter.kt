@@ -5,18 +5,18 @@ package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.resource.defaultResourceEnvironment
-import hu.simplexion.adaptive.ui.common.instruction.Color
+import hu.simplexion.adaptive.ui.common.fragment.layout.AbstractContainer
+import hu.simplexion.adaptive.ui.common.fragment.layout.RawSize
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
 import hu.simplexion.adaptive.ui.common.platform.ContainerView
 import hu.simplexion.adaptive.ui.common.platform.GestureTarget
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
+import hu.simplexion.adaptive.ui.common.platform.uiColor
 import hu.simplexion.adaptive.ui.common.render.DecorationRenderData
 import hu.simplexion.adaptive.ui.common.render.EventRenderData
 import hu.simplexion.adaptive.ui.common.render.LayoutRenderData
 import hu.simplexion.adaptive.ui.common.render.TextRenderData
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
-import hu.simplexion.adaptive.ui.common.support.layout.RawSize
 import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
@@ -81,7 +81,6 @@ open class CommonAdapter(
         view.setFrame(frame)
     }
 
-    @OptIn(ExperimentalForeignApi::class)
     override fun applyRenderInstructions(fragment: AbstractCommonFragment<UIView>) {
         val renderData = fragment.renderData
         val receiver = fragment.receiver
@@ -191,16 +190,6 @@ open class CommonAdapter(
 
     val DPixel?.px: Double
         inline get() = this?.value ?: 0.0
-
-    val Color.uiColor: UIColor
-        get() {
-            // TODO val alpha = ((value shr 24) and 0xFF) / 255.0
-            val red = ((value shr 16) and 0xFFu).toInt() / 255.0
-            val green = ((value shr 8) and 0xFFu).toInt() / 255.0
-            val blue = (value and 0xFFu).toInt() / 255.0
-
-            return UIColor.colorWithRed(red, green, blue, 1.0)
-        }
 
     @OptIn(ExperimentalForeignApi::class)
     override var mediaMetrics = rootContainer.frame.useContents {

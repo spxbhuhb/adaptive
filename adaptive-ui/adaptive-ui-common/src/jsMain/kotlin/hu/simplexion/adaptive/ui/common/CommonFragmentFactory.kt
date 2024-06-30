@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.fragment.FoundationFragmentFactory
 import hu.simplexion.adaptive.ui.common.fragment.*
+import hu.simplexion.adaptive.ui.common.fragment.layout.*
 import hu.simplexion.adaptive.ui.common.fragment.structural.CommonSlot
 
 object CommonFragmentFactory : FoundationFragmentFactory() {

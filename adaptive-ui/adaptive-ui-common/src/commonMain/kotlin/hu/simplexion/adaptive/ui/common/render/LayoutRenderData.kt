@@ -5,8 +5,8 @@
 package hu.simplexion.adaptive.ui.common.render
 
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
+import hu.simplexion.adaptive.ui.common.fragment.layout.RawSurrounding
 import hu.simplexion.adaptive.ui.common.instruction.Alignment
-import hu.simplexion.adaptive.ui.common.support.layout.RawSurrounding
 
 class LayoutRenderData(
     val adapter : AbstractCommonAdapter<*, *>

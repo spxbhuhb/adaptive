@@ -5,9 +5,9 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.ui.common.fragment.layout.RawSurrounding
 import hu.simplexion.adaptive.ui.common.render.container
 import hu.simplexion.adaptive.ui.common.render.layout
-import hu.simplexion.adaptive.ui.common.support.layout.RawSurrounding
 
 fun frame(top: DPixel, left: DPixel, width: DPixel, height: DPixel) = Frame(top, left, width, height)
 fun position(top: DPixel, left: DPixel) = Position(top, left)

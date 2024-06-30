@@ -6,7 +6,7 @@ package hu.simplexion.adaptive.ui.common.fragment.structural
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
+import hu.simplexion.adaptive.ui.common.fragment.layout.AbstractContainer
 import hu.simplexion.adaptive.utility.alsoIfInstance
 
 open class CommonStructural<RT, CRT : RT>(

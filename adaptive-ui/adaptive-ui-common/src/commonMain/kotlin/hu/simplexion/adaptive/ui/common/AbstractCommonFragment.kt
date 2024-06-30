@@ -6,9 +6,9 @@ package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.instruction.Name
+import hu.simplexion.adaptive.ui.common.fragment.layout.AbstractContainer
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.render.CommonRenderData
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 
 abstract class AbstractCommonFragment<RT>(

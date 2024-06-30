@@ -2,7 +2,7 @@
 
 ## TL;DR
 
-**Do check [Motivation](./impressum.md#motivation) and [Status](./status.md) before you blow up.**
+**Take this with a grain of salt. Also, please read [Motivation](./impressum.md#motivation) and [Status](./status.md).**
 
 ```kotlin
 object Adaptive {

@@ -9,6 +9,7 @@ import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.name
 import hu.simplexion.adaptive.markdown.parse.*
 import hu.simplexion.adaptive.ui.common.fragment.column
+import hu.simplexion.adaptive.ui.common.fragment.flowBox
 import hu.simplexion.adaptive.ui.common.fragment.row
 import hu.simplexion.adaptive.ui.common.fragment.text
 import hu.simplexion.adaptive.ui.common.instruction.*
@@ -67,7 +68,7 @@ fun header(entry: MarkdownHeaderAstEntry) {
 
 @Adaptive
 fun paragraph(entry: MarkdownParagraphAstEntry) {
-    row {
+    flowBox {
         AlignItems.bottom
         marginBottom(20.dp)
         for (child in entry.children) {

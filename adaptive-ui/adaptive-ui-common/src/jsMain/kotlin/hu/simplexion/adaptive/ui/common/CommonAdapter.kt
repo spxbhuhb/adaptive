@@ -6,6 +6,8 @@ package hu.simplexion.adaptive.ui.common
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.instruction.Name
 import hu.simplexion.adaptive.resource.defaultResourceEnvironment
+import hu.simplexion.adaptive.ui.common.fragment.layout.AbstractContainer
+import hu.simplexion.adaptive.ui.common.fragment.layout.RawSurrounding
 import hu.simplexion.adaptive.ui.common.instruction.AdaptiveUIEvent
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
@@ -17,8 +19,6 @@ import hu.simplexion.adaptive.ui.common.render.DecorationRenderData
 import hu.simplexion.adaptive.ui.common.render.EventRenderData
 import hu.simplexion.adaptive.ui.common.render.LayoutRenderData
 import hu.simplexion.adaptive.ui.common.render.TextRenderData
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
-import hu.simplexion.adaptive.ui.common.support.layout.RawSurrounding
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 import kotlinx.browser.document

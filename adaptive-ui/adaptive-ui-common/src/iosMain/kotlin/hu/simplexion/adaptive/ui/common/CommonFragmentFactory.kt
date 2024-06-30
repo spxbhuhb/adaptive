@@ -5,13 +5,16 @@
 package hu.simplexion.adaptive.ui.common
 
 import hu.simplexion.adaptive.foundation.fragment.FoundationFragmentFactory
-import hu.simplexion.adaptive.ui.common.fragment.*
+import hu.simplexion.adaptive.ui.common.fragment.CommonImage
+import hu.simplexion.adaptive.ui.common.fragment.CommonText
+import hu.simplexion.adaptive.ui.common.fragment.layout.*
 import hu.simplexion.adaptive.ui.common.fragment.structural.CommonSlot
 
 object CommonFragmentFactory : FoundationFragmentFactory() {
     init {
         add("common:box") { p, i -> CommonBox(p.adapter as CommonAdapter, p, i) }
         add("common:column") { p, i -> CommonColumn(p.adapter as CommonAdapter, p, i) }
+        add("common:flowbox") { p, i -> CommonFlowBox(p.adapter as CommonAdapter, p, i) }
         add("common:grid") { p, i -> CommonGrid(p.adapter as CommonAdapter, p, i) }
         add("common:image") { p, i -> CommonImage(p.adapter as CommonAdapter, p, i) }
         add("common:row") { p, i -> CommonRow(p.adapter as CommonAdapter, p, i) }

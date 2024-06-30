@@ -21,9 +21,9 @@ import hu.simplexion.adaptive.lib.sandbox.ui.navigation.slotTwo
 import hu.simplexion.adaptive.lib.sandbox.ui.withSandbox
 import hu.simplexion.adaptive.ui.common.browser
 import hu.simplexion.adaptive.ui.common.fragment.*
+import hu.simplexion.adaptive.ui.common.fragment.layout.AbstractGrid
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.platform.withJsResources
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractGrid
 
 fun main() {
 

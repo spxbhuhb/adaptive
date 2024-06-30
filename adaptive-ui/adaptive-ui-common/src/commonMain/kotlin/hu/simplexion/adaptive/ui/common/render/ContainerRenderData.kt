@@ -5,9 +5,9 @@
 package hu.simplexion.adaptive.ui.common.render
 
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
+import hu.simplexion.adaptive.ui.common.fragment.layout.RawTrack
 import hu.simplexion.adaptive.ui.common.instruction.Alignment
 import hu.simplexion.adaptive.ui.common.instruction.SpaceDistribution
-import hu.simplexion.adaptive.ui.common.support.layout.RawTrack
 
 class ContainerRenderData(
     val adapter : AbstractCommonAdapter<*,*>

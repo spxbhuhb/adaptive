@@ -9,10 +9,10 @@ import hu.simplexion.adaptive.foundation.instruction.Name
 import hu.simplexion.adaptive.foundation.query.first
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
+import hu.simplexion.adaptive.ui.common.fragment.layout.AbstractContainer
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
 import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
 import hu.simplexion.adaptive.utility.alsoIfInstance
 import kotlinx.coroutines.CoroutineDispatcher

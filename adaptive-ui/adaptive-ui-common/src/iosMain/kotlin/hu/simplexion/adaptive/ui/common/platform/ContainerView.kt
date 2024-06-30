@@ -5,7 +5,7 @@
 package hu.simplexion.adaptive.ui.common.platform
 
 import hu.simplexion.adaptive.ui.common.CommonAdapter
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
+import hu.simplexion.adaptive.ui.common.fragment.layout.AbstractContainer
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreGraphics.CGRectMake
 import platform.UIKit.UIView

@@ -7,7 +7,7 @@ package hu.simplexion.adaptive.ui.common.platform
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
-import hu.simplexion.adaptive.ui.common.support.layout.AbstractContainer
+import hu.simplexion.adaptive.ui.common.fragment.layout.AbstractContainer
 
 @SuppressLint("ViewConstructor") // not a general Android view group, you are not supposed to use it in general Android code
 class StructuralViewGroup(
