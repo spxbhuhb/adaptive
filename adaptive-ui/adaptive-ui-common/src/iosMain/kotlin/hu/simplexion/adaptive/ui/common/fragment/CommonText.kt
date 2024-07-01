@@ -8,9 +8,9 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
+import hu.simplexion.adaptive.ui.common.render.applyText
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
-import platform.UIKit.NSTextAlignmentCenter
 import platform.UIKit.UILabel
 import platform.UIKit.UIView
 
@@ -23,7 +23,7 @@ class CommonText(
 
     override val receiver = UILabel()
 
-    private val content: String get() = state[0]?.toString() ?: ""
+    val content: String get() = state[0]?.toString() ?: ""
 
     @OptIn(ExperimentalForeignApi::class)
     override fun genPatchInternal(): Boolean {
@@ -31,9 +31,16 @@ class CommonText(
         patchInstructions()
 
         if (haveToPatch(dirtyMask, 1)) {
-            receiver.text = content
-            receiver.textAlignment = NSTextAlignmentCenter
-            receiver.translatesAutoresizingMaskIntoConstraints = false
+
+            // we have to apply instructions if they haven't changed
+            // instructions sets the actual text fields of the UILabel
+            // we don't have to do this if the instructions has been just applied
+            // TODO think about layout effects of text changes
+
+            if (! haveToPatch(dirtyMask, 1 shl instructionIndex)) {
+                applyText(this)
+            }
+
             receiver.intrinsicContentSize.useContents {
                 renderData.innerWidth = this.width
                 renderData.innerHeight = this.height

@@ -26,6 +26,8 @@ abstract class AbstractCommonFragment<RT>(
      */
     open val uiAdapter = adapter
 
+    var previousRenderData = adapter.emptyRenderData
+
     var renderData = CommonRenderData(adapter)
 
     /**

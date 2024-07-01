@@ -99,10 +99,12 @@ data class Border(
 ) : AdaptiveInstruction, Surrounding {
 
     override fun apply(subject: Any) {
+        // decided to duplicate the border to keep layout calculations separate from decorations
         layout(subject) {
             it.border = RawSurrounding(this, it.border ?: RawSurrounding.ZERO, it.adapter)
         }
         decoration(subject) {
+            it.borderWidth = RawSurrounding(this, it.borderWidth ?: RawSurrounding.ZERO, it.adapter)
             it.borderColor = color
         }
     }

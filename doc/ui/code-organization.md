@@ -31,6 +31,7 @@ may be omitted.
 
 `render`
 * render data class declarations
+* render data application functions
 
 `support`
 

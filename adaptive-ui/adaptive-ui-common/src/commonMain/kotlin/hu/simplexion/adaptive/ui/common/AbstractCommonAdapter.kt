@@ -8,10 +8,13 @@ import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.ui.common.fragment.layout.AbstractContainer
 import hu.simplexion.adaptive.ui.common.fragment.structural.CommonLoop
 import hu.simplexion.adaptive.ui.common.fragment.structural.CommonSelect
+import hu.simplexion.adaptive.ui.common.instruction.Color
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
+import hu.simplexion.adaptive.ui.common.instruction.FontWeight
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.MediaMetricsProducer
+import hu.simplexion.adaptive.ui.common.render.CommonRenderData
 import hu.simplexion.adaptive.ui.common.render.TextRenderData
 import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
 import hu.simplexion.adaptive.utility.vmNowMicro
@@ -61,7 +64,13 @@ abstract class AbstractCommonAdapter<RT, CRT : RT> : AdaptiveAdapter {
 
     var actualBatch: Boolean = false
 
-    var defaultTextRenderData = TextRenderData()
+    val emptyRenderData = CommonRenderData(this)
+
+    var defaultTextRenderData = TextRenderData().apply {
+        color = Color(0u)
+        fontSize = SPixel(17.0)
+        fontWeight = FontWeight.NORMAL.weight
+    }
 
     protected val mediaMetricsProducers = mutableListOf<MediaMetricsProducer>()
 

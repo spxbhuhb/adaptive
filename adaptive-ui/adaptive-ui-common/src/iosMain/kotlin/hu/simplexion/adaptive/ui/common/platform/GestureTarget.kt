@@ -11,6 +11,8 @@ import hu.simplexion.adaptive.ui.common.instruction.OnClick
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExportObjCClass
 import kotlinx.cinterop.ObjCAction
+import platform.UIKit.UIGestureRecognizer
+import platform.UIKit.UIGestureRecognizerDelegateProtocol
 import platform.UIKit.UIView
 import platform.darwin.NSObject
 
@@ -29,4 +31,12 @@ class GestureTarget(
         }
     }
 
+}
+
+class Delegate : NSObject(), UIGestureRecognizerDelegateProtocol {
+
+    override fun gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer): Boolean {
+        println("Hello World!")
+        return true
+    }
 }
