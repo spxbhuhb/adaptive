@@ -9,7 +9,6 @@ import hu.simplexion.adaptive.foundation.producer.poll
 import hu.simplexion.adaptive.foundation.rangeTo
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import sandbox.lib.*
@@ -19,7 +18,7 @@ import kotlin.time.Duration.Companion.milliseconds
 fun goodMorning() {
 
     var counter = 0
-    val millis = poll(20.milliseconds) { Clock.System.now() } ?: Clock.System.now()
+    //val millis = poll(20.milliseconds) { Clock.System.now() } ?: Clock.System.now()
     val time = poll(1.milliseconds) { now() } ?: now()
     val timeText = "${time.hour.twoDigits}:${time.minute.twoDigits}:${time.second.twoDigits}"
 
@@ -34,7 +33,7 @@ fun goodMorning() {
         time(timeText)
         column {
             progress(time)
-            milliProgress(millis)
+            //milliProgress(millis)
         }
         messages(time, counter)
 
@@ -45,7 +44,7 @@ fun goodMorning() {
 
             row(2.gridCol, greenGradient, cornerRadius, AlignItems.center, onClick { counter ++ }) {
                 maxSize
-                text("Snooze") .. white .. textMedium .. noSelect
+                text("Snooze") .. white .. textMedium .. noSelect .. onClick { println("Hello World!") }
             }
 
             row(4.gridCol, whiteBorder, cornerRadius, AlignItems.center) {

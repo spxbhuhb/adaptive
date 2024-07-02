@@ -15,4 +15,8 @@ class CommonRow(
     adapter: CommonAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractRow<UIView, ContainerView>(adapter, parent, declarationIndex)
+) : AbstractRow<UIView, ContainerView>(adapter, parent, declarationIndex) {
+    init {
+        receiver.tag = id
+    }
+}

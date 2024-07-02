@@ -8,9 +8,14 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
+import hu.simplexion.adaptive.ui.common.instruction.AdaptiveUIEvent
+import hu.simplexion.adaptive.ui.common.instruction.OnClick
 import hu.simplexion.adaptive.ui.common.render.applyText
+import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
+import platform.CoreGraphics.CGRectMake
+import platform.UIKit.UIEvent
 import platform.UIKit.UILabel
 import platform.UIKit.UIView
 
@@ -21,7 +26,11 @@ class CommonText(
     index: Int
 ) : AbstractCommonFragment<UIView>(adapter, parent, index, 1, 2) {
 
-    override val receiver = UILabel()
+    override val receiver = AUILabel(this)
+
+    init {
+        receiver.tag = id
+    }
 
     val content: String get() = state[0]?.toString() ?: ""
 
@@ -50,4 +59,17 @@ class CommonText(
         return false
     }
 
+
+    @OptIn(ExperimentalForeignApi::class)
+    class AUILabel(
+        val fragment: CommonText
+    ) : UILabel(CGRectMake(0.0, 0.0, 0.0, 0.0)) {
+
+        override fun touchesEnded(touches: Set<*>, withEvent: UIEvent?) {
+            fragment.instructions.firstOrNullIfInstance<OnClick>()
+                ?.execute(AdaptiveUIEvent(fragment, withEvent))
+            super.touchesBegan(touches, withEvent)
+        }
+
+    }
 }

@@ -15,4 +15,8 @@ class CommonFlowBox(
     adapter: CommonAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractFlowBox<UIView, ContainerView>(adapter, parent, declarationIndex)
+) : AbstractFlowBox<UIView, ContainerView>(adapter, parent, declarationIndex) {
+    init {
+        receiver.tag = id
+    }
+}

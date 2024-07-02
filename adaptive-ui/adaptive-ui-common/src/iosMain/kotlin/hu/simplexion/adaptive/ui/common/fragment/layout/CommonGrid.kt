@@ -15,4 +15,8 @@ class CommonGrid(
     adapter: CommonAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractGrid<UIView, ContainerView>(adapter, parent, declarationIndex)
+) : AbstractGrid<UIView, ContainerView>(adapter, parent, declarationIndex) {
+    init {
+        receiver.tag = id
+    }
+}
