@@ -19,8 +19,7 @@ As of now, the very basic UI components are implemented and mostly working on al
 Services, Adat and other, non UI related parts should work on all platforms. I haven't tried
 for a while to be honest, focusing on the UI.
 
-That said, there are bugs and some functionality might break down time-to-time. For example,
-iOS background and gradient does not work ATM, structural fragments does not show on Android.
+That said, there are bugs and some functionality might break down time-to-time.
 
 ## Roadmap
 

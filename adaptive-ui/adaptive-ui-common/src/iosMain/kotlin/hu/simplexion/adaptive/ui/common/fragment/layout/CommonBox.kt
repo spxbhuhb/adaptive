@@ -15,4 +15,8 @@ class CommonBox(
     adapter: CommonAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractBox<UIView, ContainerView>(adapter, parent, declarationIndex)
+) : AbstractBox<UIView, ContainerView>(adapter, parent, declarationIndex) {
+    init {
+        receiver.tag = id
+    }
+}

@@ -15,4 +15,8 @@ class CommonColumn(
     adapter: CommonAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
-) : AbstractColumn<UIView, ContainerView>(adapter, parent, declarationIndex)
+) : AbstractColumn<UIView, ContainerView>(adapter, parent, declarationIndex) {
+    init {
+        receiver.tag = id
+    }
+}

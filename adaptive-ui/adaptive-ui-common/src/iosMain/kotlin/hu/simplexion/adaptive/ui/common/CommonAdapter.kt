@@ -12,7 +12,6 @@ import hu.simplexion.adaptive.ui.common.instruction.SPixel
 import hu.simplexion.adaptive.ui.common.platform.ContainerView
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
 import hu.simplexion.adaptive.ui.common.render.applyDecoration
-import hu.simplexion.adaptive.ui.common.render.applyEvents
 import hu.simplexion.adaptive.ui.common.render.applyText
 import hu.simplexion.adaptive.ui.common.support.navigation.AbstractNavSupport
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -20,6 +19,7 @@ import kotlinx.cinterop.useContents
 import platform.CoreGraphics.CGRectMake
 import platform.UIKit.UIView
 
+@OptIn(ExperimentalForeignApi::class)
 open class CommonAdapter(
     final override val rootContainer: UIView
 ) : AbstractCommonAdapter<UIView, ContainerView>() {
@@ -85,7 +85,6 @@ open class CommonAdapter(
 
         applyDecoration(fragment)
         applyText(fragment)
-        applyEvents(fragment)
 
         fragment.previousRenderData = fragment.renderData
     }

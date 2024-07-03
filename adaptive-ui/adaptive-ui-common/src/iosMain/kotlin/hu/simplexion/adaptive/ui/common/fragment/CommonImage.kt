@@ -10,18 +10,19 @@ import hu.simplexion.adaptive.resource.defaultResourceReader
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
+import hu.simplexion.adaptive.ui.common.instruction.AdaptiveUIEvent
+import hu.simplexion.adaptive.ui.common.instruction.OnClick
 import hu.simplexion.adaptive.utility.checkIfInstance
+import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import platform.CoreGraphics.CGRectMake
 import platform.Foundation.NSData
 import platform.Foundation.dataWithBytes
-import platform.UIKit.UIImage
-import platform.UIKit.UIImageView
-import platform.UIKit.UIView
-import platform.UIKit.UIViewContentMode
+import platform.UIKit.*
 
 @AdaptiveActual(common)
 class CommonImage(
@@ -31,6 +32,10 @@ class CommonImage(
 ) : AbstractCommonFragment<UIView>(adapter, parent, index, 1, 2) {
 
     override val receiver = UIImageView()
+
+    init {
+        receiver.tag = id
+    }
 
     private val content: DrawableResource
         get() = state[0].checkIfInstance()
@@ -55,6 +60,20 @@ class CommonImage(
         }
 
         return false
+    }
+
+    @OptIn(ExperimentalForeignApi::class)
+    class AUIImageView(
+        val fragment: CommonImage
+    ) : UIImageView(CGRectMake(0.0, 0.0, 0.0, 0.0)) {
+
+        override fun touchesEnded(touches: Set<*>, withEvent: UIEvent?) {
+            fragment.instructions.firstOrNullIfInstance<OnClick>()
+                ?.execute(AdaptiveUIEvent(fragment, withEvent))
+
+            super.touchesBegan(touches, withEvent)
+        }
+
     }
 
 }
