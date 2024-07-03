@@ -3,6 +3,7 @@
  */
 package hu.simplexion.adaptive.kotlin.adat.ir.exposed
 
+import hu.simplexion.adaptive.kotlin.adat.Names
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatPluginContext
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrClass
@@ -30,10 +31,19 @@ class ColumnVisitor(
     }
 
     override fun visitProperty(declaration: IrProperty) {
+        // the "id" column is hard-coded into ID tables
+
+        if (declaration.isFakeOverride && declaration.name == Names.ID) {
+            val columnType = declaration.getter !!.returnType
+            val valueType = (columnType as IrSimpleType).arguments.first().typeOrNull ?: return
+            columns += ColumnProperty(declaration, valueType)
+            return
+        }
+
         val type = declaration.backingField?.type ?: return
         if (type !is IrSimpleType) return
 
-        val valueType = type.arguments.first().typeOrNull ?: return
+        val valueType = type.arguments.firstOrNull()?.typeOrNull ?: return
 
         if (! type.isSubtypeOfClass(pluginContext.exposedColumn !!)) return
 

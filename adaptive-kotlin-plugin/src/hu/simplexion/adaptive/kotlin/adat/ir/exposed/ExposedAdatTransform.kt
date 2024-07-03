@@ -3,22 +3,29 @@
  */
 package hu.simplexion.adaptive.kotlin.adat.ir.exposed
 
+import hu.simplexion.adaptive.kotlin.adat.FqNames
 import hu.simplexion.adaptive.kotlin.adat.Names
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatPluginContext
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
+import hu.simplexion.adaptive.kotlin.common.property
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
+import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
-import org.jetbrains.kotlin.ir.declarations.IrClass
-import org.jetbrains.kotlin.ir.declarations.IrFunction
-import org.jetbrains.kotlin.ir.declarations.IrValueParameter
+import org.jetbrains.kotlin.ir.builders.irTemporary
+import org.jetbrains.kotlin.ir.declarations.*
+import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
+import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.types.*
-import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.util.defaultType
+import org.jetbrains.kotlin.ir.util.hasAnnotation
+import org.jetbrains.kotlin.ir.util.primaryConstructor
 
 class ExposedAdatTransform(
     override val pluginContext: AdatPluginContext,
@@ -52,7 +59,7 @@ class ExposedAdatTransform(
                 continue
             }
 
-            if (column.type != parameter.type) {
+            if (! isTypeOk(column, parameter) && column.property.name != Names.ID) {
                 wrongType += column
                 continue
             }
@@ -61,32 +68,42 @@ class ExposedAdatTransform(
             mapping += Mapping(column.property, column.type, parameter)
         }
 
-        check(missingColumns.isEmpty()) {
-            "missing column for constructor parameters ${missingColumns.joinToString { it.name.toString() }} in ${tableClass.name}"
-        }
-
-        check(columns.isEmpty()) {
-            "missing constructor parameter for columns ${columns.joinToString { it.property.name.toString() }} in ${tableClass.name}"
-        }
-
-        check(wrongType.isEmpty()) {
-            "invalid type for columns ${wrongType.joinToString { it.property.name.toString() }} in ${tableClass.name}"
+        check(wrongType.isEmpty() && missingColumns.isEmpty() && columns.isEmpty()) {
+            "error mapping columns to constructor parameters in ${tableClass.name} : \n" +
+                "  wrong type: ${wrongType.joinToString { it.property.name.toString() }}\n" +
+                "  missing column: ${missingColumns.joinToString { it.name.toString() }}\n" +
+                "  missing constructor parameter: ${columns.joinToString { it.property.name.toString() }}"
         }
 
         return mapping
     }
 
+    fun isTypeOk(column: ColumnProperty, parameter: IrValueParameter): Boolean =
+        when {
+            column.type == parameter.type -> true
+            column.type.isSubtypeOfClass(pluginContext.entityId !!) && parameter.type.isSubtypeOfClass(pluginContext.commonUuid) -> true
+            column.type == pluginContext.javaUuidType && parameter.type.isSubtypeOfClass(pluginContext.commonUuid) -> true
+            else -> false
+        }
+
     override fun visitFunctionNew(declaration: IrFunction): IrStatement =
         when (declaration.name) {
-            Names.FROM_ROW -> transformFromRow(declaration)
-            Names.TO_ROW -> transformToRow(declaration)
+            Names.FROM_ROW -> transformFromRow(declaration as IrSimpleFunction)
+            Names.TO_ROW -> transformToRow(declaration as IrSimpleFunction)
             else -> declaration
         }
 
-    private fun transformFromRow(declaration: IrFunction): IrStatement {
+    private fun transformFromRow(declaration: IrSimpleFunction): IrStatement {
         if (! declaration.isFakeOverride) return declaration
 
+        declaration.isFakeOverride = false
+        declaration.origin = IrDeclarationOrigin.DEFINED
+
         declaration.body = DeclarationIrBuilder(pluginContext.irContext, declaration.symbol).irBlockBody {
+
+            val table = irTemporary(irImplicitAs(tableClass.defaultType, irGet(declaration.dispatchReceiverParameter !!)))
+            val resultRow = declaration.valueParameters.first()
+
             + irReturn(
                 IrConstructorCallImpl(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
@@ -101,13 +118,13 @@ class ExposedAdatTransform(
 
                         val value = irCall(
                             pluginContext.exposedResultRowGet !!,
-                            irGet(declaration.valueParameters.first()),
+                            irGet(resultRow),
                         ).also { get ->
                             get.putTypeArgument(0, mapping.columnType)
-                            get.putValueArgument(0, irGetValue(mapping.column, irGet(declaration.dispatchReceiverParameter !!)))
+                            get.putValueArgument(0, irGetValue(mapping.column, irGet(table)))
                         }
 
-                        call.putValueArgument(index, toCommon(value))
+                        call.putValueArgument(index, toCommon(mapping, value))
                     }
                 }
             )
@@ -116,18 +133,91 @@ class ExposedAdatTransform(
         return declaration
     }
 
-    private fun toCommon(call: IrCallImpl): IrExpression? {
-        when (call.type) {
-            pluginContext.uuidType -> toCommonUuid(call)
+    private fun toCommon(mapping: Mapping, call: IrCallImpl): IrExpression =
+        when {
+            mapping.columnType.isSubtypeOfClass(pluginContext.entityId !!) -> {
+                toCommon(mapping, pluginContext.asCommonEntityId !!, call)
+            }
+
+            mapping.columnType == pluginContext.javaUuidType -> {
+                toCommon(mapping, pluginContext.asCommonUuid !!, call)
+            }
+
             else -> call
         }
-    }
 
-    private fun transformToRow(declaration: IrFunction): IrStatement {
+    private fun toCommon(mapping: Mapping, func: IrSimpleFunctionSymbol, value: IrExpression) =
+        IrCallImpl(
+            UNDEFINED_OFFSET, UNDEFINED_OFFSET,
+            func.owner.returnType,
+            func,
+            1, 0
+        ).also {
+            it.extensionReceiver = value
+            it.putTypeArgument(0, (mapping.parameter.type as IrSimpleType).arguments[0].typeOrFail)
+        }
+
+    private fun transformToRow(declaration: IrSimpleFunction): IrStatement {
         if (! declaration.isFakeOverride) return declaration
+
+        declaration.isFakeOverride = false
+        declaration.origin = IrDeclarationOrigin.DEFINED
+
+        val set = tableClass.declarations.first {
+            it is IrSimpleFunction && it.name == Names.SET && it.hasAnnotation(FqNames.EXPOSED_ADAT_SET)
+        }.symbol as IrSimpleFunctionSymbol
+
+        declaration.body = DeclarationIrBuilder(pluginContext.irContext, declaration.symbol).irBlockBody {
+
+            val valueParameters = declaration.valueParameters
+
+            val table = irTemporary(irImplicitAs(tableClass.defaultType, irGet(declaration.dispatchReceiverParameter !!)))
+            val updateBuilder = valueParameters.first()
+            val adatInstance = valueParameters[1]
+
+            for (mapping in mappings) {
+                + irCall(
+                    set,
+                    irGet(table),
+                ).also { set ->
+                    set.putTypeArgument(0, mapping.columnType)
+
+                    val adatProperty = adatClass.property(mapping.parameter.name)
+
+                    set.putValueArgument(0, irGet(updateBuilder))
+                    set.putValueArgument(1, toJava(mapping, irGetValue(adatProperty, irGet(adatInstance)), declaration))
+                    set.putValueArgument(2, irGetValue(mapping.column, irGet(table)))
+                }
+            }
+        }
 
         return declaration
     }
 
+    private fun toJava(mapping: Mapping, call: IrCall, declaration: IrSimpleFunction): IrExpression =
+        when {
+            mapping.columnType.isSubtypeOfClass(pluginContext.entityId !!) -> toJava(pluginContext.asEntityId !!, call, declaration, true)
+            mapping.columnType.isSubtypeOfClass(pluginContext.javaUuid !!) -> toJava(pluginContext.asJavaUuid !!, call, declaration, false)
+            else -> call
+        }
+
+    private fun toJava(
+        func: IrSimpleFunctionSymbol,
+        value: IrExpression,
+        declaration: IrSimpleFunction,
+        addTable: Boolean
+    ) =
+        IrCallImpl(
+            UNDEFINED_OFFSET, UNDEFINED_OFFSET,
+            func.owner.returnType,
+            func,
+            0,
+            if (addTable) 1 else 0
+        ).also {
+            it.extensionReceiver = value
+            if (addTable) {
+                it.putValueArgument(0, irGet(declaration.dispatchReceiverParameter !!))
+            }
+        }
 
 }

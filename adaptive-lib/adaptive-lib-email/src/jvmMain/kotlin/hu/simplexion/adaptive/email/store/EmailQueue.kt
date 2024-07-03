@@ -4,7 +4,7 @@ import hu.simplexion.adaptive.email.model.Email
 import hu.simplexion.adaptive.email.model.EmailQueueEntry
 import hu.simplexion.adaptive.exposed.ExposedStoreImpl
 import hu.simplexion.adaptive.exposed.asCommon
-import hu.simplexion.adaptive.exposed.asJvm
+import hu.simplexion.adaptive.exposed.asJava
 import hu.simplexion.adaptive.exposed.uuidEq
 import hu.simplexion.adaptive.utility.UUID
 import kotlinx.datetime.Clock
@@ -22,7 +22,7 @@ open class EmailQueue : Table("email_queue"), ExposedStoreImpl<EmailQueueEntry, 
 
     fun insert(entry: EmailQueueEntry) {
         insert {
-            it[email] = entry.email.asJvm()
+            it[email] = entry.email.asJava()
             it[createdAt] = Clock.System.now()
             it[tries] = entry.tries
             it[lastTry] = entry.lastTry

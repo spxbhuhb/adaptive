@@ -22,9 +22,9 @@ class AdatModuleTransform(
             declaration.isSubclassOf(pluginContext.adatClass.owner) -> {
                 declaration.transformChildrenVoid(AdatClassTransform(pluginContext, declaration))
             }
-            declaration.hasAnnotation(ClassIds.EXPOSED_ADAT) -> {
+            declaration.hasAnnotation(ClassIds.EXPOSED_ADAT_TABLE) -> {
                 if (pluginContext.exposedColumn != null) {
-                    ExposedAdatTransform(pluginContext, declaration).transform()
+                    declaration.transformChildrenVoid(ExposedAdatTransform(pluginContext, declaration))
                 }
             }
         }

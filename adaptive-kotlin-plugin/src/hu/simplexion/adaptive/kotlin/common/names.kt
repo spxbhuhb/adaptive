@@ -40,6 +40,8 @@ open class NamesBase(
 
     protected fun String.fqName() = FqName(this)
 
+    protected fun String.fqName(packageFun: () -> String) = FqName(packageFun() + "." + this)
+
     protected fun String.classId(packageFun: () -> FqName = { defaultPackage }) =
         ClassId(packageFun(), Name.identifier(this))
 

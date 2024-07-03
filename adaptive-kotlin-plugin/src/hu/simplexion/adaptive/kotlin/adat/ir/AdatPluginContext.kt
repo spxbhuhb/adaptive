@@ -8,6 +8,8 @@ import hu.simplexion.adaptive.kotlin.adat.CallableIds
 import hu.simplexion.adaptive.kotlin.adat.ClassIds
 import hu.simplexion.adaptive.kotlin.common.AbstractPluginContext
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
+import org.jetbrains.kotlin.ir.types.defaultType
+import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.getSimpleFunction
 
 class AdatPluginContext(
@@ -24,15 +26,22 @@ class AdatPluginContext(
 
     val exposedResultRow = ClassIds.RESULT_ROW.symbolOrNull()
     val exposedResultRowGet = exposedResultRow?.getSimpleFunction("get")
+
+    val exposedUpdateStatement = ClassIds.UPDATE_STATEMENT.symbolOrNull()
     val exposedColumn = ClassIds.COLUMN.symbolOrNull()
 
-    val commonUuidType = ClassIds.COMMON_UUID.classSymbol()
-    val entityIdType = ClassIds.ENTITY_ID.symbolOrNull()
-    val javaUuidType = ClassIds.JAVA_UUID.symbolOrNull()
+    val commonUuid = ClassIds.COMMON_UUID.classSymbol()
+    val commonUuidType = ClassIds.COMMON_UUID.classSymbol().defaultType
+    val entityId = ClassIds.ENTITY_ID.symbolOrNull()
+    val entityIdType = entityId?.defaultType
+    val javaUuid = ClassIds.JAVA_UUID.symbolOrNull()
+    val javaUuidType = javaUuid?.defaultType
 
     val asCommon = CallableIds.asCommon.functions()
-    val asCommonEntityId = asCommon.firstOrNull { it.owner.extensionReceiverParameter?.type == entityIdType }
-    val asCommonUuid = asCommon.firstOrNull { it.owner.extensionReceiverParameter?.type == javaUuidType }
-    val asJavaUuid = CallableIds.asJvm.functions().first { it.owner.extensionReceiverParameter?.type == commonUuidType }
+    val asCommonEntityId = asCommon.firstOrNull { it.owner.extensionReceiverParameter?.type?.isSubtypeOfClass(entityId !!) == true }
+    val asCommonUuid = asCommon.firstOrNull { it.owner.extensionReceiverParameter?.type?.isSubtypeOfClass(javaUuid !!) == true }
+
+    val asJavaUuid = CallableIds.asJava.functions().firstOrNull { it.owner.extensionReceiverParameter?.type?.isSubtypeOfClass(commonUuid) == true }
+    val asEntityId = CallableIds.asEntityID.functions().firstOrNull { it.owner.extensionReceiverParameter?.type?.isSubtypeOfClass(commonUuid) == true }
 
 }

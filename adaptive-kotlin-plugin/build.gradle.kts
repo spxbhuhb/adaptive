@@ -55,6 +55,7 @@ dependencies {
     testRuntimeOnly(libs.adaptive.core)
     testRuntimeOnly(libs.kotlinx.coroutines.core)
     testRuntimeOnly(libs.kotlinx.datetime)
+    testRuntimeOnly(libs.exposed.core)
 
     testImplementation(platform(libs.junit.bom))
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -74,9 +75,9 @@ tasks.test {
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-test", "kotlin-test")
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-script-runtime", "kotlin-script-runtime")
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-annotations-jvm", "kotlin-annotations-jvm")
-        setLibraryProperty("org.jetbrains.kotlin.test.kotlin-annotations-jvm", "kotlin-annotations-jvm")
         setLibraryProperty("adaptive.kotlin.test.kotlinx-coroutines-core", "kotlinx-coroutines-core-jvm")
         setLibraryProperty("adaptive.kotlin.test.kotlinx-datetime", "kotlinx-datetime-jvm")
+        setLibraryProperty("adaptive.org.jetbrains.exposed-core", "exposed-core")
     }
 }
 

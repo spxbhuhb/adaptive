@@ -17,7 +17,9 @@ object Strings {
     const val JETBRAINS_EXPOSED_PACKAGE = "org.jetbrains.exposed.sql"
     const val RESULT_ROW = "ResultRow"
     const val COLUMN = "Column"
-    const val EXPOSED_ADAT = "ExposedAdat"
+    const val UPDATE_STATEMENT = "UpdateStatement"
+    const val EXPOSED_ADAT_TABLE = "ExposedAdatTable"
+    const val EXPOSED_ADAT_SET = "ExposedAdatSet"
     const val FROM_ROW = "fromRow"
     const val TO_ROW = "toRow"
 }
@@ -42,13 +44,16 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val TO_STRING = "toString".name()
 
     val OTHER = "other".name()
+    val SET = "set".name()
+    val ID = "id".name()
 
     val FROM_ROW = Strings.FROM_ROW.name()
     val TO_ROW = Strings.TO_ROW.name()
 }
 
-object FqNames {
+object FqNames : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_ANNOTATION = FqName("hu.simplexion.adaptive.adat.Adat")
+    val EXPOSED_ADAT_SET = Strings.EXPOSED_ADAT_SET.fqName { Strings.EXPOSED_PACKAGE }
 }
 
 object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
@@ -63,9 +68,11 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
 
     val WIREFORMAT_REGISTRY = "WireFormatRegistry".classId { "hu.simplexion.adaptive.wireformat".fqName() }
 
-    val EXPOSED_ADAT = Strings.EXPOSED_ADAT.classId { Strings.EXPOSED_PACKAGE.fqName() }
+    val EXPOSED_ADAT_TABLE = Strings.EXPOSED_ADAT_TABLE.classId { Strings.EXPOSED_PACKAGE.fqName() }
+
     val RESULT_ROW = Strings.RESULT_ROW.classId { Strings.JETBRAINS_EXPOSED_PACKAGE.fqName() }
     val COLUMN = Strings.COLUMN.classId { Strings.JETBRAINS_EXPOSED_PACKAGE.fqName() }
+    val UPDATE_STATEMENT = Strings.UPDATE_STATEMENT.classId { Strings.JETBRAINS_EXPOSED_PACKAGE.fqName() }
 
     val COMMON_UUID = "UUID".classId { "hu.simplexion.adaptive.utility".fqName() }
     val JAVA_UUID = "UUID".classId { "java.util".fqName() }
@@ -75,7 +82,8 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
 object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val exposed = Strings.EXPOSED_PACKAGE.fqName()
     val asCommon = "asCommon".callableId { exposed }
-    val asJvm = "asCommon".callableId { exposed }
+    val asEntityID = "asEntityID".callableId { exposed }
+    val asJava = "asJava".callableId { exposed }
 }
 
 object Indices {

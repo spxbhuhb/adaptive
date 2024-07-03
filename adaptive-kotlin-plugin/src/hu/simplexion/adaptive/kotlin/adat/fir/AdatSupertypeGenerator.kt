@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
 import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 import org.jetbrains.kotlin.fir.types.FirResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.builder.buildResolvedTypeRef
+import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
 
 class AdatSupertypeGenerator(session: FirSession) : FirSupertypeGenerationExtension(session) {
@@ -28,6 +29,8 @@ class AdatSupertypeGenerator(session: FirSession) : FirSupertypeGenerationExtens
         typeResolver: TypeResolveService // uncomment this for 2.0.0-RC2
     ): List<FirResolvedTypeRef> {
         if (!session.predicateBasedProvider.matches(ADAT_PREDICATE, classLikeDeclaration.symbol)) return emptyList()
+
+        if (resolvedSupertypes.any { it.type.classId == ClassIds.ADAT_CLASS }) return emptyList()
 
         val adatClassType = classLikeDeclaration.classId.constructClassLikeType(emptyArray(), false)
 

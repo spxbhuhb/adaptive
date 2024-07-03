@@ -423,11 +423,4 @@ interface AbstractIrBuilder {
         }
     }
 
-//    fun <T> IrType.ifUuid(result: () -> T): T? {
-//        return if (this.isSubtypeOfClass(pluginContext.uuidClass)) {
-//            result()
-//        } else {
-//            null
-//        }
-//    }
 }

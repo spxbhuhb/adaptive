@@ -29,8 +29,16 @@ interface ExposedStoreImpl<A : AdatClass<A>, T : ExposedStoreImpl<A, T>> : Store
         manualOrPlugin("toRow", value)
     }
 
+    @ExposedAdatSet
+    fun <V> set(row: UpdateBuilder<*>, value: V, column: Column<V>) {
+        row[column] = value
+    }
+
     fun Table.all(): List<A> =
         selectAll().map { fromRow(it) }
+
+    fun Table.add(valueFun: () -> A) =
+        insert { toRow(it, valueFun()) }
 
     fun Table.add(value: A) =
         insert { toRow(it, value) }

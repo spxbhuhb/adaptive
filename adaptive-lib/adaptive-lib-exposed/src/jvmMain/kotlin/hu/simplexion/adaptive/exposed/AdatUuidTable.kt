@@ -17,7 +17,7 @@ import org.jetbrains.exposed.sql.update
  *
  * Check the reference documentation for exact details of the mapping.
  */
-abstract class AdatUUIDTable<A : AdatClass<A>, S : AdatUUIDTable<A, S>>(
+abstract class AdatUuidTable<A : AdatClass<A>, S : AdatUuidTable<A, S>>(
     tableName: String = "",
     columnName: String = "uuid"
 ) : UUIDTable(tableName, columnName), ExposedStoreImpl<A, S> {

@@ -4,7 +4,7 @@ import hu.simplexion.adaptive.email.model.Email
 import hu.simplexion.adaptive.email.model.EmailStatus
 import hu.simplexion.adaptive.exposed.ExposedStoreImpl
 import hu.simplexion.adaptive.exposed.asCommon
-import hu.simplexion.adaptive.exposed.asJvm
+import hu.simplexion.adaptive.exposed.asJava
 import hu.simplexion.adaptive.exposed.uuidEq
 import hu.simplexion.adaptive.utility.UUID
 import kotlinx.datetime.Clock.System.now
@@ -47,7 +47,7 @@ class EmailTable : UUIDTable("email", columnName = "uuid"), ExposedStoreImpl<Ema
 
     fun add(email: Email) {
         insert {
-            it[id] = email.uuid.asJvm()
+            it[id] = email.uuid.asJava()
             it[recipients] = email.recipients
             it[subject] = email.subject
             it[content] = email.content

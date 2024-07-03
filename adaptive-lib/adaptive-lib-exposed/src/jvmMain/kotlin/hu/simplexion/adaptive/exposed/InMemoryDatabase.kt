@@ -5,7 +5,6 @@
 package hu.simplexion.adaptive.exposed
 
 import hu.simplexion.adaptive.server.builtin.WorkerImpl
-import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.exposed.sql.Database
 
 class InMemoryDatabase : WorkerImpl<InMemoryDatabase> {
