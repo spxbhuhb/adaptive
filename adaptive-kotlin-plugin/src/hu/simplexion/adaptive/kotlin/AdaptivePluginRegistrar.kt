@@ -14,6 +14,5 @@ class AdaptivePluginRegistrar : FirExtensionRegistrar() {
         + ::ServicesDeclarationGenerator
         + ::AdatDeclarationGenerator
         + ::AdatSupertypeGenerator
-        // + ::AdaptiveDeclarationGenerator
     }
 }

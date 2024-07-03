@@ -6,10 +6,10 @@ import hu.simplexion.adaptive.email.model.EmailQueueEntry
 import hu.simplexion.adaptive.email.store.EmailQueue
 import hu.simplexion.adaptive.email.store.EmailTable
 import hu.simplexion.adaptive.email.worker.EmailWorker
+import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import hu.simplexion.adaptive.server.builtin.store
 import hu.simplexion.adaptive.server.builtin.worker
 import hu.simplexion.adaptive.service.ServiceContext
-import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class EmailService : EmailApi, ServiceImpl<EmailService> {
@@ -30,7 +30,7 @@ class EmailService : EmailApi, ServiceImpl<EmailService> {
         transaction {
             val email = Email(recipients, subject, contentText, contentType = contentType)
 
-            emailTable.insert(email)
+            emailTable.add(email)
 
             val entry = EmailQueueEntry(email.uuid)
 

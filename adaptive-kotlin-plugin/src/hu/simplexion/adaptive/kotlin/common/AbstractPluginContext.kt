@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.kotlin.AdaptiveOptions
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrFieldSymbol
+import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.fields
 import org.jetbrains.kotlin.name.CallableId
@@ -49,6 +50,12 @@ abstract class AbstractPluginContext(
 
     fun IrClassSymbol.fieldByName(name: String): IrFieldSymbol =
         fields.single { it.owner.name.asString() == name }
+
+    fun ClassId.symbolOrNull(): IrClassSymbol? =
+        irContext.referenceClass(this)
+
+    fun CallableId.functions(): Collection<IrSimpleFunctionSymbol> =
+        irContext.referenceFunctions(this)
 
     fun debugFile(): Path? {
         if (pluginLogDir == null) return null

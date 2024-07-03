@@ -4,13 +4,14 @@
 
 package hu.simplexion.adaptive.exposed
 
+import hu.simplexion.adaptive.adat.AdatClass
 import hu.simplexion.adaptive.server.builtin.StoreImpl
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.selectAll
+import hu.simplexion.adaptive.utility.manualOrPlugin
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.jetbrains.exposed.sql.transactions.transaction
 
-interface ExposedStoreImpl<T : ExposedStoreImpl<T>> : StoreImpl<T> {
+interface ExposedStoreImpl<A : AdatClass<A>, T : ExposedStoreImpl<A, T>> : StoreImpl<T> {
 
     override fun create() {
         if (this is Table) {
@@ -20,10 +21,24 @@ interface ExposedStoreImpl<T : ExposedStoreImpl<T>> : StoreImpl<T> {
         }
     }
 
-    fun isEmpty() : Boolean =
+    fun fromRow(row: ResultRow): A {
+        manualOrPlugin("fromRow", row)
+    }
+
+    fun toRow(row: UpdateBuilder<*>, value: A) {
+        manualOrPlugin("toRow", value)
+    }
+
+    fun Table.all(): List<A> =
+        selectAll().map { fromRow(it) }
+
+    fun Table.add(value: A) =
+        insert { toRow(it, value) }
+
+    fun isEmpty(): Boolean =
         count() == 0L
 
-    fun isNotEmpty() : Boolean =
+    fun isNotEmpty(): Boolean =
         count() != 0L
 
     fun count() =

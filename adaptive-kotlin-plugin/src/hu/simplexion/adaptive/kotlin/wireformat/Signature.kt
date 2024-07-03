@@ -4,14 +4,11 @@
 
 package hu.simplexion.adaptive.kotlin.wireformat
 
-import org.jetbrains.kotlin.ir.backend.js.utils.asString
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.types.IrSimpleType
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.types.isNullable
-import org.jetbrains.kotlin.types.checker.SimpleClassicTypeSystemContext.argumentsCount
-import org.jetbrains.kotlin.types.checker.SimpleClassicTypeSystemContext.getArguments
 
 object Signature {
 

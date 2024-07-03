@@ -5,14 +5,14 @@ import hu.simplexion.adaptive.email.model.EmailQueueEntry
 import hu.simplexion.adaptive.exposed.ExposedStoreImpl
 import hu.simplexion.adaptive.exposed.asCommon
 import hu.simplexion.adaptive.exposed.asJvm
-import hu.simplexion.adaptive.exposed.jeq
+import hu.simplexion.adaptive.exposed.uuidEq
 import hu.simplexion.adaptive.utility.UUID
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 
-open class EmailQueue : Table("email_queue"), ExposedStoreImpl<EmailQueue> {
+open class EmailQueue : Table("email_queue"), ExposedStoreImpl<EmailQueueEntry, EmailQueue> {
 
     val email = reference("email", EmailTable())
     val createdAt = timestamp("createdAt")
@@ -31,7 +31,7 @@ open class EmailQueue : Table("email_queue"), ExposedStoreImpl<EmailQueue> {
     }
 
     fun update(entry: EmailQueueEntry) {
-        update({ email jeq entry.email }) {
+        update({ email uuidEq entry.email }) {
             it[tries] = entry.tries
             it[lastTry] = entry.lastTry
             it[lastFailMessage] = entry.lastFailMessage
@@ -39,7 +39,7 @@ open class EmailQueue : Table("email_queue"), ExposedStoreImpl<EmailQueue> {
     }
 
     fun remove(uuid: UUID<Email>) {
-        deleteWhere { email jeq uuid }
+        deleteWhere { email uuidEq uuid }
     }
 
     fun size(): Long =

@@ -23,7 +23,7 @@ fun <T> EntityID<java.util.UUID>.asCommon() : UUID<T> =
 fun <T> java.util.UUID.asCommon() =
     UUID<T>(this.mostSignificantBits, this.leastSignificantBits)
 
-infix fun <E : EntityID<java.util.UUID>?> ExpressionWithColumnType<E>.jeq(t: UUID<*>?): Op<Boolean> {
+infix fun <E : EntityID<java.util.UUID>?> ExpressionWithColumnType<E>.uuidEq(t: UUID<*>?): Op<Boolean> {
     if (t == null) return isNull()
 
     @Suppress("UNCHECKED_CAST")

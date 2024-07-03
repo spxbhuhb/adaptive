@@ -5,14 +5,14 @@ import hu.simplexion.adaptive.email.model.EmailStatus
 import hu.simplexion.adaptive.exposed.ExposedStoreImpl
 import hu.simplexion.adaptive.exposed.asCommon
 import hu.simplexion.adaptive.exposed.asJvm
-import hu.simplexion.adaptive.exposed.jeq
+import hu.simplexion.adaptive.exposed.uuidEq
 import hu.simplexion.adaptive.utility.UUID
 import kotlinx.datetime.Clock.System.now
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 
-open class EmailTable: UUIDTable("email", columnName = "uuid"), ExposedStoreImpl<EmailTable> {
+class EmailTable : UUIDTable("email", columnName = "uuid"), ExposedStoreImpl<Email, EmailTable> {
 
     val recipients = text("recipients")
     val subject = text("subject")
@@ -27,7 +27,25 @@ open class EmailTable: UUIDTable("email", columnName = "uuid"), ExposedStoreImpl
 
     val contentType = varchar("contentType", 60)
 
-    fun insert(email: Email) {
+    fun ResultRow.toEmail(): Email =
+        Email(
+            uuid = this[id].value.asCommon(),
+            recipients = this[recipients],
+            subject = this[subject],
+            content = this[content],
+            status = this[status],
+            createdAt = this[createdAt],
+            sentAt = this[sentAt],
+            sensitive = this[sensitive],
+            hasAttachment = this[hasAttachment],
+            contentType = this[contentType]
+        )
+
+    fun all(): List<Email> =
+        selectAll()
+            .map { it.toEmail() }
+
+    fun add(email: Email) {
         insert {
             it[id] = email.uuid.asJvm()
             it[recipients] = email.recipients
@@ -42,8 +60,13 @@ open class EmailTable: UUIDTable("email", columnName = "uuid"), ExposedStoreImpl
         }
     }
 
+    operator fun get(uuid: UUID<Email>): Email =
+        select { id uuidEq uuid }
+            .single()
+            .toEmail()
+
     fun setStatus(uuid: UUID<Email>, inStatus: EmailStatus) {
-        update({ id jeq uuid }) {
+        update({ id uuidEq uuid }) {
             it[status] = inStatus
             if (inStatus == EmailStatus.Sent) {
                 it[sentAt] = now()
@@ -51,28 +74,6 @@ open class EmailTable: UUIDTable("email", columnName = "uuid"), ExposedStoreImpl
         }
     }
 
-    operator fun get(uuid: UUID<Email>) : Email =
-        select { id jeq uuid }
-            .single()
-            .toEmail()
-
-    fun all() : List<Email> =
-        selectAll()
-            .map { it.toEmail() }
-
-    fun ResultRow.toEmail(): Email =
-        Email(
-            uuid = this[id].value.asCommon(),
-            recipients = this[recipients],
-            subject = this[subject],
-            content = this[content],
-            status = this[status],
-            createdAt = this[createdAt],
-            sentAt = this[sentAt],
-            sensitive = this[sensitive],
-            hasAttachment = this[hasAttachment],
-            contentType = this[contentType]
-        )
 }
 
 
