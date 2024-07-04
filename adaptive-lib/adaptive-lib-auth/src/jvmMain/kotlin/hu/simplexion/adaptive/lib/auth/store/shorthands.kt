@@ -7,9 +7,9 @@ package hu.simplexion.adaptive.lib.auth.store
 import hu.simplexion.adaptive.auth.model.AuthHistoryEntry
 import hu.simplexion.adaptive.auth.model.Principal
 import hu.simplexion.adaptive.auth.model.Role
-import hu.simplexion.adaptive.call.CallSiteName
 import hu.simplexion.adaptive.lib.auth.context.getPrincipal
 import hu.simplexion.adaptive.server.builtin.ServiceImpl
+import hu.simplexion.adaptive.utility.CallSiteName
 import hu.simplexion.adaptive.utility.UUID
 import kotlinx.datetime.Clock
 

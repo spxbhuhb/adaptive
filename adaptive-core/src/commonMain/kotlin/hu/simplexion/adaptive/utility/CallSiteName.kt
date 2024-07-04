@@ -2,7 +2,7 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package hu.simplexion.adaptive.call
+package hu.simplexion.adaptive.utility
 
 /**
  * Then this annotation is present on a function:
