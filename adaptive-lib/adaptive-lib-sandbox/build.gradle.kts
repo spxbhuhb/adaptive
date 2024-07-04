@@ -53,16 +53,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.adaptive.core)
-                implementation(libs.adaptive.lib.auth)
-                implementation(libs.adaptive.lib.email)
-                implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.ui.common)
-            }
-        }
-
-        jvmMain {
-            dependencies {
-                implementation(libs.adaptive.lib.exposed)
             }
         }
     }

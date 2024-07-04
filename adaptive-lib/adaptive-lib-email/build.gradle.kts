@@ -25,6 +25,14 @@ kotlin {
         binaries.library()
     }
 
+    if (libs.versions.ios.support.get() != "none") {
+        listOf(
+            iosX64(),
+            iosArm64(),
+            iosSimulatorArm64()
+        )
+    }
+
     sourceSets.all {
         languageSettings {
             languageVersion = "2.0"
@@ -44,15 +52,19 @@ kotlin {
             }
         }
 
-        sourceSets["jvmMain"].dependencies {
-            implementation(libs.adaptive.lib.exposed)
-            implementation(libs.javamail)
+        jvmMain {
+            dependencies {
+                implementation(libs.adaptive.lib.exposed)
+                api(libs.javamail)
+            }
         }
 
-        sourceSets["jvmTest"].dependencies {
-            implementation(kotlin("test"))
-            implementation(libs.subethamail)
-            implementation(libs.h2database)
+        jvmTest {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(libs.subethamail)
+                implementation(libs.h2database)
+            }
         }
     }
 }

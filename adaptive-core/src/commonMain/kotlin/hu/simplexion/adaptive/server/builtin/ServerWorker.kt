@@ -4,20 +4,25 @@
 
 package hu.simplexion.adaptive.server.builtin
 
-import hu.simplexion.adaptive.foundation.*
+import hu.simplexion.adaptive.foundation.AdaptiveActual
+import hu.simplexion.adaptive.foundation.AdaptiveExpect
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.foundation.manualImplementation
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
+import hu.simplexion.adaptive.server.server
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
-@Adaptive
-fun worker(vararg instructions : AdaptiveInstruction, impl: () -> WorkerImpl<*>) {
+@AdaptiveExpect(server)
+fun worker(vararg instructions: AdaptiveInstruction, impl: () -> WorkerImpl<*>): AdaptiveFragment {
     manualImplementation(instructions, impl)
 }
 
-class AdaptiveWorker(
+@AdaptiveActual
+class ServerWorker(
     adapter: AdaptiveServerAdapter,
     parent: AdaptiveFragment,
     index: Int

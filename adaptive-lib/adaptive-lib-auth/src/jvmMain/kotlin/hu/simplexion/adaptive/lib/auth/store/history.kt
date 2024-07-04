@@ -43,6 +43,7 @@ internal fun ServiceImpl<*>.history(
     add(callSiteName, principal, result = result)
 
 @CallSiteName
+@JvmName("historyRoleGroup")
 internal fun ServiceImpl<*>.history(
     role: UUID<Role>? = null,
     roleGroup: UUID<Role>? = null,

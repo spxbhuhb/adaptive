@@ -31,12 +31,7 @@ kotlin {
             iosX64(),
             iosArm64(),
             iosSimulatorArm64()
-        ).forEach { iosTarget ->
-            iosTarget.binaries.framework {
-                baseName = "Shared"
-                isStatic = true
-            }
-        }
+        )
     }
 
     sourceSets.all {
@@ -50,7 +45,6 @@ kotlin {
             dependencies {
                 implementation(libs.adaptive.core)
                 implementation(libs.adaptive.lib.auth)
-
                 implementation(libs.ktor.client.websockets)
             }
         }

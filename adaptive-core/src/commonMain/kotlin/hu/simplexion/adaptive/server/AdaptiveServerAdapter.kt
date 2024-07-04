@@ -3,9 +3,13 @@
  */
 package hu.simplexion.adaptive.server
 
-import hu.simplexion.adaptive.foundation.*
-import hu.simplexion.adaptive.server.builtin.AdaptiveService
-import hu.simplexion.adaptive.utility.*
+import hu.simplexion.adaptive.foundation.AdaptiveAdapter
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.server.builtin.ServerService
+import hu.simplexion.adaptive.utility.getLock
+import hu.simplexion.adaptive.utility.sleep
+import hu.simplexion.adaptive.utility.use
+import hu.simplexion.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
@@ -16,7 +20,7 @@ open class AdaptiveServerAdapter(
     wait : Boolean = false
 ) : AdaptiveAdapter {
 
-    override val fragmentFactory = AdaptiveFragmentFactory()
+    override val fragmentFactory = ServerFragmentFactory
 
     var nextId = 1L
 
@@ -34,7 +38,7 @@ open class AdaptiveServerAdapter(
 
     // TODO implement cache synchronization
 
-    val serviceCache = mutableMapOf<String,AdaptiveService>()
+    val serviceCache = mutableMapOf<String, ServerService>()
 
     val lock = getLock()
 

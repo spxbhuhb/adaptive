@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.server.builtin
 
 import hu.simplexion.adaptive.foundation.query.single
+import hu.simplexion.adaptive.foundation.query.singleOrNull
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
 
 /**
@@ -70,7 +71,6 @@ inline fun <reified T : WorkerImpl<T>> ServerFragmentImpl.worker(): Lazy<T> =
 inline fun <reified T : WorkerImpl<T>> ServerFragmentImpl.workerOrNull(): Lazy<T?> =
     lazy {
         checkNotNull(adapter) { "this implementation is not part of an adaptive server" }
-            .single(deep = true) { it is AdaptiveServerFragment && it.impl is T }
-            .let { (it as AdaptiveServerFragment) }
-            .impl as T
+            .singleOrNull(deep = true) { it is AdaptiveServerFragment && it.impl is T }
+            ?.let { (it as ServerWorker).workerImpl as T }
     }

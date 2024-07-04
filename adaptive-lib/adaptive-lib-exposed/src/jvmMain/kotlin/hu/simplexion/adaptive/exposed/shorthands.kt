@@ -10,6 +10,12 @@ import hu.simplexion.adaptive.foundation.fragment
 import hu.simplexion.adaptive.server.builtin.worker
 
 @Adaptive
+fun hikari(): AdaptiveFragment {
+    worker { HikariWorker() }
+    return fragment()
+}
+
+@Adaptive
 fun inMemoryH2(): AdaptiveFragment {
     worker { InMemoryDatabase() }
     return fragment()

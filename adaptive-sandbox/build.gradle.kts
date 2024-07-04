@@ -60,6 +60,7 @@ kotlin {
                 implementation(libs.adaptive.ui.common)
                 implementation(libs.adaptive.lib.email)
                 implementation(libs.adaptive.lib.ktor)
+                implementation(libs.adaptive.lib.auth)
                 implementation(libs.adaptive.lib.sandbox)
             }
         }
@@ -67,6 +68,7 @@ kotlin {
         jvmMain {
             dependencies {
                 implementation(libs.adaptive.lib.exposed)
+                implementation(libs.h2database)
             }
         }
     }

@@ -10,6 +10,6 @@ import hu.simplexion.adaptive.exposed.AdatEntityTable
 object RoleContextTable : AdatEntityTable<RoleContext, RoleContextTable>("auth_role_context") {
 
     val name = varchar("name", 100).nullable()
-    val type = varchar("name", 100).nullable()
+    val type = varchar("type", 100).nullable()
 
 }

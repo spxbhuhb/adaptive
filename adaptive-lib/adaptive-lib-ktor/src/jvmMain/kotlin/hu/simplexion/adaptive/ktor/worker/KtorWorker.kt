@@ -24,12 +24,12 @@ class KtorWorker : WorkerImpl<KtorWorker> {
 
     val sessionWorker by workerOrNull<SessionWorker>()
 
-    lateinit var applicationEngine: ApplicationEngine
+    var applicationEngine: ApplicationEngine? = null
 
     override suspend fun run() {
         embeddedServer(Netty, port = port, module = { module() }).also {
             applicationEngine = it
-            it.start(wait = false)
+            it.start(wait = false) // FIXME think about Ktor server wait parameter
         }
     }
 

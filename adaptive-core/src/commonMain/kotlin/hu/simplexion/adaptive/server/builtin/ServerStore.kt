@@ -4,17 +4,22 @@
 
 package hu.simplexion.adaptive.server.builtin
 
-import hu.simplexion.adaptive.foundation.*
+import hu.simplexion.adaptive.foundation.AdaptiveActual
+import hu.simplexion.adaptive.foundation.AdaptiveExpect
+import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.foundation.manualImplementation
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.AdaptiveServerFragment
+import hu.simplexion.adaptive.server.server
 
-@Adaptive
-fun store(vararg instructions : AdaptiveInstruction, impl : () -> StoreImpl<*>) {
+@AdaptiveExpect(server)
+fun store(vararg instructions: AdaptiveInstruction, impl: () -> StoreImpl<*>): AdaptiveFragment {
     manualImplementation(instructions, impl)
 }
 
-class AdaptiveStore(
+@AdaptiveActual
+class ServerStore(
     adapter: AdaptiveServerAdapter,
     parent: AdaptiveFragment,
     index: Int
