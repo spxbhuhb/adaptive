@@ -4,29 +4,28 @@
 
 package hu.simplexion.adaptive.auth.api
 
-import hu.simplexion.adaptive.auth.model.Credentials
+import hu.simplexion.adaptive.auth.model.Credential
 import hu.simplexion.adaptive.auth.model.Principal
-import hu.simplexion.adaptive.auth.model.Role
 import hu.simplexion.adaptive.service.ServiceApi
 import hu.simplexion.adaptive.utility.UUID
 
 @ServiceApi
 interface PrincipalApi {
 
-    suspend fun list(): List<Principal>
+    suspend fun all(): List<Principal>
 
-    suspend fun add(principal: Principal, activated: Boolean, activationKey: String?, roles: List<UUID<Role>>): UUID<Principal>
+    suspend fun addPrincipal(principal: Principal, activated: Boolean, activationKey: String?)
 
-    suspend fun add(credentials: Credentials, currentCredentials: Credentials? = null)
+    suspend fun addCredential(credential: Credential, currentCredential: Credential? = null)
 
-    suspend fun get(uuid: UUID<Principal>): Principal
+    suspend fun get(principalId: UUID<Principal>): Principal
 
-    suspend fun activate(credentials: Credentials, key: Credentials): String
+    suspend fun activate(credential: Credential, key: Credential)
 
-    suspend fun resetPassword(credentials: Credentials, key: Credentials): String
+    suspend fun resetPassword(credential: Credential, key: Credential)
 
-    suspend fun setActivated(uuid: UUID<Principal>, activated: Boolean)
+    suspend fun setActivated(principalId: UUID<Principal>, activated: Boolean)
 
-    suspend fun setLocked(uuid: UUID<Principal>, locked: Boolean)
+    suspend fun setLocked(principalId: UUID<Principal>, locked: Boolean)
 
 }

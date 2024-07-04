@@ -83,6 +83,20 @@ fun AdaptiveAdapter.single(
 ): AdaptiveFragment =
     rootFragment.single(deep, horizontal, condition)
 
+/**
+ * Returns the single fragment that matches the condition, or null if there is no
+ * such fragment. Throws an exception if there are more than one.
+ *
+ * @param deep Deep search, go down in the fragment tree.
+ * @param horizontal When [deep] is true, filter a given level first, children second.
+ */
+fun AdaptiveAdapter.singleOrNull(
+    deep: Boolean = true,
+    horizontal: Boolean = true,
+    condition: (AdaptiveFragment) -> Boolean
+): AdaptiveFragment? =
+    rootFragment.singleOrNull(deep, horizontal, condition)
+
 // -------------------------------------------------------------
 // Inline with fragment class
 // -------------------------------------------------------------

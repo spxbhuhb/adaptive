@@ -23,10 +23,13 @@ abstract class AdatTable<A : AdatClass<A>, S : AdatTable<A, S>>(
     override fun all(): List<A> =
         selectAll().map { fromRow(it) }
 
-    override fun add(valueFun: () -> A) =
-        insert { toRow(it, valueFun()) }
+    override fun add(value: () -> A) =
+        insert { toRow(it, value()) }
 
     override fun add(value: A) =
         insert { toRow(it, value) }
 
+    operator fun plusAssign(value: A) {
+        add(value)
+    }
 }

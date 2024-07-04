@@ -5,21 +5,21 @@
 package hu.simplexion.adaptive.auth.model
 
 import hu.simplexion.adaptive.adat.Adat
-import hu.simplexion.adaptive.utility.UUID
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 
 @Adat
 class SecurityPolicy(
-    var twoFactorAuthentication: Boolean,
-    var sessionActivationInterval: Duration,
-    var sessionExpirationInterval: Duration,
-    var passwordChangeInterval: Duration,
-    var passwordHistoryLength: Int,
-    var passwordLengthMinimum: Int,
-    var uppercaseMinimum: Int,
-    var digitMinimum: Int,
-    var specialCharacterMinimum: Int,
-    var sameCharacterMaximum: Int,
-    var minEntropy: EntropyCategory,
-    var maxFailedAuths: Int
+    var twoFactorAuthentication: Boolean = false,
+    var sessionActivationInterval: Duration = 5.minutes,
+    var sessionExpirationInterval: Duration = 30.minutes,
+    var passwordChangeInterval: Duration = 30.minutes,
+    var passwordHistoryLength: Int = 10,
+    var passwordLengthMinimum: Int = 0,
+    var uppercaseMinimum: Int = 0,
+    var digitMinimum: Int = 0,
+    var specialCharacterMinimum: Int = 0,
+    var sameCharacterMaximum: Int = 0,
+    var minEntropy: EntropyCategory = EntropyCategory.Poor,
+    var maxFailedAuths: Int = 5
 )

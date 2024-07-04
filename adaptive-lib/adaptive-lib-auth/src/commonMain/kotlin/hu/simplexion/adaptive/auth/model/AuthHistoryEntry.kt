@@ -18,8 +18,11 @@ class AuthHistoryEntry(
     val executedBy: UUID<Principal>,
     val executedAt: Instant,
 
+    val session: UUID<Session>?,
     val principal: UUID<Principal>?,
     val role: UUID<Role>?,
-    val roleGroup: UUID<Role>?
+    val roleGroup: UUID<Role>?,
+
+    val result: AuthenticationResult?
 
 ) : AdatEntity<AuthHistoryEntry>

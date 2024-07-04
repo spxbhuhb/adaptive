@@ -6,8 +6,13 @@ package hu.simplexion.adaptive.kotlin.adat.ir.exposed
 
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.types.IrType
+import org.jetbrains.kotlin.ir.types.classFqName
 
 class ColumnProperty(
     val property: IrProperty,
     val type: IrType
-)
+) {
+    override fun toString(): String {
+        return "${property.name}: ${type.classFqName}"
+    }
+}

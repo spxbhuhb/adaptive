@@ -2,9 +2,11 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package hu.simplexion.adaptive.ktor
+package hu.simplexion.adaptive.ktor.worker
 
+import hu.simplexion.adaptive.lib.auth.worker.SessionWorker
 import hu.simplexion.adaptive.server.builtin.WorkerImpl
+import hu.simplexion.adaptive.server.builtin.workerOrNull
 import hu.simplexion.adaptive.server.setting.dsl.setting
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -19,6 +21,8 @@ class KtorWorker : WorkerImpl<KtorWorker> {
 
     val port by setting<Int> { "KTOR_PORT" }
     val static by setting<String> { "KTOR_STATIC" }
+
+    val sessionWorker by workerOrNull<SessionWorker>()
 
     lateinit var applicationEngine: ApplicationEngine
 
@@ -39,8 +43,10 @@ class KtorWorker : WorkerImpl<KtorWorker> {
         }
 
         routing {
-            session()
-            sessionWebsocketServiceCallTransport(this@KtorWorker)
+            sessionWorker?.let {
+                session(it)
+                sessionWebsocketServiceCallTransport(this@KtorWorker, it)
+            }
             staticFiles("/", File(static)) {
                 this.default("index.html")
             }

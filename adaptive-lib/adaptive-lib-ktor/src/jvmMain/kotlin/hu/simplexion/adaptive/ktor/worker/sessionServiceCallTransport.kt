@@ -1,9 +1,14 @@
-package hu.simplexion.adaptive.ktor
+/*
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ */
 
+package hu.simplexion.adaptive.ktor.worker
+
+import hu.simplexion.adaptive.auth.model.Session.Companion.SESSION_TOKEN
+import hu.simplexion.adaptive.lib.auth.worker.SessionWorker
 import hu.simplexion.adaptive.log.getLogger
 import hu.simplexion.adaptive.service.BasicServiceContext
 import hu.simplexion.adaptive.service.ServiceContext
-import hu.simplexion.adaptive.service.defaultServiceImplFactory
 import hu.simplexion.adaptive.service.model.RequestEnvelope
 import hu.simplexion.adaptive.service.model.ResponseEnvelope
 import hu.simplexion.adaptive.service.model.ServiceCallStatus
@@ -18,6 +23,7 @@ import io.ktor.websocket.*
 // FIXME flood detection, session id brute force attack detection
 fun Routing.sessionWebsocketServiceCallTransport(
     worker : KtorWorker,
+    sessionWorker: SessionWorker,
     path: String = "/adaptive/service",
     newContext: (uuid: UUID<ServiceContext>) -> ServiceContext = { BasicServiceContext(it) }
 ) {
@@ -38,9 +44,9 @@ fun Routing.sessionWebsocketServiceCallTransport(
 
             val context = newContext(sessionUuid)
 
-//            sessionImpl.getSessionForContext(sessionUuid)?.let {
-//                context.data[Session.SESSION_TOKEN_UUID] = it
-//            }
+            sessionWorker.getSessionForContext(sessionUuid)?.let {
+                context.data[SESSION_TOKEN] = it
+            }
 
             for (frame in incoming) {
                 val data = when (frame) {

@@ -121,6 +121,17 @@ fun AdaptiveFragment.single(
 ): AdaptiveFragment =
     filter(mutableListOf(), deep, horizontal, condition).single()
 
+/**
+ * Returns the single fragment that matches the condition or null if there is
+ * no such fragment. Throws an exception if there are more than one.
+ */
+fun AdaptiveFragment.singleOrNull(
+    deep: Boolean = true,
+    horizontal: Boolean = true,
+    condition: (AdaptiveFragment) -> Boolean
+): AdaptiveFragment? =
+    filter(mutableListOf(), deep, horizontal, condition).singleOrNull()
+
 // -------------------------------------------------------------
 // General data collect
 // -------------------------------------------------------------

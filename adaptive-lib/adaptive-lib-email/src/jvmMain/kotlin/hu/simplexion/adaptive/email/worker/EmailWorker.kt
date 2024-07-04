@@ -9,8 +9,8 @@ import hu.simplexion.adaptive.server.builtin.WorkerImpl
 import hu.simplexion.adaptive.server.builtin.launch
 import hu.simplexion.adaptive.server.builtin.store
 import hu.simplexion.adaptive.server.setting.dsl.setting
-import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
@@ -81,7 +81,7 @@ class EmailWorker : WorkerImpl<EmailWorker> {
 
         if (email.status.isFinal) {
             transaction {
-                emailQueue.remove(email.uuid)
+                emailQueue.remove(email.id)
             }
             return
         }
@@ -133,7 +133,7 @@ class EmailWorker : WorkerImpl<EmailWorker> {
             val recipient = try {
                 InternetAddress.parse(address)
             } catch (ex: AddressException) {
-                logger.error("failed to send email ${email.uuid}", ex)
+                logger.error("failed to send email ${email.id}", ex)
                 update(EmailStatus.Failed)
                 return
             }
@@ -158,7 +158,7 @@ class EmailWorker : WorkerImpl<EmailWorker> {
                 Transport.send(message)
 
                 update(EmailStatus.Sent)
-                logger.info("email sent: ${email.uuid}")
+                logger.info("email sent: ${email.id}")
 
             } catch (ex: AuthenticationFailedException) {
 
@@ -173,19 +173,19 @@ class EmailWorker : WorkerImpl<EmailWorker> {
 
             } catch (ex: SendFailedException) {
 
-                logger.error("error message from the mail server for email ${email.uuid}", ex)
+                logger.error("error message from the mail server for email ${email.id}", ex)
                 update(EmailStatus.Failed)
 
             } catch (ex: MessagingException) {
 
                 // whatever error, keep the e-mail in the queue
-                logger.error("failed to send email ${email.uuid}", ex)
+                logger.error("failed to send email ${email.id}", ex)
                 update(EmailStatus.RetryWait)
 
             }
 
         } catch (ex: Exception) {
-            logger.error("failed to send email ${email.uuid}", ex)
+            logger.error("failed to send email ${email.id}", ex)
             update(EmailStatus.Failed)
         }
     }

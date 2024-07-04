@@ -37,7 +37,7 @@ class RoleService : RoleApi, ServiceImpl<RoleService> {
 
         history(role)
 
-        roles.add { role }
+        roles += role
     }
 
     override suspend fun update(role: Role) {
@@ -46,7 +46,7 @@ class RoleService : RoleApi, ServiceImpl<RoleService> {
 
         history(role)
 
-        roles.update { role }
+        roles %= role
     }
 
     override suspend fun remove(roleId: UUID<Role>) {
@@ -54,8 +54,8 @@ class RoleService : RoleApi, ServiceImpl<RoleService> {
 
         history(roleId)
 
-        roleGrants.remove { roleId }
-        roles.remove { roleId }
+        roleGrants -= roleId
+        roles -= roleId
     }
 
     override suspend fun grant(roleId: UUID<Role>, principalId: UUID<Principal>) {
@@ -63,7 +63,7 @@ class RoleService : RoleApi, ServiceImpl<RoleService> {
 
         history(principalId, roleId)
 
-        roleGrants.add(RoleGrant(principalId, roleId))
+        roleGrants += RoleGrant(principalId, roleId)
     }
 
     override suspend fun revoke(roleId: UUID<Role>, principalId: UUID<Principal>) {

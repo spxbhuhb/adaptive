@@ -5,20 +5,20 @@
 package hu.simplexion.adaptive.lib.auth.store
 
 import hu.simplexion.adaptive.auth.model.Role
-import hu.simplexion.adaptive.exposed.asCommon
+import hu.simplexion.adaptive.auth.model.RoleMembership
+import hu.simplexion.adaptive.exposed.AdatTable
 import hu.simplexion.adaptive.exposed.asJava
 import hu.simplexion.adaptive.exposed.uuidEq
 import hu.simplexion.adaptive.utility.UUID
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 
-object RoleMembershipTable : Table("auth_role_membership") {
+object RoleMembershipTable : AdatTable<RoleMembership, RoleMembershipTable>("auth_role_membership") {
 
     val group = reference("group", RoleTable)
     val member = reference("member", RoleTable)
-
-    fun all(): List<Pair<UUID<Role>, UUID<Role>>> =
-        selectAll()
-            .map { Pair(it[group].asCommon(), it[member].asCommon()) }
 
     fun add(itemId: UUID<Role>, groupId: UUID<Role>) {
         val jvmItem = itemId.asJava()

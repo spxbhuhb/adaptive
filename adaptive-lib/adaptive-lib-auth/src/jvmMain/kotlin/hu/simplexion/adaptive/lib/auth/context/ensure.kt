@@ -111,6 +111,15 @@ fun ServiceImpl<*>.ensurePrincipal(principal: UUID<Principal>) {
 }
 
 /**
+ * Ensure that the service context runs in the name of the principal specified **OR**
+ * it has **AT LEASE ONE** of the specified roles.
+ */
+fun ServiceImpl<*>.ensurePrincipalOrOneOf(principal: UUID<Principal>, roles: Array<UUID<Role>>) {
+    if (serviceContext.isPrincipal(principal)) return
+    ensureOneOf(*roles)
+}
+
+/**
  * Marks the following code as secure by some logic.
  */
 fun ensuredByLogic(@Suppress("UNUSED_PARAMETER") explanation: String) {

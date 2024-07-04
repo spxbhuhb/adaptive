@@ -10,6 +10,7 @@ import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import hu.simplexion.adaptive.server.builtin.store
 import hu.simplexion.adaptive.server.builtin.worker
 import hu.simplexion.adaptive.service.ServiceContext
+import hu.simplexion.adaptive.utility.UUID
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class EmailService : EmailApi, ServiceImpl<EmailService> {
@@ -28,13 +29,13 @@ class EmailService : EmailApi, ServiceImpl<EmailService> {
 
     override suspend fun send(recipients: String, subject: String, contentText: String, contentType: String) {
         transaction {
-            val email = Email(recipients, subject, contentText, contentType = contentType)
+            val email = Email(UUID(), recipients, subject, contentText, contentType = contentType)
 
-            emailTable.add(email)
+            emailTable += email
 
-            val entry = EmailQueueEntry(email.uuid)
+            val entry = EmailQueueEntry(email.id)
 
-            emailQueue.insert(entry)
+            emailQueue += entry
             emailWorker.normalQueue.trySend(entry)
         }
     }

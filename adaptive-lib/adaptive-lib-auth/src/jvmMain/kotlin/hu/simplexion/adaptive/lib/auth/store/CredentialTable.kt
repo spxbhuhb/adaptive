@@ -4,9 +4,9 @@
 
 package hu.simplexion.adaptive.lib.auth.store
 
+import hu.simplexion.adaptive.auth.model.Credential
 import hu.simplexion.adaptive.auth.model.CredentialType.ACTIVATION_KEY
 import hu.simplexion.adaptive.auth.model.CredentialType.PASSWORD_RESET_KEY
-import hu.simplexion.adaptive.auth.model.Credentials
 import hu.simplexion.adaptive.auth.model.Principal
 import hu.simplexion.adaptive.exposed.AdatEntityTable
 import hu.simplexion.adaptive.exposed.ExposedAdatTable
@@ -20,7 +20,7 @@ import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 import org.jetbrains.exposed.sql.select
 
 @ExposedAdatTable
-object CredentialTable : AdatEntityTable<Credentials, CredentialTable>("auth_credentials") {
+object CredentialTable : AdatEntityTable<Credential, CredentialTable>("auth_credential") {
 
     val principal = reference("principal", PrincipalTable)
     val type = varchar("type", 50)

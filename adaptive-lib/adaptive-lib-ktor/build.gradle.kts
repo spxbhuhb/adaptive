@@ -49,6 +49,8 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.adaptive.core)
+                implementation(libs.adaptive.lib.auth)
+
                 implementation(libs.ktor.client.websockets)
             }
         }

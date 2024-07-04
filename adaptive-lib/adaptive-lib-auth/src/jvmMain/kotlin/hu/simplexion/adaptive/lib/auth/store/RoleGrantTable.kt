@@ -31,6 +31,10 @@ object RoleGrantTable : AdatTable<RoleGrant, RoleGrantTable>("auth_role_grant") 
         }
     }
 
+    operator fun minusAssign(roleId: UUID<Role>) {
+        remove(roleId)
+    }
+
     fun rolesOf(principalId: UUID<Principal>, contextId: UUID<RoleContext>?): List<Role> {
 
         val condition = if (contextId == null) {

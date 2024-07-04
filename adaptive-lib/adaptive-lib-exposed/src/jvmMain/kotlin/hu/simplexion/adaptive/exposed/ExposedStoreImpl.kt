@@ -37,7 +37,7 @@ interface ExposedStoreImpl<A : AdatClass<A>, T : ExposedStoreImpl<A, T>> : Store
 
     fun all(): List<A>
 
-    fun add(valueFun: () -> A): InsertStatement<Number>
+    fun add(value: () -> A): InsertStatement<Number>
 
     fun add(value: A): InsertStatement<Number>
 

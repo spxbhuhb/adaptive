@@ -10,10 +10,10 @@ import hu.simplexion.adaptive.server.builtin.service
 import hu.simplexion.adaptive.server.builtin.store
 import hu.simplexion.adaptive.server.builtin.worker
 import hu.simplexion.adaptive.server.server
-import hu.simplexion.adaptive.service.getService
 import hu.simplexion.adaptive.server.setting.dsl.inline
 import hu.simplexion.adaptive.server.setting.dsl.settings
 import hu.simplexion.adaptive.service.defaultServiceImplFactory
+import hu.simplexion.adaptive.service.getService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
@@ -73,8 +73,8 @@ class EmailWorkerTest {
 
             worker { InMemoryDatabase() }
 
-            store { EmailTable() }
-            store { EmailQueue() }
+            store { EmailTable }
+            store { EmailQueue }
             worker { EmailWorker() }
             service { EmailService() }
 

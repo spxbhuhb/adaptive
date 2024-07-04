@@ -1,0 +1,224 @@
+package hu.simplexion.adaptive.lib.auth.service
+
+import hu.simplexion.adaptive.auth.api.SessionApi
+import hu.simplexion.adaptive.auth.model.*
+import hu.simplexion.adaptive.auth.model.CredentialType.ACTIVATION_KEY
+import hu.simplexion.adaptive.auth.model.Session.Companion.LOGOUT_TOKEN
+import hu.simplexion.adaptive.auth.model.Session.Companion.SESSION_TOKEN
+import hu.simplexion.adaptive.auth.util.AuthenticationFail
+import hu.simplexion.adaptive.lib.auth.context.ensuredByLogic
+import hu.simplexion.adaptive.lib.auth.context.getPrincipal
+import hu.simplexion.adaptive.lib.auth.context.getSessionOrNull
+import hu.simplexion.adaptive.lib.auth.context.publicAccess
+import hu.simplexion.adaptive.lib.auth.crypto.BCrypt
+import hu.simplexion.adaptive.lib.auth.store.credentials
+import hu.simplexion.adaptive.lib.auth.store.history
+import hu.simplexion.adaptive.lib.auth.store.principals
+import hu.simplexion.adaptive.lib.auth.store.roleGrants
+import hu.simplexion.adaptive.lib.auth.worker.SessionWorker
+import hu.simplexion.adaptive.server.builtin.ServiceImpl
+import hu.simplexion.adaptive.server.builtin.worker
+import hu.simplexion.adaptive.utility.UUID
+import hu.simplexion.adaptive.utility.fourRandomInt
+import hu.simplexion.adaptive.utility.vmNowSecond
+import kotlinx.datetime.Clock.System.now
+import org.jetbrains.exposed.sql.transactions.TransactionManager
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
+import kotlin.math.abs
+
+class SessionService : SessionApi, ServiceImpl<SessionService> {
+
+    val worker by worker<SessionWorker>()
+
+    // ----------------------------------------------------------------------------------
+    // API functions
+    // ----------------------------------------------------------------------------------
+
+    override suspend fun owner(): UUID<Principal>? {
+        ensuredByLogic("Session owner gets own principal.")
+        return serviceContext.getSessionOrNull()?.principal
+    }
+
+    override suspend fun roles(): List<UUID<Role>> {
+        ensuredByLogic("Session owner gets own roles.")
+        return serviceContext.getSessionOrNull()?.roles?.map { it.id } ?: emptyList()
+    }
+
+    override suspend fun login(name: String, password: String): Session {
+        publicAccess()
+
+        val policy = getPolicy()
+        val principal = principals.getByNameOrNull(name) ?: throw AuthenticationFail(AuthenticationResult.UnknownPrincipal)
+
+        // history is written by authenticate
+
+        authenticate(principal.id, password, true, CredentialType.PASSWORD, policy)
+
+        val vmNow = vmNowSecond()
+
+        val session = Session(
+            id = serviceContext.uuid.cast(),
+            securityCode = abs(fourRandomInt()[0]).toString().padStart(6, '0').substring(0, 6),
+            principal = principal.id,
+            createdAt = now(),
+            vmCreatedAt = vmNow,
+            lastActivity = vmNow,
+            roles = roleGrants.rolesOf(principal.id, null)
+        )
+
+        if (getPolicy().twoFactorAuthentication) {
+            worker.preparedSessions[serviceContext.uuid] = session
+            worker.sendSecurityCode(session)
+        } else {
+            worker.activeSessions[serviceContext.uuid] = session
+            serviceContext.data[SESSION_TOKEN] = session
+        }
+
+        return session
+    }
+
+    override suspend fun activateSession(securityCode: String): Session {
+        publicAccess()
+
+        val session = worker.preparedSessions[serviceContext.uuid]
+            ?: throw AuthenticationFail(AuthenticationResult.UnknownSession)
+
+        if (session.securityCode != securityCode) {
+            // maybe the user opened way too many windows
+            if (
+                worker.preparedSessions.values.none {
+                    it.principal == session.principal && it.securityCode == securityCode
+                }
+            ) {
+                // FIXME do we want security code brute force detection?
+                throw AuthenticationFail(AuthenticationResult.InvalidSecurityCode)
+            }
+        }
+
+        history(serviceContext.getPrincipal(), AuthenticationResult.Success)
+
+        worker.preparedSessions.remove(serviceContext.uuid)
+        worker.activeSessions[serviceContext.uuid] = session
+        serviceContext.data[SESSION_TOKEN] = session
+
+        return session
+    }
+
+    override suspend fun getSession(): Session? {
+        ensuredByLogic("Session owner gets own session.")
+
+        return serviceContext.getSessionOrNull()
+    }
+
+    override suspend fun logout() {
+        publicAccess()
+
+        serviceContext.data[LOGOUT_TOKEN] = true
+
+        if (serviceContext.getSessionOrNull() == null) return
+
+        history(serviceContext.getPrincipal())
+
+        worker.activeSessions.remove(serviceContext.uuid)
+        serviceContext.data.remove(SESSION_TOKEN)
+    }
+
+    // ----------------------------------------------------------------------------------
+    // Non-API functions
+    // ----------------------------------------------------------------------------------
+
+    private val authenticateLock = ReentrantLock()
+    private val authenticateInProgress = mutableSetOf<UUID<Principal>>()
+
+    fun authenticate(
+        principalId: UUID<Principal>,
+        password: String,
+        checkCredentials: Boolean,
+        credentialType: String,
+        policy: SecurityPolicy
+    ) {
+
+        // FIXME check credential expiration
+
+        val validCredentials = if (checkCredentials) {
+            val credential = credentials.readValue(principalId, credentialType)
+                ?: throw AuthenticationFail(AuthenticationResult.NoCredential)
+
+            BCrypt.checkpw(password, credential)
+        } else {
+            true
+        }
+
+        // this is here to prevent SQL deadlocks
+        lockState(principalId)
+
+        try {
+            val principal = principals[principalId]
+
+            val result = when {
+                ! principal.activated && credentialType != ACTIVATION_KEY -> AuthenticationResult.NotActivated
+                principal.locked -> AuthenticationResult.Locked
+                principal.expired -> AuthenticationResult.Expired
+                principal.anonymized -> AuthenticationResult.Anonymized
+                ! validCredentials -> AuthenticationResult.InvalidCredentials
+                else -> null
+            }
+
+            if (result != null) {
+                principal.authFailCount ++
+                principal.lastAuthFail = now()
+                principal.locked = principal.locked || (principal.authFailCount > policy.maxFailedAuths)
+
+                principals %= principal
+
+                history(principal.id, result)
+
+                TransactionManager.current().commit()
+
+                throw AuthenticationFail(result)
+            }
+
+            principal.lastAuthSuccess = now()
+            principal.authSuccessCount ++
+            principal.authFailCount = 0
+
+            principals %= principal
+
+            history(principal.id, AuthenticationResult.Success)
+
+            TransactionManager.current().commit()
+
+        } finally {
+            releaseState(principalId)
+        }
+    }
+
+    private fun lockState(principalId: UUID<Principal>) {
+        var success = false
+        for (tryNumber in 1 .. 5) {
+            success = authenticateLock.withLock {
+                if (principalId in authenticateInProgress) {
+                    Thread.sleep(100)
+                    false
+                } else {
+                    authenticateInProgress += principalId
+                    true
+                }
+            }
+            if (success) break
+        }
+        if (! success) throw RuntimeException("couldn't lock principal state in 5 tries")
+    }
+
+    private fun releaseState(principalId: UUID<Principal>) {
+        authenticateLock.withLock {
+            authenticateInProgress -= principalId
+        }
+    }
+
+    fun getPolicy(): SecurityPolicy {
+        return SecurityPolicy()
+    }
+
+}

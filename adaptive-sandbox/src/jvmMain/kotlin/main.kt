@@ -2,7 +2,7 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-import hu.simplexion.adaptive.ktor.KtorWorker
+import hu.simplexion.adaptive.ktor.worker.KtorWorker
 import hu.simplexion.adaptive.sandbox.service.CounterService
 import hu.simplexion.adaptive.sandbox.worker.CounterWorker
 import hu.simplexion.adaptive.server.builtin.service

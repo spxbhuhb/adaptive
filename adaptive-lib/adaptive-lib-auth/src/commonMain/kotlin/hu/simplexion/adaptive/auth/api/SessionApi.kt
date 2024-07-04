@@ -25,8 +25,4 @@ interface SessionApi {
 
     suspend fun logout()
 
-    suspend fun logout(session: UUID<Session>)
-
-    suspend fun list(): List<Session>
-
 }

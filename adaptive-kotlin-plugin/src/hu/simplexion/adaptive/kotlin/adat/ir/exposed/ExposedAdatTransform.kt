@@ -78,13 +78,22 @@ class ExposedAdatTransform(
         return mapping
     }
 
-    fun isTypeOk(column: ColumnProperty, parameter: IrValueParameter): Boolean =
-        when {
-            column.type == parameter.type -> true
-            column.type.isSubtypeOfClass(pluginContext.entityId !!) && parameter.type.isSubtypeOfClass(pluginContext.commonUuid) -> true
-            column.type == pluginContext.javaUuidType && parameter.type.isSubtypeOfClass(pluginContext.commonUuid) -> true
+    fun isTypeOk(column: ColumnProperty, parameter: IrValueParameter): Boolean {
+        if (column.type == parameter.type) return true
+
+        if (! parameter.type.isSubtypeOfClass(pluginContext.commonUuid)) return false
+
+        val nullable = parameter.type.isNullable()
+        val entityId = column.type.isSubtypeOfClass(pluginContext.entityId !!)
+
+        return when {
+            entityId && ! column.type.isNullable() && ! nullable -> true
+            entityId && column.type.isNullable() && nullable -> true
+            column.type == pluginContext.javaUuidType && ! nullable -> true
+            column.type == pluginContext.javaUuidTypeN && nullable -> true
             else -> false
         }
+    }
 
     override fun visitFunctionNew(declaration: IrFunction): IrStatement =
         when (declaration.name) {

@@ -14,19 +14,23 @@ import org.jetbrains.exposed.sql.statements.UpdateBuilder
 class TestAdat(
     val id: UUID<TestAdat>,
     val someUuid: UUID<TestAdat>,
+    val someUuidNullable: UUID<TestAdat>?,
+    val someReferenceNullable: UUID<TestAdat>?,
     val someInt: Int,
     var someBoolean: Boolean
 ) : AdatClass<TestAdat>
 
 @ExposedAdatTable
-class TestAdatTable : AbstractAdatTable<TestAdat>() {
+object TestAdatTable : AbstractAdatTable<TestAdat>() {
     val someUuid = uuid("some_uuid")
+    val someUuidNullable = uuid("some_uuid_nullable").nullable()
+    val someReferenceNullable = reference("some_reference", TestAdatTable).nullable()
     val someInt = integer("some_int")
     val someBoolean = bool("some_boolean")
 }
 
 fun box(): String {
-    val t1 = TestAdat(UUID(), UUID(), 1, false)
+    val t1 = TestAdat(UUID(), UUID(), null, null, 1, false)
     return "OK"
 }
 

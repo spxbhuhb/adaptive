@@ -6,15 +6,10 @@ package hu.simplexion.adaptive.auth.model
 
 import hu.simplexion.adaptive.adat.Adat
 import hu.simplexion.adaptive.adat.AdatClass
-import hu.simplexion.adaptive.adat.AdatEntity
 import hu.simplexion.adaptive.utility.UUID
-import kotlinx.datetime.Instant
 
 @Adat
-class Credentials(
-    override val id: UUID<Credentials>,
-    var principal: UUID<Principal>,
-    var type: String,
-    var value: String,
-    var createdAt: Instant
-) : AdatEntity<Credentials>
+class RoleMembership(
+    var group: UUID<Role>,
+    var member: UUID<Role>
+) : AdatClass<RoleMembership>

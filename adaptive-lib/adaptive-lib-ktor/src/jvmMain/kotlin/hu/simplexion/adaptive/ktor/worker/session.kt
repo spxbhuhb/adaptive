@@ -1,5 +1,6 @@
-package hu.simplexion.adaptive.ktor
+package hu.simplexion.adaptive.ktor.worker
 
+import hu.simplexion.adaptive.lib.auth.worker.SessionWorker
 import hu.simplexion.adaptive.service.ServiceContext
 import hu.simplexion.adaptive.utility.UUID
 import io.ktor.http.*
@@ -7,11 +8,12 @@ import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Routing.session() {
+fun Routing.session(sessionWorker: SessionWorker) {
+
     get("/adaptive/session") {
         val existingSessionId = call.request.cookies["ADAPTIVE_SESSION"]?.let { UUID<ServiceContext>(it) }
 
-        val id = if (existingSessionId != null /* && sessionImpl.getSessionForContext(existingSessionId) != null */) {
+        val id = if (existingSessionId != null && sessionWorker.getSessionForContext(existingSessionId) != null) {
             existingSessionId
         } else {
             UUID()
@@ -20,4 +22,5 @@ fun Routing.session() {
         call.response.cookies.append("ADAPTIVE_SESSION", id, httpOnly = true, path = "/")
         call.respond(HttpStatusCode.OK)
     }
+
 }
