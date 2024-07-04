@@ -5,28 +5,28 @@
 package hu.simplexion.adaptive.exposed
 
 import hu.simplexion.adaptive.adat.Adat
-import hu.simplexion.adaptive.adat.AdatClass
+import hu.simplexion.adaptive.adat.AdatEntity
 import hu.simplexion.adaptive.utility.UUID
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.Test
 import kotlin.test.assertEquals
 
 @Adat
-class UuidTestData(
-    val id: UUID<UuidTestData>,
+class EntityTestData(
+    override val id: UUID<EntityTestData>,
     val someInt: Int,
     val someBoolean: Boolean
-) : AdatClass<UuidTestData>
+) : AdatEntity<EntityTestData>
 
 @ExposedAdatTable
-class UuidTestTable : AdatUuidTable<UuidTestData, UuidTestTable>() {
+class UuidTestTable : AdatEntityTable<EntityTestData, UuidTestTable>() {
 
     val someInt = integer("some_int")
     val someBoolean = bool("some_boolean")
 
 }
 
-class AdatUuidTableTest {
+class AdatEntityTableTest {
 
     @Test
     fun basic() {
@@ -34,7 +34,7 @@ class AdatUuidTableTest {
         UuidTestTable().apply {
             create()
             transaction {
-                val td = UuidTestData(UUID(), 12, false).also { add(it) }
+                val td = EntityTestData(UUID(), 12, false).also { add(it) }
                 val tdl = all()
                 assertEquals(1, tdl.size)
                 assertEquals(td, tdl.first())

@@ -10,13 +10,15 @@ import hu.simplexion.adaptive.utility.pluginGenerated
 import hu.simplexion.adaptive.wireformat.json.JsonWireFormatEncoder
 import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatEncoder
 
-interface AdatClass<S : AdatClass<S>> : AdaptivePropertyProvider {
+interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
 
     val adatValues : Array<Any?>
         get() = pluginGenerated()
 
-    val adatCompanion : AdatCompanion<S>
+    val adatCompanion: AdatCompanion<A>
         get() = pluginGenerated()
+
+    fun isValid() = true
 
     fun copy() = adatCompanion.newInstance(adatValues.copyOf())
 
@@ -34,11 +36,11 @@ interface AdatClass<S : AdatClass<S>> : AdaptivePropertyProvider {
 
     fun toJson() : ByteArray =
         @Suppress("UNCHECKED_CAST")
-        JsonWireFormatEncoder().rawInstance(this as S, adatCompanion.adatWireFormat).pack()
+        JsonWireFormatEncoder().rawInstance(this as A, adatCompanion.adatWireFormat).pack()
 
     fun toProto() : ByteArray =
         @Suppress("UNCHECKED_CAST")
-        ProtoWireFormatEncoder().rawInstance(this as S, adatCompanion.adatWireFormat).pack()
+        ProtoWireFormatEncoder().rawInstance(this as A, adatCompanion.adatWireFormat).pack()
 
     fun adatIndexOf(name : String) : Int =
         getMetadata().properties.first { it.name == name }.index

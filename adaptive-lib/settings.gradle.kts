@@ -4,6 +4,7 @@
 
 rootProject.name = "adaptive-lib"
 
+includeBuild("adaptive-lib-auth")
 includeBuild("adaptive-lib-exposed")
 includeBuild("adaptive-lib-email")
 includeBuild("adaptive-lib-ktor")

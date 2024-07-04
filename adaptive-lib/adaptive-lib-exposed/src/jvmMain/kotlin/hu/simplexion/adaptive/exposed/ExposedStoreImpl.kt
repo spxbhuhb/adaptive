@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.adat.AdatClass
 import hu.simplexion.adaptive.server.builtin.StoreImpl
 import hu.simplexion.adaptive.utility.manualOrPlugin
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.statements.InsertStatement
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -34,14 +35,11 @@ interface ExposedStoreImpl<A : AdatClass<A>, T : ExposedStoreImpl<A, T>> : Store
         row[column] = value
     }
 
-    fun Table.all(): List<A> =
-        selectAll().map { fromRow(it) }
+    fun all(): List<A>
 
-    fun Table.add(valueFun: () -> A) =
-        insert { toRow(it, valueFun()) }
+    fun add(valueFun: () -> A): InsertStatement<Number>
 
-    fun Table.add(value: A) =
-        insert { toRow(it, value) }
+    fun add(value: A): InsertStatement<Number>
 
     fun isEmpty(): Boolean =
         count() == 0L

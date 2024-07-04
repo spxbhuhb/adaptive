@@ -14,7 +14,7 @@ To use this feature you have to:
 As of now, we have two table classes:
 
 - `AdatTable` - extends `Table` class of Exposed
-- `AdatUuidTable` - extends `UUIDTable` class of Exposed
+- `AdatEntityTable` - extends `UUIDTable` class of Exposed
 
 ## AdatTable
 
@@ -59,14 +59,14 @@ TestTable().apply {
 
 ```kotlin
 @Adat
-class UuidTestData(
-    val id: UUID<UuidTestData>,
+class EntityTestData(
+    override val id: UUID<UuidTestData>,
     val someInt: Int,
     val someBoolean: Boolean
-) : AdatClass<UuidTestData>
+) : AdatEntity<UuidTestData>
 
 @ExposedAdatTable
-class UuidTestTable : AdatUuidTable<UuidTestData, UuidTestTable>() {
+class EntityTestTable : AdatEntityTable<EntityTestData, EntityTestTable>() {
 
     val someInt = integer("some_int")
     val someBoolean = bool("some_boolean")
@@ -77,14 +77,14 @@ class UuidTestTable : AdatUuidTable<UuidTestData, UuidTestTable>() {
 For these tables the basic CRUD functions are available automatically:
 
 ```kotlin
-TestUuidTable().apply {
+EntityTestTable().apply {
     val uuid = UUID()
 
     // to add a new record
-    add { TestData(uuid, 12, "Hello World!") }
+    add { EntityTestData(uuid, 12, "Hello World!") }
 
     // to update an existing record
-    update(uuid, TestData(uuid, 23, "Hello!"))
+    update { EntityTestData(uuid, 23, "Hello!") }
 
     // to delete a record
     delete(uuid)

@@ -10,6 +10,7 @@ fun register(name: String) {
     tasks.register(taskName) {
         group = groupName
 
+        dependsOn(gradle.includedBuild("adaptive-lib-auth").task(":$taskName"))
         dependsOn(gradle.includedBuild("adaptive-lib-email").task(":$taskName"))
 
         if (name !in jsOnlyTasks) {

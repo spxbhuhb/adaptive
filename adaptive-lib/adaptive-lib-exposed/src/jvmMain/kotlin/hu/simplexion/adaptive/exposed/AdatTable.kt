@@ -6,6 +6,8 @@ package hu.simplexion.adaptive.exposed
 
 import hu.simplexion.adaptive.adat.AdatClass
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.selectAll
 
 /**
  * A [Table] with Adat field mapping. The compiler plugin generates
@@ -16,4 +18,15 @@ import org.jetbrains.exposed.sql.Table
  */
 abstract class AdatTable<A : AdatClass<A>, S : AdatTable<A, S>>(
     tableName: String = ""
-) : Table(tableName), ExposedStoreImpl<A, S>
+) : Table(tableName), ExposedStoreImpl<A, S> {
+
+    override fun all(): List<A> =
+        selectAll().map { fromRow(it) }
+
+    override fun add(valueFun: () -> A) =
+        insert { toRow(it, valueFun()) }
+
+    override fun add(value: A) =
+        insert { toRow(it, value) }
+
+}
