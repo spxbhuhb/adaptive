@@ -532,6 +532,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
         runTest("testData/box/service/types/int.kt");
       }
 
+        @Test
+        @TestMetadata("list.kt")
+        public void testList() {
+            runTest("testData/box/service/types/list.kt");
+        }
+
       @Test
       @TestMetadata("string.kt")
       public void testString() {

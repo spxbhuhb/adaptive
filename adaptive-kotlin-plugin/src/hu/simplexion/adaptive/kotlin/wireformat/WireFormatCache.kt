@@ -9,18 +9,17 @@ import hu.simplexion.adaptive.kotlin.common.AbstractPluginContext
 import hu.simplexion.adaptive.kotlin.common.asClassId
 import hu.simplexion.adaptive.kotlin.common.companionClassId
 import hu.simplexion.adaptive.kotlin.wireformat.Signature.typeSignature
-import org.jetbrains.kotlin.ir.backend.js.utils.asString
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
-import org.jetbrains.kotlin.ir.types.*
+import org.jetbrains.kotlin.ir.types.IrType
+import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
+import org.jetbrains.kotlin.ir.types.isNullable
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.types.checker.SimpleClassicTypeSystemContext.argumentsCount
-import org.jetbrains.kotlin.types.checker.SimpleClassicTypeSystemContext.getArguments
 
 class WireFormatCache(
     parentPluginContext: AbstractPluginContext
@@ -77,7 +76,11 @@ class WireFormatCache(
     ).associateBy { it.representedClass }.toMutableMap()
 
     val genericFormats = mutableMapOf(
-        "kotlin.collections.List" to loadBuiltinGenericFormat(Strings.LIST_WIREFORMAT.asClassId)
+        // issue #33 "kotlin.Array" to loadBuiltinGenericFormat(Strings.ARRAY_WIREFORMAT.asClassId),
+        "kotlin.collections.List" to loadBuiltinGenericFormat(Strings.LIST_WIREFORMAT.asClassId),
+        "kotlin.collections.Set" to loadBuiltinGenericFormat(Strings.SET_WIREFORMAT.asClassId),
+        "kotlin.collections.Map" to loadBuiltinGenericFormat(Strings.MAP_WIREFORMAT.asClassId),
+        "kotlin.collections.Pair" to loadBuiltinGenericFormat(Strings.PAIR_WIREFORMAT.asClassId)
     )
 
     val signatureFormats = basicFormats.values
@@ -121,7 +124,7 @@ class WireFormatCache(
 
         val genericFormat = genericFormats[classFqName] ?: loadGeneratedGenericFormat(classFqName.asClassId)
 
-        return SignatureWireFormat(genericFormat = genericFormat)
+        return SignatureWireFormat(genericFormat = genericFormat, arguments = arguments)
     }
 
     fun loadClassFormat(typeFqName: FqName): ClassWireFormat =
@@ -137,9 +140,9 @@ class WireFormatCache(
 
     fun encodeReturnValue(targetType: IrType, encoder: IrExpression, value: IrExpression): IrExpression {
 
-        val rawInstanceFunc = if (targetType.isNullable()) (
+        val rawInstanceFunc = if (targetType.isNullable()) {
             pluginContext.rawInstanceOrNull
-            ) else {
+        } else {
             pluginContext.rawInstance
         }
 
@@ -148,9 +151,9 @@ class WireFormatCache(
 
     fun decodeReturnValue(targetType: IrType, decoder: IrExpression): IrExpression {
 
-        val asInstanceFunc = if (targetType.isNullable()) (
+        val asInstanceFunc = if (targetType.isNullable()) {
             pluginContext.asInstanceOrNull
-            ) else {
+        } else {
             pluginContext.asInstance
         }
 

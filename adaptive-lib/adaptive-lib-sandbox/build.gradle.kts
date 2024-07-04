@@ -16,7 +16,7 @@ val pomName = "Adaptive Lib Sandbox"
 val scmPath = "spxbhuhb/adaptive"
 
 adaptive {
-    pluginDebug = false
+    pluginDebug = true
     resources {
         publicResClass = true
         packageOfResClass = "sandbox.lib"

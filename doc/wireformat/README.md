@@ -41,7 +41,7 @@ encoding/decoding methods.
 | kotlin.Char                      | yes                                            |
 | kotlin.String                    | yes                                            | 
 | kotlin.Enum<T>                   | yes                                            |
-| kotlin.Array<T>                  | yes                                            |
+| kotlin.Array<T>                  | - (see issue #33)                              |
 | kotlin.BooleanArray              | yes                                            |
 | kotlin.IntArray                  | yes                                            |
 | kotlin.ShortArray                | yes                                            |

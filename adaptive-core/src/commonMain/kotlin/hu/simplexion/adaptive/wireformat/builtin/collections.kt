@@ -22,7 +22,7 @@ class ArrayWireFormat<T>(
 
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Array<T?> {
         val list = (decoder?.items(source, typeArgument) ?: emptyList()) as List<Any?>
-        @Suppress("UNCHECKED_CAST") // I have no idea why it doesn't let me create an array from the list directly
+        @Suppress("UNCHECKED_CAST") // FIXME this does not work, Java arrays have to know the class of the type argument at compile time
         return Array(list.size) { list[it] } as Array<T?>
     }
 

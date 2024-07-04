@@ -40,7 +40,11 @@ object Strings {
 
     const val WIREFORMAT_TYPE_ARGUMENT = "WireFormatTypeArgument"
 
+    // issue #33 const val ARRAY_WIREFORMAT = "$BUILTIN_PACKAGE.ArrayWireFormat"
     const val LIST_WIREFORMAT = "$BUILTIN_PACKAGE.ListWireFormat"
+    const val SET_WIREFORMAT = "$BUILTIN_PACKAGE.SetWireFormat"
+    const val MAP_WIREFORMAT = "$BUILTIN_PACKAGE.MapWireFormat"
+    const val PAIR_WIREFORMAT = "$BUILTIN_PACKAGE.PairWireFormat"
 
     const val DURATION_WIREFORMAT = "$BUILTIN_PACKAGE.DurationWireFormat"
     const val INSTANT_WIREFORMAT = "$BUILTIN_PACKAGE.InstantWireFormat"

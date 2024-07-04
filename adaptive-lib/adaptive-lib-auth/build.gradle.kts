@@ -15,6 +15,10 @@ val baseName = "adaptive-lib-auth"
 val pomName = "Adaptive Lib Auth"
 val scmPath = "spxbhuhb/adaptive"
 
+adaptive {
+    pluginDebug = true
+}
+
 kotlin {
 
     jvmToolchain(11)
