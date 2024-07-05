@@ -15,7 +15,6 @@ import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.util.isFakeOverride
 import org.jetbrains.kotlin.ir.util.isSubclassOf
-import org.jetbrains.kotlin.ir.visitors.transformChildrenVoid
 
 class AdatClassTransform(
     private val pluginContext: AdatPluginContext,
@@ -37,7 +36,6 @@ class AdatClassTransform(
     override fun visitPropertyNew(declaration: IrProperty): IrStatement {
 
         when (declaration.name) {
-            Names.ADAT_VALUES -> declaration.transform(AdatValuesPropertyTransform(pluginContext, adatClass), null)
             Names.ADAT_COMPANION -> declaration.transform(AdatCompanionPropertyTransform(pluginContext, adatClass), null)
             else -> declaration.transform(PropertyTransform(pluginContext, adatClass, propertyIndex++), null)
         }

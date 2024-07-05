@@ -12,27 +12,51 @@ import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatEncoder
 
 interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
 
-    val adatValues : Array<Any?>
-        get() = pluginGenerated()
-
     val adatCompanion: AdatCompanion<A>
         get() = pluginGenerated()
 
     fun isValid() = true
 
-    fun copy() = adatCompanion.newInstance(adatValues.copyOf())
+    fun copy(): A {
+        val instance = adatCompanion.newInstance()
 
-    fun adatToString() =
-        this::class.simpleName
+        getMetadata().properties.forEach { prop ->
+            instance.setValue(prop.index, this.getValue(prop.index))
+        }
 
-    fun adatEquals(s2: AdatClass<*>?): Boolean {
-        if (this === s2) return true
-        if (s2 == null) return false
-        return adatValues.contentEquals(s2.adatValues)
+        return instance
     }
 
-    fun adatHashCode() : Int =
-        adatValues.contentHashCode()
+    fun adatToString(): String {
+        val content = mutableListOf<String>()
+        getMetadata().properties.forEach { prop ->
+            content.add("${prop.name}=${getValue(prop.index)}")
+        }
+        return (this::class.simpleName ?: "<anonymous>") + "(" + content.joinToString(", ") + ")"
+    }
+
+    fun adatEquals(other: AdatClass<*>?): Boolean {
+        if (this === other) return true
+        if (other == null) return false
+        if (this::class != other::class) return false
+
+        repeat(getMetadata().properties.size) {
+            if (this.getValue(it) != other.getValue(it)) return false
+        }
+
+        return true
+    }
+
+    fun adatHashCode(): Int {
+        var hashCode = 0
+
+        repeat(getMetadata().properties.size) {
+            val prop = getValue(it)
+            hashCode = 31 * hashCode + (prop?.hashCode() ?: 0)
+        }
+
+        return hashCode
+    }
 
     fun toJson() : ByteArray =
         @Suppress("UNCHECKED_CAST")
@@ -48,19 +72,17 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
     fun getValue(name : String) =
         getValue(adatIndexOf(name))
 
-    fun getValue(index : Int) = adatValues[index]
+    fun getValue(index: Int): Any? {
+        pluginGenerated()
+    }
 
     fun setValue(name : String, value: Any?) {
         setValue(adatIndexOf(name), value)
     }
 
     fun setValue(index : Int, value: Any?) {
-        adatValues[index] = value
+        pluginGenerated()
     }
-
-    fun int(index : Int) = adatValues[index] as Int
-
-    fun boolean(index : Int) = adatValues[index] as Boolean
 
     fun getMetadata() =
         adatCompanion.adatMetaData
@@ -79,6 +101,10 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
     override fun setValue(path : Array<String>, value : Any?, fromBinding: AdaptiveStateVariableBinding<*>) {
         check(path.size == 1) {"nested property access is not supported yet"}
         setValue(adatIndexOf(path[0]), value)
+    }
+
+    fun invalidIndex(index: Int): Nothing {
+        throw IndexOutOfBoundsException("index $index is invalid in ${getMetadata().name}")
     }
 
 }

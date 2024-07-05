@@ -34,7 +34,7 @@ All these functions are **NOT** generated for these classes, they are implemente
 
 What **IS** generated:
 
-* an `adatValues` and an `adatCompanion` property
+* an `adatCompanion` property
 * a companion object with `adatMetadata`, `adatWireFormat` properties and a `newInstance` function
 * property getters and setters for the declared properties
 

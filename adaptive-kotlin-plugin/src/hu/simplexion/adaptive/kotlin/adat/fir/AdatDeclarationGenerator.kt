@@ -30,9 +30,6 @@ import org.jetbrains.kotlin.name.SpecialNames
 
 class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
-    val nullableAnyType = ClassIds.KOTLIN_ANY.constructClassLikeType(emptyArray(), true)
-    val adatValuesType = ClassIds.KOTLIN_ARRAY.constructClassLikeType(arrayOf(nullableAnyType), false)
-
     val ADAT_PREDICATE = LookupPredicate.create { annotated(FqNames.ADAT_ANNOTATION) }
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
@@ -80,7 +77,6 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                     Names.HASHCODE,
                     Names.TO_STRING,
                     Names.ADAT_COMPANION,
-                    Names.ADAT_VALUES,
                     SpecialNames.INIT
                 )
             }
@@ -103,10 +99,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
             context.isAdatClass -> {
                 return listOf(
                     createConstructor(context.owner, AdatPluginKey, isPrimary = false, generateDelegatedNoArgConstructorCall = true)
-                        .symbol,
-                    createConstructor(context.owner, AdatPluginKey, isPrimary = false, generateDelegatedNoArgConstructorCall = true) {
-                        valueParameter(Names.ADAT_VALUES, adatValuesType)
-                    }.symbol
+                        .symbol
                 )
             }
 
@@ -123,18 +116,6 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
 
     override fun generateProperties(callableId: CallableId, context: MemberGenerationContext?): List<FirPropertySymbol> {
         return when (callableId.callableName) {
-            Names.ADAT_VALUES -> {
-                listOf(
-                    createMemberProperty(
-                        context !!.owner,
-                        AdatPluginKey,
-                        Names.ADAT_VALUES,
-                        adatValuesType,
-                        isVal = true,
-                        hasBackingField = true
-                    ).symbol
-                )
-            }
 
             Names.ADAT_COMPANION -> {
                 listOf(
@@ -187,9 +168,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         return when (callableId.callableName) {
             Names.NEW_INSTANCE -> {
                 listOf(
-                    createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, context.adatClassType) {
-                        valueParameter(Names.ADAT_VALUES, adatValuesType)
-                    }.symbol
+                    createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, context.adatClassType).symbol
                 )
             }
             Names.EQUALS -> {

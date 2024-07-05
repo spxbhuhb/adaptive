@@ -17,7 +17,6 @@ object Strings {
     const val JETBRAINS_EXPOSED_PACKAGE = "org.jetbrains.exposed.sql"
     const val RESULT_ROW = "ResultRow"
     const val COLUMN = "Column"
-    const val UPDATE_STATEMENT = "UpdateStatement"
     const val EXPOSED_ADAT_TABLE = "ExposedAdatTable"
     const val EXPOSED_ADAT_SET = "ExposedAdatSet"
     const val FROM_ROW = "fromRow"
@@ -25,7 +24,6 @@ object Strings {
 }
 
 object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
-    val ADAT_VALUES = "adatValues".name()
     val ADAT_COMPANION = "adatCompanion".name()
     val ADAT_METADATA = Strings.ADAT_METADATA.name()
     val ADAT_WIREFORMAT = "adatWireFormat".name()
@@ -63,16 +61,12 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_CLASS_METADATA = "AdatClassMetaData".classId { Strings.METADATA_PACKAGE.fqName() }
     val ADAT_CLASS_WIREFORMAT = "AdatClassWireFormat".classId { Strings.WIREFORMAT_PACKAGE.fqName() }
 
-    val KOTLIN_ARRAY = "Array".classId { "kotlin".fqName() }
-    val KOTLIN_ANY = "Any".classId { "kotlin".fqName() }
-
     val WIREFORMAT_REGISTRY = "WireFormatRegistry".classId { "hu.simplexion.adaptive.wireformat".fqName() }
 
     val EXPOSED_ADAT_TABLE = Strings.EXPOSED_ADAT_TABLE.classId { Strings.EXPOSED_PACKAGE.fqName() }
 
     val RESULT_ROW = Strings.RESULT_ROW.classId { Strings.JETBRAINS_EXPOSED_PACKAGE.fqName() }
     val COLUMN = Strings.COLUMN.classId { Strings.JETBRAINS_EXPOSED_PACKAGE.fqName() }
-    val UPDATE_STATEMENT = Strings.UPDATE_STATEMENT.classId { Strings.JETBRAINS_EXPOSED_PACKAGE.fqName() }
 
     val COMMON_UUID = "UUID".classId { "hu.simplexion.adaptive.utility".fqName() }
     val JAVA_UUID = "UUID".classId { "java.util".fqName() }
@@ -84,8 +78,4 @@ object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val asCommon = "asCommon".callableId { exposed }
     val asEntityID = "asEntityID".callableId { exposed }
     val asJava = "asJava".callableId { exposed }
-}
-
-object Indices {
-
 }

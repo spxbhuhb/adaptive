@@ -5,8 +5,8 @@
 package hu.simplexion.adaptive.adat.wireformat
 
 import hu.simplexion.adaptive.adat.AdatClass
-import hu.simplexion.adaptive.adat.metadata.AdatClassMetaData
 import hu.simplexion.adaptive.adat.AdatCompanion
+import hu.simplexion.adaptive.adat.metadata.AdatClassMetaData
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
@@ -23,29 +23,28 @@ import hu.simplexion.adaptive.wireformat.WireFormatEncoder
  * class it is possible that the companion of that class is not loaded yet, resulting
  * the [toPropertyWireFormat] call to fail with a missing WireFormat.
  */
-class AdatClassWireFormat<T : AdatClass<T>>(
-    val companion : AdatCompanion<T>,
-    metadata: AdatClassMetaData<T>
-) : WireFormat<T> {
+class AdatClassWireFormat<A : AdatClass<A>>(
+    val companion: AdatCompanion<A>,
+    metadata: AdatClassMetaData<A>
+) : WireFormat<A> {
 
     val propertyWireFormats by lazy { metadata.properties.map { it.toPropertyWireFormat() } }
 
-    override fun wireFormatEncode(encoder: WireFormatEncoder, value: T): WireFormatEncoder {
-        val values = value.adatValues
+    override fun wireFormatEncode(encoder: WireFormatEncoder, value: A): WireFormatEncoder {
         for (propertyWireFormat in propertyWireFormats) {
-            propertyWireFormat.encode(encoder, values)
+            propertyWireFormat.encode(encoder, value)
         }
         return encoder
     }
 
-    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): T {
-        val values = arrayOfNulls<Any?>(propertyWireFormats.size)
+    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): A {
+        val value = companion.newInstance()
 
         for (propertyWireFormat in propertyWireFormats) {
-            propertyWireFormat.decode(decoder as WireFormatDecoder<*>, values)
+            propertyWireFormat.decode(decoder as WireFormatDecoder<*>, value)
         }
 
-        return companion.newInstance(values)
+        return value
     }
 
 }

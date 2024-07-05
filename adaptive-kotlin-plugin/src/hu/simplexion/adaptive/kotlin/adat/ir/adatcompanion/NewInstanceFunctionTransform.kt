@@ -3,7 +3,6 @@
  */
 package hu.simplexion.adaptive.kotlin.adat.ir.adatcompanion
 
-import hu.simplexion.adaptive.kotlin.adat.AdatPluginKey
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatPluginContext
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
@@ -14,7 +13,9 @@ import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
-import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.util.constructors
+import org.jetbrains.kotlin.ir.util.parentAsClass
 
 class NewInstanceFunctionTransform(
     override val pluginContext: AdatPluginContext,
@@ -28,11 +29,9 @@ class NewInstanceFunctionTransform(
                 IrConstructorCallImpl(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                     declaration.returnType,
-                    companionClass.parentAsClass.constructors.first{ it.valueParameters.size == 1 && it.origin == AdatPluginKey.origin }.symbol,
-                    0, 0, 1
-                ).also {
-                    it.putValueArgument(0, irGet(declaration.valueParameters[0]))
-                }
+                    companionClass.parentAsClass.constructors.first { it.valueParameters.isEmpty() }.symbol,
+                    0, 0, 0
+                )
             )
         }
         return declaration

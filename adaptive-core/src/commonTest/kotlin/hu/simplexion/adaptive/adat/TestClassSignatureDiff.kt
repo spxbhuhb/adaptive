@@ -6,28 +6,14 @@ package hu.simplexion.adaptive.adat
 
 import hu.simplexion.adaptive.adat.wireformat.AdatClassWireFormat
 
-/**
- * This class would be generated from:
- *
- * ```kotlin
- * @Adat
- * class TestClassTypeDiff(
- *     val someInt : Float,
- *     var someBoolean : Boolean,
- *     var someIntListSet : Set<List<Int>>
- * )
- * ```
- */
 @Adat
 class TestClassSignatureDiff(
-    override val adatValues: Array<Any?>
+    var someInt: Float,
+    var someBoolean: Boolean,
+    var someIntListSet: Set<List<Int>>
 ) : AdatClass<TestClassSignatureDiff> {
 
-    constructor() : this(arrayOfNulls(3))
-
-    constructor(someInt: Float, someBoolean: Boolean, someIntListSet : Set<List<Int>>) : this(
-        arrayOf<Any?>(someInt, someBoolean, someIntListSet)
-    )
+    constructor() : this(0.0f, false, setOf())
 
     override val adatCompanion = Companion
 
@@ -37,13 +23,31 @@ class TestClassSignatureDiff(
     override fun hashCode(): Int =
         adatHashCode()
 
+    override fun getValue(index: Int): Any {
+        return when (index) {
+            0 -> someInt
+            1 -> someBoolean
+            2 -> someIntListSet
+            else -> invalidIndex(index)
+        }
+    }
+
+    override fun setValue(index: Int, value: Any?) {
+        @Suppress("UNCHECKED_CAST")
+        when (index) {
+            0 -> someInt = value as Float
+            1 -> someBoolean = value as Boolean
+            2 -> someIntListSet = value as Set<List<Int>>
+            else -> invalidIndex(index)
+        }
+    }
+
     companion object : AdatCompanion<TestClassSignatureDiff> {
 
         override val adatMetaData = decodeMetaData("1/hu.simplexion.adaptive.adat.TestClass/someInt/0/F/someBoolean/1/Z/someIntListSet/2/Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
         override val adatWireFormat = AdatClassWireFormat(this, adatMetaData)
 
-        override fun newInstance(adatValues: Array<Any?>) =
-            TestClassSignatureDiff(adatValues)
+        override fun newInstance() = TestClassSignatureDiff()
 
     }
 

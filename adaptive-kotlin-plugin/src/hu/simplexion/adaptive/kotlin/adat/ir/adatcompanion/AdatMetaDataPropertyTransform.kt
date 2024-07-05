@@ -40,7 +40,7 @@ class AdatMetaDataPropertyTransform(
 
         for (property in adatClass.declarations) {
             if (property !is IrProperty) continue
-            if (property.name == Names.ADAT_VALUES || property.name == Names.ADAT_COMPANION) continue
+            if (property.name == Names.ADAT_COMPANION) continue
 
             result += property.name.identifier
             result += index.toString()
