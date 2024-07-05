@@ -10,8 +10,9 @@ object Strings {
     const val RUNTIME_PACKAGE = "hu.simplexion.adaptive.adat"
     const val METADATA_PACKAGE = "hu.simplexion.adaptive.adat.metadata"
     const val WIREFORMAT_PACKAGE = "hu.simplexion.adaptive.adat.wireformat"
-    const val ADAT_METADATA = "adatMetaData"
-    const val DECODE_METADATA = "decodeMetaData"
+    const val DESCRIPTOR_PACKAGE = "hu.simplexion.adaptive.adat.descriptor"
+    const val ADAT_METADATA = "adatMetadata"
+    const val DECODE_METADATA = "decodeMetadata"
 
     const val EXPOSED_PACKAGE = "hu.simplexion.adaptive.exposed"
     const val JETBRAINS_EXPOSED_PACKAGE = "org.jetbrains.exposed.sql"
@@ -28,14 +29,18 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_METADATA = Strings.ADAT_METADATA.name()
     val ADAT_WIREFORMAT = "adatWireFormat".name()
 
+    val DESCRIPTOR = "descriptor".name()
+
     val NEW_INSTANCE = "newInstance".name()
 
     val ADAT_EQUALS = "adatEquals".name()
     val ADAT_HASHCODE = "adatHashCode".name()
     val ADAT_TO_STRING = "adatToString".name()
 
-    val GET_VALUE = "getValue".name()
-    val SET_VALUE = "setValue".name()
+    val GEN_GET_VALUE = "genGetValue".name()
+    val GEN_SET_VALUE = "genSetValue".name()
+    val INDEX = "index".name()
+    val VALUE = "value".name()
 
     val EQUALS = "equals".name()
     val HASHCODE = "hashCode".name()
@@ -51,14 +56,18 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
 
 object FqNames : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_ANNOTATION = FqName("hu.simplexion.adaptive.adat.Adat")
+
+    val DESCRIPTOR_EXPECT = "ConstraintExpect".fqName { Strings.DESCRIPTOR_PACKAGE }
+
     val EXPOSED_ADAT_SET = Strings.EXPOSED_ADAT_SET.fqName { Strings.EXPOSED_PACKAGE }
 }
 
 object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_CLASS = "AdatClass".classId()
+    val ADAT_ENTITY = "AdatEntity".classId()
     val ADAT_COMPANION = "AdatCompanion".classId()
 
-    val ADAT_CLASS_METADATA = "AdatClassMetaData".classId { Strings.METADATA_PACKAGE.fqName() }
+    val ADAT_CLASS_METADATA = "AdatClassMetadata".classId { Strings.METADATA_PACKAGE.fqName() }
     val ADAT_CLASS_WIREFORMAT = "AdatClassWireFormat".classId { Strings.WIREFORMAT_PACKAGE.fqName() }
 
     val WIREFORMAT_REGISTRY = "WireFormatRegistry".classId { "hu.simplexion.adaptive.wireformat".fqName() }

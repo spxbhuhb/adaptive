@@ -19,14 +19,17 @@ class AdatModuleTransform(
 
     override fun visitClassNew(declaration: IrClass): IrStatement {
         when {
+
             declaration.isSubclassOf(pluginContext.adatClass.owner) -> {
                 declaration.transformChildrenVoid(AdatClassTransform(pluginContext, declaration))
             }
+
             declaration.hasAnnotation(ClassIds.EXPOSED_ADAT_TABLE) -> {
                 if (pluginContext.exposedColumn != null) {
                     declaration.transformChildrenVoid(ExposedAdatTransform(pluginContext, declaration))
                 }
             }
+
         }
 
         return declaration

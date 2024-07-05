@@ -1,12 +1,12 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.adaptive.kotlin.utility.ir
+package hu.simplexion.adaptive.kotlin.reflect.ir
 
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
-import hu.simplexion.adaptive.kotlin.utility.FqNames
-import hu.simplexion.adaptive.kotlin.utility.Names
-import hu.simplexion.adaptive.kotlin.utility.Strings
+import hu.simplexion.adaptive.kotlin.reflect.FqNames
+import hu.simplexion.adaptive.kotlin.reflect.Names
+import hu.simplexion.adaptive.kotlin.reflect.Strings
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationWithName
 import org.jetbrains.kotlin.ir.expressions.IrCall
@@ -16,7 +16,7 @@ import org.jetbrains.kotlin.ir.util.fqNameWhenAvailable
 import org.jetbrains.kotlin.ir.util.hasAnnotation
 
 class CallSiteNameVisitor(
-    override val pluginContext: UtilityPluginContext,
+    override val pluginContext: ReflectPluginContext,
 ) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
 
     override fun visitCall(expression: IrCall): IrExpression {

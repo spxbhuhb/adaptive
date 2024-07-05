@@ -5,6 +5,8 @@
 package hu.simplexion.adaptive.wireformat
 
 import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
+import hu.simplexion.adaptive.wireformat.json.JsonWireFormatDecoder
+import hu.simplexion.adaptive.wireformat.json.JsonWireFormatEncoder
 import hu.simplexion.adaptive.wireformat.json.JsonWireFormatProvider
 import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 
@@ -15,3 +17,9 @@ fun withJson() {
 fun withProtobuf() {
     defaultWireFormatProvider = ProtoWireFormatProvider()
 }
+
+fun <T> T.toJson(wireFormat: WireFormat<T>) =
+    JsonWireFormatEncoder().rawInstance(this, wireFormat).pack()
+
+fun <T> ByteArray.fromJson(wireFormat: WireFormat<T>) =
+    JsonWireFormatDecoder(this).asInstance(wireFormat)

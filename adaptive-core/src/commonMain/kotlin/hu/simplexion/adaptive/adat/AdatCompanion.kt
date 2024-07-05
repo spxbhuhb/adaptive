@@ -4,7 +4,8 @@
 
 package hu.simplexion.adaptive.adat
 
-import hu.simplexion.adaptive.adat.metadata.AdatClassMetaData
+import hu.simplexion.adaptive.adat.descriptor.DescriptorExpect
+import hu.simplexion.adaptive.adat.metadata.AdatClassMetadata
 import hu.simplexion.adaptive.utility.pluginGenerated
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
@@ -14,14 +15,17 @@ import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatDecoder
 
 interface AdatCompanion<A : AdatClass<A>> : WireFormat<A> {
 
-    val adatMetaData: AdatClassMetaData<A>
+    val adatMetadata: AdatClassMetadata<A>
         get() = pluginGenerated()
 
     val adatWireFormat: WireFormat<A>
         get() = pluginGenerated()
 
-    fun decodeMetaData(metaData: String): AdatClassMetaData<A> =
-        AdatClassMetaData.decodeFromString(metaData)
+    val adatConstraints: List<DescriptorExpect>
+        get() = pluginGenerated()
+
+    fun decodeMetadata(a: String): AdatClassMetadata<A> =
+        AdatClassMetadata.decodeFromString(a)
 
     fun newInstance(): A {
         pluginGenerated()

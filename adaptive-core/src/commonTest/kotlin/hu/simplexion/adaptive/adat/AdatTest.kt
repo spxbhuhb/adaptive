@@ -16,7 +16,7 @@ class AdatTest {
 
     @Test
     fun basic() {
-        val meta = TestClass.adatMetaData
+        val meta = TestClass.adatMetadata
         assertEquals(testMeta, meta)
 
         val sl = setOf(listOf(1,2),listOf(3,4))

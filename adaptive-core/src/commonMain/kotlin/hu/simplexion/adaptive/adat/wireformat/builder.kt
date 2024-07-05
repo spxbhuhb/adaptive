@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.adat.wireformat
 
-import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetaData
+import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatRegistry
 import hu.simplexion.adaptive.wireformat.builtin.*
@@ -12,7 +12,7 @@ import hu.simplexion.adaptive.wireformat.signature.Type
 import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 import hu.simplexion.adaptive.wireformat.signature.parseSignature
 
-fun AdatPropertyMetaData.toPropertyWireFormat(): AdatPropertyWireFormat<*> =
+fun AdatPropertyMetadata.toPropertyWireFormat(): AdatPropertyWireFormat<*> =
     AdatPropertyWireFormat(this, parseSignature(signature).toWireFormat())
 
 internal fun Type.toWireFormat(): WireFormat<*> =

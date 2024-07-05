@@ -73,6 +73,8 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         return when {
             classSymbol.isAdatClass -> {
                 setOf(
+                    Names.GEN_GET_VALUE,
+                    Names.GEN_SET_VALUE,
                     Names.EQUALS,
                     Names.HASHCODE,
                     Names.TO_STRING,
@@ -171,6 +173,22 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                     createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, context.adatClassType).symbol
                 )
             }
+            Names.GEN_GET_VALUE -> {
+                listOf(
+                    createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.nullableAnyType.type) {
+                        valueParameter(Names.INDEX, session.builtinTypes.intType.type)
+                    }.symbol
+                )
+            }
+
+            Names.GEN_SET_VALUE -> {
+                listOf(
+                    createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.unitType.type) {
+                        valueParameter(Names.INDEX, session.builtinTypes.intType.type)
+                        valueParameter(Names.VALUE, session.builtinTypes.nullableAnyType.type)
+                    }.symbol
+                )
+            }
             Names.EQUALS -> {
                 listOf(
                     createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.booleanType.type) {
@@ -198,6 +216,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
     val FirClassSymbol<*>.isAdatCompanion
         get() = ((origin as? FirDeclarationOrigin.Plugin)?.key == AdatPluginKey)
             || getSuperTypes(session).any { it.type.classId == ClassIds.ADAT_COMPANION }
+            || getContainingClassSymbol(session)?.getSuperTypes(session)?.any { it.type.classId == ClassIds.ADAT_COMPANION } ?: false
 
     val MemberGenerationContext?.isAdatClass
         get() = if (this == null) false else owner.isAdatClass

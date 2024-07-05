@@ -13,7 +13,6 @@ import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrFunction
-import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.getSimpleFunction
 
 class ToStringFunctionTransform(
@@ -21,6 +20,10 @@ class ToStringFunctionTransform(
     val adatClass: IrClass,
     val toStringFunction: IrFunction
 ) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
+
+    fun transform() {
+        toStringFunction.transform(this, null)
+    }
 
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
         toStringFunction.body = DeclarationIrBuilder(irContext, toStringFunction.symbol).irBlockBody {

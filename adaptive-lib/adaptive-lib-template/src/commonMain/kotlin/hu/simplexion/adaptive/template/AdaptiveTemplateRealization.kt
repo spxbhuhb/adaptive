@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.template
 
-import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetaData
+import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata
 import hu.simplexion.adaptive.adat.wireformat.toPropertyWireFormat
 import hu.simplexion.adaptive.foundation.*
 import hu.simplexion.adaptive.wireformat.json.JsonWireFormatDecoder
@@ -34,7 +34,7 @@ class AdaptiveTemplateRealization<BT>(
         patch()
 
         template.variables.values.forEach {
-            AdatPropertyMetaData(it.name, it.index, it.signature)
+            AdatPropertyMetadata(it.name, it.index, it.signature)
                 .toPropertyWireFormat()
                 .decode(JsonWireFormatDecoder(it.json.encodeToByteArray()), state)
         }

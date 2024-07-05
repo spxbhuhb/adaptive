@@ -486,6 +486,22 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
   }
 
+    @Nested
+    @TestMetadata("testData/box/reflect")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Reflect {
+        @Test
+        public void testAllFilesPresentInReflect() {
+            KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/reflect"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+        }
+
+        @Test
+        @TestMetadata("callSiteName.kt")
+        public void testCallSiteName() {
+            runTest("testData/box/reflect/callSiteName.kt");
+        }
+    }
+
   @Nested
   @TestMetadata("testData/box/server")
   @TestDataPath("$PROJECT_ROOT")
@@ -549,22 +565,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testUnit() {
         runTest("testData/box/service/types/unit.kt");
       }
-    }
-  }
-
-  @Nested
-  @TestMetadata("testData/box/utility")
-  @TestDataPath("$PROJECT_ROOT")
-  public class Utility {
-    @Test
-    public void testAllFilesPresentInUtility() {
-      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/utility"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
-    }
-
-    @Test
-    @TestMetadata("callSiteName.kt")
-    public void testCallSiteName() {
-      runTest("testData/box/utility/callSiteName.kt");
     }
   }
 }

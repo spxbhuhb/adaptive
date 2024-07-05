@@ -4,6 +4,8 @@
 
 package hu.simplexion.adaptive.adat
 
+import hu.simplexion.adaptive.adat.metadata.AdatClassMetadata
+import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata
 import hu.simplexion.adaptive.adat.wireformat.AdatClassWireFormat
 
 @Adat
@@ -44,8 +46,17 @@ class TestClassMissingDiff(
 
     companion object : AdatCompanion<TestClassMissingDiff> {
 
-        override val adatMetaData = decodeMetaData("1/hu.simplexion.adaptive.adat.TestClass/someInt/0/I/someOtherField/1/Z/someIntListSet/2/Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
-        override val adatWireFormat = AdatClassWireFormat(this, adatMetaData)
+        override val adatMetadata = AdatClassMetadata<TestClassMissingDiff>(
+            version = 1,
+            name = "hu.simplexion.adaptive.adat.TestClassMissingDiff",
+            properties = listOf(
+                AdatPropertyMetadata("someInt", 0, "I"),
+                AdatPropertyMetadata("someOtherField", 1, "Z"),
+                AdatPropertyMetadata("someIntListSet", 2, "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
+            )
+        )
+
+        override val adatWireFormat = AdatClassWireFormat(this, adatMetadata)
 
         override fun newInstance() = TestClassMissingDiff()
 

@@ -4,20 +4,10 @@
 
 package hu.simplexion.adaptive.adat
 
+import hu.simplexion.adaptive.adat.metadata.AdatClassMetadata
+import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata
 import hu.simplexion.adaptive.adat.wireformat.AdatClassWireFormat
 
-/**
- * This class would be generated from:
- *
- * ```kotlin
- * @Adat
- * class TestClass(
- *     val someInt : Int,
- *     var someBoolean : Boolean,
- *     var someIntListSet : Set<List<Int>>
- * )
- * ```
- */
 @Adat
 class TestClass(
     var someInt: Int,
@@ -56,8 +46,17 @@ class TestClass(
 
     companion object : AdatCompanion<TestClass> {
 
-        override val adatMetaData = decodeMetaData("1/hu.simplexion.adaptive.adat.TestClass/someInt/0/I/someBoolean/1/Z/someIntListSet/2/Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
-        override val adatWireFormat = AdatClassWireFormat(this, adatMetaData)
+        override val adatMetadata = AdatClassMetadata<TestClass>(
+            version = 1,
+            name = "hu.simplexion.adaptive.adat.TestClass",
+            properties = listOf(
+                AdatPropertyMetadata("someInt", 0, "I"),
+                AdatPropertyMetadata("someBoolean", 1, "Z"),
+                AdatPropertyMetadata("someIntListSet", 2, "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
+            )
+        )
+
+        override val adatWireFormat = AdatClassWireFormat(this, adatMetadata)
 
         override fun newInstance() =
             TestClass()

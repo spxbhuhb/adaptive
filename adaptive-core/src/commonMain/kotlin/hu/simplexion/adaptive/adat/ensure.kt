@@ -7,5 +7,5 @@ package hu.simplexion.adaptive.adat
 class InvalidAdatException : RuntimeException()
 
 fun ensureValid(data: AdatClass<*>) {
-    if (! data.isValid()) throw InvalidAdatException()
+    // FIXME if (! data.isValid()) throw InvalidAdatException()
 }

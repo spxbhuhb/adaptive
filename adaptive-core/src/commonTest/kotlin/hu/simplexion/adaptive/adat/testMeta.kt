@@ -4,16 +4,16 @@
 
 package hu.simplexion.adaptive.adat
 
-import hu.simplexion.adaptive.adat.metadata.AdatClassMetaData
-import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetaData
+import hu.simplexion.adaptive.adat.metadata.AdatClassMetadata
+import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata
 
 val testMeta =
-    AdatClassMetaData<TestClass>(
+    AdatClassMetadata<TestClass>(
         version = 1,
         name = "hu.simplexion.adaptive.adat.TestClass",
         properties = listOf(
-            AdatPropertyMetaData("someInt", 0, "I"),
-            AdatPropertyMetaData("someBoolean", 1, "Z"),
-            AdatPropertyMetaData("someIntListSet", 2, "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
+            AdatPropertyMetadata("someInt", 0, "I"),
+            AdatPropertyMetadata("someBoolean", 1, "Z"),
+            AdatPropertyMetadata("someIntListSet", 2, "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
         )
     )

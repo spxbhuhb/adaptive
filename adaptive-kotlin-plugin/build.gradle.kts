@@ -42,6 +42,8 @@ sourceSets {
 
 dependencies {
     compileOnly(libs.kotlin.compiler)
+    implementation(libs.adaptive.core)
+
     testImplementation(libs.kotlin.compiler)
 
     testRuntimeOnly(libs.kotlin.test)

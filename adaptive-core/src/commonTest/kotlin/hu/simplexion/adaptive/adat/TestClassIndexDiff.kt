@@ -4,6 +4,8 @@
 
 package hu.simplexion.adaptive.adat
 
+import hu.simplexion.adaptive.adat.metadata.AdatClassMetadata
+import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata
 import hu.simplexion.adaptive.adat.wireformat.AdatClassWireFormat
 
 @Adat
@@ -44,8 +46,17 @@ class TestClassIndexDiff(
 
     companion object : AdatCompanion<TestClassIndexDiff> {
 
-        override val adatMetaData = decodeMetaData("1/hu.simplexion.adaptive.adat.TestClass/someBoolean/0/Z/someInt/1/I/someIntListSet/2/Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
-        override val adatWireFormat = AdatClassWireFormat(this, adatMetaData)
+        override val adatMetadata = AdatClassMetadata<TestClassIndexDiff>(
+            version = 1,
+            name = "hu.simplexion.adaptive.adat.TestClassIndexDiff",
+            properties = listOf(
+                AdatPropertyMetadata("someBoolean", 0, "Z"),
+                AdatPropertyMetadata("someInt", 1, "I"),
+                AdatPropertyMetadata("someIntListSet", 2, "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
+            )
+        )
+
+        override val adatWireFormat = AdatClassWireFormat(this, adatMetadata)
 
         override fun newInstance() = TestClassIndexDiff()
     }

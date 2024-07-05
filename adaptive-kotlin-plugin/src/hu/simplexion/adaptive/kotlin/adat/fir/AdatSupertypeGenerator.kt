@@ -49,7 +49,9 @@ class AdatSupertypeGenerator(session: FirSession) : FirSupertypeGenerationExtens
             )
 
         } else {
-            if (resolvedSupertypes.any { it.type.classId == ClassIds.ADAT_CLASS }) return emptyList()
+            if (resolvedSupertypes.any { it.type.classId == ClassIds.ADAT_CLASS || it.type.classId == ClassIds.ADAT_ENTITY }) return emptyList()
+
+            // FIXME AdatEntity handling
 
             val adatClassType = classLikeDeclaration.classId.constructClassLikeType(emptyArray(), false)
 

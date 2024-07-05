@@ -15,7 +15,11 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
     val adatCompanion: AdatCompanion<A>
         get() = pluginGenerated()
 
-    fun isValid() = true
+    fun description() = Unit
+
+    fun validate() {
+
+    }
 
     fun copy(): A {
         val instance = adatCompanion.newInstance()
@@ -70,22 +74,35 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
         getMetadata().properties.first { it.name == name }.index
 
     fun getValue(name : String) =
-        getValue(adatIndexOf(name))
+        genGetValue(adatIndexOf(name))
 
-    fun getValue(index: Int): Any? {
+    fun getValue(index: Int): Any? =
+        genGetValue(index)
+
+    fun genGetValue(index: Int): Any? {
         pluginGenerated()
     }
 
     fun setValue(name : String, value: Any?) {
-        setValue(adatIndexOf(name), value)
+        genSetValue(adatIndexOf(name), value)
     }
 
     fun setValue(index : Int, value: Any?) {
+        genSetValue(index, value)
+    }
+
+    fun genSetValue(index: Int, value: Any?) {
         pluginGenerated()
     }
 
     fun getMetadata() =
-        adatCompanion.adatMetaData
+        adatCompanion.adatMetadata
+
+    fun getPropertyMetadata(name: String) =
+        adatCompanion.adatMetadata.properties.first { it.name == name }
+
+    fun getPropertyMetadata(index: Int) =
+        adatCompanion.adatMetadata.properties[index]
 
     // FIXME AdatClass.addBinding
     override fun addBinding(binding: AdaptiveStateVariableBinding<*>) = Unit

@@ -3,7 +3,6 @@
  */
 package hu.simplexion.adaptive.kotlin.adat.ir.adatclass
 
-import hu.simplexion.adaptive.kotlin.adat.AdatPluginKey
 import hu.simplexion.adaptive.kotlin.adat.Names
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatPluginContext
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
@@ -14,14 +13,17 @@ import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrFunction
-import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
-import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.util.getSimpleFunction
 
 class EqualsFunctionTransform(
     override val pluginContext: AdatPluginContext,
     val adatClass: IrClass,
     val equalsFunction: IrFunction
 ) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
+
+    fun transform() {
+        equalsFunction.transform(this, null)
+    }
 
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
         equalsFunction.body = DeclarationIrBuilder(irContext, equalsFunction.symbol).irBlockBody {

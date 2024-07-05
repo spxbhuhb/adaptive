@@ -20,6 +20,10 @@ class AdatCompanionPropertyTransform(
     val adatClass: IrClass
 ) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
 
+    fun transform(property: IrProperty) {
+        property.transform(this, null)
+    }
+
     override fun visitPropertyNew(declaration: IrProperty): IrStatement {
         val getter = declaration.getter !!
 

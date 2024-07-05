@@ -3,6 +3,7 @@
  */
 package hu.simplexion.adaptive.kotlin.adat.ir.adatcompanion
 
+import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata
 import hu.simplexion.adaptive.kotlin.adat.Names
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatPluginContext
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
@@ -22,10 +23,11 @@ import org.jetbrains.kotlin.ir.util.parentAsClass
 
 class AdatCompanionTransform(
     override val pluginContext: AdatPluginContext,
-    val companionClass: IrClass
+    val companionClass: IrClass,
+    val properties: List<AdatPropertyMetadata>
 ) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
 
-    init {
+    fun transform() {
         irFactory.createAnonymousInitializer(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             origin = IrDeclarationOrigin.DEFINED,
@@ -44,12 +46,28 @@ class AdatCompanionTransform(
                 )
             }
         }
+
+        companionClass.transform(this, null)
+
+        // reorder properties so metadata is before wireformat
+        // FIR2IR does not guarantee the order for generated properties
+        // it's important to make it right because the wireformat initialized depends on the metadata one
+
+        val metadataIndex = companionClass.declarations.indexOfFirst { it is IrProperty && it.name == Names.ADAT_METADATA }
+        val wireformatIndex = companionClass.declarations.indexOfFirst { it is IrProperty && it.name == Names.ADAT_WIREFORMAT }
+
+        if (metadataIndex > wireformatIndex) {
+            val metadata = companionClass.declarations[metadataIndex]
+            val wireformat = companionClass.declarations[wireformatIndex]
+            companionClass.declarations[wireformatIndex] = metadata
+            companionClass.declarations[metadataIndex] = wireformat
+        }
     }
 
     override fun visitPropertyNew(declaration: IrProperty): IrStatement {
 
         when (declaration.name) {
-            Names.ADAT_METADATA -> declaration.transform(AdatMetaDataPropertyTransform(pluginContext, companionClass), null)
+            Names.ADAT_METADATA -> declaration.transform(AdatMetadataPropertyTransform(pluginContext, companionClass, properties), null)
             Names.ADAT_WIREFORMAT -> declaration.transform(AdatWireFormatPropertyTransform(pluginContext, companionClass), null)
         }
 

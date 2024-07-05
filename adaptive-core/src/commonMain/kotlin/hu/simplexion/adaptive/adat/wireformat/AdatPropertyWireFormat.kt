@@ -5,13 +5,13 @@
 package hu.simplexion.adaptive.adat.wireformat
 
 import hu.simplexion.adaptive.adat.AdatClass
-import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetaData
+import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
 
 class AdatPropertyWireFormat<T>(
-    val property : AdatPropertyMetaData,
+    val property: AdatPropertyMetadata,
     val wireFormat : WireFormat<T>
 ) {
 

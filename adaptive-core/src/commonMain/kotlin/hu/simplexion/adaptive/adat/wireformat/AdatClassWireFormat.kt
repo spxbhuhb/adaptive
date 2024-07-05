@@ -6,13 +6,13 @@ package hu.simplexion.adaptive.adat.wireformat
 
 import hu.simplexion.adaptive.adat.AdatClass
 import hu.simplexion.adaptive.adat.AdatCompanion
-import hu.simplexion.adaptive.adat.metadata.AdatClassMetaData
+import hu.simplexion.adaptive.adat.metadata.AdatClassMetadata
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
 
 /**
- * WireFormat generated from [AdatClassMetaData]. Intended use of this class is to add
+ * WireFormat generated from [AdatClassMetadata]. Intended use of this class is to add
  * wire format to companion objects during compilation type by the compiler plugin.
  *
  * To construct and use WireFormats dynamically during runtime use [AdatValuesWireFormat].
@@ -25,7 +25,7 @@ import hu.simplexion.adaptive.wireformat.WireFormatEncoder
  */
 class AdatClassWireFormat<A : AdatClass<A>>(
     val companion: AdatCompanion<A>,
-    metadata: AdatClassMetaData<A>
+    metadata: AdatClassMetadata<A>
 ) : WireFormat<A> {
 
     val propertyWireFormats by lazy { metadata.properties.map { it.toPropertyWireFormat() } }

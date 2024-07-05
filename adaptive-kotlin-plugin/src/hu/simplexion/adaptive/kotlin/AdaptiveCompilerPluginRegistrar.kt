@@ -6,9 +6,9 @@ package hu.simplexion.adaptive.kotlin
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatGenerationExtension
 import hu.simplexion.adaptive.kotlin.debug.ir.DebugGenerationExtension
 import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationGenerationExtension
+import hu.simplexion.adaptive.kotlin.reflect.ir.ReflectGenerationExtension
 import hu.simplexion.adaptive.kotlin.server.ir.ServerGenerationExtension
 import hu.simplexion.adaptive.kotlin.service.ir.ServicesGenerationExtension
-import hu.simplexion.adaptive.kotlin.utility.ir.UtilityGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi
@@ -41,7 +41,7 @@ class AdaptiveCompilerPluginRegistrar : CompilerPluginRegistrar() {
         IrGenerationExtension.registerExtension(FoundationGenerationExtension(options))
         IrGenerationExtension.registerExtension(ServerGenerationExtension(options))
         IrGenerationExtension.registerExtension(AdatGenerationExtension(options))
-        IrGenerationExtension.registerExtension(UtilityGenerationExtension(options))
+        IrGenerationExtension.registerExtension(ReflectGenerationExtension(options))
         IrGenerationExtension.registerExtension(DebugGenerationExtension(options))
 
     }
