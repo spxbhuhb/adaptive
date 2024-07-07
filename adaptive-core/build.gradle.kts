@@ -23,6 +23,12 @@ repositories {
     google()
 }
 
+// this is ugly but I don't use JS dependencies anyway, 
+// https://youtrack.jetbrains.com/issue/KT-50848/Kotlin-JS-inner-build-routines-are-using-vulnerable-NPM-dependencies-and-now-that-we-have-kotlin-js-store-github-audit-this
+rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin> {
+    rootProject.the<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension>().lockFileName = "skip-yarn-lock"
+}
+
 kotlin {
     jvmToolchain(11)
 
@@ -41,12 +47,7 @@ kotlin {
             iosX64(),
             iosArm64(),
             iosSimulatorArm64()
-        ).forEach { iosTarget ->
-            iosTarget.binaries.framework {
-                baseName = "Shared"
-                isStatic = true
-            }
-        }
+        )
     }
 
     sourceSets {

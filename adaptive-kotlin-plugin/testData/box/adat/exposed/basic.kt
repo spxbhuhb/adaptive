@@ -5,6 +5,7 @@ import hu.simplexion.adaptive.adat.AdatClass
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.utility.manualOrPlugin
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.ResultRow
@@ -47,6 +48,23 @@ fun UUID<*>.asJava(): java.util.UUID =
 
 fun UUID<*>.asEntityID(table: UUIDTable): EntityID<java.util.UUID> =
     EntityID(this.asJava(), table)
+
+/**
+ * Creates an Exposed [EntityID] for a `reference` column. Gets the table
+ * from `column.foreignKey`.
+ *
+ * @throws  IllegalStateException  if the column does not have a foreign key
+ */
+@Suppress("UNCHECKED_CAST")
+fun UUID<*>.asEntityID(column: Column<java.util.UUID>): EntityID<java.util.UUID> {
+    val fk = column.foreignKey
+    if (fk != null) {
+        return EntityID(this.asJava(), fk.targetTable as IdTable<java.util.UUID>)
+    } else {
+        // this is the case of the own `id` column
+        return EntityID(this.asJava(), column.table as IdTable<java.util.UUID>)
+    }
+}
 
 fun <T> EntityID<java.util.UUID>.asCommon(): UUID<T> =
     UUID(this.value.mostSignificantBits, this.value.leastSignificantBits)

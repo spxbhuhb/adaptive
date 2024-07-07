@@ -41,6 +41,9 @@ class AdatPluginContext(
     val asCommonUuid = asCommon.firstOrNull { it.owner.extensionReceiverParameter?.type?.isSubtypeOfClass(javaUuid !!) == true }
 
     val asJavaUuid = CallableIds.asJava.functions().firstOrNull { it.owner.extensionReceiverParameter?.type?.isSubtypeOfClass(commonUuid) == true }
-    val asEntityId = CallableIds.asEntityID.functions().firstOrNull { it.owner.extensionReceiverParameter?.type?.isSubtypeOfClass(commonUuid) == true }
+    val asEntityId = CallableIds.asEntityID.functions().firstOrNull {
+        it.owner.extensionReceiverParameter?.type?.isSubtypeOfClass(commonUuid) == true
+            && it.owner.valueParameters.firstOrNull()?.type?.isSubtypeOfClass(exposedColumn !!) == true
+    }
 
 }

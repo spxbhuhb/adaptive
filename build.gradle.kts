@@ -9,13 +9,26 @@ fun register(name: String) {
     val (groupName, taskName) = name.split(":")
     tasks.register(taskName) {
         group = groupName
+
         dependsOn(gradle.includedBuild("adaptive-core").task(":$taskName"))
+
         if (name !in jsOnlyTasks) {
             dependsOn(gradle.includedBuild("adaptive-gradle-plugin").task(":$taskName"))
             dependsOn(gradle.includedBuild("adaptive-kotlin-plugin").task(":$taskName"))
         }
+
+        dependsOn(gradle.includedBuild("adaptive-lib-auth").task(":$taskName"))
+        dependsOn(gradle.includedBuild("adaptive-lib-email").task(":$taskName"))
+        dependsOn(gradle.includedBuild("adaptive-lib-exposed").task(":$taskName"))
+        dependsOn(gradle.includedBuild("adaptive-lib-ktor").task(":$taskName"))
+        dependsOn(gradle.includedBuild("adaptive-lib-sandbox").task(":$taskName"))
+
         dependsOn(gradle.includedBuild("adaptive-ui").task(":$taskName"))
-        dependsOn(gradle.includedBuild("adaptive-lib").task(":$taskName"))
+
+        if (name !in publishTasks) {
+            dependsOn(gradle.includedBuild("site").task(":$taskName"))
+            dependsOn(gradle.includedBuild("sandbox").task(":$taskName"))
+        }
     }
 }
 

@@ -2,7 +2,7 @@
 
 ios-support = "yes"
 
-adaptive = "2024.06.01-SNAPSHOT"
+adaptive = "2024.07.06-SNAPSHOT"
 agp = "8.2.0"
 android-compileSdk = "34"
 android-minSdk = "26"
@@ -41,7 +41,7 @@ adaptive-lib-email = { module = "hu.simplexion.adaptive:adaptive-lib-email", ver
 adaptive-lib-exposed = { module = "hu.simplexion.adaptive:adaptive-lib-exposed", version.ref = "adaptive" }
 adaptive-lib-ktor = { module = "hu.simplexion.adaptive:adaptive-lib-ktor", version.ref = "adaptive" }
 adaptive-lib-sandbox = { module = "hu.simplexion.adaptive:adaptive-lib-sandbox", version.ref = "adaptive" }
-adaptive-ui-common = { module = "hu.simplexion.adaptive:adaptive-ui-common", version.ref = "adaptive" }
+adaptive-ui = { module = "hu.simplexion.adaptive:adaptive-ui", version.ref = "adaptive" }
 
 android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }

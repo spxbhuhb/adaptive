@@ -194,7 +194,7 @@ class ExposedAdatTransform(
                     val adatProperty = adatClass.property(mapping.parameter.name)
 
                     set.putValueArgument(0, irGet(updateBuilder))
-                    set.putValueArgument(1, toJava(mapping, irGetValue(adatProperty, irGet(adatInstance)), declaration))
+                    set.putValueArgument(1, toJava(mapping, irGetValue(adatProperty, irGet(adatInstance)), table))
                     set.putValueArgument(2, irGetValue(mapping.column, irGet(table)))
                 }
             }
@@ -203,29 +203,33 @@ class ExposedAdatTransform(
         return declaration
     }
 
-    private fun toJava(mapping: Mapping, call: IrCall, declaration: IrSimpleFunction): IrExpression =
+    private fun toJava(mapping: Mapping, call: IrCall, table: IrVariable): IrExpression =
         when {
-            mapping.columnType.isSubtypeOfClass(pluginContext.entityId !!) -> toJava(pluginContext.asEntityId !!, call, declaration, true)
-            mapping.columnType.isSubtypeOfClass(pluginContext.javaUuid !!) -> toJava(pluginContext.asJavaUuid !!, call, declaration, false)
+            mapping.columnType.isSubtypeOfClass(pluginContext.entityId !!) -> {
+                toJava(pluginContext.asEntityId !!, call, irGetValue(mapping.column, irGet(table)))
+            }
+
+            mapping.columnType.isSubtypeOfClass(pluginContext.javaUuid !!) -> {
+                toJava(pluginContext.asJavaUuid !!, call, null)
+            }
             else -> call
         }
 
     private fun toJava(
         func: IrSimpleFunctionSymbol,
         value: IrExpression,
-        declaration: IrSimpleFunction,
-        addTable: Boolean
+        valueArgument: IrExpression?
     ) =
         IrCallImpl(
             UNDEFINED_OFFSET, UNDEFINED_OFFSET,
             func.owner.returnType,
             func,
             0,
-            if (addTable) 1 else 0
+            if (valueArgument == null) 0 else 1
         ).also {
             it.extensionReceiver = value
-            if (addTable) {
-                it.putValueArgument(0, irGet(declaration.dispatchReceiverParameter !!))
+            if (valueArgument != null) {
+                it.putValueArgument(0, valueArgument)
             }
         }
 

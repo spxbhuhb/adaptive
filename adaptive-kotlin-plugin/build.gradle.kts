@@ -54,7 +54,6 @@ dependencies {
     testImplementation(libs.kotlin.compiler.internal.test.framework)
     testImplementation(libs.junit)
 
-    testRuntimeOnly(libs.adaptive.core)
     testRuntimeOnly(libs.kotlinx.coroutines.core)
     testRuntimeOnly(libs.kotlinx.datetime)
     testRuntimeOnly(libs.exposed.core)
@@ -65,6 +64,17 @@ dependencies {
     testImplementation("org.junit.platform:junit-platform-launcher")
     testImplementation("org.junit.platform:junit-platform-runner")
     testImplementation("org.junit.platform:junit-platform-suite-api")
+}
+
+// Copy `adaptive-core` into the plugin JAR. This is necessary as the plugin
+// uses classes and functions from the core and without this there is no way
+// to provided them.
+// TODO verify that only the necessary classes are copied into the plugin jar
+tasks.jar {
+    from({
+        configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }
+    })
+    duplicatesStrategy = DuplicatesStrategy.WARN
 }
 
 tasks.test {
