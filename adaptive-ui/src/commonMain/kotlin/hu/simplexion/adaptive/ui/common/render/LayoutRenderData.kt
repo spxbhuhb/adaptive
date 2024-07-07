@@ -25,4 +25,7 @@ class LayoutRenderData(
 
     var fillHorizontal: Boolean = false
     var fillVertical: Boolean = false
+
+    var fixed: Boolean? = null
+    var zIndex: Int? = null
 }

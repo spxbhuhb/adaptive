@@ -44,50 +44,59 @@ object maxHeight : AdaptiveInstruction {
     }
 }
 
-fun gap(calcBoth: () -> DPixel) = calcBoth().let { Gap(it, it) }
-fun gap(both: DPixel) = Gap(both, both)
-fun gap(width: DPixel? = null, height: DPixel? = null) = Gap(width, height)
+fun gap(calcBoth: () -> DPixel): Gap = calcBoth().let { Gap(it, it) }
+fun gap(both: DPixel): Gap = Gap(both, both)
+fun gap(width: DPixel? = null, height: DPixel? = null): Gap = Gap(width, height)
 
-fun gapHeight(height: () -> DPixel) = Gap(height = height(), width = null)
-fun gapHeight(height: DPixel) = Gap(height = height, width = null)
+fun gapHeight(height: () -> DPixel): Gap = Gap(height = height(), width = null)
+fun gapHeight(height: DPixel): Gap = Gap(height = height, width = null)
 
-fun gapWidth(width: () -> DPixel) = Gap(width = width(), height = null)
-fun gapWidth(width: DPixel) = Gap(width = width, height = null)
+fun gapWidth(width: () -> DPixel): Gap = Gap(width = width(), height = null)
+fun gapWidth(width: DPixel): Gap = Gap(width = width, height = null)
 
-fun padding(top: DPixel? = null, right: DPixel? = null, bottom: DPixel? = null, left: DPixel? = null) = Padding(top, right, bottom, left)
-fun padding(all: () -> DPixel) = Padding(all())
-fun padding(all: DPixel) = Padding(all)
+fun padding(top: DPixel? = null, right: DPixel? = null, bottom: DPixel? = null, left: DPixel? = null): Padding = Padding(top, right, bottom, left)
+fun padding(all: () -> DPixel): Padding = Padding(all())
+fun padding(all: DPixel): Padding = Padding(all)
 
-fun paddingHorizontal(horizontal: DPixel) = Padding(null, horizontal, null, horizontal)
-fun paddingHorizontal(horizontal: () -> DPixel) = horizontal().let { Padding(null, it, null, it) }
+fun paddingHorizontal(horizontal: DPixel): Padding = Padding(null, horizontal, null, horizontal)
+fun paddingHorizontal(horizontal: () -> DPixel): Padding = horizontal().let { Padding(null, it, null, it) }
 
-fun paddingVertical(vertical: DPixel) = Padding(null, vertical, null, vertical)
-fun paddingVertical(vertical: () -> DPixel) = vertical().let { Padding(it, null, it, null) }
+fun paddingVertical(vertical: DPixel): Padding = Padding(null, vertical, null, vertical)
+fun paddingVertical(vertical: () -> DPixel): Padding = vertical().let { Padding(it, null, it, null) }
 
-fun paddingTop(top: DPixel) = padding(top = top)
-fun paddingRight(right: DPixel) = padding(right = right)
-fun paddingBottom(bottom: DPixel) = padding(bottom = bottom)
-fun paddingLeft(left: DPixel) = padding(left = left)
+fun paddingTop(top: DPixel): Padding = padding(top = top)
+fun paddingRight(right: DPixel): Padding = padding(right = right)
+fun paddingBottom(bottom: DPixel): Padding = padding(bottom = bottom)
+fun paddingLeft(left: DPixel): Padding = padding(left = left)
 
-fun paddingTop(top: () -> DPixel) = padding(top = top())
-fun paddingRight(right: () -> DPixel) = padding(right = right())
-fun paddingBottom(bottom: () -> DPixel) = padding(bottom = bottom())
-fun paddingLeft(left: () -> DPixel) = padding(left = left())
+fun paddingTop(top: () -> DPixel): Padding = padding(top = top())
+fun paddingRight(right: () -> DPixel): Padding = padding(right = right())
+fun paddingBottom(bottom: () -> DPixel): Padding = padding(bottom = bottom())
+fun paddingLeft(left: () -> DPixel): Padding = padding(left = left())
 
-fun margin(top: DPixel? = null, right: DPixel? = null, bottom: DPixel? = null, left: DPixel? = null) = Margin(top, right, bottom, left)
-fun margin(all: () -> DPixel) = Margin(all())
-fun margin(all: DPixel) = Margin(all)
-fun marginTop(top: DPixel) = margin(top = top)
-fun marginRight(right: DPixel) = margin(right = right)
-fun marginBottom(bottom: DPixel) = margin(bottom = bottom)
-fun marginLeft(left: DPixel) = margin(left = left)
+fun margin(top: DPixel? = null, right: DPixel? = null, bottom: DPixel? = null, left: DPixel? = null): Margin = Margin(top, right, bottom, left)
+fun margin(all: () -> DPixel): Margin = Margin(all())
+fun margin(all: DPixel): Margin = Margin(all)
 
-val spaceAround = DistributeSpace(SpaceDistribution.Around)
-val spaceBetween = DistributeSpace(SpaceDistribution.Between)
+fun marginTop(top: DPixel): Margin = margin(top = top)
+fun marginRight(right: DPixel): Margin = margin(right = right)
+fun marginBottom(bottom: DPixel): Margin = margin(bottom = bottom)
+fun marginLeft(left: DPixel): Margin = margin(left = left)
 
-val scroll = Scroll(horizontal = true, vertical = true)
-val verticalScroll = Scroll(horizontal = true, vertical = true)
-val horizontalScroll = Scroll(horizontal = true, vertical = true)
+fun marginTop(top: () -> DPixel): Margin = margin(top = top())
+fun marginRight(right: () -> DPixel): Margin = margin(right = right())
+fun marginBottom(bottom: () -> DPixel): Margin = margin(bottom = bottom())
+fun marginLeft(left: () -> DPixel): Margin = margin(left = left())
+
+val spaceAround: DistributeSpace = DistributeSpace(SpaceDistribution.Around)
+val spaceBetween: DistributeSpace = DistributeSpace(SpaceDistribution.Between)
+
+val scroll: Scroll = Scroll(horizontal = true, vertical = true)
+val verticalScroll: Scroll = Scroll(horizontal = true, vertical = true)
+val horizontalScroll: Scroll = Scroll(horizontal = true, vertical = true)
+
+fun zIndex(value: Int): ZIndex = ZIndex(value)
+fun zIndex(value: () -> Int): ZIndex = ZIndex(value())
 
 data class Frame(
     val top: DPixel,
@@ -314,6 +323,24 @@ data class Scroll(
         container(subject) {
             if (vertical != null) it.verticalScroll = vertical
             if (horizontal != null) it.horizontalScroll = horizontal
+        }
+    }
+}
+
+data class ZIndex(
+    val value: Int
+) : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        layout(subject) {
+            it.zIndex = value
+        }
+    }
+}
+
+val fixed = object : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        layout(subject) {
+            it.fixed = true
         }
     }
 }

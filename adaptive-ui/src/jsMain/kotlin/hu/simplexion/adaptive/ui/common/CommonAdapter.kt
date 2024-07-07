@@ -143,6 +143,12 @@ class CommonAdapter(
             b.end { style.borderRightWidth = it.pxs }
             b.bottom { style.borderBottomWidth = it.pxs }
         }
+        zIndex {
+            style.zIndex = it.toString()
+        }
+        fixed {
+            style.position = "fixed"
+        }
     }
 
     fun DecorationRenderData.apply(style: CSSStyleDeclaration) {

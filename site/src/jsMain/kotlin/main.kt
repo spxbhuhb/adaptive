@@ -5,10 +5,7 @@
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.adapter
-import hu.simplexion.adaptive.foundation.instruction.AdaptiveDetach
-import hu.simplexion.adaptive.foundation.instruction.DetachHandler
-import hu.simplexion.adaptive.foundation.instruction.DetachName
-import hu.simplexion.adaptive.foundation.instruction.name
+import hu.simplexion.adaptive.foundation.instruction.*
 import hu.simplexion.adaptive.foundation.rangeTo
 import hu.simplexion.adaptive.resource.DrawableResource
 import hu.simplexion.adaptive.resource.ThemeQualifier
@@ -21,7 +18,6 @@ import hu.simplexion.adaptive.ui.common.instruction.AlignItems.Companion.alignIt
 import hu.simplexion.adaptive.ui.common.platform.mediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.withJsResources
 import hu.simplexion.adaptive.wireformat.withJson
-import kotlinx.browser.document
 
 val white = Color(0xffffffu)
 val gray = Color(0x606060u)
@@ -53,22 +49,18 @@ fun main() {
         val background = if (media.isLight) lightBackground else darkBackground
         val textColor = if (media.isLight) darkColor else lightColor
 
-        grid(background) {
-            colTemplate(1.fr)
-            rowTemplate(48.dp, 1.fr)
+        header()
 
-            header()
-            column {
-                maxSize .. verticalScroll .. paddingTop { 32.dp }
-                slot(mainContent) { cards() }
+        column(trace(".*")) {
+            width { media.viewWidth.dp }
+            background .. paddingTop { (48 + 32).dp }
 
-                text("adaptive.fun does not use cookies") ..
-                    paddingTop { 32.dp } .. paddingBottom { 96.dp } .. AlignSelf.center .. textColor
-            }
+            slot(mainContent) { cards() }
+
+            text("adaptive.fun does not use cookies") ..
+                paddingTop { 32.dp } .. paddingBottom { 32.dp } .. AlignSelf.center .. textColor
         }
     }
-
-    document.body !!.scroll(0.0, 0.0)
 }
 
 val mainContent = name("main content")
@@ -95,8 +87,9 @@ fun AdaptiveAdapter.switchTheme() {
 @Adaptive
 fun header() {
     row {
-        maxSize .. spaceBetween .. alignItems.center .. darkBackground
+        maxWidth .. height { 48.dp } .. spaceBetween .. alignItems.center .. darkBackground
         paddingLeft { 24.dp } .. paddingRight { 24.dp }
+        fixed .. zIndex { 1 }
 
         text("Menu", white)
         text("Adaptive", white)
