@@ -26,13 +26,21 @@ data class ViewBox(
 data class Height(
     val height : String
 ) : SvgInstruction {
-    // TODO string to pixel width conversion with whatever exotic units, not sure if I want this
+    override fun apply(subject: Any) {
+        subject.alsoIfInstance<SvgRootRenderData> {
+            it.height = height.removeSuffix("px").toDouble() // TODO exotic SVG units
+        }
+    }
 }
 
 data class Width(
     val width : String
 ) : SvgInstruction {
-    // TODO string to pixel width conversion with whatever exotic units, not sure if I want this
+    override fun apply(subject: Any) {
+        subject.alsoIfInstance<SvgRootRenderData> {
+            it.width = width.removeSuffix("px").toDouble() // TODO exotic SVG units
+        }
+    }
 }
 
 data class Fill(

@@ -79,3 +79,8 @@ Foundation Fragments
 [Code organization](code-organization.md)
 [Performance](performance.md)
 [Resources](../resource)
+
+### Things to read
+
+https://stackoverflow.com/questions/49373030/how-to-get-a-full-page-web-app-even-in-safari
+

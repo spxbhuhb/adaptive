@@ -3,12 +3,9 @@
  */
 
 import hu.simplexion.adaptive.foundation.Adaptive
-import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.adapter
-import hu.simplexion.adaptive.foundation.instruction.*
 import hu.simplexion.adaptive.foundation.rangeTo
 import hu.simplexion.adaptive.resource.DrawableResource
-import hu.simplexion.adaptive.resource.ThemeQualifier
 import hu.simplexion.adaptive.site.*
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 import hu.simplexion.adaptive.ui.common.browser
@@ -18,21 +15,6 @@ import hu.simplexion.adaptive.ui.common.instruction.AlignItems.Companion.alignIt
 import hu.simplexion.adaptive.ui.common.platform.mediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.withJsResources
 import hu.simplexion.adaptive.wireformat.withJson
-
-val white = Color(0xffffffu)
-val gray = Color(0x606060u)
-
-val lightColor = Color(0xffffffu)
-val darkColor = color(0x2E2E2Eu)
-
-val lightBackground = BackgroundColor(lightColor)
-val darkBackground = BackgroundColor(darkColor)
-
-val titleLarge = FontSize(36.sp)
-val titleMedium = FontSize(20.sp)
-val titleSmall = FontSize(16.sp)
-
-val shadow = dropShadow(Color(0xc0c0c0u), 3.dp, 3.dp, 3.dp)
 
 fun main() {
 
@@ -45,55 +27,49 @@ fun main() {
             defaultTextRenderData.fontSize = 16.sp
         }
 
-        val media = mediaMetrics()
-        val background = if (media.isLight) lightBackground else darkBackground
-        val textColor = if (media.isLight) darkColor else lightColor
+        grid {
+            rowTemplate(48.dp, 1.fr)
 
-        header()
-
-        column(trace(".*")) {
-            width { media.viewWidth.dp }
-            background .. paddingTop { (48 + 32).dp }
-
-            slot(mainContent) { cards() }
-
-            text("adaptive.fun does not use cookies") ..
-                paddingTop { 32.dp } .. paddingBottom { 32.dp } .. AlignSelf.center .. textColor
+            header()
+            content()
         }
-    }
-}
-
-val mainContent = name("main content")
-
-fun replaceMain(
-    @DetachName segment: String,
-    @AdaptiveDetach content: (handler: DetachHandler) -> Unit
-) = NavClick(mainContent, segment, content)
-
-private val grid1fr = arrayOf(
-    rowTemplate(1.fr),
-    colTemplate(1.fr)
-)
-
-fun AdaptiveAdapter.switchTheme() {
-    if (this !is AbstractCommonAdapter<*, *>) return
-    if (mediaMetrics.isDark) {
-        manualTheme = ThemeQualifier.LIGHT
-    } else {
-        manualTheme = ThemeQualifier.DARK
     }
 }
 
 @Adaptive
 fun header() {
+    val media = mediaMetrics()
+
     row {
         maxWidth .. height { 48.dp } .. spaceBetween .. alignItems.center .. darkBackground
         paddingLeft { 24.dp } .. paddingRight { 24.dp }
         fixed .. zIndex { 1 }
 
-        text("Menu", white)
+        box {
+            width { 24.dp } .. height { 24.dp }
+            onClick { }
+
+            svg(Res.drawable.menu)
+        }
+
         text("Adaptive", white)
-        text("Mode", white) .. onClick { adapter().switchTheme() }
+        text(if (media.isLight) "dark" else "light", white) .. onClick { adapter().switchTheme() } .. noSelect
+    }
+}
+
+@Adaptive
+fun content() {
+    val media = mediaMetrics()
+    val background = if (media.isLight) lightBackground else darkBackground
+    val textColor = if (media.isLight) darkColor else lightColor
+
+    column {
+        width { media.viewWidth.dp } .. paddingTop { 32.dp } .. background
+
+        slot(mainContent) { cards() }
+
+        text("adaptive.fun does not use cookies") ..
+            paddingTop { 32.dp } .. paddingBottom { 32.dp } .. AlignSelf.center .. textColor
     }
 }
 
@@ -194,24 +170,19 @@ fun cards() {
 fun card(
     image: DrawableResource,
     background: Color,
-    @Adaptive content: () -> Unit
+    @Adaptive cardContent: () -> Unit
 ) {
     val media = mediaMetrics()
     val shadowIfLight = if (media.isLight) arrayOf(shadow) else emptyArray()
 
     column(*shadowIfLight) {
-        grid(size(360.dp, 214.dp)) {
-            grid1fr
-            padding(32.dp)
-            cornerTopRadius(16.dp)
-            backgroundColor(background)
-            content()
+        grid {
+            size(360.dp, 214.dp) .. padding(32.dp) .. cornerTopRadius(16.dp) .. backgroundColor(background)
+
+            cardContent()
         }
-        image(
-            image,
-            size(360.dp, (360 * 1024 / 1792).dp),
-            cornerBottomRadius(16.dp)
-        )
+
+        image(image) .. size(360.dp, (360 * 1024 / 1792).dp) .. cornerBottomRadius(16.dp)
     }
 }
 
