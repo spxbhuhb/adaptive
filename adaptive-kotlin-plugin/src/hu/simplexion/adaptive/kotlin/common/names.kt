@@ -47,4 +47,7 @@ open class NamesBase(
 
     protected fun String.callableId(packageFun: () -> FqName = { defaultPackage }) =
         CallableId(packageFun(), Name.identifier(this))
+
+    val EMPTY_ARRAY = "emptyArray".callableId { kotlin }
+
 }

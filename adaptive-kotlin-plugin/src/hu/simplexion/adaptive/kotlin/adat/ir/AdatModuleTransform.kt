@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.util.hasAnnotation
 import org.jetbrains.kotlin.ir.util.isSubclassOf
+import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
 import org.jetbrains.kotlin.ir.visitors.transformChildrenVoid
 
 class AdatModuleTransform(
@@ -21,7 +22,7 @@ class AdatModuleTransform(
         when {
 
             declaration.isSubclassOf(pluginContext.adatClass.owner) -> {
-                declaration.transformChildrenVoid(AdatClassTransform(pluginContext, declaration))
+                declaration.acceptChildrenVoid(AdatClassTransform(pluginContext, declaration))
             }
 
             declaration.hasAnnotation(ClassIds.EXPOSED_ADAT_TABLE) -> {

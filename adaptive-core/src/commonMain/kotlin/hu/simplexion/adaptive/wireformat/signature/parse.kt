@@ -8,25 +8,25 @@ import hu.simplexion.adaptive.utility.peek
 import hu.simplexion.adaptive.utility.pop
 import hu.simplexion.adaptive.utility.push
 
-internal data class Type(
+data class Type(
     var name: String = "",
     var nullable: Boolean = false,
     val generics: MutableList<Type> = mutableListOf()
 )
 
-internal enum class TokenType {
+enum class TokenType {
     Name,
     Open,
     Close,
     Nullable
 }
 
-internal data class Token(
+data class Token(
     val type: TokenType,
     val value: String
 )
 
-internal fun tokenizeSignature(signature: String): List<Token> {
+fun tokenizeSignature(signature: String): List<Token> {
 
     val tokens = mutableListOf<Token>()
     val currentName = StringBuilder()
@@ -91,7 +91,7 @@ internal fun tokenizeSignature(signature: String): List<Token> {
     return tokens
 }
 
-internal fun parseSignature(signature: String): Type {
+fun parseSignature(signature: String): Type {
     val stack = mutableListOf(Type())
 
     for (token in tokenizeSignature(signature)) {

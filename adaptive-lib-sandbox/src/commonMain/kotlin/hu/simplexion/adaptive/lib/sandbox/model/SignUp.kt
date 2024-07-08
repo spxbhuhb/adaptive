@@ -8,7 +8,7 @@ import hu.simplexion.adaptive.adat.Adat
 
 @Adat
 class SignUp(
-    val name : String = "",
+    val name: String = "hello",
     val email : String = "",
     val password : String = "",
     val verification : String = "",

@@ -5,11 +5,9 @@ package hu.simplexion.adaptive.kotlin.adat.ir.adatcompanion
 
 import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata
 import hu.simplexion.adaptive.kotlin.adat.Names
+import hu.simplexion.adaptive.kotlin.adat.ir.AdatIrBuilder
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatPluginContext
-import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
-import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
-import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
@@ -20,12 +18,14 @@ import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.classId
 import org.jetbrains.kotlin.ir.util.isFakeOverride
 import org.jetbrains.kotlin.ir.util.parentAsClass
+import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
+import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
 
 class AdatCompanionTransform(
     override val pluginContext: AdatPluginContext,
     val companionClass: IrClass,
     val properties: List<AdatPropertyMetadata>
-) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
+) : IrElementVisitorVoid, AdatIrBuilder {
 
     fun transform() {
         irFactory.createAnonymousInitializer(
@@ -47,7 +47,7 @@ class AdatCompanionTransform(
             }
         }
 
-        companionClass.transform(this, null)
+        companionClass.acceptChildrenVoid(this)
 
         // reorder properties so metadata is before wireformat
         // FIR2IR does not guarantee the order for generated properties
@@ -64,24 +64,19 @@ class AdatCompanionTransform(
         }
     }
 
-    override fun visitPropertyNew(declaration: IrProperty): IrStatement {
-
+    override fun visitProperty(declaration: IrProperty) {
         when (declaration.name) {
-            Names.ADAT_METADATA -> declaration.transform(AdatMetadataPropertyTransform(pluginContext, companionClass, properties), null)
-            Names.ADAT_WIREFORMAT -> declaration.transform(AdatWireFormatPropertyTransform(pluginContext, companionClass), null)
+            Names.ADAT_METADATA -> adatMetadata(companionClass, declaration, properties)
+            Names.ADAT_WIREFORMAT -> adatWireFormat(companionClass, declaration)
         }
-
-        return declaration
     }
 
-    override fun visitFunctionNew(declaration: IrFunction): IrStatement {
-        if (declaration.isFakeOverride) return declaration
+    override fun visitFunction(declaration: IrFunction) {
+        if (declaration.isFakeOverride) return
 
         when (declaration.name) {
-            Names.NEW_INSTANCE -> declaration.transform(NewInstanceFunctionTransform(pluginContext, companionClass, declaration), null)
+            Names.NEW_INSTANCE -> newInstance(companionClass, declaration)
         }
-
-        return declaration
     }
 
 }

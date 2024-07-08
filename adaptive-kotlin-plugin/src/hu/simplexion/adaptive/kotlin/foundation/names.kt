@@ -65,7 +65,6 @@ object Strings {
 
     const val ACTUALIZE = "actualize"
 
-    const val EMPTY_ARRAY = "emptyArray"
     const val KOTLIN_INVOKE = "invoke"
 
     const val INSTRUCTIONS = "instructions" // instruction parameter name
@@ -134,7 +133,6 @@ object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val HELPER_FUNCTION_FRAGMENT = Strings.HELPER_FRAGMENT.callableId()
     val HELPER_FUNCTION_THIS_STATE = Strings.HELPER_THIS_STATE.callableId()
     val MANUAL_IMPLEMENTATION = Strings.MANUAL_IMPLEMENTATION.callableId()
-    val EMPTY_ARRAY = Strings.EMPTY_ARRAY.callableId { kotlin }
 }
 
 object Indices {

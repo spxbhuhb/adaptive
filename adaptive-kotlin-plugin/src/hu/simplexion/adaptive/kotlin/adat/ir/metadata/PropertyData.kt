@@ -10,4 +10,16 @@ import org.jetbrains.kotlin.ir.declarations.IrProperty
 class PropertyData(
     val property: IrProperty,
     val metadata: AdatPropertyMetadata
-)
+) {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null) return false
+        if (other !is PropertyData) return false
+        return metadata.name == other.metadata.name
+    }
+
+    override fun hashCode(): Int =
+        property.name.hashCode()
+
+}

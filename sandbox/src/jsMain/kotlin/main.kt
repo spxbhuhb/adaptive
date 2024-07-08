@@ -62,7 +62,8 @@ fun main() {
                     route { slotOne() }
                     route { slotTwo() }
 
-                    text("Click on the left to load a demo!")
+                    mobileExample { welcome() }
+//                    text("Click on the left to load a demo!")
                 }
             }
         }

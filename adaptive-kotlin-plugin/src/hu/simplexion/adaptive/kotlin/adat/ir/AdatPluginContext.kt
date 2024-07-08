@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.types.makeNullable
+import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.getSimpleFunction
 
 class AdatPluginContext(
@@ -25,12 +26,16 @@ class AdatPluginContext(
     val wireFormatRegistry = ClassIds.WIREFORMAT_REGISTRY.classSymbol()
     val wireFormatRegistrySet = checkNotNull(wireFormatRegistry.getSimpleFunction("set"))
 
+    val emptyArray = irContext.referenceFunctions(CallableIds.EMPTY_ARRAY).single()
+
     val exposedResultRow = ClassIds.RESULT_ROW.symbolOrNull()
     val exposedResultRowGet = exposedResultRow?.getSimpleFunction("get")
 
     val exposedColumn = ClassIds.COLUMN.symbolOrNull()
 
     val commonUuid = ClassIds.COMMON_UUID.classSymbol()
+    val commonUuidPrimary = commonUuid.constructors.first { it.owner.valueParameters.isEmpty() }
+
     val entityId = ClassIds.ENTITY_ID.symbolOrNull()
     val javaUuid = ClassIds.JAVA_UUID.symbolOrNull()
     val javaUuidType = javaUuid?.defaultType
