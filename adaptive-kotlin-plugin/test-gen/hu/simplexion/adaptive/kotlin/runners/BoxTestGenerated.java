@@ -37,11 +37,17 @@ public class BoxTestGenerated extends AbstractBoxTest {
       runTest("testData/box/adat/basic.kt");
     }
 
-      @Test
-      @TestMetadata("defaults.kt")
-      public void testDefaults() {
-          runTest("testData/box/adat/defaults.kt");
-      }
+    @Test
+    @TestMetadata("dateTimeDefaults.kt")
+    public void testDateTimeDefaults() {
+      runTest("testData/box/adat/dateTimeDefaults.kt");
+    }
+
+    @Test
+    @TestMetadata("defaultsBasic.kt")
+    public void testDefaultsBasic() {
+      runTest("testData/box/adat/defaultsBasic.kt");
+    }
 
     @Test
     @TestMetadata("withCompanion.kt")
@@ -492,21 +498,21 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
   }
 
-    @Nested
-    @TestMetadata("testData/box/reflect")
-    @TestDataPath("$PROJECT_ROOT")
-    public class Reflect {
-        @Test
-        public void testAllFilesPresentInReflect() {
-            KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/reflect"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
-        }
-
-        @Test
-        @TestMetadata("callSiteName.kt")
-        public void testCallSiteName() {
-            runTest("testData/box/reflect/callSiteName.kt");
-        }
+  @Nested
+  @TestMetadata("testData/box/reflect")
+  @TestDataPath("$PROJECT_ROOT")
+  public class Reflect {
+    @Test
+    public void testAllFilesPresentInReflect() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/reflect"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
     }
+
+    @Test
+    @TestMetadata("callSiteName.kt")
+    public void testCallSiteName() {
+      runTest("testData/box/reflect/callSiteName.kt");
+    }
+  }
 
   @Nested
   @TestMetadata("testData/box/server")
@@ -554,11 +560,11 @@ public class BoxTestGenerated extends AbstractBoxTest {
         runTest("testData/box/service/types/int.kt");
       }
 
-        @Test
-        @TestMetadata("list.kt")
-        public void testList() {
-            runTest("testData/box/service/types/list.kt");
-        }
+      @Test
+      @TestMetadata("list.kt")
+      public void testList() {
+        runTest("testData/box/service/types/list.kt");
+      }
 
       @Test
       @TestMetadata("string.kt")

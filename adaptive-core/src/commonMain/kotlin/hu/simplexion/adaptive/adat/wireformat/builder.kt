@@ -8,14 +8,14 @@ import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatRegistry
 import hu.simplexion.adaptive.wireformat.builtin.*
-import hu.simplexion.adaptive.wireformat.signature.Type
+import hu.simplexion.adaptive.wireformat.signature.WireFormatType
 import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 import hu.simplexion.adaptive.wireformat.signature.parseSignature
 
 fun AdatPropertyMetadata.toPropertyWireFormat(): AdatPropertyWireFormat<*> =
     AdatPropertyWireFormat(this, parseSignature(signature).toWireFormat())
 
-internal fun Type.toWireFormat(): WireFormat<*> =
+internal fun WireFormatType.toWireFormat(): WireFormat<*> =
     when {
         generics.isNotEmpty() -> {
             val args = generics.map { WireFormatTypeArgument(it.toWireFormat(), it.nullable) }

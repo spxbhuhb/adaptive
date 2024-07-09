@@ -26,8 +26,6 @@ class AdatPluginContext(
     val wireFormatRegistry = ClassIds.WIREFORMAT_REGISTRY.classSymbol()
     val wireFormatRegistrySet = checkNotNull(wireFormatRegistry.getSimpleFunction("set"))
 
-    val emptyArray = irContext.referenceFunctions(CallableIds.EMPTY_ARRAY).single()
-
     val exposedResultRow = ClassIds.RESULT_ROW.symbolOrNull()
     val exposedResultRowGet = exposedResultRow?.getSimpleFunction("get")
 

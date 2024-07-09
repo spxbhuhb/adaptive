@@ -74,7 +74,6 @@ class FoundationPluginContext(
     val getProducedValue = Strings.GET_PRODUCED_VALUE.fragmentFunction()
 
     val arrayGet = checkNotNull(irContext.irBuiltIns.arrayClass.getSimpleFunction("get"))
-    val emptyArray = irContext.referenceFunctions(CallableIds.EMPTY_ARRAY).single()
 
     val helperFunctions = listOf(
         irContext.referenceFunctions(CallableIds.HELPER_FUNCTION_ADAPTER).single(),

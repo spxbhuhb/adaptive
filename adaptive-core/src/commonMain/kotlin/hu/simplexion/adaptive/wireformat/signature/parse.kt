@@ -8,10 +8,10 @@ import hu.simplexion.adaptive.utility.peek
 import hu.simplexion.adaptive.utility.pop
 import hu.simplexion.adaptive.utility.push
 
-data class Type(
+data class WireFormatType(
     var name: String = "",
     var nullable: Boolean = false,
-    val generics: MutableList<Type> = mutableListOf()
+    val generics: MutableList<WireFormatType> = mutableListOf()
 )
 
 enum class TokenType {
@@ -91,12 +91,12 @@ fun tokenizeSignature(signature: String): List<Token> {
     return tokens
 }
 
-fun parseSignature(signature: String): Type {
-    val stack = mutableListOf(Type())
+fun parseSignature(signature: String): WireFormatType {
+    val stack = mutableListOf(WireFormatType())
 
     for (token in tokenizeSignature(signature)) {
         when (token.type) {
-            TokenType.Name -> stack.peek().generics += (Type(token.value))
+            TokenType.Name -> stack.peek().generics += (WireFormatType(token.value))
             TokenType.Open -> stack.push(stack.peek().generics.last())
             TokenType.Close -> stack.pop()
             TokenType.Nullable -> stack.peek().nullable = true

@@ -12,6 +12,8 @@ import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.getPropertyGetter
 import org.jetbrains.kotlin.ir.util.isSubclassOf
 import org.jetbrains.kotlin.ir.util.properties
+import org.jetbrains.kotlin.name.ClassId
+import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.types.checker.SimpleClassicTypeSystemContext.getClassFqNameUnsafe
 
@@ -45,3 +47,9 @@ fun IrClassSymbol.functionByName(nameFun: () -> String): IrSimpleFunctionSymbol 
     val name = nameFun()
     return functions.single { it.owner.name.asString() == name }
 }
+
+val String.asClassId: ClassId
+    get() = ClassId(FqName(this.substringBeforeLast('.')), Name.identifier(this.substringAfterLast('.')))
+
+val FqName.companionClassId
+    get() = ClassId(parent(), shortName()).createNestedClassId(KotlinNames.COMPANION_OBJECT)

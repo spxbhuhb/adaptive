@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.kotlin.common
 
 import hu.simplexion.adaptive.kotlin.AdaptiveOptions
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
+import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrFieldSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
@@ -21,6 +22,9 @@ import java.time.format.DateTimeFormatter
 import kotlin.io.path.createDirectories
 import kotlin.io.path.exists
 
+/**
+ * @property  sensibleCache  Cache of `signature` - `new instance` pairs.
+ */
 abstract class AbstractPluginContext(
     val irContext: IrPluginContext,
     val options: AdaptiveOptions
@@ -29,6 +33,13 @@ abstract class AbstractPluginContext(
     val pluginLogDir: Path? = options.pluginLogDir?.let { options.pluginLogDir.toPath().also { it.createDirectories() } }
     val pluginLogTimestamp: String = DateTimeFormatter.ofPattern("yyyyMMdd'-'HHmmss").format(LocalDateTime.now())
     val pluginLogFile: Path? = debugFile()
+
+    val kotlinSymbols by lazy { KotlinSymbols(irContext) }
+    val kotlinUnsignedSymbols by lazy { KotlinUnsignedSymbols(irContext) }
+    val dateTimeTypes by lazy { DateTimeTypes(irContext) }
+    val adaptiveSymbols by lazy { AdaptiveSymbols(irContext) }
+
+    val sensibleCache = mutableMapOf<String, IrExpression?>()
 
     fun ClassId.classSymbol() =
         checkNotNull(irContext.referenceClass(this)) {

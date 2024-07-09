@@ -28,14 +28,14 @@ class ParseTest {
     @Test
     fun parseTest() {
         val actual = parseSignature("Lkotlin/collections/List<Lkotlin/Pair<LA;[+I>;>;")
-        val expected = Type(
+        val expected = WireFormatType(
             name = "kotlin/collections/List",
             generics = mutableListOf(
-                Type(
+                WireFormatType(
                     name = "kotlin/Pair",
                     generics = mutableListOf(
-                        Type("A"),
-                        Type("[+I")
+                        WireFormatType("A"),
+                        WireFormatType("[+I")
                     )
                 )
             )
