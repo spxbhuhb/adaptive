@@ -86,10 +86,12 @@ fun checkbox(
 ) {
     checkNotNull(binding)
 
-    row(onClick { binding.setValue(! binding.value, true) }) {
+    row {
+        onClick { binding.setValue(! binding.value, true) }
+
         if (binding.value) {
             box(*activeCheckBox) {
-                image(Res.drawable.check, frame(1.dp, 1.dp, 18.dp, 18.dp))
+                image(Res.drawable.check) .. noSelect .. frame(1.dp, 1.dp, 18.dp, 18.dp)
             }
         } else {
             box(*inactiveCheckBox) {
