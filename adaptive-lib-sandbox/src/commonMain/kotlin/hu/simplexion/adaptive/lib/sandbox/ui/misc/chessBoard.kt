@@ -6,6 +6,8 @@ package hu.simplexion.adaptive.lib.sandbox.ui.misc
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.fragment.measureFragmentTime
+import hu.simplexion.adaptive.foundation.instruction.name
+import hu.simplexion.adaptive.foundation.rangeTo
 import hu.simplexion.adaptive.ui.common.fragment.box
 import hu.simplexion.adaptive.ui.common.fragment.column
 import hu.simplexion.adaptive.ui.common.fragment.row
@@ -30,21 +32,23 @@ fun colors(r: Int, c: Int) =
         }
     }
 
-const val size = 8
+const val chessBoardSize = 8
 
 @Adaptive
 fun chessBoard() {
     measureFragmentTime {
         box {
-            height { (size * 40 + 2).dp }
-            width { (size * 40 + 2).dp }
+            height { (chessBoardSize * 40 + 2).dp }
+            width { (chessBoardSize * 40 + 2).dp }
             border(black)
 
             column {
-                for (r in 0 until size) {
+                for (r in 0 until chessBoardSize) {
                     row {
-                        for (c in 1 .. size) {
-                            row(*colors(r, c), AlignItems.center) { text(r * size + c, Size(40.dp, 40.dp)) }
+                        for (c in 1 .. chessBoardSize) {
+                            row(*colors(r, c), AlignItems.center) {
+                                text(r * chessBoardSize + c, Size(40.dp, 40.dp)) .. name("Square: ${r * chessBoardSize + c}")
+                            }
                         }
                     }
                 }

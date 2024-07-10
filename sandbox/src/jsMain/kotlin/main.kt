@@ -9,6 +9,7 @@ import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.invoke
 import hu.simplexion.adaptive.foundation.query.first
 import hu.simplexion.adaptive.foundation.rangeTo
+import hu.simplexion.adaptive.lib.sandbox.ui.bender.hitDetect
 import hu.simplexion.adaptive.lib.sandbox.ui.graphics.svgExample
 import hu.simplexion.adaptive.lib.sandbox.ui.layout.layoutMain
 import hu.simplexion.adaptive.lib.sandbox.ui.markdown.markdown
@@ -47,6 +48,7 @@ fun main() {
                 navButton("Markdown") .. navClick { markdown() }
                 navButton("Slot One") .. navClick { slotOne() }
                 navButton("Slot Two") .. navClick { slotTwo() }
+                navButton("Hit Detect") .. navClick { hitDetect() }
             }
 
             column {
@@ -61,6 +63,7 @@ fun main() {
                     route { markdown() }
                     route { slotOne() }
                     route { slotTwo() }
+                    route { hitDetect() }
 
                     mobileExample { welcome() }
 //                    text("Click on the left to load a demo!")

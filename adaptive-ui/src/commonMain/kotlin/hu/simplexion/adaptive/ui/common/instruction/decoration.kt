@@ -13,6 +13,7 @@ import hu.simplexion.adaptive.ui.common.render.layout
 import kotlin.math.PI
 import kotlin.math.atan2
 
+fun backgroundColor(color: UInt) = BackgroundColor(Color(color))
 fun backgroundColor(color: Color) = BackgroundColor(color)
 
 fun leftToRightGradient(leftColor : Color, rightColor: Color) = BackgroundGradient(BackgroundGradient.LEFT, BackgroundGradient.RIGHT, leftColor, rightColor)

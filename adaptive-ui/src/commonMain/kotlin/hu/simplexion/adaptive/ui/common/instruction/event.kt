@@ -11,7 +11,9 @@ import hu.simplexion.adaptive.ui.common.render.event
 
 class AdaptiveUIEvent(
     val fragment: AbstractCommonFragment<*>,
-    val nativeEvent : Any?
+    val nativeEvent: Any?,
+    val x: Double = Double.NaN,
+    val y: Double = Double.NaN
 ) {
     fun patchIfDirty() {
         val closureOwner = fragment.createClosure.owner

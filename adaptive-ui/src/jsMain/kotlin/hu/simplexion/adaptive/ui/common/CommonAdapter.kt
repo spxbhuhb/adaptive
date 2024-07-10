@@ -28,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.css.CSSStyleDeclaration
+import org.w3c.dom.events.MouseEvent
 
 class CommonAdapter(
     override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
@@ -192,7 +193,25 @@ class CommonAdapter(
         }
 
         onClick { oc ->
-            BrowserEventListener { oc.execute(AdaptiveUIEvent(fragment, it)) }.also {
+            BrowserEventListener {
+
+                val x: Double
+                val y: Double
+
+                if (it is MouseEvent) {
+                    val boundingRect = fragment.receiver.getBoundingClientRect()
+                    val renderData = fragment.renderData
+                    val margin = renderData.layout?.margin ?: RawSurrounding.ZERO
+                    x = it.clientX - boundingRect.x - margin.start
+                    y = it.clientY - boundingRect.y - margin.top
+                } else {
+                    x = Double.NaN
+                    y = Double.NaN
+                }
+
+                oc.execute(AdaptiveUIEvent(fragment, it, x, y))
+
+            }.also {
                 onClickListener = it
                 fragment.receiver.addEventListener("click", it)
             }
