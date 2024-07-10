@@ -32,6 +32,9 @@ data class AdatClassMetadata<T>(
 
     companion object : WireFormat<AdatClassMetadata<*>> {
 
+        override val wireFormatName: String
+            get() = "hu.simplexion.adaptive.adat.metadata.AdatClassMetadata"
+
         override fun wireFormatEncode(encoder: WireFormatEncoder, value: AdatClassMetadata<*>): WireFormatEncoder {
             encoder
                 .int(1, "v", value.version)

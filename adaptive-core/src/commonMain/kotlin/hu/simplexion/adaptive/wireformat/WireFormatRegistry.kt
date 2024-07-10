@@ -16,5 +16,15 @@ object WireFormatRegistry : Registry<WireFormat<*>>() {
         set("kotlin.collections.List", ListWireFormat(n))
         set("kotlin.collections.Set", SetWireFormat(n))
         set("kotlin.collections.Map", MapWireFormat(n, n))
+
+        set("kotlin.time.Duration", DurationWireFormat)
+        set("kotlinx.datetime.Instant", InstantWireFormat)
+        set("kotlinx.datetime.LocalDate", LocalDateWireFormat)
+        set("kotlinx.datetime.LocalDateTime", LocalDateTimeWireFormat)
+        set("kotlinx.datetime.LocalTime", LocalTimeWireFormat)
+    }
+
+    operator fun plusAssign(wireFormat: WireFormat<*>) {
+        set(wireFormat.wireFormatName, wireFormat)
     }
 }

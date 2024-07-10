@@ -13,6 +13,7 @@ import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 import kotlin.enums.EnumEntries
 
 object NothingWireFormat : WireFormat<Nothing> {
+    override val wireFormatName: String get() = "kotlin.Nothing"
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Nothing): WireFormatEncoder = error()
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Nothing = error()
 
@@ -22,6 +23,7 @@ object NothingWireFormat : WireFormat<Nothing> {
 }
 
 object UnitWireFormat : WireFormat<Unit> {
+    override val wireFormatName: String get() = "kotlin.Unit"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Unit): WireFormatEncoder = encoder.rawUnit(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Unit = decoder !!.rawUnit(source)
@@ -30,6 +32,7 @@ object UnitWireFormat : WireFormat<Unit> {
 }
 
 object BooleanWireFormat : WireFormat<Boolean> {
+    override val wireFormatName: String get() = "kotlin.Boolean"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Boolean): WireFormatEncoder = encoder.rawBoolean(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Boolean = decoder !!.rawBoolean(source)
@@ -38,6 +41,7 @@ object BooleanWireFormat : WireFormat<Boolean> {
 }
 
 object IntWireFormat : WireFormat<Int> {
+    override val wireFormatName: String get() = "kotlin.Int"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Int): WireFormatEncoder = encoder.rawInt(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Int = decoder !!.rawInt(source)
@@ -46,6 +50,7 @@ object IntWireFormat : WireFormat<Int> {
 }
 
 object ShortWireFormat : WireFormat<Short> {
+    override val wireFormatName: String get() = "kotlin.Short"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Short): WireFormatEncoder = encoder.rawShort(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Short = decoder !!.rawShort(source)
@@ -54,6 +59,7 @@ object ShortWireFormat : WireFormat<Short> {
 }
 
 object ByteWireFormat : WireFormat<Byte> {
+    override val wireFormatName: String get() = "kotlin.Byte"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Byte): WireFormatEncoder = encoder.rawByte(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Byte = decoder !!.rawByte(source)
@@ -62,6 +68,7 @@ object ByteWireFormat : WireFormat<Byte> {
 }
 
 object LongWireFormat : WireFormat<Long> {
+    override val wireFormatName: String get() = "kotlin.Long"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Long): WireFormatEncoder = encoder.rawLong(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Long = decoder !!.rawLong(source)
@@ -70,6 +77,7 @@ object LongWireFormat : WireFormat<Long> {
 }
 
 object FloatWireFormat : WireFormat<Float> {
+    override val wireFormatName: String get() = "kotlin.Float"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Float): WireFormatEncoder = encoder.rawFloat(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Float = decoder !!.rawFloat(source)
@@ -78,6 +86,7 @@ object FloatWireFormat : WireFormat<Float> {
 }
 
 object DoubleWireFormat : WireFormat<Double> {
+    override val wireFormatName: String get() = "kotlin.Double"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Double): WireFormatEncoder = encoder.rawDouble(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Double = decoder !!.rawDouble(source)
@@ -86,6 +95,7 @@ object DoubleWireFormat : WireFormat<Double> {
 }
 
 object CharWireFormat : WireFormat<Char> {
+    override val wireFormatName: String get() = "kotlin.Char"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Char): WireFormatEncoder = encoder.rawChar(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Char = decoder !!.rawChar(source)
@@ -94,6 +104,7 @@ object CharWireFormat : WireFormat<Char> {
 }
 
 object BooleanArrayWireFormat : WireFormat<BooleanArray> {
+    override val wireFormatName: String get() = "kotlin.BooleanArray"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: BooleanArray): WireFormatEncoder = encoder.rawBooleanArray(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): BooleanArray = decoder !!.rawBooleanArray(source)
@@ -102,6 +113,7 @@ object BooleanArrayWireFormat : WireFormat<BooleanArray> {
 }
 
 object IntArrayWireFormat : WireFormat<IntArray> {
+    override val wireFormatName: String get() = "kotlin.IntArray"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: IntArray): WireFormatEncoder = encoder.rawIntArray(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): IntArray = decoder !!.rawIntArray(source)
@@ -110,6 +122,7 @@ object IntArrayWireFormat : WireFormat<IntArray> {
 }
 
 object ShortArrayWireFormat : WireFormat<ShortArray> {
+    override val wireFormatName: String get() = "kotlin.ShortArray"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: ShortArray): WireFormatEncoder = encoder.rawShortArray(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): ShortArray = decoder !!.rawShortArray(source)
@@ -118,6 +131,7 @@ object ShortArrayWireFormat : WireFormat<ShortArray> {
 }
 
 object ByteArrayWireFormat : WireFormat<ByteArray> {
+    override val wireFormatName: String get() = "kotlin.ByteArray"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: ByteArray): WireFormatEncoder = encoder.rawByteArray(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): ByteArray = decoder !!.rawByteArray(source)
@@ -126,6 +140,7 @@ object ByteArrayWireFormat : WireFormat<ByteArray> {
 }
 
 object LongArrayWireFormat : WireFormat<LongArray> {
+    override val wireFormatName: String get() = "kotlin.LongArray"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: LongArray): WireFormatEncoder = encoder.rawLongArray(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): LongArray = decoder !!.rawLongArray(source)
@@ -134,6 +149,7 @@ object LongArrayWireFormat : WireFormat<LongArray> {
 }
 
 object FloatArrayWireFormat : WireFormat<FloatArray> {
+    override val wireFormatName: String get() = "kotlin.FloatArray"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: FloatArray): WireFormatEncoder = encoder.rawFloatArray(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): FloatArray = decoder !!.rawFloatArray(source)
@@ -142,6 +158,7 @@ object FloatArrayWireFormat : WireFormat<FloatArray> {
 }
 
 object DoubleArrayWireFormat : WireFormat<DoubleArray> {
+    override val wireFormatName: String get() = "kotlin.DoubleArray"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: DoubleArray): WireFormatEncoder = encoder.rawDoubleArray(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): DoubleArray = decoder !!.rawDoubleArray(source)
@@ -150,6 +167,7 @@ object DoubleArrayWireFormat : WireFormat<DoubleArray> {
 }
 
 object CharArrayWireFormat : WireFormat<CharArray> {
+    override val wireFormatName: String get() = "kotlin.CharArray"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: CharArray): WireFormatEncoder = encoder.rawCharArray(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): CharArray = decoder !!.rawCharArray(source)
@@ -158,6 +176,7 @@ object CharArrayWireFormat : WireFormat<CharArray> {
 }
 
 object StringWireFormat : WireFormat<String> {
+    override val wireFormatName: String get() = "kotlin.String"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: String): WireFormatEncoder = encoder.rawString(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): String = decoder !!.rawString(source)
@@ -166,6 +185,7 @@ object StringWireFormat : WireFormat<String> {
 }
 
 class EnumWireFormat<E : Enum<E>>(val entries: EnumEntries<E>) : WireFormat<E> {
+    override val wireFormatName: String get() = "kotlin.Enum" // FIXME polymorphic enum
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: E): WireFormatEncoder = encoder.rawEnum(value, entries)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): E = decoder !!.rawEnum(source, entries)
@@ -174,6 +194,7 @@ class EnumWireFormat<E : Enum<E>>(val entries: EnumEntries<E>) : WireFormat<E> {
 }
 
 object UuidWireFormat : WireFormat<UUID<*>> {
+    override val wireFormatName: String get() = "hu.simplexion.adaptive.utility.UUID"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: UUID<*>): WireFormatEncoder = encoder.rawUuid(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): UUID<*> = decoder !!.rawUuid<Any>(source)
@@ -182,6 +203,7 @@ object UuidWireFormat : WireFormat<UUID<*>> {
 }
 
 object UIntWireFormat : WireFormat<UInt> {
+    override val wireFormatName: String get() = "kotlin.UInt"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: UInt): WireFormatEncoder = encoder.rawUInt(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): UInt = decoder !!.rawUInt(source)
@@ -190,6 +212,7 @@ object UIntWireFormat : WireFormat<UInt> {
 }
 
 object UShortWireFormat : WireFormat<UShort> {
+    override val wireFormatName: String get() = "kotlin.UShort"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: UShort): WireFormatEncoder = encoder.rawUShort(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): UShort = decoder !!.rawUShort(source)
@@ -198,6 +221,7 @@ object UShortWireFormat : WireFormat<UShort> {
 }
 
 object UByteWireFormat : WireFormat<UByte> {
+    override val wireFormatName: String get() = "kotlin.UByte"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: UByte): WireFormatEncoder = encoder.rawUByte(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): UByte = decoder !!.rawUByte(source)
@@ -206,6 +230,7 @@ object UByteWireFormat : WireFormat<UByte> {
 }
 
 object ULongWireFormat : WireFormat<ULong> {
+    override val wireFormatName: String get() = "kotlin.ULong"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: ULong): WireFormatEncoder = encoder.rawULong(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): ULong = decoder !!.rawULong(source)
@@ -215,6 +240,7 @@ object ULongWireFormat : WireFormat<ULong> {
 
 @OptIn(ExperimentalUnsignedTypes::class)
 object UIntArrayWireFormat : WireFormat<UIntArray> {
+    override val wireFormatName: String get() = "kotlin.UIntArray"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: UIntArray): WireFormatEncoder = encoder.rawUIntArray(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): UIntArray = decoder !!.rawUIntArray(source)
@@ -224,6 +250,7 @@ object UIntArrayWireFormat : WireFormat<UIntArray> {
 
 @OptIn(ExperimentalUnsignedTypes::class)
 object UShortArrayWireFormat : WireFormat<UShortArray> {
+    override val wireFormatName: String get() = "kotlin.UShortArray"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: UShortArray): WireFormatEncoder = encoder.rawUShortArray(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): UShortArray = decoder !!.rawUShortArray(source)
@@ -233,6 +260,7 @@ object UShortArrayWireFormat : WireFormat<UShortArray> {
 
 @OptIn(ExperimentalUnsignedTypes::class)
 object UByteArrayWireFormat : WireFormat<UByteArray> {
+    override val wireFormatName: String get() = "kotlin.UByteArray"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: UByteArray): WireFormatEncoder = encoder.rawUByteArray(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): UByteArray = decoder !!.rawUByteArray(source)
@@ -242,6 +270,7 @@ object UByteArrayWireFormat : WireFormat<UByteArray> {
 
 @OptIn(ExperimentalUnsignedTypes::class)
 object ULongArrayWireFormat : WireFormat<ULongArray> {
+    override val wireFormatName: String get() = "kotlin.ULongArray"
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: ULongArray): WireFormatEncoder = encoder.rawULongArray(value)
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): ULongArray = decoder !!.rawULongArray(source)
@@ -253,6 +282,9 @@ class PairWireFormat<T1, T2>(
    val typeArgument1: WireFormatTypeArgument<T1>,
    val typeArgument2: WireFormatTypeArgument<T2>,
 ) : WireFormat<Pair<T1?, T2?>> {
+
+    override val wireFormatName: String
+        get() = "kotlin.Pair"
 
     override val wireFormatKind: WireFormatKind
         get() = WireFormatKind.Primitive

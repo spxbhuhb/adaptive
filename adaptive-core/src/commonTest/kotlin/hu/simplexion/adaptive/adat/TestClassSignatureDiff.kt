@@ -46,6 +46,9 @@ class TestClassSignatureDiff(
 
     companion object : AdatCompanion<TestClassSignatureDiff> {
 
+        override val wireFormatName: String
+            get() = "hu.simplexion.adaptive.adat.TestClassSignatureDiff"
+
         override val adatMetadata = AdatClassMetadata<TestClassSignatureDiff>(
             version = 1,
             name = "hu.simplexion.adaptive.adat.TestClassSignatureDiff",

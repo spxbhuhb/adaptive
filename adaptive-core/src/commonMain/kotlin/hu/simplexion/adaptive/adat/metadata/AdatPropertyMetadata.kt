@@ -18,6 +18,9 @@ data class AdatPropertyMetadata(
 
     companion object : WireFormat<AdatPropertyMetadata> {
 
+        override val wireFormatName: String
+            get() = "hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata"
+
         override fun wireFormatEncode(encoder: WireFormatEncoder, value: AdatPropertyMetadata): WireFormatEncoder {
             encoder
                 .string(1, "n", value.name)

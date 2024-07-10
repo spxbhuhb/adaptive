@@ -712,10 +712,36 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
     override fun <T> rawInstance(value: T, wireFormat: WireFormat<T>): WireFormatEncoder =
         instance(1, "", value, wireFormat)
 
-    override fun <T> rawInstanceOrNull(value: T?, wireFormat: WireFormat<T>): WireFormatEncoder {
+    override fun <T> rawInstanceOrNull(value: T?, wireFormat: WireFormat<T>): WireFormatEncoder =
         instanceOrNull(1, "", value, wireFormat)
+
+    // ----------------------------------------------------------------------------
+    // Polymorphic Instance
+    // ----------------------------------------------------------------------------
+
+    override fun <T> polymorphic(fieldNumber: Int, fieldName: String, value: T, wireFormat: WireFormat<T>): WireFormatEncoder {
+        val bytes = subEncoder.apply {
+            string(1, "", wireFormat.wireFormatName)
+            instance(2, "", value, wireFormat)
+        }.pack()
+        writer.bytes(fieldNumber, bytes)
         return this
     }
+
+    override fun <T> polymorphicOrNull(fieldNumber: Int, fieldName: String, value: T?, wireFormat: WireFormat<T>): WireFormatEncoder {
+        if (value == null) {
+            writer.bool(fieldNumber + NULL_SHIFT, true)
+        } else {
+            polymorphic(fieldNumber, fieldName, value, wireFormat)
+        }
+        return this
+    }
+
+    override fun <T> rawPolymorphic(value: T, wireFormat: WireFormat<T>): WireFormatEncoder =
+        polymorphic(1, "", value, wireFormat)
+
+    override fun <T> rawPolymorphicOrNull(value: T?, wireFormat: WireFormat<T>): WireFormatEncoder =
+        polymorphicOrNull(1, "", value, wireFormat)
 
     // ----------------------------------------------------------------------------
     // Pair

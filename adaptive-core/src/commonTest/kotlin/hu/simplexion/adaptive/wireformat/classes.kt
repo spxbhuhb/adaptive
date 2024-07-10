@@ -4,7 +4,6 @@
 
 package hu.simplexion.adaptive.wireformat
 
-
 data class A(
     var b: Boolean = false,
     var i: Int = 0,
@@ -12,6 +11,9 @@ data class A(
     var l: MutableList<Int> = mutableListOf()
 ) {
     companion object : WireFormat<A> {
+
+        override val wireFormatName: String
+            get() = "hu.simplexion.adaptive.wireformat.A"
 
         override fun wireFormatEncode(encoder: WireFormatEncoder, value: A) =
             encoder
@@ -38,6 +40,9 @@ data class B(
     var s: String = ""
 ) {
     companion object : WireFormat<B> {
+
+        override val wireFormatName: String
+            get() = "hu.simplexion.adaptive.wireformat.B"
 
         override fun wireFormatEncode(encoder: WireFormatEncoder, value: B) =
             encoder

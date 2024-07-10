@@ -15,6 +15,7 @@ import hu.simplexion.adaptive.wireformat.WireFormatEncoder
  * to be added to the code during compilation time.
  */
 class AdatValuesWireFormat(
+    override val wireFormatName: String,
     metadata: String
 ) : WireFormat<Array<Any?>> {
 

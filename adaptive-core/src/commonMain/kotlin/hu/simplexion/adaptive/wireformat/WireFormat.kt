@@ -8,6 +8,8 @@ import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 
 interface WireFormat<T> {
 
+    val wireFormatName: String
+
     val wireFormatKind: WireFormatKind
         get() = WireFormatKind.Instance
 

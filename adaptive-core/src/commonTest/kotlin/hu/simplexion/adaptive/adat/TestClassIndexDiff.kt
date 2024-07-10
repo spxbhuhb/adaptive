@@ -46,6 +46,9 @@ class TestClassIndexDiff(
 
     companion object : AdatCompanion<TestClassIndexDiff> {
 
+        override val wireFormatName: String
+            get() = "hu.simplexion.adaptive.adat.TestClassIndexDiff"
+
         override val adatMetadata = AdatClassMetadata<TestClassIndexDiff>(
             version = 1,
             name = "hu.simplexion.adaptive.adat.TestClassIndexDiff",

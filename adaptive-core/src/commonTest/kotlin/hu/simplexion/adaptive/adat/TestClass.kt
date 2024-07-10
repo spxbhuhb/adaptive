@@ -46,6 +46,9 @@ class TestClass(
 
     companion object : AdatCompanion<TestClass> {
 
+        override val wireFormatName: String
+            get() = "hu.simplexion.adaptive.adat.TestClass"
+
         override val adatMetadata = AdatClassMetadata<TestClass>(
             version = 1,
             name = "hu.simplexion.adaptive.adat.TestClass",

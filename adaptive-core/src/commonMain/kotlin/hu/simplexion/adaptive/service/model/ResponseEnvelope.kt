@@ -26,6 +26,9 @@ class ResponseEnvelope(
 
     companion object : WireFormat<ResponseEnvelope> {
 
+        override val wireFormatName: String
+            get() = "hu.simplexion.adaptive.service.model.ResponseEnvelope"
+
         override fun wireFormatEncode(encoder: WireFormatEncoder, value: ResponseEnvelope): WireFormatEncoder =
             encoder
                 .uuid(1, "callId", value.callId)

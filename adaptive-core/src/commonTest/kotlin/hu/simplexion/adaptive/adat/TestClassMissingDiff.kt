@@ -46,6 +46,9 @@ class TestClassMissingDiff(
 
     companion object : AdatCompanion<TestClassMissingDiff> {
 
+        override val wireFormatName: String
+            get() = "hu.simplexion.adaptive.adat.TestClassMissingDiff"
+
         override val adatMetadata = AdatClassMetadata<TestClassMissingDiff>(
             version = 1,
             name = "hu.simplexion.adaptive.adat.TestClassMissingDiff",

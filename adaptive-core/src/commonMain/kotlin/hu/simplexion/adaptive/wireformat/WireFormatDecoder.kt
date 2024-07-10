@@ -268,6 +268,20 @@ interface WireFormatDecoder<ST> {
     fun <T> asInstance(wireFormat: WireFormat<T>): T
 
     fun <T> asInstanceOrNull(wireFormat: WireFormat<T>): T?
+
+    // -----------------------------------------------------------------------------------------
+    // Polymorphic Instance
+    // -----------------------------------------------------------------------------------------
+
+    fun <T> polymorphic(fieldNumber: Int, fieldName: String): T
+
+    fun <T> polymorphicOrNull(fieldNumber: Int, fieldName: String): T?
+
+    fun <T> rawPolymorphic(source: ST): T
+
+    fun <T> asPolymorphic(): T
+
+    fun <T> asPolymorphicOrNull(): T?
     
     // -----------------------------------------------------------------------------------------
     // Pair

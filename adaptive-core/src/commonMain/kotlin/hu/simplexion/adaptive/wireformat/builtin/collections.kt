@@ -14,6 +14,9 @@ class ArrayWireFormat<T>(
     val typeArgument: WireFormatTypeArgument<T>
 ) : WireFormat<Array<T?>> {
 
+    override val wireFormatName: String
+        get() = "kotlin.Array"
+
     override val wireFormatKind: WireFormatKind
         get() = WireFormatKind.Collection
 
@@ -39,6 +42,9 @@ class ListWireFormat<T>(
 
     constructor(wireFormat: WireFormat<T>) : this(WireFormatTypeArgument(wireFormat, false))
 
+    override val wireFormatName: String
+        get() = "kotlin.collections.List"
+
     override val wireFormatKind: WireFormatKind
         get() = WireFormatKind.Collection
 
@@ -57,6 +63,9 @@ class ListWireFormat<T>(
 class SetWireFormat<T>(
     val typeArgument: WireFormatTypeArgument<T>
 ) : WireFormat<Set<T?>> {
+
+    override val wireFormatName: String
+        get() = "kotlin.collections.Set"
 
     override val wireFormatKind: WireFormatKind
         get() = WireFormatKind.Collection
@@ -77,6 +86,9 @@ class MapWireFormat<K, V>(
     keyTypeArgument: WireFormatTypeArgument<K>,
     valueTypeArgument: WireFormatTypeArgument<V>
 ) : WireFormat<Map<K?, V?>> {
+
+    override val wireFormatName: String
+        get() = "kotlin.collections.Map"
 
     override val wireFormatKind: WireFormatKind
         get() = WireFormatKind.Collection

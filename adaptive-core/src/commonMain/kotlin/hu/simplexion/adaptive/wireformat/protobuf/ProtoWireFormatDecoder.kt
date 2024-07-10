@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatKind
+import hu.simplexion.adaptive.wireformat.WireFormatRegistry
 import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 import kotlin.enums.EnumEntries
 
@@ -447,6 +448,35 @@ class ProtoWireFormatDecoder(
         if (get(NULL_SHIFT + 1) != null) null else rawInstance(records.single(), wireFormat)
 
     // -----------------------------------------------------------------------------------------
+    // Polymorphic Instance
+    // -----------------------------------------------------------------------------------------
+
+    override fun <T> polymorphic(fieldNumber: Int, fieldName: String): T =
+        rawPolymorphic(checkNotNull(get(fieldNumber))) // cannot do better here
+
+    override fun <T> polymorphicOrNull(fieldNumber: Int, fieldName: String): T? =
+        get(fieldNumber)?.let { rawPolymorphic(it) }
+
+    override fun <T> rawPolymorphic(source: ProtoRecord): T {
+        check(source is LenProtoRecord)
+        val decoder = source.decoder()
+        val wireFormatName = decoder.string(1, "")
+        val data = checkNotNull(decoder[2])
+        check(data is LenProtoRecord)
+
+        @Suppress("UNCHECKED_CAST")
+        val wireFormat = WireFormatRegistry[wireFormatName] as WireFormat<T>
+
+        return wireFormat.wireFormatDecode(data, data.decoder())
+    }
+
+    override fun <T> asPolymorphic(): T =
+        rawPolymorphic(records.single())
+
+    override fun <T> asPolymorphicOrNull(): T? =
+        if (get(NULL_SHIFT + 1) != null) null else rawPolymorphic(records.single())
+
+    // -----------------------------------------------------------------------------------------
     // Instance
     // -----------------------------------------------------------------------------------------
 
@@ -489,8 +519,8 @@ class ProtoWireFormatDecoder(
             (decoder[2] as LenProtoRecord).decoder()
         }
 
-        val firstValue = first?.let { typeArgument1.wireFormat.wireFormatDecode(first[1]!!, first) }
-        val secondValue = second?.let { typeArgument2.wireFormat.wireFormatDecode(second[1]!!, second) }
+        val firstValue = first?.let { typeArgument1.wireFormat.wireFormatDecode(first[1] !!, first) }
+        val secondValue = second?.let { typeArgument2.wireFormat.wireFormatDecode(second[1] !!, second) }
 
         return Pair(firstValue, secondValue)
     }

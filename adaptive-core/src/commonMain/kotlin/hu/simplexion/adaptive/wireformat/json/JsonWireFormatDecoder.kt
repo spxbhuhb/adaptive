@@ -7,6 +7,7 @@ package hu.simplexion.adaptive.wireformat.json
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
+import hu.simplexion.adaptive.wireformat.WireFormatRegistry
 import hu.simplexion.adaptive.wireformat.json.elements.JsonArray
 import hu.simplexion.adaptive.wireformat.json.elements.JsonElement
 import hu.simplexion.adaptive.wireformat.json.elements.JsonNull
@@ -462,13 +463,11 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     // Instance
     // -----------------------------------------------------------------------------------------
 
-    override fun <T> instance(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T {
-        val element = get(fieldName)
-        return wireFormat.wireFormatDecode(element, JsonWireFormatDecoder(element))
-    }
+    override fun <T> instance(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T =
+        rawInstance(get(fieldName), wireFormat)
 
     override fun <T> instanceOrNull(fieldNumber: Int, fieldName: String, wireFormat: WireFormat<T>): T? =
-        if (getOrNull(fieldName) == null) null else instance(fieldNumber, fieldName, wireFormat)
+        getOrNull(fieldName)?.let { rawInstance(it, wireFormat) }
 
     override fun <T> rawInstance(source: JsonElement, wireFormat: WireFormat<T>): T {
         return wireFormat.wireFormatDecode(source, JsonWireFormatDecoder(source))
@@ -479,6 +478,36 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
     override fun <T> asInstanceOrNull(wireFormat: WireFormat<T>): T? =
         if (root is JsonNull) null else rawInstance(root, wireFormat)
+
+    // -----------------------------------------------------------------------------------------
+    // Polymorphic Instance
+    // -----------------------------------------------------------------------------------------
+
+    override fun <T> polymorphic(fieldNumber: Int, fieldName: String): T =
+        rawPolymorphic(get(fieldName))
+
+    override fun <T> polymorphicOrNull(fieldNumber: Int, fieldName: String): T? =
+        getOrNull(fieldName)?.let { rawPolymorphic(it) }
+
+    override fun <T> rawPolymorphic(source: JsonElement): T {
+        check(source is JsonArray) { "invalid polymorphic format: not an array" }
+        check(source.items.size == 2) { "invalid polymorphic format: items.size != 2" }
+
+        val wireFormatName = source.items.first().asString
+        val data = source.items[1]
+
+        @Suppress("UNCHECKED_CAST")
+        val wireFormat = WireFormatRegistry[wireFormatName] as? WireFormat<T>
+        checkNotNull(wireFormat) { "missing wire format: $wireFormatName" }
+
+        return wireFormat.wireFormatDecode(data, JsonWireFormatDecoder(data))
+    }
+
+    override fun <T> asPolymorphic(): T =
+        rawPolymorphic(root)
+
+    override fun <T> asPolymorphicOrNull(): T? =
+        if (root is JsonNull) null else rawPolymorphic(root)
 
     // -----------------------------------------------------------------------------------------
     // Pair

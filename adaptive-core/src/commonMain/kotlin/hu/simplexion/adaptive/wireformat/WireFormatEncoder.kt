@@ -274,6 +274,18 @@ interface WireFormatEncoder {
     fun <T> rawInstanceOrNull(value: T?, wireFormat: WireFormat<T>): WireFormatEncoder
 
     // ----------------------------------------------------------------------------
+    // Polymorphic Instance
+    // ----------------------------------------------------------------------------
+
+    fun <T> polymorphic(fieldNumber: Int, fieldName: String, value: T, wireFormat: WireFormat<T>): WireFormatEncoder
+
+    fun <T> polymorphicOrNull(fieldNumber: Int, fieldName: String, value: T?, wireFormat: WireFormat<T>): WireFormatEncoder
+
+    fun <T> rawPolymorphic(value: T, wireFormat: WireFormat<T>): WireFormatEncoder
+
+    fun <T> rawPolymorphicOrNull(value: T?, wireFormat: WireFormat<T>): WireFormatEncoder
+
+    // ----------------------------------------------------------------------------
     // Pair
     // ----------------------------------------------------------------------------
 

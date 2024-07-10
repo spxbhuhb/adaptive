@@ -744,6 +744,43 @@ class JsonWireFormatEncoder(
     }
 
     // ----------------------------------------------------------------------------
+    // Polymorphic Instance
+    // ----------------------------------------------------------------------------
+
+    override fun <T> polymorphic(fieldNumber: Int, fieldName: String, value: T, wireFormat: WireFormat<T>): WireFormatEncoder {
+        polymorphicOrNull(fieldNumber, fieldName, value, wireFormat)
+        return this
+    }
+
+    override fun <T> polymorphicOrNull(fieldNumber: Int, fieldName: String, value: T?, wireFormat: WireFormat<T>): WireFormatEncoder {
+        if (value == null) {
+            writer.nullValue(fieldName)
+        } else {
+            writer.fieldName(fieldName)
+            rawPolymorphic(value, wireFormat)
+        }
+        return this
+    }
+
+    override fun <T> rawPolymorphic(value: T, wireFormat: WireFormat<T>): WireFormatEncoder {
+        writer.openArray()
+        writer.quotedString(wireFormat.wireFormatName)
+        writer.separator()
+        rawInstance(value, wireFormat)
+        writer.closeArray()
+        return this
+    }
+
+    override fun <T> rawPolymorphicOrNull(value: T?, wireFormat: WireFormat<T>): WireFormatEncoder {
+        if (value == null) {
+            writer.rawNullValue()
+        } else {
+            rawPolymorphic(value, wireFormat)
+        }
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
     // Pair
     // ----------------------------------------------------------------------------
 

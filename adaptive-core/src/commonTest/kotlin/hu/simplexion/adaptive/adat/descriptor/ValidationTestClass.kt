@@ -66,6 +66,9 @@ class ValidationTestClass(
 
     companion object : AdatCompanion<ValidationTestClass> {
 
+        override val wireFormatName: String
+            get() = "hu.simplexion.adaptive.adat.descriptor.ValidationTestClass"
+
         override val adatMetadata = decodeMetadata("1/hu.simplexion.adaptive.adat.TestClass/someInt/0/I/someBoolean/1/Z/someIntListSet/2/Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
         override val adatWireFormat = AdatClassWireFormat(this, adatMetadata)
 

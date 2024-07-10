@@ -1,9 +1,19 @@
 # Layouts
 
+> [!NOTE]
+>
+> As of now all Adaptive layouts are **strict**. This means that the position of all fragments are calculated
+> by the layout and the fragments are placed by absolute positioning relative to the container they are in.
+>
+> This works for now, but introduces issues I haven't solved yet, most notably optimization of big tables
+> in browser. I'm not sure if I want to use strict layout for tables for performance reasons. I'll have to
+> investigate this a bit in the future
+>
+
 | Function  | Supported Adapters    | Description                                                                                 |
 |-----------|-----------------------|---------------------------------------------------------------------------------------------|
 | `box`     | browser, android, ios | Position each fragment with x and y coordinates.                                            |
-| `boxFlow` | browser               | Stack fragments in a row next to each other until space is available, then start a new row. |
+| `boxFlow` | browser, android, ios | Stack fragments in a row next to each other until space is available, then start a new row. |
 | `row`     | browser, android, ios | Stack fragments next to each other.                                                         |                                                
 | `column`  | browser, android, ios | Stack fragments below each other.                                                           |
 | `grid`    | browser, android, ios |                                                                                             |
@@ -60,21 +70,6 @@ row {
 }
 ```
 
-### Instructions
-
-```kotlin
-import hu.simplexion.adaptive.ui.common.instruction.AlignItems
-import hu.simplexion.adaptive.ui.common.instruction.JustifyContent
-
-row(AlignItems.Start)
-row(AlignItems.Center)
-row(AlignItems.End)
-
-row(JustifyContent.Start)
-row(JustifyContent.Center)
-row(JustifyContent.End)
-```
-
 ## Column
 
 Column simply positions fragments below to each other.
@@ -86,8 +81,48 @@ column {
 }
 ```
 
+## Grid
+
+Grid provides a partial implementation of the [CSS grid layout](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout).
+
+```kotlin
+grid {
+    colTemplate(10.dp, 1.dp, 10.dp repeat 5) .. rowTemplate(20.dp)
+    /* ... */
+}
+```
 
 ### Instructions
+
+To put a fragment at a given grid position and/or make it span columns/rows use one or a combination of
+these:
+
+- `Number.gridCol`
+- `Number.gridRow`
+- `Number.colSpan`
+- `Number.rowSpan`
+- `GridCol(col : Int, span : Int = 1)`
+- `GridRow(row : Int, span : Int = 1)`
+- `RowSpan(span : Int)`
+- `ColSpan(span : Int)`
+- `GridPos(row : Int, col : Int, rowSpan : Int = 1, colSpan: Int = 1)`
+
+```kotlin
+ grid {
+    rowTemplate(50.dp) .. colTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
+    
+    row(2.gridCol) {
+        text("Sign Up", white)
+    }
+
+    row(4.gridCol) {
+        text("Sign In", white)
+    }
+
+}
+```
+
+## Layout Instructions
 
 >
 > [!NOTE]
@@ -95,9 +130,8 @@ column {
 > Scroll is not implemented for Android and iOS yet.
 >
 
-```kotlin
-import hu.simplexion.adaptive.ui.common.instruction.AlignItems
 
+```kotlin
 column(AlignItems.start)
 column(AlignItems.center)
 column(AlignItems.end)
@@ -120,7 +154,7 @@ This works, as you apply scroll to the column that contains the big stuff.
 
 ```kotlin
 @Adaptive
-fun a{
+fun a() {
     column {
         scroll
         bigStuff()
@@ -133,7 +167,7 @@ fun bigStuff() {
 }
 ```
 
-This **does not** work. The reason is that the `box` is already big. It does not need
+This **DOES NOT WORK**. The reason is that the `box` is already big. It does not need
 to be scrolled to contain everything. The column that contains `bigStuff` is small,
 the content of that column has to be scrolled.
 
@@ -154,50 +188,5 @@ fun bigStuff() {
         scroll
         throw RuntimeException("THIS DOES NOT WORK")
     }
-}
-```
-
-## Grid
-
-Grid provides a partial implementation of the [CSS grid layout](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout).
-
-```kotlin
-grid(
-    ColTemplate(10.dp, 1.dp, repeat(5, 10.dp)),
-    RowTemplate(20.dp)
-) {
-    /* ... */
-}
-```
-
-### Instructions
-
-To put a fragment at a given grid position and/or make it span columns/rows use one or a combination of
-these:
-
-- `Number.gridCol`
-- `Number.gridRow`
-- `Number.colSpan`
-- `Number.rowSpan`
-- `GridCol(col : Int, span : Int = 1)`
-- `GridRow(row : Int, span : Int = 1)`
-- `RowSpan(span : Int)`
-- `ColSpan(span : Int)`
-- `GridPos(row : Int, col : Int, rowSpan : Int = 1, colSpan: Int = 1)`
-
-```kotlin
- grid(
-    RowTemplate(50.dp),
-    ColTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
-) {
-
-    row(2.gridCol) {
-        text("Sign Up", white)
-    }
-
-    row(4.gridCol) {
-        text("Sign In", white)
-    }
-
 }
 ```

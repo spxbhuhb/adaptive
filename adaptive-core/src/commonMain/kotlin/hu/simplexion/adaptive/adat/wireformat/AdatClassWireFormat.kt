@@ -28,6 +28,9 @@ class AdatClassWireFormat<A : AdatClass<A>>(
     metadata: AdatClassMetadata<A>
 ) : WireFormat<A> {
 
+    override val wireFormatName
+        get() = companion.wireFormatName
+
     val propertyWireFormats by lazy { metadata.properties.map { it.toPropertyWireFormat() } }
 
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: A): WireFormatEncoder {

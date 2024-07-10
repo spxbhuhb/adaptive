@@ -35,6 +35,9 @@ abstract class AbstractWireFormatTest<ST>(
     fun <T> actual(value: T, wireFormat: WireFormat<T>) =
         e { instance(1, fieldName, value, wireFormat) } d { instance(1, fieldName, wireFormat) }
 
+    fun <T> polymorphicActual(value: T, wireFormat: WireFormat<T>) =
+        e { polymorphic(1, fieldName, value, wireFormat) } d { polymorphic<T>(1, fieldName) }
+
     // ------------------------------------------------------------
     // Test values
     // ------------------------------------------------------------
