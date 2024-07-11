@@ -143,3 +143,14 @@ class ClassWireFormat(
     }
 
 }
+
+class PolymorphicWireFormat(
+    pluginContext: WireFormatPluginContext
+) : BasicWireFormat {
+
+    override val representedClass = "*"
+    override val signature = "*"
+
+    override val classWireFormat = checkNotNull(pluginContext.irContext.referenceClass(ClassIds.POLYMORPHIC_WIREFORMAT))
+
+}

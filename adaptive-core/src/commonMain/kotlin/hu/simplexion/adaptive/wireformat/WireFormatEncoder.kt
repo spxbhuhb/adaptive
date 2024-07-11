@@ -279,7 +279,7 @@ interface WireFormatEncoder {
 
     fun <T> polymorphic(fieldNumber: Int, fieldName: String, value: T, wireFormat: WireFormat<T>): WireFormatEncoder
 
-    fun <T> polymorphicOrNull(fieldNumber: Int, fieldName: String, value: T?, wireFormat: WireFormat<T>): WireFormatEncoder
+    fun <T> polymorphicOrNull(fieldNumber: Int, fieldName: String, value: T?, wireFormat: WireFormat<T>?): WireFormatEncoder
 
     fun <T> rawPolymorphic(value: T, wireFormat: WireFormat<T>): WireFormatEncoder
 

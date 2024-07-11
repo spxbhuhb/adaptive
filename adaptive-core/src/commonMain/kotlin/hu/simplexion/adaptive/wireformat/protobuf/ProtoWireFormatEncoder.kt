@@ -4,7 +4,6 @@
 
 package hu.simplexion.adaptive.wireformat.protobuf
 
-import hu.simplexion.adaptive.adat.AdatClass
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
@@ -729,11 +728,11 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
-    override fun <T> polymorphicOrNull(fieldNumber: Int, fieldName: String, value: T?, wireFormat: WireFormat<T>): WireFormatEncoder {
+    override fun <T> polymorphicOrNull(fieldNumber: Int, fieldName: String, value: T?, wireFormat: WireFormat<T>?): WireFormatEncoder {
         if (value == null) {
             writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
-            polymorphic(fieldNumber, fieldName, value, wireFormat)
+            polymorphic(fieldNumber, fieldName, value, wireFormat !!)
         }
         return this
     }
@@ -808,22 +807,13 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
     // -----------------------------------------------------------------------------------------
 
     fun <T> valueOrNull(value: T?, typeArgument: WireFormatTypeArgument<T>, direct: Boolean) {
-        when {
-            value == null -> {
-                writer.bool(1 + NULL_SHIFT, true)
-            }
-
-            typeArgument.wireFormat == null -> {
-                @Suppress("UNCHECKED_CAST")
-                rawPolymorphic(value, (value as AdatClass<*>).adatCompanion as WireFormat<T>)
-            }
-
-            else -> {
-                if (direct) {
-                    typeArgument.wireFormat.wireFormatEncode(this, value)
-                } else {
-                    item(value, typeArgument.wireFormat)
-                }
+        if (value == null) {
+            writer.bool(1 + NULL_SHIFT, true)
+        } else {
+            if (direct) {
+                typeArgument.wireFormat.wireFormatEncode(this, value)
+            } else {
+                item(value, typeArgument.wireFormat)
             }
         }
     }

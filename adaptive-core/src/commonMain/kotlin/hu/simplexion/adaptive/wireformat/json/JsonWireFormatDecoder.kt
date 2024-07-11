@@ -553,11 +553,7 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     // -----------------------------------------------------------------------------------------
 
     fun <T> decodeOrPolymorphic(element: JsonElement, typeArgument: WireFormatTypeArgument<T>) =
-        if (typeArgument.wireFormat == null) {
-            JsonWireFormatDecoder(element).rawPolymorphic(element)
-        } else {
-            typeArgument.wireFormat.wireFormatDecode(element, JsonWireFormatDecoder(element))
-        }
+        typeArgument.wireFormat.wireFormatDecode(element, JsonWireFormatDecoder(element))
 
     override fun <T> items(source: JsonElement, typeArgument: WireFormatTypeArgument<T>): MutableList<T?> {
         val result = mutableListOf<T?>()

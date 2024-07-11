@@ -140,6 +140,8 @@ private fun AbstractPluginContext.toIrType(wireFormatType: WireFormatType): IrSi
             "F" -> irBuiltIns.floatType
             "C" -> irBuiltIns.charType
 
+            "*" -> irBuiltIns.anyType
+
             else -> symbol(name, generics)
         }
 

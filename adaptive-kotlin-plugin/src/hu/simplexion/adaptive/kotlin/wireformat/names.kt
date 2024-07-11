@@ -41,6 +41,7 @@ object Strings {
 
 object FqNames {
     val SIGNATURE_PACKAGE = FqName(Strings.SIGNATURE_PACKAGE)
+    val BUILTIN_PACKAGE = FqName(Strings.BUILTIN_PACKAGE)
 }
 
 object ClassIds : NamesBase(Strings.WIREFORMAT_PACKAGE) {
@@ -50,4 +51,6 @@ object ClassIds : NamesBase(Strings.WIREFORMAT_PACKAGE) {
     val WIREFORMAT_DECODER = Strings.WIREFORMAT_DECODER.classId()
 
     val WIREFORMAT_TYPE_ARGUMENT = Strings.WIREFORMAT_TYPE_ARGUMENT.classId { FqNames.SIGNATURE_PACKAGE }
+
+    val POLYMORPHIC_WIREFORMAT = "PolymorphicWireFormat".classId { FqNames.BUILTIN_PACKAGE }
 }

@@ -5,10 +5,8 @@
 package hu.simplexion.adaptive.kotlin.wireformat
 
 import org.jetbrains.kotlin.ir.declarations.IrFunction
-import org.jetbrains.kotlin.ir.types.IrSimpleType
-import org.jetbrains.kotlin.ir.types.IrType
-import org.jetbrains.kotlin.ir.types.classFqName
-import org.jetbrains.kotlin.ir.types.isNullable
+import org.jetbrains.kotlin.ir.types.*
+import org.jetbrains.kotlin.ir.util.isFinalClass
 
 object Signature {
 
@@ -45,7 +43,9 @@ object Signature {
         "kotlin.UByteArray" to "[+B",
         "kotlin.ULongArray" to "[+J",
 
-        "hu.simplexion.adaptive.utility.UUID" to "U"
+        "hu.simplexion.adaptive.utility.UUID" to "U",
+
+        "hu.simplexion.adaptive.wireformat.builtin.PolymorphicWireFormat" to "*"
     )
 
     val reversedShorthands = shorthands.entries.associate { it.value to it.key }
@@ -68,14 +68,23 @@ object Signature {
         if (builtin != null) return builtin.addNull(irType)
 
         check(irType is IrSimpleType)
+
+        // when a class is not final we have to go with polymorphic coding
+        if (! irType.classOrFail.owner.isFinalClass) {
+            return "*"
+        }
+
         if (irType.arguments.isEmpty()) {
             return "L$typeName;".addNull(irType)
         }
 
         val argumentSignatures =
             irType.arguments.joinToString(";") {
-                check(it is IrType) { "type argument $it is not an IrType type: $irType" }
-                typeSignature(it as IrType)
+                if (it is IrType) {
+                    typeSignature(it as IrType)
+                } else {
+                    "*"
+                }
             }
 
         return "L$typeFqName<$argumentSignatures>;".addNull(irType)

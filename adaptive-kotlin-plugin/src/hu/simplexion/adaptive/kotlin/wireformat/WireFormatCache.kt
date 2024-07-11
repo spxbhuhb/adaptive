@@ -68,11 +68,14 @@ class WireFormatCache(
 
         PrimitiveWireFormat(pluginContext, "Uuid", "U"),
 
+        PolymorphicWireFormat(pluginContext),
+
         ClassWireFormat(pluginContext, Strings.DURATION_WIREFORMAT, "kotlin.time.Duration"),
         ClassWireFormat(pluginContext, Strings.INSTANT_WIREFORMAT, "kotlinx.datetime.Instant"),
         ClassWireFormat(pluginContext, Strings.LOCALDATETIME_WIREFORMAT, "kotlinx.datetime.LocalDateTime"),
         ClassWireFormat(pluginContext, Strings.LOCALDATE_WIREFORMAT, "kotlinx.datetime.LocalDate"),
         ClassWireFormat(pluginContext, Strings.LOCALTIME_WIREFORMAT, "kotlinx.datetime.LocalTime")
+
     ).associateBy { it.representedClass }.toMutableMap()
 
     val genericFormats = mutableMapOf(

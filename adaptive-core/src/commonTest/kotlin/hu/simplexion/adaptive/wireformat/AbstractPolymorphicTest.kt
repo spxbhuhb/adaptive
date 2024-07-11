@@ -7,6 +7,7 @@ package hu.simplexion.adaptive.wireformat
 import hu.simplexion.adaptive.adat.AdatClass
 import hu.simplexion.adaptive.adat.AdatCompanion
 import hu.simplexion.adaptive.wireformat.builtin.ListWireFormat
+import hu.simplexion.adaptive.wireformat.builtin.PolymorphicWireFormat
 import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -29,7 +30,7 @@ abstract class AbstractPolymorphicTest<ST>(
         WireFormatRegistry += C1.Companion
         WireFormatRegistry += C2.Companion
 
-        listOf(C1(12), C2(23)).also { assertEquals(it, polymorphicActual(it, ListWireFormat(WireFormatTypeArgument<CI>(null, false)))) }
+        listOf(C1(12), C2(23)).also { assertEquals(it, polymorphicActual(it, ListWireFormat(WireFormatTypeArgument<CI>(PolymorphicWireFormat(), false)))) }
     }
 
     interface CI {
@@ -47,6 +48,9 @@ abstract class AbstractPolymorphicTest<ST>(
 
             override val wireFormatName: String
                 get() = "hu.simplexion.adaptive.wireformat.C1"
+
+            override val adatWireFormat: WireFormat<C1>
+                get() = this
 
             override fun wireFormatEncode(encoder: WireFormatEncoder, value: C1) =
                 encoder.int(1, "i", value.i)
@@ -67,6 +71,9 @@ abstract class AbstractPolymorphicTest<ST>(
 
             override val wireFormatName: String
                 get() = "hu.simplexion.adaptive.wireformat.C2"
+
+            override val adatWireFormat: WireFormat<C2>
+                get() = this
 
             override fun wireFormatEncode(encoder: WireFormatEncoder, value: C2) =
                 encoder.int(1, "i", value.i)

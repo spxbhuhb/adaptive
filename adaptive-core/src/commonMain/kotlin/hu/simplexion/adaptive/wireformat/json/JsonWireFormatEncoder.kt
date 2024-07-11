@@ -4,7 +4,6 @@
 
 package hu.simplexion.adaptive.wireformat.json
 
-import hu.simplexion.adaptive.adat.AdatClass
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
@@ -753,12 +752,12 @@ class JsonWireFormatEncoder(
         return this
     }
 
-    override fun <T> polymorphicOrNull(fieldNumber: Int, fieldName: String, value: T?, wireFormat: WireFormat<T>): WireFormatEncoder {
+    override fun <T> polymorphicOrNull(fieldNumber: Int, fieldName: String, value: T?, wireFormat: WireFormat<T>?): WireFormatEncoder {
         if (value == null) {
             writer.nullValue(fieldName)
         } else {
             writer.fieldName(fieldName)
-            rawPolymorphic(value, wireFormat)
+            rawPolymorphic(value, wireFormat !!)
         }
         return this
     }
@@ -826,20 +825,11 @@ class JsonWireFormatEncoder(
     }
 
     fun <T> valueOrNull(value: T?, typeArgument: WireFormatTypeArgument<T>) {
-        when {
-            value == null -> {
-                check(typeArgument.nullable)
-                writer.rawNullValue()
-            }
-
-            typeArgument.wireFormat == null -> {
-                @Suppress("UNCHECKED_CAST")
-                rawPolymorphic(value, (value as AdatClass<*>).adatCompanion as WireFormat<T>)
-            }
-
-            else -> {
-                rawInstance(value, typeArgument.wireFormat)
-            }
+        if (value == null) {
+            check(typeArgument.nullable)
+            writer.rawNullValue()
+        } else {
+            rawInstance(value, typeArgument.wireFormat)
         }
     }
 
