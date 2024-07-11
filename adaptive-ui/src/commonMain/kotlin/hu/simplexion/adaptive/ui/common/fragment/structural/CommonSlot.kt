@@ -89,6 +89,7 @@ class CommonSlot(
             // Added copy to cover use cases like `val something = route { somethingFun() }`
             // FIXME remove `slot` from `Route` and keep `Route` immutable
             routes = instructions.filterIsInstance<Route>().map { it.copy() }.onEach { it.slot = this }
+
             historySize = instructions.firstOrNullIfInstance<HistorySize>()?.size ?: 0
             name = instructions.firstOrNullIfInstance<Name>() ?: Name.ANONYMOUS
 

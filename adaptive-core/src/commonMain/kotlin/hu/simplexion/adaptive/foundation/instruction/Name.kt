@@ -4,6 +4,10 @@
 
 package hu.simplexion.adaptive.foundation.instruction
 
+import hu.simplexion.adaptive.wireformat.WireFormat
+import hu.simplexion.adaptive.wireformat.WireFormatDecoder
+import hu.simplexion.adaptive.wireformat.WireFormatEncoder
+
 fun name(name : String) = Name(name)
 
 /**
@@ -11,7 +15,27 @@ fun name(name : String) = Name(name)
  * and uses it instead of the class name if so.
  */
 data class Name(val name: String) : AdaptiveInstruction {
-    companion object {
+
+    constructor() : this("<anonymous>")
+
+    companion object : WireFormat<Name> {
+
         val ANONYMOUS = Name("<anonymous>")
+
+        override val wireFormatName: String
+            get() = "hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata"
+
+        override fun wireFormatEncode(encoder: WireFormatEncoder, value: Name): WireFormatEncoder {
+            encoder
+                .string(1, "name", value.name)
+            return encoder
+        }
+
+        override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Name {
+            check(decoder != null)
+            return Name(decoder.string(1, "name"))
+        }
+
     }
+
 }

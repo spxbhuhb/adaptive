@@ -8,6 +8,8 @@ import hu.simplexion.adaptive.kotlin.adat.CallableIds
 import hu.simplexion.adaptive.kotlin.adat.ClassIds
 import hu.simplexion.adaptive.kotlin.common.AbstractPluginContext
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
+import org.jetbrains.kotlin.builtins.UnsignedArrayType
+import org.jetbrains.kotlin.builtins.UnsignedType
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.types.makeNullable
@@ -50,5 +52,15 @@ class AdatPluginContext(
         it.owner.extensionReceiverParameter?.type?.isSubtypeOfClass(commonUuid) == true
             && it.owner.valueParameters.firstOrNull()?.type?.isSubtypeOfClass(exposedColumn !!) == true
     }
+
+    val uIntType = irContext.referenceClass(UnsignedType.UINT.classId) !!.defaultType
+    val uByteType = irContext.referenceClass(UnsignedType.UBYTE.classId) !!.defaultType
+    val uShortType = irContext.referenceClass(UnsignedType.USHORT.classId) !!.defaultType
+    val uLongType = irContext.referenceClass(UnsignedType.ULONG.classId) !!.defaultType
+
+    val uIntArrayType = irContext.referenceClass(UnsignedArrayType.UINTARRAY.classId) !!.defaultType
+    val uByteArrayType = irContext.referenceClass(UnsignedArrayType.UBYTEARRAY.classId) !!.defaultType
+    val uShortArrayType = irContext.referenceClass(UnsignedArrayType.USHORTARRAY.classId) !!.defaultType
+    val uLongArrayType = irContext.referenceClass(UnsignedArrayType.ULONGARRAY.classId) !!.defaultType
 
 }

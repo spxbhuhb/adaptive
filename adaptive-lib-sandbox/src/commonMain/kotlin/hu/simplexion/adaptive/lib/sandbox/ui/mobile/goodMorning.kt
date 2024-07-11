@@ -44,12 +44,12 @@ fun goodMorning() {
 
             row(2.gridCol, greenGradient, cornerRadius, AlignItems.center, onClick { counter ++ }) {
                 maxSize
-                text("Snooze") .. white .. textMedium .. noSelect .. onClick { println("Hello World!") }
+                text("Snooze") .. textColor(white) .. textMedium .. noSelect .. onClick { println("Hello World!") }
             }
 
             row(4.gridCol, whiteBorder, cornerRadius, AlignItems.center) {
                 maxSize
-                text("Sleepiness: $counter") .. white .. textMedium
+                text("Sleepiness: $counter") .. textColor(white) .. textMedium
             }
         }
 
@@ -75,7 +75,7 @@ private fun title() {
         AlignItems.bottomCenter
         maxSize
 
-        text("Good Morning", white, fontSize(40.sp), letterSpacing(- 0.02))
+        text("Good Morning", textColor(white), fontSize(40.sp), letterSpacing(- 0.02))
     }
 }
 
@@ -86,7 +86,7 @@ private fun time(timeText: String) {
         AlignItems.bottomCenter
         paddingTop(12.dp)
 
-        text(timeText, white, fontSize(80.sp), letterSpacing(- 0.02), FontName("Noto Sans"))
+        text(timeText, textColor(white), fontSize(80.sp), letterSpacing(- 0.02), FontName("Noto Sans"))
     }
 }
 
@@ -97,7 +97,7 @@ private fun progress(time: LocalDateTime) {
         maxSize
 
         for (i in 0 .. time.second) {
-            text(if (i % 10 == 0) "|" else ".", white)
+            text(if (i % 10 == 0) "|" else ".", textColor(white))
         }
     }
 }
@@ -110,7 +110,7 @@ private fun milliProgress(instant: Instant) {
 
         for (i in 0 .. (instant.nanosecondsOfSecond / (20 * 1_000_000))) {
             box(greenGradient) {
-                text(if (i % 10 == 0) "|" else ".", white)
+                text(if (i % 10 == 0) "|" else ".", textColor(white))
             }
         }
     }
@@ -127,13 +127,13 @@ private fun messages(time: LocalDateTime, counter: Int) {
             row(greenGradient, cornerRadius) {
                 paddingHorizontal { 16.dp } .. paddingVertical { 8.dp }
 
-                text("What an odd second!", white)
+                text("What an odd second!", textColor(white))
             }
         }
 
         if (counter > 3) {
             row(greenGradient, cornerRadius, Padding(8.dp)) {
-                text("You are really sleepy today!", white, textMedium)
+                text("You are really sleepy today!", textColor(white), textMedium)
             }
         }
     }

@@ -6,6 +6,9 @@ package hu.simplexion.adaptive.foundation.instruction
 
 import hu.simplexion.adaptive.foundation.testing.Traceable
 import hu.simplexion.adaptive.utility.alsoIfInstance
+import hu.simplexion.adaptive.wireformat.WireFormat
+import hu.simplexion.adaptive.wireformat.WireFormatDecoder
+import hu.simplexion.adaptive.wireformat.WireFormatEncoder
 
 fun trace(vararg patterns: String) = Trace(*patterns.map { Regex(it) }.toTypedArray())
 
@@ -21,5 +24,22 @@ class Trace(vararg val patterns : Regex = arrayOf(Regex(".*"))) : AdaptiveInstru
 
     override fun apply(subject: Any) {
         subject.alsoIfInstance<Traceable> { it.tracePatterns = patterns }
+    }
+
+    companion object : WireFormat<Trace> {
+
+        override val wireFormatName: String
+            get() = "hu.simplexion.adaptive.foundation.instruction.Trace"
+
+        // FIXME trace wireformat
+        override fun wireFormatEncode(encoder: WireFormatEncoder, value: Trace): WireFormatEncoder {
+            return encoder
+        }
+
+        override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Trace {
+            check(decoder != null)
+            return Trace()
+        }
+
     }
 }

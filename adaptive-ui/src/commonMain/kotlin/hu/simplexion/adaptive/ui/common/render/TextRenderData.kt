@@ -5,27 +5,27 @@
 package hu.simplexion.adaptive.ui.common.render
 
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
-import hu.simplexion.adaptive.ui.common.instruction.*
+import hu.simplexion.adaptive.ui.common.instruction.Color
+import hu.simplexion.adaptive.ui.common.instruction.SPixel
 
 class TextRenderData {
 
     var fontName: String? = null
     var fontSize: SPixel? = null
     var fontWeight: Int? = null
-    var fontStyle: FontStyle? = null
-    var fontVariant: FontVariant? = null
     var lineHeight: Double? = null
     var letterSpacing: Double? = null
-    var align : TextAlign? = null
-    var wrap : TextWrap? = null
-    var decoration : TextDecoration? = null
+    var italic: Boolean = false
+    var underline: Boolean = false
+    var smallCaps: Boolean = false
     var noSelect : Boolean? = null
     var color : Color? = null
+    var wrap: Boolean = false
 
     fun toCssString(adapter: AbstractCommonAdapter<*, *>): String {
         val s = mutableListOf<String>()
-        decoration?.let { s += it.value }
-        fontVariant?.let { s += it.value }
+        if (underline) s += "underline"
+        if (smallCaps) s += "small-caps"
         fontWeight?.let { s += it.toString() }
         // FIXME font size in toCSSString does not care about scaling
         (fontSize ?: adapter.defaultTextRenderData.fontSize)?.let { s += it.value.toString() + "px" }

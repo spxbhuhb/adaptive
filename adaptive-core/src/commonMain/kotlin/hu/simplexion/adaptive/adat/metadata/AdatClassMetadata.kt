@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.adat.metadata
 
+import hu.simplexion.adaptive.adat.Adat
 import hu.simplexion.adaptive.adat.descriptor.AdatDescriptorImpl
 import hu.simplexion.adaptive.adat.descriptor.DefaultDescriptorFactory
 import hu.simplexion.adaptive.wireformat.WireFormat
@@ -12,6 +13,7 @@ import hu.simplexion.adaptive.wireformat.WireFormatEncoder
 import hu.simplexion.adaptive.wireformat.builtin.ListWireFormat
 import hu.simplexion.adaptive.wireformat.fromJson
 
+@Adat
 data class AdatClassMetadata<T>(
     val version: Int = 1,
     val name: String,

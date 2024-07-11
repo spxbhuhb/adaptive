@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
+import hu.simplexion.adaptive.adat.Adat
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 import hu.simplexion.adaptive.ui.common.fragment.layout.RawTrack
@@ -35,19 +36,31 @@ val Number.rowSpan
 val Number.colSpan
     inline get() = ColSpan(this.toInt())
 
-data class RowSpan(val span: Int) : AdaptiveInstruction {
+@Adat
+class RowSpan(
+    val span: Int
+) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         grid(subject) { it.rowSpan = span }
     }
 }
 
-data class ColSpan(val span: Int) : AdaptiveInstruction {
+@Adat
+class ColSpan(
+    val span: Int
+) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         grid(subject) { it.colSpan = span }
     }
 }
 
-data class GridPos(val row: Int, val col: Int, val rowSpan: Int, val colSpan: Int) : AdaptiveInstruction {
+@Adat
+class GridPos(
+    val row: Int,
+    val col: Int,
+    val rowSpan: Int,
+    val colSpan: Int
+) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         grid(subject) {
             it.gridRow = row
@@ -58,7 +71,11 @@ data class GridPos(val row: Int, val col: Int, val rowSpan: Int, val colSpan: In
     }
 }
 
-data class GridRow(val row: Int, val span: Int) : AdaptiveInstruction {
+@Adat
+class GridRow(
+    val row: Int,
+    val span: Int
+) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         grid(subject) {
             it.gridRow = row
@@ -67,7 +84,11 @@ data class GridRow(val row: Int, val span: Int) : AdaptiveInstruction {
     }
 }
 
-data class GridCol(val col: Int, val span: Int) : AdaptiveInstruction {
+@Adat
+class GridCol(
+    val col: Int,
+    val span: Int
+) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         grid(subject) {
             it.gridCol = col
@@ -76,56 +97,32 @@ data class GridCol(val col: Int, val span: Int) : AdaptiveInstruction {
     }
 }
 
-class ColTemplate(val tracks: Array<out Track>) : AdaptiveInstruction {
-
+@Adat
+class ColTemplate(
+    val tracks: Array<out Track>
+) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         container(subject) { container ->
             container.colTracks = expand(tracks).map { RawTrack(it.isFix, it.isFraction, it.toRawValue(container.adapter)) }
         }
     }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || other !is ColTemplate) return false
-        return tracks.contentEquals(other.tracks)
-    }
-
-    override fun hashCode(): Int {
-        return tracks.contentHashCode()
-    }
-
-    override fun toString(): String {
-        return "ColTemplate(tracks=${tracks.contentToString()})"
-    }
 }
 
-class RowTemplate(val tracks: Array<out Track>) : AdaptiveInstruction {
-
+@Adat
+class RowTemplate(
+    val tracks: Array<out Track>
+) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         container(subject) { container ->
             container.rowTracks = expand(tracks).map { RawTrack(it.isFix, it.isFraction, it.toRawValue(container.adapter)) }
         }
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || other !is RowTemplate) return false
-        return tracks.contentEquals(other.tracks)
-    }
-
-    override fun hashCode(): Int {
-        return tracks.contentHashCode()
-    }
-
-    override fun toString(): String {
-        return "RowTemplate(tracks=${tracks.contentToString()})"
     }
 }
 
 // ---- Track --------------------------------------------------------
 
 /**
- * IMPORTANT Tracks must be are immutable (or [Repeat] won't work).
+ * IMPORTANT Tracks must be immutable (or [Repeat] won't work).
  */
 interface Track {
 
@@ -165,7 +162,11 @@ private fun expand(tracks: Array<out Track>): Array<Track> {
 /**
  * Repeat [track] [count] times.
  */
-data class Repeat(val count: Int, val track: Track) : Track {
+@Adat
+class Repeat(
+    val count: Int,
+    val track: Track = 0.dp
+) : Track {
 
     override val isIntrinsic: Boolean
         get() = false

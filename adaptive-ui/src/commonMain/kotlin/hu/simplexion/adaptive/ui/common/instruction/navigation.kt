@@ -4,6 +4,8 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
+import hu.simplexion.adaptive.adat.Adat
+import hu.simplexion.adaptive.adat.AdatClass
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.instruction.*
 import hu.simplexion.adaptive.foundation.query.firstOrNull
@@ -22,6 +24,7 @@ fun navClick(
     @AdaptiveDetach detachFun: (handler: DetachHandler) -> Unit
 ) = NavClick(slotName, segment, detachFun)
 
+@Adat
 class NavClick(
     val slotName: Name,
     @DetachName val segment: String?,
@@ -49,10 +52,6 @@ class NavClick(
             it.noSelect = true
         }
     }
-
-    override fun toString(): String {
-        return "NavClick"
-    }
 }
 
 // --------------------------------------------------------------------
@@ -72,15 +71,16 @@ fun route(
  * Defines a route for `slot` fragments. See the navigation
  * tutorial for details.
  */
-data class Route(
+@Adat
+class Route(
     @DetachName val segment: String?,
     @AdaptiveDetach val detachFun: (detachFun: DetachHandler) -> Unit
-) : AdaptiveInstruction, DetachHandler {
+) : AdaptiveInstruction, DetachHandler, AdatClass<Route> {
 
-    lateinit var slot: CommonSlot
+    var slot: CommonSlot? = null
 
     override fun detach(origin: AdaptiveFragment, detachIndex: Int) {
-        slot.setContent(origin, detachIndex, segment)
+        slot?.setContent(origin, detachIndex, segment)
     }
 
 }

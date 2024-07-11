@@ -1,5 +1,6 @@
 package hu.simplexion.adaptive.kotlin.wireformat
 
+import hu.simplexion.adaptive.kotlin.adat.ir.AdatIrBuilder
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
 import hu.simplexion.adaptive.kotlin.common.AbstractPluginContext
 import hu.simplexion.adaptive.kotlin.common.AdaptiveFqNames
@@ -21,12 +22,10 @@ import org.jetbrains.kotlin.ir.types.IrSimpleType
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.typeWith
-import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
-import org.jetbrains.kotlin.ir.util.constructors
-import org.jetbrains.kotlin.ir.util.deepCopyWithSymbols
+import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitor
 
-fun AbstractIrBuilder.sensibleDefault(signature: String): IrExpression? {
+fun AdatIrBuilder.sensibleDefault(signature: String): IrExpression? {
 
     val cache = pluginContext.sensibleCache
 
@@ -48,6 +47,7 @@ fun AbstractIrBuilder.sensibleDefault(signature: String): IrExpression? {
 
         if (length > 3) {
             when {
+                name == "kotlin.Array" -> array(name, generics)
                 name.startsWith("kotlin.collections.") -> collections(name, generics)
                 name.startsWith("kotlinx.datetime.") || name.startsWith("kotlin.time") -> datetime(name)
                 else -> instance(name, generics)
@@ -65,6 +65,7 @@ fun AbstractIrBuilder.sensibleDefault(signature: String): IrExpression? {
                     "B" -> IrConstImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, irBuiltIns.byteType, IrConstKind.Byte, 0)
                     "F" -> IrConstImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, irBuiltIns.floatType, IrConstKind.Float, 0f)
                     "C" -> IrConstImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, irBuiltIns.charType, IrConstKind.Char, '\u0000')
+                    "0" -> irNull() // FIXME unit is converted to null, how to handle function types in sensible
                     else -> instance(name, generics)
                 }
 
@@ -79,10 +80,11 @@ fun AbstractIrBuilder.sensibleDefault(signature: String): IrExpression? {
                     "[D" -> newEmptyArray(irBuiltIns.doubleType)
                     "[C" -> newEmptyArray(irBuiltIns.charType)
 
-                    "+I" -> TODO()
-                    "+S" -> TODO()
-                    "+B" -> TODO()
-                    "+J" -> TODO()
+                    "+I" -> IrConstImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.uIntType, IrConstKind.Int, 0)
+                    "+S" -> IrConstImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.uShortType, IrConstKind.Int, 0)
+                    "+B" -> IrConstImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.uByteType, IrConstKind.Int, 0)
+                    "+J" -> IrConstImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.uLongType, IrConstKind.Long, 0L)
+
                     else -> instance(name, generics)
                 }
 
@@ -142,6 +144,8 @@ private fun AbstractPluginContext.toIrType(wireFormatType: WireFormatType): IrSi
 
             "*" -> irBuiltIns.anyType
 
+            "0" -> irBuiltIns.unitType // FIXME unit type for sensible
+
             else -> symbol(name, generics)
         }
 
@@ -173,10 +177,12 @@ private fun AbstractPluginContext.toIrType(wireFormatType: WireFormatType): IrSi
     } as IrSimpleType
 }
 
-private fun AbstractIrBuilder.instance(name: String, generics: List<IrType>): IrConstructorCall {
+private fun AbstractIrBuilder.instance(name: String, generics: List<IrType>): IrConstructorCall? {
     val classSymbol = irContext.referenceClass(name.asClassId)
 
     checkNotNull(classSymbol) { "missing class: $name" }
+
+    if (classSymbol.isFunction() || classSymbol.isKFunction() || classSymbol.isKSuspendFunction()) return null
 
     val constructor = classSymbol.constructors.firstOrNull { it.owner.valueParameters.isEmpty() }
 
@@ -204,6 +210,11 @@ private fun AbstractIrBuilder.instance(name: String, generics: List<IrType>): Ir
 
 private fun AbstractIrBuilder.newEmptyArray(typeArgument: IrType) =
     irCall(pluginContext.kotlinSymbols.emptyArray, irBuiltIns.arrayClass, listOf(typeArgument))
+
+private fun AbstractIrBuilder.array(name: String, generics: List<IrType>): IrCall {
+    val symbols = pluginContext.kotlinSymbols
+    return irCall(symbols.emptyArray, symbols.array, generics)
+}
 
 private fun AbstractIrBuilder.collections(name: String, generics: List<IrType>): IrCall {
     val symbols = pluginContext.kotlinSymbols

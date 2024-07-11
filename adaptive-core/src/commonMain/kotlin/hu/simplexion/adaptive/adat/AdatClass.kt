@@ -22,13 +22,14 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
     }
 
     fun copy(): A {
-        val instance = adatCompanion.newInstance()
+        val properties = getMetadata().properties
+        val values = arrayOfNulls<Any?>(properties.size)
 
         getMetadata().properties.forEach { prop ->
-            instance.setValue(prop.index, this.getValue(prop.index))
+            values[prop.index] = getValue(prop.index)
         }
 
-        return instance
+        return adatCompanion.newInstance(values)
     }
 
     fun adatToString(): String {

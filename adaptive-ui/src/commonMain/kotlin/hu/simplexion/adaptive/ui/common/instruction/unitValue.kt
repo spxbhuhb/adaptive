@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
+import hu.simplexion.adaptive.adat.Adat
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
 
 // -----------------------------------------------------------
@@ -55,7 +56,8 @@ fun DPixel?.toPx(adapter: AbstractCommonAdapter<*, *>): Double? =
 fun DPixel?.toPxOrZero(adapter: AbstractCommonAdapter<*, *>): Double =
     if (this == null || (- 0.000001 < this.value && this.value < 0.000001)) 0.0 else adapter.toPx(this)
 
-data class DPixel(
+@Adat
+class DPixel(
     override val value: Double
 ) : Track {
 
@@ -85,10 +87,10 @@ val Int.sp: SPixel
 val Double.sp: SPixel
     get() = SPixel(this)
 
-data class SPixel(
+@Adat
+class SPixel(
     val value: Double
 ) {
-
     override fun toString(): String {
         return "${value}sp"
     }
@@ -104,7 +106,8 @@ val Int.fr: Fraction
 val Double.fr: Fraction
     get() = Fraction(this)
 
-data class Fraction(
+@Adat
+class Fraction(
     override val value: Double
 ) : Track {
 

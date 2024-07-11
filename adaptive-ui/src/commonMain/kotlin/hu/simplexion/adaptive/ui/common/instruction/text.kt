@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
+import hu.simplexion.adaptive.adat.Adat
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.render.text
 import hu.simplexion.adaptive.ui.common.render.textAndAdapter
@@ -21,23 +22,39 @@ fun lineHeight(height: DPixel) = LineHeight(height)
 inline fun lineHeight(height: () -> DPixel) = LineHeight(height())
 
 val noSelect = NoSelect()
+val noWrap = TextWrap(false)
+val underline = TextUnderline()
+
 val bold = FontWeight.BOLD
 
-fun letterSpacing(value : Double) = LetterSpacing(value)
+fun letterSpacing(value: Double) = LetterSpacing(value)
 
-data class FontName(val fontName: String) : AdaptiveInstruction {
+fun textColor(value: Int) = TextColor(Color(value.toUInt()))
+fun textColor(value: UInt) = TextColor(Color(value))
+fun textColor(value: Color) = TextColor(value)
+
+@Adat
+class FontName(
+    val fontName: String
+) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         text(subject) { it.fontName = fontName }
     }
 }
 
-data class FontSize(val fontSize: SPixel) : AdaptiveInstruction {
+@Adat
+class FontSize(
+    val fontSize: SPixel
+) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         text(subject) { it.fontSize = fontSize }
     }
 }
 
-data class FontWeight(val weight: Int) : AdaptiveInstruction {
+@Adat
+class FontWeight(
+    val weight: Int
+) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         text(subject) { it.fontWeight = weight }
     }
@@ -55,81 +72,65 @@ data class FontWeight(val weight: Int) : AdaptiveInstruction {
     }
 }
 
-enum class FontStyle(val value: String) : AdaptiveInstruction {
-    Normal("normal"),
-    Italic("italic");
-
+@Adat
+class TextItalic : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        text(subject) { it.fontStyle = this }
+        text(subject) { it.italic = true }
     }
 }
 
-enum class FontVariant(val value: String) : AdaptiveInstruction {
-    Normal("normal"),
-    SmallCaps("small-caps");
-
+@Adat
+class TextSmallCaps : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        text(subject) { it.fontVariant = this }
+        text(subject) { it.smallCaps = true }
     }
 }
 
-enum class TextDecoration(val value : String) : AdaptiveInstruction {
-    None("none"),
-    Underline("underline");
-
+@Adat
+class TextUnderline : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        text(subject) { it.decoration = this }
+        text(subject) { it.underline = true }
     }
 }
 
+@Adat
 class NoSelect : AdaptiveInstruction {
     override fun apply(subject: Any) {
         text(subject) { it.noSelect = true }
     }
 }
 
-data class LetterSpacing(val value: Double) : AdaptiveInstruction {
+@Adat
+class LetterSpacing(val value: Double) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         text(subject) { it.letterSpacing = value }
     }
 }
 
-data class LineHeight(val height: DPixel) : AdaptiveInstruction {
+@Adat
+class LineHeight(val height: DPixel) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         textAndAdapter(subject) { t, a -> t.lineHeight = a.toPx(height) }
     }
 }
 
-enum class TextWrap : AdaptiveInstruction {
-    Wrap,
-    NoWrap;
-
+@Adat
+class TextWrap(
+    val wrap: Boolean
+) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        text(subject) { it.wrap = this }
+        text(subject) { it.wrap = wrap }
     }
 }
 
-enum class TextAlign : AdaptiveInstruction {
-    Start,
-    Center,
-    End;
+@Adat
+class TextColor(
+    val color: Color
+) : AdaptiveInstruction {
+
+    constructor(color: UInt) : this(Color(color))
 
     override fun apply(subject: Any) {
-        text(subject) { it.align = this }
+        text(subject) { it.color = this.color }
     }
-}
-
-
-data class Color(val value: UInt) : AdaptiveInstruction {
-
-    override fun apply(subject: Any) {
-        text(subject) { it.color = this }
-    }
-
-    /**
-     * @return [value] in "#ffffff" format
-     */
-    fun toHexColor(): String =
-        "#${value.toString(16).padStart(6, '0')}"
-
 }

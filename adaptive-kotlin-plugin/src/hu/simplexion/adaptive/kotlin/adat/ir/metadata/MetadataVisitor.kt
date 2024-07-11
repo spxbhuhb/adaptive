@@ -42,6 +42,7 @@ class MetadataVisitor(
 
     override fun visitProperty(declaration: IrProperty) {
         if (declaration.name == Names.ADAT_COMPANION) return
+        if (declaration.backingField == null) return
 
         properties += PropertyData(
             declaration,

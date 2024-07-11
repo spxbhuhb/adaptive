@@ -172,11 +172,10 @@ class CommonAdapter(
         (fontName ?: defaultTextRenderData.fontName) { style.fontFamily = it }
         (fontSize ?: defaultTextRenderData.fontSize) { style.fontSize = it.pxs }
 
+        // FIXME text styles in browser
         fontWeight { style.fontWeight = it.toString() }
         letterSpacing { style.letterSpacing = "${it}em" }
-        align { style.textAlign = it.name.lowercase() }
-        wrap { style.setProperty("text-wrap", it.toString().lowercase()) }
-        decoration { style.textDecoration = it.value }
+        wrap { style.setProperty("text-wrap", if (it) "wrap" else "nowrap") }
         color { style.color = it.toHexColor() }
 
         if (noSelect == true) {

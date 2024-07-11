@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.markdown.fragment
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.foundation.instruction.instructionsOf
 import hu.simplexion.adaptive.foundation.instruction.name
 import hu.simplexion.adaptive.markdown.parse.*
 import hu.simplexion.adaptive.ui.common.fragment.column
@@ -14,14 +15,14 @@ import hu.simplexion.adaptive.ui.common.fragment.row
 import hu.simplexion.adaptive.ui.common.fragment.text
 import hu.simplexion.adaptive.ui.common.instruction.*
 
-val linkColor = color(0x0000ffu)
-val textColor = color(0x333333u)
+val linkColor = textColor(0x0000ff)
+val textColor = textColor(0x333333)
 val headerSizes = arrayOf(28.sp, 24.sp, 20.sp, 16.sp, 14.sp)
 
-val codeStyles = arrayOf(
+val codeStyles = instructionsOf(
     paddingLeft(6.dp),
     paddingRight(6.dp),
-    backgroundColor(color(0xe8e8e8u)),
+    backgroundColor(0xe8e8e8),
     cornerRadius(6.dp),
     fontName("ui-monospace"),
     textColor

@@ -4,11 +4,13 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
+import hu.simplexion.adaptive.adat.Adat
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 
 fun flowItemLimit(limit: Int) = FlowItemLimit(limit)
 fun flowItemLimit(limit: () -> Int) = FlowItemLimit(limit())
 
-data class FlowItemLimit(
+@Adat
+class FlowItemLimit(
     val limit: Int
 ) : AdaptiveInstruction

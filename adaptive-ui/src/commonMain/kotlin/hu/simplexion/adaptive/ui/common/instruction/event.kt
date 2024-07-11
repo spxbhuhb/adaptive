@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
+import hu.simplexion.adaptive.adat.Adat
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.internal.cleanStateMask
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
@@ -25,6 +26,7 @@ class AdaptiveUIEvent(
 
 fun onClick(handler : (event : AdaptiveUIEvent) -> Unit) = OnClick(handler)
 
+@Adat
 class OnClick(
     private val handler : (event : AdaptiveUIEvent) -> Unit
 ) : AdaptiveInstruction {
@@ -36,9 +38,5 @@ class OnClick(
     fun execute(event : AdaptiveUIEvent) {
         handler(event)
         event.patchIfDirty()
-    }
-
-    override fun toString(): String {
-        return "OnClick"
     }
 }

@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.lib.sandbox.ui.mobile
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import hu.simplexion.adaptive.foundation.instruction.instructionsOf
 import hu.simplexion.adaptive.foundation.rangeTo
 import hu.simplexion.adaptive.lib.sandbox.model.SignUp
 import hu.simplexion.adaptive.ui.common.fragment.*
@@ -43,8 +44,8 @@ fun welcome() {
 
                 checkbox { signUp.agreement }
                 row {
-                    text("I agree to the ", fontSize(15.sp), FontName("Noto Sans"), mediumGray)
-                    text("Terms of Service", fontSize(15.sp), FontName("Noto Sans"), black, bold, externalLink("/terms.txt"))
+                    text("I agree to the ", fontSize(15.sp), FontName("Noto Sans"), textColor(mediumGray))
+                    text("Terms of Service", fontSize(15.sp), FontName("Noto Sans"), textColor(black), bold, externalLink("/terms.txt"))
                 }
             }
 
@@ -72,7 +73,7 @@ fun subTitle(text: String) {
 fun footerLink(normalText: String, linkText: String, href: String) {
     row(AlignItems.center, maxWidth) {
         text(normalText, *bodyMedium)
-        text(linkText, FontSize(17.sp), FontName("Noto Sans"), black, TextDecoration.Underline, externalLink(href))
+        text(linkText, FontSize(17.sp), FontName("Noto Sans"), textColor(black), underline, externalLink(href))
     }
 }
 
@@ -101,20 +102,20 @@ fun checkbox(
     }
 }
 
-val titleLarge = arrayOf(
+val titleLarge = instructionsOf(
     FontSize(40.sp),
     FontWeight.BOLD
 )
 
-val bodyMedium = arrayOf(
-    FontSize(17.sp),
-    FontName("Noto Sans"),
-    Color(0x666666u)
+val bodyMedium = instructionsOf(
+    //FontSize(17.sp),
+    //FontName("Noto Sans"),
+    textColor(0x666666u)
 )
 
-val input = arrayOf(
+val input = instructionsOf(
     // PlaceholderColor(0x8A8A8F),
-    Color(0x000000u),
+    textColor(0x000000u),
     BackgroundColor(Color(0xEFEFF4u)),
     CornerRadius(8.dp),
     Border.NONE,
@@ -124,14 +125,14 @@ val input = arrayOf(
     padding(left = 16.dp, right = 16.dp)
 )
 
-var activeCheckBox = arrayOf(
+var activeCheckBox = instructionsOf(
     size(20.dp, 20.dp),
     cornerRadius(10.dp),
     backgroundColor(purple),
-    white
+    textColor(white)
 )
 
-var inactiveCheckBox = arrayOf(
+var inactiveCheckBox = instructionsOf(
     size(20.dp, 20.dp),
     cornerRadius(10.dp),
     border(purple, 1.dp)

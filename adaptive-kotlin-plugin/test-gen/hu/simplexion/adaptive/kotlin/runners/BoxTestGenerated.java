@@ -50,6 +50,18 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Test
+    @TestMetadata("emptyConstructor.kt")
+    public void testEmptyConstructor() {
+      runTest("testData/box/adat/emptyConstructor.kt");
+    }
+
+    @Test
+    @TestMetadata("sensibleDefaults.kt")
+    public void testSensibleDefaults() {
+      runTest("testData/box/adat/sensibleDefaults.kt");
+    }
+
+    @Test
     @TestMetadata("withCompanion.kt")
     public void testWithCompanion() {
       runTest("testData/box/adat/withCompanion.kt");

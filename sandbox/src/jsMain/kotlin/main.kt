@@ -6,6 +6,7 @@ import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.fragment
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.foundation.instruction.instructionsOf
 import hu.simplexion.adaptive.foundation.instruction.invoke
 import hu.simplexion.adaptive.foundation.query.first
 import hu.simplexion.adaptive.foundation.rangeTo
@@ -65,7 +66,7 @@ fun main() {
                     route { slotTwo() }
                     route { hitDetect() }
 
-                    mobileExample { welcome() }
+                    //mobileExample { welcome() }
 //                    text("Click on the left to load a demo!")
                 }
             }
@@ -76,9 +77,9 @@ fun main() {
         }
 }
 
-val button = arrayOf(
+val button = instructionsOf(
     maxWidth,
-    leftToRightGradient(color(0xA0DE6Fu), color(0x53C282u)),
+    leftToRightGradient(Color(0xA0DE6Fu), Color(0x53C282u)),
     cornerRadius(8.dp),
     AlignItems.startCenter,
     paddingLeft(16.dp),
@@ -88,7 +89,7 @@ val button = arrayOf(
 @Adaptive
 fun navButton(label: String, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
     row(*button, onClick { instructions<NavClick>() }, *instructions) {
-        text(label, color(0xffffffu), fontSize(15.sp), fontName("Noto Sans"), noSelect, TextWrap.NoWrap)
+        text(label, textColor(0xffffffu), fontSize(15.sp), fontName("Noto Sans"), noSelect, noWrap)
     }
     return fragment()
 }

@@ -6,6 +6,8 @@ package hu.simplexion.adaptive.foundation.instruction
 
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 
+fun instructionsOf(vararg instructions: AdaptiveInstruction) = arrayOf(*instructions)
+
 inline operator fun <reified T : AdaptiveInstruction> Array<out AdaptiveInstruction>.invoke() {
     firstOrNullIfInstance<T>()?.execute()
 }

@@ -4,20 +4,21 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
+import hu.simplexion.adaptive.adat.Adat
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.fragment.layout.RawCornerRadius
-import hu.simplexion.adaptive.ui.common.fragment.layout.RawPosition
 import hu.simplexion.adaptive.ui.common.fragment.layout.RawSurrounding
 import hu.simplexion.adaptive.ui.common.render.decoration
 import hu.simplexion.adaptive.ui.common.render.layout
 import kotlin.math.PI
 import kotlin.math.atan2
 
+fun backgroundColor(color: Int) = BackgroundColor(Color(color.toUInt()))
 fun backgroundColor(color: UInt) = BackgroundColor(Color(color))
 fun backgroundColor(color: Color) = BackgroundColor(color)
 
+fun backgroundGradient(startPosition: Position, endPosition: Position, start: Color, end: Color) = BackgroundGradient(startPosition, endPosition, start, end)
 fun leftToRightGradient(leftColor : Color, rightColor: Color) = BackgroundGradient(BackgroundGradient.LEFT, BackgroundGradient.RIGHT, leftColor, rightColor)
-fun backgroundGradient(startPosition: RawPosition, endPosition : RawPosition, start: Color, end: Color) = BackgroundGradient(startPosition, endPosition, start, end)
 
 fun border(color: Color, width: DPixel = 1.dp) = Border(color, width, width, width, width)
 fun borderTop(color: Color, width: DPixel = 1.dp) = Border(color, width, null, null, null)
@@ -26,6 +27,7 @@ fun borderBottom(color: Color, width: DPixel = 1.dp) = Border(color, null, null,
 fun borderLeft(color: Color, width: DPixel = 1.dp) = Border(color, null, null, null, width)
 
 fun cornerRadius(all: DPixel) = CornerRadius(all)
+fun cornerRadius(topLeft: DPixel? = null, topRight: DPixel? = null, bottomLeft: DPixel? = null, bottomRight: DPixel? = null) = CornerRadius(topLeft, topRight, bottomLeft, bottomRight)
 
 fun cornerTopRadius(top: DPixel) = cornerRadius(topLeft = top, topRight = top)
 fun cornerBottomRadius(bottom: DPixel) = cornerRadius(bottomLeft = bottom, bottomRight = bottom)
@@ -35,13 +37,10 @@ fun cornerTopRightRadius(topRight: DPixel) = cornerRadius(topRight = topRight)
 fun cornerBottomLeftRadius(bottomLeft: DPixel) = cornerRadius(bottomLeft = bottomLeft)
 fun cornerBottomRightRadius(bottomRight: DPixel) = cornerRadius(bottomRight = bottomRight)
 
-fun cornerRadius(topLeft: DPixel? = null, topRight: DPixel? = null, bottomLeft: DPixel? = null, bottomRight: DPixel? = null) = CornerRadius(topLeft, topRight, bottomLeft, bottomRight)
-
-fun color(value: UInt) = Color(value)
-
 fun dropShadow(color: Color, offsetX: DPixel, offsetY: DPixel, standardDeviation: DPixel) = DropShadow(color, offsetX, offsetY, standardDeviation)
 
-data class BackgroundColor(
+@Adat
+class BackgroundColor(
     val color: Color
 ) : AdaptiveInstruction {
     override fun apply(subject: Any) {
@@ -49,9 +48,10 @@ data class BackgroundColor(
     }
 }
 
-data class BackgroundGradient(
-    val startPosition: RawPosition,
-    val endPosition: RawPosition,
+@Adat
+class BackgroundGradient(
+    val startPosition: Position,
+    val endPosition: Position,
     val start: Color,
     val end: Color
 ) : AdaptiveInstruction {
@@ -63,9 +63,9 @@ data class BackgroundGradient(
     val degree
         get() = asAngle(startPosition, endPosition)
 
-    fun asAngle(startPoint: RawPosition, endPosition: RawPosition): Double {
-        val dx = endPosition.left - startPoint.left
-        val dy = endPosition.top - startPoint.top
+    fun asAngle(startPoint: Position, endPosition: Position): Double {
+        val dx = endPosition.left.value - startPoint.left.value
+        val dy = endPosition.top.value - startPoint.top.value
 
         // Calculate the angle in radians
         val angleRadians = atan2(dy, dx)
@@ -84,14 +84,15 @@ data class BackgroundGradient(
     }
 
     companion object {
-        val TOP = RawPosition(0.5, 0.0)
-        val BOTTOM = RawPosition(0.5, 1.0)
-        val LEFT = RawPosition(0.0, 0.5)
-        val RIGHT = RawPosition(1.0, 0.5)
+        val TOP = Position(0.5.dp, 0.0.dp)
+        val BOTTOM = Position(0.5.dp, 1.0.dp)
+        val LEFT = Position(0.0.dp, 0.5.dp)
+        val RIGHT = Position(1.0.dp, 0.5.dp)
     }
 }
 
-data class Border(
+@Adat
+class Border(
     val color: Color?,
     override val top: DPixel?,
     override val right: DPixel?,
@@ -115,7 +116,8 @@ data class Border(
     }
 }
 
-data class CornerRadius(
+@Adat
+class CornerRadius(
     val topLeft: DPixel?,
     val topRight: DPixel?,
     val bottomLeft: DPixel?,
@@ -132,7 +134,8 @@ data class CornerRadius(
 
 }
 
-data class DropShadow(
+@Adat
+class DropShadow(
     val color: Color,
     val offsetX: DPixel,
     val offsetY: DPixel,
@@ -142,5 +145,3 @@ data class DropShadow(
         decoration(subject) { it.dropShadow = this }
     }
 }
-
-

@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.ui.common.instruction
 
+import hu.simplexion.adaptive.adat.Adat
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.fragment.layout.RawSurrounding
 import hu.simplexion.adaptive.ui.common.render.container
@@ -19,30 +20,9 @@ fun height(calc: () -> DPixel) = Height(calc())
 fun width(width: DPixel) = Width(width)
 fun width(calc: () -> DPixel) = Width(calc())
 
-object maxSize : AdaptiveInstruction {
-    override fun apply(subject: Any) {
-        layout(subject) {
-            it.fillHorizontal = true
-            it.fillVertical = true
-        }
-    }
-}
-
-object maxWidth : AdaptiveInstruction {
-    override fun apply(subject: Any) {
-        layout(subject) {
-            it.fillHorizontal = true
-        }
-    }
-}
-
-object maxHeight : AdaptiveInstruction {
-    override fun apply(subject: Any) {
-        layout(subject) {
-            it.fillVertical = true
-        }
-    }
-}
+val maxSize = MaxSize()
+val maxWidth = MaxWidth()
+val maxHeight = MaxHeight()
 
 fun gap(calcBoth: () -> DPixel): Gap = calcBoth().let { Gap(it, it) }
 fun gap(both: DPixel): Gap = Gap(both, both)
@@ -98,7 +78,8 @@ val horizontalScroll: Scroll = Scroll(horizontal = true, vertical = true)
 fun zIndex(value: Int): ZIndex = ZIndex(value)
 fun zIndex(value: () -> Int): ZIndex = ZIndex(value())
 
-data class Frame(
+@Adat
+class Frame(
     val top: DPixel,
     val left: DPixel,
     val width: DPixel,
@@ -116,7 +97,8 @@ data class Frame(
     }
 }
 
-data class Position(
+@Adat
+class Position(
     val top: DPixel,
     val left: DPixel
 ) : AdaptiveInstruction {
@@ -129,7 +111,8 @@ data class Position(
     }
 }
 
-data class Size(
+@Adat
+class Size(
     val width: DPixel,
     val height: DPixel
 ) : AdaptiveInstruction {
@@ -142,7 +125,8 @@ data class Size(
     }
 }
 
-data class Height(
+@Adat
+class Height(
     val height: DPixel
 ) : AdaptiveInstruction {
     override fun apply(subject: Any) {
@@ -152,7 +136,8 @@ data class Height(
     }
 }
 
-data class Width(
+@Adat
+class Width(
     val width: DPixel
 ) : AdaptiveInstruction {
     override fun apply(subject: Any) {
@@ -162,7 +147,8 @@ data class Width(
     }
 }
 
-data class Gap(
+@Adat
+class Gap(
     val width: DPixel?,
     val height: DPixel?
 ) : AdaptiveInstruction {
@@ -174,7 +160,8 @@ data class Gap(
     }
 }
 
-data class Padding(
+@Adat
+class Padding(
     override val top: DPixel?,
     override val right: DPixel?,
     override val bottom: DPixel?,
@@ -191,7 +178,8 @@ data class Padding(
 
 }
 
-data class Margin(
+@Adat
+class Margin(
     override val top: DPixel?,
     override val right: DPixel?,
     override val bottom: DPixel?,
@@ -214,7 +202,8 @@ enum class Alignment {
     End
 }
 
-data class AlignItems(
+@Adat
+class AlignItems(
     val vertical: Alignment?,
     val horizontal: Alignment?,
 ) : AdaptiveInstruction {
@@ -257,7 +246,8 @@ data class AlignItems(
     }
 }
 
-data class AlignSelf(
+@Adat
+class AlignSelf(
     val vertical: Alignment?,
     val horizontal: Alignment?,
 ) : AdaptiveInstruction {
@@ -305,7 +295,8 @@ enum class SpaceDistribution {
     Around
 }
 
-data class DistributeSpace(
+@Adat
+class DistributeSpace(
     val distribution: SpaceDistribution
 ) : AdaptiveInstruction {
     override fun apply(subject: Any) {
@@ -315,7 +306,36 @@ data class DistributeSpace(
     }
 }
 
-data class Scroll(
+@Adat
+class MaxSize : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        layout(subject) {
+            it.fillHorizontal = true
+            it.fillVertical = true
+        }
+    }
+}
+
+@Adat
+class MaxWidth : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        layout(subject) {
+            it.fillHorizontal = true
+        }
+    }
+}
+
+@Adat
+class MaxHeight : AdaptiveInstruction {
+    override fun apply(subject: Any) {
+        layout(subject) {
+            it.fillVertical = true
+        }
+    }
+}
+
+@Adat
+class Scroll(
     val horizontal: Boolean? = null,
     val vertical: Boolean? = null
 ) : AdaptiveInstruction {
@@ -327,7 +347,8 @@ data class Scroll(
     }
 }
 
-data class ZIndex(
+@Adat
+class ZIndex(
     val value: Int
 ) : AdaptiveInstruction {
     override fun apply(subject: Any) {
@@ -337,7 +358,8 @@ data class ZIndex(
     }
 }
 
-val fixed = object : AdaptiveInstruction {
+@Adat
+class Fixed : AdaptiveInstruction {
     override fun apply(subject: Any) {
         layout(subject) {
             it.fixed = true

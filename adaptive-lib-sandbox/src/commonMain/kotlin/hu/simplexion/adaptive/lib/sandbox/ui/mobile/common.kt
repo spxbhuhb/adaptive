@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.fragment
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.foundation.instruction.instructionsOf
 import hu.simplexion.adaptive.ui.common.fragment.box
 import hu.simplexion.adaptive.ui.common.fragment.column
 import hu.simplexion.adaptive.ui.common.fragment.row
@@ -44,13 +45,13 @@ val Int.threeDigits
 
 fun now() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
-val black = color(0x000000u)
-val white = color(0xffffffu)
-val lightGreen = color(0xA0DE6Fu)
-val mediumGreen = color(0x53C282u)
-val lightGray = color(0xd8d8d8u)
-val mediumGray = color(0x666666u)
-val purple = color(0xA644FFu)
+val black = Color(0x000000u)
+val white = Color(0xffffffu)
+val lightGreen = Color(0xA0DE6Fu)
+val mediumGreen = Color(0x53C282u)
+val lightGray = Color(0xd8d8d8u)
+val mediumGray = Color(0x666666u)
+val purple = Color(0xA644FFu)
 
 val blackBackground = backgroundColor(black)
 val greenGradient = leftToRightGradient(lightGreen, mediumGreen)
@@ -60,9 +61,9 @@ val textSmall = fontSize(13.sp)
 val textMedium = fontSize(15.sp)
 val whiteBorder = border(white)
 val bold = FontWeight(700)
-val smallWhiteNoWrap = arrayOf(white, textSmall, TextWrap.NoWrap)
+val smallWhiteNoWrap = instructionsOf(textColor(white), textSmall, noWrap)
 
-val button = arrayOf(
+val button = instructionsOf(
     greenGradient,
     cornerRadius,
     AlignItems.center,
@@ -73,7 +74,7 @@ val button = arrayOf(
 @Adaptive
 fun button(label: String, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
     row(*button, *instructions) {
-        text(label, white, textMedium, noSelect)
+        text(label, textColor(white), textMedium, noSelect)
     }
     return fragment()
 }

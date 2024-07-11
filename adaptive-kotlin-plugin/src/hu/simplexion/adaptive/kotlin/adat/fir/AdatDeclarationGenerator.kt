@@ -99,27 +99,34 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         }
     }
 
-    override fun generateConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> {
+    override fun generateConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> =
         when {
-            context.isAdatClass -> {
-                return listOf(
-                    createConstructor(context.owner, AdatPluginKey, isPrimary = false, generateDelegatedNoArgConstructorCall = true).symbol,
-                    createConstructor(context.owner, AdatPluginKey, isPrimary = false, generateDelegatedNoArgConstructorCall = true) {
-                        valueParameter(Names.VALUES, nullableAnyArrayType)
-                    }.symbol
-                )
-            }
-
-            context.isAdatCompanion -> {
-                return listOf(
-                    createConstructor(context.owner, AdatPluginKey, isPrimary = true, generateDelegatedNoArgConstructorCall = true).symbol
-                )
-            }
-
-            else -> return emptyList()
+            context.isAdatClass -> generateClassConstructors(context)
+            context.isAdatCompanion -> generateCompanionConstrucor(context)
+            else -> emptyList()
         }
 
+    private fun generateClassConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> {
+        val result = mutableListOf<FirConstructorSymbol>()
+
+        val constructors = context.owner.declarationSymbols.filterIsInstance<FirConstructorSymbol>()
+
+        if (constructors.none { it.valueParameterSymbols.isEmpty() }) {
+            result += createConstructor(context.owner, AdatPluginKey, isPrimary = false, generateDelegatedNoArgConstructorCall = true).symbol
+        }
+
+        // FIXME duplicate array constructor
+        result += createConstructor(context.owner, AdatPluginKey, isPrimary = false, generateDelegatedNoArgConstructorCall = true) {
+            valueParameter(Names.VALUES, nullableAnyArrayType)
+        }.symbol
+
+        return result
     }
+
+    private fun generateCompanionConstrucor(context: MemberGenerationContext): List<FirConstructorSymbol> =
+        listOf(
+            createConstructor(context.owner, AdatPluginKey, isPrimary = true, generateDelegatedNoArgConstructorCall = true).symbol
+        )
 
     override fun generateProperties(callableId: CallableId, context: MemberGenerationContext?): List<FirPropertySymbol> {
         return when (callableId.callableName) {
@@ -184,11 +191,12 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
 
     override fun generateFunctions(callableId: CallableId, context: MemberGenerationContext?): List<FirNamedFunctionSymbol> {
         if (! context.isAdatCompanion && ! context.isAdatClass) return emptyList()
+        if (context == null) return emptyList()
 
         return when (callableId.callableName) {
             Names.NEW_INSTANCE -> {
                 listOf(
-                    createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, context.adatClassType).symbol,
+                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, context.adatClassType).symbol,
                     createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, context.adatClassType) {
                         valueParameter(Names.VALUES, nullableAnyArrayType)
                     }.symbol
@@ -197,7 +205,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
 
             Names.GEN_GET_VALUE -> {
                 listOf(
-                    createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.nullableAnyType.type) {
+                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.nullableAnyType.type) {
                         valueParameter(Names.INDEX, session.builtinTypes.intType.type)
                     }.symbol
                 )
@@ -205,7 +213,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
 
             Names.GEN_SET_VALUE -> {
                 listOf(
-                    createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.unitType.type) {
+                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.unitType.type) {
                         valueParameter(Names.INDEX, session.builtinTypes.intType.type)
                         valueParameter(Names.VALUE, session.builtinTypes.nullableAnyType.type)
                     }.symbol
@@ -214,7 +222,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
 
             Names.EQUALS -> {
                 listOf(
-                    createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.booleanType.type) {
+                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.booleanType.type) {
                         valueParameter(Names.OTHER, session.builtinTypes.nullableAnyType.type)
                     }.symbol
                 )
@@ -222,14 +230,18 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
 
             Names.HASHCODE -> {
                 listOf(
-                    createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.intType.type).symbol
+                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.intType.type).symbol
                 )
             }
 
             Names.TO_STRING -> {
-                listOf(
-                    createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.stringType.type).symbol
-                )
+                if (context.owner.declarationSymbols.any { it is FirNamedFunctionSymbol && it.name.identifier == "toString" }) {
+                    emptyList()
+                } else {
+                    listOf(
+                        createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.stringType.type).symbol
+                    )
+                }
             }
 
             else -> emptyList()

@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.lib.sandbox.ui.misc
 
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.fragment.measureFragmentTime
+import hu.simplexion.adaptive.foundation.instruction.instructionsOf
 import hu.simplexion.adaptive.foundation.instruction.name
 import hu.simplexion.adaptive.foundation.rangeTo
 import hu.simplexion.adaptive.ui.common.fragment.box
@@ -14,21 +15,24 @@ import hu.simplexion.adaptive.ui.common.fragment.row
 import hu.simplexion.adaptive.ui.common.fragment.text
 import hu.simplexion.adaptive.ui.common.instruction.*
 
-val black = color(0x000000u)
-val white = color(0xffffffu)
+val black = Color(0x000000u)
+val white = Color(0xffffffu)
+
+val whiteSquare = instructionsOf(textColor(black), backgroundColor(white))
+val blackSquare = instructionsOf(textColor(white), backgroundColor(black))
 
 fun colors(r: Int, c: Int) =
     if (r % 2 == 1) {
         if (c % 2 == 0) {
-            arrayOf(white, BackgroundColor(black))
+            blackSquare
         } else {
-            arrayOf(black, BackgroundColor(white))
+            whiteSquare
         }
     } else {
         if (c % 2 == 1) {
-            arrayOf(white, BackgroundColor(black))
+            blackSquare
         } else {
-            arrayOf(black, BackgroundColor(white))
+            whiteSquare
         }
     }
 
