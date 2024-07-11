@@ -75,6 +75,8 @@ val scroll: Scroll = Scroll(horizontal = true, vertical = true)
 val verticalScroll: Scroll = Scroll(horizontal = true, vertical = true)
 val horizontalScroll: Scroll = Scroll(horizontal = true, vertical = true)
 
+val fixed = Fixed()
+
 fun zIndex(value: Int): ZIndex = ZIndex(value)
 fun zIndex(value: () -> Int): ZIndex = ZIndex(value())
 

@@ -9,13 +9,15 @@ import hu.simplexion.adaptive.wireformat.signature.WireFormatType
 import hu.simplexion.adaptive.wireformat.signature.parseSignature
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.IrAttributeContainer
+import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.declarations.IrEnumEntry
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrConstKind
-import org.jetbrains.kotlin.ir.expressions.IrConstructorCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
+import org.jetbrains.kotlin.ir.expressions.impl.IrGetEnumValueImpl
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.types.IrSimpleType
@@ -24,6 +26,7 @@ import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitor
+import org.jetbrains.kotlin.utils.addToStdlib.firstIsInstance
 
 fun AdatIrBuilder.sensibleDefault(signature: String): IrExpression? {
 
@@ -177,12 +180,18 @@ private fun AbstractPluginContext.toIrType(wireFormatType: WireFormatType): IrSi
     } as IrSimpleType
 }
 
-private fun AbstractIrBuilder.instance(name: String, generics: List<IrType>): IrConstructorCall? {
+private fun AbstractIrBuilder.instance(name: String, generics: List<IrType>): IrExpression? {
     val classSymbol = irContext.referenceClass(name.asClassId)
 
     checkNotNull(classSymbol) { "missing class: $name" }
 
-    if (classSymbol.isFunction() || classSymbol.isKFunction() || classSymbol.isKSuspendFunction()) return null
+    if (classSymbol.isFunction() || classSymbol.isKFunction() || classSymbol.isKSuspendFunction()) {
+        return null
+    }
+
+    if (classSymbol.owner.isEnumClass) {
+        return enum(classSymbol.owner)
+    }
 
     val constructor = classSymbol.constructors.firstOrNull { it.owner.valueParameters.isEmpty() }
 
@@ -207,6 +216,12 @@ private fun AbstractIrBuilder.instance(name: String, generics: List<IrType>): Ir
         }
     }
 }
+
+fun enum(owner: IrClass): IrExpression =
+    IrGetEnumValueImpl(
+        SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, owner.defaultType,
+        owner.declarations.firstIsInstance<IrEnumEntry>().symbol
+    )
 
 private fun AbstractIrBuilder.newEmptyArray(typeArgument: IrType) =
     irCall(pluginContext.kotlinSymbols.emptyArray, irBuiltIns.arrayClass, listOf(typeArgument))

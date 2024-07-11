@@ -202,7 +202,7 @@ fun inactiveFeature(name: String, eta: String) {
         maxWidth .. spaceBetween
         gap(10.dp)
 
-        text(name, titleMedium, gray, TextWrap.NoWrap)
-        text("ETA: $eta", titleSmall, gray, TextWrap.NoWrap) .. AlignSelf.bottom
+        text(name, titleMedium, textColor(gray), noWrap)
+        text("ETA: $eta", titleSmall, textColor(gray), noWrap) .. AlignSelf.bottom
     }
 }

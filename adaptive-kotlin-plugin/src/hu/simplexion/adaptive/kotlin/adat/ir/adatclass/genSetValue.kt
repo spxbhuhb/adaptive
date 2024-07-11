@@ -20,10 +20,14 @@ fun AdatIrBuilder.genSetValue(
     genSetValueFunction as IrSimpleFunction
 
     genSetValueFunction.body = DeclarationIrBuilder(irContext, genSetValueFunction.symbol).irBlockBody {
-        + irWhen(
-            irBuiltIns.unitType,
-            properties.mapNotNull { transformProperty(genSetValueFunction, it) } // FIXME throw exception on else
-        )
+        val branches = properties.mapNotNull { transformProperty(genSetValueFunction, it) }
+
+        if (branches.isNotEmpty()) { // FIXME throw exception on else
+            + irWhen(
+                irBuiltIns.unitType,
+                branches
+            )
+        }
     }
 }
 

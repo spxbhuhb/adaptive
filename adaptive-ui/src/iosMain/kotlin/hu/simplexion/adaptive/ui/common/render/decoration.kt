@@ -87,8 +87,8 @@ private fun applyGradient(
         CFBridgingRelease(CFRetain(gradient.end.uiColor.CGColor))
     )
 
-    layer.startPoint = gradient.startPosition.let { p -> CGPointMake(p.left, p.top) }
-    layer.endPoint = gradient.endPosition.let { p -> CGPointMake(p.left, p.top) }
+    layer.startPoint = gradient.startPosition.let { p -> CGPointMake(p.left.value, p.top.value) }
+    layer.endPoint = gradient.endPosition.let { p -> CGPointMake(p.left.value, p.top.value) }
 
     layer.cornerRadius = current.cornerRadius?.topLeft ?: 0.0 // FIXME individual radii for corners
 
