@@ -539,8 +539,8 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
         val first = source.items[0]
         val second = source.items[1]
 
-        val firstValue = if (first is JsonNull) null else typeArgument1.wireFormat.wireFormatDecode(first, JsonWireFormatDecoder(first))
-        val secondValue = if (second is JsonNull) null else typeArgument2.wireFormat.wireFormatDecode(second, JsonWireFormatDecoder(second))
+        val firstValue = if (first is JsonNull) null else decodeOrPolymorphic(first, typeArgument1)
+        val secondValue = if (second is JsonNull) null else decodeOrPolymorphic(second, typeArgument2)
 
         check(firstValue != null || typeArgument1.nullable)
         check(secondValue != null || typeArgument2.nullable)
@@ -552,20 +552,26 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     // Utilities for classes that implement `WireFormat`
     // -----------------------------------------------------------------------------------------
 
+    fun <T> decodeOrPolymorphic(element: JsonElement, typeArgument: WireFormatTypeArgument<T>) =
+        if (typeArgument.wireFormat == null) {
+            JsonWireFormatDecoder(element).rawPolymorphic(element)
+        } else {
+            typeArgument.wireFormat.wireFormatDecode(element, JsonWireFormatDecoder(element))
+        }
+
     override fun <T> items(source: JsonElement, typeArgument: WireFormatTypeArgument<T>): MutableList<T?> {
         val result = mutableListOf<T?>()
 
         require(source is JsonArray) { "source is not an array" }
 
         val nullable = typeArgument.nullable
-        val itemWireFormat = typeArgument.wireFormat
 
         for (element in source.items) {
             if (element is JsonNull) {
                 check(nullable) { "null item in a non-nullable collection" }
                 result += null
             } else {
-                result += itemWireFormat.wireFormatDecode(element, JsonWireFormatDecoder(element))
+                result += decodeOrPolymorphic(element, typeArgument)
             }
         }
 

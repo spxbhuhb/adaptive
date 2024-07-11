@@ -4,8 +4,10 @@
 
 package hu.simplexion.adaptive.wireformat
 
-import hu.simplexion.adaptive.wireformat.builtin.*
-import kotlinx.datetime.*
+import hu.simplexion.adaptive.adat.AdatClass
+import hu.simplexion.adaptive.adat.AdatCompanion
+import hu.simplexion.adaptive.wireformat.builtin.ListWireFormat
+import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -24,7 +26,10 @@ abstract class AbstractPolymorphicTest<ST>(
 
     @Test
     fun list() {
-        listOf(C1(12), C2(23)).also { assertEquals(it, ListWireFormat()) }
+        WireFormatRegistry += C1.Companion
+        WireFormatRegistry += C2.Companion
+
+        listOf(C1(12), C2(23)).also { assertEquals(it, polymorphicActual(it, ListWireFormat(WireFormatTypeArgument<CI>(null, false)))) }
     }
 
     interface CI {
@@ -33,8 +38,12 @@ abstract class AbstractPolymorphicTest<ST>(
 
     data class C1(
         override var i: Int = 0
-    ) : CI {
-        companion object : WireFormat<C1> {
+    ) : AdatClass<C1>, CI {
+
+        override val adatCompanion: AdatCompanion<C1>
+            get() = Companion
+
+        companion object : AdatCompanion<C1> {
 
             override val wireFormatName: String
                 get() = "hu.simplexion.adaptive.wireformat.C1"
@@ -49,8 +58,12 @@ abstract class AbstractPolymorphicTest<ST>(
 
     data class C2(
         override var i: Int = 0
-    ) : CI {
-        companion object : WireFormat<C2> {
+    ) : AdatClass<C2>, CI {
+
+        override val adatCompanion: AdatCompanion<C2>
+            get() = Companion
+
+        companion object : AdatCompanion<C2> {
 
             override val wireFormatName: String
                 get() = "hu.simplexion.adaptive.wireformat.C2"

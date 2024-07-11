@@ -26,8 +26,9 @@ object Strings {
 
 object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_COMPANION = "adatCompanion".name()
-    val ADAT_METADATA = Strings.ADAT_METADATA.name()
+    val ADAT_METADATA = "adatMetadata".name()
     val ADAT_WIREFORMAT = "adatWireFormat".name()
+    val WIREFORMAT_NAME = "wireFormatName".name()
 
     val DESCRIPTOR = "descriptor".name()
 

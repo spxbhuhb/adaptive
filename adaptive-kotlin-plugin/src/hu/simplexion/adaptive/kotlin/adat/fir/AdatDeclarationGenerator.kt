@@ -87,6 +87,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                 setOf(
                     Names.ADAT_METADATA,
                     Names.ADAT_WIREFORMAT,
+                    Names.WIREFORMAT_NAME,
                     Names.NEW_INSTANCE,
                     SpecialNames.INIT
                 )
@@ -160,12 +161,25 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                 )
             }
 
+            Names.WIREFORMAT_NAME -> {
+                listOf(
+                    createMemberProperty(
+                        context !!.owner,
+                        AdatPluginKey,
+                        Names.WIREFORMAT_NAME,
+                        session.builtinTypes.stringType.type,
+                        isVal = true,
+                        hasBackingField = true
+                    ).symbol
+                )
+            }
+
             else -> emptyList()
         }
     }
 
     override fun generateFunctions(callableId: CallableId, context: MemberGenerationContext?): List<FirNamedFunctionSymbol> {
-        if (! context.isAdatCompanion && !context.isAdatClass) return emptyList()
+        if (! context.isAdatCompanion && ! context.isAdatClass) return emptyList()
 
         return when (callableId.callableName) {
             Names.NEW_INSTANCE -> {
@@ -173,6 +187,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                     createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, context.adatClassType).symbol
                 )
             }
+
             Names.GEN_GET_VALUE -> {
                 listOf(
                     createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.nullableAnyType.type) {
@@ -189,6 +204,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                     }.symbol
                 )
             }
+
             Names.EQUALS -> {
                 listOf(
                     createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.booleanType.type) {
@@ -196,16 +212,19 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                     }.symbol
                 )
             }
+
             Names.HASHCODE -> {
                 listOf(
                     createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.intType.type).symbol
                 )
             }
+
             Names.TO_STRING -> {
                 listOf(
                     createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.stringType.type).symbol
                 )
             }
+
             else -> emptyList()
         }
     }

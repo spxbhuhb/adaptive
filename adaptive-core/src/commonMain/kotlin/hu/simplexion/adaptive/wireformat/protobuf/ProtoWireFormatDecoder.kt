@@ -519,8 +519,8 @@ class ProtoWireFormatDecoder(
             (decoder[2] as LenProtoRecord).decoder()
         }
 
-        val firstValue = first?.let { typeArgument1.wireFormat.wireFormatDecode(first[1] !!, first) }
-        val secondValue = second?.let { typeArgument2.wireFormat.wireFormatDecode(second[1] !!, second) }
+        val firstValue = first?.let { decodeOrPolymorphic(first[1] !!, typeArgument1, first) }
+        val secondValue = second?.let { decodeOrPolymorphic(second[1] !!, typeArgument2, second) }
 
         return Pair(firstValue, secondValue)
     }
@@ -528,6 +528,13 @@ class ProtoWireFormatDecoder(
     // -----------------------------------------------------------------------------------------
     // Utilities for classes that implement `WireFormat`
     // -----------------------------------------------------------------------------------------
+
+    fun <T> decodeOrPolymorphic(source: ProtoRecord, typeArgument: WireFormatTypeArgument<T>, decoder: ProtoWireFormatDecoder) =
+        if (typeArgument.wireFormat == null) {
+            rawPolymorphic(source)
+        } else {
+            typeArgument.wireFormat.wireFormatDecode(source, decoder)
+        }
 
     fun <T> item(source: ProtoRecord, wireFormat: WireFormat<T>): T =
         when (wireFormat.wireFormatKind) {
@@ -548,11 +555,19 @@ class ProtoWireFormatDecoder(
 
     override fun <T> items(source: ProtoRecord, typeArgument: WireFormatTypeArgument<T>): MutableList<T?> =
         records.map {
-            if (it.fieldNumber > NULL_SHIFT) {
-                check(typeArgument.nullable)
-                null
-            } else {
-                item(it, typeArgument.wireFormat)
+            when {
+                it.fieldNumber > NULL_SHIFT -> {
+                    check(typeArgument.nullable)
+                    null
+                }
+
+                typeArgument.wireFormat == null -> {
+                    rawPolymorphic<T>(it)
+                }
+
+                else -> {
+                    item(it, typeArgument.wireFormat)
+                }
             }
         }.toMutableList()
 

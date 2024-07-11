@@ -68,6 +68,8 @@ class AdatCompanionTransform(
         when (declaration.name) {
             Names.ADAT_METADATA -> adatMetadata(companionClass, declaration, properties)
             Names.ADAT_WIREFORMAT -> adatWireFormat(companionClass, declaration)
+            Names.WIREFORMAT_NAME -> wireFormatName(companionClass, declaration)
+
         }
     }
 

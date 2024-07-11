@@ -10,7 +10,7 @@ import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 
 object WireFormatRegistry : Registry<WireFormat<*>>() {
     init {
-        val n = WireFormatTypeArgument(NothingWireFormat, true)
+        val n = WireFormatTypeArgument<Any>(null, true)
 
         set("kotlin.Array", ArrayWireFormat(n))
         set("kotlin.collections.List", ListWireFormat(n))

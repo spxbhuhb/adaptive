@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.wireformat.json
 
+import hu.simplexion.adaptive.adat.AdatClass
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
@@ -825,11 +826,20 @@ class JsonWireFormatEncoder(
     }
 
     fun <T> valueOrNull(value: T?, typeArgument: WireFormatTypeArgument<T>) {
-        if (value == null) {
-            check(typeArgument.nullable)
-            writer.rawNullValue()
-        } else {
-            rawInstance(value, typeArgument.wireFormat)
+        when {
+            value == null -> {
+                check(typeArgument.nullable)
+                writer.rawNullValue()
+            }
+
+            typeArgument.wireFormat == null -> {
+                @Suppress("UNCHECKED_CAST")
+                rawPolymorphic(value, (value as AdatClass<*>).adatCompanion as WireFormat<T>)
+            }
+
+            else -> {
+                rawInstance(value, typeArgument.wireFormat)
+            }
         }
     }
 
@@ -838,16 +848,8 @@ class JsonWireFormatEncoder(
     // -----------------------------------------------------------------------------------------
 
     override fun <T> items(value: Collection<T?>, typeArgument: WireFormatTypeArgument<T>): WireFormatEncoder {
-        val nullable = typeArgument.nullable
-        val itemWireFormat = typeArgument.wireFormat
-
         for (item in value) {
-            if (item == null) {
-                check(nullable)
-                writer.rawNullValue()
-            } else {
-                rawInstance(item, itemWireFormat)
-            }
+            valueOrNull(item, typeArgument)
             writer.separator()
         }
         return this

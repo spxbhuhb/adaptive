@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.wireformat.protobuf
 
+import hu.simplexion.adaptive.adat.AdatClass
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
@@ -754,8 +755,8 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         typeArgument1: WireFormatTypeArgument<T1>,
         typeArgument2: WireFormatTypeArgument<T2>,
     ): WireFormatEncoder {
-        val bytes1 = value.first?.let { subEncoder.apply { typeArgument1.wireFormat.wireFormatEncode(this, it) }.pack() }
-        val bytes2 = value.second?.let { subEncoder.apply { typeArgument2.wireFormat.wireFormatEncode(this, it) }.pack() }
+        val bytes1 = value.first?.let { subEncoder.apply { valueOrNull(it, typeArgument1, true) }.pack() }
+        val bytes2 = value.second?.let { subEncoder.apply { valueOrNull(it, typeArgument2, true) }.pack() }
 
         val bytes = subEncoder.apply {
 
@@ -806,6 +807,27 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
     // Utilities for classes that implement `WireFormat`
     // -----------------------------------------------------------------------------------------
 
+    fun <T> valueOrNull(value: T?, typeArgument: WireFormatTypeArgument<T>, direct: Boolean) {
+        when {
+            value == null -> {
+                writer.bool(1 + NULL_SHIFT, true)
+            }
+
+            typeArgument.wireFormat == null -> {
+                @Suppress("UNCHECKED_CAST")
+                rawPolymorphic(value, (value as AdatClass<*>).adatCompanion as WireFormat<T>)
+            }
+
+            else -> {
+                if (direct) {
+                    typeArgument.wireFormat.wireFormatEncode(this, value)
+                } else {
+                    item(value, typeArgument.wireFormat)
+                }
+            }
+        }
+    }
+
     fun <T> item(value: T, wireFormat: WireFormat<T>) {
         when (wireFormat.wireFormatKind) {
             WireFormatKind.Primitive -> wireFormat.wireFormatEncode(this, value)
@@ -815,12 +837,8 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
     }
 
     override fun <T> items(value: Collection<T?>, typeArgument: WireFormatTypeArgument<T>): WireFormatEncoder {
-        value.forEach {
-            if (it == null) {
-                writer.bool(1 + NULL_SHIFT, true)
-            } else {
-                item(it, typeArgument.wireFormat)
-            }
+        for (item in value) {
+            valueOrNull(item, typeArgument, false)
         }
         return this
     }
