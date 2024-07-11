@@ -27,13 +27,9 @@ class AdatPropertyWireFormat<T>(
         wireFormat.wireFormatEncode(encoder, property.index, property.name, values[property.index] as T?)
     }
 
-    fun decode(decoder: WireFormatDecoder<*>, instance: AdatClass<*>) {
-        val value = wireFormat.wireFormatDecode(decoder, property.index, property.name)
-        instance.setValue(property.index, if (nullable) value else checkNotNull(value))
-    }
-
     fun decode(decoder: WireFormatDecoder<*>, values:Array<Any?>) {
         val value = wireFormat.wireFormatDecode(decoder, property.index, property.name)
         values[property.index] = if (nullable) value else checkNotNull(value)
     }
+
 }

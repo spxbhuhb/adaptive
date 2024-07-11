@@ -4,6 +4,7 @@
 package hu.simplexion.adaptive.kotlin.adat.ir.adatcompanion
 
 import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata
+import hu.simplexion.adaptive.kotlin.adat.AdatPluginKey
 import hu.simplexion.adaptive.kotlin.adat.Names
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatIrBuilder
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatPluginContext
@@ -75,9 +76,16 @@ class AdatCompanionTransform(
 
     override fun visitFunction(declaration: IrFunction) {
         if (declaration.isFakeOverride) return
+        if (declaration.origin != AdatPluginKey.origin) return
 
         when (declaration.name) {
-            Names.NEW_INSTANCE -> newInstance(companionClass, declaration)
+            Names.NEW_INSTANCE -> {
+                if (declaration.valueParameters.isEmpty()) {
+                    newInstanceEmpty(companionClass, declaration)
+                } else {
+                    newInstanceArray(companionClass, declaration)
+                }
+            }
         }
     }
 

@@ -6,4 +6,8 @@ package hu.simplexion.adaptive.wireformat.json.elements
 
 class JsonObject : JsonElement() {
     val entries = mutableMapOf<String, JsonElement>()
+
+    override fun toString(): String {
+        return "{${entries.entries.joinToString(",") { "\"${it.key}\": ${it.value}" }}}"
+    }
 }

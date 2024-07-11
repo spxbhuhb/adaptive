@@ -64,6 +64,13 @@ class TestClass(
         override fun newInstance() =
             TestClass()
 
+        @Suppress("UNCHECKED_CAST")
+        override fun newInstance(values: Array<Any?>): TestClass =
+            TestClass(
+                values[0] as Int,
+                values[1] as Boolean,
+                values[2] as Set<List<Int>>
+            )
     }
 
 }

@@ -34,6 +34,8 @@ class AdatPluginContext(
     val commonUuid = ClassIds.COMMON_UUID.classSymbol()
     val commonUuidPrimary = commonUuid.constructors.first { it.owner.valueParameters.isEmpty() }
 
+    val arrayGet = checkNotNull(irContext.irBuiltIns.arrayClass.getSimpleFunction("get"))
+
     val entityId = ClassIds.ENTITY_ID.symbolOrNull()
     val javaUuid = ClassIds.JAVA_UUID.symbolOrNull()
     val javaUuidType = javaUuid?.defaultType

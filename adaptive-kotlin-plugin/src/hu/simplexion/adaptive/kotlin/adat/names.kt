@@ -33,6 +33,7 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val DESCRIPTOR = "descriptor".name()
 
     val NEW_INSTANCE = "newInstance".name()
+    val VALUES = "values".name()
 
     val ADAT_EQUALS = "adatEquals".name()
     val ADAT_HASHCODE = "adatHashCode".name()
@@ -67,6 +68,10 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_CLASS = "AdatClass".classId()
     val ADAT_ENTITY = "AdatEntity".classId()
     val ADAT_COMPANION = "AdatCompanion".classId()
+
+    // TODO move these to KotlinClassIds
+    val KOTLIN_ARRAY = "Array".classId { "kotlin".fqName() }
+    val KOTLIN_ANY = "Any".classId { "kotlin".fqName() }
 
     val ADAT_CLASS_METADATA = "AdatClassMetadata".classId { Strings.METADATA_PACKAGE.fqName() }
     val ADAT_CLASS_WIREFORMAT = "AdatClassWireFormat".classId { Strings.WIREFORMAT_PACKAGE.fqName() }

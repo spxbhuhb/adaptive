@@ -36,4 +36,7 @@ class JsonNumber(val value: String) : JsonElement() {
     override val asULong
         get() = value.toULong()
 
+    override fun toString(): String {
+        return value
+    }
 }

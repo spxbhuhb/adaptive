@@ -8,4 +8,7 @@ class JsonArray : JsonElement() {
 
     val items = mutableListOf<JsonElement>()
 
+    override fun toString(): String {
+        return "[${items.joinToString(",") { it.toString() }}]"
+    }
 }

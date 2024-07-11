@@ -31,6 +31,10 @@ interface AdatCompanion<A : AdatClass<A>> : WireFormat<A> {
         pluginGenerated()
     }
 
+    fun newInstance(values: Array<Any?>): A {
+        pluginGenerated()
+    }
+
     fun fromJson(byteArray: ByteArray): A =
         JsonWireFormatDecoder(byteArray).asInstance(adatWireFormat)
 

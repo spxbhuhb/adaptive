@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.kotlin.common
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.builtins.UnsignedArrayType
 import org.jetbrains.kotlin.builtins.UnsignedType
+import org.jetbrains.kotlin.ir.util.getSimpleFunction
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
@@ -61,6 +62,8 @@ class KotlinSymbols(
     val mutableList = KotlinClassIds.MUTABLE_LIST.classSymbol
     val mutableMap = KotlinClassIds.MUTABLE_MAP.classSymbol
     val mutableSet = KotlinClassIds.MUTABLE_SET.classSymbol
+
+    val arrayGet = checkNotNull(irContext.irBuiltIns.arrayClass.getSimpleFunction("get"))
 }
 
 class KotlinUnsignedSymbols(

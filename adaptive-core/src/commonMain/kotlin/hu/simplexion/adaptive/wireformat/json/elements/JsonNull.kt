@@ -4,4 +4,8 @@
 
 package hu.simplexion.adaptive.wireformat.json.elements
 
-class JsonNull : JsonElement()
+class JsonNull : JsonElement() {
+    override fun toString(): String {
+        return "null"
+    }
+}

@@ -29,7 +29,11 @@ class TL(
 fun box(): String {
     val tl = TL(listOf(T1(12), T2(23)))
 
-    tl.toJson(tl.adatCompanion.adatWireFormat)
+    val json = tl.toJson(tl.adatCompanion.adatWireFormat)
+
+    val tlr = tl.adatCompanion.fromJson(json)
+
+    if (tl != tlr) return "Fail: ${tlr}"
 
     return "OK"
 }

@@ -5,7 +5,6 @@ package hu.simplexion.adaptive.kotlin.adat.ir.adatclass
 
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatIrBuilder
 import hu.simplexion.adaptive.kotlin.adat.ir.metadata.PropertyData
-import hu.simplexion.adaptive.kotlin.wireformat.sensibleDefault
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irDelegatingConstructorCall
@@ -13,18 +12,15 @@ import org.jetbrains.kotlin.ir.builders.irSetField
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrConstructor
 import org.jetbrains.kotlin.ir.util.constructors
-import org.jetbrains.kotlin.ir.util.deepCopyWithSymbols
 
-fun AdatIrBuilder.emptyConstructor(
+fun AdatIrBuilder.arrayConstructor(
     adatClass: IrClass,
     constructor: IrConstructor,
     properties: List<PropertyData>
 ) {
 
     val primary = adatClass.constructors.first { it.isPrimary }
-    if (constructor === primary) return // this should never happen as we use the plugin key when calling `emptyConstructor`
-
-    val remaining = properties.toMutableSet()
+    if (constructor === primary) return
 
     constructor.body = DeclarationIrBuilder(pluginContext.irContext, constructor.symbol).irBlockBody {
 
@@ -32,25 +28,23 @@ fun AdatIrBuilder.emptyConstructor(
             irBuiltIns.anyClass.constructors.first().owner
         )
 
-        for (parameter in primary.valueParameters) {
+        val values = constructor.valueParameters.first()
 
-            val propertyData = properties.firstOrNull { it.property.name == parameter.name } ?: continue
+        for (property in properties) {
+            val backingField = property.property.backingField !! // TODO handle properties without backing fields?
 
-            val defaultValue = parameter.defaultValue
-
-            val initializer =
-                defaultValue?.deepCopyWithSymbols(primary)?.expression
-                    ?: sensibleDefault(propertyData.metadata.signature)
-
-            if (initializer != null) {
-                + irSetField(
-                    receiver = irGet(adatClass.thisReceiver !!),
-                    propertyData.property.backingField !!,
-                    initializer
+            + irSetField(
+                receiver = irGet(adatClass.thisReceiver !!),
+                backingField,
+                irImplicitAs(
+                    backingField.type,
+                    irCall(
+                        pluginContext.arrayGet,
+                        dispatchReceiver = irGet(values),
+                        args = arrayOf(irConst(property.metadata.index))
+                    )
                 )
-            }
-
-            remaining -= propertyData
+            )
         }
     }
 }

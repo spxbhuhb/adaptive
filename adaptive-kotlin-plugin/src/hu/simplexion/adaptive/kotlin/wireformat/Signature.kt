@@ -69,25 +69,25 @@ object Signature {
 
         check(irType is IrSimpleType)
 
-        // when a class is not final we have to go with polymorphic coding
-        if (! irType.classOrFail.owner.isFinalClass) {
-            return "*"
-        }
-
         if (irType.arguments.isEmpty()) {
             return "L$typeName;".addNull(irType)
         }
 
-        val argumentSignatures =
-            irType.arguments.joinToString(";") {
-                if (it is IrType) {
-                    typeSignature(it as IrType)
-                } else {
-                    "*"
-                }
-            }
+        val argumentSignatures = irType.arguments.joinToString(";") { argumentSignature(it) }
 
         return "L$typeFqName<$argumentSignatures>;".addNull(irType)
+    }
+
+    fun argumentSignature(irTypeArgument: IrTypeArgument): String {
+        if (irTypeArgument !is IrType) return "*"
+
+        if (irTypeArgument.classFqName !!.startsWith(FqNames.KOTLIN_COLLECTIONS_PACKAGE)) {
+            return typeSignature(irTypeArgument)
+        }
+
+        if (! irTypeArgument.classOrFail.owner.isFinalClass) return "*"
+
+        return typeSignature(irTypeArgument)
     }
 
     fun String.addNull(irType: IrType) =

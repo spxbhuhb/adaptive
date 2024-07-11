@@ -18,4 +18,16 @@ class JsonString(val value: String) : JsonElement() {
         return UUID(value)
     }
 
+    override fun toString(): String {
+        return "\"${escape(value)}\""
+    }
+
+    private fun escape(value: String): String {
+        return value
+            .replace("\"", "\\\"")
+            .replace("\n", "\\n")
+            .replace("\r", "\\r")
+            .replace("\t", "\\t")
+            .replace("\\", "\\\\")
+    }
 }

@@ -14,7 +14,7 @@ import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.parentAsClass
 
-fun AdatIrBuilder.newInstance(
+fun AdatIrBuilder.newInstanceEmpty(
     companionClass: IrClass,
     newInstanceFunction: IrFunction
 ) {

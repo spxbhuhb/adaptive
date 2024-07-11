@@ -13,4 +13,8 @@ class JsonBoolean(
 
     override val asUnit: Unit
         get() = check(value) { "false value as Unit" }
+
+    override fun toString(): String {
+        return value.toString()
+    }
 }

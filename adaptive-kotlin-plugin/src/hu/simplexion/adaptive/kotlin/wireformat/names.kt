@@ -42,6 +42,7 @@ object Strings {
 object FqNames {
     val SIGNATURE_PACKAGE = FqName(Strings.SIGNATURE_PACKAGE)
     val BUILTIN_PACKAGE = FqName(Strings.BUILTIN_PACKAGE)
+    val KOTLIN_COLLECTIONS_PACKAGE = FqName(Strings.BUILTIN_PACKAGE)
 }
 
 object ClassIds : NamesBase(Strings.WIREFORMAT_PACKAGE) {

@@ -52,10 +52,12 @@ class AdatClassTransform(
     }
 
     override fun visitConstructor(declaration: IrConstructor) {
-        when {
-            declaration.origin == AdatPluginKey.origin && declaration.valueParameters.isEmpty() -> {
-                emptyConstructor(adatClass, declaration, properties)
-            }
+        if (declaration.isFakeOverride) return
+        if (declaration.origin != AdatPluginKey.origin) return
+
+        when (declaration.valueParameters.size) {
+            0 -> emptyConstructor(adatClass, declaration, properties)
+            1 -> arrayConstructor(adatClass, declaration, properties)
         }
     }
 

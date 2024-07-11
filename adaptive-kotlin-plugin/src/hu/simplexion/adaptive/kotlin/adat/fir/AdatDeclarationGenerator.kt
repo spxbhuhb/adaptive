@@ -30,6 +30,8 @@ import org.jetbrains.kotlin.name.SpecialNames
 
 class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
+    val nullableAnyType = ClassIds.KOTLIN_ANY.constructClassLikeType(emptyArray(), true)
+    val nullableAnyArrayType = ClassIds.KOTLIN_ARRAY.constructClassLikeType(arrayOf(nullableAnyType), false)
     val ADAT_PREDICATE = LookupPredicate.create { annotated(FqNames.ADAT_ANNOTATION) }
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
@@ -101,8 +103,10 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         when {
             context.isAdatClass -> {
                 return listOf(
-                    createConstructor(context.owner, AdatPluginKey, isPrimary = false, generateDelegatedNoArgConstructorCall = true)
-                        .symbol
+                    createConstructor(context.owner, AdatPluginKey, isPrimary = false, generateDelegatedNoArgConstructorCall = true).symbol,
+                    createConstructor(context.owner, AdatPluginKey, isPrimary = false, generateDelegatedNoArgConstructorCall = true) {
+                        valueParameter(Names.VALUES, nullableAnyArrayType)
+                    }.symbol
                 )
             }
 
@@ -184,7 +188,10 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         return when (callableId.callableName) {
             Names.NEW_INSTANCE -> {
                 listOf(
-                    createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, context.adatClassType).symbol
+                    createMemberFunction(context !!.owner, AdatPluginKey, callableId.callableName, context.adatClassType).symbol,
+                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, context.adatClassType) {
+                        valueParameter(Names.VALUES, nullableAnyArrayType)
+                    }.symbol
                 )
             }
 
