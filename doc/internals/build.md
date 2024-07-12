@@ -1,9 +1,11 @@
 # Build
 
+1. Clone the repo
+2. Update submodules (this downloads pictures for site)
+    3. `git submodule update --init --recursive`
 1. Add `local.propeties` file to
     1. `adaptive-core`
-    2. `adaptive-ui/adaptive-ui-common`
-    3. `adaptive-sandbox`
+   2. `adaptive-ui`
 2. Run the `build` task of the root project.
 
 > [!Note]

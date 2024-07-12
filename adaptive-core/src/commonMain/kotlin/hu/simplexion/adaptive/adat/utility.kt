@@ -4,6 +4,8 @@
 
 package hu.simplexion.adaptive.adat
 
+import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata
+
 fun AdatClass<*>.diff(other : AdatClass<*>) : List<AdatDiffItem> {
     val thisProps = this.getMetadata().properties
     val otherProps = other.getMetadata().properties
@@ -32,4 +34,34 @@ fun AdatClass<*>.diff(other : AdatClass<*>) : List<AdatDiffItem> {
     }
 
     return differences
+}
+
+/**
+ * Combine [this] and [other] so that the result contains:
+ *
+ * - the value from [this] if it equals to the value from [other]
+ * - the sensible default if the value from [this] does not equal to the value from [other]
+ *
+ * @return  an instance of [T] that contains the combined values
+ */
+fun <T : AdatClass<T>> T.and(other: T): AdatClass<T> {
+    val properties = this.getMetadata().properties
+    val values = arrayOfNulls<Any?>(properties.size)
+
+    for (property in properties) {
+        val index = property.index
+        val v1 = this.getValue(index)
+        val v2 = other.getValue(index)
+        if (v1 == v2) {
+            values[index] = v1
+        } else {
+            values[index] = sensibleDefault(property)
+        }
+    }
+
+    return adatCompanion.newInstance(values)
+}
+
+fun sensibleDefault(property: AdatPropertyMetadata): Any? {
+    TODO()
 }

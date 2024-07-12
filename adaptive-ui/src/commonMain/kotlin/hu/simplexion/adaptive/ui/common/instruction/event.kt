@@ -37,10 +37,10 @@ class UIEvent(
     }
 }
 
-@Adat
-abstract class UIEventHandler(
+interface UIEventHandler : AdaptiveInstruction {
+
     val handler: (event: UIEvent) -> Unit
-) : AdaptiveInstruction {
+
     fun execute(event: UIEvent) {
         handler(event)
         event.patchIfDirty()
@@ -50,8 +50,8 @@ abstract class UIEventHandler(
 
 @Adat
 class OnClick(
-    handler: (event: UIEvent) -> Unit
-) : UIEventHandler(handler) {
+    override val handler: (event: UIEvent) -> Unit
+) : UIEventHandler {
     override fun apply(subject: Any) {
         event(subject) { it.onClick = this }
     }
@@ -59,8 +59,8 @@ class OnClick(
 
 @Adat
 class OnCursorDown(
-    handler: (event: UIEvent) -> Unit
-) : UIEventHandler(handler) {
+    override val handler: (event: UIEvent) -> Unit
+) : UIEventHandler {
     override fun apply(subject: Any) {
         event(subject) { it.onCursorDown = this }
     }
@@ -68,8 +68,8 @@ class OnCursorDown(
 
 @Adat
 class OnCursorMove(
-    handler: (event: UIEvent) -> Unit
-) : UIEventHandler(handler) {
+    override val handler: (event: UIEvent) -> Unit
+) : UIEventHandler {
     override fun apply(subject: Any) {
         event(subject) { it.onCursorMove = this }
     }
@@ -77,8 +77,8 @@ class OnCursorMove(
 
 @Adat
 class OnCursorUp(
-    handler: (event: UIEvent) -> Unit
-) : UIEventHandler(handler) {
+    override val handler: (event: UIEvent) -> Unit
+) : UIEventHandler {
     override fun apply(subject: Any) {
         event(subject) { it.onCursorUp = this }
     }

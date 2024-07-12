@@ -18,11 +18,12 @@ These classes are similar to `data` classes in concept but offer many other func
   * property name, type, index
   * constraints (if provided)
   * additional information (if provided)
-* validation with the provided constraints
+* validation
 * automatic mapping to Exposed tables
 * get/set fields by name or index
-* serializable by default (with WireFormat)
-* empty constructor with sensible defaults (when not provided directly)
+* serializable (with WireFormat)
+* sensible defaults (when not provided directly)
+* data arithmetics (or, and, etc.) - haven't finished the implementation yet
 * nice utility functions:
 
 | Function      | Status        | What it does                                                                              |
@@ -37,15 +38,24 @@ These classes are similar to `data` classes in concept but offer many other func
 | `getMetadata` | ready         | get metadata of the class                                                                 |
 | `newInstance` | ready         | get a new instance (from Companion)                                                       |
 
-Most of these functions are **NOT** generated for these classes, they are implemented in `AdatClass` and
-`AdatCompanion`.
+Most of these functions are **NOT** generated for these classes, they are implemented in `AdatClass`,
+`AdatCompanion` or by extension functions.
 
 What **IS** generated:
 
-* a companion object (or the existing is used)
-* the `adatCompanion` property
-* the `genGetValue` and `genGetValue` functions
-* a companion object with `adatMetadata`, `adatWireFormat` properties and a `newInstance` function
+* properties
+  * `adatCompanion`
+* functions:
+  * `genGetValue`
+  * `genGetValue`
+* a companion object
+  * properties:
+    * `adatMetadata`
+    * `adatWireFormat`
+    * `wireFormatName`
+  * functions:
+    * `newInstance()`
+    * `newInstance(values : Array<Any?>)`
 
 Check [AdatTest](/adaptive-core/src/commonTest/kotlin/hu/simplexion/adaptive/adat/AdatTest.kt) for details.
 
