@@ -72,6 +72,27 @@ data class RawSurrounding(
     }
 }
 
+data class RawBorder(
+    val color: Color,
+    val top: Double,
+    val right: Double,
+    val bottom: Double,
+    val left: Double
+) {
+    constructor(border: Border, previous: RawBorder, adapter: AbstractCommonAdapter<*, *>) :
+        this(
+            border.color ?: previous.color,
+            border.top.toPx(adapter) ?: previous.top,
+            border.right.toPx(adapter) ?: previous.right,
+            border.bottom.toPx(adapter) ?: previous.bottom,
+            border.left.toPx(adapter) ?: previous.left
+        )
+
+    companion object {
+        val NONE = RawBorder(Color(0u), 0.0, 0.0, 0.0, 0.0)
+    }
+}
+
 data class RawCornerRadius(
     val topLeft: Double,
     val topRight: Double,
@@ -96,3 +117,18 @@ data class RawTrack(
     val isFraction: Boolean,
     val rawValue: Double
 )
+
+data class RawDropShadow(
+    val color: Color,
+    val offsetX: Double,
+    val offsetY: Double,
+    val standardDeviation: Double
+) {
+    constructor(dropShadow: DropShadow, adapter: AbstractCommonAdapter<*, *>) :
+        this(
+            dropShadow.color,
+            dropShadow.offsetX.toPx(adapter),
+            dropShadow.offsetY.toPx(adapter),
+            dropShadow.standardDeviation.toPx(adapter)
+        )
+}

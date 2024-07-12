@@ -19,10 +19,10 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.resource.defaultResourceEnvironment
 import hu.simplexion.adaptive.ui.common.fragment.layout.AbstractContainer
 import hu.simplexion.adaptive.ui.common.fragment.layout.RawCornerRadius
-import hu.simplexion.adaptive.ui.common.instruction.AdaptiveUIEvent
 import hu.simplexion.adaptive.ui.common.instruction.Color
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
+import hu.simplexion.adaptive.ui.common.instruction.UIEvent
 import hu.simplexion.adaptive.ui.common.platform.ContainerViewGroup
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.StructuralViewGroup
@@ -189,7 +189,7 @@ open class CommonAdapter(
 
         onClick { oc ->
             view.setOnClickListener {
-                oc.execute(AdaptiveUIEvent(fragment, it))
+                oc.execute(UIEvent(fragment, it))
             }
         }
     }

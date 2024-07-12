@@ -10,8 +10,8 @@ import hu.simplexion.adaptive.resource.defaultResourceReader
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
-import hu.simplexion.adaptive.ui.common.instruction.AdaptiveUIEvent
 import hu.simplexion.adaptive.ui.common.instruction.OnClick
+import hu.simplexion.adaptive.ui.common.instruction.UIEvent
 import hu.simplexion.adaptive.utility.checkIfInstance
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -22,7 +22,10 @@ import kotlinx.coroutines.launch
 import platform.CoreGraphics.CGRectMake
 import platform.Foundation.NSData
 import platform.Foundation.dataWithBytes
-import platform.UIKit.*
+import platform.UIKit.UIImage
+import platform.UIKit.UIImageView
+import platform.UIKit.UIView
+import platform.UIKit.UIViewContentMode
 
 @AdaptiveActual(common)
 class CommonImage(
@@ -69,7 +72,7 @@ class CommonImage(
 
         override fun touchesEnded(touches: Set<*>, withEvent: UIEvent?) {
             fragment.instructions.firstOrNullIfInstance<OnClick>()
-                ?.execute(AdaptiveUIEvent(fragment, withEvent))
+                ?.execute(UIEvent(fragment, withEvent))
 
             super.touchesBegan(touches, withEvent)
         }

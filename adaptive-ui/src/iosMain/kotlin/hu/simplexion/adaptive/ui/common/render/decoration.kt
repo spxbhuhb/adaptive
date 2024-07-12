@@ -32,15 +32,15 @@ fun applyDecoration(fragment: AbstractCommonFragment<UIView>) {
 
     // ----  border  ----
 
-    val borderWidth = current?.borderWidth?.top // FIXME individual border widths
-    val borderColor = current?.borderColor
+    val borderWidth = current?.border?.top // FIXME individual border widths
+    val borderColor = current?.border?.color
     val cornerRadius = current?.cornerRadius
 
-    if (borderWidth != previous?.borderWidth?.top) {
+    if (borderWidth != previous?.border?.top) {
         view.layer.borderWidth = borderWidth ?: 0.0
     }
 
-    if (borderColor != previous?.borderColor) {
+    if (borderColor != previous?.border?.color) {
         view.layer.borderColor = borderColor?.uiColor?.CGColor
     }
 

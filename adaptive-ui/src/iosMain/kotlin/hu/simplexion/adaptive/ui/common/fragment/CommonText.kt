@@ -8,8 +8,8 @@ import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.common
-import hu.simplexion.adaptive.ui.common.instruction.AdaptiveUIEvent
 import hu.simplexion.adaptive.ui.common.instruction.OnClick
+import hu.simplexion.adaptive.ui.common.instruction.UIEvent
 import hu.simplexion.adaptive.ui.common.render.applyText
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -67,7 +67,7 @@ class CommonText(
 
         override fun touchesEnded(touches: Set<*>, withEvent: UIEvent?) {
             fragment.instructions.firstOrNullIfInstance<OnClick>()
-                ?.execute(AdaptiveUIEvent(fragment, withEvent))
+                ?.execute(hu.simplexion.adaptive.ui.common.instruction.UIEvent(fragment, withEvent))
             super.touchesBegan(touches, withEvent)
         }
 

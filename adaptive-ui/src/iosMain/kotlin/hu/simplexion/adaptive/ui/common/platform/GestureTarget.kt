@@ -6,8 +6,8 @@ package hu.simplexion.adaptive.ui.common.platform
 
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
-import hu.simplexion.adaptive.ui.common.instruction.AdaptiveUIEvent
 import hu.simplexion.adaptive.ui.common.instruction.OnClick
+import hu.simplexion.adaptive.ui.common.instruction.UIEvent
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExportObjCClass
 import kotlinx.cinterop.ObjCAction
@@ -27,7 +27,7 @@ class GestureTarget(
     @ObjCAction
     fun viewTapped() {
         if (instruction is OnClick) {
-            instruction.execute(AdaptiveUIEvent(fragment, null))
+            instruction.execute(UIEvent(fragment, null))
         }
     }
 

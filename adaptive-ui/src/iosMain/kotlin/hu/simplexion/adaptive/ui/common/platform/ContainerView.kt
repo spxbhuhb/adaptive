@@ -6,8 +6,8 @@ package hu.simplexion.adaptive.ui.common.platform
 
 import hu.simplexion.adaptive.ui.common.CommonAdapter
 import hu.simplexion.adaptive.ui.common.fragment.layout.AbstractContainer
-import hu.simplexion.adaptive.ui.common.instruction.AdaptiveUIEvent
 import hu.simplexion.adaptive.ui.common.instruction.OnClick
+import hu.simplexion.adaptive.ui.common.instruction.UIEvent
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreGraphics.CGRectMake
@@ -37,7 +37,7 @@ class ContainerView(
 
     override fun touchesEnded(touches: Set<*>, withEvent: UIEvent?) {
         owner.instructions.firstOrNullIfInstance<OnClick>()
-            ?.execute(AdaptiveUIEvent(owner, withEvent))
+            ?.execute(hu.simplexion.adaptive.ui.common.instruction.UIEvent(owner, withEvent))
         super.touchesBegan(touches, withEvent)
     }
 

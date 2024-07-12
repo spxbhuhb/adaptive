@@ -6,7 +6,9 @@ package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.adat.Adat
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.ui.common.fragment.layout.RawBorder
 import hu.simplexion.adaptive.ui.common.fragment.layout.RawCornerRadius
+import hu.simplexion.adaptive.ui.common.fragment.layout.RawDropShadow
 import hu.simplexion.adaptive.ui.common.fragment.layout.RawSurrounding
 import hu.simplexion.adaptive.ui.common.render.decoration
 import hu.simplexion.adaptive.ui.common.render.layout
@@ -106,8 +108,7 @@ class Border(
             it.border = RawSurrounding(this, it.border ?: RawSurrounding.ZERO, it.adapter)
         }
         decoration(subject) {
-            it.borderWidth = RawSurrounding(this, it.borderWidth ?: RawSurrounding.ZERO, it.adapter)
-            it.borderColor = color
+            it.border = RawBorder(this, it.border ?: RawBorder.NONE, it.adapter)
         }
     }
 
@@ -142,6 +143,6 @@ class DropShadow(
     val standardDeviation: DPixel
 ) : AdaptiveInstruction {
     override fun apply(subject: Any) {
-        decoration(subject) { it.dropShadow = this }
+        decoration(subject) { it.dropShadow = RawDropShadow(this, it.adapter) }
     }
 }

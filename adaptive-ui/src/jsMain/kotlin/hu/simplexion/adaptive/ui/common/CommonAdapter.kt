@@ -8,14 +8,14 @@ import hu.simplexion.adaptive.foundation.instruction.Name
 import hu.simplexion.adaptive.resource.defaultResourceEnvironment
 import hu.simplexion.adaptive.ui.common.fragment.layout.AbstractContainer
 import hu.simplexion.adaptive.ui.common.fragment.layout.RawSurrounding
-import hu.simplexion.adaptive.ui.common.instruction.AdaptiveUIEvent
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
+import hu.simplexion.adaptive.ui.common.instruction.UIEvent
 import hu.simplexion.adaptive.ui.common.platform.BrowserEventListener
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.NavSupport
 import hu.simplexion.adaptive.ui.common.platform.ResizeObserver
-import hu.simplexion.adaptive.ui.common.render.DecorationRenderData
+import hu.simplexion.adaptive.ui.common.render.BrowserDecorationApplier
 import hu.simplexion.adaptive.ui.common.render.EventRenderData
 import hu.simplexion.adaptive.ui.common.render.LayoutRenderData
 import hu.simplexion.adaptive.ui.common.render.TextRenderData
@@ -119,7 +119,7 @@ class CommonAdapter(
         }
 
         renderData.layout { it.apply(style) }
-        renderData.decoration { it.apply(style) }
+        BrowserDecorationApplier.applyTo(fragment)
         renderData.text { it.apply(style) }
         renderData.event { it.apply(style, fragment) }
     }
@@ -137,35 +137,12 @@ class CommonAdapter(
             m.end { style.marginRight = it.pxs }
             m.bottom { style.marginBottom = it.pxs }
         }
-        border { b ->
-            style.borderStyle = "solid"
-            b.start { style.borderLeftWidth = it.pxs }
-            b.top { style.borderTopWidth = it.pxs }
-            b.end { style.borderRightWidth = it.pxs }
-            b.bottom { style.borderBottomWidth = it.pxs }
-        }
         zIndex {
             style.zIndex = it.toString()
         }
         fixed {
             style.position = "fixed"
         }
-    }
-
-    fun DecorationRenderData.apply(style: CSSStyleDeclaration) {
-        backgroundColor { style.backgroundColor = it.toHexColor() }
-        backgroundGradient { style.background = "linear-gradient(${it.degree}deg, ${it.start.toHexColor()}, ${it.end.toHexColor()})" }
-
-        borderColor { style.borderColor = it.toHexColor() }
-
-        cornerRadius { br ->
-            br.topLeft { style.borderTopLeftRadius = it.pxs }
-            br.topRight { style.borderTopRightRadius = it.pxs }
-            br.bottomLeft { style.borderBottomLeftRadius = it.pxs }
-            br.bottomRight { style.borderBottomRightRadius = it.pxs }
-        }
-
-        dropShadow { style.filter = "drop-shadow(${it.color.toHexColor()} ${it.offsetX.pxs} ${it.offsetY.pxs} ${it.standardDeviation.pxs})" }
     }
 
     fun TextRenderData.apply(style: CSSStyleDeclaration) {
@@ -208,7 +185,7 @@ class CommonAdapter(
                     y = Double.NaN
                 }
 
-                oc.execute(AdaptiveUIEvent(fragment, it, x, y))
+                oc.execute(UIEvent(fragment, it, x, y))
 
             }.also {
                 onClickListener = it

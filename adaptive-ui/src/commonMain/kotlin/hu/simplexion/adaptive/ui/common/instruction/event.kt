@@ -10,7 +10,20 @@ import hu.simplexion.adaptive.foundation.internal.cleanStateMask
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.render.event
 
-class AdaptiveUIEvent(
+fun onClick(handler: (event: UIEvent) -> Unit) = OnClick(handler)
+
+fun onCursorDown(handler: (event: UIEvent) -> Unit) = OnCursorDown(handler)
+fun onCursorMove(handler: (event: UIEvent) -> Unit) = OnCursorMove(handler)
+fun onCursorUp(handler: (event: UIEvent) -> Unit) = OnCursorUp(handler)
+
+/**
+ * @property   x   The raw [x] coordinate where the event happened, relative to the frame of the
+ *                 fragment that the event handler is attached to.
+ *
+ * @property   y   The raw [y] coordinate where the event happened, relative to the frame of the
+ *                 fragment that the event handler is attached to.
+ */
+class UIEvent(
     val fragment: AbstractCommonFragment<*>,
     val nativeEvent: Any?,
     val x: Double = Double.NaN,
@@ -24,19 +37,49 @@ class AdaptiveUIEvent(
     }
 }
 
-fun onClick(handler : (event : AdaptiveUIEvent) -> Unit) = OnClick(handler)
+@Adat
+abstract class UIEventHandler(
+    val handler: (event: UIEvent) -> Unit
+) : AdaptiveInstruction {
+    fun execute(event: UIEvent) {
+        handler(event)
+        event.patchIfDirty()
+    }
+}
+
 
 @Adat
 class OnClick(
-    private val handler : (event : AdaptiveUIEvent) -> Unit
-) : AdaptiveInstruction {
-
+    handler: (event: UIEvent) -> Unit
+) : UIEventHandler(handler) {
     override fun apply(subject: Any) {
         event(subject) { it.onClick = this }
     }
+}
 
-    fun execute(event : AdaptiveUIEvent) {
-        handler(event)
-        event.patchIfDirty()
+@Adat
+class OnCursorDown(
+    handler: (event: UIEvent) -> Unit
+) : UIEventHandler(handler) {
+    override fun apply(subject: Any) {
+        event(subject) { it.onCursorDown = this }
+    }
+}
+
+@Adat
+class OnCursorMove(
+    handler: (event: UIEvent) -> Unit
+) : UIEventHandler(handler) {
+    override fun apply(subject: Any) {
+        event(subject) { it.onCursorMove = this }
+    }
+}
+
+@Adat
+class OnCursorUp(
+    handler: (event: UIEvent) -> Unit
+) : UIEventHandler(handler) {
+    override fun apply(subject: Any) {
+        event(subject) { it.onCursorUp = this }
     }
 }
