@@ -155,6 +155,10 @@ class CommonAdapter(
         wrap { style.setProperty("text-wrap", if (it) "wrap" else "nowrap") }
         color { style.color = it.toHexColor() }
 
+        if (smallCaps) {
+            style.fontVariant = "small-caps"
+        }
+
         if (noSelect == true) {
             style.setProperty("-webkit-user-select", "none")
             style.setProperty("user-select", "none")

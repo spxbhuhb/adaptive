@@ -4,6 +4,11 @@
 
 package hu.simplexion.adaptive.utility
 
+import kotlin.jvm.JvmName
+import kotlin.math.abs
+import kotlin.math.pow
+import kotlin.math.round
+
 /**
  * Convert an int into a byte array (4 bytes).
  */
@@ -44,3 +49,61 @@ fun ByteArray.toLong(offset: Int = 0): Long {
     }
     return value
 }
+
+const val maxDecimals = 10
+val shifts = Array(maxDecimals) { idx -> 10.0.pow(idx) }
+
+fun format(
+    double: Double,
+    decimals: Int = 1,
+    decimalSeparator: String = ".",
+    thousandSeparator: String? = null,
+    hideZeroDecimals: Boolean = false
+) = double.format(decimals, decimalSeparator, thousandSeparator, hideZeroDecimals)
+
+@JvmName("formatDouble")
+fun Double.format(
+    decimals: Int = 1,
+    decimalSeparator: String = ".",
+    thousandSeparator: String? = null,
+    hideZeroDecimals: Boolean = false
+): String {
+    check(decimals < maxDecimals) { "decimals must to be less than $maxDecimals" }
+
+    return when {
+        isNaN() -> "NaN"
+
+        isInfinite() -> if (this < 0) "-Inf" else "+Inf"
+
+        decimals == 0 -> {
+            round(this).toString().substringBefore('.').withSeparators(".").let {
+                if (it == "-0") "0" else it
+            }
+        }
+
+        else -> {
+            val shifted = abs(round(this * shifts[decimals]))
+            if (shifted > Int.MAX_VALUE) return this.toString()
+
+            val s = shifted.toInt().toString().padStart(decimals + 1, '0')
+            val cutAt = s.length - decimals
+
+            val sign = if (this < 0.0) "-" else ""
+
+            val integralString = s.substring(0, cutAt)
+                .let { if (thousandSeparator != null) it.withSeparators(thousandSeparator) else it }
+
+            val decimalString = s.substring(cutAt).let {
+                if (hideZeroDecimals && it.toLong() == 0L) "" else decimalSeparator + it
+            }
+
+            return sign + integralString + decimalString
+        }
+    }
+}
+
+fun String.withSeparators(separator: String) =
+    reversed()
+        .chunked(3)
+        .joinToString(separator)
+        .reversed()

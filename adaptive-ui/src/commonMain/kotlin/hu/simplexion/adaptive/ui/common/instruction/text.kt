@@ -27,6 +27,8 @@ val underline = TextUnderline()
 
 val bold = FontWeight.BOLD
 
+val smallCaps = TextSmallCaps()
+
 fun letterSpacing(value: Double) = LetterSpacing(value)
 
 fun textColor(value: Int) = TextColor(Color(value.toUInt()))

@@ -24,6 +24,10 @@ operator fun AdaptiveFragment.rangeTo(instruction: AdaptiveInstruction): Adaptiv
     replacedByPlugin("adds the instruction to the instruction parameter value")
 }
 
+//operator fun AdaptiveFragment.rangeTo(instructions: Array<AdaptiveInstruction>): AdaptiveFragment {
+//    replacedByPlugin("adds the instruction to the instruction parameter value")
+//}
+
 operator fun AdaptiveInstruction.rangeTo(instruction: AdaptiveInstruction): Array<AdaptiveInstruction> =
     arrayOf(this, instruction)
 

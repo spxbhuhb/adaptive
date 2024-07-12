@@ -178,6 +178,9 @@ class Padding(
         }
     }
 
+    companion object {
+        val NONE = Padding(null, null, null, null)
+    }
 }
 
 @Adat

@@ -1,6 +1,4 @@
-package hu.simplexion.adaptive.lib.sandbox.ui.bender
-
-import hu.simplexion.adaptive.bender.hits
+import hu.simplexion.adaptive.designer.hits
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.instruction.Name

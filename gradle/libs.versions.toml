@@ -42,6 +42,7 @@ adaptive-lib-exposed = { module = "hu.simplexion.adaptive:adaptive-lib-exposed",
 adaptive-lib-ktor = { module = "hu.simplexion.adaptive:adaptive-lib-ktor", version.ref = "adaptive" }
 adaptive-lib-sandbox = { module = "hu.simplexion.adaptive:adaptive-lib-sandbox", version.ref = "adaptive" }
 adaptive-ui = { module = "hu.simplexion.adaptive:adaptive-ui", version.ref = "adaptive" }
+adaptive-ui-designer = { module = "hu.simplexion.adaptive:adaptive-ui-designer", version.ref = "adaptive" }
 
 android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }

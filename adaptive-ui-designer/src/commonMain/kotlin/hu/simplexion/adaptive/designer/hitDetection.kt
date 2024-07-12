@@ -1,4 +1,4 @@
-package hu.simplexion.adaptive.bender
+package hu.simplexion.adaptive.designer
 
 import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.fragment.layout.AbstractContainer
