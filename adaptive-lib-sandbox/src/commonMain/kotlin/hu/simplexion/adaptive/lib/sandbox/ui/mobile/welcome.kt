@@ -49,7 +49,7 @@ fun welcome() {
                 }
             }
 
-            button("Sign Up", onClick { println("sing up") }) .. maxWidth
+            button("Sign Up") .. maxWidth .. onClick { println("sing up") }
         }
 
         footerLink("Have an account? ", "Sign in", "/")

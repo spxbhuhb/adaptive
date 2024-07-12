@@ -52,8 +52,8 @@ fun header() {
             svg(Res.drawable.menu)
         }
 
-        text("Adaptive", white)
-        text(if (media.isLight) "dark" else "light", white) .. onClick { adapter().switchTheme() } .. noSelect
+        text("Adaptive", textColor(white))
+        text(if (media.isLight) "dark" else "light", textColor(white)) .. onClick { adapter().switchTheme() } .. noSelect
     }
 }
 
@@ -69,7 +69,7 @@ fun content() {
         slot(mainContent) { cards() }
 
         text("adaptive.fun does not use cookies") ..
-            paddingTop { 32.dp } .. paddingBottom { 32.dp } .. AlignSelf.center .. textColor
+            paddingTop { 32.dp } .. paddingBottom { 32.dp } .. AlignSelf.center .. textColor(white)
     }
 }
 

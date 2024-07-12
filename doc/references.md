@@ -13,3 +13,5 @@ Test infrastructure: https://github.com/JetBrains/kotlin/blob/master/compiler/te
 How to set up Xcode: https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-integrate-in-existing-app.html#make-your-cross-platform-application-work-on-ios
 
 Apple Framework: https://kotlinlang.org/docs/apple-framework.html
+
+Compose Resources: https://github.com/JetBrains/compose-multiplatform/blob/master/gradle-plugins/compose/src/main/kotlin/org/jetbrains/compose/resources/ComposeResources.kt

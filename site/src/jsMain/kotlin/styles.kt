@@ -4,7 +4,7 @@ val white = Color(0xffffffu)
 val gray = Color(0x606060u)
 
 val lightColor = Color(0xffffffu)
-val darkColor = color(0x2E2E2Eu)
+val darkColor = Color(0x2E2E2Eu)
 
 val lightBackground = BackgroundColor(lightColor)
 val darkBackground = BackgroundColor(darkColor)

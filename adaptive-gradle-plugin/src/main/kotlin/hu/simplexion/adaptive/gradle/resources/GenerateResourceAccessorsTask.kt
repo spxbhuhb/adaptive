@@ -12,13 +12,7 @@ package hu.simplexion.adaptive.gradle.resources
 import hu.simplexion.adaptive.gradle.resources.utils.IdeaImportTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputFiles
-import org.gradle.api.tasks.Optional
-import org.gradle.api.tasks.OutputDirectory
-import org.gradle.api.tasks.PathSensitive
-import org.gradle.api.tasks.PathSensitivity
-import org.gradle.api.tasks.SkipWhenEmpty
+import org.gradle.api.tasks.*
 import java.io.File
 import java.nio.file.Path
 import kotlin.io.path.relativeTo
@@ -61,13 +55,7 @@ internal abstract class GenerateResourceAccessorsTask : IdeaImportTask() {
             logger.info("Generate accessors for $rootResDir")
 
             //get first level dirs
-            val dirs = rootResDir.listNotHiddenFiles()
-
-            dirs.forEach { f ->
-                if (!f.isDirectory) {
-                    error("${f.name} is not directory! Raw files should be placed in '${rootResDir.name}/files' directory.")
-                }
-            }
+            val dirs = rootResDir.listNotHiddenFiles().filter { it.isDirectory }
 
             //type -> id -> resource item
             val resources: Map<ResourceType, Map<String, List<ResourceItem>>> = dirs
