@@ -6,14 +6,22 @@ package hu.simplexion.adaptive.adat
 
 import hu.simplexion.adaptive.foundation.binding.AdaptivePropertyProvider
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import hu.simplexion.adaptive.foundation.unsupported
 import hu.simplexion.adaptive.utility.pluginGenerated
 import hu.simplexion.adaptive.wireformat.json.JsonWireFormatEncoder
 import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatEncoder
 
 interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
 
+    var adatContext: AdatContext?
+        get() = null
+        set(v) = unsupported(v)
+
     val adatCompanion: AdatCompanion<A>
         get() = pluginGenerated()
+
+    fun isImmutable() =
+        getMetadata().isImmutable
 
     fun description() = Unit
 

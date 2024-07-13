@@ -6,7 +6,6 @@ package hu.simplexion.adaptive.kotlin.common
 
 import hu.simplexion.adaptive.kotlin.AdaptiveOptions
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
-import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrFieldSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
@@ -38,8 +37,6 @@ abstract class AbstractPluginContext(
     val kotlinUnsignedSymbols by lazy { KotlinUnsignedSymbols(irContext) }
     val dateTimeTypes by lazy { DateTimeTypes(irContext) }
     val adaptiveSymbols by lazy { AdaptiveSymbols(irContext) }
-
-    val sensibleCache = mutableMapOf<String, IrExpression?>()
 
     fun ClassId.classSymbol() =
         checkNotNull(irContext.referenceClass(this)) {

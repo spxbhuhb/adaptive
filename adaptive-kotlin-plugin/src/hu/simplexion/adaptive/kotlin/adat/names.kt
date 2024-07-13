@@ -26,6 +26,7 @@ object Strings {
 
 object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_COMPANION = "adatCompanion".name()
+    val ADAT_CONTEXT = "adatContext".name()
     val ADAT_METADATA = "adatMetadata".name()
     val ADAT_WIREFORMAT = "adatWireFormat".name()
     val WIREFORMAT_NAME = "wireFormatName".name()
@@ -68,6 +69,7 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_CLASS = "AdatClass".classId()
     val ADAT_ENTITY = "AdatEntity".classId()
     val ADAT_COMPANION = "AdatCompanion".classId()
+    val ADAT_CONTEXT = "AdatContext".classId()
 
     // TODO move these to KotlinClassIds
     val KOTLIN_ARRAY = "Array".classId { "kotlin".fqName() }

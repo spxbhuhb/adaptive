@@ -5,7 +5,7 @@ package hu.simplexion.adaptive.kotlin.adat.ir.adatclass
 
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatIrBuilder
 import hu.simplexion.adaptive.kotlin.adat.ir.metadata.PropertyData
-import hu.simplexion.adaptive.kotlin.wireformat.sensibleDefault
+import hu.simplexion.adaptive.kotlin.adat.ir.sensible.sensibleDefault
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irDelegatingConstructorCall

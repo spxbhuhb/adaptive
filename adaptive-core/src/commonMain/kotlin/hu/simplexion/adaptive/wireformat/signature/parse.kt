@@ -8,13 +8,19 @@ import hu.simplexion.adaptive.utility.peek
 import hu.simplexion.adaptive.utility.pop
 import hu.simplexion.adaptive.utility.push
 
+/**
+ * @property  short  True when the name is a short signature of a built-in type. False when name is a fully
+ *                   qualified name.
+ */
 data class WireFormatType(
-    var name: String = "",
-    var nullable: Boolean = false,
+    val name: String = "",
+    val short: Boolean = false,
+    val nullable: Boolean = false,
     val generics: MutableList<WireFormatType> = mutableListOf()
 )
 
 enum class TokenType {
+    Primitive,
     Name,
     Open,
     Close,
@@ -72,7 +78,7 @@ fun tokenizeSignature(signature: String): List<Token> {
             }
 
             '?' -> {
-                check(!inName)
+                check(! inName)
                 tokens.add(Token(TokenType.Nullable, ""))
             }
 
@@ -81,7 +87,7 @@ fun tokenizeSignature(signature: String): List<Token> {
                     currentName.append(char)
                 } else {
                     currentName.append(char)
-                    tokens.add(Token(TokenType.Name, currentName.toString()))
+                    tokens.add(Token(TokenType.Primitive, currentName.toString()))
                     currentName.clear()
                 }
             }
@@ -91,15 +97,16 @@ fun tokenizeSignature(signature: String): List<Token> {
     return tokens
 }
 
-fun parseSignature(signature: String): WireFormatType {
+fun parseTypeSignature(signature: String): WireFormatType {
     val stack = mutableListOf(WireFormatType())
 
     for (token in tokenizeSignature(signature)) {
         when (token.type) {
-            TokenType.Name -> stack.peek().generics += (WireFormatType(token.value))
+            TokenType.Primitive -> stack.peek().generics += WireFormatType(token.value, short = true)
+            TokenType.Name -> stack.peek().generics += WireFormatType(token.value)
             TokenType.Open -> stack.push(stack.peek().generics.last())
             TokenType.Close -> stack.pop()
-            TokenType.Nullable -> stack.peek().nullable = true
+            TokenType.Nullable -> stack.push(stack.pop().copy(nullable = true))
         }
     }
 

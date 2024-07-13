@@ -81,6 +81,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                     Names.HASHCODE,
                     Names.TO_STRING,
                     Names.ADAT_COMPANION,
+                    Names.ADAT_CONTEXT,
                     SpecialNames.INIT
                 )
             }
@@ -140,6 +141,19 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                         ClassIds.ADAT_COMPANION.constructClassLikeType(arrayOf(context.adatClassType), false),
                         isVal = true,
                         hasBackingField = false
+                    ).symbol
+                )
+            }
+
+            Names.ADAT_CONTEXT -> {
+                listOf(
+                    createMemberProperty(
+                        context !!.owner,
+                        AdatPluginKey,
+                        Names.ADAT_CONTEXT,
+                        ClassIds.ADAT_CONTEXT.constructClassLikeType(emptyArray(), true),
+                        isVal = false,
+                        hasBackingField = true
                     ).symbol
                 )
             }

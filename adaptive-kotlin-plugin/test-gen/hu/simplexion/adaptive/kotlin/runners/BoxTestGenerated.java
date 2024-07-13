@@ -84,6 +84,22 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Nested
+    @TestMetadata("testData/box/adat/immutable")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Immutable {
+      @Test
+      public void testAllFilesPresentInImmutable() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adat/immutable"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+      }
+
+      @Test
+      @TestMetadata("basic.kt")
+      public void testBasic() {
+        runTest("testData/box/adat/immutable/basic.kt");
+      }
+    }
+
+    @Nested
     @TestMetadata("testData/box/adat/polymorphic")
     @TestDataPath("$PROJECT_ROOT")
     public class Polymorphic {

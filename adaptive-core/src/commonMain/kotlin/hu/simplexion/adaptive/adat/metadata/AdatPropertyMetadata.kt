@@ -14,11 +14,15 @@ import hu.simplexion.adaptive.wireformat.builtin.ListWireFormat
 data class AdatPropertyMetadata(
     val name: String,
     val index: Int,
+    val flags: Int,
     val signature: String,
     val descriptors: List<AdatDescriptorMetadata> = emptyList(),
 ) {
 
     companion object : WireFormat<AdatPropertyMetadata> {
+
+        const val ADAT_PROPERTY_FLAG_VAL = 1
+        const val ADAT_PROPERTY_FLAG_IMMUTABLE = 2
 
         override val wireFormatName: String
             get() = "hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata"
@@ -27,8 +31,9 @@ data class AdatPropertyMetadata(
             encoder
                 .string(1, "n", value.name)
                 .int(2, "i", value.index)
-                .string(3, "s", value.signature)
-                .instance(3, "d", value.descriptors, ListWireFormat(AdatDescriptorMetadata))
+                .int(3, "f", value.flags)
+                .string(4, "s", value.signature)
+                .instance(5, "d", value.descriptors, ListWireFormat(AdatDescriptorMetadata))
             return encoder
         }
 
@@ -38,8 +43,9 @@ data class AdatPropertyMetadata(
             return AdatPropertyMetadata(
                 decoder.string(1, "n"),
                 decoder.int(2, "i"),
-                decoder.string(3, "s"),
-                decoder.instance(4, "d", ListWireFormat(AdatDescriptorMetadata)) as List<AdatDescriptorMetadata>,
+                decoder.int(3, "f"),
+                decoder.string(4, "s"),
+                decoder.instance(5, "d", ListWireFormat(AdatDescriptorMetadata)) as List<AdatDescriptorMetadata>,
             )
         }
 

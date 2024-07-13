@@ -45,6 +45,7 @@ What **IS** generated:
 
 * properties
   * `adatCompanion`
+  * `adatContext`
 * functions:
   * `genGetValue`
   * `genGetValue`

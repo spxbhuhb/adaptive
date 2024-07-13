@@ -1,4 +1,4 @@
-package hu.simplexion.adaptive.kotlin.wireformat
+package hu.simplexion.adaptive.kotlin.adat.ir.sensible
 
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatIrBuilder
 import hu.simplexion.adaptive.kotlin.common.AbstractIrBuilder
@@ -6,7 +6,7 @@ import hu.simplexion.adaptive.kotlin.common.AbstractPluginContext
 import hu.simplexion.adaptive.kotlin.common.AdaptiveFqNames
 import hu.simplexion.adaptive.kotlin.common.asClassId
 import hu.simplexion.adaptive.wireformat.signature.WireFormatType
-import hu.simplexion.adaptive.wireformat.signature.parseSignature
+import hu.simplexion.adaptive.wireformat.signature.parseTypeSignature
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.IrAttributeContainer
 import org.jetbrains.kotlin.ir.declarations.IrClass
@@ -35,7 +35,7 @@ fun AdatIrBuilder.sensibleDefault(signature: String): IrExpression? {
     val cached = cache.getOrDefault(signature, MISSING)
     if (cached !== MISSING) return cached?.deepCopyWithSymbols()
 
-    val type = parseSignature(signature)
+    val type = parseTypeSignature(signature)
     if (type.nullable) {
         cache[signature] = null
         return null

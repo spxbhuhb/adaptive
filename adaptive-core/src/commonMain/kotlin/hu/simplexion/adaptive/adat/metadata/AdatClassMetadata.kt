@@ -17,8 +17,12 @@ import hu.simplexion.adaptive.wireformat.fromJson
 data class AdatClassMetadata<T>(
     val version: Int = 1,
     val name: String,
+    val flags: Int,
     val properties: List<AdatPropertyMetadata>
 ) {
+
+    val isImmutable
+        get() = (flags and ADAT_CLASS_FLAG_IMMUTABLE) != 0
 
     fun generateDescriptors(): List<AdatDescriptorImpl> {
         val result = mutableListOf<AdatDescriptorImpl>()
@@ -34,6 +38,8 @@ data class AdatClassMetadata<T>(
 
     companion object : WireFormat<AdatClassMetadata<*>> {
 
+        const val ADAT_CLASS_FLAG_IMMUTABLE = 1
+
         override val wireFormatName: String
             get() = "hu.simplexion.adaptive.adat.metadata.AdatClassMetadata"
 
@@ -41,7 +47,8 @@ data class AdatClassMetadata<T>(
             encoder
                 .int(1, "v", value.version)
                 .string(2, "n", value.name)
-                .instance(3, "p", value.properties, ListWireFormat(AdatPropertyMetadata))
+                .int(3, "f", value.flags)
+                .instance(4, "p", value.properties, ListWireFormat(AdatPropertyMetadata))
             return encoder
         }
 
@@ -51,7 +58,8 @@ data class AdatClassMetadata<T>(
             return AdatClassMetadata<Any?>(
                 decoder.int(1, "v"),
                 decoder.string(2, "n"),
-                decoder.instance(3, "p", ListWireFormat(AdatPropertyMetadata)) as List<AdatPropertyMetadata>,
+                decoder.int(3, "f"),
+                decoder.instance(4, "p", ListWireFormat(AdatPropertyMetadata)) as List<AdatPropertyMetadata>,
             )
         }
 

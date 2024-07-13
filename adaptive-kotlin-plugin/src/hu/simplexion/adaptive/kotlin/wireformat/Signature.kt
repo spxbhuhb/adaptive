@@ -81,11 +81,15 @@ object Signature {
     fun argumentSignature(irTypeArgument: IrTypeArgument): String {
         if (irTypeArgument !is IrType) return "*"
 
-        if (irTypeArgument.classFqName !!.startsWith(FqNames.KOTLIN_COLLECTIONS_PACKAGE)) {
+        val classFqName = irTypeArgument.classFqName ?: return "*"
+
+        if (classFqName.asString().startsWith("kotlin.collections")) {
             return typeSignature(irTypeArgument)
         }
 
-        if (! irTypeArgument.classOrFail.owner.isFinalClass) return "*"
+        val irClass = irTypeArgument.classOrNull ?: return "*"
+
+        if (! irClass.owner.isFinalClass) return "*"
 
         return typeSignature(irTypeArgument)
     }

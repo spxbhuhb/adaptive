@@ -104,3 +104,16 @@ fun manualImplementation(vararg arguments: Any?): Nothing {
         """
     )
 }
+
+/**
+ * Call to this function indicates that the function is unsupported in the given context.
+ */
+fun unsupported(vararg arguments: Any?): Nothing {
+    // TODO add a better description for `unsupported`
+    ops(
+        "unsupported",
+        """
+            unsupported operation typically means a missing override somewhere
+        """
+    )
+}

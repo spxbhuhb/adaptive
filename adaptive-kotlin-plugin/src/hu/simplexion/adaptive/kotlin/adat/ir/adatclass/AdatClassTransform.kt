@@ -36,6 +36,7 @@ class AdatClassTransform(
     override fun visitProperty(declaration: IrProperty) {
         when (declaration.name) {
             Names.ADAT_COMPANION -> adatCompanion(adatClass, declaration)
+            Names.ADAT_CONTEXT -> adatContext(declaration)
         }
     }
 

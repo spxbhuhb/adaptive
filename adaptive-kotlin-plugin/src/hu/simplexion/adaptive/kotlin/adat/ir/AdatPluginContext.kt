@@ -6,20 +6,26 @@ package hu.simplexion.adaptive.kotlin.adat.ir
 import hu.simplexion.adaptive.kotlin.AdaptiveOptions
 import hu.simplexion.adaptive.kotlin.adat.CallableIds
 import hu.simplexion.adaptive.kotlin.adat.ClassIds
+import hu.simplexion.adaptive.kotlin.adat.ir.immutable.ImmutableCache
 import hu.simplexion.adaptive.kotlin.common.AbstractPluginContext
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.builtins.UnsignedArrayType
 import org.jetbrains.kotlin.builtins.UnsignedType
+import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.types.makeNullable
-import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.getSimpleFunction
 
 class AdatPluginContext(
     irContext: IrPluginContext,
     options: AdaptiveOptions
 ) : AbstractPluginContext(irContext, options) {
+
+    val sensibleCache = mutableMapOf<String, IrExpression?>()
+
+    val shortImmutableCache = ImmutableCache(true)
+    val qualifiedImmutableCache = ImmutableCache(false)
 
     val adatClass = ClassIds.ADAT_CLASS.classSymbol()
     val adatCompanion = ClassIds.ADAT_COMPANION.classSymbol()
@@ -34,7 +40,6 @@ class AdatPluginContext(
     val exposedColumn = ClassIds.COLUMN.symbolOrNull()
 
     val commonUuid = ClassIds.COMMON_UUID.classSymbol()
-    val commonUuidPrimary = commonUuid.constructors.first { it.owner.valueParameters.isEmpty() }
 
     val arrayGet = checkNotNull(irContext.irBuiltIns.arrayClass.getSimpleFunction("get"))
 

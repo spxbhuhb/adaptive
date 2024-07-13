@@ -8,7 +8,9 @@ import hu.simplexion.adaptive.adat.metadata.AdatDescriptorMetadata
 import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata
 import hu.simplexion.adaptive.kotlin.adat.FqNames
 import hu.simplexion.adaptive.kotlin.adat.Names
+import hu.simplexion.adaptive.kotlin.adat.ir.AdatIrBuilder
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatPluginContext
+import hu.simplexion.adaptive.kotlin.adat.ir.immutable.isImmutable
 import hu.simplexion.adaptive.kotlin.wireformat.Signature
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrClass
@@ -23,9 +25,9 @@ import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
 
 class MetadataVisitor(
-    val pluginContext: AdatPluginContext,
+    override val pluginContext: AdatPluginContext,
     val adatClass: IrClass
-) : IrElementVisitorVoid {
+) : IrElementVisitorVoid, AdatIrBuilder {
 
     val properties = mutableListOf<PropertyData>()
 
@@ -42,16 +44,31 @@ class MetadataVisitor(
 
     override fun visitProperty(declaration: IrProperty) {
         if (declaration.name == Names.ADAT_COMPANION) return
+        if (declaration.name == Names.ADAT_CONTEXT) return
         if (declaration.backingField == null) return
+
+        val signature = Signature.typeSignature(declaration.getter !!.returnType)
 
         properties += PropertyData(
             declaration,
             AdatPropertyMetadata(
                 declaration.name.identifier,
                 propertyIndex ++,
-                Signature.typeSignature(declaration.getter !!.returnType)
+                calculateFlags(declaration, signature),
+                signature
             )
         )
+    }
+
+    fun calculateFlags(declaration: IrProperty, signature: String): Int {
+        var flags = 0
+
+        val isVal = ! declaration.isVar
+
+        if (isVal) flags = flags or AdatPropertyMetadata.ADAT_PROPERTY_FLAG_VAL
+        if (isVal && isImmutable(signature)) flags = flags or AdatPropertyMetadata.ADAT_PROPERTY_FLAG_IMMUTABLE
+
+        return flags
     }
 
     override fun visitFunction(declaration: IrFunction) {

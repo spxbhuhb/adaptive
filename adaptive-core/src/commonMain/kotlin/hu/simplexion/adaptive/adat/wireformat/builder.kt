@@ -10,10 +10,10 @@ import hu.simplexion.adaptive.wireformat.WireFormatRegistry
 import hu.simplexion.adaptive.wireformat.builtin.*
 import hu.simplexion.adaptive.wireformat.signature.WireFormatType
 import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
-import hu.simplexion.adaptive.wireformat.signature.parseSignature
+import hu.simplexion.adaptive.wireformat.signature.parseTypeSignature
 
 fun AdatPropertyMetadata.toPropertyWireFormat(): AdatPropertyWireFormat<*> =
-    AdatPropertyWireFormat(this, parseSignature(signature).toWireFormat())
+    AdatPropertyWireFormat(this, parseTypeSignature(signature).toWireFormat())
 
 internal fun WireFormatType.toWireFormat(): WireFormat<*> =
     when {
