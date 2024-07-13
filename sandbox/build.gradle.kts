@@ -50,7 +50,6 @@ kotlin {
             dependencies {
                 implementation(libs.adaptive.core)
                 implementation(libs.adaptive.ui)
-                implementation(libs.adaptive.ui.designer)
                 implementation(libs.adaptive.lib.email)
                 implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.lib.auth)
@@ -63,6 +62,10 @@ kotlin {
                 implementation(libs.adaptive.lib.exposed)
                 implementation(libs.h2database)
             }
+        }
+
+        jsMain.dependencies {
+            implementation(libs.adaptive.ui.designer)
         }
     }
 

@@ -21,9 +21,6 @@ import java.time.format.DateTimeFormatter
 import kotlin.io.path.createDirectories
 import kotlin.io.path.exists
 
-/**
- * @property  sensibleCache  Cache of `signature` - `new instance` pairs.
- */
 abstract class AbstractPluginContext(
     val irContext: IrPluginContext,
     val options: AdaptiveOptions

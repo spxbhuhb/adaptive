@@ -50,7 +50,7 @@ fun AdatIrBuilder.sensibleDefault(signature: String): IrExpression? {
 
         if (length > 3) {
             when {
-                name == "kotlin.Array" -> array(name, generics)
+                name == "kotlin.Array" -> array(generics)
                 name.startsWith("kotlin.collections.") -> collections(name, generics)
                 name.startsWith("kotlinx.datetime.") || name.startsWith("kotlin.time") -> datetime(name)
                 else -> instance(name, generics)
@@ -226,7 +226,7 @@ fun enum(owner: IrClass): IrExpression =
 private fun AbstractIrBuilder.newEmptyArray(typeArgument: IrType) =
     irCall(pluginContext.kotlinSymbols.emptyArray, irBuiltIns.arrayClass, listOf(typeArgument))
 
-private fun AbstractIrBuilder.array(name: String, generics: List<IrType>): IrCall {
+private fun AbstractIrBuilder.array(generics: List<IrType>): IrCall {
     val symbols = pluginContext.kotlinSymbols
     return irCall(symbols.emptyArray, symbols.array, generics)
 }
