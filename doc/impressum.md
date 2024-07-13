@@ -67,11 +67,14 @@ We'll see how it turns out. I've put in the work, and I'll continue to do so in 
 * [H2](https://www.h2database.com/) (by multiple contributors, MPL 2.0 or EPL 1.0)
 * [SubEtha SMTP](https://github.com/voodoodyne/subethasmtp) (by SubEthaMail.org, Apache 2.0)
 
-**Copied code from**
+**Copied from**
 
 * [Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform) (by JetBrains, Apache 2.0)
     * parts of the resources module
     * the resources part of the Gradle plugin
+* bcrypt (by Damien Miller, public domain)
+* [Rails](https://github.com/rails/rails)
+  * contributing guidelines
 
 **Inspiration**
 
