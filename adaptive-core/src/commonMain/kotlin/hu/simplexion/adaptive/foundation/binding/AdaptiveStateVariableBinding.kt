@@ -4,6 +4,7 @@
 package hu.simplexion.adaptive.foundation.binding
 
 import hu.simplexion.adaptive.adat.AdatClass
+import hu.simplexion.adaptive.adat.absolutePath
 import hu.simplexion.adaptive.adat.store.CopyStore
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 
@@ -49,7 +50,8 @@ class AdaptiveStateVariableBinding<VT>(
 
             when {
                 provider is AdatClass<*> && provider.adatContext?.store is CopyStore<*> -> {
-                    (provider.adatContext?.store as CopyStore<*>).setValue(path.toList(), value)
+                    val absolutePath = provider.absolutePath() + path
+                    (provider.adatContext?.store as CopyStore<*>).setValue(absolutePath, value)
                 }
 
                 provider is AdaptivePropertyProvider -> {

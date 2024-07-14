@@ -199,6 +199,9 @@ class Margin(
         }
     }
 
+    companion object {
+        val NONE = Margin(null, null, null, null)
+    }
 }
 
 enum class Alignment {

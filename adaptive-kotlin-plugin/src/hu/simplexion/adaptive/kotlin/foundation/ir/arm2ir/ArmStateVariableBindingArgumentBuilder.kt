@@ -57,7 +57,7 @@ class ArmStateVariableBindingArgumentBuilder(
                     type,
                     irBuiltIns.stringType
                 ).apply {
-                    elements += argument.path.map { irConst(it) }
+                    elements += argument.path.reversed().map { irConst(it) }
                 }
             )
         }

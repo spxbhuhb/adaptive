@@ -27,10 +27,15 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
     fun description() = Unit
 
     fun validate() {
-        if (adatContext == null) {
-            adatContext = AdatContext(null)
+        val context = adatContext
+        if (context == null) {
+            adatContext = AdatContext(
+                null, null, null,
+                InstanceValidationResult()
+            )
+        } else {
+            context.validationResult = InstanceValidationResult()
         }
-        adatContext !!.validationResult = InstanceValidationResult()
     }
 
     fun copy(): A {
@@ -75,18 +80,18 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
         return hashCode
     }
 
-    fun toJson() : ByteArray =
+    fun toJson(): ByteArray =
         @Suppress("UNCHECKED_CAST")
         JsonWireFormatEncoder().rawInstance(this as A, adatCompanion.adatWireFormat).pack()
 
-    fun toProto() : ByteArray =
+    fun toProto(): ByteArray =
         @Suppress("UNCHECKED_CAST")
         ProtoWireFormatEncoder().rawInstance(this as A, adatCompanion.adatWireFormat).pack()
 
-    fun adatIndexOf(name : String) : Int =
+    fun adatIndexOf(name: String): Int =
         getMetadata().properties.first { it.name == name }.index
 
-    fun getValue(name : String) =
+    fun getValue(name: String) =
         genGetValue(adatIndexOf(name))
 
     fun getValue(index: Int): Any? =
@@ -96,11 +101,11 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
         pluginGenerated()
     }
 
-    fun setValue(name : String, value: Any?) {
+    fun setValue(name: String, value: Any?) {
         genSetValue(adatIndexOf(name), value)
     }
 
-    fun setValue(index : Int, value: Any?) {
+    fun setValue(index: Int, value: Any?) {
         genSetValue(index, value)
     }
 

@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
+import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
@@ -67,6 +68,7 @@ class MetadataVisitor(
 
         if (isVal) flags = flags or AdatPropertyMetadata.VAL
         if (isImmutable(signature)) flags = flags or AdatPropertyMetadata.IMMUTABLE_VALUE
+        if (declaration.backingField?.type?.isSubtypeOfClass(pluginContext.adatClass) == true) flags = flags or AdatPropertyMetadata.ADAT_CLASS
 
         return flags
     }

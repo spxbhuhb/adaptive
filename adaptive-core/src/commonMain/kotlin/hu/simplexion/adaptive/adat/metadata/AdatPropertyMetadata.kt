@@ -63,10 +63,17 @@ data class AdatPropertyMetadata(
     val hasImmutableValue
         get() = (flags and IMMUTABLE_VALUE) != 0
 
+    /**
+     * True when the property value is an adat class.
+     */
+    val isAdatClass
+        get() = (flags and ADAT_CLASS) != 0
+
     companion object : WireFormat<AdatPropertyMetadata> {
 
         const val VAL = 1
         const val IMMUTABLE_VALUE = 2
+        const val ADAT_CLASS = 4
 
         override val wireFormatName: String
             get() = "hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata"

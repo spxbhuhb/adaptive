@@ -20,6 +20,12 @@ private class T(
     val someInt: Int
 ) : AdatClass<T>
 
+@Adat
+private class M(
+    val someInt: Int,
+    val t: T
+) : AdatClass<M>
+
 @Adaptive
 private fun t(
     vararg instructions: AdaptiveInstruction,
@@ -29,18 +35,26 @@ private fun t(
     T1(binding !!.value)
 }
 
-val tag = name("t")
+@Adaptive
+private fun m1(m: M) {
+    t(tag) { m.t.someInt }
+}
+
+@Adaptive
+private fun m2(t: T) {
+    t(tag) { t.someInt }
+}
+
+private val tag = name("t")
 
 class CopyStoreTest {
 
     @Test
     fun basic() {
         val adapter = test {
-            val value = copyStore(T(12))
+            val value = copyStore { T(12) }
             t(tag) { value.someInt }
         }
-
-        adapter.printTrace = true
 
         val root = adapter.rootFragment
         val t = root.first(true) { tag in it.instructions }
@@ -50,8 +64,7 @@ class CopyStoreTest {
         assertEquals(T(12), value)
         assertIs<T>(value)
 
-        @Suppress("UNCHECKED_CAST")
-        val store = value.adatContext?.store as? CopyStore<T>
+        val store = value.adatContext?.store as? CopyStore<*>
         assertNotNull(store)
 
         assertEquals(12, t1.p0)
@@ -64,5 +77,62 @@ class CopyStoreTest {
         val binding = t.state.filterIsInstance<AdaptiveStateVariableBinding<*>>().single()
         binding.setValue(45, false)
         assertEquals(45, t1.p0)
+    }
+
+    @Test
+    fun multiLevel1() {
+        val adapter = test {
+            val value = copyStore { M(12, T(23)) }
+
+            m1(value)
+        }
+
+        val root = adapter.rootFragment
+        val t = root.first(true) { tag in it.instructions }
+        val t1 = root.first<AdaptiveT1>(true)
+        val value = root.state[0]
+
+        assertIs<M>(value)
+
+        val store = value.adatContext?.store as? CopyStore<*>
+        assertNotNull(store)
+
+        assertEquals(23, t1.p0)
+        store.setValue(listOf("t", "someInt"), 34)
+        assertEquals(34, t1.p0)
+
+        val binding = t.state.filterIsInstance<AdaptiveStateVariableBinding<*>>().single()
+        binding.setValue(45, false)
+        assertEquals(45, t1.p0)
+    }
+
+    @Test
+    fun multiLevel2() {
+        val adapter = test {
+            val value = copyStore { M(12, T(23)) }
+
+            m2(value.t)
+        }
+
+        adapter.printTrace = true
+
+        val root = adapter.rootFragment
+        val t = root.first(true) { tag in it.instructions }
+        val t1 = root.first<AdaptiveT1>(true)
+        val value = root.state[0]
+
+        assertIs<M>(value)
+
+        val store = value.adatContext?.store as? CopyStore<*>
+        assertNotNull(store)
+
+        assertEquals(23, t1.p0)
+        store.setValue(listOf("t", "someInt"), 34)
+        assertEquals(34, t1.p0)
+
+        val binding = t.state.filterIsInstance<AdaptiveStateVariableBinding<*>>().single()
+        binding.setValue(45, false)
+        assertEquals(45, t1.p0)
+
     }
 }

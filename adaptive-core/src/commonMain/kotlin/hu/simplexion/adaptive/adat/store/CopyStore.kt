@@ -1,9 +1,6 @@
 package hu.simplexion.adaptive.adat.store
 
-import hu.simplexion.adaptive.adat.AdatChange
-import hu.simplexion.adaptive.adat.AdatClass
-import hu.simplexion.adaptive.adat.AdatContext
-import hu.simplexion.adaptive.adat.deepCopy
+import hu.simplexion.adaptive.adat.*
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import hu.simplexion.adaptive.foundation.producer.AdaptiveProducer
 import hu.simplexion.adaptive.foundation.producer.Producer
@@ -41,19 +38,15 @@ class CopyStore<A : AdatClass<A>>(
     initialValue: A
 ) : AdatStore(), AdaptiveProducer<A> {
 
-    override var latestValue: A? = makeCopy(initialValue, null, null)
-
+    override var latestValue: A? = makeCopy(initialValue, null)
 
     fun setValue(path: List<String>, value: Any?) {
-        latestValue = latestValue?.let { makeCopy(it, AdatChange(path, value), it.adatContext) }
+        latestValue = latestValue?.let { makeCopy(it, AdatChange(path, value)) }
         binding.targetFragment.setDirty(binding.indexInTargetState, true)
     }
 
-    fun makeCopy(value: A, change: AdatChange?, context: AdatContext?) =
-        value.deepCopy(change).also {
-            it.adatContext = context ?: AdatContext(store = this)
-            it.validate()
-        }
+    fun makeCopy(value: A, change: AdatChange?) =
+        value.deepCopy(change).also { it.applyContext(AdatContext(null, null, this, null)) }
 
     override fun start() {
         // copy store is event-driven

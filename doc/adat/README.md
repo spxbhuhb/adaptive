@@ -104,6 +104,7 @@ Metadata of the class above:
     * `1` - the property is `val` without getter
     * `2` - the property value is an immutable class or an immutable primitive
     * `3` - `1 + 2`
+    * `4` - the property value is an adat class
 * i = index of the property
 * d = description (constraints and additional information, see [Description](#description)).
 

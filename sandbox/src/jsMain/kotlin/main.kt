@@ -68,7 +68,9 @@ fun main() {
                     route { hitDetect() }
                     route { instructionEditor() }
 
-                    text("Click on the left to load a demo!")
+                    instructionEditor()
+
+//                    text("Click on the left to load a demo!")
                 }
             }
         }
