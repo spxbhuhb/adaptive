@@ -114,8 +114,6 @@ class CopyStoreTest {
             m2(value.t)
         }
 
-        adapter.printTrace = true
-
         val root = adapter.rootFragment
         val t = root.first(true) { tag in it.instructions }
         val t1 = root.first<AdaptiveT1>(true)
@@ -133,6 +131,5 @@ class CopyStoreTest {
         val binding = t.state.filterIsInstance<AdaptiveStateVariableBinding<*>>().single()
         binding.setValue(45, false)
         assertEquals(45, t1.p0)
-
     }
 }

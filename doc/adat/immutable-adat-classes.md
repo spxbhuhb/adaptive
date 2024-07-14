@@ -56,3 +56,47 @@ fun someEditor() {
     input { someAdat.s2 }
 }
 ```
+
+### Nested instances
+
+The copy store supports nested instances, so you can build complex data structures.
+
+> [!NOTE]
+>
+> As of now, copy store **DOES NOT** support nested instances stored in lists, maps and sets.
+> I'll add that in the near future as well.
+>
+
+```kotlin
+import hu.simplexion.adaptive.adat.Adat
+import hu.simplexion.adaptive.foundation.Adaptive
+
+@Adat
+class SomeAdat(
+    val s1: String,
+    val soa: SomeOtherAdat
+)
+
+@Adat
+class SomeOtherAdat(
+    val i1: Int,
+    val yaa: YetAnotherAdat
+)
+
+@Adat
+class YetAnotherAdat(
+    val s2: String
+)
+
+@Adaptive
+fun someEditor() {
+    val someAdat = copyStore { SomeAdat("", SomeOtherAdat(12, YetAnotherAdat(true))) }
+
+    yetAnotherEditor(someAdat.soa.yaa)
+}
+
+@Adaptive
+fun yetAnotherEditor(yaa : YetAnotherAdat) {
+    input { yaa.s2 }
+}
+```
