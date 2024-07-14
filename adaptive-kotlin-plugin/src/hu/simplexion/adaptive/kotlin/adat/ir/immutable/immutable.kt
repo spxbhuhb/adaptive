@@ -1,5 +1,6 @@
 package hu.simplexion.adaptive.kotlin.adat.ir.immutable
 
+import hu.simplexion.adaptive.kotlin.adat.Names
 import hu.simplexion.adaptive.kotlin.adat.ir.AdatIrBuilder
 import hu.simplexion.adaptive.kotlin.common.asClassId
 import hu.simplexion.adaptive.kotlin.common.isSubclassOf
@@ -55,7 +56,7 @@ private fun AdatIrBuilder.instance(name: String, generics: List<WireFormatType>)
     checkNotNull(classSymbol) { "missing class: $name" }
 
     val irClass = classSymbol.owner
-
+    // TODO open class
     val immutable = when {
 
         // FIXME are functions immutable?
@@ -80,6 +81,10 @@ fun AdatIrBuilder.properties(irClass: IrClass): Boolean {
 
     for (declaration in irClass.declarations) {
         if (declaration !is IrProperty) continue
+
+        val name = declaration.name
+        if (name == Names.ADAT_CONTEXT || name == Names.ADAT_COMPANION) continue
+
         if (declaration.isVar) return false
         if (! declaration.isSimpleProperty) return false
 

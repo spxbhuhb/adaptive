@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.lib.sandbox.ui.mobile
 
+import hu.simplexion.adaptive.adat.store.copyStore
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import hu.simplexion.adaptive.foundation.instruction.instructionsOf
@@ -15,9 +16,22 @@ import sandbox.lib.Res
 import sandbox.lib.check
 
 @Adaptive
-fun welcome() {
-    val signUp = SignUp()
+fun welcome(withFeedback: Boolean = false) {
+    val signUp = copyStore { SignUp() }
 
+    if (withFeedback) {
+        row {
+            gapWidth { 24.dp }
+            mobileExample { welcomeInner(signUp) }
+            feedback(signUp)
+        }
+    } else {
+        welcomeInner(signUp)
+    }
+}
+
+@Adaptive
+fun welcomeInner(signUp: SignUp) {
     grid {
         colTemplate(1.fr)
         rowTemplate(213.dp, 78.dp, 1.fr, 81.dp)
@@ -54,7 +68,6 @@ fun welcome() {
 
         footerLink("Have an account? ", "Sign in", "/")
     }
-
 }
 
 @Adaptive
@@ -137,3 +150,14 @@ var inactiveCheckBox = instructionsOf(
     cornerRadius(10.dp),
     border(purple, 1.dp)
 )
+
+@Adaptive
+fun feedback(signUp: SignUp) {
+    column {
+        text("name: ${signUp.name}")
+        text("email: ${signUp.email}")
+        text("password: ${signUp.password}")
+        text("verification: ${signUp.verification}")
+        text("agreement: ${signUp.agreement}")
+    }
+}

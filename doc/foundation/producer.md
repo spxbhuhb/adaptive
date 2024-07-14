@@ -2,11 +2,12 @@
 
 Producers provide value(s) for a state variable, typically from repeating or outside sources.
 
-| Producer   | Use case                                                                 |
-|------------|--------------------------------------------------------------------------|
-| `fetch`    | Call a suspend function, set the value when it returns.                  |
-| `poll`     | Call a suspend function periodically, set the value after each call.     |
-| `periodic` | Call a non-suspend function periodically, set the value after each call. |
+| Producer    | Use case                                                                 |
+|-------------|--------------------------------------------------------------------------|
+| `fetch`     | Call a suspend function, set the value when it returns.                  |
+| `poll`      | Call a suspend function periodically, set the value after each call.     |
+| `periodic`  | Call a non-suspend function periodically, set the value after each call. |
+| `copyStore` | For [Immutable Adat Classes](../adat/immutable-adat-classes.md).         |
 
 > [!IMPORTANT]
 > 

@@ -35,11 +35,11 @@ class TestProvider : AdaptivePropertyProvider {
         }
     }
 
-    override fun setValue(path: Array<String>, value: Any?, fromBinding: AdaptiveStateVariableBinding<*>) {
+    override fun setValue(path: Array<String>, value: Any?) {
         when {
             path[0] == "i" -> values[0] = value
         }
-        bindings.forEach { if (it != fromBinding && it.path.contentEquals(path)) it.setValue(path, false) }
+        bindings.forEach { it.setValue(path, false) }
     }
 
     override fun toString(): String {
@@ -121,6 +121,12 @@ fun box() : String {
         TraceEvent("AdaptiveT1", 5, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [12]"),
         TraceEvent("AdaptiveT1", 5, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [23]"),
         TraceEvent("AdaptiveT1", 5, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [23]"),
+        TraceEvent("AdaptiveT1", 5, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [23]"),
+        TraceEvent("AdaptivePropertyAccessor", 4, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateVariableBinding(3, 0, 0, 4, 0, [i], AdaptivePropertyMetadata(kotlin.Int))]"),
+        TraceEvent("AdaptivePropertyAccessor", 4, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000001 state: [AdaptiveStateVariableBinding(3, 0, 0, 4, 0, [i], AdaptivePropertyMetadata(kotlin.Int))]"),
+        TraceEvent("AdaptiveT1", 5, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [23]"),
+        TraceEvent("AdaptiveT1", 5, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [23]"),
+        TraceEvent("AdaptiveT1", 5, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [23]"),
         TraceEvent("AdaptiveT1", 5, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [23]"),
         TraceEvent("AdaptivePropertyAccessor", 4, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateVariableBinding(3, 0, 0, 4, 0, [i], AdaptivePropertyMetadata(kotlin.Int))]"),
         TraceEvent("AdaptivePropertyAccessor", 4, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000001 state: [AdaptiveStateVariableBinding(3, 0, 0, 4, 0, [i], AdaptivePropertyMetadata(kotlin.Int))]"),

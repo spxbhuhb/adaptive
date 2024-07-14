@@ -14,10 +14,16 @@
 
 ## Documentation
 
-* Foundation
+* [Foundation](tutorials/foundation.md)
     * [Instructions](foundation/instructions.md)
     * [Producers](foundation/producer.md)
     * [Expect fragments](foundation/expect.md)
+
+
+* [Adaptive Data Classes](adat/README.md)
+  * [Immutable Adat Classes](adat/immutable-adat-classes.md)
+  * [Integration with Exposed](adat/exposed.md)
+
 
 * [UI](ui/README.md)
 
@@ -25,8 +31,6 @@
     * [Settings](server/settings.md)
 
 * [Resources](resource/README.md)
-
-* [Adat](adat/README.md)
 
 * [Service](service/README.md)
 

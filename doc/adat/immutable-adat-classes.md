@@ -1,11 +1,25 @@
 # Immutable Adat Classes
 
-An adat class is immutable when all of its properties are immutable.
+An [adat class](README.md) is immutable when all of its properties are immutable.
 
 > [!IMPORTANT]
 >
-> A property is immutable when it is declared as `val` **AND** the value itself is
-> immutable. So, `val l : MutableList` is **NOT** immutable as the value is mutable.
+> A property is immutable when:
+> * it is declared as `val`
+> * **AND** it has no getter
+> * **AND** the value itself is immutable
+>
+>
+>  So, `val l : MutableList` is **NOT** immutable as the value is mutable.
+>
+
+> [!NOTE]
+>
+> Immutability is tricky with collection types where `List`, `Map` and `Set` actually does not
+> guarantee immutability as the actual instance may be mutable.
+>
+> I'll let this be **as is** for now, maybe I'll integrate with `kotlinx.immutable` later to make sure
+> that what is immutable is actually immutable.
 >
 
 Immutable classes are handy to keep the application logic consistent. You don't have to
@@ -14,12 +28,18 @@ worry about values changing without the whole instance changing.
 `AdatClassMetadata.isImmutable` is `true` when the class is immutable, `false` otherwise.
 
 However, this comes with a problem when you want to provide a user interface to edit
-these classes.
+these classes. The `copyStore` producer solves this problem.
 
 ## Copy Store
 
-Adaptive provides a producer called `copyStore` that produces a new copy whenever an editor
-would change a property in the class:
+Adaptive provides a producer called `copyStore` that produces a new copy whenever a fragment
+changes a property in the class.
+
+The built-in fragments recognize that `someAdat` belongs to a copy store and instead changing the value in-place
+they send a change request to the store. The store then produces a new value which triggers a patch
+in the fragment.
+
+(Actually, all fragments that use `AdaptiveStateValueBinding` work automatically with `copyStore`).
 
 ```kotlin
 @Adat
@@ -30,13 +50,9 @@ class SomeAdat(
 
 @Adaptive
 fun someEditor() {
-    val someAdat = copyStore(SomeAdat("",""))
+    val someAdat = copyStore { SomeAdat("", "") }
     
     input { someAdat.s1 }
     input { someAdat.s2 }
 }
 ```
-
-The editors recognize that `someAdat` belongs to a copy store and instead changing the value in-place
-they send a change request to the store. The store then produces a new value which triggers a patch
-in the fragment.

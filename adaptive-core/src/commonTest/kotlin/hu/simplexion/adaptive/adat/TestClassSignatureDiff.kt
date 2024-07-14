@@ -52,10 +52,11 @@ class TestClassSignatureDiff(
         override val adatMetadata = AdatClassMetadata<TestClassSignatureDiff>(
             version = 1,
             name = "hu.simplexion.adaptive.adat.TestClassSignatureDiff",
+            flags = 0,
             properties = listOf(
-                AdatPropertyMetadata("someInt", 0, "F"),
-                AdatPropertyMetadata("someBoolean", 1, "Z"),
-                AdatPropertyMetadata("someIntListSet", 2, "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
+                AdatPropertyMetadata("someInt", 0, 0, "F"),
+                AdatPropertyMetadata("someBoolean", 1, 0, "Z"),
+                AdatPropertyMetadata("someIntListSet", 2, 0, "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
             )
         )
 

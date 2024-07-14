@@ -52,10 +52,11 @@ class TestClassIndexDiff(
         override val adatMetadata = AdatClassMetadata<TestClassIndexDiff>(
             version = 1,
             name = "hu.simplexion.adaptive.adat.TestClassIndexDiff",
+            flags = 0,
             properties = listOf(
-                AdatPropertyMetadata("someBoolean", 0, "Z"),
-                AdatPropertyMetadata("someInt", 1, "I"),
-                AdatPropertyMetadata("someIntListSet", 2, "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
+                AdatPropertyMetadata("someBoolean", 0, 0, "Z"),
+                AdatPropertyMetadata("someInt", 1, 0, "I"),
+                AdatPropertyMetadata("someIntListSet", 2, 0, "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
             )
         )
 

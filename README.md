@@ -3,10 +3,12 @@
 
 > [!CAUTION]
 >
-> Project status: **preview**
+> Project status: **initial development**
 >
 > Please note the project status, many basic things you would expect to work are still
 > broken, especially around the code transformation.
+>
+> I will publish the next release when the status reaches preview (in a few weeks I hope).
 >
 
 * [What is Adaptive](./doc/what-is-adaptive.md)

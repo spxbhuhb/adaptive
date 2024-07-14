@@ -37,12 +37,11 @@ class TestProvider : AdaptivePropertyProvider {
         }
     }
 
-    override fun setValue(path: Array<String>, value: Any?, fromBinding: AdaptiveStateVariableBinding<*>) {
+    override fun setValue(path: Array<String>, value: Any?) {
         when {
             path[0] == "i" -> values[0] = value
             else -> throw AssertionError("unknown property, path=$path")
         }
-        bindings.forEach { if (it != fromBinding && it.path.contentEquals(path)) it.setValue(path, false) }
     }
 
     override fun toString(): String {

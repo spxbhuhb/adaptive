@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.adat
 
+import hu.simplexion.adaptive.adat.descriptor.result.InstanceValidationResult
 import hu.simplexion.adaptive.foundation.binding.AdaptivePropertyProvider
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import hu.simplexion.adaptive.foundation.unsupported
@@ -26,7 +27,10 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
     fun description() = Unit
 
     fun validate() {
-
+        if (adatContext == null) {
+            adatContext = AdatContext(null)
+        }
+        adatContext !!.validationResult = InstanceValidationResult()
     }
 
     fun copy(): A {
@@ -119,15 +123,22 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
     // FIXME AdatClass.removeBinding
     override fun removeBinding(binding: AdaptiveStateVariableBinding<*>) = Unit
 
-    override fun getValue(path : Array<String>) : Any? {
-        check(path.size == 1) {"nested property access is not supported yet"}
-        return getValue(adatIndexOf(path[0]))
+    override fun getValue(path: Array<String>): Any? =
+        if (path.size == 1) {
+            getValue(path[0])
+        } else {
+            resolve(path.dropLast(1)).getValue(path.last())
+        }
+
+
+    override fun setValue(path: Array<String>, value: Any?) {
+        if (path.size == 1) {
+            setValue(path[0], value)
+        } else {
+            resolve(path.dropLast(1)).setValue(path.last(), value)
+        }
     }
 
-    override fun setValue(path : Array<String>, value : Any?, fromBinding: AdaptiveStateVariableBinding<*>) {
-        check(path.size == 1) {"nested property access is not supported yet"}
-        setValue(adatIndexOf(path[0]), value)
-    }
 
     fun invalidIndex(index: Int): Nothing {
         throw IndexOutOfBoundsException("index $index is invalid in ${getMetadata().name}")

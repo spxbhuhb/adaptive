@@ -27,8 +27,9 @@ fun register(name: String) {
 
         if (name !in publishTasks) {
             dependsOn(gradle.includedBuild("adaptive-ui-designer").task(":$taskName"))
-            dependsOn(gradle.includedBuild("site").task(":$taskName"))
             dependsOn(gradle.includedBuild("sandbox").task(":$taskName"))
+            dependsOn(gradle.includedBuild("site").task(":$taskName"))
+            dependsOn(gradle.includedBuild("test").task(":$taskName"))
         }
     }
 }

@@ -3,6 +3,8 @@
  */
 package hu.simplexion.adaptive.foundation.binding
 
+import hu.simplexion.adaptive.adat.AdatClass
+import hu.simplexion.adaptive.adat.store.CopyStore
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 
 class AdaptiveStateVariableBinding<VT>(
@@ -38,23 +40,31 @@ class AdaptiveStateVariableBinding<VT>(
             }
         }
 
-    fun setValue(value: Any?, setProviderValue : Boolean) {
+    fun setValue(value: Any?, setProviderValue: Boolean) {
         checkNotNull(sourceFragment)
         if (path == null) {
             sourceFragment.setStateVariable(indexInSourceState, value, this)
         } else {
             val provider = sourceFragment.getThisClosureVariable(indexInSourceClosure)
 
-            check(provider is AdaptivePropertyProvider)
+            when {
+                provider is AdatClass<*> && provider.adatContext?.store is CopyStore<*> -> {
+                    (provider.adatContext?.store as CopyStore<*>).setValue(path.toList(), value)
+                }
 
-            if (setProviderValue) {
-                provider.setValue(path, value, this)
+                provider is AdaptivePropertyProvider -> {
+                    if (setProviderValue) {
+                        provider.setValue(path, value)
+                    }
+
+                    // FIXME setting dirty masks and change propagation at bound value change
+                    // the line above behave very strange, find out why
+                    // sourceFragment.setDirty(indexInSourceState, true)
+                    targetFragment.setDirty(indexInTargetState, true)
+                }
+
+                else -> throw UnsupportedOperationException()
             }
-
-            // FIXME setting dirty masks and change propagation at bound value change
-            // the line above behave very strange, find out why
-            // sourceFragment.setDirty(indexInSourceState, true)
-            targetFragment.setDirty(indexInTargetState, true)
         }
     }
 

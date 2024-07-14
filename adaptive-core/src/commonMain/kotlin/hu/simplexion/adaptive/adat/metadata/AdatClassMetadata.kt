@@ -13,6 +13,9 @@ import hu.simplexion.adaptive.wireformat.WireFormatEncoder
 import hu.simplexion.adaptive.wireformat.builtin.ListWireFormat
 import hu.simplexion.adaptive.wireformat.fromJson
 
+/**
+ * @property  name   The fully qualified (dot separated) name of the adat class this metadata describes.
+ */
 @Adat
 data class AdatClassMetadata<T>(
     val version: Int = 1,
@@ -21,8 +24,23 @@ data class AdatClassMetadata<T>(
     val properties: List<AdatPropertyMetadata>
 ) {
 
+    /**
+     * True then the class is mutable:
+     *
+     * - at least one property is `var` or has a getter
+     * - **OR** at least one property has a mutable value
+     */
+    val isMutable
+        inline get() = ! isImmutable
+
+    /**
+     * True then the whole class is immutable:
+     *
+     * - all properties are `val`
+     * - **AND** all property values are immutable
+     */
     val isImmutable
-        get() = (flags and ADAT_CLASS_FLAG_IMMUTABLE) != 0
+        get() = (flags and IMMUTABLE) != 0
 
     fun generateDescriptors(): List<AdatDescriptorImpl> {
         val result = mutableListOf<AdatDescriptorImpl>()
@@ -36,9 +54,18 @@ data class AdatClassMetadata<T>(
         return result
     }
 
+    operator fun get(propertyName: String): AdatPropertyMetadata =
+        properties.first { it.name == propertyName }
+
     companion object : WireFormat<AdatClassMetadata<*>> {
 
-        const val ADAT_CLASS_FLAG_IMMUTABLE = 1
+        /**
+         * Set then the whole class is immutable:
+         *
+         * - all properties are `val`
+         * - all property values are immutable
+         */
+        const val IMMUTABLE = 1
 
         override val wireFormatName: String
             get() = "hu.simplexion.adaptive.adat.metadata.AdatClassMetadata"

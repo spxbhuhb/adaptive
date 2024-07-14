@@ -97,6 +97,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testBasic() {
         runTest("testData/box/adat/immutable/basic.kt");
       }
+
+      @Test
+      @TestMetadata("immutableVar.kt")
+      public void testImmutableVar() {
+        runTest("testData/box/adat/immutable/immutableVar.kt");
+      }
     }
 
     @Nested

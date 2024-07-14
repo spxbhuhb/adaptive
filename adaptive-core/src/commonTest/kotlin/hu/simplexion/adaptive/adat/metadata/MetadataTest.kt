@@ -20,10 +20,11 @@ class MetadataTest {
         val expected = AdatClassMetadata<TestClass>(
             version = 1,
             name = "hu.simplexion.adaptive.adat.TestClass",
+            flags = 0,
             properties = listOf(
-                AdatPropertyMetadata("someInt", 0, "I"),
-                AdatPropertyMetadata("someBoolean", 1, "Z"),
-                AdatPropertyMetadata("someIntListSet", 2, "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
+                AdatPropertyMetadata("someInt", 0, 0, "I"),
+                AdatPropertyMetadata("someBoolean", 1, 0, "Z"),
+                AdatPropertyMetadata("someIntListSet", 2, 0, "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
             )
         )
 
@@ -38,9 +39,10 @@ class MetadataTest {
         val expected = AdatClassMetadata<Any>(
             version = 1,
             name = "hu.simplexion.adaptive.adat.TestClass",
+            flags = 0,
             properties = listOf(
                 AdatPropertyMetadata(
-                    "someInt", 0, "I",
+                    "someInt", 0, 0, "I",
                     listOf(
                         AdatDescriptorMetadata("int:minimum", "5"),
                         AdatDescriptorMetadata("int:maximum", "10")

@@ -43,7 +43,7 @@ fun main() {
                 maxSize .. padding(10.dp) .. gap(4.dp)
 
                 navButton("Good Morning") .. navClick { mobileExample { goodMorning() } }
-                navButton("Welcome") .. navClick { mobileExample { welcome() } }
+                navButton("Welcome") .. navClick { welcome(true) }
                 navButton("SVG") .. navClick { svgExample() }
                 navButton("Layouts") .. navClick { layoutMain() }
                 navButton("Chessboard") .. navClick { chessBoard() }
@@ -59,7 +59,7 @@ fun main() {
                 slot {
                     route { goodMorning() }
                     route { layoutMain() }
-                    route { welcome() }
+                    route { welcome(true) }
                     route { chessBoard() }
                     route { svgExample() }
                     route { markdown() }
@@ -68,8 +68,7 @@ fun main() {
                     route { hitDetect() }
                     route { instructionEditor() }
 
-                    instructionEditor()
-//                    text("Click on the left to load a demo!")
+                    text("Click on the left to load a demo!")
                 }
             }
         }

@@ -65,8 +65,8 @@ class MetadataVisitor(
 
         val isVal = ! declaration.isVar
 
-        if (isVal) flags = flags or AdatPropertyMetadata.ADAT_PROPERTY_FLAG_VAL
-        if (isVal && isImmutable(signature)) flags = flags or AdatPropertyMetadata.ADAT_PROPERTY_FLAG_IMMUTABLE
+        if (isVal) flags = flags or AdatPropertyMetadata.VAL
+        if (isImmutable(signature)) flags = flags or AdatPropertyMetadata.IMMUTABLE_VALUE
 
         return flags
     }

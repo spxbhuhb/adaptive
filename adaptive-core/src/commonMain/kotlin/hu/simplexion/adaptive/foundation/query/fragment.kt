@@ -36,6 +36,22 @@ fun AdaptiveFragment.firstOrNull(
 }
 
 /**
+ * Find the first fragment of that matches the condition, throws an exception if no such
+ * fragment exists.
+ *
+ * @param deep Deep search, go down in the fragment tree.
+ * @param horizontal When [deep] is true, check a given level first, children second.
+ *
+ * @throws NoSuchElementException
+ */
+inline fun AdaptiveFragment.first(
+    deep: Boolean = false,
+    horizontal: Boolean = true,
+    crossinline condition: (AdaptiveFragment) -> Boolean
+): AdaptiveFragment =
+    firstOrNull(deep, horizontal) { condition(it) } ?: throw NoSuchElementException()
+
+/**
  * Find the first fragment of a given class [T], throws an exception if no such
  * fragment exists.
  *

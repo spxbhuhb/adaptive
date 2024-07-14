@@ -6,7 +6,76 @@ package hu.simplexion.adaptive.adat
 
 import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata
 
-fun AdatClass<*>.diff(other : AdatClass<*>) : List<AdatDiffItem> {
+
+/**
+ * Gets an adat class stored somewhere in this one based on [path]. Path
+ * contains name of a properties to walk down.
+ *
+ * @throws IllegalArgumentException  when the path is invalid
+ */
+fun AdatClass<*>.resolve(path: List<String>): AdatClass<*> {
+
+    var sub: Any? = this
+
+    for (propertyName in path) {
+        require(sub is AdatClass<*>) { "cannot set value for $path in ${getMetadata().name}" }
+        sub = sub.getValue(propertyName)
+    }
+
+    require(sub is AdatClass<*>) { "cannot set value for $path in ${getMetadata().name}" }
+
+    return sub
+}
+
+/**
+ * Creates a deep copy of [this]. The copy is fully independent of the original, any
+ * changes made on it will not change the original in any ways.
+ *
+ * **Mutable collections are not supported yet.** See: [Adat problems and improvements #35](https://github.com/spxbhuhb/adaptive/issues/35)
+ *
+ * @throws  IllegalArgumentException  In case it is not possible to make a deep copy.
+ */
+fun <A : AdatClass<A>> A.deepCopy(replace: AdatChange? = null): A {
+    @Suppress("UNCHECKED_CAST")
+    return this.genericDeepCopy(replace) as A
+}
+
+private fun AdatClass<*>.genericDeepCopy(replace: AdatChange?): AdatClass<*> {
+    val properties = getMetadata().properties
+    val values = arrayOfNulls<Any?>(properties.size)
+
+    val replaceName = replace?.path?.first()
+
+    for (property in properties) {
+        val index = property.index
+        values[index] = getValue(index)
+
+        if (replaceName == property.name) {
+            if (replace.path.size == 1) {
+                values[index] = replace.value
+            } else {
+                values[index] = (getValue(index) as AdatClass<*>).genericDeepCopy(replace.next())
+            }
+            continue
+        }
+
+        val value = getValue(index)
+
+        values[index] = when {
+            property.hasImmutableValue -> value
+            value is AdatClass<*> -> value.genericDeepCopy(null)
+            else -> throw IllegalArgumentException("cannot deep copy ${getMetadata().name}.${property.name}")
+        }
+    }
+
+    return adatCompanion.newInstance(values)
+}
+
+/**
+ * Calculates the difference between two adat instances. The instances do not have to be
+ * same class.
+ */
+fun AdatClass<*>.diff(other: AdatClass<*>): List<AdatDiffItem> {
     val thisProps = this.getMetadata().properties
     val otherProps = other.getMetadata().properties
 

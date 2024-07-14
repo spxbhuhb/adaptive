@@ -19,10 +19,54 @@ data class AdatPropertyMetadata(
     val descriptors: List<AdatDescriptorMetadata> = emptyList(),
 ) {
 
+    /**
+     * True when the property is mutable:
+     *
+     * - it is read-write (declared as `var` or has a getter)
+     * - **OR** the value of the property is mutable
+     */
+    val isMutable
+        inline get() = ! isImmutable
+
+    /**
+     * True when the property is immutable:
+     *
+     * - it is read-only (declared as `val`, no getter)
+     * - **AND** the value of the property is immutable
+     */
+    val isImmutable
+        get() = isVal && hasImmutableValue
+
+    /**
+     * True when the property is read-only (declared as `val`, no getter).
+     *
+     * Note that this **DOES NOT** mean immutability, the internal properties of
+     * the value can change even if the property itself is read-only.
+     *
+     * Use [hasImmutableValue] to check if the value itself is immutable.
+     */
+    val isVal
+        get() = (flags and VAL) != 0
+
+    /**
+     * True when the value of the property is mutable.
+     */
+    val hasMutableValue
+        get() = ! hasImmutableValue
+
+    /**
+     * True when the value of the property is immutable.
+     *
+     * Note that this **DOES NOT** mean immutability, the property value can change.
+     * Use [isVal] to check if the property is read-only.
+     */
+    val hasImmutableValue
+        get() = (flags and IMMUTABLE_VALUE) != 0
+
     companion object : WireFormat<AdatPropertyMetadata> {
 
-        const val ADAT_PROPERTY_FLAG_VAL = 1
-        const val ADAT_PROPERTY_FLAG_IMMUTABLE = 2
+        const val VAL = 1
+        const val IMMUTABLE_VALUE = 2
 
         override val wireFormatName: String
             get() = "hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata"

@@ -52,10 +52,11 @@ class TestClassMissingDiff(
         override val adatMetadata = AdatClassMetadata<TestClassMissingDiff>(
             version = 1,
             name = "hu.simplexion.adaptive.adat.TestClassMissingDiff",
+            flags = 0,
             properties = listOf(
-                AdatPropertyMetadata("someInt", 0, "I"),
-                AdatPropertyMetadata("someOtherField", 1, "Z"),
-                AdatPropertyMetadata("someIntListSet", 2, "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
+                AdatPropertyMetadata("someInt", 0, 0, "I"),
+                AdatPropertyMetadata("someOtherField", 1, 0, "Z"),
+                AdatPropertyMetadata("someIntListSet", 2, 0, "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
             )
         )
 

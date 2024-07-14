@@ -26,10 +26,10 @@ class M2(
 
 fun box(): String {
 
-    if (! I1.adatMetadata.isImmutable) return "Fail: I1.isImmutable == false"
+    if (I1.adatMetadata.isMutable) return "Fail: I1.isMutable"
 
-    if (M1.adatMetadata.isImmutable) return "Fail: M1.isImmutable == true"
-    if (M2.adatMetadata.isImmutable) return "Fail: M2.isImmutable == true"
+    if (M1.adatMetadata.isImmutable) return "Fail: M1.isImmutable"
+    if (M2.adatMetadata.isImmutable) return "Fail: M2.isImmutable"
 
     return "OK"
 }
