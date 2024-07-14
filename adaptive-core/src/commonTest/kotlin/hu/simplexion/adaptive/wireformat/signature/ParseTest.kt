@@ -18,7 +18,7 @@ class ParseTest {
             Token(TokenType.Name, "kotlin/Pair"),
             Token(TokenType.Open, ""),
             Token(TokenType.Name, "A"),
-            Token(TokenType.Name, "[+I"),
+            Token(TokenType.Primitive, "[+I"),
             Token(TokenType.Close, ""),
             Token(TokenType.Close, ""),
         )
@@ -35,7 +35,7 @@ class ParseTest {
                     name = "kotlin/Pair",
                     generics = mutableListOf(
                         WireFormatType("A"),
-                        WireFormatType("[+I")
+                        WireFormatType("[+I", short = true)
                     )
                 )
             )

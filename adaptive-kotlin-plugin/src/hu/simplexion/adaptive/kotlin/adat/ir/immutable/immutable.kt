@@ -9,8 +9,10 @@ import hu.simplexion.adaptive.wireformat.signature.parseTypeSignature
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.types.classFqName
-import org.jetbrains.kotlin.ir.types.classOrFail
-import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.util.isEnumClass
+import org.jetbrains.kotlin.ir.util.isFunction
+import org.jetbrains.kotlin.ir.util.isKFunction
+import org.jetbrains.kotlin.ir.util.isKSuspendFunction
 
 fun AdatIrBuilder.isImmutable(signature: String): Boolean =
     isImmutable(parseTypeSignature(signature)) // FIXME cache the signatures as well so we don't have to parse them again and again
@@ -86,16 +88,21 @@ fun AdatIrBuilder.properties(irClass: IrClass): Boolean {
         if (name == Names.ADAT_CONTEXT || name == Names.ADAT_COMPANION) continue
 
         if (declaration.isVar) return false
-        if (! declaration.isSimpleProperty) return false
 
-        val type = declaration.backingField?.type ?: return false
+        val backingField = declaration.backingField ?: continue
+
+        val type = backingField.type
         val typeFqName = type.classFqName?.asString() ?: return false
+        val signature = "L$typeFqName;"
 
-        val cached = cache[typeFqName]
+        val cached = cache[signature]
         if (cached == false) return false
         if (cached == true) continue
 
-        return properties(type.classOrFail.owner)
+        val isImmutable = isImmutable(signature)
+
+        cache[signature] = isImmutable
+        if (! isImmutable) return false
     }
 
     return true

@@ -51,7 +51,7 @@ class AdaptiveStateVariableBinding<VT>(
             when {
                 provider is AdatClass<*> && provider.adatContext?.store is CopyStore<*> -> {
                     val absolutePath = provider.absolutePath() + path
-                    (provider.adatContext?.store as CopyStore<*>).setValue(absolutePath, value)
+                    (provider.adatContext?.store as CopyStore<*>).setProperty(absolutePath, value)
                 }
 
                 provider is AdaptivePropertyProvider -> {

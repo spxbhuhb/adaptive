@@ -37,7 +37,8 @@ open class DesignerDPixelInput(
 
         patchInstructions()
 
-        if (haveToPatch(dirtyMask, 1)) {
+
+        if (haveToPatch(dirtyMask, 1 shl 1)) {
             receiver.value = b.value?.value?.format(1, hideZeroDecimals = true) ?: ""
         }
 

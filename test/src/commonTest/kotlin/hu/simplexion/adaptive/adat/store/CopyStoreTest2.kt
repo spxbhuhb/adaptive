@@ -71,7 +71,7 @@ class CopyStoreTest2 {
         val store = value.adatContext?.store as? CopyStore<*>
         assertNotNull(store)
 
-        store.setValue(listOf("soa", "yaa", "i2"), 34)
+        store.setProperty(listOf("soa", "yaa", "i2"), 34)
         assertEquals(34, t1.p0)
 
         val binding = t.state.filterIsInstance<AdaptiveStateVariableBinding<*>>().single()

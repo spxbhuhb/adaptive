@@ -2,9 +2,14 @@ package hu.simplexion.adaptive.designer
 
 import hu.simplexion.adaptive.adat.Adat
 import hu.simplexion.adaptive.adat.AdatClass
+import hu.simplexion.adaptive.adat.store.copyStore
+import hu.simplexion.adaptive.adat.store.replaceWith
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.instruction.instructionsOf
+import hu.simplexion.adaptive.foundation.rangeTo
+import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.fragment.*
+import hu.simplexion.adaptive.ui.common.fragment.layout.AbstractContainer
 import hu.simplexion.adaptive.ui.common.instruction.*
 
 @Adat
@@ -13,16 +18,37 @@ class InstructionEditorData(
     val margin: Margin = Margin.NONE
 ) : AdatClass<InstructionEditorData>
 
+val blueBackground = backgroundColor(0x0000ff)
+val greenBackground = backgroundColor(0x00ff00)
+val redBackground = backgroundColor(0xff0000)
+
+fun loadInstructions(uiEvent: UIEvent, data: InstructionEditorData) {
+    val hits = hits(uiEvent.fragment as AbstractContainer<*, *>, uiEvent.x, uiEvent.y)
+
+    if (hits.isEmpty()) {
+        data.replaceWith(InstructionEditorData())
+    } else {
+        data.replaceWith(intersectInstructions(hits))
+    }
+}
+
+fun intersectInstructions(hits: List<AbstractCommonFragment<*>>): InstructionEditorData {
+    return InstructionEditorData(padding = Padding(10.dp))
+}
+
 @Adaptive
 fun instructionEditor() {
-    val data = InstructionEditorData()
+    val data = copyStore { InstructionEditorData() }
 
     grid {
         maxSize
         colTemplate(1.fr, 360.dp)
 
         box {
-            maxSize
+            maxSize .. onClick { loadInstructions(it, data) }
+            box { frame(100.dp, 100.dp, 20.dp, 20.dp) .. blueBackground }
+            box { frame(100.dp, 150.dp, 20.dp, 20.dp) .. greenBackground }
+            box { frame(200.dp, 150.dp, 20.dp, 20.dp) .. redBackground }
         }
 
         column {

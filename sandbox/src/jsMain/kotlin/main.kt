@@ -10,7 +10,6 @@ import hu.simplexion.adaptive.foundation.fragment
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.foundation.instruction.instructionsOf
 import hu.simplexion.adaptive.foundation.instruction.invoke
-import hu.simplexion.adaptive.foundation.query.first
 import hu.simplexion.adaptive.foundation.rangeTo
 import hu.simplexion.adaptive.lib.sandbox.ui.graphics.svgExample
 import hu.simplexion.adaptive.lib.sandbox.ui.layout.layoutMain
@@ -24,7 +23,6 @@ import hu.simplexion.adaptive.lib.sandbox.ui.navigation.slotTwo
 import hu.simplexion.adaptive.lib.sandbox.ui.withSandbox
 import hu.simplexion.adaptive.ui.common.browser
 import hu.simplexion.adaptive.ui.common.fragment.*
-import hu.simplexion.adaptive.ui.common.fragment.layout.AbstractGrid
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.platform.withJsResources
 
@@ -75,9 +73,9 @@ fun main() {
             }
         }
     }
-        .also {
-            println(it.first<AbstractGrid<*, *>>().dumpLayout(""))
-        }
+//        .also {
+//            println(it.first<AbstractGrid<*, *>>().dumpLayout(""))
+//        }
 }
 
 val button = instructionsOf(

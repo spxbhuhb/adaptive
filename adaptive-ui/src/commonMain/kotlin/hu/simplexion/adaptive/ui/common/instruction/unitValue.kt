@@ -73,7 +73,6 @@ class DPixel(
 
     companion object {
         val ZERO = DPixel(0.0)
-        val FULL = DPixel(Double.POSITIVE_INFINITY)
     }
 }
 

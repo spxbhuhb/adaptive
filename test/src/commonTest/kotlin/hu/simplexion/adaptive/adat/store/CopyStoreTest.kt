@@ -68,10 +68,10 @@ class CopyStoreTest {
         assertNotNull(store)
 
         assertEquals(12, t1.p0)
-        store.setValue(listOf("someInt"), 23)
+        store.setProperty(listOf("someInt"), 23)
 
         assertEquals(23, t1.p0)
-        store.setValue(listOf("someInt"), 34)
+        store.setProperty(listOf("someInt"), 34)
         assertEquals(34, t1.p0)
 
         val binding = t.state.filterIsInstance<AdaptiveStateVariableBinding<*>>().single()
@@ -98,7 +98,7 @@ class CopyStoreTest {
         assertNotNull(store)
 
         assertEquals(23, t1.p0)
-        store.setValue(listOf("t", "someInt"), 34)
+        store.setProperty(listOf("t", "someInt"), 34)
         assertEquals(34, t1.p0)
 
         val binding = t.state.filterIsInstance<AdaptiveStateVariableBinding<*>>().single()
@@ -125,7 +125,7 @@ class CopyStoreTest {
         assertNotNull(store)
 
         assertEquals(23, t1.p0)
-        store.setValue(listOf("t", "someInt"), 34)
+        store.setProperty(listOf("t", "someInt"), 34)
         assertEquals(34, t1.p0)
 
         val binding = t.state.filterIsInstance<AdaptiveStateVariableBinding<*>>().single()

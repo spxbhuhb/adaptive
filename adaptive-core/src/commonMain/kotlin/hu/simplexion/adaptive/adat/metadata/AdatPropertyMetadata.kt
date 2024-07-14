@@ -22,7 +22,7 @@ data class AdatPropertyMetadata(
     /**
      * True when the property is mutable:
      *
-     * - it is read-write (declared as `var` or has a getter)
+     * - it is read-write **AND** has a backing field
      * - **OR** the value of the property is mutable
      */
     val isMutable
@@ -31,8 +31,10 @@ data class AdatPropertyMetadata(
     /**
      * True when the property is immutable:
      *
-     * - it is read-only (declared as `val`, no getter)
-     * - **AND** the value of the property is immutable
+     * - it is read-only (declared as `val`)
+     * - **AND**
+     *   - the value of the property is immutable
+     *   - **OR** it does not have a backing field
      */
     val isImmutable
         get() = isVal && hasImmutableValue
@@ -58,7 +60,7 @@ data class AdatPropertyMetadata(
      * True when the value of the property is immutable.
      *
      * Note that this **DOES NOT** mean immutability, the property value can change.
-     * Use [isVal] to check if the property is read-only.
+     * Use [isMutable] or [isImmutable] to check for actual mutability.
      */
     val hasImmutableValue
         get() = (flags and IMMUTABLE_VALUE) != 0

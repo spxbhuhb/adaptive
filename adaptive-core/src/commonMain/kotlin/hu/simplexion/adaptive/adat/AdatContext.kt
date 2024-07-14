@@ -19,8 +19,8 @@ fun AdatClass<*>.applyContext(context: AdatContext) {
     for (property in getMetadata().properties) {
         if (property.isAdatClass) {
             // FIXME AdatContext.apply for adat class collections
-            (getValue(property.index) as AdatClass<*>)
-                .applyContext(AdatContext(this, property, context.store, null))
+            (getValue(property.index) as? AdatClass<*>)
+                ?.applyContext(AdatContext(this, property, context.store, null))
         }
     }
 }

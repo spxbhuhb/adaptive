@@ -65,10 +65,11 @@ class MetadataVisitor(
         var flags = 0
 
         val isVal = ! declaration.isVar
+        val backingField = declaration.backingField
 
         if (isVal) flags = flags or AdatPropertyMetadata.VAL
-        if (isImmutable(signature)) flags = flags or AdatPropertyMetadata.IMMUTABLE_VALUE
-        if (declaration.backingField?.type?.isSubtypeOfClass(pluginContext.adatClass) == true) flags = flags or AdatPropertyMetadata.ADAT_CLASS
+        if (backingField == null || isImmutable(signature)) flags = flags or AdatPropertyMetadata.IMMUTABLE_VALUE
+        if (backingField?.type?.isSubtypeOfClass(pluginContext.adatClass) == true) flags = flags or AdatPropertyMetadata.ADAT_CLASS
 
         return flags
     }

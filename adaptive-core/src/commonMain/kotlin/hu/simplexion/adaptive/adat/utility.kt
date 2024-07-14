@@ -4,7 +4,9 @@
 
 package hu.simplexion.adaptive.adat
 
+import hu.simplexion.adaptive.adat.metadata.AdatClassMetadata
 import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata
+import hu.simplexion.adaptive.wireformat.toJson
 
 
 /**
@@ -64,7 +66,7 @@ private fun AdatClass<*>.genericDeepCopy(replace: AdatChange?): AdatClass<*> {
         values[index] = when {
             property.hasImmutableValue -> value
             value is AdatClass<*> -> value.genericDeepCopy(null)
-            else -> throw IllegalArgumentException("cannot deep copy ${getMetadata().name}.${property.name}")
+            else -> throw IllegalArgumentException("cannot deep copy ${getMetadata().name}.${property.name} ${getMetadata().toJson(AdatClassMetadata).decodeToString()}")
         }
     }
 

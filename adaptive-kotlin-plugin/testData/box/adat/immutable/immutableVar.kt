@@ -1,8 +1,5 @@
 package hu.simplexion.adaptive.adat
 
-import hu.simplexion.adaptive.service.*
-import hu.simplexion.adaptive.service.transport.*
-
 @Adat
 class I1(
     val someInt: Int,

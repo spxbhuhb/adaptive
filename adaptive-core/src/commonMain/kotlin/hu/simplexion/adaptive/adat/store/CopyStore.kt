@@ -40,7 +40,12 @@ class CopyStore<A : AdatClass<A>>(
 
     override var latestValue: A? = makeCopy(initialValue, null)
 
-    fun setValue(path: List<String>, value: Any?) {
+    fun replaceValue(newValue: A) {
+        latestValue = makeCopy(newValue, null)
+        binding.targetFragment.setDirty(binding.indexInTargetState, true)
+    }
+
+    fun setProperty(path: List<String>, value: Any?) {
         latestValue = latestValue?.let { makeCopy(it, AdatChange(path, value)) }
         binding.targetFragment.setDirty(binding.indexInTargetState, true)
     }
@@ -60,4 +65,12 @@ class CopyStore<A : AdatClass<A>>(
         return "CopyStore($binding)"
     }
 
+}
+
+fun <A : AdatClass<A>> A.replaceWith(newValue: A) {
+    val store = requireNotNull(adatContext?.store) { "cannot replace the adat class without a store: ${getMetadata().name}" }
+    require(store is CopyStore<*>) { "store is not a copy store" }
+
+    @Suppress("UNCHECKED_CAST") // replaceWith enforces the same type
+    (store as CopyStore<A>).replaceValue(newValue)
 }

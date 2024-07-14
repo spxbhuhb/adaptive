@@ -103,6 +103,18 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testImmutableVar() {
         runTest("testData/box/adat/immutable/immutableVar.kt");
       }
+
+        @Test
+        @TestMetadata("noBackingField.kt")
+        public void testNoBackingField() {
+            runTest("testData/box/adat/immutable/noBackingField.kt");
+        }
+
+        @Test
+        @TestMetadata("nullProperty.kt")
+        public void testNullProperty() {
+            runTest("testData/box/adat/immutable/nullProperty.kt");
+        }
     }
 
     @Nested
