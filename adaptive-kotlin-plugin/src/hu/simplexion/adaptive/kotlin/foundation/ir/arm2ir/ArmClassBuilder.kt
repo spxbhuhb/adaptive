@@ -295,7 +295,8 @@ class ArmClassBuilder(
                     0, 0
                 ).also {
                     it.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!)
-                }
+                },
+                isMutable = true
             )
 
             for (statement in armClass.stateDefinitionStatements) {

@@ -279,6 +279,10 @@ abstract class AdaptiveFragment(
 
         val bindings = bindings ?: mutableListOf<AdaptiveStateVariableBinding<*>>().also { bindings = it }
 
+        bindings.filter { binding == it }.forEach {
+            removeBinding(it)
+        }
+
         bindings += binding
 
         if (binding.path != null) {
@@ -314,6 +318,7 @@ abstract class AdaptiveFragment(
         ).also {
             addBinding(it)
             descendant.setStateVariable(indexInTarget, it)
+            descendant.setDirty(indexInTarget, false)
         }
 
     fun removeBinding(binding: AdaptiveStateVariableBinding<*>) {

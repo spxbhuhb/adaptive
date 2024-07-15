@@ -49,7 +49,6 @@ fun designerMain() {
 
 @Adaptive
 fun instructionPanel(selection: List<AbstractCommonFragment<*>>) {
-    println(selection)
     val data = copyStore {
         if (selection.isEmpty()) {
             InstructionEditorData()
@@ -57,13 +56,14 @@ fun instructionPanel(selection: List<AbstractCommonFragment<*>>) {
             intersectInstructions(selection)
         }
     }
-    println(data)
 
-    column {
-        maxSize
-        gapHeight { 8.dp }
-        surroundingEditor("padding", data.padding)
-        surroundingEditor("margin", data.margin)
+    if (selection.isNotEmpty()) {
+        column {
+            maxSize
+            gapHeight { 8.dp }
+            surroundingEditor("padding", data.padding)
+            surroundingEditor("margin", data.margin)
+        }
     }
 }
 

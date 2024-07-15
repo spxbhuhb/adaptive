@@ -6,15 +6,16 @@ package hu.simplexion.adaptive.kotlin.foundation.ir.arm2ir
 
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmInternalStateVariable
 import hu.simplexion.adaptive.kotlin.foundation.ir.arm.ArmValueProducer
-import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.builders.IrBlockBodyBuilder
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
+import org.jetbrains.kotlin.ir.expressions.impl.IrBlockImpl
+import org.jetbrains.kotlin.ir.expressions.impl.IrSetValueImpl
 import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
-import org.jetbrains.kotlin.ir.util.dumpKotlinLike
+import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 
 open class ArmInternalStateVariableBuilder(
     parent: ClassBoundIrBuilder,
@@ -34,7 +35,7 @@ open class ArmInternalStateVariableBuilder(
     }
 
     fun IrBlockBodyBuilder.genNormalPatchInternal(dirtyMask: IrVariable, patchFun: IrSimpleFunction) {
-        val transformedInitializer = stateVariable.irVariable.initializer!!.transformStateAccess(patchFun)
+        val transformedInitializer = stateVariable.irVariable.initializer !!.transformStateAccess(patchFun)
 
         + irIf(
             genPatchInternalConditionForMask(patchFun, dirtyMask, stateVariable.dependencies),
@@ -45,7 +46,7 @@ open class ArmInternalStateVariableBuilder(
     fun IrBlockBodyBuilder.genProducePatchInternal(dirtyMask: IrVariable, patchFun: IrSimpleFunction, producer: ArmValueProducer) {
         + irIf(
             genPatchInternalConditionForMask(patchFun, dirtyMask, producer.producerDependencies),
-            transformProducer(producer.producerCall, patchFun).transformStateAccess(patchFun)
+            transformProducer(dirtyMask, producer.producerCall, patchFun).transformStateAccess(patchFun)
         )
         + irIf(
             // the dependencies are the dependencies of the postprocessing parts + the variable itself, see internals in producer.md
@@ -60,14 +61,14 @@ open class ArmInternalStateVariableBuilder(
     /**
      * Set the state variable binding parameter of producer calls.
      */
-    fun transformProducer(expression: IrCall, patchFun: IrSimpleFunction) : IrExpression {
+    fun transformProducer(dirtyMask: IrVariable, expression: IrCall, patchFun: IrSimpleFunction): IrExpression {
         for ((index, valueParam) in expression.symbol.owner.valueParameters.withIndex()) {
-            if ( ! valueParam.type.isSubtypeOfClass(pluginContext.adaptiveStateVariableBindingClass)) continue
+            if (! valueParam.type.isSubtypeOfClass(pluginContext.adaptiveStateVariableBindingClass)) continue
             expression.putValueArgument(
                 index,
                 irCall(
                     pluginContext.localBinding,
-                    dispatchReceiver = irGet(patchFun.dispatchReceiverParameter!!),
+                    dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!),
                     args = arrayOf(
                         irConst(stateVariable.indexInState),
                         irConst(stateVariable.type.classFqName !!.asString())
@@ -75,13 +76,22 @@ open class ArmInternalStateVariableBuilder(
                 )
             )
         }
-        return expression
+
+        // set the dirty mask we use in internal-patch
+        // if the producer changes, it produces a new value
+        // if there is no post-process, we have to use a dirty mask that
+        // contains the produced value
+
+        return IrBlockImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.irContext.irBuiltIns.unitType).also { block ->
+            block.statements += expression
+            block.statements += IrSetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, irBuiltIns.intType, dirtyMask.symbol, irConst(1 shl stateVariable.indexInState), null)
+        }
     }
 
     /**
      * Set the dispatch receiver and parameters of `getProducedValue`.
      */
     private fun transformPostProcess(patchFun: IrSimpleFunction): IrExpression =
-        ProducerPostProcessTransform(pluginContext, patchFun, stateVariable).visitExpression(stateVariable.irVariable.initializer!!)
+        ProducerPostProcessTransform(pluginContext, patchFun, stateVariable).visitExpression(stateVariable.irVariable.initializer !!)
 
 }

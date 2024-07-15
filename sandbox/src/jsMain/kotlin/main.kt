@@ -8,7 +8,6 @@ import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.fragment
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
-import hu.simplexion.adaptive.foundation.instruction.Trace
 import hu.simplexion.adaptive.foundation.instruction.instructionsOf
 import hu.simplexion.adaptive.foundation.instruction.invoke
 import hu.simplexion.adaptive.foundation.rangeTo
@@ -32,7 +31,7 @@ fun main() {
     withJsResources()
 
     //(trace = Trace(".*"))
-    browser(DesignerFragmentFactory, trace = Trace(".*")) {
+    browser(DesignerFragmentFactory) {
         withSandbox(it) // to set default font name
 
         grid {

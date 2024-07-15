@@ -14,7 +14,6 @@ import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.util.hasAnnotation
-import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 
 /**
  * Replaces the producer call (of there are any) with a call to `getProducedValue`.
@@ -33,7 +32,7 @@ class ProducerTransform(
     var producerDependencies: ArmDependencies? = null
 
     fun IrElement.dependencies(): List<ArmStateVariable> {
-        val visitor = DependencyVisitor(closure, skipLambdas = true)
+        val visitor = DependencyVisitor(closure, skipLambdas = false)
         accept(visitor, null)
         return visitor.dependencies
     }

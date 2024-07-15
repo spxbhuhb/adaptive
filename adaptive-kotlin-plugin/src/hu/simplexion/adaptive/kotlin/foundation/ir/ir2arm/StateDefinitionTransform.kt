@@ -36,7 +36,7 @@ class StateDefinitionTransform(
     var stateVariableIndex = 0
 
     fun IrElement.dependencies(): List<ArmStateVariable> {
-        val visitor = DependencyVisitor(armClass.stateVariables, skipLambdas = true)
+        val visitor = DependencyVisitor(armClass.stateVariables, skipLambdas = false)
         accept(visitor, null)
         return visitor.dependencies
     }

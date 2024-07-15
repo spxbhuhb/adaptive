@@ -77,8 +77,33 @@ class AdaptiveStateVariableBinding<VT>(
             return sourceFragment.getThisClosureVariable(indexInSourceClosure) as AdaptivePropertyProvider
         }
 
+
     override fun toString(): String {
         return "AdaptiveStateVariableBinding(${sourceFragment?.id}, $indexInSourceState, $indexInSourceState, ${targetFragment.id}, ${indexInTargetState}, ${path.contentToString()}, $metadata)"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+
+        other as AdaptiveStateVariableBinding<*>
+
+        if (sourceFragment != other.sourceFragment) return false
+        if (indexInSourceState != other.indexInSourceState) return false
+        if (indexInSourceClosure != other.indexInSourceClosure) return false
+        if (targetFragment != other.targetFragment) return false
+        if (indexInTargetState != other.indexInTargetState) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = sourceFragment?.hashCode() ?: 0
+        result = 31 * result + indexInSourceState
+        result = 31 * result + indexInSourceClosure
+        result = 31 * result + targetFragment.hashCode()
+        result = 31 * result + indexInTargetState
+        return result
     }
 
 }

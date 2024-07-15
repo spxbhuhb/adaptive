@@ -111,9 +111,9 @@ public class BoxTestGenerated extends AbstractBoxTest {
         }
 
         @Test
-        @TestMetadata("nullProperty.kt")
-        public void testNullProperty() {
-            runTest("testData/box/adat/immutable/nullProperty.kt");
+        @TestMetadata("openVal.kt")
+        public void testOpenVal() {
+            runTest("testData/box/adat/immutable/openVal.kt");
         }
     }
 
@@ -397,6 +397,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testAllFilesPresentInProducer() {
         KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/producer"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
       }
+
+        @Test
+        @TestMetadata("copyStore.kt")
+        public void testCopyStore() {
+            runTest("testData/box/foundation/producer/copyStore.kt");
+        }
 
       @Test
       @TestMetadata("poll.kt")
