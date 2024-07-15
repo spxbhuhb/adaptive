@@ -247,6 +247,10 @@ abstract class AdaptiveFragment(
         // don't forget CommonSlot and NavSegment where the vakue should be initialized quite early
         producer.start()
 
+        // when we replace the producer after a dependency change, the dependents of the target
+        // state variable have to be is patched
+        setDirty(producer.binding.indexInTargetState, false)
+
         if (trace) trace("after-Add-Producer", "producer", producer)
     }
 

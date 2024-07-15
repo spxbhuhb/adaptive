@@ -2,12 +2,13 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import hu.simplexion.adaptive.designer.designerMain
 import hu.simplexion.adaptive.designer.fragment.DesignerFragmentFactory
-import hu.simplexion.adaptive.designer.instructionEditor
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.fragment
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import hu.simplexion.adaptive.foundation.instruction.Trace
 import hu.simplexion.adaptive.foundation.instruction.instructionsOf
 import hu.simplexion.adaptive.foundation.instruction.invoke
 import hu.simplexion.adaptive.foundation.rangeTo
@@ -31,7 +32,7 @@ fun main() {
     withJsResources()
 
     //(trace = Trace(".*"))
-    browser(DesignerFragmentFactory) {
+    browser(DesignerFragmentFactory, trace = Trace(".*")) {
         withSandbox(it) // to set default font name
 
         grid {
@@ -64,9 +65,9 @@ fun main() {
                     route { slotOne() }
                     route { slotTwo() }
                     route { hitDetect() }
-                    route { instructionEditor() }
+                    route { designerMain() }
 
-                    instructionEditor()
+                    designerMain()
 
 //                    text("Click on the left to load a demo!")
                 }

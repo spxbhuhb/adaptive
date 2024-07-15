@@ -3,7 +3,6 @@ package hu.simplexion.adaptive.designer
 import hu.simplexion.adaptive.adat.Adat
 import hu.simplexion.adaptive.adat.AdatClass
 import hu.simplexion.adaptive.adat.store.copyStore
-import hu.simplexion.adaptive.adat.store.replaceWith
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.instruction.instructionsOf
 import hu.simplexion.adaptive.foundation.rangeTo
@@ -22,41 +21,49 @@ val blueBackground = backgroundColor(0x0000ff)
 val greenBackground = backgroundColor(0x00ff00)
 val redBackground = backgroundColor(0xff0000)
 
-fun loadInstructions(uiEvent: UIEvent, data: InstructionEditorData) {
-    val hits = hits(uiEvent.fragment as AbstractContainer<*, *>, uiEvent.x, uiEvent.y)
-
-    if (hits.isEmpty()) {
-        data.replaceWith(InstructionEditorData())
-    } else {
-        data.replaceWith(intersectInstructions(hits))
-    }
-}
-
 fun intersectInstructions(hits: List<AbstractCommonFragment<*>>): InstructionEditorData {
     return InstructionEditorData(padding = Padding(10.dp))
 }
 
 @Adaptive
-fun instructionEditor() {
-    val data = copyStore { InstructionEditorData() }
+fun designerMain() {
+    var selection = listOf<AbstractCommonFragment<*>>()
 
     grid {
         maxSize
         colTemplate(1.fr, 360.dp)
 
         box {
-            maxSize .. onClick { loadInstructions(it, data) }
+            maxSize
+
+            onClick { selection = hits(it.fragment as AbstractContainer<*, *>, it.x, it.y) }
+
             box { frame(100.dp, 100.dp, 20.dp, 20.dp) .. blueBackground }
             box { frame(100.dp, 150.dp, 20.dp, 20.dp) .. greenBackground }
             box { frame(200.dp, 150.dp, 20.dp, 20.dp) .. redBackground }
         }
 
-        column {
-            maxSize
-            gapHeight { 8.dp }
-            surroundingEditor("padding", data.padding)
-            surroundingEditor("margin", data.margin)
+        instructionPanel(selection)
+    }
+}
+
+@Adaptive
+fun instructionPanel(selection: List<AbstractCommonFragment<*>>) {
+    println(selection)
+    val data = copyStore {
+        if (selection.isEmpty()) {
+            InstructionEditorData()
+        } else {
+            intersectInstructions(selection)
         }
+    }
+    println(data)
+
+    column {
+        maxSize
+        gapHeight { 8.dp }
+        surroundingEditor("padding", data.padding)
+        surroundingEditor("margin", data.margin)
     }
 }
 

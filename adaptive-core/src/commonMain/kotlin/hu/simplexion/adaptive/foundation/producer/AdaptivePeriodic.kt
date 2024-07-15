@@ -10,6 +10,37 @@ import hu.simplexion.adaptive.service.transport.ServiceTimeoutException
 import kotlinx.coroutines.*
 import kotlin.time.Duration
 
+/**
+ * Execute [producerFun] once in every [interval]. Adds an [AdaptivePeriodic] producer to
+ * the given component.
+ *
+ * For suspend version use [poll].
+ *
+ * Use patterns:
+ *
+ * ```kotlin
+ * val a = periodic(10.seconds) { getA() }
+ * ```
+ *
+ * @param    interval     The interval of execution.
+ * @param    binding      Set by the compiler plugin, ignore it.
+ * @param    producerFun  The function that produces the value.
+ */
+@Producer
+fun <VT> periodic(
+    interval: Duration,
+    binding: AdaptiveStateVariableBinding<VT>? = null,
+    producerFun: () -> VT
+): VT {
+    checkNotNull(binding)
+
+    binding.targetFragment.addProducer(
+        AdaptivePoll(binding, interval, producerFun)
+    )
+
+    return producerFun()
+}
+
 class AdaptivePeriodic<VT>(
     override val binding: AdaptiveStateVariableBinding<VT>,
     val interval: Duration,

@@ -4,4 +4,11 @@
 
 package hu.simplexion.adaptive.foundation.producer
 
+/**
+ * Cancels the producer by returning from the coroutine. Throws [AdaptiveProducerCancel].
+ */
+fun cancelProducer(message: String? = null): Nothing {
+    throw AdaptiveProducerCancel(message)
+}
+
 class AdaptiveProducerCancel(message : String?) : RuntimeException(message)

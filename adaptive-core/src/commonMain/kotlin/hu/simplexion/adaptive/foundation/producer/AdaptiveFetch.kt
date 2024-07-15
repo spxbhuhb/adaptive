@@ -11,6 +11,34 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
+/**
+ * Execute [producerFun]. When the result is ready, set the state variable
+ * the fetch is bound to.
+ *
+ * Use patterns:
+ *
+ * ```kotlin
+ * val a = fetch { getA() }
+ * val b = fetch { getB() } ?: B() // default value
+ * ```
+ *
+ * @param    binding      Set by the compiler plugin, ignore it.
+ * @param    producerFun  The function that produces the value.
+ */
+@Producer
+fun <VT> fetch(
+    binding: AdaptiveStateVariableBinding<VT>? = null,
+    producerFun: suspend () -> VT
+): VT? {
+    checkNotNull(binding)
+
+    binding.targetFragment.addProducer(
+        AdaptiveFetch(binding, producerFun)
+    )
+
+    return null
+}
+
 class AdaptiveFetch<VT>(
     override val binding: AdaptiveStateVariableBinding<VT>,
     val fetchFunction: suspend () -> VT

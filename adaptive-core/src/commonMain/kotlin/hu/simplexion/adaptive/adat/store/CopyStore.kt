@@ -66,11 +66,3 @@ class CopyStore<A : AdatClass<A>>(
     }
 
 }
-
-fun <A : AdatClass<A>> A.replaceWith(newValue: A) {
-    val store = requireNotNull(adatContext?.store) { "cannot replace the adat class without a store: ${getMetadata().name}" }
-    require(store is CopyStore<*>) { "store is not a copy store" }
-
-    @Suppress("UNCHECKED_CAST") // replaceWith enforces the same type
-    (store as CopyStore<A>).replaceValue(newValue)
-}
