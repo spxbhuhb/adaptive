@@ -1,5 +1,6 @@
-package hu.simplexion.adaptive.designer
+package hu.simplexion.adaptive.designer.fragment
 
+import hu.simplexion.adaptive.designer.designer
 import hu.simplexion.adaptive.foundation.AdaptiveExpect
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction

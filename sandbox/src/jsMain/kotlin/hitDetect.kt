@@ -1,4 +1,4 @@
-import hu.simplexion.adaptive.designer.hits
+import hu.simplexion.adaptive.designer.utility.hits
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.instruction.Name
