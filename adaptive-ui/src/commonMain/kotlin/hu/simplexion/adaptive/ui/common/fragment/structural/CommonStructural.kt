@@ -79,6 +79,10 @@ open class CommonStructural<RT, CRT : RT>(
         renderData.finalHeight = proposedHeight
     }
 
+    override fun layoutChange(fragment: AbstractCommonFragment<*>) {
+        // structural fragments do not perform layout calculations
+    }
+
 //    override fun layout(proposedFrame: RawFrame?) {
 //        // layout calculation is handled by the actual layouts, structural only applies to the actual UI
 //        layoutFrameOrNull = proposedFrame

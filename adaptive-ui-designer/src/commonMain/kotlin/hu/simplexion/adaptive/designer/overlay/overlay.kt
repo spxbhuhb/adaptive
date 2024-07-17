@@ -8,11 +8,9 @@ import hu.simplexion.adaptive.ui.common.fragment.box
 
 @Adaptive
 fun overlay(selection: Selection) {
-    val frame = containingFrame(selection)
+    val frame = containingFrame(selection)?.grow(1.0)
 
     if (frame != null) {
-        box(*containingBox) {
-
-        }
+        box(*containingBox, frame) { }
     }
 }

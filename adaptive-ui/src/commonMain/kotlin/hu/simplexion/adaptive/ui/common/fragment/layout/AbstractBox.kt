@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.ui.common.fragment.layout
 
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
+import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import kotlin.math.max
 
 abstract class AbstractBox<RT, CRT : RT>(
@@ -59,6 +60,26 @@ abstract class AbstractBox<RT, CRT : RT>(
         }
 
         placeStructural()
+    }
+
+    override fun layoutChange(fragment: AbstractCommonFragment<*>) {
+        val data = this.renderData
+        val container = data.container
+
+        val innerWidth = data.innerWidth !!
+        val innerHeight = data.innerHeight !!
+
+        fragment.computeLayout(innerWidth, innerHeight)
+
+        val horizontalAlignment = container?.horizontalAlignment
+        val verticalAlignment = container?.verticalAlignment
+
+        val itemLayout = fragment.renderData.layout
+
+        val innerTop = itemLayout?.instructedTop ?: alignOnAxis(fragment.verticalAlignment, verticalAlignment, innerHeight, fragment.renderData.finalHeight)
+        val innerLeft = itemLayout?.instructedLeft ?: alignOnAxis(fragment.horizontalAlignment, horizontalAlignment, innerWidth, fragment.renderData.finalWidth)
+
+        fragment.placeLayout(innerTop + data.surroundingTop, innerLeft + data.surroundingStart)
     }
 
 }

@@ -47,9 +47,15 @@ abstract class AbstractCommonFragment<RT>(
         return true
     }
 
-    fun patchInstructions() {
+    open fun patchInstructions() {
         if (instructionIndex != - 1 && haveToPatch(dirtyMask, 1 shl instructionIndex)) {
-            renderData = CommonRenderData(uiAdapter, instructions)
+            previousRenderData = renderData
+            renderData = CommonRenderData(uiAdapter, instructions, previousRenderData)
+
+            if (renderData.layout != previousRenderData.layout) {
+                renderData.layoutFragment?.layoutChange(this)
+            }
+
             uiAdapter.applyRenderInstructions(this)
         }
     }

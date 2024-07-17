@@ -9,8 +9,9 @@ object Adaptive {
     
     override val dependencyHell
         get() = throw UnsupportedOperationException()
-
+  
     val svelte = Adaptive.ui
+    val server = Adaptive.backend
 
     override val compose = Adaptive.ui
     override val react = Adaptive.ui
@@ -21,13 +22,13 @@ object Adaptive {
     override val rest = Adaptive.services
 
     override val resources = Adaptive.resources
-  
+    override val settings = Adaptive.settings
 }
 ```
 
 ## A bit longer
 
-Adaptive is a Kotlin Multiplatform library for full-stack application development.
+Adaptive is a software suite for building full-stack Kotlin Multiplatform applications:
 
 Client platforms:
 
@@ -40,6 +41,12 @@ Server platforms:
 * all platforms supported by Kotlin Multiplatform
   * some modules may be platform dependent, but
   * the core is pure Kotlin
+
+Tools:
+
+* Project Wizard
+* Dev Server
+* UI Designer
 
 ## Adaptive in action
 

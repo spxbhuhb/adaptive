@@ -228,4 +228,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
         return grid
     }
 
+    override fun layoutChange(fragment: AbstractCommonFragment<*>) {
+        // FIXME layout change for grid
+    }
 }

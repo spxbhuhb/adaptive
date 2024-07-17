@@ -143,4 +143,5 @@ abstract class AbstractContainer<RT, CRT : RT>(
         }
     }
 
+    abstract fun layoutChange(fragment: AbstractCommonFragment<*>)
 }

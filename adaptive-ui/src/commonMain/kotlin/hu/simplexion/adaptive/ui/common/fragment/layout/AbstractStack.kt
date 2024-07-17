@@ -129,4 +129,7 @@ abstract class AbstractStack<RT, CRT : RT>(
         placeStructural()
     }
 
+    override fun layoutChange(fragment: AbstractCommonFragment<*>) {
+        // FIXME layout change for row and column
+    }
 }

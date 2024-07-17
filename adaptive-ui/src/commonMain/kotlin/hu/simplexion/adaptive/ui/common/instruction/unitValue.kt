@@ -71,6 +71,10 @@ class DPixel(
         return if (value.isNaN()) "NaP" else "${value}dp"
     }
 
+    operator fun minus(value: Double) = DPixel(this.value - value)
+
+    operator fun plus(value: Double) = DPixel(this.value + value)
+
     companion object {
         val ZERO = DPixel(0.0)
     }

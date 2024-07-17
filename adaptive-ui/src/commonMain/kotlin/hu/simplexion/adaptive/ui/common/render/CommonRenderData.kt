@@ -17,18 +17,20 @@ import hu.simplexion.adaptive.ui.common.fragment.layout.RawSurrounding
  * @property innerHeight the intrinsic height of the inner content of the fragment without padding, border width and margin
  */
 class CommonRenderData(
-    val adapter : AbstractCommonAdapter<*,*>
-): Traceable {
+    val adapter: AbstractCommonAdapter<*, *>
+) : Traceable {
 
     constructor(
-        adapter : AbstractCommonAdapter<*,*>,
-        instructions : Array<out AdaptiveInstruction>
+        adapter: AbstractCommonAdapter<*, *>,
+        instructions: Array<out AdaptiveInstruction>,
+        previous: CommonRenderData?
     ) : this(adapter) {
-        instructions.forEach{ it.apply(this) }
+        instructions.forEach { it.apply(this) }
         computeSurrounding()
+        layoutFragment = previous?.layoutFragment
     }
 
-    override var tracePatterns : Array<out Regex> = emptyArray()
+    override var tracePatterns: Array<out Regex> = emptyArray()
 
     var layoutFragment: AbstractContainer<*, *>? = null
 
@@ -48,12 +50,12 @@ class CommonRenderData(
     var finalWidth = 0.0
     var finalHeight = 0.0
 
-    var layout : LayoutRenderData? = null
-    var decoration : DecorationRenderData? = null
-    var container : ContainerRenderData? = null
-    var text : TextRenderData? = null
-    var grid : GridRenderData? = null
-    var event : EventRenderData? = null
+    var layout: LayoutRenderData? = null
+    var decoration: DecorationRenderData? = null
+    var container: ContainerRenderData? = null
+    var text: TextRenderData? = null
+    var grid: GridRenderData? = null
+    var event: EventRenderData? = null
 
     fun computeSurrounding() {
         val padding = layout?.padding ?: RawSurrounding.ZERO

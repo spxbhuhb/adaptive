@@ -6,5 +6,5 @@ import hu.simplexion.adaptive.ui.common.instruction.color
 import hu.simplexion.adaptive.ui.common.instruction.dp
 
 val containingBox = instructionsOf(
-    border(color(0x0000ff), 1.dp)
+    border(color(0xA020F0), 1.dp)
 )
