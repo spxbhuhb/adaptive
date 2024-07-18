@@ -23,6 +23,10 @@ rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlu
 
 kotlin {
 
+    jvmToolchain(11)
+
+    jvm()
+
     js(IR) {
         browser()
         binaries.library()

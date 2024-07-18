@@ -75,8 +75,13 @@ class DPixel(
 
     operator fun plus(value: Double) = DPixel(this.value + value)
 
+    operator fun minus(value: DPixel) = DPixel(this.value - value.value)
+
+    operator fun plus(value: DPixel) = DPixel(this.value + value.value)
+
     companion object {
         val ZERO = DPixel(0.0)
+        val NaP = DPixel(Double.NaN)
     }
 }
 

@@ -34,8 +34,6 @@ class DeepCopyTest {
         val original = M2(12, M1(23), I1(34))
         val copy = original.deepCopy()
 
-        println(original.getMetadata())
-
         assertEquals(original, copy)
         assertNotSame(original.m1, copy.m1)
         assertSame(original.i1, copy.i1)

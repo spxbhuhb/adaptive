@@ -8,7 +8,6 @@ import kotlin.math.max
 import kotlin.math.min
 
 fun containingFrame(selection: Selection): Frame? {
-    selection.forEach { println(it) }
     if (selection.isEmpty()) return null
 
     var top = Double.MAX_VALUE
@@ -28,5 +27,5 @@ fun containingFrame(selection: Selection): Frame? {
         right = max(finalLeft + renderData.finalWidth, left)
     }
 
-    return frame(top.dp, left.dp, (right - left).dp, (bottom - top).dp).also { println(it) }
+    return frame(top.dp, left.dp, (right - left).dp, (bottom - top).dp)
 }

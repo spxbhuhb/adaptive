@@ -132,4 +132,25 @@ class CopyStoreTest {
         binding.setValue(45, false)
         assertEquals(45, t1.p0)
     }
+
+    @Test
+    fun onChangeTest() {
+        var out = 0
+
+        val adapter = test {
+            val value = copyStore({ out = it.someInt }) { T(12) }
+        }
+
+        val root = adapter.rootFragment
+        val value = root.state[0]
+
+        assertIs<T>(value)
+
+        val store = value.adatContext?.store as? CopyStore<*>
+        assertNotNull(store)
+
+        store.setProperty(listOf("someInt"), 23)
+
+        assertEquals(23, out)
+    }
 }

@@ -39,7 +39,12 @@ open class DesignerDPixelInput(
 
 
         if (haveToPatch(dirtyMask, 1 shl 1)) {
-            receiver.value = b.value?.value?.format(1, hideZeroDecimals = true) ?: ""
+            val value = b.value
+            if (value == null || value == DPixel.NaP) {
+                receiver.value = ""
+            } else {
+                receiver.value = value.value.format(1, hideZeroDecimals = true)
+            }
         }
 
         if (isInit) {
@@ -59,7 +64,7 @@ open class DesignerDPixelInput(
                 val value = if (wellFormattedInput.isEmpty()) null else wellFormattedInput.toDouble()
 
                 if (value != b.value?.value) {
-                    b.setValue(value?.let { DPixel(it) }, true)
+                    b.setValue(value?.let { DPixel(it) } ?: DPixel.NaP, true)
                 }
             })
 

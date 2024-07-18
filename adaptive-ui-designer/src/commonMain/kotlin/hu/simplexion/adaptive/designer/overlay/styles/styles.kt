@@ -1,10 +1,15 @@
 package hu.simplexion.adaptive.designer.overlay.styles
 
 import hu.simplexion.adaptive.foundation.instruction.instructionsOf
-import hu.simplexion.adaptive.ui.common.instruction.border
-import hu.simplexion.adaptive.ui.common.instruction.color
-import hu.simplexion.adaptive.ui.common.instruction.dp
+import hu.simplexion.adaptive.ui.common.instruction.*
+
+val guideColor = color(0xfc03d7)
 
 val containingBox = instructionsOf(
-    border(color(0xA020F0), 1.dp)
+    border(guideColor, 1.dp)
+)
+
+val guide = instructionsOf(
+    borderTop(guideColor, 1.dp),
+    borderLeft(guideColor, 1.dp)
 )

@@ -99,6 +99,10 @@ class Frame(
     }
 
     fun grow(dp: Double) = Frame(top - dp, left - dp, width + (2 * dp), height + (2 * dp))
+
+    companion object {
+        val NaF = Frame(DPixel.NaP, DPixel.NaP, DPixel.NaP, DPixel.NaP)
+    }
 }
 
 @Adat

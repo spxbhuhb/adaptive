@@ -13,6 +13,8 @@ import hu.simplexion.adaptive.foundation.producer.Producer
  * produced by [copyStore] can safely use the validation result as it is
  * up-to-date all the time.
  *
+ * @param    onChange  Called after a new instance is generated, but before the
+ *                     state of the fragment is updated.
  * @param    source    Source of the stored data. [copyStore] makes a deep copy
  *                     of this instance, validates that copy and then returns with it.
  * @param    binding   Set by the compiler plugin, ignore it.
@@ -21,12 +23,13 @@ import hu.simplexion.adaptive.foundation.producer.Producer
  */
 @Producer
 fun <A : AdatClass<A>> copyStore(
+    onChange: ((newValue: A) -> Unit)? = null,
     binding: AdaptiveStateVariableBinding<A>? = null,
     source: () -> A
 ): A {
     checkNotNull(binding)
 
-    val store = CopyStore(binding, source())
+    val store = CopyStore(binding, source(), onChange)
 
     binding.targetFragment.addProducer(store)
 
@@ -35,18 +38,15 @@ fun <A : AdatClass<A>> copyStore(
 
 class CopyStore<A : AdatClass<A>>(
     override val binding: AdaptiveStateVariableBinding<A>,
-    initialValue: A
+    initialValue: A,
+    val onChange: ((newValue: A) -> Unit)?
 ) : AdatStore(), AdaptiveProducer<A> {
 
     override var latestValue: A? = makeCopy(initialValue, null)
 
-    fun replaceValue(newValue: A) {
-        latestValue = makeCopy(newValue, null)
-        binding.targetFragment.setDirty(binding.indexInTargetState, true)
-    }
-
     fun setProperty(path: List<String>, value: Any?) {
         latestValue = latestValue?.let { makeCopy(it, AdatChange(path, value)) }
+        onChange?.invoke(latestValue !!)
         binding.targetFragment.setDirty(binding.indexInTargetState, true)
     }
 
