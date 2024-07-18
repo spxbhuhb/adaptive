@@ -8,7 +8,6 @@ import hu.simplexion.adaptive.kotlin.adat.AdatPluginKey
 import hu.simplexion.adaptive.kotlin.adat.ClassIds
 import hu.simplexion.adaptive.kotlin.adat.FqNames
 import hu.simplexion.adaptive.kotlin.adat.Names
-import hu.simplexion.adaptive.kotlin.common.isFromPlugin
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.analysis.checkers.getContainingClassSymbol
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
@@ -103,7 +102,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
     override fun generateConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> =
         when {
             context.isAdatClass -> generateClassConstructors(context)
-            context.isAdatCompanion -> generateCompanionConstrucor(context)
+            context.isAdatCompanion -> generateCompanionConstructor(context)
             else -> emptyList()
         }
 
@@ -124,7 +123,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         return result
     }
 
-    private fun generateCompanionConstrucor(context: MemberGenerationContext): List<FirConstructorSymbol> =
+    private fun generateCompanionConstructor(context: MemberGenerationContext): List<FirConstructorSymbol> =
         listOf(
             createConstructor(context.owner, AdatPluginKey, isPrimary = true, generateDelegatedNoArgConstructorCall = true).symbol
         )
@@ -274,7 +273,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         get() = if (this == null) false else owner.isAdatClass
 
     val MemberGenerationContext?.isAdatCompanion
-        get() = isFromPlugin(AdatPluginKey)
+        get() = if (this == null) false else owner.isAdatCompanion
 
     val MemberGenerationContext.adatClassType
         get() = if (isAdatClass) {

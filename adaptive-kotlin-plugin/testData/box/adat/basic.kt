@@ -28,7 +28,7 @@ fun box(): String {
     t1.someBoolean = true
     t1.setValue("someInt", 12)
 
-    if (! t1.someBoolean) "Fail"
+    if (! t1.someBoolean) return "Fail"
 
     if (! t1.equals(t1)) return "Fail: equals"
     if (t1.toString() != "TestAdat(someInt=12, someBoolean=true, someIntListSet=[])") return "Fail: toString ${t1.toString()}"

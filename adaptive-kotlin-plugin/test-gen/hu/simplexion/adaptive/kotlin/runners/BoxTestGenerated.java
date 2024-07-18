@@ -56,6 +56,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Test
+    @TestMetadata("newInstance.kt")
+    public void testNewInstance() {
+      runTest("testData/box/adat/newInstance.kt");
+    }
+
+    @Test
     @TestMetadata("sensibleDefaults.kt")
     public void testSensibleDefaults() {
       runTest("testData/box/adat/sensibleDefaults.kt");
@@ -104,17 +110,17 @@ public class BoxTestGenerated extends AbstractBoxTest {
         runTest("testData/box/adat/immutable/immutableVar.kt");
       }
 
-        @Test
-        @TestMetadata("noBackingField.kt")
-        public void testNoBackingField() {
-            runTest("testData/box/adat/immutable/noBackingField.kt");
-        }
+      @Test
+      @TestMetadata("noBackingField.kt")
+      public void testNoBackingField() {
+        runTest("testData/box/adat/immutable/noBackingField.kt");
+      }
 
-        @Test
-        @TestMetadata("openVal.kt")
-        public void testOpenVal() {
-            runTest("testData/box/adat/immutable/openVal.kt");
-        }
+      @Test
+      @TestMetadata("openVal.kt")
+      public void testOpenVal() {
+        runTest("testData/box/adat/immutable/openVal.kt");
+      }
     }
 
     @Nested
@@ -398,11 +404,11 @@ public class BoxTestGenerated extends AbstractBoxTest {
         KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/producer"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
       }
 
-        @Test
-        @TestMetadata("copyStore.kt")
-        public void testCopyStore() {
-            runTest("testData/box/foundation/producer/copyStore.kt");
-        }
+      @Test
+      @TestMetadata("copyStore.kt")
+      public void testCopyStore() {
+        runTest("testData/box/foundation/producer/copyStore.kt");
+      }
 
       @Test
       @TestMetadata("poll.kt")
