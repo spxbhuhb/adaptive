@@ -1,13 +1,15 @@
 package hu.simplexion.adaptive.designer
 
+import hu.simplexion.adaptive.adat.store.copyStore
+import hu.simplexion.adaptive.adat.store.replaceWith
 import hu.simplexion.adaptive.designer.instruction.instructions
 import hu.simplexion.adaptive.designer.overlay.overlay
 import hu.simplexion.adaptive.designer.palette.palette
+import hu.simplexion.adaptive.designer.utility.Selection
 import hu.simplexion.adaptive.designer.utility.hits
 import hu.simplexion.adaptive.designer.utility.noHit
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.rangeTo
-import hu.simplexion.adaptive.ui.common.AbstractCommonFragment
 import hu.simplexion.adaptive.ui.common.fragment.box
 import hu.simplexion.adaptive.ui.common.fragment.grid
 import hu.simplexion.adaptive.ui.common.instruction.*
@@ -21,7 +23,8 @@ val canvasBorder = border(color(0xd0d0d0), 1.dp)
 
 @Adaptive
 fun designerMain() {
-    var selection = listOf<AbstractCommonFragment<*>>()
+    val selection = copyStore { Selection(emptyList()) }
+    var lastPosition: Position? = null
 
     grid {
         maxSize .. gapWidth { 12.dp }
@@ -32,7 +35,19 @@ fun designerMain() {
         box {
             maxSize .. canvasBorder .. canvasBackground
 
-            onClick { selection = hits(it.fragment, it.x, it.y) }
+            // FIXME this convert screen x and y to dp
+            onCursorDown {
+                selection.replaceWith(Selection(hits(it.fragment, it.y, it.x)))
+                lastPosition = Position(it.y.dp, it.x.dp)
+            }
+            onCursorMove {
+                if (lastPosition != null) {
+                    val newPosition = Position(it.y.dp, it.x.dp)
+                    selection.move(lastPosition !!, newPosition)
+                    lastPosition = newPosition
+                }
+            }
+            onCursorUp { lastPosition = null }
 
             box {
                 maxSize .. noHit

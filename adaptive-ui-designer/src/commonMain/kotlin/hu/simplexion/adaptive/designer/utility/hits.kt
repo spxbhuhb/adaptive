@@ -15,8 +15,8 @@ val noHit = object : AdaptiveInstruction {}
  */
 fun hits(
     container: AbstractCommonFragment<*>,
-    x: Double,
-    y: Double
+    y: Double,
+    x: Double
 ): List<AbstractCommonFragment<*>> {
 
     if (container !is AbstractContainer<*, *>) return emptyList()
@@ -43,7 +43,7 @@ fun hits(
         }
 
         if (item is AbstractContainer<*, *>) {
-            result += hits(item, x - left, y - top)
+            result += hits(item, y - top, x - left)
         }
     }
 

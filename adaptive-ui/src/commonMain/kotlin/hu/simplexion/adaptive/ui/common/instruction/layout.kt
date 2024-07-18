@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.ui.common.instruction
 
 import hu.simplexion.adaptive.adat.Adat
+import hu.simplexion.adaptive.adat.AdatClass
 import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.fragment.layout.RawSurrounding
 import hu.simplexion.adaptive.ui.common.render.container
@@ -109,13 +110,17 @@ class Frame(
 class Position(
     val top: DPixel,
     val left: DPixel
-) : AdaptiveInstruction {
+) : AdatClass<Position>, AdaptiveInstruction {
     override fun apply(subject: Any) {
         layout(subject) {
             val adapter = it.adapter
             it.instructedTop = adapter.toPx(top)
             it.instructedLeft = adapter.toPx(left)
         }
+    }
+
+    companion object {
+        val NaP = Position(DPixel.NaP, DPixel.NaP)
     }
 }
 

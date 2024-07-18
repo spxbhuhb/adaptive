@@ -100,3 +100,18 @@ fun yetAnotherEditor(yaa : YetAnotherAdat) {
     input { yaa.s2 }
 }
 ```
+
+### Replacing the top-level instance
+
+To replace the whole instance of the copy store, use the `replaceWith` function:
+
+```kotlin
+import hu.simplexion.adaptive.foundation.Adaptive
+
+@Adaptive
+fun someEditor() {
+    val someAdat = copyStore { SomeAdat("") }
+    
+    text(someAdat.s1) .. onClick { someAdat.replaceWith(SomeAdat("Hello")) }
+}
+```

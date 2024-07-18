@@ -5,20 +5,21 @@ import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
 import hu.simplexion.adaptive.ui.common.instruction.*
 
 fun applyProperties(selection: Selection, data: InstructionEditorData) {
-    for (item in selection) {
+    for (item in selection.items) {
         if (item.instructionIndex < 0) continue
         val instructions = item.instructions.toMutableList()
         applyProperties(instructions, data)
         item.setStateVariable(item.instructionIndex, instructions.toTypedArray())
         item.setDirty(item.instructionIndex, true)
     }
+    selection.nextRevision()
 }
 
-private fun applyProperties(instructions: MutableList<AdaptiveInstruction>, data: InstructionEditorData) {
+fun applyProperties(instructions: MutableList<AdaptiveInstruction>, data: InstructionEditorData) {
     applyFrame(instructions, data.frame)
 }
 
-private fun applyFrame(instructions: MutableList<AdaptiveInstruction>, frame: Frame) {
+fun applyFrame(instructions: MutableList<AdaptiveInstruction>, frame: Frame) {
     val top = frame.top
     val left = frame.left
     val width = frame.width

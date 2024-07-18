@@ -8,6 +8,7 @@ import org.w3c.dom.events.Event
 import org.w3c.dom.events.EventListener
 
 class BrowserEventListener(
+    val eventName: String,
     val eventFun : (Event) -> Unit
 ) : EventListener {
     override fun handleEvent(event: Event) {

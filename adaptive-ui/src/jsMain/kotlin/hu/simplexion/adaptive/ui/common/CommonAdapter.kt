@@ -10,13 +10,11 @@ import hu.simplexion.adaptive.ui.common.fragment.layout.AbstractContainer
 import hu.simplexion.adaptive.ui.common.fragment.layout.RawSurrounding
 import hu.simplexion.adaptive.ui.common.instruction.DPixel
 import hu.simplexion.adaptive.ui.common.instruction.SPixel
-import hu.simplexion.adaptive.ui.common.instruction.UIEvent
-import hu.simplexion.adaptive.ui.common.platform.BrowserEventListener
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.NavSupport
 import hu.simplexion.adaptive.ui.common.platform.ResizeObserver
 import hu.simplexion.adaptive.ui.common.render.BrowserDecorationApplier
-import hu.simplexion.adaptive.ui.common.render.EventRenderData
+import hu.simplexion.adaptive.ui.common.render.BrowserEventApplier
 import hu.simplexion.adaptive.ui.common.render.LayoutRenderData
 import hu.simplexion.adaptive.ui.common.render.TextRenderData
 import hu.simplexion.adaptive.utility.alsoIfInstance
@@ -28,7 +26,6 @@ import kotlinx.coroutines.Dispatchers
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.css.CSSStyleDeclaration
-import org.w3c.dom.events.MouseEvent
 
 class CommonAdapter(
     override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
@@ -121,7 +118,7 @@ class CommonAdapter(
         renderData.layout { it.apply(style) }
         BrowserDecorationApplier.applyTo(fragment)
         renderData.text { it.apply(style) }
-        renderData.event { it.apply(style, fragment) }
+        BrowserEventApplier.applyTo(fragment)
     }
 
     fun LayoutRenderData.apply(style: CSSStyleDeclaration) {
@@ -162,40 +159,6 @@ class CommonAdapter(
         if (noSelect == true) {
             style.setProperty("-webkit-user-select", "none")
             style.setProperty("user-select", "none")
-        }
-    }
-
-    fun EventRenderData.apply(style: CSSStyleDeclaration, fragment: AbstractCommonFragment<HTMLElement>) {
-
-        onClickListener {
-            it as BrowserEventListener
-            fragment.receiver.removeEventListener("click", it)
-        }
-
-        onClick { oc ->
-            BrowserEventListener {
-
-                val x: Double
-                val y: Double
-
-                if (it is MouseEvent) {
-                    val boundingRect = fragment.receiver.getBoundingClientRect()
-                    val renderData = fragment.renderData
-                    val margin = renderData.layout?.margin ?: RawSurrounding.ZERO
-                    x = it.clientX - boundingRect.x - margin.start
-                    y = it.clientY - boundingRect.y - margin.top
-                } else {
-                    x = Double.NaN
-                    y = Double.NaN
-                }
-
-                oc.execute(UIEvent(fragment, it, x, y))
-
-            }.also {
-                onClickListener = it
-                fragment.receiver.addEventListener("click", it)
-            }
-            style.cursor = "pointer"
         }
     }
 
