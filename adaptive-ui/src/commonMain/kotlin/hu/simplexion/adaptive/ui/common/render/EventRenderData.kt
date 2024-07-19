@@ -5,10 +5,7 @@
 package hu.simplexion.adaptive.ui.common.render
 
 import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
-import hu.simplexion.adaptive.ui.common.instruction.OnClick
-import hu.simplexion.adaptive.ui.common.instruction.OnCursorDown
-import hu.simplexion.adaptive.ui.common.instruction.OnCursorMove
-import hu.simplexion.adaptive.ui.common.instruction.OnCursorUp
+import hu.simplexion.adaptive.ui.common.instruction.*
 
 class EventRenderData(
     val adapter : AbstractCommonAdapter<*, *>
@@ -16,12 +13,20 @@ class EventRenderData(
     var onClick: OnClick? = null
     var onClickListener : Any? = null
 
-    var onCursorDown: OnCursorDown? = null
-    var onCursorDownListener: Any? = null
+    var additionalEvents: Boolean = false
 
-    var onCursorMove: OnCursorMove? = null
-    var onCursorMoveListener: Any? = null
+    var onMove: OnMove? = null
+    var onMoveListener: Any? = null
 
-    var onCursorUp: OnCursorUp? = null
-    var onCursorUpListener: Any? = null
+    var onPrimaryDown: OnPrimaryDown? = null
+    var onPrimaryDownListener: Any? = null
+
+    var onPrimaryUp: OnPrimaryUp? = null
+    var onPrimaryUpListener: Any? = null
+
+    var onSecondaryDown: OnSecondaryDown? = null
+    var onSecondaryDownListener: Any? = null
+
+    var onSecondaryUp: OnSecondaryUp? = null
+    var onSecondaryUpListener: Any? = null
 }

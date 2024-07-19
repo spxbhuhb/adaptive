@@ -12,9 +12,13 @@ import hu.simplexion.adaptive.ui.common.render.event
 
 fun onClick(handler: (event: UIEvent) -> Unit) = OnClick(handler)
 
-fun onCursorDown(handler: (event: UIEvent) -> Unit) = OnCursorDown(handler)
-fun onCursorMove(handler: (event: UIEvent) -> Unit) = OnCursorMove(handler)
-fun onCursorUp(handler: (event: UIEvent) -> Unit) = OnCursorUp(handler)
+fun onMove(handler: (event: UIEvent) -> Unit) = OnMove(handler)
+
+fun onPrimaryDown(handler: (event: UIEvent) -> Unit) = OnPrimaryDown(handler)
+fun onPrimaryUp(handler: (event: UIEvent) -> Unit) = OnPrimaryUp(handler)
+
+fun onSecondaryDown(handler: (event: UIEvent) -> Unit) = OnSecondaryDown(handler)
+fun onSecondaryUp(handler: (event: UIEvent) -> Unit) = OnSecondaryUp(handler)
 
 /**
  * @property   x   The raw [x] coordinate where the event happened, relative to the frame of the
@@ -58,28 +62,63 @@ class OnClick(
 }
 
 @Adat
-class OnCursorDown(
+class OnMove(
     override val handler: (event: UIEvent) -> Unit
 ) : UIEventHandler {
     override fun apply(subject: Any) {
-        event(subject) { it.onCursorDown = this }
+        event(subject) {
+            it.additionalEvents = true
+            it.onMove = this
+        }
     }
 }
 
 @Adat
-class OnCursorMove(
+class OnPrimaryDown(
     override val handler: (event: UIEvent) -> Unit
 ) : UIEventHandler {
     override fun apply(subject: Any) {
-        event(subject) { it.onCursorMove = this }
+        event(subject) {
+            it.additionalEvents = true
+            it.onPrimaryDown = this
+        }
+    }
+}
+
+
+@Adat
+class OnPrimaryUp(
+    override val handler: (event: UIEvent) -> Unit
+) : UIEventHandler {
+    override fun apply(subject: Any) {
+        event(subject) {
+            it.additionalEvents = true
+            it.onPrimaryUp = this
+        }
     }
 }
 
 @Adat
-class OnCursorUp(
+class OnSecondaryDown(
     override val handler: (event: UIEvent) -> Unit
 ) : UIEventHandler {
     override fun apply(subject: Any) {
-        event(subject) { it.onCursorUp = this }
+        event(subject) {
+            it.additionalEvents = true
+            it.onSecondaryDown = this
+        }
+    }
+}
+
+
+@Adat
+class OnSecondaryUp(
+    override val handler: (event: UIEvent) -> Unit
+) : UIEventHandler {
+    override fun apply(subject: Any) {
+        event(subject) {
+            it.additionalEvents = true
+            it.onSecondaryUp = this
+        }
     }
 }

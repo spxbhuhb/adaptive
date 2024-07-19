@@ -4,12 +4,14 @@
 
 package hu.simplexion.adaptive.ui.common.platform
 
+import hu.simplexion.adaptive.ui.common.render.BrowserEventApplier
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.EventListener
 
 class BrowserEventListener(
     val eventName: String,
-    val eventFun : (Event) -> Unit
+    val condition: BrowserEventApplier.EventCondition,
+    val eventFun: BrowserEventListener.(Event) -> Unit
 ) : EventListener {
     override fun handleEvent(event: Event) {
         eventFun(event)
