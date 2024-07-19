@@ -2,8 +2,8 @@
 
 ## Demos
 
-* [sandbox lib](../adaptive-lib/adaptive-lib-sandbox) (in this repo)
-* [site](../adaptive-site/src)  (in this repo)
+* [sandbox lib](../adaptive-lib-sandbox) (in this repo)
+* [site](../site/src)  (in this repo)
 * [adaptive-example](https://github.com/spxbhuhb/adaptive-example) repo
 
 ## Tutorials
@@ -42,6 +42,6 @@
 
 * Misc
     * [Actual UI](internals/actual%20UI.md)
-    * [Platforms](platforms/README)
+  * [Platforms](internals/platforms.md)
     * [Notes](notes.md)
     * [References](references.md)
