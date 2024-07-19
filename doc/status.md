@@ -25,6 +25,7 @@ That said, there are bugs and some functionality might break down time-to-time.
 
 In the close future I'll focus on these areas:
 
+* UI designer
 * support of basic UI features on all platforms
     * textual input fields
     * checkbox
@@ -32,7 +33,7 @@ In the close future I'll focus on these areas:
 * QR code reading for Android and iOS
 * file store for Android and iOS
 * basic charts
-* server (these already exist in other projects, I have to move it here and document it)
-    * authentication
-    * role based access control on server side
-    * file upload / download
+* server
+  * authentication - code is there, have to test and document
+  * role based access control on server side - code is there, have to test and document
+  * file upload / download - have to migrate from precursor project

@@ -33,8 +33,8 @@ class UIEvent(
     val x: Double = Double.NaN,
     val y: Double = Double.NaN
 ) {
-    val position: Position =
-        Position(
+    val position: Position
+        get() = Position(
             fragment.uiAdapter.toDp(y),
             fragment.uiAdapter.toDp(x)
         )
