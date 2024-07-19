@@ -44,7 +44,7 @@ fun goodMorning() {
 
             row(2.gridCol, greenGradient, cornerRadius, AlignItems.center, onClick { counter ++ }) {
                 maxSize
-                text("Snooze") .. textColor(white) .. textMedium .. noSelect .. onClick { println("Hello World!") }
+                text("Snooze") .. textColor(white) .. textMedium .. noSelect // .. onClick { println("Hello World!") }
             }
 
             row(4.gridCol, whiteBorder, cornerRadius, AlignItems.center) {

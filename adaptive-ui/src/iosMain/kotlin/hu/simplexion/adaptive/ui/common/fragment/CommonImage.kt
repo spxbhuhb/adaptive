@@ -70,7 +70,7 @@ class CommonImage(
         val fragment: CommonImage
     ) : UIImageView(CGRectMake(0.0, 0.0, 0.0, 0.0)) {
 
-        override fun touchesEnded(touches: Set<*>, withEvent: UIEvent?) {
+        override fun touchesEnded(touches: Set<*>, withEvent: platform.UIKit.UIEvent?) {
             fragment.instructions.firstOrNullIfInstance<OnClick>()
                 ?.execute(UIEvent(fragment, withEvent))
 

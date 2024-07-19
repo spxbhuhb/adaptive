@@ -15,7 +15,6 @@ import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import platform.CoreGraphics.CGRectMake
-import platform.UIKit.UIEvent
 import platform.UIKit.UILabel
 import platform.UIKit.UIView
 
@@ -65,9 +64,9 @@ class CommonText(
         val fragment: CommonText
     ) : UILabel(CGRectMake(0.0, 0.0, 0.0, 0.0)) {
 
-        override fun touchesEnded(touches: Set<*>, withEvent: UIEvent?) {
+        override fun touchesEnded(touches: Set<*>, withEvent: platform.UIKit.UIEvent?) {
             fragment.instructions.firstOrNullIfInstance<OnClick>()
-                ?.execute(hu.simplexion.adaptive.ui.common.instruction.UIEvent(fragment, withEvent))
+                ?.execute(UIEvent(fragment, withEvent))
             super.touchesBegan(touches, withEvent)
         }
 

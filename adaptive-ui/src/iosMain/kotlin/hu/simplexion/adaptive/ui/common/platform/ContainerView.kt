@@ -11,7 +11,6 @@ import hu.simplexion.adaptive.ui.common.instruction.UIEvent
 import hu.simplexion.adaptive.utility.firstOrNullIfInstance
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.CoreGraphics.CGRectMake
-import platform.UIKit.UIEvent
 import platform.UIKit.UIView
 
 @OptIn(ExperimentalForeignApi::class)
@@ -35,9 +34,9 @@ class ContainerView(
         }
     }
 
-    override fun touchesEnded(touches: Set<*>, withEvent: UIEvent?) {
+    override fun touchesEnded(touches: Set<*>, withEvent: platform.UIKit.UIEvent?) {
         owner.instructions.firstOrNullIfInstance<OnClick>()
-            ?.execute(hu.simplexion.adaptive.ui.common.instruction.UIEvent(owner, withEvent))
+            ?.execute(UIEvent(owner, withEvent))
         super.touchesBegan(touches, withEvent)
     }
 
