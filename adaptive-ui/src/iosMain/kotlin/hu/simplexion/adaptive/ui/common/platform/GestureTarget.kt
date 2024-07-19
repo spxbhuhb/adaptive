@@ -27,6 +27,7 @@ class GestureTarget(
     @ObjCAction
     fun viewTapped() {
         if (instruction is OnClick) {
+            // FIXME iOS UIEvent position
             instruction.execute(UIEvent(fragment, null))
         }
     }

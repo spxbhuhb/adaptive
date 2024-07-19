@@ -33,6 +33,12 @@ class UIEvent(
     val x: Double = Double.NaN,
     val y: Double = Double.NaN
 ) {
+    val position: Position =
+        Position(
+            fragment.uiAdapter.toDp(y),
+            fragment.uiAdapter.toDp(x)
+        )
+
     fun patchIfDirty() {
         val closureOwner = fragment.createClosure.owner
         if (closureOwner.dirtyMask != cleanStateMask) {

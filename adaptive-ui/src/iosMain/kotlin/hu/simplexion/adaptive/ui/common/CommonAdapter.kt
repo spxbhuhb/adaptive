@@ -94,6 +94,10 @@ open class CommonAdapter(
         return dPixel.value
     }
 
+    override fun toDp(value: Double): DPixel {
+        TODO("Not yet implemented")
+    }
+
     override fun toPx(sPixel: SPixel): Double {
         // FIXME DPixel to pixel for iOS
         return sPixel.value

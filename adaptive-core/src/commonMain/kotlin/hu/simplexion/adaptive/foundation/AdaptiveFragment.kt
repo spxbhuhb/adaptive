@@ -14,7 +14,7 @@ import hu.simplexion.adaptive.foundation.producer.AdaptiveProducer
 
 abstract class AdaptiveFragment(
     val adapter: AdaptiveAdapter,
-    val parent: AdaptiveFragment?,
+    var parent: AdaptiveFragment?,
     val declarationIndex: Int,
     val instructionIndex: Int,
     stateSize: Int

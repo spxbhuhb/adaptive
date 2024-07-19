@@ -93,7 +93,7 @@ open class CommonAdapter(
 
     override fun applyRenderInstructions(fragment: AbstractCommonFragment<View>) {
 
-        val renderData = CommonRenderData(this, fragment.instructions)
+        val renderData = CommonRenderData(this, fragment.instructions, fragment.previousRenderData)
         val view = fragment.receiver
 
         // FIXME should clear actual UI settings when null
@@ -119,7 +119,7 @@ open class CommonAdapter(
         val insets = mutableListOf<Int>()
 
         val borderWidth = layout?.border?.top // FIXME individual border widths for android
-        val borderColor = this.borderColor
+        val borderColor = this.border?.color
         val cornerRadius = this.cornerRadius
 
         if (borderWidth != null && borderColor != null) {
@@ -189,6 +189,7 @@ open class CommonAdapter(
 
         onClick { oc ->
             view.setOnClickListener {
+                // FIXME iOS UIEvent position
                 oc.execute(UIEvent(fragment, it))
             }
         }
@@ -202,6 +203,10 @@ open class CommonAdapter(
 
     override fun toPx(dPixel: DPixel): Double =
         applyDimension(COMPLEX_UNIT_DIP, dPixel.value.toFloat(), displayMetrics).toDouble()
+
+    override fun toDp(value: Double): DPixel {
+        TODO("Not yet implemented")
+    }
 
     val Double.px: Int
         inline get() = toInt()

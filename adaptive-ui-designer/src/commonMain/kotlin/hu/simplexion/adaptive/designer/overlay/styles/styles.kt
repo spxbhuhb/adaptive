@@ -13,3 +13,7 @@ val guide = instructionsOf(
     borderTop(guideColor, 1.dp),
     borderLeft(guideColor, 1.dp)
 )
+
+val targetBox = instructionsOf(
+    backgroundColor(color(0xa0a0a0))
+)

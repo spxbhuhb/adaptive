@@ -159,6 +159,7 @@ class CommonAdapter(
         if (noSelect == true) {
             style.setProperty("-webkit-user-select", "none")
             style.setProperty("user-select", "none")
+            style.cursor = "default"
         }
     }
 
@@ -175,8 +176,8 @@ class CommonAdapter(
     override fun toPx(dPixel: DPixel): Double =
         dPixel.value
 
-    val DPixel.pxs
-        get() = "${value}px"
+    override fun toDp(value: Double): DPixel =
+        DPixel(value)
 
     val Double.pxs
         inline get() = "${this}px"

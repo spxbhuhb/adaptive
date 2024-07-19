@@ -127,7 +127,13 @@ abstract class AbstractCommonAdapter<RT, CRT : RT> : AdaptiveAdapter {
         throw UnsupportedOperationException("openExternalLink($href)")
     }
 
+    // ------------------------------------------------------------------------------
+    // Device independent pixel <-> device dependent pixel conversions
+    // ------------------------------------------------------------------------------
+
     abstract fun toPx(dPixel: DPixel): Double
+
+    abstract fun toDp(value: Double): DPixel
 
     abstract fun toPx(sPixel: SPixel): Double
 

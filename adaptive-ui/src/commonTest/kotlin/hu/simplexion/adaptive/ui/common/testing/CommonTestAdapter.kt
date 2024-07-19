@@ -86,6 +86,9 @@ class CommonTestAdapter(
     override fun toPx(dPixel: DPixel): Double =
         dPixel.value
 
+    override fun toDp(value: Double): DPixel =
+        DPixel(value)
+
     override fun toPx(sPixel: SPixel): Double =
         sPixel.value
 
