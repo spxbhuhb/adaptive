@@ -23,31 +23,51 @@ abstract class EventRenderApplier<R> : AbstractRenderApplier() {
             if (current != null) current.onClickListener = it
         }
 
+        if (previous?.additionalEvents == false && current?.additionalEvents == false) return
+
         applyEventHandler(
             fragment,
-            previous?.onCursorDown,
-            previous?.onCursorDownListener,
-            current?.onCursorDown
+            previous?.onMove,
+            previous?.onMoveListener,
+            current?.onMove
         ).also {
-            if (current != null) current.onCursorDownListener = it
+            if (current != null) current.onMoveListener = it
         }
 
         applyEventHandler(
             fragment,
-            previous?.onCursorMove,
-            previous?.onCursorMoveListener,
-            current?.onCursorMove
+            previous?.onPrimaryDown,
+            previous?.onPrimaryDownListener,
+            current?.onPrimaryDown
         ).also {
-            if (current != null) current.onCursorMoveListener = it
+            if (current != null) current.onPrimaryDownListener = it
         }
 
         applyEventHandler(
             fragment,
-            previous?.onCursorUp,
-            previous?.onCursorUpListener,
-            current?.onCursorUp
+            previous?.onPrimaryUp,
+            previous?.onPrimaryUpListener,
+            current?.onPrimaryUp
         ).also {
-            if (current != null) current.onCursorUpListener = it
+            if (current != null) current.onPrimaryUpListener = it
+        }
+
+        applyEventHandler(
+            fragment,
+            previous?.onSecondaryDown,
+            previous?.onSecondaryDownListener,
+            current?.onSecondaryDown
+        ).also {
+            if (current != null) current.onSecondaryDownListener = it
+        }
+
+        applyEventHandler(
+            fragment,
+            previous?.onSecondaryUp,
+            previous?.onSecondaryUpListener,
+            current?.onSecondaryUp
+        ).also {
+            if (current != null) current.onSecondaryUpListener = it
         }
 
     }
