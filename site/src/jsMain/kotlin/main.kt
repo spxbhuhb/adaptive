@@ -12,6 +12,7 @@ import hu.simplexion.adaptive.ui.common.browser
 import hu.simplexion.adaptive.ui.common.fragment.*
 import hu.simplexion.adaptive.ui.common.instruction.*
 import hu.simplexion.adaptive.ui.common.instruction.AlignItems.Companion.alignItems
+import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.mediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.withJsResources
 import hu.simplexion.adaptive.wireformat.withJson
@@ -27,19 +28,20 @@ fun main() {
             defaultTextRenderData.fontSize = 16.sp
         }
 
-        grid {
-            rowTemplate(48.dp, 1.fr)
+        val media = mediaMetrics()
+        val background = if (media.isLight) lightBackground else darkBackground
 
-            header()
-            content()
+        grid {
+            rowTemplate(48.dp, 1.fr) .. maxSize .. background
+
+            header(media)
+            content(media)
         }
     }
 }
 
 @Adaptive
-fun header() {
-    val media = mediaMetrics()
-
+fun header(media: MediaMetrics) {
     row {
         maxWidth .. height { 48.dp } .. spaceBetween .. alignItems.center .. darkBackground
         paddingLeft { 24.dp } .. paddingRight { 24.dp }
@@ -58,18 +60,17 @@ fun header() {
 }
 
 @Adaptive
-fun content() {
-    val media = mediaMetrics()
+fun content(media: MediaMetrics) {
     val background = if (media.isLight) lightBackground else darkBackground
-    val textColor = if (media.isLight) darkColor else lightColor
+    val textColor = if (media.isLight) darkTextColor else lightTextColor
 
     column {
-        width { media.viewWidth.dp } .. paddingTop { 32.dp } .. background
+        maxWidth .. paddingTop { 32.dp } .. background
 
         slot(mainContent) { cards() }
 
         text("adaptive.fun does not use cookies") ..
-            paddingTop { 32.dp } .. paddingBottom { 32.dp } .. AlignSelf.center .. textColor(white)
+            paddingTop { 32.dp } .. paddingBottom { 32.dp } .. AlignSelf.center .. textColor
     }
 }
 

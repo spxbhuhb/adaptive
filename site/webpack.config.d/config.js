@@ -12,7 +12,7 @@ if (config.devServer) {
         ...config.devServer,
         // open: false, // comment this out to disable opening new browser windows at startup
         port: 3000,
-        //host: "127.0.0.1", // comment this out to have the dev server listen on all interfaces
+        host: "127.0.0.1", // comment this out to have the dev server listen on all interfaces
         proxy: [
             {
                 context: ['/adaptive/service'],
