@@ -85,7 +85,7 @@ class BoxTest {
     @Test
     fun `box border`() {
         cff(
-            border(color(0u)),
+            border(Color(0u)),
             f2 = alignSelf.bottomEnd.asArray(),
         ) {
             assertFinal(C1, 0, 0, 400, 400)

@@ -50,7 +50,7 @@ Tools:
 
 ## Adaptive in action
 
-Coming soon on: [https://adaptive.fun](https://adaptive.fun)
+Web site: [https://adaptive.fun](https://adaptive.fun)
 
 ## Let's write a small application
 
