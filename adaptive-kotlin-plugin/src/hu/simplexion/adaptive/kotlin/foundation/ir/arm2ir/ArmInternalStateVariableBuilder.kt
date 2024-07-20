@@ -35,7 +35,8 @@ open class ArmInternalStateVariableBuilder(
     }
 
     fun IrBlockBodyBuilder.genNormalPatchInternal(dirtyMask: IrVariable, patchFun: IrSimpleFunction) {
-        val transformedInitializer = stateVariable.irVariable.initializer !!.transformStateAccess(patchFun)
+        val transformedInitializer = stateVariable.irVariable.initializer?.transformStateAccess(patchFun)
+            ?: irNull()
 
         + irIf(
             genPatchInternalConditionForMask(patchFun, dirtyMask, stateVariable.dependencies),

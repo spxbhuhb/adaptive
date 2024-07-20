@@ -546,6 +546,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
         runTest("testData/box/foundation/variables/many.kt");
       }
 
+        @Test
+        @TestMetadata("noInitializer.kt")
+        public void testNoInitializer() {
+            runTest("testData/box/foundation/variables/noInitializer.kt");
+        }
+
       @Test
       @TestMetadata("onlyExternal.kt")
       public void testOnlyExternal() {
