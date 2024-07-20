@@ -19,16 +19,14 @@ import sandbox.lib.check
 fun welcome(withFeedback: Boolean = false) {
     val signUp = copyStore { SignUp() }
 
-    row {
-        if (withFeedback) {
-            row {
-                gapWidth { 24.dp }
-                mobileExample { welcomeInner(signUp) }
-                feedback(signUp)
-            }
-        } else {
-            welcomeInner(signUp)
+    if (withFeedback) {
+        row {
+            gapWidth { 24.dp }
+            mobileExample { welcomeInner(signUp) }
+            feedback(signUp)
         }
+    } else {
+        welcomeInner(signUp)
     }
 }
 

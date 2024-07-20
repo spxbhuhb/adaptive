@@ -98,31 +98,5 @@ fun independentIf(i : Int) {
 }
 ```
 
-## Ordered Layouts
 
-Ordered layouts depend on the order their children are added. When they have a descendant
-using `if` and `for` the number of items to layout may change and/or the items in the 
-layout may be replaced.
-
-These layouts have to have the information where to apply the changes in the actual UI.
-
-`addAnchor` and `removeAnchor` functions of `AdaptiveFragment` may be used to add
-and remove anchors to and from the actual UI. Non-ordered layouts may simply ignore
-these calls, ordered layouts have to perform their own anchor management to keep
-tha actual UI in-line with the fragment tree.
-
-Also, `addActual` and `removeActual` has an anchor parameter that tells the layout
-to which anchor the fragment belongs to.
-
-`if` and `for`
-
-- calls `addAnchor`/`removeAnchor` in `beforeMount`/`afterUnmount`
-- when forwarding `addActual`/`removeActual` 
-  - checks if there is an anchor specified
-    - if so, forwards the call with the specified anchor
-    - if not, forwards the call with itself (the `if` or `for`) as anchor
-- when forwarding `addAnchor`/`removeAnchor`
-  - checks if there is a higher anchor specified
-      - if so, forwards the call with the specified anchor
-      - if not, forwards the call with itself (the `if` or `for`) as the higher anchor
 

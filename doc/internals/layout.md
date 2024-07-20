@@ -7,6 +7,7 @@ Adaptive layouts are writing direction dependent horizontally, but fixed vertica
 
 This means that surrounding values (padding, border and margin) use `start` and `end` instead
 of `left` and `right`. The actual mapping to `left` and `right` depends on instructions.
+(Actually, this is not true right now, I have to decide of I want to change the names.)
 
 Vertical surroundings always use `top` and `bottom`.
 
@@ -194,13 +195,7 @@ final width =
 
 ### Box
 
-Box has three modes:
-
-- `absolute` which means that all items have instructed positions or self-alignment
-- `horizontalFlow` which means that items are placed in a flow horizontally
-- `verticalFlow` which means that the items are placed in a flow vertically
-
-#### Absolute
+Box places all items at instructed positions or by self-alignment
 
 final height =
 
@@ -214,9 +209,9 @@ final width =
 - proposed, if not unbound
 - `max(child.instructedLeft + child.finalWidth)` + surrounding
 
-#### Horizontal Flow
+#### Flow Box
 
-The horizontal flow box places the children in rows.
+The flow box places the children in rows, opens new row when horizontal size reached.
 
 **bound** horizontally
 
@@ -233,26 +228,6 @@ final height =
 - instructed, if present
 - proposed, if not unbound vertically
 - `sum(row.finalHeight) + gapHeight * (row.count - 1)` + surrounding
-
-#### Vertical Flow
-
-The vertical flow box places the children in columns.
-
-**bound** vertically
-
-- children are put into columns until there is available space in the column, the columns are **bound**
-- final height = `instructed` or `proposed` height
-
-**unbound** vertically
-
-- there is only one column that contains all children
-- final height = `sum(child.finalHeight) + gapHeight * (children.count - 1)` + surrounding
-
-final width =
-
-- instructed, if present
-- proposed, if not unbound vertically
-- `sum(column.finalWidth) + gapWidth * (column.count - 1)` + surrounding
 
 ### Row
 

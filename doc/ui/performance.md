@@ -32,15 +32,15 @@ Chessboard size: 10.000 (100x100)
 
 | Hardware                     | Hardware Age | OS          | Browser | `create` | `mount` | `unmount` | `dispose` |
 |------------------------------|--------------|-------------|---------|----------|---------|-----------|-----------|
-| 3,2 GHz Intel Core i3        | 14 years     | macOS 10.13 | Firefox | 1.029 ms | 57 ms   | 66 ms     | 13 ms     |
+| 3,2 GHz Intel Core i3        | 14 years     | macOS 10.13 | Firefox | 1029 ms  | 57 ms   | 66 ms     | 13 ms     |
 | 3,6 GHz 8-Core Intel Core i9 | 4 years      | macOS 14.5  | Safari  | 183 ms   | 18 ms   | 63 ms     | 15 ms     |     
 
 Chessboard size: 65536 (256x256)
 
 | Hardware                     | Hardware Age | OS          | Browser | `create` | `mount` | `unmount` | `dispose` |
 |------------------------------|--------------|-------------|---------|----------|---------|-----------|-----------|
-| 3,2 GHz Intel Core i3        | 14 years     | macOS 10.13 | Firefox | 6.154 ms | 385 ms  | 439 ms    | 78 ms     |
-| 3,6 GHz 8-Core Intel Core i9 | 4 years      | macOS 14.5  | Safari  | 2.292 ms | 255 ms  | 358 ms    | 74 ms     |     
+| 3,2 GHz Intel Core i3        | 14 years     | macOS 10.13 | Firefox | 6154 ms  | 385 ms  | 439 ms    | 78 ms     |
+| 3,6 GHz 8-Core Intel Core i9 | 4 years      | macOS 14.5  | Safari  | 2292 ms  | 255 ms  | 358 ms    | 74 ms     |     
 
 
 **Conclusion**

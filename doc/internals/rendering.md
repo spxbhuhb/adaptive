@@ -23,20 +23,16 @@ Therefore `CommonRenderData` data uses subclasses for these groups: `ContainerRe
 ## Layout
 
 Layout processing starts when a fragment calls `addActualRoot` of the adapter. This method
-sets the frame of the fragment, calls `measure` and `layout`. Example from the browser adapter:
+sets the frame of the fragment, calls `computeLayout` and `placeLayout`. Example from the browser adapter:
 
 ```kotlin
 override fun addActualRoot(fragment: AdaptiveFragment) {
     traceAddActual(fragment)
 
-    fragment.alsoIfInstance<AbstractContainerFragment<HTMLElement, HTMLDivElement>> {
+    fragment.alsoIfInstance<AbstractContainer<HTMLElement, HTMLDivElement>> {
         rootContainer.getBoundingClientRect().let { r ->
-            val frame = RawFrame(0.0, 0.0, r.width, r.height)
-
-            it.layoutFrame = frame
-            it.measure()
-            it.layout(frame)
-
+            it.computeLayout(r.width, r.height)
+            it.placeLayout(0.0, 0.0)
             rootContainer.appendChild(it.receiver)
         }
     }
@@ -54,5 +50,3 @@ the fragments by absolute coordinates calculated by the `layout` call in the abo
 - `ContainerViewGroup` and `StructuralViewGroup` for Android
 - nothing for browser
 - `ContainerView` for iOS
-
-

@@ -173,7 +173,10 @@ abstract class AdaptiveFragment(
     open fun unmount() {
         if (trace) trace("before-Unmount")
 
-        children.forEach { it.unmount() }
+        var index = children.size - 1
+        while (index >= 0) {
+            children[index --].unmount()
+        }
         isMounted = false
 
         if (trace) trace("after-Unmount")
@@ -182,7 +185,10 @@ abstract class AdaptiveFragment(
     open fun dispose() {
         if (trace) trace("before-Dispose")
 
-        children.forEach { it.dispose() }
+        var index = children.size - 1
+        while (index >= 0) {
+            children[index --].dispose()
+        }
 
         // converting to array so we can safely remove
         producers?.toTypedArray()?.forEach { removeProducer(it) }

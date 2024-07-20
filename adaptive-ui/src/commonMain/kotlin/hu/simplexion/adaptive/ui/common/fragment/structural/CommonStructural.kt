@@ -47,12 +47,11 @@ open class CommonStructural<RT, CRT : RT>(
     }
 
     override fun removeActual(fragment: AdaptiveFragment, direct: Boolean?) {
-        if (trace) trace("removeActual", "fragment=$fragment, structural=$this, direct=$direct")
-
-        // when in a batch, everything will be removed at once
-        if (uiAdapter.actualBatch) return
+        if (trace) trace("removeActual", "item=$fragment, structural=$this, direct=$direct")
 
         fragment.alsoIfInstance<AbstractCommonFragment<RT>> { itemFragment ->
+
+            if (uiAdapter.actualBatchOwner != null && uiAdapter.actualBatchOwner != itemFragment.renderData.layoutFragment) return
 
             when (direct) {
                 true -> {
@@ -82,10 +81,4 @@ open class CommonStructural<RT, CRT : RT>(
     override fun layoutChange(fragment: AbstractCommonFragment<*>) {
         // structural fragments do not perform layout calculations
     }
-
-//    override fun layout(proposedFrame: RawFrame?) {
-//        // layout calculation is handled by the actual layouts, structural only applies to the actual UI
-//        layoutFrameOrNull = proposedFrame
-//        traceLayout()
-//    }
 }

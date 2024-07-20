@@ -50,30 +50,24 @@ abstract class AbstractContainer<RT, CRT : RT>(
 
     /**
      * An optimization to remove the whole subtree of fragments from the actual UI at once.
-     * See [AbstractCommonAdapter.actualBatch].
+     * See [AbstractCommonAdapter.actualBatchOwner].
      */
     override fun unmount() {
-        if (uiAdapter.actualBatch) {
+        if (uiAdapter.actualBatchOwner != null) {
             super.unmount()
             return
         }
 
         try {
-            uiAdapter.actualBatch = true
+            uiAdapter.actualBatchOwner = this.renderData.layoutFragment
             super.unmount()
         } finally {
-            uiAdapter.actualBatch = false
-
-            // Unmount calls this, but it is useless as actualBatch is true at
-            // that time, therefore it is a no-op. So, we have to call it manually.
-            // FIXME manual remove actual after actual batch
-            // I think this is somewhat incorrect because it may call adapter.removeActualRoot twice
-            parent?.removeActual(this, if (isStructural) null else true)
+            uiAdapter.actualBatchOwner = null
         }
     }
 
     override fun addActual(fragment: AdaptiveFragment, direct: Boolean?) {
-        if (trace) trace("addActual", "fragment=$fragment, direct=$direct")
+        if (trace) trace("addActual", "item=$fragment, direct=$direct")
 
         fragment.alsoIfInstance<AbstractCommonFragment<RT>> { itemFragment ->
 
@@ -104,12 +98,12 @@ abstract class AbstractContainer<RT, CRT : RT>(
     }
 
     override fun removeActual(fragment: AdaptiveFragment, direct: Boolean?) {
-        if (trace) trace("removeActual", "fragment=$fragment")
-
-        // when in a batch, everything will be removed at once
-        if (uiAdapter.actualBatch) return
+        if (trace) trace("removeActual", "item=$fragment, direct=$direct")
 
         fragment.alsoIfInstance<AbstractCommonFragment<RT>> { itemFragment ->
+
+            // when in a batch, everything will be removed at once
+            if (uiAdapter.actualBatchOwner != null && uiAdapter.actualBatchOwner != itemFragment.renderData.layoutFragment) return
 
             itemFragment.renderData.layoutFragment = null
 

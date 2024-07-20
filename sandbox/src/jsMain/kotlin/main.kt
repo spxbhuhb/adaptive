@@ -31,6 +31,7 @@ fun main() {
     withJsResources()
 
     //(trace = Trace(".*"))
+    //, trace = trace("removeActual|.*-Unmount|setContent")
     browser(DesignerFragmentFactory) {
         withSandbox(it) // to set default font name
 

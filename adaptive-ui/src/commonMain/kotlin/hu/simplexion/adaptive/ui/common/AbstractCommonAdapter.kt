@@ -42,8 +42,8 @@ import kotlinx.coroutines.Dispatchers
  *                         When `false` they will use the same algorithm as mobile. This seconds option
  *                         is useful when you use browsers to develop for mobile.
  *
- * @property  actualBatch  When true, removeActual is a no-op. Used by layout fragments to group
- *                         remove operations, so they can remove a whole actual subtree at once.
+ * @property  actualBatchOwner  Used by layout fragments to group remove operations, so they can remove
+ *                              a whole actual subtree at once.
  */
 abstract class AbstractCommonAdapter<RT, CRT : RT> : AdaptiveAdapter {
 
@@ -63,7 +63,7 @@ abstract class AbstractCommonAdapter<RT, CRT : RT> : AdaptiveAdapter {
 
     var autoSizing: Boolean = true
 
-    var actualBatch: Boolean = false
+    var actualBatchOwner: AbstractContainer<*, *>? = null
 
     val emptyRenderData = CommonRenderData(this)
 
