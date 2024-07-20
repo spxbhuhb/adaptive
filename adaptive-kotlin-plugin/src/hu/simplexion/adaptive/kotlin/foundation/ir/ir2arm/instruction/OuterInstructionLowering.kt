@@ -97,11 +97,12 @@ class OuterInstructionLowering(
 
             check(owner.name == Names.RANGE_TO) { "invalid outer instruction chain (not rangeTo): ${expression.dumpKotlinLike()}" }
 
-            check(current.getValueArgument(0) !!.type.isSubtypeOfClass(pluginContext.adaptiveInstructionClass)) {
-                { "invalid outer instruction chain (range end is not an instruction): ${expression.dumpKotlinLike()}" }
-            }
+            val value = current.getValueArgument(0) !!
+            val type = value.type
 
-            instructions += current.getValueArgument(0) !!
+            check(type.isInstruction(pluginContext)) { "invalid outer instruction chain (range end is not an instruction): ${expression.dumpKotlinLike()}" }
+
+            instructions += value
 
             current = current.extensionReceiver as? IrCall
         }

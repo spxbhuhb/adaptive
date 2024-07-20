@@ -8,10 +8,6 @@ import hu.simplexion.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedE
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.HigherOrderProcessing
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.expressions.*
-import org.jetbrains.kotlin.ir.types.IrType
-import org.jetbrains.kotlin.ir.types.getArrayElementType
-import org.jetbrains.kotlin.ir.types.isArray
-import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.isFunction
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
@@ -50,7 +46,7 @@ class InnerInstructionLowering(
         for (statement in body.statements) {
             if (statement !is IrExpression) break
             if (statement !is IrTypeOperatorCall) break
-            if (! statement.argument.type.isInstruction) break
+            if (! statement.argument.type.isInstruction(pluginContext)) break
             result += statement.argument
         }
 
@@ -58,9 +54,5 @@ class InnerInstructionLowering(
 
         return result
     }
-
-    private val IrType.isInstruction
-        get() = isSubtypeOfClass(pluginContext.adaptiveInstructionClass) ||
-            (isArray() && getArrayElementType(pluginContext.irBuiltIns).isSubtypeOfClass(pluginContext.adaptiveInstructionClass))
 
 }

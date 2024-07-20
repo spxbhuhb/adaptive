@@ -3,6 +3,7 @@
  */
 package hu.simplexion.adaptive.kotlin.foundation.ir.ir2arm.instruction
 
+import hu.simplexion.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import hu.simplexion.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrCall
@@ -10,9 +11,12 @@ import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrVarargElement
 import org.jetbrains.kotlin.ir.expressions.impl.IrSpreadElementImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrVarargImpl
-import org.jetbrains.kotlin.ir.types.isArray
-import org.jetbrains.kotlin.ir.types.typeWith
+import org.jetbrains.kotlin.ir.types.*
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+
+fun IrType.isInstruction(pluginContext: FoundationPluginContext) =
+    isSubtypeOfClass(pluginContext.adaptiveInstructionClass) ||
+        (isArray() && getArrayElementType(pluginContext.irBuiltIns).isSubtypeOfClass(pluginContext.adaptiveInstructionClass))
 
 fun AdaptiveAnnotationBasedExtension.addInstructions(
     expression: IrCall,

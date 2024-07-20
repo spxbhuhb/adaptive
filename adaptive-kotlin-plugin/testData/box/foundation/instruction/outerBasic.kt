@@ -15,6 +15,8 @@ fun testFragment(vararg instructions: AdaptiveInstruction, @Adaptive block: () -
     return fragment()
 }
 
+val names = arrayOf(name("4"), name("5"))
+
 fun box(): String {
 
     val adapter = AdaptiveTestAdapter()
@@ -29,6 +31,8 @@ fun box(): String {
         } .. name("stuff - outer")
 
         testFragment { } .. name("1") .. name("2")
+
+        testFragment { } .. names
     }
 
     val fragments = adapter.filter(true) { it.instructions.any { it is Name } }
@@ -44,6 +48,10 @@ fun box(): String {
     if (fragments[2].instructions.size != 2) return "Fail: fragments[2].instructions.size != 2"
     if (name("1") != fragments[2].instructions[0]) return "Fail: name(\"1\") != fragments[2].instructions[0]"
     if (name("2") != fragments[2].instructions[1]) return "Fail: name(\"2\") != fragments[2].instructions[1]"
+
+    if (fragments[3].instructions.size != 2) return "Fail: fragments[3].instructions.size != 2"
+    if (name("4") != fragments[3].instructions[0]) return "Fail: name(\"4\") != fragments[3].instructions[0]"
+    if (name("5") != fragments[3].instructions[1]) return "Fail: name(\"5\") != fragments[3].instructions[1]"
 
     return "OK"
 
