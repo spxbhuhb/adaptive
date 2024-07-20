@@ -12,15 +12,6 @@ application {
     mainClass.set("MainKt")
 }
 
-adaptive {
-    pluginDebug = false
-    resources {
-        publicResClass = true
-        packageOfResClass = "sandbox"
-        generateResClass = auto
-    }
-}
-
 // this is ugly but I don't use JS dependencies anyway, 
 // https://youtrack.jetbrains.com/issue/KT-50848/Kotlin-JS-inner-build-routines-are-using-vulnerable-NPM-dependencies-and-now-that-we-have-kotlin-js-store-github-audit-this
 rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin> {
@@ -53,7 +44,6 @@ kotlin {
                 implementation(libs.adaptive.lib.email)
                 implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.lib.auth)
-                implementation(libs.adaptive.lib.sandbox)
             }
         }
 

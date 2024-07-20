@@ -2,8 +2,6 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-import hu.simplexion.adaptive.designer.designerMain
-import hu.simplexion.adaptive.designer.fragment.DesignerFragmentFactory
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.foundation.fragment
@@ -32,7 +30,7 @@ fun main() {
 
     //(trace = Trace(".*"))
     //, trace = trace("removeActual|.*-Unmount|setContent")
-    browser(DesignerFragmentFactory) {
+    browser {
         withSandbox(it) // to set default font name
 
         grid {
@@ -49,7 +47,6 @@ fun main() {
                 navButton("Markdown") .. navClick { markdown() }
                 navButton("Slot One") .. navClick { slotOne() }
                 navButton("Slot Two") .. navClick { slotTwo() }
-                navButton("Hit Detect") .. navClick { hitDetect() }
             }
 
             column {
@@ -64,12 +61,8 @@ fun main() {
                     route { markdown() }
                     route { slotOne() }
                     route { slotTwo() }
-                    route { hitDetect() }
-                    route { designerMain() }
 
-                    designerMain()
-
-//                    text("Click on the left to load a demo!")
+                    text("Click on the left to load a demo!")
                 }
             }
         }
