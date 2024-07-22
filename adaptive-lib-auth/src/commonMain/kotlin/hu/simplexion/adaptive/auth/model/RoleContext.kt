@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.auth.model
 
 import hu.simplexion.adaptive.adat.Adat
+import hu.simplexion.adaptive.adat.AdatCompanion
 import hu.simplexion.adaptive.adat.AdatEntity
 import hu.simplexion.adaptive.utility.UUID
 
@@ -13,4 +14,6 @@ class RoleContext(
     override val id: UUID<RoleContext>,
     var name: String? = null,
     var type: String? = null
-) : AdatEntity<RoleContext>
+) : AdatEntity<RoleContext> {
+    companion object : AdatCompanion<RoleContext>
+}

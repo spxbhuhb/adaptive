@@ -19,9 +19,14 @@
         <appender-ref ref="Console"/>
     </root>
 
-    <logger name="Exposed" level="WARN"/>
+    <logger name="Exposed" level="ERROR"/>
     <logger name="org.eclipse.jetty" level="INFO"/>
     <logger name="io.netty" level="INFO"/>
     <logger name="io.ktor" level="INFO"/>
+
+    <logger name="io.ktor.websocket" level="TRACE"/>
+
+    <logger name="websocket" level="TRACE"/>
+
 
 </configuration>

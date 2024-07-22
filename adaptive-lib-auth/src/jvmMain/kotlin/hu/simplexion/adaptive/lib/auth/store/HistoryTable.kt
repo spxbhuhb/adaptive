@@ -15,7 +15,7 @@ object HistoryTable : AdatEntityTable<AuthHistoryEntry, HistoryTable>("auth_hist
 
     val event = varchar("event", 100)
 
-    val executedBy = reference("executed_by", PrincipalTable)
+    val executedBy = reference("executed_by", PrincipalTable).nullable()
     val executedAt = timestamp("executed_at")
 
     val session = uuid("session").nullable()

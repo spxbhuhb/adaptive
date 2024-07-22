@@ -16,7 +16,7 @@ fun hikari(): AdaptiveFragment {
 }
 
 @Adaptive
-fun inMemoryH2(): AdaptiveFragment {
-    worker { InMemoryDatabase() }
+fun inMemoryH2(name: String = "db"): AdaptiveFragment {
+    worker { InMemoryDatabase(name) }
     return fragment()
 }

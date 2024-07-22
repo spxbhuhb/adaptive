@@ -5,7 +5,6 @@ import hu.simplexion.adaptive.auth.model.*
 import hu.simplexion.adaptive.auth.model.CredentialType.ACTIVATION_KEY
 import hu.simplexion.adaptive.auth.model.Session.Companion.LOGOUT_TOKEN
 import hu.simplexion.adaptive.auth.model.Session.Companion.SESSION_TOKEN
-import hu.simplexion.adaptive.auth.util.AuthenticationFail
 import hu.simplexion.adaptive.lib.auth.context.ensuredByLogic
 import hu.simplexion.adaptive.lib.auth.context.getPrincipal
 import hu.simplexion.adaptive.lib.auth.context.getSessionOrNull
@@ -122,6 +121,10 @@ class SessionService : SessionApi, ServiceImpl<SessionService> {
 
         worker.activeSessions.remove(serviceContext.uuid)
         serviceContext.data.remove(SESSION_TOKEN)
+
+        TransactionManager.current().commit()
+
+        return
     }
 
     // ----------------------------------------------------------------------------------

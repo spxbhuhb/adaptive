@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.auth.model
 
 import hu.simplexion.adaptive.adat.Adat
+import hu.simplexion.adaptive.adat.AdatCompanion
 import hu.simplexion.adaptive.adat.AdatEntity
 import hu.simplexion.adaptive.utility.UUID
 import kotlinx.datetime.Instant
@@ -15,7 +16,7 @@ class AuthHistoryEntry(
     override val id: UUID<AuthHistoryEntry>,
 
     val event: String,
-    val executedBy: UUID<Principal>,
+    val executedBy: UUID<Principal>?,
     val executedAt: Instant,
 
     val session: UUID<Session>?,
@@ -25,4 +26,8 @@ class AuthHistoryEntry(
 
     val result: AuthenticationResult?
 
-) : AdatEntity<AuthHistoryEntry>
+) : AdatEntity<AuthHistoryEntry> {
+
+    companion object : AdatCompanion<AuthHistoryEntry>
+
+}

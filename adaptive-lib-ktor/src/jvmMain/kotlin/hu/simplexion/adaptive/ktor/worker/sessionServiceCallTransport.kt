@@ -11,14 +11,10 @@ import hu.simplexion.adaptive.auth.model.Session.Companion.SESSION_TOKEN
 import hu.simplexion.adaptive.lib.auth.context.getPrincipalOrNull
 import hu.simplexion.adaptive.lib.auth.worker.SessionWorker
 import hu.simplexion.adaptive.log.AdaptiveLogger
-import hu.simplexion.adaptive.log.ReturnException
 import hu.simplexion.adaptive.log.getLogger
 import hu.simplexion.adaptive.service.BasicServiceContext
 import hu.simplexion.adaptive.service.ServiceContext
-import hu.simplexion.adaptive.service.model.RequestEnvelope
-import hu.simplexion.adaptive.service.model.ResponseEnvelope
-import hu.simplexion.adaptive.service.model.ServiceCallStatus
-import hu.simplexion.adaptive.service.model.ServiceExceptionData
+import hu.simplexion.adaptive.service.model.*
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.decode
 import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
@@ -27,6 +23,8 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
 
 val serviceAccessLog = LoggerFactory.getLogger("hu.simplexion.adaptive.service.ServiceAccessLog") !!
@@ -43,7 +41,7 @@ fun Routing.sessionWebsocketServiceCallTransport(
         logger.info("connection opened from ${call.request.local.remoteAddress}:${call.request.local.remotePort}")
 
         try {
-            val sessionUuid = call.request.cookies[sessionWorker.sessionCookieName]?.let { UUID<ServiceContext>(it) } ?: UUID()
+            val sessionUuid = call.request.cookies[sessionWorker.clientIdCookieName]?.let { UUID<ServiceContext>(it) } ?: UUID()
 
             val context = newContext(sessionUuid)
 
@@ -64,6 +62,8 @@ fun Routing.sessionWebsocketServiceCallTransport(
 
                 launch { serve(logger, sessionWorker, context, requestEnvelope) }
             }
+        } catch (ex: kotlinx.coroutines.CancellationException) {
+            // this is shutdown, no error to be logged there
         } catch (ex: Exception) {
             logger.error(ex)
         }
@@ -81,32 +81,27 @@ suspend fun DefaultWebSocketSession.serve(
         val service = sessionWorker.adapter?.serviceCache?.get(requestEnvelope.serviceName)?.newInstance(context)
         checkNotNull(service) { "service not found: ${requestEnvelope.serviceName}" }
 
-        val responsePayload = service.dispatch(
-            requestEnvelope.funName,
-            defaultWireFormatProvider.decoder(requestEnvelope.payload)
-        )
+        val responsePayload = transaction {
+            runBlocking {
+                service.dispatch(
+                    requestEnvelope.funName,
+                    defaultWireFormatProvider.decoder(requestEnvelope.payload)
+                )
+            }
+        }
 
         ResponseEnvelope(
             requestEnvelope.callId,
-            ServiceCallStatus.Ok,
+            if (context.data[LOGOUT_TOKEN] != null) ServiceCallStatus.Ok else ServiceCallStatus.Logout,
             responsePayload
         )
 
+    } catch (ex: ReturnException) {
+        logger.info("${ex::class.simpleName} ${ex.message ?: ""}")
+        ex.toResponseEnvelope(requestEnvelope.callId)
     } catch (ex: Exception) {
-        if (ex is ReturnException) {
-            logger.info("${ex::class.simpleName} ${ex.message ?: ""}")
-        } else {
-            logger.error(ex)
-        }
-
-        val innerPayload = if (ex is AdatClass<*>) ex.encode() else byteArrayOf()
-        val exceptionData = ServiceExceptionData(ex::class.qualifiedName ?: ex::class.simpleName ?: "<unknown>", ex.message, innerPayload)
-
-        ResponseEnvelope(
-            requestEnvelope.callId,
-            ServiceCallStatus.Exception,
-            encode(exceptionData, ServiceExceptionData)
-        )
+        logger.error(ex)
+        ex.toResponseEnvelope(requestEnvelope.callId)
     }
 
     serviceAccessLog.info("${requestEnvelope.serviceName} ${requestEnvelope.funName} ${requestEnvelope.payload.size} ${responseEnvelope.status} ${responseEnvelope.payload.size} ${context.getPrincipalOrNull()}")
@@ -116,4 +111,15 @@ suspend fun DefaultWebSocketSession.serve(
     if (context.data[LOGOUT_TOKEN] == true) {
         close(CloseReason(CloseReason.Codes.GOING_AWAY, "logout"))
     }
+}
+
+fun Exception.toResponseEnvelope(callId: UUID<RequestEnvelope>): ResponseEnvelope {
+    val innerPayload = if (this is AdatClass<*>) this.encode() else byteArrayOf()
+    val exceptionData = ServiceExceptionData(this::class.qualifiedName ?: this::class.simpleName ?: "<unknown>", this.message, innerPayload)
+
+    return ResponseEnvelope(
+        callId,
+        ServiceCallStatus.Exception,
+        encode(exceptionData, ServiceExceptionData)
+    )
 }

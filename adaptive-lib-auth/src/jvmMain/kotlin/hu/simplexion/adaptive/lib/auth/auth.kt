@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.lib.auth
 
+import hu.simplexion.adaptive.auth.authCommon
 import hu.simplexion.adaptive.foundation.Adaptive
 import hu.simplexion.adaptive.lib.auth.service.PrincipalService
 import hu.simplexion.adaptive.lib.auth.service.RoleService
@@ -16,12 +17,15 @@ import hu.simplexion.adaptive.server.builtin.worker
 
 @Adaptive
 fun auth() {
+    authCommon()
+
     store { principals }
     store { credentials }
     store { roles }
     store { roleContexts }
     store { roleGrants }
     store { roleMemberships }
+    store { history }
 
     service { PrincipalService() }
     service { RoleService() }

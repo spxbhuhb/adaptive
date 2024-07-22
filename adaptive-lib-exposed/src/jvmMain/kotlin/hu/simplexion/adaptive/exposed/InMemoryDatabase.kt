@@ -7,10 +7,12 @@ package hu.simplexion.adaptive.exposed
 import hu.simplexion.adaptive.server.builtin.WorkerImpl
 import org.jetbrains.exposed.sql.Database
 
-class InMemoryDatabase : WorkerImpl<InMemoryDatabase> {
+class InMemoryDatabase(
+    val name: String = "db"
+) : WorkerImpl<InMemoryDatabase> {
 
     override fun create() {
-        Database.connect("jdbc:h2:mem:regular;DB_CLOSE_DELAY=-1;", "org.h2.Driver")
+        Database.connect("jdbc:h2:mem:$name;DB_CLOSE_DELAY=-1;", "org.h2.Driver")
     }
 
     override suspend fun run() {

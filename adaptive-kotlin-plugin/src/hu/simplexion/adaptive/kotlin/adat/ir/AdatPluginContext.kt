@@ -12,7 +12,10 @@ import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.builtins.UnsignedArrayType
 import org.jetbrains.kotlin.builtins.UnsignedType
 import org.jetbrains.kotlin.ir.expressions.IrExpression
+import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
+import org.jetbrains.kotlin.ir.symbols.IrFunctionSymbol
 import org.jetbrains.kotlin.ir.types.defaultType
+import org.jetbrains.kotlin.ir.types.isNullable
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.util.getSimpleFunction
@@ -49,12 +52,26 @@ class AdatPluginContext(
     val javaUuidTypeN = javaUuidType?.makeNullable()
 
     val asCommon = CallableIds.asCommon.functions()
-    val asCommonEntityId = asCommon.firstOrNull { it.owner.extensionReceiverParameter?.type?.isSubtypeOfClass(entityId !!) == true }
-    val asCommonUuid = asCommon.firstOrNull { it.owner.extensionReceiverParameter?.type?.isSubtypeOfClass(javaUuid !!) == true }
 
-    val asJavaUuid = CallableIds.asJava.functions().firstOrNull { it.owner.extensionReceiverParameter?.type?.isSubtypeOfClass(commonUuid) == true }
+    fun IrFunctionSymbol.isExtensionOf(symbol: IrClassSymbol?, nullable: Boolean) =
+        symbol != null && owner.extensionReceiverParameter?.type?.let { it.isSubtypeOfClass(symbol) && it.isNullable() == nullable } == true
+
+    val asCommonEntityId = asCommon.firstOrNull { it.isExtensionOf(entityId, false) }
+    val asCommonEntityIdN = asCommon.firstOrNull { it.isExtensionOf(entityId, true) }
+
+    val asCommonUuid = asCommon.firstOrNull { it.isExtensionOf(javaUuid, false) }
+    val asCommonUuidN = asCommon.firstOrNull { it.isExtensionOf(javaUuid, true) }
+
+    val asJavaUuid = CallableIds.asJava.functions().firstOrNull { it.isExtensionOf(commonUuid, false) }
+    val asJavaUuidN = CallableIds.asJava.functions().firstOrNull { it.isExtensionOf(commonUuid, true) }
+
     val asEntityId = CallableIds.asEntityID.functions().firstOrNull {
-        it.owner.extensionReceiverParameter?.type?.isSubtypeOfClass(commonUuid) == true
+        it.isExtensionOf(commonUuid, false)
+            && it.owner.valueParameters.firstOrNull()?.type?.isSubtypeOfClass(exposedColumn !!) == true
+    }
+
+    val asEntityIdN = CallableIds.asEntityID.functions().firstOrNull {
+        it.isExtensionOf(commonUuid, true)
             && it.owner.valueParameters.firstOrNull()?.type?.isSubtypeOfClass(exposedColumn !!) == true
     }
 

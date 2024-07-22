@@ -4,6 +4,7 @@ import hu.simplexion.adaptive.log.getLogger
 import hu.simplexion.adaptive.service.model.RequestEnvelope
 import hu.simplexion.adaptive.service.model.ResponseEnvelope
 import hu.simplexion.adaptive.service.model.ServiceCallStatus
+import hu.simplexion.adaptive.service.model.ServiceExceptionData
 import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 import hu.simplexion.adaptive.service.transport.ServiceErrorHandler
 import hu.simplexion.adaptive.service.transport.ServiceResultException
@@ -26,7 +27,7 @@ open class BasicWebSocketServiceCallTransport(
     val path: String = "/adaptive/service",
     var errorHandler: ServiceErrorHandler? = null,
     val trace: Boolean = false,
-    val useTextFrame : Boolean = false
+    val useTextFrame: Boolean = false
 ) : ServiceCallTransport {
 
     val logger = getLogger("hu.simplexion.adaptive.ktor.BasicWebSocketServiceCallTransport")
@@ -38,12 +39,13 @@ open class BasicWebSocketServiceCallTransport(
         val createdMicros: Long = vmNowMicro(),
         val responseChannel: Channel<ResponseEnvelope> = Channel(1)
     ) {
-        override fun toString() : String =
+        override fun toString(): String =
             "$createdMicros ${request.callId} ${request.serviceName} ${request.funName} ${request.payload.size}"
     }
 
     var retryDelay = 200L // milliseconds
     val scope = CoroutineScope(Dispatchers.Default)
+    var socket: WebSocketSession? = null
 
     val outgoingLock = getLock()
     private val outgoingCalls = Channel<OutgoingCall>(Channel.UNLIMITED)
@@ -68,6 +70,8 @@ open class BasicWebSocketServiceCallTransport(
 
                 client.webSocket(path) {
 
+                    socket = this
+
                     if (trace) logger.fine("connected")
 
                     retryDelay = 200 // reset the retry delay as we have a working connection
@@ -90,8 +94,11 @@ open class BasicWebSocketServiceCallTransport(
                                     break
                                 }
                             }
+                        } catch (ex: CancellationException) {
+                            // the `for` is cancelled, this probably means a shutdown
+                            throw ex
                         } catch (ex: Exception) {
-                            ex.printStackTrace()
+                            logger.error(ex)
                         }
                     }
 
@@ -107,14 +114,18 @@ open class BasicWebSocketServiceCallTransport(
                         if (call != null) {
                             call.responseChannel.send(responseEnvelope)
                         } else {
-                            errorHandler?.callError("", "", responseEnvelope)
+                            errorHandler?.callError("", "", responseEnvelope, null)
                         }
                     }
 
                 }
 
+            } catch (ex: CancellationException) {
+                // the `for` is cancelled, this probably means a shutdown
+                throw ex
             } catch (ex: Exception) {
                 connectionError(ex)
+                if (! scope.isActive) return
                 delay(retryDelay) // wait a bit before trying to re-establish the connection
                 if (retryDelay < 5_000) retryDelay = (retryDelay * 115) / 100
             }
@@ -187,6 +198,15 @@ open class BasicWebSocketServiceCallTransport(
                     return responseEnvelope.payload
                 }
 
+                ServiceCallStatus.Logout -> {
+                    try {
+                        socket?.close()
+                    } catch (ex: Exception) {
+                        logger.warning(ex)
+                    }
+                    return responseEnvelope.payload
+                }
+
                 ServiceCallStatus.Timeout -> {
                     timeoutError(serviceName, funName, responseEnvelope)
                     throw RuntimeException("$serviceName  $funName  ${responseEnvelope.status}")
@@ -205,7 +225,7 @@ open class BasicWebSocketServiceCallTransport(
      * service call will be hanging forever.
      */
     open fun timeoutError(serviceName: String, funName: String, responseEnvelope: ResponseEnvelope) {
-        errorHandler?.callError(serviceName, funName, responseEnvelope)
+        errorHandler?.callError(serviceName, funName, responseEnvelope, null)
         throw ServiceTimeoutException(serviceName, funName, responseEnvelope)
     }
 
@@ -214,8 +234,9 @@ open class BasicWebSocketServiceCallTransport(
      * service call will be hanging forever.
      */
     open fun responseError(serviceName: String, funName: String, responseEnvelope: ResponseEnvelope) {
-        errorHandler?.callError(serviceName, funName, responseEnvelope)
-        throw ServiceResultException(serviceName, funName, responseEnvelope)
+        val serviceExceptionData = decode(responseEnvelope.payload, ServiceExceptionData)
+        errorHandler?.callError(serviceName, funName, responseEnvelope, serviceExceptionData)
+        throw ServiceResultException(serviceName, funName, responseEnvelope, serviceExceptionData)
     }
 
 }

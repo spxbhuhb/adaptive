@@ -4,6 +4,7 @@
 
 package hu.simplexion.adaptive.lib.auth.context
 
+import hu.simplexion.adaptive.auth.model.AccessDenied
 import hu.simplexion.adaptive.auth.model.Principal
 import hu.simplexion.adaptive.auth.model.Role
 import hu.simplexion.adaptive.server.builtin.ServiceImpl

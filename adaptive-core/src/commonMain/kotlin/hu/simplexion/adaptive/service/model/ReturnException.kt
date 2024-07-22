@@ -1,4 +1,4 @@
-package hu.simplexion.adaptive.log
+package hu.simplexion.adaptive.service.model
 
 /**
  * Exceptions that are not actual software errors but more like out-of-order return values

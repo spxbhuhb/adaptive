@@ -4,11 +4,13 @@
 
 package hu.simplexion.adaptive.wireformat
 
+import hu.simplexion.adaptive.utility.pluginGenerated
 import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 
 interface WireFormat<T> {
 
     val wireFormatName: String
+        get() = pluginGenerated()
 
     val wireFormatKind: WireFormatKind
         get() = WireFormatKind.Instance

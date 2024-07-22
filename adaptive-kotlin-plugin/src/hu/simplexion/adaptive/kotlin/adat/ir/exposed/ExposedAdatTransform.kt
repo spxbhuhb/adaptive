@@ -145,10 +145,12 @@ class ExposedAdatTransform(
     private fun toCommon(mapping: Mapping, call: IrCallImpl): IrExpression =
         when {
             mapping.columnType.isSubtypeOfClass(pluginContext.entityId !!) -> {
-                toCommon(mapping, pluginContext.asCommonEntityId !!, call)
+                val f = if (mapping.columnType.isNullable()) pluginContext.asCommonEntityIdN else pluginContext.asCommonEntityId
+                toCommon(mapping, f !!, call)
             }
 
             mapping.columnType == pluginContext.javaUuidType -> {
+                val f = if (mapping.columnType.isNullable()) pluginContext.asCommonUuidN else pluginContext.asCommonUuid
                 toCommon(mapping, pluginContext.asCommonUuid !!, call)
             }
 
@@ -206,12 +208,15 @@ class ExposedAdatTransform(
     private fun toJava(mapping: Mapping, call: IrCall, table: IrVariable): IrExpression =
         when {
             mapping.columnType.isSubtypeOfClass(pluginContext.entityId !!) -> {
-                toJava(pluginContext.asEntityId !!, call, irGetValue(mapping.column, irGet(table)))
+                val f = if (mapping.columnType.isNullable()) pluginContext.asEntityIdN else pluginContext.asEntityId
+                toJava(f !!, call, irGetValue(mapping.column, irGet(table)))
             }
 
             mapping.columnType.isSubtypeOfClass(pluginContext.javaUuid !!) -> {
-                toJava(pluginContext.asJavaUuid !!, call, null)
+                val f = if (mapping.columnType.isNullable()) pluginContext.asJavaUuidN else pluginContext.asJavaUuid
+                toJava(f !!, call, null)
             }
+
             else -> call
         }
 

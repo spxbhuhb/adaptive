@@ -21,7 +21,7 @@ fun withProtoWebSocketTransport(path: String = "/adaptive/service", trace: Boole
     BasicWebSocketServiceCallTransport(path = path, useTextFrame = false, trace = trace)
         .also {
             defaultWireFormatProvider = ProtoWireFormatProvider()
-           defaultServiceCallTransport = it
-           it.start()
-       }
+            defaultServiceCallTransport = it
+            it.start()
+        }
 

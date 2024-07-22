@@ -14,11 +14,20 @@ import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.utility.vmNowSecond
 import kotlinx.coroutines.delay
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.concurrent.CancellationException
 import java.util.concurrent.ConcurrentHashMap
 
 class SessionWorker : WorkerImpl<SessionWorker> {
 
-    val sessionCookieName by setting<String> { "SESSION_COOKIE_NAME" } default "ADAPTIVE_SESSION"
+    /**
+     * The path on which a client can request a client ID. Default is `/adaptive/client-id`
+     */
+    val clientIdRoute by setting<String> { "CLIENT_ID_PATH" } default "/adaptive/client-id"
+
+    /**
+     * The name of the cookie that contains the client ID.
+     */
+    val clientIdCookieName by setting<String> { "CLIENT_COOKIE_NAME" } default "ADAPTIVE_CLIENT_ID"
 
     /**
      * Sessions waiting for the second step of 2FA.
@@ -37,11 +46,15 @@ class SessionWorker : WorkerImpl<SessionWorker> {
     var sendSecurityCode: (session: Session) -> Unit = { }
 
     override suspend fun run() {
-        while (isActive) {
-            val policy = SecurityPolicy()
-            cleanActiveSessions(policy)
-            cleanPreparedSessions(policy)
-            delay(60_000)
+        try {
+            while (isActive) {
+                val policy = SecurityPolicy()
+                cleanActiveSessions(policy)
+                cleanPreparedSessions(policy)
+                delay(60_000)
+            }
+        } catch (ex: CancellationException) {
+            // delay throws cancellation exception
         }
     }
 

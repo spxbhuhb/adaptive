@@ -21,7 +21,8 @@ import java.util.concurrent.TimeUnit
 class KtorWorker : WorkerImpl<KtorWorker> {
 
     val port by setting<Int> { "KTOR_PORT" } default 8080
-    val static by setting<String> { "KTOR_STATIC" } default "./var/static"
+    val staticResourcesPath by setting<String> { "KTOR_STATIC" } default "./var/static"
+    val serviceWebSocketRoute by setting<String> { "ADAPTIVE_SERVICE" } default "/adaptive/service"
 
     val sessionWorker by workerOrNull<SessionWorker>()
 
@@ -53,10 +54,10 @@ class KtorWorker : WorkerImpl<KtorWorker> {
 
         routing {
             sessionWorker?.let {
-                session(it)
-                sessionWebsocketServiceCallTransport(it)
+                clientId(it)
+                sessionWebsocketServiceCallTransport(it, serviceWebSocketRoute)
             }
-            staticFiles("/", File(static)) {
+            staticFiles("/", File(staticResourcesPath)) {
                 this.default("index.html")
             }
         }

@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.auth.model
 
 import hu.simplexion.adaptive.adat.Adat
+import hu.simplexion.adaptive.adat.AdatCompanion
 import hu.simplexion.adaptive.adat.AdatEntity
 import hu.simplexion.adaptive.utility.UUID
 import kotlinx.datetime.Instant
@@ -17,8 +18,10 @@ class Principal(
     var locked: Boolean = false,
     var expired: Boolean = false,
     var anonymized: Boolean = false,
-    var lastAuthSuccess: Instant?,
-    var authSuccessCount: Int,
-    var lastAuthFail: Instant?,
-    var authFailCount: Int
-) : AdatEntity<Principal>
+    var lastAuthSuccess: Instant? = null,
+    var authSuccessCount: Int = 0,
+    var lastAuthFail: Instant? = null,
+    var authFailCount: Int = 0
+) : AdatEntity<Principal> {
+    companion object : AdatCompanion<Principal>
+}

@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.auth.model
 
 import hu.simplexion.adaptive.adat.Adat
+import hu.simplexion.adaptive.adat.AdatCompanion
 import hu.simplexion.adaptive.adat.AdatEntity
 import hu.simplexion.adaptive.utility.UUID
 import kotlinx.datetime.Instant
@@ -16,4 +17,6 @@ class Credential(
     var type: String,
     var value: String,
     var createdAt: Instant
-) : AdatEntity<Credential>
+) : AdatEntity<Credential> {
+    companion object : AdatCompanion<Credential>
+}

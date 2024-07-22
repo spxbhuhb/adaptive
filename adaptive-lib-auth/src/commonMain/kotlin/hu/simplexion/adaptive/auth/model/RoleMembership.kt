@@ -6,10 +6,13 @@ package hu.simplexion.adaptive.auth.model
 
 import hu.simplexion.adaptive.adat.Adat
 import hu.simplexion.adaptive.adat.AdatClass
+import hu.simplexion.adaptive.adat.AdatCompanion
 import hu.simplexion.adaptive.utility.UUID
 
 @Adat
 class RoleMembership(
     var group: UUID<Role>,
     var member: UUID<Role>
-) : AdatClass<RoleMembership>
+) : AdatClass<RoleMembership> {
+    companion object : AdatCompanion<RoleMembership>
+}
