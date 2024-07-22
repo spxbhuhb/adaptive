@@ -53,4 +53,11 @@ interface ServerFragmentImpl {
      */
     fun mount() = Unit
 
+    /**
+     * Called when the fragment that contains this implementation is unmounted by
+     * Adaptive. Fragments are unmounted in the reverse order they are declared. You
+     * can use dependencies in unmount, but it might be possible that the dependencies
+     * are already unmounted.
+     */
+    fun unmount() = Unit
 }

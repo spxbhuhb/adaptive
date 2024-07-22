@@ -14,7 +14,7 @@ import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
  * @param horizontal When [deep] is true, check a given level first, children second.
  */
 fun AdaptiveFragment.firstOrNull(
-    deep: Boolean = false,
+    deep: Boolean = true,
     horizontal: Boolean = true,
     condition: (AdaptiveFragment) -> Boolean
 ): AdaptiveFragment? {
@@ -45,7 +45,7 @@ fun AdaptiveFragment.firstOrNull(
  * @throws NoSuchElementException
  */
 inline fun AdaptiveFragment.first(
-    deep: Boolean = false,
+    deep: Boolean = true,
     horizontal: Boolean = true,
     crossinline condition: (AdaptiveFragment) -> Boolean
 ): AdaptiveFragment =
@@ -61,7 +61,7 @@ inline fun AdaptiveFragment.first(
  * @throws NoSuchElementException
  */
 inline fun <reified T : Any> AdaptiveFragment.first(
-    deep: Boolean = false,
+    deep: Boolean = true,
     horizontal: Boolean = true
 ): T =
     firstOrNull(deep, horizontal) { it is T } as T? ?: throw NoSuchElementException()
@@ -73,7 +73,7 @@ inline fun <reified T : Any> AdaptiveFragment.first(
  * @param horizontal When [deep] is true, check a given level first, children second.
  */
 inline fun <reified T : Any> AdaptiveFragment.firstOrNull(
-    deep: Boolean = false,
+    deep: Boolean = true,
     horizontal: Boolean = true
 ): T? =
     firstOrNull(deep, horizontal) { it is T } as T?
@@ -95,7 +95,7 @@ inline fun <reified T : AdaptiveInstruction> AdaptiveFragment.firstOrNullWith(de
  */
 fun AdaptiveFragment.filter(
     matches: MutableList<AdaptiveFragment> = mutableListOf(),
-    deep: Boolean = false,
+    deep: Boolean = true,
     horizontal: Boolean = true,
     condition: (AdaptiveFragment) -> Boolean
 ): MutableList<AdaptiveFragment> {
@@ -121,7 +121,7 @@ fun AdaptiveFragment.filter(
  * if there is no such fragment or there are more than one.
  */
 inline fun <reified T : AdaptiveFragment> AdaptiveFragment.single(
-    deep: Boolean = false,
+    deep: Boolean = true,
     horizontal: Boolean = true
 ): T =
     single(deep, horizontal) { it is T } as T
@@ -160,7 +160,7 @@ fun AdaptiveFragment.singleOrNull(
  */
 fun <T> AdaptiveFragment.collect(
     matches: MutableList<T> = mutableListOf(),
-    deep: Boolean = false,
+    deep: Boolean = true,
     horizontal: Boolean = true,
     collector: (AdaptiveFragment, MutableList<T>) -> Unit
 ): MutableList<T> {

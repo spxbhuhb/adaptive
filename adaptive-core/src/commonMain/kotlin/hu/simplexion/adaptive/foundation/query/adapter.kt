@@ -23,7 +23,7 @@ import hu.simplexion.adaptive.server.AdaptiveServerFragment
  * @throws NoSuchElementException
  */
 fun AdaptiveAdapter.first(
-    deep: Boolean = false,
+    deep: Boolean = true,
     horizontal: Boolean = true,
     condition: (AdaptiveFragment) -> Boolean
 ): AdaptiveFragment =
@@ -36,7 +36,7 @@ fun AdaptiveAdapter.first(
  * @param horizontal When [deep] is true, check a given level first, children second.
  */
 fun AdaptiveAdapter.firstOrNull(
-    deep: Boolean = false,
+    deep: Boolean = true,
     horizontal: Boolean = true,
     condition: (AdaptiveFragment) -> Boolean
 ): AdaptiveFragment? =
@@ -49,7 +49,7 @@ fun AdaptiveAdapter.firstOrNull(
  * @param horizontal When [deep] is true, filter a given level first, children second.
  */
 fun AdaptiveAdapter.filter(
-    deep: Boolean = false,
+    deep: Boolean = true,
     horizontal: Boolean = true,
     condition: (AdaptiveFragment) -> Boolean
 ): MutableList<AdaptiveFragment> =
@@ -63,7 +63,7 @@ fun AdaptiveAdapter.filter(
  */
 fun AdaptiveAdapter.filter(
     matches: MutableList<AdaptiveFragment> = mutableListOf(),
-    deep: Boolean = false,
+    deep: Boolean = true,
     horizontal: Boolean = true,
     condition: (AdaptiveFragment) -> Boolean
 ): MutableList<AdaptiveFragment> =
@@ -110,7 +110,7 @@ fun AdaptiveAdapter.singleOrNull(
  * @throws NoSuchElementException if there is no fragment of class [T]
  */
 inline fun <reified T : AdaptiveFragment> AdaptiveAdapter.first(
-    deep: Boolean = false,
+    deep: Boolean = true,
     horizontal: Boolean = true
 ): T =
     firstOrNull(deep, horizontal) { it is T } as? T ?: throw NoSuchElementException()
@@ -122,7 +122,7 @@ inline fun <reified T : AdaptiveFragment> AdaptiveAdapter.first(
  * @param horizontal When [deep] is true, check a given level first, children second.
  */
 inline fun <reified T : AdaptiveFragment> AdaptiveAdapter.firstOrNull(
-    deep: Boolean = false,
+    deep: Boolean = true,
     horizontal: Boolean = true
 ): T? =
     firstOrNull(deep, horizontal) { it is T } as T?
@@ -135,7 +135,7 @@ inline fun <reified T : AdaptiveFragment> AdaptiveAdapter.firstOrNull(
  * @param horizontal When [deep] is true, filter a given level first, children second.
  */
 inline fun <reified T : AdaptiveFragment> AdaptiveAdapter.single(
-    deep: Boolean = false,
+    deep: Boolean = true,
     horizontal: Boolean = true
 ): T =
     rootFragment.single(deep, horizontal) { it is T } as T

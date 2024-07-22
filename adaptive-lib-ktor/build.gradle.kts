@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
@@ -25,7 +28,10 @@ kotlin {
 
     jvmToolchain(11)
 
-    jvm()
+    jvm {
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
+    }
 
     js(IR) {
         browser()
@@ -58,9 +64,15 @@ kotlin {
         }
 
         jvmMain.dependencies {
+            implementation(libs.adaptive.lib.exposed)
             implementation(libs.ktor.server.core)
             implementation(libs.ktor.server.netty)
             implementation(libs.ktor.server.websockets)
+        }
+
+        jvmTest.dependencies {
+            implementation(libs.h2database)
+            implementation(libs.ktor.client.okhttp)
         }
     }
 }

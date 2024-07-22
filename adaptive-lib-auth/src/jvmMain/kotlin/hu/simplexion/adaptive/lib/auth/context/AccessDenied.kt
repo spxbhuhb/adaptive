@@ -4,7 +4,9 @@
 
 package hu.simplexion.adaptive.lib.auth.context
 
+import hu.simplexion.adaptive.log.ReturnException
+
 /**
  * Thrown when an access check fails for an authenticated/unauthenticated session.
  */
-class AccessDenied : Exception()
+class AccessDenied : ReturnException()

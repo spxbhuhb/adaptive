@@ -10,8 +10,8 @@ import io.ktor.server.routing.*
 
 fun Routing.session(sessionWorker: SessionWorker) {
 
-    get("/adaptive/session") {
-        val existingSessionId = call.request.cookies["ADAPTIVE_SESSION"]?.let { UUID<ServiceContext>(it) }
+    get("/adaptive/session-id") {
+        val existingSessionId = call.request.cookies[sessionWorker.sessionCookieName]?.let { UUID<ServiceContext>(it) }
 
         val id = if (existingSessionId != null && sessionWorker.getSessionForContext(existingSessionId) != null) {
             existingSessionId
@@ -19,7 +19,7 @@ fun Routing.session(sessionWorker: SessionWorker) {
             UUID()
         }.toString()
 
-        call.response.cookies.append("ADAPTIVE_SESSION", id, httpOnly = true, path = "/")
+        call.response.cookies.append(sessionWorker.sessionCookieName, id, httpOnly = true, path = "/")
         call.respond(HttpStatusCode.OK)
     }
 

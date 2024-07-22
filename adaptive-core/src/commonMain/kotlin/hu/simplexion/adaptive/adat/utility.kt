@@ -6,6 +6,7 @@ package hu.simplexion.adaptive.adat
 
 import hu.simplexion.adaptive.adat.metadata.AdatClassMetadata
 import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata
+import hu.simplexion.adaptive.wireformat.WireFormatProvider
 import hu.simplexion.adaptive.wireformat.toJson
 
 
@@ -136,3 +137,12 @@ fun <T : AdatClass<T>> T.and(other: T): AdatClass<T> {
 fun sensibleDefault(property: AdatPropertyMetadata): Any? {
     TODO()
 }
+
+fun <A : AdatClass<A>> AdatClass<*>.encode(): ByteArray {
+    @Suppress("UNCHECKED_CAST")
+    this as A
+    return WireFormatProvider.encode(this, this.adatCompanion.adatWireFormat)
+}
+
+fun <A : AdatClass<A>> ByteArray.decode(companion: AdatCompanion<A>): A =
+    WireFormatProvider.decode(this, companion.adatWireFormat)

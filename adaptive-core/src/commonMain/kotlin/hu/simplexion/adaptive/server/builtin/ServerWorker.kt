@@ -55,6 +55,8 @@ class ServerWorker(
         if (trace) trace("before-Unmount")
 
         checkNotNull(impl) { "inconsistent server state innerUnmount with a null implementation" }
+            .also { it.unmount() }
+
         scope.cancel() // TODO check Job docs about waiting
         impl = null
 

@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.auth.model.SecurityPolicy
 import hu.simplexion.adaptive.auth.model.Session
 import hu.simplexion.adaptive.lib.auth.store.history
 import hu.simplexion.adaptive.server.builtin.WorkerImpl
+import hu.simplexion.adaptive.server.setting.dsl.setting
 import hu.simplexion.adaptive.service.ServiceContext
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.utility.vmNowSecond
@@ -16,6 +17,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.concurrent.ConcurrentHashMap
 
 class SessionWorker : WorkerImpl<SessionWorker> {
+
+    val sessionCookieName by setting<String> { "SESSION_COOKIE_NAME" } default "ADAPTIVE_SESSION"
 
     /**
      * Sessions waiting for the second step of 2FA.

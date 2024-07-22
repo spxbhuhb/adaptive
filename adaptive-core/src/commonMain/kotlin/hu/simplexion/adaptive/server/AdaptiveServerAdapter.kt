@@ -65,4 +65,7 @@ open class AdaptiveServerAdapter(
         }
     }
 
+    fun stop() {
+        rootFragment.unmount()
+    }
 }

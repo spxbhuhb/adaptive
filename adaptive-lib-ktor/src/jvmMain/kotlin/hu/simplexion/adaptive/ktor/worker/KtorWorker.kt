@@ -16,21 +16,30 @@ import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import java.io.File
 import java.time.Duration
+import java.util.concurrent.TimeUnit
 
 class KtorWorker : WorkerImpl<KtorWorker> {
 
-    val port by setting<Int> { "KTOR_PORT" }
-    val static by setting<String> { "KTOR_STATIC" }
+    val port by setting<Int> { "KTOR_PORT" } default 8080
+    val static by setting<String> { "KTOR_STATIC" } default "./var/static"
 
     val sessionWorker by workerOrNull<SessionWorker>()
 
     var applicationEngine: ApplicationEngine? = null
 
-    override suspend fun run() {
+    override fun mount() {
         embeddedServer(Netty, port = port, module = { module() }).also {
             applicationEngine = it
             it.start(wait = false) // FIXME think about Ktor server wait parameter
         }
+    }
+
+    override suspend fun run() {
+        // nothing to do here, mount starts the application engine
+    }
+
+    override fun unmount() {
+        applicationEngine?.stop(0, 0, TimeUnit.MILLISECONDS)
     }
 
     fun Application.module() {
@@ -45,7 +54,7 @@ class KtorWorker : WorkerImpl<KtorWorker> {
         routing {
             sessionWorker?.let {
                 session(it)
-                sessionWebsocketServiceCallTransport(this@KtorWorker, it)
+                sessionWebsocketServiceCallTransport(it)
             }
             staticFiles("/", File(static)) {
                 this.default("index.html")

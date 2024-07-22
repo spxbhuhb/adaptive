@@ -15,6 +15,7 @@ import hu.simplexion.adaptive.utility.vmNowMicro
 import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.decode
 import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.encode
 import io.ktor.client.*
+import io.ktor.client.plugins.cookies.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.*
@@ -49,6 +50,7 @@ open class BasicWebSocketServiceCallTransport(
     val pendingCalls = mutableMapOf<UUID<RequestEnvelope>, OutgoingCall>()
 
     val client = HttpClient {
+        install(HttpCookies)
         install(WebSockets) {
             pingInterval = 20_000
         }
