@@ -37,7 +37,7 @@ fun Routing.sessionWebsocketServiceCallTransport(
 ) {
     webSocket(path) {
 
-        val logger = getLogger("websocket")
+        val logger = getLogger("hu.simplexion.adaptive.ktor.worker.sessionWebsocketServiceCallTransport")
         logger.info("connection opened from ${call.request.local.remoteAddress}:${call.request.local.remotePort}")
 
         try {
@@ -92,7 +92,7 @@ suspend fun DefaultWebSocketSession.serve(
 
         ResponseEnvelope(
             requestEnvelope.callId,
-            if (context.data[LOGOUT_TOKEN] != null) ServiceCallStatus.Ok else ServiceCallStatus.Logout,
+            if (context.data[LOGOUT_TOKEN] == null) ServiceCallStatus.Ok else ServiceCallStatus.Logout,
             responsePayload
         )
 

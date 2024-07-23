@@ -16,4 +16,8 @@ class JsonWireFormatProvider : WireFormatProvider() {
     override fun decoder(payload: ByteArray): WireFormatDecoder<*> =
         JsonWireFormatDecoder(payload)
 
+    override fun dump(payload: ByteArray): String {
+        return payload.decodeToString()
+    }
+
 }

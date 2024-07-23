@@ -14,6 +14,7 @@ import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrConstructor
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.deepCopyWithSymbols
+import org.jetbrains.kotlin.ir.util.superClass
 
 fun AdatIrBuilder.emptyConstructor(
     adatClass: IrClass,
@@ -29,7 +30,7 @@ fun AdatIrBuilder.emptyConstructor(
     constructor.body = DeclarationIrBuilder(pluginContext.irContext, constructor.symbol).irBlockBody {
 
         + irDelegatingConstructorCall(
-            irBuiltIns.anyClass.constructors.first().owner
+            adatClass.superClass?.constructors?.first { it.valueParameters.isEmpty() } ?: irBuiltIns.anyClass.constructors.first().owner
         )
 
         for (parameter in primary.valueParameters) {

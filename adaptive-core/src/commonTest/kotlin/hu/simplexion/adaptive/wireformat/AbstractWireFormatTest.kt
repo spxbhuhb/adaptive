@@ -100,7 +100,7 @@ abstract class AbstractWireFormatTest<ST>(
         null
     )
 
-    val enumVal = E.V1
+    val enumVal = E.V2
     val enumListVal = listOf(E.V2, E.V1)
 
     val uIntVal = 123.toUInt()

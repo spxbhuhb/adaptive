@@ -1,0 +1,1 @@
+Auth tests are in the `adaptive-lib-ktor` module.

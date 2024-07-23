@@ -10,11 +10,11 @@ import hu.simplexion.adaptive.wireformat.json.JsonWireFormatEncoder
 import hu.simplexion.adaptive.wireformat.json.JsonWireFormatProvider
 import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 
-fun withJson() {
+fun withJsonWireFormat() {
     defaultWireFormatProvider = JsonWireFormatProvider()
 }
 
-fun withProtobuf() {
+fun withProtoWireFormat() {
     defaultWireFormatProvider = ProtoWireFormatProvider()
 }
 

@@ -4,6 +4,8 @@
 
 package hu.simplexion.adaptive.auth.model
 
+import hu.simplexion.adaptive.wireformat.builtin.EnumWireFormat
+
 enum class AuthenticationResult {
     UnknownPrincipal,
     UnknownSession,
@@ -15,5 +17,10 @@ enum class AuthenticationResult {
     Anonymized,
     InvalidCredentials,
     Success,
-    SecondFactorSuccess
+    SecondFactorSuccess;
+
+    companion object : EnumWireFormat<AuthenticationResult>(entries) {
+        override val wireFormatName: String
+            get() = "hu.simplexion.adaptive.auth.model.AuthenticationResult"
+    }
 }

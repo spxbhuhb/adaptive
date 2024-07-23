@@ -5,13 +5,11 @@
 package hu.simplexion.adaptive.ktor.worker
 
 import hu.simplexion.adaptive.auth.api.SessionApi
-import hu.simplexion.adaptive.auth.model.AuthenticationResult
-import hu.simplexion.adaptive.auth.model.Credential
-import hu.simplexion.adaptive.auth.model.CredentialType
-import hu.simplexion.adaptive.auth.model.Principal
+import hu.simplexion.adaptive.auth.model.*
 import hu.simplexion.adaptive.exposed.inMemoryH2
 import hu.simplexion.adaptive.ktor.BasicWebSocketServiceCallTransport
 import hu.simplexion.adaptive.ktor.ktor
+import hu.simplexion.adaptive.ktor.withJsonWebSocketTransport
 import hu.simplexion.adaptive.ktor.withProtoWebSocketTransport
 import hu.simplexion.adaptive.lib.auth.auth
 import hu.simplexion.adaptive.lib.auth.crypto.BCrypt
@@ -24,7 +22,6 @@ import hu.simplexion.adaptive.server.query.firstImpl
 import hu.simplexion.adaptive.server.server
 import hu.simplexion.adaptive.service.defaultServiceCallTransport
 import hu.simplexion.adaptive.service.getService
-import hu.simplexion.adaptive.service.transport.ServiceResultException
 import hu.simplexion.adaptive.utility.UUID
 import io.ktor.client.plugins.cookies.*
 import io.ktor.client.request.*
@@ -36,6 +33,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock.System.now
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.Test
+import kotlin.test.AfterTest
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
@@ -45,7 +43,10 @@ import kotlin.test.assertNotNull
  */
 class SessionTest {
 
+    lateinit var adapter: AdaptiveServerAdapter
+
     fun server(dbName: String) = server {
+        adapter = it as AdaptiveServerAdapter
         inMemoryH2(dbName)
         auth() // to have session worker
         ktor()
@@ -63,9 +64,15 @@ class SessionTest {
         }
     }
 
+    @AfterTest
+    fun cleanup() {
+        transport.stop()
+        adapter.stop()
+    }
+
     @Test
     fun getSession() {
-        val adapter = server("getSession")
+        server("getSession")
         val sessionWorker = adapter.firstImpl<SessionWorker>()
 
         withProtoWebSocketTransport("ws://localhost:8080/adaptive/service", true)
@@ -84,9 +91,6 @@ class SessionTest {
             val session = sessionService.getSession()
             assertNull(session)
         }
-
-        transport.stop()
-        adapter.stop()
     }
 
     @CallSiteName
@@ -94,9 +98,9 @@ class SessionTest {
         callSiteName: String = "unknown",
         test: suspend (it: AdaptiveServerAdapter) -> Unit
     ) {
-        val adapter = server(callSiteName.substringAfterLast('.'))
+        server(callSiteName.substringAfterLast('.'))
 
-        withProtoWebSocketTransport("ws://localhost:8080/adaptive/service", true)
+        withJsonWebSocketTransport("ws://localhost:8080/adaptive/service", true)
 
         val client = transport.client
 
@@ -106,18 +110,15 @@ class SessionTest {
 
             test(adapter)
         }
-
-        transport.stop()
-        adapter.stop()
     }
 
     @Test
     fun loginUnknownPrincipal() {
         sessionTest {
-            assertFailsWith(ServiceResultException::class) {
+            assertFailsWith(AuthenticationFail::class) {
                 getService<SessionApi>().login("admin", "admin")
             }.also {
-                assertEquals(AuthenticationResult.UnknownPrincipal.name, it.serviceExceptionData.message)
+                assertEquals(AuthenticationResult.UnknownPrincipal, it.result)
             }
         }
     }
@@ -125,13 +126,13 @@ class SessionTest {
     @Test
     fun loginNoCredentials() {
         sessionTest {
-            assertFailsWith(ServiceResultException::class) {
+            assertFailsWith(AuthenticationFail::class) {
                 transaction {
                     PrincipalTable += Principal(UUID(), "admin")
                 }
                 getService<SessionApi>().login("admin", "admin")
             }.also {
-                assertEquals(AuthenticationResult.NoCredential.name, it.serviceExceptionData.message)
+                assertEquals(AuthenticationResult.NoCredential, it.result)
             }
         }
     }
@@ -139,7 +140,7 @@ class SessionTest {
     @Test
     fun loginNotActivated() {
         sessionTest {
-            assertFailsWith(ServiceResultException::class) {
+            assertFailsWith(AuthenticationFail::class) {
                 transaction {
                     val admin = Principal(UUID(), "admin")
                     val passwd = BCrypt.hashpw("stuff", BCrypt.gensalt())
@@ -149,7 +150,7 @@ class SessionTest {
                 }
                 getService<SessionApi>().login("admin", "admin")
             }.also {
-                assertEquals(AuthenticationResult.NotActivated.name, it.serviceExceptionData.message)
+                assertEquals(AuthenticationResult.NotActivated, it.result)
             }
         }
     }
@@ -157,7 +158,7 @@ class SessionTest {
     @Test
     fun loginInvalidCredentials() {
         sessionTest {
-            assertFailsWith(ServiceResultException::class) {
+            assertFailsWith(AuthenticationFail::class) {
                 transaction {
                     val admin = Principal(UUID(), "admin", activated = true)
                     val passwd = BCrypt.hashpw("stuff", BCrypt.gensalt())
@@ -167,7 +168,7 @@ class SessionTest {
                 }
                 getService<SessionApi>().login("admin", "other stuff")
             }.also {
-                assertEquals(AuthenticationResult.InvalidCredentials.name, it.serviceExceptionData.message)
+                assertEquals(AuthenticationResult.InvalidCredentials, it.result)
             }
         }
     }

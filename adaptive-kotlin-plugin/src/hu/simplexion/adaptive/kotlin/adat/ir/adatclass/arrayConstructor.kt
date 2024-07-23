@@ -12,6 +12,7 @@ import org.jetbrains.kotlin.ir.builders.irSetField
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrConstructor
 import org.jetbrains.kotlin.ir.util.constructors
+import org.jetbrains.kotlin.ir.util.superClass
 
 fun AdatIrBuilder.arrayConstructor(
     adatClass: IrClass,
@@ -25,7 +26,7 @@ fun AdatIrBuilder.arrayConstructor(
     constructor.body = DeclarationIrBuilder(pluginContext.irContext, constructor.symbol).irBlockBody {
 
         + irDelegatingConstructorCall(
-            irBuiltIns.anyClass.constructors.first().owner
+            adatClass.superClass?.constructors?.first { it.valueParameters.isEmpty() } ?: irBuiltIns.anyClass.constructors.first().owner
         )
 
         val values = constructor.valueParameters.first()

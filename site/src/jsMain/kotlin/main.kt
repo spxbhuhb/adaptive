@@ -15,11 +15,11 @@ import hu.simplexion.adaptive.ui.common.instruction.AlignItems.Companion.alignIt
 import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.mediaMetrics
 import hu.simplexion.adaptive.ui.common.platform.withJsResources
-import hu.simplexion.adaptive.wireformat.withJson
+import hu.simplexion.adaptive.wireformat.withJsonWireFormat
 
 fun main() {
 
-    withJson()
+    withJsonWireFormat()
     withJsResources()
 
     browser {

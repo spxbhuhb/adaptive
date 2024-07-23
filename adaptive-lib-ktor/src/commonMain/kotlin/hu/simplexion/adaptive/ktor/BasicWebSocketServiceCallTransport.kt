@@ -5,16 +5,18 @@ import hu.simplexion.adaptive.service.model.RequestEnvelope
 import hu.simplexion.adaptive.service.model.ResponseEnvelope
 import hu.simplexion.adaptive.service.model.ServiceCallStatus
 import hu.simplexion.adaptive.service.model.ServiceExceptionData
+import hu.simplexion.adaptive.service.transport.ServiceCallException
 import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 import hu.simplexion.adaptive.service.transport.ServiceErrorHandler
-import hu.simplexion.adaptive.service.transport.ServiceResultException
 import hu.simplexion.adaptive.service.transport.ServiceTimeoutException
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.utility.getLock
 import hu.simplexion.adaptive.utility.use
 import hu.simplexion.adaptive.utility.vmNowMicro
 import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.decode
+import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
 import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.encode
+import hu.simplexion.adaptive.wireformat.WireFormatRegistry
 import io.ktor.client.*
 import io.ktor.client.plugins.cookies.*
 import io.ktor.client.plugins.websocket.*
@@ -79,7 +81,10 @@ open class BasicWebSocketServiceCallTransport(
                     launch {
                         try {
                             for (call in outgoingCalls) {
-                                if (trace) logger.fine("send $call")
+                                if (trace) {
+                                    logger.fine("send $call")
+                                    logger.fine("send data:\n${defaultWireFormatProvider.dump(call.request.payload)}")
+                                }
 
                                 try {
                                     if (useTextFrame) {
@@ -108,7 +113,10 @@ open class BasicWebSocketServiceCallTransport(
 
                         val responseEnvelope = decode(frame.data, ResponseEnvelope)
 
-                        if (trace) logger.fine("receive ${responseEnvelope.callId} ${responseEnvelope.status}")
+                        if (trace) {
+                            logger.fine("receive ${responseEnvelope.callId} ${responseEnvelope.status}")
+                            logger.fine("send data:\n${defaultWireFormatProvider.dump(responseEnvelope.payload)}")
+                        }
 
                         val call = pendingCalls.remove(responseEnvelope.callId)
                         if (call != null) {
@@ -235,8 +243,16 @@ open class BasicWebSocketServiceCallTransport(
      */
     open fun responseError(serviceName: String, funName: String, responseEnvelope: ResponseEnvelope) {
         val serviceExceptionData = decode(responseEnvelope.payload, ServiceExceptionData)
+
         errorHandler?.callError(serviceName, funName, responseEnvelope, serviceExceptionData)
-        throw ServiceResultException(serviceName, funName, responseEnvelope, serviceExceptionData)
+
+        val wireFormat = WireFormatRegistry[serviceExceptionData.className] // FIXME do we want className or wireFormatName here?
+
+        if (wireFormat != null) {
+            throw decode(serviceExceptionData.payload, wireFormat) as Exception
+        } else {
+            throw ServiceCallException(serviceName, funName, responseEnvelope, serviceExceptionData)
+        }
     }
 
 }

@@ -12,13 +12,14 @@ abstract class WireFormatProvider {
 
     abstract fun decoder(payload: ByteArray): WireFormatDecoder<*>
 
+    abstract fun dump(payload: ByteArray): String
+
     companion object {
 
         var defaultWireFormatProvider: WireFormatProvider = ProtoWireFormatProvider()
 
         fun <T> encode(instance : T, wireFormat : WireFormat<T>) : ByteArray =
             defaultWireFormatProvider.encoder().rawInstance(instance, wireFormat).pack()
-
 
         fun <T> decode(byteArray : ByteArray, wireFormat : WireFormat<T>) : T =
             defaultWireFormatProvider.decoder(byteArray).asInstance(wireFormat)

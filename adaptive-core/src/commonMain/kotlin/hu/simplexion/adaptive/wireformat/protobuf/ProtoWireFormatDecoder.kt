@@ -294,13 +294,13 @@ class ProtoWireFormatDecoder(
     // -----------------------------------------------------------------------------------------
 
     override fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): E =
-        entries[checkNotNull(get(fieldNumber)).value.toInt()]
+        entries[checkNotNull(get(fieldNumber)).value.sint32()]
 
     override fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): E? =
-        get(fieldNumber)?.let { entries[it.value.toInt()] }
+        get(fieldNumber)?.let { entries[it.value.sint32()] }
 
     override fun <E : Enum<E>> rawEnum(source: ProtoRecord, entries: EnumEntries<E>): E {
-        return entries[source.value.toInt()]
+        return entries[source.value.sint32()]
     }
 
     // -----------------------------------------------------------------------------------------

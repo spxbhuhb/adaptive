@@ -175,9 +175,111 @@ data class BasicServiceContext(
 Transports move the call arguments and the return values between the client and the server. The library 
 uses [WireFormat](../wireformat/README) for transport.
 
-There is a very basic transport implementation for Ktor in `adaptive-lib` which is automatically
-included with `KtorWorker` and can be added on the client side with `withWebSocketTransport()`
+There is a very basic transport implementation for Ktor in `adaptive-lib-ktor` which is automatically
+included with `KtorWorker` on the server side (`sessionWebsocketServiceCallTransport`).
+
+This transport uses `defaultWireFormatProvider` which in turn uses ProtoBuf by default. Switch formats
+use one of these during the server bootstrap:
+
+* `withProtoWireFormat()`
+* `withJsonWireFormat()`
+
+On the client side you can use one of the bootstrap functions:
+
+* `withProtoWebSocketTransport()`
+* `withJsonWebSocketTransport()`
 
 ## Supported Parameter and Return Types
 
-Whatever [WireFormat](../wireformat/README) supports.
+Whatever [WireFormat](../wireformat/README.md) supports.
+
+## Exceptions
+
+Exception handling depends on the transport implementation, see [Service Transports](#service-transports).
+
+With the default implementation, server side throw results in:
+
+* for [Adat](../adat/README.md) exception instances, instance of the same class is thrown with the same data as on the server (also see note)
+* for non-Adat classes `ServiceCallException` is thrown
+
+> [!NOTE]
+>
+> If there is no wireformat registered for the given Adat class on the client side, `ServiceCallException` is thrown.
+>
+
+```kotlin
+@Adat
+class OddNumberException : Exception()
+
+@ServiceApi
+interface NumberApi {
+  suspend fun ensureEven(i : Int, illegal : Boolean)
+}
+
+// ----  SERVER SIDE  --------
+
+class NumberService : NumberApi, ServiceImpl<NumberService> {
+
+  override suspend fun ensureEven(i : Int, illegal : Boolean) {
+    publicAccess()
+    if (i % 2 == 1) {
+      if (illegal) throw IllegalArgumentException() else throw OddNumberException()
+    }
+  }
+
+}
+
+// ----  CLIENT SIDE  --------
+
+suspend fun checkNumber(i : Int, illegal : Boolean) : String {
+  try {
+    getService<NumberApi>().ensureEven(i, illegal)
+    return "this is an even number"
+  } catch (ex : OddNumberException) {
+    return "this is an odd number"
+  } catch (ex : ServiceCallException) {
+    return "ServiceCallException"
+  }
+}
+```
+
+## Logging
+
+The default server side transport implementation logs service access and service errors. These can be configured
+in `logback.xml` as the example shows below. For a full example, check [logback.xml](../../site/src/jvmMain/resources/logback.xml).
+
+Exceptions that extend `ReturnException` are logged as INFO rather than WARN or ERROR.
+
+These are not actual software errors but more like out-of-order return values.
+
+An example use case is `AccessDenied` which does not indicate an actual software error and does not need
+investigation. In contrast, `NullPointerException` should be investigated.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2020, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+-->
+<configuration
+        xmlns="http://ch.qos.logback/xml/ns/logback"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://ch.qos.logback/xml/ns/logback xsd/logback.xsd">
+  
+    <appender name="ErrorLogFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- appender configuration -->
+    </appender>
+
+    <appender name="AccessLogFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+      <!-- appender configuration -->
+    </appender>
+
+    <root level="WARN">
+        <appender-ref ref="ErrorLogFile"/>
+    </root>
+
+    <logger name="hu.simplexion.adaptive.service.ServiceAccessLog" level="INFO" additivity="false">
+        <appender-ref ref="AccessLogFile"/>
+    </logger>
+  
+</configuration>
+```

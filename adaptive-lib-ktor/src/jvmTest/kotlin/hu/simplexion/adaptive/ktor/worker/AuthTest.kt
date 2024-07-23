@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.ktor.worker
 
 import hu.simplexion.adaptive.auth.api.SessionApi
+import hu.simplexion.adaptive.auth.model.AccessDenied
 import hu.simplexion.adaptive.auth.model.Credential
 import hu.simplexion.adaptive.auth.model.CredentialType
 import hu.simplexion.adaptive.auth.model.Principal
@@ -22,7 +23,6 @@ import hu.simplexion.adaptive.server.builtin.service
 import hu.simplexion.adaptive.server.server
 import hu.simplexion.adaptive.service.defaultServiceCallTransport
 import hu.simplexion.adaptive.service.getService
-import hu.simplexion.adaptive.service.transport.ServiceResultException
 import hu.simplexion.adaptive.utility.UUID
 import io.ktor.client.request.*
 import kotlinx.coroutines.cancel
@@ -52,7 +52,7 @@ class AuthTest {
     }
 
     @CallSiteName
-    fun sessionTest(
+    fun authTest(
         callSiteName: String = "unknown",
         login: Boolean = true,
         test: suspend (it: AdaptiveServerAdapter) -> Unit
@@ -91,7 +91,7 @@ class AuthTest {
 
     @Test
     fun publicAccessNotLoggedIn() {
-        sessionTest(login = false) {
+        authTest(login = false) {
             val result = getService<AuthTestApi>().publicFun()
             assertEquals("publicFun", result)
         }
@@ -99,7 +99,7 @@ class AuthTest {
 
     @Test
     fun publicAccessLoggedIn() {
-        sessionTest {
+        authTest {
             val result = getService<AuthTestApi>().publicFun()
             assertEquals("publicFun", result)
         }
@@ -107,11 +107,27 @@ class AuthTest {
 
     @Test
     fun loggedInNotLoggedIn() {
-        sessionTest(login = false) {
-            assertFailsWith(ServiceResultException::class) {
+        authTest(login = false) {
+            assertFailsWith(AccessDenied::class) {
                 getService<AuthTestApi>().loggedInFun()
-            }.also {
+            }
+        }
+    }
 
+    @Test
+    fun loggedInLoggedIn() {
+        authTest(login = true) {
+            val result = getService<AuthTestApi>().loggedInFun()
+            assertEquals("loggedInFun", result)
+        }
+    }
+
+    @Test
+    fun loggedInAfterLogout() {
+        authTest(login = true) {
+            getService<SessionApi>().logout()
+            assertFailsWith(AccessDenied::class) {
+                getService<AuthTestApi>().loggedInFun()
             }
         }
     }

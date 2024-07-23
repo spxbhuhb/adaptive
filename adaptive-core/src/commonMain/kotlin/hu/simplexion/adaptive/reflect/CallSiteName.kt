@@ -5,7 +5,7 @@
 package hu.simplexion.adaptive.reflect
 
 /**
- * Then this annotation is present on a function:
+ * When this annotation is present on a function:
  *
  * - if the function has a `String` parameter called `callSiteName`
  * - **AND** the parameter value is not specified (using the default value)

@@ -9,4 +9,4 @@ package hu.simplexion.adaptive.service.model
  *
  * [ReturnException] classes are logged as INFO rather than WARN or ERROR.
  */
-abstract class ReturnException(message: String? = null) : Exception(message)
+abstract class ReturnException : Exception()

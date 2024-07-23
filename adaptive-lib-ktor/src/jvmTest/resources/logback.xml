@@ -11,7 +11,8 @@
 
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <!-- pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern-->
+            <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -24,9 +25,8 @@
     <logger name="io.netty" level="INFO"/>
     <logger name="io.ktor" level="INFO"/>
 
-    <logger name="io.ktor.websocket" level="TRACE"/>
+    <logger name="io.ktor.websocket" level="INFO"/>
 
-    <logger name="websocket" level="TRACE"/>
-
+    <logger name="hu.simplexion.adaptive.ktor" level="TRACE"/>
 
 </configuration>

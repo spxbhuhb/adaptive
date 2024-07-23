@@ -16,4 +16,8 @@ class ProtoWireFormatProvider : WireFormatProvider() {
     override fun decoder(payload: ByteArray): WireFormatDecoder<*> =
         ProtoWireFormatDecoder(payload)
 
+    override fun dump(payload: ByteArray): String {
+        return payload.dumpProto()
+    }
+
 }

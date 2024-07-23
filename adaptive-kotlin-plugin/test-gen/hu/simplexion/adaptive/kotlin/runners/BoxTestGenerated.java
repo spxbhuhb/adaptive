@@ -56,6 +56,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Test
+    @TestMetadata("extendConstructors.kt")
+    public void testExtendConstructors() {
+      runTest("testData/box/adat/extendConstructors.kt");
+    }
+
+    @Test
     @TestMetadata("newInstance.kt")
     public void testNewInstance() {
       runTest("testData/box/adat/newInstance.kt");
@@ -546,11 +552,11 @@ public class BoxTestGenerated extends AbstractBoxTest {
         runTest("testData/box/foundation/variables/many.kt");
       }
 
-        @Test
-        @TestMetadata("noInitializer.kt")
-        public void testNoInitializer() {
-            runTest("testData/box/foundation/variables/noInitializer.kt");
-        }
+      @Test
+      @TestMetadata("noInitializer.kt")
+      public void testNoInitializer() {
+        runTest("testData/box/foundation/variables/noInitializer.kt");
+      }
 
       @Test
       @TestMetadata("onlyExternal.kt")

@@ -184,7 +184,7 @@ object StringWireFormat : WireFormat<String> {
     override fun <ST> wireFormatDecode(decoder: WireFormatDecoder<ST>, fieldNumber: Int, fieldName: String) = decoder.stringOrNull(fieldNumber, fieldName)
 }
 
-class EnumWireFormat<E : Enum<E>>(val entries: EnumEntries<E>) : WireFormat<E> {
+open class EnumWireFormat<E : Enum<E>>(val entries: EnumEntries<E>) : WireFormat<E> {
     override val wireFormatName: String get() = "kotlin.Enum" // FIXME polymorphic enum
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: E): WireFormatEncoder = encoder.rawEnum(value, entries)

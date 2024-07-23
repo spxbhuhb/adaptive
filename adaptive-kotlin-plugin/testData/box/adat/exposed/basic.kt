@@ -43,11 +43,20 @@ annotation class ExposedAdatSet
 
 annotation class ExposedAdatTable
 
+
 fun UUID<*>.asJava(): java.util.UUID =
     java.util.UUID(this.msb, this.lsb)
 
+@JvmName("asJavaN")
+fun UUID<*>?.asJava(): java.util.UUID? =
+    if (this == null) null else java.util.UUID(this.msb, this.lsb)
+
 fun UUID<*>.asEntityID(table: UUIDTable): EntityID<java.util.UUID> =
     EntityID(this.asJava(), table)
+
+@JvmName("asEntityIDN")
+fun UUID<*>?.asEntityID(table: UUIDTable): EntityID<java.util.UUID>? =
+    if (this == null) null else EntityID(asJava(), table)
 
 /**
  * Creates an Exposed [EntityID] for a `reference` column. Gets the table
@@ -66,11 +75,23 @@ fun UUID<*>.asEntityID(column: Column<java.util.UUID>): EntityID<java.util.UUID>
     }
 }
 
+@JvmName("asEntityIDN")
+fun UUID<*>?.asEntityID(column: Column<java.util.UUID>): EntityID<java.util.UUID>? =
+    this?.asEntityID(column)
+
 fun <T> EntityID<java.util.UUID>.asCommon(): UUID<T> =
     UUID(this.value.mostSignificantBits, this.value.leastSignificantBits)
 
+@JvmName("asCommonN")
+fun <T> EntityID<java.util.UUID>?.asCommon(): UUID<T>? =
+    this?.asCommon()
+
 fun <T> java.util.UUID.asCommon() =
     UUID<T>(this.mostSignificantBits, this.leastSignificantBits)
+
+@JvmName("asCommonN")
+fun <T> java.util.UUID?.asCommon() =
+    this?.asCommon<T>()
 
 abstract class AbstractAdatTable<A : AdatClass<A>> : UUIDTable("test") {
 

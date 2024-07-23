@@ -7,9 +7,9 @@ package hu.simplexion.adaptive.service.transport
 import hu.simplexion.adaptive.service.model.ResponseEnvelope
 import hu.simplexion.adaptive.service.model.ServiceExceptionData
 
-class ServiceResultException(
+class ServiceCallException(
     val serviceName: String,
     val funName: String,
     val responseEnvelope: ResponseEnvelope,
-    val serviceExceptionData: ServiceExceptionData
+    val exceptionData: ServiceExceptionData
 ) : RuntimeException()
