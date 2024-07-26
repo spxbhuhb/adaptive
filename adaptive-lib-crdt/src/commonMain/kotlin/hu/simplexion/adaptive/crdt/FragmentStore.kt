@@ -5,11 +5,15 @@ import hu.simplexion.adaptive.crdt.state.StateOperation
 import hu.simplexion.adaptive.crdt.tree.TreeData
 import hu.simplexion.adaptive.crdt.tree.TreeOperation
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.utility.UUID
 
 class FragmentStore(
-    val id: StoreId,
-    private var time: LamportTimestamp
+    val globalStoreId: UUID<FragmentStore>,
+    timestamp: Int,
+    instanceId: Int
 ) {
+
+    private var time = LamportTimestamp(timestamp, instanceId)
 
     private val tree = TreeData(this)
     private val state = StateData(this)
