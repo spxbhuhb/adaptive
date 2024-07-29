@@ -9,7 +9,6 @@ import hu.simplexion.adaptive.auth.model.*
 import hu.simplexion.adaptive.exposed.inMemoryH2
 import hu.simplexion.adaptive.ktor.BasicWebSocketServiceCallTransport
 import hu.simplexion.adaptive.ktor.ktor
-import hu.simplexion.adaptive.ktor.withJsonWebSocketTransport
 import hu.simplexion.adaptive.ktor.withProtoWebSocketTransport
 import hu.simplexion.adaptive.lib.auth.auth
 import hu.simplexion.adaptive.lib.auth.crypto.BCrypt
@@ -24,8 +23,6 @@ import hu.simplexion.adaptive.service.defaultServiceCallTransport
 import hu.simplexion.adaptive.service.getService
 import hu.simplexion.adaptive.utility.UUID
 import io.ktor.client.plugins.cookies.*
-import io.ktor.client.request.*
-import io.ktor.http.*
 import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -75,15 +72,12 @@ class SessionTest {
         server("getSession")
         val sessionWorker = adapter.firstImpl<SessionWorker>()
 
-        withProtoWebSocketTransport("ws://localhost:8080/adaptive/service", true)
-
-        val sessionService = getService<SessionApi>()
-
-        val client = transport.client
-
         runBlocking {
-            val response = client.get("http://localhost:8080/adaptive/client-id")
-            assertEquals(HttpStatusCode.OK, response.status)
+            withProtoWebSocketTransport("ws://localhost:8080/adaptive/service", "http://localhost:8080/adaptive/client-id")
+
+            val sessionService = getService<SessionApi>()
+
+            val client = transport.client
 
             val cookies = client.cookies("http://localhost:8080")
             assertNotNull(cookies.firstOrNull { it.name == sessionWorker.clientIdCookieName })
@@ -100,13 +94,8 @@ class SessionTest {
     ) {
         server(callSiteName.substringAfterLast('.'))
 
-        withJsonWebSocketTransport("ws://localhost:8080/adaptive/service", true)
-
-        val client = transport.client
-
         runBlocking {
-            // to set the client id cookie
-            client.get("http://localhost:8080/adaptive/client-id")
+            withProtoWebSocketTransport("ws://localhost:8080/adaptive/service", "http://localhost:8080/adaptive/client-id")
 
             test(adapter)
         }

@@ -24,7 +24,6 @@ import hu.simplexion.adaptive.server.server
 import hu.simplexion.adaptive.service.defaultServiceCallTransport
 import hu.simplexion.adaptive.service.getService
 import hu.simplexion.adaptive.utility.UUID
-import io.ktor.client.request.*
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -74,13 +73,8 @@ class AuthTest {
             }
         }
 
-        withProtoWebSocketTransport("ws://localhost:8080/adaptive/service", true)
-
-        val client = transport.client
-
         runBlocking {
-            // to set the client id cookie
-            client.get("http://localhost:8080/adaptive/client-id")
+            withProtoWebSocketTransport("ws://localhost:8080/adaptive/service", "http://localhost:8080/adaptive/client-id")
             if (login) getService<SessionApi>().login("admin", "stuff")
             test(adapter)
         }

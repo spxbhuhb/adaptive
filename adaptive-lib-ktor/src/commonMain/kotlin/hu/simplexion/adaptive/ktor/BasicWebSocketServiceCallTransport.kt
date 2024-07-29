@@ -6,11 +6,7 @@ import hu.simplexion.adaptive.service.model.RequestEnvelope
 import hu.simplexion.adaptive.service.model.ResponseEnvelope
 import hu.simplexion.adaptive.service.model.ServiceCallStatus
 import hu.simplexion.adaptive.service.model.ServiceExceptionData
-import hu.simplexion.adaptive.service.transport.ServiceCallException
-import hu.simplexion.adaptive.service.transport.ServiceCallTransport
-import hu.simplexion.adaptive.service.transport.ServiceErrorHandler
-import hu.simplexion.adaptive.service.transport.ServiceResponseListener
-import hu.simplexion.adaptive.service.transport.ServiceTimeoutException
+import hu.simplexion.adaptive.service.transport.*
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.utility.getLock
 import hu.simplexion.adaptive.utility.use
@@ -22,13 +18,15 @@ import hu.simplexion.adaptive.wireformat.WireFormatRegistry
 import io.ktor.client.*
 import io.ktor.client.plugins.cookies.*
 import io.ktor.client.plugins.websocket.*
+import io.ktor.client.request.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlin.collections.set
 
 open class BasicWebSocketServiceCallTransport(
-    val path: String = "/adaptive/service",
+    val servicePath: String = "/adaptive/service",
+    val clientIdPath: String = "/adaptive/client-id",
     var errorHandler: ServiceErrorHandler? = null,
     val trace: Boolean = false,
     val useTextFrame: Boolean = false
@@ -65,7 +63,9 @@ open class BasicWebSocketServiceCallTransport(
         }
     }
 
-    fun start() {
+    suspend fun start() {
+        // initialize the client id cookie
+        client.get(clientIdPath)
         scope.launch { run() }
         scope.launch { timeout() }
     }
@@ -77,7 +77,7 @@ open class BasicWebSocketServiceCallTransport(
             try {
                 if (trace) logger.fine("connecting (retryDelay=$retryDelay)")
 
-                client.webSocket(path) {
+                client.webSocket(servicePath) {
 
                     socket = this
 
@@ -141,7 +141,6 @@ open class BasicWebSocketServiceCallTransport(
             frame as? Frame.Binary ?: continue
 
             val responseEnvelope = decode(frame.data, ResponseEnvelope)
-
             if (trace) {
                 logger.fine("receive ${responseEnvelope.callId} ${responseEnvelope.status}")
                 logger.fine("send data:\n${defaultWireFormatProvider.dump(responseEnvelope.payload)}")
@@ -152,13 +151,13 @@ open class BasicWebSocketServiceCallTransport(
 
             if (call != null) {
                 call.responseChannel.send(responseEnvelope)
-                return
+                continue
             }
 
             val listener = listenerLock.use { listeners[callId] }
             if (listener != null) {
                 launch { listener.receive(callId, responseEnvelope) }
-                return
+                continue
             }
 
             // drop the message silently as this might happen during normal operation if:

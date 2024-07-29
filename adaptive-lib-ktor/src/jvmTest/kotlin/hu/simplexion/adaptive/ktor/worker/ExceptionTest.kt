@@ -20,7 +20,6 @@ import hu.simplexion.adaptive.service.ServiceApi
 import hu.simplexion.adaptive.service.defaultServiceCallTransport
 import hu.simplexion.adaptive.service.getService
 import hu.simplexion.adaptive.service.transport.ServiceCallException
-import io.ktor.client.request.*
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -86,13 +85,9 @@ class ExceptionTest {
             ktor()
         }
 
-        withProtoWebSocketTransport("ws://localhost:8080/adaptive/service", true)
-
-        val client = transport.client
-
         runBlocking {
-            // to set the client id cookie
-            client.get("http://localhost:8080/adaptive/client-id")
+            withProtoWebSocketTransport("ws://localhost:8080/adaptive/service", "http://localhost:8080/adaptive/client-id")
+
             test(adapter)
         }
 

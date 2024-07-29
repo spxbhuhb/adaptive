@@ -9,16 +9,24 @@ import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWir
 import hu.simplexion.adaptive.wireformat.json.JsonWireFormatProvider
 import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 
-fun withJsonWebSocketTransport(path: String = "/adaptive/service", trace: Boolean = false) =
-    BasicWebSocketServiceCallTransport(path = path, useTextFrame = true, trace = trace)
+suspend fun withJsonWebSocketTransport(
+    servicePath: String = "/adaptive/service",
+    clientIdPath: String = "/adaptive/client-id",
+    trace: Boolean = false
+) =
+    BasicWebSocketServiceCallTransport(servicePath = servicePath, clientIdPath = clientIdPath, useTextFrame = true, trace = trace)
         .also {
             defaultWireFormatProvider = JsonWireFormatProvider()
             defaultServiceCallTransport = it
             it.start()
         }
 
-fun withProtoWebSocketTransport(path: String = "/adaptive/service", trace: Boolean = false) =
-    BasicWebSocketServiceCallTransport(path = path, useTextFrame = false, trace = trace)
+suspend fun withProtoWebSocketTransport(
+    servicePath: String = "/adaptive/service",
+    clientIdPath: String = "/adaptive/client-id",
+    trace: Boolean = false
+) =
+    BasicWebSocketServiceCallTransport(servicePath = servicePath, clientIdPath = clientIdPath, useTextFrame = false, trace = trace)
         .also {
             defaultWireFormatProvider = ProtoWireFormatProvider()
             defaultServiceCallTransport = it
