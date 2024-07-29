@@ -6,13 +6,12 @@ package hu.simplexion.adaptive.ktor.worker
 
 import hu.simplexion.adaptive.adat.AdatClass
 import hu.simplexion.adaptive.adat.encode
+import hu.simplexion.adaptive.auth.context.getPrincipalOrNull
 import hu.simplexion.adaptive.auth.model.Session.Companion.LOGOUT_TOKEN
 import hu.simplexion.adaptive.auth.model.Session.Companion.SESSION_TOKEN
-import hu.simplexion.adaptive.lib.auth.context.getPrincipalOrNull
 import hu.simplexion.adaptive.lib.auth.worker.SessionWorker
 import hu.simplexion.adaptive.log.AdaptiveLogger
 import hu.simplexion.adaptive.log.getLogger
-import hu.simplexion.adaptive.service.BasicServiceContext
 import hu.simplexion.adaptive.service.ServiceContext
 import hu.simplexion.adaptive.service.model.*
 import hu.simplexion.adaptive.utility.UUID
@@ -32,8 +31,7 @@ val serviceAccessLog = LoggerFactory.getLogger("hu.simplexion.adaptive.service.S
 // FIXME flood detection, session id brute force attack detection
 fun Routing.sessionWebsocketServiceCallTransport(
     sessionWorker: SessionWorker,
-    path: String = "/adaptive/service",
-    newContext: (uuid: UUID<ServiceContext>) -> ServiceContext = { BasicServiceContext(it) }
+    path: String = "/adaptive/service"
 ) {
     webSocket(path) {
 
@@ -43,7 +41,7 @@ fun Routing.sessionWebsocketServiceCallTransport(
         try {
             val sessionUuid = call.request.cookies[sessionWorker.clientIdCookieName]?.let { UUID<ServiceContext>(it) } ?: UUID()
 
-            val context = newContext(sessionUuid)
+            val context = ServiceContext(sessionUuid)
 
             sessionWorker.getSessionForContext(sessionUuid)?.let {
                 context.data[SESSION_TOKEN] = it
@@ -62,7 +60,7 @@ fun Routing.sessionWebsocketServiceCallTransport(
 
                 launch { serve(logger, sessionWorker, context, requestEnvelope) }
             }
-        } catch (ex: kotlinx.coroutines.CancellationException) {
+        } catch (_: kotlinx.coroutines.CancellationException) {
             // this is shutdown, no error to be logged there
         } catch (ex: Exception) {
             logger.error(ex)

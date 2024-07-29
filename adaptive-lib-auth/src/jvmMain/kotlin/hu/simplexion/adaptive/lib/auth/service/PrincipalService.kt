@@ -2,6 +2,10 @@ package hu.simplexion.adaptive.lib.auth.service
 
 import hu.simplexion.adaptive.adat.ensureValid
 import hu.simplexion.adaptive.auth.api.PrincipalApi
+import hu.simplexion.adaptive.auth.context.ensureOneOf
+import hu.simplexion.adaptive.auth.context.ensurePrincipalOrOneOf
+import hu.simplexion.adaptive.auth.context.isPrincipal
+import hu.simplexion.adaptive.auth.context.publicAccess
 import hu.simplexion.adaptive.auth.model.Credential
 import hu.simplexion.adaptive.auth.model.CredentialType.ACTIVATION_KEY
 import hu.simplexion.adaptive.auth.model.CredentialType.PASSWORD
@@ -9,10 +13,6 @@ import hu.simplexion.adaptive.auth.model.CredentialType.PASSWORD_RESET_KEY
 import hu.simplexion.adaptive.auth.model.Principal
 import hu.simplexion.adaptive.auth.model.Role
 import hu.simplexion.adaptive.auth.model.SecurityPolicy
-import hu.simplexion.adaptive.lib.auth.context.ensureOneOf
-import hu.simplexion.adaptive.lib.auth.context.ensurePrincipalOrOneOf
-import hu.simplexion.adaptive.lib.auth.context.isPrincipal
-import hu.simplexion.adaptive.lib.auth.context.publicAccess
 import hu.simplexion.adaptive.lib.auth.crypto.BCrypt
 import hu.simplexion.adaptive.lib.auth.store.credentials
 import hu.simplexion.adaptive.lib.auth.store.history

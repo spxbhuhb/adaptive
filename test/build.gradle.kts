@@ -44,6 +44,7 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             api(libs.adaptive.core)
+            api(libs.adaptive.lib.auth)
         }
 
         commonTest.dependencies {

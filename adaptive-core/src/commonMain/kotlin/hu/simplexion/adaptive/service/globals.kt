@@ -6,11 +6,11 @@ package hu.simplexion.adaptive.service
 
 import hu.simplexion.adaptive.service.factory.BasicServiceImplFactory
 import hu.simplexion.adaptive.service.factory.ServiceImplFactory
-import hu.simplexion.adaptive.service.transport.LocalServiceCallTransport
+import hu.simplexion.adaptive.service.model.RequestEnvelope
 import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 import hu.simplexion.adaptive.utility.UUID
 
-var defaultServiceCallTransport: ServiceCallTransport = LocalServiceCallTransport()
+lateinit var defaultServiceCallTransport: ServiceCallTransport
 
 val defaultServiceImplFactory: ServiceImplFactory = BasicServiceImplFactory()
 
@@ -43,3 +43,7 @@ inline operator fun <reified T> ServiceContext.get(uuid: UUID<T>): T? {
 operator fun <T> ServiceContext.set(uuid: UUID<T>, value: T) {
     data.let { it[uuid] = value }
 }
+
+typealias ServiceResponseEndpoint = UUID<RequestEnvelope>
+
+fun ServiceResponseEndpoint.new() = UUID<ServiceResponseEndpoint>()

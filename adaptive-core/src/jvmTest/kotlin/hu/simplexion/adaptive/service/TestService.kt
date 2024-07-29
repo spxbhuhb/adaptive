@@ -48,6 +48,8 @@ class TestService2Impl(
     override val serviceContext: ServiceContext
 ) : TestService2, ServiceImpl<TestService2Impl> {
 
+    override var serviceCallTransport: ServiceCallTransport? = null
+
     override fun newInstance(serviceContext: ServiceContext): TestService2Impl {
         return TestService2Impl(serviceContext)
     }
@@ -66,10 +68,10 @@ class TestService2Impl(
 fun box(): String {
     var response: String
     runBlocking {
-        defaultServiceCallTransport = TestServiceTransport(TestService2Impl(BasicServiceContext()))
+        defaultServiceCallTransport = TestServiceTransport(TestService2Impl(ServiceContext()))
         response = testServiceConsumer.testFun(1, "hello")
     }
-    return if (response.startsWith("i:1 s:hello BasicServiceContext(")) "OK" else "Fail (response=$response)"
+    return if (response.startsWith("i:1 s:hello ServiceContext(")) "OK" else "Fail (response=$response)"
 }
 
 class BasicServiceTest1 {

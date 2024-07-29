@@ -4,13 +4,18 @@
 
 package hu.simplexion.adaptive.service.transport
 
+import hu.simplexion.adaptive.service.ServiceResponseEndpoint
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
 import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
 
-interface ServiceCallTransport {
+abstract class ServiceCallTransport {
 
-    suspend fun call(serviceName: String, funName: String, payload: ByteArray): ByteArray
+    abstract suspend fun call(serviceName: String, funName: String, payload: ByteArray): ByteArray
+
+    abstract fun connect(endpoint: ServiceResponseEndpoint, listener: ServiceResponseListener)
+
+    abstract fun disconnect(endpoint: ServiceResponseEndpoint)
 
     val wireFormatEncoder: WireFormatEncoder
         get() = defaultWireFormatProvider.encoder()

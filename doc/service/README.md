@@ -1,16 +1,21 @@
-## Getting started
+# Services
 
 When using services we work with:
 
 * service APIs
 * service consumers
-* service implementations
+* service providers
 * service transports
 
-### Service APIs
+## Service APIs
 
-Service APIs describe the communication between the client and the server. They are pretty straightforward:
-create an interface, annotate it with `@ServiceApi` and define the functions the service provides:
+Service APIs describe the communication between a service consumer and a service provider.
+
+To write one:
+
+- create an interface
+- annotate it with `@ServiceApi`
+- define **suspend** functions the service provides
 
 ```kotlin
 @ServiceApi
@@ -21,54 +26,46 @@ interface CounterApi {
 }
 ```
 
-Service functions must be `suspend`.
+## Service Consumers
 
-You can define non-suspend functions in service APIs. Those are **NOT** sent to the service implementations on
-the server side.
+The `getService` function:
 
-### Service Consumers
-
-Use the `getService` function to get a service consumer instance. The compiler plugin generates all the code for the 
-client side, you simply call the functions.
+- returns with a service consumer instance
+- the compiler plugin generates all the code for the consumer side
+- you simply call the functions
 
 ```kotlin
 val counterService = getService<CounterApi>()
+
+val counter = counterService.incrementAndGet()
+
+println(counter)
 ```
 
-Call example (this uses the default service transport, more about that later):
+## Service Providers
 
-```kotlin
-@Adaptive
-fun counter() {
+Service providers:
 
-    val counter = poll(1.seconds, 0) { counterService.incrementAndGet() }
-
-    text("$counter")
-
-}
-```
-
-### Service Implementations
-
-On the server side create a service implementation that does whatever this service should do.
-
-This service below calls uses a worker to increment and get the value of the counter.
+- implement a server API
+- extend `ServiceImpl`
+- added with `service` to the server fragment tree
+- **are instantiated for each call** (see below)
 
 ```kotlin
 class CounterService : CounterApi, ServiceImpl<CounterService> {
 
-    val worker by worker<CounterWorker>()
+  companion object {
+    val counter = AtomicInteger(0)
+  }
 
     override suspend fun incrementAndGet(): Int {
-        return worker.counter.incrementAndGet()
+      return counter.incrementAndGet()
     }
 
 }
 ```
 
-Register the service during application startup, so the server knows that it is available.
-
-See [server main](https://github.com/spxbhuhb/adaptive-example/blob/main/server/src/main/kotlin/Application.kt) for a complete example.
+Register the service during application startup, so it is known.
 
 ```kotlin
 fun main() {
@@ -79,8 +76,8 @@ fun main() {
 ```
 
 > [!IMPORTANT]
-> 
-> A new service implementation instance is created for each service call. This might seem a bit of an overkill, but it
+>
+> A new service provider instance is created for each service call. This might seem a bit of an overkill, but it
 > makes the handling of the [service context](#Service-Context) very straightforward.
 > 
 
@@ -117,77 +114,48 @@ class CounterService : CounterApi, ServiceImpl<CounterService> {
 }
 ```
 
-#### Service Context
+## Service Context
 
-Most cases you need authorization and session data on the server side. Services provide a `serviceContext`.
-This context may contain the identity of the user, along with other information.
+Each service provider call gets the service context which is reachable in the `serviceContext` property and
+is an instance of `ServiceContext`.
 
-Each service implementation call gets the service context which is reachable in the `serviceContext` property:
+`ServiceContext` instances
 
-> [!NOTE]
-> 
-> This example is a bit outdated and the service context functions are not merged into the project yet.
->
+* store session data on the server side
+  * ID of the session
+  * owner of the session, is known (user ID)
+  * roles of the owner
+
+* provide functions for publish/subscribe patterns
+  * `send` - sends a message on the connection
+  * `connectionCleanup` - register a connection cleanup function
+  * `sessionCleanup` - register a session cleanup function
 
 ```kotlin
-class HelloServiceImpl : HelloService, ServiceImpl<HelloServiceImpl> {
+class HelloService : HelloServiceApi, ServiceImpl<HelloService> {
 
     override suspend fun hello(myName: String): String {
-        if (serviceContext.isAnonymous) {
+      publicAccess()
+
+      if (serviceContext.isLoggedIn) {
             return "Sorry, I can talk only with clients I know."
         } else {
             return "Hello $myName! Your user id is: ${serviceContext.owner}."
         }            
     }
-    
-    override suspend fun login(email : String, password : String) : String {
-        if (authenticate(email, password)) serviceContext.owner = myId
-    }
-
-    override suspend fun logout() : String {
-        serviceContext.owner = null
-    }
 
 }
 ```
 
-Type of `serviceContext` is `ServiceContext`:
+## Service Transports
 
-```kotlin
-interface ServiceContext {
-    val uuid: UUID<ServiceContext>
-    var data : MutableMap<Any,Any?>
-}
-```
+Service transports:
 
-Your transport may use your choice of class for the actual service context. There is a `BasicServiceContext` which is the
-barest implementation:
+- move the call arguments from the consumer to the provider
+- move the return value from the provider to the consumer
+- use [WireFormat](../wireformat/README)
 
-```kotlin
-data class BasicServiceContext(
-    override val uuid: UUID<ServiceContext> = UUID(),
-    override var data : MutableMap<Any,Any?> = mutableMapOf()
-) : ServiceContext
-```
-
-### Service Transports
-
-Transports move the call arguments and the return values between the client and the server. The library 
-uses [WireFormat](../wireformat/README) for transport.
-
-There is a very basic transport implementation for Ktor in `adaptive-lib-ktor` which is automatically
-included with `KtorWorker` on the server side (`sessionWebsocketServiceCallTransport`).
-
-This transport uses `defaultWireFormatProvider` which in turn uses ProtoBuf by default. Switch formats
-use one of these during the server bootstrap:
-
-* `withProtoWireFormat()`
-* `withJsonWireFormat()`
-
-On the client side you can use one of the bootstrap functions:
-
-* `withProtoWebSocketTransport()`
-* `withJsonWebSocketTransport()`
+Check the implementation for [Ktor](../ktor/readme.md) for examples.
 
 ## Supported Parameter and Return Types
 
@@ -197,7 +165,7 @@ Whatever [WireFormat](../wireformat/README.md) supports.
 
 Exception handling depends on the transport implementation, see [Service Transports](#service-transports).
 
-With the default implementation, server side throw results in:
+With the Ktor implementation, provider side exceptions result in:
 
 * for [Adat](../adat/README.md) exception instances, instance of the same class is thrown with the same data as on the server (also see note)
 * for non-Adat classes `ServiceCallException` is thrown
@@ -282,4 +250,95 @@ investigation. In contrast, `NullPointerException` should be investigated.
     </logger>
   
 </configuration>
+```
+
+## Publish-Subscribe pattern
+
+> [!NOTE]
+>
+> This pattern is very important, but it is **NOT** intended for general use.
+> There are producers which are far more convenient and those should be sufficient
+> for most use cases. Most notably `fragmentStore` in `adaptive-lib-crtd` provides
+> real-time, conflict-free, multi-peer synchronization of fragment trees.
+>
+
+These functions can be used to implement the publish-subscribe pattern.
+
+client side
+
+- `ServiceCallTransport.connect`
+- `ServiceCallTransport.disconnect`
+
+server side
+
+- `ServiceContext.send`
+- `ServiceContext.connectionCleanup`
+- `ServiceContext.sessionCleanup`
+
+```kotlin
+@Adat
+class CounterValue(
+  val value: Int
+)
+
+@ServiceApi
+interface PushCounterApi {
+
+  suspend fun getAndSubscribe(endpoint: ServiceResponseEndpoint)
+
+  suspend fun unsubscribe(endpoint: ServiceResponseEndpoint)
+
+}
+
+class CounterValueListener : ServiceResponseListener {
+  override suspend fun receive(endpoint: ServiceResponseEndpoint, message: ResponseEnvelope) {
+    val
+  }
+}
+
+suspend fun consumer() {
+
+  val publisher = getService<PushCounterApi>()
+
+  val endpoint = ServiceResponseEndpoint.new()
+
+  defaultServiceCallTransport.connect(endpoint) {
+
+    println(it)
+
+    if (it == 13) {
+      publisher.unsubscribe(endpoint)
+      defaultServiceCallTransport.disconnect(endpoint)
+    }
+  }
+}
+
+class PushCounterService : PushCounterApi, ServiceImpl<PushCounterService>() {
+
+  companion object {
+    val lock = Lock()
+    val subscriptions = mutableMapOf<ServiceResponseEndpoint, ServiceContext>()
+    var counter = 0
+  }
+
+  suspend fun getAndSubscribe(endpoint: ServiceResponseEndpoint) {
+    publicAccess()
+
+    lock.use {
+      val value = CounterValue(counter ++)
+      subscriptions[endpoint] = serviceContext
+      subscriptions.values.forEach { it.send(value) }
+      return value
+    }
+  }
+
+  suspend fun unsubscribe(endpoint: ServiceResponseEndpoint) {
+    publicAccess()
+
+    lock.use {
+      subscriptions.remove(endpoint)
+    }
+  }
+
+}
 ```

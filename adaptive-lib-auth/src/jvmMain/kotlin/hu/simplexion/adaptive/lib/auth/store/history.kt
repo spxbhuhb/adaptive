@@ -4,9 +4,9 @@
 
 package hu.simplexion.adaptive.lib.auth.store
 
+import hu.simplexion.adaptive.auth.context.getPrincipalOrNull
+import hu.simplexion.adaptive.auth.context.getSessionOrNull
 import hu.simplexion.adaptive.auth.model.*
-import hu.simplexion.adaptive.lib.auth.context.getPrincipalOrNull
-import hu.simplexion.adaptive.lib.auth.context.getSessionOrNull
 import hu.simplexion.adaptive.reflect.CallSiteName
 import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import hu.simplexion.adaptive.utility.UUID

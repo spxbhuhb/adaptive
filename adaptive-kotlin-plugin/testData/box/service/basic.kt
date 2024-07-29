@@ -1,11 +1,11 @@
 package hu.simplexion.adaptive.service
 
-import hu.simplexion.adaptive.service.*
-import hu.simplexion.adaptive.service.transport.*
-import hu.simplexion.adaptive.service.testing.TestServiceTransport
 import hu.simplexion.adaptive.server.builtin.ServiceImpl
+import hu.simplexion.adaptive.service.*
+import hu.simplexion.adaptive.service.testing.TestServiceTransport
+import hu.simplexion.adaptive.service.transport.*
+import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 import kotlinx.coroutines.runBlocking
-import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 
 @ServiceApi
 interface TestService1 {
@@ -15,6 +15,7 @@ interface TestService1 {
 val testServiceConsumer = getService<TestService1>()
 
 class TestService1Impl : TestService1, ServiceImpl<TestService1Impl> {
+    override var serviceCallTransport: ServiceCallTransport? = null
 
     override suspend fun testFun(arg1: Int, arg2: String) =
         "i:$arg1 s:$arg2 $serviceContext"
@@ -27,5 +28,5 @@ fun box(): String {
         defaultServiceCallTransport = TestServiceTransport(TestService1Impl())
         response = testServiceConsumer.testFun(1, "hello")
     }
-    return if (response.startsWith("i:1 s:hello BasicServiceContext(")) "OK" else "Fail (response=$response)"
+    return if (response.startsWith("i:1 s:hello ServiceContext(")) "OK" else "Fail (response=$response)"
 }

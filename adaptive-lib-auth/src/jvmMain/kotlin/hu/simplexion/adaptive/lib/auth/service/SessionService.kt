@@ -1,14 +1,14 @@
 package hu.simplexion.adaptive.lib.auth.service
 
 import hu.simplexion.adaptive.auth.api.SessionApi
+import hu.simplexion.adaptive.auth.context.ensuredByLogic
+import hu.simplexion.adaptive.auth.context.getPrincipal
+import hu.simplexion.adaptive.auth.context.getSessionOrNull
+import hu.simplexion.adaptive.auth.context.publicAccess
 import hu.simplexion.adaptive.auth.model.*
 import hu.simplexion.adaptive.auth.model.CredentialType.ACTIVATION_KEY
 import hu.simplexion.adaptive.auth.model.Session.Companion.LOGOUT_TOKEN
 import hu.simplexion.adaptive.auth.model.Session.Companion.SESSION_TOKEN
-import hu.simplexion.adaptive.lib.auth.context.ensuredByLogic
-import hu.simplexion.adaptive.lib.auth.context.getPrincipal
-import hu.simplexion.adaptive.lib.auth.context.getSessionOrNull
-import hu.simplexion.adaptive.lib.auth.context.publicAccess
 import hu.simplexion.adaptive.lib.auth.crypto.BCrypt
 import hu.simplexion.adaptive.lib.auth.store.credentials
 import hu.simplexion.adaptive.lib.auth.store.history

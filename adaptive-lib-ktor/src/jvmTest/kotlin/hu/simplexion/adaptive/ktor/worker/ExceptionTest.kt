@@ -5,12 +5,12 @@
 package hu.simplexion.adaptive.ktor.worker
 
 import hu.simplexion.adaptive.adat.Adat
+import hu.simplexion.adaptive.auth.context.publicAccess
 import hu.simplexion.adaptive.exposed.inMemoryH2
 import hu.simplexion.adaptive.ktor.BasicWebSocketServiceCallTransport
 import hu.simplexion.adaptive.ktor.ktor
 import hu.simplexion.adaptive.ktor.withProtoWebSocketTransport
 import hu.simplexion.adaptive.lib.auth.auth
-import hu.simplexion.adaptive.lib.auth.context.publicAccess
 import hu.simplexion.adaptive.reflect.CallSiteName
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.builtin.ServiceImpl

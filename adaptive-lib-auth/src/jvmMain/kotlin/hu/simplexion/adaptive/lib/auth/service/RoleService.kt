@@ -6,12 +6,12 @@ package hu.simplexion.adaptive.lib.auth.service
 
 import hu.simplexion.adaptive.adat.ensureValid
 import hu.simplexion.adaptive.auth.api.RoleApi
+import hu.simplexion.adaptive.auth.context.ensureAll
+import hu.simplexion.adaptive.auth.context.ensureOneOf
 import hu.simplexion.adaptive.auth.model.Principal
 import hu.simplexion.adaptive.auth.model.Role
 import hu.simplexion.adaptive.auth.model.RoleContext
 import hu.simplexion.adaptive.auth.model.RoleGrant
-import hu.simplexion.adaptive.lib.auth.context.ensureAll
-import hu.simplexion.adaptive.lib.auth.context.ensureOneOf
 import hu.simplexion.adaptive.lib.auth.store.*
 import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import hu.simplexion.adaptive.utility.UUID

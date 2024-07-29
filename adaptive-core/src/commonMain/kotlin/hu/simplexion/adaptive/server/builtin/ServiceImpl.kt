@@ -4,14 +4,10 @@
 
 package hu.simplexion.adaptive.server.builtin
 
-import hu.simplexion.adaptive.service.BasicServiceContext
 import hu.simplexion.adaptive.service.ServiceBase
 import hu.simplexion.adaptive.service.ServiceContext
-import hu.simplexion.adaptive.service.defaultServiceCallTransport
-import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.utility.manualOrPlugin
-import hu.simplexion.adaptive.utility.overrideManually
 import hu.simplexion.adaptive.utility.pluginGenerated
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 
@@ -24,11 +20,11 @@ interface ServiceImpl<T : ServiceImpl<T>> : ServiceBase, ServerFragmentImpl {
         get() = manualOrPlugin("serviceContext")
 
     /**
-     * The internal version of this service implementation. The context is [BasicServiceContext] with
+     * The internal version of this service implementation. The context is [ServiceContext] with
      * `UUID.NIL` context id.
      */
     val internal: T
-        get() = newInstance(BasicServiceContext(UUID.nil()))
+        get() = newInstance(ServiceContext(UUID.nil()))
 
     /**
      * Create a new instance of the given service with the given context.

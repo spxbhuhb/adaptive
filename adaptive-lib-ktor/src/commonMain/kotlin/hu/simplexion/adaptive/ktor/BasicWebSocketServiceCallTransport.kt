@@ -1,6 +1,7 @@
 package hu.simplexion.adaptive.ktor
 
 import hu.simplexion.adaptive.log.getLogger
+import hu.simplexion.adaptive.service.ServiceResponseEndpoint
 import hu.simplexion.adaptive.service.model.RequestEnvelope
 import hu.simplexion.adaptive.service.model.ResponseEnvelope
 import hu.simplexion.adaptive.service.model.ServiceCallStatus
@@ -8,6 +9,7 @@ import hu.simplexion.adaptive.service.model.ServiceExceptionData
 import hu.simplexion.adaptive.service.transport.ServiceCallException
 import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 import hu.simplexion.adaptive.service.transport.ServiceErrorHandler
+import hu.simplexion.adaptive.service.transport.ServiceResponseListener
 import hu.simplexion.adaptive.service.transport.ServiceTimeoutException
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.utility.getLock
@@ -30,7 +32,7 @@ open class BasicWebSocketServiceCallTransport(
     var errorHandler: ServiceErrorHandler? = null,
     val trace: Boolean = false,
     val useTextFrame: Boolean = false
-) : ServiceCallTransport {
+) : ServiceCallTransport() {
 
     val logger = getLogger("hu.simplexion.adaptive.ktor.BasicWebSocketServiceCallTransport")
 
@@ -53,6 +55,9 @@ open class BasicWebSocketServiceCallTransport(
     private val outgoingCalls = Channel<OutgoingCall>(Channel.UNLIMITED)
     val pendingCalls = mutableMapOf<UUID<RequestEnvelope>, OutgoingCall>()
 
+    val listenerLock = getLock()
+    val listeners = mutableMapOf<ServiceResponseEndpoint, ServiceResponseListener>()
+
     val client = HttpClient {
         install(HttpCookies)
         install(WebSockets) {
@@ -66,6 +71,8 @@ open class BasicWebSocketServiceCallTransport(
     }
 
     suspend fun run() {
+        var outgoing: Job? = null
+
         while (scope.isActive) {
             try {
                 if (trace) logger.fine("connecting (retryDelay=$retryDelay)")
@@ -78,53 +85,8 @@ open class BasicWebSocketServiceCallTransport(
 
                     retryDelay = 200 // reset the retry delay as we have a working connection
 
-                    launch {
-                        try {
-                            for (call in outgoingCalls) {
-                                if (trace) {
-                                    logger.fine("send $call")
-                                    logger.fine("send data:\n${defaultWireFormatProvider.dump(call.request.payload)}")
-                                }
-
-                                try {
-                                    if (useTextFrame) {
-                                        send(Frame.Text(true, encode(call.request, RequestEnvelope)))
-                                    } else {
-                                        send(Frame.Binary(true, encode(call.request, RequestEnvelope)))
-                                    }
-                                    pendingCalls[call.request.callId] = call
-                                } catch (ex: CancellationException) {
-                                    postponeAfterCancel(call)
-                                    // break to get out of for, so we can retry
-                                    break
-                                }
-                            }
-                        } catch (ex: CancellationException) {
-                            // the `for` is cancelled, this probably means a shutdown
-                            throw ex
-                        } catch (ex: Exception) {
-                            logger.error(ex)
-                        }
-                    }
-
-                    for (frame in incoming) {
-
-                        frame as? Frame.Binary ?: continue
-
-                        val responseEnvelope = decode(frame.data, ResponseEnvelope)
-
-                        if (trace) {
-                            logger.fine("receive ${responseEnvelope.callId} ${responseEnvelope.status}")
-                            logger.fine("send data:\n${defaultWireFormatProvider.dump(responseEnvelope.payload)}")
-                        }
-
-                        val call = pendingCalls.remove(responseEnvelope.callId)
-                        if (call != null) {
-                            call.responseChannel.send(responseEnvelope)
-                        } else {
-                            errorHandler?.callError("", "", responseEnvelope, null)
-                        }
-                    }
+                    outgoing = launch { outgoing() }
+                    incoming()
 
                 }
 
@@ -132,11 +94,78 @@ open class BasicWebSocketServiceCallTransport(
                 // the `for` is cancelled, this probably means a shutdown
                 throw ex
             } catch (ex: Exception) {
+                outgoing?.cancelAndJoin()
+
                 connectionError(ex)
+
                 if (! scope.isActive) return
+
                 delay(retryDelay) // wait a bit before trying to re-establish the connection
                 if (retryDelay < 5_000) retryDelay = (retryDelay * 115) / 100
             }
+        }
+    }
+
+    private suspend fun DefaultWebSocketSession.outgoing() {
+        try {
+            for (call in outgoingCalls) {
+                if (trace) {
+                    logger.fine("send $call")
+                    logger.fine("send data:\n${defaultWireFormatProvider.dump(call.request.payload)}")
+                }
+
+                try {
+                    if (useTextFrame) {
+                        send(Frame.Text(true, encode(call.request, RequestEnvelope)))
+                    } else {
+                        send(Frame.Binary(true, encode(call.request, RequestEnvelope)))
+                    }
+                    pendingCalls[call.request.callId] = call
+                } catch (_: CancellationException) {
+                    postponeAfterCancel(call)
+                    // break to get out of for, so we can retry
+                    break
+                }
+            }
+        } catch (ex: CancellationException) {
+            // the `for` is cancelled, this probably means a shutdown
+            throw ex
+        } catch (ex: Exception) {
+            logger.error(ex)
+        }
+    }
+
+    private suspend fun DefaultWebSocketSession.incoming() {
+        for (frame in incoming) {
+
+            frame as? Frame.Binary ?: continue
+
+            val responseEnvelope = decode(frame.data, ResponseEnvelope)
+
+            if (trace) {
+                logger.fine("receive ${responseEnvelope.callId} ${responseEnvelope.status}")
+                logger.fine("send data:\n${defaultWireFormatProvider.dump(responseEnvelope.payload)}")
+            }
+
+            val callId = responseEnvelope.callId
+            val call = pendingCalls.remove(callId)
+
+            if (call != null) {
+                call.responseChannel.send(responseEnvelope)
+                return
+            }
+
+            val listener = listenerLock.use { listeners[callId] }
+            if (listener != null) {
+                launch { listener.receive(callId, responseEnvelope) }
+                return
+            }
+
+            // drop the message silently as this might happen during normal operation if:
+            // * the message for a listener is sent by the peer just before the listener disconnects
+            // * a call went to timeout and the response arrived later
+
+            logger.info("dropping message: $responseEnvelope")
         }
     }
 
@@ -225,6 +254,18 @@ open class BasicWebSocketServiceCallTransport(
                     throw RuntimeException("$serviceName  $funName  ${responseEnvelope.status}")
                 }
             }
+        }
+    }
+
+    override fun connect(endpoint: ServiceResponseEndpoint, listener: ServiceResponseListener) {
+        listenerLock.use {
+            listeners[endpoint] = listener
+        }
+    }
+
+    override fun disconnect(endpoint: ServiceResponseEndpoint) {
+        listenerLock.use {
+            listeners.remove(endpoint)
         }
     }
 

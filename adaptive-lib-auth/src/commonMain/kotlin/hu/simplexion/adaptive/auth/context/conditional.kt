@@ -2,39 +2,13 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package hu.simplexion.adaptive.lib.auth.context
+package hu.simplexion.adaptive.auth.context
 
-import hu.simplexion.adaptive.auth.model.AccessDenied
 import hu.simplexion.adaptive.auth.model.Principal
 import hu.simplexion.adaptive.auth.model.Role
 import hu.simplexion.adaptive.service.ServiceContext
 import hu.simplexion.adaptive.utility.UUID
-
-enum class ContextCheckResult {
-    Allow,
-    Deny;
-
-    val isAllowed
-        get() = this == Allow
-
-    infix fun and(other: ContextCheckResult): ContextCheckResult {
-        if (this == Allow && other == Allow) return Allow
-        return Deny
-    }
-
-    infix fun or(other: ContextCheckResult): ContextCheckResult {
-        if (this == Allow || other == Allow) return Allow
-        return Deny
-    }
-
-    operator fun <T> invoke(block: () -> T) {
-        if (this == Allow) {
-            block()
-        } else {
-            throw AccessDenied()
-        }
-    }
-}
+import kotlin.collections.any
 
 /**
  * True when there is no service context for the call

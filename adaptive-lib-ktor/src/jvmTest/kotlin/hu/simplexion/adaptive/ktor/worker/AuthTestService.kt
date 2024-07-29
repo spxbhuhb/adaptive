@@ -1,7 +1,7 @@
 package hu.simplexion.adaptive.ktor.worker
 
-import hu.simplexion.adaptive.lib.auth.context.ensureLoggedIn
-import hu.simplexion.adaptive.lib.auth.context.publicAccess
+import hu.simplexion.adaptive.auth.context.ensureLoggedIn
+import hu.simplexion.adaptive.auth.context.publicAccess
 import hu.simplexion.adaptive.server.builtin.ServiceImpl
 
 class AuthTestService : AuthTestApi, ServiceImpl<AuthTestService> {

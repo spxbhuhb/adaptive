@@ -4,9 +4,37 @@
 
 package hu.simplexion.adaptive.service
 
+import hu.simplexion.adaptive.service.model.ResponseEnvelope
 import hu.simplexion.adaptive.utility.UUID
 
-interface ServiceContext {
-    val uuid: UUID<ServiceContext>
-    var data: MutableMap<Any, Any?>
+open class ServiceContext(
+    val uuid: UUID<ServiceContext> = UUID(),
+    val data: MutableMap<Any, Any?> = mutableMapOf()
+) {
+
+    /**
+     * Send a message to a listener on the other side of the connection this
+     * context belongs to. The listener is identified by `envelope.callId`.
+     */
+    open suspend fun send(envelope: ResponseEnvelope) {
+        throw UnsupportedOperationException()
+    }
+
+    /**
+     * Register a cleanup function that runs when the connection is closed.
+     */
+    open fun connectionCleanup(cleanupFun: (id: UUID<ServiceContext>) -> Unit) {
+        throw UnsupportedOperationException()
+    }
+
+    /**
+     * Register a cleanup function that runs when the session is closed.
+     */
+    open fun sessionCleanup(cleanupFun: (id: UUID<ServiceContext>) -> Unit) {
+        throw UnsupportedOperationException()
+    }
+
+    override fun toString(): String {
+        return "ServiceContext(uuid=$uuid, data=$data)"
+    }
 }

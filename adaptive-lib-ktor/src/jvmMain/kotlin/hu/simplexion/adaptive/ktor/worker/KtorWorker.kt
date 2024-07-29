@@ -8,6 +8,9 @@ import hu.simplexion.adaptive.lib.auth.worker.SessionWorker
 import hu.simplexion.adaptive.server.builtin.WorkerImpl
 import hu.simplexion.adaptive.server.builtin.workerOrNull
 import hu.simplexion.adaptive.server.setting.dsl.setting
+import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
+import hu.simplexion.adaptive.wireformat.json.JsonWireFormatProvider
+import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.http.content.*
@@ -21,6 +24,7 @@ import java.util.concurrent.TimeUnit
 class KtorWorker : WorkerImpl<KtorWorker> {
 
     val port by setting<Int> { "KTOR_PORT" } default 8080
+    val wireFormat by setting<String> { "KTOR_WIREFORMAT" } default "proto"
     val staticResourcesPath by setting<String> { "KTOR_STATIC" } default "./var/static"
     val serviceWebSocketRoute by setting<String> { "ADAPTIVE_SERVICE" } default "/adaptive/service"
 
@@ -29,6 +33,11 @@ class KtorWorker : WorkerImpl<KtorWorker> {
     var applicationEngine: ApplicationEngine? = null
 
     override fun mount() {
+        when (wireFormat.lowercase()) {
+            "proto" -> defaultWireFormatProvider = ProtoWireFormatProvider()
+            "json" -> defaultWireFormatProvider = JsonWireFormatProvider()
+            else -> throw IllegalArgumentException("invalid wire format: $wireFormat, expected proto or json")
+        }
         embeddedServer(Netty, port = port, module = { module() }).also {
             applicationEngine = it
             it.start(wait = false) // FIXME think about Ktor server wait parameter
