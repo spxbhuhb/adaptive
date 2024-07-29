@@ -5,7 +5,6 @@ import hu.simplexion.adaptive.adat.AdatClass
 import hu.simplexion.adaptive.adat.AdatCompanion
 import hu.simplexion.adaptive.auth.context.publicAccess
 import hu.simplexion.adaptive.server.builtin.ServiceImpl
-import hu.simplexion.adaptive.service.model.RequestEnvelope
 import hu.simplexion.adaptive.service.model.ResponseEnvelope
 import hu.simplexion.adaptive.service.model.ServiceCallStatus
 import hu.simplexion.adaptive.service.testing.TestServiceTransport
@@ -23,7 +22,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.seconds
 
-class PublishSubscribeTest() {
+class PublishSubscribeTest {
 
     @Test
     fun basic() {
@@ -35,7 +34,7 @@ class PublishSubscribeTest() {
         service.serviceCallTransport = transport
         (publisher as ServiceBase).serviceCallTransport = transport
 
-        val endpoint: ServiceResponseEndpoint = UUID<RequestEnvelope>()
+        val endpoint: ServiceResponseEndpoint = UUID()
 
         val listener = CounterValueListener(publisher)
 
