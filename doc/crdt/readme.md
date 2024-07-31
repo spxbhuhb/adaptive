@@ -1,39 +1,41 @@
-# Conflict-free Replicated Fragment Trees
+# Conflict-free Replicated Data Types
 
-The `adaptive-lib-crdt` module provides a fragment tree store which is synchronized between peers
-(server-client, client-client, internal).
+The `adaptive-lib-crdt` module provides data types that are automatically synchronized between peers
+(server-client, client-client, internal):
 
-All tree and state changes are sent to all other connected stores, which in turn apply their changes to
-all their fragments.
+* `AutoData` - a single [Adat](../adat/readme.md) class
+* `AutoList` - a list of [Adat](../adat/readme.md) classes
+* `AutoTree` - a tree of fragments
 
-These stores use [CRDT](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type) data types under the hood to
-make sure that the fragment tree and the fragment states are the same on all peers.
+These stores use [CRDT](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type) data types under the hood to make sure that the actual data is the same on all peers.
 
 ```kotlin
-@AdatFragment
-class SomeFragment(
+import hu.simplexion.adaptive.service.transport.ServiceResponseListener
+
+@Adat
+class SomeData(
     val someText: String
 )
 
 @ServiceApi
 interface ItemApi {
-    suspend fun itemStore(): UUID<FragmentStore<SomeFragment>>
+    suspend fun items(listener: UUID<ServiceResponseListener>) : AutoList<SomeFragment>
 }
 
 @Adaptive
 fun someList() {
-    val itemStore = fragmentStore { itemService.itemStore() }
+    val items = autoList { itemService.items() }
 
-    for (item in itemStore) {
+    for (item in items) {
         text(item.someText)
     }
 }
 
 class ItemService : ServiceImpl<ItemService>, ItemApi {
     val fragmentStoreWorker by worker<FragmentStoreWorker>()
-    
-    override suspend fun itemStore(): UUID<FragmentStore<SomeFragment>> {
-        return fragmentStoreWorker.makeStore()
+
+    override suspend fun items(listener: UUID<ServiceResponseListener>) : AutoList<SomeFragment> {
+        return fragmentStoreWorker.makeList(listener, initialState)
     }
 }
 ```
@@ -48,3 +50,21 @@ from the item API.
 
 After that you can use the fragments in the store freely.
 
+## Internals
+
+Auto implementations have a type-specific backend and a use-case specific frontend.
+
+**backend**
+
+* specific to the type of the Auto class (`Auto`, `AutoList`, `AutoTree`)
+* stores the CRTD data
+* is responsible for the replication
+* typically not used from application-level code
+
+**frontend**
+
+* specific to the use-case, examples:
+    * include the fragments of an `AutoTree` into the UI directly
+    * use the data in an `AutoList` to build a table
+    * store the content of an `AutoList` into SQL
+    * store the content of an `AutoTree` in files
