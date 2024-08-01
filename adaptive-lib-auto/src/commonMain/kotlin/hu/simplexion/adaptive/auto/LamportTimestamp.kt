@@ -19,9 +19,13 @@ class LamportTimestamp(
         }
 
     fun receive(remote: LamportTimestamp): LamportTimestamp =
-        LamportTimestamp(max(remote.timestamp, timestamp) + 1, backendId)
+        LamportTimestamp(backendId, max(remote.timestamp, timestamp))
 
     fun increment(): LamportTimestamp =
-        LamportTimestamp(timestamp + 1, backendId)
+        LamportTimestamp(backendId, timestamp + 1)
+
+    override fun toString(): String {
+        return "$backendId:$timestamp"
+    }
 
 }

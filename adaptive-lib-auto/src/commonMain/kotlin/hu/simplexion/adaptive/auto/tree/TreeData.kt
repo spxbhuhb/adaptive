@@ -9,6 +9,7 @@ package hu.simplexion.adaptive.auto.tree/*
  */
 
 import hu.simplexion.adaptive.auto.FragmentStore
+import hu.simplexion.adaptive.auto.ItemId
 import kotlin.math.max
 
 typealias Value = Int
