@@ -34,6 +34,8 @@ class AdatClassTransform(
     }
 
     override fun visitProperty(declaration: IrProperty) {
+        if (declaration.origin != AdatPluginKey.origin) return
+
         when (declaration.name) {
             Names.ADAT_COMPANION -> adatCompanion(adatClass, declaration)
             Names.ADAT_CONTEXT -> adatContext(declaration)
@@ -42,6 +44,7 @@ class AdatClassTransform(
 
     override fun visitFunction(declaration: IrFunction) {
         if (declaration.isFakeOverride) return
+        if (declaration.origin != AdatPluginKey.origin) return
 
         when (declaration.name) {
             Names.GEN_GET_VALUE -> genGetValue(declaration, properties)
