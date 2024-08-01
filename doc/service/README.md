@@ -258,8 +258,9 @@ investigation. In contrast, `NullPointerException` should be investigated.
 >
 > This pattern is very important, but it is **NOT** intended for general use.
 > There are producers which are far more convenient and those should be sufficient
-> for most use cases. Most notably `fragmentStore` in `adaptive-lib-crtd` provides
-> real-time, conflict-free, multi-peer synchronization of fragment trees.
+> for most use cases. Most notably `autoInstance`, `autoList` and `autoTree` in
+> `adaptive-lib-auto` provides real-time, conflict-free, multi-peer synchronization
+> of adat instances, lists and fragment trees.
 >
 
 These functions can be used to implement the publish-subscribe pattern.
