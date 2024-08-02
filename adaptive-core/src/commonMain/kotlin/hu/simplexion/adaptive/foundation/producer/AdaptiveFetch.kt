@@ -6,8 +6,8 @@ package hu.simplexion.adaptive.foundation.producer
 
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import hu.simplexion.adaptive.service.transport.ServiceCallException
-import hu.simplexion.adaptive.service.transport.ServiceTimeoutException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
@@ -57,7 +57,7 @@ class AdaptiveFetch<VT>(
                     binding.targetFragment.setDirty(binding.indexInTargetState, true)
                 } catch (e: AdaptiveProducerCancel) {
                     it.cancel()
-                } catch (e: ServiceTimeoutException) {
+                } catch (e: TimeoutCancellationException) {
                     // TODO indicate the problem somehow
                     println(e)
                 } catch (e: ServiceCallException) {

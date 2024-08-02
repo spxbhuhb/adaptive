@@ -6,7 +6,6 @@ package hu.simplexion.adaptive.foundation.producer
 
 import hu.simplexion.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import hu.simplexion.adaptive.service.transport.ServiceCallException
-import hu.simplexion.adaptive.service.transport.ServiceTimeoutException
 import kotlinx.coroutines.*
 import kotlin.time.Duration
 
@@ -63,7 +62,7 @@ class AdaptivePeriodic<VT>(
                     } catch (e: AdaptiveProducerCancel) {
                         it.cancel()
                         break
-                    } catch (e: ServiceTimeoutException) {
+                    } catch (e: TimeoutCancellationException) {
                         // TODO indicate the problem somehow
                         println(e)
                     } catch (e: ServiceCallException) {

@@ -4,29 +4,65 @@
 
 package hu.simplexion.adaptive.service
 
-import hu.simplexion.adaptive.foundation.unsupported
-import hu.simplexion.adaptive.service.transport.ServiceCallTransport
+import hu.simplexion.adaptive.service.model.ServiceSession
+import hu.simplexion.adaptive.utility.CleanupHandler
 import hu.simplexion.adaptive.utility.UUID
-import hu.simplexion.adaptive.wireformat.WireFormatProvider
+import hu.simplexion.adaptive.utility.getLock
+import hu.simplexion.adaptive.utility.use
+import kotlinx.atomicfu.atomic
 
-open class ServiceContext(
-    val uuid: UUID<ServiceContext> = UUID(),
-    val data: MutableMap<Any, Any?> = mutableMapOf(),
-    override val wireFormatProvider: WireFormatProvider
-) : ServiceCallTransport() {
+open class ServiceContext<PT>(
+    val uuid: UUID<ServiceContext<PT>> = UUID(),
+    val sessionOrNull: ServiceSession<PT>? = null
+) {
 
-    /**
-     * Register a cleanup function that runs when the connection is closed.
-     */
-    open fun connectionCleanup(cleanupFun: (id: UUID<ServiceContext>) -> Unit) {
-        unsupported()
+    val disconnect = atomic<Boolean>(false)
+
+    private val lock = getLock()
+
+    private val cleanupHandlers = mutableListOf<CleanupHandler<ServiceContext<PT>>>()
+
+    val data = mutableMapOf<Any, Any?>()
+
+    operator fun get(key: Any): Any? = lock.use { data[key] }
+
+    operator fun set(key: Any, value: Any?) {
+        lock.use { data[key] = value }
     }
 
     /**
-     * Register a cleanup function that runs when the session is closed.
+     * Add a cleanup handler that runs after a service context is disconnected.
      */
-    open fun sessionCleanup(cleanupFun: (id: UUID<ServiceContext>) -> Unit) {
-        unsupported()
+    open fun addContextCleanup(handler: CleanupHandler<ServiceContext<PT>>) {
+        lock.use { cleanupHandlers += handler }
+    }
+
+    /**
+     * Remove a previously added context cleanup handler.
+     */
+    open fun removeContextCleanup(handler: CleanupHandler<ServiceContext<PT>>) {
+        lock.use { cleanupHandlers -= handler }
+    }
+
+    /**
+     * Add a cleanup handler that runs after the session is closed.
+     */
+    open fun addSessionCleanup(handler: CleanupHandler<ServiceSession<PT>>) {
+        sessionOrNull?.addSessionCleanup(handler)
+    }
+
+    /**
+     * Remove a previously added session cleanup handler.
+     */
+    open fun removeSessionCleanup(handler: CleanupHandler<ServiceSession<PT>>) {
+        sessionOrNull?.removeSessionCleanup(handler)
+    }
+
+    fun cleanup() {
+        lock.use {
+            cleanupHandlers.forEach { it.cleanupFun.invoke(this) }
+            cleanupHandlers.clear()
+        }
     }
 
     override fun toString(): String {

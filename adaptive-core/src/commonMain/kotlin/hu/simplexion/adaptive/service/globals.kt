@@ -24,9 +24,9 @@ val defaultServiceImplFactory: ServiceImplFactory = BasicServiceImplFactory()
  */
 fun <T> getService(context: ServiceContext? = null, consumer: T? = null): T {
     checkNotNull(consumer)
-    if (context != null) {
-        (consumer as ServiceConsumer).serviceCallTransport = context
-    }
+//    if (context != null) {
+//        (consumer as ServiceConsumer).serviceCallTransport = context
+//    }
     return consumer
 }
 
@@ -45,3 +45,5 @@ inline operator fun <reified T> ServiceContext.get(uuid: UUID<T>): T? {
 operator fun <T> ServiceContext.set(uuid: UUID<T>, value: T) {
     data.let { it[uuid] = value }
 }
+
+object LOGOUT_TOKEN

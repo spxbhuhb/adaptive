@@ -5,54 +5,41 @@
 package hu.simplexion.adaptive.service.testing
 
 import hu.simplexion.adaptive.server.builtin.ServiceImpl
-import hu.simplexion.adaptive.service.ServiceResponseEndpoint
+import hu.simplexion.adaptive.service.ServiceContext
+import hu.simplexion.adaptive.service.model.TransportEnvelope
 import hu.simplexion.adaptive.service.transport.ServiceCallTransport
-import hu.simplexion.adaptive.service.transport.ServiceResponseListener
-import hu.simplexion.adaptive.utility.getLock
-import hu.simplexion.adaptive.utility.use
+import hu.simplexion.adaptive.wireformat.WireFormatDecoder
+import hu.simplexion.adaptive.wireformat.WireFormatProvider
 import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 class TestServiceTransport(
     val serviceImpl: ServiceImpl<*>,
     val dump: Boolean = false
-) : ServiceCallTransport() {
+) : ServiceCallTransport(
+    CoroutineScope(Dispatchers.Default)
+) {
+    override val wireFormatProvider: WireFormatProvider
+        get() = defaultWireFormatProvider
 
-    val listenerLock = getLock()
-    private val listeners = mutableMapOf<ServiceResponseEndpoint, ServiceResponseListener>()
+    override suspend fun send(envelope: TransportEnvelope) {
+        TODO("Not yet implemented")
+    }
 
-    override suspend fun call(serviceName: String, funName: String, payload: ByteArray): ByteArray {
-        if (dump) {
-            println("==== REQUEST ====")
-            println(serviceName)
-            println(funName)
-            println(defaultWireFormatProvider.dump(payload))
-        }
+    override fun context(): ServiceContext {
+        return ServiceContext()
+    }
 
-        val responsePayload = serviceImpl
+    override suspend fun dispatch(context: ServiceContext, serviceName: String, funName: String, decoder: WireFormatDecoder<*>): ByteArray {
+        return serviceImpl
             .newInstance(TestServiceContext(this))
             .also { it.serviceCallTransport = this }
-            .dispatch(funName, decoder(payload))
-
-        if (dump) {
-            println("==== RESPONSE ====")
-            println(defaultWireFormatProvider.dump(responsePayload))
-        }
-
-        return responsePayload
+            .dispatch(funName, decoder)
     }
 
-    operator fun get(index: ServiceResponseEndpoint): ServiceResponseListener? =
-        listenerLock.use { listeners[index] }
+    override suspend fun disconnect() {
 
-    override fun connect(endpoint: ServiceResponseEndpoint, listener: ServiceResponseListener) {
-        listenerLock.use {
-            listeners[endpoint] = listener
-        }
     }
 
-    override fun disconnect(endpoint: ServiceResponseEndpoint) {
-        listenerLock.use {
-            listeners.remove(endpoint)
-        }
-    }
 }

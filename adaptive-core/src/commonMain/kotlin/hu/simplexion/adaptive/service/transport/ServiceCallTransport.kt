@@ -4,7 +4,11 @@
 
 package hu.simplexion.adaptive.service.transport
 
+import hu.simplexion.adaptive.adat.AdatClass
+import hu.simplexion.adaptive.adat.encode
 import hu.simplexion.adaptive.log.getLogger
+import hu.simplexion.adaptive.service.ServiceContext
+import hu.simplexion.adaptive.service.model.ReturnException
 import hu.simplexion.adaptive.service.model.ServiceExceptionData
 import hu.simplexion.adaptive.service.model.TransportEnvelope
 import hu.simplexion.adaptive.utility.UUID
@@ -15,14 +19,21 @@ import hu.simplexion.adaptive.wireformat.WireFormatEncoder
 import hu.simplexion.adaptive.wireformat.WireFormatProvider
 import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.decode
 import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
+import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.encode
 import hu.simplexion.adaptive.wireformat.WireFormatRegistry
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import kotlin.time.Duration.Companion.seconds
 
-abstract class ServiceCallTransport {
+abstract class ServiceCallTransport(
+    val scope: CoroutineScope
+) {
 
-    val logger = getLogger("hu.simplexion.adaptive.service.transport.ServiceCallTransport")
+    val transportLog = getLogger("hu.simplexion.adaptive.service.Transport")
+
+    val accessLog = getLogger("hu.simplexion.adaptive.service.Access")
 
     val trace: Boolean = false
 
@@ -36,7 +47,11 @@ abstract class ServiceCallTransport {
 
     abstract suspend fun send(envelope: TransportEnvelope)
 
-    abstract fun serve(envelope: TransportEnvelope)
+    abstract fun context(): ServiceContext<*>
+
+    abstract suspend fun dispatch(context: ServiceContext<*>, serviceName: String, funName: String, decoder: WireFormatDecoder<*>): ByteArray
+
+    abstract suspend fun disconnect()
 
     /**
      * Handle an incoming [TransportEnvelope]. The envelope may be a call `(success == null)` or
@@ -47,14 +62,14 @@ abstract class ServiceCallTransport {
         val envelope = decode(payload, TransportEnvelope)
 
         if (trace) {
-            logger.fine("receive $envelope")
-            logger.fine("receive data:\n${defaultWireFormatProvider.dump(envelope.payload)}")
+            transportLog.fine("receive $envelope")
+            transportLog.fine("receive data:\n${defaultWireFormatProvider.dump(envelope.payload)}")
         }
 
         val callId = envelope.callId
 
         if (envelope.success == null) {
-            serve(envelope)
+            scope.launch { serve(envelope) }
             return
         }
 
@@ -63,16 +78,58 @@ abstract class ServiceCallTransport {
         }
 
         if (responseChannel == null) {
-            logger.info("dropping envelope (no response channel) $envelope")
+            transportLog.info("dropping envelope (no response channel) $envelope")
             return
         }
 
         val sendResult = responseChannel.trySend(envelope)
 
         if (! sendResult.isSuccess) {
-            logger.info("dropping envelope (responseChannel.trySend failed) $envelope")
+            transportLog.info("dropping envelope (responseChannel.trySend failed) $envelope")
         }
 
+    }
+
+    suspend fun serve(request: TransportEnvelope) {
+
+        val context = context()
+
+        val response = try {
+
+            requireNotNull(request.serviceName)
+            requireNotNull(request.funName)
+
+            val responsePayload = dispatch(context, request.serviceName, request.funName, decoder(request.payload))
+
+            TransportEnvelope(request.callId, null, null, true, responsePayload)
+
+        } catch (ex: ReturnException) {
+
+            transportLog.info("${ex::class.simpleName} ${ex.message ?: ""}")
+            ex.toEnvelope(request.callId)
+
+        } catch (ex: Exception) {
+
+            transportLog.error(ex)
+            ex.toEnvelope(request.callId)
+
+        }
+
+        accessLog.info("$request ${context.sessionOrNull?.principalOrNull}")
+
+        send(response)
+
+        if (context.disconnect.value) {
+            disconnect()
+            context.cleanup()
+        }
+    }
+
+    fun Exception.toEnvelope(callId: UUID<TransportEnvelope>): TransportEnvelope {
+        val innerPayload = if (this is AdatClass<*>) this.encode() else byteArrayOf()
+        val exceptionData = ServiceExceptionData(this::class.qualifiedName ?: this::class.simpleName ?: "<unknown>", this.message, innerPayload)
+
+        return TransportEnvelope(callId, null, null, false, encode(exceptionData, ServiceExceptionData))
     }
 
     /**
@@ -102,7 +159,7 @@ abstract class ServiceCallTransport {
             }
         }
 
-        if (trace) logger.fine("${if (response.success == true) "SUCCESS" else "FAIL"} for $request")
+        if (trace) transportLog.fine("${if (response.success == true) "SUCCESS" else "FAIL"} for $request")
 
         if (response.success == true) {
             return response.payload

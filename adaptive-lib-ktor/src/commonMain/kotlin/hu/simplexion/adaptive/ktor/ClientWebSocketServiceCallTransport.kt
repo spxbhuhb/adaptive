@@ -1,7 +1,9 @@
 package hu.simplexion.adaptive.ktor
 
 import hu.simplexion.adaptive.service.ServiceContext
+import hu.simplexion.adaptive.service.defaultServiceImplFactory
 import hu.simplexion.adaptive.utility.UUID
+import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatProvider
 import io.ktor.client.*
 import io.ktor.client.plugins.cookies.*
@@ -38,10 +40,10 @@ open class ClientWebSocketServiceCallTransport(
         while (scope.isActive) {
 
             try {
-                if (trace) logger.fine("connecting (retryDelay=$retryDelay)")
+                if (trace) transportLog.fine("connecting (retryDelay=$retryDelay)")
 
                 client.webSocket(servicePath) {
-                    if (trace) logger.fine("connected")
+                    if (trace) transportLog.fine("connected")
                     socket = this
                     incoming()
                 }
@@ -57,8 +59,16 @@ open class ClientWebSocketServiceCallTransport(
         }
     }
 
-    override fun serviceContext(): ServiceContext {
-        return ServiceContext(UUID(), mutableMapOf(), wireFormatProvider)
+    override fun context(): ServiceContext {
+        return ServiceContext(UUID(), null, mutableMapOf(), wireFormatProvider)
+    }
+
+    override suspend fun dispatch(context: ServiceContext, serviceName: String, funName: String, decoder: WireFormatDecoder<*>): ByteArray {
+        val serviceImpl = defaultServiceImplFactory[serviceName, context]
+
+        requireNotNull(serviceImpl) { "cannot find service $serviceName" }
+
+        return serviceImpl.dispatch(funName, decoder)
     }
 
 }
