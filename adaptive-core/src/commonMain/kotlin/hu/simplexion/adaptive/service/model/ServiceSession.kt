@@ -3,13 +3,13 @@ package hu.simplexion.adaptive.service.model
 import hu.simplexion.adaptive.utility.CleanupHandler
 import hu.simplexion.adaptive.utility.UUID
 
-interface ServiceSession<PT> {
+interface ServiceSession {
 
-    val principalOrNull: UUID<PT>?
+    val principalOrNull: UUID<*>?
 
-    fun addSessionCleanup(cleanup: CleanupHandler<ServiceSession<PT>>)
+    fun addSessionCleanup(cleanup: CleanupHandler<ServiceSession>)
 
-    fun removeSessionCleanup(cleanup: CleanupHandler<ServiceSession<PT>>)
+    fun removeSessionCleanup(cleanup: CleanupHandler<ServiceSession>)
 
     fun cleanup()
 

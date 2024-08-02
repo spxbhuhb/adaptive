@@ -44,4 +44,7 @@ abstract class WebSocketServiceCallTransport(
         }
     }
 
+    override suspend fun disconnect() {
+        socket?.close(CloseReason(CloseReason.Codes.GOING_AWAY, ""))
+    }
 }

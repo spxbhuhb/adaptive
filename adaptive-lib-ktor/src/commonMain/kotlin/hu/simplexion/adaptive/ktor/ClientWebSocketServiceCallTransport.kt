@@ -9,6 +9,7 @@ import io.ktor.client.*
 import io.ktor.client.plugins.cookies.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
+import io.ktor.websocket.*
 import kotlinx.coroutines.*
 
 open class ClientWebSocketServiceCallTransport(
@@ -49,18 +50,21 @@ open class ClientWebSocketServiceCallTransport(
                 }
 
             } catch (ex: CancellationException) {
-                // the `for` is cancelled, this probably means a shutdown
-                throw ex
+                // shutdown, no error to be logged there
+                currentCoroutineContext().ensureActive()
             } catch (ex: Exception) {
                 if (! scope.isActive) return
                 delay(retryDelay) // wait a bit before trying to re-establish the connection
                 if (retryDelay < 5_000) retryDelay = (retryDelay * 115) / 100
+            } finally {
+                socket?.close()
             }
+
         }
     }
 
     override fun context(): ServiceContext {
-        return ServiceContext(UUID(), null, mutableMapOf(), wireFormatProvider)
+        return ServiceContext(UUID(), null)
     }
 
     override suspend fun dispatch(context: ServiceContext, serviceName: String, funName: String, decoder: WireFormatDecoder<*>): ByteArray {

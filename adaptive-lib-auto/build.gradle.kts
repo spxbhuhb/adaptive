@@ -3,7 +3,6 @@
  */
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.atomicfu)
     alias(libs.plugins.adaptive)
     signing
     `maven-publish`

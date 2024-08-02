@@ -7,7 +7,6 @@ package hu.simplexion.adaptive.service
 import hu.simplexion.adaptive.service.factory.BasicServiceImplFactory
 import hu.simplexion.adaptive.service.factory.ServiceImplFactory
 import hu.simplexion.adaptive.service.transport.ServiceCallTransport
-import hu.simplexion.adaptive.utility.UUID
 
 lateinit var defaultServiceCallTransport: ServiceCallTransport
 
@@ -29,21 +28,3 @@ fun <T> getService(context: ServiceContext? = null, consumer: T? = null): T {
 //    }
     return consumer
 }
-
-/**
- * Get a typed data instance fom the service context.
- *
- * @throws  ClassCastException  If the instance is not of the class [T].
- */
-inline operator fun <reified T> ServiceContext.get(uuid: UUID<T>): T? {
-    return data.let { it[uuid] } as? T
-}
-
-/**
- * Put a data instance into the service context.
- */
-operator fun <T> ServiceContext.set(uuid: UUID<T>, value: T) {
-    data.let { it[uuid] = value }
-}
-
-object LOGOUT_TOKEN

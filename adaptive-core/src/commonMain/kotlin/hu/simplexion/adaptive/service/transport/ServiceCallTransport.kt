@@ -47,9 +47,9 @@ abstract class ServiceCallTransport(
 
     abstract suspend fun send(envelope: TransportEnvelope)
 
-    abstract fun context(): ServiceContext<*>
+    abstract fun context(): ServiceContext
 
-    abstract suspend fun dispatch(context: ServiceContext<*>, serviceName: String, funName: String, decoder: WireFormatDecoder<*>): ByteArray
+    abstract suspend fun dispatch(context: ServiceContext, serviceName: String, funName: String, decoder: WireFormatDecoder<*>): ByteArray
 
     abstract suspend fun disconnect()
 
@@ -119,7 +119,7 @@ abstract class ServiceCallTransport(
 
         send(response)
 
-        if (context.disconnect.value) {
+        if (context.disconnect) {
             disconnect()
             context.cleanup()
         }
