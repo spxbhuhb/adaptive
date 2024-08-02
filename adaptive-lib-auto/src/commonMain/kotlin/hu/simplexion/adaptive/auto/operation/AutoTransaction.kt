@@ -7,7 +7,7 @@ import hu.simplexion.adaptive.auto.backend.AutoBackend
 @Adat
 class AutoTransaction(
     override val timestamp: LamportTimestamp,
-    val operations: List<AutoOperation>
+    val modify: List<AutoModify>
 ) : AutoOperation() {
 
     override fun apply(backend: AutoBackend, commit: Boolean, distribute: Boolean) {

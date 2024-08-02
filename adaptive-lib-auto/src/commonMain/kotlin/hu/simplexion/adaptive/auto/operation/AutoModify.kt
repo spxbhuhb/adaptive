@@ -10,7 +10,7 @@ class AutoModify(
     override val timestamp: LamportTimestamp,
     val item: ItemId,
     val propertyName: String,
-    val propertyValue: Any?
+    val propertyValue: ByteArray
 ) : AutoOperation() {
 
     override fun apply(backend: AutoBackend, commit: Boolean, distribute: Boolean) {

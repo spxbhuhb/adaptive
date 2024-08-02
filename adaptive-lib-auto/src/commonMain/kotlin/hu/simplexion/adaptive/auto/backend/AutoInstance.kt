@@ -9,6 +9,8 @@ import hu.simplexion.adaptive.auto.operation.AutoModify
 import hu.simplexion.adaptive.auto.operation.AutoOperation
 import hu.simplexion.adaptive.auto.operation.AutoTransaction
 import hu.simplexion.adaptive.utility.UUID
+import hu.simplexion.adaptive.wireformat.WireFormat
+import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 
 class AutoInstance<A : AdatClass<A>>(
@@ -23,14 +25,21 @@ class AutoInstance<A : AdatClass<A>>(
     var value: A? = initialValue
 
     val metadata = companion.adatMetadata
+    val propertyWireFormats = companion.adatWireFormat.propertyWireFormats
 
-    val operations: Array<AutoModify?> = if (initialValue == null) {
-        arrayOfNulls(metadata.properties.size)
-    } else {
-        Array(metadata.properties.size) {
-            AutoModify(time, time, metadata.properties[it].name, initialValue.getValue(it))
+    val wireFormatProvider = defaultWireFormatProvider
+
+    class OperationAndValue(
+        val operation: AutoModify,
+        val propertyValue: Any?
+    )
+
+    val operations: Array<OperationAndValue?> =
+        if (initialValue == null) {
+            arrayOfNulls(metadata.properties.size)
+        } else {
+            Array(metadata.properties.size) { operationAndValue(initialValue, it) }
         }
-    }
 
     // --------------------------------------------------------------------------------
     // Incoming from other backends
@@ -47,7 +56,7 @@ class AutoInstance<A : AdatClass<A>>(
     override fun transaction(transaction: AutoTransaction, commit: Boolean, distribute: Boolean) {
         if (trace) trace("commit=$commit distribute=$distribute op=$transaction")
 
-        for (operation in transaction.operations) {
+        for (operation in transaction.modify) {
             operation.apply(this, commit = false, distribute = false)
         }
 
@@ -59,11 +68,13 @@ class AutoInstance<A : AdatClass<A>>(
 
         check(value != null || ! commit) { "cannot modify auto instance before synchronization with origin is complete" }
 
+        wireFormatProvider.decoder(operation.propertyValue)
         val propertyIndex = metadata[operation.propertyName].index
+
         val lastOperation = operations[propertyIndex]
 
-        if (lastOperation == null || lastOperation.timestamp < operation.timestamp) {
-            operations[propertyIndex] = operation
+        if (lastOperation == null || lastOperation.operation.timestamp < operation.timestamp) {
+            operations[propertyIndex] = operationAndValue(operation)
         }
 
         close(operation, commit, distribute)
@@ -74,11 +85,15 @@ class AutoInstance<A : AdatClass<A>>(
     // --------------------------------------------------------------------------------
 
     fun modify(item: ItemId, propertyName: String, propertyValue: Any?) {
-        modify(
-            AutoModify(nextTime(), item, propertyName, propertyValue),
-            commit = true,
-            distribute = true
-        )
+        val propertyMeta = metadata[propertyName]
+        val payload = encode(propertyMeta.index, propertyValue)
+
+        val operation = AutoModify(nextTime(), item, propertyName, payload)
+        if (trace) trace("commit=true distribute=true op=$operation")
+
+        operations[propertyMeta.index] = OperationAndValue(operation, propertyValue)
+
+        close(operation, commit = true, distribute = true)
     }
 
     // --------------------------------------------------------------------------------
@@ -92,12 +107,12 @@ class AutoInstance<A : AdatClass<A>>(
     override fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp) {
         if (peerTime.timestamp >= time.timestamp) return
 
-        val update = mutableListOf<AutoOperation>()
+        val update = mutableListOf<AutoModify>()
 
-        for (operation in operations) {
-            if (operation == null) continue
-            if (peerTime >= operation.timestamp) continue
-            update += operation
+        for (operationAndValue in operations) {
+            if (operationAndValue == null) continue
+            if (peerTime >= operationAndValue.operation.timestamp) continue
+            update += operationAndValue.operation
         }
 
         val transaction = AutoTransaction(time, update)
@@ -130,5 +145,32 @@ class AutoInstance<A : AdatClass<A>>(
         }
 
     }
+
+    fun encode(index: Int, value: Any?): ByteArray {
+        @Suppress("UNCHECKED_CAST")
+        val wireformat = propertyWireFormats[index].wireFormat as WireFormat<Any?>
+        return wireFormatProvider.encoder().rawInstance(value, wireformat).pack()
+    }
+
+    fun operationAndValue(instance: A, propertyIndex: Int): OperationAndValue {
+        val propertyMeta = metadata.properties[propertyIndex]
+        val propertyValue = instance.getValue(propertyIndex)
+
+        return OperationAndValue(
+            AutoModify(time, time, propertyMeta.name, encode(propertyMeta.index, propertyValue)),
+            propertyValue
+        )
+    }
+
+    fun operationAndValue(operation: AutoModify): OperationAndValue {
+        val propertyMeta = metadata[operation.propertyName]
+
+        @Suppress("UNCHECKED_CAST")
+        val wireformat = propertyWireFormats[propertyMeta.index].wireFormat as WireFormat<Any?>
+        val payload = wireFormatProvider.decoder(operation.propertyValue).asInstance(wireformat)
+
+        return OperationAndValue(operation, payload)
+    }
+
 
 }
