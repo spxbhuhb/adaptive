@@ -14,7 +14,7 @@ suspend fun withJsonWebSocketTransport(
     clientIdPath: String = "/adaptive/client-id",
     trace: Boolean = false
 ) =
-    BasicWebSocketServiceCallTransport(servicePath = servicePath, clientIdPath = clientIdPath, useTextFrame = true, trace = trace)
+    WebSocketServiceCallTransport(servicePath = servicePath, clientIdPath = clientIdPath, useTextFrame = true, trace = trace)
         .also {
             defaultWireFormatProvider = JsonWireFormatProvider()
             defaultServiceCallTransport = it
@@ -26,7 +26,7 @@ suspend fun withProtoWebSocketTransport(
     clientIdPath: String = "/adaptive/client-id",
     trace: Boolean = false
 ) =
-    BasicWebSocketServiceCallTransport(servicePath = servicePath, clientIdPath = clientIdPath, useTextFrame = false, trace = trace)
+    WebSocketServiceCallTransport(servicePath = servicePath, clientIdPath = clientIdPath, useTextFrame = false, trace = trace)
         .also {
             defaultWireFormatProvider = ProtoWireFormatProvider()
             defaultServiceCallTransport = it

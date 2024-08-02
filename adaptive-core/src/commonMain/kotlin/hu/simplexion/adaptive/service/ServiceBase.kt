@@ -41,9 +41,9 @@ interface ServiceBase {
         get() = serviceCallTransport ?: defaultServiceCallTransport
 
     fun wireFormatEncoder() =
-        serviceCallTransportOrDefault.wireFormatEncoder
+        serviceCallTransportOrDefault.encoder()
 
     fun wireFormatDecoder(payload: ByteArray): WireFormatDecoder<*> =
-        serviceCallTransportOrDefault.wireFormatDecoder(payload)
+        serviceCallTransportOrDefault.decoder(payload)
 
 }

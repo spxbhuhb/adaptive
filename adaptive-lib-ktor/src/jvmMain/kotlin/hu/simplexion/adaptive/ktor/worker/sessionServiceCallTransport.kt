@@ -9,12 +9,14 @@ import hu.simplexion.adaptive.adat.encode
 import hu.simplexion.adaptive.auth.context.getPrincipalOrNull
 import hu.simplexion.adaptive.auth.model.Session.Companion.LOGOUT_TOKEN
 import hu.simplexion.adaptive.auth.model.Session.Companion.SESSION_TOKEN
+import hu.simplexion.adaptive.ktor.ServerWebSocketServiceCallTransport
 import hu.simplexion.adaptive.lib.auth.worker.SessionWorker
 import hu.simplexion.adaptive.log.AdaptiveLogger
 import hu.simplexion.adaptive.log.getLogger
 import hu.simplexion.adaptive.service.ServiceContext
 import hu.simplexion.adaptive.service.model.*
 import hu.simplexion.adaptive.utility.UUID
+import hu.simplexion.adaptive.wireformat.WireFormatProvider
 import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.decode
 import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
 import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.encode
@@ -30,6 +32,8 @@ val serviceAccessLog = LoggerFactory.getLogger("hu.simplexion.adaptive.service.S
 
 // FIXME flood detection, session id brute force attack detection
 fun Routing.sessionWebsocketServiceCallTransport(
+    useTextFrame: Boolean,
+    wireFormatProvider: WireFormatProvider,
     sessionWorker: SessionWorker,
     path: String = "/adaptive/service"
 ) {
@@ -41,12 +45,19 @@ fun Routing.sessionWebsocketServiceCallTransport(
         try {
             val sessionUuid = call.request.cookies[sessionWorker.clientIdCookieName]?.let { UUID<ServiceContext>(it) } ?: UUID()
 
-            val context = ServiceContext(sessionUuid)
+            val context = ServiceContext(sessionUuid, wireFormatProvider = defaultWireFormatProvider)
 
             sessionWorker.getSessionForContext(sessionUuid)?.let {
                 context.data[SESSION_TOKEN] = it
             }
 
+            val transport = ServerWebSocketServiceCallTransport(
+                useTextFrame,
+                wireFormatProvider,
+                this
+            )
+
+            incoming()
             for (frame in incoming) {
                 val data = when (frame) {
                     is Frame.Binary -> frame.data
@@ -66,6 +77,7 @@ fun Routing.sessionWebsocketServiceCallTransport(
             logger.error(ex)
         }
     }
+
 }
 
 suspend fun DefaultWebSocketSession.serve(

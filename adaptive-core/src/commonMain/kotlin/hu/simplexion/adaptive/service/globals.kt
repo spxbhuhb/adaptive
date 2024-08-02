@@ -6,7 +6,6 @@ package hu.simplexion.adaptive.service
 
 import hu.simplexion.adaptive.service.factory.BasicServiceImplFactory
 import hu.simplexion.adaptive.service.factory.ServiceImplFactory
-import hu.simplexion.adaptive.service.model.RequestEnvelope
 import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 import hu.simplexion.adaptive.utility.UUID
 
@@ -23,8 +22,11 @@ val defaultServiceImplFactory: ServiceImplFactory = BasicServiceImplFactory()
  * val clicks = getService<ClickApi>()
  * ```
  */
-fun <T> getService(consumer: T? = null): T {
+fun <T> getService(context: ServiceContext? = null, consumer: T? = null): T {
     checkNotNull(consumer)
+    if (context != null) {
+        (consumer as ServiceConsumer).serviceCallTransport = context
+    }
     return consumer
 }
 
@@ -43,7 +45,3 @@ inline operator fun <reified T> ServiceContext.get(uuid: UUID<T>): T? {
 operator fun <T> ServiceContext.set(uuid: UUID<T>, value: T) {
     data.let { it[uuid] = value }
 }
-
-typealias ServiceResponseEndpoint = UUID<RequestEnvelope>
-
-fun ServiceResponseEndpoint.new() = UUID<ServiceResponseEndpoint>()

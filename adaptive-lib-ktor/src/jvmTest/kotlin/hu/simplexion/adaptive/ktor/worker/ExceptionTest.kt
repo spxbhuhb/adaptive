@@ -7,7 +7,7 @@ package hu.simplexion.adaptive.ktor.worker
 import hu.simplexion.adaptive.adat.Adat
 import hu.simplexion.adaptive.auth.context.publicAccess
 import hu.simplexion.adaptive.exposed.inMemoryH2
-import hu.simplexion.adaptive.ktor.BasicWebSocketServiceCallTransport
+import hu.simplexion.adaptive.ktor.WebSocketServiceCallTransport
 import hu.simplexion.adaptive.ktor.ktor
 import hu.simplexion.adaptive.ktor.withProtoWebSocketTransport
 import hu.simplexion.adaptive.lib.auth.auth
@@ -62,9 +62,9 @@ suspend fun checkNumber(i: Int, illegal: Boolean): String {
 class ExceptionTest {
 
     val transport
-        get() = (defaultServiceCallTransport as BasicWebSocketServiceCallTransport)
+        get() = (defaultServiceCallTransport as WebSocketServiceCallTransport)
 
-    fun BasicWebSocketServiceCallTransport.stop() {
+    fun WebSocketServiceCallTransport.stop() {
         scope.cancel()
         runBlocking {
             // this is not the perfect solution, but I don't know a better one

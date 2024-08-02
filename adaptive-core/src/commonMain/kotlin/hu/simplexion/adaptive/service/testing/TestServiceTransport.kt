@@ -31,7 +31,7 @@ class TestServiceTransport(
         val responsePayload = serviceImpl
             .newInstance(TestServiceContext(this))
             .also { it.serviceCallTransport = this }
-            .dispatch(funName, wireFormatDecoder(payload))
+            .dispatch(funName, decoder(payload))
 
         if (dump) {
             println("==== RESPONSE ====")
