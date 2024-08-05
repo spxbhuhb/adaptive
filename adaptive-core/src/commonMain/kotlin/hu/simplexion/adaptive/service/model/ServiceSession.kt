@@ -5,6 +5,8 @@ import hu.simplexion.adaptive.utility.UUID
 
 interface ServiceSession {
 
+    val id: UUID<*>
+
     val principalOrNull: UUID<*>?
 
     fun addSessionCleanup(cleanup: CleanupHandler<ServiceSession>)

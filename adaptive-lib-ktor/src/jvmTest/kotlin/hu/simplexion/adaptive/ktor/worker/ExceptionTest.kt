@@ -7,7 +7,6 @@ package hu.simplexion.adaptive.ktor.worker
 import hu.simplexion.adaptive.adat.Adat
 import hu.simplexion.adaptive.auth.context.publicAccess
 import hu.simplexion.adaptive.exposed.inMemoryH2
-import hu.simplexion.adaptive.ktor.WebSocketServiceCallTransport
 import hu.simplexion.adaptive.ktor.ktor
 import hu.simplexion.adaptive.ktor.withProtoWebSocketTransport
 import hu.simplexion.adaptive.lib.auth.auth
@@ -17,11 +16,8 @@ import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import hu.simplexion.adaptive.server.builtin.service
 import hu.simplexion.adaptive.server.server
 import hu.simplexion.adaptive.service.ServiceApi
-import hu.simplexion.adaptive.service.defaultServiceCallTransport
 import hu.simplexion.adaptive.service.getService
 import hu.simplexion.adaptive.service.transport.ServiceCallException
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -61,18 +57,6 @@ suspend fun checkNumber(i: Int, illegal: Boolean): String {
  */
 class ExceptionTest {
 
-    val transport
-        get() = (defaultServiceCallTransport as WebSocketServiceCallTransport)
-
-    fun WebSocketServiceCallTransport.stop() {
-        scope.cancel()
-        runBlocking {
-            // this is not the perfect solution, but I don't know a better one
-            // see: https://kotlinlang.slack.com/archives/C1CFAFJSK/p1721638059715979
-            delay(100)
-        }
-    }
-
     @CallSiteName
     fun exceptionTest(
         callSiteName: String = "unknown",
@@ -86,13 +70,15 @@ class ExceptionTest {
         }
 
         runBlocking {
-            withProtoWebSocketTransport("ws://localhost:8080/adaptive/service", "http://localhost:8080/adaptive/client-id")
+            val transport = withProtoWebSocketTransport("ws://localhost:8080/adaptive/service-ws", "http://localhost:8080/adaptive/client-id")
 
-            test(adapter)
+            try {
+                test(adapter)
+            } finally {
+                transport.stop()
+                adapter.stop()
+            }
         }
-
-        transport.stop()
-        adapter.stop()
     }
 
     @Test

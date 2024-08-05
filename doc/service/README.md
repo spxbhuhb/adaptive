@@ -256,29 +256,3 @@ investigation. In contrast, `NullPointerException` should be investigated.
   
 </configuration>
 ```
-
-## Publish-Subscribe pattern
-
-> [!NOTE]
->
-> This pattern is very important, but it is **NOT** intended for general use.
-> There are producers which are far more convenient and those should be sufficient
-> for most use cases. Most notably `autoInstance`, `autoList` and `autoTree` in
-> `adaptive-lib-auto` provides real-time, conflict-free, multi-peer synchronization
-> of adat instances, lists and fragment trees.
->
-
-These functions can be used to implement the publish-subscribe pattern.
-
-client side
-
-- `ServiceCallTransport.connect`
-- `ServiceCallTransport.disconnect`
-
-server side
-
-- `ServiceContext.send`
-- `ServiceContext.connectionCleanup`
-- `ServiceContext.sessionCleanup`
-
-Example implementation: [PublishSubscribeTest](/test/src/commonTest/kotlin/hu/simplexion/adaptive/service/PublishSubscribeTest.kt)

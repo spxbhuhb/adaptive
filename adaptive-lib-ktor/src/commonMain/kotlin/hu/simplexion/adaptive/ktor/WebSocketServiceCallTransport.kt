@@ -41,6 +41,7 @@ abstract class WebSocketServiceCallTransport(
                     is Frame.Text -> frame.data
                     is Frame.Close -> {
                         transportLog.info("close frame: $frame")
+                        socketLock.use { socket = null } // to stop send sending out more frames
                         break
                     }
                     else -> {
@@ -62,6 +63,10 @@ abstract class WebSocketServiceCallTransport(
             socket?.close(CloseReason(CloseReason.Codes.GOING_AWAY, ""))
             socket = null
         }
+    }
+
+    override suspend fun stop() {
+        disconnect()
     }
 
 }

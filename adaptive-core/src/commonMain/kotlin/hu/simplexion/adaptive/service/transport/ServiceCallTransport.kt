@@ -51,6 +51,8 @@ abstract class ServiceCallTransport(
 
     abstract suspend fun disconnect()
 
+    abstract suspend fun stop()
+
     /**
      * Handle an incoming [TransportEnvelope]. The envelope may be a call `(success == null)` or
      * a return value `(success != null)`.

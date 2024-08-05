@@ -26,7 +26,7 @@ class SessionWorker : WorkerImpl<SessionWorker>, ServiceSessionProvider {
     internal val preparedSessions = ConcurrentHashMap<UUID<ServiceContext>, Session>()
 
     /**
-     * Active sessions used for authorization. Use the [getSessionForContext] method
+     * Active sessions used for authorization. Use the [getSession] method
      * to get the session.
      */
     internal val activeSessions = ConcurrentHashMap<UUID<ServiceContext>, Session>()

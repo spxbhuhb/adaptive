@@ -35,6 +35,12 @@ open class ClientWebSocketServiceCallTransport(
         scope.launch { run() }
     }
 
+    override suspend fun stop() {
+        super.stop()
+        client.close()
+        scope.cancel()
+    }
+
     suspend fun run() {
         while (scope.isActive) {
 

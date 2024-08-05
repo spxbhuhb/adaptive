@@ -16,6 +16,7 @@ class TransactionWebSocketServiceCallTransport(
     wireFormatProvider: WireFormatProvider,
     val adapter: AdaptiveServerAdapter,
     override var socket: WebSocketSession?,
+    val clientId: UUID<ServiceContext>,
     val session: ServiceSession?
 ) : WebSocketServiceCallTransport(
     CoroutineScope(Dispatchers.Default),
@@ -23,7 +24,7 @@ class TransactionWebSocketServiceCallTransport(
 ) {
 
     override fun context(): ServiceContext =
-        ServiceContext(UUID(), session)
+        ServiceContext(clientId, session)
 
     override suspend fun dispatch(context: ServiceContext, serviceName: String, funName: String, decoder: WireFormatDecoder<*>): ByteArray {
 

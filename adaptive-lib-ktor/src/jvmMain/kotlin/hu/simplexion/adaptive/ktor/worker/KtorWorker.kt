@@ -94,6 +94,7 @@ class KtorWorker : WorkerImpl<KtorWorker> {
                 wireFormatProvider,
                 safeAdapter,
                 this,
+                sessionUuid,
                 provider.getSession(sessionUuid)
             )
 

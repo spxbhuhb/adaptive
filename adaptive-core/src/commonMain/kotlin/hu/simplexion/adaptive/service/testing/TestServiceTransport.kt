@@ -42,4 +42,8 @@ class TestServiceTransport(
 
     }
 
+    override suspend fun stop() {
+
+    }
+
 }
