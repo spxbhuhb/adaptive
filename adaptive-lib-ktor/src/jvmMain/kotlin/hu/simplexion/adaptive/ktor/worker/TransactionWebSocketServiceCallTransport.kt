@@ -24,7 +24,7 @@ class TransactionWebSocketServiceCallTransport(
 ) {
 
     override fun context(): ServiceContext =
-        ServiceContext(clientId, session)
+        ServiceContext(clientId, session, this)
 
     override suspend fun dispatch(context: ServiceContext, serviceName: String, funName: String, decoder: WireFormatDecoder<*>): ByteArray {
 

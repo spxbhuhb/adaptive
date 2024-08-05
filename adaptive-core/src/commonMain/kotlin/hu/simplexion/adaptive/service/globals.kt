@@ -23,8 +23,8 @@ val defaultServiceImplFactory: ServiceImplFactory = BasicServiceImplFactory()
  */
 fun <T> getService(context: ServiceContext? = null, consumer: T? = null): T {
     checkNotNull(consumer)
-//    if (context != null) {
-//        (consumer as ServiceConsumer).serviceCallTransport = context
-//    }
+    if (context?.transport != null) {
+        (consumer as ServiceConsumer).serviceCallTransport = context.transport
+    }
     return consumer
 }

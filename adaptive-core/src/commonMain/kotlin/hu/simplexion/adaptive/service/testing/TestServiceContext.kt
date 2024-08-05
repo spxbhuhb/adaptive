@@ -3,8 +3,10 @@ package hu.simplexion.adaptive.service.testing
 import hu.simplexion.adaptive.service.ServiceContext
 
 class TestServiceContext(
-    val transport: TestServiceTransport
-) : ServiceContext() {
+    transport: TestServiceTransport
+) : ServiceContext(
+    transport = transport
+) {
 
 //    override suspend fun send(envelope: TransportEnvelope) {
 //        if (transport.dump) {

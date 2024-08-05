@@ -162,6 +162,19 @@ Check the implementation for [Ktor](../ktor/readme.md) for examples.
 The service transports may close the connection at specific events such as login and logout. When this
 happens, all pending calls fail with `DisconnectException`.
 
+## Calling client side functions
+
+You can call client side functions from the server if you have a `ServiceContext`:
+
+```kotlin
+getService<DuplexApi>(serviceContext).process(value)
+```
+
+> [!NOTE]
+>
+> Be careful, it is easy to create infinite loops by calling a service from a service
+> implementation.
+
 ## Supported Parameter and Return Types
 
 Whatever [WireFormat](../wireformat/README.md) supports.

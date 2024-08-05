@@ -128,8 +128,12 @@ abstract class ServiceCallTransport(
     }
 
     fun Exception.toEnvelope(callId: UUID<TransportEnvelope>): TransportEnvelope {
-        val innerPayload = if (this is AdatClass<*>) this.encode(wireFormatProvider) else byteArrayOf()
-        val exceptionData = ServiceExceptionData(this::class.qualifiedName ?: this::class.simpleName ?: "<unknown>", this.message, innerPayload)
+        val exceptionData = if (this is AdatClass<*>) {
+            ServiceExceptionData(this.adatCompanion.wireFormatName, this.message, this.encode(wireFormatProvider))
+        } else {
+            // TODO JS does not support qualified name, how to encode exceptions properly?
+            ServiceExceptionData(this::class.simpleName ?: "<unknown>", this.message, byteArrayOf())
+        }
 
         return TransportEnvelope(callId, null, null, false, wireFormatProvider.encode(exceptionData, ServiceExceptionData))
     }

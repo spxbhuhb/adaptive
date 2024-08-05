@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.service
 
 import hu.simplexion.adaptive.service.model.ServiceSession
+import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 import hu.simplexion.adaptive.utility.CleanupHandler
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.utility.getLock
@@ -12,7 +13,8 @@ import hu.simplexion.adaptive.utility.use
 
 open class ServiceContext(
     val uuid: UUID<ServiceContext> = UUID(),
-    val sessionOrNull: ServiceSession? = null
+    val sessionOrNull: ServiceSession? = null,
+    val transport: ServiceCallTransport? = null
 ) {
     val session: ServiceSession
         get() = checkNotNull(sessionOrNull) { "missing or invalid session" }
