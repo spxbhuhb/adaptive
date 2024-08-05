@@ -1,0 +1,94 @@
+@startuml
+!pragma teoz true
+
+box Connecting Peer
+participant App as c.app
+participant AutoBackend as c.backend
+participant AutoService as c.service
+participant AutoWorker as c.worker
+endbox
+
+box Origin Peer
+participant AppService as o.app.service
+participant AutoBackend as o.backend
+
+participant "AutoService" as o.service
+participant "AutoWorker" as o.worker
+endbox
+
+c.app --> o.app.service : service function call
+activate o.app.service
+
+o.app.service -> o.backend : create instance
+activate o.backend
+o.backend -> o.app.service
+deactivate o.backend
+
+o.app.service -> o.worker : register
+activate o.worker
+o.worker -> o.app.service
+deactivate o.worker
+o.app.service --> c.app : return with AutoHandle
+deactivate o.app.service
+
+c.app -> c.backend : create instance
+activate c.backend
+c.backend -> c.app
+deactivate c.backend
+
+c.app -> c.worker : register
+activate c.worker
+c.worker -> c.app
+deactivate c.worker
+
+c.app -> c.backend : connect
+activate c.backend
+c.backend --> o.service : connect
+activate o.service
+o.service -> o.worker : connect
+activate o.worker
+o.worker -> o.backend : addPeer
+activate o.backend
+hnote over o.backend : launch syncPeer
+o.backend -> o.worker
+deactivate o.backend
+o.worker -> o.service
+deactivate o.worker
+o.service --> c.backend : return
+deactivate o.service
+
+== syncPeer ==
+
+activate o.backend
+o.backend --> c.service : add/modify/move/remove
+activate c.service
+
+c.service -> c.worker : receive
+activate c.worker
+
+c.worker -> c.backend : receive
+activate c.backend #gold
+c.backend -> c.worker
+deactivate c.backend #gold
+
+c.worker -> c.service
+deactivate c.worker
+c.service --> o.backend
+deactivate c.service
+
+o.backend --> c.service : initEnd
+activate c.service
+c.service -> c.worker : initEnd
+c.worker -> c.backend : addPeer
+activate c.backend #gold
+c.backend -> c.worker
+deactivate c.backend #gold
+c.worker -> c.service
+c.service --> o.backend
+deactivate c.service
+deactivate o.backend
+c.backend -> c.app
+deactivate c.backend
+
+== normal operation ==
+@enduml

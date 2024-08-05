@@ -1,4 +1,4 @@
-package hu.simplexion.adaptive.auto.operation
+package hu.simplexion.adaptive.auto.model.operation
 
 import hu.simplexion.adaptive.auto.LamportTimestamp
 import hu.simplexion.adaptive.auto.backend.AutoBackend

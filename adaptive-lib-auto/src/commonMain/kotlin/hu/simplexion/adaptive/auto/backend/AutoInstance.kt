@@ -5,9 +5,9 @@ import hu.simplexion.adaptive.adat.AdatCompanion
 import hu.simplexion.adaptive.auto.ItemId
 import hu.simplexion.adaptive.auto.LamportTimestamp
 import hu.simplexion.adaptive.auto.connector.AutoConnector
-import hu.simplexion.adaptive.auto.operation.AutoModify
-import hu.simplexion.adaptive.auto.operation.AutoOperation
-import hu.simplexion.adaptive.auto.operation.AutoTransaction
+import hu.simplexion.adaptive.auto.model.operation.AutoModify
+import hu.simplexion.adaptive.auto.model.operation.AutoOperation
+import hu.simplexion.adaptive.auto.model.operation.AutoTransaction
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.wireformat.WireFormat
 import hu.simplexion.adaptive.wireformat.WireFormatProvider
@@ -103,7 +103,7 @@ class AutoInstance<A : AdatClass<A>>(
      * Send any changes that happened after [peerTime] to the peer.
      * TODO check if `peerTime.timestamp` is 0 and is  and if so, send the whole instance at once
      */
-    override fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp) {
+    override suspend fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp) {
         if (peerTime.timestamp >= time.timestamp) return
 
         val update = mutableListOf<AutoModify>()
@@ -118,10 +118,7 @@ class AutoInstance<A : AdatClass<A>>(
 
         if (trace) trace("peerTime=$peerTime op=$transaction")
 
-        connector.send(
-            transaction,
-            distribute = false
-        )
+        connector.transaction(globalId, transaction)
     }
 
     fun close(operation: AutoOperation, commit: Boolean, distribute: Boolean) {
@@ -136,10 +133,7 @@ class AutoInstance<A : AdatClass<A>>(
 
         if (distribute) {
             for (connector in connectors) {
-                connector.send(
-                    operation,
-                    distribute = false
-                )
+                connector.modify(globalId, operation)
             }
         }
 

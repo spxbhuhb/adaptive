@@ -1,4 +1,4 @@
-package hu.simplexion.adaptive.auto.tree
+package hu.simplexion.adaptive.auto.deprecated.tree
 
 class Node(val id: NodeId) : Comparable<Node> {
     var parent: Node? = null

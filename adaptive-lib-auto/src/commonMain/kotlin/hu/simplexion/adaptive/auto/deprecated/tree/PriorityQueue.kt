@@ -1,4 +1,4 @@
-package hu.simplexion.adaptive.auto.tree
+package hu.simplexion.adaptive.auto.deprecated.tree
 
 /**
  * Note: This priority queue implementation is inefficient. It should

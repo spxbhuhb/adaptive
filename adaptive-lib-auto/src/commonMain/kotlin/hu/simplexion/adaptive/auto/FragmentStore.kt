@@ -1,9 +1,9 @@
 package hu.simplexion.adaptive.auto
 
-import hu.simplexion.adaptive.auto.state.StateData
-import hu.simplexion.adaptive.auto.state.StateOperation
-import hu.simplexion.adaptive.auto.tree.TreeData
-import hu.simplexion.adaptive.auto.tree.TreeOperation
+import hu.simplexion.adaptive.auto.deprecated.state.StateData
+import hu.simplexion.adaptive.auto.deprecated.state.StateOperation
+import hu.simplexion.adaptive.auto.deprecated.tree.TreeData
+import hu.simplexion.adaptive.auto.deprecated.tree.TreeOperation
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
 import hu.simplexion.adaptive.utility.UUID
 

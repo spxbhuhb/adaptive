@@ -1,4 +1,4 @@
-package hu.simplexion.adaptive.auto.operation
+package hu.simplexion.adaptive.auto.model.operation
 
 import hu.simplexion.adaptive.adat.Adat
 import hu.simplexion.adaptive.auto.ItemId
@@ -6,13 +6,16 @@ import hu.simplexion.adaptive.auto.LamportTimestamp
 import hu.simplexion.adaptive.auto.backend.AutoBackend
 
 @Adat
-class AutoRemove(
+class AutoInsert(
     override val timestamp: LamportTimestamp,
-    val item: ItemId
+    val item: ItemId,
+    val origin: ItemId,
+    val left: ItemId,
+    val right: ItemId
 ) : AutoOperation() {
 
     override fun apply(backend: AutoBackend, commit: Boolean, distribute: Boolean) {
-        backend.remove(timestamp, item)
+        backend.insert(timestamp, item, origin, left, right)
     }
 
 }

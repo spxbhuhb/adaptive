@@ -3,13 +3,14 @@ package hu.simplexion.adaptive.auto.backend
 import hu.simplexion.adaptive.auto.ItemId
 import hu.simplexion.adaptive.auto.LamportTimestamp
 import hu.simplexion.adaptive.auto.connector.AutoConnector
-import hu.simplexion.adaptive.auto.operation.AutoModify
-import hu.simplexion.adaptive.auto.operation.AutoOperation
-import hu.simplexion.adaptive.auto.operation.AutoTransaction
+import hu.simplexion.adaptive.auto.model.operation.AutoModify
+import hu.simplexion.adaptive.auto.model.operation.AutoOperation
+import hu.simplexion.adaptive.auto.model.operation.AutoTransaction
 import hu.simplexion.adaptive.foundation.unsupported
 import hu.simplexion.adaptive.reflect.CallSiteName
 import hu.simplexion.adaptive.utility.UUID
-import kotlinx.atomicfu.atomic
+import hu.simplexion.adaptive.utility.getLock
+import hu.simplexion.adaptive.utility.use
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -21,10 +22,12 @@ abstract class AutoBackend(
 
     abstract val scope: CoroutineScope
 
-    private val pConnectors = atomic<List<AutoConnector>>(listOf())
+    val connectorLock = getLock()
+
+    private var pConnectors = listOf<AutoConnector>()
 
     val connectors
-        get() = pConnectors.value
+        get() = connectorLock.use { pConnectors }
 
     var time = time
         protected set
@@ -40,12 +43,13 @@ abstract class AutoBackend(
      * Add a connection to a peer. The backend launches [syncPeer] in to send all known
      * operations that happened after the [peerTime] to the peer.
      */
-    fun addPeer(connector: AutoConnector, peerTime: LamportTimestamp) {
-        pConnectors.value = pConnectors.value.plus(connector)
+    fun addPeer(connector: AutoConnector, peerTime: LamportTimestamp): LamportTimestamp {
+        connectorLock.use { pConnectors += connector }
         scope.launch { syncPeer(connector, peerTime) }
+        return time
     }
 
-    abstract fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp)
+    abstract suspend fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp)
 
     /**
      * Receive the operation from the peer. Intended to be implemented by
