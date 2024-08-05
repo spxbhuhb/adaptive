@@ -10,6 +10,9 @@ import hu.simplexion.adaptive.wireformat.WireFormatProvider
 
 class JsonWireFormatProvider : WireFormatProvider() {
 
+    override val useTextFrame
+        get() = true
+
     override fun encoder(): WireFormatEncoder =
         JsonWireFormatEncoder()
 

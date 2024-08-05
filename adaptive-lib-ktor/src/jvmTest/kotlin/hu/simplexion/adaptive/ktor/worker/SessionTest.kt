@@ -7,6 +7,7 @@ package hu.simplexion.adaptive.ktor.worker
 import hu.simplexion.adaptive.auth.api.SessionApi
 import hu.simplexion.adaptive.auth.model.*
 import hu.simplexion.adaptive.exposed.inMemoryH2
+import hu.simplexion.adaptive.ktor.ClientWebSocketServiceCallTransport
 import hu.simplexion.adaptive.ktor.WebSocketServiceCallTransport
 import hu.simplexion.adaptive.ktor.ktor
 import hu.simplexion.adaptive.ktor.withProtoWebSocketTransport
@@ -14,13 +15,13 @@ import hu.simplexion.adaptive.lib.auth.auth
 import hu.simplexion.adaptive.lib.auth.crypto.BCrypt
 import hu.simplexion.adaptive.lib.auth.store.CredentialTable
 import hu.simplexion.adaptive.lib.auth.store.PrincipalTable
-import hu.simplexion.adaptive.lib.auth.worker.SessionWorker
 import hu.simplexion.adaptive.reflect.CallSiteName
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.query.firstImpl
 import hu.simplexion.adaptive.server.server
 import hu.simplexion.adaptive.service.defaultServiceCallTransport
 import hu.simplexion.adaptive.service.getService
+import hu.simplexion.adaptive.service.model.DisconnectException
 import hu.simplexion.adaptive.utility.UUID
 import io.ktor.client.plugins.cookies.*
 import junit.framework.TestCase.assertNull
@@ -50,7 +51,7 @@ class SessionTest {
     }
 
     val transport
-        get() = (defaultServiceCallTransport as WebSocketServiceCallTransport)
+        get() = (defaultServiceCallTransport as ClientWebSocketServiceCallTransport)
 
     fun WebSocketServiceCallTransport.stop() {
         scope.cancel()
@@ -70,17 +71,17 @@ class SessionTest {
     @Test
     fun getSession() {
         server("getSession")
-        val sessionWorker = adapter.firstImpl<SessionWorker>()
+        val ktorWorker = adapter.firstImpl<KtorWorker>()
 
         runBlocking {
-            withProtoWebSocketTransport("ws://localhost:8080/adaptive/service", "http://localhost:8080/adaptive/client-id")
+            withProtoWebSocketTransport("ws://localhost:8080/adaptive/service-ws", "http://localhost:8080/adaptive/client-id")
 
             val sessionService = getService<SessionApi>()
 
             val client = transport.client
 
             val cookies = client.cookies("http://localhost:8080")
-            assertNotNull(cookies.firstOrNull { it.name == sessionWorker.clientIdCookieName })
+            assertNotNull(cookies.firstOrNull { it.name == ktorWorker.clientIdCookieName })
 
             val session = sessionService.getSession()
             assertNull(session)
@@ -95,7 +96,7 @@ class SessionTest {
         server(callSiteName.substringAfterLast('.'))
 
         runBlocking {
-            withProtoWebSocketTransport("ws://localhost:8080/adaptive/service", "http://localhost:8080/adaptive/client-id")
+            withProtoWebSocketTransport("ws://localhost:8080/adaptive/service-ws", "http://localhost:8080/adaptive/client-id", true)
 
             test(adapter)
         }
@@ -176,7 +177,7 @@ class SessionTest {
             val session = getService<SessionApi>().login("admin", "stuff")
 
             assertNotNull(session)
-            assertEquals(admin.id, session.principal)
+            assertEquals(admin.id, session.principalOrNull)
         }
     }
 
@@ -194,10 +195,12 @@ class SessionTest {
             val sessionService = getService<SessionApi>()
 
             sessionService.login("admin", "stuff")
+
             sessionService.logout()
 
-            val session = sessionService.getSession()
-            assertNull(session)
+            assertFailsWith(DisconnectException::class) {
+                sessionService.getSession()
+            }
         }
     }
 }

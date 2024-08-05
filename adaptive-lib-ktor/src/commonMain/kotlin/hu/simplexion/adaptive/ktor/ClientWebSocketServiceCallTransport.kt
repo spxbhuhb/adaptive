@@ -3,23 +3,21 @@ package hu.simplexion.adaptive.ktor
 import hu.simplexion.adaptive.service.ServiceContext
 import hu.simplexion.adaptive.service.defaultServiceImplFactory
 import hu.simplexion.adaptive.utility.UUID
+import hu.simplexion.adaptive.utility.use
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatProvider
 import io.ktor.client.*
 import io.ktor.client.plugins.cookies.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
-import io.ktor.websocket.*
 import kotlinx.coroutines.*
 
 open class ClientWebSocketServiceCallTransport(
-    val servicePath: String = "/adaptive/service",
-    val clientIdPath: String = "/adaptive/client-id",
-    useTextFrame: Boolean,
+    val servicePath: String,
+    val clientIdPath: String,
     wireFormatProvider: WireFormatProvider
 ) : WebSocketServiceCallTransport(
     CoroutineScope(Dispatchers.Default),
-    useTextFrame,
     wireFormatProvider
 ) {
 
@@ -41,11 +39,12 @@ open class ClientWebSocketServiceCallTransport(
         while (scope.isActive) {
 
             try {
-                if (trace) transportLog.fine("connecting (retryDelay=$retryDelay)")
+                counter ++
+                if (trace) transportLog.fine("connecting (retryDelay=$retryDelay, counter=$counter)")
 
                 client.webSocket(servicePath) {
-                    if (trace) transportLog.fine("connected")
-                    socket = this
+                    if (trace) transportLog.fine("connected (counter=$counter)")
+                    socketLock.use { socket = this }
                     incoming()
                 }
 
@@ -57,7 +56,7 @@ open class ClientWebSocketServiceCallTransport(
                 delay(retryDelay) // wait a bit before trying to re-establish the connection
                 if (retryDelay < 5_000) retryDelay = (retryDelay * 115) / 100
             } finally {
-                socket?.close()
+                disconnect()
             }
 
         }

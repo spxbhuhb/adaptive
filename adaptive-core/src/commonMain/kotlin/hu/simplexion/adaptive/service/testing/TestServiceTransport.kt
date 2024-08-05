@@ -10,7 +10,7 @@ import hu.simplexion.adaptive.service.model.TransportEnvelope
 import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatProvider
-import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
+import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
@@ -21,10 +21,10 @@ class TestServiceTransport(
     CoroutineScope(Dispatchers.Default)
 ) {
     override val wireFormatProvider: WireFormatProvider
-        get() = defaultWireFormatProvider
+        get() = ProtoWireFormatProvider()
 
     override suspend fun send(envelope: TransportEnvelope) {
-        TODO("Not yet implemented")
+        receive(wireFormatProvider.encode(envelope, TransportEnvelope))
     }
 
     override fun context(): ServiceContext {

@@ -10,7 +10,7 @@ import hu.simplexion.adaptive.auto.operation.AutoOperation
 import hu.simplexion.adaptive.auto.operation.AutoTransaction
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.wireformat.WireFormat
-import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
+import hu.simplexion.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 
 class AutoInstance<A : AdatClass<A>>(
@@ -19,6 +19,7 @@ class AutoInstance<A : AdatClass<A>>(
     time: LamportTimestamp,
     val companion: AdatCompanion<A>,
     initialValue: A? = null,
+    val wireFormatProvider: WireFormatProvider,
     val onChange: ((newValue: A) -> Unit)? = null
 ) : AutoBackend(time) {
 
@@ -26,8 +27,6 @@ class AutoInstance<A : AdatClass<A>>(
 
     val metadata = companion.adatMetadata
     val propertyWireFormats = companion.adatWireFormat.propertyWireFormats
-
-    val wireFormatProvider = defaultWireFormatProvider
 
     class OperationAndValue(
         val operation: AutoModify,

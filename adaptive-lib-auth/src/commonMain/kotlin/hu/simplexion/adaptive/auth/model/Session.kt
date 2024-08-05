@@ -5,25 +5,33 @@
 package hu.simplexion.adaptive.auth.model
 
 import hu.simplexion.adaptive.adat.Adat
-import hu.simplexion.adaptive.adat.AdatCompanion
 import hu.simplexion.adaptive.adat.AdatEntity
+import hu.simplexion.adaptive.service.model.ServiceSession
+import hu.simplexion.adaptive.utility.CleanupHandler
 import hu.simplexion.adaptive.utility.UUID
 import kotlinx.datetime.Instant
 
 @Adat
 class Session(
-    override var id: UUID<Session>,
-    var securityCode: String,
+    override val id: UUID<Session>,
+    override val principalOrNull: UUID<Principal>?,
+    val securityCode: String,
     val createdAt: Instant,
-    var vmCreatedAt: Long,
-    var lastActivity: Long,
-    var principal: UUID<Principal>?,
-    var roles: List<Role>
-) : AdatEntity<Session> {
+    val vmCreatedAt: Long,
+    var lastActivity: Long, // TODO does the synchronization of ConcurrentHashMap enough for lastActivity?
+    val roles: List<Role>
+) : AdatEntity<Session>, ServiceSession {
 
-    companion object : AdatCompanion<Session> {
-        val SESSION_TOKEN = UUID<Session>("7fdd494f-e542-4d5b-870b-7cab83dc3197")
-        val LOGOUT_TOKEN = UUID<Session>("61e974dc-094b-42e8-b21c-08502be7c595")
+    override fun addSessionCleanup(cleanup: CleanupHandler<ServiceSession>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun removeSessionCleanup(cleanup: CleanupHandler<ServiceSession>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun cleanup() {
+        TODO("Not yet implemented")
     }
 
 }

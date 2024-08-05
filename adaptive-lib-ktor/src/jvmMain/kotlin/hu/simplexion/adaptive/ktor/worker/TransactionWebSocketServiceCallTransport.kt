@@ -13,14 +13,12 @@ import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 class TransactionWebSocketServiceCallTransport(
-    useTextFrame: Boolean,
     wireFormatProvider: WireFormatProvider,
     val adapter: AdaptiveServerAdapter,
     override var socket: WebSocketSession?,
     val session: ServiceSession?
 ) : WebSocketServiceCallTransport(
     CoroutineScope(Dispatchers.Default),
-    useTextFrame,
     wireFormatProvider
 ) {
 

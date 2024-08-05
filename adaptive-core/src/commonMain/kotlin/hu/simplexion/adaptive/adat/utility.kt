@@ -138,11 +138,12 @@ fun sensibleDefault(property: AdatPropertyMetadata): Any? {
     TODO()
 }
 
-fun <A : AdatClass<A>> AdatClass<*>.encode(): ByteArray {
+// TODO I'm not happy with AdatClass<*>.encode and decode (unchecked cast)
+fun <A : AdatClass<A>> AdatClass<*>.encode(wireFormatProvider: WireFormatProvider): ByteArray {
     @Suppress("UNCHECKED_CAST")
     this as A
-    return WireFormatProvider.encode(this, this.adatCompanion.adatWireFormat)
+    return wireFormatProvider.encode(this, this.adatCompanion.adatWireFormat)
 }
 
-fun <A : AdatClass<A>> ByteArray.decode(companion: AdatCompanion<A>): A =
-    WireFormatProvider.decode(this, companion.adatWireFormat)
+fun <A : AdatClass<A>> ByteArray.decode(wireFormatProvider: WireFormatProvider, companion: AdatCompanion<A>): A =
+    wireFormatProvider.decode(this, companion.adatWireFormat)

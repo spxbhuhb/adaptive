@@ -8,7 +8,6 @@ import hu.simplexion.adaptive.auth.model.Principal
 import hu.simplexion.adaptive.auth.model.Role
 import hu.simplexion.adaptive.service.ServiceContext
 import hu.simplexion.adaptive.utility.UUID
-import kotlin.collections.any
 
 /**
  * True when there is no service context for the call
@@ -25,8 +24,8 @@ fun ServiceContext.isInternal(): Boolean {
  * the session.
  */
 fun ServiceContext.isLoggedIn(): Boolean {
-    val session = getSessionOrNull() ?: return false
-    return session.principal != null
+    val session = sessionOrNull ?: return false
+    return session.principalOrNull != null
 }
 
 /**
@@ -97,9 +96,6 @@ fun ServiceContext.hasOneOf(vararg roles: UUID<Role>): Boolean {
  * True when there is a session in the service context and the principal
  * of the session is [principal].
  */
-fun ServiceContext.isPrincipal(principal: UUID<Principal>): Boolean {
-    val session = getSessionOrNull() ?: return false
-    return principal == session.principal
+fun ServiceContext.ofPrincipal(principal: UUID<Principal>): Boolean {
+    return principal == sessionOrNull?.principalOrNull
 }
-
-

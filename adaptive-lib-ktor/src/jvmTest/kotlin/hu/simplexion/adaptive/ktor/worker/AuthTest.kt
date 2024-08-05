@@ -23,6 +23,7 @@ import hu.simplexion.adaptive.server.builtin.service
 import hu.simplexion.adaptive.server.server
 import hu.simplexion.adaptive.service.defaultServiceCallTransport
 import hu.simplexion.adaptive.service.getService
+import hu.simplexion.adaptive.service.model.DisconnectException
 import hu.simplexion.adaptive.utility.UUID
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
@@ -74,7 +75,7 @@ class AuthTest {
         }
 
         runBlocking {
-            withProtoWebSocketTransport("ws://localhost:8080/adaptive/service", "http://localhost:8080/adaptive/client-id")
+            withProtoWebSocketTransport("ws://localhost:8080/adaptive/service-ws", "http://localhost:8080/adaptive/client-id")
             if (login) getService<SessionApi>().login("admin", "stuff")
             test(adapter)
         }
@@ -120,7 +121,7 @@ class AuthTest {
     fun loggedInAfterLogout() {
         authTest(login = true) {
             getService<SessionApi>().logout()
-            assertFailsWith(AccessDenied::class) {
+            assertFailsWith(DisconnectException::class) {
                 getService<AuthTestApi>().loggedInFun()
             }
         }

@@ -4,7 +4,7 @@
 
 package hu.simplexion.adaptive.lib.auth.store
 
-import hu.simplexion.adaptive.auth.context.getPrincipalOrNull
+import hu.simplexion.adaptive.auth.context.getPrincipalIdOrNull
 import hu.simplexion.adaptive.auth.context.getSessionOrNull
 import hu.simplexion.adaptive.auth.model.*
 import hu.simplexion.adaptive.reflect.CallSiteName
@@ -62,7 +62,7 @@ private fun ServiceImpl<*>.add(
         AuthHistoryEntry(
             UUID(),
             function,
-            serviceContext.getPrincipalOrNull() ?: principal,
+            serviceContext.getPrincipalIdOrNull() ?: principal,
             Clock.System.now(),
             serviceContext.getSessionOrNull()?.id,
             principal,

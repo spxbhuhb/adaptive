@@ -57,6 +57,8 @@ dependencies {
     testRuntimeOnly(libs.kotlinx.coroutines.core)
     testRuntimeOnly(libs.kotlinx.datetime)
     testRuntimeOnly(libs.exposed.core)
+    testRuntimeOnly(libs.slf4j)
+    testRuntimeOnly(libs.slf4j.nop)
 
     testImplementation(platform(libs.junit.bom))
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -90,6 +92,8 @@ tasks.test {
         setLibraryProperty("adaptive.kotlin.test.kotlinx-coroutines-core", "kotlinx-coroutines-core-jvm")
         setLibraryProperty("adaptive.kotlin.test.kotlinx-datetime", "kotlinx-datetime-jvm")
         setLibraryProperty("adaptive.org.jetbrains.exposed-core", "exposed-core")
+        setLibraryProperty("adaptive.org.slf4j:slf4j-api", "slf4j-api")
+        setLibraryProperty("adaptive.org.slf4j:slf4j-nop", "slf4j-nop")
     }
 }
 

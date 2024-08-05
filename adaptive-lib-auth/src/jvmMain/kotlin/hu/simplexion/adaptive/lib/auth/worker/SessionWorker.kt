@@ -8,8 +8,9 @@ import hu.simplexion.adaptive.auth.model.SecurityPolicy
 import hu.simplexion.adaptive.auth.model.Session
 import hu.simplexion.adaptive.lib.auth.store.history
 import hu.simplexion.adaptive.server.builtin.WorkerImpl
-import hu.simplexion.adaptive.server.setting.dsl.setting
 import hu.simplexion.adaptive.service.ServiceContext
+import hu.simplexion.adaptive.service.model.ServiceSession
+import hu.simplexion.adaptive.service.transport.ServiceSessionProvider
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.utility.vmNowSecond
 import kotlinx.coroutines.delay
@@ -17,17 +18,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.concurrent.CancellationException
 import java.util.concurrent.ConcurrentHashMap
 
-class SessionWorker : WorkerImpl<SessionWorker> {
-
-    /**
-     * The path on which a client can request a client ID. Default is `/adaptive/client-id`
-     */
-    val clientIdRoute by setting<String> { "CLIENT_ID_PATH" } default "/adaptive/client-id"
-
-    /**
-     * The name of the cookie that contains the client ID.
-     */
-    val clientIdCookieName by setting<String> { "CLIENT_COOKIE_NAME" } default "ADAPTIVE_CLIENT_ID"
+class SessionWorker : WorkerImpl<SessionWorker>, ServiceSessionProvider {
 
     /**
      * Sessions waiting for the second step of 2FA.
@@ -68,7 +59,7 @@ class SessionWorker : WorkerImpl<SessionWorker> {
 
             activeSessions.remove(session.id.cast())
 
-            session.principal?.let {
+            session.principalOrNull?.let {
                 transaction {
                     history(it, session.id)
                 }
@@ -87,11 +78,11 @@ class SessionWorker : WorkerImpl<SessionWorker> {
         }
     }
 
-    fun getSessionForContext(sessionUuid: UUID<ServiceContext>): Session? =
-        activeSessions.computeIfPresent(sessionUuid) { _, session ->
+    override fun getSession(uuid: UUID<ServiceContext>): ServiceSession? =
+        activeSessions.computeIfPresent(uuid) { _, session ->
             session.lastActivity = vmNowSecond()
             session
-        } ?: preparedSessions.computeIfPresent(sessionUuid) { _, session ->
+        } ?: preparedSessions.computeIfPresent(uuid) { _, session ->
             session.lastActivity = vmNowSecond()
             session
         }

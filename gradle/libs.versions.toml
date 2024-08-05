@@ -26,11 +26,11 @@ kotlin = "2.0.0"
 kotlinpoet = "1.16.0"
 kotlin-wrappers = "1.0.0-pre.760"
 ktor = "2.3.11"
-log4j = "2.20.0"
-logback = "1.2.11" # newer versions are incompatible with Android, see https://youtrack.jetbrains.com/issue/KTOR-5227
+logback = "1.5.6" # newer versions are incompatible with Android, see https://youtrack.jetbrains.com/issue/KTOR-5227
 plugin-publish = "1.1.0"
 plugin-android = "7.3.0"
 shadow = "8.1.1"
+slf4j = "2.0.13"
 subethamail = "3.1.7"
 
 [libraries]
@@ -85,11 +85,13 @@ ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor"
 ktor-server-tests = { module = "io.ktor:ktor-server-tests-jvm", version.ref = "ktor" }
 ktor-server-websockets = { module = "io.ktor:ktor-server-websockets", version.ref = "ktor" }
 
-log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
 plugin-android = { module = "com.android.tools.build:gradle", version.ref = "plugin-android" }
 plugin-android-api = { module = "com.android.tools.build:gradle-api", version.ref = "plugin-android" }
+
+slf4j = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+slf4j-nop = { module = "org.slf4j:slf4j-nop", version.ref = "slf4j" }
 
 subethamail = { module = "org.subethamail:subethasmtp", version.ref = "subethamail" }
 

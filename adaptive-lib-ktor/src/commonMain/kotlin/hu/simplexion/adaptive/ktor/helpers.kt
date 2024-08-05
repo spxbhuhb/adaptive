@@ -5,31 +5,30 @@
 package hu.simplexion.adaptive.ktor
 
 import hu.simplexion.adaptive.service.defaultServiceCallTransport
-import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
 import hu.simplexion.adaptive.wireformat.json.JsonWireFormatProvider
 import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 
 suspend fun withJsonWebSocketTransport(
-    servicePath: String = "/adaptive/service",
+    servicePath: String = "/adaptive/service-ws",
     clientIdPath: String = "/adaptive/client-id",
-    trace: Boolean = false
+    trace: Boolean = false,
 ) =
-    WebSocketServiceCallTransport(servicePath = servicePath, clientIdPath = clientIdPath, useTextFrame = true, trace = trace)
+    ClientWebSocketServiceCallTransport(servicePath = servicePath, clientIdPath = clientIdPath, JsonWireFormatProvider())
         .also {
-            defaultWireFormatProvider = JsonWireFormatProvider()
             defaultServiceCallTransport = it
+            it.trace = trace
             it.start()
         }
 
 suspend fun withProtoWebSocketTransport(
-    servicePath: String = "/adaptive/service",
+    servicePath: String = "/adaptive/service-ws",
     clientIdPath: String = "/adaptive/client-id",
     trace: Boolean = false
 ) =
-    WebSocketServiceCallTransport(servicePath = servicePath, clientIdPath = clientIdPath, useTextFrame = false, trace = trace)
+    ClientWebSocketServiceCallTransport(servicePath = servicePath, clientIdPath = clientIdPath, ProtoWireFormatProvider())
         .also {
-            defaultWireFormatProvider = ProtoWireFormatProvider()
             defaultServiceCallTransport = it
+            it.trace = trace
             it.start()
         }
 

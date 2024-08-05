@@ -6,6 +6,9 @@ package hu.simplexion.adaptive.wireformat
 
 import hu.simplexion.adaptive.adat.AdatClass
 import hu.simplexion.adaptive.adat.AdatCompanion
+import hu.simplexion.adaptive.adat.metadata.AdatClassMetadata
+import hu.simplexion.adaptive.adat.metadata.AdatPropertyMetadata
+import hu.simplexion.adaptive.adat.wireformat.AdatClassWireFormat
 import hu.simplexion.adaptive.wireformat.builtin.ListWireFormat
 import hu.simplexion.adaptive.wireformat.builtin.PolymorphicWireFormat
 import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
@@ -44,13 +47,29 @@ abstract class AbstractPolymorphicTest<ST>(
         override val adatCompanion: AdatCompanion<C1>
             get() = Companion
 
+        override fun genGetValue(index: Int): Any {
+            return i
+        }
+
+        override fun genSetValue(index: Int, value: Any?) {
+            i = value as Int
+        }
+
         companion object : AdatCompanion<C1> {
 
             override val wireFormatName: String
                 get() = "hu.simplexion.adaptive.wireformat.C1"
 
-            override val adatWireFormat: WireFormat<C1>
-                get() = this
+            override val adatMetadata = AdatClassMetadata<C1>(
+                version = 1,
+                name = "hu.simplexion.adaptive.wireformat.C1",
+                flags = 0,
+                properties = listOf(
+                    AdatPropertyMetadata("i", 0, 0, "I"),
+                )
+            )
+
+            override val adatWireFormat = AdatClassWireFormat(this, adatMetadata)
 
             override fun wireFormatEncode(encoder: WireFormatEncoder, value: C1) =
                 encoder.int(1, "i", value.i)
@@ -67,13 +86,29 @@ abstract class AbstractPolymorphicTest<ST>(
         override val adatCompanion: AdatCompanion<C2>
             get() = Companion
 
+        override fun genGetValue(index: Int): Any {
+            return i
+        }
+
+        override fun genSetValue(index: Int, value: Any?) {
+            i = value as Int
+        }
+
         companion object : AdatCompanion<C2> {
 
             override val wireFormatName: String
                 get() = "hu.simplexion.adaptive.wireformat.C2"
 
-            override val adatWireFormat: WireFormat<C2>
-                get() = this
+            override val adatMetadata = AdatClassMetadata<C2>(
+                version = 1,
+                name = "hu.simplexion.adaptive.wireformat.C2",
+                flags = 0,
+                properties = listOf(
+                    AdatPropertyMetadata("i", 0, 0, "I"),
+                )
+            )
+
+            override val adatWireFormat = AdatClassWireFormat(this, adatMetadata)
 
             override fun wireFormatEncode(encoder: WireFormatEncoder, value: C2) =
                 encoder.int(1, "i", value.i)

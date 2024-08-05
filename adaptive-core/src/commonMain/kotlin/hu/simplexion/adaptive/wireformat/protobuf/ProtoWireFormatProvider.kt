@@ -10,6 +10,9 @@ import hu.simplexion.adaptive.wireformat.WireFormatProvider
 
 class ProtoWireFormatProvider : WireFormatProvider() {
 
+    override val useTextFrame
+        get() = false
+
     override fun encoder(): WireFormatEncoder =
         ProtoWireFormatEncoder()
 

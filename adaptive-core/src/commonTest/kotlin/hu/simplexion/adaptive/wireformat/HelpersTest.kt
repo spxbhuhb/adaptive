@@ -4,18 +4,30 @@
 
 package hu.simplexion.adaptive.wireformat
 
-import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.decode
-import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.encode
+import hu.simplexion.adaptive.wireformat.json.JsonWireFormatProvider
+import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class HelpersTest {
 
     @Test
-    fun testEncodeDecode() {
+    fun testEncodeDecodeProto() {
         val expected = A(true, 12, "abc")
-        val p = encode(expected, A)
-        val actual = decode(p, A)
+
+        val provider = ProtoWireFormatProvider()
+        val p = provider.encode(expected, A)
+        val actual = provider.decode(p, A)
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun testEncodeDecodeJson() {
+        val expected = A(true, 12, "abc")
+
+        val provider = JsonWireFormatProvider()
+        val p = provider.encode(expected, A)
+        val actual = provider.decode(p, A)
         assertEquals(expected, actual)
     }
 

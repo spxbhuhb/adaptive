@@ -74,3 +74,19 @@ inline fun <reified T : WorkerImpl<T>> ServerFragmentImpl.workerOrNull(): Lazy<T
             .singleOrNull { it is AdaptiveServerFragment && it.impl is T }
             ?.let { (it as ServerWorker).workerImpl as T }
     }
+
+/**
+ * Finds the service fragment with  of the given implementation type [T]. Uses `null`
+ * if there is no such fragment.
+ *
+ * Throws exception when:
+ *
+ * - the fragment is not part of an adaptive server
+ * - there is more than one fragment of the given implementation type
+ */
+inline fun <reified T> ServerFragmentImpl.implOrNull(): Lazy<T?> =
+    lazy {
+        checkNotNull(adapter) { "this implementation is not part of an adaptive server" }
+            .singleOrNull { it is AdaptiveServerFragment && it.impl is T }
+            ?.let { (it as AdaptiveServerFragment).impl as T }
+    }

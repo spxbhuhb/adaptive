@@ -4,9 +4,9 @@
 
 package hu.simplexion.adaptive.wireformat
 
-import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatProvider
-
 abstract class WireFormatProvider {
+
+    abstract val useTextFrame: Boolean
 
     abstract fun encoder(): WireFormatEncoder
 
@@ -14,15 +14,10 @@ abstract class WireFormatProvider {
 
     abstract fun dump(payload: ByteArray): String
 
-    companion object {
+    fun <T> encode(instance: T, wireFormat: WireFormat<T>): ByteArray =
+        encoder().rawInstance(instance, wireFormat).pack()
 
-        var defaultWireFormatProvider: WireFormatProvider = ProtoWireFormatProvider()
+    fun <T> decode(byteArray: ByteArray, wireFormat: WireFormat<T>): T =
+        decoder(byteArray).asInstance(wireFormat)
 
-        fun <T> encode(instance : T, wireFormat : WireFormat<T>) : ByteArray =
-            defaultWireFormatProvider.encoder().rawInstance(instance, wireFormat).pack()
-
-        fun <T> decode(byteArray : ByteArray, wireFormat : WireFormat<T>) : T =
-            defaultWireFormatProvider.decoder(byteArray).asInstance(wireFormat)
-
-    }
 }

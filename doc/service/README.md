@@ -157,6 +157,11 @@ Service transports:
 
 Check the implementation for [Ktor](../ktor/readme.md) for examples.
 
+### Disconnecting
+
+The service transports may close the connection at specific events such as login and logout. When this
+happens, all pending calls fail with `DisconnectException`.
+
 ## Supported Parameter and Return Types
 
 Whatever [WireFormat](../wireformat/README.md) supports.

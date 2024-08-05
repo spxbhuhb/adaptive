@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.adat.AdatClass
 import hu.simplexion.adaptive.adat.encode
 import hu.simplexion.adaptive.log.getLogger
 import hu.simplexion.adaptive.service.ServiceContext
+import hu.simplexion.adaptive.service.model.DisconnectException
 import hu.simplexion.adaptive.service.model.ReturnException
 import hu.simplexion.adaptive.service.model.ServiceExceptionData
 import hu.simplexion.adaptive.service.model.TransportEnvelope
@@ -17,9 +18,6 @@ import hu.simplexion.adaptive.utility.use
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 import hu.simplexion.adaptive.wireformat.WireFormatEncoder
 import hu.simplexion.adaptive.wireformat.WireFormatProvider
-import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.decode
-import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.defaultWireFormatProvider
-import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.encode
 import hu.simplexion.adaptive.wireformat.WireFormatRegistry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -35,9 +33,9 @@ abstract class ServiceCallTransport(
 
     val accessLog = getLogger("hu.simplexion.adaptive.service.Access")
 
-    val trace: Boolean = false
+    var trace: Boolean = false
 
-    val responseTimeout = 20.seconds.inWholeMicroseconds
+    val responseTimeout = 20.seconds
 
     val responseChannelLock = getLock()
 
@@ -59,11 +57,11 @@ abstract class ServiceCallTransport(
      */
     fun receive(payload: ByteArray) {
 
-        val envelope = decode(payload, TransportEnvelope)
+        val envelope = wireFormatProvider.decode(payload, TransportEnvelope)
 
         if (trace) {
             transportLog.fine("receive $envelope")
-            transportLog.fine("receive data:\n${defaultWireFormatProvider.dump(envelope.payload)}")
+            transportLog.fine("receive data:\n${wireFormatProvider.dump(envelope.payload)}")
         }
 
         val callId = envelope.callId
@@ -117,19 +115,21 @@ abstract class ServiceCallTransport(
 
         accessLog.info("$request ${context.sessionOrNull?.principalOrNull}")
 
-        send(response)
-
-        if (context.disconnect) {
-            disconnect()
-            context.cleanup()
+        try {
+            send(response)
+        } finally {
+            if (context.disconnect) {
+                disconnect()
+                context.cleanup()
+            }
         }
     }
 
     fun Exception.toEnvelope(callId: UUID<TransportEnvelope>): TransportEnvelope {
-        val innerPayload = if (this is AdatClass<*>) this.encode() else byteArrayOf()
+        val innerPayload = if (this is AdatClass<*>) this.encode(wireFormatProvider) else byteArrayOf()
         val exceptionData = ServiceExceptionData(this::class.qualifiedName ?: this::class.simpleName ?: "<unknown>", this.message, innerPayload)
 
-        return TransportEnvelope(callId, null, null, false, encode(exceptionData, ServiceExceptionData))
+        return TransportEnvelope(callId, null, null, false, wireFormatProvider.encode(exceptionData, ServiceExceptionData))
     }
 
     /**
@@ -173,14 +173,33 @@ abstract class ServiceCallTransport(
      * service call would be hanging forever.
      */
     open fun responseError(serviceName: String, funName: String, envelope: TransportEnvelope): Nothing {
-        val serviceExceptionData = decode(envelope.payload, ServiceExceptionData)
+        val serviceExceptionData = wireFormatProvider.decode(envelope.payload, ServiceExceptionData)
 
         val wireFormat = WireFormatRegistry[serviceExceptionData.className] // FIXME do we want className or wireFormatName here?
 
         if (wireFormat != null) {
-            throw decode(serviceExceptionData.payload, wireFormat) as Exception
+            throw wireFormatProvider.decode(serviceExceptionData.payload, wireFormat) as Exception
         } else {
             throw ServiceCallException(serviceName, funName, envelope, serviceExceptionData)
+        }
+    }
+
+    open fun disconnectPending() {
+        responseChannelLock.use {
+
+            val data = ServiceExceptionData(
+                "hu.simplexion.adaptive.service.model.DisconnectException",
+                null,
+                wireFormatProvider.encode(DisconnectException(), DisconnectException)
+            )
+
+            val payload = wireFormatProvider.encode(data, ServiceExceptionData)
+
+            responseChannels.forEach { (callId, channel) ->
+                channel.trySend(
+                    TransportEnvelope(callId, null, null, false, payload)
+                )
+            }
         }
     }
 

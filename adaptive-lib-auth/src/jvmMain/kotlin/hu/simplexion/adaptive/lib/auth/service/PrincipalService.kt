@@ -4,7 +4,7 @@ import hu.simplexion.adaptive.adat.ensureValid
 import hu.simplexion.adaptive.auth.api.PrincipalApi
 import hu.simplexion.adaptive.auth.context.ensureOneOf
 import hu.simplexion.adaptive.auth.context.ensurePrincipalOrOneOf
-import hu.simplexion.adaptive.auth.context.isPrincipal
+import hu.simplexion.adaptive.auth.context.ofPrincipal
 import hu.simplexion.adaptive.auth.context.publicAccess
 import hu.simplexion.adaptive.auth.model.Credential
 import hu.simplexion.adaptive.auth.model.CredentialType.ACTIVATION_KEY
@@ -71,7 +71,7 @@ class PrincipalService : PrincipalApi, ServiceImpl<PrincipalService> {
 
         history(credential.principal)
 
-        if (serviceContext.isPrincipal(credential.principal)) {
+        if (serviceContext.ofPrincipal(credential.principal)) {
             requireNotNull(currentCredential)
             sessionService.authenticate(credential.principal, currentCredential.value, true, currentCredential.type, policy)
         }

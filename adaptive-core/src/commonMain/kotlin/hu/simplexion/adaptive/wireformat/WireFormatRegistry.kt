@@ -5,6 +5,7 @@
 package hu.simplexion.adaptive.wireformat
 
 import hu.simplexion.adaptive.registry.Registry
+import hu.simplexion.adaptive.service.model.DisconnectException
 import hu.simplexion.adaptive.wireformat.builtin.*
 import hu.simplexion.adaptive.wireformat.signature.WireFormatTypeArgument
 
@@ -22,6 +23,8 @@ object WireFormatRegistry : Registry<WireFormat<*>>() {
         set("kotlinx.datetime.LocalDate", LocalDateWireFormat)
         set("kotlinx.datetime.LocalDateTime", LocalDateTimeWireFormat)
         set("kotlinx.datetime.LocalTime", LocalTimeWireFormat)
+
+        this += DisconnectException
     }
 
     operator fun plusAssign(wireFormat: WireFormat<*>) {

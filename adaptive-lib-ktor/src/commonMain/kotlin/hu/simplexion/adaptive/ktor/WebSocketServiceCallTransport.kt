@@ -2,31 +2,36 @@ package hu.simplexion.adaptive.ktor
 
 import hu.simplexion.adaptive.service.model.TransportEnvelope
 import hu.simplexion.adaptive.service.transport.ServiceCallTransport
+import hu.simplexion.adaptive.utility.getLock
+import hu.simplexion.adaptive.utility.use
+import hu.simplexion.adaptive.utility.waitFor
 import hu.simplexion.adaptive.wireformat.WireFormatProvider
-import hu.simplexion.adaptive.wireformat.WireFormatProvider.Companion.encode
 import io.ktor.websocket.*
 import kotlinx.coroutines.CoroutineScope
 
 abstract class WebSocketServiceCallTransport(
     scope: CoroutineScope,
-    val useTextFrame: Boolean,
     override val wireFormatProvider: WireFormatProvider
 ) : ServiceCallTransport(scope) {
+
+    var counter = 0
+
+    val socketLock = getLock()
 
     open var socket: WebSocketSession? = null
 
     override suspend fun send(envelope: TransportEnvelope) {
-        val safeSocket = socket ?: throw RuntimeException("service transport is not connected")
+        val safeSocket = waitFor(responseTimeout) { socketLock.use { socket } }
 
-        if (useTextFrame) {
-            safeSocket.send(Frame.Text(true, encode(envelope, TransportEnvelope)))
+        if (wireFormatProvider.useTextFrame) {
+            safeSocket.send(Frame.Text(true, wireFormatProvider.encode(envelope, TransportEnvelope)))
         } else {
-            safeSocket.send(Frame.Binary(true, encode(envelope, TransportEnvelope)))
+            safeSocket.send(Frame.Binary(true, wireFormatProvider.encode(envelope, TransportEnvelope)))
         }
     }
 
     suspend fun incoming() {
-        val safeSocket = socket ?: throw RuntimeException("service transport is not connected")
+        val safeSocket = waitFor(responseTimeout) { socketLock.use { socket } }
 
         for (frame in safeSocket.incoming) {
 
@@ -34,6 +39,10 @@ abstract class WebSocketServiceCallTransport(
                 when (frame) {
                     is Frame.Binary -> frame.data
                     is Frame.Text -> frame.data
+                    is Frame.Close -> {
+                        transportLog.info("close frame: $frame")
+                        break
+                    }
                     else -> {
                         transportLog.info("unhandled frame: $frame")
                         continue
@@ -45,6 +54,14 @@ abstract class WebSocketServiceCallTransport(
     }
 
     override suspend fun disconnect() {
-        socket?.close(CloseReason(CloseReason.Codes.GOING_AWAY, ""))
+        if (trace) transportLog.fine("disconnecting (counter: $counter)")
+
+        disconnectPending()
+        socketLock.use {
+            socket?.incoming?.cancel()
+            socket?.close(CloseReason(CloseReason.Codes.GOING_AWAY, ""))
+            socket = null
+        }
     }
+
 }

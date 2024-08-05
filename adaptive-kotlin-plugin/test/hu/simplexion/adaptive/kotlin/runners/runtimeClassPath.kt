@@ -26,6 +26,8 @@ fun runtimeClassPath() : List<File> {
     result += File(System.getProperty("adaptive.kotlin.test.kotlinx-coroutines-core"))
     result += File(System.getProperty("adaptive.kotlin.test.kotlinx-datetime"))
     result += File(System.getProperty("adaptive.org.jetbrains.exposed-core"))
+    result += File(System.getProperty("adaptive.org.slf4j:slf4j-api"))
+    result += File(System.getProperty("adaptive.org.slf4j:slf4j-nop"))
 
     return result
 }

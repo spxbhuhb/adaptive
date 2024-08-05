@@ -1,14 +1,9 @@
 package hu.simplexion.adaptive.lib.auth.service
 
 import hu.simplexion.adaptive.auth.api.SessionApi
-import hu.simplexion.adaptive.auth.context.ensuredByLogic
-import hu.simplexion.adaptive.auth.context.getPrincipal
-import hu.simplexion.adaptive.auth.context.getSessionOrNull
-import hu.simplexion.adaptive.auth.context.publicAccess
+import hu.simplexion.adaptive.auth.context.*
 import hu.simplexion.adaptive.auth.model.*
 import hu.simplexion.adaptive.auth.model.CredentialType.ACTIVATION_KEY
-import hu.simplexion.adaptive.auth.model.Session.Companion.LOGOUT_TOKEN
-import hu.simplexion.adaptive.auth.model.Session.Companion.SESSION_TOKEN
 import hu.simplexion.adaptive.lib.auth.crypto.BCrypt
 import hu.simplexion.adaptive.lib.auth.store.credentials
 import hu.simplexion.adaptive.lib.auth.store.history
@@ -36,7 +31,7 @@ class SessionService : SessionApi, ServiceImpl<SessionService> {
 
     override suspend fun owner(): UUID<Principal>? {
         ensuredByLogic("Session owner gets own principal.")
-        return serviceContext.getSessionOrNull()?.principal
+        return serviceContext.getPrincipalIdOrNull()
     }
 
     override suspend fun roles(): List<UUID<Role>> {
@@ -58,8 +53,8 @@ class SessionService : SessionApi, ServiceImpl<SessionService> {
 
         val session = Session(
             id = serviceContext.uuid.cast(),
+            principalOrNull = principal.id,
             securityCode = abs(fourRandomInt()[0]).toString().padStart(6, '0').substring(0, 6),
-            principal = principal.id,
             createdAt = now(),
             vmCreatedAt = vmNow,
             lastActivity = vmNow,
@@ -71,7 +66,7 @@ class SessionService : SessionApi, ServiceImpl<SessionService> {
             worker.sendSecurityCode(session)
         } else {
             worker.activeSessions[serviceContext.uuid] = session
-            serviceContext.data[SESSION_TOKEN] = session
+            serviceContext.disconnect = true
         }
 
         return session
@@ -87,7 +82,7 @@ class SessionService : SessionApi, ServiceImpl<SessionService> {
             // maybe the user opened way too many windows
             if (
                 worker.preparedSessions.values.none {
-                    it.principal == session.principal && it.securityCode == securityCode
+                    it.principalOrNull == session.principalOrNull && it.securityCode == securityCode
                 }
             ) {
                 // FIXME do we want security code brute force detection?
@@ -95,11 +90,11 @@ class SessionService : SessionApi, ServiceImpl<SessionService> {
             }
         }
 
-        history(serviceContext.getPrincipal(), AuthenticationResult.Success)
+        history(serviceContext.getPrincipalId(), AuthenticationResult.Success)
 
         worker.preparedSessions.remove(serviceContext.uuid)
         worker.activeSessions[serviceContext.uuid] = session
-        serviceContext.data[SESSION_TOKEN] = session
+        serviceContext.disconnect = true
 
         return session
     }
@@ -113,14 +108,13 @@ class SessionService : SessionApi, ServiceImpl<SessionService> {
     override suspend fun logout() {
         publicAccess()
 
-        serviceContext.data[LOGOUT_TOKEN] = true
+        serviceContext.disconnect = true
 
         if (serviceContext.getSessionOrNull() == null) return
 
-        history(serviceContext.getPrincipal())
+        history(serviceContext.getPrincipalId())
 
         worker.activeSessions.remove(serviceContext.uuid)
-        serviceContext.data.remove(SESSION_TOKEN)
 
         TransactionManager.current().commit()
 

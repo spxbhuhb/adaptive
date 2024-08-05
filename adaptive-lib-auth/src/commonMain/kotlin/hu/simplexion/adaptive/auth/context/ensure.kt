@@ -108,7 +108,7 @@ fun ensuredBy(block: () -> Boolean) {
  * Ensure that the service context runs in the name of the principal specified.
  */
 fun ServiceImpl<*>.ensurePrincipal(principal: UUID<Principal>) {
-    ensurePrincipal(serviceContext.isPrincipal(principal))
+    ensurePrincipal(serviceContext.ofPrincipal(principal))
 }
 
 /**
@@ -116,7 +116,7 @@ fun ServiceImpl<*>.ensurePrincipal(principal: UUID<Principal>) {
  * it has **AT LEASE ONE** of the specified roles.
  */
 fun ServiceImpl<*>.ensurePrincipalOrOneOf(principal: UUID<Principal>, roles: Array<UUID<Role>>) {
-    if (serviceContext.isPrincipal(principal)) return
+    if (serviceContext.ofPrincipal(principal)) return
     ensureOneOf(*roles)
 }
 

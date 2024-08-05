@@ -1,0 +1,78 @@
+@startuml
+!pragma teoz true
+
+box Service Consumer
+participant "API function" as c.function
+endbox
+
+box Consumer Transport
+participant "call" as ct.call
+participant "send" as ct.send
+participant "receive" as ct.receive
+endbox
+
+box Provider Transport
+participant "receive" as pt.receive
+participant "send" as pt.send
+participant "serve" as pt.serve
+participant "dispatch" as pt.dispatch
+endbox
+
+box Service Provider
+participant "dispatch" as p.dispatch
+participant "implementation" as p.function
+endbox
+
+c.function -> ct.call
+activate c.function
+activate ct.call
+
+ct.call -> ct.send
+activate ct.send
+
+ct.send --> pt.receive : wire transfer
+activate pt.receive
+
+ct.send -> ct.call
+deactivate ct.send
+activate ct.call #yellow
+
+pt.receive --> pt.serve : launch
+activate pt.serve
+deactivate pt.receive
+
+pt.serve -> pt.dispatch
+activate pt.dispatch
+
+pt.dispatch -> p.dispatch
+activate p.dispatch
+
+p.dispatch -> p.function
+activate p.function
+
+p.function -> p.dispatch
+deactivate p.function
+
+p.dispatch -> pt.dispatch
+deactivate p.dispatch
+
+pt.dispatch -> pt.serve
+deactivate pt.dispatch
+activate pt.send
+
+pt.serve -> pt.send
+deactivate pt.serve
+
+pt.send --> ct.receive : wire transfer
+activate ct.receive
+deactivate pt.send
+
+ct.receive --> ct.call : channel.send
+deactivate ct.call #yellow
+deactivate ct.receive
+
+ct.call --> c.function
+deactivate ct.call
+deactivate c.function
+
+@enduml

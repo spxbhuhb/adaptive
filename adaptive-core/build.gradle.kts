@@ -69,7 +69,6 @@ kotlin {
 
         sourceSets["jvmMain"].dependencies {
             api(libs.logback)
-            api(libs.log4j.core) // FFS
         }
 
         sourceSets["jvmTest"].dependencies {
