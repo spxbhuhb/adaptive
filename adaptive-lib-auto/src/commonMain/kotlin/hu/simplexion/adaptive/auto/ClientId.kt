@@ -1,3 +1,3 @@
 package hu.simplexion.adaptive.auto
 
-typealias BackendId = Int
+typealias ClientId = Int

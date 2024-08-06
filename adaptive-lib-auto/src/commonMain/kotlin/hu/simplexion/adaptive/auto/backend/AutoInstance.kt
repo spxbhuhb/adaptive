@@ -24,7 +24,7 @@ class AutoInstance<A : AdatClass<A>>(
     val onChange: ((newValue: A) -> Unit)? = null
 ) : AutoBackend(time) {
 
-    override val handle = AutoHandle(globalId, time.backendId)
+    override val handle = AutoHandle(globalId, time.clientId)
 
     var value: A? = initialValue
 

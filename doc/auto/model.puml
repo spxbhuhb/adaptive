@@ -1,0 +1,63 @@
+@startuml
+
+class AutoContext {
+    handle : AutoHandle
+    scope : CoroutineScope
+    time : LamportTimestamp
+    wireFormatProvider : WireFormatProvider
+}
+
+class AutoHandle <<Adat>> {
+    globalId : UUID
+    clientId : Int
+}
+
+abstract AutoBackend {
+    context : AutoContext
+    operations : MutableList<AutoOperation>
+    modify(itemId : ItemId, propertyName : String, propertyValue : Any?)
+}
+AutoBackend o-- AutoContext
+
+abstract AutoCollection<A> {
+    instances : Map<ItemId, AutoInstance>
+    add(itemId : ItemId, instance : AutoInstance)
+    remove(itemId : ItemId)
+}
+AutoCollection <|-- AutoBackend
+
+class AutoInstance<A> {
+    itemId : ItemId
+    wireFormat : AdatClassWireFormat
+}
+AutoInstance <|-- AutoBackend
+
+class AutoCollectionItem {
+    itemId : ItemId
+    deleted : Boolean
+    instance : AutoInstance
+}
+AutoCollectionItem *-- AutoInstance
+
+class AutoList<A> {
+    items : MutableList<AutoCollectionItem>
+}
+
+AutoList <|-- AutoCollection
+AutoList *-- AutoCollectionItem
+class AutoTree<A> {
+    activeRoot : AutoNode
+    deletedRoot : AutoNode
+    nodes : MutableMap<ItemId,AutoNode>
+    move(itemId : ItemId, newParent : ItemId)
+}
+AutoTree <|-- AutoCollection
+AutoTree *-- AutoNode
+
+class AutoNode {
+    id : ItemId
+    parent: AutoNode?
+    children: MutableList<AutoNode>
+    edges : MutableMapOf<ItemId, LamportTimestamp>
+}
+@enduml
