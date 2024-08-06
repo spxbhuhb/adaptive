@@ -1,5 +1,6 @@
 package hu.simplexion.adaptive.ktor
 
+import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.service.ServiceContext
 import hu.simplexion.adaptive.service.defaultServiceImplFactory
 import hu.simplexion.adaptive.utility.UUID
@@ -15,7 +16,8 @@ import kotlinx.coroutines.*
 open class ClientWebSocketServiceCallTransport(
     val servicePath: String,
     val clientIdPath: String,
-    wireFormatProvider: WireFormatProvider
+    wireFormatProvider: WireFormatProvider,
+    val adapter: AdaptiveServerAdapter?
 ) : WebSocketServiceCallTransport(
     CoroutineScope(Dispatchers.Default),
     wireFormatProvider
@@ -73,7 +75,11 @@ open class ClientWebSocketServiceCallTransport(
     }
 
     override suspend fun dispatch(context: ServiceContext, serviceName: String, funName: String, decoder: WireFormatDecoder<*>): ByteArray {
-        val serviceImpl = defaultServiceImplFactory[serviceName, context]
+        val serviceImpl = if (adapter == null) {
+            defaultServiceImplFactory[serviceName, context]
+        } else {
+            adapter.serviceCache[serviceName]?.newInstance(context)
+        }
 
         requireNotNull(serviceImpl) { "cannot find service $serviceName" }
 

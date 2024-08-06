@@ -86,7 +86,7 @@ fun autoTest(
     }
 
     runBlocking {
-        val transport = withProtoWebSocketTransport("ws://localhost:8080/adaptive/service-ws", "http://localhost:8080/adaptive/client-id", true)
+        val transport = withProtoWebSocketTransport("ws://localhost:8080/adaptive/service-ws", "http://localhost:8080/adaptive/client-id", false, connectingAdapter)
 
         defaultServiceImplFactory += connectingAdapter.singleImpl<AutoService>()
 
@@ -102,7 +102,7 @@ fun autoTest(
 
 suspend fun waitForSync(w1: AutoWorker, h1: AutoHandle, w2: AutoWorker, h2: AutoHandle) {
     withTimeout(1000) {
-        while (w1.peerTime(h1) != w2.peerTime(h2)) {
+        while (w1.peerTime(h1).timestamp != w2.peerTime(h2).timestamp) {
             delay(10)
         }
     }

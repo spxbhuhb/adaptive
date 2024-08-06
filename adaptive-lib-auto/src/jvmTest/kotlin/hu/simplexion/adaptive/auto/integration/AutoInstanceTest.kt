@@ -15,6 +15,7 @@ import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.junit.Test
+import kotlin.test.assertEquals
 
 /**
  * These tests **SHOULD NOT** run parallel, check `junit-platform.properties`.
@@ -37,7 +38,7 @@ class AutoInstanceTest {
             val originHandle = connectInfo.originHandle
             val connectingHandle = connectInfo.connectingHandle
 
-            val instance = AutoInstance(
+            val connectingInstance = AutoInstance(
                 connectingHandle.globalId,
                 scope,
                 LamportTimestamp(connectingHandle.clientId, 0),
@@ -46,28 +47,27 @@ class AutoInstanceTest {
                 ProtoWireFormatProvider()
             )
 
-            connectingWorker.register(instance)
+            connectingWorker.register(connectingInstance)
 
-            instance.addPeer(
+            connectingInstance.addPeer(
                 ServiceConnector(originHandle, autoService, scope, 1000),
                 connectInfo.originTime
             )
 
-            autoService.addPeer(originHandle, connectingHandle, instance.time)
+            autoService.addPeer(originHandle, connectingHandle, connectingInstance.time)
 
             waitForSync(originWorker, originHandle, connectingWorker, connectingHandle)
 
-//            instance.modify(itemId, "i", 23)
-//            assertEquals(23, i2.value !!.i)
-//
-//            i2.modify(itemId, "i", 34)
-//            assertEquals(34, i1.value !!.i)
-//
-//            i1.modify(itemId, "s", "cd")
-//            assertEquals("cd", i2.value !!.s)
-//
-//            i2.modify(itemId, "s", "ef")
-//            assertEquals("ef", i1.value !!.s)
+            @Suppress("UNCHECKED_CAST")
+            val originInstance = originWorker[originHandle] as AutoInstance<TestData>
+
+            connectingInstance.modify(itemId, "i", 23)
+            waitForSync(originWorker, originHandle, connectingWorker, connectingHandle)
+            assertEquals(23, originInstance.value !!.i)
+
+            originInstance.modify(itemId, "i", 34)
+            waitForSync(originWorker, originHandle, connectingWorker, connectingHandle)
+            assertEquals(34, connectingInstance.value !!.i)
         }
     }
 
