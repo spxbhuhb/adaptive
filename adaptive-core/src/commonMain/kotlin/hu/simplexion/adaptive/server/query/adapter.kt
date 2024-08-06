@@ -54,4 +54,6 @@ inline fun <reified T : ServerFragmentImpl> AdaptiveServerAdapter.singleImpl(
     deep: Boolean = true,
     horizontal: Boolean = true
 ): T =
-    rootFragment.single(deep, horizontal) { it is AdaptiveServerFragment && it.impl is T } as T
+    rootFragment.single(deep, horizontal) { it is AdaptiveServerFragment && it.impl is T }
+        .let { it as AdaptiveServerFragment }
+        .impl as T

@@ -13,7 +13,10 @@ interface WorkerImpl<T : WorkerImpl<T>> : ServerFragmentImpl {
 
     // FIXME scope change in adaptive worker (this does not respect the change)
     val isActive: Boolean
-        get() = (fragment as ServerWorker).scope.isActive
+        get() = scope.isActive
+
+    val scope: CoroutineScope
+        get() = (fragment as ServerWorker).scope
 
     suspend fun run()
 
@@ -23,14 +26,13 @@ interface WorkerImpl<T : WorkerImpl<T>> : ServerFragmentImpl {
  * Launches a function in the scope of this worker.
  */
 fun WorkerImpl<*>.launch(function: suspend CoroutineScope.() -> Unit) {
-    (fragment as ServerWorker)
-        .scope.launch {
-            try {
-                function(this)
-            } catch (ex : CancellationException) {
-                logger.fine(ex)
-            } catch (ex: Exception) {
-                logger.error(ex)
-            }
+    scope.launch {
+        try {
+            function(this)
+        } catch (ex: CancellationException) {
+            logger.fine(ex)
+        } catch (ex: Exception) {
+            logger.error(ex)
         }
+    }
 }

@@ -6,6 +6,7 @@ import hu.simplexion.adaptive.adat.AdatCompanion
 import hu.simplexion.adaptive.auto.LamportTimestamp
 import hu.simplexion.adaptive.auto.connector.DirectConnector
 import hu.simplexion.adaptive.utility.UUID
+import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -29,8 +30,8 @@ class AutoInstanceTest {
 
         runTest {
 
-            val i1 = AutoInstance(gid, this, itemId, TestData, testData)
-            val i2 = AutoInstance(gid, this, LamportTimestamp(2, 0), TestData)
+            val i1 = AutoInstance(gid, this, itemId, TestData, testData, ProtoWireFormatProvider())
+            val i2 = AutoInstance(gid, this, LamportTimestamp(2, 0), TestData, null, ProtoWireFormatProvider())
 
             i1.addPeer(DirectConnector(i2), i2.time)
             i2.addPeer(DirectConnector(i1), i1.time)

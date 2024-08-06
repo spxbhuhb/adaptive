@@ -5,6 +5,7 @@ import hu.simplexion.adaptive.adat.AdatCompanion
 import hu.simplexion.adaptive.auto.ItemId
 import hu.simplexion.adaptive.auto.LamportTimestamp
 import hu.simplexion.adaptive.auto.connector.AutoConnector
+import hu.simplexion.adaptive.auto.model.AutoHandle
 import hu.simplexion.adaptive.auto.model.operation.AutoModify
 import hu.simplexion.adaptive.auto.model.operation.AutoOperation
 import hu.simplexion.adaptive.auto.model.operation.AutoTransaction
@@ -23,9 +24,12 @@ class AutoInstance<A : AdatClass<A>>(
     val onChange: ((newValue: A) -> Unit)? = null
 ) : AutoBackend(time) {
 
+    override val handle = AutoHandle(globalId, time.backendId)
+
     var value: A? = initialValue
 
     val metadata = companion.adatMetadata
+
     val propertyWireFormats = companion.adatWireFormat.propertyWireFormats
 
     class OperationAndValue(
@@ -43,6 +47,14 @@ class AutoInstance<A : AdatClass<A>>(
     // --------------------------------------------------------------------------------
     // Incoming from other backends
     // --------------------------------------------------------------------------------
+
+    override fun send(operation: AutoOperation) {
+        receive(operation, false)
+    }
+
+    override fun syncEnd(peerTime: LamportTimestamp) {
+        time = time.receive(peerTime)
+    }
 
     override fun receive(operation: AutoOperation, distribute: Boolean) {
         if (trace) trace("distribute=$distribute op=$operation")
@@ -118,7 +130,7 @@ class AutoInstance<A : AdatClass<A>>(
 
         if (trace) trace("peerTime=$peerTime op=$transaction")
 
-        connector.transaction(globalId, transaction)
+        connector.send(transaction)
     }
 
     fun close(operation: AutoOperation, commit: Boolean, distribute: Boolean) {
@@ -133,7 +145,7 @@ class AutoInstance<A : AdatClass<A>>(
 
         if (distribute) {
             for (connector in connectors) {
-                connector.modify(globalId, operation)
+                connector.send(operation)
             }
         }
 

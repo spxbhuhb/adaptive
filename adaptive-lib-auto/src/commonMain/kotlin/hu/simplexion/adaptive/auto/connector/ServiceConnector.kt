@@ -1,36 +1,44 @@
 package hu.simplexion.adaptive.auto.connector
 
 import hu.simplexion.adaptive.auto.api.AutoApi
-import hu.simplexion.adaptive.auto.backend.AutoBackend
+import hu.simplexion.adaptive.auto.model.AutoHandle
 import hu.simplexion.adaptive.auto.model.operation.*
-import hu.simplexion.adaptive.service.ServiceContext
-import hu.simplexion.adaptive.service.getService
-import hu.simplexion.adaptive.utility.UUID
+import hu.simplexion.adaptive.service.model.DisconnectException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 
 class ServiceConnector(
-    context: ServiceContext
+    val peerHandle: AutoHandle,
+    val service: AutoApi,
+    scope: CoroutineScope,
+    pendingLimit: Int
 ) : AutoConnector() {
 
-    val service = getService<AutoApi>(context)
 
-    override suspend fun add(globalId: UUID<AutoBackend>, operation: AutoAdd) {
-        service.add(globalId, operation)
+    val operations: Channel<AutoOperation> = Channel(pendingLimit)
+
+    init {
+        scope.launch { run() }
     }
 
-    override suspend fun modify(globalId: UUID<AutoBackend>, operation: AutoModify) {
-        service.modify(globalId, operation)
+    override fun send(operation: AutoOperation) {
+        val result = operations.trySend(operation)
+        if (! result.isSuccess) throw DisconnectException() // TODO proper disconnect/reconnect handling in ServiceConnector
     }
 
-    override suspend fun move(globalId: UUID<AutoBackend>, operation: AutoMove) {
-        service.move(globalId, operation)
-    }
-
-    override suspend fun remove(globalId: UUID<AutoBackend>, operation: AutoRemove) {
-        service.remove(globalId, operation)
-    }
-
-    override suspend fun transaction(globalId: UUID<AutoBackend>, operation: AutoTransaction) {
-        service.transaction(globalId, operation)
+    suspend fun run() {
+        for (operation in operations) {
+            // TODO proper disconnect/reconnect handling in ServiceConnector
+            when (operation) {
+                is AutoAdd -> service.add(peerHandle, operation)
+                is AutoModify -> service.modify(peerHandle, operation)
+                is AutoMove -> service.move(peerHandle, operation)
+                is AutoRemove -> service.remove(peerHandle, operation)
+                is AutoTransaction -> service.transaction(peerHandle, operation)
+                is AutoSyncEnd -> service.syncEnd(peerHandle, operation)
+            }
+        }
     }
 
 }

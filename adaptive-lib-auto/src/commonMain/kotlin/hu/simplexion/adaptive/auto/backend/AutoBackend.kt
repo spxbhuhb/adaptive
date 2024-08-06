@@ -3,6 +3,7 @@ package hu.simplexion.adaptive.auto.backend
 import hu.simplexion.adaptive.auto.ItemId
 import hu.simplexion.adaptive.auto.LamportTimestamp
 import hu.simplexion.adaptive.auto.connector.AutoConnector
+import hu.simplexion.adaptive.auto.model.AutoHandle
 import hu.simplexion.adaptive.auto.model.operation.AutoModify
 import hu.simplexion.adaptive.auto.model.operation.AutoOperation
 import hu.simplexion.adaptive.auto.model.operation.AutoTransaction
@@ -20,6 +21,8 @@ abstract class AutoBackend(
 
     abstract val globalId: UUID<AutoBackend>
 
+    abstract val handle: AutoHandle
+
     abstract val scope: CoroutineScope
 
     val connectorLock = getLock()
@@ -29,8 +32,13 @@ abstract class AutoBackend(
     val connectors
         get() = connectorLock.use { pConnectors }
 
+    val lock = getLock()
+
     var time = time
-        protected set
+        get() = lock.use { field }
+        protected set(value) {
+            lock.use { field = value }
+        }
 
     var trace: Boolean = true
 
@@ -50,6 +58,11 @@ abstract class AutoBackend(
     }
 
     abstract suspend fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp)
+
+    /**
+     * Called by the connector as the last operation of a peer synchronization.
+     */
+    abstract fun syncEnd(peerTime: LamportTimestamp)
 
     /**
      * Receive the operation from the peer. Intended to be implemented by

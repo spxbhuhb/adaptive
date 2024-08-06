@@ -28,7 +28,7 @@ o.app.service -> o.worker : register
 activate o.worker
 o.worker -> o.app.service
 deactivate o.worker
-o.app.service --> c.app : return with AutoHandle
+o.app.service --> c.app : return with AutoConnectInfo
 deactivate o.app.service
 
 c.app -> c.backend : create instance
@@ -41,11 +41,14 @@ activate c.worker
 c.worker -> c.app
 deactivate c.worker
 
-c.app -> c.backend : connect
+c.app -> c.backend : addPeer
 activate c.backend
-c.backend --> o.service : connect
+c.backend -> c.app
+deactivate c.backend
+
+c.app --> o.service : addPeer
 activate o.service
-o.service -> o.worker : connect
+o.service -> o.worker : addPeer
 activate o.worker
 o.worker -> o.backend : addPeer
 activate o.backend
@@ -54,13 +57,13 @@ o.backend -> o.worker
 deactivate o.backend
 o.worker -> o.service
 deactivate o.worker
-o.service --> c.backend : return
+o.service --> c.app : return
 deactivate o.service
 
 == syncPeer ==
 
 activate o.backend
-o.backend --> c.service : add/modify/move/remove
+o.backend --> c.service : add/modify/move/remove/transaction/syncEnd
 activate c.service
 
 c.service -> c.worker : receive
@@ -75,20 +78,7 @@ c.worker -> c.service
 deactivate c.worker
 c.service --> o.backend
 deactivate c.service
-
-o.backend --> c.service : initEnd
-activate c.service
-c.service -> c.worker : initEnd
-c.worker -> c.backend : addPeer
-activate c.backend #gold
-c.backend -> c.worker
-deactivate c.backend #gold
-c.worker -> c.service
-c.service --> o.backend
-deactivate c.service
 deactivate o.backend
-c.backend -> c.app
-deactivate c.backend
 
 == normal operation ==
 @enduml
