@@ -171,7 +171,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
             }
 
             Names.ADAT_WIREFORMAT -> {
-                val wireFormatClassId = hu.simplexion.adaptive.kotlin.wireformat.ClassIds.WIREFORMAT
+                val wireFormatClassId = ClassIds.ADAT_CLASS_WIREFORMAT
 
                 listOf(
                     createMemberProperty(

@@ -9,6 +9,7 @@ import hu.simplexion.adaptive.kotlin.common.propertyGetter
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
+import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.defaultType
@@ -18,15 +19,17 @@ fun AdatIrBuilder.adatWireFormat(
     companionClass: IrClass,
     wireFormatProperty: IrProperty
 ) {
+    val adatClassType = companionClass.parentAsClass.defaultType
+
     wireFormatProperty.backingField !!.initializer = irFactory.createExpressionBody(
         SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
         IrConstructorCallImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            wireFormatProperty.getter !!.returnType,
+            pluginContext.adatClassWireFormat.owner.typeWith(adatClassType),
             pluginContext.adatClassWireFormat.constructors.first(),
             1, 0, 2
         ).also {
-            it.putTypeArgument(0, companionClass.parentAsClass.defaultType)
+            it.putTypeArgument(0, adatClassType)
 
             it.putValueArgument(0, irGet(companionClass.thisReceiver !!))
             it.putValueArgument(
