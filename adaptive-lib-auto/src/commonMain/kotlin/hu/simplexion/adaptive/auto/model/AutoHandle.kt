@@ -1,7 +1,7 @@
 package hu.simplexion.adaptive.auto.model
 
 import hu.simplexion.adaptive.adat.Adat
-import hu.simplexion.adaptive.auto.backend.AutoBackend
+import hu.simplexion.adaptive.auto.backend.AbstractBackend
 import hu.simplexion.adaptive.utility.UUID
 
 /**
@@ -10,6 +10,6 @@ import hu.simplexion.adaptive.utility.UUID
  */
 @Adat
 class AutoHandle(
-    val globalId: UUID<AutoBackend>,
+    val globalId: UUID<AbstractBackend>,
     val clientId: Int
 )

@@ -40,7 +40,7 @@ class CopyStore<A : AdatClass<A>>(
     override val binding: AdaptiveStateVariableBinding<A>,
     initialValue: A,
     val onChange: ((newValue: A) -> Unit)?
-) : AdatStore(), AdaptiveProducer<A> {
+) : AdatStore, AdaptiveProducer<A> {
 
     override var latestValue: A? = makeCopy(initialValue, null)
 

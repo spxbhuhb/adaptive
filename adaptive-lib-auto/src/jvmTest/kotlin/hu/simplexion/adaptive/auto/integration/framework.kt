@@ -1,10 +1,11 @@
 package hu.simplexion.adaptive.auto.integration
 
-import hu.simplexion.adaptive.adat.Adat
-import hu.simplexion.adaptive.adat.AdatClass
-import hu.simplexion.adaptive.adat.AdatCompanion
+import hu.simplexion.adaptive.adat.toArray
 import hu.simplexion.adaptive.auto.LamportTimestamp
-import hu.simplexion.adaptive.auto.backend.AutoInstance
+import hu.simplexion.adaptive.auto.backend.BackendContext
+import hu.simplexion.adaptive.auto.backend.PropertyBackend
+import hu.simplexion.adaptive.auto.backend.TestData
+import hu.simplexion.adaptive.auto.frontend.AdatClassFrontend
 import hu.simplexion.adaptive.auto.model.AutoConnectInfo
 import hu.simplexion.adaptive.auto.model.AutoHandle
 import hu.simplexion.adaptive.auto.service.AutoService
@@ -28,13 +29,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 
-@Adat
-class TestData(
-    val i: Int,
-    val s: String
-) : AdatClass<TestData> {
-    companion object : AdatCompanion<TestData>
-}
 
 @ServiceApi
 interface AutoTestApi {
@@ -46,21 +40,35 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
     val worker by worker<AutoWorker>()
 
     override suspend fun testInstance(): AutoConnectInfo {
-        val instance = AutoInstance(
-            UUID(),
+        val context = BackendContext(
+            AutoHandle(UUID(), 1),
             worker.scope,
-            LamportTimestamp(1, 1),
-            TestData,
-            TestData(12, "a"),
-            ProtoWireFormatProvider()
+            ProtoWireFormatProvider(),
+            true,
+            LamportTimestamp(1, 1)
         )
 
-        worker.register(instance)
+        val originBackend = PropertyBackend(
+            context,
+            LamportTimestamp(1, 1),
+            TestData.adatWireFormat.propertyWireFormats,
+            TestData(12, "a").toArray()
+        )
+
+        val originFrontend = AdatClassFrontend(
+            originBackend,
+            TestData,
+            TestData(12, "a")
+        )
+
+        originBackend.frontEnd = originFrontend
+
+        worker.register(originBackend)
 
         return AutoConnectInfo(
-            instance.handle,
-            instance.time,
-            AutoHandle(instance.globalId, 2),
+            context.handle,
+            context.time,
+            AutoHandle(context.handle.globalId, 2),
         )
     }
 

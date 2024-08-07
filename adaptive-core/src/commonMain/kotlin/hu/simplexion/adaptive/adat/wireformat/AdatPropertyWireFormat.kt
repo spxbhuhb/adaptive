@@ -15,6 +15,12 @@ class AdatPropertyWireFormat<T>(
     val wireFormat : WireFormat<T>
 ) {
 
+    val index: Int
+        get() = property.index
+
+    val name: String
+        get() = property.name
+
     val nullable : Boolean = property.signature.endsWith("?")
 
     fun encode(encoder: WireFormatEncoder, instance: AdatClass<*>) {

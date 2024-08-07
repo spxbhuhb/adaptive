@@ -6,8 +6,11 @@ package hu.simplexion.adaptive.auto.integration
 
 import hu.simplexion.adaptive.auto.LamportTimestamp
 import hu.simplexion.adaptive.auto.api.AutoApi
-import hu.simplexion.adaptive.auto.backend.AutoInstance
+import hu.simplexion.adaptive.auto.backend.BackendContext
+import hu.simplexion.adaptive.auto.backend.PropertyBackend
+import hu.simplexion.adaptive.auto.backend.TestData
 import hu.simplexion.adaptive.auto.connector.ServiceConnector
+import hu.simplexion.adaptive.auto.frontend.AdatClassFrontend
 import hu.simplexion.adaptive.auto.worker.AutoWorker
 import hu.simplexion.adaptive.server.query.firstImpl
 import hu.simplexion.adaptive.service.getService
@@ -20,14 +23,14 @@ import kotlin.test.assertEquals
 /**
  * These tests **SHOULD NOT** run parallel, check `junit-platform.properties`.
  */
-class AutoInstanceTest {
+class PropertyBackendTest {
 
     @Test
     fun basic() {
         autoTest { originAdapter, connectingAdapter ->
 
             val scope = CoroutineScope(Dispatchers.Default)
-            val itemId = LamportTimestamp(0, 0) // does not matter for AutoInstance
+            val itemId = LamportTimestamp(0, 0) // does not matter for PropertyBackend
 
             val autoService = getService<AutoApi>() // service consumer from connecting to origin
 
@@ -38,36 +41,51 @@ class AutoInstanceTest {
             val originHandle = connectInfo.originHandle
             val connectingHandle = connectInfo.connectingHandle
 
-            val connectingInstance = AutoInstance(
-                connectingHandle.globalId,
+            val connectingContext = BackendContext(
+                connectingHandle,
                 scope,
+                ProtoWireFormatProvider(),
+                true,
                 LamportTimestamp(connectingHandle.clientId, 0),
-                TestData,
-                null,
-                ProtoWireFormatProvider()
             )
 
-            connectingWorker.register(connectingInstance)
+            val connectingBackend = PropertyBackend(
+                connectingContext,
+                itemId,
+                TestData.adatWireFormat.propertyWireFormats
+            )
 
-            connectingInstance.addPeer(
+            val connectingFrontend = AdatClassFrontend(
+                connectingBackend,
+                TestData,
+                null
+            )
+
+            connectingBackend.frontEnd = connectingFrontend
+
+            connectingWorker.register(connectingBackend)
+
+            connectingBackend.addPeer(
                 ServiceConnector(originHandle, autoService, scope, 1000),
                 connectInfo.originTime
             )
 
-            autoService.addPeer(originHandle, connectingHandle, connectingInstance.time)
+            autoService.addPeer(originHandle, connectingHandle, connectingBackend.context.time)
 
             waitForSync(originWorker, originHandle, connectingWorker, connectingHandle)
 
+            val originBackend = originWorker[originHandle] as PropertyBackend
             @Suppress("UNCHECKED_CAST")
-            val originInstance = originWorker[originHandle] as AutoInstance<TestData>
+            val originFrontend = (originBackend.frontEnd as AdatClassFrontend<TestData>)
 
-            connectingInstance.modify(itemId, "i", 23)
+            connectingFrontend.modify("i", 23)
             waitForSync(originWorker, originHandle, connectingWorker, connectingHandle)
-            assertEquals(23, originInstance.value !!.i)
 
-            originInstance.modify(itemId, "i", 34)
+            assertEquals(23, originFrontend.value !!.i)
+
+            originFrontend.modify("i", 34)
             waitForSync(originWorker, originHandle, connectingWorker, connectingHandle)
-            assertEquals(34, connectingInstance.value !!.i)
+            assertEquals(34, connectingFrontend.value !!.i)
         }
     }
 

@@ -1,7 +1,7 @@
 package hu.simplexion.adaptive.auto.worker
 
 import hu.simplexion.adaptive.auto.LamportTimestamp
-import hu.simplexion.adaptive.auto.backend.AutoBackend
+import hu.simplexion.adaptive.auto.backend.AbstractBackend
 import hu.simplexion.adaptive.auto.connector.AutoConnector
 import hu.simplexion.adaptive.auto.model.AutoHandle
 import hu.simplexion.adaptive.auto.model.operation.AutoOperation
@@ -13,26 +13,26 @@ class AutoWorker : WorkerImpl<AutoWorker> {
 
     val instanceLock = getLock()
 
-    val instances = mutableMapOf<AutoHandle, AutoBackend>()
+    val instances = mutableMapOf<AutoHandle, AbstractBackend>()
 
     override suspend fun run() {
         // worker is event-driven
     }
 
-    operator fun get(handle: AutoHandle): AutoBackend? =
+    operator fun get(handle: AutoHandle): AbstractBackend? =
         instanceLock.use {
             instances[handle]
         }
 
-    fun register(backend: AutoBackend) {
+    fun register(backend: AbstractBackend) {
         instanceLock.use {
-            instances[backend.handle] = backend
+            instances[backend.context.handle] = backend
         }
     }
 
-    fun unregister(backend: AutoBackend) {
+    fun unregister(backend: AbstractBackend) {
         instanceLock.use {
-            instances.remove(backend.handle)
+            instances.remove(backend.context.handle)
         }
     }
 
@@ -40,7 +40,7 @@ class AutoWorker : WorkerImpl<AutoWorker> {
         instanceLock.use {
             checkNotNull(instances[handle]) { "missing auto instance: $handle" }
         }
-            .time
+            .context.time
 
     fun addPeer(handle: AutoHandle, connector: AutoConnector, connectingPeerTime: LamportTimestamp): LamportTimestamp =
         instanceLock.use {

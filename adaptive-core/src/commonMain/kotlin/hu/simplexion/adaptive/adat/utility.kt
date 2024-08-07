@@ -147,3 +147,8 @@ fun <A : AdatClass<A>> AdatClass<*>.encode(wireFormatProvider: WireFormatProvide
 
 fun <A : AdatClass<A>> ByteArray.decode(wireFormatProvider: WireFormatProvider, companion: AdatCompanion<A>): A =
     wireFormatProvider.decode(this, companion.adatWireFormat)
+
+fun AdatClass<*>.toArray(): Array<Any?> {
+    val properties = getMetadata().properties
+    return Array(properties.size) { i -> getValue(i) }
+}

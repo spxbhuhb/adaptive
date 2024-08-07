@@ -7,11 +7,6 @@ class AutoContext {
     wireFormatProvider : WireFormatProvider
 }
 
-class AutoHandle <<Adat>> {
-    globalId : UUID
-    clientId : Int
-}
-
 abstract AutoBackend {
     context : AutoContext
     operations : MutableList<AutoOperation>
