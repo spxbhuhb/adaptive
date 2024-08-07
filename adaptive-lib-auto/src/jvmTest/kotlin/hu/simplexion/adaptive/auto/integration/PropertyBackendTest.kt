@@ -61,7 +61,7 @@ class PropertyBackendTest {
                 null
             )
 
-            connectingBackend.frontEnd = connectingFrontend
+            connectingBackend.context.frontEnd = connectingFrontend
 
             connectingWorker.register(connectingBackend)
 
@@ -76,7 +76,7 @@ class PropertyBackendTest {
 
             val originBackend = originWorker[originHandle] as PropertyBackend
             @Suppress("UNCHECKED_CAST")
-            val originFrontend = (originBackend.frontEnd as AdatClassFrontend<TestData>)
+            val originFrontend = (originBackend.context.frontEnd as AdatClassFrontend<TestData>)
 
             connectingFrontend.modify("i", 23)
             waitForSync(originWorker, originHandle, connectingWorker, connectingHandle)

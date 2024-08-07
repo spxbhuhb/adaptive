@@ -4,9 +4,7 @@ import hu.simplexion.adaptive.adat.wireformat.AdatPropertyWireFormat
 import hu.simplexion.adaptive.auto.ItemId
 import hu.simplexion.adaptive.auto.LamportTimestamp
 import hu.simplexion.adaptive.auto.connector.AutoConnector
-import hu.simplexion.adaptive.auto.frontend.AbstractFrontend
 import hu.simplexion.adaptive.auto.model.operation.AutoModify
-import hu.simplexion.adaptive.auto.model.operation.AutoOperation
 import hu.simplexion.adaptive.auto.model.operation.AutoTransaction
 import hu.simplexion.adaptive.wireformat.WireFormat
 
@@ -15,9 +13,7 @@ class PropertyBackend(
     val itemId: LamportTimestamp,
     val properties: List<AdatPropertyWireFormat<*>>,
     initialValues: Array<Any?>? = null
-) : AbstractBackend() {
-
-    var frontEnd: AbstractFrontend? = null
+) : BackendBase() {
 
     operator fun List<AdatPropertyWireFormat<*>>.get(name: String): AdatPropertyWireFormat<*> =
         first { it.property.name == name }
@@ -35,38 +31,30 @@ class PropertyBackend(
     val operations: Array<AutoModify?> = arrayOfNulls(properties.size)
 
     // --------------------------------------------------------------------------------
-    // Incoming from other backends
+    // Operations from the frontend
     // --------------------------------------------------------------------------------
 
-    override fun send(operation: AutoOperation) {
-        receive(operation, false)
+    override fun modify(itemId: ItemId, propertyName: String, propertyValue: Any?) {
+        val property = properties[propertyName]
+        val index = property.index
+
+        values[index] = propertyValue // must be BEFORE `encode`
+
+        val payload = encode(property)
+
+        val operation = AutoModify(context.nextTime(), itemId, propertyName, payload)
+        trace { "FE -> BE  $propertyName=$propertyValue .. commit true .. distribute true .. $operation" }
+
+        operations[index] = operation
+
+        close(operation, commit = true, distribute = true)
     }
 
-    override fun syncEnd(peerTime: LamportTimestamp) {
-        context.time = context.time.receive(peerTime)
-    }
-
-    override fun receive(operation: AutoOperation, distribute: Boolean) {
-        trace { "distribute=$distribute op=$operation" }
-
-        operation.apply(this, commit = true, distribute)
-
-        context.receive(operation.timestamp)
-    }
-
-    override fun transaction(transaction: AutoTransaction, commit: Boolean, distribute: Boolean) {
-        trace { "commit=$commit distribute=$distribute op=$transaction" }
-
-        for (operation in transaction.modify) {
-            operation.apply(this, commit = false, distribute = false)
-        }
-
-        close(transaction, commit, distribute)
-    }
+    // --------------------------------------------------------------------------------
+    // Operations from peers
+    // --------------------------------------------------------------------------------
 
     override fun modify(operation: AutoModify, commit: Boolean, distribute: Boolean) {
-        trace { "commit=$commit distribute=$distribute op=$operation" }
-
         context.wireFormatProvider.decoder(operation.propertyValue)
         val index = indexOf(operation.propertyName)
 
@@ -80,30 +68,25 @@ class PropertyBackend(
 
             values[index] = value
             operations[index] = operation
+            context.receive(operation.timestamp)
+
+            trace { "BE -> BE  ${operation.propertyName}=$value .. commit $commit .. distribute $distribute .. $operation" }
 
             close(operation, commit, distribute)
 
+        } else {
+            trace { "BE -> BE  SKIP  $operation" }
         }
     }
 
-    // --------------------------------------------------------------------------------
-    // Changes from the frontend
-    // --------------------------------------------------------------------------------
+    override fun transaction(transaction: AutoTransaction, commit: Boolean, distribute: Boolean) {
+        trace { "commit=$commit distribute=$distribute op=$transaction" }
 
-    fun modify(item: ItemId, propertyName: String, propertyValue: Any?) {
-        val property = properties[propertyName]
-        val index = property.index
+        for (operation in transaction.modifications ?: emptyList()) {
+            operation.apply(this, commit = false, distribute = false)
+        }
 
-        values[index] = propertyValue // must be BEFORE `encode`
-
-        val payload = encode(property)
-
-        val operation = AutoModify(context.nextTime(), item, propertyName, payload)
-        trace { "commit=true distribute=true op=$operation" }
-
-        operations[index] = operation
-
-        close(operation, commit = true, distribute = true)
+        close(transaction, commit, distribute)
     }
 
     // --------------------------------------------------------------------------------
@@ -112,7 +95,6 @@ class PropertyBackend(
 
     /**
      * Send any changes that happened after [peerTime] to the peer.
-     * TODO check if `peerTime.timestamp` is 0 and is  and if so, send the whole instance at once
      */
     override suspend fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp) {
         val time = context.time
@@ -121,40 +103,29 @@ class PropertyBackend(
             return
         }
 
-        val update = mutableListOf<AutoModify>()
+        val modifications = mutableListOf<AutoModify>()
 
         for (index in operations.indices) {
             val operation = operations[index]
             if (operation != null) {
-                update += operation
+                if (operation.timestamp <= peerTime) continue
+                modifications += operation
             } else {
                 val property = properties[index]
-                update += AutoModify(time, itemId, property.name, encode(property))
+                modifications += AutoModify(time, itemId, property.name, encode(property))
             }
-
         }
 
-        val transaction = AutoTransaction(time, update)
+        val transaction = AutoTransaction(time, modifications = modifications)
 
         trace { "peerTime=$peerTime op=$transaction" }
 
         connector.send(transaction)
     }
 
-    fun close(operation: AutoOperation, commit: Boolean, distribute: Boolean) {
-
-        if (commit) {
-            frontEnd?.commit()
-            trace { "==== commit ====\n" }
-        }
-
-        if (distribute) {
-            for (connector in connectors) {
-                connector.send(operation)
-            }
-        }
-
-    }
+    // --------------------------------------------------------------------------------
+    // Utility, common
+    // --------------------------------------------------------------------------------
 
     fun encode(property: AdatPropertyWireFormat<*>): ByteArray {
         val index = property.index

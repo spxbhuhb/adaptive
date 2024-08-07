@@ -61,7 +61,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
             TestData(12, "a")
         )
 
-        originBackend.frontEnd = originFrontend
+        originBackend.context.frontEnd = originFrontend
 
         worker.register(originBackend)
 

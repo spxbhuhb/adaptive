@@ -1,7 +1,7 @@
 package hu.simplexion.adaptive.auto.worker
 
 import hu.simplexion.adaptive.auto.LamportTimestamp
-import hu.simplexion.adaptive.auto.backend.AbstractBackend
+import hu.simplexion.adaptive.auto.backend.BackendBase
 import hu.simplexion.adaptive.auto.connector.AutoConnector
 import hu.simplexion.adaptive.auto.model.AutoHandle
 import hu.simplexion.adaptive.auto.model.operation.AutoOperation
@@ -13,24 +13,24 @@ class AutoWorker : WorkerImpl<AutoWorker> {
 
     val instanceLock = getLock()
 
-    val instances = mutableMapOf<AutoHandle, AbstractBackend>()
+    val instances = mutableMapOf<AutoHandle, BackendBase>()
 
     override suspend fun run() {
         // worker is event-driven
     }
 
-    operator fun get(handle: AutoHandle): AbstractBackend? =
+    operator fun get(handle: AutoHandle): BackendBase? =
         instanceLock.use {
             instances[handle]
         }
 
-    fun register(backend: AbstractBackend) {
+    fun register(backend: BackendBase) {
         instanceLock.use {
             instances[backend.context.handle] = backend
         }
     }
 
-    fun unregister(backend: AbstractBackend) {
+    fun unregister(backend: BackendBase) {
         instanceLock.use {
             instances.remove(backend.context.handle)
         }

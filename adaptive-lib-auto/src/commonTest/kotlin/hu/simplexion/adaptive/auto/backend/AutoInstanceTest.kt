@@ -29,7 +29,7 @@ class AutoInstanceTest {
 
     @Test
     fun basic() {
-        val gid = UUID<AbstractBackend>()
+        val gid = UUID<BackendBase>()
         val itemId = LamportTimestamp(1, 1)
         val testData = TestData(12, "ab")
 
@@ -39,12 +39,12 @@ class AutoInstanceTest {
             val c1 = BackendContext(AutoHandle(gid, 1), scope, ProtoWireFormatProvider(), true, LamportTimestamp(1, 1))
             val b1 = PropertyBackend(c1, itemId, TestData.adatWireFormat.propertyWireFormats, testData.toArray())
             val f1 = AdatClassFrontend(b1, TestData, testData)
-            b1.frontEnd = f1
+            b1.context.frontEnd = f1
 
             val c2 = BackendContext(AutoHandle(gid, 2), scope, ProtoWireFormatProvider(), true, LamportTimestamp(2, 0))
             val b2 = PropertyBackend(c2, itemId, TestData.adatWireFormat.propertyWireFormats, null)
             val f2 = AdatClassFrontend(b2, TestData, null)
-            b2.frontEnd = f2
+            b2.context.frontEnd = f2
 
             b1.addPeer(DirectConnector(b2), c2.time)
             b2.addPeer(DirectConnector(b1), c1.time)

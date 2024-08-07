@@ -1,58 +1,56 @@
 @startuml
 
-class AutoContext {
+class BackendContext {
     handle : AutoHandle
+    frontend : AbstractFrontend
     scope : CoroutineScope
     time : LamportTimestamp
+    connectors : List<AutoConnector>
     wireFormatProvider : WireFormatProvider
 }
 
-abstract AutoBackend {
-    context : AutoContext
-    operations : MutableList<AutoOperation>
-    modify(itemId : ItemId, propertyName : String, propertyValue : Any?)
+abstract BackendBase {
+    context : BackendContext
+    modify()
 }
-AutoBackend o-- AutoContext
+BackendBase o-- BackendContext
 
-abstract AutoCollection<A> {
-    instances : Map<ItemId, AutoInstance>
-    add(itemId : ItemId, instance : AutoInstance)
-    remove(itemId : ItemId)
-}
-AutoCollection <|-- AutoBackend
-
-class AutoInstance<A> {
+class PropertyBackend {
     itemId : ItemId
     wireFormat : AdatClassWireFormat
 }
-AutoInstance <|-- AutoBackend
+PropertyBackend <|-- BackendBase
 
-class AutoCollectionItem {
-    itemId : ItemId
-    deleted : Boolean
-    instance : AutoInstance
+abstract BackendCollection<A> {
+    items : Map<ItemId, PropertyBackend>
+    remove()
 }
-AutoCollectionItem *-- AutoInstance
+BackendCollection <|-- BackendBase
+BackendCollection *-- PropertyBackend
 
-class AutoList<A> {
-    items : MutableList<AutoCollectionItem>
+class ListBackend {
+    adds : MutableSet<ItemId>
+    removes : MutableSet<ItemId>
+    add()
 }
 
-AutoList <|-- AutoCollection
-AutoList *-- AutoCollectionItem
-class AutoTree<A> {
-    activeRoot : AutoNode
-    deletedRoot : AutoNode
-    nodes : MutableMap<ItemId,AutoNode>
-    move(itemId : ItemId, newParent : ItemId)
-}
-AutoTree <|-- AutoCollection
-AutoTree *-- AutoNode
+ListBackend <|-- BackendCollection
 
-class AutoNode {
+class TreeBackend {
+    activeRoot : TreeBackendNode
+    deletedRoot : TreeBackendNode
+    nodes : MutableMap<ItemId,TreeBackendNode>
+    add()
+    move()
+}
+TreeBackend <|-- BackendCollection
+TreeBackend *-- TreeBackendNode
+
+class TreeBackendNode {
     id : ItemId
-    parent: AutoNode?
-    children: MutableList<AutoNode>
+    parent: TreeBackendNode?
+    children: MutableList<TreeBackendNode>
     edges : MutableMapOf<ItemId, LamportTimestamp>
 }
+
 @enduml

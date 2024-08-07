@@ -1,10 +1,10 @@
 package hu.simplexion.adaptive.auto.connector
 
-import hu.simplexion.adaptive.auto.backend.AbstractBackend
+import hu.simplexion.adaptive.auto.backend.BackendBase
 import hu.simplexion.adaptive.auto.model.operation.AutoOperation
 
 class DirectConnector(
-    val peer: AbstractBackend
+    val peer: BackendBase
 ) : AutoConnector() {
 
     override fun send(operation: AutoOperation) {

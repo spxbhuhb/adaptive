@@ -1,6 +1,11 @@
 # Conflict-free Replicated Data Types
 
-The `adaptive-lib-crdt` module provides data types that are automatically synchronized between peers
+> [!CAUTION]
+>
+> This module is under active development, the information below is mostly obsoleted.
+>
+
+The `adaptive-lib-auto` module provides data types that are automatically synchronized between peers
 (server-client, client-client, internal):
 
 * `AutoData` - a single [Adat](../adat/readme.md) class
@@ -56,15 +61,25 @@ Auto implementations have a type-specific backend and a use-case specific fronte
 
 **backend**
 
-* specific to the type of the Auto class (`Auto`, `AutoList`, `AutoTree`)
+* `PropertyBackend`, `ListBackend`, `TreeBackend`
 * stores the CRTD data
-* is responsible for the replication
+* responsible for the replication
 * typically not used from application-level code
 
 **frontend**
 
 * specific to the use-case, examples:
-    * include the fragments of an `AutoTree` into the UI directly
-    * use the data in an `AutoList` to build a table
-    * store the content of an `AutoList` into SQL
-    * store the content of an `AutoTree` in files
+  * include the fragments of an `TreeBackend` into the UI directly
+  * use the data in an `ListBackend` to build a table
+  * store the content of an `ListBackend` into SQL
+  * store the content of an `TreeBackend` in files
+
+### ListBackend
+
+Stores additions and removals in `ListBackend.adds` and `ListBackend.removals` respectively.
+
+Both `adds` and `removals` store item ids, that is `clientId:timestamp` pairs.
+
+The resulting list is defined as `(adds - removals).sorted()`.
+
+This does not care about interweaving, but I think that it is irrelevant for general use cases.

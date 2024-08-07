@@ -36,7 +36,6 @@ class ServiceConnector(
                 is AutoMove -> service.move(peerHandle, operation)
                 is AutoRemove -> service.remove(peerHandle, operation)
                 is AutoTransaction -> service.transaction(peerHandle, operation)
-                is AutoSyncEnd -> service.syncEnd(peerHandle, operation)
             }
         }
     }

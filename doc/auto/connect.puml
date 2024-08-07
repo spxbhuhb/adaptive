@@ -63,7 +63,7 @@ deactivate o.service
 == syncPeer ==
 
 activate o.backend
-o.backend --> c.service : add/modify/move/remove/transaction/syncEnd
+o.backend --> c.service : add/modify/move/remove/transaction
 activate c.service
 
 c.service -> c.worker : receive
