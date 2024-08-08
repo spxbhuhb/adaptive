@@ -3,6 +3,7 @@ package hu.simplexion.adaptive.auto.backend
 import hu.simplexion.adaptive.auto.ItemId
 import hu.simplexion.adaptive.auto.LamportTimestamp
 import hu.simplexion.adaptive.auto.connector.AutoConnector
+import hu.simplexion.adaptive.auto.frontend.FrontendBase
 import hu.simplexion.adaptive.auto.model.operation.AutoModify
 import hu.simplexion.adaptive.auto.model.operation.AutoOperation
 import hu.simplexion.adaptive.reflect.CallSiteName
@@ -11,6 +12,8 @@ import kotlinx.coroutines.launch
 abstract class BackendBase : AutoConnector() {
 
     abstract val context: BackendContext
+
+    var frontEnd: FrontendBase? = null
 
     // --------------------------------------------------------------------------------
     // Operations from the frontend
@@ -60,7 +63,7 @@ abstract class BackendBase : AutoConnector() {
     fun close(operation: AutoOperation, commit: Boolean, distribute: Boolean) {
 
         if (commit) {
-            context.frontEnd?.commit()
+            frontEnd?.commit()
             trace { "==== commit ====\n" }
         }
 

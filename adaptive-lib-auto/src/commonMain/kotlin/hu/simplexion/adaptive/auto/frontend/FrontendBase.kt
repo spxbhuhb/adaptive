@@ -1,6 +1,6 @@
 package hu.simplexion.adaptive.auto.frontend
 
-abstract class AbstractFrontend {
+abstract class FrontendBase {
 
     abstract fun commit()
 

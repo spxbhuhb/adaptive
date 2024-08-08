@@ -70,14 +70,14 @@ class ListBackend(
 
         addItem(operation.itemId, operation.metadataId, context.wireFormatProvider.decode(operation.payload, context.defaultWireFormat))
 
-        closeListOp(operation, operation.itemId, commit, distribute)
+        closeListOp(operation, setOf(operation.itemId), commit, distribute)
     }
 
     override fun remove(operation: AutoRemove, commit: Boolean, distribute: Boolean) {
         trace { "commit=$commit distribute=$distribute op=$operation" }
 
         removals += operation.itemIds
-        // closeListOp(operation, operation.itemId, commit, distribute)
+        closeListOp(operation, operation.itemIds, commit, distribute)
     }
 
     override fun modify(operation: AutoModify, commit: Boolean, distribute: Boolean) {
@@ -85,32 +85,6 @@ class ListBackend(
         val item = items[operation.itemId] ?: return
         item.modify(operation, commit, distribute)
     }
-
-//    override fun transaction(transaction: AutoTransaction, commit: Boolean, distribute: Boolean) {
-//        trace { "commit=$commit distribute=$distribute op=$transaction" }
-//
-//        for (operation in transaction.modifications ?: emptyList()) {
-//            operation.apply(this, commit = false, distribute = false)
-//        }
-//
-//        val trnAdditions = transaction.additions
-//        if (trnAdditions != null) {
-//            additions += trnAdditions
-//            for ((itemId,metadataId) in trnAdditions) {
-//                addItem(itemId, metadataId)
-//            }
-//        }
-//
-//        val trnRemovals = transaction.removals
-//        if (trnRemovals != null) {
-//            removals += trnRemovals
-//            for (itemId in trnRemovals) {
-//                items -= itemId
-//            }
-//        }
-//
-//        close(transaction, commit, distribute)
-//    }
 
     // --------------------------------------------------------------------------------
     // Peer synchronization
@@ -133,15 +107,6 @@ class ListBackend(
             item.syncPeer(connector, peerTime)
         }
 
-        // Send the additions and removals. This will modify only
-        // the presence information of the items, not the items
-        // themselves.
-
-//        val transaction = AutoTransaction(time, additions, removals)
-//
-//        trace { "peerTime=$peerTime op=$transaction" }
-//
-//        connector.send(transaction)
     }
 
     // --------------------------------------------------------------------------------
@@ -149,10 +114,10 @@ class ListBackend(
     // --------------------------------------------------------------------------------
 
     @CallSiteName
-    fun closeListOp(operation: AutoOperation, itemId: ItemId, commit: Boolean, distribute: Boolean, callSiteName: String = "") {
+    fun closeListOp(operation: AutoOperation, itemIds: Set<ItemId>, commit: Boolean, distribute: Boolean, callSiteName: String = "") {
         if (context.time < operation.timestamp) {
             context.receive(operation.timestamp)
-            trace(callSiteName) { "BE -> BE  itemId=${itemId} .. commit $commit .. distribute $distribute .. $operation" }
+            trace(callSiteName) { "BE -> BE  itemIds=${itemIds} .. commit $commit .. distribute $distribute .. $operation" }
             close(operation, commit, distribute)
         } else {
             trace(callSiteName) { "BE -> BE  SKIP  $operation" }

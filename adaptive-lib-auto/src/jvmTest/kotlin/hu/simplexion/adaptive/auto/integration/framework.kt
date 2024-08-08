@@ -60,10 +60,11 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
         val originFrontend = AdatClassFrontend(
             originBackend,
             TestData,
-            TestData(12, "a")
+            TestData(12, "a"),
+            null
         )
 
-        originBackend.context.frontEnd = originFrontend
+        originBackend.frontEnd = originFrontend
 
         worker.register(originBackend)
 

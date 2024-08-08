@@ -7,7 +7,6 @@ import hu.simplexion.adaptive.auto.ItemId
 import hu.simplexion.adaptive.auto.LamportTimestamp
 import hu.simplexion.adaptive.auto.MetadataId
 import hu.simplexion.adaptive.auto.connector.AutoConnector
-import hu.simplexion.adaptive.auto.frontend.AbstractFrontend
 import hu.simplexion.adaptive.auto.model.AutoHandle
 import hu.simplexion.adaptive.utility.getLock
 import hu.simplexion.adaptive.utility.use
@@ -26,8 +25,6 @@ class BackendContext(
 ) {
 
     var time by Atomic(time)
-
-    var frontEnd: AbstractFrontend? = null
 
     val connectorLock = getLock()
 

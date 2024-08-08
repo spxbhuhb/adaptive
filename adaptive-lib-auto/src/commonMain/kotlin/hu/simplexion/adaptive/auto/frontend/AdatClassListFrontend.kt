@@ -5,23 +5,30 @@ import hu.simplexion.adaptive.adat.AdatCompanion
 import hu.simplexion.adaptive.adat.store.AdatStore
 import hu.simplexion.adaptive.auto.ItemId
 import hu.simplexion.adaptive.auto.backend.ListBackend
+import hu.simplexion.adaptive.auto.model.AutoItemInstance
 
+// TODO optimize AutoClassListFrontend.commit (or maybe ListBackend)
 class AdatClassListFrontend<A : AdatClass<A>>(
     val backend: ListBackend,
     val companion: AdatCompanion<A>
-) : AbstractFrontend(), AdatStore {
+) : CollectionFrontendBase(), AdatStore {
 
     var classFrontends = mutableMapOf<ItemId, AdatClassFrontend<A>>()
 
-    var values: List<Pair<ItemId, A>> = emptyList()
+    var values: List<AutoItemInstance<A>> = emptyList()
         private set
 
     override fun commit() {
-        // TODO optimize AutoClassListFrontend.commit (or maybe ListBackend)
         values =
             (backend.additions.map { it.first }.toSet() subtract backend.removals)
                 .sorted()
-                .map { it to getFrontend(it).value !! }
+                .map { AutoItemInstance(it, getFrontend(it).value !!) }
+    }
+
+    override fun commit(itemId: ItemId) {
+        val index = values.indexOfFirst { it.itemId == itemId }
+        if (index == - 1) return
+        values = values.subList(0, index) + AutoItemInstance(itemId, getFrontend(itemId).value !!) + values.subList(index + 1, values.size)
     }
 
     fun add(item: A) {
@@ -43,7 +50,8 @@ class AdatClassListFrontend<A : AdatClass<A>>(
     fun getFrontend(itemId: ItemId) =
         classFrontends.getOrPut(itemId) {
             val propertyBackend = checkNotNull(backend.items[itemId])
-            AdatClassFrontend(propertyBackend, companion, companion.newInstance(propertyBackend.values))
+            AdatClassFrontend(propertyBackend, companion, companion.newInstance(propertyBackend.values), this)
+                .also { propertyBackend.frontEnd = it }
         }
 
 }

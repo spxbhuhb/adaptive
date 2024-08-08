@@ -10,8 +10,9 @@ import hu.simplexion.adaptive.auto.backend.PropertyBackend
 class AdatClassFrontend<A : AdatClass<A>>(
     val backend: PropertyBackend,
     val companion: AdatCompanion<A>,
-    initialValue: A?
-) : AbstractFrontend(), AdatStore {
+    initialValue: A?,
+    val collectionFrontend: CollectionFrontendBase?
+) : FrontendBase(), AdatStore {
 
     val adatContext = AdatContext(null, null, store = this, null)
 
@@ -23,6 +24,7 @@ class AdatClassFrontend<A : AdatClass<A>>(
         val newValue = companion.newInstance(backend.values)
         newValue.adatContext = adatContext
         value = newValue
+        collectionFrontend?.commit(backend.itemId)
     }
 
     fun modify(propertyName: String, propertyValue: Any?) {
