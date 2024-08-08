@@ -5,7 +5,6 @@ import hu.simplexion.adaptive.auto.LamportTimestamp
 import hu.simplexion.adaptive.auto.connector.AutoConnector
 import hu.simplexion.adaptive.auto.model.operation.AutoModify
 import hu.simplexion.adaptive.auto.model.operation.AutoOperation
-import hu.simplexion.adaptive.auto.model.operation.AutoTransaction
 import hu.simplexion.adaptive.reflect.CallSiteName
 import kotlinx.coroutines.launch
 
@@ -37,8 +36,6 @@ abstract class BackendBase : AutoConnector() {
     }
 
     abstract fun modify(operation: AutoModify, commit: Boolean, distribute: Boolean)
-
-    abstract fun transaction(transaction: AutoTransaction, commit: Boolean, distribute: Boolean)
 
     // --------------------------------------------------------------------------------
     // Peer synchronization

@@ -3,17 +3,20 @@ package hu.simplexion.adaptive.auto.backend
 import hu.simplexion.adaptive.adat.wireformat.AdatPropertyWireFormat
 import hu.simplexion.adaptive.auto.ItemId
 import hu.simplexion.adaptive.auto.LamportTimestamp
+import hu.simplexion.adaptive.auto.MetadataId
 import hu.simplexion.adaptive.auto.connector.AutoConnector
+import hu.simplexion.adaptive.auto.model.AutoPropertyValue
 import hu.simplexion.adaptive.auto.model.operation.AutoModify
-import hu.simplexion.adaptive.auto.model.operation.AutoTransaction
 import hu.simplexion.adaptive.wireformat.WireFormat
 
 class PropertyBackend(
     override val context: BackendContext,
     val itemId: LamportTimestamp,
-    val properties: List<AdatPropertyWireFormat<*>>,
-    initialValues: Array<Any?>? = null
+    val metadataId: MetadataId?,
+    initialValues: Array<Any?>?
 ) : BackendBase() {
+
+    val properties: List<AdatPropertyWireFormat<*>> = context.defaultWireFormat.propertyWireFormats
 
     operator fun List<AdatPropertyWireFormat<*>>.get(name: String): AdatPropertyWireFormat<*> =
         first { it.property.name == name }
@@ -28,7 +31,12 @@ class PropertyBackend(
         Array(properties.size) { initialValues[it] }
     }
 
-    val operations: Array<AutoModify?> = arrayOfNulls(properties.size)
+    class Change(
+        val time: LamportTimestamp,
+        val payload: ByteArray
+    )
+
+    val changes: Array<Change?> = arrayOfNulls(properties.size)
 
     // --------------------------------------------------------------------------------
     // Operations from the frontend
@@ -42,10 +50,10 @@ class PropertyBackend(
 
         val payload = encode(property)
 
-        val operation = AutoModify(context.nextTime(), itemId, propertyName, payload)
+        val operation = AutoModify(context.nextTime(), itemId, listOf(AutoPropertyValue(propertyName, payload)))
         trace { "FE -> BE  $propertyName=$propertyValue .. commit true .. distribute true .. $operation" }
 
-        operations[index] = operation
+        changes[index] = Change(operation.timestamp, payload)
 
         close(operation, commit = true, distribute = true)
     }
@@ -55,38 +63,39 @@ class PropertyBackend(
     // --------------------------------------------------------------------------------
 
     override fun modify(operation: AutoModify, commit: Boolean, distribute: Boolean) {
-        context.wireFormatProvider.decoder(operation.propertyValue)
-        val index = indexOf(operation.propertyName)
+        var changed = false
 
-        val lastOperation = operations[index]
+        for (change in operation.values) {
 
-        if (lastOperation == null || lastOperation.timestamp < operation.timestamp) {
+            val index = indexOf(change.propertyName)
 
-            @Suppress("UNCHECKED_CAST")
-            val wireformat = properties[index].wireFormat as WireFormat<Any?>
-            val value = context.wireFormatProvider.decoder(operation.propertyValue).asInstance(wireformat)
+            val lastChange = changes[index]
 
-            values[index] = value
-            operations[index] = operation
-            context.receive(operation.timestamp)
+            if (lastChange == null || lastChange.time < operation.timestamp) {
 
-            trace { "BE -> BE  ${operation.propertyName}=$value .. commit $commit .. distribute $distribute .. $operation" }
+                @Suppress("UNCHECKED_CAST")
+                val wireformat = properties[index].wireFormat as WireFormat<Any?>
+                val value = context.wireFormatProvider.decoder(change.payload).asInstance(wireformat)
 
+                values[index] = value
+                changes[index] = Change(operation.timestamp, change.payload)
+                context.receive(operation.timestamp)
+
+                trace { "BE -> BE  CHANGE ${change.propertyName}=$value" }
+
+                changed = true
+
+            } else {
+                trace { "BE -> BE  SKIP   ${change.propertyName}" }
+            }
+        }
+
+        if (changed) {
+            trace { "BE -> BE  commit=$commit distribute=$distribute op=$operation" }
             close(operation, commit, distribute)
-
         } else {
-            trace { "BE -> BE  SKIP  $operation" }
+            trace { "BE -> BE  SKIP   op=$operation" }
         }
-    }
-
-    override fun transaction(transaction: AutoTransaction, commit: Boolean, distribute: Boolean) {
-        trace { "commit=$commit distribute=$distribute op=$transaction" }
-
-        for (operation in transaction.modifications ?: emptyList()) {
-            operation.apply(this, commit = false, distribute = false)
-        }
-
-        close(transaction, commit, distribute)
     }
 
     // --------------------------------------------------------------------------------
@@ -103,24 +112,25 @@ class PropertyBackend(
             return
         }
 
-        val modifications = mutableListOf<AutoModify>()
+        val changesToSend = mutableListOf<AutoPropertyValue>()
 
-        for (index in operations.indices) {
-            val operation = operations[index]
-            if (operation != null) {
-                if (operation.timestamp <= peerTime) continue
-                modifications += operation
+        for (index in changes.indices) {
+            val change = changes[index]
+            val property = properties[index]
+
+            if (change != null) {
+                if (change.time <= peerTime) continue
+                changesToSend += AutoPropertyValue(property.name, change.payload)
             } else {
-                val property = properties[index]
-                modifications += AutoModify(time, itemId, property.name, encode(property))
+                changesToSend += AutoPropertyValue(property.name, encode(property))
             }
         }
 
-        val transaction = AutoTransaction(time, modifications = modifications)
+        val operation = AutoModify(time, itemId, changesToSend)
 
-        trace { "peerTime=$peerTime op=$transaction" }
+        trace { "peerTime=$peerTime op=$operation" }
 
-        connector.send(transaction)
+        connector.send(operation)
     }
 
     // --------------------------------------------------------------------------------

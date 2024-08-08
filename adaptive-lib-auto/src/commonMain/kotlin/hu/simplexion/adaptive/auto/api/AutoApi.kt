@@ -18,6 +18,4 @@ interface AutoApi {
     suspend fun move(handle: AutoHandle, operation: AutoMove)
     suspend fun remove(handle: AutoHandle, operation: AutoRemove)
 
-    suspend fun transaction(handle: AutoHandle, operation: AutoTransaction)
-
 }

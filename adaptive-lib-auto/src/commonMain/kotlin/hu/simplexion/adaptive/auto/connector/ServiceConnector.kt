@@ -35,7 +35,6 @@ class ServiceConnector(
                 is AutoModify -> service.modify(peerHandle, operation)
                 is AutoMove -> service.move(peerHandle, operation)
                 is AutoRemove -> service.remove(peerHandle, operation)
-                is AutoTransaction -> service.transaction(peerHandle, operation)
             }
         }
     }

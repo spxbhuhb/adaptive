@@ -40,10 +40,6 @@ class AutoService : ServiceImpl<AutoService>, AutoApi {
         worker.receive(handle, operation)
     }
 
-    override suspend fun transaction(handle: AutoHandle, operation: AutoTransaction) {
-        worker.receive(handle, operation)
-    }
-
     override suspend fun removePeer(handle: AutoHandle) {
         TODO("Not yet implemented")
     }

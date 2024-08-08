@@ -9,12 +9,12 @@ import hu.simplexion.adaptive.auto.backend.CollectionBackendBase
 @Adat
 class AutoRemove(
     override val timestamp: LamportTimestamp,
-    val itemId: ItemId
+    val itemIds: Set<ItemId>
 ) : AutoOperation() {
 
     override fun apply(backend: BackendBase, commit: Boolean, distribute: Boolean) {
         backend as CollectionBackendBase
-        backend.remove(itemId, commit, distribute)
+        backend.remove(this, commit, distribute)
     }
 
 }

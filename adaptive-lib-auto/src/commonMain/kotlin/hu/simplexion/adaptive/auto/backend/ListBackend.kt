@@ -1,7 +1,11 @@
 package hu.simplexion.adaptive.auto.backend
 
+import hu.simplexion.adaptive.adat.AdatClass
+import hu.simplexion.adaptive.adat.encode
+import hu.simplexion.adaptive.adat.toArray
 import hu.simplexion.adaptive.auto.ItemId
 import hu.simplexion.adaptive.auto.LamportTimestamp
+import hu.simplexion.adaptive.auto.MetadataId
 import hu.simplexion.adaptive.auto.connector.AutoConnector
 import hu.simplexion.adaptive.auto.model.operation.*
 import hu.simplexion.adaptive.reflect.CallSiteName
@@ -10,7 +14,7 @@ class ListBackend(
     override val context: BackendContext
 ) : CollectionBackendBase() {
 
-    val additions = mutableSetOf<ItemId>()
+    val additions = mutableSetOf<Pair<ItemId, MetadataId?>>()
     val removals = mutableSetOf<ItemId>()
 
     override val items = mutableMapOf<ItemId, PropertyBackend>()
@@ -19,14 +23,37 @@ class ListBackend(
     // Operations from the frontend
     // --------------------------------------------------------------------------------
 
-    override fun add(itemId: ItemId, parentItemId: ItemId?, commit: Boolean, distribute: Boolean) {
-        additions += itemId
-        addItem(itemId)
+    override fun add(item: AdatClass<*>, metadataId: MetadataId?, parentItemId: ItemId?, commit: Boolean, distribute: Boolean) {
+        val itemId = context.nextTime()
+        addItem(itemId, metadataId, item)
+
+        val operation = AutoAdd(itemId, itemId, metadataId, parentItemId, item.encode(context.wireFormatProvider))
+        trace { "FE -> BE  itemId=$itemId .. commit true .. distribute true .. $operation" }
+
+        close(operation, commit, distribute)
     }
 
     override fun remove(itemId: ItemId, commit: Boolean, distribute: Boolean) {
         removals += itemId
         items -= itemId
+
+        val operation = AutoRemove(context.nextTime(), setOf(itemId))
+        trace { "FE -> BE  itemId=$itemId .. commit true .. distribute true .. $operation" }
+
+        close(operation, commit, distribute)
+    }
+
+    override fun removeAll(itemIds: Set<ItemId>, commit: Boolean, distribute: Boolean) {
+        removals += itemIds
+
+        for (itemId in itemIds) {
+            items -= itemId
+        }
+
+        val operation = AutoRemove(context.nextTime(), itemIds)
+        trace { "FE -> BE  commit true .. distribute true .. $operation" }
+
+        close(operation, commit, distribute)
     }
 
     override fun modify(itemId: ItemId, propertyName: String, propertyValue: Any?) {
@@ -39,13 +66,18 @@ class ListBackend(
     // --------------------------------------------------------------------------------
 
     override fun add(operation: AutoAdd, commit: Boolean, distribute: Boolean) {
-        additions += operation.itemId
+        trace { "commit=$commit distribute=$distribute op=$operation" }
+
+        addItem(operation.itemId, operation.metadataId, context.wireFormatProvider.decode(operation.payload, context.defaultWireFormat))
+
         closeListOp(operation, operation.itemId, commit, distribute)
     }
 
     override fun remove(operation: AutoRemove, commit: Boolean, distribute: Boolean) {
-        removals += operation.itemId
-        closeListOp(operation, operation.itemId, commit, distribute)
+        trace { "commit=$commit distribute=$distribute op=$operation" }
+
+        removals += operation.itemIds
+        // closeListOp(operation, operation.itemId, commit, distribute)
     }
 
     override fun modify(operation: AutoModify, commit: Boolean, distribute: Boolean) {
@@ -53,6 +85,32 @@ class ListBackend(
         val item = items[operation.itemId] ?: return
         item.modify(operation, commit, distribute)
     }
+
+//    override fun transaction(transaction: AutoTransaction, commit: Boolean, distribute: Boolean) {
+//        trace { "commit=$commit distribute=$distribute op=$transaction" }
+//
+//        for (operation in transaction.modifications ?: emptyList()) {
+//            operation.apply(this, commit = false, distribute = false)
+//        }
+//
+//        val trnAdditions = transaction.additions
+//        if (trnAdditions != null) {
+//            additions += trnAdditions
+//            for ((itemId,metadataId) in trnAdditions) {
+//                addItem(itemId, metadataId)
+//            }
+//        }
+//
+//        val trnRemovals = transaction.removals
+//        if (trnRemovals != null) {
+//            removals += trnRemovals
+//            for (itemId in trnRemovals) {
+//                items -= itemId
+//            }
+//        }
+//
+//        close(transaction, commit, distribute)
+//    }
 
     // --------------------------------------------------------------------------------
     // Peer synchronization
@@ -79,42 +137,16 @@ class ListBackend(
         // the presence information of the items, not the items
         // themselves.
 
-        val transaction = AutoTransaction(time, additions, removals)
-
-        trace { "peerTime=$peerTime op=$transaction" }
-
-        connector.send(transaction)
+//        val transaction = AutoTransaction(time, additions, removals)
+//
+//        trace { "peerTime=$peerTime op=$transaction" }
+//
+//        connector.send(transaction)
     }
 
     // --------------------------------------------------------------------------------
     // Utility, common
     // --------------------------------------------------------------------------------
-
-    override fun transaction(transaction: AutoTransaction, commit: Boolean, distribute: Boolean) {
-        trace { "commit=$commit distribute=$distribute op=$transaction" }
-
-        for (operation in transaction.modifications ?: emptyList()) {
-            operation.apply(this, commit = false, distribute = false)
-        }
-
-        val trnAdditions = transaction.additions
-        if (trnAdditions != null) {
-            additions += trnAdditions
-            for (itemId in trnAdditions) {
-                addItem(itemId)
-            }
-        }
-
-        val trnRemovals = transaction.removals
-        if (trnRemovals != null) {
-            removals += trnRemovals
-            for (itemId in trnRemovals) {
-                items -= itemId
-            }
-        }
-
-        close(transaction, commit, distribute)
-    }
 
     @CallSiteName
     fun closeListOp(operation: AutoOperation, itemId: ItemId, commit: Boolean, distribute: Boolean, callSiteName: String = "") {
@@ -127,7 +159,8 @@ class ListBackend(
         }
     }
 
-    fun addItem(itemId: ItemId) {
-        items += itemId to PropertyBackend(context, itemId, TODO())
+    fun addItem(itemId: ItemId, metadataId: ItemId?, value: AdatClass<*>) {
+        additions += (itemId to metadataId)
+        items += itemId to PropertyBackend(context, itemId, metadataId, value.toArray())
     }
 }

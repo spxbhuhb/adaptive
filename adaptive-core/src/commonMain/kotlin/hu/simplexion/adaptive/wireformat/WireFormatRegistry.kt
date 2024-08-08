@@ -13,6 +13,7 @@ object WireFormatRegistry : Registry<WireFormat<*>>() {
     init {
         val n = WireFormatTypeArgument<Any>(PolymorphicWireFormat(), true)
 
+        set("kotlin.Pair", PairWireFormat(n, n))
         set("kotlin.Array", ArrayWireFormat(n))
         set("kotlin.collections.List", ListWireFormat(n))
         set("kotlin.collections.Set", SetWireFormat(n))

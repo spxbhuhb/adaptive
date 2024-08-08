@@ -23,7 +23,7 @@ import kotlin.test.assertEquals
 /**
  * These tests **SHOULD NOT** run parallel, check `junit-platform.properties`.
  */
-class PropertyBackendTest {
+class PropertyBackendIntegrationTest {
 
     @Test
     fun basic() {
@@ -45,6 +45,8 @@ class PropertyBackendTest {
                 connectingHandle,
                 scope,
                 ProtoWireFormatProvider(),
+                TestData.adatMetadata,
+                TestData.adatWireFormat,
                 true,
                 LamportTimestamp(connectingHandle.clientId, 0),
             )
@@ -52,7 +54,8 @@ class PropertyBackendTest {
             val connectingBackend = PropertyBackend(
                 connectingContext,
                 itemId,
-                TestData.adatWireFormat.propertyWireFormats
+                null,
+                null
             )
 
             val connectingFrontend = AdatClassFrontend(

@@ -1,8 +1,5 @@
 package hu.simplexion.adaptive.auto.backend
 
-import hu.simplexion.adaptive.adat.Adat
-import hu.simplexion.adaptive.adat.AdatClass
-import hu.simplexion.adaptive.adat.AdatCompanion
 import hu.simplexion.adaptive.adat.toArray
 import hu.simplexion.adaptive.auto.LamportTimestamp
 import hu.simplexion.adaptive.auto.connector.DirectConnector
@@ -17,15 +14,7 @@ import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-@Adat
-class TestData(
-    val i: Int,
-    val s: String
-) : AdatClass<TestData> {
-    companion object : AdatCompanion<TestData>
-}
-
-class AutoInstanceTest {
+class PropertyBackendTest {
 
     @Test
     fun basic() {
@@ -36,13 +25,13 @@ class AutoInstanceTest {
         runTest {
             val scope = CoroutineScope(Dispatchers.Default)
 
-            val c1 = BackendContext(AutoHandle(gid, 1), scope, ProtoWireFormatProvider(), true, LamportTimestamp(1, 1))
-            val b1 = PropertyBackend(c1, itemId, TestData.adatWireFormat.propertyWireFormats, testData.toArray())
+            val c1 = BackendContext(AutoHandle(gid, 1), scope, ProtoWireFormatProvider(), TestData.adatMetadata, TestData.adatWireFormat, true, LamportTimestamp(1, 1))
+            val b1 = PropertyBackend(c1, itemId, null, testData.toArray())
             val f1 = AdatClassFrontend(b1, TestData, testData)
             b1.context.frontEnd = f1
 
-            val c2 = BackendContext(AutoHandle(gid, 2), scope, ProtoWireFormatProvider(), true, LamportTimestamp(2, 0))
-            val b2 = PropertyBackend(c2, itemId, TestData.adatWireFormat.propertyWireFormats, null)
+            val c2 = BackendContext(AutoHandle(gid, 2), scope, ProtoWireFormatProvider(), TestData.adatMetadata, TestData.adatWireFormat, true, LamportTimestamp(2, 0))
+            val b2 = PropertyBackend(c2, itemId, null, null)
             val f2 = AdatClassFrontend(b2, TestData, null)
             b2.context.frontEnd = f2
 

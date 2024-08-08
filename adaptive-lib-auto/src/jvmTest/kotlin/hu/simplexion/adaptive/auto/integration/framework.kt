@@ -44,6 +44,8 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
             AutoHandle(UUID(), 1),
             worker.scope,
             ProtoWireFormatProvider(),
+            TestData.adatMetadata,
+            TestData.adatWireFormat,
             true,
             LamportTimestamp(1, 1)
         )
@@ -51,7 +53,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
         val originBackend = PropertyBackend(
             context,
             LamportTimestamp(1, 1),
-            TestData.adatWireFormat.propertyWireFormats,
+            null,
             TestData(12, "a").toArray()
         )
 

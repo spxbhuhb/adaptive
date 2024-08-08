@@ -39,6 +39,7 @@ fun AdatClass<*>.resolve(path: List<String>): AdatClass<*> {
  * @throws  IllegalArgumentException  In case it is not possible to make a deep copy.
  */
 fun <A : AdatClass<A>> A.deepCopy(replace: AdatChange? = null): A {
+    // TODO when A is immutable, return with A
     @Suppress("UNCHECKED_CAST")
     return this.genericDeepCopy(replace) as A
 }
