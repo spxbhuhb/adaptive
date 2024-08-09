@@ -16,12 +16,11 @@ import kotlinx.coroutines.Dispatchers
 
 class TestServiceTransport(
     val serviceImpl: ServiceImpl<*>,
-    val dump: Boolean = false
+    val dump: Boolean = false,
+    override val wireFormatProvider: WireFormatProvider = ProtoWireFormatProvider(),
 ) : ServiceCallTransport(
     CoroutineScope(Dispatchers.Default)
 ) {
-    override val wireFormatProvider: WireFormatProvider
-        get() = ProtoWireFormatProvider()
 
     override suspend fun send(envelope: TransportEnvelope) {
         receive(wireFormatProvider.encode(envelope, TransportEnvelope))

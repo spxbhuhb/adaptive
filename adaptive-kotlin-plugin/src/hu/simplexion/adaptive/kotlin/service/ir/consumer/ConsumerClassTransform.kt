@@ -23,7 +23,6 @@ import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.util.*
-import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 
 /**
  * Add initializers and function bodies to the consumer class.
@@ -104,6 +103,13 @@ class ConsumerClassTransform(
             dispatchReceiver = irGet(function.dispatchReceiverParameter !!)
         ).also { it.origin = IrStatementOrigin.GET_PROPERTY }
 
+        if (function.valueParameters.isEmpty()) return payload
+
+        payload = irCall(
+            pluginContext.wireFormatCache.pluginContext.pseudoInstanceStart,
+            dispatchReceiver = payload
+        )
+
         function.valueParameters.forEachIndexed { fieldNumber, valueParameter ->
             payload = pluginContext.wireFormatCache.encode(
                 payload,
@@ -112,6 +118,11 @@ class ConsumerClassTransform(
                 irGet(valueParameter)
             )
         }
+
+        payload = irCall(
+            pluginContext.wireFormatCache.pluginContext.pseudoInstanceEnd,
+            dispatchReceiver = payload
+        )
 
         return payload
     }

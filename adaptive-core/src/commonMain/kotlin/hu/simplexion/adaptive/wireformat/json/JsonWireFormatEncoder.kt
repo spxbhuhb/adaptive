@@ -781,6 +781,20 @@ class JsonWireFormatEncoder(
     }
 
     // ----------------------------------------------------------------------------
+    // Pseudo Instance
+    // ----------------------------------------------------------------------------
+
+    override fun pseudoInstanceStart(): WireFormatEncoder {
+        writer.openObject()
+        return this
+    }
+
+    override fun pseudoInstanceEnd(): WireFormatEncoder {
+        writer.closeObject()
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
     // Pair
     // ----------------------------------------------------------------------------
 

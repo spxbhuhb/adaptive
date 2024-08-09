@@ -286,10 +286,18 @@ interface WireFormatEncoder {
     fun <T> rawPolymorphicOrNull(value: T?, wireFormat: WireFormat<T>): WireFormatEncoder
 
     // ----------------------------------------------------------------------------
+    // Pseudo Instance
+    // ----------------------------------------------------------------------------
+
+    fun pseudoInstanceStart(): WireFormatEncoder
+
+    fun pseudoInstanceEnd(): WireFormatEncoder
+
+    // ----------------------------------------------------------------------------
     // Pair
     // ----------------------------------------------------------------------------
 
-    fun <T1,T2> pair(
+    fun <T1, T2> pair(
         fieldNumber: Int,
         fieldName: String,
         value: Pair<T1?, T2?>,
@@ -297,7 +305,7 @@ interface WireFormatEncoder {
         typeArgument2: WireFormatTypeArgument<T2>,
     ): WireFormatEncoder
 
-    fun <T1,T2> pairOrNull(
+    fun <T1, T2> pairOrNull(
         fieldNumber: Int,
         fieldName: String,
         value: Pair<T1?, T2?>?,
@@ -305,7 +313,7 @@ interface WireFormatEncoder {
         typeArgument2: WireFormatTypeArgument<T2>,
     ): WireFormatEncoder
 
-    fun <T1,T2> rawPair(
+    fun <T1, T2> rawPair(
         value: Pair<T1?, T2?>,
         typeArgument1: WireFormatTypeArgument<T1>,
         typeArgument2: WireFormatTypeArgument<T2>,

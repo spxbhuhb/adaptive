@@ -24,6 +24,9 @@ object Strings {
     const val INSTANCE = "instance"
     const val INSTANCE_OR_NULL = "instanceOrNull"
 
+    const val PSEUDO_INSTANCE_START = "pseudoInstanceStart"
+    const val PSEUDO_INSTANCE_END = "pseudoInstanceEnd"
+
     const val WIREFORMAT_TYPE_ARGUMENT = "WireFormatTypeArgument"
 
     // issue #33 const val ARRAY_WIREFORMAT = "$BUILTIN_PACKAGE.ArrayWireFormat"

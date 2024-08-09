@@ -744,6 +744,20 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         polymorphicOrNull(1, "", value, wireFormat)
 
     // ----------------------------------------------------------------------------
+    // Pseudo Instance
+    // ----------------------------------------------------------------------------
+
+    override fun pseudoInstanceStart(): WireFormatEncoder {
+        // no need in protobuf
+        return this
+    }
+
+    override fun pseudoInstanceEnd(): WireFormatEncoder {
+        // no need in protobuf
+        return this
+    }
+
+    // ----------------------------------------------------------------------------
     // Pair
     // ----------------------------------------------------------------------------
 

@@ -8,15 +8,15 @@ import hu.simplexion.adaptive.auth.api.SessionApi
 import hu.simplexion.adaptive.auth.model.*
 import hu.simplexion.adaptive.exposed.inMemoryH2
 import hu.simplexion.adaptive.ktor.ktor
-import hu.simplexion.adaptive.ktor.withProtoWebSocketTransport
+import hu.simplexion.adaptive.ktor.withJsonWebSocketTransport
 import hu.simplexion.adaptive.lib.auth.auth
 import hu.simplexion.adaptive.lib.auth.crypto.BCrypt
-import hu.simplexion.adaptive.lib.auth.store.CredentialTable
-import hu.simplexion.adaptive.lib.auth.store.PrincipalTable
 import hu.simplexion.adaptive.reflect.CallSiteName
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.query.firstImpl
 import hu.simplexion.adaptive.server.server
+import hu.simplexion.adaptive.server.setting.dsl.inline
+import hu.simplexion.adaptive.server.setting.dsl.settings
 import hu.simplexion.adaptive.service.getService
 import hu.simplexion.adaptive.utility.UUID
 import io.ktor.client.plugins.cookies.*
@@ -36,6 +36,9 @@ import kotlin.test.assertNotNull
 class SessionTest {
 
     fun server(dbName: String) = server {
+        settings {
+            inline("KTOR_WIREFORMAT" to "json")
+        }
         inMemoryH2(dbName)
         auth() // to have session worker
         ktor()
@@ -47,7 +50,7 @@ class SessionTest {
         val ktorWorker = adapter.firstImpl<KtorWorker>()
 
         runBlocking {
-            val transport = withProtoWebSocketTransport("ws://localhost:8080/adaptive/service-ws", "http://localhost:8080/adaptive/client-id")
+            val transport = withJsonWebSocketTransport("ws://localhost:8080/adaptive/service-ws", "http://localhost:8080/adaptive/client-id")
 
             try {
                 val sessionService = getService<SessionApi>()
@@ -74,7 +77,7 @@ class SessionTest {
         val adapter = server(callSiteName.substringAfterLast('.'))
 
         runBlocking {
-            val transport = withProtoWebSocketTransport("ws://localhost:8080/adaptive/service-ws", "http://localhost:8080/adaptive/client-id", true)
+            val transport = withJsonWebSocketTransport("ws://localhost:8080/adaptive/service-ws", "http://localhost:8080/adaptive/client-id", true)
 
             try {
                 test(adapter)

@@ -33,7 +33,7 @@ class DuplexService : DuplexApi, ServiceImpl<DuplexService> {
             return value
         } else {
             val side = if (adapter == null) "c" else "S"
-            return getService<DuplexApi>(serviceContext).process(value + side)
+            return getService<DuplexApi>(serviceContext.transport).process(value + side)
         }
     }
 

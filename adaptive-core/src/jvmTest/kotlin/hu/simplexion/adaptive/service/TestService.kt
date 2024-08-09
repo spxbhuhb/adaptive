@@ -8,10 +8,13 @@ import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import hu.simplexion.adaptive.service.testing.TestServiceTransport
 import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
+import hu.simplexion.adaptive.wireformat.WireFormatProvider
 import hu.simplexion.adaptive.wireformat.builtin.StringWireFormat
+import hu.simplexion.adaptive.wireformat.json.JsonWireFormatProvider
+import hu.simplexion.adaptive.wireformat.protobuf.ProtoWireFormatProvider
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
-import kotlin.test.assertEquals
 
 @ServiceApi
 interface TestService1 {
@@ -28,8 +31,10 @@ interface TestService1 {
                 callService(
                     "testFun;IS",
                     wireFormatEncoder()
+                        .pseudoInstanceStart()
                         .int(1, "arg1", arg1)
                         .string(2, "arg2", arg2)
+                        .pseudoInstanceEnd()
                 )
             ).asInstance(StringWireFormat)
     }
@@ -41,8 +46,6 @@ interface TestService2 {
     suspend fun testFun(arg1: Int, arg2: String): String
 
 }
-
-val testServiceConsumer = TestService1.Consumer()
 
 class TestService2Impl(
     override val serviceContext: ServiceContext
@@ -65,20 +68,21 @@ class TestService2Impl(
 
 }
 
-fun box(): String {
-    var response: String
-    runBlocking {
-        defaultServiceCallTransport = TestServiceTransport(TestService2Impl(ServiceContext()))
-        response = testServiceConsumer.testFun(1, "hello")
-    }
-    return if (response.startsWith("i:1 s:hello ServiceContext(")) "OK" else "Fail (response=$response)"
-}
-
 class BasicServiceTest1 {
 
     @Test
-    fun basicTest() {
-        assertEquals("OK", box())
+    fun basic() {
+        suspend fun test(provider: WireFormatProvider): String {
+            val c = TestService1.Consumer()
+            c.serviceCallTransport = TestServiceTransport(TestService2Impl(ServiceContext()), wireFormatProvider = provider)
+            return c.testFun(1, "hello")
+        }
+
+        runBlocking {
+            assertTrue(test(ProtoWireFormatProvider()).startsWith("i:1 s:hello ServiceContext("))
+            assertTrue(test(JsonWireFormatProvider()).startsWith("i:1 s:hello ServiceContext("))
+        }
+
     }
 
 }
