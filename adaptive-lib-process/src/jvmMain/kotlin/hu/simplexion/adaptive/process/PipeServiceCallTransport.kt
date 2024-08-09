@@ -3,7 +3,6 @@ package hu.simplexion.adaptive.process
 import hu.simplexion.adaptive.service.model.TransportEnvelope
 import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 import hu.simplexion.adaptive.utility.use
-import hu.simplexion.adaptive.utility.waitFor
 import hu.simplexion.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
@@ -12,6 +11,7 @@ import java.util.concurrent.Executors
 
 abstract class PipeServiceCallTransport(
     scope: CoroutineScope,
+
     override val wireFormatProvider: WireFormatProvider
 ) : ServiceCallTransport(scope) {
 
@@ -21,7 +21,6 @@ abstract class PipeServiceCallTransport(
     val writerScope = CoroutineScope(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
 
     override suspend fun send(envelope: TransportEnvelope) {
-        val safeSocket = waitFor(responseTimeout) { socketLock.use { socket } }
 
         if (wireFormatProvider.useTextFrame) {
             io.ktor.websocket.WebSocketSession.send(io.ktor.websocket.Frame.Text(true, wireFormatProvider.encode(envelope, TransportEnvelope)))

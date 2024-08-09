@@ -47,3 +47,5 @@ fun enumListToOrdinals(values: List<Enum<*>>): List<Int> {
 fun enumListOrNullToOrdinals(values: List<Enum<*>>?): List<Int>? {
     return values?.map { it.ordinal }
 }
+
+object EndOfBuffer : Exception()

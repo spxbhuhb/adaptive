@@ -112,6 +112,10 @@ fun Test.setLibraryProperty(propName: String, jarName: String) {
     systemProperty(propName, path)
 }
 
+tasks.register("jvmTest") {
+    dependsOn(tasks["test"])
+}
+
 // ---- Publishing -----
 
 val String.propValue

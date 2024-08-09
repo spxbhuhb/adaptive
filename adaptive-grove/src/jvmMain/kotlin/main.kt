@@ -9,11 +9,8 @@ import hu.simplexion.adaptive.lib.auth.auth
 import hu.simplexion.adaptive.server.server
 import hu.simplexion.adaptive.server.setting.dsl.propertyFile
 import hu.simplexion.adaptive.server.setting.dsl.settings
-import hu.simplexion.adaptive.wireformat.withJson
 
 fun main() {
-
-    withJson()
 
     server(wait = true) {
 

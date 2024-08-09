@@ -4,7 +4,7 @@ import hu.simplexion.adaptive.email.api.EmailApi
 import hu.simplexion.adaptive.email.service.EmailService
 import hu.simplexion.adaptive.email.store.EmailQueue
 import hu.simplexion.adaptive.email.store.EmailTable
-import hu.simplexion.adaptive.exposed.InMemoryDatabase
+import hu.simplexion.adaptive.exposed.inMemoryH2
 import hu.simplexion.adaptive.foundation.query.singleImpl
 import hu.simplexion.adaptive.server.builtin.service
 import hu.simplexion.adaptive.server.builtin.store
@@ -71,7 +71,7 @@ class EmailWorkerTest {
 
         val adapter = server {
 
-            worker { InMemoryDatabase() }
+            inMemoryH2()
 
             store { EmailTable }
             store { EmailQueue }
@@ -91,7 +91,7 @@ class EmailWorkerTest {
             getService<EmailApi>().send(expectRecipient, expectSubject, expectContent)
 
             withTimeout(15.seconds) { // might be slow during complete build
-                while (wiser.messages.size == 0) {
+                while (wiser.messages.isEmpty()) {
                     delay(30.milliseconds)
                 }
             }

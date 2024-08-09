@@ -15,3 +15,5 @@ How to set up Xcode: https://www.jetbrains.com/help/kotlin-multiplatform-dev/mul
 Apple Framework: https://kotlinlang.org/docs/apple-framework.html
 
 Compose Resources: https://github.com/JetBrains/compose-multiplatform/blob/master/gradle-plugins/compose/src/main/kotlin/org/jetbrains/compose/resources/ComposeResources.kt
+
+Exception costs: https://shipilev.net/blog/2014/exceptional-performance/

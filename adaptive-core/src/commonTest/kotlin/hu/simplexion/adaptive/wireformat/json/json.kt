@@ -7,6 +7,7 @@ package hu.simplexion.adaptive.wireformat.json
 import hu.simplexion.adaptive.wireformat.AbstractCollectionTest
 import hu.simplexion.adaptive.wireformat.AbstractDatetimeTest
 import hu.simplexion.adaptive.wireformat.AbstractKotlinTest
+import hu.simplexion.adaptive.wireformat.AbstractMessageTest
 import hu.simplexion.adaptive.wireformat.AbstractPolymorphicTest
 import hu.simplexion.adaptive.wireformat.json.elements.JsonElement
 
@@ -17,4 +18,6 @@ class JsonCollectionTest : AbstractCollectionTest<JsonElement>(JsonWireFormatPro
 class JsonDatetimeTest : AbstractDatetimeTest<JsonElement>(JsonWireFormatProvider()), JsonTestHelpers
 
 class JsonPolymorphicTest : AbstractPolymorphicTest<JsonElement>(JsonWireFormatProvider()), JsonTestHelpers
+
+class JsonMessageTest : AbstractMessageTest<JsonElement>(JsonWireFormatProvider()), JsonTestHelpers
 

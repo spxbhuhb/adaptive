@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
@@ -85,6 +83,10 @@ gradlePlugin {
             tags.set(listOf("kotlin"))
         }
     }
+}
+
+tasks.register("jvmTest") {
+    // this is here so we can run it on all projects at once
 }
 
 // ====  Automatic update of the Kotlin plugin version  ========================================================

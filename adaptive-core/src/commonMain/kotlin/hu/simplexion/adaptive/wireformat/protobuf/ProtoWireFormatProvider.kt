@@ -19,6 +19,23 @@ class ProtoWireFormatProvider : WireFormatProvider() {
     override fun decoder(payload: ByteArray): WireFormatDecoder<*> =
         ProtoWireFormatDecoder(payload)
 
+    override fun writeMessage(payload: ByteArray, writeFun: (ByteArray) -> Unit) {
+        writeFun(
+            ProtoBufferWriter().let {
+                it.bytesHeader(1, payload)
+                it.pack()
+            }
+        )
+        writeFun(payload)
+    }
+
+    override fun readMessage(buffer: ByteArray): Pair<List<ByteArray>, ByteArray> {
+        val reader = ProtoBufferReader(buffer)
+        val arrays = reader.records(true).map { it.bytes() }.toList()
+        val remaining = buffer.copyOfRange(reader.readOffset, buffer.size)
+        return arrays to remaining
+    }
+
     override fun dump(payload: ByteArray): String {
         return payload.dumpProto()
     }

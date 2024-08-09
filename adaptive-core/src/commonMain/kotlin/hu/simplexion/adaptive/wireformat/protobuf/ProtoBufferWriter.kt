@@ -142,6 +142,11 @@ class ProtoBufferWriter(
         put(value)
     }
 
+    fun bytesHeader(fieldNumber: Int, value: ByteArray) {
+        tag(fieldNumber, LEN)
+        varint(value.size.toULong())
+    }
+
     // ------------------------------------------------------------------------
     // Wire format writers
     // ------------------------------------------------------------------------

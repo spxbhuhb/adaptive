@@ -28,39 +28,63 @@ class ProtoBufferReader(
 
     constructor(record: LenProtoRecord) : this(record.byteArray, record.offset, record.length)
 
+    private var endOffset = offset + length
+    var readOffset = offset
+        private set
+
     /**
      * Convert the byte array into a list of [ProtoRecord]. The records, [LenProtoRecord]s
      * in particular, are backed by the buffer, you should not modify the buffer while
      * they are used.
      */
-    fun records(): List<ProtoRecord> {
+    fun records(partial: Boolean = false): List<ProtoRecord> {
         val records = mutableListOf<ProtoRecord>()
 
         readOffset = offset
         val readEnd = offset + length
 
         while (readOffset < readEnd) {
-            val tag = varint()
-            val fieldNumber = (tag shr 3).toInt()
-            val type = (tag and 7UL).toInt()
+            try {
+                val offsetSave = readOffset
 
-            records += when (type) {
-                VARINT -> VarintProtoRecord(fieldNumber, varint())
-                I64 -> I64ProtoRecord(fieldNumber, i64())
-                I32 -> I32ProtoRecord(fieldNumber, i32())
-                LEN -> {
-                    val length = varint().toInt()
-                    LenProtoRecord(fieldNumber, buffer, readOffset, length).also {
-                        readOffset += length
+                val tag = varint()
+                val fieldNumber = (tag shr 3).toInt()
+                val type = (tag and 7UL).toInt()
+
+                records += when (type) {
+                    VARINT -> VarintProtoRecord(fieldNumber, varint())
+                    I64 -> I64ProtoRecord(fieldNumber, i64())
+                    I32 -> I32ProtoRecord(fieldNumber, i32())
+                    LEN -> {
+                        val length = varint().toInt()
+
+                        if (readOffset + length > readEnd) {
+                            if (! partial) {
+                                throw IllegalArgumentException("end of data reached before data was fully read, structural problem in the message or software bug")
+                            } else {
+                                readOffset = offsetSave // to roll back tag and length read
+                                break
+                            }
+                        }
+
+                        LenProtoRecord(fieldNumber, buffer, readOffset, length).also {
+                            readOffset += length
+                        }
                     }
-                }
 
-                else -> throw IllegalArgumentException("unknown type $type")
+                    else -> throw IllegalArgumentException("unknown type $type")
+                }
+            } catch (_: EndOfBuffer) {
+                if (! partial) {
+                    throw IllegalArgumentException("end of data reached before data was fully read, structural problem in the message or software bug")
+                } else {
+                    break
+                }
             }
         }
 
         // the reader should read all data, not less, not more
-        check(readOffset - offset == length) { "read length mismatch, structural problem in the message or software bug" }
+        check(partial || readOffset - offset == length) { "read length mismatch, structural problem in the message or software bug" }
 
         return records
     }
@@ -84,11 +108,8 @@ class ProtoBufferReader(
         return list
     }
 
-    private var endOffset = offset + length
-    private var readOffset = offset
-
     private fun get(): ULong {
-        check(readOffset < endOffset)
+        if (readOffset >= endOffset) throw EndOfBuffer
         return buffer[readOffset ++].toULong() and 0xffUL
     }
 
@@ -110,6 +131,7 @@ class ProtoBufferReader(
 
     fun string(): String {
         val length = varint().toInt()
+        if (readOffset + length > endOffset) throw EndOfBuffer
         val value = buffer.decodeToString(readOffset, readOffset + length)
         readOffset += length
         return value
@@ -118,6 +140,7 @@ class ProtoBufferReader(
     fun <T> uuid(): UUID<T> {
         val length = varint().toInt()
         check(length == 16)
+        if (readOffset + length > endOffset) throw EndOfBuffer
         val value = buffer.toUuid<T>(readOffset)
         readOffset += length
         return value
@@ -125,6 +148,7 @@ class ProtoBufferReader(
 
     fun bytes(): ByteArray {
         val length = varint().toInt()
+        if (readOffset + length > endOffset) throw EndOfBuffer
         val value = buffer.copyOfRange(readOffset, readOffset + length)
         readOffset += length
         return value
@@ -143,5 +167,4 @@ class ProtoBufferReader(
 
         return value or ((next and valueMask) shl shift)
     }
-
 }
