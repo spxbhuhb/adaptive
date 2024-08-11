@@ -2,7 +2,7 @@
 
 ios-support = "yes"
 
-adaptive = "0.6.0-SNAPSHOT"
+adaptive = "0.6.0"
 agp = "8.2.0"
 android-compileSdk = "34"
 android-minSdk = "26"
@@ -16,13 +16,13 @@ androidx-test-junit = "1.1.5"
 coroutines = "1.7.3"
 datetime = "0.4.0"
 gradle-download-plugin = "5.5.0"
+gradle-maven-publish = "0.29.0"
 h2 = "2.1.214"
 hikaricp = "3.4.2"
 exposed = "0.41.1"
 javamail = "1.6.2"
 junit = "4.13.2"
 junit-bom = "5.8.0"
-jreleaser = "1.13.1"
 kotlin = "2.0.0"
 kotlinpoet = "1.16.0"
 kotlin-wrappers = "1.0.0-pre.760"
@@ -107,4 +107,4 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
 pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publish" }
-jReleaser = { id = "org.jreleaser", version.ref = "jreleaser" }
+gradleMavenPublish = { id = "com.vanniktech.maven.publish", version.ref = "gradle-maven-publish" }
