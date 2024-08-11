@@ -24,8 +24,8 @@ fun registerTask(name: String) {
     tasks.register(taskName) {
         group = groupName
         gradle.includedBuilds.forEach { build ->
-            if (build.name in noPublishBuilds && name in publishTasks) return@register
-            if (build.name in noJsBuilds && name in jsTasks) return@register
+            if (build.name in noPublishBuilds && name in publishTasks) return@forEach
+            if (build.name in noJsBuilds && name in jsTasks) return@forEach
             dependsOn(build.task(":$taskName"))
         }
     }

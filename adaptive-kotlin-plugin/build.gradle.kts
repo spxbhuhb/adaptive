@@ -1,18 +1,20 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
+import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinJvm)
     java
     signing
-    `maven-publish`
+    alias(libs.plugins.gradleMavenPublish)
 }
 
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
+val baseName = "adaptive-kotlin-plugin"
 val scmPath = "spxbhuhb/adaptive"
 
 repositories {
@@ -118,79 +120,42 @@ tasks.register("jvmTest") {
 
 // ---- Publishing -----
 
-val String.propValue
-    get() = (System.getenv(this.uppercase().replace('.', '_')) ?: project.findProperty(this))?.toString() ?: ""
-
-val isPublishing = "adaptive.publish".propValue
-val publishSnapshotUrl = "adaptive.publish.snapshot.url".propValue
-val publishReleaseUrl = "adaptive.publish.release.url".propValue
-val publishUsername = "adaptive.publish.username".propValue
-val publishPassword = "adaptive.publish.password".propValue
-val isSnapshot = "SNAPSHOT" in project.version.toString()
-
-tasks.register("sourcesJar", Jar::class) {
-    group = "build"
-    description = "Assembles Kotlin sources"
-
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
-    dependsOn(tasks.classes)
-}
-
-val javadocJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("javadoc")
-}
-
 signing {
     useGpgCmd()
     sign(publishing.publications)
 }
 
-publishing {
-    
-    repositories {
-        maven {
-            name = "MavenCentral"
-            url = project.uri(requireNotNull(if (isSnapshot) publishSnapshotUrl else publishReleaseUrl))
-            credentials {
-                username = publishUsername
-                password = publishPassword
+mavenPublishing {
+
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+    signAllPublications()
+
+    coordinates("fun.adaptive", baseName, version.toString())
+
+    pom {
+        description.set("Client-server communication with the absolute minimum amount of boilerplate.")
+        name.set(project.name)
+        url.set("https://github.com/$scmPath")
+        scm {
+            url.set("https://github.com/$scmPath")
+            connection.set("scm:git:git://github.com/$scmPath.git")
+            developerConnection.set("scm:git:ssh://git@github.com/$scmPath.git")
+        }
+        licenses {
+            license {
+                name.set("Apache 2.0")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                distribution.set("repo")
             }
         }
-    }
-
-    publications {
-
-        create<MavenPublication>("default") {
-            from(components["java"])
-            artifact(tasks["sourcesJar"])
-            artifact(javadocJar.get())
-
-            pom {
-                description.set("Client-server communication with the absolute minimum amount of boilerplate.")
-                name.set(project.name)
-                url.set("https://github.com/$scmPath")
-                scm {
-                    url.set("https://github.com/$scmPath")
-                    connection.set("scm:git:git://github.com/$scmPath.git")
-                    developerConnection.set("scm:git:ssh://git@github.com/$scmPath.git")
-                }
-                licenses {
-                    license {
-                        name.set("Apache 2.0")
-                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                        distribution.set("repo")
-                    }
-                }
-                developers {
-                    developer {
-                        id.set("toth-istvan-zoltan")
-                        name.set("Tóth István Zoltán")
-                        url.set("https://github.com/toth-istvan-zoltan")
-                        organization.set("Simplexion Kft.")
-                        organizationUrl.set("https://www.simplexion.hu")
-                    }
-                }
+        developers {
+            developer {
+                id.set("toth-istvan-zoltan")
+                name.set("Tóth István Zoltán")
+                url.set("https://github.com/toth-istvan-zoltan")
+                organization.set("Simplexion Kft.")
+                organizationUrl.set("https://www.simplexion.hu")
             }
         }
     }

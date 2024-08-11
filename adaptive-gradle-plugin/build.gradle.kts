@@ -1,11 +1,14 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
+
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     alias(libs.plugins.pluginPublish)
     alias(libs.plugins.kotlinJvm)
     signing
-    `maven-publish`
+    alias(libs.plugins.gradleMavenPublish)
     alias(libs.plugins.download)
     alias(libs.plugins.shadow)
 }
@@ -22,6 +25,7 @@ repositories {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
+val baseName = "adaptive-gradle-plugin"
 val scmPath = "spxbhuhb/adaptive"
 val pomName = "Adaptive Gradle Plugin"
 val pluginDescription = "Kotlin Multiplatform compiler plugin for the Adaptive library."
@@ -65,7 +69,7 @@ val shadow = tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.Shadow
     exclude("META-INF/versions/**")
 }
 
-val jar = tasks.named<Jar>("jar") {
+tasks.named<Jar>("jar") {
     dependsOn(shadow)
     from(zipTree(shadow.get().archiveFile))
     this.duplicatesStrategy = DuplicatesStrategy.INCLUDE
@@ -113,59 +117,44 @@ tasks["checkKotlinGradlePluginConfigurationErrors"].dependsOn("updateVersion")
 
 // ====  Publishing  ========================================================
 
-val String.propValue
-    get() = (System.getenv(this.uppercase().replace('.', '_')) ?: project.findProperty(this))?.toString() ?: ""
-
-val publishSnapshotUrl = "adaptive.publish.snapshot.url".propValue
-val publishReleaseUrl = "adaptive.publish.release.url".propValue
-val publishUsername = "adaptive.publish.username".propValue
-val publishPassword = "adaptive.publish.password".propValue
-val isSnapshot = "SNAPSHOT" in project.version.toString()
-
 signing {
     useGpgCmd()
     sign(publishing.publications)
 }
 
-publishing {
+mavenPublishing {
 
-    repositories {
-        maven {
-            name = "MavenCentral"
-            url = project.uri(requireNotNull(if (isSnapshot) publishSnapshotUrl else publishReleaseUrl))
-            credentials {
-                username = publishUsername
-                password = publishPassword
-            }
-        }
-    }
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
-    publications.withType<MavenPublication>().all {
-        pom {
+    signAllPublications()
+
+    coordinates("fun.adaptive", baseName, version.toString())
+
+    pom {
+        url.set("https://github.com/$scmPath")
+        name.set(pomName)
+        description.set(pluginDescription)
+        scm {
             url.set("https://github.com/$scmPath")
-            name.set(pomName)
-            description.set(pluginDescription)
-            scm {
-                url.set("https://github.com/$scmPath")
-                connection.set("scm:git:git://github.com/$scmPath.git")
-                developerConnection.set("scm:git:ssh://git@github.com/$scmPath.git")
+            connection.set("scm:git:git://github.com/$scmPath.git")
+            developerConnection.set("scm:git:ssh://git@github.com/$scmPath.git")
+        }
+        licenses {
+            license {
+                name.set("Apache 2.0")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                distribution.set("repo")
             }
-            licenses {
-                license {
-                    name.set("Apache 2.0")
-                    url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                    distribution.set("repo")
-                }
-            }
-            developers {
-                developer {
-                    id.set("toth-istvan-zoltan")
-                    name.set("Tóth István Zoltán")
-                    url.set("https://github.com/toth-istvan-zoltan")
-                    organization.set("Simplexion Kft.")
-                    organizationUrl.set("https://www.simplexion.hu")
-                }
+        }
+        developers {
+            developer {
+                id.set("toth-istvan-zoltan")
+                name.set("Tóth István Zoltán")
+                url.set("https://github.com/toth-istvan-zoltan")
+                organization.set("Simplexion Kft.")
+                organizationUrl.set("https://www.simplexion.hu")
             }
         }
     }
+
 }
