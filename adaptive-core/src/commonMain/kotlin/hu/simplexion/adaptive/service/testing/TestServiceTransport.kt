@@ -6,6 +6,8 @@ package hu.simplexion.adaptive.service.testing
 
 import hu.simplexion.adaptive.server.builtin.ServiceImpl
 import hu.simplexion.adaptive.service.ServiceContext
+import hu.simplexion.adaptive.service.defaultServiceImplFactory
+import hu.simplexion.adaptive.service.factory.ServiceImplFactory
 import hu.simplexion.adaptive.service.model.TransportEnvelope
 import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
@@ -15,8 +17,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 class TestServiceTransport(
-    val serviceImpl: ServiceImpl<*>,
+    val serviceImpl: ServiceImpl<*>? = null,
     val dump: Boolean = false,
+    override val serviceImplFactory: ServiceImplFactory = defaultServiceImplFactory,
     override val wireFormatProvider: WireFormatProvider = ProtoWireFormatProvider(),
 ) : ServiceCallTransport(
     CoroutineScope(Dispatchers.Default)
@@ -27,15 +30,16 @@ class TestServiceTransport(
     }
 
     override fun context(): ServiceContext {
-        return ServiceContext()
+        return ServiceContext(transport = this)
     }
 
-    override suspend fun dispatch(context: ServiceContext, serviceName: String, funName: String, decoder: WireFormatDecoder<*>): ByteArray {
-        return serviceImpl
-            .newInstance(TestServiceContext(this))
-            .also { it.serviceCallTransport = this }
-            .dispatch(funName, decoder)
-    }
+    override suspend fun dispatch(context: ServiceContext, serviceName: String, funName: String, decoder: WireFormatDecoder<*>): ByteArray =
+        if (serviceImpl != null) {
+            serviceImpl.newInstance(context).dispatch(funName, decoder)
+        } else {
+            checkNotNull(serviceImplFactory[serviceName, context]) { "missing service: $serviceName" }
+                .dispatch(funName, decoder)
+        }
 
     override suspend fun disconnect() {
 

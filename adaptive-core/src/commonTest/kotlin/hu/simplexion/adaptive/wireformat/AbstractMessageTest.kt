@@ -28,7 +28,7 @@ abstract class AbstractMessageTest<ST>(
         val writer = Writer()
         wireFormatProvider.writeMessage(w1) { writer.bytes += it }
 
-        val (m1, rem1) = wireFormatProvider.readMessage(writer.bytes)
+        val (m1, rem1) = wireFormatProvider.readMessage(writer.bytes, 0, writer.bytes.size)
         assertEquals(1, m1.size)
         assertEquals(0, rem1.size)
 
@@ -43,7 +43,7 @@ abstract class AbstractMessageTest<ST>(
         wireFormatProvider.writeMessage(w2) { writer.bytes += it }
         wireFormatProvider.writeMessage(w3) { writer.bytes += it }
 
-        val (ms, rem1) = wireFormatProvider.readMessage(writer.bytes)
+        val (ms, rem1) = wireFormatProvider.readMessage(writer.bytes, 0, writer.bytes.size)
         assertEquals(3, ms.size)
         assertEquals(0, rem1.size)
 
@@ -62,7 +62,7 @@ abstract class AbstractMessageTest<ST>(
         val writer = Writer()
         wireFormatProvider.writeMessage(w1) { writer.bytes += it }
 
-        val (m1, rem1) = wireFormatProvider.readMessage(writer.bytes.take(10).toByteArray())
+        val (m1, rem1) = wireFormatProvider.readMessage(writer.bytes.take(10).toByteArray(), 0, 10)
         assertEquals(0, m1.size)
         assertEquals(10, rem1.size)
     }
@@ -76,7 +76,7 @@ abstract class AbstractMessageTest<ST>(
         val len = writer.bytes.size
         val withMessageLen = len / 2
 
-        val (m1, rem1) = wireFormatProvider.readMessage(writer.bytes.take(withMessageLen + 10).toByteArray())
+        val (m1, rem1) = wireFormatProvider.readMessage(writer.bytes.take(withMessageLen + 10).toByteArray(), 0, withMessageLen + 10)
         assertEquals(1, m1.size)
         assertEquals(10, rem1.size)
 
@@ -94,7 +94,7 @@ abstract class AbstractMessageTest<ST>(
         val len = writer.bytes.size
         val withMessageLen = len / 3
 
-        val (ms, rem1) = wireFormatProvider.readMessage(writer.bytes.take((withMessageLen * 2) + 10).toByteArray())
+        val (ms, rem1) = wireFormatProvider.readMessage(writer.bytes.take((withMessageLen * 2) + 10).toByteArray(), 0, (withMessageLen * 2) + 10)
         assertEquals(2, ms.size)
         assertEquals(10, rem1.size)
 

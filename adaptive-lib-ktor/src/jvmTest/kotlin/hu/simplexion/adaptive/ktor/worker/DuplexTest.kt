@@ -59,7 +59,7 @@ class DuplexTest {
         defaultServiceImplFactory += DuplexService() // this is the client side service
 
         runBlocking {
-            val transport = withProtoWebSocketTransport("ws://localhost:8080/adaptive/service-ws", "http://localhost:8080/adaptive/client-id", true)
+            val transport = withProtoWebSocketTransport("http://localhost:8080")
 
             try {
                 test(adapter)

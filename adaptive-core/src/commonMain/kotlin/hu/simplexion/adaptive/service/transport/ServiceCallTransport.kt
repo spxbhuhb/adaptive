@@ -8,6 +8,7 @@ import hu.simplexion.adaptive.adat.AdatClass
 import hu.simplexion.adaptive.adat.encode
 import hu.simplexion.adaptive.log.getLogger
 import hu.simplexion.adaptive.service.ServiceContext
+import hu.simplexion.adaptive.service.factory.ServiceImplFactory
 import hu.simplexion.adaptive.service.model.DisconnectException
 import hu.simplexion.adaptive.service.model.ReturnException
 import hu.simplexion.adaptive.service.model.ServiceExceptionData
@@ -41,17 +42,15 @@ abstract class ServiceCallTransport(
 
     val responseChannels = mutableMapOf<UUID<TransportEnvelope>, Channel<TransportEnvelope>>()
 
+    abstract val serviceImplFactory: ServiceImplFactory
+
     abstract val wireFormatProvider: WireFormatProvider
 
     abstract suspend fun send(envelope: TransportEnvelope)
 
     abstract fun context(): ServiceContext
 
-    abstract suspend fun dispatch(context: ServiceContext, serviceName: String, funName: String, decoder: WireFormatDecoder<*>): ByteArray
-
     abstract suspend fun disconnect()
-
-    abstract suspend fun stop()
 
     /**
      * Handle an incoming [TransportEnvelope]. The envelope may be a call `(success == null)` or
@@ -63,7 +62,7 @@ abstract class ServiceCallTransport(
 
         if (trace) {
             transportLog.fine("receive $envelope")
-            transportLog.fine("receive data:\n${wireFormatProvider.dump(envelope.payload)}")
+            transportLog.fine("receive data: ${wireFormatProvider.dump(envelope.payload)}")
         }
 
         val callId = envelope.callId
@@ -127,6 +126,19 @@ abstract class ServiceCallTransport(
         }
     }
 
+    open suspend fun dispatch(
+        context: ServiceContext,
+        serviceName: String,
+        funName: String,
+        decoder: WireFormatDecoder<*>
+    ): ByteArray {
+        val service = serviceImplFactory[serviceName, context]
+
+        requireNotNull(service) { "service not found: $serviceName" }
+
+        return service.dispatch(funName, decoder)
+    }
+
     fun Exception.toEnvelope(callId: UUID<TransportEnvelope>): TransportEnvelope {
         val exceptionData = if (this is AdatClass<*>) {
             ServiceExceptionData(this.adatCompanion.wireFormatName, this.message, this.encode(wireFormatProvider))
@@ -152,6 +164,11 @@ abstract class ServiceCallTransport(
 
             responseChannelLock.use {
                 responseChannels[callId] = responseChannel
+            }
+
+            if (trace) {
+                transportLog.fine("send $request")
+                transportLog.fine("send data: ${wireFormatProvider.dump(request.payload)}")
             }
 
             withTimeout(responseTimeout) {
@@ -207,6 +224,10 @@ abstract class ServiceCallTransport(
                 )
             }
         }
+    }
+
+    open suspend fun stop() {
+        disconnect()
     }
 
     fun encoder(): WireFormatEncoder =

@@ -14,6 +14,7 @@ import hu.simplexion.adaptive.server.setting.dsl.inline
 import hu.simplexion.adaptive.server.setting.dsl.settings
 import hu.simplexion.adaptive.service.defaultServiceImplFactory
 import hu.simplexion.adaptive.service.getService
+import hu.simplexion.adaptive.service.testing.TestServiceTransport
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
@@ -86,9 +87,10 @@ class EmailWorkerTest {
 
         runBlocking {
 
-            defaultServiceImplFactory += adapter.singleImpl<EmailService>()
 
-            getService<EmailApi>().send(expectRecipient, expectSubject, expectContent)
+            val transport = TestServiceTransport(serviceImplFactory = adapter)
+
+            getService<EmailApi>(transport).send(expectRecipient, expectSubject, expectContent)
 
             withTimeout(15.seconds) { // might be slow during complete build
                 while (wiser.messages.isEmpty()) {

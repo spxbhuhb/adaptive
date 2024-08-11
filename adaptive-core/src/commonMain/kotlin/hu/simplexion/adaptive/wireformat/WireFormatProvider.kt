@@ -26,7 +26,7 @@ abstract class WireFormatProvider {
      * array contains the unprocessed bytes (in case there is a partial message in
      * the [buffer]).
      */
-    abstract fun readMessage(buffer: ByteArray): Pair<List<ByteArray>, ByteArray>
+    abstract fun readMessage(buffer: ByteArray, offset: Int, length: Int): Pair<List<ByteArray>, ByteArray>
 
     abstract fun dump(payload: ByteArray): String
 

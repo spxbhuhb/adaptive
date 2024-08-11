@@ -9,6 +9,7 @@ import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
+import org.jetbrains.kotlin.ir.builders.irTemporary
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
 import org.jetbrains.kotlin.ir.types.makeNullable
@@ -31,7 +32,7 @@ class NewInstance(
 
     override fun IrSimpleFunction.buildBody() {
         body = DeclarationIrBuilder(irContext, this.symbol).irBlockBody {
-            + irReturn(
+            val instance = irTemporary(
                 IrConstructorCallImpl(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                     transformedClass.defaultType,
@@ -40,6 +41,16 @@ class NewInstance(
                 ).also {
                     it.putValueArgument(0, irGet(valueParameters.first()))
                 }
+            )
+
+            + irSetValue(
+                pluginContext.serviceImplFragment,
+                irGetValue(pluginContext.serviceImplFragment, irGet(this@buildBody.dispatchReceiverParameter !!)),
+                irGet(instance)
+            )
+
+            + irReturn(
+                irGet(instance)
             )
         }
     }

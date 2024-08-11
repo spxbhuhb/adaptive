@@ -45,9 +45,9 @@ suspend fun checkNumber(i: Int, illegal: Boolean): String {
     try {
         getService<NumberApi>().ensureEven(i, illegal)
         return "this is an even number"
-    } catch (ex: OddNumberException) {
+    } catch (_: OddNumberException) {
         return "this is an odd number"
-    } catch (ex: ServiceCallException) {
+    } catch (_: ServiceCallException) {
         return "ServiceCallException"
     }
 }
@@ -70,7 +70,7 @@ class ExceptionTest {
         }
 
         runBlocking {
-            val transport = withProtoWebSocketTransport("ws://localhost:8080/adaptive/service-ws", "http://localhost:8080/adaptive/client-id")
+            val transport = withProtoWebSocketTransport("http://localhost:8080")
 
             try {
                 test(adapter)

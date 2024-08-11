@@ -6,6 +6,8 @@ package hu.simplexion.adaptive.kotlin.service.ir
 import hu.simplexion.adaptive.kotlin.AdaptiveOptions
 import hu.simplexion.adaptive.kotlin.common.AbstractPluginContext
 import hu.simplexion.adaptive.kotlin.common.functionByName
+import hu.simplexion.adaptive.kotlin.common.property
+import hu.simplexion.adaptive.kotlin.common.propertyGetter
 import hu.simplexion.adaptive.kotlin.service.CallableIds
 import hu.simplexion.adaptive.kotlin.service.ClassIds
 import hu.simplexion.adaptive.kotlin.service.Strings
@@ -22,6 +24,7 @@ class ServicesPluginContext(
 
     val serviceImplClass = ClassIds.SERVICE_IMPL.classSymbol()
     val serviceImplNewInstance = serviceImplClass.functionByName { Strings.NEW_INSTANCE }
+    val serviceImplFragment = serviceImplClass.property { Strings.FRAGMENT }
 
     val getService = CallableIds.GET_SERVICE.firstFunctionSymbol()
 

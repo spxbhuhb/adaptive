@@ -5,6 +5,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 class ProcessWorker {
 
@@ -32,18 +33,6 @@ class ProcessWorker {
         val writer = process.outputStream.bufferedWriter()
         val reader = process.inputStream.bufferedReader()
 
-        job?.cancel()
-
-        job = CoroutineScope(Executors.newSingleThreadExecutor().asCoroutineDispatcher()).launch {
-            while (true) {
-                toDriver.receive().also { line ->
-                    val driverRootEntity = context[element.id].dict.asEntity()
-                    driverRootEntity.logTrace100 { "toDriver: $line" }
-                    writer.appendLine(line)
-                    writer.flush()
-                }
-            }
-        }
 
         CoroutineScope(Executors.newSingleThreadExecutor().asCoroutineDispatcher()).launch {
 

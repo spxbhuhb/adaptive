@@ -65,8 +65,4 @@ abstract class WebSocketServiceCallTransport(
         }
     }
 
-    override suspend fun stop() {
-        disconnect()
-    }
-
 }

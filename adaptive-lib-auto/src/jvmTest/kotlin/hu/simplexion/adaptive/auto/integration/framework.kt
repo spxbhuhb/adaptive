@@ -21,6 +21,8 @@ import hu.simplexion.adaptive.server.builtin.service
 import hu.simplexion.adaptive.server.builtin.worker
 import hu.simplexion.adaptive.server.query.singleImpl
 import hu.simplexion.adaptive.server.server
+import hu.simplexion.adaptive.server.setting.dsl.inline
+import hu.simplexion.adaptive.server.setting.dsl.settings
 import hu.simplexion.adaptive.service.ServiceApi
 import hu.simplexion.adaptive.service.defaultServiceImplFactory
 import hu.simplexion.adaptive.utility.UUID
@@ -83,6 +85,9 @@ fun autoTest(
     test: suspend (originAdapter: AdaptiveServerAdapter, connectingAdapter: AdaptiveServerAdapter) -> Unit
 ) {
     val originAdapter = server {
+        settings {
+            inline("KTOR_PORT" to 8081)
+        }
         inMemoryH2(callSiteName.substringAfterLast('.'))
         worker { AutoWorker() }
         service { AutoTestService() }
@@ -97,7 +102,7 @@ fun autoTest(
     }
 
     runBlocking {
-        val transport = withProtoWebSocketTransport("ws://localhost:8080/adaptive/service-ws", "http://localhost:8080/adaptive/client-id", false, connectingAdapter)
+        val transport = withProtoWebSocketTransport("http://localhost:8081", serviceImplFactory = connectingAdapter)
 
         defaultServiceImplFactory += connectingAdapter.singleImpl<AutoService>()
 

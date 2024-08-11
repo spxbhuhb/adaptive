@@ -20,13 +20,6 @@ class EmailService : EmailApi, ServiceImpl<EmailService> {
     private val emailQueue by store<EmailQueue>()
     private val emailWorker by worker<EmailWorker>()
 
-    // FIXME newInstance fragment copy
-    override fun newInstance(serviceContext: ServiceContext): EmailService {
-        return EmailService().also {
-            it.fragment = this.fragment
-        }
-    }
-
     override suspend fun send(recipients: String, subject: String, contentText: String, contentType: String) {
         transaction {
             val email = Email(UUID(), recipients, subject, contentText, contentType = contentType)

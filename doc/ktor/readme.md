@@ -15,9 +15,9 @@ withJsonWebSocketTransport()
 Android/iOS:
 
 ```kotlin
-withProtoWebSocketTransport("https://your.host/adaptive/service")
+withProtoWebSocketTransport("https://your.host")
 // ----  OR  ---
-withJsonWebSocketTransport("https://your.host/adaptive/service")
+withJsonWebSocketTransport("https://your.host")
 ```
 
 **backend**
@@ -39,8 +39,8 @@ server {
             "KTOR_PORT" to 8080,
             "KTOR_WIREFORMAT" to "proto", // set this to "json" if you want JSON
             "KTOR_STATIC_DIR" to "./var/static",
-            "KTOR_SERVICE_ROUTE" to "/adaptive/service",
-            "SESSION_CLIENT_ID_ROUTE to " / adaptive / client - id",
+            "KTOR_SERVICE_ROUTE" to "/adaptive/service-ws",
+            "SESSION_CLIENT_ID_ROUTE to " /adaptive/client-id",
             "SESSION_COOKIE_NAME" to "ADAPTIVE_CLIENT_ID"
         )
     }
@@ -56,12 +56,12 @@ server {
 
 * a basic Ktor (with Netty) server which provides the following paths:
     * `/adaptive/client-id` - get a client ID (sets a cookie with a UUID)
-    * `/adaptive/service` - web socket connection for services
+  * `/adaptive/service-ws` - web socket connection for services
     * everything else is mapped to `./var/static`
 * sets `defaultWireFormatProvider` to the specified format
 * is very simple, you can easily make a copy and customize it for your needs
 
-### BasicWebSocketServiceCallTransport
+### ClientWebSocketServiceCallTransport
 
 * handles the client side of the service calls
 * uses `defaultWireFormatProvider` to encode/decode messages
@@ -69,12 +69,7 @@ server {
     * sets `defaultWireFormatProvider` to the appropriate format
     * creates a new transport and assigns it to `defaultServiceCallTransport`
 
-### Routing.clientId
-
-* assigns a UUID for each client
-* sets the cookie (if not already set) to a randomly generated UUID
-
-### sessionServiceCallTransport
+### TransactionWebSocketServiceCallTransport
 
 * handles the server side of the service calls
 * uses the client id set by `Routing.clientId` to identify the client

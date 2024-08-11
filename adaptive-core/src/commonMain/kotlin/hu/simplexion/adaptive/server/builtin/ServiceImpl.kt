@@ -6,12 +6,22 @@ package hu.simplexion.adaptive.server.builtin
 
 import hu.simplexion.adaptive.service.ServiceBase
 import hu.simplexion.adaptive.service.ServiceContext
+import hu.simplexion.adaptive.service.transport.ServiceCallTransport
 import hu.simplexion.adaptive.utility.UUID
 import hu.simplexion.adaptive.utility.manualOrPlugin
 import hu.simplexion.adaptive.utility.pluginGenerated
 import hu.simplexion.adaptive.wireformat.WireFormatDecoder
 
 interface ServiceImpl<T : ServiceImpl<T>> : ServiceBase, ServerFragmentImpl {
+
+    /**
+     *  The transport from [serviceContext].
+     */
+    override var serviceCallTransport: ServiceCallTransport?
+        get() = serviceContext.transport
+        set(value) {
+            manualOrPlugin("serviceCallTransport", value)
+        }
 
     /**
      * Context of a service call. Set by `dispatch` when the call goes through it.

@@ -27,6 +27,7 @@ object Strings {
     const val SERVICE_CONTEXT_PROPERTY = "serviceContext"
     const val NEW_INSTANCE = "newInstance"
     const val DISPATCH = "dispatch"
+    const val FRAGMENT = "fragment"
 
     const val SERVICE_CALL_TRANSPORT = "ServiceCallTransport"
 

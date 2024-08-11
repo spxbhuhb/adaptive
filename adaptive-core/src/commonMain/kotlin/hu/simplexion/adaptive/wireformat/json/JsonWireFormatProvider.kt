@@ -24,12 +24,12 @@ class JsonWireFormatProvider : WireFormatProvider() {
         writeFun(newLine)
     }
 
-    override fun readMessage(buffer: ByteArray): Pair<List<ByteArray>, ByteArray> {
+    override fun readMessage(buffer: ByteArray, offset: Int, length: Int): Pair<List<ByteArray>, ByteArray> {
         val messages = mutableListOf<ByteArray>()
 
-        var start = 0
-        var current = 0
-        val end = buffer.size
+        var start = offset
+        var current = offset
+        val end = offset + length
         val newLine = 0x0a.toByte()
 
         while (current < end) {
@@ -43,8 +43,8 @@ class JsonWireFormatProvider : WireFormatProvider() {
             start = current
         }
 
-        val remaining = if (start < buffer.size) {
-            buffer.sliceArray(start until buffer.size)
+        val remaining = if (start < end) {
+            buffer.sliceArray(start until end)
         } else {
             emptyByteArray
         }

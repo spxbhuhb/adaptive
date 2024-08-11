@@ -5,7 +5,11 @@ package hu.simplexion.adaptive.server
 
 import hu.simplexion.adaptive.foundation.AdaptiveAdapter
 import hu.simplexion.adaptive.foundation.AdaptiveFragment
+import hu.simplexion.adaptive.foundation.unsupported
 import hu.simplexion.adaptive.server.builtin.ServerService
+import hu.simplexion.adaptive.server.builtin.ServiceImpl
+import hu.simplexion.adaptive.service.ServiceContext
+import hu.simplexion.adaptive.service.factory.ServiceImplFactory
 import hu.simplexion.adaptive.utility.getLock
 import hu.simplexion.adaptive.utility.sleep
 import hu.simplexion.adaptive.utility.use
@@ -18,7 +22,7 @@ import kotlinx.coroutines.Dispatchers
  */
 open class AdaptiveServerAdapter(
     wait : Boolean = false
-) : AdaptiveAdapter {
+) : AdaptiveAdapter, ServiceImplFactory {
 
     override val fragmentFactory = ServerFragmentFactory
 
@@ -68,4 +72,16 @@ open class AdaptiveServerAdapter(
     fun stop() {
         rootFragment.unmount()
     }
+
+    override fun plusAssign(template: ServiceImpl<*>) {
+        unsupported()
+    }
+
+    override fun minusAssign(template: ServiceImpl<*>) {
+        unsupported()
+    }
+
+    override fun get(serviceName: String, context: ServiceContext): ServiceImpl<*>? =
+        serviceCache[serviceName]?.newInstance(context)
+
 }

@@ -52,14 +52,12 @@ class AuthTest {
             val admin = Principal(UUID(), "admin", activated = true)
             val passwd = BCrypt.hashpw("stuff", BCrypt.gensalt())
 
-            transaction {
-                PrincipalTable += admin
-                CredentialTable += Credential(UUID(), admin.id, CredentialType.PASSWORD, passwd, now())
-            }
+            PrincipalTable += admin
+            CredentialTable += Credential(UUID(), admin.id, CredentialType.PASSWORD, passwd, now())
         }
 
         runBlocking {
-            val transport = withProtoWebSocketTransport("ws://localhost:8080/adaptive/service-ws", "http://localhost:8080/adaptive/client-id")
+            val transport = withProtoWebSocketTransport("http://localhost:8080")
 
             if (login) {
                 getService<SessionApi>().login("admin", "stuff")

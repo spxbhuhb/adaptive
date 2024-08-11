@@ -25,6 +25,8 @@ interface ServiceBase {
      * field to use different call transport than the default. When null, service
      * calls use [defaultServiceCallTransport].
      *
+     * Service implementations use the transport in the context if not overridden.
+     *
      * Overridden by the plugin with:
      *
      * ```kotlin

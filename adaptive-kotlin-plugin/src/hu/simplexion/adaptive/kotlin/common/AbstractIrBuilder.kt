@@ -199,7 +199,7 @@ interface AbstractIrBuilder {
     fun irSetValue(irProperty: IrProperty, value: IrExpression, receiver: IrExpression?): IrCall =
         IrCallImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irProperty.backingField !!.type,
+            irProperty.getter !!.returnType,
             irProperty.setter !!.symbol,
             0, 1
         ).apply {

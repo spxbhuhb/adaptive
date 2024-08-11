@@ -155,7 +155,21 @@ Service transports:
 - move the return value from the provider to the consumer
 - use [WireFormat](../wireformat/README)
 
-Check the implementation for [Ktor](../ktor/readme.md) for examples.
+Built-in transports:
+
+**WebSocket**
+
+- check [Ktor](../ktor/readme.md) for examples
+
+**Stream** (JVM only)
+
+- [StreamServiceCallTransport](/adaptive-core/src/jvmMain/kotlin/hu/simplexion/adaptive/service/transport/StreamServiceCallTransport.kt)
+- uses Java input and output streams
+
+**Test**
+
+- [TestServiceTransport](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/service/testing/TestServiceContext.kt)
+- call services of a supplied template or from an implementation factory
 
 ### Disconnecting
 

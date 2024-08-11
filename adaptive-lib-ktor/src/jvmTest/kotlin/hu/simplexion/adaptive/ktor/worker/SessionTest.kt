@@ -11,6 +11,8 @@ import hu.simplexion.adaptive.ktor.ktor
 import hu.simplexion.adaptive.ktor.withJsonWebSocketTransport
 import hu.simplexion.adaptive.lib.auth.auth
 import hu.simplexion.adaptive.lib.auth.crypto.BCrypt
+import hu.simplexion.adaptive.lib.auth.store.CredentialTable
+import hu.simplexion.adaptive.lib.auth.store.PrincipalTable
 import hu.simplexion.adaptive.reflect.CallSiteName
 import hu.simplexion.adaptive.server.AdaptiveServerAdapter
 import hu.simplexion.adaptive.server.query.firstImpl
@@ -50,7 +52,7 @@ class SessionTest {
         val ktorWorker = adapter.firstImpl<KtorWorker>()
 
         runBlocking {
-            val transport = withJsonWebSocketTransport("ws://localhost:8080/adaptive/service-ws", "http://localhost:8080/adaptive/client-id")
+            val transport = withJsonWebSocketTransport("http://localhost:8080")
 
             try {
                 val sessionService = getService<SessionApi>()
@@ -77,7 +79,7 @@ class SessionTest {
         val adapter = server(callSiteName.substringAfterLast('.'))
 
         runBlocking {
-            val transport = withJsonWebSocketTransport("ws://localhost:8080/adaptive/service-ws", "http://localhost:8080/adaptive/client-id", true)
+            val transport = withJsonWebSocketTransport("http://localhost:8080")
 
             try {
                 test(adapter)

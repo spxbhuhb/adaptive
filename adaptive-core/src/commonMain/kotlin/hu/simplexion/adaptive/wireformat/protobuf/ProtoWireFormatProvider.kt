@@ -29,8 +29,8 @@ class ProtoWireFormatProvider : WireFormatProvider() {
         writeFun(payload)
     }
 
-    override fun readMessage(buffer: ByteArray): Pair<List<ByteArray>, ByteArray> {
-        val reader = ProtoBufferReader(buffer)
+    override fun readMessage(buffer: ByteArray, offset: Int, length: Int): Pair<List<ByteArray>, ByteArray> {
+        val reader = ProtoBufferReader(buffer, offset, length)
         val arrays = reader.records(true).map { it.bytes() }.toList()
         val remaining = buffer.copyOfRange(reader.readOffset, buffer.size)
         return arrays to remaining

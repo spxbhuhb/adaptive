@@ -17,3 +17,5 @@ Apple Framework: https://kotlinlang.org/docs/apple-framework.html
 Compose Resources: https://github.com/JetBrains/compose-multiplatform/blob/master/gradle-plugins/compose/src/main/kotlin/org/jetbrains/compose/resources/ComposeResources.kt
 
 Exception costs: https://shipilev.net/blog/2014/exceptional-performance/
+
+Coroutine Cancel: https://betterprogramming.pub/the-silent-killer-thats-crashing-your-coroutines-9171d1e8f79b
