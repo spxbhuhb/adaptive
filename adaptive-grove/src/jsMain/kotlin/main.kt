@@ -2,12 +2,12 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-import hu.simplexion.adaptive.grove.designer.groveMain
-import hu.simplexion.adaptive.grove.fragment.GroveFragmentFactory
-import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
-import hu.simplexion.adaptive.ui.common.browser
-import hu.simplexion.adaptive.ui.common.instruction.sp
-import hu.simplexion.adaptive.ui.common.platform.withJsResources
+import `fun`.adaptive.grove.designer.groveMain
+import `fun`.adaptive.grove.fragment.GroveFragmentFactory
+import `fun`.adaptive.ui.common.AbstractCommonAdapter
+import `fun`.adaptive.ui.common.browser
+import `fun`.adaptive.ui.common.instruction.sp
+import `fun`.adaptive.ui.common.platform.withJsResources
 
 fun main() {
 

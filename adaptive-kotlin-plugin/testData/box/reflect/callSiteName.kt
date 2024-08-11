@@ -1,6 +1,6 @@
 package somePackage.someSubPackage
 
-import hu.simplexion.adaptive.reflect.*
+import `fun`.adaptive.reflect.*
 
 val names = mutableListOf<String>()
 

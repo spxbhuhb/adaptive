@@ -197,7 +197,7 @@ Instructions may be added to fragments to modify them in many ways. `backgroundC
 are instructions in the code example below.
 
 ```kotlin
-import hu.simplexion.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.rangeTo
 
 @Adaptive
 fun helloWorld() {

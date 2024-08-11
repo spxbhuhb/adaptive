@@ -1,12 +1,12 @@
-package hu.simplexion.adaptive.adat
+package `fun`.adaptive.adat
 
-import hu.simplexion.adaptive.service.*
-import hu.simplexion.adaptive.service.transport.*
-import hu.simplexion.adaptive.service.testing.TestServiceTransport
-import hu.simplexion.adaptive.server.builtin.ServiceImpl
+import `fun`.adaptive.service.*
+import `fun`.adaptive.service.transport.*
+import `fun`.adaptive.service.testing.TestServiceTransport
+import `fun`.adaptive.server.builtin.ServiceImpl
 import kotlinx.coroutines.runBlocking
-import hu.simplexion.adaptive.wireformat.WireFormatDecoder
-import hu.simplexion.adaptive.wireformat.WireFormatRegistry
+import `fun`.adaptive.wireformat.WireFormatDecoder
+import `fun`.adaptive.wireformat.WireFormatRegistry
 
 @Adat
 class TestAdat(
@@ -34,7 +34,7 @@ fun box(): String {
     if (t1.toString() != "TestAdat(someInt=12, someBoolean=true, someIntListSet=[])") return "Fail: toString ${t1.toString()}"
     if (t1.hashCode() != hash(12, true, emptySet())) return "Fail: hashCode"
 
-    if (WireFormatRegistry["hu.simplexion.adaptive.adat.TestAdat"] == null) return "Fail: not in WireFormatRegistry"
+    if (WireFormatRegistry["fun.adaptive.adat.TestAdat"] == null) return "Fail: not in WireFormatRegistry"
 
     return "OK"
 }

@@ -4,8 +4,8 @@ When an adaptive function has the `@AdaptiveExpect` annotation, the fragment is 
 method of the adapter, which in turn uses the `fragmentFactory` to get an instance of the fragment.
 
 ```kotlin
-import hu.simplexion.adaptive.foundation.AdaptiveExpect
-import hu.simplexion.adaptive.ui.common.commonUI
+import `fun`.adaptive.foundation.AdaptiveExpect
+import `fun`.adaptive.ui.common.commonUI
 
 @AdaptiveExpect(commonUI)
 fun text(text : String) {

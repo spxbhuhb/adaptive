@@ -73,14 +73,14 @@ What **IS** generated:
     * `newInstance()`
     * `newInstance(values : Array<Any?>)`
 
-Check [AdatTest](/adaptive-core/src/commonTest/kotlin/hu/simplexion/adaptive/adat/AdatTest.kt) for details.
+Check [AdatTest](/adaptive-core/src/commonTest/kotlin/fun/adaptive/adat/AdatTest.kt) for details.
 
 ## Metadata
 
 The `getMetadata()` function returns with the metadata of the given Adat instance. It is stored in the
 `adatMetadata` property of the companion object of each Adat class.
 
-The metadata is an instance of [AdatClassMetadata](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/adat/metadata/AdatClassMetadata.kt).
+The metadata is an instance of [AdatClassMetadata](/adaptive-core/src/commonMain/kotlin/fun/adaptive/adat/metadata/AdatClassMetadata.kt).
 
 During compilation the compiler builds the metadata of the class and serializes it into JSON. This JSON is
 deserialized when the companion object is initialized.
@@ -111,7 +111,7 @@ Metadata of the class above:
 ```json
 {
   "v": 1,
-  "n": "hu.simplexion.adaptive.adat.TestClass",
+  "n": "fun.adaptive.adat.TestClass",
   "f": 1,
   "p": [
     {

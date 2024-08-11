@@ -19,7 +19,7 @@ repositories {
     mavenCentral()
 }
 
-group = "hu.simplexion.adaptive"
+group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
 val scmPath = "spxbhuhb/adaptive"
@@ -55,7 +55,7 @@ val packagesToRelocate = listOf("de.undercouch", "com.squareup.kotlinpoet")
 
 val shadow = tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
     for (packageToRelocate in packagesToRelocate) {
-        relocate(packageToRelocate, "hu.simplexion.adaptive.gradle.internal.$packageToRelocate")
+        relocate(packageToRelocate, "fun.adaptive.gradle.internal.$packageToRelocate")
     }
     archiveBaseName.set("shadow")
     archiveClassifier.set("")
@@ -76,10 +76,10 @@ gradlePlugin {
     vcsUrl.set("https://github.com/spxbhuhb/adaptive.git")
     plugins {
         create("a2c") {
-            id = "hu.simplexion.adaptive"
+            id = "fun.adaptive"
             displayName = pomName
             description = pluginDescription
-            implementationClass = "hu.simplexion.adaptive.gradle.AdaptiveGradlePlugin"
+            implementationClass = "fun.adaptive.gradle.AdaptiveGradlePlugin"
             tags.set(listOf("kotlin"))
         }
     }
@@ -91,7 +91,7 @@ tasks.register("jvmTest") {
 
 // ====  Automatic update of the Kotlin plugin version  ========================================================
 
-val fileWithVersion = file("${projectDir}/src/main/kotlin/hu/simplexion/adaptive/gradle/AdaptiveGradlePlugin.kt")
+val fileWithVersion = file("${projectDir}/src/main/kotlin/fun/adaptive/gradle/AdaptiveGradlePlugin.kt")
 val versionRegex = """const val PLUGIN_VERSION\s*=\s*\"(\d+\.\d+\.\d+(-SNAPSHOT)?)\"""".toRegex()
 
 tasks.register("updateVersion") {

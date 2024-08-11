@@ -10,7 +10,7 @@ stringEditor { s }
 A bit more sophisticated example:
 
 ```kotlin
-import hu.simplexion.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.Adaptive
 
 @Adaptive
 fun bookEditor(bookUuid : UUID<Book>) {

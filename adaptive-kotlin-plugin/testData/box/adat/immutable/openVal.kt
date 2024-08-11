@@ -1,4 +1,4 @@
-package hu.simplexion.adaptive.adat
+package `fun`.adaptive.adat
 
 @Adat
 class Padding(

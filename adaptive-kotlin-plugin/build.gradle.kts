@@ -10,7 +10,7 @@ plugins {
     `maven-publish`
 }
 
-group = "hu.simplexion.adaptive"
+group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
 val scmPath = "spxbhuhb/adaptive"
@@ -99,7 +99,7 @@ tasks.test {
 
 tasks.create<JavaExec>("generateTests") {
     classpath = sourceSets.test.get().runtimeClasspath
-    mainClass.set("hu.simplexion.adaptive.kotlin.GenerateTestsKt")
+    mainClass.set("fun.adaptive.kotlin.GenerateTestsKt")
 }
 
 fun Test.setLibraryProperty(propName: String, jarName: String) {

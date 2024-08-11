@@ -9,7 +9,7 @@ Inner and outer instructions are lowered by in `IrFunction2ArmClass` after state
 and before rendering transform.
 
 ```kotlin
-import hu.simplexion.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.Adaptive
 
 @Adaptive
 fun someFun() {

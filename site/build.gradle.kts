@@ -27,7 +27,7 @@ adaptive {
     pluginDebug = false
     resources {
         publicResClass = true
-        packageOfResClass = "hu.simplexion.adaptive.site"
+        packageOfResClass = "fun.adaptive.site"
         generateResClass = auto
     }
 }

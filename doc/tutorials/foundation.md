@@ -166,7 +166,7 @@ You can define higher order fragments by declaring a parameter which is
 a function and is annotated with `@Adaptive`.
 
 ```kotlin
-import hu.simplexion.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.Adaptive
 
 @Adaptive
 fun higherOrder(@Adaptive sub: (time: Instant) -> Unit) {

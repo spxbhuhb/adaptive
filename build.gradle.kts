@@ -15,7 +15,7 @@ val publishTasks = listOf(
 )
 
 val noPublishBuilds = listOf(
-    "sandbox", "site", "test"
+    "sandbox", "site", "test", "adaptive-grove"
 )
 
 fun registerTask(name: String) {

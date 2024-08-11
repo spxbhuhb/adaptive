@@ -47,8 +47,8 @@ text(12)
 ### Instructions
 
 ```kotlin
-import hu.simplexion.adaptive.ui.common.instruction.TextAlign
-import hu.simplexion.adaptive.ui.common.instruction.TextWrap
+import `fun`.adaptive.ui.common.instruction.TextAlign
+import `fun`.adaptive.ui.common.instruction.TextWrap
 
 text("a", FontName("Courier New"))
 text("a", FontSize(12))

@@ -96,9 +96,9 @@ Check these files to see how the given qualifier is retrieved on the given plato
 
 | Platform | Class                                                                                                                                  |
 |----------|----------------------------------------------------------------------------------------------------------------------------------------|
-| android  | [ResourceEnvironment.android.kt](/adaptive-core/src/androidMain/kotlin/hu/simplexion/adaptive/resource/ResourceEnvironment.android.kt) |
-| ios      | [ResourceEnvironment.apple.kt](/adaptive-core/src/appleMain/kotlin/hu/simplexion/adaptive/resource/ResourceEnvironment.apple.kt)       |
-| browser  | [ResourceEnvironment.js.kt](/adaptive-core/src/jsMain/kotlin/hu/simplexion/adaptive/resource/ResourceEnvironment.js.kt)                |
+| android  | [ResourceEnvironment.android.kt](/adaptive-core/src/androidMain/kotlin/fun/adaptive/resource/ResourceEnvironment.android.kt) |
+| ios      | [ResourceEnvironment.apple.kt](/adaptive-core/src/appleMain/kotlin/fun/adaptive/resource/ResourceEnvironment.apple.kt)       |
+| browser  | [ResourceEnvironment.js.kt](/adaptive-core/src/jsMain/kotlin/fun/adaptive/resource/ResourceEnvironment.js.kt)                |
 
 ## Res class
 

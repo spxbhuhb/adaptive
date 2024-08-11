@@ -1,9 +1,9 @@
-package hu.simplexion.adaptive.services
+package `fun`.adaptive.services
 
-import hu.simplexion.adaptive.services.*
-import hu.simplexion.adaptive.services.testing.TestServiceTransport
-import hu.simplexion.adaptive.services.transport.*
-import hu.simplexion.adaptive.wireformat.WireFormatDecoder
+import `fun`.adaptive.services.*
+import `fun`.adaptive.services.testing.TestServiceTransport
+import `fun`.adaptive.services.transport.*
+import `fun`.adaptive.wireformat.WireFormatDecoder
 import kotlinx.coroutines.runBlocking
 
 interface TestService1 : Service {
@@ -11,7 +11,7 @@ interface TestService1 : Service {
 
     class Consumer : TestService1 {
 
-        override var fqName = "hu.simplexion.adaptive.services.TestService1"
+        override var fqName = "fun.adaptive.services.TestService1"
 
         override var serviceCallTransport: ServiceCallTransport? = null
 

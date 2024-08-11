@@ -2,27 +2,27 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-import hu.simplexion.adaptive.foundation.Adaptive
-import hu.simplexion.adaptive.foundation.AdaptiveFragment
-import hu.simplexion.adaptive.foundation.fragment
-import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
-import hu.simplexion.adaptive.foundation.instruction.instructionsOf
-import hu.simplexion.adaptive.foundation.instruction.invoke
-import hu.simplexion.adaptive.foundation.rangeTo
-import hu.simplexion.adaptive.lib.sandbox.ui.graphics.svgExample
-import hu.simplexion.adaptive.lib.sandbox.ui.layout.layoutMain
-import hu.simplexion.adaptive.lib.sandbox.ui.markdown.markdown
-import hu.simplexion.adaptive.lib.sandbox.ui.misc.chessBoard
-import hu.simplexion.adaptive.lib.sandbox.ui.mobile.goodMorning
-import hu.simplexion.adaptive.lib.sandbox.ui.mobile.mobileExample
-import hu.simplexion.adaptive.lib.sandbox.ui.mobile.welcome
-import hu.simplexion.adaptive.lib.sandbox.ui.navigation.slotOne
-import hu.simplexion.adaptive.lib.sandbox.ui.navigation.slotTwo
-import hu.simplexion.adaptive.lib.sandbox.ui.withSandbox
-import hu.simplexion.adaptive.ui.common.browser
-import hu.simplexion.adaptive.ui.common.fragment.*
-import hu.simplexion.adaptive.ui.common.instruction.*
-import hu.simplexion.adaptive.ui.common.platform.withJsResources
+import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.instructionsOf
+import `fun`.adaptive.foundation.instruction.invoke
+import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.lib.sandbox.ui.graphics.svgExample
+import `fun`.adaptive.lib.sandbox.ui.layout.layoutMain
+import `fun`.adaptive.lib.sandbox.ui.markdown.markdown
+import `fun`.adaptive.lib.sandbox.ui.misc.chessBoard
+import `fun`.adaptive.lib.sandbox.ui.mobile.goodMorning
+import `fun`.adaptive.lib.sandbox.ui.mobile.mobileExample
+import `fun`.adaptive.lib.sandbox.ui.mobile.welcome
+import `fun`.adaptive.lib.sandbox.ui.navigation.slotOne
+import `fun`.adaptive.lib.sandbox.ui.navigation.slotTwo
+import `fun`.adaptive.lib.sandbox.ui.withSandbox
+import `fun`.adaptive.ui.common.browser
+import `fun`.adaptive.ui.common.fragment.*
+import `fun`.adaptive.ui.common.instruction.*
+import `fun`.adaptive.ui.common.platform.withJsResources
 
 fun main() {
 

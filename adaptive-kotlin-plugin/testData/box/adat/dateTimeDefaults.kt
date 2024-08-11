@@ -1,9 +1,9 @@
-package hu.simplexion.adaptive.adat
+package `fun`.adaptive.adat
 
 
-import hu.simplexion.adaptive.adat.Adat
-import hu.simplexion.adaptive.utility.instant
-import hu.simplexion.adaptive.utility.isBetween
+import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.utility.instant
+import `fun`.adaptive.utility.isBetween
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime

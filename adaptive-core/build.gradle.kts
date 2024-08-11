@@ -11,7 +11,7 @@ plugins {
     `maven-publish`
 }
 
-group = "hu.simplexion.adaptive"
+group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
 val baseName = "adaptive-core"

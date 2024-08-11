@@ -163,12 +163,12 @@ Built-in transports:
 
 **Stream** (JVM only)
 
-- [StreamServiceCallTransport](/adaptive-core/src/jvmMain/kotlin/hu/simplexion/adaptive/service/transport/StreamServiceCallTransport.kt)
+- [StreamServiceCallTransport](/adaptive-core/src/jvmMain/kotlin/fun/adaptive/service/transport/StreamServiceCallTransport.kt)
 - uses Java input and output streams
 
 **Test**
 
-- [TestServiceTransport](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/service/testing/TestServiceContext.kt)
+- [TestServiceTransport](/adaptive-core/src/commonMain/kotlin/fun/adaptive/service/testing/TestServiceContext.kt)
 - call services of a supplied template or from an implementation factory
 
 ### Disconnecting
@@ -277,7 +277,7 @@ investigation. In contrast, `NullPointerException` should be investigated.
         <appender-ref ref="ErrorLogFile"/>
     </root>
 
-    <logger name="hu.simplexion.adaptive.service.ServiceAccessLog" level="INFO" additivity="false">
+    <logger name="fun.adaptive.service.ServiceAccessLog" level="INFO" additivity="false">
         <appender-ref ref="AccessLogFile"/>
     </logger>
   

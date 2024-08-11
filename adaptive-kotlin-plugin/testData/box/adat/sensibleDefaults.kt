@@ -1,12 +1,12 @@
-package hu.simplexion.adaptive.adat
+package `fun`.adaptive.adat
 
-import hu.simplexion.adaptive.service.*
-import hu.simplexion.adaptive.service.transport.*
-import hu.simplexion.adaptive.service.testing.TestServiceTransport
-import hu.simplexion.adaptive.server.builtin.ServiceImpl
+import `fun`.adaptive.service.*
+import `fun`.adaptive.service.transport.*
+import `fun`.adaptive.service.testing.TestServiceTransport
+import `fun`.adaptive.server.builtin.ServiceImpl
 import kotlinx.coroutines.runBlocking
-import hu.simplexion.adaptive.wireformat.WireFormatDecoder
-import hu.simplexion.adaptive.wireformat.WireFormatRegistry
+import `fun`.adaptive.wireformat.WireFormatDecoder
+import `fun`.adaptive.wireformat.WireFormatRegistry
 
 enum class E {
     E1,

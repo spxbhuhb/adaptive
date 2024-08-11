@@ -1,14 +1,14 @@
 /*
  * Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.adaptive.kotlin.base.success
+package `fun`.adaptive.kotlin.base.success
 
-import hu.simplexion.adaptive.foundation.*
-import hu.simplexion.adaptive.foundation.testing.*
-import hu.simplexion.adaptive.foundation.producer.*
-import hu.simplexion.adaptive.adat.Adat
-import hu.simplexion.adaptive.adat.AdatClass
-import hu.simplexion.adaptive.adat.store.copyStore
+import `fun`.adaptive.foundation.*
+import `fun`.adaptive.foundation.testing.*
+import `fun`.adaptive.foundation.producer.*
+import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.store.copyStore
 
 @Adat
 class T(
@@ -45,8 +45,8 @@ fun box(): String {
             TraceEvent("AdaptiveCopyStoreTest", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null]"),
             TraceEvent("AdaptiveCopyStoreTest", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, null]"),
             TraceEvent("AdaptiveCopyStoreTest", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, null]"),
-            TraceEvent("AdaptiveCopyStoreTest", 3, "before-Add-Producer", "producer: CopyStore(AdaptiveStateVariableBinding(3, 1, 1, 3, 1, null, AdaptivePropertyMetadata(hu.simplexion.adaptive.kotlin.base.success.T)))"),
-            TraceEvent("AdaptiveCopyStoreTest", 3, "after-Add-Producer", "producer: CopyStore(AdaptiveStateVariableBinding(3, 1, 1, 3, 1, null, AdaptivePropertyMetadata(hu.simplexion.adaptive.kotlin.base.success.T)))"),
+            TraceEvent("AdaptiveCopyStoreTest", 3, "before-Add-Producer", "producer: CopyStore(AdaptiveStateVariableBinding(3, 1, 1, 3, 1, null, AdaptivePropertyMetadata(fun.adaptive.kotlin.base.success.T)))"),
+            TraceEvent("AdaptiveCopyStoreTest", 3, "after-Add-Producer", "producer: CopyStore(AdaptiveStateVariableBinding(3, 1, 1, 3, 1, null, AdaptivePropertyMetadata(fun.adaptive.kotlin.base.success.T)))"),
             TraceEvent("AdaptiveCopyStoreTest", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12, T(ti=14)]"),
             TraceEvent("AdaptiveT1", 4, "before-Create", ""),
             TraceEvent("AdaptiveT1", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
@@ -65,10 +65,10 @@ fun box(): String {
             TraceEvent("AdaptiveCopyStoreTest", 3, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [12, T(ti=14)]"),
             TraceEvent("AdaptiveCopyStoreTest", 3, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [23, T(ti=14)]"),
             TraceEvent("AdaptiveCopyStoreTest", 3, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [23, T(ti=14)]"),
-            TraceEvent("AdaptiveCopyStoreTest", 3, "before-Add-Producer", "producer: CopyStore(AdaptiveStateVariableBinding(3, 1, 1, 3, 1, null, AdaptivePropertyMetadata(hu.simplexion.adaptive.kotlin.base.success.T)))"),
-            TraceEvent("AdaptiveCopyStoreTest", 3, "before-Remove-Producer", "producer: CopyStore(AdaptiveStateVariableBinding(3, 1, 1, 3, 1, null, AdaptivePropertyMetadata(hu.simplexion.adaptive.kotlin.base.success.T)))"),
-            TraceEvent("AdaptiveCopyStoreTest", 3, "after-Remove-Producer", "producer: CopyStore(AdaptiveStateVariableBinding(3, 1, 1, 3, 1, null, AdaptivePropertyMetadata(hu.simplexion.adaptive.kotlin.base.success.T)))"),
-            TraceEvent("AdaptiveCopyStoreTest", 3, "after-Add-Producer", "producer: CopyStore(AdaptiveStateVariableBinding(3, 1, 1, 3, 1, null, AdaptivePropertyMetadata(hu.simplexion.adaptive.kotlin.base.success.T)))"),
+            TraceEvent("AdaptiveCopyStoreTest", 3, "before-Add-Producer", "producer: CopyStore(AdaptiveStateVariableBinding(3, 1, 1, 3, 1, null, AdaptivePropertyMetadata(fun.adaptive.kotlin.base.success.T)))"),
+            TraceEvent("AdaptiveCopyStoreTest", 3, "before-Remove-Producer", "producer: CopyStore(AdaptiveStateVariableBinding(3, 1, 1, 3, 1, null, AdaptivePropertyMetadata(fun.adaptive.kotlin.base.success.T)))"),
+            TraceEvent("AdaptiveCopyStoreTest", 3, "after-Remove-Producer", "producer: CopyStore(AdaptiveStateVariableBinding(3, 1, 1, 3, 1, null, AdaptivePropertyMetadata(fun.adaptive.kotlin.base.success.T)))"),
+            TraceEvent("AdaptiveCopyStoreTest", 3, "after-Add-Producer", "producer: CopyStore(AdaptiveStateVariableBinding(3, 1, 1, 3, 1, null, AdaptivePropertyMetadata(fun.adaptive.kotlin.base.success.T)))"),
             TraceEvent("AdaptiveT1", 4, "before-Patch-External", "createMask: 0x00000003 thisMask: 0x00000000 state: [14]"),
             TraceEvent("AdaptiveT1", 4, "after-Patch-External", "createMask: 0x00000003 thisMask: 0x00000001 state: [25]"),
             TraceEvent("AdaptiveT1", 4, "before-Patch-Internal", "createMask: 0x00000003 thisMask: 0x00000001 state: [25]"),

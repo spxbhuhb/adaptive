@@ -3,11 +3,11 @@
  */
 package stuff
 
-import hu.simplexion.adaptive.foundation.*
-import hu.simplexion.adaptive.foundation.instruction.*
-import hu.simplexion.adaptive.foundation.query.*
-import hu.simplexion.adaptive.foundation.fragment.*
-import hu.simplexion.adaptive.foundation.testing.*
+import `fun`.adaptive.foundation.*
+import `fun`.adaptive.foundation.instruction.*
+import `fun`.adaptive.foundation.query.*
+import `fun`.adaptive.foundation.fragment.*
+import `fun`.adaptive.foundation.testing.*
 
 @Adaptive
 fun login() {

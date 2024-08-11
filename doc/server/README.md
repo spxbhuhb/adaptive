@@ -8,11 +8,11 @@ Server is actually a bit of a misnomer because you can use these components anyw
 Built-in fragments store a so-called "implementation" which you typically pass to the fragment as 
 a result of a builder function.
 
-| Fragment | Class                                                                                                            | Module | Description                                                                           |
-|----------|------------------------------------------------------------------------------------------------------------------|--------|---------------------------------------------------------------------------------------|
-| service  | [AdaptiveService](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/server/builtin/AdaptiveService.kt) | core   | client request handler, new instance for each request                                 |
-| worker   | [AdaptiveWorker](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/server/builtin/AdaptiveWorker.kt)   | core   | background worker, one (or few) instances per server                                  |
-| store    | [AdaptiveStore](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/server/builtin/AdaptiveStore.kt)     | core   | a store of data, you can use any kind of data storage (SQL, No-SQL, whatever, really) |
+| Fragment | Class                                                                                                | Module | Description                                                                           |
+|----------|------------------------------------------------------------------------------------------------------|--------|---------------------------------------------------------------------------------------|
+| service  | [AdaptiveService](/adaptive-core/src/commonMain/kotlin/fun/adaptive/server/builtin/ServerService.kt) | core   | client request handler, new instance for each request                                 |
+| worker   | [AdaptiveWorker](/adaptive-core/src/commonMain/kotlin/fun/adaptive/server/builtin/ServerWorker.kt)   | core   | background worker, one (or few) instances per server                                  |
+| store    | [AdaptiveStore](/adaptive-core/src/commonMain/kotlin/fun/adaptive/server/builtin/ServerStore.kt)     | core   | a store of data, you can use any kind of data storage (SQL, No-SQL, whatever, really) |
 
 A server main looks like this (but of course you can use `server` anywhere).
 

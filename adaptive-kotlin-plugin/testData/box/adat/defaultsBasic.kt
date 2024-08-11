@@ -1,7 +1,7 @@
-package hu.simplexion.adaptive.adat
+package `fun`.adaptive.adat
 
-import hu.simplexion.adaptive.service.*
-import hu.simplexion.adaptive.service.transport.*
+import `fun`.adaptive.service.*
+import `fun`.adaptive.service.transport.*
 
 @Adat
 class TestAdat(

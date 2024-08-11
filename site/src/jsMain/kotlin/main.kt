@@ -2,24 +2,23 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-import hu.simplexion.adaptive.foundation.Adaptive
-import hu.simplexion.adaptive.foundation.adapter
-import hu.simplexion.adaptive.foundation.rangeTo
-import hu.simplexion.adaptive.resource.DrawableResource
-import hu.simplexion.adaptive.site.*
-import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
-import hu.simplexion.adaptive.ui.common.browser
-import hu.simplexion.adaptive.ui.common.fragment.*
-import hu.simplexion.adaptive.ui.common.instruction.*
-import hu.simplexion.adaptive.ui.common.instruction.AlignItems.Companion.alignItems
-import hu.simplexion.adaptive.ui.common.platform.MediaMetrics
-import hu.simplexion.adaptive.ui.common.platform.mediaMetrics
-import hu.simplexion.adaptive.ui.common.platform.withJsResources
-import hu.simplexion.adaptive.wireformat.withJsonWireFormat
+import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.adapter
+import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.resource.DrawableResource
+import `fun`.adaptive.site.*
+import `fun`.adaptive.ui.common.AbstractCommonAdapter
+import `fun`.adaptive.ui.common.browser
+import `fun`.adaptive.ui.common.fragment.*
+import `fun`.adaptive.ui.common.instruction.*
+import `fun`.adaptive.ui.common.instruction.AlignItems.Companion.alignItems
+import `fun`.adaptive.ui.common.platform.MediaMetrics
+import `fun`.adaptive.ui.common.platform.mediaMetrics
+import `fun`.adaptive.ui.common.platform.withJsResources
 
 fun main() {
 
-    withJsonWireFormat()
+    //withJsonWebSocketTransport(window.location.origin)
     withJsResources()
 
     browser {

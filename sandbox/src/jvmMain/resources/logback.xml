@@ -83,7 +83,7 @@
         <appender-ref ref="ErrorLogFile"/>
     </root>
 
-    <logger name="hu.simplexion.adaptive.service.ServiceAccessLog" level="INFO" additivity="false">
+    <logger name="fun.adaptive.service.ServiceAccessLog" level="INFO" additivity="false">
         <appender-ref ref="AccessLogFile"/>
     </logger>
 

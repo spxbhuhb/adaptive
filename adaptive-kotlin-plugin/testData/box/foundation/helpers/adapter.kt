@@ -1,10 +1,10 @@
 /*
  * Copyright © 2020-2021, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package hu.simplexion.adaptive.kotlin.base.success
+package `fun`.adaptive.kotlin.base.success
 
-import hu.simplexion.adaptive.foundation.*
-import hu.simplexion.adaptive.foundation.testing.*
+import `fun`.adaptive.foundation.*
+import `fun`.adaptive.foundation.testing.*
 
 var actual : AdaptiveAdapter? = null
 

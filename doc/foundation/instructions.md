@@ -7,7 +7,7 @@ Here, all the parameters of `row` are instructions. This is a mix of built-in an
 defined instructions.
 
 ```kotlin
-import hu.simplexion.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.Adaptive
 
 @Adaptive
 fun someFun() {
@@ -30,7 +30,7 @@ This results in much more readable code.
 >
 
 ```kotlin
-import hu.simplexion.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.Adaptive
 
 @Adaptive
 fun someFun() {
@@ -49,8 +49,8 @@ You can put instructions after rendering statements with the `..` (rangeTo) oper
 This also results in much readable code.
 
 ```kotlin
-import hu.simplexion.adaptive.foundation.Adaptive
-import hu.simplexion.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.rangeTo
 
 @Adaptive
 fun someFun() {
@@ -155,8 +155,8 @@ there is a `Replace` instruction.
 This invoke is no-op when there is no such instruction.
 
 ```kotlin
-import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
-import hu.simplexion.adaptive.foundation.instruction.invoke
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.invoke
 
 @Adaptive
 fun link(label: String, vararg instructions: AdaptiveInstruction) {
@@ -175,7 +175,7 @@ fun link(label: String, vararg instructions: AdaptiveInstruction) {
 Simply create a class or an object that implements `AdaptiveInstruction`:
 
 ```kotlin
-import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 
 class SomeInstruction(val someString: String)
 
@@ -192,7 +192,7 @@ Use on of:
 - `filterWith`
 
 ```kotlin
-import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 
 object A : AdaptiveInstruction
 object B : AdaptiveInstruction

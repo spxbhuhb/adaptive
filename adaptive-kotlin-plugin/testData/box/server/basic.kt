@@ -1,11 +1,11 @@
-package hu.simplexion.adaptive.service
+package `fun`.adaptive.service
 
-import hu.simplexion.adaptive.server.*
-import hu.simplexion.adaptive.service.*
-import hu.simplexion.adaptive.service.transport.*
-import hu.simplexion.adaptive.service.testing.TestServiceTransport
+import `fun`.adaptive.server.*
+import `fun`.adaptive.service.*
+import `fun`.adaptive.service.transport.*
+import `fun`.adaptive.service.testing.TestServiceTransport
 import kotlinx.coroutines.runBlocking
-import hu.simplexion.adaptive.wireformat.WireFormatDecoder
+import `fun`.adaptive.wireformat.WireFormatDecoder
 
 //interface TestService : Service {
 //    suspend fun testFun(arg1: Int, arg2: String): String

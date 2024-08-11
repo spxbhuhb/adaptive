@@ -3,11 +3,11 @@
  */
 package stuff
 
-import hu.simplexion.adaptive.foundation.instruction.*
-import hu.simplexion.adaptive.foundation.*
-import hu.simplexion.adaptive.foundation.testing.*
-import hu.simplexion.adaptive.foundation.fragment.*
-import hu.simplexion.adaptive.foundation.query.*
+import `fun`.adaptive.foundation.instruction.*
+import `fun`.adaptive.foundation.*
+import `fun`.adaptive.foundation.testing.*
+import `fun`.adaptive.foundation.fragment.*
+import `fun`.adaptive.foundation.query.*
 
 @Adaptive
 fun text(content: String, vararg instructions: AdaptiveInstruction) {
@@ -52,7 +52,7 @@ fun box(): String {
 
     val inst = adapter.collect<Append>().single()
 
-    if (inst.name != "hu.simplexion.adaptive.foundation.testing.AdaptiveT1") return "Fail: inst.name == T1 (${inst.name})"
+    if (inst.name != "fun.adaptive.foundation.testing.AdaptiveT1") return "Fail: inst.name == T1 (${inst.name})"
 
     return "OK"
 }

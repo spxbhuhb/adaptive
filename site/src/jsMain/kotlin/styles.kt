@@ -1,4 +1,4 @@
-import hu.simplexion.adaptive.ui.common.instruction.*
+import `fun`.adaptive.ui.common.instruction.*
 
 val white = Color(0xffffffu)
 val gray = Color(0x606060u)

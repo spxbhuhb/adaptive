@@ -1,10 +1,10 @@
 package foo.bar
 
-import hu.simplexion.adaptive.serialization.protobuf.*
-import hu.simplexion.adaptive.service.ServiceResponseEndpoint
-import hu.simplexion.adaptive.service.transport.ServiceResponseListener
-import hu.simplexion.adaptive.services.*
-import hu.simplexion.adaptive.services.transport.ServiceCallTransport
+import `fun`.adaptive.serialization.protobuf.*
+import `fun`.adaptive.service.ServiceResponseEndpoint
+import `fun`.adaptive.service.transport.ServiceResponseListener
+import `fun`.adaptive.services.*
+import `fun`.adaptive.services.transport.ServiceCallTransport
 import kotlinx.coroutines.runBlocking
 import kotlin.TODO
 

@@ -4,9 +4,9 @@
 
 package foo.bar
 
-import hu.simplexion.adaptive.serialization.protobuf.*
-import hu.simplexion.adaptive.services.*
-import hu.simplexion.adaptive.services.transport.ServiceCallTransport
+import `fun`.adaptive.serialization.protobuf.*
+import `fun`.adaptive.services.*
+import `fun`.adaptive.services.transport.ServiceCallTransport
 import kotlinx.coroutines.runBlocking
 
 interface BasicService : Service {

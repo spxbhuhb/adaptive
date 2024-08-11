@@ -2,10 +2,10 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package hu.simplexion.adaptive.service
+package `fun`.adaptive.service
 
-import hu.simplexion.adaptive.foundation.adaptive
-import hu.simplexion.adaptive.foundation.testing.*
+import `fun`.adaptive.foundation.adaptive
+import `fun`.adaptive.foundation.testing.*
 
 fun hello(b : () -> Int) : Int {
     return b()

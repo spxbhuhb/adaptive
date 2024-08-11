@@ -172,8 +172,8 @@ to be scrolled to contain everything. The column that contains `bigStuff` is sma
 the content of that column has to be scrolled.
 
 ```kotlin
-import hu.simplexion.adaptive.foundation.Adaptive
-import hu.simplexion.adaptive.ui.common.instruction.scroll
+import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.ui.common.instruction.scroll
 
 @Adaptive
 fun a() {

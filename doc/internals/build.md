@@ -31,7 +31,7 @@ Everything uses the dependencies defined in [libs.versions.toml](gradle/libs.ver
 To bump Adaptive version number:
 
 - change `adaptive` version in  [libs.versions.toml](gradle/libs.versions.toml)
-- change `PLUGIN_VERSION` in [AdaptiveGradlePlugin](adaptive-gradle-plugin/src/main/kotlin/hu/simplexion/adaptive/gradle/AdaptiveGradlePlugin.kt) (also
+- change `PLUGIN_VERSION` in [AdaptiveGradlePlugin](/adaptive-gradle-plugin/src/main/kotlin/fun/adaptive/gradle/AdaptiveGradlePlugin.kt) (also
   see https://github.com/spxbhuhb/adaptive/issues/7)
 
 ## Debug

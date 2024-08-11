@@ -3,8 +3,8 @@
  */
 package stuff
 
-import hu.simplexion.adaptive.foundation.*
-import hu.simplexion.adaptive.foundation.testing.*
+import `fun`.adaptive.foundation.*
+import `fun`.adaptive.foundation.testing.*
 
 @AdaptiveExpect("c")
 fun test() {

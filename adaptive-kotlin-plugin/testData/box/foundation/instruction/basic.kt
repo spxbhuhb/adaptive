@@ -3,11 +3,11 @@
  */
 package stuff
 
-import hu.simplexion.adaptive.foundation.instruction.AdaptiveInstruction
-import hu.simplexion.adaptive.foundation.Adaptive
-import hu.simplexion.adaptive.foundation.adaptive
-import hu.simplexion.adaptive.foundation.testing.*
-import hu.simplexion.adaptive.foundation.query.*
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.adaptive
+import `fun`.adaptive.foundation.testing.*
+import `fun`.adaptive.foundation.query.*
 
 @Adaptive
 fun tf(vararg instructions: AdaptiveInstruction) {

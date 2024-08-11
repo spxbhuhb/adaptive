@@ -1,8 +1,8 @@
-package hu.simplexion.adaptive.adat
+package `fun`.adaptive.adat
 
-import hu.simplexion.adaptive.service.*
-import hu.simplexion.adaptive.service.transport.*
-import hu.simplexion.adaptive.service.model.ReturnException
+import `fun`.adaptive.service.*
+import `fun`.adaptive.service.transport.*
+import `fun`.adaptive.service.model.ReturnException
 
 @Adat
 class TestAdat(

@@ -15,7 +15,7 @@ The `adaptive-lib-auto` module provides data types that are automatically synchr
 These stores use [CRDT](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type) data types under the hood to make sure that the actual data is the same on all peers.
 
 ```kotlin
-import hu.simplexion.adaptive.service.transport.ServiceResponseListener
+import `fun`.adaptive.service.transport.ServiceResponseListener
 
 @Adat
 class SomeData(

@@ -1,15 +1,15 @@
-package hu.simplexion.adaptive.adat
+package `fun`.adaptive.adat
 
-import hu.simplexion.adaptive.adat.Adat
-import hu.simplexion.adaptive.adat.AdatClass
-import hu.simplexion.adaptive.service.*
-import hu.simplexion.adaptive.service.transport.*
-import hu.simplexion.adaptive.service.testing.TestServiceTransport
-import hu.simplexion.adaptive.server.builtin.ServiceImpl
+import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.service.*
+import `fun`.adaptive.service.transport.*
+import `fun`.adaptive.service.testing.TestServiceTransport
+import `fun`.adaptive.server.builtin.ServiceImpl
 import kotlinx.coroutines.runBlocking
-import hu.simplexion.adaptive.wireformat.WireFormatDecoder
-import hu.simplexion.adaptive.wireformat.WireFormatRegistry
-import hu.simplexion.adaptive.wireformat.toJson
+import `fun`.adaptive.wireformat.WireFormatDecoder
+import `fun`.adaptive.wireformat.WireFormatRegistry
+import `fun`.adaptive.wireformat.toJson
 
 @Adat
 class T1(

@@ -2,7 +2,7 @@
 
 ios-support = "yes"
 
-adaptive = "2024.07.20-SNAPSHOT"
+adaptive = "0.6.0-SNAPSHOT"
 agp = "8.2.0"
 android-compileSdk = "34"
 android-minSdk = "26"
@@ -22,6 +22,7 @@ exposed = "0.41.1"
 javamail = "1.6.2"
 junit = "4.13.2"
 junit-bom = "5.8.0"
+jreleaser = "1.13.1"
 kotlin = "2.0.0"
 kotlinpoet = "1.16.0"
 kotlin-wrappers = "1.0.0-pre.760"
@@ -35,13 +36,13 @@ subethamail = "3.1.7"
 
 [libraries]
 
-adaptive-core = { module = "hu.simplexion.adaptive:adaptive-core", version.ref = "adaptive" }
-adaptive-lib-auth = { module = "hu.simplexion.adaptive:adaptive-lib-auth", version.ref = "adaptive" }
-adaptive-lib-email = { module = "hu.simplexion.adaptive:adaptive-lib-email", version.ref = "adaptive" }
-adaptive-lib-exposed = { module = "hu.simplexion.adaptive:adaptive-lib-exposed", version.ref = "adaptive" }
-adaptive-lib-ktor = { module = "hu.simplexion.adaptive:adaptive-lib-ktor", version.ref = "adaptive" }
-adaptive-lib-sandbox = { module = "hu.simplexion.adaptive:adaptive-lib-sandbox", version.ref = "adaptive" }
-adaptive-ui = { module = "hu.simplexion.adaptive:adaptive-ui", version.ref = "adaptive" }
+adaptive-core = { module = "fun.adaptive:adaptive-core", version.ref = "adaptive" }
+adaptive-lib-auth = { module = "fun.adaptive:adaptive-lib-auth", version.ref = "adaptive" }
+adaptive-lib-email = { module = "fun.adaptive:adaptive-lib-email", version.ref = "adaptive" }
+adaptive-lib-exposed = { module = "fun.adaptive:adaptive-lib-exposed", version.ref = "adaptive" }
+adaptive-lib-ktor = { module = "fun.adaptive:adaptive-lib-ktor", version.ref = "adaptive" }
+adaptive-lib-sandbox = { module = "fun.adaptive:adaptive-lib-sandbox", version.ref = "adaptive" }
+adaptive-ui = { module = "fun.adaptive:adaptive-ui", version.ref = "adaptive" }
 
 android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
@@ -97,7 +98,7 @@ subethamail = { module = "org.subethamail:subethasmtp", version.ref = "subethama
 
 [plugins]
 
-adaptive = { id = "hu.simplexion.adaptive", version.ref = "adaptive" }
+adaptive = { id = "fun.adaptive", version.ref = "adaptive" }
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 download = { id = "de.undercouch.download", version.ref = "gradle-download-plugin" }
@@ -106,3 +107,4 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
 pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publish" }
+jReleaser = { id = "org.jreleaser", version.ref = "jreleaser" }

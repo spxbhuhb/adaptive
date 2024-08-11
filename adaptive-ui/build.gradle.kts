@@ -13,7 +13,7 @@ plugins {
     `maven-publish`
 }
 
-group = "hu.simplexion.adaptive"
+group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
 val baseName = "adaptive-ui"
@@ -81,7 +81,7 @@ kotlin {
 }
 
 android {
-    namespace = "hu.simplexion.adaptive.ui"
+    namespace = "fun.adaptive.ui"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

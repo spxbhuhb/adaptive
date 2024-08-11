@@ -1,14 +1,14 @@
-import hu.simplexion.adaptive.foundation.AdaptiveAdapter
-import hu.simplexion.adaptive.foundation.instruction.AdaptiveDetach
-import hu.simplexion.adaptive.foundation.instruction.DetachHandler
-import hu.simplexion.adaptive.foundation.instruction.DetachName
-import hu.simplexion.adaptive.foundation.instruction.name
-import hu.simplexion.adaptive.resource.ThemeQualifier
-import hu.simplexion.adaptive.ui.common.AbstractCommonAdapter
-import hu.simplexion.adaptive.ui.common.instruction.NavClick
-import hu.simplexion.adaptive.ui.common.instruction.colTemplate
-import hu.simplexion.adaptive.ui.common.instruction.fr
-import hu.simplexion.adaptive.ui.common.instruction.rowTemplate
+import `fun`.adaptive.foundation.AdaptiveAdapter
+import `fun`.adaptive.foundation.instruction.AdaptiveDetach
+import `fun`.adaptive.foundation.instruction.DetachHandler
+import `fun`.adaptive.foundation.instruction.DetachName
+import `fun`.adaptive.foundation.instruction.name
+import `fun`.adaptive.resource.ThemeQualifier
+import `fun`.adaptive.ui.common.AbstractCommonAdapter
+import `fun`.adaptive.ui.common.instruction.NavClick
+import `fun`.adaptive.ui.common.instruction.colTemplate
+import `fun`.adaptive.ui.common.instruction.fr
+import `fun`.adaptive.ui.common.instruction.rowTemplate
 
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.

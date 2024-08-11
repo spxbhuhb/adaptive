@@ -2,7 +2,7 @@
 
 The UI fragments are sorted into namespaces, for example `common`, `canvas`, `svg`.
 
-Each namespace has a package in `commonMain`, `hu.simplexion.adaptive.grapics.canvas` for the `canvas` namespace for example.
+Each namespace has a package in `commonMain`, ``fun`.adaptive.grapics.canvas` for the `canvas` namespace for example.
 
 The layout of this package shall be the same for all namespaces as detailed below. Empty directories
 may be omitted.

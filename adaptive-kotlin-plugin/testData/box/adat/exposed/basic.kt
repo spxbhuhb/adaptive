@@ -1,9 +1,9 @@
-package hu.simplexion.adaptive.exposed // this is important so lookups work fine
+package `fun`.adaptive.exposed // this is important so lookups work fine
 
-import hu.simplexion.adaptive.adat.Adat
-import hu.simplexion.adaptive.adat.AdatClass
-import hu.simplexion.adaptive.utility.UUID
-import hu.simplexion.adaptive.utility.manualOrPlugin
+import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.manualOrPlugin
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IdTable
 import org.jetbrains.exposed.dao.id.UUIDTable

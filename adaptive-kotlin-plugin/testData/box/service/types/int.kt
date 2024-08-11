@@ -1,11 +1,11 @@
-package hu.simplexion.adaptive.service
+package `fun`.adaptive.service
 
-import hu.simplexion.adaptive.server.builtin.ServiceImpl
-import hu.simplexion.adaptive.service.ServiceApi
-import hu.simplexion.adaptive.service.defaultServiceCallTransport
-import hu.simplexion.adaptive.service.getService
-import hu.simplexion.adaptive.service.testing.TestServiceTransport
-import hu.simplexion.adaptive.service.transport.ServiceCallTransport
+import `fun`.adaptive.server.builtin.ServiceImpl
+import `fun`.adaptive.service.ServiceApi
+import `fun`.adaptive.service.defaultServiceCallTransport
+import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.testing.TestServiceTransport
+import `fun`.adaptive.service.transport.ServiceCallTransport
 import kotlinx.coroutines.runBlocking
 
 @ServiceApi

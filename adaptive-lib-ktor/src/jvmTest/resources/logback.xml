@@ -27,6 +27,6 @@
 
     <logger name="io.ktor.websocket" level="INFO"/>
 
-    <logger name="hu.simplexion.adaptive.ktor" level="TRACE"/>
+    <logger name="fun.adaptive.ktor" level="TRACE"/>
 
 </configuration>

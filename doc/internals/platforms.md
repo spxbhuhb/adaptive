@@ -9,11 +9,11 @@ Adaptive needs these functions/classes implemented on a given platform:
 
 Platform specific files and functions:
 
-* [clock](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/utility/clock.kt) - `vmNowMicro`, `vmNowSecond`
-* [lock](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/utility/lock.kt) - `getLock`
-* [process](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/utility/process.kt) - `exitProcessCommon`
-* [random](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/utility/random.kt) - `fourRandomInt`
-* [logger](/adaptive-core/src/commonMain/kotlin/hu/simplexion/adaptive/log/logger.kt) - `getLogger`
+* [clock](/adaptive-core/src/commonMain/kotlin/fun/adaptive/utility/clock.kt) - `vmNowMicro`, `vmNowSecond`
+* [lock](/adaptive-core/src/commonMain/kotlin/fun/adaptive/utility/lock.kt) - `getLock`
+* [process](/adaptive-core/src/commonMain/kotlin/fun/adaptive/utility/process.kt) - `exitProcessCommon`
+* [random](/adaptive-core/src/commonMain/kotlin/fun/adaptive/utility/random.kt) - `fourRandomInt`
+* [logger](/adaptive-core/src/commonMain/kotlin/fun/adaptive/log/logger.kt) - `getLogger`
 
 | Platform   | `clock`                  | `lock`            | `process`                                   | `random`                        | `logger`                   |
 |------------|--------------------------|-------------------|---------------------------------------------|---------------------------------|----------------------------|

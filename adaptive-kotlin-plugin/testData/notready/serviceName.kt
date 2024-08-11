@@ -4,9 +4,9 @@
 
 package foo.bar
 
-import hu.simplexion.adaptive.services.Service
-import hu.simplexion.adaptive.services.ServiceImpl
-import hu.simplexion.adaptive.services.getService
+import `fun`.adaptive.services.Service
+import `fun`.adaptive.services.ServiceImpl
+import `fun`.adaptive.services.getService
 
 interface TestService : Service {
 

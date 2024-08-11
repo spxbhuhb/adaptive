@@ -1,12 +1,12 @@
-package hu.simplexion.adaptive.services.runtime.test.box.context
+package `fun`.adaptive.services.runtime.test.box.context
 
-import hu.simplexion.adaptive.services.Service
-import hu.simplexion.adaptive.services.getService
-import hu.simplexion.adaptive.services.ServiceContext
-import hu.simplexion.adaptive.services.ServiceImpl
+import `fun`.adaptive.services.Service
+import `fun`.adaptive.services.getService
+import `fun`.adaptive.services.ServiceContext
+import `fun`.adaptive.services.ServiceImpl
 import kotlinx.coroutines.runBlocking
-import hu.simplexion.adaptive.services.defaultServiceImplFactory
-import hu.simplexion.adaptive.util.UUID
+import `fun`.adaptive.services.defaultServiceImplFactory
+import `fun`.adaptive.util.UUID
 
 interface TestService : Service {
 
