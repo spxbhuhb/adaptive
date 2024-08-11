@@ -94,7 +94,7 @@ mavenPublishing {
     pom {
         description.set(project.name)
         name.set(pomName)
-        url.set("https://github.com/$scmPath")
+        url.set("https://adaptive.fun")
         scm {
             url.set("https://github.com/$scmPath")
             connection.set("scm:git:git://github.com/$scmPath.git")
