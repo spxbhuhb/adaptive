@@ -1,4 +1,4 @@
-package `fun`.adaptive.auto.deprecated.tree/*
+/*
  * License CC0 - http://creativecommons.org/publicdomain/zero/1.0/
  * To the extent possible under law, the author(s) have dedicated all
  * copyright and related and neighboring rights to this software to
@@ -8,56 +8,63 @@ package `fun`.adaptive.auto.deprecated.tree/*
  * This code a Kotlin port of: https://madebyevan.com/algos/crdt-mutable-tree-hierarchy/
  */
 
-import `fun`.adaptive.auto.FragmentStore
+package `fun`.adaptive.auto.backend.tree
+
 import `fun`.adaptive.auto.ItemId
+import `fun`.adaptive.auto.backend.TreeBackend
+import kotlin.collections.get
 import kotlin.math.max
 
-typealias Value = Int
-
 class TreeData(
-    val store: FragmentStore
+    val backend : TreeBackend,
 ) {
 
-    private val activeNodes = Node(ItemId(0, 1))
-    private val deletedNodes = Node(ItemId(0, 2))
+    val activeNodes = Node(ItemId(0, 1))
+    val removedNodes = Node(ItemId(0, 2))
 
-    private val root = Node(ItemId(0, 0)).also { root ->
+    val root = Node(ItemId(0, 0)).also { root ->
         root.children += activeNodes
-        root.children += deletedNodes
+        root.children += removedNodes
         activeNodes.edges[root.id] = 0
-        deletedNodes.edges[root.id] = 0
+        removedNodes.edges[root.id] = 0
     }
 
-    private val nodes = mutableMapOf(
+    val nodes = mutableMapOf(
         root.id to root,
         activeNodes.id to activeNodes,
-        deletedNodes.id to deletedNodes
+        removedNodes.id to removedNodes
     )
 
     /**
-     * Keep the in-memory tree up to date and cycle-free as the database is mutated
+     * Keep the in-memory tree up to date and cycle-free as the database is mutated.
      */
-    fun afterApply(op: TreeOperation) {
+    fun afterApply(itemId : ItemId, parentId: ItemId, counter : Int?, commit : Boolean = true) {
         // Each mutation takes place on the child. The key is the parent
         // identifier and the value is the counter for that graph edge.
-        var child = nodes[op.id]
+
+        var child = nodes[itemId]
         if (child == null) {
             // Make sure the child exists
-            child = Node(op.id)
-            nodes[op.id] = child
+            child = Node(itemId)
+            nodes[itemId] = child
         }
-        if (op.key !in nodes) {
+
+        if (parentId !in nodes) {
             // Make sure the parent exists
-            nodes[op.key] = Node(op.key)
+            nodes[parentId] = Node(parentId)
         }
-        if (op.value == null) {
+
+        if (counter == null) {
             // Undo can revert a value back to undefined
-            child.edges.remove(op.key)
+            child.edges.remove(parentId)
         } else {
             // Otherwise, add an edge from the child to the parent
-            child.edges[op.key] = op.value
+            child.edges[parentId] = counter
         }
-        recomputeParentsAndChildren()
+
+        if (commit) {
+            recomputeParentsAndChildren()
+        }
     }
 
     fun recomputeParentsAndChildren() {
@@ -88,7 +95,7 @@ class TreeData(
         // node. The order of reattachment is arbitrary but needs to be based
         // only on information in the database so that all peers reattach
         // non-rooted nodes in the same order and end up with the same tree.
-        if (nonRootedNodes.size > 0) {
+        if (nonRootedNodes.isNotEmpty()) {
             // All "ready" edges already have the parent connected to the root,
             // and all "deferred" edges have a parent not yet connected to the
             // root. Prioritize newer edges over older edges using the counter.
@@ -181,7 +188,7 @@ class TreeData(
                 maxCounter = max(maxCounter, counter)
             }
 
-            store.add(TreeOperation(child.id, parent.id, maxCounter + 1, store.nextTime()))
+            backend.moved(child.id, parent.id)
         }
     }
 

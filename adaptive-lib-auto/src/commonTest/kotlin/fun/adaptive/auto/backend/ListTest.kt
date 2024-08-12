@@ -1,5 +1,6 @@
 package `fun`.adaptive.auto.backend
 
+import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.auto.LamportTimestamp
 import `fun`.adaptive.auto.connector.DirectConnector
 import `fun`.adaptive.auto.frontend.AdatClassListFrontend
@@ -10,9 +11,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 
-class ListBackendTest {
+class ListTest {
 
     @Test
     fun basic() {
@@ -36,29 +38,44 @@ class ListBackendTest {
             b2.addPeer(DirectConnector(b1), c1.time)
 
             f1.add(testData)
-            assertEquals(testData, f2.values.first().instance)
+            f2.assertEquals(f1)
 
-            f1.values.first().also {
-                f1.modify(it.itemId, "i", 23)
-                assertEquals(23, f2.values.first().instance.i)
-            }
+            val itemId1 = f1.values.first().itemId
+            f1.modify(itemId1, "i", 23)
+            f2.assertEquals(f1)
 
-            f2.values.first().also {
-                f2.modify(it.itemId, "i", 34)
-                assertEquals(34, f1.values.first().instance.i)
-            }
+            f2.modify(itemId1, "i", 34)
+            f1.assertEquals(f2)
 
             val t2 = TestData(54, "ef")
             f1.add(t2)
-            assertEquals(t2, f2.values[1].instance)
+            f2.assertEquals(f1)
 
             val t3 = TestData(67, "gh")
             f2.add(t3)
-            assertEquals(t3, f1.values[2].instance)
+            f1.assertEquals(f2)
 
-            f1.remove(f1.values.first().itemId)
-            assertEquals(2, f2.values.size)
+            f1.remove(itemId1)
+            f2.assertEquals(f1)
         }
     }
 
+    fun <A : AdatClass<A>> AdatClassListFrontend<A>.assertEquals(expected : AdatClassListFrontend<A>) {
+        this.backend.assertEquals(expected.backend)
+        assertEquals(expected.values, this.values)
+    }
+
+    fun ListBackend.assertEquals(expected : ListBackend) {
+        assertEquals(expected.additions, this.additions)
+        assertEquals(expected.removals, this.removals)
+        assertEquals(expected.items.size, this.items.size)
+        for ((key, value) in this.items) {
+            value.assertEquals(expected.items[key] !!)
+        }
+    }
+
+    fun PropertyBackend.assertEquals(expected : PropertyBackend) {
+        assertEquals(expected.itemId, this.itemId)
+        assertContentEquals(expected.values, this.values)
+    }
 }

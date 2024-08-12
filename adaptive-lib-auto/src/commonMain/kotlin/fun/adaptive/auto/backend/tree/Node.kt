@@ -1,9 +1,11 @@
-package `fun`.adaptive.auto.deprecated.tree
+package `fun`.adaptive.auto.backend.tree
+
+import `fun`.adaptive.auto.LamportTimestamp
 
 class Node(val id: NodeId) : Comparable<Node> {
     var parent: Node? = null
     val children: MutableList<Node> = mutableListOf()
-    val edges = mutableMapOf<NodeId, Value>()
+    val edges = mutableMapOf<NodeId, Int>()
 
     override fun compareTo(other: Node): Int {
         if (this.id < other.id) return - 1

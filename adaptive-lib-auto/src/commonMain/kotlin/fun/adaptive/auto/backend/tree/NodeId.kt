@@ -1,4 +1,4 @@
-package `fun`.adaptive.auto.deprecated.tree
+package `fun`.adaptive.auto.backend.tree
 
 import `fun`.adaptive.auto.LamportTimestamp
 
