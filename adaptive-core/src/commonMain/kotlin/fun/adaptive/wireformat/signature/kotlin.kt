@@ -1,89 +1,33 @@
-@file:OptIn(ExperimentalUnsignedTypes::class)
-
 package `fun`.adaptive.wireformat.signature
 
-import `fun`.adaptive.utility.UUID
+object KotlinSignatures {
+    const val ANY = "*"
+    const val UNIT = "0"
+    const val BOOLEAN = "Z"
+    const val INT = "I"
+    const val BYTE = "B"
+    const val SHORT = "S"
+    const val LONG = "J"
+    const val FLOAT = "F"
+    const val DOUBLE = "D"
+    const val CHAR = "C"
+    const val STRING = "T"
+    const val UUID = "U"
+    const val BOOLEAN_ARRAY = "[Z"
+    const val INT_ARRAY = "[I"
+    const val BYTE_ARRAY = "[B"
+    const val SHORT_ARRAY = "[S"
+    const val LONG_ARRAY = "[J"
+    const val FLOAT_ARRAY = "[F"
+    const val DOUBLE_ARRAY = "[D"
+    const val CHAR_ARRAY = "[C"
+    const val UINT = "+I"
+    const val UBYTE = "+B"
+    const val USHORT = "+S"
+    const val ULONG = "+J"
+    const val UINT_ARRAY = "[+I"
+    const val UBYTE_ARRAY = "[+B"
+    const val USHORT_ARRAY = "[+S"
+    const val ULONG_ARRAY = "[+J"
+}
 
-val Any.signature: String
-    get() = "*"
-
-val Unit.signature: String
-    get() = "0"
-
-val Boolean.signature: String
-    get() = "Z"
-
-val Int.signature: String
-    get() = "I"
-
-val Byte.signature: String
-    get() = "B"
-
-val Short.signature: String
-    get() = "S"
-
-val Long.signature: String
-    get() = "J"
-
-val Float.signature: String
-    get() = "F"
-
-val Double.signature: String
-    get() = "D"
-
-val Char.signature: String
-    get() = "C"
-
-val String.signature: String
-    get() = "T"
-
-val UUID<*>.signature: String
-    get() = "U"
-
-val BooleanArray.signature: String
-    get() = "[Z"
-
-val IntArray.signature: String
-    get() = "[I"
-
-val ByteArray.signature: String
-    get() = "[B"
-
-val ShortArray.signature: String
-    get() = "[S"
-
-val LongArray.signature: String
-    get() = "[J"
-
-val FloatArray.signature: String
-    get() = "[F"
-
-val DoubleArray.signature: String
-    get() = "[D"
-
-val CharArray.signature: String
-    get() = "[C"
-
-val UInt.signature: String
-    get() = "+I"
-
-val UByte.signature: String
-    get() = "+B"
-
-val UShort.signature: String
-    get() = "+S"
-
-val ULong.signature: String
-    get() = "+J"
-
-val UIntArray.signature: String
-    get() = "[+I"
-
-val UByteArray.signature: String
-    get() = "[+B"
-
-val UShortArray.signature: String
-    get() = "[+S"
-
-val ULongArray.signature: String
-    get() = "[+J"
