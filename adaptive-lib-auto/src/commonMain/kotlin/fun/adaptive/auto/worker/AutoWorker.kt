@@ -5,7 +5,7 @@ import `fun`.adaptive.auto.backend.BackendBase
 import `fun`.adaptive.auto.connector.AutoConnector
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.operation.AutoOperation
-import `fun`.adaptive.server.builtin.WorkerImpl
+import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 

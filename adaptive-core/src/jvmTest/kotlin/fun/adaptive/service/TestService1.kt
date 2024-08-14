@@ -1,6 +1,6 @@
 package `fun`.adaptive.service
 
-import `fun`.adaptive.server.builtin.ServiceImpl
+import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.wireformat.WireFormatDecoder
 import `fun`.adaptive.wireformat.builtin.StringWireFormat
 

@@ -1,27 +1,25 @@
 # Server
 
-Adaptive provides a `server` entry point (with `AdaptiveServerAdapter`) and few server side fragments 
+Adaptive provides a `backend` entry point (with `BackendAdapter`) and few backend fragments 
 for building servers.
-
-Server is actually a bit of a misnomer because you can use these components anywhere, it is common code.
 
 Built-in fragments store a so-called "implementation" which you typically pass to the fragment as 
 a result of a builder function.
 
-| Fragment | Class                                                                                                | Module | Description                                                                           |
-|----------|------------------------------------------------------------------------------------------------------|--------|---------------------------------------------------------------------------------------|
-| service  | [AdaptiveService](/adaptive-core/src/commonMain/kotlin/fun/adaptive/server/builtin/ServerService.kt) | core   | client request handler, new instance for each request                                 |
-| worker   | [AdaptiveWorker](/adaptive-core/src/commonMain/kotlin/fun/adaptive/server/builtin/ServerWorker.kt)   | core   | background worker, one (or few) instances per server                                  |
-| store    | [AdaptiveStore](/adaptive-core/src/commonMain/kotlin/fun/adaptive/server/builtin/ServerStore.kt)     | core   | a store of data, you can use any kind of data storage (SQL, No-SQL, whatever, really) |
+| Fragment | Class                                                                                                 | Module | Description                                                                           |
+|----------|-------------------------------------------------------------------------------------------------------|--------|---------------------------------------------------------------------------------------|
+| service  | [BackendService](/adaptive-core/src/commonMain/kotlin/fun/adaptive/backend/builtin/BackendService.kt) | core   | client request handler, new instance for each request                                 |
+| worker   | [BackendWorker](/adaptive-core/src/commonMain/kotlin/fun/adaptive/backend/builtin/BackendWorker.kt)   | core   | background worker, one (or few) instances per backend                                 |
+| store    | [BackendStore](/adaptive-core/src/commonMain/kotlin/fun/adaptive/backend/builtin/BackendStore.kt)     | core   | a store of data, you can use any kind of data storage (SQL, No-SQL, whatever, really) |
 
-A server main looks like this (but of course you can use `server` anywhere).
+A server main looks like this (but of course you can use `backend` on clients as well).
 
 Settings are also available in common code, but providers may be platform-dependent. See [Settings](settings.md) for details.
 
 ```kotlin
 fun main() {
     
-   server {
+   backend {
 
         settings { 
             environment()

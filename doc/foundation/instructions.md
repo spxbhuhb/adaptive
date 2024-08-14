@@ -123,7 +123,7 @@ fun someFun() {
 
 ## Non-UI instructions
 
-Instructions are not limited to styling nor to UI fragments. This is a server side
+Instructions are not limited to styling nor to UI fragments. This is a backend
 instruction:
 
 ```kotlin

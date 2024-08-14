@@ -12,7 +12,7 @@ import `fun`.adaptive.auto.backend.TestData
 import `fun`.adaptive.auto.connector.ServiceConnector
 import `fun`.adaptive.auto.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.worker.AutoWorker
-import `fun`.adaptive.server.query.firstImpl
+import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 import kotlinx.coroutines.CoroutineScope

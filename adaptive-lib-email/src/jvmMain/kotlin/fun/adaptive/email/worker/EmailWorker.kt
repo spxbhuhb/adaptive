@@ -5,10 +5,10 @@ import `fun`.adaptive.email.model.EmailQueueEntry
 import `fun`.adaptive.email.model.EmailStatus
 import `fun`.adaptive.email.store.EmailQueue
 import `fun`.adaptive.email.store.EmailTable
-import `fun`.adaptive.server.builtin.WorkerImpl
-import `fun`.adaptive.server.builtin.launch
-import `fun`.adaptive.server.builtin.store
-import `fun`.adaptive.server.setting.dsl.setting
+import `fun`.adaptive.backend.builtin.WorkerImpl
+import `fun`.adaptive.backend.builtin.launch
+import `fun`.adaptive.backend.builtin.store
+import `fun`.adaptive.backend.setting.dsl.setting
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock

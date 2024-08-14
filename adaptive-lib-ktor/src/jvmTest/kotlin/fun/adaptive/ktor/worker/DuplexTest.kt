@@ -9,10 +9,10 @@ import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.ktor.withProtoWebSocketTransport
 import `fun`.adaptive.lib.auth.auth
 import `fun`.adaptive.reflect.CallSiteName
-import `fun`.adaptive.server.AdaptiveServerAdapter
-import `fun`.adaptive.server.builtin.ServiceImpl
-import `fun`.adaptive.server.builtin.service
-import `fun`.adaptive.server.server
+import `fun`.adaptive.backend.BackendAdapter
+import `fun`.adaptive.backend.builtin.ServiceImpl
+import `fun`.adaptive.backend.builtin.service
+import `fun`.adaptive.backend.backend
 import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.service.defaultServiceImplFactory
 import `fun`.adaptive.service.getService
@@ -47,9 +47,9 @@ class DuplexTest {
     @CallSiteName
     fun duplexTest(
         callSiteName: String = "unknown",
-        test: suspend (it: AdaptiveServerAdapter) -> Unit
+        test: suspend (it: BackendAdapter) -> Unit
     ) {
-        val adapter = server {
+        val adapter = backend {
             inMemoryH2(callSiteName.substringAfterLast('.'))
             service { DuplexService() } // this is the server side service
             auth() // to have session worker

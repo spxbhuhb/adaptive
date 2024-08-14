@@ -13,7 +13,7 @@ import `fun`.adaptive.auth.model.Role
 import `fun`.adaptive.auth.model.RoleContext
 import `fun`.adaptive.auth.model.RoleGrant
 import `fun`.adaptive.lib.auth.store.*
-import `fun`.adaptive.server.builtin.ServiceImpl
+import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.utility.UUID
 
 class RoleService : RoleApi, ServiceImpl<RoleService> {

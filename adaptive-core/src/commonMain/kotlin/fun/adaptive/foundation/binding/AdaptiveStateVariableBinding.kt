@@ -17,7 +17,7 @@ class AdaptiveStateVariableBinding<VT>(
     val indexInTargetState: Int,
     val path: Array<String>?,
     val boundType : String,
-    val adatCompanion: AdatCompanion<*>?,
+    val adatCompanion: AdatCompanion<*>?, // cannot use VT here as it might not be an adat class
 ) {
 
     constructor(targetFragment: AdaptiveFragment, indexInTargetState: Int, boundType: String) : this(

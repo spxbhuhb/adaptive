@@ -10,7 +10,7 @@ import `fun`.adaptive.kotlin.adat.ir.AdatGenerationExtension
 import `fun`.adaptive.kotlin.debug.ir.DebugGenerationExtension
 import `fun`.adaptive.kotlin.foundation.ir.FoundationGenerationExtension
 import `fun`.adaptive.kotlin.reflect.ir.ReflectGenerationExtension
-import `fun`.adaptive.kotlin.server.ir.ServerGenerationExtension
+import `fun`.adaptive.kotlin.backend.ir.BackendGenerationExtension
 import `fun`.adaptive.kotlin.service.ir.ServicesGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
@@ -36,7 +36,7 @@ class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentCo
 
         IrGenerationExtension.registerExtension(ServicesGenerationExtension(options))
         IrGenerationExtension.registerExtension(FoundationGenerationExtension(options))
-        IrGenerationExtension.registerExtension(ServerGenerationExtension(options))
+        IrGenerationExtension.registerExtension(BackendGenerationExtension(options))
         IrGenerationExtension.registerExtension(AdatGenerationExtension(options))
         IrGenerationExtension.registerExtension(ReflectGenerationExtension(options))
         IrGenerationExtension.registerExtension(DebugGenerationExtension(options))

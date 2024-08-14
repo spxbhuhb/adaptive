@@ -4,9 +4,9 @@
 
 package `fun`.adaptive.ktor.worker
 
-import `fun`.adaptive.server.builtin.WorkerImpl
-import `fun`.adaptive.server.builtin.implOrNull
-import `fun`.adaptive.server.setting.dsl.setting
+import `fun`.adaptive.backend.builtin.WorkerImpl
+import `fun`.adaptive.backend.builtin.implOrNull
+import `fun`.adaptive.backend.setting.dsl.setting
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.transport.ServiceSessionProvider
 import `fun`.adaptive.utility.UUID

@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.exposed
 
-import `fun`.adaptive.server.builtin.WorkerImpl
+import `fun`.adaptive.backend.builtin.WorkerImpl
 import org.jetbrains.exposed.sql.Database
 
 class InMemoryDatabase(

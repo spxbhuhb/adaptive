@@ -46,9 +46,9 @@ println(counter)
 
 Service providers:
 
-- implement a server API
+- implement a service API
 - extend `ServiceImpl`
-- added with `service` to the server fragment tree
+- added with `service` to the backend fragment tree
 - **are instantiated for each call** (see below)
 
 ```kotlin
@@ -69,7 +69,7 @@ Register the service during application startup, so it is known.
 
 ```kotlin
 fun main() {
-    server(wait = true) {
+    backend(wait = true) {
         service { CounterService() }
     }
 }
@@ -199,7 +199,7 @@ Exception handling depends on the transport implementation, see [Service Transpo
 
 With the Ktor implementation, provider side exceptions result in:
 
-* for [Adat](../adat/README.md) exception instances, instance of the same class is thrown with the same data as on the server (also see note)
+* for [Adat](../adat/readme.md) exception instances, instance of the same class is thrown with the same data as on the server (also see note)
 * for non-Adat classes `ServiceCallException` is thrown
 
 > [!NOTE]

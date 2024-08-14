@@ -11,9 +11,9 @@ import `fun`.adaptive.lib.auth.service.RoleService
 import `fun`.adaptive.lib.auth.service.SessionService
 import `fun`.adaptive.lib.auth.store.*
 import `fun`.adaptive.lib.auth.worker.SessionWorker
-import `fun`.adaptive.server.builtin.service
-import `fun`.adaptive.server.builtin.store
-import `fun`.adaptive.server.builtin.worker
+import `fun`.adaptive.backend.builtin.service
+import `fun`.adaptive.backend.builtin.store
+import `fun`.adaptive.backend.builtin.worker
 
 @Adaptive
 fun auth() {

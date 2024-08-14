@@ -14,12 +14,12 @@ import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.ktor.withProtoWebSocketTransport
 import `fun`.adaptive.lib.auth.auth
 import `fun`.adaptive.lib.auth.crypto.BCrypt
+import `fun`.adaptive.reflect.CallSiteName
+import `fun`.adaptive.backend.BackendAdapter
+import `fun`.adaptive.backend.builtin.service
+import `fun`.adaptive.backend.backend
 import `fun`.adaptive.lib.auth.store.CredentialTable
 import `fun`.adaptive.lib.auth.store.PrincipalTable
-import `fun`.adaptive.reflect.CallSiteName
-import `fun`.adaptive.server.AdaptiveServerAdapter
-import `fun`.adaptive.server.builtin.service
-import `fun`.adaptive.server.server
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.utility.UUID
 import kotlinx.coroutines.delay
@@ -39,9 +39,9 @@ class AuthTest {
     fun authTest(
         callSiteName: String = "unknown",
         login: Boolean = true,
-        test: suspend (it: AdaptiveServerAdapter) -> Unit
+        test: suspend (it: BackendAdapter) -> Unit
     ) {
-        val adapter = server {
+        val adapter = backend {
             inMemoryH2(callSiteName.substringAfterLast('.'))
             service { AuthTestService() }
             auth() // to have session worker

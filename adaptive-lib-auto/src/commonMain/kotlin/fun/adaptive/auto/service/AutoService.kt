@@ -6,8 +6,8 @@ import `fun`.adaptive.auto.connector.ServiceConnector
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.operation.*
 import `fun`.adaptive.auto.worker.AutoWorker
-import `fun`.adaptive.server.builtin.ServiceImpl
-import `fun`.adaptive.server.builtin.worker
+import `fun`.adaptive.backend.builtin.ServiceImpl
+import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.service.getService
 
 class AutoService : ServiceImpl<AutoService>, AutoApi {

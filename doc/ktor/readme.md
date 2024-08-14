@@ -32,7 +32,7 @@ withJsonWebSocketTransport("https://your.host")
 >
 
 ```kotlin
-server {
+backend {
 
     settings {
         inline(

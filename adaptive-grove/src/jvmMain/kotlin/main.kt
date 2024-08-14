@@ -6,13 +6,13 @@ import `fun`.adaptive.email.email
 import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.lib.auth.auth
-import `fun`.adaptive.server.server
-import `fun`.adaptive.server.setting.dsl.propertyFile
-import `fun`.adaptive.server.setting.dsl.settings
+import `fun`.adaptive.backend.backend
+import `fun`.adaptive.backend.setting.dsl.propertyFile
+import `fun`.adaptive.backend.setting.dsl.settings
 
 fun main() {
 
-    server(wait = true) {
+    backend(wait = true) {
 
         settings {
             propertyFile(optional = false) { "./etc/grove.properties" }

@@ -5,8 +5,7 @@
 package `fun`.adaptive.service.factory
 
 import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.server.builtin.ServiceImpl
-import `fun`.adaptive.utility.Lock
+import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 

@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.service.testing
 
-import `fun`.adaptive.server.builtin.ServiceImpl
+import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.defaultServiceImplFactory
 import `fun`.adaptive.service.factory.ServiceImplFactory

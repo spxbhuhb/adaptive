@@ -94,7 +94,7 @@ class CommonSlot(
             name = instructions.firstOrNullIfInstance<Name>() ?: Name.ANONYMOUS
 
             if (routes.isNotEmpty()) {
-                navSegment = navSegment(AdaptiveStateVariableBinding(this, NAV_SEGMENT))
+                navSegment = navSegment(AdaptiveStateVariableBinding(this, NAV_SEGMENT, "kotlin.String?"))
             } else {
                 producers
                     ?.filter { it is NavSegmentProducer && it.binding.indexInTargetState == NAV_SEGMENT }

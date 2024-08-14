@@ -134,7 +134,7 @@ mavenPublishing {
     coordinates("fun.adaptive", baseName, version.toString())
 
     pom {
-        description.set("Client-server communication with the absolute minimum amount of boilerplate.")
+        description.set("Koltin compiler plugin for Adaptive")
         name.set(project.name)
         url.set("https://github.com/$scmPath")
         scm {

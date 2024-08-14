@@ -10,8 +10,8 @@ import `fun`.adaptive.lib.auth.store.history
 import `fun`.adaptive.lib.auth.store.principals
 import `fun`.adaptive.lib.auth.store.roleGrants
 import `fun`.adaptive.lib.auth.worker.SessionWorker
-import `fun`.adaptive.server.builtin.ServiceImpl
-import `fun`.adaptive.server.builtin.worker
+import `fun`.adaptive.backend.builtin.ServiceImpl
+import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.fourRandomInt
 import `fun`.adaptive.utility.vmNowSecond

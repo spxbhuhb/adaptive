@@ -5,7 +5,7 @@
 package `fun`.adaptive.exposed
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.server.builtin.StoreImpl
+import `fun`.adaptive.backend.builtin.StoreImpl
 import `fun`.adaptive.utility.manualOrPlugin
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.statements.InsertStatement

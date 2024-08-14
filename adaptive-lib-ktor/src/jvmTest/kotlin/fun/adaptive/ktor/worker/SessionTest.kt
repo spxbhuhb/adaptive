@@ -11,14 +11,14 @@ import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.ktor.withJsonWebSocketTransport
 import `fun`.adaptive.lib.auth.auth
 import `fun`.adaptive.lib.auth.crypto.BCrypt
+import `fun`.adaptive.reflect.CallSiteName
+import `fun`.adaptive.backend.BackendAdapter
+import `fun`.adaptive.backend.query.firstImpl
+import `fun`.adaptive.backend.backend
+import `fun`.adaptive.backend.setting.dsl.inline
+import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.lib.auth.store.CredentialTable
 import `fun`.adaptive.lib.auth.store.PrincipalTable
-import `fun`.adaptive.reflect.CallSiteName
-import `fun`.adaptive.server.AdaptiveServerAdapter
-import `fun`.adaptive.server.query.firstImpl
-import `fun`.adaptive.server.server
-import `fun`.adaptive.server.setting.dsl.inline
-import `fun`.adaptive.server.setting.dsl.settings
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.utility.UUID
 import io.ktor.client.plugins.cookies.*
@@ -37,7 +37,7 @@ import kotlin.test.assertNotNull
  */
 class SessionTest {
 
-    fun server(dbName: String) = server {
+    fun server(dbName: String) = backend {
         settings {
             inline("KTOR_WIREFORMAT" to "json")
         }
@@ -74,7 +74,7 @@ class SessionTest {
     @CallSiteName
     fun sessionTest(
         callSiteName: String = "unknown",
-        test: suspend (it: AdaptiveServerAdapter) -> Unit
+        test: suspend (it: BackendAdapter) -> Unit
     ) {
         val adapter = server(callSiteName.substringAfterLast('.'))
 

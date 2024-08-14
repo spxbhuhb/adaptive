@@ -6,8 +6,8 @@ package `fun`.adaptive.exposed
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import `fun`.adaptive.server.builtin.WorkerImpl
-import `fun`.adaptive.server.setting.dsl.setting
+import `fun`.adaptive.backend.builtin.WorkerImpl
+import `fun`.adaptive.backend.setting.dsl.setting
 import org.jetbrains.exposed.sql.Database
 
 class HikariWorker : WorkerImpl<HikariWorker> {

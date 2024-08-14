@@ -8,7 +8,7 @@ import `fun`.adaptive.auth.context.getPrincipalIdOrNull
 import `fun`.adaptive.auth.context.getSessionOrNull
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.reflect.CallSiteName
-import `fun`.adaptive.server.builtin.ServiceImpl
+import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.utility.UUID
 import kotlinx.datetime.Clock
 

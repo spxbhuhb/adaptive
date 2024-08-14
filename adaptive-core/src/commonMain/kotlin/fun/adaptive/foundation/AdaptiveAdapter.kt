@@ -3,11 +3,12 @@
  */
 package `fun`.adaptive.foundation
 
-import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.foundation.fragment.AdaptiveLoop
 import `fun`.adaptive.foundation.fragment.AdaptiveSelect
 import `fun`.adaptive.foundation.fragment.AdaptiveSequence
+import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.foundation.testing.TraceEvent
+import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.utility.firstOrNullIfInstance
 import kotlinx.coroutines.CoroutineDispatcher
 
@@ -20,6 +21,9 @@ interface AdaptiveAdapter {
     val rootContainer: Any
 
     val dispatcher: CoroutineDispatcher
+
+    val backend : BackendAdapter
+        get() = unsupported()
 
     var trace: Array<out Regex>
 

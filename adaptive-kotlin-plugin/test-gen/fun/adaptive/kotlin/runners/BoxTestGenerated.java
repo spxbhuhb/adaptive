@@ -3,9 +3,9 @@
 package fun.adaptive.kotlin.runners;
 
 import com.intellij.testFramework.TestDataPath;
+import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.jetbrains.kotlin.test.TargetBackend;
 import org.jetbrains.kotlin.test.TestMetadata;
-import org.jetbrains.kotlin.test.util.KtTestUtil;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -143,6 +143,22 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testBasic() {
         runTest("testData/box/adat/polymorphic/basic.kt");
       }
+    }
+  }
+
+  @Nested
+  @TestMetadata("testData/box/backend")
+  @TestDataPath("$PROJECT_ROOT")
+  public class Backend {
+    @Test
+    public void testAllFilesPresentInBackend() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/backend"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+    }
+
+    @Test
+    @TestMetadata("basic.kt")
+    public void testBasic() {
+      runTest("testData/box/backend/basic.kt");
     }
   }
 
@@ -597,22 +613,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
     @TestMetadata("callSiteName.kt")
     public void testCallSiteName() {
       runTest("testData/box/reflect/callSiteName.kt");
-    }
-  }
-
-  @Nested
-  @TestMetadata("testData/box/server")
-  @TestDataPath("$PROJECT_ROOT")
-  public class Server {
-    @Test
-    public void testAllFilesPresentInServer() {
-      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/server"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
-    }
-
-    @Test
-    @TestMetadata("basic.kt")
-    public void testBasic() {
-      runTest("testData/box/server/basic.kt");
     }
   }
 

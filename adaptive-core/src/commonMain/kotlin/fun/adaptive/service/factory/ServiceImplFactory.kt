@@ -5,7 +5,7 @@
 package `fun`.adaptive.service.factory
 
 import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.server.builtin.ServiceImpl
+import `fun`.adaptive.backend.builtin.ServiceImpl
 
 interface ServiceImplFactory {
 

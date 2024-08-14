@@ -15,14 +15,14 @@ import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.ktor.withProtoWebSocketTransport
 import `fun`.adaptive.lib.auth.auth
 import `fun`.adaptive.reflect.CallSiteName
-import `fun`.adaptive.server.AdaptiveServerAdapter
-import `fun`.adaptive.server.builtin.ServiceImpl
-import `fun`.adaptive.server.builtin.service
-import `fun`.adaptive.server.builtin.worker
-import `fun`.adaptive.server.query.singleImpl
-import `fun`.adaptive.server.server
-import `fun`.adaptive.server.setting.dsl.inline
-import `fun`.adaptive.server.setting.dsl.settings
+import `fun`.adaptive.backend.BackendAdapter
+import `fun`.adaptive.backend.builtin.ServiceImpl
+import `fun`.adaptive.backend.builtin.service
+import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.backend.query.singleImpl
+import `fun`.adaptive.backend.backend
+import `fun`.adaptive.backend.setting.dsl.inline
+import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.service.defaultServiceImplFactory
 import `fun`.adaptive.utility.UUID
@@ -82,9 +82,9 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
 @CallSiteName
 fun autoTest(
     callSiteName: String = "unknown",
-    test: suspend (originAdapter: AdaptiveServerAdapter, connectingAdapter: AdaptiveServerAdapter) -> Unit
+    test: suspend (originAdapter: BackendAdapter, connectingAdapter: BackendAdapter) -> Unit
 ) {
-    val originAdapter = server {
+    val originAdapter = backend {
         settings {
             inline("KTOR_PORT" to 8081)
         }
@@ -96,7 +96,7 @@ fun autoTest(
         ktor()
     }
 
-    val connectingAdapter = server {
+    val connectingAdapter = backend {
         worker { AutoWorker() }
         service { AutoService() }
     }

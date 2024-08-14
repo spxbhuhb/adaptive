@@ -36,7 +36,7 @@ Client platforms:
 * Android
 * iOS
 
-Server platforms:
+Backend/Server platforms:
 
 * all platforms supported by Kotlin Multiplatform
   * some modules may be platform dependent, but
@@ -92,7 +92,7 @@ Source set: **jvmMain**
 ```kotlin
 fun main() {
 
-  server(wait = true) {
+  backend(wait = true) {
 
     settings {
       propertyFile(optional = false) { "./etc/sandbox.properties" }
@@ -153,7 +153,7 @@ There are quite a few points in the example above that worth mentioning.
 **functions marked with @Adaptive are fragments**
 
 Fragments are the building blocks in adaptive. The system creates a so-called fragment
-tree from these fragments. The fragment tree contains the UI or the server structure.
+tree from these fragments. The fragment tree contains the UI or the backend structure.
 
 **fragments are reactive by default**
 

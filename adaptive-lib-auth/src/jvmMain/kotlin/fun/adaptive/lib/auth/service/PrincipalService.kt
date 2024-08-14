@@ -17,7 +17,7 @@ import `fun`.adaptive.lib.auth.crypto.BCrypt
 import `fun`.adaptive.lib.auth.store.credentials
 import `fun`.adaptive.lib.auth.store.history
 import `fun`.adaptive.lib.auth.store.principals
-import `fun`.adaptive.server.builtin.ServiceImpl
+import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.utility.UUID
 import kotlinx.datetime.Clock.System.now
 

@@ -12,13 +12,13 @@ fun main() {
 
 Available entry functions (bridge is used to connect Adaptive to the underlying software):
 
-| Platform    | Function Name | Adapter Class            | Bridge                    | Comments                                         |
-|-------------|---------------|--------------------------|---------------------------|--------------------------------------------------|
-| commonMain  | `server`      | `AdaptiveServerAdapter`  | `Any`                     | You can use the server adapter on all platforms. |
-| commonMain  | `test`        | `AdaptiveTestAdapter`    | `TestNode`                |                                                  |      
-| jsMain      | `browser`     | `AdaptiveBrowserAdapter` | `org.w3c.dom.HTMLElement` | Standard browser stuff, HTML.                    |
-| androidMain | `android`     | `AdaptiveAndroidAdapter` | `android.view.View`       |                                                  |
-| iosMain     | `ios`         | `AdaptiveIOSAdapter`     | `UiView`                  |                                                  |
+| Platform    | Function Name | Adapter Class            | Bridge                    | Comments                                          |
+|-------------|---------------|--------------------------|---------------------------|---------------------------------------------------|
+| commonMain  | `backend`     | `BackendAdapter`         | `Any`                     | You can use the backend adapter on all platforms. |
+| commonMain  | `test`        | `AdaptiveTestAdapter`    | `TestNode`                |                                                   |      
+| jsMain      | `browser`     | `AdaptiveBrowserAdapter` | `org.w3c.dom.HTMLElement` | Standard browser stuff, HTML.                     |
+| androidMain | `android`     | `AdaptiveAndroidAdapter` | `android.view.View`       |                                                   |
+| iosMain     | `ios`         | `AdaptiveIOSAdapter`     | `UiView`                  |                                                   |
 
 Notes:
 

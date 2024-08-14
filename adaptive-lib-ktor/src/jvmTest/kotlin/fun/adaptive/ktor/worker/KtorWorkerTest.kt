@@ -5,7 +5,7 @@
 package `fun`.adaptive.ktor.worker
 
 import `fun`.adaptive.ktor.ktor
-import `fun`.adaptive.server.server
+import `fun`.adaptive.backend.backend
 import org.junit.Test
 
 class KtorWorkerTest {
@@ -13,7 +13,7 @@ class KtorWorkerTest {
     @Test
     fun ktorWorker() {
 
-        server {
+        backend {
             ktor()
         }.also {
             it.stop()

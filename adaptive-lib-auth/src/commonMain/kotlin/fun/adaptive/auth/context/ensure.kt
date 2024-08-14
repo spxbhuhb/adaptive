@@ -7,7 +7,7 @@ package `fun`.adaptive.auth.context
 import `fun`.adaptive.auth.model.AccessDenied
 import `fun`.adaptive.auth.model.Principal
 import `fun`.adaptive.auth.model.Role
-import `fun`.adaptive.server.builtin.ServiceImpl
+import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.utility.UUID
 
 /**

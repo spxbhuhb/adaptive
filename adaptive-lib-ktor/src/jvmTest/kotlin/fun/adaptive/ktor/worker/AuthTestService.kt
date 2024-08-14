@@ -2,7 +2,7 @@ package `fun`.adaptive.ktor.worker
 
 import `fun`.adaptive.auth.context.ensureLoggedIn
 import `fun`.adaptive.auth.context.publicAccess
-import `fun`.adaptive.server.builtin.ServiceImpl
+import `fun`.adaptive.backend.builtin.ServiceImpl
 
 class AuthTestService : AuthTestApi, ServiceImpl<AuthTestService> {
 

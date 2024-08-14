@@ -6,13 +6,12 @@ import `fun`.adaptive.email.store.EmailQueue
 import `fun`.adaptive.email.store.EmailTable
 import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.foundation.query.singleImpl
-import `fun`.adaptive.server.builtin.service
-import `fun`.adaptive.server.builtin.store
-import `fun`.adaptive.server.builtin.worker
-import `fun`.adaptive.server.server
-import `fun`.adaptive.server.setting.dsl.inline
-import `fun`.adaptive.server.setting.dsl.settings
-import `fun`.adaptive.service.defaultServiceImplFactory
+import `fun`.adaptive.backend.builtin.service
+import `fun`.adaptive.backend.builtin.store
+import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.backend.backend
+import `fun`.adaptive.backend.setting.dsl.inline
+import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.service.testing.TestServiceTransport
 import kotlinx.coroutines.delay
@@ -70,7 +69,7 @@ class EmailWorkerTest {
             )
         }
 
-        val adapter = server {
+        val adapter = backend {
 
             inMemoryH2()
 

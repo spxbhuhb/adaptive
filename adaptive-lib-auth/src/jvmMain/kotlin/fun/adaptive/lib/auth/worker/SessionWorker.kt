@@ -7,7 +7,7 @@ package `fun`.adaptive.lib.auth.worker
 import `fun`.adaptive.auth.model.SecurityPolicy
 import `fun`.adaptive.auth.model.Session
 import `fun`.adaptive.lib.auth.store.history
-import `fun`.adaptive.server.builtin.WorkerImpl
+import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.model.ServiceSession
 import `fun`.adaptive.service.transport.ServiceSessionProvider

@@ -7,7 +7,7 @@ package `fun`.adaptive.exposed
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.server.builtin.worker
+import `fun`.adaptive.backend.builtin.worker
 
 @Adaptive
 fun hikari(): AdaptiveFragment {

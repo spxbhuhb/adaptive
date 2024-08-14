@@ -7,7 +7,7 @@ package `fun`.adaptive.foundation.query
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.server.AdaptiveServerFragment
+import `fun`.adaptive.backend.BackendFragment
 
 // -------------------------------------------------------------
 // With general condition
@@ -198,11 +198,11 @@ inline fun <reified T : AdaptiveInstruction> AdaptiveAdapter.collect(deep: Boole
     }
 
 // -------------------------------------------------------------
-// Inline with server implementation class
+// Inline with backend implementation class
 // -------------------------------------------------------------
 
 /**
- * Find the first server fragment with implementation of a given class [T].
+ * Find the first backend fragment with implementation of a given class [T].
  *
  * @param deep Deep search, go down in the fragment tree.
  * @param horizontal When [deep] is true, check a given level first, children second.
@@ -211,8 +211,8 @@ inline fun <reified T : Any> AdaptiveAdapter.firstImpl(
     deep: Boolean = true,
     horizontal: Boolean = true
 ): T? =
-    firstOrNull(deep, horizontal) { f -> (f as? AdaptiveServerFragment)?.let { it.impl is T } ?: false }
-        .let { (it as AdaptiveServerFragment).impl as T? }
+    firstOrNull(deep, horizontal) { f -> (f as? BackendFragment)?.let { it.impl is T } ?: false }
+        .let { (it as BackendFragment).impl as T? }
 
 /**
  * Returns the single fragment of class [T], or throws an exception
@@ -222,8 +222,8 @@ inline fun <reified T : Any> AdaptiveAdapter.firstImpl(
  * @param horizontal When [deep] is true, filter a given level first, children second.
  */
 inline fun <reified T : Any> AdaptiveAdapter.singleImpl(
-    deep: Boolean = true, // with server, we typically want deep search
+    deep: Boolean = true, // with backend, we typically want deep search
     horizontal: Boolean = true
 ): T =
-    rootFragment.single(deep, horizontal) { f -> (f as? AdaptiveServerFragment)?.let { it.impl is T } ?: false }
-        .let { (it as AdaptiveServerFragment).impl as T }
+    rootFragment.single(deep, horizontal) { f -> (f as? BackendFragment)?.let { it.impl is T } ?: false }
+        .let { (it as BackendFragment).impl as T }
