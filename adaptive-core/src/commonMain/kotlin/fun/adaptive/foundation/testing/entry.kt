@@ -3,6 +3,7 @@
  */
 package `fun`.adaptive.foundation.testing
 
+import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveEntry
@@ -13,8 +14,8 @@ import `fun`.adaptive.foundation.AdaptiveEntry
  * **IMPORTANT** variables declared outside the block are **NOT** reactive
  */
 @AdaptiveEntry
-fun test(printTrace : Boolean = false, @Adaptive block: (adapter : AdaptiveAdapter) -> Unit) : AdaptiveTestAdapter =
-    AdaptiveTestAdapter(printTrace).also {
+fun test(backendAdapter: BackendAdapter = BackendAdapter(), printTrace: Boolean = false, @Adaptive block: (adapter: AdaptiveAdapter) -> Unit): AdaptiveTestAdapter =
+    AdaptiveTestAdapter(printTrace, backendAdapter).also {
         block(it)
         it.mounted()
     }

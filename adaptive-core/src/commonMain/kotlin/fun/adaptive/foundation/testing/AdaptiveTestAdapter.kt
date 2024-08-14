@@ -3,6 +3,7 @@
  */
 package `fun`.adaptive.foundation.testing
 
+import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.utility.getLock
@@ -14,7 +15,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
 
 class AdaptiveTestAdapter(
-    var printTrace: Boolean = false
+    var printTrace: Boolean = false,
+    override val backend: BackendAdapter = BackendAdapter()
 ) : AdaptiveAdapter {
 
     var nextId = 2L
@@ -25,7 +27,7 @@ class AdaptiveTestAdapter(
 
     override val rootContainer = TestNode()
 
-    override var dispatcher: CoroutineDispatcher = Dispatchers.Main
+    override var dispatcher: CoroutineDispatcher = Dispatchers.Default
 
     override var trace : Array<out Regex> = arrayOf(
         Regex(".*(?!addActual|removeActual)") // anything that does not end with addActual/ removeActual

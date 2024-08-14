@@ -11,7 +11,8 @@ class AdatClassFrontend<A : AdatClass<A>>(
     val backend: PropertyBackend,
     val companion: AdatCompanion<A>,
     initialValue: A?,
-    val collectionFrontend: CollectionFrontendBase?
+    val collectionFrontend: CollectionFrontendBase?,
+    val onCommit: ((frontend: AdatClassFrontend<A>) -> Unit)? = null
 ) : FrontendBase(), AdatStore {
 
     val adatContext = AdatContext(null, null, store = this, null)
@@ -25,6 +26,7 @@ class AdatClassFrontend<A : AdatClass<A>>(
         newValue.adatContext = adatContext
         value = newValue
         collectionFrontend?.commit(backend.itemId)
+        onCommit?.invoke(this)
     }
 
     fun modify(propertyName: String, propertyValue: Any?) {

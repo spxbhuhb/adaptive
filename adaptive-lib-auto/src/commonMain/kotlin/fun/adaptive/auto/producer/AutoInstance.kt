@@ -126,7 +126,10 @@ class AutoInstance<A : AdatClass<A>>(
                 companion,
                 null,
                 null
-            )
+            ) {
+                latestValue = frontend.value
+                binding.targetFragment.setDirty(binding.indexInTargetState, true) // TODO make a separate binding for producers
+            }
 
             backend.frontEnd = frontend
 
@@ -140,14 +143,11 @@ class AutoInstance<A : AdatClass<A>>(
             )
 
             autoService.addPeer(originHandle, connectingHandle, backend.context.time)
-
-            // TODO waitForSync(originWorker, originHandle, connectingWorker, connectingHandle)
-
         }
     }
 
     override fun stop() {
-        // copy store is event-driven
+        adapter.backend.firstImpl<AutoWorker>().deregister(backend)
     }
 
     override fun toString(): String {

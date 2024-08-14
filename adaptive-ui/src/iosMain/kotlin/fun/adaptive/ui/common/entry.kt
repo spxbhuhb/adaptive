@@ -3,6 +3,7 @@
  */
 package `fun`.adaptive.ui.common
 
+import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveEntry
@@ -19,11 +20,12 @@ import platform.UIKit.UIView
 fun ios(
     rootView : UIView,
     vararg imports : AdaptiveFragmentFactory,
+    backend: BackendAdapter = BackendAdapter(),
     trace: Trace? = null,
     @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
 ) : CommonAdapter =
     CommonAdapter(
-        rootView
+        rootView, backend
     ).also {
         it.fragmentFactory += imports
         if (trace != null) { it.trace = trace.patterns }

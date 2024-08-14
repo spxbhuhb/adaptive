@@ -5,6 +5,7 @@ package `fun`.adaptive.ui.common
 
 import android.content.Context
 import android.view.ViewGroup
+import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveEntry
@@ -21,11 +22,12 @@ fun android(
     context : Context,
     rootView : ViewGroup,
     vararg imports : AdaptiveFragmentFactory,
+    backend: BackendAdapter = BackendAdapter(),
     trace : Trace? = null,
     @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
 ) : CommonAdapter =
     CommonAdapter(
-        context, rootView
+        context, rootView, backend
     ).also {
         it.fragmentFactory += imports
         if (trace != null) { it.trace = trace.patterns }

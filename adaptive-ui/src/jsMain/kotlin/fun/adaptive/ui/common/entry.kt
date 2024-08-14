@@ -3,6 +3,7 @@
  */
 package `fun`.adaptive.ui.common
 
+import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveEntry
@@ -14,12 +15,13 @@ import org.w3c.dom.HTMLElement
 @AdaptiveEntry
 fun browser(
     vararg imports : AdaptiveFragmentFactory,
+    backend: BackendAdapter = BackendAdapter(),
     rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
     trace : Trace? = null,
     @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
 ) : CommonAdapter {
 
-    return CommonAdapter(rootContainer).also {
+    return CommonAdapter(rootContainer, backend).also {
         it.fragmentFactory += imports
         if (trace != null) { it.trace = trace.patterns }
         block(it)

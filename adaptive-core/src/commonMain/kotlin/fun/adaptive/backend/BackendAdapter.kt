@@ -3,11 +3,11 @@
  */
 package `fun`.adaptive.backend
 
+import `fun`.adaptive.backend.builtin.BackendService
+import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.unsupported
-import `fun`.adaptive.backend.builtin.BackendService
-import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.factory.ServiceImplFactory
 import `fun`.adaptive.utility.getLock
@@ -37,6 +37,9 @@ open class BackendAdapter(
 
     override val dispatcher: CoroutineDispatcher
         get() = Dispatchers.Default
+
+    override val backend: BackendAdapter
+        get() = this
 
     override var trace : Array<out Regex> = emptyArray<Regex>()
 

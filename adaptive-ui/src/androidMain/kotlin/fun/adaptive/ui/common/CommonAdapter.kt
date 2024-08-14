@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.graphics.toColorInt
+import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.resource.defaultResourceEnvironment
 import `fun`.adaptive.ui.common.fragment.layout.AbstractContainer
@@ -31,7 +32,8 @@ import `fun`.adaptive.ui.common.support.navigation.AbstractNavSupport
 
 open class CommonAdapter(
     val context: Context,
-    final override val rootContainer: ViewGroup
+    final override val rootContainer: ViewGroup,
+    override val backend: BackendAdapter
 ) : AbstractCommonAdapter<View, ContainerViewGroup>() {
 
     override val fragmentFactory = CommonFragmentFactory

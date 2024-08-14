@@ -3,6 +3,7 @@
  */
 package `fun`.adaptive.ui.common
 
+import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.resource.defaultResourceEnvironment
 import `fun`.adaptive.ui.common.fragment.layout.AbstractContainer
@@ -21,7 +22,8 @@ import platform.UIKit.UIView
 
 @OptIn(ExperimentalForeignApi::class)
 open class CommonAdapter(
-    final override val rootContainer: UIView
+    final override val rootContainer: UIView,
+    override val backend: BackendAdapter
 ) : AbstractCommonAdapter<UIView, ContainerView>() {
 
     override val fragmentFactory = CommonFragmentFactory

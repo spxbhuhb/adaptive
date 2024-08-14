@@ -3,6 +3,7 @@
  */
 package `fun`.adaptive.ui.common
 
+import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.resource.defaultResourceEnvironment
@@ -29,6 +30,7 @@ import org.w3c.dom.css.CSSStyleDeclaration
 
 class CommonAdapter(
     override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
+    override val backend: BackendAdapter
 ) : AbstractCommonAdapter<HTMLElement, HTMLDivElement>() {
 
     override val fragmentFactory = CommonFragmentFactory

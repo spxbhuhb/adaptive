@@ -11,46 +11,46 @@ import `fun`.adaptive.utility.use
 
 class AutoWorker : WorkerImpl<AutoWorker> {
 
-    val instanceLock = getLock()
+    val backendLock = getLock()
 
-    val instances = mutableMapOf<AutoHandle, BackendBase>()
+    val backends = mutableMapOf<AutoHandle, BackendBase>()
 
     override suspend fun run() {
         // worker is event-driven
     }
 
     operator fun get(handle: AutoHandle): BackendBase? =
-        instanceLock.use {
-            instances[handle]
+        backendLock.use {
+            backends[handle]
         }
 
     fun register(backend: BackendBase) {
-        instanceLock.use {
-            instances[backend.context.handle] = backend
+        backendLock.use {
+            backends[backend.context.handle] = backend
         }
     }
 
-    fun unregister(backend: BackendBase) {
-        instanceLock.use {
-            instances.remove(backend.context.handle)
+    fun deregister(backend: BackendBase) {
+        backendLock.use {
+            backends.remove(backend.context.handle)
         }
     }
 
     fun peerTime(handle: AutoHandle): LamportTimestamp =
-        instanceLock.use {
-            checkNotNull(instances[handle]) { "missing auto instance: $handle" }
+        backendLock.use {
+            checkNotNull(backends[handle]) { "missing auto instance: $handle" }
         }
             .context.time
 
     fun addPeer(handle: AutoHandle, connector: AutoConnector, connectingPeerTime: LamportTimestamp): LamportTimestamp =
-        instanceLock.use {
-            checkNotNull(instances[handle]) { "missing auto instance: $handle" }
+        backendLock.use {
+            checkNotNull(backends[handle]) { "missing auto instance: $handle" }
         }
             .addPeer(connector, connectingPeerTime)
 
     fun receive(handle: AutoHandle, operation: AutoOperation) {
-        instanceLock.use {
-            instances[handle]?.receive(operation, false)
+        backendLock.use {
+            backends[handle]?.receive(operation, false)
         }
     }
 
