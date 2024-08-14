@@ -6,6 +6,7 @@ package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmInternalStateVariable
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmValueProducer
+import `fun`.adaptive.kotlin.foundation.ir.util.adatCompanionOrNull
 import org.jetbrains.kotlin.ir.builders.IrBlockBodyBuilder
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrVariable
@@ -14,8 +15,10 @@ import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrBlockImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrSetValueImpl
 import org.jetbrains.kotlin.ir.types.classFqName
+import org.jetbrains.kotlin.ir.types.classOrFail
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.util.companionObject
 
 open class ArmInternalStateVariableBuilder(
     parent: ClassBoundIrBuilder,
@@ -63,19 +66,10 @@ open class ArmInternalStateVariableBuilder(
      * Set the state variable binding parameter of producer calls.
      */
     fun transformProducer(dirtyMask: IrVariable, expression: IrCall, patchFun: IrSimpleFunction): IrExpression {
+
         for ((index, valueParam) in expression.symbol.owner.valueParameters.withIndex()) {
             if (! valueParam.type.isSubtypeOfClass(pluginContext.adaptiveStateVariableBindingClass)) continue
-            expression.putValueArgument(
-                index,
-                irCall(
-                    pluginContext.localBinding,
-                    dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!),
-                    args = arrayOf(
-                        irConst(stateVariable.indexInState),
-                        irConst(stateVariable.type.classFqName !!.asString())
-                    )
-                )
-            )
+            setBindingParameter(expression, index, patchFun)
         }
 
         // set the dirty mask we use in internal-patch
@@ -87,6 +81,25 @@ open class ArmInternalStateVariableBuilder(
             block.statements += expression
             block.statements += IrSetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, irBuiltIns.intType, dirtyMask.symbol, irConst(1 shl stateVariable.indexInState), null)
         }
+    }
+
+    private fun setBindingParameter(call: IrCall, index: Int, patchFun: IrSimpleFunction) {
+
+        // if the state variable is an adat class we have to find the companion
+        // object and pass it to `localBinding`
+
+        call.putValueArgument(
+            index,
+            irCall(
+                pluginContext.localBinding,
+                dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!),
+                args = arrayOf(
+                    irConst(stateVariable.indexInState),
+                    irConst(stateVariable.type.classFqName !!.asString()),
+                    adatCompanionOrNull(stateVariable.type)
+                )
+            )
+        )
     }
 
     /**

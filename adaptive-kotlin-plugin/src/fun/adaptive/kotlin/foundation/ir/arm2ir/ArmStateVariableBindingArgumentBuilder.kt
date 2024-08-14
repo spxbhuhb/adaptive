@@ -6,6 +6,7 @@ package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmClosure
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmStateVariableBindingArgument
+import `fun`.adaptive.kotlin.foundation.ir.util.adatCompanionOrNull
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrVariable
@@ -34,6 +35,7 @@ class ArmStateVariableBindingArgumentBuilder(
                 irConst(argument.argumentIndex), // indexInTarget
                 genPath(argument), // path
                 irConst(argument.boundType.classFqName !!.asString()), // boundType
+                adatCompanionOrNull(closure[argument.indexInClosure].type)
             )
         )
 

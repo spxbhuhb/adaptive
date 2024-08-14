@@ -94,6 +94,8 @@ class FoundationPluginContext(
     val detachHandlerClass = ClassIds.DETACH_HANDLER.classSymbol()
     val detachFun = detachHandlerClass.owner.functionByName { Strings.DETACH }
 
+    val adatClass = ClassIds.ADAT_CLASS.classSymbol()
+
     private fun String.fragmentPropertyList() =
         adaptiveFragmentClass.owner.properties.filter { it.name.asString() == this }.map { it.symbol }.toList()
 

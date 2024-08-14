@@ -106,6 +106,7 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     private val INTERNAL = Strings.INTERNAL_PACKAGE.fqName()
     private val INSTRUCTION = Strings.INSTRUCTION_PACKAGE.fqName()
     private val PRODUCER_PACKAGE = Strings.PRODUCER_PACKAGE.fqName()
+    private val ADAT_PACKAGE = "fun.adaptive.adat".fqName()
 
     val ADAPTIVE = Strings.ADAPTIVE.classId()
     val ADAPTIVE_FRAGMENT = Strings.ADAPTIVE_FRAGMENT.classId()
@@ -126,6 +127,8 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val DETACH_HANDLER = "DetachHandler".classId { INSTRUCTION }
 
     val PRODUCER = "Producer".classId { PRODUCER_PACKAGE }
+
+    val ADAT_CLASS = "AdatClass".classId { ADAT_PACKAGE }
 }
 
 object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {

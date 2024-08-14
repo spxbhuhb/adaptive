@@ -3,7 +3,7 @@
  */
 package `fun`.adaptive.foundation
 
-import `fun`.adaptive.foundation.binding.AdaptivePropertyMetadata
+import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.internal.AdaptiveClosure
@@ -269,6 +269,7 @@ abstract class AdaptiveFragment(
         if (trace) trace("after-Remove-Producer", "producer", producer)
     }
 
+    @Suppress("unused") // used by the plugin
     fun getProducedValue(stateVariableIndex : Int) : Any? {
         producers?.forEach { producer ->
             if (producer.hasValueFor(stateVariableIndex)) return producer.value()
@@ -310,7 +311,8 @@ abstract class AdaptiveFragment(
         descendant: AdaptiveFragment,
         indexInTarget: Int,
         path: Array<String>? = null,
-        boundType: String,
+        boundType : String,
+        adatCompanion: AdatCompanion<*>?
     ): AdaptiveStateVariableBinding<*> =
 
         AdaptiveStateVariableBinding<Int>(
@@ -320,7 +322,8 @@ abstract class AdaptiveFragment(
             targetFragment = descendant,
             indexInTargetState = indexInTarget,
             path = path,
-            metadata = AdaptivePropertyMetadata(boundType)
+            boundType = boundType,
+            adatCompanion = adatCompanion
         ).also {
             addBinding(it)
             descendant.setStateVariable(indexInTarget, it)
@@ -342,7 +345,8 @@ abstract class AdaptiveFragment(
     /**
      * Creates a binding for producer use.
      */
-    fun localBinding(indexInState: Int, boundType: String) =
+    @Suppress("unused") // used by the plugin
+    fun localBinding(indexInState: Int, boundType: String, adatCompanion: AdatCompanion<*>?) =
         AdaptiveStateVariableBinding<Int>(
             sourceFragment = this,
             indexInSourceState = indexInState,
@@ -350,7 +354,8 @@ abstract class AdaptiveFragment(
             targetFragment = this,
             indexInTargetState = indexInState,
             path = null,
-            metadata = AdaptivePropertyMetadata(boundType)
+            boundType = boundType,
+            adatCompanion = adatCompanion
         )
 
     // --------------------------------------------------------------------------

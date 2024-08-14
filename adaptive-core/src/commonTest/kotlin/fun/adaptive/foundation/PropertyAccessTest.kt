@@ -62,7 +62,7 @@ fun propertyAccessTest() {
 @Adaptive
 fun <T> propertyAccessor(
     binding: AdaptiveStateVariableBinding<T>? = null,
-    @Suppress("UNUSED_PARAMETER") selector: () -> T
+    @Suppress("unused") selector: () -> T
 ) {
     checkNotNull(binding)
     checkNotNull(binding.propertyProvider)
@@ -98,11 +98,11 @@ class PropertyAccessTest {
                     TraceEvent("AdaptivePropertyAccessBindingTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [TestProvider()]"),
                     TraceEvent("AdaptivePropertyAccessor", 3, "before-Create", ""),
                     TraceEvent("AdaptivePropertyAccessor", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-                    TraceEvent("AdaptivePropertyAccessBindingTest", 2, "before-Add-Binding", "binding: AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], AdaptivePropertyMetadata(kotlin.Int))"),
-                    TraceEvent("AdaptivePropertyAccessBindingTest", 2, "after-Add-Binding", "binding: AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], AdaptivePropertyMetadata(kotlin.Int))"),
-                    TraceEvent("AdaptivePropertyAccessor", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], AdaptivePropertyMetadata(kotlin.Int))]"),
-                    TraceEvent("AdaptivePropertyAccessor", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], AdaptivePropertyMetadata(kotlin.Int))]"),
-                    TraceEvent("AdaptivePropertyAccessor", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], AdaptivePropertyMetadata(kotlin.Int))]"),
+                    TraceEvent("AdaptivePropertyAccessBindingTest", 2, "before-Add-Binding", "binding: AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], kotlin.Int, null)"),
+                    TraceEvent("AdaptivePropertyAccessBindingTest", 2, "after-Add-Binding", "binding: AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], kotlin.Int, null)"),
+                    TraceEvent("AdaptivePropertyAccessor", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], kotlin.Int, null)]"),
+                    TraceEvent("AdaptivePropertyAccessor", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], kotlin.Int, null)]"),
+                    TraceEvent("AdaptivePropertyAccessor", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], kotlin.Int, null)]"),
                     TraceEvent("AdaptiveT1", 4, "before-Create", ""),
                     TraceEvent("AdaptiveT1", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
                     TraceEvent("AdaptiveT1", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
@@ -117,18 +117,18 @@ class PropertyAccessTest {
                     TraceEvent("AdaptiveT1", 4, "after-Mount"),
                     TraceEvent("AdaptivePropertyAccessor", 3, "after-Mount"),
                     TraceEvent("AdaptivePropertyAccessBindingTest", 2, "after-Mount"),
-                    TraceEvent("AdaptivePropertyAccessor", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000001 state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], AdaptivePropertyMetadata(kotlin.Int))]"),
+                    TraceEvent("AdaptivePropertyAccessor", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000001 state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], kotlin.Int, null)]"),
                     TraceEvent("AdaptiveT1", 4, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [12]"),
                     TraceEvent("AdaptiveT1", 4, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [23]"),
                     TraceEvent("AdaptiveT1", 4, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [23]"),
                     TraceEvent("AdaptiveT1", 4, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [23]"),
-                    TraceEvent("AdaptivePropertyAccessor", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], AdaptivePropertyMetadata(kotlin.Int))]"),
-                    TraceEvent("AdaptivePropertyAccessor", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000001 state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], AdaptivePropertyMetadata(kotlin.Int))]"),
+                    TraceEvent("AdaptivePropertyAccessor", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], kotlin.Int, null)]"),
+                    TraceEvent("AdaptivePropertyAccessor", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000001 state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], kotlin.Int, null)]"),
                     TraceEvent("AdaptiveT1", 4, "before-Patch-External", "createMask: 0x00000001 thisMask: 0x00000000 state: [23]"),
                     TraceEvent("AdaptiveT1", 4, "after-Patch-External", "createMask: 0x00000001 thisMask: 0x00000001 state: [45]"),
                     TraceEvent("AdaptiveT1", 4, "before-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000001 state: [45]"),
                     TraceEvent("AdaptiveT1", 4, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [45]"),
-                    TraceEvent("AdaptivePropertyAccessor", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], AdaptivePropertyMetadata(kotlin.Int))]")
+                    TraceEvent("AdaptivePropertyAccessor", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, [i], kotlin.Int, null)]")
                     //@formatter:on
                 )
             ),
@@ -169,7 +169,8 @@ class AdaptivePropertyAccessBindingTest(
                         descendant = fragment,
                         indexInTarget = 0,
                         path = arrayOf("i"),
-                        boundType = "kotlin.Int"
+                        boundType = "kotlin.Int",
+                        adatCompanion = null
                     )
                 }
             }

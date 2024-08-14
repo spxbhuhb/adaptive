@@ -4,6 +4,7 @@
 package `fun`.adaptive.foundation.binding
 
 import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.absolutePath
 import `fun`.adaptive.adat.store.CopyStore
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -15,16 +16,18 @@ class AdaptiveStateVariableBinding<VT>(
     val targetFragment: AdaptiveFragment,
     val indexInTargetState: Int,
     val path: Array<String>?,
-    val metadata: AdaptivePropertyMetadata?,
+    val boundType : String,
+    val adatCompanion: AdatCompanion<*>?,
 ) {
 
-    constructor(targetFragment: AdaptiveFragment, indexInTargetState: Int) : this(
+    constructor(targetFragment: AdaptiveFragment, indexInTargetState: Int, boundType: String) : this(
         sourceFragment = null,
         indexInSourceState = - 1,
         indexInSourceClosure = - 1,
         targetFragment,
         indexInTargetState,
         emptyArray<String>(),
+        boundType,
         null
     )
 
@@ -79,7 +82,7 @@ class AdaptiveStateVariableBinding<VT>(
 
 
     override fun toString(): String {
-        return "AdaptiveStateVariableBinding(${sourceFragment?.id}, $indexInSourceState, $indexInSourceState, ${targetFragment.id}, ${indexInTargetState}, ${path.contentToString()}, $metadata)"
+        return "AdaptiveStateVariableBinding(${sourceFragment?.id}, $indexInSourceState, $indexInSourceState, ${targetFragment.id}, $indexInTargetState, ${path.contentToString()}, $boundType, ${adatCompanion?.wireFormatName})"
     }
 
     override fun equals(other: Any?): Boolean {
