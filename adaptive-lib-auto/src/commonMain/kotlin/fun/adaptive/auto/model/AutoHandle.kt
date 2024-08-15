@@ -1,7 +1,7 @@
 package `fun`.adaptive.auto.model
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.auto.backend.BackendBase
+import `fun`.adaptive.auto.internal.backend.BackendBase
 import `fun`.adaptive.utility.UUID
 
 /**

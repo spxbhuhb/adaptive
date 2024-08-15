@@ -1,7 +1,6 @@
 package `fun`.adaptive.auto.model
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.auto.LamportTimestamp
 
 /**
  * @property  originHandle       Handle of an existing backend to connect with, the origin backend.

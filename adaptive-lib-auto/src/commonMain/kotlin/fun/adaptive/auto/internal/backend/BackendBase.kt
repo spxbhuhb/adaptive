@@ -1,9 +1,11 @@
-package `fun`.adaptive.auto.backend
+package `fun`.adaptive.auto.internal.backend
 
-import `fun`.adaptive.auto.ItemId
-import `fun`.adaptive.auto.LamportTimestamp
-import `fun`.adaptive.auto.connector.AutoConnector
-import `fun`.adaptive.auto.frontend.FrontendBase
+import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.auto.internal.connector.AutoConnector
+import `fun`.adaptive.auto.internal.frontend.FrontendBase
+import `fun`.adaptive.auto.model.AutoConnectInfo
+import `fun`.adaptive.auto.model.AutoHandle
+import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.operation.AutoModify
 import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.reflect.CallSiteName
@@ -75,6 +77,11 @@ abstract class BackendBase : AutoConnector() {
 
     }
 
+    fun connectInfo() =
+        with(context) {
+            AutoConnectInfo(handle, time, AutoHandle(handle.globalId, 2))
+        }
+
     @CallSiteName
     inline fun trace(callSiteName: String = "<unknown>", builder: () -> String) {
         if (context.trace) trace(builder(), callSiteName)
@@ -83,4 +90,5 @@ abstract class BackendBase : AutoConnector() {
     open fun trace(message: String, callSiteName: String) {
         println("[${callSiteName.substringAfterLast('.')} @ ${context.time}] $message")
     }
+
 }

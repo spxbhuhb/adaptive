@@ -1,9 +1,12 @@
 package `fun`.adaptive.auto.backend
 
 import `fun`.adaptive.adat.toArray
-import `fun`.adaptive.auto.LamportTimestamp
-import `fun`.adaptive.auto.connector.DirectConnector
-import `fun`.adaptive.auto.frontend.AdatClassFrontend
+import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.auto.internal.connector.DirectConnector
+import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
+import `fun`.adaptive.auto.internal.backend.BackendBase
+import `fun`.adaptive.auto.internal.backend.BackendContext
+import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider

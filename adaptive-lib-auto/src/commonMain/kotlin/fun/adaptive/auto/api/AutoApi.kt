@@ -1,6 +1,6 @@
 package `fun`.adaptive.auto.api
 
-import `fun`.adaptive.auto.LamportTimestamp
+import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.operation.*
 import `fun`.adaptive.service.ServiceApi

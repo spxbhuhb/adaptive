@@ -1,4 +1,4 @@
-package `fun`.adaptive.auto.connector
+package `fun`.adaptive.auto.internal.connector
 
 import `fun`.adaptive.auto.api.AutoApi
 import `fun`.adaptive.auto.model.AutoHandle

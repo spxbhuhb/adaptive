@@ -1,7 +1,7 @@
 package `fun`.adaptive.auto.model.operation
 
-import `fun`.adaptive.auto.LamportTimestamp
-import `fun`.adaptive.auto.backend.BackendBase
+import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.auto.internal.backend.BackendBase
 
 abstract class AutoOperation {
 

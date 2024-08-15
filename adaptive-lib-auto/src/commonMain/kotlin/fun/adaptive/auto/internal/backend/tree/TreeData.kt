@@ -8,10 +8,10 @@
  * This code a Kotlin port of: https://madebyevan.com/algos/crdt-mutable-tree-hierarchy/
  */
 
-package `fun`.adaptive.auto.backend.tree
+package `fun`.adaptive.auto.internal.backend.tree
 
-import `fun`.adaptive.auto.ItemId
-import `fun`.adaptive.auto.backend.TreeBackend
+import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.auto.internal.backend.TreeBackend
 import kotlin.collections.get
 import kotlin.math.max
 

@@ -1,3 +1,3 @@
-package `fun`.adaptive.auto
+package `fun`.adaptive.auto.model
 
 typealias ItemId = LamportTimestamp

@@ -1,11 +1,11 @@
-package `fun`.adaptive.auto.backend
+package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.wireformat.AdatPropertyWireFormat
-import `fun`.adaptive.auto.ItemId
-import `fun`.adaptive.auto.LamportTimestamp
-import `fun`.adaptive.auto.MetadataId
-import `fun`.adaptive.auto.connector.AutoConnector
+import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.model.AutoPropertyValue
+import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.auto.model.MetadataId
 import `fun`.adaptive.auto.model.operation.AutoModify
 import `fun`.adaptive.wireformat.WireFormat
 

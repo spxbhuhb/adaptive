@@ -1,14 +1,14 @@
-package `fun`.adaptive.auto.frontend
+package `fun`.adaptive.auto.internal.frontend
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.AdatContext
 import `fun`.adaptive.adat.deepCopy
 import `fun`.adaptive.adat.store.AdatStore
-import `fun`.adaptive.auto.backend.PropertyBackend
+import `fun`.adaptive.auto.internal.backend.PropertyBackend
 
 class AdatClassFrontend<A : AdatClass<A>>(
-    val backend: PropertyBackend,
+    override val backend: PropertyBackend,
     val companion: AdatCompanion<A>,
     initialValue: A?,
     val collectionFrontend: CollectionFrontendBase?,

@@ -46,11 +46,13 @@ class CopyStore<A : AdatClass<A>>(
 
     fun replaceValue(newValue: A) {
         latestValue = makeCopy(newValue, null)
+        latestValue?.validate()
         binding.targetFragment.setDirty(binding.indexInTargetState, true)
     }
 
     fun setProperty(path: List<String>, value: Any?) {
         latestValue = latestValue?.let { makeCopy(it, AdatChange(path, value)) }
+        latestValue?.validate()
         onChange?.invoke(latestValue !!)
         binding.targetFragment.setDirty(binding.indexInTargetState, true)
     }

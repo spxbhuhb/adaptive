@@ -1,6 +1,4 @@
-package `fun`.adaptive.auto.backend.tree
-
-import `fun`.adaptive.auto.LamportTimestamp
+package `fun`.adaptive.auto.internal.backend.tree
 
 class Node(val id: NodeId) : Comparable<Node> {
     var parent: Node? = null

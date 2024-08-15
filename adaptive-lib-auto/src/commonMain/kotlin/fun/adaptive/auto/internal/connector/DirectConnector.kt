@@ -1,6 +1,6 @@
-package `fun`.adaptive.auto.connector
+package `fun`.adaptive.auto.internal.connector
 
-import `fun`.adaptive.auto.backend.BackendBase
+import `fun`.adaptive.auto.internal.backend.BackendBase
 import `fun`.adaptive.auto.model.operation.AutoOperation
 
 class DirectConnector(

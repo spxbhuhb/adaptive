@@ -1,8 +1,8 @@
 package `fun`.adaptive.auto.service
 
-import `fun`.adaptive.auto.LamportTimestamp
+import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.api.AutoApi
-import `fun`.adaptive.auto.connector.ServiceConnector
+import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.operation.*
 import `fun`.adaptive.auto.worker.AutoWorker

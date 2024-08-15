@@ -1,4 +1,4 @@
-package `fun`.adaptive.auto.backend.tree
+package `fun`.adaptive.auto.internal.backend.tree
 
 class Edge(
     val parent: Node,

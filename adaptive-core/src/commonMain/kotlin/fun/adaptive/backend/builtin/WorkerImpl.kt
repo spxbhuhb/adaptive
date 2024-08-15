@@ -6,6 +6,7 @@ package `fun`.adaptive.backend.builtin
 
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
@@ -29,8 +30,8 @@ fun WorkerImpl<*>.launch(function: suspend CoroutineScope.() -> Unit) {
     scope.launch {
         try {
             function(this)
-        } catch (ex: CancellationException) {
-            logger.fine(ex)
+        } catch (_: CancellationException) {
+            scope.ensureActive()
         } catch (ex: Exception) {
             logger.error(ex)
         }

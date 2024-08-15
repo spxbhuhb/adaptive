@@ -4,13 +4,13 @@
 
 package `fun`.adaptive.auto.integration
 
-import `fun`.adaptive.auto.LamportTimestamp
+import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.api.AutoApi
-import `fun`.adaptive.auto.backend.BackendContext
-import `fun`.adaptive.auto.backend.PropertyBackend
+import `fun`.adaptive.auto.internal.backend.BackendContext
+import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.backend.TestData
-import `fun`.adaptive.auto.connector.ServiceConnector
-import `fun`.adaptive.auto.frontend.AdatClassFrontend
+import `fun`.adaptive.auto.internal.connector.ServiceConnector
+import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.worker.AutoWorker
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.service.getService
@@ -27,7 +27,7 @@ class PropertyBackendIntegrationTest {
 
     @Test
     fun basic() {
-        autoTest { originAdapter, connectingAdapter ->
+        autoTest(port = 8083) { originAdapter, connectingAdapter ->
 
             val scope = CoroutineScope(Dispatchers.Default)
             val itemId = LamportTimestamp(0, 0) // does not matter for PropertyBackend

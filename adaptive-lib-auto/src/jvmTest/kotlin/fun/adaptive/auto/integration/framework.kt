@@ -1,11 +1,11 @@
 package `fun`.adaptive.auto.integration
 
 import `fun`.adaptive.adat.toArray
-import `fun`.adaptive.auto.LamportTimestamp
-import `fun`.adaptive.auto.backend.BackendContext
-import `fun`.adaptive.auto.backend.PropertyBackend
+import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.auto.internal.backend.BackendContext
+import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.backend.TestData
-import `fun`.adaptive.auto.frontend.AdatClassFrontend
+import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.service.AutoService
@@ -82,11 +82,12 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
 @CallSiteName
 fun autoTest(
     callSiteName: String = "unknown",
+    port : Int,
     test: suspend (originAdapter: BackendAdapter, connectingAdapter: BackendAdapter) -> Unit
 ) {
     val originAdapter = backend {
         settings {
-            inline("KTOR_PORT" to 8081)
+            inline("KTOR_PORT" to port)
         }
         inMemoryH2(callSiteName.substringAfterLast('.'))
         worker { AutoWorker() }
@@ -102,7 +103,7 @@ fun autoTest(
     }
 
     runBlocking {
-        val transport = withProtoWebSocketTransport("http://localhost:8081", serviceImplFactory = connectingAdapter)
+        val transport = withProtoWebSocketTransport("http://localhost:$port", serviceImplFactory = connectingAdapter)
 
         defaultServiceImplFactory += connectingAdapter.singleImpl<AutoService>()
 

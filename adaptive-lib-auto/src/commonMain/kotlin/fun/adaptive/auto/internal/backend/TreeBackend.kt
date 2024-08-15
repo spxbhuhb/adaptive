@@ -1,22 +1,22 @@
-package `fun`.adaptive.auto.backend
+package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.encode
 import `fun`.adaptive.adat.toArray
-import `fun`.adaptive.auto.ItemId
-import `fun`.adaptive.auto.LamportTimestamp
-import `fun`.adaptive.auto.MetadataId
-import `fun`.adaptive.auto.connector.AutoConnector
+import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.auto.model.MetadataId
+import `fun`.adaptive.auto.internal.connector.AutoConnector
+import `fun`.adaptive.auto.internal.backend.tree.TreeData
 import `fun`.adaptive.auto.model.operation.*
 import `fun`.adaptive.reflect.CallSiteName
+import kotlin.collections.minusAssign
 
-class ListBackend(
+class TreeBackend(
     override val context: BackendContext
 ) : CollectionBackendBase() {
 
-    val additions = mutableSetOf<Pair<ItemId, MetadataId?>>()
-    val removals = mutableSetOf<ItemId>()
-
+    val tree = TreeData(this)
     override val items = mutableMapOf<ItemId, PropertyBackend>()
 
     // --------------------------------------------------------------------------------
@@ -24,8 +24,10 @@ class ListBackend(
     // --------------------------------------------------------------------------------
 
     override fun add(item: AdatClass<*>, metadataId: MetadataId?, parentItemId: ItemId?, commit: Boolean, distribute: Boolean) {
+        checkNotNull(parentItemId) { "tree items must have a parent" }
+
         val itemId = context.nextTime()
-        addItem(itemId, metadataId, item)
+        addItem(itemId, metadataId, parentItemId, item)
 
         val operation = AutoAdd(itemId, itemId, metadataId, parentItemId, item.encode(context.wireFormatProvider))
         trace { "FE -> BE  itemId=$itemId .. commit true .. distribute true .. $operation" }
@@ -34,7 +36,7 @@ class ListBackend(
     }
 
     override fun remove(itemId: ItemId, commit: Boolean, distribute: Boolean) {
-        removals += itemId
+        tree.afterApply(itemId, tree.removedNodes.id, Int.MAX_VALUE)
         items -= itemId
 
         val operation = AutoRemove(context.nextTime(), setOf(itemId))
@@ -44,11 +46,13 @@ class ListBackend(
     }
 
     override fun removeAll(itemIds: Set<ItemId>, commit: Boolean, distribute: Boolean) {
-        removals += itemIds
 
         for (itemId in itemIds) {
+            tree.afterApply(itemId, tree.removedNodes.id, Int.MAX_VALUE, commit = false)
             items -= itemId
         }
+
+        tree.recomputeParentsAndChildren()
 
         val operation = AutoRemove(context.nextTime(), itemIds)
         trace { "FE -> BE  commit true .. distribute true .. $operation" }
@@ -62,13 +66,23 @@ class ListBackend(
     }
 
     // --------------------------------------------------------------------------------
+    // Operations from the tree data (correction after conflicting move)
+    // --------------------------------------------------------------------------------
+
+    fun moved(itemId : ItemId, parentId : ItemId) {
+
+    }
+
+    // --------------------------------------------------------------------------------
     // Incoming from other backends
     // --------------------------------------------------------------------------------
 
     override fun add(operation: AutoAdd, commit: Boolean, distribute: Boolean) {
         trace { "commit=$commit distribute=$distribute op=$operation" }
 
-        addItem(operation.itemId, operation.metadataId, context.wireFormatProvider.decode(operation.payload, context.defaultWireFormat))
+        checkNotNull(operation.parentItemId) { "tree items must have a parent" }
+
+        addItem(operation.itemId, operation.metadataId, operation.parentItemId, context.wireFormatProvider.decode(operation.payload, context.defaultWireFormat))
 
         closeListOp(operation, setOf(operation.itemId), commit, distribute)
     }
@@ -76,14 +90,17 @@ class ListBackend(
     override fun remove(operation: AutoRemove, commit: Boolean, distribute: Boolean) {
         trace { "commit=$commit distribute=$distribute op=$operation" }
 
-        items -= operation.itemIds
-        removals += operation.itemIds
+        for (itemId in operation.itemIds) {
+            tree.afterApply(itemId, tree.removedNodes.id, Int.MAX_VALUE, commit = false)
+            items -= itemId
+        }
+
+        tree.recomputeParentsAndChildren()
 
         closeListOp(operation, operation.itemIds, commit, distribute)
     }
 
     override fun modify(operation: AutoModify, commit: Boolean, distribute: Boolean) {
-        if (operation.itemId in removals) return
         val item = items[operation.itemId] ?: return
         item.modify(operation, commit, distribute)
     }
@@ -100,18 +117,13 @@ class ListBackend(
             return
         }
 
+        val removals = tree.removedNodes.children
         if (removals.isNotEmpty()) {
-            connector.send(AutoRemove(time, removals))
+            connector.send(AutoRemove(peerTime, removals.map { it.id }.toSet()))
         }
 
         for (item in items.values) {
-            val itemId = item.itemId
-
-            if (itemId > peerTime) {
-                connector.send(AutoAdd(itemId, itemId, item.metadataId, null, item.encode()))
-            } else {
-                item.syncPeer(connector, peerTime)
-            }
+            item.syncPeer(connector, peerTime)
         }
 
     }
@@ -131,10 +143,8 @@ class ListBackend(
         }
     }
 
-    fun addItem(itemId: ItemId, metadataId: ItemId?, value: AdatClass<*>) : PropertyBackend {
-        additions += (itemId to metadataId)
-        val backend = PropertyBackend(context, itemId, metadataId, value.toArray())
-        items += itemId to backend
-        return backend
+    fun addItem(itemId: ItemId, metadataId: ItemId?, parentItemId : ItemId, value: AdatClass<*>) {
+        tree.addChildToParent(itemId, parentItemId)
+        items += itemId to PropertyBackend(context, itemId, metadataId, value.toArray())
     }
 }

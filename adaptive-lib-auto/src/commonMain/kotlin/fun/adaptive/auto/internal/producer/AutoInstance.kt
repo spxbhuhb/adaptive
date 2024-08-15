@@ -1,4 +1,4 @@
-package `fun`.adaptive.auto.producer
+package `fun`.adaptive.auto.internal.producer
 
 import `fun`.adaptive.adat.AdatChange
 import `fun`.adaptive.adat.AdatClass
@@ -7,12 +7,12 @@ import `fun`.adaptive.adat.AdatContext
 import `fun`.adaptive.adat.applyContext
 import `fun`.adaptive.adat.deepCopy
 import `fun`.adaptive.adat.store.AdatStore
-import `fun`.adaptive.auto.LamportTimestamp
+import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.api.AutoApi
-import `fun`.adaptive.auto.backend.BackendContext
-import `fun`.adaptive.auto.backend.PropertyBackend
-import `fun`.adaptive.auto.connector.ServiceConnector
-import `fun`.adaptive.auto.frontend.AdatClassFrontend
+import `fun`.adaptive.auto.internal.backend.BackendContext
+import `fun`.adaptive.auto.internal.backend.PropertyBackend
+import `fun`.adaptive.auto.internal.connector.ServiceConnector
+import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.auto.worker.AutoWorker
 import `fun`.adaptive.backend.query.firstImpl
@@ -23,41 +23,6 @@ import `fun`.adaptive.service.getService
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-
-/**
- * Connect to peers with [AutoApi] and produce an instance that is
- * synchronized between peers.
- *
- * Property changes (on any peer) generate a new instance (on all peers).
- *
- * Each new instance is validated by default, so fragments that use values
- * produced by [autoInstance] can safely use the validation result as it is
- * up-to-date all the time.
- *
- * @param    onChange       Called after a new instance is generated, but before the
- *                          state of the fragment is updated.
- * @param    connect        A function to get the connection info. Typically, this is created by
- *                          a service call.
- *                          of this instance, validates that copy and then returns with it.
- * @param    binding        Set by the compiler plugin, ignore it.
- *
- * @return   `null` (it takes time to connect and synchronize)
- */
-@Producer
-fun <A : AdatClass<A>> autoInstance(
-    onChange: ((newValue: A) -> Unit)? = null,
-    binding: AdaptiveStateVariableBinding<A>? = null,
-    connect: suspend () -> AutoConnectInfo
-): A? {
-    checkNotNull(binding)
-    checkNotNull(binding.adatCompanion)
-
-    val store = AutoInstance(binding, connect, onChange)
-
-    binding.targetFragment.addProducer(store)
-
-    return null
-}
 
 class AutoInstance<A : AdatClass<A>>(
     override val binding: AdaptiveStateVariableBinding<A>,
@@ -128,6 +93,7 @@ class AutoInstance<A : AdatClass<A>>(
                 null
             ) {
                 latestValue = frontend.value
+                latestValue?.validate()
                 binding.targetFragment.setDirty(binding.indexInTargetState, true) // TODO make a separate binding for producers
             }
 

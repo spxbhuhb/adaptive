@@ -1,4 +1,4 @@
-package `fun`.adaptive.auto.backend.tree
+package `fun`.adaptive.auto.internal.backend.tree
 
 /**
  * Note: This priority queue implementation is inefficient. It should

@@ -1,11 +1,11 @@
 package `fun`.adaptive.auto.model.operation
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.auto.ItemId
-import `fun`.adaptive.auto.LamportTimestamp
-import `fun`.adaptive.auto.MetadataId
-import `fun`.adaptive.auto.backend.BackendBase
-import `fun`.adaptive.auto.backend.CollectionBackendBase
+import `fun`.adaptive.auto.internal.backend.BackendBase
+import `fun`.adaptive.auto.internal.backend.CollectionBackendBase
+import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.auto.model.MetadataId
 
 @Adat
 class AutoAdd(

@@ -1,4 +1,4 @@
-package `fun`.adaptive.auto
+package `fun`.adaptive.auto.model
 
 import `fun`.adaptive.adat.Adat
 import kotlin.math.max

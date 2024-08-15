@@ -1,8 +1,8 @@
-package `fun`.adaptive.auto.backend
+package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.auto.ItemId
-import `fun`.adaptive.auto.MetadataId
+import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.auto.model.MetadataId
 import `fun`.adaptive.auto.model.operation.AutoAdd
 import `fun`.adaptive.auto.model.operation.AutoRemove
 

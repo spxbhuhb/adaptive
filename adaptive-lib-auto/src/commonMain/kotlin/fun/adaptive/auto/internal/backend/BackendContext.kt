@@ -1,13 +1,13 @@
-package `fun`.adaptive.auto.backend
+package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.metadata.AdatClassMetadata
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.atomic.Atomic
-import `fun`.adaptive.auto.ItemId
-import `fun`.adaptive.auto.LamportTimestamp
-import `fun`.adaptive.auto.MetadataId
-import `fun`.adaptive.auto.connector.AutoConnector
+import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.model.AutoHandle
+import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.auto.model.MetadataId
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.wireformat.WireFormat

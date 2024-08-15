@@ -1,8 +1,8 @@
 package `fun`.adaptive.auto.worker
 
-import `fun`.adaptive.auto.LamportTimestamp
-import `fun`.adaptive.auto.backend.BackendBase
-import `fun`.adaptive.auto.connector.AutoConnector
+import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.auto.internal.backend.BackendBase
+import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.backend.builtin.WorkerImpl

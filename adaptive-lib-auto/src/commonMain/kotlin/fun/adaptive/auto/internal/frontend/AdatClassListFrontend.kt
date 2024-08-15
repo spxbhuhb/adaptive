@@ -1,15 +1,15 @@
-package `fun`.adaptive.auto.frontend
+package `fun`.adaptive.auto.internal.frontend
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.store.AdatStore
-import `fun`.adaptive.auto.ItemId
-import `fun`.adaptive.auto.backend.ListBackend
+import `fun`.adaptive.auto.internal.backend.ListBackend
 import `fun`.adaptive.auto.model.AutoItemInstance
+import `fun`.adaptive.auto.model.ItemId
 
 // TODO optimize AutoClassListFrontend.commit (or maybe ListBackend)
 class AdatClassListFrontend<A : AdatClass<A>>(
-    val backend: ListBackend,
+    override val backend: ListBackend,
     val companion: AdatCompanion<A>
 ) : CollectionFrontendBase(), AdatStore {
 

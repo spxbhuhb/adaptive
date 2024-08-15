@@ -1,9 +1,9 @@
 package `fun`.adaptive.auto.model.operation
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.auto.ItemId
-import `fun`.adaptive.auto.LamportTimestamp
-import `fun`.adaptive.auto.backend.BackendBase
+import `fun`.adaptive.auto.internal.backend.BackendBase
+import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.auto.model.LamportTimestamp
 
 @Adat
 class AutoMove(

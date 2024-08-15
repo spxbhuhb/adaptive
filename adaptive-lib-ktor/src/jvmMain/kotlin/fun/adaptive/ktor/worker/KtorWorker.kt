@@ -52,7 +52,7 @@ class KtorWorker : WorkerImpl<KtorWorker> {
     }
 
     override fun unmount() {
-        applicationEngine?.stop(0, 0, TimeUnit.MILLISECONDS)
+        applicationEngine?.stop(1000, 1000, TimeUnit.MILLISECONDS)
     }
 
     fun Application.module() {
