@@ -1,17 +1,20 @@
 package `fun`.adaptive.auto.internal.backend
 
-import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.internal.frontend.FrontendBase
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.auto.model.AutoHandle
+import `fun`.adaptive.auto.model.ClientId
 import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.AutoModify
 import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.reflect.CallSiteName
 import kotlinx.coroutines.launch
 
-abstract class BackendBase : AutoConnector() {
+abstract class BackendBase(
+    clientId: ClientId
+) : AutoConnector(clientId) {
 
     abstract val context: BackendContext
 
@@ -58,6 +61,22 @@ abstract class BackendBase : AutoConnector() {
 
     abstract suspend fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp)
 
+    fun removePeer(handle: AutoHandle) {
+        context.removeConnector(handle)
+    }
+
+    // --------------------------------------------------------------------------------
+    // Lifecycle
+    // --------------------------------------------------------------------------------
+
+    override suspend fun disconnect() {
+        context.stop()
+    }
+
+    override fun onDisconnect() {
+        // nothing to do with this
+    }
+
     // --------------------------------------------------------------------------------
     // Utility, common
     // --------------------------------------------------------------------------------
@@ -66,7 +85,7 @@ abstract class BackendBase : AutoConnector() {
 
         if (commit) {
             frontEnd?.commit()
-            trace { "==== commit ====\n" }
+            trace { "==== commit ====" }
         }
 
         if (distribute) {
@@ -79,16 +98,16 @@ abstract class BackendBase : AutoConnector() {
 
     fun connectInfo() =
         with(context) {
-            AutoConnectInfo(handle, time, AutoHandle(handle.globalId, 2))
+            AutoConnectInfo(handle, time, AutoHandle(handle.globalId, context.nextTime().timestamp))
         }
 
     @CallSiteName
     inline fun trace(callSiteName: String = "<unknown>", builder: () -> String) {
-        if (context.trace) trace(builder(), callSiteName)
+        trace(builder(), callSiteName)
     }
 
     open fun trace(message: String, callSiteName: String) {
-        println("[${callSiteName.substringAfterLast('.')} @ ${context.time}] $message")
+        context.logger.fine { "[${callSiteName.substringAfterLast('.')} @ ${context.time}] $message" }
     }
 
 }

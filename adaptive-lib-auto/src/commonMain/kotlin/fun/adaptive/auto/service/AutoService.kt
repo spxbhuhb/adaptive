@@ -1,28 +1,48 @@
 package `fun`.adaptive.auto.service
 
-import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.api.AutoApi
-import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.model.AutoHandle
+import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.*
 import `fun`.adaptive.auto.worker.AutoWorker
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.worker
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.model.ServiceSession
+import `fun`.adaptive.utility.CleanupHandler
 
 class AutoService : ServiceImpl<AutoService>, AutoApi {
 
     val worker by worker<AutoWorker>()
 
+    class PeerCleanup(
+        worker: AutoWorker,
+        handle: AutoHandle
+    ) : CleanupHandler<ServiceSession>(
+        {
+            worker.removePeer(handle)
+        }
+    )
+
     override suspend fun peerTime(handle: AutoHandle): LamportTimestamp =
         worker.peerTime(handle)
 
-    override suspend fun addPeer(origin: AutoHandle, connecting: AutoHandle, connectingTime: LamportTimestamp): LamportTimestamp =
-        worker.addPeer(
+    override suspend fun addPeer(origin: AutoHandle, connecting: AutoHandle, connectingTime: LamportTimestamp): LamportTimestamp {
+
+        val originTime = worker.addPeer(
             origin,
-            ServiceConnector(connecting, getService(serviceContext.transport), worker.scope, 1000),
-            connectingTime
+            connecting,
+            connectingTime,
+            requireNotNull(serviceContext.transport) { "no transport in the service context" }
         )
+
+        serviceContext.addSessionCleanup(PeerCleanup(worker, connecting))
+
+        return originTime
+    }
+
+    override suspend fun removePeer(handle: AutoHandle) {
+        worker.removePeer(handle)
+    }
 
     override suspend fun add(handle: AutoHandle, operation: AutoAdd) {
         worker.receive(handle, operation)
@@ -40,7 +60,4 @@ class AutoService : ServiceImpl<AutoService>, AutoApi {
         worker.receive(handle, operation)
     }
 
-    override suspend fun removePeer(handle: AutoHandle) {
-        TODO("Not yet implemented")
-    }
 }

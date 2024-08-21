@@ -3,23 +3,26 @@ package `fun`.adaptive.auto.internal.connector
 import `fun`.adaptive.auto.api.AutoApi
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.operation.*
+import `fun`.adaptive.log.AdaptiveLogger
 import `fun`.adaptive.service.model.DisconnectException
+import `fun`.adaptive.utility.safeCall
+import `fun`.adaptive.utility.safeLaunch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
 
 class ServiceConnector(
+    val thisHandle: AutoHandle,
     val peerHandle: AutoHandle,
     val service: AutoApi,
-    scope: CoroutineScope,
+    val logger: AdaptiveLogger,
+    val scope: CoroutineScope,
     pendingLimit: Int
-) : AutoConnector() {
-
+) : AutoConnector(peerHandle.clientId) {
 
     val operations: Channel<AutoOperation> = Channel(pendingLimit)
 
     init {
-        scope.launch { run() }
+        scope.safeLaunch(logger) { run() }
     }
 
     override fun send(operation: AutoOperation) {
@@ -36,6 +39,16 @@ class ServiceConnector(
                 is AutoMove -> service.move(peerHandle, operation)
                 is AutoRemove -> service.remove(peerHandle, operation)
             }
+        }
+    }
+
+    override suspend fun disconnect() {
+        service.removePeer(thisHandle)
+    }
+
+    override fun onDisconnect() {
+        safeCall(logger) {
+            operations.close()
         }
     }
 

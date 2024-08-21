@@ -3,18 +3,18 @@ package `fun`.adaptive.auto.internal.backend
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.encode
 import `fun`.adaptive.adat.toArray
+import `fun`.adaptive.auto.internal.backend.tree.TreeData
+import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.MetadataId
-import `fun`.adaptive.auto.internal.connector.AutoConnector
-import `fun`.adaptive.auto.internal.backend.tree.TreeData
 import `fun`.adaptive.auto.model.operation.*
 import `fun`.adaptive.reflect.CallSiteName
 import kotlin.collections.minusAssign
 
 class TreeBackend(
     override val context: BackendContext
-) : CollectionBackendBase() {
+) : CollectionBackendBase(context.handle.clientId) {
 
     val tree = TreeData(this)
     override val items = mutableMapOf<ItemId, PropertyBackend>()

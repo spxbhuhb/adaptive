@@ -1,8 +1,8 @@
 package `fun`.adaptive.auto.api
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.auto.internal.producer.AutoInstance
+import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.Producer
 
@@ -18,10 +18,9 @@ import `fun`.adaptive.foundation.producer.Producer
  *
  * @param    onChange       Called after a new instance is generated, but before the
  *                          state of the fragment is updated.
+ * @param    binding        Set by the compiler plugin, ignore it.
  * @param    connect        A function to get the connection info. Typically, this is created by
  *                          a service call.
- *                          of this instance, validates that copy and then returns with it.
- * @param    binding        Set by the compiler plugin, ignore it.
  *
  * @return   `null` (it takes time to connect and synchronize)
  */
@@ -29,12 +28,13 @@ import `fun`.adaptive.foundation.producer.Producer
 fun <A : AdatClass<A>> autoInstance(
     onChange: ((newValue: A) -> Unit)? = null,
     binding: AdaptiveStateVariableBinding<A>? = null,
+    trace: Boolean = false,
     connect: suspend () -> AutoConnectInfo
 ): A? {
     checkNotNull(binding)
     checkNotNull(binding.adatCompanion)
 
-    val store = AutoInstance(binding, connect, onChange)
+    val store = AutoInstance(binding, connect, onChange, trace)
 
     binding.targetFragment.addProducer(store)
 

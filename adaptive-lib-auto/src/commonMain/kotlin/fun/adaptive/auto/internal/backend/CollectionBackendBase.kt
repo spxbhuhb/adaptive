@@ -1,12 +1,15 @@
 package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.auto.model.ClientId
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.MetadataId
 import `fun`.adaptive.auto.model.operation.AutoAdd
 import `fun`.adaptive.auto.model.operation.AutoRemove
 
-abstract class CollectionBackendBase : BackendBase() {
+abstract class CollectionBackendBase(
+    clientId: ClientId
+) : BackendBase(clientId) {
 
     abstract val items: MutableMap<ItemId, PropertyBackend>
 

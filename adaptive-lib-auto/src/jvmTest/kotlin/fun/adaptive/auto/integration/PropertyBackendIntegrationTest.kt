@@ -4,15 +4,16 @@
 
 package `fun`.adaptive.auto.integration
 
-import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.api.AutoApi
+import `fun`.adaptive.auto.backend.TestData
 import `fun`.adaptive.auto.internal.backend.BackendContext
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
-import `fun`.adaptive.auto.backend.TestData
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
+import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.worker.AutoWorker
 import `fun`.adaptive.backend.query.firstImpl
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 import kotlinx.coroutines.CoroutineScope
@@ -30,6 +31,8 @@ class PropertyBackendIntegrationTest {
         autoTest(port = 8083) { originAdapter, connectingAdapter ->
 
             val scope = CoroutineScope(Dispatchers.Default)
+            val logger = getLogger("logger")
+
             val itemId = LamportTimestamp(0, 0) // does not matter for PropertyBackend
 
             val autoService = getService<AutoApi>() // service consumer from connecting to origin
@@ -37,17 +40,17 @@ class PropertyBackendIntegrationTest {
             val originWorker = originAdapter.firstImpl<AutoWorker>()
             val connectingWorker = connectingAdapter.firstImpl<AutoWorker>()
 
-            val connectInfo = getService<AutoTestApi>().testInstance()
+            val connectInfo = getService<AutoTestApi>().testInstanceManual()
             val originHandle = connectInfo.originHandle
             val connectingHandle = connectInfo.connectingHandle
 
             val connectingContext = BackendContext(
                 connectingHandle,
                 scope,
+                logger,
                 ProtoWireFormatProvider(),
                 TestData.adatMetadata,
                 TestData.adatWireFormat,
-                true,
                 LamportTimestamp(connectingHandle.clientId, 0),
             )
 
@@ -70,7 +73,7 @@ class PropertyBackendIntegrationTest {
             connectingWorker.register(connectingBackend)
 
             connectingBackend.addPeer(
-                ServiceConnector(originHandle, autoService, scope, 1000),
+                ServiceConnector(connectingHandle, originHandle, autoService, logger, scope, 1000),
                 connectInfo.originTime
             )
 

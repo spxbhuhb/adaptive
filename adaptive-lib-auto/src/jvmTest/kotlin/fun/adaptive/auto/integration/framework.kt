@@ -1,30 +1,30 @@
 package `fun`.adaptive.auto.integration
 
 import `fun`.adaptive.adat.toArray
-import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.auto.api.originInstance
+import `fun`.adaptive.auto.backend.TestData
 import `fun`.adaptive.auto.internal.backend.BackendContext
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
-import `fun`.adaptive.auto.backend.TestData
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.auto.model.AutoHandle
+import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.service.AutoService
 import `fun`.adaptive.auto.worker.AutoWorker
+import `fun`.adaptive.backend.BackendAdapter
+import `fun`.adaptive.backend.backend
+import `fun`.adaptive.backend.builtin.ServiceImpl
+import `fun`.adaptive.backend.builtin.service
+import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.backend.setting.dsl.inline
+import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.ktor.withProtoWebSocketTransport
 import `fun`.adaptive.lib.auth.auth
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.reflect.CallSiteName
-import `fun`.adaptive.backend.BackendAdapter
-import `fun`.adaptive.backend.builtin.ServiceImpl
-import `fun`.adaptive.backend.builtin.service
-import `fun`.adaptive.backend.builtin.worker
-import `fun`.adaptive.backend.query.singleImpl
-import `fun`.adaptive.backend.backend
-import `fun`.adaptive.backend.setting.dsl.inline
-import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.service.ServiceApi
-import `fun`.adaptive.service.defaultServiceImplFactory
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 import kotlinx.coroutines.delay
@@ -34,21 +34,24 @@ import kotlinx.coroutines.withTimeout
 
 @ServiceApi
 interface AutoTestApi {
-    suspend fun testInstance(): AutoConnectInfo
+    suspend fun testInstanceManual(): AutoConnectInfo
+    suspend fun testInstanceWithOrigin(): AutoConnectInfo
 }
 
 class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
 
     val worker by worker<AutoWorker>()
 
-    override suspend fun testInstance(): AutoConnectInfo {
+    override suspend fun testInstanceManual(): AutoConnectInfo {
+        val logger = getLogger("logger")
+
         val context = BackendContext(
             AutoHandle(UUID(), 1),
             worker.scope,
+            logger,
             ProtoWireFormatProvider(),
             TestData.adatMetadata,
             TestData.adatWireFormat,
-            true,
             LamportTimestamp(1, 1)
         )
 
@@ -75,6 +78,10 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
             context.time,
             AutoHandle(context.handle.globalId, 2),
         )
+    }
+
+    override suspend fun testInstanceWithOrigin(): AutoConnectInfo {
+        return originInstance(worker, TestData(12, "a"), true) { }.connectInfo()
     }
 
 }

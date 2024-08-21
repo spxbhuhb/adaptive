@@ -4,16 +4,17 @@
 
 package `fun`.adaptive.backend.builtin
 
+import `fun`.adaptive.backend.BackendAdapter
+import `fun`.adaptive.backend.BackendFragment
+import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveExpect
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.manualImplementation
-import `fun`.adaptive.backend.BackendAdapter
-import `fun`.adaptive.backend.BackendFragment
-import `fun`.adaptive.backend.backend
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 @AdaptiveExpect(backend)
@@ -57,7 +58,10 @@ class BackendWorker(
         checkNotNull(impl) { "inconsistent backend state innerUnmount with a null implementation" }
             .also { it.unmount() }
 
-        scope.cancel() // TODO check Job docs about waiting
+        if (scope.isActive) {
+            scope.cancel() // TODO check Job docs about waiting
+        }
+
         impl = null
 
         if (trace) trace("after-Unmount")

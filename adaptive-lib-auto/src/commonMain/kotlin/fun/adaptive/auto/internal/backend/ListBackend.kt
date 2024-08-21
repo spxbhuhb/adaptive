@@ -12,7 +12,7 @@ import `fun`.adaptive.reflect.CallSiteName
 
 class ListBackend(
     override val context: BackendContext
-) : CollectionBackendBase() {
+) : CollectionBackendBase(context.handle.clientId) {
 
     val additions = mutableSetOf<Pair<ItemId, MetadataId?>>()
     val removals = mutableSetOf<ItemId>()
@@ -68,7 +68,20 @@ class ListBackend(
     override fun add(operation: AutoAdd, commit: Boolean, distribute: Boolean) {
         trace { "commit=$commit distribute=$distribute op=$operation" }
 
-        addItem(operation.itemId, operation.metadataId, context.wireFormatProvider.decode(operation.payload, context.defaultWireFormat))
+        try {
+            addItem(operation.itemId, operation.metadataId, context.wireFormatProvider.decode(operation.payload, context.defaultWireFormat))
+        } catch (ex: IllegalArgumentException) {
+            // FIXME remove debug code
+            println("============ ERROR INFO ================")
+            println("============ ERROR INFO ================")
+            println("============ ERROR INFO ================")
+            println("============ ERROR INFO ================")
+            println(context.wireFormatProvider.dump(operation.payload))
+            println("============ ERROR INFO ================")
+            println("============ ERROR INFO ================")
+            println("============ ERROR INFO ================")
+            println("============ ERROR INFO ================")
+        }
 
         closeListOp(operation, setOf(operation.itemId), commit, distribute)
     }

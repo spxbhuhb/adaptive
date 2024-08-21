@@ -1,13 +1,14 @@
 package `fun`.adaptive.auto.backend
 
 import `fun`.adaptive.adat.toArray
-import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.internal.connector.DirectConnector
-import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.internal.backend.BackendBase
 import `fun`.adaptive.auto.internal.backend.BackendContext
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
+import `fun`.adaptive.auto.internal.connector.DirectConnector
+import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.model.AutoHandle
+import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 import kotlinx.coroutines.CoroutineScope
@@ -27,13 +28,15 @@ class PropertyTest {
 
         runTest {
             val scope = CoroutineScope(Dispatchers.Default)
+            val logger1 = getLogger("logger.1")
+            val logger2 = getLogger("logger.2")
 
-            val c1 = BackendContext(AutoHandle(gid, 1), scope, ProtoWireFormatProvider(), TestData.adatMetadata, TestData.adatWireFormat, true, LamportTimestamp(1, 1))
+            val c1 = BackendContext(AutoHandle(gid, 1), scope, logger1, ProtoWireFormatProvider(), TestData.adatMetadata, TestData.adatWireFormat, LamportTimestamp(1, 1))
             val b1 = PropertyBackend(c1, itemId, null, testData.toArray())
             val f1 = AdatClassFrontend(b1, TestData, testData, null)
             b1.frontEnd = f1
 
-            val c2 = BackendContext(AutoHandle(gid, 2), scope, ProtoWireFormatProvider(), TestData.adatMetadata, TestData.adatWireFormat, true, LamportTimestamp(2, 0))
+            val c2 = BackendContext(AutoHandle(gid, 2), scope, logger2, ProtoWireFormatProvider(), TestData.adatMetadata, TestData.adatWireFormat, LamportTimestamp(2, 0))
             val b2 = PropertyBackend(c2, itemId, null, null)
             val f2 = AdatClassFrontend(b2, TestData, null, null)
             b2.frontEnd = f2

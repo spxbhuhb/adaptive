@@ -11,11 +11,11 @@ class IOSLogger(
     name: String,
 ) : AdaptiveLogger {
 
-    var level = LogLevel.Info
+    override var level = LogLevel.Info
     val prefix = "[$name]"
 
     private inline fun log(messageLevel: LogLevel, message: () -> String) {
-        if (level >= messageLevel) NSLog(message().replace("%", "%%"))
+        if (level <= messageLevel) NSLog(message().replace("%", "%%"))
     }
 
     override fun fine(message: String) {

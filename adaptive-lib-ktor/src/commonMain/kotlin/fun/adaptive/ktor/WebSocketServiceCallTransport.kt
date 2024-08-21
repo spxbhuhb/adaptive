@@ -3,7 +3,6 @@ package `fun`.adaptive.ktor
 import `fun`.adaptive.service.model.TransportEnvelope
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.getLock
-import `fun`.adaptive.utility.safeCall
 import `fun`.adaptive.utility.safeSuspendCall
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.utility.waitFor
@@ -47,6 +46,7 @@ abstract class WebSocketServiceCallTransport(
                         socketLock.use { socket = null } // to stop send sending out more frames
                         break
                     }
+
                     else -> {
                         transportLog.info("unhandled frame: $frame")
                         continue
@@ -64,12 +64,11 @@ abstract class WebSocketServiceCallTransport(
 
         socketLock.use {
             val safeSocket = socket ?: return
-            safeCall(transportLog) {
-                if (safeSocket.isActive == true) safeSocket.incoming.cancel()
-            }
+
             safeSuspendCall(transportLog) {
                 if (safeSocket.isActive == true) safeSocket.close(CloseReason(CloseReason.Codes.GOING_AWAY, ""))
             }
+
             socket = null
         }
     }

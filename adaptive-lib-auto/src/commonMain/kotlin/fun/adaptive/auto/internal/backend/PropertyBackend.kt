@@ -14,7 +14,7 @@ class PropertyBackend(
     val itemId: LamportTimestamp,
     val metadataId: MetadataId?,
     initialValues: Array<Any?>?
-) : BackendBase() {
+) : BackendBase(context.handle.clientId) {
 
     val properties: List<AdatPropertyWireFormat<*>> = context.defaultWireFormat.propertyWireFormats
 

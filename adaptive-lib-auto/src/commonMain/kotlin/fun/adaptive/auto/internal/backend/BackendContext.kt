@@ -8,7 +8,9 @@ import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.MetadataId
+import `fun`.adaptive.log.AdaptiveLogger
 import `fun`.adaptive.utility.getLock
+import `fun`.adaptive.utility.safeSuspendCall
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatProvider
@@ -17,10 +19,10 @@ import kotlinx.coroutines.CoroutineScope
 class BackendContext(
     val handle: AutoHandle,
     val scope: CoroutineScope,
+    val logger: AdaptiveLogger,
     val wireFormatProvider: WireFormatProvider,
     val defaultMetadata: AdatClassMetadata<*>,
     val defaultWireFormat: AdatClassWireFormat<*>,
-    val trace: Boolean,
     time: LamportTimestamp
 ) {
 
@@ -37,6 +39,10 @@ class BackendContext(
     val connectors
         get() = connectorLock.use { pConnectors }
 
+    init {
+        logger.fine("backend context created")
+    }
+
     fun receive(receivedTime: LamportTimestamp) {
         time = time.receive(receivedTime)
     }
@@ -50,5 +56,21 @@ class BackendContext(
         connectorLock.use {
             pConnectors += connector
         }
+    }
+
+    fun removeConnector(handle: AutoHandle) {
+        connectorLock.use {
+            val toRemove = pConnectors.filter { it.clientId == handle.clientId }
+            pConnectors -= toRemove
+            toRemove.forEach { it.onDisconnect() }
+        }
+    }
+
+    suspend fun stop() {
+        connectorLock.use {
+            pConnectors.forEach { safeSuspendCall(logger) { it.disconnect() } }
+        }
+
+        logger.fine("backend context stopped")
     }
 }

@@ -7,19 +7,21 @@ import `fun`.adaptive.adat.AdatContext
 import `fun`.adaptive.adat.applyContext
 import `fun`.adaptive.adat.deepCopy
 import `fun`.adaptive.adat.store.AdatStore
-import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.api.AutoApi
 import `fun`.adaptive.auto.internal.backend.BackendContext
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.model.AutoConnectInfo
+import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.worker.AutoWorker
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
-import `fun`.adaptive.foundation.producer.Producer
+import `fun`.adaptive.log.AdaptiveLogger
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.getService
+import `fun`.adaptive.utility.safeLaunch
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -27,12 +29,14 @@ import kotlinx.coroutines.launch
 class AutoInstance<A : AdatClass<A>>(
     override val binding: AdaptiveStateVariableBinding<A>,
     val connect: suspend () -> AutoConnectInfo,
-    val onChange: ((newValue: A) -> Unit)?
+    val onChange: ((newValue: A) -> Unit)?,
+    val trace: Boolean
 ) : AdatStore, AdaptiveProducer<A> {
 
     override var latestValue: A? = null
 
     lateinit var scope: CoroutineScope
+    lateinit var logger: AdaptiveLogger
 
     lateinit var backendContext: BackendContext
     lateinit var backend: PropertyBackend
@@ -69,13 +73,16 @@ class AutoInstance<A : AdatClass<A>>(
             val originHandle = connectInfo.originHandle
             val connectingHandle = connectInfo.connectingHandle
 
+            logger = getLogger("fun.adaptive.auto.internal.producer.AutoInstance.${connectingHandle.globalId.toShort()}.${connectingHandle.clientId}")
+            if (trace) logger.enableFine()
+
             backendContext = BackendContext(
                 connectingHandle,
                 scope,
+                logger,
                 ProtoWireFormatProvider(),
                 companion.adatMetadata,
                 companion.adatWireFormat,
-                true,
                 LamportTimestamp(connectingHandle.clientId, 0),
             )
 
@@ -104,7 +111,7 @@ class AutoInstance<A : AdatClass<A>>(
             val autoService = getService<AutoApi>()
 
             backend.addPeer(
-                ServiceConnector(originHandle, autoService, scope, 1000),
+                ServiceConnector(connectingHandle, originHandle, autoService, logger, scope, 1000),
                 connectInfo.originTime
             )
 
@@ -114,6 +121,10 @@ class AutoInstance<A : AdatClass<A>>(
 
     override fun stop() {
         adapter.backend.firstImpl<AutoWorker>().deregister(backend)
+
+        scope.safeLaunch(logger) {
+            backend.disconnect()
+        }
     }
 
     override fun toString(): String {

@@ -6,7 +6,13 @@ package `fun`.adaptive.log
 
 interface AdaptiveLogger {
 
+    var level: LogLevel
+
     fun fine(message: String)
+
+    fun fine(message: () -> String) {
+        if (level == LogLevel.Fine) fine(message())
+    }
 
     fun fine(exception: Exception)
 
@@ -29,5 +35,10 @@ interface AdaptiveLogger {
     fun fatal(exception: Exception) : Nothing
 
     fun fatal(message : String, exception: Exception) : Nothing
+
+    fun enableFine(): AdaptiveLogger {
+        level = LogLevel.Fine
+        return this
+    }
 
 }
