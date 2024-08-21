@@ -8,6 +8,7 @@ import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
+import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 
@@ -15,7 +16,7 @@ class AutoWorker : WorkerImpl<AutoWorker> {
 
     val backendLock = getLock()
 
-    val backends = mutableMapOf<AutoHandle, BackendBase>()
+    val backends = mutableMapOf<UUID<BackendBase>, BackendBase>()
 
     override suspend fun run() {
         // worker is event-driven
@@ -23,30 +24,30 @@ class AutoWorker : WorkerImpl<AutoWorker> {
 
     operator fun get(handle: AutoHandle): BackendBase? =
         backendLock.use {
-            backends[handle]
+            backends[handle.globalId]
         }
 
     fun register(backend: BackendBase) {
         backendLock.use {
-            backends[backend.context.handle] = backend
+            backends[backend.globalId] = backend
         }
     }
 
     fun deregister(backend: BackendBase) {
         backendLock.use {
-            backends.remove(backend.context.handle)
+            backends.remove(backend.globalId)
         }
     }
 
     fun peerTime(handle: AutoHandle): LamportTimestamp =
         backendLock.use {
-            checkNotNull(backends[handle]) { "missing auto instance: $handle" }
+            checkNotNull(backends[handle.globalId]) { "missing auto instance: $handle" }
         }
             .context.time
 
     fun addPeer(origin: AutoHandle, connecting: AutoHandle, connectingPeerTime: LamportTimestamp, transport: ServiceCallTransport): LamportTimestamp =
         backendLock.use {
-            checkNotNull(backends[origin]) { "missing auto instance: $origin" }
+            checkNotNull(backends[origin.globalId]) { "missing auto instance: $origin" }
         }.let {
             it.addPeer(
                 ServiceConnector(origin, connecting, getService(transport), it.context.logger, scope, 1000),
@@ -56,14 +57,14 @@ class AutoWorker : WorkerImpl<AutoWorker> {
 
     fun removePeer(handle: AutoHandle) =
         backendLock.use {
-            checkNotNull(backends[handle]) { "missing auto instance: $handle" }
+            checkNotNull(backends[handle.globalId]) { "missing auto instance: $handle" }
         }.also {
             it.removePeer(handle)
         }
 
     fun receive(handle: AutoHandle, operation: AutoOperation) {
         backendLock.use {
-            backends[handle]?.receive(operation, false)
+            backends[handle.globalId]?.receive(operation, false)
         }
     }
 

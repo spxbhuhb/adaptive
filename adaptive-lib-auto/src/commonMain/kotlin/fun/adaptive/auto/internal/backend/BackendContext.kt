@@ -67,10 +67,7 @@ class BackendContext(
     }
 
     suspend fun stop() {
-        connectorLock.use {
-            pConnectors.forEach { safeSuspendCall(logger) { it.disconnect() } }
-        }
-
+        connectors.forEach { safeSuspendCall(logger) { it.disconnect() } }
         logger.fine("backend context stopped")
     }
 }

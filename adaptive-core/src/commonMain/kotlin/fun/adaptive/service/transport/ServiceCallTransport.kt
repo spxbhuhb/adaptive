@@ -213,7 +213,7 @@ abstract class ServiceCallTransport(
             val data = ServiceExceptionData(
                 "fun.adaptive.service.model.DisconnectException",
                 null,
-                wireFormatProvider.encode(DisconnectException(), DisconnectException)
+                wireFormatProvider.encode(DisconnectException("transport is disconnected"), DisconnectException)
             )
 
             val payload = wireFormatProvider.encode(data, ServiceExceptionData)

@@ -35,7 +35,7 @@ class AutoInstance<A : AdatClass<A>>(
 
     override var latestValue: A? = null
 
-    lateinit var scope: CoroutineScope
+    val scope: CoroutineScope = CoroutineScope(adapter.dispatcher)
     lateinit var logger: AdaptiveLogger
 
     lateinit var backendContext: BackendContext
@@ -66,9 +66,7 @@ class AutoInstance<A : AdatClass<A>>(
         value.deepCopy(change).also { it.applyContext(AdatContext(null, null, this, null)) }
 
     override fun start() {
-        CoroutineScope(adapter.dispatcher).launch {
-            scope = this
-
+        scope.launch {
             val connectInfo = connect()
             val originHandle = connectInfo.originHandle
             val connectingHandle = connectInfo.connectingHandle
