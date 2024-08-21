@@ -3,11 +3,14 @@ package `fun`.adaptive.ktor
 import `fun`.adaptive.service.model.TransportEnvelope
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.getLock
+import `fun`.adaptive.utility.safeCall
+import `fun`.adaptive.utility.safeSuspendCall
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.utility.waitFor
 import `fun`.adaptive.wireformat.WireFormatProvider
 import io.ktor.websocket.*
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.isActive
 
 abstract class WebSocketServiceCallTransport(
     scope: CoroutineScope,
@@ -58,9 +61,15 @@ abstract class WebSocketServiceCallTransport(
         if (trace) transportLog.fine("disconnecting (counter: $counter)")
 
         disconnectPending()
+
         socketLock.use {
-            socket?.incoming?.cancel()
-            socket?.close(CloseReason(CloseReason.Codes.GOING_AWAY, ""))
+            val safeSocket = socket ?: return
+            safeCall(transportLog) {
+                if (safeSocket.isActive == true) safeSocket.incoming.cancel()
+            }
+            safeSuspendCall(transportLog) {
+                if (safeSocket.isActive == true) safeSocket.close(CloseReason(CloseReason.Codes.GOING_AWAY, ""))
+            }
             socket = null
         }
     }

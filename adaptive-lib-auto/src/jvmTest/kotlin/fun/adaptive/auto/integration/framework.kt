@@ -105,8 +105,6 @@ fun autoTest(
     runBlocking {
         val transport = withProtoWebSocketTransport("http://localhost:$port", serviceImplFactory = connectingAdapter)
 
-        defaultServiceImplFactory += connectingAdapter.singleImpl<AutoService>()
-
         try {
             test(originAdapter, connectingAdapter)
         } finally {

@@ -114,6 +114,7 @@ class ListBackend(
             }
         }
 
+        trace { "SYNC DONE: time= $time peerTime=$peerTime" }
     }
 
     // --------------------------------------------------------------------------------

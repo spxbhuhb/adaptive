@@ -15,7 +15,7 @@ class AutoInstanceTest {
 
     @Test
     fun basic() {
-        autoTest(port = 8081) { originAdapter, connectingAdapter ->
+        autoTest(port = 8084) { originAdapter, connectingAdapter ->
             val testAdapter = test(connectingAdapter) {
                 val a = autoInstance<TestData> { getService<AutoTestApi>().testInstance() }
                 if (a != null) {
