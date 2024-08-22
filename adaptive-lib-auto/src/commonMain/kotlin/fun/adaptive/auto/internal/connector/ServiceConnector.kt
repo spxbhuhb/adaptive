@@ -38,6 +38,7 @@ class ServiceConnector(
                 is AutoModify -> service.modify(peerHandle, operation)
                 is AutoMove -> service.move(peerHandle, operation)
                 is AutoRemove -> service.remove(peerHandle, operation)
+                is AutoEmpty -> service.empty(peerHandle, operation)
             }
         }
     }

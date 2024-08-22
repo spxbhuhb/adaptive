@@ -14,7 +14,7 @@ import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatEncoder
 
 interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
 
-    var adatContext: AdatContext?
+    var adatContext: AdatContext<Any>?
         get() = null
         set(v) = unsupported(v)
 
@@ -30,7 +30,7 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
         val context = adatContext
         if (context == null) {
             adatContext = AdatContext(
-                null, null, null,
+                null, null, null, null,
                 InstanceValidationResult()
             )
         } else {

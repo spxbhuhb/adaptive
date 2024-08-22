@@ -64,8 +64,7 @@ class PropertyBackendIntegrationTest {
             val connectingFrontend = AdatClassFrontend(
                 connectingBackend,
                 TestData,
-                null,
-                null
+                null, null, null
             )
 
             connectingBackend.frontEnd = connectingFrontend

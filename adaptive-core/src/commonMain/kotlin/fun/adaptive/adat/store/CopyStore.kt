@@ -58,7 +58,7 @@ class CopyStore<A : AdatClass<A>>(
     }
 
     fun makeCopy(value: A, change: AdatChange?) =
-        value.deepCopy(change).also { it.applyContext(AdatContext(null, null, this, null)) }
+        value.deepCopy(change).also { it.applyContext(AdatContext<Any>(null, null, null, this, null)) }
 
     override fun start() {
         // copy store is event-driven

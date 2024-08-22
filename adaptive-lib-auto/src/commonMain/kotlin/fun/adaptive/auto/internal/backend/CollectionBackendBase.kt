@@ -5,6 +5,7 @@ import `fun`.adaptive.auto.model.ClientId
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.MetadataId
 import `fun`.adaptive.auto.model.operation.AutoAdd
+import `fun`.adaptive.auto.model.operation.AutoEmpty
 import `fun`.adaptive.auto.model.operation.AutoRemove
 
 abstract class CollectionBackendBase(
@@ -26,6 +27,8 @@ abstract class CollectionBackendBase(
     // --------------------------------------------------------------------------------
     // Operations from peers
     // --------------------------------------------------------------------------------
+
+    abstract fun empty(operation: AutoEmpty, commit: Boolean, distribute: Boolean)
 
     abstract fun add(operation: AutoAdd, commit: Boolean, distribute: Boolean)
 

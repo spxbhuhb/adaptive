@@ -11,7 +11,7 @@ import kotlinx.coroutines.withTimeout
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-var producedValue: TestData? = null
+private var producedValue: TestData? = null
 
 class AutoInstanceTest {
 

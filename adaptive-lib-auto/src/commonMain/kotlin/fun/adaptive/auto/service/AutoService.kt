@@ -60,4 +60,8 @@ class AutoService : ServiceImpl<AutoService>, AutoApi {
         worker.receive(handle, operation)
     }
 
+    override suspend fun empty(handle: AutoHandle, operation: AutoEmpty) {
+        worker.receive(handle, operation)
+    }
+
 }
