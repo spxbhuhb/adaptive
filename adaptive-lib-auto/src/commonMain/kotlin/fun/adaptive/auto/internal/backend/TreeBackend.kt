@@ -105,6 +105,10 @@ class TreeBackend(
         item.modify(operation, commit, distribute)
     }
 
+    override fun empty(operation: AutoEmpty, commit: Boolean, distribute: Boolean) {
+        closeListOp(operation, emptySet(), commit, distribute)
+    }
+
     // --------------------------------------------------------------------------------
     // Peer synchronization
     // --------------------------------------------------------------------------------

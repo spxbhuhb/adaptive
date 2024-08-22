@@ -10,7 +10,7 @@ import `fun`.adaptive.auto.model.MetadataId
 import `fun`.adaptive.auto.model.operation.*
 import `fun`.adaptive.reflect.CallSiteName
 
-class ListBackend(
+class SetBackend(
     override val context: BackendContext
 ) : CollectionBackendBase(context.handle.clientId) {
 
@@ -68,20 +68,7 @@ class ListBackend(
     override fun add(operation: AutoAdd, commit: Boolean, distribute: Boolean) {
         trace { "commit=$commit distribute=$distribute op=$operation" }
 
-        try {
-            addItem(operation.itemId, operation.metadataId, context.wireFormatProvider.decode(operation.payload, context.defaultWireFormat))
-        } catch (ex: IllegalArgumentException) {
-            // FIXME remove debug code
-            println("============ ERROR INFO ================")
-            println("============ ERROR INFO ================")
-            println("============ ERROR INFO ================")
-            println("============ ERROR INFO ================")
-            println(context.wireFormatProvider.dump(operation.payload))
-            println("============ ERROR INFO ================")
-            println("============ ERROR INFO ================")
-            println("============ ERROR INFO ================")
-            println("============ ERROR INFO ================")
-        }
+        addItem(operation.itemId, operation.metadataId, context.wireFormatProvider.decode(operation.payload, context.defaultWireFormat))
 
         closeListOp(operation, setOf(operation.itemId), commit, distribute)
     }
@@ -101,6 +88,10 @@ class ListBackend(
         item.modify(operation, commit, distribute)
     }
 
+    override fun empty(operation: AutoEmpty, commit: Boolean, distribute: Boolean) {
+        closeListOp(operation, emptySet(), commit, distribute)
+    }
+
     // --------------------------------------------------------------------------------
     // Peer synchronization
     // --------------------------------------------------------------------------------
@@ -111,6 +102,10 @@ class ListBackend(
         if (peerTime.timestamp >= time.timestamp) {
             trace { "SKIP SYNC: time= $time peerTime=$peerTime" }
             return
+        }
+
+        if (additions.isEmpty()) {
+            connector.send(AutoEmpty(time))
         }
 
         if (removals.isNotEmpty()) {

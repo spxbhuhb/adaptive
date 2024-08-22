@@ -2,6 +2,7 @@ package `fun`.adaptive.auto.integration
 
 import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.auto.api.originInstance
+import `fun`.adaptive.auto.api.originList
 import `fun`.adaptive.auto.backend.TestData
 import `fun`.adaptive.auto.internal.backend.BackendContext
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
@@ -36,6 +37,7 @@ import kotlinx.coroutines.withTimeout
 interface AutoTestApi {
     suspend fun testInstanceManual(): AutoConnectInfo
     suspend fun testInstanceWithOrigin(): AutoConnectInfo
+    suspend fun testListWithOrigin(): AutoConnectInfo
 }
 
 class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
@@ -66,7 +68,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
             originBackend,
             TestData,
             TestData(12, "a"),
-            null
+            null, null
         )
 
         originBackend.frontEnd = originFrontend
@@ -81,7 +83,11 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
     }
 
     override suspend fun testInstanceWithOrigin(): AutoConnectInfo {
-        return originInstance(worker, TestData(12, "a"), true) { }.connectInfo()
+        return originInstance(worker, TestData(12, "a"), true).connectInfo()
+    }
+
+    override suspend fun testListWithOrigin(): AutoConnectInfo {
+        return originList(worker, TestData, true).connectInfo()
     }
 
 }

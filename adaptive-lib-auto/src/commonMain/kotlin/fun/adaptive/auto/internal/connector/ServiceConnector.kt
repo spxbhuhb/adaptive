@@ -27,7 +27,7 @@ class ServiceConnector(
 
     override fun send(operation: AutoOperation) {
         val result = operations.trySend(operation)
-        if (! result.isSuccess) throw DisconnectException() // TODO proper disconnect/reconnect handling in ServiceConnector
+        if (! result.isSuccess) throw DisconnectException("failed to send operation: $operation") // TODO proper disconnect/reconnect handling in ServiceConnector
     }
 
     suspend fun run() {
@@ -38,6 +38,7 @@ class ServiceConnector(
                 is AutoModify -> service.modify(peerHandle, operation)
                 is AutoMove -> service.move(peerHandle, operation)
                 is AutoRemove -> service.remove(peerHandle, operation)
+                is AutoEmpty -> service.empty(peerHandle, operation)
             }
         }
     }

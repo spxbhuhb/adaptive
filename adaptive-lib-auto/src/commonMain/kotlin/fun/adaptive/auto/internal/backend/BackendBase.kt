@@ -18,6 +18,9 @@ abstract class BackendBase(
 
     abstract val context: BackendContext
 
+    val globalId
+        get() = context.handle.globalId
+
     var frontEnd: FrontendBase? = null
 
     // --------------------------------------------------------------------------------
