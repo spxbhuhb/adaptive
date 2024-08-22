@@ -7,7 +7,6 @@ import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.resource.DrawableResource
 import `fun`.adaptive.site.*
-import `fun`.adaptive.ui.common.AbstractCommonAdapter
 import `fun`.adaptive.ui.common.browser
 import `fun`.adaptive.ui.common.fragment.*
 import `fun`.adaptive.ui.common.instruction.*
@@ -21,10 +20,10 @@ fun main() {
     //withJsonWebSocketTransport(window.location.origin)
     withJsResources()
 
-    browser {
-        with(it as AbstractCommonAdapter<*, *>) {
-            defaultTextRenderData.fontName = "Noto Sans"
-            defaultTextRenderData.fontSize = 16.sp
+    browser { adapter ->
+        with(adapter.defaultTextRenderData) {
+            fontName = "Noto Sans"
+            fontSize = 16.sp
         }
 
         val media = mediaMetrics()
@@ -202,7 +201,7 @@ fun inactiveFeature(name: String, eta: String) {
         maxWidth .. spaceBetween
         gap(10.dp)
 
-        text(name, titleMedium, textColor(gray), noWrap)
-        text("ETA: $eta", titleSmall, textColor(gray), noWrap) .. AlignSelf.bottom
+        text(name, titleMedium, textColor(gray), noTextWrap)
+        text("ETA: $eta", titleSmall, textColor(gray), noTextWrap) .. AlignSelf.bottom
     }
 }

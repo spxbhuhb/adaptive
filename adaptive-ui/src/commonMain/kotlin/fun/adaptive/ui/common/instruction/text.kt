@@ -22,7 +22,8 @@ fun lineHeight(height: DPixel) = LineHeight(height)
 inline fun lineHeight(height: () -> DPixel) = LineHeight(height())
 
 val noSelect = NoSelect()
-val noWrap = TextWrap(false)
+val noTextWrap = TextWrap(false)
+val textWrap = TextWrap(true)
 val underline = TextUnderline()
 
 val bold = FontWeight.BOLD

@@ -5,7 +5,6 @@ package `fun`.adaptive.ui.common
 
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveEntry
 import `fun`.adaptive.foundation.AdaptiveFragmentFactory
 import `fun`.adaptive.foundation.instruction.Trace
@@ -18,7 +17,7 @@ fun browser(
     backend: BackendAdapter = BackendAdapter(),
     rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
     trace : Trace? = null,
-    @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
+    @Adaptive block: (adapter: AbstractCommonAdapter<*, *>) -> Unit
 ) : CommonAdapter {
 
     return CommonAdapter(rootContainer, backend).also {

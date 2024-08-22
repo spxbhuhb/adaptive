@@ -8,7 +8,7 @@
 > Please note the project status, many basic things you would expect to work are still
 > broken, especially around the code transformation.
 >
-> I will publish the next release when the status reaches preview (in a few weeks I hope).
+> Preview release is scheduled for the last week of August.
 >
 
 * [What is Adaptive](./doc/what-is-adaptive.md)
@@ -30,6 +30,7 @@
 >   2. Languages & Frameworks
 >   3. Kotlin
 >   4. Enable K2 mode
+>
 > 2. Enable 3rd party compiler plugins in the IntelliJ registry
 >   1. https://youtrack.jetbrains.com/issue/KTIJ-29248/K2-IDE-Enable-non-bundled-compiler-plugins-in-IDE-by-default
 >   2. `Shift-Shift` 

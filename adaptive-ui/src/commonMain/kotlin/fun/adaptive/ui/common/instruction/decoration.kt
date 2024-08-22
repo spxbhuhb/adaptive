@@ -18,6 +18,8 @@ import kotlin.math.atan2
 fun color(color: Int) = Color(color.toUInt())
 
 fun backgroundColor(color: Int) = BackgroundColor(Color(color.toUInt()))
+inline fun backgroundColor(color: () -> Int) = BackgroundColor(Color(color().toUInt()))
+
 fun backgroundColor(color: UInt) = BackgroundColor(Color(color))
 fun backgroundColor(color: Color) = BackgroundColor(color)
 

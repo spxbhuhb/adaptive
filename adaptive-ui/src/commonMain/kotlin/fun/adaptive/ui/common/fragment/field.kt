@@ -5,6 +5,7 @@
 package `fun`.adaptive.ui.common.fragment
 
 import `fun`.adaptive.foundation.AdaptiveExpect
+import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.manualImplementation
@@ -18,6 +19,6 @@ fun input(
     vararg instructions : AdaptiveInstruction,
     binding: AdaptiveStateVariableBinding<String>? = null,
     selector: () -> String
-) {
+): AdaptiveFragment {
     manualImplementation(instructions, binding, selector)
 }

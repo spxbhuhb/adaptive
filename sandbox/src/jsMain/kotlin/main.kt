@@ -84,7 +84,7 @@ val button = instructionsOf(
 @Adaptive
 fun navButton(label: String, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
     row(*button, onClick { instructions<NavClick>() }, *instructions) {
-        text(label, textColor(0xffffffu), fontSize(15.sp), fontName("Noto Sans"), noSelect, noWrap)
+        text(label, textColor(0xffffffu), fontSize(15.sp), fontName("Noto Sans"), noSelect, noTextWrap)
     }
     return fragment()
 }
