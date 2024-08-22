@@ -20,6 +20,7 @@ object CommonFragmentFactory : FoundationFragmentFactory() {
         add("common:input") { p,i -> CommonInput(p.adapter as CommonAdapter, p, i) }
         add("common:row") { p,i -> CommonRow(p.adapter as CommonAdapter, p, i) }
         add("common:text") { p,i -> CommonText(p.adapter as CommonAdapter, p, i) }
+        add("common:flowtext") { p, i -> CommonFlowText(p.adapter as CommonAdapter, p, i) }
         add("common:slot") { p, i -> CommonSlot(p.adapter as CommonAdapter, p, i) }
         add("common:svg") { p, i -> CommonSvg(p.adapter as CommonAdapter, p, i) }
     }

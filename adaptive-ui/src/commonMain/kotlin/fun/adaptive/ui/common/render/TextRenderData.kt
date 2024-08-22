@@ -20,7 +20,7 @@ class TextRenderData {
     var smallCaps: Boolean = false
     var noSelect : Boolean? = null
     var color : Color? = null
-    var wrap: Boolean = false
+    var wrap: Boolean = true
 
     fun toCssString(adapter: AbstractCommonAdapter<*, *>): String {
         val s = mutableListOf<String>()

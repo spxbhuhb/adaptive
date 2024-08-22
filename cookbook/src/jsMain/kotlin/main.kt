@@ -46,6 +46,7 @@ fun recipe(title: String, explanation: String) {
     grid {
         width { 240.dp } .. height { 120.dp } .. cornerRadius8 .. lightBackground .. shadow
         rowTemplate(38.dp, 1.fr)
+        onClick { println("hello world") }
 
         box {
             maxSize .. backgroundColor(0xFFF7E1u) .. cornerTopRadius(8.dp) .. paddingLeft { 12.dp }
@@ -54,6 +55,6 @@ fun recipe(title: String, explanation: String) {
             text(title) .. titleSmall
         }
 
-        text(explanation) .. padding { 12.dp } .. bodySmall
+        flowText(explanation) .. padding { 12.dp } .. bodySmall
     }
 }

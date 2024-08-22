@@ -14,3 +14,8 @@ import `fun`.adaptive.ui.common.common
 fun text(content: Any?, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
     manualImplementation(content, instructions)
 }
+
+@AdaptiveExpect(common)
+fun flowText(content: Any?, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
+    manualImplementation(content, instructions)
+}
