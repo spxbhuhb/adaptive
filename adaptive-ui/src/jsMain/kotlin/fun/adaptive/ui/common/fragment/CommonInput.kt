@@ -9,7 +9,9 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.ui.common.AbstractCommonFragment
 import `fun`.adaptive.ui.common.CommonAdapter
 import `fun`.adaptive.ui.common.common
+import `fun`.adaptive.ui.common.instruction.InputPlaceholder
 import `fun`.adaptive.utility.checkIfInstance
+import `fun`.adaptive.utility.firstOrNullIfInstance
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
@@ -48,7 +50,11 @@ open class CommonInput(
             })
 
             receiver.style.outline = "none"
-            b.path?.let { receiver.placeholder = it.last() }
+
+            val placeholder = instructions.firstOrNullIfInstance<InputPlaceholder>()?.value ?: b.path?.last()
+            if (placeholder != null) {
+                receiver.placeholder = placeholder
+            }
         }
 
         return false

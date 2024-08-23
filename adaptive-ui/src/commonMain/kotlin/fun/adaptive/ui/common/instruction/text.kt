@@ -18,6 +18,8 @@ inline fun fontSize(fontSize: () -> SPixel) = FontSize(fontSize())
 fun fontWeight(weight: Int) = FontWeight(weight)
 inline fun fontWeight(fontWeight: () -> Int) = FontWeight(fontWeight())
 
+val lightFont = FontWeight.LIGHT
+
 fun lineHeight(height: DPixel) = LineHeight(height)
 inline fun lineHeight(height: () -> DPixel) = LineHeight(height())
 

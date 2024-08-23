@@ -10,7 +10,6 @@ import `fun`.adaptive.site.*
 import `fun`.adaptive.ui.common.browser
 import `fun`.adaptive.ui.common.fragment.*
 import `fun`.adaptive.ui.common.instruction.*
-import `fun`.adaptive.ui.common.instruction.AlignItems.Companion.alignItems
 import `fun`.adaptive.ui.common.platform.MediaMetrics
 import `fun`.adaptive.ui.common.platform.mediaMetrics
 import `fun`.adaptive.ui.common.platform.withJsResources

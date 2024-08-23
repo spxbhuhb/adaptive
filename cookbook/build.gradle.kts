@@ -16,7 +16,7 @@ adaptive {
     pluginDebug = false
     resources {
         publicResClass = true
-        packageOfResClass = "cookbook"
+        packageOfResClass = "fun.adaptive.cookbook"
         generateResClass = auto
     }
 }

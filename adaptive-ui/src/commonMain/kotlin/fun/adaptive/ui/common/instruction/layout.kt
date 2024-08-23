@@ -69,6 +69,9 @@ fun marginRight(right: () -> DPixel): Margin = margin(right = right())
 fun marginBottom(bottom: () -> DPixel): Margin = margin(bottom = bottom())
 fun marginLeft(left: () -> DPixel): Margin = margin(left = left())
 
+val alignSelf = AlignSelf
+val alignItems = AlignItems
+
 val spaceAround: DistributeSpace = DistributeSpace(SpaceDistribution.Around)
 val spaceBetween: DistributeSpace = DistributeSpace(SpaceDistribution.Between)
 
@@ -235,8 +238,6 @@ class AlignItems(
     }
 
     companion object {
-        val alignItems = AlignItems
-
         val center = AlignItems(vertical = Alignment.Center, horizontal = Alignment.Center)
 
         val top = AlignItems(vertical = Alignment.Start, horizontal = null)
@@ -279,7 +280,6 @@ class AlignSelf(
     }
 
     companion object {
-        val alignSelf = AlignSelf
 
         val center = AlignSelf(vertical = Alignment.Center, horizontal = Alignment.Center)
 

@@ -5,6 +5,12 @@
 import `fun`.adaptive.cookbook.auth.authMain
 import `fun`.adaptive.cookbook.layout.desktop.layoutDesktopMain
 import `fun`.adaptive.cookbook.layout.mobile.layoutMobileMain
+import `fun`.adaptive.cookbook.shared.bodySmall
+import `fun`.adaptive.cookbook.shared.cornerRadius8
+import `fun`.adaptive.cookbook.shared.inputStyle
+import `fun`.adaptive.cookbook.shared.lightBackground
+import `fun`.adaptive.cookbook.shared.shadow
+import `fun`.adaptive.cookbook.shared.titleSmall
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -15,7 +21,7 @@ import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.common.browser
 import `fun`.adaptive.ui.common.fragment.*
 import `fun`.adaptive.ui.common.instruction.*
-import `fun`.adaptive.ui.common.instruction.AlignItems.Companion.alignItems
+import `fun`.adaptive.ui.common.platform.mediaMetrics
 import `fun`.adaptive.ui.common.platform.withJsResources
 
 val cookbookContent = name("cookbook-content")
@@ -31,9 +37,11 @@ fun main() {
             fontSize = 16.sp
         }
 
+        val media = mediaMetrics()
+
         grid {
-            maxSize .. padding { 16.dp } .. gap { 16.dp }
-            rowTemplate(40.dp, 44.dp, 1.fr)
+            height { media.viewHeight.dp } .. width { media.viewWidth.dp } .. padding { 16.dp } .. gap { 16.dp }
+            rowTemplate(40.dp, 1.fr)
 
             text("Cookbook")
 
@@ -52,13 +60,17 @@ fun main() {
 fun recipeList() {
     val filter = ""
 
-    input { filter } .. inputStyle .. width { 200.dp }
-
-    flowBox {
+    column {
         gap { 16.dp }
-        recipe("Layout - Mobile", "Layouts for small screens.") .. navClick(cookbookContent) { layoutMobileMain() }
-        recipe("Layout - Desktop", "Layouts for large screens.") .. navClick(cookbookContent) { layoutDesktopMain() }
-        recipe("Auth", "Basic authorization and authentication: login, logout, password change, user management.") .. navClick(cookbookContent) { authMain() }
+
+        input { filter } .. inputStyle .. width { 200.dp }
+
+        flowBox {
+            gap { 16.dp }
+            recipe("Layout - Mobile", "Layouts for small screens.") .. navClick(cookbookContent) { layoutMobileMain() }
+            recipe("Layout - Desktop", "Layouts for large screens.") .. navClick(cookbookContent) { layoutDesktopMain() }
+            recipe("Auth", "Basic authorization and authentication: login, logout, password change, user management.") .. navClick(cookbookContent) { authMain() }
+        }
     }
 
 }
