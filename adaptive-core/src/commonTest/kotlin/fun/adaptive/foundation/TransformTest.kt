@@ -73,7 +73,7 @@ class AdaptiveTransformTest(
 
     val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {
 
         val fragment = when (declarationIndex) {
             0 -> AdaptiveTransformed(parent.adapter, parent, declarationIndex)
@@ -110,7 +110,7 @@ class AdaptiveTransformed(
 
     val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? {
         return null
     }
 

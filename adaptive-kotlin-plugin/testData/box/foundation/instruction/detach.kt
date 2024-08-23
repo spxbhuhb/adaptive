@@ -3,11 +3,11 @@
  */
 package stuff
 
-import `fun`.adaptive.foundation.instruction.*
 import `fun`.adaptive.foundation.*
-import `fun`.adaptive.foundation.testing.*
 import `fun`.adaptive.foundation.fragment.*
+import `fun`.adaptive.foundation.instruction.*
 import `fun`.adaptive.foundation.query.*
+import `fun`.adaptive.foundation.testing.*
 
 @Adaptive
 fun text(content : String, vararg instructions : AdaptiveInstruction) {
@@ -24,7 +24,7 @@ class Append(
     }
 
     override fun detach(origin: AdaptiveFragment, detachIndex: Int) {
-        origin.genBuild(origin, detachIndex)?.also {
+        origin.genBuild(origin, detachIndex, AdaptiveFragment.DETACHED_MASK)?.also {
             origin.children += it
             it.create()
             it.mount()
@@ -107,24 +107,12 @@ fun box(): String {
         TraceEvent("AdaptiveT1", 8, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
         TraceEvent("AdaptiveT1", 8, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
         TraceEvent("AdaptiveT1", 8, "after-Create", ""),
-        TraceEvent("AdaptiveT1", 8, "before-Create", ""),
-        TraceEvent("AdaptiveT1", 8, "before-Patch-External", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
-        TraceEvent("AdaptiveT1", 8, "after-Patch-External", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
-        TraceEvent("AdaptiveT1", 8, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
-        TraceEvent("AdaptiveT1", 8, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
-        TraceEvent("AdaptiveT1", 8, "after-Create", ""),
         TraceEvent("AdaptiveT1", 8, "before-Mount", ""),
         TraceEvent("AdaptiveT1", 8, "after-Mount", ""),
         TraceEvent("AdaptiveT1", 9, "before-Create", ""),
         TraceEvent("AdaptiveT1", 9, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
         TraceEvent("AdaptiveT1", 9, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [23]"),
         TraceEvent("AdaptiveT1", 9, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [23]"),
-        TraceEvent("AdaptiveT1", 9, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [23]"),
-        TraceEvent("AdaptiveT1", 9, "after-Create", ""),
-        TraceEvent("AdaptiveT1", 9, "before-Create", ""),
-        TraceEvent("AdaptiveT1", 9, "before-Patch-External", "createMask: 0x00000000 thisMask: 0x00000000 state: [23]"),
-        TraceEvent("AdaptiveT1", 9, "after-Patch-External", "createMask: 0x00000000 thisMask: 0x00000000 state: [23]"),
-        TraceEvent("AdaptiveT1", 9, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [23]"),
         TraceEvent("AdaptiveT1", 9, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [23]"),
         TraceEvent("AdaptiveT1", 9, "after-Create", ""),
         TraceEvent("AdaptiveT1", 9, "before-Mount", ""),

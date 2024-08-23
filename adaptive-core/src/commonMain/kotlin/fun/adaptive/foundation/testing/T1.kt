@@ -23,7 +23,7 @@ class AdaptiveT1(
     val p0: Int
         get() = state[0].checkIfInstance()
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? = null
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 

@@ -22,10 +22,10 @@ class CommonSelect<RT, CRT : RT>(
         createClosure.closureSize + state.size
     )
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? = null
 
     override fun genPatchInternal(): Boolean = super<AdaptiveSelectLogic>.genPatchInternal()
 
-    override fun makeBranch(): AdaptiveFragment? = createClosure.owner.genBuild(this, shownBranch)
+    override fun makeBranch(): AdaptiveFragment? = createClosure.owner.genBuild(this, shownBranch, 0)
 
 }

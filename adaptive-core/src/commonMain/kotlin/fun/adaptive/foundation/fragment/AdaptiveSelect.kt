@@ -85,13 +85,13 @@ class AdaptiveSelect(
         createClosure.closureSize + state.size
     )
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? =
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         null // genPatchInternal will create the child fragment if necessary
 
     override fun genPatchInternal(): Boolean =
         super<AdaptiveSelectLogic>.genPatchInternal()
 
     override fun makeBranch(): AdaptiveFragment? =
-        createClosure.owner.genBuild(this, shownBranch)
+        createClosure.owner.genBuild(this, shownBranch, 0)
 
 }

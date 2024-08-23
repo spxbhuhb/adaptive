@@ -39,7 +39,7 @@ class FoundationDelegate(
     val patchInternalFun: (AdaptiveFragment.() -> Boolean)?
         get() = state[2].checkIfInstance()
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? {
         return buildFun?.invoke(this, parent, declarationIndex)?.also { it.create() }
     }
 
@@ -49,7 +49,7 @@ class FoundationDelegate(
 
 
     override fun genPatchInternal(): Boolean {
-        return patchInternalFun?.invoke(this) ?: true
+        return patchInternalFun?.invoke(this) != false
     }
 
 }

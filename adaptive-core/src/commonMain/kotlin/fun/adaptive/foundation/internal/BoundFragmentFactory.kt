@@ -9,8 +9,8 @@ class BoundFragmentFactory(
     val declaringFragment: AdaptiveFragment,
     val declarationIndex : Int
 ) {
-    fun build(parent: AdaptiveFragment) : AdaptiveFragment? {
-        return declaringFragment.genBuild(parent, declarationIndex)
+    fun build(parent: AdaptiveFragment, flags: Int): AdaptiveFragment? {
+        return declaringFragment.genBuild(parent, declarationIndex, flags)
     }
 
     override fun toString() =

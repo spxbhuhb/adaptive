@@ -3,8 +3,8 @@
  */
 package `fun`.adaptive.foundation
 
-import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
+import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.foundation.testing.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -183,7 +183,7 @@ class AdaptiveHigherOrderTest(
 
     val dependencyMask_2_0 = 0x01 // fragment index: 2, state variable index: 0
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {
         val fragment = when (declarationIndex) {
             0 -> AdaptiveHigherFun(parent.adapter, parent, declarationIndex)
             1 -> AdaptiveHigherFun(parent.adapter, parent, declarationIndex)
@@ -243,7 +243,7 @@ class AdaptiveHigherFun(
     val builder
         get() = state[1] as BoundFragmentFactory
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {
         val fragment = when (declarationIndex) {
             0 -> AdaptiveHigherFunInner(parent.adapter, parent, declarationIndex)
             1 -> AdaptiveAnonymous(parent, declarationIndex, 1, builder)
@@ -289,7 +289,7 @@ class AdaptiveHigherFunInner(
     val builder
         get() = state[1] as BoundFragmentFactory
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {
         val fragment = when (declarationIndex) {
             0 -> AdaptiveAnonymous(parent, declarationIndex, 1, builder)
             else -> invalidIndex(declarationIndex) // throws exception

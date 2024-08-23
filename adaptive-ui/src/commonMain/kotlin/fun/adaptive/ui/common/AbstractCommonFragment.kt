@@ -36,7 +36,7 @@ abstract class AbstractCommonFragment<RT>(
     open val isStructural
         get() = false
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? =
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         null
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) =

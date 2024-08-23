@@ -42,7 +42,7 @@ abstract class AbstractContainer<RT, CRT : RT>(
     val content: BoundFragmentFactory
         get() = state[state.size - 1].checkIfInstance()
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? {
         if (declarationIndex != 0) invalidIndex(declarationIndex)
         // FIXME I think this anonymous fragment is superfluous
         return AdaptiveAnonymous(this, declarationIndex, 0, content).apply { create() }

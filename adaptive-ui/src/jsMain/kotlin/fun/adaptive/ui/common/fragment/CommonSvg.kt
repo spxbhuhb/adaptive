@@ -32,7 +32,7 @@ class CommonSvg(
     val resource: DrawableResource
         get() = state[0].checkIfInstance()
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {
         if (declarationIndex != 0) invalidIndex(declarationIndex)
         return CanvasSvg(canvasAdapter, this, declarationIndex).also { it.create() }
     }

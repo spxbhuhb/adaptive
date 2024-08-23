@@ -3,8 +3,8 @@
  */
 package `fun`.adaptive.foundation
 
-import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.foundation.fragment.AdaptiveLoop
+import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.foundation.testing.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -134,7 +134,7 @@ class AdaptiveLoopTest(
     val dependencyMask_0_1 = 0x02 // fragment index: 0, state variable index: 0
     val dependencyMask_1_0 = 0x02 // fragment index: 1, state variable index: 0
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {
         val fragment = when (declarationIndex) {
             0 -> AdaptiveLoop<Int>(parent.adapter, parent, declarationIndex)
             1 -> AdaptiveT1(parent.adapter, parent, declarationIndex)

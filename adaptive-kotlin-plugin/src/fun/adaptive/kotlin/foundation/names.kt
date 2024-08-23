@@ -46,6 +46,7 @@ object Strings {
     const val LOCAL_BINDING = "localBinding"
     const val SET_BINDING = "setBinding"
     const val GET_PRODUCED_VALUE = "getProducedValue"
+    const val IS_DETACHED = "isDetached"
 
     const val ADAPTER = "adapter"
     const val PARENT = "parent"

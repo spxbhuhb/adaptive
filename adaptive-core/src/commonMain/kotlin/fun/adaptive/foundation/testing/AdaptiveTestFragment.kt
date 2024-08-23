@@ -15,7 +15,7 @@ abstract class AdaptiveTestFragment(
 
     val receiver = TestNode()
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? =
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         null
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit

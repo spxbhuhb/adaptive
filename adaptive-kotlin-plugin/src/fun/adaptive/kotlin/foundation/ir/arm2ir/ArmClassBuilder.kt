@@ -5,6 +5,7 @@
 
 package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 
+import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.kotlin.common.propertyGetter
 import `fun`.adaptive.kotlin.foundation.FoundationPluginKey
 import `fun`.adaptive.kotlin.foundation.Indices
@@ -23,6 +24,7 @@ import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.builders.declarations.addConstructor
 import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
 import org.jetbrains.kotlin.ir.builders.declarations.buildClass
+import org.jetbrains.kotlin.ir.builders.irGet
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrConstKind
 import org.jetbrains.kotlin.ir.expressions.IrExpression
@@ -176,17 +178,28 @@ class ArmClassBuilder(
 
             val fragment = irTemporary(genBuildWhen(buildFun))
 
-            + IrCallImpl(
-                SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                irBuiltIns.unitType,
-                pluginContext.create,
-                0, 0
-            ).also {
-                it.dispatchReceiver = irGet(fragment)
-            }
+            genBuildCreate(fragment, buildFun)
 
             + irReturn(irGet(fragment))
         }
+    }
+
+    private fun IrBlockBodyBuilder.genBuildCreate(fragment: IrVariable, buildFun: IrFunction) {
+        val condition = irEqual(
+            irAnd(irGet(buildFun.valueParameters[2]), irConst(AdaptiveFragment.DETACHED_MASK)),
+            irConst(0)
+        )
+
+        val body = IrCallImpl(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            irBuiltIns.unitType,
+            pluginContext.create,
+            0, 0
+        ).also {
+            it.dispatchReceiver = irGet(fragment)
+        }
+
+        + irIf(condition, body)
     }
 
     private fun genBuildWhen(buildFun: IrSimpleFunction): IrExpression =

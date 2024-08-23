@@ -69,7 +69,7 @@ class CommonSlot(
 
     val forwardHistory = mutableListOf<List<AdaptiveFragment>>()
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? {
         return null // content handled in `genPatchInternal`
     }
 
@@ -112,7 +112,7 @@ class CommonSlot(
 
     fun patchSegment() {
         if (routes.isEmpty()) {
-            setContent(defaultContent.build(this) !!, null)
+            setContent(defaultContent.build(this, flags) !!, null)
             return
         }
 
@@ -120,7 +120,7 @@ class CommonSlot(
         if (segment != activeSegment) {
             val route = routes.firstOrNull { it.segment == segment }
             if (route == null) {
-                setContent(defaultContent.build(this) !!, segment)
+                setContent(defaultContent.build(this, flags) !!, segment)
             } else {
                 route.detachFun(route) // calls `setContent`
             }
@@ -137,8 +137,17 @@ class CommonSlot(
             uiAdapter.navSupport.segmentChange(this, segment)
         }
 
-        val fragment = origin.genBuild(this, detachIndex)
+        val fragment = origin.genBuild(this, detachIndex, DETACHED_MASK)
         checkNotNull(fragment) { "${origin}.genBuild(this, $detachIndex) returned with null" }
+
+        // TODO should we set isDetached from genBuild?
+        fragment.isDetached = true
+
+        // only the origin fragment can patch the detached one, no one else has the necessary
+        // information to do so
+        origin.genPatchDescendant(fragment)
+
+        fragment.create()
 
         return setContent(fragment, segment)
     }

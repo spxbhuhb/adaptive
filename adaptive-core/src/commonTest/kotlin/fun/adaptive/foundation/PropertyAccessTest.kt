@@ -145,7 +145,7 @@ class AdaptivePropertyAccessBindingTest(
 
     val dependencyMask_0_0 = 0x01 // fragment index: 0, state variable index: 0
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {
 
         val fragment = when (declarationIndex) {
             0 -> AdaptivePropertyAccessor(parent.adapter, parent, declarationIndex)
@@ -191,7 +191,7 @@ class AdaptivePropertyAccessor(
 
     val dependencyMask_0_0 = 0x01 // fragment index: 0, state variable index: 0
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {
 
         val fragment = when (declarationIndex) {
             0 -> AdaptiveT1(parent.adapter, parent, declarationIndex)

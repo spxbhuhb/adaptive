@@ -21,7 +21,7 @@ class AdaptiveDebug(
     index: Int
 ) : AdaptiveFragment(adapter, parent, index, -1, 1) {
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? = null
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 

@@ -3,9 +3,9 @@
  */
 package `fun`.adaptive.backend
 
+import `fun`.adaptive.backend.builtin.BackendFragmentImpl
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.internal.initStateMask
-import `fun`.adaptive.backend.builtin.BackendFragmentImpl
 import `fun`.adaptive.utility.checkIfInstance
 
 abstract class BackendFragment(
@@ -21,7 +21,7 @@ abstract class BackendFragment(
     // Fragment overrides
     // -------------------------------------------------------------------------
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? =
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         null
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit

@@ -25,7 +25,7 @@ class AdaptiveSequence(
     val indices : IntArray
         get() = state[0].checkIfInstance()
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? {
         return null
     }
 
@@ -33,7 +33,7 @@ class AdaptiveSequence(
         // FIXME sequence genPatchInternal does not handle state changes properly
         if (children.size != indices.size) {
             for (itemIndex in indices) {
-                createClosure.owner.genBuild(this, itemIndex)?.let { children.add(it) }
+                createClosure.owner.genBuild(this, itemIndex, 0)?.let { children.add(it) }
             }
             return false
         }

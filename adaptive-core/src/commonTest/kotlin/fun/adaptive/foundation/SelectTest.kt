@@ -201,7 +201,7 @@ class AdaptiveSelectTest(
     val dependencyMask_1_0 = 0x01 // fragment index: 1, state variable index: 0
     val dependencyMask_2_0 = 0x01 // fragment index: 2, state variable index: 0
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment {
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {
         val fragment = when (declarationIndex) {
             0 -> AdaptiveSelect(parent.adapter, parent, declarationIndex)
             1 -> AdaptiveT1(parent.adapter, parent, declarationIndex)

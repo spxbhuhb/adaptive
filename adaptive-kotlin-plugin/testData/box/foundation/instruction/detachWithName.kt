@@ -3,11 +3,11 @@
  */
 package stuff
 
-import `fun`.adaptive.foundation.instruction.*
 import `fun`.adaptive.foundation.*
-import `fun`.adaptive.foundation.testing.*
 import `fun`.adaptive.foundation.fragment.*
+import `fun`.adaptive.foundation.instruction.*
 import `fun`.adaptive.foundation.query.*
+import `fun`.adaptive.foundation.testing.*
 
 @Adaptive
 fun text(content: String, vararg instructions: AdaptiveInstruction) {
@@ -25,7 +25,7 @@ class Append(
     }
 
     override fun detach(origin: AdaptiveFragment, detachIndex: Int) {
-        origin.genBuild(origin, detachIndex)?.also {
+        origin.genBuild(origin, detachIndex, AdaptiveFragment.DETACHED_MASK)?.also {
             origin.children += it
             it.create()
             it.mount()

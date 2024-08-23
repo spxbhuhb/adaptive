@@ -23,7 +23,7 @@ abstract class SvgFragment<T : SvgRenderData>(
     val canvas
         get() = svgAdapter.rootContainer
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? =
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         null
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) =

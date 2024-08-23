@@ -20,7 +20,7 @@ class AdaptiveSuspendS1(
     index: Int
 ) : AdaptiveTestFragment(adapter, parent, index, 1) {
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? = null
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? = null
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 

@@ -32,8 +32,8 @@ class AdaptiveAnonymous private constructor(
         factory.declaringFragment.genPatchDescendant(fragment)
     }
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int): AdaptiveFragment? {
-        return factory.build(this)
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? {
+        return factory.build(this, flags)
     }
 
     override fun genPatchInternal(): Boolean = true
