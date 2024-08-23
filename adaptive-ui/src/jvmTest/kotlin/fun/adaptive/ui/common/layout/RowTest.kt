@@ -9,7 +9,6 @@ import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.common.fragment.row
 import `fun`.adaptive.ui.common.fragment.space
 import `fun`.adaptive.ui.common.instruction.*
-import `fun`.adaptive.ui.common.instruction.AlignItems.Companion.alignItems
 import `fun`.adaptive.ui.common.support.C1
 import `fun`.adaptive.ui.common.support.F1
 import `fun`.adaptive.ui.common.support.F2

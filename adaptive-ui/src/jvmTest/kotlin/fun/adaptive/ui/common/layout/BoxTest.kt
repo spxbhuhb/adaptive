@@ -12,8 +12,6 @@ import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.common.AbstractCommonFragment
 import `fun`.adaptive.ui.common.fragment.*
 import `fun`.adaptive.ui.common.instruction.*
-import `fun`.adaptive.ui.common.instruction.AlignItems.Companion.alignItems
-import `fun`.adaptive.ui.common.instruction.AlignSelf.Companion.alignSelf
 import `fun`.adaptive.ui.common.support.C1
 import `fun`.adaptive.ui.common.support.F1
 import `fun`.adaptive.ui.common.support.F2
