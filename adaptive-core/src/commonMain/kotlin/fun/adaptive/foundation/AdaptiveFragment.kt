@@ -270,7 +270,7 @@ abstract class AdaptiveFragment(
     }
 
     @Suppress("unused") // used by the plugin
-    fun getProducedValue(stateVariableIndex : Int) : Any? {
+    fun getProducedValue(stateVariableIndex: Int): Any? {
         producers?.forEach { producer ->
             if (producer.hasValueFor(stateVariableIndex)) return producer.value()
         }
@@ -311,7 +311,7 @@ abstract class AdaptiveFragment(
         descendant: AdaptiveFragment,
         indexInTarget: Int,
         path: Array<String>? = null,
-        boundType : String,
+        boundType: String,
         adatCompanion: AdatCompanion<*>?
     ): AdaptiveStateVariableBinding<*> =
 

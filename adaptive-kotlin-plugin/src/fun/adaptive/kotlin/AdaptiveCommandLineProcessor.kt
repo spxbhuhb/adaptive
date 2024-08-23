@@ -27,7 +27,14 @@ class AdaptiveCommandLineProcessor : CommandLineProcessor {
     }
 
     fun String.toWritableDirectory() : File =
-        File(this).also { require(it.isDirectory && it.canWrite()) { "missing or non-writable directory: >$this<" } }
+        File(this).also {
+            // FIXME I'm not sure I want to make the plugin debug directory if it does not exists, figure it out
+            if (!it.exists()) {
+                it.mkdirs()
+            } else {
+                require(it.isDirectory && it.canWrite()) { "missing or non-writable directory: >$this<" }
+            }
+        }
 
     companion object {
 

@@ -38,7 +38,7 @@ class NavClick(
     override fun detach(origin: AdaptiveFragment, detachIndex: Int) {
         // FIXME expensive slot search, should create a slot map in the adapter perhaps
         val root = origin.adapter.rootFragment
-        val slot = root.firstOrNull(deep = true) { it is CommonSlot && it.name == slotName } ?: return
+        val slot = root.firstOrNull { it is CommonSlot && it.name == slotName } ?: return
 
         slot as CommonSlot
         slot.setContent(origin, detachIndex, segment)
