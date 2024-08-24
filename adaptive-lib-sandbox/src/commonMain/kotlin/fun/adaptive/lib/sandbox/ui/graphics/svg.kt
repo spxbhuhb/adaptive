@@ -5,11 +5,11 @@
 package `fun`.adaptive.lib.sandbox.ui.graphics
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.ui.common.fragment.box
-import `fun`.adaptive.ui.common.fragment.svg
-import `fun`.adaptive.ui.common.instruction.dp
-import `fun`.adaptive.ui.common.instruction.height
-import `fun`.adaptive.ui.common.instruction.width
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.graphics.svg.api.svg
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.api.height
+import `fun`.adaptive.ui.api.width
 import sandbox.lib.Res
 import sandbox.lib.thermometer
 

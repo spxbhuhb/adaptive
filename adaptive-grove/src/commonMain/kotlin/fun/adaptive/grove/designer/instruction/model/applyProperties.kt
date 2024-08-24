@@ -2,7 +2,12 @@ package `fun`.adaptive.grove.designer.instruction.model
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.grove.designer.utility.Selection
-import `fun`.adaptive.ui.common.instruction.*
+import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.instruction.layout.Frame
+import `fun`.adaptive.ui.instruction.layout.Height
+import `fun`.adaptive.ui.instruction.layout.Position
+import `fun`.adaptive.ui.instruction.layout.Size
+import `fun`.adaptive.ui.instruction.layout.Width
 
 fun applyProperties(selection: Selection, data: InstructionEditorData) {
     for (item in selection.items) {

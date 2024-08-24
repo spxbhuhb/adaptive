@@ -19,11 +19,23 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.rangeTo
-import `fun`.adaptive.ui.common.fragment.grid
-import `fun`.adaptive.ui.common.fragment.input
-import `fun`.adaptive.ui.common.fragment.row
-import `fun`.adaptive.ui.common.fragment.text
-import `fun`.adaptive.ui.common.instruction.*
+import `fun`.adaptive.ui.api.alignItems
+import `fun`.adaptive.ui.api.boldFont
+import `fun`.adaptive.ui.api.colTemplate
+import `fun`.adaptive.ui.api.externalLink
+import `fun`.adaptive.ui.api.fontSize
+import `fun`.adaptive.ui.api.maxWidth
+import `fun`.adaptive.ui.api.onClick
+import `fun`.adaptive.ui.api.paddingTop
+import `fun`.adaptive.ui.api.repeat
+import `fun`.adaptive.ui.api.rowTemplate
+import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.input
+import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.instruction.text.FontName
 
 @Adaptive
 fun welcome(): AdaptiveFragment {
@@ -50,7 +62,7 @@ fun welcome(): AdaptiveFragment {
                 checkbox { signUp.agreement }
                 row {
                     text("I agree to the ", fontSize(15.sp), FontName("Noto Sans"), textColor(darkGray))
-                    text("Terms of Service", fontSize(15.sp), FontName("Noto Sans"), textColor(black), bold, externalLink("/terms.txt"))
+                    text("Terms of Service", fontSize(15.sp), FontName("Noto Sans"), textColor(black), boldFont, externalLink("/terms.txt"))
                 }
             }
 

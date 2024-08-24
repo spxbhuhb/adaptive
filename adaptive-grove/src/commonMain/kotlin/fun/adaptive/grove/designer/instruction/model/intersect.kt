@@ -1,9 +1,9 @@
 package `fun`.adaptive.grove.designer.instruction.model
 
 import `fun`.adaptive.grove.designer.utility.Selection
-import `fun`.adaptive.ui.common.instruction.Frame
-import `fun`.adaptive.ui.common.instruction.Margin
-import `fun`.adaptive.ui.common.instruction.Padding
+import `fun`.adaptive.ui.instruction.layout.Frame
+import `fun`.adaptive.ui.instruction.layout.Margin
+import `fun`.adaptive.ui.instruction.layout.Padding
 import `fun`.adaptive.utility.firstOrNullIfInstance
 
 fun intersect(selection: Selection): InstructionEditorData {

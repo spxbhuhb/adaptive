@@ -19,11 +19,23 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.rangeTo
-import `fun`.adaptive.ui.common.fragment.grid
-import `fun`.adaptive.ui.common.fragment.input
-import `fun`.adaptive.ui.common.fragment.row
-import `fun`.adaptive.ui.common.fragment.text
-import `fun`.adaptive.ui.common.instruction.*
+import `fun`.adaptive.ui.api.colTemplate
+import `fun`.adaptive.ui.api.fontSize
+import `fun`.adaptive.ui.api.lightFont
+import `fun`.adaptive.ui.api.maxWidth
+import `fun`.adaptive.ui.api.onClick
+import `fun`.adaptive.ui.api.paddingRight
+import `fun`.adaptive.ui.api.paddingTop
+import `fun`.adaptive.ui.api.repeat
+import `fun`.adaptive.ui.api.rowTemplate
+import `fun`.adaptive.ui.api.spaceBetween
+import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.input
+import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.instruction.text.FontName
 
 @Adaptive
 fun signIn(): AdaptiveFragment {

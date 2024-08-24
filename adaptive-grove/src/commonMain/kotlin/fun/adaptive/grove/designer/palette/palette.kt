@@ -1,8 +1,8 @@
 package `fun`.adaptive.grove.designer.palette
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.ui.common.fragment.column
-import `fun`.adaptive.ui.common.fragment.text
+import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.text
 
 @Adaptive
 fun palette() {

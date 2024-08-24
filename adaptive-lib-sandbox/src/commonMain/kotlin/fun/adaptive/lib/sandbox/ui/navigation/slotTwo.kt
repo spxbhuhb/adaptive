@@ -7,10 +7,10 @@ package `fun`.adaptive.lib.sandbox.ui.navigation
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.rangeTo
-import `fun`.adaptive.ui.common.fragment.slot
-import `fun`.adaptive.ui.common.fragment.text
-import `fun`.adaptive.ui.common.instruction.navClick
-import `fun`.adaptive.ui.common.instruction.route
+import `fun`.adaptive.ui.api.slot
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.navClick
+import `fun`.adaptive.ui.api.route
 
 val slotTwoKey = name("slotTwo")
 

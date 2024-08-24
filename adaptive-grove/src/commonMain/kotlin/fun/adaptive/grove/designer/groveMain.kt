@@ -10,10 +10,23 @@ import `fun`.adaptive.grove.designer.palette.palette
 import `fun`.adaptive.grove.designer.utility.emptySelection
 import `fun`.adaptive.grove.designer.utility.noHit
 import `fun`.adaptive.grove.designer.utility.selectionOf
-import `fun`.adaptive.ui.common.fragment.box
-import `fun`.adaptive.ui.common.fragment.grid
-import `fun`.adaptive.ui.common.fragment.row
-import `fun`.adaptive.ui.common.instruction.*
+import `fun`.adaptive.ui.api.backgroundColor
+import `fun`.adaptive.ui.api.border
+import `fun`.adaptive.ui.api.colTemplate
+import `fun`.adaptive.ui.api.color
+import `fun`.adaptive.ui.api.frame
+import `fun`.adaptive.ui.api.gapWidth
+import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.noSelect
+import `fun`.adaptive.ui.api.onMove
+import `fun`.adaptive.ui.api.onPrimaryDown
+import `fun`.adaptive.ui.api.onPrimaryUp
+import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.instruction.layout.Position
 
 val blueBackground = backgroundColor(0x0000ff)
 val greenBackground = backgroundColor(0x00ff00)

@@ -6,9 +6,13 @@ import `fun`.adaptive.grove.designer.overlay.styles.guide
 import `fun`.adaptive.grove.designer.overlay.styles.targetBox
 import `fun`.adaptive.grove.designer.utility.Selection
 import `fun`.adaptive.grove.designer.utility.noHit
-import `fun`.adaptive.ui.common.fragment.box
-import `fun`.adaptive.ui.common.fragment.layout.AbstractContainer
-import `fun`.adaptive.ui.common.instruction.*
+import `fun`.adaptive.ui.api.maxHeight
+import `fun`.adaptive.ui.api.maxWidth
+import `fun`.adaptive.ui.api.position
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.fragment.layout.AbstractContainer
+import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.instruction.layout.Frame
 
 @Adaptive
 fun overlay(selection: Selection, target: Selection) {

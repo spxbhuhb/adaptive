@@ -1,16 +1,16 @@
 package `fun`.adaptive.cookbook.shared
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.ui.common.fragment.row
-import `fun`.adaptive.ui.common.fragment.text
-import `fun`.adaptive.ui.common.instruction.AlignItems
-import `fun`.adaptive.ui.common.instruction.FontName
-import `fun`.adaptive.ui.common.instruction.FontSize
-import `fun`.adaptive.ui.common.instruction.externalLink
-import `fun`.adaptive.ui.common.instruction.maxWidth
-import `fun`.adaptive.ui.common.instruction.sp
-import `fun`.adaptive.ui.common.instruction.textColor
-import `fun`.adaptive.ui.common.instruction.underline
+import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.instruction.layout.AlignItems
+import `fun`.adaptive.ui.instruction.text.FontName
+import `fun`.adaptive.ui.instruction.text.FontSize
+import `fun`.adaptive.ui.api.externalLink
+import `fun`.adaptive.ui.api.maxWidth
+import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.api.underline
 
 
 @Adaptive

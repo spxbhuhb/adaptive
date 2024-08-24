@@ -5,7 +5,7 @@
 package `fun`.adaptive.lib.sandbox.ui.misc
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.ui.common.fragment.text
+import `fun`.adaptive.ui.api.text
 
 @Adaptive
 fun publicFun() {

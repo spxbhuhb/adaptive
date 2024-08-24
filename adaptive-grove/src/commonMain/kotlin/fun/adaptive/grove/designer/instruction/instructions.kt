@@ -8,11 +8,17 @@ import `fun`.adaptive.grove.designer.instruction.model.applyProperties
 import `fun`.adaptive.grove.designer.instruction.model.intersect
 import `fun`.adaptive.grove.designer.instruction.styles.*
 import `fun`.adaptive.grove.designer.utility.Selection
-import `fun`.adaptive.ui.common.fragment.column
-import `fun`.adaptive.ui.common.fragment.flowBox
-import `fun`.adaptive.ui.common.fragment.row
-import `fun`.adaptive.ui.common.fragment.text
-import `fun`.adaptive.ui.common.instruction.*
+import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.gapHeight
+import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.maxWidth
+import `fun`.adaptive.ui.api.paddingLeft
+import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.flowBox
+import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.instruction.layout.Frame
 
 
 @Adaptive

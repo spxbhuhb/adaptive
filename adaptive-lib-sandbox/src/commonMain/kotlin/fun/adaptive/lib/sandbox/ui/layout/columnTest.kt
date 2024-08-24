@@ -6,9 +6,14 @@ package `fun`.adaptive.lib.sandbox.ui.layout
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.rangeTo
-import `fun`.adaptive.ui.common.fragment.column
-import `fun`.adaptive.ui.common.fragment.text
-import `fun`.adaptive.ui.common.instruction.*
+import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.instruction.layout.AlignItems
+import `fun`.adaptive.ui.instruction.layout.Alignment
 
 @Adaptive
 fun colTest() {

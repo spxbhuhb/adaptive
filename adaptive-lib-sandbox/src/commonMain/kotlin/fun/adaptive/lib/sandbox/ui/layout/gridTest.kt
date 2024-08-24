@@ -9,11 +9,16 @@ package `fun`.adaptive.lib.sandbox.ui.layout/*
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.rangeTo
-import `fun`.adaptive.ui.common.fragment.box
-import `fun`.adaptive.ui.common.fragment.column
-import `fun`.adaptive.ui.common.fragment.grid
-import `fun`.adaptive.ui.common.fragment.text
-import `fun`.adaptive.ui.common.instruction.*
+import `fun`.adaptive.ui.api.border
+import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.margin
+import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.size
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.instruction.*
 
 @Adaptive
 fun gridTest() {

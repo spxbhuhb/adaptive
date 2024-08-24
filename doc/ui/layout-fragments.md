@@ -13,7 +13,7 @@
 | Function  | Supported Adapters    | Description                                                                                 |
 |-----------|-----------------------|---------------------------------------------------------------------------------------------|
 | `box`     | browser, android, ios | Position each fragment with x and y coordinates.                                            |
-| `boxFlow` | browser, android, ios | Stack fragments in a row next to each other until space is available, then start a new row. |
+| `flowBox` | browser, android, ios | Stack fragments in a row next to each other until space is available, then start a new row. |
 | `row`     | browser, android, ios | Stack fragments next to each other.                                                         |                                                
 | `column`  | browser, android, ios | Stack fragments below each other.                                                           |
 | `grid`    | browser, android, ios |                                                                                             |
@@ -101,11 +101,11 @@ these:
 - `Number.gridRow`
 - `Number.colSpan`
 - `Number.rowSpan`
-- `GridCol(col : Int, span : Int = 1)`
-- `GridRow(row : Int, span : Int = 1)`
-- `RowSpan(span : Int)`
-- `ColSpan(span : Int)`
-- `GridPos(row : Int, col : Int, rowSpan : Int = 1, colSpan: Int = 1)`
+- `gridCol(col : Int, span : Int = 1)`
+- `gridRow(row : Int, span : Int = 1)`
+- `rowSpan(span : Int)`
+- `colSpan(span : Int)`
+- `gridPos(row : Int, col : Int, rowSpan : Int = 1, colSpan: Int = 1)`
 
 ```kotlin
  grid {
@@ -132,14 +132,14 @@ these:
 
 
 ```kotlin
-column(AlignItems.start)
-column(AlignItems.center)
-column(AlignItems.end)
+column(alignItems.start)
+column(alignItems.center)
+column(alignItems.end)
 
-column(AlignItems.startCenter)
-column(AlignItems.topCenter)
-column(AlignItems.endCenter)
-column(AlignItems.bottomCenter)
+column(alignItems.startCenter)
+column(alignItems.topCenter)
+column(alignItems.endCenter)
+column(alignItems.bottomCenter)
 
 column(scroll)
 column(verticalScroll)
@@ -173,7 +173,7 @@ the content of that column has to be scrolled.
 
 ```kotlin
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.ui.common.instruction.scroll
+import `fun`.adaptive.ui.api.scroll
 
 @Adaptive
 fun a() {

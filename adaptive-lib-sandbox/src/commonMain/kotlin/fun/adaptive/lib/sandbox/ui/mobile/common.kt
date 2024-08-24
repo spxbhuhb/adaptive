@@ -9,11 +9,26 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.ui.common.fragment.box
-import `fun`.adaptive.ui.common.fragment.column
-import `fun`.adaptive.ui.common.fragment.row
-import `fun`.adaptive.ui.common.fragment.text
-import `fun`.adaptive.ui.common.instruction.*
+import `fun`.adaptive.ui.api.backgroundColor
+import `fun`.adaptive.ui.api.border
+import `fun`.adaptive.ui.api.color
+import `fun`.adaptive.ui.api.cornerRadius
+import `fun`.adaptive.ui.api.fontSize
+import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.leftToRightGradient
+import `fun`.adaptive.ui.api.noSelect
+import `fun`.adaptive.ui.api.noTextWrap
+import `fun`.adaptive.ui.api.size
+import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.instruction.layout.AlignItems
+import `fun`.adaptive.ui.instruction.layout.Height
+import `fun`.adaptive.ui.instruction.layout.Padding
+import `fun`.adaptive.ui.instruction.text.FontWeight
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -25,7 +40,7 @@ fun mobileExample(@Adaptive body: () -> Unit) {
     val height = 812 + borderWidth // 812 // pixel: 808 - 24 - 24 = 760
 
     column {
-        AlignItems.start
+        AlignItems.Companion.start
         gap(10.dp)
 
         box {
@@ -45,13 +60,13 @@ val Int.threeDigits
 
 fun now() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
-val black = Color(0x000000u)
-val white = Color(0xffffffu)
-val lightGreen = Color(0xA0DE6Fu)
-val mediumGreen = Color(0x53C282u)
-val lightGray = Color(0xd8d8d8u)
-val mediumGray = Color(0x666666u)
-val purple = Color(0xA644FFu)
+val black = color(0x000000u)
+val white = color(0xffffffu)
+val lightGreen = color(0xA0DE6Fu)
+val mediumGreen = color(0x53C282u)
+val lightGray = color(0xd8d8d8u)
+val mediumGray = color(0x666666u)
+val purple = color(0xA644FFu)
 
 val blackBackground = backgroundColor(black)
 val greenGradient = leftToRightGradient(lightGreen, mediumGreen)
@@ -66,7 +81,7 @@ val smallWhiteNoWrap = instructionsOf(textColor(white), textSmall, noTextWrap)
 val button = instructionsOf(
     greenGradient,
     cornerRadius,
-    AlignItems.center,
+    AlignItems.Companion.center,
     Padding(8.dp),
     Height(50.dp)
 )

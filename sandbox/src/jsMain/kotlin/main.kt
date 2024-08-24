@@ -18,11 +18,36 @@ import `fun`.adaptive.lib.sandbox.ui.mobile.mobileExample
 import `fun`.adaptive.lib.sandbox.ui.mobile.welcome
 import `fun`.adaptive.lib.sandbox.ui.navigation.slotOne
 import `fun`.adaptive.lib.sandbox.ui.navigation.slotTwo
-import `fun`.adaptive.lib.sandbox.ui.withSandbox
-import `fun`.adaptive.ui.common.browser
-import `fun`.adaptive.ui.common.fragment.*
-import `fun`.adaptive.ui.common.instruction.*
-import `fun`.adaptive.ui.common.platform.withJsResources
+import `fun`.adaptive.lib.sandbox.withSandbox
+import `fun`.adaptive.ui.api.colTemplate
+import `fun`.adaptive.ui.api.color
+import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.cornerRadius
+import `fun`.adaptive.ui.api.fontName
+import `fun`.adaptive.ui.api.fontSize
+import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.leftToRightGradient
+import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.maxWidth
+import `fun`.adaptive.ui.api.navClick
+import `fun`.adaptive.ui.api.noSelect
+import `fun`.adaptive.ui.api.noTextWrap
+import `fun`.adaptive.ui.api.onClick
+import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.paddingLeft
+import `fun`.adaptive.ui.api.route
+import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.api.slot
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.api.verticalScroll
+import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.instruction.layout.AlignItems
+import `fun`.adaptive.ui.instruction.layout.Height
+import `fun`.adaptive.ui.instruction.navigation.NavClick
+import `fun`.adaptive.ui.platform.withJsResources
 
 fun main() {
 
@@ -74,9 +99,9 @@ fun main() {
 
 val button = instructionsOf(
     maxWidth,
-    leftToRightGradient(Color(0xA0DE6Fu), Color(0x53C282u)),
+    leftToRightGradient(color(0xA0DE6Fu), color(0x53C282u)),
     cornerRadius(8.dp),
-    AlignItems.startCenter,
+    AlignItems.Companion.startCenter,
     paddingLeft(16.dp),
     Height(32.dp)
 )

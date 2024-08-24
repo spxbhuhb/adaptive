@@ -5,9 +5,9 @@ import `fun`.adaptive.cookbook.auth.screens.signIn
 import `fun`.adaptive.cookbook.auth.screens.welcome
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.ui.common.fragment.flowBox
-import `fun`.adaptive.ui.common.instruction.dp
-import `fun`.adaptive.ui.common.instruction.gap
+import `fun`.adaptive.ui.api.flowBox
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.api.gap
 
 
 @Adaptive

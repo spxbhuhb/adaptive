@@ -5,14 +5,51 @@
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.DrawableResource
 import `fun`.adaptive.site.*
-import `fun`.adaptive.ui.common.browser
-import `fun`.adaptive.ui.common.fragment.*
-import `fun`.adaptive.ui.common.instruction.*
-import `fun`.adaptive.ui.common.platform.MediaMetrics
-import `fun`.adaptive.ui.common.platform.mediaMetrics
-import `fun`.adaptive.ui.common.platform.withJsResources
+import `fun`.adaptive.ui.api.alignItems
+import `fun`.adaptive.ui.api.backgroundColor
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.color
+import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.cornerBottomRadius
+import `fun`.adaptive.ui.api.cornerTopRadius
+import `fun`.adaptive.ui.api.externalLink
+import `fun`.adaptive.ui.api.fixed
+import `fun`.adaptive.ui.api.flowBox
+import `fun`.adaptive.ui.api.flowItemLimit
+import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.height
+import `fun`.adaptive.ui.api.image
+import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.maxWidth
+import `fun`.adaptive.ui.api.noSelect
+import `fun`.adaptive.ui.api.noTextWrap
+import `fun`.adaptive.ui.api.onClick
+import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.paddingBottom
+import `fun`.adaptive.ui.api.paddingLeft
+import `fun`.adaptive.ui.api.paddingRight
+import `fun`.adaptive.ui.api.paddingTop
+import `fun`.adaptive.ui.api.rowTemplate
+import `fun`.adaptive.ui.api.size
+import `fun`.adaptive.ui.api.spaceBetween
+import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.api.width
+import `fun`.adaptive.ui.api.zIndex
+import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.instruction.decoration.Color
+import `fun`.adaptive.ui.instruction.layout.AlignItems
+import `fun`.adaptive.ui.instruction.layout.AlignSelf
+import `fun`.adaptive.ui.platform.media.MediaMetrics
+import `fun`.adaptive.ui.api.mediaMetrics
+import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.api.slot
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.platform.withJsResources
 
 fun main() {
 
@@ -67,7 +104,7 @@ fun content(media: MediaMetrics) {
         slot(mainContent) { cards() }
 
         text("adaptive.fun does not use cookies") ..
-            paddingTop { 32.dp } .. paddingBottom { 32.dp } .. AlignSelf.center .. textColor
+            paddingTop { 32.dp } .. paddingBottom { 32.dp } .. AlignSelf.Companion.center .. textColor
     }
 }
 
@@ -75,13 +112,13 @@ fun content(media: MediaMetrics) {
 fun cards() {
     row {
         maxWidth
-        AlignItems.topCenter
+        AlignItems.Companion.topCenter
 
         flowBox {
             flowItemLimit { 4 }
             gap(24.dp)
 
-            card(Res.drawable.what_is_adaptive, Color(0xFFF7E1u)) {
+            card(Res.drawable.what_is_adaptive, color(0xFFF7E1u)) {
                 column {
                     externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/what-is-adaptive.md")
                     largeTitle("What is Adaptive")
@@ -91,7 +128,7 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.preview_status, Color(0xFF6347u)) {
+            card(Res.drawable.preview_status, color(0xFF6347u)) {
                 column {
                     externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/status.md")
                     largeTitle("Status")
@@ -101,7 +138,7 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.getting_started, Color(0x87CEFAu)) {
+            card(Res.drawable.getting_started, color(0x87CEFAu)) {
                 column {
                     externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/getting-started.md")
                     largeTitle("Getting Started")
@@ -111,7 +148,7 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.tools, Color(0xFFB07Cu)) {
+            card(Res.drawable.tools, color(0xFFB07Cu)) {
                 column {
                     externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/tools.md")
                     largeTitle("Tools")
@@ -121,7 +158,7 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.ui, Color(0xFFBF00u)) {
+            card(Res.drawable.ui, color(0xFFBF00u)) {
                 column {
                     externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/ui/README.md")
                     largeTitle("User Interface")
@@ -131,7 +168,7 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.server, Color(0x3CB371u)) {
+            card(Res.drawable.server, color(0x3CB371u)) {
                 column {
                     externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/server/README.md")
                     largeTitle("Server & Cloud")
@@ -141,7 +178,7 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.impressum, Color(0xAEE1E1u)) {
+            card(Res.drawable.impressum, color(0xAEE1E1u)) {
                 column {
                     externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/impressum.md")
                     largeTitle("Impressum")
@@ -151,7 +188,7 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.deep_waters, Color(0x6495EDu)) {
+            card(Res.drawable.deep_waters, color(0x6495EDu)) {
                 column {
                     externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/internals")
                     largeTitle("Deep Waters")
@@ -201,6 +238,6 @@ fun inactiveFeature(name: String, eta: String) {
         gap(10.dp)
 
         text(name, titleMedium, textColor(gray), noTextWrap)
-        text("ETA: $eta", titleSmall, textColor(gray), noTextWrap) .. AlignSelf.bottom
+        text("ETA: $eta", titleSmall, textColor(gray), noTextWrap) .. AlignSelf.Companion.bottom
     }
 }

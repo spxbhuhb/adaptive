@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.manualImplementation
 import `fun`.adaptive.grove.grove
-import `fun`.adaptive.ui.common.instruction.DPixel
+import `fun`.adaptive.ui.instruction.DPixel
 
 @AdaptiveExpect(grove)
 fun dPixelInput(

@@ -3,11 +3,14 @@ package `fun`.adaptive.grove.designer.instruction
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.grove.designer.fragment.dPixelInput
 import `fun`.adaptive.grove.designer.instruction.styles.*
-import `fun`.adaptive.ui.common.fragment.column
-import `fun`.adaptive.ui.common.fragment.flowBox
-import `fun`.adaptive.ui.common.fragment.row
-import `fun`.adaptive.ui.common.fragment.text
-import `fun`.adaptive.ui.common.instruction.*
+import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.maxWidth
+import `fun`.adaptive.ui.api.paddingLeft
+import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.flowBox
+import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.instruction.*
 
 @Adaptive
 fun surrounding(label: String, surrounding: Surrounding) {

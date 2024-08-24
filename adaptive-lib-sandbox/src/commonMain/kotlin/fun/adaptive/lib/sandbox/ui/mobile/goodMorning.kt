@@ -7,8 +7,35 @@ package `fun`.adaptive.lib.sandbox.ui.mobile
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.producer.poll
 import `fun`.adaptive.foundation.rangeTo
-import `fun`.adaptive.ui.common.fragment.*
-import `fun`.adaptive.ui.common.instruction.*
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.colTemplate
+import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.externalLink
+import `fun`.adaptive.ui.api.fontSize
+import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.gridCol
+import `fun`.adaptive.ui.api.image
+import `fun`.adaptive.ui.api.letterSpacing
+import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.maxWidth
+import `fun`.adaptive.ui.api.noSelect
+import `fun`.adaptive.ui.api.onClick
+import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.paddingBottom
+import `fun`.adaptive.ui.api.paddingHorizontal
+import `fun`.adaptive.ui.api.paddingRight
+import `fun`.adaptive.ui.api.paddingTop
+import `fun`.adaptive.ui.api.paddingVertical
+import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.api.rowTemplate
+import `fun`.adaptive.ui.api.size
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.instruction.layout.AlignItems
+import `fun`.adaptive.ui.instruction.layout.Padding
+import `fun`.adaptive.ui.instruction.text.FontName
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import sandbox.lib.*
@@ -42,12 +69,12 @@ fun goodMorning() {
             rowTemplate(50.dp)
             colTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
 
-            row(2.gridCol, greenGradient, cornerRadius, AlignItems.center, onClick { counter ++ }) {
+            row(2.gridCol, greenGradient, cornerRadius, AlignItems.Companion.center, onClick { counter ++ }) {
                 maxSize
                 text("Snooze") .. textColor(white) .. textMedium .. noSelect // .. onClick { println("Hello World!") }
             }
 
-            row(4.gridCol, whiteBorder, cornerRadius, AlignItems.center) {
+            row(4.gridCol, whiteBorder, cornerRadius, AlignItems.Companion.center) {
                 maxSize
                 text("Sleepiness: $counter") .. textColor(white) .. textMedium
             }
@@ -61,7 +88,7 @@ fun goodMorning() {
 @Adaptive
 private fun logo() {
     row {
-        AlignItems.bottomCenter
+        AlignItems.Companion.bottomCenter
         paddingBottom(20.dp)
         maxSize
 
@@ -72,7 +99,7 @@ private fun logo() {
 @Adaptive
 private fun title() {
     row {
-        AlignItems.bottomCenter
+        AlignItems.Companion.bottomCenter
         maxSize
 
         text("Good Morning", textColor(white), fontSize(40.sp), letterSpacing(- 0.02))
@@ -83,7 +110,7 @@ private fun title() {
 private fun time(timeText: String) {
     column {
         maxSize
-        AlignItems.bottomCenter
+        AlignItems.Companion.bottomCenter
         paddingTop(12.dp)
 
         text(timeText, textColor(white), fontSize(80.sp), letterSpacing(- 0.02), FontName("Noto Sans"))
@@ -93,7 +120,7 @@ private fun time(timeText: String) {
 @Adaptive
 private fun progress(time: LocalDateTime) {
     row {
-        AlignItems.center
+        AlignItems.Companion.center
         maxSize
 
         for (i in 0 .. time.second) {
@@ -105,7 +132,7 @@ private fun progress(time: LocalDateTime) {
 @Adaptive
 private fun milliProgress(instant: Instant) {
     row {
-        AlignItems.center
+        AlignItems.Companion.center
         maxSize
 
         for (i in 0 .. (instant.nanosecondsOfSecond / (20 * 1_000_000))) {
@@ -119,7 +146,7 @@ private fun milliProgress(instant: Instant) {
 @Adaptive
 private fun messages(time: LocalDateTime, counter: Int) {
     column {
-        AlignItems.center
+        AlignItems.Companion.center
         maxWidth
         gap { 10.dp }
 
@@ -141,7 +168,7 @@ private fun messages(time: LocalDateTime, counter: Int) {
 
 @Adaptive
 private fun terms() {
-    column(AlignItems.center, padding(right = 32.dp, left = 32.dp, top = 12.dp)) {
+    column(AlignItems.Companion.center, padding(right = 32.dp, left = 32.dp, top = 12.dp)) {
         row {
             text("By joining you agree to our", *smallWhiteNoWrap, paddingRight(6.dp))
             text("Terms of Service", externalLink(Res.file.terms), *smallWhiteNoWrap, bold, paddingRight(right = 6.dp))

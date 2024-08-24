@@ -13,18 +13,22 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.Trace
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.rangeTo
-import `fun`.adaptive.ui.common.fragment.box
-import `fun`.adaptive.ui.common.fragment.column
-import `fun`.adaptive.ui.common.fragment.text
-import `fun`.adaptive.ui.common.instruction.*
+import `fun`.adaptive.ui.api.backgroundColor
+import `fun`.adaptive.ui.api.border
+import `fun`.adaptive.ui.api.color
+import `fun`.adaptive.ui.api.size
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.instruction.*
 
-val black = Color(0x0u)
-val outerBorder = Color(0xF08080u)
-val innerBorder = Color(0xFFBF00u)
+val black = color(0x0u)
+val outerBorder = color(0xF08080u)
+val innerBorder = color(0xFFBF00u)
 
-val blueishBackground = backgroundColor(Color(0xB0C4DEu))
-val greenishBackground = backgroundColor(Color(0xB4E7B4u))
-val orangeBackground = backgroundColor(Color(0xFFBF00u))
+val blueishBackground = backgroundColor(color(0xB0C4DEu))
+val greenishBackground = backgroundColor(color(0xB4E7B4u))
+val orangeBackground = backgroundColor(color(0xFFBF00u))
 
 val trace = Trace()
 

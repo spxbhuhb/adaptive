@@ -5,9 +5,9 @@ method of the adapter, which in turn uses the `fragmentFactory` to get an instan
 
 ```kotlin
 import `fun`.adaptive.foundation.AdaptiveExpect
-import `fun`.adaptive.ui.common.commonUI
+import `fun`.adaptive.ui.aui
 
-@AdaptiveExpect(commonUI)
+@AdaptiveExpect(aui)
 fun text(text : String) {
     manualImplementation(text)
 }
@@ -30,7 +30,7 @@ The code above results in a `genBuild` like this:
 fun genBuild(parent: AdaptiveFragment<TestNode>, declarationIndex: Int): AdaptiveFragment<TestNode> {
 
     val fragment = when (declarationIndex) {
-        0 -> adapter.actualize("common:text", this, 0)
+        0 -> adapter.actualize("aui:text", this, 0)
         else -> invalidIndex(declarationIndex) // throws exception
     }
 

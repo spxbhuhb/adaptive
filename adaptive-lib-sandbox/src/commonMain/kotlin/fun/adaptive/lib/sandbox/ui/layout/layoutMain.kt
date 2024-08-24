@@ -5,8 +5,8 @@
 package `fun`.adaptive.lib.sandbox.ui.layout
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.ui.common.fragment.row
-import `fun`.adaptive.ui.common.instruction.AlignItems
+import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.instruction.layout.AlignItems
 
 @Adaptive
 fun layoutMain() {

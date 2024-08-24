@@ -47,13 +47,9 @@ text(12)
 ### Instructions
 
 ```kotlin
-import `fun`.adaptive.ui.common.instruction.TextAlign
-import `fun`.adaptive.ui.common.instruction.TextWrap
-
-text("a", FontName("Courier New"))
-text("a", FontSize(12))
-text("a", FontWeight(12))
-text("a", LetterSpacing(- 2))
-text("a", TextAlign.Center)
-text("a", TextWrap.NoWrap)
+text("a", fontName("Courier New"))
+text("a", fontSize(12))
+text("a", lightFont)
+text("a", letterSpacing(- 2))
+text("a", noTextWrap)
 ```

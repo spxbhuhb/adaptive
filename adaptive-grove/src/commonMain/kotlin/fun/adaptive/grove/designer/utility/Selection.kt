@@ -3,9 +3,14 @@ package `fun`.adaptive.grove.designer.utility
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.store.replaceWith
-import `fun`.adaptive.ui.common.AbstractCommonFragment
-import `fun`.adaptive.ui.common.fragment.layout.AbstractContainer
-import `fun`.adaptive.ui.common.instruction.*
+import `fun`.adaptive.ui.api.frame
+import `fun`.adaptive.ui.AbstractAuiFragment
+import `fun`.adaptive.ui.fragment.layout.AbstractContainer
+import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.instruction.event.UIEvent
+import `fun`.adaptive.ui.instruction.layout.Frame
+import `fun`.adaptive.ui.instruction.layout.Position
+import `fun`.adaptive.ui.instruction.layout.Size
 import `fun`.adaptive.utility.firstOrNullIfInstance
 import kotlin.math.max
 import kotlin.math.min
@@ -17,7 +22,7 @@ fun selectionOf(event: UIEvent): Selection =
 
 @Adat
 class Selection(
-    val items: List<AbstractCommonFragment<*>>,
+    val items: List<AbstractAuiFragment<*>>,
     val revision: Int
 ) : AdatClass<Selection> {
 
@@ -25,7 +30,7 @@ class Selection(
 
     fun isNotEmpty() = items.isNotEmpty()
 
-    operator fun contains(fragment: AbstractCommonFragment<*>): Boolean =
+    operator fun contains(fragment: AbstractAuiFragment<*>): Boolean =
         items.contains(fragment)
 
     fun containingFrame(selection: Selection): Frame? {
@@ -95,7 +100,7 @@ class Selection(
         }
     }
 
-    private fun place(item: AbstractCommonFragment<*>, container: AbstractContainer<*, *>) {
+    private fun place(item: AbstractAuiFragment<*>, container: AbstractContainer<*, *>) {
         val instructions = item.instructions
         val result = instructions.toMutableList()
 

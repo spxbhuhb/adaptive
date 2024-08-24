@@ -1,8 +1,8 @@
 package `fun`.adaptive.grove.designer.utility
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.ui.common.AbstractCommonFragment
-import `fun`.adaptive.ui.common.fragment.layout.AbstractContainer
+import `fun`.adaptive.ui.AbstractAuiFragment
+import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 
 val noHit = object : AdaptiveInstruction {}
 
@@ -14,14 +14,14 @@ val noHit = object : AdaptiveInstruction {}
  *          Empty list if the fragment is not a container
  */
 fun hits(
-    container: AbstractCommonFragment<*>,
+    container: AbstractAuiFragment<*>,
     y: Double,
     x: Double
-): List<AbstractCommonFragment<*>> {
+): List<AbstractAuiFragment<*>> {
 
     if (container !is AbstractContainer<*, *>) return emptyList()
 
-    val result = mutableListOf<AbstractCommonFragment<*>>()
+    val result = mutableListOf<AbstractAuiFragment<*>>()
 
     for (item in container.layoutItems) {
         val renderData = item.renderData

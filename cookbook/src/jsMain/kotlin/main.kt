@@ -18,11 +18,30 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.Trace
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.rangeTo
-import `fun`.adaptive.ui.common.browser
-import `fun`.adaptive.ui.common.fragment.*
-import `fun`.adaptive.ui.common.instruction.*
-import `fun`.adaptive.ui.common.platform.mediaMetrics
-import `fun`.adaptive.ui.common.platform.withJsResources
+import `fun`.adaptive.ui.api.alignItems
+import `fun`.adaptive.ui.api.backgroundColor
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.cornerTopRadius
+import `fun`.adaptive.ui.api.flowBox
+import `fun`.adaptive.ui.api.flowText
+import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.height
+import `fun`.adaptive.ui.api.input
+import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.navClick
+import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.paddingLeft
+import `fun`.adaptive.ui.api.route
+import `fun`.adaptive.ui.api.rowTemplate
+import `fun`.adaptive.ui.api.width
+import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.api.mediaMetrics
+import `fun`.adaptive.ui.api.slot
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.platform.withJsResources
 
 val cookbookContent = name("cookbook-content")
 

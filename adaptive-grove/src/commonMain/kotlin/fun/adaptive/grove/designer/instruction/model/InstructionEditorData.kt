@@ -2,9 +2,9 @@ package `fun`.adaptive.grove.designer.instruction.model
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.ui.common.instruction.Frame
-import `fun`.adaptive.ui.common.instruction.Margin
-import `fun`.adaptive.ui.common.instruction.Padding
+import `fun`.adaptive.ui.instruction.layout.Frame
+import `fun`.adaptive.ui.instruction.layout.Margin
+import `fun`.adaptive.ui.instruction.layout.Padding
 
 @Adat
 class InstructionEditorData(

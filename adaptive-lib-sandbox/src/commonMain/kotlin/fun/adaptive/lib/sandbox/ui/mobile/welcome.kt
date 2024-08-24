@@ -10,8 +10,43 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.lib.sandbox.model.SignUp
-import `fun`.adaptive.ui.common.fragment.*
-import `fun`.adaptive.ui.common.instruction.*
+import `fun`.adaptive.ui.api.backgroundColor
+import `fun`.adaptive.ui.api.boldFont
+import `fun`.adaptive.ui.api.border
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.colTemplate
+import `fun`.adaptive.ui.api.color
+import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.cornerRadius
+import `fun`.adaptive.ui.api.externalLink
+import `fun`.adaptive.ui.api.fontSize
+import `fun`.adaptive.ui.api.frame
+import `fun`.adaptive.ui.api.gapWidth
+import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.height
+import `fun`.adaptive.ui.api.image
+import `fun`.adaptive.ui.api.input
+import `fun`.adaptive.ui.api.lightFont
+import `fun`.adaptive.ui.api.maxWidth
+import `fun`.adaptive.ui.api.noBorder
+import `fun`.adaptive.ui.api.noSelect
+import `fun`.adaptive.ui.api.onClick
+import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.paddingLeft
+import `fun`.adaptive.ui.api.paddingRight
+import `fun`.adaptive.ui.api.paddingTop
+import `fun`.adaptive.ui.api.repeat
+import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.api.rowTemplate
+import `fun`.adaptive.ui.api.size
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.api.underline
+import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.instruction.layout.AlignItems
+import `fun`.adaptive.ui.instruction.layout.Height
+import `fun`.adaptive.ui.instruction.text.FontName
+import `fun`.adaptive.ui.instruction.text.FontSize
 import sandbox.lib.Res
 import sandbox.lib.check
 
@@ -53,7 +88,7 @@ fun welcomeInner(signUp: SignUp) {
 
             grid {
                 paddingTop(15.dp)
-                AlignItems.start
+                AlignItems.Companion.start
                 colTemplate(40.dp, 1.fr)
 
                 checkbox { signUp.agreement }
@@ -79,12 +114,12 @@ fun titleLarge(text: String) {
 
 @Adaptive
 fun subTitle(text: String) {
-    text(text, *bodyMedium, FontWeight.LIGHT, paddingTop(15.dp))
+    text(text, *bodyMedium, lightFont, paddingTop(15.dp))
 }
 
 @Adaptive
 fun footerLink(normalText: String, linkText: String, href: String) {
-    row(AlignItems.center, maxWidth) {
+    row(AlignItems.Companion.center, maxWidth) {
         text(normalText, *bodyMedium)
         text(linkText, FontSize(17.sp), FontName("Noto Sans"), textColor(black), underline, externalLink(href))
     }
@@ -117,7 +152,7 @@ fun checkbox(
 
 val titleLarge = instructionsOf(
     FontSize(40.sp),
-    FontWeight.BOLD
+    boldFont
 )
 
 val bodyMedium = instructionsOf(
@@ -129,12 +164,12 @@ val bodyMedium = instructionsOf(
 val input = instructionsOf(
     // PlaceholderColor(0x8A8A8F),
     textColor(0x000000u),
-    BackgroundColor(Color(0xEFEFF4u)),
-    CornerRadius(8.dp),
-    Border.NONE,
+    backgroundColor(color(0xEFEFF4u)),
+    cornerRadius(8.dp),
+    noBorder,
     Height(44.dp),
     FontSize(17.sp),
-    FontWeight.LIGHT,
+    lightFont,
     padding(left = 16.dp, right = 16.dp)
 )
 

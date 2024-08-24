@@ -6,9 +6,9 @@ package `fun`.adaptive.grove.fragment
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
-import `fun`.adaptive.ui.common.AbstractCommonFragment
-import `fun`.adaptive.ui.common.CommonAdapter
-import `fun`.adaptive.ui.common.instruction.DPixel
+import `fun`.adaptive.ui.AbstractAuiFragment
+import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.utility.checkIfInstance
 import `fun`.adaptive.utility.format
 import kotlinx.browser.document
@@ -17,10 +17,10 @@ import org.w3c.dom.HTMLInputElement
 
 @AdaptiveActual
 open class GroveDPixelInput(
-    adapter: CommonAdapter,
+    adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractCommonFragment<HTMLElement>(adapter, parent, index, 0, 2) {
+) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 0, 2) {
 
     // 0 - instructions
     // 1 - binding

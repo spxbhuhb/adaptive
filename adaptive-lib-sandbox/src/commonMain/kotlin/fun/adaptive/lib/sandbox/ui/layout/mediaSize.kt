@@ -7,8 +7,8 @@ package `fun`.adaptive.lib.sandbox.ui.layout/*
  */
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.ui.common.fragment.text
-import `fun`.adaptive.ui.common.platform.mediaMetrics
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.mediaMetrics
 
 @Adaptive
 fun mediaSize() {

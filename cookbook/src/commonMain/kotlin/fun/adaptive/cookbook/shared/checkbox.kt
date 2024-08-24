@@ -8,13 +8,13 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.rangeTo
-import `fun`.adaptive.ui.common.fragment.box
-import `fun`.adaptive.ui.common.fragment.image
-import `fun`.adaptive.ui.common.fragment.row
-import `fun`.adaptive.ui.common.instruction.dp
-import `fun`.adaptive.ui.common.instruction.frame
-import `fun`.adaptive.ui.common.instruction.noSelect
-import `fun`.adaptive.ui.common.instruction.onClick
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.image
+import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.api.frame
+import `fun`.adaptive.ui.api.noSelect
+import `fun`.adaptive.ui.api.onClick
 
 /**
  * Editor for a boolean.

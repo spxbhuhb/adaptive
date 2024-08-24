@@ -1,11 +1,11 @@
 package `fun`.adaptive.cookbook.shared
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.ui.common.fragment.row
-import `fun`.adaptive.ui.common.fragment.text
-import `fun`.adaptive.ui.common.instruction.dp
-import `fun`.adaptive.ui.common.instruction.height
-import `fun`.adaptive.ui.common.instruction.paddingTop
+import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.api.height
+import `fun`.adaptive.ui.api.paddingTop
 
 @Adaptive
 fun title(text: String) {

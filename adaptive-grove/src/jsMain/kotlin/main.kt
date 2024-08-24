@@ -4,10 +4,9 @@
 
 import `fun`.adaptive.grove.designer.groveMain
 import `fun`.adaptive.grove.fragment.GroveFragmentFactory
-import `fun`.adaptive.ui.common.AbstractCommonAdapter
-import `fun`.adaptive.ui.common.browser
-import `fun`.adaptive.ui.common.instruction.sp
-import `fun`.adaptive.ui.common.platform.withJsResources
+import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.platform.withJsResources
 
 fun main() {
 
@@ -16,7 +15,6 @@ fun main() {
     //(trace = Trace(".*"))
     //, trace = trace("removeActual|.*-Unmount|setContent")
     browser(GroveFragmentFactory) { adapter ->
-        adapter as AbstractCommonAdapter<*, *>
 
         with(adapter.defaultTextRenderData) {
             fontName = "Noto Sans"
