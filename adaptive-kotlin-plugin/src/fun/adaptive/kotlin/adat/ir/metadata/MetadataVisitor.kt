@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
+import kotlin.collections.map
 
 class MetadataVisitor(
     override val pluginContext: AdatPluginContext,
@@ -31,8 +32,12 @@ class MetadataVisitor(
 ) : IrElementVisitorVoid, AdatIrBuilder {
 
     val properties = mutableListOf<PropertyData>()
+    val descriptors = mutableListOf<Pair<String,List<AdatDescriptorMetadata>>>()
 
     var propertyIndex = 0
+
+    fun zip() : List<AdatPropertyMetadata> =
+        properties.map { it.metadata.copy(descriptors = descriptors.firstOrNull { d -> d.first == it.property.name.identifier }?.second ?: emptyList()) }
 
     override fun visitElement(element: IrElement) {
         element.acceptChildrenVoid(this)
@@ -77,72 +82,8 @@ class MetadataVisitor(
     override fun visitFunction(declaration: IrFunction) {
         if (declaration.name != Names.DESCRIPTOR) return
         if (declaration.isFakeOverride) return
-        val body = declaration.body ?: return
 
-        for (statement in body.statements) {
-            check(statement is IrCall) { "invalid descriptor statement (not a call) ${statement.dumpKotlinLike()}" }
-        }
-    }
-
-    fun flattenDescriptorCalls(call: IrCall): Pair<String, List<AdatDescriptorMetadata>> {
-
-        var propertyName: String? = null
-        val result = mutableListOf<AdatDescriptorMetadata>()
-        var current: IrExpression? = call
-
-        while (current != null) {
-
-            when (current) {
-
-                is IrGetValue -> {
-                    val owner = current.symbol.owner
-                    check(owner.parent == adatClass) { "invalid descriptor property base: ${current?.dumpKotlinLike()}" }
-                    propertyName = owner.name.identifier
-                    current = null
-                }
-
-                is IrCall -> {
-                    val owner = current.symbol.owner
-
-                    val annotation = owner.getAnnotation(FqNames.DESCRIPTOR_EXPECT)
-
-                    if (annotation != null) {
-
-                        result += AdatDescriptorMetadata(
-                            annotation.getAnnotationStringValue() + ":" + owner.kotlinFqName,
-                            encodeDescriptorParameters(current)
-                        )
-
-                        current = current.extensionReceiver
-
-                    } else {
-
-                        val symbol = current.symbol.owner.correspondingPropertySymbol
-                        checkNotNull(symbol) { "not a property access (1): ${call.dumpKotlinLike()}" }
-                        propertyName = symbol.owner.name.identifier
-                        break
-                    }
-
-                }
-
-                else -> {
-                    throw IllegalStateException("unknown access: ${call.dumpKotlinLike()}")
-                }
-            }
-        }
-
-        check(propertyName != null) { "not a property access (2): ${call.dumpKotlinLike()}" }
-
-        return propertyName to result
-    }
-
-    private fun encodeDescriptorParameters(current: IrCall): String {
-        check(current.valueArgumentsCount == 1) { "only single parameter descriptors are supported: ${current.dumpKotlinLike()}" }
-
-        val const = current.getValueArgument(0)
-        check(const is IrConstImpl<*>) { "only constants are supported as descriptor parameters: ${current.dumpKotlinLike()}" }
-
-        return const.value.toString()
+        descriptor(adatClass, declaration, descriptors)
     }
 
 }

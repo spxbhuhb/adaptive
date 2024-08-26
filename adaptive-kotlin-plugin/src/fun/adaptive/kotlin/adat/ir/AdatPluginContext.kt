@@ -85,4 +85,5 @@ class AdatPluginContext(
     val uShortArrayType = irContext.referenceClass(UnsignedArrayType.USHORTARRAY.classId) !!.defaultType
     val uLongArrayType = irContext.referenceClass(UnsignedArrayType.ULONGARRAY.classId) !!.defaultType
 
+    val propertiesFun = CallableIds.properties.functions().first()
 }

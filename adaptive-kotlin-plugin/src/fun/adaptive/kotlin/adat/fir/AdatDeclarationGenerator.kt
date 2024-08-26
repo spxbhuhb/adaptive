@@ -32,6 +32,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
     val nullableAnyType = ClassIds.KOTLIN_ANY.constructClassLikeType(emptyArray(), true)
     val nullableAnyArrayType = ClassIds.KOTLIN_ARRAY.constructClassLikeType(arrayOf(nullableAnyType), false)
     val ADAT_PREDICATE = LookupPredicate.create { annotated(FqNames.ADAT_ANNOTATION) }
+    val descriptorSetType = ClassIds.KOTLIN_ARRAY.constructClassLikeType(arrayOf(ClassIds.ADAT_DESCRIPTOR_SET.defaultType(emptyList())), false)
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(ADAT_PREDICATE)
@@ -89,6 +90,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                 setOf(
                     Names.ADAT_METADATA,
                     Names.ADAT_WIREFORMAT,
+                    Names.ADAT_DESCRIPTORS,
                     Names.WIREFORMAT_NAME,
                     Names.NEW_INSTANCE,
                     SpecialNames.INIT
@@ -179,6 +181,19 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                         AdatPluginKey,
                         Names.ADAT_WIREFORMAT,
                         wireFormatClassId.constructClassLikeType(arrayOf(context.adatClassType), false),
+                        isVal = true,
+                        hasBackingField = true
+                    ).symbol
+                )
+            }
+
+            Names.ADAT_DESCRIPTORS -> {
+                listOf(
+                    createMemberProperty(
+                        context !!.owner,
+                        AdatPluginKey,
+                        Names.ADAT_DESCRIPTORS,
+                        descriptorSetType,
                         isVal = true,
                         hasBackingField = true
                     ).symbol

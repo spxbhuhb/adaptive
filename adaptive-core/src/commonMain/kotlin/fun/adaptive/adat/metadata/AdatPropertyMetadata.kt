@@ -5,6 +5,8 @@
 package `fun`.adaptive.adat.metadata
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.adat.descriptor.AdatDescriptorSet
+import `fun`.adaptive.adat.descriptor.kotlin.string.StringSecret
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatDecoder
 import `fun`.adaptive.wireformat.WireFormatEncoder
@@ -70,6 +72,9 @@ data class AdatPropertyMetadata(
      */
     val isAdatClass
         get() = (flags and ADAT_CLASS) != 0
+
+    fun isSecret(descriptors : Array<AdatDescriptorSet>) =
+        descriptors.first { it.property.name == name }.descriptors.filterIsInstance<StringSecret>().firstOrNull()?.isSecret == true
 
     companion object : WireFormat<AdatPropertyMetadata> {
 

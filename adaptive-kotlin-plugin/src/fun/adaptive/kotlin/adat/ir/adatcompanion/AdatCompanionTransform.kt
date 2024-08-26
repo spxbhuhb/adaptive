@@ -3,6 +3,7 @@
  */
 package `fun`.adaptive.kotlin.adat.ir.adatcompanion
 
+import `fun`.adaptive.adat.metadata.AdatDescriptorMetadata
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
 import `fun`.adaptive.kotlin.adat.AdatPluginKey
 import `fun`.adaptive.kotlin.adat.Names
@@ -69,6 +70,7 @@ class AdatCompanionTransform(
         when (declaration.name) {
             Names.ADAT_METADATA -> adatMetadata(companionClass, declaration, properties)
             Names.ADAT_WIREFORMAT -> adatWireFormat(companionClass, declaration)
+            Names.ADAT_DESCRIPTORS -> adatDescriptors(companionClass, declaration)
             Names.WIREFORMAT_NAME -> wireFormatName(companionClass, declaration)
 
         }

@@ -15,6 +15,10 @@ data class AdatDescriptorMetadata(
     val parameters: String
 ) {
 
+    fun asBoolean() = parameters.toBooleanStrict()
+
+    fun asInt() = parameters.toInt()
+
     companion object : WireFormat<AdatDescriptorMetadata> {
 
         override val wireFormatName: String

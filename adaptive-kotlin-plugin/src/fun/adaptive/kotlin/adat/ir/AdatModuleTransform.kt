@@ -5,10 +5,12 @@ package `fun`.adaptive.kotlin.adat.ir
 
 import `fun`.adaptive.kotlin.adat.ClassIds
 import `fun`.adaptive.kotlin.adat.ir.adatclass.AdatClassTransform
+import `fun`.adaptive.kotlin.adat.ir.adatcompanion.AdatCompanionTransform
 import `fun`.adaptive.kotlin.adat.ir.exposed.ExposedAdatTransform
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.util.companionObject
 import org.jetbrains.kotlin.ir.util.hasAnnotation
 import org.jetbrains.kotlin.ir.util.isSubclassOf
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
@@ -22,7 +24,18 @@ class AdatModuleTransform(
         when {
 
             declaration.isSubclassOf(pluginContext.adatClass.owner) -> {
-                declaration.acceptChildrenVoid(AdatClassTransform(pluginContext, declaration))
+                val transform = AdatClassTransform(pluginContext, declaration)
+
+                declaration.acceptChildrenVoid(transform)
+
+                val companion = declaration.companionObject()
+                requireNotNull(companion)
+
+                AdatCompanionTransform(
+                    pluginContext,
+                    companion,
+                    transform.metadata.zip()
+                ).transform()
             }
 
             declaration.hasAnnotation(ClassIds.EXPOSED_ADAT_TABLE) -> {

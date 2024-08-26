@@ -5,7 +5,8 @@
 package `fun`.adaptive.adat.metadata
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.descriptor.AdatDescriptorImpl
+import `fun`.adaptive.adat.descriptor.AdatDescriptor
+import `fun`.adaptive.adat.descriptor.AdatDescriptorSet
 import `fun`.adaptive.adat.descriptor.DefaultDescriptorFactory
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatDecoder
@@ -42,16 +43,18 @@ data class AdatClassMetadata<T>(
     val isImmutable
         get() = (flags and IMMUTABLE) != 0
 
-    fun generateDescriptors(): List<AdatDescriptorImpl> {
-        val result = mutableListOf<AdatDescriptorImpl>()
+    fun generateDescriptors(): Array<AdatDescriptorSet> {
+        val result = mutableListOf<AdatDescriptorSet>()
 
         for (property in properties) {
+            val propertyResult = mutableListOf<AdatDescriptor>()
             for (descriptor in property.descriptors) {
-                result += DefaultDescriptorFactory.newInstance(descriptor.name, property, descriptor)
+                propertyResult += DefaultDescriptorFactory.newInstance(descriptor.name, descriptor)
             }
+            result += AdatDescriptorSet(property, propertyResult)
         }
 
-        return result
+        return result.toTypedArray()
     }
 
     operator fun get(propertyName: String): AdatPropertyMetadata =

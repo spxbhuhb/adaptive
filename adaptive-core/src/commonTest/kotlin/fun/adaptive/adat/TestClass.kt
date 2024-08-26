@@ -4,7 +4,9 @@
 
 package `fun`.adaptive.adat
 
+import `fun`.adaptive.adat.descriptor.api.properties
 import `fun`.adaptive.adat.metadata.AdatClassMetadata
+import `fun`.adaptive.adat.metadata.AdatDescriptorMetadata
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 
@@ -19,13 +21,21 @@ class TestClass(
 
     override val adatCompanion = Companion
 
+    override var adatContext : AdatContext<Any>? = null
+
+    override fun descriptor() { // not used in this test, compiler plugin tests and the "test" module contains actual unit tests
+        properties {
+            someInt minimum 23 maximum 200 default 34
+        }
+    }
+
     override fun equals(other: Any?): Boolean =
         adatEquals(other as? TestClass)
 
     override fun hashCode(): Int =
         adatHashCode()
 
-    override fun getValue(index: Int): Any {
+    override fun genGetValue(index: Int): Any {
         return when (index) {
             0 -> someInt
             1 -> someBoolean
@@ -34,7 +44,7 @@ class TestClass(
         }
     }
 
-    override fun setValue(index: Int, value: Any?) {
+    override fun genSetValue(index: Int, value: Any?) {
         @Suppress("UNCHECKED_CAST")
         when (index) {
             0 -> someInt = value as Int
@@ -54,13 +64,22 @@ class TestClass(
             name = "fun.adaptive.adat.TestClass",
             flags = 0,
             properties = listOf(
-                AdatPropertyMetadata("someInt", 0, 0, "I"),
+                AdatPropertyMetadata(
+                    "someInt", 0, 0, "I",
+                    listOf(
+                        AdatDescriptorMetadata("IntDefault", "23"),
+                        AdatDescriptorMetadata("IntMinimum", "0"),
+                        AdatDescriptorMetadata("IntMaximum", "100")
+                    )
+                ),
                 AdatPropertyMetadata("someBoolean", 1, 0, "Z"),
                 AdatPropertyMetadata("someIntListSet", 2, 0, "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
             )
         )
 
         override val adatWireFormat = AdatClassWireFormat(this, adatMetadata)
+
+        override val adatDescriptors = adatMetadata.generateDescriptors()
 
         override fun newInstance() =
             TestClass()

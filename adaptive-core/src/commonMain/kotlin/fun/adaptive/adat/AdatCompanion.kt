@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.adat
 
-import `fun`.adaptive.adat.descriptor.DescriptorExpect
+import `fun`.adaptive.adat.descriptor.AdatDescriptorSet
 import `fun`.adaptive.adat.metadata.AdatClassMetadata
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.utility.pluginGenerated
@@ -22,11 +22,14 @@ interface AdatCompanion<A : AdatClass<A>> : WireFormat<A> {
     val adatWireFormat: AdatClassWireFormat<A>
         get() = pluginGenerated()
 
-    val adatConstraints: List<DescriptorExpect>
+    val adatDescriptors: Array<AdatDescriptorSet>
         get() = pluginGenerated()
 
     fun decodeMetadata(a: String): AdatClassMetadata<A> =
         AdatClassMetadata.decodeFromString(a)
+
+    fun generateDescriptors() : Array<AdatDescriptorSet> =
+        adatMetadata.generateDescriptors()
 
     fun newInstance(): A {
         pluginGenerated()

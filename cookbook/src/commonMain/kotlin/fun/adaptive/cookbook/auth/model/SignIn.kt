@@ -6,10 +6,20 @@ package `fun`.adaptive.cookbook.auth.model
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.descriptor.api.properties
 
 @Adat
 class SignIn(
     val email: String = "",
     val password: String = "",
     val remember: Boolean = false
-) : AdatClass<SignIn>
+) : AdatClass<SignIn> {
+
+    override fun descriptor() {
+        properties {
+            email blank false pattern "^[\\w\\-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$"
+            password secret true blank false
+        }
+    }
+
+}

@@ -4,6 +4,7 @@
 
 package `fun`.adaptive.foundation.instruction
 
+import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.utility.firstOrNullIfInstance
 
 fun instructionsOf(vararg instructions: AdaptiveInstruction) = arrayOf(*instructions)
@@ -11,3 +12,6 @@ fun instructionsOf(vararg instructions: AdaptiveInstruction) = arrayOf(*instruct
 inline operator fun <reified T : AdaptiveInstruction> Array<out AdaptiveInstruction>.invoke() {
     firstOrNullIfInstance<T>()?.execute()
 }
+
+inline fun <reified T : AdaptiveInstruction> AdaptiveFragment.get() : T? =
+    instructions.firstOrNullIfInstance<T>()

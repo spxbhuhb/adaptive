@@ -13,6 +13,7 @@ object Strings {
     const val DESCRIPTOR_PACKAGE = "fun.adaptive.adat.descriptor"
     const val ADAT_METADATA = "adatMetadata"
     const val DECODE_METADATA = "decodeMetadata"
+    const val GENERATE_DESCRIPTORS = "generateDescriptors"
 
     const val EXPOSED_PACKAGE = "fun.adaptive.exposed"
     const val JETBRAINS_EXPOSED_PACKAGE = "org.jetbrains.exposed.sql"
@@ -29,6 +30,7 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_CONTEXT = "adatContext".name()
     val ADAT_METADATA = "adatMetadata".name()
     val ADAT_WIREFORMAT = "adatWireFormat".name()
+    val ADAT_DESCRIPTORS = "adatDescriptors".name()
     val WIREFORMAT_NAME = "wireFormatName".name()
 
     val DESCRIPTOR = "descriptor".name()
@@ -60,8 +62,6 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
 object FqNames : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_ANNOTATION = FqName("fun.adaptive.adat.Adat")
 
-    val DESCRIPTOR_EXPECT = "ConstraintExpect".fqName { Strings.DESCRIPTOR_PACKAGE }
-
     val EXPOSED_ADAT_SET = Strings.EXPOSED_ADAT_SET.fqName { Strings.EXPOSED_PACKAGE }
 }
 
@@ -77,6 +77,7 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
 
     val ADAT_CLASS_METADATA = "AdatClassMetadata".classId { Strings.METADATA_PACKAGE.fqName() }
     val ADAT_CLASS_WIREFORMAT = "AdatClassWireFormat".classId { Strings.WIREFORMAT_PACKAGE.fqName() }
+    val ADAT_DESCRIPTOR_SET = "AdatDescriptorSet".classId { Strings.DESCRIPTOR_PACKAGE.fqName() }
 
     val WIREFORMAT_REGISTRY = "WireFormatRegistry".classId { "fun.adaptive.wireformat".fqName() }
 
@@ -92,7 +93,10 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
 
 object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val exposed = Strings.EXPOSED_PACKAGE.fqName()
+    val descriptorApi = "fun.adaptive.adat.descriptor.api".fqName()
+
     val asCommon = "asCommon".callableId { exposed }
     val asEntityID = "asEntityID".callableId { exposed }
     val asJava = "asJava".callableId { exposed }
+    val properties = "properties".callableId { descriptorApi }
 }

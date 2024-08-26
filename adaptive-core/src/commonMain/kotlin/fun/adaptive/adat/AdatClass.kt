@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.adat
 
-import `fun`.adaptive.adat.descriptor.result.InstanceValidationResult
+import `fun`.adaptive.adat.descriptor.InstanceValidationResult
 import `fun`.adaptive.foundation.binding.AdaptivePropertyProvider
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.unsupported
@@ -24,17 +24,24 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
     fun isImmutable() =
         getMetadata().isImmutable
 
-    fun description() = Unit
+    fun descriptor() = Unit
 
     fun validate() {
+
+        val result = InstanceValidationResult()
+
+        for (descriptorSet in adatCompanion.adatDescriptors) {
+            val value = genGetValue(descriptorSet.property.index)
+            for (descriptor in descriptorSet.descriptors) {
+                descriptor.validate(this, value, descriptorSet.property, result)
+            }
+        }
+
         val context = adatContext
         if (context == null) {
-            adatContext = AdatContext(
-                null, null, null, null,
-                InstanceValidationResult()
-            )
+            adatContext = AdatContext(null, null, null, null, result)
         } else {
-            context.validationResult = InstanceValidationResult()
+            context.validationResult = result
         }
     }
 

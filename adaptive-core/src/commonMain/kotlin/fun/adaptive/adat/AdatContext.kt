@@ -1,6 +1,6 @@
 package `fun`.adaptive.adat
 
-import `fun`.adaptive.adat.descriptor.result.InstanceValidationResult
+import `fun`.adaptive.adat.descriptor.InstanceValidationResult
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
 import `fun`.adaptive.adat.store.AdatStore
 

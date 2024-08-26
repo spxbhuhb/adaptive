@@ -8,22 +8,21 @@ import `fun`.adaptive.adat.metadata.AdatDescriptorMetadata
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
 import `fun`.adaptive.registry.Registry
 
-open class DescriptorFactory : Registry<NamedDescriptorFactory>() {
+open class DescriptorFactory : Registry<(AdatDescriptorMetadata) -> AdatDescriptor>() {
 
     fun add(
         key: String,
-        buildFun: (propertyMetadata: AdatPropertyMetadata, descriptorMetadata: AdatDescriptorMetadata) -> AdatDescriptorImpl
+        buildFun: (descriptorMetadata: AdatDescriptorMetadata) -> AdatDescriptor
     ) {
-        set(key, NamedDescriptorFactory(key, buildFun))
+        set(key, buildFun)
     }
 
     fun newInstance(
         key: String,
-        propertyMetadata: AdatPropertyMetadata,
         descriptorMetadata: AdatDescriptorMetadata
-    ): AdatDescriptorImpl {
-        return checkNotNull(get(key)) { "Unknown descriptor type: $key, known descriptor types: ${entries.keys}" }
-            .build(propertyMetadata, descriptorMetadata)
+    ): AdatDescriptor {
+        val buildFun = checkNotNull(get(key)) { "Unknown descriptor type: $key, known descriptor types: ${entries.keys}" }
+        return buildFun(descriptorMetadata)
     }
 
 }

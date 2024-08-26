@@ -4,4 +4,5 @@
 
 package `fun`.adaptive.adat
 
+@Target(AnnotationTarget.CLASS)
 annotation class Adat
