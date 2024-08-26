@@ -22,10 +22,20 @@ class ActualBrowserCanvas : ActualCanvas {
 
     var saveIds = mutableListOf<Long>()
 
+    var currentWidth = 0.0
+    var currentHeight = 0.0
+
     fun setSize(width: Double, height: Double) {
+        if (width == currentWidth && height == currentHeight) return
+
+        currentWidth = width
+        currentHeight = height
+
         val scale = window.devicePixelRatio
+
         receiver.width = (width * scale).toInt()
         receiver.height = (height * scale).toInt()
+
         context.scale(scale, scale)
     }
 

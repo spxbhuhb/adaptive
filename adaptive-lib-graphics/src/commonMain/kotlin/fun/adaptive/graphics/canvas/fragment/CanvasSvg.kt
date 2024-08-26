@@ -23,7 +23,7 @@ open class CanvasSvg(
     index: Int
 ) : CanvasFragment(adapter, parent, index, 1, 2) {
 
-    val svgAdapter = SvgAdapter(adapter, canvas)
+    val svgAdapter = SvgAdapter(adapter, canvas).also { it.trace = adapter.trace }
 
     var resource : DrawableResource
         get() = state[0].checkIfInstance()
@@ -43,7 +43,7 @@ open class CanvasSvg(
     }
 
     override fun draw() {
-
+        if (trace) trace("draw")
     }
 
 }

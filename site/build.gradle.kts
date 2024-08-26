@@ -60,6 +60,7 @@ kotlin {
             implementation(libs.adaptive.lib.auth)
             implementation(libs.adaptive.lib.ktor)
             implementation(libs.adaptive.ui)
+            implementation(libs.adaptive.lib.graphics)
         }
         jvmMain.dependencies {
             implementation(libs.adaptive.lib.exposed)

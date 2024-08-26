@@ -4,11 +4,15 @@
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
+import `fun`.adaptive.foundation.instruction.trace
 import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
+import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.DrawableResource
 import `fun`.adaptive.site.*
 import `fun`.adaptive.ui.api.alignItems
+import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.color
@@ -25,6 +29,7 @@ import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.image
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.maxWidth
+import `fun`.adaptive.ui.api.mediaMetrics
 import `fun`.adaptive.ui.api.noSelect
 import `fun`.adaptive.ui.api.noTextWrap
 import `fun`.adaptive.ui.api.onClick
@@ -33,22 +38,20 @@ import `fun`.adaptive.ui.api.paddingBottom
 import `fun`.adaptive.ui.api.paddingLeft
 import `fun`.adaptive.ui.api.paddingRight
 import `fun`.adaptive.ui.api.paddingTop
+import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.size
+import `fun`.adaptive.ui.api.slot
 import `fun`.adaptive.ui.api.spaceBetween
+import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.textColor
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.instruction.decoration.Color
-import `fun`.adaptive.ui.instruction.layout.AlignItems
 import `fun`.adaptive.ui.instruction.layout.AlignSelf
 import `fun`.adaptive.ui.platform.media.MediaMetrics
-import `fun`.adaptive.ui.api.mediaMetrics
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.slot
-import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.platform.withJsResources
 
 fun main() {
@@ -56,7 +59,7 @@ fun main() {
     //withJsonWebSocketTransport(window.location.origin)
     withJsResources()
 
-    browser { adapter ->
+    browser(CanvasFragmentFactory, SvgFragmentFactory) { adapter ->
         with(adapter.defaultTextRenderData) {
             fontName = "Noto Sans"
             fontSize = 16.sp
@@ -66,7 +69,7 @@ fun main() {
         val background = if (media.isLight) lightBackground else darkBackground
 
         grid {
-            rowTemplate(48.dp, 1.fr) .. maxSize .. background
+            maxSize .. rowTemplate(48.dp, 1.fr) .. background
 
             header(media)
             content(media)
@@ -78,14 +81,13 @@ fun main() {
 fun header(media: MediaMetrics) {
     row {
         maxWidth .. height { 48.dp } .. spaceBetween .. alignItems.center .. darkBackground
-        paddingLeft { 24.dp } .. paddingRight { 24.dp }
+        paddingLeft { 16.dp } .. paddingRight { 24.dp }
         fixed .. zIndex { 1 }
 
         box {
             width { 24.dp } .. height { 24.dp }
             onClick { }
-
-            svg(Res.drawable.menu)
+            svg(Res.drawable.menu) .. trace(".*")
         }
 
         text("Adaptive", textColor(white))
@@ -104,7 +106,7 @@ fun content(media: MediaMetrics) {
         slot(mainContent) { cards() }
 
         text("adaptive.fun does not use cookies") ..
-            paddingTop { 32.dp } .. paddingBottom { 32.dp } .. AlignSelf.Companion.center .. textColor
+            paddingTop { 32.dp } .. paddingBottom { 32.dp } .. alignSelf.center .. textColor
     }
 }
 
@@ -112,7 +114,7 @@ fun content(media: MediaMetrics) {
 fun cards() {
     row {
         maxWidth
-        AlignItems.Companion.topCenter
+        alignItems.topCenter
 
         flowBox {
             flowItemLimit { 4 }

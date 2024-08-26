@@ -26,7 +26,8 @@ class SvgRoot(
         val height = renderData.height
         val width = renderData.width
 
-        println("$viewBox $width $height")
+        if (trace) trace("draw", "$viewBox $width $height")
+
         if (viewBox != null && width != null && height != null) {
             val scaleX = width / viewBox.width
             val scaleY = height / viewBox.height
@@ -37,7 +38,7 @@ class SvgRoot(
             canvas.transform(Translate(translateX, translateY))
             canvas.transform(Scale(scaleX, scaleY))
 
-            println("$translateX $translateY $scaleX $scaleY")
+            if (trace) trace("draw", "$translateX $translateY $scaleX $scaleY")
         }
 
         super.draw()

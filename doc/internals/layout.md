@@ -88,7 +88,7 @@ When a top level container is added to the adapter (`AdaptiveAdapter.addActualRo
 
 `instructed` values
 
-- trump everything else **when has meaning in the layout type**
+- trump everything else **when have meaning in the layout type**
 - when a value is instructed, that one is used, no matter the calculations
 - if only one value is instructed (width for example), the others (height for example) will be computed
 
