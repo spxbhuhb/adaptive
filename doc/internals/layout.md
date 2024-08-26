@@ -165,6 +165,16 @@ The layout process starts with calling `computeLayout`:
 
 - places the fragment relative to its container
 
+## Resize
+
+Resizing the viewport is important mostly for browser based interfaces, mobile applications
+are fixed size in general. (Actually, this is not true, but we can work with it.)
+
+- `AuiAdapter` for browser adds a resize observer to its root container
+- whenever the observer reports a size change all root fragments
+  - re-run the layout calculation by calling `computeLayout`
+  - re-place the layout by calling `placeLayout`
+
 ## Type dependent calculations
 
 ### Intrinsic UI fragments

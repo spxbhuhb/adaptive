@@ -87,7 +87,7 @@ fun header(media: MediaMetrics) {
         box {
             width { 24.dp } .. height { 24.dp }
             onClick { }
-            svg(Res.drawable.menu) .. trace(".*")
+            svg(Res.drawable.menu)
         }
 
         text("Adaptive", textColor(white))
@@ -101,12 +101,15 @@ fun content(media: MediaMetrics) {
     val textColor = if (media.isLight) darkTextColor else lightTextColor
 
     column {
-        maxWidth .. paddingTop { 32.dp } .. background
+        maxWidth .. paddingTop { 32.dp } .. background .. trace(".*")
 
         slot(mainContent) { cards() }
 
         text("adaptive.fun does not use cookies") ..
-            paddingTop { 32.dp } .. paddingBottom { 32.dp } .. alignSelf.center .. textColor
+            paddingTop { 32.dp } ..
+            paddingBottom { 32.dp } ..
+            alignSelf.center ..
+            textColor
     }
 }
 

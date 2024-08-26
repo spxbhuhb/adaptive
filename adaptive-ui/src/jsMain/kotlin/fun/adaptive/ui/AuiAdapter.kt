@@ -198,7 +198,6 @@ class AuiAdapter(
         MediaMetrics(r.width, r.height, defaultResourceEnvironment.theme, manualTheme)
     }
 
-    // FIXME disconnect media observer on adapter dispose
     val resizeObserver = ResizeObserver { entries, _ ->
         entries.firstOrNull()?.let {
             mediaMetrics = MediaMetrics(
@@ -228,4 +227,13 @@ class AuiAdapter(
     // ------------------------------------------------------------------------------
 
     override val navSupport = NavSupport(this)
+
+    // ------------------------------------------------------------------------------
+    // Cleanup
+    // ------------------------------------------------------------------------------
+
+    // TODO adapter stop mechanism
+    fun stop() {
+        resizeObserver.disconnect()
+    }
 }

@@ -7,7 +7,6 @@ package `fun`.adaptive.ui
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
-import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import `fun`.adaptive.utility.firstOrNullIfInstance
 

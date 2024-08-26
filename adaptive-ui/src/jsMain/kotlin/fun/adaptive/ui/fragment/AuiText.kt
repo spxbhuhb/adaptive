@@ -36,13 +36,7 @@ open class AuiText(
 
             if (receiver.textContent != content) {
                 receiver.textContent = content
-
-//                if (uiAdapter.autoSizing) {
-//                  renderData.innerWidth = Double.NaN
-//                  renderData.innerHeight = Double.NaN
-//                }
                 measureText(content)
-//                }
             }
         }
 

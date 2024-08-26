@@ -27,6 +27,10 @@ class AuiRenderData(
     ) : this(adapter) {
         instructions.forEach { it.apply(this) }
         computeSurrounding()
+        innerWidth = previous?.innerWidth
+        innerHeight = previous?.innerHeight
+        finalWidth = previous?.finalWidth ?: 0.0
+        finalHeight = previous?.finalHeight ?: 0.0
         layoutFragment = previous?.layoutFragment
     }
 
