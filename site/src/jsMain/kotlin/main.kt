@@ -116,8 +116,7 @@ fun content(media: MediaMetrics) {
 @Adaptive
 fun cards() {
     row {
-        maxWidth
-        alignItems.topCenter
+        maxWidth .. alignItems.topCenter
 
         flowBox {
             flowItemLimit { 4 }

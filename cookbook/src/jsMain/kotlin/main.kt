@@ -29,18 +29,18 @@ import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.input
+import `fun`.adaptive.ui.api.maxHeight
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.navClick
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.paddingLeft
 import `fun`.adaptive.ui.api.route
 import `fun`.adaptive.ui.api.rowTemplate
+import `fun`.adaptive.ui.api.slot
+import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.instruction.*
-import `fun`.adaptive.ui.api.mediaMetrics
-import `fun`.adaptive.ui.api.slot
-import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.platform.withJsResources
 
 val cookbookContent = name("cookbook-content")
@@ -56,10 +56,8 @@ fun main() {
             fontSize = 16.sp
         }
 
-        val media = mediaMetrics()
-
         grid {
-            height { media.viewHeight.dp } .. width { media.viewWidth.dp } .. padding { 16.dp } .. gap { 16.dp }
+            maxHeight .. padding { 16.dp } .. gap { 16.dp }
             rowTemplate(40.dp, 1.fr)
 
             text("Cookbook")
