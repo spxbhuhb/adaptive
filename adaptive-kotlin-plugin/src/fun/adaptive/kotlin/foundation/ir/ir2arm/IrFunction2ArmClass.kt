@@ -15,6 +15,7 @@ import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
+import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.types.IrType
@@ -552,11 +553,18 @@ class IrFunction2ArmClass(
             ArmImplicitStateVariable(armClass, 1, closure.size + 1, irNull())
         )
 
-        armSelect.branches += statement.branches.map { irBranch ->
+        armSelect.branches += statement.branches.mapNotNull { irBranch ->
+            val branchResult = irBranch.result
+
+            if (branchResult is IrCallImpl) {
+                val owner = branchResult.symbol.owner
+                if (owner.name.asString() == "noWhenBranchMatchedException") return@mapNotNull null
+            }
+
             ArmBranch(
                 armClass,
                 ArmExpression(armClass, irBranch.condition, irBranch.dependencies()),
-                withClosure(selectState) { transformStatement(irBranch.result) } ?: placeholder(irBranch.result)
+                withClosure(selectState) { transformStatement(branchResult) } ?: placeholder(branchResult)
             )
         }
 

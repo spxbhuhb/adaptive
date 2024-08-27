@@ -511,6 +511,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testWhenSubjectConditions() {
         runTest("testData/box/foundation/select/whenSubjectConditions.kt");
       }
+
+      @Test
+      @TestMetadata("whenSubjectEnum.kt")
+      public void testWhenSubjectEnum() {
+        runTest("testData/box/foundation/select/whenSubjectEnum.kt");
+      }
     }
 
     @Nested
