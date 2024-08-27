@@ -341,6 +341,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
+      @TestMetadata("outerAccessor.kt")
+      public void testOuterAccessor() {
+        runTest("testData/box/foundation/instruction/outerAccessor.kt");
+      }
+
+      @Test
       @TestMetadata("outerBasic.kt")
       public void testOuterBasic() {
         runTest("testData/box/foundation/instruction/outerBasic.kt");

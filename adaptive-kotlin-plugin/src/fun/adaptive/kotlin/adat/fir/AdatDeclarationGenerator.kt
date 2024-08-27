@@ -102,10 +102,24 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
     }
 
     override fun generateConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> =
-        when {
-            context.isAdatClass -> generateClassConstructors(context)
-            context.isAdatCompanion -> generateCompanionConstructor(context)
-            else -> emptyList()
+        try {
+            when {
+                context.isAdatClass -> generateClassConstructors(context)
+                context.isAdatCompanion -> generateCompanionConstructor(context)
+                else -> emptyList()
+            }
+        } catch (_ : IllegalArgumentException) {
+            // This happens when there is no empty constructor yet, I don't really know what to do with this one.
+            // TODO investigate empty constructor plugin problem
+
+            // java.lang.IllegalArgumentException: Required value was null.
+            //	 at org.jetbrains.kotlin.fir.plugin.ConstructorBuildingContextKt.generateNoArgDelegatingConstructorCall(ConstructorBuildingContext.kt:155)
+            //	 at org.jetbrains.kotlin.fir.plugin.ConstructorBuildingContextKt.createConstructor(ConstructorBuildingContext.kt:129)
+            //	 at org.jetbrains.kotlin.fir.plugin.ConstructorBuildingContextKt.createConstructor$default(ConstructorBuildingContext.kt:116)
+            //	  at fun.adaptive.kotlin.adat.fir.AdatDeclarationGenerator.generateCompanionConstructor(AdatDeclarationGenerator.kt:128)
+            //	 at fun.adaptive.kotlin.adat.fir.AdatDeclarationGenerator.generateConstructors(AdatDeclarationGenerator.kt:105)
+
+            emptyList()
         }
 
     private fun generateClassConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> {

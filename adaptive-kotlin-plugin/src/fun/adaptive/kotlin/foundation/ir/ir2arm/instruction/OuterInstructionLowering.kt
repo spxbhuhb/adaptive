@@ -19,15 +19,21 @@ class OuterInstructionLowering(
 ) : IrElementTransformerVoid(), AdaptiveAnnotationBasedExtension {
 
     override fun visitTypeOperator(expression: IrTypeOperatorCall): IrExpression {
-        if (expression.operator != IrTypeOperator.IMPLICIT_COERCION_TO_UNIT) return expression
+        pluginContext.debug { "\n\nouter instruction lowering.1: ${expression.dumpKotlinLike()}" }
+
+        if (expression.operator != IrTypeOperator.IMPLICIT_COERCION_TO_UNIT) {
+            return super.visitTypeOperator(expression)
+        }
 
         // TODO make outer instruction recognition better, this is quite dirty I think
         val argument = expression.argument
 
-        if (argument !is IrCall) return expression
+        if (argument !is IrCall)  {
+            return super.visitTypeOperator(expression)
+        }
 
-        val extensionReceiver = argument.extensionReceiver ?: return expression
-        if (! extensionReceiver.type.isSubtypeOfClass(pluginContext.adaptiveFragmentClass)) return expression
+        val extensionReceiver = argument.extensionReceiver ?: return super.visitTypeOperator(expression)
+        if (! extensionReceiver.type.isSubtypeOfClass(pluginContext.adaptiveFragmentClass)) return super.visitTypeOperator(expression)
 
         val (renderCall, instructions) = flattenInstructionCalls(argument)
 
@@ -35,7 +41,7 @@ class OuterInstructionLowering(
 
         addInstructions(renderCall, valueParameters, instructions)
 
-        return renderCall
+        return super.visitCall(renderCall)
     }
 
     /**
