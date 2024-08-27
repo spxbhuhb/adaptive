@@ -2,18 +2,18 @@
 
 1. Clone the repo
 2. Update submodules (this downloads pictures for site)
-    3. `git submodule update --init --recursive`
-1. Add `local.propeties` file to
+    1. `git submodule update --init --recursive`
+3. Add `local.propeties` file to
     1. `adaptive-core`
    2. `adaptive-ui`
-2. Run the `build` task of the root project.
+4. Run the `build` task of the root project.
 
 > [!Note]
 >
 > If you are building with iOS targets you have to run the build on Mac OS X. This is a requirement from Apple,
 > see [Multiplatform Setup](https://www.jetbrains.com/help/kotlin-multiplatform-dev/multiplatform-setup.html) for details.
 >
-> To disable iOS targets set the version of `ios-support` to `none` in [libs.versions.toml](gradle/libs.versions.toml). Any
+> To disable iOS targets set the version of `ios-support` to `none` in [libs.versions.toml](/gradle/libs.versions.toml). Any
 > value other than `none` adds support for iOS.
 >
 > This is also useful when you don't want to wait for the iOS linking during development.
@@ -26,11 +26,11 @@ each included project:
 - `publishToMavenLocal`
 - `kotlinUpgradeYarnLock`
 
-Everything uses the dependencies defined in [libs.versions.toml](gradle/libs.versions.toml).
+Everything uses the dependencies defined in [libs.versions.toml](/gradle/libs.versions.toml).
 
 To bump Adaptive version number:
 
-- change `adaptive` version in  [libs.versions.toml](gradle/libs.versions.toml)
+- change `adaptive` version in  [libs.versions.toml](/gradle/libs.versions.toml)
 - change `PLUGIN_VERSION` in [AdaptiveGradlePlugin](/adaptive-gradle-plugin/src/main/kotlin/fun/adaptive/gradle/AdaptiveGradlePlugin.kt) (also
   see https://github.com/spxbhuhb/adaptive/issues/7)
 

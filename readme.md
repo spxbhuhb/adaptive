@@ -15,8 +15,8 @@
 * [Status](./doc/status.md)
 * [Getting Started](./doc/getting-started.md)
 * [Tools](./doc/tools.md)
-* [User Interface](./doc/ui/README.md)
-* [Server](./doc/server/README.md)
+* [User Interface](./doc/ui/readme.md)
+* [Server](./doc/server/readme.md)
 * [Impressum](./doc/impressum.md)
 * [Deep Waters](./doc/internals)
 
@@ -31,7 +31,8 @@
 >   3. Kotlin
 >   4. Enable K2 mode
 >
-> 2. Enable 3rd party compiler plugins in the IntelliJ registry
+> 
+> 1. Enable 3rd party compiler plugins in the IntelliJ registry
 >   1. https://youtrack.jetbrains.com/issue/KTIJ-29248/K2-IDE-Enable-non-bundled-compiler-plugins-in-IDE-by-default
 >   2. `Shift-Shift` 
 >   3. select `Actions` on top

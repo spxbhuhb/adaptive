@@ -8,6 +8,3 @@
 Adaptive needs a simple Kotlin Multiplatform project. I suggest to use the browser only setup for
 trying out things first and then advance to Android and iOS.
 
-## Browser only
-
-[Download] the

@@ -24,7 +24,7 @@ If we double the bytes needed per character (Unicode), that is 625 KB.
 
 ### Generated code size
 
-These calculations are based on the code I copied from Compose in May 2024. Most probably it will get optimized,
+**These calculations are based on the code I copied from Compose in May 2024.** Most probably it will get optimized,
 but it is good to have some pointers to base our future development on.
 
 Using the following string resource:

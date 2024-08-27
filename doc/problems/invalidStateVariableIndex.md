@@ -2,7 +2,6 @@
 
 Related documentation:
 
-* [Rendering Transformation](../internals/rendering-transformation.md)
 * [Higher Order Functions](../internals/mechanisms.md#higher-order-arguments)
 * [Problems with manualImplementation](./manualImplementation.md)
  

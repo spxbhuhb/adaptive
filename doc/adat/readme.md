@@ -14,18 +14,10 @@ class SomeClass(
 
 Subtopics:
 
+* [Descriptor and validation](descriptor-and-validation.md)
 * [Immutable adat classes](immutable-adat-classes.md)
 * [Integration with Exposed](exposed.md)
 
-> [!NOTE]
->
-> As of IntelliJ 2024.1 you have to add `: AdatClass<TestAdat>` to get rid of the syntax error in IntelliJ.
-> This is purely an IDE thing, you can actually compile the code without adding the supertype.
->
-> As far as I know multiplatform support for FIR comes in 2024.2 (it's not in EAP yet) and then the error
-> will go away.
->
->
 These classes are similar to `data` classes in concept but offer many other functions in addition:
 
 * metadata (a.k.a. reflection) available during runtime, including
@@ -38,7 +30,6 @@ These classes are similar to `data` classes in concept but offer many other func
 * get/set fields by name or index
 * serializable (with WireFormat)
 * empty constructor, with sensible defaults
-* data arithmetics (or, and, etc.) - haven't finished the implementation yet
 * utility functions:
 
 | Function      | What it does                                                                                                                         |
@@ -68,6 +59,7 @@ What **IS** generated:
   * properties:
     * `adatMetadata`
     * `adatWireFormat`
+    * `adatDescriptors`
     * `wireFormatName`
   * functions:
     * `newInstance()`
@@ -106,7 +98,7 @@ Metadata of the class above:
     * `3` - `1 + 2`
     * `4` - the property value is an adat class
 * i = index of the property
-* d = description (constraints and additional information, see [Description](#description)).
+* d = description (constraints and additional information, see [Descriptor and validation](descriptor-and-validation.md)).
 
 ```json
 {
@@ -136,36 +128,5 @@ Metadata of the class above:
       "d": []
     }
   ]
-}
-```
-
-## Description
-
-> [!NOTE]
->
-> As of now, complex constraints are not supported. They are not particularly complex to add, but I don't need
-> them right now, and there is so much to do.
->
-> Also, the available descriptors are quite limited for now, I'll add them as needed.
->
-
-With the `description` function you can describe the constraints of the data or provide additional information.
-
-```kotlin
-@Adat
-class TestAdat(
-  var someInt: Int,
-  var someBoolean: Boolean,
-  var someIntListSet: Set<List<Int>>
-) {
-
-  init {
-    description {
-      someInt minimum 5 maximum 10 default 7
-      someBoolean default true
-      someIntListSet default setOf(listOf(12, 13))
-    }
-  }
-
 }
 ```

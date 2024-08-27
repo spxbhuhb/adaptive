@@ -1,6 +1,6 @@
 # Immutable Adat Classes
 
-An [adat class](README.md) is immutable when all of its properties are immutable.
+An [adat class](readme.md) is immutable when all of its properties are immutable.
 
 > [!IMPORTANT]
 >

@@ -2,7 +2,6 @@
 
 Related documentation:
 
-* [Rendering Transformation](../internals/rendering-transformation.md)
 * [Problems with manualImplementation](./manualImplementation.md)
 
 Possible causes:

@@ -92,13 +92,13 @@ The language and country codes are case-sensitive.
 
 ### Sources
 
-Check these files to see how the given qualifier is retrieved on the given platoform:
+Check these files to see how the given qualifier is retrieved on the given platform:
 
-| Platform | Class                                                                                                                                  |
-|----------|----------------------------------------------------------------------------------------------------------------------------------------|
-| android  | [ResourceEnvironment.android.kt](/adaptive-core/src/androidMain/kotlin/fun/adaptive/resource/ResourceEnvironment.android.kt) |
-| ios      | [ResourceEnvironment.apple.kt](/adaptive-core/src/appleMain/kotlin/fun/adaptive/resource/ResourceEnvironment.apple.kt)       |
-| browser  | [ResourceEnvironment.js.kt](/adaptive-core/src/jsMain/kotlin/fun/adaptive/resource/ResourceEnvironment.js.kt)                |
+| Platform | Class                                                                                                           |
+|----------|-----------------------------------------------------------------------------------------------------------------|
+| android  | [withAndroidResources.kt](/adaptive-ui/src/androidMain/kotlin/fun/adaptive/ui/platform/withAndroidResources.kt) |
+| ios      | [withIosResources.kt](/adaptive-ui/src/iosMain/kotlin/fun/adaptive/ui/platform/withIosResources.kt)             |
+| browser  | [withJsResources.kt](/adaptive-ui/src/jsMain/kotlin/fun/adaptive/ui/platform/withJsResources.kt)                |
 
 ## Res class
 

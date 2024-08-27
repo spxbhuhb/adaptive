@@ -45,7 +45,7 @@ class ItemService : ServiceImpl<ItemService>, ItemApi {
 }
 ```
 
-`AdatFragment` turns the [Adat](../adat/README.md) class into an `AdaptiveFragment`, so it can be used
+`AdatFragment` turns the [Adat](../adat/readme.md) class into an `AdaptiveFragment`, so it can be used
 as a fragment. This is necessary as the fragment store synchronizes fragment trees.
 
 `ItemApi` is the API we use to get the global ID of the fragment store we want to connect.

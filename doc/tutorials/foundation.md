@@ -51,7 +51,7 @@ We call these *internal state variables*.
 
 The state of the fragment below consists of the `time` internal state variable.
 
-`poll` is a [producer](producer.md), it gets the current time each second and sets `time`
+`poll` is a [producer](../foundation/producer.md), it gets the current time each second and sets `time`
 to the value. As a result, the text shown is updated to the current time each second.
 
 ```kotlin

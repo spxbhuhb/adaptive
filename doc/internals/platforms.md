@@ -13,7 +13,7 @@ Platform specific files and functions:
 * [lock](/adaptive-core/src/commonMain/kotlin/fun/adaptive/utility/lock.kt) - `getLock`
 * [process](/adaptive-core/src/commonMain/kotlin/fun/adaptive/utility/process.kt) - `exitProcessCommon`
 * [random](/adaptive-core/src/commonMain/kotlin/fun/adaptive/utility/random.kt) - `fourRandomInt`
-* [logger](/adaptive-core/src/commonMain/kotlin/fun/adaptive/log/logger.kt) - `getLogger`
+* [logger](/adaptive-core/src/commonMain/kotlin/fun/adaptive/log/getLogger.kt) - `getLogger`
 
 | Platform   | `clock`                  | `lock`            | `process`                                   | `random`                        | `logger`                   |
 |------------|--------------------------|-------------------|---------------------------------------------|---------------------------------|----------------------------|
