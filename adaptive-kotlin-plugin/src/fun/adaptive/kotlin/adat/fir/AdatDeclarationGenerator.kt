@@ -277,7 +277,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
             }
 
             Names.TO_STRING -> {
-                if (context.owner.declarationSymbols.any { it is FirNamedFunctionSymbol && it.name.identifier == "toString" }) {
+                if (context.owner.declarationSymbols.any { it is FirNamedFunctionSymbol && ! it.name.isSpecial && it.name.identifier == "toString" }) {
                     emptyList()
                 } else {
                     listOf(
