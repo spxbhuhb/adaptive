@@ -15,7 +15,6 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.instruction.Trace
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.alignItems
@@ -56,13 +55,15 @@ fun main() {
             fontSize = 16.sp
         }
 
+        adapter.theme["AuiInput"] = inputStyle
+
         grid {
             maxHeight .. padding { 16.dp } .. gap { 16.dp }
             rowTemplate(40.dp, 1.fr)
 
             text("Cookbook")
 
-            slot(cookbookContent, Trace(".*")) {
+            slot(cookbookContent) {
                 route { authMain() }
                 route { layoutMobileMain() }
                 route { layoutDesktopMain() }
@@ -80,7 +81,7 @@ fun recipeList() {
     column {
         gap { 16.dp }
 
-        input { filter } .. inputStyle .. width { 200.dp }
+        input { filter } .. width { 200.dp }
 
         flowBox {
             gap { 16.dp }

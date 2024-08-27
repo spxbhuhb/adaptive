@@ -5,6 +5,7 @@
 package `fun`.adaptive.ui
 
 import `fun`.adaptive.foundation.*
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.resource.ThemeQualifier
 import `fun`.adaptive.ui.api.normalFont
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
@@ -136,6 +137,15 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : AdaptiveAdapter {
     abstract fun toDp(value: Double): DPixel
 
     abstract fun toPx(sPixel: SPixel): Double
+
+    // ------------------------------------------------------------------------------
+    // Theme support
+    // ------------------------------------------------------------------------------
+
+    val theme = mutableMapOf<String, Array<out AdaptiveInstruction>>()
+
+    fun themeFor(fragment: AbstractAuiFragment<RT>): Array<out AdaptiveInstruction> =
+        theme[fragment::class.simpleName] ?: emptyArray<AdaptiveInstruction>()
 
     // ------------------------------------------------------------------------------
     // Media metrics support

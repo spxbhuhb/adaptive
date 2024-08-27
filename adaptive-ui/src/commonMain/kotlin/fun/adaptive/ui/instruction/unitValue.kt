@@ -134,7 +134,7 @@ class Fraction(
 // Surrounding
 // -----------------------------------------------------------
 
-interface Surrounding{
+interface Surrounding {
     val top: DPixel?
     val right: DPixel?
     val bottom: DPixel?

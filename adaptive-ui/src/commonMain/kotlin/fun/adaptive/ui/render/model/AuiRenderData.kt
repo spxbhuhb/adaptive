@@ -16,16 +16,20 @@ import `fun`.adaptive.ui.fragment.layout.RawSurrounding
  * @property innerWidth the intrinsic width of the inner content of the fragment without padding, border width and margin
  * @property innerHeight the intrinsic height of the inner content of the fragment without padding, border width and margin
  */
-class AuiRenderData(
+data class AuiRenderData(
     val adapter: AbstractAuiAdapter<*, *>
 ) : Traceable {
 
     constructor(
         adapter: AbstractAuiAdapter<*, *>,
-        instructions: Array<out AdaptiveInstruction>,
-        previous: AuiRenderData?
+        previous: AuiRenderData?,
+        vararg instructionSets: Array<out AdaptiveInstruction>,
     ) : this(adapter) {
-        instructions.forEach { it.apply(this) }
+        for (instructionSet in instructionSets) {
+            for (instruction in instructionSet) {
+                instruction.apply(this)
+            }
+        }
         computeSurrounding()
         innerWidth = previous?.innerWidth
         innerHeight = previous?.innerHeight

@@ -38,7 +38,7 @@ open class AuiInput(
 
         patchInstructions()
 
-        if (haveToPatch(dirtyMask, 1)) {
+        if (haveToPatch(dirtyMask, 2)) {
             receiver.value = b.value
         }
 

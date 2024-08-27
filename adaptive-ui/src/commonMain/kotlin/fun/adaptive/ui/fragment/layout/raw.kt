@@ -10,8 +10,6 @@ import `fun`.adaptive.ui.instruction.decoration.Border
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.decoration.CornerRadius
 import `fun`.adaptive.ui.instruction.decoration.DropShadow
-import `fun`.adaptive.ui.instruction.layout.Position
-import `fun`.adaptive.ui.instruction.layout.Size
 
 operator fun Double.plus(other: Double?): Double =
     if (other == null) this else other + this
@@ -25,11 +23,7 @@ data class RawFrame(
     val left : Double,
     val width : Double,
     val height : Double
-) {
-    companion object {
-        val AUTO = RawFrame(Double.NaN, Double.NaN, Double.NaN, Double.NaN)
-    }
-}
+)
 
 /**
  * Position where the values are actual device dependent pixel values. All measurements and
@@ -38,10 +32,7 @@ data class RawFrame(
 data class RawPosition(
     val top: Double,
     val left: Double
-) {
-    constructor(position: Position, adapter: AbstractAuiAdapter<*, *>) :
-        this(position.top.toPx(adapter), position.left.toPx(adapter))
-}
+)
 
 /**
  * Size where the values are actual device dependent pixel values. All measurements and
@@ -50,14 +41,7 @@ data class RawPosition(
 data class RawSize(
     val width: Double,
     val height: Double
-) {
-    constructor(point: Size, adapter: AbstractAuiAdapter<*, *>) :
-        this(point.width.toPx(adapter), point.height.toPx(adapter))
-
-    companion object {
-        val UNKNOWN = RawSize(Double.NaN, Double.NaN)
-    }
-}
+)
 
 data class RawSurrounding(
     val top: Double,

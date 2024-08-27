@@ -27,6 +27,10 @@ abstract class AbstractAuiFragment<RT>(
 
     var previousRenderData = adapter.emptyRenderData
 
+    /**
+     * The initial render data is read from the adapter. This makes it possible to apply
+     * global styling by fragment type.
+     */
     var renderData = AuiRenderData(adapter)
 
     /**
@@ -49,7 +53,7 @@ abstract class AbstractAuiFragment<RT>(
     open fun patchInstructions() {
         if (instructionIndex != - 1 && haveToPatch(dirtyMask, 1 shl instructionIndex)) {
             previousRenderData = renderData
-            renderData = AuiRenderData(uiAdapter, instructions, previousRenderData)
+            renderData = AuiRenderData(uiAdapter, previousRenderData, uiAdapter.themeFor(this), instructions)
 
             if (renderData.layout != previousRenderData.layout) {
                 renderData.layoutFragment?.layoutChange(this)
