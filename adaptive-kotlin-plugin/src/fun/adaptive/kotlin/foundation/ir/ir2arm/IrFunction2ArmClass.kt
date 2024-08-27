@@ -4,6 +4,7 @@
 package `fun`.adaptive.kotlin.foundation.ir.ir2arm
 
 import `fun`.adaptive.kotlin.common.AbstractIrBuilder
+import `fun`.adaptive.kotlin.common.removeCoercionToUnit
 import `fun`.adaptive.kotlin.foundation.ADAPTIVE_STATE_VARIABLE_LIMIT
 import `fun`.adaptive.kotlin.foundation.FqNames
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
@@ -138,7 +139,7 @@ class IrFunction2ArmClass(
 
             is IrReturn -> transformReturn(statement)
 
-            is IrTypeOperatorCall -> transformStatement(statement.removeImplicitCoercion())
+            is IrTypeOperatorCall -> transformStatement(statement.removeCoercionToUnit())
 
             else -> throw IllegalStateException("invalid rendering statement: ${statement.dumpKotlinLike()}\n${statement.dump()}")
         }
@@ -206,7 +207,7 @@ class IrFunction2ArmClass(
         check(irLoopVariable is IrVariable)
 
         // TODO think for loop check details
-        val block = body.statements[1].removeImplicitCoercion()
+        val block = body.statements[1].removeCoercionToUnit()
         check((block is IrBlock && block.origin == null) || block is IrCall) { "not a block in loop: ${statement.dumpKotlinLike()}\n${statement.dump()}" }
 
         val iterator = transformDeclaration(irIterator)
@@ -502,8 +503,8 @@ class IrFunction2ArmClass(
         val body = checkNotNull(expression.function.body) { "detach: missing function body" }
         check(body.statements.size == 1) { "detach: non-single-statement body" }
 
-        val call = body.statements.first()
-        check(call is IrCall) { "detach: non-call body statement" }
+        val call = body.statements.first().removeCoercionToUnit()
+        check(call is IrCall) { "detach: non-call body statement ${call.dumpKotlinLike()}" }
         check(call.isDirectAdaptiveCall) { "detach: not a direct adaptive call" }
 
         val armCall = transformDirectCall(call) as ArmCall

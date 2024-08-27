@@ -1,8 +1,8 @@
 package `fun`.adaptive.kotlin.adat.ir.metadata
 
 import `fun`.adaptive.adat.metadata.AdatDescriptorMetadata
-import `fun`.adaptive.kotlin.adat.FqNames
 import `fun`.adaptive.kotlin.adat.ir.AdatIrBuilder
+import `fun`.adaptive.kotlin.common.removeCoercionToUnit
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.builders.irBlockBody
@@ -12,15 +12,10 @@ import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
-import org.jetbrains.kotlin.ir.expressions.IrTypeOperator
-import org.jetbrains.kotlin.ir.expressions.IrTypeOperatorCall
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
 import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import org.jetbrains.kotlin.ir.util.fqNameWhenAvailable
-import org.jetbrains.kotlin.ir.util.getAnnotation
-import org.jetbrains.kotlin.ir.util.getAnnotationStringValue
-import org.jetbrains.kotlin.ir.util.kotlinFqName
 import org.jetbrains.kotlin.ir.util.statements
 
 fun AdatIrBuilder.descriptor(
@@ -64,11 +59,7 @@ private fun collectPropertyDescriptors(
     statement: IrStatement
 ): Pair<String, List<AdatDescriptorMetadata>> {
 
-    val call = if (statement is IrTypeOperatorCall && statement.operator == IrTypeOperator.IMPLICIT_COERCION_TO_UNIT) {
-        statement.argument
-    } else {
-        statement
-    }
+    val call = statement.removeCoercionToUnit()
 
     require(call is IrCall) { "invalid descriptor statement (not a call) ${call.dumpKotlinLike()}" }
 

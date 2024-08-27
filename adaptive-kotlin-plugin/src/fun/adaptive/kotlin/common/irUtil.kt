@@ -4,8 +4,11 @@
 
 package `fun`.adaptive.kotlin.common
 
+import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrProperty
+import org.jetbrains.kotlin.ir.expressions.IrTypeOperator
+import org.jetbrains.kotlin.ir.expressions.IrTypeOperatorCall
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.util.functions
@@ -53,3 +56,10 @@ val String.asClassId: ClassId
 
 val FqName.companionClassId
     get() = ClassId(parent(), shortName()).createNestedClassId(KotlinNames.COMPANION_OBJECT)
+
+fun IrStatement.removeCoercionToUnit() =
+    if (this is IrTypeOperatorCall && this.operator == IrTypeOperator.IMPLICIT_COERCION_TO_UNIT) {
+        this.argument
+    } else {
+        this
+    }

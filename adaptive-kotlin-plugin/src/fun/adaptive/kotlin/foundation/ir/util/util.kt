@@ -34,11 +34,4 @@ fun CallableId.adaptiveClassFqName(): FqName {
     return parent.child(Name.identifier("Adaptive" + this.callableName.identifier.capitalizeFirstChar()))
 }
 
-fun IrStatement.removeImplicitCoercion(): IrStatement =
-    if (this is IrTypeOperatorCall && this.operator == IrTypeOperator.IMPLICIT_COERCION_TO_UNIT) {
-        argument
-    } else {
-        this
-    }
-
 fun String.capitalizeFirstChar() = replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
