@@ -11,19 +11,24 @@ import `fun`.adaptive.graphics.svg.fragment.SvgGroup
 import `fun`.adaptive.graphics.svg.fragment.SvgPath
 import `fun`.adaptive.graphics.svg.fragment.SvgRoot
 import `fun`.adaptive.graphics.svg.instruction.*
+import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.wireformat.xml.XmlAttribute
 import `fun`.adaptive.wireformat.xml.XmlElement
 import `fun`.adaptive.wireformat.xml.parseXml
 
 interface SvgInstruction : AdaptiveInstruction
 
-fun parseSvg(adapter : SvgAdapter, source: String): SvgFragment<*> {
+fun parseSvg(
+    adapter: SvgAdapter,
+    source: String,
+    additionalInstructions: Array<out SvgInstruction> = emptyArray()
+): SvgFragment<*> {
     val xmlRoot = parseXml(source, skipBlankContent = true)
     requireNotNull(xmlRoot) { "could not parse XML: $source" }
-    return toSvg(xmlRoot, adapter, null)
+    return toSvg(xmlRoot, adapter, null, additionalInstructions)
 }
 
-private fun toSvg(xmlElement: XmlElement, adapter : SvgAdapter, parent : SvgFragment<*>?): SvgFragment<*> {
+private fun toSvg(xmlElement: XmlElement, adapter: SvgAdapter, parent: SvgFragment<*>?, additionalInstructions: Array<out SvgInstruction>): SvgFragment<*> {
 
     val instructions = mutableListOf<SvgInstruction>()
     xmlElement.attributes.forEach { toSvg(it, instructions) }
@@ -35,13 +40,13 @@ private fun toSvg(xmlElement: XmlElement, adapter : SvgAdapter, parent : SvgFrag
         else -> throw NotImplementedError("svg type ${xmlElement.tag} is not implemented yet")
     }
 
-    fragment.state[fragment.instructionIndex] = instructions.toTypedArray()
+    fragment.state[fragment.instructionIndex] = instructions.toTypedArray() + additionalInstructions
     // no external patch for SVG fragments when loaded directly
     fragment.genPatchInternal()
 
     for (child in xmlElement.children) {
         if (child !is XmlElement) continue
-        fragment.children += toSvg(child, adapter, fragment)
+        fragment.children += toSvg(child, adapter, fragment, additionalInstructions)
     }
 
     return fragment
@@ -68,7 +73,7 @@ private fun transform(value: String, instructions: MutableList<SvgInstruction>) 
 }
 
 private fun fill(value: String, instructions: MutableList<SvgInstruction>) {
-    instructions += Fill(value)
+    instructions += Fill(Color(value))
 }
 
 private fun d(value: String, instructions: MutableList<SvgInstruction>) {

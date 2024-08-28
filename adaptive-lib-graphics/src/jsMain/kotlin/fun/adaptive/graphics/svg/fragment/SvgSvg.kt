@@ -27,7 +27,7 @@ class SvgSvg(
 
     override val receiver: org.w3c.dom.HTMLCanvasElement = canvas.receiver
 
-    val canvasAdapter = CanvasAdapter(adapter, canvas, this)
+    val canvasAdapter = CanvasAdapter(adapter, canvas, this).also { it.trace = arrayOf(Regex(".*")) }
 
     val resource: DrawableResource
         get() = state[0].checkIfInstance()
@@ -38,7 +38,10 @@ class SvgSvg(
     }
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) {
-        (fragment as CanvasSvg).resource = resource
+        (fragment as CanvasSvg).also {
+            it.resource = resource
+            it.state[it.instructionIndex] = instructions
+        }
     }
 
     override fun genPatchInternal(): Boolean {

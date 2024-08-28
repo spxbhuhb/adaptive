@@ -5,7 +5,7 @@
 package `fun`.adaptive.graphics.canvas.platform
 
 import `fun`.adaptive.graphics.svg.instruction.Fill
-import `fun`.adaptive.graphics.svg.instruction.SvgTransform
+import `fun`.adaptive.graphics.svg.instruction.transform.SvgTransform
 
 /**
  * Implemented by bridge classes to connect common code with the actual UI canvas implementation.

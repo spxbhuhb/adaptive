@@ -5,9 +5,10 @@
 package `fun`.adaptive.graphics.svg.render
 
 import `fun`.adaptive.graphics.svg.instruction.Fill
-import `fun`.adaptive.graphics.svg.instruction.SvgTransform
+import `fun`.adaptive.graphics.svg.instruction.transform.SvgTransform
+import `fun`.adaptive.ui.instruction.decoration.Color
 
 open class SvgRenderData {
-    var fill : Fill = Fill("#000")
+    var fill: Fill = Fill(Color(0x0u))
     var transform : MutableList<SvgTransform>? = null
 }

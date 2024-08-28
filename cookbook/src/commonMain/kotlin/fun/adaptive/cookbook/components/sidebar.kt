@@ -12,8 +12,10 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.svg.api.svg
+import `fun`.adaptive.graphics.svg.api.svgFill
 import `fun`.adaptive.resource.DrawableResource
 import `fun`.adaptive.ui.api.alignItems
+import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.fontSize
 import `fun`.adaptive.ui.api.gap
@@ -23,18 +25,41 @@ import `fun`.adaptive.ui.api.paddingLeft
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.textColor
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 
-val mainContent = Name("Main Content")
+private val mainContent = Name("Main Content")
+
+private class SideBarItem(
+    val index: Int,
+    val icon: DrawableResource,
+    val title: String,
+    val active: Boolean
+)
+
+private val activeBackground = backgroundColor(0x6259CE)
+private val normalBackground = backgroundColor(0xffffff)
+
+private val activeTextColor = textColor(0xffffff)
+private val normalTextColor = textColor(0x0)
+
+private val activeIconColor = svgFill(0xffffff)
+private val normalIconColor = svgFill(0x0)
+
+private val items = setOf(
+    SideBarItem(0, Res.drawable.grid_view, "Zónák", false),
+    SideBarItem(1, Res.drawable.mail, "Értesítések", true),
+    SideBarItem(2, Res.drawable.folder, "Beállítások", false),
+    SideBarItem(3, Res.drawable.assignment, "Elemzések", false),
+)
 
 @Adaptive
 fun sidebar() {
     column {
-        sideBarItem(Res.drawable.grid_view, "Zónák") .. navClick(mainContent) { text("Zónák") }
-        sideBarItem(Res.drawable.mail, "Értesítések") .. navClick(mainContent) { text("Értesítések") }
-        sideBarItem(Res.drawable.folder, "Beállítások") .. navClick(mainContent) { text("Beállítások") }
-        sideBarItem(Res.drawable.assignment, "Elemzések") .. navClick(mainContent) { text("Elemzések") }
+        for (item in items.sortedBy { it.index }) {
+            sideBarItem(item) .. navClick(mainContent) { text(item.title) }
+        }
     }
 }
 
@@ -43,14 +68,13 @@ private val itemStyles = size(314.dp, 63.dp) .. alignItems.startCenter .. gap(16
 
 @Adaptive
 private fun sideBarItem(
-    icon: DrawableResource,
-    title: String,
+    item: SideBarItem,
     vararg instructions: AdaptiveInstruction
 ): AdaptiveFragment {
 
-    row(*instructions, *itemStyles) {
-        svg(icon) .. iconStyles
-        text(title) .. fontSize(16.sp) .. lineHeight(22.dp)
+    row(*instructions, *itemStyles, if (item.active) activeBackground else normalBackground) {
+        svg(item.icon) .. iconStyles .. if (item.active) activeIconColor else normalIconColor
+        text(item.title) .. fontSize(16.sp) .. lineHeight(22.dp) .. if (item.active) activeTextColor else normalTextColor
     }
 
     return fragment()

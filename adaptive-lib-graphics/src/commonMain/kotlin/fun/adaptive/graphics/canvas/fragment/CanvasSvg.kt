@@ -9,6 +9,7 @@ import `fun`.adaptive.graphics.canvas.CanvasAdapter
 import `fun`.adaptive.graphics.canvas.CanvasFragment
 import `fun`.adaptive.graphics.canvas.canvas
 import `fun`.adaptive.graphics.svg.SvgAdapter
+import `fun`.adaptive.graphics.svg.parse.SvgInstruction
 import `fun`.adaptive.graphics.svg.parse.parseSvg
 import `fun`.adaptive.resource.DrawableResource
 import `fun`.adaptive.resource.defaultResourceReader
@@ -34,7 +35,7 @@ open class CanvasSvg(
             // FIXME start resource read in a different thread and during mount maybe?
             CoroutineScope(adapter.dispatcher).launch {
                 val data = defaultResourceReader.read(resource.path)
-                svgAdapter.rootFragment = parseSvg(svgAdapter, data.decodeToString())
+                svgAdapter.rootFragment = parseSvg(svgAdapter, data.decodeToString(), instructions.filterIsInstance<SvgInstruction>().toTypedArray())
                 svgAdapter.draw()
             }
         }

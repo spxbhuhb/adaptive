@@ -29,7 +29,9 @@ class SvgPath(
 
     override fun draw() {
         renderData.transform { it.forEach { t -> canvas.transform(t) } }
-        renderData.fill { canvas.setFill(it) }
+        renderData.fill {
+            canvas.setFill(it)
+        }
 
         canvas.fill(path)
 
