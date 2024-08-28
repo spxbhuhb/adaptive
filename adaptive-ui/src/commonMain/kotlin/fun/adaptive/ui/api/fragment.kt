@@ -39,7 +39,7 @@ fun flowBox(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> U
 }
 
 @AdaptiveExpect(aui)
-fun row(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
+fun row(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) : AdaptiveFragment {
     manualImplementation(instructions, content)
 }
 

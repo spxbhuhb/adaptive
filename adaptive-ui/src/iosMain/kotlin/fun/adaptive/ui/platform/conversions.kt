@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.ui.platform
 
-import `fun`.adaptive.ui.instruction.Color
+import `fun`.adaptive.ui.instruction.decoration.Color
 import platform.UIKit.UIColor
 
 val Color.uiColor: UIColor

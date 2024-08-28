@@ -9,7 +9,7 @@ import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
 import `fun`.adaptive.ui.instruction.event.OnClick
-import `fun`.adaptive.ui.api.UIEvent
+import `fun`.adaptive.ui.instruction.event.UIEvent
 import `fun`.adaptive.ui.render.applyText
 import `fun`.adaptive.utility.firstOrNullIfInstance
 import kotlinx.cinterop.ExperimentalForeignApi

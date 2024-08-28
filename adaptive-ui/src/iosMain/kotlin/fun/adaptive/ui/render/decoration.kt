@@ -4,7 +4,6 @@
 
 package `fun`.adaptive.ui.render
 
-import `fun`.adaptive.ui.api.BackgroundGradient
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.platform.uiColor
 import `fun`.adaptive.ui.render.model.AuiRenderData
@@ -31,25 +30,25 @@ fun applyDecoration(fragment: AbstractAuiFragment<UIView>) {
 
     // ----  background color  ----
 
-    view.backgroundColor = DecorationRenderData.backgroundColor?.uiColor ?: UIColor.clearColor()
+    view.backgroundColor = current?.backgroundColor?.uiColor ?: UIColor.clearColor()
 
     // ----  border  ----
 
-    val borderWidth = DecorationRenderData.border?.top // FIXME individual border widths
-    val borderColor = DecorationRenderData.border?.color
-    val cornerRadius = DecorationRenderData.cornerRadius
+    val borderWidth = current?.border?.top // FIXME individual border widths
+    val borderColor = current?.border?.color
+    val cornerRadius = current?.cornerRadius
 
-    if (borderWidth != DecorationRenderData.border?.top) {
+    if (borderWidth != current?.border?.top) {
         view.layer.borderWidth = borderWidth ?: 0.0
     }
 
-    if (borderColor != DecorationRenderData.border?.color) {
+    if (borderColor != current?.border?.color) {
         view.layer.borderColor = borderColor?.uiColor?.CGColor
     }
 
     // ----  corner radius  ----
 
-    if (cornerRadius != DecorationRenderData.cornerRadius) {
+    if (cornerRadius != current?.cornerRadius) {
         view.layer.cornerRadius = cornerRadius?.topLeft ?: 0.0 // FIXME individual radii for corners
     }
 
@@ -86,12 +85,12 @@ private fun applyGradient(
     layer.frame = CGRectMake(0.0, 0.0, data.finalWidth, data.finalHeight)
 
     layer.colors = listOf(
-        CFBridgingRelease(CFRetain(BackgroundGradient.start.uiColor.CGColor)),
-        CFBridgingRelease(CFRetain(BackgroundGradient.end.uiColor.CGColor))
+        CFBridgingRelease(CFRetain(gradient.start.uiColor.CGColor)),
+        CFBridgingRelease(CFRetain(gradient.end.uiColor.CGColor))
     )
 
-    layer.startPoint = BackgroundGradient.startPosition.let { p -> CGPointMake(p.left.value, p.top.value) }
-    layer.endPoint = BackgroundGradient.endPosition.let { p -> CGPointMake(p.left.value, p.top.value) }
+    layer.startPoint = gradient.startPosition.let { p -> CGPointMake(p.left.value, p.top.value) }
+    layer.endPoint = gradient.endPosition.let { p -> CGPointMake(p.left.value, p.top.value) }
 
     layer.cornerRadius = current.cornerRadius?.topLeft ?: 0.0 // FIXME individual radii for corners
 

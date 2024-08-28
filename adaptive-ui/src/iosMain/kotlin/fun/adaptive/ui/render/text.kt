@@ -7,7 +7,6 @@ package `fun`.adaptive.ui.render
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.AuiText
 import `fun`.adaptive.ui.platform.uiColor
-import `fun`.adaptive.ui.render.model.TextRenderData
 import kotlinx.cinterop.BetaInteropApi
 import platform.Foundation.NSAttributedString
 import platform.Foundation.create
@@ -32,8 +31,8 @@ fun applyText(fragment: AbstractAuiFragment<UIView>) {
 
     // ----  color ----
 
-    val color = TextRenderData.color
-    if (color != TextRenderData.color) {
+    val color = current?.color
+    if (color != current?.color) {
         view.textColor = (color ?: default.color !!).uiColor
     }
 
@@ -41,10 +40,10 @@ fun applyText(fragment: AbstractAuiFragment<UIView>) {
 
     // FIXME font handling in iOS
 
-    val fontSize = TextRenderData.fontSize
-    val fontWeight = TextRenderData.fontWeight
+    val fontSize = current?.fontSize
+    val fontWeight = current?.fontWeight
 
-    if (fontSize != TextRenderData.fontSize || fontWeight != TextRenderData.fontWeight) {
+    if (fontSize != current?.fontSize || fontWeight != current?.fontWeight) {
         val scaledFontSize = adapter.toPx(fontSize ?: default.fontSize !!)
         view.font = when {
             fontWeight != 400 -> UIFont.boldSystemFontOfSize(scaledFontSize)
@@ -57,9 +56,9 @@ fun applyText(fragment: AbstractAuiFragment<UIView>) {
 
     val text = (fragment as AuiText).content
 
-    val letterSpacing = TextRenderData.letterSpacing
+    val letterSpacing = current?.letterSpacing
 
-    if (letterSpacing != TextRenderData.letterSpacing) {
+    if (letterSpacing != current?.letterSpacing) {
 
         val attributedString = NSAttributedString.create(
             text,

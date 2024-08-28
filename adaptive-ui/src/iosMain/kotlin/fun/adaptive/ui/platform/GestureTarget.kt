@@ -7,7 +7,7 @@ package `fun`.adaptive.ui.platform
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.instruction.event.OnClick
-import `fun`.adaptive.ui.api.UIEvent
+import `fun`.adaptive.ui.instruction.event.UIEvent
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExportObjCClass
 import kotlinx.cinterop.ObjCAction
