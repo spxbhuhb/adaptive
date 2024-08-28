@@ -44,6 +44,21 @@ class OuterInstructionLowering(
         return super.visitCall(renderCall)
     }
 
+    override fun visitCall(expression: IrCall): IrExpression {
+        pluginContext.debug { "\n\nouter instruction lowering.2: ${expression.dumpKotlinLike()}" }
+
+        val extensionReceiver = expression.extensionReceiver ?: return super.visitCall(expression)
+        if (! extensionReceiver.type.isSubtypeOfClass(pluginContext.adaptiveFragmentClass)) return super.visitCall(expression)
+
+        val (renderCall, instructions) = flattenInstructionCalls(expression)
+
+        val valueParameters = renderCall.symbol.owner.valueParameters
+
+        addInstructions(renderCall, valueParameters, instructions)
+
+        return super.visitCall(renderCall)
+    }
+
     /**
      * Flatten a call chain for `rangeTo` operators and instructions. For example:
      * `text("a") .. name("12") .. bold .. italic`
