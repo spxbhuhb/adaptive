@@ -55,7 +55,7 @@ fun main() {
     browser(CanvasFragmentFactory, SvgFragmentFactory) { adapter ->
 
         with(adapter.defaultTextRenderData) {
-            fontName = "Noto Sans"
+            fontName = "Open Sans"
             fontSize = 16.sp
         }
 
