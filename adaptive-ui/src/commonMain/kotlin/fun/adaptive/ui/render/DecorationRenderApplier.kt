@@ -52,6 +52,8 @@ abstract class DecorationRenderApplier<R> : AbstractRenderApplier() {
                 applyColor(receiver, color)
             }
             clearBackground = false
+        } else {
+            clearBackground = (previousColor != null)
         }
 
         val gradient = current?.backgroundGradient
@@ -61,6 +63,8 @@ abstract class DecorationRenderApplier<R> : AbstractRenderApplier() {
                 applyGradient(receiver, gradient, cornerRadius)
             }
             clearBackground = false
+        } else {
+            clearBackground = clearBackground || (previousGradient != null)
         }
 
         if (clearBackground) {
