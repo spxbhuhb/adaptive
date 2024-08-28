@@ -1,6 +1,6 @@
 # What is Adaptive
 
-Adaptive is a software suite designed for building full-stack Kotlin Multiplatform applications.
+Adaptive is a software suite for building full-stack Kotlin Multiplatform applications.
 
 Significant changes are taking place in software development. The rise of AI-assisted development 
 tools and application generators is inevitable; it has already transformed the way we develop software.

@@ -1,8 +1,5 @@
-package `fun`.adaptive.cookbook.auth
+package `fun`.adaptive.cookbook.components
 
-import `fun`.adaptive.cookbook.auth.screens.passwordReset
-import `fun`.adaptive.cookbook.auth.screens.signIn
-import `fun`.adaptive.cookbook.auth.screens.signUp
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.column
@@ -14,16 +11,14 @@ import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.instruction.dp
 
 @Adaptive
-fun authMain() {
+fun componentsMain() {
     column {
         maxHeight .. verticalScroll
 
         flowBox {
             maxWidth .. gap { 16.dp }
 
-            signUp()
-            signIn()
-            passwordReset()
+            sidebar()
         }
     }
 }

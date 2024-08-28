@@ -13,7 +13,7 @@ class SignIn(
     val email: String = "",
     val password: String = "",
     val remember: Boolean = false
-) : AdatClass<SignIn> {
+) {
 
     override fun descriptor() {
         properties {

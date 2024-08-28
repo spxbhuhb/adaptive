@@ -3,6 +3,8 @@
  */
 
 import `fun`.adaptive.cookbook.auth.authMain
+import `fun`.adaptive.cookbook.components.componentsMain
+import `fun`.adaptive.cookbook.intro.introMain
 import `fun`.adaptive.cookbook.layout.desktop.layoutDesktopMain
 import `fun`.adaptive.cookbook.layout.mobile.layoutMobileMain
 import `fun`.adaptive.cookbook.shared.bodySmall
@@ -17,6 +19,8 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
+import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.box
@@ -48,7 +52,7 @@ fun main() {
 
     withJsResources()
 
-    browser { adapter ->
+    browser(CanvasFragmentFactory, SvgFragmentFactory) { adapter ->
 
         with(adapter.defaultTextRenderData) {
             fontName = "Noto Sans"
@@ -65,8 +69,10 @@ fun main() {
 
             slot(cookbookContent) {
                 route { authMain() }
+                route { introMain() }
                 route { layoutMobileMain() }
                 route { layoutDesktopMain() }
+                route { componentsMain() }
 
                 recipeList()
             }
@@ -85,8 +91,10 @@ fun recipeList() {
 
         flowBox {
             gap { 16.dp }
+            recipe("What is Adaptive?", "An introduction to Adaptive.") .. navClick(cookbookContent) { introMain() }
             recipe("Layout - Mobile", "Layouts for small screens.") .. navClick(cookbookContent) { layoutMobileMain() }
             recipe("Layout - Desktop", "Layouts for large screens.") .. navClick(cookbookContent) { layoutDesktopMain() }
+            recipe("Components", "Simple components.") .. navClick(cookbookContent) { componentsMain() }
             recipe("Auth", "Basic authorization and authentication: login, logout, password change, user management.") .. navClick(cookbookContent) { authMain() }
         }
     }

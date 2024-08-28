@@ -5,7 +5,6 @@
 package `fun`.adaptive.cookbook.auth.screens
 
 import `fun`.adaptive.adat.store.copyStore
-import `fun`.adaptive.cookbook.auth.model.SignUp
 import `fun`.adaptive.cookbook.shared.black
 import `fun`.adaptive.cookbook.shared.button
 import `fun`.adaptive.cookbook.shared.checkbox
@@ -35,9 +34,10 @@ import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.textColor
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.instruction.text.FontName
+import `fun`.adaptive.cookbook.auth.model.SignUp
 
 @Adaptive
-fun welcome(): AdaptiveFragment {
+fun signUp(): AdaptiveFragment {
     val signUp = copyStore { SignUp() }
 
     grid {
