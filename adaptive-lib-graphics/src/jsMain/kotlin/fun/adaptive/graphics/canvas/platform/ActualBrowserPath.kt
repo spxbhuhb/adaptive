@@ -90,7 +90,7 @@ class ActualBrowserPath : ActualPath {
     }
 
     override fun quadraticCurve(x1: Double, y1: Double, x: Double, y: Double) {
-        TODO("Not yet implemented")
+        receiver.quadraticCurveTo(x1, y1, x, y)
     }
 
     override fun smoothQuadraticCurve(x: Double, y: Double) {

@@ -6,14 +6,14 @@ package `fun`.adaptive.graphics.svg.instruction
 
 import `fun`.adaptive.graphics.canvas.platform.ActualPath
 
-interface SvgPathCommand {
-    fun apply(path: ActualPath)
+abstract class SvgPathCommand {
+    abstract fun apply(path: ActualPath)
 }
 
 data class MoveTo(
     val x: Double,
     val y: Double
-) : SvgPathCommand {
+) : SvgPathCommand() {
     override fun apply(path: ActualPath) = path.moveTo(x, y)
 }
 
@@ -22,31 +22,25 @@ data class ClosePath(
     val y1: Double,
     val x2: Double,
     val y2: Double
-) : SvgPathCommand {
+) : SvgPathCommand() {
     override fun apply(path: ActualPath) = path.closePath(x1, y1, x2, y2)
 }
 
 data class LineTo(
     val x: Double,
     val y: Double
-) : SvgPathCommand {
+) : SvgPathCommand() {
     override fun apply(path: ActualPath) = path.lineTo(x, y)
 }
 
-enum class BezierCurveType {
-    Cubic,
-    Quadratic
-}
-
-data class BezierCurve(
-    val type : BezierCurveType,
+data class CubicCurve(
     val x1: Double,
     val y1: Double,
     val x2: Double,
     val y2: Double,
     val x: Double,
     val y: Double
-) : SvgPathCommand {
+) : SvgPathCommand() {
     override fun apply(path: ActualPath) = path.cubicCurve(x1, y1, x2, y2, x, y)
 }
 
@@ -55,7 +49,7 @@ data class QuadraticCurve(
     val y1: Double,
     val x: Double,
     val y: Double
-) : SvgPathCommand {
+) : SvgPathCommand() {
     override fun apply(path: ActualPath) = path.quadraticCurve(x1, y1, x, y)
 }
 
@@ -69,7 +63,7 @@ data class Arc(
     val y1: Double,
     val x2: Double,
     val y2: Double,
-) : SvgPathCommand {
+) : SvgPathCommand() {
     override fun apply(path: ActualPath) = path.arcTo(this)
 }
 

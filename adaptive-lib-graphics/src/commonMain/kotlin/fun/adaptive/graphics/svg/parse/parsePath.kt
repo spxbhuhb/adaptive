@@ -52,10 +52,12 @@ fun parsePath(source: String): List<SvgPathCommand> {
 
             else -> {
                 val parameterCount = if (parameter.isNotEmpty()) parameterIndex + 1 else parameterIndex
+                val commandsLength = commands.size
                 position = build(command, parameters, parameterCount, position, subPathStart, commands)
 
                 if (command == 'M' || command == 'm') {
-                    subPathStart = position
+                    val m = commands[commandsLength] as MoveTo
+                    subPathStart = m.x to m.y
                 }
 
                 command = char
@@ -95,17 +97,17 @@ private fun build(
         'V' -> verticalLineToAbsolute(parameters, parameterCount, position, commands)
         'v' -> verticalLineToRelative(parameters, parameterCount, position, commands)
 
-        'C' -> bezierCurveAbsolute(BezierCurveType.Cubic, parameters, parameterCount, commands)
-        'c' -> bezierCurveRelative(BezierCurveType.Cubic, parameters, parameterCount, position, commands)
+        'C' -> cubicCurveAbsolute(parameters, parameterCount, commands)
+        'c' -> cubicCurveRelative(parameters, parameterCount, position, commands)
 
-        'S' -> bezierCurveSmooth(BezierCurveType.Cubic, true, parameters, parameterCount, position, commands)
-        's' -> bezierCurveSmooth(BezierCurveType.Cubic, false, parameters, parameterCount, position, commands)
+        'S' -> cubicCurveSmooth(true, parameters, parameterCount, position, commands)
+        's' -> cubicCurveSmooth(false, parameters, parameterCount, position, commands)
 
-        'Q' -> bezierCurveAbsolute(BezierCurveType.Quadratic, parameters, parameterCount, commands)
-        'q' -> bezierCurveRelative(BezierCurveType.Quadratic, parameters, parameterCount, position, commands)
+        'Q' -> quadraticCurveAbsolute(parameters, parameterCount, commands)
+        'q' -> quadraticCurveRelative(parameters, parameterCount, position, commands)
 
-        'T' -> bezierCurveSmooth(BezierCurveType.Quadratic, true, parameters, parameterCount, position, commands)
-        't' -> bezierCurveSmooth(BezierCurveType.Quadratic, false, parameters, parameterCount, position, commands)
+        'T' -> quadraticCurveSmooth(true, parameters, parameterCount, position, commands)
+        't' -> quadraticCurveSmooth(false, parameters, parameterCount, position, commands)
 
         'A' -> arcAbsolute(parameters, parameterCount, position, commands)
         'a' -> arcRelative(parameters, parameterCount, position, commands)
@@ -249,15 +251,14 @@ private fun verticalLineToRelative(parameters: List<StringBuilder>, parameterCou
     return position.first to lastRelativeValue
 }
 
-private fun bezierCurveAbsolute(type : BezierCurveType, parameters: List<StringBuilder>, parameterCount: Int, commands: MutableList<SvgPathCommand>): Pair<Double, Double> {
+private fun cubicCurveAbsolute(parameters: List<StringBuilder>, parameterCount: Int, commands: MutableList<SvgPathCommand>): Pair<Double, Double> {
     check(parameterCount >= 6 && parameterCount % 6 == 0) { "invalid number of parameters" }
 
     var parameterIndex = 0
-    var lastCommand: BezierCurve? = null
+    var lastCommand: CubicCurve? = null
 
     while (parameterIndex < parameterCount) {
-        lastCommand = BezierCurve(
-            type,
+        lastCommand = CubicCurve(
             parameters.toDouble(parameterIndex ++),
             parameters.toDouble(parameterIndex ++),
             parameters.toDouble(parameterIndex ++),
@@ -271,7 +272,7 @@ private fun bezierCurveAbsolute(type : BezierCurveType, parameters: List<StringB
     return lastCommand !!.let { it.x to it.y }
 }
 
-private fun bezierCurveRelative(type : BezierCurveType, parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Double, Double>, commands: MutableList<SvgPathCommand>): Pair<Double, Double> {
+private fun cubicCurveRelative(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Double, Double>, commands: MutableList<SvgPathCommand>): Pair<Double, Double> {
     check(parameterCount >= 6 && parameterCount % 6 == 0) { "invalid number of parameters" }
 
     var parameterIndex = 0
@@ -290,19 +291,18 @@ private fun bezierCurveRelative(type : BezierCurveType, parameters: List<StringB
         x += parameters.toDouble(parameterIndex ++)
         y += parameters.toDouble(parameterIndex ++)
 
-        commands.add(BezierCurve(type, x1, y1, x2, y2, x, y))
+        commands.add(CubicCurve(x1, y1, x2, y2, x, y))
     }
 
     return x to y
 }
 
-private fun bezierCurveSmooth(type : BezierCurveType, absolute : Boolean, parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Double, Double>, commands: MutableList<SvgPathCommand>): Pair<Double, Double> {
+private fun cubicCurveSmooth(absolute : Boolean, parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Double, Double>, commands: MutableList<SvgPathCommand>): Pair<Double, Double> {
     check(parameterCount >= 4 && parameterCount % 4 == 0) { "invalid number of parameters" }
 
     var parameterIndex = 0
 
-    var lastCommand: BezierCurve? = commands.lastOrNull() as? BezierCurve
-    if (lastCommand?.type != type) lastCommand = null
+    var lastCommand: CubicCurve? = commands.lastOrNull() as? CubicCurve
 
     var x : Double = position.first
     var y : Double = position.second
@@ -329,10 +329,92 @@ private fun bezierCurveSmooth(type : BezierCurveType, absolute : Boolean, parame
             y += parameters.toDouble(parameterIndex ++)
         }
 
-        lastCommand = BezierCurve(
-            type,
+        lastCommand = CubicCurve(
             x1, y1,
             x2, y2,
+            x, y
+        )
+
+        commands.add(lastCommand)
+    }
+
+    return lastCommand !!.let { it.x to it.y }
+}
+
+
+private fun quadraticCurveAbsolute(parameters: List<StringBuilder>, parameterCount: Int, commands: MutableList<SvgPathCommand>): Pair<Double, Double> {
+    check(parameterCount >= 4 && parameterCount % 4 == 0) { "invalid number of parameters" }
+
+    var parameterIndex = 0
+    var lastCommand: QuadraticCurve? = null
+
+    while (parameterIndex < parameterCount) {
+        lastCommand = QuadraticCurve(
+            parameters.toDouble(parameterIndex ++),
+            parameters.toDouble(parameterIndex ++),
+            parameters.toDouble(parameterIndex ++),
+            parameters.toDouble(parameterIndex ++)
+        )
+        commands.add(lastCommand)
+    }
+
+    return lastCommand !!.let { it.x to it.y }
+}
+
+private fun quadraticCurveRelative(parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Double, Double>, commands: MutableList<SvgPathCommand>): Pair<Double, Double> {
+    check(parameterCount >= 4 && parameterCount % 4 == 0) { "invalid number of parameters" }
+
+    var parameterIndex = 0
+    var x = position.first
+    var y = position.second
+    var x1: Double
+    var y1: Double
+
+    while (parameterIndex < parameterCount) {
+        x1 = x + parameters.toDouble(parameterIndex ++)
+        y1 = y + parameters.toDouble(parameterIndex ++)
+        x += parameters.toDouble(parameterIndex ++)
+        y += parameters.toDouble(parameterIndex ++)
+
+        commands.add(QuadraticCurve(x1, y1, x, y))
+    }
+
+    return x to y
+}
+
+private fun quadraticCurveSmooth(absolute : Boolean, parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Double, Double>, commands: MutableList<SvgPathCommand>): Pair<Double, Double> {
+    check(parameterCount >= 2 && parameterCount % 2 == 0) { "invalid number of parameters" }
+
+    var parameterIndex = 0
+
+    var lastCommand: QuadraticCurve? = commands.lastOrNull() as? QuadraticCurve
+
+    var x : Double = position.first
+    var y : Double = position.second
+
+    while (parameterIndex < parameterCount) {
+
+        if (absolute) {
+            x = parameters.toDouble(parameterIndex ++)
+            y = parameters.toDouble(parameterIndex ++)
+        } else {
+            x += parameters.toDouble(parameterIndex ++)
+            y += parameters.toDouble(parameterIndex ++)
+        }
+
+        val x1: Double
+        val y1: Double
+
+        if (lastCommand == null) {
+            x1 = x
+            y1 = y
+        } else {
+            x1 = 2 * x - lastCommand.x1
+            y1 = 2 * y - lastCommand.y1
+        }
+
+        lastCommand = QuadraticCurve(
+            x1, y1,
             x, y
         )
 
