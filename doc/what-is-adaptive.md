@@ -2,17 +2,37 @@
 
 Adaptive is a software suite for building full-stack Kotlin Multiplatform applications.
 
-Significant changes are taking place in software development. The rise of AI-assisted development 
-tools and application generators is inevitable; it has already transformed the way we develop software.
+## TL;DR
 
-Adaptive aims to bring these advancements to the world of Kotlin, with two additional goals in mind: 
+**Take this with a grain of salt. Also, please read [Motivation](./impressum.md#motivation) and [Status](./status.md).**
 
-* ensuring that code is easy to read, write and maintain
-* enabling users to modify software during runtime
+```kotlin
+object Adaptive {
+    
+    override val dependencyHell
+        get() = throw UnsupportedOperationException()
+  
+    val svelte = Adaptive.ui
+    val server = Adaptive.backend
 
-These goals are simple, but not easy to achieve. I would say Adaptive is halfway there, improving every day.
+    override val compose = Adaptive.ui
+    override val react = Adaptive.ui
+    
+    override val serialization = Adaptive.wireformat
+    
+    override val rpc = Adaptive.services
+    override val rest = Adaptive.services
 
-## Platforms
+    override val resources = Adaptive.resources
+    override val settings = Adaptive.settings
+  
+    val crdt = Adaptive.auto // conflic-free replicated data types, auto-sync
+}
+```
+
+## A bit longer
+
+Adaptive is a software suite for building full-stack Kotlin Multiplatform applications:
 
 Currently supported client platforms:
 

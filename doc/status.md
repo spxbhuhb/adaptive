@@ -6,34 +6,11 @@ The project is in **preview** status:
 * Changes happen on daily basis, no compatibility is maintained at this stage.
 * I try to keep the documentation up-to-date, but no promises.
 
-## Proof of Concepts
+I feel that the library reached the point when it is possible to write actual
+applications with it.
 
-As of now, the very basic UI components are implemented and mostly working on all supported platforms:
+In the next few months that (actual applications) will be the main focus as
+I actually have to deliver those applications to customers.
 
-* layouts
-* text
-* image
-* click event handler
-* basic formatting and styling
-
-Services, Adat and other, non UI related parts should work on all platforms. I haven't tried
-for a while to be honest, focusing on the UI.
-
-That said, there are bugs and some functionality might break down time-to-time.
-
-## Roadmap
-
-In the close future I'll focus on these areas:
-
-* UI designer
-* support of basic UI features on all platforms
-    * textual input fields
-    * checkbox
-* picture taking for Android and iOS
-* QR code reading for Android and iOS
-* file store for Android and iOS
-* basic charts
-* server
-  * authentication - code is there, have to test and document
-  * role based access control on server side - code is there, have to test and document
-  * file upload / download - have to migrate from precursor project
+I expect the library to mature during this period. Hopefully by the end of
+the year it will be ready for general use.

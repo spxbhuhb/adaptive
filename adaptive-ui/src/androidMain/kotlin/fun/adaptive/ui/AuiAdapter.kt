@@ -18,22 +18,16 @@ import androidx.core.graphics.toColorInt
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.resource.defaultResourceEnvironment
-import `fun`.adaptive.ui.api.BackgroundGradient
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.fragment.layout.RawCornerRadius
-import `fun`.adaptive.ui.instruction.Color
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.SPixel
-import `fun`.adaptive.ui.api.UIEvent
+import `fun`.adaptive.ui.instruction.decoration.Color
+import `fun`.adaptive.ui.instruction.event.UIEvent
 import `fun`.adaptive.ui.platform.ContainerViewGroup
-import `fun`.adaptive.ui.platform.media.MediaMetrics
 import `fun`.adaptive.ui.platform.StructuralViewGroup
-import `fun`.adaptive.ui.render.*
-import `fun`.adaptive.ui.render.model.AuiRenderData
-import `fun`.adaptive.ui.render.model.DecorationRenderData
-import `fun`.adaptive.ui.render.model.EventRenderData
-import `fun`.adaptive.ui.render.model.LayoutRenderData
-import `fun`.adaptive.ui.render.model.TextRenderData
+import `fun`.adaptive.ui.platform.media.MediaMetrics
+import `fun`.adaptive.ui.render.model.*
 import `fun`.adaptive.ui.support.navigation.AbstractNavSupport
 
 open class AuiAdapter(
@@ -101,7 +95,7 @@ open class AuiAdapter(
 
     override fun applyRenderInstructions(fragment: AbstractAuiFragment<View>) {
 
-        val renderData = AuiRenderData(this, fragment.instructions, fragment.previousRenderData)
+        val renderData = AuiRenderData(this, fragment.previousRenderData, fragment.instructions)
         val view = fragment.receiver
 
         // FIXME should clear actual UI settings when null
@@ -152,7 +146,7 @@ open class AuiAdapter(
         backgroundGradient?.let {
             drawables += GradientDrawable(
                 GradientDrawable.Orientation.LEFT_RIGHT, //
-                intArrayOf(BackgroundGradient.start.androidColor, BackgroundGradient.end.androidColor),
+                intArrayOf(it.start.androidColor, it.end.androidColor),
 
                 ).apply {
                 cornerRadius { b -> cornerRadii = b.toFloatArray() }

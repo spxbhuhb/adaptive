@@ -3,13 +3,13 @@
 
 > [!CAUTION]
 >
-> Project status: **initial development**
+> Project status: **preview**
 >
 > Please note the project status, many basic things you would expect to work are still
 > broken, especially around the code transformation.
 >
-> Preview release is scheduled for the last week of August.
->
+
+For support, please join the `#fun-adaptive` channel on [kotlinlang](https://slack-chats.kotlinlang.org/).
 
 * [What is Adaptive](./doc/what-is-adaptive.md)
 * [Status](./doc/status.md)
@@ -35,12 +35,24 @@
  
 **Enable 3rd party compiler plugins in the IntelliJ registry**
 
-1. https://youtrack.jetbrains.com/issue/KTIJ-29248/K2-IDE-Enable-non-bundled-compiler-plugins-in-IDE-by-default
-2. `Shift-Shift` 
-3. select `Actions` on top
-4. type in `Registry`
-5. find `kotlin.k2.only.bundled.compiler.plugins.enabled` and set it OFF
+See [KTIJ-29248](https://youtrack.jetbrains.com/issue/KTIJ-29248/K2-IDE-Enable-non-bundled-compiler-plugins-in-IDE-by-default) for details.
+
+1. `Shift-Shift`
+2. select `Actions` on top
+3. type in `Registry`
+4. find `kotlin.k2.only.bundled.compiler.plugins.enabled` and set it OFF
  
 Technically you could avoid the registry setting by adding some boilerplate manually, but I think it's just
 easier to have it. Also, the issue above is scheduled for 2024.3, so hopefully this setting won't be needed
 anymore.
+
+**Android issues**
+
+As of now, the Android plugin in IntelliJ does not support K2, so syntax highlighting does not work.
+Switching back to K1 mode works, but then Adat classes do not work. Luckily we don't need to edit
+Android specific code too much.
+
+**Import issues**
+
+There are a few import related issues when in K2 mode, see [KTIJ-31100](https://youtrack.jetbrains.com/issue/KTIJ-31100/K2-Incorrect-auto-completion-for-escaped-package-names)
+for details. Hopefully as K2 matures these will go away.
