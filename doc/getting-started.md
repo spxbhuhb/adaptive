@@ -9,9 +9,7 @@
 
 ## Tutorials
 
-* [Project Setup](tutorials/project-setup.md)
 * [Foundation](tutorials/foundation.md)
-* [Navigation](tutorials/navigation.md)
 
 ## Documentation
 
