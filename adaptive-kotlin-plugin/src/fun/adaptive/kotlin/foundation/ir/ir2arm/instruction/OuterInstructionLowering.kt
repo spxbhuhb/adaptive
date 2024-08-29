@@ -19,7 +19,6 @@ class OuterInstructionLowering(
 ) : IrElementTransformerVoid(), AdaptiveAnnotationBasedExtension {
 
     override fun visitTypeOperator(expression: IrTypeOperatorCall): IrExpression {
-        pluginContext.debug { "\n\nouter instruction lowering.1: ${expression.dumpKotlinLike()}" }
 
         if (expression.operator != IrTypeOperator.IMPLICIT_COERCION_TO_UNIT) {
             return super.visitTypeOperator(expression)
@@ -45,7 +44,6 @@ class OuterInstructionLowering(
     }
 
     override fun visitCall(expression: IrCall): IrExpression {
-        pluginContext.debug { "\n\nouter instruction lowering.2: ${expression.dumpKotlinLike()}" }
 
         val extensionReceiver = expression.extensionReceiver ?: return super.visitCall(expression)
         if (! extensionReceiver.type.isSubtypeOfClass(pluginContext.adaptiveFragmentClass)) return super.visitCall(expression)

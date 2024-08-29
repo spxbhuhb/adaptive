@@ -10,12 +10,15 @@ import `fun`.adaptive.kotlin.foundation.ir.util.adatCompanionOrNull
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrVariable
+import org.jetbrains.kotlin.ir.declarations.path
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrVarargImpl
 import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import kotlin.text.map
+import kotlin.text.reversed
 
 class ArmStateVariableBindingArgumentBuilder(
     parent: ClassBoundIrBuilder,
@@ -44,24 +47,6 @@ class ArmStateVariableBindingArgumentBuilder(
             return irNull()
         }
 
-        val type = irBuiltIns.arrayClass.typeWith(irBuiltIns.stringType)
-
-        return IrCallImpl(
-            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            type,
-            irBuiltIns.arrayOf,
-            1, 1,
-        ).apply {
-            putTypeArgument(0, irBuiltIns.stringType)
-            putValueArgument(0,
-                IrVarargImpl(
-                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                    type,
-                    irBuiltIns.stringType
-                ).apply {
-                    elements += argument.path.reversed().map { irConst(it) }
-                }
-            )
-        }
+        return irArrayOf(argument.path.reversed().map { irConst(it) })
     }
 }

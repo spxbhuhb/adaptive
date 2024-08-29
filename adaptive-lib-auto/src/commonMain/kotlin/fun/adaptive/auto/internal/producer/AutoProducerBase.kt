@@ -26,7 +26,7 @@ abstract class AutoProducerBase<T>(
     override val binding: AdaptiveStateVariableBinding<T>,
     val connect: suspend () -> AutoConnectInfo,
     val trace: Boolean
-) : AdatStore, AdaptiveProducer<T> {
+) : AdatStore(), AdaptiveProducer<T> {
 
     override var latestValue: T? = null
 

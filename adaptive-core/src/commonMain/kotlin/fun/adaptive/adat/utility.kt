@@ -6,9 +6,10 @@ package `fun`.adaptive.adat
 
 import `fun`.adaptive.adat.metadata.AdatClassMetadata
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
+import `fun`.adaptive.utility.PluginReference
+import `fun`.adaptive.utility.pluginGenerated
 import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.toJson
-
 
 /**
  * Gets an adat class stored somewhere in this one based on [path]. Path

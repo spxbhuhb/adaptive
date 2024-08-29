@@ -1,5 +1,8 @@
 package `fun`.adaptive.cookbook.components
 
+import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.adat.api.update
+import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.rangeTo
@@ -28,9 +31,14 @@ private val active = backgroundColor(0x6259CE) .. textColor(0xffffff) .. cornerR
 private val normal = instructionsOf(textColor(0x0))
 private val label = fontSize(14.sp) .. lightFont .. noSelect
 
+@Adat
+class Filters(
+    val status: Status
+)
+
 @Adaptive
 fun quickFilter() {
-    var activeStatus = Status.All
+    var filters = copyStore { Filters(Status.All) }
 
     box {
         row {
@@ -40,8 +48,8 @@ fun quickFilter() {
             for (status in Status.entries) {
                 row {
                     common
-                    if (status == activeStatus) active else normal
-                    onClick { activeStatus = status }
+                    if (status == filters.status) active else normal
+                    onClick { filters.status.update { status } }
 
                     text(status.label) .. label
                 }

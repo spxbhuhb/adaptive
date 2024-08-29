@@ -1,6 +1,6 @@
 package `fun`.adaptive.adat
 
-import `fun`.adaptive.adat.descriptor.api.properties
+import `fun`.adaptive.adat.api.properties
 import `fun`.adaptive.adat.descriptor.kotlin.integer.*
 import `fun`.adaptive.service.*
 import `fun`.adaptive.service.transport.*
@@ -9,7 +9,7 @@ import `fun`.adaptive.backend.builtin.ServiceImpl
 import kotlinx.coroutines.runBlocking
 import `fun`.adaptive.wireformat.WireFormatDecoder
 import `fun`.adaptive.wireformat.WireFormatRegistry
-import `fun`.adaptive.adat.descriptor.api.properties
+import `fun`.adaptive.adat.api.properties
 
 @Adat
 class TestAdat(

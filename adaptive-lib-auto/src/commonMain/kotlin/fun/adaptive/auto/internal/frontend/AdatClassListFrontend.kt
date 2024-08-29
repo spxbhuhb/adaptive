@@ -12,7 +12,7 @@ class AdatClassListFrontend<A : AdatClass<A>>(
     val companion: AdatCompanion<A>,
     val onListCommit: ((newValue: List<A>) -> Unit)?,
     val onItemCommit: ((item: A) -> Unit)?
-) : CollectionFrontendBase(), AdatStore {
+) : CollectionFrontendBase() {
 
     var classFrontends = mutableMapOf<ItemId, AdatClassFrontend<A>>()
 

@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.adat
 
-import `fun`.adaptive.adat.descriptor.api.properties
+import `fun`.adaptive.adat.api.properties
 import `fun`.adaptive.adat.metadata.AdatClassMetadata
 import `fun`.adaptive.adat.metadata.AdatDescriptorMetadata
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata

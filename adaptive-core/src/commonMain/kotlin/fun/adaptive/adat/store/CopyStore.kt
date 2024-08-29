@@ -40,7 +40,7 @@ class CopyStore<A : AdatClass<A>>(
     override val binding: AdaptiveStateVariableBinding<A>,
     initialValue: A,
     val onChange: ((newValue: A) -> Unit)?
-) : AdatStore, AdaptiveProducer<A> {
+) : AdatStore(), AdaptiveProducer<A> {
 
     override var latestValue: A? = makeCopy(initialValue, null)
 
@@ -50,10 +50,17 @@ class CopyStore<A : AdatClass<A>>(
         binding.targetFragment.setDirty(binding.indexInTargetState, true)
     }
 
+    @Deprecated("use update instead")
     fun setProperty(path: List<String>, value: Any?) {
-        latestValue = latestValue?.let { makeCopy(it, AdatChange(path, value)) }
-        latestValue?.validate()
-        onChange?.invoke(latestValue !!)
+        update(latestValue!!, path.toTypedArray(), value)
+    }
+
+    override fun update(instance: AdatClass<*>, path: Array<String>, value: Any?) {
+        val current = requireNotNull(latestValue)
+        val new = makeCopy(current, AdatChange(path.toList(), value))
+        new.validate()
+        latestValue = new
+        onChange?.invoke(new)
         binding.targetFragment.setDirty(binding.indexInTargetState, true)
     }
 

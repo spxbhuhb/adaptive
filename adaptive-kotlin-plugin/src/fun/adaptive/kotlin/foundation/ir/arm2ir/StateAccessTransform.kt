@@ -5,7 +5,6 @@ package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 
 import `fun`.adaptive.kotlin.common.AbstractIrBuilder
 import `fun`.adaptive.kotlin.common.property
-import `fun`.adaptive.kotlin.foundation.ClassIds
 import `fun`.adaptive.kotlin.foundation.Indices
 import `fun`.adaptive.kotlin.foundation.Names
 import `fun`.adaptive.kotlin.foundation.Strings
@@ -17,15 +16,12 @@ import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationBase
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
+import org.jetbrains.kotlin.ir.declarations.IrDeclarationParent
 import org.jetbrains.kotlin.ir.declarations.IrFunction
-import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
-import org.jetbrains.kotlin.ir.types.classFqName
-import org.jetbrains.kotlin.ir.types.isClassType
-import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.name.Name
 
@@ -138,14 +134,20 @@ class StateAccessTransform(
      *   - sets parent to `genPatchInternal`
      * - when in rendering
      *   - sets parent to `genPatchDescendant`
+     *
      */
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
         if (declaration.origin == IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA) {
-            declaration.parent = checkNotNull(newParent) { "should not be null here" }
+            // debugParents(declaration.returnType.render(), declaration)
+            // This check is necessary for nested lambdas, otherwise we modify the parent when it should be kept the same.
+            // TODO check if nested lambda check can be replaced by level counting or something like that
+            if (!declaration.parents.contains(newParent as IrDeclarationParent)) {
+                declaration.parent = checkNotNull(newParent) { "should not be null here" }
+            }
         }
         return super.visitFunctionNew(declaration)
     }
-
+//
 //    fun debugParents(label: String, declaration: IrDeclaration) {
 //        pluginContext.debug(label) {
 //            declaration.parentsWithSelf.toList().reversed().joinToString {

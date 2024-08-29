@@ -1,4 +1,4 @@
-package `fun`.adaptive.adat.descriptor.api
+package `fun`.adaptive.adat.api
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.descriptor.PropertiesBuilder

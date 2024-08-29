@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.getPrimitiveType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.types.isBoolean
+import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.ir.util.getPrimitiveArrayElementType
@@ -420,6 +421,28 @@ interface AbstractIrBuilder {
             result()
         } else {
             null
+        }
+    }
+
+    fun irArrayOf(elements : List<IrVarargElement>) : IrCall {
+        val type = irBuiltIns.arrayClass.typeWith(irBuiltIns.stringType)
+
+        return IrCallImpl(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            type,
+            irBuiltIns.arrayOf,
+            1, 1,
+        ).apply {
+            putTypeArgument(0, irBuiltIns.stringType)
+            putValueArgument(0,
+                IrVarargImpl(
+                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                    type,
+                    irBuiltIns.stringType
+                ).also {
+                    it.elements += elements
+                }
+            )
         }
     }
 

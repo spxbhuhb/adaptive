@@ -93,10 +93,13 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
 
 object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val exposed = Strings.EXPOSED_PACKAGE.fqName()
-    val descriptorApi = "fun.adaptive.adat.descriptor.api".fqName()
+
+    val api = "fun.adaptive.adat.api".fqName()
 
     val asCommon = "asCommon".callableId { exposed }
     val asEntityID = "asEntityID".callableId { exposed }
     val asJava = "asJava".callableId { exposed }
-    val properties = "properties".callableId { descriptorApi }
+
+    val properties = "properties".callableId { api }
+    val updateFun = "update".callableId { api }
 }

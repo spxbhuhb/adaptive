@@ -5,8 +5,7 @@
 package `fun`.adaptive.cookbook.auth.model
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.descriptor.api.properties
+import `fun`.adaptive.adat.api.properties
 
 @Adat
 class SignIn(

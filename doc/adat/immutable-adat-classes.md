@@ -9,7 +9,6 @@ An [adat class](readme.md) is immutable when all of its properties are immutable
 > * **AND** it has no getter
 > * **AND** the value itself is immutable
 >
->
 >  So, `val l : MutableList` is **NOT** immutable as the value is mutable.
 >
 
@@ -35,8 +34,8 @@ these classes. The `copyStore` producer solves this problem.
 Adaptive provides a producer called `copyStore` that produces a new copy whenever a fragment
 changes a property in the class.
 
-The built-in fragments recognize that `someAdat` belongs to a copy store and instead changing the value in-place
-they send a change request to the store. The store then produces a new value which triggers a patch
+The built-in fragments recognize that `someAdat` belongs to a copy store and instead of changing the value
+in-place they send a change request to the store. The store then produces a new value which triggers a patch
 in the fragment.
 
 (Actually, all fragments that use `AdaptiveStateValueBinding` work automatically with `copyStore`).
@@ -57,6 +56,30 @@ fun someEditor() {
 }
 ```
 
+### Updating values
+
+To update value in a copy store, call the `update` extension function. 
+
+1. `update` sends the change to the store
+2. the store produces a new instance
+3. `someAdat` is set to the new instance
+4. all fragments that use `someAdat` are patched
+
+```kotlin
+@Adat
+class SomeAdat(
+    val s1 : String,
+    val s2 : String
+)
+
+@Adaptive
+fun someFun() {
+    val someAdat = copyStore { SomeAdat("", "") }
+
+    text(someAdat.s1) .. onClick { someAdat.s1.update { "new value" } }
+}
+```
+
 ### Nested instances
 
 The copy store supports nested instances, so you can build complex data structures.
@@ -64,7 +87,6 @@ The copy store supports nested instances, so you can build complex data structur
 > [!NOTE]
 >
 > As of now, copy store **DOES NOT** support nested instances stored in lists, maps and sets.
-> I'll add that in the near future as well.
 >
 
 ```kotlin

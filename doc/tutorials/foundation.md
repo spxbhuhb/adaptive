@@ -134,7 +134,7 @@ fun parent() {
 
 ## Basics: Conditions
 
-You can use the standard Kotlin `if` (`when` probably also works, I should try it out).
+You can use the standard Kotlin `if` and `when`:
 
 ```kotlin
 @Adaptive

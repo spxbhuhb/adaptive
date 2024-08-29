@@ -15,7 +15,7 @@ class AdatClassFrontend<A : AdatClass<A>>(
     val itemId : ItemId?,
     val collectionFrontend: CollectionFrontendBase?,
     val onCommit: ((frontend: AdatClassFrontend<A>) -> Unit)? = null
-) : FrontendBase(), AdatStore {
+) : FrontendBase() {
 
     val adatContext = AdatContext<ItemId>(itemId, null, null, store = this, null)
 

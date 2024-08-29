@@ -4,6 +4,7 @@
 package `fun`.adaptive.kotlin.adat.ir
 
 import `fun`.adaptive.kotlin.AdaptiveOptions
+import `fun`.adaptive.kotlin.adat.ir.immutable.UpdateVisitor
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
@@ -19,6 +20,8 @@ class AdatGenerationExtension(
             // debug("DUMP BEFORE") { "\n\n" + moduleFragment.dump() }
 
             moduleFragment.transformChildrenVoid(AdatModuleTransform(this))
+
+            moduleFragment.transformChildrenVoid(UpdateVisitor(this))
 
             // debug("DUMP AFTER") { "\n\n" + moduleFragment.dumpKotlinLike(KotlinLikeDumpOptions(printFakeOverridesStrategy = FakeOverridesStrategy.NONE)) }
             // debug("DUMP AFTER") { "\n\n" + moduleFragment.dump() }

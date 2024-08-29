@@ -35,9 +35,9 @@ class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentCo
         FirExtensionRegistrarAdapter.registerExtension(AdaptivePluginRegistrar())
 
         IrGenerationExtension.registerExtension(ServicesGenerationExtension(options))
+        IrGenerationExtension.registerExtension(AdatGenerationExtension(options))
         IrGenerationExtension.registerExtension(FoundationGenerationExtension(options))
         IrGenerationExtension.registerExtension(BackendGenerationExtension(options))
-        IrGenerationExtension.registerExtension(AdatGenerationExtension(options))
         IrGenerationExtension.registerExtension(ReflectGenerationExtension(options))
         IrGenerationExtension.registerExtension(DebugGenerationExtension(options))
 

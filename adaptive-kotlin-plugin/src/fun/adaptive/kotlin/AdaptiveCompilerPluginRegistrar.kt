@@ -38,9 +38,9 @@ class AdaptiveCompilerPluginRegistrar : CompilerPluginRegistrar() {
 
         // if you add something here, add also to ExtensionRegistrarConfigurator for tests
         IrGenerationExtension.registerExtension(ServicesGenerationExtension(options))
+        IrGenerationExtension.registerExtension(AdatGenerationExtension(options))
         IrGenerationExtension.registerExtension(FoundationGenerationExtension(options))
         IrGenerationExtension.registerExtension(BackendGenerationExtension(options))
-        IrGenerationExtension.registerExtension(AdatGenerationExtension(options))
         IrGenerationExtension.registerExtension(ReflectGenerationExtension(options))
         IrGenerationExtension.registerExtension(DebugGenerationExtension(options))
 
