@@ -6,4 +6,4 @@
 * don't troll
 * don't hurt
 
-That basically covers it. We are smart people, we exactly know what these means.
+That basically covers it. We are smart people, we exactly know what these mean.
