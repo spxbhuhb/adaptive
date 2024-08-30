@@ -5,6 +5,7 @@
 import `fun`.adaptive.cookbook.auth.authMain
 import `fun`.adaptive.cookbook.components.componentsMain
 import `fun`.adaptive.cookbook.intro.introMain
+import `fun`.adaptive.cookbook.iot.iotMain
 import `fun`.adaptive.cookbook.layout.desktop.layoutDesktopMain
 import `fun`.adaptive.cookbook.layout.mobile.layoutMobileMain
 import `fun`.adaptive.cookbook.shared.bodySmall
@@ -73,6 +74,7 @@ fun main() {
                 route { layoutMobileMain() }
                 route { layoutDesktopMain() }
                 route { componentsMain() }
+                route { iotMain() }
 
                 recipeList()
             }
@@ -96,6 +98,7 @@ fun recipeList() {
             recipe("Layout - Desktop", "Layouts for large screens.") .. navClick(cookbookContent) { layoutDesktopMain() }
             recipe("Components", "Simple components.") .. navClick(cookbookContent) { componentsMain() }
             recipe("Auth", "Basic authorization and authentication: login, logout, password change, user management.") .. navClick(cookbookContent) { authMain() }
+            recipe("IoT", "Basic IoT UI") .. navClick(cookbookContent) { iotMain() }
         }
     }
 

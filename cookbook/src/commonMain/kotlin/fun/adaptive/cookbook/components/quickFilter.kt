@@ -32,41 +32,42 @@ private val normal = instructionsOf(textColor(0x0))
 private val label = fontSize(14.sp) .. lightFont .. noSelect
 
 @Adat
-class Filters(
-    val status: Status
+class Filter(
+    val option: Options
 )
+
+enum class Options(
+    val label: String
+) {
+    First("First"),
+    Second("Second"),
+    Third("Third"),
+    Fourth("Fourth")
+}
 
 @Adaptive
 fun quickFilter() {
-    var filters = copyStore { Filters(Status.All) }
+    var filters = copyStore { Filter(Options.First) }
 
+    quickFilter(filters.option, Options.entries.map { it.name to it.label }, onSelect = { filters.option.update { it }})
+}
+
+@Adaptive
+fun <T> quickFilter(selected : T, entries : List<Pair<T,String>>, onSelect: (it : T) -> Unit) {
     box {
         row {
             filterHeight .. alignItems.center .. gap(8.dp) .. border(color(0xF3F3F3), 1.dp) .. cornerRadius(10.dp) .. backgroundColor(0xffffff)
             padding((- 1).dp)
 
-            for (status in Status.entries) {
+            for (entry in entries) {
                 row {
                     common
-                    if (status == filters.status) active else normal
-                    onClick { filters.status.update { status } }
+                    if (selected == entry.first) active else normal
+                    onClick { onSelect(entry.first) }
 
-                    text(status.label) .. label
+                    text(entry.second) .. label
                 }
             }
         }
     }
-}
-
-
-enum class Status(
-    val label: String
-) {
-    All("Összes"),
-    Heating("Hűtés"),
-    Cooling("Fűtés"),
-    Off("Off"),
-    On("On"),
-    Offline("Offline"),
-    SOS("SOS")
 }

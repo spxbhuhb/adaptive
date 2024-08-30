@@ -28,6 +28,9 @@ val mediumGray = color(0x8A8A8Fu)
 val darkGray = color(0x666666u)
 val purple = color(0xA644FFu)
 
+val f16 = fontSize(16.sp)
+val f12 = fontSize(12.sp)
+
 val lightTextColor = textColor(0xffffffu)
 val darkTextColor = textColor(0x2E2E2Eu)
 

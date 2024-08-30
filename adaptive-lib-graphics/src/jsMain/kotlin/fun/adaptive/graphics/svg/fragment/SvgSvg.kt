@@ -27,7 +27,7 @@ class SvgSvg(
 
     override val receiver: org.w3c.dom.HTMLCanvasElement = canvas.receiver
 
-    val canvasAdapter = CanvasAdapter(adapter, canvas, this).also { it.trace = arrayOf(Regex(".*")) }
+    val canvasAdapter = CanvasAdapter(adapter, canvas, this)
 
     val resource: DrawableResource
         get() = state[0].checkIfInstance()
