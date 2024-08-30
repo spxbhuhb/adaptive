@@ -114,7 +114,7 @@ abstract class ServiceCallTransport(
 
         }
 
-        accessLog.info("$request ${context.sessionOrNull?.principalOrNull}")
+        accessLog.info("$request ${response.success} ${context.sessionOrNull?.principalOrNull}")
 
         try {
             send(response)

@@ -2,9 +2,16 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import `fun`.adaptive.auto.api.autoCommon
+import `fun`.adaptive.auto.service.AutoService
+import `fun`.adaptive.auto.worker.AutoWorker
+import `fun`.adaptive.backend.backend
+import `fun`.adaptive.backend.builtin.service
+import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.cookbook.auth.authMain
 import `fun`.adaptive.cookbook.components.componentsMain
 import `fun`.adaptive.cookbook.intro.introMain
+import `fun`.adaptive.cookbook.iot.iotCommon
 import `fun`.adaptive.cookbook.iot.iotMain
 import `fun`.adaptive.cookbook.layout.desktop.layoutDesktopMain
 import `fun`.adaptive.cookbook.layout.mobile.layoutMobileMain
@@ -22,6 +29,7 @@ import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
+import `fun`.adaptive.ktor.withJsonWebSocketTransport
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.box
@@ -38,45 +46,62 @@ import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.navClick
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.paddingLeft
-import `fun`.adaptive.ui.api.route
 import `fun`.adaptive.ui.api.rowTemplate
-import `fun`.adaptive.ui.api.slot
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.platform.withJsResources
+import kotlinx.browser.window
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 val cookbookContent = name("cookbook-content")
 
 fun main() {
+    CoroutineScope(Dispatchers.Default).launch {
 
-    withJsResources()
+        withJsResources()
 
-    browser(CanvasFragmentFactory, SvgFragmentFactory) { adapter ->
+        val localBackend =
+            backend {
+                worker { AutoWorker() }
+                service { AutoService() }
+            }
 
-        with(adapter.defaultTextRenderData) {
-            fontName = "Open Sans"
-            fontSize = 16.sp
-        }
+        withJsonWebSocketTransport(window.location.origin, serviceImplFactory = localBackend)
 
-        adapter.theme["AuiInput"] = inputStyle
+        iotCommon()
+        autoCommon()
 
-        grid {
-            maxHeight .. padding { 16.dp } .. gap { 16.dp }
-            rowTemplate(40.dp, 1.fr)
+        browser(CanvasFragmentFactory, SvgFragmentFactory, backend = localBackend) { adapter ->
 
-            text("Cookbook")
+            with(adapter.defaultTextRenderData) {
+                fontName = "Open Sans"
+                fontSize = 16.sp
+            }
 
-            slot(cookbookContent) {
-                route { authMain() }
-                route { introMain() }
-                route { layoutMobileMain() }
-                route { layoutDesktopMain() }
-                route { componentsMain() }
-                route { iotMain() }
+            adapter.theme["AuiInput"] = inputStyle
 
-                recipeList()
+            grid {
+                maxHeight .. padding { 16.dp } .. gap { 16.dp }
+                rowTemplate(40.dp, 1.fr)
+
+                iotMain()
+
+//                text("Cookbook")
+//
+//                slot(cookbookContent) {
+//                    route { authMain() }
+//                    route { introMain() }
+//                    route { layoutMobileMain() }
+//                    route { layoutDesktopMain() }
+//                    route { componentsMain() }
+//                    route { iotMain() }
+//
+//                    recipeList()
+//                }
             }
         }
     }
@@ -105,7 +130,7 @@ fun recipeList() {
 }
 
 @Adaptive
-fun recipe(title: String, explanation: String, vararg instructions: AdaptiveInstruction) : AdaptiveFragment {
+fun recipe(title: String, explanation: String, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
 
     grid(*instructions) {
         width { 240.dp } .. height { 120.dp } .. cornerRadius8 .. lightBackground .. shadow

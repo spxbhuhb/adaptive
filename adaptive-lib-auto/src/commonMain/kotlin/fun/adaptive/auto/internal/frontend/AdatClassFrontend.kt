@@ -4,7 +4,6 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.AdatContext
 import `fun`.adaptive.adat.deepCopy
-import `fun`.adaptive.adat.store.AdatStore
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.model.ItemId
 
@@ -39,5 +38,12 @@ class AdatClassFrontend<A : AdatClass<A>>(
     fun modify(propertyName: String, propertyValue: Any?) {
         backend.modify(backend.itemId, propertyName, propertyValue)
     }
+
+    override fun update(instance: AdatClass<*>, path: Array<String>, value: Any?) {
+        // FIXME only single properties are handled b y AdatClassListFrontend
+        check(path.size == 1) { "multi-level paths are not implemented yet" }
+        modify(path[0], value)
+    }
+
 
 }

@@ -46,12 +46,6 @@ Technically you could avoid the registry setting by adding some boilerplate manu
 easier to have it. Also, the issue above is scheduled for 2024.3, so hopefully this setting won't be needed
 anymore.
 
-**Android issues**
-
-As of now, the Android plugin in IntelliJ does not support K2, so syntax highlighting does not work.
-Switching back to K1 mode works, but then Adat classes do not work. Luckily we don't need to edit
-Android specific code too much.
-
 **Import issues**
 
 There are a few import related issues when in K2 mode, see [KTIJ-31100](https://youtrack.jetbrains.com/issue/KTIJ-31100/K2-Incorrect-auto-completion-for-escaped-package-names)

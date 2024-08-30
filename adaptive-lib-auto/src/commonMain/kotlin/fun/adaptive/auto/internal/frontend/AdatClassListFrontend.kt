@@ -3,7 +3,6 @@ package `fun`.adaptive.auto.internal.frontend
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.AdatContext
-import `fun`.adaptive.adat.store.AdatStore
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.model.ItemId
 
@@ -35,8 +34,18 @@ class AdatClassListFrontend<A : AdatClass<A>>(
         onItemCommit?.invoke(instance)
     }
 
+    operator fun get(index: Int) = values[index]
+
+    operator fun plusAssign(item: A) {
+        add(item)
+    }
+
     fun add(item: A) {
         backend.add(item, null, null, true, true)
+    }
+
+    operator fun minusAssign(item: A) {
+        remove(item.adatContext !!.id as ItemId)
     }
 
     fun remove(itemId: ItemId) {
@@ -49,6 +58,12 @@ class AdatClassListFrontend<A : AdatClass<A>>(
 
     fun modify(itemId: ItemId, propertyName: String, propertyValue: Any?) {
         getFrontend(itemId).modify(propertyName, propertyValue)
+    }
+
+    override fun update(instance: AdatClass<*>, path: Array<String>, value: Any?) {
+        // FIXME only single properties are handled b y AdatClassListFrontend
+        check(path.size == 1) { "multi-level paths are not implemented yet" }
+        modify(instance.adatContext !!.id as ItemId, path[0], value)
     }
 
     // TODO optimize AdatClassListFrontend.getFrontend - I think `newInstance` is unnecessary here

@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.adaptive
+
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
@@ -56,13 +58,17 @@ kotlin {
                 implementation(libs.adaptive.lib.auto)
                 implementation(libs.adaptive.lib.graphics)
                 implementation(libs.adaptive.lib.markdown)
+                implementation(libs.kotlinx.coroutines.debug)
             }
         }
 
         jvmMain {
             dependencies {
-                implementation(libs.adaptive.lib.exposed)
                 implementation(libs.h2database)
+                implementation(libs.ktor.server.core)
+                implementation(libs.ktor.server.netty)
+                implementation(libs.ktor.server.websockets)
+                implementation(libs.adaptive.lib.exposed)
             }
         }
     }

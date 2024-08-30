@@ -3,18 +3,25 @@ package `fun`.adaptive.cookbook.iot
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.auto.api.autoList
 import `fun`.adaptive.cookbook.components.quickFilter
+import `fun`.adaptive.cookbook.iot.api.ThermostatApi
+import `fun`.adaptive.cookbook.iot.model.Thermostat
+import `fun`.adaptive.cookbook.iot.model.ThermostatStatus
 import `fun`.adaptive.cookbook.shared.f12
 import `fun`.adaptive.cookbook.shared.f16
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.service.getService
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.color
+import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.cornerRadius
 import `fun`.adaptive.ui.api.fontSize
+import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.semiBoldFont
@@ -25,72 +32,38 @@ import `fun`.adaptive.ui.api.textColor
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
-import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.format
-import `fun`.adaptive.utility.fourRandomInt
-import kotlin.math.abs
 
 @Adat
 class ThermostatFilter(
-    val status: Status,
+    val status: ThermostatStatus,
     val text: String
 ) {
     fun matches(thermostat: Thermostat): Boolean {
-        println(thermostat)
         return (text.isEmpty() || thermostat.name.contains(text, ignoreCase = true)) &&
-            (status == Status.All || thermostat.status == status)
+            (status == ThermostatStatus.All || thermostat.status == status)
     }
-}
-
-@Adat
-class Thermostat(
-    val id: UUID<Thermostat>,
-    val localId: String,
-    val floor: String,
-    val name: String,
-    val group: String,
-    val actual: Double,
-    val setPoint: Double,
-    val target: Double,
-    val status: Status
-)
-
-enum class Status(
-    val label: String
-) {
-    All("Összes"),
-    Heating("Hűtés"),
-    Cooling("Fűtés"),
-    Off("Off"),
-    On("On"),
-    Offline("Offline"),
-    SOS("SOS");
 }
 
 @Adaptive
 fun thermostats() {
-    val filter = copyStore { ThermostatFilter(Status.All, "") }
+    val filter = copyStore { ThermostatFilter(ThermostatStatus.All, "") }
 
-    println(filter)
+    val all = autoList(Thermostat, trace = true) { getService<ThermostatApi>().list() }
+    val filtered = all?.filter { filter.matches(it) }
 
-    val thermostats = (1 .. 100).map {
-        Thermostat(
-            id = UUID(),
-            localId = "TH-${it.toString().padStart(3, '0')}",
-            floor = "${abs(fourRandomInt()[0] % 5) + 1}. em",
-            name = "Thermostat - 1",
-            group = "Tárgyalók",
-            actual = 22.0,
-            setPoint = 21.0,
-            target = 20.5,
-            status = Status.entries[abs(fourRandomInt()[0] % 6) + 1]
-        )
-    }.filter { filter.matches(it) }
+    column {
+        gap(16.dp)
 
-    quickFilter(filter.status, Status.entries.map { it.name to it.label }) { filter.status.update { it } }
+        quickFilter(filter.status, ThermostatStatus.entries, { label }) { filter.status.update { it } }
 
-    for (thermostat in thermostats) {
-        thermostat(thermostat)
+        if (filtered != null) {
+            for (thermostat in filtered) {
+                thermostat(thermostat)
+            }
+        } else {
+            text("... loading ...")
+        }
     }
 }
 
@@ -141,9 +114,9 @@ private val statusTextStyles = arrayOf(
 )
 
 @Adaptive
-private fun status(status: Status) {
+private fun status(status: ThermostatStatus) {
     row {
         statusBoxStyles[status.ordinal] .. alignItems.center
-        text(status) .. statusTextStyles[status.ordinal] .. fontSize(9.sp)
+        text(status.label) .. statusTextStyles[status.ordinal] .. fontSize(9.sp)
     }
 }

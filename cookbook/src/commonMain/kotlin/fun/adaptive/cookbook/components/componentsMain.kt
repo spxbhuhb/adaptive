@@ -22,7 +22,7 @@ fun componentsMain() {
             sidebar()
             column {
                 gap(8.dp)
-                quickFilter()
+                quickFilterShort()
             }
         }
     }

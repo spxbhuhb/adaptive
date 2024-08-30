@@ -46,14 +46,14 @@ enum class Options(
 }
 
 @Adaptive
-fun quickFilter() {
+fun quickFilterShort() {
     var filters = copyStore { Filter(Options.First) }
 
-    quickFilter(filters.option, Options.entries.map { it.name to it.label }, onSelect = { filters.option.update { it }})
+    quickFilter(filters.option, Options.entries, { label }, onSelect = { filters.option.update { it } })
 }
 
 @Adaptive
-fun <T> quickFilter(selected : T, entries : List<Pair<T,String>>, onSelect: (it : T) -> Unit) {
+fun <T> quickFilter(selected: T, entries: List<T>, labelFun: T.() -> String, onSelect: (it: T) -> Unit) {
     box {
         row {
             filterHeight .. alignItems.center .. gap(8.dp) .. border(color(0xF3F3F3), 1.dp) .. cornerRadius(10.dp) .. backgroundColor(0xffffff)
@@ -62,10 +62,10 @@ fun <T> quickFilter(selected : T, entries : List<Pair<T,String>>, onSelect: (it 
             for (entry in entries) {
                 row {
                     common
-                    if (selected == entry.first) active else normal
-                    onClick { onSelect(entry.first) }
+                    if (selected == entry) active else normal
+                    onClick { onSelect(entry) }
 
-                    text(entry.second) .. label
+                    text(entry.labelFun()) .. label
                 }
             }
         }
