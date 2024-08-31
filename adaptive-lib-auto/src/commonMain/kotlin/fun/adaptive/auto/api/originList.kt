@@ -40,7 +40,7 @@ fun <A : AdatClass<A>> originList(
     companion: AdatCompanion<A>,
     trace: Boolean = false,
     onListCommit: ((newValue: List<A>) -> Unit)? = null,
-    onItemCommit: ((item: A) -> Unit)? = null
+    onItemCommit: ((newValue: List<A>, item: A) -> Unit)? = null
 ) : AdatClassListFrontend<A> {
 
     val originHandle = AutoHandle(UUID(), 1)

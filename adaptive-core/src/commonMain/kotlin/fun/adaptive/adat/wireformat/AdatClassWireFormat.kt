@@ -44,7 +44,10 @@ class AdatClassWireFormat<A : AdatClass<A>>(
         return encoder
     }
 
-    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): A {
+    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): A =
+        wireFormatDecode(decoder)
+
+    fun <ST> wireFormatDecode(decoder: WireFormatDecoder<ST>?): A {
         val value = arrayOfNulls<Any?>(propertyWireFormats.size)
 
         for (propertyWireFormat in propertyWireFormats) {

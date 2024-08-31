@@ -1,7 +1,6 @@
 package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.encode
 import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.model.ItemId
@@ -27,7 +26,7 @@ class SetBackend(
         val itemId = context.nextTime()
         addItem(itemId, metadataId, item)
 
-        val operation = AutoAdd(itemId, itemId, metadataId, parentItemId, item.encode(context.wireFormatProvider))
+        val operation = AutoAdd(itemId, itemId, metadataId, parentItemId, encode(item.toArray()))
         trace { "FE -> BE  itemId=$itemId .. commit true .. distribute true .. $operation" }
 
         close(operation, commit, distribute)
@@ -68,7 +67,7 @@ class SetBackend(
     override fun add(operation: AutoAdd, commit: Boolean, distribute: Boolean) {
         trace { "commit=$commit distribute=$distribute op=$operation" }
 
-        addItem(operation.itemId, operation.metadataId, context.wireFormatProvider.decode(operation.payload, context.defaultWireFormat))
+        addItem(operation.itemId, operation.metadataId, decode(operation.payload))
 
         closeListOp(operation, setOf(operation.itemId), commit, distribute)
     }
@@ -116,7 +115,7 @@ class SetBackend(
             val itemId = item.itemId
 
             if (itemId > peerTime) {
-                connector.send(AutoAdd(itemId, itemId, item.metadataId, null, item.encode()))
+                connector.send(AutoAdd(itemId, itemId, item.metadataId, null, encode(item.values)))
             } else {
                 item.syncPeer(connector, peerTime)
             }
@@ -146,4 +145,11 @@ class SetBackend(
         items += itemId to backend
         return backend
     }
+
+    private fun encode(values : Array<Any?>) =
+        context.defaultWireFormat.wireFormatEncode(context.wireFormatProvider.encoder(), values).pack()
+
+    private fun decode(payload : ByteArray) =
+        context.defaultWireFormat.wireFormatDecode(context.wireFormatProvider.decoder(payload))
+
 }

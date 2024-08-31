@@ -146,7 +146,4 @@ class PropertyBackend(
         return context.wireFormatProvider.encoder().rawInstance(value, wireformat).pack()
     }
 
-    fun encode() =
-        context.defaultWireFormat.wireFormatEncode(context.wireFormatProvider.encoder(), values).pack()
-
 }

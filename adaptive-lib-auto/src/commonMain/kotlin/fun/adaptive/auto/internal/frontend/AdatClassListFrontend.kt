@@ -10,7 +10,7 @@ class AdatClassListFrontend<A : AdatClass<A>>(
     override val backend: SetBackend,
     val companion: AdatCompanion<A>,
     val onListCommit: ((newValue: List<A>) -> Unit)?,
-    val onItemCommit: ((item: A) -> Unit)?
+    val onItemCommit: ((newValue: List<A>, item: A) -> Unit)?
 ) : CollectionFrontendBase() {
 
     var classFrontends = mutableMapOf<ItemId, AdatClassFrontend<A>>()
@@ -27,11 +27,11 @@ class AdatClassListFrontend<A : AdatClass<A>>(
 
     override fun commit(itemId: ItemId) {
         @Suppress("UNCHECKED_CAST")
-        val index = values.indexOfFirst { (it.adatContext as AdatContext<ItemId>).id == itemId.adatContext?.id }
+        val index = values.indexOfFirst { (it.adatContext as AdatContext<ItemId>).id == itemId }
         if (index == - 1) return
         val instance = getFrontend(itemId).value !!
         values = values.subList(0, index) + instance + values.subList(index + 1, values.size)
-        onItemCommit?.invoke(instance)
+        onItemCommit?.invoke(values, instance)
     }
 
     operator fun get(index: Int) = values[index]

@@ -43,7 +43,11 @@ class AutoList<A : AdatClass<A>>(
                 onListCommit?.invoke(it)
                 binding.targetFragment.setDirty(binding.indexInTargetState, true) // TODO make a separate binding for producers
             },
-            onItemCommit = onItemCommit,
+            onItemCommit = { list, instance ->
+                latestValue = list
+                onItemCommit?.invoke(instance)
+                binding.targetFragment.setDirty(binding.indexInTargetState, true) // TODO make a separate binding for producers
+            }
         )
     }
 

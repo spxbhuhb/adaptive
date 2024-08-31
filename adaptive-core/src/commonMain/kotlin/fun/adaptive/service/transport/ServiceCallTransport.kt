@@ -6,6 +6,7 @@ package `fun`.adaptive.service.transport
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.encode
+import `fun`.adaptive.log.LogLevel
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.factory.ServiceImplFactory
@@ -32,7 +33,7 @@ abstract class ServiceCallTransport(
 
     val transportLog = getLogger("fun.adaptive.service.Transport")
 
-    val accessLog = getLogger("fun.adaptive.service.Access")
+    val accessLog = getLogger("fun.adaptive.service.Access").also { it.level = LogLevel.Warning }
 
     var trace: Boolean = false
 
