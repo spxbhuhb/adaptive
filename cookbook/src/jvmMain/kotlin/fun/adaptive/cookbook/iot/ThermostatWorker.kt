@@ -30,16 +30,16 @@ class ThermostatWorker : WorkerImpl<ThermostatWorker> {
 
         while (isActive) {
             val randoms = fourRandomInt().map { abs(it) }
-            val index = (randoms[0] % count)
+            val index = (randoms[0] % 10) // change the first 10, so it is visible
             val thermostat = thermostats[index]
 
-            when (randoms[1] % 4) {
-                0 -> thermostat.actual.update { thermostat.actual + 0.1 }
-                1 -> thermostat.actual.update { thermostat.actual - 0.1 }
+            when (randoms[1] % 3) {
+                0 -> thermostat.actual.update { thermostat.actual + 5 }
+                1 -> thermostat.actual.update { thermostat.actual - 5 }
                 2 -> thermostat.status.update { ThermostatStatus.entries[(thermostat.status.ordinal + 1) % 6] }
             }
 
-            delay(1000)
+            delay(50)
         }
     }
 

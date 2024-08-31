@@ -84,9 +84,9 @@ fun main() {
 
             adapter.theme["AuiInput"] = inputStyle
 
-            grid {
-                maxHeight .. padding { 16.dp } .. gap { 16.dp }
-                rowTemplate(40.dp, 1.fr)
+//            grid {
+//                maxHeight .. padding { 16.dp } .. gap { 16.dp }
+//                rowTemplate(40.dp, 1.fr)
 
                 iotMain()
 
@@ -102,7 +102,7 @@ fun main() {
 //
 //                    recipeList()
 //                }
-            }
+//           }
         }
     }
 }

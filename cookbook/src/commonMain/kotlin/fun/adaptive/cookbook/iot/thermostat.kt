@@ -22,15 +22,22 @@ import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.cornerRadius
 import `fun`.adaptive.ui.api.fontSize
 import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.height
+import `fun`.adaptive.ui.api.maxHeight
+import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.semiBoldFont
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.spaceBetween
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.utility.format
 
@@ -49,17 +56,21 @@ class ThermostatFilter(
 fun thermostats() {
     val filter = copyStore { ThermostatFilter(ThermostatStatus.All, "") }
 
-    val all = autoList(Thermostat, trace = true) { getService<ThermostatApi>().list() }
+    val all = autoList(Thermostat) { getService<ThermostatApi>().list() }
     val filtered = all?.filter { filter.matches(it) }
 
-    column {
-        gap(16.dp)
+    grid {
+        maxSize .. rowTemplate(38.dp, 1.fr) .. gap(16.dp)
 
         quickFilter(filter.status, ThermostatStatus.entries, { label }) { filter.status.update { it } }
 
         if (filtered != null) {
-            for (thermostat in filtered) {
-                thermostat(thermostat)
+            column {
+                maxSize .. verticalScroll .. gap(8.dp)
+
+                for (thermostat in filtered) {
+                    thermostat(thermostat)
+                }
             }
         } else {
             text("... loading ...")
