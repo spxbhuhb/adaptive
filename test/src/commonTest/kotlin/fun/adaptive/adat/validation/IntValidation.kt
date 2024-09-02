@@ -34,7 +34,7 @@ class IntValidation {
 
         val fc = result.failedConstraints.first()
 
-        assertTrue(fc is IntMinimum)
+        assertEquals("IntMinimum", fc.descriptorMetadata.name)
     }
 
 
@@ -50,7 +50,7 @@ class IntValidation {
 
         val fc = result.failedConstraints.first()
 
-        assertTrue(fc is IntMaximum)
+        assertEquals("IntMaximum", fc.descriptorMetadata.name)
     }
 
     @Test

@@ -93,6 +93,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testBasic() {
         runTest("testData/box/adat/descriptor/basic.kt");
       }
+
+      @Test
+      @TestMetadata("stringEscape.kt")
+      public void testStringEscape() {
+        runTest("testData/box/adat/descriptor/stringEscape.kt");
+      }
     }
 
     @Nested

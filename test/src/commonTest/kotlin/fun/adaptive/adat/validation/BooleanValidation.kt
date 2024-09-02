@@ -2,7 +2,6 @@ package `fun`.adaptive.adat.validation
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.api.properties
-import `fun`.adaptive.adat.descriptor.kotlin.bool.BooleanValue
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -33,7 +32,7 @@ class BooleanValidation {
 
         val fc = result.failedConstraints.first()
 
-        assertTrue(fc is BooleanValue)
+        assertEquals("BooleanValue", fc.descriptorMetadata.name)
     }
 
     @Test

@@ -18,4 +18,24 @@ class JsonReaderTest {
         assertEquals(1, root.entries.size)
         assertEquals(12, root.entries["i"]!!.asInt)
     }
+
+    @Test
+    fun stringEscape() {
+        test("""{ "s" : "\"" }""", "\"")
+        test("""{ "s" : "\\" }""", "\\")
+        test("""{ "s" : "\n" }""", "\n")
+        test("""{ "s" : "\r" }""", "\r")
+        test("""{ "s" : "\t" }""", "\t")
+        test("""{ "s" : "\u0000" }""", "\u0000")
+        test("""{ "s" : "\u0008" }""", "\u0008")
+        test("""{ "s" : "\u0020" }""", " ")
+        test("""{ "s" : "árvíztűrő tükörfúrógép" }""", "árvíztűrő tükörfúrógép")
+    }
+
+    fun test(source : String, expected: String) {
+        val root = JsonBufferReader(source.encodeToByteArray()).read()
+        assertTrue(root is JsonObject)
+        assertEquals(1, root.entries.size)
+        assertEquals(expected, root.entries["s"]!!.asString)
+    }
 }

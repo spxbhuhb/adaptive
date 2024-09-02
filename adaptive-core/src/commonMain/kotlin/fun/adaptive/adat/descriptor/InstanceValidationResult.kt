@@ -9,6 +9,6 @@ class InstanceValidationResult {
     val isValid: Boolean
         get() = failedConstraints.isEmpty()
 
-    val failedConstraints = mutableListOf<AdatDescriptor>()
+    val failedConstraints = mutableListOf<ConstraintFail>()
 
 }

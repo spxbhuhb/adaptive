@@ -1,11 +1,14 @@
 package `fun`.adaptive.adat.descriptor
 
 import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.metadata.AdatDescriptorMetadata
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
 
 abstract class AdatDescriptor {
 
-    open fun validate(instance: AdatClass<*>, value : Any?, metadata : AdatPropertyMetadata, result : InstanceValidationResult) {
+    abstract val metadata : AdatDescriptorMetadata
+
+    open fun validate(instance: AdatClass<*>, value : Any?, propertyMetadata : AdatPropertyMetadata, result : InstanceValidationResult) {
         // non-constraint descriptors may leave this function empty
     }
 

@@ -52,9 +52,9 @@ class AdaptiveStateVariableBinding<VT>(
             val provider = sourceFragment.getThisClosureVariable(indexInSourceClosure)
 
             when {
-                provider is AdatClass<*> && provider.adatContext?.store is CopyStore<*> -> {
+                provider is AdatClass<*> && provider.adatContext != null -> {
                     val absolutePath = provider.absolutePath() + path
-                    (provider.adatContext?.store as CopyStore<*>).setProperty(absolutePath, value)
+                    provider.adatContext?.store?.update(provider, absolutePath.toTypedArray(), value)
                 }
 
                 provider is AdaptivePropertyProvider -> {
@@ -72,6 +72,16 @@ class AdaptiveStateVariableBinding<VT>(
             }
         }
     }
+
+    /**
+     * Value of the state variable this binding uses. This is not the value bound
+     * when [path] is not empty, but usually the Adat class that contains that value.
+     */
+    val stateVariableValue : Any?
+        get() {
+            checkNotNull(sourceFragment)
+            return sourceFragment.getThisClosureVariable(indexInSourceClosure)
+        }
 
     val propertyProvider: AdaptivePropertyProvider
         get() {

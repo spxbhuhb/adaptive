@@ -3,6 +3,7 @@
  */
 package `fun`.adaptive.ui.fragment
 
+import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
@@ -45,6 +46,7 @@ open class AuiInput(
         if (isInit) {
             receiver.addEventListener("input", {
                 if (receiver.value != b.value) {
+                    touch(b)
                     b.setValue(receiver.value, true)
                 }
             })
@@ -70,5 +72,13 @@ open class AuiInput(
         }
 
         return false
+    }
+
+    fun touch(binding: AdaptiveStateVariableBinding<String>) {
+        val instance = binding.stateVariableValue
+        if (instance == null || instance !is AdatClass<*>) return
+        val context = instance.adatContext ?: return
+        val path = binding.path ?: return
+        context.touch(path)
     }
 }

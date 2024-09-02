@@ -42,11 +42,12 @@ class CopyStore<A : AdatClass<A>>(
     val onChange: ((newValue: A) -> Unit)?
 ) : AdatStore(), AdaptiveProducer<A> {
 
-    override var latestValue: A? = makeCopy(initialValue, null)
+    val adatContext = AdatContext<Any>(null, null, null, store = this, null)
+
+    override var latestValue: A? = makeCopy(initialValue, null, false)
 
     fun replaceValue(newValue: A) {
-        latestValue = makeCopy(newValue, null)
-        latestValue?.validate()
+        makeCopy(newValue, null, true)
         binding.targetFragment.setDirty(binding.indexInTargetState, true)
     }
 
@@ -57,15 +58,19 @@ class CopyStore<A : AdatClass<A>>(
 
     override fun update(instance: AdatClass<*>, path: Array<String>, value: Any?) {
         val current = requireNotNull(latestValue)
-        val new = makeCopy(current, AdatChange(path.toList(), value))
-        new.validate()
-        latestValue = new
-        onChange?.invoke(new)
-        binding.targetFragment.setDirty(binding.indexInTargetState, true)
+        makeCopy(current, AdatChange(path.toList(), value), patch = true)
     }
 
-    fun makeCopy(value: A, change: AdatChange?) =
-        value.deepCopy(change).also { it.applyContext(AdatContext<Any>(null, null, null, this, null)) }
+    fun makeCopy(value: A, change: AdatChange?, patch : Boolean) =
+        value.deepCopy(change).also {
+            it.applyContext(adatContext)
+            it.validate()
+            latestValue = it
+            onChange?.invoke(it)
+            if (patch) {
+                binding.targetFragment.setDirty(binding.indexInTargetState, true)
+            }
+        }
 
     override fun start() {
         // copy store is event-driven

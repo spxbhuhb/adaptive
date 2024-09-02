@@ -4,17 +4,18 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.descriptor.AdatDescriptor
 import `fun`.adaptive.adat.descriptor.InstanceValidationResult
+import `fun`.adaptive.adat.metadata.AdatDescriptorMetadata
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
-import kotlin.collections.plusAssign
 
 @Adat
 class IntMaximum(
+    override val metadata: AdatDescriptorMetadata,
     val maximum : Int
 ) : AdatDescriptor() {
 
-    override fun validate(instance: AdatClass<*>, value : Any?, metadata : AdatPropertyMetadata, result : InstanceValidationResult) {
+    override fun validate(instance: AdatClass<*>, value : Any?, propertyMetadata : AdatPropertyMetadata, result : InstanceValidationResult) {
         value as Int
-        if (value > maximum) result.failedConstraints += this
+        if (value > maximum) propertyMetadata.fail(result, this)
     }
 
 }

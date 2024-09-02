@@ -132,22 +132,13 @@ class JsonBufferReader(
                 }
 
                 '\"' -> {
-                    val value = StringBuilder()
-
-                    while (currentPosition + 1 < json.length) {
-                        val nextChar = json[++ currentPosition]
-                        if (nextChar == '\"' && value[value.length - 1] != '\\') {
-                            break
-                        } else {
-                            value.append(nextChar)
-                        }
-                    }
+                    val value = readString()
 
                     if (valueExpected) {
-                        JsonString(value.toString()).append()
+                        JsonString(value).append()
                         fieldName = null
                     } else {
-                        fieldName = value.toString()
+                        fieldName = value
                     }
 
                     valueExpected = false
@@ -179,7 +170,7 @@ class JsonBufferReader(
                 }
 
                 else -> {
-                    if (!char.isWhitespace()) {
+                    if (! char.isWhitespace()) {
                         throw IllegalArgumentException("invalid character: $char")
                     }
                 }
@@ -216,6 +207,56 @@ class JsonBufferReader(
 
     private fun Char.isDigitOrDecimal(): Boolean {
         return this.isDigit() || this == '.'
+    }
+
+    private fun readString(): String {
+        val value = StringBuilder()
+
+        while (currentPosition + 1 < json.length) {
+            val char = json[++ currentPosition]
+
+            if (char == '\"') return value.toString()
+
+            if (char != '\\') {
+                value.append(char)
+                continue
+            }
+
+            val next = json[++ currentPosition]
+
+            when (next) {
+                '\"' -> {
+                    value.append(next)
+                }
+
+                '\\' -> {
+                    value.append(next)
+                }
+
+                'n' -> {
+                    value.append('\n')
+                }
+
+                'r' -> {
+                    value.append('\r')
+                }
+
+                't' -> {
+                    value.append('\t')
+                }
+
+                'u' -> {
+                    require(currentPosition + 4 < json.length) { "invalid unicode escape" }
+                    val code = json.substring(currentPosition + 1, currentPosition + 5).toInt(16)
+                    value.append(code.toChar())
+                    currentPosition += 4
+                }
+
+                else -> throw IllegalArgumentException("invalid escape sequence: \\$next")
+            }
+        }
+
+        throw IllegalArgumentException("unterminated string")
     }
 
 }

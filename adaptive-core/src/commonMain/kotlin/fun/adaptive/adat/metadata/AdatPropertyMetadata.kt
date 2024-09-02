@@ -5,7 +5,10 @@
 package `fun`.adaptive.adat.metadata
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.adat.descriptor.AdatDescriptor
 import `fun`.adaptive.adat.descriptor.AdatDescriptorSet
+import `fun`.adaptive.adat.descriptor.ConstraintFail
+import `fun`.adaptive.adat.descriptor.InstanceValidationResult
 import `fun`.adaptive.adat.descriptor.kotlin.string.StringSecret
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatDecoder
@@ -75,6 +78,10 @@ data class AdatPropertyMetadata(
 
     fun isSecret(descriptors : Array<AdatDescriptorSet>) =
         descriptors.first { it.property.name == name }.descriptors.filterIsInstance<StringSecret>().firstOrNull()?.isSecret == true
+
+    fun fail(result : InstanceValidationResult, descriptor : AdatDescriptor) {
+        result.failedConstraints += ConstraintFail(this, descriptor.metadata)
+    }
 
     companion object : WireFormat<AdatPropertyMetadata> {
 

@@ -21,6 +21,7 @@ import `fun`.adaptive.cookbook.shared.inputStyle
 import `fun`.adaptive.cookbook.shared.lightBackground
 import `fun`.adaptive.cookbook.shared.shadow
 import `fun`.adaptive.cookbook.shared.titleSmall
+import `fun`.adaptive.cookbook.wizard.project.ui.browser.projectWizardMain
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -70,7 +71,7 @@ fun main() {
                 service { AutoService() }
             }
 
-        withJsonWebSocketTransport(window.location.origin, serviceImplFactory = localBackend)
+        // withJsonWebSocketTransport(window.location.origin, serviceImplFactory = localBackend)
 
         iotCommon()
         autoCommon()
@@ -88,7 +89,9 @@ fun main() {
 //                maxHeight .. padding { 16.dp } .. gap { 16.dp }
 //                rowTemplate(40.dp, 1.fr)
 
-                iotMain()
+//                iotMain()
+
+            projectWizardMain()
 
 //                text("Cookbook")
 //

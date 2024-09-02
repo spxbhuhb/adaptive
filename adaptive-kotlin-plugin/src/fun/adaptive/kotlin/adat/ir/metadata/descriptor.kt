@@ -113,7 +113,7 @@ private fun collectPropertyDescriptors(
 
     check(propertyName != null) { "not a property access (2): ${statement.dumpKotlinLike()}" }
 
-    return propertyName to result
+    return propertyName to result.reversed()
 }
 
 private fun encodeDescriptorParameters(current: IrCall): String {

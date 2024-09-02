@@ -18,18 +18,18 @@ import `fun`.adaptive.adat.descriptor.kotlin.string.StringSecret
 
 object DefaultDescriptorFactory : DescriptorFactory() {
     init {
-        add("BooleanDefault") { BooleanDefault(it.asBoolean()) }
-        add("BooleanValue") { BooleanValue(it.asBoolean()) }
+        add("BooleanDefault") { BooleanDefault(it, it.asBoolean()) }
+        add("BooleanValue") { BooleanValue(it, it.asBoolean()) }
 
-        add("IntDefault") { IntMinimum(it.asInt()) }
-        add("IntMaximum") { IntMaximum(it.asInt()) }
-        add("IntMinimum") { IntDefault(it.asInt()) }
+        add("IntMinimum") { IntMinimum(it, it.asInt()) }
+        add("IntMaximum") { IntMaximum(it, it.asInt()) }
+        add("IntDefault") { IntDefault(it, it.asInt()) }
 
-        add("StringBlank") { StringBlank(it.asBoolean()) }
-        add("StringDefault") { StringDefault(it.parameters) }
-        add("StringMinLength") { StringMinLength(it.asInt()) }
-        add("StringMaxLength") { StringMaxLength(it.asInt()) }
-        add("StringPattern") { StringPattern(it.parameters) }
-        add("StringSecret") { StringSecret(it.asBoolean()) }
+        add("StringBlank") { StringBlank(it, it.asBoolean()) }
+        add("StringDefault") { StringDefault(it, it.parameters) }
+        add("StringMinLength") { StringMinLength(it, it.asInt()) }
+        add("StringMaxLength") { StringMaxLength(it, it.asInt()) }
+        add("StringPattern") { StringPattern(it, it.parameters) }
+        add("StringSecret") { StringSecret(it, it.asBoolean()) }
     }
 }

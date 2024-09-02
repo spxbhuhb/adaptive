@@ -37,7 +37,7 @@ class StringValidation {
 
         val fc = result.failedConstraints.first()
 
-        assertIs<StringMinLength>(fc)
+        assertEquals("StringMinLength", fc.descriptorMetadata.name)
     }
 
 
@@ -53,7 +53,7 @@ class StringValidation {
 
         val fc = result.failedConstraints.first()
 
-        assertIs<StringMaxLength>(fc)
+        assertEquals("StringMaxLength", fc.descriptorMetadata.name)
     }
 
     @Test
@@ -66,7 +66,7 @@ class StringValidation {
         assertFalse(result.isValid)
         assertEquals(2, result.failedConstraints.size)
 
-        result.failedConstraints.first { it is StringBlank }
+        result.failedConstraints.first { it.descriptorMetadata.name == "StringBlank" }
     }
 
     @Test
@@ -81,7 +81,7 @@ class StringValidation {
 
         val fc = result.failedConstraints.first()
 
-        assertIs<StringPattern>(fc)
+        assertEquals("StringPattern", fc.descriptorMetadata.name)
     }
 
     @Test

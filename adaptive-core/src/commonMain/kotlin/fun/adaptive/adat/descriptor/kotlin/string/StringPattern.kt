@@ -4,19 +4,20 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.descriptor.AdatDescriptor
 import `fun`.adaptive.adat.descriptor.InstanceValidationResult
+import `fun`.adaptive.adat.metadata.AdatDescriptorMetadata
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
-import kotlin.collections.plusAssign
 
 @Adat
 class StringPattern(
+    override val metadata: AdatDescriptorMetadata,
     val pattern: String
 ) : AdatDescriptor() {
 
     val regex = Regex(pattern)
 
-    override fun validate(instance: AdatClass<*>, value : Any?, metadata : AdatPropertyMetadata, result : InstanceValidationResult) {
+    override fun validate(instance: AdatClass<*>, value : Any?, propertyMetadata : AdatPropertyMetadata, result : InstanceValidationResult) {
         value as String
-        if (!regex.matches(value)) result.failedConstraints += this
+        if (!regex.matches(value)) propertyMetadata.fail(result, this)
     }
 
 }

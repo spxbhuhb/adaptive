@@ -94,8 +94,9 @@ data class AdatClassMetadata<T>(
         }
 
         @Suppress("UNCHECKED_CAST")
-        fun <T> decodeFromString(a: String): AdatClassMetadata<T> =
-            a.encodeToByteArray().fromJson(this) as AdatClassMetadata<T>
+        fun <T> decodeFromString(a: String): AdatClassMetadata<T> {
+            return a.encodeToByteArray().fromJson(this) as AdatClassMetadata<T>
+        }
 
     }
 

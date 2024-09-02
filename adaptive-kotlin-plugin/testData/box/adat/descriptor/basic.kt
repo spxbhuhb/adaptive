@@ -38,6 +38,8 @@ fun box(): String {
     if (ds.size != 3) return "Fail: ds.size != 3"
 
     if (ds[0] !is IntMinimum) return "Fail: ds[0] !is IntMinimum"
+    if (ds[1] !is IntMaximum) return "Fail: ds[1] !is IntMaximum"
+    if (ds[2] !is IntDefault) return "Fail: ds[2] !is IntDefault"
 
     return "OK"
 }

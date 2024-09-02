@@ -34,7 +34,7 @@ open class AuiText(
         if (haveToPatch(dirtyMask, 1)) {
             val content = this.content
 
-            if (receiver.textContent != content) {
+            if (receiver.textContent != content || isInit) {
                 receiver.textContent = content
                 measureText(content)
             }

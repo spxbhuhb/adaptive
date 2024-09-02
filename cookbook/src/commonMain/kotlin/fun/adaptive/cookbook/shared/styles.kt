@@ -11,12 +11,14 @@ import `fun`.adaptive.ui.api.fontSize
 import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.leftToRightGradient
 import `fun`.adaptive.ui.api.lightFont
+import `fun`.adaptive.ui.api.marginTop
 import `fun`.adaptive.ui.api.noBorder
 import `fun`.adaptive.ui.api.noTextWrap
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.paddingHorizontal
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.instruction.*
 
 val black = color(0x000000u)
@@ -45,6 +47,8 @@ val bodySmall = fontSize(12.sp)
 
 val shadow = dropShadow(color(0xc0c0c0u), 3.dp, 3.dp, 3.dp)
 
+val cornerRadius2 = cornerRadius(2.dp)
+val cornerRadius4 = cornerRadius(4.dp)
 val cornerRadius8 = cornerRadius(8.dp)
 val lightBorder = border(lightGray, 1.dp)
 
@@ -58,6 +62,20 @@ val inputStyle = instructionsOf(
     fontSize { 17.sp },
     lightFont,
     padding(left = 16.dp, right = 16.dp)
+)
+
+val inputErrorContainer = instructionsOf(
+    marginTop { 4.dp },
+    border(color(0xff0000), 1.dp),
+    backgroundColor(0xFFF8F8u),
+    cornerRadius8,
+    padding { 8.dp },
+    zIndex(2000)
+)
+
+val inputErrorText = instructionsOf(
+    bodySmall,
+    textColor(0xff0000)
 )
 
 val blackBackground = backgroundColor(black)

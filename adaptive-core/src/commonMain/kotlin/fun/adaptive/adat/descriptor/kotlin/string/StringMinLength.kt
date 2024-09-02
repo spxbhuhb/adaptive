@@ -4,18 +4,18 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.descriptor.AdatDescriptor
 import `fun`.adaptive.adat.descriptor.InstanceValidationResult
+import `fun`.adaptive.adat.metadata.AdatDescriptorMetadata
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
-import kotlin.collections.plusAssign
-import kotlin.math.min
 
 @Adat
 class StringMinLength(
+    override val metadata: AdatDescriptorMetadata,
     val minimum : Int
 ) : AdatDescriptor() {
 
-    override fun validate(instance: AdatClass<*>, value : Any?, metadata : AdatPropertyMetadata, result : InstanceValidationResult) {
+    override fun validate(instance: AdatClass<*>, value : Any?, propertyMetadata : AdatPropertyMetadata, result : InstanceValidationResult) {
         value as String
-        if (value.length < minimum) result.failedConstraints += this
+        if (value.length < minimum) propertyMetadata.fail(result, this)
     }
 
 }
