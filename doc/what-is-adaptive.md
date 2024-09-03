@@ -2,59 +2,52 @@
 
 Adaptive is a software suite for building full-stack Kotlin Multiplatform applications.
 
-## TL;DR
+## Features
 
-**Take this with a grain of salt. Also, please read [Motivation](./impressum.md#motivation) and [Status](./status.md).**
+> [!NOTE]
+>
+> These features already work, but some of them are lacking polishing or only a
+> subset of is implemented (SVG for example).
+>
+> That said, I've already started building actual applications with them and
+> polish/implement missing parts as needed.
+>
 
-```kotlin
-object Adaptive {
-    
-    override val dependencyHell
-        get() = throw UnsupportedOperationException()
-  
-    val svelte = Adaptive.ui
-    val server = Adaptive.backend
+* [fully reactive](tutorials/foundation.md) (UI already is, planned for backend)
+* compiler plugin to avoid boilerplate
+* inspect and change UI and server **structure, during runtime**
+* [Adat](adat/readme.md) classes
+  * data models with many features (deep copy, serialization, diff, immutability information)
+  * constraints and additional information, validation (mostly automatic)
+  * mapping to Exposed tables
+* [UI](ui/readme.md)
+  * target platforms:
+    * browser
+    * Android
+    * iOS
+  * fragment and instruction based (see below)
+  * strict layouts, same result on all platforms
+  * SVG support (very basic atm), can change the colors (or anything else actually) **during runtime**
+  * data model integration for validations, user feedback, etc.
+* [Resources](resource/readme.md)
+  * A spin-off of Compose resources
+  * Images, SVG already works, strings on the way
+* [Services](service/readme.md)
+  * API driven client-server communication with simple function calls
+* [Auto](auto/readme.md)
+  * automatic, conflict free data replication between peers (client-server, client-client, server-server)
+* [Auth](auth/readme.md)
+  * authentication and authorization module (role based, documentation is lacking)
+* [WireFormat](wireformat/readme.md)
+  * serialization (automatically generated for services and Adat classes)
+* [Ktor](ktor/readme.md)
+  * basic integration to provide WebSocket service transport and static resources
 
-    override val compose = Adaptive.ui
-    override val react = Adaptive.ui
-    
-    override val serialization = Adaptive.wireformat
-    
-    override val rpc = Adaptive.services
-    override val rest = Adaptive.services
+**Tools**
 
-    override val resources = Adaptive.resources
-    override val settings = Adaptive.settings
-  
-    val crdt = Adaptive.auto // conflic-free replicated data types, auto-sync
-}
-```
-
-## A bit longer
-
-Adaptive is a software suite for building full-stack Kotlin Multiplatform applications:
-
-Currently supported client platforms:
-
-* browser (JS)
-* Android
-* iOS
-
-Backend/Server platforms:
-
-* all platforms supported by Kotlin Multiplatform
-  * some modules may be platform dependent, but
-  * the core is pure Kotlin
-
-Tools:
-
-* Project Wizard
-* Dev Server
-* UI Designer
-
-## Adaptive in action
-
-Web site: [https://adaptive.fun](https://adaptive.fun)
+* Project Wizard (on the way)
+* Dev Server (ETA: 2024.10)
+* UI Designer (ETA: 2024.10)
 
 ## Let's write a small application
 
@@ -237,7 +230,7 @@ code.
 With the help of [inner](foundation/instructions.md#inner-instructions) and [outer](foundation/instructions.md#outer-instructions)
 instructions code becomes very easy to read (and write).
 
-## Features
+### Result
 
 The fragment/instruction approach provides a quite interesting toolset:
 
