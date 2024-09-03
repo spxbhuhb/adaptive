@@ -179,7 +179,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                         context !!.owner,
                         AdatPluginKey,
                         Names.ADAT_METADATA,
-                        ClassIds.ADAT_CLASS_METADATA.constructClassLikeType(arrayOf(context.adatClassType), false),
+                        ClassIds.ADAT_CLASS_METADATA.constructClassLikeType(emptyArray(), false),
                         isVal = true,
                         hasBackingField = true
                     ).symbol

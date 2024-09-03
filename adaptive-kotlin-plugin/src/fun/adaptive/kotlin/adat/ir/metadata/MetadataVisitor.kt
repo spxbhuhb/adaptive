@@ -6,7 +6,6 @@ package `fun`.adaptive.kotlin.adat.ir.metadata
 
 import `fun`.adaptive.adat.metadata.AdatDescriptorMetadata
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
-import `fun`.adaptive.kotlin.adat.FqNames
 import `fun`.adaptive.kotlin.adat.Names
 import `fun`.adaptive.kotlin.adat.ir.AdatIrBuilder
 import `fun`.adaptive.kotlin.adat.ir.AdatPluginContext
@@ -16,10 +15,6 @@ import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrProperty
-import org.jetbrains.kotlin.ir.expressions.IrCall
-import org.jetbrains.kotlin.ir.expressions.IrExpression
-import org.jetbrains.kotlin.ir.expressions.IrGetValue
-import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
@@ -32,12 +27,20 @@ class MetadataVisitor(
 ) : IrElementVisitorVoid, AdatIrBuilder {
 
     val properties = mutableListOf<PropertyData>()
-    val descriptors = mutableListOf<Pair<String,List<AdatDescriptorMetadata>>>()
+    val descriptors = mutableListOf<Pair<String, List<AdatDescriptorMetadata>>>()
 
     var propertyIndex = 0
 
-    fun zip() : List<AdatPropertyMetadata> =
-        properties.map { it.metadata.copy(descriptors = descriptors.firstOrNull { d -> d.first == it.property.name.identifier }?.second ?: emptyList()) }
+    fun zip(): List<AdatPropertyMetadata> =
+        properties.map {
+            AdatPropertyMetadata(
+                it.metadata.name,
+                it.metadata.index,
+                it.metadata.flags,
+                it.metadata.signature,
+                descriptors.firstOrNull { d -> d.first == it.property.name.identifier }?.second ?: emptyList()
+            )
+        }
 
     override fun visitElement(element: IrElement) {
         element.acceptChildrenVoid(this)

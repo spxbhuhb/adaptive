@@ -21,7 +21,7 @@ class BackendContext(
     val scope: CoroutineScope,
     val logger: AdaptiveLogger,
     val wireFormatProvider: WireFormatProvider,
-    val defaultMetadata: AdatClassMetadata<*>,
+    val defaultMetadata: AdatClassMetadata,
     val defaultWireFormat: AdatClassWireFormat<*>,
     time: LamportTimestamp
 ) {
@@ -32,7 +32,7 @@ class BackendContext(
 
     private var pConnectors = listOf<AutoConnector>()
 
-    val metadata = mutableMapOf<MetadataId, AdatClassMetadata<*>>()
+    val metadata = mutableMapOf<MetadataId, AdatClassMetadata>()
 
     val wireFormats = mutableMapOf<ItemId, WireFormat<*>>()
 

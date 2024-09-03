@@ -49,7 +49,7 @@ class TestClassMissingDiff(
         override val wireFormatName: String
             get() = "fun.adaptive.adat.TestClassMissingDiff"
 
-        override val adatMetadata = AdatClassMetadata<TestClassMissingDiff>(
+        override val adatMetadata = AdatClassMetadata(
             version = 1,
             name = "fun.adaptive.adat.TestClassMissingDiff",
             flags = 0,

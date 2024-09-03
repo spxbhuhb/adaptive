@@ -22,7 +22,7 @@ import `fun`.adaptive.wireformat.WireFormatEncoder
  */
 class AdatClassWireFormat<A : AdatClass<A>>(
     val companion: AdatCompanion<A>,
-    val metadata: AdatClassMetadata<A>
+    val metadata: AdatClassMetadata
 ) : WireFormat<A> {
 
     override val wireFormatName

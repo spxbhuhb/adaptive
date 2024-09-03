@@ -20,8 +20,8 @@ interface Track {
 
 fun box(): String {
 
-    if (DPixel.adatMetadata.isMutable) return "Fail: DPixel.isMutable"
-    if (DPixel.adatMetadata.properties.first().isMutable) return "Fail: value is mutable"
+    if (DPixel.adatMetadata.isMutableClass) return "Fail: DPixel.isMutable"
+    if (DPixel.adatMetadata.properties.first().isMutableProperty) return "Fail: value is mutable"
 
     return "OK"
 }

@@ -16,7 +16,7 @@ import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatDecoder
 
 interface AdatCompanion<A : AdatClass<A>> : WireFormat<A> {
 
-    val adatMetadata: AdatClassMetadata<A>
+    val adatMetadata: AdatClassMetadata
         get() = pluginGenerated()
 
     val adatWireFormat: AdatClassWireFormat<A>
@@ -25,7 +25,7 @@ interface AdatCompanion<A : AdatClass<A>> : WireFormat<A> {
     val adatDescriptors: Array<AdatDescriptorSet>
         get() = pluginGenerated()
 
-    fun decodeMetadata(a: String): AdatClassMetadata<A> =
+    fun decodeMetadata(a: String): AdatClassMetadata =
         AdatClassMetadata.decodeFromString(a)
 
     fun generateDescriptors() : Array<AdatDescriptorSet> =

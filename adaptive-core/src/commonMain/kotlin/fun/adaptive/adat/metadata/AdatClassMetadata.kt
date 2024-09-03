@@ -5,25 +5,24 @@
 package `fun`.adaptive.adat.metadata
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.descriptor.AdatDescriptor
 import `fun`.adaptive.adat.descriptor.AdatDescriptorSet
 import `fun`.adaptive.adat.descriptor.DefaultDescriptorFactory
-import `fun`.adaptive.wireformat.WireFormat
-import `fun`.adaptive.wireformat.WireFormatDecoder
-import `fun`.adaptive.wireformat.WireFormatEncoder
-import `fun`.adaptive.wireformat.builtin.ListWireFormat
+import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.wireformat.fromJson
 
 /**
  * @property  name   The fully qualified (dot separated) name of the adat class this metadata describes.
  */
 @Adat
-data class AdatClassMetadata<T>(
+class AdatClassMetadata(
     val version: Int = 1,
     val name: String,
     val flags: Int,
     val properties: List<AdatPropertyMetadata>
-) {
+) : AdatClass<AdatClassMetadata> {
 
     /**
      * True then the class is mutable:
@@ -31,8 +30,8 @@ data class AdatClassMetadata<T>(
      * - at least one property is `var` or has a getter
      * - **OR** at least one property has a mutable value
      */
-    val isMutable
-        inline get() = ! isImmutable
+    val isMutableClass
+        inline get() = ! isImmutableClass
 
     /**
      * True then the whole class is immutable:
@@ -40,7 +39,7 @@ data class AdatClassMetadata<T>(
      * - all properties are `val`
      * - **AND** all property values are immutable
      */
-    val isImmutable
+    val isImmutableClass
         get() = (flags and IMMUTABLE) != 0
 
     fun generateDescriptors(): Array<AdatDescriptorSet> {
@@ -60,7 +59,27 @@ data class AdatClassMetadata<T>(
     operator fun get(propertyName: String): AdatPropertyMetadata =
         properties.first { it.name == propertyName }
 
-    companion object : WireFormat<AdatClassMetadata<*>> {
+    // --------------------------------------------------------------------------------
+    // AdatClass overrides
+    // --------------------------------------------------------------------------------
+
+    override val adatCompanion: AdatCompanion<AdatClassMetadata>
+        get() = AdatClassMetadata
+
+    override fun equals(other: Any?): Boolean = adatEquals(other)
+    override fun hashCode(): Int = adatHashCode()
+    override fun toString(): String = adatToString()
+
+    override fun genGetValue(index: Int): Any? =
+        when (index) {
+            0 -> version
+            1 -> name
+            2 -> flags
+            3 -> properties
+            else -> throw IndexOutOfBoundsException()
+        }
+
+    companion object : AdatCompanion<AdatClassMetadata> {
 
         /**
          * Set then the whole class is immutable:
@@ -73,30 +92,38 @@ data class AdatClassMetadata<T>(
         override val wireFormatName: String
             get() = "fun.adaptive.adat.metadata.AdatClassMetadata"
 
-        override fun wireFormatEncode(encoder: WireFormatEncoder, value: AdatClassMetadata<*>): WireFormatEncoder {
-            encoder
-                .int(1, "v", value.version)
-                .string(2, "n", value.name)
-                .int(3, "f", value.flags)
-                .instance(4, "p", value.properties, ListWireFormat(AdatPropertyMetadata))
-            return encoder
+        override val adatMetadata = AdatClassMetadata(
+            version = 1,
+            name = wireFormatName,
+            flags = 0,
+            properties = listOf(
+                AdatPropertyMetadata("version", 0, 0, "I"),
+                AdatPropertyMetadata("name", 1, 0, "T"),
+                AdatPropertyMetadata("flags", 2, 0, "I"),
+                AdatPropertyMetadata("properties", 3, 0, "Lkotlin.collections.List<Lfun.adaptive.adat.metadata.AdatPropertyMetadata;>;")
+            )
+        )
+
+        override val adatWireFormat: AdatClassWireFormat<AdatClassMetadata>
+            get() = AdatClassWireFormat(this, adatMetadata)
+
+        override fun newInstance(): AdatClassMetadata {
+            throw UnsupportedOperationException()
         }
 
-        override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): AdatClassMetadata<*> {
-            check(decoder != null)
+        override fun newInstance(values: Array<Any?>): AdatClassMetadata {
             @Suppress("UNCHECKED_CAST")
-            return AdatClassMetadata<Any?>(
-                decoder.int(1, "v"),
-                decoder.string(2, "n"),
-                decoder.int(3, "f"),
-                decoder.instance(4, "p", ListWireFormat(AdatPropertyMetadata)) as List<AdatPropertyMetadata>,
+            return AdatClassMetadata(
+                version = values[0] as Int,
+                name = values[1] as String,
+                flags = values[2] as Int,
+                properties = values[3] as List<AdatPropertyMetadata>
             )
         }
 
         @Suppress("UNCHECKED_CAST")
-        fun <T> decodeFromString(a: String): AdatClassMetadata<T> {
-            return a.encodeToByteArray().fromJson(this) as AdatClassMetadata<T>
-        }
+        fun decodeFromString(a: String): AdatClassMetadata =
+            a.encodeToByteArray().fromJson(this)
 
     }
 

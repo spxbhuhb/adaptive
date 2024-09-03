@@ -35,11 +35,11 @@ interface Surrounding {
 
 fun box(): String {
 
-    if (Padding.adatMetadata.isMutable) return "Fail: Padding.isMutable"
-    if (Padding.adatMetadata.properties.first().isMutable) return "Fail: top is mutable"
+    if (Padding.adatMetadata.isMutableClass) return "Fail: Padding.isMutable"
+    if (Padding.adatMetadata.properties.first().isMutableProperty) return "Fail: top is mutable"
 
-    if (DPixel.adatMetadata.isMutable) return "Fail: DPixel.isMutable"
-    if (DPixel.adatMetadata.properties.first().isMutable) return "Fail: value is mutable"
+    if (DPixel.adatMetadata.isMutableClass) return "Fail: DPixel.isMutable"
+    if (DPixel.adatMetadata.properties.first().isMutableProperty) return "Fail: value is mutable"
 
     return "OK"
 }

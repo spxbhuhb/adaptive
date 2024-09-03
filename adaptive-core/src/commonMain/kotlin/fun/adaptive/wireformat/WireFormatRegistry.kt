@@ -4,6 +4,9 @@
 
 package `fun`.adaptive.wireformat
 
+import `fun`.adaptive.adat.metadata.AdatClassMetadata
+import `fun`.adaptive.adat.metadata.AdatDescriptorMetadata
+import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
 import `fun`.adaptive.registry.Registry
 import `fun`.adaptive.service.model.DisconnectException
 import `fun`.adaptive.wireformat.builtin.*
@@ -24,6 +27,10 @@ object WireFormatRegistry : Registry<WireFormat<*>>() {
         set("kotlinx.datetime.LocalDate", LocalDateWireFormat)
         set("kotlinx.datetime.LocalDateTime", LocalDateTimeWireFormat)
         set("kotlinx.datetime.LocalTime", LocalTimeWireFormat)
+
+        this += AdatClassMetadata
+        this += AdatPropertyMetadata
+        this += AdatDescriptorMetadata
 
         this += DisconnectException
     }

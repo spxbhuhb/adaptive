@@ -5,39 +5,66 @@
 package `fun`.adaptive.adat.metadata
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.wireformat.WireFormat
-import `fun`.adaptive.wireformat.WireFormatDecoder
-import `fun`.adaptive.wireformat.WireFormatEncoder
+import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.AdatCompanion
+import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 
 @Adat
 data class AdatDescriptorMetadata(
     val name: String,
     val parameters: String
-) {
+) : AdatClass<AdatDescriptorMetadata> {
 
     fun asBoolean() = parameters.toBooleanStrict()
 
     fun asInt() = parameters.toInt()
 
-    companion object : WireFormat<AdatDescriptorMetadata> {
+    // --------------------------------------------------------------------------------
+    // AdatClass overrides
+    // --------------------------------------------------------------------------------
+
+    override val adatCompanion: AdatCompanion<AdatDescriptorMetadata>
+        get() = AdatDescriptorMetadata
+
+    override fun equals(other: Any?): Boolean = adatEquals(other)
+    override fun hashCode(): Int = adatHashCode()
+    override fun toString(): String = adatToString()
+
+    override fun genGetValue(index: Int): Any? =
+        when (index) {
+            0 -> name
+            1 -> parameters
+            else -> invalidIndex(index)
+        }
+
+    companion object : AdatCompanion<AdatDescriptorMetadata> {
 
         override val wireFormatName: String
             get() = "fun.adaptive.adat.metadata.AdatDescriptorMetadata"
 
-        override fun wireFormatEncode(encoder: WireFormatEncoder, value: AdatDescriptorMetadata): WireFormatEncoder {
-            encoder
-                .string(1, "n", value.name)
-                .string(2, "p", value.parameters)
-            return encoder
+        override val adatMetadata = AdatClassMetadata(
+            version = 1,
+            name = wireFormatName,
+            flags = 0,
+            properties = listOf(
+                AdatPropertyMetadata("name", 0, 0, "T"),
+                AdatPropertyMetadata("parameters", 1, 0, "T")
+            )
+        )
+
+        override val adatWireFormat: AdatClassWireFormat<AdatDescriptorMetadata>
+            get() = AdatClassWireFormat(this, adatMetadata)
+
+        override fun newInstance(): AdatDescriptorMetadata {
+            throw UnsupportedOperationException()
         }
 
-        override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): AdatDescriptorMetadata {
-            check(decoder != null)
+        override fun newInstance(values: Array<Any?>): AdatDescriptorMetadata {
+            @Suppress("UNCHECKED_CAST")
             return AdatDescriptorMetadata(
-                decoder.string(1, "n"),
-                decoder.string(2, "p")
+                name = values[0] as String,
+                parameters = values[1] as String
             )
         }
-
     }
 }

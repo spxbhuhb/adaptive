@@ -12,7 +12,7 @@ class M3(
 
 fun box(): String {
 
-    if (M3.adatMetadata.isImmutable) return "Fail: M3.isImmutable"
+    if (M3.adatMetadata.isImmutableClass) return "Fail: M3.isImmutableClass"
     if (M3.adatMetadata["i1"].hasMutableValue) return "Fail: M3.i1.hasImmutableValue"
 
     return "OK"

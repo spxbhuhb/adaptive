@@ -24,11 +24,11 @@ fun AbstractIrBuilder.adatMetadata(
     val adatClass = companionClass.parentAsClass
     var flags = 0
 
-    if (properties.none { it.isMutable }) {
+    if (properties.none { it.isMutableProperty }) {
         flags = flags or AdatClassMetadata.IMMUTABLE
     }
 
-    val metadata = AdatClassMetadata<Any>(
+    val metadata = AdatClassMetadata(
         version = 1,
         name = adatClass.classId !!.asFqNameString(),
         flags = flags,

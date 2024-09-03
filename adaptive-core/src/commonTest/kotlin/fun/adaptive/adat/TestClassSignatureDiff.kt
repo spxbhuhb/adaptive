@@ -49,7 +49,7 @@ class TestClassSignatureDiff(
         override val wireFormatName: String
             get() = "fun.adaptive.adat.TestClassSignatureDiff"
 
-        override val adatMetadata = AdatClassMetadata<TestClassSignatureDiff>(
+        override val adatMetadata = AdatClassMetadata(
             version = 1,
             name = "fun.adaptive.adat.TestClassSignatureDiff",
             flags = 0,

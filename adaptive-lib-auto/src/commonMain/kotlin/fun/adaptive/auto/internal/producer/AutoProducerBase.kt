@@ -78,7 +78,7 @@ abstract class AutoProducerBase<T>(
 
     abstract fun createBackendAndFrontend()
 
-    abstract fun defaultMetadata(): AdatClassMetadata<*>
+    abstract fun defaultMetadata(): AdatClassMetadata
 
     abstract fun defaultWireFormat(): AdatClassWireFormat<*>
 

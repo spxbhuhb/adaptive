@@ -59,7 +59,7 @@ class TestClass(
         override val wireFormatName: String
             get() = "fun.adaptive.adat.TestClass"
 
-        override val adatMetadata = AdatClassMetadata<TestClass>(
+        override val adatMetadata = AdatClassMetadata(
             version = 1,
             name = "fun.adaptive.adat.TestClass",
             flags = 0,

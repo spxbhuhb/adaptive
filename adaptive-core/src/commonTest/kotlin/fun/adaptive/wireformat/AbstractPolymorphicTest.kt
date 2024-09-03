@@ -60,7 +60,7 @@ abstract class AbstractPolymorphicTest<ST>(
             override val wireFormatName: String
                 get() = "fun.adaptive.wireformat.C1"
 
-            override val adatMetadata = AdatClassMetadata<C1>(
+            override val adatMetadata = AdatClassMetadata(
                 version = 1,
                 name = "fun.adaptive.wireformat.C1",
                 flags = 0,
@@ -99,7 +99,7 @@ abstract class AbstractPolymorphicTest<ST>(
             override val wireFormatName: String
                 get() = "fun.adaptive.wireformat.C2"
 
-            override val adatMetadata = AdatClassMetadata<C2>(
+            override val adatMetadata = AdatClassMetadata(
                 version = 1,
                 name = "fun.adaptive.wireformat.C2",
                 flags = 0,

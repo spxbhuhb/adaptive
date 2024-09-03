@@ -22,7 +22,7 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
         get() = pluginGenerated()
 
     fun isImmutable() =
-        getMetadata().isImmutable
+        getMetadata().isImmutableClass
 
     fun descriptor() = Unit
 
@@ -64,10 +64,11 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
         return (this::class.simpleName ?: "<anonymous>") + "(" + content.joinToString(", ") + ")"
     }
 
-    fun adatEquals(other: AdatClass<*>?): Boolean {
+    fun adatEquals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null) return false
         if (this::class != other::class) return false
+        if (other !is AdatClass<*>) return false
 
         repeat(getMetadata().properties.size) {
             if (this.getValue(it) != other.getValue(it)) return false

@@ -14,7 +14,7 @@ class MetadataTest {
 
     @Test
     fun basic() {
-        val expected = AdatClassMetadata<TestClass>(
+        val expected = AdatClassMetadata(
             version = 1,
             name = "fun.adaptive.adat.TestClass",
             flags = 0,

@@ -49,7 +49,7 @@ class TestClassIndexDiff(
         override val wireFormatName: String
             get() = "fun.adaptive.adat.TestClassIndexDiff"
 
-        override val adatMetadata = AdatClassMetadata<TestClassIndexDiff>(
+        override val adatMetadata = AdatClassMetadata(
             version = 1,
             name = "fun.adaptive.adat.TestClassIndexDiff",
             flags = 0,

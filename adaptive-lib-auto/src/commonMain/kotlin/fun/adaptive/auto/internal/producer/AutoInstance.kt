@@ -58,7 +58,7 @@ class AutoInstance<A : AdatClass<A>>(
         )
     }
 
-    override fun defaultMetadata(): AdatClassMetadata<*> =
+    override fun defaultMetadata(): AdatClassMetadata =
         companion.adatMetadata
 
     override fun defaultWireFormat(): AdatClassWireFormat<*> =
