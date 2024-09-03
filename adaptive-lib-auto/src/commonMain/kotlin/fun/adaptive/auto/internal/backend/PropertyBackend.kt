@@ -5,7 +5,6 @@ import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.model.AutoPropertyValue
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.model.MetadataId
 import `fun`.adaptive.auto.model.operation.AutoModify
 import `fun`.adaptive.wireformat.WireFormat
 
@@ -16,7 +15,9 @@ class PropertyBackend(
     initialValues: Array<Any?>?
 ) : BackendBase(context.handle.clientId) {
 
-    val properties: List<AdatPropertyWireFormat<*>> = context.defaultWireFormat.propertyWireFormats
+    val wireFormat = wireFormatFor(wireFormatName)
+
+    val properties: List<AdatPropertyWireFormat<*>> = wireFormat.propertyWireFormats
 
     operator fun List<AdatPropertyWireFormat<*>>.get(name: String): AdatPropertyWireFormat<*> =
         first { it.property.name == name }

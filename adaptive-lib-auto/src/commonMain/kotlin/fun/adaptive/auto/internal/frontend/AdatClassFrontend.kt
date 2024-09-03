@@ -1,15 +1,15 @@
 package `fun`.adaptive.auto.internal.frontend
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.AdatContext
 import `fun`.adaptive.adat.deepCopy
+import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.model.ItemId
 
 class AdatClassFrontend<A : AdatClass<A>>(
     override val backend: PropertyBackend,
-    val companion: AdatCompanion<A>,
+    val wireFormat: AdatClassWireFormat<A>,
     initialValue: A?,
     val itemId : ItemId?,
     val collectionFrontend: CollectionFrontendBase?,
@@ -24,7 +24,7 @@ class AdatClassFrontend<A : AdatClass<A>>(
     }
 
     override fun commit() {
-        val newValue = companion.newInstance(backend.values)
+        val newValue = wireFormat.newInstance(backend.values)
 
         @Suppress("UNCHECKED_CAST")
         newValue.adatContext = adatContext as AdatContext<Any>

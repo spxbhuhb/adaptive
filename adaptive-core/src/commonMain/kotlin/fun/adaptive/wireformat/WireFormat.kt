@@ -27,4 +27,8 @@ interface WireFormat<T> {
 
     fun wireFormatCopy(typeArguments : List<WireFormatTypeArgument<*>>) : WireFormat<*> = this
 
+    fun newInstance(values: Array<Any?>): T {
+        throw NotImplementedError()
+    }
+
 }

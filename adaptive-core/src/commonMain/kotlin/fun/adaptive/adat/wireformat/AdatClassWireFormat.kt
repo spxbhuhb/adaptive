@@ -47,6 +47,10 @@ class AdatClassWireFormat<A : AdatClass<A>>(
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): A =
         wireFormatDecode(decoder)
 
+    // TODO think about newInstance in manually coded wire formats in `core`
+    override fun newInstance(values: Array<Any?>): A =
+        companion.newInstance(values)
+
     fun <ST> wireFormatDecode(decoder: WireFormatDecoder<ST>?): A {
         val value = arrayOfNulls<Any?>(propertyWireFormats.size)
 

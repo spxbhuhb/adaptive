@@ -9,16 +9,16 @@ import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 
-class AutoList<A : AdatClass<A>>(
-    binding: AdaptiveStateVariableBinding<List<A>>,
+class AutoPolyList(
+    binding: AdaptiveStateVariableBinding<List<AdatClass<*>>>,
     connect: suspend () -> AutoConnectInfo,
-    val companion: AdatCompanion<A>,
-    val onListCommit: ((newValue: List<A>) -> Unit)?,
-    val onItemCommit: ((item: A) -> Unit)?,
+    val companion: AdatCompanion<*>,
+    val onListCommit: ((newValue: List<AdatClass<*>>) -> Unit)?,
+    val onItemCommit: ((item: AdatClass<*>) -> Unit)?,
     trace: Boolean
-) : AutoProducerBase<List<A>>(binding, connect, trace) {
+) : AutoProducerBase<List<AdatClass<*>>>(binding, connect, trace) {
 
-    override var latestValue: List<A>? = null
+    override var latestValue: List<AdatClass<*>>? = null
 
     override val backend: SetBackend
         get() = setBackend
@@ -26,10 +26,10 @@ class AutoList<A : AdatClass<A>>(
     lateinit var setBackend: SetBackend
         private set
 
-    override val frontend: AdatClassListFrontend<A>
+    override val frontend: AdatClassListFrontend<*>
         get() = listFrontend
 
-    lateinit var listFrontend: AdatClassListFrontend<A>
+    lateinit var listFrontend: AdatClassListFrontend<*>
         private set
 
     override fun createBackendAndFrontend() {
@@ -58,7 +58,7 @@ class AutoList<A : AdatClass<A>>(
         companion.adatWireFormat
 
     override fun toString(): String {
-        return "AutoList($binding)"
+        return "AutoPolyList($binding)"
     }
 
 }

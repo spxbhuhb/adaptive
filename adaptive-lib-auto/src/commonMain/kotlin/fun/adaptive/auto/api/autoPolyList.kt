@@ -2,7 +2,7 @@ package `fun`.adaptive.auto.api
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
-import `fun`.adaptive.auto.internal.producer.AutoList
+import `fun`.adaptive.auto.internal.producer.AutoPolyList
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.Producer
@@ -16,7 +16,7 @@ import `fun`.adaptive.foundation.producer.Producer
  * - Property changes keep the non-affected instances.
  *
  * Each new instance is validated by default, so fragments that use values
- * produced by [autoList] can safely use the validation result as it is
+ * produced by [autoInstance] can safely use the validation result as it is
  * up-to-date all the time.
  *
  * The list is **NOT** thread safe.
@@ -32,17 +32,17 @@ import `fun`.adaptive.foundation.producer.Producer
  * @return   `null` (it takes time to connect and synchronize)
  */
 @Producer
-fun <A : AdatClass<A>> autoList(
-    companion: AdatCompanion<A>,
-    onListCommit: ((newValue: List<A>) -> Unit)? = null,
-    onItemCommit: ((item: A) -> Unit)? = null,
-    binding: AdaptiveStateVariableBinding<List<A>>? = null,
+fun autoPolyList(
+    companion: AdatCompanion<*>,
+    onListCommit: ((newValue: List<AdatClass<*>>) -> Unit)? = null,
+    onItemCommit: ((item: AdatClass<*>) -> Unit)? = null,
+    binding: AdaptiveStateVariableBinding<List<AdatClass<*>>>? = null,
     trace: Boolean = false,
     connect: suspend () -> AutoConnectInfo
-): List<A>? {
+): List<AdatClass<*>>? {
     checkNotNull(binding)
 
-    val store = AutoList(binding, connect, companion, onListCommit, onItemCommit, trace)
+    val store = AutoPolyList(binding, connect, companion, onListCommit, onItemCommit, trace)
 
     binding.targetFragment.addProducer(store)
 

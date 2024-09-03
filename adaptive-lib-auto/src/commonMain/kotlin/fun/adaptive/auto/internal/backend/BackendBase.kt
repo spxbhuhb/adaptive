@@ -1,5 +1,6 @@
 package `fun`.adaptive.auto.internal.backend
 
+import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.internal.frontend.FrontendBase
 import `fun`.adaptive.auto.model.AutoConnectInfo
@@ -10,6 +11,7 @@ import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.AutoModify
 import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.reflect.CallSiteName
+import `fun`.adaptive.wireformat.WireFormatRegistry
 import kotlinx.coroutines.launch
 
 abstract class BackendBase(
@@ -98,6 +100,14 @@ abstract class BackendBase(
         }
 
     }
+
+    fun wireFormatFor(name: String?) =
+        if (name == null) {
+            context.defaultWireFormat
+        } else {
+            (WireFormatRegistry[name] as AdatCompanion<*>).adatWireFormat
+        }
+
 
     fun connectInfo() =
         with(context) {

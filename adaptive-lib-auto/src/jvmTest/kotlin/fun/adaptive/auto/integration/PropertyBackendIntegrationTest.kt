@@ -5,13 +5,13 @@
 package `fun`.adaptive.auto.integration
 
 import `fun`.adaptive.auto.api.AutoApi
+import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.backend.TestData
 import `fun`.adaptive.auto.internal.backend.BackendContext
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.getService
@@ -63,7 +63,7 @@ class PropertyBackendIntegrationTest {
 
             val connectingFrontend = AdatClassFrontend(
                 connectingBackend,
-                TestData,
+                TestData.adatWireFormat,
                 null, null, null
             )
 

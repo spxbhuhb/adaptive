@@ -3,6 +3,7 @@ package `fun`.adaptive.auto.internal.frontend
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.AdatContext
+import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.model.ItemId
 
@@ -69,8 +70,18 @@ class AdatClassListFrontend<A : AdatClass<A>>(
     // TODO optimize AdatClassListFrontend.getFrontend - I think `newInstance` is unnecessary here
     fun getFrontend(itemId: ItemId) =
         classFrontends.getOrPut(itemId) {
+
             val propertyBackend = checkNotNull(backend.items[itemId])
-            AdatClassFrontend(propertyBackend, companion, companion.newInstance(propertyBackend.values), itemId, this)
+            val wireFormat = propertyBackend.wireFormat
+
+            @Suppress("UNCHECKED_CAST")
+            AdatClassFrontend(
+                propertyBackend,
+                wireFormat as AdatClassWireFormat<A>,
+                wireFormat.newInstance(propertyBackend.values),
+                itemId,
+                this
+            )
                 .also { propertyBackend.frontEnd = it }
         }
 

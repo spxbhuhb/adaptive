@@ -2,12 +2,12 @@ package `fun`.adaptive.auto.api
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.toArray
+import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.BackendContext
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
@@ -24,6 +24,8 @@ import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
  * Each new instance is validated by default, so fragments that use values
  * produced by [autoList] can safely use the validation result as it is
  * up-to-date all the time.
+ *
+ * The instance is **NOT** thread safe.
  *
  * @param    onChange       Called after a new instance is generated (that is,
  *                          after a property changes).
@@ -64,7 +66,7 @@ fun <A : AdatClass<A>> originInstance(
 
     val originFrontend = AdatClassFrontend(
         originBackend,
-        companion,
+        companion.adatWireFormat,
         initialValue,
         null, null
     ) {

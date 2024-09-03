@@ -16,6 +16,8 @@ import `fun`.adaptive.foundation.producer.Producer
  * produced by [autoInstance] can safely use the validation result as it is
  * up-to-date all the time.
  *
+ * The instance is **NOT** thread safe.
+ *
  * @param    onChange       Called after a new instance is generated, but before the
  *                          state of the fragment is updated.
  * @param    binding        Set by the compiler plugin, ignore it.

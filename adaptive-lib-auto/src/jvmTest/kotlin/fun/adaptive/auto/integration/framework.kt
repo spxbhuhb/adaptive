@@ -3,6 +3,9 @@ package `fun`.adaptive.auto.integration
 import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.auto.api.originInstance
 import `fun`.adaptive.auto.api.originList
+import `fun`.adaptive.auto.api.originPolyList
+import `fun`.adaptive.auto.backend.AutoService
+import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.backend.TestData
 import `fun`.adaptive.auto.internal.backend.BackendContext
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
@@ -10,8 +13,6 @@ import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.backend.AutoService
-import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.ServiceImpl
@@ -32,12 +33,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 
-
 @ServiceApi
 interface AutoTestApi {
     suspend fun testInstanceManual(): AutoConnectInfo
     suspend fun testInstanceWithOrigin(): AutoConnectInfo
     suspend fun testListWithOrigin(): AutoConnectInfo
+    suspend fun testPolyListWithOrigin(): AutoConnectInfo
 }
 
 class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
@@ -66,7 +67,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
 
         val originFrontend = AdatClassFrontend(
             originBackend,
-            TestData,
+            TestData.adatWireFormat,
             TestData(12, "a"),
             null, null
         )
@@ -88,6 +89,10 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
 
     override suspend fun testListWithOrigin(): AutoConnectInfo {
         return originList(worker, TestData, true).connectInfo()
+    }
+
+    override suspend fun testPolyListWithOrigin(): AutoConnectInfo {
+        return originPolyList(worker, TestData, true).connectInfo()
     }
 
 }

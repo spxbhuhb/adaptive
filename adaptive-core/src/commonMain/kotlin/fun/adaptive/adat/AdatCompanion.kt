@@ -35,7 +35,7 @@ interface AdatCompanion<A : AdatClass<A>> : WireFormat<A> {
         pluginGenerated()
     }
 
-    fun newInstance(values: Array<Any?>): A {
+    override fun newInstance(values: Array<Any?>): A {
         pluginGenerated()
     }
 

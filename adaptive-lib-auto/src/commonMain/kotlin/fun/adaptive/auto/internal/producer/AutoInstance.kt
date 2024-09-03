@@ -47,7 +47,7 @@ class AutoInstance<A : AdatClass<A>>(
 
         adatClassFrontend = AdatClassFrontend(
             propertyBackend,
-            companion,
+            companion.adatWireFormat,
             initialValue = null,
             itemId = null,
             collectionFrontend = null,

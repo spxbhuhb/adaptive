@@ -33,12 +33,12 @@ class PropertyTest {
 
             val c1 = BackendContext(AutoHandle(gid, 1), scope, logger1, ProtoWireFormatProvider(), TestData.adatMetadata, TestData.adatWireFormat, LamportTimestamp(1, 1))
             val b1 = PropertyBackend(c1, itemId, null, testData.toArray())
-            val f1 = AdatClassFrontend(b1, TestData, testData, null, null)
+            val f1 = AdatClassFrontend(b1, TestData.adatWireFormat, testData, null, null)
             b1.frontEnd = f1
 
             val c2 = BackendContext(AutoHandle(gid, 2), scope, logger2, ProtoWireFormatProvider(), TestData.adatMetadata, TestData.adatWireFormat, LamportTimestamp(2, 0))
             val b2 = PropertyBackend(c2, itemId, null, null)
-            val f2 = AdatClassFrontend(b2, TestData, null, null, null)
+            val f2 = AdatClassFrontend(b2, TestData.adatWireFormat, null, null, null)
             b2.frontEnd = f2
 
             b1.addPeer(DirectConnector(b2), c2.time)

@@ -1,59 +1,27 @@
-# Conflict-free Replicated Data Types
+# Auto
 
-> [!CAUTION]
->
-> This module is under active development, the information below is mostly obsoleted.
->
+The `adaptive-lib-auto` module provides high-level data synchronization utilities.
 
-The `adaptive-lib-auto` module provides data types that are automatically synchronized between peers
-(server-client, client-client, internal):
+The general idea is to:
 
-* `AutoData` - a single [Adat](../adat/readme.md) class
-* `AutoList` - a list of [Adat](../adat/readme.md) classes
-* `AutoTree` - a tree of fragments
+- define the *origin* data (typically on a server)
+- connect to the *origin* data
+- expect that all data changes appear on all peers
+- expect that conflicts are resolved automatically and deterministically
 
-These stores use [CRDT](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type) data types under the hood to make sure that the actual data is the same on all peers.
+This feature takes reactivity to another level as it is not simple reactivity
+inside the UI but reactivity between peers.
 
-```kotlin
-import `fun`.adaptive.service.transport.ServiceResponseListener
+All Auto features use [Conflict-free replicated data types](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type)
+to make sure that the actual data is the same on all peers.
 
-@Adat
-class SomeData(
-    val someText: String
-)
+The following origin/peer functions are available:
 
-@ServiceApi
-interface ItemApi {
-    suspend fun items(listener: UUID<ServiceResponseListener>) : AutoList<SomeFragment>
-}
+* `originInstance` and `autoInstance` - a simple Adat instance
+* `originList` and `autoList` - a list of Adat instances (same class)
+* `originPolyList` and `autoPolyList` - a polymorphic list of Adat instances (any Adat class)
 
-@Adaptive
-fun someList() {
-    val items = autoList { itemService.items() }
-
-    for (item in items) {
-        text(item.someText)
-    }
-}
-
-class ItemService : ServiceImpl<ItemService>, ItemApi {
-    val fragmentStoreWorker by worker<FragmentStoreWorker>()
-
-    override suspend fun items(listener: UUID<ServiceResponseListener>) : AutoList<SomeFragment> {
-        return fragmentStoreWorker.makeList(listener, initialState)
-    }
-}
-```
-
-`AdatFragment` turns the [Adat](../adat/readme.md) class into an `AdaptiveFragment`, so it can be used
-as a fragment. This is necessary as the fragment store synchronizes fragment trees.
-
-`ItemApi` is the API we use to get the global ID of the fragment store we want to connect.
-
-`fragmentStore` creates a store instance for you and connects it to the peer based on the global store ID we got
-from the item API.
-
-After that you can use the fragments in the store freely.
+Check the cookbook for examples.
 
 ## Internals
 
@@ -61,7 +29,7 @@ Auto implementations have a type-specific backend and a use-case specific fronte
 
 **backend**
 
-* `PropertyBackend`, `ListBackend`, `TreeBackend`
+* `PropertyBackend`, `SetBackend`, `TreeBackend`
 * stores the CRTD data
 * responsible for the replication
 * typically not used from application-level code
@@ -70,16 +38,16 @@ Auto implementations have a type-specific backend and a use-case specific fronte
 
 * specific to the use-case, examples:
   * include the fragments of an `TreeBackend` into the UI directly
-  * use the data in an `ListBackend` to build a table
-  * store the content of an `ListBackend` into SQL
+  * use the data in an `SetBackend` to build a table
+  * store the content of an `SetBackend` into SQL
   * store the content of an `TreeBackend` in files
 
-### ListBackend
+### SetBackend
 
-Stores additions and removals in `ListBackend.adds` and `ListBackend.removals` respectively.
+Stores additions and removals in `SetBackend.additions` and `SetBackend.removals` respectively.
 
-Both `adds` and `removals` store item ids, that is `clientId:timestamp` pairs.
+Both `additions` and `removals` store item ids, that is `clientId:timestamp` pairs.
 
-The resulting list is defined as `(adds - removals).sorted()`.
+The resulting list is defined as `(additions - removals).sorted()`.
 
 This does not care about interweaving, but I think that it is irrelevant for general use cases.

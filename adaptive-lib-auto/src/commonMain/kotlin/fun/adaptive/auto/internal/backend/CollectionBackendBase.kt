@@ -1,10 +1,7 @@
 package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.AdatCompanion
-import `fun`.adaptive.adat.encode
 import `fun`.adaptive.adat.toArray
-import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.model.ClientId
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.operation.AutoAdd
@@ -12,8 +9,6 @@ import `fun`.adaptive.auto.model.operation.AutoEmpty
 import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.auto.model.operation.AutoRemove
 import `fun`.adaptive.reflect.CallSiteName
-import `fun`.adaptive.wireformat.WireFormatRegistry
-import `fun`.adaptive.wireformat.protobuf.dumpProto
 
 abstract class CollectionBackendBase(
     clientId: ClientId
@@ -70,13 +65,6 @@ abstract class CollectionBackendBase(
         val itemWireFormatName = item.adatCompanion.wireFormatName
         return if (itemWireFormatName == defaultWireFormatName) null else itemWireFormatName
     }
-
-    fun wireFormatFor(name: String?) =
-        if (name == null) {
-            context.defaultWireFormat
-        } else {
-            (WireFormatRegistry[name] as AdatCompanion<*>).adatWireFormat
-        }
 
     @CallSiteName
     fun closeListOp(operation: AutoOperation, itemIds: Set<ItemId>, commit: Boolean, distribute: Boolean, callSiteName: String = "") {
