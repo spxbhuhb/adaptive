@@ -11,7 +11,7 @@ import `fun`.adaptive.auto.model.MetadataId
 class AutoAdd(
     override val timestamp: LamportTimestamp,
     val itemId: ItemId,
-    val metadataId: MetadataId?,
+    val wireFormatName: String?,
     val parentItemId: ItemId?,
     val payload: ByteArray
 ) : AutoOperation() {

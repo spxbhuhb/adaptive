@@ -19,21 +19,11 @@ class TreeBackend(
     val tree = TreeData(this)
     override val items = mutableMapOf<ItemId, PropertyBackend>()
 
+    override val defaultWireFormatName = context.defaultWireFormat.wireFormatName
+
     // --------------------------------------------------------------------------------
     // Operations from the frontend
     // --------------------------------------------------------------------------------
-
-    override fun add(item: AdatClass<*>, metadataId: MetadataId?, parentItemId: ItemId?, commit: Boolean, distribute: Boolean) {
-        checkNotNull(parentItemId) { "tree items must have a parent" }
-
-        val itemId = context.nextTime()
-        addItem(itemId, metadataId, parentItemId, item)
-
-        val operation = AutoAdd(itemId, itemId, metadataId, parentItemId, item.encode(context.wireFormatProvider))
-        trace { "FE -> BE  itemId=$itemId .. commit true .. distribute true .. $operation" }
-
-        close(operation, commit, distribute)
-    }
 
     override fun remove(itemId: ItemId, commit: Boolean, distribute: Boolean) {
         tree.afterApply(itemId, tree.removedNodes.id, Int.MAX_VALUE)
@@ -82,7 +72,7 @@ class TreeBackend(
 
         checkNotNull(operation.parentItemId) { "tree items must have a parent" }
 
-        addItem(operation.itemId, operation.metadataId, operation.parentItemId, context.wireFormatProvider.decode(operation.payload, context.defaultWireFormat))
+        addItem(operation.itemId, operation.parentItemId, context.wireFormatProvider.decode(operation.payload, context.defaultWireFormat))
 
         closeListOp(operation, setOf(operation.itemId), commit, distribute)
     }
@@ -136,19 +126,9 @@ class TreeBackend(
     // Utility, common
     // --------------------------------------------------------------------------------
 
-    @CallSiteName
-    fun closeListOp(operation: AutoOperation, itemIds: Set<ItemId>, commit: Boolean, distribute: Boolean, callSiteName: String = "") {
-        if (context.time < operation.timestamp) {
-            context.receive(operation.timestamp)
-            trace(callSiteName) { "BE -> BE  itemIds=${itemIds} .. commit $commit .. distribute $distribute .. $operation" }
-            close(operation, commit, distribute)
-        } else {
-            trace(callSiteName) { "BE -> BE  SKIP  $operation" }
-        }
-    }
-
-    fun addItem(itemId: ItemId, metadataId: ItemId?, parentItemId : ItemId, value: AdatClass<*>) {
+    override fun addItem(itemId: ItemId, parentItemId : ItemId?, value: AdatClass<*>) {
+        checkNotNull(parentItemId) { "tree items must have a parent" }
         tree.addChildToParent(itemId, parentItemId)
-        items += itemId to PropertyBackend(context, itemId, metadataId, value.toArray())
+        items += itemId to PropertyBackend(context, itemId, value.adatCompanion.wireFormatName, value.toArray())
     }
 }

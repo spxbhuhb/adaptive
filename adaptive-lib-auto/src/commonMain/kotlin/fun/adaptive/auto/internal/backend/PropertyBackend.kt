@@ -12,7 +12,7 @@ import `fun`.adaptive.wireformat.WireFormat
 class PropertyBackend(
     override val context: BackendContext,
     val itemId: LamportTimestamp,
-    val metadataId: MetadataId?,
+    val wireFormatName: String?,
     initialValues: Array<Any?>?
 ) : BackendBase(context.handle.clientId) {
 

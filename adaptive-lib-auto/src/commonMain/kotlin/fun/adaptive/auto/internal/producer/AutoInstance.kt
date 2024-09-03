@@ -41,7 +41,7 @@ class AutoInstance<A : AdatClass<A>>(
         propertyBackend = PropertyBackend(
             backendContext,
             itemId,
-            metadataId = null,
+            companion.wireFormatName,
             initialValues = null
         )
 

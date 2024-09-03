@@ -1,12 +1,19 @@
 package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.AdatCompanion
+import `fun`.adaptive.adat.encode
+import `fun`.adaptive.adat.toArray
+import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.model.ClientId
 import `fun`.adaptive.auto.model.ItemId
-import `fun`.adaptive.auto.model.MetadataId
 import `fun`.adaptive.auto.model.operation.AutoAdd
 import `fun`.adaptive.auto.model.operation.AutoEmpty
+import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.auto.model.operation.AutoRemove
+import `fun`.adaptive.reflect.CallSiteName
+import `fun`.adaptive.wireformat.WireFormatRegistry
+import `fun`.adaptive.wireformat.protobuf.dumpProto
 
 abstract class CollectionBackendBase(
     clientId: ClientId
@@ -14,11 +21,30 @@ abstract class CollectionBackendBase(
 
     abstract val items: MutableMap<ItemId, PropertyBackend>
 
+    abstract val defaultWireFormatName: String
+
     // --------------------------------------------------------------------------------
     // Operations from the frontend
     // --------------------------------------------------------------------------------
 
-    abstract fun add(item: AdatClass<*>, metadataId: MetadataId?, parentItemId: ItemId?, commit: Boolean, distribute: Boolean)
+    fun add(item: AdatClass<*>, parentItemId: ItemId?, commit: Boolean, distribute: Boolean) {
+        val itemId = context.nextTime()
+        addItem(itemId, parentItemId, item)
+
+        val wireFormatName = wireFormatNameOrNull(item)
+
+        val operation = AutoAdd(
+            timestamp = itemId,
+            itemId = itemId,
+            wireFormatName,
+            parentItemId,
+            encode(wireFormatName, item.toArray()) // FIXME clean up the array/adat class confusion
+        )
+
+        trace { "FE -> BE  itemId=$itemId .. commit true .. distribute true .. $operation" }
+
+        close(operation, commit, distribute)
+    }
 
     abstract fun remove(itemId: ItemId, commit: Boolean, distribute: Boolean)
 
@@ -34,4 +60,41 @@ abstract class CollectionBackendBase(
 
     abstract fun remove(operation: AutoRemove, commit: Boolean, distribute: Boolean)
 
+    // --------------------------------------------------------------------------------
+    // Helpers
+    // --------------------------------------------------------------------------------
+
+    abstract fun addItem(itemId: ItemId, parentItemId: ItemId?, value: AdatClass<*>)
+
+    fun wireFormatNameOrNull(item: AdatClass<*>): String? {
+        val itemWireFormatName = item.adatCompanion.wireFormatName
+        return if (itemWireFormatName == defaultWireFormatName) null else itemWireFormatName
+    }
+
+    fun wireFormatFor(name: String?) =
+        if (name == null) {
+            context.defaultWireFormat
+        } else {
+            (WireFormatRegistry[name] as AdatCompanion<*>).adatWireFormat
+        }
+
+    @CallSiteName
+    fun closeListOp(operation: AutoOperation, itemIds: Set<ItemId>, commit: Boolean, distribute: Boolean, callSiteName: String = "") {
+        if (context.time < operation.timestamp) {
+            context.receive(operation.timestamp)
+            trace(callSiteName) { "BE -> BE  itemIds=${itemIds} .. commit $commit .. distribute $distribute .. $operation" }
+            close(operation, commit, distribute)
+        } else {
+            trace(callSiteName) { "BE -> BE  SKIP  $operation" }
+        }
+    }
+
+    fun encode(wireFormatName: String?, values: Array<Any?>) =
+        wireFormatFor(wireFormatName)
+            .wireFormatEncode(context.wireFormatProvider.encoder(), values)
+            .pack()
+
+    fun decode(wireFormatName: String?, payload: ByteArray) =
+        wireFormatFor(wireFormatName)
+            .wireFormatDecode(context.wireFormatProvider.decoder(payload))
 }

@@ -5,32 +5,22 @@ import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.model.MetadataId
 import `fun`.adaptive.auto.model.operation.*
-import `fun`.adaptive.reflect.CallSiteName
 
 class SetBackend(
     override val context: BackendContext
 ) : CollectionBackendBase(context.handle.clientId) {
 
-    val additions = mutableSetOf<Pair<ItemId, MetadataId?>>()
+    val additions = mutableSetOf<ItemId>()
     val removals = mutableSetOf<ItemId>()
 
     override val items = mutableMapOf<ItemId, PropertyBackend>()
 
+    override val defaultWireFormatName = context.defaultWireFormat.wireFormatName
+
     // --------------------------------------------------------------------------------
     // Operations from the frontend
     // --------------------------------------------------------------------------------
-
-    override fun add(item: AdatClass<*>, metadataId: MetadataId?, parentItemId: ItemId?, commit: Boolean, distribute: Boolean) {
-        val itemId = context.nextTime()
-        addItem(itemId, metadataId, item)
-
-        val operation = AutoAdd(itemId, itemId, metadataId, parentItemId, encode(item.toArray()))
-        trace { "FE -> BE  itemId=$itemId .. commit true .. distribute true .. $operation" }
-
-        close(operation, commit, distribute)
-    }
 
     override fun remove(itemId: ItemId, commit: Boolean, distribute: Boolean) {
         removals += itemId
@@ -67,7 +57,7 @@ class SetBackend(
     override fun add(operation: AutoAdd, commit: Boolean, distribute: Boolean) {
         trace { "commit=$commit distribute=$distribute op=$operation" }
 
-        addItem(operation.itemId, operation.metadataId, decode(operation.payload))
+        addItem(operation.itemId, null, decode(operation.wireFormatName, operation.payload))
 
         closeListOp(operation, setOf(operation.itemId), commit, distribute)
     }
@@ -115,7 +105,7 @@ class SetBackend(
             val itemId = item.itemId
 
             if (itemId > peerTime) {
-                connector.send(AutoAdd(itemId, itemId, item.metadataId, null, encode(item.values)))
+                connector.send(AutoAdd(itemId, itemId, item.wireFormatName,  null, encode(item.wireFormatName, item.values)))
             } else {
                 item.syncPeer(connector, peerTime)
             }
@@ -128,28 +118,10 @@ class SetBackend(
     // Utility, common
     // --------------------------------------------------------------------------------
 
-    @CallSiteName
-    fun closeListOp(operation: AutoOperation, itemIds: Set<ItemId>, commit: Boolean, distribute: Boolean, callSiteName: String = "") {
-        if (context.time < operation.timestamp) {
-            context.receive(operation.timestamp)
-            trace(callSiteName) { "BE -> BE  itemIds=${itemIds} .. commit $commit .. distribute $distribute .. $operation" }
-            close(operation, commit, distribute)
-        } else {
-            trace(callSiteName) { "BE -> BE  SKIP  $operation" }
-        }
-    }
-
-    fun addItem(itemId: ItemId, metadataId: ItemId?, value: AdatClass<*>) : PropertyBackend {
-        additions += (itemId to metadataId)
-        val backend = PropertyBackend(context, itemId, metadataId, value.toArray())
+    override fun addItem(itemId: ItemId, parentItemId: ItemId?, value: AdatClass<*>) {
+        additions += itemId
+        val backend = PropertyBackend(context, itemId, value.adatCompanion.wireFormatName, value.toArray())
         items += itemId to backend
-        return backend
     }
-
-    private fun encode(values : Array<Any?>) =
-        context.defaultWireFormat.wireFormatEncode(context.wireFormatProvider.encoder(), values).pack()
-
-    private fun decode(payload : ByteArray) =
-        context.defaultWireFormat.wireFormatDecode(context.wireFormatProvider.decoder(payload))
 
 }

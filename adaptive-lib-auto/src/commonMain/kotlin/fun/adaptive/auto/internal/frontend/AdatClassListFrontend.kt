@@ -20,7 +20,7 @@ class AdatClassListFrontend<A : AdatClass<A>>(
 
     // TODO optimize AutoClassListFrontend.commit  (or maybe SetBackend)
     override fun commit() {
-        val active = (backend.additions.map { it.first }.toSet() subtract backend.removals)
+        val active = (backend.additions subtract backend.removals)
         values = active.sorted().map { getFrontend(it).value !! }
         onListCommit?.invoke(values)
     }
@@ -41,7 +41,7 @@ class AdatClassListFrontend<A : AdatClass<A>>(
     }
 
     fun add(item: A) {
-        backend.add(item, null, null, true, true)
+        backend.add(item, null, true, true)
     }
 
     operator fun minusAssign(item: A) {

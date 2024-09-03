@@ -21,7 +21,7 @@ class AutoListTest {
         autoTest(port = 8085) { originAdapter, connectingAdapter ->
 
             val testAdapter = test(connectingAdapter) {
-                val a = autoList(TestData, trace = true) { getService<AutoTestApi>().testListWithOrigin() }
+                val a = autoList(TestData) { getService<AutoTestApi>().testListWithOrigin() }
 
                 if (a != null) {
                     producedValue = a
