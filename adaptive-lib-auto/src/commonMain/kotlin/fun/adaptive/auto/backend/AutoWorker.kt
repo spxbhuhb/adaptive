@@ -1,4 +1,4 @@
-package `fun`.adaptive.auto.worker
+package `fun`.adaptive.auto.backend
 
 import `fun`.adaptive.auto.internal.backend.BackendBase
 import `fun`.adaptive.auto.internal.connector.ServiceConnector

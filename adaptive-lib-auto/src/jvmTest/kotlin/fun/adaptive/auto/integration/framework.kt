@@ -10,8 +10,8 @@ import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.service.AutoService
-import `fun`.adaptive.auto.worker.AutoWorker
+import `fun`.adaptive.auto.backend.AutoService
+import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.ServiceImpl

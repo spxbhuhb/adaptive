@@ -1,8 +1,8 @@
 package `fun`.adaptive.cookbook.iot
 
 import `fun`.adaptive.auto.api.autoCommon
-import `fun`.adaptive.auto.service.AutoService
-import `fun`.adaptive.auto.worker.AutoWorker
+import `fun`.adaptive.auto.backend.AutoService
+import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.worker

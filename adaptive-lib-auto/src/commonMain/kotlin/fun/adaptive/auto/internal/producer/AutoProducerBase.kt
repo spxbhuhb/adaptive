@@ -10,7 +10,7 @@ import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.internal.frontend.FrontendBase
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.worker.AutoWorker
+import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.AdaptiveProducer

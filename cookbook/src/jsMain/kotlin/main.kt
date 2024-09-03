@@ -3,8 +3,8 @@
  */
 
 import `fun`.adaptive.auto.api.autoCommon
-import `fun`.adaptive.auto.service.AutoService
-import `fun`.adaptive.auto.worker.AutoWorker
+import `fun`.adaptive.auto.backend.AutoService
+import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.worker
@@ -30,7 +30,6 @@ import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
-import `fun`.adaptive.ktor.withJsonWebSocketTransport
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.box
@@ -42,7 +41,6 @@ import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.input
-import `fun`.adaptive.ui.api.maxHeight
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.navClick
 import `fun`.adaptive.ui.api.padding
@@ -53,7 +51,6 @@ import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.platform.withJsResources
-import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

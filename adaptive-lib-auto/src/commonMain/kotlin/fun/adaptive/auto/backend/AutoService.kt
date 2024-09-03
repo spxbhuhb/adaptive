@@ -1,10 +1,9 @@
-package `fun`.adaptive.auto.service
+package `fun`.adaptive.auto.backend
 
 import `fun`.adaptive.auto.api.AutoApi
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.*
-import `fun`.adaptive.auto.worker.AutoWorker
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.service.model.ServiceSession

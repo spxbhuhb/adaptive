@@ -11,7 +11,7 @@ import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.worker.AutoWorker
+import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.getService

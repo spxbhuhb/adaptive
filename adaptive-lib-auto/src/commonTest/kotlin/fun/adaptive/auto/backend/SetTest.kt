@@ -3,8 +3,8 @@ package `fun`.adaptive.auto.backend
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.auto.internal.backend.BackendBase
 import `fun`.adaptive.auto.internal.backend.BackendContext
-import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
+import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.connector.DirectConnector
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.model.AutoHandle
@@ -48,13 +48,7 @@ class SetTest {
             b1.addPeer(DirectConnector(b2), c2.time)
             b2.addPeer(DirectConnector(b1), c1.time)
 
-            withContext(Dispatchers.Default) {
-                withTimeout(1000) {
-                    while (b1.context.time.timestamp != b2.context.time.timestamp) {
-                        delay(10)
-                    }
-                }
-            }
+            waitForSync(b1, b2)
 
             f1.add(testData)
             f2.assertEquals(f1)
@@ -78,7 +72,6 @@ class SetTest {
             f2.assertEquals(f1)
         }
     }
-
 
     @Test
     fun preloaded() {
@@ -105,24 +98,36 @@ class SetTest {
             b1.addPeer(DirectConnector(b2), c2.time)
             b2.addPeer(DirectConnector(b1), c1.time)
 
-            withContext(Dispatchers.Default) {
-                withTimeout(1000) {
+            f2.assertEquals(f1) { f2.values.isNotEmpty() }
+        }
+    }
+
+
+    suspend fun waitForSync(b1: BackendBase, b2: BackendBase, condition: (() -> Boolean)? = null) {
+        withContext(Dispatchers.Default) {
+            withTimeout(1000) {
+                if (condition != null) {
+                    while (! condition()) {
+                        delay(10)
+                    }
+                } else {
                     while (b1.context.time.timestamp != b2.context.time.timestamp) {
                         delay(10)
                     }
                 }
             }
-
-            f2.assertEquals(f1)
         }
     }
 
-    fun <A : AdatClass<A>> AdatClassListFrontend<A>.assertEquals(expected : AdatClassListFrontend<A>) {
+    suspend fun <A : AdatClass<A>> AdatClassListFrontend<A>.assertEquals(expected: AdatClassListFrontend<A>, condition: (() -> Boolean)? = null) {
+        waitForSync(this.backend, expected.backend, condition)
         this.backend.assertEquals(expected.backend)
         assertEquals(expected.values, this.values)
     }
 
-    fun SetBackend.assertEquals(expected : SetBackend) {
+    suspend fun SetBackend.assertEquals(expected: SetBackend) {
+        waitForSync(this, expected)
+
         assertEquals(expected.additions, this.additions)
         assertEquals(expected.removals, this.removals)
         assertEquals(expected.items.size, this.items.size)
@@ -131,7 +136,9 @@ class SetTest {
         }
     }
 
-    fun PropertyBackend.assertEquals(expected : PropertyBackend) {
+    suspend fun PropertyBackend.assertEquals(expected: PropertyBackend) {
+        waitForSync(this, expected)
+
         assertEquals(expected.itemId, this.itemId)
         assertContentEquals(expected.values, this.values)
     }

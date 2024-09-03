@@ -3,7 +3,7 @@ package `fun`.adaptive.cookbook.iot
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.auto.api.originList
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
-import `fun`.adaptive.auto.worker.AutoWorker
+import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.cookbook.iot.model.Thermostat

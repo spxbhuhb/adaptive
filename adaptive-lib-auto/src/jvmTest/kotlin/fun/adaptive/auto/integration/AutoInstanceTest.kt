@@ -2,7 +2,7 @@ package `fun`.adaptive.auto.integration
 
 import `fun`.adaptive.auto.api.autoInstance
 import `fun`.adaptive.auto.backend.TestData
-import `fun`.adaptive.auto.worker.AutoWorker
+import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.testing.test
 import `fun`.adaptive.service.getService
