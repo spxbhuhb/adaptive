@@ -4,10 +4,6 @@
 
 package `fun`.adaptive.utility
 
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withTimeout
-import kotlin.time.Duration
-
 inline fun <reified T> Any.alsoIfInstance(block: (it: T) -> Unit) {
     if (this is T) this.also(block)
 }
@@ -24,15 +20,3 @@ inline fun <reified T> Any?.checkIfInstance(): T {
     check(this is T) { "$this is not an instance of ${T::class}" }
     return this
 }
-
-suspend inline fun <reified T> waitFor(timeout: Duration, crossinline block: () -> T?): T =
-    block() ?: withTimeout(timeout) {
-        var value: T?
-        do {
-            value = block()
-            if (value == null) {
-                delay(50)
-            }
-        } while (value == null)
-        value
-    }

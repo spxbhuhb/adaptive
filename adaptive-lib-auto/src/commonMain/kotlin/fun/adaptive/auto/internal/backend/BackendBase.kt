@@ -11,8 +11,8 @@ import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.AutoModify
 import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.reflect.CallSiteName
+import `fun`.adaptive.utility.safeLaunch
 import `fun`.adaptive.wireformat.WireFormatRegistry
-import kotlinx.coroutines.launch
 
 abstract class BackendBase(
     clientId: ClientId
@@ -60,7 +60,7 @@ abstract class BackendBase(
      */
     fun addPeer(connector: AutoConnector, peerTime: LamportTimestamp): LamportTimestamp {
         context.addConnector(connector)
-        context.scope.launch { syncPeer(connector, peerTime) }
+        context.scope.safeLaunch(context.logger) { syncPeer(connector, peerTime) }
         return context.time
     }
 

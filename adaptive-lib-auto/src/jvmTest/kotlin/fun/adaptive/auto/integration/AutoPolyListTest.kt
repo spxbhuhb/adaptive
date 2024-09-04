@@ -9,10 +9,10 @@ import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.testing.test
 import `fun`.adaptive.service.getService
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.withTimeout
+import `fun`.adaptive.utility.waitForReal
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.time.Duration.Companion.seconds
 
 private var producedValue: List<AdatClass<*>>? = null
 
@@ -41,12 +41,7 @@ class AutoPolyListTest {
                 }
             }
 
-            withTimeout(1000L) {
-                while (true) {
-                    if (testAdapter.rootFragment.state[0] != null) break
-                    delay(10)
-                }
-            }
+            waitForReal(2.seconds) { testAdapter.rootFragment.state[0] != null }
 
             val originWorker = originAdapter.firstImpl<AutoWorker>()
             val originBackend = originWorker.backends.values.first()

@@ -7,13 +7,13 @@ import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.model.ItemId
 
-class AdatClassFrontend<A : AdatClass<A>>(
+open class AdatClassFrontend<A : AdatClass<A>>(
     override val backend: PropertyBackend,
     val wireFormat: AdatClassWireFormat<A>,
     initialValue: A?,
     val itemId : ItemId?,
     val collectionFrontend: CollectionFrontendBase?,
-    val onCommit: ((frontend: AdatClassFrontend<A>) -> Unit)? = null
+    val onCommit: ((frontend: AdatClassFrontend<A>) -> Unit)?
 ) : FrontendBase() {
 
     val adatContext = AdatContext<ItemId>(itemId, null, null, store = this, null)

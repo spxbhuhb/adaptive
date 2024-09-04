@@ -52,6 +52,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.adaptive.core)
             implementation(libs.adaptive.lib.exposed)
+            implementation(libs.kotlinx.io)
         }
 
         commonTest.dependencies {

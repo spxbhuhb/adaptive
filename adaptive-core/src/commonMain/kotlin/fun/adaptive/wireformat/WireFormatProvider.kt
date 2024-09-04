@@ -4,6 +4,11 @@
 
 package `fun`.adaptive.wireformat
 
+import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.utility.read
+import `fun`.adaptive.utility.write
+import kotlinx.io.files.Path
+
 abstract class WireFormatProvider {
 
     abstract val useTextFrame: Boolean
@@ -33,7 +38,18 @@ abstract class WireFormatProvider {
     fun <T> encode(instance: T, wireFormat: WireFormat<T>): ByteArray =
         encoder().rawInstance(instance, wireFormat).pack()
 
+    fun <T> write(path: Path, instance: T, wireFormat: WireFormat<T>) {
+        path.write(encoder().rawInstance(instance, wireFormat).pack())
+    }
+
+    fun <A : AdatClass<A>> write(path: Path, instance: A) {
+        path.write(encoder().rawInstance(instance, instance.adatCompanion.adatWireFormat).pack())
+    }
+
     fun <T> decode(byteArray: ByteArray, wireFormat: WireFormat<T>): T =
         decoder(byteArray).asInstance(wireFormat)
+
+    fun <T> read(path: Path, wireFormat: WireFormat<T>): T =
+        decoder(path.read()).asInstance(wireFormat)
 
 }

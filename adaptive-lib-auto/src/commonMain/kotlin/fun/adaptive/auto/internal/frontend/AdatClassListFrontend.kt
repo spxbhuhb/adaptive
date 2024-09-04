@@ -80,7 +80,8 @@ class AdatClassListFrontend<A : AdatClass<A>>(
                 wireFormat as AdatClassWireFormat<A>,
                 wireFormat.newInstance(propertyBackend.values),
                 itemId,
-                this
+                this,
+                null
             )
                 .also { propertyBackend.frontEnd = it }
         }

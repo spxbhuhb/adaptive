@@ -5,7 +5,7 @@ import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.safeSuspendCall
 import `fun`.adaptive.utility.use
-import `fun`.adaptive.utility.waitFor
+import `fun`.adaptive.utility.waitForNotNull
 import `fun`.adaptive.wireformat.WireFormatProvider
 import io.ktor.websocket.*
 import kotlinx.coroutines.CoroutineScope
@@ -23,7 +23,7 @@ abstract class WebSocketServiceCallTransport(
     open var socket: WebSocketSession? = null
 
     override suspend fun send(envelope: TransportEnvelope) {
-        val safeSocket = waitFor(responseTimeout) { socketLock.use { socket } }
+        val safeSocket = waitForNotNull(responseTimeout) { socketLock.use { socket } }
 
         if (wireFormatProvider.useTextFrame) {
             safeSocket.send(Frame.Text(true, wireFormatProvider.encode(envelope, TransportEnvelope)))
@@ -33,7 +33,7 @@ abstract class WebSocketServiceCallTransport(
     }
 
     suspend fun incoming() {
-        val safeSocket = waitFor(responseTimeout) { socketLock.use { socket } }
+        val safeSocket = waitForNotNull(responseTimeout) { socketLock.use { socket } }
 
         for (frame in safeSocket.incoming) {
 

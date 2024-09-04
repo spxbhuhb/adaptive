@@ -1,6 +1,7 @@
 package `fun`.adaptive.auto.integration
 
 import `fun`.adaptive.adat.toArray
+import `fun`.adaptive.auto.api.fileInstance
 import `fun`.adaptive.auto.api.originInstance
 import `fun`.adaptive.auto.api.originList
 import `fun`.adaptive.auto.api.originPolyList
@@ -28,20 +29,32 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.ensureTestPath
+import `fun`.adaptive.utility.testPath
+import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
+import kotlin.test.BeforeTest
 
 @ServiceApi
 interface AutoTestApi {
     suspend fun testInstanceManual(): AutoConnectInfo
     suspend fun testInstanceWithOrigin(): AutoConnectInfo
+    suspend fun testInstanceWithFile(): AutoConnectInfo
     suspend fun testListWithOrigin(): AutoConnectInfo
     suspend fun testPolyListWithOrigin(): AutoConnectInfo
 }
 
 class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
+
+    @BeforeTest
+    fun setup() {
+        ensureTestPath()
+    }
 
     val worker by worker<AutoWorker>()
 
@@ -69,7 +82,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
             originBackend,
             TestData.adatWireFormat,
             TestData(12, "a"),
-            null, null
+            null, null, null
         )
 
         originBackend.frontEnd = originFrontend
@@ -89,6 +102,12 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
 
     override suspend fun testListWithOrigin(): AutoConnectInfo {
         return originList(worker, TestData, true).connectInfo()
+    }
+
+    override suspend fun testInstanceWithFile(): AutoConnectInfo {
+        val path = Path(testPath, "AutoTestService.testInstanceWithFile.json")
+        SystemFileSystem.delete(path, mustExist = false)
+        return fileInstance(worker, TestData, path, JsonWireFormatProvider(), TestData(12, "a"), true).connectInfo()
     }
 
     override suspend fun testPolyListWithOrigin(): AutoConnectInfo {

@@ -15,17 +15,18 @@ androidx-espresso-core = "3.5.1"
 androidx-test-junit = "1.1.5"
 coroutines = "1.7.3"
 datetime = "0.4.0"
+exposed = "0.41.1"
 gradle-download-plugin = "5.5.0"
 gradle-maven-publish = "0.29.0"
 h2 = "2.1.214"
 hikaricp = "3.4.2"
-exposed = "0.41.1"
 javamail = "1.6.2"
 junit = "4.13.2"
 junit-bom = "5.8.0"
 kotlin = "2.0.0"
 kotlinpoet = "1.16.0"
 kotlin-wrappers = "1.0.0-pre.760"
+kotlinx-io = "0.5.3"
 ktor = "2.3.11"
 logback = "1.5.6"
 plugin-publish = "1.1.0"
@@ -81,6 +82,8 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 kotlinx-coroutines-debug = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-debug", version.ref = "coroutines" }
 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
+
+kotlinx-io = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "kotlinx-io" }
 
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
