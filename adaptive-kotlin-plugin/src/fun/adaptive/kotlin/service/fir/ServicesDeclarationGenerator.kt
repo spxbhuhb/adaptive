@@ -95,7 +95,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         val symbols = expandedClass
             .declarationSymbols
             .filterIsInstance<FirNamedFunctionSymbol>()
-            .filter { it.isSuspend && it.name.identifier != Strings.CALL_SERVICE }
+            .filter { it.isSuspend && ! it.name.isSpecial && it.name.identifier != Strings.CALL_SERVICE }
             .map { it.name }
             .toMutableSet()
 
