@@ -1,8 +1,114 @@
-# String Resources
+# Internals
 
-String resources are compiled into `.arv` (Adaptive Resource Values) files.
+The resources module started as a fork of Compose Resources. That said, I've decided to
+rewrite how resources are handled as I think the original implementation generates too
+much code (see [Generated Code Size](#generated-code-size)).
 
-## Data size
+## Data Model
+
+* At high level, each resource in the application is represented by a *type* and a *name*.
+* Each resource may have *versions*, each *version* has a unique set of *qualifiers*.
+* The code that references the resource typically does not care about which *version* of the resource is used.
+* The *version* to be used is decided by a lower layer, based on the environment and/or settings.
+* Any given resource *version* have one, and only one, actual file that contains that version.
+
+Resource types **at file level**:
+
+* image (bitmap, typically encoded in a format such as JPG, PNG etc.)
+* svg
+* file (any binary data)
+* font
+* string table
+
+All the types above can be represented by the `ResourceFile` and `ResourceSet` classes:
+
+```kotlin
+class ResourceFile(
+    val path : String,
+    val qualifiers : Set<Qualifier>
+)
+
+class ResourceSet(
+    vararg files : ResourceFile
+)    
+```
+
+### Whole-file resources
+
+```kotlin
+object Images
+
+val Images.background: ImageResource
+  get() = CommonMainImages0.background
+
+private val qDark = setOf(ThemeQualifier.DARK)
+private val qLight = setOf(ThemeQualifier.LIGHT)
+
+private object CommonMainImages0 {
+    val background by lazy { init_background() }
+}
+
+private fun init_background() =
+    FileResourceSet(
+        ResourceFile("adaptiveResources/sandbox.lib/image-light/background.jpg", qDark),
+        ResourceFile("adaptiveResources/sandbox.lib/image-dark/background.jpg", qLight)
+    )
+```
+
+## String resources
+
+Each original string resource file (`.xml`) is compiled into an `.arv` (Adaptive Resource Values) file.
+
+In addition, the following code is generated:
+
+```kotlin
+object Strings
+
+val Strings.hello: StringResource
+    get() = CommonMainStrings.hello
+
+private val qNone = setOf()
+private val qHu = setOf(LanguageQualifier("hu"))
+
+private object CommonMainStrings : StringResourceSet(
+    ResourceFile("adaptiveResources/sandbox.lib/values/strings.avr", qNone),
+    ResourceFile("adaptiveResources/sandbox.lib/values-hu/strings.avr", qHu)
+) {
+    val hello = string(0)
+}
+```
+
+### Loading
+
+Applications load the `.avr` of the active language during startup. It makes no sense 
+to delay the loading as the very first screen will most probably show some strings.
+
+`StringResourceSet.load()` is used to load the strings.
+
+### Binary Format
+
+The `.avr` files store the strings in a binary format which contains three blocks:
+
+* header
+* offset table
+* values
+
+The header contains the file version and the number of values in the file, both as 32-bit integers.
+
+The offset table contains `value-number * 2` 32-bit integers, the offset and length of each value.
+Offset is the absolute position of the value in the file.
+
+Values are put one after each other without separators, encoded in UTF-8.
+
+Example (header and offset table in decimal text for readability):
+```text
+00000001 00000002 // version = 1, value count = 2
+00000024 00000002 // offset of the first value, length of the first value
+00000026 00000003 // offset of the second value, length of the second value
+aabbb             // first value = "aa", second value = "bbb" 
+```
+
+### Data size
 
 These are from ChatGPT, so take them with a grain of salt.
 
