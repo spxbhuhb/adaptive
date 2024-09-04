@@ -7,7 +7,7 @@ import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.model.ItemId
 
-class AdatClassListFrontend<A : AdatClass<A>>(
+open class AdatClassListFrontend<A : AdatClass<A>>(
     override val backend: SetBackend,
     val companion: AdatCompanion<A>,
     val onListCommit: ((newValue: List<A>) -> Unit)?,
@@ -68,7 +68,7 @@ class AdatClassListFrontend<A : AdatClass<A>>(
     }
 
     // TODO optimize AdatClassListFrontend.getFrontend - I think `newInstance` is unnecessary here
-    fun getFrontend(itemId: ItemId) =
+    open fun getFrontend(itemId: ItemId) =
         classFrontends.getOrPut(itemId) {
 
             val propertyBackend = checkNotNull(backend.items[itemId])

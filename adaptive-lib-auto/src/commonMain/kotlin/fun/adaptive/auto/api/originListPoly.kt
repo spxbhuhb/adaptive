@@ -8,18 +8,18 @@ import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
 
 /**
- * Registers an Auto list with [worker].
+ * Registers a polymorphic Auto list with [worker].
  *
- * After registration peers can use [autoList] to connect to the registered
- * list. To get the connection info needed for the [autoList] use the `connectInfo`
+ * After registration peers can use [autoListPoly] to connect to the registered
+ * list. To get the connection info needed for [autoListPoly] use the `connectInfo`
  * function of the returned frontend.
  *
  * - Adding/removing items from the list generate a new list instance (on all peers).
  * - Property changes (on any peer) generate a new list instance (on all peers).
  * - Property changes keep the non-affected instances.
  *
- * Each new instance is validated by default, so code that use values
- * produced by [originList] can safely use the validation result as it is
+ * Each new instance is validated by default, so fragments that use values
+ * produced by [originListPoly] can safely use the validation result as it is
  * up-to-date all the time.
  *
  * The list is **NOT** thread safe.
@@ -27,18 +27,18 @@ import `fun`.adaptive.auto.internal.origin.OriginBase
  * @param    onListCommit       Called after the structure of the list has been changed (add/remove), but before the
  *                              state of the fragment is updated.
  * @param    onItemCommit       Called when a property of a list item has been changed, but before the
- *                              state of the fragment is updated.
+ *                            state of the fragment is updated.
  *
- * @return   An [OriginBase] for this auto list. Use this instance to change
+ * @return   An [OriginBase] for this polymorphic auto list. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  */
-fun <A : AdatClass<A>> originList(
+fun originListPoly(
     worker: AutoWorker,
-    companion: AdatCompanion<A>,
+    companion: AdatCompanion<*>,
     trace: Boolean = false,
-    onListCommit: ((newValue: List<A>) -> Unit)? = null,
-    onItemCommit: ((newValue: List<A>, item: A) -> Unit)? = null
-): OriginBase<SetBackend, AdatClassListFrontend<A>> {
+    onListCommit: ((newValue: List<AdatClass<*>>) -> Unit)? = null,
+    onItemCommit: ((newValue: List<AdatClass<*>>, item: AdatClass<*>) -> Unit)? = null
+): OriginBase<SetBackend, AdatClassListFrontend<*>> {
 
     return OriginBase(
         worker,

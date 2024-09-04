@@ -32,7 +32,7 @@ class FileFrontendTest {
             with(PropertyTestSetup(testData)) {
 
                 val f1 = AdatClassFrontend(b1, wireFormat, testData, null, null, null).also { b1.frontEnd = it }
-                b2.frontEnd = FileFrontend(b2, wireFormat, null, null, null, json, path)
+                b2.frontEnd = FileFrontend(b2, wireFormat, null, null, null, null, json, path)
 
                 connect()
 

@@ -32,7 +32,7 @@ import `fun`.adaptive.foundation.producer.Producer
  * @return   `null` (it takes time to connect and synchronize)
  */
 @Producer
-fun autoPolyList(
+fun autoListPoly(
     companion: AdatCompanion<*>,
     onListCommit: ((newValue: List<AdatClass<*>>) -> Unit)? = null,
     onItemCommit: ((item: AdatClass<*>) -> Unit)? = null,

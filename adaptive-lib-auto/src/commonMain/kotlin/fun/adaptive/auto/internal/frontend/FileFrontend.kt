@@ -16,6 +16,7 @@ class FileFrontend<A : AdatClass<A>>(
     backend: PropertyBackend,
     wireFormat: AdatClassWireFormat<A>,
     itemId: ItemId?,
+    initialValue: A?,
     collectionFrontend: CollectionFrontendBase?,
     onCommit: ((frontend: AdatClassFrontend<A>) -> Unit)?,
     val wireFormatProvider: WireFormatProvider,
@@ -23,7 +24,7 @@ class FileFrontend<A : AdatClass<A>>(
 ) : AdatClassFrontend<A>(
     backend,
     wireFormat,
-    null,
+    initialValue,
     itemId,
     collectionFrontend,
     onCommit

@@ -4,11 +4,14 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.SetBackend
-import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
+import `fun`.adaptive.auto.internal.frontend.FolderFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.wireformat.WireFormatProvider
+import kotlinx.io.files.Path
 
 /**
- * Registers an Auto list with [worker].
+ * Registers an Auto list with [AutoWorker].
  *
  * After registration peers can use [autoList] to connect to the registered
  * list. To get the connection info needed for the [autoList] use the `connectInfo`
@@ -29,16 +32,18 @@ import `fun`.adaptive.auto.internal.origin.OriginBase
  * @param    onItemCommit       Called when a property of a list item has been changed, but before the
  *                              state of the fragment is updated.
  *
- * @return   An [OriginBase] for this auto list. Use this instance to change
+ * @return   The Auto frontend of this list. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  */
-fun <A : AdatClass<A>> originList(
+fun originFolderPoly(
     worker: AutoWorker,
-    companion: AdatCompanion<A>,
+    companion: AdatCompanion<*>,
+    wireFormatProvider: WireFormatProvider,
     trace: Boolean = false,
-    onListCommit: ((newValue: List<A>) -> Unit)? = null,
-    onItemCommit: ((newValue: List<A>, item: A) -> Unit)? = null
-): OriginBase<SetBackend, AdatClassListFrontend<A>> {
+    onListCommit: ((newValue: List<AdatClass<*>>) -> Unit)? = null,
+    onItemCommit: ((newValue: List<AdatClass<*>>, item: AdatClass<*>) -> Unit)? = null,
+    path: (itemId: ItemId, item: AdatClass<*>) -> Path
+): OriginBase<SetBackend, FolderFrontend<*>> {
 
     return OriginBase(
         worker,
@@ -49,11 +54,13 @@ fun <A : AdatClass<A>> originList(
 
         backend = SetBackend(context)
 
-        frontend = AdatClassListFrontend(
+        frontend = FolderFrontend(
             backend,
             companion,
-            onListCommit = onListCommit,
-            onItemCommit = onItemCommit
+            onListCommit,
+            onItemCommit,
+            wireFormatProvider,
+            path
         )
     }
 
