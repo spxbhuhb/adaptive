@@ -22,7 +22,7 @@ open class AdatClassListFrontend<A : AdatClass<A>>(
     // TODO optimize AutoClassListFrontend.commit  (or maybe SetBackend)
     override fun commit() {
         val active = (backend.additions subtract backend.removals)
-        values = active.sorted().map { getFrontend(it).value !! }
+        values = active.sorted().map { getItemFrontend(it).value !! }
         onListCommit?.invoke(values)
     }
 
@@ -30,7 +30,7 @@ open class AdatClassListFrontend<A : AdatClass<A>>(
         @Suppress("UNCHECKED_CAST")
         val index = values.indexOfFirst { (it.adatContext as AdatContext<ItemId>).id == itemId }
         if (index == - 1) return
-        val instance = getFrontend(itemId).value !!
+        val instance = getItemFrontend(itemId).value !!
         values = values.subList(0, index) + instance + values.subList(index + 1, values.size)
         onItemCommit?.invoke(values, instance)
     }
@@ -58,7 +58,7 @@ open class AdatClassListFrontend<A : AdatClass<A>>(
     }
 
     fun modify(itemId: ItemId, propertyName: String, propertyValue: Any?) {
-        getFrontend(itemId).modify(propertyName, propertyValue)
+        getItemFrontend(itemId).modify(propertyName, propertyValue)
     }
 
     fun itemId(instance: AdatClass<*>) =
@@ -71,7 +71,7 @@ open class AdatClassListFrontend<A : AdatClass<A>>(
     }
 
     // TODO optimize AdatClassListFrontend.getFrontend - I think `newInstance` is unnecessary here
-    open fun getFrontend(itemId: ItemId) =
+    open fun getItemFrontend(itemId: ItemId) =
         classFrontends.getOrPut(itemId) {
 
             val propertyBackend = checkNotNull(backend.items[itemId])

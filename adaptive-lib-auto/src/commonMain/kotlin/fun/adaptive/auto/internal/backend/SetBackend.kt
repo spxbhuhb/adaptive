@@ -8,15 +8,23 @@ import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.*
 
 class SetBackend(
-    override val context: BackendContext
+    override val context: BackendContext,
+    initialValue: Map<ItemId, PropertyBackend>? = null
 ) : CollectionBackendBase(context.handle.clientId) {
 
     val additions = mutableSetOf<ItemId>()
     val removals = mutableSetOf<ItemId>()
 
-    override val items = mutableMapOf<ItemId, PropertyBackend>()
+    override val items = initialValue?.toMutableMap() ?: mutableMapOf<ItemId, PropertyBackend>()
 
     override val defaultWireFormatName = context.defaultWireFormat.wireFormatName
+
+    init {
+        if (initialValue != null && initialValue.isNotEmpty()) {
+            additions.addAll(initialValue.keys)
+            context.receive(initialValue.keys.maxOf { it })
+        }
+    }
 
     // --------------------------------------------------------------------------------
     // Operations from the frontend
@@ -24,7 +32,8 @@ class SetBackend(
 
     override fun remove(itemId: ItemId, commit: Boolean, distribute: Boolean) {
         removals += itemId
-        items -= itemId
+
+        items.remove(itemId)?.removed()
 
         val operation = AutoRemove(context.nextTime(), setOf(itemId))
         trace { "FE -> BE  itemId=$itemId .. commit true .. distribute true .. $operation" }
@@ -36,7 +45,7 @@ class SetBackend(
         removals += itemIds
 
         for (itemId in itemIds) {
-            items -= itemId
+            items.remove(itemId)?.removed()
         }
 
         val operation = AutoRemove(context.nextTime(), itemIds)
@@ -101,7 +110,7 @@ class SetBackend(
             connector.send(AutoRemove(time, removals))
         }
 
-        for (item in items.values) {
+        for (item in items.values.sortedBy { it.itemId }) {
             val itemId = item.itemId
 
             if (itemId > peerTime) {

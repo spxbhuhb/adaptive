@@ -1,13 +1,11 @@
 package `fun`.adaptive.auto.integration
 
 import `fun`.adaptive.auto.api.auto
-import `fun`.adaptive.auto.backend.AutoService
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.service
-import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.exposed.inMemoryH2
@@ -23,9 +21,12 @@ import kotlinx.coroutines.withTimeout
 fun autoTest(
     callSiteName: String = "unknown",
     port : Int,
+    trace: Boolean = false,
     test: suspend (originAdapter: BackendAdapter, connectingAdapter: BackendAdapter) -> Unit
 ) {
     val originAdapter = backend {
+        if (trace) it.trace = arrayOf(Regex(".*"))
+
         settings {
             inline("KTOR_PORT" to port)
         }
@@ -41,6 +42,7 @@ fun autoTest(
     }
 
     val connectingAdapter = backend {
+        if (trace) it.trace = arrayOf(Regex(".*"))
         auto()
     }
 

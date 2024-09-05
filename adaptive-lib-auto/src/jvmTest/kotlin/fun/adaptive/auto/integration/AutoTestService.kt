@@ -18,7 +18,6 @@ import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.testPath
 import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
@@ -91,15 +90,6 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
 
         val path = Path(testPath, folderName)
 
-        if (path.exists()) {
-            SystemFileSystem.list(path).forEach {
-                require(it.name.endsWith(".json"))
-                SystemFileSystem.delete(it)
-            }
-        } else {
-            SystemFileSystem.createDirectories(path)
-        }
-
         return originFolder(
             worker,
             TestData,
@@ -108,6 +98,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
             { itemId,_ -> "${itemId.clientId}.${itemId.timestamp}.json" },
             serviceContext
         ).connectInfo()
+
     }
 
 }

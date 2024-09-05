@@ -1,7 +1,6 @@
 package `fun`.adaptive.auto.internal.frontend
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.model.ItemId
@@ -10,7 +9,6 @@ import `fun`.adaptive.utility.write
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.WireFormatRegistry
-import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 
@@ -38,6 +36,10 @@ class FileFrontend<A : AdatClass<A>>(
     override fun commit() {
         super.commit()
         write(path, wireFormatProvider, itemId, value !!)
+    }
+
+    override fun removed() {
+        SystemFileSystem.delete(path)
     }
 
     companion object {

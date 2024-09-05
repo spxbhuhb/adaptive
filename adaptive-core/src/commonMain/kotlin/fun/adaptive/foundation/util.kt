@@ -1,8 +1,11 @@
 package `fun`.adaptive.foundation
 
+fun AdaptiveAdapter.dumpFragmentTree(): String =
+    rootFragment.dumpFragmentTree()
+
 fun AdaptiveFragment.dumpFragmentTree(indent: String = ""): String {
     val lines = mutableListOf<String>()
-    lines += this.toString()
+    lines += indent + this.toString()
     for (child in children) {
         lines += child.dumpFragmentTree("$indent  ")
     }

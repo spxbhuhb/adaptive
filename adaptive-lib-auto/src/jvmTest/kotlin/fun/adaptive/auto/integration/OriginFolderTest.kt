@@ -7,7 +7,10 @@ import `fun`.adaptive.auto.internal.frontend.FolderFrontend
 import `fun`.adaptive.foundation.testing.test
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.utility.exists
+import `fun`.adaptive.utility.testPath
 import `fun`.adaptive.utility.waitForReal
+import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -21,11 +24,15 @@ class OriginFolderTest {
     fun basic() {
         autoTest(port = 8085) { originAdapter, connectingAdapter ->
 
+            producedValue = null
+
             val folderName = "OriginFolderTest.basic"
+            val folderPath = Path(testPath, folderName)
+            folderPath.ensureExistsAndEmpty()
 
             test(connectingAdapter) {
 
-                val a = autoList(TestData, trace = true) { getService<AutoTestApi>().folder(folderName) }
+                val a = autoList(TestData) { getService<AutoTestApi>().folder(folderName) }
 
                 if (a != null) {
                     producedValue = a
@@ -53,6 +60,45 @@ class OriginFolderTest {
         }
     }
 
+    @Test
+    fun initial() {
+        val t1 = TestData(12, "ab")
+        val t2 = TestData(23, "bc")
+        val t3 = TestData(34, "cd")
+
+        val folderName = "OriginFolderTest.initial"
+        val folderPath = Path(testPath, folderName)
+
+        folderPath.ensureExistsAndEmpty()
+
+        write(Path(folderPath, "1.1.json"), ItemId(1, 1), t1)
+        write(Path(folderPath, "1.2.json"), ItemId(1, 2), t2)
+        write(Path(folderPath, "1.3.json"), ItemId(1, 3), t3)
+
+        autoTest(port = 8086) { originAdapter, connectingAdapter ->
+
+            producedValue = null
+
+            test(connectingAdapter) {
+
+                val a = autoList(TestData) { getService<AutoTestApi>().folder(folderName) }
+
+                if (a != null) {
+                    producedValue = a
+                }
+
+            }
+
+            waitForReal(2.seconds) { producedValue != null }
+
+            val setup = TestSetup<FolderFrontend<TestData>, AdatClassListFrontend<TestData>>(originAdapter, connectingAdapter)
+
+            with(setup) {
+                assert(listOf(t1, t2, t3))
+            }
+        }
+    }
+
     suspend fun TestSetup<FolderFrontend<TestData>, AdatClassListFrontend<TestData>>.addOrigin(t : TestData, expected : List<TestData>) {
         originFrontend.add(t)
         assert(expected)
@@ -66,17 +112,21 @@ class OriginFolderTest {
 
     suspend fun TestSetup<FolderFrontend<TestData>, AdatClassListFrontend<TestData>>.assert(expected : List<TestData>) {
         waitForReal(2.seconds) { producedValue?.size == expected.size }
-        for (et in expected.indices) {
-            assert(expected[et], et)
+
+        val existing = mutableSetOf<Path>()
+
+        for (index in expected.indices) {
+
+            val pv = producedValue !![index]
+            val pt = originFrontend.pathFor(originFrontend.itemId(pv), pv)
+
+            assertEquals(expected[index], pv)
+            assertTrue(pt.exists())
+            assertEquals(expected[index], read(pt))
+
+            existing += pt
         }
-    }
 
-    fun TestSetup<FolderFrontend<TestData>, AdatClassListFrontend<TestData>>.assert(expected : TestData, index : Int) {
-        val at1 = producedValue!![index]
-        val pt1 = originFrontend.pathFor(originFrontend.itemId(at1), at1)
-
-        assertEquals(expected, at1)
-        assertTrue(pt1.exists())
-        assertEquals(expected, read(pt1))
+        assertEquals(existing, SystemFileSystem.list(originFrontend.path).filter { ! it.name.startsWith(".") }.toSet())
     }
 }

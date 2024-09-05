@@ -11,6 +11,7 @@ import `fun`.adaptive.foundation.internal.StateVariableMask
 import `fun`.adaptive.foundation.internal.cleanStateMask
 import `fun`.adaptive.foundation.internal.initStateMask
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
+import `fun`.adaptive.foundation.query.FragmentVisitor
 
 abstract class AdaptiveFragment(
     val adapter: AdaptiveAdapter,
@@ -437,4 +438,15 @@ abstract class AdaptiveFragment(
     override fun toString(): String =
         "${this::class.simpleName ?: "<unknown>"} @ $id"
 
+    // ----------------------------------------------
+    // Visitor support
+    // ----------------------------------------------
+
+    fun accept(visitor: FragmentVisitor) {
+        visitor.visitFragment(this)
+    }
+
+    fun acceptChildren(visitor: FragmentVisitor) {
+        children.forEach { it.accept(visitor) }
+    }
 }

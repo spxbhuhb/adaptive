@@ -24,7 +24,7 @@ import kotlinx.io.files.Path
  * - load each file in the directory with `FileFrontend.read`
  * - add each loaded item to the list
  *
- * [FolderFrontend] writes all changes to the files specified by [path] and [fileName].
+ * [FolderFrontend] writes all changes to the files specified by [path] and [fileNameFun].
  *
  * After registration peers can use [autoList] to connect to the registered
  * list. To get the connection info needed for the [autoList] use the `connectInfo`
@@ -75,7 +75,10 @@ fun <A : AdatClass<A>> originFolder(
         trace
     ) {
 
-        backend = SetBackend(context)
+        backend = SetBackend(
+            context,
+            FolderFrontend.load(context, path, wireFormatProvider)
+        )
 
         frontend = FolderFrontend(
             backend,

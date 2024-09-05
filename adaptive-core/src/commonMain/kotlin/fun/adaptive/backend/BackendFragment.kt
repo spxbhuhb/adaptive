@@ -34,7 +34,7 @@ abstract class BackendFragment(
         (implFun.invoke()).also {
             impl = it
             it.fragment = this
-            it.logger = backendAdapter.getLogger(it::class.simpleName!!) // FIXME using class simpleName
+            it.logger = backendAdapter.getLogger(it::class.simpleName !!) // FIXME using class simpleName
             it.create()
         }
 
@@ -49,17 +49,22 @@ abstract class BackendFragment(
         // there is no actual UI for backend fragments
     }
 
+    override fun toString(): String {
+        return super.toString() + " impl: ${impl?.let { it::class.simpleName }}"
+    }
     // -------------------------------------------------------------------------
     // Implementation support
     // -------------------------------------------------------------------------
 
     // 0 : instructions
 
-    val implFun : () -> BackendFragmentImpl
+    val implFun: () -> BackendFragmentImpl
         get() = state[1].checkIfInstance()
 
-    var impl : BackendFragmentImpl?
+    var impl: BackendFragmentImpl?
         get() = state[2].checkIfInstance()
-        set(value) { state[2] = value }
+        set(value) {
+            state[2] = value
+        }
 
 }
