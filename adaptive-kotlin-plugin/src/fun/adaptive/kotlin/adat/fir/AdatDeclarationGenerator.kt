@@ -296,7 +296,10 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
     val FirClassSymbol<*>.isAdatCompanion
         get() = ((origin as? FirDeclarationOrigin.Plugin)?.key == AdatPluginKey)
             || getSuperTypes(session).any { it.type.classId == ClassIds.ADAT_COMPANION }
-            || getContainingClassSymbol(session)?.getSuperTypes(session)?.any { it.type.classId == ClassIds.ADAT_COMPANION } ?: false
+            || getContainingClassSymbol(session)?.let {
+            session.predicateBasedProvider.matches(ADAT_PREDICATE, it) ||
+                it.getSuperTypes(session).any { it.type.classId == ClassIds.ADAT_CLASS }
+        } ?: false
 
     val MemberGenerationContext?.isAdatClass
         get() = if (this == null) false else owner.isAdatClass
