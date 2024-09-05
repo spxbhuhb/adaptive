@@ -5,9 +5,12 @@ import `fun`.adaptive.service.ServiceApi
 
 @ServiceApi
 interface AutoTestApi {
-    suspend fun testInstanceManual(): AutoConnectInfo
-    suspend fun testInstanceWithOrigin(): AutoConnectInfo
-    suspend fun testInstanceWithFile(): AutoConnectInfo
-    suspend fun testListWithOrigin(): AutoConnectInfo
-    suspend fun testPolyListWithOrigin(): AutoConnectInfo
+    suspend fun manual(): AutoConnectInfo
+
+    suspend fun instance(): AutoConnectInfo
+    suspend fun list(): AutoConnectInfo
+    suspend fun polyList(): AutoConnectInfo
+
+    suspend fun file(): AutoConnectInfo
+    suspend fun folder(folderName : String) : AutoConnectInfo
 }

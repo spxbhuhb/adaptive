@@ -7,6 +7,7 @@ import `fun`.adaptive.auto.internal.frontend.FileFrontend
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.testing.test
 import `fun`.adaptive.service.getService
+import `fun`.adaptive.utility.ensureTestPath
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.waitForReal
 import junit.framework.TestCase.assertTrue
@@ -21,10 +22,12 @@ class AutoInstanceTest {
 
     @Test
     fun basic() {
+        ensureTestPath()
+
         autoTest(port = 8085) { originAdapter, connectingAdapter ->
 
             val testAdapter = test(connectingAdapter) {
-                val a = autoInstance<TestData> { getService<AutoTestApi>().testInstanceWithFile() }
+                val a = autoInstance<TestData> { getService<AutoTestApi>().file() }
 
                 if (a != null) {
                     producedValue = a

@@ -9,34 +9,23 @@ import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 
-class AutoPolyList(
+class AutoListPoly(
     binding: AdaptiveStateVariableBinding<List<AdatClass<*>>>,
     connect: suspend () -> AutoConnectInfo,
     val companion: AdatCompanion<*>,
     val onListCommit: ((newValue: List<AdatClass<*>>) -> Unit)?,
     val onItemCommit: ((item: AdatClass<*>) -> Unit)?,
     trace: Boolean
-) : AutoProducerBase<List<AdatClass<*>>>(binding, connect, trace) {
+) : ProducerBase<SetBackend, AdatClassListFrontend<*>, List<AdatClass<*>>>(binding, connect, trace) {
 
     override var latestValue: List<AdatClass<*>>? = null
 
-    override val backend: SetBackend
-        get() = setBackend
+    override fun build() {
+        // TODO merge AutoList and AutoListPoly
+        backend = SetBackend(context)
 
-    lateinit var setBackend: SetBackend
-        private set
-
-    override val frontend: AdatClassListFrontend<*>
-        get() = listFrontend
-
-    lateinit var listFrontend: AdatClassListFrontend<*>
-        private set
-
-    override fun createBackendAndFrontend() {
-        setBackend = SetBackend(backendContext)
-
-        listFrontend = AdatClassListFrontend(
-            setBackend,
+        frontend = AdatClassListFrontend(
+            backend,
             companion,
             onListCommit = {
                 latestValue = it

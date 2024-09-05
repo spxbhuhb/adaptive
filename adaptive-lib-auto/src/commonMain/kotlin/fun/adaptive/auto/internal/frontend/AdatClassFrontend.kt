@@ -2,6 +2,7 @@ package `fun`.adaptive.auto.internal.frontend
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatContext
+import `fun`.adaptive.adat.api.validateForContext
 import `fun`.adaptive.adat.deepCopy
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
@@ -28,7 +29,7 @@ open class AdatClassFrontend<A : AdatClass<A>>(
 
         @Suppress("UNCHECKED_CAST")
         newValue.adatContext = adatContext as AdatContext<Any>
-        newValue.validate()
+        newValue.validateForContext()
 
         value = newValue
         collectionFrontend?.commit(backend.itemId)

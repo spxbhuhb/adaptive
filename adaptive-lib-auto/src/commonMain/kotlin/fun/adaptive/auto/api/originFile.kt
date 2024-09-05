@@ -8,15 +8,25 @@ import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.FileFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.io.files.Path
 
 /**
- * Registers an Auto instance with a [FileFrontend] with [worker].
+ * Register a file-based origin Auto instance with the [worker].
  *
- * The data is loaded from the file specified by [path]. The function
- * throws an exception if no such file exists **AND** [initialValue] is null.
+ * - backend: [PropertyBackend]
+ * - frontend: [FileFrontend]
+ *
+ * Initialization:
+ *
+ * - load data from the file specified by [path], if it exists
+ * - use [initialValue] if the file specified by [path] does not exist
+ * - throw exception if the file does not exist and [initialValue] is null
+ * - create the file if it does not exist
+ *
+ * [FileFrontend] writes all changes to the file specified by [path].
  *
  * After registration peers can use [autoInstance] to connect to the registered
  * instance. To get the connection info needed for the [autoInstance]
@@ -25,42 +35,67 @@ import kotlinx.io.files.Path
  * Property changes (on any peer) generate a new instance (on all peers).
  *
  * Each new instance is validated by default, so fragments that use values
- * produced by [autoList] can safely use the validation result as it is
+ * produced by [autoInstance] can safely use the validation result as it is
  * up-to-date all the time.
  *
- * The instance is **NOT** thread safe.
+ * Registers a cleanup handler into the session through [serviceContext] or
+ * into the context if there is no session.
+ *
+ * **This function and the instance is NOT thread safe.**
+ *
+ * @param    wireFormatProvider  The wire format to use to read/write the content of the file.
  *
  * @return   An [OriginBase] for this auto instance. Use this instance to change
  *           properties and to get connection info for the connecting peers.
+ *
+ * @throws   IllegalArgumentException  if [initialValue] is `null` and no file exists on [path]
  */
 fun <A : AdatClass<A>> originFile(
     worker: AutoWorker,
     companion: AdatCompanion<A>,
     path: Path,
-    wireFormatProvider: WireFormatProvider,
     initialValue: A?,
+    wireFormatProvider: WireFormatProvider,
+    serviceContext: ServiceContext? = null,
     trace: Boolean = false
 ): OriginBase<PropertyBackend, FileFrontend<A>> {
 
-    val values = if (! path.exists()) {
+    val itemId = LamportTimestamp(1, 1)
+
+    val value : A
+
+    if (! path.exists()) {
+
         requireNotNull(initialValue) { "no initial value and the file $path does not exist" }
-        wireFormatProvider.write(path, initialValue)
-        initialValue.toArray()
+
+        FileFrontend.write(path, wireFormatProvider, itemId, initialValue)
+
+        value = initialValue
+
     } else {
-        wireFormatProvider.read(path, companion.adatWireFormat).toArray()
+
+        @Suppress("UNCHECKED_CAST")
+        value = FileFrontend.read(path, wireFormatProvider).second as A
+
+        check(value.adatCompanion.wireFormatName == companion.wireFormatName) {
+            "type mismatch in $path: ${value.adatCompanion.wireFormatName} != ${companion.wireFormatName}"
+        }
+
+        check(value.validate().isValid) { "validation failed for content of $path" }
     }
 
     return OriginBase(
         worker,
+        serviceContext,
         companion.adatMetadata,
         companion.adatWireFormat,
         trace
     ) {
         backend = PropertyBackend(
             context,
-            LamportTimestamp(1, 1),
+            itemId,
             null,
-            values
+            value.toArray()
         )
 
         frontend = FileFrontend(
@@ -71,5 +106,4 @@ fun <A : AdatClass<A>> originFile(
             path
         )
     }
-
 }

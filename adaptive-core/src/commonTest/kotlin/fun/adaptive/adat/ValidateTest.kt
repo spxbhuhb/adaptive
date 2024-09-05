@@ -14,9 +14,7 @@ class ValidateTest {
         val sl = setOf(listOf(1, 2), listOf(3, 4))
         val t = TestClass(34, false, sl)
 
-        t.validate()
-
-        assertTrue(t.adatContext !!.validationResult !!.isValid)
+        assertTrue(t.validate().isValid)
     }
 
     @Test
@@ -26,6 +24,6 @@ class ValidateTest {
 
         t.validate()
 
-        assertTrue(! t.adatContext !!.validationResult !!.isValid)
+        assertTrue(! t.validate().isValid)
     }
 }

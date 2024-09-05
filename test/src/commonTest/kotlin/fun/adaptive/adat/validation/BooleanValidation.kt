@@ -23,9 +23,7 @@ class BooleanValidation {
     @Test
     fun invalid() {
         val t = BooleanTest(false)
-        t.validate()
-
-        val result = t.adatContext!!.validationResult!!
+        val result = t.validate()
 
         assertFalse(result.isValid)
         assertEquals(1, result.failedConstraints.size)
@@ -38,9 +36,7 @@ class BooleanValidation {
     @Test
     fun valid() {
         val t = BooleanTest(true)
-        t.validate()
-
-        val result = t.adatContext!!.validationResult!!
+        val result = t.validate()
 
         assertTrue(result.isValid)
         assertEquals(0, result.failedConstraints.size)

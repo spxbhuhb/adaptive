@@ -1,8 +1,6 @@
 package `fun`.adaptive.cookbook.iot
 
-import `fun`.adaptive.auto.api.autoCommon
-import `fun`.adaptive.auto.backend.AutoService
-import `fun`.adaptive.auto.backend.AutoWorker
+import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.worker
@@ -15,7 +13,6 @@ import `fun`.adaptive.lib.auth.auth
 fun main() {
 
     iotCommon()
-    autoCommon()
 
     backend(wait = true) {
 
@@ -28,8 +25,7 @@ fun main() {
         auth()
         ktor()
 
-        worker { AutoWorker() }
-        service { AutoService() }
+        auto()
 
         worker { ThermostatWorker() }
         service { ThermostatService() }

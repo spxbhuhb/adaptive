@@ -1,14 +1,17 @@
 package `fun`.adaptive.adat.api
 
 import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.AdatContext
+import `fun`.adaptive.adat.descriptor.InstanceValidationResult
 import `fun`.adaptive.adat.descriptor.PropertiesBuilder
+import `fun`.adaptive.foundation.replacedByPlugin
 
 /**
  * Provide builder context for property descriptor builder.
  * See Adat documentation for more details.
  */
 fun AdatClass<*>.properties(buildFun : PropertiesBuilder.() -> Unit) {
-
+    replacedByPlugin("", buildFun)
 }
 
 /**
@@ -40,3 +43,22 @@ fun AdatClass<*>.isValid(path : Array<String>) : Boolean {
  */
 fun AdatClass<*>.isTouched(path : Array<String>) : Boolean =
     adatContext?.isTouched(path) == true
+
+/**
+ * Validate the Adat instance and store the result in the context.
+ * Create a new context if there is no context.
+ */
+fun AdatClass<*>.validateForContext() : InstanceValidationResult {
+
+    val result = validate()
+
+    val context = adatContext
+    if (context == null) {
+        adatContext = AdatContext(null, null, null, null, result)
+    } else {
+        context.validationResult = result
+    }
+
+    return result
+
+}

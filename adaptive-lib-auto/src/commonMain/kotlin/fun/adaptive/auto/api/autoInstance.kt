@@ -10,13 +10,16 @@ import `fun`.adaptive.foundation.producer.Producer
  * Connect to peers with [AutoApi] and produce an instance that is
  * automatically synchronized between peers.
  *
+ * - Backend: PropertyBackend
+ * - Frontend: AdatClassFrontend
+ *
  * Property changes (on any peer) generate a new instance (on all peers).
  *
  * Each new instance is validated by default, so fragments that use values
  * produced by [autoInstance] can safely use the validation result as it is
  * up-to-date all the time.
  *
- * The instance is **NOT** thread safe.
+ * **This function is NOT thread safe.**
  *
  * @param    onChange       Called after a new instance is generated, but before the
  *                          state of the fragment is updated.

@@ -1,6 +1,6 @@
 # Auto
 
-The `adaptive-lib-auto` module provides high-level data synchronization utilities.
+The `adaptive-lib-auto` module provides a high-level data synchronization feature.
 
 The general idea is to:
 
@@ -15,39 +15,118 @@ inside the UI but reactivity between peers.
 All Auto features use [Conflict-free replicated data types](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type)
 to make sure that the actual data is the same on all peers.
 
-The following origin/peer functions are available:
+The following origin functions are available:
 
-* `originInstance` and `autoInstance` - a simple Adat instance
-* `originList` and `autoList` - a list of Adat instances (same class)
-* `originPolyList` and `autoPolyList` - a polymorphic list of Adat instances (any Adat class)
+| Function           | Storage                  | Stored data                                      |
+|--------------------|--------------------------|--------------------------------------------------|
+| `originInstance`   | In-memory                | Adat instance.                                   |
+| `originList`       | In-memory                | Adat instance list (same class).                 |
+| `originListPoly`   | In-memory                | Polymorphic Adat instance list (any Adat class). |
+| `originFile`       | Disk (one file)          | Adat instance.                                   |
+| `originFolder`     | Disk (one file per item) | Adat instance list (same class).                 |
+| `originFolderPoly` | Disk (one file per item) | Polymorphic Adat instance list (any Adat class). |
 
-Check the cookbook for examples.
+The following producer functions (to be used in fragments) are available:
 
-## Internals
+| Function           | Storage                  | Stored data                                      |
+|--------------------|--------------------------|--------------------------------------------------|
+| `autoInstance`     | In-memory                | Adat instance.                                   |
+| `autoList`         | In-memory                | Adat instance list (same class).                 |
+| `autoListPoly`     | In-memory                | Polymorphic Adat instance list (any Adat class). |
 
-Auto implementations have a type-specific backend and a use-case specific frontend.
+> [!NOTE]
+> 
+> A note on terminology.
+> 
+> In Auto, the terms *frontend* and *backend* have module-specific meaning, that is different from
+> the usual.
+> 
+> - *Auto backend* means the class/instance that handles data synchronization, conflict resolution, etc.
+> - *Auto frontend* means the class/instance that:
+>   - builds the actual instances, lists the application code sees
+>   - handles the persistence (in files, folders, databases)
+>
+> In the documentation we specifically use *Auto frontend* and *Auto backend* whenever we use this
+> specific meaning.
+> 
 
-**backend**
+## Setup
 
-* `PropertyBackend`, `SetBackend`, `TreeBackend`
-* stores the CRTD data
-* responsible for the replication
-* typically not used from application-level code
+To use the Auto, you have to set up a backend on each peer:
 
-**frontend**
+**headless code (no UI)**
 
-* specific to the use-case, examples:
-  * include the fragments of an `TreeBackend` into the UI directly
-  * use the data in an `SetBackend` to build a table
-  * store the content of an `SetBackend` into SQL
-  * store the content of an `TreeBackend` in files
+```kotlin
+backend {
+    auto()
+}
+```
 
-### SetBackend
+**UI code**
 
-Stores additions and removals in `SetBackend.additions` and `SetBackend.removals` respectively.
+```kotlin
+val backend = backend { auto() }
 
-Both `additions` and `removals` store item ids, that is `clientId:timestamp` pairs.
+withJsonWebSocketTransport(window.location.origin, serviceImplFactory = backend)
 
-The resulting list is defined as `(additions - removals).sorted()`.
+browser(backend = backend) {
+    // ...
+}
+```
 
-This does not care about interweaving, but I think that it is irrelevant for general use cases.
+The `auto` fragment:
+
+- registers wire formats
+- adds an `AutoWorker`
+- adds an `AutoService`
+
+## Defining origins
+
+Origins can be defined anywhere if you have access to an `AutoWorker` instance.
+
+### In a service
+
+This example shows how to create an origin instance in a service.
+
+Important points:
+
+- return value of the service function should be `AutoConnectInfo`
+- passing `serviceContext` to `origin*` functions registers a cleanup function:
+  - if there is a session, the instance will be de-registered when the session closes
+  - if there is no session, the instance will be de-registered when the connection closes
+- not passing `serviceContext` means a memory-leak in this particular use pattern
+
+```kotlin
+@ServiceApi
+interface AutoTestApi {
+    suspend fun testInMemoryInstance(): AutoConnectInfo
+}
+
+class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
+
+    val worker by worker<AutoWorker>()
+
+    override suspend fun testInMemoryInstance(): AutoConnectInfo {
+        return originInstance(worker, TestData(12, "a"), serviceContext).connectInfo()
+    }
+
+}
+```
+
+## Use in fragments
+
+Auto provides producers to connect to origins easily from fragments:
+
+```kotlin
+@Adaptive
+fun thermostats() {
+    val all = autoList(Thermostat) { getService<ThermostatApi>().list() }
+    
+    for (thermostat in all) {
+        text(thermostat.name)
+    }
+}
+```
+
+In this example `all` is updated automatically whenever there is a change on any
+peers and in turn the fragment will update the text.

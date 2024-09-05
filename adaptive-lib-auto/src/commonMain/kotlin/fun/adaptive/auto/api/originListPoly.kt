@@ -6,6 +6,7 @@ import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.service.ServiceContext
 
 /**
  * Registers a polymorphic Auto list with [worker].
@@ -35,6 +36,7 @@ import `fun`.adaptive.auto.internal.origin.OriginBase
 fun originListPoly(
     worker: AutoWorker,
     companion: AdatCompanion<*>,
+    serviceContext: ServiceContext? = null,
     trace: Boolean = false,
     onListCommit: ((newValue: List<AdatClass<*>>) -> Unit)? = null,
     onItemCommit: ((newValue: List<AdatClass<*>>, item: AdatClass<*>) -> Unit)? = null
@@ -42,6 +44,7 @@ fun originListPoly(
 
     return OriginBase(
         worker,
+        serviceContext,
         companion.adatMetadata,
         companion.adatWireFormat,
         trace

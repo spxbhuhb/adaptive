@@ -25,9 +25,7 @@ class IntValidation {
     @Test
     fun minimum() {
         val t = IntTest(1)
-        t.validate()
-
-        val result = t.adatContext!!.validationResult!!
+        val result = t.validate()
 
         assertFalse(result.isValid)
         assertEquals(1, result.failedConstraints.size)
@@ -41,9 +39,7 @@ class IntValidation {
     @Test
     fun maximum() {
         val t = IntTest(102)
-        t.validate()
-
-        val result = t.adatContext!!.validationResult!!
+        val result = t.validate()
 
         assertFalse(result.isValid)
         assertEquals(1, result.failedConstraints.size)
@@ -56,9 +52,7 @@ class IntValidation {
     @Test
     fun valid() {
         val t = IntTest(34)
-        t.validate()
-
-        val result = t.adatContext!!.validationResult!!
+        val result = t.validate()
 
         assertTrue(result.isValid)
         assertEquals(0, result.failedConstraints.size)

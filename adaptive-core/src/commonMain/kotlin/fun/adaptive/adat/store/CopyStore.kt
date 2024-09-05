@@ -1,6 +1,7 @@
 package `fun`.adaptive.adat.store
 
 import `fun`.adaptive.adat.*
+import `fun`.adaptive.adat.api.validateForContext
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
 import `fun`.adaptive.foundation.producer.Producer
@@ -64,7 +65,7 @@ class CopyStore<A : AdatClass<A>>(
     fun makeCopy(value: A, change: AdatChange?, patch : Boolean) =
         value.deepCopy(change).also {
             it.applyContext(adatContext)
-            it.validate()
+            it.validateForContext()
             latestValue = it
             onChange?.invoke(it)
             if (patch) {

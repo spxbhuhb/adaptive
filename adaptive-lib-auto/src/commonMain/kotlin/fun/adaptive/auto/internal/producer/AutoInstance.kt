@@ -15,47 +15,39 @@ class AutoInstance<A : AdatClass<A>>(
     connect: suspend () -> AutoConnectInfo,
     val onCommit: ((newValue: A) -> Unit)?,
     trace: Boolean
-) : AutoProducerBase<A>(binding, connect, trace) {
-
+) : ProducerBase<PropertyBackend, AdatClassFrontend<A>, A>(
+    binding, connect, trace
+) {
     override var latestValue: A? = null
-
-    @Suppress("UNCHECKED_CAST") // TODO should we create a binding for adat classes specifically?
-    val companion = binding.adatCompanion !! as AdatCompanion<A>
-
-    override val backend: PropertyBackend
-        get() = propertyBackend
-
-    lateinit var propertyBackend: PropertyBackend
-        private set
-
-    override val frontend: AdatClassFrontend<A>
-        get() = adatClassFrontend
-
-    lateinit var adatClassFrontend: AdatClassFrontend<A>
-        private set
 
     val itemId
         get() = LamportTimestamp(0, 0) // does not matter for single instances
 
-    override fun createBackendAndFrontend() {
-        propertyBackend = PropertyBackend(
-            backendContext,
+    @Suppress("UNCHECKED_CAST") // TODO should we create a binding for adat classes specifically?
+    val companion = binding.adatCompanion !! as AdatCompanion<A>
+
+    override fun build() {
+
+        backend = PropertyBackend(
+            context,
             itemId,
             companion.wireFormatName,
             initialValues = null
         )
 
-        adatClassFrontend = AdatClassFrontend(
-            propertyBackend,
+        frontend = AdatClassFrontend(
+            backend,
             companion.adatWireFormat,
             initialValue = null,
             itemId = null,
             collectionFrontend = null,
             onCommit = {
-                latestValue = adatClassFrontend.value
+                latestValue = frontend.value
+                onCommit?.invoke(latestValue!!)
                 binding.targetFragment.setDirty(binding.indexInTargetState, true) // TODO make a separate binding for producers
             }
         )
+
     }
 
     override fun defaultMetadata(): AdatClassMetadata =

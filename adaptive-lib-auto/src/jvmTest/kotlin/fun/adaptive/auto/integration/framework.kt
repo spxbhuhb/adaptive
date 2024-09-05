@@ -1,5 +1,6 @@
 package `fun`.adaptive.auto.integration
 
+import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.auto.backend.AutoService
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.model.AutoHandle
@@ -28,17 +29,19 @@ fun autoTest(
         settings {
             inline("KTOR_PORT" to port)
         }
+
         inMemoryH2(callSiteName.substringAfterLast('.'))
-        worker { AutoWorker() }
-        service { AutoTestService() }
-        service { AutoService() }
-        auth()
+
         ktor()
+        auth()
+
+        auto()
+
+        service { AutoTestService() }
     }
 
     val connectingAdapter = backend {
-        worker { AutoWorker() }
-        service { AutoService() }
+        auto()
     }
 
     runBlocking {

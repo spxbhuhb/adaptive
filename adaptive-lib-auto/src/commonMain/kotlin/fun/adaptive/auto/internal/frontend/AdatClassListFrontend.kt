@@ -61,10 +61,13 @@ open class AdatClassListFrontend<A : AdatClass<A>>(
         getFrontend(itemId).modify(propertyName, propertyValue)
     }
 
+    fun itemId(instance: AdatClass<*>) =
+        instance.adatContext !!.id as ItemId
+
     override fun update(instance: AdatClass<*>, path: Array<String>, value: Any?) {
         // FIXME only single properties are handled b y AdatClassListFrontend
         check(path.size == 1) { "multi-level paths are not implemented yet" }
-        modify(instance.adatContext !!.id as ItemId, path[0], value)
+        modify(itemId(instance), path[0], value)
     }
 
     // TODO optimize AdatClassListFrontend.getFrontend - I think `newInstance` is unnecessary here

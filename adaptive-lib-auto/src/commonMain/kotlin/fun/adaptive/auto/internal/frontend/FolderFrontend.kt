@@ -4,7 +4,9 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.SetBackend
+import `fun`.adaptive.auto.internal.frontend.FileFrontend.Companion.write
 import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.utility.exists
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.io.files.Path
 
@@ -14,7 +16,8 @@ class FolderFrontend<A : AdatClass<A>>(
     onListCommit: ((newValue: List<A>) -> Unit)?,
     onItemCommit: ((newValue: List<A>, item: A) -> Unit)?,
     val wireFormatProvider: WireFormatProvider,
-    val path: (itemId: ItemId, item: A) -> Path
+    val path: Path,
+    val fileNameFun : (itemId: ItemId, item: A) -> String
 ) : AdatClassListFrontend<A>(
     backend,
     companion,
@@ -22,14 +25,12 @@ class FolderFrontend<A : AdatClass<A>>(
     onItemCommit
 ) {
 
-    override fun update(instance: AdatClass<*>, path: Array<String>, value: Any?) {
-        // FIXME only single properties are handled b y AdatClassListFrontend
-        check(path.size == 1) { "multi-level paths are not implemented yet" }
-        modify(instance.adatContext !!.id as ItemId, path[0], value)
-    }
+    fun pathFor(itemId : ItemId, instance : A) =
+        Path(path, fileNameFun(itemId, instance))
 
     // TODO optimize AdatClassListFrontend.getFrontend - I think `newInstance` is unnecessary here
     override fun getFrontend(itemId: ItemId) =
+
         classFrontends.getOrPut(itemId) {
 
             val propertyBackend = checkNotNull(backend.items[itemId])
@@ -38,6 +39,11 @@ class FolderFrontend<A : AdatClass<A>>(
             val wireFormat = propertyBackend.wireFormat as AdatClassWireFormat<A>
 
             val instance = wireFormat.newInstance(propertyBackend.values)
+            val path = pathFor(itemId, instance)
+
+            if (!path.exists()) {
+                write(path, wireFormatProvider, itemId, instance)
+            }
 
             FileFrontend(
                 propertyBackend,
@@ -47,7 +53,7 @@ class FolderFrontend<A : AdatClass<A>>(
                 this,
                 null,
                 wireFormatProvider,
-                path(itemId, instance)
+                path
             )
                 .also { propertyBackend.frontEnd = it }
         }

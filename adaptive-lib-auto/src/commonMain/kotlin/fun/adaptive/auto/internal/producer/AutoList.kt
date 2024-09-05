@@ -16,27 +16,15 @@ class AutoList<A : AdatClass<A>>(
     val onListCommit: ((newValue: List<A>) -> Unit)?,
     val onItemCommit: ((item: A) -> Unit)?,
     trace: Boolean
-) : AutoProducerBase<List<A>>(binding, connect, trace) {
+) : ProducerBase<SetBackend, AdatClassListFrontend<A>, List<A>>(binding, connect, trace) {
 
     override var latestValue: List<A>? = null
 
-    override val backend: SetBackend
-        get() = setBackend
+    override fun build() {
+        backend = SetBackend(context)
 
-    lateinit var setBackend: SetBackend
-        private set
-
-    override val frontend: AdatClassListFrontend<A>
-        get() = listFrontend
-
-    lateinit var listFrontend: AdatClassListFrontend<A>
-        private set
-
-    override fun createBackendAndFrontend() {
-        setBackend = SetBackend(backendContext)
-
-        listFrontend = AdatClassListFrontend(
-            setBackend,
+        frontend = AdatClassListFrontend(
+            backend,
             companion,
             onListCommit = {
                 latestValue = it

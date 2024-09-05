@@ -2,6 +2,7 @@ package `fun`.adaptive.auto.integration
 
 import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.auto.api.originFile
+import `fun`.adaptive.auto.api.originFolder
 import `fun`.adaptive.auto.api.originInstance
 import `fun`.adaptive.auto.api.originList
 import `fun`.adaptive.auto.api.originListPoly
@@ -17,26 +18,19 @@ import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.utility.ensureTestPath
+import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.testPath
 import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlin.getValue
-import kotlin.test.BeforeTest
-
 
 class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
 
-    @BeforeTest
-    fun setup() {
-        ensureTestPath()
-    }
-
     val worker by worker<AutoWorker>()
 
-    override suspend fun testInstanceManual(): AutoConnectInfo {
+    override suspend fun manual(): AutoConnectInfo {
         val logger = getLogger("logger")
 
         val context = BackendContext(
@@ -74,22 +68,46 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
         )
     }
 
-    override suspend fun testInstanceWithOrigin(): AutoConnectInfo {
-        return originInstance(worker, TestData(12, "a"), true).connectInfo()
+    override suspend fun instance(): AutoConnectInfo {
+        val origin = originInstance(worker, TestData(12, "a"), serviceContext)
+        return origin.connectInfo()
     }
 
-    override suspend fun testListWithOrigin(): AutoConnectInfo {
-        return originList(worker, TestData, true).connectInfo()
+    override suspend fun list(): AutoConnectInfo {
+        return originList(worker, TestData, serviceContext).connectInfo()
     }
 
-    override suspend fun testInstanceWithFile(): AutoConnectInfo {
+    override suspend fun polyList(): AutoConnectInfo {
+        return originListPoly(worker, TestData, serviceContext).connectInfo()
+    }
+
+    override suspend fun file(): AutoConnectInfo {
         val path = Path(testPath, "AutoTestService.testInstanceWithFile.json")
         SystemFileSystem.delete(path, mustExist = false)
-        return originFile(worker, TestData, path, JsonWireFormatProvider(), TestData(12, "a"), true).connectInfo()
+        return originFile(worker, TestData, path, TestData(12, "a"), JsonWireFormatProvider(), serviceContext).connectInfo()
     }
 
-    override suspend fun testPolyListWithOrigin(): AutoConnectInfo {
-        return originListPoly(worker, TestData, true).connectInfo()
+    override suspend fun folder(folderName : String): AutoConnectInfo {
+
+        val path = Path(testPath, folderName)
+
+        if (path.exists()) {
+            SystemFileSystem.list(path).forEach {
+                require(it.name.endsWith(".json"))
+                SystemFileSystem.delete(it)
+            }
+        } else {
+            SystemFileSystem.createDirectories(path)
+        }
+
+        return originFolder(
+            worker,
+            TestData,
+            JsonWireFormatProvider(),
+            path,
+            { itemId,_ -> "${itemId.clientId}.${itemId.timestamp}.json" },
+            serviceContext
+        ).connectInfo()
     }
 
 }

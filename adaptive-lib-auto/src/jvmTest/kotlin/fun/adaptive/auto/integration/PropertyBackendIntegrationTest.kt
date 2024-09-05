@@ -40,7 +40,7 @@ class PropertyBackendIntegrationTest {
             val originWorker = originAdapter.firstImpl<AutoWorker>()
             val connectingWorker = connectingAdapter.firstImpl<AutoWorker>()
 
-            val connectInfo = getService<AutoTestApi>().testInstanceManual()
+            val connectInfo = getService<AutoTestApi>().manual()
             val originHandle = connectInfo.originHandle
             val connectingHandle = connectInfo.connectingHandle
 

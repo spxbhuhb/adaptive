@@ -2,11 +2,14 @@ package `fun`.adaptive.auto.api
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.toArray
+import `fun`.adaptive.adat.api.validateForContext
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.service.ServiceContext
+import `fun`.adaptive.utility.CleanupHandler
 
 /**
  * Registers a copy of [initialValue] as an Auto instance with [worker].
@@ -32,14 +35,16 @@ import `fun`.adaptive.auto.model.LamportTimestamp
 fun <A : AdatClass<A>> originInstance(
     worker: AutoWorker,
     initialValue: A,
+    serviceContext: ServiceContext? = null,
     trace: Boolean = false,
     onChange: ((newValue: A) -> Unit)? = null
 ): OriginBase<PropertyBackend, AdatClassFrontend<A>> {
 
     val companion = initialValue.adatCompanion
 
-    return OriginBase(
+    val origin = OriginBase<PropertyBackend, AdatClassFrontend<A>>(
         worker,
+        serviceContext,
         companion.adatMetadata,
         companion.adatWireFormat,
         trace
@@ -58,10 +63,12 @@ fun <A : AdatClass<A>> originInstance(
             null, null
         ) {
             it.value?.let { value ->
-                value.validate()
+                value.validateForContext()
                 onChange?.invoke(value)
             }
         }
     }
+
+    return origin
 
 }

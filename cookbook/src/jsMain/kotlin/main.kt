@@ -2,12 +2,8 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-import `fun`.adaptive.auto.api.autoCommon
-import `fun`.adaptive.auto.backend.AutoService
-import `fun`.adaptive.auto.backend.AutoWorker
+import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
-import `fun`.adaptive.backend.builtin.service
-import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.cookbook.auth.authMain
 import `fun`.adaptive.cookbook.components.componentsMain
 import `fun`.adaptive.cookbook.intro.introMain
@@ -21,7 +17,6 @@ import `fun`.adaptive.cookbook.shared.inputStyle
 import `fun`.adaptive.cookbook.shared.lightBackground
 import `fun`.adaptive.cookbook.shared.shadow
 import `fun`.adaptive.cookbook.shared.titleSmall
-import `fun`.adaptive.cookbook.wizard.project.ui.browser.projectWizardMain
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -30,6 +25,7 @@ import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
+import `fun`.adaptive.ktor.withJsonWebSocketTransport
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.box
@@ -51,6 +47,7 @@ import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.platform.withJsResources
+import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -60,18 +57,13 @@ val cookbookContent = name("cookbook-content")
 fun main() {
     CoroutineScope(Dispatchers.Default).launch {
 
+        iotCommon()
+
         withJsResources()
 
-        val localBackend =
-            backend {
-                worker { AutoWorker() }
-                service { AutoService() }
-            }
+        val localBackend = backend { auto() }
 
-        // withJsonWebSocketTransport(window.location.origin, serviceImplFactory = localBackend)
-
-        iotCommon()
-        autoCommon()
+        withJsonWebSocketTransport(window.location.origin, serviceImplFactory = localBackend)
 
         browser(CanvasFragmentFactory, SvgFragmentFactory, backend = localBackend) { adapter ->
 
@@ -86,9 +78,9 @@ fun main() {
 //                maxHeight .. padding { 16.dp } .. gap { 16.dp }
 //                rowTemplate(40.dp, 1.fr)
 
-//                iotMain()
+                iotMain()
 
-            projectWizardMain()
+//            projectWizardMain()
 
 //                text("Cookbook")
 //

@@ -10,11 +10,14 @@ import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.log.getLogger
+import `fun`.adaptive.service.ServiceContext
+import `fun`.adaptive.utility.CleanupHandler
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 
 class OriginBase<BE : BackendBase, FE : FrontendBase>(
     worker: AutoWorker,
+    serviceContext: ServiceContext?,
     metadata: AdatClassMetadata,
     wireFormat: AdatClassWireFormat<*>,
     trace: Boolean,
@@ -45,6 +48,14 @@ class OriginBase<BE : BackendBase, FE : FrontendBase>(
         builder()
         backend.frontEnd = frontend
         worker.register(backend)
+
+        if (serviceContext != null) {
+            if (serviceContext.sessionOrNull != null) {
+                serviceContext.addSessionCleanup( CleanupHandler { worker.deregister(backend) })
+            } else {
+                serviceContext.addContextCleanup( CleanupHandler { worker.deregister(backend) })
+            }
+        }
     }
 
     fun connectInfo(): AutoConnectInfo {

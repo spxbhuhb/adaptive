@@ -2,7 +2,7 @@ package `fun`.adaptive.auto.api
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
-import `fun`.adaptive.auto.internal.producer.AutoPolyList
+import `fun`.adaptive.auto.internal.producer.AutoListPoly
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.Producer
@@ -42,7 +42,7 @@ fun autoListPoly(
 ): List<AdatClass<*>>? {
     checkNotNull(binding)
 
-    val store = AutoPolyList(binding, connect, companion, onListCommit, onItemCommit, trace)
+    val store = AutoListPoly(binding, connect, companion, onListCommit, onItemCommit, trace)
 
     binding.targetFragment.addProducer(store)
 

@@ -712,6 +712,7 @@ class JsonWireFormatEncoder(
             writer.fieldName(fieldName)
             rawInstance(value, wireFormat)
         }
+        writer.separator()
         return this
     }
 
@@ -740,6 +741,7 @@ class JsonWireFormatEncoder(
         } else {
             rawInstance(value, wireFormat)
         }
+        writer.separator()
         return this
     }
 

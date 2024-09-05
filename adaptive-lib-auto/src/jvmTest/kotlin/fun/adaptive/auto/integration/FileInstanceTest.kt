@@ -8,8 +8,10 @@ import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.testing.AdaptiveTestAdapter
 import `fun`.adaptive.foundation.testing.test
 import `fun`.adaptive.service.getService
+import `fun`.adaptive.utility.ensureTestPath
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.waitForReal
+import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
 import kotlinx.io.files.SystemFileSystem
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -21,10 +23,12 @@ class FileInstanceTest {
 
     @Test
     fun basic() {
+        ensureTestPath()
+
         autoTest(port = 8085) { originAdapter, connectingAdapter ->
 
             val testAdapter = test(connectingAdapter) {
-                val a = autoInstance<TestData> { getService<AutoTestApi>().testInstanceWithFile() }
+                val a = autoInstance<TestData> { getService<AutoTestApi>().file() }
 
                 if (a != null) {
                     producedValue = a
@@ -68,7 +72,7 @@ class FileInstanceTest {
     fun assert(expected: TestData, adapter: AdaptiveTestAdapter, frontend: FileFrontend<*>) {
         val instance = adapter.rootFragment.state[0]
 
-        val fromFile = frontend.wireFormatProvider.read(frontend.path, TestData)
+        val fromFile = FileFrontend.read(frontend.path, JsonWireFormatProvider()).second as TestData
 
         assertEquals(expected, instance)
         assertEquals(expected, producedValue)

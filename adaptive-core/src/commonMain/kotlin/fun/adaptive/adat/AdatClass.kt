@@ -21,12 +21,9 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
     val adatCompanion: AdatCompanion<A>
         get() = pluginGenerated()
 
-    fun isImmutable() =
-        getMetadata().isImmutableClass
-
     fun descriptor() = Unit
 
-    fun validate() {
+    fun validate() : InstanceValidationResult {
 
         val result = InstanceValidationResult()
 
@@ -37,12 +34,7 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
             }
         }
 
-        val context = adatContext
-        if (context == null) {
-            adatContext = AdatContext(null, null, null, null, result)
-        } else {
-            context.validationResult = result
-        }
+        return result
     }
 
     fun copy(): A {
@@ -123,12 +115,6 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
 
     fun getMetadata() =
         adatCompanion.adatMetadata
-
-    fun getPropertyMetadata(name: String) =
-        adatCompanion.adatMetadata.properties.first { it.name == name }
-
-    fun getPropertyMetadata(index: Int) =
-        adatCompanion.adatMetadata.properties[index]
 
     // FIXME AdatClass.addBinding
     override fun addBinding(binding: AdaptiveStateVariableBinding<*>) = Unit

@@ -15,13 +15,10 @@ import kotlin.time.Duration.Companion.seconds
 
 class FileFrontendTest {
 
-    @BeforeTest
-    fun setup() {
-        ensureTestPath()
-    }
-
     @Test
     fun fromOrigin() {
+        ensureTestPath()
+
         val path = Path(testPath, "FileFrontendTest.fromOrigin.json")
         val testData = TestData(12, "ab")
 
@@ -38,19 +35,21 @@ class FileFrontendTest {
 
                 waitForReal(2.seconds) { SystemFileSystem.exists(path) }
 
-                assertEquals(testData, json.read(path, TestData))
+                fun read() = FileFrontend.read(path, json).second as TestData
+
+                assertEquals(testData, read())
 
                 f1.modify("i", 23)
 
-                assertEquals(TestData(23, "ab"), json.read(path, TestData))
+                assertEquals(TestData(23, "ab"), read())
 
                 f1.modify("i", 34)
 
-                assertEquals(TestData(34, "ab"), json.read(path, TestData))
+                assertEquals(TestData(34, "ab"), read())
 
                 f1.modify("s", "bc")
 
-                assertEquals(TestData(34, "bc"), json.read(path, TestData))
+                assertEquals(TestData(34, "bc"), read())
 
             }
         }

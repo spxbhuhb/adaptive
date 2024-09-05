@@ -28,9 +28,7 @@ class StringValidation {
     @Test
     fun minLength() {
         val t = StringTest("1")
-        t.validate()
-
-        val result = t.adatContext!!.validationResult!!
+        val result = t.validate()
 
         assertFalse(result.isValid)
         assertEquals(1, result.failedConstraints.size)
@@ -44,9 +42,7 @@ class StringValidation {
     @Test
     fun maxLength() {
         val t = StringTest("12345")
-        t.validate()
-
-        val result = t.adatContext!!.validationResult!!
+        val result = t.validate()
 
         assertFalse(result.isValid)
         assertEquals(1, result.failedConstraints.size)
@@ -59,9 +55,7 @@ class StringValidation {
     @Test
     fun blank() {
         val t = StringTest("  ")
-        t.validate()
-
-        val result = t.adatContext!!.validationResult!!
+        val result = t.validate()
 
         assertFalse(result.isValid)
         assertEquals(2, result.failedConstraints.size)
@@ -72,9 +66,7 @@ class StringValidation {
     @Test
     fun pattern() {
         val t = StringTest("abcd")
-        t.validate()
-
-        val result = t.adatContext!!.validationResult!!
+        val result = t.validate()
 
         assertFalse(result.isValid)
         assertEquals(1, result.failedConstraints.size)
@@ -87,9 +79,7 @@ class StringValidation {
     @Test
     fun valid() {
         val t = StringTest("1234")
-        t.validate()
-
-        val result = t.adatContext!!.validationResult!!
+        val result = t.validate()
 
         assertTrue(result.isValid)
         assertEquals(0, result.failedConstraints.size)
