@@ -25,7 +25,7 @@ import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
-import `fun`.adaptive.ktor.withJsonWebSocketTransport
+import `fun`.adaptive.ktor.withWebSocketTransport
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.box
@@ -63,7 +63,7 @@ fun main() {
 
         val localBackend = backend { auto() }
 
-        withJsonWebSocketTransport(window.location.origin, serviceImplFactory = localBackend)
+        withWebSocketTransport(window.location.origin, serviceImplFactory = localBackend)
 
         browser(CanvasFragmentFactory, SvgFragmentFactory, backend = localBackend) { adapter ->
 

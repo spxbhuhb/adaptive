@@ -34,24 +34,42 @@ The following producer functions (to be used in fragments) are available:
 | `autoList`         | In-memory                | Adat instance list (same class).                 |
 | `autoListPoly`     | In-memory                | Polymorphic Adat instance list (any Adat class). |
 
+## Performance
+
+Auto is a very high-level feature focusing on convenience and data consistency instead of performance.
+
+I don't think there will be a performance bottleneck for normal use cases (a few thousand items). 
+That said, Auto is definitely not optimized well enough to handle millions of items.
+
+There is one **very important** point you have to keep in mind and that is list age. The implementation
+of lists uses two sets for item add/removal bookkeeping and (as of now) those sets will **never** 
+shrink. Modifying the properties of the items already in the list does not have this impact.
+
+In a long-running application or in lists that add/remove items very fast you have to consider this.
+For the target use cases this won't be a problem, but keep it in mind. If unsure, ask on the Slack channel.
+
+## Recipes
+
+- [originFolder - originList](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/originFolder_originList/Recipe.kt) (backend to backend, non-fragment)
+
+## Setup
+
 > [!NOTE]
-> 
+>
 > A note on terminology.
-> 
+>
 > In Auto, the terms *frontend* and *backend* have module-specific meaning, that is different from
 > the usual.
-> 
+>
 > - *Auto backend* means the class/instance that handles data synchronization, conflict resolution, etc.
 > - *Auto frontend* means the class/instance that:
->   - builds the actual instances, lists the application code sees
+    >   - builds the actual instances, lists the application code sees
 >   - handles the persistence (in files, folders, databases)
 >
 > In the documentation we specifically use *Auto frontend* and *Auto backend* whenever we use this
 > specific meaning.
+>
 > 
-
-## Setup
-
 To use the Auto, you have to set up a backend on each peer:
 
 **headless code (no UI)**

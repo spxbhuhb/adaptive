@@ -3,7 +3,7 @@ package `fun`.adaptive.service.transport
 import `fun`.adaptive.service.TestApi1
 import `fun`.adaptive.service.TestService1
 import `fun`.adaptive.service.factory.BasicServiceImplFactory
-import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
+import `fun`.adaptive.wireformat.api.Json
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -30,7 +30,7 @@ class StreamServiceCallTransportTest {
             inputStream1,
             outputStream2,
             serviceImplFactory,
-            JsonWireFormatProvider()
+            Json
         )
 
         val t2 = StreamServiceCallTransport(
@@ -38,7 +38,7 @@ class StreamServiceCallTransportTest {
             inputStream2,
             outputStream1,
             serviceImplFactory,
-            JsonWireFormatProvider()
+            Json
         )
 
         t1.trace = true

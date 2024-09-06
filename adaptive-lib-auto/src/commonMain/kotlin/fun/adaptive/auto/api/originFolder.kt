@@ -6,11 +6,14 @@ import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.frontend.FolderFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.service.ServiceContext
+import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.io.files.Path
+import kotlinx.io.files.SystemFileSystem
 
 /**
  * Register a directory-based Auto list with the [worker].
@@ -60,15 +63,17 @@ fun <A : AdatClass<A>> originFolder(
     path: Path,
     fileNameFun: (itemId: ItemId, item: A) -> String,
     serviceContext: ServiceContext? = null,
+    handle : AutoHandle = AutoHandle(UUID(), 1),
     trace: Boolean = false,
     onListCommit: ((newValue: List<A>) -> Unit)? = null,
     onItemCommit: ((newValue: List<A>, item: A) -> Unit)? = null,
 ): OriginBase<SetBackend, FolderFrontend<A>> {
 
-    require(path.exists()) { "missing directory: $path" }
+    require(path.exists()) { "missing directory: ${SystemFileSystem.resolve(path)}" }
 
     return OriginBase(
         worker,
+        handle,
         serviceContext,
         companion.adatMetadata,
         companion.adatWireFormat,

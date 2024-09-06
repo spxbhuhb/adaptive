@@ -72,7 +72,7 @@ class FolderFrontend<A : AdatClass<A>>(
             SystemFileSystem.list(path).forEach {
 
                 // ignore hidden files
-                if (path.name.startsWith(".")) return@forEach
+                if (it.name.startsWith(".")) return@forEach
 
                 val (itemId, instance) = FileFrontend.read(it, wireFormatProvider)
                 checkNotNull(itemId)

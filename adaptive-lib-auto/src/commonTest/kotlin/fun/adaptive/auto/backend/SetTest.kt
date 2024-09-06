@@ -12,7 +12,7 @@ import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
+import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -35,12 +35,12 @@ class SetTest {
             val logger1 = getLogger("logger.1")
             val logger2 = getLogger("logger.2")
 
-            val c1 = BackendContext(AutoHandle(gid, 1), scope, logger1, ProtoWireFormatProvider(), TestData.adatMetadata, TestData.adatWireFormat, LamportTimestamp(1, 0))
+            val c1 = BackendContext(AutoHandle(gid, 1), scope, logger1, Proto, TestData.adatMetadata, TestData.adatWireFormat, LamportTimestamp(1, 0))
             val b1 = SetBackend(c1)
             val f1 = AdatClassListFrontend<TestData>(b1, TestData, null, null)
             b1.frontEnd = f1
 
-            val c2 = BackendContext(AutoHandle(gid, 2), scope, logger2, ProtoWireFormatProvider(), TestData.adatMetadata, TestData.adatWireFormat, LamportTimestamp(2, 0))
+            val c2 = BackendContext(AutoHandle(gid, 2), scope, logger2, Proto, TestData.adatMetadata, TestData.adatWireFormat, LamportTimestamp(2, 0))
             val b2 = SetBackend(c2)
             val f2 = AdatClassListFrontend<TestData>(b2, TestData, null, null)
             b2.frontEnd = f2
@@ -83,12 +83,12 @@ class SetTest {
             val logger1 = getLogger("logger.1")
             val logger2 = getLogger("logger.2")
 
-            val c1 = BackendContext(AutoHandle(gid, 1), scope, logger1, ProtoWireFormatProvider(), TestData.adatMetadata, TestData.adatWireFormat, LamportTimestamp(1, 0))
+            val c1 = BackendContext(AutoHandle(gid, 1), scope, logger1, Proto, TestData.adatMetadata, TestData.adatWireFormat, LamportTimestamp(1, 0))
             val b1 = SetBackend(c1)
             val f1 = AdatClassListFrontend<TestData>(b1, TestData, null, null)
             b1.frontEnd = f1
 
-            val c2 = BackendContext(AutoHandle(gid, 2), scope, logger2, ProtoWireFormatProvider(), TestData.adatMetadata, TestData.adatWireFormat, LamportTimestamp(2, 0))
+            val c2 = BackendContext(AutoHandle(gid, 2), scope, logger2, Proto, TestData.adatMetadata, TestData.adatWireFormat, LamportTimestamp(2, 0))
             val b2 = SetBackend(c2)
             val f2 = AdatClassListFrontend<TestData>(b2, TestData, null, null)
             b2.frontEnd = f2

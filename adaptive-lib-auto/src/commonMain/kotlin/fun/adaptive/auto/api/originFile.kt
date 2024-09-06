@@ -7,8 +7,10 @@ import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.FileFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.service.ServiceContext
+import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.io.files.Path
@@ -57,6 +59,7 @@ fun <A : AdatClass<A>> originFile(
     initialValue: A?,
     wireFormatProvider: WireFormatProvider,
     serviceContext: ServiceContext? = null,
+    handle : AutoHandle = AutoHandle(UUID(), 1),
     trace: Boolean = false
 ): OriginBase<PropertyBackend, FileFrontend<A>> {
 
@@ -86,6 +89,7 @@ fun <A : AdatClass<A>> originFile(
 
     return OriginBase(
         worker,
+        handle,
         serviceContext,
         companion.adatMetadata,
         companion.adatWireFormat,

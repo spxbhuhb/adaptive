@@ -204,7 +204,7 @@ class ImplClassTransform(
             }
         }
 
-        require(serviceNames.isNotEmpty()) { "${transformedClass.kotlinFqName} missing service interface (probably ': Service' is missing)" }
+        require(serviceNames.isNotEmpty()) { "${transformedClass.kotlinFqName} missing service interface (is '@ServiceApi' missing?)" }
         require(serviceNames.size == 1) {
             "${transformedClass.kotlinFqName} you have to set `serviceName` manually when more than one service is implemented (${serviceNames.joinToString()})"
         }

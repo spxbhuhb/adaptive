@@ -10,7 +10,7 @@ import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.ktor.ktor
-import `fun`.adaptive.ktor.withProtoWebSocketTransport
+import `fun`.adaptive.ktor.withWebSocketTransport
 import `fun`.adaptive.lib.auth.auth
 import `fun`.adaptive.reflect.CallSiteName
 import kotlinx.coroutines.delay
@@ -47,7 +47,7 @@ fun autoTest(
     }
 
     runBlocking {
-        val transport = withProtoWebSocketTransport("http://localhost:$port", serviceImplFactory = connectingAdapter)
+        val transport = withWebSocketTransport("http://localhost:$port", serviceImplFactory = connectingAdapter)
 
         try {
             test(originAdapter, connectingAdapter)

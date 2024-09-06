@@ -11,13 +11,13 @@ import `fun`.adaptive.auth.model.CredentialType
 import `fun`.adaptive.auth.model.Principal
 import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.ktor.ktor
-import `fun`.adaptive.ktor.withProtoWebSocketTransport
 import `fun`.adaptive.lib.auth.auth
 import `fun`.adaptive.lib.auth.crypto.BCrypt
 import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.backend
+import `fun`.adaptive.ktor.withWebSocketTransport
 import `fun`.adaptive.lib.auth.store.CredentialTable
 import `fun`.adaptive.lib.auth.store.PrincipalTable
 import `fun`.adaptive.service.getService
@@ -57,7 +57,7 @@ class AuthTest {
         }
 
         runBlocking {
-            val transport = withProtoWebSocketTransport("http://localhost:8080")
+            val transport = withWebSocketTransport("http://localhost:8080")
 
             if (login) {
                 getService<SessionApi>().login("admin", "stuff")

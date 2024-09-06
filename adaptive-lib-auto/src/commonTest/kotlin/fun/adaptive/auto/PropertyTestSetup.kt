@@ -11,8 +11,8 @@ import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
-import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
+import `fun`.adaptive.wireformat.api.Json
+import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
@@ -28,8 +28,8 @@ class PropertyTestSetup(
     val logger1 = getLogger("logger.1").enableFine()
     val logger2 = getLogger("logger.2").enableFine()
 
-    val protobuf = ProtoWireFormatProvider()
-    val json = JsonWireFormatProvider()
+    val protobuf = Proto
+    val json = Json
     val metadata = TestData.adatMetadata
     val wireFormat = TestData.adatWireFormat
 

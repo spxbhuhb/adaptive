@@ -12,15 +12,16 @@ import `fun`.adaptive.service.model.TransportEnvelope
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.wireformat.WireFormatDecoder
 import `fun`.adaptive.wireformat.WireFormatProvider
-import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
+import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 class TestServiceTransport(
     val serviceImpl: ServiceImpl<*>? = null,
+    val peerTransport: TestServiceTransport? = null,
     val dump: Boolean = false,
     override val serviceImplFactory: ServiceImplFactory = defaultServiceImplFactory,
-    override val wireFormatProvider: WireFormatProvider = ProtoWireFormatProvider(),
+    override val wireFormatProvider: WireFormatProvider = Proto
 ) : ServiceCallTransport(
     CoroutineScope(Dispatchers.Default)
 ) {
@@ -30,7 +31,7 @@ class TestServiceTransport(
     }
 
     override fun context(): ServiceContext {
-        return ServiceContext(transport = this)
+        return ServiceContext(transport = peerTransport ?: this)
     }
 
     override suspend fun dispatch(context: ServiceContext, serviceName: String, funName: String, decoder: WireFormatDecoder<*>): ByteArray =

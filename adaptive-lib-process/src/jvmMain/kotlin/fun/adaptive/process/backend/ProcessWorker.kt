@@ -2,8 +2,8 @@ package `fun`.adaptive.process.backend
 
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.service.transport.StreamServiceCallTransport
-import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
-import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
+import `fun`.adaptive.wireformat.api.Json
+import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
@@ -34,8 +34,8 @@ class ProcessWorker(
 
         val wireFormatProvider =
             when (wireFormat.lowercase()) {
-                "proto" -> ProtoWireFormatProvider()
-                "json" -> JsonWireFormatProvider()
+                "proto" -> Proto
+                "json" -> Json
                 else -> throw IllegalArgumentException("invalid wire format: $wireFormat, expected proto or json")
             }
 

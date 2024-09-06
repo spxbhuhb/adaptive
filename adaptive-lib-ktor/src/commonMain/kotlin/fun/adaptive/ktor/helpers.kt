@@ -7,31 +7,18 @@ package `fun`.adaptive.ktor
 import `fun`.adaptive.service.defaultServiceCallTransport
 import `fun`.adaptive.service.defaultServiceImplFactory
 import `fun`.adaptive.service.factory.ServiceImplFactory
-import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
-import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
+import `fun`.adaptive.wireformat.WireFormatProvider
+import `fun`.adaptive.wireformat.api.Json
 
-suspend fun withJsonWebSocketTransport(
+suspend fun withWebSocketTransport(
     host: String,
+    wireFormatProvider: WireFormatProvider = Json,
     servicePath: String = "/adaptive/service-ws",
     clientIdPath: String = "/adaptive/client-id",
     trace: Boolean = false,
     serviceImplFactory: ServiceImplFactory = defaultServiceImplFactory,
 ) =
-    ClientWebSocketServiceCallTransport(host, servicePath, clientIdPath, JsonWireFormatProvider(), serviceImplFactory)
-        .also {
-            defaultServiceCallTransport = it
-            it.trace = trace
-            it.start()
-        }
-
-suspend fun withProtoWebSocketTransport(
-    host: String,
-    servicePath: String = "/adaptive/service-ws",
-    clientIdPath: String = "/adaptive/client-id",
-    trace: Boolean = false,
-    serviceImplFactory: ServiceImplFactory = defaultServiceImplFactory,
-) =
-    ClientWebSocketServiceCallTransport(host, servicePath, clientIdPath, ProtoWireFormatProvider(), serviceImplFactory)
+    ClientWebSocketServiceCallTransport(host, servicePath, clientIdPath, wireFormatProvider, serviceImplFactory)
         .also {
             defaultServiceCallTransport = it
             it.trace = trace

@@ -8,13 +8,14 @@ import `fun`.adaptive.wireformat.AbstractCollectionTest
 import `fun`.adaptive.wireformat.AbstractDatetimeTest
 import `fun`.adaptive.wireformat.AbstractKotlinTest
 import `fun`.adaptive.wireformat.AbstractMessageTest
+import `fun`.adaptive.wireformat.api.Proto
 import `fun`.adaptive.wireformat.json.JsonTestHelpers
 import `fun`.adaptive.wireformat.json.elements.JsonElement
 
-class ProtoKotlinTest : AbstractKotlinTest<ProtoRecord>(ProtoWireFormatProvider()), ProtoTestHelpers
+class ProtoKotlinTest : AbstractKotlinTest<ProtoRecord>(Proto), ProtoTestHelpers
 
-class ProtoCollectionTest : AbstractCollectionTest<ProtoRecord>(ProtoWireFormatProvider()), ProtoTestHelpers
+class ProtoCollectionTest : AbstractCollectionTest<ProtoRecord>(Proto), ProtoTestHelpers
 
-class ProtoDatetimeTest : AbstractDatetimeTest<ProtoRecord>(ProtoWireFormatProvider()), ProtoTestHelpers
+class ProtoDatetimeTest : AbstractDatetimeTest<ProtoRecord>(Proto), ProtoTestHelpers
 
-class ProtoMessageTest : AbstractMessageTest<JsonElement>(ProtoWireFormatProvider()), JsonTestHelpers
+class ProtoMessageTest : AbstractMessageTest<JsonElement>(Proto), JsonTestHelpers

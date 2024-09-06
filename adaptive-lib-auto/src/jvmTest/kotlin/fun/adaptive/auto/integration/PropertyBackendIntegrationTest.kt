@@ -15,7 +15,7 @@ import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.getService
-import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
+import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import org.junit.Test
@@ -48,7 +48,7 @@ class PropertyBackendIntegrationTest {
                 connectingHandle,
                 scope,
                 logger,
-                ProtoWireFormatProvider(),
+                Proto,
                 TestData.adatMetadata,
                 TestData.adatWireFormat,
                 LamportTimestamp(connectingHandle.clientId, 0),

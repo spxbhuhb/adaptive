@@ -98,7 +98,7 @@ class SetBackend(
         val time = context.time
 
         if (peerTime.timestamp >= time.timestamp) {
-            trace { "SKIP SYNC: time= $time peerTime=$peerTime" }
+            trace { "SKIP SYNC: time=$time peerTime=$peerTime" }
             return
         }
 
@@ -120,7 +120,7 @@ class SetBackend(
             }
         }
 
-        trace { "SYNC DONE: time= $time peerTime=$peerTime" }
+        trace { "SYNC DONE: time=$time peerTime=$peerTime" }
     }
 
     // --------------------------------------------------------------------------------

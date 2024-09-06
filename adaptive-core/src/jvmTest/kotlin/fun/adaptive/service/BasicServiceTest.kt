@@ -6,8 +6,8 @@ package `fun`.adaptive.service
 
 import `fun`.adaptive.service.testing.TestServiceTransport
 import `fun`.adaptive.wireformat.WireFormatProvider
-import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
-import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
+import `fun`.adaptive.wireformat.api.Json
+import `fun`.adaptive.wireformat.api.Proto
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
@@ -23,8 +23,8 @@ class BasicServiceTest {
         }
 
         runBlocking {
-            assertTrue(test(ProtoWireFormatProvider()).startsWith("i:1 s:hello ServiceContext("))
-            assertTrue(test(JsonWireFormatProvider()).startsWith("i:1 s:hello ServiceContext("))
+            assertTrue(test(Proto).startsWith("i:1 s:hello ServiceContext("))
+            assertTrue(test(Json).startsWith("i:1 s:hello ServiceContext("))
         }
 
     }

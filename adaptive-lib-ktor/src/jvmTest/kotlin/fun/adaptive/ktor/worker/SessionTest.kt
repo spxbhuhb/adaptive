@@ -8,7 +8,7 @@ import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.ktor.ktor
-import `fun`.adaptive.ktor.withJsonWebSocketTransport
+import `fun`.adaptive.ktor.withWebSocketTransport
 import `fun`.adaptive.lib.auth.auth
 import `fun`.adaptive.lib.auth.crypto.BCrypt
 import `fun`.adaptive.reflect.CallSiteName
@@ -52,7 +52,7 @@ class SessionTest {
         val ktorWorker = adapter.firstImpl<KtorWorker>()
 
         runBlocking {
-            val transport = withJsonWebSocketTransport("http://localhost:8080")
+            val transport = withWebSocketTransport("http://localhost:8080")
 
             try {
                 val sessionService = getService<SessionApi>()
@@ -79,7 +79,7 @@ class SessionTest {
         val adapter = server(callSiteName.substringAfterLast('.'))
 
         runBlocking {
-            val transport = withJsonWebSocketTransport("http://localhost:8080")
+            val transport = withWebSocketTransport("http://localhost:8080")
 
             try {
                 test(adapter)

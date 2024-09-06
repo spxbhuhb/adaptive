@@ -4,8 +4,8 @@
 
 package `fun`.adaptive.wireformat
 
-import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
-import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
+import `fun`.adaptive.wireformat.api.Json
+import `fun`.adaptive.wireformat.api.Proto
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -15,7 +15,7 @@ class HelpersTest {
     fun testEncodeDecodeProto() {
         val expected = A(true, 12, "abc")
 
-        val provider = ProtoWireFormatProvider()
+        val provider = Proto
         val p = provider.encode(expected, A)
         val actual = provider.decode(p, A)
         assertEquals(expected, actual)
@@ -25,7 +25,7 @@ class HelpersTest {
     fun testEncodeDecodeJson() {
         val expected = A(true, 12, "abc")
 
-        val provider = JsonWireFormatProvider()
+        val provider = Json
         val p = provider.encode(expected, A)
         val actual = provider.decode(p, A)
         assertEquals(expected, actual)

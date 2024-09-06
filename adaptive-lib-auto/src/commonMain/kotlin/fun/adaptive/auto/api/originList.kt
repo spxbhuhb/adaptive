@@ -6,7 +6,9 @@ import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.service.ServiceContext
+import `fun`.adaptive.utility.UUID
 
 /**
  * Registers an Auto list with [worker].
@@ -37,6 +39,7 @@ fun <A : AdatClass<A>> originList(
     worker: AutoWorker,
     companion: AdatCompanion<A>,
     serviceContext: ServiceContext? = null,
+    handle : AutoHandle = AutoHandle(UUID(), 1),
     trace: Boolean = false,
     onListCommit: ((newValue: List<A>) -> Unit)? = null,
     onItemCommit: ((newValue: List<A>, item: A) -> Unit)? = null
@@ -44,6 +47,7 @@ fun <A : AdatClass<A>> originList(
 
     return OriginBase(
         worker,
+        handle,
         serviceContext,
         companion.adatMetadata,
         companion.adatWireFormat,

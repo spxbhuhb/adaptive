@@ -19,8 +19,8 @@ import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.testPath
-import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
-import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
+import `fun`.adaptive.wireformat.api.Json
+import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlin.getValue
@@ -36,7 +36,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
             AutoHandle(UUID(), 1),
             worker.scope,
             logger,
-            ProtoWireFormatProvider(),
+            Proto,
             TestData.adatMetadata,
             TestData.adatWireFormat,
             LamportTimestamp(1, 1)
@@ -83,7 +83,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
     override suspend fun file(): AutoConnectInfo {
         val path = Path(testPath, "AutoTestService.testInstanceWithFile.json")
         SystemFileSystem.delete(path, mustExist = false)
-        return originFile(worker, TestData, path, TestData(12, "a"), JsonWireFormatProvider(), serviceContext).connectInfo()
+        return originFile(worker, TestData, path, TestData(12, "a"), Json, serviceContext).connectInfo()
     }
 
     override suspend fun folder(folderName : String): AutoConnectInfo {
@@ -93,7 +93,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
         return originFolder(
             worker,
             TestData,
-            JsonWireFormatProvider(),
+            Json,
             path,
             { itemId,_ -> "${itemId.clientId}.${itemId.timestamp}.json" },
             serviceContext

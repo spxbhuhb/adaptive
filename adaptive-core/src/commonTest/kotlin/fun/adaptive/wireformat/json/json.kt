@@ -9,15 +9,16 @@ import `fun`.adaptive.wireformat.AbstractDatetimeTest
 import `fun`.adaptive.wireformat.AbstractKotlinTest
 import `fun`.adaptive.wireformat.AbstractMessageTest
 import `fun`.adaptive.wireformat.AbstractPolymorphicTest
+import `fun`.adaptive.wireformat.api.Json
 import `fun`.adaptive.wireformat.json.elements.JsonElement
 
-class JsonKotlinTest : AbstractKotlinTest<JsonElement>(JsonWireFormatProvider()), JsonTestHelpers
+class JsonKotlinTest : AbstractKotlinTest<JsonElement>(Json), JsonTestHelpers
 
-class JsonCollectionTest : AbstractCollectionTest<JsonElement>(JsonWireFormatProvider()), JsonTestHelpers
+class JsonCollectionTest : AbstractCollectionTest<JsonElement>(Json), JsonTestHelpers
 
-class JsonDatetimeTest : AbstractDatetimeTest<JsonElement>(JsonWireFormatProvider()), JsonTestHelpers
+class JsonDatetimeTest : AbstractDatetimeTest<JsonElement>(Json), JsonTestHelpers
 
-class JsonPolymorphicTest : AbstractPolymorphicTest<JsonElement>(JsonWireFormatProvider()), JsonTestHelpers
+class JsonPolymorphicTest : AbstractPolymorphicTest<JsonElement>(Json), JsonTestHelpers
 
-class JsonMessageTest : AbstractMessageTest<JsonElement>(JsonWireFormatProvider()), JsonTestHelpers
+class JsonMessageTest : AbstractMessageTest<JsonElement>(Json), JsonTestHelpers
 

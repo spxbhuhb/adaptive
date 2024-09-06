@@ -11,7 +11,7 @@ import `fun`.adaptive.service.getService
 import `fun`.adaptive.utility.ensureTestPath
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.waitForReal
-import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
+import `fun`.adaptive.wireformat.api.Json
 import kotlinx.io.files.SystemFileSystem
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -72,7 +72,7 @@ class FileInstanceTest {
     fun assert(expected: TestData, adapter: AdaptiveTestAdapter, frontend: FileFrontend<*>) {
         val instance = adapter.rootFragment.state[0]
 
-        val fromFile = FileFrontend.read(frontend.path, JsonWireFormatProvider()).second as TestData
+        val fromFile = FileFrontend.read(frontend.path, Json).second as TestData
 
         assertEquals(expected, instance)
         assertEquals(expected, producedValue)

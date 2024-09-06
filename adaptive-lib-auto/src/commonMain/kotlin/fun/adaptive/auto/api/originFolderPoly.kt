@@ -6,8 +6,10 @@ import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.frontend.FolderFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.service.ServiceContext
+import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.io.files.Path
 
@@ -43,6 +45,7 @@ fun originFolderPoly(
     path: Path,
     fileNameFun: (itemId: ItemId, item: AdatClass<*>) -> String,
     serviceContext: ServiceContext? = null,
+    handle : AutoHandle = AutoHandle(UUID(), 1),
     trace: Boolean = false,
     onListCommit: ((newValue: List<AdatClass<*>>) -> Unit)? = null,
     onItemCommit: ((newValue: List<AdatClass<*>>, item: AdatClass<*>) -> Unit)? = null,
@@ -50,6 +53,7 @@ fun originFolderPoly(
 
     return OriginBase(
         worker,
+        handle,
         serviceContext,
         companion.adatMetadata,
         companion.adatWireFormat,

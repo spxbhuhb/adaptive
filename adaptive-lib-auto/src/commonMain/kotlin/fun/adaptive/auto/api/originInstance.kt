@@ -7,9 +7,10 @@ import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.utility.CleanupHandler
+import `fun`.adaptive.utility.UUID
 
 /**
  * Registers a copy of [initialValue] as an Auto instance with [worker].
@@ -36,6 +37,7 @@ fun <A : AdatClass<A>> originInstance(
     worker: AutoWorker,
     initialValue: A,
     serviceContext: ServiceContext? = null,
+    handle : AutoHandle = AutoHandle(UUID(), 1),
     trace: Boolean = false,
     onChange: ((newValue: A) -> Unit)? = null
 ): OriginBase<PropertyBackend, AdatClassFrontend<A>> {
@@ -44,6 +46,7 @@ fun <A : AdatClass<A>> originInstance(
 
     val origin = OriginBase<PropertyBackend, AdatClassFrontend<A>>(
         worker,
+        handle,
         serviceContext,
         companion.adatMetadata,
         companion.adatWireFormat,

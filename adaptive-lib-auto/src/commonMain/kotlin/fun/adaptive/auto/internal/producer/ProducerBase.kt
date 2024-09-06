@@ -13,9 +13,6 @@ import `fun`.adaptive.auto.internal.frontend.FrontendBase
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.backend.AutoWorker
-import `fun`.adaptive.auto.internal.backend.SetBackend
-import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
-import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
@@ -23,7 +20,7 @@ import `fun`.adaptive.log.AdaptiveLogger
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.utility.safeLaunch
-import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
+import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -59,7 +56,7 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, T>(
                 connectingHandle,
                 scope,
                 logger,
-                ProtoWireFormatProvider(),
+                Proto,
                 defaultMetadata(),
                 defaultWireFormat(),
                 LamportTimestamp(connectingHandle.clientId, 0),

@@ -4,20 +4,14 @@
 
 **frontend**
 
-Web:
-
 ```kotlin
-withProtoWebSocketTransport()
-// ----  OR  ---
-withJsonWebSocketTransport()
+withWebSocketTransport("https://your.host")
 ```
 
-Android/iOS:
+From browser, you can use:
 
 ```kotlin
-withProtoWebSocketTransport("https://your.host")
-// ----  OR  ---
-withJsonWebSocketTransport("https://your.host")
+withWebSocketTransport(window.location.origin)
 ```
 
 **backend**
@@ -64,9 +58,8 @@ backend {
 ### ClientWebSocketServiceCallTransport
 
 * handles the client side of the service calls
-* uses `defaultWireFormatProvider` to encode/decode messages
-* `withProtoWebSocketTransport` / `withJsonWebSocketTransport`
-    * sets `defaultWireFormatProvider` to the appropriate format
+* `withWebSocketTransport`
+    * sets `defaultWireFormatProvider` to the format provided as a parameter (default is Json)
     * creates a new transport and assigns it to `defaultServiceCallTransport`
 
 ### TransactionWebSocketServiceCallTransport

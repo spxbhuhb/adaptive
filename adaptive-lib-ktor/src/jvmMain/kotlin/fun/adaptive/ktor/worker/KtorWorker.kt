@@ -10,8 +10,8 @@ import `fun`.adaptive.backend.setting.dsl.setting
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.transport.ServiceSessionProvider
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
-import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
+import `fun`.adaptive.wireformat.api.Json
+import `fun`.adaptive.wireformat.api.Proto
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -85,8 +85,8 @@ class KtorWorker : WorkerImpl<KtorWorker> {
 
             val wireFormatProvider =
                 when (wireFormat.lowercase()) {
-                    "proto" -> ProtoWireFormatProvider()
-                    "json" -> JsonWireFormatProvider()
+                    "proto" -> Proto
+                    "json" -> Json
                     else -> throw IllegalArgumentException("invalid wire format: $wireFormat, expected proto or json")
                 }
 

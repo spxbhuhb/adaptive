@@ -8,13 +8,13 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.ktor.ktor
-import `fun`.adaptive.ktor.withProtoWebSocketTransport
 import `fun`.adaptive.lib.auth.auth
 import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.backend
+import `fun`.adaptive.ktor.withWebSocketTransport
 import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.service.transport.ServiceCallException
@@ -70,7 +70,7 @@ class ExceptionTest {
         }
 
         runBlocking {
-            val transport = withProtoWebSocketTransport("http://localhost:8080")
+            val transport = withWebSocketTransport("http://localhost:8080")
 
             try {
                 test(adapter)
