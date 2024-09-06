@@ -26,6 +26,7 @@ class BackendContext(
     time: LamportTimestamp
 ) {
 
+    // FIXME this atomic is not really atomic
     var time by Atomic(time)
 
     val connectorLock = getLock()

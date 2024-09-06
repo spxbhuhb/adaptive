@@ -10,7 +10,8 @@ import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.cookbook.shared.ClientServerRecipe
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.utility.UUID
-import kotlinx.coroutines.delay
+import `fun`.adaptive.utility.waitFor
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Create a permanent auto list on the server side by a worker.
@@ -32,6 +33,13 @@ class Recipe : ClientServerRecipe() {
 
     override suspend fun clientMain() {
 
+        // Wait for the worker to initialise the data. This happens in the background in
+        // a coroutine, so we have to wait for it.
+
+        val masterDataWorker = serverBackend.firstImpl<MasterDataWorker>()
+
+        waitFor(1.seconds) { masterDataWorker.masterDataOrNull != null }
+
         // Get the connection info. We have to do this before we create
         // the client side list as the client side list needs the client
         // id from `connectInfo.connectingHandle`.
@@ -48,16 +56,17 @@ class Recipe : ClientServerRecipe() {
         // will start synchronization between the two list. As the client
         // side is empty, it will load everything from the server side.
 
-        data.connect { connectInfo }
-
-        // Wait until the initial synchronization finishes
-
-
+        data.connect(waitForSync = true) { connectInfo }
 
         // Add an item on the client side
 
         data.frontend.add(MasterDataItem(UUID(), "record-name-1"))
 
+        // Wait for sync on the server side. Typically, we don't wait this way
+        // but for the cookbook recipe it is needed so the program has time
+        // to send the data and write out the file.
+
+        waitFor(2.seconds) { masterDataWorker.masterData.backend.context.time.timestamp == data.backend.context.time.timestamp }
     }
 
 }

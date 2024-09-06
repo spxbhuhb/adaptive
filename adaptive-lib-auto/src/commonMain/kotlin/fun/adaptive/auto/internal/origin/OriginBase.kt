@@ -40,7 +40,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase>(
         Proto,
         metadata,
         wireFormat,
-        LamportTimestamp(handle.clientId, 1)
+        LamportTimestamp(handle.clientId, handle.clientId),
     )
 
     lateinit var backend: BE
@@ -65,7 +65,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase>(
         return backend.connectInfo()
     }
 
-    suspend fun connect(transport: ServiceCallTransport? = defaultServiceCallTransport, connectInfoFun: suspend () -> AutoConnectInfo) : OriginBase<BE, FE> {
+    suspend fun connect(transport: ServiceCallTransport? = defaultServiceCallTransport, waitForSync: Boolean = false, connectInfoFun: suspend () -> AutoConnectInfo): OriginBase<BE, FE> {
 
         val autoService = getService<AutoApi>(transport)
         val connectInfo = connectInfoFun()
@@ -88,6 +88,12 @@ class OriginBase<BE : BackendBase, FE : FrontendBase>(
             backend.context.time
         )
 
+        if (waitForSync) waitForSync(connectInfo)
+
         return this
+    }
+
+    suspend fun waitForSync(connectInfo: AutoConnectInfo) {
+        backend.waitForSync(connectInfo)
     }
 }

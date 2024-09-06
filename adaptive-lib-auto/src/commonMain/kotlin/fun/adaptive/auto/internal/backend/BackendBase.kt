@@ -13,6 +13,7 @@ import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.utility.safeLaunch
 import `fun`.adaptive.wireformat.WireFormatRegistry
+import kotlinx.coroutines.delay
 
 abstract class BackendBase(
     clientId: ClientId
@@ -115,8 +116,21 @@ abstract class BackendBase(
 
     fun connectInfo() =
         with(context) {
-            AutoConnectInfo(handle, time, AutoHandle(handle.globalId, context.nextTime().timestamp))
+            val time = context.nextTime()
+            AutoConnectInfo(handle, time, AutoHandle(handle.globalId, time.timestamp))
         }
+
+    fun isSynced(connectInfo: AutoConnectInfo): Boolean {
+        return context.time >= connectInfo.originTime
+    }
+
+    suspend fun waitForSync(connectInfo: AutoConnectInfo) {
+        trace { "SYNC WAIT: $connectInfo" }
+        while (! isSynced(connectInfo)) {
+            delay(50)
+        }
+        trace { "SYNC END" }
+    }
 
     @CallSiteName
     inline fun trace(callSiteName: String = "<unknown>", builder: () -> String) {
