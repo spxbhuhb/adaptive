@@ -54,7 +54,7 @@ class AdaptiveFetch<VT>(
             it.launch {
                 try {
                     latestValue = fetchFunction()
-                    binding.targetFragment.setDirty(binding.indexInTargetState, true)
+                    setDirty()
                 } catch (e: AdaptiveProducerCancel) {
                     it.cancel()
                 } catch (e: TimeoutCancellationException) {

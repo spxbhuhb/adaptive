@@ -44,7 +44,7 @@ class AutoInstance<A : AdatClass<A>>(
             onCommit = {
                 latestValue = frontend.value
                 onCommit?.invoke(latestValue!!)
-                binding.targetFragment.setDirty(binding.indexInTargetState, true) // TODO make a separate binding for producers
+                setDirty() // TODO make a separate binding for producers
             }
         )
 

@@ -35,4 +35,8 @@ interface AdaptiveProducer<T> {
     fun value(): Any? =
         latestValue
 
+    fun setDirty() {
+        binding.targetFragment.setDirty(binding.indexInTargetState, true)
+    }
+
 }

@@ -30,6 +30,6 @@ class MediaMetricsProducer(
 
     fun update(metrics: MediaMetrics) {
         latestValue = metrics
-        binding.targetFragment.setDirty(binding.indexInTargetState, true)
+        setDirty()
     }
 }

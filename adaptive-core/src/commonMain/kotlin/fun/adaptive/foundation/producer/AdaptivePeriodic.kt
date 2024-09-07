@@ -58,7 +58,7 @@ class AdaptivePeriodic<VT>(
                     // TODO do not run when the fragment is not mounted
                     try {
                         latestValue = producerFun()
-                        binding.targetFragment.setDirty(binding.indexInTargetState, true)
+                        setDirty()
                     } catch (e: AdaptiveProducerCancel) {
                         it.cancel()
                         break

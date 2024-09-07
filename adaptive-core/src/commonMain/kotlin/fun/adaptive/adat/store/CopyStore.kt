@@ -49,7 +49,7 @@ class CopyStore<A : AdatClass<A>>(
 
     fun replaceValue(newValue: A) {
         makeCopy(newValue, null, true)
-        binding.targetFragment.setDirty(binding.indexInTargetState, true)
+        setDirty()
     }
 
     @Deprecated("use update instead")
@@ -69,7 +69,7 @@ class CopyStore<A : AdatClass<A>>(
             latestValue = it
             onChange?.invoke(it)
             if (patch) {
-                binding.targetFragment.setDirty(binding.indexInTargetState, true)
+                setDirty()
             }
         }
 

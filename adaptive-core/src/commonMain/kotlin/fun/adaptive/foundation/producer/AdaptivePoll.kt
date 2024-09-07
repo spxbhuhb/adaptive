@@ -60,7 +60,7 @@ class AdaptivePoll<VT>(
 
                     try {
                         latestValue = pollFunction()
-                        binding.targetFragment.setDirty(binding.indexInTargetState, true) // TODO make a separate binding for producers
+                        setDirty() // TODO make a separate binding for producers
                     } catch (e: AdaptiveProducerCancel) {
                         it.cancel()
                         break

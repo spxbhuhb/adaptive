@@ -30,12 +30,12 @@ class AutoListPoly(
             onListCommit = {
                 latestValue = it
                 onListCommit?.invoke(it)
-                binding.targetFragment.setDirty(binding.indexInTargetState, true) // TODO make a separate binding for producers
+                setDirty() // TODO make a separate binding for producers
             },
             onItemCommit = { list, instance ->
                 latestValue = list
                 onItemCommit?.invoke(instance)
-                binding.targetFragment.setDirty(binding.indexInTargetState, true) // TODO make a separate binding for producers
+                setDirty() // TODO make a separate binding for producers
             }
         )
     }
