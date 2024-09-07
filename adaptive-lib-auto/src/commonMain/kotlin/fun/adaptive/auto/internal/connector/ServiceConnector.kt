@@ -17,7 +17,7 @@ class ServiceConnector(
     val logger: AdaptiveLogger,
     val scope: CoroutineScope,
     pendingLimit: Int
-) : AutoConnector(peerHandle.clientId) {
+) : AutoConnector(peerHandle.peerId) {
 
     val operations: Channel<AutoOperation> = Channel(pendingLimit)
 
@@ -39,6 +39,7 @@ class ServiceConnector(
                 is AutoMove -> service.move(peerHandle, operation)
                 is AutoRemove -> service.remove(peerHandle, operation)
                 is AutoEmpty -> service.empty(peerHandle, operation)
+                is AutoSyncEnd -> service.syncEnd(peerHandle, operation)
             }
         }
     }

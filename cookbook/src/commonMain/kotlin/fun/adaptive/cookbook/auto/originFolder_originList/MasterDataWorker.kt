@@ -9,10 +9,8 @@ import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.backend.setting.dsl.setting
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
-import `fun`.adaptive.utility.waitFor
 import `fun`.adaptive.wireformat.api.Json
 import kotlinx.io.files.Path
-import kotlin.time.Duration.Companion.seconds
 
 /**
  * A worker that creates a permanent, folder-persisted auto list
@@ -48,7 +46,7 @@ class MasterDataWorker(
             // This function generates the name of the files.
             // The actual file name is not important, but it should not start with a '.'
             // character as those files are ignored at list load.
-            { itemId, _ -> "${itemId.clientId}.${itemId.timestamp}.json" },
+            { itemId, _ -> "${itemId.peerId}.${itemId.timestamp}.json" },
             trace = trace,
         )
 

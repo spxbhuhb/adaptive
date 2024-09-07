@@ -95,7 +95,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
             TestData,
             Json,
             path,
-            { itemId,_ -> "${itemId.clientId}.${itemId.timestamp}.json" },
+            { itemId,_ -> "${itemId.peerId}.${itemId.timestamp}.json" },
             serviceContext
         ).connectInfo()
 

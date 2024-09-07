@@ -1,20 +1,17 @@
 package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.encode
 import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.auto.internal.backend.tree.TreeData
 import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.model.MetadataId
 import `fun`.adaptive.auto.model.operation.*
-import `fun`.adaptive.reflect.CallSiteName
 import kotlin.collections.minusAssign
 
 class TreeBackend(
     override val context: BackendContext
-) : CollectionBackendBase(context.handle.clientId) {
+) : CollectionBackendBase(context.handle.peerId) {
 
     val tree = TreeData(this)
     override val items = mutableMapOf<ItemId, PropertyBackend>()
@@ -91,12 +88,27 @@ class TreeBackend(
     }
 
     override fun modify(operation: AutoModify, commit: Boolean, distribute: Boolean) {
-        val item = items[operation.itemId] ?: return
-        item.modify(operation, commit, distribute)
+        // FIXME check if the item has been removed
+        val item = items[operation.itemId]
+        if (item != null) {
+            item.modify(operation, commit, distribute)
+        } else {
+            // This is a tricky situation, we've got a modification, but we don't have the
+            // item yet. May happen if the item is updated during synchronization. In this
+            // case we have to put this operation to the shelf until the synchronization
+            // is done.
+            afterSync += operation
+        }
     }
 
     override fun empty(operation: AutoEmpty, commit: Boolean, distribute: Boolean) {
         closeListOp(operation, emptySet(), commit, distribute)
+    }
+
+    override fun syncEnd(operation: AutoSyncEnd, commit: Boolean, distribute: Boolean) {
+        afterSync.forEach { modify(it, commit, distribute) }
+        afterSync.clear()
+        context.receive(operation.timestamp)
     }
 
     // --------------------------------------------------------------------------------

@@ -56,7 +56,7 @@ class Recipe : ClientServerRecipe() {
         // will start synchronization between the two list. As the client
         // side is empty, it will load everything from the server side.
 
-        data.connect(waitForSync = true) { connectInfo }
+        data.connect(waitForSync = 2.seconds) { connectInfo }
 
         // Add an item on the client side
 

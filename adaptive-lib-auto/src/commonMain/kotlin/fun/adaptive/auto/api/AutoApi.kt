@@ -22,5 +22,6 @@ interface AutoApi {
     suspend fun move(handle: AutoHandle, operation: AutoMove)
     suspend fun remove(handle: AutoHandle, operation: AutoRemove)
     suspend fun empty(handle: AutoHandle, operation: AutoEmpty)
+    suspend fun syncEnd(handle: AutoHandle, operation: AutoSyncEnd)
 
 }

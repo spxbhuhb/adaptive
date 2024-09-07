@@ -61,7 +61,7 @@ class BackendContext(
 
     fun removeConnector(handle: AutoHandle) {
         connectorLock.use {
-            val toRemove = pConnectors.filter { it.clientId == handle.clientId }
+            val toRemove = pConnectors.filter { it.peerId == handle.peerId }
             pConnectors -= toRemove
             toRemove.forEach { it.onDisconnect() }
         }

@@ -2,19 +2,26 @@ package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.toArray
-import `fun`.adaptive.auto.model.ClientId
+import `fun`.adaptive.auto.model.PeerId
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.operation.AutoAdd
 import `fun`.adaptive.auto.model.operation.AutoEmpty
+import `fun`.adaptive.auto.model.operation.AutoModify
 import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.auto.model.operation.AutoRemove
+import `fun`.adaptive.auto.model.operation.AutoSyncEnd
 import `fun`.adaptive.reflect.CallSiteName
 
 abstract class CollectionBackendBase(
-    clientId: ClientId
-) : BackendBase(clientId) {
+    peerId: PeerId
+) : BackendBase(peerId) {
 
     abstract val items: MutableMap<ItemId, PropertyBackend>
+
+    /**
+     * Contains modification that should be applied when [AutoSyncEnd] arrives.
+     */
+    val afterSync = mutableListOf<AutoModify>()
 
     abstract val defaultWireFormatName: String
 
@@ -50,6 +57,8 @@ abstract class CollectionBackendBase(
     // --------------------------------------------------------------------------------
 
     abstract fun empty(operation: AutoEmpty, commit: Boolean, distribute: Boolean)
+
+    abstract fun syncEnd(operation: AutoSyncEnd, commit: Boolean, distribute: Boolean)
 
     abstract fun add(operation: AutoAdd, commit: Boolean, distribute: Boolean)
 

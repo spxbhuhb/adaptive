@@ -5,19 +5,20 @@ import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.internal.frontend.FrontendBase
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.auto.model.AutoHandle
-import `fun`.adaptive.auto.model.ClientId
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.auto.model.PeerId
 import `fun`.adaptive.auto.model.operation.AutoModify
 import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.utility.safeLaunch
+import `fun`.adaptive.utility.waitFor
 import `fun`.adaptive.wireformat.WireFormatRegistry
-import kotlinx.coroutines.delay
+import kotlin.time.Duration
 
 abstract class BackendBase(
-    clientId: ClientId
-) : AutoConnector(clientId) {
+    peerId: PeerId
+) : AutoConnector(peerId) {
 
     abstract val context: BackendContext
 
@@ -121,15 +122,13 @@ abstract class BackendBase(
         }
 
     fun isSynced(connectInfo: AutoConnectInfo): Boolean {
-        return context.time >= connectInfo.originTime
+        return context.time.timestamp >= connectInfo.originTime.timestamp
     }
 
-    suspend fun waitForSync(connectInfo: AutoConnectInfo) {
+    suspend fun waitForSync(connectInfo: AutoConnectInfo, timeout : Duration) {
         trace { "SYNC WAIT: $connectInfo" }
-        while (! isSynced(connectInfo)) {
-            delay(50)
-        }
-        trace { "SYNC END" }
+        waitFor(timeout)  { isSynced(connectInfo) }
+        trace { "SYNC WAIT END" }
     }
 
     @CallSiteName

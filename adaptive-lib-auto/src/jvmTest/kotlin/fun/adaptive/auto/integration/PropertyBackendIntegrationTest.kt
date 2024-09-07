@@ -51,7 +51,7 @@ class PropertyBackendIntegrationTest {
                 Proto,
                 TestData.adatMetadata,
                 TestData.adatWireFormat,
-                LamportTimestamp(connectingHandle.clientId, 0),
+                LamportTimestamp(connectingHandle.peerId, 0),
             )
 
             val connectingBackend = PropertyBackend(

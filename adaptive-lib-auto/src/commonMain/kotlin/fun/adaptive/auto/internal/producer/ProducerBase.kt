@@ -1,7 +1,5 @@
 package `fun`.adaptive.auto.internal.producer
 
-import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.metadata.AdatClassMetadata
 import `fun`.adaptive.adat.store.AdatStore
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
@@ -49,7 +47,7 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, T>(
             val originHandle = connectInfo.originHandle
             val connectingHandle = connectInfo.connectingHandle
 
-            logger = getLogger("fun.adaptive.auto.internal.producer.${this::class.simpleName}.${connectingHandle.globalId.toShort()}.${connectingHandle.clientId}")
+            logger = getLogger("fun.adaptive.auto.internal.producer.${this::class.simpleName}.${connectingHandle.globalId.toShort()}.${connectingHandle.peerId}")
             if (trace) logger.enableFine()
 
             context = BackendContext(
@@ -59,7 +57,7 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, T>(
                 Proto,
                 defaultMetadata(),
                 defaultWireFormat(),
-                LamportTimestamp(connectingHandle.clientId, 0),
+                LamportTimestamp(connectingHandle.peerId, 0),
             )
 
             build()

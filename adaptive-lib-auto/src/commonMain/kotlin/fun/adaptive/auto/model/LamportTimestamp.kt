@@ -5,7 +5,7 @@ import kotlin.math.max
 
 @Adat
 class LamportTimestamp(
-    val clientId: ClientId,
+    val peerId: PeerId,
     val timestamp: Int,
 ) : Comparable<LamportTimestamp> {
 
@@ -13,19 +13,21 @@ class LamportTimestamp(
         when {
             this.timestamp < other.timestamp -> - 1
             this.timestamp > other.timestamp -> 1
-            this.clientId < other.clientId -> - 1
-            this.clientId > other.clientId -> 1
+            // Not that here order is reversed, lower peerId is considered greater
+            // This means that the peer that joined earlier is considered stronger.
+            this.peerId > other.peerId -> - 1
+            this.peerId < other.peerId -> 1
             else -> 0
         }
 
     fun receive(remote: LamportTimestamp): LamportTimestamp =
-        LamportTimestamp(clientId, max(remote.timestamp, timestamp))
+        LamportTimestamp(peerId, max(remote.timestamp, timestamp))
 
     fun increment(): LamportTimestamp =
-        LamportTimestamp(clientId, timestamp + 1)
+        LamportTimestamp(peerId, timestamp + 1)
 
     override fun toString(): String {
-        return "$clientId:$timestamp"
+        return "$peerId:$timestamp"
     }
 
 }

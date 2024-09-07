@@ -18,6 +18,7 @@ import `fun`.adaptive.service.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.CleanupHandler
 import `fun`.adaptive.wireformat.api.Proto
+import kotlin.time.Duration
 
 class OriginBase<BE : BackendBase, FE : FrontendBase>(
     worker: AutoWorker,
@@ -29,7 +30,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase>(
     builder: OriginBase<BE, FE>.() -> Unit
 ) {
 
-    val logger = getLogger("fun.adaptive.auto.${handle.globalId.toShort()}.${handle.clientId}").also {
+    val logger = getLogger("fun.adaptive.auto.${handle.globalId.toShort()}.${handle.peerId}").also {
         if (trace) it.enableFine()
     }
 
@@ -40,7 +41,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase>(
         Proto,
         metadata,
         wireFormat,
-        LamportTimestamp(handle.clientId, handle.clientId),
+        LamportTimestamp(handle.peerId, 1),
     )
 
     lateinit var backend: BE
@@ -65,7 +66,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase>(
         return backend.connectInfo()
     }
 
-    suspend fun connect(transport: ServiceCallTransport? = defaultServiceCallTransport, waitForSync: Boolean = false, connectInfoFun: suspend () -> AutoConnectInfo): OriginBase<BE, FE> {
+    suspend fun connect(transport: ServiceCallTransport? = defaultServiceCallTransport, waitForSync: Duration? = null, connectInfoFun: suspend () -> AutoConnectInfo): OriginBase<BE, FE> {
 
         val autoService = getService<AutoApi>(transport)
         val connectInfo = connectInfoFun()
@@ -88,12 +89,12 @@ class OriginBase<BE : BackendBase, FE : FrontendBase>(
             backend.context.time
         )
 
-        if (waitForSync) waitForSync(connectInfo)
+        if (waitForSync != null) waitForSync(connectInfo, waitForSync)
 
         return this
     }
 
-    suspend fun waitForSync(connectInfo: AutoConnectInfo) {
-        backend.waitForSync(connectInfo)
+    suspend fun waitForSync(connectInfo: AutoConnectInfo, timeout : Duration) {
+        backend.waitForSync(connectInfo, timeout)
     }
 }

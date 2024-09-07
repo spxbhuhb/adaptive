@@ -13,7 +13,7 @@ class PropertyBackend(
     val itemId: LamportTimestamp,
     val wireFormatName: String?,
     initialValues: Array<Any?>?
-) : BackendBase(context.handle.clientId) {
+) : BackendBase(context.handle.peerId) {
 
     val wireFormat = wireFormatFor(wireFormatName)
 
@@ -104,12 +104,13 @@ class PropertyBackend(
     // --------------------------------------------------------------------------------
 
     /**
-     * Send any changes that happened after [peerTime] to the peer.
+     * Send any changes that happened after [syncFrom] to the peer.
      */
-    override suspend fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp) {
+    override suspend fun syncPeer(connector: AutoConnector, syncFrom: LamportTimestamp) {
         val time = context.time
-        if (peerTime.timestamp >= time.timestamp) {
-            trace { "SKIP SYNC: time= $time peerTime=$peerTime" }
+
+        if (syncFrom.timestamp >= time.timestamp) {
+            trace { "SKIP SYNC: time= $time peerTime=$syncFrom" }
             return
         }
 
@@ -120,7 +121,7 @@ class PropertyBackend(
             val property = properties[index]
 
             if (change != null) {
-                if (change.time <= peerTime) continue
+                if (change.time <= syncFrom) continue
                 changesToSend += AutoPropertyValue(property.name, change.payload)
             } else {
                 changesToSend += AutoPropertyValue(property.name, encode(property))
@@ -129,7 +130,7 @@ class PropertyBackend(
 
         val operation = AutoModify(time, itemId, changesToSend)
 
-        trace { "peerTime=$peerTime op=$operation" }
+        trace { "peerTime=$syncFrom op=$operation" }
 
         connector.send(operation)
     }

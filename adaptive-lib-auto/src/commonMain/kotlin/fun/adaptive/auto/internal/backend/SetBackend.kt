@@ -10,7 +10,7 @@ import `fun`.adaptive.auto.model.operation.*
 class SetBackend(
     override val context: BackendContext,
     initialValue: Map<ItemId, PropertyBackend>? = null
-) : CollectionBackendBase(context.handle.clientId) {
+) : CollectionBackendBase(context.handle.peerId) {
 
     val additions = mutableSetOf<ItemId>()
     val removals = mutableSetOf<ItemId>()
@@ -82,28 +82,55 @@ class SetBackend(
 
     override fun modify(operation: AutoModify, commit: Boolean, distribute: Boolean) {
         if (operation.itemId in removals) return
-        val item = items[operation.itemId] ?: return
-        item.modify(operation, commit, distribute)
+        val item = items[operation.itemId]
+        if (item != null) {
+            item.modify(operation, commit, distribute)
+        } else {
+            // This is a tricky situation, we've got a modification, but we don't have the
+            // item yet. May happen if the item is updated during synchronization. In this
+            // case we have to put this operation to the shelf until the synchronization
+            // is done.
+            afterSync += operation
+        }
     }
 
     override fun empty(operation: AutoEmpty, commit: Boolean, distribute: Boolean) {
         closeListOp(operation, emptySet(), commit, distribute)
     }
 
+    override fun syncEnd(operation: AutoSyncEnd, commit: Boolean, distribute: Boolean) {
+        // apply modifications that have been postponed because we haven't had the
+        // item at the time (see syncPeer and modify for details)
+        afterSync.forEach { modify(it, commit, distribute) }
+        afterSync.clear()
+        context.receive(operation.timestamp)
+        trace { "time=${context.time}" }
+    }
+
     // --------------------------------------------------------------------------------
     // Peer synchronization
     // --------------------------------------------------------------------------------
 
-    override suspend fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp) {
+    override suspend fun syncPeer(connector: AutoConnector, syncFrom: LamportTimestamp) {
+
+        // The current time marks everything we have to send over. Anything happens after
+        // this point will be sent by the normal distribution mechanism. The only problematic
+        // events are the property updates as the updated item may not be on the other side yet.
+        // `modify` and `syncEnd` covers that situation
+
         val time = context.time
 
-        if (peerTime.timestamp >= time.timestamp) {
-            trace { "SKIP SYNC: time=$time peerTime=$peerTime" }
+        trace { "SYNC START: time=$time peerTime=$syncFrom" }
+
+        if (syncFrom.timestamp >= time.timestamp) {
+            trace { "SYNC END:  --SKIPPED--  time=$time peerTime=$syncFrom" }
             return
         }
 
         if (additions.isEmpty()) {
             connector.send(AutoEmpty(time))
+            trace { "SYNC END:  --EMPTY--  time=$time peerTime=$syncFrom" }
+            return
         }
 
         if (removals.isNotEmpty()) {
@@ -113,14 +140,16 @@ class SetBackend(
         for (item in items.values.sortedBy { it.itemId }) {
             val itemId = item.itemId
 
-            if (itemId > peerTime) {
+            if (itemId > syncFrom) {
                 connector.send(AutoAdd(itemId, itemId, item.wireFormatName,  null, encode(item.wireFormatName, item.values)))
             } else {
-                item.syncPeer(connector, peerTime)
+                item.syncPeer(connector, syncFrom)
             }
         }
 
-        trace { "SYNC DONE: time=$time peerTime=$peerTime" }
+        connector.send(AutoSyncEnd(time))
+
+        trace { "SYNC END:  --SENT--  time=$time peerTime=$syncFrom" }
     }
 
     // --------------------------------------------------------------------------------
@@ -128,6 +157,9 @@ class SetBackend(
     // --------------------------------------------------------------------------------
 
     override fun addItem(itemId: ItemId, parentItemId: ItemId?, value: AdatClass<*>) {
+        // this is here for safety, theoretically the item id should never be in removals when addItem is called
+        if (itemId in removals) return
+
         additions += itemId
         val backend = PropertyBackend(context, itemId, value.adatCompanion.wireFormatName, value.toArray())
         items += itemId to backend

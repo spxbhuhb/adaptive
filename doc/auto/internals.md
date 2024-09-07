@@ -21,7 +21,7 @@ Auto implementations have a type-specific backend and a use-case specific fronte
 
 Stores additions and removals in `SetBackend.additions` and `SetBackend.removals` respectively.
 
-Both `additions` and `removals` store item ids, that is `clientId:timestamp` pairs.
+Both `additions` and `removals` store item ids, that is `peerId:timestamp` pairs.
 
 The resulting list is defined as `(additions - removals).sorted()`.
 
