@@ -4,6 +4,7 @@
 
 package `fun`.adaptive.foundation.producer
 
+import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 
 interface AdaptiveProducer<T> {
@@ -11,6 +12,12 @@ interface AdaptiveProducer<T> {
     val binding: AdaptiveStateVariableBinding<T>
 
     var latestValue: T?
+
+    /**
+     * When true, this producer will be calle
+     */
+    val actual : Boolean
+        get() = false
 
     fun start()
 
@@ -39,4 +46,17 @@ interface AdaptiveProducer<T> {
         binding.targetFragment.setDirty(binding.indexInTargetState, true)
     }
 
+    /**
+     * Called from [AdaptiveFragment.addActual] when a [actual] is true.
+     */
+    fun addActual(fragment: AdaptiveFragment) {
+
+    }
+
+    /**
+     * Called from [AdaptiveFragment.removeActual] when a [actual] is true.
+     */
+    fun removeActual(fragment: AdaptiveFragment) {
+
+    }
 }

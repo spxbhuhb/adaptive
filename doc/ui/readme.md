@@ -60,6 +60,7 @@
 Producers
 
 - [mediaMetrics](./basic-producers.md#mediametrics)
+- [hover](./basic-producers.md#hover)
 
 Foundation Fragments
 

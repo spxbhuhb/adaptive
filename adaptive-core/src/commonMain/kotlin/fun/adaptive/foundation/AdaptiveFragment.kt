@@ -71,6 +71,11 @@ abstract class AdaptiveFragment(
 
     var producers: MutableList<AdaptiveProducer<*>>? = null
 
+    /**
+     * Producers that are interested in [addActual] and [removeActual].
+     */
+    var actualProducers : MutableList<AdaptiveProducer<*>>? = null
+
     var bindings: MutableList<AdaptiveStateVariableBinding<*>>? = null
 
     val instructions: Array<out AdaptiveInstruction>
@@ -123,12 +128,14 @@ abstract class AdaptiveFragment(
      */
     open fun addActual(fragment: AdaptiveFragment, direct: Boolean?) {
         parent?.addActual(fragment, direct) ?: adapter.addActualRoot(fragment)
+        actualProducers?.forEach { it.addActual(fragment) }
     }
 
     /**
      * See [addActual].
      */
     open fun removeActual(fragment: AdaptiveFragment, direct: Boolean?) {
+        actualProducers?.forEach { it.removeActual(fragment) }
         parent?.removeActual(fragment, direct) ?: adapter.removeActualRoot(fragment)
     }
 
@@ -253,7 +260,7 @@ abstract class AdaptiveFragment(
     // Producer support
     // --------------------------------------------------------------------------
 
-    fun addProducer(producer: AdaptiveProducer<*>) {
+    open fun addProducer(producer: AdaptiveProducer<*>) {
         if (trace) trace("before-Add-Producer", "producer", producer)
 
         val producers = producers ?: mutableListOf<AdaptiveProducer<*>>().also { producers = it }
@@ -271,11 +278,18 @@ abstract class AdaptiveFragment(
         // state variable have to be is patched
         setDirty(producer.binding.indexInTargetState, false)
 
+        if (producer.actual) {
+            actualProducers ?: mutableListOf<AdaptiveProducer<*>>().also { actualProducers = it }
+                .add(producer)
+        }
+
         if (trace) trace("after-Add-Producer", "producer", producer)
     }
 
-    fun removeProducer(producer: AdaptiveProducer<*>) {
+    open fun removeProducer(producer: AdaptiveProducer<*>) {
         if (trace) trace("before-Remove-Producer", "producer", producer)
+
+        if (producer.actual) actualProducers?.remove(producer)
 
         requireNotNull(producers).remove(producer)
         producer.stop()

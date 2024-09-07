@@ -20,3 +20,27 @@ fun mediaSize() {
 
 }
 ```
+
+## hover
+
+Produces:
+
+- `true` if the mouse hovers over any of the children of the fragment
+- `false` when the mouse is outside all children of the fragment
+
+```kotlin
+@Adaptive
+fun hoverMain() {
+    val hover = hover()
+
+    column {
+        box {
+            width { 32.dp } .. height { 32.dp }
+            if (hover) backgroundColor(0xff0000) else backgroundColor(0x00ff00)
+        }
+
+        if (hover) text("hover")
+    }
+
+}
+```

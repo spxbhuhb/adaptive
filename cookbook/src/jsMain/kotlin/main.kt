@@ -45,6 +45,7 @@ import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.hover.hoverMain
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.platform.withJsResources
 import kotlinx.browser.window
@@ -63,7 +64,7 @@ fun main() {
 
         val localBackend = backend { auto() }
 
-        withWebSocketTransport(window.location.origin, serviceImplFactory = localBackend)
+        // withWebSocketTransport(window.location.origin, serviceImplFactory = localBackend)
 
         browser(CanvasFragmentFactory, SvgFragmentFactory, backend = localBackend) { adapter ->
 
@@ -78,7 +79,10 @@ fun main() {
 //                maxHeight .. padding { 16.dp } .. gap { 16.dp }
 //                rowTemplate(40.dp, 1.fr)
 
-                iotMain()
+//                iotMain()
+              box {
+                  hoverMain()
+              }
 
 //            projectWizardMain()
 
