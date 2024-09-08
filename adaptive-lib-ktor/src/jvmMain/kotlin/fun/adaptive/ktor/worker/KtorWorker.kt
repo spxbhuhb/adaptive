@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit
 class KtorWorker : WorkerImpl<KtorWorker> {
 
     val port by setting<Int> { "KTOR_PORT" } default 8080
-    val wireFormat by setting<String> { "KTOR_WIREFORMAT" } default "proto"
+    val wireFormat by setting<String> { "KTOR_WIREFORMAT" } default "json"
     val staticResourcesPath by setting<String> { "KTOR_STATIC_FILES" } default "./var/static"
     val serviceWebSocketRoute by setting<String> { "KTOR_SERVICE_WEBSOCKET_ROUTE" } default "/adaptive/service-ws"
     val clientIdRoute by setting<String> { "KTOR_CLIENT_ID_ROUTE" } default "/adaptive/client-id"

@@ -8,7 +8,7 @@ import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.ktor.ktor
-import `fun`.adaptive.ktor.withWebSocketTransport
+import `fun`.adaptive.ktor.api.withWebSocketTransport
 import `fun`.adaptive.lib.auth.auth
 import `fun`.adaptive.lib.auth.crypto.BCrypt
 import `fun`.adaptive.reflect.CallSiteName

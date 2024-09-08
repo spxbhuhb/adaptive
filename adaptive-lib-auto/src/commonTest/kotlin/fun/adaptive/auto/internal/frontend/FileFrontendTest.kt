@@ -5,6 +5,7 @@ import `fun`.adaptive.auto.backend.TestData
 import `fun`.adaptive.utility.ensureTestPath
 import `fun`.adaptive.utility.testPath
 import `fun`.adaptive.utility.waitForReal
+import `fun`.adaptive.wireformat.api.Json
 import kotlinx.coroutines.test.runTest
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
@@ -29,13 +30,13 @@ class FileFrontendTest {
             with(PropertyTestSetup(testData)) {
 
                 val f1 = AdatClassFrontend(b1, wireFormat, testData, null, null, null).also { b1.frontEnd = it }
-                b2.frontEnd = FileFrontend(b2, wireFormat, null, null, null, null, json, path)
+                b2.frontEnd = FileFrontend(b2, wireFormat, null, null, null, null, Json, path)
 
                 connect()
 
                 waitForReal(2.seconds) { SystemFileSystem.exists(path) }
 
-                fun read() = FileFrontend.read(path, json).second as TestData
+                fun read() = FileFrontend.read(path, Json).second as TestData
 
                 assertEquals(testData, read())
 

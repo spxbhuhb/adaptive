@@ -11,7 +11,6 @@ import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.wireformat.api.Json
 import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,15 +27,13 @@ class PropertyTestSetup(
     val logger1 = getLogger("logger.1").enableFine()
     val logger2 = getLogger("logger.2").enableFine()
 
-    val protobuf = Proto
-    val json = Json
     val metadata = TestData.adatMetadata
     val wireFormat = TestData.adatWireFormat
 
-    val c1: BackendContext = BackendContext(AutoHandle(gid, 1), scope, logger1, protobuf, metadata, wireFormat, LamportTimestamp(1, 1))
+    val c1: BackendContext = BackendContext(AutoHandle(gid, 1), scope, logger1, Proto, metadata, wireFormat, LamportTimestamp(1, 1))
     val b1 = PropertyBackend(c1, itemId, null, initialData)
 
-    val c2: BackendContext = BackendContext(AutoHandle(gid, 2), scope, logger2, protobuf, metadata, wireFormat, LamportTimestamp(2, 0))
+    val c2: BackendContext = BackendContext(AutoHandle(gid, 2), scope, logger2, Proto, metadata, wireFormat, LamportTimestamp(2, 0))
     val b2 = PropertyBackend(c2, itemId, null, null)
 
     fun connect() {

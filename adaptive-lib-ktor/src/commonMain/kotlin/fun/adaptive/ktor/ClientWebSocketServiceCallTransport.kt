@@ -1,5 +1,7 @@
 package `fun`.adaptive.ktor
 
+import `fun`.adaptive.ktor.api.toHttp
+import `fun`.adaptive.ktor.api.toWs
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.defaultServiceImplFactory
 import `fun`.adaptive.service.factory.ServiceImplFactory

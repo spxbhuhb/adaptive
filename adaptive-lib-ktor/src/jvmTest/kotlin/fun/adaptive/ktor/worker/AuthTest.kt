@@ -17,7 +17,7 @@ import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.backend
-import `fun`.adaptive.ktor.withWebSocketTransport
+import `fun`.adaptive.ktor.api.withWebSocketTransport
 import `fun`.adaptive.lib.auth.store.CredentialTable
 import `fun`.adaptive.lib.auth.store.PrincipalTable
 import `fun`.adaptive.service.getService

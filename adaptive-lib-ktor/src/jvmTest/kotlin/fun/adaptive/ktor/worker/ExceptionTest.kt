@@ -14,7 +14,7 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.backend
-import `fun`.adaptive.ktor.withWebSocketTransport
+import `fun`.adaptive.ktor.api.withWebSocketTransport
 import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.service.transport.ServiceCallException

@@ -2,8 +2,9 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package `fun`.adaptive.ktor
+package `fun`.adaptive.ktor.api
 
+import `fun`.adaptive.ktor.ClientWebSocketServiceCallTransport
 import `fun`.adaptive.service.defaultServiceCallTransport
 import `fun`.adaptive.service.defaultServiceImplFactory
 import `fun`.adaptive.service.factory.ServiceImplFactory
