@@ -5,7 +5,6 @@ import `fun`.adaptive.auto.internal.backend.BackendBase
 import `fun`.adaptive.auto.internal.backend.CollectionBackendBase
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.model.MetadataId
 
 @Adat
 class AutoAdd(
@@ -16,9 +15,9 @@ class AutoAdd(
     val payload: ByteArray
 ) : AutoOperation() {
 
-    override fun apply(backend: BackendBase, commit: Boolean, distribute: Boolean) {
+    override fun apply(backend: BackendBase, commit: Boolean) {
         backend as CollectionBackendBase
-        backend.add(this, commit, distribute)
+        backend.add(this, commit)
     }
 
 }

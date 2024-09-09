@@ -7,6 +7,6 @@ abstract class AutoOperation {
 
     abstract val timestamp: LamportTimestamp
 
-    abstract fun apply(backend: BackendBase, commit: Boolean, distribute: Boolean)
+    abstract fun apply(backend: BackendBase, commit: Boolean)
 
 }

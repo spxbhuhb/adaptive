@@ -12,7 +12,7 @@ class AutoMove(
     val newParent: ItemId
 ) : AutoOperation() {
 
-    override fun apply(backend: BackendBase, commit: Boolean, distribute: Boolean) {
+    override fun apply(backend: BackendBase, commit: Boolean) {
         //backend.move(timestamp, item, newParent)
     }
 

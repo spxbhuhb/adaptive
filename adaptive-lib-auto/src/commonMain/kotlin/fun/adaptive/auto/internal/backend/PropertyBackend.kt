@@ -52,18 +52,18 @@ class PropertyBackend(
         val payload = encode(property)
 
         val operation = AutoModify(context.nextTime(), itemId, listOf(AutoPropertyValue(propertyName, payload)))
-        trace { "FE -> BE  $propertyName=$propertyValue .. commit true .. distribute true .. $operation" }
+        trace { "FE -> BE  $propertyName=$propertyValue .. commit true $operation" }
 
         changes[index] = Change(operation.timestamp, payload)
 
-        close(operation, commit = true, distribute = true)
+        close(operation, commit = true)
     }
 
     // --------------------------------------------------------------------------------
     // Operations from peers
     // --------------------------------------------------------------------------------
 
-    override fun modify(operation: AutoModify, commit: Boolean, distribute: Boolean) {
+    override fun modify(operation: AutoModify, commit: Boolean) {
         var changed = false
 
         for (change in operation.values) {
@@ -92,8 +92,8 @@ class PropertyBackend(
         }
 
         if (changed) {
-            trace { "BE -> BE  commit=$commit distribute=$distribute op=$operation" }
-            close(operation, commit, distribute)
+            trace { "BE -> BE  commit=$commit .. op=$operation" }
+            close(operation, commit)
         } else {
             trace { "BE -> BE  SKIP   op=$operation" }
         }

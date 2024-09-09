@@ -16,8 +16,8 @@ class AutoModify(
     val values: List<AutoPropertyValue>
 ) : AutoOperation() {
 
-    override fun apply(backend: BackendBase, commit: Boolean, distribute: Boolean) {
-        backend.modify(this, commit, distribute)
+    override fun apply(backend: BackendBase, commit: Boolean) {
+        backend.modify(this, commit)
     }
 
 }

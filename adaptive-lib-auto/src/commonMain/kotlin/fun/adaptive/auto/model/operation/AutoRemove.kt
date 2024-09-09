@@ -12,9 +12,9 @@ class AutoRemove(
     val itemIds: Set<ItemId>
 ) : AutoOperation() {
 
-    override fun apply(backend: BackendBase, commit: Boolean, distribute: Boolean) {
+    override fun apply(backend: BackendBase, commit: Boolean) {
         backend as CollectionBackendBase
-        backend.remove(this, commit, distribute)
+        backend.remove(this, commit)
     }
 
 }

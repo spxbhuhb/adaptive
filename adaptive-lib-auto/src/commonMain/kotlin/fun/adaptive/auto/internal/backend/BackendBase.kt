@@ -39,18 +39,18 @@ abstract class BackendBase(
 
     override fun send(operation: AutoOperation) {
         //  When the backend acts as connector, send simply has to call receive.
-        receive(operation, false)
+        receive(operation)
     }
 
-    fun receive(operation: AutoOperation, distribute: Boolean) {
-        trace { "distribute=$distribute op=$operation" }
+    fun receive(operation: AutoOperation) {
+        trace { operation.toString() }
 
-        operation.apply(this, commit = true, distribute)
+        operation.apply(this, commit = true)
 
         context.receive(operation.timestamp)
     }
 
-    abstract fun modify(operation: AutoModify, commit: Boolean, distribute: Boolean)
+    abstract fun modify(operation: AutoModify, commit: Boolean)
 
     // --------------------------------------------------------------------------------
     // Peer synchronization
@@ -92,19 +92,18 @@ abstract class BackendBase(
     // Utility, common
     // --------------------------------------------------------------------------------
 
-    fun close(operation: AutoOperation, commit: Boolean, distribute: Boolean) {
+    fun close(operation: AutoOperation, commit: Boolean) {
 
         if (commit) {
             frontEnd?.commit()
             trace { "==== commit ====" }
         }
 
-        if (distribute) {
-            for (connector in context.connectors) {
-                connector.send(operation)
-            }
+        for (connector in context.connectors) {
+            // do not send operations back to the peer that created them
+            if (connector.peerId == operation.timestamp.peerId) continue
+            connector.send(operation)
         }
-
     }
 
     fun wireFormatFor(name: String?) =

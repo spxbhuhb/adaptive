@@ -29,7 +29,7 @@ abstract class CollectionBackendBase(
     // Operations from the frontend
     // --------------------------------------------------------------------------------
 
-    fun add(item: AdatClass<*>, parentItemId: ItemId?, commit: Boolean, distribute: Boolean) {
+    fun add(item: AdatClass<*>, parentItemId: ItemId?, commit: Boolean) {
         val itemId = context.nextTime()
         addItem(itemId, parentItemId, item)
 
@@ -43,26 +43,26 @@ abstract class CollectionBackendBase(
             encode(wireFormatName, item.toArray()) // FIXME clean up the array/adat class confusion
         )
 
-        trace { "FE -> BE  itemId=$itemId .. commit true .. distribute true .. $operation" }
+        trace { "FE -> BE  itemId=$itemId .. commit true .. $operation" }
 
-        close(operation, commit, distribute)
+        close(operation, commit)
     }
 
-    abstract fun remove(itemId: ItemId, commit: Boolean, distribute: Boolean)
+    abstract fun remove(itemId: ItemId, commit: Boolean)
 
-    abstract fun removeAll(itemIds: Set<ItemId>, commit: Boolean, distribute: Boolean)
+    abstract fun removeAll(itemIds: Set<ItemId>, commit: Boolean)
 
     // --------------------------------------------------------------------------------
     // Operations from peers
     // --------------------------------------------------------------------------------
 
-    abstract fun empty(operation: AutoEmpty, commit: Boolean, distribute: Boolean)
+    abstract fun empty(operation: AutoEmpty, commit: Boolean)
 
-    abstract fun syncEnd(operation: AutoSyncEnd, commit: Boolean, distribute: Boolean)
+    abstract fun syncEnd(operation: AutoSyncEnd, commit: Boolean)
 
-    abstract fun add(operation: AutoAdd, commit: Boolean, distribute: Boolean)
+    abstract fun add(operation: AutoAdd, commit: Boolean)
 
-    abstract fun remove(operation: AutoRemove, commit: Boolean, distribute: Boolean)
+    abstract fun remove(operation: AutoRemove, commit: Boolean)
 
     // --------------------------------------------------------------------------------
     // Helpers
@@ -76,11 +76,11 @@ abstract class CollectionBackendBase(
     }
 
     @CallSiteName
-    fun closeListOp(operation: AutoOperation, itemIds: Set<ItemId>, commit: Boolean, distribute: Boolean, callSiteName: String = "") {
+    fun closeListOp(operation: AutoOperation, itemIds: Set<ItemId>, commit: Boolean, callSiteName: String = "") {
         if (context.time < operation.timestamp) {
             context.receive(operation.timestamp)
-            trace(callSiteName) { "BE -> BE  itemIds=${itemIds} .. commit $commit .. distribute $distribute .. $operation" }
-            close(operation, commit, distribute)
+            trace(callSiteName) { "BE -> BE  itemIds=${itemIds} .. commit $commit .. $operation" }
+            close(operation, commit)
         } else {
             trace(callSiteName) { "BE -> BE  SKIP  $operation" }
         }

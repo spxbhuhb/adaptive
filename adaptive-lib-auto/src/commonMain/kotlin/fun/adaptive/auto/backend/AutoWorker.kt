@@ -64,7 +64,7 @@ class AutoWorker : WorkerImpl<AutoWorker> {
 
     fun receive(handle: AutoHandle, operation: AutoOperation) {
         backendLock.use {
-            backends[handle.globalId]?.receive(operation, false)
+            backends[handle.globalId]?.receive(operation)
         }
     }
 

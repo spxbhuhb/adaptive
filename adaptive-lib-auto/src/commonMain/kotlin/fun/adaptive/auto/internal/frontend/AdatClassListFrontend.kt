@@ -42,7 +42,7 @@ open class AdatClassListFrontend<A : AdatClass<A>>(
     }
 
     fun add(item: A) {
-        backend.add(item, null, true, true)
+        backend.add(item, null, true)
     }
 
     operator fun minusAssign(item: A) {
@@ -50,11 +50,11 @@ open class AdatClassListFrontend<A : AdatClass<A>>(
     }
 
     fun remove(itemId: ItemId) {
-        backend.remove(itemId, true, true)
+        backend.remove(itemId, true)
     }
 
     fun removeAll(itemIds: Set<ItemId>) {
-        backend.removeAll(itemIds, true, true)
+        backend.removeAll(itemIds, true)
     }
 
     fun modify(itemId: ItemId, propertyName: String, propertyValue: Any?) {

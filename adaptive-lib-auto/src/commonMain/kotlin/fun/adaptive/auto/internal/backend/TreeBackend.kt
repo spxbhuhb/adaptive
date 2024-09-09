@@ -22,17 +22,17 @@ class TreeBackend(
     // Operations from the frontend
     // --------------------------------------------------------------------------------
 
-    override fun remove(itemId: ItemId, commit: Boolean, distribute: Boolean) {
+    override fun remove(itemId: ItemId, commit: Boolean) {
         tree.afterApply(itemId, tree.removedNodes.id, Int.MAX_VALUE)
         items -= itemId
 
         val operation = AutoRemove(context.nextTime(), setOf(itemId))
-        trace { "FE -> BE  itemId=$itemId .. commit true .. distribute true .. $operation" }
+        trace { "FE -> BE  itemId=$itemId .. commit true .. $operation" }
 
-        close(operation, commit, distribute)
+        close(operation, commit)
     }
 
-    override fun removeAll(itemIds: Set<ItemId>, commit: Boolean, distribute: Boolean) {
+    override fun removeAll(itemIds: Set<ItemId>, commit: Boolean) {
 
         for (itemId in itemIds) {
             tree.afterApply(itemId, tree.removedNodes.id, Int.MAX_VALUE, commit = false)
@@ -42,9 +42,9 @@ class TreeBackend(
         tree.recomputeParentsAndChildren()
 
         val operation = AutoRemove(context.nextTime(), itemIds)
-        trace { "FE -> BE  commit true .. distribute true .. $operation" }
+        trace { "FE -> BE  commit true .. $operation" }
 
-        close(operation, commit, distribute)
+        close(operation, commit)
     }
 
     override fun modify(itemId: ItemId, propertyName: String, propertyValue: Any?) {
@@ -64,18 +64,18 @@ class TreeBackend(
     // Incoming from other backends
     // --------------------------------------------------------------------------------
 
-    override fun add(operation: AutoAdd, commit: Boolean, distribute: Boolean) {
-        trace { "commit=$commit distribute=$distribute op=$operation" }
+    override fun add(operation: AutoAdd, commit: Boolean) {
+        trace { "commit=$commit op=$operation" }
 
         checkNotNull(operation.parentItemId) { "tree items must have a parent" }
 
         addItem(operation.itemId, operation.parentItemId, context.wireFormatProvider.decode(operation.payload, context.defaultWireFormat))
 
-        closeListOp(operation, setOf(operation.itemId), commit, distribute)
+        closeListOp(operation, setOf(operation.itemId), commit)
     }
 
-    override fun remove(operation: AutoRemove, commit: Boolean, distribute: Boolean) {
-        trace { "commit=$commit distribute=$distribute op=$operation" }
+    override fun remove(operation: AutoRemove, commit: Boolean) {
+        trace { "commit=$commit op=$operation" }
 
         for (itemId in operation.itemIds) {
             tree.afterApply(itemId, tree.removedNodes.id, Int.MAX_VALUE, commit = false)
@@ -84,14 +84,14 @@ class TreeBackend(
 
         tree.recomputeParentsAndChildren()
 
-        closeListOp(operation, operation.itemIds, commit, distribute)
+        closeListOp(operation, operation.itemIds, commit)
     }
 
-    override fun modify(operation: AutoModify, commit: Boolean, distribute: Boolean) {
+    override fun modify(operation: AutoModify, commit: Boolean) {
         // FIXME check if the item has been removed
         val item = items[operation.itemId]
         if (item != null) {
-            item.modify(operation, commit, distribute)
+            item.modify(operation, commit)
         } else {
             // This is a tricky situation, we've got a modification, but we don't have the
             // item yet. May happen if the item is updated during synchronization. In this
@@ -101,12 +101,12 @@ class TreeBackend(
         }
     }
 
-    override fun empty(operation: AutoEmpty, commit: Boolean, distribute: Boolean) {
-        closeListOp(operation, emptySet(), commit, distribute)
+    override fun empty(operation: AutoEmpty, commit: Boolean) {
+        closeListOp(operation, emptySet(), commit)
     }
 
-    override fun syncEnd(operation: AutoSyncEnd, commit: Boolean, distribute: Boolean) {
-        afterSync.forEach { modify(it, commit, distribute) }
+    override fun syncEnd(operation: AutoSyncEnd, commit: Boolean) {
+        afterSync.forEach { modify(it, commit) }
         afterSync.clear()
         context.receive(operation.timestamp)
     }

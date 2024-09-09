@@ -3,7 +3,6 @@ package `fun`.adaptive.auto.model.operation
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.auto.internal.backend.BackendBase
 import `fun`.adaptive.auto.internal.backend.CollectionBackendBase
-import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 
 @Adat
@@ -11,9 +10,9 @@ class AutoEmpty(
     override val timestamp: LamportTimestamp
 ) : AutoOperation() {
 
-    override fun apply(backend: BackendBase, commit: Boolean, distribute: Boolean) {
+    override fun apply(backend: BackendBase, commit: Boolean) {
         backend as CollectionBackendBase
-        backend.empty(this, commit, distribute)
+        backend.empty(this, commit)
     }
 
 }

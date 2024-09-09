@@ -8,7 +8,7 @@ class DirectConnector(
 ) : AutoConnector(peer.peerId) {
 
     override fun send(operation: AutoOperation) {
-        peer.receive(operation, false)
+        peer.receive(operation)
     }
 
     override suspend fun disconnect() {
