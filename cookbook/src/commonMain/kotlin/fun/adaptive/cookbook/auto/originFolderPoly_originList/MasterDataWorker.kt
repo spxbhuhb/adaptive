@@ -1,6 +1,6 @@
-package `fun`.adaptive.cookbook.auto.originFolder_originList
+package `fun`.adaptive.cookbook.auto.originFolderPoly_originList
 
-import `fun`.adaptive.auto.api.originFolder
+import `fun`.adaptive.auto.api.originFolderPoly
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.auto.model.AutoConnectInfo
@@ -14,7 +14,7 @@ import kotlinx.io.files.Path
 
 /**
  * A worker that creates a permanent, folder-persisted auto list
- * of [MasterDataItem] instances.
+ * of polymorphic instances.
  */
 class MasterDataWorker(
     path: String,
@@ -38,9 +38,9 @@ class MasterDataWorker(
 
     override suspend fun run() {
 
-        masterDataOrNull = originFolder(
+        masterDataOrNull = originFolderPoly(
             autoWorker,
-            MasterDataItem,
+            StringItem,
             Json,
             Path(path),
             // This function generates the name of the files.

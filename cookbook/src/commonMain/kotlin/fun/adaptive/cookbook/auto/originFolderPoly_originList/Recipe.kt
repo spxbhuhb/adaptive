@@ -1,8 +1,10 @@
-package `fun`.adaptive.cookbook.auto.originFolder_originList
+package `fun`.adaptive.cookbook.auto.originFolderPoly_originList
 
+import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.auto.api.auto
-import `fun`.adaptive.auto.api.originList
+import `fun`.adaptive.auto.api.originListPoly
 import `fun`.adaptive.auto.backend.AutoWorker
+import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.worker
@@ -11,6 +13,8 @@ import `fun`.adaptive.cookbook.shared.ClientServerRecipe
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.waitFor
+import `fun`.adaptive.wireformat.WireFormatRegistry
+import kotlinx.datetime.Clock.System.now
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -21,10 +25,18 @@ import kotlin.time.Duration.Companion.seconds
  */
 class Recipe : ClientServerRecipe() {
 
+    companion object {
+        init {
+            WireFormatRegistry += StringItem
+            WireFormatRegistry += IntItem
+            WireFormatRegistry += InstantItem
+        }
+    }
+
     override val serverBackend = backend {
         auto()
         service { DataService() }
-        worker { MasterDataWorker("./cookbook/var/auto/originFolder_originList", trace = true) }
+        worker { MasterDataWorker("./cookbook/var/auto/originFolderPoly_originList", trace = true) }
     }
 
     override val clientBackend = backend {
@@ -50,7 +62,7 @@ class Recipe : ClientServerRecipe() {
         // but from the application point of view it is permanent
         // as it is registered with `AutoWorker`.
 
-        val data = originList(clientBackend.firstImpl<AutoWorker>(), MasterDataItem, handle = connectInfo.connectingHandle, trace = true)
+        val data = originListPoly(clientBackend.firstImpl<AutoWorker>(), StringItem, handle = connectInfo.connectingHandle, trace = true)
 
         // Connect to the origin list on the server side. This call
         // will start synchronization between the two list. As the client
@@ -60,7 +72,12 @@ class Recipe : ClientServerRecipe() {
 
         // Add an item on the client side
 
-        data.frontend.add(MasterDataItem(UUID(), "record-name-1"))
+        @Suppress("UNCHECKED_CAST")
+        val fe = data.frontend as AdatClassListFrontend<AdatClass<*>>
+
+        fe.add(StringItem(UUID(), "record-name-1"))
+        fe.add(IntItem(UUID(), 12))
+        fe.add(InstantItem(UUID(), now()))
 
         // Wait for sync on the server side. Typically, we don't wait this way
         // but for the cookbook recipe it is needed so the program has time

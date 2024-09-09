@@ -60,7 +60,10 @@ fun originFolderPoly(
         trace
     ) {
 
-        backend = SetBackend(context)
+        backend = SetBackend(
+            context,
+            FolderFrontend.load(context, path, wireFormatProvider)
+        )
 
         frontend = FolderFrontend(
             backend,
