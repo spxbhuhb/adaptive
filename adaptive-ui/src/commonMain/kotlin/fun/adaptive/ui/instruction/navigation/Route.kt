@@ -5,7 +5,6 @@
 package `fun`.adaptive.ui.instruction.navigation
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.*
 import `fun`.adaptive.ui.fragment.structural.AuiSlot
@@ -18,7 +17,7 @@ import `fun`.adaptive.ui.fragment.structural.AuiSlot
 class Route(
     @DetachName val segment: String?,
     @AdaptiveDetach val detachFun: (detachFun: DetachHandler) -> Unit
-) : AdaptiveInstruction, DetachHandler, AdatClass<Route> {
+) : AdaptiveInstruction, DetachHandler {
 
     var slot: AuiSlot? = null
 

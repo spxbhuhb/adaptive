@@ -2,6 +2,7 @@ package `fun`.adaptive.adat.validation
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.api.properties
+import `fun`.adaptive.adat.api.validate
 import `fun`.adaptive.adat.descriptor.kotlin.integer.IntMaximum
 import `fun`.adaptive.adat.descriptor.kotlin.integer.IntMinimum
 import kotlin.test.Test

@@ -10,7 +10,7 @@ import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 
-class AutoInstance<A : AdatClass<A>>(
+class AutoInstance<A : AdatClass>(
     binding: AdaptiveStateVariableBinding<A>,
     connect: suspend () -> AutoConnectInfo,
     val onCommit: ((newValue: A) -> Unit)?,

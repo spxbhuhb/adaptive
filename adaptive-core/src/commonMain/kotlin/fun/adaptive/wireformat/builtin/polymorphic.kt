@@ -16,14 +16,14 @@ class PolymorphicWireFormat<A> : WireFormat<A> {
 
     @Suppress("UNCHECKED_CAST")
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: A): WireFormatEncoder =
-        encoder.rawPolymorphic(value, (value as AdatClass<*>).adatCompanion.adatWireFormat as WireFormat<A>)
+        encoder.rawPolymorphic(value, (value as AdatClass).adatCompanion.adatWireFormat as WireFormat<A>)
 
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): A =
         decoder !!.rawPolymorphic(source)
 
     @Suppress("UNCHECKED_CAST")
     override fun wireFormatEncode(encoder: WireFormatEncoder, fieldNumber: Int, fieldName: String, value: A?) =
-        encoder.polymorphicOrNull(fieldNumber, fieldName, value, (value as AdatClass<*>).adatCompanion.adatWireFormat as WireFormat<A>)
+        encoder.polymorphicOrNull(fieldNumber, fieldName, value, (value as AdatClass).adatCompanion.adatWireFormat as WireFormat<A>)
 
     override fun <ST> wireFormatDecode(decoder: WireFormatDecoder<ST>, fieldNumber: Int, fieldName: String) =
         decoder.polymorphicOrNull<A>(fieldNumber, fieldName)

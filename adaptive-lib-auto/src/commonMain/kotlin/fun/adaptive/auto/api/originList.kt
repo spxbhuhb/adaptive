@@ -35,7 +35,7 @@ import `fun`.adaptive.utility.UUID
  * @return   An [OriginBase] for this auto list. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  */
-fun <A : AdatClass<A>> originList(
+fun <A : AdatClass> originList(
     worker: AutoWorker,
     companion: AdatCompanion<A>,
     serviceContext: ServiceContext? = null,
@@ -58,7 +58,6 @@ fun <A : AdatClass<A>> originList(
 
         frontend = AdatClassListFrontend(
             backend,
-            companion,
             onListCommit = onListCommit,
             onItemCommit = onItemCommit
         )

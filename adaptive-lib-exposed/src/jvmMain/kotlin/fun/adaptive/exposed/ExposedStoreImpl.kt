@@ -12,7 +12,7 @@ import org.jetbrains.exposed.sql.statements.InsertStatement
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.jetbrains.exposed.sql.transactions.transaction
 
-interface ExposedStoreImpl<A : AdatClass<A>, T : ExposedStoreImpl<A, T>> : StoreImpl<T> {
+interface ExposedStoreImpl<A : AdatClass, T : ExposedStoreImpl<A, T>> : StoreImpl<T> {
 
     override fun create() {
         if (this is Table) {

@@ -34,12 +34,12 @@ import `fun`.adaptive.foundation.producer.Producer
 @Producer
 fun autoListPoly(
     companion: AdatCompanion<*>,
-    onListCommit: ((newValue: List<AdatClass<*>>) -> Unit)? = null,
-    onItemCommit: ((item: AdatClass<*>) -> Unit)? = null,
-    binding: AdaptiveStateVariableBinding<List<AdatClass<*>>>? = null,
+    onListCommit: ((newValue: List<AdatClass>) -> Unit)? = null,
+    onItemCommit: ((item: AdatClass) -> Unit)? = null,
+    binding: AdaptiveStateVariableBinding<List<AdatClass>>? = null,
     trace: Boolean = false,
     connect: suspend () -> AutoConnectInfo
-): List<AdatClass<*>>? {
+): List<AdatClass>? {
     checkNotNull(binding)
 
     val store = AutoListPoly(binding, connect, companion, onListCommit, onItemCommit, trace)

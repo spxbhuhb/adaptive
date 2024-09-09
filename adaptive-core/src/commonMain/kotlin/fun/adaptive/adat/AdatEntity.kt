@@ -6,7 +6,7 @@ package `fun`.adaptive.adat
 
 import `fun`.adaptive.utility.UUID
 
-interface AdatEntity<A : AdatClass<A>> : AdatClass<A> {
+interface AdatEntity<A : AdatClass> : AdatClass {
 
     val id: UUID<A>
 

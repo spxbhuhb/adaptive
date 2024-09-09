@@ -1,7 +1,7 @@
 package `fun`.adaptive.adat.store
 
 import `fun`.adaptive.adat.*
-import `fun`.adaptive.adat.api.validateForContext
+import `fun`.adaptive.adat.api.*
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
 import `fun`.adaptive.foundation.producer.Producer
@@ -23,7 +23,7 @@ import `fun`.adaptive.foundation.producer.Producer
  * @return   A validated copy of [source].
  */
 @Producer
-fun <A : AdatClass<A>> copyStore(
+fun <A : AdatClass> copyStore(
     onChange: ((newValue: A) -> Unit)? = null,
     binding: AdaptiveStateVariableBinding<A>? = null,
     source: () -> A
@@ -37,7 +37,7 @@ fun <A : AdatClass<A>> copyStore(
     return store.latestValue !!
 }
 
-class CopyStore<A : AdatClass<A>>(
+class CopyStore<A : AdatClass>(
     override val binding: AdaptiveStateVariableBinding<A>,
     initialValue: A,
     val onChange: ((newValue: A) -> Unit)?
@@ -57,7 +57,7 @@ class CopyStore<A : AdatClass<A>>(
         update(latestValue!!, path.toTypedArray(), value)
     }
 
-    override fun update(instance: AdatClass<*>, path: Array<String>, value: Any?) {
+    override fun update(instance: AdatClass, path: Array<String>, value: Any?) {
         val current = requireNotNull(latestValue)
         makeCopy(current, AdatChange(path.toList(), value), patch = true)
     }
@@ -87,7 +87,7 @@ class CopyStore<A : AdatClass<A>>(
 
 }
 
-fun <A : AdatClass<A>> A.replaceWith(newValue: A) {
+fun <A : AdatClass> A.replaceWith(newValue: A) {
     val store = requireNotNull(adatContext?.store) { "cannot replace the adat class without a store: ${getMetadata().name}" }
     require(store is CopyStore<*>) { "store is not a copy store" }
 

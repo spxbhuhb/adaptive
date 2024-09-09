@@ -20,7 +20,7 @@ import `fun`.adaptive.wireformat.WireFormatEncoder
  * class it is possible that the companion of that class is not loaded yet, resulting
  * the [toPropertyWireFormat] call to fail with a missing WireFormat.
  */
-class AdatClassWireFormat<A : AdatClass<A>>(
+class AdatClassWireFormat<A>(
     val companion: AdatCompanion<A>,
     val metadata: AdatClassMetadata
 ) : WireFormat<A> {
@@ -32,7 +32,7 @@ class AdatClassWireFormat<A : AdatClass<A>>(
 
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: A): WireFormatEncoder {
         for (propertyWireFormat in propertyWireFormats) {
-            propertyWireFormat.encode(encoder, value)
+            propertyWireFormat.encode(encoder, value as AdatClass)
         }
         return encoder
     }

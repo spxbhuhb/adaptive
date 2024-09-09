@@ -2,6 +2,7 @@ package `fun`.adaptive.adat.validation
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.api.properties
+import `fun`.adaptive.adat.api.validate
 import `fun`.adaptive.adat.descriptor.kotlin.string.StringBlank
 import `fun`.adaptive.adat.descriptor.kotlin.string.StringMaxLength
 import `fun`.adaptive.adat.descriptor.kotlin.string.StringMinLength

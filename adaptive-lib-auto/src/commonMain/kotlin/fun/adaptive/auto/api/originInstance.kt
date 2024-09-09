@@ -3,6 +3,7 @@ package `fun`.adaptive.auto.api
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.adat.api.validateForContext
+import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
@@ -33,7 +34,7 @@ import `fun`.adaptive.utility.UUID
  * @return   An [OriginBase] for this auto instance. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  */
-fun <A : AdatClass<A>> originInstance(
+fun <A : AdatClass> originInstance(
     worker: AutoWorker,
     initialValue: A,
     serviceContext: ServiceContext? = null,
@@ -44,6 +45,7 @@ fun <A : AdatClass<A>> originInstance(
 
     val companion = initialValue.adatCompanion
 
+    @Suppress("UNCHECKED_CAST")
     val origin = OriginBase<PropertyBackend, AdatClassFrontend<A>>(
         worker,
         handle,
@@ -61,7 +63,7 @@ fun <A : AdatClass<A>> originInstance(
 
         frontend = AdatClassFrontend(
             backend,
-            companion.adatWireFormat,
+            companion.adatWireFormat as AdatClassWireFormat<A>,
             initialValue,
             null, null
         ) {

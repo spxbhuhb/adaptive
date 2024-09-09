@@ -6,9 +6,17 @@ package `fun`.adaptive.wireformat
 
 import `fun`.adaptive.wireformat.json.JsonWireFormatDecoder
 import `fun`.adaptive.wireformat.json.JsonWireFormatEncoder
+import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatDecoder
+import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatEncoder
 
 fun <T> T.toJson(wireFormat: WireFormat<T>) =
     JsonWireFormatEncoder().rawInstance(this, wireFormat).pack()
 
 fun <T> ByteArray.fromJson(wireFormat: WireFormat<T>) =
     JsonWireFormatDecoder(this).asInstance(wireFormat)
+
+fun <T> T.toProto(wireFormat: WireFormat<T>) =
+    ProtoWireFormatEncoder().rawInstance(this, wireFormat).pack()
+
+fun <T> ByteArray.fromProto(wireFormat: WireFormat<T>) =
+    ProtoWireFormatDecoder(this).asInstance(wireFormat)

@@ -6,7 +6,6 @@ package `fun`.adaptive.foundation.binding
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.absolutePath
-import `fun`.adaptive.adat.store.CopyStore
 import `fun`.adaptive.foundation.AdaptiveFragment
 
 class AdaptiveStateVariableBinding<VT>(
@@ -52,7 +51,7 @@ class AdaptiveStateVariableBinding<VT>(
             val provider = sourceFragment.getThisClosureVariable(indexInSourceClosure)
 
             when {
-                provider is AdatClass<*> && provider.adatContext != null -> {
+                provider is AdatClass && provider.adatContext != null -> {
                     val absolutePath = provider.absolutePath() + path
                     provider.adatContext?.store?.update(provider, absolutePath.toTypedArray(), value)
                 }

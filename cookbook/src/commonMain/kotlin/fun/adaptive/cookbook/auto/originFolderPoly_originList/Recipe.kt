@@ -73,7 +73,7 @@ class Recipe : ClientServerRecipe() {
         // Add an item on the client side
 
         @Suppress("UNCHECKED_CAST")
-        val fe = data.frontend as AdatClassListFrontend<AdatClass<*>>
+        val fe = data.frontend as AdatClassListFrontend<AdatClass>
 
         fe.add(StringItem(UUID(), "record-name-1"))
         fe.add(IntItem(UUID(), 12))

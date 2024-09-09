@@ -76,7 +76,7 @@ open class AuiInput(
 
     fun touch(binding: AdaptiveStateVariableBinding<String>) {
         val instance = binding.stateVariableValue
-        if (instance == null || instance !is AdatClass<*>) return
+        if (instance == null || instance !is AdatClass) return
         val context = instance.adatContext ?: return
         val path = binding.path ?: return
         context.touch(path)

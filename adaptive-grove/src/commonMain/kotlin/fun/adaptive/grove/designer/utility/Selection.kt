@@ -24,7 +24,7 @@ fun selectionOf(event: UIEvent): Selection =
 class Selection(
     val items: List<AbstractAuiFragment<*>>,
     val revision: Int
-) : AdatClass<Selection> {
+) {
 
     fun isEmpty() = items.isEmpty()
 

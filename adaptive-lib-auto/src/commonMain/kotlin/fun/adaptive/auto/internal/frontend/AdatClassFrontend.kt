@@ -3,12 +3,12 @@ package `fun`.adaptive.auto.internal.frontend
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatContext
 import `fun`.adaptive.adat.api.validateForContext
-import `fun`.adaptive.adat.deepCopy
+import `fun`.adaptive.adat.api.deepCopy
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.model.ItemId
 
-open class AdatClassFrontend<A : AdatClass<A>>(
+open class AdatClassFrontend<A : AdatClass>(
     override val backend: PropertyBackend,
     val wireFormat: AdatClassWireFormat<A>,
     initialValue: A?,
@@ -40,7 +40,7 @@ open class AdatClassFrontend<A : AdatClass<A>>(
         backend.modify(backend.itemId, propertyName, propertyValue)
     }
 
-    override fun update(instance: AdatClass<*>, path: Array<String>, value: Any?) {
+    override fun update(instance: AdatClass, path: Array<String>, value: Any?) {
         // FIXME only single properties are handled b y AdatClassListFrontend
         check(path.size == 1) { "multi-level paths are not implemented yet" }
         modify(path[0], value)

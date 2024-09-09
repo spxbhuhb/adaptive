@@ -15,7 +15,7 @@ class TestClass(
     var someInt: Int,
     var someBoolean: Boolean,
     var someIntListSet: Set<List<Int>>
-) : AdatClass<TestClass> {
+) : AdatClass {
 
     constructor() : this(0, false, setOf())
 

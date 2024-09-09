@@ -3,6 +3,7 @@
  */
 package `fun`.adaptive.ui.fragment.structural
 
+import `fun`.adaptive.adat.api.copy
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding

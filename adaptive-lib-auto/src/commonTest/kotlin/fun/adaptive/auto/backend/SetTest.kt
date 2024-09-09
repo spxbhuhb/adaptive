@@ -37,12 +37,12 @@ class SetTest {
 
             val c1 = BackendContext(AutoHandle(gid, 1), scope, logger1, Proto, TestData.adatMetadata, TestData.adatWireFormat, LamportTimestamp(1, 0))
             val b1 = SetBackend(c1)
-            val f1 = AdatClassListFrontend<TestData>(b1, TestData, null, null)
+            val f1 = AdatClassListFrontend<TestData>(b1, null, null)
             b1.frontEnd = f1
 
             val c2 = BackendContext(AutoHandle(gid, 2), scope, logger2, Proto, TestData.adatMetadata, TestData.adatWireFormat, LamportTimestamp(2, 0))
             val b2 = SetBackend(c2)
-            val f2 = AdatClassListFrontend<TestData>(b2, TestData, null, null)
+            val f2 = AdatClassListFrontend<TestData>(b2, null, null)
             b2.frontEnd = f2
 
             b1.addPeer(DirectConnector(b2), c2.time)
@@ -85,12 +85,12 @@ class SetTest {
 
             val c1 = BackendContext(AutoHandle(gid, 1), scope, logger1, Proto, TestData.adatMetadata, TestData.adatWireFormat, LamportTimestamp(1, 0))
             val b1 = SetBackend(c1)
-            val f1 = AdatClassListFrontend<TestData>(b1, TestData, null, null)
+            val f1 = AdatClassListFrontend<TestData>(b1, null, null)
             b1.frontEnd = f1
 
             val c2 = BackendContext(AutoHandle(gid, 2), scope, logger2, Proto, TestData.adatMetadata, TestData.adatWireFormat, LamportTimestamp(2, 0))
             val b2 = SetBackend(c2)
-            val f2 = AdatClassListFrontend<TestData>(b2, TestData, null, null)
+            val f2 = AdatClassListFrontend<TestData>(b2, null, null)
             b2.frontEnd = f2
 
             f1.add(testData)
@@ -119,7 +119,7 @@ class SetTest {
         }
     }
 
-    suspend fun <A : AdatClass<A>> AdatClassListFrontend<A>.assertEquals(expected: AdatClassListFrontend<A>, condition: (() -> Boolean)? = null) {
+    suspend fun <A : AdatClass> AdatClassListFrontend<A>.assertEquals(expected: AdatClassListFrontend<A>, condition: (() -> Boolean)? = null) {
         waitForSync(this.backend, expected.backend, condition)
         this.backend.assertEquals(expected.backend)
         assertEquals(expected.values, this.values)

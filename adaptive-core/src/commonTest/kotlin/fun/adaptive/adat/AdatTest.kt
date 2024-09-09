@@ -4,6 +4,10 @@
 
 package `fun`.adaptive.adat
 
+import `fun`.adaptive.adat.api.copy
+import `fun`.adaptive.adat.api.diff
+import `fun`.adaptive.wireformat.toJson
+import `fun`.adaptive.wireformat.toProto
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -24,8 +28,8 @@ class AdatTest {
         assertEquals(t1, t1.copy())
         assertNotEquals(t1, TestClass(12, true, sl))
 
-        assertEquals(t1, TestClass.fromJson(t1.toJson()))
-        assertEquals(t1, TestClass.fromProto(t1.toProto()))
+        assertEquals(t1, TestClass.fromJson(t1.toJson(TestClass)))
+        assertEquals(t1, TestClass.fromProto(t1.toProto(TestClass)))
     }
 
     @Test

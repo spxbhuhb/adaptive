@@ -8,7 +8,7 @@ abstract class AdatDescriptor {
 
     abstract val metadata : AdatDescriptorMetadata
 
-    open fun validate(instance: AdatClass<*>, value : Any?, propertyMetadata : AdatPropertyMetadata, result : InstanceValidationResult) {
+    open fun validate(instance: AdatClass, value: Any?, propertyMetadata: AdatPropertyMetadata, result: InstanceValidationResult) {
         // non-constraint descriptors may leave this function empty
     }
 

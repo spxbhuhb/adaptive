@@ -13,4 +13,4 @@ class EmailQueueEntry(
     val tries: Int = 0,
     val lastTry: Instant? = Clock.System.now(),
     val lastFailMessage: String? = null
-) : AdatClass<EmailQueueEntry>
+)

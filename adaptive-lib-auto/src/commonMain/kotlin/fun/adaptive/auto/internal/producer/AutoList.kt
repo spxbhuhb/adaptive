@@ -9,7 +9,7 @@ import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 
-class AutoList<A : AdatClass<A>>(
+class AutoList<A : AdatClass>(
     binding: AdaptiveStateVariableBinding<List<A>>,
     connect: suspend () -> AutoConnectInfo,
     val companion: AdatCompanion<A>,
@@ -25,7 +25,6 @@ class AutoList<A : AdatClass<A>>(
 
         frontend = AdatClassListFrontend(
             backend,
-            companion,
             onListCommit = {
                 latestValue = it
                 onListCommit?.invoke(it)

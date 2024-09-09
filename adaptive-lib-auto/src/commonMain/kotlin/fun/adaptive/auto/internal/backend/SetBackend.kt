@@ -66,7 +66,7 @@ class SetBackend(
     override fun add(operation: AutoAdd, commit: Boolean) {
         trace { "commit=$commit op=$operation" }
 
-        addItem(operation.itemId, null, decode(operation.wireFormatName, operation.payload))
+        addItem(operation.itemId, null, decode(operation.wireFormatName, operation.payload) as AdatClass)
 
         closeListOp(operation, setOf(operation.itemId), commit)
     }
@@ -141,7 +141,7 @@ class SetBackend(
             val itemId = item.itemId
 
             if (itemId > syncFrom) {
-                connector.send(AutoAdd(itemId, itemId, item.wireFormatName,  null, encode(item.wireFormatName, item.values)))
+                connector.send(AutoAdd(itemId, itemId, item.wireFormatName, null, encode(item.wireFormatName, item.values)))
             } else {
                 item.syncPeer(connector, syncFrom)
             }
@@ -156,7 +156,7 @@ class SetBackend(
     // Utility, common
     // --------------------------------------------------------------------------------
 
-    override fun addItem(itemId: ItemId, parentItemId: ItemId?, value: AdatClass<*>) {
+    override fun addItem(itemId: ItemId, parentItemId: ItemId?, value: AdatClass) {
         // this is here for safety, theoretically the item id should never be in removals when addItem is called
         if (itemId in removals) return
 

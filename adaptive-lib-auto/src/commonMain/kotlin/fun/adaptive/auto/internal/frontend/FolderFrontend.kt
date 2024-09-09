@@ -1,7 +1,6 @@
 package `fun`.adaptive.auto.internal.frontend
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.BackendContext
@@ -14,9 +13,8 @@ import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 
-class FolderFrontend<A : AdatClass<A>>(
+class FolderFrontend<A : AdatClass>(
     backend: SetBackend,
-    companion: AdatCompanion<A>,
     onListCommit: ((newValue: List<A>) -> Unit)?,
     onItemCommit: ((newValue: List<A>, item: A) -> Unit)?,
     val wireFormatProvider: WireFormatProvider,
@@ -24,7 +22,6 @@ class FolderFrontend<A : AdatClass<A>>(
     val fileNameFun: (itemId: ItemId, item: A) -> String
 ) : AdatClassListFrontend<A>(
     backend,
-    companion,
     onListCommit,
     onItemCommit
 ) {

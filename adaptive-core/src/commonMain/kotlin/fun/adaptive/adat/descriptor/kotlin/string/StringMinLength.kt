@@ -13,7 +13,7 @@ class StringMinLength(
     val minimum : Int
 ) : AdatDescriptor() {
 
-    override fun validate(instance: AdatClass<*>, value : Any?, propertyMetadata : AdatPropertyMetadata, result : InstanceValidationResult) {
+    override fun validate(instance: AdatClass, value: Any?, propertyMetadata: AdatPropertyMetadata, result: InstanceValidationResult) {
         value as String
         if (value.length < minimum) propertyMetadata.fail(result, this)
     }

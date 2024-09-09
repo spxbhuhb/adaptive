@@ -42,8 +42,9 @@ abstract class WireFormatProvider {
         path.write(encoder().rawInstance(instance, wireFormat).pack())
     }
 
-    fun <A : AdatClass<A>> write(path: Path, instance: A) {
-        path.write(encoder().rawInstance(instance, instance.adatCompanion.adatWireFormat).pack())
+    fun <A : AdatClass> write(path: Path, instance: A) {
+        @Suppress("UNCHECKED_CAST")
+        path.write(encoder().rawInstance(instance, instance.adatCompanion.adatWireFormat as WireFormat<A>).pack())
     }
 
     fun <T> decode(byteArray: ByteArray, wireFormat: WireFormat<T>): T =

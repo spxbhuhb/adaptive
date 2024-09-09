@@ -19,7 +19,7 @@ import kotlin.test.assertNotNull
 private class SomeAdat(
     val s1: String,
     val soa: SomeOtherAdat
-) : AdatClass<SomeAdat>
+)
 
 @Adat
 private class SomeOtherAdat(

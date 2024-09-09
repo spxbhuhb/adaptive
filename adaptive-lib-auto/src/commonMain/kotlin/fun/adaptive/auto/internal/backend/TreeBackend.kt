@@ -69,7 +69,7 @@ class TreeBackend(
 
         checkNotNull(operation.parentItemId) { "tree items must have a parent" }
 
-        addItem(operation.itemId, operation.parentItemId, context.wireFormatProvider.decode(operation.payload, context.defaultWireFormat))
+        addItem(operation.itemId, operation.parentItemId, context.wireFormatProvider.decode(operation.payload, context.defaultWireFormat) as AdatClass)
 
         closeListOp(operation, setOf(operation.itemId), commit)
     }
@@ -138,7 +138,7 @@ class TreeBackend(
     // Utility, common
     // --------------------------------------------------------------------------------
 
-    override fun addItem(itemId: ItemId, parentItemId : ItemId?, value: AdatClass<*>) {
+    override fun addItem(itemId: ItemId, parentItemId: ItemId?, value: AdatClass) {
         checkNotNull(parentItemId) { "tree items must have a parent" }
         tree.addChildToParent(itemId, parentItemId)
         items += itemId to PropertyBackend(context, itemId, value.adatCompanion.wireFormatName, value.toArray())

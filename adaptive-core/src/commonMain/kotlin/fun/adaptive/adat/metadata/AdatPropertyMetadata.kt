@@ -21,7 +21,7 @@ class AdatPropertyMetadata(
     val flags: Int,
     val signature: String,
     val descriptors: List<AdatDescriptorMetadata> = emptyList(),
-) : AdatClass<AdatPropertyMetadata> {
+) : AdatClass {
 
     /**
      * True when the property is mutable:

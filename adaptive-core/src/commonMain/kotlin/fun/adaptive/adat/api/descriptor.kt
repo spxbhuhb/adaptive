@@ -10,26 +10,10 @@ import `fun`.adaptive.foundation.replacedByPlugin
  * Provide builder context for property descriptor builder.
  * See Adat documentation for more details.
  */
-fun AdatClass<*>.properties(buildFun : PropertiesBuilder.() -> Unit) {
+fun AdatClass.properties(buildFun: PropertiesBuilder.() -> Unit) {
     replacedByPlugin("", buildFun)
 }
 
-/**
- * Check if the property selected by [path] has any validation errors.
- *
- * This call is meaningful only after the `validation` function of the
- * Adat instance is called. Built-in producers such as `copyStore`, `autoInstance`
- * and `autoList` call `validate` automatically when the data changes.
- *
- * **TODO** Deep path support (AdatClass<*>.isValid)
- *
- * @return  true if the data is valid, false otherwise
- */
-fun AdatClass<*>.isValid(path : Array<String>) : Boolean {
-    check(path.size == 1) { "only simple paths are supported" }
-    val result = adatContext?.validationResult?.failedConstraints?.filter { it.property?.name == path[0] }
-    return (result == null || result.isEmpty())
-}
 
 /**
  * Check if the property has been touched by the user on the UI. Before a field
@@ -41,14 +25,14 @@ fun AdatClass<*>.isValid(path : Array<String>) : Boolean {
  *
  * @return  true if the field is touched, false otherwise
  */
-fun AdatClass<*>.isTouched(path : Array<String>) : Boolean =
+fun AdatClass.isTouched(path: Array<String>): Boolean =
     adatContext?.isTouched(path) == true
 
 /**
  * Validate the Adat instance and store the result in the context.
  * Create a new context if there is no context.
  */
-fun AdatClass<*>.validateForContext() : InstanceValidationResult {
+fun AdatClass.validateForContext(): InstanceValidationResult {
 
     val result = validate()
 

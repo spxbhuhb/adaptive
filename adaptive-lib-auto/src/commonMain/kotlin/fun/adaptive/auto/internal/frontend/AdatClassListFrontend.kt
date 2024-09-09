@@ -1,15 +1,13 @@
 package `fun`.adaptive.auto.internal.frontend
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.AdatContext
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.model.ItemId
 
-open class AdatClassListFrontend<A : AdatClass<A>>(
+open class AdatClassListFrontend<A : AdatClass>(
     override val backend: SetBackend,
-    val companion: AdatCompanion<A>,
     val onListCommit: ((newValue: List<A>) -> Unit)?,
     val onItemCommit: ((newValue: List<A>, item: A) -> Unit)?
 ) : CollectionFrontendBase() {
@@ -53,18 +51,14 @@ open class AdatClassListFrontend<A : AdatClass<A>>(
         backend.remove(itemId, true)
     }
 
-    fun removeAll(itemIds: Set<ItemId>) {
-        backend.removeAll(itemIds, true)
-    }
-
     fun modify(itemId: ItemId, propertyName: String, propertyValue: Any?) {
         getItemFrontend(itemId).modify(propertyName, propertyValue)
     }
 
-    fun itemId(instance: AdatClass<*>) =
+    fun itemId(instance: AdatClass) =
         instance.adatContext !!.id as ItemId
 
-    override fun update(instance: AdatClass<*>, path: Array<String>, value: Any?) {
+    override fun update(instance: AdatClass, path: Array<String>, value: Any?) {
         // FIXME only single properties are handled b y AdatClassListFrontend
         check(path.size == 1) { "multi-level paths are not implemented yet" }
         modify(itemId(instance), path[0], value)

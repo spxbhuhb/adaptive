@@ -45,7 +45,7 @@ fun fieldNote(
     checkNotNull(path)
 
     val instance = binding.stateVariableValue
-    check(instance is AdatClass<*>)
+    check(instance is AdatClass)
 
     if (binding.path!![0] == "packageName") {
         val regex = Regex("^[a-zA-Z]+[a-zA-z0-9]*(\\.[a-zA-Z]+[a-zA-Z0-9]*)*\$")

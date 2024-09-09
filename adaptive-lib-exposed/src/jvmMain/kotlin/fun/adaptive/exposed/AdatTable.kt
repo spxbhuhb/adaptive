@@ -16,7 +16,7 @@ import org.jetbrains.exposed.sql.selectAll
  *
  * Check the reference documentation for exact details of the mapping.
  */
-abstract class AdatTable<A : AdatClass<A>, S : AdatTable<A, S>>(
+abstract class AdatTable<A : AdatClass, S : AdatTable<A, S>>(
     tableName: String = ""
 ) : Table(tableName), ExposedStoreImpl<A, S> {
 

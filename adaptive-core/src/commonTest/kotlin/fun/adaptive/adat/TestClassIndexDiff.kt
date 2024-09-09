@@ -13,7 +13,7 @@ class TestClassIndexDiff(
     var someBoolean: Boolean,
     var someInt: Int,
     var someIntListSet: Set<List<Int>>
-) : AdatClass<TestClassIndexDiff> {
+) : AdatClass {
 
     constructor() : this(false, 0, setOf())
 

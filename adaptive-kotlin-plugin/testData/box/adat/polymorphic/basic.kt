@@ -23,7 +23,7 @@ class T2(
 
 @Adat
 class TL(
-    val someList: List<AdatClass<*>>
+    val someList: List<AdatClass>
 )
 
 fun box(): String {

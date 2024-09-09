@@ -21,7 +21,7 @@ fun <T> T.update(value: () -> T) {
  * and the update is handled by the store.
  */
 @PluginReference
-fun <T> update(instance: AdatClass<*>, path: Array<String>, value: () -> T) {
+fun <T> update(instance: AdatClass, path: Array<String>, value: () -> T) {
     val store = requireNotNull(instance.adatContext?.store) { "there is no store for the update" }
     store.update(instance, path, value())
 }

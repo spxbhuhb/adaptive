@@ -29,7 +29,7 @@ abstract class CollectionBackendBase(
     // Operations from the frontend
     // --------------------------------------------------------------------------------
 
-    fun add(item: AdatClass<*>, parentItemId: ItemId?, commit: Boolean) {
+    fun add(item: AdatClass, parentItemId: ItemId?, commit: Boolean) {
         val itemId = context.nextTime()
         addItem(itemId, parentItemId, item)
 
@@ -68,9 +68,9 @@ abstract class CollectionBackendBase(
     // Helpers
     // --------------------------------------------------------------------------------
 
-    abstract fun addItem(itemId: ItemId, parentItemId: ItemId?, value: AdatClass<*>)
+    abstract fun addItem(itemId: ItemId, parentItemId: ItemId?, value: AdatClass)
 
-    fun wireFormatNameOrNull(item: AdatClass<*>): String? {
+    fun wireFormatNameOrNull(item: AdatClass): String? {
         val itemWireFormatName = item.adatCompanion.wireFormatName
         return if (itemWireFormatName == defaultWireFormatName) null else itemWireFormatName
     }

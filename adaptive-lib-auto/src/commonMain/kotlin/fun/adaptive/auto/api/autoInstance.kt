@@ -30,7 +30,7 @@ import `fun`.adaptive.foundation.producer.Producer
  * @return   `null` (it takes time to connect and synchronize)
  */
 @Producer
-fun <A : AdatClass<A>> autoInstance(
+fun <A : AdatClass> autoInstance(
     onChange: ((newValue: A) -> Unit)? = null,
     binding: AdaptiveStateVariableBinding<A>? = null,
     trace: Boolean = false,

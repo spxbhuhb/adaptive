@@ -13,7 +13,7 @@ class StringBlank(
     val allowBlank: Boolean
 ) : AdatDescriptor() {
 
-    override fun validate(instance: AdatClass<*>, value : Any?, propertyMetadata : AdatPropertyMetadata, result : InstanceValidationResult) {
+    override fun validate(instance: AdatClass, value: Any?, propertyMetadata: AdatPropertyMetadata, result: InstanceValidationResult) {
         value as String
         if (! allowBlank && value.isBlank()) propertyMetadata.fail(result, this)
     }

@@ -11,4 +11,4 @@ class InstructionEditorData(
     val frame: Frame = Frame.NaF,
     val padding: Padding = Padding.NONE,
     val margin: Margin = Margin.NONE
-) : AdatClass<InstructionEditorData>
+)

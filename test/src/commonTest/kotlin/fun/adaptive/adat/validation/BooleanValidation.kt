@@ -1,7 +1,9 @@
 package `fun`.adaptive.adat.validation
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.adat.api.isValid
 import `fun`.adaptive.adat.api.properties
+import `fun`.adaptive.adat.api.validate
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -36,9 +38,6 @@ class BooleanValidation {
     @Test
     fun valid() {
         val t = BooleanTest(true)
-        val result = t.validate()
-
-        assertTrue(result.isValid)
-        assertEquals(0, result.failedConstraints.size)
+        assertTrue(t.isValid())
     }
 }

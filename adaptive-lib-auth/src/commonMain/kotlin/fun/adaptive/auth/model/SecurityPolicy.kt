@@ -5,8 +5,6 @@
 package `fun`.adaptive.auth.model
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.AdatCompanion
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 
@@ -24,6 +22,4 @@ class SecurityPolicy(
     var sameCharacterMaximum: Int = 0,
     var minEntropy: EntropyCategory = EntropyCategory.Poor,
     var maxFailedAuths: Int = 5
-) : AdatClass<SecurityPolicy> {
-    companion object : AdatCompanion<SecurityPolicy>
-}
+)

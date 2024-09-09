@@ -9,7 +9,7 @@ import `fun`.adaptive.adat.store.AdatStore
  */
 class AdatContext<IT>(
     val id: Comparable<IT>?,
-    val parent: AdatClass<*>?,
+    val parent: AdatClass?,
     val property: AdatPropertyMetadata?,
     val store: AdatStore?,
     var validationResult: InstanceValidationResult?
@@ -41,18 +41,18 @@ class AdatContext<IT>(
 }
 
 
-fun AdatClass<*>.applyContext(context: AdatContext<Any>) {
+fun AdatClass.applyContext(context: AdatContext<Any>) {
     adatContext = context
     for (property in getMetadata().properties) {
         if (property.isAdatClass) {
             // FIXME AdatContext.apply for adat class collections
-            (getValue(property.index) as? AdatClass<*>)
+            (getValue(property.index) as? AdatClass)
                 ?.applyContext(AdatContext<Any>(null, this, property, context.store, null))
         }
     }
 }
 
-fun AdatClass<*>.absolutePath(): List<String> {
+fun AdatClass.absolutePath(): List<String> {
     val context: AdatContext<*> = adatContext ?: return emptyList()
     val parent = context.parent ?: return emptyList()
     val property = context.property ?: return emptyList()

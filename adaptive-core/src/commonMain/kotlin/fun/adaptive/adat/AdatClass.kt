@@ -4,49 +4,21 @@
 
 package `fun`.adaptive.adat
 
-import `fun`.adaptive.adat.descriptor.InstanceValidationResult
 import `fun`.adaptive.foundation.binding.AdaptivePropertyProvider
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.utility.pluginGenerated
-import `fun`.adaptive.wireformat.json.JsonWireFormatEncoder
-import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatEncoder
 
-interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
+interface AdatClass : AdaptivePropertyProvider {
 
     var adatContext: AdatContext<Any>?
         get() = null
         set(v) = unsupported(v)
 
-    val adatCompanion: AdatCompanion<A>
+    val adatCompanion: AdatCompanion<*>
         get() = pluginGenerated()
 
     fun descriptor() = Unit
-
-    fun validate() : InstanceValidationResult {
-
-        val result = InstanceValidationResult()
-
-        for (descriptorSet in adatCompanion.adatDescriptors) {
-            val value = genGetValue(descriptorSet.property.index)
-            for (descriptor in descriptorSet.descriptors) {
-                descriptor.validate(this, value, descriptorSet.property, result)
-            }
-        }
-
-        return result
-    }
-
-    fun copy(): A {
-        val properties = getMetadata().properties
-        val values = arrayOfNulls<Any?>(properties.size)
-
-        getMetadata().properties.forEach { prop ->
-            values[prop.index] = getValue(prop.index)
-        }
-
-        return adatCompanion.newInstance(values)
-    }
 
     fun adatToString(): String {
         val content = mutableListOf<String>()
@@ -60,7 +32,7 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
         if (this === other) return true
         if (other == null) return false
         if (this::class != other::class) return false
-        if (other !is AdatClass<*>) return false
+        if (other !is AdatClass) return false
 
         repeat(getMetadata().properties.size) {
             if (this.getValue(it) != other.getValue(it)) return false
@@ -79,14 +51,6 @@ interface AdatClass<A : AdatClass<A>> : AdaptivePropertyProvider {
 
         return hashCode
     }
-
-    fun toJson(): ByteArray =
-        @Suppress("UNCHECKED_CAST")
-        JsonWireFormatEncoder().rawInstance(this as A, adatCompanion.adatWireFormat).pack()
-
-    fun toProto(): ByteArray =
-        @Suppress("UNCHECKED_CAST")
-        ProtoWireFormatEncoder().rawInstance(this as A, adatCompanion.adatWireFormat).pack()
 
     fun adatIndexOf(name: String): Int =
         getMetadata().properties.first { it.name == name }.index

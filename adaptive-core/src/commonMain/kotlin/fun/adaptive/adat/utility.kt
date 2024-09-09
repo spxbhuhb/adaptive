@@ -4,12 +4,9 @@
 
 package `fun`.adaptive.adat
 
-import `fun`.adaptive.adat.metadata.AdatClassMetadata
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
-import `fun`.adaptive.utility.PluginReference
-import `fun`.adaptive.utility.pluginGenerated
+import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatProvider
-import `fun`.adaptive.wireformat.toJson
 
 /**
  * Gets an adat class stored somewhere in this one based on [path]. Path
@@ -17,98 +14,20 @@ import `fun`.adaptive.wireformat.toJson
  *
  * @throws IllegalArgumentException  when the path is invalid
  */
-fun AdatClass<*>.resolve(path: List<String>): AdatClass<*> {
+fun AdatClass.resolve(path: List<String>): AdatClass {
 
     var sub: Any? = this
 
     for (propertyName in path) {
-        require(sub is AdatClass<*>) { "cannot set value for $path in ${getMetadata().name}" }
+        require(sub is AdatClass) { "cannot set value for $path in ${getMetadata().name}" }
         sub = sub.getValue(propertyName)
     }
 
-    require(sub is AdatClass<*>) { "cannot set value for $path in ${getMetadata().name}" }
+    require(sub is AdatClass) { "cannot set value for $path in ${getMetadata().name}" }
 
     return sub
 }
 
-/**
- * Creates a deep copy of [this]. The copy is fully independent of the original, any
- * changes made on it will not change the original in any ways.
- *
- * **Mutable collections are not supported yet.** See: [Adat problems and improvements #35](https://github.com/spxbhuhb/adaptive/issues/35)
- *
- * @throws  IllegalArgumentException  In case it is not possible to make a deep copy.
- */
-fun <A : AdatClass<A>> A.deepCopy(replace: AdatChange? = null): A {
-    // TODO when A is immutable, return with A
-    @Suppress("UNCHECKED_CAST")
-    return this.genericDeepCopy(replace) as A
-}
-
-private fun AdatClass<*>.genericDeepCopy(replace: AdatChange?): AdatClass<*> {
-    val properties = getMetadata().properties
-    val values = arrayOfNulls<Any?>(properties.size)
-
-    val replaceName = replace?.path?.first()
-
-    for (property in properties) {
-        val index = property.index
-        values[index] = getValue(index)
-
-        if (replaceName == property.name) {
-            if (replace.path.size == 1) {
-                values[index] = replace.value
-            } else {
-                values[index] = (getValue(index) as AdatClass<*>).genericDeepCopy(replace.next())
-            }
-            continue
-        }
-
-        val value = getValue(index)
-
-        values[index] = when {
-            property.hasImmutableValue -> value
-            value is AdatClass<*> -> value.genericDeepCopy(null)
-            else -> throw IllegalArgumentException("cannot deep copy ${getMetadata().name}.${property.name} ${getMetadata().toJson(AdatClassMetadata).decodeToString()}")
-        }
-    }
-
-    return adatCompanion.newInstance(values)
-}
-
-/**
- * Calculates the difference between two adat instances. The instances do not have to be
- * same class.
- */
-fun AdatClass<*>.diff(other: AdatClass<*>): List<AdatDiffItem> {
-    val thisProps = this.getMetadata().properties
-    val otherProps = other.getMetadata().properties
-
-    val differences = mutableListOf<AdatDiffItem>()
-
-    val map1 = thisProps.associateBy { it.name }
-    val map2 = otherProps.associateBy { it.name }
-
-    val allKeys = map1.keys.union(map2.keys)
-
-    for (key in allKeys) {
-        val item1 = map1[key]
-        val item2 = map2[key]
-
-        when {
-            item1 == null -> AdatDiffItem(AdatDiffKind.MissingFromThis, key, null)
-            item2 == null -> AdatDiffItem(AdatDiffKind.MissingFromOther, key, null)
-            item1.index != item2.index -> AdatDiffItem(AdatDiffKind.IndexDiff, key, null)
-            item1.signature != item2.signature -> AdatDiffItem(AdatDiffKind.SignatureDiff, key, item1.index)
-            getValue(item1.index) != other.getValue(item2.index) -> AdatDiffItem(AdatDiffKind.ValueDiff, key, item1.index)
-            else -> null
-        }?.also {
-            differences.add(it)
-        }
-    }
-
-    return differences
-}
 
 /**
  * Combine [this] and [other] so that the result contains:
@@ -118,7 +37,7 @@ fun AdatClass<*>.diff(other: AdatClass<*>): List<AdatDiffItem> {
  *
  * @return  an instance of [T] that contains the combined values
  */
-fun <T : AdatClass<T>> T.and(other: T): AdatClass<T> {
+fun <A : AdatClass> A.and(other: A): A {
     val properties = this.getMetadata().properties
     val values = arrayOfNulls<Any?>(properties.size)
 
@@ -133,24 +52,25 @@ fun <T : AdatClass<T>> T.and(other: T): AdatClass<T> {
         }
     }
 
-    return adatCompanion.newInstance(values)
+    @Suppress("UNCHECKED_CAST")
+    return adatCompanion.newInstance(values) as A
 }
 
 fun sensibleDefault(property: AdatPropertyMetadata): Any? {
     TODO()
 }
 
-// TODO I'm not happy with AdatClass<*>.encode and decode (unchecked cast)
-fun <A : AdatClass<A>> AdatClass<*>.encode(wireFormatProvider: WireFormatProvider): ByteArray {
+// TODO I'm not happy with AdatClass.encode and decode (unchecked cast)
+fun <A : AdatClass> A.encode(wireFormatProvider: WireFormatProvider): ByteArray {
     @Suppress("UNCHECKED_CAST")
-    this as A
-    return wireFormatProvider.encode(this, this.adatCompanion.adatWireFormat)
+    return wireFormatProvider.encode(this, this.adatCompanion.adatWireFormat as WireFormat<A>)
 }
 
-fun <A : AdatClass<A>> ByteArray.decode(wireFormatProvider: WireFormatProvider, companion: AdatCompanion<A>): A =
+fun <A : AdatClass> ByteArray.decode(wireFormatProvider: WireFormatProvider, companion: AdatCompanion<A>): A =
     wireFormatProvider.decode(this, companion.adatWireFormat)
 
-fun AdatClass<*>.toArray(): Array<Any?> {
+fun AdatClass.toArray(): Array<Any?> {
     val properties = getMetadata().properties
     return Array(properties.size) { i -> getValue(i) }
 }
+

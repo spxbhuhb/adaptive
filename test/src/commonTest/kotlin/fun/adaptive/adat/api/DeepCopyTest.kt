@@ -1,5 +1,6 @@
-package `fun`.adaptive.adat
+package `fun`.adaptive.adat.api
 
+import `fun`.adaptive.adat.Adat
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotSame
@@ -43,22 +44,22 @@ class DeepCopyTest {
 @Adat
 class I1(
     val v: Int
-) : AdatClass<I1>
+)
 
 @Adat
 class I2(
     val v: Int,
     val i1: I1
-) : AdatClass<I2>
+)
 
 @Adat
 class M1(
     var v: Int
-) : AdatClass<M1>
+)
 
 @Adat
 class M2(
     var v: Int,
     var m1: M1,
     var i1: I1
-) : AdatClass<M2>
+)

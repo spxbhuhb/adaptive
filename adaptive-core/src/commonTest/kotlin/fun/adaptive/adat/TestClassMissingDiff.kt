@@ -13,7 +13,7 @@ class TestClassMissingDiff(
     var someInt: Int,
     var someOtherField: Boolean,
     var someIntListSet: Set<List<Int>>
-) : AdatClass<TestClassMissingDiff> {
+) : AdatClass {
 
     constructor() : this(0, false, setOf())
 

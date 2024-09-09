@@ -19,7 +19,7 @@ class TestAdat(
     val someReferenceNullable: UUID<TestAdat>?,
     val someInt: Int,
     var someBoolean: Boolean
-) : AdatClass<TestAdat>
+)
 
 @ExposedAdatTable
 object TestAdatTable : AbstractAdatTable<TestAdat>() {
@@ -93,7 +93,7 @@ fun <T> java.util.UUID.asCommon() =
 fun <T> java.util.UUID?.asCommon() =
     this?.asCommon<T>()
 
-abstract class AbstractAdatTable<A : AdatClass<A>> : UUIDTable("test") {
+abstract class AbstractAdatTable<A : AdatClass> : UUIDTable("test") {
 
     open fun fromRow(row: ResultRow): A {
         manualOrPlugin("fromRow", row)

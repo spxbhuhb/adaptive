@@ -56,7 +56,7 @@ import kotlinx.io.files.SystemFileSystem
  *
  * @throws   IllegalArgumentException  if the directory does not exist
  */
-fun <A : AdatClass<A>> originFolder(
+fun <A : AdatClass> originFolder(
     worker: AutoWorker,
     companion: AdatCompanion<A>,
     wireFormatProvider: WireFormatProvider,
@@ -87,7 +87,6 @@ fun <A : AdatClass<A>> originFolder(
 
         frontend = FolderFrontend(
             backend,
-            companion,
             onListCommit,
             onItemCommit,
             wireFormatProvider,

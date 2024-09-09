@@ -16,7 +16,7 @@ class TestData(
     val someUuid: UUID<TestData>,
     val someInt: Int,
     val someBoolean: Boolean
-) : AdatClass<TestData>
+) : AdatClass
 
 @ExposedAdatTable
 class TestTable : AdatTable<TestData, TestTable>() {

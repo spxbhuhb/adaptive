@@ -4,6 +4,8 @@
 
 package `fun`.adaptive.adat
 
+import `fun`.adaptive.adat.api.isValid
+import `fun`.adaptive.adat.api.validate
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
@@ -22,8 +24,6 @@ class ValidateTest {
         val sl = setOf(listOf(1, 2), listOf(3, 4))
         val t = TestClass(200, false, sl)
 
-        t.validate()
-
-        assertTrue(! t.validate().isValid)
+        assertTrue(! t.isValid())
     }
 }

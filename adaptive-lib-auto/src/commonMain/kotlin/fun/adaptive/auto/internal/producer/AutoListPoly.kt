@@ -10,15 +10,15 @@ import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 
 class AutoListPoly(
-    binding: AdaptiveStateVariableBinding<List<AdatClass<*>>>,
+    binding: AdaptiveStateVariableBinding<List<AdatClass>>,
     connect: suspend () -> AutoConnectInfo,
     val companion: AdatCompanion<*>,
-    val onListCommit: ((newValue: List<AdatClass<*>>) -> Unit)?,
-    val onItemCommit: ((item: AdatClass<*>) -> Unit)?,
+    val onListCommit: ((newValue: List<AdatClass>) -> Unit)?,
+    val onItemCommit: ((item: AdatClass) -> Unit)?,
     trace: Boolean
-) : ProducerBase<SetBackend, AdatClassListFrontend<*>, List<AdatClass<*>>>(binding, connect, trace) {
+) : ProducerBase<SetBackend, AdatClassListFrontend<*>, List<AdatClass>>(binding, connect, trace) {
 
-    override var latestValue: List<AdatClass<*>>? = null
+    override var latestValue: List<AdatClass>? = null
 
     override fun build() {
         // TODO merge AutoList and AutoListPoly
@@ -26,7 +26,6 @@ class AutoListPoly(
 
         frontend = AdatClassListFrontend(
             backend,
-            companion,
             onListCommit = {
                 latestValue = it
                 onListCommit?.invoke(it)

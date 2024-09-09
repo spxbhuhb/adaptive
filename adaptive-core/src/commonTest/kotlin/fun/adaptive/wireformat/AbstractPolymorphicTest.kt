@@ -42,7 +42,7 @@ abstract class AbstractPolymorphicTest<ST>(
 
     data class C1(
         override var i: Int = 0
-    ) : AdatClass<C1>, CI {
+    ) : AdatClass, CI {
 
         override val adatCompanion: AdatCompanion<C1>
             get() = Companion
@@ -81,7 +81,7 @@ abstract class AbstractPolymorphicTest<ST>(
 
     data class C2(
         override var i: Int = 0
-    ) : AdatClass<C2>, CI {
+    ) : AdatClass, CI {
 
         override val adatCompanion: AdatCompanion<C2>
             get() = Companion

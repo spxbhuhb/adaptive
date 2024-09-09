@@ -5,14 +5,10 @@
 package `fun`.adaptive.auth.model
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.utility.UUID
 
 @Adat
 class RoleGrant(
     var principal: UUID<Principal>,
     var role: UUID<Role>
-) : AdatClass<RoleGrant> {
-    companion object : AdatCompanion<RoleGrant>
-}
+)

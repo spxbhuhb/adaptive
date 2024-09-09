@@ -43,12 +43,12 @@ fun originFolderPoly(
     companion: AdatCompanion<*>,
     wireFormatProvider: WireFormatProvider,
     path: Path,
-    fileNameFun: (itemId: ItemId, item: AdatClass<*>) -> String,
+    fileNameFun: (itemId: ItemId, item: AdatClass) -> String,
     serviceContext: ServiceContext? = null,
     handle : AutoHandle = AutoHandle(UUID(), 1),
     trace: Boolean = false,
-    onListCommit: ((newValue: List<AdatClass<*>>) -> Unit)? = null,
-    onItemCommit: ((newValue: List<AdatClass<*>>, item: AdatClass<*>) -> Unit)? = null,
+    onListCommit: ((newValue: List<AdatClass>) -> Unit)? = null,
+    onItemCommit: ((newValue: List<AdatClass>, item: AdatClass) -> Unit)? = null,
 ): OriginBase<SetBackend, FolderFrontend<*>> {
 
     return OriginBase(
@@ -67,7 +67,6 @@ fun originFolderPoly(
 
         frontend = FolderFrontend(
             backend,
-            companion,
             onListCommit,
             onItemCommit,
             wireFormatProvider,

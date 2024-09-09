@@ -14,4 +14,4 @@ class SignUp(
     val password: String = "",
     val verification: String = "",
     val agreement: Boolean = false
-) : AdatClass<SignUp>
+)

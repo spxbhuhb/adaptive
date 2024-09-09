@@ -14,7 +14,7 @@ import `fun`.adaptive.wireformat.WireFormatEncoder
 import `fun`.adaptive.wireformat.json.JsonWireFormatDecoder
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatDecoder
 
-interface AdatCompanion<A : AdatClass<A>> : WireFormat<A> {
+interface AdatCompanion<A> : WireFormat<A> {
 
     val adatMetadata: AdatClassMetadata
         get() = pluginGenerated()

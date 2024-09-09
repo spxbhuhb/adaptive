@@ -5,7 +5,6 @@ import `fun`.adaptive.kotlin.adat.FqNames
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.declarations.FirClassLikeDeclaration
 import org.jetbrains.kotlin.fir.declarations.FirRegularClass
-import org.jetbrains.kotlin.fir.declarations.utils.classId
 import org.jetbrains.kotlin.fir.extensions.FirDeclarationPredicateRegistrar
 import org.jetbrains.kotlin.fir.extensions.FirSupertypeGenerationExtension
 import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
@@ -61,11 +60,9 @@ class AdatSupertypeGenerator(session: FirSession) : FirSupertypeGenerationExtens
 
             // FIXME AdatEntity handling
 
-            val adatClassType = classLikeDeclaration.classId.constructClassLikeType(emptyArray(), false)
-
             return listOf(
                 buildResolvedTypeRef {
-                    type = ClassIds.ADAT_CLASS.constructClassLikeType(arrayOf(adatClassType), false)
+                    type = ClassIds.ADAT_CLASS.constructClassLikeType(emptyArray(), false)
                 }
             )
         }

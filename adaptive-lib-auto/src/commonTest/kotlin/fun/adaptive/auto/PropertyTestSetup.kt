@@ -19,7 +19,7 @@ class PropertyTestSetup(
     initialData: Array<Any?>?
 ) {
 
-    constructor(instance: AdatClass<*>) : this(instance.toArray())
+    constructor(instance: AdatClass) : this(instance.toArray())
 
     val gid = UUID<BackendBase>()
     val itemId = LamportTimestamp(1, 1)

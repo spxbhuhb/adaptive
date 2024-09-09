@@ -32,7 +32,7 @@ import `fun`.adaptive.foundation.producer.Producer
  * @return   `null` (it takes time to connect and synchronize)
  */
 @Producer
-fun <A : AdatClass<A>> autoList(
+fun <A : AdatClass> autoList(
     companion: AdatCompanion<A>,
     onListCommit: ((newValue: List<A>) -> Unit)? = null,
     onItemCommit: ((item: A) -> Unit)? = null,

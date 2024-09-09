@@ -11,7 +11,7 @@ class BooleanValue(
     val expected : Boolean
 ) : AdatDescriptor() {
 
-    override fun validate(instance: AdatClass<*>, value : Any?, propertyMetadata : AdatPropertyMetadata, result : InstanceValidationResult) {
+    override fun validate(instance: AdatClass, value: Any?, propertyMetadata: AdatPropertyMetadata, result: InstanceValidationResult) {
         value as Boolean
         if (value != expected) propertyMetadata.fail(result, this)
     }

@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.render.layout
 class Position(
     val top: DPixel,
     val left: DPixel
-) : AdatClass<Position>, AdaptiveInstruction {
+) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         layout(subject) {
             val adapter = it.adapter

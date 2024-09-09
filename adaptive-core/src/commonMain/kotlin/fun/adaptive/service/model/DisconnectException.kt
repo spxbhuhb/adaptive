@@ -12,7 +12,7 @@ import `fun`.adaptive.wireformat.WireFormatEncoder
 @Wire
 class DisconnectException(
     message : String?
-) : Exception(message), AdatClass<DisconnectException> {
+) : Exception(message), AdatClass {
 
     companion object : WireFormat<DisconnectException> {
 

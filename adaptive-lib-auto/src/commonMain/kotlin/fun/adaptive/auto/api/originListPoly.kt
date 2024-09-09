@@ -41,8 +41,8 @@ fun originListPoly(
     serviceContext: ServiceContext? = null,
     handle : AutoHandle = AutoHandle(UUID(), 1),
     trace: Boolean = false,
-    onListCommit: ((newValue: List<AdatClass<*>>) -> Unit)? = null,
-    onItemCommit: ((newValue: List<AdatClass<*>>, item: AdatClass<*>) -> Unit)? = null
+    onListCommit: ((newValue: List<AdatClass>) -> Unit)? = null,
+    onItemCommit: ((newValue: List<AdatClass>, item: AdatClass) -> Unit)? = null
 ): OriginBase<SetBackend, AdatClassListFrontend<*>> {
 
     return OriginBase(
@@ -58,7 +58,6 @@ fun originListPoly(
 
         frontend = AdatClassListFrontend(
             backend,
-            companion,
             onListCommit = onListCommit,
             onItemCommit = onItemCommit
         )

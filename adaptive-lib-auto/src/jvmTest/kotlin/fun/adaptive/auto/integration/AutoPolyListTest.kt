@@ -14,7 +14,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.seconds
 
-private var producedValue: List<AdatClass<*>>? = null
+private var producedValue: List<AdatClass>? = null
 
 @Adat
 private class TD2(
@@ -50,7 +50,7 @@ class AutoPolyListTest {
             val connectingBackend = connectingWorker.backends.values.first()
 
             @Suppress("UNCHECKED_CAST")
-            val originFrontend = originBackend.frontEnd as AdatClassListFrontend<AdatClass<*>>
+            val originFrontend = originBackend.frontEnd as AdatClassListFrontend<AdatClass>
 
             val t1 = TestData(12, "ab")
             val t2 = TD2(23)

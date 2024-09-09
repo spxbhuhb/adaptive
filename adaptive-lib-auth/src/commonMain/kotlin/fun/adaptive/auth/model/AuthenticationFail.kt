@@ -11,6 +11,4 @@ import `fun`.adaptive.service.model.ReturnException
 @Adat
 class AuthenticationFail(
     val result: AuthenticationResult
-) : ReturnException(), AdatClass<AuthenticationFail> {
-    companion object : AdatCompanion<AuthenticationFail>
-}
+) : ReturnException()

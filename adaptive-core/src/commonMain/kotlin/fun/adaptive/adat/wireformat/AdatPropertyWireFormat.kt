@@ -23,7 +23,7 @@ class AdatPropertyWireFormat<T>(
 
     val nullable : Boolean = property.signature.endsWith("?")
 
-    fun encode(encoder: WireFormatEncoder, instance: AdatClass<*>) {
+    fun encode(encoder: WireFormatEncoder, instance: AdatClass) {
         @Suppress("UNCHECKED_CAST")
         wireFormat.wireFormatEncode(encoder, property.index, property.name, instance.getValue(property.index) as T?)
     }

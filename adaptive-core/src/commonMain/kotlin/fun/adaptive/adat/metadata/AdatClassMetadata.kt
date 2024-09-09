@@ -22,7 +22,7 @@ class AdatClassMetadata(
     val name: String,
     val flags: Int,
     val properties: List<AdatPropertyMetadata>
-) : AdatClass<AdatClassMetadata> {
+) : AdatClass {
 
     /**
      * True then the class is mutable:

@@ -13,7 +13,7 @@ class TestClassSignatureDiff(
     var someInt: Float,
     var someBoolean: Boolean,
     var someIntListSet: Set<List<Int>>
-) : AdatClass<TestClassSignatureDiff> {
+) : AdatClass {
 
     constructor() : this(0.0f, false, setOf())
 

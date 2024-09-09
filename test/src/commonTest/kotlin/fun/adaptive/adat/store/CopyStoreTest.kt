@@ -18,13 +18,13 @@ import kotlin.test.assertNotNull
 @Adat
 private class T(
     val someInt: Int
-) : AdatClass<T>
+) : AdatClass
 
 @Adat
 private class M(
     val someInt: Int,
     val t: T
-) : AdatClass<M>
+) : AdatClass
 
 @Adaptive
 private fun t(

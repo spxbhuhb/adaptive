@@ -13,7 +13,7 @@ import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 data class AdatDescriptorMetadata(
     val name: String,
     val parameters: String
-) : AdatClass<AdatDescriptorMetadata> {
+) : AdatClass {
 
     fun asBoolean() = parameters.toBooleanStrict()
 

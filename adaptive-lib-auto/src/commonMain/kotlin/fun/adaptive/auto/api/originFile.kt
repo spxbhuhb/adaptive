@@ -3,6 +3,7 @@ package `fun`.adaptive.auto.api
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.toArray
+import `fun`.adaptive.adat.api.isValid
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.FileFrontend
@@ -52,7 +53,7 @@ import kotlinx.io.files.Path
  *
  * @throws   IllegalArgumentException  if [initialValue] is `null` and no file exists on [path]
  */
-fun <A : AdatClass<A>> originFile(
+fun <A : AdatClass> originFile(
     worker: AutoWorker,
     companion: AdatCompanion<A>,
     path: Path,
@@ -84,7 +85,7 @@ fun <A : AdatClass<A>> originFile(
             "type mismatch in $path: ${value.adatCompanion.wireFormatName} != ${companion.wireFormatName}"
         }
 
-        check(value.validate().isValid) { "validation failed for content of $path" }
+        check(value.isValid()) { "validation failed for content of $path" }
     }
 
     return OriginBase(
