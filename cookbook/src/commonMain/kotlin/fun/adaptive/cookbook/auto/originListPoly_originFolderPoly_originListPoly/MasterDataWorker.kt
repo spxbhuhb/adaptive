@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.auto.originFolderPoly_originList
+package `fun`.adaptive.cookbook.auto.originListPoly_originFolderPoly_originListPoly
 
 import `fun`.adaptive.auto.api.originFolderPoly
 import `fun`.adaptive.auto.backend.AutoWorker

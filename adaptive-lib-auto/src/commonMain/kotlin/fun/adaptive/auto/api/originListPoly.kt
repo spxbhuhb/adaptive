@@ -43,7 +43,7 @@ fun originListPoly(
     trace: Boolean = false,
     onListCommit: ((newValue: List<AdatClass>) -> Unit)? = null,
     onItemCommit: ((newValue: List<AdatClass>, item: AdatClass) -> Unit)? = null
-): OriginBase<SetBackend, AdatClassListFrontend<*>> {
+): OriginBase<SetBackend, AdatClassListFrontend<AdatClass>> {
 
     return OriginBase(
         worker,

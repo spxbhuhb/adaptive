@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.auto.originFolderPoly_originList
+package `fun`.adaptive.cookbook.auto.originFolderPoly_originListPoly
 
 import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.auto.model.AutoConnectInfo

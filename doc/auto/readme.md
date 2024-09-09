@@ -51,7 +51,7 @@ For the target use cases this won't be a problem, but keep it in mind. If unsure
 ## Recipes
 
 - [originFolder - originList](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/originFolder_originList/Recipe.kt) (backend to backend, non-fragment)
-- [originFolderPoly - originList](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/originFolderPoly_originList/Recipe.kt) (backend to backend, non-fragment)
+- [originFolderPoly - originList](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/originFolderPoly_originListPoly/Recipe.kt) (backend to backend, non-fragment)
 
 ## Setup
 
