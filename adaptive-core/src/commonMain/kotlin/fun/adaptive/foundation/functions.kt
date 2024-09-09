@@ -33,3 +33,6 @@ operator fun AdaptiveInstruction.rangeTo(instruction: AdaptiveInstruction): Arra
 
 operator fun Array<AdaptiveInstruction>.rangeTo(instruction: AdaptiveInstruction): Array<AdaptiveInstruction> =
     this + instruction
+
+operator fun Array<AdaptiveInstruction>.rangeTo(instruction: Array<AdaptiveInstruction>): Array<AdaptiveInstruction> =
+    this + instruction

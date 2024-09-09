@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.hover
+package `fun`.adaptive.cookbook.ui.hover
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.rangeTo

@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.platform
+package `fun`.adaptive.ui.platform.hover
 
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
@@ -20,7 +20,7 @@ class Hover(
     }
 
     override fun stop() {
-        // FIXME check the effect of remove batch on hover
+        // FIXME check the effect of remove in batch on hover
     }
 
     val enterHandler = { _: Any ->
@@ -37,7 +37,6 @@ class Hover(
         if (this is AbstractAuiFragment<*> && this.receiver is HTMLElement) this.receiver as HTMLElement? else null
 
     override fun addActual(fragment: AdaptiveFragment) {
-        println("addActual")
         val receiver = fragment.receiver() ?: return
         receiver.addEventListener("mouseenter", enterHandler)
         receiver.addEventListener("mouseleave", leaveHandler)

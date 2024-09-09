@@ -1,6 +1,7 @@
 package `fun`.adaptive.cookbook.shared
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
+import `fun`.adaptive.graphics.svg.api.svgFill
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.border
@@ -20,6 +21,29 @@ import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.textColor
 import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.instruction.*
+
+fun colors(active: Boolean = false, hover: Boolean = false) =
+    when {
+        active -> primaryStyles
+        hover -> hoverStyles
+        else -> normalStyles
+    }
+
+val primaryBackground = backgroundColor(0x6259CE)
+val primaryText = textColor(0xffffffu)
+val primaryIcon = svgFill(0xffffffu)
+
+val hoverBackground = backgroundColor(0x9B8CFFu)
+val hoverText = textColor(0xffffffu)
+val hoverIcon = svgFill(0xffffffu)
+
+val normalBackground = backgroundColor(0xffffffu)
+val normalText = textColor(0x0)
+val normalIcon = svgFill(0x0)
+
+val primaryStyles = instructionsOf(primaryBackground, primaryText, primaryIcon)
+val hoverStyles = instructionsOf(hoverBackground, hoverText, hoverIcon)
+val normalStyles = instructionsOf(normalBackground, normalText, normalIcon)
 
 val black = color(0x000000u)
 val white = color(0xffffffu)

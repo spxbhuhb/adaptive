@@ -4,3 +4,5 @@ import `fun`.adaptive.graphics.svg.instruction.Fill
 import `fun`.adaptive.ui.instruction.decoration.Color
 
 fun svgFill(color: Int) = Fill(Color(color.toUInt()))
+
+fun svgFill(color: UInt) = Fill(Color(color))
