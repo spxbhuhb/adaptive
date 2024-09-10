@@ -4,6 +4,9 @@
 
 package `fun`.adaptive.adat.descriptor
 
+import `fun`.adaptive.adat.descriptor.general.Hidden
+import `fun`.adaptive.adat.descriptor.general.Readonly
+import `fun`.adaptive.adat.descriptor.general.UseToString
 import `fun`.adaptive.adat.descriptor.kotlin.bool.BooleanDefault
 import `fun`.adaptive.adat.descriptor.kotlin.bool.BooleanValue
 import `fun`.adaptive.adat.descriptor.kotlin.integer.IntDefault
@@ -31,5 +34,9 @@ object DefaultDescriptorFactory : DescriptorFactory() {
         add("StringMaxLength") { StringMaxLength(it, it.asInt()) }
         add("StringPattern") { StringPattern(it, it.parameters) }
         add("StringSecret") { StringSecret(it, it.asBoolean()) }
+
+        add("Hidden") { Hidden(it, it.asBoolean()) }
+        add("Readonly") { Readonly(it, it.asBoolean()) }
+        add("UseToString") { UseToString(it, it.asBoolean()) }
     }
 }

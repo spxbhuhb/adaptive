@@ -3,6 +3,9 @@ package `fun`.adaptive.widget.form.api
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.api.isValid
 import `fun`.adaptive.adat.api.validate
+import `fun`.adaptive.adat.descriptor.AdatDescriptor
+import `fun`.adaptive.adat.descriptor.general.Readonly
+import `fun`.adaptive.adat.descriptor.general.UseToString
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveExpect
@@ -45,6 +48,7 @@ import `fun`.adaptive.ui.api.textColor
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.wireformat.signature.DatetimeSignatures
 import widget.lib.Res
 import widget.lib.check
 
@@ -56,8 +60,6 @@ fun form(data: AdatClass) {
 
     val propertyCount = data.getMetadata().properties.size
 
-    println(data.isValid())
-
     grid {
         width { 600.dp } .. height { (propertyCount * 44 + (propertyCount - 1) * 8).dp }
         colTemplate(200.dp, 400.dp) .. rowTemplate(44.dp repeat propertyCount) .. gap { 8.dp }
@@ -68,7 +70,7 @@ fun form(data: AdatClass) {
                 text(property.name.replaceFirstChar { it.uppercaseChar() })
             }
             row {
-                gap { 16.dp }
+                gap { 16.dp } .. maxHeight .. alignItems.startCenter
 
                 when (property.signature) {
                     KotlinSignatures.BYTE,
@@ -83,14 +85,47 @@ fun form(data: AdatClass) {
 
                     KotlinSignatures.BOOLEAN
                         -> checkbox(data, property)
+
+                    DatetimeSignatures.INSTANT,
+                    KotlinSignatures.UUID
+                        -> text(data.getValue(property.index).toString())
+
+                    else -> {
+                        if (property.isAdatClass) {
+                            subForm(data, property)
+                        }
+                    }
                 }
 
-                if (!data.isValid(property.name)) {
-                    text("invalid value") .. textColor(0xFF0000u) .. zIndex(200) .. alignSelf.startCenter
+                if (! data.isValid(property.name)) {
+                    text("invalid value") .. textColor(0xFF0000u) .. zIndex(200)
                 }
             }
         }
     }
+}
+
+fun AdatClass.hasDescriptor(property: AdatPropertyMetadata, condition: (it: AdatDescriptor) -> Boolean): Boolean {
+    for (descriptor in adatCompanion.adatDescriptors.first { it.property.index == property.index }.descriptors) {
+        if (condition(descriptor)) return true
+    }
+    return false
+}
+
+@Adaptive
+fun subForm(data: AdatClass, property: AdatPropertyMetadata): AdaptiveFragment {
+    val value = data.getValue(property.index) as AdatClass
+
+    if (data.hasDescriptor(property) { it is Readonly } && data.hasDescriptor(property) { it is UseToString }) {
+        row {
+            fieldStyle .. width { 400.dp } .. alignItems.startCenter
+            text(value)
+        }
+    } else {
+        form(value)
+    }
+
+    return fragment()
 }
 
 /**

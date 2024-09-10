@@ -63,6 +63,7 @@ object FqNames : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_ANNOTATION = FqName("fun.adaptive.adat.Adat")
 
     val EXPOSED_ADAT_SET = Strings.EXPOSED_ADAT_SET.fqName { Strings.EXPOSED_PACKAGE }
+    val ADAT_DESCRIPTOR_NAME = "AdatDescriptorName".fqName { Strings.DESCRIPTOR_PACKAGE }
 }
 
 object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {

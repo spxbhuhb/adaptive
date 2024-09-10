@@ -1,6 +1,7 @@
 package `fun`.adaptive.kotlin.adat.ir.metadata
 
 import `fun`.adaptive.adat.metadata.AdatDescriptorMetadata
+import `fun`.adaptive.kotlin.adat.FqNames
 import `fun`.adaptive.kotlin.adat.ir.AdatIrBuilder
 import `fun`.adaptive.kotlin.common.removeCoercionToUnit
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
@@ -13,9 +14,9 @@ import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
-import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import org.jetbrains.kotlin.ir.util.fqNameWhenAvailable
+import org.jetbrains.kotlin.ir.util.getAnnotationArgumentValue
 import org.jetbrains.kotlin.ir.util.statements
 
 fun AdatIrBuilder.descriptor(
@@ -85,11 +86,8 @@ private fun collectPropertyDescriptors(
 
                 if (receiver != null) {
 
-                    val type = receiver.type.classFqName
-                    requireNotNull(type) { "invalid descriptor property receiver type: ${current.dumpKotlinLike()}" }
-
                     result += AdatDescriptorMetadata(
-                        type.shortName().identifier + owner.name.identifier.replaceFirstChar { it.uppercaseChar() },
+                        owner.getAnnotationArgumentValue<String>(FqNames.ADAT_DESCRIPTOR_NAME, "name") !!,
                         encodeDescriptorParameters(current)
                     )
 
