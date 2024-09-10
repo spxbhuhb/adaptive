@@ -29,6 +29,18 @@ fun AdatClass.isValid(): Boolean {
 }
 
 /**
+ * Check if the property selected by [name] has any validation errors.
+ *
+ * This call is meaningful only after the `validation` function of the
+ * Adat instance is called. Built-in producers such as `copyStore`, `autoInstance`
+ * and `autoList` call `validate` automatically when the data changes.
+ *
+ * @return  true if the data is valid, false otherwise
+ */
+fun AdatClass.isValid(name : String): Boolean =
+    isValid(arrayOf(name))
+
+/**
  * Check if the property selected by [path] has any validation errors.
  *
  * This call is meaningful only after the `validation` function of the

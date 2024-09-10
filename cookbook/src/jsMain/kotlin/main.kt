@@ -7,6 +7,7 @@ import `fun`.adaptive.backend.backend
 import `fun`.adaptive.cookbook.auth.authMain
 import `fun`.adaptive.cookbook.components.componentsMain
 import `fun`.adaptive.cookbook.components.sidebar
+import `fun`.adaptive.cookbook.form.formMain
 import `fun`.adaptive.cookbook.intro.introMain
 import `fun`.adaptive.cookbook.iot.iotCommon
 import `fun`.adaptive.cookbook.iot.iotMain
@@ -49,6 +50,7 @@ import `fun`.adaptive.cookbook.ui.hover.hoverMain
 import `fun`.adaptive.ktor.api.withWebSocketTransport
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.platform.withJsResources
+import `fun`.adaptive.widget.form.FormFragmentFactory
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -65,9 +67,9 @@ fun main() {
 
         val localBackend = backend { auto() }
 
-        withWebSocketTransport(window.location.origin, serviceImplFactory = localBackend)
+        // withWebSocketTransport(window.location.origin, serviceImplFactory = localBackend)
 
-        browser(CanvasFragmentFactory, SvgFragmentFactory, backend = localBackend) { adapter ->
+        browser(CanvasFragmentFactory, SvgFragmentFactory, FormFragmentFactory, backend = localBackend) { adapter ->
 
             with(adapter.defaultTextRenderData) {
                 fontName = "Open Sans"
@@ -80,7 +82,9 @@ fun main() {
 //                maxHeight .. padding { 16.dp } .. gap { 16.dp }
 //                rowTemplate(40.dp, 1.fr)
 
-                iotMain()
+            formMain()
+
+//                iotMain()
 //              box {
 //                  hoverMain()
 //              }

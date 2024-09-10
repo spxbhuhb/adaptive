@@ -55,6 +55,9 @@ interface AdatClass : AdaptivePropertyProvider {
     fun adatIndexOf(name: String): Int =
         getMetadata().properties.first { it.name == name }.index
 
+    fun adatNameOf(index: Int): String =
+        getMetadata().properties.first { it.index == index }.name
+
     fun getValue(name: String) =
         genGetValue(adatIndexOf(name))
 
@@ -66,11 +69,21 @@ interface AdatClass : AdaptivePropertyProvider {
     }
 
     fun setValue(name: String, value: Any?) {
-        genSetValue(adatIndexOf(name), value)
+        val store = adatContext?.store
+        if (store == null) {
+            genSetValue(adatIndexOf(name), value)
+        } else {
+            store.update(this, arrayOf(name), value)
+        }
     }
 
     fun setValue(index: Int, value: Any?) {
-        genSetValue(index, value)
+        val store = adatContext?.store
+        if (store == null) {
+            genSetValue(index, value)
+        } else {
+            store.update(this, arrayOf(adatNameOf(index)), value)
+        }
     }
 
     fun genSetValue(index: Int, value: Any?) {
