@@ -4,6 +4,8 @@
 
 package `fun`.adaptive.kotlin.wireformat
 
+import org.jetbrains.kotlin.descriptors.ClassKind
+import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.types.*
 import org.jetbrains.kotlin.ir.util.isFinalClass
@@ -89,7 +91,11 @@ object Signature {
 
         val irClass = irTypeArgument.classOrNull ?: return "*"
 
-        if (! irClass.owner.isFinalClass) return "*"
+        val owner = irClass.owner
+
+        owner.isFinalClass
+
+        if (owner.modality != Modality.FINAL && owner.kind != ClassKind.ENUM_CLASS) return "*"
 
         return typeSignature(irTypeArgument)
     }

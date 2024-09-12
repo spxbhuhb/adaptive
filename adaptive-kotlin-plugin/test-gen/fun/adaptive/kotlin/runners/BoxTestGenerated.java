@@ -167,6 +167,22 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
     }
 
+      @Nested
+      @TestMetadata("testData/box/adat/signature")
+      @TestDataPath("$PROJECT_ROOT")
+      public class Signature {
+          @Test
+          public void testAllFilesPresentInSignature() {
+              KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adat/signature"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+          }
+
+          @Test
+          @TestMetadata("enum.kt")
+          public void testEnum() {
+              runTest("testData/box/adat/signature/enum.kt");
+          }
+      }
+
     @Nested
     @TestMetadata("testData/box/adat/store")
     @TestDataPath("$PROJECT_ROOT")
