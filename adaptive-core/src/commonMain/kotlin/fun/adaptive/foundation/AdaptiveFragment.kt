@@ -191,6 +191,10 @@ abstract class AdaptiveFragment(
         if (trace) traceWithState("after-Patch-Internal")
     }
 
+    open fun patchIfDirty() {
+        if (dirtyMask != 0) patchInternal()
+    }
+
     open fun unmount() {
         if (trace) trace("before-Unmount")
 

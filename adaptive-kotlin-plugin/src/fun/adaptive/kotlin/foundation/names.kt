@@ -42,6 +42,7 @@ object Strings {
     const val SET_STATE_VARIABLE = "setStateVariable"
     const val GET_CREATE_CLOSURE_VARIABLE = "getCreateClosureVariable"
     const val GET_THIS_CLOSURE_VARIABLE = "getThisClosureVariable"
+    const val PATCH_IF_DIRTY = "patchIfDirty"
     const val INVALID_INDEX = "invalidIndex"
     const val LOCAL_BINDING = "localBinding"
     const val SET_BINDING = "setBinding"

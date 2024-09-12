@@ -69,6 +69,7 @@ class FoundationPluginContext(
     val getCreateClosureVariable = Strings.GET_CREATE_CLOSURE_VARIABLE.fragmentFunction()
     val getThisClosureVariable = Strings.GET_THIS_CLOSURE_VARIABLE.fragmentFunction()
     val setStateVariable = Strings.SET_STATE_VARIABLE.fragmentFunction { it.owner.valueParameters.size == 2 }
+    val patchIfDirty = Strings.PATCH_IF_DIRTY.fragmentFunction()
     val localBinding = Strings.LOCAL_BINDING.fragmentFunction()
     val setBinding = Strings.SET_BINDING.fragmentFunction()
     val getProducedValue = Strings.GET_PRODUCED_VALUE.fragmentFunction()

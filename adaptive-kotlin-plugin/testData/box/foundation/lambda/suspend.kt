@@ -20,7 +20,6 @@ fun box(): String {
 
     runBlocking {
         s1.s0(45)
-        s1.createClosure.owner.patchInternal()
     }
 
     return adapter.assert(

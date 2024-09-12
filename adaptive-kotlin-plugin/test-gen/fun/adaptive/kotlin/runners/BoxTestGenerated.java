@@ -409,6 +409,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
+      @TestMetadata("lambdaPatch.kt")
+      public void testLambdaPatch() {
+        runTest("testData/box/foundation/lambda/lambdaPatch.kt");
+      }
+
+      @Test
       @TestMetadata("outreach.kt")
       public void testOutreach() {
         runTest("testData/box/foundation/lambda/outreach.kt");

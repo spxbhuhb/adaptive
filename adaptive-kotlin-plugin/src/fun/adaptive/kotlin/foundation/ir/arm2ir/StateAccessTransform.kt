@@ -25,7 +25,7 @@ import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.name.Name
 
-@OptIn(UnsafeDuringIrConstructionAPI::class) // uncomment for 2.0.0.
+@OptIn(UnsafeDuringIrConstructionAPI::class)
 class StateAccessTransform(
     private val irBuilder: ClassBoundIrBuilder,
     private val closure: ArmClosure,
@@ -36,6 +36,9 @@ class StateAccessTransform(
 ) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
 
     override val pluginContext = irBuilder.pluginContext
+
+    var stateChange = false
+    var inLambda = false
 
     override fun visitGetValue(expression: IrGetValue): IrExpression {
         val name = expression.symbol.owner.name
@@ -77,6 +80,8 @@ class StateAccessTransform(
         val name = expression.symbol.owner.name.identifier
 
         val stateVariable = closure.firstOrNull { it.name == name } ?: return super.visitSetValue(expression)
+
+        stateChange = true
 
         return IrCallImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
@@ -137,15 +142,45 @@ class StateAccessTransform(
      *
      */
     override fun visitFunctionNew(declaration: IrFunction): IrStatement {
-        if (declaration.origin == IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA) {
-            // debugParents(declaration.returnType.render(), declaration)
-            // This check is necessary for nested lambdas, otherwise we modify the parent when it should be kept the same.
-            // TODO check if nested lambda check can be replaced by level counting or something like that
-            if (!declaration.parents.contains(newParent as IrDeclarationParent)) {
-                declaration.parent = checkNotNull(newParent) { "should not be null here" }
+        if (declaration.origin != IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA) {
+            return super.visitFunctionNew(declaration)
+        }
+
+        if (inLambda || declaration.parents.contains(newParent as IrDeclarationParent)) {
+            return super.visitFunctionNew(declaration)
+        }
+
+        inLambda = true
+        stateChange = false
+
+        // debugParents(declaration.returnType.render(), declaration)
+        // This check is necessary for nested lambdas, otherwise we modify the parent when it should be kept the same.
+        // TODO check if nested lambda check can be replaced by level counting or something like that
+
+        declaration.parent = checkNotNull(newParent) { "should not be null here" }
+
+        val transformed = super.visitFunctionNew(declaration)
+
+        if (stateChange) {
+            check(declaration.body is IrBlockBody) { "only block body is supported" }
+
+            val body = declaration.body as IrBlockBody
+
+            // FIXME adding patch at the end of the lambda body is wrong on so many levels
+
+            body.statements += IrCallImpl(
+                SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                irBuiltIns.unitType,
+                pluginContext.patchIfDirty,
+                0, 0
+            ).also {
+                it.dispatchReceiver = irGet(newParent.dispatchReceiverParameter !!)
             }
         }
-        return super.visitFunctionNew(declaration)
+
+        inLambda = false
+
+        return transformed
     }
 //
 //    fun debugParents(label: String, declaration: IrDeclaration) {

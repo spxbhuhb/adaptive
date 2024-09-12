@@ -18,7 +18,6 @@ fun box(): String {
     val s1 = adapter.rootFragment.children.first() as AdaptiveS1
 
     s1.s0(45)
-    s1.createClosure.owner.patchInternal()
 
     return adapter.assert(
         listOf(
