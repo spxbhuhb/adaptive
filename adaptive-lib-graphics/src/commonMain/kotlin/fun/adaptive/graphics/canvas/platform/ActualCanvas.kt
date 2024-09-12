@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.graphics.canvas.platform
 
-import `fun`.adaptive.graphics.svg.instruction.Fill
+import `fun`.adaptive.graphics.svg.instruction.SvgFill
 import `fun`.adaptive.graphics.svg.instruction.transform.SvgTransform
 
 /**
@@ -57,6 +57,6 @@ interface ActualCanvas {
     /**
      * Set the fill style for the canvas.
      */
-    fun setFill(fill : Fill)
+    fun setFill(fill : SvgFill)
 
 }

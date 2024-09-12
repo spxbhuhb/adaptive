@@ -4,18 +4,21 @@
 
 package `fun`.adaptive.graphics.svg.instruction
 
+import `fun`.adaptive.graphics.svg.instruction.SvgHeight
 import `fun`.adaptive.graphics.svg.parse.SvgInstruction
-import `fun`.adaptive.graphics.svg.render.SvgRenderData
-import `fun`.adaptive.ui.instruction.decoration.Color
+import `fun`.adaptive.graphics.svg.render.SvgRootRenderData
 import `fun`.adaptive.utility.alsoIfInstance
 
-data class Fill(
-    val color: Color
+data class SvgWidth(
+    val width: Double
 ) : SvgInstruction {
 
+    // TODO exotic SVG units
+    constructor(width: String) : this(width.removeSuffix("px").toDouble())
+
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<SvgRenderData> {
-            it.fill = this
+        subject.alsoIfInstance<SvgRootRenderData> {
+            it.width = this.width
         }
     }
 }

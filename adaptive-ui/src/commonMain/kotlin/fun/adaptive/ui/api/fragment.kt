@@ -39,6 +39,11 @@ fun flowBox(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> U
 }
 
 @AdaptiveExpect(aui)
+fun rootBox(vararg instructions : AdaptiveInstruction, @Adaptive content: () -> Unit) {
+    manualImplementation(instructions, content)
+}
+
+@AdaptiveExpect(aui)
 fun row(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) : AdaptiveFragment {
     manualImplementation(instructions, content)
 }

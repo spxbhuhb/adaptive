@@ -39,6 +39,7 @@ import `fun`.adaptive.ui.instruction.decoration.CornerRadius
 import `fun`.adaptive.ui.instruction.decoration.DropShadow
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.OnClick
+import `fun`.adaptive.ui.instruction.event.OnClose
 import `fun`.adaptive.ui.instruction.event.OnMove
 import `fun`.adaptive.ui.instruction.event.OnPrimaryDown
 import `fun`.adaptive.ui.instruction.event.OnPrimaryUp
@@ -114,6 +115,8 @@ fun onPrimaryUp(handler: (event: UIEvent) -> Unit) = OnPrimaryUp(handler)
 
 fun onSecondaryDown(handler: (event: UIEvent) -> Unit) = OnSecondaryDown(handler)
 fun onSecondaryUp(handler: (event: UIEvent) -> Unit) = OnSecondaryUp(handler)
+
+fun onClose(handler : () -> Unit) = OnClose(handler)
 
 // ------------------------------------------------------------------------------------
 // Layout

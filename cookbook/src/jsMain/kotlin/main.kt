@@ -6,7 +6,6 @@ import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.cookbook.auth.authMain
 import `fun`.adaptive.cookbook.components.componentsMain
-import `fun`.adaptive.cookbook.components.sidebar
 import `fun`.adaptive.cookbook.form.formMain
 import `fun`.adaptive.cookbook.intro.introMain
 import `fun`.adaptive.cookbook.iot.iotCommon
@@ -19,6 +18,7 @@ import `fun`.adaptive.cookbook.shared.inputStyle
 import `fun`.adaptive.cookbook.shared.lightBackground
 import `fun`.adaptive.cookbook.shared.shadow
 import `fun`.adaptive.cookbook.shared.titleSmall
+import `fun`.adaptive.cookbook.ui.dialog.dialogMain
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -46,12 +46,9 @@ import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.browser
-import `fun`.adaptive.cookbook.ui.hover.hoverMain
-import `fun`.adaptive.ktor.api.withWebSocketTransport
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.platform.withJsResources
-import `fun`.adaptive.widget.form.FormFragmentFactory
-import kotlinx.browser.window
+import `fun`.adaptive.ui.form.FormFragmentFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -82,7 +79,8 @@ fun main() {
 //                maxHeight .. padding { 16.dp } .. gap { 16.dp }
 //                rowTemplate(40.dp, 1.fr)
 
-            formMain()
+//            formMain()
+            dialogMain()
 
 //                iotMain()
 //              box {

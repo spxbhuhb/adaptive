@@ -21,7 +21,7 @@ adaptive {
     pluginDebug = false
     resources {
         publicResClass = true
-        packageOfResClass = "widget.lib"
+        packageOfResClass = "fun.adaptive.ui.builtin"
         generateResClass = auto
     }
 }

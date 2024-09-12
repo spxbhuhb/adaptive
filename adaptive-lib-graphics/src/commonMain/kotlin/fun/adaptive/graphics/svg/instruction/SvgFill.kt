@@ -5,15 +5,17 @@
 package `fun`.adaptive.graphics.svg.instruction
 
 import `fun`.adaptive.graphics.svg.parse.SvgInstruction
-import `fun`.adaptive.graphics.svg.render.SvgRootRenderData
+import `fun`.adaptive.graphics.svg.render.SvgRenderData
+import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.utility.alsoIfInstance
 
-data class Height(
-    val height: String
+data class SvgFill(
+    val color: Color
 ) : SvgInstruction {
+
     override fun apply(subject: Any) {
-        subject.alsoIfInstance<SvgRootRenderData> {
-            it.height = height.removeSuffix("px").toDouble() // TODO exotic SVG units
+        subject.alsoIfInstance<SvgRenderData> {
+            it.fill = this
         }
     }
 }

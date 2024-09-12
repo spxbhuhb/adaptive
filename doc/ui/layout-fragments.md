@@ -14,6 +14,7 @@
 |-----------|-----------------------|---------------------------------------------------------------------------------------------|
 | `box`     | browser, android, ios | Position each fragment with x and y coordinates.                                            |
 | `flowBox` | browser, android, ios | Stack fragments in a row next to each other until space is available, then start a new row. |
+| `rootBox` | browser               | A box that is added directly to the root container.                                         |
 | `row`     | browser, android, ios | Stack fragments next to each other.                                                         |                                                
 | `column`  | browser, android, ios | Stack fragments below each other.                                                           |
 | `grid`    | browser, android, ios |                                                                                             |
@@ -56,6 +57,21 @@ flowBox {
     // this item will start in a new row
     // even if there would be enough space
     text("d") 
+}
+```
+
+## Root Box
+
+`rootBox` is the same as `box` with one key difference: it is added directly to the
+root container instead of the parent fragment.
+
+This is used mostly for modals when we want to place something over everything else.
+
+```kotlin
+rootBox {
+    text("a", Frame(0,0,100,100))
+    text("b", Frame(0,0,100,120))
+    text("c", AlignSelf.center)
 }
 ```
 

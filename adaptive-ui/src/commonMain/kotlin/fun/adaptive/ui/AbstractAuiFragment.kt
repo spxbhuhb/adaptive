@@ -39,6 +39,13 @@ abstract class AbstractAuiFragment<RT>(
     open val isStructural
         get() = false
 
+    /**
+     * When true, the fragment does **NOT** call the `addActual/removeActual` of its parent
+     * but calls `addActualRoot/removeActualRoot` of the adapter directly.
+     */
+    open val isRootActual
+        get() = false
+
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         null
 
@@ -65,11 +72,25 @@ abstract class AbstractAuiFragment<RT>(
 
     override fun mount() {
         super.mount()
-        parent?.addActual(this, if (isStructural) null else true) ?: adapter.addActualRoot(this)
+
+        val safeParent = parent
+
+        if (isRootActual || safeParent == null) {
+            adapter.addActualRoot(this)
+        } else {
+            safeParent.addActual(this, if (isStructural) null else true)
+        }
     }
 
     override fun unmount() {
-        parent?.removeActual(this, if (isStructural) null else true) ?: adapter.removeActualRoot(this)
+        val safeParent = parent
+
+        if (isRootActual || safeParent == null) {
+            adapter.removeActualRoot(this)
+        } else {
+            safeParent.removeActual(this, if (isStructural) null else true)
+        }
+
         super.unmount()
     }
 

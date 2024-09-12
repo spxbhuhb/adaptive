@@ -14,7 +14,7 @@ fun withSandbox(adapter: AbstractAuiAdapter<*, *>) {
     adapter.fragmentFactory += arrayOf(CanvasFragmentFactory, SvgFragmentFactory)
 
     with(adapter.defaultTextRenderData) {
-        fontName = "Noto Sans"
+        fontName = "Open Sans"
         fontSize = 17.sp
     }
 }

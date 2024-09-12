@@ -8,12 +8,16 @@ import `fun`.adaptive.graphics.svg.parse.SvgInstruction
 import `fun`.adaptive.graphics.svg.render.SvgRootRenderData
 import `fun`.adaptive.utility.alsoIfInstance
 
-data class Width(
-    val width: String
+data class SvgHeight(
+    val height: Double
 ) : SvgInstruction {
+
+    // TODO exotic SVG units
+    constructor(height: String) : this(height.removeSuffix("px").toDouble())
+
     override fun apply(subject: Any) {
         subject.alsoIfInstance<SvgRootRenderData> {
-            it.width = width.removeSuffix("px").toDouble() // TODO exotic SVG units
+            it.height = this.height
         }
     }
 }

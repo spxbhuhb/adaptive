@@ -6,7 +6,7 @@ package `fun`.adaptive.graphics.canvas
 
 import `fun`.adaptive.graphics.canvas.platform.ActualCanvas
 import `fun`.adaptive.graphics.canvas.platform.ActualPath
-import `fun`.adaptive.graphics.svg.instruction.Fill
+import `fun`.adaptive.graphics.svg.instruction.SvgFill
 import `fun`.adaptive.graphics.svg.instruction.transform.SvgTransform
 
 class TestCanvas : ActualCanvas {
@@ -41,7 +41,7 @@ class TestCanvas : ActualCanvas {
 
     }
 
-    override fun setFill(fill: Fill) {
+    override fun setFill(fill: SvgFill) {
 
     }
 

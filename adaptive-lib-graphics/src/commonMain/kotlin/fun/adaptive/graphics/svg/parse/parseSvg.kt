@@ -73,7 +73,7 @@ private fun transform(value: String, instructions: MutableList<SvgInstruction>) 
 }
 
 private fun fill(value: String, instructions: MutableList<SvgInstruction>) {
-    instructions += Fill(Color(value))
+    instructions += SvgFill(Color(value))
 }
 
 private fun d(value: String, instructions: MutableList<SvgInstruction>) {
@@ -81,11 +81,11 @@ private fun d(value: String, instructions: MutableList<SvgInstruction>) {
 }
 
 private fun height(value: String, instructions: MutableList<SvgInstruction>) {
-    instructions += Height(value)
+    instructions += SvgHeight(value)
 }
 
 private fun width(value: String, instructions: MutableList<SvgInstruction>) {
-    instructions += Width(value)
+    instructions += SvgWidth(value)
 }
 
 private fun viewBox(value: String, instructions: MutableList<SvgInstruction>) {

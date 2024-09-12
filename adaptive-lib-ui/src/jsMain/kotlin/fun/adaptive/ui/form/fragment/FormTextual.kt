@@ -1,7 +1,7 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package `fun`.adaptive.widget.form.fragment
+package `fun`.adaptive.ui.form.fragment
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
@@ -12,14 +12,14 @@ import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.instruction.input.InputPlaceholder
 import `fun`.adaptive.utility.format
-import `fun`.adaptive.widget.form.form
+import `fun`.adaptive.ui.form.form
 import `fun`.adaptive.wireformat.signature.KotlinSignatures
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 
 @AdaptiveActual(form)
-open class FormInputField(
+open class FormTextual(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
@@ -48,7 +48,6 @@ open class FormInputField(
             propertyValue = formatValue(adatClass.getValue(property.index))
 
             if (receiver.value != propertyValue) {
-                println("set INPUT: ${property.name} = $propertyValue")
                 receiver.value = propertyValue
             }
         }
@@ -61,7 +60,6 @@ open class FormInputField(
             receiver.addEventListener("input", {
                 if (receiver.value != propertyValue) {
                     val parsedValue = parseValue(receiver.value)
-                    println("set DATA ${property.name} = $parsedValue")
                     adatClass.adatContext?.touch(path)
                     adatClass.setValue(path, parsedValue)
                 }
