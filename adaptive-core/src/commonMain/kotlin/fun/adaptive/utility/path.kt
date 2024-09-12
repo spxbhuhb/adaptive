@@ -15,6 +15,8 @@ fun Path.read(): ByteArray {
 
 fun Path.exists() = SystemFileSystem.exists(this)
 
+fun Path.delete() = SystemFileSystem.delete(this)
+
 val testPath = Path("./build/tmp/test")
 
 fun ensureTestPath() {

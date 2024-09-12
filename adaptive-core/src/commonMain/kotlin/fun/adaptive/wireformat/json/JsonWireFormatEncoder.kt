@@ -477,6 +477,7 @@ class JsonWireFormatEncoder(
             writer.fieldName(fieldName)
             writer.quotedString(value.name)
         }
+        writer.separator()
         return this
     }
 

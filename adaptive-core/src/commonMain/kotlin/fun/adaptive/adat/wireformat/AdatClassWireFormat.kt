@@ -10,6 +10,7 @@ import `fun`.adaptive.adat.metadata.AdatClassMetadata
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatDecoder
 import `fun`.adaptive.wireformat.WireFormatEncoder
+import `fun`.adaptive.wireformat.toJson
 
 /**
  * WireFormat generated from [AdatClassMetadata].
@@ -28,7 +29,15 @@ class AdatClassWireFormat<A>(
     override val wireFormatName
         get() = companion.wireFormatName
 
-    val propertyWireFormats by lazy { metadata.properties.map { it.toPropertyWireFormat() } }
+    val propertyWireFormats by lazy {
+        metadata.properties.map {
+            try {
+                it.toPropertyWireFormat()
+            } catch (ex: Exception) {
+                throw RuntimeException("wireformat build error for ${metadata.name}.${it.name}\n${metadata.toJson(AdatClassMetadata).decodeToString()}\n", ex)
+            }
+        }
+    }
 
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: A): WireFormatEncoder {
         for (propertyWireFormat in propertyWireFormats) {
