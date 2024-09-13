@@ -21,8 +21,8 @@ import `fun`.adaptive.wireformat.api.Proto
 import kotlin.time.Duration
 
 class OriginBase<BE : BackendBase, FE : FrontendBase>(
-    worker: AutoWorker,
-    val handle : AutoHandle,
+    worker: AutoWorker?,
+    val handle: AutoHandle,
     serviceContext: ServiceContext?,
     metadata: AdatClassMetadata,
     wireFormat: AdatClassWireFormat<*>,
@@ -36,7 +36,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase>(
 
     val context = BackendContext(
         handle,
-        worker.scope,
+        worker?.scope,
         logger,
         Proto,
         metadata,
@@ -51,13 +51,17 @@ class OriginBase<BE : BackendBase, FE : FrontendBase>(
     init {
         builder()
         backend.frontEnd = frontend
-        worker.register(backend)
 
-        if (serviceContext != null) {
-            if (serviceContext.sessionOrNull != null) {
-                serviceContext.addSessionCleanup(CleanupHandler { worker.deregister(backend) })
-            } else {
-                serviceContext.addContextCleanup(CleanupHandler { worker.deregister(backend) })
+        if (worker != null) {
+
+            worker.register(backend)
+
+            if (serviceContext != null) {
+                if (serviceContext.sessionOrNull != null) {
+                    serviceContext.addSessionCleanup(CleanupHandler { worker.deregister(backend) })
+                } else {
+                    serviceContext.addContextCleanup(CleanupHandler { worker.deregister(backend) })
+                }
             }
         }
     }
@@ -67,6 +71,8 @@ class OriginBase<BE : BackendBase, FE : FrontendBase>(
     }
 
     suspend fun connect(transport: ServiceCallTransport? = defaultServiceCallTransport, waitForSync: Duration? = null, connectInfoFun: suspend () -> AutoConnectInfo): OriginBase<BE, FE> {
+        val scope = backend.context.scope
+        check(scope != null) { "connecting is not possible when there is no worker passed during creation" }
 
         val autoService = getService<AutoApi>(transport)
         val connectInfo = connectInfoFun()
@@ -77,7 +83,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase>(
                 connectInfo.originHandle,
                 autoService,
                 logger,
-                backend.context.scope,
+                scope,
                 1000
             ),
             connectInfo.originTime
@@ -94,7 +100,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase>(
         return this
     }
 
-    suspend fun waitForSync(connectInfo: AutoConnectInfo, timeout : Duration) {
+    suspend fun waitForSync(connectInfo: AutoConnectInfo, timeout: Duration) {
         backend.waitForSync(connectInfo, timeout)
     }
 }

@@ -46,6 +46,9 @@ import kotlinx.io.files.Path
  *
  * **This function and the instance is NOT thread safe.**
  *
+ * @param    worker             Origins that support peer connections must specify pass an [AutoWorker] in this
+ *                              parameter. Standalone origins may pass `null`.
+ *
  * @param    wireFormatProvider  The wire format to use to read/write the content of the file.
  *
  * @return   An [OriginBase] for this auto instance. Use this instance to change
@@ -54,7 +57,7 @@ import kotlinx.io.files.Path
  * @throws   IllegalArgumentException  if [initialValue] is `null` and no file exists on [path]
  */
 fun <A : AdatClass> originFile(
-    worker: AutoWorker,
+    worker: AutoWorker?,
     companion: AdatCompanion<A>,
     path: Path,
     initialValue: A?,

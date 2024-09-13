@@ -61,8 +61,9 @@ abstract class BackendBase(
      * operations that happened after the [peerTime] to the peer.
      */
     fun addPeer(connector: AutoConnector, peerTime: LamportTimestamp): LamportTimestamp {
+        val scope = checkNotNull(context.scope) { "cannot add a peer when there is no worker passed during creation" }
         context.addConnector(connector)
-        context.scope.safeLaunch(context.logger) { syncPeer(connector, peerTime) }
+        scope.safeLaunch(context.logger) { syncPeer(connector, peerTime) }
         return context.time
     }
 
@@ -124,9 +125,9 @@ abstract class BackendBase(
         return context.time.timestamp >= connectInfo.originTime.timestamp
     }
 
-    suspend fun waitForSync(connectInfo: AutoConnectInfo, timeout : Duration) {
+    suspend fun waitForSync(connectInfo: AutoConnectInfo, timeout: Duration) {
         trace { "SYNC WAIT: $connectInfo" }
-        waitFor(timeout)  { isSynced(connectInfo) }
+        waitFor(timeout) { isSynced(connectInfo) }
         trace { "SYNC WAIT END" }
     }
 

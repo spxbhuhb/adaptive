@@ -30,8 +30,12 @@ import kotlinx.io.files.Path
  *
  * The list is **NOT** thread safe.
  *
+ * @param    worker             Origins that support peer connections must specify pass an [AutoWorker] in this
+ *                              parameter. Standalone origins may pass `null`.
+ *
  * @param    onListCommit       Called after the structure of the list has been changed (add/remove), but before the
  *                              state of the fragment is updated.
+ *
  * @param    onItemCommit       Called when a property of a list item has been changed, but before the
  *                              state of the fragment is updated.
  *
@@ -39,7 +43,7 @@ import kotlinx.io.files.Path
  *           properties and to get connection info for the connecting peers.
  */
 fun originFolderPoly(
-    worker: AutoWorker,
+    worker: AutoWorker?,
     companion: AdatCompanion<*>,
     wireFormatProvider: WireFormatProvider,
     path: Path,

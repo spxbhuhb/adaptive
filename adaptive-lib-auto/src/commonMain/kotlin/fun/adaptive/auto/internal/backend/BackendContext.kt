@@ -18,7 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 
 class BackendContext(
     val handle: AutoHandle,
-    val scope: CoroutineScope,
+    val scope: CoroutineScope?,
     val logger: AdaptiveLogger,
     val wireFormatProvider: WireFormatProvider,
     val defaultMetadata: AdatClassMetadata,

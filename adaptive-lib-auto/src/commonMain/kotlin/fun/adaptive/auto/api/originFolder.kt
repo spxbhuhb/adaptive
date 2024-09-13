@@ -46,6 +46,9 @@ import kotlinx.io.files.SystemFileSystem
  *
  * **This function, the list and the instances are NOT thread safe.**
  *
+ * @param    worker             Origins that support peer connections must specify pass an [AutoWorker] in this
+ *                              parameter. Standalone origins may pass `null`.
+ *
  * @param    onListCommit       Called after the structure of the list has been changed (add/remove), but before the
  *                              state of the fragment is updated.
  * @param    onItemCommit       Called when a property of a list item has been changed, but before the
@@ -57,7 +60,7 @@ import kotlinx.io.files.SystemFileSystem
  * @throws   IllegalArgumentException  if the directory does not exist
  */
 fun <A : AdatClass> originFolder(
-    worker: AutoWorker,
+    worker: AutoWorker?,
     companion: AdatCompanion<A>,
     wireFormatProvider: WireFormatProvider,
     path: Path,
