@@ -17,6 +17,8 @@ fun Path.exists() = SystemFileSystem.exists(this)
 
 fun Path.delete() = SystemFileSystem.delete(this)
 
+fun Path.absolute() = SystemFileSystem.resolve(this)
+
 val testPath = Path("./build/tmp/test")
 
 fun ensureTestPath() {
