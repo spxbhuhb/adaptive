@@ -12,7 +12,7 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 
 class AutoInstance<A : AdatClass>(
     binding: AdaptiveStateVariableBinding<A>,
-    connect: suspend () -> AutoConnectInfo,
+    connect: suspend () -> AutoConnectInfo<A>,
     val onCommit: ((newValue: A) -> Unit)?,
     trace: Boolean
 ) : ProducerBase<PropertyBackend, AdatClassFrontend<A>, A>(

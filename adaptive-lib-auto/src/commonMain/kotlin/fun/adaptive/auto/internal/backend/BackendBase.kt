@@ -118,14 +118,14 @@ abstract class BackendBase(
     fun connectInfo() =
         with(context) {
             val time = context.nextTime()
-            AutoConnectInfo(handle, time, AutoHandle(handle.globalId, time.timestamp))
+            AutoConnectInfo<Any>(handle, time, AutoHandle(handle.globalId, time.timestamp))
         }
 
-    fun isSynced(connectInfo: AutoConnectInfo): Boolean {
+    fun isSynced(connectInfo: AutoConnectInfo<*>): Boolean {
         return context.time.timestamp >= connectInfo.originTime.timestamp
     }
 
-    suspend fun waitForSync(connectInfo: AutoConnectInfo, timeout: Duration) {
+    suspend fun waitForSync(connectInfo: AutoConnectInfo<*>, timeout: Duration) {
         trace { "SYNC WAIT: $connectInfo" }
         waitFor(timeout) { isSynced(connectInfo) }
         trace { "SYNC WAIT END" }

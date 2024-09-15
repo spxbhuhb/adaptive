@@ -6,6 +6,6 @@ import `fun`.adaptive.service.ServiceApi
 @ServiceApi
 interface DataServiceApi {
 
-    suspend fun getConnectInfo(): AutoConnectInfo
+    suspend fun getConnectInfo(): AutoConnectInfo<List<MasterDataItem>>
 
 }

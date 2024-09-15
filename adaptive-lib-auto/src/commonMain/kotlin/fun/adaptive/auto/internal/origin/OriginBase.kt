@@ -1,5 +1,6 @@
 package `fun`.adaptive.auto.internal.origin
 
+import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.metadata.AdatClassMetadata
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.api.AutoApi
@@ -20,14 +21,14 @@ import `fun`.adaptive.utility.CleanupHandler
 import `fun`.adaptive.wireformat.api.Proto
 import kotlin.time.Duration
 
-class OriginBase<BE : BackendBase, FE : FrontendBase>(
+class OriginBase<BE : BackendBase, FE : FrontendBase, CT>(
     worker: AutoWorker?,
     val handle: AutoHandle,
     serviceContext: ServiceContext?,
     metadata: AdatClassMetadata,
     wireFormat: AdatClassWireFormat<*>,
     trace: Boolean,
-    builder: OriginBase<BE, FE>.() -> Unit
+    builder: OriginBase<BE, FE, CT>.() -> Unit
 ) {
 
     val logger = getLogger("fun.adaptive.auto.${handle.globalId.toShort()}.${handle.peerId}").also {
@@ -66,11 +67,15 @@ class OriginBase<BE : BackendBase, FE : FrontendBase>(
         }
     }
 
-    fun connectInfo(): AutoConnectInfo {
-        return backend.connectInfo()
+    fun connectInfo(): AutoConnectInfo<CT> {
+        @Suppress("UNCHECKED_CAST")
+        return backend.connectInfo() as AutoConnectInfo<CT>
     }
 
-    suspend fun connect(transport: ServiceCallTransport? = defaultServiceCallTransport, waitForSync: Duration? = null, connectInfoFun: suspend () -> AutoConnectInfo): OriginBase<BE, FE> {
+    suspend fun connect(
+        transport: ServiceCallTransport? = defaultServiceCallTransport,
+        waitForSync: Duration? = null, connectInfoFun: suspend () -> AutoConnectInfo<CT>
+    ): OriginBase<BE, FE, CT> {
         val scope = backend.context.scope
         check(scope != null) { "connecting is not possible when there is no worker passed during creation" }
 
@@ -100,7 +105,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase>(
         return this
     }
 
-    suspend fun waitForSync(connectInfo: AutoConnectInfo, timeout: Duration) {
+    suspend fun waitForSync(connectInfo: AutoConnectInfo<CT>, timeout: Duration) {
         backend.waitForSync(connectInfo, timeout)
     }
 }

@@ -11,7 +11,7 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 
 class AutoListPoly(
     binding: AdaptiveStateVariableBinding<List<AdatClass>>,
-    connect: suspend () -> AutoConnectInfo,
+    connect: suspend () -> AutoConnectInfo<List<AdatClass>>,
     val companion: AdatCompanion<*>,
     val onListCommit: ((newValue: List<AdatClass>) -> Unit)?,
     val onItemCommit: ((item: AdatClass) -> Unit)?,

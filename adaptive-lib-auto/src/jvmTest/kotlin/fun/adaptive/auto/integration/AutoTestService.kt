@@ -1,5 +1,6 @@
 package `fun`.adaptive.auto.integration
 
+import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.auto.api.originFile
 import `fun`.adaptive.auto.api.originFolder
@@ -29,7 +30,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
 
     val worker by worker<AutoWorker>()
 
-    override suspend fun manual(): AutoConnectInfo {
+    override suspend fun manual(): AutoConnectInfo<TestData> {
         val logger = getLogger("logger")
 
         val context = BackendContext(
@@ -60,33 +61,33 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
 
         worker.register(originBackend)
 
-        return AutoConnectInfo(
+        return AutoConnectInfo<TestData>(
             context.handle,
             context.time,
             AutoHandle(context.handle.globalId, 2),
         )
     }
 
-    override suspend fun instance(): AutoConnectInfo {
+    override suspend fun instance(): AutoConnectInfo<TestData> {
         val origin = originInstance(worker, TestData(12, "a"), serviceContext)
         return origin.connectInfo()
     }
 
-    override suspend fun list(): AutoConnectInfo {
+    override suspend fun list(): AutoConnectInfo<List<TestData>> {
         return originList(worker, TestData, serviceContext).connectInfo()
     }
 
-    override suspend fun polyList(): AutoConnectInfo {
+    override suspend fun polyList(): AutoConnectInfo<List<AdatClass>> {
         return originListPoly(worker, TestData, serviceContext).connectInfo()
     }
 
-    override suspend fun file(): AutoConnectInfo {
+    override suspend fun file(): AutoConnectInfo<TestData> {
         val path = Path(testPath, "AutoTestService.testInstanceWithFile.json")
         SystemFileSystem.delete(path, mustExist = false)
         return originFile(worker, TestData, path, TestData(12, "a"), Json, serviceContext).connectInfo()
     }
 
-    override suspend fun folder(folderName : String): AutoConnectInfo {
+    override suspend fun folder(folderName : String): AutoConnectInfo<List<TestData>> {
 
         val path = Path(testPath, folderName)
 

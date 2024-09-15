@@ -8,7 +8,7 @@ import `fun`.adaptive.adat.Adat
  * @property  connectingHandle   A new handle created for the backend that wants to connect to the origin backend.
  */
 @Adat
-class AutoConnectInfo(
+class AutoConnectInfo<T>(
     val originHandle: AutoHandle,
     val originTime: LamportTimestamp,
     val connectingHandle: AutoHandle

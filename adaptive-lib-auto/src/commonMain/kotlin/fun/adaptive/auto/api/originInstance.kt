@@ -41,12 +41,12 @@ fun <A : AdatClass> originInstance(
     handle : AutoHandle = AutoHandle(UUID(), 1),
     trace: Boolean = false,
     onChange: ((newValue: A) -> Unit)? = null
-): OriginBase<PropertyBackend, AdatClassFrontend<A>> {
+): OriginBase<PropertyBackend, AdatClassFrontend<A>, A> {
 
     val companion = initialValue.adatCompanion
 
     @Suppress("UNCHECKED_CAST")
-    val origin = OriginBase<PropertyBackend, AdatClassFrontend<A>>(
+    val origin = OriginBase<PropertyBackend, AdatClassFrontend<A>, A>(
         worker,
         handle,
         serviceContext,

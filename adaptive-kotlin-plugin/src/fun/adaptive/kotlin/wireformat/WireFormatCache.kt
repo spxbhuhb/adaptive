@@ -17,6 +17,7 @@ import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.types.isNullable
+import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
@@ -94,7 +95,7 @@ class WireFormatCache(
         typeSignature(targetType).let { signatureFormats[it] ?: loadSignatureFormat(it, targetType) }
 
     private fun loadSignatureFormat(signature: String, irType: IrType): SignatureWireFormat {
-        val typeFqName = checkNotNull(irType.classFqName) { "type without null classFqName: $irType" }
+        val typeFqName = checkNotNull(irType.classFqName) { "type without classFqName: $irType" }
         val classFqName = typeFqName.asString()
 
         // null and non-null formats are the same on the top level
@@ -109,9 +110,11 @@ class WireFormatCache(
 
         check(irType is IrSimpleTypeImpl) { "not a simple type: $irType" }
 
-        // without type arguments we can load the companion directly as a class format
+        // Without type arguments we can load the companion directly as a class format.
+        // Adat classes may have type arguments, but we don't care about that as the
+        // Adat plugin has to handle those.
 
-        if (irType.arguments.isEmpty()) {
+        if (irType.arguments.isEmpty() || irType.isSubtypeOfClass(pluginContext.adatClass)) {
             val basicFormat = basicFormats[classFqName] ?: loadClassFormat(typeFqName)
             return SignatureWireFormat(basicFormat).also { signatureFormats[signature] = it }
         }

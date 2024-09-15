@@ -9,7 +9,7 @@ class DataService : DataServiceApi, ServiceImpl<DataService> {
 
     val dataWorker by worker<MasterDataWorker>()
 
-    override suspend fun getConnectInfo(): AutoConnectInfo {
+    override suspend fun getConnectInfo(): AutoConnectInfo<List<MasterDataItem>> {
         publicAccess()
         return dataWorker.connectInfo()
     }

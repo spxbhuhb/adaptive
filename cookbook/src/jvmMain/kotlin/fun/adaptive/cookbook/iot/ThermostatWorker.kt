@@ -25,7 +25,7 @@ class ThermostatWorker : WorkerImpl<ThermostatWorker> {
 
     val lock = getLock()
 
-    lateinit var origin : OriginBase<SetBackend, AdatClassListFrontend<Thermostat>>
+    lateinit var origin : OriginBase<SetBackend, AdatClassListFrontend<Thermostat>, List<Thermostat>>
     lateinit var thermostats: AdatClassListFrontend<Thermostat>
 
     override suspend fun run() {

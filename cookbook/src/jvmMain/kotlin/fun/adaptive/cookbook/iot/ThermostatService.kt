@@ -6,12 +6,13 @@ import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.cookbook.iot.api.ThermostatApi
+import `fun`.adaptive.cookbook.iot.model.Thermostat
 
 class ThermostatService : ThermostatApi, ServiceImpl<ThermostatService> {
 
     val thermostatWorker by worker<ThermostatWorker>()
 
-    override suspend fun list(): AutoConnectInfo {
+    override suspend fun list(): AutoConnectInfo<List<Thermostat>> {
         publicAccess()
         return thermostatWorker.connectInfo()
     }

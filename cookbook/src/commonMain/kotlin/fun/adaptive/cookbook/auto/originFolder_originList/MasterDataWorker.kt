@@ -27,10 +27,10 @@ class MasterDataWorker(
 
     val lock = getLock()
 
-    val masterData: OriginBase<*, *>
+    val masterData: OriginBase<*, *, List<MasterDataItem>>
         get() = requireNotNull(masterDataOrNull) { "masterData is null, perhaps the worker is not started" }
 
-    var masterDataOrNull: OriginBase<*, *>? = null
+    var masterDataOrNull: OriginBase<*, *, List<MasterDataItem>>? = null
         get() = lock.use { field }
         private set(v) {
             lock.use { field = v }
@@ -52,7 +52,7 @@ class MasterDataWorker(
 
     }
 
-    fun connectInfo(): AutoConnectInfo {
+    fun connectInfo(): AutoConnectInfo<List<MasterDataItem>> {
         return masterData.connectInfo()
     }
 

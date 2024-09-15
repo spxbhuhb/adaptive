@@ -38,7 +38,7 @@ fun <A : AdatClass> autoList(
     onItemCommit: ((item: A) -> Unit)? = null,
     binding: AdaptiveStateVariableBinding<List<A>>? = null,
     trace: Boolean = false,
-    connect: suspend () -> AutoConnectInfo
+    connect: suspend () -> AutoConnectInfo<List<A>>
 ): List<A>? {
     checkNotNull(binding)
 

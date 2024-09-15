@@ -34,7 +34,7 @@ fun <A : AdatClass> autoInstance(
     onChange: ((newValue: A) -> Unit)? = null,
     binding: AdaptiveStateVariableBinding<A>? = null,
     trace: Boolean = false,
-    connect: suspend () -> AutoConnectInfo
+    connect: suspend () -> AutoConnectInfo<A>
 ): A? {
     checkNotNull(binding)
     checkNotNull(binding.adatCompanion)

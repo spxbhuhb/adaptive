@@ -11,15 +11,12 @@ object Strings {
     const val WIREFORMAT_PACKAGE = "fun.adaptive.wireformat"
     const val BUILTIN_PACKAGE = "fun.adaptive.wireformat.builtin"
     const val SIGNATURE_PACKAGE = "fun.adaptive.wireformat.signature"
+    const val ADAT_PACKAGE = "fun.adaptive.adat"
 
     const val WIREFORMAT = "WireFormat"
 
-    const val STANDALONE = "Standalone"
     const val WIREFORMAT_ENCODER = "WireFormatEncoder"
     const val WIREFORMAT_DECODER = "WireFormatDecoder"
-
-    const val WIREFORMAT_PROVIDER = "WireFormatProvider"
-    const val DEFAULT_WIREFORMAT_PROVIDER = "defaultWireFormatProvider"
 
     const val INSTANCE = "instance"
     const val INSTANCE_OR_NULL = "instanceOrNull"
@@ -45,11 +42,12 @@ object Strings {
 object FqNames {
     val SIGNATURE_PACKAGE = FqName(Strings.SIGNATURE_PACKAGE)
     val BUILTIN_PACKAGE = FqName(Strings.BUILTIN_PACKAGE)
-    val KOTLIN_COLLECTIONS_PACKAGE = FqName(Strings.BUILTIN_PACKAGE)
+    val ADAT_PACKAGE = FqName(Strings.ADAT_PACKAGE)
 }
 
 object ClassIds : NamesBase(Strings.WIREFORMAT_PACKAGE) {
     val WIREFORMAT = Strings.WIREFORMAT.classId()
+    val ADATCLASS = "AdatClass".classId { FqNames.ADAT_PACKAGE }
 
     val WIREFORMAT_ENCODER = Strings.WIREFORMAT_ENCODER.classId()
     val WIREFORMAT_DECODER = Strings.WIREFORMAT_DECODER.classId()

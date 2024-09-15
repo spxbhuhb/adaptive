@@ -38,7 +38,7 @@ fun autoListPoly(
     onItemCommit: ((item: AdatClass) -> Unit)? = null,
     binding: AdaptiveStateVariableBinding<List<AdatClass>>? = null,
     trace: Boolean = false,
-    connect: suspend () -> AutoConnectInfo
+    connect: suspend () -> AutoConnectInfo<List<AdatClass>>
 ): List<AdatClass>? {
     checkNotNull(binding)
 

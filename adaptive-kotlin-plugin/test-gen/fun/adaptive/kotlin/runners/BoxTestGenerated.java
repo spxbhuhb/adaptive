@@ -167,21 +167,21 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
     }
 
-      @Nested
-      @TestMetadata("testData/box/adat/signature")
-      @TestDataPath("$PROJECT_ROOT")
-      public class Signature {
-          @Test
-          public void testAllFilesPresentInSignature() {
-              KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adat/signature"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
-          }
-
-          @Test
-          @TestMetadata("enum.kt")
-          public void testEnum() {
-              runTest("testData/box/adat/signature/enum.kt");
-          }
+    @Nested
+    @TestMetadata("testData/box/adat/signature")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Signature {
+      @Test
+      public void testAllFilesPresentInSignature() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adat/signature"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
       }
+
+      @Test
+      @TestMetadata("enum.kt")
+      public void testEnum() {
+        runTest("testData/box/adat/signature/enum.kt");
+      }
+    }
 
     @Nested
     @TestMetadata("testData/box/adat/store")
@@ -701,6 +701,22 @@ public class BoxTestGenerated extends AbstractBoxTest {
     @TestMetadata("basic.kt")
     public void testBasic() {
       runTest("testData/box/service/basic.kt");
+    }
+
+    @Nested
+    @TestMetadata("testData/box/service/polymorphic")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Polymorphic {
+      @Test
+      public void testAllFilesPresentInPolymorphic() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/service/polymorphic"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+      }
+
+      @Test
+      @TestMetadata("basic.kt")
+      public void testBasic() {
+        runTest("testData/box/service/polymorphic/basic.kt");
+      }
     }
 
     @Nested

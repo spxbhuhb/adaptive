@@ -53,7 +53,7 @@ fun originFolderPoly(
     trace: Boolean = false,
     onListCommit: ((newValue: List<AdatClass>) -> Unit)? = null,
     onItemCommit: ((newValue: List<AdatClass>, item: AdatClass) -> Unit)? = null,
-): OriginBase<SetBackend, FolderFrontend<*>> {
+): OriginBase<SetBackend, FolderFrontend<*>, List<AdatClass>> {
 
     return OriginBase(
         worker,

@@ -74,7 +74,7 @@ class Recipe : ClientServerRecipe() {
 
     }
 
-    suspend fun client(): Pair<OriginBase<*, *>, AdatClassListFrontend<AdatClass>> {
+    suspend fun client(): Pair<OriginBase<*, *,List<AdatClass>>, AdatClassListFrontend<AdatClass>> {
         // Get the connection info. We have to do this before we create
         // the client side list as the client side list needs the client
         // id from `connectInfo.connectingHandle`.

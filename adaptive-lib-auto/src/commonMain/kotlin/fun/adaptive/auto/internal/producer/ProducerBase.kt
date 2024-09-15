@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 
 abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, T>(
     override val binding: AdaptiveStateVariableBinding<T>,
-    val connect: suspend () -> AutoConnectInfo,
+    val connect: suspend () -> AutoConnectInfo<T>,
     val trace: Boolean
 ) : AdatStore(), AdaptiveProducer<T> {
 

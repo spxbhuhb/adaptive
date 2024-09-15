@@ -1,5 +1,6 @@
 package `fun`.adaptive.cookbook.auto.originListPoly_originFolderPoly_originListPoly
 
+import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.auto.api.originFolderPoly
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.origin.OriginBase
@@ -27,10 +28,10 @@ class MasterDataWorker(
 
     val lock = getLock()
 
-    val masterData: OriginBase<*, *>
+    val masterData: OriginBase<*, *, List<AdatClass>>
         get() = requireNotNull(masterDataOrNull) { "masterData is null, perhaps the worker is not started" }
 
-    var masterDataOrNull: OriginBase<*, *>? = null
+    var masterDataOrNull: OriginBase<*, *, List<AdatClass>>? = null
         get() = lock.use { field }
         private set(v) {
             lock.use { field = v }
@@ -52,7 +53,7 @@ class MasterDataWorker(
 
     }
 
-    fun connectInfo(): AutoConnectInfo {
+    fun connectInfo(): AutoConnectInfo<List<AdatClass>> {
         return masterData.connectInfo()
     }
 

@@ -43,7 +43,7 @@ fun <A : AdatClass> originList(
     trace: Boolean = false,
     onListCommit: ((newValue: List<A>) -> Unit)? = null,
     onItemCommit: ((newValue: List<A>, item: A) -> Unit)? = null
-): OriginBase<SetBackend, AdatClassListFrontend<A>> {
+): OriginBase<SetBackend, AdatClassListFrontend<A>, List<A>> {
 
     return OriginBase(
         worker,

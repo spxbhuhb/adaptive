@@ -65,7 +65,7 @@ fun <A : AdatClass> originFile(
     serviceContext: ServiceContext? = null,
     handle : AutoHandle = AutoHandle(UUID(), 1),
     trace: Boolean = false
-): OriginBase<PropertyBackend, FileFrontend<A>> {
+): OriginBase<PropertyBackend, FileFrontend<A>, A> {
 
     val itemId = LamportTimestamp(1, 1)
 

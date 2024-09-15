@@ -70,7 +70,7 @@ fun <A : AdatClass> originFolder(
     trace: Boolean = false,
     onListCommit: ((newValue: List<A>) -> Unit)? = null,
     onItemCommit: ((newValue: List<A>, item: A) -> Unit)? = null,
-): OriginBase<SetBackend, FolderFrontend<A>> {
+): OriginBase<SetBackend, FolderFrontend<A>, List<A>> {
 
     require(path.exists()) { "missing directory: ${SystemFileSystem.resolve(path)}" }
 
