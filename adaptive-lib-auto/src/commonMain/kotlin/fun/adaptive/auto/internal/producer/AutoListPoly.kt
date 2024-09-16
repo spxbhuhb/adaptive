@@ -9,16 +9,16 @@ import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 
-class AutoListPoly(
-    binding: AdaptiveStateVariableBinding<List<AdatClass>>,
-    connect: suspend () -> AutoConnectInfo<List<AdatClass>>,
+class AutoListPoly<A : AdatClass>(
+    binding: AdaptiveStateVariableBinding<List<A>>,
+    connect: suspend () -> AutoConnectInfo<List<A>>,
     override val defaultWireFormat: AdatClassWireFormat<*>? = null,
-    val onListCommit: ((newValue: List<AdatClass>) -> Unit)?,
-    val onItemCommit: ((item: AdatClass) -> Unit)?,
+    val onListCommit: ((newValue: List<A>) -> Unit)?,
+    val onItemCommit: ((item: A) -> Unit)?,
     trace: Boolean
-) : ProducerBase<SetBackend, AdatClassListFrontend<*>, List<AdatClass>>(binding, connect, trace) {
+) : ProducerBase<SetBackend, AdatClassListFrontend<*>, List<A>>(binding, connect, trace) {
 
-    override var latestValue: List<AdatClass>? = null
+    override var latestValue: List<A>? = null
 
     override fun build() {
         // TODO merge AutoList and AutoListPoly

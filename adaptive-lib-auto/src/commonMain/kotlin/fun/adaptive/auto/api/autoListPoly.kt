@@ -1,7 +1,6 @@
 package `fun`.adaptive.auto.api
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.SetBackend
@@ -39,14 +38,14 @@ import `fun`.adaptive.service.ServiceContext
  * @return   `null` (it takes time to connect and synchronize)
  */
 @Producer
-fun autoListPoly(
+fun <A : AdatClass> autoListPoly(
     defaultWireFormat: AdatClassWireFormat<*>? = null,
-    onListCommit: ((newValue: List<AdatClass>) -> Unit)? = null,
-    onItemCommit: ((item: AdatClass) -> Unit)? = null,
-    binding: AdaptiveStateVariableBinding<List<AdatClass>>? = null,
+    onListCommit: ((newValue: List<A>) -> Unit)? = null,
+    onItemCommit: ((item: A) -> Unit)? = null,
+    binding: AdaptiveStateVariableBinding<List<A>>? = null,
     trace: Boolean = false,
-    connect: suspend () -> AutoConnectInfo<List<AdatClass>>
-): List<AdatClass>? {
+    connect: suspend () -> AutoConnectInfo<List<A>>
+): List<A>? {
     checkNotNull(binding)
 
     val store = AutoListPoly(binding, connect, defaultWireFormat, onListCommit, onItemCommit, trace)
@@ -81,15 +80,15 @@ fun autoListPoly(
  * @return   An [OriginBase] for this polymorphic auto list. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  */
-fun autoListPoly(
+fun <A : AdatClass> autoListPoly(
     worker: AutoWorker,
     defaultWireFormat: AdatClassWireFormat<*>? = null,
     serviceContext: ServiceContext? = null,
     handle: AutoHandle = AutoHandle(),
     trace: Boolean = false,
-    onListCommit: ((newValue: List<AdatClass>) -> Unit)? = null,
-    onItemCommit: ((newValue: List<AdatClass>, item: AdatClass) -> Unit)? = null
-): OriginBase<SetBackend, AdatClassListFrontend<AdatClass>, List<AdatClass>> {
+    onListCommit: ((newValue: List<A>) -> Unit)? = null,
+    onItemCommit: ((newValue: List<A>, item: A) -> Unit)? = null
+): OriginBase<SetBackend, AdatClassListFrontend<A>, List<A>> {
 
     return OriginBase(
         worker,

@@ -42,18 +42,18 @@ import kotlinx.io.files.Path
  * @return   The Auto frontend of this list. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  */
-fun autoFolderPoly(
+fun <A : AdatClass> autoFolderPoly(
     worker: AutoWorker?,
     path: Path,
-    fileNameFun: (itemId: ItemId, item: AdatClass) -> String,
+    fileNameFun: (itemId: ItemId, item: A) -> String,
     wireFormatProvider: WireFormatProvider = Json,
     defaultWireFormat: AdatClassWireFormat<*>? = null,
     serviceContext: ServiceContext? = null,
     handle: AutoHandle = AutoHandle(),
     trace: Boolean = false,
-    onListCommit: ((newValue: List<AdatClass>) -> Unit)? = null,
-    onItemCommit: ((newValue: List<AdatClass>, item: AdatClass) -> Unit)? = null,
-): OriginBase<SetBackend, FolderFrontend<*>, List<AdatClass>> {
+    onListCommit: ((newValue: List<A>) -> Unit)? = null,
+    onItemCommit: ((newValue: List<A>, item: A) -> Unit)? = null,
+): OriginBase<SetBackend, FolderFrontend<*>, List<A>> {
 
     return OriginBase(
         worker,

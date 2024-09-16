@@ -77,7 +77,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
     }
 
     override suspend fun polyList(): AutoConnectInfo<List<AdatClass>> {
-        return autoListPoly(worker, serviceContext = serviceContext).connectInfo()
+        return autoListPoly<AdatClass>(worker, serviceContext = serviceContext).connectInfo()
     }
 
     override suspend fun file(): AutoConnectInfo<TestData> {
