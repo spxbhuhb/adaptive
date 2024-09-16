@@ -707,11 +707,11 @@ public class BoxTestGenerated extends AbstractBoxTest {
     @TestMetadata("testData/box/service/polymorphic")
     @TestDataPath("$PROJECT_ROOT")
     public class Polymorphic {
-        @Test
-        @TestMetadata("abstract.kt")
-        public void testAbstract() {
-            runTest("testData/box/service/polymorphic/abstract.kt");
-        }
+      @Test
+      @TestMetadata("abstract.kt")
+      public void testAbstract() {
+        runTest("testData/box/service/polymorphic/abstract.kt");
+      }
 
       @Test
       public void testAllFilesPresentInPolymorphic() {

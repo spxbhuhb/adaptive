@@ -121,7 +121,7 @@ class AdatPropertyMetadata(
                 AdatPropertyMetadata("index", 1, 0, "I"),
                 AdatPropertyMetadata("flags", 2, 0, "I"),
                 AdatPropertyMetadata("signature", 3, 0, "T"),
-                AdatPropertyMetadata("properties", 4, 0, "Lkotlin.collections.List<Lfun.adaptive.adat.metadata.AdatDescriptorMetadata;>;")
+                AdatPropertyMetadata("descriptors", 4, 0, "Lkotlin.collections.List<Lfun.adaptive.adat.metadata.AdatDescriptorMetadata;>;")
             )
         )
 
