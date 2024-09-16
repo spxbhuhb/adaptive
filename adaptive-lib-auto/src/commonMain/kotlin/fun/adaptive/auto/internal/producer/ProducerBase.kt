@@ -1,16 +1,15 @@
 package `fun`.adaptive.auto.internal.producer
 
-import `fun`.adaptive.adat.metadata.AdatClassMetadata
 import `fun`.adaptive.adat.store.AdatStore
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.api.AutoApi
+import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.BackendBase
 import `fun`.adaptive.auto.internal.backend.BackendContext
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.internal.frontend.FrontendBase
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
@@ -41,6 +40,8 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, T>(
     val adapter
         get() = binding.targetFragment.adapter
 
+    abstract val defaultWireFormat : AdatClassWireFormat<*>?
+
     override fun start() {
         scope.launch {
             val connectInfo = connect()
@@ -55,7 +56,7 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, T>(
                 scope,
                 logger,
                 Proto,
-                defaultWireFormat(),
+                defaultWireFormat,
                 LamportTimestamp(connectingHandle.peerId, 0),
             )
 
@@ -77,10 +78,6 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, T>(
     }
 
     abstract fun build()
-
-    abstract fun defaultMetadata(): AdatClassMetadata
-
-    abstract fun defaultWireFormat(): AdatClassWireFormat<*>
 
     override fun stop() {
         adapter.backend.firstImpl<AutoWorker>().deregister(backend)

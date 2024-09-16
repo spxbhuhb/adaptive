@@ -12,7 +12,7 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 class AutoListPoly(
     binding: AdaptiveStateVariableBinding<List<AdatClass>>,
     connect: suspend () -> AutoConnectInfo<List<AdatClass>>,
-    val companion: AdatCompanion<*>,
+    override val defaultWireFormat: AdatClassWireFormat<*>? = null,
     val onListCommit: ((newValue: List<AdatClass>) -> Unit)?,
     val onItemCommit: ((item: AdatClass) -> Unit)?,
     trace: Boolean
@@ -38,12 +38,6 @@ class AutoListPoly(
             }
         )
     }
-
-    override fun defaultMetadata(): AdatClassMetadata =
-        companion.adatMetadata
-
-    override fun defaultWireFormat(): AdatClassWireFormat<*> =
-        companion.adatWireFormat
 
     override fun toString(): String {
         return "AutoPolyList($binding)"

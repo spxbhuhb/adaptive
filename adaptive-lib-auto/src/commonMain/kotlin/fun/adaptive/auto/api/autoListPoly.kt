@@ -40,7 +40,7 @@ import `fun`.adaptive.service.ServiceContext
  */
 @Producer
 fun autoListPoly(
-    companion: AdatCompanion<*>,
+    defaultWireFormat: AdatClassWireFormat<*>? = null,
     onListCommit: ((newValue: List<AdatClass>) -> Unit)? = null,
     onItemCommit: ((item: AdatClass) -> Unit)? = null,
     binding: AdaptiveStateVariableBinding<List<AdatClass>>? = null,
@@ -49,7 +49,7 @@ fun autoListPoly(
 ): List<AdatClass>? {
     checkNotNull(binding)
 
-    val store = AutoListPoly(binding, connect, companion, onListCommit, onItemCommit, trace)
+    val store = AutoListPoly(binding, connect, defaultWireFormat, onListCommit, onItemCommit, trace)
 
     binding.targetFragment.addProducer(store)
 

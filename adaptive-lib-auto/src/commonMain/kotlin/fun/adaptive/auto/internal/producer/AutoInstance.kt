@@ -2,7 +2,6 @@ package `fun`.adaptive.auto.internal.producer
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
-import `fun`.adaptive.adat.metadata.AdatClassMetadata
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
@@ -25,6 +24,9 @@ class AutoInstance<A : AdatClass>(
 
     @Suppress("UNCHECKED_CAST") // TODO should we create a binding for adat classes specifically?
     val companion = binding.adatCompanion !! as AdatCompanion<A>
+
+    override val defaultWireFormat: AdatClassWireFormat<*>?
+        get() = companion.adatWireFormat
 
     override fun build() {
 
@@ -49,12 +51,6 @@ class AutoInstance<A : AdatClass>(
         )
 
     }
-
-    override fun defaultMetadata(): AdatClassMetadata =
-        companion.adatMetadata
-
-    override fun defaultWireFormat(): AdatClassWireFormat<*> =
-        companion.adatWireFormat
 
     override fun toString(): String {
         return "AutoInstance($binding)"

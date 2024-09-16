@@ -2,7 +2,6 @@ package `fun`.adaptive.auto.internal.producer
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
-import `fun`.adaptive.adat.metadata.AdatClassMetadata
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
@@ -19,6 +18,9 @@ class AutoList<A : AdatClass>(
 ) : ProducerBase<SetBackend, AdatClassListFrontend<A>, List<A>>(binding, connect, trace) {
 
     override var latestValue: List<A>? = null
+
+    override val defaultWireFormat: AdatClassWireFormat<*>?
+        get() = companion.adatWireFormat
 
     override fun build() {
         backend = SetBackend(context)
@@ -37,12 +39,6 @@ class AutoList<A : AdatClass>(
             }
         )
     }
-
-    override fun defaultMetadata(): AdatClassMetadata =
-        companion.adatMetadata
-
-    override fun defaultWireFormat(): AdatClassWireFormat<*> =
-        companion.adatWireFormat
 
     override fun toString(): String {
         return "AutoList($binding)"
