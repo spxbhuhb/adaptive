@@ -8,6 +8,7 @@ import `fun`.adaptive.kotlin.adat.AdatPluginKey
 import `fun`.adaptive.kotlin.adat.ClassIds
 import `fun`.adaptive.kotlin.adat.FqNames
 import `fun`.adaptive.kotlin.adat.Names
+import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.analysis.checkers.getContainingClassSymbol
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
@@ -39,7 +40,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
     }
 
     override fun getNestedClassifiersNames(classSymbol: FirClassSymbol<*>, context: NestedClassGenerationContext): Set<Name> {
-        if (classSymbol.isAdatClass) {
+        if (classSymbol.isAdatClass && classSymbol.rawStatus.modality != Modality.ABSTRACT) {
             return setOf(SpecialNames.DEFAULT_NAME_FOR_COMPANION_OBJECT)
         } else {
             return emptySet()
@@ -51,7 +52,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         name: Name,
         context: NestedClassGenerationContext
     ): FirClassLikeSymbol<*>? {
-        if (! owner.isAdatClass) return null
+        if (! owner.isAdatClass || owner.rawStatus.modality == Modality.ABSTRACT) return null
 
         check(owner is FirRegularClassSymbol)
 

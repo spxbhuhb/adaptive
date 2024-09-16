@@ -146,6 +146,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         }
     }
 
+    @OptIn(SymbolInternals::class)
     override fun generateFunctions(callableId: CallableId, context: MemberGenerationContext?): List<FirNamedFunctionSymbol> {
         if (context.isForeign) return emptyList()
         requireNotNull(context)
@@ -167,6 +168,15 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
                         valueParameterSymbol.name,
                         valueParameterSymbol.resolvedReturnType
                     )
+                }
+                interfaceFunction.typeParameterSymbols.forEach { typeParameterSymbol ->
+                    typeParameter(
+                        typeParameterSymbol.name,
+                        typeParameterSymbol.variance,
+                        isReified = typeParameterSymbol.isReified
+                    ) {
+                        bound(typeParameterSymbol.fir.bounds.first().coneType)
+                    }
                 }
             }.symbol
         }

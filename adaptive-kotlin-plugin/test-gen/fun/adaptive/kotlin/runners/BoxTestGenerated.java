@@ -717,6 +717,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testBasic() {
         runTest("testData/box/service/polymorphic/basic.kt");
       }
+
+      @Test
+      @TestMetadata("generic.kt")
+      public void testGeneric() {
+        runTest("testData/box/service/polymorphic/generic.kt");
+      }
     }
 
     @Nested

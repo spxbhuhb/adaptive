@@ -19,6 +19,8 @@ fun Path.delete() = SystemFileSystem.delete(this)
 
 fun Path.absolute() = SystemFileSystem.resolve(this)
 
+fun Path.list() = SystemFileSystem.list(this)
+
 fun Path.ensure() : Path {
     SystemFileSystem.createDirectories(this)
     return this
