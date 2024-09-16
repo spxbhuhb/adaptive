@@ -12,12 +12,12 @@ import kotlinx.coroutines.channels.Channel
 
 class ServiceConnector(
     val thisHandle: AutoHandle,
-    val peerHandle: AutoHandle,
+    peerHandle: AutoHandle,
     val service: AutoApi,
     val logger: AdaptiveLogger,
     val scope: CoroutineScope,
     pendingLimit: Int
-) : AutoConnector(peerHandle.peerId) {
+) : AutoConnector(peerHandle) {
 
     val operations: Channel<AutoOperation> = Channel(pendingLimit)
 

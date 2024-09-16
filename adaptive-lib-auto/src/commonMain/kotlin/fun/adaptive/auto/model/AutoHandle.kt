@@ -11,5 +11,8 @@ import `fun`.adaptive.utility.UUID
 @Adat
 class AutoHandle(
     val globalId: UUID<BackendBase>,
-    val peerId: Int
-)
+    val peerId: Int,
+    val itemId : ItemId?
+) {
+    constructor() : this(UUID(), 0, null)
+}

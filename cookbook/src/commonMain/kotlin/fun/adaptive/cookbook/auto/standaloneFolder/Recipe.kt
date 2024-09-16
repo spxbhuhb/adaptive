@@ -1,19 +1,20 @@
 package `fun`.adaptive.cookbook.auto.standaloneFolder
 
-import `fun`.adaptive.auto.api.originFolder
+import `fun`.adaptive.auto.api.autoFolder
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.ensure
 import `fun`.adaptive.wireformat.api.Json
 import kotlinx.io.files.Path
 
 class Recipe {
-    val path = "./cookbook/var/auto/standaloneFolder"
+    val path = Path("./cookbook/var/auto/standaloneFolder").ensure()
 
     fun run() {
-        val standalone = originFolder(
+        val standalone = autoFolder(
             null,
             MasterDataItem,
             Json,
-            Path(path),
+            path,
             // This function generates the name of the files.
             // The actual file name is not important, but it should not start with a '.'
             // character as those files are ignored at list load.

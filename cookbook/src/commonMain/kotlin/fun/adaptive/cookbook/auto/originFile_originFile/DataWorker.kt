@@ -1,6 +1,6 @@
-package `fun`.adaptive.cookbook.auto.originFolder_originList
+package `fun`.adaptive.cookbook.auto.originFile_originFile
 
-import `fun`.adaptive.auto.api.autoFolder
+import `fun`.adaptive.auto.api.autoFile
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.auto.model.AutoConnectInfo
@@ -13,13 +13,12 @@ import `fun`.adaptive.wireformat.api.Json
 import kotlinx.io.files.Path
 
 /**
- * A worker that creates a permanent, folder-persisted auto list
- * of [MasterDataItem] instances.
+ * A worker that creates a permanent, file-persisted auto instance of [DataItem].
  */
-class MasterDataWorker(
+class DataWorker(
     path: Path,
     val trace: Boolean = false
-) : WorkerImpl<MasterDataWorker> {
+) : WorkerImpl<DataWorker> {
 
     val autoWorker by worker<AutoWorker>()
 
@@ -27,10 +26,10 @@ class MasterDataWorker(
 
     val lock = getLock()
 
-    val masterData: OriginBase<*, *, List<MasterDataItem>>
+    val masterData: OriginBase<*, *, DataItem>
         get() = requireNotNull(masterDataOrNull) { "masterData is null, perhaps the worker is not started" }
 
-    var masterDataOrNull: OriginBase<*, *, List<MasterDataItem>>? = null
+    var masterDataOrNull: OriginBase<*, *, DataItem>? = null
         get() = lock.use { field }
         private set(v) {
             lock.use { field = v }
@@ -38,21 +37,18 @@ class MasterDataWorker(
 
     override suspend fun run() {
 
-        masterDataOrNull = autoFolder(
+        masterDataOrNull = autoFile(
             autoWorker,
-            MasterDataItem,
-            Json,
+            DataItem,
             path,
-            // This function generates the name of the files.
-            // The actual file name is not important, but it should not start with a '.'
-            // character as those files are ignored at list load.
-            { itemId, _ -> "${itemId.peerId}.${itemId.timestamp}.json" },
+            DataItem(),
+            Json,
             trace = trace,
         )
 
     }
 
-    fun connectInfo(): AutoConnectInfo<List<MasterDataItem>> {
+    fun connectInfo(): AutoConnectInfo<DataItem> {
         return masterData.connectInfo()
     }
 

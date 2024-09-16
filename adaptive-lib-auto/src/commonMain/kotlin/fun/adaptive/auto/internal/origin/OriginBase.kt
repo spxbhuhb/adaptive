@@ -1,16 +1,16 @@
 package `fun`.adaptive.auto.internal.origin
 
-import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.metadata.AdatClassMetadata
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.api.AutoApi
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.BackendBase
 import `fun`.adaptive.auto.internal.backend.BackendContext
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
+import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.frontend.FrontendBase
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.auto.model.AutoHandle
+import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.ServiceContext
@@ -25,7 +25,6 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, CT>(
     worker: AutoWorker?,
     val handle: AutoHandle,
     serviceContext: ServiceContext?,
-    metadata: AdatClassMetadata,
     wireFormat: AdatClassWireFormat<*>,
     trace: Boolean,
     builder: OriginBase<BE, FE, CT>.() -> Unit
@@ -40,7 +39,6 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, CT>(
         worker?.scope,
         logger,
         Proto,
-        metadata,
         wireFormat,
         LamportTimestamp(handle.peerId, 1),
     )
@@ -72,9 +70,23 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, CT>(
         return backend.connectInfo() as AutoConnectInfo<CT>
     }
 
+    fun <IT> connectInfo(itemId : ItemId): AutoConnectInfo<IT> {
+        @Suppress("UNCHECKED_CAST")
+        return backend.connectInfo(itemId) as AutoConnectInfo<IT>
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun <IT> connectInfo(filterFun: (IT) -> Boolean) : AutoConnectInfo<IT>? {
+        val safeFrontend = frontend
+        check(safeFrontend is AdatClassListFrontend<*>) { "connecting with filter function is supported only by AdatClassListFrontend" }
+        val itemId = safeFrontend.values.firstOrNull { filterFun(it as IT) }?.let { safeFrontend.itemId(it) } ?: return null
+        return backend.connectInfo(itemId) as AutoConnectInfo<IT>
+    }
+
     suspend fun connect(
         transport: ServiceCallTransport? = defaultServiceCallTransport,
-        waitForSync: Duration? = null, connectInfoFun: suspend () -> AutoConnectInfo<CT>
+        waitForSync: Duration? = null,
+        connectInfoFun: suspend () -> AutoConnectInfo<CT>
     ): OriginBase<BE, FE, CT> {
         val scope = backend.context.scope
         check(scope != null) { "connecting is not possible when there is no worker passed during creation" }

@@ -7,18 +7,21 @@ import kotlin.reflect.KProperty
 
 class Atomic<T>(
     initialValue: T,
-) : ReadWriteProperty<Any?, T> {
+) {
 
     private val lock = getLock()
 
     private var value = initialValue
 
-    override fun getValue(thisRef: Any?, property: KProperty<*>): T {
+    fun get(): T {
         return lock.use { value }
     }
 
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
+    fun set(value: T) {
         lock.use { this.value = value }
     }
+
+    fun compute(computeFun : (it : T) -> T) : T =
+        lock.use { computeFun(value).also { value = it } }
 
 }

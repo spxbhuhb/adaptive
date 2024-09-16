@@ -1,7 +1,7 @@
 package `fun`.adaptive.cookbook.auto.originFolderPoly_originListPoly
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.auto.api.originFolderPoly
+import `fun`.adaptive.auto.api.autoFolderPoly
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.auto.model.AutoConnectInfo
@@ -18,13 +18,13 @@ import kotlinx.io.files.Path
  * of polymorphic instances.
  */
 class MasterDataWorker(
-    path: String,
+    path: Path,
     val trace: Boolean = false
 ) : WorkerImpl<MasterDataWorker> {
 
     val autoWorker by worker<AutoWorker>()
 
-    val path by setting<String> { "DATA_PATH" } default path
+    val path by setting<Path> { "DATA_PATH" } default path
 
     val lock = getLock()
 
@@ -39,11 +39,11 @@ class MasterDataWorker(
 
     override suspend fun run() {
 
-        masterDataOrNull = originFolderPoly(
+        masterDataOrNull = autoFolderPoly(
             autoWorker,
             StringItem,
             Json,
-            Path(path),
+            path,
             // This function generates the name of the files.
             // The actual file name is not important, but it should not start with a '.'
             // character as those files are ignored at list load.

@@ -11,7 +11,7 @@ import kotlin.collections.minusAssign
 
 class TreeBackend(
     override val context: BackendContext
-) : CollectionBackendBase(context.handle.peerId) {
+) : CollectionBackendBase(context.handle) {
 
     val tree = TreeData(this)
     override val items = mutableMapOf<ItemId, PropertyBackend>()

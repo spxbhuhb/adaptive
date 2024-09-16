@@ -1,10 +1,10 @@
 package `fun`.adaptive.auto.internal.connector
 
-import `fun`.adaptive.auto.model.PeerId
+import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.operation.AutoOperation
 
 abstract class AutoConnector(
-    val peerId: PeerId
+    val peerHandle: AutoHandle
 ) {
 
     abstract fun send(operation: AutoOperation)

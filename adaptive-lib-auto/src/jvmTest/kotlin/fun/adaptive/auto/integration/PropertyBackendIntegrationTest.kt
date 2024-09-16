@@ -49,7 +49,6 @@ class PropertyBackendIntegrationTest {
                 scope,
                 logger,
                 Proto,
-                TestData.adatMetadata,
                 TestData.adatWireFormat,
                 LamportTimestamp(connectingHandle.peerId, 0),
             )

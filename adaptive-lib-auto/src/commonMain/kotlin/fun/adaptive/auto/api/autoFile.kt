@@ -9,11 +9,12 @@ import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.FileFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.auto.model.AutoHandle
+import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.wireformat.WireFormatProvider
+import `fun`.adaptive.wireformat.api.Json
 import kotlinx.io.files.Path
 
 /**
@@ -46,56 +47,64 @@ import kotlinx.io.files.Path
  *
  * **This function and the instance is NOT thread safe.**
  *
- * @param    worker             Origins that support peer connections must specify pass an [AutoWorker] in this
- *                              parameter. Standalone origins may pass `null`.
+ * @param    worker              Origins that support peer connections must specify pass an [AutoWorker] in this
+ *                               parameter. Standalone origins may pass `null`.
  *
  * @param    wireFormatProvider  The wire format to use to read/write the content of the file.
+ *
+ * @param    itemId              The item id of the instance, default is (1,1). Passing an item id is useful when
+ *                               the instance is part of an auto list, but we don't need the whole list, just
+ *                               that one item.
  *
  * @return   An [OriginBase] for this auto instance. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  *
  * @throws   IllegalArgumentException  if [initialValue] is `null` and no file exists on [path]
  */
-fun <A : AdatClass> originFile(
+fun <A : AdatClass> autoFile(
     worker: AutoWorker?,
     companion: AdatCompanion<A>,
     path: Path,
-    initialValue: A?,
-    wireFormatProvider: WireFormatProvider,
+    initialValue: A? = null,
+    wireFormatProvider: WireFormatProvider = Json,
     serviceContext: ServiceContext? = null,
-    handle : AutoHandle = AutoHandle(UUID(), 1),
+    handle: AutoHandle = AutoHandle(),
+    itemId: ItemId = LamportTimestamp(1, 1),
     trace: Boolean = false
 ): OriginBase<PropertyBackend, FileFrontend<A>, A> {
 
-    val itemId = LamportTimestamp(1, 1)
+    val value: A?
 
-    val value : A
-
-    if (! path.exists()) {
-
-        requireNotNull(initialValue) { "no initial value and the file $path does not exist" }
-
-        FileFrontend.write(path, wireFormatProvider, itemId, initialValue)
-
-        value = initialValue
-
-    } else {
-
-        @Suppress("UNCHECKED_CAST")
-        value = FileFrontend.read(path, wireFormatProvider).second as A
-
-        check(value.adatCompanion.wireFormatName == companion.wireFormatName) {
-            "type mismatch in $path: ${value.adatCompanion.wireFormatName} != ${companion.wireFormatName}"
+    when {
+        initialValue != null -> {
+            FileFrontend.write(path, wireFormatProvider, itemId, initialValue)
+            value = initialValue
         }
 
-        check(value.isValid()) { "validation failed for content of $path" }
+        path.exists() -> {
+            @Suppress("UNCHECKED_CAST")
+            value = FileFrontend.read(path, wireFormatProvider).second as A
+
+            check(value.adatCompanion.wireFormatName == companion.wireFormatName) {
+                "type mismatch in $path: ${value.adatCompanion.wireFormatName} != ${companion.wireFormatName}"
+            }
+
+            check(value.isValid()) { "validation failed for content of $path" }
+        }
+
+        itemId.isValid() -> {
+            value = null
+        }
+
+        else -> {
+            throw IllegalStateException("no initial value, no idem id and the file $path does not exist")
+        }
     }
 
     return OriginBase(
         worker,
         handle,
         serviceContext,
-        companion.adatMetadata,
         companion.adatWireFormat,
         trace
     ) {
@@ -103,13 +112,14 @@ fun <A : AdatClass> originFile(
             context,
             itemId,
             null,
-            value.toArray()
+            value?.toArray()
         )
 
         frontend = FileFrontend(
             backend,
             companion.adatWireFormat,
-            null, null, null, null,
+            itemId,
+            null, null, null,
             wireFormatProvider,
             path
         )

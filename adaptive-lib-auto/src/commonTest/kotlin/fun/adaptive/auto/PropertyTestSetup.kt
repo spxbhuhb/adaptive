@@ -27,13 +27,12 @@ class PropertyTestSetup(
     val logger1 = getLogger("logger.1").enableFine()
     val logger2 = getLogger("logger.2").enableFine()
 
-    val metadata = TestData.adatMetadata
     val wireFormat = TestData.adatWireFormat
 
-    val c1: BackendContext = BackendContext(AutoHandle(gid, 1), scope, logger1, Proto, metadata, wireFormat, LamportTimestamp(1, 1))
+    val c1: BackendContext = BackendContext(AutoHandle(gid, 1, null), scope, logger1, Proto, wireFormat, LamportTimestamp(1, 1))
     val b1 = PropertyBackend(c1, itemId, null, initialData)
 
-    val c2: BackendContext = BackendContext(AutoHandle(gid, 2), scope, logger2, Proto, metadata, wireFormat, LamportTimestamp(2, 0))
+    val c2: BackendContext = BackendContext(AutoHandle(gid, 2, null), scope, logger2, Proto, wireFormat, LamportTimestamp(2, 0))
     val b2 = PropertyBackend(c2, itemId, null, null)
 
     fun connect() {

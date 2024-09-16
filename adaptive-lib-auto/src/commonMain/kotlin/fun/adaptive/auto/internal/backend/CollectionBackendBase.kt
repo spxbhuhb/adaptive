@@ -2,7 +2,7 @@ package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.toArray
-import `fun`.adaptive.auto.model.PeerId
+import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.operation.AutoAdd
 import `fun`.adaptive.auto.model.operation.AutoEmpty
@@ -13,8 +13,8 @@ import `fun`.adaptive.auto.model.operation.AutoSyncEnd
 import `fun`.adaptive.reflect.CallSiteName
 
 abstract class CollectionBackendBase(
-    peerId: PeerId
-) : BackendBase(peerId) {
+    peerHandle: AutoHandle,
+) : BackendBase(peerHandle) {
 
     abstract val items: MutableMap<ItemId, PropertyBackend>
 

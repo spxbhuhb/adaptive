@@ -9,7 +9,6 @@ import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.io.files.Path
@@ -38,7 +37,7 @@ import kotlinx.io.files.SystemFileSystem
  * - Property changes keep the non-affected instances.
  *
  * Each new instance is validated by default, so code that use values
- * produced by [originList] can safely use the validation result as it is
+ * produced by [autoList] can safely use the validation result as it is
  * up-to-date all the time.
  *
  * Registers a cleanup handler into the session through [serviceContext] or
@@ -59,14 +58,14 @@ import kotlinx.io.files.SystemFileSystem
  *
  * @throws   IllegalArgumentException  if the directory does not exist
  */
-fun <A : AdatClass> originFolder(
+fun <A : AdatClass> autoFolder(
     worker: AutoWorker?,
     companion: AdatCompanion<A>,
     wireFormatProvider: WireFormatProvider,
     path: Path,
     fileNameFun: (itemId: ItemId, item: A) -> String,
     serviceContext: ServiceContext? = null,
-    handle : AutoHandle = AutoHandle(UUID(), 1),
+    handle : AutoHandle = AutoHandle(),
     trace: Boolean = false,
     onListCommit: ((newValue: List<A>) -> Unit)? = null,
     onItemCommit: ((newValue: List<A>, item: A) -> Unit)? = null,
@@ -78,7 +77,6 @@ fun <A : AdatClass> originFolder(
         worker,
         handle,
         serviceContext,
-        companion.adatMetadata,
         companion.adatWireFormat,
         trace
     ) {

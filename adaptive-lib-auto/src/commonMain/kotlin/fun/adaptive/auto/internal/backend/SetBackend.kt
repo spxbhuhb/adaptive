@@ -10,7 +10,7 @@ import `fun`.adaptive.auto.model.operation.*
 class SetBackend(
     override val context: BackendContext,
     initialValue: Map<ItemId, PropertyBackend>? = null
-) : CollectionBackendBase(context.handle.peerId) {
+) : CollectionBackendBase(context.handle) {
 
     val additions = mutableSetOf<ItemId>()
     val removals = mutableSetOf<ItemId>()
@@ -81,8 +81,12 @@ class SetBackend(
     }
 
     override fun modify(operation: AutoModify, commit: Boolean) {
+        trace { "commit=$commit op=$operation" }
+
         if (operation.itemId in removals) return
+
         val item = items[operation.itemId]
+
         if (item != null) {
             item.modify(operation, commit)
         } else {
@@ -127,6 +131,24 @@ class SetBackend(
             return
         }
 
+        // When there is an item id in the connector, the peer is a single-item peer.
+        // In that case we have to treat it such: cannot send over list operations.
+
+        if (connector.peerHandle.itemId != null) {
+            syncItem(connector, syncFrom, connector.peerHandle.itemId)
+        } else {
+            syncCollection(time, connector, syncFrom)
+        }
+
+        trace { "SYNC END:  --SENT--  time=$time peerTime=$syncFrom" }
+    }
+
+    suspend fun syncItem(connector: AutoConnector, syncFrom: LamportTimestamp, itemId: ItemId) {
+        requireNotNull(items[itemId]) { "missing item: $itemId" }
+            .syncPeer(connector, syncFrom)
+    }
+
+    suspend fun syncCollection(time : LamportTimestamp, connector: AutoConnector, syncFrom: LamportTimestamp) {
         if (additions.isEmpty()) {
             connector.send(AutoEmpty(time))
             trace { "SYNC END:  --EMPTY--  time=$time peerTime=$syncFrom" }
@@ -148,8 +170,6 @@ class SetBackend(
         }
 
         connector.send(AutoSyncEnd(time))
-
-        trace { "SYNC END:  --SENT--  time=$time peerTime=$syncFrom" }
     }
 
     // --------------------------------------------------------------------------------

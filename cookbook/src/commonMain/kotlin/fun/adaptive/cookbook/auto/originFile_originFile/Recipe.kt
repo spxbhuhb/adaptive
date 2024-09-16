@@ -1,33 +1,37 @@
-package `fun`.adaptive.cookbook.auto.originFolder_originList
+package `fun`.adaptive.cookbook.auto.originFile_originFile
 
 import `fun`.adaptive.auto.api.auto
-import `fun`.adaptive.auto.api.autoList
+import `fun`.adaptive.auto.api.autoFile
 import `fun`.adaptive.auto.backend.AutoWorker
+import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.cookbook.auto.AutoRecipe
+import `fun`.adaptive.cookbook.shared.ClientServerRecipe
 import `fun`.adaptive.service.getService
-import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.ensure
+import `fun`.adaptive.utility.waitFor
+import `fun`.adaptive.wireformat.api.Json
 import kotlinx.io.files.Path
 import kotlin.time.Duration.Companion.seconds
 
 /**
- * Create a permanent auto list on the server side by a worker.
+ * Create a permanent auto instance on the server side by a worker.
  *
- * - Persist the list into a folder.
- * - Connect to the list from the client side from non-adaptive code.
+ * - Persist the instance into a file.
+ * - Connect to the instance from the client side from non-adaptive code.
  */
 class Recipe : AutoRecipe() {
 
-    val serverPath = Path("./cookbook/var/auto/originFolder_originList").ensure().clean()
+    val serverPath = Path(Path("./cookbook/var/auto/originFile_originFile/server").ensure().clean(), "item.json")
+    val clientPath = Path(Path("./cookbook/var/auto/originFile_originFile/client").ensure().clean(), "item.json")
 
     override val serverBackend = backend {
         auto()
         service { DataService() }
-        worker { MasterDataWorker(serverPath) }
+        worker { DataWorker(serverPath) }
     }
 
     override val clientBackend = backend {
@@ -37,18 +41,17 @@ class Recipe : AutoRecipe() {
     override suspend fun autoClientMain() {
 
         // Get the connection info. We have to do this before we create
-        // the client side list as the client side list needs the client
-        // id from `connectInfo.connectingHandle`.
+        // the client side as the client side needs the client id
+        // and the item id from `connectInfo.connectingHandle`.
 
         val connectInfo = getService<DataServiceApi>().getConnectInfo()
 
-        // Create the client side list. This list is not persisted,
-        // but from the application point of view it is permanent
-        // as it is registered with `AutoWorker`.
+        // Create the client side auto file.
 
-        val data = autoList(
+        val data = autoFile(
             clientBackend.firstImpl<AutoWorker>(),
-            MasterDataItem,
+            DataItem,
+            clientPath,
             handle = connectInfo.connectingHandle
         )
 
@@ -60,8 +63,7 @@ class Recipe : AutoRecipe() {
 
         // Add an item on the client side
 
-        data.frontend.add(MasterDataItem(UUID(), "record-name-1"))
+        data.frontend.modify("recordName", "record-name-2")
 
     }
-
 }

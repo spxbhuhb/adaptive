@@ -7,7 +7,6 @@ import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.model.PeerId
 import `fun`.adaptive.auto.model.operation.AutoModify
 import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.reflect.CallSiteName
@@ -17,8 +16,8 @@ import `fun`.adaptive.wireformat.WireFormatRegistry
 import kotlin.time.Duration
 
 abstract class BackendBase(
-    peerId: PeerId
-) : AutoConnector(peerId) {
+    peerHandle: AutoHandle
+) : AutoConnector(peerHandle) {
 
     abstract val context: BackendContext
 
@@ -102,7 +101,10 @@ abstract class BackendBase(
 
         for (connector in context.connectors) {
             // do not send operations back to the peer that created them
-            if (connector.peerId == operation.timestamp.peerId) continue
+            if (connector.peerHandle.peerId == operation.timestamp.peerId) continue
+            // do not send list operations to single-item peers
+            if (connector.peerHandle.itemId != null && operation !is AutoModify) continue
+
             connector.send(operation)
         }
     }
@@ -115,10 +117,10 @@ abstract class BackendBase(
         }
 
 
-    fun connectInfo() =
+    fun connectInfo(itemId : ItemId? = null) =
         with(context) {
             val time = context.nextTime()
-            AutoConnectInfo<Any>(handle, time, AutoHandle(handle.globalId, time.timestamp))
+            AutoConnectInfo<Any>(handle, time, AutoHandle(handle.globalId, time.timestamp, itemId))
         }
 
     fun isSynced(connectInfo: AutoConnectInfo<*>): Boolean {

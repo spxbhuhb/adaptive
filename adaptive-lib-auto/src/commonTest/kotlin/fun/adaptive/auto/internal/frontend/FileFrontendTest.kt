@@ -2,7 +2,7 @@ package `fun`.adaptive.auto.internal.frontend
 
 import `fun`.adaptive.auto.PropertyTestSetup
 import `fun`.adaptive.auto.backend.TestData
-import `fun`.adaptive.utility.ensureTestPath
+import `fun`.adaptive.utility.ensure
 import `fun`.adaptive.utility.testPath
 import `fun`.adaptive.utility.waitForReal
 import `fun`.adaptive.wireformat.api.Json
@@ -18,7 +18,7 @@ class FileFrontendTest {
 
     @Test
     fun fromOrigin() {
-        ensureTestPath()
+        testPath.ensure()
 
         val path = Path(testPath, "FileFrontendTest.fromOrigin.json")
         val testData = TestData(12, "ab")

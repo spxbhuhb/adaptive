@@ -55,7 +55,6 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, T>(
                 scope,
                 logger,
                 Proto,
-                defaultMetadata(),
                 defaultWireFormat(),
                 LamportTimestamp(connectingHandle.peerId, 0),
             )

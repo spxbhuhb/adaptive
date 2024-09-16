@@ -19,9 +19,20 @@ suspend fun withWebSocketTransport(
     trace: Boolean = false,
     serviceImplFactory: ServiceImplFactory = defaultServiceImplFactory,
 ) =
+    webSocketTransport(host, wireFormatProvider, servicePath, clientIdPath, trace, serviceImplFactory).also {
+        defaultServiceCallTransport = it
+    }
+
+suspend fun webSocketTransport(
+    host: String,
+    wireFormatProvider: WireFormatProvider = Json,
+    servicePath: String = "/adaptive/service-ws",
+    clientIdPath: String = "/adaptive/client-id",
+    trace: Boolean = false,
+    serviceImplFactory: ServiceImplFactory = defaultServiceImplFactory,
+) =
     ClientWebSocketServiceCallTransport(host, servicePath, clientIdPath, wireFormatProvider, serviceImplFactory)
         .also {
-            defaultServiceCallTransport = it
             it.trace = trace
             it.start()
         }

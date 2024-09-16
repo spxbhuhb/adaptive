@@ -1,7 +1,7 @@
 package `fun`.adaptive.cookbook.iot
 
 import `fun`.adaptive.adat.api.update
-import `fun`.adaptive.auto.api.originList
+import `fun`.adaptive.auto.api.autoList
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.SetBackend
@@ -48,7 +48,7 @@ class ThermostatWorker : WorkerImpl<ThermostatWorker> {
 
     fun initList() {
         lock.use {
-            origin = originList(autoWorker, Thermostat)
+            origin = autoList(autoWorker, Thermostat)
             thermostats = origin.frontend
         }
 

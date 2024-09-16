@@ -8,8 +8,9 @@ import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.testing.AdaptiveTestAdapter
 import `fun`.adaptive.foundation.testing.test
 import `fun`.adaptive.service.getService
-import `fun`.adaptive.utility.ensureTestPath
+import `fun`.adaptive.utility.ensure
 import `fun`.adaptive.utility.exists
+import `fun`.adaptive.utility.testPath
 import `fun`.adaptive.utility.waitForReal
 import `fun`.adaptive.wireformat.api.Json
 import kotlinx.io.files.SystemFileSystem
@@ -23,7 +24,7 @@ class FileInstanceTest {
 
     @Test
     fun basic() {
-        ensureTestPath()
+        testPath.ensure()
 
         autoTest(port = 8085) { originAdapter, connectingAdapter ->
 

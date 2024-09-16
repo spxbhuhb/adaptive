@@ -9,7 +9,6 @@ import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.io.files.Path
 
@@ -25,7 +24,7 @@ import kotlinx.io.files.Path
  * - Property changes keep the non-affected instances.
  *
  * Each new instance is validated by default, so code that use values
- * produced by [originList] can safely use the validation result as it is
+ * produced by [autoList] can safely use the validation result as it is
  * up-to-date all the time.
  *
  * The list is **NOT** thread safe.
@@ -42,14 +41,14 @@ import kotlinx.io.files.Path
  * @return   The Auto frontend of this list. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  */
-fun originFolderPoly(
+fun autoFolderPoly(
     worker: AutoWorker?,
     companion: AdatCompanion<*>,
     wireFormatProvider: WireFormatProvider,
     path: Path,
     fileNameFun: (itemId: ItemId, item: AdatClass) -> String,
     serviceContext: ServiceContext? = null,
-    handle : AutoHandle = AutoHandle(UUID(), 1),
+    handle : AutoHandle = AutoHandle(),
     trace: Boolean = false,
     onListCommit: ((newValue: List<AdatClass>) -> Unit)? = null,
     onItemCommit: ((newValue: List<AdatClass>, item: AdatClass) -> Unit)? = null,
@@ -59,7 +58,6 @@ fun originFolderPoly(
         worker,
         handle,
         serviceContext,
-        companion.adatMetadata,
         companion.adatWireFormat,
         trace
     ) {

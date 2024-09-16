@@ -13,7 +13,7 @@ class PropertyBackend(
     val itemId: LamportTimestamp,
     val wireFormatName: String?,
     initialValues: Array<Any?>?
-) : BackendBase(context.handle.peerId) {
+) : BackendBase(context.handle) {
 
     val wireFormat = wireFormatFor(wireFormatName)
 

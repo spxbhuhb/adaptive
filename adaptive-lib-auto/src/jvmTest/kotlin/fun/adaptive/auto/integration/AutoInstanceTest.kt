@@ -7,8 +7,9 @@ import `fun`.adaptive.auto.internal.frontend.FileFrontend
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.testing.test
 import `fun`.adaptive.service.getService
-import `fun`.adaptive.utility.ensureTestPath
+import `fun`.adaptive.utility.ensure
 import `fun`.adaptive.utility.exists
+import `fun`.adaptive.utility.testPath
 import `fun`.adaptive.utility.waitForReal
 import junit.framework.TestCase.assertTrue
 import kotlin.test.Test
@@ -22,7 +23,7 @@ class AutoInstanceTest {
 
     @Test
     fun basic() {
-        ensureTestPath()
+        testPath.ensure()
 
         autoTest(port = 8085) { originAdapter, connectingAdapter ->
 

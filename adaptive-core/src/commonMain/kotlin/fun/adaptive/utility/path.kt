@@ -19,8 +19,9 @@ fun Path.delete() = SystemFileSystem.delete(this)
 
 fun Path.absolute() = SystemFileSystem.resolve(this)
 
-val testPath = Path("./build/tmp/test")
-
-fun ensureTestPath() {
-    SystemFileSystem.createDirectories(testPath)
+fun Path.ensure() : Path {
+    SystemFileSystem.createDirectories(this)
+    return this
 }
+
+val testPath = Path("./build/tmp/test")
