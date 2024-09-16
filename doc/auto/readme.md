@@ -5,7 +5,7 @@ The `adaptive-lib-auto` module provides a high-level data synchronization featur
 The general idea is to:
 
 - define the *origin* data (typically on a server)
-- connect to the *origin* data
+- connect to the *origin* data (maybe from multiple clients)
 - expect that all data changes appear on all peers
 - expect that conflicts are resolved automatically and deterministically
 
@@ -15,18 +15,18 @@ inside the UI but reactivity between peers.
 All Auto features use [Conflict-free replicated data types](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type)
 to make sure that the actual data is the same on all peers.
 
-The following origin functions are available:
+The following *origin* functions are available:
 
-| Function           | Storage                  | Stored data                                      |
-|--------------------|--------------------------|--------------------------------------------------|
-| `originInstance`   | In-memory                | Adat instance.                                   |
-| `originList`       | In-memory                | Adat instance list (same class).                 |
-| `originListPoly`   | In-memory                | Polymorphic Adat instance list (any Adat class). |
-| `originFile`       | Disk (one file)          | Adat instance.                                   |
-| `originFolder`     | Disk (one file per item) | Adat instance list (same class).                 |
-| `originFolderPoly` | Disk (one file per item) | Polymorphic Adat instance list (any Adat class). |
+| Function         | Storage                  | Stored data                                      |
+|------------------|--------------------------|--------------------------------------------------|
+| `autoInstance`   | In-memory                | Adat instance.                                   |
+| `autoList`       | In-memory                | Adat instance list (same class).                 |
+| `autoListPoly`   | In-memory                | Polymorphic Adat instance list (any Adat class). |
+| `autoFile`       | Disk (one file)          | Adat instance.                                   |
+| `autoFolder`     | Disk (one file per item) | Adat instance list (same class).                 |
+| `autoFolderPoly` | Disk (one file per item) | Polymorphic Adat instance list (any Adat class). |
 
-The following producer functions (to be used in fragments) are available:
+The following *producer* functions (to be used in fragments) are available:
 
 | Function           | Storage                  | Stored data                                      |
 |--------------------|--------------------------|--------------------------------------------------|
@@ -50,8 +50,14 @@ For the target use cases this won't be a problem, but keep it in mind. If unsure
 
 ## Recipes
 
-- [originFolder - originList](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/originFolder_originList/Recipe.kt) (backend to backend, non-fragment)
-- [originFolderPoly - originList](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/originFolderPoly_originListPoly/Recipe.kt) (backend to backend, non-fragment)
+**backend - backend**
+
+- [autoFile - autoFile](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/autoFile_autoFile/Recipe.kt)
+- [autoFolder - autoFile](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/autoFolder_autoFile/Recipe.kt)
+- [autoFolder - autoList](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/autoFolder_autoList/Recipe.kt)
+- [autoFolderPoly - autoListPoly](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/autoFolderPoly_autoListPoly/Recipe.kt)
+- [autoListPoly - autoFolderPoly - autoListPoly](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/autoListPoly_autoFolderPoly_autoListPoly/Recipe.kt)
+- [autoFolder](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/autoFolder/Recipe.kt)
 
 ## Setup
 
@@ -125,7 +131,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
 
     val worker by worker<AutoWorker>()
 
-    override suspend fun testInMemoryInstance(): AutoConnectInfo {
+    override suspend fun testInMemoryInstance(): AutoConnectInfo<TestData> {
         return originInstance(worker, TestData(12, "a"), serviceContext).connectInfo()
     }
 
