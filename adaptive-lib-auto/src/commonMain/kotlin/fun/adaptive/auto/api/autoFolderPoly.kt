@@ -53,7 +53,7 @@ fun <A : AdatClass> autoFolderPoly(
     trace: Boolean = false,
     onListCommit: ((newValue: List<A>) -> Unit)? = null,
     onItemCommit: ((newValue: List<A>, item: A) -> Unit)? = null,
-): OriginBase<SetBackend, FolderFrontend<*>, List<A>> {
+): OriginBase<SetBackend, FolderFrontend<A>, List<A>> {
 
     return OriginBase(
         worker,
@@ -76,6 +76,8 @@ fun <A : AdatClass> autoFolderPoly(
             path,
             fileNameFun
         )
+
+        frontend.commit()
     }
 
 }

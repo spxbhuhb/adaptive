@@ -123,5 +123,9 @@ fun <A : AdatClass> autoFile(
             wireFormatProvider,
             path
         )
+
+        if (value != null) {
+            frontend.commit()
+        }
     }
 }

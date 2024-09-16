@@ -14,7 +14,7 @@ import `fun`.adaptive.wireformat.signature.WireFormatTypeArgument
 
 object WireFormatRegistry : Registry<WireFormat<*>>() {
     init {
-        val n = WireFormatTypeArgument<Any>(PolymorphicWireFormat(), true)
+        val n = WireFormatTypeArgument<Any>(PolymorphicWireFormat, true)
 
         set("kotlin.Pair", PairWireFormat(n, n))
         set("kotlin.Array", ArrayWireFormat(n))

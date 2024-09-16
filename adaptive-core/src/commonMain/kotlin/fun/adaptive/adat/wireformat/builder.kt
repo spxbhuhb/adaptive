@@ -47,7 +47,7 @@ internal fun WireFormatType.toWireFormat(): WireFormat<*> =
                     "B" -> ByteWireFormat
                     "0" -> UnitWireFormat
 
-                    "*" -> PolymorphicWireFormat<Any>()
+                    "*" -> PolymorphicWireFormat
 
                     else -> checkNotNull(WireFormatRegistry[name]) { "WireFormat for type $name not found" }
                 }

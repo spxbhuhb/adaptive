@@ -94,6 +94,8 @@ fun <A : AdatClass> autoFolder(
             path,
             fileNameFun
         )
+
+        frontend.commit()
     }
 
 }

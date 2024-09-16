@@ -67,7 +67,7 @@ class FileFrontend<A : AdatClass>(
             val itemId = decoder.instanceOrNull(2, "itemId", ItemId)
 
             @Suppress("UNCHECKED_CAST")
-            val wireFormat = WireFormatRegistry[type] as WireFormat<AdatClass>
+            val wireFormat = requireNotNull(WireFormatRegistry[type] as? WireFormat<AdatClass>) { "missing wire format for $type" }
 
             val value = decoder.instance<AdatClass>(3, "properties", wireFormat)
 

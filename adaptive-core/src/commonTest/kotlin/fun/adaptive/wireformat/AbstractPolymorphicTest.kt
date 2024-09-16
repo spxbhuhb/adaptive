@@ -33,7 +33,10 @@ abstract class AbstractPolymorphicTest<ST>(
         WireFormatRegistry += C1.Companion
         WireFormatRegistry += C2.Companion
 
-        listOf(C1(12), C2(23)).also { assertEquals(it, polymorphicActual(it, ListWireFormat(WireFormatTypeArgument<CI>(PolymorphicWireFormat(), false)))) }
+        listOf(C1(12), C2(23)).also {
+            @Suppress("UNCHECKED_CAST")
+            assertEquals(it, polymorphicActual(it, ListWireFormat(WireFormatTypeArgument<CI>(PolymorphicWireFormat as WireFormat<CI>, false))))
+        }
     }
 
     interface CI {

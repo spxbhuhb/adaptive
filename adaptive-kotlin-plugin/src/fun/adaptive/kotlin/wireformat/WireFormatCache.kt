@@ -9,12 +9,14 @@ import `fun`.adaptive.kotlin.common.AbstractPluginContext
 import `fun`.adaptive.kotlin.common.asClassId
 import `fun`.adaptive.kotlin.common.companionClassId
 import `fun`.adaptive.kotlin.wireformat.Signature.typeSignature
+import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classFqName
+import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.types.isNullable
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
@@ -110,11 +112,22 @@ class WireFormatCache(
 
         check(irType is IrSimpleTypeImpl) { "not a simple type: $irType" }
 
+        // Abstract classes are polymorphic by default, so those cannot use the
+        // companion.
+
         // Without type arguments we can load the companion directly as a class format.
         // Adat classes may have type arguments, but we don't care about that as the
         // Adat plugin has to handle those.
 
-        if (irType.arguments.isEmpty() || irType.isSubtypeOfClass(pluginContext.adatClass)) {
+        val isAdatClass = irType.isSubtypeOfClass(pluginContext.adatClass)
+        val isAbstract = (irType.classOrNull?.owner?.modality == Modality.ABSTRACT)
+
+        // FIXME polymorphic vs. abstract vs. adatclass
+        if (isAdatClass && isAbstract) {
+            return SignatureWireFormat(PolymorphicWireFormat(pluginContext)).also { signatureFormats[signature] = it }
+        }
+
+        if (irType.arguments.isEmpty() || isAdatClass) {
             val basicFormat = basicFormats[classFqName] ?: loadClassFormat(typeFqName)
             return SignatureWireFormat(basicFormat).also { signatureFormats[signature] = it }
         }

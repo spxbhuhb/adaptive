@@ -6,7 +6,7 @@ import `fun`.adaptive.wireformat.WireFormatDecoder
 import `fun`.adaptive.wireformat.WireFormatEncoder
 import `fun`.adaptive.wireformat.WireFormatKind
 
-class PolymorphicWireFormat<A> : WireFormat<A> {
+object PolymorphicWireFormat : WireFormat<Any> {
 
     override val wireFormatName: String
         get() = "*"
@@ -15,17 +15,17 @@ class PolymorphicWireFormat<A> : WireFormat<A> {
         get() = WireFormatKind.Primitive
 
     @Suppress("UNCHECKED_CAST")
-    override fun wireFormatEncode(encoder: WireFormatEncoder, value: A): WireFormatEncoder =
-        encoder.rawPolymorphic(value, (value as AdatClass).adatCompanion.adatWireFormat as WireFormat<A>)
+    override fun wireFormatEncode(encoder: WireFormatEncoder, value: Any): WireFormatEncoder =
+        encoder.rawPolymorphic(value, (value as AdatClass).adatCompanion.adatWireFormat as WireFormat<Any>)
 
-    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): A =
+    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Any =
         decoder !!.rawPolymorphic(source)
 
     @Suppress("UNCHECKED_CAST")
-    override fun wireFormatEncode(encoder: WireFormatEncoder, fieldNumber: Int, fieldName: String, value: A?) =
-        encoder.polymorphicOrNull(fieldNumber, fieldName, value, (value as AdatClass).adatCompanion.adatWireFormat as WireFormat<A>)
+    override fun wireFormatEncode(encoder: WireFormatEncoder, fieldNumber: Int, fieldName: String, value: Any?) =
+        encoder.polymorphicOrNull(fieldNumber, fieldName, value, (value as AdatClass).adatCompanion.adatWireFormat as WireFormat<Any>)
 
     override fun <ST> wireFormatDecode(decoder: WireFormatDecoder<ST>, fieldNumber: Int, fieldName: String) =
-        decoder.polymorphicOrNull<A>(fieldNumber, fieldName)
+        decoder.polymorphicOrNull<Any>(fieldNumber, fieldName)
 
 }
