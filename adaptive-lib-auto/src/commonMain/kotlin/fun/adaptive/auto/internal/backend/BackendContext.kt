@@ -17,7 +17,7 @@ class BackendContext(
     val scope: CoroutineScope?,
     val logger: AdaptiveLogger,
     val wireFormatProvider: WireFormatProvider,
-    val defaultWireFormat: AdatClassWireFormat<*>,
+    val defaultWireFormat: AdatClassWireFormat<*>?,
     time: LamportTimestamp
 ) {
 

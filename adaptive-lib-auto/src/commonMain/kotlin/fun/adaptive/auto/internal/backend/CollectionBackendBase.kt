@@ -23,8 +23,6 @@ abstract class CollectionBackendBase(
      */
     val afterSync = mutableListOf<AutoModify>()
 
-    abstract val defaultWireFormatName: String
-
     // --------------------------------------------------------------------------------
     // Operations from the frontend
     // --------------------------------------------------------------------------------
@@ -72,7 +70,8 @@ abstract class CollectionBackendBase(
 
     fun wireFormatNameOrNull(item: AdatClass): String? {
         val itemWireFormatName = item.adatCompanion.wireFormatName
-        return if (itemWireFormatName == defaultWireFormatName) null else itemWireFormatName
+        // TODO I'm not sure about using null here, might cause problems during runtime if the configurations mismatch
+        return if (itemWireFormatName == context.defaultWireFormat?.wireFormatName) null else itemWireFormatName
     }
 
     @CallSiteName

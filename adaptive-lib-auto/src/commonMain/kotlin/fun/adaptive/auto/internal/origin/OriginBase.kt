@@ -25,7 +25,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, CT>(
     worker: AutoWorker?,
     val handle: AutoHandle,
     serviceContext: ServiceContext?,
-    wireFormat: AdatClassWireFormat<*>,
+    defaultWireFormat: AdatClassWireFormat<*>?,
     trace: Boolean,
     builder: OriginBase<BE, FE, CT>.() -> Unit
 ) {
@@ -39,7 +39,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, CT>(
         worker?.scope,
         logger,
         Proto,
-        wireFormat,
+        defaultWireFormat,
         LamportTimestamp(handle.peerId, 1),
     )
 

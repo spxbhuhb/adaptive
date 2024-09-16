@@ -70,7 +70,6 @@ class Recipe : AutoRecipe() {
 
         val data = autoListPoly(
             clientBackend.firstImpl<AutoWorker>(),
-            StringItem,
             handle = connectInfo.connectingHandle
         )
 

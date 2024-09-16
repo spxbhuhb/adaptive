@@ -1,7 +1,7 @@
 package `fun`.adaptive.auto.api
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.AdatCompanion
+import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.frontend.FolderFrontend
@@ -10,6 +10,7 @@ import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.wireformat.WireFormatProvider
+import `fun`.adaptive.wireformat.api.Json
 import kotlinx.io.files.Path
 
 /**
@@ -43,12 +44,12 @@ import kotlinx.io.files.Path
  */
 fun autoFolderPoly(
     worker: AutoWorker?,
-    companion: AdatCompanion<*>,
-    wireFormatProvider: WireFormatProvider,
     path: Path,
     fileNameFun: (itemId: ItemId, item: AdatClass) -> String,
+    wireFormatProvider: WireFormatProvider = Json,
+    defaultWireFormat: AdatClassWireFormat<*>? = null,
     serviceContext: ServiceContext? = null,
-    handle : AutoHandle = AutoHandle(),
+    handle: AutoHandle = AutoHandle(),
     trace: Boolean = false,
     onListCommit: ((newValue: List<AdatClass>) -> Unit)? = null,
     onItemCommit: ((newValue: List<AdatClass>, item: AdatClass) -> Unit)? = null,
@@ -58,8 +59,8 @@ fun autoFolderPoly(
         worker,
         handle,
         serviceContext,
-        companion.adatWireFormat,
-        trace
+        defaultWireFormat,
+        trace = trace
     ) {
 
         backend = SetBackend(

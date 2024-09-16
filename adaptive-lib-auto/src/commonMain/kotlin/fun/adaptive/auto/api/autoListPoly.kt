@@ -2,6 +2,7 @@ package `fun`.adaptive.auto.api
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
+import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
@@ -82,9 +83,9 @@ fun autoListPoly(
  */
 fun autoListPoly(
     worker: AutoWorker,
-    companion: AdatCompanion<*>,
+    defaultWireFormat: AdatClassWireFormat<*>? = null,
     serviceContext: ServiceContext? = null,
-    handle : AutoHandle = AutoHandle(),
+    handle: AutoHandle = AutoHandle(),
     trace: Boolean = false,
     onListCommit: ((newValue: List<AdatClass>) -> Unit)? = null,
     onItemCommit: ((newValue: List<AdatClass>, item: AdatClass) -> Unit)? = null
@@ -94,7 +95,7 @@ fun autoListPoly(
         worker,
         handle,
         serviceContext,
-        companion.adatWireFormat,
+        defaultWireFormat,
         trace
     ) {
 

@@ -17,8 +17,6 @@ class SetBackend(
 
     override val items = initialValue?.toMutableMap() ?: mutableMapOf<ItemId, PropertyBackend>()
 
-    override val defaultWireFormatName = context.defaultWireFormat.wireFormatName
-
     init {
         if (initialValue != null && initialValue.isNotEmpty()) {
             additions.addAll(initialValue.keys)

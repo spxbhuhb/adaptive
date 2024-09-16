@@ -16,8 +16,6 @@ class TreeBackend(
     val tree = TreeData(this)
     override val items = mutableMapOf<ItemId, PropertyBackend>()
 
-    override val defaultWireFormatName = context.defaultWireFormat.wireFormatName
-
     // --------------------------------------------------------------------------------
     // Operations from the frontend
     // --------------------------------------------------------------------------------
@@ -69,7 +67,7 @@ class TreeBackend(
 
         checkNotNull(operation.parentItemId) { "tree items must have a parent" }
 
-        addItem(operation.itemId, operation.parentItemId, context.wireFormatProvider.decode(operation.payload, context.defaultWireFormat) as AdatClass)
+        addItem(operation.itemId, operation.parentItemId, decode(operation.wireFormatName, operation.payload) as AdatClass)
 
         closeListOp(operation, setOf(operation.itemId), commit)
     }
