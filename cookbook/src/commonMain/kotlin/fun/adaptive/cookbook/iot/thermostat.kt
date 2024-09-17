@@ -23,8 +23,6 @@ import `fun`.adaptive.ui.api.cornerRadius
 import `fun`.adaptive.ui.api.fontSize
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.grid
-import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.maxHeight
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.row

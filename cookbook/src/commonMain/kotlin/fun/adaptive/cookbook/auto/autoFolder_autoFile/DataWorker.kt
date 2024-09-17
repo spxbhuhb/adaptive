@@ -11,7 +11,6 @@ import `fun`.adaptive.backend.setting.dsl.setting
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
-import `fun`.adaptive.wireformat.api.Json
 import kotlinx.io.files.Path
 
 /**
@@ -40,15 +39,11 @@ class DataWorker(
 
     override suspend fun run() {
 
-        masterDataOrNull = autoFolder(
+        masterDataOrNull = autoFolder<DataItem>(
             autoWorker,
-            DataItem,
-            Json,
             path,
-            // This function generates the name of the files.
-            // The actual file name is not important, but it should not start with a '.'
-            // character as those files are ignored at list load.
             { itemId, _ -> "${itemId.peerId}.${itemId.timestamp}.json" },
+            defaultWireFormat = DataItem.adatWireFormat,
             trace = trace,
         )
 

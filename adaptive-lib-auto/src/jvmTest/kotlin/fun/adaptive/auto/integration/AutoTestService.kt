@@ -6,7 +6,6 @@ import `fun`.adaptive.auto.api.autoFile
 import `fun`.adaptive.auto.api.autoFolder
 import `fun`.adaptive.auto.api.autoInstance
 import `fun`.adaptive.auto.api.autoList
-import `fun`.adaptive.auto.api.autoListPoly
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.backend.TestData
 import `fun`.adaptive.auto.internal.backend.BackendContext
@@ -77,7 +76,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
     }
 
     override suspend fun polyList(): AutoConnectInfo<List<AdatClass>> {
-        return autoListPoly<AdatClass>(worker, serviceContext = serviceContext).connectInfo()
+        return autoList<AdatClass>(worker, serviceContext = serviceContext).connectInfo()
     }
 
     override suspend fun file(): AutoConnectInfo<TestData> {
@@ -86,17 +85,16 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
         return autoFile(worker, TestData, path, TestData(12, "a"), Json, serviceContext).connectInfo()
     }
 
-    override suspend fun folder(folderName : String): AutoConnectInfo<List<TestData>> {
+    override suspend fun folder(folderName: String): AutoConnectInfo<List<TestData>> {
 
         val path = Path(testPath, folderName)
 
-        return autoFolder(
+        return autoFolder<TestData>(
             worker,
-            TestData,
-            Json,
             path,
-            { itemId,_ -> "${itemId.peerId}.${itemId.timestamp}.json" },
-            serviceContext
+            { itemId, _ -> "${itemId.peerId}.${itemId.timestamp}.json" },
+            defaultWireFormat = TestData.adatWireFormat,
+            serviceContext = serviceContext
         ).connectInfo()
 
     }

@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.auto.autoListPoly_autoFolderPoly_autoListPoly
+package `fun`.adaptive.cookbook.auto.autoListPoly_autoFolder_autoListPoly
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.auth.context.publicAccess

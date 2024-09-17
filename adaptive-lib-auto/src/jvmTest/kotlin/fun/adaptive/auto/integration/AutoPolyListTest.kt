@@ -2,7 +2,7 @@ package `fun`.adaptive.auto.integration
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.auto.api.autoListPoly
+import `fun`.adaptive.auto.api.autoList
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.backend.TestData
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
@@ -34,7 +34,7 @@ class AutoPolyListTest {
 
             val testAdapter = test(connectingAdapter) {
 
-                val a = autoListPoly { getService<AutoTestApi>().polyList() }
+                val a = autoList<AdatClass> { getService<AutoTestApi>().polyList() }
 
                 if (a != null) {
                     producedValue = a

@@ -48,7 +48,7 @@ class ThermostatWorker : WorkerImpl<ThermostatWorker> {
 
     fun initList() {
         lock.use {
-            origin = autoList(autoWorker, Thermostat)
+            origin = autoList(autoWorker, Thermostat.adatWireFormat)
             thermostats = origin.frontend
         }
 

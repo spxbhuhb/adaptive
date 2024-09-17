@@ -1,7 +1,7 @@
-package `fun`.adaptive.cookbook.auto.autoListPoly_autoFolderPoly_autoListPoly
+package `fun`.adaptive.cookbook.auto.autoFolder_autoListPoly
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.auto.api.autoFolderPoly
+import `fun`.adaptive.auto.api.autoFolder
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.auto.model.AutoConnectInfo
@@ -38,7 +38,7 @@ class MasterDataWorker(
 
     override suspend fun run() {
 
-        masterDataOrNull = autoFolderPoly(
+        masterDataOrNull = autoFolder(
             autoWorker,
             path,
             { itemId, _ -> "${itemId.peerId}.${itemId.timestamp}.json" },

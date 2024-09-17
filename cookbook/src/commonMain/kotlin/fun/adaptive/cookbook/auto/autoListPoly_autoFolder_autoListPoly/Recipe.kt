@@ -1,8 +1,8 @@
-package `fun`.adaptive.cookbook.auto.autoListPoly_autoFolderPoly_autoListPoly
+package `fun`.adaptive.cookbook.auto.autoListPoly_autoFolder_autoListPoly
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.auto.api.auto
-import `fun`.adaptive.auto.api.autoListPoly
+import `fun`.adaptive.auto.api.autoList
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.backend.backend
@@ -68,7 +68,7 @@ class Recipe : AutoRecipe() {
         // but from the application point of view it is permanent
         // as it is registered with `AutoWorker`.
 
-        val data = autoListPoly<AdatClass>(
+        val data = autoList<AdatClass>(
             clientBackend.firstImpl<AutoWorker>(),
             handle = connectInfo.connectingHandle
         )

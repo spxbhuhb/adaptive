@@ -1,7 +1,7 @@
 package `fun`.adaptive.auto.api
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.AdatCompanion
+import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.frontend.FolderFrontend
@@ -11,6 +11,7 @@ import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.wireformat.WireFormatProvider
+import `fun`.adaptive.wireformat.api.Json
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 
@@ -34,10 +35,10 @@ import kotlinx.io.files.SystemFileSystem
  *
  * - Adding/removing items from the list generate a new list instance (on all peers).
  * - Property changes (on any peer) generate a new list instance (on all peers).
- * - Property changes keep the non-affected instances.
+ * - Property changes keep the non-affected properties as they are.
  *
  * Each new instance is validated by default, so code that use values
- * produced by [autoList] can safely use the validation result as it is
+ * produced by [autoFolder] can safely use the validation result as it is
  * up-to-date all the time.
  *
  * Registers a cleanup handler into the session through [serviceContext] or
@@ -48,8 +49,15 @@ import kotlinx.io.files.SystemFileSystem
  * @param    worker             Origins that support peer connections must specify pass an [AutoWorker] in this
  *                              parameter. Standalone origins may pass `null`.
  *
+ * @param    fileNameFun        Generates the name of the files. The actual file name is not important, but it should
+ *                              **not start with a '.' character** as those files are ignored at list load.
+ *
+ * @param    includeFun         When loading the items, this function is called to check if the given file should be
+ *                              loaded into this list or not.
+ *
  * @param    onListCommit       Called after the structure of the list has been changed (add/remove), but before the
  *                              state of the fragment is updated.
+ *
  * @param    onItemCommit       Called when a property of a list item has been changed, but before the
  *                              state of the fragment is updated.
  *
@@ -60,15 +68,16 @@ import kotlinx.io.files.SystemFileSystem
  */
 fun <A : AdatClass> autoFolder(
     worker: AutoWorker?,
-    companion: AdatCompanion<A>,
-    wireFormatProvider: WireFormatProvider,
     path: Path,
     fileNameFun: (itemId: ItemId, item: A) -> String,
+    wireFormatProvider: WireFormatProvider = Json,
+    includeFun: (Path) -> Boolean = { true },
+    defaultWireFormat: AdatClassWireFormat<*>? = null,
     serviceContext: ServiceContext? = null,
-    handle : AutoHandle = AutoHandle(),
-    trace: Boolean = false,
+    handle: AutoHandle = AutoHandle(),
     onListCommit: ((newValue: List<A>) -> Unit)? = null,
     onItemCommit: ((newValue: List<A>, item: A) -> Unit)? = null,
+    trace: Boolean = false,
 ): OriginBase<SetBackend, FolderFrontend<A>, List<A>> {
 
     require(path.exists()) { "missing directory: ${SystemFileSystem.resolve(path)}" }
@@ -77,13 +86,13 @@ fun <A : AdatClass> autoFolder(
         worker,
         handle,
         serviceContext,
-        companion.adatWireFormat,
+        defaultWireFormat,
         trace
     ) {
 
         backend = SetBackend(
             context,
-            FolderFrontend.load(context, path, wireFormatProvider)
+            FolderFrontend.load(context, path, includeFun, wireFormatProvider)
         )
 
         frontend = FolderFrontend(

@@ -61,7 +61,12 @@ class FolderFrontend<A : AdatClass>(
 
     companion object {
 
-        fun load(context: BackendContext, path: Path, wireFormatProvider: WireFormatProvider): Map<ItemId, PropertyBackend> {
+        fun load(
+            context: BackendContext,
+            path: Path,
+            includeFun : (path: Path) -> Boolean,
+            wireFormatProvider: WireFormatProvider
+        ): Map<ItemId, PropertyBackend> {
             require(path.exists()) { "path $path does not exist" }
 
             val result = mutableMapOf<ItemId, PropertyBackend>()
@@ -70,6 +75,7 @@ class FolderFrontend<A : AdatClass>(
 
                 // ignore hidden files
                 if (it.name.startsWith(".")) return@forEach
+                if (! includeFun(it)) return@forEach
 
                 val (itemId, instance) = FileFrontend.read(it, wireFormatProvider)
                 checkNotNull(itemId)
