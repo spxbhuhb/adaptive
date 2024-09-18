@@ -12,11 +12,11 @@ import `fun`.adaptive.auto.model.operation.AutoRemove
 import `fun`.adaptive.auto.model.operation.AutoSyncEnd
 import `fun`.adaptive.reflect.CallSiteName
 
-abstract class CollectionBackendBase(
+abstract class CollectionBackendBase<A : AdatClass>(
     peerHandle: AutoHandle,
 ) : BackendBase(peerHandle) {
 
-    abstract val items: MutableMap<ItemId, PropertyBackend>
+    abstract val items: MutableMap<ItemId, PropertyBackend<A>>
 
     /**
      * Contains modification that should be applied when [AutoSyncEnd] arrives.
@@ -27,7 +27,7 @@ abstract class CollectionBackendBase(
     // Operations from the frontend
     // --------------------------------------------------------------------------------
 
-    fun add(item: AdatClass, parentItemId: ItemId?, commit: Boolean) {
+    fun add(item: A, parentItemId: ItemId?, commit: Boolean) {
         val itemId = context.nextTime()
         addItem(itemId, parentItemId, item)
 
@@ -66,7 +66,7 @@ abstract class CollectionBackendBase(
     // Helpers
     // --------------------------------------------------------------------------------
 
-    abstract fun addItem(itemId: ItemId, parentItemId: ItemId?, value: AdatClass)
+    abstract fun addItem(itemId: ItemId, parentItemId: ItemId?, value: A)
 
     fun wireFormatNameOrNull(item: AdatClass): String? {
         val itemWireFormatName = item.adatCompanion.wireFormatName

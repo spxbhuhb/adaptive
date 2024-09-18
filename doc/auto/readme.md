@@ -67,7 +67,7 @@ For the target use cases this won't be a problem, but keep it in mind. If unsure
 >
 > - *Auto backend* means the class/instance that handles data synchronization, conflict resolution, etc.
 > - *Auto frontend* means the class/instance that:
-    >   - builds the actual instances, lists the application code sees
+>   - builds the actual instances, lists the application code sees
 >   - handles the persistence (in files, folders, databases)
 >
 > In the documentation we specifically use *Auto frontend* and *Auto backend* whenever we use this
@@ -89,7 +89,7 @@ backend {
 ```kotlin
 val backend = backend { auto() }
 
-withJsonWebSocketTransport(window.location.origin, serviceImplFactory = backend)
+withWebSocketTransport(window.location.origin, serviceImplFactory = backend)
 
 browser(backend = backend) {
     // ...
@@ -121,7 +121,7 @@ Important points:
 ```kotlin
 @ServiceApi
 interface AutoTestApi {
-    suspend fun testInMemoryInstance(): AutoConnectInfo
+    suspend fun testInMemoryInstance(): AutoConnectInfo<TestData>
 }
 
 class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
@@ -129,7 +129,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
     val worker by worker<AutoWorker>()
 
     override suspend fun testInMemoryInstance(): AutoConnectInfo<TestData> {
-        return originInstance(worker, TestData(12, "a"), serviceContext).connectInfo()
+        return originInstance(worker, TestData(12, "a"), serviceContext = serviceContext).connectInfo()
     }
 
 }

@@ -1,5 +1,6 @@
 package `fun`.adaptive.auto.internal.producer
 
+import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.store.AdatStore
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.api.AutoApi
@@ -21,18 +22,18 @@ import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, T>(
-    override val binding: AdaptiveStateVariableBinding<T>,
-    val connect: suspend () -> AutoConnectInfo<T>,
+abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
+    override val binding: AdaptiveStateVariableBinding<VT>,
+    val connect: suspend () -> AutoConnectInfo<VT>,
     val trace: Boolean
-) : AdatStore(), AdaptiveProducer<T> {
+) : AdatStore(), AdaptiveProducer<VT> {
 
-    override var latestValue: T? = null
+    override var latestValue: VT? = null
 
     val scope: CoroutineScope = CoroutineScope(adapter.dispatcher)
 
     lateinit var logger: AdaptiveLogger
-    lateinit var context: BackendContext
+    lateinit var context: BackendContext<IT>
 
     lateinit var backend: BE
     lateinit var frontend: FE
@@ -62,7 +63,7 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, T>(
 
             build()
 
-            backend.frontEnd = frontend
+            backend.frontend = frontend
 
             adapter.backend.firstImpl<AutoWorker>().register(backend)
 

@@ -13,7 +13,7 @@ class AutoRemove(
 ) : AutoOperation() {
 
     override fun apply(backend: BackendBase, commit: Boolean) {
-        backend as CollectionBackendBase
+        backend as CollectionBackendBase<*>
         backend.remove(this, commit)
     }
 

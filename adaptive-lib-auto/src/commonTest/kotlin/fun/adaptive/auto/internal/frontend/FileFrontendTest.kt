@@ -9,7 +9,6 @@ import `fun`.adaptive.wireformat.api.Json
 import kotlinx.coroutines.test.runTest
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
-import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.seconds
@@ -29,8 +28,8 @@ class FileFrontendTest {
 
             with(PropertyTestSetup(testData)) {
 
-                val f1 = AdatClassFrontend(b1, wireFormat, testData, null, null, null).also { b1.frontEnd = it }
-                b2.frontEnd = FileFrontend(b2, wireFormat, null, null, null, null, Json, path)
+                val f1 = AdatClassFrontend(b1, wireFormat, testData, null, null,).also { b1.frontend = it }
+                b2.frontend = FileFrontend(b2, wireFormat, null, null, null, Json, path)
 
                 connect()
 

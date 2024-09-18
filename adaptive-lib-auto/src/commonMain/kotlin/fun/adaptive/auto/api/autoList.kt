@@ -28,10 +28,6 @@ import `fun`.adaptive.service.ServiceContext
  *
  * The list is **NOT** thread safe.
  *
- * @param    onListCommit       Called after the structure of the list has been changed (add/remove), but before the
- *                              state of the fragment is updated.
- * @param    onItemCommit       Called when a property of a list item has been changed, but before the
- *  *                           state of the fragment is updated.
  * @param    binding            Set by the compiler plugin, ignore it.
  * @param    connect            A function to get the connection info. Typically, this is created by
  *                              a service call.
@@ -41,15 +37,14 @@ import `fun`.adaptive.service.ServiceContext
 @Producer
 fun <A : AdatClass> autoList(
     companion: AdatCompanion<A>,
-    onListCommit: ((newValue: List<A>) -> Unit)? = null,
-    onItemCommit: ((item: A) -> Unit)? = null,
+    listener : AutoListener<A>? = null,
     binding: AdaptiveStateVariableBinding<List<A>>? = null,
     trace: Boolean = false,
     connect: suspend () -> AutoConnectInfo<List<A>>
 ): List<A>? {
     checkNotNull(binding)
 
-    val store = AutoList(binding, connect, companion.adatWireFormat, onListCommit, onItemCommit, trace)
+    val store = AutoList(binding, connect, companion.adatWireFormat, listener, trace)
 
     binding.targetFragment.addProducer(store)
 
@@ -70,10 +65,6 @@ fun <A : AdatClass> autoList(
  *
  * The list is **NOT** thread safe.
  *
- * @param    onListCommit       Called after the structure of the list has been changed (add/remove), but before the
- *                              state of the fragment is updated.
- * @param    onItemCommit       Called when a property of a list item has been changed, but before the
- *  *                           state of the fragment is updated.
  * @param    binding            Set by the compiler plugin, ignore it.
  * @param    connect            A function to get the connection info. Typically, this is created by
  *                              a service call.
@@ -83,15 +74,14 @@ fun <A : AdatClass> autoList(
 @Producer
 fun <A : AdatClass> autoList(
     defaultWireFormat: AdatClassWireFormat<*>? = null,
-    onListCommit: ((newValue: List<A>) -> Unit)? = null,
-    onItemCommit: ((item: A) -> Unit)? = null,
+    listener : AutoListener<A>? = null,
     binding: AdaptiveStateVariableBinding<List<A>>? = null,
     trace: Boolean = false,
     connect: suspend () -> AutoConnectInfo<List<A>>
 ): List<A>? {
     checkNotNull(binding)
 
-    val store = AutoList(binding, connect, defaultWireFormat, onListCommit, onItemCommit, trace)
+    val store = AutoList(binding, connect, defaultWireFormat, listener, trace)
 
     binding.targetFragment.addProducer(store)
 
@@ -118,24 +108,17 @@ fun <A : AdatClass> autoList(
  * @param    worker             Origins that support peer connections must specify pass an [AutoWorker] in this
  *                              parameter. Standalone origins may pass `null`.
  *
- * @param    onListCommit       Called after the structure of the list has been changed (add/remove), but before the
- *                              state of the fragment is updated.
- *
- * @param    onItemCommit       Called when a property of a list item has been changed, but before the
- *                              state of the fragment is updated.
- *
  * @return   An [OriginBase] for this auto list. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  */
 fun <A : AdatClass> autoList(
     worker: AutoWorker,
     defaultWireFormat: AdatClassWireFormat<*>? = null,
+    listener : AutoListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle: AutoHandle = AutoHandle(),
-    onListCommit: ((newValue: List<A>) -> Unit)? = null,
-    onItemCommit: ((newValue: List<A>, item: A) -> Unit)? = null,
     trace: Boolean = false
-): OriginBase<SetBackend, AdatClassListFrontend<A>, List<A>> {
+): OriginBase<SetBackend<A>, AdatClassListFrontend<A>, List<A>, A> {
 
     return OriginBase(
         worker,
@@ -144,14 +127,9 @@ fun <A : AdatClass> autoList(
         defaultWireFormat,
         trace
     ) {
-
+        if (listener != null) context.addListener(listener)
         backend = SetBackend(context)
-
-        frontend = AdatClassListFrontend(
-            backend,
-            onListCommit = onListCommit,
-            onItemCommit = onItemCommit
-        )
+        frontend = AdatClassListFrontend(backend)
     }
 
 }
@@ -177,24 +155,17 @@ fun <A : AdatClass> autoList(
  * @param    worker             Origins that support peer connections must specify pass an [AutoWorker] in this
  *                              parameter. Standalone origins may pass `null`.
  *
- * @param    onListCommit       Called after the structure of the list has been changed (add/remove), but before the
- *                              state of the fragment is updated.
- *
- * @param    onItemCommit       Called when a property of a list item has been changed, but before the
- *                              state of the fragment is updated.
- *
  * @return   An [OriginBase] for this auto list. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  */
 fun <A : AdatClass> autoList(
     worker: AutoWorker,
     companion: AdatCompanion<A>,
+    listener : AutoListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle: AutoHandle = AutoHandle(),
-    onListCommit: ((newValue: List<A>) -> Unit)? = null,
-    onItemCommit: ((newValue: List<A>, item: A) -> Unit)? = null,
     trace: Boolean = false
-): OriginBase<SetBackend, AdatClassListFrontend<A>, List<A>> {
+): OriginBase<SetBackend<A>, AdatClassListFrontend<A>, List<A>, A> {
 
     return OriginBase(
         worker,
@@ -203,14 +174,9 @@ fun <A : AdatClass> autoList(
         companion.adatWireFormat,
         trace
     ) {
-
+        if (listener != null) context.addListener(listener)
         backend = SetBackend(context)
-
-        frontend = AdatClassListFrontend(
-            backend,
-            onListCommit = onListCommit,
-            onItemCommit = onItemCommit
-        )
+        frontend = AdatClassListFrontend(backend)
     }
 
 }

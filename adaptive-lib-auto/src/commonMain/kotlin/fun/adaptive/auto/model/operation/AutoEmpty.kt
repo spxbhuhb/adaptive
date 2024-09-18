@@ -11,7 +11,7 @@ class AutoEmpty(
 ) : AutoOperation() {
 
     override fun apply(backend: BackendBase, commit: Boolean) {
-        backend as CollectionBackendBase
+        backend as CollectionBackendBase<*>
         backend.empty(this, commit)
     }
 

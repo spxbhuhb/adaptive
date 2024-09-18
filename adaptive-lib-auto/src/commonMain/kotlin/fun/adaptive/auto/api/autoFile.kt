@@ -67,11 +67,12 @@ fun <A : AdatClass> autoFile(
     path: Path,
     initialValue: A? = null,
     wireFormatProvider: WireFormatProvider = Json,
+    listener : AutoListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle: AutoHandle = AutoHandle(),
     itemId: ItemId = LamportTimestamp(1, 1),
     trace: Boolean = false
-): OriginBase<PropertyBackend, FileFrontend<A>, A> {
+): OriginBase<PropertyBackend<A>, FileFrontend<A>, A, A> {
 
     val value: A?
 
@@ -108,6 +109,9 @@ fun <A : AdatClass> autoFile(
         companion.adatWireFormat,
         trace
     ) {
+
+        if (listener != null) context.addListener(listener)
+
         backend = PropertyBackend(
             context,
             itemId,
@@ -119,7 +123,7 @@ fun <A : AdatClass> autoFile(
             backend,
             companion.adatWireFormat,
             itemId,
-            null, null, null,
+            null, null,
             wireFormatProvider,
             path
         )

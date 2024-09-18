@@ -27,10 +27,10 @@ class MasterDataWorker(
 
     val lock = getLock()
 
-    val masterData: OriginBase<*, *, List<AdatClass>>
+    val masterData: OriginBase<*, *, List<AdatClass>, AdatClass>
         get() = requireNotNull(masterDataOrNull) { "masterData is null, perhaps the worker is not started" }
 
-    var masterDataOrNull: OriginBase<*, *, List<AdatClass>>? = null
+    var masterDataOrNull: OriginBase<*, *, List<AdatClass>, AdatClass>? = null
         get() = lock.use { field }
         private set(v) {
             lock.use { field = v }

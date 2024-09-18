@@ -1,5 +1,6 @@
 package `fun`.adaptive.auto.internal.origin
 
+import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.api.AutoApi
 import `fun`.adaptive.auto.backend.AutoWorker
@@ -21,20 +22,20 @@ import `fun`.adaptive.utility.CleanupHandler
 import `fun`.adaptive.wireformat.api.Proto
 import kotlin.time.Duration
 
-class OriginBase<BE : BackendBase, FE : FrontendBase, CT>(
+class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
     worker: AutoWorker?,
     val handle: AutoHandle,
     serviceContext: ServiceContext?,
     defaultWireFormat: AdatClassWireFormat<*>?,
     trace: Boolean,
-    builder: OriginBase<BE, FE, CT>.() -> Unit
+    builder: OriginBase<BE, FE, VT, IT>.() -> Unit
 ) {
 
     val logger = getLogger("fun.adaptive.auto.${handle.globalId.toShort()}.${handle.peerId}").also {
         if (trace) it.enableFine()
     }
 
-    val context = BackendContext(
+    val context = BackendContext<IT>(
         handle,
         worker?.scope,
         logger,
@@ -49,7 +50,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, CT>(
 
     init {
         builder()
-        backend.frontEnd = frontend
+        backend.frontend = frontend
 
         if (worker != null) {
 
@@ -65,9 +66,9 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, CT>(
         }
     }
 
-    fun connectInfo(): AutoConnectInfo<CT> {
+    fun connectInfo(): AutoConnectInfo<VT> {
         @Suppress("UNCHECKED_CAST")
-        return backend.connectInfo() as AutoConnectInfo<CT>
+        return backend.connectInfo() as AutoConnectInfo<VT>
     }
 
     fun <IT> connectInfo(itemId : ItemId): AutoConnectInfo<IT> {
@@ -86,8 +87,8 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, CT>(
     suspend fun connect(
         transport: ServiceCallTransport? = defaultServiceCallTransport,
         waitForSync: Duration? = null,
-        connectInfoFun: suspend () -> AutoConnectInfo<CT>
-    ): OriginBase<BE, FE, CT> {
+        connectInfoFun: suspend () -> AutoConnectInfo<VT>
+    ): OriginBase<BE, FE, VT, IT> {
         val scope = backend.context.scope
         check(scope != null) { "connecting is not possible when there is no worker passed during creation" }
 
@@ -117,7 +118,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, CT>(
         return this
     }
 
-    suspend fun waitForSync(connectInfo: AutoConnectInfo<CT>, timeout: Duration) {
+    suspend fun waitForSync(connectInfo: AutoConnectInfo<VT>, timeout: Duration) {
         backend.waitForSync(connectInfo, timeout)
     }
 }

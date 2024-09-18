@@ -35,15 +35,15 @@ class SetTest {
             val logger1 = getLogger("logger.1")
             val logger2 = getLogger("logger.2")
 
-            val c1 = BackendContext(AutoHandle(gid, 1, null), scope, logger1, Proto, TestData.adatWireFormat, LamportTimestamp(1, 0))
+            val c1 = BackendContext<TestData>(AutoHandle(gid, 1, null), scope, logger1, Proto, TestData.adatWireFormat, LamportTimestamp(1, 0))
             val b1 = SetBackend(c1)
-            val f1 = AdatClassListFrontend<TestData>(b1, null, null)
-            b1.frontEnd = f1
+            val f1 = AdatClassListFrontend<TestData>(b1)
+            b1.frontend = f1
 
-            val c2 = BackendContext(AutoHandle(gid, 2, null), scope, logger2, Proto, TestData.adatWireFormat, LamportTimestamp(2, 0))
+            val c2 = BackendContext<TestData>(AutoHandle(gid, 2, null), scope, logger2, Proto, TestData.adatWireFormat, LamportTimestamp(2, 0))
             val b2 = SetBackend(c2)
-            val f2 = AdatClassListFrontend<TestData>(b2, null, null)
-            b2.frontEnd = f2
+            val f2 = AdatClassListFrontend<TestData>(b2)
+            b2.frontend = f2
 
             b1.addPeer(DirectConnector(b2), c2.time)
             b2.addPeer(DirectConnector(b1), c1.time)
@@ -83,15 +83,15 @@ class SetTest {
             val logger1 = getLogger("logger.1")
             val logger2 = getLogger("logger.2")
 
-            val c1 = BackendContext(AutoHandle(gid, 1, null), scope, logger1, Proto, TestData.adatWireFormat, LamportTimestamp(1, 0))
+            val c1 = BackendContext<TestData>(AutoHandle(gid, 1, null), scope, logger1, Proto, TestData.adatWireFormat, LamportTimestamp(1, 0))
             val b1 = SetBackend(c1)
-            val f1 = AdatClassListFrontend<TestData>(b1, null, null)
-            b1.frontEnd = f1
+            val f1 = AdatClassListFrontend<TestData>(b1)
+            b1.frontend = f1
 
-            val c2 = BackendContext(AutoHandle(gid, 2, null), scope, logger2, Proto, TestData.adatWireFormat, LamportTimestamp(2, 0))
+            val c2 = BackendContext<TestData>(AutoHandle(gid, 2, null), scope, logger2, Proto, TestData.adatWireFormat, LamportTimestamp(2, 0))
             val b2 = SetBackend(c2)
-            val f2 = AdatClassListFrontend<TestData>(b2, null, null)
-            b2.frontEnd = f2
+            val f2 = AdatClassListFrontend<TestData>(b2)
+            b2.frontend = f2
 
             f1.add(testData)
 
@@ -125,7 +125,7 @@ class SetTest {
         assertEquals(expected.values, this.values)
     }
 
-    suspend fun SetBackend.assertEquals(expected: SetBackend) {
+    suspend fun SetBackend<*>.assertEquals(expected: SetBackend<*>) {
         waitForSync(this, expected)
 
         assertEquals(expected.additions, this.additions)
@@ -136,7 +136,7 @@ class SetTest {
         }
     }
 
-    suspend fun PropertyBackend.assertEquals(expected: PropertyBackend) {
+    suspend fun PropertyBackend<*>.assertEquals(expected: PropertyBackend<*>) {
         waitForSync(this, expected)
 
         assertEquals(expected.itemId, this.itemId)

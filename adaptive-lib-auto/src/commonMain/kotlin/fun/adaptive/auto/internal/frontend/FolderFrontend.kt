@@ -14,16 +14,12 @@ import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 
 class FolderFrontend<A : AdatClass>(
-    backend: SetBackend,
-    onListCommit: ((newValue: List<A>) -> Unit)?,
-    onItemCommit: ((newValue: List<A>, item: A) -> Unit)?,
+    backend: SetBackend<A>,
     val wireFormatProvider: WireFormatProvider,
     val path: Path,
     val fileNameFun: (itemId: ItemId, item: A) -> String
 ) : AdatClassListFrontend<A>(
-    backend,
-    onListCommit,
-    onItemCommit
+    backend
 ) {
 
     fun pathFor(itemId: ItemId, instance: A) =
@@ -52,24 +48,23 @@ class FolderFrontend<A : AdatClass>(
                 itemId,
                 instance,
                 this,
-                null,
                 wireFormatProvider,
                 path
             )
-                .also { propertyBackend.frontEnd = it }
+                .also { propertyBackend.frontend = it }
         }
 
     companion object {
 
-        fun load(
-            context: BackendContext,
+        fun <A : AdatClass> load(
+            context: BackendContext<A>,
             path: Path,
             includeFun : (path: Path) -> Boolean,
             wireFormatProvider: WireFormatProvider
-        ): Map<ItemId, PropertyBackend> {
+        ): Map<ItemId, PropertyBackend<A>> {
             require(path.exists()) { "path $path does not exist" }
 
-            val result = mutableMapOf<ItemId, PropertyBackend>()
+            val result = mutableMapOf<ItemId, PropertyBackend<A>>()
 
             SystemFileSystem.list(path).forEach {
 

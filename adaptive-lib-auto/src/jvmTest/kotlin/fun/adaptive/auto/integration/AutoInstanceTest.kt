@@ -40,7 +40,7 @@ class AutoInstanceTest {
             val originBackend = originAdapter.firstImpl<AutoWorker>().backends.values.first()
             assertEquals(1, originBackend.context.connectors.size)
 
-            val originFrontend = originBackend.frontEnd
+            val originFrontend = originBackend.frontend
             assertIs<FileFrontend<*>>(originFrontend)
 
             assertTrue(originFrontend.path.exists())

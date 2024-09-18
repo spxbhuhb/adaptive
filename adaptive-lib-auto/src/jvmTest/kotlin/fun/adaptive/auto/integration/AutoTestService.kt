@@ -19,7 +19,6 @@ import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.testPath
-import `fun`.adaptive.wireformat.api.Json
 import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
@@ -32,7 +31,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
     override suspend fun manual(): AutoConnectInfo<TestData> {
         val logger = getLogger("logger")
 
-        val context = BackendContext(
+        val context = BackendContext<TestData>(
             AutoHandle(UUID(), 1, null),
             worker.scope,
             logger,
@@ -52,10 +51,10 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
             originBackend,
             TestData.adatWireFormat,
             TestData(12, "a"),
-            null, null, null
+            null, null
         )
 
-        originBackend.frontEnd = originFrontend
+        originBackend.frontend = originFrontend
 
         worker.register(originBackend)
 
@@ -67,12 +66,12 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
     }
 
     override suspend fun instance(): AutoConnectInfo<TestData> {
-        val origin = autoInstance(worker, TestData(12, "a"), serviceContext)
+        val origin = autoInstance(worker, TestData(12, "a"), serviceContext = serviceContext)
         return origin.connectInfo()
     }
 
     override suspend fun list(): AutoConnectInfo<List<TestData>> {
-        return autoList(worker, TestData, serviceContext).connectInfo()
+        return autoList(worker, TestData, serviceContext = serviceContext).connectInfo()
     }
 
     override suspend fun polyList(): AutoConnectInfo<List<AdatClass>> {
@@ -82,7 +81,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
     override suspend fun file(): AutoConnectInfo<TestData> {
         val path = Path(testPath, "AutoTestService.testInstanceWithFile.json")
         SystemFileSystem.delete(path, mustExist = false)
-        return autoFile(worker, TestData, path, TestData(12, "a"), Json, serviceContext).connectInfo()
+        return autoFile(worker, TestData, path, TestData(12, "a"), serviceContext = serviceContext).connectInfo()
     }
 
     override suspend fun folder(folderName: String): AutoConnectInfo<List<TestData>> {

@@ -7,15 +7,15 @@ import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.*
 
-class SetBackend(
-    override val context: BackendContext,
-    initialValue: Map<ItemId, PropertyBackend>? = null
-) : CollectionBackendBase(context.handle) {
+class SetBackend<A : AdatClass>(
+    override val context: BackendContext<A>,
+    initialValue: Map<ItemId, PropertyBackend<A>>? = null
+) : CollectionBackendBase<A>(context.handle) {
 
     val additions = mutableSetOf<ItemId>()
     val removals = mutableSetOf<ItemId>()
 
-    override val items = initialValue?.toMutableMap() ?: mutableMapOf<ItemId, PropertyBackend>()
+    override val items = initialValue?.toMutableMap() ?: mutableMapOf<ItemId, PropertyBackend<A>>()
 
     init {
         if (initialValue != null && initialValue.isNotEmpty()) {
@@ -64,7 +64,8 @@ class SetBackend(
     override fun add(operation: AutoAdd, commit: Boolean) {
         trace { "commit=$commit op=$operation" }
 
-        addItem(operation.itemId, null, decode(operation.wireFormatName, operation.payload) as AdatClass)
+        @Suppress("UNCHECKED_CAST")
+        addItem(operation.itemId, null, decode(operation.wireFormatName, operation.payload) as A)
 
         closeListOp(operation, setOf(operation.itemId), commit)
     }
@@ -72,8 +73,11 @@ class SetBackend(
     override fun remove(operation: AutoRemove, commit: Boolean) {
         trace { "commit=$commit op=$operation" }
 
-        items -= operation.itemIds
         removals += operation.itemIds
+        for (itemId in operation.itemIds) {
+            val item = items.remove(itemId)
+            item?.frontend?.removed()
+        }
 
         closeListOp(operation, operation.itemIds, commit)
     }
@@ -174,13 +178,15 @@ class SetBackend(
     // Utility, common
     // --------------------------------------------------------------------------------
 
-    override fun addItem(itemId: ItemId, parentItemId: ItemId?, value: AdatClass) {
+    override fun addItem(itemId: ItemId, parentItemId: ItemId?, value: A) {
         // this is here for safety, theoretically the item id should never be in removals when addItem is called
         if (itemId in removals) return
 
         additions += itemId
         val backend = PropertyBackend(context, itemId, value.adatCompanion.wireFormatName, value.toArray())
         items += itemId to backend
+
+        context.onAdd(value)
     }
 
 }

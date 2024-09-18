@@ -19,12 +19,12 @@ abstract class BackendBase(
     peerHandle: AutoHandle
 ) : AutoConnector(peerHandle) {
 
-    abstract val context: BackendContext
+    abstract val context: BackendContext<*>
 
     val globalId
         get() = context.handle.globalId
 
-    var frontEnd: FrontendBase? = null
+    var frontend: FrontendBase? = null
 
     // --------------------------------------------------------------------------------
     // Operations from the frontend
@@ -85,7 +85,7 @@ abstract class BackendBase(
     }
 
     fun removed() {
-        frontEnd?.removed()
+        frontend?.removed()
     }
 
     // --------------------------------------------------------------------------------
@@ -95,7 +95,7 @@ abstract class BackendBase(
     fun close(operation: AutoOperation, commit: Boolean) {
 
         if (commit) {
-            frontEnd?.commit()
+            frontend?.commit()
             trace { "==== commit ====" }
         }
 

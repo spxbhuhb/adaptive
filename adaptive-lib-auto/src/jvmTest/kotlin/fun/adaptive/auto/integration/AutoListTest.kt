@@ -42,7 +42,7 @@ class AutoListTest {
             val connectingBackend = connectingWorker.backends.values.first()
 
             @Suppress("UNCHECKED_CAST")
-            val originFrontend = originBackend.frontEnd as AdatClassListFrontend<TestData>
+            val originFrontend = originBackend.frontend as AdatClassListFrontend<TestData>
 
             val t1 = TestData(12, "ab")
 

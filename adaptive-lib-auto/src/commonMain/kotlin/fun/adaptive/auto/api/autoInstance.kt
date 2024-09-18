@@ -1,7 +1,6 @@
 package `fun`.adaptive.auto.api
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.api.validateForContext
 import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
@@ -31,8 +30,6 @@ import `fun`.adaptive.service.ServiceContext
  *
  * **This function is NOT thread safe.**
  *
- * @param    onChange       Called after a new instance is generated, but before the
- *                          state of the fragment is updated.
  * @param    binding        Set by the compiler plugin, ignore it.
  * @param    connect        A function to get the connection info. Typically, this is created by
  *                          a service call.
@@ -41,7 +38,7 @@ import `fun`.adaptive.service.ServiceContext
  */
 @Producer
 fun <A : AdatClass> autoInstance(
-    onChange: ((newValue: A) -> Unit)? = null,
+    listener : AutoListener<A>? = null,
     binding: AdaptiveStateVariableBinding<A>? = null,
     trace: Boolean = false,
     connect: suspend () -> AutoConnectInfo<A>
@@ -49,7 +46,7 @@ fun <A : AdatClass> autoInstance(
     checkNotNull(binding)
     checkNotNull(binding.adatCompanion)
 
-    val store = AutoInstance(binding, connect, onChange, trace)
+    val store = AutoInstance(binding, connect, listener, trace)
 
     binding.targetFragment.addProducer(store)
 
@@ -72,31 +69,31 @@ fun <A : AdatClass> autoInstance(
  *
  * The instance is **NOT** thread safe.
  *
- * @param    onChange       Called after a new instance is generated (that is,
- *                          after a property changes).
- *
  * @return   An [OriginBase] for this auto instance. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  */
 fun <A : AdatClass> autoInstance(
     worker: AutoWorker,
     initialValue: A,
+    listener : AutoListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle : AutoHandle = AutoHandle(),
-    trace: Boolean = false,
-    onChange: ((newValue: A) -> Unit)? = null
-): OriginBase<PropertyBackend, AdatClassFrontend<A>, A> {
+    trace: Boolean = false
+): OriginBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A> {
 
     val companion = initialValue.adatCompanion
 
     @Suppress("UNCHECKED_CAST")
-    val origin = OriginBase<PropertyBackend, AdatClassFrontend<A>, A>(
+    val origin = OriginBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A>(
         worker,
         handle,
         serviceContext,
         companion.adatWireFormat,
         trace
     ) {
+
+        if (listener != null) context.addListener(listener)
+
         backend = PropertyBackend(
             context,
             LamportTimestamp(1, 1),
@@ -109,12 +106,8 @@ fun <A : AdatClass> autoInstance(
             companion.adatWireFormat as AdatClassWireFormat<A>,
             initialValue,
             null, null
-        ) {
-            it.value?.let { value ->
-                value.validateForContext()
-                onChange?.invoke(value)
-            }
-        }
+        )
+
     }
 
     return origin

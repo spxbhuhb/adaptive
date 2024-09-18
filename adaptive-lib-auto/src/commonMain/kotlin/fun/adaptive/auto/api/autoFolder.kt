@@ -55,12 +55,6 @@ import kotlinx.io.files.SystemFileSystem
  * @param    includeFun         When loading the items, this function is called to check if the given file should be
  *                              loaded into this list or not.
  *
- * @param    onListCommit       Called after the structure of the list has been changed (add/remove), but before the
- *                              state of the fragment is updated.
- *
- * @param    onItemCommit       Called when a property of a list item has been changed, but before the
- *                              state of the fragment is updated.
- *
  * @return   The Auto frontend of this list. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  *
@@ -73,12 +67,11 @@ fun <A : AdatClass> autoFolder(
     wireFormatProvider: WireFormatProvider = Json,
     includeFun: (Path) -> Boolean = { true },
     defaultWireFormat: AdatClassWireFormat<*>? = null,
+    listener : AutoListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle: AutoHandle = AutoHandle(),
-    onListCommit: ((newValue: List<A>) -> Unit)? = null,
-    onItemCommit: ((newValue: List<A>, item: A) -> Unit)? = null,
     trace: Boolean = false,
-): OriginBase<SetBackend, FolderFrontend<A>, List<A>> {
+): OriginBase<SetBackend<A>, FolderFrontend<A>, List<A>, A> {
 
     require(path.exists()) { "missing directory: ${SystemFileSystem.resolve(path)}" }
 
@@ -90,6 +83,8 @@ fun <A : AdatClass> autoFolder(
         trace
     ) {
 
+        if (listener != null) context.addListener(listener)
+
         backend = SetBackend(
             context,
             FolderFrontend.load(context, path, includeFun, wireFormatProvider)
@@ -97,8 +92,6 @@ fun <A : AdatClass> autoFolder(
 
         frontend = FolderFrontend(
             backend,
-            onListCommit,
-            onItemCommit,
             wireFormatProvider,
             path,
             fileNameFun

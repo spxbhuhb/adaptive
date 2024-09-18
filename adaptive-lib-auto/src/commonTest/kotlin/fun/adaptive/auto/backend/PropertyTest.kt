@@ -16,8 +16,8 @@ class PropertyTest {
         runTest {
             with(PropertyTestSetup(testData)) {
 
-                val f1 = AdatClassFrontend(b1, TestData.adatWireFormat, testData, null, null, null).also { b1.frontEnd = it }
-                val f2 = AdatClassFrontend(b2, TestData.adatWireFormat, null, null, null, null).also { b2.frontEnd = it }
+                val f1 = AdatClassFrontend(b1, TestData.adatWireFormat, testData, null, null).also { b1.frontend = it }
+                val f2 = AdatClassFrontend(b2, TestData.adatWireFormat, null, null, null).also { b2.frontend = it }
 
                 connect()
 

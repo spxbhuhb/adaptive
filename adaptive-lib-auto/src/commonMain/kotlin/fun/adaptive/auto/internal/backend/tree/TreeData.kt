@@ -16,7 +16,7 @@ import kotlin.collections.get
 import kotlin.math.max
 
 class TreeData(
-    val backend : TreeBackend,
+    val backend : TreeBackend<*>,
 ) {
 
     val activeNodes = Node(ItemId(0, 1))

@@ -41,7 +41,7 @@ class FileInstanceTest {
             val originBackend = originAdapter.firstImpl<AutoWorker>().backends.values.first()
 
             @Suppress("UNCHECKED_CAST")
-            val frontend = originBackend.frontEnd as FileFrontend<TestData>
+            val frontend = originBackend.frontend as FileFrontend<TestData>
 
             // ---- Initial Sync ----
 

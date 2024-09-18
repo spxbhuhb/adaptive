@@ -1,5 +1,6 @@
 package `fun`.adaptive.atomic
 
+import `fun`.adaptive.utility.Lock
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 import kotlin.properties.ReadWriteProperty
@@ -7,9 +8,8 @@ import kotlin.reflect.KProperty
 
 class Atomic<T>(
     initialValue: T,
+    private val lock : Lock = getLock()
 ) {
-
-    private val lock = getLock()
 
     private var value = initialValue
 

@@ -28,10 +28,10 @@ class DataWorker(
 
     val lock = getLock()
 
-    val masterData: OriginBase<*, FolderFrontend<DataItem>, List<DataItem>>
+    val masterData: OriginBase<*, FolderFrontend<DataItem>, List<DataItem>, DataItem>
         get() = requireNotNull(masterDataOrNull) { "masterData is null, perhaps the worker is not started" }
 
-    var masterDataOrNull: OriginBase<*, FolderFrontend<DataItem>, List<DataItem>>? = null
+    var masterDataOrNull: OriginBase<*, FolderFrontend<DataItem>, List<DataItem>, DataItem>? = null
         get() = lock.use { field }
         private set(v) {
             lock.use { field = v }

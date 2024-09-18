@@ -16,7 +16,7 @@ class AutoAdd(
 ) : AutoOperation() {
 
     override fun apply(backend: BackendBase, commit: Boolean) {
-        backend as CollectionBackendBase
+        backend as CollectionBackendBase<*>
         backend.add(this, commit)
     }
 

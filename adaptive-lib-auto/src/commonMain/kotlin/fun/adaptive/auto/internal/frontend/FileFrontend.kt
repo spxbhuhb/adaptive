@@ -17,12 +17,11 @@ import kotlinx.io.files.SystemFileSystem
  * Auto frontend to store properties in a file specified by [path].
  */
 class FileFrontend<A : AdatClass>(
-    backend: PropertyBackend,
+    backend: PropertyBackend<A>,
     wireFormat: AdatClassWireFormat<A>,
     itemId: ItemId?,
     initialValue: A?,
     collectionFrontend: CollectionFrontendBase?,
-    onCommit: ((frontend: AdatClassFrontend<A>) -> Unit)?,
     val wireFormatProvider: WireFormatProvider,
     val path: Path
 ) : AdatClassFrontend<A>(
@@ -30,8 +29,7 @@ class FileFrontend<A : AdatClass>(
     wireFormat,
     initialValue,
     itemId,
-    collectionFrontend,
-    onCommit
+    collectionFrontend
 ) {
 
     override fun commit() {
@@ -40,6 +38,7 @@ class FileFrontend<A : AdatClass>(
     }
 
     override fun removed() {
+        super.removed()
         SystemFileSystem.delete(path)
     }
 

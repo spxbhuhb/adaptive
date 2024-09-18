@@ -19,10 +19,10 @@ class TestSetup<OFE : FrontendBase, CFE : FrontendBase>(
     val connectingBackend = connectingWorker.backends.values.first()
 
     @Suppress("UNCHECKED_CAST")
-    val originFrontend : OFE = originBackend.frontEnd as OFE
+    val originFrontend : OFE = originBackend.frontend as OFE
 
     @Suppress("UNCHECKED_CAST")
-    val connectingFrontend : CFE = originBackend.frontEnd as CFE
+    val connectingFrontend : CFE = originBackend.frontend as CFE
 
     suspend fun waitForSync() {
         waitForReal(2.seconds) {

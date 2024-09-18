@@ -9,12 +9,12 @@ import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.*
 import kotlin.collections.minusAssign
 
-class TreeBackend(
-    override val context: BackendContext
-) : CollectionBackendBase(context.handle) {
+class TreeBackend<A : AdatClass>(
+    override val context: BackendContext<A>
+) : CollectionBackendBase<A>(context.handle) {
 
     val tree = TreeData(this)
-    override val items = mutableMapOf<ItemId, PropertyBackend>()
+    override val items = mutableMapOf<ItemId, PropertyBackend<A>>()
 
     // --------------------------------------------------------------------------------
     // Operations from the frontend
@@ -67,7 +67,8 @@ class TreeBackend(
 
         checkNotNull(operation.parentItemId) { "tree items must have a parent" }
 
-        addItem(operation.itemId, operation.parentItemId, decode(operation.wireFormatName, operation.payload) as AdatClass)
+        @Suppress("UNCHECKED_CAST")
+        addItem(operation.itemId, operation.parentItemId, decode(operation.wireFormatName, operation.payload) as A)
 
         closeListOp(operation, setOf(operation.itemId), commit)
     }
@@ -136,9 +137,10 @@ class TreeBackend(
     // Utility, common
     // --------------------------------------------------------------------------------
 
-    override fun addItem(itemId: ItemId, parentItemId: ItemId?, value: AdatClass) {
+    override fun addItem(itemId: ItemId, parentItemId: ItemId?, value: A) {
         checkNotNull(parentItemId) { "tree items must have a parent" }
         tree.addChildToParent(itemId, parentItemId)
         items += itemId to PropertyBackend(context, itemId, value.adatCompanion.wireFormatName, value.toArray())
+        context.onAdd(value)
     }
 }

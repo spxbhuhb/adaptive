@@ -1,5 +1,6 @@
 package `fun`.adaptive.auto.internal.backend
 
+import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatPropertyWireFormat
 import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.model.AutoPropertyValue
@@ -8,8 +9,8 @@ import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.AutoModify
 import `fun`.adaptive.wireformat.WireFormat
 
-class PropertyBackend(
-    override val context: BackendContext,
+class PropertyBackend<A : AdatClass>(
+    override val context: BackendContext<A>,
     val itemId: LamportTimestamp,
     val wireFormatName: String?,
     initialValues: Array<Any?>?

@@ -7,9 +7,7 @@ import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.model.ItemId
 
 open class AdatClassListFrontend<A : AdatClass>(
-    override val backend: SetBackend,
-    val onListCommit: ((newValue: List<A>) -> Unit)?,
-    val onItemCommit: ((newValue: List<A>, item: A) -> Unit)?
+    override val backend: SetBackend<A>
 ) : CollectionFrontendBase() {
 
     var classFrontends = mutableMapOf<ItemId, AdatClassFrontend<A>>()
@@ -21,7 +19,7 @@ open class AdatClassListFrontend<A : AdatClass>(
     override fun commit() {
         val active = (backend.additions subtract backend.removals)
         values = active.sorted().map { getItemFrontend(it).value !! }
-        onListCommit?.invoke(values)
+        backend.context.onListCommit(values)
     }
 
     override fun commit(itemId: ItemId) {
@@ -30,7 +28,7 @@ open class AdatClassListFrontend<A : AdatClass>(
         if (index == - 1) return
         val instance = getItemFrontend(itemId).value !!
         values = values.subList(0, index) + instance + values.subList(index + 1, values.size)
-        onItemCommit?.invoke(values, instance)
+        backend.context.onItemCommit(instance)
     }
 
     operator fun get(index: Int) = values[index]
@@ -77,10 +75,9 @@ open class AdatClassListFrontend<A : AdatClass>(
                 wireFormat as AdatClassWireFormat<A>,
                 wireFormat.newInstance(propertyBackend.values),
                 itemId,
-                this,
-                null
+                this
             )
-                .also { propertyBackend.frontEnd = it }
+                .also { propertyBackend.frontend = it }
         }
 
 }

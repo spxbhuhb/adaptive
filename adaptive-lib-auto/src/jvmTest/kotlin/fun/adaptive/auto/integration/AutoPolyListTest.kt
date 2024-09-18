@@ -50,7 +50,7 @@ class AutoPolyListTest {
             val connectingBackend = connectingWorker.backends.values.first()
 
             @Suppress("UNCHECKED_CAST")
-            val originFrontend = originBackend.frontEnd as AdatClassListFrontend<AdatClass>
+            val originFrontend = originBackend.frontend as AdatClassListFrontend<AdatClass>
 
             val t1 = TestData(12, "ab")
             val t2 = TD2(23)
