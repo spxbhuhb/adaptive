@@ -49,9 +49,10 @@ class ProcessWorker(
             scope,
             process.inputStream,
             process.outputStream,
-            safeAdapter,
             wireFormatProvider
         )
+
+        transport.start(safeAdapter)
 
         try {
 

@@ -6,21 +6,29 @@ package `fun`.adaptive.graphics.svg
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.graphics.canvas.platform.ActualCanvas
+import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 class SvgAdapter(
-    val parentAdapter : AdaptiveAdapter,
-    override val rootContainer : ActualCanvas
+    val parentAdapter: AdaptiveAdapter,
+    override val rootContainer: ActualCanvas,
 ) : AdaptiveAdapter {
 
     override val fragmentFactory = parentAdapter.fragmentFactory
 
+    override val transport: ServiceCallTransport
+        get() = parentAdapter.transport
+
     override lateinit var rootFragment: AdaptiveFragment
 
     override val dispatcher: CoroutineDispatcher
-        get() = Dispatchers.Default
+        get() = parentAdapter.dispatcher
+
+    override val scope: CoroutineScope
+        get() = parentAdapter.scope
 
     override var trace = parentAdapter.trace
 

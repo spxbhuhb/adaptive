@@ -21,10 +21,8 @@ val defaultServiceImplFactory: ServiceImplFactory = BasicServiceImplFactory()
  * val clicks = getService<ClickApi>()
  * ```
  */
-fun <T> getService(transport: ServiceCallTransport? = null, consumer: T? = null): T {
+fun <T> getService(transport: ServiceCallTransport?, consumer: T? = null): T {
     checkNotNull(consumer)
-    if (transport != null) {
-        (consumer as ServiceConsumer).serviceCallTransport = transport
-    }
+    (consumer as ServiceConsumer).serviceCallTransport = transport
     return consumer
 }

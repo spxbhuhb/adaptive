@@ -1,7 +1,6 @@
 package `fun`.adaptive.cookbook.shared
 
 import `fun`.adaptive.backend.BackendAdapter
-import `fun`.adaptive.service.defaultServiceCallTransport
 import `fun`.adaptive.service.testing.TestServiceTransport
 import `fun`.adaptive.utility.delete
 import kotlinx.io.files.Path
@@ -9,17 +8,15 @@ import kotlinx.io.files.SystemFileSystem
 
 abstract class ClientServerRecipe {
 
+    val clientTransport = TestServiceTransport()
+
+    val serverTransport = TestServiceTransport(peerTransport = clientTransport)
+
     abstract val serverBackend: BackendAdapter
 
     abstract val clientBackend: BackendAdapter
 
     suspend fun run() {
-
-        defaultServiceCallTransport = TestServiceTransport(
-            serviceImplFactory = serverBackend,
-            peerTransport = TestServiceTransport(serviceImplFactory = clientBackend)
-        )
-
         clientMain()
     }
 

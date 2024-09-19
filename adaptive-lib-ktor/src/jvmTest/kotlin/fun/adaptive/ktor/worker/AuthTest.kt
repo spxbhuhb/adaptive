@@ -9,17 +9,17 @@ import `fun`.adaptive.auth.model.AccessDenied
 import `fun`.adaptive.auth.model.Credential
 import `fun`.adaptive.auth.model.CredentialType
 import `fun`.adaptive.auth.model.Principal
+import `fun`.adaptive.backend.BackendAdapter
+import `fun`.adaptive.backend.backend
+import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.exposed.inMemoryH2
+import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.lib.auth.auth
 import `fun`.adaptive.lib.auth.crypto.BCrypt
-import `fun`.adaptive.reflect.CallSiteName
-import `fun`.adaptive.backend.BackendAdapter
-import `fun`.adaptive.backend.builtin.service
-import `fun`.adaptive.backend.backend
-import `fun`.adaptive.ktor.api.withWebSocketTransport
 import `fun`.adaptive.lib.auth.store.CredentialTable
 import `fun`.adaptive.lib.auth.store.PrincipalTable
+import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.utility.UUID
 import kotlinx.coroutines.delay
@@ -41,12 +41,14 @@ class AuthTest {
         login: Boolean = true,
         test: suspend (it: BackendAdapter) -> Unit
     ) {
-        val adapter = backend {
+        val serverBackend = backend {
             inMemoryH2(callSiteName.substringAfterLast('.'))
             service { AuthTestService() }
             auth() // to have session worker
             ktor()
         }
+
+        val clientBackend = backend(webSocketTransport("http://localhost:8080")) { }.start()
 
         transaction {
             val admin = Principal(UUID(), "admin", activated = true)
@@ -57,23 +59,22 @@ class AuthTest {
         }
 
         runBlocking {
-            val transport = withWebSocketTransport("http://localhost:8080")
-
             if (login) {
-                getService<SessionApi>().login("admin", "stuff")
+                getService<SessionApi>(clientBackend.transport).login("admin", "stuff")
                 delay(100) // let the websocket disconnect
             }
-            test(adapter)
 
-            transport.stop()
-            adapter.stop()
+            test(clientBackend)
+
+            clientBackend.stop()
+            serverBackend.stop()
         }
     }
 
     @Test
     fun publicAccessNotLoggedIn() {
         authTest(login = false) {
-            val result = getService<AuthTestApi>().publicFun()
+            val result = getService<AuthTestApi>(it.transport).publicFun()
             assertEquals("publicFun", result)
         }
     }
@@ -81,7 +82,7 @@ class AuthTest {
     @Test
     fun publicAccessLoggedIn() {
         authTest {
-            val result = getService<AuthTestApi>().publicFun()
+            val result = getService<AuthTestApi>(it.transport).publicFun()
             assertEquals("publicFun", result)
         }
     }
@@ -90,7 +91,7 @@ class AuthTest {
     fun loggedInNotLoggedIn() {
         authTest(login = false) {
             assertFailsWith(AccessDenied::class) {
-                getService<AuthTestApi>().loggedInFun()
+                getService<AuthTestApi>(it.transport).loggedInFun()
             }
         }
     }
@@ -98,7 +99,7 @@ class AuthTest {
     @Test
     fun loggedInLoggedIn() {
         authTest(login = true) {
-            val result = getService<AuthTestApi>().loggedInFun()
+            val result = getService<AuthTestApi>(it.transport).loggedInFun()
             assertEquals("loggedInFun", result)
         }
     }
@@ -106,11 +107,11 @@ class AuthTest {
     @Test
     fun loggedInAfterLogout() {
         authTest(login = true) {
-            getService<SessionApi>().logout()
+            getService<SessionApi>(it.transport).logout()
             delay(100) // let the websocket disconnect
 
             assertFailsWith(AccessDenied::class) {
-                getService<AuthTestApi>().loggedInFun()
+                getService<AuthTestApi>(it.transport).loggedInFun()
             }
         }
     }

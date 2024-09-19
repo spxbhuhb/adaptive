@@ -7,6 +7,7 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.resource.defaultResourceEnvironment
+import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.DPixel
@@ -30,7 +31,8 @@ import org.w3c.dom.css.CSSStyleDeclaration
 
 class AuiAdapter(
     override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
-    override val backend: BackendAdapter
+    override val backend: BackendAdapter,
+    override val transport: ServiceCallTransport = backend.transport
 ) : AbstractAuiAdapter<HTMLElement, HTMLDivElement>() {
 
     override val fragmentFactory = AuiFragmentFactory

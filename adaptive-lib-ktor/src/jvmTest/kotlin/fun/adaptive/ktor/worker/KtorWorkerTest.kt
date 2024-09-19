@@ -6,6 +6,7 @@ package `fun`.adaptive.ktor.worker
 
 import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.backend.backend
+import `fun`.adaptive.service.testing.TestServiceTransport
 import org.junit.Test
 
 class KtorWorkerTest {

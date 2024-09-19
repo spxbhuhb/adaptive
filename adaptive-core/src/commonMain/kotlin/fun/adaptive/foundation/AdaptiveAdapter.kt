@@ -9,18 +9,25 @@ import `fun`.adaptive.foundation.fragment.AdaptiveSequence
 import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.foundation.testing.TraceEvent
 import `fun`.adaptive.backend.BackendAdapter
+import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.firstOrNullIfInstance
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
 
 interface AdaptiveAdapter {
 
     val fragmentFactory: AdaptiveFragmentFactory
+
+    val transport : ServiceCallTransport
 
     var rootFragment: AdaptiveFragment
 
     val rootContainer: Any
 
     val dispatcher: CoroutineDispatcher
+
+    val scope : CoroutineScope
 
     val backend : BackendAdapter
         get() = unsupported()
@@ -30,6 +37,12 @@ interface AdaptiveAdapter {
     val startedAt: Long
 
     fun newId(): Long
+
+    fun start() : AdaptiveAdapter = this
+
+    fun stop() {
+        scope.cancel()
+    }
 
     fun newSequence(parent : AdaptiveFragment, index : Int) : AdaptiveFragment =
         AdaptiveSequence(parent.adapter, parent, index)

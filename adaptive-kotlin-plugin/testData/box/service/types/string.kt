@@ -14,10 +14,13 @@ interface TestService {
     suspend fun testValueNull(arg1: String?): String?
 }
 
-val testServiceConsumer = getService<TestService>()
+val testServiceConsumer = getService<TestService>(TestServiceTransport(TestServiceImpl()))
 
 class TestServiceImpl : TestService, ServiceImpl<TestServiceImpl> {
-    override var serviceCallTransport: ServiceCallTransport? = null
+
+    override var serviceCallTransport: ServiceCallTransport?
+        get() = serviceContext.transport
+        set(v) { TODO() }
 
     override suspend fun testValue(arg1: String): String = arg1
     override suspend fun testValueNull(arg1: String?): String? = arg1

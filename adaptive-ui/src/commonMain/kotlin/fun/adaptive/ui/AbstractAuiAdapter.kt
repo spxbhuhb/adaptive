@@ -21,7 +21,9 @@ import `fun`.adaptive.ui.render.model.TextRenderData
 import `fun`.adaptive.ui.support.navigation.AbstractNavSupport
 import `fun`.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 
 /**
  * Container receiver types ([CRT]):
@@ -62,6 +64,8 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : AdaptiveAdapter {
     override val dispatcher: CoroutineDispatcher
         get() = Dispatchers.Main
 
+    override val scope = CoroutineScope(dispatcher)
+
     var autoSizing: Boolean = true
 
     var actualBatchOwner: AbstractContainer<*, *>? = null
@@ -72,6 +76,10 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : AdaptiveAdapter {
         color = Color(0u)
         fontSize = SPixel(17.0)
         fontWeight = normalFont.weight
+    }
+
+    override fun stop() {
+        scope.cancel()
     }
 
     override fun newSelect(parent: AdaptiveFragment, index: Int): AdaptiveFragment =

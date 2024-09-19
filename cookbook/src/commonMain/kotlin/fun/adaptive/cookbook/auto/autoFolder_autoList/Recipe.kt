@@ -24,13 +24,13 @@ class Recipe : AutoRecipe() {
 
     val serverPath = Path("./cookbook/var/auto/autoFolder_autoList").ensure().clean()
 
-    override val serverBackend = backend {
+    override val serverBackend = backend(serverTransport) {
         auto()
         service { DataService() }
         worker { MasterDataWorker(serverPath) }
     }
 
-    override val clientBackend = backend {
+    override val clientBackend = backend(clientTransport) {
         auto()
     }
 
@@ -40,7 +40,7 @@ class Recipe : AutoRecipe() {
         // the client side list as the client side list needs the client
         // id from `connectInfo.connectingHandle`.
 
-        val connectInfo = getService<DataServiceApi>().getConnectInfo()
+        val connectInfo = getService<DataServiceApi>(clientTransport).getConnectInfo()
 
         // Create the client side list. This list is not persisted,
         // but from the application point of view it is permanent

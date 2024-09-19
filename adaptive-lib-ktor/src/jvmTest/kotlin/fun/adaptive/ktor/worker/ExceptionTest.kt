@@ -14,10 +14,11 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.backend
-import `fun`.adaptive.ktor.api.withWebSocketTransport
+import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.service.transport.ServiceCallException
+import `fun`.adaptive.service.transport.ServiceCallTransport
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -41,9 +42,9 @@ class NumberService : NumberApi, ServiceImpl<NumberService> {
 
 }
 
-suspend fun checkNumber(i: Int, illegal: Boolean): String {
+suspend fun checkNumber(transport: ServiceCallTransport, i: Int, illegal: Boolean): String {
     try {
-        getService<NumberApi>().ensureEven(i, illegal)
+        getService<NumberApi>(transport).ensureEven(i, illegal)
         return "this is an even number"
     } catch (_: OddNumberException) {
         return "this is an odd number"
@@ -62,21 +63,21 @@ class ExceptionTest {
         callSiteName: String = "unknown",
         test: suspend (it: BackendAdapter) -> Unit
     ) {
-        val adapter = backend {
+        val serverBackend = backend {
             inMemoryH2(callSiteName.substringAfterLast('.'))
             service { NumberService() }
             auth() // to have session worker
             ktor()
         }
 
-        runBlocking {
-            val transport = withWebSocketTransport("http://localhost:8080")
+        val clientBackend = backend(webSocketTransport("http://localhost:8080")) { }.start()
 
+        runBlocking {
             try {
-                test(adapter)
+                test(clientBackend)
             } finally {
-                transport.stop()
-                adapter.stop()
+                clientBackend.stop()
+                serverBackend.stop()
             }
         }
     }
@@ -84,14 +85,14 @@ class ExceptionTest {
     @Test
     fun throwAdat() {
         exceptionTest {
-            assertEquals("this is an odd number", checkNumber(13, false))
+            assertEquals("this is an odd number", checkNumber(it.transport, 13, false))
         }
     }
 
     @Test
     fun throwNonAdat() {
         exceptionTest {
-            assertEquals("ServiceCallException", checkNumber(13, true))
+            assertEquals("ServiceCallException", checkNumber(it.transport, 13, true))
         }
     }
 

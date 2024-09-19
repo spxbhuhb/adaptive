@@ -6,6 +6,8 @@ package `fun`.adaptive.kotlin.base.success
 import `fun`.adaptive.foundation.*
 import `fun`.adaptive.foundation.testing.*
 import `fun`.adaptive.foundation.producer.*
+import `fun`.adaptive.backend.BackendAdapter
+import `fun`.adaptive.service.testing.TestServiceTransport
 import kotlinx.coroutines.*
 import kotlin.time.Duration
 
@@ -15,8 +17,12 @@ fun mock(i: Int) = i + 100
 @Suppress("OPT_IN_USAGE")
 fun box(): String {
 
-    val adapter = AdaptiveTestAdapter()
-    adapter.dispatcher = newSingleThreadContext("test thread")
+    val adapter = AdaptiveTestAdapter(
+        backend = BackendAdapter(
+            dispatcher = newSingleThreadContext("test thread"),
+            transport = TestServiceTransport()
+        )
+    )
 
     try {
 

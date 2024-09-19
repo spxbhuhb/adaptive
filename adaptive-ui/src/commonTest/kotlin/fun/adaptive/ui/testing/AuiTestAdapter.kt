@@ -7,6 +7,8 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.foundation.query.first
+import `fun`.adaptive.service.testing.TestServiceTransport
+import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
@@ -21,6 +23,7 @@ import kotlin.test.assertEquals
 
 class AuiTestAdapter(
     override val rootContainer: TestReceiver = TestReceiver(),
+    override val transport: ServiceCallTransport = TestServiceTransport()
 ) : AbstractAuiAdapter<TestReceiver, TestReceiver>() {
 
     override val fragmentFactory = AuiFragmentFactory

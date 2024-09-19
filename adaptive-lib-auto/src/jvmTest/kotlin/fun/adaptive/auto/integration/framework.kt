@@ -9,6 +9,7 @@ import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.exposed.inMemoryH2
+import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.ktor.api.withWebSocketTransport
 import `fun`.adaptive.lib.auth.auth
@@ -41,18 +42,15 @@ fun autoTest(
         service { AutoTestService() }
     }
 
-    val connectingAdapter = backend {
+    val connectingAdapter = backend(webSocketTransport("http://localhost:$port")) {
         if (trace) it.trace = arrayOf(Regex(".*"))
         auto()
     }
 
     runBlocking {
-        val transport = withWebSocketTransport("http://localhost:$port", serviceImplFactory = connectingAdapter)
-
         try {
             test(originAdapter, connectingAdapter)
         } finally {
-            transport.stop()
             originAdapter.stop()
             connectingAdapter.stop()
         }

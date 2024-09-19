@@ -18,6 +18,7 @@ import androidx.core.graphics.toColorInt
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.resource.defaultResourceEnvironment
+import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.fragment.layout.RawCornerRadius
 import `fun`.adaptive.ui.instruction.DPixel
@@ -33,7 +34,8 @@ import `fun`.adaptive.ui.support.navigation.AbstractNavSupport
 open class AuiAdapter(
     val context: Context,
     final override val rootContainer: ViewGroup,
-    override val backend: BackendAdapter
+    override val backend: BackendAdapter,
+    override val transport: ServiceCallTransport = backend.transport
 ) : AbstractAuiAdapter<View, ContainerViewGroup>() {
 
     override val fragmentFactory = AuiFragmentFactory

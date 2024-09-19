@@ -22,7 +22,6 @@ class StreamServiceCallTransport(
     scope: CoroutineScope,
     inputStream: InputStream,
     val outputStream: OutputStream,
-    override val serviceImplFactory: ServiceImplFactory,
     override val wireFormatProvider: WireFormatProvider,
     serviceContext: ServiceContext? = null,
     val writeTimeout: Duration = 2.seconds,
@@ -38,9 +37,11 @@ class StreamServiceCallTransport(
 
     val serviceContext: ServiceContext = serviceContext ?: ServiceContext(transport = this)
 
-    fun start() {
+    override suspend fun start(serviceImplFactory: ServiceImplFactory) : ServiceCallTransport {
+        super.start(serviceImplFactory)
         readerThread.start()
         writerThread.start()
+        return this
     }
 
     override fun context(): ServiceContext =

@@ -8,7 +8,6 @@ import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.ktor.ktor
-import `fun`.adaptive.ktor.api.withWebSocketTransport
 import `fun`.adaptive.lib.auth.auth
 import `fun`.adaptive.lib.auth.crypto.BCrypt
 import `fun`.adaptive.reflect.CallSiteName
@@ -17,10 +16,15 @@ import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.settings
+import `fun`.adaptive.ktor.ClientWebSocketServiceCallTransport
+import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.lib.auth.store.CredentialTable
 import `fun`.adaptive.lib.auth.store.PrincipalTable
 import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.testing.TestServiceTransport
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.waitFor
+import `fun`.adaptive.utility.waitForSuspend
 import io.ktor.client.plugins.cookies.*
 import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.delay
@@ -31,13 +35,14 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * These tests **SHOULD NOT** run parallel, check `junit-platform.properties`.
  */
 class SessionTest {
 
-    fun server(dbName: String) = backend {
+    fun server(dbName: String) = backend(TestServiceTransport()) {
         settings {
             inline("KTOR_WIREFORMAT" to "json")
         }
@@ -48,16 +53,21 @@ class SessionTest {
 
     @Test
     fun getSession() {
-        val adapter = server("getSession")
-        val ktorWorker = adapter.firstImpl<KtorWorker>()
+        val serverBackend = server("getSession")
+        val ktorWorker = serverBackend.firstImpl<KtorWorker>()
 
         runBlocking {
-            val transport = withWebSocketTransport("http://localhost:8080")
+            val clientBackend = backend(webSocketTransport("http://localhost:8080")) { }.start()
 
             try {
-                val sessionService = getService<SessionApi>()
 
-                val client = transport.client
+                val sessionService = getService<SessionApi>(clientBackend.transport)
+
+                val client = (clientBackend.transport as ClientWebSocketServiceCallTransport).client
+
+                waitForSuspend(1.seconds) {
+                    client.cookies("http://localhost:8080").isNotEmpty()
+                }
 
                 val cookies = client.cookies("http://localhost:8080")
                 assertNotNull(cookies.firstOrNull { it.name == ktorWorker.clientIdCookieName })
@@ -65,8 +75,8 @@ class SessionTest {
                 val session = sessionService.getSession()
                 assertNull(session)
             } finally {
-                transport.stop()
-                adapter.stop()
+                clientBackend.stop()
+                serverBackend.stop()
             }
         }
     }
@@ -76,16 +86,15 @@ class SessionTest {
         callSiteName: String = "unknown",
         test: suspend (it: BackendAdapter) -> Unit
     ) {
-        val adapter = server(callSiteName.substringAfterLast('.'))
+        val serverBackend = server(callSiteName.substringAfterLast('.'))
+        val clientBackend = backend(webSocketTransport("http://localhost:8080")) { }.start()
 
         runBlocking {
-            val transport = withWebSocketTransport("http://localhost:8080")
-
             try {
-                test(adapter)
+                test(clientBackend)
             } finally {
-                transport.stop()
-                adapter.stop()
+                clientBackend.stop()
+                serverBackend.stop()
             }
         }
     }
@@ -94,7 +103,7 @@ class SessionTest {
     fun loginUnknownPrincipal() {
         sessionTest {
             assertFailsWith(AuthenticationFail::class) {
-                getService<SessionApi>().login("admin", "admin")
+                getService<SessionApi>(it.transport).login("admin", "admin")
             }.also {
                 assertEquals(AuthenticationResult.UnknownPrincipal, it.result)
             }
@@ -108,7 +117,7 @@ class SessionTest {
                 transaction {
                     PrincipalTable += Principal(UUID(), "admin")
                 }
-                getService<SessionApi>().login("admin", "admin")
+                getService<SessionApi>(it.transport).login("admin", "admin")
             }.also {
                 assertEquals(AuthenticationResult.NoCredential, it.result)
             }
@@ -126,7 +135,7 @@ class SessionTest {
                     PrincipalTable += admin
                     CredentialTable += Credential(UUID(), admin.id, CredentialType.PASSWORD, passwd, now())
                 }
-                getService<SessionApi>().login("admin", "admin")
+                getService<SessionApi>(it.transport).login("admin", "admin")
             }.also {
                 assertEquals(AuthenticationResult.NotActivated, it.result)
             }
@@ -144,7 +153,7 @@ class SessionTest {
                     PrincipalTable += admin
                     CredentialTable += Credential(UUID(), admin.id, CredentialType.PASSWORD, passwd, now())
                 }
-                getService<SessionApi>().login("admin", "other stuff")
+                getService<SessionApi>(it.transport).login("admin", "other stuff")
             }.also {
                 assertEquals(AuthenticationResult.InvalidCredentials, it.result)
             }
@@ -162,7 +171,7 @@ class SessionTest {
                 CredentialTable += Credential(UUID(), admin.id, CredentialType.PASSWORD, passwd, now())
             }
 
-            val session = getService<SessionApi>().login("admin", "stuff")
+            val session = getService<SessionApi>(it.transport).login("admin", "stuff")
 
             assertNotNull(session)
             assertEquals(admin.id, session.principalOrNull)
@@ -180,7 +189,7 @@ class SessionTest {
                 CredentialTable += Credential(UUID(), admin.id, CredentialType.PASSWORD, passwd, now())
             }
 
-            val sessionService = getService<SessionApi>()
+            val sessionService = getService<SessionApi>(it.transport)
 
             sessionService.login("admin", "stuff")
             delay(100) // to let the websocket close

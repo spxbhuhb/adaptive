@@ -4,8 +4,10 @@
 package `fun`.adaptive.backend
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveEntry
+import `fun`.adaptive.service.transport.LocalServiceCallTransport
+import `fun`.adaptive.service.transport.ServiceCallTransport
+import kotlinx.coroutines.Dispatchers
 
 /**
  * The entry point of a backend component tree.
@@ -13,8 +15,8 @@ import `fun`.adaptive.foundation.AdaptiveEntry
  * **IMPORTANT** variables declared outside the block are **NOT** reactive
  */
 @AdaptiveEntry
-fun backend(wait : Boolean = false, @Adaptive block: (adapter : AdaptiveAdapter) -> Unit) : BackendAdapter =
-    BackendAdapter(wait).also {
+fun backend(transport: ServiceCallTransport = LocalServiceCallTransport(), wait : Boolean = false, @Adaptive block: (adapter : BackendAdapter) -> Unit) : BackendAdapter =
+    BackendAdapter(wait, transport, Dispatchers.Default).also {
         block(it)
         it.mounted()
     }

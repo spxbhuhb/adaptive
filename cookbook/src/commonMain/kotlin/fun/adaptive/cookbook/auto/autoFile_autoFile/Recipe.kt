@@ -24,13 +24,13 @@ class Recipe : AutoRecipe() {
     val serverPath = Path(Path("./cookbook/var/auto/autoFile_autoFile/server").ensure().clean(), "item.json")
     val clientPath = Path(Path("./cookbook/var/auto/autoFile_autoFile/client").ensure().clean(), "item.json")
 
-    override val serverBackend = backend {
+    override val serverBackend = backend(serverTransport) {
         auto()
         service { DataService() }
         worker { DataWorker(serverPath) }
     }
 
-    override val clientBackend = backend {
+    override val clientBackend = backend(clientTransport) {
         auto()
     }
 
@@ -40,7 +40,7 @@ class Recipe : AutoRecipe() {
         // the client side as the client side needs the client id
         // and the item id from `connectInfo.connectingHandle`.
 
-        val connectInfo = getService<DataServiceApi>().getConnectInfo()
+        val connectInfo = getService<DataServiceApi>(clientTransport).getConnectInfo()
 
         // Create the client side auto file.
 

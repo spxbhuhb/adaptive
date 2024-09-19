@@ -14,7 +14,6 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 
 class TransactionWebSocketServiceCallTransport(
     wireFormatProvider: WireFormatProvider,
-    override val serviceImplFactory: ServiceImplFactory,
     override var socket: WebSocketSession?,
     val clientId: UUID<ServiceContext>,
     val session: ServiceSession?,

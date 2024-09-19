@@ -6,28 +6,37 @@ package `fun`.adaptive.foundation.testing
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.service.testing.TestServiceTransport
+import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
 
 class AdaptiveTestAdapter(
     var printTrace: Boolean = false,
-    override val backend: BackendAdapter = BackendAdapter()
+    override val backend: BackendAdapter = BackendAdapter(transport = TestServiceTransport(), dispatcher = Dispatchers.Default)
 ) : AdaptiveAdapter {
 
     var nextId = 2L
 
     override val fragmentFactory = TestNodeFragmentFactory
 
+    override val transport: ServiceCallTransport
+        get() = backend.transport
+
     override lateinit var rootFragment: AdaptiveFragment
 
     override val rootContainer = TestNode()
 
-    override var dispatcher: CoroutineDispatcher = Dispatchers.Default
+    override val dispatcher: CoroutineDispatcher
+        get() = backend.dispatcher
+
+    override val scope = CoroutineScope(dispatcher)
 
     override var trace : Array<out Regex> = arrayOf(
         Regex(".*(?!addActual|removeActual)") // anything that does not end with addActual/ removeActual
@@ -83,6 +92,7 @@ class AdaptiveTestAdapter(
         }
     }
 
+    @Suppress("unused") // used by plugin tests
     fun assert(expected: List<TraceEvent>): String {
         return if (expected == traceEvents) {
             "OK"

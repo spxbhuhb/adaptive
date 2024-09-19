@@ -4,17 +4,16 @@
 
 package `fun`.adaptive.ktor.worker
 
+import `fun`.adaptive.backend.BackendAdapter
+import `fun`.adaptive.backend.backend
+import `fun`.adaptive.backend.builtin.ServiceImpl
+import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.exposed.inMemoryH2
+import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.lib.auth.auth
 import `fun`.adaptive.reflect.CallSiteName
-import `fun`.adaptive.backend.BackendAdapter
-import `fun`.adaptive.backend.builtin.ServiceImpl
-import `fun`.adaptive.backend.builtin.service
-import `fun`.adaptive.backend.backend
-import `fun`.adaptive.ktor.api.withWebSocketTransport
 import `fun`.adaptive.service.ServiceApi
-import `fun`.adaptive.service.defaultServiceImplFactory
 import `fun`.adaptive.service.getService
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -29,6 +28,7 @@ interface DuplexApi {
 class DuplexService : DuplexApi, ServiceImpl<DuplexService> {
 
     override suspend fun process(value: String): String {
+        println("$this  ${serviceContext.transport}")
         if (value.length > 4) {
             return value
         } else {
@@ -49,23 +49,23 @@ class DuplexTest {
         callSiteName: String = "unknown",
         test: suspend (it: BackendAdapter) -> Unit
     ) {
-        val adapter = backend {
+        val serverBackend = backend {
             inMemoryH2(callSiteName.substringAfterLast('.'))
-            service { DuplexService() } // this is the server side service
+            service { DuplexService() }
             auth() // to have session worker
             ktor()
         }
 
-        defaultServiceImplFactory += DuplexService() // this is the client side service
+        val clientBackend = backend(webSocketTransport("http://localhost:8080")) {
+            service { DuplexService() }
+        }.start()
 
         runBlocking {
-            val transport = withWebSocketTransport("http://localhost:8080")
-
             try {
-                test(adapter)
+                test(clientBackend)
             } finally {
-                transport.stop()
-                adapter.stop()
+                clientBackend.stop()
+                serverBackend.stop()
             }
         }
     }
@@ -73,7 +73,7 @@ class DuplexTest {
     @Test
     fun throwAdat() {
         duplexTest {
-            val service = getService<DuplexApi>()
+            val service = getService<DuplexApi>(it.transport)
 
             val result = service.process("")
 

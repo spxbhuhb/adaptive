@@ -15,6 +15,15 @@ suspend fun waitFor(timeout: Duration, condition: () -> Boolean) {
     }
 }
 
+suspend fun waitForSuspend(timeout: Duration, condition: suspend () -> Boolean) {
+    withTimeout(timeout) {
+        while (! condition()) {
+            delay(50)
+        }
+    }
+}
+
+
 @OptIn(ExperimentalCoroutinesApi::class)
 suspend fun waitForReal(timeout: Duration, condition: () -> Boolean) {
     withContext(Dispatchers.Default.limitedParallelism(1)) {

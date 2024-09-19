@@ -7,6 +7,8 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveEntry
+import `fun`.adaptive.service.testing.TestServiceTransport
+import kotlinx.coroutines.Dispatchers
 
 /**
  * The general entry point of an Adaptive test component tree.
@@ -14,7 +16,11 @@ import `fun`.adaptive.foundation.AdaptiveEntry
  * **IMPORTANT** variables declared outside the block are **NOT** reactive
  */
 @AdaptiveEntry
-fun test(backendAdapter: BackendAdapter = BackendAdapter(), printTrace: Boolean = false, @Adaptive block: (adapter: AdaptiveAdapter) -> Unit): AdaptiveTestAdapter =
+fun test(
+    backendAdapter: BackendAdapter = BackendAdapter(transport = TestServiceTransport(), dispatcher = Dispatchers.Default),
+    printTrace: Boolean = false,
+    @Adaptive block: (adapter: AdaptiveAdapter) -> Unit
+): AdaptiveTestAdapter =
     AdaptiveTestAdapter(printTrace, backendAdapter).also {
         block(it)
         it.mounted()

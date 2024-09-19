@@ -29,7 +29,6 @@ class StreamServiceCallTransportTest {
             CoroutineScope(Dispatchers.IO),
             inputStream1,
             outputStream2,
-            serviceImplFactory,
             Json
         )
 
@@ -37,7 +36,6 @@ class StreamServiceCallTransportTest {
             CoroutineScope(Dispatchers.IO),
             inputStream2,
             outputStream1,
-            serviceImplFactory,
             Json
         )
 
@@ -46,8 +44,8 @@ class StreamServiceCallTransportTest {
 
         runBlocking {
             try {
-                t1.start()
-                t2.start()
+                t1.start(serviceImplFactory)
+                t2.start(serviceImplFactory)
 
                 val consumer = TestApi1.Consumer()
                 consumer.serviceCallTransport = t1

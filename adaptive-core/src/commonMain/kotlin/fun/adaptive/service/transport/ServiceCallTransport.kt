@@ -43,7 +43,7 @@ abstract class ServiceCallTransport(
 
     val responseChannels = mutableMapOf<UUID<TransportEnvelope>, Channel<TransportEnvelope>>()
 
-    abstract val serviceImplFactory: ServiceImplFactory
+    lateinit var serviceImplFactory: ServiceImplFactory
 
     abstract val wireFormatProvider: WireFormatProvider
 
@@ -225,6 +225,11 @@ abstract class ServiceCallTransport(
                 )
             }
         }
+    }
+
+    open suspend fun start(serviceImplFactory: ServiceImplFactory) : ServiceCallTransport {
+        this.serviceImplFactory = serviceImplFactory
+        return this
     }
 
     open suspend fun stop() {

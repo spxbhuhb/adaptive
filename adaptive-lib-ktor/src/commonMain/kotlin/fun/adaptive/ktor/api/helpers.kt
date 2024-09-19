@@ -6,36 +6,27 @@ package `fun`.adaptive.ktor.api
 
 import `fun`.adaptive.ktor.ClientWebSocketServiceCallTransport
 import `fun`.adaptive.service.defaultServiceCallTransport
-import `fun`.adaptive.service.defaultServiceImplFactory
-import `fun`.adaptive.service.factory.ServiceImplFactory
 import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.api.Json
 
-suspend fun withWebSocketTransport(
+@Deprecated("user webSocketTransport() with backend adapter instead")
+fun withWebSocketTransport(
     host: String,
     wireFormatProvider: WireFormatProvider = Json,
     servicePath: String = "/adaptive/service-ws",
-    clientIdPath: String = "/adaptive/client-id",
-    trace: Boolean = false,
-    serviceImplFactory: ServiceImplFactory = defaultServiceImplFactory,
+    clientIdPath: String = "/adaptive/client-id"
 ) =
-    webSocketTransport(host, wireFormatProvider, servicePath, clientIdPath, trace, serviceImplFactory).also {
+    webSocketTransport(host, wireFormatProvider, servicePath, clientIdPath).also {
         defaultServiceCallTransport = it
     }
 
-suspend fun webSocketTransport(
+fun webSocketTransport(
     host: String,
     wireFormatProvider: WireFormatProvider = Json,
     servicePath: String = "/adaptive/service-ws",
-    clientIdPath: String = "/adaptive/client-id",
-    trace: Boolean = false,
-    serviceImplFactory: ServiceImplFactory = defaultServiceImplFactory,
+    clientIdPath: String = "/adaptive/client-id"
 ) =
-    ClientWebSocketServiceCallTransport(host, servicePath, clientIdPath, wireFormatProvider, serviceImplFactory)
-        .also {
-            it.trace = trace
-            it.start()
-        }
+    ClientWebSocketServiceCallTransport(host, servicePath, clientIdPath, wireFormatProvider)
 
 fun String.toHttp(path: String): String {
     var url = this.trim()

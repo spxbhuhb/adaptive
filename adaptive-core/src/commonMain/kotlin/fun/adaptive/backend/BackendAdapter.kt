@@ -10,19 +10,25 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.factory.ServiceImplFactory
+import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.getLock
+import `fun`.adaptive.utility.safeLaunch
 import `fun`.adaptive.utility.sleep
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * Adapter for backends (stores, services, workers).
  */
 open class BackendAdapter(
-    wait : Boolean = false
+    wait : Boolean = false,
+    override val transport: ServiceCallTransport,
+    override val dispatcher: CoroutineDispatcher
 ) : AdaptiveAdapter, ServiceImplFactory {
+
+    val logger = getLogger("BackendAdapter")
 
     override val fragmentFactory = BackendFragmentFactory
 
@@ -35,8 +41,7 @@ open class BackendAdapter(
     override val rootContainer
         get() = throw NotImplementedError()
 
-    override val dispatcher: CoroutineDispatcher
-        get() = Dispatchers.Default
+    override val scope = CoroutineScope(dispatcher)
 
     override val backend: BackendAdapter
         get() = this
@@ -72,8 +77,19 @@ open class BackendAdapter(
         }
     }
 
-    fun stop() {
+    override fun start() : BackendAdapter {
+        scope.safeLaunch(logger) {
+            transport.start(this@BackendAdapter)
+        }
+        return this
+    }
+
+    override fun stop() {
         rootFragment.unmount()
+
+        scope.safeLaunch(logger) {
+            transport.stop()
+        }
     }
 
     override fun plusAssign(template: ServiceImpl<*>) {

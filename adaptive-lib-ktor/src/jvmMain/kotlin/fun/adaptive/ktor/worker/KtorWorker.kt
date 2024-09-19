@@ -92,11 +92,12 @@ class KtorWorker : WorkerImpl<KtorWorker> {
 
             val transport = TransactionWebSocketServiceCallTransport(
                 wireFormatProvider,
-                safeAdapter,
                 this,
                 sessionUuid,
                 provider.getSession(sessionUuid)
             )
+
+            transport.start(safeAdapter)
 
             try {
 

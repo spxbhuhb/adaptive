@@ -16,10 +16,13 @@ interface TestService {
     suspend fun testArrayNull(arg1: IntArray?) : IntArray?
 }
 
-val testServiceConsumer = getService<TestService>()
+val testServiceConsumer = getService<TestService>(TestServiceTransport(TestServiceImpl()))
 
 class TestServiceImpl : TestService, ServiceImpl<TestServiceImpl> {
-    override var serviceCallTransport: ServiceCallTransport? = null
+
+    override var serviceCallTransport: ServiceCallTransport?
+        get() = serviceContext.transport
+        set(v) { TODO() }
 
     override suspend fun testValue(arg1: Int): Int = arg1
     override suspend fun testValueNull(arg1: Int?): Int? = arg1
@@ -29,8 +32,6 @@ class TestServiceImpl : TestService, ServiceImpl<TestServiceImpl> {
 
 fun box(): String {
     runBlocking {
-        defaultServiceCallTransport = TestServiceTransport(TestServiceImpl())
-
         val value = 123
         val valueArray = IntArray(3) { it }
 

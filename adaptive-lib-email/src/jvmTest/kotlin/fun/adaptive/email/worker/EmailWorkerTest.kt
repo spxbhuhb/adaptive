@@ -87,7 +87,7 @@ class EmailWorkerTest {
         runBlocking {
 
 
-            val transport = TestServiceTransport(serviceImplFactory = adapter)
+            val transport = TestServiceTransport().start(adapter)
 
             getService<EmailApi>(transport).send(expectRecipient, expectSubject, expectContent)
 

@@ -5,26 +5,35 @@ package `fun`.adaptive.graphics.canvas
 
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.query.collect
 import `fun`.adaptive.graphics.canvas.platform.ActualCanvas
+import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.alsoIfInstance
 import `fun`.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 class CanvasAdapter(
     val parentAdapter : AdaptiveAdapter,
     override val rootContainer: ActualCanvas,
-    override var rootFragment : AdaptiveFragment
+    override var rootFragment : AdaptiveFragment,
 ) : AdaptiveAdapter {
 
     override val fragmentFactory = parentAdapter.fragmentFactory
 
-    override val dispatcher: CoroutineDispatcher
-        get() = Dispatchers.Default
-
     override var trace = parentAdapter.trace
 
     override val startedAt = vmNowMicro()
+
+    override val transport: ServiceCallTransport
+        get() = parentAdapter.transport
+
+    override val dispatcher: CoroutineDispatcher
+        get() = parentAdapter.dispatcher
+
+    override val scope: CoroutineScope
+        get() = parentAdapter.scope
 
     override fun newId() = parentAdapter.newId()
 

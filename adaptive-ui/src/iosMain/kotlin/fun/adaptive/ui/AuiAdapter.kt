@@ -6,6 +6,7 @@ package `fun`.adaptive.ui
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.resource.defaultResourceEnvironment
+import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.fragment.layout.RawSize
 import `fun`.adaptive.ui.instruction.DPixel
@@ -23,7 +24,8 @@ import platform.UIKit.UIView
 @OptIn(ExperimentalForeignApi::class)
 open class AuiAdapter(
     final override val rootContainer: UIView,
-    override val backend: BackendAdapter
+    override val backend: BackendAdapter,
+    override val transport: ServiceCallTransport = backend.transport
 ) : AbstractAuiAdapter<UIView, ContainerView>() {
 
     override val fragmentFactory = AuiFragmentFactory
