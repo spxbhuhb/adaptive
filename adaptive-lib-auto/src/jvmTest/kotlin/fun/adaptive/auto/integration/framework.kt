@@ -11,7 +11,6 @@ import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ktor.ktor
-import `fun`.adaptive.ktor.api.withWebSocketTransport
 import `fun`.adaptive.lib.auth.auth
 import `fun`.adaptive.reflect.CallSiteName
 import kotlinx.coroutines.delay
@@ -40,12 +39,12 @@ fun autoTest(
         auto()
 
         service { AutoTestService() }
-    }
+    }.start()
 
     val connectingAdapter = backend(webSocketTransport("http://localhost:$port")) {
         if (trace) it.trace = arrayOf(Regex(".*"))
         auto()
-    }
+    }.start()
 
     runBlocking {
         try {

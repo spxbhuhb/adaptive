@@ -2,6 +2,7 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -9,6 +10,7 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.instruction.invoke
 import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.lib.sandbox.ui.graphics.svgExample
 import `fun`.adaptive.lib.sandbox.ui.layout.layoutMain
 import `fun`.adaptive.lib.sandbox.ui.markdown.markdown
@@ -19,6 +21,7 @@ import `fun`.adaptive.lib.sandbox.ui.mobile.welcome
 import `fun`.adaptive.lib.sandbox.ui.navigation.slotOne
 import `fun`.adaptive.lib.sandbox.ui.navigation.slotTwo
 import `fun`.adaptive.lib.sandbox.withSandbox
+import `fun`.adaptive.service.transport.LocalServiceCallTransport
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.color
 import `fun`.adaptive.ui.api.column
@@ -48,6 +51,7 @@ import `fun`.adaptive.ui.instruction.layout.AlignItems
 import `fun`.adaptive.ui.instruction.layout.Height
 import `fun`.adaptive.ui.instruction.navigation.NavClick
 import `fun`.adaptive.ui.platform.withJsResources
+import kotlinx.browser.window
 
 fun main() {
 
@@ -55,7 +59,7 @@ fun main() {
 
     //(trace = Trace(".*"))
     //, trace = trace("removeActual|.*-Unmount|setContent")
-    browser {
+    browser(backend = backend(LocalServiceCallTransport()) { }) {
         withSandbox(it) // to set default font name
 
         grid {

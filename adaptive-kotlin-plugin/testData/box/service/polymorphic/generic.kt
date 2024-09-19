@@ -23,7 +23,7 @@ val testServiceConsumer = getService<TestService1>(TestServiceTransport(TestServ
 
 class TestService1Impl : TestService1, ServiceImpl<TestService1Impl> {
 
-    override var serviceCallTransport: ServiceCallTransport?
+    override var serviceCallTransport: ServiceCallTransport
         get() = serviceContext.transport
         set(v) { TODO() }
 

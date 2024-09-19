@@ -1,16 +1,20 @@
 package `fun`.adaptive.cookbook.shared
 
 import `fun`.adaptive.backend.BackendAdapter
-import `fun`.adaptive.service.testing.TestServiceTransport
+import `fun`.adaptive.service.testing.DirectServiceTransport
 import `fun`.adaptive.utility.delete
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 
 abstract class ClientServerRecipe {
 
-    val clientTransport = TestServiceTransport()
+    val clientTransport = DirectServiceTransport()
+    val serverTransport = DirectServiceTransport()
 
-    val serverTransport = TestServiceTransport(peerTransport = clientTransport)
+    init {
+        clientTransport.peerTransport = serverTransport
+        serverTransport.peerTransport = clientTransport
+    }
 
     abstract val serverBackend: BackendAdapter
 

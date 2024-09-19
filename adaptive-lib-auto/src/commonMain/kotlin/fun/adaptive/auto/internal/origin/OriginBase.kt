@@ -15,7 +15,6 @@ import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.service.defaultServiceCallTransport
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.CleanupHandler
@@ -23,7 +22,7 @@ import `fun`.adaptive.wireformat.api.Proto
 import kotlin.time.Duration
 
 class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
-    worker: AutoWorker?,
+    val worker: AutoWorker?,
     val handle: AutoHandle,
     serviceContext: ServiceContext?,
     defaultWireFormat: AdatClassWireFormat<*>?,
@@ -85,7 +84,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
     }
 
     suspend fun connect(
-        transport: ServiceCallTransport? = defaultServiceCallTransport,
+        transport: ServiceCallTransport = requireNotNull(worker?.adapter?.transport),
         waitForSync: Duration? = null,
         connectInfoFun: suspend () -> AutoConnectInfo<VT>
     ): OriginBase<BE, FE, VT, IT> {

@@ -6,7 +6,6 @@ import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.cookbook.auth.authMain
 import `fun`.adaptive.cookbook.components.componentsMain
-import `fun`.adaptive.cookbook.form.formMain
 import `fun`.adaptive.cookbook.intro.introMain
 import `fun`.adaptive.cookbook.iot.iotCommon
 import `fun`.adaptive.cookbook.iot.iotMain
@@ -27,6 +26,7 @@ import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
+import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.box
@@ -46,9 +46,10 @@ import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.form.FormFragmentFactory
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.platform.withJsResources
-import `fun`.adaptive.ui.form.FormFragmentFactory
+import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -62,9 +63,7 @@ fun main() {
 
         withJsResources()
 
-        val localBackend = backend { auto() }
-
-        // withWebSocketTransport(window.location.origin, serviceImplFactory = localBackend)
+        val localBackend = backend(webSocketTransport(window.location.origin)) { auto() }
 
         browser(CanvasFragmentFactory, SvgFragmentFactory, FormFragmentFactory, backend = localBackend) { adapter ->
 
@@ -80,9 +79,9 @@ fun main() {
 //                rowTemplate(40.dp, 1.fr)
 
 //            formMain()
-            dialogMain()
+//            dialogMain()
 
-//                iotMain()
+            iotMain()
 //              box {
 //                  hoverMain()
 //              }

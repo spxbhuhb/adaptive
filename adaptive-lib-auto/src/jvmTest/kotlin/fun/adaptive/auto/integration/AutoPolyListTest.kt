@@ -34,7 +34,7 @@ class AutoPolyListTest {
 
             val testAdapter = test(connectingAdapter) {
 
-                val a = autoList<AdatClass> { getService<AutoTestApi>().polyList() }
+                val a = autoList<AdatClass> { getService<AutoTestApi>(connectingAdapter.transport).polyList() }
 
                 if (a != null) {
                     producedValue = a

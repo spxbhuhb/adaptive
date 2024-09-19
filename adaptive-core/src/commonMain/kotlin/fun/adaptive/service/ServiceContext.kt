@@ -11,10 +11,18 @@ import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 
+/**
+ *  A context that belongs to one connection. It is not the same as a session,
+ *  as one session may have more than one connection and thus more than one
+ *  context.
+ *
+ * @property  uuid       The unique id of this service context.
+ * @property  transport  The service transport to send calls to the connected peer.
+ */
 open class ServiceContext(
+    val transport: ServiceCallTransport,
     val uuid: UUID<ServiceContext> = UUID(),
-    val sessionOrNull: ServiceSession? = null,
-    val transport: ServiceCallTransport? = null
+    val sessionOrNull: ServiceSession? = null
 ) {
     val session: ServiceSession
         get() = checkNotNull(sessionOrNull) { "missing or invalid session" }

@@ -28,7 +28,8 @@ class AutoInstanceTest {
         autoTest(port = 8085) { originAdapter, connectingAdapter ->
 
             val testAdapter = test(connectingAdapter) {
-                val a = autoInstance<TestData> { getService<AutoTestApi>().file() }
+
+                val a = autoInstance<TestData> { getService<AutoTestApi>(connectingAdapter.transport).file() }
 
                 if (a != null) {
                     producedValue = a

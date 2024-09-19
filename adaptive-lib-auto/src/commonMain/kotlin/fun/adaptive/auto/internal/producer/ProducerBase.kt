@@ -67,7 +67,7 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatCl
 
             adapter.backend.firstImpl<AutoWorker>().register(backend)
 
-            val autoService = getService<AutoApi>()
+            val autoService = getService<AutoApi>(adapter.transport)
 
             backend.addPeer(
                 ServiceConnector(connectingHandle, originHandle, autoService, logger, scope, 1000),

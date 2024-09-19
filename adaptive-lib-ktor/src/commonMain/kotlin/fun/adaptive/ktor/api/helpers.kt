@@ -5,20 +5,8 @@
 package `fun`.adaptive.ktor.api
 
 import `fun`.adaptive.ktor.ClientWebSocketServiceCallTransport
-import `fun`.adaptive.service.defaultServiceCallTransport
 import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.api.Json
-
-@Deprecated("user webSocketTransport() with backend adapter instead")
-fun withWebSocketTransport(
-    host: String,
-    wireFormatProvider: WireFormatProvider = Json,
-    servicePath: String = "/adaptive/service-ws",
-    clientIdPath: String = "/adaptive/client-id"
-) =
-    webSocketTransport(host, wireFormatProvider, servicePath, clientIdPath).also {
-        defaultServiceCallTransport = it
-    }
 
 fun webSocketTransport(
     host: String,

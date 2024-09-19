@@ -28,11 +28,10 @@ interface DuplexApi {
 class DuplexService : DuplexApi, ServiceImpl<DuplexService> {
 
     override suspend fun process(value: String): String {
-        println("$this  ${serviceContext.transport}")
         if (value.length > 4) {
             return value
         } else {
-            val side = if (adapter == null) "c" else "S"
+            val side = if (value.length % 2 == 0) "S" else "c"
             return getService<DuplexApi>(serviceContext.transport).process(value + side)
         }
     }
@@ -49,6 +48,10 @@ class DuplexTest {
         callSiteName: String = "unknown",
         test: suspend (it: BackendAdapter) -> Unit
     ) {
+        // Here the server backend does not need a specific transport. DuplexService
+        // uses the transport from the service context which is created when the
+        // client connects though websocket.
+
         val serverBackend = backend {
             inMemoryH2(callSiteName.substringAfterLast('.'))
             service { DuplexService() }
@@ -73,6 +76,7 @@ class DuplexTest {
     @Test
     fun throwAdat() {
         duplexTest {
+            // it.transport is a ClientWebSocketServiceCallTransport
             val service = getService<DuplexApi>(it.transport)
 
             val result = service.process("")

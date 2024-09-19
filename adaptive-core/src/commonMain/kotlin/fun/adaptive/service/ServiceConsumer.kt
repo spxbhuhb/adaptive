@@ -13,6 +13,6 @@ interface ServiceConsumer : ServiceBase {
      * the plugin.
      */
     suspend fun callService(funName: String, payload: WireFormatEncoder): ByteArray =
-        serviceCallTransportOrDefault.call(serviceName, funName, payload.pack())
+        serviceCallTransport.call(serviceName, funName, payload.pack())
 
 }

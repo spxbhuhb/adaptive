@@ -12,10 +12,15 @@ interface TestService1 {
     suspend fun testFun(arg1: Int, arg2: String): String
 }
 
-val testServiceConsumer = getService<TestService1>()
+val testServiceConsumer = getService<TestService1>(TestServiceTransport(TestService1Impl()))
 
 class TestService1Impl : TestService1, ServiceImpl<TestService1Impl> {
-    override var serviceCallTransport: ServiceCallTransport? = null
+
+    override var serviceCallTransport: ServiceCallTransport
+        get() = serviceContext.transport
+        set(v) {
+            TODO()
+        }
 
     override suspend fun testFun(arg1: Int, arg2: String) =
         "i:$arg1 s:$arg2 $serviceContext"
@@ -25,7 +30,6 @@ class TestService1Impl : TestService1, ServiceImpl<TestService1Impl> {
 fun box(): String {
     var response: String
     runBlocking {
-        defaultServiceCallTransport = TestServiceTransport(TestService1Impl())
         response = testServiceConsumer.testFun(1, "hello")
     }
     return if (response.startsWith("i:1 s:hello ServiceContext(")) "OK" else "Fail (response=$response)"

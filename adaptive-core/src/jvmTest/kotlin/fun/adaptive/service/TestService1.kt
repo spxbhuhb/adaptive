@@ -5,7 +5,7 @@ import `fun`.adaptive.wireformat.WireFormatDecoder
 import `fun`.adaptive.wireformat.builtin.StringWireFormat
 
 class TestService1(
-    override val serviceContext: ServiceContext = ServiceContext()
+    override val serviceContext: ServiceContext
 ) : TestApi1, ServiceImpl<TestService1> {
 
     override var serviceName = "fun.adaptive.services.TestApi1"

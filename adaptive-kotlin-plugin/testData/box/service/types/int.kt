@@ -2,7 +2,6 @@ package `fun`.adaptive.service
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.service.ServiceApi
-import `fun`.adaptive.service.defaultServiceCallTransport
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.service.testing.TestServiceTransport
 import `fun`.adaptive.service.transport.ServiceCallTransport
@@ -20,7 +19,7 @@ val testServiceConsumer = getService<TestService>(TestServiceTransport(TestServi
 
 class TestServiceImpl : TestService, ServiceImpl<TestServiceImpl> {
 
-    override var serviceCallTransport: ServiceCallTransport?
+    override var serviceCallTransport: ServiceCallTransport
         get() = serviceContext.transport
         set(v) { TODO() }
 
@@ -32,7 +31,8 @@ class TestServiceImpl : TestService, ServiceImpl<TestServiceImpl> {
 
 fun box(): String {
     runBlocking {
-        val value = 123
+
+    val value = 123
         val valueArray = IntArray(3) { it }
 
         if (value != testServiceConsumer.testValue(value)) return@runBlocking "Fail: value"

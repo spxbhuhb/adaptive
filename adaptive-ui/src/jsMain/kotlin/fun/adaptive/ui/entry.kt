@@ -14,7 +14,7 @@ import org.w3c.dom.HTMLElement
 @AdaptiveEntry
 fun browser(
     vararg imports : AdaptiveFragmentFactory,
-    backend: BackendAdapter = BackendAdapter(),
+    backend: BackendAdapter,
     rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
     trace : Trace? = null,
     @Adaptive block: (adapter: AbstractAuiAdapter<*, *>) -> Unit

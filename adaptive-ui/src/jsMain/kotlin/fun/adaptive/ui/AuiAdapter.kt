@@ -235,7 +235,7 @@ class AuiAdapter(
     // ------------------------------------------------------------------------------
 
     // TODO adapter stop mechanism
-    fun stop() {
+    override fun stop() {
         resizeObserver.disconnect()
     }
 }

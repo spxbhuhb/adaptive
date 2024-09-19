@@ -18,7 +18,7 @@ class BasicServiceTest {
     fun basic() {
         suspend fun test(provider: WireFormatProvider): String {
             val c = TestApi1.Consumer()
-            c.serviceCallTransport = TestServiceTransport(TestService1(ServiceContext()), wireFormatProvider = provider)
+            c.serviceCallTransport = TestServiceTransport(TestService1(ServiceContext(TestServiceTransport())), wireFormatProvider = provider)
             return c.testFun(1, "hello")
         }
 

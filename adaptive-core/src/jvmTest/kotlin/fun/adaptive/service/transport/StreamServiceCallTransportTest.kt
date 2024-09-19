@@ -1,8 +1,10 @@
 package `fun`.adaptive.service.transport
 
+import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.TestApi1
 import `fun`.adaptive.service.TestService1
 import `fun`.adaptive.service.factory.BasicServiceImplFactory
+import `fun`.adaptive.service.testing.TestServiceTransport
 import `fun`.adaptive.wireformat.api.Json
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +19,7 @@ class StreamServiceCallTransportTest {
     @Test
     fun basic() {
         val serviceImplFactory = BasicServiceImplFactory()
-        serviceImplFactory += TestService1()
+        serviceImplFactory += TestService1(ServiceContext(TestServiceTransport()))
 
         val outputStream1 = PipedOutputStream()
         val inputStream1 = PipedInputStream(outputStream1)

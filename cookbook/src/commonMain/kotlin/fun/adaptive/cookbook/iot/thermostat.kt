@@ -11,6 +11,7 @@ import `fun`.adaptive.cookbook.iot.model.ThermostatStatus
 import `fun`.adaptive.cookbook.shared.f12
 import `fun`.adaptive.cookbook.shared.f16
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.service.getService
@@ -54,7 +55,7 @@ class ThermostatFilter(
 fun thermostats() {
     val filter = copyStore { ThermostatFilter(ThermostatStatus.All, "") }
 
-    val all = autoList(Thermostat) { getService<ThermostatApi>().list() }
+    val all = autoList(Thermostat) { getService<ThermostatApi>(adapter().transport).list() }
     val filtered = all?.filter { filter.matches(it) }
 
     grid {

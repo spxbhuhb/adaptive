@@ -15,8 +15,11 @@ import kotlinx.coroutines.Dispatchers
  * **IMPORTANT** variables declared outside the block are **NOT** reactive
  */
 @AdaptiveEntry
-fun backend(transport: ServiceCallTransport = LocalServiceCallTransport(), wait : Boolean = false, @Adaptive block: (adapter : BackendAdapter) -> Unit) : BackendAdapter =
+fun backend(transport: ServiceCallTransport = LocalServiceCallTransport(), start: Boolean = true, wait: Boolean = false, @Adaptive block: (adapter: BackendAdapter) -> Unit): BackendAdapter =
     BackendAdapter(wait, transport, Dispatchers.Default).also {
         block(it)
         it.mounted()
+        if (start) {
+            it.start()
+        }
     }

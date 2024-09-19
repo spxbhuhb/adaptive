@@ -22,30 +22,26 @@ interface ServiceBase {
 
     /**
      * The call transport to use when calling a service function. You can change this
-     * field to use different call transport than the default. When null, service
-     * calls use [defaultServiceCallTransport].
+     * field to use different call transport than the default.
      *
      * Service implementations use the transport in the context if not overridden.
      *
      * Overridden by the plugin with:
      *
      * ```kotlin
-     * override var callTransport : ServiceCallTransport = defaultServiceCallTransport
+     * override var callTransport : ServiceCallTransport = null
      * ```
      */
-    var serviceCallTransport: ServiceCallTransport?
-        get() = null
+    var serviceCallTransport: ServiceCallTransport
+        get() = manualOrPlugin("serviceCallTransport")
         set(value) {
             manualOrPlugin("serviceCallTransport", value)
         }
 
-    val serviceCallTransportOrDefault: ServiceCallTransport
-        get() = serviceCallTransport ?: defaultServiceCallTransport
-
     fun wireFormatEncoder() =
-        serviceCallTransportOrDefault.encoder()
+        serviceCallTransport.encoder()
 
     fun wireFormatDecoder(payload: ByteArray): WireFormatDecoder<*> =
-        serviceCallTransportOrDefault.decoder(payload)
+        serviceCallTransport.decoder(payload)
 
 }

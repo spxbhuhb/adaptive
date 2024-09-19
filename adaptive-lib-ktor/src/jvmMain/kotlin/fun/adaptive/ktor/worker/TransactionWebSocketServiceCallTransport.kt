@@ -2,7 +2,6 @@ package `fun`.adaptive.ktor.worker
 
 import `fun`.adaptive.ktor.WebSocketServiceCallTransport
 import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.service.factory.ServiceImplFactory
 import `fun`.adaptive.service.model.ServiceSession
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.wireformat.WireFormatDecoder
@@ -23,7 +22,7 @@ class TransactionWebSocketServiceCallTransport(
 ) {
 
     override fun context(): ServiceContext =
-        ServiceContext(clientId, session, this)
+        ServiceContext(this, clientId, session)
 
     override suspend fun dispatch(context: ServiceContext, serviceName: String, funName: String, decoder: WireFormatDecoder<*>): ByteArray {
 

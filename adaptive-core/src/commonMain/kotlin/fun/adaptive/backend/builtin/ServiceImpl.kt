@@ -6,6 +6,7 @@ package `fun`.adaptive.backend.builtin
 
 import `fun`.adaptive.service.ServiceBase
 import `fun`.adaptive.service.ServiceContext
+import `fun`.adaptive.service.transport.LocalServiceCallTransport
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.manualOrPlugin
@@ -17,8 +18,8 @@ interface ServiceImpl<T : ServiceImpl<T>> : ServiceBase, BackendFragmentImpl {
     /**
      *  The transport from [serviceContext].
      */
-    override var serviceCallTransport: ServiceCallTransport?
-        get() = serviceContext.transport
+    override var serviceCallTransport: ServiceCallTransport
+        get() = requireNotNull(serviceContext.transport)
         set(value) {
             manualOrPlugin("serviceCallTransport", value)
         }
@@ -34,7 +35,7 @@ interface ServiceImpl<T : ServiceImpl<T>> : ServiceBase, BackendFragmentImpl {
      * `UUID.NIL` context id.
      */
     val internal: T
-        get() = newInstance(ServiceContext(UUID.nil()))
+        get() = newInstance(ServiceContext(transport = LocalServiceCallTransport(), UUID.nil()))
 
     /**
      * Create a new instance of the given service with the given context.

@@ -164,12 +164,13 @@ Built-in transports:
 **Stream** (JVM only)
 
 - [StreamServiceCallTransport](/adaptive-core/src/jvmMain/kotlin/fun/adaptive/service/transport/StreamServiceCallTransport.kt)
-- uses Java input and output streams
+  - uses Java input and output streams
 
 **Test**
 
-- [TestServiceTransport](/adaptive-core/src/commonMain/kotlin/fun/adaptive/service/testing/TestServiceContext.kt)
-- call services of a supplied template or from an implementation factory
+- [TestServiceTransport](/adaptive-core/src/commonMain/kotlin/fun/adaptive/service/testing/TestServiceTransport.kt)
+  - calls services of a supplied template or from an implementation factory
+- [DirectServiceTransport](/adaptive-core/src/commonMain/kotlin/fun/adaptive/service/testing/DirectServiceTransport.kt)
 
 ### Disconnecting
 
@@ -181,7 +182,7 @@ happens, all pending calls fail with `DisconnectException`.
 You can call client side functions from the server if you have a `ServiceContext`:
 
 ```kotlin
-getService<DuplexApi>(serviceContext).process(value)
+getService<DuplexApi>(serviceContext.transport).process(value)
 ```
 
 > [!NOTE]
@@ -233,7 +234,7 @@ class NumberService : NumberApi, ServiceImpl<NumberService> {
 
 suspend fun checkNumber(i : Int, illegal : Boolean) : String {
   try {
-    getService<NumberApi>().ensureEven(i, illegal)
+    getService<NumberApi>(clientBackend.transport).ensureEven(i, illegal)
     return "this is an even number"
   } catch (ex : OddNumberException) {
     return "this is an odd number"

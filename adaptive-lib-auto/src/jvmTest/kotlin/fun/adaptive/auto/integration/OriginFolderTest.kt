@@ -33,7 +33,7 @@ class OriginFolderTest {
 
             test(connectingAdapter) {
 
-                val a = autoList(TestData) { getService<AutoTestApi>().folder(folderName) }
+                val a = autoList(TestData) { getService<AutoTestApi>(connectingAdapter.transport).folder(folderName) }
 
                 if (a != null) {
                     producedValue = a
@@ -82,7 +82,7 @@ class OriginFolderTest {
 
             test(connectingAdapter) {
 
-                val a = autoList(TestData) { getService<AutoTestApi>().folder(folderName) }
+                val a = autoList(TestData) { getService<AutoTestApi>(connectingAdapter.transport).folder(folderName) }
 
                 if (a != null) {
                     producedValue = a

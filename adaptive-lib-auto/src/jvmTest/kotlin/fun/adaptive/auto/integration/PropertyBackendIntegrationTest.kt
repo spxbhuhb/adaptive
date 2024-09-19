@@ -35,12 +35,12 @@ class PropertyBackendIntegrationTest {
 
             val itemId = LamportTimestamp(0, 0) // does not matter for PropertyBackend
 
-            val autoService = getService<AutoApi>() // service consumer from connecting to origin
+            val autoService = getService<AutoApi>(connectingAdapter.transport) // service consumer from connecting to origin
 
             val originWorker = originAdapter.firstImpl<AutoWorker>()
             val connectingWorker = connectingAdapter.firstImpl<AutoWorker>()
 
-            val connectInfo = getService<AutoTestApi>().manual()
+            val connectInfo = getService<AutoTestApi>(connectingAdapter.transport).manual()
             val originHandle = connectInfo.originHandle
             val connectingHandle = connectInfo.connectingHandle
 
