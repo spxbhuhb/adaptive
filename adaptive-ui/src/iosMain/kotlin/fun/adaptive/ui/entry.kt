@@ -9,6 +9,8 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveEntry
 import `fun`.adaptive.foundation.AdaptiveFragmentFactory
 import `fun`.adaptive.foundation.instruction.Trace
+import `fun`.adaptive.service.transport.LocalServiceCallTransport
+import kotlinx.coroutines.Dispatchers
 import platform.UIKit.UIView
 
 /**
@@ -20,7 +22,10 @@ import platform.UIKit.UIView
 fun ios(
     rootView : UIView,
     vararg imports : AdaptiveFragmentFactory,
-    backend: BackendAdapter = BackendAdapter(),
+    backend: BackendAdapter = BackendAdapter(
+        dispatcher = Dispatchers.Main,
+        transport = LocalServiceCallTransport()
+    ),
     trace: Trace? = null,
     @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
 ) : AuiAdapter =

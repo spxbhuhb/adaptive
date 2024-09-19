@@ -11,6 +11,8 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveEntry
 import `fun`.adaptive.foundation.AdaptiveFragmentFactory
 import `fun`.adaptive.foundation.instruction.Trace
+import `fun`.adaptive.service.transport.LocalServiceCallTransport
+import kotlinx.coroutines.Dispatchers
 
 /**
  * The entry position of an Adaptive Android component tree.
@@ -22,7 +24,10 @@ fun android(
     context : Context,
     rootView : ViewGroup,
     vararg imports : AdaptiveFragmentFactory,
-    backend: BackendAdapter = BackendAdapter(),
+    backend: BackendAdapter = BackendAdapter(
+        dispatcher = Dispatchers.Main,
+        transport = LocalServiceCallTransport()
+    ),
     trace : Trace? = null,
     @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
 ) : AuiAdapter =
