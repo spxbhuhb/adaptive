@@ -29,7 +29,6 @@ These classes are similar to `data` classes in concept but offer many other func
 * automatic mapping to Exposed tables
 * get/set fields by name or index
 * serializable (with WireFormat)
-* empty constructor, with sensible defaults
 * utility functions:
 
 | Function      | What it does                                                                                                                         |
@@ -62,7 +61,6 @@ What **IS** generated:
     * `adatDescriptors`
     * `wireFormatName`
   * functions:
-    * `newInstance()`
     * `newInstance(values : Array<Any?>)`
 
 Check [AdatTest](/adaptive-core/src/commonTest/kotlin/fun/adaptive/adat/AdatTest.kt) for details.
