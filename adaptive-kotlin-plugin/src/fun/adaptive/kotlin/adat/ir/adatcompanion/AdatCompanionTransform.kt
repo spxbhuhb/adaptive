@@ -81,13 +81,7 @@ class AdatCompanionTransform(
         if (declaration.origin != AdatPluginKey.origin) return
 
         when (declaration.name) {
-            Names.NEW_INSTANCE -> {
-                if (declaration.valueParameters.isEmpty()) {
-                    newInstanceEmpty(companionClass, declaration)
-                } else {
-                    newInstanceArray(companionClass, declaration)
-                }
-            }
+            Names.NEW_INSTANCE -> newInstanceArray(companionClass, declaration)
         }
     }
 

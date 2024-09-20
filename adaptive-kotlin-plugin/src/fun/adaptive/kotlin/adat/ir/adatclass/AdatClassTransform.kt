@@ -49,10 +49,7 @@ class AdatClassTransform(
         if (declaration.isFakeOverride) return
         if (declaration.origin != AdatPluginKey.origin) return
 
-        when (declaration.valueParameters.size) {
-            0 -> emptyConstructor(adatClass, declaration, metadata.properties)
-            1 -> arrayConstructor(adatClass, declaration, metadata.properties)
-        }
+        arrayConstructor(adatClass, declaration, metadata.properties)
     }
 
 }

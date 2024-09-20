@@ -62,8 +62,6 @@ class TestClassSignatureDiff(
 
         override val adatWireFormat = AdatClassWireFormat(this, adatMetadata)
 
-        override fun newInstance() = TestClassSignatureDiff()
-
     }
 
 }

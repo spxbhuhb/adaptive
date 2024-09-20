@@ -81,9 +81,6 @@ class TestClass(
 
         override val adatDescriptors = adatMetadata.generateDescriptors()
 
-        override fun newInstance() =
-            TestClass()
-
         @Suppress("UNCHECKED_CAST")
         override fun newInstance(values: Array<Any?>): TestClass =
             TestClass(

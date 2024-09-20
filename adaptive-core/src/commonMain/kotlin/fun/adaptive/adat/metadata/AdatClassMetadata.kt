@@ -107,10 +107,6 @@ class AdatClassMetadata(
         override val adatWireFormat: AdatClassWireFormat<AdatClassMetadata>
             get() = AdatClassWireFormat(this, adatMetadata)
 
-        override fun newInstance(): AdatClassMetadata {
-            throw UnsupportedOperationException()
-        }
-
         override fun newInstance(values: Array<Any?>): AdatClassMetadata {
             @Suppress("UNCHECKED_CAST")
             return AdatClassMetadata(

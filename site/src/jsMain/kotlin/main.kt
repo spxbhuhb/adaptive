@@ -2,6 +2,7 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.instruction.trace
@@ -54,12 +55,14 @@ import `fun`.adaptive.ui.instruction.layout.AlignSelf
 import `fun`.adaptive.ui.platform.media.MediaMetrics
 import `fun`.adaptive.ui.platform.withJsResources
 
+val clientBackend = backend {  }
+
 fun main() {
 
     //withJsonWebSocketTransport(window.location.origin)
     withJsResources()
 
-    browser(CanvasFragmentFactory, SvgFragmentFactory) { adapter ->
+    browser(CanvasFragmentFactory, SvgFragmentFactory, backend = clientBackend) { adapter ->
         with(adapter.defaultTextRenderData) {
             fontName = "Noto Sans"
             fontSize = 16.sp

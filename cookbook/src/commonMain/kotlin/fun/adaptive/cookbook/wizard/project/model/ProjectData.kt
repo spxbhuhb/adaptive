@@ -5,15 +5,15 @@ import `fun`.adaptive.adat.api.properties
 
 @Adat
 class ProjectData(
-    val projectName: String,
-    val packageName: String,
-    val browser : Boolean,
-    val android : Boolean,
-    val ios : Boolean,
-    val ktor : Boolean,
-    val auth : Boolean,
-    val auto : Boolean,
-    val exposed : Boolean
+    val projectName: String = "",
+    val packageName: String = "",
+    val browser : Boolean = true,
+    val android : Boolean = false,
+    val ios : Boolean = false,
+    val ktor : Boolean = true,
+    val auth : Boolean = true,
+    val auto : Boolean = true,
+    val exposed : Boolean = true
 ) {
     override fun descriptor() {
         properties {

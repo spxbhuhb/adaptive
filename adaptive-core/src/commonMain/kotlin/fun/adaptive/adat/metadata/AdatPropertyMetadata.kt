@@ -128,10 +128,6 @@ class AdatPropertyMetadata(
         override val adatWireFormat: AdatClassWireFormat<AdatPropertyMetadata>
             get() = AdatClassWireFormat(this, adatMetadata)
 
-        override fun newInstance(): AdatPropertyMetadata {
-            throw UnsupportedOperationException()
-        }
-
         override fun newInstance(values: Array<Any?>): AdatPropertyMetadata {
             @Suppress("UNCHECKED_CAST")
             return AdatPropertyMetadata(

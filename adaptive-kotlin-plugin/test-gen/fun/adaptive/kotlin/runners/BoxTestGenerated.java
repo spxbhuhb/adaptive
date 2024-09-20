@@ -38,12 +38,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Test
-    @TestMetadata("dateTimeDefaults.kt")
-    public void testDateTimeDefaults() {
-      runTest("testData/box/adat/dateTimeDefaults.kt");
-    }
-
-    @Test
     @TestMetadata("defaultsBasic.kt")
     public void testDefaultsBasic() {
       runTest("testData/box/adat/defaultsBasic.kt");
@@ -65,12 +59,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
     @TestMetadata("newInstance.kt")
     public void testNewInstance() {
       runTest("testData/box/adat/newInstance.kt");
-    }
-
-    @Test
-    @TestMetadata("sensibleDefaults.kt")
-    public void testSensibleDefaults() {
-      runTest("testData/box/adat/sensibleDefaults.kt");
     }
 
     @Test

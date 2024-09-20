@@ -126,12 +126,6 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
     private fun generateClassConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> {
         val result = mutableListOf<FirConstructorSymbol>()
 
-        val constructors = context.owner.declarationSymbols.filterIsInstance<FirConstructorSymbol>()
-
-        if (constructors.none { it.valueParameterSymbols.isEmpty() }) {
-            result += createConstructor(context.owner, AdatPluginKey, isPrimary = false, generateDelegatedNoArgConstructorCall = true).symbol
-        }
-
         // FIXME duplicate array constructor
         result += createConstructor(context.owner, AdatPluginKey, isPrimary = false, generateDelegatedNoArgConstructorCall = true) {
             valueParameter(Names.VALUES, nullableAnyArrayType)
@@ -239,7 +233,6 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         return when (callableId.callableName) {
             Names.NEW_INSTANCE -> {
                 listOf(
-                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, context.adatClassType).symbol,
                     createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, context.adatClassType) {
                         valueParameter(Names.VALUES, nullableAnyArrayType)
                     }.symbol

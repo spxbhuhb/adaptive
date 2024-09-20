@@ -10,9 +10,7 @@ class TestAdat(
 ) : ReturnException()
 
 fun box(): String {
-    TestAdat()
     TestAdat(12)
-    TestAdat.newInstance()
     TestAdat.newInstance(arrayOf<Any?>(12))
     return "OK"
 }

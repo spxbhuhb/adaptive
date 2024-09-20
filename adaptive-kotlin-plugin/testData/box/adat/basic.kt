@@ -23,10 +23,7 @@ fun hash(someInt: Int?, someBoolean: Boolean?, someIntListSet: Set<List<Int>>?):
 }
 
 fun box(): String {
-    val t1 = TestAdat()
-
-    t1.someBoolean = true
-    t1.setValue("someInt", 12)
+    val t1 = TestAdat(12, true, emptySet())
 
     if (! t1.someBoolean) return "Fail"
 

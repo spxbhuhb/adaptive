@@ -55,10 +55,6 @@ data class AdatDescriptorMetadata(
         override val adatWireFormat: AdatClassWireFormat<AdatDescriptorMetadata>
             get() = AdatClassWireFormat(this, adatMetadata)
 
-        override fun newInstance(): AdatDescriptorMetadata {
-            throw UnsupportedOperationException()
-        }
-
         override fun newInstance(values: Array<Any?>): AdatDescriptorMetadata {
             @Suppress("UNCHECKED_CAST")
             return AdatDescriptorMetadata(

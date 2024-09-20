@@ -62,8 +62,6 @@ class TestClassMissingDiff(
 
         override val adatWireFormat = AdatClassWireFormat(this, adatMetadata)
 
-        override fun newInstance() = TestClassMissingDiff()
-
     }
 
 }

@@ -31,10 +31,6 @@ interface AdatCompanion<A> : WireFormat<A> {
     fun generateDescriptors() : Array<AdatDescriptorSet> =
         adatMetadata.generateDescriptors()
 
-    fun newInstance(): A {
-        pluginGenerated()
-    }
-
     override fun newInstance(values: Array<Any?>): A {
         pluginGenerated()
     }
