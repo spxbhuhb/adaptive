@@ -4,37 +4,103 @@
 
 package `fun`.adaptive.log
 
-interface AdaptiveLogger {
+abstract class AdaptiveLogger {
 
-    var level: LogLevel
+    var level: LogLevel = LogLevel.Info
 
-    fun fine(message: String)
+    // --------------------------------------------------------------------------------
+    // Fine (a.k.a. debug, trace)
+    // --------------------------------------------------------------------------------
 
-    fun fine(message: () -> String) {
-        if (level == LogLevel.Fine) fine(message())
+    abstract fun rawFine(message: String? = null, exception: Exception? = null)
+
+    fun fine(message: String) {
+        if (level == LogLevel.Fine) rawFine(message)
     }
 
-    fun fine(exception: Exception)
+    fun fine(exception: Exception) {
+        if (level == LogLevel.Fine) rawFine(exception = exception)
+    }
 
-    fun info(message: String)
+    fun fine(message: String? = null, exception: Exception? = null) {
+        if (level == LogLevel.Fine) rawFine(message, exception)
+    }
 
-    fun warning(message : String)
+    inline fun fine(message: () -> String) {
+        if (level == LogLevel.Fine) rawFine(message())
+    }
 
-    fun warning(exception: Exception)
+    // --------------------------------------------------------------------------------
+    // Info
+    // --------------------------------------------------------------------------------
 
-    fun warning(message : String, exception: Exception)
+    abstract fun rawInfo(message: String? = null, exception: Exception? = null)
 
-    fun error(message : String)
+    fun info(message: String) {
+        if (level <= LogLevel.Info) rawInfo(message)
+    }
 
-    fun error(exception: Exception)
+    fun info(exception: Exception) {
+        if (level <= LogLevel.Info) rawInfo(exception = exception)
+    }
 
-    fun error(message : String, exception: Exception)
+    fun info(message: String? = null, exception: Exception? = null) {
+        if (level <= LogLevel.Info) rawInfo(message, exception)
+    }
 
-    fun fatal(message: String) : Nothing
+    inline fun info(message: () -> String) {
+        if (level <= LogLevel.Info) rawInfo(message())
+    }
 
-    fun fatal(exception: Exception) : Nothing
+    // --------------------------------------------------------------------------------
+    // Warning
+    // --------------------------------------------------------------------------------
 
-    fun fatal(message : String, exception: Exception) : Nothing
+    abstract fun rawWarning(message: String? = null, exception: Exception? = null)
+
+    fun warning(message: String) {
+        if (level <= LogLevel.Warning) rawWarning(message)
+    }
+
+    fun warning(exception: Exception) {
+        if (level <= LogLevel.Warning) rawWarning(exception = exception)
+    }
+
+    fun warning(message: String, exception: Exception) {
+        if (level <= LogLevel.Warning) rawWarning(message, exception)
+    }
+
+    inline fun warning(exception: Exception? = null, message: () -> String) {
+        if (level <= LogLevel.Warning) rawWarning(message(), exception)
+    }
+
+    // --------------------------------------------------------------------------------
+    // Error
+    // --------------------------------------------------------------------------------
+
+    abstract fun rawError(message: String? = null, exception: Exception? = null)
+
+    fun error(message: String) {
+        if (level <= LogLevel.Error) rawError(message)
+    }
+
+    fun error(exception: Exception) {
+        if (level <= LogLevel.Error) rawError(exception = exception)
+    }
+
+    fun error(message: String, exception: Exception) {
+        if (level <= LogLevel.Error) rawError(message, exception)
+    }
+
+    inline fun error(message: () -> String) {
+        if (level <= LogLevel.Error) error(message())
+    }
+
+    // --------------------------------------------------------------------------------
+    // Fatal
+    // --------------------------------------------------------------------------------
+
+    abstract fun fatal(message: String, exception: Exception? = null): Nothing
 
     fun enableFine(): AdaptiveLogger {
         level = LogLevel.Fine

@@ -63,7 +63,7 @@ class UUID<T> : Comparable<UUID<T>> {
         get() = (((lsbm.toULong()) shl 32) or (lsbl.toULong() and mask)).toLong()
 
     constructor() {
-        val array = fourRandomInt()
+        val array = secureRandom(4)
 
         msbm = array[0]
         msbl = (array[1] and versionMask) or version

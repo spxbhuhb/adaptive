@@ -3,8 +3,9 @@
  */
 package `fun`.adaptive.utility
 
-actual fun fourRandomInt(): IntArray {
-    val buffer = IntArray(4)
+
+actual fun secureRandom(count : Int): IntArray {
+    val buffer = IntArray(count)
 
     // TODO this works properly in browser only, in tests / node should use crypto module
     js(
@@ -12,10 +13,9 @@ actual fun fourRandomInt(): IntArray {
         if (window && window.crypto) {
             window.crypto.getRandomValues(buffer);
         } else {
-            buffer[0] = Math.random() * Number.MAX_SAFE_INTEGER;
-            buffer[1] = Math.random() * Number.MAX_SAFE_INTEGER;
-            buffer[2] = Math.random() * Number.MAX_SAFE_INTEGER;
-            buffer[3] = Math.random() * Number.MAX_SAFE_INTEGER; 
+            for (var i = 0; i < buffer.length; i++) {
+                buffer[i] = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+            }
         }
          """
     )

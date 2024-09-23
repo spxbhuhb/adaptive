@@ -13,7 +13,7 @@ import `fun`.adaptive.lib.auth.worker.SessionWorker
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.utility.fourRandomInt
+import `fun`.adaptive.utility.secureRandom
 import `fun`.adaptive.utility.vmNowSecond
 import kotlinx.datetime.Clock.System.now
 import org.jetbrains.exposed.sql.transactions.TransactionManager
@@ -54,7 +54,7 @@ class SessionService : SessionApi, ServiceImpl<SessionService> {
         val session = Session(
             id = serviceContext.uuid.cast(),
             principalOrNull = principal.id,
-            securityCode = abs(fourRandomInt()[0]).toString().padStart(6, '0').substring(0, 6),
+            securityCode = abs(secureRandom(1)[0]).toString().padStart(6, '0').substring(0, 6),
             createdAt = now(),
             vmCreatedAt = vmNow,
             lastActivity = vmNow,

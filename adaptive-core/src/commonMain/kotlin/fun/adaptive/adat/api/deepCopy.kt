@@ -43,6 +43,18 @@ private fun AdatClass.genericDeepCopy(replace: AdatChange?): AdatClass {
         values[index] = when {
             property.hasImmutableValue -> value
             value is AdatClass -> value.genericDeepCopy(null)
+            value is Enum<*> -> value // FIXME mutable properties in enum
+            value is Set<*> -> value // FIXME mutable entries in a set
+            value is List<*> -> value // FIXME mutable entries in a list
+            value is Array<*> -> value.copyOf() // FIXME mutable entries in an array
+            value is IntArray -> value.copyOf()
+            value is ByteArray -> value.copyOf()
+            value is ShortArray -> value.copyOf()
+            value is LongArray -> value.copyOf()
+            value is FloatArray -> value.copyOf()
+            value is DoubleArray -> value.copyOf()
+            value is CharArray -> value.copyOf()
+            value is BooleanArray -> value.copyOf()
             else -> throw IllegalArgumentException("cannot deep copy ${getMetadata().name}.${property.name} ${getMetadata().toJson(AdatClassMetadata).decodeToString()}")
         }
     }

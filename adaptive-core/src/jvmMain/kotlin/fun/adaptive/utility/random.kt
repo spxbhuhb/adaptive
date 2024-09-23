@@ -7,11 +7,10 @@ import java.security.SecureRandom
 
 val generator = SecureRandom()
 
-actual fun fourRandomInt(): IntArray {
-    val array = IntArray(4)
-    array[0] = generator.nextInt()
-    array[1] = generator.nextInt()
-    array[2] = generator.nextInt()
-    array[3] = generator.nextInt()
+actual fun secureRandom(count: Int): IntArray {
+    val array = IntArray(count)
+    for (i in 0 until count) {
+        array[i] = generator.nextInt()
+    }
     return array
 }

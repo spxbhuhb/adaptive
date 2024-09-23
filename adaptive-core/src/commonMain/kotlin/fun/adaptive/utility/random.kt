@@ -3,4 +3,4 @@
  */
 package `fun`.adaptive.utility
 
-expect fun fourRandomInt(): IntArray
+expect fun secureRandom(count : Int): IntArray

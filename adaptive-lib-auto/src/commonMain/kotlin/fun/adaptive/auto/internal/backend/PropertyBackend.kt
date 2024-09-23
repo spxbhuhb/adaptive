@@ -146,7 +146,13 @@ class PropertyBackend<A : AdatClass>(
 
         @Suppress("UNCHECKED_CAST")
         val wireformat = property.wireFormat as WireFormat<Any?>
-        return context.wireFormatProvider.encoder().rawInstance(value, wireformat).pack()
+        val encoder = context.wireFormatProvider.encoder()
+        if (property.nullable) {
+            encoder.rawInstanceOrNull(value, wireformat)
+        } else {
+            encoder.rawInstance(value, wireformat)
+        }
+        return encoder.pack()
     }
 
 }

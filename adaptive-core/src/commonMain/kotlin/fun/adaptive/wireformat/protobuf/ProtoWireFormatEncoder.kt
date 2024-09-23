@@ -28,7 +28,9 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
     var subEncoderInner: ProtoWireFormatEncoder? = null
 
     val subEncoder: ProtoWireFormatEncoder
-        get() = subEncoderInner?.reset() ?: ProtoWireFormatEncoder().also { subEncoderInner = it }
+        //get() = subEncoderInner?.reset() ?: ProtoWireFormatEncoder().also { subEncoderInner = it }
+        // FIXME ProtoWireFormatEncoder.subEncoder resets more than once with polymorphic encoding
+        get() = ProtoWireFormatEncoder()
 
     fun reset(): ProtoWireFormatEncoder {
         writer.reset()

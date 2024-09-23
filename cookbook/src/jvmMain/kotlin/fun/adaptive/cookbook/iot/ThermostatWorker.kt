@@ -2,17 +2,17 @@ package `fun`.adaptive.cookbook.iot
 
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.auto.api.autoList
-import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.SetBackend
+import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.cookbook.iot.model.Thermostat
 import `fun`.adaptive.cookbook.iot.model.ThermostatStatus
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.utility.fourRandomInt
 import `fun`.adaptive.utility.getLock
+import `fun`.adaptive.utility.secureRandom
 import `fun`.adaptive.utility.use
 import kotlinx.coroutines.delay
 import kotlin.math.abs
@@ -32,7 +32,7 @@ class ThermostatWorker : WorkerImpl<ThermostatWorker> {
         initList()
 
         while (isActive) {
-            val randoms = fourRandomInt().map { abs(it) }
+            val randoms = secureRandom(2).map { abs(it) }
             val index = (randoms[0] % 10) // change the first 10, so it is visible
             val thermostat = thermostats[index]
 
@@ -53,7 +53,7 @@ class ThermostatWorker : WorkerImpl<ThermostatWorker> {
         }
 
         (1 .. count).map {
-            val randoms = fourRandomInt()
+            val randoms = secureRandom(3)
 
             thermostats +=
                 Thermostat(

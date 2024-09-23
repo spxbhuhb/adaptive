@@ -10,8 +10,8 @@ import platform.Security.errSecSuccess
 import platform.Security.kSecRandomDefault
 
 @OptIn(ExperimentalForeignApi::class)
-actual fun fourRandomInt(): IntArray {
-    val buffer = IntArray(4)
+actual fun secureRandom(count : Int): IntArray {
+    val buffer = IntArray(2)
     buffer.usePinned { pinned ->
         val rc = SecRandomCopyBytes(
             kSecRandomDefault,
