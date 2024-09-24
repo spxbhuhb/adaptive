@@ -13,8 +13,10 @@ import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.instruction.input.InputPlaceholder
 import `fun`.adaptive.utility.format
 import `fun`.adaptive.ui.form.form
+import `fun`.adaptive.wireformat.signature.DatetimeSignatures
 import `fun`.adaptive.wireformat.signature.KotlinSignatures
 import kotlinx.browser.document
+import kotlinx.datetime.LocalDateTime
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 
@@ -86,6 +88,7 @@ open class FormTextual(
             KotlinSignatures.FLOAT -> value.toFloatOrNull()
             KotlinSignatures.CHAR -> value.first()
             KotlinSignatures.STRING -> value
+            DatetimeSignatures.LOCAL_DATE_TIME -> LocalDateTime.parse(value)
             else -> throw IllegalStateException("unsupported property type for $property")
         }
 
@@ -130,6 +133,9 @@ open class FormTextual(
             }
             KotlinSignatures.STRING -> {
                 receiver.type = "text"
+            }
+            DatetimeSignatures.LOCAL_DATE_TIME -> {
+                receiver.type = "datetime"
             }
             else -> throw IllegalStateException("unsupported property type for $property")
         }

@@ -65,6 +65,9 @@ fun form(data: AdatClass, vararg instructions : AdaptiveInstruction) : AdaptiveF
                     KotlinSignatures.UUID
                         -> text(data.getValue(property.index).toString()) .. inputTheme.disabled
 
+                    DatetimeSignatures.LOCAL_DATE_TIME
+                        -> textual(data, property) .. inputTheme.active
+
                     else -> {
                         if (property.isAdatClass) {
                             subForm(data, property)

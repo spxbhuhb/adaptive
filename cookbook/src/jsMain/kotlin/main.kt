@@ -6,6 +6,7 @@ import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.cookbook.auth.authMain
 import `fun`.adaptive.cookbook.components.componentsMain
+import `fun`.adaptive.cookbook.components.sidebar
 import `fun`.adaptive.cookbook.intro.introMain
 import `fun`.adaptive.cookbook.iot.iotCommon
 import `fun`.adaptive.cookbook.iot.iotMain
@@ -63,7 +64,8 @@ fun main() {
 
         withJsResources()
 
-        val localBackend = backend(webSocketTransport(window.location.origin)) { auto() }
+//        val localBackend = backend(webSocketTransport(window.location.origin)) { auto() }
+        val localBackend = backend { auto() }
 
         browser(CanvasFragmentFactory, SvgFragmentFactory, FormFragmentFactory, backend = localBackend) { adapter ->
 
@@ -81,12 +83,12 @@ fun main() {
 //            formMain()
 //            dialogMain()
 
-            iotMain()
+//            iotMain()
 //              box {
 //                  hoverMain()
 //              }
 
-//            sidebar()
+            sidebar()
 
 //            projectWizardMain()
 
