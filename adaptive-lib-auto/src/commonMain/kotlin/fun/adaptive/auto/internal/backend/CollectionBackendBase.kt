@@ -76,13 +76,13 @@ abstract class CollectionBackendBase<A : AdatClass>(
 
     @CallSiteName
     fun closeListOp(operation: AutoOperation, itemIds: Set<ItemId>, commit: Boolean, callSiteName: String = "") {
-        if (context.time < operation.timestamp) {
-            context.receive(operation.timestamp)
+//        if (context.time < operation.timestamp) {
+//            context.receive(operation.timestamp)
             trace(callSiteName) { "BE -> BE  itemIds=${itemIds} .. commit $commit .. $operation" }
             close(operation, commit)
-        } else {
-            trace(callSiteName) { "BE -> BE  SKIP  $operation" }
-        }
+//        } else {
+//            trace(callSiteName) { "BE -> BE  SKIP  $operation" }
+//        }
     }
 
     fun encode(wireFormatName: String?, values: Array<Any?>) =

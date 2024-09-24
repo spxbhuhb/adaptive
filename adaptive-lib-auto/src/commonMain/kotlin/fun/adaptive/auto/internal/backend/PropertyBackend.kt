@@ -14,7 +14,7 @@ class PropertyBackend<A : AdatClass>(
     val itemId: LamportTimestamp,
     val wireFormatName: String?,
     initialValues: Array<Any?>,
-    propertyTimes : List<LamportTimestamp> = MutableList(initialValues.size) { itemId }
+    propertyTimes: List<LamportTimestamp> = MutableList(initialValues.size) { itemId }
 ) : BackendBase(context.handle) {
 
     val wireFormat = wireFormatFor(wireFormatName)
@@ -34,7 +34,7 @@ class PropertyBackend<A : AdatClass>(
     val propertyTimes = propertyTimes.toMutableList()
 
     init {
-        trace { "INIT  itemId=$itemId  ${initialValues.contentToString()}"}
+        trace { "INIT  itemId=$itemId  ${initialValues.contentToString()}" }
     }
 
     // --------------------------------------------------------------------------------
@@ -53,6 +53,29 @@ class PropertyBackend<A : AdatClass>(
         trace { "FE -> BE  $propertyName=$propertyValue .. commit true $operation" }
 
         propertyTimes[index] = operation.timestamp
+
+        close(operation, commit = true)
+    }
+
+    fun update(newValues: Array<Any?>) {
+        check(newValues.size <= values.size)
+
+        val time = context.nextTime()
+        val changes = mutableListOf<AutoPropertyValue>()
+
+        for ((index, propertyValue) in values.withIndex()) {
+            val newValue = newValues[index]
+            if (newValue == propertyValue) continue
+
+            val property = properties[index]
+            values[index] = newValue
+            propertyTimes[index] = time
+            changes += AutoPropertyValue(property.name, encode(property))
+        }
+
+        val operation = AutoModify(context.nextTime(), itemId, changes)
+
+        trace { "FE -> BE  commit true $operation" }
 
         close(operation, commit = true)
     }

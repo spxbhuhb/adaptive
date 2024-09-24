@@ -6,6 +6,7 @@ import `fun`.adaptive.auto.api.AutoApi
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.BackendBase
 import `fun`.adaptive.auto.internal.backend.BackendContext
+import `fun`.adaptive.auto.internal.connector.DirectConnector
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.frontend.FrontendBase
@@ -117,7 +118,43 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
         return this
     }
 
+    /**
+     * Connect to the origin backend with [DirectConnector]. This works only if the origin is
+     * in the same VM as the connecting peer.
+     */
+    suspend fun connectDirect(
+        worker: AutoWorker,
+        waitForSync: Duration? = null,
+        connectInfoFun: suspend () -> AutoConnectInfo<VT>
+    ): OriginBase<BE, FE, VT, IT> {
+
+        val scope = backend.context.scope
+        check(scope != null) { "connecting is not possible when there is no worker passed during creation" }
+
+        val connectInfo = connectInfoFun()
+
+        val peer = worker.backends[connectInfo.originHandle.globalId]
+        checkNotNull(peer) { "direct backend for ${connectInfo.originHandle.globalId} is missing" }
+
+        backend.addPeer(DirectConnector(peer), connectInfo.originTime)
+        peer.addPeer(DirectConnector(backend), backend.context.time)
+
+        if (waitForSync != null) waitForSync(connectInfo, waitForSync)
+
+        return this
+    }
+
     suspend fun waitForSync(connectInfo: AutoConnectInfo<VT>, timeout: Duration) {
         backend.waitForSync(connectInfo, timeout)
+    }
+
+    fun update(original: IT, new: IT) {
+        frontend.also {
+            if (it is AdatClassListFrontend<*>) {
+                @Suppress("UNCHECKED_CAST")
+                it as AdatClassListFrontend<IT>
+                it.update(original, new)
+            }
+        }
     }
 }

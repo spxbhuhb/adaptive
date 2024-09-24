@@ -1,5 +1,6 @@
 package `fun`.adaptive.auto.internal.frontend
 
+import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.store.AdatStore
 import `fun`.adaptive.auto.internal.backend.BackendBase
 import `fun`.adaptive.auto.internal.backend.BackendContext
@@ -19,4 +20,5 @@ abstract class FrontendBase : AdatStore() {
 
     }
 
+    abstract fun update(original: AdatClass, new: AdatClass)
 }

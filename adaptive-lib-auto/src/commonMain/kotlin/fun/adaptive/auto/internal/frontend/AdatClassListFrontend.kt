@@ -53,6 +53,10 @@ open class AdatClassListFrontend<A : AdatClass>(
         getItemFrontend(itemId).modify(propertyName, propertyValue)
     }
 
+    override fun update(original: AdatClass, new: AdatClass) {
+        getItemFrontend(itemId(original)).update(new)
+    }
+
     fun itemId(instance: AdatClass) =
         instance.adatContext !!.id as ItemId
 
