@@ -33,7 +33,7 @@ class PropertyBackendIntegrationTest {
             val scope = CoroutineScope(Dispatchers.Default)
             val logger = getLogger("logger")
 
-            val itemId = LamportTimestamp(0, 0) // does not matter for PropertyBackend
+            val itemId = LamportTimestamp.INITIAL // does not matter for PropertyBackend
 
             val autoService = getService<AutoApi>(connectingAdapter.transport) // service consumer from connecting to origin
 
@@ -57,13 +57,13 @@ class PropertyBackendIntegrationTest {
                 connectingContext,
                 itemId,
                 null,
-                null
+                arrayOfNulls(TestData.adatMetadata.properties.size)
             )
 
             val connectingFrontend = AdatClassFrontend(
                 connectingBackend,
                 TestData.adatWireFormat,
-                null, null, null
+                null, itemId, null
             )
 
             connectingBackend.frontend = connectingFrontend

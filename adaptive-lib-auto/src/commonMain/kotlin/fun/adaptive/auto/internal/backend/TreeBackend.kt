@@ -140,7 +140,12 @@ class TreeBackend<A : AdatClass>(
     override fun addItem(itemId: ItemId, parentItemId: ItemId?, value: A) {
         checkNotNull(parentItemId) { "tree items must have a parent" }
         tree.addChildToParent(itemId, parentItemId)
-        items += itemId to PropertyBackend(context, itemId, value.adatCompanion.wireFormatName, value.toArray())
+
+        val values = value.toArray()
+        val backend = PropertyBackend(context, itemId, value.adatCompanion.wireFormatName, values)
+
+        items += itemId to backend
+
         context.onAdd(value)
     }
 }

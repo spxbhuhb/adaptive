@@ -67,34 +67,49 @@ fun <A : AdatClass> autoFile(
     path: Path,
     initialValue: A? = null,
     wireFormatProvider: WireFormatProvider = Json,
-    listener : AutoListener<A>? = null,
+    listener: AutoListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle: AutoHandle = AutoHandle(),
-    itemId: ItemId = LamportTimestamp(1, 1),
+    itemId: ItemId = LamportTimestamp.INITIAL,
     trace: Boolean = false
 ): OriginBase<PropertyBackend<A>, FileFrontend<A>, A, A> {
 
-    val value: A?
+    val pItemId : ItemId
+    val propertyTimes : List<LamportTimestamp>
+    val value: Array<Any?>
+    val commit : Boolean
+
+    val size = companion.adatMetadata.properties.size
 
     when {
         initialValue != null -> {
-            FileFrontend.write(path, wireFormatProvider, itemId, initialValue)
-            value = initialValue
+            propertyTimes = MutableList(size) { itemId }
+            value = initialValue.toArray()
+            pItemId = itemId
+            commit = true
+
+            FileFrontend.write(path, wireFormatProvider, itemId, propertyTimes, initialValue)
         }
 
         path.exists() -> {
-            @Suppress("UNCHECKED_CAST")
-            value = FileFrontend.read(path, wireFormatProvider).second as A
+            val r = FileFrontend.read<A>(path, wireFormatProvider)
+            pItemId = r.first ?: itemId
+            propertyTimes = r.second
+            value = r.third.toArray()
+            commit = true
 
-            check(value.adatCompanion.wireFormatName == companion.wireFormatName) {
-                "type mismatch in $path: ${value.adatCompanion.wireFormatName} != ${companion.wireFormatName}"
+            check(r.third.adatCompanion.wireFormatName == companion.wireFormatName) {
+                "type mismatch in $path: ${r.third.adatCompanion.wireFormatName} != ${companion.wireFormatName}"
             }
 
-            check(value.isValid()) { "validation failed for content of $path" }
+            check(r.third.isValid()) { "validation failed for content of $path" }
         }
 
         itemId.isValid() -> {
-            value = null
+            pItemId = itemId
+            value = arrayOfNulls<Any?>(size)
+            propertyTimes = MutableList(size) { itemId }
+            commit = false
         }
 
         else -> {
@@ -114,21 +129,22 @@ fun <A : AdatClass> autoFile(
 
         backend = PropertyBackend(
             context,
-            itemId,
+            pItemId,
             null,
-            value?.toArray()
+            value,
+            propertyTimes
         )
 
         frontend = FileFrontend(
             backend,
             companion.adatWireFormat,
-            itemId,
+            pItemId,
             null, null,
             wireFormatProvider,
             path
         )
 
-        if (value != null) {
+        if (commit) {
             frontend.commit()
         }
     }

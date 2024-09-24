@@ -37,12 +37,12 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
             logger,
             Proto,
             TestData.adatWireFormat,
-            LamportTimestamp(1, 1)
+            LamportTimestamp.INITIAL
         )
 
         val originBackend = PropertyBackend(
             context,
-            LamportTimestamp(1, 1),
+            LamportTimestamp.INITIAL,
             null,
             TestData(12, "a").toArray()
         )
@@ -51,7 +51,8 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
             originBackend,
             TestData.adatWireFormat,
             TestData(12, "a"),
-            null, null
+            LamportTimestamp.INITIAL,
+            null
         )
 
         originBackend.frontend = originFrontend

@@ -12,7 +12,7 @@ open class AdatClassFrontend<A : AdatClass>(
     override val backend: PropertyBackend<A>,
     val wireFormat: AdatClassWireFormat<A>,
     initialValue: A?,
-    val itemId : ItemId?,
+    val itemId : ItemId,
     val collectionFrontend: CollectionFrontendBase?
 ) : FrontendBase() {
 

@@ -73,7 +73,7 @@ class FileInstanceTest {
     fun assert(expected: TestData, adapter: AdaptiveTestAdapter, frontend: FileFrontend<*>) {
         val instance = adapter.rootFragment.state[0]
 
-        val fromFile = FileFrontend.read(frontend.path, Json).second as TestData
+        val fromFile = FileFrontend.read<TestData>(frontend.path, Json).third
 
         assertEquals(expected, instance)
         assertEquals(expected, producedValue)

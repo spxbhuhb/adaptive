@@ -9,10 +9,10 @@ import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 
 fun read(path: Path) =
-    FileFrontend.read(path, Json).second as TestData
+    FileFrontend.read<TestData>(path, Json).third
 
 fun write(path: Path, itemId: ItemId, t: TestData) =
-    FileFrontend.write(path, Json, itemId, t)
+    FileFrontend.write(path, Json, itemId, MutableList(TestData.adatMetadata.properties.size) { itemId }, t)
 
 fun Path.ensureExistsAndEmpty() {
     if (exists()) {

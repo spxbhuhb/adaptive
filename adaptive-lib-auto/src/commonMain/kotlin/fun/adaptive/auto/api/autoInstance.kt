@@ -94,18 +94,22 @@ fun <A : AdatClass> autoInstance(
 
         if (listener != null) context.addListener(listener)
 
+        val itemId = LamportTimestamp.INITIAL
+        val values = initialValue.toArray()
+
         backend = PropertyBackend(
             context,
-            LamportTimestamp(1, 1),
+            itemId,
             null,
-            initialValue.toArray()
+            values
         )
 
         frontend = AdatClassFrontend(
             backend,
             companion.adatWireFormat as AdatClassWireFormat<A>,
             initialValue,
-            null, null
+            itemId,
+            null
         )
 
     }

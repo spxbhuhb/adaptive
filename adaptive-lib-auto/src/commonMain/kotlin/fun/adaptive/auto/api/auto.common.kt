@@ -24,7 +24,7 @@ fun auto() {
 }
 
 private fun wireFormats() {
-    WireFormatRegistry += AutoHandle
+    WireFormatRegistry.plusAssign(AutoHandle)
     WireFormatRegistry += AutoConnectInfo
     WireFormatRegistry += AutoAdd
     WireFormatRegistry += AutoEmpty

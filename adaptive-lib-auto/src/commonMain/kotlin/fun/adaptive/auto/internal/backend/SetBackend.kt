@@ -20,7 +20,7 @@ class SetBackend<A : AdatClass>(
     init {
         if (initialValue != null && initialValue.isNotEmpty()) {
             additions.addAll(initialValue.keys)
-            context.receive(initialValue.keys.maxOf { it })
+            context.receive(LamportTimestamp(context.handle.peerId, initialValue.keys.maxOf { it.timestamp }))
         }
     }
 
@@ -164,7 +164,7 @@ class SetBackend<A : AdatClass>(
         for (item in items.values.sortedBy { it.itemId }) {
             val itemId = item.itemId
 
-            if (itemId > syncFrom) {
+            if (itemId.timestamp > syncFrom.timestamp) {
                 connector.send(AutoAdd(itemId, itemId, item.wireFormatName, null, encode(item.wireFormatName, item.values)))
             } else {
                 item.syncPeer(connector, syncFrom)
@@ -183,7 +183,10 @@ class SetBackend<A : AdatClass>(
         if (itemId in removals) return
 
         additions += itemId
-        val backend = PropertyBackend(context, itemId, value.adatCompanion.wireFormatName, value.toArray())
+
+        val values = value.toArray()
+        val backend = PropertyBackend(context, itemId, value.adatCompanion.wireFormatName, values)
+
         items += itemId to backend
 
         context.onAdd(value)

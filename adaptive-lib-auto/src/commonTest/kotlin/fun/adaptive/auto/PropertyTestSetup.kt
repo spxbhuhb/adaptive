@@ -16,13 +16,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 class PropertyTestSetup(
-    initialData: Array<Any?>?
+    initialData: Array<Any?>
 ) {
 
     constructor(instance: AdatClass) : this(instance.toArray())
 
     val gid = UUID<BackendBase>()
-    val itemId = LamportTimestamp(1, 1)
+    val itemId = LamportTimestamp.INITIAL
     val scope = CoroutineScope(Dispatchers.Default)
     val logger1 = getLogger("logger.1").enableFine()
     val logger2 = getLogger("logger.2").enableFine()
@@ -33,7 +33,7 @@ class PropertyTestSetup(
     val b1 = PropertyBackend(c1, itemId, null, initialData)
 
     val c2 = BackendContext<TestData>(AutoHandle(gid, 2, null), scope, logger2, Proto, wireFormat, LamportTimestamp(2, 0))
-    val b2 = PropertyBackend(c2, itemId, null, null)
+    val b2 = PropertyBackend(c2, itemId, null, arrayOfNulls(initialData.size))
 
     fun connect() {
         b1.addPeer(DirectConnector(b2), c2.time)

@@ -28,14 +28,14 @@ class FileFrontendTest {
 
             with(PropertyTestSetup(testData)) {
 
-                val f1 = AdatClassFrontend(b1, wireFormat, testData, null, null,).also { b1.frontend = it }
-                b2.frontend = FileFrontend(b2, wireFormat, null, null, null, Json, path)
+                val f1 = AdatClassFrontend(b1, wireFormat, testData, itemId, null,).also { b1.frontend = it }
+                b2.frontend = FileFrontend(b2, wireFormat, itemId, null, null, Json, path)
 
                 connect()
 
                 waitForReal(2.seconds) { SystemFileSystem.exists(path) }
 
-                fun read() = FileFrontend.read(path, Json).second as TestData
+                fun read() = FileFrontend.read<TestData>(path, Json).third
 
                 assertEquals(testData, read())
 

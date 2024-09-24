@@ -22,7 +22,7 @@ class AutoInstance<A : AdatClass>(
     override var latestValue: A? = null
 
     val itemId
-        get() = LamportTimestamp(0, 0) // does not matter for single instances
+        get() = LamportTimestamp.INITIAL // does not matter for single instances
 
     @Suppress("UNCHECKED_CAST") // TODO should we create a binding for adat classes specifically?
     val companion = binding.adatCompanion !! as AdatCompanion<A>
@@ -35,18 +35,20 @@ class AutoInstance<A : AdatClass>(
         context.addListener(ProducerListener())
         if (listener != null) context.addListener(listener)
 
+        val values = arrayOfNulls<Any?>(companion.adatMetadata.properties.size)
+
         backend = PropertyBackend<A>(
             context,
             itemId,
             companion.wireFormatName,
-            initialValues = null
+            values
         )
 
         frontend = AdatClassFrontend(
             backend,
             companion.adatWireFormat,
             initialValue = null,
-            itemId = null,
+            itemId = itemId,
             collectionFrontend = null
         )
 
@@ -57,7 +59,7 @@ class AutoInstance<A : AdatClass>(
     }
 
 
-    private inner class ProducerListener: AutoListener<A>() {
+    private inner class ProducerListener : AutoListener<A>() {
         override fun onItemCommit(item: A) {
             item.validateForContext()
             latestValue = item

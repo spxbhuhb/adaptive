@@ -1,12 +1,13 @@
 package `fun`.adaptive.auto.model
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.adat.AdatCompanion
 import kotlin.math.max
 
 @Adat
 class LamportTimestamp(
     val peerId: PeerId,
-    val timestamp: Int,
+    val timestamp: LamportTime,
 ) : Comparable<LamportTimestamp> {
 
     override fun compareTo(other: LamportTimestamp): Int =
@@ -30,4 +31,7 @@ class LamportTimestamp(
         return "$peerId:$timestamp"
     }
 
+    companion object : AdatCompanion<LamportTimestamp> {
+        val INITIAL = LamportTimestamp(0, 0)
+    }
 }

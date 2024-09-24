@@ -1,3 +1,3 @@
 package `fun`.adaptive.auto.model
 
-typealias PeerId = Int
+typealias PeerId = Long

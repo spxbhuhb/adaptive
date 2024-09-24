@@ -13,7 +13,8 @@ class PropertyBackend<A : AdatClass>(
     override val context: BackendContext<A>,
     val itemId: LamportTimestamp,
     val wireFormatName: String?,
-    initialValues: Array<Any?>?
+    initialValues: Array<Any?>,
+    propertyTimes : List<LamportTimestamp> = MutableList(initialValues.size) { itemId }
 ) : BackendBase(context.handle) {
 
     val wireFormat = wireFormatFor(wireFormatName)
@@ -26,19 +27,15 @@ class PropertyBackend<A : AdatClass>(
     fun indexOf(name: String) =
         properties[name].property.index
 
-    val values: Array<Any?> = if (initialValues == null) {
-        arrayOfNulls(properties.size)
-    } else {
-        check(initialValues.size == properties.size)
-        Array(properties.size) { initialValues[it] }
+    val values: Array<Any?> = initialValues.copyOf()
+
+    val lastUpdate = propertyTimes.max()
+
+    val propertyTimes = propertyTimes.toMutableList()
+
+    init {
+        trace { "INIT  itemId=$itemId  ${initialValues.contentToString()}"}
     }
-
-    class Change(
-        val time: LamportTimestamp,
-        val payload: ByteArray
-    )
-
-    val changes: Array<Change?> = arrayOfNulls(properties.size)
 
     // --------------------------------------------------------------------------------
     // Operations from the frontend
@@ -55,7 +52,7 @@ class PropertyBackend<A : AdatClass>(
         val operation = AutoModify(context.nextTime(), itemId, listOf(AutoPropertyValue(propertyName, payload)))
         trace { "FE -> BE  $propertyName=$propertyValue .. commit true $operation" }
 
-        changes[index] = Change(operation.timestamp, payload)
+        propertyTimes[index] = operation.timestamp
 
         close(operation, commit = true)
     }
@@ -71,16 +68,16 @@ class PropertyBackend<A : AdatClass>(
 
             val index = indexOf(change.propertyName)
 
-            val lastChange = changes[index]
+            val lastChange = propertyTimes[index]
 
-            if (lastChange == null || lastChange.time < operation.timestamp) {
+            if (lastChange < operation.timestamp) {
 
                 @Suppress("UNCHECKED_CAST")
                 val wireformat = properties[index].wireFormat as WireFormat<Any?>
                 val value = context.wireFormatProvider.decoder(change.payload).asInstance(wireformat)
 
                 values[index] = value
-                changes[index] = Change(operation.timestamp, change.payload)
+                propertyTimes[index] = operation.timestamp
                 context.receive(operation.timestamp)
 
                 trace { "BE -> BE  CHANGE ${change.propertyName}=$value" }
@@ -108,28 +105,25 @@ class PropertyBackend<A : AdatClass>(
      * Send any changes that happened after [syncFrom] to the peer.
      */
     override suspend fun syncPeer(connector: AutoConnector, syncFrom: LamportTimestamp) {
-        val time = context.time
 
-        if (syncFrom.timestamp >= time.timestamp) {
-            trace { "SKIP SYNC: time= $time peerTime=$syncFrom" }
+        if (syncFrom >= lastUpdate) {
+            trace { "SKIP SYNC: time= $lastUpdate peerTime=$syncFrom" }
             return
+        } else {
+            trace { "SYNC: itemId=$itemId time= $lastUpdate peerTime=$syncFrom" }
         }
 
         val changesToSend = mutableListOf<AutoPropertyValue>()
 
-        for (index in changes.indices) {
-            val change = changes[index]
+        for (index in propertyTimes.indices) {
+            val change = propertyTimes[index]
             val property = properties[index]
 
-            if (change != null) {
-                if (change.time <= syncFrom) continue
-                changesToSend += AutoPropertyValue(property.name, change.payload)
-            } else {
-                changesToSend += AutoPropertyValue(property.name, encode(property))
-            }
+            if (change <= syncFrom) continue
+            changesToSend += AutoPropertyValue(property.name, encode(property))
         }
 
-        val operation = AutoModify(time, itemId, changesToSend)
+        val operation = AutoModify(context.time, itemId, changesToSend)
 
         trace { "peerTime=$syncFrom op=$operation" }
 

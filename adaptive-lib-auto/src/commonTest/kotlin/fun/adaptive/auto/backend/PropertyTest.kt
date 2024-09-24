@@ -2,6 +2,7 @@ package `fun`.adaptive.auto.backend
 
 import `fun`.adaptive.auto.PropertyTestSetup
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
+import `fun`.adaptive.auto.model.LamportTimestamp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -16,8 +17,8 @@ class PropertyTest {
         runTest {
             with(PropertyTestSetup(testData)) {
 
-                val f1 = AdatClassFrontend(b1, TestData.adatWireFormat, testData, null, null).also { b1.frontend = it }
-                val f2 = AdatClassFrontend(b2, TestData.adatWireFormat, null, null, null).also { b2.frontend = it }
+                val f1 = AdatClassFrontend(b1, TestData.adatWireFormat, testData, itemId, null).also { b1.frontend = it }
+                val f2 = AdatClassFrontend(b2, TestData.adatWireFormat, null, itemId, null).also { b2.frontend = it }
 
                 connect()
 

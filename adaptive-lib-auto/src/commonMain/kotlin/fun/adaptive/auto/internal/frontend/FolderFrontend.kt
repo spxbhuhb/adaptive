@@ -39,7 +39,7 @@ class FolderFrontend<A : AdatClass>(
             val path = pathFor(itemId, instance)
 
             if (! path.exists()) {
-                write(path, wireFormatProvider, itemId, instance)
+                write(path, wireFormatProvider, itemId, propertyBackend.propertyTimes, instance)
             }
 
             FileFrontend(
@@ -72,7 +72,7 @@ class FolderFrontend<A : AdatClass>(
                 if (it.name.startsWith(".")) return@forEach
                 if (! includeFun(it)) return@forEach
 
-                val (itemId, instance) = FileFrontend.read(it, wireFormatProvider)
+                val (itemId, propertyTimes, instance) = FileFrontend.read<A>(it, wireFormatProvider)
                 checkNotNull(itemId)
 
                 check(itemId !in result) { "duplicated item id $itemId in $it" }
@@ -81,7 +81,8 @@ class FolderFrontend<A : AdatClass>(
                     context,
                     itemId,
                     instance.adatCompanion.wireFormatName,
-                    instance.toArray()
+                    instance.toArray(),
+                    propertyTimes
                 )
             }
 

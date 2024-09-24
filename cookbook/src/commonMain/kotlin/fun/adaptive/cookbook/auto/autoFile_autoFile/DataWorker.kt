@@ -4,6 +4,7 @@ import `fun`.adaptive.auto.api.autoFile
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.auto.model.AutoConnectInfo
+import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.backend.setting.dsl.setting
@@ -43,6 +44,7 @@ class DataWorker(
             path,
             DataItem(),
             Json,
+            itemId = LamportTimestamp(0, 1),
             trace = trace,
         )
 

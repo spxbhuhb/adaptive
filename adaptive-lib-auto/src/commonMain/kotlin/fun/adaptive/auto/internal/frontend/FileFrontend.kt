@@ -5,11 +5,14 @@ import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.utility.read
 import `fun`.adaptive.utility.write
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.WireFormatRegistry
+import `fun`.adaptive.wireformat.builtin.ListWireFormat
+import `fun`.adaptive.wireformat.builtin.LongWireFormat
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 
@@ -19,7 +22,7 @@ import kotlinx.io.files.SystemFileSystem
 class FileFrontend<A : AdatClass>(
     backend: PropertyBackend<A>,
     wireFormat: AdatClassWireFormat<A>,
-    itemId: ItemId?,
+    itemId: ItemId,
     initialValue: A?,
     collectionFrontend: CollectionFrontendBase?,
     val wireFormatProvider: WireFormatProvider,
@@ -34,7 +37,7 @@ class FileFrontend<A : AdatClass>(
 
     override fun commit() {
         super.commit()
-        write(path, wireFormatProvider, itemId, value !!)
+        write(path, wireFormatProvider, itemId, backend.propertyTimes, value !!)
     }
 
     override fun removed() {
@@ -44,7 +47,14 @@ class FileFrontend<A : AdatClass>(
 
     companion object {
 
-        fun <A : AdatClass> write(path: Path, wireFormatProvider: WireFormatProvider, itemId: ItemId?, value: A) {
+        fun <A : AdatClass> write(path: Path, wireFormatProvider: WireFormatProvider, itemId: ItemId, propertyTimes : List<LamportTimestamp>, value: A) {
+
+            val times = mutableListOf<Long>()
+
+            for (propertyTime in propertyTimes) {
+                times += propertyTime.peerId
+                times += propertyTime.timestamp
+            }
 
             @Suppress("UNCHECKED_CAST")
             val bytes = wireFormatProvider
@@ -53,13 +63,14 @@ class FileFrontend<A : AdatClass>(
                 .string(1, "type", value.adatCompanion.wireFormatName)
                 .instanceOrNull(2, "itemId", itemId, ItemId)
                 .instance(3, "properties", value, value.adatCompanion as AdatCompanion<A>)
+                .instance(4, "propertyTimes", times, ListWireFormat(LongWireFormat))
                 .pseudoInstanceEnd()
                 .pack()
 
             path.write(bytes)
         }
 
-        fun read(path: Path, wireFormatProvider: WireFormatProvider): Pair<ItemId?, AdatClass> {
+        fun <A : AdatClass> read(path: Path, wireFormatProvider: WireFormatProvider): Triple<ItemId?, List<LamportTimestamp>, A> {
             val decoder = wireFormatProvider.decoder(path.read())
 
             val type = decoder.string(1, "type")
@@ -68,9 +79,19 @@ class FileFrontend<A : AdatClass>(
             @Suppress("UNCHECKED_CAST")
             val wireFormat = requireNotNull(WireFormatRegistry[type] as? WireFormat<AdatClass>) { "missing wire format for $type" }
 
-            val value = decoder.instance<AdatClass>(3, "properties", wireFormat)
+            @Suppress("UNCHECKED_CAST")
+            val value = decoder.instance<AdatClass>(3, "properties", wireFormat) as A
 
-            return itemId to value
+            @Suppress("UNCHECKED_CAST")
+            val times = decoder.instance(4, "propertyTimes", ListWireFormat(LongWireFormat)) as List<Long>
+
+            val propertyTimes = mutableListOf<LamportTimestamp>()
+
+            for (i in times.indices step 2) {
+                propertyTimes += LamportTimestamp(times[i], times[i + 1])
+            }
+
+            return Triple(itemId, propertyTimes, value)
         }
     }
 

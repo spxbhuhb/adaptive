@@ -27,7 +27,7 @@ class Recipe : AutoRecipe() {
     override val serverBackend = backend(serverTransport) {
         auto()
         service { DataService() }
-        worker { DataWorker(serverPath) }
+        worker { DataWorker(serverPath, trace = true) }
     }
 
     override val clientBackend = backend(clientTransport) {
@@ -48,7 +48,8 @@ class Recipe : AutoRecipe() {
             clientBackend.firstImpl<AutoWorker>(),
             DataItem,
             clientPath,
-            handle = connectInfo.connectingHandle
+            handle = connectInfo.connectingHandle,
+            trace = true
         )
 
         // Connect to the origin list on the server side. This call
