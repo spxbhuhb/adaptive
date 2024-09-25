@@ -1,19 +1,24 @@
 package `fun`.adaptive.auto.api
 
 import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.AdatCompanion
+import `fun`.adaptive.adat.api.isValid
 import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
+import `fun`.adaptive.auto.internal.frontend.FileFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.auto.internal.producer.AutoInstance
 import `fun`.adaptive.auto.model.AutoConnectInfo
 import `fun`.adaptive.auto.model.AutoHandle
+import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.Producer
 import `fun`.adaptive.service.ServiceContext
+import `fun`.adaptive.utility.exists
 
 /**
  * Connect to peers with [AutoApi] and produce an instance that is
@@ -74,14 +79,37 @@ fun <A : AdatClass> autoInstance(
  */
 fun <A : AdatClass> autoInstance(
     worker: AutoWorker,
-    initialValue: A,
+    companion: AdatCompanion<A>,
+    initialValue: A? = null,
     listener : AutoListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle : AutoHandle = AutoHandle(),
+    itemId: ItemId = LamportTimestamp.CONNECTING,
     trace: Boolean = false
 ): OriginBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A> {
 
-    val companion = initialValue.adatCompanion
+    val pItemId : ItemId
+    val propertyTimes : List<LamportTimestamp>
+    val value: Array<Any?>
+    val commit : Boolean
+
+    val size = companion.adatMetadata.properties.size
+
+    when {
+        initialValue != null -> {
+            pItemId = if (itemId === LamportTimestamp.CONNECTING) LamportTimestamp.ORIGIN else itemId
+            value = initialValue.toArray()
+            propertyTimes = MutableList(size) { itemId }
+            commit = true
+        }
+
+        else -> {
+            pItemId = itemId
+            value = arrayOfNulls<Any?>(size)
+            propertyTimes = MutableList(size) { LamportTimestamp.CONNECTING }
+            commit = false
+        }
+    }
 
     @Suppress("UNCHECKED_CAST")
     val origin = OriginBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A>(
@@ -94,19 +122,18 @@ fun <A : AdatClass> autoInstance(
 
         if (listener != null) context.addListener(listener)
 
-        val itemId = LamportTimestamp.INITIAL
-        val values = initialValue.toArray()
+        val itemId = LamportTimestamp.CONNECTING
 
         backend = PropertyBackend(
             context,
             itemId,
             null,
-            values
+            value
         )
 
         frontend = AdatClassFrontend(
             backend,
-            companion.adatWireFormat as AdatClassWireFormat<A>,
+            companion.adatWireFormat,
             initialValue,
             itemId,
             null

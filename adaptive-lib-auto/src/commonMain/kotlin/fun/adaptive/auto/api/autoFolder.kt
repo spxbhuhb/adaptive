@@ -70,6 +70,7 @@ fun <A : AdatClass> autoFolder(
     listener : AutoListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle: AutoHandle = AutoHandle(),
+    register : Boolean = true,
     trace: Boolean = false,
 ): OriginBase<SetBackend<A>, FolderFrontend<A>, List<A>, A> {
 
@@ -80,7 +81,8 @@ fun <A : AdatClass> autoFolder(
         handle,
         serviceContext,
         defaultWireFormat,
-        trace
+        trace = trace,
+        register = register
     ) {
 
         if (listener != null) context.addListener(listener)

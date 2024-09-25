@@ -22,7 +22,7 @@ class AutoInstance<A : AdatClass>(
     override var latestValue: A? = null
 
     val itemId
-        get() = LamportTimestamp.INITIAL // does not matter for single instances
+        get() = LamportTimestamp.CONNECTING // does not matter for single instances
 
     @Suppress("UNCHECKED_CAST") // TODO should we create a binding for adat classes specifically?
     val companion = binding.adatCompanion !! as AdatCompanion<A>

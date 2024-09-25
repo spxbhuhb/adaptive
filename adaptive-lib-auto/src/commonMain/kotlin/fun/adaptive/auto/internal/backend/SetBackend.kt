@@ -33,7 +33,7 @@ class SetBackend<A : AdatClass>(
 
         items.remove(itemId)?.removed()
 
-        val operation = AutoRemove(context.nextTime(), setOf(itemId))
+        val operation = AutoRemove(context.nextTime(), true, setOf(itemId))
         trace { "FE -> BE  itemId=$itemId .. commit true .. $operation" }
 
         close(operation, commit)
@@ -46,7 +46,7 @@ class SetBackend<A : AdatClass>(
             items.remove(itemId)?.removed()
         }
 
-        val operation = AutoRemove(context.nextTime(), itemIds)
+        val operation = AutoRemove(context.nextTime(), true, itemIds)
         trace { "FE -> BE  commit true .. $operation" }
 
         close(operation, commit)
@@ -82,6 +82,10 @@ class SetBackend<A : AdatClass>(
         }
 
         closeListOp(operation, operation.itemIds, commit)
+
+        if (operation.syncTime) {
+            context.receive(operation.timestamp)
+        }
     }
 
     override fun modify(operation: AutoModify, commit: Boolean) {
@@ -120,7 +124,7 @@ class SetBackend<A : AdatClass>(
     // Peer synchronization
     // --------------------------------------------------------------------------------
 
-    override suspend fun syncPeer(connector: AutoConnector, syncFrom: LamportTimestamp) {
+    override suspend fun syncPeer(connector: AutoConnector, syncFrom: LamportTimestamp, sendSyncEnd : Boolean) {
 
         // The current time marks everything we have to send over. Anything happens after
         // this point will be sent by the normal distribution mechanism. The only problematic
@@ -145,12 +149,16 @@ class SetBackend<A : AdatClass>(
             syncCollection(time, connector, syncFrom)
         }
 
+        if (sendSyncEnd) {
+            connector.send(AutoSyncEnd(time))
+        }
+
         trace { "SYNC END:  --SENT--  time=$time peerTime=$syncFrom" }
     }
 
     suspend fun syncItem(connector: AutoConnector, syncFrom: LamportTimestamp, itemId: ItemId) {
         requireNotNull(items[itemId]) { "missing item: $itemId" }
-            .syncPeer(connector, syncFrom)
+            .syncPeer(connector, syncFrom, false)
     }
 
     suspend fun syncCollection(time : LamportTimestamp, connector: AutoConnector, syncFrom: LamportTimestamp) {
@@ -161,7 +169,7 @@ class SetBackend<A : AdatClass>(
         }
 
         if (removals.isNotEmpty()) {
-            connector.send(AutoRemove(time, removals))
+            connector.send(AutoRemove(time, false, removals))
         }
 
         for (item in items.values.sortedBy { it.itemId }) {
@@ -170,11 +178,9 @@ class SetBackend<A : AdatClass>(
             if (itemId.timestamp > syncFrom.timestamp) {
                 connector.send(AutoAdd(time, itemId, item.wireFormatName, null, encode(item.wireFormatName, item.values)))
             } else {
-                item.syncPeer(connector, syncFrom)
+                item.syncPeer(connector, syncFrom, false)
             }
         }
-
-        connector.send(AutoSyncEnd(time))
     }
 
     // --------------------------------------------------------------------------------

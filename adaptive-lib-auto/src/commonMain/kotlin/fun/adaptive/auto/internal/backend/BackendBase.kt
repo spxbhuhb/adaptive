@@ -9,6 +9,7 @@ import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.AutoModify
 import `fun`.adaptive.auto.model.operation.AutoOperation
+import `fun`.adaptive.auto.model.operation.AutoSyncEnd
 import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.utility.safeLaunch
 import `fun`.adaptive.utility.waitFor
@@ -48,6 +49,8 @@ abstract class BackendBase(
 
     abstract fun modify(operation: AutoModify, commit: Boolean)
 
+    abstract fun syncEnd(operation: AutoSyncEnd, commit: Boolean)
+
     // --------------------------------------------------------------------------------
     // Peer synchronization
     // --------------------------------------------------------------------------------
@@ -63,7 +66,7 @@ abstract class BackendBase(
         return context.time
     }
 
-    abstract suspend fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp)
+    abstract suspend fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp, sendSyncEnd : Boolean = true)
 
     fun removePeer(handle: AutoHandle) {
         context.removeConnector(handle)
@@ -97,10 +100,15 @@ abstract class BackendBase(
         }
 
         for (connector in context.connectors) {
+            val peerHandle = connector.peerHandle
             // do not send operations back to the peer that created them
-            if (connector.peerHandle.peerId == operation.timestamp.peerId) continue
-            // do not send list operations to single-item peers
-            if (connector.peerHandle.itemId != null && operation !is AutoModify) continue
+            if (peerHandle.peerId == operation.timestamp.peerId) continue
+
+            // do not send list and non-item operations to single-item peers
+            if (peerHandle.itemId != null) {
+                if (operation !is AutoModify) continue
+                if (operation.itemId != peerHandle.itemId) continue
+            }
 
             connector.send(operation)
         }

@@ -24,7 +24,7 @@ class TreeBackend<A : AdatClass>(
         tree.afterApply(itemId, tree.removedNodes.id, Int.MAX_VALUE)
         items -= itemId
 
-        val operation = AutoRemove(context.nextTime(), setOf(itemId))
+        val operation = AutoRemove(context.nextTime(), true, setOf(itemId))
         trace { "FE -> BE  itemId=$itemId .. commit true .. $operation" }
 
         close(operation, commit)
@@ -39,7 +39,7 @@ class TreeBackend<A : AdatClass>(
 
         tree.recomputeParentsAndChildren()
 
-        val operation = AutoRemove(context.nextTime(), itemIds)
+        val operation = AutoRemove(context.nextTime(), true, itemIds)
         trace { "FE -> BE  commit true .. $operation" }
 
         close(operation, commit)
@@ -114,7 +114,7 @@ class TreeBackend<A : AdatClass>(
     // Peer synchronization
     // --------------------------------------------------------------------------------
 
-    override suspend fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp) {
+    override suspend fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp, sendsyncEnd : Boolean) {
         val time = context.time
 
         if (peerTime.timestamp >= time.timestamp) {
@@ -124,7 +124,7 @@ class TreeBackend<A : AdatClass>(
 
         val removals = tree.removedNodes.children
         if (removals.isNotEmpty()) {
-            connector.send(AutoRemove(peerTime, removals.map { it.id }.toSet()))
+            connector.send(AutoRemove(peerTime, true, removals.map { it.id }.toSet()))
         }
 
         for (item in items.values) {

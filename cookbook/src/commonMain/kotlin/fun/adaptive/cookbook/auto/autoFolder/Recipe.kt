@@ -13,7 +13,8 @@ class Recipe {
             null,
             path,
             { itemId, _ -> "${itemId.peerId}.${itemId.timestamp}.json" },
-            defaultWireFormat = MasterDataItem.adatWireFormat
+            defaultWireFormat = MasterDataItem.adatWireFormat,
+            register = false
         )
 
         standalone.frontend.add(MasterDataItem(UUID(), "record-1"))

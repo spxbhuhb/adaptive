@@ -29,7 +29,7 @@ class AutoInstanceTest {
 
             val testAdapter = test(connectingAdapter) {
 
-                val a = autoInstance<TestData> { getService<AutoTestApi>(connectingAdapter.transport).file() }
+                val a = autoInstance<TestData>(trace = true) { getService<AutoTestApi>(connectingAdapter.transport).file() }
 
                 if (a != null) {
                     producedValue = a

@@ -22,18 +22,18 @@ class PropertyTestSetup(
     constructor(instance: AdatClass) : this(instance.toArray())
 
     val gid = UUID<BackendBase>()
-    val itemId = LamportTimestamp.INITIAL
+    val itemId = LamportTimestamp(0, 1)
     val scope = CoroutineScope(Dispatchers.Default)
     val logger1 = getLogger("logger.1").enableFine()
     val logger2 = getLogger("logger.2").enableFine()
 
     val wireFormat = TestData.adatWireFormat
 
-    val c1 = BackendContext<TestData>(AutoHandle(gid, 1, null), scope, logger1, Proto, wireFormat, LamportTimestamp(1, 1))
+    val c1 = BackendContext<TestData>(AutoHandle(gid, 0, null), scope, logger1, Proto, wireFormat, LamportTimestamp(0, 1))
     val b1 = PropertyBackend(c1, itemId, null, initialData)
 
     val c2 = BackendContext<TestData>(AutoHandle(gid, 2, null), scope, logger2, Proto, wireFormat, LamportTimestamp(2, 0))
-    val b2 = PropertyBackend(c2, itemId, null, arrayOfNulls(initialData.size))
+    val b2 = PropertyBackend(c2, itemId, null, arrayOfNulls(initialData.size), MutableList(initialData.size) { LamportTimestamp.CONNECTING })
 
     fun connect() {
         b1.addPeer(DirectConnector(b2), c2.time)

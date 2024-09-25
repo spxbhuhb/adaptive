@@ -44,7 +44,7 @@ class DataWorker(
             path,
             { itemId, _ -> "${itemId.peerId}.${itemId.timestamp}.json" },
             defaultWireFormat = DataItem.adatWireFormat,
-            trace = trace,
+            trace = trace
         )
 
         masterData.frontend.add(DataItem(UUID(), "record-name-server"))

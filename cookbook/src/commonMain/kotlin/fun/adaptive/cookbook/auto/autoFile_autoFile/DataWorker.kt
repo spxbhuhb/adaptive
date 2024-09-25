@@ -44,8 +44,7 @@ class DataWorker(
             path,
             DataItem(),
             Json,
-            itemId = LamportTimestamp(0, 1),
-            trace = trace,
+            trace = trace
         )
 
     }

@@ -56,8 +56,6 @@ abstract class CollectionBackendBase<A : AdatClass>(
 
     abstract fun empty(operation: AutoEmpty, commit: Boolean)
 
-    abstract fun syncEnd(operation: AutoSyncEnd, commit: Boolean)
-
     abstract fun add(operation: AutoAdd, commit: Boolean)
 
     abstract fun remove(operation: AutoRemove, commit: Boolean)

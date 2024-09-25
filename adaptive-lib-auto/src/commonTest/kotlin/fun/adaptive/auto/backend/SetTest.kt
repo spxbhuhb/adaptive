@@ -35,7 +35,7 @@ class SetTest {
             val logger1 = getLogger("logger.1")
             val logger2 = getLogger("logger.2")
 
-            val c1 = BackendContext<TestData>(AutoHandle(gid, 1, null), scope, logger1, Proto, TestData.adatWireFormat, LamportTimestamp(1, 0))
+            val c1 = BackendContext<TestData>(AutoHandle(gid, 0, null), scope, logger1, Proto, TestData.adatWireFormat, LamportTimestamp(0, 1))
             val b1 = SetBackend(c1)
             val f1 = AdatClassListFrontend<TestData>(b1)
             b1.frontend = f1
@@ -83,7 +83,7 @@ class SetTest {
             val logger1 = getLogger("logger.1")
             val logger2 = getLogger("logger.2")
 
-            val c1 = BackendContext<TestData>(AutoHandle(gid, 1, null), scope, logger1, Proto, TestData.adatWireFormat, LamportTimestamp(1, 0))
+            val c1 = BackendContext<TestData>(AutoHandle(gid, 0, null), scope, logger1, Proto, TestData.adatWireFormat, LamportTimestamp(0, 1))
             val b1 = SetBackend(c1)
             val f1 = AdatClassListFrontend<TestData>(b1)
             b1.frontend = f1

@@ -32,17 +32,17 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
         val logger = getLogger("logger")
 
         val context = BackendContext<TestData>(
-            AutoHandle(UUID(), 1, null),
+            AutoHandle(UUID(), 0, null),
             worker.scope,
             logger,
             Proto,
             TestData.adatWireFormat,
-            LamportTimestamp.INITIAL
+            LamportTimestamp.ORIGIN
         )
 
         val originBackend = PropertyBackend(
             context,
-            LamportTimestamp.INITIAL,
+            LamportTimestamp.ORIGIN,
             null,
             TestData(12, "a").toArray()
         )
@@ -51,7 +51,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
             originBackend,
             TestData.adatWireFormat,
             TestData(12, "a"),
-            LamportTimestamp.INITIAL,
+            LamportTimestamp.ORIGIN,
             null
         )
 
@@ -67,7 +67,7 @@ class AutoTestService : AutoTestApi, ServiceImpl<AutoTestService> {
     }
 
     override suspend fun instance(): AutoConnectInfo<TestData> {
-        val origin = autoInstance(worker, TestData(12, "a"), serviceContext = serviceContext)
+        val origin = autoInstance(worker, TestData, TestData(12, "a"), serviceContext = serviceContext)
         return origin.connectInfo()
     }
 

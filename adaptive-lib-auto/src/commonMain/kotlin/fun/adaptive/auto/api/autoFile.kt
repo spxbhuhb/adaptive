@@ -70,7 +70,7 @@ fun <A : AdatClass> autoFile(
     listener: AutoListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle: AutoHandle = AutoHandle(),
-    itemId: ItemId = LamportTimestamp.INITIAL,
+    itemId: ItemId = LamportTimestamp.CONNECTING,
     trace: Boolean = false
 ): OriginBase<PropertyBackend<A>, FileFrontend<A>, A, A> {
 
@@ -83,19 +83,19 @@ fun <A : AdatClass> autoFile(
 
     when {
         initialValue != null -> {
-            propertyTimes = MutableList(size) { itemId }
+            pItemId = if (itemId === LamportTimestamp.CONNECTING) LamportTimestamp.ORIGIN else itemId
             value = initialValue.toArray()
-            pItemId = itemId
+            propertyTimes = MutableList(size) { pItemId }
             commit = true
 
-            FileFrontend.write(path, wireFormatProvider, itemId, propertyTimes, initialValue)
+            FileFrontend.write(path, wireFormatProvider, pItemId, propertyTimes, initialValue)
         }
 
         path.exists() -> {
             val r = FileFrontend.read<A>(path, wireFormatProvider)
             pItemId = r.first ?: itemId
-            propertyTimes = r.second
             value = r.third.toArray()
+            propertyTimes = r.second
             commit = true
 
             check(r.third.adatCompanion.wireFormatName == companion.wireFormatName) {
@@ -105,15 +105,11 @@ fun <A : AdatClass> autoFile(
             check(r.third.isValid()) { "validation failed for content of $path" }
         }
 
-        itemId.isValid() -> {
-            pItemId = itemId
-            value = arrayOfNulls<Any?>(size)
-            propertyTimes = MutableList(size) { itemId }
-            commit = false
-        }
-
         else -> {
-            throw IllegalStateException("no initial value, no idem id and the file $path does not exist")
+            pItemId = if (itemId === LamportTimestamp.CONNECTING) LamportTimestamp.ORIGIN else itemId
+            value = arrayOfNulls<Any?>(size)
+            propertyTimes = MutableList(size) { LamportTimestamp.CONNECTING }
+            commit = false
         }
     }
 

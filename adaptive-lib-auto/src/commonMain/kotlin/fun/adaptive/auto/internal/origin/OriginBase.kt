@@ -42,7 +42,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
         logger,
         Proto,
         defaultWireFormat,
-        LamportTimestamp(handle.peerId, 1),
+        LamportTimestamp(handle.peerId, 0),
     )
 
     lateinit var backend: BE

@@ -7,6 +7,7 @@ import `fun`.adaptive.auto.model.AutoPropertyValue
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.AutoModify
+import `fun`.adaptive.auto.model.operation.AutoSyncEnd
 import `fun`.adaptive.wireformat.WireFormat
 
 class PropertyBackend<A : AdatClass>(
@@ -49,7 +50,9 @@ class PropertyBackend<A : AdatClass>(
 
         val payload = encode(property)
 
-        val operation = AutoModify(context.nextTime(), itemId, listOf(AutoPropertyValue(propertyName, payload)))
+        val time = context.nextTime()
+
+        val operation = AutoModify(time, itemId, listOf(AutoPropertyValue(time, propertyName, payload)))
         trace { "FE -> BE  $propertyName=$propertyValue .. commit true $operation" }
 
         propertyTimes[index] = operation.timestamp
@@ -70,7 +73,7 @@ class PropertyBackend<A : AdatClass>(
             val property = properties[index]
             values[index] = newValue
             propertyTimes[index] = time
-            changes += AutoPropertyValue(property.name, encode(property))
+            changes += AutoPropertyValue(time, property.name, encode(property))
         }
 
         val operation = AutoModify(context.nextTime(), itemId, changes)
@@ -93,15 +96,15 @@ class PropertyBackend<A : AdatClass>(
 
             val lastChange = propertyTimes[index]
 
-            if (lastChange < operation.timestamp) {
+            if (lastChange < change.changeTime) {
 
                 @Suppress("UNCHECKED_CAST")
                 val wireformat = properties[index].wireFormat as WireFormat<Any?>
                 val value = context.wireFormatProvider.decoder(change.payload).asInstance(wireformat)
 
                 values[index] = value
-                propertyTimes[index] = operation.timestamp
-                context.receive(operation.timestamp)
+                propertyTimes[index] = change.changeTime
+                context.receive(change.changeTime)
 
                 trace { "BE -> BE  CHANGE ${change.propertyName}=$value" }
 
@@ -120,6 +123,11 @@ class PropertyBackend<A : AdatClass>(
         }
     }
 
+    override fun syncEnd(operation: AutoSyncEnd, commit: Boolean) {
+        context.receive(operation.timestamp)
+        trace { "time=${context.time}" }
+    }
+
     // --------------------------------------------------------------------------------
     // Peer synchronization
     // --------------------------------------------------------------------------------
@@ -127,7 +135,7 @@ class PropertyBackend<A : AdatClass>(
     /**
      * Send any changes that happened after [syncFrom] to the peer.
      */
-    override suspend fun syncPeer(connector: AutoConnector, syncFrom: LamportTimestamp) {
+    override suspend fun syncPeer(connector: AutoConnector, syncFrom: LamportTimestamp, sendSyncEnd : Boolean) {
 
         if (syncFrom >= lastUpdate) {
             trace { "SKIP SYNC: time= $lastUpdate peerTime=$syncFrom" }
@@ -143,7 +151,7 @@ class PropertyBackend<A : AdatClass>(
             val property = properties[index]
 
             if (change <= syncFrom) continue
-            changesToSend += AutoPropertyValue(property.name, encode(property))
+            changesToSend += AutoPropertyValue(change, property.name, encode(property))
         }
 
         val operation = AutoModify(context.time, itemId, changesToSend)
@@ -151,6 +159,10 @@ class PropertyBackend<A : AdatClass>(
         trace { "peerTime=$syncFrom op=$operation" }
 
         connector.send(operation)
+
+        if (sendSyncEnd) {
+            connector.send(AutoSyncEnd(context.time))
+        }
     }
 
     // --------------------------------------------------------------------------------

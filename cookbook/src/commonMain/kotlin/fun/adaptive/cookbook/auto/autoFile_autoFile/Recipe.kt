@@ -48,8 +48,7 @@ class Recipe : AutoRecipe() {
             clientBackend.firstImpl<AutoWorker>(),
             DataItem,
             clientPath,
-            handle = connectInfo.connectingHandle,
-            trace = true
+            handle = connectInfo.connectingHandle
         )
 
         // Connect to the origin list on the server side. This call
