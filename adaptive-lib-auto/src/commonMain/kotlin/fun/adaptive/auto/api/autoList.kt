@@ -89,7 +89,12 @@ fun <A : AdatClass> autoList(
 }
 
 /**
- * Registers an Auto list with [worker].
+ * Creates an Auto List.
+ *
+ * When [register] is true, register the list with [worker].
+ *
+ * When [register] is false, use [OriginBase.connectDirect] to create a direct
+ * connection.
  *
  * After registration peers can use [autoList] to connect to the registered
  * list. To get the connection info needed for the [autoList] use the `connectInfo`
@@ -117,6 +122,7 @@ fun <A : AdatClass> autoList(
     listener : AutoListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle: AutoHandle = AutoHandle(),
+    register: Boolean = true,
     trace: Boolean = false
 ): OriginBase<SetBackend<A>, AdatClassListFrontend<A>, List<A>, A> {
 
@@ -125,7 +131,8 @@ fun <A : AdatClass> autoList(
         handle,
         serviceContext,
         defaultWireFormat,
-        trace
+        trace,
+        register
     ) {
         if (listener != null) context.addListener(listener)
         backend = SetBackend(context)

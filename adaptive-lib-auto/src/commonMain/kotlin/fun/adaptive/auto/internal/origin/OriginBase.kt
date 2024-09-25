@@ -28,6 +28,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
     serviceContext: ServiceContext?,
     defaultWireFormat: AdatClassWireFormat<*>?,
     trace: Boolean,
+    register: Boolean = true,
     builder: OriginBase<BE, FE, VT, IT>.() -> Unit
 ) {
 
@@ -52,7 +53,8 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
         builder()
         backend.frontend = frontend
 
-        if (worker != null) {
+        if (register) {
+            requireNotNull(worker) { "cannot register without a worker" }
 
             worker.register(backend)
 
@@ -71,13 +73,13 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
         return backend.connectInfo() as AutoConnectInfo<VT>
     }
 
-    fun <IT> connectInfo(itemId : ItemId): AutoConnectInfo<IT> {
+    fun <IT> connectInfo(itemId: ItemId): AutoConnectInfo<IT> {
         @Suppress("UNCHECKED_CAST")
         return backend.connectInfo(itemId) as AutoConnectInfo<IT>
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <IT> connectInfo(filterFun: (IT) -> Boolean) : AutoConnectInfo<IT>? {
+    fun <IT> connectInfo(filterFun: (IT) -> Boolean): AutoConnectInfo<IT>? {
         val safeFrontend = frontend
         check(safeFrontend is AdatClassListFrontend<*>) { "connecting with filter function is supported only by AdatClassListFrontend" }
         val itemId = safeFrontend.values.firstOrNull { filterFun(it as IT) }?.let { safeFrontend.itemId(it) } ?: return null
@@ -123,13 +125,11 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
      * in the same VM as the connecting peer.
      */
     suspend fun connectDirect(
-        worker: AutoWorker,
         waitForSync: Duration? = null,
         connectInfoFun: suspend () -> AutoConnectInfo<VT>
     ): OriginBase<BE, FE, VT, IT> {
 
-        val scope = backend.context.scope
-        check(scope != null) { "connecting is not possible when there is no worker passed during creation" }
+        checkNotNull(worker) { "cannot connect directly without a worker" }
 
         val connectInfo = connectInfoFun()
 

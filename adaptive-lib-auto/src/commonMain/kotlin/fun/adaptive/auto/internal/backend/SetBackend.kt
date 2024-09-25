@@ -68,6 +68,8 @@ class SetBackend<A : AdatClass>(
         addItem(operation.itemId, null, decode(operation.wireFormatName, operation.payload) as A)
 
         closeListOp(operation, setOf(operation.itemId), commit)
+
+        context.receive(operation.itemId)
     }
 
     override fun remove(operation: AutoRemove, commit: Boolean) {
@@ -102,6 +104,7 @@ class SetBackend<A : AdatClass>(
 
     override fun empty(operation: AutoEmpty, commit: Boolean) {
         closeListOp(operation, emptySet(), commit)
+        context.receive(operation.timestamp)
     }
 
     override fun syncEnd(operation: AutoSyncEnd, commit: Boolean) {
@@ -165,7 +168,7 @@ class SetBackend<A : AdatClass>(
             val itemId = item.itemId
 
             if (itemId.timestamp > syncFrom.timestamp) {
-                connector.send(AutoAdd(itemId, itemId, item.wireFormatName, null, encode(item.wireFormatName, item.values)))
+                connector.send(AutoAdd(time, itemId, item.wireFormatName, null, encode(item.wireFormatName, item.values)))
             } else {
                 item.syncPeer(connector, syncFrom)
             }

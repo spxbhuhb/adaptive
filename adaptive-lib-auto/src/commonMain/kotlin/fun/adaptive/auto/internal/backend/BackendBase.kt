@@ -43,10 +43,7 @@ abstract class BackendBase(
 
     fun receive(operation: AutoOperation) {
         trace { operation.toString() }
-
         operation.apply(this, commit = true)
-
-        context.receive(operation.timestamp)
     }
 
     abstract fun modify(operation: AutoModify, commit: Boolean)
