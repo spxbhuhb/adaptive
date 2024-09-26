@@ -92,6 +92,10 @@ class BackendContext<A : AdatClass>(
         listeners.forEach { it.onRemove(value) }
     }
 
+    internal fun onListInit(values : List<A>) {
+        listeners.forEach { it.onListInit(values) }
+    }
+
     internal fun onListCommit(values : List<A>) {
         listeners.forEach { it.onListCommit(values) }
     }

@@ -99,7 +99,7 @@ fun <A : AdatClass> autoFolder(
             fileNameFun
         )
 
-        frontend.commit()
+        frontend.commit(initial = true)
     }
 
 }

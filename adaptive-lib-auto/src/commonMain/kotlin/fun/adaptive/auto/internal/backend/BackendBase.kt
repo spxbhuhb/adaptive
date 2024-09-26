@@ -66,7 +66,7 @@ abstract class BackendBase(
         return context.time
     }
 
-    abstract suspend fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp, sendSyncEnd : Boolean = true)
+    abstract suspend fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp, sendSyncEnd: Boolean = true)
 
     fun removePeer(handle: AutoHandle) {
         context.removeConnector(handle)
@@ -99,17 +99,40 @@ abstract class BackendBase(
             trace { "==== commit ====" }
         }
 
-        for (connector in context.connectors) {
+        val connectors = context.connectors
+        val closePeers = connectors.map { it.peerHandle.peerId }
+        val thisPeer = context.handle.peerId
+
+        for (connector in connectors) {
             val peerHandle = connector.peerHandle
+            val sourcePeer = operation.timestamp.peerId
+
             // do not send operations back to the peer that created them
-            if (peerHandle.peerId == operation.timestamp.peerId) continue
+            if (peerHandle.peerId == sourcePeer) {
+                // println("BackendBase.SKIP: this=${context.handle} peer=${peerHandle.peerId} item=${peerHandle.itemId} operation.timestamp=${operation.timestamp}")
+                continue
+            }
 
             // do not send list and non-item operations to single-item peers
             if (peerHandle.itemId != null) {
-                if (operation !is AutoModify) continue
-                if (operation.itemId != peerHandle.itemId) continue
+                if (operation !is AutoModify) {
+                    // println("BackendBase.SKIP: this=${context.handle} peer=${peerHandle.peerId} item=${peerHandle.itemId} operation.timestamp=${operation.timestamp}")
+                    continue
+                }
+                if (operation.itemId != peerHandle.itemId) {
+                    // println("BackendBase.SKIP: this=${context.handle} peer=${peerHandle.peerId} item=${peerHandle.itemId} operation.timestamp=${operation.timestamp}")
+                    continue
+                }
             }
 
+            // do not send operations originated from peers far away
+            // FIXME operation send for far peers
+            if (sourcePeer != thisPeer && sourcePeer !in closePeers) {
+                // println("BackendBase.SKIP: this=${context.handle} peer=${peerHandle.peerId} item=${peerHandle.itemId} operation.timestamp=${operation.timestamp}")
+                continue
+            }
+
+            // println("BackendBase.SEND: this=${context.handle} peer=${peerHandle.peerId} item=${peerHandle.itemId} operation.timestamp=${operation.timestamp}")
             connector.send(operation)
         }
     }
@@ -122,7 +145,7 @@ abstract class BackendBase(
         }
 
 
-    fun connectInfo(itemId : ItemId? = null) =
+    fun connectInfo(itemId: ItemId? = null) =
         with(context) {
             val time = context.nextTime()
             AutoConnectInfo<Any>(handle, time, AutoHandle(handle.globalId, time.timestamp, itemId))

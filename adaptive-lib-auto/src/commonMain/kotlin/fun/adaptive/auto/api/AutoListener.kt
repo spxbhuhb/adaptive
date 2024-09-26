@@ -11,6 +11,9 @@ abstract class AutoListener<A : AdatClass> {
     open fun onRemove(item : A) {
 
     }
+    open fun onListInit(value: List<A>) {
+
+    }
 
     open fun onListCommit(newValue: List<A>) {
 

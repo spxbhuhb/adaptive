@@ -9,7 +9,7 @@ abstract class FrontendBase : AdatStore() {
 
     abstract val backend: BackendBase
 
-    abstract fun commit()
+    abstract fun commit(initial: Boolean = false)
 
     /**
      * Called by collection backends when the item that represented by this

@@ -32,7 +32,7 @@ open class AdatClassFrontend<A : AdatClass>(
      * AdatClassListFrontend calls PropertyBackend on modify
      * PropertyBackend calls commit when finished
      */
-    override fun commit() {
+    override fun commit(initial : Boolean) {
         val newValue = wireFormat.newInstance(backend.values)
 
         @Suppress("UNCHECKED_CAST")

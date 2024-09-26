@@ -16,10 +16,14 @@ open class AdatClassListFrontend<A : AdatClass>(
         private set
 
     // TODO optimize AutoClassListFrontend.commit  (or maybe SetBackend)
-    override fun commit() {
+    override fun commit(initial : Boolean) {
         val active = (backend.additions subtract backend.removals)
         values = active.sorted().map { getItemFrontend(it).value !! }
-        backend.context.onListCommit(values)
+        if (initial) {
+            backend.context.onListInit(values)
+        } else {
+            backend.context.onListCommit(values)
+        }
     }
 
     override fun commit(itemId: ItemId) {
