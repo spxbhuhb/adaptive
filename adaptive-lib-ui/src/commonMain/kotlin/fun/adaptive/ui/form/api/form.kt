@@ -63,14 +63,18 @@ fun form(data: AdatClass, vararg instructions : AdaptiveInstruction) : AdaptiveF
 
                     DatetimeSignatures.INSTANT,
                     KotlinSignatures.UUID
-                        -> text(data.getValue(property.index).toString()) .. inputTheme.disabled
+                        -> text(data.getValue(property.index).toString()) .. inputTheme.disabled .. width { 300.dp }
 
                     DatetimeSignatures.LOCAL_DATE_TIME
                         -> textual(data, property) .. inputTheme.active
 
                     else -> {
                         if (property.isAdatClass) {
-                            subForm(data, property)
+                            if (property.isImmutableProperty) {
+                                text(data.getValue(property.index).toString())
+                            } else {
+                                subForm(data, property)
+                            }
                         }
                     }
                 }
