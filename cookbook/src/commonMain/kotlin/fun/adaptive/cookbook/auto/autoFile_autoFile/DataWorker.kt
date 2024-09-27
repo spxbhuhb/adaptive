@@ -3,8 +3,7 @@ package `fun`.adaptive.cookbook.auto.autoFile_autoFile
 import `fun`.adaptive.auto.api.autoFile
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.origin.OriginBase
-import `fun`.adaptive.auto.model.AutoConnectInfo
-import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.backend.setting.dsl.setting
@@ -49,7 +48,7 @@ class DataWorker(
 
     }
 
-    fun connectInfo(): AutoConnectInfo<DataItem> {
+    fun connectInfo(): AutoConnectionInfo<DataItem> {
         return masterData.connectInfo()
     }
 

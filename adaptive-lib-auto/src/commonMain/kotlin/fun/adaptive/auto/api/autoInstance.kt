@@ -2,23 +2,19 @@ package `fun`.adaptive.auto.api
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
-import `fun`.adaptive.adat.api.isValid
 import `fun`.adaptive.adat.toArray
-import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
-import `fun`.adaptive.auto.internal.frontend.FileFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.auto.internal.producer.AutoInstance
-import `fun`.adaptive.auto.model.AutoConnectInfo
+import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.Producer
 import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.utility.exists
 
 /**
  * Connect to peers with [AutoApi] and produce an instance that is
@@ -43,15 +39,16 @@ import `fun`.adaptive.utility.exists
  */
 @Producer
 fun <A : AdatClass> autoInstance(
+    peer: OriginBase<*, *, A, A>? = null,
     listener : AutoListener<A>? = null,
     binding: AdaptiveStateVariableBinding<A>? = null,
     trace: Boolean = false,
-    connect: suspend () -> AutoConnectInfo<A>
+    connect: suspend () -> AutoConnectionInfo<A>
 ): A? {
     checkNotNull(binding)
     checkNotNull(binding.adatCompanion)
 
-    val store = AutoInstance(binding, connect, listener, trace)
+    val store = AutoInstance(binding, connect, listener, peer, trace)
 
     binding.targetFragment.addProducer(store)
 
@@ -78,7 +75,7 @@ fun <A : AdatClass> autoInstance(
  *           properties and to get connection info for the connecting peers.
  */
 fun <A : AdatClass> autoInstance(
-    worker: AutoWorker,
+    worker: AutoWorker?,
     companion: AdatCompanion<A>,
     initialValue: A? = null,
     listener : AutoListener<A>? = null,
@@ -104,7 +101,7 @@ fun <A : AdatClass> autoInstance(
         }
 
         else -> {
-            pItemId = itemId
+            pItemId = if (itemId === LamportTimestamp.CONNECTING) LamportTimestamp.ORIGIN else itemId
             value = arrayOfNulls<Any?>(size)
             propertyTimes = MutableList(size) { LamportTimestamp.CONNECTING }
             commit = false
@@ -117,16 +114,15 @@ fun <A : AdatClass> autoInstance(
         handle,
         serviceContext,
         companion.adatWireFormat,
-        trace
+        register = (worker != null),
+        trace = trace
     ) {
 
         if (listener != null) context.addListener(listener)
 
-        val itemId = LamportTimestamp.CONNECTING
-
         backend = PropertyBackend(
             context,
-            itemId,
+            pItemId,
             null,
             value
         )
@@ -135,7 +131,7 @@ fun <A : AdatClass> autoInstance(
             backend,
             companion.adatWireFormat,
             initialValue,
-            itemId,
+            pItemId,
             null
         )
 

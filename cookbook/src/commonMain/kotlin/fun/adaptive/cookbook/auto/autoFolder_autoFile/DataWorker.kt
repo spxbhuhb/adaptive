@@ -4,7 +4,7 @@ import `fun`.adaptive.auto.api.autoFolder
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.frontend.FolderFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
-import `fun`.adaptive.auto.model.AutoConnectInfo
+import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.backend.setting.dsl.setting
@@ -50,7 +50,7 @@ class DataWorker(
         masterData.frontend.add(DataItem(UUID(), "record-name-server"))
     }
 
-    fun connectInfo(filter : String): AutoConnectInfo<DataItem> =
+    fun connectInfo(filter: String): AutoConnectionInfo<DataItem> =
         lock.use {
             requireNotNull(masterData.connectInfo<DataItem> { filter in it.recordName })
         }

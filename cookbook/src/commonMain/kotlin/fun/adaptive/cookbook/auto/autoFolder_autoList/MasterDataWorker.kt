@@ -3,7 +3,7 @@ package `fun`.adaptive.cookbook.auto.autoFolder_autoList
 import `fun`.adaptive.auto.api.autoFolder
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.origin.OriginBase
-import `fun`.adaptive.auto.model.AutoConnectInfo
+import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.backend.setting.dsl.setting
@@ -47,7 +47,7 @@ class MasterDataWorker(
 
     }
 
-    fun connectInfo(): AutoConnectInfo<List<MasterDataItem>> {
+    fun connectInfo(): AutoConnectionInfo<List<MasterDataItem>> {
         return masterData.connectInfo()
     }
 

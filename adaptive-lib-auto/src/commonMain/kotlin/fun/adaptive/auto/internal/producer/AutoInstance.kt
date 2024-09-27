@@ -7,17 +7,19 @@ import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.api.AutoListener
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
-import `fun`.adaptive.auto.model.AutoConnectInfo
+import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 
 class AutoInstance<A : AdatClass>(
     binding: AdaptiveStateVariableBinding<A>,
-    connect: suspend () -> AutoConnectInfo<A>,
+    connect: suspend () -> AutoConnectionInfo<A>,
     val listener: AutoListener<A>? = null,
+    peer: OriginBase<*, *, A, A>? = null,
     trace: Boolean
 ) : ProducerBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A>(
-    binding, connect, trace
+    binding, connect, peer, trace
 ) {
     override var latestValue: A? = null
 

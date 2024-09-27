@@ -7,4 +7,5 @@ suspend fun main() {
     `fun`.adaptive.cookbook.auto.autoFolder_autoList.Recipe().run()
     `fun`.adaptive.cookbook.auto.autoFolder_autoListPoly.Recipe().run()
     `fun`.adaptive.cookbook.auto.autoListPoly_autoFolder_autoListPoly.Recipe().run()
+    `fun`.adaptive.cookbook.auto.globalInstance_fragmentInstance.recipe()
 }

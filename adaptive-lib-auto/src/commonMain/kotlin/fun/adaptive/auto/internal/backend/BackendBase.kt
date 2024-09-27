@@ -3,7 +3,8 @@ package `fun`.adaptive.auto.internal.backend
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.internal.frontend.FrontendBase
-import `fun`.adaptive.auto.model.AutoConnectInfo
+import `fun`.adaptive.auto.model.AutoConnectionInfo
+import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
@@ -60,7 +61,7 @@ abstract class BackendBase(
      * operations that happened after the [peerTime] to the peer.
      */
     fun addPeer(connector: AutoConnector, peerTime: LamportTimestamp): LamportTimestamp {
-        val scope = checkNotNull(context.scope) { "cannot add a peer when there is no worker passed during creation" }
+        val scope = checkNotNull(context.scope) { "cannot add a peer when scope is null" }
         context.addConnector(connector)
         scope.safeLaunch(context.logger) { syncPeer(connector, peerTime) }
         return context.time
@@ -145,17 +146,17 @@ abstract class BackendBase(
         }
 
 
-    fun connectInfo(itemId: ItemId? = null) =
+    fun connectInfo(type: AutoConnectionType, itemId: ItemId? = null) =
         with(context) {
             val time = context.nextTime()
-            AutoConnectInfo<Any>(handle, time, AutoHandle(handle.globalId, time.timestamp, itemId))
+            AutoConnectionInfo<Any>(type, handle, time, AutoHandle(handle.globalId, time.timestamp, itemId))
         }
 
-    fun isSynced(connectInfo: AutoConnectInfo<*>): Boolean {
+    fun isSynced(connectInfo: AutoConnectionInfo<*>): Boolean {
         return context.time.timestamp >= connectInfo.originTime.timestamp
     }
 
-    suspend fun waitForSync(connectInfo: AutoConnectInfo<*>, timeout: Duration) {
+    suspend fun waitForSync(connectInfo: AutoConnectionInfo<*>, timeout: Duration) {
         trace { "SYNC WAIT: $connectInfo" }
         waitFor(timeout) { isSynced(connectInfo) }
         trace { "SYNC WAIT END" }

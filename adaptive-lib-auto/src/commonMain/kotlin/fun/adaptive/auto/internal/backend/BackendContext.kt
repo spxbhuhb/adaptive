@@ -14,15 +14,18 @@ import `fun`.adaptive.utility.safeSuspendCall
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 class BackendContext<A : AdatClass>(
     val handle: AutoHandle,
-    val scope: CoroutineScope?,
+    scope: CoroutineScope?,
     val logger: AdaptiveLogger,
     val wireFormatProvider: WireFormatProvider,
     val defaultWireFormat: AdatClassWireFormat<*>?,
     time: LamportTimestamp
 ) {
+
+    val scope = scope ?: CoroutineScope(Dispatchers.Default)
 
     val time : LamportTimestamp
         get() = safeTime.get()

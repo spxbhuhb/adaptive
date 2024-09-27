@@ -10,7 +10,8 @@ import `fun`.adaptive.auto.internal.connector.DirectConnector
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.frontend.FrontendBase
-import `fun`.adaptive.auto.model.AutoConnectInfo
+import `fun`.adaptive.auto.model.AutoConnectionInfo
+import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
@@ -68,28 +69,28 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
         }
     }
 
-    fun connectInfo(): AutoConnectInfo<VT> {
+    fun connectInfo(type: AutoConnectionType = AutoConnectionType.Service): AutoConnectionInfo<VT> {
         @Suppress("UNCHECKED_CAST")
-        return backend.connectInfo() as AutoConnectInfo<VT>
+        return backend.connectInfo(type) as AutoConnectionInfo<VT>
     }
 
-    fun <IT> connectInfo(itemId: ItemId): AutoConnectInfo<IT> {
+    fun <IT> connectInfo(itemId: ItemId, type: AutoConnectionType = AutoConnectionType.Service): AutoConnectionInfo<IT> {
         @Suppress("UNCHECKED_CAST")
-        return backend.connectInfo(itemId) as AutoConnectInfo<IT>
+        return backend.connectInfo(type, itemId) as AutoConnectionInfo<IT>
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <IT> connectInfo(filterFun: (IT) -> Boolean): AutoConnectInfo<IT>? {
+    fun <IT> connectInfo(type: AutoConnectionType = AutoConnectionType.Service, filterFun: (IT) -> Boolean): AutoConnectionInfo<IT>? {
         val safeFrontend = frontend
         check(safeFrontend is AdatClassListFrontend<*>) { "connecting with filter function is supported only by AdatClassListFrontend" }
         val itemId = safeFrontend.values.firstOrNull { filterFun(it as IT) }?.let { safeFrontend.itemId(it) } ?: return null
-        return backend.connectInfo(itemId) as AutoConnectInfo<IT>
+        return backend.connectInfo(type, itemId) as AutoConnectionInfo<IT>
     }
 
     suspend fun connect(
         transport: ServiceCallTransport = requireNotNull(worker?.adapter?.transport),
         waitForSync: Duration? = null,
-        connectInfoFun: suspend () -> AutoConnectInfo<VT>
+        connectInfoFun: suspend () -> AutoConnectionInfo<VT>
     ): OriginBase<BE, FE, VT, IT> {
         val scope = backend.context.scope
         check(scope != null) { "connecting is not possible when there is no worker passed during creation" }
@@ -126,7 +127,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
      */
     suspend fun connectDirect(
         waitForSync: Duration? = null,
-        connectInfoFun: suspend () -> AutoConnectInfo<VT>
+        connectInfoFun: suspend () -> AutoConnectionInfo<VT>
     ): OriginBase<BE, FE, VT, IT> {
 
         checkNotNull(worker) { "cannot connect directly without a worker" }
@@ -144,7 +145,7 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
         return this
     }
 
-    suspend fun waitForSync(connectInfo: AutoConnectInfo<VT>, timeout: Duration) {
+    suspend fun waitForSync(connectInfo: AutoConnectionInfo<VT>, timeout: Duration) {
         backend.waitForSync(connectInfo, timeout)
     }
 

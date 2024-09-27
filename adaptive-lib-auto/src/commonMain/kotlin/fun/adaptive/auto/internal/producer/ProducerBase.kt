@@ -7,9 +7,13 @@ import `fun`.adaptive.auto.api.AutoApi
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.BackendBase
 import `fun`.adaptive.auto.internal.backend.BackendContext
+import `fun`.adaptive.auto.internal.connector.DirectConnector
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.internal.frontend.FrontendBase
-import `fun`.adaptive.auto.model.AutoConnectInfo
+import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.model.AutoConnectionInfo
+import `fun`.adaptive.auto.model.AutoConnectionType
+import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
@@ -24,7 +28,8 @@ import kotlinx.coroutines.launch
 
 abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
     override val binding: AdaptiveStateVariableBinding<VT>,
-    val connect: suspend () -> AutoConnectInfo<VT>,
+    val connect: suspend () -> AutoConnectionInfo<VT>,
+    val peer: OriginBase<*, *, VT, IT>? = null,
     val trace: Boolean
 ) : AdatStore(), AdaptiveProducer<VT> {
 
@@ -33,6 +38,7 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatCl
     val scope: CoroutineScope = CoroutineScope(adapter.dispatcher)
 
     lateinit var logger: AdaptiveLogger
+    lateinit var connectInfo: AutoConnectionInfo<VT>
     lateinit var context: BackendContext<IT>
 
     lateinit var backend: BE
@@ -45,7 +51,7 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatCl
 
     override fun start() {
         scope.launch {
-            val connectInfo = connect()
+            connectInfo = connect()
             val originHandle = connectInfo.originHandle
             val connectingHandle = connectInfo.connectingHandle
 
@@ -65,23 +71,39 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatCl
 
             backend.frontend = frontend
 
-            adapter.backend.firstImpl<AutoWorker>().register(backend)
-
-            val autoService = getService<AutoApi>(adapter.transport)
-
-            backend.addPeer(
-                ServiceConnector(connectingHandle, originHandle, autoService, logger, scope, 1000),
-                connectInfo.originTime
-            )
-
-            autoService.addPeer(originHandle, connectingHandle, backend.context.time)
+            if (connectInfo.connectionType == AutoConnectionType.Service) {
+                connectService(connectingHandle, originHandle)
+            } else {
+                connectDirect()
+            }
         }
+    }
+
+    suspend fun connectService(connectingHandle: AutoHandle, originHandle: AutoHandle) {
+        adapter.backend.firstImpl<AutoWorker>().register(backend)
+
+        val autoService = getService<AutoApi>(adapter.transport)
+
+        backend.addPeer(
+            ServiceConnector(connectingHandle, originHandle, autoService, logger, scope, 1000),
+            connectInfo.originTime
+        )
+
+        autoService.addPeer(originHandle, connectingHandle, backend.context.time)
+    }
+
+    fun connectDirect() {
+        checkNotNull(peer)
+        backend.addPeer(DirectConnector(peer.backend), connectInfo.originTime)
+        peer.backend.addPeer(DirectConnector(backend), backend.context.time)
     }
 
     abstract fun build()
 
     override fun stop() {
-        adapter.backend.firstImpl<AutoWorker>().deregister(backend)
+        if (connectInfo.connectionType == AutoConnectionType.Service) {
+            adapter.backend.firstImpl<AutoWorker>().deregister(backend)
+        }
 
         scope.safeLaunch(logger) {
             backend.disconnect()

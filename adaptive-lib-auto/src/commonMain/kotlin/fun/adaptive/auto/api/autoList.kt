@@ -8,7 +8,7 @@ import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.auto.internal.producer.AutoList
-import `fun`.adaptive.auto.model.AutoConnectInfo
+import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.Producer
@@ -37,14 +37,15 @@ import `fun`.adaptive.service.ServiceContext
 @Producer
 fun <A : AdatClass> autoList(
     companion: AdatCompanion<A>,
+    peer: OriginBase<*, *, List<A>, A>? = null,
     listener : AutoListener<A>? = null,
     binding: AdaptiveStateVariableBinding<List<A>>? = null,
     trace: Boolean = false,
-    connect: suspend () -> AutoConnectInfo<List<A>>
+    connect: suspend () -> AutoConnectionInfo<List<A>>
 ): List<A>? {
     checkNotNull(binding)
 
-    val store = AutoList(binding, connect, companion.adatWireFormat, listener, trace)
+    val store = AutoList(binding, connect, companion.adatWireFormat, listener, peer, trace)
 
     binding.targetFragment.addProducer(store)
 
@@ -73,15 +74,16 @@ fun <A : AdatClass> autoList(
  */
 @Producer
 fun <A : AdatClass> autoList(
+    peer: OriginBase<*, *, List<A>, A>? = null,
     defaultWireFormat: AdatClassWireFormat<*>? = null,
     listener : AutoListener<A>? = null,
     binding: AdaptiveStateVariableBinding<List<A>>? = null,
     trace: Boolean = false,
-    connect: suspend () -> AutoConnectInfo<List<A>>
+    connect: suspend () -> AutoConnectionInfo<List<A>>
 ): List<A>? {
     checkNotNull(binding)
 
-    val store = AutoList(binding, connect, defaultWireFormat, listener, trace)
+    val store = AutoList(binding, connect, defaultWireFormat, listener, peer, trace)
 
     binding.targetFragment.addProducer(store)
 
