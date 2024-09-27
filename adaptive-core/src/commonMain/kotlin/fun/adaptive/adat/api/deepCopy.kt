@@ -44,8 +44,9 @@ private fun AdatClass.genericDeepCopy(replace: AdatChange?): AdatClass {
             property.hasImmutableValue -> value
             value is AdatClass -> value.genericDeepCopy(null)
             value is Enum<*> -> value // FIXME mutable properties in enum
-            value is Set<*> -> value // FIXME mutable entries in a set
-            value is List<*> -> value // FIXME mutable entries in a list
+            value is Set<*> -> value.toSet() // FIXME mutable entries in a set
+            value is List<*> -> value.toList() // FIXME mutable entries in a list
+            value is Map<*, *> -> value.toMap() // FIXME mutable entries in a list
             value is Array<*> -> value.copyOf() // FIXME mutable entries in an array
             value is IntArray -> value.copyOf()
             value is ByteArray -> value.copyOf()

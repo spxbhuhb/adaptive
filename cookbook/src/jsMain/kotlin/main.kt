@@ -12,6 +12,7 @@ import `fun`.adaptive.cookbook.iot.iotCommon
 import `fun`.adaptive.cookbook.iot.iotMain
 import `fun`.adaptive.cookbook.layout.desktop.layoutDesktopMain
 import `fun`.adaptive.cookbook.layout.mobile.layoutMobileMain
+import `fun`.adaptive.cookbook.nav.navMain
 import `fun`.adaptive.cookbook.shared.bodySmall
 import `fun`.adaptive.cookbook.shared.cornerRadius8
 import `fun`.adaptive.cookbook.shared.inputStyle
@@ -88,7 +89,9 @@ fun main() {
 //                  hoverMain()
 //              }
 
-            sidebar()
+//            sidebar()
+
+            navMain()
 
 //            projectWizardMain()
 

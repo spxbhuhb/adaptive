@@ -9,6 +9,7 @@ import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.auto.internal.producer.AutoInstance
 import `fun`.adaptive.auto.model.AutoConnectionInfo
+import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
@@ -55,6 +56,36 @@ fun <A : AdatClass> autoInstance(
     return null
 }
 
+@Producer
+fun <A : AdatClass> autoInstance(
+    peer: OriginBase<*, *, A, A>,
+    listener: AutoListener<A>? = null,
+    binding: AdaptiveStateVariableBinding<A>? = null,
+    trace: Boolean = false
+): A? {
+    checkNotNull(binding)
+    checkNotNull(binding.adatCompanion)
+
+    val store = AutoInstance(binding, { peer.connectInfo(AutoConnectionType.Direct) }, listener, peer, trace)
+
+    binding.targetFragment.addProducer(store)
+
+    return null
+}
+
+@Suppress("UNCHECKED_CAST")
+fun <A : AdatClass> autoInstance(
+    initialValue: A,
+    listener: AutoListener<A>? = null,
+    trace: Boolean = false
+): OriginBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A> =
+    autoInstance(
+        worker = null,
+        companion = initialValue.adatCompanion as AdatCompanion<A>,
+        initialValue = initialValue,
+        listener = listener,
+        trace = trace
+    )
 
 /**
  * Registers a copy of [initialValue] as an Auto instance with [worker].

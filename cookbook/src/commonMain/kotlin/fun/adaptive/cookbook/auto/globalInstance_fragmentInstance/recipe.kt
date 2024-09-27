@@ -8,7 +8,7 @@ import kotlinx.coroutines.delay
 
 val initial = DataItem()
 
-val global = autoInstance(null, DataItem, initial, trace = true)
+val global = autoInstance(initial)
 
 var out: DataItem?
     get() = TODO()
@@ -22,7 +22,7 @@ suspend fun recipe() {
     val backend = backend { }
 
     test(backend) {
-        val data = autoInstance(global, trace = true) { global.connectInfo(AutoConnectionType.Direct) }
+        val data = autoInstance(global) { global.connectInfo(AutoConnectionType.Direct) }
         out = data
     }
 
