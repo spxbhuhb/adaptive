@@ -2,6 +2,7 @@ package `fun`.adaptive.utility
 
 import `fun`.adaptive.log.AdaptiveLogger
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 
@@ -16,12 +17,12 @@ import kotlinx.coroutines.launch
  * **NOTE** Best is if your cleanup code does not throw exceptions, however, it may
  * be a tad bit hard to cover it all, hence [safeCall].
  */
-fun safeCall(logger: AdaptiveLogger, block: () -> Unit) {
+fun safeCall(logger: AdaptiveLogger, message : String? = null, block: () -> Unit) {
     try {
         block()
     } catch (ex: Exception) {
         try {
-            logger.error(ex)
+            logger.error(message ?: ex.message ?: "", ex)
         } catch (lex: Exception) {
             ex.printStackTrace()
             lex.printStackTrace()
@@ -40,12 +41,12 @@ fun safeCall(logger: AdaptiveLogger, block: () -> Unit) {
  * **NOTE** Best is if your cleanup code does not throw exceptions, however, it may
  * be a tad bit hard to cover it all, hence [safeCall].
  */
-suspend fun safeSuspendCall(logger: AdaptiveLogger, block: suspend () -> Unit) {
+suspend fun safeSuspendCall(logger: AdaptiveLogger, message : String? = null, block: suspend () -> Unit) {
     try {
         block()
     } catch (ex: Exception) {
         try {
-            logger.error(ex)
+            logger.error(message ?: ex.message ?: "", ex)
         } catch (lex: Exception) {
             ex.printStackTrace()
             lex.printStackTrace()
@@ -64,7 +65,8 @@ suspend fun safeSuspendCall(logger: AdaptiveLogger, block: suspend () -> Unit) {
  * **NOTE** Best is if your cleanup code does not throw exceptions, however, it may
  * be a tad bit hard to cover it all, hence [safeCall].
  */
-fun CoroutineScope.safeLaunch(logger: AdaptiveLogger, block: suspend () -> Unit) {
+fun CoroutineScope.safeLaunch(logger: AdaptiveLogger, message : String? = null, block: suspend () -> Unit) : Job =
+
     launch {
         try {
             block()
@@ -73,11 +75,10 @@ fun CoroutineScope.safeLaunch(logger: AdaptiveLogger, block: suspend () -> Unit)
             ensureActive()
 
             try {
-                logger.error(ex)
+                logger.error(message ?: ex.message ?: "", ex)
             } catch (lex: Exception) {
                 ex.printStackTrace()
                 lex.printStackTrace()
             }
         }
     }
-}

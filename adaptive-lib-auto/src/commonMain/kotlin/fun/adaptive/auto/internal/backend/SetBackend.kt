@@ -20,7 +20,7 @@ class SetBackend<A : AdatClass>(
     init {
         if (initialValue != null && initialValue.isNotEmpty()) {
             additions.addAll(initialValue.keys)
-            context.receive(LamportTimestamp(context.handle.peerId, initialValue.keys.maxOf { it.timestamp }))
+            context.receive(LamportTimestamp(context.handle.peerId, initialValue.values.maxOf { it.lastUpdate.timestamp }))
         }
     }
 
