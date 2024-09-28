@@ -41,7 +41,7 @@ import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.utility.format
 
 @Adat
-class ThermostatFilter(
+data class ThermostatFilter(
     val status: ThermostatStatus,
     val text: String
 ) {
@@ -61,7 +61,7 @@ fun thermostats() {
     grid {
         maxSize .. rowTemplate(38.dp, 1.fr) .. gap(16.dp)
 
-        quickFilter(filter.status, ThermostatStatus.entries, { label }) { filter.status.update { it } }
+        quickFilter(filter.status, ThermostatStatus.entries, { label }) { filter.update(filter.copy(status = it)) }
 
         if (filtered != null) {
             column {

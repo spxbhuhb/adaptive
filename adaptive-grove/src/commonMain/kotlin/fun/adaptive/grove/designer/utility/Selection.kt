@@ -1,8 +1,7 @@
 package `fun`.adaptive.grove.designer.utility
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.store.replaceWith
+import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.ui.api.frame
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
@@ -86,7 +85,7 @@ class Selection(
     }
 
     fun nextRevision() {
-        this.replaceWith(Selection(items, revision + 1))
+        this.update(Selection(items, revision + 1))
     }
 
     fun place(target: Selection) {

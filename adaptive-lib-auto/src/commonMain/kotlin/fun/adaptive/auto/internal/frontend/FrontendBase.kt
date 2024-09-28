@@ -5,7 +5,7 @@ import `fun`.adaptive.adat.store.AdatStore
 import `fun`.adaptive.auto.internal.backend.BackendBase
 import `fun`.adaptive.auto.internal.backend.BackendContext
 
-abstract class FrontendBase : AdatStore() {
+abstract class FrontendBase : AdatStore<AdatClass>() {
 
     abstract val backend: BackendBase
 
@@ -20,5 +20,4 @@ abstract class FrontendBase : AdatStore() {
 
     }
 
-    abstract fun update(original: AdatClass, new: AdatClass)
 }

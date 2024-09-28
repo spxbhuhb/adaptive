@@ -1,6 +1,7 @@
 package `fun`.adaptive.cookbook.components
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.adat.api.copy
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.cookbook.shared.colors
@@ -31,7 +32,7 @@ import `fun`.adaptive.ui.instruction.sp
 fun quickFilterShort() {
     var filters = copyStore { Filter(Options.First) }
 
-    quickFilter(filters.option, Options.entries, { label }, onSelect = { filters.option.update { it } })
+    quickFilter(filters.option, Options.entries, { label }, onSelect = { filters.update(filters.copy(option = it)) })
 }
 
 @Adaptive
@@ -60,7 +61,7 @@ private fun <T> quickFilterItem(entry: T, selected: Boolean, labelFun: T.() -> S
 }
 
 @Adat
-class Filter(
+data class Filter(
     val option: Options
 )
 

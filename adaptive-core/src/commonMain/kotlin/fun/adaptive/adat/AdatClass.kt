@@ -4,6 +4,7 @@
 
 package `fun`.adaptive.adat
 
+import `fun`.adaptive.adat.api.storeOrNull
 import `fun`.adaptive.foundation.binding.AdaptivePropertyProvider
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.unsupported
@@ -69,7 +70,7 @@ interface AdatClass : AdaptivePropertyProvider {
     }
 
     fun setValue(name: String, value: Any?) {
-        val store = adatContext?.store
+        val store = storeOrNull<AdatClass>()
         if (store == null) {
             genSetValue(adatIndexOf(name), value)
         } else {
@@ -78,7 +79,7 @@ interface AdatClass : AdaptivePropertyProvider {
     }
 
     fun setValue(index: Int, value: Any?) {
-        val store = adatContext?.store
+        val store = storeOrNull<AdatClass>()
         if (store == null) {
             genSetValue(index, value)
         } else {

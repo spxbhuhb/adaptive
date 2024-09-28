@@ -23,60 +23,62 @@ class UpdateVisitor(
     override val pluginContext: AdatPluginContext,
 ) : IrElementTransformerVoidWithContext(), AdatIrBuilder {
 
-    override fun visitCall(expression: IrCall): IrExpression {
-        if (expression.symbol != pluginContext.updateShorthand) return super.visitCall(expression)
+    //  See comments in AdatGenerationExtension
 
-        val (getValue, path) = flattenPropertyPath(expression)
-
-        return irCall(
-            pluginContext.updateComplete,
-            dispatchReceiver = null,
-            getValue,
-            irArrayOf(path.map { irConst(it) }),
-            expression.getValueArgument(0)!! // the lambda to generate the value, as we are in the same scope, it is fine to use it directly
-        )
-    }
-
-    /**
-     * Flatten a get chain for properties. For example: `a.b.c.update {  }`.
-     * These should be like this in IR:
-     *
-     * ```text
-     * irCall                -- update
-     *   irCall              -- property access 1
-     *     ...
-     *       irCall          -- property access N
-     *         irGetValue    -- the starting variable access
-     * ```
-     */
-    fun flattenPropertyPath(expression: IrExpression): Pair<IrExpression, List<String>> {
-        check(expression is IrCall)
-
-        var current: IrStatement? = requireNotNull(expression.extensionReceiver)
-
-        val path = mutableListOf<String>()
-
-        while (current != null) {
-            when (current) {
-
-                is IrGetValue -> {
-                    check(path.isNotEmpty())
-                    return current to path
-                }
-
-                is IrCall -> {
-                    val symbol = current.symbol.owner.correspondingPropertySymbol
-                    checkNotNull(symbol) { "not a property access (1): ${expression.dump()}" }
-                    path += symbol.owner.name.identifier
-                    current = current.dispatchReceiver
-                }
-
-                else -> {
-                    throw IllegalStateException("unknown access: ${expression.dump()}")
-                }
-            }
-        }
-
-        throw IllegalStateException("invalid property access chain: ${expression.dumpKotlinLike()}")
-    }
+//    override fun visitCall(expression: IrCall): IrExpression {
+//        if (expression.symbol != pluginContext.updateShorthand) return super.visitCall(expression)
+//
+//        val (getValue, path) = flattenPropertyPath(expression)
+//
+//        return irCall(
+//            pluginContext.updateComplete,
+//            dispatchReceiver = null,
+//            getValue,
+//            irArrayOf(path.map { irConst(it) }),
+//            expression.getValueArgument(0)!! // the lambda to generate the value, as we are in the same scope, it is fine to use it directly
+//        )
+//    }
+//
+//    /**
+//     * Flatten a get chain for properties. For example: `a.b.c.update {  }`.
+//     * These should be like this in IR:
+//     *
+//     * ```text
+//     * irCall                -- update
+//     *   irCall              -- property access 1
+//     *     ...
+//     *       irCall          -- property access N
+//     *         irGetValue    -- the starting variable access
+//     * ```
+//     */
+//    fun flattenPropertyPath(expression: IrExpression): Pair<IrExpression, List<String>> {
+//        check(expression is IrCall)
+//
+//        var current: IrStatement? = requireNotNull(expression.extensionReceiver)
+//
+//        val path = mutableListOf<String>()
+//
+//        while (current != null) {
+//            when (current) {
+//
+//                is IrGetValue -> {
+//                    check(path.isNotEmpty())
+//                    return current to path
+//                }
+//
+//                is IrCall -> {
+//                    val symbol = current.symbol.owner.correspondingPropertySymbol
+//                    checkNotNull(symbol) { "not a property access (1): ${expression.dump()}" }
+//                    path += symbol.owner.name.identifier
+//                    current = current.dispatchReceiver
+//                }
+//
+//                else -> {
+//                    throw IllegalStateException("unknown access: ${expression.dump()}")
+//                }
+//            }
+//        }
+//
+//        throw IllegalStateException("invalid property access chain: ${expression.dumpKotlinLike()}")
+//    }
 }

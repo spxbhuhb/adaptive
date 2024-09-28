@@ -87,8 +87,9 @@ class AdatPluginContext(
 
     val propertiesFun = CallableIds.properties.functions().first()
 
-    val updates = CallableIds.updateFun.functions()
-    val updateShorthand = updates.first { it.owner.valueParameters.size == 1 }
-    val updateComplete = updates.first { it.owner.valueParameters.size == 3 }
+//  See comments in AdatGenerationExtension
+//    val updates = CallableIds.updateFun.functions()
+//    val updateShorthand = updates.first { it.owner.valueParameters.size == 1 }
+//    val updateComplete = updates.first { it.owner.valueParameters.size == 3 }
 
 }

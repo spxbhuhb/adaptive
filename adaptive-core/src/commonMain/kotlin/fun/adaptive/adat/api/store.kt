@@ -1,28 +1,19 @@
 package `fun`.adaptive.adat.api
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.AdatContext
-import `fun`.adaptive.utility.PluginReference
-import `fun`.adaptive.utility.pluginGenerated
+import `fun`.adaptive.adat.store.AdatStore
 
-/**
- * Update a field of an immutable Adat instance. This function is meant
- * for use cases where the adat class has a store ([AdatContext.store])
- * and the update is handled by the store.
- */
-@PluginReference
-fun <T> T.update(value: () -> T) {
-    pluginGenerated(value)
+fun <A : AdatClass> A.store(): AdatStore<A> {
+    val store = checkNotNull(adatContext?.store) { "no store for $this" }
+    @Suppress("UNCHECKED_CAST")
+    return store as AdatStore<A>
 }
 
-/**
- * Update a field of an immutable Adat instance. This function is meant
- * for use cases where the adat class has a store ([AdatContext.store])
- * and the update is handled by the store.
- */
-@PluginReference
-fun <T> update(instance: AdatClass, path: Array<String>, value: () -> T) {
-    val store = requireNotNull(instance.adatContext?.store) { "there is no store for the update" }
-    store.update(instance, path, value())
+fun <A : AdatClass> A.storeOrNull(): AdatStore<A>? {
+    @Suppress("UNCHECKED_CAST")
+    return adatContext?.store as AdatStore<A>
 }
 
+fun <A : AdatClass> A.update(newValue: A) {
+    store().update(this, newValue)
+}

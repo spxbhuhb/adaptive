@@ -60,7 +60,7 @@ open class AdatClassFrontend<A : AdatClass>(
         backend.update(new.toArray())
     }
 
-    fun update(new: AdatClass) {
+    override fun update(new: AdatClass) {
         backend.update(new.toArray())
     }
 

@@ -11,7 +11,7 @@ class AdatContext<IT>(
     val id: Comparable<IT>?,
     val parent: AdatClass?,
     val property: AdatPropertyMetadata?,
-    val store: AdatStore?,
+    val store: AdatStore<*>?,
     var validationResult: InstanceValidationResult?
 ) {
 

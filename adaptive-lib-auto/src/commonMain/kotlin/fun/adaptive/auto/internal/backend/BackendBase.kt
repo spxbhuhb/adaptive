@@ -140,7 +140,7 @@ abstract class BackendBase(
 
     fun wireFormatFor(name: String?) =
         if (name == null) {
-            requireNotNull(context.defaultWireFormat)
+            requireNotNull(context.defaultWireFormat) { "missing wireformat for ${context.handle}"}
         } else {
             (WireFormatRegistry[name] as AdatCompanion<*>).adatWireFormat
         }

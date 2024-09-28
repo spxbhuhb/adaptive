@@ -1,7 +1,7 @@
 package `fun`.adaptive.grove.designer
 
+import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.adat.store.copyStore
-import `fun`.adaptive.adat.store.replaceWith
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.grove.designer.instruction.instructions
@@ -54,8 +54,8 @@ fun groveMain() {
             // FIXME convert screen x and y to dp
             onPrimaryDown { event ->
                 lastPosition = event.position
-                selection.replaceWith(selectionOf(event))
-                target.replaceWith(emptySelection())
+                selection.update(selectionOf(event))
+                target.update(emptySelection())
             }
 
             onMove { event ->
@@ -63,13 +63,13 @@ fun groveMain() {
                 val newPosition = event.position
                 selection.move(lastPosition !!, newPosition)
                 lastPosition = newPosition
-                target.replaceWith(selectionOf(event))
+                target.update(selectionOf(event))
             }
 
             onPrimaryUp {
                 lastPosition = null
                 selection.place(target)
-                target.replaceWith(emptySelection())
+                target.update(emptySelection())
             }
 
             box {

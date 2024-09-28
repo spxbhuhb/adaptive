@@ -88,12 +88,11 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
     }
 
     suspend fun connect(
-        transport: ServiceCallTransport = requireNotNull(worker?.adapter?.transport),
+        transport: ServiceCallTransport = requireNotNull(worker?.adapter?.transport) { "missing worker (cannot get transport)" },
         waitForSync: Duration? = null,
         connectInfoFun: suspend () -> AutoConnectionInfo<VT>
     ): OriginBase<BE, FE, VT, IT> {
         val scope = backend.context.scope
-        check(scope != null) { "connecting is not possible when there is no worker passed during creation" }
 
         val autoService = getService<AutoApi>(transport)
         val connectInfo = connectInfoFun()

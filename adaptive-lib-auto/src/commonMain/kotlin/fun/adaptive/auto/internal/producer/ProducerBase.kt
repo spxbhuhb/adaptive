@@ -31,7 +31,7 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatCl
     val connect: suspend () -> AutoConnectionInfo<VT>,
     val peer: OriginBase<*, *, VT, IT>? = null,
     val trace: Boolean
-) : AdatStore(), AdaptiveProducer<VT> {
+) : AdatStore<IT>(), AdaptiveProducer<VT> {
 
     override var latestValue: VT? = null
 

@@ -41,28 +41,33 @@ class CopyStore<A : AdatClass>(
     override val binding: AdaptiveStateVariableBinding<A>,
     initialValue: A,
     val onChange: ((newValue: A) -> Unit)?
-) : AdatStore(), AdaptiveProducer<A> {
+) : AdatStore<A>(), AdaptiveProducer<A> {
 
     val adatContext = AdatContext<Any>(null, null, null, store = this, null)
 
     override var latestValue: A? = makeCopy(initialValue, null, false)
 
-    fun replaceValue(newValue: A) {
+    @Deprecated("use update instead")
+    fun setProperty(path: List<String>, value: Any?) {
+        update(latestValue !!, path.toTypedArray(), value)
+    }
+
+    override fun update(original: A, newValue: A) {
         makeCopy(newValue, null, true)
         setDirty()
     }
 
-    @Deprecated("use update instead")
-    fun setProperty(path: List<String>, value: Any?) {
-        update(latestValue!!, path.toTypedArray(), value)
+    override fun update(newValue: A) {
+        makeCopy(newValue, null, true)
+        setDirty()
     }
 
-    override fun update(instance: AdatClass, path: Array<String>, value: Any?) {
-        val current = requireNotNull(latestValue)
+    override fun update(instance: A, path: Array<String>, value: Any?) {
+        val current = requireNotNull(latestValue) { "missing latest value" }
         makeCopy(current, AdatChange(path.toList(), value), patch = true)
     }
 
-    fun makeCopy(value: A, change: AdatChange?, patch : Boolean) =
+    fun makeCopy(value: A, change: AdatChange?, patch: Boolean) =
         value.deepCopy(change).also {
             it.applyContext(adatContext)
             it.validateForContext()
@@ -85,12 +90,4 @@ class CopyStore<A : AdatClass>(
         return "CopyStore($binding)"
     }
 
-}
-
-fun <A : AdatClass> A.replaceWith(newValue: A) {
-    val store = requireNotNull(adatContext?.store) { "cannot replace the adat class without a store: ${getMetadata().name}" }
-    require(store is CopyStore<*>) { "store is not a copy store" }
-
-    @Suppress("UNCHECKED_CAST") // replaceWith enforces the same type
-    (store as CopyStore<A>).replaceValue(newValue)
 }
