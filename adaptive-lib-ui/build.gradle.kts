@@ -62,6 +62,7 @@ kotlin {
             implementation(libs.adaptive.core)
             implementation(libs.adaptive.ui)
             implementation(libs.adaptive.lib.graphics)
+            implementation(libs.adaptive.lib.auto)
         }
     }
 }

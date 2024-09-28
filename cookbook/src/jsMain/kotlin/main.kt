@@ -12,14 +12,13 @@ import `fun`.adaptive.cookbook.iot.iotCommon
 import `fun`.adaptive.cookbook.iot.iotMain
 import `fun`.adaptive.cookbook.layout.desktop.layoutDesktopMain
 import `fun`.adaptive.cookbook.layout.mobile.layoutMobileMain
-import `fun`.adaptive.cookbook.nav.navMain
 import `fun`.adaptive.cookbook.shared.bodySmall
 import `fun`.adaptive.cookbook.shared.cornerRadius8
 import `fun`.adaptive.cookbook.shared.inputStyle
 import `fun`.adaptive.cookbook.shared.lightBackground
 import `fun`.adaptive.cookbook.shared.shadow
 import `fun`.adaptive.cookbook.shared.titleSmall
-import `fun`.adaptive.cookbook.ui.dialog.dialogMain
+import `fun`.adaptive.cookbook.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -28,7 +27,6 @@ import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
-import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.box
@@ -51,7 +49,6 @@ import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.form.FormFragmentFactory
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.platform.withJsResources
-import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -89,9 +86,9 @@ fun main() {
 //                  hoverMain()
 //              }
 
-//            sidebar()
+              sideBarRecipe()
 
-            navMain()
+//            navMain()
 
 //            projectWizardMain()
 

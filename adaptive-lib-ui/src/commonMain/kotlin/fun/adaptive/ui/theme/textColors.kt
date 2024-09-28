@@ -8,4 +8,5 @@ class ThemeTextColors {
     val onSurface = textColor(colors.onSurface)
     val onSurfaceVariant = textColor(colors.onSurfaceVariant)
     val onPrimary = textColor(colors.onPrimary)
+    val onPrimaryHover = textColor(colors.onPrimaryHover)
 }
