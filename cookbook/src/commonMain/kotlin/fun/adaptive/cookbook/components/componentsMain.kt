@@ -19,7 +19,6 @@ fun componentsMain() {
         flowBox {
             maxWidth .. gap { 16.dp }
 
-            sidebar()
             column {
                 gap(8.dp)
                 quickFilterShort()

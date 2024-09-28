@@ -17,7 +17,6 @@ fun iotMain() {
         maxSize .. colTemplate(314.dp, 1.fr) .. gap(16.dp)
         backgroundColor(0xFAFAFA)
 
-        sidebar()
         thermostats()
     }
 }

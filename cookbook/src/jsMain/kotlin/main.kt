@@ -6,7 +6,6 @@ import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.cookbook.auth.authMain
 import `fun`.adaptive.cookbook.components.componentsMain
-import `fun`.adaptive.cookbook.components.sidebar
 import `fun`.adaptive.cookbook.intro.introMain
 import `fun`.adaptive.cookbook.iot.iotCommon
 import `fun`.adaptive.cookbook.iot.iotMain
