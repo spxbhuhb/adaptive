@@ -8,6 +8,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.instruction.layout.Alignment
+import `fun`.adaptive.ui.render.model.LayoutRenderData
 import kotlin.math.max
 
 abstract class AbstractColumn<RT, CRT : RT>(
@@ -54,5 +55,39 @@ abstract class AbstractColumn<RT, CRT : RT>(
         placeLayout(offset, innerLeft + this@AbstractColumn.renderData.surroundingStart)
 
         return renderData.finalHeight
+    }
+
+    override fun layoutChange(fragment: AbstractAuiFragment<*>) {
+        val previous = fragment.previousRenderData.layout ?: LayoutRenderData(uiAdapter)
+        val current = fragment.renderData.layout ?: LayoutRenderData(uiAdapter)
+
+        val currentInstructedWidth = current.instructedWidth
+
+        if (previous.instructedWidth != currentInstructedWidth) {
+
+            if (currentInstructedWidth != null && currentInstructedWidth > renderData.finalWidth) {
+                // The instructed width of the contained fragment changed, and it does not fit to the
+                // current height of the column. We have to resize the column to fit the changed fragment.
+
+                // TODO if the row has it's own instructed height it might limit the height of the fragment
+                // in that case the row height won't change and we don't have re-layout the layout that contains the row
+                super.layoutChange(this)
+                return
+            }
+
+        }
+
+        val currentInstructedHeight = current.instructedHeight
+
+        if (previous.instructedHeight != currentInstructedHeight) {
+            // TODO inefficient width change re-layout
+            super.layoutChange(this)
+            return
+        }
+
+        // This part should be reached only if the container can handle the layout change by itself.
+        // This means that the final dimensions of the component won't change, no matter what.
+
+        computeLayout(renderData.finalWidth, renderData.finalHeight)
     }
 }

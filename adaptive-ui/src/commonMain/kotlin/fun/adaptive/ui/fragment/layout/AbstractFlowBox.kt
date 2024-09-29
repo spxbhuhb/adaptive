@@ -99,8 +99,4 @@ abstract class AbstractFlowBox<RT, CRT : RT>(
         placeStructural()
     }
 
-    override fun layoutChange(fragment: AbstractAuiFragment<*>) {
-        // FIXME layout change for flow box
-    }
-
 }

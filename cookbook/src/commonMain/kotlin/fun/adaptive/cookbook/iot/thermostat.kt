@@ -4,7 +4,6 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.auto.api.autoList
-import `fun`.adaptive.cookbook.components.quickFilter
 import `fun`.adaptive.cookbook.iot.api.ThermostatApi
 import `fun`.adaptive.cookbook.iot.model.Thermostat
 import `fun`.adaptive.cookbook.iot.model.ThermostatStatus
@@ -35,6 +34,7 @@ import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.textColor
 import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.api.width
+import `fun`.adaptive.ui.filter.quickFilter
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
