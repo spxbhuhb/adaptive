@@ -2,6 +2,7 @@ package `fun`.adaptive.adat.store
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.api.store
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
@@ -64,8 +65,7 @@ class CopyStoreTest {
         assertEquals(T(12), value)
         assertIs<T>(value)
 
-        val store = value.adatContext?.store as? CopyStore<*>
-        assertNotNull(store)
+        val store = value.store()
 
         assertEquals(12, t1.p0)
         store.update(value, arrayOf("someInt"), 23)
@@ -94,7 +94,7 @@ class CopyStoreTest {
 
         assertIs<M>(value)
 
-        val store = value.adatContext?.store as? CopyStore<*>
+        val store = value.store()
         assertNotNull(store)
 
         assertEquals(23, t1.p0)
@@ -121,7 +121,7 @@ class CopyStoreTest {
 
         assertIs<M>(value)
 
-        val store = value.adatContext?.store as? CopyStore<*>
+        val store = value.store()
         assertNotNull(store)
 
         assertEquals(23, t1.p0)
@@ -146,7 +146,7 @@ class CopyStoreTest {
 
         assertIs<T>(value)
 
-        val store = value.adatContext?.store as? CopyStore<*>
+        val store = value.store()
         assertNotNull(store)
 
         store.update(value, arrayOf("someInt"), 23)

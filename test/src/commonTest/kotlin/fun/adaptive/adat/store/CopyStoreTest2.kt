@@ -2,6 +2,7 @@ package `fun`.adaptive.adat.store
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.api.store
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
@@ -68,7 +69,7 @@ class CopyStoreTest2 {
 
         assertIs<SomeAdat>(value)
 
-        val store = value.adatContext?.store as? CopyStore<*>
+        val store = value.store()
         assertNotNull(store)
 
         store.update(value, arrayOf("soa", "yaa", "i2"), 34)

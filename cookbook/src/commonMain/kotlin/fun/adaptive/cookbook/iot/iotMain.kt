@@ -1,6 +1,5 @@
 package `fun`.adaptive.cookbook.iot
 
-import `fun`.adaptive.cookbook.components.sidebar
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.backgroundColor

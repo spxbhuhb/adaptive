@@ -1,5 +1,6 @@
 package `fun`.adaptive.auto.integration
 
+import `fun`.adaptive.adat.api.store
 import `fun`.adaptive.auto.api.autoInstance
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.backend.TestData
@@ -50,7 +51,7 @@ class FileInstanceTest {
             // ---- Hackish update ----
 
             val instance = testAdapter.rootFragment.state[0] as TestData
-            instance.adatContext !!.store !!.update(instance, arrayOf("i"), 23)
+            instance.store().update(instance, arrayOf("i"), 23)
 
             // we can delete the file safely here
             SystemFileSystem.delete(frontend.path)

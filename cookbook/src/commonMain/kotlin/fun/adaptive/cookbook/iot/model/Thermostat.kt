@@ -4,7 +4,7 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.utility.UUID
 
 @Adat
-class Thermostat(
+data class Thermostat(
     val id: UUID<Thermostat>,
     val localId: String,
     val floor: String,

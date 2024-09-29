@@ -1,5 +1,6 @@
 package `fun`.adaptive.cookbook.iot
 
+import `fun`.adaptive.adat.api.copy
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.auto.api.autoList
 import `fun`.adaptive.auto.backend.AutoWorker
@@ -25,7 +26,7 @@ class ThermostatWorker : WorkerImpl<ThermostatWorker> {
 
     val lock = getLock()
 
-    lateinit var origin : OriginBase<SetBackend<Thermostat>, AdatClassListFrontend<Thermostat>, List<Thermostat>, Thermostat>
+    lateinit var origin: OriginBase<SetBackend<Thermostat>, AdatClassListFrontend<Thermostat>, List<Thermostat>, Thermostat>
     lateinit var thermostats: AdatClassListFrontend<Thermostat>
 
     override suspend fun run() {
@@ -37,9 +38,9 @@ class ThermostatWorker : WorkerImpl<ThermostatWorker> {
             val thermostat = thermostats[index]
 
             when (randoms[1] % 3) {
-                0 -> thermostat.actual.update { thermostat.actual + 5 }
-                1 -> thermostat.actual.update { thermostat.actual - 5 }
-                2 -> thermostat.status.update { ThermostatStatus.entries[(thermostat.status.ordinal + 1) % 6] }
+                0 -> thermostat.update(thermostat.copy(actual = thermostat.actual + 5))
+                1 -> thermostat.update(thermostat.copy(actual = thermostat.actual - 5))
+                2 -> thermostat.update(thermostat.copy(status = ThermostatStatus.entries[(thermostat.status.ordinal + 1) % 6]))
             }
 
             delay(50)
