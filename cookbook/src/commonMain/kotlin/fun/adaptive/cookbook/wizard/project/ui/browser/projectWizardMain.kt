@@ -5,7 +5,7 @@ import `fun`.adaptive.adat.api.isTouched
 import `fun`.adaptive.adat.api.isValid
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.cookbook.shared.bodySmall
-import `fun`.adaptive.cookbook.shared.checkbox
+import `fun`.adaptive.ui.checkbox.api.checkbox
 import `fun`.adaptive.cookbook.shared.cornerRadius8
 import `fun`.adaptive.cookbook.shared.darkGray
 import `fun`.adaptive.cookbook.shared.inputErrorContainer

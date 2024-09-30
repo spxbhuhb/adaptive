@@ -7,7 +7,7 @@ package `fun`.adaptive.cookbook.auth.screens
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.cookbook.shared.black
 import `fun`.adaptive.cookbook.shared.button
-import `fun`.adaptive.cookbook.shared.checkbox
+import `fun`.adaptive.ui.checkbox.api.checkbox
 import `fun`.adaptive.cookbook.shared.darkGray
 import `fun`.adaptive.cookbook.shared.footerLink
 import `fun`.adaptive.cookbook.shared.mobileScreen

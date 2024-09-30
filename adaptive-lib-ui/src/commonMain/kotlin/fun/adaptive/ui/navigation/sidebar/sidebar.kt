@@ -6,6 +6,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.svg.api.svg
+import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.fontSize
 import `fun`.adaptive.ui.api.hover
@@ -19,31 +20,42 @@ import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.navigation.NavStateOrigin
 import `fun`.adaptive.ui.navigation.appNavState
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+
 
 @Adaptive
-fun sidebar(items : Collection<SideBarItem>, navStateOrigin : NavStateOrigin = appNavState) {
+fun sidebar(
+    items: Collection<SideBarItem>,
+    navStateOrigin: NavStateOrigin = appNavState,
+    theme: SideBarTheme = sideBarTheme,
+    vararg instructions: AdaptiveInstruction
+): AdaptiveFragment {
     val navState = autoInstance(navStateOrigin)
 
-    column {
+    column(*instructions, *theme.container) {
         for (item in items.sortedBy { it.index }) {
-            sideBarItem(item, navState)
+            sideBarItem(item, navState, theme)
         }
     }
+
+    return fragment()
 }
 
 @Adaptive
 private fun sideBarItem(
     item: SideBarItem,
-    navState: NavState?
-) : AdaptiveFragment {
+    navState: NavState?,
+    theme: SideBarTheme = sideBarTheme
+): AdaptiveFragment {
 
     val hover = hover()
-    val colors = sideBarTheme.itemColors(navState in item.state, hover)
+    val colors = theme.itemColors(navState in item.state, hover)
 
-    row(*sideBarTheme.item, *colors) {
+    row(*theme.item, *colors) {
         onClick { navState?.goto(item.state) }
 
-        svg(item.icon) .. sideBarTheme.icon .. colors
+        box { theme.prefix(navState in item.state) }
+        svg(item.icon) .. theme.icon .. colors
         text(item.title) .. fontSize(16.sp) .. lineHeight(22.dp) .. colors .. noSelect
     }
 

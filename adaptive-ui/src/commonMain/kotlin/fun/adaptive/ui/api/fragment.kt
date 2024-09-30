@@ -10,7 +10,7 @@ import `fun`.adaptive.resource.DrawableResource
 import `fun`.adaptive.ui.aui
 
 @AdaptiveExpect(aui)
-fun canvas(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
+fun canvas(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit) {
     manualImplementation(instructions, content)
 }
 
@@ -21,7 +21,7 @@ fun image(res: DrawableResource, vararg instructions: AdaptiveInstruction): Adap
 
 @AdaptiveExpect(aui)
 fun input(
-    vararg instructions : AdaptiveInstruction,
+    vararg instructions: AdaptiveInstruction,
     binding: AdaptiveStateVariableBinding<String>? = null,
     selector: () -> String
 ): AdaptiveFragment {
@@ -29,32 +29,32 @@ fun input(
 }
 
 @AdaptiveExpect(aui)
-fun box(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
+fun box(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
     manualImplementation(instructions, content)
 }
 
 @AdaptiveExpect(aui)
-fun flowBox(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit) {
+fun flowBox(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
     manualImplementation(instructions, content)
 }
 
 @AdaptiveExpect(aui)
-fun rootBox(vararg instructions : AdaptiveInstruction, @Adaptive content: () -> Unit) {
+fun rootBox(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
     manualImplementation(instructions, content)
 }
 
 @AdaptiveExpect(aui)
-fun row(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) : AdaptiveFragment {
+fun row(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
     manualImplementation(instructions, content)
 }
 
 @AdaptiveExpect(aui)
-fun column(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
+fun column(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
     manualImplementation(instructions, content)
 }
 
 @AdaptiveExpect(aui)
-fun grid(vararg instructions : AdaptiveInstruction, @Adaptive content : () -> Unit) {
+fun grid(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
     manualImplementation(instructions, content)
 }
 

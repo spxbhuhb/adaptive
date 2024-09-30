@@ -22,6 +22,9 @@ For support, please join the `#fun-adaptive` channel on [kotlinlang](https://sla
 
 > [!IMPORTANT]
 > 
+> Currently only IntelliJ 2024.2.1 and Kotlin 2.0.0 is supported. I'll update everything eventually, but for now
+> I focus on the functionality.
+> 
 > Adaptive uses the K2 compiler heavily. Starting from IntelliJ IDEA 2024.2 K2 support is available for multiplatform
 > projects. To have it, you have to enable K2 and the non-bundled plugins.
 

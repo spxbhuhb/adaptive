@@ -12,10 +12,11 @@ fun NavStateOrigin.open(navState: NavState) {
 }
 
 @Adat
-class NavState(
+open class NavState(
     val segments: List<String> = emptyList(),
     val parameters: Map<String, String> = emptyMap(),
-    val tag : String = ""
+    val tag : String = "",
+    val custom : String = ""
 ) {
 
     constructor(path: String) : this(segments = path.split("/").mapNotNull { it.ifEmpty { null } })

@@ -44,19 +44,20 @@ private fun content() {
         }
     }
 }
+
 @Adaptive
 private fun innerContent(selection : String) {
     text("selected: $selection (click on this text to open the next)") .. onClick { next() } .. noSelect
 }
 
-fun next() {
+private fun next() {
     val current = navState.frontend.value
     val nextIndex = items.indexOfFirst { it.state == current } + 1
     val nextItem = if (nextIndex < items.size) items[nextIndex] else items[0]
     navState.open(nextItem.state)
 }
 
-private val navState = autoInstance(NavState(), trace = true)
+private val navState = autoInstance(NavState())
 
 private object Routes {
     val zones = NavState("zones")
