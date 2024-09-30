@@ -136,8 +136,8 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
         val peer = worker.backends[connectInfo.originHandle.globalId]
         checkNotNull(peer) { "direct backend for ${connectInfo.originHandle.globalId} is missing" }
 
-        backend.addPeer(DirectConnector(peer), connectInfo.originTime)
-        peer.addPeer(DirectConnector(backend), backend.context.time)
+        backend.addPeer(DirectConnector(backend, peer), connectInfo.originTime)
+        peer.addPeer(DirectConnector(peer, backend), backend.context.time)
 
         if (waitForSync != null) waitForSync(connectInfo, waitForSync)
 

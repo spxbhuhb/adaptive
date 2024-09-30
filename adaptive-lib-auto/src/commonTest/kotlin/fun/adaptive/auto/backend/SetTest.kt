@@ -45,8 +45,8 @@ class SetTest {
             val f2 = AdatClassListFrontend<TestData>(b2)
             b2.frontend = f2
 
-            b1.addPeer(DirectConnector(b2), c2.time)
-            b2.addPeer(DirectConnector(b1), c1.time)
+            b1.addPeer(DirectConnector(b1, b2), c2.time)
+            b2.addPeer(DirectConnector(b2, b1), c1.time)
 
             waitForSync(b1, b2)
 
@@ -95,8 +95,8 @@ class SetTest {
 
             f1.add(testData)
 
-            b1.addPeer(DirectConnector(b2), c2.time)
-            b2.addPeer(DirectConnector(b1), c1.time)
+            b1.addPeer(DirectConnector(b1, b2), c2.time)
+            b2.addPeer(DirectConnector(b2, b1), c1.time)
 
             f2.assertEquals(f1) { f2.values.isNotEmpty() }
         }

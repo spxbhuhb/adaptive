@@ -94,8 +94,8 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatCl
 
     fun connectDirect() {
         checkNotNull(peer)
-        backend.addPeer(DirectConnector(peer.backend), connectInfo.originTime)
-        peer.backend.addPeer(DirectConnector(backend), backend.context.time)
+        backend.addPeer(DirectConnector(backend, peer.backend), connectInfo.originTime)
+        peer.backend.addPeer(DirectConnector(peer.backend, backend), backend.context.time)
     }
 
     abstract fun build()

@@ -4,6 +4,7 @@ import `fun`.adaptive.auto.internal.backend.BackendBase
 import `fun`.adaptive.auto.model.operation.AutoOperation
 
 class DirectConnector(
+    val connecting : BackendBase,
     val peer: BackendBase
 ) : AutoConnector(peer.context.handle) {
 
@@ -12,7 +13,7 @@ class DirectConnector(
     }
 
     override suspend fun disconnect() {
-        // nothing to do for direct connector
+        peer.removePeer(connecting.context.handle)
     }
 
     override fun onDisconnect() {

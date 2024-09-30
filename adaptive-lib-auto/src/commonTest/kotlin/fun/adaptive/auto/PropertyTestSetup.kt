@@ -36,7 +36,7 @@ class PropertyTestSetup(
     val b2 = PropertyBackend(c2, itemId, null, arrayOfNulls(initialData.size), MutableList(initialData.size) { LamportTimestamp.CONNECTING })
 
     fun connect() {
-        b1.addPeer(DirectConnector(b2), c2.time)
-        b2.addPeer(DirectConnector(b1), c1.time)
+        b1.addPeer(DirectConnector(b1, b2), c2.time)
+        b2.addPeer(DirectConnector(b2, b1), c1.time)
     }
 }
