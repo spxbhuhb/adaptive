@@ -129,6 +129,7 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val DETACH_HANDLER = "DetachHandler".classId { INSTRUCTION }
 
     val PRODUCER = "Producer".classId { PRODUCER_PACKAGE }
+    val PROPERTY_SELECTOR = "PropertySelector".classId { BINDING }
 
     val ADAT_CLASS = "AdatClass".classId { ADAT_PACKAGE }
 }

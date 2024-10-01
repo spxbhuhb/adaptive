@@ -4,6 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveExpect
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.manualImplementation
 import `fun`.adaptive.resource.DrawableResource
@@ -23,9 +24,20 @@ fun image(res: DrawableResource, vararg instructions: AdaptiveInstruction): Adap
 fun input(
     vararg instructions: AdaptiveInstruction,
     binding: AdaptiveStateVariableBinding<String>? = null,
+    @PropertySelector
     selector: () -> String
 ): AdaptiveFragment {
     manualImplementation(instructions, binding, selector)
+}
+
+@AdaptiveExpect(aui)
+fun <T> boundInput(
+    vararg instructions: AdaptiveInstruction,
+    binding: AdaptiveStateVariableBinding<T>,
+    toString: (T) -> String,
+    fromString: (String) -> T?
+): AdaptiveFragment {
+    manualImplementation(instructions, binding)
 }
 
 @AdaptiveExpect(aui)

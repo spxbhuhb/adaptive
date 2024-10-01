@@ -6,6 +6,7 @@ import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.cookbook.iot.iotCommon
 import `fun`.adaptive.cookbook.shared.inputStyle
+import `fun`.adaptive.cookbook.ui.boundInput.boundInputRecipe
 import `fun`.adaptive.cookbook.ui.button.buttonRecipe
 import `fun`.adaptive.cookbook.ui.dialog.dialogRecipe
 import `fun`.adaptive.cookbook.ui.filter.quickFilterRecipe
@@ -55,7 +56,9 @@ fun main() {
 //                  hoverMain()
 //              }
 
-            dialogRecipe()
+            boundInputRecipe()
+
+            //            dialogRecipe()
 
 //            buttonRecipe()
 //            gridAlignRecipe()

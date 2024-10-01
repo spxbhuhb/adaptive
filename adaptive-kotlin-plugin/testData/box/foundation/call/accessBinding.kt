@@ -5,6 +5,7 @@ package `fun`.adaptive.kotlin.base.success
 
 import `fun`.adaptive.foundation.*
 import `fun`.adaptive.foundation.binding.*
+import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.testing.*
 
 @Adaptive
@@ -16,7 +17,9 @@ fun accessTest() {
 @Adaptive
 fun <T> accessor(
     binding: AdaptiveStateVariableBinding<T>? = null,
-    @Suppress("UNUSED_PARAMETER") selector: () -> T
+    @Suppress("UNUSED_PARAMETER")
+    @PropertySelector
+    selector: () -> T
 ) {
     checkNotNull(binding)
     T1(binding.value as Int)

@@ -15,6 +15,7 @@ import `fun`.adaptive.cookbook.shared.titleSmall
 import `fun`.adaptive.cookbook.wizard.project.model.ProjectData
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.colTemplate
@@ -37,6 +38,7 @@ fun fieldNote(
     message: String? = null,
     // TODO add an annotation that performs a compiler check: selector should be an adat class
     binding: AdaptiveStateVariableBinding<String>? = null,
+    @PropertySelector
     selector: () -> String
 ) {
     checkNotNull(binding)

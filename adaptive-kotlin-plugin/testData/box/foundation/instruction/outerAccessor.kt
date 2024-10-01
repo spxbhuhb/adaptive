@@ -5,6 +5,7 @@ package `fun`.adaptive.kotlin.base.success
 
 import `fun`.adaptive.foundation.*
 import `fun`.adaptive.foundation.binding.*
+import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.testing.*
 import `fun`.adaptive.foundation.instruction.*
 
@@ -18,7 +19,9 @@ fun accessTest() {
 fun <T> accessor(
     vararg instructions: AdaptiveInstruction,
     binding: AdaptiveStateVariableBinding<T>? = null,
-    @Suppress("UNUSED_PARAMETER") selector: () -> T
+    @Suppress("UNUSED_PARAMETER")
+    @PropertySelector
+    selector: () -> T
 ) : AdaptiveFragment {
     checkNotNull(binding)
     T1(binding.value as Int)

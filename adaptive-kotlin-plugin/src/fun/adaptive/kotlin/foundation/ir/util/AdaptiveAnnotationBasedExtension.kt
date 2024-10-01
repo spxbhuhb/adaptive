@@ -16,6 +16,7 @@ import org.jetbrains.kotlin.ir.types.getArrayElementType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.types.isArray
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
+import org.jetbrains.kotlin.ir.util.dump
 import org.jetbrains.kotlin.ir.util.hasAnnotation
 import org.jetbrains.kotlin.ir.util.isFunctionOrKFunction
 
@@ -56,12 +57,17 @@ interface AdaptiveAnnotationBasedExtension {
         get() = symbol.owner.name == Names.KOTLIN_INVOKE && dispatchReceiver?.let {
             // expect annotation on a parameter is meaningless, so we don't have to check it here
             it is IrGetValue && it.symbol.owner.hasAnnotation(pluginContext.adaptiveClass)
-        } ?: false
+        } == true
 
-    fun IrType.isAccessSelector(previousType: IrType?): Boolean {
-        if (previousType == null) return false
-        if (! isFunctionOrKFunction()) return false
-        return previousType.isSubtypeOfClass(pluginContext.adaptiveStateVariableBindingClass)
+    fun IrType.isAccessSelector(parameter: IrValueParameter?, previousType: IrType?): Boolean {
+        if (parameter == null) return false
+        if (! parameter.hasAnnotation(pluginContext.propertySelectorAnnotation)) return false
+
+        check(previousType != null) { "no variable binding before the selector: ${parameter.dump()}" }
+        check(isFunctionOrKFunction()) { "selector is not a function:  ${parameter.dump()}" }
+        check(previousType.isSubtypeOfClass(pluginContext.adaptiveStateVariableBindingClass)) { "no variable binding before the selector:  ${parameter.dump()}" }
+
+        return true
     }
 
 }

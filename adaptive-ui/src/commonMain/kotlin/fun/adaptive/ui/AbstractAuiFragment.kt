@@ -57,7 +57,7 @@ abstract class AbstractAuiFragment<RT>(
         return true
     }
 
-    open fun patchInstructions() {
+    open fun patchInstructions(addText: Boolean = false) {
         if (instructionIndex != - 1 && haveToPatch(dirtyMask, 1 shl instructionIndex)) {
             previousRenderData = renderData
             renderData = AuiRenderData(uiAdapter, previousRenderData, uiAdapter.themeFor(this), instructions)
@@ -65,6 +65,8 @@ abstract class AbstractAuiFragment<RT>(
             if (renderData.layout != previousRenderData.layout) {
                 renderData.layoutFragment?.layoutChange(this)
             }
+
+            if (addText && renderData.text == null) renderData.text = uiAdapter.defaultTextRenderData
 
             uiAdapter.applyRenderInstructions(this)
         }

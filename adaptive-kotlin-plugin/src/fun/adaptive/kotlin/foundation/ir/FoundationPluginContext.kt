@@ -33,6 +33,7 @@ class FoundationPluginContext(
 
     val adaptiveClass = ClassIds.ADAPTIVE.classSymbol()
     val producerAnnotation = ClassIds.PRODUCER.classSymbol()
+    val propertySelectorAnnotation = ClassIds.PROPERTY_SELECTOR.classSymbol()
 
     val armClasses = mutableListOf<ArmClass>()
     val irClasses = mutableMapOf<FqName, IrClass>()

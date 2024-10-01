@@ -1,10 +1,10 @@
 package `fun`.adaptive.adat.store
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.api.store
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.query.first
@@ -37,6 +37,7 @@ private class YetAnotherAdat(
 private fun t(
     vararg instructions: AdaptiveInstruction,
     binding: AdaptiveStateVariableBinding<Int>? = null,
+    @PropertySelector
     selector: () -> Int
 ) {
     T1(binding !!.value)

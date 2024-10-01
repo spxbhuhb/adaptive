@@ -17,6 +17,7 @@ object AuiFragmentFactory : FoundationFragmentFactory() {
         add("aui:grid") { p, i -> AuiGrid(p.adapter as AuiAdapter, p, i) }
         add("aui:image") { p, i -> AuiImage(p.adapter as AuiAdapter, p, i) }
         add("aui:input") { p, i -> AuiInput(p.adapter as AuiAdapter, p, i) }
+        add("aui:boundinput") { p, i -> AuiBoundInput(p.adapter as AuiAdapter, p, i) }
         add("aui:row") { p, i -> AuiRow(p.adapter as AuiAdapter, p, i) }
         add("aui:text") { p, i -> AuiText(p.adapter as AuiAdapter, p, i) }
         add("aui:flowtext") { p, i -> AuiFlowText(p.adapter as AuiAdapter, p, i) }

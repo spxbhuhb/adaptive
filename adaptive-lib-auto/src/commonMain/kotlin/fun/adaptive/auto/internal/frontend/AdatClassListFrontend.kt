@@ -53,6 +53,12 @@ open class AdatClassListFrontend<A : AdatClass>(
         backend.remove(itemId, true)
     }
 
+    fun remove(selector: (A) -> Boolean) {
+        for (item in values.filter(selector)) {
+            backend.remove(itemId(item), true)
+        }
+    }
+
     fun modify(itemId: ItemId, propertyName: String, propertyValue: Any?) {
         getItemFrontend(itemId).modify(propertyName, propertyValue)
     }

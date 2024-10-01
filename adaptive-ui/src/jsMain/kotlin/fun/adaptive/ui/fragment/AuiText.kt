@@ -29,7 +29,7 @@ open class AuiText(
 
     override fun genPatchInternal(): Boolean {
 
-        patchInstructions()
+        patchInstructions(true)
 
         if (haveToPatch(dirtyMask, 1)) {
             val content = this.content

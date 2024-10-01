@@ -57,7 +57,9 @@ class StateDefinitionTransform(
             // which state variable to access
             // TODO add FIR checker to make sure the selector and the binding type arguments are the same
 
-            if (valueParameter.type.isAccessSelector(armClass.stateVariables.lastOrNull()?.type)) return@forEach
+            if (valueParameter.type.isAccessSelector(valueParameter, armClass.stateVariables.lastOrNull()?.type)) {
+                return@forEach
+            }
 
             ArmExternalStateVariable(
                 armClass,

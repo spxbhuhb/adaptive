@@ -336,7 +336,7 @@ class IrFunction2ArmClass(
                 }
             }
 
-            parameterType.isAccessSelector(armCall.arguments.lastOrNull()?.type) -> {
+            parameterType.isAccessSelector(parameter, armCall.arguments.lastOrNull()?.type) -> {
                 // replaces the binding, which has to be the previous parameter
                 transformAccessSelector(armCall, expression)
                 // selector is not transformed into a state variable

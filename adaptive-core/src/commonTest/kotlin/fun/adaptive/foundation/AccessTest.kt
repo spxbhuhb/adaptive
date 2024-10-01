@@ -4,6 +4,7 @@
 package `fun`.adaptive.foundation
 
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.testing.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -18,7 +19,9 @@ fun accessTest() {
 @Adaptive
 fun <T> accessor(
     binding: AdaptiveStateVariableBinding<T>? = null,
-    @Suppress("unused") selector: () -> T
+    @Suppress("unused")
+    @PropertySelector
+    selector: () -> T
 ) {
     checkNotNull(binding)
     T1(binding.value as Int)

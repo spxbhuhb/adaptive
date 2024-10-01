@@ -7,6 +7,7 @@ package `fun`.adaptive.lib.sandbox.ui.mobile
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.lib.sandbox.model.SignUp
@@ -131,6 +132,7 @@ fun footerLink(normalText: String, linkText: String, href: String) {
 @Adaptive
 fun checkbox(
     binding: AdaptiveStateVariableBinding<Boolean>? = null,
+    @PropertySelector
     selector: () -> Boolean
 ) {
     checkNotNull(binding)
