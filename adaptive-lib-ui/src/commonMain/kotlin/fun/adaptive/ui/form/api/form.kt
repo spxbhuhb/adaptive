@@ -63,7 +63,7 @@ fun form(data: AdatClass, vararg instructions : AdaptiveInstruction) : AdaptiveF
 
                     DatetimeSignatures.INSTANT,
                     KotlinSignatures.UUID
-                        -> text(data.getValue(property.index).toString()) .. inputTheme.disabled .. width { 300.dp }
+                        -> text(data.getValue(property.index).toString()) .. inputTheme.disabled .. width { 350.dp }
 
                     DatetimeSignatures.LOCAL_DATE_TIME
                         -> textual(data, property) .. inputTheme.active

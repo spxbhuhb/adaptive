@@ -15,7 +15,7 @@ import `fun`.adaptive.ui.dialog.api.formDialog
 import `fun`.adaptive.ui.form.api.form
 
 @Adaptive
-fun dialogMain() {
+fun formDialogRecipe() {
     var modalOpen = false
     val data = copyStore { EditData("Something", "Something else", true) }
 
@@ -31,7 +31,7 @@ fun dialogMain() {
 }
 
 @Adat
-class EditData(
+private class EditData(
     val displayName: String,
     val group: String,
     val active: Boolean
