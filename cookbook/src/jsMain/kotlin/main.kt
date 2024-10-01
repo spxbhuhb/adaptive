@@ -7,6 +7,7 @@ import `fun`.adaptive.backend.backend
 import `fun`.adaptive.cookbook.iot.iotCommon
 import `fun`.adaptive.cookbook.shared.inputStyle
 import `fun`.adaptive.cookbook.ui.filter.quickFilterRecipe
+import `fun`.adaptive.cookbook.ui.grid.gridAlignRecipe
 import `fun`.adaptive.cookbook.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
@@ -52,7 +53,8 @@ fun main() {
 //                  hoverMain()
 //              }
 
-            sideBarRecipe()
+            gridAlignRecipe()
+//            sideBarRecipe()
 //            quickFilterRecipe()
 
 //            navMain()

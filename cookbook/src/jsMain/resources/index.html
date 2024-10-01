@@ -43,5 +43,11 @@
 </head>
 <body>
 </body>
-<script src="/cookbook.js"></script>
+<script>
+document.fonts.load('1em "Noto Sans"').then(function () {
+    const script = document.createElement('script');
+    script.src = 'cookbook.js';
+    document.body.appendChild(script);
+});
+</script>
 </html>

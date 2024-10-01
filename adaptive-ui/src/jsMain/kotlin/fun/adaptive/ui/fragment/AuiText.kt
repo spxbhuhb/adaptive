@@ -55,15 +55,15 @@ open class AuiText(
             return
         }
 
-        val text = renderData.text
-        measureContext.font = text?.toCssString(uiAdapter) ?: ""
+        val text = renderData.text ?: uiAdapter.defaultTextRenderData
+        measureContext.font = text.toCssString(uiAdapter)
 
         val metrics = measureContext.measureText(content)
 
         renderData.innerWidth = metrics.width
         renderData.innerHeight =
-            text?.lineHeight
-                ?: (text?.fontSize ?: uiAdapter.defaultTextRenderData.fontSize)?.value?.let { it * 1.5 }
+            text.lineHeight
+                ?: (text.fontSize ?: uiAdapter.defaultTextRenderData.fontSize)?.value?.let { it * 1.5 }
                     ?: (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)
     }
 

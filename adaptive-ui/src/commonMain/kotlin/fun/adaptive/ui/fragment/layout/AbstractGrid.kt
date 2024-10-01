@@ -63,6 +63,9 @@ abstract class AbstractGrid<RT, CRT : RT>(
 
         // ----  layout and place items -----------------------------------------------
 
+        val horizontalAlignment = container?.horizontalAlignment
+        val verticalAlignment = container?.verticalAlignment
+
         for (item in layoutItems) {
             val g = item.renderData.grid !!
 
@@ -74,9 +77,17 @@ abstract class AbstractGrid<RT, CRT : RT>(
             val row = g.rowIndex
             val col = g.colIndex
 
+            val rowOffset = rowOffsets[row]
+            val spanHeight = rowOffsets[row + g.rowSpan] - rowOffset
+            val topAlign = alignOnAxis(item.verticalAlignment, verticalAlignment, spanHeight, item.renderData.finalHeight)
+
+            val colOffset = colOffsets[col]
+            val spanWidth = colOffsets[col + g.colSpan] - colOffset
+            val leftAlign = alignOnAxis(item.horizontalAlignment, horizontalAlignment, spanWidth, item.renderData.finalWidth)
+
             item.placeLayout(
-                rowOffsets[row] + data.surroundingTop,
-                colOffsets[col] + data.surroundingStart
+                rowOffset + topAlign + data.surroundingTop,
+                colOffset + leftAlign + data.surroundingStart
             )
         }
 

@@ -26,7 +26,7 @@ class TextRenderData {
         val s = mutableListOf<String>()
         if (underline) s += "underline"
         if (smallCaps) s += "small-caps"
-        fontWeight?.let { s += it.toString() }
+        (fontWeight ?: adapter.defaultTextRenderData.fontWeight)?.let { s += it.toString() }
         // FIXME font size in toCSSString does not care about scaling
         (fontSize ?: adapter.defaultTextRenderData.fontSize)?.let { s += it.value.toString() + "px" }
         (fontName ?: adapter.defaultTextRenderData.fontName)?.let { s += "'$it'" }

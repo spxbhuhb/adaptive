@@ -74,6 +74,7 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : AdaptiveAdapter {
 
     var defaultTextRenderData = TextRenderData().apply {
         color = Color(0u)
+        fontName = "sans-serif"
         fontSize = SPixel(17.0)
         fontWeight = normalFont.weight
     }

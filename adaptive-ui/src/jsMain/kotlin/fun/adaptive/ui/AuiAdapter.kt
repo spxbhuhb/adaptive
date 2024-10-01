@@ -149,9 +149,9 @@ class AuiAdapter(
     fun TextRenderData.apply(style: CSSStyleDeclaration) {
         (fontName ?: defaultTextRenderData.fontName) { style.fontFamily = it }
         (fontSize ?: defaultTextRenderData.fontSize) { style.fontSize = it.pxs }
+        (fontWeight ?: defaultTextRenderData.fontWeight) { style.fontWeight = it.toString() }
 
         // FIXME text styles in browser
-        fontWeight { style.fontWeight = it.toString() }
         letterSpacing { style.letterSpacing = "${it}em" }
         wrap { style.setProperty("text-wrap", if (it) "wrap" else "nowrap") }
         color { style.color = it.toHexColor() }
