@@ -56,12 +56,12 @@ fun main() {
 //                  hoverMain()
 //              }
 
-            boundInputRecipe()
+//            boundInputRecipe()
 
             //            dialogRecipe()
 
 //            buttonRecipe()
-//            gridAlignRecipe()
+            gridAlignRecipe()
 //            sideBarRecipe()
 //            quickFilterRecipe()
 

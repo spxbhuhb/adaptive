@@ -21,7 +21,7 @@ object BrowserDecorationApplier : DecorationRenderApplier<HTMLElement>() {
 
         with(receiver.style) {
             borderStyle = "solid"
-            borderColor = border.color.toHexColor()
+            borderColor = border.color.hex
 
             val top = border.top
 
@@ -58,11 +58,11 @@ object BrowserDecorationApplier : DecorationRenderApplier<HTMLElement>() {
     }
 
     override fun applyColor(receiver: HTMLElement, color: Color) {
-        receiver.style.backgroundColor = color.toHexColor()
+        receiver.style.backgroundColor = color.hex
     }
 
     override fun applyGradient(receiver: HTMLElement, gradient: BackgroundGradient, cornerRadius: RawCornerRadius?) {
-        receiver.style.backgroundImage = "linear-gradient(${gradient.degree}deg, ${gradient.start.toHexColor()}, ${gradient.end.toHexColor()})"
+        receiver.style.backgroundImage = "linear-gradient(${gradient.degree}deg, ${gradient.start.hex}, ${gradient.end.hex})"
     }
 
     override fun clearBackground(receiver: HTMLElement) {
@@ -77,6 +77,6 @@ object BrowserDecorationApplier : DecorationRenderApplier<HTMLElement>() {
         }
 
         receiver.style.filter =
-            "drop-shadow(${dropShadow.color.toHexColor()} ${dropShadow.offsetX.pxs()} ${dropShadow.offsetY.pxs()} ${dropShadow.standardDeviation.pxs()})"
+            "drop-shadow(${dropShadow.color.hex} ${dropShadow.offsetX.pxs()} ${dropShadow.offsetY.pxs()} ${dropShadow.standardDeviation.pxs()})"
     }
 }

@@ -71,13 +71,13 @@ import `fun`.adaptive.ui.instruction.layout.ZIndex
 // ------------------------------------------------------------------------------------
 
 fun backgroundColor(color: Color) = BackgroundColor(color)
-fun backgroundColor(color: Int) = BackgroundColor(Color(color.toUInt()))
-fun backgroundColor(color: UInt) = BackgroundColor(Color(color))
+fun backgroundColor(color: Int, opacity: Float = 1f) = BackgroundColor(Color(color.toUInt(), opacity))
+fun backgroundColor(color: UInt, opacity: Float = 1f) = BackgroundColor(Color(color, opacity))
 
 inline fun backgroundColor(color: () -> Int) = BackgroundColor(Color(color().toUInt()))
 
 fun backgroundGradient(startPosition: Position, endPosition: Position, start: Color, end: Color) = BackgroundGradient(startPosition, endPosition, start, end)
-fun leftToRightGradient(leftColor : Color, rightColor: Color) = BackgroundGradient(BackgroundGradient.LEFT, BackgroundGradient.RIGHT, leftColor, rightColor)
+fun leftToRightGradient(leftColor: Color, rightColor: Color) = BackgroundGradient(BackgroundGradient.LEFT, BackgroundGradient.RIGHT, leftColor, rightColor)
 
 fun border(color: Color, width: DPixel = 1.dp) = Border(color, width, width, width, width)
 fun borderBottom(color: Color, width: DPixel = 1.dp) = Border(color, null, null, width, null)
@@ -87,8 +87,8 @@ fun borderTop(color: Color, width: DPixel = 1.dp) = Border(color, width, null, n
 
 val noBorder = Border(color(0u), 0.dp, null, null, null)
 
-fun color(color: Int) = Color(color.toUInt())
-fun color(color: UInt) = Color(color)
+fun color(color: Int, opacity: Float = 1f) = Color(color.toUInt(), opacity)
+fun color(color: UInt, opacity: Float = 1f) = Color(color, opacity)
 
 fun cornerRadius(all: DPixel) = CornerRadius(all)
 fun cornerRadius(topLeft: DPixel? = null, topRight: DPixel? = null, bottomLeft: DPixel? = null, bottomRight: DPixel? = null) = CornerRadius(topLeft, topRight, bottomLeft, bottomRight)
@@ -116,7 +116,7 @@ fun onPrimaryUp(handler: (event: UIEvent) -> Unit) = OnPrimaryUp(handler)
 fun onSecondaryDown(handler: (event: UIEvent) -> Unit) = OnSecondaryDown(handler)
 fun onSecondaryUp(handler: (event: UIEvent) -> Unit) = OnSecondaryUp(handler)
 
-fun onClose(handler : () -> Unit) = OnClose(handler)
+fun onClose(handler: () -> Unit) = OnClose(handler)
 
 // ------------------------------------------------------------------------------------
 // Layout
@@ -195,13 +195,13 @@ fun rowTemplate(vararg tracks: GridTrack) = GridRowTemplate(tracks)
 
 infix fun GridTrack.repeat(count: Int): GridRepeat = GridRepeat(count, this)
 
-fun colSpan(span : Int) = GridColSpan(span)
-fun rowSpan(span : Int) = GridRowSpan(span)
+fun colSpan(span: Int) = GridColSpan(span)
+fun rowSpan(span: Int) = GridRowSpan(span)
 
-fun gridCol(col: Int, span : Int = 1) = GridCol(col, span)
-fun gridRow(row : Int, span : Int = 1) = GridRow(row, span)
+fun gridCol(col: Int, span: Int = 1) = GridCol(col, span)
+fun gridRow(row: Int, span: Int = 1) = GridRow(row, span)
 
-fun gridPos(row : Int, col : Int, rowSpan : Int = 1, colSpan : Int = 1) = GridPos(row, col, rowSpan, colSpan)
+fun gridPos(row: Int, col: Int, rowSpan: Int = 1, colSpan: Int = 1) = GridPos(row, col, rowSpan, colSpan)
 
 val Number.gridCol
     inline get() = GridCol(this.toInt(), 1)

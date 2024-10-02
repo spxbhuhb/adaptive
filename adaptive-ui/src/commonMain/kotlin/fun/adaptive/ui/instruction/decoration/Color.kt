@@ -4,16 +4,22 @@ import `fun`.adaptive.adat.Adat
 
 @Adat
 class Color(
-    val value: UInt
+    val value: UInt,
+    val opacity : Float = 1f
 ) {
 
     constructor(value: String) : this(value.parse())
 
+    val hex by lazy { "#${value.toString(16).padStart(6, '0')}${(opacity * 255).toInt().toString(16).padStart(2, '0')}" }
+
+    fun opaque(opacity: Float) = Color(value, opacity)
+
     /**
      * @return [value] in "#ffffff" format
      */
+    @Deprecated("use hex instread", replaceWith = ReplaceWith("hex"))
     fun toHexColor(): String =
-        "#${value.toString(16).padStart(6, '0')}"
+        hex
 
     companion object {
         fun String.parse(): UInt {

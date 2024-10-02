@@ -154,7 +154,7 @@ class AuiAdapter(
         // FIXME text styles in browser
         letterSpacing { style.letterSpacing = "${it}em" }
         wrap { style.setProperty("text-wrap", if (it) "wrap" else "nowrap") }
-        color { style.color = it.toHexColor() }
+        color { style.color = it.hex }
 
         if (smallCaps) {
             style.fontVariant = "small-caps"

@@ -101,6 +101,6 @@ class ActualBrowserCanvas : ActualCanvas {
     }
 
     override fun setFill(fill: SvgFill) {
-        context.fillStyle = fill.color.toHexColor()
+        context.fillStyle = fill.color.hex
     }
 }
