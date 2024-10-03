@@ -29,7 +29,7 @@ fun sideBarRecipe() {
 
 @Adaptive
 private fun content() {
-    val navState = autoInstance(navState)
+    val navState = autoInstance(navState, trace = true)
 
     row {
         padding { 16.dp }
@@ -57,7 +57,7 @@ private fun next() {
     navState.open(nextItem.state)
 }
 
-private val navState = autoInstance(NavState())
+private val navState = autoInstance(NavState(), trace = true)
 
 private object Routes {
     val zones = NavState("zones")

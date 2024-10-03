@@ -129,7 +129,7 @@ fun <A : AdatClass> autoInstance(
         initialValue != null -> {
             pItemId = if (itemId === LamportTimestamp.CONNECTING) LamportTimestamp.ORIGIN else itemId
             value = initialValue.toArray()
-            propertyTimes = MutableList(size) { itemId }
+            propertyTimes = MutableList(size) { pItemId }
             commit = true
         }
 
@@ -157,7 +157,8 @@ fun <A : AdatClass> autoInstance(
             context,
             pItemId,
             null,
-            value
+            value,
+            propertyTimes
         )
 
         frontend = AdatClassFrontend(

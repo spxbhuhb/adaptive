@@ -63,8 +63,8 @@ fun main() {
 
 //            buttonRecipe()
 //            gridAlignRecipe()
-              selectRecipe()
-//            sideBarRecipe()
+//              selectRecipe()
+            sideBarRecipe()
 //            quickFilterRecipe()
 
 //            navMain()
