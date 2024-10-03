@@ -23,7 +23,7 @@ class ThemeColors {
     val onPrimaryHover = color(0xFFFFFFu)
 
     val outline = color(0xC5C5C5)
-    val overlay = color(0x88888840u)
+    val overlay = color(0x0, opacity = 0.4f)
 
     val danger = color(0xEC5453u)
     val onDanger = color(0xFFFFFFu)

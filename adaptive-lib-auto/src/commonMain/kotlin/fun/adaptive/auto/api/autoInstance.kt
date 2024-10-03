@@ -84,6 +84,7 @@ fun <A : AdatClass> autoInstance(
         companion = initialValue.adatCompanion as AdatCompanion<A>,
         initialValue = initialValue,
         listener = listener,
+        register = false,
         trace = trace
     )
 
@@ -113,6 +114,7 @@ fun <A : AdatClass> autoInstance(
     serviceContext: ServiceContext? = null,
     handle : AutoHandle = AutoHandle(),
     itemId: ItemId = LamportTimestamp.CONNECTING,
+    register: Boolean = true,
     trace: Boolean = false
 ): OriginBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A> {
 
@@ -145,7 +147,7 @@ fun <A : AdatClass> autoInstance(
         handle,
         serviceContext,
         companion.adatWireFormat,
-        register = (worker != null),
+        register = register,
         trace = trace
     ) {
 

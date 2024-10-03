@@ -98,9 +98,16 @@ class PropertyBackend<A : AdatClass>(
 
             if (lastChange < change.changeTime) {
 
+                val property = properties[index]
+                val decoder = context.wireFormatProvider.decoder(change.payload)
+
                 @Suppress("UNCHECKED_CAST")
-                val wireformat = properties[index].wireFormat as WireFormat<Any?>
-                val value = context.wireFormatProvider.decoder(change.payload).asInstance(wireformat)
+                val wireformat = property.wireFormat as WireFormat<Any?>
+                val value = if (property.nullable) {
+                    decoder.asInstanceOrNull(wireformat)
+                } else {
+                    decoder.asInstance(wireformat)
+                }
 
                 values[index] = value
                 propertyTimes[index] = change.changeTime
@@ -135,7 +142,7 @@ class PropertyBackend<A : AdatClass>(
     /**
      * Send any changes that happened after [syncFrom] to the peer.
      */
-    override suspend fun syncPeer(connector: AutoConnector, syncFrom: LamportTimestamp, sendSyncEnd : Boolean) {
+    override suspend fun syncPeer(connector: AutoConnector, syncFrom: LamportTimestamp, sendSyncEnd: Boolean) {
 
         if (syncFrom >= lastUpdate) {
             trace { "SKIP SYNC: time= $lastUpdate peerTime=$syncFrom" }
@@ -170,18 +177,23 @@ class PropertyBackend<A : AdatClass>(
     // --------------------------------------------------------------------------------
 
     fun encode(property: AdatPropertyWireFormat<*>): ByteArray {
-        val index = property.index
-        val value = values[index]
+        try {
+            val index = property.index
+            val value = values[index]
 
-        @Suppress("UNCHECKED_CAST")
-        val wireformat = property.wireFormat as WireFormat<Any?>
-        val encoder = context.wireFormatProvider.encoder()
-        if (property.nullable) {
-            encoder.rawInstanceOrNull(value, wireformat)
-        } else {
-            encoder.rawInstance(value, wireformat)
+            @Suppress("UNCHECKED_CAST")
+            val wireformat = property.wireFormat as WireFormat<Any?>
+            val encoder = context.wireFormatProvider.encoder()
+            if (property.nullable) {
+                encoder.rawInstanceOrNull(value, wireformat)
+            } else {
+                encoder.rawInstance(value, wireformat)
+            }
+            return encoder.pack()
+        } catch (e: Throwable) {
+            context.logger.error("error while writing property: ${property.property}")
+            throw e
         }
-        return encoder.pack()
     }
 
 }
