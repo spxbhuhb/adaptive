@@ -65,6 +65,7 @@ import `fun`.adaptive.ui.instruction.layout.Size
 import `fun`.adaptive.ui.instruction.layout.SpaceDistribution
 import `fun`.adaptive.ui.instruction.layout.Width
 import `fun`.adaptive.ui.instruction.layout.ZIndex
+import `fun`.adaptive.ui.instruction.text.ToText
 
 // ------------------------------------------------------------------------------------
 // Decoration
@@ -281,6 +282,9 @@ fun letterSpacing(value: Double) = LetterSpacing(value)
 fun textColor(value: Int) = TextColor(Color(value.toUInt()))
 fun textColor(value: UInt) = TextColor(Color(value))
 fun textColor(value: Color) = TextColor(value)
+
+// FIXME toText should be linked with the instructed component and correctness of T should be checked
+fun <T> toText(toTextFun: (T) -> String) = ToText(toTextFun)
 
 // ------------------------------------------------------------------------------------
 // Input
