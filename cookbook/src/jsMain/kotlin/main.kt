@@ -11,6 +11,7 @@ import `fun`.adaptive.cookbook.ui.button.buttonRecipe
 import `fun`.adaptive.cookbook.ui.dialog.dialogRecipe
 import `fun`.adaptive.cookbook.ui.filter.quickFilterRecipe
 import `fun`.adaptive.cookbook.ui.grid.gridAlignRecipe
+import `fun`.adaptive.cookbook.ui.select.selectRecipe
 import `fun`.adaptive.cookbook.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
@@ -61,7 +62,8 @@ fun main() {
             //            dialogRecipe()
 
 //            buttonRecipe()
-            gridAlignRecipe()
+//            gridAlignRecipe()
+              selectRecipe()
 //            sideBarRecipe()
 //            quickFilterRecipe()
 

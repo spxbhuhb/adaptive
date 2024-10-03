@@ -80,6 +80,7 @@ fun backgroundGradient(startPosition: Position, endPosition: Position, start: Co
 fun leftToRightGradient(leftColor: Color, rightColor: Color) = BackgroundGradient(BackgroundGradient.LEFT, BackgroundGradient.RIGHT, leftColor, rightColor)
 
 fun border(color: Color, width: DPixel = 1.dp) = Border(color, width, width, width, width)
+fun border(color: Color, top: DPixel = 1.dp, right: DPixel = 1.dp, bottom: DPixel = 1.dp, left: DPixel = 1.dp ) = Border(color, top, right, bottom, left)
 fun borderBottom(color: Color, width: DPixel = 1.dp) = Border(color, null, null, width, null)
 fun borderLeft(color: Color, width: DPixel = 1.dp) = Border(color, null, null, null, width)
 fun borderRight(color: Color, width: DPixel = 1.dp) = Border(color, null, width, null, null)
