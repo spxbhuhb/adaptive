@@ -10,6 +10,7 @@ import `fun`.adaptive.cookbook.eco
 import `fun`.adaptive.cookbook.grid_view
 import `fun`.adaptive.cookbook.iot.iotCommon
 import `fun`.adaptive.cookbook.ui.dialog.dialogRecipe
+import `fun`.adaptive.cookbook.ui.svg.svgRecipe
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
@@ -105,16 +106,17 @@ fun main() {
     }
 }
 
-private val appNavState = autoInstance(Routes.dialog)
+private val appNavState = autoInstance(Routes.svg)
 
 private object Routes {
     val dialog = NavState("Dialog")
+    val svg = NavState("SVG")
 }
 
 private val items = listOf(
     SideBarItem(0, Res.drawable.grid_view, "Dialog", Routes.dialog),
+    SideBarItem(0, Res.drawable.grid_view, "SVG", Routes.svg)
 )
-
 
 @Adaptive
 fun mainMenu() {
@@ -138,6 +140,7 @@ fun mainContent() {
 
         when (navState) {
             in Routes.dialog -> dialogRecipe()
+            in Routes.svg -> svgRecipe()
             else -> text("unknown route: $navState")
         }
     }

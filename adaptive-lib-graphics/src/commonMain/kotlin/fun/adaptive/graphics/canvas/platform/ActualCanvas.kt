@@ -15,19 +15,15 @@ import `fun`.adaptive.graphics.svg.instruction.transform.SvgTransform
 interface ActualCanvas {
 
     /**
+     * Draw on the canvas by calling [drawFun]. Implementations may surround [drawFun] with whatever
+     * needed to notify the actual UI about the change.
+     */
+    fun draw(drawFun : () -> Unit)
+
+    /**
      * Get an empty path that may be used for drawing, clipping etc.
      */
     fun newPath(): ActualPath
-
-    /**
-     * Called by [CanvasAdapter] to indicate that drawing on the canvas is about to begin.
-     */
-    fun startDraw()
-
-    /**
-     * Called by [CanvasAdapter] to indicate that drawing on the canvas has been ended.
-     */
-    fun endDraw()
 
     /**
      * Save the current state of the canvas. Use [restore] to get back to the last save state.
@@ -59,4 +55,8 @@ interface ActualCanvas {
      */
     fun setFill(fill : SvgFill)
 
+    /**
+     * Clear the canvas.
+     */
+    fun clear()
 }

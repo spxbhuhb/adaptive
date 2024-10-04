@@ -13,19 +13,15 @@ class TestCanvas : ActualCanvas {
 
     val trace = mutableListOf<String>()
 
-    override fun startDraw() {
-
-    }
-
-    override fun endDraw() {
-
-    }
-
     override fun save(id: Long) {
 
     }
 
     override fun restore(id: Long) {
+
+    }
+
+    override fun draw(drawFun: () -> Unit) {
 
     }
 
@@ -42,6 +38,10 @@ class TestCanvas : ActualCanvas {
     }
 
     override fun setFill(fill: SvgFill) {
+
+    }
+
+    override fun clear() {
 
     }
 

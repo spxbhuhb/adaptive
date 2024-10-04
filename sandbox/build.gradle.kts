@@ -54,6 +54,8 @@ kotlin {
                 implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.lib.auth)
                 implementation(libs.adaptive.lib.sandbox)
+                implementation(libs.adaptive.lib.graphics)
+                implementation(libs.adaptive.lib.ui)
             }
         }
 

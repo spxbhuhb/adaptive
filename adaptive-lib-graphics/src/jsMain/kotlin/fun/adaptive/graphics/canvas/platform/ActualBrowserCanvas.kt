@@ -46,13 +46,6 @@ class ActualBrowserCanvas : ActualCanvas {
         context.scale(scale, scale)
     }
 
-    override fun startDraw() {
-
-    }
-
-    override fun endDraw() {
-    }
-
     override fun save(id: Long) {
         if (saveIds.lastOrNull() == id) return
         saveIds.add(id)
@@ -63,6 +56,10 @@ class ActualBrowserCanvas : ActualCanvas {
         if (saveIds.lastOrNull() != id) return
         saveIds.removeLastOrNull()
         context.restore()
+    }
+
+    override fun draw(drawFun: () -> Unit) {
+        drawFun()
     }
 
     override fun newPath(): ActualBrowserPath {
@@ -102,5 +99,9 @@ class ActualBrowserCanvas : ActualCanvas {
 
     override fun setFill(fill: SvgFill) {
         context.fillStyle = fill.color.hex
+    }
+
+    override fun clear() {
+        context.clearRect(0.0, 0.0, receiver.height.toDouble(), receiver.width.toDouble())
     }
 }

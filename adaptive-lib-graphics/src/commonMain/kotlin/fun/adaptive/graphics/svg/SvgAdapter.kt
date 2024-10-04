@@ -37,8 +37,10 @@ class SvgAdapter(
     override fun newId() = parentAdapter.newId()
 
     fun draw() {
-        rootContainer.startDraw()
-        (rootFragment as SvgFragment<*>).draw()
-        rootContainer.endDraw()
+        rootContainer.draw {
+            rootContainer.save(0)
+            (rootFragment as SvgFragment<*>).draw()
+            rootContainer.restore(0)
+        }
     }
 }

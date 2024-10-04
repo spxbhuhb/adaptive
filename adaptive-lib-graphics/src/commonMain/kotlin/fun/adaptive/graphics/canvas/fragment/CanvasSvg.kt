@@ -26,18 +26,28 @@ open class CanvasSvg(
 
     val svgAdapter = SvgAdapter(adapter, canvas).also { it.trace = adapter.trace }
 
-    var resource : DrawableResource
+    var resource: DrawableResource
         get() = state[0].checkIfInstance()
-        set(v) { setStateVariable(0,v) }
+        set(v) {
+            setStateVariable(0, v)
+        }
+
+    var data: ByteArray = byteArrayOf()
 
     override fun genPatchInternal(): Boolean {
+
         if (haveToPatch(dirtyMask, 1)) {
             // FIXME start resource read in a different thread and during mount maybe?
             CoroutineScope(adapter.dispatcher).launch {
-                val data = defaultResourceReader.read(resource.path)
+                data = defaultResourceReader.read(resource.path)
                 svgAdapter.rootFragment = parseSvg(svgAdapter, data.decodeToString(), instructions.filterIsInstance<SvgInstruction>().toTypedArray())
                 svgAdapter.draw()
             }
+        }
+
+        if (data.isNotEmpty() && haveToPatch(dirtyMask, 2)) {
+            svgAdapter.rootFragment = parseSvg(svgAdapter, data.decodeToString(), instructions.filterIsInstance<SvgInstruction>().toTypedArray())
+            svgAdapter.draw()
         }
 
         return true

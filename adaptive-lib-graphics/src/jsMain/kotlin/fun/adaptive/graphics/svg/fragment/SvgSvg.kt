@@ -38,15 +38,20 @@ class SvgSvg(
     }
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) {
+        // FIXME hackish SGV patch
         (fragment as CanvasSvg).also {
-            it.resource = resource
+            if (it.isInit || it.resource != resource) {
+                it.resource = resource
+                it.dirtyMask = it.dirtyMask or 1
+            }
             it.state[it.instructionIndex] = instructions
+            it.dirtyMask = it.dirtyMask or 2
         }
     }
 
     override fun genPatchInternal(): Boolean {
         patchInstructions()
-        return false
+        return true
     }
 
     override fun placeLayout(top: Double, left: Double) {

@@ -55,9 +55,9 @@ class CanvasAdapter(
 
     fun draw() {
         trace("draw", "drawItems.size = ${drawItems.size}")
-        rootContainer.startDraw()
-        drawItems.forEach { it.draw() }
-        rootContainer.endDraw()
+        rootContainer.draw {
+            drawItems.forEach { it.draw() }
+        }
     }
 
     fun traceAddActual(fragment: AdaptiveFragment) {
