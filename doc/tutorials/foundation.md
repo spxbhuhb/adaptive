@@ -60,7 +60,7 @@ fun now() =
 
 @Adaptive
 fun time() {
-    val time = poll(1.seconds, now()) { now() }
+    val time = poll(1.seconds) { now() } ?: now()
     text("$time")
 }
 ```
@@ -77,10 +77,58 @@ on the outside. In that case the fragment updates the UI automatically.
 ```kotlin
 @Adaptive
 fun timeWithLabel(label: String) {
-    val time = poll(1.seconds, now()) { now() }
+    val time = poll(1.seconds) { now() } ?: now()
     text("$label: $time")
 }
 ```
+
+## Basics: Dependency
+
+By default, all state variables are reactive and are updated when a variable
+they depend on changes:
+
+```kotlin
+@Adaptive
+fun t1() {
+    val time = poll(1.seconds) { now() } ?: now()
+    t2(time)
+}
+
+@Adaptive
+fun t2(time : Instant) {
+    val displayTime = time.toLocalDateTime(TimeZone.currentSystemDefault())
+    text(displayTime)
+}
+```
+
+In the example above, `displayTime` changes whenever `time` changes. Adaptive takes
+care of change distribution automatically.
+
+If you want to stop automatic updates, use the `@Independent` annotation.
+When this annotation is added, the value calculated only once: when the fragment
+is initialized the first time.
+
+In this example, `displayTime` never changes, even if time changes.
+
+```kotlin
+@Adaptive
+fun t2(time : Instant) {
+    
+    @Independent
+    val displayTime = time.toLocalDateTime(TimeZone.currentSystemDefault())
+    
+    text(displayTime)
+}
+```
+
+> [!NOTE]
+> 
+> Independent **DOES NOT** mean static and/or immutable. Independent state 
+> variables can change, just not because of the other variables used to calculate them.
+> 
+> You can change them explicitly (if they are declared as `var`) or they can change
+> automatically if they have a [producer](../foundation/producer.md).
+> 
 
 ## Basics: Boundary
 
@@ -106,7 +154,7 @@ function marks the *boundary*.
 ```kotlin
 @Adaptive
 fun timeBoundary() {
-    val time = poll(1.seconds, now()) { now() }
+    val time = poll(1.seconds) { now() } ?: now()
     // ---- boundary ----
     text("$label: $time")
 }
@@ -126,7 +174,7 @@ fun child(time: Instant, number : Int) {
 
 @Adaptive
 fun parent() {
-    val time = poll(1.seconds, now()) { now() }
+    val time = poll(1.seconds) { now() } ?: now()
     child(time, 1)
     child(time, 2)
 }
@@ -139,7 +187,7 @@ You can use the standard Kotlin `if` and `when`:
 ```kotlin
 @Adaptive
 fun oddHour() {
-    val time = poll(1.seconds, now()) { now() }
+    val time = poll(1.seconds) { now() } ?: now()
     
     text("$time")
     
@@ -171,7 +219,7 @@ import `fun`.adaptive.foundation.Adaptive
 @Adaptive
 fun higherOrder(@Adaptive sub: (time: Instant) -> Unit) {
     
-    val time = poll(1.seconds, now()) { now() }
+    val time = poll(1.seconds) { now() } ?: now()
 
     sub(time)
 }

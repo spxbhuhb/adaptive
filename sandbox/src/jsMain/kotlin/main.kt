@@ -10,7 +10,6 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.instruction.invoke
 import `fun`.adaptive.foundation.rangeTo
-import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.lib.sandbox.ui.graphics.svgExample
 import `fun`.adaptive.lib.sandbox.ui.layout.layoutMain
 import `fun`.adaptive.lib.sandbox.ui.markdown.markdown
@@ -51,7 +50,7 @@ import `fun`.adaptive.ui.instruction.layout.AlignItems
 import `fun`.adaptive.ui.instruction.layout.Height
 import `fun`.adaptive.ui.instruction.navigation.NavClick
 import `fun`.adaptive.ui.platform.withJsResources
-import kotlinx.browser.window
+
 
 fun main() {
 
@@ -61,6 +60,7 @@ fun main() {
     //, trace = trace("removeActual|.*-Unmount|setContent")
     browser(backend = backend(LocalServiceCallTransport()) { }) {
         withSandbox(it) // to set default font name
+
 
         grid {
             maxSize .. colTemplate(200.dp, 1.fr)

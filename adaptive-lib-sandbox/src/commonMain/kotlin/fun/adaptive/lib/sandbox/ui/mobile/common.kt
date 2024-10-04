@@ -58,7 +58,7 @@ val Int.twoDigits
 val Int.threeDigits
     get() = toString().padStart(3, '0')
 
-fun now() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+fun nowLocal() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
 val black = color(0x000000u)
 val white = color(0xffffffu)

@@ -17,6 +17,7 @@ import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.deepCopyWithoutPatchingParents
 import org.jetbrains.kotlin.ir.util.dump
 import org.jetbrains.kotlin.ir.util.dumpKotlinLike
+import org.jetbrains.kotlin.ir.util.hasAnnotation
 import org.jetbrains.kotlin.ir.util.isVararg
 
 
@@ -36,6 +37,9 @@ class StateDefinitionTransform(
     var stateVariableIndex = 0
 
     fun IrElement.dependencies(): List<ArmStateVariable> {
+        if (this is IrDeclaration && this.hasAnnotation(pluginContext.independentAnnotation)) {
+            return emptyList()
+        }
         val visitor = DependencyVisitor(armClass.stateVariables, skipLambdas = false)
         accept(visitor, null)
         return visitor.dependencies

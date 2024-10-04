@@ -46,7 +46,7 @@ fun goodMorning() {
 
     var counter = 0
     //val millis = poll(20.milliseconds) { Clock.System.now() } ?: Clock.System.now()
-    val time = poll(1.milliseconds) { now() } ?: now()
+    val time = poll(1.milliseconds) { nowLocal() } ?: nowLocal()
     val timeText = "${time.hour.twoDigits}:${time.minute.twoDigits}:${time.second.twoDigits}"
 
     image(Res.drawable.background)

@@ -3,28 +3,40 @@
  */
 
 import `fun`.adaptive.auto.api.auto
+import `fun`.adaptive.auto.api.autoInstance
 import `fun`.adaptive.backend.backend
+import `fun`.adaptive.cookbook.Res
+import `fun`.adaptive.cookbook.eco
+import `fun`.adaptive.cookbook.grid_view
 import `fun`.adaptive.cookbook.iot.iotCommon
-import `fun`.adaptive.cookbook.shared.inputStyle
-import `fun`.adaptive.cookbook.ui.boundInput.boundInputRecipe
-import `fun`.adaptive.cookbook.ui.button.buttonRecipe
 import `fun`.adaptive.cookbook.ui.dialog.dialogRecipe
-import `fun`.adaptive.cookbook.ui.filter.quickFilterRecipe
-import `fun`.adaptive.cookbook.ui.grid.gridAlignRecipe
-import `fun`.adaptive.cookbook.ui.select.selectRecipe
-import `fun`.adaptive.cookbook.ui.sidebar.sideBarRecipe
-import `fun`.adaptive.foundation.instruction.name
+import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
+import `fun`.adaptive.graphics.svg.api.svg
+import `fun`.adaptive.ui.api.backgroundColor
+import `fun`.adaptive.ui.api.boldFont
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.colTemplate
+import `fun`.adaptive.ui.api.fontSize
+import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.position
+import `fun`.adaptive.ui.api.rowTemplate
+import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.form.FormFragmentFactory
 import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.navigation.NavState
+import `fun`.adaptive.ui.navigation.sidebar.SideBarItem
+import `fun`.adaptive.ui.navigation.sidebar.sideBarTheme
+import `fun`.adaptive.ui.navigation.sidebar.sidebar
 import `fun`.adaptive.ui.platform.withJsResources
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
-val cookbookContent = name("cookbook-content")
 
 fun main() {
     CoroutineScope(Dispatchers.Default).launch {
@@ -41,9 +53,14 @@ fun main() {
             with(adapter.defaultTextRenderData) {
                 fontName = "Open Sans"
                 fontSize = 16.sp
+                fontWeight = 300
             }
 
-            adapter.theme["AuiInput"] = inputStyle
+            grid {
+                maxSize .. colTemplate(sideBarTheme.width, 1.fr)
+                mainMenu()
+                mainContent()
+            }
 
 //            grid {
 //                maxHeight .. padding { 16.dp } .. gap { 16.dp }
@@ -64,7 +81,7 @@ fun main() {
 //            buttonRecipe()
 //            gridAlignRecipe()
 //              selectRecipe()
-            sideBarRecipe()
+//            sideBarRecipe()
 //            quickFilterRecipe()
 
 //            navMain()
@@ -84,6 +101,44 @@ fun main() {
 //                    recipeList()
 //                }
 //           }
+        }
+    }
+}
+
+private val appNavState = autoInstance(Routes.dialog)
+
+private object Routes {
+    val dialog = NavState("Dialog")
+}
+
+private val items = listOf(
+    SideBarItem(0, Res.drawable.grid_view, "Dialog", Routes.dialog),
+)
+
+
+@Adaptive
+fun mainMenu() {
+    grid {
+        rowTemplate(168.dp, 1.fr) .. maxSize
+        box {
+            svg(Res.drawable.eco) .. position(60.dp, 32.dp)
+            text("Adaptive") .. boldFont .. fontSize(28.sp) .. position(60.dp, 88.dp)
+        }
+        sidebar(items, appNavState)
+    }
+}
+
+@Adaptive
+fun mainContent() {
+
+    val navState = autoInstance(appNavState)
+
+    box {
+        maxSize .. padding { 16.dp } .. backgroundColor(0xFAFAFA)
+
+        when (navState) {
+            in Routes.dialog -> dialogRecipe()
+            else -> text("unknown route: $navState")
         }
     }
 }

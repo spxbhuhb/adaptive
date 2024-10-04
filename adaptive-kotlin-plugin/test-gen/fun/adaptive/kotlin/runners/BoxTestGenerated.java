@@ -256,6 +256,22 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Nested
+    @TestMetadata("testData/box/foundation/dependency")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Dependency {
+      @Test
+      public void testAllFilesPresentInDependency() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/dependency"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+      }
+
+      @Test
+      @TestMetadata("independent.kt")
+      public void testIndependent() {
+        runTest("testData/box/foundation/dependency/independent.kt");
+      }
+    }
+
+    @Nested
     @TestMetadata("testData/box/foundation/expect")
     @TestDataPath("$PROJECT_ROOT")
     public class Expect {

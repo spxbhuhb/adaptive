@@ -1,44 +1,137 @@
 package `fun`.adaptive.cookbook.ui.dialog
 
-import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.cookbook.Res
+import `fun`.adaptive.cookbook.check
+import `fun`.adaptive.cookbook.grid_view
+import `fun`.adaptive.cookbook.mail
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.Independent
+import `fun`.adaptive.foundation.producer.poll
 import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.ui.api.alignItems
+import `fun`.adaptive.ui.api.alignSelf
+import `fun`.adaptive.ui.api.colSpan
+import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.flowText
+import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.gridCol
+import `fun`.adaptive.ui.api.height
+import `fun`.adaptive.ui.api.input
+import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.onClose
+import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.api.rowTemplate
+import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.builtin.Res
 import `fun`.adaptive.ui.builtin.check
 import `fun`.adaptive.ui.button.api.button
-import `fun`.adaptive.ui.checkbox.api.checkbox
+import `fun`.adaptive.ui.dialog.api.buttonDialog
 import `fun`.adaptive.ui.dialog.api.dialog
-import `fun`.adaptive.ui.dialog.api.formDialog
-import `fun`.adaptive.ui.form.api.form
+import `fun`.adaptive.ui.dialog.api.iconDialog
+import `fun`.adaptive.ui.input.api.inputTheme
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.ui.theme.textColors
+import kotlinx.datetime.Clock.System.now
+import kotlin.math.max
+import kotlin.time.Duration.Companion.seconds
 
 @Adaptive
 fun dialogRecipe() {
-    var modalOpen = false
-    var data = false
 
     column {
-        text("Hello World! $data")
-        button("Open", Res.drawable.check) .. onClick { modalOpen = true }
+        gap { 16.dp }
+
+        basic()
+
+        buttonDialog("Button Dialog", Res.drawable.mail, "Button Dialog Title") { close ->
+            dialogContent(close)
+        }
+
+        row {
+            gap { 16.dp }
+            iconDialog(Res.drawable.grid_view, "Icon Dialog Title") { close ->
+                dialogContent(close)
+            }
+            text("(icon dialog)") .. textColors.onSurfaceVariant
+        }
+
+        buttonDialog("Independent", Res.drawable.mail, "Dialog Title") { close ->
+            independent(close)
+        }
+    }
+
+}
+
+@Adaptive
+private fun basic() {
+    var modalOpen = false
+
+    column {
+        button("Basic") .. onClick { modalOpen = true }
 
         if (modalOpen) {
             dialog("Dialog Title") {
                 onClose { modalOpen = false }
-                text("hello")
-                choice { data = it }
+                dialogContent { modalOpen = false }
             }
         }
     }
 }
 
+@Adaptive
+private fun dialogContent(close: () -> Unit) {
+    var data = ""
+
+    grid {
+        size(700.dp, 300.dp)
+        colTemplate(200.dp, 1.fr) .. rowTemplate(44.dp, 100.dp) .. padding { 32.dp }
+
+        text("Data:") .. alignSelf.startCenter
+        input { data } .. inputTheme.active .. maxWidth
+
+        button("Save", Res.drawable.check) .. gridCol(2) .. alignSelf.endBottom ..
+            onClick {
+                // save the content
+                close()
+            }
+    }
+}
 
 @Adaptive
-fun choice(f : (Boolean) -> Unit) {
-    var a = false
-    f(a)
-    checkbox { a }
+private fun independent(close: () -> Unit) {
+    var time = poll(1.seconds) { now() } ?: now()
+
+    var data = time.toString().replace("T", " ").replace("Z", " ").substringBeforeLast('.')
+
+    @Independent
+    var iData = data
+
+    grid {
+        size(700.dp, (288 + 64 + 3 * 16).dp)
+        colTemplate(200.dp, 1.fr) .. rowTemplate(100.dp, 44.dp, 44.dp, 100.dp) .. padding { 32.dp }
+        gap { 16.dp } .. alignItems.startCenter
+
+        flowText(
+            """
+            This dialog shows how to avoid continuous data update with the use of @Independent.
+            With it updating automatically, the you cannot edit `data`.  
+            `iData` on the other hand is fine as it is initialized once and then you can 
+            edit it without any problems.
+        """.trimIndent()
+        ) .. colSpan(2) .. maxWidth .. height { 100.dp }
+
+        text("Dependent data:")
+        input { data } .. inputTheme.active .. maxWidth
+
+        text("Independent data:")
+        input { iData } .. inputTheme.active .. maxWidth
+
+        button("Save", Res.drawable.check) .. gridCol(2) .. alignSelf.endBottom .. onClick { close() }
+    }
+
 }
