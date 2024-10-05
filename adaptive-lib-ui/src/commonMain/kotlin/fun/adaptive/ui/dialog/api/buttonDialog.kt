@@ -1,6 +1,9 @@
 package `fun`.adaptive.ui.dialog.api
 
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.resource.DrawableResource
 import `fun`.adaptive.ui.api.onClick
@@ -18,10 +21,16 @@ import `fun`.adaptive.ui.button.api.button
  * @param  modalContent  Content of the dialog.
  */
 @Adaptive
-fun buttonDialog(label: String, resource: DrawableResource, title: String, @Adaptive modalContent: (close: () -> Unit) -> Unit) {
+fun buttonDialog(
+    label: String,
+    resource: DrawableResource,
+    title: String,
+    vararg instructions: AdaptiveInstruction,
+    @Adaptive modalContent: (close: () -> Unit) -> Unit
+): AdaptiveFragment {
     var modalOpen = false
 
-    button(label, resource) .. onClick { modalOpen = true }
+    button(label, resource, *instructions) .. onClick { modalOpen = true }
 
     if (modalOpen) {
         dialog(title) {
@@ -29,4 +38,6 @@ fun buttonDialog(label: String, resource: DrawableResource, title: String, @Adap
             modalContent { modalOpen = false }
         }
     }
+
+    return fragment()
 }

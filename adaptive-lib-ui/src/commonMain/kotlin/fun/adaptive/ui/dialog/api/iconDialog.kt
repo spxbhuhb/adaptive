@@ -1,6 +1,10 @@
 package `fun`.adaptive.ui.dialog.api
 
+import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.resource.DrawableResource
 import `fun`.adaptive.ui.api.onClick
@@ -20,11 +24,12 @@ import `fun`.adaptive.ui.icon.icon
 fun iconDialog(
     resource: DrawableResource,
     title: String,
+    vararg instructions: AdaptiveInstruction,
     @Adaptive modalContent: (close: () -> Unit) -> Unit
-) {
+): AdaptiveFragment {
     var modalOpen = false
 
-    icon(resource) .. onClick { modalOpen = true }
+    icon(resource, *instructions) .. onClick { modalOpen = true }
 
     if (modalOpen) {
         dialog(title) {
@@ -32,4 +37,6 @@ fun iconDialog(
             modalContent { modalOpen = false }
         }
     }
+
+    return fragment()
 }

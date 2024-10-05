@@ -5,7 +5,7 @@ package `fun`.adaptive.foundation.binding
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
-import `fun`.adaptive.adat.absolutePath
+import `fun`.adaptive.adat.api.absolutePath
 import `fun`.adaptive.adat.api.store
 import `fun`.adaptive.foundation.AdaptiveFragment
 
