@@ -38,6 +38,7 @@ open class ClientWebSocketServiceCallTransport(
     val serviceUrl = host.toWs(servicePath)
 
     var retryDelay = 200L // milliseconds
+    var retrying = false
 
     val client = HttpClient {
         install(HttpCookies)
@@ -64,10 +65,11 @@ open class ClientWebSocketServiceCallTransport(
 
             try {
                 counter ++
-                if (trace) transportLog.fine("connecting (retryDelay=$retryDelay, counter=$counter)")
+                transportLog.fine { "connecting (retryDelay=$retryDelay, attempts=$counter)" }
 
                 client.webSocket(serviceUrl) {
-                    if (trace) transportLog.fine("connected (counter=$counter)")
+                    transportLog.info { "WS-CONNECT $serviceUrl (attempt=$counter)" }
+                    counter = 0
                     socketLock.use { socket = this }
                     incoming()
                 }
@@ -76,7 +78,13 @@ open class ClientWebSocketServiceCallTransport(
                 // shutdown, no error to be logged there, no retry
                 currentCoroutineContext().ensureActive()
 
-                transportLog.error(ex)
+                if (counter == 0) {
+                    transportLog.info { "WS-DISCONNECT $serviceUrl" }
+                    retrying = true
+                }
+
+                // connection problems are normal, we should not spam the error log with them
+                transportLog.fine(ex)
 
                 if (! scope.isActive) return
                 delay(retryDelay) // wait a bit before trying to re-establish the connection

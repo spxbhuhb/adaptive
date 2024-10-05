@@ -1,33 +1,39 @@
 package `fun`.adaptive.auto.internal.connector
 
 import `fun`.adaptive.auto.api.AutoApi
+import `fun`.adaptive.auto.internal.backend.BackendBase
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.operation.*
 import `fun`.adaptive.log.AdaptiveLogger
-import `fun`.adaptive.service.model.DisconnectException
 import `fun`.adaptive.utility.safeCall
 import `fun`.adaptive.utility.safeLaunch
+import `fun`.adaptive.utility.safeSuspendCall
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.ensureActive
 
 class ServiceConnector(
-    val thisHandle: AutoHandle,
+    val thisBackend: BackendBase,
     peerHandle: AutoHandle,
     val service: AutoApi,
     val logger: AdaptiveLogger,
     val scope: CoroutineScope,
-    pendingLimit: Int
+    pendingLimit: Int = 1000
 ) : AutoConnector(peerHandle) {
 
     val operations: Channel<AutoOperation> = Channel(pendingLimit)
 
-    val job = scope.safeLaunch(logger, "run error in ServiceConnector @ $thisHandle") { run() }
+    val job = scope.safeLaunch(logger, "run error in ServiceConnector @ $thisBackend") { run() }
 
     override fun send(operation: AutoOperation) {
         val result = operations.trySend(operation)
-        if (! result.isSuccess) throw DisconnectException("failed to send operation: $operation") // TODO proper disconnect/reconnect handling in ServiceConnector
+
+        // This happens when the channel is full. With a limit of 1000 this probably
+        // means that the peer disconnected. `removePeer` calls `dispose` which
+        // stops `run` and closes `operations`.
+
+        if (! result.isSuccess) thisBackend.removePeer(peerHandle)
     }
 
     suspend fun run() {
@@ -45,6 +51,10 @@ class ServiceConnector(
             }
         } catch (ex : Exception) {
 
+            safeSuspendCall(logger) {
+                thisBackend.removePeer(peerHandle)
+            }
+
             job.ensureActive()
 
             // FIXME I don't think this is the right way to handle the cancellation of the service out channel
@@ -57,14 +67,18 @@ class ServiceConnector(
             // this is NOT a cancellation of `run` (that has been handled by `ensureActive`)
             // but some other cancellation exception (most notably, Netty's closed connection)
         }
+
+        println("END OF Run")
     }
 
     override suspend fun disconnect() {
-        service.removePeer(thisHandle)
+        safeSuspendCall(logger) {
+            service.removePeer(thisBackend.peerHandle)
+        }
     }
 
-    override fun onDisconnect() {
-        safeCall(logger, "onDisconnect error in ServiceConnector @ $thisHandle") {
+    override fun dispose() {
+        safeCall(logger, "onDisconnect error in ServiceConnector @ $thisBackend") {
             job.cancel()
             operations.close()
         }

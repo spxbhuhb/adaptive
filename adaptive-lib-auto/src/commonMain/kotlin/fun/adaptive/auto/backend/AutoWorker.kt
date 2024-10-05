@@ -50,7 +50,7 @@ class AutoWorker : WorkerImpl<AutoWorker> {
             checkNotNull(backends[origin.globalId]) { "missing auto instance: $origin" }
         }.let {
             it.addPeer(
-                ServiceConnector(origin, connecting, getService(transport), it.context.logger, scope, 1000),
+                ServiceConnector(it, connecting, getService(transport), it.context.logger, scope),
                 connectingPeerTime
             )
         }

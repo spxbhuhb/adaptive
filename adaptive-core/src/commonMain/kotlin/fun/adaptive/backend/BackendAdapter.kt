@@ -54,6 +54,8 @@ open class BackendAdapter(
 
     val lock = getLock()
 
+    var stopped = false
+
     var wait : Boolean = wait
         get() = lock.use { field }
         set(v) { lock.use { field = v } }
@@ -85,6 +87,11 @@ open class BackendAdapter(
     }
 
     override fun stop() {
+        lock.use {
+            if (stopped) return
+            stopped = true
+        }
+
         rootFragment.unmount()
 
         scope.safeLaunch(logger) {

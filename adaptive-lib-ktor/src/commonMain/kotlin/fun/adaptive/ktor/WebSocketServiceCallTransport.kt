@@ -25,11 +25,15 @@ abstract class WebSocketServiceCallTransport(
     override suspend fun send(envelope: TransportEnvelope) {
         val safeSocket = waitForNotNull(responseTimeout) { socketLock.use { socket } }
 
-        if (wireFormatProvider.useTextFrame) {
-            safeSocket.send(Frame.Text(true, wireFormatProvider.encode(envelope, TransportEnvelope)))
+        val payload = wireFormatProvider.encode(envelope, TransportEnvelope)
+
+        val frame = if (wireFormatProvider.useTextFrame) {
+            Frame.Text(true, payload)
         } else {
-            safeSocket.send(Frame.Binary(true, wireFormatProvider.encode(envelope, TransportEnvelope)))
+            Frame.Binary(true, payload)
         }
+
+        safeSocket.send(frame)
     }
 
     suspend fun incoming() {
@@ -62,14 +66,10 @@ abstract class WebSocketServiceCallTransport(
 
         disconnectPending()
 
-        socketLock.use {
-            val safeSocket = socket ?: return
+        val safeSocket = socketLock.use { socket.also { socket = null } } ?: return
 
-            safeSuspendCall(transportLog) {
-                if (safeSocket.isActive == true) safeSocket.close(CloseReason(CloseReason.Codes.GOING_AWAY, ""))
-            }
-
-            socket = null
+        safeSuspendCall(transportLog) {
+            if (safeSocket.isActive == true) safeSocket.close(CloseReason(CloseReason.Codes.GOING_AWAY, ""))
         }
     }
 

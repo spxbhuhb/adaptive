@@ -37,7 +37,7 @@ abstract class ServiceCallTransport(
 
     var trace: Boolean = false
 
-    val responseTimeout = 20.seconds
+    var responseTimeout = 20.seconds
 
     val responseChannelLock = getLock()
 

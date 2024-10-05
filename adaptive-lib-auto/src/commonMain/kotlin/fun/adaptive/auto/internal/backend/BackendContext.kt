@@ -1,7 +1,6 @@
 package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.atomic.Atomic
 import `fun`.adaptive.auto.api.AutoListener
@@ -62,7 +61,10 @@ class BackendContext<A : AdatClass>(
         lock.use {
             val toRemove = pConnectors.filter { it.peerHandle.peerId == handle.peerId }
             pConnectors -= toRemove
-            toRemove.forEach { it.onDisconnect() }
+            toRemove.forEach {
+                logger.fine { "remove connector $handle" }
+                it.dispose()
+            }
         }
     }
 

@@ -16,7 +16,7 @@ class DirectConnector(
         peer.removePeer(connecting.context.handle)
     }
 
-    override fun onDisconnect() {
+    override fun dispose() {
         // nothing to do for direct connector
     }
 

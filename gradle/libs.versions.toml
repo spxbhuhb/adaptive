@@ -92,6 +92,7 @@ ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "kto
 ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
 ktor-server-tests = { module = "io.ktor:ktor-server-tests-jvm", version.ref = "ktor" }
 ktor-server-websockets = { module = "io.ktor:ktor-server-websockets", version.ref = "ktor" }
+ktor-server-forwardedheaders = { module = "io.ktor:ktor-server-forwarded-header", version.ref = "ktor" }
 
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 

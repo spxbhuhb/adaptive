@@ -210,9 +210,9 @@ inline fun <reified T : AdaptiveInstruction> AdaptiveAdapter.collect(deep: Boole
 inline fun <reified T : Any> AdaptiveAdapter.firstImpl(
     deep: Boolean = true,
     horizontal: Boolean = true
-): T? =
-    firstOrNull(deep, horizontal) { f -> (f as? BackendFragment)?.let { it.impl is T } ?: false }
-        .let { (it as BackendFragment).impl as T? }
+): T =
+    first(deep, horizontal) { f -> (f as? BackendFragment)?.let { it.impl is T } == true }
+        .let { (it as BackendFragment).impl as T }
 
 /**
  * Returns the single fragment of class [T], or throws an exception

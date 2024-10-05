@@ -10,6 +10,8 @@ import `fun`.adaptive.backend.setting.dsl.setting
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.transport.ServiceSessionProvider
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.safeCall
+import `fun`.adaptive.utility.safeSuspendCall
 import `fun`.adaptive.wireformat.api.Json
 import `fun`.adaptive.wireformat.api.Proto
 import io.ktor.http.*
@@ -17,6 +19,8 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.http.content.*
 import io.ktor.server.netty.*
+import io.ktor.server.plugins.forwardedheaders.XForwardedHeaders
+import io.ktor.server.plugins.origin
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
@@ -27,9 +31,11 @@ import java.io.File
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 
-class KtorWorker : WorkerImpl<KtorWorker> {
+class KtorWorker(
+    port: Int = 8080,
+) : WorkerImpl<KtorWorker> {
 
-    val port by setting<Int> { "KTOR_PORT" } default 8080
+    val port by setting<Int> { "KTOR_PORT" } default port
     val wireFormat by setting<String> { "KTOR_WIREFORMAT" } default "json"
     val staticResourcesPath by setting<String> { "KTOR_STATIC_FILES" } default "./var/static"
     val serviceWebSocketRoute by setting<String> { "KTOR_SERVICE_WEBSOCKET_ROUTE" } default "/adaptive/service-ws"
@@ -64,6 +70,8 @@ class KtorWorker : WorkerImpl<KtorWorker> {
             masking = false
         }
 
+        install(XForwardedHeaders)
+
         routing {
             clientId()
             sessionWebsocketServiceCallTransport()
@@ -80,6 +88,10 @@ class KtorWorker : WorkerImpl<KtorWorker> {
         val provider = sessionProvider ?: return
 
         webSocket(serviceWebSocketRoute) {
+
+            logger.info {
+                with(call.request.origin) { "WS-CONNECT $remoteAddress:$remotePort" }
+            }
 
             val sessionUuid = call.request.cookies[clientIdCookieName]?.let { UUID<ServiceContext>(it) } ?: UUID()
 
@@ -108,6 +120,11 @@ class KtorWorker : WorkerImpl<KtorWorker> {
                 currentCoroutineContext().ensureActive()
             } catch (ex: Exception) {
                 transport.transportLog.error(ex)
+            } finally {
+                safeSuspendCall(logger) {
+                    transport.disconnect()
+                }
+                logger.info { with (call.request.origin) { "WS-DISCONNECT $remoteAddress:$remotePort" } }
             }
 
         }

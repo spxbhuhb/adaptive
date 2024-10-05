@@ -81,7 +81,7 @@ abstract class BackendBase(
         context.stop()
     }
 
-    override fun onDisconnect() {
+    override fun dispose() {
         // nothing to do with this
     }
 

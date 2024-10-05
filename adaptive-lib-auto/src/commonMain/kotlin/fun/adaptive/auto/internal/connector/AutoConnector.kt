@@ -11,15 +11,16 @@ abstract class AutoConnector(
 
     /**
      * Disconnect this connector from its peer. Calls `AutoApi.removePeer` to
-     * notify the peer. `AutoApi.removePeer` in turn calls [onDisconnect] of the
+     * notify the peer. `AutoApi.removePeer` in turn calls [dispose] of the
      * peer connector.
      */
     abstract suspend fun disconnect()
 
     /**
-     * Called when a peer of this connector disconnects.
+     * Called when the backend removes this connector with `removeConnector` and
+     * the connector will no longer be used. The connector has to free all resources
+     * it holds.
      */
-    abstract fun onDisconnect()
-
+    abstract fun dispose()
 
 }

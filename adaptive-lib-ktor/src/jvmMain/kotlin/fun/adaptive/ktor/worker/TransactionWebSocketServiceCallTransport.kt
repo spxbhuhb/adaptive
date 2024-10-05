@@ -9,6 +9,7 @@ import `fun`.adaptive.wireformat.WireFormatProvider
 import io.ktor.websocket.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 class TransactionWebSocketServiceCallTransport(
@@ -31,8 +32,10 @@ class TransactionWebSocketServiceCallTransport(
         requireNotNull(service) { "service not found: $serviceName" }
 
         // TODO suspend transactions in Exposed
-        return newSuspendedTransaction {
-            service.dispatch(funName, decoder)
+        return withContext(Dispatchers.IO) {
+            newSuspendedTransaction {
+                service.dispatch(funName, decoder)
+            }
         }
     }
 }

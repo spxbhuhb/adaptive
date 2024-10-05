@@ -85,7 +85,7 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatCl
         val autoService = getService<AutoApi>(adapter.transport)
 
         backend.addPeer(
-            ServiceConnector(connectingHandle, originHandle, autoService, logger, scope, 1000),
+            ServiceConnector(backend, originHandle, autoService, logger, scope),
             connectInfo.originTime
         )
 

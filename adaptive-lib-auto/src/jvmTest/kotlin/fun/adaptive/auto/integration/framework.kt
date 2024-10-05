@@ -27,13 +27,9 @@ fun autoTest(
     val originAdapter = backend {
         if (trace) it.trace = arrayOf(Regex(".*"))
 
-        settings {
-            inline("KTOR_PORT" to port)
-        }
-
         inMemoryH2(callSiteName.substringAfterLast('.'))
 
-        ktor()
+        ktor(port)
         auth()
 
         auto()

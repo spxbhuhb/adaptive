@@ -11,7 +11,7 @@ import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
 @Adaptive
-fun ktor() {
+fun ktor(port : Int = 8080) {
     WireFormatRegistry += AccessDenied
-    worker { KtorWorker() }
+    worker { KtorWorker(port) }
 }

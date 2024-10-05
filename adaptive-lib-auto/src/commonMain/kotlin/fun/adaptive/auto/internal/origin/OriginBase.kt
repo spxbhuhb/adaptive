@@ -99,12 +99,11 @@ class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
 
         backend.addPeer(
             ServiceConnector(
-                connectInfo.connectingHandle,
+                backend,
                 connectInfo.originHandle,
                 autoService,
                 logger,
-                scope,
-                1000
+                scope
             ),
             connectInfo.originTime
         )
