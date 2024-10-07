@@ -23,16 +23,21 @@ class PropertyBackend<A : AdatClass>(
     val properties: List<AdatPropertyWireFormat<*>> = wireFormat.propertyWireFormats
 
     operator fun List<AdatPropertyWireFormat<*>>.get(name: String): AdatPropertyWireFormat<*> =
-        first { it.property.name == name }
+        first { it.metadata.name == name }
 
     fun indexOf(name: String) =
-        properties[name].property.index
+        properties[name].metadata.index
 
     val values: Array<Any?> = initialValues.copyOf()
 
     val lastUpdate = propertyTimes.max()
 
-    val propertyTimes = propertyTimes.toMutableList()
+    val propertyTimes = propertyTimes.toMutableList().also {
+        // this happens when we extend the property list of the adat class
+        while (it.size < values.size) {
+            it += itemId
+        }
+    }
 
     init {
         trace { "INIT  itemId=$itemId  ${initialValues.contentToString()}" }
@@ -103,7 +108,7 @@ class PropertyBackend<A : AdatClass>(
 
                 @Suppress("UNCHECKED_CAST")
                 val wireformat = property.wireFormat as WireFormat<Any?>
-                val value = if (property.nullable) {
+                val value = if (property.metadata.isNullable) {
                     decoder.asInstanceOrNull(wireformat)
                 } else {
                     decoder.asInstance(wireformat)
@@ -184,14 +189,14 @@ class PropertyBackend<A : AdatClass>(
             @Suppress("UNCHECKED_CAST")
             val wireformat = property.wireFormat as WireFormat<Any?>
             val encoder = context.wireFormatProvider.encoder()
-            if (property.nullable) {
+            if (property.metadata.isNullable) {
                 encoder.rawInstanceOrNull(value, wireformat)
             } else {
                 encoder.rawInstance(value, wireformat)
             }
             return encoder.pack()
         } catch (e: Throwable) {
-            context.logger.error("error while writing property: ${property.property}")
+            context.logger.error("error while writing property: ${property.metadata}")
             throw e
         }
     }

@@ -11,31 +11,29 @@ import `fun`.adaptive.wireformat.WireFormatDecoder
 import `fun`.adaptive.wireformat.WireFormatEncoder
 
 class AdatPropertyWireFormat<T>(
-    val property: AdatPropertyMetadata,
+    val metadata: AdatPropertyMetadata,
     val wireFormat : WireFormat<T>
 ) {
 
     val index: Int
-        get() = property.index
+        get() = metadata.index
 
     val name: String
-        get() = property.name
-
-    val nullable : Boolean = property.signature.endsWith("?")
+        get() = metadata.name
 
     fun encode(encoder: WireFormatEncoder, instance: AdatClass) {
         @Suppress("UNCHECKED_CAST")
-        wireFormat.wireFormatEncode(encoder, property.index, property.name, instance.getValue(property.index) as T?)
+        wireFormat.wireFormatEncode(encoder, metadata.index, metadata.name, instance.getValue(metadata.index) as T?)
     }
 
     fun encode(encoder : WireFormatEncoder, values : Array<Any?>) {
         @Suppress("UNCHECKED_CAST")
-        wireFormat.wireFormatEncode(encoder, property.index, property.name, values[property.index] as T?)
+        wireFormat.wireFormatEncode(encoder, metadata.index, metadata.name, values[metadata.index] as T?)
     }
 
     fun decode(decoder: WireFormatDecoder<*>, values:Array<Any?>) {
-        val value = wireFormat.wireFormatDecode(decoder, property.index, property.name)
-        values[property.index] = if (nullable) value else checkNotNull(value)
+        val value = wireFormat.wireFormatDecode(decoder, metadata.index, metadata.name)
+        values[metadata.index] = if (metadata.isNullable || metadata.hasDefault) value else checkNotNull(value)
     }
 
 }
