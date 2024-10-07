@@ -15,6 +15,7 @@ import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrProperty
+import org.jetbrains.kotlin.ir.types.isNullable
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
@@ -28,6 +29,8 @@ class MetadataVisitor(
 
     val properties = mutableListOf<PropertyData>()
     val descriptors = mutableListOf<Pair<String, List<AdatDescriptorMetadata>>>()
+
+    val constructor = adatClass.primaryConstructor !!
 
     var propertyIndex = 0
 
@@ -78,6 +81,16 @@ class MetadataVisitor(
         if (isVal) flags = flags or AdatPropertyMetadata.VAL
         if (backingField == null || isImmutable(signature)) flags = flags or AdatPropertyMetadata.IMMUTABLE_VALUE
         if (backingField?.type?.isSubtypeOfClass(pluginContext.adatClass) == true) flags = flags or AdatPropertyMetadata.ADAT_CLASS
+
+        if (backingField?.type?.isNullable() == true) {
+            flags = flags or AdatPropertyMetadata.NULLABLE
+        }
+
+        val defaultValue = constructor.valueParameters.firstOrNull { it.name == declaration.name }?.defaultValue
+
+        if (defaultValue != null) {
+            flags = flags or AdatPropertyMetadata.HAS_DEFAULT
+        }
 
         return flags
     }

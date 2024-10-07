@@ -1,4 +1,5 @@
 import org.gradle.kotlin.dsl.adaptive
+import org.gradle.kotlin.dsl.implementation
 
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
@@ -69,6 +70,7 @@ kotlin {
                 implementation(libs.ktor.server.core)
                 implementation(libs.ktor.server.netty)
                 implementation(libs.ktor.server.websockets)
+                implementation(libs.ktor.server.forwardedheaders)
                 implementation(libs.adaptive.lib.exposed)
             }
         }

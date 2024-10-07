@@ -52,6 +52,7 @@ class AdatPluginContext(
     val javaUuidTypeN = javaUuidType?.makeNullable()
 
     val asCommon = CallableIds.asCommon.functions()
+    val verifyParameters = CallableIds.verifyParameters.functions().single()
 
     fun IrFunctionSymbol.isExtensionOf(symbol: IrClassSymbol?, nullable: Boolean) =
         symbol != null && owner.extensionReceiverParameter?.type?.let { it.isSubtypeOfClass(symbol) && it.isNullable() == nullable } == true

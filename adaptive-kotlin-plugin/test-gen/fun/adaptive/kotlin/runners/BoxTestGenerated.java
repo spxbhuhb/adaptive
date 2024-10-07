@@ -38,12 +38,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Test
-    @TestMetadata("defaultsBasic.kt")
-    public void testDefaultsBasic() {
-      runTest("testData/box/adat/defaultsBasic.kt");
-    }
-
-    @Test
     @TestMetadata("emptyConstructor.kt")
     public void testEmptyConstructor() {
       runTest("testData/box/adat/emptyConstructor.kt");
@@ -65,6 +59,34 @@ public class BoxTestGenerated extends AbstractBoxTest {
     @TestMetadata("withCompanion.kt")
     public void testWithCompanion() {
       runTest("testData/box/adat/withCompanion.kt");
+    }
+
+    @Nested
+    @TestMetadata("testData/box/adat/default")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Default {
+      @Test
+      public void testAllFilesPresentInDefault() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adat/default"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+      }
+
+      @Test
+      @TestMetadata("defaultArray.kt")
+      public void testDefaultArray() {
+        runTest("testData/box/adat/default/defaultArray.kt");
+      }
+
+      @Test
+      @TestMetadata("defaultArrayFail.kt")
+      public void testDefaultArrayFail() {
+        runTest("testData/box/adat/default/defaultArrayFail.kt");
+      }
+
+      @Test
+      @TestMetadata("defaultsBasic.kt")
+      public void testDefaultsBasic() {
+        runTest("testData/box/adat/default/defaultsBasic.kt");
+      }
     }
 
     @Nested

@@ -102,6 +102,7 @@ object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val asJava = "asJava".callableId { exposed }
 
     val properties = "properties".callableId { api }
+    val verifyParameters = "verifyParameters".callableId()
 
     //  See comments in AdatGenerationExtension
     // val updateFun = "update".callableId { api }

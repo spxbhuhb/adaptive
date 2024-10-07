@@ -75,6 +75,18 @@ class AdatPropertyMetadata(
     val isAdatClass
         get() = (flags and ADAT_CLASS) != 0
 
+    /**
+     * True when the property is nullable.
+     */
+    val isNullable
+        get() = (flags and NULLABLE) != 0
+
+    /**
+     * True when the property has a default value.
+     */
+    val hasDefault
+        get() = (flags and HAS_DEFAULT) != 0
+
     fun isSecret(descriptors : Array<AdatDescriptorSet>) =
         descriptors.first { it.property.name == name }.descriptors.filterIsInstance<StringSecret>().firstOrNull()?.isSecret == true
 
@@ -108,6 +120,8 @@ class AdatPropertyMetadata(
         const val VAL = 1
         const val IMMUTABLE_VALUE = 2
         const val ADAT_CLASS = 4
+        const val NULLABLE = 8
+        const val HAS_DEFAULT = 16
 
         override val wireFormatName: String
             get() = "fun.adaptive.adat.metadata.AdatPropertyMetadata"

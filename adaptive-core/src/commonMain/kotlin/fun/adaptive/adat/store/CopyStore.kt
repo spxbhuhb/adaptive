@@ -69,7 +69,7 @@ class CopyStore<A : AdatClass>(
 
     fun makeCopy(value: A, change: AdatChange?, patch: Boolean) =
         value.deepCopy(change).also {
-            it.applyContext(adatContext)
+            adatContext.apply(it)
             it.validateForContext()
             latestValue = it
             onChange?.invoke(it)
