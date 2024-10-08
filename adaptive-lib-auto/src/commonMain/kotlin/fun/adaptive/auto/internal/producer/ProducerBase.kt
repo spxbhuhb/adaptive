@@ -21,14 +21,20 @@ import `fun`.adaptive.foundation.producer.AdaptiveProducer
 import `fun`.adaptive.log.AdaptiveLogger
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.getService
+import `fun`.adaptive.utility.getLock
+import `fun`.adaptive.utility.safeCall
 import `fun`.adaptive.utility.safeLaunch
 import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
     override val binding: AdaptiveStateVariableBinding<VT>,
-    val connect: suspend () -> AutoConnectionInfo<VT>,
+    val connect: suspend () -> AutoConnectionInfo<VT>?,
     val peer: OriginBase<*, *, VT, IT>? = null,
     val trace: Boolean
 ) : AdatStore<IT>(), AdaptiveProducer<VT> {
@@ -44,14 +50,25 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatCl
     lateinit var backend: BE
     lateinit var frontend: FE
 
+    var job: Job? = null
+
     val adapter
         get() = binding.targetFragment.adapter
 
     abstract val defaultWireFormat : AdatClassWireFormat<*>?
 
     override fun start() {
-        scope.launch {
-            connectInfo = connect()
+        job = scope.launch {
+
+            while (isActive) {
+                val ci = connect()
+                if (ci != null) {
+                    connectInfo = ci
+                    break
+                }
+                delay(1000)
+            }
+
             val originHandle = connectInfo.originHandle
             val connectingHandle = connectInfo.connectingHandle
 
@@ -107,6 +124,10 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatCl
 
         scope.safeLaunch(logger) {
             backend.disconnect()
+        }
+
+        safeCall(logger) {
+            job?.cancel()
         }
     }
 

@@ -41,7 +41,7 @@ fun <A : AdatClass> autoList(
     listener : AutoListener<A>? = null,
     binding: AdaptiveStateVariableBinding<List<A>>? = null,
     trace: Boolean = false,
-    connect: suspend () -> AutoConnectionInfo<List<A>>
+    connect: suspend () -> AutoConnectionInfo<List<A>>?
 ): List<A>? {
     checkNotNull(binding)
 

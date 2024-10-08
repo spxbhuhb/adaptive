@@ -11,7 +11,7 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 
 class AutoList<A : AdatClass>(
     binding: AdaptiveStateVariableBinding<List<A>>,
-    connect: suspend () -> AutoConnectionInfo<List<A>>,
+    connect: suspend () -> AutoConnectionInfo<List<A>>?,
     override val defaultWireFormat: AdatClassWireFormat<*>? = null,
     val listener: AutoListener<A>? = null,
     peer: OriginBase<*, *, List<A>, A>? = null,
