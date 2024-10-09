@@ -23,4 +23,8 @@ abstract class AutoListener<A : AdatClass> {
 
     }
 
+    open fun onSyncEnd() {
+
+    }
+
 }

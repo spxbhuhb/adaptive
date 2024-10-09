@@ -108,4 +108,8 @@ class BackendContext<A : AdatClass>(
     internal fun onItemCommit(item : A) {
         listeners.forEach { it.onItemCommit(item) }
     }
+
+    internal fun onSyncEnd() {
+        listeners.forEach { it.onSyncEnd() }
+    }
 }

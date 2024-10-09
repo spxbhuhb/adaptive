@@ -52,6 +52,8 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatCl
 
     var job: Job? = null
 
+    var syncEnd = false
+
     val adapter
         get() = binding.targetFragment.adapter
 

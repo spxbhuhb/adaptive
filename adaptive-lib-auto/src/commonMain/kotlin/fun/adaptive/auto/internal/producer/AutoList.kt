@@ -37,15 +37,22 @@ class AutoList<A : AdatClass>(
     private inner class ProducerListener: AutoListener<A>() {
 
         override fun onListCommit(newValue: List<A>) {
+            if (! syncEnd) return
             latestValue = frontend.values
             setDirty() // TODO make a separate binding for producers
         }
 
         override fun onItemCommit(item: A) {
+            if (! syncEnd) return
             latestValue = frontend.values
             setDirty() // TODO make a separate binding for producers
         }
 
+        override fun onSyncEnd() {
+            syncEnd = true
+            latestValue = frontend.values
+            setDirty() // TODO make a separate binding for producers
+        }
     }
 
 }

@@ -117,6 +117,7 @@ class SetBackend<A : AdatClass>(
         afterSync.forEach { modify(it, commit) }
         afterSync.clear()
         context.receive(operation.timestamp)
+        context.onSyncEnd()
         trace { "time=${context.time}" }
     }
 
