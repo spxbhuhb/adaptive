@@ -7,6 +7,7 @@ import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.internal.origin.OriginListBase
 import `fun`.adaptive.auto.internal.producer.AutoList
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoHandle
@@ -126,9 +127,9 @@ fun <A : AdatClass> autoList(
     handle: AutoHandle = AutoHandle(),
     register: Boolean = true,
     trace: Boolean = false
-): OriginBase<SetBackend<A>, AdatClassListFrontend<A>, List<A>, A> {
+): ListBase<A> {
 
-    return OriginBase(
+    return OriginListBase(
         worker,
         handle,
         serviceContext,
@@ -174,9 +175,9 @@ fun <A : AdatClass> autoList(
     serviceContext: ServiceContext? = null,
     handle: AutoHandle = AutoHandle(),
     trace: Boolean = false
-): OriginBase<SetBackend<A>, AdatClassListFrontend<A>, List<A>, A> {
+): ListBase<A> {
 
-    return OriginBase(
+    return OriginListBase(
         worker,
         handle,
         serviceContext,

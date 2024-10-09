@@ -8,12 +8,11 @@ import `fun`.adaptive.auto.model.ItemId
 
 open class AdatClassListFrontend<A : AdatClass>(
     override val backend: SetBackend<A>
-) : CollectionFrontendBase() {
+) : CollectionFrontendBase<A>() {
 
     var classFrontends = mutableMapOf<ItemId, AdatClassFrontend<A>>()
 
-    var values: List<A> = emptyList()
-        private set
+    override var values: List<A> = emptyList()
 
     // TODO optimize AutoClassListFrontend.commit  (or maybe SetBackend)
     override fun commit(initial : Boolean) {
@@ -35,13 +34,11 @@ open class AdatClassListFrontend<A : AdatClass>(
         backend.context.onItemCommit(instance)
     }
 
-    operator fun get(index: Int) = values[index]
-
     operator fun plusAssign(item: A) {
         add(item)
     }
 
-    fun add(item: A) {
+    override fun add(item: A) {
         backend.add(item, null, true)
     }
 
@@ -49,11 +46,11 @@ open class AdatClassListFrontend<A : AdatClass>(
         remove(item.adatContext !!.id as ItemId)
     }
 
-    fun remove(itemId: ItemId) {
+    override fun remove(itemId: ItemId) {
         backend.remove(itemId, true)
     }
 
-    fun remove(selector: (A) -> Boolean) {
+    override fun remove(selector: (A) -> Boolean) {
         for (item in values.filter(selector)) {
             backend.remove(itemId(item), true)
         }

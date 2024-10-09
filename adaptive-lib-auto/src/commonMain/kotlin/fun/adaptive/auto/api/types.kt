@@ -7,8 +7,9 @@ import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.frontend.FileFrontend
 import `fun`.adaptive.auto.internal.frontend.FolderFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.internal.origin.OriginListBase
 
 typealias InstanceBase<A> = OriginBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A>
-typealias ListBase<A> = OriginBase<SetBackend<A>, AdatClassListFrontend<A>, List<A>, A>
+typealias ListBase<A> = OriginListBase<SetBackend<A>, AdatClassListFrontend<A>, A>
 typealias FileBase<A> = OriginBase<PropertyBackend<A>, FileFrontend<A>, A, A>
-typealias FolderBase<A> = OriginBase<SetBackend<A>, FolderFrontend<A>, List<A>, A>
+typealias FolderBase<A> = OriginListBase<SetBackend<A>, FolderFrontend<A>, A>

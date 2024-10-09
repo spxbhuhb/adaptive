@@ -23,7 +23,7 @@ import `fun`.adaptive.utility.CleanupHandler
 import `fun`.adaptive.wireformat.api.Proto
 import kotlin.time.Duration
 
-class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
+open class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
     val worker: AutoWorker?,
     val handle: AutoHandle,
     serviceContext: ServiceContext?,

@@ -5,7 +5,7 @@ import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.frontend.FolderFrontend
-import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.internal.origin.OriginListBase
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.service.ServiceContext
@@ -72,11 +72,11 @@ fun <A : AdatClass> autoFolder(
     handle: AutoHandle = AutoHandle(),
     register : Boolean = true,
     trace: Boolean = false,
-): OriginBase<SetBackend<A>, FolderFrontend<A>, List<A>, A> {
+): FolderBase<A> {
 
     require(path.exists()) { "missing directory: ${SystemFileSystem.resolve(path)}" }
 
-    return OriginBase(
+    return OriginListBase(
         worker,
         handle,
         serviceContext,
