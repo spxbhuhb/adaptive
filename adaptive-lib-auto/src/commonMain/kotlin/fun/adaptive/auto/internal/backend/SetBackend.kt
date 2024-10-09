@@ -124,8 +124,12 @@ class SetBackend<A : AdatClass>(
     // Peer synchronization
     // --------------------------------------------------------------------------------
 
-    override suspend fun syncPeer(connector: AutoConnector, syncFrom: LamportTimestamp, sendSyncEnd : Boolean) {
-
+    override suspend fun syncPeer(
+        connector: AutoConnector,
+        syncFrom: LamportTimestamp,
+        syncBatch: MutableList<AutoModify>?,
+        sendSyncEnd: Boolean,
+    ) {
         // The current time marks everything we have to send over. Anything happens after
         // this point will be sent by the normal distribution mechanism. The only problematic
         // events are the property updates as the updated item may not be on the other side yet.
@@ -158,7 +162,7 @@ class SetBackend<A : AdatClass>(
 
     suspend fun syncItem(connector: AutoConnector, syncFrom: LamportTimestamp, itemId: ItemId) {
         requireNotNull(items[itemId]) { "missing item: $itemId" }
-            .syncPeer(connector, syncFrom, false)
+            .syncPeer(connector, syncFrom, null, false)
     }
 
     suspend fun syncCollection(time : LamportTimestamp, connector: AutoConnector, syncFrom: LamportTimestamp) {
@@ -172,14 +176,27 @@ class SetBackend<A : AdatClass>(
             connector.send(AutoRemove(time, false, removals))
         }
 
+        var add = mutableListOf<AutoAdd>()
+        val modify = mutableListOf<AutoModify>()
+
         for (item in items.values.sortedBy { it.itemId }) {
             val itemId = item.itemId
 
             if (itemId.timestamp > syncFrom.timestamp) {
-                connector.send(AutoAdd(time, itemId, item.wireFormatName, null, encode(item.wireFormatName, item.values)))
+                add += AutoAdd(time, itemId, item.wireFormatName, null, encode(item.wireFormatName, item.values))
             } else {
-                item.syncPeer(connector, syncFrom, false)
+                item.syncPeer(connector, syncFrom, modify, false)
             }
+
+            if (add.size + modify.size >= 1000) {
+                connector.send(AutoSyncBatch(time, add, modify))
+                add.clear()
+                modify.clear()
+            }
+        }
+
+        if (add.isNotEmpty() || modify.isNotEmpty()) {
+            connector.send(AutoSyncBatch(time, add, modify))
         }
     }
 

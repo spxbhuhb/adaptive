@@ -46,6 +46,7 @@ class ServiceConnector(
                     is AutoMove -> service.move(peerHandle, operation)
                     is AutoRemove -> service.remove(peerHandle, operation)
                     is AutoEmpty -> service.empty(peerHandle, operation)
+                    is AutoSyncBatch -> service.syncBatch(peerHandle, operation)
                     is AutoSyncEnd -> service.syncEnd(peerHandle, operation)
                 }
             }

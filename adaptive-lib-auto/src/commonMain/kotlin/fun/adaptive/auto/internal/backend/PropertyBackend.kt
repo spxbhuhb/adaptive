@@ -147,7 +147,12 @@ class PropertyBackend<A : AdatClass>(
     /**
      * Send any changes that happened after [syncFrom] to the peer.
      */
-    override suspend fun syncPeer(connector: AutoConnector, syncFrom: LamportTimestamp, sendSyncEnd: Boolean) {
+    override suspend fun syncPeer(
+        connector: AutoConnector,
+        syncFrom: LamportTimestamp,
+        syncBatch: MutableList<AutoModify>?,
+        sendSyncEnd: Boolean,
+    ) {
 
         if (syncFrom >= lastUpdate) {
             trace { "SKIP SYNC: time= $lastUpdate peerTime=$syncFrom" }
@@ -170,10 +175,14 @@ class PropertyBackend<A : AdatClass>(
 
         trace { "peerTime=$syncFrom op=$operation" }
 
-        connector.send(operation)
+        if (syncBatch != null) {
+            syncBatch += operation
+        } else {
+            connector.send(operation)
 
-        if (sendSyncEnd) {
-            connector.send(AutoSyncEnd(context.time))
+            if (sendSyncEnd) {
+                connector.send(AutoSyncEnd(context.time))
+            }
         }
     }
 

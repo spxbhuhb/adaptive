@@ -114,22 +114,28 @@ class TreeBackend<A : AdatClass>(
     // Peer synchronization
     // --------------------------------------------------------------------------------
 
-    override suspend fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp, sendsyncEnd : Boolean) {
-        val time = context.time
+    override suspend fun syncPeer(
+        connector: AutoConnector,
+        syncFrom: LamportTimestamp,
+        syncBatch: MutableList<AutoModify>?,
+        sendSyncEnd: Boolean,
+    ) {
 
-        if (peerTime.timestamp >= time.timestamp) {
-            trace { "SKIP SYNC: time= $time peerTime=$peerTime" }
-            return
-        }
-
-        val removals = tree.removedNodes.children
-        if (removals.isNotEmpty()) {
-            connector.send(AutoRemove(peerTime, true, removals.map { it.id }.toSet()))
-        }
-
-        for (item in items.values) {
-            item.syncPeer(connector, peerTime)
-        }
+//        val time = context.time
+//
+//        if (peerTime.timestamp >= time.timestamp) {
+//            trace { "SKIP SYNC: time= $time peerTime=$peerTime" }
+//            return
+//        }
+//
+//        val removals = tree.removedNodes.children
+//        if (removals.isNotEmpty()) {
+//            connector.send(AutoRemove(peerTime, true, removals.map { it.id }.toSet()))
+//        }
+//
+//        for (item in items.values) {
+//            item.syncPeer(connector, peerTime)
+//        }
 
     }
 

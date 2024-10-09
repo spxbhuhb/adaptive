@@ -63,8 +63,11 @@ class AutoService : ServiceImpl<AutoService>, AutoApi {
         worker.receive(handle, operation)
     }
 
-    override suspend fun syncEnd(handle: AutoHandle, operation: AutoSyncEnd) {
+    override suspend fun syncBatch(handle: AutoHandle, operation: AutoSyncBatch) {
         worker.receive(handle, operation)
     }
 
+    override suspend fun syncEnd(handle: AutoHandle, operation: AutoSyncEnd) {
+        worker.receive(handle, operation)
+    }
 }

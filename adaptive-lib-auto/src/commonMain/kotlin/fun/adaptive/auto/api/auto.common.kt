@@ -12,6 +12,9 @@ import `fun`.adaptive.auto.model.operation.AutoEmpty
 import `fun`.adaptive.auto.model.operation.AutoModify
 import `fun`.adaptive.auto.model.operation.AutoMove
 import `fun`.adaptive.auto.model.operation.AutoRemove
+import `fun`.adaptive.auto.model.operation.AutoSyncBatch
+import `fun`.adaptive.auto.model.operation.AutoSyncEnd
+import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.foundation.Adaptive
@@ -34,6 +37,8 @@ private fun wireFormats() {
     WireFormatRegistry += AutoModify
     WireFormatRegistry += AutoMove
     WireFormatRegistry += AutoRemove
+    WireFormatRegistry += AutoSyncBatch
+    WireFormatRegistry += AutoSyncEnd
     WireFormatRegistry += AutoPropertyValue
     WireFormatRegistry += LamportTimestamp
     enum(AutoConnectionType.entries)

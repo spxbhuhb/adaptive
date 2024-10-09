@@ -63,11 +63,16 @@ abstract class BackendBase(
     fun addPeer(connector: AutoConnector, peerTime: LamportTimestamp): LamportTimestamp {
         val scope = checkNotNull(context.scope) { "cannot add a peer when scope is null" }
         context.addConnector(connector)
-        scope.safeLaunch(context.logger) { syncPeer(connector, peerTime) }
+        scope.safeLaunch(context.logger) { syncPeer(connector, peerTime, null) }
         return context.time
     }
 
-    abstract suspend fun syncPeer(connector: AutoConnector, peerTime: LamportTimestamp, sendSyncEnd: Boolean = true)
+    abstract suspend fun syncPeer(
+        connector: AutoConnector,
+        peerTime: LamportTimestamp,
+        syncBatch: MutableList<AutoModify>?,
+        sendSyncEnd: Boolean = true
+    )
 
     fun removePeer(handle: AutoHandle) {
         context.removeConnector(handle)
