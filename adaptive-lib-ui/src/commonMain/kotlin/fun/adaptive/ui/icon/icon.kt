@@ -9,7 +9,7 @@ import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.DrawableResource
 
 @Adaptive
-fun icon(resource: DrawableResource, vararg instructions: AdaptiveInstruction) : AdaptiveFragment {
-    svg(resource, *instructions) .. iconTheme.active
+fun icon(resource: DrawableResource, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
+    svg(resource, *iconTheme.active, *instructions)
     return fragment()
 }
