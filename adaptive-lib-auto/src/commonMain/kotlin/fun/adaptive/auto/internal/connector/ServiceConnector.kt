@@ -79,7 +79,7 @@ class ServiceConnector(
     }
 
     override fun dispose() {
-        safeCall(logger, "onDisconnect error in ServiceConnector @ $thisBackend") {
+        safeCall(logger, message = "onDisconnect error in ServiceConnector @ $thisBackend") {
             job.cancel()
             operations.close()
         }

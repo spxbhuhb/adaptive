@@ -39,22 +39,26 @@ class OriginListBase<BE : BackendBase, FE : CollectionFrontendBase<IT>, IT : Ada
         values.iterator()
 
     override fun indexOf(element: IT): Int =
-        values.indexOf(element)
+        unsupported()
 
     override fun lastIndexOf(element: IT): Int =
-        values.lastIndexOf(element)
+        unsupported()
 
     override operator fun get(index: Int) =
-        values[index]
+        unsupported()
 
     override fun listIterator(): ListIterator<IT> =
         values.listIterator()
 
     override fun listIterator(index: Int): ListIterator<IT> =
-        values.listIterator(index)
+        unsupported()
 
     override fun subList(fromIndex: Int, toIndex: Int): List<IT> =
-        values.subList(fromIndex, toIndex)
+        unsupported()
+
+    operator fun plusAssign(element: IT) {
+        frontend.add(element)
+    }
 
     fun add(element: IT) {
         frontend.add(element)
@@ -64,4 +68,7 @@ class OriginListBase<BE : BackendBase, FE : CollectionFrontendBase<IT>, IT : Ada
         frontend.remove(selector)
     }
 
+    private fun unsupported() : Nothing {
+            throw UnsupportedOperationException("auto list indexes can change in the background, make a copy of the list to use indices")
+    }
 }
