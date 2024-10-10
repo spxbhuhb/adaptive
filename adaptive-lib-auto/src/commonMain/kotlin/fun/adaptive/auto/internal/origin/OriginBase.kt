@@ -123,7 +123,7 @@ open class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
      * Connect to the origin backend with [DirectConnector]. This works only if the origin is
      * in the same VM as the connecting peer.
      */
-    suspend fun connectDirect(
+    open suspend fun connectDirect(
         waitForSync: Duration? = null,
         connectInfoFun: suspend () -> AutoConnectionInfo<VT>
     ): OriginBase<BE, FE, VT, IT> {

@@ -5,8 +5,10 @@ import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.BackendBase
 import `fun`.adaptive.auto.internal.frontend.CollectionFrontendBase
+import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.service.ServiceContext
+import kotlin.time.Duration
 
 class OriginListBase<BE : BackendBase, FE : CollectionFrontendBase<IT>, IT : AdatClass>(
     worker: AutoWorker?,
@@ -70,5 +72,13 @@ class OriginListBase<BE : BackendBase, FE : CollectionFrontendBase<IT>, IT : Ada
 
     private fun unsupported() : Nothing {
             throw UnsupportedOperationException("auto list indexes can change in the background, make a copy of the list to use indices")
+    }
+
+    override suspend fun connectDirect(
+        waitForSync: Duration?,
+        connectInfoFun: suspend () -> AutoConnectionInfo<List<IT>>
+    ): OriginListBase<BE, FE, IT> {
+        super.connectDirect(waitForSync, connectInfoFun)
+        return this
     }
 }
