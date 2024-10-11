@@ -12,6 +12,9 @@ import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatEncoder
 fun <T> T.toJson(wireFormat: WireFormat<T>) =
     JsonWireFormatEncoder().rawInstance(this, wireFormat).pack()
 
+fun <T> String.fromJson(wireFormat: WireFormat<T>) =
+    JsonWireFormatDecoder(this.encodeToByteArray()).asInstance(wireFormat)
+
 fun <T> ByteArray.fromJson(wireFormat: WireFormat<T>) =
     JsonWireFormatDecoder(this).asInstance(wireFormat)
 

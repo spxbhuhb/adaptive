@@ -3,8 +3,10 @@ package `fun`.adaptive.auto.internal.backend
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.atomic.Atomic
-import `fun`.adaptive.auto.api.AutoListener
+import `fun`.adaptive.auto.api.AutoCollectionListener
+import `fun`.adaptive.auto.api.AutoInstanceListener
 import `fun`.adaptive.auto.internal.connector.AutoConnector
+import `fun`.adaptive.auto.internal.producer.AutoInstance
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.log.AdaptiveLogger
@@ -26,7 +28,7 @@ class BackendContext<A : AdatClass>(
 
     val scope = scope ?: CoroutineScope(Dispatchers.Default)
 
-    val time : LamportTimestamp
+    val time: LamportTimestamp
         get() = safeTime.get()
 
     val connectors
@@ -38,7 +40,9 @@ class BackendContext<A : AdatClass>(
 
     private var pConnectors = listOf<AutoConnector>()
 
-    private var listeners = listOf<AutoListener<A>>()
+    private var instanceListeners = emptyList<AutoInstanceListener<A>>()
+
+    private var collectionListeners = emptyList<AutoCollectionListener<A>>()
 
     init {
         logger.fine("backend context created")
@@ -68,17 +72,30 @@ class BackendContext<A : AdatClass>(
         }
     }
 
-    fun addListener(listener: AutoListener<A>) {
+    fun addListener(listener: AutoInstanceListener<A>) {
         lock.use {
-            listeners += listener
+            instanceListeners += listener
         }
     }
 
-    fun removeListener(listener: AutoListener<A>) {
+    fun removeListener(listener: AutoInstanceListener<A>) {
         lock.use {
-            listeners -= listener
+            instanceListeners -= listener
         }
     }
+
+    fun addListener(listener: AutoCollectionListener<A>) {
+        lock.use {
+            collectionListeners += listener
+        }
+    }
+
+    fun removeListener(listener: AutoCollectionListener<A>) {
+        lock.use {
+            collectionListeners -= listener
+        }
+    }
+
 
     suspend fun stop() {
         connectors.forEach { safeSuspendCall(logger) { it.disconnect() } }
@@ -89,27 +106,28 @@ class BackendContext<A : AdatClass>(
     // Listener callbacks
     // --------------------------------------------------------------------------------
 
-    internal fun onAdd(item : A) {
-        listeners.forEach { it.onAdd(item) }
+    internal fun onChange(newValue: A, oldValue: A?) {
+        instanceListeners.forEach { it.onChange(newValue, oldValue) }
+        collectionListeners.forEach { it.onChange(newValue, oldValue) }
     }
 
-    internal fun onRemove(value : A) {
-        listeners.forEach { it.onRemove(value) }
+    internal fun onInit(values: List<A>) {
+        collectionListeners.forEach { it.onInit(values) }
     }
 
-    internal fun onListInit(values : List<A>) {
-        listeners.forEach { it.onListInit(values) }
+    internal fun onChange(values: List<A>) {
+        collectionListeners.forEach { it.onChange(values) }
     }
 
-    internal fun onListCommit(values : List<A>) {
-        listeners.forEach { it.onListCommit(values) }
+    internal fun onAdd(item: A) {
+        collectionListeners.forEach { it.onAdd(item) }
     }
 
-    internal fun onItemCommit(item : A) {
-        listeners.forEach { it.onItemCommit(item) }
+    internal fun onRemove(value: A) {
+        collectionListeners.forEach { it.onRemove(value) }
     }
 
     internal fun onSyncEnd() {
-        listeners.forEach { it.onSyncEnd() }
+        collectionListeners.forEach { it.onSyncEnd() }
     }
 }

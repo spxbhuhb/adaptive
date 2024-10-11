@@ -67,7 +67,7 @@ fun <A : AdatClass> autoFolder(
     wireFormatProvider: WireFormatProvider = Json,
     includeFun: (Path) -> Boolean = { true },
     defaultWireFormat: AdatClassWireFormat<*>? = null,
-    listener : AutoListener<A>? = null,
+    listener : AutoCollectionListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle: AutoHandle = AutoHandle(),
     register : Boolean = true,

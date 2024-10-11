@@ -41,7 +41,7 @@ import `fun`.adaptive.service.ServiceContext
 @Producer
 fun <A : AdatClass> autoInstance(
     peer: OriginBase<*, *, A, A>? = null,
-    listener : AutoListener<A>? = null,
+    listener : AutoInstanceListener<A>? = null,
     binding: AdaptiveStateVariableBinding<A>? = null,
     trace: Boolean = false,
     connect: suspend () -> AutoConnectionInfo<A>
@@ -59,7 +59,7 @@ fun <A : AdatClass> autoInstance(
 @Producer
 fun <A : AdatClass> autoInstance(
     peer: OriginBase<*, *, A, A>,
-    listener: AutoListener<A>? = null,
+    listener: AutoInstanceListener<A>? = null,
     binding: AdaptiveStateVariableBinding<A>? = null,
     trace: Boolean = false
 ): A? {
@@ -76,7 +76,7 @@ fun <A : AdatClass> autoInstance(
 @Suppress("UNCHECKED_CAST")
 fun <A : AdatClass> autoInstance(
     initialValue: A,
-    listener: AutoListener<A>? = null,
+    listener: AutoInstanceListener<A>? = null,
     trace: Boolean = false
 ): OriginBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A> =
     autoInstance(
@@ -110,7 +110,7 @@ fun <A : AdatClass> autoInstance(
     worker: AutoWorker?,
     companion: AdatCompanion<A>,
     initialValue: A? = null,
-    listener : AutoListener<A>? = null,
+    listener : AutoInstanceListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle : AutoHandle = AutoHandle(),
     itemId: ItemId = LamportTimestamp.CONNECTING,
@@ -168,6 +168,8 @@ fun <A : AdatClass> autoInstance(
             pItemId,
             null
         )
+
+
 
     }
 

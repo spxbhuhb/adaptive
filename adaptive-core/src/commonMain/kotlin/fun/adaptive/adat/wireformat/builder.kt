@@ -15,6 +15,11 @@ import `fun`.adaptive.wireformat.signature.parseTypeSignature
 fun AdatPropertyMetadata.toPropertyWireFormat(): AdatPropertyWireFormat<*> =
     AdatPropertyWireFormat(this, parseTypeSignature(signature).toWireFormat())
 
+/**
+ * Parses a signature into a WireFormat.
+ */
+fun String.toWireFormat() = parseTypeSignature(this).toWireFormat()
+
 internal fun WireFormatType.toWireFormat(): WireFormat<*> =
     when {
         generics.isNotEmpty() -> {

@@ -33,6 +33,7 @@ open class AdatClassFrontend<A : AdatClass>(
      * PropertyBackend calls commit when finished
      */
     override fun commit(initial : Boolean) {
+        val oldValue = value
         val newValue = wireFormat.newInstance(backend.values)
 
         @Suppress("UNCHECKED_CAST")
@@ -41,9 +42,9 @@ open class AdatClassFrontend<A : AdatClass>(
 
         value = newValue
         if (collectionFrontend != null) {
-            collectionFrontend.commit(backend.itemId)
+            collectionFrontend.commit(backend.itemId, newValue, oldValue, initial)
         } else {
-            backend.context.onItemCommit(newValue)
+            backend.context.onChange(newValue, oldValue)
         }
     }
 

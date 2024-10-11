@@ -19,19 +19,25 @@ open class AdatClassListFrontend<A : AdatClass>(
         val active = (backend.additions subtract backend.removals)
         values = active.sorted().map { getItemFrontend(it).value !! }
         if (initial) {
-            backend.context.onListInit(values)
+            backend.context.onInit(values)
         } else {
-            backend.context.onListCommit(values)
+            backend.context.onChange(values)
         }
     }
 
-    override fun commit(itemId: ItemId) {
+    override fun commit(itemId: ItemId, newValue : A, oldValue: A?, initial : Boolean) {
+        // TODO check AdatClassListFrontend.commit, should we throw an exception when there is no item?
         @Suppress("UNCHECKED_CAST")
         val index = values.indexOfFirst { (it.adatContext as AdatContext<ItemId>).id == itemId }
         if (index == - 1) return
-        val instance = getItemFrontend(itemId).value !!
-        values = values.subList(0, index) + instance + values.subList(index + 1, values.size)
-        backend.context.onItemCommit(instance)
+
+        values = values.subList(0, index) + newValue + values.subList(index + 1, values.size)
+
+        if (initial) {
+            backend.context.onAdd(newValue)
+        } else {
+            backend.context.onChange(newValue, oldValue)
+        }
     }
 
     operator fun plusAssign(item: A) {

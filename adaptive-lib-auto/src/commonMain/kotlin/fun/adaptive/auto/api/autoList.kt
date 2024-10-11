@@ -39,7 +39,7 @@ import `fun`.adaptive.service.ServiceContext
 fun <A : AdatClass> autoList(
     companion: AdatCompanion<A>,
     peer: OriginBase<*, *, List<A>, A>? = null,
-    listener : AutoListener<A>? = null,
+    listener : AutoCollectionListener<A>? = null,
     binding: AdaptiveStateVariableBinding<List<A>>? = null,
     trace: Boolean = false,
     connect: suspend () -> AutoConnectionInfo<List<A>>?
@@ -77,7 +77,7 @@ fun <A : AdatClass> autoList(
 fun <A : AdatClass> autoList(
     peer: OriginBase<*, *, List<A>, A>? = null,
     defaultWireFormat: AdatClassWireFormat<*>? = null,
-    listener : AutoListener<A>? = null,
+    listener : AutoCollectionListener<A>? = null,
     binding: AdaptiveStateVariableBinding<List<A>>? = null,
     trace: Boolean = false,
     connect: suspend () -> AutoConnectionInfo<List<A>>
@@ -122,7 +122,7 @@ fun <A : AdatClass> autoList(
 fun <A : AdatClass> autoList(
     worker: AutoWorker,
     defaultWireFormat: AdatClassWireFormat<*>? = null,
-    listener : AutoListener<A>? = null,
+    listener : AutoCollectionListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle: AutoHandle = AutoHandle(),
     register: Boolean = true,
@@ -171,7 +171,7 @@ fun <A : AdatClass> autoList(
 fun <A : AdatClass> autoList(
     worker: AutoWorker,
     companion: AdatCompanion<A>,
-    listener : AutoListener<A>? = null,
+    listener : AutoCollectionListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle: AutoHandle = AutoHandle(),
     trace: Boolean = false

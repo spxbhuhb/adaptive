@@ -4,7 +4,8 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.api.validateForContext
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
-import `fun`.adaptive.auto.api.AutoListener
+import `fun`.adaptive.auto.api.AutoCollectionListener
+import `fun`.adaptive.auto.api.AutoInstanceListener
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
@@ -15,7 +16,7 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 class AutoInstance<A : AdatClass>(
     binding: AdaptiveStateVariableBinding<A>,
     connect: suspend () -> AutoConnectionInfo<A>,
-    val listener: AutoListener<A>? = null,
+    val listener: AutoInstanceListener<A>? = null,
     peer: OriginBase<*, *, A, A>? = null,
     trace: Boolean
 ) : ProducerBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A>(
@@ -61,10 +62,10 @@ class AutoInstance<A : AdatClass>(
     }
 
 
-    private inner class ProducerListener : AutoListener<A>() {
-        override fun onItemCommit(item: A) {
-            item.validateForContext()
-            latestValue = item
+    private inner class ProducerListener : AutoCollectionListener<A>() {
+        override fun onChange(newValue: A, oldValue : A?) {
+            newValue.validateForContext()
+            latestValue = newValue
             setDirty() // TODO make a separate binding for producers
         }
     }

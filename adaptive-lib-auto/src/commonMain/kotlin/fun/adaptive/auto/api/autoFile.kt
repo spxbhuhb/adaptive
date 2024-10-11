@@ -67,7 +67,7 @@ fun <A : AdatClass> autoFile(
     path: Path,
     initialValue: A? = null,
     wireFormatProvider: WireFormatProvider = Json,
-    listener: AutoListener<A>? = null,
+    listener: AutoInstanceListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle: AutoHandle = AutoHandle(),
     itemId: ItemId = LamportTimestamp.CONNECTING,
@@ -141,7 +141,7 @@ fun <A : AdatClass> autoFile(
         )
 
         if (commit) {
-            frontend.commit()
+            frontend.commit(true)
         }
     }
 }

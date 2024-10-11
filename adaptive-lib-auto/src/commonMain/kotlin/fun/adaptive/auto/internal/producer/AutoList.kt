@@ -2,7 +2,7 @@ package `fun`.adaptive.auto.internal.producer
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
-import `fun`.adaptive.auto.api.AutoListener
+import `fun`.adaptive.auto.api.AutoCollectionListener
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
@@ -13,7 +13,7 @@ class AutoList<A : AdatClass>(
     binding: AdaptiveStateVariableBinding<List<A>>,
     connect: suspend () -> AutoConnectionInfo<List<A>>?,
     override val defaultWireFormat: AdatClassWireFormat<*>? = null,
-    val listener: AutoListener<A>? = null,
+    val listener: AutoCollectionListener<A>? = null,
     peer: OriginBase<*, *, List<A>, A>? = null,
     trace: Boolean
 ) : ProducerBase<SetBackend<A>, AdatClassListFrontend<A>, List<A>, A>(binding, connect, peer, trace) {
@@ -34,15 +34,15 @@ class AutoList<A : AdatClass>(
         return "AutoList($binding)"
     }
 
-    private inner class ProducerListener: AutoListener<A>() {
+    private inner class ProducerListener: AutoCollectionListener<A>() {
 
-        override fun onListCommit(newValue: List<A>) {
+        override fun onChange(newValue: List<A>) {
             if (! syncEnd) return
             latestValue = frontend.values
             setDirty() // TODO make a separate binding for producers
         }
 
-        override fun onItemCommit(item: A) {
+        override fun onChange(newValue: A, oldValue : A?) {
             if (! syncEnd) return
             latestValue = frontend.values
             setDirty() // TODO make a separate binding for producers
