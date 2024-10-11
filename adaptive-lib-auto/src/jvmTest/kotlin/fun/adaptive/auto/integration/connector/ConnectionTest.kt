@@ -84,7 +84,7 @@ class ConnectionTest {
                 val connectInfo = dataService.getConnectInfo()
 
                 val clientInstance = autoInstance(clientAutoWorker, DataItem, handle = connectInfo.connectingHandle, trace = true)
-                    .connect(transport) { connectInfo }
+                    .connect(transport = transport) { connectInfo }
 
                 waitFor(2.seconds) { clientInstance.frontend.value != null }
 

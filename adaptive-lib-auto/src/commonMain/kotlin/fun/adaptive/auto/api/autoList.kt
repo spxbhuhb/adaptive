@@ -2,8 +2,10 @@ package `fun`.adaptive.auto.api
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
+import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
+import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
@@ -11,6 +13,7 @@ import `fun`.adaptive.auto.internal.origin.OriginListBase
 import `fun`.adaptive.auto.internal.producer.AutoList
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoHandle
+import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.Producer
 import `fun`.adaptive.service.ServiceContext
@@ -174,6 +177,7 @@ fun <A : AdatClass> autoList(
     listener : AutoCollectionListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle: AutoHandle = AutoHandle(),
+    initialValues: List<A>? = null,
     trace: Boolean = false
 ): ListBase<A> {
 
@@ -185,8 +189,22 @@ fun <A : AdatClass> autoList(
         trace
     ) {
         if (listener != null) context.addListener(listener)
-        backend = SetBackend(context)
+
+        backend = SetBackend(
+            context,
+            initialValues?.mapIndexed { index, item ->
+                PropertyBackend<A>(
+                    context,
+                    ItemId(1, index + 1L),
+                    companion.wireFormatName,
+                    item.toArray()
+                )
+            }?.associateBy { it.itemId }
+        )
+
         frontend = AdatClassListFrontend(backend)
+
+        frontend.commit(initial = true)
     }
 
 }

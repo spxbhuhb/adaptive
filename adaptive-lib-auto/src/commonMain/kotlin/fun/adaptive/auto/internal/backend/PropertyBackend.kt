@@ -155,7 +155,7 @@ class PropertyBackend<A : AdatClass>(
     ) {
 
         if (syncFrom >= lastUpdate) {
-            trace { "SKIP SYNC: time= $lastUpdate peerTime=$syncFrom" }
+            trace { "SYNC SKIP: time= $lastUpdate peerTime=$syncFrom" }
             return
         } else {
             trace { "SYNC: itemId=$itemId time= $lastUpdate peerTime=$syncFrom" }
