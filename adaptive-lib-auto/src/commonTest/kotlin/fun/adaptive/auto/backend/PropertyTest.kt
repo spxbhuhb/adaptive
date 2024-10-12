@@ -22,23 +22,23 @@ class PropertyTest {
 
                 connect()
 
-                while (f2.value == null) {
+                while (f2.valueOrNull == null) {
                     delay(10)
                 }
 
-                assertEquals(12, f2.value !!.i)
+                assertEquals(12, f2.value.i)
 
                 f1.modify("i", 23)
-                assertEquals(23, f2.value !!.i)
+                assertEquals(23, f2.value.i)
 
                 f2.modify("i", 34)
-                assertEquals(34, f1.value !!.i)
+                assertEquals(34, f1.value.i)
 
                 f1.modify("s", "cd")
-                assertEquals("cd", f2.value !!.s)
+                assertEquals("cd", f2.value.s)
 
                 f2.modify("s", "ef")
-                assertEquals("ef", f1.value !!.s)
+                assertEquals("ef", f1.value.s)
 
             }
         }

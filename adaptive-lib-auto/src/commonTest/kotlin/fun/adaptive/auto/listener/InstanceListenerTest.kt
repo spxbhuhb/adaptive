@@ -18,7 +18,7 @@ import kotlin.test.assertNotNull
 import kotlin.time.Duration.Companion.seconds
 
 @ExperimentalCoroutinesApi
-class ItemListenerTest {
+class InstanceListenerTest {
 
     object TestItemListener : AutoInstanceListener<TestData>() {
         val changes = mutableListOf<Pair<TestData, TestData?>>()
@@ -35,7 +35,7 @@ class ItemListenerTest {
 
             val modelService = getService<AutoTestApi>(clientTransport)
 
-            val connectInfo = modelService.item(12)
+            val connectInfo = modelService.instance()
 
             assertNotNull(connectInfo)
 
@@ -43,7 +43,6 @@ class ItemListenerTest {
                 clientBackend.firstImpl<AutoWorker>(),
                 TestData,
                 handle = connectInfo.connectingHandle,
-                itemId = connectInfo.connectingHandle.itemId !!,
                 listener = TestItemListener
             )
 

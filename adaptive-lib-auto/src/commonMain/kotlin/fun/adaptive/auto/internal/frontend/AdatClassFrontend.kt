@@ -13,34 +13,38 @@ open class AdatClassFrontend<A : AdatClass>(
     override val backend: PropertyBackend<A>,
     val wireFormat: AdatClassWireFormat<A>,
     initialValue: A?,
-    val itemId : ItemId,
+    val itemId: ItemId,
     val collectionFrontend: CollectionFrontendBase<A>?
-) : FrontendBase() {
+) : InstanceFrontendBase<A>() {
 
     val adatContext = AdatContext<ItemId>(itemId, null, null, store = this, null)
 
-    var value: A? = initialValue?.deepCopy()?.also {
+    override val value: A
+        get() = checkNotNull(valueOrNull) { "value not yet initialized" }
+
+    var valueOrNull: A? = initialValue?.deepCopy()?.also {
         @Suppress("UNCHECKED_CAST")
         it.adatContext = adatContext as AdatContext<Any>
     }
 
     override fun removed() {
-        backend.context.onRemove(value !!)
+        backend.context.onRemove(value)
     }
 
     /**
      * AdatClassListFrontend calls PropertyBackend on modify
      * PropertyBackend calls commit when finished
      */
-    override fun commit(initial : Boolean) {
-        val oldValue = value
+    override fun commit(initial: Boolean) {
+        val oldValue = valueOrNull
         val newValue = wireFormat.newInstance(backend.values)
 
         @Suppress("UNCHECKED_CAST")
         newValue.adatContext = adatContext as AdatContext<Any>
         newValue.validateForContext()
 
-        value = newValue
+        valueOrNull = newValue
+
         if (collectionFrontend != null) {
             collectionFrontend.commit(backend.itemId, newValue, oldValue, initial)
         } else {

@@ -119,10 +119,6 @@ class BackendContext<A : AdatClass>(
         collectionListeners.forEach { it.onChange(values) }
     }
 
-    internal fun onAdd(item: A) {
-        collectionListeners.forEach { it.onAdd(item) }
-    }
-
     internal fun onRemove(value: A) {
         collectionListeners.forEach { it.onRemove(value) }
     }

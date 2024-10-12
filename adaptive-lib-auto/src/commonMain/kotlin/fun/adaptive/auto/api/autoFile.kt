@@ -8,6 +8,7 @@ import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.FileFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.internal.origin.OriginInstanceBase
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
@@ -72,7 +73,7 @@ fun <A : AdatClass> autoFile(
     handle: AutoHandle = AutoHandle(),
     itemId: ItemId = LamportTimestamp.CONNECTING,
     trace: Boolean = false
-): OriginBase<PropertyBackend<A>, FileFrontend<A>, A, A> {
+): InstanceBase<A> {
 
     val pItemId : ItemId
     val propertyTimes : List<LamportTimestamp>
@@ -113,7 +114,7 @@ fun <A : AdatClass> autoFile(
         }
     }
 
-    return OriginBase(
+    return OriginInstanceBase(
         worker,
         handle,
         serviceContext,

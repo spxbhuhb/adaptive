@@ -15,12 +15,6 @@ abstract class AutoCollectionListener<A : AdatClass> {
     open fun onChange(newValue: List<A>) = Unit
 
     /**
-     * Called when an item is added to the list. This covers the initial load
-     * of the list and adds later as well.
-     */
-    open fun onAdd(item : A) = Unit
-
-    /**
      * Called when an item is removed from the list.
      */
     open fun onRemove(item : A) = Unit

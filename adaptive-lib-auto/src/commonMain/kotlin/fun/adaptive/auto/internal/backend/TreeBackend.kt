@@ -152,6 +152,6 @@ class TreeBackend<A : AdatClass>(
 
         items += itemId to backend
 
-        context.onAdd(value)
+        context.onChange(value, null)
     }
 }

@@ -33,11 +33,7 @@ open class AdatClassListFrontend<A : AdatClass>(
 
         values = values.subList(0, index) + newValue + values.subList(index + 1, values.size)
 
-        if (initial) {
-            backend.context.onAdd(newValue)
-        } else {
-            backend.context.onChange(newValue, oldValue)
-        }
+        backend.context.onChange(newValue, oldValue)
     }
 
     operator fun plusAssign(item: A) {

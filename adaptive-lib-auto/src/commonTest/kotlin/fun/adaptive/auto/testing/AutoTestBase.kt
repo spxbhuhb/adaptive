@@ -43,29 +43,31 @@ class AutoTestBase {
     }
 
     companion object {
+
         fun autoTest(testFun: suspend AutoTestBase.() -> Unit) = runTest {
             val base = AutoTestBase()
             base.testFun()
         }
 
-        fun autoTestWorker(trace: Boolean = false, testFun: suspend AutoTestBase.() -> Unit) = runTest {
-            autoTest {
+        fun autoTestWorker(trace: Boolean = false, testFun: suspend AutoTestBase.() -> Unit) =
+            runTest {
+                autoTest {
 
-                serverBackend = backend(serverTransport) {
-                    auto()
-                    service { AutoTestServiceInWorker() }
-                    worker { AutoTestWorker(trace) }
+                    serverBackend = backend(serverTransport) {
+                        auto()
+                        service { AutoTestServiceInWorker() }
+                        worker { AutoTestWorker(trace) }
+                    }
+
+                    clientBackend = backend(clientTransport) {
+                        auto()
+                    }
+
+                    run {
+                        testFun()
+                    }
+
                 }
-
-                clientBackend = backend(clientTransport) {
-                    auto()
-                }
-
-                run {
-                    testFun()
-                }
-
             }
-        }
     }
 }

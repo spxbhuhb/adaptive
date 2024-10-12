@@ -16,43 +16,40 @@ import kotlin.time.Duration.Companion.seconds
 class FileFrontendTest {
 
     @Test
-    fun fromOrigin() {
+    fun fromOrigin() = runTest {
+
         testPath.ensure()
 
         val path = Path(testPath, "FileFrontendTest.fromOrigin.json")
         val testData = TestData(12, "ab")
 
-        runTest {
+        SystemFileSystem.delete(path, mustExist = false)
 
-            SystemFileSystem.delete(path, mustExist = false)
+        with(PropertyTestSetup(testData)) {
 
-            with(PropertyTestSetup(testData)) {
+            val f1 = AdatClassFrontend(b1, wireFormat, testData, itemId, null).also { b1.frontend = it }
+            b2.frontend = FileFrontend(b2, wireFormat, itemId, null, null, Json, path)
 
-                val f1 = AdatClassFrontend(b1, wireFormat, testData, itemId, null,).also { b1.frontend = it }
-                b2.frontend = FileFrontend(b2, wireFormat, itemId, null, null, Json, path)
+            connect()
 
-                connect()
+            waitForReal(2.seconds) { SystemFileSystem.exists(path) }
 
-                waitForReal(2.seconds) { SystemFileSystem.exists(path) }
+            fun read() = FileFrontend.read<TestData>(path, Json).third
 
-                fun read() = FileFrontend.read<TestData>(path, Json).third
+            assertEquals(testData, read())
 
-                assertEquals(testData, read())
+            f1.modify("i", 23)
 
-                f1.modify("i", 23)
+            assertEquals(TestData(23, "ab"), read())
 
-                assertEquals(TestData(23, "ab"), read())
+            f1.modify("i", 34)
 
-                f1.modify("i", 34)
+            assertEquals(TestData(34, "ab"), read())
 
-                assertEquals(TestData(34, "ab"), read())
+            f1.modify("s", "bc")
 
-                f1.modify("s", "bc")
+            assertEquals(TestData(34, "bc"), read())
 
-                assertEquals(TestData(34, "bc"), read())
-
-            }
         }
     }
-
 }
