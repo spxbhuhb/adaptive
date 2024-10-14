@@ -73,7 +73,7 @@ fun <A : AdatClass> autoFile(
     handle: AutoHandle = AutoHandle(),
     itemId: ItemId = LamportTimestamp.CONNECTING,
     trace: Boolean = false
-): InstanceBase<A> {
+): FileBase<A> {
 
     val pItemId : ItemId
     val propertyTimes : List<LamportTimestamp>

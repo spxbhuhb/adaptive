@@ -57,9 +57,10 @@ class AutoWorker : WorkerImpl<AutoWorker> {
 
     fun removePeer(handle: AutoHandle) =
         backendLock.use {
-            checkNotNull(backends[handle.globalId]) { "missing auto instance: $handle" }
-        }.also {
-            it.removePeer(handle)
+            // Decided not to throw an exception here as this is a pretty normal occurrence after
+            // server start when the connected peers try to disconnect from with the old handle.
+            // TODO should we try and persist handles when it's possible?
+            backends[handle.globalId]?.removePeer(handle)
         }
 
     fun receive(handle: AutoHandle, operation: AutoOperation) {

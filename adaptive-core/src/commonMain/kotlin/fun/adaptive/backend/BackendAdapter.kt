@@ -18,6 +18,7 @@ import `fun`.adaptive.utility.use
 import `fun`.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.isActive
 
 /**
  * Adapter for backends (stores, services, workers).
@@ -74,14 +75,15 @@ open class BackendAdapter(
     open fun getLogger(name : String) = `fun`.adaptive.log.getLogger(name)
 
     override fun mounted() {
-        while (wait) {
-            sleep(1000)
-        }
+
     }
 
     override fun start() : BackendAdapter {
         scope.safeLaunch(logger) {
             transport.start(this@BackendAdapter)
+        }
+        while (wait && scope.isActive) {
+            sleep(1000)
         }
         return this
     }

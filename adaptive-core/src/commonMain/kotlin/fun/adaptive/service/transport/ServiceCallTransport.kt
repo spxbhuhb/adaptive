@@ -31,9 +31,9 @@ abstract class ServiceCallTransport(
     val scope: CoroutineScope
 ) {
 
-    val transportLog = getLogger("fun.adaptive.service.Transport")
+    val transportLog = getLogger("service.transport")
 
-    val accessLog = getLogger("fun.adaptive.service.Access").also { it.level = LogLevel.Warning }
+    val accessLog = getLogger("service.access").also { it.level = LogLevel.Warning }
 
     var trace: Boolean = false
 

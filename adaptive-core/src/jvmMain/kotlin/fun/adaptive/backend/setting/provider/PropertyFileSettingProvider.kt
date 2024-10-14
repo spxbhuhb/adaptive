@@ -25,7 +25,7 @@ class PropertyFileSettingProvider(
     val optional: Boolean
 ) : SettingProvider {
 
-    val logger = getLogger("PropertyFileSettingProvider")
+    val logger = getLogger("property.file")
 
     override val isReadOnly: Boolean
         get() = true

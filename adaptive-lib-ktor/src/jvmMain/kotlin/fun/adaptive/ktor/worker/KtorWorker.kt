@@ -89,11 +89,11 @@ class KtorWorker(
 
         webSocket(serviceWebSocketRoute) {
 
-            logger.info {
-                with(call.request.origin) { "WS-CONNECT $remoteAddress:$remotePort" }
-            }
-
             val sessionUuid = call.request.cookies[clientIdCookieName]?.let { UUID<ServiceContext>(it) } ?: UUID()
+
+            logger.info {
+                with(call.request.origin) { "WS-CONNECT $remoteAddress:$remotePort $sessionUuid" }
+            }
 
             val wireFormatProvider =
                 when (wireFormat.lowercase()) {
@@ -124,7 +124,7 @@ class KtorWorker(
                 safeSuspendCall(logger) {
                     transport.disconnect()
                 }
-                logger.info { with (call.request.origin) { "WS-DISCONNECT $remoteAddress:$remotePort" } }
+                logger.info { with (call.request.origin) { "WS-DISCONNECT $remoteAddress:$remotePort $sessionUuid" } }
             }
 
         }
