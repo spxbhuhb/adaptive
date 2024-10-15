@@ -11,6 +11,7 @@ import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
+import kotlinx.coroutines.launch
 
 class AutoWorker : WorkerImpl<AutoWorker> {
 
@@ -45,15 +46,27 @@ class AutoWorker : WorkerImpl<AutoWorker> {
         }
             .context.time
 
-    fun addPeer(origin: AutoHandle, connecting: AutoHandle, connectingPeerTime: LamportTimestamp, transport: ServiceCallTransport): LamportTimestamp =
-        backendLock.use {
+    suspend fun addPeer(
+        origin: AutoHandle,
+        connecting: AutoHandle,
+        connectingPeerTime: LamportTimestamp,
+        transport: ServiceCallTransport
+    ): LamportTimestamp {
+        val backend = backendLock.use {
             checkNotNull(backends[origin.globalId]) { "missing auto instance: $origin" }
-        }.let {
-            it.addPeer(
-                ServiceConnector(it, connecting, getService(transport), it.context.logger, scope),
-                connectingPeerTime
-            )
         }
+
+        val connector = ServiceConnector(backend, connecting, getService(transport), reconnect = false)
+
+        val time = backend.addPeer(
+            connector,
+            connectingPeerTime
+        )
+
+        scope.launch { connector.run() }
+
+        return time
+    }
 
     fun removePeer(handle: AutoHandle) =
         backendLock.use {
