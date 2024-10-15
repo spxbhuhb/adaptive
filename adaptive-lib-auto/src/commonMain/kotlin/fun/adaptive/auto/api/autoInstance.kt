@@ -114,7 +114,7 @@ fun <A : AdatClass> autoInstance(
     listener : AutoInstanceListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle : AutoHandle = AutoHandle(),
-    itemId: ItemId = LamportTimestamp.CONNECTING,
+    itemId: ItemId = handle.itemId ?: LamportTimestamp.CONNECTING,
     register: Boolean = true,
     trace: Boolean = false
 ): OriginInstanceBase<PropertyBackend<A>, AdatClassFrontend<A>, A> {

@@ -21,14 +21,12 @@ import `fun`.adaptive.foundation.producer.AdaptiveProducer
 import `fun`.adaptive.log.AdaptiveLogger
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.getService
-import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.safeCall
 import `fun`.adaptive.utility.safeLaunch
 import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
@@ -104,14 +102,14 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatCl
         val autoService = getService<AutoApi>(adapter.transport)
 
         backend.addPeer(
-            ServiceConnector(backend, originHandle, autoService, logger, scope),
+            ServiceConnector(backend, originHandle, autoService, reconnect = true),
             connectInfo.originTime
         )
 
         autoService.addPeer(originHandle, connectingHandle, backend.context.time)
     }
 
-    fun connectDirect() {
+    suspend fun connectDirect() {
         checkNotNull(peer)
         backend.addPeer(DirectConnector(backend, peer.backend), connectInfo.originTime)
         peer.backend.addPeer(DirectConnector(peer.backend, backend), backend.context.time)

@@ -15,6 +15,9 @@ import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.utility.safeLaunch
 import `fun`.adaptive.utility.waitFor
 import `fun`.adaptive.wireformat.WireFormatRegistry
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import kotlin.time.Duration
 
 abstract class BackendBase(
@@ -60,10 +63,9 @@ abstract class BackendBase(
      * Add a connection to a peer. The backend launches [syncPeer] in to send all known
      * operations that happened after the [peerTime] to the peer.
      */
-    fun addPeer(connector: AutoConnector, peerTime: LamportTimestamp): LamportTimestamp {
-        val scope = checkNotNull(context.scope) { "cannot add a peer when scope is null" }
+    suspend fun addPeer(connector: AutoConnector, peerTime: LamportTimestamp): LamportTimestamp {
         context.addConnector(connector)
-        scope.safeLaunch(context.logger) { syncPeer(connector, peerTime, null) }
+        supervisorScope { launch { syncPeer(connector, peerTime, null) } }
         return context.time
     }
 
@@ -81,6 +83,16 @@ abstract class BackendBase(
     // --------------------------------------------------------------------------------
     // Lifecycle
     // --------------------------------------------------------------------------------
+
+    /**
+     * `ServiceConnector` calls [reconnect] when the connection breaks. In this case the
+     * backend tries to reconnect to the peer and synchronize again.
+     */
+    fun reconnect() {
+        while (true) {
+
+        }
+    }
 
     override suspend fun disconnect() {
         context.stop()

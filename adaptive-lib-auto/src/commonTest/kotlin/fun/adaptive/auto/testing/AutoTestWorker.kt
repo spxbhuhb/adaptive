@@ -22,9 +22,7 @@ class AutoTestWorker(
     val polyList by lazy { autoList<AdatClass>(worker, trace = trace) }
 
     override suspend fun run() {
-        checkNotNull(instance)
-        checkNotNull(list)
-        checkNotNull(polyList)
+
     }
 
     fun instance(): AutoConnectionInfo<TestData> {

@@ -23,17 +23,17 @@ class ItemConnectTest {
 
         withContext(Dispatchers.Default.limitedParallelism(1)) {
 
-            val modelService = getService<AutoTestApi>(clientTransport)
+            val autoTestService = getService<AutoTestApi>(clientTransport)
 
-            val connectInfo = modelService.item(12)
+            val connectInfo = autoTestService.item(12)
 
             assertNotNull(connectInfo)
+            assertNotNull(connectInfo.connectingHandle.itemId)
 
             val instance = autoInstance(
                 clientBackend.firstImpl<AutoWorker>(),
                 TestData,
                 handle = connectInfo.connectingHandle,
-                itemId = connectInfo.connectingHandle.itemId !!,
                 trace = true
             )
 
@@ -41,6 +41,7 @@ class ItemConnectTest {
 
             assertEquals(TestData(12, "a"), instance.frontend.value)
         }
+
     }
 
 }
