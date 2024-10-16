@@ -199,7 +199,7 @@ fun <A : AdatClass> autoList(
                     companion.wireFormatName,
                     item.toArray()
                 )
-            }?.associateBy { it.itemId }
+            }?.associateBy { it.itemId }?.toMutableMap()
         )
 
         frontend = AdatClassListFrontend(backend)

@@ -6,20 +6,19 @@ import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.*
+import `fun`.adaptive.utility.getLock
+import `fun`.adaptive.utility.use
 
 class SetBackend<A : AdatClass>(
     override val context: BackendContext<A>,
-    initialValue: Map<ItemId, PropertyBackend<A>>? = null
+    initialValue: MutableMap<ItemId, PropertyBackend<A>>? = null
 ) : CollectionBackendBase<A>(context.handle) {
 
-    val additions = mutableSetOf<ItemId>()
-    val removals = mutableSetOf<ItemId>()
-
-    override val items = initialValue?.toMutableMap() ?: mutableMapOf<ItemId, PropertyBackend<A>>()
+    val data = SetBackendData<A>(initialValue)
 
     init {
         if (initialValue != null && initialValue.isNotEmpty()) {
-            additions.addAll(initialValue.keys)
+            data.addAll(initialValue.keys)
             context.receive(LamportTimestamp(context.handle.peerId, initialValue.values.maxOf { it.lastUpdate.timestamp }))
         }
     }
@@ -29,9 +28,7 @@ class SetBackend<A : AdatClass>(
     // --------------------------------------------------------------------------------
 
     override fun remove(itemId: ItemId, commit: Boolean) {
-        removals += itemId
-
-        items.remove(itemId)?.removed()
+        data -= itemId
 
         val operation = AutoRemove(context.nextTime(), true, setOf(itemId))
         trace { "FE -> BE  itemId=$itemId .. commit true .. $operation" }
@@ -40,11 +37,7 @@ class SetBackend<A : AdatClass>(
     }
 
     override fun removeAll(itemIds: Set<ItemId>, commit: Boolean) {
-        removals += itemIds
-
-        for (itemId in itemIds) {
-            items.remove(itemId)?.removed()
-        }
+        data -= itemIds
 
         val operation = AutoRemove(context.nextTime(), true, itemIds)
         trace { "FE -> BE  commit true .. $operation" }
@@ -53,7 +46,7 @@ class SetBackend<A : AdatClass>(
     }
 
     override fun modify(itemId: ItemId, propertyName: String, propertyValue: Any?) {
-        val item = items[itemId] ?: return
+        val item = data[itemId] ?: return
         item.modify(itemId, propertyName, propertyValue)
     }
 
@@ -75,11 +68,7 @@ class SetBackend<A : AdatClass>(
     override fun remove(operation: AutoRemove, commit: Boolean) {
         trace { "commit=$commit op=$operation" }
 
-        removals += operation.itemIds
-        for (itemId in operation.itemIds) {
-            val item = items.remove(itemId)
-            item?.frontend?.removed()
-        }
+        data -= operation.itemIds
 
         closeListOp(operation, operation.itemIds, commit)
 
@@ -91,9 +80,9 @@ class SetBackend<A : AdatClass>(
     override fun modify(operation: AutoModify, commit: Boolean) {
         trace { "commit=$commit op=$operation" }
 
-        if (operation.itemId in removals) return
+        if (operation.itemId !in data) return
 
-        val item = items[operation.itemId]
+        val item = data[operation.itemId]
 
         if (item != null) {
             item.modify(operation, commit)
@@ -162,17 +151,18 @@ class SetBackend<A : AdatClass>(
     }
 
     suspend fun syncItem(connector: AutoConnector, syncFrom: LamportTimestamp, itemId: ItemId) {
-        requireNotNull(items[itemId]) { "missing item: $itemId" }
+        requireNotNull(data[itemId]) { "missing item: $itemId" }
             .syncPeer(connector, syncFrom, null, false)
     }
 
-    suspend fun syncCollection(time : LamportTimestamp, connector: AutoConnector, syncFrom: LamportTimestamp) {
-        if (additions.isEmpty()) {
+    suspend fun syncCollection(time: LamportTimestamp, connector: AutoConnector, syncFrom: LamportTimestamp) {
+        if (data.isEmpty()) {
             connector.send(AutoEmpty(time))
             trace { "SYNC END:  --EMPTY--  time=$time peerTime=$syncFrom" }
             return
         }
 
+        val removals = data.removals()
         if (removals.isNotEmpty()) {
             connector.send(AutoRemove(time, false, removals))
         }
@@ -180,7 +170,7 @@ class SetBackend<A : AdatClass>(
         var add = mutableListOf<AutoAdd>()
         val modify = mutableListOf<AutoModify>()
 
-        for (item in items.values.sortedBy { it.itemId }) {
+        for (item in data.items()) {
             val itemId = item.itemId
 
             if (itemId.timestamp > syncFrom.timestamp) {
@@ -206,17 +196,15 @@ class SetBackend<A : AdatClass>(
     // --------------------------------------------------------------------------------
 
     override fun addItem(itemId: ItemId, parentItemId: ItemId?, value: A) {
-        // this is here for safety, theoretically the item id should never be in removals when addItem is called
-        if (itemId in removals) return
-
-        additions += itemId
 
         val values = value.toArray()
         val backend = PropertyBackend(context, itemId, value.adatCompanion.wireFormatName, values)
 
-        items += itemId to backend
+        val added = data.add(itemId, backend)
 
-        context.onChange(value, null)
+        if (added) {
+            context.onChange(value, null)
+        }
     }
 
 }

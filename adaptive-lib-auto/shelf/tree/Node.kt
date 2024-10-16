@@ -1,5 +1,3 @@
-package `fun`.adaptive.auto.internal.backend.tree
-
 class Node(val id: NodeId) : Comparable<Node> {
     var parent: Node? = null
     val children: MutableList<Node> = mutableListOf()

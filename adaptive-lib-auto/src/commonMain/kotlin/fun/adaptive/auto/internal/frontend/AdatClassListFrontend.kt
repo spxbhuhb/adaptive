@@ -16,8 +16,7 @@ open class AdatClassListFrontend<A : AdatClass>(
 
     // TODO optimize AutoClassListFrontend.commit  (or maybe SetBackend)
     override fun commit(initial : Boolean) {
-        val active = (backend.additions subtract backend.removals)
-        values = active.sorted().map { getItemFrontend(it).value !! }
+        values = backend.data.active().sorted().map { getItemFrontend(it).value }
         if (initial) {
             backend.context.onInit(values)
         } else {
@@ -79,7 +78,7 @@ open class AdatClassListFrontend<A : AdatClass>(
     open fun getItemFrontend(itemId: ItemId) =
         classFrontends.getOrPut(itemId) {
 
-            val propertyBackend = checkNotNull(backend.items[itemId])
+            val propertyBackend = checkNotNull(backend.data[itemId])
             val wireFormat = propertyBackend.wireFormat
 
             @Suppress("UNCHECKED_CAST")

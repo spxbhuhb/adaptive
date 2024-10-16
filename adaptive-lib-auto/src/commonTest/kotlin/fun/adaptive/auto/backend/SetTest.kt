@@ -128,11 +128,9 @@ class SetTest {
     suspend fun SetBackend<*>.assertEquals(expected: SetBackend<*>) {
         waitForSync(this, expected)
 
-        assertEquals(expected.additions, this.additions)
-        assertEquals(expected.removals, this.removals)
-        assertEquals(expected.items.size, this.items.size)
-        for ((key, value) in this.items) {
-            value.assertEquals(expected.items[key] !!)
+        assertEquals(expected.data, this.data)
+        for (item in this.data.items()) {
+            item.assertEquals(expected.data[item.itemId] !!)
         }
     }
 

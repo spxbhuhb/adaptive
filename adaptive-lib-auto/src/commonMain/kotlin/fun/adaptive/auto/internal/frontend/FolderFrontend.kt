@@ -30,7 +30,7 @@ class FolderFrontend<A : AdatClass>(
 
         classFrontends.getOrPut(itemId) {
 
-            val propertyBackend = checkNotNull(backend.items[itemId])
+            val propertyBackend = checkNotNull(backend.data[itemId])
 
             @Suppress("UNCHECKED_CAST")
             val wireFormat = propertyBackend.wireFormat as AdatClassWireFormat<A>
@@ -61,7 +61,7 @@ class FolderFrontend<A : AdatClass>(
             path: Path,
             includeFun : (path: Path) -> Boolean,
             wireFormatProvider: WireFormatProvider
-        ): Map<ItemId, PropertyBackend<A>> {
+        ): MutableMap<ItemId, PropertyBackend<A>> {
             require(path.exists()) { "path $path does not exist" }
 
             val result = mutableMapOf<ItemId, PropertyBackend<A>>()

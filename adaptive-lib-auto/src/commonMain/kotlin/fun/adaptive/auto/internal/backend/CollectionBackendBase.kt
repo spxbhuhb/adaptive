@@ -16,8 +16,6 @@ abstract class CollectionBackendBase<A : AdatClass>(
     peerHandle: AutoHandle,
 ) : BackendBase(peerHandle) {
 
-    abstract val items: MutableMap<ItemId, PropertyBackend<A>>
-
     /**
      * Contains modification that should be applied when [AutoSyncEnd] arrives.
      */
