@@ -10,6 +10,7 @@ import `fun`.adaptive.resource.DrawableResource
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.onClose
 import `fun`.adaptive.ui.icon.icon
+import `fun`.adaptive.ui.icon.primaryIconTheme
 
 /**
  * An icon (24x24) that opens the dialog built by [modalContent] when clicked.
@@ -29,7 +30,7 @@ fun iconDialog(
 ): AdaptiveFragment {
     var modalOpen = false
 
-    icon(resource, *instructions) .. onClick { modalOpen = true }
+    icon(resource, *instructions, theme = primaryIconTheme) .. onClick { modalOpen = true }
 
     if (modalOpen) {
         dialog(title) {

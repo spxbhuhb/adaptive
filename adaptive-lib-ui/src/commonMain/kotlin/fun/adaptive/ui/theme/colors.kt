@@ -16,6 +16,9 @@ class ThemeColors {
     val surfaceVariant = color(0xF2F2F2)
     val onSurfaceVariant = color(0x757575)
 
+    val friendlySurface = color(0x3CB371u)
+    val angrySurface = color(0xEC5453u)
+
     val primary = color(0x6259CE)
     val onPrimary = color(0xFFFFFF)
 

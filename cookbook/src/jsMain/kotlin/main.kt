@@ -10,6 +10,7 @@ import `fun`.adaptive.cookbook.eco
 import `fun`.adaptive.cookbook.grid_view
 import `fun`.adaptive.cookbook.iot.iotCommon
 import `fun`.adaptive.cookbook.ui.dialog.dialogRecipe
+import `fun`.adaptive.cookbook.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.cookbook.ui.svg.svgRecipe
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.rangeTo
@@ -31,9 +32,9 @@ import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.form.FormFragmentFactory
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.navigation.NavState
-import `fun`.adaptive.ui.navigation.sidebar.SideBarItem
-import `fun`.adaptive.ui.navigation.sidebar.sideBarTheme
-import `fun`.adaptive.ui.navigation.sidebar.sidebar
+import `fun`.adaptive.ui.navigation.sidebar.SidebarItem
+import `fun`.adaptive.ui.navigation.sidebar.fullSidebar
+import `fun`.adaptive.ui.navigation.sidebar.theme.fullSidebarTheme
 import `fun`.adaptive.ui.platform.withJsResources
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -58,7 +59,7 @@ fun main() {
             }
 
             grid {
-                maxSize .. colTemplate(sideBarTheme.width, 1.fr)
+                maxSize .. colTemplate(fullSidebarTheme.width, 1.fr)
                 mainMenu()
                 mainContent()
             }
@@ -106,16 +107,18 @@ fun main() {
     }
 }
 
-private val appNavState = autoInstance(Routes.svg)
+private val appNavState = autoInstance(Routes.sidebar)
 
 private object Routes {
     val dialog = NavState("Dialog")
+    val sidebar = NavState("SideBar")
     val svg = NavState("SVG")
 }
 
 private val items = listOf(
-    SideBarItem(0, Res.drawable.grid_view, "Dialog", Routes.dialog),
-    SideBarItem(0, Res.drawable.grid_view, "SVG", Routes.svg)
+    SidebarItem(0, Res.drawable.grid_view, "Dialog", Routes.dialog),
+    SidebarItem(0, Res.drawable.grid_view, "SideBar", Routes.sidebar),
+    SidebarItem(0, Res.drawable.grid_view, "SVG", Routes.svg)
 )
 
 @Adaptive
@@ -126,7 +129,7 @@ fun mainMenu() {
             svg(Res.drawable.eco) .. position(60.dp, 32.dp)
             text("Adaptive") .. boldFont .. fontSize(28.sp) .. position(60.dp, 88.dp)
         }
-        sidebar(items, appNavState)
+        fullSidebar(items, appNavState)
     }
 }
 
@@ -141,6 +144,7 @@ fun mainContent() {
         when (navState) {
             in Routes.dialog -> dialogRecipe()
             in Routes.svg -> svgRecipe()
+            in Routes.sidebar -> sideBarRecipe()
             else -> text("unknown route: $navState")
         }
     }
