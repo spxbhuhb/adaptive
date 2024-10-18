@@ -18,7 +18,7 @@ import org.w3c.dom.HTMLSpanElement
 open class AuiText(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
-    index: Int
+    index: Int,
 ) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 1, 2) {
 
     override val receiver: HTMLSpanElement =
@@ -37,6 +37,11 @@ open class AuiText(
             if (receiver.textContent != content || isInit) {
                 receiver.textContent = content
                 measureText(content)
+
+                // TODO this is a potential second re-layout, we should optimize this somehow
+                if (! isInit && (renderData.innerWidth != previousRenderData.innerWidth || renderData.innerHeight != previousRenderData.innerHeight)) {
+                    renderData.layoutFragment?.layoutChange(this)
+                }
             }
         }
 
