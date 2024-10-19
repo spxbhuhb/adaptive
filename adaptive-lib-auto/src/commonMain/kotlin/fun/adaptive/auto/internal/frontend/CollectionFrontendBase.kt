@@ -7,7 +7,7 @@ abstract class CollectionFrontendBase<A> : FrontendBase() {
     abstract var values : List<A>
         protected set
 
-    abstract fun commit(itemId: ItemId, newValue : A, oldValue : A?, initial: Boolean)
+    abstract fun commit(itemId: ItemId, newValue : A, oldValue : A?, initial: Boolean, fromBackend: Boolean)
 
     abstract fun add(item: A)
 

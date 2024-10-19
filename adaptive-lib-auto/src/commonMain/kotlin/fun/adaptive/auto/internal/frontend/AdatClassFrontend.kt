@@ -27,15 +27,15 @@ open class AdatClassFrontend<A : AdatClass>(
         it.adatContext = adatContext as AdatContext<Any>
     }
 
-    override fun removed() {
-        backend.context.onRemove(value)
+    override fun removed(fromBackend: Boolean) {
+        backend.context.onRemove(value, fromBackend)
     }
 
     /**
      * AdatClassListFrontend calls PropertyBackend on modify
      * PropertyBackend calls commit when finished
      */
-    override fun commit(initial: Boolean) {
+    override fun commit(initial: Boolean, fromBackend: Boolean) {
         val oldValue = valueOrNull
         val newValue = wireFormat.newInstance(backend.values)
 
@@ -46,9 +46,9 @@ open class AdatClassFrontend<A : AdatClass>(
         valueOrNull = newValue
 
         if (collectionFrontend != null) {
-            collectionFrontend.commit(backend.itemId, newValue, oldValue, initial)
+            collectionFrontend.commit(backend.itemId, newValue, oldValue, initial, fromBackend)
         } else {
-            backend.context.onChange(newValue, oldValue)
+            backend.context.onChange(newValue, oldValue, fromBackend)
         }
     }
 

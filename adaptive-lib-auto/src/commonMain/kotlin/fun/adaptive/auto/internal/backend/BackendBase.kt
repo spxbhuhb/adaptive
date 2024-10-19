@@ -90,18 +90,18 @@ abstract class BackendBase(
         // nothing to do with this
     }
 
-    fun removed() {
-        frontend?.removed()
+    fun removed(fromBackend: Boolean) {
+        frontend?.removed(fromBackend)
     }
 
     // --------------------------------------------------------------------------------
     // Utility, common
     // --------------------------------------------------------------------------------
 
-    fun close(operation: AutoOperation, commit: Boolean) {
+    fun close(operation: AutoOperation, commit: Boolean, fromBackend: Boolean) {
 
         if (commit) {
-            frontend?.commit()
+            frontend?.commit(initial = false, fromBackend)
             trace { "==== commit ====" }
         }
 

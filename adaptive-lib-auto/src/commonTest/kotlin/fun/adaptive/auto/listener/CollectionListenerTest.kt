@@ -8,6 +8,7 @@ import `fun`.adaptive.auto.testing.AutoTestApi
 import `fun`.adaptive.auto.testing.AutoTestBase.Companion.autoTestWorker
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.service.getService
+import `fun`.adaptive.utility.waitForReal
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.withContext
@@ -27,7 +28,11 @@ class CollectionListenerTest {
         const val REMOVE = 4
     }
 
-    object TestCollectionListener : AutoCollectionListener<TestData>() {
+    class TestCollectionListener(
+        backendOnly : Boolean,
+    ) : AutoCollectionListener<TestData>(
+        backendOnly
+    ) {
         val changes = mutableListOf<Triple<Int, TestData?, TestData?>>()
 
         override fun onInit(value: List<TestData>) {
@@ -45,12 +50,22 @@ class CollectionListenerTest {
         override fun onRemove(item: TestData) {
             changes += Triple(REMOVE, null, item)
         }
+
+        fun assertCallback(index : Int, type : Int, newValue: TestData?, oldValue: TestData?) {
+            assertTrue(index < changes.size)
+            assertEquals(
+                Triple(type, newValue, oldValue),
+                changes[index]
+            )
+        }
     }
 
     @Test
-    fun basic() = autoTestWorker {
+    fun basic() = autoTestWorker(trace = true) {
 
         withContext(Dispatchers.Default.limitedParallelism(1)) {
+
+            val listener = TestCollectionListener(false)
 
             val modelService = getService<AutoTestApi>(clientTransport)
 
@@ -62,15 +77,15 @@ class CollectionListenerTest {
                 clientBackend.firstImpl<AutoWorker>(),
                 TestData,
                 handle = connectInfo.connectingHandle,
-                listener = TestCollectionListener
+                listener = listener
             )
 
-            assertCallback(0, INIT, null, null)
+            listener.assertCallback(0, INIT, null, null)
 
             list.connect(2.seconds) { connectInfo }
 
-            assertCallback(1, CHANGE, TestData(12, "a"), null)
-            assertCallback(2, SYNC_END, null, null)
+            listener.assertCallback(1, CHANGE, TestData(12, "a"), null)
+            listener.assertCallback(2, SYNC_END, null, null)
 
             val instance = list.frontend.values.first()
 
@@ -78,19 +93,91 @@ class CollectionListenerTest {
 
             list.update(instance, TestData(13, "b"))
 
-            assertCallback(3, CHANGE, TestData(13, "b"), TestData(12, "a"))
+            listener.assertCallback(3, CHANGE, TestData(13, "b"), TestData(12, "a"))
 
             list.remove { it.i == 13 }
 
-            assertCallback(4, REMOVE, null, TestData(13, "b"))
+            listener.assertCallback(4, REMOVE, null, TestData(13, "b"))
+
+            val serverList = serverList()
+            waitForSync(serverList, list)
+
+            assertTrue(serverList.isEmpty())
+
+            list.add(TestData(24, "c"))
+
+            listener.assertCallback(5, CHANGE, TestData(24, "c"), null)
         }
     }
 
-    fun assertCallback(index : Int, type : Int, newValue: TestData?, oldValue: TestData?) {
-        assertTrue(index < TestCollectionListener.changes.size)
-        assertEquals(
-            Triple(type, newValue, oldValue),
-            TestCollectionListener.changes[index]
-        )
+    @Test
+    fun backendOnly() = autoTestWorker {
+
+        withContext(Dispatchers.Default.limitedParallelism(1)) {
+
+            val listener = TestCollectionListener(true)
+
+            val modelService = getService<AutoTestApi>(clientTransport)
+
+            val connectInfo = modelService.list()
+
+            assertNotNull(connectInfo)
+
+            val list = autoList(
+                clientBackend.firstImpl<AutoWorker>(),
+                TestData,
+                handle = connectInfo.connectingHandle,
+                listener = listener,
+                trace = true
+            )
+
+            // skipped by backend only
+            // listener.assertCallback(0, INIT, null, null)
+            assertEquals(0, listener.changes.size)
+
+            list.connect(2.seconds) { connectInfo }
+
+            listener.assertCallback(0, CHANGE, TestData(12, "a"), null)
+            listener.assertCallback(1, SYNC_END, null, null)
+
+            val instance = list.frontend.values.first()
+
+            assertEquals(TestData(12, "a"), instance)
+
+            list.update(instance, TestData(13, "b"))
+
+            // skipped by backend only
+            // listener.assertCallback(3, CHANGE, TestData(13, "b"), TestData(12, "a"))
+            assertEquals(2, listener.changes.size)
+
+            list.remove { it.i == 13 }
+
+            // skipped by backend only
+            // listener.assertCallback(4, REMOVE, null, TestData(13, "b"))
+            assertEquals(2, listener.changes.size)
+
+            list.add(TestData(24, "c"))
+
+            // skipped by backend only
+            // listener.assertCallback(5, CHANGE, TestData(24, "c"), null)
+            assertEquals(2, listener.changes.size)
+
+            val serverList = serverList()
+
+            serverList.add(TestData(45, "d"))
+            waitForSync(serverList, list)
+
+            listener.assertCallback(2, CHANGE, TestData(45, "d"), null)
+
+            serverList.update(serverList.values.first(), TestData(56, "e"))
+            waitForSync(serverList, list)
+
+            listener.assertCallback(3, CHANGE, TestData(56, "e"), TestData(45, "d"))
+
+            serverList.remove { it.i == 56 }
+            waitForSync(serverList, list)
+
+            listener.assertCallback(4, REMOVE, null, TestData(56, "e"))
+        }
     }
 }

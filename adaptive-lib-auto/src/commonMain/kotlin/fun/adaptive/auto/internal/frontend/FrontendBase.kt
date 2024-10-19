@@ -9,14 +9,14 @@ abstract class FrontendBase : AdatStore<AdatClass>() {
 
     abstract val backend: BackendBase
 
-    abstract fun commit(initial: Boolean = false)
+    abstract fun commit(initial: Boolean, fromBackend: Boolean)
 
     /**
      * Called by collection backends when the item that represented by this
      * frontend is removed. If the frontend persists the data somehow, it
      * should remove the persisted data when this function is called.
      */
-    open fun removed() {
+    open fun removed(fromBackend: Boolean) {
 
     }
 

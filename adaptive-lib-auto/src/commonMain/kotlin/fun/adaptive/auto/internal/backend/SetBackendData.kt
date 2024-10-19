@@ -60,11 +60,11 @@ class SetBackendData<A : AdatClass>(
         }
     }
 
-    fun remove(itemId: ItemId) {
+    fun remove(itemId: ItemId, fromBackend: Boolean) {
         structuralLock.use {
             removals += itemId
             active -= itemId
-            items.remove(itemId)?.removed()
+            items.remove(itemId)?.removed(fromBackend)
         }
     }
 
@@ -79,16 +79,12 @@ class SetBackendData<A : AdatClass>(
         }
     }
 
-    operator fun minusAssign(itemId: ItemId) {
-        remove(itemId)
-    }
-
-    operator fun minusAssign(itemIds: Set<ItemId>) {
+    fun remove(itemIds: Set<ItemId>, fromBackend: Boolean) {
         structuralLock.use {
             removals.addAll(itemIds)
             active.removeAll(itemIds)
             for (itemId in itemIds) {
-                items.remove(itemId)?.removed()
+                items.remove(itemId)?.removed(fromBackend)
             }
         }
     }

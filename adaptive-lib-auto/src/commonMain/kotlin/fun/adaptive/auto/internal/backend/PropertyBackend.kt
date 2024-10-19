@@ -62,7 +62,7 @@ class PropertyBackend<A : AdatClass>(
 
         propertyTimes[index] = operation.timestamp
 
-        close(operation, commit = true)
+        close(operation, commit = true, fromBackend = false)
     }
 
     fun update(newValues: Array<Any?>) {
@@ -85,7 +85,7 @@ class PropertyBackend<A : AdatClass>(
 
         trace { "FE -> BE  commit true $operation" }
 
-        close(operation, commit = true)
+        close(operation, commit = true, fromBackend = false)
     }
 
     // --------------------------------------------------------------------------------
@@ -129,7 +129,7 @@ class PropertyBackend<A : AdatClass>(
 
         if (changed) {
             trace { "BE -> BE  commit=$commit .. op=$operation" }
-            close(operation, commit)
+            close(operation, commit, fromBackend = true)
         } else {
             trace { "BE -> BE  SKIP   op=$operation" }
         }

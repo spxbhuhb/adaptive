@@ -204,7 +204,7 @@ fun <A : AdatClass> autoList(
 
         frontend = AdatClassListFrontend(backend)
 
-        frontend.commit(initial = true)
+        frontend.commit(initial = true, fromBackend = false)
     }
 
 }

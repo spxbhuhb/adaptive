@@ -15,16 +15,16 @@ open class AdatClassListFrontend<A : AdatClass>(
     override var values: List<A> = emptyList()
 
     // TODO optimize AutoClassListFrontend.commit  (or maybe SetBackend)
-    override fun commit(initial : Boolean) {
+    override fun commit(initial : Boolean, fromBackend: Boolean) {
         values = backend.data.active().sorted().map { getItemFrontend(it).value }
         if (initial) {
-            backend.context.onInit(values)
+            backend.context.onInit(values, fromBackend)
         } else {
-            backend.context.onChange(values)
+            backend.context.onChange(values, fromBackend)
         }
     }
 
-    override fun commit(itemId: ItemId, newValue : A, oldValue: A?, initial : Boolean) {
+    override fun commit(itemId: ItemId, newValue : A, oldValue: A?, initial : Boolean, fromBackend: Boolean) {
         // TODO check AdatClassListFrontend.commit, should we throw an exception when there is no item?
         @Suppress("UNCHECKED_CAST")
         val index = values.indexOfFirst { (it.adatContext as AdatContext<ItemId>).id == itemId }
@@ -32,7 +32,7 @@ open class AdatClassListFrontend<A : AdatClass>(
 
         values = values.subList(0, index) + newValue + values.subList(index + 1, values.size)
 
-        backend.context.onChange(newValue, oldValue)
+        backend.context.onChange(newValue, oldValue, fromBackend)
     }
 
     operator fun plusAssign(item: A) {

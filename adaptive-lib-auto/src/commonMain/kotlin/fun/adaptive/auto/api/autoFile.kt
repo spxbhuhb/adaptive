@@ -142,7 +142,7 @@ fun <A : AdatClass> autoFile(
         )
 
         if (commit) {
-            frontend.commit(true)
+            frontend.commit(initial = true, fromBackend = false)
         }
     }
 }

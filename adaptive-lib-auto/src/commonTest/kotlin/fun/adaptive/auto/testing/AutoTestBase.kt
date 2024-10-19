@@ -2,6 +2,8 @@ package `fun`.adaptive.auto.testing
 
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.auto.backend.AutoWorker
+import `fun`.adaptive.auto.internal.frontend.FrontendBase
+import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.service
@@ -41,6 +43,14 @@ class AutoTestBase {
         val serverAutoWorker = serverBackend.firstImpl<AutoWorker>()
         waitForReal(1.seconds) { serverAutoWorker.backends.isNotEmpty() }
     }
+
+    suspend fun waitForSync(a1 : OriginBase<*,*,*,*>, a2 : OriginBase<*,*,*,*>) {
+        waitForReal(1.seconds) {
+            a1.context.time.timestamp == a2.context.time.timestamp
+        }
+
+    }
+    fun serverList() = serverBackend.firstImpl<AutoTestWorker>().list
 
     companion object {
 

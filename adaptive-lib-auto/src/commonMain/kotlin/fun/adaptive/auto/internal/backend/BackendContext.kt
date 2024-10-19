@@ -106,24 +106,24 @@ class BackendContext<A : AdatClass>(
     // Listener callbacks
     // --------------------------------------------------------------------------------
 
-    internal fun onChange(newValue: A, oldValue: A?) {
-        instanceListeners.forEach { it.onChange(newValue, oldValue) }
-        collectionListeners.forEach { it.onChange(newValue, oldValue) }
+    internal fun onChange(newValue: A, oldValue: A?, fromBackend: Boolean) {
+        instanceListeners.forEach { if (fromBackend || ! it.backendOnly) it.onChange(newValue, oldValue) }
+        collectionListeners.forEach { if (fromBackend || ! it.backendOnly) it.onChange(newValue, oldValue) }
     }
 
-    internal fun onInit(values: List<A>) {
-        collectionListeners.forEach { it.onInit(values) }
+    internal fun onInit(values: List<A>, fromBackend: Boolean) {
+        collectionListeners.forEach { if (fromBackend || ! it.backendOnly) it.onInit(values) }
     }
 
-    internal fun onChange(values: List<A>) {
-        collectionListeners.forEach { it.onChange(values) }
+    internal fun onChange(values: List<A>, fromBackend: Boolean) {
+        collectionListeners.forEach { if (fromBackend || ! it.backendOnly) it.onChange(values) }
     }
 
-    internal fun onRemove(value: A) {
-        collectionListeners.forEach { it.onRemove(value) }
+    internal fun onRemove(value: A, fromBackend: Boolean) {
+        collectionListeners.forEach { if (fromBackend || ! it.backendOnly) it.onRemove(value) }
     }
 
-    internal fun onSyncEnd() {
-        collectionListeners.forEach { it.onSyncEnd() }
+    internal fun onSyncEnd(fromBackend: Boolean) {
+        collectionListeners.forEach { if (fromBackend || ! it.backendOnly) it.onSyncEnd() }
     }
 }

@@ -28,21 +28,21 @@ class SetBackend<A : AdatClass>(
     // --------------------------------------------------------------------------------
 
     override fun remove(itemId: ItemId, commit: Boolean) {
-        data -= itemId
+        data.remove(itemId, fromBackend = false)
 
         val operation = AutoRemove(context.nextTime(), true, setOf(itemId))
         trace { "FE -> BE  itemId=$itemId .. commit true .. $operation" }
 
-        close(operation, commit)
+        close(operation, commit, fromBackend = false    )
     }
 
     override fun removeAll(itemIds: Set<ItemId>, commit: Boolean) {
-        data -= itemIds
+        data.remove(itemIds, fromBackend = false)
 
         val operation = AutoRemove(context.nextTime(), true, itemIds)
         trace { "FE -> BE  commit true .. $operation" }
 
-        close(operation, commit)
+        close(operation, commit, fromBackend = false)
     }
 
     override fun modify(itemId: ItemId, propertyName: String, propertyValue: Any?) {
@@ -58,9 +58,9 @@ class SetBackend<A : AdatClass>(
         trace { "commit=$commit op=$operation" }
 
         @Suppress("UNCHECKED_CAST")
-        addItem(operation.itemId, null, decode(operation.wireFormatName, operation.payload) as A)
+        addItem(operation.itemId, null, decode(operation.wireFormatName, operation.payload) as A, fromBackend = true)
 
-        closeListOp(operation, setOf(operation.itemId), commit)
+        closeListOp(operation, setOf(operation.itemId), commit, fromBackend = true)
 
         context.receive(operation.itemId)
     }
@@ -68,9 +68,9 @@ class SetBackend<A : AdatClass>(
     override fun remove(operation: AutoRemove, commit: Boolean) {
         trace { "commit=$commit op=$operation" }
 
-        data -= operation.itemIds
+        data.remove(operation.itemIds, fromBackend = true)
 
-        closeListOp(operation, operation.itemIds, commit)
+        closeListOp(operation, operation.itemIds, commit, fromBackend = true)
 
         if (operation.syncTime) {
             context.receive(operation.timestamp)
@@ -86,6 +86,7 @@ class SetBackend<A : AdatClass>(
 
         if (item != null) {
             item.modify(operation, commit)
+            context.receive(operation.timestamp)
         } else {
             // This is a tricky situation, we've got a modification, but we don't have the
             // item yet. May happen if the item is updated during synchronization. In this
@@ -96,7 +97,7 @@ class SetBackend<A : AdatClass>(
     }
 
     override fun empty(operation: AutoEmpty, commit: Boolean) {
-        closeListOp(operation, emptySet(), commit)
+        closeListOp(operation, emptySet(), commit, fromBackend = true)
         context.receive(operation.timestamp)
     }
 
@@ -106,7 +107,7 @@ class SetBackend<A : AdatClass>(
         afterSync.forEach { modify(it, commit) }
         afterSync.clear()
         context.receive(operation.timestamp)
-        context.onSyncEnd()
+        context.onSyncEnd(fromBackend = true)
         trace { "time=${context.time}" }
     }
 
@@ -195,7 +196,7 @@ class SetBackend<A : AdatClass>(
     // Utility, common
     // --------------------------------------------------------------------------------
 
-    override fun addItem(itemId: ItemId, parentItemId: ItemId?, value: A) {
+    override fun addItem(itemId: ItemId, parentItemId: ItemId?, value: A, fromBackend: Boolean) {
 
         val values = value.toArray()
         val backend = PropertyBackend(context, itemId, value.adatCompanion.wireFormatName, values)
@@ -203,7 +204,7 @@ class SetBackend<A : AdatClass>(
         val added = data.add(itemId, backend)
 
         if (added) {
-            context.onChange(value, null)
+            context.onChange(value, null, fromBackend)
         }
     }
 

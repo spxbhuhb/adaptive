@@ -35,13 +35,13 @@ class FileFrontend<A : AdatClass>(
     collectionFrontend
 ) {
 
-    override fun commit(initial : Boolean) {
-        super.commit(initial)
-        write(path, wireFormatProvider, itemId, backend.propertyTimes, value !!)
+    override fun commit(initial : Boolean, fromBackend: Boolean) {
+        super.commit(initial, fromBackend)
+        write(path, wireFormatProvider, itemId, backend.propertyTimes, value)
     }
 
-    override fun removed() {
-        super.removed()
+    override fun removed(fromBackend: Boolean) {
+        super.removed(fromBackend)
         SystemFileSystem.delete(path)
     }
 

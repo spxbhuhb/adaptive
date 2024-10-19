@@ -27,7 +27,7 @@ abstract class CollectionBackendBase<A : AdatClass>(
 
     fun add(item: A, parentItemId: ItemId?, commit: Boolean) {
         val itemId = context.nextTime()
-        addItem(itemId, parentItemId, item)
+        addItem(itemId, parentItemId, item, false)
 
         val wireFormatName = wireFormatNameOrNull(item)
 
@@ -41,7 +41,7 @@ abstract class CollectionBackendBase<A : AdatClass>(
 
         trace { "FE -> BE  itemId=$itemId .. commit true .. $operation" }
 
-        close(operation, commit)
+        close(operation, commit, false)
     }
 
     abstract fun remove(itemId: ItemId, commit: Boolean)
@@ -62,7 +62,7 @@ abstract class CollectionBackendBase<A : AdatClass>(
     // Helpers
     // --------------------------------------------------------------------------------
 
-    abstract fun addItem(itemId: ItemId, parentItemId: ItemId?, value: A)
+    abstract fun addItem(itemId: ItemId, parentItemId: ItemId?, value: A, fromBackend: Boolean)
 
     fun wireFormatNameOrNull(item: AdatClass): String? {
         val itemWireFormatName = item.adatCompanion.wireFormatName
@@ -71,14 +71,9 @@ abstract class CollectionBackendBase<A : AdatClass>(
     }
 
     @CallSiteName
-    fun closeListOp(operation: AutoOperation, itemIds: Set<ItemId>, commit: Boolean, callSiteName: String = "") {
-//        if (context.time < operation.timestamp) {
-//            context.receive(operation.timestamp)
-            trace(callSiteName) { "BE -> BE  itemIds=${itemIds} .. commit $commit .. $operation" }
-            close(operation, commit)
-//        } else {
-//            trace(callSiteName) { "BE -> BE  SKIP  $operation" }
-//        }
+    fun closeListOp(operation: AutoOperation, itemIds: Set<ItemId>, commit: Boolean, fromBackend: Boolean, callSiteName: String = "") {
+        trace(callSiteName) { "BE -> BE  itemIds=${itemIds} .. commit $commit .. $operation" }
+        close(operation, commit, fromBackend)
     }
 
     fun encode(wireFormatName: String?, values: Array<Any?>) =
