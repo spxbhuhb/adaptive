@@ -21,6 +21,7 @@ import `fun`.adaptive.utility.firstOrNullIfInstance
 
 @Adaptive
 fun dialog(title : String, vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+
     rootBox {
         dialogTheme.root
 

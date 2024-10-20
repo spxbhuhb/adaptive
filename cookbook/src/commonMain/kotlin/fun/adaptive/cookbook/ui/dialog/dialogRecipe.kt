@@ -63,6 +63,10 @@ fun dialogRecipe() {
         buttonDialog("Independent", Res.drawable.mail, "Dialog Title") { close ->
             independent(close)
         }
+
+        buttonDialog("Independent Auto", Res.drawable.mail, "Dialog Title") { close ->
+            independentAuto(close)
+        }
     }
 
 }
@@ -100,38 +104,4 @@ private fun dialogContent(close: () -> Unit) {
                 close()
             }
     }
-}
-
-@Adaptive
-private fun independent(close: () -> Unit) {
-    var time = poll(1.seconds) { now() } ?: now()
-
-    var data = time.toString().replace("T", " ").replace("Z", " ").substringBeforeLast('.')
-
-    @Independent
-    var iData = data
-
-    grid {
-        size(700.dp, (288 + 64 + 3 * 16).dp)
-        colTemplate(200.dp, 1.fr) .. rowTemplate(100.dp, 44.dp, 44.dp, 100.dp) .. padding { 32.dp }
-        gap { 16.dp } .. alignItems.startCenter
-
-        flowText(
-            """
-            This dialog shows how to avoid continuous data update with the use of @Independent.
-            With it updating automatically, the you cannot edit `data`.  
-            `iData` on the other hand is fine as it is initialized once and then you can 
-            edit it without any problems.
-        """.trimIndent()
-        ) .. colSpan(2) .. maxWidth .. height { 100.dp }
-
-        text("Dependent data:")
-        input { data } .. inputTheme.active .. maxWidth
-
-        text("Independent data:")
-        input { iData } .. inputTheme.active .. maxWidth
-
-        button("Save", Res.drawable.check) .. gridCol(2) .. alignSelf.endBottom .. onClick { close() }
-    }
-
 }

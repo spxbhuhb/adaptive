@@ -35,7 +35,4 @@ class OriginInstanceBase<BE : BackendBase, FE : InstanceFrontendBase<IT>, IT : A
         return this
     }
 
-    fun update(newValue: IT) {
-        frontend.update(newValue)
-    }
 }

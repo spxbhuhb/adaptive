@@ -40,6 +40,11 @@ class AuiAdapter(
     override val dispatcher: CoroutineDispatcher
         get() = Dispatchers.Default
 
+    /**
+     * Fragments which are over the main root fragment, such as dialog boxes.
+     */
+    val otherRootFragments = mutableListOf<AdaptiveFragment>()
+
     override fun makeContainerReceiver(fragment: AbstractContainer<HTMLElement, HTMLDivElement>): HTMLDivElement =
         document.createElement("div") as HTMLDivElement
 
@@ -56,6 +61,8 @@ class AuiAdapter(
                 rootContainer.appendChild(it.receiver)
             }
         }
+
+        otherRootFragments += fragment
     }
 
     override fun removeActualRoot(fragment: AdaptiveFragment) {
@@ -64,6 +71,8 @@ class AuiAdapter(
         fragment.alsoIfInstance<AbstractContainer<HTMLElement, HTMLDivElement>> {
             rootContainer.removeChild(it.receiver)
         }
+
+        otherRootFragments -= fragment
     }
 
     override fun addActual(containerReceiver: HTMLDivElement, itemReceiver: HTMLElement) {
@@ -212,7 +221,14 @@ class AuiAdapter(
             updateMediaMetrics()
 
             rootContainer.getBoundingClientRect().let { r ->
-                for (fragment in rootFragment.children) {
+
+                val root = rootFragment as? AbstractAuiFragment<*>
+                if (root != null) {
+                    root.computeLayout(r.width, r.height)
+                    root.placeLayout(0.0, 0.0)
+                }
+
+                for (fragment in otherRootFragments) {
                     if (fragment is AbstractAuiFragment<*>) {
                         fragment.computeLayout(r.width, r.height)
                         fragment.placeLayout(0.0, 0.0)

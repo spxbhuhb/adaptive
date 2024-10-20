@@ -147,6 +147,10 @@ open class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
         backend.waitForSync(connectInfo, timeout)
     }
 
+    open fun update(new: IT) {
+        frontend.update(new)
+    }
+
     fun update(original: IT, new: IT) {
         frontend.also {
             if (it is AdatClassListFrontend<*>) {
