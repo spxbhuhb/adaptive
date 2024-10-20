@@ -32,6 +32,7 @@ fun box() : String {
     }
 
     return adapter.assert(listOf(
+        //@formatter:off
         TraceEvent("<root>", 2, "before-Create", ""),
         TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
         TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
@@ -66,5 +67,6 @@ fun box() : String {
         TraceEvent("AdaptiveT1", 4, "after-Patch-Internal", "createMask: 0x00000003 thisMask: 0x00000000 state: [35]"),
         TraceEvent("AdaptiveIndependentVariable", 3, "after-Patch-Internal", "createMask: 0x00000001 thisMask: 0x00000000 state: [20, 23, 12]"),
         TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [20]")
+        //@formatter:on
     ))
 }

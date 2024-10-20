@@ -10,6 +10,8 @@ import `fun`.adaptive.kotlin.foundation.ir.arm.ArmDependencies
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmStateVariable
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.IrElement
+import org.jetbrains.kotlin.ir.declarations.IrDeclaration
+import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
@@ -25,7 +27,8 @@ import org.jetbrains.kotlin.ir.util.hasAnnotation
  */
 class ProducerTransform(
     override val pluginContext: FoundationPluginContext,
-    val closure: ArmClosure
+    val variable: IrVariable,
+    val closure: ArmClosure,
 ) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
 
     var producerCall: IrCall? = null
@@ -44,7 +47,13 @@ class ProducerTransform(
             check(producerCall == null) { "only one producer call is allowed per state variable" }
 
             producerCall = expression
-            producerDependencies = expression.dependencies()
+
+            producerDependencies =
+                if (variable.hasAnnotation(pluginContext.independentAnnotation)) {
+                    emptyList()
+                } else {
+                    expression.dependencies()
+                }
 
             return irImplicitAs(
                 expression.type,

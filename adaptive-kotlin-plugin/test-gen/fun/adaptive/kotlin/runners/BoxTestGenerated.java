@@ -297,6 +297,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testIntervariable() {
         runTest("testData/box/foundation/dependency/intervariable.kt");
       }
+
+      @Test
+      @TestMetadata("producer.kt")
+      public void testProducer() {
+        runTest("testData/box/foundation/dependency/producer.kt");
+      }
     }
 
     @Nested

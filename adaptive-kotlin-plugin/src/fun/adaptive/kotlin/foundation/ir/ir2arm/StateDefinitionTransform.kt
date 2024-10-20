@@ -37,6 +37,7 @@ class StateDefinitionTransform(
     var stateVariableIndex = 0
 
     fun IrElement.dependencies(): List<ArmStateVariable> {
+        // if you modify this you have to modify ProducerTransform as well
         if (this is IrDeclaration && this.hasAnnotation(pluginContext.independentAnnotation)) {
             return emptyList()
         }
@@ -147,7 +148,7 @@ class StateDefinitionTransform(
 
     private fun transformProducer(statement: IrVariable): ArmValueProducer? {
 
-        val visitor = ProducerTransform(pluginContext, armClass.stateVariables)
+        val visitor = ProducerTransform(pluginContext, statement, armClass.stateVariables)
         val postProcess = statement.accept(visitor, null)
 
         if (visitor.producerCall == null) return null
