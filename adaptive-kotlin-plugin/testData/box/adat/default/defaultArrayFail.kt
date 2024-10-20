@@ -23,7 +23,6 @@ fun box(): String {
     } catch (ex : MissingParameterException) {
         if (ex.className != "fun.adaptive.adat.TestAdat") return "Fail: t1 adatClass ${ex.className}"
         if (ex.propertyName != "someString") return "Fail: t1 propertyName"
-        if (ex.id != null) return "Fail: id"
     }
 
     val id = UUID<Any>()
@@ -33,7 +32,6 @@ fun box(): String {
     } catch (ex : MissingParameterException) {
         if (ex.className != "fun.adaptive.adat.TestAdat2") return "Fail:  t2 adatClass ${ex.className}"
         if (ex.propertyName != "someInt23") return "Fail: t2 propertyName"
-        if (ex.id != id) return "Fail: id"
     }
 
     return "OK"

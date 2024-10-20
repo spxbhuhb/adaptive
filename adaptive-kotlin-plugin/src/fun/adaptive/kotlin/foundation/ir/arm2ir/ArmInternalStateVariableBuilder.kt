@@ -22,7 +22,7 @@ import org.jetbrains.kotlin.ir.util.companionObject
 
 open class ArmInternalStateVariableBuilder(
     parent: ClassBoundIrBuilder,
-    val stateVariable: ArmInternalStateVariable
+    val stateVariable: ArmInternalStateVariable,
 ) : ClassBoundIrBuilder(parent) {
 
     fun genPatchInternal(irBlockBodyBuilder: IrBlockBodyBuilder, dirtyMask: IrVariable, patchFun: IrSimpleFunction) {
@@ -43,7 +43,10 @@ open class ArmInternalStateVariableBuilder(
 
         + irIf(
             genPatchInternalConditionForMask(patchFun, dirtyMask, stateVariable.dependencies),
-            irSetStateVariable(patchFun, stateVariable.indexInState, transformedInitializer)
+            IrBlockImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.irContext.irBuiltIns.unitType).also { block ->
+                block.statements += irSetStateVariable(patchFun, stateVariable.indexInState, transformedInitializer)
+                block.statements += IrSetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, irBuiltIns.intType, dirtyMask.symbol, irConst(1 shl stateVariable.indexInState), null)
+            }
         )
     }
 
