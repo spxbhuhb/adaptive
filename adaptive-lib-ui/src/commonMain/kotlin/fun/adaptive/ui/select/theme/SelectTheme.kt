@@ -27,7 +27,7 @@ import `fun`.adaptive.ui.theme.colors
 import kotlin.collections.plus
 
 open class SelectTheme(
-    val itemHeight: Int,
+    val itemHeight: Int = editorTheme.height,
 ) {
 
     var outerContainer = instructionsOf(

@@ -13,8 +13,11 @@ import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
 import `fun`.adaptive.ui.instruction.input.InputPlaceholder
+import `fun`.adaptive.ui.instruction.input.MaxLength
 import `fun`.adaptive.utility.checkIfInstance
+import `fun`.adaptive.wireformat.signature.DatetimeSignatures
 import kotlinx.browser.document
+import kotlinx.datetime.DateTimePeriod
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 
@@ -80,12 +83,16 @@ open class AuiBoundInput(
                 }
             })
 
-            // TODO should we merge AuiBoundInput and AuiInput?
             val propertyName = binding.path?.last()
 
             val placeholder = get<InputPlaceholder>()?.value ?: propertyName
             if (placeholder != null) {
                 receiver.placeholder = placeholder
+            }
+
+            val maxLength = get<MaxLength>()?.maxLength
+            if (maxLength != null) {
+                receiver.maxLength = maxLength
             }
 
             val metadata = binding.adatCompanion?.adatMetadata
@@ -94,8 +101,9 @@ open class AuiBoundInput(
             // TODO checking for the secret descriptor in input field is too expensive considering the number of uses in an application
             // however, if we will add more checks/customization properties it might be OK
 
-            if (propertyName != null && metadata != null && descriptors != null && metadata[propertyName].isSecret(descriptors)) {
-                receiver.type = "password"
+            if (propertyName != null && metadata != null && descriptors != null) {
+                val property = metadata[propertyName]
+                if (property.isSecret(descriptors)) receiver.type = "password"
             }
         }
 

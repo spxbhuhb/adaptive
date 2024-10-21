@@ -19,7 +19,11 @@ import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.utility.localDate
 import `fun`.adaptive.utility.localDateTime
+import `fun`.adaptive.utility.localTime
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 
 @Adaptive
 fun editorRecipe() {
@@ -41,10 +45,12 @@ fun editorRecipe() {
 
         grid {
             colTemplate(100.dp, 400.dp, 1.fr) .. alignItems.startCenter .. gap { 16.dp }
-            rowTemplate(44.dp repeat 2)
+            rowTemplate(44.dp repeat 4)
 
             textEditor()
             intEditor()
+            timeEditor()
+            dateEditor()
         }
     }
 }
@@ -52,7 +58,7 @@ fun editorRecipe() {
 
 @Adaptive
 fun textEditor() {
-    var value: String = "Hello World!"
+    var value = "Hello World!"
     text("String")
     editor { value }
     text("Current value: $value")
@@ -60,8 +66,24 @@ fun textEditor() {
 
 @Adaptive
 fun intEditor() {
-    var value: Int = 12
+    var value = 12
     text("Int")
+    editor { value }
+    text("Current value: $value")
+}
+
+@Adaptive
+fun timeEditor() {
+    var value = localTime()
+    text("LocalTime")
+    editor { value }
+    text("Current value: $value")
+}
+
+@Adaptive
+fun dateEditor() {
+    var value = localDate()
+    text("LocalDate")
     editor { value }
     text("Current value: $value")
 }

@@ -1,6 +1,7 @@
 package `fun`.adaptive.ui.editor
 
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.binding.PropertySelector
@@ -8,8 +9,15 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.ui.api.boundInput
 import `fun`.adaptive.ui.api.focus
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.editor.theme.editorTheme
+import `fun`.adaptive.ui.instruction.input.MaxLength
+import `fun`.adaptive.ui.theme.textColors
+import `fun`.adaptive.wireformat.signature.DatetimeSignatures
 import `fun`.adaptive.wireformat.signature.KotlinSignatures
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 
 @Suppress("UNCHECKED_CAST")
 @Adaptive
@@ -82,6 +90,31 @@ fun <T> editor(
                 invalid = { invalidInput = it }
             )
         }
+
+        DatetimeSignatures.LOCAL_TIME -> {
+            boundInput<LocalTime>(
+                *styles, *instructions, width { editorTheme.timeWidth }, MaxLength(5),
+                binding = binding as AdaptiveStateVariableBinding<LocalTime>,
+                toString = { it.toString().take(5) },
+                fromString = { LocalTime.parse(it) },
+                invalid = { invalidInput = it }
+            )
+        }
+
+        DatetimeSignatures.LOCAL_DATE -> {
+            boundInput<LocalDate>(
+                *styles, *instructions, width { editorTheme.dateWidth }, MaxLength(10),
+                binding = binding as AdaptiveStateVariableBinding<LocalDate>,
+                toString = { it.toString() },
+                fromString = { LocalDate.parse(it) },
+                invalid = { invalidInput = it }
+            )
+        }
+
+        else -> {
+            text("! no editor for type ${binding.boundType} !") .. textColors.onSurfaceAngry
+        }
+
     }
 
     return fragment()

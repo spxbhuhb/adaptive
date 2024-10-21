@@ -22,6 +22,9 @@ class EditorTheme(
     val width: Int,
 ) {
 
+    var timeWidth = 80.dp
+    var dateWidth = 130.dp
+
     val base = instructionsOf(
         cornerRadius(8.dp),
         height { height.dp },
