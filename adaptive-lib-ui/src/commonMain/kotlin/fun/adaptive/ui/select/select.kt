@@ -26,47 +26,57 @@ import `fun`.adaptive.ui.api.paddingLeft
 import `fun`.adaptive.ui.api.paddingRight
 import `fun`.adaptive.ui.api.position
 import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.builtin.Res
 import `fun`.adaptive.ui.builtin.arrow_drop_down
 import `fun`.adaptive.ui.builtin.arrow_drop_up
 import `fun`.adaptive.ui.icon.icon
+import `fun`.adaptive.ui.input.api.inputTheme
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.input.InputPlaceholder
 import `fun`.adaptive.ui.instruction.text.ToText
+import `fun`.adaptive.ui.select.theme.SelectTheme
+import `fun`.adaptive.ui.select.theme.selectTheme
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.utility.firstOrNullIfInstance
 import kotlin.collections.plus
+import kotlin.math.max
+import kotlin.math.min
 
 
 @Adaptive
 fun <T> select(
     value: T?,
     items: List<T>,
+    theme: SelectTheme = selectTheme,
     vararg instructions: AdaptiveInstruction,
     onChange: (T) -> Unit,
 ): AdaptiveFragment {
     var open = false
     val toText = instructions.firstOrNullIfInstance<ToText<T>>() ?: ToText<T> { it.toString() }
+    val openHeight = min(10, items.size) * theme.itemHeight
 
     box {
-        height { 44.dp } // keep it 44 so we won't re-layout it even if the select is open
+        height { theme.itemHeight.dp } // keep it fixed so we won't re-layout it even if the select is open
 
         if (open) {
-            box {
-                width { 400.dp } .. height { 400.dp } .. zIndex(2) .. backgrounds.surface
+            box(*theme.openContainer) {
+                height { openHeight.dp }
 
-                selectTop(value, open, toText, *instructions) .. onClick { open = false }
+                selectTop(value, open, toText, theme, *instructions) .. onClick { open = false }
 
                 column {
-                    maxSize .. position(44.dp, 0.dp)
+                    theme.itemsContainer
+                    height { openHeight.dp }
+
                     for (index in items.indices) {
-                        selectItem(index, items[index], items.size, toText) .. onClick {
+                        selectItem(items[index], value, toText, theme) .. onClick {
                             onChange(items[index])
                             open = false
                         }
@@ -74,9 +84,8 @@ fun <T> select(
                 }
             }
         } else {
-            box {
-                width { 400.dp } .. height { 44.dp }
-                selectTop(value, open, toText, *instructions) .. onClick { open = true }
+            box(*theme.closedContainer) {
+                selectTop(value, open, toText, theme, *instructions) .. onClick { open = true }
             }
         }
     }
@@ -89,16 +98,15 @@ private fun <T> selectTop(
     selected: T?,
     open: Boolean,
     toText: ToText<T>,
-    vararg instructions: AdaptiveInstruction
+    theme: SelectTheme,
+    vararg instructions: AdaptiveInstruction,
 ): AdaptiveFragment {
 
     val placeholder = instructions.firstOrNullIfInstance<InputPlaceholder>()
     val textColor = if (selected != null) textColors.onSurface else textColors.onSurfaceVariant
 
     grid(*instructions, if (open) cornerTopRadius(8.dp) else cornerRadius(8.dp)) {
-        colTemplate(1.fr, 24.dp) .. height { 44.dp }
-        paddingLeft { 16.dp } .. paddingRight(8.dp) .. borders.outline
-        alignItems.startCenter
+        theme.active
 
         text(selected?.let { toText.toTextFun(it) } ?: placeholder?.value ?: "") .. textColor
         icon(if (open) Res.drawable.arrow_drop_up else Res.drawable.arrow_drop_down)
@@ -109,24 +117,17 @@ private fun <T> selectTop(
 
 @Adaptive
 private fun <T> selectItem(
-    index: Int,
     value: T,
-    size: Int,
+    selected: T?,
     toText: ToText<T>,
-    vararg instructions: AdaptiveInstruction
+    theme: SelectTheme,
+    vararg instructions: AdaptiveInstruction,
 ): AdaptiveFragment {
+
     val hover = hover()
 
-    var styles = instructionsOf(border(colors.outline, top = 0.dp, bottom = 0.dp))
-
-    if (index == size - 1) {
-        styles += border(colors.outline, top = 0.dp)
-        styles += cornerBottomRadius(8.dp)
-    }
-
     box(*instructions) {
-        maxWidth .. height { 44.dp } .. padding(16.dp)
-        colors(false, hover) .. styles
+        theme.itemColors(value == selected, hover) .. theme.item
 
         text(toText.toTextFun(value)) .. alignSelf.startCenter
     }

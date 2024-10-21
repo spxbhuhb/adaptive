@@ -10,18 +10,24 @@ import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.lightFont
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.api.width
+import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.colors
 
-var inputTheme = InputTheme()
+var inputTheme = InputTheme(44, 400)
 
-class InputTheme {
+class InputTheme(
+    val height : Int,
+    val width : Int
+) {
 
     val base = instructionsOf(
         cornerRadius(8.dp),
         border(colors.outline, 1.dp),
-        height { 44.dp },
+        height { height.dp },
+        width { width.dp },
         fontSize { 17.sp },
         lightFont,
         padding(left = 16.dp, right = 16.dp)

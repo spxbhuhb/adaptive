@@ -10,6 +10,7 @@ import `fun`.adaptive.cookbook.eco
 import `fun`.adaptive.cookbook.grid_view
 import `fun`.adaptive.cookbook.iot.iotCommon
 import `fun`.adaptive.cookbook.ui.dialog.dialogRecipe
+import `fun`.adaptive.cookbook.ui.select.selectRecipe
 import `fun`.adaptive.cookbook.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.cookbook.ui.svg.svgRecipe
 import `fun`.adaptive.cookbook.ui.text.textRecipe
@@ -65,12 +66,7 @@ fun main() {
                 mainContent()
             }
 
-//            grid {
-//                maxHeight .. padding { 16.dp } .. gap { 16.dp }
-//                rowTemplate(40.dp, 1.fr)
-
 //            formMain()
-//            dialogMain()
 
 //            iotMain()
 //              box {
@@ -83,35 +79,18 @@ fun main() {
 
 //            buttonRecipe()
 //            gridAlignRecipe()
-//              selectRecipe()
-//            sideBarRecipe()
 //            quickFilterRecipe()
 
-//            navMain()
-
 //            projectWizardMain()
-
-//                text("Cookbook")
-//
-//                slot(cookbookContent) {
-//                    route { authMain() }
-//                    route { introMain() }
-//                    route { layoutMobileMain() }
-//                    route { layoutDesktopMain() }
-//                    route { componentsMain() }
-//                    route { iotMain() }
-//
-//                    recipeList()
-//                }
-//           }
         }
     }
 }
 
-private val appNavState = autoInstance(Routes.dialog)
+private val appNavState = autoInstance(Routes.select)
 
 private object Routes {
     val dialog = NavState("Dialog")
+    val select = NavState("Select")
     val sidebar = NavState("SideBar")
     val svg = NavState("SVG")
     val text = NavState("Text")
@@ -119,6 +98,7 @@ private object Routes {
 
 private val items = listOf(
     SidebarItem(0, Res.drawable.grid_view, "Dialog", Routes.dialog),
+    SidebarItem(0, Res.drawable.grid_view, "Select", Routes.select),
     SidebarItem(0, Res.drawable.grid_view, "SideBar", Routes.sidebar),
     SidebarItem(0, Res.drawable.grid_view, "SVG", Routes.svg),
     SidebarItem(0, Res.drawable.grid_view, "Text", Routes.text)
@@ -146,8 +126,9 @@ fun mainContent() {
 
         when (navState) {
             in Routes.dialog -> dialogRecipe()
-            in Routes.svg -> svgRecipe()
+            in Routes.select -> selectRecipe()
             in Routes.sidebar -> sideBarRecipe()
+            in Routes.svg -> svgRecipe()
             in Routes.text -> textRecipe()
             else -> text("unknown route: $navState")
         }

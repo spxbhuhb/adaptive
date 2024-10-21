@@ -15,6 +15,8 @@ fun selectRecipe() {
     column {
         basicSelect()
         toTextSelect()
+        singleItem()
+        many()
     }
 }
 
@@ -48,4 +50,28 @@ fun toTextSelect() {
             toText<Int> { names[it - 1] }
     }
 
+}
+
+@Adaptive
+fun singleItem() {
+    val items = listOf("one")
+    var selected: String? = null
+
+    column {
+        padding { 16.dp }
+        text("Selected: $selected")
+        select(selected, items) { selected = it } .. inputPlaceholder { "(no item selected)" }
+    }
+}
+
+@Adaptive
+fun many() {
+    val items = (1..50).map { "item - $it" }
+    var selected: String? = null
+
+    column {
+        padding { 16.dp }
+        text("Selected: $selected")
+        select(selected, items) { selected = it } .. inputPlaceholder { "(no item selected)" }
+    }
 }
