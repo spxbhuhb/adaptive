@@ -17,6 +17,7 @@ import `fun`.adaptive.ui.platform.ResizeObserver
 import `fun`.adaptive.ui.platform.media.MediaMetrics
 import `fun`.adaptive.ui.render.BrowserDecorationApplier
 import `fun`.adaptive.ui.render.BrowserEventApplier
+import `fun`.adaptive.ui.render.BrowserInputApplier
 import `fun`.adaptive.ui.render.model.LayoutRenderData
 import `fun`.adaptive.ui.render.model.TextRenderData
 import `fun`.adaptive.utility.alsoIfInstance
@@ -132,6 +133,7 @@ class AuiAdapter(
         BrowserDecorationApplier.applyTo(fragment)
         renderData.text { it.apply(style) }
         BrowserEventApplier.applyTo(fragment)
+        BrowserInputApplier.applyTo(fragment)
     }
 
     fun LayoutRenderData.apply(style: CSSStyleDeclaration) {

@@ -10,6 +10,7 @@ import `fun`.adaptive.ui.render.model.ContainerRenderData
 import `fun`.adaptive.ui.render.model.DecorationRenderData
 import `fun`.adaptive.ui.render.model.EventRenderData
 import `fun`.adaptive.ui.render.model.GridRenderData
+import `fun`.adaptive.ui.render.model.InputRenderData
 import `fun`.adaptive.ui.render.model.LayoutRenderData
 import `fun`.adaptive.ui.render.model.TextRenderData
 
@@ -52,5 +53,11 @@ internal inline fun grid(subject: Any, setter: (data : GridRenderData) -> Unit) 
 internal inline fun event(subject: Any, setter: (data : EventRenderData) -> Unit) {
     if (subject is AuiRenderData) {
         setter((subject.event ?: EventRenderData(subject.adapter).also { subject.event = it }))
+    }
+}
+
+internal inline fun input(subject: Any, setter: (data : InputRenderData) -> Unit) {
+    if (subject is AuiRenderData) {
+        setter((subject.input ?: InputRenderData(subject.adapter).also { subject.input = it }))
     }
 }

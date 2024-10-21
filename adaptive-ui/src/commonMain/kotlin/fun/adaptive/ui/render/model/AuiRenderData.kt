@@ -64,6 +64,7 @@ data class AuiRenderData(
     var text: TextRenderData? = null
     var grid: GridRenderData? = null
     var event: EventRenderData? = null
+    var input: InputRenderData? = null
 
     fun computeSurrounding() {
         val padding = layout?.padding ?: RawSurrounding.ZERO

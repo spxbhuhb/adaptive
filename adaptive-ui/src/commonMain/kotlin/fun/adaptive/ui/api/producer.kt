@@ -2,6 +2,7 @@ package `fun`.adaptive.ui.api
 
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.Producer
+import `fun`.adaptive.ui.platform.focus.focusImpl
 import `fun`.adaptive.ui.platform.hover.hoverImpl
 import `fun`.adaptive.ui.platform.media.MediaMetrics
 import `fun`.adaptive.ui.platform.media.MediaMetricsProducer
@@ -37,6 +38,27 @@ fun hover(
     checkNotNull(binding)
 
     val hover = hoverImpl(binding)
+
+    binding.targetFragment.addProducer(hover)
+
+    return hover.latestValue !!
+
+}
+
+
+/**
+ * Produces:
+ *
+ * - `true` if any of the children of the fragment have focus
+ * - `false` when none of the children of the fragment have focus
+ */
+@Producer
+fun focus(
+    binding: AdaptiveStateVariableBinding<Boolean>? = null,
+): Boolean {
+    checkNotNull(binding)
+
+    val hover = focusImpl(binding)
 
     binding.targetFragment.addProducer(hover)
 

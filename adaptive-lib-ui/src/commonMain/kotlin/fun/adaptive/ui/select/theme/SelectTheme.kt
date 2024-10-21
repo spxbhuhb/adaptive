@@ -13,6 +13,7 @@ import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.paddingLeft
 import `fun`.adaptive.ui.api.paddingRight
 import `fun`.adaptive.ui.api.position
+import `fun`.adaptive.ui.api.tabIndex
 import `fun`.adaptive.ui.api.textColor
 import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.api.width
@@ -28,6 +29,11 @@ open class SelectTheme(
     val itemHeight: Int,
 ) {
 
+    var outerContainer = instructionsOf(
+        height { itemHeight.dp }, // keep it fixed so we won't re-layout it even if the select is open
+        tabIndex { 1 }
+    )
+
     var closedContainer = instructionsOf(
         width { inputTheme.width.dp },
         height { itemHeight.dp }
@@ -42,9 +48,11 @@ open class SelectTheme(
         alignItems.startCenter
     )
 
-    val active = base .. textColor(colors.onSurface) .. backgroundColor(colors.surface)
+    var active = base .. textColor(colors.onSurface) .. backgroundColor(colors.surface)
 
-    val disabled = base .. backgroundColor(colors.surfaceVariant) .. textColor(colors.onSurfaceVariant)
+    var focus = active .. border(colors.primary, 2.dp)
+
+    var disabled = base .. backgroundColor(colors.surfaceVariant) .. textColor(colors.onSurfaceVariant)
 
     var openContainer = instructionsOf(
         width { inputTheme.width.dp },
@@ -66,6 +74,6 @@ open class SelectTheme(
         padding(16.dp)
     )
 
-    fun itemColors(selected : Boolean, hover : Boolean) = colors(false, hover)
+    fun itemColors(selected: Boolean, hover: Boolean) = colors(false, hover)
 
 }

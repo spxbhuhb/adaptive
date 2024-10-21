@@ -15,6 +15,7 @@ import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.cornerBottomRadius
 import `fun`.adaptive.ui.api.cornerRadius
 import `fun`.adaptive.ui.api.cornerTopRadius
+import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.hover
@@ -25,6 +26,7 @@ import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.paddingLeft
 import `fun`.adaptive.ui.api.paddingRight
 import `fun`.adaptive.ui.api.position
+import `fun`.adaptive.ui.api.tabIndex
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.api.width
@@ -58,18 +60,22 @@ fun <T> select(
     vararg instructions: AdaptiveInstruction,
     onChange: (T) -> Unit,
 ): AdaptiveFragment {
+    var focus = focus()
+
     var open = false
+    if (focus == false) open = false // this is not the same as open = focus!
+
     val toText = instructions.firstOrNullIfInstance<ToText<T>>() ?: ToText<T> { it.toString() }
     val openHeight = min(10, items.size) * theme.itemHeight
 
     box {
-        height { theme.itemHeight.dp } // keep it fixed so we won't re-layout it even if the select is open
+        theme.outerContainer
 
         if (open) {
             box(*theme.openContainer) {
                 height { openHeight.dp }
 
-                selectTop(value, open, toText, theme, *instructions) .. onClick { open = false }
+                selectTop(value, open, focus, toText, theme, *instructions) .. onClick { open = false }
 
                 column {
                     theme.itemsContainer
@@ -85,7 +91,7 @@ fun <T> select(
             }
         } else {
             box(*theme.closedContainer) {
-                selectTop(value, open, toText, theme, *instructions) .. onClick { open = true }
+                selectTop(value, open, focus, toText, theme, *instructions) .. onClick { open = true }
             }
         }
     }
@@ -97,6 +103,7 @@ fun <T> select(
 private fun <T> selectTop(
     selected: T?,
     open: Boolean,
+    focus : Boolean,
     toText: ToText<T>,
     theme: SelectTheme,
     vararg instructions: AdaptiveInstruction,
@@ -106,7 +113,7 @@ private fun <T> selectTop(
     val textColor = if (selected != null) textColors.onSurface else textColors.onSurfaceVariant
 
     grid(*instructions, if (open) cornerTopRadius(8.dp) else cornerRadius(8.dp)) {
-        theme.active
+        if (focus) theme.focus else theme.active
 
         text(selected?.let { toText.toTextFun(it) } ?: placeholder?.value ?: "") .. textColor
         icon(if (open) Res.drawable.arrow_drop_up else Res.drawable.arrow_drop_down)

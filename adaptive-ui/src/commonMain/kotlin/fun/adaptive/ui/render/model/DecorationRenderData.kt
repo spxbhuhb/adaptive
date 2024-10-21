@@ -22,4 +22,5 @@ class DecorationRenderData(
     var backgroundGradient : BackgroundGradient? = null
 
     var dropShadow: RawDropShadow? = null
+
 }

@@ -47,6 +47,7 @@ import `fun`.adaptive.ui.instruction.event.OnSecondaryDown
 import `fun`.adaptive.ui.instruction.event.OnSecondaryUp
 import `fun`.adaptive.ui.instruction.event.UIEvent
 import `fun`.adaptive.ui.instruction.input.InputPlaceholder
+import `fun`.adaptive.ui.instruction.input.TabIndex
 import `fun`.adaptive.ui.instruction.layout.AlignItems
 import `fun`.adaptive.ui.instruction.layout.AlignSelf
 import `fun`.adaptive.ui.instruction.layout.DistributeSpace
@@ -290,4 +291,12 @@ fun <T> toText(toTextFun: (T) -> String) = ToText(toTextFun)
 // Input
 // ------------------------------------------------------------------------------------
 
+/**
+ * ```text
+ * -1    not focusable
+ * 0     in order in document source
+ * N     before m > N but after 0
+ * ```
+ */
+inline fun tabIndex(value: () -> Int) = TabIndex(value())
 inline fun inputPlaceholder(valueFun: () -> String) = InputPlaceholder(valueFun())
