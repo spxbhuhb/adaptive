@@ -5,7 +5,6 @@ import `fun`.adaptive.adat.api.isTouched
 import `fun`.adaptive.adat.api.isValid
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.cookbook.shared.bodySmall
-import `fun`.adaptive.ui.checkbox.api.checkbox
 import `fun`.adaptive.cookbook.shared.cornerRadius8
 import `fun`.adaptive.cookbook.shared.darkGray
 import `fun`.adaptive.cookbook.shared.inputErrorContainer
@@ -22,7 +21,6 @@ import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.grid
-import `fun`.adaptive.ui.api.input
 import `fun`.adaptive.ui.api.marginTop
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.repeat
@@ -30,6 +28,8 @@ import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.checkbox.api.checkbox
+import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.dp
 
 @Adaptive
@@ -86,14 +86,14 @@ fun projectWizardMain() {
 
         section("Project Name") {
             column {
-                input { setup.projectName }
+                editor { setup.projectName }
                 fieldNote("Name of the project in setting.gradle.kts.", "Not a valid Gradle project name.\nMay contain only characters: a-z A-Z 0-9 _ . - ") { setup.projectName }
             }
         }
 
         section("Package Name") {
             column {
-                input { setup.packageName }
+                editor { setup.packageName }
                 fieldNote(
                     "The root package to put source codes into.",
                     "Not a valid Java package name.\nMay contain only characters: a-z A-Z 0-9 .\nHave to start with a letter.\nMay not contain two consecutive dots."

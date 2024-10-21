@@ -31,6 +31,8 @@ class OuterInstructionLowering(
             return super.visitTypeOperator(expression)
         }
 
+        // FIXME handling of callback functions in outer instruction lowering
+        // problem: onClick { fragment().something }
         val extensionReceiver = argument.extensionReceiver ?: return super.visitTypeOperator(expression)
         if (! extensionReceiver.type.isSubtypeOfClass(pluginContext.adaptiveFragmentClass)) return super.visitTypeOperator(expression)
 

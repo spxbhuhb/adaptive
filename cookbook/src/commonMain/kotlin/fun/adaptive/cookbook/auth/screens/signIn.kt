@@ -6,8 +6,6 @@ package `fun`.adaptive.cookbook.auth.screens
 
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.cookbook.auth.model.SignIn
-import `fun`.adaptive.cookbook.shared.button
-import `fun`.adaptive.ui.checkbox.api.checkbox
 import `fun`.adaptive.cookbook.shared.darkGray
 import `fun`.adaptive.cookbook.shared.footerLink
 import `fun`.adaptive.cookbook.shared.mediumGray
@@ -21,7 +19,6 @@ import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.fontSize
 import `fun`.adaptive.ui.api.grid
-import `fun`.adaptive.ui.api.input
 import `fun`.adaptive.ui.api.lightFont
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.onClick
@@ -33,6 +30,9 @@ import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.spaceBetween
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.button.api.button
+import `fun`.adaptive.ui.checkbox.api.checkbox
+import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.instruction.text.FontName
 
@@ -50,8 +50,8 @@ fun signIn(): AdaptiveFragment {
         grid {
             colTemplate(1.fr) .. rowTemplate(52.dp repeat 2, 60.dp, 50.dp)
 
-            input { signIn.email }
-            input { signIn.password }
+            editor { signIn.email }
+            editor { signIn.password }
 
             row {
                 paddingTop(15.dp) .. spaceBetween .. maxWidth

@@ -46,6 +46,9 @@ abstract class AbstractAuiFragment<RT>(
     open val isRootActual
         get() = false
 
+    open val invalidInput : Boolean
+        get() =  false
+
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         null
 

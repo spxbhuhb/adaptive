@@ -18,7 +18,6 @@ import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.gridCol
 import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.input
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.padding
@@ -26,7 +25,7 @@ import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.button.api.button
-import `fun`.adaptive.ui.input.api.inputTheme
+import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import kotlinx.datetime.Clock.System.now
@@ -64,10 +63,10 @@ fun independentAuto(close: () -> Unit) {
         ) .. colSpan(2) .. maxWidth .. height { 120.dp }
 
         text("Dependent data:")
-        input { autoData.s } .. inputTheme.active .. maxWidth
+        editor { autoData.s }
 
         text("Independent data:")
-        input { iData.s } .. inputTheme.active .. maxWidth
+        editor { iData.s }
 
         button("Save", Res.drawable.check) .. gridCol(2) .. alignSelf.endBottom .. onClick {
             sharedData.update(sharedData.frontend.value.copy(s = iData.s))

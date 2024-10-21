@@ -23,11 +23,10 @@ fun image(res: DrawableResource, vararg instructions: AdaptiveInstruction): Adap
 @AdaptiveExpect(aui)
 fun input(
     vararg instructions: AdaptiveInstruction,
-    binding: AdaptiveStateVariableBinding<String>? = null,
-    @PropertySelector
-    selector: () -> String
+    value: String?,
+    onChange: (newValue: String) -> Unit,
 ): AdaptiveFragment {
-    manualImplementation(instructions, binding, selector)
+    manualImplementation(instructions, value, onChange)
 }
 
 @AdaptiveExpect(aui)
@@ -35,9 +34,10 @@ fun <T> boundInput(
     vararg instructions: AdaptiveInstruction,
     binding: AdaptiveStateVariableBinding<T>,
     toString: (T) -> String,
-    fromString: (String) -> T?
+    fromString: (String) -> T?,
+    invalid : (Boolean) -> Unit
 ): AdaptiveFragment {
-    manualImplementation(instructions, binding)
+    manualImplementation(instructions, binding, toString, fromString)
 }
 
 @AdaptiveExpect(aui)

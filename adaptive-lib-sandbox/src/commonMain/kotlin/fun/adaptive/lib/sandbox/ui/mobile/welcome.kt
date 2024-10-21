@@ -26,7 +26,6 @@ import `fun`.adaptive.ui.api.gapWidth
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.image
-import `fun`.adaptive.ui.api.input
 import `fun`.adaptive.ui.api.lightFont
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.noBorder
@@ -43,6 +42,7 @@ import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.textColor
 import `fun`.adaptive.ui.api.underline
+import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.instruction.layout.AlignItems
 import `fun`.adaptive.ui.instruction.layout.Height
@@ -82,10 +82,10 @@ fun welcomeInner(signUp: SignUp) {
             colTemplate(1.fr)
             rowTemplate(52.dp repeat 4, 60.dp, 50.dp)
 
-            input(*input) { signUp.name }
-            input(*input) { signUp.email }
-            input(*input) { signUp.password }
-            input(*input) { signUp.verification }
+            editor { signUp.name }
+            editor { signUp.email }
+            editor { signUp.password }
+            editor { signUp.verification }
 
             grid {
                 paddingTop(15.dp)

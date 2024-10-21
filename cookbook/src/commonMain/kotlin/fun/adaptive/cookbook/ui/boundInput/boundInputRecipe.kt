@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.api.boundInput
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.width
-import `fun`.adaptive.ui.input.api.inputTheme
+import `fun`.adaptive.ui.editor.theme.editorTheme
 import `fun`.adaptive.ui.instruction.dp
 import kotlinx.datetime.LocalTime
 
@@ -22,7 +22,7 @@ fun boundInputRecipe() {
     val data = copyStore { EditData(LocalTime(12, 0)) }
     column {
         text("stuff: ${data.time}")
-        timeInput { data.time } .. inputTheme.active .. width { 80.dp }
+        timeInput { data.time } .. editorTheme.enabled .. width { 80.dp }
     }
 }
 
@@ -38,7 +38,8 @@ private fun timeInput(
         *instructions,
         binding = binding,
         toString = { it.toString() },
-        fromString = { LocalTime.parse(it) }
+        fromString = { LocalTime.parse(it) },
+        invalid = {  }
     )
     return fragment()
 }

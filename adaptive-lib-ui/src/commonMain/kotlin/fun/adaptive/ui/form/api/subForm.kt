@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.width
-import `fun`.adaptive.ui.input.api.inputTheme
+import `fun`.adaptive.ui.editor.theme.editorTheme
 
 @Adaptive
 fun subForm(data: AdatClass, property: AdatPropertyMetadata): AdaptiveFragment {
@@ -22,7 +22,7 @@ fun subForm(data: AdatClass, property: AdatPropertyMetadata): AdaptiveFragment {
 
     if (data.hasDescriptor(property) { it is Readonly } && data.hasDescriptor(property) { it is UseToString }) {
         row {
-            inputTheme.active .. width { 400.dp } .. alignItems.startCenter
+            editorTheme.enabled .. width { 400.dp } .. alignItems.startCenter
             text(value)
         }
     } else {

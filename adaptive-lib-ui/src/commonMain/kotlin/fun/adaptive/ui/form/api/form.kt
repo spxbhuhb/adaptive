@@ -24,7 +24,7 @@ import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.form.api.field.boolean
 import `fun`.adaptive.ui.form.api.field.textual
-import `fun`.adaptive.ui.input.api.inputTheme
+import `fun`.adaptive.ui.editor.theme.editorTheme
 import `fun`.adaptive.wireformat.signature.DatetimeSignatures
 
 @Adaptive
@@ -56,17 +56,17 @@ fun form(data: AdatClass, vararg instructions : AdaptiveInstruction) : AdaptiveF
                     KotlinSignatures.DOUBLE,
                     KotlinSignatures.CHAR,
                     KotlinSignatures.STRING
-                        -> textual(data, property) .. inputTheme.active
+                        -> textual(data, property) .. editorTheme.enabled
 
                     KotlinSignatures.BOOLEAN
                         -> boolean(data, property)
 
                     DatetimeSignatures.INSTANT,
                     KotlinSignatures.UUID
-                        -> text(data.getValue(property.index).toString()) .. inputTheme.disabled .. width { 350.dp }
+                        -> text(data.getValue(property.index).toString()) .. editorTheme.disabled .. width { 350.dp }
 
                     DatetimeSignatures.LOCAL_DATE_TIME
-                        -> textual(data, property) .. inputTheme.active
+                        -> textual(data, property) .. editorTheme.enabled
 
                     else -> {
                         if (property.isAdatClass) {

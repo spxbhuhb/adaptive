@@ -18,12 +18,13 @@ import `fun`.adaptive.ui.api.textColor
 import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.api.zIndex
-import `fun`.adaptive.ui.input.api.inputTheme
+import `fun`.adaptive.ui.editor.theme.editorTheme
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
+import kotlin.collections.plus
 
 open class SelectTheme(
     val itemHeight: Int,
@@ -35,27 +36,39 @@ open class SelectTheme(
     )
 
     var closedContainer = instructionsOf(
-        width { inputTheme.width.dp },
+        width { editorTheme.width.dp },
         height { itemHeight.dp }
     )
 
     var base = instructionsOf(
         colTemplate(1.fr, 24.dp),
         height { itemHeight.dp },
-        paddingLeft { 16.dp },
-        paddingRight(8.dp),
-        borders.outline,
         alignItems.startCenter
     )
 
-    var active = base .. textColor(colors.onSurface) .. backgroundColor(colors.surface)
+    var enabled = base + instructionsOf(
+        borders.outline,
+        padding(top = 1.dp, left = 16.dp, bottom = 1.dp, right = 8.dp),
+        textColor(colors.onSurface),
+        backgroundColor(colors.surface)
+    )
 
-    var focus = active .. border(colors.primary, 2.dp)
+    var focused = base + instructionsOf(
+        border(colors.primary, 2.dp),
+        padding(left = 15.dp, right = 7.dp),
+        textColor(colors.onSurface),
+        backgroundColor(colors.surface),
+    )
 
-    var disabled = base .. backgroundColor(colors.surfaceVariant) .. textColor(colors.onSurfaceVariant)
+    var disabled = base + instructionsOf(
+        borders.outline,
+        padding(top = 1.dp, left = 16.dp, bottom = 1.dp, right = 16.dp),
+        backgroundColor(colors.surfaceVariant),
+        textColor(colors.onSurfaceVariant)
+    )
 
     var openContainer = instructionsOf(
-        width { inputTheme.width.dp },
+        width { editorTheme.width.dp },
         zIndex(2),
         backgrounds.surface
     )

@@ -7,6 +7,7 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.get
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
@@ -21,7 +22,7 @@ import org.w3c.dom.HTMLInputElement
 open class AuiBoundInput(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
-    index: Int
+    index: Int,
 ) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 0, 4) {
 
     // 0 - instructions
@@ -32,7 +33,7 @@ open class AuiBoundInput(
     override val receiver: HTMLInputElement =
         document.createElement("input") as HTMLInputElement
 
-    private val binding: AdaptiveStateVariableBinding<String>
+    private val binding: AdaptiveStateVariableBinding<Any>
         get() = state[1].checkIfInstance()
 
     private val valueToString: (Any) -> String
@@ -41,41 +42,46 @@ open class AuiBoundInput(
     private val valueFromString: (String) -> Any?
         get() = state[3].checkIfInstance()
 
-    override fun genPatchInternal(): Boolean {
+    private val invalid: (Boolean) -> Unit
+        get() = state[4].checkIfInstance()
 
-        val b = binding
+    override var invalidInput : Boolean = false
+
+    override fun genPatchInternal(): Boolean {
 
         patchInstructions()
 
-        if (haveToPatch(dirtyMask, 2)) {
-            receiver.value = valueToString(b.value)
+        // FIXME this is here because the value change does not change the binding itself
+        // this results in a clear dirty mask and so the field is not updated
+        val currentValue = valueToString(binding.value)
+
+        if ((haveToPatch(dirtyMask, 2) || receiver.value != currentValue) && !invalidInput) {
+            receiver.value = currentValue
         }
 
         if (isInit) {
             receiver.addEventListener("input", {
-                if (receiver.value != b.value) {
-                    touch(b)
 
-                    var success: Boolean = true
+                if (receiver.value != binding.value) {
+                    touch(binding)
 
-                    val newValue = try {
-                        valueFromString(receiver.value)
+                    try {
+                        val newValue = valueFromString(receiver.value)
+                        binding.setValue(newValue, true)
+                        invalidInput = false
+
                     } catch (_: Throwable) {
                         // TODO think about value conversion exceptions in AuiBoundInput
                         // keep this silent, this is quite normal in most cases
-                        success = false
+                        invalidInput = true
                     }
 
-                    if (success) {
-                        b.setValue(newValue, true)
-                    }
+                    invalid(invalidInput)
                 }
             })
 
             // TODO should we merge AuiBoundInput and AuiInput?
-            receiver.style.outline = "none"
-
-            val propertyName = b.path?.last()
+            val propertyName = binding.path?.last()
 
             val placeholder = get<InputPlaceholder>()?.value ?: propertyName
             if (placeholder != null) {
@@ -96,7 +102,7 @@ open class AuiBoundInput(
         return false
     }
 
-    fun touch(binding: AdaptiveStateVariableBinding<String>) {
+    fun touch(binding: AdaptiveStateVariableBinding<Any>) {
         val instance = binding.stateVariableValue
         if (instance == null || instance !is AdatClass) return
         val context = instance.adatContext ?: return

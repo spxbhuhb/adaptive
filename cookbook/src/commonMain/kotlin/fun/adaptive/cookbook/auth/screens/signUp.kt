@@ -5,9 +5,8 @@
 package `fun`.adaptive.cookbook.auth.screens
 
 import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.cookbook.auth.model.SignUp
 import `fun`.adaptive.cookbook.shared.black
-import `fun`.adaptive.cookbook.shared.button
-import `fun`.adaptive.ui.checkbox.api.checkbox
 import `fun`.adaptive.cookbook.shared.darkGray
 import `fun`.adaptive.cookbook.shared.footerLink
 import `fun`.adaptive.cookbook.shared.mobileScreen
@@ -23,7 +22,6 @@ import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.externalLink
 import `fun`.adaptive.ui.api.fontSize
 import `fun`.adaptive.ui.api.grid
-import `fun`.adaptive.ui.api.input
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.paddingTop
@@ -32,9 +30,11 @@ import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.button.api.button
+import `fun`.adaptive.ui.checkbox.api.checkbox
+import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.instruction.text.FontName
-import `fun`.adaptive.cookbook.auth.model.SignUp
 
 @Adaptive
 fun signUp(): AdaptiveFragment {
@@ -50,10 +50,10 @@ fun signUp(): AdaptiveFragment {
         grid {
             colTemplate(1.fr) .. rowTemplate(52.dp repeat 4, 60.dp, 50.dp)
 
-            input { signUp.name }
-            input { signUp.email }
-            input { signUp.password }
-            input { signUp.verification }
+            editor { signUp.name }
+            editor { signUp.email }
+            editor { signUp.password }
+            editor { signUp.verification }
 
             grid {
                 paddingTop(15.dp) .. alignItems.start .. colTemplate(40.dp, 1.fr)

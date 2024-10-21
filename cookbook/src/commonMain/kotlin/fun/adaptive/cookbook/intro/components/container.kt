@@ -15,6 +15,7 @@ import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.rowTemplate
+import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 
