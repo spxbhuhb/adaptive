@@ -31,11 +31,14 @@ fun <T> editor(
     checkNotNull(binding)
 
     val focus = focus()
-    var invalidInput = binding.isInError()
+
+    // we have to use both to support editors without adat class
+    val inError = binding.isInError()
+    var invalidInput = false
 
     val styles = when {
-        invalidInput && focus -> editorTheme.invalidFocused
-        invalidInput -> editorTheme.invalidNotFocused
+        (invalidInput || inError) && focus -> editorTheme.invalidFocused
+        (invalidInput || inError) -> editorTheme.invalidNotFocused
         focus -> editorTheme.focused
         else -> editorTheme.enabled
     }
@@ -47,7 +50,7 @@ fun <T> editor(
                 binding = binding as AdaptiveStateVariableBinding<Int>,
                 toString = { it.toString() },
                 fromString = { it.toInt() },
-                validityFun = { binding.setProblem(!it) }
+                validityFun = { invalidInput = binding.setProblem(!it) }
             )
         }
 
@@ -57,7 +60,7 @@ fun <T> editor(
                 binding = binding as AdaptiveStateVariableBinding<Long>,
                 toString = { it.toString() },
                 fromString = { it.toLong() },
-                validityFun = { binding.setProblem(!it) }
+                validityFun = { invalidInput = binding.setProblem(!it) }
             )
         }
 
@@ -67,7 +70,7 @@ fun <T> editor(
                 binding = binding as AdaptiveStateVariableBinding<Float>,
                 toString = { it.toString() },
                 fromString = { it.toFloat() },
-                validityFun = { binding.setProblem(!it) }
+                validityFun = { invalidInput = binding.setProblem(!it) }
             )
         }
 
@@ -77,7 +80,7 @@ fun <T> editor(
                 binding = binding as AdaptiveStateVariableBinding<Double>,
                 toString = { it.toString() },
                 fromString = { it.toDouble() },
-                validityFun = { binding.setProblem(!it) }
+                validityFun = { invalidInput = binding.setProblem(!it) }
             )
         }
 
@@ -87,7 +90,7 @@ fun <T> editor(
                 binding = binding as AdaptiveStateVariableBinding<String>,
                 toString = { it },
                 fromString = { it },
-                validityFun = { binding.setProblem(!it) }
+                validityFun = { invalidInput = binding.setProblem(!it) }
             )
         }
 
@@ -97,7 +100,7 @@ fun <T> editor(
                 binding = binding as AdaptiveStateVariableBinding<LocalTime>,
                 toString = { it.toString().take(5) },
                 fromString = { LocalTime.parse(it) },
-                validityFun = { binding.setProblem(!it) }
+                validityFun = { invalidInput = binding.setProblem(!it) }
             )
         }
 
@@ -107,7 +110,7 @@ fun <T> editor(
                 binding = binding as AdaptiveStateVariableBinding<LocalDate>,
                 toString = { it.toString() },
                 fromString = { LocalDate.parse(it) },
-                validityFun = { binding.setProblem(!it) }
+                validityFun = { invalidInput = binding.setProblem(!it) }
             )
         }
 

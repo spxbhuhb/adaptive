@@ -75,9 +75,9 @@ class AdaptiveStateVariableBinding<VT>(
         }
     }
 
-    fun setProblem(value : Boolean) {
+    fun setProblem(value : Boolean) : Boolean {
         checkNotNull(sourceFragment)
-        if (path == null) return
+        if (path == null) return value
 
         val provider = sourceFragment.getThisClosureVariable(indexInSourceClosure)
 
@@ -89,6 +89,8 @@ class AdaptiveStateVariableBinding<VT>(
 
             else -> throw UnsupportedOperationException()
         }
+
+        return value
     }
 
     fun isInError(): Boolean {
