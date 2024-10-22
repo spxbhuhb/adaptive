@@ -86,7 +86,7 @@ fun main() {
     }
 }
 
-private val appNavState = autoInstance(Routes.editor)
+private val appNavState = autoInstance(Routes.form)
 
 private object Routes {
     val dialog = NavState("Dialog")

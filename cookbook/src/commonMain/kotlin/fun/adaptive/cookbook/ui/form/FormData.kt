@@ -16,6 +16,7 @@ class FormData(
     val char: Char = 'A',
     val string: String = "ab",
     val enum: E = E.V1,
+    val enumOrNull: E? = null,
 ) {
     override fun descriptor() {
         properties {

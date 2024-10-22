@@ -246,7 +246,13 @@ abstract class AdaptiveFragment(
     }
 
     fun setStateVariable(index: Int, value: Any?, origin: AdaptiveStateVariableBinding<*>?) {
-        if (state[index] == value) return
+        // TODO think about changes of state variable binding
+        // Editor passes the binding to other fragments, however the binding equals to the
+        // previous binding even when the value of the bound state variable has changed.
+        // This has an unwanted effect on patching as the fragments are not patched on
+        // bound state variable change. For now I've added the check for binding, but
+        // this might be not a good solution.
+        if (state[index] == value && value !is AdaptiveStateVariableBinding<*>) return
 
         state[index] = value
 

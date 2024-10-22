@@ -31,7 +31,7 @@ fun adatFormRecipe() {
     val data = copyStore { FormData() }
 
     grid {
-        rowTemplate(44.dp repeat 4, 60.dp)
+        rowTemplate(44.dp repeat 5, 60.dp)
         colTemplate(200.dp, 400.dp)
         gap(16.dp) .. alignItems.startCenter
 
@@ -46,6 +46,9 @@ fun adatFormRecipe() {
 
         text("Enum:")
         editor { data.enum }
+
+        text("Enum or null:")
+        editor { data.enumOrNull }
 
         column {
             text("Valid: ${data.isValid()}")

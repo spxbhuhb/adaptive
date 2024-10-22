@@ -75,8 +75,6 @@ private fun parsedType(boundType: String): Pair<EditorType, WireFormat<*>?> =
             val type = parseTypeSignature(boundType)
             val wireFormat = WireFormatRegistry[type.name]
 
-            println("$type $wireFormat")
-
             when (wireFormat) {
                 null -> EditorType.Unsupported to null
                 is EnumWireFormat<*> -> EditorType.Enum to wireFormat
