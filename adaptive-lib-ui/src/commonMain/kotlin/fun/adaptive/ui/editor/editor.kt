@@ -11,6 +11,8 @@ import `fun`.adaptive.ui.api.boundInput
 import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.width
+import `fun`.adaptive.ui.checkbox.api.boundCheckbox
+import `fun`.adaptive.ui.checkbox.api.checkbox
 import `fun`.adaptive.ui.editor.theme.editorTheme
 import `fun`.adaptive.ui.instruction.input.MaxLength
 import `fun`.adaptive.ui.theme.textColors
@@ -44,6 +46,10 @@ fun <T> editor(
     }
 
     when (binding.boundType) {
+        KotlinSignatures.BOOLEAN -> {
+            boundCheckbox(*instructions, binding = binding as AdaptiveStateVariableBinding<Boolean>)
+        }
+
         KotlinSignatures.INT -> {
             boundInput<Int>(
                 *styles, *instructions,

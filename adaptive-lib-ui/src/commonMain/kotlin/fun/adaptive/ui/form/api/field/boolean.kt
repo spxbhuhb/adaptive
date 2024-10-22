@@ -17,7 +17,7 @@ import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.builtin.Res
 import `fun`.adaptive.ui.builtin.check
-import `fun`.adaptive.ui.checkbox.api.checkboxTheme
+import `fun`.adaptive.ui.checkbox.api.theme.checkboxTheme
 import `fun`.adaptive.ui.instruction.dp
 
 /**

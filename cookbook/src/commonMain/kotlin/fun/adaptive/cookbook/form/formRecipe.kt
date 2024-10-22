@@ -31,9 +31,12 @@ fun adatFormRecipe() {
     val data = copyStore { FormData() }
 
     grid {
-        rowTemplate(44.dp repeat 2, 60.dp)
+        rowTemplate(44.dp repeat 3, 60.dp)
         colTemplate(200.dp, 400.dp)
         gap(16.dp) .. alignItems.startCenter
+
+        text("Boolean:")
+        editor { data.boolean }
 
         text("Int:")
         editor { data.int }
