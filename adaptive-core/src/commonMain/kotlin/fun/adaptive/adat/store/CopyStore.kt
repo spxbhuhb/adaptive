@@ -67,6 +67,16 @@ class CopyStore<A : AdatClass>(
         makeCopy(current, AdatChange(path.toList(), value), patch = true)
     }
 
+    override fun setProblem(path: Array<String>, value: Boolean) {
+        if (value) {
+            adatContext.addProblem(path)
+        } else {
+            adatContext.clearProblem(path)
+        }
+
+        makeCopy(latestValue !!, null, patch = true)
+    }
+
     fun makeCopy(value: A, change: AdatChange?, patch: Boolean) =
         value.deepCopy(change).also {
             adatContext.apply(it)

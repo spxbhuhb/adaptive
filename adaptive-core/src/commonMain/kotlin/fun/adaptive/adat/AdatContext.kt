@@ -35,6 +35,11 @@ class AdatContext<IT>(
         safeLocalInfo.add(Flag(path, TOUCHED_FLAG))
     }
 
+    fun hasProblem() : Boolean {
+        val info = localInfo ?: return false
+        return info.indexOfFirst { it is Flag && it.flagName == HAS_PROBLEM } != - 1
+    }
+
     fun hasProblem(path: Array<String>): Boolean {
         val info = localInfo ?: return false
         return info.indexOfFirst { it is Flag && it.propertyPath.contentEquals(path) && it.flagName == HAS_PROBLEM } != - 1

@@ -6,6 +6,8 @@ package `fun`.adaptive.foundation.binding
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.api.absolutePath
+import `fun`.adaptive.adat.api.hasProblem
+import `fun`.adaptive.adat.api.isValid
 import `fun`.adaptive.adat.api.store
 import `fun`.adaptive.foundation.AdaptiveFragment
 
@@ -16,7 +18,7 @@ class AdaptiveStateVariableBinding<VT>(
     val targetFragment: AdaptiveFragment,
     val indexInTargetState: Int,
     val path: Array<String>?,
-    val boundType : String,
+    val boundType: String,
     val adatCompanion: AdatCompanion<*>?, // cannot use VT here as it might not be an adat class
 ) {
 
@@ -73,11 +75,43 @@ class AdaptiveStateVariableBinding<VT>(
         }
     }
 
+    fun setProblem(value : Boolean) {
+        checkNotNull(sourceFragment)
+        if (path == null) return
+
+        val provider = sourceFragment.getThisClosureVariable(indexInSourceClosure)
+
+        when {
+            provider is AdatClass && provider.adatContext?.store != null -> {
+                val absolutePath = provider.absolutePath() + path
+                provider.store().setProblem(absolutePath.toTypedArray(), value)
+            }
+
+            else -> throw UnsupportedOperationException()
+        }
+    }
+
+    fun isInError(): Boolean {
+        checkNotNull(sourceFragment)
+
+        val safePath = path ?: return false
+
+        val provider = sourceFragment.getThisClosureVariable(indexInSourceClosure)
+        if (provider !is AdatClass) return false
+
+
+        if (! provider.isValid(safePath)) return true
+
+        if (provider.hasProblem(safePath)) return true
+
+        return false
+    }
+
     /**
      * Value of the state variable this binding uses. This is not the value bound
      * when [path] is not empty, but usually the Adat class that contains that value.
      */
-    val stateVariableValue : Any?
+    val stateVariableValue: Any?
         get() {
             checkNotNull(sourceFragment)
             return sourceFragment.getThisClosureVariable(indexInSourceClosure)

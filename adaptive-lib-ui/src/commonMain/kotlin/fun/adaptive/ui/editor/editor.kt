@@ -1,12 +1,12 @@
 package `fun`.adaptive.ui.editor
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.boundInput
 import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.text
@@ -31,7 +31,7 @@ fun <T> editor(
     checkNotNull(binding)
 
     val focus = focus()
-    var invalidInput = false
+    var invalidInput = binding.isInError()
 
     val styles = when {
         invalidInput && focus -> editorTheme.invalidFocused
@@ -47,7 +47,7 @@ fun <T> editor(
                 binding = binding as AdaptiveStateVariableBinding<Int>,
                 toString = { it.toString() },
                 fromString = { it.toInt() },
-                invalid = { invalidInput = it }
+                validityFun = { binding.setProblem(!it) }
             )
         }
 
@@ -57,7 +57,7 @@ fun <T> editor(
                 binding = binding as AdaptiveStateVariableBinding<Long>,
                 toString = { it.toString() },
                 fromString = { it.toLong() },
-                invalid = { invalidInput = it }
+                validityFun = { binding.setProblem(!it) }
             )
         }
 
@@ -67,7 +67,7 @@ fun <T> editor(
                 binding = binding as AdaptiveStateVariableBinding<Float>,
                 toString = { it.toString() },
                 fromString = { it.toFloat() },
-                invalid = { invalidInput = it }
+                validityFun = { binding.setProblem(!it) }
             )
         }
 
@@ -77,7 +77,7 @@ fun <T> editor(
                 binding = binding as AdaptiveStateVariableBinding<Double>,
                 toString = { it.toString() },
                 fromString = { it.toDouble() },
-                invalid = { invalidInput = it }
+                validityFun = { binding.setProblem(!it) }
             )
         }
 
@@ -87,7 +87,7 @@ fun <T> editor(
                 binding = binding as AdaptiveStateVariableBinding<String>,
                 toString = { it },
                 fromString = { it },
-                invalid = { invalidInput = it }
+                validityFun = { binding.setProblem(!it) }
             )
         }
 
@@ -97,7 +97,7 @@ fun <T> editor(
                 binding = binding as AdaptiveStateVariableBinding<LocalTime>,
                 toString = { it.toString().take(5) },
                 fromString = { LocalTime.parse(it) },
-                invalid = { invalidInput = it }
+                validityFun = { binding.setProblem(!it) }
             )
         }
 
@@ -107,7 +107,7 @@ fun <T> editor(
                 binding = binding as AdaptiveStateVariableBinding<LocalDate>,
                 toString = { it.toString() },
                 fromString = { LocalDate.parse(it) },
-                invalid = { invalidInput = it }
+                validityFun = { binding.setProblem(!it) }
             )
         }
 

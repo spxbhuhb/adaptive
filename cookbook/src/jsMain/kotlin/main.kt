@@ -7,6 +7,7 @@ import `fun`.adaptive.auto.api.autoInstance
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.cookbook.Res
 import `fun`.adaptive.cookbook.eco
+import `fun`.adaptive.cookbook.form.formRecipe
 import `fun`.adaptive.cookbook.grid_view
 import `fun`.adaptive.cookbook.iot.iotCommon
 import `fun`.adaptive.cookbook.ui.dialog.dialogRecipe
@@ -67,16 +68,12 @@ fun main() {
                 mainContent()
             }
 
-//            formMain()
-
 //            iotMain()
 //              box {
 //                  hoverMain()
 //              }
 
 //            boundInputRecipe()
-
-            //            dialogRecipe()
 
 //            buttonRecipe()
 //            gridAlignRecipe()
@@ -87,11 +84,12 @@ fun main() {
     }
 }
 
-private val appNavState = autoInstance(Routes.editor)
+private val appNavState = autoInstance(Routes.form)
 
 private object Routes {
     val dialog = NavState("Dialog")
     val editor = NavState("Editor")
+    val form = NavState("Form")
     val select = NavState("Select")
     val sidebar = NavState("SideBar")
     val svg = NavState("SVG")
@@ -101,6 +99,7 @@ private object Routes {
 private val items = listOf(
     SidebarItem(0, Res.drawable.grid_view, "Dialog", Routes.dialog),
     SidebarItem(0, Res.drawable.grid_view, "Editor", Routes.editor),
+    SidebarItem(0, Res.drawable.grid_view, "Form", Routes.form),
     SidebarItem(0, Res.drawable.grid_view, "Select", Routes.select),
     SidebarItem(0, Res.drawable.grid_view, "SideBar", Routes.sidebar),
     SidebarItem(0, Res.drawable.grid_view, "SVG", Routes.svg),
@@ -130,6 +129,7 @@ fun mainContent() {
         when (navState) {
             in Routes.dialog -> dialogRecipe()
             in Routes.editor -> editorRecipe()
+            in Routes.form -> formRecipe()
             in Routes.select -> selectRecipe()
             in Routes.sidebar -> sideBarRecipe()
             in Routes.svg -> svgRecipe()

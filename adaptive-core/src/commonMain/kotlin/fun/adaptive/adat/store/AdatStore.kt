@@ -16,4 +16,8 @@ abstract class AdatStore<A : AdatClass> {
         throw UnsupportedOperationException()
     }
 
+    open fun setProblem(path: Array<String>, value: Boolean) {
+        throw UnsupportedOperationException()
+    }
+
 }

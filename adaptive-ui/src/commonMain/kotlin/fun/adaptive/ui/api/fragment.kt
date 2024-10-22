@@ -4,7 +4,6 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveExpect
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
-import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.manualImplementation
 import `fun`.adaptive.resource.DrawableResource
@@ -35,9 +34,9 @@ fun <T> boundInput(
     binding: AdaptiveStateVariableBinding<T>,
     toString: (T) -> String,
     fromString: (String) -> T?,
-    invalid : (Boolean) -> Unit
+    validityFun : (Boolean) -> Unit
 ): AdaptiveFragment {
-    manualImplementation(instructions, binding, toString, fromString)
+    manualImplementation(instructions, binding, toString, fromString, validityFun)
 }
 
 @AdaptiveExpect(aui)

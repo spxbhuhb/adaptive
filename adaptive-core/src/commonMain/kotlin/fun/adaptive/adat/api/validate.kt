@@ -17,6 +17,13 @@ fun <A : AdatClass> A.validate(): InstanceValidationResult {
     return result
 }
 
+/**
+ * Check if the Adat instance is invalid.
+ *
+ * @return  true if the instance is invalid, false otherwise
+ */
+fun AdatClass.isNotValid(): Boolean =
+    ! isValid()
 
 /**
  * Check if the Adat instance is valid.
@@ -37,7 +44,7 @@ fun AdatClass.isValid(): Boolean {
  *
  * @return  true if the data is valid, false otherwise
  */
-fun AdatClass.isValid(name : String): Boolean =
+fun AdatClass.isValid(name: String): Boolean =
     isValid(arrayOf(name))
 
 /**
@@ -55,4 +62,27 @@ fun AdatClass.isValid(path: Array<String>): Boolean {
     check(path.size == 1) { "only simple paths are supported" }
     val result = adatContext?.validationResult?.failedConstraints?.filter { it.property?.name == path[0] }
     return (result == null || result.isEmpty())
+}
+
+/**
+ * Check if the Adat instance context has a problem. This is useful for editors when it is
+ * possible that an edited field has a problem (such as wrong value format). In that case
+ * editors add the problem to `localInfo` of the adat context.
+ *
+ * @return  true if the instance is valid, false otherwise
+ */
+fun AdatClass.hasProblem(): Boolean =
+    adatContext?.hasProblem() == true
+
+/**
+ * Check if the property selected by [path] has any problems.
+ *
+ * This call is meaningful only when the adat class has a context.
+ *
+ * **TODO** Deep path support (AdatClass.hasProblem)
+ *
+ * @return  true if the data has a problem, false otherwise
+ */
+fun AdatClass.hasProblem(path: Array<String>): Boolean {
+    return adatContext?.hasProblem(path) == true
 }

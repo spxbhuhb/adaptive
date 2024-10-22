@@ -39,7 +39,7 @@ private fun timeInput(
         binding = binding,
         toString = { it.toString() },
         fromString = { LocalTime.parse(it) },
-        invalid = {  }
+        validityFun = {  }
     )
     return fragment()
 }

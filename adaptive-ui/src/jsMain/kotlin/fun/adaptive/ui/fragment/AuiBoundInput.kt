@@ -7,7 +7,6 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
-import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.get
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
@@ -15,9 +14,7 @@ import `fun`.adaptive.ui.aui
 import `fun`.adaptive.ui.instruction.input.InputPlaceholder
 import `fun`.adaptive.ui.instruction.input.MaxLength
 import `fun`.adaptive.utility.checkIfInstance
-import `fun`.adaptive.wireformat.signature.DatetimeSignatures
 import kotlinx.browser.document
-import kotlinx.datetime.DateTimePeriod
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 
@@ -32,6 +29,7 @@ open class AuiBoundInput(
     // 1 - binding
     // 2 - valueToString
     // 3 - valueFromString
+    // 4 - validityFun
 
     override val receiver: HTMLInputElement =
         document.createElement("input") as HTMLInputElement
@@ -45,7 +43,7 @@ open class AuiBoundInput(
     private val valueFromString: (String) -> Any?
         get() = state[3].checkIfInstance()
 
-    private val invalid: (Boolean) -> Unit
+    private val valididyFun: (Boolean) -> Unit
         get() = state[4].checkIfInstance()
 
     override var invalidInput : Boolean = false
@@ -79,7 +77,7 @@ open class AuiBoundInput(
                         invalidInput = true
                     }
 
-                    invalid(invalidInput)
+                    valididyFun(!invalidInput)
                 }
             })
 

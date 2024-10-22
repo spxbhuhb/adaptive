@@ -111,14 +111,6 @@ val textMedium = fontSize(15.sp)
 val whiteBorder = border(white)
 val smallWhiteNoWrap = instructionsOf(textColor(white), textSmall, noTextWrap)
 
-val button = instructionsOf(
-    greenGradient,
-    cornerRadius,
-    alignItems.center,
-    padding(8.dp),
-    height(50.dp)
-)
-
 val bodyMedium = instructionsOf(
     //FontSize(17.sp),
     //FontName("Noto Sans"),

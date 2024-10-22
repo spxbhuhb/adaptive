@@ -1,7 +1,6 @@
 package `fun`.adaptive.cookbook.intro.components
 
 import `fun`.adaptive.cookbook.intro.model.IntroState
-import `fun`.adaptive.cookbook.shared.button
 import `fun`.adaptive.cookbook.shared.mobileScreen
 import `fun`.adaptive.cookbook.shared.title
 import `fun`.adaptive.foundation.Adaptive
