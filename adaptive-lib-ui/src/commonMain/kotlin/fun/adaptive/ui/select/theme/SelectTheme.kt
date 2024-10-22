@@ -32,7 +32,7 @@ open class SelectTheme(
 
     var outerContainer = instructionsOf(
         height { itemHeight.dp }, // keep it fixed so we won't re-layout it even if the select is open
-        tabIndex { 1 }
+        tabIndex { 0 }
     )
 
     var closedContainer = instructionsOf(

@@ -1,5 +1,6 @@
 package `fun`.adaptive.cookbook.ui.select
 
+import `fun`.adaptive.cookbook.model.E
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.column
@@ -17,6 +18,7 @@ fun selectRecipe() {
         toTextSelect()
         singleItem()
         many()
+        enumSelect()
     }
 }
 
@@ -73,5 +75,16 @@ fun many() {
         padding { 16.dp }
         text("Selected: $selected")
         select(selected, items) { selected = it } .. inputPlaceholder { "(no item selected)" }
+    }
+}
+
+@Adaptive
+fun enumSelect() {
+    var selected: E? = null
+
+    column {
+        padding { 16.dp }
+        text("Selected: $selected")
+        select(selected, E.entries) { selected = it } .. inputPlaceholder { "(no item selected)" }
     }
 }

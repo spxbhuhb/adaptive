@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.form
+package `fun`.adaptive.cookbook.ui.form
 
 import `fun`.adaptive.adat.api.hasProblem
 import `fun`.adaptive.adat.api.isNotValid
@@ -31,7 +31,7 @@ fun adatFormRecipe() {
     val data = copyStore { FormData() }
 
     grid {
-        rowTemplate(44.dp repeat 3, 60.dp)
+        rowTemplate(44.dp repeat 4, 60.dp)
         colTemplate(200.dp, 400.dp)
         gap(16.dp) .. alignItems.startCenter
 
@@ -44,10 +44,14 @@ fun adatFormRecipe() {
         text("String:")
         editor { data.string }
 
+        text("Enum:")
+        editor { data.enum }
+
         column {
             text("Valid: ${data.isValid()}")
             text("Has problem: ${data.hasProblem()}")
         }
+
         button("Save") .. onClick { save(data) }
     }
 }

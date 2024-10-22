@@ -1,5 +1,6 @@
 package `fun`.adaptive.cookbook.ui.editor
 
+import `fun`.adaptive.cookbook.model.E
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -19,6 +20,7 @@ import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.utility.localDate
 import `fun`.adaptive.utility.localDateTime
 import `fun`.adaptive.utility.localTime
@@ -45,12 +47,13 @@ fun editorRecipe() {
 
         grid {
             colTemplate(100.dp, 400.dp, 1.fr) .. alignItems.startCenter .. gap { 16.dp }
-            rowTemplate(44.dp repeat 4)
+            rowTemplate(44.dp repeat 5)
 
             textEditor()
             intEditor()
             timeEditor()
             dateEditor()
+            enumEditor()
         }
     }
 }
@@ -88,8 +91,16 @@ fun dateEditor() {
     text("Current value: $value")
 }
 
+@Adaptive
+fun enumEditor() {
+    var value = E.V1
 
-fun hasInvalidInput(fragment : AdaptiveFragment): Boolean {
+    text("Enum")
+    editor { value }
+    text("Current value: $value")
+}
+
+fun hasInvalidInput(fragment: AdaptiveFragment): Boolean {
     if (fragment is AbstractAuiFragment<*> && fragment.invalidInput) return true
 
     for (child in fragment.children) {

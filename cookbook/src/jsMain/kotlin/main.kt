@@ -6,8 +6,9 @@ import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.auto.api.autoInstance
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.cookbook.Res
+import `fun`.adaptive.cookbook.cookbookCommon
 import `fun`.adaptive.cookbook.eco
-import `fun`.adaptive.cookbook.form.formRecipe
+import `fun`.adaptive.cookbook.ui.form.formRecipe
 import `fun`.adaptive.cookbook.grid_view
 import `fun`.adaptive.cookbook.iot.iotCommon
 import `fun`.adaptive.cookbook.ui.dialog.dialogRecipe
@@ -48,6 +49,7 @@ fun main() {
     CoroutineScope(Dispatchers.Default).launch {
 
         iotCommon()
+        cookbookCommon()
 
         withJsResources()
 
@@ -84,7 +86,7 @@ fun main() {
     }
 }
 
-private val appNavState = autoInstance(Routes.form)
+private val appNavState = autoInstance(Routes.editor)
 
 private object Routes {
     val dialog = NavState("Dialog")
