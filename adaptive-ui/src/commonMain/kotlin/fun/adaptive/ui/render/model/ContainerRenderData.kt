@@ -25,4 +25,7 @@ class ContainerRenderData(
 
     var colTracks: List<RawTrack>? = null
     var rowTracks: List<RawTrack>? = null
+
+    var colExtension: RawTrack? = null
+    var rowExtension: RawTrack? = null
 }

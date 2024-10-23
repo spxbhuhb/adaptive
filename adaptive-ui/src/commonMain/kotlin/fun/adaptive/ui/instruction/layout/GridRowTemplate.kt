@@ -8,15 +8,16 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.ui.fragment.layout.RawTrack
 import `fun`.adaptive.ui.render.container
-import `fun`.adaptive.ui.render.model.ContainerRenderData
 
 @Adat
 class GridRowTemplate(
-    val tracks: Array<out GridTrack>
+    val tracks: Array<out GridTrack>,
+    val extend : GridTrack?
 ) : AdaptiveInstruction {
     override fun apply(subject: Any) {
         container(subject) { c ->
             c.rowTracks = expand(tracks).map { RawTrack(it.isFix, it.isFraction, it.toRawValue(c.adapter)) }
+            c.rowExtension = extend?.let { RawTrack(it.isFix, it.isFraction, it.toRawValue(c.adapter)) }
         }
     }
 }

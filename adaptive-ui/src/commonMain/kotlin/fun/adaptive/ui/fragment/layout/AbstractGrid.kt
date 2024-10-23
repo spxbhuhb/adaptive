@@ -24,6 +24,8 @@ abstract class AbstractGrid<RT, CRT : RT>(
         val singleTrack = listOf(
             RawTrack(isFix = false, isFraction = true, rawValue = 1.0)
         )
+
+        val defaultExtend = RawTrack(isFix = false, isFraction = true, rawValue = 1.0)
     }
 
     override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
@@ -31,21 +33,27 @@ abstract class AbstractGrid<RT, CRT : RT>(
         val layout = data.layout
         val container = data.container
 
-        val colTracks = container?.colTracks ?: singleTrack
-        val rowTracks = container?.rowTracks ?: singleTrack
+        var colTracks = (container?.colTracks ?: singleTrack).toMutableList()
+        var rowTracks = (container?.rowTracks ?: singleTrack).toMutableList()
 
         val colGap = container?.gapWidth ?: 0.0 // gap between columns
         val rowGap = container?.gapHeight ?: 0.0 // gap between rows
 
         // ----  assign the items to cells  -------------------------------------------
 
+        val colExtend = container?.colExtension
+        val rowExtend = container?.rowExtension ?: if (colExtend != null) null else defaultExtend
+
         layoutItems.forEach { it.renderData.grid ?: GridRenderData(uiAdapter).apply { it.renderData.grid = this } }
-        placeItemsInCells(colTracks.size, rowTracks.size)
+        placeItemsInCells(colTracks, colExtend, rowTracks, rowExtend)
 
         // ----  calculate and set inner and final sizes  -----------------------------
 
-        val finalWidth = layout?.instructedWidth ?: proposedWidth
-        val finalHeight = layout?.instructedHeight ?: proposedHeight
+        val widthSum = colTracks.sumOf { if (it.isFix) it.rawValue else Double.POSITIVE_INFINITY }
+        val heightSum = rowTracks.sumOf { if (it.isFix) it.rawValue else Double.POSITIVE_INFINITY }
+
+        val finalWidth = layout?.instructedWidth ?: if (widthSum != Double.POSITIVE_INFINITY) widthSum else proposedWidth
+        val finalHeight = layout?.instructedHeight ?: if (heightSum != Double.POSITIVE_INFINITY) heightSum else proposedHeight
 
         data.finalWidth = finalWidth
         data.finalHeight = finalHeight
@@ -94,21 +102,39 @@ abstract class AbstractGrid<RT, CRT : RT>(
         placeStructural()
     }
 
-    fun placeItemsInCells(cols: Int, rows: Int): Array<Array<AbstractAuiFragment<RT>?>> {
+    fun placeItemsInCells(
+        cols: MutableList<RawTrack>,
+        colExtension: RawTrack?,
+        rows: MutableList<RawTrack>,
+        rowExtension: RawTrack?
+    ): List<List<AbstractAuiFragment<RT>?>> {
 
-        val grid = Array(rows) { arrayOfNulls<AbstractAuiFragment<RT>?>(cols) }
+        val grid = MutableList(rows.size) { MutableList<AbstractAuiFragment<RT>?>(cols.size) { null } }
 
         fun findNextEmptyCell(): Pair<Int, Int>? {
-            for (r in 0 until rows) {
-                for (c in 0 until cols) {
+            for (r in 0 until rows.size) {
+                for (c in 0 until cols.size) {
                     if (grid[r][c] == null) return r to c
                 }
             }
+
+            if (rowExtension != null) {
+                grid.add(MutableList(cols.size) { null })
+                rows.add(rowExtension)
+                return rows.lastIndex to 0
+            }
+
+            if (colExtension != null) {
+                grid.forEach { it.add(null) }
+                cols.add(colExtension)
+                return 0 to cols.lastIndex
+            }
+
             return null
         }
 
         fun canPlaceFragment(r: Int, c: Int, rowSpan: Int, colSpan: Int): Boolean {
-            if (r + rowSpan > rows || c + colSpan > cols) return false
+            if (r + rowSpan > rows.size || c + colSpan > cols.size) return false
             for (i in r until r + rowSpan) {
                 for (j in c until c + colSpan) {
                     if (grid[i][j] != null) return false
@@ -141,14 +167,14 @@ abstract class AbstractGrid<RT, CRT : RT>(
                     throw IllegalStateException("Cannot place fragment $cell at ($row, $col) in $this")
                 }
             } else if (row != null) {
-                for (c in 0 until cols) {
+                for (c in 0 until cols.size) {
                     if (canPlaceFragment(row, c, rowSpan, colSpan)) {
                         placeFragment(item, cell, rowSpan, colSpan, row, c)
                         break
                     }
                 }
             } else if (col != null) {
-                for (r in 0 until rows) {
+                for (r in 0 until rows.size) {
                     if (canPlaceFragment(r, col, rowSpan, colSpan)) {
                         placeFragment(item, cell, rowSpan, colSpan, r, col)
                         break

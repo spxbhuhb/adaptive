@@ -101,14 +101,45 @@ column {
 
 Grid provides a partial implementation of the [CSS grid layout](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout).
 
+* Basic use: instruct column and row sizes with `colTemplate` and `rowTemplate`.
+* Both defaults to `1.fr` if not specified.
+* Rows also extend by `1.fr` if not instructed otherwise, see [extension](#automatic-grid-extension).
+
 ```kotlin
 grid {
-    colTemplate(10.dp, 1.dp, 10.dp repeat 5) .. rowTemplate(20.dp)
-    /* ... */
+    colTemplate(10.dp, 1.dp, 10.dp repeat 5)
+    rowTemplate(20.dp)
+    
+    // ...
 }
 ```
 
-### Instructions
+### Automatic grid extension
+
+* When not switched off, grids add rows to contain fragments if needed.
+* Use the `extend` parameter of `rowTemplate` and `colTemplate` to set extension.
+* If `extend` is set to `null` automatic extension is off.
+* Default for `extend` is `1.fr` for rows, `null` for columns.
+* If automatic extension is off, the grid throws exception on overflow.
+
+This example adds `20.dp` rows as needed (in this case all rows are added automatically).
+
+```kotlin
+grid {
+    colTemplate(40.dp, 40.dp)
+    rowTemplate(extend = 20.dp)
+}
+```
+
+### Grid sizing
+
+* When a grid has an instructed width or height, that value is used.
+* When the grid has only fix size rows or columns, the sum of the row/column sizes is used.
+* Otherwise, the size proposed by the parent container is used.
+
+### Placing fragments directly
+
+Direct fragment placing cannot be used by fragments placed by automatic grid extension.
 
 To put a fragment at a given grid position and/or make it span columns/rows use one or a combination of
 these:

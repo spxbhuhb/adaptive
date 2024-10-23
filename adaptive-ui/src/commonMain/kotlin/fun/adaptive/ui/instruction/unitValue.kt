@@ -6,6 +6,7 @@ package `fun`.adaptive.ui.instruction
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.ui.AbstractAuiAdapter
+import `fun`.adaptive.ui.instruction.layout.GridRepeat
 import `fun`.adaptive.ui.instruction.layout.GridTrack
 
 // -----------------------------------------------------------
@@ -65,6 +66,9 @@ class DPixel(
     override val isFix
         get() = true
 
+    override val isExtend: Boolean
+        get() = false
+
     override fun toRawValue(adapter: AbstractAuiAdapter<*, *>): Double =
         this.toPxOrZero(adapter)
 
@@ -79,6 +83,8 @@ class DPixel(
     operator fun minus(value: DPixel) = DPixel(this.value - value.value)
 
     operator fun plus(value: DPixel) = DPixel(this.value + value.value)
+
+    infix fun repeat(count: Int): GridRepeat = GridRepeat(count, this)
 
     companion object {
         val ZERO = DPixel(0.0)
@@ -122,6 +128,11 @@ class Fraction(
 
     override val isFraction: Boolean
         get() = true
+
+    override val isExtend: Boolean
+        get() = false
+
+    infix fun repeat(count: Int): GridRepeat = GridRepeat(count, this)
 
     override fun toRawValue(adapter: AbstractAuiAdapter<*, *>): Double = value
 

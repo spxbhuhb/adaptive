@@ -193,8 +193,8 @@ fun zIndex(value: () -> Int): ZIndex = ZIndex(value())
 fun flowItemLimit(limit: Int) = FlowItemLimit(limit)
 fun flowItemLimit(limit: () -> Int) = FlowItemLimit(limit())
 
-fun colTemplate(vararg tracks: GridTrack) = GridColTemplate(tracks)
-fun rowTemplate(vararg tracks: GridTrack) = GridRowTemplate(tracks)
+fun colTemplate(vararg tracks: GridTrack, extend : GridTrack? = null) = GridColTemplate(tracks, extend)
+fun rowTemplate(vararg tracks: GridTrack, extend : GridTrack? = null) = GridRowTemplate(tracks, extend)
 
 infix fun GridTrack.repeat(count: Int): GridRepeat = GridRepeat(count, this)
 

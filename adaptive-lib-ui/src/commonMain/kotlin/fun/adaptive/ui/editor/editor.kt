@@ -103,7 +103,8 @@ private fun simpleEditor(
         else -> editorTheme.enabled
     }
 
-    when (binding.boundType) {
+    when (binding.boundType.removeSuffix("?")) {
+
 
         KotlinSignatures.BOOLEAN -> {
             boundCheckbox(*instructions, binding = binding as AdaptiveStateVariableBinding<Boolean>)
@@ -177,6 +178,10 @@ private fun simpleEditor(
                 fromString = { LocalDate.parse(it) },
                 validityFun = { invalidInput = binding.setProblem(! it) }
             )
+        }
+
+        DatetimeSignatures.LOCAL_DATE_TIME -> {
+
         }
 
         else -> {

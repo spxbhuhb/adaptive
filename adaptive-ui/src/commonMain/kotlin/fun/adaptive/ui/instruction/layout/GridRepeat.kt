@@ -17,7 +17,7 @@ class GridRepeat(
     val track: GridTrack = 0.dp
 ) : GridTrack {
 
-    override val isIntrinsic: Boolean
+    override val isExtend: Boolean
         get() = false
 
     override val value: Double
@@ -25,11 +25,7 @@ class GridRepeat(
 
     override fun expand(out: MutableList<GridTrack>) {
         repeat(count) {
-            if (track.isIntrinsic) {
-                out.add(track)
-            } else {
-                track.expand(out)
-            }
+            out.add(track)
         }
     }
 

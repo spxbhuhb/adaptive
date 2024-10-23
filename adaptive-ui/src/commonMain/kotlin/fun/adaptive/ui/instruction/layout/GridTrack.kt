@@ -11,9 +11,6 @@ import `fun`.adaptive.ui.AbstractAuiAdapter
  */
 interface GridTrack {
 
-    val isIntrinsic: Boolean
-        get() = true
-
     val isFix: Boolean
         get() = false
 
@@ -24,6 +21,8 @@ interface GridTrack {
         get() = false
 
     val value: Double
+
+    val isExtend: Boolean
 
     fun expand(out: MutableList<GridTrack>) {
         out.add(this)
