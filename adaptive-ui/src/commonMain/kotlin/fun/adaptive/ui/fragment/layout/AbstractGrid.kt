@@ -94,78 +94,6 @@ abstract class AbstractGrid<RT, CRT : RT>(
         placeStructural()
     }
 
-    fun proposeItemSize(offsets: DoubleArray, gap: Double, start: Int, span: Int): Double =
-        if (start + span < offsets.size - 1) {
-            offsets[start + span] - offsets[start] - gap
-        } else {
-            offsets[start + span] - offsets[start]
-        }
-
-    /**
-     * There is a difference between browser and other targets. Browser handles margin
-     * and padding in its own way. `toFrameOffsets` lets the browser grid implementation
-     * to adjust the positions of items as needed.
-     */
-    open fun toFrameOffsets(): RawPosition {
-        val border = renderData.layout?.border ?: RawSurrounding.ZERO
-        val padding = renderData.layout?.padding ?: RawSurrounding.ZERO
-
-        return RawPosition(border.top + padding.top, border.start + padding.start)
-    }
-
-    /**
-     * Distribute the available space between tracks:
-     *
-     * - first allocate space for all fix tracks
-     * - then distribute the remaining space between the fraction tracks
-     *
-     * @return Offsets of the tracks in the available space. Size of a track
-     *         can be calculated by subtracting the offset of the track from
-     *         the offset of the next track. The return array is one item
-     *         longer than [tracks] as it contains the offset of the "end"
-     *         as well.
-     */
-    fun distribute(availableSpace: Double, gap: Double, tracks: List<RawTrack>): DoubleArray {
-
-        check(availableSpace.isFinite()) { "grid cannot be used without size information" }
-
-        var usedSpace = (tracks.size - 1) * gap
-        var fractionSum = 0.0
-
-        for (i in tracks.indices) {
-            val track = tracks[i]
-            if (track.isFix) {
-                usedSpace += track.rawValue
-            } else {
-                fractionSum += track.rawValue
-            }
-        }
-
-        val piece = (availableSpace - usedSpace) / fractionSum
-
-        var offset = 0.0
-        var previous = 0.0 // size of the previous track
-
-        val result = DoubleArray(tracks.size + 1)
-
-        for (i in tracks.indices) {
-            offset += previous
-            result[i] = offset
-
-            if (tracks[i].isFix) {
-                previous = tracks[i].rawValue
-            } else {
-                previous = tracks[i].rawValue * piece
-            }
-
-            offset += gap
-        }
-
-        result[tracks.size] = offset + previous - gap // the last gap is not there
-
-        return result
-    }
-
     fun placeItemsInCells(cols: Int, rows: Int): Array<Array<AbstractAuiFragment<RT>?>> {
 
         val grid = Array(rows) { arrayOfNulls<AbstractAuiFragment<RT>?>(cols) }
@@ -237,5 +165,77 @@ abstract class AbstractGrid<RT, CRT : RT>(
         }
 
         return grid
+    }
+
+    /**
+     * Distribute the available space between tracks:
+     *
+     * - first allocate space for all fix tracks
+     * - then distribute the remaining space between the fraction tracks
+     *
+     * @return Offsets of the tracks in the available space. Size of a track
+     *         can be calculated by subtracting the offset of the track from
+     *         the offset of the next track. The return array is one item
+     *         longer than [tracks] as it contains the offset of the "end"
+     *         as well.
+     */
+    fun distribute(availableSpace: Double, gap: Double, tracks: List<RawTrack>): DoubleArray {
+
+        check(availableSpace.isFinite()) { "grid cannot be used without size information" }
+
+        var usedSpace = (tracks.size - 1) * gap
+        var fractionSum = 0.0
+
+        for (i in tracks.indices) {
+            val track = tracks[i]
+            if (track.isFix) {
+                usedSpace += track.rawValue
+            } else {
+                fractionSum += track.rawValue
+            }
+        }
+
+        val piece = (availableSpace - usedSpace) / fractionSum
+
+        var offset = 0.0
+        var previous = 0.0 // size of the previous track
+
+        val result = DoubleArray(tracks.size + 1)
+
+        for (i in tracks.indices) {
+            offset += previous
+            result[i] = offset
+
+            if (tracks[i].isFix) {
+                previous = tracks[i].rawValue
+            } else {
+                previous = tracks[i].rawValue * piece
+            }
+
+            offset += gap
+        }
+
+        result[tracks.size] = offset + previous - gap // the last gap is not there
+
+        return result
+    }
+
+    fun proposeItemSize(offsets: DoubleArray, gap: Double, start: Int, span: Int): Double =
+        if (start + span < offsets.size - 1) {
+            offsets[start + span] - offsets[start] - gap
+        } else {
+            offsets[start + span] - offsets[start]
+        }
+
+    /**
+     * There is a difference between browser and other targets. Browser handles margin
+     * and padding in its own way. `toFrameOffsets` lets the browser grid implementation
+     * to adjust the positions of items as needed.
+     */
+    open fun toFrameOffsets(): RawPosition {
+        val border = renderData.layout?.border ?: RawSurrounding.ZERO
+        val padding = renderData.layout?.padding ?: RawSurrounding.ZERO
+
+        return RawPosition(border.top + padding.top, border.start + padding.start)
     }
 }
