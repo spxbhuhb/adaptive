@@ -80,8 +80,7 @@ private fun dialogContent(close: () -> Unit) {
     var data = ""
 
     grid {
-        size(700.dp, 300.dp)
-        colTemplate(200.dp, 1.fr) .. rowTemplate(44.dp, 100.dp) .. padding { 32.dp }
+        colTemplate(200.dp, 400.dp) .. rowTemplate(44.dp, 100.dp) .. padding { 32.dp }
 
         text("Data:") .. alignSelf.startCenter
         editor { data }

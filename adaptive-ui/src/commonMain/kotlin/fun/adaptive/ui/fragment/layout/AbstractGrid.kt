@@ -52,8 +52,21 @@ abstract class AbstractGrid<RT, CRT : RT>(
         val widthSum = colTracks.sumOf { if (it.isFix) it.rawValue else Double.POSITIVE_INFINITY }
         val heightSum = rowTracks.sumOf { if (it.isFix) it.rawValue else Double.POSITIVE_INFINITY }
 
-        val finalWidth = layout?.instructedWidth ?: if (widthSum != Double.POSITIVE_INFINITY) widthSum else proposedWidth
-        val finalHeight = layout?.instructedHeight ?: if (heightSum != Double.POSITIVE_INFINITY) heightSum else proposedHeight
+        val instructedWidth = layout?.instructedWidth
+
+        val finalWidth = when {
+            instructedWidth != null -> instructedWidth
+            widthSum == Double.POSITIVE_INFINITY -> proposedWidth
+            else -> widthSum + data.surroundingHorizontal
+        }
+
+        val instructedHeight = layout?.instructedHeight
+
+        val finalHeight = when {
+            instructedHeight != null -> instructedHeight
+            heightSum == Double.POSITIVE_INFINITY -> proposedHeight
+            else -> heightSum + data.surroundingVertical
+        }
 
         data.finalWidth = finalWidth
         data.finalHeight = finalHeight
