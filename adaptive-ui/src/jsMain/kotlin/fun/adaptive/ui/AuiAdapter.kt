@@ -18,6 +18,9 @@ import `fun`.adaptive.ui.platform.media.MediaMetrics
 import `fun`.adaptive.ui.render.BrowserDecorationApplier
 import `fun`.adaptive.ui.render.BrowserEventApplier
 import `fun`.adaptive.ui.render.BrowserInputApplier
+import `fun`.adaptive.ui.render.BrowserLayoutApplier
+import `fun`.adaptive.ui.render.BrowserTextApplier
+import `fun`.adaptive.ui.render.LayoutRenderApplier
 import `fun`.adaptive.ui.render.model.LayoutRenderData
 import `fun`.adaptive.ui.render.model.TextRenderData
 import `fun`.adaptive.utility.alsoIfInstance
@@ -29,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.css.CSSStyleDeclaration
+import kotlin.apply
 
 class AuiAdapter(
     override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
@@ -119,7 +123,6 @@ class AuiAdapter(
 
     override fun applyRenderInstructions(fragment: AbstractAuiFragment<HTMLElement>) {
         val renderData = fragment.renderData
-        val style = fragment.receiver.style
 
         if (renderData.tracePatterns.isNotEmpty()) {
             fragment.tracePatterns = renderData.tracePatterns
@@ -129,53 +132,11 @@ class AuiAdapter(
             fragment.receiver.id = it.name
         }
 
-        renderData.layout { it.apply(style) }
+        BrowserLayoutApplier.applyTo(fragment)
         BrowserDecorationApplier.applyTo(fragment)
-        renderData.text { it.apply(style) }
+        BrowserTextApplier.applyTo(fragment)
         BrowserEventApplier.applyTo(fragment)
         BrowserInputApplier.applyTo(fragment)
-    }
-
-    fun LayoutRenderData.apply(style: CSSStyleDeclaration) {
-        padding { p ->
-            p.start { style.paddingLeft = it.pxs }
-            p.top { style.paddingTop = it.pxs }
-            p.end { style.paddingRight = it.pxs }
-            p.bottom { style.paddingBottom = it.pxs }
-        }
-        margin { m ->
-            m.start { style.marginLeft = it.pxs }
-            m.top { style.marginTop = it.pxs }
-            m.end { style.marginRight = it.pxs }
-            m.bottom { style.marginBottom = it.pxs }
-        }
-        zIndex {
-            style.zIndex = it.toString()
-        }
-        fixed {
-            style.position = "fixed"
-        }
-    }
-
-    fun TextRenderData.apply(style: CSSStyleDeclaration) {
-        (fontName ?: defaultTextRenderData.fontName) { style.fontFamily = it }
-        (fontSize ?: defaultTextRenderData.fontSize) { style.fontSize = it.pxs }
-        (fontWeight ?: defaultTextRenderData.fontWeight) { style.fontWeight = it.toString() }
-
-        // FIXME text styles in browser
-        letterSpacing { style.letterSpacing = "${it}em" }
-        wrap { style.setProperty("text-wrap", if (it) "wrap" else "nowrap") }
-        color { style.color = it.hex }
-
-        if (smallCaps) {
-            style.fontVariant = "small-caps"
-        }
-
-        if (noSelect == true) {
-            style.setProperty("-webkit-user-select", "none")
-            style.setProperty("user-select", "none")
-            style.cursor = "default"
-        }
     }
 
     inline operator fun <reified T : Any> T?.invoke(function: (it: T) -> Unit) {
