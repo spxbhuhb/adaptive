@@ -3,6 +3,7 @@
  */
 package `fun`.adaptive.ui.fragment
 
+import `fun`.adaptive.adaptive_ui.generated.resources.Res.font
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.AbstractAuiFragment
@@ -13,6 +14,7 @@ import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLSpanElement
+import kotlin.math.ceil
 
 @AdaptiveActual(aui)
 open class AuiText(
@@ -54,9 +56,18 @@ open class AuiText(
     }
 
     fun measureText(content: String) {
+
         if (content.isEmpty()) {
             renderData.innerWidth = 0.0
             renderData.innerHeight = 0.0
+            return
+        }
+
+        // skip measurement when the text is instructed
+        val layout = renderData.layout
+        if (layout != null && layout.instructedWidth != null && layout.instructedHeight != null) {
+            renderData.innerWidth = layout.instructedWidth
+            renderData.innerHeight = layout.instructedHeight
             return
         }
 
@@ -65,11 +76,12 @@ open class AuiText(
 
         val metrics = measureContext.measureText(content)
 
-        renderData.innerWidth = metrics.width
-        renderData.innerHeight =
+        renderData.innerWidth = ceil(metrics.width)
+        renderData.innerHeight = ceil(
             text.lineHeight
                 ?: (text.fontSize ?: uiAdapter.defaultTextRenderData.fontSize)?.value?.let { it * 1.5 }
                     ?: (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)
+        )
     }
 
     companion object {
