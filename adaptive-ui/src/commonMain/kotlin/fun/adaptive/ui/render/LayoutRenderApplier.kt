@@ -1,12 +1,8 @@
 package `fun`.adaptive.ui.render
 
 import `fun`.adaptive.ui.AbstractAuiFragment
-import `fun`.adaptive.ui.fragment.layout.RawBorder
-import `fun`.adaptive.ui.fragment.layout.RawCornerRadius
-import `fun`.adaptive.ui.fragment.layout.RawDropShadow
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
-import `fun`.adaptive.ui.instruction.decoration.BackgroundGradient
-import `fun`.adaptive.ui.instruction.decoration.Color
+import `fun`.adaptive.ui.instruction.layout.OverflowBehavior
 
 abstract class LayoutRenderApplier<R> : AbstractRenderApplier() {
 
@@ -56,6 +52,15 @@ abstract class LayoutRenderApplier<R> : AbstractRenderApplier() {
         if (fixed != previousFixed) {
             applyFixed(receiver, fixed)
         }
+
+        // ----  overflow  ----
+
+        val overflow = current?.overflow
+        val previousOverflow = previous?.overflow
+
+        if (overflow != previousOverflow) {
+            applyOverflow(receiver, overflow)
+        }
     }
 
     abstract fun applyPadding(receiver: R, padding: RawSurrounding?)
@@ -65,4 +70,7 @@ abstract class LayoutRenderApplier<R> : AbstractRenderApplier() {
     abstract fun applyZIndex(receiver: R, zIndex: Int?)
 
     abstract fun applyFixed(receiver: R, fixed: Boolean?)
+
+    abstract fun applyOverflow(receiver: R, overflow: OverflowBehavior?)
+
 }

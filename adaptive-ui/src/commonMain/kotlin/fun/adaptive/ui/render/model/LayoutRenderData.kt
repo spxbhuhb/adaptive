@@ -7,6 +7,7 @@ package `fun`.adaptive.ui.render.model
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.layout.Alignment
+import `fun`.adaptive.ui.instruction.layout.OverflowBehavior
 
 class LayoutRenderData(
     val adapter : AbstractAuiAdapter<*, *>
@@ -27,5 +28,6 @@ class LayoutRenderData(
     var fillVertical: Boolean = false
 
     var fixed: Boolean? = null
+    var overflow : OverflowBehavior? = null
     var zIndex: Int? = null
 }

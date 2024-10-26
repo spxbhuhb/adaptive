@@ -87,7 +87,7 @@ fun main() {
     }
 }
 
-private val appNavState = autoInstance(Routes.dialog)
+private val appNavState = autoInstance(Routes.grid)
 
 private object Routes {
     val dialog = NavState("Dialog")

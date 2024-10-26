@@ -1,5 +1,9 @@
 package `fun`.adaptive.cookbook.ui.grid
 
+import `fun`.adaptive.cookbook.shared.blue
+import `fun`.adaptive.cookbook.shared.green
+import `fun`.adaptive.cookbook.shared.purple
+import `fun`.adaptive.cookbook.shared.red
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.alignItems
@@ -17,6 +21,7 @@ import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.AlignItems
+import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
 
@@ -33,7 +38,7 @@ fun gridAlignRecipe() {
 @Adaptive
 private fun recipeGrid(title : String, align: AlignItems) {
     column {
-        backgroundColor(colors.surfaceVariant)
+        backgrounds.surfaceVariant
 
         text(title) .. alignSelf.center
         grid {
@@ -42,10 +47,10 @@ private fun recipeGrid(title : String, align: AlignItems) {
             colTemplate(100.dp, 100.dp)
             rowTemplate(100.dp, 100.dp)
 
-            box { size(80.dp, 80.dp) .. backgroundColor(0xff0000) }
-            box { size(80.dp, 80.dp) .. backgroundColor(0xffff00) }
-            box { size(80.dp, 80.dp) .. backgroundColor(0xff00ff) }
-            box { size(80.dp, 80.dp) .. backgroundColor(0x0000ff) }
+            box { size(80.dp, 80.dp) .. backgrounds.red }
+            box { size(80.dp, 80.dp) .. backgrounds.green }
+            box { size(80.dp, 80.dp) .. backgrounds.purple }
+            box { size(80.dp, 80.dp) .. backgrounds.blue }
         }
     }
 }

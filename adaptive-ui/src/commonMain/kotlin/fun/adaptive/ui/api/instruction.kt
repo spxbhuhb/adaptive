@@ -59,6 +59,7 @@ import `fun`.adaptive.ui.instruction.layout.Margin
 import `fun`.adaptive.ui.instruction.layout.MaxHeight
 import `fun`.adaptive.ui.instruction.layout.MaxSize
 import `fun`.adaptive.ui.instruction.layout.MaxWidth
+import `fun`.adaptive.ui.instruction.layout.Overflow
 import `fun`.adaptive.ui.instruction.layout.Padding
 import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.instruction.layout.Scroll
@@ -186,6 +187,7 @@ val verticalScroll: Scroll = Scroll(horizontal = true, vertical = true)
 val horizontalScroll: Scroll = Scroll(horizontal = true, vertical = true)
 
 val fixed = Fixed()
+val overflow = Overflow.Companion
 
 fun zIndex(value: Int): ZIndex = ZIndex(value)
 fun zIndex(value: () -> Int): ZIndex = ZIndex(value())

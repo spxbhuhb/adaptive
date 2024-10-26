@@ -57,7 +57,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
         val finalWidth = when {
             instructedWidth != null -> instructedWidth
             widthSum == Double.POSITIVE_INFINITY -> proposedWidth
-            else -> widthSum + data.surroundingHorizontal
+            else -> widthSum + data.surroundingHorizontal + (colGap * (colTracks.size - 1))
         }
 
         val instructedHeight = layout?.instructedHeight
@@ -65,7 +65,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
         val finalHeight = when {
             instructedHeight != null -> instructedHeight
             heightSum == Double.POSITIVE_INFINITY -> proposedHeight
-            else -> heightSum + data.surroundingVertical
+            else -> heightSum + data.surroundingVertical + (rowGap * (rowTracks.size - 1))
         }
 
         data.finalWidth = finalWidth

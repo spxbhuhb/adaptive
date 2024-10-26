@@ -5,6 +5,7 @@
 package `fun`.adaptive.ui.render
 
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
+import `fun`.adaptive.ui.instruction.layout.OverflowBehavior
 import org.w3c.dom.HTMLElement
 
 object BrowserLayoutApplier : LayoutRenderApplier<HTMLElement>() {
@@ -50,6 +51,14 @@ object BrowserLayoutApplier : LayoutRenderApplier<HTMLElement>() {
             receiver.style.position = "absolute"
         } else {
             receiver.style.position = if (fixed) "fixed" else "absolute"
+        }
+    }
+
+    override fun applyOverflow(receiver: HTMLElement, overflow: OverflowBehavior?) {
+        if (overflow == null) {
+            receiver.style.overflowX = "hidden"
+        } else {
+            receiver.style.position = overflow.name
         }
     }
 

@@ -10,7 +10,7 @@ import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.render.layout
 
 @Adat
-class Size(
+data class Size(
     val width: DPixel,
     val height: DPixel
 ) : AdaptiveInstruction {

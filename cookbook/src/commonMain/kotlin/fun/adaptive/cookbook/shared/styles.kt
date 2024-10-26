@@ -2,7 +2,6 @@ package `fun`.adaptive.cookbook.shared
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.svg.api.svgFill
-import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.color
@@ -21,6 +20,29 @@ import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.textColor
 import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.theme.ThemeBackgrounds
+import `fun`.adaptive.ui.theme.ThemeTextColors
+
+val ThemeBackgrounds.red
+    get() = backgroundColor(0xff0000)
+
+val ThemeBackgrounds.green
+    get() = backgroundColor(0x00ff00)
+
+val ThemeBackgrounds.blue
+    get() = backgroundColor(0x0000ff)
+
+val ThemeBackgrounds.purple
+    get() = backgroundColor(0xff00ff)
+
+val ThemeBackgrounds.cyan
+    get() = backgroundColor(0x00ffff)
+
+val ThemeBackgrounds.yellow
+    get() = backgroundColor(0xffff00)
+
+val ThemeTextColors.white
+    get() = textColor(0xffffff)
 
 fun colors(active: Boolean = false, hover: Boolean = false) =
     when {

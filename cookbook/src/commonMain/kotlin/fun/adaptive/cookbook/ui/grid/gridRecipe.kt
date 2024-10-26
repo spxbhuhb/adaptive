@@ -11,5 +11,6 @@ fun gridRecipe() {
 
         gridExtendRecipe()
         gridAlignRecipe()
+        gridResizeRecipe()
     }
 }
