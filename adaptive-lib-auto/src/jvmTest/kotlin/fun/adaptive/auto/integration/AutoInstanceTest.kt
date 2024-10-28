@@ -1,6 +1,6 @@
 package `fun`.adaptive.auto.integration
 
-import `fun`.adaptive.auto.api.autoInstance
+import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.backend.TestData
 import `fun`.adaptive.auto.internal.frontend.FileFrontend
@@ -29,7 +29,7 @@ class AutoInstanceTest {
 
             val testAdapter = test(connectingAdapter) {
 
-                val a = autoInstance<TestData>(trace = true) { getService<AutoTestApi>(connectingAdapter.transport).file() }
+                val a = autoItem<TestData>(trace = true) { getService<AutoTestApi>(connectingAdapter.transport).file() }
 
                 if (a != null) {
                     producedValue = a

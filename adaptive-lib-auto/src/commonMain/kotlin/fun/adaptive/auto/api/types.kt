@@ -9,7 +9,7 @@ import `fun`.adaptive.auto.internal.frontend.FolderFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.auto.internal.origin.OriginListBase
 
-typealias InstanceBase<A> = OriginBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A>
+typealias ItemBase<A> = OriginBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A>
 typealias ListBase<A> = OriginListBase<SetBackend<A>, AdatClassListFrontend<A>, A>
 typealias FileBase<A> = OriginBase<PropertyBackend<A>, FileFrontend<A>, A, A>
 typealias FolderBase<A> = OriginListBase<SetBackend<A>, FolderFrontend<A>, A>

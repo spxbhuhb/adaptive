@@ -3,7 +3,7 @@ package `fun`.adaptive.auto.testing
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.auto.api.autoFile
 import `fun`.adaptive.auto.api.autoFolder
-import `fun`.adaptive.auto.api.autoInstance
+import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.auto.api.autoList
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.backend.TestData
@@ -20,7 +20,7 @@ class AutoTestServiceInContext : AutoTestApi, ServiceImpl<AutoTestServiceInConte
     val worker by worker<AutoWorker>()
 
     override suspend fun instance(): AutoConnectionInfo<TestData> {
-        val origin = autoInstance(worker, TestData, TestData(12, "a"), serviceContext = serviceContext)
+        val origin = autoItem(worker, TestData, TestData(12, "a"), serviceContext = serviceContext)
         return origin.connectInfo()
     }
 

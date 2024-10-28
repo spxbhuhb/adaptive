@@ -14,8 +14,8 @@ open class AdatClassFrontend<A : AdatClass>(
     val wireFormat: AdatClassWireFormat<A>,
     initialValue: A?,
     val itemId: ItemId,
-    val collectionFrontend: CollectionFrontendBase<A>?
-) : InstanceFrontendBase<A>() {
+    val collectionFrontend: CollectionFrontendBase<A>?,
+) : ItemFrontendBase<A>() {
 
     val adatContext = AdatContext<ItemId>(itemId, null, null, store = this, null)
 

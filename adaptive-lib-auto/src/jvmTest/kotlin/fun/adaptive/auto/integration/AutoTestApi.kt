@@ -9,7 +9,7 @@ import `fun`.adaptive.service.ServiceApi
 interface AutoTestApi {
     suspend fun manual(): AutoConnectionInfo<TestData>
 
-    suspend fun instance(): AutoConnectionInfo<TestData>
+    suspend fun item(): AutoConnectionInfo<TestData>
     suspend fun list(): AutoConnectionInfo<List<TestData>>
     suspend fun polyList(): AutoConnectionInfo<List<AdatClass>>
 

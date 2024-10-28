@@ -1,9 +1,9 @@
 package `fun`.adaptive.ui.navigation
 
-import `fun`.adaptive.auto.api.autoInstance
+import `fun`.adaptive.auto.api.autoItem
 
 /**
  * Nav state of the whole application. Changes update navigation UI elements
  * automatically.
  */
-val appNavState = autoInstance(NavState())
+val appNavState = autoItem(NavState())

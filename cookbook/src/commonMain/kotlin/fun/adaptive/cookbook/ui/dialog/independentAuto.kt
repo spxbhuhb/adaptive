@@ -2,7 +2,7 @@ package `fun`.adaptive.cookbook.ui.dialog
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.store.copyStore
-import `fun`.adaptive.auto.api.autoInstance
+import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.cookbook.Res
 import `fun`.adaptive.cookbook.check
 import `fun`.adaptive.foundation.Adaptive
@@ -36,11 +36,11 @@ private data class Data(
     val s : String
 )
 
-private val sharedData = autoInstance(Data("Hello"))
+private val sharedData = autoItem(Data("Hello"))
 
 @Adaptive
 fun independentAuto(close: () -> Unit) {
-    val autoData = autoInstance(sharedData) ?: sharedData.frontend.value
+    val autoData = autoItem(sharedData) ?: sharedData.frontend.value
 
     @Independent
     var iData = copyStore { autoData }

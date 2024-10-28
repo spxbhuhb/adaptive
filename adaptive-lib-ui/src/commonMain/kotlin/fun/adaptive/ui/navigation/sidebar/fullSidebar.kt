@@ -1,6 +1,6 @@
 package `fun`.adaptive.ui.navigation.sidebar
 
-import `fun`.adaptive.auto.api.autoInstance
+import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -27,7 +27,7 @@ fun fullSidebar(
     theme: FullSidebarTheme = fullSidebarTheme,
     vararg instructions: AdaptiveInstruction
 ): AdaptiveFragment {
-    val navState = autoInstance(navStateOrigin)
+    val navState = autoItem(navStateOrigin)
 
     column(*instructions, *theme.container) {
         for (item in items.sortedBy { it.index }) {

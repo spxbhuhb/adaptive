@@ -8,7 +8,7 @@ import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.FileFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
-import `fun`.adaptive.auto.internal.origin.OriginInstanceBase
+import `fun`.adaptive.auto.internal.origin.OriginItemBase
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
@@ -33,14 +33,14 @@ import kotlinx.io.files.Path
  *
  * [FileFrontend] writes all changes to the file specified by [path].
  *
- * After registration peers can use [autoInstance] to connect to the registered
- * instance. To get the connection info needed for the [autoInstance]
+ * After registration peers can use [autoItem] to connect to the registered
+ * instance. To get the connection info needed for the [autoItem]
  * use the `connectInfo` function of the returned frontend.
  *
  * Property changes (on any peer) generate a new instance (on all peers).
  *
  * Each new instance is validated by default, so fragments that use values
- * produced by [autoInstance] can safely use the validation result as it is
+ * produced by [autoItem] can safely use the validation result as it is
  * up-to-date all the time.
  *
  * Registers a cleanup handler into the session through [serviceContext] or
@@ -68,11 +68,11 @@ fun <A : AdatClass> autoFile(
     path: Path,
     initialValue: A? = null,
     wireFormatProvider: WireFormatProvider = Json,
-    listener: AutoInstanceListener<A>? = null,
+    listener: AutoItemListener<A>? = null,
     serviceContext: ServiceContext? = null,
     handle: AutoHandle = AutoHandle(),
     itemId: ItemId = LamportTimestamp.CONNECTING,
-    trace: Boolean = false
+    trace: Boolean = false,
 ): FileBase<A> {
 
     val pItemId : ItemId
@@ -114,7 +114,7 @@ fun <A : AdatClass> autoFile(
         }
     }
 
-    return OriginInstanceBase(
+    return OriginItemBase(
         worker,
         handle,
         serviceContext,

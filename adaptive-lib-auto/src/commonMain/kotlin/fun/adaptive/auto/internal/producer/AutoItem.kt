@@ -5,19 +5,18 @@ import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.api.validateForContext
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.api.AutoCollectionListener
-import `fun`.adaptive.auto.api.AutoInstanceListener
+import `fun`.adaptive.auto.api.AutoItemListener
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
-import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 
-class AutoInstance<A : AdatClass>(
+class AutoItem<A : AdatClass>(
     binding: AdaptiveStateVariableBinding<A>,
     connect: suspend () -> AutoConnectionInfo<A>,
-    val listener: AutoInstanceListener<A>? = null,
-    trace: Boolean
+    val listener: AutoItemListener<A>? = null,
+    trace: Boolean,
 ) : ProducerBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A>(
     binding, connect, trace
 ) {
@@ -57,7 +56,7 @@ class AutoInstance<A : AdatClass>(
     }
 
     override fun toString(): String {
-        return "AutoInstance($binding)"
+        return "AutoItem($binding)"
     }
 
 

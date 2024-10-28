@@ -1,10 +1,9 @@
 package `fun`.adaptive.auto.listener
 
-import `fun`.adaptive.auto.api.AutoInstanceListener
-import `fun`.adaptive.auto.api.autoInstance
+import `fun`.adaptive.auto.api.AutoItemListener
+import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.backend.TestData
-import `fun`.adaptive.auto.listener.ItemListenerTest.TestItemListener
 import `fun`.adaptive.auto.testing.AutoTestApi
 import `fun`.adaptive.auto.testing.AutoTestBase.Companion.autoTestWorker
 import `fun`.adaptive.foundation.query.firstImpl
@@ -20,7 +19,7 @@ import kotlin.time.Duration.Companion.seconds
 @ExperimentalCoroutinesApi
 class InstanceListenerTest {
 
-    object TestItemListener : AutoInstanceListener<TestData>() {
+    object TestItemListener : AutoItemListener<TestData>() {
         val changes = mutableListOf<Pair<TestData, TestData?>>()
 
         override fun onChange(newValue: TestData, oldValue: TestData?) {
@@ -39,7 +38,7 @@ class InstanceListenerTest {
 
             assertNotNull(connectInfo)
 
-            val instance = autoInstance(
+            val instance = autoItem(
                 clientBackend.firstImpl<AutoWorker>(),
                 TestData,
                 handle = connectInfo.connectingHandle,

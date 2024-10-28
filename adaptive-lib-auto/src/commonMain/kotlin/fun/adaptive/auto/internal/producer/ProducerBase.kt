@@ -131,7 +131,7 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatCl
     }
 
     override fun toString(): String {
-        return "AutoInstance($binding)"
+        return "AutoItem($binding)"
     }
 
 }

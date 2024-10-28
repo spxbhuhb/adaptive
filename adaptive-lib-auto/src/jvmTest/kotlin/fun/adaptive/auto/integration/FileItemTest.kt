@@ -1,7 +1,7 @@
 package `fun`.adaptive.auto.integration
 
 import `fun`.adaptive.adat.api.store
-import `fun`.adaptive.auto.api.autoInstance
+import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.backend.TestData
 import `fun`.adaptive.auto.internal.frontend.FileFrontend
@@ -21,7 +21,7 @@ import kotlin.time.Duration.Companion.seconds
 
 private var producedValue: TestData? = null
 
-class FileInstanceTest {
+class FileItemTest {
 
     @Test
     fun basic() {
@@ -30,7 +30,7 @@ class FileInstanceTest {
         autoTest(port = 8085) { originAdapter, connectingAdapter ->
 
             val testAdapter = test(connectingAdapter) {
-                val a = autoInstance<TestData> { getService<AutoTestApi>(connectingAdapter.transport).file() }
+                val a = autoItem<TestData> { getService<AutoTestApi>(connectingAdapter.transport).file() }
 
                 if (a != null) {
                     producedValue = a

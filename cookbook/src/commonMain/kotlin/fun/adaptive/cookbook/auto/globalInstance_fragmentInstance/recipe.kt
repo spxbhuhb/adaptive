@@ -1,6 +1,6 @@
 package `fun`.adaptive.cookbook.auto.globalInstance_fragmentInstance
 
-import `fun`.adaptive.auto.api.autoInstance
+import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.testing.test
@@ -8,7 +8,7 @@ import kotlinx.coroutines.delay
 
 val initial = DataItem()
 
-val global = autoInstance(initial)
+val global = autoItem(initial)
 
 var out: DataItem?
     get() = TODO()
@@ -22,7 +22,7 @@ suspend fun recipe() {
     val backend = backend { }
 
     test(backend) {
-        val data = autoInstance(global) { global.connectInfo(AutoConnectionType.Direct) }
+        val data = autoItem(global) { global.connectInfo(AutoConnectionType.Direct) }
         out = data
     }
 

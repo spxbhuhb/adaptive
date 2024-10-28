@@ -1,8 +1,8 @@
 package `fun`.adaptive.auto.integration.connector
 
-import `fun`.adaptive.auto.api.InstanceBase
+import `fun`.adaptive.auto.api.ItemBase
 import `fun`.adaptive.auto.api.auto
-import `fun`.adaptive.auto.api.autoInstance
+import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
@@ -53,7 +53,7 @@ class ConnectionTest {
     }
 
     fun test(
-        testFun: suspend (server: BackendAdapter, clientInstance: InstanceBase<DataItem>, transport: ServiceCallTransport) -> Unit
+        testFun: suspend (server: BackendAdapter, clientInstance: ItemBase<DataItem>, transport: ServiceCallTransport) -> Unit,
     ) {
         runBlocking {
             val server = backend {
@@ -83,7 +83,7 @@ class ConnectionTest {
 
                 val connectInfo = dataService.getConnectInfo()
 
-                val clientInstance = autoInstance(clientAutoWorker, DataItem, handle = connectInfo.connectingHandle, trace = true)
+                val clientInstance = autoItem(clientAutoWorker, DataItem, handle = connectInfo.connectingHandle, trace = true)
                     .connect(transport = transport) { connectInfo }
 
                 waitFor(2.seconds) { clientInstance.frontend.valueOrNull != null }

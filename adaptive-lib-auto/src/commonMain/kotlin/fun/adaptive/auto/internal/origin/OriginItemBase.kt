@@ -4,22 +4,20 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.BackendBase
-import `fun`.adaptive.auto.internal.frontend.CollectionFrontendBase
-import `fun`.adaptive.auto.internal.frontend.FrontendBase
-import `fun`.adaptive.auto.internal.frontend.InstanceFrontendBase
+import `fun`.adaptive.auto.internal.frontend.ItemFrontendBase
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.service.ServiceContext
 import kotlin.time.Duration
 
-class OriginInstanceBase<BE : BackendBase, FE : InstanceFrontendBase<IT>, IT : AdatClass>(
+class OriginItemBase<BE : BackendBase, FE : ItemFrontendBase<IT>, IT : AdatClass>(
     worker: AutoWorker?,
     handle: AutoHandle,
     serviceContext: ServiceContext?,
     defaultWireFormat: AdatClassWireFormat<*>?,
     trace: Boolean,
     register: Boolean = true,
-    builder: OriginBase<BE, FE, IT, IT>.() -> Unit
+    builder: OriginBase<BE, FE, IT, IT>.() -> Unit,
 ) : OriginBase<BE, FE, IT, IT> (
     worker, handle, serviceContext, defaultWireFormat, trace, register, builder
 ) {
@@ -29,8 +27,8 @@ class OriginInstanceBase<BE : BackendBase, FE : InstanceFrontendBase<IT>, IT : A
 
     override suspend fun connectDirect(
         waitForSync: Duration?,
-        connectInfoFun: suspend () -> AutoConnectionInfo<IT>
-    ): OriginInstanceBase<BE, FE, IT> {
+        connectInfoFun: suspend () -> AutoConnectionInfo<IT>,
+    ): OriginItemBase<BE, FE, IT> {
         super.connectDirect(waitForSync, connectInfoFun)
         return this
     }

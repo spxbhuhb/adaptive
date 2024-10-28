@@ -1,7 +1,7 @@
 package `fun`.adaptive.auto.testing
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.auto.api.autoInstance
+import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.auto.api.autoList
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.backend.TestData
@@ -17,7 +17,7 @@ class AutoTestWorker(
 
     val worker by worker<AutoWorker>()
 
-    val instance by lazy { autoInstance(worker, TestData, instanceInit, trace = trace) }
+    val instance by lazy { autoItem(worker, TestData, instanceInit, trace = trace) }
     val list by lazy { autoList(worker, TestData, initialValues = listInit, trace = trace) }
     val polyList by lazy { autoList<AdatClass>(worker, trace = trace) }
 

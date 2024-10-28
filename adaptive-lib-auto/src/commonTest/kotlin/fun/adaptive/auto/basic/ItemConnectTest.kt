@@ -1,6 +1,6 @@
 package `fun`.adaptive.auto.basic
 
-import `fun`.adaptive.auto.api.autoInstance
+import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.backend.TestData
 import `fun`.adaptive.auto.testing.AutoTestApi
@@ -30,7 +30,7 @@ class ItemConnectTest {
             assertNotNull(connectInfo)
             assertNotNull(connectInfo.connectingHandle.itemId)
 
-            val instance = autoInstance(
+            val instance = autoItem(
                 clientBackend.firstImpl<AutoWorker>(),
                 TestData,
                 handle = connectInfo.connectingHandle,

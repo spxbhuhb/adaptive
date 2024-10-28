@@ -4,9 +4,8 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.atomic.Atomic
 import `fun`.adaptive.auto.api.AutoCollectionListener
-import `fun`.adaptive.auto.api.AutoInstanceListener
+import `fun`.adaptive.auto.api.AutoItemListener
 import `fun`.adaptive.auto.internal.connector.AutoConnector
-import `fun`.adaptive.auto.internal.producer.AutoInstance
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.log.AdaptiveLogger
@@ -40,7 +39,7 @@ class BackendContext<A : AdatClass>(
 
     private var pConnectors = listOf<AutoConnector>()
 
-    private var instanceListeners = emptyList<AutoInstanceListener<A>>()
+    private var itemListeners = emptyList<AutoItemListener<A>>()
 
     private var collectionListeners = emptyList<AutoCollectionListener<A>>()
 
@@ -72,15 +71,15 @@ class BackendContext<A : AdatClass>(
         }
     }
 
-    fun addListener(listener: AutoInstanceListener<A>) {
+    fun addListener(listener: AutoItemListener<A>) {
         lock.use {
-            instanceListeners += listener
+            itemListeners += listener
         }
     }
 
-    fun removeListener(listener: AutoInstanceListener<A>) {
+    fun removeListener(listener: AutoItemListener<A>) {
         lock.use {
-            instanceListeners -= listener
+            itemListeners -= listener
         }
     }
 
@@ -107,7 +106,7 @@ class BackendContext<A : AdatClass>(
     // --------------------------------------------------------------------------------
 
     internal fun onChange(newValue: A, oldValue: A?, fromBackend: Boolean) {
-        instanceListeners.forEach { if (fromBackend || ! it.backendOnly) it.onChange(newValue, oldValue) }
+        itemListeners.forEach { if (fromBackend || ! it.backendOnly) it.onChange(newValue, oldValue) }
         collectionListeners.forEach { if (fromBackend || ! it.backendOnly) it.onChange(newValue, oldValue) }
     }
 
