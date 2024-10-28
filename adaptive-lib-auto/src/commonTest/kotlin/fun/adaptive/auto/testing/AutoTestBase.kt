@@ -30,18 +30,7 @@ class AutoTestBase {
     lateinit var clientBackend: BackendAdapter
 
     suspend fun run(testMain: suspend () -> Unit) {
-        waitForServerInit()
         testMain()
-    }
-
-    /**
-     *  Wait for the server side to initialization. Typically, we don't wait this way,
-     *  but for the cookbook recipe it is needed so the server side initializes
-     *  properly.
-     */
-    suspend fun waitForServerInit() {
-        val serverAutoWorker = serverBackend.firstImpl<AutoWorker>()
-        waitForReal(1.seconds) { serverAutoWorker.backends.isNotEmpty() }
     }
 
     suspend fun waitForSync(a1 : OriginBase<*,*,*,*>, a2 : OriginBase<*,*,*,*>) {
@@ -77,6 +66,8 @@ class AutoTestBase {
                         testFun()
                     }
 
+                    clientBackend.stop()
+                    serverBackend.stop()
                 }
             }
     }

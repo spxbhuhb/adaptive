@@ -11,20 +11,27 @@ import `fun`.adaptive.utility.safeSuspendCall
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.launch
+import kotlin.coroutines.coroutineContext
 
+/**
+ * @param  reconnect  When true the service connector calls `thisBackend.reconnect` in case of
+ *                    communication error.
+ */
 class ServiceConnector(
     val thisBackend: BackendBase,
     peerHandle: AutoHandle,
     val service: AutoApi,
-    val logger: AdaptiveLogger,
-    val scope: CoroutineScope,
+    val reconnect: Boolean,
     pendingLimit: Int = 1000
 ) : AutoConnector(peerHandle) {
 
     val operations: Channel<AutoOperation> = Channel(pendingLimit)
 
-    val job = scope.safeLaunch(logger, "run error in ServiceConnector @ $thisBackend") { run() }
+    val logger
+        get() = thisBackend.context.logger
 
     override fun send(operation: AutoOperation) {
         val result = operations.trySend(operation)
@@ -39,7 +46,6 @@ class ServiceConnector(
     suspend fun run() {
         try {
             for (operation in operations) {
-                // TODO proper disconnect/reconnect handling in ServiceConnector
                 when (operation) {
                     is AutoAdd -> service.add(peerHandle, operation)
                     is AutoModify -> service.modify(peerHandle, operation)
@@ -50,13 +56,14 @@ class ServiceConnector(
                     is AutoSyncEnd -> service.syncEnd(peerHandle, operation)
                 }
             }
-        } catch (ex : Exception) {
+        } catch (ex: Exception) {
 
             safeSuspendCall(logger) {
                 thisBackend.removePeer(peerHandle)
+                if (reconnect) thisBackend.reconnect()
             }
 
-            job.ensureActive()
+            coroutineContext.ensureActive()
 
             // FIXME I don't think this is the right way to handle the cancellation of the service out channel
 
@@ -68,8 +75,6 @@ class ServiceConnector(
             // this is NOT a cancellation of `run` (that has been handled by `ensureActive`)
             // but some other cancellation exception (most notably, Netty's closed connection)
         }
-
-        println("END OF Run")
     }
 
     override suspend fun disconnect() {
@@ -80,7 +85,6 @@ class ServiceConnector(
 
     override fun dispose() {
         safeCall(logger, message = "onDisconnect error in ServiceConnector @ $thisBackend") {
-            job.cancel()
             operations.close()
         }
     }

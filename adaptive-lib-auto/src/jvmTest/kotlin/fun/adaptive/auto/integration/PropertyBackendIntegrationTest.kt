@@ -71,7 +71,7 @@ class PropertyBackendIntegrationTest {
             connectingWorker.register(connectingBackend)
 
             connectingBackend.addPeer(
-                ServiceConnector(connectingBackend, originHandle, autoService, logger, scope),
+                ServiceConnector(connectingBackend, originHandle, autoService, reconnect = true),
                 connectInfo.originTime
             )
 
