@@ -17,10 +17,9 @@ class AutoInstance<A : AdatClass>(
     binding: AdaptiveStateVariableBinding<A>,
     connect: suspend () -> AutoConnectionInfo<A>,
     val listener: AutoInstanceListener<A>? = null,
-    peer: OriginBase<*, *, A, A>? = null,
     trace: Boolean
 ) : ProducerBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A>(
-    binding, connect, peer, trace
+    binding, connect, trace
 ) {
     override var latestValue: A? = null
 

@@ -6,7 +6,7 @@ import `fun`.adaptive.auto.model.operation.AutoOperation
 class DirectConnector(
     val connecting : BackendBase,
     val peer: BackendBase
-) : AutoConnector(peer.context.handle) {
+) : AutoConnector() {
 
     override fun send(operation: AutoOperation) {
         peer.receive(operation)

@@ -4,8 +4,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import kotlin.coroutines.coroutineContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -56,11 +58,31 @@ suspend inline fun <reified T> untilNotNull(
     if (value != null) return value
 
     while (true) {
+        coroutineContext.ensureActive()
+
         try {
             value = block()
             if (value != null) return value
         } catch (ex: TimeoutCancellationException) {
             if (! catchTimeout) throw ex
+        }
+
+        waitStrategy.wait()
+    }
+}
+
+suspend inline fun <reified T> untilSuccess(
+    waitStrategy: WaitStrategy = WaitStrategy(),
+    crossinline block: suspend () -> T
+): T {
+
+    while (true) {
+        coroutineContext.ensureActive()
+
+        try {
+            return block()
+        } catch (_: TimeoutCancellationException) {
+            // timeout is fine, others we can actually throw
         }
 
         waitStrategy.wait()
@@ -74,6 +96,7 @@ suspend inline fun <reified T> untilNoTimeout(
 ): T {
 
     while (true) {
+        coroutineContext.ensureActive()
 
         try {
             return block()

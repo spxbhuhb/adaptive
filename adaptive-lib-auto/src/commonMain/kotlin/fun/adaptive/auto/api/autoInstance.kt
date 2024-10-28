@@ -19,44 +19,14 @@ import `fun`.adaptive.foundation.producer.Producer
 import `fun`.adaptive.service.ServiceContext
 
 /**
- * Connect to peers with [AutoApi] and produce an instance that is
- * automatically synchronized between peers.
+ * Create an **endpoint** and connect it to [peer] with **direct** connection.
  *
- * - Backend: PropertyBackend
- * - Frontend: AdatClassFrontend
+ * This is a producer intended for use in an Adaptive fragment.
  *
- * Property changes (on any peer) generate a new instance (on all peers).
- *
- * Each new instance is validated by default, so fragments that use values
- * produced by [autoInstance] can safely use the validation result as it is
- * up-to-date all the time.
- *
- * **This function is NOT thread safe.**
- *
+ * @param    listener       An optional listener to get auto events.
  * @param    binding        Set by the compiler plugin, ignore it.
- * @param    connect        A function to get the connection info. Typically, this is created by
- *                          a service call.
- *
- * @return   `null` (it takes time to connect and synchronize)
+ * @param    trace         Log trace information.
  */
-@Producer
-fun <A : AdatClass> autoInstance(
-    peer: OriginBase<*, *, A, A>? = null,
-    listener : AutoInstanceListener<A>? = null,
-    binding: AdaptiveStateVariableBinding<A>? = null,
-    trace: Boolean = false,
-    connect: suspend () -> AutoConnectionInfo<A>
-): A? {
-    checkNotNull(binding)
-    checkNotNull(binding.adatCompanion)
-
-    val store = AutoInstance(binding, connect, listener, peer, trace)
-
-    binding.targetFragment.addProducer(store)
-
-    return null
-}
-
 @Producer
 fun <A : AdatClass> autoInstance(
     peer: OriginBase<*, *, A, A>,
@@ -67,13 +37,54 @@ fun <A : AdatClass> autoInstance(
     checkNotNull(binding)
     checkNotNull(binding.adatCompanion)
 
-    val store = AutoInstance(binding, { peer.connectInfo(AutoConnectionType.Direct) }, listener, peer, trace)
+    val store = AutoInstance(binding, { peer.connectInfo(AutoConnectionType.Direct) }, listener, trace)
 
     binding.targetFragment.addProducer(store)
 
     return null
 }
 
+/**
+ * Create an **endpoint** and connect it to the peer with [AutoApi] using **service** connection.
+ *
+ * This is a producer intended for use in an Adaptive fragment.
+ *
+ * Uses the transport of the fragment adapter.
+ *
+ * @param    listener       An optional listener to get auto events.
+ * @param    binding        Set by the compiler plugin, ignore it.
+ * @param    trace          Log trace information.
+ * @param    connect        A function to get the connection info. Typically, this is created by
+ *                          a service call.
+ *
+ * @return   `null` (it takes time to connect and synchronize)
+ */
+@Producer
+fun <A : AdatClass> autoInstance(
+    listener : AutoInstanceListener<A>? = null,
+    binding: AdaptiveStateVariableBinding<A>? = null,
+    trace: Boolean = false,
+    connect: suspend () -> AutoConnectionInfo<A>
+): A? {
+    checkNotNull(binding)
+    checkNotNull(binding.adatCompanion)
+
+    val store = AutoInstance(binding, connect, listener, trace)
+
+    binding.targetFragment.addProducer(store)
+
+    return null
+}
+
+/**
+ * Create a **controller** with the initial value set to [initialValue].
+ * The created auto instance is **NOT**  registered, it can have only **direct**
+ * connections.
+ *
+ * @param    initialValue   The value of the auto instance.
+ * @param    listener       An optional listener to get auto events.
+ * @param    trace          Log trace information.
+ */
 @Suppress("UNCHECKED_CAST")
 fun <A : AdatClass> autoInstance(
     initialValue: A,
@@ -169,9 +180,6 @@ fun <A : AdatClass> autoInstance(
             pItemId,
             null
         )
-
-
-
     }
 
     return origin

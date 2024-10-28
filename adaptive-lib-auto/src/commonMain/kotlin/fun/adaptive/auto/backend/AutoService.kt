@@ -34,6 +34,7 @@ class AutoService : ServiceImpl<AutoService>, AutoApi {
             requireNotNull(serviceContext.transport) { "no transport in the service context" }
         )
 
+        // FIXME shouldn't this be context cleanup
         serviceContext.addSessionCleanup(PeerCleanup(worker, connecting))
 
         return originTime

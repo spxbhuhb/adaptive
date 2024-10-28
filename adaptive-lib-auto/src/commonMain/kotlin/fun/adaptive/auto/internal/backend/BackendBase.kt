@@ -12,17 +12,14 @@ import `fun`.adaptive.auto.model.operation.AutoModify
 import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.auto.model.operation.AutoSyncEnd
 import `fun`.adaptive.reflect.CallSiteName
-import `fun`.adaptive.utility.safeLaunch
 import `fun`.adaptive.utility.waitFor
 import `fun`.adaptive.wireformat.WireFormatRegistry
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlin.time.Duration
 
 abstract class BackendBase(
-    peerHandle: AutoHandle
-) : AutoConnector(peerHandle) {
+) : AutoConnector() {
 
     abstract val context: BackendContext<*>
 
@@ -83,16 +80,6 @@ abstract class BackendBase(
     // --------------------------------------------------------------------------------
     // Lifecycle
     // --------------------------------------------------------------------------------
-
-    /**
-     * `ServiceConnector` calls [reconnect] when the connection breaks. In this case the
-     * backend tries to reconnect to the peer and synchronize again.
-     */
-    fun reconnect() {
-        while (true) {
-
-        }
-    }
 
     override suspend fun disconnect() {
         context.stop()

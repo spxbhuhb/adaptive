@@ -3,9 +3,7 @@ package `fun`.adaptive.auto.internal.connector
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.operation.AutoOperation
 
-abstract class AutoConnector(
-    val peerHandle: AutoHandle
-) {
+abstract class AutoConnector {
 
     abstract fun send(operation: AutoOperation)
 

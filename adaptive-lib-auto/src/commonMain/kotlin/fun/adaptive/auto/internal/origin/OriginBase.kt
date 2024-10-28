@@ -2,11 +2,12 @@ package `fun`.adaptive.auto.internal.origin
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
+import `fun`.adaptive.auto.api.AutoApi
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.BackendBase
 import `fun`.adaptive.auto.internal.backend.BackendContext
 import `fun`.adaptive.auto.internal.connector.DirectConnector
-import `fun`.adaptive.auto.internal.connector.serviceConnect
+import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.frontend.FrontendBase
 import `fun`.adaptive.auto.model.AutoConnectionInfo
@@ -16,6 +17,7 @@ import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.ServiceContext
+import `fun`.adaptive.service.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.CleanupHandler
 import `fun`.adaptive.wireformat.api.Proto
@@ -67,6 +69,10 @@ open class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
         }
     }
 
+    // --------------------------------------------------------------------------------
+    // Functions to get connection info from this node
+    // --------------------------------------------------------------------------------
+
     fun connectInfo(type: AutoConnectionType = AutoConnectionType.Service): AutoConnectionInfo<VT> {
         @Suppress("UNCHECKED_CAST")
         return backend.connectInfo(type) as AutoConnectionInfo<VT>
@@ -85,13 +91,23 @@ open class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
         return backend.connectInfo(type, itemId) as AutoConnectionInfo<IT>
     }
 
+    // --------------------------------------------------------------------------------
+    // Functions that connect an endpoint/node to a node
+    // --------------------------------------------------------------------------------
+
     suspend fun connect(
         waitForSync: Duration? = null,
         transport: ServiceCallTransport = requireNotNull(worker?.adapter?.transport) { "missing worker (cannot get transport)" },
-        connectInfoFun: suspend () -> AutoConnectionInfo<VT>
+        infoFun: suspend () -> AutoConnectionInfo<VT>
     ): OriginBase<BE, FE, VT, IT> {
 
-        val connectInfo = serviceConnect(backend, transport, connectInfoFun)
+        ServiceConnector(
+            backend,
+            getService<AutoApi>(transport),
+            infoFun,
+            initiator = true,
+            reconnect = true
+        )
 
         if (waitForSync != null) waitForSync(connectInfo, waitForSync)
 
@@ -121,6 +137,10 @@ open class OriginBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
 
         return this
     }
+
+    // --------------------------------------------------------------------------------
+    // Utility functions
+    // --------------------------------------------------------------------------------
 
     suspend fun waitForSync(connectInfo: AutoConnectionInfo<VT>, timeout: Duration) {
         backend.waitForSync(connectInfo, timeout)

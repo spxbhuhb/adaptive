@@ -32,8 +32,7 @@ import kotlinx.coroutines.launch
 
 abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
     override val binding: AdaptiveStateVariableBinding<VT>,
-    val connect: suspend () -> AutoConnectionInfo<VT>?,
-    val peer: OriginBase<*, *, VT, IT>? = null,
+    val infoFun: suspend () -> AutoConnectionInfo<VT>?,
     val trace: Boolean
 ) : AdatStore<IT>(), AdaptiveProducer<VT> {
 
@@ -61,7 +60,7 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatCl
         job = scope.launch {
 
             while (isActive) {
-                val ci = connect()
+                val ci = infoFun()
                 if (ci != null) {
                     connectInfo = ci
                     break

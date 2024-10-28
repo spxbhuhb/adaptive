@@ -123,3 +123,131 @@ fun showItem(item : Item) {
     text(item.counter) .. onClick { item.update { counter = 1 } }
 }
 ```
+
+## Use cases 2
+
+**Controller in global variable**
+
+```kotlin
+private val appNavState = autoInstance(Routes.zones)
+```
+
+**Endpoint with a producer as an internal state variable, direct connection to a node in a global variable**
+
+```kotlin
+val navState = autoInstance(appNavState)
+```
+
+**Endpoint with a producer as an internal state variable, service connection**
+
+```kotlin
+val dayOverrides = autoList<DayOverride> { hvacService.dayOverridesAuto() }
+```
+
+**Endpoint with a listener**
+
+```kotlin
+val connectInfo = worker.modelStore.pointAuto<ZigBeeDataPoint>(deviceId, pointId)
+if (connectInfo == null) return data
+
+val instance = autoInstance(
+    worker.autoWorker,
+    ZigBeeDataPoint,
+    handle = connectInfo.connectingHandle,
+    itemId = connectInfo.connectingHandle.itemId!!,
+    listener = PointListener(worker, updateFun),
+    register = false
+)
+
+instance.connectDirect(10.seconds) { connectInfo }
+```
+
+**Endpoint with persistence, service connection, newly established (itemId passed)**
+
+```kotlin
+val connectInfo = driver.modelService.networkAuto<NT>(networkId)
+
+network = autoFile(
+    driver.autoWorker,
+    driver.networkCompanion,
+    networkPath,
+    handle = connectInfo.connectingHandle,
+    itemId = connectInfo.connectingHandle.itemId!!,
+    listener = networkListener
+)
+
+// Connect to the origin list on the server side. This call
+// will start synchronization between the two list. As the client
+// side is empty, it will load everything from the server side.
+
+network.connect(waitForSync = 10.seconds) { connectInfo }
+```
+
+**Endpoint with persistence, service connection, previously established**
+
+```kotlin
+val connectInfo = driver.modelService.networkAuto<NT>(networkId)
+
+network = autoFile<NT>(
+    driver.autoWorker,
+    driver.networkCompanion,
+    path = networkFile,
+    handle = connectInfo.connectingHandle,
+    listener = networkListener
+)
+
+network.connect(waitForSync = 2.seconds) { connectInfo }
+```
+
+**Controller with persistence and with listener**
+
+```kotlin
+autoFolder(
+    autoWorker,
+    path,
+    { _, item -> fileNameFun(item) },
+    listener = itemListener()
+)
+```
+
+**Endpoint with persistence**
+
+```kotlin
+ val connectInfo = driver.modelService.commandsAuto(networkId)
+
+commands = autoFolder<AioCommand>(
+    driver.autoWorker,
+    driver.commandsPath(networkId).ensure(),
+    { _, c -> driver.commandFilename(c.id) },
+    handle = connectInfo.connectingHandle,
+    includeFun = { it.name.let { n -> n.startsWith("command.") && n.endsWith(".json") } },
+    listener = commandListener
+)
+
+commands.connect(waitForSync = 10.seconds) { connectInfo }
+```
+
+
+## Service Connection
+
+Service connection uses `AutoApi` and `ServiceConnector` to connect two auto instances.
+The connecting instance uses `AutoApi.addPeer` and `BackendBase.addPeer` to register 
+the two directions of the connection.
+
+The connection is made by calling the `serviceConnect` global function.
+
+`serviceConnect`
+    - runs the function passed to get the connection info
+    - calls `AutoApi.addPeer` to add the connection on the remote peer
+    - 
+
+`AutoApi.addPeer` - this runs on the "connected to" peer
+    - calls `AutoWorker.addPeer`
+        - creates a `ServiceConnector` with reconnect `false`
+        - calls `BackendBase.addPeer`
+        - starts the connector
+    - adds `PeerCleanup` to the session
+
+`BackendBase.addPeer` - this runs on both peers
+    - adds the connector to the context
+
