@@ -7,28 +7,30 @@ import `fun`.adaptive.adat.api.validateForContext
 import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.model.ItemId
 
-open class AdatClassFrontend<A : AdatClass>(
-    override val backend: PropertyBackend<A>,
-    val wireFormat: AdatClassWireFormat<A>,
-    initialValue: A?,
+open class AdatClassFrontend<IT : AdatClass>(
+    override val instance: AutoInstance<*, *, *, IT>,
+    val wireFormat: AdatClassWireFormat<IT>,
+    initialValue: IT?,
     val itemId: ItemId,
-    val collectionFrontend: CollectionFrontendBase<A>?,
-) : ItemFrontendBase<A>() {
+    val itemBackend: PropertyBackend<IT>,
+    val collectionFrontend: AutoCollectionFrontend<IT>?,
+) : AutoItemFrontend<IT>() {
 
     val adatContext = AdatContext<ItemId>(itemId, null, null, store = this, null)
 
-    override val value: A
+    override val value: IT
         get() = checkNotNull(valueOrNull) { "value not yet initialized" }
 
-    var valueOrNull: A? = initialValue?.deepCopy()?.also {
+    var valueOrNull: IT? = initialValue?.deepCopy()?.also {
         @Suppress("UNCHECKED_CAST")
         it.adatContext = adatContext as AdatContext<Any>
     }
 
     override fun removed(fromBackend: Boolean) {
-        backend.context.onRemove(value, fromBackend)
+        instance.onRemove(value, fromBackend)
     }
 
     /**
@@ -37,7 +39,7 @@ open class AdatClassFrontend<A : AdatClass>(
      */
     override fun commit(initial: Boolean, fromBackend: Boolean) {
         val oldValue = valueOrNull
-        val newValue = wireFormat.newInstance(backend.values)
+        val newValue = wireFormat.newInstance(itemBackend.values)
 
         @Suppress("UNCHECKED_CAST")
         newValue.adatContext = adatContext as AdatContext<Any>
@@ -46,14 +48,14 @@ open class AdatClassFrontend<A : AdatClass>(
         valueOrNull = newValue
 
         if (collectionFrontend != null) {
-            collectionFrontend.commit(backend.itemId, newValue, oldValue, initial, fromBackend)
+            collectionFrontend.commit(itemBackend.itemId, newValue, oldValue, initial, fromBackend)
         } else {
-            backend.context.onChange(newValue, oldValue, fromBackend)
+            instance.onChange(newValue, oldValue, fromBackend)
         }
     }
 
     fun modify(propertyName: String, propertyValue: Any?) {
-        backend.modify(backend.itemId, propertyName, propertyValue)
+        itemBackend.modify(itemBackend.itemId, propertyName, propertyValue)
     }
 
     override fun update(instance: AdatClass, path: Array<String>, value: Any?) {
@@ -62,11 +64,11 @@ open class AdatClassFrontend<A : AdatClass>(
     }
 
     override fun update(original: AdatClass, new: AdatClass) {
-        backend.update(new.toArray())
+        itemBackend.update(new.toArray())
     }
 
     override fun update(new: AdatClass) {
-        backend.update(new.toArray())
+        itemBackend.update(new.toArray())
     }
 
 

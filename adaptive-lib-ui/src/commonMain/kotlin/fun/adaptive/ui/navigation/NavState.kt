@@ -3,9 +3,9 @@ package `fun`.adaptive.ui.navigation
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.store.AdatStore
-import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 
-typealias NavStateOrigin = OriginBase<*, *, NavState, NavState>
+typealias NavStateOrigin = AutoInstance<*, *, NavState, NavState>
 
 fun NavStateOrigin.open(navState: NavState) {
     frontend.update(navState)

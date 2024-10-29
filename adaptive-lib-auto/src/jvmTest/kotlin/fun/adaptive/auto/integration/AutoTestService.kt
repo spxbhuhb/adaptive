@@ -8,7 +8,6 @@ import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.auto.api.autoList
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.backend.TestData
-import `fun`.adaptive.auto.internal.backend.BackendContext
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.model.AutoConnectionInfo

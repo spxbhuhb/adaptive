@@ -7,7 +7,6 @@ package `fun`.adaptive.auto.integration
 import `fun`.adaptive.auto.api.AutoApi
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.backend.TestData
-import `fun`.adaptive.auto.internal.backend.BackendContext
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
@@ -41,7 +40,7 @@ class PropertyBackendIntegrationTest {
             val connectingWorker = connectingAdapter.firstImpl<AutoWorker>()
 
             val connectInfo = getService<AutoTestApi>(connectingAdapter.transport).manual()
-            val originHandle = connectInfo.originHandle
+            val originHandle = connectInfo.acceptingHandle
             val connectingHandle = connectInfo.connectingHandle
 
             val connectingContext = BackendContext<TestData>(
@@ -72,7 +71,7 @@ class PropertyBackendIntegrationTest {
 
             connectingBackend.addPeer(
                 ServiceConnector(connectingBackend, originHandle, autoService, reconnect = true),
-                connectInfo.originTime
+                connectInfo.acceptingTime
             )
 
             autoService.addPeer(originHandle, connectingHandle, connectingBackend.context.time)

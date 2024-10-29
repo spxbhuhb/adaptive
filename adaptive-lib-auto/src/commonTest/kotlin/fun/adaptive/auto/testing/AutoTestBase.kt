@@ -1,16 +1,13 @@
 package `fun`.adaptive.auto.testing
 
 import `fun`.adaptive.auto.api.auto
-import `fun`.adaptive.auto.backend.AutoWorker
-import `fun`.adaptive.auto.internal.frontend.FrontendBase
-import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.service.testing.DirectServiceTransport
-import `fun`.adaptive.utility.waitFor
 import `fun`.adaptive.utility.waitForReal
 import kotlinx.coroutines.test.runTest
 import kotlin.time.Duration.Companion.seconds
@@ -33,7 +30,7 @@ class AutoTestBase {
         testMain()
     }
 
-    suspend fun waitForSync(a1 : OriginBase<*,*,*,*>, a2 : OriginBase<*,*,*,*>) {
+    suspend fun waitForSync(a1: AutoInstance<*, *, *, *>, a2: AutoInstance<*, *, *, *>) {
         waitForReal(1.seconds) {
             a1.context.time.timestamp == a2.context.time.timestamp
         }

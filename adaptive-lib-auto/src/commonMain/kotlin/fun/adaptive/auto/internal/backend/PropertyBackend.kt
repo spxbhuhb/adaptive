@@ -3,6 +3,7 @@ package `fun`.adaptive.auto.internal.backend
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatPropertyWireFormat
 import `fun`.adaptive.auto.internal.connector.AutoConnector
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.model.AutoPropertyValue
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
@@ -10,13 +11,13 @@ import `fun`.adaptive.auto.model.operation.AutoModify
 import `fun`.adaptive.auto.model.operation.AutoSyncEnd
 import `fun`.adaptive.wireformat.WireFormat
 
-class PropertyBackend<A : AdatClass>(
-    override val context: BackendContext<A>,
+class PropertyBackend<IT : AdatClass>(
+    instance: AutoInstance<*, *, *, IT>,
     val itemId: LamportTimestamp,
     val wireFormatName: String?,
     initialValues: Array<Any?>,
-    propertyTimes: List<LamportTimestamp> = MutableList(initialValues.size) { itemId }
-) : BackendBase(context.handle) {
+    propertyTimes: List<LamportTimestamp> = MutableList(initialValues.size) { itemId },
+) : AutoItemBackend<IT>(instance) {
 
     val wireFormat = wireFormatFor(wireFormatName)
 
@@ -55,7 +56,7 @@ class PropertyBackend<A : AdatClass>(
 
         val payload = encode(property)
 
-        val time = context.nextTime()
+        val time = instance.nextTime()
 
         val operation = AutoModify(time, itemId, listOf(AutoPropertyValue(time, propertyName, payload)))
         trace { "FE -> BE  $propertyName=$propertyValue .. commit true $operation" }
@@ -68,7 +69,7 @@ class PropertyBackend<A : AdatClass>(
     fun update(newValues: Array<Any?>) {
         check(newValues.size <= values.size)
 
-        val time = context.nextTime()
+        val time = instance.nextTime()
         val changes = mutableListOf<AutoPropertyValue>()
 
         for ((index, propertyValue) in values.withIndex()) {
@@ -81,7 +82,8 @@ class PropertyBackend<A : AdatClass>(
             changes += AutoPropertyValue(time, property.name, encode(property))
         }
 
-        val operation = AutoModify(context.nextTime(), itemId, changes)
+        // TODO check if nextTime is necessary here or we can use `time`
+        val operation = AutoModify(instance.nextTime(), itemId, changes)
 
         trace { "FE -> BE  commit true $operation" }
 
@@ -104,7 +106,7 @@ class PropertyBackend<A : AdatClass>(
             if (lastChange < change.changeTime) {
 
                 val property = properties[index]
-                val decoder = context.wireFormatProvider.decoder(change.payload)
+                val decoder = instance.wireFormatProvider.decoder(change.payload)
 
                 @Suppress("UNCHECKED_CAST")
                 val wireformat = property.wireFormat as WireFormat<Any?>
@@ -116,7 +118,7 @@ class PropertyBackend<A : AdatClass>(
 
                 values[index] = value
                 propertyTimes[index] = change.changeTime
-                context.receive(change.changeTime)
+                instance.receive(change.changeTime)
 
                 trace { "BE -> BE  CHANGE ${change.propertyName}=$value" }
 
@@ -136,8 +138,8 @@ class PropertyBackend<A : AdatClass>(
     }
 
     override fun syncEnd(operation: AutoSyncEnd, commit: Boolean) {
-        context.receive(operation.timestamp)
-        trace { "time=${context.time}" }
+        instance.receive(operation.timestamp)
+        trace { "time=${instance.time}" }
     }
 
     // --------------------------------------------------------------------------------
@@ -171,7 +173,7 @@ class PropertyBackend<A : AdatClass>(
             changesToSend += AutoPropertyValue(change, property.name, encode(property))
         }
 
-        val operation = AutoModify(context.time, itemId, changesToSend)
+        val operation = AutoModify(instance.time, itemId, changesToSend)
 
         trace { "peerTime=$syncFrom op=$operation" }
 
@@ -181,13 +183,13 @@ class PropertyBackend<A : AdatClass>(
             connector.send(operation)
 
             if (sendSyncEnd) {
-                connector.send(AutoSyncEnd(context.time))
+                connector.send(AutoSyncEnd(instance.time))
             }
         }
     }
 
     // --------------------------------------------------------------------------------
-    // Utility, common
+    // Utility
     // --------------------------------------------------------------------------------
 
     fun encode(property: AdatPropertyWireFormat<*>): ByteArray {
@@ -197,7 +199,7 @@ class PropertyBackend<A : AdatClass>(
 
             @Suppress("UNCHECKED_CAST")
             val wireformat = property.wireFormat as WireFormat<Any?>
-            val encoder = context.wireFormatProvider.encoder()
+            val encoder = instance.wireFormatProvider.encoder()
             if (property.metadata.isNullable) {
                 encoder.rawInstanceOrNull(value, wireformat)
             } else {
@@ -205,7 +207,7 @@ class PropertyBackend<A : AdatClass>(
             }
             return encoder.pack()
         } catch (e: Throwable) {
-            context.logger.error("error while writing property: ${property.metadata}")
+            instance.error("error while writing property: ${property.metadata}")
             throw e
         }
     }

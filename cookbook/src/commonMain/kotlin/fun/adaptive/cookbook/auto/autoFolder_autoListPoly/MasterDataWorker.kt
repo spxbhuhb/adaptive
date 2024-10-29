@@ -3,7 +3,7 @@ package `fun`.adaptive.cookbook.auto.autoFolder_autoListPoly
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.auto.api.autoFolder
 import `fun`.adaptive.auto.backend.AutoWorker
-import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.builtin.worker
@@ -27,10 +27,10 @@ class MasterDataWorker(
 
     val lock = getLock()
 
-    val masterData: OriginBase<*, *, List<AdatClass>, AdatClass>
+    val masterData: AutoInstance<*, *, List<AdatClass>, AdatClass>
         get() = requireNotNull(masterDataOrNull) { "masterData is null, perhaps the worker is not started" }
 
-    var masterDataOrNull: OriginBase<*, *, List<AdatClass>, AdatClass>? = null
+    var masterDataOrNull: AutoInstance<*, *, List<AdatClass>, AdatClass>? = null
         get() = lock.use { field }
         private set(v) {
             lock.use { field = v }

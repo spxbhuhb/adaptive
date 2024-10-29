@@ -3,7 +3,7 @@ package `fun`.adaptive.cookbook.auto.autoFolder_autoFile
 import `fun`.adaptive.auto.api.autoFolder
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.frontend.FolderFrontend
-import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.builtin.worker
@@ -28,10 +28,10 @@ class DataWorker(
 
     val lock = getLock()
 
-    val masterData: OriginBase<*, FolderFrontend<DataItem>, List<DataItem>, DataItem>
+    val masterData: AutoInstance<*, FolderFrontend<DataItem>, List<DataItem>, DataItem>
         get() = requireNotNull(masterDataOrNull) { "masterData is null, perhaps the worker is not started" }
 
-    var masterDataOrNull: OriginBase<*, FolderFrontend<DataItem>, List<DataItem>, DataItem>? = null
+    var masterDataOrNull: AutoInstance<*, FolderFrontend<DataItem>, List<DataItem>, DataItem>? = null
         get() = lock.use { field }
         private set(v) {
             lock.use { field = v }

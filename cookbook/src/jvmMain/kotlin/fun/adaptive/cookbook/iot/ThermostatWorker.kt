@@ -6,7 +6,7 @@ import `fun`.adaptive.auto.api.autoList
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
-import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.cookbook.iot.model.Thermostat
@@ -26,7 +26,7 @@ class ThermostatWorker : WorkerImpl<ThermostatWorker> {
 
     val lock = getLock()
 
-    lateinit var origin: OriginBase<SetBackend<Thermostat>, AdatClassListFrontend<Thermostat>, List<Thermostat>, Thermostat>
+    lateinit var origin: AutoInstance<SetBackend<Thermostat>, AdatClassListFrontend<Thermostat>, List<Thermostat>, Thermostat>
     lateinit var thermostats: AdatClassListFrontend<Thermostat>
 
     override suspend fun run() {

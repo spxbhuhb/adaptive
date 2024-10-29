@@ -5,12 +5,10 @@ import `fun`.adaptive.adat.store.AdatStore
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.api.AutoApi
 import `fun`.adaptive.auto.backend.AutoWorker
-import `fun`.adaptive.auto.internal.backend.BackendBase
-import `fun`.adaptive.auto.internal.backend.BackendContext
+import `fun`.adaptive.auto.internal.backend.AutoBackend
 import `fun`.adaptive.auto.internal.connector.DirectConnector
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
-import `fun`.adaptive.auto.internal.frontend.FrontendBase
-import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.internal.frontend.AutoFrontend
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.AutoHandle
@@ -30,10 +28,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatClass>(
+abstract class ProducerBase<BE : AutoBackend, FE : AutoFrontend, VT, IT : AdatClass>(
     override val binding: AdaptiveStateVariableBinding<VT>,
     val infoFun: suspend () -> AutoConnectionInfo<VT>?,
-    val trace: Boolean
+    val trace: Boolean,
 ) : AdatStore<IT>(), AdaptiveProducer<VT> {
 
     override var latestValue: VT? = null
@@ -68,7 +66,7 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatCl
                 delay(1000)
             }
 
-            val originHandle = connectInfo.originHandle
+            val originHandle = connectInfo.acceptingHandle
             val connectingHandle = connectInfo.connectingHandle
 
             logger = getLogger("fun.adaptive.auto.internal.producer.${this::class.simpleName}.${connectingHandle.globalId.toShort()}.${connectingHandle.peerId}")
@@ -102,7 +100,7 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatCl
 
         backend.addPeer(
             ServiceConnector(backend, originHandle, autoService, reconnect = true),
-            connectInfo.originTime
+            connectInfo.acceptingTime
         )
 
         autoService.addPeer(originHandle, connectingHandle, backend.context.time)
@@ -110,7 +108,7 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatCl
 
     suspend fun connectDirect() {
         checkNotNull(peer)
-        backend.addPeer(DirectConnector(backend, peer.backend), connectInfo.originTime)
+        backend.addPeer(DirectConnector(backend, peer.backend), connectInfo.acceptingTime)
         peer.backend.addPeer(DirectConnector(peer.backend, backend), backend.context.time)
     }
 

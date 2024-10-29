@@ -1,7 +1,7 @@
 package `fun`.adaptive.auto.model
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.auto.internal.backend.BackendBase
+import `fun`.adaptive.auto.internal.backend.AutoBackend
 import `fun`.adaptive.utility.UUID
 
 /**
@@ -10,9 +10,9 @@ import `fun`.adaptive.utility.UUID
  */
 @Adat
 class AutoHandle(
-    val globalId: UUID<BackendBase>,
+    val globalId: UUID<AutoBackend>,
     val peerId: PeerId,
-    val itemId : ItemId?
+    val itemId: ItemId?,
 ) {
     constructor() : this(UUID(), 0, null)
 }

@@ -5,6 +5,8 @@ import `fun`.adaptive.auto.model.operation.AutoOperation
 
 abstract class AutoConnector {
 
+    abstract val peerHandle: AutoHandle
+
     abstract fun send(operation: AutoOperation)
 
     /**

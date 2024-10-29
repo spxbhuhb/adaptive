@@ -3,7 +3,6 @@ package `fun`.adaptive.auto.internal.frontend
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
-import `fun`.adaptive.auto.internal.backend.BackendContext
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.frontend.FileFrontend.Companion.write

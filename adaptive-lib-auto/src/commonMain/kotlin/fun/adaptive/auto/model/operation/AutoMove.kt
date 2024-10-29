@@ -1,7 +1,7 @@
 package `fun`.adaptive.auto.model.operation
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.auto.internal.backend.BackendBase
+import `fun`.adaptive.auto.internal.backend.AutoBackend
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 
@@ -12,7 +12,7 @@ class AutoMove(
     val newParent: ItemId
 ) : AutoOperation() {
 
-    override fun apply(backend: BackendBase, commit: Boolean) {
+    override fun apply(backend: AutoBackend, commit: Boolean) {
         //backend.move(timestamp, item, newParent)
     }
 

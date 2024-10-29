@@ -3,22 +3,22 @@ package `fun`.adaptive.auto.internal.origin
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
-import `fun`.adaptive.auto.internal.backend.BackendBase
-import `fun`.adaptive.auto.internal.frontend.CollectionFrontendBase
+import `fun`.adaptive.auto.internal.backend.AutoBackend
+import `fun`.adaptive.auto.internal.frontend.AutoCollectionFrontend
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.service.ServiceContext
 import kotlin.time.Duration
 
-class OriginListBase<BE : BackendBase, FE : CollectionFrontendBase<IT>, IT : AdatClass>(
+class OriginListBase<BE : AutoBackend, FE : AutoCollectionFrontend<IT>, IT : AdatClass>(
     worker: AutoWorker?,
     handle: AutoHandle,
     serviceContext: ServiceContext?,
     defaultWireFormat: AdatClassWireFormat<*>?,
     trace: Boolean,
     register: Boolean = true,
-    builder: OriginBase<BE, FE, List<IT>, IT>.() -> Unit
-) : OriginBase<BE, FE, List<IT>, IT>(
+    builder: AutoInstance<BE, FE, List<IT>, IT>.() -> Unit,
+) : AutoInstance<BE, FE, List<IT>, IT>(
     worker, handle, serviceContext, defaultWireFormat, trace, register, builder
 ), List<IT> {
 

@@ -1,8 +1,9 @@
 package `fun`.adaptive.auto.internal.backend
 
+import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.auto.internal.connector.AutoConnector
-import `fun`.adaptive.auto.internal.frontend.FrontendBase
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.AutoHandle
@@ -14,19 +15,11 @@ import `fun`.adaptive.auto.model.operation.AutoSyncEnd
 import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.utility.waitFor
 import `fun`.adaptive.wireformat.WireFormatRegistry
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
 import kotlin.time.Duration
 
-abstract class BackendBase(
+abstract class AutoBackend<IT : AdatClass>(
+    val instance: AutoInstance<*, *, *, IT>,
 ) : AutoConnector() {
-
-    abstract val context: BackendContext<*>
-
-    val globalId
-        get() = context.handle.globalId
-
-    var frontend: FrontendBase? = null
 
     // --------------------------------------------------------------------------------
     // Operations from the frontend
@@ -56,42 +49,12 @@ abstract class BackendBase(
     // Peer synchronization
     // --------------------------------------------------------------------------------
 
-    /**
-     * Add a connection to a peer. The backend launches [syncPeer] in to send all known
-     * operations that happened after the [peerTime] to the peer.
-     */
-    suspend fun addPeer(connector: AutoConnector, peerTime: LamportTimestamp): LamportTimestamp {
-        context.addConnector(connector)
-        supervisorScope { launch { syncPeer(connector, peerTime, null) } }
-        return context.time
-    }
-
     abstract suspend fun syncPeer(
         connector: AutoConnector,
         peerTime: LamportTimestamp,
         syncBatch: MutableList<AutoModify>?,
-        sendSyncEnd: Boolean = true
+        sendSyncEnd: Boolean = true,
     )
-
-    fun removePeer(handle: AutoHandle) {
-        context.removeConnector(handle)
-    }
-
-    // --------------------------------------------------------------------------------
-    // Lifecycle
-    // --------------------------------------------------------------------------------
-
-    override suspend fun disconnect() {
-        context.stop()
-    }
-
-    override fun dispose() {
-        // nothing to do with this
-    }
-
-    fun removed(fromBackend: Boolean) {
-        frontend?.removed(fromBackend)
-    }
 
     // --------------------------------------------------------------------------------
     // Utility, common
@@ -100,13 +63,13 @@ abstract class BackendBase(
     fun close(operation: AutoOperation, commit: Boolean, fromBackend: Boolean) {
 
         if (commit) {
-            frontend?.commit(initial = false, fromBackend)
+            instance.commit(initial = false, fromBackend)
             trace { "==== commit ====" }
         }
 
-        val connectors = context.connectors
-        val closePeers = connectors.map { it.peerHandle.peerId }
-        val thisPeer = context.handle.peerId
+        val connectors = instance.connectors
+        val closePeers = instance.closePeers
+        val thisPeer = instance.handle.peerId
 
         for (connector in connectors) {
             val peerHandle = connector.peerHandle
@@ -144,20 +107,20 @@ abstract class BackendBase(
 
     fun wireFormatFor(name: String?) =
         if (name == null) {
-            requireNotNull(context.defaultWireFormat) { "missing wireformat for ${context.handle}"}
+            requireNotNull(instance.defaultWireFormat) { "missing wireformat for $instance" }
         } else {
             (WireFormatRegistry[name] as AdatCompanion<*>).adatWireFormat
         }
 
 
     fun connectInfo(type: AutoConnectionType, itemId: ItemId? = null) =
-        with(context) {
-            val time = context.nextTime()
+        with(instance) {
+            val time = nextTime()
             AutoConnectionInfo<Any>(type, handle, time, AutoHandle(handle.globalId, time.timestamp, itemId))
         }
 
     fun isSynced(connectInfo: AutoConnectionInfo<*>): Boolean {
-        return context.time.timestamp >= connectInfo.originTime.timestamp
+        return instance.time.timestamp >= connectInfo.acceptingTime.timestamp
     }
 
     suspend fun waitForSync(connectInfo: AutoConnectionInfo<*>, timeout: Duration) {
@@ -167,12 +130,8 @@ abstract class BackendBase(
     }
 
     @CallSiteName
-    inline fun trace(callSiteName: String = "<unknown>", builder: () -> String) {
-        trace(builder(), callSiteName)
-    }
-
-    open fun trace(message: String, callSiteName: String) {
-        context.logger.fine { "[${callSiteName.substringAfterLast('.')} @ ${context.time}] $message" }
+    fun trace(callSiteName: String = "<unknown>", builder: () -> String) {
+        instance.trace(callSiteName) { "[${callSiteName.substringAfterLast('.')} @ ${instance.time}] ${builder()}" }
     }
 
 }

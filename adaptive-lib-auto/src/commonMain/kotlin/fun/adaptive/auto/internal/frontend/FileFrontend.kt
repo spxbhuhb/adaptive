@@ -24,9 +24,9 @@ class FileFrontend<A : AdatClass>(
     wireFormat: AdatClassWireFormat<A>,
     itemId: ItemId,
     initialValue: A?,
-    collectionFrontend: CollectionFrontendBase<A>?,
+    collectionFrontend: AutoCollectionFrontend<A>?,
     val wireFormatProvider: WireFormatProvider,
-    val path: Path
+    val path: Path,
 ) : AdatClassFrontend<A>(
     backend,
     wireFormat,

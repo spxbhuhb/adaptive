@@ -3,28 +3,31 @@ package `fun`.adaptive.auto.internal.frontend
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatContext
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
+import `fun`.adaptive.auto.internal.backend.AutoCollectionBackend
 import `fun`.adaptive.auto.internal.backend.SetBackend
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.model.ItemId
 
-open class AdatClassListFrontend<A : AdatClass>(
-    override val backend: SetBackend<A>
-) : CollectionFrontendBase<A>() {
+open class AdatClassListFrontend<IT : AdatClass>(
+    instance: AutoInstance<AutoCollectionBackend<IT>, AutoCollectionFrontend<IT>, List<IT>, IT>,
+    val collectionBackend: SetBackend<IT>,
+) : AutoCollectionFrontend<IT>(instance) {
 
-    var classFrontends = mutableMapOf<ItemId, AdatClassFrontend<A>>()
+    var classFrontends = mutableMapOf<ItemId, AdatClassFrontend<IT>>()
 
-    override var values: List<A> = emptyList()
+    override var values: List<IT> = emptyList()
 
     // TODO optimize AutoClassListFrontend.commit  (or maybe SetBackend)
     override fun commit(initial : Boolean, fromBackend: Boolean) {
-        values = backend.data.active().sorted().map { getItemFrontend(it).value }
+        values = collectionBackend.data.active().sorted().map { getItemFrontend(it).value }
         if (initial) {
-            backend.context.onInit(values, fromBackend)
+            instance.onInit(values, fromBackend)
         } else {
-            backend.context.onChange(values, fromBackend)
+            instance.onChange(values, fromBackend)
         }
     }
 
-    override fun commit(itemId: ItemId, newValue : A, oldValue: A?, initial : Boolean, fromBackend: Boolean) {
+    override fun commit(itemId: ItemId, newValue: IT, oldValue: IT?, initial: Boolean, fromBackend: Boolean) {
         // TODO check AdatClassListFrontend.commit, should we throw an exception when there is no item?
         @Suppress("UNCHECKED_CAST")
         val index = values.indexOfFirst { (it.adatContext as AdatContext<ItemId>).id == itemId }
@@ -32,28 +35,28 @@ open class AdatClassListFrontend<A : AdatClass>(
 
         values = values.subList(0, index) + newValue + values.subList(index + 1, values.size)
 
-        backend.context.onChange(newValue, oldValue, fromBackend)
+        instance.onChange(newValue, oldValue, fromBackend)
     }
 
-    operator fun plusAssign(item: A) {
+    operator fun plusAssign(item: IT) {
         add(item)
     }
 
-    override fun add(item: A) {
-        backend.add(item, null, true)
+    override fun add(item: IT) {
+        collectionBackend.add(item, null, true)
     }
 
-    operator fun minusAssign(item: A) {
+    operator fun minusAssign(item: IT) {
         remove(item.adatContext !!.id as ItemId)
     }
 
     override fun remove(itemId: ItemId) {
-        backend.remove(itemId, true)
+        collectionBackend.remove(itemId, true)
     }
 
-    override fun remove(selector: (A) -> Boolean) {
+    override fun remove(selector: (IT) -> Boolean) {
         for (item in values.filter(selector)) {
-            backend.remove(itemId(item), true)
+            collectionBackend.remove(itemId(item), true)
         }
     }
 
@@ -78,13 +81,13 @@ open class AdatClassListFrontend<A : AdatClass>(
     open fun getItemFrontend(itemId: ItemId) =
         classFrontends.getOrPut(itemId) {
 
-            val propertyBackend = checkNotNull(backend.data[itemId])
+            val propertyBackend = checkNotNull(collectionBackend.data[itemId])
             val wireFormat = propertyBackend.wireFormat
 
             @Suppress("UNCHECKED_CAST")
-            AdatClassFrontend(
+            AdatClassFrontend<IT>(
                 propertyBackend,
-                wireFormat as AdatClassWireFormat<A>,
+                wireFormat as AdatClassWireFormat<IT>,
                 wireFormat.newInstance(propertyBackend.values),
                 itemId,
                 this

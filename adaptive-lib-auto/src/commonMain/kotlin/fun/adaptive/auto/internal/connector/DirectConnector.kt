@@ -1,11 +1,11 @@
 package `fun`.adaptive.auto.internal.connector
 
-import `fun`.adaptive.auto.internal.backend.BackendBase
+import `fun`.adaptive.auto.internal.backend.AutoBackend
 import `fun`.adaptive.auto.model.operation.AutoOperation
 
 class DirectConnector(
-    val connecting : BackendBase,
-    val peer: BackendBase
+    val connecting: AutoBackend,
+    val peer: AutoBackend,
 ) : AutoConnector() {
 
     override fun send(operation: AutoOperation) {

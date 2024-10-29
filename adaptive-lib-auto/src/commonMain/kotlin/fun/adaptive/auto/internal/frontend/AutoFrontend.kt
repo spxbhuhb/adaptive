@@ -2,11 +2,11 @@ package `fun`.adaptive.auto.internal.frontend
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.store.AdatStore
-import `fun`.adaptive.auto.internal.backend.BackendBase
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 
-abstract class FrontendBase : AdatStore<AdatClass>() {
+abstract class AutoFrontend<IT : AdatClass> : AdatStore<AdatClass>() {
 
-    abstract val backend: BackendBase
+    abstract val instance: AutoInstance<*, *, *, IT>
 
     abstract fun commit(initial: Boolean, fromBackend: Boolean)
 

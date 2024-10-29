@@ -1,8 +1,7 @@
 package `fun`.adaptive.auto.backend
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.auto.internal.backend.BackendBase
-import `fun`.adaptive.auto.internal.backend.BackendContext
+import `fun`.adaptive.auto.internal.backend.AutoBackend
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.connector.DirectConnector
@@ -27,7 +26,7 @@ class SetTest {
 
     @Test
     fun basic() {
-        val gid = UUID<BackendBase>()
+        val gid = UUID<AutoBackend>()
         val testData = TestData(12, "ab")
 
         runTest {
@@ -75,7 +74,7 @@ class SetTest {
 
     @Test
     fun preloaded() {
-        val gid = UUID<BackendBase>()
+        val gid = UUID<AutoBackend>()
         val testData = TestData(12, "ab")
 
         runTest {
@@ -103,7 +102,7 @@ class SetTest {
     }
 
 
-    suspend fun waitForSync(b1: BackendBase, b2: BackendBase, condition: (() -> Boolean)? = null) {
+    suspend fun waitForSync(b1: AutoBackend, b2: AutoBackend, condition: (() -> Boolean)? = null) {
         withContext(Dispatchers.Default) {
             withTimeout(1000) {
                 if (condition != null) {

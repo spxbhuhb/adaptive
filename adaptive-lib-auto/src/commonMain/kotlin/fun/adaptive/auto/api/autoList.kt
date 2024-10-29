@@ -8,12 +8,11 @@ import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
-import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.internal.origin.OriginListBase
 import `fun`.adaptive.auto.internal.producer.AutoList
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoHandle
-import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.Producer
 import `fun`.adaptive.service.ServiceContext
@@ -41,11 +40,11 @@ import `fun`.adaptive.service.ServiceContext
 @Producer
 fun <A : AdatClass> autoList(
     companion: AdatCompanion<A>,
-    peer: OriginBase<*, *, List<A>, A>? = null,
-    listener : AutoCollectionListener<A>? = null,
+    peer: AutoInstance<*, *, List<A>, A>? = null,
+    listener: AutoCollectionListener<A>? = null,
     binding: AdaptiveStateVariableBinding<List<A>>? = null,
     trace: Boolean = false,
-    connect: suspend () -> AutoConnectionInfo<List<A>>?
+    connect: suspend () -> AutoConnectionInfo<List<A>>?,
 ): List<A>? {
     checkNotNull(binding)
 
@@ -78,12 +77,12 @@ fun <A : AdatClass> autoList(
  */
 @Producer
 fun <A : AdatClass> autoList(
-    peer: OriginBase<*, *, List<A>, A>? = null,
+    peer: AutoInstance<*, *, List<A>, A>? = null,
     defaultWireFormat: AdatClassWireFormat<*>? = null,
-    listener : AutoCollectionListener<A>? = null,
+    listener: AutoCollectionListener<A>? = null,
     binding: AdaptiveStateVariableBinding<List<A>>? = null,
     trace: Boolean = false,
-    connect: suspend () -> AutoConnectionInfo<List<A>>
+    connect: suspend () -> AutoConnectionInfo<List<A>>,
 ): List<A>? {
     checkNotNull(binding)
 
@@ -99,7 +98,7 @@ fun <A : AdatClass> autoList(
  *
  * When [register] is true, register the list with [worker].
  *
- * When [register] is false, use [OriginBase.connectDirect] to create a direct
+ * When [register] is false, use [AutoInstance.connectDirect] to create a direct
  * connection.
  *
  * After registration peers can use [autoList] to connect to the registered
@@ -119,7 +118,7 @@ fun <A : AdatClass> autoList(
  * @param    worker             Origins that support peer connections must specify pass an [AutoWorker] in this
  *                              parameter. Standalone origins may pass `null`.
  *
- * @return   An [OriginBase] for this auto list. Use this instance to change
+ * @return   An [AutoInstance] for this auto list. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  */
 fun <A : AdatClass> autoList(
@@ -168,7 +167,7 @@ fun <A : AdatClass> autoList(
  * @param    worker             Origins that support peer connections must specify pass an [AutoWorker] in this
  *                              parameter. Standalone origins may pass `null`.
  *
- * @return   An [OriginBase] for this auto list. Use this instance to change
+ * @return   An [AutoInstance] for this auto list. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  */
 fun <A : AdatClass> autoList(

@@ -3,8 +3,7 @@ package `fun`.adaptive.auto
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.auto.backend.TestData
-import `fun`.adaptive.auto.internal.backend.BackendBase
-import `fun`.adaptive.auto.internal.backend.BackendContext
+import `fun`.adaptive.auto.internal.backend.AutoBackend
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.connector.DirectConnector
 import `fun`.adaptive.auto.model.AutoHandle
@@ -21,7 +20,7 @@ class PropertyTestSetup(
 
     constructor(instance: AdatClass) : this(instance.toArray())
 
-    val gid = UUID<BackendBase>()
+    val gid = UUID<AutoBackend>()
     val itemId = LamportTimestamp(0, 1)
     val scope = CoroutineScope(Dispatchers.Default)
     val logger1 = getLogger("logger.1").enableFine()

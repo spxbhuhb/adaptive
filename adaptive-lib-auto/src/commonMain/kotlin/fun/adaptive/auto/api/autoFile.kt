@@ -7,7 +7,7 @@ import `fun`.adaptive.adat.api.isValid
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.FileFrontend
-import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.internal.origin.OriginItemBase
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
@@ -57,7 +57,7 @@ import kotlinx.io.files.Path
  *                               the instance is part of an auto list, but we don't need the whole list, just
  *                               that one item.
  *
- * @return   An [OriginBase] for this auto instance. Use this instance to change
+ * @return   An [AutoInstance] for this auto instance. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  *
  * @throws   IllegalArgumentException  if [initialValue] is `null` and no file exists on [path]

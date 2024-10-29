@@ -5,8 +5,8 @@ import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 
-class SetBackendData<A : AdatClass>(
-    initialValue: MutableMap<ItemId, PropertyBackend<A>>?
+class SetBackendData<IT : AdatClass>(
+    initialValue: MutableMap<ItemId, PropertyBackend<IT>>?,
 ) {
 
     private val structuralLock = getLock()
@@ -41,7 +41,7 @@ class SetBackendData<A : AdatClass>(
             active.toSet()
         }
 
-    fun add(itemId: ItemId, backend: PropertyBackend<A>): Boolean {
+    fun add(itemId: ItemId, backend: PropertyBackend<IT>): Boolean {
         structuralLock.use {
             if (itemId in removals) return false
 
@@ -73,7 +73,7 @@ class SetBackendData<A : AdatClass>(
             items[itemId]
         }
 
-    operator fun set(itemId: ItemId, value: PropertyBackend<A>) {
+    operator fun set(itemId: ItemId, value: PropertyBackend<IT>) {
         structuralLock.use {
             items[itemId] = value
         }

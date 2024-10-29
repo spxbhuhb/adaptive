@@ -1,13 +1,13 @@
 package `fun`.adaptive.auto.integration
 
 import `fun`.adaptive.auto.backend.AutoWorker
-import `fun`.adaptive.auto.internal.frontend.FrontendBase
+import `fun`.adaptive.auto.internal.frontend.AutoFrontend
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.utility.waitForReal
 import kotlin.time.Duration.Companion.seconds
 
-class TestSetup<OFE : FrontendBase, CFE : FrontendBase>(
+class TestSetup<OFE : AutoFrontend, CFE : AutoFrontend>(
     originAdapter : BackendAdapter,
     connectingAdapter : BackendAdapter,
 ) {

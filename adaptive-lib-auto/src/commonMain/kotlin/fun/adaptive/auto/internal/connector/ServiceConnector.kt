@@ -1,10 +1,11 @@
 package `fun`.adaptive.auto.internal.connector
 
 import `fun`.adaptive.auto.api.AutoApi
-import `fun`.adaptive.auto.internal.backend.BackendBase
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.operation.*
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.safeCall
 import `fun`.adaptive.utility.safeSuspendCall
@@ -24,7 +25,7 @@ import kotlin.coroutines.coroutineContext
  *                    communication error.
  */
 class ServiceConnector(
-    val thisBackend: BackendBase,
+    val instance: AutoInstance<*, *, *, *>,
     val service: AutoApi,
     val infoFun: suspend () -> AutoConnectionInfo<*>,
     val initiator: Boolean,
@@ -44,8 +45,7 @@ class ServiceConnector(
 
     var job: Job? = null
 
-    val logger
-        get() = thisBackend.context.logger
+    val logger = getLogger("$instance.connector")
 
     val operations: Channel<AutoOperation> = Channel(pendingLimit)
 
@@ -55,10 +55,10 @@ class ServiceConnector(
 
     var operationToSend: AutoOperation? = null
 
-    val peerHandle: AutoHandle
-        get() = checkNotNull(peerHandleOrNull)
+    override val peerHandle: AutoHandle
+        get() = checkNotNull(if (initiator) connectInfo?.acceptingHandle else connectInfo?.connectingHandle) {}
 
-    var peerHandleOrNull: AutoHandle? = null
+    var connectInfo: AutoConnectionInfo<*>? = null
 
     override fun send(operation: AutoOperation) {
         val result = operations.trySend(operation)
@@ -69,7 +69,7 @@ class ServiceConnector(
 
         // FIXME remove peer
         if (! result.isSuccess) {
-            thisBackend.removePeer(peerHandle)
+            instance.removePeer(peerHandle)
         }
     }
 
@@ -98,9 +98,10 @@ class ServiceConnector(
         check(status in listOf(Status.CREATED, Status.CONNECTING))
 
         status = Status.CONNECTING
+        connectInfo = null
 
         // tries util succeeds or disposed
-        val connectInfo = untilSuccess {
+        val localConnectInfo = untilSuccess {
 
             if (status != Status.CONNECTING) {
                 return@untilSuccess null // the service connector has been disposed
@@ -111,23 +112,23 @@ class ServiceConnector(
             if (initiator) {
                 // starts a synchronization from the remote to this
                 service.addPeer(
-                    info.originHandle,
+                    info.acceptingHandle,
                     info.connectingHandle,
-                    thisBackend.context.time
+                    instance.time
                 )
             }
 
             info
         }
 
-        if (connectInfo == null) return // he service connector has been disposed
+        if (localConnectInfo == null) return // he service connector has been disposed
 
-        peerHandleOrNull = connectInfo.connectingHandle
+        connectInfo = localConnectInfo
 
         // starts a synchronization from this to the remote
-        thisBackend.addPeer(
+        instance.addPeer(
             this,
-            connectInfo.originTime
+            localConnectInfo.acceptingTime
         )
 
         status = Status.CONNECTED
@@ -169,7 +170,7 @@ class ServiceConnector(
             status = if (reconnect) Status.CONNECTING else Status.DISPOSING
 
             // removing the peer means that we won't get any new operations
-            thisBackend.removePeer(peerHandle)
+            instance.removePeer(peerHandle)
             peerHandleOrNull = null
 
             // empty the list of operations, we are disconnected, no need for them
@@ -186,7 +187,7 @@ class ServiceConnector(
     }
 
     override fun dispose() {
-        safeCall(logger, message = "onDisconnect error in ServiceConnector @ $thisBackend") {
+        safeCall(logger, message = "onDisconnect error in ServiceConnector @ $instance") {
             status = Status.DISPOSING
 
             operations.close()

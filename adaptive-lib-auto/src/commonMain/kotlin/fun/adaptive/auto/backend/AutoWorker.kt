@@ -1,7 +1,9 @@
 package `fun`.adaptive.auto.backend
 
-import `fun`.adaptive.auto.internal.backend.BackendBase
+import `fun`.adaptive.auto.api.AutoGeneric
+import `fun`.adaptive.auto.internal.backend.AutoBackend
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.AutoOperation
@@ -15,34 +17,34 @@ import kotlinx.coroutines.launch
 
 class AutoWorker : WorkerImpl<AutoWorker> {
 
-    val backendLock = getLock()
+    val instanceLock = getLock()
 
-    val backends = mutableMapOf<UUID<BackendBase>, BackendBase>()
+    val instances = mutableMapOf<UUID<AutoGeneric>, AutoGeneric>()
 
     override suspend fun run() {
         // worker is event-driven
     }
 
-    operator fun get(handle: AutoHandle): BackendBase? =
-        backendLock.use {
-            backends[handle.globalId]
+    operator fun get(handle: AutoHandle): AutoGeneric? =
+        instanceLock.use {
+            instances[handle.globalId]
         }
 
-    fun register(backend: BackendBase) {
-        backendLock.use {
-            backends[backend.globalId] = backend
+    fun register(backend: AutoGeneric) {
+        instanceLock.use {
+            instances[backend.globalId] = backend
         }
     }
 
-    fun deregister(backend: BackendBase) {
-        backendLock.use {
-            backends.remove(backend.globalId)
+    fun deregister(backend: AutoGeneric) {
+        instanceLock.use {
+            instances.remove(backend.globalId)
         }
     }
 
     fun peerTime(handle: AutoHandle): LamportTimestamp =
-        backendLock.use {
-            checkNotNull(backends[handle.globalId]) { "missing auto instance: $handle" }
+        instanceLock.use {
+            checkNotNull(instances[handle.globalId]) { "missing auto instance: $handle" }
         }
             .context.time
 
@@ -52,8 +54,8 @@ class AutoWorker : WorkerImpl<AutoWorker> {
         connectingPeerTime: LamportTimestamp,
         transport: ServiceCallTransport
     ): LamportTimestamp {
-        val backend = backendLock.use {
-            checkNotNull(backends[origin.globalId]) { "missing auto instance: $origin" }
+        val backend = instanceLock.use {
+            checkNotNull(instances[origin.globalId]) { "missing auto instance: $origin" }
         }
 
         val connector = ServiceConnector(backend, connecting, getService(transport), reconnect = false)
@@ -69,16 +71,16 @@ class AutoWorker : WorkerImpl<AutoWorker> {
     }
 
     fun removePeer(handle: AutoHandle) =
-        backendLock.use {
+        instanceLock.use {
             // Decided not to throw an exception here as this is a pretty normal occurrence after
             // server start when the connected peers try to disconnect from with the old handle.
             // TODO should we try and persist handles when it's possible?
-            backends[handle.globalId]?.removePeer(handle)
+            instances[handle.globalId]?.removePeer(handle)
         }
 
     fun receive(handle: AutoHandle, operation: AutoOperation) {
-        backendLock.use {
-            backends[handle.globalId]?.receive(operation)
+        instanceLock.use {
+            instances[handle.globalId]?.receive(operation)
         }
     }
 

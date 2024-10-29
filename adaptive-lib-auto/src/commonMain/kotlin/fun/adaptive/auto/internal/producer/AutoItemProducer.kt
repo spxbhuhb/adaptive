@@ -12,7 +12,7 @@ import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 
-class AutoItem<A : AdatClass>(
+class AutoItemProducer<A : AdatClass>(
     binding: AdaptiveStateVariableBinding<A>,
     connect: suspend () -> AutoConnectionInfo<A>,
     val listener: AutoItemListener<A>? = null,

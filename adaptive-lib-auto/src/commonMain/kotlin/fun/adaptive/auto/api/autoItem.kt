@@ -7,12 +7,11 @@ import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
-import `fun`.adaptive.auto.internal.origin.OriginBase
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.internal.origin.OriginItemBase
-import `fun`.adaptive.auto.internal.producer.AutoItem
+import `fun`.adaptive.auto.internal.producer.AutoItemProducer
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoConnectionType
-import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
@@ -30,7 +29,7 @@ import `fun`.adaptive.service.ServiceContext
  */
 @Producer
 fun <A : AdatClass> autoItem(
-    peer: OriginBase<*, *, A, A>,
+    peer: AutoInstance<*, *, A, A>,
     listener: AutoItemListener<A>? = null,
     binding: AdaptiveStateVariableBinding<A>? = null,
     trace: Boolean = false,
@@ -38,7 +37,7 @@ fun <A : AdatClass> autoItem(
     checkNotNull(binding)
     checkNotNull(binding.adatCompanion)
 
-    val store = AutoItem(binding, { peer.connectInfo(AutoConnectionType.Direct) }, listener, trace)
+    val store = AutoItemProducer(binding, { peer.connectInfo(AutoConnectionType.Direct) }, listener, trace)
 
     binding.targetFragment.addProducer(store)
 
@@ -70,7 +69,7 @@ fun <A : AdatClass> autoItem(
     checkNotNull(binding)
     checkNotNull(binding.adatCompanion)
 
-    val store = AutoItem(binding, infoFun, listener, trace)
+    val store = AutoItemProducer(binding, infoFun, listener, trace)
 
     binding.targetFragment.addProducer(store)
 
@@ -82,7 +81,7 @@ fun <A : AdatClass> autoItem(
  *
  * The created controller:
  *
- * - **does not connect** to any other nodes by itself
+ * - **does not connect** to any other nodes automatically
  * - is **not registered** with any worker
  * - can have **only direct** connections
  *
@@ -95,7 +94,7 @@ fun <A : AdatClass> autoItem(
     initialValue: A,
     listener: AutoItemListener<A>? = null,
     trace: Boolean = false,
-): OriginBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A> =
+): AutoInstance<PropertyBackend<A>, AdatClassFrontend<A>, A, A> =
     autoItem(
         worker = null,
         companion = initialValue.adatCompanion as AdatCompanion<A>,
@@ -112,7 +111,7 @@ fun <A : AdatClass> autoItem(
  *
  * The created controller:
  *
- * - does not connect to any other nodes by itself
+ * - does not connect to any other nodes automatically
  * - **is registered** with [worker]
  * - may have **service or direct** connections
  *
@@ -127,9 +126,10 @@ fun <A : AdatClass> autoItem(
     initialValue: A,
     listener: AutoItemListener<A>? = null,
     trace: Boolean = false,
-): OriginBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A> =
+): AutoInstance<PropertyBackend<A>, AdatClassFrontend<A>, A, A> =
     autoItem(
         worker = worker,
+        initialValue = initialValue,
         companion = initialValue.adatCompanion as AdatCompanion<A>,
         listener = listener,
         register = false,
@@ -148,17 +148,17 @@ fun <A : AdatClass> autoItem(
  * - may have **service or direct** connections
  *
  * @param    worker         The worker to register this instance with.
- * @param    initialValue   The value of the auto instance.
  * @param    listener       An optional listener to get auto events.
  * @param    trace          Log trace information.
+ * @param    infoFun        Called to get the connection info from the peer.
  */
 @Suppress("UNCHECKED_CAST")
-fun <A : AdatClass> autoItem(
+suspend fun <A : AdatClass> autoItem(
     worker: AutoWorker,
     listener: AutoItemListener<A>? = null,
     trace: Boolean = false,
     infoFun: suspend () -> AutoConnectionInfo<A>,
-): OriginBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A> {
+): AutoInstance<PropertyBackend<A>, AdatClassFrontend<A>, A, A> {
     return autoItem(
         worker = worker,
         companion = adatCompanionOf<A>(),
@@ -184,7 +184,7 @@ fun <A : AdatClass> autoItem(
  *
  * The instance is **NOT** thread safe.
  *
- * @return   An [OriginBase] for this auto instance. Use this instance to change
+ * @return   An [AutoInstance] for this auto instance. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  */
 fun <A : AdatClass> autoItem(
@@ -199,10 +199,10 @@ fun <A : AdatClass> autoItem(
     trace: Boolean = false,
 ): OriginItemBase<PropertyBackend<A>, AdatClassFrontend<A>, A> {
 
-    val pItemId : ItemId
-    val propertyTimes : List<LamportTimestamp>
+    val pItemId: ItemId
+    val propertyTimes: List<LamportTimestamp>
     val value: Array<Any?>
-    val commit : Boolean
+    val commit: Boolean
 
     val size = companion.adatMetadata.properties.size
 
