@@ -27,6 +27,7 @@ import kotlin.coroutines.coroutineContext
 class ServiceConnector(
     val instance: AutoInstance<*, *, *, *>,
     val service: AutoApi,
+    val handle: AutoHandle?,
     val infoFun: suspend () -> AutoConnectionInfo<*>,
     val initiator: Boolean,
     val reconnect: Boolean,

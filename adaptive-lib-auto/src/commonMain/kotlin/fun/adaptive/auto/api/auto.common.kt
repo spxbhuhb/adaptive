@@ -14,7 +14,6 @@ import `fun`.adaptive.auto.model.operation.AutoMove
 import `fun`.adaptive.auto.model.operation.AutoRemove
 import `fun`.adaptive.auto.model.operation.AutoSyncBatch
 import `fun`.adaptive.auto.model.operation.AutoSyncEnd
-import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.foundation.Adaptive

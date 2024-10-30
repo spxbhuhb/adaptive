@@ -3,6 +3,7 @@ package `fun`.adaptive.auto.internal.frontend
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.auto.internal.backend.AutoCollectionBackend
 import `fun`.adaptive.auto.internal.origin.AutoInstance
+import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 
 abstract class AutoCollectionFrontend<IT : AdatClass>(
@@ -20,4 +21,7 @@ abstract class AutoCollectionFrontend<IT : AdatClass>(
 
     abstract fun remove(selector: (IT) -> Boolean)
 
+    override fun loadHandle(): AutoHandle? {
+        return AutoHandle(collection = true)
+    }
 }

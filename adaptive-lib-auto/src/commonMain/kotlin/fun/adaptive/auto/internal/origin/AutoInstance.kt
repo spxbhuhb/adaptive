@@ -35,14 +35,9 @@ import kotlin.time.Duration
 /**
  * The base class for all auto instances.
  */
-open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<*>, VT, IT : AdatClass>(
-    val worker: AutoWorker?,
-    val infoFun: InfoFunOrNull<VT>?,
+open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<VT,IT>, VT, IT : AdatClass>(
     val defaultWireFormat: AdatClassWireFormat<*>?,
-    val wireFormatProvider: WireFormatProvider,
-    serviceContext: ServiceContext?,
-    register: Boolean,
-    trace: Boolean,
+    val wireFormatProvider: WireFormatProvider
 ) {
 
     val time: LamportTimestamp
@@ -52,7 +47,7 @@ open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<*>, VT, IT : Adat
 
     private lateinit var logger: AdaptiveLogger
 
-    private lateinit var handle: AutoHandle
+    internal lateinit var handle: AutoHandle
 
     private lateinit var backend: BE
 
@@ -86,19 +81,7 @@ open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<*>, VT, IT : Adat
         //        if (trace) it.enableFine()
         //    }
 
-        if (register) {
-            requireNotNull(worker) { "cannot register without a worker" }
 
-            worker.register(this)
-
-            if (serviceContext != null) {
-                if (serviceContext.sessionOrNull != null) {
-                    serviceContext.addSessionCleanup(CleanupHandler { worker.deregister(this) })
-                } else {
-                    serviceContext.addContextCleanup(CleanupHandler { worker.deregister(this) })
-                }
-            }
-        }
     }
 
     // --------------------------------------------------------------------------------
@@ -127,48 +110,8 @@ open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<*>, VT, IT : Adat
     // Functions that connect an endpoint/node to a node
     // --------------------------------------------------------------------------------
 
-    suspend fun connect(
-        waitForSync: Duration? = null,
-        transport: ServiceCallTransport = requireNotNull(worker?.adapter?.transport) { "missing worker (cannot get transport)" },
-        infoFun: suspend () -> AutoConnectionInfo<VT>,
-    ): AutoInstance<BE, FE, VT, IT> {
 
-        ServiceConnector(
-            this,
-            getService<AutoApi>(transport),
-            infoFun,
-            initiator = true,
-            reconnect = true
-        )
 
-        if (waitForSync != null) waitForSync(connectInfo, waitForSync)
-
-        return this
-    }
-
-    /**
-     * Connect to the origin backend with [DirectConnector]. This works only if the origin is
-     * in the same VM as the connecting peer.
-     */
-    open suspend fun connectDirect(
-        waitForSync: Duration? = null,
-        connectInfoFun: suspend () -> AutoConnectionInfo<VT>,
-    ): AutoInstance<BE, FE, VT, IT> {
-
-        checkNotNull(worker) { "cannot connect directly without a worker" }
-
-        val connectInfo = connectInfoFun()
-
-        val peer = worker.instances[connectInfo.acceptingHandle.globalId]
-        checkNotNull(peer) { "direct backend for ${connectInfo.acceptingHandle.globalId} is missing" }
-
-        addPeer(DirectConnector(backend, peer), connectInfo.acceptingTime)
-        peer.addPeer(DirectConnector(peer, backend), time)
-
-        if (waitForSync != null) waitForSync(connectInfo, waitForSync)
-
-        return this
-    }
 
     // --------------------------------------------------------------------------------
     // Utility functions

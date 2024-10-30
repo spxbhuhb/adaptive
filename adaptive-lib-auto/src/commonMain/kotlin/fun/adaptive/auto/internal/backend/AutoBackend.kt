@@ -18,7 +18,7 @@ import `fun`.adaptive.wireformat.WireFormatRegistry
 import kotlin.time.Duration
 
 abstract class AutoBackend<IT : AdatClass>(
-    val instance: AutoInstance<*, *, *, IT>,
+    val instance: AutoInstance<*, *, *, IT>
 ) : AutoConnector() {
 
     // --------------------------------------------------------------------------------

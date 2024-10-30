@@ -1,7 +1,8 @@
 package `fun`.adaptive.auto.model
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.auto.internal.backend.AutoBackend
+import `fun`.adaptive.auto.api.AutoGeneric
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.utility.UUID
 
 /**
@@ -10,9 +11,18 @@ import `fun`.adaptive.utility.UUID
  */
 @Adat
 class AutoHandle(
-    val globalId: UUID<AutoBackend>,
+    val globalId: UUID<AutoGeneric>,
     val peerId: PeerId,
     val itemId: ItemId?,
 ) {
-    constructor() : this(UUID(), 0, null)
+    companion object {
+
+        fun origin(collection: Boolean) =
+            AutoHandle(
+                UUID<AutoGeneric>(),
+                PeerId.ORIGIN,
+                if (collection) null else LamportTimestamp.ORIGIN
+            )
+
+    }
 }

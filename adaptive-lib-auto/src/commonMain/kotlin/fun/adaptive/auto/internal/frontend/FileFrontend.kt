@@ -4,6 +4,7 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
+import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.utility.read
@@ -93,6 +94,10 @@ class FileFrontend<A : AdatClass>(
 
             return Triple(itemId, propertyTimes, value)
         }
+    }
+
+    override fun loadHandle(): AutoHandle? {
+        return AutoHandle()
     }
 
 }
