@@ -27,10 +27,7 @@ import kotlin.coroutines.coroutineContext
 class ServiceConnector(
     val instance: AutoInstance<*, *, *, *>,
     val service: AutoApi,
-    val handle: AutoHandle?,
-    val infoFun: suspend () -> AutoConnectionInfo<*>,
-    val initiator: Boolean,
-    val reconnect: Boolean,
+    val info : AutoConnectionInfo<*>,
     pendingLimit: Int = 1000,
 ) : AutoConnector() {
 
@@ -55,11 +52,6 @@ class ServiceConnector(
         private set(value) = lock.use { field = value }
 
     var operationToSend: AutoOperation? = null
-
-    override val peerHandle: AutoHandle
-        get() = checkNotNull(if (initiator) connectInfo?.acceptingHandle else connectInfo?.connectingHandle) {}
-
-    var connectInfo: AutoConnectionInfo<*>? = null
 
     override fun send(operation: AutoOperation) {
         val result = operations.trySend(operation)

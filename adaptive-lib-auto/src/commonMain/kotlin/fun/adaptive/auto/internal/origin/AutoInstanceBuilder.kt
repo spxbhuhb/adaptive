@@ -4,7 +4,6 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.api.AutoApi
 import `fun`.adaptive.auto.api.AutoCollectionListener
-import `fun`.adaptive.auto.api.AutoGeneric
 import `fun`.adaptive.auto.api.AutoItemListener
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.AutoBackend
@@ -12,34 +11,31 @@ import `fun`.adaptive.auto.internal.connector.DirectConnector
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.internal.frontend.AutoFrontend
 import `fun`.adaptive.auto.model.AutoConnectionInfo
-import `fun`.adaptive.auto.model.AutoHandle
-import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.model.PeerId
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.getService
-import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.CleanupHandler
-import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.untilSuccess
 import `fun`.adaptive.wireformat.WireFormatProvider
-import kotlin.collections.get
-import kotlin.time.Duration
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
-class AutoInstanceBuilder<BE : AutoBackend<*>, FE : AutoFrontend<VT,IT>, VT, IT : AdatClass>(
+class AutoInstanceBuilder<BE : AutoBackend<*>, FE : AutoFrontend<VT, IT>, VT, IT : AdatClass>(
     val origin: Boolean,
     val persistent: Boolean,
     val service: Boolean,
     val collection: Boolean,
-    val value: VT?,
     val info: AutoConnectionInfo<VT>?,
-    val infoFun: (suspend () -> AutoConnectionInfo<VT>)?,
+    val infoFun: (() -> AutoConnectionInfo<VT>)?,
+    val infoFunSuspend: (suspend () -> AutoConnectionInfo<VT>)?,
     val defaultWireFormat: AdatClassWireFormat<*>?,
-    val wireFormatProvider: WireFormatProvider,
+    wireFormatProvider: WireFormatProvider,
     val itemListener: AutoItemListener<IT>?,
     val collectionListener: AutoCollectionListener<IT>?,
     val worker: AutoWorker?,
     val serviceContext: ServiceContext?,
+    val scope: CoroutineScope?,
     val trace: Boolean,
-    val backendFun: (AutoInstanceBuilder<BE, FE, VT, IT>) -> BE,
+    val backendFun: (AutoInstanceBuilder<BE, FE, VT, IT>, info: AutoConnectionInfo<VT>?, value: VT?) -> BE,
     val frontendFun: (AutoInstanceBuilder<BE, FE, VT, IT>) -> FE,
 ) {
 
@@ -48,116 +44,41 @@ class AutoInstanceBuilder<BE : AutoBackend<*>, FE : AutoFrontend<VT,IT>, VT, IT 
     lateinit var backend: BE
     lateinit var frontend: FE
 
-    var handle : AutoHandle? = null
-
-    fun build() {
-        // Frontend exists both for origins and peers. We have to load it very early as
-        // peer frontends may have persisted state which is used during initialization.
-
+    fun build(
+        initialValue: VT?,
+    ) {
         frontend = frontendFun(this)
-        frontend.load()
 
-        if (origin) {
-            buildOrigin()
-        } else {
-            buildPeer()
-        }
-    }
+        val loadedValue = frontend.load()
+        val loadedInfo = frontend.connectionInfo
 
-    // --------------------------------------------------------------------------------
-    // Origin
-    // --------------------------------------------------------------------------------
-
-    fun buildOrigin() {
-
-        if (frontend.handle == null) {
-            check(frontend.valueOrNull == null) { "inconsistent frontend load, no handle with value" }
-            check(value != null) { "cannot create origin without a value" }
-            frontend.handle = AutoHandle.origin(collection)
-            frontend.valueOrNull = value
+        val connectionInfo = when {
+            loadedInfo != null -> loadedInfo
+            info != null -> info
+            origin -> AutoConnectionInfo.origin<VT>(collection)
+            else -> null
         }
 
-        backend = backendFun(this)
+        val value = when {
+            loadedValue != null -> loadedValue
+            initialValue != null -> initialValue
+            else -> null
+        }
+
+        backend = backendFun(this, connectionInfo, value)
 
         addListener()
-        registerWithWorker()
-    }
 
-    fun registerWithWorker() {
-        if (! service) return
-
-        requireNotNull(worker) { "cannot register without a worker" }
-
-        worker.register(instance)
-
-        if (serviceContext != null) {
-            if (serviceContext.sessionOrNull != null) {
-                serviceContext.addSessionCleanup(CleanupHandler { worker.deregister(instance) })
-            } else {
-                serviceContext.addContextCleanup(CleanupHandler { worker.deregister(instance) })
-            }
+        if (service) {
+            registerWithWorker()
         }
-    }
 
-    // --------------------------------------------------------------------------------
-    // Peer
-    // --------------------------------------------------------------------------------
-
-    fun buildPeer() {
-        // At this point we have a frontend which may or may not have a handle and a loaded value.
-        // If we have handle and value we can go on, make everything and just launch the connection.
-        // However, if we do not have these, we have to get a handle first.
-
-        if (frontend.handle != null) {
-            check(frontend.valueOrNull != null) { "inconsistent frontend load, handle with no value" }
-            check(value == null) { "cannot use supplied value when frontend loaded another" }
-            backend = backendFun(this)
-        }
-    }
-
-    fun createServiceConnector() {
-
-        val transport: ServiceCallTransport = requireNotNull(worker?.adapter?.transport) { "missing worker (cannot get transport)" },
-
-        if (frontend.handle != null) {
-
+        if (! origin) {
+            addCleanup()
         } else {
-            checkNotNull(infoFun) { "cannot connect without a connection info function" }
-            ServiceConnector(
-                instance,
-                getService<AutoApi>(transport),
-                frontend.handle,
-                infoFun,
-                initiator = true,
-                reconnect = true
-            )
+            createConnector(connectionInfo)
         }
     }
-
-    suspend fun createDirectConnector(
-        waitForSync: Duration? = null,
-        connectInfoFun: suspend () -> AutoConnectionInfo<VT>,
-    ): AutoInstance<BE, FE, VT, IT> {
-
-        checkNotNull(worker) { "cannot connect directly without a worker" }
-
-        val connectInfo = connectInfoFun()
-
-        val peer = worker.instances[connectInfo.acceptingHandle.globalId]
-        checkNotNull(peer) { "direct backend for ${connectInfo.acceptingHandle.globalId} is missing" }
-
-        addPeer(DirectConnector(backend, peer), connectInfo.acceptingTime)
-        peer.addPeer(DirectConnector(peer, backend), time)
-
-        if (waitForSync != null) waitForSync(connectInfo, waitForSync)
-
-        return this
-    }
-
-
-    // --------------------------------------------------------------------------------
-    // Common
-    // --------------------------------------------------------------------------------
 
     fun addListener() {
         if (itemListener != null) {
@@ -168,4 +89,79 @@ class AutoInstanceBuilder<BE : AutoBackend<*>, FE : AutoFrontend<VT,IT>, VT, IT 
             instance.addListener(collectionListener)
         }
     }
+
+    fun registerWithWorker() {
+        requireNotNull(worker) { "cannot register without a worker" }
+        worker.register(instance)
+    }
+
+    fun addCleanup() {
+        requireNotNull(worker) { "cannot cleanup without a worker" }
+
+        if (serviceContext != null) {
+            if (serviceContext.sessionOrNull != null) {
+                serviceContext.addSessionCleanup(CleanupHandler { worker.deregister(instance) })
+            } else {
+                serviceContext.addContextCleanup(CleanupHandler { worker.deregister(instance) })
+            }
+        }
+    }
+
+    fun createConnector(connectionInfo: AutoConnectionInfo<VT>?) {
+        if (service) {
+            connect(connectionInfo) { createServiceConnector(it) }
+        } else {
+            connect(connectionInfo) { createDirectConnector(it) }
+        }
+    }
+
+    private fun connect(connectionInfo: AutoConnectionInfo<VT>?, connector: (AutoConnectionInfo<VT>) -> Unit) {
+        if (connectionInfo != null) {
+            connector(connectionInfo)
+            return
+        }
+
+        if (infoFun != null) {
+            connector(infoFun())
+            return
+        }
+
+        if (infoFunSuspend != null) {
+            checkNotNull(scope)
+
+            scope.launch {
+                connector(
+                    untilSuccess { infoFunSuspend() }
+                )
+            }
+        }
+
+        error("cannot connect service, all options are missing")
+    }
+
+    fun createServiceConnector(connectionInfo: AutoConnectionInfo<VT>) {
+
+        checkNotNull(worker) { "cannot register without a worker" }
+        val adapter = checkNotNull(worker.adapter) { "cannot register without an adapter (the passed worker does not have one $worker)" }
+
+        ServiceConnector(
+            instance,
+            getService<AutoApi>(adapter.transport),
+            connectionInfo
+        )
+    }
+
+    fun createDirectConnector(connectionInfo: AutoConnectionInfo<VT>) {
+
+        checkNotNull(worker) { "cannot connect directly without a worker" }
+
+        val peer = worker.instances[connectionInfo.acceptingHandle.globalId]
+        checkNotNull(peer) { "direct backend for ${connectionInfo.acceptingHandle.globalId} is missing" }
+
+        instance.addPeer(DirectConnector(instance, peer), connectionInfo.acceptingTime)
+        peer.addPeer(DirectConnector(peer, instance), instance.time)
+
+    }
+
+
 }

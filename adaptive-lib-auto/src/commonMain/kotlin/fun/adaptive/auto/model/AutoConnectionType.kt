@@ -11,5 +11,10 @@ enum class AutoConnectionType {
      * Connect directly, without involvement of a service or a worker. This connection type needs
      * the peer backend in the same process.
      */
-    Direct
+    Direct,
+
+    /**
+     * This connection type is used to build the connection info of origins.
+     */
+    Origin
 }

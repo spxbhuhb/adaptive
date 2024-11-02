@@ -3,15 +3,10 @@ package `fun`.adaptive.auto.internal.origin
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.atomic.Atomic
-import `fun`.adaptive.auto.api.AutoApi
 import `fun`.adaptive.auto.api.AutoCollectionListener
 import `fun`.adaptive.auto.api.AutoItemListener
-import `fun`.adaptive.auto.api.InfoFunOrNull
-import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.AutoBackend
 import `fun`.adaptive.auto.internal.connector.AutoConnector
-import `fun`.adaptive.auto.internal.connector.DirectConnector
-import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.frontend.AutoFrontend
 import `fun`.adaptive.auto.model.AutoConnectionInfo
@@ -19,15 +14,15 @@ import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.auto.model.PeerId
+import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.log.AdaptiveLogger
-import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.service.getService
-import `fun`.adaptive.service.transport.ServiceCallTransport
-import `fun`.adaptive.utility.CleanupHandler
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.safeSuspendCall
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.wireformat.WireFormatProvider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlin.time.Duration
@@ -37,7 +32,8 @@ import kotlin.time.Duration
  */
 open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<VT,IT>, VT, IT : AdatClass>(
     val defaultWireFormat: AdatClassWireFormat<*>?,
-    val wireFormatProvider: WireFormatProvider
+    val wireFormatProvider: WireFormatProvider,
+    val scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
 ) {
 
     val time: LamportTimestamp
@@ -64,7 +60,7 @@ open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<VT,IT>, VT, IT : 
     /**
      * Peers that are connected directly to this instance are "close".
      */
-    var closePeers = emptyList<Long>()
+    var closePeers = emptyList<PeerId>()
         get() = lock.use { field }
         private set(value) {
             lock.use { field = value }
@@ -80,8 +76,27 @@ open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<VT,IT>, VT, IT : 
         // getLogger("fun.adaptive.auto.${handle.globalId.toShort()}.${handle.peerId}").also {
         //        if (trace) it.enableFine()
         //    }
+    }
 
+    // --------------------------------------------------------------------------------
+    // Lifecycle
+    // --------------------------------------------------------------------------------
 
+    suspend fun stop() {
+        connectors.forEach { safeSuspendCall(logger) { it.disconnect() } }
+        logger.fine("backend context stopped")
+    }
+
+    suspend fun waitForSync(connectInfo: AutoConnectionInfo<VT>, timeout: Duration) {
+        backend.waitForSync(connectInfo, timeout)
+    }
+
+    // --------------------------------------------------------------------------------
+    // Communication
+    // --------------------------------------------------------------------------------
+
+    fun receive(operation: AutoOperation) {
+        backend.receive(operation)
     }
 
     // --------------------------------------------------------------------------------
@@ -107,19 +122,8 @@ open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<VT,IT>, VT, IT : 
     }
 
     // --------------------------------------------------------------------------------
-    // Functions that connect an endpoint/node to a node
-    // --------------------------------------------------------------------------------
-
-
-
-
-    // --------------------------------------------------------------------------------
     // Utility functions
     // --------------------------------------------------------------------------------
-
-    suspend fun waitForSync(connectInfo: AutoConnectionInfo<VT>, timeout: Duration) {
-        backend.waitForSync(connectInfo, timeout)
-    }
 
     open fun update(new: IT) {
         frontend.update(new)
@@ -134,7 +138,6 @@ open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<VT,IT>, VT, IT : 
             }
         }
     }
-
 
     // --------------------------------------------------------------------------------
     // Time
@@ -155,14 +158,18 @@ open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<VT,IT>, VT, IT : 
      * Add a connection to a peer. The instance launches `backend.syncPeer` to send all known
      * operations that happened after the [peerTime] to the peer.
      */
-    suspend fun addPeer(connector: AutoConnector, peerTime: LamportTimestamp): LamportTimestamp {
+    fun addPeer(connector: AutoConnector, peerTime: LamportTimestamp): LamportTimestamp {
 
         lock.use {
             connectors += connector
             closePeers += connector.peerHandle.peerId
         }
 
-        supervisorScope { launch { backend.syncPeer(connector, peerTime, null) } }
+        scope.launch {
+            supervisorScope {
+                launch { backend.syncPeer(connector, peerTime, null) }
+            }
+        }
 
         return time
     }
@@ -181,22 +188,13 @@ open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<VT,IT>, VT, IT : 
         }
     }
 
-    fun closePeers() = lock.use { connectors.forEach { it.dispose() } }
-
     // --------------------------------------------------------------------------------
     // Listeners
     // --------------------------------------------------------------------------------
 
-
     fun addListener(listener: AutoItemListener<IT>) {
         lock.use {
             itemListeners += listener
-        }
-    }
-
-    fun removeListener(listener: AutoItemListener<IT>) {
-        lock.use {
-            itemListeners -= listener
         }
     }
 
@@ -205,23 +203,6 @@ open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<VT,IT>, VT, IT : 
             collectionListeners += listener
         }
     }
-
-    fun removeListener(listener: AutoCollectionListener<IT>) {
-        lock.use {
-            collectionListeners -= listener
-        }
-    }
-
-
-    suspend fun stop() {
-        connectors.forEach { safeSuspendCall(logger) { it.disconnect() } }
-        logger.fine("backend context stopped")
-    }
-
-    // --------------------------------------------------------------------------------
-    // Commit
-    // --------------------------------------------------------------------------------
-
 
     // --------------------------------------------------------------------------------
     // Listener callbacks
@@ -261,23 +242,3 @@ open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<VT,IT>, VT, IT : 
     }
 
 }
-//
-//// --------------------------------------------------------------------------------
-//// Builder
-//// --------------------------------------------------------------------------------
-//
-//fun build(builder: AutoInstanceBuilder.() -> Unit) {
-//    builder(AutoInstanceBuilder())
-//}
-//
-//class AutoInstanceBuilder<BE : AutoBackend, FE : AutoFrontend, VT, IT : AdatClass> {
-//
-//    fun backend(builder: (instance: AutoInstance<BE, FE, VT, IT>) -> BE) {
-//        backend = builder(this@AutoInstance)
-//    }
-//
-//    fun frontend(builder: (instance: AutoInstance<BE, FE, VT, IT>) -> FE) {
-//        frontend = builder(this@AutoInstance)
-//    }
-//
-//}

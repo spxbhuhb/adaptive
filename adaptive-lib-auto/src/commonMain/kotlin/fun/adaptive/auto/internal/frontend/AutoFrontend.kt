@@ -3,13 +3,13 @@ package `fun`.adaptive.auto.internal.frontend
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.store.AdatStore
 import `fun`.adaptive.auto.internal.origin.AutoInstance
-import `fun`.adaptive.auto.model.AutoHandle
+import `fun`.adaptive.auto.model.AutoConnectionInfo
 
 abstract class AutoFrontend<VT, IT : AdatClass> : AdatStore<AdatClass>() {
 
     abstract val instance: AutoInstance<*, *, VT, IT>
 
-    abstract var handle: AutoHandle?
+    abstract var connectionInfo: AutoConnectionInfo<VT>?
 
     abstract var valueOrNull: VT?
 
@@ -38,6 +38,6 @@ abstract class AutoFrontend<VT, IT : AdatClass> : AdatStore<AdatClass>() {
      * The function have to set [handle] and [valueOrNull] to the appropriate value if
      * possible or leave them on null if they are unknown.
      */
-    abstract fun load()
+    abstract fun load() : VT?
 
 }

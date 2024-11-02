@@ -23,6 +23,5 @@ class AutoHandle(
                 PeerId.ORIGIN,
                 if (collection) null else LamportTimestamp.ORIGIN
             )
-
     }
 }

@@ -1,6 +1,8 @@
 package `fun`.adaptive.auto.model
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.adat.AdatCompanion
+import kotlin.math.acos
 
 /**
  * @property  acceptingHandle    Handle of an existing backend that accepts the connection.
@@ -13,4 +15,16 @@ class AutoConnectionInfo<T>(
     val acceptingHandle: AutoHandle,
     val acceptingTime: LamportTimestamp,
     val connectingHandle: AutoHandle,
-)
+) {
+    companion object : AdatCompanion<AutoConnectionInfo<*>> {
+
+        fun <VT> origin(collection: Boolean) =
+            AutoConnectionInfo<VT>(
+                AutoConnectionType.Origin,
+                acceptingHandle = AutoHandle.origin(collection),
+                acceptingTime = LamportTimestamp.ORIGIN,
+                connectingHandle = AutoHandle.origin(collection),
+            )
+
+    }
+}
