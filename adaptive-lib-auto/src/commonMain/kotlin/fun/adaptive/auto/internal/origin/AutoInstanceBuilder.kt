@@ -11,6 +11,7 @@ import `fun`.adaptive.auto.internal.connector.DirectConnector
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.internal.frontend.AutoFrontend
 import `fun`.adaptive.auto.model.AutoConnectionInfo
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.utility.CleanupHandler
@@ -19,27 +20,27 @@ import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class AutoInstanceBuilder<BE : AutoBackend<*>, FE : AutoFrontend<VT, IT>, VT, IT : AdatClass>(
+class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, IT : AdatClass>(
     val origin: Boolean,
     val persistent: Boolean,
     val service: Boolean,
     val collection: Boolean,
     val info: AutoConnectionInfo<VT>?,
-    val infoFun: (() -> AutoConnectionInfo<VT>)?,
-    val infoFunSuspend: (suspend () -> AutoConnectionInfo<VT>)?,
+    val infoFun: ((instance : AutoInstance<BE, FE, VT, IT>) -> AutoConnectionInfo<VT>)?,
+    val infoFunSuspend: (suspend (instance : AutoInstance<BE, FE, VT, IT>) -> AutoConnectionInfo<VT>)?,
     val defaultWireFormat: AdatClassWireFormat<*>?,
     wireFormatProvider: WireFormatProvider,
     val itemListener: AutoItemListener<IT>?,
     val collectionListener: AutoCollectionListener<IT>?,
     val worker: AutoWorker?,
     val serviceContext: ServiceContext?,
-    val scope: CoroutineScope?,
+    val scope: CoroutineScope,
     val trace: Boolean,
     val backendFun: (AutoInstanceBuilder<BE, FE, VT, IT>, info: AutoConnectionInfo<VT>?, value: VT?) -> BE,
     val frontendFun: (AutoInstanceBuilder<BE, FE, VT, IT>) -> FE,
 ) {
 
-    val instance = AutoInstance<BE, FE, VT, IT>(defaultWireFormat, wireFormatProvider)
+    val instance = AutoInstance<BE, FE, VT, IT>(defaultWireFormat, wireFormatProvider, scope)
 
     lateinit var backend: BE
     lateinit var frontend: FE
@@ -47,10 +48,9 @@ class AutoInstanceBuilder<BE : AutoBackend<*>, FE : AutoFrontend<VT, IT>, VT, IT
     fun build(
         initialValue: VT?,
     ) {
-        frontend = frontendFun(this)
+        instance.frontend = frontendFun(this)
 
-        val loadedValue = frontend.load()
-        val loadedInfo = frontend.connectionInfo
+        val (loadedInfo, loadedValue) = frontend.load()
 
         val connectionInfo = when {
             loadedInfo != null -> loadedInfo
@@ -73,11 +73,19 @@ class AutoInstanceBuilder<BE : AutoBackend<*>, FE : AutoFrontend<VT, IT>, VT, IT
             registerWithWorker()
         }
 
+        addCleanup()
+
         if (! origin) {
-            addCleanup()
-        } else {
             createConnector(connectionInfo)
+        } else {
+            setLogger(connectionInfo !!)
         }
+    }
+
+    private fun setLogger(connectionInfo: AutoConnectionInfo<VT>) {
+        val handle = connectionInfo.connectingHandle
+        val base = "auto.${handle.globalId.toShort()}.${handle.peerId}"
+        instance.logger = getLogger(base + (handle.itemId?.let { ".$it" } ?: ""))
     }
 
     fun addListener() {
@@ -96,9 +104,7 @@ class AutoInstanceBuilder<BE : AutoBackend<*>, FE : AutoFrontend<VT, IT>, VT, IT
     }
 
     fun addCleanup() {
-        requireNotNull(worker) { "cannot cleanup without a worker" }
-
-        if (serviceContext != null) {
+        if (serviceContext != null && worker != null) {
             if (serviceContext.sessionOrNull != null) {
                 serviceContext.addSessionCleanup(CleanupHandler { worker.deregister(instance) })
             } else {
@@ -117,12 +123,16 @@ class AutoInstanceBuilder<BE : AutoBackend<*>, FE : AutoFrontend<VT, IT>, VT, IT
 
     private fun connect(connectionInfo: AutoConnectionInfo<VT>?, connector: (AutoConnectionInfo<VT>) -> Unit) {
         if (connectionInfo != null) {
+            setLogger(connectionInfo)
             connector(connectionInfo)
             return
         }
 
         if (infoFun != null) {
-            connector(infoFun())
+            infoFun(instance).also {
+                setLogger(it)
+                connector(it)
+            }
             return
         }
 
@@ -130,9 +140,10 @@ class AutoInstanceBuilder<BE : AutoBackend<*>, FE : AutoFrontend<VT, IT>, VT, IT
             checkNotNull(scope)
 
             scope.launch {
-                connector(
-                    untilSuccess { infoFunSuspend() }
-                )
+                untilSuccess { infoFunSuspend(instance) }.also {
+                    setLogger(it)
+                    connector(it)
+                }
             }
         }
 
@@ -162,6 +173,4 @@ class AutoInstanceBuilder<BE : AutoBackend<*>, FE : AutoFrontend<VT, IT>, VT, IT
         peer.addPeer(DirectConnector(peer, instance), instance.time)
 
     }
-
-
 }

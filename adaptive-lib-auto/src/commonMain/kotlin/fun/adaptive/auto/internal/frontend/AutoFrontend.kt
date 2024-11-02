@@ -9,8 +9,6 @@ abstract class AutoFrontend<VT, IT : AdatClass> : AdatStore<AdatClass>() {
 
     abstract val instance: AutoInstance<*, *, VT, IT>
 
-    abstract var connectionInfo: AutoConnectionInfo<VT>?
-
     abstract var valueOrNull: VT?
 
     /**
@@ -34,10 +32,7 @@ abstract class AutoFrontend<VT, IT : AdatClass> : AdatStore<AdatClass>() {
      * An operation to be implemented by persistent frontends such as file or database.
      * During instance creation this function is called to load the handle and the content
      * of the auto instance if possible.
-     *
-     * The function have to set [handle] and [valueOrNull] to the appropriate value if
-     * possible or leave them on null if they are unknown.
      */
-    abstract fun load() : VT?
+    abstract fun load() : Pair<AutoConnectionInfo<VT>?,VT?>
 
 }

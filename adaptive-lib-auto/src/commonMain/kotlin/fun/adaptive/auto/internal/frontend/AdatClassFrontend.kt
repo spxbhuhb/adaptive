@@ -8,10 +8,12 @@ import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.origin.AutoInstance
+import `fun`.adaptive.auto.model.AutoConnectionInfo
+import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.ItemId
 
 open class AdatClassFrontend<IT : AdatClass>(
-    override val instance: AutoInstance<*, *, *, IT>,
+    override val instance: AutoInstance<*, *, IT, IT>,
     val wireFormat: AdatClassWireFormat<IT>,
     initialValue: IT?,
     val itemId: ItemId,
@@ -19,14 +21,21 @@ open class AdatClassFrontend<IT : AdatClass>(
     val collectionFrontend: AutoCollectionFrontend<IT>?,
 ) : AutoItemFrontend<IT>() {
 
+    override val persistent: Boolean
+        get() = false
+
     val adatContext = AdatContext<ItemId>(itemId, null, null, store = this, null)
 
     override val value: IT
         get() = checkNotNull(valueOrNull) { "value not yet initialized" }
 
-    var valueOrNull: IT? = initialValue?.deepCopy()?.also {
+    override var valueOrNull: IT? = initialValue?.deepCopy()?.also {
         @Suppress("UNCHECKED_CAST")
         it.adatContext = adatContext as AdatContext<Any>
+    }
+
+    override fun load(): Pair<AutoConnectionInfo<IT>?,IT?> {
+        throw UnsupportedOperationException("AdatClassFrontend does not persist values, so it cannot load them")
     }
 
     override fun removed(fromBackend: Boolean) {

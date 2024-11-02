@@ -3,15 +3,13 @@ package `fun`.adaptive.auto.internal.frontend
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.auto.internal.backend.AutoCollectionBackend
 import `fun`.adaptive.auto.internal.origin.AutoInstance
-import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 
 abstract class AutoCollectionFrontend<IT : AdatClass>(
-    override val instance: AutoInstance<AutoCollectionBackend<IT>, AutoCollectionFrontend<IT>, List<IT>, IT>,
-) : AutoFrontend<IT>() {
+    override val instance: AutoInstance<AutoCollectionBackend<IT>, AutoCollectionFrontend<IT>, Collection<IT>, IT>,
+) : AutoFrontend<Collection<IT>, IT>() {
 
-    abstract var values: List<IT>
-        protected set
+    abstract val values: Collection<IT>
 
     abstract fun commit(itemId: ItemId, newValue: IT, oldValue: IT?, initial: Boolean, fromBackend: Boolean)
 
@@ -21,7 +19,4 @@ abstract class AutoCollectionFrontend<IT : AdatClass>(
 
     abstract fun remove(selector: (IT) -> Boolean)
 
-    override fun loadHandle(): AutoHandle? {
-        return AutoHandle(collection = true)
-    }
 }

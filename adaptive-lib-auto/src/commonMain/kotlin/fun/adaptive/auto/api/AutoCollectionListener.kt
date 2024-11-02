@@ -14,12 +14,12 @@ abstract class AutoCollectionListener<A : AdatClass>(
     /**
      * Called when the auto list is initializes the first time.
      */
-    open fun onInit(value: List<A>) = Unit
+    open fun onInit(value: Collection<A>) = Unit
 
     /**
      * Called when an item is added or removed (a structural change).
      */
-    open fun onChange(newValue: List<A>) = Unit
+    open fun onChange(newValue: Collection<A>) = Unit
 
     /**
      * Called when an item is removed from the list.

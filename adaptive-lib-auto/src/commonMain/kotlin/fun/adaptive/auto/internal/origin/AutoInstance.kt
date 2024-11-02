@@ -17,12 +17,12 @@ import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.PeerId
 import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.log.AdaptiveLogger
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.safeSuspendCall
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlin.time.Duration
@@ -30,10 +30,10 @@ import kotlin.time.Duration
 /**
  * The base class for all auto instances.
  */
-open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<VT,IT>, VT, IT : AdatClass>(
+open class AutoInstance<BE : AutoBackend<IT>, FE : AutoFrontend<VT,IT>, VT, IT : AdatClass>(
     val defaultWireFormat: AdatClassWireFormat<*>?,
     val wireFormatProvider: WireFormatProvider,
-    val scope: CoroutineScope = CoroutineScope(Dispatchers.Default)
+    val scope: CoroutineScope
 ) {
 
     val time: LamportTimestamp
@@ -41,13 +41,17 @@ open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<VT,IT>, VT, IT : 
 
     private val lock = getLock()
 
-    private lateinit var logger: AdaptiveLogger
+    internal var logger: AdaptiveLogger = getLogger("auto.*")
+        set(v) {
+            field.disconnect()
+            field = v
+        }
 
     internal lateinit var handle: AutoHandle
 
-    private lateinit var backend: BE
+    internal lateinit var backend: BE
 
-    private lateinit var frontend: FE
+    internal lateinit var frontend: FE
 
     private val safeTime = Atomic(LamportTimestamp(handle.peerId, 0), lock)
 
@@ -69,14 +73,6 @@ open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<VT,IT>, VT, IT : 
     private var itemListeners = emptyList<AutoItemListener<IT>>()
 
     private var collectionListeners = emptyList<AutoCollectionListener<IT>>()
-
-    init {
-        logger.fine("backend context created")
-
-        // getLogger("fun.adaptive.auto.${handle.globalId.toShort()}.${handle.peerId}").also {
-        //        if (trace) it.enableFine()
-        //    }
-    }
 
     // --------------------------------------------------------------------------------
     // Lifecycle
@@ -213,11 +209,11 @@ open class AutoInstance<BE : AutoBackend<*>, FE : AutoFrontend<VT,IT>, VT, IT : 
         collectionListeners.forEach { if (fromBackend || ! it.backendOnly) it.onChange(newValue, oldValue) }
     }
 
-    internal fun onInit(values: List<IT>, fromBackend: Boolean) {
+    internal fun onInit(values: Collection<IT>, fromBackend: Boolean) {
         collectionListeners.forEach { if (fromBackend || ! it.backendOnly) it.onInit(values) }
     }
 
-    internal fun onChange(values: List<IT>, fromBackend: Boolean) {
+    internal fun onChange(values: Collection<IT>, fromBackend: Boolean) {
         collectionListeners.forEach { if (fromBackend || ! it.backendOnly) it.onChange(values) }
     }
 

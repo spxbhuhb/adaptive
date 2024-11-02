@@ -8,7 +8,7 @@ import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.FileFrontend
 import `fun`.adaptive.auto.internal.origin.AutoInstance
-import `fun`.adaptive.auto.internal.origin.OriginItemBase
+import `fun`.adaptive.auto.internal.origin.AutoItemBase
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
@@ -114,7 +114,7 @@ fun <A : AdatClass> autoFile(
         }
     }
 
-    return OriginItemBase(
+    return AutoItemBase(
         worker,
         handle,
         serviceContext,

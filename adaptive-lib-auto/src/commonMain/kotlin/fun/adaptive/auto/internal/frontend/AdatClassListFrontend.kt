@@ -6,20 +6,33 @@ import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.AutoCollectionBackend
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.origin.AutoInstance
+import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.ItemId
 
 open class AdatClassListFrontend<IT : AdatClass>(
-    instance: AutoInstance<AutoCollectionBackend<IT>, AutoCollectionFrontend<IT>, List<IT>, IT>,
+    instance: AutoInstance<AutoCollectionBackend<IT>, AutoCollectionFrontend<IT>, Collection<IT>, IT>,
     val collectionBackend: SetBackend<IT>,
 ) : AutoCollectionFrontend<IT>(instance) {
 
+    override val persistent: Boolean
+        get() = false
+
     var classFrontends = mutableMapOf<ItemId, AdatClassFrontend<IT>>()
 
-    override var values: List<IT> = emptyList()
+    override val values: Collection<IT>
+        get() = checkNotNull(values)
+
+    override var valueOrNull: Collection<IT>? = null
+        protected set
+
+    override fun load(): Pair<AutoConnectionInfo<Collection<IT>>?, Collection<IT>?> {
+        throw UnsupportedOperationException("AdatClassListFrontend does not persist values, so it cannot load them")
+    }
 
     // TODO optimize AutoClassListFrontend.commit  (or maybe SetBackend)
-    override fun commit(initial : Boolean, fromBackend: Boolean) {
-        values = collectionBackend.data.active().sorted().map { getItemFrontend(it).value }
+    override fun commit(initial: Boolean, fromBackend: Boolean) {
+        valueOrNull = collectionBackend.data.active().sorted().map { getItemFrontend(it).value }
+
         if (initial) {
             instance.onInit(values, fromBackend)
         } else {
@@ -33,7 +46,7 @@ open class AdatClassListFrontend<IT : AdatClass>(
         val index = values.indexOfFirst { (it.adatContext as AdatContext<ItemId>).id == itemId }
         if (index == - 1) return
 
-        values = values.subList(0, index) + newValue + values.subList(index + 1, values.size)
+        valueOrNull = values.subList(0, index) + newValue + values.subList(index + 1, values.size)
 
         instance.onChange(newValue, oldValue, fromBackend)
     }

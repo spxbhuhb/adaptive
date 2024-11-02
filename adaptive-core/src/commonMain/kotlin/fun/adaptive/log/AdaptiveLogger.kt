@@ -8,6 +8,13 @@ abstract class AdaptiveLogger {
 
     var level: LogLevel = LogLevel.Info
 
+    /**
+     * Disconnect from this logger when it is no longer used.
+     */
+    fun disconnect() {
+        // FIXME logger disconnect
+    }
+
     // --------------------------------------------------------------------------------
     // Fine (a.k.a. debug, trace)
     // --------------------------------------------------------------------------------

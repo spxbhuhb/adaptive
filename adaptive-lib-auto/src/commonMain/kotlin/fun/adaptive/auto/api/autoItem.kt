@@ -8,7 +8,7 @@ import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.internal.origin.AutoInstance
-import `fun`.adaptive.auto.internal.origin.OriginItemBase
+import `fun`.adaptive.auto.internal.origin.AutoItemBase
 import `fun`.adaptive.auto.internal.producer.AutoItemProducer
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoConnectionType
@@ -197,7 +197,7 @@ fun <A : AdatClass> autoItem(
     //itemId: ItemId = handle.itemId ?: LamportTimestamp.CONNECTING,
     register: Boolean = true,
     trace: Boolean = false,
-): OriginItemBase<PropertyBackend<A>, AdatClassFrontend<A>, A> {
+): AutoItemBase<PropertyBackend<A>, AdatClassFrontend<A>, A> {
 
     val pItemId: ItemId
     val propertyTimes: List<LamportTimestamp>
@@ -223,7 +223,7 @@ fun <A : AdatClass> autoItem(
     }
 
     @Suppress("UNCHECKED_CAST")
-    val origin = OriginItemBase<PropertyBackend<A>, AdatClassFrontend<A>, A>(
+    val origin = AutoItemBase<PropertyBackend<A>, AdatClassFrontend<A>, A>(
         worker,
         handle,
         serviceContext,
