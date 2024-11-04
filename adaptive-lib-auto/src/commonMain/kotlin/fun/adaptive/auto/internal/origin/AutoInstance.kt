@@ -5,7 +5,9 @@ import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.atomic.Atomic
 import `fun`.adaptive.auto.api.AutoCollectionListener
 import `fun`.adaptive.auto.api.AutoItemListener
+import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.AutoBackend
+import `fun`.adaptive.auto.internal.backend.AutoItemBackend
 import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.frontend.AutoFrontend
@@ -30,10 +32,10 @@ import kotlin.time.Duration
 /**
  * The base class for all auto instances.
  */
-open class AutoInstance<BE : AutoBackend<IT>, FE : AutoFrontend<VT,IT>, VT, IT : AdatClass>(
+abstract class AutoInstance<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, IT : AdatClass>(
     val defaultWireFormat: AdatClassWireFormat<*>?,
     val wireFormatProvider: WireFormatProvider,
-    val scope: CoroutineScope
+    val scope: CoroutineScope,
 ) {
 
     val time: LamportTimestamp
@@ -47,7 +49,11 @@ open class AutoInstance<BE : AutoBackend<IT>, FE : AutoFrontend<VT,IT>, VT, IT :
             field = v
         }
 
+    internal lateinit var connectionInfo: AutoConnectionInfo<VT>
+        private set
+
     internal lateinit var handle: AutoHandle
+        private set
 
     internal lateinit var backend: BE
 
@@ -78,6 +84,19 @@ open class AutoInstance<BE : AutoBackend<IT>, FE : AutoFrontend<VT,IT>, VT, IT :
     // Lifecycle
     // --------------------------------------------------------------------------------
 
+    internal fun setInfo(connectionInfo: AutoConnectionInfo<VT>, worker: AutoWorker?) {
+        this.connectionInfo = connectionInfo
+        handle = connectionInfo.connectingHandle
+
+        val loggerName = "auto.${handle.globalId.toShort()}.${handle.peerId}${handle.itemId?.let { ".$it" } ?: ""}"
+        logger = getLogger(loggerName)
+
+        if (connectionInfo.connectionType == AutoConnectionType.Service) {
+            checkNotNull(worker) { "cannot register auto instance without a worker ($this)" }
+            worker.register(this)
+        }
+    }
+
     suspend fun stop() {
         connectors.forEach { safeSuspendCall(logger) { it.disconnect() } }
         logger.fine("backend context stopped")
@@ -94,6 +113,20 @@ open class AutoInstance<BE : AutoBackend<IT>, FE : AutoFrontend<VT,IT>, VT, IT :
     fun receive(operation: AutoOperation) {
         backend.receive(operation)
     }
+
+    /**
+     * Called by backends when the data handled by the backend has been modified.
+     *
+     * @param  itemBackend   The item backend that initiates this commit. Null when the commit
+     *                       is for a collection operation (add or remove).
+     * @param  initial       True when this is the commit happening during the initialization
+     *                       of the auto instance.
+     * @param  fromPeer      True when this operation is received from the peer (to separate
+     *                       from ones initiated by the frontend). Used to skip callback
+     *                       echo to the frontend (if the backendOnly parameter is true for
+     *                       the listener).
+     */
+    abstract fun commit(itemBackend : AutoItemBackend<IT>?, initial: Boolean, fromPeer: Boolean)
 
     // --------------------------------------------------------------------------------
     // Functions to get connection info from this node
@@ -117,23 +150,6 @@ open class AutoInstance<BE : AutoBackend<IT>, FE : AutoFrontend<VT,IT>, VT, IT :
         return backend.connectInfo(type, itemId) as AutoConnectionInfo<IT>
     }
 
-    // --------------------------------------------------------------------------------
-    // Utility functions
-    // --------------------------------------------------------------------------------
-
-    open fun update(new: IT) {
-        frontend.update(new)
-    }
-
-    fun update(original: IT, new: IT) {
-        frontend.also {
-            if (it is AdatClassListFrontend<*>) {
-                @Suppress("UNCHECKED_CAST")
-                it as AdatClassListFrontend<IT>
-                it.update(original, new)
-            }
-        }
-    }
 
     // --------------------------------------------------------------------------------
     // Time
@@ -141,6 +157,10 @@ open class AutoInstance<BE : AutoBackend<IT>, FE : AutoFrontend<VT,IT>, VT, IT :
 
     fun receive(receivedTime: LamportTimestamp) {
         safeTime.compute { it.receive(receivedTime) }
+    }
+
+    fun receive(receivedTime: ItemId) {
+        safeTime.compute { it.receive(receivedTime.asLamportTimestamp()) }
     }
 
     fun nextTime(): LamportTimestamp =

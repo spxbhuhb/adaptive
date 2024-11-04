@@ -10,7 +10,7 @@ import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.*
 
 class SetBackend<IT : AdatClass>(
-    instance: AutoInstance<AutoCollectionBackend<IT>, AutoCollectionFrontend<IT>, List<IT>, IT>,
+    instance: AutoInstance<AutoCollectionBackend<IT>, AutoCollectionFrontend<IT>, Collection<IT>, IT>,
     initialValue: MutableMap<ItemId, PropertyBackend<IT>>? = null,
 ) : AutoCollectionBackend<IT>(instance) {
 
@@ -27,27 +27,36 @@ class SetBackend<IT : AdatClass>(
     // Operations from the frontend
     // --------------------------------------------------------------------------------
 
+    // add is defined in AutoCollectionBackend
+
     override fun remove(itemId: ItemId, commit: Boolean) {
-        data.remove(itemId, fromBackend = false)
+        data.remove(itemId, fromPeer = false)
 
         val operation = AutoRemove(instance.nextTime(), true, setOf(itemId))
         trace { "FE -> BE  itemId=$itemId .. commit true .. $operation" }
 
-        close(operation, commit, fromBackend = false    )
+        instance.commit(null, initial = false, fromPeer = false)
+        distribute(operation)
     }
 
     override fun removeAll(itemIds: Set<ItemId>, commit: Boolean) {
-        data.remove(itemIds, fromBackend = false)
+        data.remove(itemIds, fromPeer = false)
 
         val operation = AutoRemove(instance.nextTime(), true, itemIds)
         trace { "FE -> BE  commit true .. $operation" }
 
-        close(operation, commit, fromBackend = false)
+        instance.commit(null, initial = false, fromPeer = false)
+        distribute(operation)
     }
 
-    override fun modify(itemId: ItemId, propertyName: String, propertyValue: Any?) {
+    override fun update(itemId: ItemId, propertyName: String, propertyValue: Any?) {
         val item = data[itemId] ?: return
-        item.modify(itemId, propertyName, propertyValue)
+        item.update(itemId, propertyName, propertyValue) // calls instance.commit and distribute
+    }
+
+    override fun update(itemId: ItemId, new : IT) {
+        val item = data[itemId] ?: return
+        item.update(itemId, new) // calls instance.commit and distribute
     }
 
     // --------------------------------------------------------------------------------
@@ -55,56 +64,62 @@ class SetBackend<IT : AdatClass>(
     // --------------------------------------------------------------------------------
 
     override fun add(operation: AutoAdd, commit: Boolean) {
-        trace { "commit=$commit op=$operation" }
+        trace { "BE -> BE  $operation" }
 
         @Suppress("UNCHECKED_CAST")
         addItem(operation.itemId, null, decode(operation.wireFormatName, operation.payload) as IT, fromBackend = true)
 
-        closeListOp(operation, setOf(operation.itemId), commit, fromBackend = true)
+        instance.commit(null, initial = false, fromPeer = true)
+
+        distribute(operation)
 
         instance.receive(operation.itemId)
     }
 
     override fun remove(operation: AutoRemove, commit: Boolean) {
-        trace { "commit=$commit op=$operation" }
+        trace { "BE -> BE  $operation" }
 
-        data.remove(operation.itemIds, fromBackend = true)
+        data.remove(operation.itemIds, fromPeer = true)
 
-        closeListOp(operation, operation.itemIds, commit, fromBackend = true)
+        instance.commit(null, initial = false, fromPeer = true)
+
+        distribute(operation)
 
         if (operation.syncTime) {
             instance.receive(operation.timestamp)
         }
     }
 
-    override fun modify(operation: AutoModify, commit: Boolean) {
-        trace { "commit=$commit op=$operation" }
-
+    override fun update(operation: AutoModify, commit: Boolean) {
         if (operation.itemId !in data) return
 
         val item = data[operation.itemId]
 
         if (item != null) {
-            item.modify(operation, commit)
+            item.update(operation, commit) // calls instance.commit and distribute, also trace
             instance.receive(operation.timestamp)
         } else {
             // This is a tricky situation, we've got a modification, but we don't have the
             // item yet. May happen if the item is updated during synchronization. In this
             // case we have to put this operation to the shelf until the synchronization
             // is done.
+            trace { "BE -> BE  AFTER-SYNC: $operation" }
             afterSync += operation
         }
     }
 
     override fun empty(operation: AutoEmpty, commit: Boolean) {
-        closeListOp(operation, emptySet(), commit, fromBackend = true)
+        instance.commit(null, initial = false, fromPeer = true)
+
+        distribute(operation)
+
         instance.receive(operation.timestamp)
     }
 
     override fun syncEnd(operation: AutoSyncEnd, commit: Boolean) {
         // apply modifications that have been postponed because we haven't had the
         // item at the time (see syncPeer and modify for details)
-        afterSync.forEach { modify(it, commit) }
+        afterSync.forEach { update(it, commit) } // calls instance.commit and distribute
         afterSync.clear()
         instance.receive(operation.timestamp)
         instance.onSyncEnd(fromBackend = true)
@@ -138,8 +153,9 @@ class SetBackend<IT : AdatClass>(
         // When there is an item id in the connector, the peer is a single-item peer.
         // In that case we have to treat it such: cannot send over list operations.
 
-        if (connector.peerHandle.itemId != null) {
-            syncItem(connector, syncFrom, connector.peerHandle.itemId)
+        val itemId = connector.peerHandle.itemId
+        if (itemId != null) {
+            syncItem(connector, syncFrom, itemId)
         } else {
             syncCollection(time, connector, syncFrom)
         }
@@ -199,7 +215,7 @@ class SetBackend<IT : AdatClass>(
     override fun addItem(itemId: ItemId, parentItemId: ItemId?, value: IT, fromBackend: Boolean) {
 
         val values = value.toArray()
-        val backend = PropertyBackend<IT>(instance, itemId, value.adatCompanion.wireFormatName, values)
+        val backend = PropertyBackend<IT>(instance, value.adatCompanion.wireFormatName, values, null, itemId = itemId)
 
         val added = data.add(itemId, backend)
 

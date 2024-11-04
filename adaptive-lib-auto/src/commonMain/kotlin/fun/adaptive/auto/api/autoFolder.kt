@@ -1,19 +1,8 @@
 package `fun`.adaptive.auto.api
 
-import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.frontend.FolderFrontend
-import `fun`.adaptive.auto.internal.origin.AutoCollectionBase
-import `fun`.adaptive.auto.model.AutoHandle
-import `fun`.adaptive.auto.model.ItemId
-import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.utility.exists
-import `fun`.adaptive.wireformat.WireFormatProvider
-import `fun`.adaptive.wireformat.api.Json
-import kotlinx.io.files.Path
-import kotlinx.io.files.SystemFileSystem
 
 /**
  * Register a directory-based Auto list with the [worker].
@@ -60,46 +49,46 @@ import kotlinx.io.files.SystemFileSystem
  *
  * @throws   IllegalArgumentException  if the directory does not exist
  */
-fun <A : AdatClass> autoFolder(
-    worker: AutoWorker?,
-    path: Path,
-    fileNameFun: (itemId: ItemId, item: A) -> String,
-    wireFormatProvider: WireFormatProvider = Json,
-    includeFun: (Path) -> Boolean = { true },
-    defaultWireFormat: AdatClassWireFormat<*>? = null,
-    listener : AutoCollectionListener<A>? = null,
-    serviceContext: ServiceContext? = null,
-    handle: AutoHandle = AutoHandle(),
-    register : Boolean = true,
-    trace: Boolean = false,
-): FolderBase<A> {
-
-    require(path.exists()) { "missing directory: ${SystemFileSystem.resolve(path)}" }
-
-    return AutoCollectionBase(
-        worker,
-        handle,
-        serviceContext,
-        defaultWireFormat,
-        trace = trace,
-        register = register
-    ) {
-
-        if (listener != null) context.addListener(listener)
-
-        backend = SetBackend(
-            context,
-            FolderFrontend.load(context, path, includeFun, wireFormatProvider)
-        )
-
-        frontend = FolderFrontend(
-            backend,
-            wireFormatProvider,
-            path,
-            fileNameFun
-        )
-
-        frontend.commit(initial = true, fromBackend = false)
-    }
-
-}
+//fun <A : AdatClass> autoFolder(
+//    worker: AutoWorker?,
+//    path: Path,
+//    fileNameFun: (itemId: ItemId, item: A) -> String,
+//    wireFormatProvider: WireFormatProvider = Json,
+//    includeFun: (Path) -> Boolean = { true },
+//    defaultWireFormat: AdatClassWireFormat<*>? = null,
+//    listener : AutoCollectionListener<A>? = null,
+//    serviceContext: ServiceContext? = null,
+//    handle: AutoHandle = AutoHandle(),
+//    register : Boolean = true,
+//    trace: Boolean = false,
+//): FolderBase<A> {
+//
+//    require(path.exists()) { "missing directory: ${SystemFileSystem.resolve(path)}" }
+//
+//    return AutoCollectionBase(
+//        worker,
+//        handle,
+//        serviceContext,
+//        defaultWireFormat,
+//        trace = trace,
+//        register = register
+//    ) {
+//
+//        if (listener != null) context.addListener(listener)
+//
+//        backend = SetBackend(
+//            context,
+//            FolderFrontend.load(context, path, includeFun, wireFormatProvider)
+//        )
+//
+//        frontend = FolderFrontend(
+//            backend,
+//            wireFormatProvider,
+//            path,
+//            fileNameFun
+//        )
+//
+//        frontend.commit(initial = true, fromBackend = false)
+//    }
+//
+//}

@@ -2,8 +2,8 @@ package `fun`.adaptive.auto.internal.frontend
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatContext
-import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.AutoCollectionBackend
+import `fun`.adaptive.auto.internal.backend.AutoItemBackend
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.model.AutoConnectionInfo
@@ -25,28 +25,30 @@ open class AdatClassListFrontend<IT : AdatClass>(
     override var valueOrNull: Collection<IT>? = null
         protected set
 
+    var cachedList : List<IT> = emptyList()
+
     override fun load(): Pair<AutoConnectionInfo<Collection<IT>>?, Collection<IT>?> {
         throw UnsupportedOperationException("AdatClassListFrontend does not persist values, so it cannot load them")
     }
 
-    // TODO optimize AutoClassListFrontend.commit  (or maybe SetBackend)
-    override fun commit(initial: Boolean, fromBackend: Boolean) {
-        valueOrNull = collectionBackend.data.active().sorted().map { getItemFrontend(it).value }
+    override fun commit(itemBackend: AutoItemBackend<IT>?, initial: Boolean, fromPeer: Boolean) {
+        cachedList = collectionBackend.data.active().map { getItemFrontend(it).value }
 
         if (initial) {
-            instance.onInit(values, fromBackend)
+            instance.onInit(values, fromPeer)
         } else {
-            instance.onChange(values, fromBackend)
+            instance.onChange(values, fromPeer)
         }
     }
 
     override fun commit(itemId: ItemId, newValue: IT, oldValue: IT?, initial: Boolean, fromBackend: Boolean) {
         // TODO check AdatClassListFrontend.commit, should we throw an exception when there is no item?
+        // TODO optimise AdatClassListFrontend.commit
         @Suppress("UNCHECKED_CAST")
-        val index = values.indexOfFirst { (it.adatContext as AdatContext<ItemId>).id == itemId }
+        val index = cachedList.indexOfFirst { (it.adatContext as AdatContext<ItemId>).id == itemId }
         if (index == - 1) return
 
-        valueOrNull = values.subList(0, index) + newValue + values.subList(index + 1, values.size)
+        valueOrNull = cachedList.subList(0, index) + newValue + cachedList.subList(index + 1, values.size)
 
         instance.onChange(newValue, oldValue, fromBackend)
     }
@@ -73,11 +75,11 @@ open class AdatClassListFrontend<IT : AdatClass>(
         }
     }
 
-    fun modify(itemId: ItemId, propertyName: String, propertyValue: Any?) {
-        getItemFrontend(itemId).modify(propertyName, propertyValue)
+    fun update(itemId: ItemId, propertyName: String, propertyValue: Any?) {
+        collectionBackend.data[itemId]?.update(propertyName, propertyValue)
     }
 
-    override fun update(original: AdatClass, new: AdatClass) {
+    fun replace(original: AdatClass, new: AdatClass) {
         getItemFrontend(itemId(original)).update(new)
     }
 
@@ -87,7 +89,7 @@ open class AdatClassListFrontend<IT : AdatClass>(
     override fun update(instance: AdatClass, path: Array<String>, value: Any?) {
         // FIXME only single properties are handled b y AdatClassListFrontend
         check(path.size == 1) { "multi-level paths are not implemented yet" }
-        modify(itemId(instance), path[0], value)
+        update(itemId(instance), path[0], value)
     }
 
     // TODO optimize AdatClassListFrontend.getFrontend - I think `newInstance` is unnecessary here
@@ -99,13 +101,12 @@ open class AdatClassListFrontend<IT : AdatClass>(
 
             @Suppress("UNCHECKED_CAST")
             AdatClassFrontend<IT>(
-                propertyBackend,
-                wireFormat as AdatClassWireFormat<IT>,
-                wireFormat.newInstance(propertyBackend.values),
+                instance,
+                wireFormat.newInstance(propertyBackend.values) as IT,
+                this,
                 itemId,
-                this
             )
-                .also { propertyBackend.frontend = it }
+                .also { it.backend = propertyBackend }
         }
 
 }

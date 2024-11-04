@@ -1,9 +1,8 @@
 package `fun`.adaptive.auto.backend
 
 import `fun`.adaptive.auto.api.AutoGeneric
-import `fun`.adaptive.auto.internal.backend.AutoBackend
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
-import `fun`.adaptive.auto.internal.origin.AutoInstance
+import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.AutoOperation
@@ -30,15 +29,15 @@ class AutoWorker : WorkerImpl<AutoWorker> {
             instances[handle.globalId]
         }
 
-    fun register(backend: AutoGeneric) {
+    fun register(instance: AutoGeneric) {
         instanceLock.use {
-            instances[backend.globalId] = backend
+            instances[instance.handle.globalId] = instance
         }
     }
 
-    fun deregister(backend: AutoGeneric) {
+    fun deregister(instance: AutoGeneric) {
         instanceLock.use {
-            instances.remove(backend.globalId)
+            instances.remove(instance.handle.globalId)
         }
     }
 
@@ -46,21 +45,25 @@ class AutoWorker : WorkerImpl<AutoWorker> {
         instanceLock.use {
             checkNotNull(instances[handle.globalId]) { "missing auto instance: $handle" }
         }
-            .context.time
+            .time
 
-    suspend fun addPeer(
-        origin: AutoHandle,
-        connecting: AutoHandle,
-        connectingPeerTime: LamportTimestamp,
+    fun addPeer(
+        info : AutoConnectionInfo<*>,
+        connectingPeerTime : LamportTimestamp,
         transport: ServiceCallTransport
     ): LamportTimestamp {
-        val backend = instanceLock.use {
-            checkNotNull(instances[origin.globalId]) { "missing auto instance: $origin" }
+        val instance = instanceLock.use {
+            checkNotNull(instances[info.acceptingHandle.globalId]) { "missing auto instance: $info" }
         }
 
-        val connector = ServiceConnector(backend, connecting, getService(transport), reconnect = false)
+        val connector = ServiceConnector(
+            instance,
+            getService(transport),
+            info,
+            connecting = false
+        )
 
-        val time = backend.addPeer(
+        val time = instance.addPeer(
             connector,
             connectingPeerTime
         )

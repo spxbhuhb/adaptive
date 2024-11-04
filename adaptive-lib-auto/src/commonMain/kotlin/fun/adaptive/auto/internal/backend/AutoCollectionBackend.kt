@@ -8,14 +8,11 @@ import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.operation.AutoAdd
 import `fun`.adaptive.auto.model.operation.AutoEmpty
 import `fun`.adaptive.auto.model.operation.AutoModify
-import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.auto.model.operation.AutoRemove
 import `fun`.adaptive.auto.model.operation.AutoSyncEnd
-import `fun`.adaptive.reflect.CallSiteName
-import `fun`.adaptive.wireformat.WireFormatProvider
 
 abstract class AutoCollectionBackend<IT : AdatClass>(
-    instance: AutoInstance<AutoCollectionBackend<IT>, AutoCollectionFrontend<IT>, List<IT>, IT>
+    instance: AutoInstance<AutoCollectionBackend<IT>, AutoCollectionFrontend<IT>, Collection<IT>, IT>
 ) : AutoBackend<IT>(instance) {
 
     /**
@@ -27,14 +24,16 @@ abstract class AutoCollectionBackend<IT : AdatClass>(
     // Operations from the frontend
     // --------------------------------------------------------------------------------
 
-    fun add(item: IT, parentItemId: ItemId?, commit: Boolean) {
-        val itemId = instance.nextTime()
+    fun add(item: IT, parentItemId: ItemId?) {
+        val time = instance.nextTime()
+        val itemId = time.asItemId()
+
         addItem(itemId, parentItemId, item, false)
 
         val wireFormatName = wireFormatNameOrNull(item)
 
         val operation = AutoAdd(
-            timestamp = itemId,
+            timestamp = time,
             itemId = itemId,
             wireFormatName,
             parentItemId,
@@ -43,7 +42,9 @@ abstract class AutoCollectionBackend<IT : AdatClass>(
 
         trace { "FE -> BE  itemId=$itemId .. commit true .. $operation" }
 
-        close(operation, commit, false)
+        instance.commit(null, initial = false, fromPeer = false)
+
+        distribute(operation)
     }
 
     abstract fun remove(itemId: ItemId, commit: Boolean)
@@ -70,12 +71,6 @@ abstract class AutoCollectionBackend<IT : AdatClass>(
         val itemWireFormatName = item.adatCompanion.wireFormatName
         // TODO I'm not sure about using null here, might cause problems during runtime if the configurations mismatch
         return if (itemWireFormatName == instance.defaultWireFormat?.wireFormatName) null else itemWireFormatName
-    }
-
-    @CallSiteName
-    fun closeListOp(operation: AutoOperation, itemIds: Set<ItemId>, commit: Boolean, fromBackend: Boolean, callSiteName: String = "") {
-        trace(callSiteName) { "BE -> BE  itemIds=${itemIds} .. commit $commit .. $operation" }
-        close(operation, commit, fromBackend)
     }
 
     fun encode(wireFormatName: String?, values: Array<Any?>) =

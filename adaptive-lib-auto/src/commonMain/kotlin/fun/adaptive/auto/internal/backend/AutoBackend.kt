@@ -9,6 +9,7 @@ import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.auto.model.PeerId
 import `fun`.adaptive.auto.model.operation.AutoModify
 import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.auto.model.operation.AutoSyncEnd
@@ -19,29 +20,26 @@ import kotlin.time.Duration
 
 abstract class AutoBackend<IT : AdatClass>(
     val instance: AutoInstance<*, *, *, IT>
-) : AutoConnector() {
+) {
 
     // --------------------------------------------------------------------------------
     // Operations from the frontend
     // --------------------------------------------------------------------------------
 
-    abstract fun modify(itemId: ItemId, propertyName: String, propertyValue: Any?)
+    abstract fun update(itemId: ItemId, propertyName: String, propertyValue: Any?)
+
+    abstract fun update(itemId: ItemId, newValue: IT)
 
     // --------------------------------------------------------------------------------
     // Operations from peers
     // --------------------------------------------------------------------------------
-
-    override fun send(operation: AutoOperation) {
-        //  When the backend acts as connector, send simply has to call receive.
-        receive(operation)
-    }
 
     fun receive(operation: AutoOperation) {
         trace { operation.toString() }
         operation.apply(this, commit = true)
     }
 
-    abstract fun modify(operation: AutoModify, commit: Boolean)
+    abstract fun update(operation: AutoModify, commit: Boolean)
 
     abstract fun syncEnd(operation: AutoSyncEnd, commit: Boolean)
 
@@ -60,12 +58,7 @@ abstract class AutoBackend<IT : AdatClass>(
     // Utility, common
     // --------------------------------------------------------------------------------
 
-    fun close(operation: AutoOperation, commit: Boolean, fromBackend: Boolean) {
-
-        if (commit) {
-            instance.commit(initial = false, fromBackend)
-            trace { "==== commit ====" }
-        }
+    fun distribute(operation: AutoOperation) {
 
         val connectors = instance.connectors
         val closePeers = instance.closePeers
@@ -116,7 +109,7 @@ abstract class AutoBackend<IT : AdatClass>(
     fun connectInfo(type: AutoConnectionType, itemId: ItemId? = null) =
         with(instance) {
             val time = nextTime()
-            AutoConnectionInfo<Any>(type, handle, time, AutoHandle(handle.globalId, time.timestamp, itemId))
+            AutoConnectionInfo<Any>(type, handle, time, AutoHandle(handle.globalId, PeerId(time.timestamp), itemId))
         }
 
     fun isSynced(connectInfo: AutoConnectionInfo<*>): Boolean {

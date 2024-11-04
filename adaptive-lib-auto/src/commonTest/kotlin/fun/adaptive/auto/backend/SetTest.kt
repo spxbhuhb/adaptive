@@ -53,10 +53,10 @@ class SetTest {
             f2.assertEquals(f1)
 
             val itemId1 = f1.values.first().adatContext?.id as ItemId
-            f1.modify(itemId1, "i", 23)
+            f1.update(itemId1, "i", 23)
             f2.assertEquals(f1)
 
-            f2.modify(itemId1, "i", 34)
+            f2.update(itemId1, "i", 34)
             f1.assertEquals(f2)
 
             val t2 = TestData(54, "ef")

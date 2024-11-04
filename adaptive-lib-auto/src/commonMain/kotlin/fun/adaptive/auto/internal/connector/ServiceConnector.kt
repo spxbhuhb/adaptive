@@ -28,6 +28,7 @@ class ServiceConnector(
     val instance: AutoInstance<*, *, *, *>,
     val service: AutoApi,
     val info : AutoConnectionInfo<*>,
+    val connecting : Boolean,
     pendingLimit: Int = 1000,
 ) : AutoConnector() {
 

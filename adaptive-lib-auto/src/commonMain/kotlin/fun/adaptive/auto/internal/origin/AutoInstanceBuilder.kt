@@ -5,19 +5,25 @@ import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.api.AutoApi
 import `fun`.adaptive.auto.api.AutoCollectionListener
 import `fun`.adaptive.auto.api.AutoItemListener
+import `fun`.adaptive.auto.api.InfoFunSuspend
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.AutoBackend
+import `fun`.adaptive.auto.internal.backend.AutoCollectionBackend
+import `fun`.adaptive.auto.internal.backend.AutoItemBackend
 import `fun`.adaptive.auto.internal.connector.DirectConnector
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
+import `fun`.adaptive.auto.internal.frontend.AutoCollectionFrontend
 import `fun`.adaptive.auto.internal.frontend.AutoFrontend
+import `fun`.adaptive.auto.internal.frontend.AutoItemFrontend
 import `fun`.adaptive.auto.model.AutoConnectionInfo
-import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.utility.CleanupHandler
 import `fun`.adaptive.utility.untilSuccess
 import `fun`.adaptive.wireformat.WireFormatProvider
+import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, IT : AdatClass>(
@@ -25,29 +31,34 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, I
     val persistent: Boolean,
     val service: Boolean,
     val collection: Boolean,
-    val info: AutoConnectionInfo<VT>?,
-    val infoFun: ((instance : AutoInstance<BE, FE, VT, IT>) -> AutoConnectionInfo<VT>)?,
-    val infoFunSuspend: (suspend (instance : AutoInstance<BE, FE, VT, IT>) -> AutoConnectionInfo<VT>)?,
+    val info: AutoConnectionInfo<VT>? = null,
+    val infoFun: ((instance : AutoInstance<BE, FE, VT, IT>) -> AutoConnectionInfo<VT>)?= null,
+    val infoFunSuspend: InfoFunSuspend<BE,FE,VT,IT>? = null,
     val defaultWireFormat: AdatClassWireFormat<*>?,
-    wireFormatProvider: WireFormatProvider,
-    val itemListener: AutoItemListener<IT>?,
-    val collectionListener: AutoCollectionListener<IT>?,
-    val worker: AutoWorker?,
-    val serviceContext: ServiceContext?,
-    val scope: CoroutineScope,
+    wireFormatProvider: WireFormatProvider = Proto,
+    val itemListener: AutoItemListener<IT>? = null,
+    val collectionListener: AutoCollectionListener<IT>? = null,
+    val worker: AutoWorker? = null,
+    val serviceContext: ServiceContext? = null,
+    val scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     val trace: Boolean,
     val backendFun: (AutoInstanceBuilder<BE, FE, VT, IT>, info: AutoConnectionInfo<VT>?, value: VT?) -> BE,
     val frontendFun: (AutoInstanceBuilder<BE, FE, VT, IT>) -> FE,
 ) {
 
-    val instance = AutoInstance<BE, FE, VT, IT>(defaultWireFormat, wireFormatProvider, scope)
+    @Suppress("UNCHECKED_CAST")
+    val instance = if (collection) {
+        AutoCollection<AutoCollectionBackend<IT>, AutoCollectionFrontend<IT>,IT>(defaultWireFormat, wireFormatProvider, scope)
+    } else {
+        AutoItem<AutoItemBackend<IT>, AutoItemFrontend<IT>, IT>(defaultWireFormat, wireFormatProvider, scope)
+    } as AutoInstance<BE, FE, VT, IT>
 
     lateinit var backend: BE
     lateinit var frontend: FE
 
     fun build(
         initialValue: VT?,
-    ) {
+    ) : AutoInstance<BE, FE, VT, IT> {
         instance.frontend = frontendFun(this)
 
         val (loadedInfo, loadedValue) = frontend.load()
@@ -68,24 +79,15 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, I
         backend = backendFun(this, connectionInfo, value)
 
         addListener()
-
-        if (service) {
-            registerWithWorker()
-        }
-
         addCleanup()
 
         if (! origin) {
             createConnector(connectionInfo)
         } else {
-            setLogger(connectionInfo !!)
+            instance.setInfo(connectionInfo !!, worker)
         }
-    }
 
-    private fun setLogger(connectionInfo: AutoConnectionInfo<VT>) {
-        val handle = connectionInfo.connectingHandle
-        val base = "auto.${handle.globalId.toShort()}.${handle.peerId}"
-        instance.logger = getLogger(base + (handle.itemId?.let { ".$it" } ?: ""))
+        return instance
     }
 
     fun addListener() {
@@ -96,11 +98,6 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, I
             check(collection) { "cannot add a collection listener to a non-collection instance" }
             instance.addListener(collectionListener)
         }
-    }
-
-    fun registerWithWorker() {
-        requireNotNull(worker) { "cannot register without a worker" }
-        worker.register(instance)
     }
 
     fun addCleanup() {
@@ -123,14 +120,14 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, I
 
     private fun connect(connectionInfo: AutoConnectionInfo<VT>?, connector: (AutoConnectionInfo<VT>) -> Unit) {
         if (connectionInfo != null) {
-            setLogger(connectionInfo)
+            instance.setInfo(connectionInfo, worker)
             connector(connectionInfo)
             return
         }
 
         if (infoFun != null) {
             infoFun(instance).also {
-                setLogger(it)
+                instance.setInfo(it, worker)
                 connector(it)
             }
             return
@@ -141,7 +138,7 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, I
 
             scope.launch {
                 untilSuccess { infoFunSuspend(instance) }.also {
-                    setLogger(it)
+                    instance.setInfo(it, worker)
                     connector(it)
                 }
             }
@@ -158,7 +155,8 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, I
         ServiceConnector(
             instance,
             getService<AutoApi>(adapter.transport),
-            connectionInfo
+            connectionInfo,
+            connecting = true
         )
     }
 

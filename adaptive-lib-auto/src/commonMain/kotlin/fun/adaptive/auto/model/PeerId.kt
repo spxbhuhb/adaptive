@@ -1,12 +1,12 @@
 package `fun`.adaptive.auto.model
 
-value class PeerId(private val id: Long) {
+value class PeerId(private val id: Long) : Comparable<PeerId> {
 
-    /**
-     * Peer ID of the origin auto instance.
-     */
+    override fun compareTo(other: PeerId): Int = id.compareTo(other.id)
+
     companion object {
         val ORIGIN = PeerId(0L)
+        val CONNECTING = PeerId(-1L)
     }
 
 }

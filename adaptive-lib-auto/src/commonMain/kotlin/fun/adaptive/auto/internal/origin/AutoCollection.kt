@@ -3,17 +3,22 @@ package `fun`.adaptive.auto.internal.origin
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.AutoBackend
+import `fun`.adaptive.auto.internal.backend.AutoItemBackend
 import `fun`.adaptive.auto.internal.frontend.AutoCollectionFrontend
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 
-class AutoCollectionBase<BE : AutoBackend<IT>, FE : AutoCollectionFrontend<IT>, IT : AdatClass>(
+class AutoCollection<BE : AutoBackend<IT>, FE : AutoCollectionFrontend<IT>, IT : AdatClass>(
     defaultWireFormat: AdatClassWireFormat<*>?,
     wireFormatProvider: WireFormatProvider,
     scope: CoroutineScope
 ) : AutoInstance<BE, FE, Collection<IT>, IT>(
     defaultWireFormat, wireFormatProvider, scope
 ), Collection<IT> {
+
+    override fun commit(itemBackend: AutoItemBackend<IT>?, initial: Boolean, fromPeer: Boolean) {
+        frontend.commit(itemBackend, initial, fromPeer)
+    }
 
     override val size: Int
         get() = values.size

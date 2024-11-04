@@ -17,8 +17,6 @@ abstract class AutoFrontend<VT, IT : AdatClass> : AdatStore<AdatClass>() {
      */
     abstract val persistent: Boolean
 
-    abstract fun commit(initial: Boolean, fromBackend: Boolean)
-
     /**
      * Called by collection backends when the item that represented by this
      * frontend is removed. If the frontend persists the data somehow, it

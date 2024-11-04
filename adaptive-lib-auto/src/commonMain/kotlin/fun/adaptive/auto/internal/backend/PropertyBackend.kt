@@ -1,6 +1,7 @@
 package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.adat.wireformat.AdatPropertyWireFormat
 import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.internal.origin.AutoInstance
@@ -13,10 +14,10 @@ import `fun`.adaptive.wireformat.WireFormat
 
 class PropertyBackend<IT : AdatClass>(
     instance: AutoInstance<*, *, *, IT>,
-    val itemId: LamportTimestamp,
     val wireFormatName: String?,
-    initialValues: Array<Any?>,
-    propertyTimes: List<LamportTimestamp> = MutableList(initialValues.size) { itemId },
+    initialValues: Array<Any?>?,
+    propertyTimes: List<LamportTimestamp>? = null,
+    override val itemId: ItemId = ItemId.CONNECTING,
 ) : AutoItemBackend<IT>(instance) {
 
     val wireFormat = wireFormatFor(wireFormatName)
@@ -29,16 +30,16 @@ class PropertyBackend<IT : AdatClass>(
     fun indexOf(name: String) =
         properties[name].metadata.index
 
-    val values: Array<Any?> = initialValues.copyOf()
+    val values: Array<Any?> = initialValues?.copyOf() ?: arrayOfNulls(properties.size)
 
-    val lastUpdate = propertyTimes.max()
+    val lastUpdate = propertyTimes?.max() ?: LamportTimestamp.CONNECTING
 
-    val propertyTimes = propertyTimes.toMutableList().also {
+    val propertyTimes = propertyTimes?.toMutableList()?.also {
         // this happens when we extend the property list of the adat class
         while (it.size < values.size) {
-            it += itemId
+            it += LamportTimestamp.CONNECTING
         }
-    }
+    } ?: MutableList(properties.size) { LamportTimestamp.CONNECTING }
 
     init {
         trace { "INIT  itemId=$itemId  ${initialValues.contentToString()}" }
@@ -48,7 +49,7 @@ class PropertyBackend<IT : AdatClass>(
     // Operations from the frontend
     // --------------------------------------------------------------------------------
 
-    override fun modify(itemId: ItemId, propertyName: String, propertyValue: Any?) {
+    override fun update(itemId: ItemId, propertyName: String, propertyValue: Any?) {
         val property = properties[propertyName]
         val index = property.index
 
@@ -59,14 +60,18 @@ class PropertyBackend<IT : AdatClass>(
         val time = instance.nextTime()
 
         val operation = AutoModify(time, itemId, listOf(AutoPropertyValue(time, propertyName, payload)))
-        trace { "FE -> BE  $propertyName=$propertyValue .. commit true $operation" }
 
         propertyTimes[index] = operation.timestamp
 
-        close(operation, commit = true, fromBackend = false)
+        instance.commit(this, initial = false, fromPeer = false)
+
+        trace { "FE -> BE  $propertyName=$propertyValue $operation" }
+
+        distribute(operation)
     }
 
-    fun update(newValues: Array<Any?>) {
+    override fun update(itemId: ItemId, new: IT) {
+        val newValues = new.toArray()
         check(newValues.size <= values.size)
 
         val time = instance.nextTime()
@@ -85,16 +90,18 @@ class PropertyBackend<IT : AdatClass>(
         // TODO check if nextTime is necessary here or we can use `time`
         val operation = AutoModify(instance.nextTime(), itemId, changes)
 
-        trace { "FE -> BE  commit true $operation" }
+        instance.commit(this, initial = false, fromPeer = false)
 
-        close(operation, commit = true, fromBackend = false)
+        trace { "FE -> BE  $operation" }
+
+        distribute(operation)
     }
 
     // --------------------------------------------------------------------------------
     // Operations from peers
     // --------------------------------------------------------------------------------
 
-    override fun modify(operation: AutoModify, commit: Boolean) {
+    override fun update(operation: AutoModify, commit: Boolean) {
         var changed = false
 
         for (change in operation.values) {
@@ -130,8 +137,9 @@ class PropertyBackend<IT : AdatClass>(
         }
 
         if (changed) {
-            trace { "BE -> BE  commit=$commit .. op=$operation" }
-            close(operation, commit, fromBackend = true)
+            trace { "BE -> BE  op=$operation" }
+            instance.commit(this, initial = false, fromPeer = true)
+            distribute(operation)
         } else {
             trace { "BE -> BE  SKIP   op=$operation" }
         }
@@ -191,6 +199,11 @@ class PropertyBackend<IT : AdatClass>(
     // --------------------------------------------------------------------------------
     // Utility
     // --------------------------------------------------------------------------------
+
+    override fun getItem(): IT {
+        @Suppress("UNCHECKED_CAST")
+        return wireFormat.newInstance(values) as IT
+    }
 
     fun encode(property: AdatPropertyWireFormat<*>): ByteArray {
         try {

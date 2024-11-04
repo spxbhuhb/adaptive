@@ -31,15 +31,17 @@ class LamportTimestamp(
         return "$peerId:$timestamp"
     }
 
+    fun asItemId() = ItemId(this)
+
     companion object : AdatCompanion<LamportTimestamp> {
         /**
          * Timestamp used by connecting peers.
          */
-        val CONNECTING = LamportTimestamp(0, 0)
+        val CONNECTING = LamportTimestamp(PeerId.CONNECTING, 0)
 
         /**
          * Timestamp used by origins, the first instances of an auto structure.
          */
-        val ORIGIN = LamportTimestamp(0, 1)
+        val ORIGIN = LamportTimestamp(PeerId.ORIGIN, 1)
     }
 }

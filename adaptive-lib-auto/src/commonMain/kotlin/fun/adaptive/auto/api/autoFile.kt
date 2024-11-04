@@ -1,22 +1,9 @@
 package `fun`.adaptive.auto.api
 
-import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.AdatCompanion
-import `fun`.adaptive.adat.toArray
-import `fun`.adaptive.adat.api.isValid
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.FileFrontend
 import `fun`.adaptive.auto.internal.origin.AutoInstance
-import `fun`.adaptive.auto.internal.origin.AutoItemBase
-import `fun`.adaptive.auto.model.AutoHandle
-import `fun`.adaptive.auto.model.ItemId
-import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.utility.exists
-import `fun`.adaptive.wireformat.WireFormatProvider
-import `fun`.adaptive.wireformat.api.Json
-import kotlinx.io.files.Path
 
 /**
  * Register a file-based origin Auto instance with the [worker].
@@ -62,87 +49,87 @@ import kotlinx.io.files.Path
  *
  * @throws   IllegalArgumentException  if [initialValue] is `null` and no file exists on [path]
  */
-fun <A : AdatClass> autoFile(
-    worker: AutoWorker?,
-    companion: AdatCompanion<A>,
-    path: Path,
-    initialValue: A? = null,
-    wireFormatProvider: WireFormatProvider = Json,
-    listener: AutoItemListener<A>? = null,
-    serviceContext: ServiceContext? = null,
-    handle: AutoHandle = AutoHandle(),
-    itemId: ItemId = LamportTimestamp.CONNECTING,
-    trace: Boolean = false,
-): FileBase<A> {
-
-    val pItemId : ItemId
-    val propertyTimes : List<LamportTimestamp>
-    val value: Array<Any?>
-    val commit : Boolean
-
-    val size = companion.adatMetadata.properties.size
-
-    when {
-        initialValue != null -> {
-            pItemId = if (itemId === LamportTimestamp.CONNECTING) LamportTimestamp.ORIGIN else itemId
-            value = initialValue.toArray()
-            propertyTimes = MutableList(size) { pItemId }
-            commit = true
-
-            FileFrontend.write(path, wireFormatProvider, pItemId, propertyTimes, initialValue)
-        }
-
-        path.exists() -> {
-            val r = FileFrontend.read<A>(path, wireFormatProvider)
-            pItemId = r.first ?: itemId
-            value = r.third.toArray()
-            propertyTimes = r.second
-            commit = true
-
-            check(r.third.adatCompanion.wireFormatName == companion.wireFormatName) {
-                "type mismatch in $path: ${r.third.adatCompanion.wireFormatName} != ${companion.wireFormatName}"
-            }
-
-            check(r.third.isValid()) { "validation failed for content of $path" }
-        }
-
-        else -> {
-            pItemId = if (itemId === LamportTimestamp.CONNECTING) LamportTimestamp.ORIGIN else itemId
-            value = arrayOfNulls<Any?>(size)
-            propertyTimes = MutableList(size) { LamportTimestamp.CONNECTING }
-            commit = false
-        }
-    }
-
-    return AutoItemBase(
-        worker,
-        handle,
-        serviceContext,
-        companion.adatWireFormat,
-        trace
-    ) {
-
-        if (listener != null) context.addListener(listener)
-
-        backend = PropertyBackend(
-            context,
-            pItemId,
-            null,
-            value,
-            propertyTimes
-        )
-
-        frontend = FileFrontend(
-            backend,
-            companion.adatWireFormat,
-            pItemId,
-            null, null,
-            wireFormatProvider,
-            path
-        )
-
-        if (commit) {
-            frontend.commit(initial = true, fromBackend = false)
-        }
-    }
-}
+//fun <A : AdatClass> autoFile(
+//    worker: AutoWorker?,
+//    companion: AdatCompanion<A>,
+//    path: Path,
+//    initialValue: A? = null,
+//    wireFormatProvider: WireFormatProvider = Json,
+//    listener: AutoItemListener<A>? = null,
+//    serviceContext: ServiceContext? = null,
+//    handle: AutoHandle = AutoHandle(),
+//    itemId: ItemId = LamportTimestamp.CONNECTING,
+//    trace: Boolean = false,
+//): FileBase<A> {
+//
+//    val pItemId : ItemId
+//    val propertyTimes : List<LamportTimestamp>
+//    val value: Array<Any?>
+//    val commit : Boolean
+//
+//    val size = companion.adatMetadata.properties.size
+//
+//    when {
+//        initialValue != null -> {
+//            pItemId = if (itemId === LamportTimestamp.CONNECTING) LamportTimestamp.ORIGIN else itemId
+//            value = initialValue.toArray()
+//            propertyTimes = MutableList(size) { pItemId }
+//            commit = true
+//
+//            FileFrontend.write(path, wireFormatProvider, pItemId, propertyTimes, initialValue)
+//        }
+//
+//        path.exists() -> {
+//            val r = FileFrontend.read<A>(path, wireFormatProvider)
+//            pItemId = r.first ?: itemId
+//            value = r.third.toArray()
+//            propertyTimes = r.second
+//            commit = true
+//
+//            check(r.third.adatCompanion.wireFormatName == companion.wireFormatName) {
+//                "type mismatch in $path: ${r.third.adatCompanion.wireFormatName} != ${companion.wireFormatName}"
+//            }
+//
+//            check(r.third.isValid()) { "validation failed for content of $path" }
+//        }
+//
+//        else -> {
+//            pItemId = if (itemId === LamportTimestamp.CONNECTING) LamportTimestamp.ORIGIN else itemId
+//            value = arrayOfNulls<Any?>(size)
+//            propertyTimes = MutableList(size) { LamportTimestamp.CONNECTING }
+//            commit = false
+//        }
+//    }
+//
+//    return AutoItemBase(
+//        worker,
+//        handle,
+//        serviceContext,
+//        companion.adatWireFormat,
+//        trace
+//    ) {
+//
+//        if (listener != null) context.addListener(listener)
+//
+//        backend = PropertyBackend(
+//            context,
+//            pItemId,
+//            null,
+//            value,
+//            propertyTimes
+//        )
+//
+//        frontend = FileFrontend(
+//            backend,
+//            companion.adatWireFormat,
+//            pItemId,
+//            null, null,
+//            wireFormatProvider,
+//            path
+//        )
+//
+//        if (commit) {
+//            frontend.commit(initial = true, fromBackend = false)
+//        }
+//    }
+//}

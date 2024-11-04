@@ -4,19 +4,18 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.api.adatCompanionOf
 import `fun`.adaptive.adat.toArray
+import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.internal.origin.AutoInstance
-import `fun`.adaptive.auto.internal.origin.AutoItemBase
+import `fun`.adaptive.auto.internal.origin.AutoInstanceBuilder
+import `fun`.adaptive.auto.internal.origin.AutoItem
 import `fun`.adaptive.auto.internal.producer.AutoItemProducer
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoConnectionType
-import `fun`.adaptive.auto.model.ItemId
-import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.Producer
-import `fun`.adaptive.service.ServiceContext
 
 /**
  * Create an **endpoint** and connect it to [peer] with **direct** connection.
@@ -94,16 +93,16 @@ fun <A : AdatClass> autoItem(
     initialValue: A,
     listener: AutoItemListener<A>? = null,
     trace: Boolean = false,
-): AutoInstance<PropertyBackend<A>, AdatClassFrontend<A>, A, A> =
-    autoItem(
-        worker = null,
-        companion = initialValue.adatCompanion as AdatCompanion<A>,
+): AutoItem<PropertyBackend<A>, AdatClassFrontend<A>, A> =
+
+    buildItem(
+        origin = true,
+        service = false,
         initialValue = initialValue,
+        defaultWireFormat = (initialValue.adatCompanion as AdatCompanion<A>).adatWireFormat,
         listener = listener,
-        register = false,
         trace = trace
     )
-
 
 /**
  * Create an **origin controller** with [initialValue] and register
@@ -126,131 +125,87 @@ fun <A : AdatClass> autoItem(
     initialValue: A,
     listener: AutoItemListener<A>? = null,
     trace: Boolean = false,
-): AutoInstance<PropertyBackend<A>, AdatClassFrontend<A>, A, A> =
-    autoItem(
-        worker = worker,
+): AutoItem<PropertyBackend<A>, AdatClassFrontend<A>, A> =
+
+    buildItem(
+        origin = true,
+        service = true,
         initialValue = initialValue,
-        companion = initialValue.adatCompanion as AdatCompanion<A>,
+        defaultWireFormat = (initialValue.adatCompanion as AdatCompanion<A>).adatWireFormat,
         listener = listener,
-        register = false,
-        trace = trace
+        trace = trace,
+        worker = worker
     )
 
-
 /**
- * Create an auto instance with no initial value and connect
+ * Create a **node** with no initial value and connect
  * it to another auto node.
  *
  * The created instance:
  *
- * - **initiates a connection** with [infoFun]
+ * - **initiates a connection** with [infoFunSuspend]
  * - **is registered** with the [worker]
  * - may have **service or direct** connections
  *
- * @param    worker         The worker to register this instance with.
- * @param    listener       An optional listener to get auto events.
- * @param    trace          Log trace information.
- * @param    infoFun        Called to get the connection info from the peer.
+ * @param    worker          The worker to register this instance with.
+ * @param    listener        An optional listener to get auto events.
+ * @param    trace           Log trace information.
+ * @param    infoFunSuspend  Called to get the connection info from the peer.
  */
 @Suppress("UNCHECKED_CAST")
-suspend fun <A : AdatClass> autoItem(
+fun <A : AdatClass> autoItem(
     worker: AutoWorker,
     listener: AutoItemListener<A>? = null,
     trace: Boolean = false,
-    infoFun: suspend () -> AutoConnectionInfo<A>,
-): AutoInstance<PropertyBackend<A>, AdatClassFrontend<A>, A, A> {
-    return autoItem(
-        worker = worker,
-        companion = adatCompanionOf<A>(),
+    infoFunSuspend: InfoFunSuspend<PropertyBackend<A>, AdatClassFrontend<A>, A, A>,
+): AutoItem<PropertyBackend<A>, AdatClassFrontend<A>, A> =
+
+    buildItem(
+        origin = false,
+        service = true,
+        infoFunSuspend = infoFunSuspend,
+        defaultWireFormat = adatCompanionOf<A>().adatWireFormat,
         listener = listener,
-        register = false,
         trace = trace,
-        infoFun = infoFun
+        worker = worker
     )
-}
 
-/**
- * Registers a copy of [initialValue] as an Auto instance with [worker].
- *
- * After registration peers can use [autoItem] to connect to the registered
- * instance. To get the connection info needed for the [autoItem]
- * use the `connectInfo` function of the returned frontend.
- *
- * Property changes (on any peer) generate a new instance (on all peers).
- *
- * Each new instance is validated by default, so fragments that use values
- * produced by [autoList] can safely use the validation result as it is
- * up-to-date all the time.
- *
- * The instance is **NOT** thread safe.
- *
- * @return   An [AutoInstance] for this auto instance. Use this instance to change
- *           properties and to get connection info for the connecting peers.
- */
-fun <A : AdatClass> autoItem(
-    worker: AutoWorker?,
-    companion: AdatCompanion<A>,
+@Suppress("UNCHECKED_CAST")
+private fun <A : AdatClass> buildItem(
+    origin : Boolean,
+    service : Boolean,
+    defaultWireFormat : AdatClassWireFormat<A>,
     initialValue: A? = null,
+    infoFunSuspend: InfoFunSuspend<PropertyBackend<A>, AdatClassFrontend<A>, A, A>? = null,
     listener: AutoItemListener<A>? = null,
-    serviceContext: ServiceContext? = null,
-    //handle : AutoHandle = AutoHandle(),
-    //itemId: ItemId = handle.itemId ?: LamportTimestamp.CONNECTING,
-    register: Boolean = true,
-    trace: Boolean = false,
-): AutoItemBase<PropertyBackend<A>, AdatClassFrontend<A>, A> {
+    trace: Boolean,
+    worker : AutoWorker? = null,
+): AutoItem<PropertyBackend<A>, AdatClassFrontend<A>, A> =
 
-    val pItemId: ItemId
-    val propertyTimes: List<LamportTimestamp>
-    val value: Array<Any?>
-    val commit: Boolean
-
-    val size = companion.adatMetadata.properties.size
-
-    when {
-        initialValue != null -> {
-            pItemId = if (itemId === LamportTimestamp.CONNECTING) LamportTimestamp.ORIGIN else itemId
-            value = initialValue.toArray()
-            propertyTimes = MutableList(size) { pItemId }
-            commit = true
+    AutoInstanceBuilder<PropertyBackend<A>, AdatClassFrontend<A>, A, A>(
+        origin = origin,
+        persistent = false,
+        service = service,
+        collection = false,
+        infoFunSuspend = infoFunSuspend,
+        defaultWireFormat = defaultWireFormat,
+        itemListener = listener,
+        worker = worker,
+        trace = trace,
+        backendFun = { builder, info, value ->
+            PropertyBackend(
+                builder.instance,
+                null,
+                value?.toArray()
+            )
+        },
+        frontendFun = { builder ->
+            AdatClassFrontend(
+                builder.instance,
+                initialValue,
+                collectionFrontend = null
+            )
         }
-
-        else -> {
-            pItemId = if (itemId === LamportTimestamp.CONNECTING) LamportTimestamp.ORIGIN else itemId
-            value = arrayOfNulls<Any?>(size)
-            propertyTimes = MutableList(size) { LamportTimestamp.CONNECTING }
-            commit = false
-        }
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    val origin = AutoItemBase<PropertyBackend<A>, AdatClassFrontend<A>, A>(
-        worker,
-        handle,
-        serviceContext,
-        companion.adatWireFormat,
-        register = register,
-        trace = trace
-    ) {
-
-        if (listener != null) context.addListener(listener)
-
-        backend = PropertyBackend(
-            context,
-            pItemId,
-            null,
-            value,
-            propertyTimes
-        )
-
-        frontend = AdatClassFrontend(
-            backend,
-            companion.adatWireFormat,
-            initialValue,
-            pItemId,
-            null
-        )
-    }
-
-    return origin
-
-}
+    ).build(
+        initialValue
+    ) as AutoItem<PropertyBackend<A>, AdatClassFrontend<A>, A>

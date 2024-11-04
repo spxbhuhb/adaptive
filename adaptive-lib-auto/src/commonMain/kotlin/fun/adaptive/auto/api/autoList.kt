@@ -1,21 +1,7 @@
 package `fun`.adaptive.auto.api
 
-import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.AdatCompanion
-import `fun`.adaptive.adat.toArray
-import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
-import `fun`.adaptive.auto.internal.backend.PropertyBackend
-import `fun`.adaptive.auto.internal.backend.SetBackend
-import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.origin.AutoInstance
-import `fun`.adaptive.auto.internal.origin.AutoCollectionBase
-import `fun`.adaptive.auto.internal.producer.AutoList
-import `fun`.adaptive.auto.model.AutoConnectionInfo
-import `fun`.adaptive.auto.model.AutoHandle
-import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
-import `fun`.adaptive.foundation.producer.Producer
-import `fun`.adaptive.service.ServiceContext
 
 /**
  * Connect to peers with [AutoApi] and produce a list that is
@@ -37,23 +23,23 @@ import `fun`.adaptive.service.ServiceContext
  *
  * @return   `null` (it takes time to connect and synchronize)
  */
-@Producer
-fun <A : AdatClass> autoList(
-    companion: AdatCompanion<A>,
-    peer: AutoInstance<*, *, List<A>, A>? = null,
-    listener: AutoCollectionListener<A>? = null,
-    binding: AdaptiveStateVariableBinding<List<A>>? = null,
-    trace: Boolean = false,
-    connect: suspend () -> AutoConnectionInfo<List<A>>?,
-): List<A>? {
-    checkNotNull(binding)
-
-    val store = AutoList(binding, connect, companion.adatWireFormat, listener, peer, trace)
-
-    binding.targetFragment.addProducer(store)
-
-    return null
-}
+//@Producer
+//fun <A : AdatClass> autoList(
+//    companion: AdatCompanion<A>,
+//    peer: AutoInstance<*, *, List<A>, A>? = null,
+//    listener: AutoCollectionListener<A>? = null,
+//    binding: AdaptiveStateVariableBinding<List<A>>? = null,
+//    trace: Boolean = false,
+//    connect: suspend () -> AutoConnectionInfo<List<A>>?,
+//): List<A>? {
+//    checkNotNull(binding)
+//
+//    val store = AutoList(binding, connect, companion.adatWireFormat, listener, peer, trace)
+//
+//    binding.targetFragment.addProducer(store)
+//
+//    return null
+//}
 
 /**
  * Connect to peers with [AutoApi] and produce a list that is
@@ -75,23 +61,23 @@ fun <A : AdatClass> autoList(
  *
  * @return   `null` (it takes time to connect and synchronize)
  */
-@Producer
-fun <A : AdatClass> autoList(
-    peer: AutoInstance<*, *, List<A>, A>? = null,
-    defaultWireFormat: AdatClassWireFormat<*>? = null,
-    listener: AutoCollectionListener<A>? = null,
-    binding: AdaptiveStateVariableBinding<List<A>>? = null,
-    trace: Boolean = false,
-    connect: suspend () -> AutoConnectionInfo<List<A>>,
-): List<A>? {
-    checkNotNull(binding)
-
-    val store = AutoList(binding, connect, defaultWireFormat, listener, peer, trace)
-
-    binding.targetFragment.addProducer(store)
-
-    return null
-}
+//@Producer
+//fun <A : AdatClass> autoList(
+//    peer: AutoInstance<*, *, List<A>, A>? = null,
+//    defaultWireFormat: AdatClassWireFormat<*>? = null,
+//    listener: AutoCollectionListener<A>? = null,
+//    binding: AdaptiveStateVariableBinding<List<A>>? = null,
+//    trace: Boolean = false,
+//    connect: suspend () -> AutoConnectionInfo<List<A>>,
+//): List<A>? {
+//    checkNotNull(binding)
+//
+//    val store = AutoList(binding, connect, defaultWireFormat, listener, peer, trace)
+//
+//    binding.targetFragment.addProducer(store)
+//
+//    return null
+//}
 
 /**
  * Creates an Auto List.
@@ -121,30 +107,30 @@ fun <A : AdatClass> autoList(
  * @return   An [AutoInstance] for this auto list. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  */
-fun <A : AdatClass> autoList(
-    worker: AutoWorker,
-    defaultWireFormat: AdatClassWireFormat<*>? = null,
-    listener : AutoCollectionListener<A>? = null,
-    serviceContext: ServiceContext? = null,
-    handle: AutoHandle = AutoHandle(),
-    register: Boolean = true,
-    trace: Boolean = false
-): ListBase<A> {
-
-    return AutoCollectionBase(
-        worker,
-        handle,
-        serviceContext,
-        defaultWireFormat,
-        trace,
-        register
-    ) {
-        if (listener != null) context.addListener(listener)
-        backend = SetBackend(context)
-        frontend = AdatClassListFrontend(backend)
-    }
-
-}
+//fun <A : AdatClass> autoList(
+//    worker: AutoWorker,
+//    defaultWireFormat: AdatClassWireFormat<*>? = null,
+//    listener : AutoCollectionListener<A>? = null,
+//    serviceContext: ServiceContext? = null,
+//    handle: AutoHandle = AutoHandle(),
+//    register: Boolean = true,
+//    trace: Boolean = false
+//): ListBase<A> {
+//
+//    return AutoCollectionBase(
+//        worker,
+//        handle,
+//        serviceContext,
+//        defaultWireFormat,
+//        trace,
+//        register
+//    ) {
+//        if (listener != null) context.addListener(listener)
+//        backend = SetBackend(context)
+//        frontend = AdatClassListFrontend(backend)
+//    }
+//
+//}
 
 
 /**
@@ -170,40 +156,40 @@ fun <A : AdatClass> autoList(
  * @return   An [AutoInstance] for this auto list. Use this instance to change
  *           properties and to get connection info for the connecting peers.
  */
-fun <A : AdatClass> autoList(
-    worker: AutoWorker,
-    companion: AdatCompanion<A>,
-    listener : AutoCollectionListener<A>? = null,
-    serviceContext: ServiceContext? = null,
-    handle: AutoHandle = AutoHandle(),
-    initialValues: List<A>? = null,
-    trace: Boolean = false
-): ListBase<A> {
-
-    return AutoCollectionBase(
-        worker,
-        handle,
-        serviceContext,
-        companion.adatWireFormat,
-        trace
-    ) {
-        if (listener != null) context.addListener(listener)
-
-        backend = SetBackend(
-            context,
-            initialValues?.mapIndexed { index, item ->
-                PropertyBackend<A>(
-                    context,
-                    ItemId(1, index + 1L),
-                    companion.wireFormatName,
-                    item.toArray()
-                )
-            }?.associateBy { it.itemId }?.toMutableMap()
-        )
-
-        frontend = AdatClassListFrontend(backend)
-
-        frontend.commit(initial = true, fromBackend = false)
-    }
-
-}
+//fun <A : AdatClass> autoList(
+//    worker: AutoWorker,
+//    companion: AdatCompanion<A>,
+//    listener : AutoCollectionListener<A>? = null,
+//    serviceContext: ServiceContext? = null,
+//    handle: AutoHandle = AutoHandle(),
+//    initialValues: List<A>? = null,
+//    trace: Boolean = false
+//): ListBase<A> {
+//
+//    return AutoCollectionBase(
+//        worker,
+//        handle,
+//        serviceContext,
+//        companion.adatWireFormat,
+//        trace
+//    ) {
+//        if (listener != null) context.addListener(listener)
+//
+//        backend = SetBackend(
+//            context,
+//            initialValues?.mapIndexed { index, item ->
+//                PropertyBackend<A>(
+//                    context,
+//                    ItemId(1, index + 1L),
+//                    companion.wireFormatName,
+//                    item.toArray()
+//                )
+//            }?.associateBy { it.itemId }?.toMutableMap()
+//        )
+//
+//        frontend = AdatClassListFrontend(backend)
+//
+//        frontend.commit(initial = true, fromBackend = false)
+//    }
+//
+//}

@@ -36,8 +36,8 @@ class FileFrontend<A : AdatClass>(
     collectionFrontend
 ) {
 
-    override fun commit(initial : Boolean, fromBackend: Boolean) {
-        super.commit(initial, fromBackend)
+    override fun commit(initial : Boolean, fromPeer: Boolean) {
+        super.commit(initial, fromPeer)
         write(path, wireFormatProvider, itemId, backend.propertyTimes, value)
     }
 
