@@ -1,28 +1,31 @@
 package `fun`.adaptive.auto.internal.connector
 
-import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.auto.api.AutoGeneric
-import `fun`.adaptive.auto.backend.AutoWorker
-import `fun`.adaptive.auto.internal.backend.AutoBackend
-import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.model.AutoHandle
+import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.AutoOperation
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 
 class DirectConnector(
-    val instance : AutoGeneric,
-    val peer: AutoGeneric,
+    val instance: AutoGeneric,
+    val connectingPeer: AutoGeneric
 ) : AutoConnector() {
 
     override val peerHandle: AutoHandle
-        get() = peer.handle
+        get() = connectingPeer.handle
+
+    suspend fun run(connectingTime: LamportTimestamp) {
+        instance.backend.syncPeer(this, connectingTime, null)
+    }
 
     override fun send(operation: AutoOperation) {
-        peer.receive(operation)
+        connectingPeer.backend.receive(operation)
     }
 
     override suspend fun disconnect() {
-        peer.removePeer(instance.handle)
-        instance.removePeer(peer.handle)
+        connectingPeer.removeConnector(instance.handle)
+        instance.removeConnector(connectingPeer.handle)
     }
 
     override fun dispose() {

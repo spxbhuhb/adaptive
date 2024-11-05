@@ -57,13 +57,13 @@ A (time, name, value) triple kept synchronized across all peers.
 
 A set of *auto properties* with a unique item id.
 
-**Auto Set**
+**Auto Collection**
 
-A set of *auto items*.
+A collection of *auto items*.
 
 **Garbage Collection**
 
-A cleanup of *auto set* remove information. The information about
+A cleanup of *auto collection* remove information. The information about
 removed items must be kept until all connected peers reach the same
 *milestone*.
 
@@ -80,19 +80,30 @@ Updates an *auto property*, changing the time and value of the property.
 
 **item add**
 
-Add item(s) to an *auto set*.
+Add item(s) to an *auto collection*.
 
 **item remove**
 
-Remove item(s) from an *auto set*.
+Remove item(s) from an *auto collection*.
 
-**connect**
+## Connections
 
-Connects an *auto instance* to a *controller*.
+Auto supports direct and service connections, using `DirectConnector` and `ServiceConnector`.
 
-**disconnect**
+- `DirectConnector` simply calls `receive` of the peer instance.
+- `ServiceConnector` uses `AutoApi` to send updates to the peer.
 
-Disconnects an *auto instance* from a *controller*.
+Connectors are created at two points:
+
+- in `AutoInstanceBuilder` to create a connector of for a connecting instance
+- in `AutoWorker` to create a connector for an accepting instance
+
+When created, the connectors launch a synchronization process that synchronizes
+the content of the connected instances.
+
+In case of `ServiceConnector` the connector handles communication breaks. In case
+of lost connection it tries to reconnect to the peer. After reconnecting, the
+synchronization process starts again.
 
 ## Use Cases
 
@@ -226,28 +237,4 @@ commands = autoFolder<AioCommand>(
 
 commands.connect(waitForSync = 10.seconds) { connectInfo }
 ```
-
-
-## Service Connection
-
-Service connection uses `AutoApi` and `ServiceConnector` to connect two auto instances.
-The connecting instance uses `AutoApi.addPeer` and `BackendBase.addPeer` to register 
-the two directions of the connection.
-
-The connection is made by calling the `serviceConnect` global function.
-
-`serviceConnect`
-    - runs the function passed to get the connection info
-    - calls `AutoApi.addPeer` to add the connection on the remote peer
-    - 
-
-`AutoApi.addPeer` - this runs on the "connected to" peer
-    - calls `AutoWorker.addPeer`
-        - creates a `ServiceConnector` with reconnect `false`
-        - calls `BackendBase.addPeer`
-        - starts the connector
-    - adds `PeerCleanup` to the session
-
-`BackendBase.addPeer` - this runs on both peers
-    - adds the connector to the context
 

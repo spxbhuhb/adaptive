@@ -25,6 +25,7 @@ import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 
 class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, IT : AdatClass>(
     val origin: Boolean,
@@ -32,8 +33,8 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, I
     val service: Boolean,
     val collection: Boolean,
     val info: AutoConnectionInfo<VT>? = null,
-    val infoFun: ((instance : AutoInstance<BE, FE, VT, IT>) -> AutoConnectionInfo<VT>)?= null,
-    val infoFunSuspend: InfoFunSuspend<BE,FE,VT,IT>? = null,
+    val infoFun: ((instance: AutoInstance<BE, FE, VT, IT>) -> AutoConnectionInfo<VT>)? = null,
+    val infoFunSuspend: InfoFunSuspend<BE, FE, VT, IT>? = null,
     val defaultWireFormat: AdatClassWireFormat<*>?,
     wireFormatProvider: WireFormatProvider = Proto,
     val itemListener: AutoItemListener<IT>? = null,
@@ -48,7 +49,7 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, I
 
     @Suppress("UNCHECKED_CAST")
     val instance = if (collection) {
-        AutoCollection<AutoCollectionBackend<IT>, AutoCollectionFrontend<IT>,IT>(defaultWireFormat, wireFormatProvider, scope)
+        AutoCollection<AutoCollectionBackend<IT>, AutoCollectionFrontend<IT>, IT>(defaultWireFormat, wireFormatProvider, scope)
     } else {
         AutoItem<AutoItemBackend<IT>, AutoItemFrontend<IT>, IT>(defaultWireFormat, wireFormatProvider, scope)
     } as AutoInstance<BE, FE, VT, IT>
@@ -58,7 +59,7 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, I
 
     fun build(
         initialValue: VT?,
-    ) : AutoInstance<BE, FE, VT, IT> {
+    ): AutoInstance<BE, FE, VT, IT> {
         instance.frontend = frontendFun(this)
 
         val (loadedInfo, loadedValue) = frontend.load()
@@ -81,10 +82,10 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, I
         addListener()
         addCleanup()
 
-        if (! origin) {
-            createConnector(connectionInfo)
-        } else {
+        if (origin) {
             instance.setInfo(connectionInfo !!, worker)
+        } else {
+            createConnector(connectionInfo)
         }
 
         return instance
@@ -152,12 +153,17 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, I
         checkNotNull(worker) { "cannot register without a worker" }
         val adapter = checkNotNull(worker.adapter) { "cannot register without an adapter (the passed worker does not have one $worker)" }
 
-        ServiceConnector(
-            instance,
-            getService<AutoApi>(adapter.transport),
-            connectionInfo,
-            connecting = true
-        )
+        val connector =
+            ServiceConnector(
+                instance,
+                getService<AutoApi>(adapter.transport),
+                connectionInfo.acceptingHandle,
+                connecting = true
+            )
+
+        instance.addConnector(connector)
+        scope.launch { supervisorScope { connector.run(connectionInfo.acceptingTime) } }
+
     }
 
     fun createDirectConnector(connectionInfo: AutoConnectionInfo<VT>) {
@@ -167,8 +173,14 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, I
         val peer = worker.instances[connectionInfo.acceptingHandle.globalId]
         checkNotNull(peer) { "direct backend for ${connectionInfo.acceptingHandle.globalId} is missing" }
 
-        instance.addPeer(DirectConnector(instance, peer), connectionInfo.acceptingTime)
-        peer.addPeer(DirectConnector(peer, instance), instance.time)
+        val thisConnector = DirectConnector(instance, peer)
+        instance.addConnector(thisConnector)
+        scope.launch { supervisorScope { thisConnector.run(connectionInfo.acceptingTime) } }
+
+        val peerConnector = DirectConnector(peer, instance)
+        peer.addConnector(peerConnector)
+        scope.launch { supervisorScope { peerConnector.run(instance.time) } }
 
     }
+
 }

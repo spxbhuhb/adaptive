@@ -2,7 +2,6 @@ package `fun`.adaptive.auto.backend
 
 import `fun`.adaptive.auto.api.AutoGeneric
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
-import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.AutoOperation
@@ -13,6 +12,7 @@ import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 
 class AutoWorker : WorkerImpl<AutoWorker> {
 
@@ -48,27 +48,25 @@ class AutoWorker : WorkerImpl<AutoWorker> {
             .time
 
     fun addPeer(
-        info : AutoConnectionInfo<*>,
-        connectingPeerTime : LamportTimestamp,
+        thisHandle: AutoHandle,
+        connectingHandle: AutoHandle,
+        connectingTime : LamportTimestamp,
         transport: ServiceCallTransport
     ): LamportTimestamp {
         val instance = instanceLock.use {
-            checkNotNull(instances[info.acceptingHandle.globalId]) { "missing auto instance: $info" }
+            checkNotNull(instances[thisHandle.globalId]) { "missing auto instance: $thisHandle" }
         }
 
         val connector = ServiceConnector(
             instance,
             getService(transport),
-            info,
+            connectingHandle,
             connecting = false
         )
 
-        val time = instance.addPeer(
-            connector,
-            connectingPeerTime
-        )
+        val time = instance.addConnector(connector)
 
-        scope.launch { connector.run() }
+        scope.launch { supervisorScope {  connector.run(connectingTime) } }
 
         return time
     }
@@ -78,7 +76,7 @@ class AutoWorker : WorkerImpl<AutoWorker> {
             // Decided not to throw an exception here as this is a pretty normal occurrence after
             // server start when the connected peers try to disconnect from with the old handle.
             // TODO should we try and persist handles when it's possible?
-            instances[handle.globalId]?.removePeer(handle)
+            instances[handle.globalId]?.removeConnector(handle)
         }
 
     fun receive(handle: AutoHandle, operation: AutoOperation) {

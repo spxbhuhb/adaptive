@@ -2,11 +2,11 @@ package `fun`.adaptive.auto.internal.frontend
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
-import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
-import `fun`.adaptive.auto.internal.backend.PropertyBackend
-import `fun`.adaptive.auto.model.AutoHandle
+import `fun`.adaptive.auto.internal.backend.AutoItemBackend
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.auto.model.PeerId
 import `fun`.adaptive.utility.read
 import `fun`.adaptive.utility.write
 import `fun`.adaptive.wireformat.WireFormat
@@ -20,25 +20,21 @@ import kotlinx.io.files.SystemFileSystem
 /**
  * Auto frontend to store properties in a file specified by [path].
  */
-class FileFrontend<A : AdatClass>(
-    backend: PropertyBackend<A>,
-    wireFormat: AdatClassWireFormat<A>,
-    itemId: ItemId,
-    initialValue: A?,
-    collectionFrontend: AutoCollectionFrontend<A>?,
-    val wireFormatProvider: WireFormatProvider,
+class FileFrontend<IT : AdatClass>(
+    instance: AutoInstance<*, *, IT, IT>,
+    initialValue: IT?,
+    collectionFrontend: AutoCollectionFrontend<IT>?,
+    itemId: ItemId = ItemId.CONNECTING,
     val path: Path,
-) : AdatClassFrontend<A>(
-    backend,
-    wireFormat,
-    initialValue,
-    itemId,
-    collectionFrontend
+) : AdatClassFrontend<IT>(
+    instance, initialValue, collectionFrontend, itemId
 ) {
+
+    lateinit var backend : AutoItemBackend<IT>
 
     override fun commit(initial : Boolean, fromPeer: Boolean) {
         super.commit(initial, fromPeer)
-        write(path, wireFormatProvider, itemId, backend.propertyTimes, value)
+        write(path, instance.wireFormatProvider, itemId, instance.backend.propertyTimes, value)
     }
 
     override fun removed(fromBackend: Boolean) {
@@ -53,7 +49,7 @@ class FileFrontend<A : AdatClass>(
             val times = mutableListOf<Long>()
 
             for (propertyTime in propertyTimes) {
-                times += propertyTime.peerId
+                times += propertyTime.peerId.value
                 times += propertyTime.timestamp
             }
 
@@ -62,7 +58,7 @@ class FileFrontend<A : AdatClass>(
                 .encoder()
                 .pseudoInstanceStart()
                 .string(1, "type", value.adatCompanion.wireFormatName)
-                .instanceOrNull(2, "itemId", itemId, ItemId)
+                .instanceOrNull(2, "itemId", itemId.value, LamportTimestamp)
                 .instance(3, "properties", value, value.adatCompanion as AdatCompanion<A>)
                 .instance(4, "propertyTimes", times, ListWireFormat(LongWireFormat))
                 .pseudoInstanceEnd()
@@ -75,7 +71,7 @@ class FileFrontend<A : AdatClass>(
             val decoder = wireFormatProvider.decoder(path.read())
 
             val type = decoder.string(1, "type")
-            val itemId = decoder.instanceOrNull(2, "itemId", ItemId)
+            val itemId = decoder.instanceOrNull(2, "itemId", LamportTimestamp)?.let { ItemId(it) }
 
             @Suppress("UNCHECKED_CAST")
             val wireFormat = requireNotNull(WireFormatRegistry[type] as? WireFormat<AdatClass>) { "missing wire format for $type" }
@@ -89,15 +85,11 @@ class FileFrontend<A : AdatClass>(
             val propertyTimes = mutableListOf<LamportTimestamp>()
 
             for (i in times.indices step 2) {
-                propertyTimes += LamportTimestamp(times[i], times[i + 1])
+                propertyTimes += LamportTimestamp(PeerId(times[i]), times[i + 1])
             }
 
             return Triple(itemId, propertyTimes, value)
         }
-    }
-
-    override fun loadHandle(): AutoHandle? {
-        return AutoHandle()
     }
 
 }

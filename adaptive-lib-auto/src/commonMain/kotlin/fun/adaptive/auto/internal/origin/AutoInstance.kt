@@ -25,8 +25,6 @@ import `fun`.adaptive.utility.safeSuspendCall
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
 import kotlin.time.Duration
 
 /**
@@ -160,7 +158,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT,
     }
 
     fun receive(receivedTime: ItemId) {
-        safeTime.compute { it.receive(receivedTime.asLamportTimestamp()) }
+        safeTime.compute { it.receive(receivedTime.value) }
     }
 
     fun nextTime(): LamportTimestamp =
@@ -174,23 +172,17 @@ abstract class AutoInstance<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT,
      * Add a connection to a peer. The instance launches `backend.syncPeer` to send all known
      * operations that happened after the [peerTime] to the peer.
      */
-    fun addPeer(connector: AutoConnector, peerTime: LamportTimestamp): LamportTimestamp {
+    fun addConnector(connector: AutoConnector,): LamportTimestamp {
 
         lock.use {
             connectors += connector
             closePeers += connector.peerHandle.peerId
         }
 
-        scope.launch {
-            supervisorScope {
-                launch { backend.syncPeer(connector, peerTime, null) }
-            }
-        }
-
         return time
     }
 
-    fun removePeer(handle: AutoHandle) {
+    fun removeConnector(handle: AutoHandle) {
         lock.use {
             val toRemove = connectors.filter { it.peerHandle.peerId == handle.peerId }
 

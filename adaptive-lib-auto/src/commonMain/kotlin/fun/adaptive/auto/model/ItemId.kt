@@ -1,14 +1,11 @@
 package `fun`.adaptive.auto.model
 
-value class ItemId(private val id: LamportTimestamp) : Comparable<ItemId> {
-
-
-    fun asLamportTimestamp(): LamportTimestamp = id
+value class ItemId(val value: LamportTimestamp) : Comparable<ItemId> {
 
     val timestamp
-        get() = id.timestamp
+        get() = value.timestamp
 
-    override fun compareTo(other: ItemId): Int = id.compareTo(other.id)
+    override fun compareTo(other: ItemId): Int = value.compareTo(other.value)
 
     companion object {
         val CONNECTING = ItemId(LamportTimestamp.CONNECTING)

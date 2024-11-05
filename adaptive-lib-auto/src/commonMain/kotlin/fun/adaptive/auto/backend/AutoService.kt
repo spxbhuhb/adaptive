@@ -1,6 +1,8 @@
 package `fun`.adaptive.auto.backend
 
 import `fun`.adaptive.auto.api.AutoApi
+import `fun`.adaptive.auto.model.AutoConnectionInfo
+import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.*

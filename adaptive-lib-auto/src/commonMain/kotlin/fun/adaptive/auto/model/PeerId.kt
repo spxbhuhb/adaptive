@@ -1,8 +1,8 @@
 package `fun`.adaptive.auto.model
 
-value class PeerId(private val id: Long) : Comparable<PeerId> {
+value class PeerId(val value: Long) : Comparable<PeerId> {
 
-    override fun compareTo(other: PeerId): Int = id.compareTo(other.id)
+    override fun compareTo(other: PeerId): Int = value.compareTo(other.value)
 
     companion object {
         val ORIGIN = PeerId(0L)
