@@ -1,6 +1,7 @@
 package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.frontend.AutoItemFrontend
 import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.model.ItemId
@@ -11,6 +12,8 @@ abstract class AutoItemBackend<IT : AdatClass>(
 ) : AutoBackend<IT>(instance) {
 
     abstract val itemId : ItemId
+
+    abstract val wireFormat : AdatClassWireFormat<*>
 
     abstract fun getItem() : IT
 
@@ -34,4 +37,5 @@ abstract class AutoItemBackend<IT : AdatClass>(
         frontend?.removed(fromBackend)
     }
 
+    internal abstract fun encode() : ByteArray
 }

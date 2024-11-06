@@ -16,33 +16,46 @@ class PropertyBackend<IT : AdatClass>(
     instance: AutoInstance<*, *, *, IT>,
     val wireFormatName: String?,
     initialValues: Array<Any?>?,
-    propertyTimes: List<LamportTimestamp>? = null,
+    propertyTimes: List<LamportTimestamp>?,
     override val itemId: ItemId = ItemId.CONNECTING,
 ) : AutoItemBackend<IT>(instance) {
 
-    val wireFormat = wireFormatFor(wireFormatName)
+    var lastUpdate = propertyTimes?.max() ?: LamportTimestamp.CONNECTING
+        private set
 
-    val properties: List<AdatPropertyWireFormat<*>> = wireFormat.propertyWireFormats
+    override val wireFormat = wireFormatFor(wireFormatName)
 
-    operator fun List<AdatPropertyWireFormat<*>>.get(name: String): AdatPropertyWireFormat<*> =
-        first { it.metadata.name == name }
+    private val properties: List<AdatPropertyWireFormat<*>> = wireFormat.propertyWireFormats
 
-    fun indexOf(name: String) =
-        properties[name].metadata.index
+    private val values: Array<Any?> = initialValues?.copyOf() ?: arrayOfNulls(properties.size)
 
-    val values: Array<Any?> = initialValues?.copyOf() ?: arrayOfNulls(properties.size)
-
-    val lastUpdate = propertyTimes?.max() ?: LamportTimestamp.CONNECTING
-
-    val propertyTimes = propertyTimes?.toMutableList()?.also {
-        // this happens when we extend the property list of the adat class
-        while (it.size < values.size) {
-            it += LamportTimestamp.CONNECTING
-        }
-    } ?: MutableList(properties.size) { LamportTimestamp.CONNECTING }
+    private val propertyTimes = initPropertyTimes(propertyTimes)
 
     init {
         trace { "INIT  itemId=$itemId  ${initialValues.contentToString()}" }
+    }
+
+    private fun initPropertyTimes(propertyTimes: List<LamportTimestamp>?) : Array<LamportTimestamp> {
+
+        if (propertyTimes == null) {
+            return Array(properties.size) { LamportTimestamp.CONNECTING }
+        }
+
+        if (propertyTimes.size == properties.size) {
+            return Array(properties.size) { propertyTimes[it] }
+        }
+
+        // this happens when we extend the property list of the adat class, in that
+        // case the property time array does not contain the times for the new
+        // properties
+
+        return Array(properties.size) {
+            if (it < propertyTimes.size) {
+                propertyTimes[it]
+            } else {
+                LamportTimestamp.CONNECTING
+            }
+        }
     }
 
     // --------------------------------------------------------------------------------
@@ -125,6 +138,7 @@ class PropertyBackend<IT : AdatClass>(
 
                 values[index] = value
                 propertyTimes[index] = change.changeTime
+                lastUpdate = maxOf(lastUpdate, change.changeTime)
                 instance.receive(change.changeTime)
 
                 trace { "BE -> BE  CHANGE ${change.propertyName}=$value" }
@@ -205,7 +219,13 @@ class PropertyBackend<IT : AdatClass>(
         return wireFormat.newInstance(values) as IT
     }
 
-    fun encode(property: AdatPropertyWireFormat<*>): ByteArray {
+    private operator fun List<AdatPropertyWireFormat<*>>.get(name: String): AdatPropertyWireFormat<*> =
+        first { it.metadata.name == name }
+
+    private fun indexOf(name: String) =
+        properties[name].metadata.index
+
+    private fun encode(property: AdatPropertyWireFormat<*>): ByteArray {
         try {
             val index = property.index
             val value = values[index]
@@ -224,5 +244,10 @@ class PropertyBackend<IT : AdatClass>(
             throw e
         }
     }
+
+    override fun encode() =
+        wireFormat
+            .wireFormatEncode(instance.wireFormatProvider.encoder(), values)
+            .pack()
 
 }

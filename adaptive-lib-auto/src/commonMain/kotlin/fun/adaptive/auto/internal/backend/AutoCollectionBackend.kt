@@ -1,7 +1,6 @@
 package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.auto.internal.frontend.AutoCollectionFrontend
 import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.model.ItemId
@@ -18,7 +17,7 @@ abstract class AutoCollectionBackend<IT : AdatClass>(
     /**
      * Contains modification that should be applied when [AutoSyncEnd] arrives.
      */
-    val afterSync = mutableListOf<AutoModify>()
+    protected val afterSync = mutableListOf<AutoModify>()
 
     // --------------------------------------------------------------------------------
     // Operations from the frontend
@@ -28,16 +27,14 @@ abstract class AutoCollectionBackend<IT : AdatClass>(
         val time = instance.nextTime()
         val itemId = time.asItemId()
 
-        addItem(itemId, parentItemId, item, false)
-
-        val wireFormatName = wireFormatNameOrNull(item)
+        val item = addItem(itemId, parentItemId, item, false)
 
         val operation = AutoAdd(
             timestamp = time,
             itemId = itemId,
-            wireFormatName,
+            item.wireFormat.wireFormatName,
             parentItemId,
-            encode(wireFormatName, item.toArray()) // FIXME clean up the array/adat class confusion
+            item.encode()
         )
 
         trace { "FE -> BE  itemId=$itemId .. commit true .. $operation" }
@@ -65,21 +62,11 @@ abstract class AutoCollectionBackend<IT : AdatClass>(
     // Helpers
     // --------------------------------------------------------------------------------
 
-    abstract fun addItem(itemId: ItemId, parentItemId: ItemId?, value: IT, fromBackend: Boolean)
-
-    fun wireFormatNameOrNull(item: AdatClass): String? {
-        val itemWireFormatName = item.adatCompanion.wireFormatName
-        // TODO I'm not sure about using null here, might cause problems during runtime if the configurations mismatch
-        return if (itemWireFormatName == instance.defaultWireFormat?.wireFormatName) null else itemWireFormatName
-    }
-
-    fun encode(wireFormatName: String?, values: Array<Any?>) =
-        wireFormatFor(wireFormatName)
-            .wireFormatEncode(instance.wireFormatProvider.encoder(), values)
-            .pack()
-
-    fun decode(wireFormatName: String?, payload: ByteArray) =
-        wireFormatFor(wireFormatName)
-            .wireFormatDecode(instance.wireFormatProvider.decoder(payload))
+    protected abstract fun addItem(
+        itemId: ItemId,
+        parentItemId: ItemId?,
+        value: IT,
+        fromBackend: Boolean
+    ) : AutoItemBackend<IT>
 
 }

@@ -14,7 +14,7 @@ class SetBackend<IT : AdatClass>(
     initialValue: MutableMap<ItemId, PropertyBackend<IT>>? = null,
 ) : AutoCollectionBackend<IT>(instance) {
 
-    val data = SetBackendData<IT>(initialValue)
+    private val data = SetBackendData<IT>(initialValue)
 
     init {
         if (initialValue != null && initialValue.isNotEmpty()) {
@@ -54,7 +54,7 @@ class SetBackend<IT : AdatClass>(
         item.update(itemId, propertyName, propertyValue) // calls instance.commit and distribute
     }
 
-    override fun update(itemId: ItemId, new : IT) {
+    override fun update(itemId: ItemId, new: IT) {
         val item = data[itemId] ?: return
         item.update(itemId, new) // calls instance.commit and distribute
     }
@@ -66,8 +66,13 @@ class SetBackend<IT : AdatClass>(
     override fun add(operation: AutoAdd, commit: Boolean) {
         trace { "BE -> BE  $operation" }
 
+        val wireFormat = wireFormatFor(operation.wireFormatName)
+
+        // TODO optimize, it is inefficient to encode into an instance and then convert it into an array
         @Suppress("UNCHECKED_CAST")
-        addItem(operation.itemId, null, decode(operation.wireFormatName, operation.payload) as IT, fromBackend = true)
+        val value = wireFormat.wireFormatDecode(instance.wireFormatProvider.decoder(operation.payload)) as IT
+
+        addItem(operation.itemId, null, value, fromBackend = true)
 
         instance.commit(null, initial = false, fromPeer = true)
 
@@ -191,7 +196,7 @@ class SetBackend<IT : AdatClass>(
             val itemId = item.itemId
 
             if (itemId.timestamp > syncFrom.timestamp) {
-                add += AutoAdd(time, itemId, item.wireFormatName, null, encode(item.wireFormatName, item.values))
+                add += AutoAdd(time, itemId, item.wireFormatName, null, item.encode())
             } else {
                 item.syncPeer(connector, syncFrom, modify, false)
             }
@@ -212,7 +217,12 @@ class SetBackend<IT : AdatClass>(
     // Utility, common
     // --------------------------------------------------------------------------------
 
-    override fun addItem(itemId: ItemId, parentItemId: ItemId?, value: IT, fromBackend: Boolean) {
+    override fun addItem(
+        itemId: ItemId,
+        parentItemId: ItemId?,
+        value: IT,
+        fromBackend: Boolean
+    ) : AutoItemBackend<IT> {
 
         val values = value.toArray()
         val backend = PropertyBackend<IT>(instance, value.adatCompanion.wireFormatName, values, null, itemId = itemId)
@@ -222,6 +232,8 @@ class SetBackend<IT : AdatClass>(
         if (added) {
             instance.onChange(value, null, fromBackend)
         }
+
+        return backend
     }
 
 }
