@@ -2,11 +2,12 @@ package `fun`.adaptive.utility
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.api.adatCompanionOf
+import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
+import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
-import kotlinx.io.files.SystemTemporaryDirectory
 import kotlinx.io.readByteArray
 
 fun Path.write(bytes: ByteArray, append: Boolean = false) {
@@ -17,7 +18,7 @@ fun Path.read(): ByteArray {
     return SystemFileSystem.source(this).buffered().use { it.readByteArray() }
 }
 
-inline fun <reified A : AdatClass> Path.load(wireFormatProvider: WireFormatProvider) : A =
+fun <A> Path.load(wireFormatProvider: WireFormatProvider, wireFormat: AdatClassWireFormat<A>): A =
     wireFormatProvider.decoder(this.read()).asInstance(adatCompanionOf<A>().adatWireFormat)
 
 /**
@@ -31,16 +32,17 @@ inline fun <reified A : AdatClass> Path.load(wireFormatProvider: WireFormatProvi
  *
  * Reason for this is to avoid empty or partial file content.
  */
-inline fun <reified A : AdatClass> Path.save(value : A, wireFormatProvider: WireFormatProvider, withTemporaryFile: Boolean = true) {
+fun <A : AdatClass> save(path: Path, value: A, wireFormatProvider: WireFormatProvider, withTemporaryFile: Boolean = true) {
     val out = if (withTemporaryFile) {
-        Path(this.parent!!, this.name + ".tmp")
+        Path(path.parent !!, path.name + ".tmp")
     } else {
-        this
+        path
     }
 
+    @Suppress("UNCHECKED_CAST")
     wireFormatProvider.encoder()
         .pseudoInstanceStart()
-        .rawInstance(value, adatCompanionOf<A>().adatWireFormat)
+        .rawInstance(value, value.adatCompanion.adatWireFormat as WireFormat<A>)
         .pseudoInstanceEnd()
         .pack()
         .also {
@@ -48,7 +50,7 @@ inline fun <reified A : AdatClass> Path.save(value : A, wireFormatProvider: Wire
         }
 
     if (withTemporaryFile) {
-        SystemFileSystem.atomicMove(out, this)
+        SystemFileSystem.atomicMove(out, path)
     }
 }
 

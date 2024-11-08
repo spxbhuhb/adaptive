@@ -1,16 +1,21 @@
 package `fun`.adaptive.auto.internal.persistence
 
+import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.adat.AdatCompanion
-import `fun`.adaptive.auto.internal.origin.AutoItem
+import `fun`.adaptive.adat.api.adatCompanionOf
+import `fun`.adaptive.auto.internal.backend.AutoItemBackend
+import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoMetadata
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.PeerId
+import `fun`.adaptive.foundation.adaptive
+import `fun`.adaptive.utility.delete
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.load
 import `fun`.adaptive.utility.read
+import `fun`.adaptive.utility.save
 import `fun`.adaptive.utility.write
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatProvider
@@ -21,22 +26,28 @@ import kotlinx.io.files.Path
 
 class ItemFilePersistence<IT : AdatClass>(
     val path: Path,
+    backend: AutoItemBackend<IT>,
+    wireFormatProvider: WireFormatProvider,
+) : ItemPersistence<IT>(
+    backend,
+    wireFormatProvider
+) {
 
-    wireFormatProvider: WireFormatProvider
-) : ItemPersistence<IT>(wireFormatProvider) {
+    override fun load(): ItemExport<IT> {
+        if (! path.exists()) return ItemExport.none()
 
-    override fun load(): ItemLoad {
-        if (! path.exists()) return ItemLoad.NONE
-
-        val meta = loadMeta(path)
-
+        val meta = metaPath(path).load(wireFormatProvider, AutoMetadata.adatWireFormat)
         val (itemId, propertyTimes, value) = read<IT>(path, wireFormatProvider)
 
-        return ItemLoad(meta, itemId, propertyTimes, value.toArray())
+        return ItemExport(meta, itemId, propertyTimes, value)
     }
 
-    override fun onChange(itemId : ItemId, newValue: IT, oldValue: IT?) {
-        write(path, wireFormatProvider, itemId)
+    override fun save(export: ItemExport<IT>) {
+        val meta = checkNotNull(export.meta) as AutoMetadata<IT>
+
+        save(metaPath(path), meta, wireFormatProvider)
+
+        write(path, wireFormatProvider, export)
     }
 
     override fun onRemove() {
@@ -45,7 +56,11 @@ class ItemFilePersistence<IT : AdatClass>(
 
     companion object {
 
-        fun <A : AdatClass> write(path: Path, wireFormatProvider: WireFormatProvider, itemId: ItemId, propertyTimes: List<LamportTimestamp>, value: A) {
+        fun <IT : AdatClass> write(path: Path, wireFormatProvider: WireFormatProvider, export: ItemExport<IT>) {
+
+            val itemId = checkNotNull(export.itemId) { "export without item id" }
+            val propertyTimes = checkNotNull(export.propertyTimes) { "export without property times" }
+            val value = checkNotNull(export.value) { "export without value" }
 
             val times = mutableListOf<Long>()
 
@@ -60,7 +75,7 @@ class ItemFilePersistence<IT : AdatClass>(
                 .pseudoInstanceStart()
                 .string(1, "type", value.adatCompanion.wireFormatName)
                 .instanceOrNull(2, "itemId", itemId.value, LamportTimestamp)
-                .instance(3, "properties", value, value.adatCompanion as AdatCompanion<A>)
+                .instance(3, "properties", value, value.adatCompanion as AdatCompanion<IT>)
                 .instance(4, "propertyTimes", times, ListWireFormat(LongWireFormat))
                 .pseudoInstanceEnd()
                 .pack()
