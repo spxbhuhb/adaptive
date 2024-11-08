@@ -92,6 +92,7 @@ private val appNavState = autoInstance(Routes.grid)
 private object Routes {
     val dialog = NavState("Dialog")
     val editor = NavState("Editor")
+    val empty = NavState("Empty")
     val form = NavState("Form")
     val grid = NavState("Grid")
     val select = NavState("Select")
@@ -135,6 +136,7 @@ fun mainContent() {
             in Routes.dialog -> dialogRecipe()
             in Routes.editor -> editorRecipe()
             in Routes.form -> formRecipe()
+            in Routes.empty -> box { }
             in Routes.grid -> gridRecipe()
             in Routes.select -> selectRecipe()
             in Routes.sidebar -> sideBarRecipe()
