@@ -72,6 +72,8 @@ The namespace is based on SVG 1.1: https://www.w3.org/TR/SVG11
 
 Reference: https://www.w3.org/TR/SVG11/paths.html
 
+Test tool: [SvgPathEditor](https://yqnn.github.io/svg-path-editor/)
+
 | Function           | Variant            | Implemented | SVG                                                     |
 |--------------------|--------------------|-------------|---------------------------------------------------------|
 | Move To            | absolute           | yes         | M x y                                                   | 
