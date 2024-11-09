@@ -18,12 +18,9 @@ import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.ktor.ClientWebSocketServiceCallTransport
 import `fun`.adaptive.ktor.api.webSocketTransport
-import `fun`.adaptive.lib.auth.store.CredentialTable
-import `fun`.adaptive.lib.auth.store.PrincipalTable
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.testing.TestServiceTransport
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.utility.waitFor
 import `fun`.adaptive.utility.waitForSuspend
 import io.ktor.client.plugins.cookies.*
 import junit.framework.TestCase.assertNull

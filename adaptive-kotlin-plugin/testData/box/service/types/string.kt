@@ -2,7 +2,7 @@ package `fun`.adaptive.service
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.service.ServiceApi
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.testing.TestServiceTransport
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import kotlinx.coroutines.runBlocking

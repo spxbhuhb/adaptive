@@ -8,7 +8,7 @@ import `fun`.adaptive.auto.listener.ItemListenerTest.TestItemListener
 import `fun`.adaptive.auto.testing.AutoTestApi
 import `fun`.adaptive.auto.testing.AutoTestBase.Companion.autoTestWorker
 import `fun`.adaptive.foundation.query.firstImpl
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.api.getService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.withContext

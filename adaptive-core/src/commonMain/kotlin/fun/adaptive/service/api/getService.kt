@@ -2,8 +2,9 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package `fun`.adaptive.service
+package `fun`.adaptive.service.api
 
+import `fun`.adaptive.service.ServiceConsumer
 import `fun`.adaptive.service.transport.ServiceCallTransport
 
 /**

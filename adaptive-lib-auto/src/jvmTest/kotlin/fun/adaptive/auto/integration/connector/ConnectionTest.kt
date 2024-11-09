@@ -13,7 +13,7 @@ import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.lib.auth.auth
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.waitFor
 import kotlinx.coroutines.delay

@@ -6,7 +6,7 @@ import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.backend.builtin.WorkerImpl
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.getLock

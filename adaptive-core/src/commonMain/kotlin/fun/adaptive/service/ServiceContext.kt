@@ -5,6 +5,7 @@
 package `fun`.adaptive.service
 
 import `fun`.adaptive.service.model.ServiceSession
+import `fun`.adaptive.service.transport.FileTransport
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.CleanupHandler
 import `fun`.adaptive.utility.UUID
@@ -22,7 +23,8 @@ import `fun`.adaptive.utility.use
 open class ServiceContext(
     val transport: ServiceCallTransport,
     val uuid: UUID<ServiceContext> = UUID(),
-    val sessionOrNull: ServiceSession? = null
+    val sessionOrNull: ServiceSession? = null,
+    val fileTransport : FileTransport? = null
 ) {
     val session: ServiceSession
         get() = checkNotNull(sessionOrNull) { "missing or invalid session" }

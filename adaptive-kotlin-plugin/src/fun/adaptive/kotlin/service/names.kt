@@ -8,6 +8,7 @@ import org.jetbrains.kotlin.name.Name
 
 object Strings {
     const val SERVICES_PACKAGE = "fun.adaptive.service"
+    const val SERVICES_API_PACKAGE = "fun.adaptive.service.api"
     const val SERVICES_TRANSPORT_PACKAGE = "fun.adaptive.service.transport"
     const val BACKEND_BUILTIN_PACKAGE = "fun.adaptive.backend.builtin"
 
@@ -59,7 +60,7 @@ object ClassIds : NamesBase(Strings.SERVICES_PACKAGE) {
     val SERVICE_CALL_TRANSPORT = Strings.SERVICE_CALL_TRANSPORT.classId { FqNames.SERVICES_TRANSPORT_PACKAGE }
 }
 
-object CallableIds : NamesBase(Strings.SERVICES_PACKAGE) {
+object CallableIds : NamesBase(Strings.SERVICES_API_PACKAGE) {
     val GET_SERVICE = Strings.GET_SERVICE.callableId()
 }
 

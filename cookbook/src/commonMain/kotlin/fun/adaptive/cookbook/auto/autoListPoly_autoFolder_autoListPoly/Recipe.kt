@@ -10,7 +10,7 @@ import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.cookbook.auto.AutoRecipe
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.ensure
 import `fun`.adaptive.wireformat.WireFormatRegistry

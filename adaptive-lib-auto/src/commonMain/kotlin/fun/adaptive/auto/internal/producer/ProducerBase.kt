@@ -20,15 +20,13 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
 import `fun`.adaptive.log.AdaptiveLogger
 import `fun`.adaptive.log.getLogger
-import `fun`.adaptive.service.getService
-import `fun`.adaptive.utility.getLock
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.utility.safeCall
 import `fun`.adaptive.utility.safeLaunch
 import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 

@@ -17,10 +17,8 @@ import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.lib.auth.auth
 import `fun`.adaptive.lib.auth.crypto.BCrypt
-import `fun`.adaptive.lib.auth.store.CredentialTable
-import `fun`.adaptive.lib.auth.store.PrincipalTable
 import `fun`.adaptive.reflect.CallSiteName
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.utility.UUID
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking

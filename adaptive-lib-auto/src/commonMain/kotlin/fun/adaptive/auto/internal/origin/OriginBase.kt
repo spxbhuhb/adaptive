@@ -17,7 +17,7 @@ import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.CleanupHandler
 import `fun`.adaptive.wireformat.api.Proto

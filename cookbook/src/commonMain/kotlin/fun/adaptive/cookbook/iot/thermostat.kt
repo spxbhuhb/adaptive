@@ -13,7 +13,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.rangeTo
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.border
