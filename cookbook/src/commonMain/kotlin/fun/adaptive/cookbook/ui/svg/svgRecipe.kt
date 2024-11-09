@@ -2,16 +2,23 @@ package `fun`.adaptive.cookbook.ui.svg
 
 import `fun`.adaptive.cookbook.Res
 import `fun`.adaptive.cookbook.eco
+import `fun`.adaptive.cookbook.folder
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.producer.poll
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.svg.api.svg
+import `fun`.adaptive.graphics.svg.api.svgHeight
+import `fun`.adaptive.graphics.svg.api.svgWidth
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.colSpan
 import `fun`.adaptive.ui.api.colTemplate
+import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.maxWidth
-import `fun`.adaptive.ui.api.repeat
 import `fun`.adaptive.ui.api.rowTemplate
+import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
@@ -32,6 +39,11 @@ fun svgRecipe() {
         text(" - with color")
 
         colorChange()
+
+        box {
+            colSpan(2)
+            big()
+        }
     }
 }
 
@@ -43,4 +55,13 @@ private fun colorChange() {
     svg(Res.drawable.eco) .. colors[random]
 
     text(" - with changing color - $random")
+}
+
+@Adaptive
+private fun big() {
+    column {
+        gap { 16.dp }
+        svg(Res.drawable.eco) .. svgHeight(128.dp) .. svgWidth(128.dp) .. size(128.dp, 128.dp)
+        svg(Res.drawable.folder) .. svgHeight(128.dp) .. svgWidth(128.dp) .. size(128.dp, 128.dp)
+    }
 }

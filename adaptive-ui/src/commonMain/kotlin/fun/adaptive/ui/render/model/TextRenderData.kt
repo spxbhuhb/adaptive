@@ -7,6 +7,7 @@ package `fun`.adaptive.ui.render.model
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.instruction.SPixel
 import `fun`.adaptive.ui.instruction.decoration.Color
+import `fun`.adaptive.ui.instruction.sp
 
 class TextRenderData {
 
@@ -18,18 +19,19 @@ class TextRenderData {
     var italic: Boolean = false
     var underline: Boolean = false
     var smallCaps: Boolean = false
-    var noSelect : Boolean? = null
-    var color : Color? = null
+    var noSelect: Boolean? = null
+    var color: Color? = null
     var wrap: Boolean = true
 
     fun toCssString(adapter: AbstractAuiAdapter<*, *>): String {
         val s = mutableListOf<String>()
         if (underline) s += "underline"
         if (smallCaps) s += "small-caps"
-        (fontWeight ?: adapter.defaultTextRenderData.fontWeight)?.let { s += it.toString() }
-        // FIXME font size in toCSSString does not care about scaling
-        (fontSize ?: adapter.defaultTextRenderData.fontSize)?.let { s += it.value.toString() + "px" }
-        (fontName ?: adapter.defaultTextRenderData.fontName)?.let { s += "'$it'" }
+        s += "normal"
+        s += (fontWeight ?: adapter.defaultTextRenderData.fontWeight ?: "300").toString()
+        s += (fontSize?.value ?: adapter.defaultTextRenderData.fontSize?.value ?: 16).toString() + "px"  // FIXME font size in toCSSString does not care about scaling
+        s += "'${fontName ?: adapter.defaultTextRenderData.fontName ?: "Open Sans"}'"
+        // FIXME missing letter spacing
         return s.joinToString(" ")
     }
 

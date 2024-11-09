@@ -297,15 +297,15 @@ private fun cubicCurveRelative(parameters: List<StringBuilder>, parameterCount: 
     return x to y
 }
 
-private fun cubicCurveSmooth(absolute : Boolean, parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Double, Double>, commands: MutableList<SvgPathCommand>): Pair<Double, Double> {
+private fun cubicCurveSmooth(absolute: Boolean, parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Double, Double>, commands: MutableList<SvgPathCommand>): Pair<Double, Double> {
     check(parameterCount >= 4 && parameterCount % 4 == 0) { "invalid number of parameters" }
 
     var parameterIndex = 0
 
     var lastCommand: CubicCurve? = commands.lastOrNull() as? CubicCurve
 
-    var x : Double = position.first
-    var y : Double = position.second
+    var x: Double = position.first
+    var y: Double = position.second
 
     while (parameterIndex < parameterCount) {
         val x1: Double
@@ -317,8 +317,8 @@ private fun cubicCurveSmooth(absolute : Boolean, parameters: List<StringBuilder>
             x1 = x
             y1 = y
         } else {
-            x1 = 2 * x - lastCommand.x2
-            y1 = 2 * y - lastCommand.y2
+            x1 = 2 * lastCommand.x - lastCommand.x2
+            y1 = 2 * lastCommand.y - lastCommand.y2
         }
 
         if (absolute) {
@@ -365,16 +365,18 @@ private fun quadraticCurveRelative(parameters: List<StringBuilder>, parameterCou
     check(parameterCount >= 4 && parameterCount % 4 == 0) { "invalid number of parameters" }
 
     var parameterIndex = 0
-    var x = position.first
-    var y = position.second
+    var ox = position.first
+    var oy = position.second
     var x1: Double
     var y1: Double
+    var x = ox
+    var y = oy
 
     while (parameterIndex < parameterCount) {
-        x1 = x + parameters.toDouble(parameterIndex ++)
-        y1 = y + parameters.toDouble(parameterIndex ++)
-        x += parameters.toDouble(parameterIndex ++)
-        y += parameters.toDouble(parameterIndex ++)
+        x1 = ox + parameters.toDouble(parameterIndex ++)
+        y1 = oy + parameters.toDouble(parameterIndex ++)
+        x = ox + parameters.toDouble(parameterIndex ++)
+        y = oy + parameters.toDouble(parameterIndex ++)
 
         commands.add(QuadraticCurve(x1, y1, x, y))
     }
@@ -382,25 +384,25 @@ private fun quadraticCurveRelative(parameters: List<StringBuilder>, parameterCou
     return x to y
 }
 
-private fun quadraticCurveSmooth(absolute : Boolean, parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Double, Double>, commands: MutableList<SvgPathCommand>): Pair<Double, Double> {
+private fun quadraticCurveSmooth(absolute: Boolean, parameters: List<StringBuilder>, parameterCount: Int, position: Pair<Double, Double>, commands: MutableList<SvgPathCommand>): Pair<Double, Double> {
     check(parameterCount >= 2 && parameterCount % 2 == 0) { "invalid number of parameters" }
 
     var parameterIndex = 0
 
     var lastCommand: QuadraticCurve? = commands.lastOrNull() as? QuadraticCurve
 
-    var x : Double = position.first
-    var y : Double = position.second
+    println(lastCommand)
+    println(position)
+
+    var ox: Double = if (absolute) 0.0 else position.first
+    var oy: Double = if (absolute) 0.0 else position.second
+
+    println("$ox,$oy")
 
     while (parameterIndex < parameterCount) {
 
-        if (absolute) {
-            x = parameters.toDouble(parameterIndex ++)
-            y = parameters.toDouble(parameterIndex ++)
-        } else {
-            x += parameters.toDouble(parameterIndex ++)
-            y += parameters.toDouble(parameterIndex ++)
-        }
+        val x = ox + parameters.toDouble(parameterIndex ++)
+        val y = oy + parameters.toDouble(parameterIndex ++)
 
         val x1: Double
         val y1: Double
@@ -409,8 +411,8 @@ private fun quadraticCurveSmooth(absolute : Boolean, parameters: List<StringBuil
             x1 = x
             y1 = y
         } else {
-            x1 = 2 * x - lastCommand.x1
-            y1 = 2 * y - lastCommand.y1
+            x1 = 2 * lastCommand.x - lastCommand.x1
+            y1 = 2 * lastCommand.y - lastCommand.y1
         }
 
         lastCommand = QuadraticCurve(
@@ -420,6 +422,8 @@ private fun quadraticCurveSmooth(absolute : Boolean, parameters: List<StringBuil
 
         commands.add(lastCommand)
     }
+
+    println(lastCommand)
 
     return lastCommand !!.let { it.x to it.y }
 }
