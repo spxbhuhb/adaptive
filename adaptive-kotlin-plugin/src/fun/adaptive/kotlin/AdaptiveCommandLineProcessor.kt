@@ -15,12 +15,14 @@ class AdaptiveCommandLineProcessor : CommandLineProcessor {
 
     override val pluginOptions = listOf(
         OPTION_PLUGIN_DEBUG,
+        OPTION_DEBUG_FILTER,
         OPTION_PLUGIN_LOG_DIR
     )
 
     override fun processOption(option: AbstractCliOption, value: String, configuration: CompilerConfiguration) {
         when (option) {
-            OPTION_PLUGIN_DEBUG -> configuration.put(CONFIG_KEY_PLUGIN_DEBUG, value.toBooleanStrictOrNull() ?: false)
+            OPTION_PLUGIN_DEBUG -> configuration.put(CONFIG_KEY_PLUGIN_DEBUG, value.toBooleanStrictOrNull() == true)
+            OPTION_DEBUG_FILTER -> configuration.put(CONFIG_KEY_DEBUG_FILTER, value)
             OPTION_PLUGIN_LOG_DIR -> configuration.put(CONFIG_KEY_PLUGIN_LOG_DIR, value.toWritableDirectory())
             else -> throw CliOptionProcessingException("Unknown option: ${option.optionName}")
         }
@@ -48,6 +50,19 @@ class AdaptiveCommandLineProcessor : CommandLineProcessor {
 
         val OPTION_PLUGIN_DEBUG = CliOption(
             OPTION_NAME_PLUGIN_DEBUG, "plugin-debug", "Output plugin debug information.",
+            required = false, allowMultipleOccurrences = false
+        )
+
+        // -------------------------------------------------------------------------------------------------
+        // Debug filter
+        // -------------------------------------------------------------------------------------------------
+
+        const val OPTION_NAME_DEBUG_FILTER = "debug-filter"
+
+        val CONFIG_KEY_DEBUG_FILTER = CompilerConfigurationKey.create<String>(OPTION_NAME_DEBUG_FILTER)
+
+        val OPTION_DEBUG_FILTER = CliOption(
+            OPTION_NAME_DEBUG_FILTER, "string", "Filter debug information by element name.",
             required = false, allowMultipleOccurrences = false
         )
 

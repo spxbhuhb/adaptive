@@ -7,32 +7,34 @@ import `fun`.adaptive.kotlin.AdaptiveOptions
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
+import org.jetbrains.kotlin.ir.declarations.name
 import org.jetbrains.kotlin.ir.util.*
 
 internal class DebugGenerationExtension(
-    val options: AdaptiveOptions
+    val options: AdaptiveOptions,
 ) : IrGenerationExtension {
 
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
-        with (DebugPluginContext(pluginContext, options)) {
-            if (options.dumpKotlinLike) {
-                debug {
-                    pluginContext.platform
-                }
-                debug {
-                    moduleFragment.dumpKotlinLike(KotlinLikeDumpOptions(printFakeOverridesStrategy = FakeOverridesStrategy.NONE))
-                }
+        with(DebugPluginContext(pluginContext, options)) {
+            debug {
+                pluginContext.platform
             }
-            if (options.dumpIR) {
-                debug {
-                    pluginContext.platform
-                }
-                debug {
-                    moduleFragment.dump()
+            moduleFragment.files.forEach { file ->
+                file.declarations.forEach {
+                    if (it.symbol.toString().matches(options.debugFilter)) {
+                        if (options.dumpKotlinLike) {
+                            debug {
+                                it.dumpKotlinLike(KotlinLikeDumpOptions(printFakeOverridesStrategy = FakeOverridesStrategy.NONE))
+                            }
+                        }
+                        if (options.dumpIR) {
+                            debug {
+                                it.dump()
+                            }
+                        }
+                    }
                 }
             }
         }
     }
-
 }
-

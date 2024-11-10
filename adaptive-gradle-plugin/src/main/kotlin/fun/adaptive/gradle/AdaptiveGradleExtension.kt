@@ -21,6 +21,11 @@ open class AdaptiveGradleExtension {
     var pluginDebug: Boolean = false
 
     /**
+     * A filter to apply on plugin debug.
+     */
+    var debugFilter : String = ".*"
+
+    /**
      * When [pluginDebug] is true the plugin saves logs into this directory. Each run creates a file named
      * "rui-log-yyyyMMdd-HHmmss.txt" in this directory. This is mostly useful during the development of the
      * plugin itself and/or troubleshooting.
