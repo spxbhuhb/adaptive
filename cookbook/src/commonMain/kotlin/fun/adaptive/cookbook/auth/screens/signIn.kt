@@ -5,6 +5,7 @@
 package `fun`.adaptive.cookbook.auth.screens
 
 import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.cookbook.auth.model.SignIn
 import `fun`.adaptive.cookbook.shared.darkGray
 import `fun`.adaptive.cookbook.shared.footerLink
@@ -14,8 +15,10 @@ import `fun`.adaptive.cookbook.shared.subTitle
 import `fun`.adaptive.cookbook.shared.title
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.fontSize
 import `fun`.adaptive.ui.api.grid
@@ -30,11 +33,15 @@ import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.spaceBetween
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.checkbox.api.checkbox
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.instruction.text.FontName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Adaptive
 fun signIn(): AdaptiveFragment {
@@ -50,21 +57,25 @@ fun signIn(): AdaptiveFragment {
         grid {
             colTemplate(1.fr) .. rowTemplate(52.dp repeat 2, 60.dp, 50.dp)
 
-            editor { signIn.email }
-            editor { signIn.password }
+            editor { signIn.email } .. width { 315.dp }
+            editor { signIn.password } .. width { 315.dp } // FIXME hard-coded width
 
             row {
                 paddingTop(15.dp) .. spaceBetween .. maxWidth
 
                 row {
                     checkbox { signIn.remember } .. paddingRight { 8.dp }
-                    text("Remember be", fontSize(15.sp), FontName("Noto Sans"), textColor(darkGray))
+                    text("Remember be", fontSize(15.sp), textColor(darkGray))
                 }
 
-                text("Forgot password?", fontSize(15.sp), FontName("Noto Sans"), textColor(mediumGray), lightFont)
+                text("Forgot password?", fontSize(15.sp), textColor(mediumGray), lightFont)
             }
 
-            button("Sign In") .. maxWidth .. onClick { println("sing in") }
+            button("Sign In") .. maxWidth .. onClick {
+                CoroutineScope(Dispatchers.Default).launch {
+                    getService<SessionApi>(adapter().transport).login(signIn.email, signIn.password)
+                }
+            }
         }
 
         footerLink("Don't have an account? ", "Sign Up", "/")

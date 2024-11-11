@@ -8,14 +8,6 @@ import `fun`.adaptive.ktor.ClientWebSocketServiceCallTransport
 import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.api.Json
 
-fun webSocketTransport(
-    host: String,
-    wireFormatProvider: WireFormatProvider = Json,
-    servicePath: String = "/adaptive/service-ws",
-    clientIdPath: String = "/adaptive/client-id"
-) =
-    ClientWebSocketServiceCallTransport(host, servicePath, clientIdPath, wireFormatProvider)
-
 fun String.toHttp(path: String): String {
     var url = this.trim()
 
@@ -26,16 +18,4 @@ fun String.toHttp(path: String): String {
     }
 
     return url.removeSuffix("/") + '/' + path.trimStart('/')
-}
-
-fun String.toWs(path: String): String {
-    var url = this.trim()
-
-    when {
-        url.startsWith("http://") -> url = url.replaceRange(0, 7, "ws://")
-        url.startsWith("https://") -> url = url.replaceRange(0, 8, "wss://")
-        ! url.startsWith("ws://") && ! url.startsWith("wss://") -> url = "wss://$url"
-    }
-
-    return url.trimEnd('/') + '/' + path.trimStart('/')
 }

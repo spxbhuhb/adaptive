@@ -65,6 +65,11 @@ kotlin {
             }
         }
 
+        jsMain {
+            dependencies {
+                implementation(libs.ktor.client.core)
+            }
+        }
         jvmMain {
             dependencies {
                 implementation(libs.h2database)

@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.instruction.dp
 
 @Adaptive
-fun authMain() {
+fun authRecipe() {
     column {
         maxHeight .. verticalScroll
 

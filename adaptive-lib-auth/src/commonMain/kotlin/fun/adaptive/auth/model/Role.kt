@@ -12,6 +12,7 @@ import `fun`.adaptive.utility.UUID
 @Adat
 class Role(
     override val id: UUID<Role>,
+    var name: String,
     var context: String? = null,
     var group: Boolean = false,
     var displayOrder: Int = 0

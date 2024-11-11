@@ -18,6 +18,7 @@ import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.repeat
 import `fun`.adaptive.ui.api.rowTemplate
+import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.*
@@ -36,7 +37,7 @@ fun passwordReset(): AdaptiveFragment {
         grid {
             colTemplate(1.fr) .. rowTemplate(52.dp repeat 2, 60.dp, 50.dp)
 
-            editor { email } .. inputPlaceholder { "email" }
+            editor { email } .. inputPlaceholder { "email" } .. width(315.dp)
 
             button("Send") .. maxWidth .. onClick { println("send password reset") }
         }

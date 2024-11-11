@@ -30,6 +30,7 @@ import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.checkbox.api.checkbox
 import `fun`.adaptive.ui.editor.editor
@@ -50,18 +51,18 @@ fun signUp(): AdaptiveFragment {
         grid {
             colTemplate(1.fr) .. rowTemplate(52.dp repeat 4, 60.dp, 50.dp)
 
-            editor { signUp.name }
-            editor { signUp.email }
-            editor { signUp.password }
-            editor { signUp.verification }
+            editor { signUp.name } .. width { 315.dp }
+            editor { signUp.email } .. width { 315.dp }
+            editor { signUp.password } .. width { 315.dp }
+            editor { signUp.verification } .. width { 315.dp }
 
             grid {
                 paddingTop(15.dp) .. alignItems.start .. colTemplate(40.dp, 1.fr)
 
                 checkbox { signUp.agreement }
                 row {
-                    text("I agree to the ", fontSize(15.sp), FontName("Noto Sans"), textColor(darkGray))
-                    text("Terms of Service", fontSize(15.sp), FontName("Noto Sans"), textColor(black), boldFont, externalLink("/terms.txt"))
+                    text("I agree to the ", fontSize(15.sp), textColor(darkGray))
+                    text("Terms of Service", fontSize(15.sp), textColor(black), boldFont, externalLink("/terms.txt"))
                 }
             }
 

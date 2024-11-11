@@ -10,7 +10,6 @@ import `fun`.adaptive.backend.setting.dsl.setting
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.transport.ServiceSessionProvider
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.utility.safeCall
 import `fun`.adaptive.utility.safeSuspendCall
 import `fun`.adaptive.wireformat.api.Json
 import `fun`.adaptive.wireformat.api.Proto
@@ -32,19 +31,24 @@ import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 class KtorWorker(
-    port: Int = 8080,
+    port: Int = 8080
 ) : WorkerImpl<KtorWorker> {
 
     val port by setting<Int> { "KTOR_PORT" } default port
     val wireFormat by setting<String> { "KTOR_WIREFORMAT" } default "json"
     val staticResourcesPath by setting<String> { "KTOR_STATIC_FILES" } default "./var/static"
+    val downloadPath by setting<String> { "KTOR_DOWNLOAD_DIR" } default "./var/download"
     val serviceWebSocketRoute by setting<String> { "KTOR_SERVICE_WEBSOCKET_ROUTE" } default "/adaptive/service-ws"
     val clientIdRoute by setting<String> { "KTOR_CLIENT_ID_ROUTE" } default "/adaptive/client-id"
+    val downloadRoute by setting<String> { "KTOR_DOWNLOAD_ROUTE" } default "/adaptive/download"
     val clientIdCookieName by setting<String> { "KTOR_SESSION_COOKIE_NAME" } default "ADAPTIVE_CLIENT_ID"
 
     val sessionProvider by implOrNull<ServiceSessionProvider>()
 
     var applicationEngine: ApplicationEngine? = null
+
+    val fileNameRegex = Regex("[\\w\\-. ]+")
+    val fileTransport = KtorFileTransport(this)
 
     override fun mount() {
         embeddedServer(Netty, port = port, module = { module() }).also {
@@ -75,12 +79,26 @@ class KtorWorker(
         routing {
             clientId()
             sessionWebsocketServiceCallTransport()
-
-            staticFiles("/", File(staticResourcesPath)) {
-                this.default("index.html")
-            }
+            jsAppFiles()
+            downloadFiles()
         }
+    }
 
+    fun Routing.clientId() {
+        val provider = sessionProvider ?: return
+
+        get(clientIdRoute) {
+            val existingClientId = call.request.cookies[clientIdCookieName]?.let { UUID<ServiceContext>(it) }
+
+            val id = if (existingClientId != null && provider.getSession(existingClientId) != null) {
+                existingClientId
+            } else {
+                UUID()
+            }.toString()
+
+            call.response.cookies.append(clientIdCookieName, id, httpOnly = true, path = "/")
+            call.respond(HttpStatusCode.OK)
+        }
     }
 
     fun Routing.sessionWebsocketServiceCallTransport() {
@@ -106,7 +124,8 @@ class KtorWorker(
                 wireFormatProvider,
                 this,
                 sessionUuid,
-                provider.getSession(sessionUuid)
+                provider.getSession(sessionUuid),
+                fileTransport
             )
 
             transport.start(safeAdapter)
@@ -124,27 +143,68 @@ class KtorWorker(
                 safeSuspendCall(logger) {
                     transport.disconnect()
                 }
-                logger.info { with (call.request.origin) { "WS-DISCONNECT $remoteAddress:$remotePort $sessionUuid" } }
+                logger.info { with(call.request.origin) { "WS-DISCONNECT $remoteAddress:$remotePort $sessionUuid" } }
             }
 
         }
 
     }
 
-    fun Routing.clientId() {
-        val provider = sessionProvider ?: return
-
-        get(clientIdRoute) {
-            val existingClientId = call.request.cookies[clientIdCookieName]?.let { UUID<ServiceContext>(it) }
-
-            val id = if (existingClientId != null && provider.getSession(existingClientId) != null) {
-                existingClientId
-            } else {
-                UUID()
-            }.toString()
-
-            call.response.cookies.append(clientIdCookieName, id, httpOnly = true, path = "/")
-            call.respond(HttpStatusCode.OK)
+    fun Routing.jsAppFiles() {
+        staticFiles("/", File(staticResourcesPath)) {
+            this.default("index.html")
         }
     }
+
+    fun Routing.downloadFiles() {
+        val provider = sessionProvider ?: return
+
+        get("$downloadRoute/{fileName}") {
+            val clientId = call.request.cookies[clientIdCookieName]?.let { UUID<ServiceContext>(it) }
+            if (clientId == null) {
+                call.respond(HttpStatusCode.Unauthorized)
+                return@get
+            }
+
+            val session = provider.getSession(clientId)
+            if (session == null) {
+                call.respond(HttpStatusCode.Unauthorized)
+                return@get
+            }
+
+            val fileName = call.parameters["fileName"]
+            if (fileName == null || ! fileName.matches(fileNameRegex)) {
+                call.respond(HttpStatusCode.BadRequest)
+                return@get
+            }
+
+            val file = File(fileTransport.getDownloadPath(clientId, fileName).toString())
+            println(file)
+            if (! file.exists()) {
+                call.respond(HttpStatusCode.NotFound)
+                return@get
+            }
+
+            logger.info { "DOWNLOAD-START  ${session.id} $file" }
+
+            call.response.header(
+                HttpHeaders.ContentDisposition,
+                ContentDisposition.Attachment.withParameter(ContentDisposition.Parameters.FileName, fileName).toString()
+            )
+
+            try {
+                call.respondOutputStream(ContentType.defaultForFile(file)) {
+                    file.inputStream().use { inputStream ->
+                        inputStream.copyTo(this)
+                    }
+                }
+                logger.info { "DOWNLOAD-SUCCESS ${session.id} $file" }
+            } catch (ex : Exception) {
+                logger.info("DOWNLOAD-FAIL ${session.id} $file", ex)
+            } finally {
+                file.delete()
+            }
+        }
+    }
+
 }

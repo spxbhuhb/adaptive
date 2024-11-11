@@ -9,6 +9,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ktor.worker.KtorWorker
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.wireformat.WireFormatRegistry
+import io.ktor.server.application.Application
 
 @Adaptive
 fun ktor(port : Int = 8080) {

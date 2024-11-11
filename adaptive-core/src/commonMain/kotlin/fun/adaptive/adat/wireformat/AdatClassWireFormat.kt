@@ -34,7 +34,7 @@ class AdatClassWireFormat<A>(
             try {
                 it.toPropertyWireFormat()
             } catch (ex: Exception) {
-                throw RuntimeException("wireformat build error for ${metadata.name}.${it.name}\n${metadata.toJson(AdatClassMetadata).decodeToString()}\n", ex)
+                throw RuntimeException("wireformat build error for ${metadata.name}.${it.name}\n${metadata.toJson(AdatClassMetadata).decodeToString()}\n${ex.stackTraceToString()}", ex)
             }
         }
     }

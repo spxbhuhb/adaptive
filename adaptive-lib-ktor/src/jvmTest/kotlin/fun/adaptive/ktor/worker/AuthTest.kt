@@ -17,6 +17,8 @@ import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.lib.auth.auth
 import `fun`.adaptive.lib.auth.crypto.BCrypt
+import `fun`.adaptive.lib.auth.store.CredentialTable
+import `fun`.adaptive.lib.auth.store.PrincipalTable
 import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.utility.UUID
@@ -52,8 +54,8 @@ class AuthTest {
             val admin = Principal(UUID(), "admin", activated = true)
             val passwd = BCrypt.hashpw("stuff", BCrypt.gensalt())
 
-            PrincipalTable += admin
-            CredentialTable += Credential(UUID(), admin.id, CredentialType.PASSWORD, passwd, now())
+            PrincipalTable.plusAssign(admin)
+            CredentialTable.plusAssign(Credential(UUID(), admin.id, CredentialType.PASSWORD, passwd, now()))
         }
 
         runBlocking {
