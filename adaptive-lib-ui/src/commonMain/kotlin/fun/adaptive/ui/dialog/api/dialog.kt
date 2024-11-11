@@ -20,7 +20,7 @@ import `fun`.adaptive.ui.instruction.event.OnClose
 import `fun`.adaptive.utility.firstOrNullIfInstance
 
 @Adaptive
-fun dialog(title : String, vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+fun dialog(title : String, vararg instructions: AdaptiveInstruction, @Adaptive _fixme_adaptive_content: () -> Unit): AdaptiveFragment {
 
     rootBox {
         dialogTheme.root
@@ -38,7 +38,7 @@ fun dialog(title : String, vararg instructions: AdaptiveInstruction, @Adaptive c
                 }
             }
 
-            content()
+            _fixme_adaptive_content()
         }
     }
 

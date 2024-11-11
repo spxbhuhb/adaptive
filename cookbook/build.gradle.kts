@@ -17,6 +17,7 @@ application {
 
 adaptive {
     pluginDebug = false
+    debugFilter = ".*dialog.*"
     resources {
         publicResClass = true
         packageOfResClass = "fun.adaptive.cookbook"
