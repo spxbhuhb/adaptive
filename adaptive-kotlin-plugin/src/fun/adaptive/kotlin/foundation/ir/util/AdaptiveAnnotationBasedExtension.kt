@@ -35,7 +35,8 @@ interface AdaptiveAnnotationBasedExtension {
         }
 
     val IrValueParameter?.isAdaptive: Boolean
-        get() = this?.hasAnnotation(pluginContext.adaptiveClass) ?: false
+        // FIXME remove hard-coded _fixme_adaptive_content
+        get() = this?.name?.identifier == "_fixme_adaptive_content" || this?.hasAnnotation(pluginContext.adaptiveClass) == true
 
     val IrValueParameter?.isInstructions: Boolean
         get() = (this != null
