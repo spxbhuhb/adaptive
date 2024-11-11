@@ -26,7 +26,7 @@ fun iconDialog(
     resource: DrawableResource,
     title: String,
     vararg instructions: AdaptiveInstruction,
-    @Adaptive modalContent: (close: () -> Unit) -> Unit
+    @Adaptive _fixme_adaptive_content: (close: () -> Unit) -> Unit
 ): AdaptiveFragment {
     var modalOpen = false
 
@@ -35,7 +35,7 @@ fun iconDialog(
     if (modalOpen) {
         dialog(title) {
             onClose { modalOpen = false }
-            modalContent { modalOpen = false }
+            _fixme_adaptive_content { modalOpen = false }
         }
     }
 
