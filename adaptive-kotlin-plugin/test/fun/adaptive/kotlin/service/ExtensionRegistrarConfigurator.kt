@@ -11,7 +11,6 @@ import `fun`.adaptive.kotlin.debug.ir.DebugGenerationExtension
 import `fun`.adaptive.kotlin.foundation.ir.FoundationGenerationExtension
 import `fun`.adaptive.kotlin.reflect.ir.ReflectGenerationExtension
 import `fun`.adaptive.kotlin.backend.ir.BackendGenerationExtension
-import `fun`.adaptive.kotlin.common.debug
 import `fun`.adaptive.kotlin.service.ir.ServicesGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
