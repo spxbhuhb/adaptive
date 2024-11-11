@@ -391,13 +391,8 @@ private fun quadraticCurveSmooth(absolute: Boolean, parameters: List<StringBuild
 
     var lastCommand: QuadraticCurve? = commands.lastOrNull() as? QuadraticCurve
 
-    println(lastCommand)
-    println(position)
-
     var ox: Double = if (absolute) 0.0 else position.first
     var oy: Double = if (absolute) 0.0 else position.second
-
-    println("$ox,$oy")
 
     while (parameterIndex < parameterCount) {
 
@@ -422,8 +417,6 @@ private fun quadraticCurveSmooth(absolute: Boolean, parameters: List<StringBuild
 
         commands.add(lastCommand)
     }
-
-    println(lastCommand)
 
     return lastCommand !!.let { it.x to it.y }
 }
