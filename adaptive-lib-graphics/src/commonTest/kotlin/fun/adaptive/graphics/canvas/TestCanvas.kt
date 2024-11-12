@@ -27,7 +27,7 @@ class TestCanvas : ActualCanvas {
     }
 
     override fun arc(cx: Double, cy: Double, radius: Double, startAngle: Double, endAngle: Double, anticlockwise: Boolean) {
-        TODO("Not yet implemented")
+
     }
 
     override fun newPath(): ActualPath {
@@ -39,6 +39,14 @@ class TestCanvas : ActualCanvas {
     }
 
     override fun fill() {
+
+    }
+
+    override fun fillText(x: Double, y: Double, text: String) {
+
+    }
+
+    override fun line(x1: Double, y1: Double, x2: Double, y2: Double) {
         TODO("Not yet implemented")
     }
 
@@ -47,6 +55,10 @@ class TestCanvas : ActualCanvas {
     }
 
     override fun setFont(font: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun setStroke(color: Color) {
         TODO("Not yet implemented")
     }
 

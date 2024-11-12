@@ -5,14 +5,14 @@ package `fun`.adaptive.graphics.canvas
 
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.query.collect
+import `fun`.adaptive.graphics.canvas.fragment.CanvasLoop
+import `fun`.adaptive.graphics.canvas.fragment.CanvasSelect
 import `fun`.adaptive.graphics.canvas.platform.ActualCanvas
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.alsoIfInstance
 import `fun`.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 
 class CanvasAdapter(
     val parentAdapter : AdaptiveAdapter,
@@ -36,6 +36,12 @@ class CanvasAdapter(
         get() = parentAdapter.scope
 
     override fun newId() = parentAdapter.newId()
+
+    override fun newSelect(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
+        CanvasSelect(this, parent, index)
+
+    override fun newLoop(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
+        CanvasLoop(this, parent, index)
 
     val drawItems = mutableListOf<CanvasFragment>()
 
