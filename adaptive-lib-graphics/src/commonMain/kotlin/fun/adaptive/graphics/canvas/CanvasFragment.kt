@@ -6,6 +6,7 @@ package `fun`.adaptive.graphics.canvas
 
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.graphics.canvas.platform.ActualCanvas
+import `fun`.adaptive.graphics.canvas.render.GraphicsRenderData
 
 abstract class CanvasFragment(
     adapter: CanvasAdapter,
@@ -20,6 +21,8 @@ abstract class CanvasFragment(
     val canvas: ActualCanvas
         get() = canvasAdapter.rootContainer
 
+    lateinit var renderData: GraphicsRenderData
+
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         null
 
@@ -27,6 +30,9 @@ abstract class CanvasFragment(
         Unit
 
     override fun genPatchInternal(): Boolean {
+        if (instructionIndex != - 1 && haveToPatch(dirtyMask, 1 shl instructionIndex)) {
+            renderData = GraphicsRenderData().also { rd -> instructions.forEach { it.apply(rd) } }
+        }
         return false
     }
 

@@ -8,6 +8,7 @@ import `fun`.adaptive.graphics.canvas.platform.ActualCanvas
 import `fun`.adaptive.graphics.canvas.platform.ActualPath
 import `fun`.adaptive.graphics.svg.instruction.SvgFill
 import `fun`.adaptive.graphics.svg.instruction.transform.SvgTransform
+import `fun`.adaptive.ui.instruction.decoration.Color
 
 class TestCanvas : ActualCanvas {
 
@@ -25,6 +26,10 @@ class TestCanvas : ActualCanvas {
 
     }
 
+    override fun arc(cx: Double, cy: Double, radius: Double, startAngle: Double, endAngle: Double, anticlockwise: Boolean) {
+        TODO("Not yet implemented")
+    }
+
     override fun newPath(): ActualPath {
         return TestPath(this)
     }
@@ -33,12 +38,20 @@ class TestCanvas : ActualCanvas {
 
     }
 
+    override fun fill() {
+        TODO("Not yet implemented")
+    }
+
     override fun transform(t: SvgTransform) {
 
     }
 
-    override fun setFill(fill: SvgFill) {
+    override fun setFont(font: String) {
+        TODO("Not yet implemented")
+    }
 
+    override fun setFill(color: Color) {
+        TODO("Not yet implemented")
     }
 
     override fun clear() {

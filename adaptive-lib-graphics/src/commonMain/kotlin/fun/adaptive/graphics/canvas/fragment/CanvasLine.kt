@@ -15,38 +15,32 @@ import `fun`.adaptive.utility.checkIfInstance
 import kotlin.math.PI
 
 @AdaptiveActual(canvas)
-open class CanvasCircle(
+open class CanvasLine(
     adapter: CanvasAdapter,
     parent: AdaptiveFragment,
     index: Int,
-) : CanvasFragment(adapter, parent, index, 6, 7) {
+) : CanvasFragment(adapter, parent, index, 4, 5) {
 
-    val centerX: Double
+    val x1: Double
         get() = state[0].checkIfInstance()
 
-    val centerY: Double
+    val y1: Double
         get() = state[1].checkIfInstance()
 
-    val radius: Double
+    val x2: Double
         get() = state[2].checkIfInstance()
 
-    val startAngle: Double
+    val y2: Double
         get() = state[3]?.checkIfInstance() ?: 0.0
-
-    val endAngle: Double
-        get() = state[4]?.checkIfInstance() ?: (2 * PI)
-
-    val anticlockwise: Boolean
-        get() = state[5]?.checkIfInstance() ?: false
 
     override fun draw() {
         trace("draw")
 
         canvas.save(id)
 
-        canvas.setFill(renderData.fill.color)
+        canvas.setStroke(renderData.stroke.color)
 
-        canvas.arc(centerX, centerY, radius, startAngle, endAngle, anticlockwise)
+        canvas.line(x1, y1, x2, y2)
 
         canvas.restore(id)
     }

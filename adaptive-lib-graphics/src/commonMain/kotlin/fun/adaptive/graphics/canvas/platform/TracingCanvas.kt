@@ -47,9 +47,29 @@ class TracingCanvas<T : ActualCanvas>(
         canvas.fill()
     }
 
+    override fun fillText(x: Double, y: Double, text: String) {
+        println("fillText: $x, $y, $text")
+        canvas.fillText(x, y, text)
+    }
+
+    override fun line(x1: Double, y1: Double, x2: Double, y2: Double) {
+        println("line: $x1, $y1, $x2, $y2")
+        canvas.line(x1, y1, x2, y2)
+    }
+
     override fun transform(t: SvgTransform) {
         println("transform: $t")
         canvas.transform(t)
+    }
+
+    override fun setFont(font: String) {
+        println("font: $font")
+        canvas.setFont(font)
+    }
+
+    override fun setStroke(color: Color) {
+        println("setStroke: $color")
+        canvas.setStroke(color)
     }
 
     override fun setFill(color: Color) {

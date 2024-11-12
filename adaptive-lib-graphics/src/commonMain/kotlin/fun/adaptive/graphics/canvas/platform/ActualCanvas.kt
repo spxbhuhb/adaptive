@@ -63,10 +63,18 @@ interface ActualCanvas {
      */
     fun fill()
 
+    fun fillText(x: Double, y: Double, text: String)
+
+    fun line(x1 : Double, y1 : Double, x2 : Double, y2 : Double)
+
     /**
      * Add a transform to the canvas.
      */
     fun transform(t: SvgTransform)
+
+    fun setFont(font: String)
+
+    fun setStroke(color : Color)
 
     /**
      * Set the fill style for the canvas.

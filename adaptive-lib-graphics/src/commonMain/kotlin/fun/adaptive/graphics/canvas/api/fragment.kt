@@ -15,6 +15,16 @@ fun canvas(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Un
 }
 
 @AdaptiveExpect(canvas)
+fun fillText(
+    x: Double,
+    y: Double,
+    text: String,
+    vararg instructions: AdaptiveInstruction
+) : AdaptiveFragment {
+    manualImplementation(x, y, text, instructions)
+}
+
+@AdaptiveExpect(canvas)
 fun circle(
     centerX: Double,
     centerY: Double,
@@ -25,6 +35,17 @@ fun circle(
     vararg instructions: AdaptiveInstruction
 ) : AdaptiveFragment {
     manualImplementation(centerX, centerY, radius, startAngle, endAngle, anticlockwise, instructions)
+}
+
+@AdaptiveExpect(canvas)
+fun line(
+    x1: Double,
+    y1: Double,
+    x2: Double,
+    y2: Double,
+    vararg instructions: AdaptiveInstruction
+) : AdaptiveFragment {
+    manualImplementation(x1, y1, x2, y2, instructions)
 }
 
 @AdaptiveExpect(canvas)

@@ -89,6 +89,17 @@ class ActualBrowserCanvas : ActualCanvas {
         context.fill()
     }
 
+    override fun fillText(x: Double, y: Double, text: String) {
+        context.fillText(text, x, y)
+    }
+
+    override fun line(x1: Double, y1: Double, x2: Double, y2: Double) {
+        context.beginPath()
+        context.moveTo(x1, y1)
+        context.lineTo(x2, y2)
+        context.stroke()
+    }
+
     override fun transform(t: SvgTransform) {
         when (t) {
             is Translate -> context.translate(t.tx, t.ty)
@@ -113,6 +124,14 @@ class ActualBrowserCanvas : ActualCanvas {
                 context.transform(1.0, tan(rad), 0.0, 1.0, 0.0, 0.0)
             }
         }
+    }
+
+    override fun setFont(font: String) {
+        context.font = font
+    }
+
+    override fun setStroke(color: Color) {
+        context.strokeStyle = color.hex
     }
 
     override fun setFill(color: Color) {
