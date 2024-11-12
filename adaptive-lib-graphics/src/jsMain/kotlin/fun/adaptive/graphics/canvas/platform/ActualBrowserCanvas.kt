@@ -12,6 +12,7 @@ import `fun`.adaptive.graphics.svg.instruction.transform.SkewX
 import `fun`.adaptive.graphics.svg.instruction.transform.SkewY
 import `fun`.adaptive.graphics.svg.instruction.transform.SvgTransform
 import `fun`.adaptive.graphics.svg.instruction.transform.Translate
+import `fun`.adaptive.ui.instruction.decoration.Color
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.CanvasRenderingContext2D
@@ -62,6 +63,19 @@ class ActualBrowserCanvas : ActualCanvas {
         drawFun()
     }
 
+    override fun arc(
+        cx: Double,
+        cy: Double,
+        radius: Double,
+        startAngle: Double,
+        endAngle: Double,
+        anticlockwise: Boolean
+    ) {
+        context.beginPath()
+        context.arc(cx, cy, radius, startAngle, endAngle, anticlockwise)
+        context.fill()
+    }
+
     override fun newPath(): ActualBrowserPath {
         return ActualBrowserPath()
     }
@@ -69,6 +83,10 @@ class ActualBrowserCanvas : ActualCanvas {
     override fun fill(path: ActualPath) {
         path as ActualBrowserPath
         context.fill(path.receiver)
+    }
+
+    override fun fill() {
+        context.fill()
     }
 
     override fun transform(t: SvgTransform) {
@@ -97,8 +115,8 @@ class ActualBrowserCanvas : ActualCanvas {
         }
     }
 
-    override fun setFill(fill: SvgFill) {
-        context.fillStyle = fill.color.hex
+    override fun setFill(color: Color) {
+        context.fillStyle = color.hex
     }
 
     override fun clear() {

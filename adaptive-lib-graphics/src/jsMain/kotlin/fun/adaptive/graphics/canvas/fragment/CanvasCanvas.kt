@@ -6,6 +6,7 @@ package `fun`.adaptive.graphics.canvas.fragment
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
+import `fun`.adaptive.foundation.instruction.Trace
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.graphics.canvas.platform.ActualBrowserCanvas
 import `fun`.adaptive.graphics.canvas.CanvasAdapter
@@ -13,6 +14,7 @@ import `fun`.adaptive.graphics.canvas.canvas
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.utility.checkIfInstance
+import `fun`.adaptive.utility.firstOrNullIfInstance
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLElement
 
@@ -39,13 +41,23 @@ class CanvasCanvas(
 
     override fun genPatchInternal(): Boolean {
         patchInstructions()
-        return false
+
+        instructions.firstOrNullIfInstance<Trace>()?.let {
+            canvasAdapter.trace = it.patterns
+        }
+
+        return true
+    }
+
+    override fun patchInternal() {
+        super.patchInternal()
+        canvasAdapter.draw()
     }
 
     override fun placeLayout(top: Double, left: Double) {
         val data = renderData
 
-        canvas.setSize(data.innerWidth ?: 0.0, data.innerHeight ?: 0.0)
+        canvas.setSize(data.finalWidth, data.finalWidth)
 
         uiAdapter.applyLayoutToActual(this)
         canvasAdapter.draw()

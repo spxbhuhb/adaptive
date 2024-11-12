@@ -10,11 +10,6 @@ import `fun`.adaptive.resource.DrawableResource
 import `fun`.adaptive.ui.aui
 
 @AdaptiveExpect(aui)
-fun canvas(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit) {
-    manualImplementation(instructions, content)
-}
-
-@AdaptiveExpect(aui)
 fun image(res: DrawableResource, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
     manualImplementation(res, instructions)
 }

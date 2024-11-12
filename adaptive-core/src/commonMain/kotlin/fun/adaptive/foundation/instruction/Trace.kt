@@ -10,6 +10,8 @@ import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatDecoder
 import `fun`.adaptive.wireformat.WireFormatEncoder
 
+val traceAll = Trace(".*")
+
 fun trace(vararg patterns: String) = Trace(*patterns.map { Regex(it) }.toTypedArray())
 
 /**

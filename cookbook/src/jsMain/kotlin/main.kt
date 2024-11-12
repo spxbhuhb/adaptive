@@ -12,6 +12,7 @@ import `fun`.adaptive.cookbook.Res
 import `fun`.adaptive.cookbook.auth.authRecipe
 import `fun`.adaptive.cookbook.cookbookCommon
 import `fun`.adaptive.cookbook.eco
+import `fun`.adaptive.cookbook.graphics.canvas.canvasRecipe
 import `fun`.adaptive.cookbook.grid_view
 import `fun`.adaptive.cookbook.shared.textSmall
 import `fun`.adaptive.cookbook.ui.dialog.dialogRecipe
@@ -107,10 +108,11 @@ fun main() {
     }
 }
 
-private val appNavState = autoInstance(Routes.file)
+private val appNavState = autoInstance(Routes.canvas)
 
 private object Routes {
     val auth = NavState("Auth")
+    val canvas = NavState("Canvas")
     val dialog = NavState("Dialog")
     val editor = NavState("Editor")
     val empty = NavState("Empty")
@@ -125,6 +127,7 @@ private object Routes {
 
 private val items = listOf(
     SidebarItem(0, Res.drawable.grid_view, "Auth", Routes.auth),
+    SidebarItem(0, Res.drawable.grid_view, "Canvas", Routes.canvas),
     SidebarItem(0, Res.drawable.grid_view, "Dialog", Routes.dialog),
     SidebarItem(0, Res.drawable.grid_view, "Editor", Routes.editor),
     SidebarItem(0, Res.drawable.grid_view, "File", Routes.file),
@@ -166,6 +169,7 @@ fun mainContent() {
 
         when (navState) {
             in Routes.auth -> authRecipe()
+            in Routes.canvas -> canvasRecipe()
             in Routes.dialog -> dialogRecipe()
             in Routes.editor -> editorRecipe()
             in Routes.file -> fileRecipe()

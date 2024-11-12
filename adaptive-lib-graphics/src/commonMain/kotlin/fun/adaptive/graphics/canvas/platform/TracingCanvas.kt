@@ -6,6 +6,7 @@ package `fun`.adaptive.graphics.canvas.platform
 
 import `fun`.adaptive.graphics.svg.instruction.*
 import `fun`.adaptive.graphics.svg.instruction.transform.SvgTransform
+import `fun`.adaptive.ui.instruction.decoration.Color
 
 class TracingCanvas<T : ActualCanvas>(
     val canvas: T
@@ -26,6 +27,11 @@ class TracingCanvas<T : ActualCanvas>(
         canvas.draw(drawFun)
     }
 
+    override fun arc(cx: Double, cy: Double, radius: Double, startAngle: Double, endAngle: Double, anticlockwise: Boolean) {
+        println("arc: $cx, $cy, $radius, $startAngle, $endAngle, $anticlockwise")
+        canvas.arc(cx, cy, radius, startAngle, endAngle, anticlockwise)
+    }
+
     override fun newPath(): ActualPath {
         println("newPath")
         return canvas.newPath()
@@ -36,14 +42,19 @@ class TracingCanvas<T : ActualCanvas>(
         canvas.fill(path)
     }
 
+    override fun fill() {
+        println("fill")
+        canvas.fill()
+    }
+
     override fun transform(t: SvgTransform) {
         println("transform: $t")
         canvas.transform(t)
     }
 
-    override fun setFill(fill: SvgFill) {
-        println("setFill: $fill")
-        canvas.setFill(fill)
+    override fun setFill(color: Color) {
+        println("setFill: $color")
+        canvas.setFill(color)
     }
 
     override fun clear() {

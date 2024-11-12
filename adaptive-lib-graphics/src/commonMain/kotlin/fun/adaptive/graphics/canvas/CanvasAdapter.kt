@@ -55,6 +55,7 @@ class CanvasAdapter(
 
     fun draw() {
         trace("draw", "drawItems.size = ${drawItems.size}")
+        rootContainer.clear()
         rootContainer.draw {
             drawItems.forEach { it.draw() }
         }
