@@ -104,6 +104,8 @@ object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val properties = "properties".callableId { api }
     val verifyParameters = "verifyParameters".callableId()
 
+    val adatCompanionOf = "adatCompanionOf".callableId { api }
+
     //  See comments in AdatGenerationExtension
     // val updateFun = "update".callableId { api }
 }

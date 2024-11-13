@@ -87,6 +87,7 @@ class AdatPluginContext(
     val uLongArrayType = irContext.referenceClass(UnsignedArrayType.ULONGARRAY.classId) !!.defaultType
 
     val propertiesFun = CallableIds.properties.functions().first()
+    val adatCompanionOfFun = CallableIds.adatCompanionOf.functions().first()
 
 //  See comments in AdatGenerationExtension
 //    val updates = CallableIds.updateFun.functions()
