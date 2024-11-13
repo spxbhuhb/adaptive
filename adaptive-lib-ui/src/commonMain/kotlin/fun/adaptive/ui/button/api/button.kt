@@ -7,6 +7,7 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.DrawableResource
+import `fun`.adaptive.ui.api.noSelect
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.text
 

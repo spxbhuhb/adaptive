@@ -9,6 +9,7 @@ import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.resource.defaultResourceEnvironment
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
+import `fun`.adaptive.ui.fragment.layout.AuiRootBox
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.SPixel
@@ -99,6 +100,10 @@ class AuiAdapter(
         val left = data.finalLeft
         val height = data.finalHeight
         val width = data.finalWidth
+
+        if (fragment is AuiRootBox) {
+            println("AAA: ${top} ${left} ${height} ${width}")
+        }
 
         val margin = data.layout?.margin ?: RawSurrounding.ZERO
         val parentLayout = data.layoutFragment?.renderData?.layout

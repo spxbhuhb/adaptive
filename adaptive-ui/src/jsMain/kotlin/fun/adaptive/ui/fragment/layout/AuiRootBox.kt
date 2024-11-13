@@ -20,4 +20,8 @@ open class AuiRootBox(
     override val isRootActual: Boolean
         get() = true
 
+    override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
+        super.computeLayout(proposedWidth, proposedHeight)
+        println("$proposedWidth $proposedHeight ${renderData.finalWidth} ${renderData.finalHeight} ")
+    }
 }

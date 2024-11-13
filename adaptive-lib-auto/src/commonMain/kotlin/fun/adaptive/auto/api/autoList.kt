@@ -2,11 +2,13 @@ package `fun`.adaptive.auto.api
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
+import `fun`.adaptive.adat.api.adatCompanionOf
 import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.backend.SetBackend
+import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.origin.OriginBase
 import `fun`.adaptive.auto.internal.origin.OriginListBase
@@ -14,6 +16,7 @@ import `fun`.adaptive.auto.internal.producer.AutoList
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.Producer
 import `fun`.adaptive.service.ServiceContext
@@ -93,6 +96,40 @@ fun <A : AdatClass> autoList(
 
     return null
 }
+
+@Suppress("UNCHECKED_CAST")
+inline fun <reified A : AdatClass> autoList(
+    initialValue: List<A>,
+    wireFormat : AdatClassWireFormat<A>,
+    listener: AutoCollectionListener<A>? = null,
+    trace: Boolean = false
+): ListBase<A> =
+    OriginListBase(
+        null,
+        AutoHandle(),
+        null,
+        wireFormat,
+        trace,
+        false
+    ) {
+        if (listener != null) context.addListener(listener)
+
+        backend = SetBackend(
+            context,
+            initialValue.mapIndexed { index, item ->
+                PropertyBackend<A>(
+                    context,
+                    ItemId(1, index + 1L),
+                    wireFormat.wireFormatName,
+                    item.toArray()
+                )
+            }.associateBy { it.itemId }.toMutableMap()
+        )
+
+        frontend = AdatClassListFrontend(backend)
+
+        frontend.commit(initial = true, fromBackend = false)
+    }
 
 /**
  * Creates an Auto List.
