@@ -10,7 +10,10 @@ fun Path.write(string: String, append: Boolean = false) {
 }
 
 fun Path.write(bytes: ByteArray, append: Boolean = false) {
-    SystemFileSystem.sink(this, append).buffered().use { it.write(bytes) }
+    SystemFileSystem.sink(this, append).buffered().use {
+        it.write(bytes)
+        it.flush()
+    }
 }
 
 fun Path.read(): ByteArray {

@@ -2,7 +2,6 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.auth.authCommon
 import `fun`.adaptive.auto.api.auto
@@ -25,6 +24,7 @@ import `fun`.adaptive.cookbook.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.cookbook.ui.snackbar.snackbarRecipe
 import `fun`.adaptive.cookbook.ui.svg.svgRecipe
 import `fun`.adaptive.cookbook.ui.text.textRecipe
+import `fun`.adaptive.cookbook.ui.tree.treeRecipe
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.producer.fetch
@@ -46,7 +46,6 @@ import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.position
-import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.browser
@@ -128,6 +127,7 @@ private object Routes {
     val snackbar = NavState("Snackbar")
     val svg = NavState("SVG")
     val text = NavState("Text")
+    val tree = NavState("Tree")
 }
 
 private val items = listOf(
@@ -142,7 +142,8 @@ private val items = listOf(
     SidebarItem(0, Res.drawable.grid_view, "Sidebar", Routes.sidebar),
     SidebarItem(0, Res.drawable.grid_view, "Snackbar", Routes.snackbar),
     SidebarItem(0, Res.drawable.grid_view, "SVG", Routes.svg),
-    SidebarItem(0, Res.drawable.grid_view, "Text", Routes.text)
+    SidebarItem(0, Res.drawable.grid_view, "Text", Routes.text),
+    SidebarItem(0, Res.drawable.grid_view, "Tree", Routes.tree)
 )
 
 @Adaptive
@@ -187,6 +188,7 @@ fun mainContent() {
             in Routes.snackbar -> snackbarRecipe()
             in Routes.svg -> svgRecipe()
             in Routes.text -> textRecipe()
+            in Routes.tree -> treeRecipe()
             else -> text("unknown route: $navState")
         }
     }
