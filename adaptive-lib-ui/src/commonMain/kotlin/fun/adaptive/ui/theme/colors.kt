@@ -30,4 +30,6 @@ class ThemeColors {
 
     val danger = color(0xEC5453u)
     val onDanger = color(0xFFFFFFu)
+
+    val white = color(0xFFFFFF)
 }

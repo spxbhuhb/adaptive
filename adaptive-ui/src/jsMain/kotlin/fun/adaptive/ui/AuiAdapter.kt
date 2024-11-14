@@ -101,10 +101,6 @@ class AuiAdapter(
         val height = data.finalHeight
         val width = data.finalWidth
 
-        if (fragment is AuiRootBox) {
-            println("AAA: ${top} ${left} ${height} ${width}")
-        }
-
         val margin = data.layout?.margin ?: RawSurrounding.ZERO
         val parentLayout = data.layoutFragment?.renderData?.layout
         val parentMargin = parentLayout?.margin ?: RawSurrounding.ZERO

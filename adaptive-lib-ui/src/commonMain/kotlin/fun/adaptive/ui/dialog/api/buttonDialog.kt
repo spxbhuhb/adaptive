@@ -9,6 +9,7 @@ import `fun`.adaptive.resource.DrawableResource
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.onClose
 import `fun`.adaptive.ui.button.api.button
+import `fun`.adaptive.ui.button.api.dangerButton
 
 /**
  * An icon button that opens the dialog built by [modalContent] when clicked.
@@ -31,6 +32,38 @@ fun buttonDialog(
     var modalOpen = false
 
     button(label, resource, *instructions) .. onClick { modalOpen = true }
+
+    if (modalOpen) {
+        dialog(title) {
+            onClose { modalOpen = false }
+            _fixme_adaptive_content { modalOpen = false }
+        }
+    }
+
+    return fragment()
+}
+
+/**
+ * An icon button that opens the dialog built by [modalContent] when clicked.
+ *
+ * Use the `close` parameter of [modalContent] to close the modal.
+ *
+ * @param  label         The label of the button.
+ * @param  resource      The drawable resource of the button icon.
+ * @param  title         Title of the dialog.
+ * @param  modalContent  Content of the dialog.
+ */
+@Adaptive
+fun dangerButtonDialog(
+    label: String,
+    resource: DrawableResource,
+    title: String,
+    vararg instructions: AdaptiveInstruction,
+    @Adaptive _fixme_adaptive_content: (close: () -> Unit) -> Unit
+): AdaptiveFragment {
+    var modalOpen = false
+
+    dangerButton(label, resource, *instructions) .. onClick { modalOpen = true }
 
     if (modalOpen) {
         dialog(title) {

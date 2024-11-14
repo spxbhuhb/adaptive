@@ -2,8 +2,8 @@ package `fun`.adaptive.ui.snackbar
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.ui.api.alignItems
-import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.cornerRadius
+import `fun`.adaptive.ui.api.fontSize
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.padding
@@ -11,6 +11,7 @@ import `fun`.adaptive.ui.api.spaceBetween
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.textColors
 
@@ -38,7 +39,7 @@ open class SnackbarTheme(
     )
 
     open val success = item + instructionsOf(backgrounds.friendly)
-    open val info = item + instructionsOf(backgrounds.overlay)
+    open val info = item + instructionsOf(backgrounds.surfaceVariant)
     open val warning = item + instructionsOf(backgrounds.angry)
     open val fail = item + instructionsOf(backgrounds.angry)
 
@@ -50,10 +51,10 @@ open class SnackbarTheme(
             SnackType.Fail -> fail
         }
 
-    open val successText = instructionsOf(textColors.onSurface)
-    open val infoText = instructionsOf(textColors.onSurface)
-    open val warningText = instructionsOf(textColors.onSurface)
-    open val failText = instructionsOf(textColors.onSurface)
+    open val successText = instructionsOf(textColors.white, fontSize(12.sp))
+    open val infoText = instructionsOf(textColors.onSurfaceVariant, fontSize(12.sp))
+    open val warningText = instructionsOf(textColors.white, fontSize(12.sp))
+    open val failText = instructionsOf(textColors.white, fontSize(12.sp))
 
     open fun text(snack: Snack) = when (snack.type) {
         SnackType.Success -> successText
