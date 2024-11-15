@@ -373,10 +373,10 @@ private fun quadraticCurveRelative(parameters: List<StringBuilder>, parameterCou
     var y = oy
 
     while (parameterIndex < parameterCount) {
-        x1 = ox + parameters.toDouble(parameterIndex ++)
-        y1 = oy + parameters.toDouble(parameterIndex ++)
-        x = ox + parameters.toDouble(parameterIndex ++)
-        y = oy + parameters.toDouble(parameterIndex ++)
+        x1 = x + parameters.toDouble(parameterIndex ++)
+        y1 = y + parameters.toDouble(parameterIndex ++)
+        x = x + parameters.toDouble(parameterIndex ++)
+        y = y + parameters.toDouble(parameterIndex ++)
 
         commands.add(QuadraticCurve(x1, y1, x, y))
     }

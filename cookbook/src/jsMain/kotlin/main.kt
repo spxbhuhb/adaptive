@@ -111,7 +111,7 @@ fun main() {
     }
 }
 
-private val appNavState = autoInstance(Routes.snackbar)
+private val appNavState = autoInstance(Routes.svg)
 
 private object Routes {
     val auth = NavState("Auth")

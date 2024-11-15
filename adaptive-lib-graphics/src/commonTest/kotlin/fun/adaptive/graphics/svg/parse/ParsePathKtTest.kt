@@ -120,7 +120,7 @@ class ParsePathKtTest {
 
     @Test
     fun testParsePath3() {
-        println(parsePath("M 216 -176 Q 171 -221 145.5 -280 Q 120 -339 120 -402 T 216 -176 Z"))
+        println(parsePath("M 10 10 q 10.77 0 17.7 -6.92   6.92 -6.93 6.92 -17.7 Z"))
 
         // MoveTo(x=216.0, y=-176.0)
         // QuadraticCurve(x1=171.0, y1=-221.0, x=145.5, y=-280.0),

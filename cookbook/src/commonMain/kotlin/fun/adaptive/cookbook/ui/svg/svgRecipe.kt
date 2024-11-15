@@ -3,6 +3,7 @@ package `fun`.adaptive.cookbook.ui.svg
 import `fun`.adaptive.cookbook.Res
 import `fun`.adaptive.cookbook.eco
 import `fun`.adaptive.cookbook.folder
+import `fun`.adaptive.cookbook.frame_inspect
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.producer.poll
 import `fun`.adaptive.foundation.rangeTo
@@ -62,6 +63,6 @@ private fun big() {
     column {
         gap { 16.dp }
         svg(Res.drawable.eco) .. svgHeight(128.dp) .. svgWidth(128.dp) .. size(128.dp, 128.dp)
-        svg(Res.drawable.folder) .. svgHeight(128.dp) .. svgWidth(128.dp) .. size(128.dp, 128.dp)
+        svg(Res.drawable.frame_inspect) .. svgHeight(128.dp) .. svgWidth(128.dp) .. size(128.dp, 128.dp)
     }
 }
