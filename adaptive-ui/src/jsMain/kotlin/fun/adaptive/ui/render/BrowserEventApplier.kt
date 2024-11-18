@@ -15,6 +15,14 @@ import org.w3c.dom.events.MouseEvent
 
 object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
 
+    override fun applyNoPointerEvents(fragment: AbstractAuiFragment<HTMLElement>, previous: Boolean?, current: Boolean?) {
+        val style = fragment.receiver.style
+        when (current) {
+            true -> style.setProperty("pointer-events", "none")
+            else -> style.setProperty("pointer-events", "auto")
+        }
+    }
+
     override fun addEventListener(fragment: AbstractAuiFragment<HTMLElement>, eventFun: UIEventHandler): Any {
 
         val (eventName, condition) = when (eventFun) {

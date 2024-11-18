@@ -19,6 +19,7 @@ class EventRenderData(
     var onClickListener : Any? = null
 
     var additionalEvents: Boolean = false
+    var noPointerEvents: Boolean? = null
 
     var onMove: OnMove? = null
     var onMoveListener: Any? = null

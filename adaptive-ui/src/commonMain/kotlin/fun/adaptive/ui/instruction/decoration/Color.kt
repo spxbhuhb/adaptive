@@ -28,7 +28,11 @@ class Color(
             return when (cleanedValue.length) {
                 3 -> cleanedValue.flatMap { listOf(it, it) }.joinToString("").toUInt(16)
                 6 -> cleanedValue.toUInt(16)
-                else -> throw IllegalArgumentException("Invalid color string format")
+                9 -> {
+                    // this is a tad bit strange, but google icons "menu" actually contains 'fill="undefined"'
+                    if (this == "undefined") 0x0u else throw IllegalArgumentException("Invalid color string format: $this")
+                }
+                else -> throw IllegalArgumentException("Invalid color string format: $this")
             }
         }
     }

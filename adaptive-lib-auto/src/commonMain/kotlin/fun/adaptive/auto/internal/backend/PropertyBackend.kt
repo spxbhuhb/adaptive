@@ -66,7 +66,7 @@ class PropertyBackend<A : AdatClass>(
     }
 
     fun update(newValues: Array<Any?>) {
-        check(newValues.size <= values.size)
+        check(newValues.size <= values.size) { "PropertyBackend.update: newValues.size <= values.size" }
 
         val time = context.nextTime()
         val changes = mutableListOf<AutoPropertyValue>()

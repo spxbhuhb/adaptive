@@ -42,13 +42,13 @@ import `fun`.adaptive.service.ServiceContext
 @Producer
 fun <A : AdatClass> autoInstance(
     peer: OriginBase<*, *, A, A>? = null,
-    listener : AutoInstanceListener<A>? = null,
+    listener: AutoInstanceListener<A>? = null,
     binding: AdaptiveStateVariableBinding<A>? = null,
     trace: Boolean = false,
-    connect: suspend () -> AutoConnectionInfo<A>
+    connect: suspend () -> AutoConnectionInfo<A>,
 ): A? {
-    checkNotNull(binding)
-    checkNotNull(binding.adatCompanion)
+    checkNotNull(binding) { "autoInstance: missing binding" }
+    checkNotNull(binding.adatCompanion) { "autoInstance: missing adatCompanion" }
 
     val store = AutoInstance(binding, connect, listener, peer, trace)
 
@@ -62,10 +62,10 @@ fun <A : AdatClass> autoInstance(
     peer: OriginBase<*, *, A, A>,
     listener: AutoInstanceListener<A>? = null,
     binding: AdaptiveStateVariableBinding<A>? = null,
-    trace: Boolean = false
+    trace: Boolean = false,
 ): A? {
-    checkNotNull(binding)
-    checkNotNull(binding.adatCompanion)
+    checkNotNull(binding) { "autoInstance: missing binding" }
+    checkNotNull(binding.adatCompanion) { "autoInstance: missing adatCompanion" }
 
     val store = AutoInstance(binding, { peer.connectInfo(AutoConnectionType.Direct) }, listener, peer, trace)
 
@@ -78,7 +78,7 @@ fun <A : AdatClass> autoInstance(
 fun <A : AdatClass> autoInstance(
     initialValue: A,
     listener: AutoInstanceListener<A>? = null,
-    trace: Boolean = false
+    trace: Boolean = false,
 ): OriginBase<PropertyBackend<A>, AdatClassFrontend<A>, A, A> =
     autoInstance(
         worker = null,
@@ -111,18 +111,18 @@ fun <A : AdatClass> autoInstance(
     worker: AutoWorker?,
     companion: AdatCompanion<A>,
     initialValue: A? = null,
-    listener : AutoInstanceListener<A>? = null,
+    listener: AutoInstanceListener<A>? = null,
     serviceContext: ServiceContext? = null,
-    handle : AutoHandle = AutoHandle(),
+    handle: AutoHandle = AutoHandle(),
     itemId: ItemId = LamportTimestamp.CONNECTING,
     register: Boolean = true,
-    trace: Boolean = false
+    trace: Boolean = false,
 ): OriginInstanceBase<PropertyBackend<A>, AdatClassFrontend<A>, A> {
 
-    val pItemId : ItemId
-    val propertyTimes : List<LamportTimestamp>
+    val pItemId: ItemId
+    val propertyTimes: List<LamportTimestamp>
     val value: Array<Any?>
-    val commit : Boolean
+    val commit: Boolean
 
     val size = companion.adatMetadata.properties.size
 
@@ -169,7 +169,6 @@ fun <A : AdatClass> autoInstance(
             pItemId,
             null
         )
-
 
 
     }

@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.ui.grid
+package `fun`.adaptive.cookbook.ui.layout.grid
 
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.adat.store.copyStore
@@ -6,8 +6,6 @@ import `fun`.adaptive.cookbook.shared.blue
 import `fun`.adaptive.cookbook.shared.green
 import `fun`.adaptive.cookbook.shared.purple
 import `fun`.adaptive.cookbook.shared.red
-import `fun`.adaptive.cookbook.shared.white
-import `fun`.adaptive.cookbook.shared.cyan
 import `fun`.adaptive.cookbook.shared.yellow
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ui.api.box
@@ -17,7 +15,6 @@ import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf
-import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.grid
@@ -28,11 +25,9 @@ import `fun`.adaptive.ui.api.noSelect
 import `fun`.adaptive.ui.api.onMove
 import `fun`.adaptive.ui.api.onPrimaryDown
 import `fun`.adaptive.ui.api.onPrimaryUp
-import `fun`.adaptive.ui.api.position
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.theme.backgrounds

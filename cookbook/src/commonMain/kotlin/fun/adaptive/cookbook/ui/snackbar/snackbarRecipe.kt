@@ -10,7 +10,9 @@ import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.maxHeight
+import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.mediaMetrics
+import `fun`.adaptive.ui.api.noPointerEvents
 import `fun`.adaptive.ui.api.noSelect
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.rootBox
@@ -30,7 +32,6 @@ import `fun`.adaptive.ui.snackbar.warning
 
 @Adaptive
 fun snackbarRecipe() {
-    val media = mediaMetrics()
     val snacks = autoList(snacks, Snack.adatWireFormat) { snacks.connectInfo(AutoConnectionType.Direct) } ?: emptyList()
     val activeSnacks = autoList(activeSnacks, Snack.adatWireFormat) { activeSnacks.connectInfo(AutoConnectionType.Direct) } ?: emptyList()
 
@@ -52,7 +53,7 @@ fun snackbarRecipe() {
         }
 
         rootBox {
-            alignItems.endBottom .. height { 200.dp } .. width { 200.dp }
+            noPointerEvents .. maxSize .. alignItems.endBottom
             snackList(activeSnacks)
         }
     }

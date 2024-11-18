@@ -50,7 +50,7 @@ fun <A : AdatClass> autoList(
     trace: Boolean = false,
     connect: suspend () -> AutoConnectionInfo<List<A>>?
 ): List<A>? {
-    checkNotNull(binding)
+    checkNotNull(binding) { "autoList: missing binding"}
 
     val store = AutoList(binding, connect, companion.adatWireFormat, listener, peer, trace)
 
@@ -88,7 +88,7 @@ fun <A : AdatClass> autoList(
     trace: Boolean = false,
     connect: suspend () -> AutoConnectionInfo<List<A>>
 ): List<A>? {
-    checkNotNull(binding)
+    checkNotNull(binding) { "autoList: missing binding"}
 
     val store = AutoList(binding, connect, defaultWireFormat, listener, peer, trace)
 

@@ -20,7 +20,7 @@ open class AdatClassFrontend<A : AdatClass>(
     val adatContext = AdatContext<ItemId>(itemId, null, null, store = this, null)
 
     override val value: A
-        get() = checkNotNull(valueOrNull) { "value not yet initialized" }
+        get() = checkNotNull(valueOrNull) { "AdatClassFrontEnd: value not yet initialized" }
 
     var valueOrNull: A? = initialValue?.deepCopy()?.also {
         @Suppress("UNCHECKED_CAST")

@@ -78,7 +78,7 @@ open class AdatClassListFrontend<A : AdatClass>(
     open fun getItemFrontend(itemId: ItemId) =
         classFrontends.getOrPut(itemId) {
 
-            val propertyBackend = checkNotNull(backend.data[itemId])
+            val propertyBackend = checkNotNull(backend.data[itemId]) { "AdatClassListFrontend: missing property backend"}
             val wireFormat = propertyBackend.wireFormat
 
             @Suppress("UNCHECKED_CAST")

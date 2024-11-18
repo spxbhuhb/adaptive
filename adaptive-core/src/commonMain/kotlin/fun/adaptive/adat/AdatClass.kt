@@ -24,7 +24,12 @@ interface AdatClass : AdaptivePropertyProvider {
     fun adatToString(): String {
         val content = mutableListOf<String>()
         getMetadata().properties.forEach { prop ->
-            content.add("${prop.name}=${getValue(prop.index)}")
+            val value = getValue(prop.index)
+            val text = when (value) {
+                is Array<*> -> value.contentDeepToString()
+                else -> value.toString()
+            }
+            content.add("${prop.name}=${text}")
         }
         return (this::class.simpleName ?: "<anonymous>") + "(" + content.joinToString(", ") + ")"
     }

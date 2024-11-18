@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.ui.grid
+package `fun`.adaptive.cookbook.ui.layout.grid
 
 import `fun`.adaptive.cookbook.shared.blue
 import `fun`.adaptive.cookbook.shared.green
@@ -8,7 +8,6 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf
-import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column
@@ -23,7 +22,6 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.AlignItems
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
-import `fun`.adaptive.ui.theme.colors
 
 @Adaptive
 fun gridAlignRecipe() {

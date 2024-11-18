@@ -110,7 +110,7 @@ abstract class ProducerBase<BE : BackendBase, FE : FrontendBase, VT, IT : AdatCl
     }
 
     fun connectDirect() {
-        checkNotNull(peer)
+        checkNotNull(peer) { "ProducerBase: missing peer" }
         backend.addPeer(DirectConnector(backend, peer.backend), connectInfo.originTime)
         peer.backend.addPeer(DirectConnector(peer.backend, backend), backend.context.time)
     }

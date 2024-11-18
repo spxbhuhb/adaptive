@@ -17,7 +17,7 @@ class FolderFrontend<A : AdatClass>(
     backend: SetBackend<A>,
     val wireFormatProvider: WireFormatProvider,
     val path: Path,
-    val fileNameFun: (itemId: ItemId, item: A) -> String
+    val fileNameFun: (itemId: ItemId, item: A) -> String,
 ) : AdatClassListFrontend<A>(
     backend
 ) {
@@ -30,7 +30,7 @@ class FolderFrontend<A : AdatClass>(
 
         classFrontends.getOrPut(itemId) {
 
-            val propertyBackend = checkNotNull(backend.data[itemId])
+            val propertyBackend = checkNotNull(backend.data[itemId]) { "FolderFrontend: missing property backend" }
 
             @Suppress("UNCHECKED_CAST")
             val wireFormat = propertyBackend.wireFormat as AdatClassWireFormat<A>
@@ -59,8 +59,8 @@ class FolderFrontend<A : AdatClass>(
         fun <A : AdatClass> load(
             context: BackendContext<A>,
             path: Path,
-            includeFun : (path: Path) -> Boolean,
-            wireFormatProvider: WireFormatProvider
+            includeFun: (path: Path) -> Boolean,
+            wireFormatProvider: WireFormatProvider,
         ): MutableMap<ItemId, PropertyBackend<A>> {
             require(path.exists()) { "path $path does not exist" }
 
@@ -73,7 +73,7 @@ class FolderFrontend<A : AdatClass>(
                 if (! includeFun(it)) return@forEach
 
                 val (itemId, propertyTimes, instance) = FileFrontend.read<A>(it, wireFormatProvider)
-                checkNotNull(itemId)
+                checkNotNull(itemId) { "FolderFrontend: missing itemId for $it"}
 
                 check(itemId !in result) { "duplicated item id $itemId in $it" }
 

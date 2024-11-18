@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.ui.grid
+package `fun`.adaptive.cookbook.ui.layout.grid
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ui.api.column
