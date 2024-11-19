@@ -4,7 +4,7 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.frontend.AutoItemFrontend
 import `fun`.adaptive.auto.internal.origin.AutoInstance
-import `fun`.adaptive.auto.internal.persistence.ItemExport
+import `fun`.adaptive.auto.internal.persistence.AutoItemExport
 import `fun`.adaptive.auto.model.ItemId
 
 abstract class AutoItemBackend<IT : AdatClass>(
@@ -18,7 +18,7 @@ abstract class AutoItemBackend<IT : AdatClass>(
 
     abstract fun getItem() : IT
 
-    abstract fun export(): ItemExport<IT>
+    abstract fun export(): AutoItemExport<IT>
 
     fun update(propertyName: String, propertyValue: Any?) {
         update(itemId, propertyName, propertyValue)

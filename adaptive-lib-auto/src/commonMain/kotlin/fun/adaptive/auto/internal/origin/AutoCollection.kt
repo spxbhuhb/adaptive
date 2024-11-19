@@ -5,14 +5,16 @@ import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.AutoBackend
 import `fun`.adaptive.auto.internal.backend.AutoItemBackend
 import `fun`.adaptive.auto.internal.frontend.AutoCollectionFrontend
+import `fun`.adaptive.auto.internal.persistence.AutoCollectionPersistence
+import `fun`.adaptive.auto.internal.persistence.AutoPersistence
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 
-class AutoCollection<BE : AutoBackend<IT>, FE : AutoCollectionFrontend<IT>, IT : AdatClass>(
+class AutoCollection<BE : AutoBackend<IT>, PT : AutoCollectionPersistence<IT>, IT : AdatClass>(
     defaultWireFormat: AdatClassWireFormat<*>?,
     wireFormatProvider: WireFormatProvider,
     scope: CoroutineScope
-) : AutoInstance<BE, FE, Collection<IT>, IT>(
+) : AutoInstance<BE, PT, Collection<IT>, IT>(
     defaultWireFormat, wireFormatProvider, scope
 ), Collection<IT> {
 
@@ -39,11 +41,11 @@ class AutoCollection<BE : AutoBackend<IT>, FE : AutoCollectionFrontend<IT>, IT :
         values.iterator()
 
     operator fun plusAssign(element: IT) {
-        frontend.add(element)
+        localAdd(element)
     }
 
     fun add(element: IT) {
-        frontend.add(element)
+        localAdd(element)
     }
 
     fun remove(selector: (IT) -> Boolean) {

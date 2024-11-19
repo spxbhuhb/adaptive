@@ -9,7 +9,7 @@ import `fun`.adaptive.auto.model.AutoPropertyValue
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.AutoAdd
 import `fun`.adaptive.auto.model.operation.AutoEmpty
-import `fun`.adaptive.auto.model.operation.AutoModify
+import `fun`.adaptive.auto.model.operation.AutoUpdate
 import `fun`.adaptive.auto.model.operation.AutoMove
 import `fun`.adaptive.auto.model.operation.AutoRemove
 import `fun`.adaptive.auto.model.operation.AutoSyncBatch
@@ -33,7 +33,7 @@ private fun wireFormats() {
     WireFormatRegistry += AutoConnectionInfo
     WireFormatRegistry += AutoAdd
     WireFormatRegistry += AutoEmpty
-    WireFormatRegistry += AutoModify
+    WireFormatRegistry += AutoUpdate
     WireFormatRegistry += AutoMove
     WireFormatRegistry += AutoRemove
     WireFormatRegistry += AutoSyncBatch

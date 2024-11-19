@@ -18,7 +18,7 @@ interface AutoApi {
     suspend fun removePeer(handle: AutoHandle)
 
     suspend fun add(handle: AutoHandle, operation: AutoAdd)
-    suspend fun modify(handle: AutoHandle, operation: AutoModify)
+    suspend fun modify(handle: AutoHandle, operation: AutoUpdate)
     suspend fun move(handle: AutoHandle, operation: AutoMove)
     suspend fun remove(handle: AutoHandle, operation: AutoRemove)
     suspend fun empty(handle: AutoHandle, operation: AutoEmpty)

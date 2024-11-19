@@ -4,6 +4,16 @@
 package `fun`.adaptive.utility
 
 /**
+ * Marks functions that are thread safe.
+ */
+annotation class ThreadSafe
+
+/**
+ * Marks functions that needs to run under the protection of a lock.
+ */
+annotation class RequireLock
+
+/**
  * This is a copy of Ktor multiplatform lock as we clearly need it.
  * Only JVM and JS implementations are added at the moment, I'll add native
  * when it becomes important:

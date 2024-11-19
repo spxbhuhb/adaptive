@@ -3,14 +3,14 @@ package `fun`.adaptive.auto.internal.backend
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.auto.internal.connector.AutoConnector
-import `fun`.adaptive.auto.internal.frontend.AutoCollectionFrontend
 import `fun`.adaptive.auto.internal.origin.AutoInstance
+import `fun`.adaptive.auto.internal.persistence.AutoCollectionPersistence
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.*
 
 class SetBackend<IT : AdatClass>(
-    instance: AutoInstance<AutoCollectionBackend<IT>, AutoCollectionFrontend<IT>, Collection<IT>, IT>,
+    instance: AutoInstance<AutoCollectionBackend<IT>, AutoCollectionPersistence<IT>, Collection<IT>, IT>,
     initialValue: MutableMap<ItemId, PropertyBackend<IT>>? = null,
 ) : AutoCollectionBackend<IT>(instance) {
 
@@ -29,7 +29,7 @@ class SetBackend<IT : AdatClass>(
 
     // add is defined in AutoCollectionBackend
 
-    override fun remove(itemId: ItemId, commit: Boolean) {
+    override fun remove(timestamp : LamportTimestamp, itemId: ItemId, commit: Boolean) {
         data.remove(itemId, fromPeer = false)
 
         val operation = AutoRemove(instance.nextTime(), true, setOf(itemId))
@@ -95,7 +95,7 @@ class SetBackend<IT : AdatClass>(
         }
     }
 
-    override fun update(operation: AutoModify, commit: Boolean) {
+    override fun update(operation: AutoUpdate, commit: Boolean) {
         if (operation.itemId !in data) return
 
         val item = data[operation.itemId]
@@ -121,14 +121,11 @@ class SetBackend<IT : AdatClass>(
         instance.receive(operation.timestamp)
     }
 
-    override fun syncEnd(operation: AutoSyncEnd, commit: Boolean) {
+    override fun syncEnd(operation: AutoSyncEnd) {
         // apply modifications that have been postponed because we haven't had the
         // item at the time (see syncPeer and modify for details)
-        afterSync.forEach { update(it, commit) } // calls instance.commit and distribute
+        afterSync.forEach { update(it) } // calls instance.commit and distribute
         afterSync.clear()
-        instance.receive(operation.timestamp)
-        instance.onSyncEnd(fromBackend = true)
-        trace { "time=${instance.time}" }
     }
 
     // --------------------------------------------------------------------------------
@@ -138,7 +135,7 @@ class SetBackend<IT : AdatClass>(
     override suspend fun syncPeer(
         connector: AutoConnector,
         syncFrom: LamportTimestamp,
-        syncBatch: MutableList<AutoModify>?,
+        syncBatch: MutableList<AutoUpdate>?,
         sendSyncEnd: Boolean,
     ) {
         // The current time marks everything we have to send over. Anything happens after
@@ -190,7 +187,7 @@ class SetBackend<IT : AdatClass>(
         }
 
         var add = mutableListOf<AutoAdd>()
-        val modify = mutableListOf<AutoModify>()
+        val modify = mutableListOf<AutoUpdate>()
 
         for (item in data.items()) {
             val itemId = item.itemId
@@ -235,5 +232,16 @@ class SetBackend<IT : AdatClass>(
 
         return backend
     }
+
+    override fun firstOrNull(filterFun: (IT) -> Boolean): AutoItemBackend<IT>? {
+        for (itemBackend in data.items()) {
+            val item = itemBackend.getItem()
+            if (filterFun(item)) return itemBackend
+        }
+        return null
+    }
+
+    override fun filter(filterFun: (IT) -> Boolean): Collection<IT> =
+        data.items().map { it.getItem() }.filter { filterFun(it) }
 
 }

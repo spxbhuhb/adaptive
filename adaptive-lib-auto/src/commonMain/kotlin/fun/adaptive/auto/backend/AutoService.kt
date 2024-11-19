@@ -1,8 +1,6 @@
 package `fun`.adaptive.auto.backend
 
 import `fun`.adaptive.auto.api.AutoApi
-import `fun`.adaptive.auto.model.AutoConnectionInfo
-import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.*
@@ -50,7 +48,7 @@ class AutoService : ServiceImpl<AutoService>, AutoApi {
         worker.receive(handle, operation)
     }
 
-    override suspend fun modify(handle: AutoHandle, operation: AutoModify) {
+    override suspend fun modify(handle: AutoHandle, operation: AutoUpdate) {
         worker.receive(handle, operation)
     }
 

@@ -13,8 +13,12 @@ import `fun`.adaptive.auto.internal.backend.AutoItemBackend
 import `fun`.adaptive.auto.internal.connector.DirectConnector
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.internal.frontend.AutoCollectionFrontend
-import `fun`.adaptive.auto.internal.frontend.AutoFrontend
 import `fun`.adaptive.auto.internal.frontend.AutoItemFrontend
+import `fun`.adaptive.auto.internal.persistence.AutoCollectionExport
+import `fun`.adaptive.auto.internal.persistence.AutoCollectionPersistence
+import `fun`.adaptive.auto.internal.persistence.AutoItemExport
+import `fun`.adaptive.auto.internal.persistence.AutoItemPersistence
+import `fun`.adaptive.auto.internal.persistence.AutoPersistence
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.getService
@@ -27,14 +31,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 
-class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, IT : AdatClass>(
+class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT, IT : AdatClass>(
     val origin: Boolean,
     val persistent: Boolean,
     val service: Boolean,
     val collection: Boolean,
     val info: AutoConnectionInfo<VT>? = null,
-    val infoFun: ((instance: AutoInstance<BE, FE, VT, IT>) -> AutoConnectionInfo<VT>)? = null,
-    val infoFunSuspend: InfoFunSuspend<BE, FE, VT, IT>? = null,
+    val infoFun: ((instance: AutoInstance<BE, PT, VT, IT>) -> AutoConnectionInfo<VT>)? = null,
+    val infoFunSuspend: InfoFunSuspend<BE, PT, VT, IT>? = null,
     val defaultWireFormat: AdatClassWireFormat<*>?,
     wireFormatProvider: WireFormatProvider = Proto,
     val itemListener: AutoItemListener<IT>? = null,
@@ -43,26 +47,25 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, I
     val serviceContext: ServiceContext? = null,
     val scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     val trace: Boolean,
-    val backendFun: (AutoInstanceBuilder<BE, FE, VT, IT>, info: AutoConnectionInfo<VT>?, value: VT?) -> BE,
-    val frontendFun: (AutoInstanceBuilder<BE, FE, VT, IT>) -> FE,
+    val backendFun: (AutoInstanceBuilder<BE, PT, VT, IT>, info: AutoConnectionInfo<VT>?, value: VT?) -> BE,
+    val persistenceFun: (AutoInstanceBuilder<BE, PT, VT, IT>) -> PT,
 ) {
 
     @Suppress("UNCHECKED_CAST")
     val instance = if (collection) {
-        AutoCollection<AutoCollectionBackend<IT>, AutoCollectionFrontend<IT>, IT>(defaultWireFormat, wireFormatProvider, scope)
+        AutoCollection<AutoCollectionBackend<IT>, AutoCollectionPersistence<IT>, IT>(defaultWireFormat, wireFormatProvider, scope)
     } else {
-        AutoItem<AutoItemBackend<IT>, AutoItemFrontend<IT>, IT>(defaultWireFormat, wireFormatProvider, scope)
-    } as AutoInstance<BE, FE, VT, IT>
+        AutoItem<AutoItemBackend<IT>, AutoItemPersistence<IT>, IT>(defaultWireFormat, wireFormatProvider, scope)
+    } as AutoInstance<BE, PT, VT, IT>
 
     lateinit var backend: BE
-    lateinit var frontend: FE
 
     fun build(
         initialValue: VT?,
-    ): AutoInstance<BE, FE, VT, IT> {
-        instance.frontend = frontendFun(this)
+    ): AutoInstance<BE, PT, VT, IT> {
+        instance.persistence = persistenceFun(this)
 
-        val (loadedInfo, loadedValue) = frontend.load()
+        val (loadedInfo, loadedValue) = load()
 
         val connectionInfo = when {
             loadedInfo != null -> loadedInfo
@@ -89,6 +92,16 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, FE : AutoFrontend<VT, IT>, VT, I
         }
 
         return instance
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun load(): Pair<AutoConnectionInfo<VT>?, VT> {
+        val export = instance.persistence.load()
+        when (export) {
+            is AutoItemExport<*> -> return (export.meta?.connection to export.item as VT)
+            is AutoCollectionExport<*> -> return (export.meta?.connection to export.items as VT)
+            else -> error("unknown persistence class: ${instance.persistence}")
+        }
     }
 
     fun addListener() {

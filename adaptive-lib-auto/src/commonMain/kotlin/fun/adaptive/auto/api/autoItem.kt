@@ -199,7 +199,7 @@ private fun <A : AdatClass> buildItem(
                 value?.toArray()
             )
         },
-        frontendFun = { builder ->
+        persistenceFun = { builder ->
             AdatClassFrontend(
                 builder.instance,
                 initialValue,

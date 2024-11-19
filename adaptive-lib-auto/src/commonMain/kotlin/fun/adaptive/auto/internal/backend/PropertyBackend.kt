@@ -8,8 +8,9 @@ import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.model.AutoPropertyValue
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.model.operation.AutoModify
+import `fun`.adaptive.auto.model.operation.AutoUpdate
 import `fun`.adaptive.auto.model.operation.AutoSyncEnd
+import `fun`.adaptive.utility.RequireLock
 import `fun`.adaptive.wireformat.WireFormat
 
 class PropertyBackend<IT : AdatClass>(
@@ -30,6 +31,8 @@ class PropertyBackend<IT : AdatClass>(
     private val values: Array<Any?> = initialValues?.copyOf() ?: arrayOfNulls(properties.size)
 
     private val propertyTimes = initPropertyTimes(propertyTimes)
+
+    private var item : IT? = null
 
     init {
         trace { "INIT  itemId=$itemId  ${initialValues.contentToString()}" }
@@ -59,10 +62,10 @@ class PropertyBackend<IT : AdatClass>(
     }
 
     // --------------------------------------------------------------------------------
-    // Operations from the frontend
+    // Local operations
     // --------------------------------------------------------------------------------
 
-    override fun update(itemId: ItemId, propertyName: String, propertyValue: Any?) {
+    override fun update(timestamp : LamportTimestamp, itemId: ItemId, propertyName: String, propertyValue: Any?) {
         val property = properties[propertyName]
         val index = property.index
 
@@ -70,24 +73,22 @@ class PropertyBackend<IT : AdatClass>(
 
         val payload = encode(property)
 
-        val time = instance.nextTime()
+        val time = timestamp
 
-        val operation = AutoModify(time, itemId, listOf(AutoPropertyValue(time, propertyName, payload)))
+        val operation = AutoUpdate(time, itemId, listOf(AutoPropertyValue(time, propertyName, payload)))
 
         propertyTimes[index] = operation.timestamp
 
         instance.commit(this, initial = false, fromPeer = false)
 
         trace { "FE -> BE  $propertyName=$propertyValue $operation" }
-
-        distribute(operation)
     }
 
-    override fun update(itemId: ItemId, new: IT) {
+    override fun update(timestamp : LamportTimestamp, itemId: ItemId, new: IT) {
         val newValues = new.toArray()
         check(newValues.size <= values.size)
 
-        val time = instance.nextTime()
+        val time = timestamp
         val changes = mutableListOf<AutoPropertyValue>()
 
         for ((index, propertyValue) in values.withIndex()) {
@@ -100,21 +101,18 @@ class PropertyBackend<IT : AdatClass>(
             changes += AutoPropertyValue(time, property.name, encode(property))
         }
 
-        // TODO check if nextTime is necessary here or we can use `time`
-        val operation = AutoModify(instance.nextTime(), itemId, changes)
+        val operation = AutoUpdate(time, itemId, changes)
 
         instance.commit(this, initial = false, fromPeer = false)
 
         trace { "FE -> BE  $operation" }
-
-        distribute(operation)
     }
 
     // --------------------------------------------------------------------------------
     // Operations from peers
     // --------------------------------------------------------------------------------
 
-    override fun update(operation: AutoModify, commit: Boolean) {
+    override fun update(operation: AutoUpdate, commit: Boolean) : LamportTimestamp? {
         var changed = false
 
         for (change in operation.values) {
@@ -153,9 +151,10 @@ class PropertyBackend<IT : AdatClass>(
         if (changed) {
             trace { "BE -> BE  op=$operation" }
             instance.commit(this, initial = false, fromPeer = true)
-            distribute(operation)
+            return lastUpdate
         } else {
             trace { "BE -> BE  SKIP   op=$operation" }
+            return null
         }
     }
 
@@ -174,7 +173,7 @@ class PropertyBackend<IT : AdatClass>(
     override suspend fun syncPeer(
         connector: AutoConnector,
         syncFrom: LamportTimestamp,
-        syncBatch: MutableList<AutoModify>?,
+        syncBatch: MutableList<AutoUpdate>?,
         sendSyncEnd: Boolean,
     ) {
 
@@ -195,7 +194,7 @@ class PropertyBackend<IT : AdatClass>(
             changesToSend += AutoPropertyValue(change, property.name, encode(property))
         }
 
-        val operation = AutoModify(instance.time, itemId, changesToSend)
+        val operation = AutoUpdate(instance.time, itemId, changesToSend)
 
         trace { "peerTime=$syncFrom op=$operation" }
 
@@ -214,10 +213,10 @@ class PropertyBackend<IT : AdatClass>(
     // Utility
     // --------------------------------------------------------------------------------
 
-    override fun getItem(): IT {
-        @Suppress("UNCHECKED_CAST")
-        return wireFormat.newInstance(values) as IT
-    }
+    @RequireLock
+    @Suppress("UNCHECKED_CAST")
+    override fun getItem(): IT =
+        item ?: (wireFormat.newInstance(values) as IT).also { item = it }
 
     private operator fun List<AdatPropertyWireFormat<*>>.get(name: String): AdatPropertyWireFormat<*> =
         first { it.metadata.name == name }

@@ -1,23 +1,19 @@
 package `fun`.adaptive.auto.internal.persistence
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.auto.api.AutoItemListener
 import `fun`.adaptive.auto.internal.backend.AutoItemBackend
-import `fun`.adaptive.auto.model.AutoMetadata
 import `fun`.adaptive.utility.exists
-import `fun`.adaptive.utility.load
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 
-abstract class ItemPersistence<IT : AdatClass>(
-    val itemBackend: AutoItemBackend<IT>,
+abstract class AutoItemPersistence<IT : AdatClass>(
     val wireFormatProvider: WireFormatProvider,
-) : AutoItemListener<IT>() {
+) : AutoPersistence<IT, IT>() {
 
-    abstract fun load(): ItemExport<IT>
+    abstract override fun load(): AutoItemExport<IT>
 
-    abstract fun save(export: ItemExport<IT>)
+    abstract fun save(export: AutoItemExport<IT>)
 
     fun deleteMeta(path: Path) {
         SystemFileSystem.delete(metaPath(path))

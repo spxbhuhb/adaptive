@@ -1,21 +1,18 @@
 package `fun`.adaptive.auto.model.operation
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.auto.internal.backend.AutoBackend
-import `fun`.adaptive.auto.internal.backend.AutoCollectionBackend
+import `fun`.adaptive.auto.api.AutoGeneric
 import `fun`.adaptive.auto.model.LamportTimestamp
 
 @Adat
 class AutoSyncBatch(
     override val timestamp: LamportTimestamp,
-    val addOperations: List<AutoAdd>,
-    val modifyOperations: List<AutoModify>
+    val additions: List<AutoAdd>,
+    val updates: List<AutoUpdate>
 ) : AutoOperation() {
 
-    override fun apply(backend: AutoBackend, commit: Boolean) {
-        backend as AutoCollectionBackend<*>
-        addOperations.forEach { it.apply(backend, commit) }
-        modifyOperations.forEach { it.apply(backend, commit) }
+    override fun apply(instance: AutoGeneric) {
+        instance.syncBatch(this)
     }
 
 }

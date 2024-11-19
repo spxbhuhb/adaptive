@@ -1,17 +1,12 @@
 package `fun`.adaptive.auto.internal.persistence
 
-import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
-import `fun`.adaptive.adat.api.adatCompanionOf
 import `fun`.adaptive.auto.internal.backend.AutoItemBackend
-import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoMetadata
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.PeerId
-import `fun`.adaptive.foundation.adaptive
-import `fun`.adaptive.utility.delete
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.load
 import `fun`.adaptive.utility.read
@@ -26,23 +21,21 @@ import kotlinx.io.files.Path
 
 class ItemFilePersistence<IT : AdatClass>(
     val path: Path,
-    backend: AutoItemBackend<IT>,
     wireFormatProvider: WireFormatProvider,
-) : ItemPersistence<IT>(
-    backend,
+) : AutoItemPersistence<IT>(
     wireFormatProvider
 ) {
 
-    override fun load(): ItemExport<IT> {
-        if (! path.exists()) return ItemExport.none()
+    override fun load(): AutoItemExport<IT> {
+        if (! path.exists()) return AutoItemExport.none()
 
         val meta = metaPath(path).load(wireFormatProvider, AutoMetadata.adatWireFormat)
         val (itemId, propertyTimes, value) = read<IT>(path, wireFormatProvider)
 
-        return ItemExport(meta, itemId, propertyTimes, value)
+        return AutoItemExport(meta, itemId, propertyTimes, value)
     }
 
-    override fun save(export: ItemExport<IT>) {
+    override fun save(export: AutoItemExport<IT>) {
         val meta = checkNotNull(export.meta) as AutoMetadata<IT>
 
         save(metaPath(path), meta, wireFormatProvider)
@@ -56,7 +49,7 @@ class ItemFilePersistence<IT : AdatClass>(
 
     companion object {
 
-        fun <IT : AdatClass> write(path: Path, wireFormatProvider: WireFormatProvider, export: ItemExport<IT>) {
+        fun <IT : AdatClass> write(path: Path, wireFormatProvider: WireFormatProvider, export: AutoItemExport<IT>) {
 
             val itemId = checkNotNull(export.itemId) { "export without item id" }
             val propertyTimes = checkNotNull(export.propertyTimes) { "export without property times" }

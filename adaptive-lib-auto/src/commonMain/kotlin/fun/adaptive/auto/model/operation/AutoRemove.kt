@@ -1,6 +1,7 @@
 package `fun`.adaptive.auto.model.operation
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.auto.api.AutoGeneric
 import `fun`.adaptive.auto.internal.backend.AutoBackend
 import `fun`.adaptive.auto.internal.backend.AutoCollectionBackend
 import `fun`.adaptive.auto.model.ItemId
@@ -20,9 +21,8 @@ class AutoRemove(
     val itemIds: Set<ItemId>
 ) : AutoOperation() {
 
-    override fun apply(backend: AutoBackend, commit: Boolean) {
-        backend as AutoCollectionBackend<*>
-        backend.remove(this, commit)
+    override fun apply(backend: AutoGeneric) {
+        backend.remove(this)
     }
 
 }
