@@ -21,7 +21,7 @@ class AutoHandle(
             AutoHandle(
                 UUID<AutoGeneric>(),
                 PeerId.ORIGIN,
-                if (collection) null else LamportTimestamp.ORIGIN
+                if (collection) null else ItemId.ORIGIN
             )
     }
 }

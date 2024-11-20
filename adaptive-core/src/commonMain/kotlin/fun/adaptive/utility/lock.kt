@@ -6,11 +6,13 @@ package `fun`.adaptive.utility
 /**
  * Marks functions that are thread safe.
  */
+@Retention(AnnotationRetention.SOURCE)
 annotation class ThreadSafe
 
 /**
  * Marks functions that needs to run under the protection of a lock.
  */
+@Retention(AnnotationRetention.SOURCE)
 annotation class RequireLock
 
 /**

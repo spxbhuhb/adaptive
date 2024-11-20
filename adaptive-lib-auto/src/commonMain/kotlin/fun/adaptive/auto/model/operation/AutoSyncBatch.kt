@@ -12,7 +12,7 @@ class AutoSyncBatch(
 ) : AutoOperation() {
 
     override fun apply(instance: AutoGeneric) {
-        instance.syncBatch(this)
+        instance.remoteSyncBatch(this)
     }
 
 }

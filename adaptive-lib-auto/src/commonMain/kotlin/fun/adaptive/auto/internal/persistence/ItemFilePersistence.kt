@@ -2,7 +2,6 @@ package `fun`.adaptive.auto.internal.persistence
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
-import `fun`.adaptive.auto.internal.backend.AutoItemBackend
 import `fun`.adaptive.auto.model.AutoMetadata
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
@@ -36,16 +35,16 @@ class ItemFilePersistence<IT : AdatClass>(
     }
 
     override fun save(export: AutoItemExport<IT>) {
-        val meta = checkNotNull(export.meta) as AutoMetadata<IT>
+        val meta = checkNotNull(export.meta)
 
         save(metaPath(path), meta, wireFormatProvider)
 
         write(path, wireFormatProvider, export)
     }
 
-    override fun onRemove() {
-        deleteMeta(path)
-    }
+//    override fun onRemove() {
+//        deleteMeta(path)
+//    }
 
     companion object {
 
@@ -53,7 +52,7 @@ class ItemFilePersistence<IT : AdatClass>(
 
             val itemId = checkNotNull(export.itemId) { "export without item id" }
             val propertyTimes = checkNotNull(export.propertyTimes) { "export without property times" }
-            val value = checkNotNull(export.value) { "export without value" }
+            val value = checkNotNull(export.item) { "export without value" }
 
             val times = mutableListOf<Long>()
 

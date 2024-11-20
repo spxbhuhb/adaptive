@@ -1,7 +1,7 @@
 package `fun`.adaptive.cookbook.ui.sidebar
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.auto.api.autoItem
+import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.cookbook.Res
 import `fun`.adaptive.cookbook.eco
 import `fun`.adaptive.cookbook.grid_view
@@ -51,11 +51,11 @@ private class SidebarState(
     val mode: String
 )
 
-private val sidebarState = autoItem(SidebarState(FULL), trace = true)
+private val sidebarState = autoItemOrigin(SidebarState(FULL), trace = true)
 
 @Adaptive
 fun collapsible() {
-    val state = autoItem(sidebarState, trace = true)
+    val state = autoItemOrigin(sidebarState, trace = true)
 
     box {
         size(800.dp, 600.dp) .. backgrounds.friendly

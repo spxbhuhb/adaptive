@@ -2,8 +2,6 @@ package `fun`.adaptive.auto.model.operation
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.auto.api.AutoGeneric
-import `fun`.adaptive.auto.internal.backend.AutoBackend
-import `fun`.adaptive.auto.internal.backend.AutoCollectionBackend
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 
@@ -22,7 +20,7 @@ class AutoRemove(
 ) : AutoOperation() {
 
     override fun apply(backend: AutoGeneric) {
-        backend.remove(this)
+        backend.remoteRemove(this)
     }
 
 }

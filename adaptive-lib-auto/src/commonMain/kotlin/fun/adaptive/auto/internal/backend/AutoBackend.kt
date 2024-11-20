@@ -26,21 +26,21 @@ abstract class AutoBackend<IT : AdatClass>(
     // Operations from the frontend
     // --------------------------------------------------------------------------------
 
-    abstract fun add(timestamp: LamportTimestamp, item : IT) : Pair<AutoAdd, IT>
+    abstract fun localAdd(timestamp: LamportTimestamp, item : IT) : Pair<AutoAdd, IT>
 
-    abstract fun update(timestamp: LamportTimestamp, itemId: ItemId, updates : Collection<Pair<String, Any?>>) : Pair<AutoUpdate,IT>
+    abstract fun localUpdate(timestamp: LamportTimestamp, itemId: ItemId, updates : Collection<Pair<String, Any?>>) : Pair<AutoUpdate,IT>
 
-    abstract fun remove(timestamp: LamportTimestamp, itemId : ItemId) : Pair<AutoRemove,IT?>
+    abstract fun localRemove(timestamp: LamportTimestamp, itemId : ItemId) : Pair<AutoRemove,IT?>
 
     // --------------------------------------------------------------------------------
     // Operations from peers
     // --------------------------------------------------------------------------------
 
-    abstract fun add(operation: AutoAdd): Pair<LamportTimestamp?,IT>
+    abstract fun remoteAdd(operation: AutoAdd): Pair<LamportTimestamp?,IT>
 
-    abstract fun update(operation: AutoUpdate): Triple<LamportTimestamp?,IT,IT>
+    abstract fun remoteUpdate(operation: AutoUpdate): Triple<LamportTimestamp?,IT,IT>
 
-    abstract fun remove(operation: AutoRemove): Pair<LamportTimestamp?, IT?>
+    abstract fun remove(operation: AutoRemove): Pair<LamportTimestamp?, Set<Pair<ItemId, IT>>>
 
     open fun syncEnd(operation: AutoSyncEnd) = Unit
 
@@ -67,9 +67,9 @@ abstract class AutoBackend<IT : AdatClass>(
     }
 
     suspend fun waitForSync(connectInfo: AutoConnectionInfo<*>, timeout: Duration) {
-        trace { "SYNC WAIT: $connectInfo" }
+        trace("SYNC WAIT") { connectInfo.toString()}
         waitFor(timeout) { isSynced(connectInfo) }
-        trace { "SYNC WAIT END" }
+        trace("SYNC WAIT END") { "" }
     }
 
     // --------------------------------------------------------------------------------
@@ -79,7 +79,7 @@ abstract class AutoBackend<IT : AdatClass>(
 
     @CallSiteName
     fun trace(callSiteName: String = "<unknown>", builder: () -> String) {
-        instance.trace(callSiteName) { "[${callSiteName.substringAfterLast('.')} @ ${instance.time}] ${builder()}" }
+        instance.trace(callSiteName) { builder() }
     }
 
 }

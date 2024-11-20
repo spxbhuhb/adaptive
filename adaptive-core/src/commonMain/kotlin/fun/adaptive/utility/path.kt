@@ -19,7 +19,7 @@ fun Path.read(): ByteArray {
 }
 
 fun <A> Path.load(wireFormatProvider: WireFormatProvider, wireFormat: AdatClassWireFormat<A>): A =
-    wireFormatProvider.decoder(this.read()).asInstance(adatCompanionOf<A>().adatWireFormat)
+    wireFormatProvider.decoder(this.read()).asInstance(wireFormat)
 
 /**
  * Encode [value] with [wireFormatProvider] into a byte array and write it to [this].

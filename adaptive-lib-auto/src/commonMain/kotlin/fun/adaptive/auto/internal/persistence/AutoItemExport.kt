@@ -6,7 +6,7 @@ import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 
 class AutoItemExport<IT>(
-    override val meta: AutoMetadata<IT>?,
+    override val meta: AutoMetadata?,
     val itemId: ItemId?,
     val propertyTimes: List<LamportTimestamp>?,
     val item: IT?

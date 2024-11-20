@@ -8,7 +8,7 @@ import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.AutoBackend
 import `fun`.adaptive.auto.internal.connector.DirectConnector
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
-import `fun`.adaptive.auto.internal.frontend.AutoFrontend
+import `fun`.adaptive.auto.internal.persistence.AutoPersistence
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.AutoHandle
@@ -27,109 +27,109 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-
-abstract class ProducerBase<BE : AutoBackend, FE : AutoFrontend, VT, IT : AdatClass>(
-    override val binding: AdaptiveStateVariableBinding<VT>,
-    val infoFun: suspend () -> AutoConnectionInfo<VT>?,
-    val trace: Boolean,
-) : AdatStore<IT>(), AdaptiveProducer<VT> {
-
-    override var latestValue: VT? = null
-
-    val scope: CoroutineScope = CoroutineScope(adapter.dispatcher)
-
-    lateinit var logger: AdaptiveLogger
-    lateinit var connectInfo: AutoConnectionInfo<VT>
-    lateinit var context: BackendContext<IT>
-
-    lateinit var backend: BE
-    lateinit var frontend: FE
-
-    var job: Job? = null
-
-    var syncEnd = false
-
-    val adapter
-        get() = binding.targetFragment.adapter
-
-    abstract val defaultWireFormat : AdatClassWireFormat<*>?
-
-    override fun start() {
-        job = scope.launch {
-
-            while (isActive) {
-                val ci = infoFun()
-                if (ci != null) {
-                    connectInfo = ci
-                    break
-                }
-                delay(1000)
-            }
-
-            val originHandle = connectInfo.acceptingHandle
-            val connectingHandle = connectInfo.connectingHandle
-
-            logger = getLogger("fun.adaptive.auto.internal.producer.${this::class.simpleName}.${connectingHandle.globalId.toShort()}.${connectingHandle.peerId}")
-            if (trace) logger.enableFine()
-
-            context = BackendContext(
-                connectingHandle,
-                scope,
-                logger,
-                Proto,
-                defaultWireFormat,
-                LamportTimestamp(connectingHandle.peerId, 0),
-            )
-
-            build()
-
-            backend.frontend = frontend
-
-            if (connectInfo.connectionType == AutoConnectionType.Service) {
-                connectService(connectingHandle, originHandle)
-            } else {
-                connectDirect()
-            }
-        }
-    }
-
-    suspend fun connectService(connectingHandle: AutoHandle, originHandle: AutoHandle) {
-        adapter.backend.firstImpl<AutoWorker>().register(backend)
-
-        val autoService = getService<AutoApi>(adapter.transport)
-
-        backend.addPeer(
-            ServiceConnector(backend, originHandle, autoService, reconnect = true),
-            connectInfo.acceptingTime
-        )
-
-        autoService.addPeer(originHandle, connectingHandle, backend.context.time)
-    }
-
-    suspend fun connectDirect() {
-        checkNotNull(peer)
-        backend.addPeer(DirectConnector(backend, peer.backend), connectInfo.acceptingTime)
-        peer.backend.addPeer(DirectConnector(peer.backend, backend), backend.context.time)
-    }
-
-    abstract fun build()
-
-    override fun stop() {
-        if (connectInfo.connectionType == AutoConnectionType.Service) {
-            adapter.backend.firstImpl<AutoWorker>().deregister(backend)
-        }
-
-        scope.safeLaunch(logger) {
-            backend.disconnect()
-        }
-
-        safeCall(logger) {
-            job?.cancel()
-        }
-    }
-
-    override fun toString(): String {
-        return "AutoItem($binding)"
-    }
-
-}
+//
+//abstract class ProducerBase<BE : AutoBackend<IT>, FE : AutoPersistence<VT, IT>, VT, IT : AdatClass>(
+//    override val binding: AdaptiveStateVariableBinding<VT>,
+//    val infoFun: suspend () -> AutoConnectionInfo<VT>?,
+//    val trace: Boolean,
+//) : AdatStore<IT>(), AdaptiveProducer<VT> {
+//
+//    override var latestValue: VT? = null
+//
+//    val scope: CoroutineScope = CoroutineScope(adapter.dispatcher)
+//
+//    lateinit var logger: AdaptiveLogger
+//    lateinit var connectInfo: AutoConnectionInfo<VT>
+//    lateinit var context: BackendContext<IT>
+//
+//    lateinit var backend: BE
+//    lateinit var frontend: FE
+//
+//    var job: Job? = null
+//
+//    var syncEnd = false
+//
+//    val adapter
+//        get() = binding.targetFragment.adapter
+//
+//    abstract val defaultWireFormat : AdatClassWireFormat<*>?
+//
+//    override fun start() {
+//        job = scope.launch {
+//
+//            while (isActive) {
+//                val ci = infoFun()
+//                if (ci != null) {
+//                    connectInfo = ci
+//                    break
+//                }
+//                delay(1000)
+//            }
+//
+//            val originHandle = connectInfo.acceptingHandle
+//            val connectingHandle = connectInfo.connectingHandle
+//
+//            logger = getLogger("fun.adaptive.auto.internal.producer.${this::class.simpleName}.${connectingHandle.globalId.toShort()}.${connectingHandle.peerId}")
+//            if (trace) logger.enableFine()
+//
+//            context = BackendContext(
+//                connectingHandle,
+//                scope,
+//                logger,
+//                Proto,
+//                defaultWireFormat,
+//                LamportTimestamp(connectingHandle.peerId, 0),
+//            )
+//
+//            build()
+//
+//            backend.frontend = frontend
+//
+//            if (connectInfo.connectionType == AutoConnectionType.Service) {
+//                connectService(connectingHandle, originHandle)
+//            } else {
+//                connectDirect()
+//            }
+//        }
+//    }
+//
+//    suspend fun connectService(connectingHandle: AutoHandle, originHandle: AutoHandle) {
+//        adapter.backend.firstImpl<AutoWorker>().register(backend)
+//
+//        val autoService = getService<AutoApi>(adapter.transport)
+//
+//        backend.addPeer(
+//            ServiceConnector(backend, originHandle, autoService, reconnect = true),
+//            connectInfo.acceptingTime
+//        )
+//
+//        autoService.addPeer(originHandle, connectingHandle, backend.context.time)
+//    }
+//
+//    suspend fun connectDirect() {
+//        checkNotNull(peer)
+//        backend.addPeer(DirectConnector(backend, peer.backend), connectInfo.acceptingTime)
+//        peer.backend.addPeer(DirectConnector(peer.backend, backend), backend.context.time)
+//    }
+//
+//    abstract fun build()
+//
+//    override fun stop() {
+//        if (connectInfo.connectionType == AutoConnectionType.Service) {
+//            adapter.backend.firstImpl<AutoWorker>().deregister(backend)
+//        }
+//
+//        scope.safeLaunch(logger) {
+//            backend.disconnect()
+//        }
+//
+//        safeCall(logger) {
+//            job?.cancel()
+//        }
+//    }
+//
+//    override fun toString(): String {
+//        return "AutoItem($binding)"
+//    }
+//
+//}

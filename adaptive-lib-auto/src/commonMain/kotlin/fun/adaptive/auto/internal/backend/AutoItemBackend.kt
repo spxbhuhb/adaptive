@@ -2,43 +2,38 @@ package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
-import `fun`.adaptive.auto.internal.frontend.AutoItemFrontend
 import `fun`.adaptive.auto.internal.origin.AutoInstance
-import `fun`.adaptive.auto.internal.persistence.AutoItemExport
 import `fun`.adaptive.auto.model.ItemId
 
 abstract class AutoItemBackend<IT : AdatClass>(
-    instance: AutoInstance<*, *, *, IT>,
-    val frontend: AutoItemFrontend<IT>? = null,
+    instance: AutoInstance<*, *, *, IT>
 ) : AutoBackend<IT>(instance) {
 
-    abstract val itemId : ItemId
+    abstract val itemId: ItemId
 
-    abstract val wireFormat : AdatClassWireFormat<*>
+    abstract val wireFormat: AdatClassWireFormat<*>
 
-    abstract fun getItem() : IT
+    abstract fun getItem(): IT
 
-    abstract fun export(): AutoItemExport<IT>
-
-    fun update(propertyName: String, propertyValue: Any?) {
-        update(itemId, propertyName, propertyValue)
-    }
-
-    fun update(path: Array<String>, value: Any?) {
-        check(path.size == 1) { "multi-level paths are not implemented yet" }
-        update(itemId, path[0], value)
-    }
-
-    fun update(new: IT) {
-        update(itemId, new)
-    }
+//    fun update(propertyName: String, propertyValue: Any?) {
+//        update(itemId, propertyName, propertyValue)
+//    }
+//
+//    fun update(path: Array<String>, value: Any?) {
+//        check(path.size == 1) { "multi-level paths are not implemented yet" }
+//        update(itemId, path[0], value)
+//    }
+//
+//    fun update(new: IT) {
+//        update(itemId, new)
+//    }
 
     /**
      * Called by collection backends when the item of this backend is removed from the collection.
      */
     fun removed(fromBackend: Boolean) {
-        frontend?.removed(fromBackend)
+        // FIXME frontend?.removed(fromBackend)
     }
 
-    internal abstract fun encode() : ByteArray
+    internal abstract fun encode(): ByteArray
 }

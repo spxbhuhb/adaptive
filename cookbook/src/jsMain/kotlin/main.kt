@@ -3,7 +3,7 @@
  */
 
 import `fun`.adaptive.auto.api.auto
-import `fun`.adaptive.auto.api.autoItem
+import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.cookbook.Res
 import `fun`.adaptive.cookbook.cookbookCommon
@@ -87,7 +87,7 @@ fun main() {
     }
 }
 
-private val appNavState = autoItem(Routes.grid)
+private val appNavState = autoItemOrigin(Routes.grid)
 
 private object Routes {
     val dialog = NavState("Dialog")
@@ -126,7 +126,7 @@ fun mainMenu() {
 @Adaptive
 fun mainContent() {
 
-    val navState = autoItem(appNavState)
+    val navState = autoItemOrigin(appNavState)
 
     box {
         maxSize .. padding { 16.dp } .. backgroundColor(0xFAFAFA)

@@ -1,9 +1,9 @@
 package `fun`.adaptive.auto.api
-
-import `fun`.adaptive.auto.backend.AutoWorker
-import `fun`.adaptive.auto.internal.backend.PropertyBackend
-import `fun`.adaptive.auto.internal.frontend.FileFrontend
-import `fun`.adaptive.auto.internal.origin.AutoInstance
+//
+//import `fun`.adaptive.auto.backend.AutoWorker
+//import `fun`.adaptive.auto.internal.backend.PropertyBackend
+//import `fun`.adaptive.auto.internal.frontend.FileFrontend
+//import `fun`.adaptive.auto.internal.origin.AutoInstance
 
 /**
  * Register a file-based origin Auto instance with the [worker].
@@ -20,14 +20,14 @@ import `fun`.adaptive.auto.internal.origin.AutoInstance
  *
  * [FileFrontend] writes all changes to the file specified by [path].
  *
- * After registration peers can use [autoItem] to connect to the registered
- * instance. To get the connection info needed for the [autoItem]
+ * After registration peers can use [autoItemOrigin] to connect to the registered
+ * instance. To get the connection info needed for the [autoItemOrigin]
  * use the `connectInfo` function of the returned frontend.
  *
  * Property changes (on any peer) generate a new instance (on all peers).
  *
  * Each new instance is validated by default, so fragments that use values
- * produced by [autoItem] can safely use the validation result as it is
+ * produced by [autoItemOrigin] can safely use the validation result as it is
  * up-to-date all the time.
  *
  * Registers a cleanup handler into the session through [serviceContext] or

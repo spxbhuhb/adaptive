@@ -12,8 +12,6 @@ import `fun`.adaptive.auto.internal.backend.AutoCollectionBackend
 import `fun`.adaptive.auto.internal.backend.AutoItemBackend
 import `fun`.adaptive.auto.internal.connector.DirectConnector
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
-import `fun`.adaptive.auto.internal.frontend.AutoCollectionFrontend
-import `fun`.adaptive.auto.internal.frontend.AutoItemFrontend
 import `fun`.adaptive.auto.internal.persistence.AutoCollectionExport
 import `fun`.adaptive.auto.internal.persistence.AutoCollectionPersistence
 import `fun`.adaptive.auto.internal.persistence.AutoItemExport
@@ -58,11 +56,11 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
         AutoItem<AutoItemBackend<IT>, AutoItemPersistence<IT>, IT>(defaultWireFormat, wireFormatProvider, scope)
     } as AutoInstance<BE, PT, VT, IT>
 
-    lateinit var backend: BE
-
     fun build(
         initialValue: VT?,
     ): AutoInstance<BE, PT, VT, IT> {
+        if (trace) instance.logger.enableFine()
+
         instance.persistence = persistenceFun(this)
 
         val (loadedInfo, loadedValue) = load()
@@ -80,13 +78,15 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
             else -> null
         }
 
-        backend = backendFun(this, connectionInfo, value)
+        instance.trace("BUILD") { "connectionInfo: $connectionInfo value: $value" }
+
+        instance.backend = backendFun(this, connectionInfo, value)
 
         addListener()
         addCleanup()
 
         if (origin) {
-            instance.setInfo(connectionInfo !!, worker)
+            instance.setInfo(connectionInfo !!, worker, trace)
         } else {
             createConnector(connectionInfo)
         }
@@ -98,8 +98,9 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
     fun load(): Pair<AutoConnectionInfo<VT>?, VT> {
         val export = instance.persistence.load()
         when (export) {
-            is AutoItemExport<*> -> return (export.meta?.connection to export.item as VT)
-            is AutoCollectionExport<*> -> return (export.meta?.connection to export.items as VT)
+            // FIXME the first cast ( as AutoConnectionInfo<VT>) is here because the compiler plugin does not handle the type correctly
+            is AutoItemExport<*> -> return (export.meta?.connection as? AutoConnectionInfo<VT> to export.item as VT)
+            is AutoCollectionExport<*> -> return (export.meta?.connection as? AutoConnectionInfo<VT> to export.items as VT)
             else -> error("unknown persistence class: ${instance.persistence}")
         }
     }
@@ -134,14 +135,14 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
 
     private fun connect(connectionInfo: AutoConnectionInfo<VT>?, connector: (AutoConnectionInfo<VT>) -> Unit) {
         if (connectionInfo != null) {
-            instance.setInfo(connectionInfo, worker)
+            instance.setInfo(connectionInfo, worker, trace)
             connector(connectionInfo)
             return
         }
 
         if (infoFun != null) {
             infoFun(instance).also {
-                instance.setInfo(it, worker)
+                instance.setInfo(it, worker, trace)
                 connector(it)
             }
             return
@@ -152,7 +153,7 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
 
             scope.launch {
                 untilSuccess { infoFunSuspend(instance) }.also {
-                    instance.setInfo(it, worker)
+                    instance.setInfo(it, worker, trace)
                     connector(it)
                 }
             }

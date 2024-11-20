@@ -1,17 +1,17 @@
 package `fun`.adaptive.auto.internal.origin
 
+import `fun`.adaptive.adat.api.diff
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.api.AutoCollectionListener
+import `fun`.adaptive.auto.api.AutoGeneric
 import `fun`.adaptive.auto.api.AutoItemListener
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.AutoBackend
 import `fun`.adaptive.auto.internal.backend.AutoCollectionBackend
 import `fun`.adaptive.auto.internal.backend.AutoItemBackend
 import `fun`.adaptive.auto.internal.connector.AutoConnector
-import `fun`.adaptive.auto.internal.persistence.AutoCollectionExport
-import `fun`.adaptive.auto.internal.persistence.AutoItemExport
-import `fun`.adaptive.auto.internal.persistence.AutoItemPersistence
+import `fun`.adaptive.auto.internal.connector.DirectConnector
 import `fun`.adaptive.auto.internal.persistence.AutoPersistence
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoConnectionType
@@ -28,8 +28,10 @@ import `fun`.adaptive.auto.model.operation.AutoSyncBatch
 import `fun`.adaptive.auto.model.operation.AutoSyncEnd
 import `fun`.adaptive.log.AdaptiveLogger
 import `fun`.adaptive.log.getLogger
+import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.utility.RequireLock
 import `fun`.adaptive.utility.ThreadSafe
+import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.safeSuspendCall
 import `fun`.adaptive.utility.use
@@ -43,25 +45,30 @@ import kotlin.time.Duration
 abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT, IT : AdatClass>(
     val defaultWireFormat: AdatClassWireFormat<*>?,
     val wireFormatProvider: WireFormatProvider,
-    val scope: CoroutineScope,
+    val scope: CoroutineScope
 ) {
 
+    @ThreadSafe
     val time: LamportTimestamp
-        get() = lock.use { pTime }
+        get() = lock.use { unsafeTime }
 
     private val lock = getLock()
 
-    private var logger: AdaptiveLogger = getLogger("auto.*")
+    internal var logger: AdaptiveLogger = getLogger("auto.CONNECTING")
 
     private lateinit var connectionInfo: AutoConnectionInfo<VT>
 
-    private lateinit var handle: AutoHandle
+    @ThreadSafe
+    val handle: AutoHandle
+        get() = lock.use { checkNotNull(handleOrNull) }
 
-    private lateinit var backend: BE
+    private var handleOrNull: AutoHandle? = null
+
+    internal lateinit var backend: BE
 
     internal lateinit var persistence: PT
 
-    private var pTime = LamportTimestamp(handle.peerId, 0)
+    private var unsafeTime = LamportTimestamp(handleOrNull?.peerId ?: PeerId.CONNECTING, 0)
 
     private var closePeers = emptyList<PeerId>()
 
@@ -76,19 +83,30 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     // --------------------------------------------------------------------------------
 
     @ThreadSafe
-    internal fun setInfo(connectionInfo: AutoConnectionInfo<VT>, worker: AutoWorker?) {
+    internal fun setInfo(connectionInfo: AutoConnectionInfo<VT>, worker: AutoWorker?, trace: Boolean) {
         lock.use {
             this.connectionInfo = connectionInfo
-            handle = connectionInfo.connectingHandle
 
-            val loggerName = "auto.${handle.globalId.toShort()}.${handle.peerId}${handle.itemId?.let { ".$it" } ?: ""}"
-            logger = getLogger(loggerName)
+            connectionInfo.connectingHandle.also {
+                handleOrNull = it
+
+                if (connectionInfo.connectionType == AutoConnectionType.Origin) {
+                    unsafeTime = LamportTimestamp.ORIGIN
+                }
+
+                // ${it.itemId?.let { ".$it" } ?: ""}
+                val loggerName = "auto.${it.globalId.toShort()}.${it.peerId}"
+                logger = getLogger(loggerName)
+                if (trace) logger.enableFine()
+            }
         }
 
         if (connectionInfo.connectionType == AutoConnectionType.Service) {
             checkNotNull(worker) { "cannot register auto instance without a worker ($this)" }
             worker.register(this)
         }
+
+        trace("SET-INFO") { "$connectionInfo $worker" }
     }
 
     @ThreadSafe
@@ -102,15 +120,18 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     }
 
     // --------------------------------------------------------------------------------
-    // Interface provided for users of this instance
+    // Operations initiated locally (through this instance)
     // --------------------------------------------------------------------------------
 
     @ThreadSafe
     protected fun localAdd(item: IT) {
         lock.use {
-            val (operation, added) = backend.add(nextTime(), item)
-            onChange(operation.itemId, added, null, fromPeer = false)
+            val (operation, added) = backend.localAdd(nextTime(), item)
+
+            onLocalChange(operation.itemId, added, null)
             distribute(operation)
+
+            trace("LOCAL ADD") { "${operation.itemId} $added" }
         }
     }
 
@@ -118,107 +139,112 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     protected fun localUpdate(itemId: ItemId, updates: Collection<Pair<String, Any?>>) {
         lock.use {
             val original = backend.getItem(itemId)
-            val (operation, updated) = backend.update(nextTime(), itemId, updates)
-            onChange(operation.itemId, updated, original, fromPeer = false)
+            checkNotNull(original)
+
+            val (operation, updated) = backend.localUpdate(nextTime(), itemId, updates)
+
+            onLocalChange(operation.itemId, updated, original)
             distribute(operation)
+
+            trace("LOCAL UPDATE") { "${operation.itemId} ${updated.diff(original)}" }
         }
     }
 
     @ThreadSafe
     protected fun localRemove(itemId: ItemId) {
         lock.use {
-            val (operation, removed) = backend.remove(nextTime(), itemId)
-            removed?.let { onRemove(it, fromPeer = false) }
+            val (operation, removed) = backend.localRemove(nextTime(), itemId)
+
+            removed?.let { onLocalRemove(itemId, it) }
             distribute(operation)
+
+            trace("LOCAL REMOVE") { "$itemId $removed" }
         }
     }
 
     // --------------------------------------------------------------------------------
-    // Operations from peers
+    // Operations from peers (received through a connector)
     // --------------------------------------------------------------------------------
 
     @ThreadSafe
-    internal fun receive(operation: AutoOperation) {
+    internal fun remoteReceive(operation: AutoOperation) {
         lock.use {
             operation.apply(this)
         }
     }
 
     @RequireLock
-    internal open fun add(operation: AutoAdd) {
-        val (timestamp, added) = backend.add(operation)
+    internal open fun remoteAdd(operation: AutoAdd) {
+        val (timestamp, added) = backend.remoteAdd(operation)
 
         if (timestamp != null) {
             receive(timestamp)
-            onChange(operation.itemId, added, null, fromPeer = true)
+            onRemoteChange(operation.itemId, added, null)
             distribute(operation)
+
+            trace("REMOTE ADD") { "${operation.itemId} $added" }
+        } else {
+            trace("SKIPPED :: REMOTE ADD") { "${operation.itemId}" }
         }
     }
 
     @RequireLock
-    internal fun update(operation: AutoUpdate) {
-        val (timestamp, original, updated) = backend.update(operation)
+    internal fun remoteUpdate(operation: AutoUpdate) {
+        val (timestamp, original, updated) = backend.remoteUpdate(operation)
 
         if (timestamp != null) {
             receive(timestamp)
-            onChange(operation.itemId, updated, original, fromPeer = true)
+            onRemoteChange(operation.itemId, updated, original)
             distribute(operation)
+
+            trace("REMOTE UPDATE") { "${operation.itemId} $updated $original" }
+        } else {
+            trace("SKIPPED :: REMOTE UPDATE") { "${operation.itemId}" }
         }
     }
 
     @RequireLock
-    internal open fun remove(operation: AutoRemove) {
+    internal open fun remoteRemove(operation: AutoRemove) {
         val (timestamp, removed) = backend.remove(operation)
+
         if (timestamp != null) {
             receive(timestamp)
-            if (removed != null) {
-                onRemove(removed, fromPeer = true)
+            removed.forEach {
+                onRemoteRemove(it.first, it.second)
             }
             distribute(operation)
+            trace("REMOTE REMOVE") { "${operation.itemIds} $removed" }
+        } else {
+            trace("SKIPPED :: REMOTE REMOVE") { "${operation.itemIds}" }
         }
     }
 
     @RequireLock
-    internal fun empty(operation: AutoEmpty) {
+    internal fun remoteEmpty(operation: AutoEmpty) {
         receive(operation.timestamp)
-        // FIXME AutoEmpty
-//        onInit(emptyList(), fromBackend = true)
-//        onSyncEnd(fromBackend = true)
+        trace("REMOTE EMPTY") { "${operation.timestamp}" }
+        onInit(emptyList())
+        onSyncEnd()
     }
 
     @RequireLock
-    internal open fun syncBatch(operation: AutoSyncBatch) {
+    internal open fun remoteSyncBatch(operation: AutoSyncBatch) {
         operation.additions.forEach { it.apply(this) }
         operation.updates.forEach { it.apply(this) }
     }
 
     @RequireLock
-    internal open fun syncEnd(operation: AutoSyncEnd) {
+    internal open fun remoteSyncEnd(operation: AutoSyncEnd) {
         backend.syncEnd(operation)
         receive(operation.timestamp)
-        onSyncEnd(fromPeer = true)
+        onSyncEnd()
     }
-
-    /**
-     * Called by backends when the data handled by the backend has been modified.
-     *
-     * @param  itemBackend   The item backend that initiates this commit. Null when the commit
-     *                       is for a collection operation (add or remove).
-     * @param  initial       True when this is the commit happening during the initialization
-     *                       of the auto instance.
-     * @param  fromPeer      True when this operation is received from the peer (to separate
-     *                       from ones initiated by the frontend). Used to skip callback
-     *                       echo to the frontend (if the backendOnly parameter is true for
-     *                       the listener).
-     */
-    @RequireLock
-    internal abstract fun commit(itemBackend: AutoItemBackend<IT>?, initial: Boolean, fromPeer: Boolean)
 
     @RequireLock
     private fun distribute(operation: AutoOperation) {
         val connectors = connectors
         val closePeers = closePeers
-        val thisPeer = handle.peerId
+        val thisPeer = handleOrNull !!.peerId
 
         for (connector in connectors) {
             val peerHandle = connector.peerHandle
@@ -287,8 +313,16 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
             type,
             handle,
             connectTime,
-            AutoHandle(handle.globalId, PeerId(connectTime.timestamp), null)
+            AutoHandle(handle.globalId, PeerId(connectTime.timestamp), itemId)
         )
+    }
+
+    // --------------------------------------------------------------------------------
+    // Peer synchronization
+    // --------------------------------------------------------------------------------
+
+    internal suspend fun syncPeer(connector: DirectConnector, connectingTime: LamportTimestamp) {
+        backend.syncPeer(connector, connectingTime, null)
     }
 
     // --------------------------------------------------------------------------------
@@ -297,26 +331,27 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
 
     @RequireLock
     protected fun receive(receivedTime: LamportTimestamp) {
-        pTime = pTime.receive(receivedTime)
+        unsafeTime = unsafeTime.receive(receivedTime)
     }
 
     @RequireLock
     protected fun receive(receivedTime: ItemId) {
-        pTime = pTime.receive(receivedTime.value)
+        unsafeTime = unsafeTime.receive(receivedTime.value)
     }
 
     @RequireLock
     protected fun nextTime(): LamportTimestamp =
-        pTime.increment().also { pTime = it }
+        unsafeTime.increment().also { unsafeTime = it }
 
     // --------------------------------------------------------------------------------
     // Peers
     // --------------------------------------------------------------------------------
 
     /**
-     * Add a connection to a peer. The instance launches `backend.syncPeer` to send all known
-     * operations that happened after the [peerTime] to the peer.
+     * Add a connection to a peer. The instance launches `AutoBackend.syncPeer` to send all known
+     * operations that happened after the `connector.peerTime` to the peer.
      */
+    @ThreadSafe
     fun addConnector(connector: AutoConnector): LamportTimestamp {
 
         lock.use {
@@ -327,6 +362,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
         return time
     }
 
+    @ThreadSafe
     fun removeConnector(handle: AutoHandle) {
         lock.use {
             val toRemove = connectors.filter { it.peerHandle.peerId == handle.peerId }
@@ -345,12 +381,14 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     // Listeners
     // --------------------------------------------------------------------------------
 
+    @ThreadSafe
     fun addListener(listener: AutoItemListener<IT>) {
         lock.use {
             itemListeners += listener
         }
     }
 
+    @ThreadSafe
     fun addListener(listener: AutoCollectionListener<IT>) {
         lock.use {
             collectionListeners += listener
@@ -361,32 +399,98 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     // Listener callbacks
     // --------------------------------------------------------------------------------
 
-    internal fun onChange(itemId: ItemId, newValue: IT, oldValue: IT?, fromPeer: Boolean) {
-        itemListeners.forEach { if (fromPeer || ! it.backendOnly) it.onChange(itemId, newValue, oldValue) }
-        collectionListeners.forEach { if (fromPeer || ! it.backendOnly) it.onChange(newValue, oldValue) }
+    @RequireLock
+    private fun onLocalChange(itemId: ItemId, newValue: IT, oldValue: IT?) {
+        for (listener in itemListeners) {
+            listener.onLocalChange(itemId, newValue, oldValue)
+        }
+        for (listener in collectionListeners) {
+            listener.onLocalChange(itemId, newValue, oldValue)
+        }
     }
 
-    internal fun onInit(values: Collection<IT>, fromBackend: Boolean) {
-        collectionListeners.forEach { if (fromBackend || ! it.backendOnly) it.onInit(values) }
+    @RequireLock
+    private fun onLocalRemove(itemId: ItemId, value: IT) {
+        for (listener in itemListeners) {
+            listener.onLocalRemove(itemId, value)
+        }
+        for (listener in collectionListeners) {
+            listener.onLocalRemove(itemId, value)
+        }
     }
 
-    internal fun onChange(values: Collection<IT>, fromBackend: Boolean) {
-        collectionListeners.forEach { if (fromBackend || ! it.backendOnly) it.onChange(values) }
+    @RequireLock
+    private fun onInit(values: Collection<IT>) {
+        for (listener in collectionListeners) {
+            listener.onInit(values)
+        }
     }
 
-    internal fun onRemove(value: IT, fromPeer: Boolean) {
-        collectionListeners.forEach { if (fromPeer || ! it.backendOnly) it.onRemove(value) }
+    @RequireLock
+    private fun onRemoteChange(itemId: ItemId, newValue: IT, oldValue: IT?) {
+        for (listener in itemListeners) {
+            listener.onRemoteChange(itemId, newValue, oldValue)
+        }
+        for (listener in collectionListeners) {
+            listener.onRemoteChange(itemId, newValue, oldValue)
+        }
     }
 
-    internal fun onSyncEnd(fromPeer: Boolean) {
-        collectionListeners.forEach { if (fromPeer || ! it.backendOnly) it.onSyncEnd() }
+    @RequireLock
+    private fun onRemoteRemove(itemId: ItemId, value: IT) {
+        for (listener in itemListeners) {
+            listener.onLocalRemove(itemId, value)
+        }
+        for (listener in collectionListeners) {
+            listener.onLocalRemove(itemId, value)
+        }
     }
+
+    @RequireLock
+    private fun onSyncEnd() {
+        for (listener in collectionListeners) {
+            listener.onSyncEnd()
+        }
+    }
+
+    // --------------------------------------------------------------------------------
+    // Access, utility
+    // --------------------------------------------------------------------------------
+
+    @ThreadSafe
+    @Suppress("UNCHECKED_CAST")
+    protected fun getItem(): IT =
+        lock.use {
+            (backend as AutoItemBackend<IT>).getItem()
+        }
+
+    @ThreadSafe
+    @Suppress("UNCHECKED_CAST")
+    protected fun getItems(): Collection<IT> =
+        lock.use {
+            (backend as AutoCollectionBackend<IT>).getItems()
+        }
+
+    @ThreadSafe
+    fun itemId(item: IT) =
+        checkNotNull(item.adatContext?.id as? ItemId) { "this item is not managed by an auto instance" }
+
+    @ThreadSafe
+    fun globalId(): UUID<AutoGeneric> =
+        lock.use {
+            handle.globalId
+        }
 
     // --------------------------------------------------------------------------------
     // Logging
     // --------------------------------------------------------------------------------
 
-    open fun trace(callSiteName: String, builder: () -> String) {
+    internal fun error(message: String, e: Exception) {
+        logger.error(message, e)
+    }
+
+    @CallSiteName
+    open fun trace(callSiteName: String = "", builder: () -> String) {
         logger.fine { "[${callSiteName.substringAfterLast('.')} @ $time] ${builder()}" }
     }
 

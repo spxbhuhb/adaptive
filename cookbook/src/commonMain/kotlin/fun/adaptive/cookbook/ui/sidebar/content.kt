@@ -1,6 +1,6 @@
 package `fun`.adaptive.cookbook.ui.sidebar
 
-import `fun`.adaptive.auto.api.autoItem
+import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -23,7 +23,7 @@ private fun next() {
 
 @Adaptive
 fun sidebarContent(vararg instructions: AdaptiveInstruction) : AdaptiveFragment {
-    val navState = autoItem(navState)
+    val navState = autoItemOrigin(navState)
 
     row(*instructions) {
         padding { 16.dp }

@@ -1,16 +1,16 @@
 package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.adat.wireformat.AdatPropertyWireFormat
 import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.model.AutoPropertyValue
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.model.operation.AutoUpdate
+import `fun`.adaptive.auto.model.operation.AutoAdd
+import `fun`.adaptive.auto.model.operation.AutoRemove
 import `fun`.adaptive.auto.model.operation.AutoSyncEnd
-import `fun`.adaptive.utility.RequireLock
+import `fun`.adaptive.auto.model.operation.AutoUpdate
 import `fun`.adaptive.wireformat.WireFormat
 
 class PropertyBackend<IT : AdatClass>(
@@ -18,7 +18,7 @@ class PropertyBackend<IT : AdatClass>(
     val wireFormatName: String?,
     initialValues: Array<Any?>?,
     propertyTimes: List<LamportTimestamp>?,
-    override val itemId: ItemId = ItemId.CONNECTING,
+    override val itemId: ItemId,
 ) : AutoItemBackend<IT>(instance) {
 
     var lastUpdate = propertyTimes?.max() ?: LamportTimestamp.CONNECTING
@@ -32,13 +32,13 @@ class PropertyBackend<IT : AdatClass>(
 
     private val propertyTimes = initPropertyTimes(propertyTimes)
 
-    private var item : IT? = null
+    private var item: IT? = null
 
     init {
-        trace { "INIT  itemId=$itemId  ${initialValues.contentToString()}" }
+        trace("INIT") { "itemId=$itemId  ${initialValues.contentToString()}" }
     }
 
-    private fun initPropertyTimes(propertyTimes: List<LamportTimestamp>?) : Array<LamportTimestamp> {
+    private fun initPropertyTimes(propertyTimes: List<LamportTimestamp>?): Array<LamportTimestamp> {
 
         if (propertyTimes == null) {
             return Array(properties.size) { LamportTimestamp.CONNECTING }
@@ -65,55 +65,51 @@ class PropertyBackend<IT : AdatClass>(
     // Local operations
     // --------------------------------------------------------------------------------
 
-    override fun update(timestamp : LamportTimestamp, itemId: ItemId, propertyName: String, propertyValue: Any?) {
-        val property = properties[propertyName]
-        val index = property.index
-
-        values[index] = propertyValue // must be BEFORE `encode`
-
-        val payload = encode(property)
-
-        val time = timestamp
-
-        val operation = AutoUpdate(time, itemId, listOf(AutoPropertyValue(time, propertyName, payload)))
-
-        propertyTimes[index] = operation.timestamp
-
-        instance.commit(this, initial = false, fromPeer = false)
-
-        trace { "FE -> BE  $propertyName=$propertyValue $operation" }
+    override fun localAdd(timestamp: LamportTimestamp, item: IT): Pair<AutoAdd, IT> {
+        throw UnsupportedOperationException("auto item does not support adding items ($this)")
     }
 
-    override fun update(timestamp : LamportTimestamp, itemId: ItemId, new: IT) {
-        val newValues = new.toArray()
-        check(newValues.size <= values.size)
+    override fun localUpdate(
+        timestamp: LamportTimestamp,
+        itemId: ItemId,
+        updates: Collection<Pair<String, Any?>>
+    ): Pair<AutoUpdate, IT> {
 
-        val time = timestamp
-        val changes = mutableListOf<AutoPropertyValue>()
+        val parts = mutableListOf<AutoPropertyValue>()
 
-        for ((index, propertyValue) in values.withIndex()) {
-            val newValue = newValues[index]
-            if (newValue == propertyValue) continue
+        for ((propertyName, propertyValue) in updates) {
+            val property = properties[propertyName]
+            val index = property.index
 
-            val property = properties[index]
-            values[index] = newValue
-            propertyTimes[index] = time
-            changes += AutoPropertyValue(time, property.name, encode(property))
+            values[index] = propertyValue // must be BEFORE `encode`
+
+            val payload = encode(property)
+            val time = timestamp
+
+            parts += AutoPropertyValue(time, propertyName, payload)
+
+            propertyTimes[index] = timestamp
         }
 
-        val operation = AutoUpdate(time, itemId, changes)
+        return AutoUpdate(timestamp, itemId, parts) to getItem()
+    }
 
-        instance.commit(this, initial = false, fromPeer = false)
-
-        trace { "FE -> BE  $operation" }
+    override fun localRemove(timestamp: LamportTimestamp, itemId: ItemId): Pair<AutoRemove, IT?> {
+        throw UnsupportedOperationException("auto item does not support removing items ($this)")
     }
 
     // --------------------------------------------------------------------------------
     // Operations from peers
     // --------------------------------------------------------------------------------
 
-    override fun update(operation: AutoUpdate, commit: Boolean) : LamportTimestamp? {
+    override fun remoteAdd(operation: AutoAdd): Pair<LamportTimestamp?, IT> {
+        throw UnsupportedOperationException("auto item does not support adding items ($this)")
+    }
+
+    override fun remoteUpdate(operation: AutoUpdate): Triple<LamportTimestamp?, IT, IT> {
         var changed = false
+
+        val original = getItem()
 
         for (change in operation.values) {
 
@@ -137,30 +133,26 @@ class PropertyBackend<IT : AdatClass>(
                 values[index] = value
                 propertyTimes[index] = change.changeTime
                 lastUpdate = maxOf(lastUpdate, change.changeTime)
-                instance.receive(change.changeTime)
 
-                trace { "BE -> BE  CHANGE ${change.propertyName}=$value" }
+                trace { "REMOTE CHANGE ${change.propertyName}=$value" }
 
                 changed = true
 
             } else {
-                trace { "BE -> BE  SKIP   ${change.propertyName}" }
+                trace("SKIPPED :: REMOTE CHANGE") { "${change.propertyName} $values" }
             }
         }
 
         if (changed) {
-            trace { "BE -> BE  op=$operation" }
-            instance.commit(this, initial = false, fromPeer = true)
-            return lastUpdate
+            item = null
+            return Triple(lastUpdate, original, getItem())
         } else {
-            trace { "BE -> BE  SKIP   op=$operation" }
-            return null
+            return Triple(null, original, original)
         }
     }
 
-    override fun syncEnd(operation: AutoSyncEnd, commit: Boolean) {
-        instance.receive(operation.timestamp)
-        trace { "time=${instance.time}" }
+    override fun remove(operation: AutoRemove): Pair<LamportTimestamp?, Set<Pair<ItemId, IT>>> {
+        throw UnsupportedOperationException("auto item does not support removing items ($this)")
     }
 
     // --------------------------------------------------------------------------------
@@ -178,10 +170,10 @@ class PropertyBackend<IT : AdatClass>(
     ) {
 
         if (syncFrom >= lastUpdate) {
-            trace { "SYNC SKIP: time= $lastUpdate peerTime=$syncFrom" }
+            trace { "SKIPPED :: SYNC time= $lastUpdate peerTime=$syncFrom" }
             return
         } else {
-            trace { "SYNC: itemId=$itemId time= $lastUpdate peerTime=$syncFrom" }
+            trace { "SYNC itemId=$itemId time= $lastUpdate peerTime=$syncFrom" }
         }
 
         val changesToSend = mutableListOf<AutoPropertyValue>()
@@ -213,7 +205,11 @@ class PropertyBackend<IT : AdatClass>(
     // Utility
     // --------------------------------------------------------------------------------
 
-    @RequireLock
+    override fun getItem(itemId: ItemId): IT? {
+        check(itemId == this.itemId) { "item id mismatch : $itemId != $this.itemId" }
+        return item
+    }
+
     @Suppress("UNCHECKED_CAST")
     override fun getItem(): IT =
         item ?: (wireFormat.newInstance(values) as IT).also { item = it }
@@ -238,8 +234,8 @@ class PropertyBackend<IT : AdatClass>(
                 encoder.rawInstance(value, wireformat)
             }
             return encoder.pack()
-        } catch (e: Throwable) {
-            instance.error("error while writing property: ${property.metadata}")
+        } catch (e: Exception) {
+            instance.error("error while writing property: ${property.metadata}", e)
             throw e
         }
     }

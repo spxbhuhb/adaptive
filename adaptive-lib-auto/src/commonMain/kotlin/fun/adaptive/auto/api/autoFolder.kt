@@ -1,8 +1,8 @@
 package `fun`.adaptive.auto.api
 
-import `fun`.adaptive.auto.backend.AutoWorker
-import `fun`.adaptive.auto.internal.backend.SetBackend
-import `fun`.adaptive.auto.internal.frontend.FolderFrontend
+//import `fun`.adaptive.auto.backend.AutoWorker
+//import `fun`.adaptive.auto.internal.backend.SetBackend
+//import `fun`.adaptive.auto.internal.frontend.FolderFrontend
 
 /**
  * Register a directory-based Auto list with the [worker].

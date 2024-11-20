@@ -24,22 +24,7 @@ abstract class AutoCollectionBackend<IT : AdatClass>(
     // Operations from the frontend
     // --------------------------------------------------------------------------------
 
-    fun add(timestamp: LamportTimestamp, item: IT, parentItemId: ItemId?) {
-        val itemId = timestamp.asItemId()
-        val item = addItem(itemId, parentItemId, item, false)
-
-        val operation = AutoAdd(
-            timestamp = timestamp,
-            itemId = itemId,
-            item.wireFormat.wireFormatName,
-            parentItemId,
-            item.encode()
-        )
-
-        trace { "FE -> BE  itemId=$itemId .. commit true .. $operation" }
-
-        instance.commit(null, initial = false, fromPeer = false)
-    }
+    abstract fun add(timestamp: LamportTimestamp, item: IT, parentItemId: ItemId?)
 
     abstract fun remove(timestamp: LamportTimestamp, itemId: ItemId, commit: Boolean)
 
@@ -69,5 +54,7 @@ abstract class AutoCollectionBackend<IT : AdatClass>(
     abstract fun firstOrNull(filterFun : (IT) -> Boolean) : AutoItemBackend<IT>?
 
     abstract fun filter(filterFun : (IT) -> Boolean) : Collection<IT>
+
+    internal abstract fun getItems() : Collection<IT>
 
 }

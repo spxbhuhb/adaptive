@@ -31,13 +31,13 @@ class AutoWorker : WorkerImpl<AutoWorker> {
 
     fun register(instance: AutoGeneric) {
         instanceLock.use {
-            instances[instance.handle.globalId] = instance
+            instances[instance.globalId()] = instance
         }
     }
 
     fun deregister(instance: AutoGeneric) {
         instanceLock.use {
-            instances.remove(instance.handle.globalId)
+            instances.remove(instance.globalId())
         }
     }
 
@@ -81,7 +81,7 @@ class AutoWorker : WorkerImpl<AutoWorker> {
 
     fun receive(handle: AutoHandle, operation: AutoOperation) {
         instanceLock.use {
-            instances[handle.globalId]?.receive(operation)
+            instances[handle.globalId]?.remoteReceive(operation)
         }
     }
 

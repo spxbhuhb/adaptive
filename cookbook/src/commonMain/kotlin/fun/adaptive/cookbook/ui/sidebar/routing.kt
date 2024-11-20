@@ -1,6 +1,6 @@
 package `fun`.adaptive.cookbook.ui.sidebar
 
-import `fun`.adaptive.auto.api.autoItem
+import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.cookbook.Res
 import `fun`.adaptive.cookbook.assignment
 import `fun`.adaptive.cookbook.folder
@@ -9,7 +9,7 @@ import `fun`.adaptive.cookbook.mail
 import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.navigation.sidebar.SidebarItem
 
-val navState = autoItem(NavState())
+val navState = autoItemOrigin(NavState())
 
 object Routes {
     val zones = NavState("zones")

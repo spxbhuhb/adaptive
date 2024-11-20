@@ -3,10 +3,7 @@ package `fun`.adaptive.auto.internal.origin
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.AutoBackend
-import `fun`.adaptive.auto.internal.backend.AutoItemBackend
-import `fun`.adaptive.auto.internal.frontend.AutoCollectionFrontend
 import `fun`.adaptive.auto.internal.persistence.AutoCollectionPersistence
-import `fun`.adaptive.auto.internal.persistence.AutoPersistence
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 
@@ -18,15 +15,11 @@ class AutoCollection<BE : AutoBackend<IT>, PT : AutoCollectionPersistence<IT>, I
     defaultWireFormat, wireFormatProvider, scope
 ), Collection<IT> {
 
-    override fun commit(itemBackend: AutoItemBackend<IT>?, initial: Boolean, fromPeer: Boolean) {
-        frontend.commit(itemBackend, initial, fromPeer)
-    }
-
     override val size: Int
         get() = values.size
 
     val values: Collection<IT>
-        get() = frontend.values
+        get() = getItems()
 
     override fun contains(element: IT): Boolean =
         values.contains(element)
@@ -48,8 +41,18 @@ class AutoCollection<BE : AutoBackend<IT>, PT : AutoCollectionPersistence<IT>, I
         localAdd(element)
     }
 
+    operator fun minusAssign(element : IT) {
+        localRemove(itemId(element))
+    }
+
+    fun remove(element : IT) {
+        localRemove(itemId(element))
+    }
+
     fun remove(selector: (IT) -> Boolean) {
-        frontend.remove(selector)
+        getItems().filter(selector).forEach {
+            localRemove(itemId(it))
+        }
     }
 
 }

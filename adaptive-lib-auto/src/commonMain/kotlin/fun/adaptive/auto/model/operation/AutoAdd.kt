@@ -2,8 +2,6 @@ package `fun`.adaptive.auto.model.operation
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.auto.api.AutoGeneric
-import `fun`.adaptive.auto.internal.backend.AutoBackend
-import `fun`.adaptive.auto.internal.backend.AutoCollectionBackend
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 
@@ -17,7 +15,7 @@ class AutoAdd(
 ) : AutoOperation() {
 
     override fun apply(instance: AutoGeneric) {
-        instance.add(this)
+        instance.remoteAdd(this)
     }
 
 }
