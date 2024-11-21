@@ -36,6 +36,7 @@ open class NavState(
         if (other.segments.size < segments.size) return false
 
         for (i in other.segments.indices) {
+            if (i > this.segments.lastIndex) return true
             if (other.segments[i] != segments[i]) return false
         }
 

@@ -8,20 +8,22 @@ import `fun`.adaptive.auto.api.autoInstance
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.cookbook.Res
+import `fun`.adaptive.cookbook.Routes
+import `fun`.adaptive.cookbook.appNavState
 import `fun`.adaptive.cookbook.auth.authRecipe
 import `fun`.adaptive.cookbook.cookbookCommon
 import `fun`.adaptive.cookbook.eco
 import `fun`.adaptive.cookbook.graphics.canvas.canvasRecipe
-import `fun`.adaptive.cookbook.grid_view
+import `fun`.adaptive.cookbook.items
 import `fun`.adaptive.cookbook.menu
 import `fun`.adaptive.cookbook.ui.dialog.dialogRecipe
 import `fun`.adaptive.cookbook.ui.editor.editorRecipe
 import `fun`.adaptive.cookbook.ui.event.eventRecipe
-import `fun`.adaptive.cookbook.ui.file.fileRecipe
 import `fun`.adaptive.cookbook.ui.form.formRecipe
 import `fun`.adaptive.cookbook.ui.layout.box.boxRecipe
 import `fun`.adaptive.cookbook.ui.layout.grid.gridRecipe
 import `fun`.adaptive.cookbook.ui.layout.responsive.responsiveMain
+import `fun`.adaptive.cookbook.ui.navigation.navigationRecipe
 import `fun`.adaptive.cookbook.ui.select.selectRecipe
 import `fun`.adaptive.cookbook.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.cookbook.ui.snackbar.snackbarRecipe
@@ -38,12 +40,10 @@ import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.layout.app.default.defaultAppLayout
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.form.FormFragmentFactory
 import `fun`.adaptive.ui.instruction.*
-import `fun`.adaptive.ui.navigation.NavState
-import `fun`.adaptive.ui.navigation.sidebar.SidebarItem
+import `fun`.adaptive.ui.layout.app.default.defaultAppLayout
 import `fun`.adaptive.ui.platform.withJsResources
 import `fun`.adaptive.ui.snackbar.SnackbarManager
 import kotlinx.browser.window
@@ -63,6 +63,7 @@ fun main() {
         withJsResources()
 
         val transport = webSocketTransport(window.location.origin)
+
         val localBackend = backend(transport) {
             auto()
             worker { SnackbarManager() }
@@ -76,7 +77,6 @@ fun main() {
                 fontWeight = 300
             }
 
-
             defaultAppLayout(
                 items,
                 appNavState,
@@ -88,63 +88,9 @@ fun main() {
                 mainContent()
             }
 
-//            iotMain()
-//              box {
-//                  hoverMain()
-//              }
-
-//            boundInputRecipe()
-
-//            buttonRecipe()
-//            gridAlignRecipe()
-//            quickFilterRecipe()
-
-//            projectWizardMain()
         }
     }
 }
-
-private val appNavState = autoInstance(Routes.event)
-
-private object Routes {
-    val auth = NavState("Auth")
-    val box = NavState("Box")
-    val canvas = NavState("Canvas")
-    val dialog = NavState("Dialog")
-    val editor = NavState("Editor")
-    val empty = NavState("Empty")
-    val event = NavState("Event")
-    val file = NavState("File")
-    val form = NavState("Form")
-    val grid = NavState("Grid")
-    val responsive = NavState("Responsive")
-    val select = NavState("Select")
-    val sidebar = NavState("SideBar")
-    val snackbar = NavState("Snackbar")
-    val svg = NavState("SVG")
-    val text = NavState("Text")
-    val tree = NavState("Tree")
-}
-
-private val items = listOf(
-    SidebarItem(0, Res.drawable.grid_view, "Auth", Routes.auth),
-    SidebarItem(0, Res.drawable.grid_view, "Box", Routes.box),
-    SidebarItem(0, Res.drawable.grid_view, "Canvas", Routes.canvas),
-    SidebarItem(0, Res.drawable.grid_view, "Dialog", Routes.dialog),
-    SidebarItem(0, Res.drawable.grid_view, "Editor", Routes.editor),
-    SidebarItem(0, Res.drawable.grid_view, "Event", Routes.event),
-    SidebarItem(0, Res.drawable.grid_view, "File", Routes.file),
-    SidebarItem(0, Res.drawable.grid_view, "Form", Routes.form),
-    SidebarItem(0, Res.drawable.grid_view, "Grid", Routes.grid),
-    SidebarItem(0, Res.drawable.grid_view, "Responsive", Routes.responsive),
-    SidebarItem(0, Res.drawable.grid_view, "Select", Routes.select),
-    SidebarItem(0, Res.drawable.grid_view, "Sidebar", Routes.sidebar),
-    SidebarItem(0, Res.drawable.grid_view, "Snackbar", Routes.snackbar),
-    SidebarItem(0, Res.drawable.grid_view, "SVG", Routes.svg),
-    SidebarItem(0, Res.drawable.grid_view, "Text", Routes.text),
-    SidebarItem(0, Res.drawable.grid_view, "Tree", Routes.tree)
-)
-
 
 @Adaptive
 fun mainContent() {
@@ -162,9 +108,9 @@ fun mainContent() {
             in Routes.editor -> editorRecipe()
             in Routes.empty -> box { }
             in Routes.event -> eventRecipe()
-            in Routes.file -> fileRecipe()
             in Routes.form -> formRecipe()
             in Routes.grid -> gridRecipe()
+            in Routes.navigation -> navigationRecipe(navState)
             in Routes.responsive -> responsiveMain()
             in Routes.select -> selectRecipe()
             in Routes.sidebar -> sideBarRecipe()
