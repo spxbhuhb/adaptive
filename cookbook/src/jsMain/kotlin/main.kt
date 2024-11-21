@@ -103,7 +103,7 @@ fun main() {
     }
 }
 
-private val appNavState = autoInstance(Routes.box)
+private val appNavState = autoInstance(Routes.snackbar)
 
 private object Routes {
     val auth = NavState("Auth")

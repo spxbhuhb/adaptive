@@ -1,6 +1,9 @@
 package `fun`.adaptive.ui.snackbar
 
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.height
@@ -16,14 +19,17 @@ import `fun`.adaptive.utility.p02
 fun snackList(
     snacks: List<Snack>,
     theme: SnackbarTheme = snackbarTheme,
-) {
-    column(*theme.container) {
+    vararg instructions: AdaptiveInstruction,
+): AdaptiveFragment {
+    column(*theme.container, *instructions) {
         height { (theme.snackHeight + theme.snackGap) * snacks.size }
 
         for (snack in snacks.sortedByDescending { it.createdAt }) {
             snackItem(snack, theme)
         }
     }
+
+    return fragment()
 }
 
 @Adaptive

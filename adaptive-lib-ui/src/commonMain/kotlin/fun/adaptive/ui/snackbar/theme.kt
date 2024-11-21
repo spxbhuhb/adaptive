@@ -38,10 +38,10 @@ open class SnackbarTheme(
         cornerRadius(8.dp)
     )
 
-    open val success = item + instructionsOf(backgrounds.friendly)
-    open val info = item + instructionsOf(backgrounds.surfaceVariant)
-    open val warning = item + instructionsOf(backgrounds.angry)
-    open val fail = item + instructionsOf(backgrounds.angry)
+    open val success = item + instructionsOf(backgrounds.successSurface)
+    open val info = item + instructionsOf(backgrounds.infoSurface)
+    open val warning = item + instructionsOf(backgrounds.warningSurface)
+    open val fail = item + instructionsOf(backgrounds.failSurface)
 
     open fun item(snack: Snack) =
         when (snack.type) {
@@ -51,10 +51,10 @@ open class SnackbarTheme(
             SnackType.Fail -> fail
         }
 
-    open val successText = instructionsOf(textColors.white, fontSize(12.sp))
-    open val infoText = instructionsOf(textColors.onSurfaceVariant, fontSize(12.sp))
-    open val warningText = instructionsOf(textColors.white, fontSize(12.sp))
-    open val failText = instructionsOf(textColors.white, fontSize(12.sp))
+    open val successText = instructionsOf(textColors.onSuccessSurface, fontSize(12.sp))
+    open val infoText = instructionsOf(textColors.onInfoSurface, fontSize(12.sp))
+    open val warningText = instructionsOf(textColors.onWarningSurface, fontSize(12.sp))
+    open val failText = instructionsOf(textColors.onFailSurface, fontSize(12.sp))
 
     open fun text(snack: Snack) = when (snack.type) {
         SnackType.Success -> successText

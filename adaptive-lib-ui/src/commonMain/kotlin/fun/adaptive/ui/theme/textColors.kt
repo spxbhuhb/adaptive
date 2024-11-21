@@ -12,4 +12,9 @@ class ThemeTextColors {
     val onPrimary = textColor(colors.onPrimary)
     val onPrimaryHover = textColor(colors.onPrimaryHover)
     val white = textColor(colors.white)
+
+    val onSuccessSurface = textColor(colors.onSuccessSurface)
+    val onInfoSurface = textColor(colors.onInfoSurface)
+    val onWarningSurface = textColor(colors.onWarningSurface)
+    val onFailSurface = textColor(colors.onFailSurface)
 }

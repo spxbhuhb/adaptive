@@ -89,5 +89,9 @@ abstract class AbstractColumn<RT, CRT : RT>(
         // This means that the final dimensions of the component won't change, no matter what.
 
         computeLayout(renderData.finalWidth, renderData.finalHeight)
+
+        if (renderData.finalWidth != previousRenderData.finalWidth || renderData.finalHeight != previousRenderData.finalHeight) {
+            super.layoutChange(this)
+        }
     }
 }
