@@ -64,6 +64,7 @@ object FqNames : NamesBase(Strings.RUNTIME_PACKAGE) {
 
     val EXPOSED_ADAT_SET = Strings.EXPOSED_ADAT_SET.fqName { Strings.EXPOSED_PACKAGE }
     val ADAT_DESCRIPTOR_NAME = "AdatDescriptorName".fqName { Strings.DESCRIPTOR_PACKAGE }
+    val ADAT_COMPANION_RESOLVE = "AdatCompanionResolve".fqName { Strings.RUNTIME_PACKAGE }
 }
 
 object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {

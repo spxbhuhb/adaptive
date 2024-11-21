@@ -61,21 +61,27 @@ public class BoxTestGenerated extends AbstractBoxTest {
       runTest("testData/box/adat/withCompanion.kt");
     }
 
-      @Nested
-      @TestMetadata("testData/box/adat/companion")
-      @TestDataPath("$PROJECT_ROOT")
-      public class Companion {
-          @Test
-          @TestMetadata("adatCompanionOf.kt")
-          public void testAdatCompanionOf() {
-              runTest("testData/box/adat/companion/adatCompanionOf.kt");
-          }
-
-          @Test
-          public void testAllFilesPresentInCompanion() {
-              KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adat/companion"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
-          }
+    @Nested
+    @TestMetadata("testData/box/adat/companion")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Companion {
+      @Test
+      @TestMetadata("adatCompanionOf.kt")
+      public void testAdatCompanionOf() {
+        runTest("testData/box/adat/companion/adatCompanionOf.kt");
       }
+
+      @Test
+      @TestMetadata("adatCompanionResolve.kt")
+      public void testAdatCompanionResolve() {
+        runTest("testData/box/adat/companion/adatCompanionResolve.kt");
+      }
+
+      @Test
+      public void testAllFilesPresentInCompanion() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adat/companion"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+      }
+    }
 
     @Nested
     @TestMetadata("testData/box/adat/default")

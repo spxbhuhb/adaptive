@@ -20,6 +20,7 @@ class AdatGenerationExtension(
 
             moduleFragment.transformChildrenVoid(AdatModuleTransform(this))
             moduleFragment.transformChildrenVoid(AdatCallTransform(this))
+            moduleFragment.transformChildrenVoid(AdatCompanionResolveTransform(this))
 
             // I don't like the syntax of this function, confusing and too general
             // I'll comment this out until I figure out a better solution
