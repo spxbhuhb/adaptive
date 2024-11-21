@@ -1,6 +1,8 @@
 package `fun`.adaptive.ui.layout.app.default
 
 import `fun`.adaptive.auto.api.autoInstance
+import `fun`.adaptive.auto.api.autoList
+import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -15,16 +17,20 @@ import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.boldFont
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.colTemplate
+import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.fontSize
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.height
+import `fun`.adaptive.ui.api.maxHeight
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.mediaMetrics
+import `fun`.adaptive.ui.api.noPointerEvents
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.position
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
@@ -35,9 +41,13 @@ import `fun`.adaptive.ui.navigation.sidebar.theme.fullSidebarTheme
 import `fun`.adaptive.ui.navigation.sidebar.theme.thinSidebarTheme
 import `fun`.adaptive.ui.navigation.sidebar.thinSidebar
 import `fun`.adaptive.ui.platform.media.MediaMetrics
+import `fun`.adaptive.ui.snackbar.Snack
+import `fun`.adaptive.ui.snackbar.activeSnacks
+import `fun`.adaptive.ui.snackbar.snackList
+import `fun`.adaptive.ui.snackbar.snackbarTheme
 import `fun`.adaptive.ui.theme.colors
 
-val sidebarState = autoInstance(SidebarState())
+val appSidebarState = autoInstance(SidebarState())
 
 @Adaptive
 fun defaultAppLayout(
@@ -51,20 +61,34 @@ fun defaultAppLayout(
 ) {
 
     val metrics = mediaMetrics()
-    val barState = autoInstance(sidebarState)
 
-    grid(gridInst(metrics, barState)) {
+    val sidebarState = autoInstance(appSidebarState)
+
+    val activeSnacks = autoList(activeSnacks, Snack.adatWireFormat) { activeSnacks.connectInfo(AutoConnectionType.Direct) } ?: emptyList()
+
+    val snackbarPosition = position(
+        metrics.viewHeight.dp - (snackbarTheme.snackHeight + snackbarTheme.snackGap) * activeSnacks.size,
+        metrics.viewWidth.dp - snackbarTheme.snackWidth - 16.dp
+    )
+
+    grid(gridInst(metrics, sidebarState)) {
         maxSize
 
         box {
+            maxSize
             when {
-                metrics.isSmall -> small(smallIcon, title, items, navState, barState)
-                metrics.isMedium -> medium(mediumIcon, title, items, navState, barState)
-                metrics.isLarge -> large(largeIcon, title, items, navState, barState)
+                metrics.isSmall -> small(smallIcon, title, items, navState, sidebarState)
+                metrics.isMedium -> medium(mediumIcon, title, items, navState, sidebarState)
+                metrics.isLarge -> large(largeIcon, title, items, navState, sidebarState)
             }
         }
 
         _fixme_adaptive_content()
+    }
+
+    box {
+        noPointerEvents .. maxSize
+        snackList(activeSnacks) .. noPointerEvents .. snackbarPosition
     }
 }
 
@@ -107,7 +131,6 @@ private fun medium(
     navState: NavStateOrigin,
     barState: SidebarState?,
 ) {
-    println(barState?.mediumMode)
     if (barState?.mediumMode == SidebarUserMode.Closed) {
         thin(icon, title, items, navState) { toggleMediumUserState() }
     } else {
@@ -155,7 +178,7 @@ private fun thin(
     toggle: () -> Unit,
 ) {
     grid {
-        rowTemplate(80.dp, 1.fr)
+        rowTemplate(80.dp, 1.fr) .. maxHeight
 
         box {
             size(80.dp, 80.dp) .. alignItems.center
@@ -166,7 +189,10 @@ private fun thin(
             }
         }
 
-        thinSidebar(items, state)
+        column {
+            maxHeight .. verticalScroll
+            thinSidebar(items, state)
+        }
     }
 }
 
@@ -179,12 +205,15 @@ private fun full(
     toggle: () -> Unit,
 ) {
     grid {
-        rowTemplate(168.dp, 1.fr, 60.dp) .. maxSize
+        rowTemplate(168.dp, 1.fr, 60.dp) .. maxHeight
         box {
             appIcon(icon) .. position(36.dp, 16.dp) .. onClick { toggle() }
             text(title) .. boldFont .. fontSize(28.sp) .. position(60.dp, 88.dp)
         }
-        fullSidebar(items, state)
+        column {
+            maxHeight .. verticalScroll
+            fullSidebar(items, state)
+        }
     }
 }
 
@@ -206,9 +235,9 @@ fun appIcon(
 
 // FIXME sidebar mode toggle
 private fun toggleSmallUserState() {
-    val current = sidebarState.frontend.value
+    val current = appSidebarState.frontend.value
 
-    sidebarState.frontend.update(
+    appSidebarState.frontend.update(
         if (current.smallMode == SidebarUserMode.Open) {
             SidebarState(SidebarUserMode.Closed, SidebarUserMode.Closed, SidebarUserMode.Open)
         } else {
@@ -218,9 +247,9 @@ private fun toggleSmallUserState() {
 }
 
 private fun toggleMediumUserState() {
-    val current = sidebarState.frontend.value
+    val current = appSidebarState.frontend.value
 
-    sidebarState.frontend.update(
+    appSidebarState.frontend.update(
         if (current.mediumMode == SidebarUserMode.Open) {
             SidebarState(SidebarUserMode.Closed, SidebarUserMode.Closed, SidebarUserMode.Open)
         } else {
@@ -230,9 +259,9 @@ private fun toggleMediumUserState() {
 }
 
 private fun toggleLargeUserState() {
-    val current = sidebarState.frontend.value
+    val current = appSidebarState.frontend.value
 
-    sidebarState.frontend.update(
+    appSidebarState.frontend.update(
         if (current.largeMode == SidebarUserMode.Open) {
             SidebarState(SidebarUserMode.Closed, SidebarUserMode.Closed, SidebarUserMode.Closed)
         } else {

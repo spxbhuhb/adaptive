@@ -35,14 +35,14 @@ import `fun`.adaptive.ui.theme.backgrounds
 
 @Adaptive
 fun snackbarRecipe() {
-    val metrics = mediaMetrics()
+//    val metrics = mediaMetrics()
     val snacks = autoList(snacks, Snack.adatWireFormat) { snacks.connectInfo(AutoConnectionType.Direct) } ?: emptyList()
-    val activeSnacks = autoList(activeSnacks, Snack.adatWireFormat) { activeSnacks.connectInfo(AutoConnectionType.Direct) } ?: emptyList()
+//    val activeSnacks = autoList(activeSnacks, Snack.adatWireFormat) { activeSnacks.connectInfo(AutoConnectionType.Direct) } ?: emptyList()
 
-    val globalPos = position(
-        metrics.viewHeight.dp - (snackbarTheme.snackHeight + snackbarTheme.snackGap) * activeSnacks.size,
-        metrics.viewWidth.dp - snackbarTheme.snackWidth - 16.dp
-    )
+//    val globalPos = position(
+//        metrics.viewHeight.dp - (snackbarTheme.snackHeight + snackbarTheme.snackGap) * activeSnacks.size,
+//        metrics.viewWidth.dp - snackbarTheme.snackWidth - 16.dp
+//    )
 
     box {
         column {
@@ -61,9 +61,9 @@ fun snackbarRecipe() {
             snackList(snacks)
         }
 
-        rootBox {
-            noPointerEvents .. maxSize
-            snackList(activeSnacks) .. noPointerEvents .. globalPos
-        }
+//        rootBox {
+//            noPointerEvents .. maxSize
+//            snackList(activeSnacks) .. noPointerEvents .. globalPos
+//        }
     }
 }
