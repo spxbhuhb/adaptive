@@ -2,14 +2,18 @@ package `fun`.adaptive.auto.api
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
+import `fun`.adaptive.adat.AdatCompanionResolve
 import `fun`.adaptive.adat.api.adatCompanionOf
 import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
+import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.internal.origin.AutoInstanceBuilder
 import `fun`.adaptive.auto.internal.origin.AutoItem
+import `fun`.adaptive.auto.internal.persistence.AutoItemPersistence
 import `fun`.adaptive.auto.internal.persistence.ItemMemoryPersistence
+import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 
@@ -97,10 +101,10 @@ import `fun`.adaptive.auto.model.LamportTimestamp
  */
 fun <A : AdatClass> autoItemOrigin(
     initialValue: A,
-    worker : AutoWorker? = null,
+    worker: AutoWorker? = null,
     listener: AutoItemListener<A>? = null,
     trace: Boolean = false,
-): AutoItem<PropertyBackend<A>, ItemMemoryPersistence<A>, A> =
+): AutoItem<PropertyBackend<A>, AutoItemPersistence<A>, A> =
 
     @Suppress("UNCHECKED_CAST")
     buildItem(
@@ -146,19 +150,37 @@ fun <A : AdatClass> autoItemOrigin(
 //        worker = worker
 //    )
 
+
+@AdatCompanionResolve
+fun <A : AdatClass> autoItemNode(
+    origin: ItemBase<A>,
+    listener: AutoItemListener<A>? = null,
+    trace: Boolean = false,
+    companion : AdatCompanion<A>? = null
+) =
+    @Suppress("UNCHECKED_CAST")
+    buildItem(
+        origin = false,
+        service = true,
+        infoFunSuspend = { origin.connectInfo(AutoConnectionType.Direct) },
+        defaultWireFormat = companion!!.adatWireFormat,
+        listener = listener,
+        trace = trace
+    )
+
 @Suppress("UNCHECKED_CAST")
 fun <A : AdatClass> buildItem(
-    origin : Boolean,
-    service : Boolean,
-    defaultWireFormat : AdatClassWireFormat<A>,
+    origin: Boolean,
+    service: Boolean,
+    defaultWireFormat: AdatClassWireFormat<A>,
     initialValue: A? = null,
-    infoFunSuspend: InfoFunSuspend<PropertyBackend<A>, ItemMemoryPersistence<A>, A, A>? = null,
+    infoFunSuspend: InfoFunSuspend<PropertyBackend<A>, AutoItemPersistence<A>, A, A>? = null,
     listener: AutoItemListener<A>? = null,
     trace: Boolean,
-    worker : AutoWorker? = null,
-): AutoItem<PropertyBackend<A>, ItemMemoryPersistence<A>, A> =
+    worker: AutoWorker? = null,
+): AutoItem<PropertyBackend<A>, AutoItemPersistence<A>, A> =
 
-    AutoInstanceBuilder<PropertyBackend<A>, ItemMemoryPersistence<A>, A, A>(
+    AutoInstanceBuilder<PropertyBackend<A>, AutoItemPersistence<A>, A, A>(
         origin = origin,
         persistent = false,
         service = service,
@@ -182,4 +204,4 @@ fun <A : AdatClass> buildItem(
         }
     ).build(
         initialValue
-    ) as AutoItem<PropertyBackend<A>, ItemMemoryPersistence<A>, A>
+    ) as AutoItem<PropertyBackend<A>, AutoItemPersistence<A>, A>

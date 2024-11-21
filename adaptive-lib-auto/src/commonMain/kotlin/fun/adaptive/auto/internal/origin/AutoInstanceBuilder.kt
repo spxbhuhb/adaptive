@@ -157,6 +157,7 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
                     connector(it)
                 }
             }
+            return
         }
 
         error("cannot connect service, all options are missing")
