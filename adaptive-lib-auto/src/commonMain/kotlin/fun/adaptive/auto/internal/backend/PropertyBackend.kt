@@ -91,6 +91,7 @@ class PropertyBackend<IT : AdatClass>(
             propertyTimes[index] = timestamp
         }
 
+        item = null
         return AutoUpdate(timestamp, itemId, parts) to getItem()
     }
 
@@ -207,7 +208,7 @@ class PropertyBackend<IT : AdatClass>(
 
     override fun getItem(itemId: ItemId): IT? {
         check(itemId == this.itemId) { "item id mismatch : $itemId != $this.itemId" }
-        return item
+        return getItem()
     }
 
     @Suppress("UNCHECKED_CAST")

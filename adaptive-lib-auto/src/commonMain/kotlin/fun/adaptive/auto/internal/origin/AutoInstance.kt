@@ -1,7 +1,7 @@
 package `fun`.adaptive.auto.internal.origin
 
-import `fun`.adaptive.adat.api.diff
 import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.api.diff
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.api.AutoCollectionListener
 import `fun`.adaptive.auto.api.AutoGeneric
@@ -21,11 +21,11 @@ import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.PeerId
 import `fun`.adaptive.auto.model.operation.AutoAdd
 import `fun`.adaptive.auto.model.operation.AutoEmpty
-import `fun`.adaptive.auto.model.operation.AutoUpdate
 import `fun`.adaptive.auto.model.operation.AutoOperation
 import `fun`.adaptive.auto.model.operation.AutoRemove
 import `fun`.adaptive.auto.model.operation.AutoSyncBatch
 import `fun`.adaptive.auto.model.operation.AutoSyncEnd
+import `fun`.adaptive.auto.model.operation.AutoUpdate
 import `fun`.adaptive.log.AdaptiveLogger
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.reflect.CallSiteName
@@ -47,28 +47,29 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     val wireFormatProvider: WireFormatProvider,
     val scope: CoroutineScope
 ) {
+    private val lock = getLock()
+
+    @ThreadSafe
+    val handle: AutoHandle
+        get() = lock.use { checkNotNull(unsafeHandle) }
+
+    @RequireLock
+    private var unsafeHandle: AutoHandle? = null
 
     @ThreadSafe
     val time: LamportTimestamp
         get() = lock.use { unsafeTime }
 
-    private val lock = getLock()
+    @RequireLock
+    private var unsafeTime = LamportTimestamp(unsafeHandle?.peerId ?: PeerId.CONNECTING, 0)
 
     internal var logger: AdaptiveLogger = getLogger("auto.CONNECTING")
 
     private lateinit var connectionInfo: AutoConnectionInfo<VT>
 
-    @ThreadSafe
-    val handle: AutoHandle
-        get() = lock.use { checkNotNull(handleOrNull) }
-
-    private var handleOrNull: AutoHandle? = null
-
     internal lateinit var backend: BE
 
     internal lateinit var persistence: PT
-
-    private var unsafeTime = LamportTimestamp(handleOrNull?.peerId ?: PeerId.CONNECTING, 0)
 
     private var closePeers = emptyList<PeerId>()
 
@@ -88,7 +89,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
             this.connectionInfo = connectionInfo
 
             connectionInfo.connectingHandle.also {
-                handleOrNull = it
+                unsafeHandle = it
 
                 if (connectionInfo.connectionType == AutoConnectionType.Origin) {
                     unsafeTime = LamportTimestamp.ORIGIN
@@ -136,17 +137,20 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     }
 
     @ThreadSafe
-    protected fun localUpdate(itemId: ItemId, updates: Collection<Pair<String, Any?>>) {
+    protected fun localUpdate(itemId: ItemId?, updates: Collection<Pair<String, Any?>>) {
         lock.use {
-            val original = backend.getItem(itemId)
+            val safeItemId = itemId ?: connectionInfo.connectingHandle.itemId
+            checkNotNull(safeItemId) { "no item id passed and connection info does not contain one in $this" }
+
+            val original = backend.getItem(safeItemId)
             checkNotNull(original)
 
-            val (operation, updated) = backend.localUpdate(nextTime(), itemId, updates)
+            val (operation, updated) = backend.localUpdate(nextTime(), safeItemId, updates)
 
             onLocalChange(operation.itemId, updated, original)
             distribute(operation)
 
-            trace("LOCAL UPDATE") { "${operation.itemId} ${updated.diff(original)}" }
+            trace("LOCAL UPDATE") { "opTime: ${operation.itemId} diff: ${updated.diff(original).map { it.path to updated.getValue(it.path)}}" }
         }
     }
 
@@ -244,7 +248,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     private fun distribute(operation: AutoOperation) {
         val connectors = connectors
         val closePeers = closePeers
-        val thisPeer = handleOrNull !!.peerId
+        val thisPeer = unsafeHandle !!.peerId
 
         for (connector in connectors) {
             val peerHandle = connector.peerHandle

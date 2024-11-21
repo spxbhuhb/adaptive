@@ -4,8 +4,10 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.AutoItemBackend
 import `fun`.adaptive.auto.internal.persistence.AutoItemPersistence
+import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
+import kotlin.reflect.KProperty
 
 class AutoItem<BE : AutoItemBackend<IT>, PT : AutoItemPersistence<IT>, IT : AdatClass>(
     defaultWireFormat: AdatClassWireFormat<*>?,
@@ -17,7 +19,11 @@ class AutoItem<BE : AutoItemBackend<IT>, PT : AutoItemPersistence<IT>, IT : Adat
 
     val value: IT
         get() = getItem()
-//
+
+    fun <V> update(vararg changes: Pair<KProperty<V>, V>) {
+        localUpdate(null, changes.map { it.first.name to it.second })
+    }
+
 //    fun update(propertyName: String, value: Any?) {
 //        backend.remoteUpdate(propertyName, value)
 //    }
