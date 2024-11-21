@@ -16,6 +16,7 @@ import `fun`.adaptive.cookbook.grid_view
 import `fun`.adaptive.cookbook.menu
 import `fun`.adaptive.cookbook.ui.dialog.dialogRecipe
 import `fun`.adaptive.cookbook.ui.editor.editorRecipe
+import `fun`.adaptive.cookbook.ui.event.eventRecipe
 import `fun`.adaptive.cookbook.ui.file.fileRecipe
 import `fun`.adaptive.cookbook.ui.form.formRecipe
 import `fun`.adaptive.cookbook.ui.layout.box.boxRecipe
@@ -103,7 +104,7 @@ fun main() {
     }
 }
 
-private val appNavState = autoInstance(Routes.snackbar)
+private val appNavState = autoInstance(Routes.event)
 
 private object Routes {
     val auth = NavState("Auth")
@@ -112,6 +113,7 @@ private object Routes {
     val dialog = NavState("Dialog")
     val editor = NavState("Editor")
     val empty = NavState("Empty")
+    val event = NavState("Event")
     val file = NavState("File")
     val form = NavState("Form")
     val grid = NavState("Grid")
@@ -130,6 +132,7 @@ private val items = listOf(
     SidebarItem(0, Res.drawable.grid_view, "Canvas", Routes.canvas),
     SidebarItem(0, Res.drawable.grid_view, "Dialog", Routes.dialog),
     SidebarItem(0, Res.drawable.grid_view, "Editor", Routes.editor),
+    SidebarItem(0, Res.drawable.grid_view, "Event", Routes.event),
     SidebarItem(0, Res.drawable.grid_view, "File", Routes.file),
     SidebarItem(0, Res.drawable.grid_view, "Form", Routes.form),
     SidebarItem(0, Res.drawable.grid_view, "Grid", Routes.grid),
@@ -157,9 +160,10 @@ fun mainContent() {
             in Routes.canvas -> canvasRecipe()
             in Routes.dialog -> dialogRecipe()
             in Routes.editor -> editorRecipe()
+            in Routes.empty -> box { }
+            in Routes.event -> eventRecipe()
             in Routes.file -> fileRecipe()
             in Routes.form -> formRecipe()
-            in Routes.empty -> box { }
             in Routes.grid -> gridRecipe()
             in Routes.responsive -> responsiveMain()
             in Routes.select -> selectRecipe()

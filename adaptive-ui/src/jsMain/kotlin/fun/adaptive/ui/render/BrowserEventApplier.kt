@@ -3,6 +3,7 @@ package `fun`.adaptive.ui.render
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.event.OnClick
+import `fun`.adaptive.ui.instruction.event.OnDoubleClick
 import `fun`.adaptive.ui.instruction.event.OnMove
 import `fun`.adaptive.ui.instruction.event.OnPrimaryDown
 import `fun`.adaptive.ui.instruction.event.OnPrimaryUp
@@ -27,6 +28,7 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
 
         val (eventName, condition) = when (eventFun) {
             is OnClick -> "click" to Always
+            is OnDoubleClick -> "dblclick" to Always
             is OnPrimaryDown -> "mousedown" to Primary
             is OnMove -> "mousemove" to Always
             is OnPrimaryUp -> "mouseup" to Primary

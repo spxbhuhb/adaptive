@@ -6,6 +6,7 @@ package `fun`.adaptive.ui.render.model
 
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.instruction.event.OnClick
+import `fun`.adaptive.ui.instruction.event.OnDoubleClick
 import `fun`.adaptive.ui.instruction.event.OnMove
 import `fun`.adaptive.ui.instruction.event.OnPrimaryDown
 import `fun`.adaptive.ui.instruction.event.OnPrimaryUp
@@ -20,6 +21,9 @@ class EventRenderData(
 
     var additionalEvents: Boolean = false
     var noPointerEvents: Boolean? = null
+
+    var onDoubleClick: OnDoubleClick? = null
+    var onDoubleClickListener: Any? = null
 
     var onMove: OnMove? = null
     var onMoveListener: Any? = null

@@ -35,6 +35,15 @@ abstract class EventRenderApplier<R> : AbstractRenderApplier() {
 
         applyEventHandler(
             fragment,
+            previous?.onDoubleClick,
+            previous?.onDoubleClickListener,
+            current?.onDoubleClick
+        ).also {
+            if (current != null) current.onDoubleClickListener = it
+        }
+
+        applyEventHandler(
+            fragment,
             previous?.onMove,
             previous?.onMoveListener,
             current?.onMove
