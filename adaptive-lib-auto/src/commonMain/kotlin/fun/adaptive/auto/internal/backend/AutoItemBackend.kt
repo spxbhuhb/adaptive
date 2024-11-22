@@ -9,7 +9,7 @@ abstract class AutoItemBackend<IT : AdatClass>(
     instance: AutoInstance<*, *, *, IT>
 ) : AutoBackend<IT>(instance) {
 
-    abstract val itemId: ItemId
+    abstract var itemId: ItemId
 
     abstract val wireFormat: AdatClassWireFormat<*>
 

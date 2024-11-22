@@ -37,6 +37,7 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
     val info: AutoConnectionInfo<VT>? = null,
     val infoFun: ((instance: AutoInstance<BE, PT, VT, IT>) -> AutoConnectionInfo<VT>)? = null,
     val infoFunSuspend: InfoFunSuspend<BE, PT, VT, IT>? = null,
+    val directPeer: AutoInstance<BE, PT, VT, IT>? = null,
     val defaultWireFormat: AdatClassWireFormat<*>?,
     wireFormatProvider: WireFormatProvider = Proto,
     val itemListener: AutoItemListener<IT>? = null,
@@ -51,9 +52,13 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
 
     @Suppress("UNCHECKED_CAST")
     val instance = if (collection) {
-        AutoCollection<AutoCollectionBackend<IT>, AutoCollectionPersistence<IT>, IT>(defaultWireFormat, wireFormatProvider, scope)
+        AutoCollection<AutoCollectionBackend<IT>, AutoCollectionPersistence<IT>, IT>(
+            origin, defaultWireFormat, wireFormatProvider, scope
+        )
     } else {
-        AutoItem<AutoItemBackend<IT>, AutoItemPersistence<IT>, IT>(defaultWireFormat, wireFormatProvider, scope)
+        AutoItem<AutoItemBackend<IT>, AutoItemPersistence<IT>, IT>(
+            origin, defaultWireFormat, wireFormatProvider, scope
+        )
     } as AutoInstance<BE, PT, VT, IT>
 
     fun build(
@@ -78,7 +83,7 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
             else -> null
         }
 
-        instance.trace("BUILD") { "connectionInfo: $connectionInfo value: $value" }
+        instance.trace { "connectionInfo: $connectionInfo value: $value" }
 
         instance.backend = backendFun(this, connectionInfo, value)
 
@@ -183,9 +188,13 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
 
     fun createDirectConnector(connectionInfo: AutoConnectionInfo<VT>) {
 
-        checkNotNull(worker) { "cannot connect directly without a worker" }
+        val peer = if (directPeer != null) {
+            directPeer
+        } else {
+            checkNotNull(worker) { "cannot connect directly without a worker" }
+            worker.instances[connectionInfo.acceptingHandle.globalId]
+        }
 
-        val peer = worker.instances[connectionInfo.acceptingHandle.globalId]
         checkNotNull(peer) { "direct backend for ${connectionInfo.acceptingHandle.globalId} is missing" }
 
         val thisConnector = DirectConnector(instance, peer)

@@ -3,19 +3,16 @@ package `fun`.adaptive.auto.api
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.AdatCompanionResolve
-import `fun`.adaptive.adat.api.adatCompanionOf
 import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
-import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.internal.origin.AutoInstanceBuilder
 import `fun`.adaptive.auto.internal.origin.AutoItem
 import `fun`.adaptive.auto.internal.persistence.AutoItemPersistence
 import `fun`.adaptive.auto.internal.persistence.ItemMemoryPersistence
 import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.ItemId
-import `fun`.adaptive.auto.model.LamportTimestamp
 
 //import `fun`.adaptive.auto.internal.producer.AutoItemProducer
 //import `fun`.adaptive.auto.model.AutoConnectionInfo
@@ -156,14 +153,15 @@ fun <A : AdatClass> autoItemNode(
     origin: ItemBase<A>,
     listener: AutoItemListener<A>? = null,
     trace: Boolean = false,
-    companion : AdatCompanion<A>? = null
+    companion: AdatCompanion<A>? = null
 ) =
     @Suppress("UNCHECKED_CAST")
     buildItem(
         origin = false,
-        service = true,
+        service = false,
         infoFunSuspend = { origin.connectInfo(AutoConnectionType.Direct) },
-        defaultWireFormat = companion!!.adatWireFormat,
+        directPeer = origin,
+        defaultWireFormat = companion !!.adatWireFormat,
         listener = listener,
         trace = trace
     )
@@ -175,6 +173,7 @@ fun <A : AdatClass> buildItem(
     defaultWireFormat: AdatClassWireFormat<A>,
     initialValue: A? = null,
     infoFunSuspend: InfoFunSuspend<PropertyBackend<A>, AutoItemPersistence<A>, A, A>? = null,
+    directPeer: ItemBase<A>? = null,
     listener: AutoItemListener<A>? = null,
     trace: Boolean,
     worker: AutoWorker? = null,
@@ -186,6 +185,7 @@ fun <A : AdatClass> buildItem(
         service = service,
         collection = false,
         infoFunSuspend = infoFunSuspend,
+        directPeer = directPeer,
         defaultWireFormat = defaultWireFormat,
         itemListener = listener,
         worker = worker,
@@ -195,7 +195,7 @@ fun <A : AdatClass> buildItem(
                 builder.instance,
                 null,
                 value?.toArray(),
-                propertyTimes = null,
+                initialPropertyTimes = null,
                 itemId = info?.connectingHandle?.itemId ?: ItemId.CONNECTING
             )
         },

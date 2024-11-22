@@ -43,6 +43,7 @@ import kotlin.time.Duration
  * The base class for all auto instances.
  */
 abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT, IT : AdatClass>(
+    val origin: Boolean,
     val defaultWireFormat: AdatClassWireFormat<*>?,
     val wireFormatProvider: WireFormatProvider,
     val scope: CoroutineScope
@@ -63,7 +64,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     @RequireLock
     private var unsafeTime = LamportTimestamp(unsafeHandle?.peerId ?: PeerId.CONNECTING, 0)
 
-    internal var logger: AdaptiveLogger = getLogger("auto.CONNECTING")
+    internal var logger: AdaptiveLogger = getLogger("auto.CONNECTING   ")
 
     private lateinit var connectionInfo: AutoConnectionInfo<VT>
 
@@ -93,10 +94,16 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
 
                 if (connectionInfo.connectionType == AutoConnectionType.Origin) {
                     unsafeTime = LamportTimestamp.ORIGIN
+                } else {
+                    unsafeTime = LamportTimestamp(it.peerId, 0)
+                }
+
+                if (it.itemId != null) {
+                    (backend as? AutoItemBackend<*>)?.also { be -> be.itemId = it.itemId }
                 }
 
                 // ${it.itemId?.let { ".$it" } ?: ""}
-                val loggerName = "auto.${it.globalId.toShort()}.${it.peerId}"
+                val loggerName = "auto.${it.globalId.toShort()}.${it.peerId.toString().padStart(6, '0')}"
                 logger = getLogger(loggerName)
                 if (trace) logger.enableFine()
             }
@@ -107,17 +114,13 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
             worker.register(this)
         }
 
-        trace("SET-INFO") { "$connectionInfo $worker" }
+        trace { "APPLIED  :: $connectionInfo $worker" }
     }
 
     @ThreadSafe
     suspend fun stop() {
         lock.use { connectors }.forEach { safeSuspendCall(logger) { it.disconnect() } }
         logger.fine("backend context stopped")
-    }
-
-    suspend fun waitForSync(connectInfo: AutoConnectionInfo<VT>, timeout: Duration) {
-        backend.waitForSync(connectInfo, timeout)
     }
 
     // --------------------------------------------------------------------------------
@@ -132,7 +135,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
             onLocalChange(operation.itemId, added, null)
             distribute(operation)
 
-            trace("LOCAL ADD") { "${operation.itemId} $added" }
+            trace("localAdd") { "APPLIED  :: opItemId=${operation.itemId} added=$added" }
         }
     }
 
@@ -150,7 +153,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
             onLocalChange(operation.itemId, updated, original)
             distribute(operation)
 
-            trace("LOCAL UPDATE") { "opTime: ${operation.itemId} diff: ${updated.diff(original).map { it.path to updated.getValue(it.path)}}" }
+            trace("localUpdate") { "APPLIED  :: opItemId=${operation.itemId} diff=${updated.diff(original).map { it.path to updated.getValue(it.path) }}" }
         }
     }
 
@@ -162,7 +165,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
             removed?.let { onLocalRemove(itemId, it) }
             distribute(operation)
 
-            trace("LOCAL REMOVE") { "$itemId $removed" }
+            trace("localRemove") { "APPLIED  :: itemId=${itemId} removed=$removed" }
         }
     }
 
@@ -186,9 +189,9 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
             onRemoteChange(operation.itemId, added, null)
             distribute(operation)
 
-            trace("REMOTE ADD") { "${operation.itemId} $added" }
+            trace { "APPLIED  :: ${operation.itemId} $added" }
         } else {
-            trace("SKIPPED :: REMOTE ADD") { "${operation.itemId}" }
+            trace { "SKIPPED  :: ${operation.itemId}" }
         }
     }
 
@@ -201,9 +204,9 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
             onRemoteChange(operation.itemId, updated, original)
             distribute(operation)
 
-            trace("REMOTE UPDATE") { "${operation.itemId} $updated $original" }
+            trace { "APPLIED  :: ${operation.itemId} $updated $original" }
         } else {
-            trace("SKIPPED :: REMOTE UPDATE") { "${operation.itemId}" }
+            trace { "SKIPPED  :: ${operation.itemId}" }
         }
     }
 
@@ -217,16 +220,16 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
                 onRemoteRemove(it.first, it.second)
             }
             distribute(operation)
-            trace("REMOTE REMOVE") { "${operation.itemIds} $removed" }
+            trace { "APPLIED  :: ${operation.itemIds} $removed" }
         } else {
-            trace("SKIPPED :: REMOTE REMOVE") { "${operation.itemIds}" }
+            trace { "SKIPPED  :: ${operation.itemIds}" }
         }
     }
 
     @RequireLock
     internal fun remoteEmpty(operation: AutoEmpty) {
         receive(operation.timestamp)
-        trace("REMOTE EMPTY") { "${operation.timestamp}" }
+        trace { "APPLIED  :: opTime=${operation.timestamp}" }
         onInit(emptyList())
         onSyncEnd()
     }
@@ -241,6 +244,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     internal open fun remoteSyncEnd(operation: AutoSyncEnd) {
         backend.syncEnd(operation)
         receive(operation.timestamp)
+        trace { "APPLIED  :: opTime=${operation.timestamp}" }
         onSyncEnd()
     }
 
@@ -290,7 +294,11 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
 
     @ThreadSafe
     internal fun connectInfo(type: AutoConnectionType = AutoConnectionType.Service): AutoConnectionInfo<VT> =
-        lock.use { makeConnectInfo<VT>(null, type) }
+        lock.use {
+            // Using the item id from connection info here works for items and collections as well.
+            // For collections this will pass null, for items it will pass the actual value.
+            makeConnectInfo<VT>(connectionInfo.connectingHandle.itemId, type)
+        }
 
     @ThreadSafe
     internal fun <IT> connectInfo(itemId: ItemId, type: AutoConnectionType = AutoConnectionType.Service): AutoConnectionInfo<IT> =
@@ -495,7 +503,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
 
     @CallSiteName
     open fun trace(callSiteName: String = "", builder: () -> String) {
-        logger.fine { "[${callSiteName.substringAfterLast('.')} @ $time] ${builder()}" }
+        logger.fine { "[ ${callSiteName.substringAfterLast('.').padEnd(15, ' ')} @ $time] ${builder()}" }
     }
 
 }

@@ -26,19 +26,19 @@ abstract class AutoBackend<IT : AdatClass>(
     // Operations from the frontend
     // --------------------------------------------------------------------------------
 
-    abstract fun localAdd(timestamp: LamportTimestamp, item : IT) : Pair<AutoAdd, IT>
+    abstract fun localAdd(timestamp: LamportTimestamp, item: IT): Pair<AutoAdd, IT>
 
-    abstract fun localUpdate(timestamp: LamportTimestamp, itemId: ItemId, updates : Collection<Pair<String, Any?>>) : Pair<AutoUpdate,IT>
+    abstract fun localUpdate(timestamp: LamportTimestamp, itemId: ItemId, updates: Collection<Pair<String, Any?>>): Pair<AutoUpdate, IT>
 
-    abstract fun localRemove(timestamp: LamportTimestamp, itemId : ItemId) : Pair<AutoRemove,IT?>
+    abstract fun localRemove(timestamp: LamportTimestamp, itemId: ItemId): Pair<AutoRemove, IT?>
 
     // --------------------------------------------------------------------------------
     // Operations from peers
     // --------------------------------------------------------------------------------
 
-    abstract fun remoteAdd(operation: AutoAdd): Pair<LamportTimestamp?,IT>
+    abstract fun remoteAdd(operation: AutoAdd): Pair<LamportTimestamp?, IT>
 
-    abstract fun remoteUpdate(operation: AutoUpdate): Triple<LamportTimestamp?,IT,IT>
+    abstract fun remoteUpdate(operation: AutoUpdate): Triple<LamportTimestamp?, IT?, IT>
 
     abstract fun remove(operation: AutoRemove): Pair<LamportTimestamp?, Set<Pair<ItemId, IT>>>
 
@@ -67,7 +67,7 @@ abstract class AutoBackend<IT : AdatClass>(
     }
 
     suspend fun waitForSync(connectInfo: AutoConnectionInfo<*>, timeout: Duration) {
-        trace("SYNC WAIT") { connectInfo.toString()}
+        trace("SYNC WAIT") { connectInfo.toString() }
         waitFor(timeout) { isSynced(connectInfo) }
         trace("SYNC WAIT END") { "" }
     }

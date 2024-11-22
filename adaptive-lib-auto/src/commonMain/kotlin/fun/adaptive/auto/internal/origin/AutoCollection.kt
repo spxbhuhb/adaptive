@@ -8,11 +8,12 @@ import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 
 class AutoCollection<BE : AutoBackend<IT>, PT : AutoCollectionPersistence<IT>, IT : AdatClass>(
+    origin: Boolean,
     defaultWireFormat: AdatClassWireFormat<*>?,
     wireFormatProvider: WireFormatProvider,
     scope: CoroutineScope
 ) : AutoInstance<BE, PT, Collection<IT>, IT>(
-    defaultWireFormat, wireFormatProvider, scope
+    origin, defaultWireFormat, wireFormatProvider, scope
 ), Collection<IT> {
 
     override val size: Int

@@ -4,17 +4,17 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.AutoItemBackend
 import `fun`.adaptive.auto.internal.persistence.AutoItemPersistence
-import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlin.reflect.KProperty
 
 class AutoItem<BE : AutoItemBackend<IT>, PT : AutoItemPersistence<IT>, IT : AdatClass>(
+    origin: Boolean,
     defaultWireFormat: AdatClassWireFormat<*>?,
     wireFormatProvider: WireFormatProvider,
     scope: CoroutineScope
 ) : AutoInstance<BE, PT, IT, IT>(
-    defaultWireFormat, wireFormatProvider, scope
+    origin, defaultWireFormat, wireFormatProvider, scope
 ) {
 
     val value: IT
