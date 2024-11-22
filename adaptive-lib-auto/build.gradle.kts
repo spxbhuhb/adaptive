@@ -60,13 +60,6 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.kotlinx.coroutines.debug)
         }
-
-        jvmTest.dependencies {
-            implementation(libs.h2database)
-            implementation(libs.ktor.client.okhttp)
-            implementation(libs.adaptive.lib.auth)
-            implementation(libs.adaptive.lib.ktor)
-        }
     }
 }
 

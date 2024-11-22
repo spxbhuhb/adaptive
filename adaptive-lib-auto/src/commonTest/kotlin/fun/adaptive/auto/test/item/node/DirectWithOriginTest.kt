@@ -1,4 +1,4 @@
-package `fun`.adaptive.auto.test.item.connect.direct
+package `fun`.adaptive.auto.test.item.node
 
 import `fun`.adaptive.auto.api.autoItemNode
 import `fun`.adaptive.auto.api.autoItemOrigin
@@ -11,8 +11,8 @@ class DirectWithOriginTest {
     @Test
     fun basic() {
         val td = TestData(12, "a")
-        val origin = autoItemOrigin(td, trace = true)
-        val node = autoItemNode(origin, trace = true)
+        val origin = autoItemOrigin(td)
+        val node = autoItemNode(origin)
 
         while (node.time.timestamp != origin.time.timestamp) {
             continue

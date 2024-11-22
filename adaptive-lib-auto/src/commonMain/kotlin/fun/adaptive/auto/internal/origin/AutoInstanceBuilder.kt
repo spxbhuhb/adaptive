@@ -18,6 +18,7 @@ import `fun`.adaptive.auto.internal.persistence.AutoItemExport
 import `fun`.adaptive.auto.internal.persistence.AutoItemPersistence
 import `fun`.adaptive.auto.internal.persistence.AutoPersistence
 import `fun`.adaptive.auto.model.AutoConnectionInfo
+import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.utility.CleanupHandler
@@ -31,8 +32,6 @@ import kotlinx.coroutines.supervisorScope
 
 class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT, IT : AdatClass>(
     val origin: Boolean,
-    val persistent: Boolean,
-    val service: Boolean,
     val collection: Boolean,
     val info: AutoConnectionInfo<VT>? = null,
     val infoFun: ((instance: AutoInstance<BE, PT, VT, IT>) -> AutoConnectionInfo<VT>)? = null,
@@ -93,7 +92,7 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
         if (origin) {
             instance.setInfo(connectionInfo !!, worker, trace)
         } else {
-            createConnector(connectionInfo)
+            connect(connectionInfo)
         }
 
         return instance
@@ -130,15 +129,7 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
         }
     }
 
-    fun createConnector(connectionInfo: AutoConnectionInfo<VT>?) {
-        if (service) {
-            connect(connectionInfo) { createServiceConnector(it) }
-        } else {
-            connect(connectionInfo) { createDirectConnector(it) }
-        }
-    }
-
-    private fun connect(connectionInfo: AutoConnectionInfo<VT>?, connector: (AutoConnectionInfo<VT>) -> Unit) {
+    private fun connect(connectionInfo: AutoConnectionInfo<VT>?) {
         if (connectionInfo != null) {
             instance.setInfo(connectionInfo, worker, trace)
             connector(connectionInfo)
@@ -166,6 +157,14 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
         }
 
         error("cannot connect service, all options are missing")
+    }
+
+    fun connector(connectionInfo: AutoConnectionInfo<VT>) {
+        if (connectionInfo.connectionType == AutoConnectionType.Service) {
+            createServiceConnector(connectionInfo)
+        } else {
+            createDirectConnector(connectionInfo)
+        }
     }
 
     fun createServiceConnector(connectionInfo: AutoConnectionInfo<VT>) {

@@ -115,8 +115,8 @@ fun <A : AdatClass> autoItemOrigin(
     )
 
 /**
- * Create a **node** with no initial value and connect
- * it to another auto node.
+ * Create a **node** with no initial value and connect it to another auto node
+ * through a worker.
  *
  * The created instance:
  *
@@ -129,28 +129,45 @@ fun <A : AdatClass> autoItemOrigin(
  * @param    trace           Log trace information.
  * @param    infoFunSuspend  Called to get the connection info from the peer.
  */
-//inline fun <reified A : AdatClass> autoItemNode(
-//    worker: AutoWorker,
-//    listener: AutoItemListener<A>? = null,
-//    trace: Boolean = false,
-//    noinline infoFunSuspend: InfoFunSuspend<PropertyBackend<A>, ItemMemoryPersistence<A>, A, A>,
-//): AutoItem<PropertyBackend<A>, ItemMemoryPersistence<A>, A> =
-//
-//    @Suppress("UNCHECKED_CAST")
-//    buildItem(
-//        origin = false,
-//        service = true,
-//        infoFunSuspend = infoFunSuspend,
-//        defaultWireFormat = adatCompanionOf<A>().adatWireFormat,
-//        listener = listener,
-//        trace = trace,
-//        worker = worker
-//    )
-
-
 @AdatCompanionResolve
 fun <A : AdatClass> autoItemNode(
-    origin: ItemBase<A>,
+    worker: AutoWorker,
+    listener: AutoItemListener<A>? = null,
+    trace: Boolean = false,
+    companion: AdatCompanion<A>? = null,
+    infoFunSuspend: InfoFunSuspend<PropertyBackend<A>, AutoItemPersistence<A>, A, A>,
+) =
+
+    @Suppress("UNCHECKED_CAST")
+    buildItem(
+        origin = false,
+        service = true,
+        infoFunSuspend = infoFunSuspend,
+        defaultWireFormat = companion !!.adatWireFormat,
+        listener = listener,
+        trace = trace,
+        worker = worker
+    )
+
+/**
+ * Create a **node** with no initial value and connect it to another auto node
+ * without involving a worker.
+ *
+ * The created instance:
+ *
+ * - creates a **direct connection** with [peer]
+ * - is **NOT registered** with any workers
+ * - may have **only direct** contentions
+ *
+ * @param    peer            The worker to register this instance with.
+ * @param    listener        An optional listener to get auto events.
+ * @param    trace           Log trace information.
+ * @param    companion       The adat companion to fetch the wireformat from. When on default the compiler
+ *                           will resolve the type parameter into an actual companion.
+ */
+@AdatCompanionResolve
+fun <A : AdatClass> autoItemNode(
+    peer: ItemBase<A>,
     listener: AutoItemListener<A>? = null,
     trace: Boolean = false,
     companion: AdatCompanion<A>? = null
@@ -159,15 +176,15 @@ fun <A : AdatClass> autoItemNode(
     buildItem(
         origin = false,
         service = false,
-        infoFunSuspend = { origin.connectInfo(AutoConnectionType.Direct) },
-        directPeer = origin,
+        infoFunSuspend = { peer.connectInfo(AutoConnectionType.Direct) },
+        directPeer = peer,
         defaultWireFormat = companion !!.adatWireFormat,
         listener = listener,
         trace = trace
     )
 
 @Suppress("UNCHECKED_CAST")
-fun <A : AdatClass> buildItem(
+private fun <A : AdatClass> buildItem(
     origin: Boolean,
     service: Boolean,
     defaultWireFormat: AdatClassWireFormat<A>,
@@ -181,8 +198,6 @@ fun <A : AdatClass> buildItem(
 
     AutoInstanceBuilder<PropertyBackend<A>, AutoItemPersistence<A>, A, A>(
         origin = origin,
-        persistent = false,
-        service = service,
         collection = false,
         infoFunSuspend = infoFunSuspend,
         directPeer = directPeer,

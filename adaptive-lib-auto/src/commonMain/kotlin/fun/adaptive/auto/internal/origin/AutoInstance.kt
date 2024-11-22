@@ -109,7 +109,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
             }
         }
 
-        if (connectionInfo.connectionType == AutoConnectionType.Service) {
+        if (connectionInfo.connectionType == AutoConnectionType.Service || (origin && worker != null)) {
             checkNotNull(worker) { "cannot register auto instance without a worker ($this)" }
             worker.register(this)
         }
