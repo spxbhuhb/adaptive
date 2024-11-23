@@ -177,11 +177,11 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
                 instance,
                 getService<AutoApi>(adapter.transport),
                 connectionInfo.acceptingHandle,
-                connecting = true
+                initiator = true
             )
 
         instance.addConnector(connector)
-        scope.launch { supervisorScope { connector.run(connectionInfo.acceptingTime) } }
+        scope.launch { supervisorScope { connector.run() } }
 
     }
 

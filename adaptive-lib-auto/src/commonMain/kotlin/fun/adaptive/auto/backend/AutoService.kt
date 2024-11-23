@@ -30,7 +30,6 @@ class AutoService : ServiceImpl<AutoService>, AutoApi {
         val originTime = worker.addPeer(
             origin,
             connecting,
-            connectingTime,
             requireNotNull(serviceContext.transport) { "no transport in the service context" }
         )
 
@@ -48,7 +47,7 @@ class AutoService : ServiceImpl<AutoService>, AutoApi {
         worker.receive(handle, operation)
     }
 
-    override suspend fun modify(handle: AutoHandle, operation: AutoUpdate) {
+    override suspend fun update(handle: AutoHandle, operation: AutoUpdate) {
         worker.receive(handle, operation)
     }
 

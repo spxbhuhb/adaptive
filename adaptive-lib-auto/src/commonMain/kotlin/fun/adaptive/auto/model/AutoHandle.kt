@@ -1,6 +1,7 @@
 package `fun`.adaptive.auto.model
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.auto.api.AutoGeneric
 import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.utility.UUID
@@ -15,13 +16,13 @@ class AutoHandle(
     val peerId: PeerId,
     val itemId: ItemId?,
 ) {
-    companion object {
+    companion object : AdatCompanion<AutoHandle> {
 
         fun origin(collection: Boolean) =
             AutoHandle(
                 UUID<AutoGeneric>(),
-                PeerId.ORIGIN,
-                if (collection) null else ItemId.ORIGIN
+                PEER_ID_ORIGIN,
+                if (collection) null else ITEM_ID_ORIGIN
             )
     }
 }

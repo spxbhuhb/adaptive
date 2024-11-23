@@ -19,12 +19,14 @@ class AutoConnectionInfo<T>(
     companion object : AdatCompanion<AutoConnectionInfo<*>> {
 
         fun <VT> origin(collection: Boolean) =
-            AutoConnectionInfo<VT>(
-                AutoConnectionType.Origin,
-                acceptingHandle = AutoHandle.origin(collection),
-                acceptingTime = LamportTimestamp.ORIGIN,
-                connectingHandle = AutoHandle.origin(collection),
-            )
+            AutoHandle.origin(collection).let { handle ->
+                AutoConnectionInfo<VT>(
+                    AutoConnectionType.Origin,
+                    acceptingHandle = handle,
+                    acceptingTime = LamportTimestamp.ORIGIN,
+                    connectingHandle = handle,
+                )
+            }
 
     }
 }

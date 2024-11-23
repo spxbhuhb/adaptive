@@ -18,6 +18,7 @@ import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.auto.model.PEER_ID_CONNECTING
 import `fun`.adaptive.auto.model.PeerId
 import `fun`.adaptive.auto.model.operation.AutoAdd
 import `fun`.adaptive.auto.model.operation.AutoEmpty
@@ -62,11 +63,15 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
         get() = lock.use { unsafeTime }
 
     @RequireLock
-    private var unsafeTime = LamportTimestamp(unsafeHandle?.peerId ?: PeerId.CONNECTING, 0)
+    private var unsafeTime = LamportTimestamp(unsafeHandle?.peerId ?: PEER_ID_CONNECTING, 0)
 
     internal var logger: AdaptiveLogger = getLogger("auto.CONNECTING   ")
 
-    private lateinit var connectionInfo: AutoConnectionInfo<VT>
+    internal lateinit var connectionInfo: AutoConnectionInfo<VT>
+
+    @ThreadSafe
+    val remoteHandle : AutoHandle
+        get() = lock.use { connectionInfo.acceptingHandle }
 
     internal lateinit var backend: BE
 
@@ -112,9 +117,10 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
         if (connectionInfo.connectionType == AutoConnectionType.Service || (origin && worker != null)) {
             checkNotNull(worker) { "cannot register auto instance without a worker ($this)" }
             worker.register(this)
+            trace { "REGISTERED  :: $worker" }
         }
 
-        trace { "APPLIED  :: $connectionInfo $worker" }
+        trace { "APPLIED  :: $connectionInfo" }
     }
 
     @ThreadSafe
@@ -325,7 +331,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
             type,
             handle,
             connectTime,
-            AutoHandle(handle.globalId, PeerId(connectTime.timestamp), itemId)
+            AutoHandle(handle.globalId, connectTime.timestamp, itemId)
         )
     }
 
@@ -333,7 +339,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     // Peer synchronization
     // --------------------------------------------------------------------------------
 
-    internal suspend fun syncPeer(connector: DirectConnector, connectingTime: LamportTimestamp) {
+    internal suspend fun syncPeer(connector: AutoConnector, connectingTime: LamportTimestamp) {
         backend.syncPeer(connector, connectingTime, null)
     }
 
@@ -344,11 +350,6 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     @RequireLock
     protected fun receive(receivedTime: LamportTimestamp) {
         unsafeTime = unsafeTime.receive(receivedTime)
-    }
-
-    @RequireLock
-    protected fun receive(receivedTime: ItemId) {
-        unsafeTime = unsafeTime.receive(receivedTime.value)
     }
 
     @RequireLock

@@ -5,7 +5,6 @@ import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.auto.model.AutoMetadata
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.model.PeerId
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.load
 import `fun`.adaptive.utility.read
@@ -57,7 +56,7 @@ class ItemFilePersistence<IT : AdatClass>(
             val times = mutableListOf<Long>()
 
             for (propertyTime in propertyTimes) {
-                times += propertyTime.peerId.value
+                times += propertyTime.peerId
                 times += propertyTime.timestamp
             }
 
@@ -66,7 +65,7 @@ class ItemFilePersistence<IT : AdatClass>(
                 .encoder()
                 .pseudoInstanceStart()
                 .string(1, "type", value.adatCompanion.wireFormatName)
-                .instanceOrNull(2, "itemId", itemId.value, LamportTimestamp)
+                .instanceOrNull(2, "itemId", itemId, LamportTimestamp)
                 .instance(3, "properties", value, value.adatCompanion as AdatCompanion<IT>)
                 .instance(4, "propertyTimes", times, ListWireFormat(LongWireFormat))
                 .pseudoInstanceEnd()
@@ -79,7 +78,7 @@ class ItemFilePersistence<IT : AdatClass>(
             val decoder = wireFormatProvider.decoder(path.read())
 
             val type = decoder.string(1, "type")
-            val itemId = decoder.instanceOrNull(2, "itemId", LamportTimestamp)?.let { ItemId(it) }
+            val itemId = decoder.instanceOrNull(2, "itemId", LamportTimestamp)
 
             @Suppress("UNCHECKED_CAST")
             val wireFormat = requireNotNull(WireFormatRegistry[type] as? WireFormat<AdatClass>) { "missing wire format for $type" }
@@ -93,7 +92,7 @@ class ItemFilePersistence<IT : AdatClass>(
             val propertyTimes = mutableListOf<LamportTimestamp>()
 
             for (i in times.indices step 2) {
-                propertyTimes += LamportTimestamp(PeerId(times[i]), times[i + 1])
+                propertyTimes += LamportTimestamp(times[i], times[i + 1])
             }
 
             return Triple(itemId, propertyTimes, value)

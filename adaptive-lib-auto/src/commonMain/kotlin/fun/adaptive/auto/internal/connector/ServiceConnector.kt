@@ -3,20 +3,23 @@ package `fun`.adaptive.auto.internal.connector
 import `fun`.adaptive.auto.api.AutoApi
 import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.auto.model.AutoHandle
-import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.*
-import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.getLock
+import `fun`.adaptive.utility.safeSuspendCall
+import `fun`.adaptive.utility.untilSuccess
 import `fun`.adaptive.utility.use
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
+import kotlin.coroutines.coroutineContext
 
 class ServiceConnector(
     val instance: AutoInstance<*, *, *, *>,
     val service: AutoApi,
     override val peerHandle : AutoHandle,
-    val connecting : Boolean,
-    pendingLimit: Int = 1000,
+    val initiator : Boolean,
+    pendingLimit: Int = 10000,
 ) : AutoConnector() {
 
     val lock = getLock()
@@ -29,10 +32,6 @@ class ServiceConnector(
         DISPOSED
     }
 
-    var job: Job? = null
-
-    val logger = getLogger("$instance.connector")
-
     val operations: Channel<AutoOperation> = Channel(pendingLimit)
 
     var status = Status.CREATED
@@ -44,7 +43,7 @@ class ServiceConnector(
     override fun send(operation: AutoOperation) {
         val result = operations.trySend(operation)
 
-        // This happens when the channel is full. With a limit of 1000 this probably
+        // This happens when the channel is full. With a limit of 10000 this probably
         // means that the peer disconnected. `removePeer` calls `dispose` which
         // stops `run` and closes `operations`.
 
@@ -54,103 +53,92 @@ class ServiceConnector(
         }
     }
 
-    suspend fun run(connectingTime: LamportTimestamp) {
-//        safeSuspendCall(logger) {
-//
-//            while (coroutineContext.isActive) {
-//
-//                connect() // tries until successful or disposed
-//
-//                scope.launch {
-//                    supervisorScope {
-//                        launch { backend.syncPeer(connector, peerTime, null) }
-//                    }
-//                }
-//
-//                try {
-//                    sendOperations()
-//                } catch (ex: Exception) {
-//                    disconnect()
-//                }
-//
-//                if (!reconnect) break
-//            }
-//        }
+    suspend fun run() {
+        safeSuspendCall(instance.logger) {
+
+            while (coroutineContext.isActive) {
+
+                connect() // tries until successful or disposed
+
+                try {
+                    sendOperations()
+                } catch (ex: Exception) {
+                    instance.error("service connection error", ex)
+                    disconnect()
+                }
+
+                if (!initiator) break
+            }
+        }
     }
 
-//    /**
-//     * Connect to the other peer. Can be used on both peers.
-//     */
-//    suspend fun connect() {
-//        check(status in listOf(Status.CREATED, Status.CONNECTING))
-//
-//        status = Status.CONNECTING
-//        connectInfo = null
-//
-//        // tries util succeeds or disposed
-//        val localConnectInfo = untilSuccess {
-//
-//            if (status != Status.CONNECTING) {
-//                return@untilSuccess null // the service connector has been disposed
-//            }
-//
-//            val info = infoFun()
-//
-//            if (initiator) {
-//                // starts a synchronization from the remote to this
-//                service.addPeer(
-//                    info.acceptingHandle,
-//                    info.connectingHandle,
-//                    instance.time
-//                )
-//            }
-//
-//            info
-//        }
-//
-//        if (localConnectInfo == null) return // he service connector has been disposed
-//
-//        connectInfo = localConnectInfo
-//
-//        // starts a synchronization from this to the remote
-//        instance.addConnector(
-//            this,
-//            localConnectInfo.acceptingTime
-//        )
-//
-//        status = Status.CONNECTED
-//    }
-//
-//    /**
-//     * Returns when:
-//     *
-//     * - `receive` is interrupted by a job cancel. This means dispose.
-//     * - `sendOperation` throws an exception. This means connection failure.
-//     */
-//    suspend fun sendOperations() {
-//        while (status == Status.CONNECTED) {
-//
-//            val toSend = operationToSend ?: operations.receive()
-//            operationToSend = toSend
-//
-//            sendOperation(toSend)
-//
-//            operationToSend = null
-//        }
-//    }
-//
-//    suspend fun sendOperation(operation: AutoOperation) {
-//        when (operation) {
-//            is AutoAdd -> service.add(peerHandle, operation)
-//            is AutoModify -> service.modify(peerHandle, operation)
-//            is AutoMove -> service.move(peerHandle, operation)
-//            is AutoRemove -> service.remove(peerHandle, operation)
-//            is AutoEmpty -> service.empty(peerHandle, operation)
-//            is AutoSyncBatch -> service.syncBatch(peerHandle, operation)
-//            is AutoSyncEnd -> service.syncEnd(peerHandle, operation)
-//        }
-//    }
-//
+    /**
+     * Connect to the other peer. Can be used on both peers.
+     */
+    suspend fun connect() {
+        check(status in listOf(Status.CREATED, Status.CONNECTING))
+
+        status = Status.CONNECTING
+
+        val peerTime = untilSuccess {
+
+            if (status != Status.CONNECTING) {
+                return@untilSuccess null // the service connector has been disposed
+            }
+
+            if (initiator) {
+                // starts a synchronization from the remote to this
+                service.addPeer(
+                    instance.remoteHandle,
+                    instance.handle,
+                    instance.time
+                )
+            }
+
+            service.peerTime(instance.remoteHandle)
+        }
+
+        if (peerTime == null) return // he service connector has been disposed
+
+        instance.scope.launch {
+            supervisorScope {
+                launch { instance.syncPeer(this@ServiceConnector, peerTime) }
+            }
+        }
+
+        status = Status.CONNECTED
+    }
+
+    /**
+     * Returns when:
+     *
+     * - `receive` is interrupted by a job cancel. This means dispose.
+     * - `sendOperation` throws an exception. This means connection failure.
+     */
+    suspend fun sendOperations() {
+        while (status == Status.CONNECTED) {
+
+            val toSend = operationToSend ?: operations.receive()
+            operationToSend = toSend
+
+            sendOperation(toSend)
+
+            operationToSend = null
+        }
+    }
+
+    suspend fun sendOperation(operation: AutoOperation) {
+        when (operation) {
+            is AutoAdd -> service.add(peerHandle, operation)
+            is AutoUpdate -> service.update(peerHandle, operation)
+            is AutoMove -> service.move(peerHandle, operation)
+            is AutoRemove -> service.remove(peerHandle, operation)
+            is AutoEmpty -> service.empty(peerHandle, operation)
+            is AutoSyncBatch -> service.syncBatch(peerHandle, operation)
+            is AutoSyncEnd -> service.syncEnd(peerHandle, operation)
+        }
+    }
+
     override suspend fun disconnect() {
 //        safeSuspendCall(logger) {
 //

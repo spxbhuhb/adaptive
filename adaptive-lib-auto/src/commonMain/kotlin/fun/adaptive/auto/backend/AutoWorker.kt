@@ -50,7 +50,6 @@ class AutoWorker : WorkerImpl<AutoWorker> {
     fun addPeer(
         thisHandle: AutoHandle,
         connectingHandle: AutoHandle,
-        connectingTime : LamportTimestamp,
         transport: ServiceCallTransport
     ): LamportTimestamp {
         val instance = instanceLock.use {
@@ -61,12 +60,12 @@ class AutoWorker : WorkerImpl<AutoWorker> {
             instance,
             getService(transport),
             connectingHandle,
-            connecting = false
+            initiator = false
         )
 
         val time = instance.addConnector(connector)
 
-        scope.launch { supervisorScope {  connector.run(connectingTime) } }
+        scope.launch { supervisorScope {  connector.run() } }
 
         return time
     }
