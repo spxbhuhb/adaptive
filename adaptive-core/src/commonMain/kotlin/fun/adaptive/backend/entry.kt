@@ -7,6 +7,8 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveEntry
 import `fun`.adaptive.service.transport.LocalServiceCallTransport
 import `fun`.adaptive.service.transport.ServiceCallTransport
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 /**
@@ -15,8 +17,15 @@ import kotlinx.coroutines.Dispatchers
  * **IMPORTANT** variables declared outside the block are **NOT** reactive
  */
 @AdaptiveEntry
-fun backend(transport: ServiceCallTransport = LocalServiceCallTransport(), start: Boolean = true, wait: Boolean = false, @Adaptive block: (adapter: BackendAdapter) -> Unit): BackendAdapter =
-    BackendAdapter(wait, transport, Dispatchers.Default).also {
+fun backend(
+    transport: ServiceCallTransport = LocalServiceCallTransport(),
+    start: Boolean = true,
+    wait: Boolean = false,
+    dispatcher: CoroutineDispatcher = Dispatchers.Default,
+    scope: CoroutineScope = CoroutineScope(dispatcher),
+    @Adaptive block: (adapter: BackendAdapter) -> Unit
+): BackendAdapter =
+    BackendAdapter(wait, transport, dispatcher, scope).also {
         block(it)
         it.mounted()
         if (start) {

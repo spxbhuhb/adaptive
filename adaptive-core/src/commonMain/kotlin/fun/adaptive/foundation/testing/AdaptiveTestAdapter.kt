@@ -19,7 +19,11 @@ import kotlinx.coroutines.withTimeout
 
 class AdaptiveTestAdapter(
     var printTrace: Boolean = false,
-    override val backend: BackendAdapter = BackendAdapter(transport = TestServiceTransport(), dispatcher = Dispatchers.Default)
+    override val backend: BackendAdapter = BackendAdapter(
+        transport = TestServiceTransport(),
+        dispatcher = Dispatchers.Default,
+        scope = CoroutineScope(Dispatchers.Default)
+    )
 ) : AdaptiveAdapter {
 
     var nextId = 2L

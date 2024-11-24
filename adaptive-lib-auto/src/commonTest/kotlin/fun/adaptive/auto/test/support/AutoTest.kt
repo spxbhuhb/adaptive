@@ -6,7 +6,10 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.service.testing.DirectServiceTransport
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
+import kotlin.coroutines.ContinuationInterceptor
 
 class AutoTest {
 
@@ -39,7 +42,13 @@ class AutoTest {
                         auto()
                     }
 
-                    clientBackend = backend(clientTransport) {
+                    val scope = this@runTest
+                    val dispatcher = scope.coroutineContext[ContinuationInterceptor] as CoroutineDispatcher
+
+                    // The client backend must run in the test scope or patch calls may have a conflict.
+                    // This is basically the same as using the Main dispatcher for UI adapters.
+
+                    clientBackend = backend(clientTransport, dispatcher = dispatcher, scope = this@runTest) {
                         auto()
                     }
 

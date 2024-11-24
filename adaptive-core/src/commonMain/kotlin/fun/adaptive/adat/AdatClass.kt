@@ -12,7 +12,7 @@ import `fun`.adaptive.utility.pluginGenerated
 
 interface AdatClass : AdaptivePropertyProvider {
 
-    var adatContext: AdatContext<Any>?
+    var adatContext: AdatContext<*>?
         get() = null
         set(v) = unsupported(v)
 

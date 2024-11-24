@@ -1,6 +1,7 @@
 package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.AdatContext
 import `fun`.adaptive.adat.wireformat.AdatPropertyWireFormat
 import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.internal.origin.AutoInstance
@@ -221,7 +222,11 @@ class PropertyBackend<IT : AdatClass>(
 
     @Suppress("UNCHECKED_CAST")
     override fun getItem(): IT =
-        item ?: (wireFormat.newInstance(values) as IT).also { item = it }
+        item
+            ?: (wireFormat.newInstance(values) as IT).also {
+                it.adatContext = AdatContext(itemId, store = instance.store)
+                item = it
+            }
 
     private operator fun List<AdatPropertyWireFormat<*>>.get(name: String): AdatPropertyWireFormat<*> =
         first { it.metadata.name == name }

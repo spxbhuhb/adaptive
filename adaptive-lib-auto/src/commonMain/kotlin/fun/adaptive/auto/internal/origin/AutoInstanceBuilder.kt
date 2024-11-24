@@ -43,7 +43,7 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
     val collectionListener: AutoCollectionListener<IT>? = null,
     val worker: AutoWorker? = null,
     val serviceContext: ServiceContext? = null,
-    val scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
+    val scope: CoroutineScope,
     val trace: Boolean,
     val backendFun: (AutoInstanceBuilder<BE, PT, VT, IT>, info: AutoConnectionInfo<VT>?, value: VT?) -> BE,
     val persistenceFun: (AutoInstanceBuilder<BE, PT, VT, IT>) -> PT,

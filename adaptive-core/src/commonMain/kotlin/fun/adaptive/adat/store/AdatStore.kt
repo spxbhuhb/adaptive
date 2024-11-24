@@ -4,7 +4,7 @@ import `fun`.adaptive.adat.AdatClass
 
 abstract class AdatStore<A : AdatClass> {
 
-    open fun update(instance: A, path: Array<String>, value: Any?) {
+    open fun update(original: A, path: Array<String>, value: Any?) {
         throw UnsupportedOperationException()
     }
 

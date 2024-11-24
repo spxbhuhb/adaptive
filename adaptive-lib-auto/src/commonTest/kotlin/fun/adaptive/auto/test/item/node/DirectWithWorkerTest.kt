@@ -2,12 +2,10 @@ package `fun`.adaptive.auto.test.item.node
 
 import `fun`.adaptive.auto.api.autoItemNode
 import `fun`.adaptive.auto.api.autoItemOrigin
-import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.test.support.AutoTest.Companion.autoTest
 import `fun`.adaptive.auto.test.support.TestData
 import `fun`.adaptive.utility.waitForReal
-import kotlinx.coroutines.delay
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.seconds

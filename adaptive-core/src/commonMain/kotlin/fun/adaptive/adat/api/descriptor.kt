@@ -38,7 +38,7 @@ fun AdatClass.validateForContext(): InstanceValidationResult {
 
     val context = adatContext
     if (context == null) {
-        adatContext = AdatContext(null, null, null, null, result)
+        adatContext = AdatContext<Any>(null, null, null, null, result)
     } else {
         context.validationResult = result
     }

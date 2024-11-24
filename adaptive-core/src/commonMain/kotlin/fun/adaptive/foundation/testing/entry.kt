@@ -8,6 +8,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveEntry
 import `fun`.adaptive.service.testing.TestServiceTransport
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 /**
@@ -17,7 +18,11 @@ import kotlinx.coroutines.Dispatchers
  */
 @AdaptiveEntry
 fun test(
-    backendAdapter: BackendAdapter = BackendAdapter(transport = TestServiceTransport(), dispatcher = Dispatchers.Default),
+    backendAdapter: BackendAdapter = BackendAdapter(
+        transport = TestServiceTransport(),
+        dispatcher = Dispatchers.Default,
+        scope = CoroutineScope(Dispatchers.Default)
+    ),
     printTrace: Boolean = false,
     @Adaptive block: (adapter: AdaptiveAdapter) -> Unit
 ): AdaptiveTestAdapter =

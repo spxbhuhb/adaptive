@@ -64,4 +64,8 @@ abstract class AutoCollectionListener<IT : AdatClass> {
      */
     open fun onSyncEnd() = Unit
 
+    /**
+     * Called by the `stop` method of the instance.
+     */
+    open fun onStop() = Unit
 }

@@ -8,11 +8,11 @@ import `fun`.adaptive.adat.store.AdatStore
  * @property    property    The property this value
  */
 class AdatContext<IT>(
-    val id: Comparable<IT>?,
-    val parent: AdatClass?,
-    val property: AdatPropertyMetadata?,
-    val store: AdatStore<*>?,
-    var validationResult: InstanceValidationResult?
+    val id: Comparable<IT>? = null,
+    val parent: AdatClass? = null,
+    val property: AdatPropertyMetadata? = null,
+    val store: AdatStore<*>? = null,
+    var validationResult: InstanceValidationResult? = null
 ) {
 
     var localInfo: MutableList<Any>? = null

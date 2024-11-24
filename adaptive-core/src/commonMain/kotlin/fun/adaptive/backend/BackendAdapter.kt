@@ -26,7 +26,8 @@ import kotlinx.coroutines.isActive
 open class BackendAdapter(
     wait : Boolean = false,
     override val transport: ServiceCallTransport,
-    override val dispatcher: CoroutineDispatcher
+    override val dispatcher: CoroutineDispatcher,
+    override val scope : CoroutineScope
 ) : AdaptiveAdapter, ServiceImplFactory {
 
     val logger = getLogger("BackendAdapter")
@@ -41,8 +42,6 @@ open class BackendAdapter(
 
     override val rootContainer
         get() = throw NotImplementedError()
-
-    override val scope = CoroutineScope(dispatcher)
 
     override val backend: BackendAdapter
         get() = this

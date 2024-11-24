@@ -1,72 +1,66 @@
 package `fun`.adaptive.auto.internal.producer
-//
-//import `fun`.adaptive.adat.AdatClass
-//import `fun`.adaptive.adat.AdatCompanion
-//import `fun`.adaptive.adat.api.validateForContext
-//import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
-//import `fun`.adaptive.auto.api.AutoCollectionListener
-//import `fun`.adaptive.auto.api.AutoItemListener
-//import `fun`.adaptive.auto.internal.backend.PropertyBackend
-//import `fun`.adaptive.auto.internal.frontend.AdatClassFrontend
-//import `fun`.adaptive.auto.internal.persistence.AutoItemPersistence
-//import `fun`.adaptive.auto.model.AutoConnectionInfo
-//import `fun`.adaptive.auto.model.LamportTimestamp
-//import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
-//
-//class AutoItemProducer<A : AdatClass>(
-//    binding: AdaptiveStateVariableBinding<A>,
-//    connect: suspend () -> AutoConnectionInfo<A>,
-//    val listener: AutoItemListener<A>? = null,
-//    trace: Boolean,
-//) : ProducerBase<PropertyBackend<A>, AutoItemPersistence<A>, A, A>(
-//    binding, connect, trace
-//) {
-//    override var latestValue: A? = null
-//
-//    val itemId
-//        get() = LamportTimestamp.CONNECTING // does not matter for single instances
-//
-//    @Suppress("UNCHECKED_CAST") // TODO should we create a binding for adat classes specifically?
-//    val companion = binding.adatCompanion !! as AdatCompanion<A>
-//
-//    override val defaultWireFormat: AdatClassWireFormat<*>?
-//        get() = companion.adatWireFormat
-//
-//    override fun build() {
-//
-//        context.addListener(ProducerListener())
-//        if (listener != null) context.addListener(listener)
-//
-//        val values = arrayOfNulls<Any?>(companion.adatMetadata.properties.size)
-//
-//        backend = PropertyBackend<A>(
-//            context,
-//            itemId,
-//            companion.wireFormatName,
-//            values
-//        )
-//
-//        frontend = AdatClassFrontend(
-//            backend,
-//            companion.adatWireFormat,
-//            initialValue = null,
-//            itemId = itemId,
-//            collectionFrontend = null
-//        )
-//
-//    }
-//
-//    override fun toString(): String {
-//        return "AutoItem($binding)"
-//    }
-//
-//
-//    private inner class ProducerListener : AutoCollectionListener<A>() {
-//        override fun onChange(newValue: A, oldValue : A?) {
-//            newValue.validateForContext()
-//            latestValue = newValue
-//            setDirty() // TODO make a separate binding for producers
-//        }
-//    }
-//
-//}
+
+import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.api.validateForContext
+import `fun`.adaptive.auto.api.AutoItemListener
+import `fun`.adaptive.auto.api.ItemBase
+import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import `fun`.adaptive.foundation.producer.AdaptiveProducer
+import kotlinx.coroutines.launch
+
+/**
+ * @property  disposeInstance  When true the instance should be disposed by [stop].
+ */
+class AutoItemProducer<IT : AdatClass>(
+    override val binding: AdaptiveStateVariableBinding<IT>,
+    val disposeInstance: Boolean
+) : AutoItemListener<IT>(), AdaptiveProducer<IT> {
+
+    override var latestValue: IT? = null
+
+    var instance: ItemBase<IT>? = null
+
+    val adapter
+        get() = binding.targetFragment.adapter
+
+    override fun start() {
+        // nothing to do here, callbacks handle the data changes
+    }
+
+    override fun stop() {
+        instance?.stop()
+        instance = null
+    }
+
+    override fun onInit(itemId: ItemId, value: IT) {
+        value.validateForContext() // TODO make sure that we don't validate unnecessarily
+        adapter.scope.launch {
+            latestValue = value
+            setDirty()
+        }
+    }
+
+    override fun onChange(itemId: ItemId, newValue: IT, oldValue: IT?) {
+        newValue.validateForContext() // TODO make sure that we don't validate unnecessarily
+        adapter.scope.launch {
+            latestValue = newValue
+            setDirty() // calls patch
+        }
+    }
+
+    override fun onRemove(itemId: ItemId, removed: IT?) {
+        adapter.scope.launch {
+            latestValue = null
+            setDirty()
+        }
+    }
+
+    override fun onStop() {
+        adapter.scope.launch {
+            latestValue = null
+            setDirty()
+        }
+    }
+
+}

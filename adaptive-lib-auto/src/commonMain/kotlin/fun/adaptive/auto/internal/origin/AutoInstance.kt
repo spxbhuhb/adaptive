@@ -34,10 +34,15 @@ import `fun`.adaptive.utility.RequireLock
 import `fun`.adaptive.utility.ThreadSafe
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.getLock
+import `fun`.adaptive.utility.safeCall
 import `fun`.adaptive.utility.safeSuspendCall
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlin.reflect.KProperty
 import kotlin.time.Duration
 
 /**
@@ -65,8 +70,10 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     @RequireLock
     private var unsafeTime = LamportTimestamp(unsafeHandle?.peerId ?: PEER_ID_CONNECTING, 0)
 
+    @RequireLock
     internal var logger: AdaptiveLogger = getLogger("auto.CONNECTING   ")
 
+    @RequireLock
     internal lateinit var connectionInfo: AutoConnectionInfo<VT>
 
     @ThreadSafe
@@ -77,6 +84,8 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
 
     internal lateinit var persistence: PT
 
+    private var worker : AutoWorker? = null
+
     private var closePeers = emptyList<PeerId>()
 
     private var connectors = listOf<AutoConnector>()
@@ -84,6 +93,8 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     private var itemListeners = emptyList<AutoItemListener<IT>>()
 
     private var collectionListeners = emptyList<AutoCollectionListener<IT>>()
+
+    internal val store = AutoAdatStore(this)
 
     // --------------------------------------------------------------------------------
     // Lifecycle
@@ -116,6 +127,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
 
         if (connectionInfo.connectionType == AutoConnectionType.Service || (origin && worker != null)) {
             checkNotNull(worker) { "cannot register auto instance without a worker ($this)" }
+            this.worker = worker
             worker.register(this)
             trace { "REGISTERED  :: $worker" }
         }
@@ -124,9 +136,23 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     }
 
     @ThreadSafe
-    suspend fun stop() {
-        lock.use { connectors }.forEach { safeSuspendCall(logger) { it.disconnect() } }
-        logger.fine("backend context stopped")
+    fun stop() {
+        lock.use {
+            worker?.deregister(this)
+
+            val scope = CoroutineScope(Dispatchers.Default)
+
+            scope.launch { connectors.forEach { safeSuspendCall(logger) { it.disconnect() } } }
+            connectors = emptyList()
+
+            itemListeners.forEach { safeCall(logger) { it.onStop() } }
+            itemListeners = emptyList()
+
+            collectionListeners.forEach { safeCall(logger) { it.onStop() } }
+            collectionListeners = emptyList()
+        }
+
+        logger.fine("STOP")
     }
 
     // --------------------------------------------------------------------------------
@@ -134,7 +160,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     // --------------------------------------------------------------------------------
 
     @ThreadSafe
-    protected fun localAdd(item: IT) {
+    internal fun localAdd(item: IT) {
         lock.use {
             val (operation, added) = backend.localAdd(nextTime(), item)
 
@@ -146,7 +172,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     }
 
     @ThreadSafe
-    protected fun localUpdate(itemId: ItemId?, updates: Collection<Pair<String, Any?>>) {
+    internal fun localUpdate(itemId: ItemId?, updates: Collection<Pair<String, Any?>>) {
         lock.use {
             val safeItemId = itemId ?: connectionInfo.connectingHandle.itemId
             checkNotNull(safeItemId) { "no item id passed and connection info does not contain one in $this" }
@@ -164,7 +190,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     }
 
     @ThreadSafe
-    protected fun localRemove(itemId: ItemId) {
+    internal fun localRemove(itemId: ItemId) {
         lock.use {
             val (operation, removed) = backend.localRemove(nextTime(), itemId)
 
@@ -398,6 +424,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     fun addListener(listener: AutoItemListener<IT>) {
         lock.use {
             itemListeners += listener
+
         }
     }
 
