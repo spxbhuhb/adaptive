@@ -6,7 +6,9 @@ package `fun`.adaptive.lib.auth.store
 
 import `fun`.adaptive.auth.model.RoleContext
 import `fun`.adaptive.exposed.AdatEntityTable
+import `fun`.adaptive.exposed.ExposedAdatTable
 
+@ExposedAdatTable
 object RoleContextTable : AdatEntityTable<RoleContext, RoleContextTable>("auth_role_context") {
 
     val name = varchar("name", 100).nullable()

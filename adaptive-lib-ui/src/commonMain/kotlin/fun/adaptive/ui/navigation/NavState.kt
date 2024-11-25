@@ -43,6 +43,17 @@ open class NavState(
         return true
     }
 
+    fun enter(segment: Any) {
+        goto(
+            NavState(
+                this.segments + segment.toString(),
+                this.parameters,
+                this.tag,
+                this.custom
+            )
+        )
+    }
+
     fun goto(newState : NavState) {
         store().update(newState)
     }

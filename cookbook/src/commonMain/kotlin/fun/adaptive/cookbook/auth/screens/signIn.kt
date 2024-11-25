@@ -39,6 +39,8 @@ import `fun`.adaptive.ui.checkbox.api.checkbox
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.instruction.text.FontName
+import `fun`.adaptive.ui.snackbar.fail
+import `fun`.adaptive.ui.snackbar.success
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -73,7 +75,12 @@ fun signIn(): AdaptiveFragment {
 
             button("Sign In") .. maxWidth .. onClick {
                 CoroutineScope(Dispatchers.Default).launch {
-                    getService<SessionApi>(adapter().transport).login(signIn.email, signIn.password)
+                    try {
+                        getService<SessionApi>(adapter().transport).login(signIn.email, signIn.password)
+                        success("Signed in!")
+                    } catch (t: Throwable) {
+                        fail("Sikertelen belépés")
+                    }
                 }
             }
         }

@@ -2,6 +2,7 @@ package `fun`.adaptive.cookbook
 
 import `fun`.adaptive.auto.api.autoInstance
 import `fun`.adaptive.cookbook.auth.authRecipe
+import `fun`.adaptive.cookbook.auth.authRouting
 import `fun`.adaptive.cookbook.graphics.canvas.canvasRecipe
 import `fun`.adaptive.cookbook.ui.dialog.dialogRecipe
 import `fun`.adaptive.cookbook.ui.editor.editorRecipe
@@ -32,7 +33,7 @@ import `fun`.adaptive.ui.navigation.sidebar.SidebarItem
 val appNavState = autoInstance(Routes.auth)
 
 object Routes {
-    val auth = NavState("Auth")
+    val auth = authRouting
     val box = NavState("Box")
     val canvas = NavState("Canvas")
     val dialog = NavState("Dialog")

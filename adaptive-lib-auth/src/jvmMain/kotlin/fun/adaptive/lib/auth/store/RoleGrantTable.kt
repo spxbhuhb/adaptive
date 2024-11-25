@@ -9,11 +9,13 @@ import `fun`.adaptive.auth.model.Role
 import `fun`.adaptive.auth.model.RoleContext
 import `fun`.adaptive.auth.model.RoleGrant
 import `fun`.adaptive.exposed.AdatTable
+import `fun`.adaptive.exposed.ExposedAdatTable
 import `fun`.adaptive.exposed.asCommon
 import `fun`.adaptive.exposed.uuidEq
 import `fun`.adaptive.utility.UUID
 import org.jetbrains.exposed.sql.*
 
+@ExposedAdatTable
 object RoleGrantTable : AdatTable<RoleGrant, RoleGrantTable>("auth_role_grant") {
 
     val principal = reference("principal", PrincipalTable).index()

@@ -128,11 +128,6 @@ val blackBackground = backgroundColor(black)
 val greenGradient = leftToRightGradient(lightGreen, mediumGreen)
 val cornerRadius = cornerRadius(8.dp)
 
-val textSmall = fontSize(13.sp)
-val textMedium = fontSize(15.sp)
-val whiteBorder = border(white)
-val smallWhiteNoWrap = instructionsOf(textColor(white), textSmall, noTextWrap)
-
 val bodyMedium = instructionsOf(
     //FontSize(17.sp),
     //FontName("Noto Sans"),

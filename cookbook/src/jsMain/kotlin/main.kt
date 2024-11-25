@@ -101,7 +101,7 @@ fun mainContent() {
         maxSize .. padding { 16.dp } .. backgroundColor(0xFAFAFA)
 
         when (navState) {
-            in Routes.auth -> authRecipe()
+            in Routes.auth -> authRecipe(navState)
             in Routes.box -> boxRecipe()
             in Routes.canvas -> canvasRecipe()
             in Routes.dialog -> dialogRecipe()

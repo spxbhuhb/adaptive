@@ -20,7 +20,7 @@
         <appender-ref ref="Console"/>
     </root>
 
-    <logger name="Exposed" level="ERROR"/>
+    <!-- logger name="Exposed" level="ERROR"/ -->
     <logger name="org.eclipse.jetty" level="INFO"/>
     <logger name="io.netty" level="INFO"/>
     <logger name="io.ktor" level="INFO"/>

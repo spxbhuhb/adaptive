@@ -19,14 +19,24 @@ import `fun`.adaptive.lib.auth.store.history
 import `fun`.adaptive.lib.auth.store.principals
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.getLock
+import `fun`.adaptive.utility.use
 import kotlinx.datetime.Clock.System.now
 
 class PrincipalService : PrincipalApi, ServiceImpl<PrincipalService> {
 
     companion object {
-        var addRoles = emptyArray<UUID<Role>>()
-        var getRoles = emptyArray<UUID<Role>>()
-        var updateRoles = emptyArray<UUID<Role>>()
+        var addRoles: Array<UUID<Role>> = emptyArray<UUID<Role>>()
+            get() = synchronized(field) { field }
+            set(value) = synchronized(field) { field = value }
+
+        var getRoles: Array<UUID<Role>> = emptyArray<UUID<Role>>()
+            get() = synchronized(field) { field }
+            set(value) = synchronized(field) { field = value }
+
+        var updateRoles: Array<UUID<Role>> = emptyArray<UUID<Role>>()
+            get() = synchronized(field) { field }
+            set(value) = synchronized(field) { field = value }
     }
 
     val sessionService
@@ -44,7 +54,7 @@ class PrincipalService : PrincipalApi, ServiceImpl<PrincipalService> {
     override suspend fun addPrincipal(
         principal: Principal,
         activated: Boolean,
-        activationKey: String?
+        activationKey: String?,
     ) {
 
         ensureOneOf(*addRoles)

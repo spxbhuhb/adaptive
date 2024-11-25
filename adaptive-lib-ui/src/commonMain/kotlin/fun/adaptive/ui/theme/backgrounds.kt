@@ -10,6 +10,7 @@ class ThemeBackgrounds {
     val primary = backgroundColor(colors.primary)
     val overlay = backgroundColor(colors.overlay)
     val primaryHover = backgroundColor(colors.primaryHover)
+    val surfaceHover = backgroundColor(colors.surface.opaque(0.1f))
     val friendly = backgroundColor(colors.successSurface)
     val angry = backgroundColor(colors.failSurface)
 

@@ -3,7 +3,6 @@ package `fun`.adaptive.cookbook.ui.layout.box
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.auto.api.autoList
 import `fun`.adaptive.auto.model.AutoConnectionType
-import `fun`.adaptive.cookbook.shared.textSmall
 import `fun`.adaptive.cookbook.shared.yellow
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.rangeTo
@@ -21,6 +20,7 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
+import `fun`.adaptive.ui.theme.textSmall
 
 @Adaptive
 fun addChild(inColumn : Boolean = false) {

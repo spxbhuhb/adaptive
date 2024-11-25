@@ -7,6 +7,7 @@ package `fun`.adaptive.lib.auth.store
 import `fun`.adaptive.auth.model.Role
 import `fun`.adaptive.auth.model.RoleMembership
 import `fun`.adaptive.exposed.AdatTable
+import `fun`.adaptive.exposed.ExposedAdatTable
 import `fun`.adaptive.exposed.asJava
 import `fun`.adaptive.exposed.uuidEq
 import `fun`.adaptive.utility.UUID
@@ -15,6 +16,7 @@ import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 
+@ExposedAdatTable
 object RoleMembershipTable : AdatTable<RoleMembership, RoleMembershipTable>("auth_role_membership") {
 
     val group = reference("group", RoleTable)
