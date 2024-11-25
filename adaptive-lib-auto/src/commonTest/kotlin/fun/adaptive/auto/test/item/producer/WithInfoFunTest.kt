@@ -3,38 +3,36 @@ package `fun`.adaptive.auto.test.item.producer
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.auto.api.autoItemOrigin
+import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.test.support.AutoTest.Companion.autoTest
 import `fun`.adaptive.auto.test.support.TestData
+import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.testing.test
+import `fun`.adaptive.utility.waitFor
 import `fun`.adaptive.utility.waitForReal
 import kotlinx.coroutines.launch
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
 
+private val td = TestData(12, "a")
 
-class WithInstanceTest {
+class WithInfoFunTest {
 
     @Test
     fun basic() = autoTest {
 
-        // In this case the producer is simply a listener on origin.
-        // The value is immediately set by `onInit`. `onInit` runs in
-        // a coroutine, so we have to give the test the opportunity
-        // to execute it, hence `delay`.
+        val origin = autoItemOrigin(td, worker = serverBackend.firstImpl<AutoWorker>())
 
-        val td = TestData(12, "a")
-        val origin = autoItemOrigin(td, trace= true)
-
-        val adapter = test {
-            @Suppress("UNUSED_VARIABLE","unused")
-            val item = autoItem(origin)
+        val adapter = test(clientBackend) {
+            @Suppress("UNUSED_VARIABLE", "unused")
+            val item = autoItem { origin.connectInfo() }
         }
 
         @Suppress("UNCHECKED_CAST")
         fun item() = (adapter.rootFragment.state[0] as TestData?)
 
-        waitForReal(1.seconds) { item() != null }
+        waitFor(1.seconds) { item() != null }
 
         // I'm not 100% sure about the timing here, values may contain
         // nulls as well depending on how the coroutines run. Using
@@ -42,19 +40,18 @@ class WithInstanceTest {
 
         origin.update(td::i to 23)
 
-        waitForReal(1.seconds) { item()?.i == 23 }
+        waitFor(1.seconds) { item()?.i == 23 }
     }
 
     @Test
     fun adaptiveUpdate() = autoTest {
 
-        // see comments in `basic`
+        // see comments in `basic` and in `WithInstanceTest`
 
-        val td = TestData(12, "a")
-        val origin = autoItemOrigin(td)
+        val origin = autoItemOrigin(td, worker = serverBackend.firstImpl<AutoWorker>(), trace = false)
 
         val adapter = test(clientBackend) {
-            val item = autoItem(origin)
+            val item = autoItem { origin.connectInfo() }
             val doUpdate = false
 
             if (doUpdate) {

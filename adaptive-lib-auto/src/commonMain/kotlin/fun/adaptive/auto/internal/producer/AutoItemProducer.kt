@@ -29,7 +29,9 @@ class AutoItemProducer<IT : AdatClass>(
     }
 
     override fun stop() {
-        instance?.stop()
+        if (disposeInstance) {
+            instance?.stop()
+        }
         instance = null
     }
 

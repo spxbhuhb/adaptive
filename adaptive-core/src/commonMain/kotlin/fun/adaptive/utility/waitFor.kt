@@ -118,8 +118,11 @@ class WaitStrategy(
     var retryDelay = initialDelay.inWholeMilliseconds
     val maximumDelayMillis = maximumDelay.inWholeMilliseconds
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun wait() {
-        delay(retryDelay)
+        withContext(Dispatchers.Default.limitedParallelism(1)) {
+            delay(retryDelay)
+        }
         if (retryDelay < maximumDelayMillis) retryDelay = (retryDelay * retryMultiplier) / 100
     }
 }

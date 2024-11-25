@@ -6,15 +6,14 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.service.testing.DirectServiceTransport
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.runTest
-import kotlin.coroutines.ContinuationInterceptor
+import kotlinx.coroutines.withContext
 
 class AutoTest {
 
-    val clientTransport = DirectServiceTransport()
-    val serverTransport = DirectServiceTransport()
+    val clientTransport = DirectServiceTransport(name = "client") // .also { it.trace = true; it.transportLog.enableFine() }
+    val serverTransport = DirectServiceTransport(name = "server") // .also { it.trace = true; it.transportLog.enableFine() }
 
     init {
         clientTransport.peerTransport = serverTransport
@@ -38,24 +37,26 @@ class AutoTest {
             runTest {
                 with(AutoTest()) {
 
-                    serverBackend = backend(serverTransport) {
-                        auto()
+                    // Switch to a coroutine context that is NOT a test context. The test context
+                    // skips delays which wreaks havoc with service call timeouts that depend on
+                    // delays actually working.
+
+                    withContext(Dispatchers.Default) {
+
+                        serverBackend = backend(serverTransport) {
+                            auto()
+                        }
+
+                        clientBackend = backend(clientTransport) {
+                            auto()
+                        }
+
+                        testFun()
+
+                        // FIXME figure out how to stop backends in tests properly
+//                        clientBackend.stop()
+//                        serverBackend.stop()
                     }
-
-                    val scope = this@runTest
-                    val dispatcher = scope.coroutineContext[ContinuationInterceptor] as CoroutineDispatcher
-
-                    // The client backend must run in the test scope or patch calls may have a conflict.
-                    // This is basically the same as using the Main dispatcher for UI adapters.
-
-                    clientBackend = backend(clientTransport, dispatcher = dispatcher, scope = this@runTest) {
-                        auto()
-                    }
-
-                    testFun()
-
-                    clientBackend.stop()
-                    serverBackend.stop()
                 }
             }
     }

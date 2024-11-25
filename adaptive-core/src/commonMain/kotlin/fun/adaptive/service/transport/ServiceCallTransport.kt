@@ -28,12 +28,13 @@ import kotlinx.coroutines.withTimeout
 import kotlin.time.Duration.Companion.seconds
 
 abstract class ServiceCallTransport(
-    val scope: CoroutineScope
+    val scope: CoroutineScope,
+    val name: String = "service"
 ) {
 
-    val transportLog = getLogger("service.transport")
+    val transportLog = getLogger("$name.transport")
 
-    val accessLog = getLogger("service.access").also { it.level = LogLevel.Warning }
+    val accessLog = getLogger("$name.access").also { it.level = LogLevel.Warning }
 
     var trace: Boolean = false
 
@@ -227,7 +228,7 @@ abstract class ServiceCallTransport(
         }
     }
 
-    open suspend fun start(serviceImplFactory: ServiceImplFactory) : ServiceCallTransport {
+    open suspend fun start(serviceImplFactory: ServiceImplFactory): ServiceCallTransport {
         this.serviceImplFactory = serviceImplFactory
         return this
     }

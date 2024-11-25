@@ -70,11 +70,15 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     internal var logger: AdaptiveLogger = getLogger("auto.CONNECTING   ")
 
     @RequireLock
-    internal lateinit var connectionInfo: AutoConnectionInfo<VT>
+    internal var connectionInfo: AutoConnectionInfo<VT>? = null
+
+    @RequireLock
+    val thisItemId : ItemId?
+        get() = connectionInfo?.connectingHandle?.itemId
 
     @ThreadSafe
     val remoteHandle : AutoHandle
-        get() = lock.use { connectionInfo.acceptingHandle }
+        get() = lock.use { connectionInfo!!.acceptingHandle }
 
     internal lateinit var backend: BE
 
@@ -91,6 +95,10 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     private var collectionListeners = emptyList<AutoCollectionListener<IT>>()
 
     internal val store = AutoAdatStore(this)
+
+    @RequireLock
+    private val isInitialized: Boolean
+        get() = ((time >= (connectionInfo?.acceptingTime ?: LamportTimestamp.ORIGIN)))
 
     // --------------------------------------------------------------------------------
     // Lifecycle
@@ -170,7 +178,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     @ThreadSafe
     internal fun localUpdate(itemId: ItemId?, updates: Collection<Pair<String, Any?>>) {
         lock.use {
-            val safeItemId = itemId ?: connectionInfo.connectingHandle.itemId
+            val safeItemId = itemId ?: thisItemId
             checkNotNull(safeItemId) { "no item id passed and connection info does not contain one in $this" }
 
             val original = backend.getItem(safeItemId)
@@ -325,7 +333,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
         lock.use {
             // Using the item id from connection info here works for items and collections as well.
             // For collections this will pass null, for items it will pass the actual value.
-            makeConnectInfo<VT>(connectionInfo.connectingHandle.itemId, type)
+            makeConnectInfo<VT>(thisItemId, type)
         }
 
     @ThreadSafe
@@ -420,7 +428,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     fun addListener(listener: AutoItemListener<IT>) {
         lock.use {
             itemListeners += listener
-
+            if (isInitialized) listener.onInit(thisItemId!!, getItem())
         }
     }
 
@@ -428,6 +436,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     fun addListener(listener: AutoCollectionListener<IT>) {
         lock.use {
             collectionListeners += listener
+            if (isInitialized) listener.onInit(getItems())
         }
     }
 

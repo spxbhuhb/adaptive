@@ -54,6 +54,10 @@ open class BackendAdapter(
 
     val lock = getLock()
 
+    var isRunning = false
+        get() = lock.use { field }
+        set(v) { lock.use { field = v } }
+
     var stopped = false
 
     var wait : Boolean = wait
@@ -84,10 +88,13 @@ open class BackendAdapter(
         while (wait && scope.isActive) {
             sleep(1000)
         }
+        isRunning = true
         return this
     }
 
     override fun stop() {
+        isRunning = false
+
         lock.use {
             if (stopped) return
             stopped = true

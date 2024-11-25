@@ -14,6 +14,7 @@ import `fun`.adaptive.auto.internal.persistence.ItemMemoryPersistence
 import `fun`.adaptive.auto.internal.producer.AutoItemProducer
 import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.NonAdaptive
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.Producer
@@ -39,6 +40,8 @@ fun <A : AdatClass> autoItem(
     val producer = AutoItemProducer(binding, disposeInstance = false)
 
     producer.instance = instance
+
+    az onInit beallitja az erteket, es utana a latestValue return null-ra allitja
 
     instance.addListener(producer)
     binding.targetFragment.addProducer(producer)
@@ -85,7 +88,8 @@ fun <A : AdatClass> autoItem(
             defaultWireFormat = companion !!.adatWireFormat,
             listener = producer,
             trace = trace,
-            scope = binding.targetFragment.adapter.scope
+            scope = binding.targetFragment.adapter.scope,
+            worker = binding.targetFragment.adapter.backend.firstImpl<AutoWorker>()
         )
 
     producer.instance = instance

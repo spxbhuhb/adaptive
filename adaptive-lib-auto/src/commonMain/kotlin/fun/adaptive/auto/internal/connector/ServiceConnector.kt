@@ -17,8 +17,8 @@ import kotlin.coroutines.coroutineContext
 class ServiceConnector(
     val instance: AutoInstance<*, *, *, *>,
     val service: AutoApi,
-    override val peerHandle : AutoHandle,
-    val initiator : Boolean,
+    override val peerHandle: AutoHandle,
+    val initiator: Boolean,
     pendingLimit: Int = 10000,
 ) : AutoConnector() {
 
@@ -54,9 +54,8 @@ class ServiceConnector(
     }
 
     suspend fun run() {
-        safeSuspendCall(instance.logger) {
-
-            while (coroutineContext.isActive) {
+        while (coroutineContext.isActive) {
+            safeSuspendCall(instance.logger) {
 
                 connect() // tries until successful or disposed
 
@@ -66,9 +65,8 @@ class ServiceConnector(
                     instance.error("service connection error", ex)
                     disconnect()
                 }
-
-                if (!initiator) break
             }
+            if (! initiator) break
         }
     }
 
@@ -86,6 +84,8 @@ class ServiceConnector(
                 return@untilSuccess null // the service connector has been disposed
             }
 
+            instance.logger.fine { "CONNECTING :: ${instance.remoteHandle}" }
+
             if (initiator) {
                 // starts a synchronization from the remote to this
                 service.addPeer(
@@ -99,6 +99,8 @@ class ServiceConnector(
         }
 
         if (peerTime == null) return // he service connector has been disposed
+
+        instance.logger.fine { "CONNECTED :: ${instance.remoteHandle}" }
 
         instance.scope.launch {
             supervisorScope {
@@ -160,7 +162,8 @@ class ServiceConnector(
 //            }
 //        }
     }
-//
+
+    //
     override fun dispose() {
 //        safeCall(logger, message = "onDisconnect error in ServiceConnector @ $instance") {
 //            status = Status.DISPOSING

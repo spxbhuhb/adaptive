@@ -15,9 +15,11 @@ import kotlinx.coroutines.Dispatchers
 
 class DirectServiceTransport(
     val dump: Boolean = false,
-    override val wireFormatProvider: WireFormatProvider = Proto
+    override val wireFormatProvider: WireFormatProvider = Proto,
+    name : String = "direct"
 ) : ServiceCallTransport(
-    CoroutineScope(Dispatchers.Default)
+    CoroutineScope(Dispatchers.Default),
+    name
 ) {
 
     lateinit var peerTransport: DirectServiceTransport
