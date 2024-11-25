@@ -4,7 +4,7 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatContext
 import `fun`.adaptive.adat.wireformat.AdatPropertyWireFormat
 import `fun`.adaptive.auto.internal.connector.AutoConnector
-import `fun`.adaptive.auto.internal.origin.AutoInstance
+import `fun`.adaptive.auto.internal.instance.AutoInstance
 import `fun`.adaptive.auto.model.AutoPropertyValue
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp

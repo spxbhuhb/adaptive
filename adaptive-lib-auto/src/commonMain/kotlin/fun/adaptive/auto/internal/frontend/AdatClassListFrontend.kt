@@ -1,13 +1,6 @@
 package `fun`.adaptive.auto.internal.frontend
 
-import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.AdatContext
-import `fun`.adaptive.auto.internal.backend.AutoCollectionBackend
-import `fun`.adaptive.auto.internal.backend.AutoItemBackend
 //import `fun`.adaptive.auto.internal.backend.SetBackend
-import `fun`.adaptive.auto.internal.origin.AutoInstance
-import `fun`.adaptive.auto.model.AutoConnectionInfo
-import `fun`.adaptive.auto.model.ItemId
 //
 //open class AdatClassListFrontend<IT : AdatClass>(
 //    instance: AutoInstance<AutoCollectionBackend<IT>, AutoCollectionFrontend<IT>, Collection<IT>, IT>,

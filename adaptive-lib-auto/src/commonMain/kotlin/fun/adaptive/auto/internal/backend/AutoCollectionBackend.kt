@@ -1,7 +1,7 @@
 package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.auto.internal.origin.AutoInstance
+import `fun`.adaptive.auto.internal.instance.AutoInstance
 import `fun`.adaptive.auto.internal.persistence.AutoCollectionPersistence
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp

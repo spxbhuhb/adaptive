@@ -1,7 +1,7 @@
 package `fun`.adaptive.auto.api
 
 import `fun`.adaptive.auto.backend.AutoWorker
-import `fun`.adaptive.auto.internal.origin.AutoInstance
+import `fun`.adaptive.auto.internal.instance.AutoInstance
 
 /**
  * Connect to peers with [AutoApi] and produce a list that is

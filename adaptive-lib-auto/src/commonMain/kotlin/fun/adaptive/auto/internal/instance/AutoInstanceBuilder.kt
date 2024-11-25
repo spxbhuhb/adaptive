@@ -1,4 +1,4 @@
-package `fun`.adaptive.auto.internal.origin
+package `fun`.adaptive.auto.internal.instance
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
@@ -26,7 +26,6 @@ import `fun`.adaptive.utility.untilSuccess
 import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 

@@ -1,7 +1,7 @@
 package `fun`.adaptive.auto.internal.connector
 
 import `fun`.adaptive.auto.api.AutoApi
-import `fun`.adaptive.auto.internal.origin.AutoInstance
+import `fun`.adaptive.auto.internal.instance.AutoInstance
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.operation.*
 import `fun`.adaptive.utility.getLock

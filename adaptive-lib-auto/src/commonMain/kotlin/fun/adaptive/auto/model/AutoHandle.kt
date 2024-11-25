@@ -3,7 +3,6 @@ package `fun`.adaptive.auto.model
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.auto.api.AutoGeneric
-import `fun`.adaptive.auto.internal.origin.AutoInstance
 import `fun`.adaptive.utility.UUID
 
 /**

@@ -3,7 +3,7 @@ package `fun`.adaptive.ui.navigation
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.store.AdatStore
-import `fun`.adaptive.auto.internal.origin.AutoInstance
+import `fun`.adaptive.auto.internal.instance.AutoInstance
 
 typealias NavStateOrigin = AutoInstance<*, *, NavState, NavState>
 

@@ -6,12 +6,9 @@ import `fun`.adaptive.auto.internal.backend.PropertyBackend
 //import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 //import `fun`.adaptive.auto.internal.frontend.FileFrontend
 //import `fun`.adaptive.auto.internal.frontend.FolderFrontend
-import `fun`.adaptive.auto.internal.origin.AutoInstance
-import `fun`.adaptive.auto.internal.origin.AutoCollection
-import `fun`.adaptive.auto.internal.origin.AutoItem
+import `fun`.adaptive.auto.internal.instance.AutoInstance
 import `fun`.adaptive.auto.internal.persistence.AutoItemPersistence
 import `fun`.adaptive.auto.internal.persistence.ItemFilePersistence
-import `fun`.adaptive.auto.internal.persistence.ItemMemoryPersistence
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 
 typealias ItemBase<A> = AutoInstance<PropertyBackend<A>, AutoItemPersistence<A>, A, A>

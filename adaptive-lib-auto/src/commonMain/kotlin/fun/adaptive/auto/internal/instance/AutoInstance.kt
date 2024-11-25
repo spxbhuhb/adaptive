@@ -1,4 +1,4 @@
-package `fun`.adaptive.auto.internal.origin
+package `fun`.adaptive.auto.internal.instance
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.api.diff
@@ -11,7 +11,6 @@ import `fun`.adaptive.auto.internal.backend.AutoBackend
 import `fun`.adaptive.auto.internal.backend.AutoCollectionBackend
 import `fun`.adaptive.auto.internal.backend.AutoItemBackend
 import `fun`.adaptive.auto.internal.connector.AutoConnector
-import `fun`.adaptive.auto.internal.connector.DirectConnector
 import `fun`.adaptive.auto.internal.persistence.AutoPersistence
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoConnectionType
@@ -40,10 +39,7 @@ import `fun`.adaptive.utility.use
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlin.reflect.KProperty
-import kotlin.time.Duration
 
 /**
  * The base class for all auto instances.

@@ -7,8 +7,8 @@ import `fun`.adaptive.adat.toArray
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
-import `fun`.adaptive.auto.internal.origin.AutoInstanceBuilder
-import `fun`.adaptive.auto.internal.origin.AutoItem
+import `fun`.adaptive.auto.internal.instance.AutoInstanceBuilder
+import `fun`.adaptive.auto.internal.instance.AutoItem
 import `fun`.adaptive.auto.internal.persistence.AutoItemPersistence
 import `fun`.adaptive.auto.internal.persistence.ItemMemoryPersistence
 import `fun`.adaptive.auto.internal.producer.AutoItemProducer

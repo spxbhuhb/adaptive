@@ -2,7 +2,7 @@ package `fun`.adaptive.cookbook.auto.autoFile_autoFile
 
 import `fun`.adaptive.auto.api.autoFile
 import `fun`.adaptive.auto.backend.AutoWorker
-import `fun`.adaptive.auto.internal.origin.AutoInstance
+import `fun`.adaptive.auto.internal.instance.AutoInstance
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.builtin.worker

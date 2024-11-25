@@ -3,7 +3,7 @@ package `fun`.adaptive.auto.internal.backend
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.auto.internal.connector.AutoConnector
-import `fun`.adaptive.auto.internal.origin.AutoInstance
+import `fun`.adaptive.auto.internal.instance.AutoInstance
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp

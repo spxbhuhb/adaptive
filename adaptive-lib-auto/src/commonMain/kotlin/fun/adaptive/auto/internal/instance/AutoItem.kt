@@ -1,4 +1,4 @@
-package `fun`.adaptive.auto.internal.origin
+package `fun`.adaptive.auto.internal.instance
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
