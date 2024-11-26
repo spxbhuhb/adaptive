@@ -186,6 +186,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
 
             val (operation, updated) = backend.localUpdate(nextTime(), safeItemId, updates)
 
+            persistenceUpdate(safeItemId, updated)
             onLocalChange(operation.itemId, updated, original)
             distribute(operation)
 
@@ -237,6 +238,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
 
         if (timestamp != null) {
             receive(timestamp)
+            persistenceUpdate(operation.itemId, updated)
             onRemoteChange(operation.itemId, updated, original)
             distribute(operation)
 
@@ -385,6 +387,21 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     @RequireLock
     protected fun nextTime(): LamportTimestamp =
         unsafeTime.increment().also { unsafeTime = it }
+
+    // --------------------------------------------------------------------------------
+    // Persistence
+    // --------------------------------------------------------------------------------
+
+    /**
+     * Called when an origin instance is initialized the first time. In that case
+     * the initial value has to be persisted.
+     */
+    abstract fun persistenceInit()
+
+    /**
+     * Called on local and remote item updates.
+     */
+    abstract fun persistenceUpdate(itemId : ItemId, value : IT)
 
     // --------------------------------------------------------------------------------
     // Peers

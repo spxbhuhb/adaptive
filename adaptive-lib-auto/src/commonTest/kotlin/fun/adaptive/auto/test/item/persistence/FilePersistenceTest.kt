@@ -1,6 +1,7 @@
 package `fun`.adaptive.auto.test.item.persistence
 
 import `fun`.adaptive.auto.api.autoCommon
+import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.auto.internal.persistence.AutoItemExport
 import `fun`.adaptive.auto.internal.persistence.ItemFilePersistence
 import `fun`.adaptive.auto.model.AutoConnectionInfo
@@ -8,7 +9,7 @@ import `fun`.adaptive.auto.model.AutoMetadata
 import `fun`.adaptive.auto.model.ITEM_ID_ORIGIN
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.test.support.TestData
-import `fun`.adaptive.utility.clearTestPath
+import `fun`.adaptive.utility.clearedTestPath
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.wireformat.api.Json
 import kotlinx.io.files.Path
@@ -19,10 +20,10 @@ import kotlin.test.assertTrue
 class FilePersistenceTest {
 
     @Test
-    fun basic() {
+    fun saveAndLoad() {
         autoCommon()
 
-        val dirPath = clearTestPath()
+        val dirPath = clearedTestPath()
         val filePath = Path(dirPath, "test.json")
 
         val persistence = ItemFilePersistence<TestData>(filePath, Json)
@@ -47,10 +48,10 @@ class FilePersistenceTest {
     }
 
     @Test
-    fun noMeta() {
+    fun saveAndLoadNoMeta() {
         autoCommon()
 
-        val dirPath = clearTestPath()
+        val dirPath = clearedTestPath()
         val filePath = Path(dirPath, "test.json")
 
         val persistence = ItemFilePersistence<TestData>(filePath, Json)
@@ -73,4 +74,37 @@ class FilePersistenceTest {
         assertEquals(export.propertyTimes, import.propertyTimes)
         assertEquals(export.item, import.item)
     }
+
+    @Test
+    fun basic() {
+        autoCommon()
+
+        val dirPath = clearedTestPath()
+        val filePath = Path(dirPath, "test.json")
+
+        val td = TestData(12, "ab")
+
+        val instance = autoItemOrigin(td, persistence = ItemFilePersistence<TestData>(filePath, Json))
+
+        ItemFilePersistence.read<TestData>(filePath, Json).also { import ->
+            assertEquals(instance.handle, import.meta !!.connection.connectingHandle)
+            assertEquals(td, import.item)
+        }
+
+        ItemFilePersistence.read<TestData>(filePath, Json).also { import ->
+            assertEquals(12, import.item!!.i)
+        }
+
+        instance.update(td::i to 23)
+
+        ItemFilePersistence.read<TestData>(filePath, Json).also { import ->
+            assertEquals(23, import.item!!.i)
+        }
+
+        val other = autoItemOrigin(null, persistence = ItemFilePersistence<TestData>(filePath, Json))
+
+        assertEquals(other.value, instance.value)
+
+    }
+
 }

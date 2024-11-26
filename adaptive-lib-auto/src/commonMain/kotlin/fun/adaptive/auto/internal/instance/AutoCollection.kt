@@ -4,6 +4,7 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.AutoBackend
 import `fun`.adaptive.auto.internal.persistence.AutoCollectionPersistence
+import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 
@@ -54,6 +55,14 @@ class AutoCollection<BE : AutoBackend<IT>, PT : AutoCollectionPersistence<IT>, I
         getItems().filter(selector).forEach {
             localRemove(itemId(it))
         }
+    }
+
+    override fun persistenceInit() {
+        TODO("Not yet implemented")
+    }
+
+    override fun persistenceUpdate(itemId: ItemId, value: IT) {
+        TODO("Not yet implemented")
     }
 
 }

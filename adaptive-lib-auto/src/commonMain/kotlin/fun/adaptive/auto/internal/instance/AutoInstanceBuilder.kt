@@ -90,6 +90,7 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
 
         if (origin) {
             instance.setInfo(connectionInfo !!, worker, trace)
+            if (loadedInfo == null) instance.persistenceInit()
         } else {
             connect(connectionInfo)
         }
@@ -98,7 +99,7 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun load(): Pair<AutoConnectionInfo<VT>?, VT> {
+    fun load(): Pair<AutoConnectionInfo<VT>?, VT?> {
         val export = instance.persistence.load()
         when (export) {
             // FIXME the first cast ( as AutoConnectionInfo<VT>) is here because the compiler plugin does not handle the type correctly

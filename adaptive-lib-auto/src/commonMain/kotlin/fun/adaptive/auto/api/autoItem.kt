@@ -113,25 +113,32 @@ fun <A : AdatClass> autoItem(
  * @param    initialValue   The value of the auto instance.
  * @param    worker         An optional worker to register this instance with.
  * @param    listener       An optional listener to get auto events.
+ * @param    persistence    Persistence provider, defaults to [ItemMemoryPersistence].
  * @param    trace          Log trace information.
+ * @param    companion      The adat companion to fetch the wireformat from. When on default the compiler
+ *                          will resolve the type parameter into an actual companion.
  */
 @NonAdaptive
+@AdatCompanionResolve
 fun <A : AdatClass> autoItemOrigin(
-    initialValue: A,
+    initialValue: A?,
     worker: AutoWorker? = null,
     listener: AutoItemListener<A>? = null,
+    persistence: AutoItemPersistence<A>? = null,
     trace: Boolean = false,
+    companion: AdatCompanion<A>? = null
 ): AutoItem<PropertyBackend<A>, AutoItemPersistence<A>, A> =
 
     @Suppress("UNCHECKED_CAST")
     buildItem(
         origin = true,
         initialValue = initialValue,
-        defaultWireFormat = (initialValue.adatCompanion as AdatCompanion<A>).adatWireFormat,
+        defaultWireFormat = companion!!.adatWireFormat,
         listener = listener,
         trace = trace,
         worker = worker,
-        scope = CoroutineScope(Dispatchers.Default)
+        scope = CoroutineScope(Dispatchers.Default),
+        persistence = persistence
     )
 
 /**
@@ -146,7 +153,10 @@ fun <A : AdatClass> autoItemOrigin(
  *
  * @param    worker          The worker to register this instance with.
  * @param    listener        An optional listener to get auto events.
+ * @param    persistence     Persistence provider, defaults to [ItemMemoryPersistence].
  * @param    trace           Log trace information.
+ * @param    companion       The adat companion to fetch the wireformat from. When on default the compiler
+ *                           will resolve the type parameter into an actual companion.
  * @param    infoFunSuspend  Called to get the connection info from the peer.
  */
 @NonAdaptive
@@ -154,6 +164,7 @@ fun <A : AdatClass> autoItemOrigin(
 fun <A : AdatClass> autoItemNode(
     worker: AutoWorker,
     listener: AutoItemListener<A>? = null,
+    persistence: AutoItemPersistence<A>? = null,
     trace: Boolean = false,
     companion: AdatCompanion<A>? = null,
     infoFunSuspend: InfoFunSuspend<PropertyBackend<A>, AutoItemPersistence<A>, A, A>,
@@ -167,7 +178,8 @@ fun <A : AdatClass> autoItemNode(
         listener = listener,
         trace = trace,
         worker = worker,
-        scope = CoroutineScope(Dispatchers.Default)
+        scope = CoroutineScope(Dispatchers.Default),
+        persistence = persistence
     )
 
 /**
@@ -182,6 +194,7 @@ fun <A : AdatClass> autoItemNode(
  *
  * @param    peer            The instance to connect with.
  * @param    listener        An optional listener to get auto events.
+ * @param    persistence     Persistence provider, defaults to [ItemMemoryPersistence].
  * @param    trace           Log trace information.
  * @param    companion       The adat companion to fetch the wireformat from. When on default the compiler
  *                           will resolve the type parameter into an actual companion.
@@ -191,6 +204,7 @@ fun <A : AdatClass> autoItemNode(
 fun <A : AdatClass> autoItemNode(
     peer: ItemBase<A>,
     listener: AutoItemListener<A>? = null,
+    persistence: AutoItemPersistence<A>? = null,
     trace: Boolean = false,
     companion: AdatCompanion<A>? = null
 ) =
@@ -209,13 +223,14 @@ fun <A : AdatClass> autoItemNode(
 private fun <A : AdatClass> buildItem(
     origin: Boolean,
     defaultWireFormat: AdatClassWireFormat<A>,
-    scope : CoroutineScope,
+    scope: CoroutineScope,
     initialValue: A? = null,
     infoFunSuspend: InfoFunSuspend<PropertyBackend<A>, AutoItemPersistence<A>, A, A>? = null,
     directPeer: ItemBase<A>? = null,
     listener: AutoItemListener<A>? = null,
     trace: Boolean,
     worker: AutoWorker? = null,
+    persistence: AutoItemPersistence<A>? = null,
 ): AutoItem<PropertyBackend<A>, AutoItemPersistence<A>, A> =
 
     AutoInstanceBuilder<PropertyBackend<A>, AutoItemPersistence<A>, A, A>(
@@ -238,7 +253,7 @@ private fun <A : AdatClass> buildItem(
             )
         },
         persistenceFun = { builder ->
-            ItemMemoryPersistence(wireFormatProvider = builder.instance.wireFormatProvider)
+            persistence ?: ItemMemoryPersistence(wireFormatProvider = builder.instance.wireFormatProvider)
         }
     ).build(
         initialValue

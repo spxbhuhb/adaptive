@@ -30,7 +30,7 @@ class PropertyBackend<IT : AdatClass>(
 
     private val values: Array<Any?> = initialValues?.copyOf() ?: arrayOfNulls(properties.size)
 
-    private val propertyTimes = initPropertyTimes(initialPropertyTimes)
+    internal val propertyTimes = initPropertyTimes(initialPropertyTimes)
 
     var lastUpdate = propertyTimes.max()
         private set

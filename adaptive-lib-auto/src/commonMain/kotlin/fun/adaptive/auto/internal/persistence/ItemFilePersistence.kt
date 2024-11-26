@@ -2,14 +2,10 @@ package `fun`.adaptive.auto.internal.persistence
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
-import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.AutoMetadata
-import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.utility.exists
-import `fun`.adaptive.utility.load
 import `fun`.adaptive.utility.read
-import `fun`.adaptive.utility.save
 import `fun`.adaptive.utility.write
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatProvider
@@ -33,6 +29,7 @@ class ItemFilePersistence<IT : AdatClass>(
     override fun save(export: AutoItemExport<IT>) {
         write(path, wireFormatProvider, export)
     }
+
 
 //    override fun onRemove() {
 //        deleteMeta(path)
