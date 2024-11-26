@@ -41,8 +41,6 @@ fun <A : AdatClass> autoItem(
 
     producer.instance = instance
 
-    az onInit beallitja az erteket, es utana a latestValue return null-ra allitja
-
     instance.addListener(producer)
     binding.targetFragment.addProducer(producer)
 

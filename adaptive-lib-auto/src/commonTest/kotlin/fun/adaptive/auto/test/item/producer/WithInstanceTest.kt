@@ -7,7 +7,12 @@ import `fun`.adaptive.auto.test.support.AutoTest.Companion.autoTest
 import `fun`.adaptive.auto.test.support.TestData
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.testing.test
+import `fun`.adaptive.utility.getLock
+import `fun`.adaptive.utility.use
 import `fun`.adaptive.utility.waitForReal
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
@@ -24,10 +29,10 @@ class WithInstanceTest {
         // to execute it, hence `delay`.
 
         val td = TestData(12, "a")
-        val origin = autoItemOrigin(td, trace= true)
+        val origin = autoItemOrigin(td)
 
         val adapter = test {
-            @Suppress("UNUSED_VARIABLE","unused")
+            @Suppress("UNUSED_VARIABLE", "unused")
             val item = autoItem(origin)
         }
 
@@ -48,35 +53,31 @@ class WithInstanceTest {
     @Test
     fun adaptiveUpdate() = autoTest {
 
-        // see comments in `basic`
+        var i = 0
+        while (i ++ < 5) {
+            // see comments in `basic`
 
-        val td = TestData(12, "a")
-        val origin = autoItemOrigin(td)
+            val td = TestData(12, "a")
+            val origin = autoItemOrigin(td)
 
-        val adapter = test(clientBackend) {
-            val item = autoItem(origin)
-            val doUpdate = false
-
-            if (doUpdate) {
-                adapter().scope.launch {
-                    item?.update(item::i, 34)
+            val adapter = test(clientBackend, printTrace = true) {
+                val item = autoItem(origin)
+                if (item?.i == 23) {
+                    item.update(item::i, 34)
                 }
             }
+
+            @Suppress("UNCHECKED_CAST")
+            fun item() = (adapter.rootFragment.state[0] as TestData?)
+
+            waitForReal(1.seconds) { item() != null }
+
+            origin.update(td::i to 23)
+
+            waitForReal(1.seconds) { item()?.i == 23 || item()?.i == 34 }
+
+            waitForReal(1.seconds) { item()?.i == 34 }
         }
-
-        @Suppress("UNCHECKED_CAST")
-        fun item() = (adapter.rootFragment.state[0] as TestData?)
-
-        waitForReal(1.seconds) { item() != null }
-
-        origin.update(td::i to 23)
-
-        waitForReal(1.seconds) { item()?.i == 23 }
-
-        adapter.rootFragment.state[1] = true
-        adapter.rootFragment.setDirty(1, true) // calls patch
-
-        waitForReal(1.seconds) {item()?.i == 34 }
     }
 
 }

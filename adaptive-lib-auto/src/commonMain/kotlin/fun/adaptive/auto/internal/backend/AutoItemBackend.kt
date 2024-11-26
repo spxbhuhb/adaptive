@@ -15,6 +15,8 @@ abstract class AutoItemBackend<IT : AdatClass>(
 
     abstract fun getItem(): IT
 
+    abstract fun getItemOrNull(): IT?
+
 //    fun update(propertyName: String, propertyValue: Any?) {
 //        update(itemId, propertyName, propertyValue)
 //    }

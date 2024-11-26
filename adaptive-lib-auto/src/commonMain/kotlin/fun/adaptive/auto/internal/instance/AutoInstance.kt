@@ -433,6 +433,13 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     }
 
     @ThreadSafe
+    fun removeListener(listener: AutoItemListener<IT>) {
+        lock.use {
+            itemListeners -= listener
+        }
+    }
+
+    @ThreadSafe
     fun addListener(listener: AutoCollectionListener<IT>) {
         lock.use {
             collectionListeners += listener
@@ -507,6 +514,13 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     protected fun getItem(): IT =
         lock.use {
             (backend as AutoItemBackend<IT>).getItem()
+        }
+
+    @ThreadSafe
+    @Suppress("UNCHECKED_CAST")
+    protected fun getItemOrNull(): IT? =
+        lock.use {
+            (backend as AutoItemBackend<IT>).getItemOrNull()
         }
 
     @ThreadSafe

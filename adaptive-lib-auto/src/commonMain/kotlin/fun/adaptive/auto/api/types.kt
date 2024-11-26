@@ -7,11 +7,12 @@ import `fun`.adaptive.auto.internal.backend.PropertyBackend
 //import `fun`.adaptive.auto.internal.frontend.FileFrontend
 //import `fun`.adaptive.auto.internal.frontend.FolderFrontend
 import `fun`.adaptive.auto.internal.instance.AutoInstance
+import `fun`.adaptive.auto.internal.instance.AutoItem
 import `fun`.adaptive.auto.internal.persistence.AutoItemPersistence
 import `fun`.adaptive.auto.internal.persistence.ItemFilePersistence
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 
-typealias ItemBase<A> = AutoInstance<PropertyBackend<A>, AutoItemPersistence<A>, A, A>
+typealias ItemBase<A> = AutoItem<PropertyBackend<A>, AutoItemPersistence<A>, A>
 //typealias ListBase<A> = AutoCollection<SetBackend<A>, AdatClassListFrontend<A>, A>
 typealias FileBase<A> = AutoInstance<PropertyBackend<A>, ItemFilePersistence<A>, A, A>
 //typealias FolderBase<A> = AutoCollection<SetBackend<A>, FolderFrontend<A>, A>

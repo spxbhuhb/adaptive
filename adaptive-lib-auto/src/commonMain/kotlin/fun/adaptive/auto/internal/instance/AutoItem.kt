@@ -20,6 +20,9 @@ class AutoItem<BE : AutoItemBackend<IT>, PT : AutoItemPersistence<IT>, IT : Adat
     val value: IT
         get() = getItem()
 
+    val valueOrNull : IT?
+        get() = getItemOrNull()
+
     fun <V> update(vararg changes: Pair<KProperty<V>, V>) {
         localUpdate(null, changes.map { it.first.name to it.second })
     }

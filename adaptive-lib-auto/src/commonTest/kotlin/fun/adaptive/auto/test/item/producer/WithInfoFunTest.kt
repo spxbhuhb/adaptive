@@ -48,32 +48,28 @@ class WithInfoFunTest {
 
         // see comments in `basic` and in `WithInstanceTest`
 
-        val origin = autoItemOrigin(td, worker = serverBackend.firstImpl<AutoWorker>(), trace = false)
+        var i = 0
+        while (i ++ < 5) {
+            val origin = autoItemOrigin(td, worker = serverBackend.firstImpl<AutoWorker>())
 
-        val adapter = test(clientBackend) {
-            val item = autoItem { origin.connectInfo() }
-            val doUpdate = false
-
-            if (doUpdate) {
-                adapter().scope.launch {
-                    item?.update(item::i, 34)
+            val adapter = test(clientBackend) {
+                val item = autoItem { origin.connectInfo() }
+                if (item?.i == 23) {
+                    item.update(item::i, 34)
                 }
             }
+
+            @Suppress("UNCHECKED_CAST")
+            fun item() = (adapter.rootFragment.state[0] as TestData?)
+
+            waitForReal(1.seconds) { item() != null }
+
+            origin.update(td::i to 23)
+
+            waitForReal(1.seconds) { item()?.i == 23 || item()?.i == 34 }
+
+            waitForReal(1.seconds) { item()?.i == 34 }
         }
-
-        @Suppress("UNCHECKED_CAST")
-        fun item() = (adapter.rootFragment.state[0] as TestData?)
-
-        waitForReal(1.seconds) { item() != null }
-
-        origin.update(td::i to 23)
-
-        waitForReal(1.seconds) { item()?.i == 23 }
-
-        adapter.rootFragment.state[1] = true
-        adapter.rootFragment.setDirty(1, true) // calls patch
-
-        waitForReal(1.seconds) {item()?.i == 34 }
     }
 
 }

@@ -6,7 +6,9 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.service.testing.DirectServiceTransport
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 
@@ -32,6 +34,7 @@ class AutoTest {
 
     companion object {
 
+        @OptIn(ExperimentalCoroutinesApi::class)
         fun autoTest(testFun: suspend AutoTest.() -> Unit) =
 
             runTest {
@@ -41,22 +44,27 @@ class AutoTest {
                     // skips delays which wreaks havoc with service call timeouts that depend on
                     // delays actually working.
 
-                    withContext(Dispatchers.Default) {
+                    val serverDispatcher = Dispatchers.Default
+                    val serverScope = CoroutineScope(serverDispatcher)
 
-                        serverBackend = backend(serverTransport) {
-                            auto()
-                        }
+                    val clientDispatcher = Dispatchers.Default.limitedParallelism(1)
+                    val clientScope = CoroutineScope(clientDispatcher)
 
-                        clientBackend = backend(clientTransport) {
-                            auto()
-                        }
+                    serverBackend = backend(serverTransport, dispatcher = serverDispatcher, scope = serverScope) {
+                        auto()
+                    }
 
+                    clientBackend = backend(clientTransport, dispatcher = clientDispatcher, scope = clientScope) {
+                        auto()
+                    }
+
+                    withContext(clientDispatcher) {
                         testFun()
+                    }
 
                         // FIXME figure out how to stop backends in tests properly
 //                        clientBackend.stop()
 //                        serverBackend.stop()
-                    }
                 }
             }
     }

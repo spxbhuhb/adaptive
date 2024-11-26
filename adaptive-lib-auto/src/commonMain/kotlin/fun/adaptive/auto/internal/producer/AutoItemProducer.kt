@@ -20,6 +20,12 @@ class AutoItemProducer<IT : AdatClass>(
     override var latestValue: IT? = null
 
     var instance: ItemBase<IT>? = null
+        set(v) {
+            field = v
+            // Avoid double patching. Without this the producer returns with null
+            // even if the instance has a value already.
+            latestValue = v?.valueOrNull
+        }
 
     val adapter
         get() = binding.targetFragment.adapter
@@ -31,11 +37,14 @@ class AutoItemProducer<IT : AdatClass>(
     override fun stop() {
         if (disposeInstance) {
             instance?.stop()
+        } else {
+            instance?.removeListener(this)
         }
         instance = null
     }
 
     override fun onInit(itemId: ItemId, value: IT) {
+        if (value === latestValue) return // Avoid double patching
         value.validateForContext() // TODO make sure that we don't validate unnecessarily
         adapter.scope.launch {
             latestValue = value

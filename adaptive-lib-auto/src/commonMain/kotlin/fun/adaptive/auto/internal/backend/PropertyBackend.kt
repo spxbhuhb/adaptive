@@ -39,6 +39,7 @@ class PropertyBackend<IT : AdatClass>(
 
     init {
         trace { "itemId=$itemId  lastUpdate=$lastUpdate  values=${initialValues.contentToString()}" }
+        if (initialValues != null) getItem() // initialize the item if we have initial values
     }
 
     private fun initPropertyTimes(propertyTimes: List<LamportTimestamp>?): Array<LamportTimestamp> {
@@ -227,6 +228,8 @@ class PropertyBackend<IT : AdatClass>(
                 it.adatContext = AdatContext(itemId, store = instance.store)
                 item = it
             }
+
+    override fun getItemOrNull(): IT? = item
 
     private operator fun List<AdatPropertyWireFormat<*>>.get(name: String): AdatPropertyWireFormat<*> =
         first { it.metadata.name == name }
