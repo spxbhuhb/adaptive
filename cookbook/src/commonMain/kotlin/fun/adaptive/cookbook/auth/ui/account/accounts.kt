@@ -71,7 +71,7 @@ private fun header(filter: AccountFilter) {
 
         editor { filter.text } .. alignSelf.center .. width { 400.dp } .. inputPlaceholder { "fiókok szűrése" }
 
-        buttonDialog("Fiók", Res.drawable.add, "Fiók hozzáadása") { } .. alignSelf.endCenter
+        buttonDialog("Fiók", Res.drawable.add, "Fiók hozzáadása") { accountEditor(close = it) } .. alignSelf.endCenter
     }
 }
 
@@ -138,6 +138,19 @@ private fun item(item: AccountSummary) {
         }
         datetime(item.lastLogin) .. maxWidth .. alignSelf.endCenter .. textSmall
 
-        iconDialog(Res.drawable.edit, "Fiók szerkesztése") { }
+        iconDialog(Res.drawable.edit, "Fiók szerkesztése") {
+            accountEditor(
+                AccountEditorData(
+                    item.id,
+                    item.login,
+                    item.name,
+                    item.email,
+                    item.phone,
+                    item.activated,
+                    item.locked
+                ),
+                it
+            )
+        }
     }
 }

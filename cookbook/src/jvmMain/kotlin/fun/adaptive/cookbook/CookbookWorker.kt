@@ -10,6 +10,7 @@ import `fun`.adaptive.cookbook.auth.AccountTable
 import `fun`.adaptive.cookbook.auth.model.Account
 import `fun`.adaptive.lib.auth.crypto.BCrypt
 import `fun`.adaptive.lib.auth.service.PrincipalService
+import `fun`.adaptive.lib.auth.service.RoleService
 import `fun`.adaptive.lib.auth.store.CredentialTable
 import `fun`.adaptive.lib.auth.store.PrincipalTable
 import `fun`.adaptive.lib.auth.store.RoleGrantTable
@@ -38,6 +39,10 @@ class CookbookWorker : WorkerImpl<CookbookWorker> {
         PrincipalService.addRoles += role.id
         PrincipalService.getRoles += role.id
         PrincipalService.updateRoles += role.id
+
+        RoleService.addRoles += role.id
+        RoleService.getRoles += role.id
+        RoleService.updateRoles += role.id
     }
 
 }

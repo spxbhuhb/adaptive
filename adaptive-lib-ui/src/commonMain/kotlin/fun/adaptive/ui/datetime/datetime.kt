@@ -10,6 +10,6 @@ import kotlinx.datetime.Instant
 
 @Adaptive
 fun datetime(timestamp: Instant?, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
-    text(timestamp.toString().replace("T", " ").substringBefore('.'), *emptyInst(timestamp), *instructions)
+    text(timestamp?.toString()?.replace("T", " ")?.substringBefore('.') ?: "-", *emptyInst(timestamp), *instructions)
     return fragment()
 }
