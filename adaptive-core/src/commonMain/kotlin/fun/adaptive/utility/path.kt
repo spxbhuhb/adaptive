@@ -70,7 +70,7 @@ fun Path.ensure(): Path {
 val testPath = Path("./build/tmp/test")
 
 @CallSiteName
-fun clearTestPath(callSiteName: String = "unknown") : Path {
+fun clearedTestPath(callSiteName: String = "unknown") : Path {
 
     fun clean(dir: Path) {
         dir.list().forEach {
