@@ -13,7 +13,6 @@ import `fun`.adaptive.ui.api.leftToRightGradient
 import `fun`.adaptive.ui.api.lightFont
 import `fun`.adaptive.ui.api.marginTop
 import `fun`.adaptive.ui.api.noBorder
-import `fun`.adaptive.ui.api.noTextWrap
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.paddingHorizontal
 import `fun`.adaptive.ui.api.size
@@ -147,8 +146,14 @@ var inactiveCheckBox = instructionsOf(
     border(purple, 1.dp)
 )
 
-val mobileScreen = instructionsOf(
+val smallScreen = instructionsOf(
     size(377.dp, 814.dp),
+    border(lightGray, 1.dp),
+    paddingHorizontal { 32.dp }
+)
+
+val largeScreen = instructionsOf(
+    size(1400.dp, 814.dp),
     border(lightGray, 1.dp),
     paddingHorizontal { 32.dp }
 )

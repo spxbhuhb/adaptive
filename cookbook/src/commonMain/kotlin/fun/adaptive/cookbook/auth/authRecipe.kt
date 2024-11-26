@@ -1,9 +1,11 @@
 package `fun`.adaptive.cookbook.auth
 
-import `fun`.adaptive.cookbook.auth.account.accounts
-import `fun`.adaptive.cookbook.auth.screens.passwordReset
-import `fun`.adaptive.cookbook.auth.screens.signIn
-import `fun`.adaptive.cookbook.auth.screens.signUp
+import `fun`.adaptive.cookbook.auth.ui.account.accounts
+import `fun`.adaptive.cookbook.auth.ui.large.authLarge
+import `fun`.adaptive.cookbook.auth.ui.small.authSmall
+import `fun`.adaptive.cookbook.auth.ui.small.passwordReset
+import `fun`.adaptive.cookbook.auth.ui.small.signIn
+import `fun`.adaptive.cookbook.auth.ui.small.signUp
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.flowBox
@@ -39,21 +41,14 @@ fun authRecipe(navState: NavState?) {
         }
 
         when (navState) {
-            in small -> small()
-            in large -> text("todo")
+            in small -> authSmall()
+            in large -> authLarge()
             in users -> accounts()
             else -> text("todo")
         }
     }
 }
 
-@Adaptive
-private fun small() {
-    flowBox {
-        maxSize .. verticalScroll .. gap { 16.dp }
 
-        signUp()
-        signIn()
-        passwordReset()
-    }
-}
+
+

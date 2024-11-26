@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.auth.account
+package `fun`.adaptive.cookbook.auth.ui.account
 
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.cookbook.Res

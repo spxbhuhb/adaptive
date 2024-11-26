@@ -1,7 +1,6 @@
-package `fun`.adaptive.cookbook.auth.account
+package `fun`.adaptive.cookbook.auth.ui.account
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.auth.model.Principal
 import `fun`.adaptive.cookbook.auth.model.AccountSummary
 import kotlin.text.contains
 import kotlin.text.isEmpty

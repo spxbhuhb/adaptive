@@ -13,8 +13,7 @@ import `fun`.adaptive.ui.api.text
 
 @Adaptive
 fun button(label: String, icon: DrawableResource? = null, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
-    row(*instructions) {
-        buttonTheme.container
+    row(*buttonTheme.container, *instructions) {
         if (icon != null) svg(icon) .. buttonTheme.icon
         text(label) .. buttonTheme.text
     }
@@ -23,8 +22,7 @@ fun button(label: String, icon: DrawableResource? = null, vararg instructions: A
 
 @Adaptive
 fun dangerButton(label: String, icon: DrawableResource? = null, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
-    row(*instructions) {
-        dangerButtonTheme.container
+    row(*dangerButtonTheme.container, *instructions) {
         if (icon != null) svg(icon) .. dangerButtonTheme.icon
         text(label) .. dangerButtonTheme.text
     }

@@ -2,14 +2,14 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package `fun`.adaptive.cookbook.auth.screens
+package `fun`.adaptive.cookbook.auth.ui.large
 
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.cookbook.auth.model.SignUp
 import `fun`.adaptive.cookbook.shared.black
 import `fun`.adaptive.cookbook.shared.darkGray
 import `fun`.adaptive.cookbook.shared.footerLink
-import `fun`.adaptive.cookbook.shared.mobileScreen
+import `fun`.adaptive.cookbook.shared.smallScreen
 import `fun`.adaptive.cookbook.shared.subTitle
 import `fun`.adaptive.cookbook.shared.title
 import `fun`.adaptive.foundation.Adaptive
@@ -25,7 +25,6 @@ import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.paddingTop
-import `fun`.adaptive.ui.api.repeat
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.text
@@ -35,14 +34,13 @@ import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.checkbox.api.checkbox
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.*
-import `fun`.adaptive.ui.instruction.text.FontName
 
 @Adaptive
 fun signUp(): AdaptiveFragment {
     val signUp = copyStore { SignUp() }
 
     grid {
-        mobileScreen .. colTemplate(1.fr) .. rowTemplate(213.dp, 78.dp, 1.fr, 81.dp)
+        smallScreen .. colTemplate(1.fr) .. rowTemplate(213.dp, 78.dp, 1.fr, 81.dp)
 
         title("Welcome")
 
