@@ -7,6 +7,7 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.api.absolutePath
 import `fun`.adaptive.adat.api.hasProblem
+import `fun`.adaptive.adat.api.isTouched
 import `fun`.adaptive.adat.api.isValid
 import `fun`.adaptive.adat.api.store
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -101,12 +102,22 @@ class AdaptiveStateVariableBinding<VT>(
         val provider = sourceFragment.getThisClosureVariable(indexInSourceClosure)
         if (provider !is AdatClass) return false
 
-
         if (! provider.isValid(safePath)) return true
 
         if (provider.hasProblem(safePath)) return true
 
         return false
+    }
+
+    fun isTouched(): Boolean {
+        checkNotNull(sourceFragment)
+
+        val safePath = path ?: return false
+
+        val provider = sourceFragment.getThisClosureVariable(indexInSourceClosure)
+        if (provider !is AdatClass) return false
+
+        return provider.isTouched(safePath)
     }
 
     /**

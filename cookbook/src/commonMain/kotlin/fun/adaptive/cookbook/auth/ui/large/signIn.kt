@@ -4,11 +4,11 @@
 
 package `fun`.adaptive.cookbook.auth.ui.large
 
+import `fun`.adaptive.adat.api.isTouched
+import `fun`.adaptive.adat.api.touchAndValidate
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.cookbook.auth.model.SignIn
-import `fun`.adaptive.cookbook.shared.bodyMedium
-import `fun`.adaptive.cookbook.shared.darkGray
 import `fun`.adaptive.cookbook.shared.largeScreen
 import `fun`.adaptive.cookbook.shared.mediumGray
 import `fun`.adaptive.cookbook.shared.titleLarge
@@ -29,9 +29,9 @@ import `fun`.adaptive.ui.api.inputPlaceholder
 import `fun`.adaptive.ui.api.letterSpacing
 import `fun`.adaptive.ui.api.lightFont
 import `fun`.adaptive.ui.api.maxWidth
+import `fun`.adaptive.ui.api.noSelect
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.paddingRight
-import `fun`.adaptive.ui.api.paddingTop
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.semiBoldFont
@@ -45,7 +45,7 @@ import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.snackbar.fail
 import `fun`.adaptive.ui.snackbar.success
-import `fun`.adaptive.ui.theme.textColors
+import `fun`.adaptive.ui.snackbar.warning
 import kotlinx.coroutines.launch
 
 @Adaptive
@@ -73,7 +73,13 @@ fun signIn(): AdaptiveFragment {
                 text("Emlékezzünk rád")
             }
 
-            button("Belépés") .. traceAll .. maxWidth .. onClick {
+            button("Belépés") .. maxWidth .. onClick {
+
+                if (! signIn.touchAndValidate()) {
+                    warning("Vannak még érvénytelen mezők.")
+                    return@onClick
+                }
+
                 adapter().scope.launch {
                     try {
                         getService<SessionApi>(adapter().transport).login(signIn.login, signIn.password)
@@ -84,7 +90,9 @@ fun signIn(): AdaptiveFragment {
                 }
             }
 
-            text("Elfelejtetted a jelszavad?", fontSize(15.sp), textColor(mediumGray), lightFont)
+            text("Elfelejtetted a jelszavad?", fontSize(15.sp), textColor(mediumGray), lightFont) .. noSelect .. onClick {
+
+            }
         }
     }
 

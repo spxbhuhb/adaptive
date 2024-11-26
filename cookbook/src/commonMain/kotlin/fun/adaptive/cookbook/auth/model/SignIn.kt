@@ -16,7 +16,7 @@ class SignIn(
 
     override fun descriptor() {
         properties {
-            login blank false pattern "^[\\w\\-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$"
+            login blank false
             password secret true blank false
         }
     }
