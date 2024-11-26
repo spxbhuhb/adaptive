@@ -7,6 +7,7 @@ package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmInternalStateVariable
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmValueProducer
 import `fun`.adaptive.kotlin.foundation.ir.util.adatCompanionOrNull
+import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.builders.IrBlockBodyBuilder
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrVariable
@@ -45,7 +46,7 @@ open class ArmInternalStateVariableBuilder(
             genPatchInternalConditionForMask(patchFun, dirtyMask, stateVariable.dependencies),
             IrBlockImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.irContext.irBuiltIns.unitType).also { block ->
                 block.statements += irSetStateVariable(patchFun, stateVariable.indexInState, transformedInitializer)
-                block.statements += IrSetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, irBuiltIns.intType, dirtyMask.symbol, irConst(1 shl stateVariable.indexInState), null)
+                block.statements += irUpdateDirtyMask(dirtyMask)
             }
         )
     }
@@ -82,7 +83,7 @@ open class ArmInternalStateVariableBuilder(
 
         return IrBlockImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.irContext.irBuiltIns.unitType).also { block ->
             block.statements += expression
-            block.statements += IrSetValueImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, irBuiltIns.intType, dirtyMask.symbol, irConst(1 shl stateVariable.indexInState), null)
+            block.statements += irUpdateDirtyMask(dirtyMask)
         }
     }
 
@@ -110,5 +111,17 @@ open class ArmInternalStateVariableBuilder(
      */
     private fun transformPostProcess(patchFun: IrSimpleFunction): IrExpression =
         ProducerPostProcessTransform(pluginContext, patchFun, stateVariable).visitExpression(stateVariable.irVariable.initializer !!)
+
+    private fun irUpdateDirtyMask(dirtyMask: IrVariable): IrStatement =
+        IrSetValueImpl(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            irBuiltIns.intType,
+            dirtyMask.symbol,
+            irOr(
+                irGet(dirtyMask),
+                irConst(1 shl stateVariable.indexInState)
+            ),
+            null
+        )
 
 }
