@@ -2,6 +2,7 @@ package `fun`.adaptive.auto.internal.persistence
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
+import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.AutoMetadata
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
@@ -26,18 +27,10 @@ class ItemFilePersistence<IT : AdatClass>(
 
     override fun load(): AutoItemExport<IT> {
         if (! path.exists()) return AutoItemExport.none()
-
-        val meta = metaPath(path).load(wireFormatProvider, AutoMetadata.adatWireFormat)
-        val (itemId, propertyTimes, value) = read<IT>(path, wireFormatProvider)
-
-        return AutoItemExport(meta, itemId, propertyTimes, value)
+        return read<IT>(path, wireFormatProvider)
     }
 
     override fun save(export: AutoItemExport<IT>) {
-        val meta = checkNotNull(export.meta)
-
-        save(metaPath(path), meta, wireFormatProvider)
-
         write(path, wireFormatProvider, export)
     }
 
@@ -68,16 +61,18 @@ class ItemFilePersistence<IT : AdatClass>(
                 .instanceOrNull(2, "itemId", itemId, LamportTimestamp)
                 .instance(3, "properties", value, value.adatCompanion as AdatCompanion<IT>)
                 .instance(4, "propertyTimes", times, ListWireFormat(LongWireFormat))
+                .instanceOrNull(5, "meta", export.meta, AutoMetadata.adatWireFormat)
                 .pseudoInstanceEnd()
                 .pack()
 
             path.write(bytes)
         }
 
-        fun <IT : AdatClass> read(path: Path, wireFormatProvider: WireFormatProvider): Triple<ItemId?, List<LamportTimestamp>, IT> {
+        fun <IT : AdatClass> read(path: Path, wireFormatProvider: WireFormatProvider): AutoItemExport<IT> {
             val decoder = wireFormatProvider.decoder(path.read())
 
             val type = decoder.string(1, "type")
+
             val itemId = decoder.instanceOrNull(2, "itemId", LamportTimestamp)
 
             @Suppress("UNCHECKED_CAST")
@@ -95,7 +90,14 @@ class ItemFilePersistence<IT : AdatClass>(
                 propertyTimes += LamportTimestamp(times[i], times[i + 1])
             }
 
-            return Triple(itemId, propertyTimes, value)
+            val meta = decoder.instanceOrNull(5, "meta", AutoMetadata)
+
+            return AutoItemExport<IT>(
+                meta = meta,
+                itemId = itemId,
+                propertyTimes = propertyTimes,
+                item = value
+            )
         }
     }
 }

@@ -25,6 +25,8 @@ import kotlinx.coroutines.Dispatchers
  * Produces a new value whenever the auto item handled by [instance]
  * changes.
  *
+ * Does not create a new auto instance, adds a listener to [instance].
+ *
  * This is a producer intended for use in an Adaptive fragment.
  *
  * @param    instance       The instance to connect with.

@@ -1,8 +1,8 @@
 package `fun`.adaptive.utility
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.api.adatCompanionOf
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
+import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.io.buffered
@@ -22,7 +22,7 @@ fun <A> Path.load(wireFormatProvider: WireFormatProvider, wireFormat: AdatClassW
     wireFormatProvider.decoder(this.read()).asInstance(wireFormat)
 
 /**
- * Encode [value] with [wireFormatProvider] into a byte array and write it to [this].
+ * Encode [value] with [wireFormatProvider] into a byte array and write it to [path].
  *
  * When [withTemporaryFile] is true (which is the default):
  *
@@ -68,3 +68,29 @@ fun Path.ensure(): Path {
 }
 
 val testPath = Path("./build/tmp/test")
+
+@CallSiteName
+fun clearTestPath(callSiteName: String = "unknown") : Path {
+
+    fun clean(dir: Path) {
+        dir.list().forEach {
+
+            check(it.absolute().toString().startsWith(testPath.absolute().toString()))
+
+            if (SystemFileSystem.metadataOrNull(it)?.isDirectory == true) {
+                clean(it)
+            } else {
+                it.delete()
+            }
+        }
+    }
+
+    val testDir = Path(testPath, callSiteName)
+    if (testDir.exists()) {
+        clean(testDir)
+    } else {
+        testDir.ensure()
+    }
+
+    return testDir
+}

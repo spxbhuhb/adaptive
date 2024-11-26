@@ -21,6 +21,10 @@ import `fun`.adaptive.wireformat.WireFormatRegistry
 import `fun`.adaptive.wireformat.builtin.EnumWireFormat
 import kotlin.enums.EnumEntries
 
+fun autoCommon() {
+    wireFormats()
+}
+
 @Adaptive
 fun auto() {
     wireFormats()

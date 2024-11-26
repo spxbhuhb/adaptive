@@ -6,6 +6,6 @@ import `fun`.adaptive.adat.AdatCompanion
 @Adat
 class AutoMetadata(
     val connection: AutoConnectionInfo<*>,
-    val removedItems: List<ItemId>,
-    val milestone: LamportTimestamp
+    val removedItems: List<ItemId>?,
+    val milestone: LamportTimestamp?
 )
