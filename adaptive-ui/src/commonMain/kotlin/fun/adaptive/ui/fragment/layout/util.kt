@@ -12,14 +12,14 @@ fun AbstractContainer<*, *>.computeFinal(proposedWidth: Double, itemsWidth: Doub
     val layout = renderData.layout
 
     val innerWidth = when {
-        layout?.instructedWidth != null -> layout.instructedWidth !! - data.surroundingHorizontal
         proposedWidth.isFinite() && layout?.fillHorizontal == true -> proposedWidth - data.surroundingHorizontal
+        layout?.instructedWidth != null -> layout.instructedWidth !! - data.surroundingHorizontal
         else -> itemsWidth
     }
 
     val innerHeight = when {
-        layout?.instructedHeight != null -> layout.instructedHeight !! - data.surroundingVertical
         proposedHeight.isFinite() && layout?.fillVertical == true -> proposedHeight - data.surroundingVertical
+        layout?.instructedHeight != null -> layout.instructedHeight !! - data.surroundingVertical
         else -> itemsHeight
     }
 
