@@ -8,7 +8,7 @@ package `fun`.adaptive.ui.layout.app.default
  * * closed: do not show the sidebar
  *
  * Medium screens
- * * open: show the full sidebar **over the content**
+ * * open: show the full sidebar **next the content**
  * * closed: show the thin sidebar **next to the content**
  *
  * Large screens:

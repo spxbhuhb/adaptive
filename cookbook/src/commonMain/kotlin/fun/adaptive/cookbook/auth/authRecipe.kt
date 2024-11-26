@@ -25,7 +25,7 @@ import `fun`.adaptive.ui.navigation.NavState
 val authRouting = NavState("Auth")
 
 private val small = NavState(listOf("Auth", "small"))
-private val large = NavState(listOf("Auth", "large"))
+private val large = NavState(listOf("Auth", "large"), fullScreen = true)
 private val users = NavState(listOf("Auth", "users"))
 
 @Adaptive

@@ -15,8 +15,9 @@ fun NavStateOrigin.open(navState: NavState) {
 open class NavState(
     val segments: List<String> = emptyList(),
     val parameters: Map<String, String> = emptyMap(),
-    val tag : String = "",
-    val custom : String = ""
+    val tag: String = "",
+    val custom: String = "",
+    val fullScreen: Boolean = false,
 ) {
 
     constructor(path: String) : this(segments = path.split("/").mapNotNull { it.ifEmpty { null } })
@@ -28,7 +29,7 @@ open class NavState(
      *
      * Does not check [parameters] and [tag].
      */
-    operator fun contains(other : NavState?) : Boolean {
+    operator fun contains(other: NavState?): Boolean {
         if (other == null) return false
 
         // this       other
@@ -54,7 +55,7 @@ open class NavState(
         )
     }
 
-    fun goto(newState : NavState) {
+    fun goto(newState: NavState) {
         store().update(newState)
     }
 
@@ -62,7 +63,7 @@ open class NavState(
         store().update(parse(url))
     }
 
-    private fun store() : AdatStore<NavState> {
+    private fun store(): AdatStore<NavState> {
         @Suppress("UNCHECKED_CAST")
         val store = adatContext?.store as? AdatStore<NavState>
         return checkNotNull(store) { "no store for the nav state" }
@@ -71,7 +72,7 @@ open class NavState(
     companion object : AdatCompanion<NavState> {
         private val regex = Regex("([^?#]*)(\\?[^#]*)?(#.*)?")
 
-        fun parse(url : String) : NavState {
+        fun parse(url: String): NavState {
             val match = regex.matchEntire(url)
             requireNotNull(match)
 

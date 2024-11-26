@@ -34,6 +34,7 @@ import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.navigation.NavStateOrigin
 import `fun`.adaptive.ui.navigation.sidebar.SidebarItem
 import `fun`.adaptive.ui.navigation.sidebar.fullSidebar
@@ -47,12 +48,12 @@ import `fun`.adaptive.ui.snackbar.snackList
 import `fun`.adaptive.ui.snackbar.snackbarTheme
 import `fun`.adaptive.ui.theme.colors
 
-val appSidebarState = autoInstance(SidebarState())
+val appLayoutState = autoInstance(AppLayoutState())
 
 @Adaptive
 fun defaultAppLayout(
     items: List<SidebarItem>,
-    navState: NavStateOrigin,
+    appNavState: NavStateOrigin,
     smallIcon: DrawableResource,
     mediumIcon: DrawableResource,
     largeIcon: DrawableResource,
@@ -62,7 +63,8 @@ fun defaultAppLayout(
 
     val metrics = mediaMetrics()
 
-    val sidebarState = autoInstance(appSidebarState)
+    val layoutState = autoInstance(appLayoutState)
+    val navState = autoInstance(appNavState)
 
     val activeSnacks = autoList(activeSnacks, Snack.adatWireFormat) { activeSnacks.connectInfo(AutoConnectionType.Direct) } ?: emptyList()
 
@@ -71,15 +73,16 @@ fun defaultAppLayout(
         metrics.viewWidth.dp - snackbarTheme.snackWidth - 16.dp
     )
 
-    grid(gridInst(metrics, sidebarState)) {
+    grid(gridInst(metrics, layoutState, navState)) {
         maxSize
 
         box {
             maxSize
             when {
-                metrics.isSmall -> small(smallIcon, title, items, navState, sidebarState)
-                metrics.isMedium -> medium(mediumIcon, title, items, navState, sidebarState)
-                metrics.isLarge -> large(largeIcon, title, items, navState, sidebarState)
+                navState?.fullScreen == true -> box {  }
+                metrics.isSmall -> small(smallIcon, title, items, appNavState, layoutState)
+                metrics.isMedium -> medium(mediumIcon, title, items, appNavState, layoutState)
+                metrics.isLarge -> large(largeIcon, title, items, appNavState, layoutState)
             }
         }
 
@@ -92,7 +95,12 @@ fun defaultAppLayout(
     }
 }
 
-private fun gridInst(metrics: MediaMetrics, barState: SidebarState?): AdaptiveInstruction {
+private fun gridInst(metrics: MediaMetrics, barState: AppLayoutState?, navState : NavState?): AdaptiveInstruction {
+
+    if (navState?.fullScreen == true) {
+        return colTemplate(0.dp, 1.fr)
+    }
+
     if (metrics.isSmall) {
         return rowTemplate(48.dp, 1.fr)
     }
@@ -106,6 +114,7 @@ private fun gridInst(metrics: MediaMetrics, barState: SidebarState?): AdaptiveIn
     } else {
         return colTemplate(thinSidebarTheme.width, 1.fr)
     }
+
 }
 
 @Adaptive
@@ -114,7 +123,7 @@ private fun small(
     title: String,
     items: List<SidebarItem>,
     navState: NavStateOrigin,
-    barState: SidebarState?,
+    barState: AppLayoutState?,
 ) {
     if (barState?.smallMode == SidebarUserMode.Closed) {
         top(icon, title, items, navState)
@@ -129,7 +138,7 @@ private fun medium(
     title: String,
     items: List<SidebarItem>,
     navState: NavStateOrigin,
-    barState: SidebarState?,
+    barState: AppLayoutState?,
 ) {
     if (barState?.mediumMode == SidebarUserMode.Closed) {
         thin(icon, title, items, navState) { toggleMediumUserState() }
@@ -144,7 +153,7 @@ private fun large(
     title: String,
     items: List<SidebarItem>,
     navState: NavStateOrigin,
-    barState: SidebarState?,
+    barState: AppLayoutState?,
 ) {
     if (barState?.largeMode == SidebarUserMode.Closed) {
         thin(icon, title, items, navState) { toggleLargeUserState() }
@@ -235,37 +244,37 @@ fun appIcon(
 
 // FIXME sidebar mode toggle
 private fun toggleSmallUserState() {
-    val current = appSidebarState.frontend.value
+    val current = appLayoutState.frontend.value
 
-    appSidebarState.frontend.update(
+    appLayoutState.frontend.update(
         if (current.smallMode == SidebarUserMode.Open) {
-            SidebarState(SidebarUserMode.Closed, SidebarUserMode.Closed, SidebarUserMode.Open)
+            AppLayoutState(SidebarUserMode.Closed, SidebarUserMode.Closed, SidebarUserMode.Open)
         } else {
-            SidebarState(SidebarUserMode.Open, SidebarUserMode.Closed, SidebarUserMode.Open)
+            AppLayoutState(SidebarUserMode.Open, SidebarUserMode.Closed, SidebarUserMode.Open)
         }
     )
 }
 
 private fun toggleMediumUserState() {
-    val current = appSidebarState.frontend.value
+    val current = appLayoutState.frontend.value
 
-    appSidebarState.frontend.update(
+    appLayoutState.frontend.update(
         if (current.mediumMode == SidebarUserMode.Open) {
-            SidebarState(SidebarUserMode.Closed, SidebarUserMode.Closed, SidebarUserMode.Open)
+            AppLayoutState(SidebarUserMode.Closed, SidebarUserMode.Closed, SidebarUserMode.Open)
         } else {
-            SidebarState(SidebarUserMode.Closed, SidebarUserMode.Open, SidebarUserMode.Open)
+            AppLayoutState(SidebarUserMode.Closed, SidebarUserMode.Open, SidebarUserMode.Open)
         }
     )
 }
 
 private fun toggleLargeUserState() {
-    val current = appSidebarState.frontend.value
+    val current = appLayoutState.frontend.value
 
-    appSidebarState.frontend.update(
+    appLayoutState.frontend.update(
         if (current.largeMode == SidebarUserMode.Open) {
-            SidebarState(SidebarUserMode.Closed, SidebarUserMode.Closed, SidebarUserMode.Closed)
+            AppLayoutState(SidebarUserMode.Closed, SidebarUserMode.Closed, SidebarUserMode.Closed)
         } else {
-            SidebarState(SidebarUserMode.Closed, SidebarUserMode.Closed, SidebarUserMode.Open)
+            AppLayoutState(SidebarUserMode.Closed, SidebarUserMode.Closed, SidebarUserMode.Open)
         }
     )
 }

@@ -4,19 +4,20 @@
 
 package `fun`.adaptive.cookbook.auth.ui.large
 
-import `fun`.adaptive.adat.api.isTouched
 import `fun`.adaptive.adat.api.touchAndValidate
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.auth.api.SessionApi
+import `fun`.adaptive.cookbook.appNavState
+import `fun`.adaptive.cookbook.auth.authRouting
 import `fun`.adaptive.cookbook.auth.model.SignIn
 import `fun`.adaptive.cookbook.shared.largeScreen
 import `fun`.adaptive.cookbook.shared.mediumGray
 import `fun`.adaptive.cookbook.shared.titleLarge
+import `fun`.adaptive.cookbook.ui.sidebar.sidebarRecipeNavState
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.instruction.traceAll
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.alignItems
@@ -43,6 +44,7 @@ import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.checkbox.api.checkbox
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.navigation.open
 import `fun`.adaptive.ui.snackbar.fail
 import `fun`.adaptive.ui.snackbar.success
 import `fun`.adaptive.ui.snackbar.warning
@@ -84,6 +86,7 @@ fun signIn(): AdaptiveFragment {
                     try {
                         getService<SessionApi>(adapter().transport).login(signIn.login, signIn.password)
                         success("Sikeres belépés!")
+                        appNavState.open(authRouting)
                     } catch (t: Throwable) {
                         fail("Sikertelen belépés!")
                     }
