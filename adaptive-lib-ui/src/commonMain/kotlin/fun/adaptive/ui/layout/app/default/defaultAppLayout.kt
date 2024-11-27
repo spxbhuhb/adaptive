@@ -105,7 +105,11 @@ private fun gridInst(metrics: MediaMetrics, barState: AppLayoutState?, navState:
     }
 
     if (metrics.isMedium) {
-        return colTemplate(thinSidebarTheme.width, 1.fr)
+        if (barState?.mediumMode == SidebarUserMode.Open) {
+            return colTemplate(fullSidebarTheme.width, 1.fr)
+        } else {
+            return colTemplate(thinSidebarTheme.width, 1.fr)
+        }
     }
 
     if (barState?.largeMode == SidebarUserMode.Open) {
@@ -268,6 +272,6 @@ private fun toggleLargeUserState() {
     appLayoutState.update(
         current::smallMode to SidebarUserMode.Closed,
         current::mediumMode to SidebarUserMode.Closed,
-        current::largeMode to (if (current.mediumMode == SidebarUserMode.Open) SidebarUserMode.Closed else SidebarUserMode.Open)
+        current::largeMode to (if (current.largeMode == SidebarUserMode.Open) SidebarUserMode.Closed else SidebarUserMode.Open)
     )
 }
