@@ -14,6 +14,23 @@ fun Path.write(bytes: ByteArray, append: Boolean = false) {
     SystemFileSystem.sink(this, append).buffered().use { it.write(bytes) }
 }
 
+/**
+ * Write out [bytes] into a temporary file (`<name>.tmp`) and the move the temporary file to
+ * `this` path. This method ensures that the content of the file written is complete.
+ *
+ * The move uses `SystemFileSystem.atomicMove` to move the file.
+ */
+fun Path.safeWrite(bytes: ByteArray) {
+    val out = Path(parent !!, "$name.tmp")
+
+    SystemFileSystem.sink(out, append = false).buffered().use {
+        it.write(bytes)
+        it.flush()
+    }
+
+    SystemFileSystem.atomicMove(out, this)
+}
+
 fun Path.read(): ByteArray {
     return SystemFileSystem.source(this).buffered().use { it.readByteArray() }
 }
@@ -70,7 +87,7 @@ fun Path.ensure(): Path {
 val testPath = Path("./build/tmp/test")
 
 @CallSiteName
-fun clearedTestPath(callSiteName: String = "unknown") : Path {
+fun clearedTestPath(callSiteName: String = "unknown"): Path {
 
     fun clean(dir: Path) {
         dir.list().forEach {

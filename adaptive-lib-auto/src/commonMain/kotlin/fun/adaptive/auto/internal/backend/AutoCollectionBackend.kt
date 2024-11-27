@@ -2,6 +2,7 @@ package `fun`.adaptive.auto.internal.backend
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.auto.internal.instance.AutoInstance
+import `fun`.adaptive.auto.internal.persistence.AutoCollectionExport
 import `fun`.adaptive.auto.internal.persistence.AutoCollectionPersistence
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
@@ -25,5 +26,7 @@ abstract class AutoCollectionBackend<IT : AdatClass>(
     abstract fun filter(filterFun : (IT) -> Boolean) : Collection<IT>
 
     internal abstract fun getItems() : Collection<IT>
+
+    internal abstract fun export() : AutoCollectionExport<IT>
 
 }

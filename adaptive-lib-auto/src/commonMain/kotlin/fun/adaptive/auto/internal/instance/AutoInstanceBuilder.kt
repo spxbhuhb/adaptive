@@ -14,11 +14,15 @@ import `fun`.adaptive.auto.internal.connector.DirectConnector
 import `fun`.adaptive.auto.internal.connector.ServiceConnector
 import `fun`.adaptive.auto.internal.persistence.AutoCollectionExport
 import `fun`.adaptive.auto.internal.persistence.AutoCollectionPersistence
+import `fun`.adaptive.auto.internal.persistence.AutoExport
 import `fun`.adaptive.auto.internal.persistence.AutoItemExport
 import `fun`.adaptive.auto.internal.persistence.AutoItemPersistence
 import `fun`.adaptive.auto.internal.persistence.AutoPersistence
 import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoConnectionType
+import `fun`.adaptive.auto.model.AutoMetadata
+import `fun`.adaptive.auto.model.ITEM_ID_ORIGIN
+import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.getService
 import `fun`.adaptive.utility.CleanupHandler
@@ -44,7 +48,7 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
     val serviceContext: ServiceContext? = null,
     val scope: CoroutineScope,
     val trace: Boolean,
-    val backendFun: (AutoInstanceBuilder<BE, PT, VT, IT>, info: AutoConnectionInfo<VT>?, value: VT?) -> BE,
+    val backendFun: (AutoInstanceBuilder<BE, PT, VT, IT>, export: AutoExport<VT>) -> BE,
     val persistenceFun: (AutoInstanceBuilder<BE, PT, VT, IT>) -> PT,
 ) {
 
@@ -66,7 +70,10 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
 
         instance.persistence = persistenceFun(this)
 
-        val (loadedInfo, loadedValue) = load()
+        val loadedExport = instance.persistence.load()
+
+        @Suppress("UNCHECKED_CAST")
+        val loadedInfo = loadedExport.meta?.connection as? AutoConnectionInfo<VT>
 
         val connectionInfo = when {
             loadedInfo != null -> loadedInfo
@@ -75,15 +82,11 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
             else -> null
         }
 
-        val value = when {
-            loadedValue != null -> loadedValue
-            initialValue != null -> initialValue
-            else -> null
-        }
+        val export = buildExport(loadedInfo, loadedExport, connectionInfo, initialValue)
 
-        instance.trace { "connectionInfo: $connectionInfo value: $value" }
+        instance.trace { "connectionInfo: $connectionInfo" }
 
-        instance.backend = backendFun(this, connectionInfo, value)
+        instance.backend = backendFun(this, export)
 
         addListener()
         addCleanup()
@@ -99,15 +102,33 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun load(): Pair<AutoConnectionInfo<VT>?, VT?> {
-        val export = instance.persistence.load()
-        when (export) {
-            // FIXME the first cast ( as AutoConnectionInfo<VT>) is here because the compiler plugin does not handle the type correctly
-            is AutoItemExport<*> -> return (export.meta?.connection as? AutoConnectionInfo<VT> to export.item as VT)
-            is AutoCollectionExport<*> -> return (export.meta?.connection as? AutoConnectionInfo<VT> to export.items as VT)
-            else -> error("unknown persistence class: ${instance.persistence}")
-        }
-    }
+    fun buildExport(
+        loadedInfo: AutoConnectionInfo<VT>?,
+        loadedExport: AutoExport<VT>,
+        connectionInfo: AutoConnectionInfo<VT>?,
+        initialValue: VT?
+    ) =
+        when {
+            loadedInfo != null -> loadedExport
+            collection -> {
+                var itemId = ITEM_ID_ORIGIN
+
+                AutoCollectionExport<IT>(
+                    connectionInfo?.let { AutoMetadata(it, null, null) },
+                    (initialValue as Collection<IT>).map {
+                        AutoItemExport<IT>(null, itemId, null, it).also { itemId = itemId.increment() }
+                    }
+                )
+            }
+            else -> {
+                AutoItemExport<IT>(
+                    connectionInfo?.let { AutoMetadata(it, null, null) },
+                    connectionInfo?.connectingHandle?.itemId,
+                    null,
+                    initialValue as IT?
+                )
+            }
+        } as AutoExport<VT>
 
     fun addListener() {
         if (itemListener != null) {

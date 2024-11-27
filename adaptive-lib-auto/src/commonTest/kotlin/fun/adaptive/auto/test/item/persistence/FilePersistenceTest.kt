@@ -87,7 +87,7 @@ class FilePersistenceTest {
         val instance = autoItemOrigin(td, persistence = ItemFilePersistence<TestData>(filePath, Json))
 
         ItemFilePersistence.read<TestData>(filePath, Json).also { import ->
-            assertEquals(instance.handle, import.meta !!.connection.connectingHandle)
+            assertEquals(instance.handle, import.meta?.connection?.connectingHandle)
             assertEquals(td, import.item)
         }
 

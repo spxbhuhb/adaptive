@@ -3,15 +3,19 @@ package `fun`.adaptive.auto.api
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.AdatCompanionResolve
+import `fun`.adaptive.adat.api.toArray
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
+import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.instance.AutoCollection
 import `fun`.adaptive.auto.internal.instance.AutoInstanceBuilder
+import `fun`.adaptive.auto.internal.persistence.AutoCollectionExport
 import `fun`.adaptive.auto.internal.persistence.AutoCollectionPersistence
 import `fun`.adaptive.auto.internal.persistence.CollectionMemoryPersistence
 import `fun`.adaptive.auto.internal.producer.AutoCollectionProducer
 import `fun`.adaptive.auto.model.AutoConnectionType
+import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.NonAdaptive
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
@@ -234,7 +238,7 @@ private fun <A : AdatClass> buildCollection(
 
     AutoInstanceBuilder<SetBackend<A>, AutoCollectionPersistence<A>, Collection<A>, A>(
         origin = origin,
-        collection = false,
+        collection = true,
         infoFunSuspend = infoFunSuspend,
         directPeer = directPeer,
         defaultWireFormat = defaultWireFormat,
@@ -242,10 +246,24 @@ private fun <A : AdatClass> buildCollection(
         worker = worker,
         scope = scope,
         trace = trace,
-        backendFun = { builder, info, value ->
+        backendFun = { builder, export ->
+            export as AutoCollectionExport<A>
+
+            val values = mutableMapOf<ItemId, PropertyBackend<A>>()
+
+            export.items.forEach {
+                values[it.itemId!!] = PropertyBackend(
+                    builder.instance,
+                    null,
+                    it.item?.toArray(),
+                    initialPropertyTimes = it.propertyTimes,
+                    itemId = it.itemId
+                )
+            }
+
             SetBackend(
                 builder.instance,
-                null
+                values
             )
         },
         persistenceFun = { builder ->

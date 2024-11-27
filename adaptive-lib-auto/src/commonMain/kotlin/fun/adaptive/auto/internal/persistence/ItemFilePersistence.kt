@@ -6,7 +6,7 @@ import `fun`.adaptive.auto.model.AutoMetadata
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.read
-import `fun`.adaptive.utility.write
+import `fun`.adaptive.utility.safeWrite
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.WireFormatRegistry
@@ -62,7 +62,7 @@ class ItemFilePersistence<IT : AdatClass>(
                 .pseudoInstanceEnd()
                 .pack()
 
-            path.write(bytes)
+            path.safeWrite(bytes)
         }
 
         fun <IT : AdatClass> read(path: Path, wireFormatProvider: WireFormatProvider): AutoItemExport<IT> {

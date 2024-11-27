@@ -3,12 +3,15 @@ package `fun`.adaptive.auto.internal.instance
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.AutoBackend
+import `fun`.adaptive.auto.internal.backend.AutoCollectionBackend
+import `fun`.adaptive.auto.internal.persistence.AutoCollectionExport
 import `fun`.adaptive.auto.internal.persistence.AutoCollectionPersistence
+import `fun`.adaptive.auto.model.AutoMetadata
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 
-class AutoCollection<BE : AutoBackend<IT>, PT : AutoCollectionPersistence<IT>, IT : AdatClass>(
+class AutoCollection<BE : AutoCollectionBackend<IT>, PT : AutoCollectionPersistence<IT>, IT : AdatClass>(
     origin: Boolean,
     defaultWireFormat: AdatClassWireFormat<*>?,
     wireFormatProvider: WireFormatProvider,
@@ -61,7 +64,7 @@ class AutoCollection<BE : AutoBackend<IT>, PT : AutoCollectionPersistence<IT>, I
     }
 
     override fun persistenceInit() {
-        TODO("Not yet implemented")
+        persistence.save(backend.export())
     }
 
     override fun persistenceUpdate(itemId: ItemId, value: IT) {

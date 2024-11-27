@@ -9,6 +9,7 @@ import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
 import `fun`.adaptive.auto.internal.instance.AutoInstanceBuilder
 import `fun`.adaptive.auto.internal.instance.AutoItem
+import `fun`.adaptive.auto.internal.persistence.AutoItemExport
 import `fun`.adaptive.auto.internal.persistence.AutoItemPersistence
 import `fun`.adaptive.auto.internal.persistence.ItemMemoryPersistence
 import `fun`.adaptive.auto.internal.producer.AutoItemProducer
@@ -243,13 +244,14 @@ private fun <A : AdatClass> buildItem(
         worker = worker,
         scope = scope,
         trace = trace,
-        backendFun = { builder, info, value ->
+        backendFun = { builder, export ->
+            export as AutoItemExport<A>
             PropertyBackend(
                 builder.instance,
                 null,
-                value?.toArray(),
+                export.item?.toArray(),
                 initialPropertyTimes = null,
-                itemId = info?.connectingHandle?.itemId ?: ItemId.CONNECTING
+                itemId = export.itemId ?: ItemId.CONNECTING
             )
         },
         persistenceFun = { builder ->

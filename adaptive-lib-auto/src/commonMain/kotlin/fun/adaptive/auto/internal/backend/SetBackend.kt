@@ -4,7 +4,9 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.api.toArray
 import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.internal.instance.AutoInstance
-import `fun`.adaptive.auto.internal.persistence.AutoCollectionPersistence
+import `fun`.adaptive.auto.internal.persistence.AutoCollectionExport
+import `fun`.adaptive.auto.internal.persistence.AutoItemExport
+import `fun`.adaptive.auto.model.AutoMetadata
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.model.operation.AutoAdd
@@ -27,7 +29,7 @@ class SetBackend<IT : AdatClass>(
     init {
         if (initialValue != null && initialValue.isNotEmpty()) {
             data.addAll(initialValue.keys)
-            lastUpdate = LamportTimestamp(instance.handle.peerId, initialValue.values.maxOf { it.lastUpdate.timestamp })
+            lastUpdate = initialValue.values.maxOf { it.lastUpdate }
         }
     }
 
@@ -235,4 +237,18 @@ class SetBackend<IT : AdatClass>(
     override fun getItem(itemId: ItemId): IT? {
         return data[itemId]?.getItem()
     }
+
+    override fun export(): AutoCollectionExport<IT> =
+        AutoCollectionExport(
+            AutoMetadata(instance.connectionInfo, null, null), // FIXME removed items and milestone in auto collection export
+            data.items().map {
+                AutoItemExport<IT>(
+                    null,
+                    it.itemId,
+                    it.propertyTimes.toList(),
+                    it.getItem()
+                )
+            }
+        )
+
 }
