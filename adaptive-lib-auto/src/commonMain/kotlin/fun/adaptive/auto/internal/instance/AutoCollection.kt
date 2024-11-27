@@ -10,6 +10,8 @@ import `fun`.adaptive.auto.model.AutoMetadata
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
+import kotlin.reflect.KProperty
+import kotlin.reflect.KProperty1
 
 class AutoCollection<BE : AutoCollectionBackend<IT>, PT : AutoCollectionPersistence<IT>, IT : AdatClass>(
     origin: Boolean,
@@ -49,6 +51,20 @@ class AutoCollection<BE : AutoCollectionBackend<IT>, PT : AutoCollectionPersiste
         localAdd(element)
     }
 
+    fun <V> update(vararg changes: Pair<KProperty<V>, V>, selector: (IT) -> Boolean) {
+        val changes = changes.map { it.first.name to it.second }
+        value.filter(selector).forEach {
+            localUpdate(itemId(it), changes)
+        }
+    }
+
+    fun <V> update(vararg changes: KProperty1<IT, V>, selector: (IT) -> Boolean) {
+        val changes = changes.map { it.name to it.get(value.first()) }
+        value.filter(selector).forEach {
+            localUpdate(itemId(it), changes)
+        }
+    }
+
     operator fun minusAssign(element : IT) {
         localRemove(itemId(element))
     }
@@ -68,7 +84,7 @@ class AutoCollection<BE : AutoCollectionBackend<IT>, PT : AutoCollectionPersiste
     }
 
     override fun persistenceUpdate(itemId: ItemId, value: IT) {
-        TODO("Not yet implemented")
+        // persistence.save(backend.export())
     }
 
 }

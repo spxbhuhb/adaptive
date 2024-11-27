@@ -46,10 +46,10 @@ class CollectionOriginBasicTest {
     fun `add to empty`() {
         val instance = autoCollectionOrigin(content_empty)
 
-        instance.add(td12)
+        instance += td12
         assertEquals(content_12, instance.value)
 
-        instance.add(td23)
+        instance += td23
         assertEquals(content_12_23, instance.value)
     }
 
@@ -57,8 +57,39 @@ class CollectionOriginBasicTest {
     fun `add to single`() {
         val instance = autoCollectionOrigin(content_12)
 
-        instance.add(td23)
+        instance += td23
         assertEquals(content_12_23, instance.value)
     }
 
+    @Test
+    fun `add and remove`() {
+        val instance = autoCollectionOrigin(content_empty)
+
+        instance += td12
+        instance -= instance.value.first()
+
+        assertEquals(content_empty, instance.value)
+    }
+
+    @Test
+    fun `add two, remove first`() {
+        val instance = autoCollectionOrigin(content_empty)
+
+        instance += td12
+        instance += td23
+        instance -= instance.value.first { it == td12 }
+
+        assertEquals(content_23, instance.value)
+    }
+
+    @Test
+    fun `add two, remove second`() {
+        val instance = autoCollectionOrigin(content_empty)
+
+        instance += td12
+        instance += td23
+        instance -= instance.value.first { it == td23 }
+
+        assertEquals(content_12, instance.value)
+    }
 }
