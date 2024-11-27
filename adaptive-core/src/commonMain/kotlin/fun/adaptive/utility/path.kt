@@ -10,8 +10,15 @@ import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readByteArray
 
+fun Path.write(string: String, append: Boolean = false) {
+    SystemFileSystem.sink(this, append).buffered().use { it.write(string.encodeToByteArray()) }
+}
+
 fun Path.write(bytes: ByteArray, append: Boolean = false) {
-    SystemFileSystem.sink(this, append).buffered().use { it.write(bytes) }
+    SystemFileSystem.sink(this, append).buffered().use {
+        it.write(bytes)
+        it.flush()
+    }
 }
 
 /**

@@ -2,60 +2,72 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import `fun`.adaptive.auth.authCommon
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.backend.backend
+import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.cookbook.Res
+import `fun`.adaptive.cookbook.Routes
+import `fun`.adaptive.cookbook.appNavState
+import `fun`.adaptive.cookbook.auth.authRecipe
 import `fun`.adaptive.cookbook.cookbookCommon
 import `fun`.adaptive.cookbook.eco
-import `fun`.adaptive.cookbook.grid_view
-import `fun`.adaptive.cookbook.iot.iotCommon
+import `fun`.adaptive.cookbook.graphics.canvas.canvasRecipe
+import `fun`.adaptive.cookbook.items
+import `fun`.adaptive.cookbook.menu
 import `fun`.adaptive.cookbook.ui.dialog.dialogRecipe
 import `fun`.adaptive.cookbook.ui.editor.editorRecipe
+import `fun`.adaptive.cookbook.ui.event.eventRecipe
 import `fun`.adaptive.cookbook.ui.form.formRecipe
-import `fun`.adaptive.cookbook.ui.grid.gridRecipe
+import `fun`.adaptive.cookbook.ui.layout.box.boxRecipe
+import `fun`.adaptive.cookbook.ui.layout.grid.gridRecipe
+import `fun`.adaptive.cookbook.ui.layout.responsive.responsiveMain
+import `fun`.adaptive.cookbook.ui.navigation.navigationRecipe
 import `fun`.adaptive.cookbook.ui.select.selectRecipe
 import `fun`.adaptive.cookbook.ui.sidebar.sideBarRecipe
+import `fun`.adaptive.cookbook.ui.snackbar.snackbarRecipe
 import `fun`.adaptive.cookbook.ui.svg.svgRecipe
 import `fun`.adaptive.cookbook.ui.text.textRecipe
+import `fun`.adaptive.cookbook.ui.tree.treeRecipe
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
-import `fun`.adaptive.graphics.svg.api.svg
+import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ui.api.backgroundColor
-import `fun`.adaptive.ui.api.boldFont
 import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.colTemplate
-import `fun`.adaptive.ui.api.fontSize
-import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.ui.api.position
-import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.form.FormFragmentFactory
 import `fun`.adaptive.ui.instruction.*
-import `fun`.adaptive.ui.navigation.NavState
-import `fun`.adaptive.ui.navigation.sidebar.SidebarItem
-import `fun`.adaptive.ui.navigation.sidebar.fullSidebar
-import `fun`.adaptive.ui.navigation.sidebar.theme.fullSidebarTheme
+import `fun`.adaptive.ui.layout.app.default.defaultAppLayout
 import `fun`.adaptive.ui.platform.withJsResources
+import `fun`.adaptive.ui.snackbar.SnackbarManager
+import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 fun main() {
+
     CoroutineScope(Dispatchers.Default).launch {
 
-        iotCommon()
+        clientId()
+
+        authCommon()
         cookbookCommon()
 
         withJsResources()
 
-//        val localBackend = backend(webSocketTransport(window.location.origin)) { auto() }
-        val localBackend = backend { auto() }
+        val transport = webSocketTransport(window.location.origin)
+
+        val localBackend = backend(transport) {
+            auto()
+            worker { SnackbarManager() }
+        }
 
         browser(CanvasFragmentFactory, SvgFragmentFactory, FormFragmentFactory, backend = localBackend) { adapter ->
 
@@ -65,24 +77,17 @@ fun main() {
                 fontWeight = 300
             }
 
-            grid {
-                maxSize .. colTemplate(fullSidebarTheme.width, 1.fr)
-                mainMenu()
+            defaultAppLayout(
+                items,
+                appNavState,
+                Res.drawable.menu,
+                Res.drawable.eco,
+                Res.drawable.eco,
+                "Adaptive"
+            ) {
                 mainContent()
             }
 
-//            iotMain()
-//              box {
-//                  hoverMain()
-//              }
-
-//            boundInputRecipe()
-
-//            buttonRecipe()
-//            gridAlignRecipe()
-//            quickFilterRecipe()
-
-//            projectWizardMain()
         }
     }
 }
@@ -132,14 +137,23 @@ fun mainContent() {
         maxSize .. padding { 16.dp } .. backgroundColor(0xFAFAFA)
 
         when (navState) {
+            in Routes.auth -> authRecipe(navState)
+            in Routes.box -> boxRecipe()
+            in Routes.canvas -> canvasRecipe()
             in Routes.dialog -> dialogRecipe()
             in Routes.editor -> editorRecipe()
+            in Routes.empty -> box { }
+            in Routes.event -> eventRecipe()
             in Routes.form -> formRecipe()
             in Routes.grid -> gridRecipe()
+            in Routes.navigation -> navigationRecipe(navState)
+            in Routes.responsive -> responsiveMain()
             in Routes.select -> selectRecipe()
             in Routes.sidebar -> sideBarRecipe()
+            in Routes.snackbar -> snackbarRecipe()
             in Routes.svg -> svgRecipe()
             in Routes.text -> textRecipe()
+            in Routes.tree -> treeRecipe()
             else -> text("unknown route: $navState")
         }
     }

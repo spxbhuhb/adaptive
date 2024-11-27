@@ -17,6 +17,7 @@ application {
 
 adaptive {
     pluginDebug = false
+    debugFilter = ".*dialog.*"
     resources {
         publicResClass = true
         packageOfResClass = "fun.adaptive.cookbook"
@@ -64,6 +65,11 @@ kotlin {
             }
         }
 
+        jsMain {
+            dependencies {
+                implementation(libs.ktor.client.core)
+            }
+        }
         jvmMain {
             dependencies {
                 implementation(libs.h2database)

@@ -9,7 +9,7 @@ import `fun`.adaptive.cookbook.mail
 import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.navigation.sidebar.SidebarItem
 
-val navState = autoItemOrigin(NavState())
+val sidebarRecipeNavState = autoItemOrigin(NavState())
 
 object Routes {
     val zones = NavState("zones")

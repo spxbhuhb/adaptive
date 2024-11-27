@@ -43,7 +43,7 @@ open class ClassBoundIrBuilder(
     ) =
         irCall(
             target,
-            irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)),
+            irGetValue(pluginContext.adapter, irGet(buildFun.valueParameters[Indices.BUILD_PARENT])),
             irGet(buildFun.valueParameters[Indices.BUILD_PARENT]),
             irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX])
         )

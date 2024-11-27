@@ -6,6 +6,7 @@ package `fun`.adaptive.graphics.canvas.platform
 
 import `fun`.adaptive.graphics.svg.instruction.SvgFill
 import `fun`.adaptive.graphics.svg.instruction.transform.SvgTransform
+import `fun`.adaptive.ui.instruction.decoration.Color
 
 /**
  * Implemented by bridge classes to connect common code with the actual UI canvas implementation.
@@ -19,6 +20,18 @@ interface ActualCanvas {
      * needed to notify the actual UI about the change.
      */
     fun draw(drawFun : () -> Unit)
+
+    /**
+     * Draw an arc.
+     */
+    fun arc(
+        cx: Double,
+        cy: Double,
+        radius: Double,
+        startAngle: Double,
+        endAngle: Double,
+        anticlockwise: Boolean
+    )
 
     /**
      * Get an empty path that may be used for drawing, clipping etc.
@@ -46,14 +59,27 @@ interface ActualCanvas {
     fun fill(path: ActualPath)
 
     /**
+     * Fill the current path.
+     */
+    fun fill()
+
+    fun fillText(x: Double, y: Double, text: String)
+
+    fun line(x1 : Double, y1 : Double, x2 : Double, y2 : Double)
+
+    /**
      * Add a transform to the canvas.
      */
     fun transform(t: SvgTransform)
 
+    fun setFont(font: String)
+
+    fun setStroke(color : Color)
+
     /**
      * Set the fill style for the canvas.
      */
-    fun setFill(fill : SvgFill)
+    fun setFill(color : Color)
 
     /**
      * Clear the canvas.

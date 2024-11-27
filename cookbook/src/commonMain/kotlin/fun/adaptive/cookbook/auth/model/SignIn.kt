@@ -9,14 +9,14 @@ import `fun`.adaptive.adat.api.properties
 
 @Adat
 class SignIn(
-    val email: String = "",
+    val login: String = "",
     val password: String = "",
     val remember: Boolean = false
 ) {
 
     override fun descriptor() {
         properties {
-            email blank false pattern "^[\\w\\-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$"
+            login blank false
             password secret true blank false
         }
     }

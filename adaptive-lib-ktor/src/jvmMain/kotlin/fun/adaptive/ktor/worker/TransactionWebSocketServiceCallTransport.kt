@@ -17,13 +17,14 @@ class TransactionWebSocketServiceCallTransport(
     override var socket: WebSocketSession?,
     val clientId: UUID<ServiceContext>,
     val session: ServiceSession?,
+    val fileTransport: KtorFileTransport,
 ) : WebSocketServiceCallTransport(
     CoroutineScope(Dispatchers.Default),
     wireFormatProvider
 ) {
 
     override fun context(): ServiceContext =
-        ServiceContext(this, clientId, session)
+        ServiceContext(this, clientId, session, fileTransport)
 
     override suspend fun dispatch(context: ServiceContext, serviceName: String, funName: String, decoder: WireFormatDecoder<*>): ByteArray {
 

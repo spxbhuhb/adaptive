@@ -3,7 +3,6 @@
  */
 package `fun`.adaptive.kotlin.service.ir
 
-import `fun`.adaptive.kotlin.common.debug
 import `fun`.adaptive.kotlin.common.isSubclassOf
 import `fun`.adaptive.kotlin.service.FqNames
 import `fun`.adaptive.kotlin.service.ir.consumer.ConsumerClassTransform
@@ -27,7 +26,6 @@ class ServicesClassTransform(
             }
 
             declaration.hasAnnotation(FqNames.SERVICE_API) -> {
-                debug { declaration.dumpKotlinLike() }
                 ConsumerClassTransform(pluginContext).visitClass(declaration)
             }
 

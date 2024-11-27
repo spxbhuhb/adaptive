@@ -14,7 +14,6 @@ import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.navigation.NavStateOrigin
-import `fun`.adaptive.ui.navigation.appNavState
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.ui.navigation.sidebar.theme.FullSidebarTheme
 import `fun`.adaptive.ui.navigation.sidebar.theme.fullSidebarTheme
@@ -23,9 +22,9 @@ import `fun`.adaptive.ui.navigation.sidebar.theme.fullSidebarTheme
 @Adaptive
 fun fullSidebar(
     items: Collection<SidebarItem>,
-    navStateOrigin: NavStateOrigin = appNavState,
+    navStateOrigin: NavStateOrigin,
     theme: FullSidebarTheme = fullSidebarTheme,
-    vararg instructions: AdaptiveInstruction
+    vararg instructions: AdaptiveInstruction,
 ): AdaptiveFragment {
     val navState = autoItemOrigin(navStateOrigin)
 

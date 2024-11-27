@@ -17,7 +17,6 @@ import `fun`.adaptive.ui.api.onClose
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
-import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.dialog.api.buttonDialog
@@ -25,7 +24,6 @@ import `fun`.adaptive.ui.dialog.api.dialog
 import `fun`.adaptive.ui.dialog.api.iconDialog
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.textColors
 
 @Adaptive
@@ -34,7 +32,7 @@ fun dialogRecipe() {
     column {
         gap { 16.dp }
 
-        basic()
+        dialogBasic()
 
         buttonDialog("Button Dialog", Res.drawable.mail, "Button Dialog Title") { close ->
             dialogContent(close)
@@ -60,7 +58,7 @@ fun dialogRecipe() {
 }
 
 @Adaptive
-private fun basic() {
+private fun dialogBasic() {
     var modalOpen = false
 
     column {

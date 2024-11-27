@@ -1,7 +1,6 @@
 package `fun`.adaptive.ui.editor.theme
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.cornerRadius
@@ -59,14 +58,14 @@ class EditorTheme(
         border(colors.onSurfaceAngry, 2.dp),
         padding(left = 15.dp, right = 15.dp),
         textColor(colors.onSurface),
-        backgroundColor(colors.angrySurface.opaque(0.05f)),
+        backgroundColor(colors.failSurface.opaque(0.05f)),
     )
 
     val invalidNotFocused = base + instructionsOf(
         border(colors.onSurfaceAngry, 1.dp),
         padding(top = 1.dp, left = 16.dp, bottom = 1.dp, right = 16.dp),
         textColor(colors.onSurface),
-        backgroundColor(colors.angrySurface.opaque(0.05f)),
+        backgroundColor(colors.failSurface.opaque(0.05f)),
     )
 
 }

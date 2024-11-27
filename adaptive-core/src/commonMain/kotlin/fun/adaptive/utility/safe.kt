@@ -48,7 +48,7 @@ fun <T> safeCall(logger: AdaptiveLogger, lock : Lock? = null, message : String? 
  * **NOTE** Best is if your cleanup code does not throw exceptions, however, it may
  * be a tad bit hard to cover it all, hence [safeCall].
  */
-suspend fun <T> safeSuspendCall(logger: AdaptiveLogger, message : String? = null, block: suspend () -> T) =
+suspend fun <T> safeSuspendCall(logger: AdaptiveLogger, message: String? = null, block: suspend () -> T): T? =
     try {
         block()
     } catch (ex: Exception) {
@@ -58,6 +58,7 @@ suspend fun <T> safeSuspendCall(logger: AdaptiveLogger, message : String? = null
             ex.printStackTrace()
             lex.printStackTrace()
         }
+        null
     }
 
 /**

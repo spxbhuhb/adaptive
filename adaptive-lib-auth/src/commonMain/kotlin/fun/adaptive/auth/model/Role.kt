@@ -12,9 +12,10 @@ import `fun`.adaptive.utility.UUID
 @Adat
 class Role(
     override val id: UUID<Role>,
-    var context: String? = null,
+    var name: String,
+    var context: UUID<RoleContext>? = null,
     var group: Boolean = false,
-    var displayOrder: Int = 0
+    var displayOrder: Int = 0,
 ) : AdatEntity<Role> {
 
     companion object : AdatCompanion<Role>

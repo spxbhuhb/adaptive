@@ -38,8 +38,10 @@ import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.decoration.CornerRadius
 import `fun`.adaptive.ui.instruction.decoration.DropShadow
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.event.NoPointerEvents
 import `fun`.adaptive.ui.instruction.event.OnClick
 import `fun`.adaptive.ui.instruction.event.OnClose
+import `fun`.adaptive.ui.instruction.event.OnDoubleClick
 import `fun`.adaptive.ui.instruction.event.OnMove
 import `fun`.adaptive.ui.instruction.event.OnPrimaryDown
 import `fun`.adaptive.ui.instruction.event.OnPrimaryUp
@@ -111,6 +113,7 @@ fun dropShadow(color: Color, offsetX: DPixel, offsetY: DPixel, standardDeviation
 // ------------------------------------------------------------------------------------
 
 fun onClick(handler: (event: UIEvent) -> Unit) = OnClick(handler)
+fun onDoubleClick(handler: (event: UIEvent) -> Unit) = OnDoubleClick(handler)
 
 fun onMove(handler: (event: UIEvent) -> Unit) = OnMove(handler)
 
@@ -120,6 +123,7 @@ fun onPrimaryUp(handler: (event: UIEvent) -> Unit) = OnPrimaryUp(handler)
 fun onSecondaryDown(handler: (event: UIEvent) -> Unit) = OnSecondaryDown(handler)
 fun onSecondaryUp(handler: (event: UIEvent) -> Unit) = OnSecondaryUp(handler)
 
+val noPointerEvents = NoPointerEvents()
 fun onClose(handler: () -> Unit) = OnClose(handler)
 
 // ------------------------------------------------------------------------------------

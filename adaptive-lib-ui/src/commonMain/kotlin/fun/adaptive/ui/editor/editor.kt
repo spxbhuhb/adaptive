@@ -1,5 +1,6 @@
 package `fun`.adaptive.ui.editor
 
+import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
@@ -94,9 +95,11 @@ private fun simpleEditor(
 
     // we have to use both to support editors without adat class
     val inError = binding.isInError()
+    val isTouched = binding.isTouched()
     var invalidInput = false
 
     val styles = when {
+        ! isTouched -> if (focus) editorTheme.focused else editorTheme.enabled
         (invalidInput || inError) && focus -> editorTheme.invalidFocused
         (invalidInput || inError) -> editorTheme.invalidNotFocused
         focus -> editorTheme.focused
@@ -104,7 +107,6 @@ private fun simpleEditor(
     }
 
     when (binding.boundType.removeSuffix("?")) {
-
 
         KotlinSignatures.BOOLEAN -> {
             boundCheckbox(*instructions, binding = binding as AdaptiveStateVariableBinding<Boolean>)

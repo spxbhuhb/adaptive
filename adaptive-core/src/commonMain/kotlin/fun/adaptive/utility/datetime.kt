@@ -36,6 +36,9 @@ operator fun Instant.compareTo(other: LocalDate) =
 operator fun Instant.compareTo(other: LocalTime) =
     this.compareTo(LocalDateTime(localDate(), other).toInstant(TimeZone.currentSystemDefault()))
 
+fun Instant.localTime() =
+    this.toLocalDateTime(TimeZone.currentSystemDefault()).time
+
 fun Instant.isBetween(start: Instant, end: Instant): Boolean =
     this in start .. end
 

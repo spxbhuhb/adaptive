@@ -22,7 +22,11 @@ class AuiLoop<RT, CRT : RT>(
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
-    override fun genPatchInternal(): Boolean = super<AdaptiveLoopLogic>.genPatchInternal()
+    override fun genPatchInternal(): Boolean {
+        super<AdaptiveLoopLogic>.genPatchInternal()
+        //renderData.layoutFragment?.layoutChange(this) // FIXME loop layout change
+        return false
+    }
 
     override fun stateToTraceString(): String = super<AdaptiveLoopLogic>.stateToTraceString()
 

@@ -20,19 +20,23 @@ class AdatContext<IT>(
     val safeLocalInfo: MutableList<Any>
         get() = localInfo ?: mutableListOf<Any>().also { localInfo = it }
 
-    class Flag(
+    data class Flag(
         val propertyPath: Array<String>,
-        val flagName: String
+        val flagName: String,
     )
 
     fun isTouched(path: Array<String>): Boolean {
         val info = localInfo ?: return false
-        return info.indexOfFirst { it is Flag && it.propertyPath.contentEquals(path) && it.flagName == TOUCHED_FLAG } != - 1
+        return info.indexOfFirst { it is Flag && it.flagName == TOUCHED_FLAG && (it.propertyPath.contentEquals(path) || it.propertyPath.isEmpty()) } != - 1
     }
 
     fun touch(path: Array<String>) {
         if (isTouched(path)) return
         safeLocalInfo.add(Flag(path, TOUCHED_FLAG))
+    }
+
+    fun touchAll() {
+        safeLocalInfo.add(Flag(emptyArray(), TOUCHED_FLAG))
     }
 
     fun hasProblem() : Boolean {

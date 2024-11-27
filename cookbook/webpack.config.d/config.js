@@ -19,6 +19,18 @@ if (config.devServer) {
                 target: 'ws://127.0.0.1:8080',
                 ws: true,
                 secure: false
+            },
+            {
+                context: ['/adaptive/client-id'],
+                target: 'http://127.0.0.1:8080',
+                ws: false,
+                secure: false
+            },
+            {
+                context: ['/adaptive/download'],
+                target: 'http://127.0.0.1:8080',
+                ws: false,
+                secure: false
             }
         ],
         historyApiFallback: {

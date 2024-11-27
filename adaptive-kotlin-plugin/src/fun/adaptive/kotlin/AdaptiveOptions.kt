@@ -8,7 +8,8 @@ import java.io.File
 
 class AdaptiveOptions(
     val pluginDebug: Boolean,
+    val debugFilter: Regex,
     val pluginLogDir: File?,
     val dumpKotlinLike: Boolean,
-    val dumpIR: Boolean
+    val dumpIR: Boolean,
 )

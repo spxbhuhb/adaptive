@@ -84,6 +84,14 @@ class DPixel(
 
     operator fun plus(value: DPixel) = DPixel(this.value + value.value)
 
+    operator fun times(value: Int) = DPixel(this.value * value)
+
+    operator fun times(value: Double) = DPixel(this.value * value)
+
+    operator fun div(value: Double) = DPixel(this.value / value)
+
+    operator fun div(value: DPixel) = DPixel(this.value / value.value)
+
     infix fun repeat(count: Int): GridRepeat = GridRepeat(count, this)
 
     companion object {

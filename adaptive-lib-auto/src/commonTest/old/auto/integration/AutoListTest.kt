@@ -6,7 +6,7 @@ import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.testing.test
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.api.getService
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withTimeout
 import kotlin.test.Test

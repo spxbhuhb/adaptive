@@ -13,4 +13,9 @@ class ThemeIconColors {
     val onSurfaceAngry = svgFill(colors.onSurfaceAngry)
     val onPrimary = svgFill(colors.onPrimary)
     val onPrimaryHover = svgFill(colors.onPrimaryHover)
+
+    val onSuccessSurface = textColor(colors.onSuccessSurface)
+    val onInfoSurface = textColor(colors.onInfoSurface)
+    val onWarningSurface = textColor(colors.onWarningSurface)
+    val onFailSurface = textColor(colors.onFailSurface)
 }

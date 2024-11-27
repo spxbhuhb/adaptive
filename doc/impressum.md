@@ -84,6 +84,7 @@ We'll see how it turns out. I've put in the work, and I'll continue to do so in 
 
 **Images and colors**
 
+* [SvgPathEditor](https://yqnn.github.io/svg-path-editor/) SVG Path Editor by Yann Armelin
 * [ChatGPT](https://chatgpt.com)
     * cartoon-like images are generated with ChatGPT 4o
     * colors are generated with ChatGPT 4o

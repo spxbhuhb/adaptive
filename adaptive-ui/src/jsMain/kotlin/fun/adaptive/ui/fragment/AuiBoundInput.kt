@@ -43,7 +43,7 @@ open class AuiBoundInput(
     private val valueFromString: (String) -> Any?
         get() = state[3].checkIfInstance()
 
-    private val valididyFun: (Boolean) -> Unit
+    private val validityFun: (Boolean) -> Unit
         get() = state[4].checkIfInstance()
 
     override var invalidInput : Boolean = false
@@ -77,7 +77,7 @@ open class AuiBoundInput(
                         invalidInput = true
                     }
 
-                    valididyFun(!invalidInput)
+                    validityFun(! invalidInput)
                 }
             })
 

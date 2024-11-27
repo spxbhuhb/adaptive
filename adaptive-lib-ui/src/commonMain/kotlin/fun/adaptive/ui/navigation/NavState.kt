@@ -17,6 +17,7 @@ open class NavState(
     val parameters: Map<String, String> = emptyMap(),
     val tag: String = "",
     val custom: String = "",
+    val fullScreen: Boolean = false,
 ) {
 
     constructor(path: String) : this(segments = path.split("/").mapNotNull { it.ifEmpty { null } })
@@ -36,6 +37,7 @@ open class NavState(
         if (other.segments.size < segments.size) return false
 
         for (i in other.segments.indices) {
+            if (i > this.segments.lastIndex) return true
             if (other.segments[i] != segments[i]) return false
         }
 

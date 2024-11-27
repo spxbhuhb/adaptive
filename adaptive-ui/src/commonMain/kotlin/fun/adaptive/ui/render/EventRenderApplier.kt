@@ -23,7 +23,24 @@ abstract class EventRenderApplier<R> : AbstractRenderApplier() {
             if (current != null) current.onClickListener = it
         }
 
+        if (previous?.noPointerEvents != current?.noPointerEvents) {
+            applyNoPointerEvents(
+                fragment,
+                previous?.noPointerEvents,
+                current?.noPointerEvents
+            )
+        }
+
         if (previous?.additionalEvents == false && current?.additionalEvents == false) return
+
+        applyEventHandler(
+            fragment,
+            previous?.onDoubleClick,
+            previous?.onDoubleClickListener,
+            current?.onDoubleClick
+        ).also {
+            if (current != null) current.onDoubleClickListener = it
+        }
 
         applyEventHandler(
             fragment,
@@ -93,6 +110,8 @@ abstract class EventRenderApplier<R> : AbstractRenderApplier() {
             return null
         }
     }
+
+    abstract fun applyNoPointerEvents(fragment: AbstractAuiFragment<R>, previous: Boolean?, current: Boolean?)
 
     abstract fun addEventListener(fragment: AbstractAuiFragment<R>, eventFun: UIEventHandler): Any?
 

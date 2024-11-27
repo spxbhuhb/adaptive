@@ -20,10 +20,9 @@ import `fun`.adaptive.ktor.ClientWebSocketServiceCallTransport
 import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.lib.auth.store.CredentialTable
 import `fun`.adaptive.lib.auth.store.PrincipalTable
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.testing.TestServiceTransport
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.utility.waitFor
 import `fun`.adaptive.utility.waitForSuspend
 import io.ktor.client.plugins.cookies.*
 import junit.framework.TestCase.assertNull
@@ -104,6 +103,7 @@ class SessionTest {
         sessionTest {
             assertFailsWith(AuthenticationFail::class) {
                 getService<SessionApi>(it.transport).login("admin", "admin")
+                delay(100) // let the websocket disconnect
             }.also {
                 assertEquals(AuthenticationResult.UnknownPrincipal, it.result)
             }
@@ -118,6 +118,7 @@ class SessionTest {
                     PrincipalTable += Principal(UUID(), "admin")
                 }
                 getService<SessionApi>(it.transport).login("admin", "admin")
+                delay(100) // let the websocket disconnect
             }.also {
                 assertEquals(AuthenticationResult.NoCredential, it.result)
             }
@@ -132,10 +133,11 @@ class SessionTest {
                     val admin = Principal(UUID(), "admin")
                     val passwd = BCrypt.hashpw("stuff", BCrypt.gensalt())
 
-                    PrincipalTable += admin
-                    CredentialTable += Credential(UUID(), admin.id, CredentialType.PASSWORD, passwd, now())
+                    PrincipalTable.plusAssign(admin)
+                    CredentialTable.plusAssign(Credential(UUID(), admin.id, CredentialType.PASSWORD, passwd, now()))
                 }
                 getService<SessionApi>(it.transport).login("admin", "admin")
+                delay(100) // let the websocket disconnect
             }.also {
                 assertEquals(AuthenticationResult.NotActivated, it.result)
             }
@@ -154,6 +156,7 @@ class SessionTest {
                     CredentialTable += Credential(UUID(), admin.id, CredentialType.PASSWORD, passwd, now())
                 }
                 getService<SessionApi>(it.transport).login("admin", "other stuff")
+                delay(100) // let the websocket disconnect
             }.also {
                 assertEquals(AuthenticationResult.InvalidCredentials, it.result)
             }
@@ -172,6 +175,7 @@ class SessionTest {
             }
 
             val session = getService<SessionApi>(it.transport).login("admin", "stuff")
+            delay(100) // let the websocket disconnect
 
             assertNotNull(session)
             assertEquals(admin.id, session.principalOrNull)

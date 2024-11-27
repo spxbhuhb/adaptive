@@ -14,6 +14,9 @@ import kotlin.math.round
  */
 fun Int.toByteArray(): ByteArray = ByteArray(4).also { this.encodeInto(it) }
 
+val Int.p02
+    get() = this.toString().padStart(2, '0')
+
 /**
  * Convert an int to bytes and write those bytes into [target] starting
  * from [offset].
@@ -58,7 +61,7 @@ fun format(
     decimals: Int = 1,
     decimalSeparator: String = ".",
     thousandSeparator: String? = null,
-    hideZeroDecimals: Boolean = false
+    hideZeroDecimals: Boolean = false,
 ) = double.format(decimals, decimalSeparator, thousandSeparator, hideZeroDecimals)
 
 @JvmName("formatDouble")
@@ -66,7 +69,7 @@ fun Double.format(
     decimals: Int = 1,
     decimalSeparator: String = ".",
     thousandSeparator: String? = null,
-    hideZeroDecimals: Boolean = false
+    hideZeroDecimals: Boolean = false,
 ): String {
     check(decimals < maxDecimals) { "decimals must to be less than $maxDecimals" }
 

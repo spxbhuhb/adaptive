@@ -80,7 +80,7 @@ fun fullMode() {
         colTemplate(fullSidebarTheme.width, 1.fr)
 
         fullHeader() .. gridPos(1,1)
-        fullSidebar(items, navState) .. gridPos(2, 1)
+        fullSidebar(items, sidebarRecipeNavState) .. gridPos(2, 1)
         sidebarContent()  .. gridPos(1, 2) .. rowSpan(2)
     }
 }
@@ -113,7 +113,7 @@ fun thinMode() {
         colTemplate(thinSidebarTheme.width, 1.fr)
 
         thinHeader() .. gridPos(1,1)
-        thinSidebar(items, navState) .. gridPos(2, 1)
+        thinSidebar(items, sidebarRecipeNavState) .. gridPos(2, 1)
         sidebarContent()  .. gridPos(1, 2) .. rowSpan(2)
     }
 }

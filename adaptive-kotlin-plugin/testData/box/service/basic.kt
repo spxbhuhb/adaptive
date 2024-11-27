@@ -2,6 +2,7 @@ package `fun`.adaptive.service
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.service.*
+import `fun`.adaptive.service.api.*
 import `fun`.adaptive.service.testing.TestServiceTransport
 import `fun`.adaptive.service.transport.*
 import `fun`.adaptive.service.transport.ServiceCallTransport

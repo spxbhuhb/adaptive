@@ -14,11 +14,11 @@ import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.icon.primaryIconTheme
 
 /**
- * An text that opens the dialog built by [modalContent] when clicked.
+ * A label that opens the dialog built by [modalContent] when clicked.
  *
  * Use the `close` parameter of [modalContent] to close the modal.
  *
- * @param  label         The label to click on.
+ * @param  label         Content of the label.
  * @param  title         Title of the dialog.
  * @param  modalContent  Content of the dialog.
  */
@@ -27,7 +27,7 @@ fun textDialog(
     label: String,
     title: String,
     vararg instructions: AdaptiveInstruction,
-    @Adaptive _fixme_adaptive_content: (close: () -> Unit) -> Unit
+    @Adaptive _fixme_adaptive_content: (close: () -> Unit) -> Unit,
 ): AdaptiveFragment {
     var modalOpen = false
 

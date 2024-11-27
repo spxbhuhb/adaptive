@@ -12,7 +12,7 @@ import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.settings
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.testing.TestServiceTransport
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking

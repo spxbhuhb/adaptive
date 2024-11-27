@@ -8,7 +8,7 @@ import `fun`.adaptive.auto.internal.frontend.FileFrontend
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.testing.AdaptiveTestAdapter
 import `fun`.adaptive.foundation.testing.test
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.utility.ensure
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.testPath

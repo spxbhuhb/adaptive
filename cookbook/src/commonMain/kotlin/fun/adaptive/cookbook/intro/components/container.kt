@@ -1,12 +1,11 @@
 package `fun`.adaptive.cookbook.intro.components
 
 import `fun`.adaptive.cookbook.intro.model.IntroState
-import `fun`.adaptive.cookbook.shared.mobileScreen
+import `fun`.adaptive.cookbook.shared.smallScreen
 import `fun`.adaptive.cookbook.shared.title
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.backgroundColor
-import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.gap
@@ -25,7 +24,7 @@ fun container(
     @Adaptive content: () -> Unit
 ) {
     grid {
-        mobileScreen .. rowTemplate(213.dp, 1.fr, 81.dp)
+        smallScreen .. rowTemplate(213.dp, 1.fr, 81.dp)
 
         title(title)
 

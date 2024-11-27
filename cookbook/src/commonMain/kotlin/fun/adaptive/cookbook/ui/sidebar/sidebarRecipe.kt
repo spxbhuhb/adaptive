@@ -37,7 +37,7 @@ fun sideBarRecipe() {
 @Adaptive
 fun full() {
     row {
-        fullSidebar(items, navState)
+        fullSidebar(items, sidebarRecipeNavState)
         sidebarContent()
     }
 }
@@ -45,7 +45,7 @@ fun full() {
 @Adaptive
 fun variant() {
     row {
-        fullSidebar(items, navState, FullSidebarThemeVariant())
+        fullSidebar(items, sidebarRecipeNavState, FullSidebarThemeVariant())
         sidebarContent()
     }
 }
@@ -53,7 +53,7 @@ fun variant() {
 @Adaptive
 fun thin() {
     row {
-        thinSidebar(items, navState)
+        thinSidebar(items, sidebarRecipeNavState)
         sidebarContent()
     }
 }

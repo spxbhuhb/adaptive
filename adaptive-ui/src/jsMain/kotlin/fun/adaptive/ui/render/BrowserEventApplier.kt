@@ -3,6 +3,7 @@ package `fun`.adaptive.ui.render
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.event.OnClick
+import `fun`.adaptive.ui.instruction.event.OnDoubleClick
 import `fun`.adaptive.ui.instruction.event.OnMove
 import `fun`.adaptive.ui.instruction.event.OnPrimaryDown
 import `fun`.adaptive.ui.instruction.event.OnPrimaryUp
@@ -15,10 +16,19 @@ import org.w3c.dom.events.MouseEvent
 
 object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
 
+    override fun applyNoPointerEvents(fragment: AbstractAuiFragment<HTMLElement>, previous: Boolean?, current: Boolean?) {
+        val style = fragment.receiver.style
+        when (current) {
+            true -> style.setProperty("pointer-events", "none")
+            else -> style.setProperty("pointer-events", "auto")
+        }
+    }
+
     override fun addEventListener(fragment: AbstractAuiFragment<HTMLElement>, eventFun: UIEventHandler): Any {
 
         val (eventName, condition) = when (eventFun) {
             is OnClick -> "click" to Always
+            is OnDoubleClick -> "dblclick" to Always
             is OnPrimaryDown -> "mousedown" to Primary
             is OnMove -> "mousemove" to Always
             is OnPrimaryUp -> "mouseup" to Primary

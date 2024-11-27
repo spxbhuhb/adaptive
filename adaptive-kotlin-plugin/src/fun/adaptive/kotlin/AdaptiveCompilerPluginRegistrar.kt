@@ -25,10 +25,11 @@ class AdaptiveCompilerPluginRegistrar : CompilerPluginRegistrar() {
 
     override fun ExtensionStorage.registerExtensions(configuration: CompilerConfiguration) {
 
-        val debug = configuration.get(AdaptiveCommandLineProcessor.CONFIG_KEY_PLUGIN_DEBUG) ?: false
+        val debug = configuration.get(AdaptiveCommandLineProcessor.CONFIG_KEY_PLUGIN_DEBUG) == true
 
         val options = AdaptiveOptions(
             pluginDebug = debug,
+            debugFilter = Regex(configuration.get(AdaptiveCommandLineProcessor.CONFIG_KEY_DEBUG_FILTER) ?: ".*"),
             pluginLogDir = configuration.get(AdaptiveCommandLineProcessor.CONFIG_KEY_PLUGIN_LOG_DIR),
             dumpKotlinLike = debug,
             dumpIR = true

@@ -14,7 +14,7 @@ import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.lib.auth.auth
 import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.service.ServiceApi
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.api.getService
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import kotlin.test.assertEquals

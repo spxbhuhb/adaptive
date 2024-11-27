@@ -16,7 +16,7 @@ import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.service.ServiceApi
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallException
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import kotlinx.coroutines.runBlocking

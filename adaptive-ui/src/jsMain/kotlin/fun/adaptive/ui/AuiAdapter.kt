@@ -9,6 +9,7 @@ import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.resource.defaultResourceEnvironment
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
+import `fun`.adaptive.ui.fragment.layout.AuiRootBox
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.SPixel
@@ -188,13 +189,13 @@ class AuiAdapter(
                 val root = rootFragment as? AbstractAuiFragment<*>
                 if (root != null) {
                     root.computeLayout(r.width, r.height)
-                    root.placeLayout(0.0, 0.0)
+                    root.placeLayout(root.renderData.finalTop, root.renderData.finalTop)
                 }
 
                 for (fragment in otherRootFragments) {
                     if (fragment is AbstractAuiFragment<*>) {
                         fragment.computeLayout(r.width, r.height)
-                        fragment.placeLayout(0.0, 0.0)
+                        fragment.placeLayout(fragment.renderData.finalTop, fragment.renderData.finalTop)
                     }
                 }
             }

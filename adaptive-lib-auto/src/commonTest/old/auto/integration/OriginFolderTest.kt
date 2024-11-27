@@ -4,9 +4,8 @@ import `fun`.adaptive.auto.api.autoList
 import `fun`.adaptive.auto.backend.TestData
 import `fun`.adaptive.auto.internal.frontend.AdatClassListFrontend
 import `fun`.adaptive.auto.internal.frontend.FolderFrontend
-import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.foundation.testing.test
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.testPath
 import `fun`.adaptive.utility.waitForReal

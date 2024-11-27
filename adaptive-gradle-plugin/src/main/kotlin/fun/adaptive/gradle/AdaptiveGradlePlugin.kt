@@ -14,7 +14,7 @@ import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 import java.io.File
 import java.nio.file.Files
 
-const val PLUGIN_VERSION = "0.9.75-SNAPSHOT"
+const val PLUGIN_VERSION = "0.9.86-SNAPSHOT"
 const val KOTLIN_COMPILER_PLUGIN_ID = "adaptive"  // this is how the compiler identifies the plugin
 const val KOTLIN_COMPILER_PLUGIN_ARTIFACT_GROUP = "fun.adaptive"
 const val KOTLIN_COMPILER_PLUGIN_ARTIFACT_NAME = "adaptive-kotlin-plugin"
@@ -75,6 +75,8 @@ class AdaptiveGradlePlugin : KotlinCompilerPluginSupportPlugin {
         val options = mutableListOf<SubpluginOption>()
 
         options += SubpluginOption(key = "plugin-debug", extension.pluginDebug.toString())
+
+        options += SubpluginOption(key = "debug-filter", extension.debugFilter.toString())
 
         val pluginLogDir = extension.pluginLogDir
             ?: project.layout.buildDirectory.get().asFile.toPath().resolve("adaptive/debug")

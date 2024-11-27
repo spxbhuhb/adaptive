@@ -65,8 +65,18 @@ abstract class AbstractAuiFragment<RT>(
             previousRenderData = renderData
             renderData = AuiRenderData(uiAdapter, previousRenderData, uiAdapter.themeFor(this), instructions)
 
-            if (renderData.layout != previousRenderData.layout) {
-                renderData.layoutFragment?.layoutChange(this)
+            if (renderData.layout != previousRenderData.layout || renderData.container != previousRenderData.container)  {
+                // when patchInstructions is called during fragment create the layout fragment is not set
+                // this implicitly ignores the layout change call, not sure if that's OK
+                val layoutFragment = renderData.layoutFragment
+
+                if (layoutFragment != null) {
+                    layoutFragment.layoutChange(this)
+                } else {
+                    // in this case this is a root fragment
+                    computeLayout(renderData.finalWidth, renderData.finalHeight)
+                    placeLayout(renderData.finalTop, renderData.finalTop)
+                }
             }
 
             if (addText && renderData.text == null) renderData.text = uiAdapter.defaultTextRenderData
