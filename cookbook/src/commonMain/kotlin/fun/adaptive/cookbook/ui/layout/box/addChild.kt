@@ -3,7 +3,6 @@ package `fun`.adaptive.cookbook.ui.layout.box
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.auto.api.autoCollection
 import `fun`.adaptive.auto.api.autoCollectionOrigin
-import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.cookbook.shared.yellow
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.rangeTo

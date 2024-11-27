@@ -46,7 +46,7 @@ class PropertyBackend<IT : AdatClass>(
 
         if (propertyTimes == null) {
             if (instance.origin) {
-                return Array(properties.size) { LamportTimestamp.ORIGIN }
+                return Array(properties.size) { itemId }
             } else {
                 return Array(properties.size) { LamportTimestamp.CONNECTING }
             }
