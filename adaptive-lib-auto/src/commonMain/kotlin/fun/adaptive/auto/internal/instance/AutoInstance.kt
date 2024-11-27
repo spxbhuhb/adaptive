@@ -73,18 +73,18 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     internal var connectionInfo: AutoConnectionInfo<VT>? = null
 
     @RequireLock
-    val thisItemId : ItemId?
+    val thisItemId: ItemId?
         get() = connectionInfo?.connectingHandle?.itemId
 
     @ThreadSafe
-    val remoteHandle : AutoHandle
-        get() = lock.use { connectionInfo!!.acceptingHandle }
+    val remoteHandle: AutoHandle
+        get() = lock.use { connectionInfo !!.acceptingHandle }
 
     internal lateinit var backend: BE
 
     internal lateinit var persistence: PT
 
-    private var worker : AutoWorker? = null
+    private var worker: AutoWorker? = null
 
     private var closePeers = emptyList<PeerId>()
 
@@ -168,10 +168,10 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
         lock.use {
             val (operation, added) = backend.localAdd(nextTime(), item)
 
+            trace("localAdd") { "APPLIED  :: opItemId=${operation.itemId} added=$added" }
+
             onLocalChange(operation.itemId, added, null)
             distribute(operation)
-
-            trace("localAdd") { "APPLIED  :: opItemId=${operation.itemId} added=$added" }
         }
     }
 
@@ -185,12 +185,12 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
             checkNotNull(original)
 
             val (operation, updated) = backend.localUpdate(nextTime(), safeItemId, updates)
-
             persistenceUpdate(safeItemId, updated)
-            onLocalChange(operation.itemId, updated, original)
-            distribute(operation)
 
             trace("localUpdate") { "APPLIED  :: opItemId=${operation.itemId} diff=${updated.diff(original).map { it.path to updated.getValue(it.path) }}" }
+
+            onLocalChange(operation.itemId, updated, original)
+            distribute(operation)
         }
     }
 
@@ -199,10 +199,10 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
         lock.use {
             val (operation, removed) = backend.localRemove(nextTime(), itemId)
 
+            trace("localRemove") { "APPLIED  :: itemId=${itemId} removed=$removed" }
+
             removed?.let { onLocalRemove(itemId, it) }
             distribute(operation)
-
-            trace("localRemove") { "APPLIED  :: itemId=${itemId} removed=$removed" }
         }
     }
 
@@ -219,38 +219,46 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
 
     @RequireLock
     internal open fun remoteAdd(operation: AutoAdd) {
-        val (timestamp, added) = backend.remoteAdd(operation)
+        val result = backend.remoteAdd(operation)
 
-        if (timestamp != null) {
+        if (result != null) {
+            val (timestamp, added) = result
             receive(timestamp)
-            onRemoteChange(operation.itemId, added, null)
-            distribute(operation)
 
             trace { "APPLIED  :: ${operation.itemId} $added" }
+
+            onRemoteChange(operation.itemId, added, null)
         } else {
             trace { "SKIPPED  :: ${operation.itemId}" }
         }
+
+        distribute(operation)
     }
 
     @RequireLock
     internal fun remoteUpdate(operation: AutoUpdate) {
-        val (timestamp, original, updated) = backend.remoteUpdate(operation)
+        val result = backend.remoteUpdate(operation)
 
-        if (timestamp != null) {
+        if (result != null) {
+            val (timestamp, original, updated) = result
+
             receive(timestamp)
             persistenceUpdate(operation.itemId, updated)
-            onRemoteChange(operation.itemId, updated, original)
-            distribute(operation)
 
             trace { "APPLIED  :: ${operation.itemId} $updated $original" }
+
+            onRemoteChange(operation.itemId, updated, original)
         } else {
+            // FIXME this trace is not exactly correct as the operation may be postponed
             trace { "SKIPPED  :: ${operation.itemId}" }
         }
+
+        distribute(operation)
     }
 
     @RequireLock
     internal open fun remoteRemove(operation: AutoRemove) {
-        val (timestamp, removed) = backend.remove(operation)
+        val (timestamp, removed) = backend.remoteRemove(operation)
 
         if (timestamp != null) {
             receive(timestamp)
@@ -260,6 +268,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
             distribute(operation)
             trace { "APPLIED  :: ${operation.itemIds} $removed" }
         } else {
+            distribute(operation)
             trace { "SKIPPED  :: ${operation.itemIds}" }
         }
     }
@@ -280,7 +289,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
 
     @RequireLock
     internal open fun remoteSyncEnd(operation: AutoSyncEnd) {
-        backend.syncEnd(operation)
+        backend.remoteSyncEnd(operation)
         receive(operation.timestamp)
         trace { "APPLIED  :: opTime=${operation.timestamp}" }
         onSyncEnd()
@@ -401,7 +410,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     /**
      * Called on local and remote item updates.
      */
-    abstract fun persistenceUpdate(itemId : ItemId, value : IT)
+    abstract fun persistenceUpdate(itemId: ItemId, value: IT)
 
     // --------------------------------------------------------------------------------
     // Peers
@@ -445,7 +454,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     fun addListener(listener: AutoItemListener<IT>) {
         lock.use {
             itemListeners += listener
-            if (isInitialized) listener.onInit(thisItemId!!, getItem())
+            if (isInitialized) listener.onInit(thisItemId !!, getItem())
         }
     }
 

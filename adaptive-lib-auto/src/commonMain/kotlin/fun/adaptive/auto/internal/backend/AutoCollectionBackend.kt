@@ -20,38 +20,7 @@ abstract class AutoCollectionBackend<IT : AdatClass>(
      */
     protected val afterSync = mutableListOf<AutoUpdate>()
 
-    // --------------------------------------------------------------------------------
-    // Operations from the frontend
-    // --------------------------------------------------------------------------------
-
-    abstract fun add(timestamp: LamportTimestamp, item: IT, parentItemId: ItemId?)
-
-    abstract fun remove(timestamp: LamportTimestamp, itemId: ItemId, commit: Boolean)
-
-    abstract fun removeAll(itemIds: Set<ItemId>, commit: Boolean)
-
-    // --------------------------------------------------------------------------------
-    // Operations from peers
-    // --------------------------------------------------------------------------------
-
-    abstract fun empty(operation: AutoEmpty, commit: Boolean)
-
-    abstract fun add(operation: AutoAdd, commit: Boolean)
-
-    abstract fun remove(operation: AutoRemove, commit: Boolean)
-
-    // --------------------------------------------------------------------------------
-    // Helpers
-    // --------------------------------------------------------------------------------
-
-    protected abstract fun addItem(
-        itemId: ItemId,
-        parentItemId: ItemId?,
-        value: IT,
-        fromBackend: Boolean
-    ) : AutoItemBackend<IT>
-
-    abstract fun firstOrNull(filterFun : (IT) -> Boolean) : AutoItemBackend<IT>?
+    abstract fun firstOrNull(filterFun: (IT) -> Boolean): AutoItemBackend<IT>?
 
     abstract fun filter(filterFun : (IT) -> Boolean) : Collection<IT>
 

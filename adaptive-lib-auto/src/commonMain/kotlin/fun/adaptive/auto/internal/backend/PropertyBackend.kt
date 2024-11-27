@@ -73,7 +73,7 @@ class PropertyBackend<IT : AdatClass>(
     // Local operations
     // --------------------------------------------------------------------------------
 
-    override fun localAdd(timestamp: LamportTimestamp, item: IT): Pair<AutoAdd, IT> {
+    override fun localAdd(timestamp: LamportTimestamp, item: IT, parentItemId : ItemId?): Pair<AutoAdd, IT> {
         throw UnsupportedOperationException("auto item does not support adding items ($this)")
     }
 
@@ -111,11 +111,11 @@ class PropertyBackend<IT : AdatClass>(
     // Operations from peers
     // --------------------------------------------------------------------------------
 
-    override fun remoteAdd(operation: AutoAdd): Pair<LamportTimestamp?, IT> {
+    override fun remoteAdd(operation: AutoAdd): Pair<LamportTimestamp, IT>? {
         throw UnsupportedOperationException("auto item does not support adding items ($this)")
     }
 
-    override fun remoteUpdate(operation: AutoUpdate): Triple<LamportTimestamp?, IT?, IT> {
+    override fun remoteUpdate(operation: AutoUpdate): Triple<LamportTimestamp, IT?, IT>? {
         var changed = false
 
         val original = item
@@ -156,11 +156,11 @@ class PropertyBackend<IT : AdatClass>(
             item = null
             return Triple(lastUpdate, original, getItem())
         } else {
-            return Triple(null, original !!, original)
+            return null
         }
     }
 
-    override fun remove(operation: AutoRemove): Pair<LamportTimestamp?, Set<Pair<ItemId, IT>>> {
+    override fun remoteRemove(operation: AutoRemove): Pair<LamportTimestamp?, Set<Pair<ItemId, IT>>> {
         throw UnsupportedOperationException("auto item does not support removing items ($this)")
     }
 

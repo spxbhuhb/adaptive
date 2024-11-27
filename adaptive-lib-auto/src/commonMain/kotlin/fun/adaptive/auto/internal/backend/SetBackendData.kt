@@ -60,13 +60,14 @@ class SetBackendData<IT : AdatClass>(
         }
     }
 
-    fun remove(itemId: ItemId, fromPeer: Boolean) {
+    fun remove(itemId: ItemId, fromPeer: Boolean) : IT? =
         structuralLock.use {
             removals += itemId
             active -= itemId
-            items.remove(itemId)?.removed(fromPeer)
+            val removed = items.remove(itemId)
+            removed?.removed(fromPeer)
+            removed?.getItem()
         }
-    }
 
     operator fun get(itemId: ItemId) =
         structuralLock.use {

@@ -60,7 +60,7 @@ class WithInstanceTest {
             val td = TestData(12, "a")
             val origin = autoItemOrigin(td)
 
-            val adapter = test(clientBackend, printTrace = true) {
+            val adapter = test(clientBackend) {
                 val item = autoItem(origin)
                 if (item?.i == 23) {
                     item.update(item::i, 34)

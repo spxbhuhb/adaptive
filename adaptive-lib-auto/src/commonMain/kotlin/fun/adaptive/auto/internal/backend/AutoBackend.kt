@@ -26,7 +26,7 @@ abstract class AutoBackend<IT : AdatClass>(
     // Operations from the frontend
     // --------------------------------------------------------------------------------
 
-    abstract fun localAdd(timestamp: LamportTimestamp, item: IT): Pair<AutoAdd, IT>
+    abstract fun localAdd(timestamp: LamportTimestamp, item: IT, parentItemId : ItemId? = null): Pair<AutoAdd, IT>
 
     abstract fun localUpdate(timestamp: LamportTimestamp, itemId: ItemId, updates: Collection<Pair<String, Any?>>): Pair<AutoUpdate, IT>
 
@@ -36,13 +36,13 @@ abstract class AutoBackend<IT : AdatClass>(
     // Operations from peers
     // --------------------------------------------------------------------------------
 
-    abstract fun remoteAdd(operation: AutoAdd): Pair<LamportTimestamp?, IT>
+    abstract fun remoteAdd(operation: AutoAdd): Pair<LamportTimestamp, IT>?
 
-    abstract fun remoteUpdate(operation: AutoUpdate): Triple<LamportTimestamp?, IT?, IT>
+    abstract fun remoteUpdate(operation: AutoUpdate): Triple<LamportTimestamp, IT?, IT>?
 
-    abstract fun remove(operation: AutoRemove): Pair<LamportTimestamp?, Set<Pair<ItemId, IT>>>
+    abstract fun remoteRemove(operation: AutoRemove): Pair<LamportTimestamp?, Set<Pair<ItemId, IT>>>
 
-    open fun syncEnd(operation: AutoSyncEnd) = Unit
+    open fun remoteSyncEnd(operation: AutoSyncEnd) = Unit
 
     // --------------------------------------------------------------------------------
     // Peer synchronization

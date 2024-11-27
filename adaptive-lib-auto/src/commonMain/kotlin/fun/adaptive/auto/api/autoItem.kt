@@ -3,7 +3,7 @@ package `fun`.adaptive.auto.api
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.AdatCompanionResolve
-import `fun`.adaptive.adat.toArray
+import `fun`.adaptive.adat.api.toArray
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.PropertyBackend
