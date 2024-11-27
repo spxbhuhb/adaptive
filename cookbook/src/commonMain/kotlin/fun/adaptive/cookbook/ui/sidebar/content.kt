@@ -1,6 +1,6 @@
 package `fun`.adaptive.cookbook.ui.sidebar
 
-import `fun`.adaptive.auto.api.autoInstance
+import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -15,7 +15,7 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.navigation.open
 
 private fun next() {
-    val current = sidebarRecipeNavState.frontend.value
+    val current = sidebarRecipeNavState.value
     val nextIndex = items.indexOfFirst { it.state == current } + 1
     val nextItem = if (nextIndex < items.size) items[nextIndex] else items[0]
     sidebarRecipeNavState.open(nextItem.state)
@@ -23,7 +23,7 @@ private fun next() {
 
 @Adaptive
 fun sidebarContent(vararg instructions: AdaptiveInstruction) : AdaptiveFragment {
-    val navState = autoInstance(sidebarRecipeNavState)
+    val navState = autoItem(sidebarRecipeNavState)
 
     row(*instructions) {
         padding { 16.dp }

@@ -11,6 +11,7 @@ import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlin.reflect.KProperty
+import kotlin.reflect.KProperty0
 
 class AutoItem<BE : AutoItemBackend<IT>, PT : AutoItemPersistence<IT>, IT : AdatClass>(
     origin: Boolean,
@@ -29,6 +30,10 @@ class AutoItem<BE : AutoItemBackend<IT>, PT : AutoItemPersistence<IT>, IT : Adat
 
     fun <V> update(vararg changes: Pair<KProperty<V>, V>) {
         localUpdate(null, changes.map { it.first.name to it.second })
+    }
+
+    fun <V> update(vararg changes: KProperty0<V>) {
+        localUpdate(null, changes.map { it.name to it.get() })
     }
 
     override fun persistenceInit() {

@@ -14,4 +14,14 @@ class AutoAdatStore<IT : AdatClass>(
         this.instance.localUpdate(id, listOf(path[0] to value))
     }
 
+    override fun update(new: IT) {
+        check(instance is AutoItem<*, *, *>)
+        instance.localUpdate(
+            instance.backend.itemId,
+            new.adatCompanion.adatDescriptors.map {
+                it.property.name to new.getValue(it.property.index)
+            }
+        )
+    }
+
 }

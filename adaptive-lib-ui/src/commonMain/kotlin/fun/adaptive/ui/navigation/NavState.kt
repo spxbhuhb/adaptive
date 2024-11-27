@@ -3,12 +3,18 @@ package `fun`.adaptive.ui.navigation
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.store.AdatStore
-import `fun`.adaptive.auto.internal.instance.AutoInstance
+import `fun`.adaptive.auto.api.ItemBase
 
-typealias NavStateOrigin = AutoInstance<*, *, NavState, NavState>
+typealias NavStateOrigin = ItemBase<NavState>
 
 fun NavStateOrigin.open(navState: NavState) {
-    frontend.update(navState)
+    update(
+        navState::segments,
+        navState::parameters,
+        navState::tag,
+        navState::custom,
+        navState::fullScreen
+    )
 }
 
 @Adat

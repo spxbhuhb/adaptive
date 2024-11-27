@@ -2,6 +2,7 @@ package `fun`.adaptive.cookbook.ui.dialog
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.cookbook.Res
 import `fun`.adaptive.cookbook.check
@@ -40,7 +41,7 @@ private val sharedData = autoItemOrigin(Data("Hello"))
 
 @Adaptive
 fun independentAuto(close: () -> Unit) {
-    val autoData = autoItemOrigin(sharedData) ?: sharedData.frontend.value
+    val autoData = autoItem(sharedData) ?: sharedData.value
 
     @Independent
     var iData = copyStore { autoData }
@@ -69,7 +70,7 @@ fun independentAuto(close: () -> Unit) {
         editor { iData.s }
 
         button("Save", Res.drawable.check) .. gridCol(2) .. alignSelf.endBottom .. onClick {
-            sharedData.update(sharedData.frontend.value.copy(s = iData.s))
+            sharedData.update(iData::s)
             close()
         }
     }
@@ -80,5 +81,5 @@ fun independentAuto(close: () -> Unit) {
 fun updateShared() {
     val time = poll(1.seconds) { now() } ?: now()
     val s = time.toString().replace("T", " ").replace("Z", " ").substringBeforeLast('.')
-    sharedData.update(sharedData.frontend.value.copy(s = s))
+    sharedData.update(sharedData.value::s to s)
 }

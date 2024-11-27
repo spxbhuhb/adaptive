@@ -4,7 +4,7 @@
 
 import `fun`.adaptive.auth.authCommon
 import `fun`.adaptive.auto.api.auto
-import `fun`.adaptive.auto.api.autoItemOrigin
+import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.cookbook.Res
@@ -92,46 +92,10 @@ fun main() {
     }
 }
 
-private val appNavState = autoItemOrigin(Routes.grid)
-
-private object Routes {
-    val dialog = NavState("Dialog")
-    val editor = NavState("Editor")
-    val form = NavState("Form")
-    val grid = NavState("Grid")
-    val select = NavState("Select")
-    val sidebar = NavState("SideBar")
-    val svg = NavState("SVG")
-    val text = NavState("Text")
-}
-
-private val items = listOf(
-    SidebarItem(0, Res.drawable.grid_view, "Dialog", Routes.dialog),
-    SidebarItem(0, Res.drawable.grid_view, "Editor", Routes.editor),
-    SidebarItem(0, Res.drawable.grid_view, "Form", Routes.form),
-    SidebarItem(0, Res.drawable.grid_view, "Grid", Routes.grid),
-    SidebarItem(0, Res.drawable.grid_view, "Select", Routes.select),
-    SidebarItem(0, Res.drawable.grid_view, "SideBar", Routes.sidebar),
-    SidebarItem(0, Res.drawable.grid_view, "SVG", Routes.svg),
-    SidebarItem(0, Res.drawable.grid_view, "Text", Routes.text)
-)
-
-@Adaptive
-fun mainMenu() {
-    grid {
-        rowTemplate(168.dp, 1.fr) .. maxSize
-        box {
-            svg(Res.drawable.eco) .. position(60.dp, 32.dp)
-            text("Adaptive") .. boldFont .. fontSize(28.sp) .. position(60.dp, 88.dp)
-        }
-        fullSidebar(items, appNavState)
-    }
-}
-
 @Adaptive
 fun mainContent() {
 
-    val navState = autoItemOrigin(appNavState)
+    val navState = autoItem(appNavState)
 
     box {
         maxSize .. padding { 16.dp } .. backgroundColor(0xFAFAFA)

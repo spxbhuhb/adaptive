@@ -1,6 +1,7 @@
 package `fun`.adaptive.cookbook.ui.sidebar
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.cookbook.Res
 import `fun`.adaptive.cookbook.eco
@@ -55,7 +56,7 @@ private val sidebarState = autoItemOrigin(SidebarState(FULL), trace = true)
 
 @Adaptive
 fun collapsible() {
-    val state = autoItemOrigin(sidebarState, trace = true)
+    val state = autoItem(sidebarState)
 
     box {
         size(800.dp, 600.dp) .. backgrounds.friendly
@@ -91,7 +92,7 @@ private fun fullHeader(vararg instructions : AdaptiveInstruction) : AdaptiveFrag
         padding(16.dp, 0.dp, 16.dp, 32.dp)
         colTemplate(64.dp, 1.fr)
         alignItems.startCenter
-        onClick { sidebarState.frontend.update(SidebarState(THIN)) }
+        onClick { sidebarState.update(sidebarState.value::mode to THIN) }
 
         box {
             size(48.dp, 48.dp)
@@ -122,7 +123,7 @@ fun thinMode() {
 fun thinHeader(vararg instructions : AdaptiveInstruction) : AdaptiveFragment {
     box(*instructions) {
         size(80.dp, 80.dp) .. alignItems.center
-        onClick { sidebarState.frontend.update(SidebarState(FULL)) }
+        onClick { sidebarState.update(sidebarState.value::mode to FULL) }
 
         box {
             size(48.dp, 48.dp)

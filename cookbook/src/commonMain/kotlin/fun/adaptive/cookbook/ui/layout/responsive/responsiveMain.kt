@@ -1,7 +1,6 @@
 package `fun`.adaptive.cookbook.ui.layout.responsive
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.auto.api.autoInstance
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ui.api.mediaMetrics
 import `fun`.adaptive.ui.platform.media.MediaMetrics

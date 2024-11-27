@@ -22,9 +22,8 @@ import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.AutoMetadata
 import `fun`.adaptive.auto.model.ITEM_ID_ORIGIN
-import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.service.getService
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.utility.CleanupHandler
 import `fun`.adaptive.utility.untilSuccess
 import `fun`.adaptive.wireformat.WireFormatProvider

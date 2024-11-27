@@ -1,8 +1,8 @@
 package `fun`.adaptive.ui.layout.app.default
 
-import `fun`.adaptive.auto.api.autoInstance
-import `fun`.adaptive.auto.api.autoList
-import `fun`.adaptive.auto.model.AutoConnectionType
+import `fun`.adaptive.auto.api.autoCollection
+import `fun`.adaptive.auto.api.autoItem
+import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -42,13 +42,12 @@ import `fun`.adaptive.ui.navigation.sidebar.theme.fullSidebarTheme
 import `fun`.adaptive.ui.navigation.sidebar.theme.thinSidebarTheme
 import `fun`.adaptive.ui.navigation.sidebar.thinSidebar
 import `fun`.adaptive.ui.platform.media.MediaMetrics
-import `fun`.adaptive.ui.snackbar.Snack
 import `fun`.adaptive.ui.snackbar.activeSnacks
 import `fun`.adaptive.ui.snackbar.snackList
 import `fun`.adaptive.ui.snackbar.snackbarTheme
 import `fun`.adaptive.ui.theme.colors
 
-val appLayoutState = autoInstance(AppLayoutState())
+val appLayoutState = autoItemOrigin(AppLayoutState())
 
 @Adaptive
 fun defaultAppLayout(
@@ -63,10 +62,10 @@ fun defaultAppLayout(
 
     val metrics = mediaMetrics()
 
-    val layoutState = autoInstance(appLayoutState)
-    val navState = autoInstance(appNavState)
+    val layoutState = autoItem(appLayoutState)
+    val navState = autoItem(appNavState)
 
-    val activeSnacks = autoList(activeSnacks, Snack.adatWireFormat) { activeSnacks.connectInfo(AutoConnectionType.Direct) } ?: emptyList()
+    val activeSnacks = autoCollection(activeSnacks) ?: emptyList()
 
     val snackbarPosition = position(
         metrics.viewHeight.dp - (snackbarTheme.snackHeight + snackbarTheme.snackGap) * activeSnacks.size,
@@ -79,7 +78,7 @@ fun defaultAppLayout(
         box {
             maxSize
             when {
-                navState?.fullScreen == true -> box {  }
+                navState?.fullScreen == true -> box { }
                 metrics.isSmall -> small(smallIcon, title, items, appNavState, layoutState)
                 metrics.isMedium -> medium(mediumIcon, title, items, appNavState, layoutState)
                 metrics.isLarge -> large(largeIcon, title, items, appNavState, layoutState)
@@ -95,7 +94,7 @@ fun defaultAppLayout(
     }
 }
 
-private fun gridInst(metrics: MediaMetrics, barState: AppLayoutState?, navState : NavState?): AdaptiveInstruction {
+private fun gridInst(metrics: MediaMetrics, barState: AppLayoutState?, navState: NavState?): AdaptiveInstruction {
 
     if (navState?.fullScreen == true) {
         return colTemplate(0.dp, 1.fr)
@@ -244,37 +243,31 @@ fun appIcon(
 
 // FIXME sidebar mode toggle
 private fun toggleSmallUserState() {
-    val current = appLayoutState.frontend.value
+    val current = appLayoutState.value
 
-    appLayoutState.frontend.update(
-        if (current.smallMode == SidebarUserMode.Open) {
-            AppLayoutState(SidebarUserMode.Closed, SidebarUserMode.Closed, SidebarUserMode.Open)
-        } else {
-            AppLayoutState(SidebarUserMode.Open, SidebarUserMode.Closed, SidebarUserMode.Open)
-        }
+    appLayoutState.update(
+        current::smallMode to (if (current.smallMode == SidebarUserMode.Open) SidebarUserMode.Closed else SidebarUserMode.Open),
+        current::mediumMode to SidebarUserMode.Closed,
+        current::largeMode to SidebarUserMode.Closed
     )
 }
 
 private fun toggleMediumUserState() {
-    val current = appLayoutState.frontend.value
+    val current = appLayoutState.value
 
-    appLayoutState.frontend.update(
-        if (current.mediumMode == SidebarUserMode.Open) {
-            AppLayoutState(SidebarUserMode.Closed, SidebarUserMode.Closed, SidebarUserMode.Open)
-        } else {
-            AppLayoutState(SidebarUserMode.Closed, SidebarUserMode.Open, SidebarUserMode.Open)
-        }
+    appLayoutState.update(
+        current::smallMode to SidebarUserMode.Closed,
+        current::mediumMode to (if (current.mediumMode == SidebarUserMode.Open) SidebarUserMode.Closed else SidebarUserMode.Open),
+        current::largeMode to SidebarUserMode.Open
     )
 }
 
 private fun toggleLargeUserState() {
-    val current = appLayoutState.frontend.value
+    val current = appLayoutState.value
 
-    appLayoutState.frontend.update(
-        if (current.largeMode == SidebarUserMode.Open) {
-            AppLayoutState(SidebarUserMode.Closed, SidebarUserMode.Closed, SidebarUserMode.Closed)
-        } else {
-            AppLayoutState(SidebarUserMode.Closed, SidebarUserMode.Closed, SidebarUserMode.Open)
-        }
+    appLayoutState.update(
+        current::smallMode to SidebarUserMode.Closed,
+        current::mediumMode to SidebarUserMode.Closed,
+        current::largeMode to (if (current.mediumMode == SidebarUserMode.Open) SidebarUserMode.Closed else SidebarUserMode.Open)
     )
 }

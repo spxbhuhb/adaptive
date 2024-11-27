@@ -1,36 +1,12 @@
 package `fun`.adaptive.cookbook
 
-import `fun`.adaptive.auto.api.autoInstance
-import `fun`.adaptive.cookbook.auth.authRecipe
+import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.cookbook.auth.authRouting
-import `fun`.adaptive.cookbook.graphics.canvas.canvasRecipe
-import `fun`.adaptive.cookbook.ui.dialog.dialogRecipe
-import `fun`.adaptive.cookbook.ui.editor.editorRecipe
-import `fun`.adaptive.cookbook.ui.event.eventRecipe
-import `fun`.adaptive.cookbook.ui.form.formRecipe
-import `fun`.adaptive.cookbook.ui.layout.box.boxRecipe
-import `fun`.adaptive.cookbook.ui.layout.grid.gridRecipe
-import `fun`.adaptive.cookbook.ui.layout.responsive.responsiveMain
 import `fun`.adaptive.cookbook.ui.navigation.navRouting
-import `fun`.adaptive.cookbook.ui.navigation.navigationRecipe
-import `fun`.adaptive.cookbook.ui.select.selectRecipe
-import `fun`.adaptive.cookbook.ui.sidebar.sideBarRecipe
-import `fun`.adaptive.cookbook.ui.snackbar.snackbarRecipe
-import `fun`.adaptive.cookbook.ui.svg.svgRecipe
-import `fun`.adaptive.cookbook.ui.text.textRecipe
-import `fun`.adaptive.cookbook.ui.tree.treeRecipe
-import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
-import `fun`.adaptive.ui.api.backgroundColor
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.navigation.sidebar.SidebarItem
 
-val appNavState = autoInstance(Routes.auth)
+val appNavState = autoItemOrigin(Routes.auth)
 
 object Routes {
     val auth = authRouting

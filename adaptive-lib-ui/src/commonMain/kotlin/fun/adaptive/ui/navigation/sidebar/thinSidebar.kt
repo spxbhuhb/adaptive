@@ -1,5 +1,6 @@
 package `fun`.adaptive.ui.navigation.sidebar
 
+import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -25,7 +26,7 @@ fun thinSidebar(
     theme: ThinSidebarTheme = thinSidebarTheme,
     vararg instructions: AdaptiveInstruction,
 ): AdaptiveFragment {
-    val navState = autoItemOrigin(navStateOrigin)
+    val navState = autoItem(navStateOrigin)
 
     column(*instructions, *theme.container) {
         for (item in items.sortedBy { it.index }) {

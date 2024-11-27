@@ -1,7 +1,8 @@
 package `fun`.adaptive.cookbook.ui.layout.box
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.auto.api.autoList
+import `fun`.adaptive.auto.api.autoCollection
+import `fun`.adaptive.auto.api.autoCollectionOrigin
 import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.cookbook.shared.yellow
 import `fun`.adaptive.foundation.Adaptive
@@ -24,7 +25,7 @@ import `fun`.adaptive.ui.theme.textSmall
 
 @Adaptive
 fun addChild(inColumn : Boolean = false) {
-    val boxes = autoList(boxStore, Index.adatWireFormat) { boxStore.connectInfo(AutoConnectionType.Direct) } ?: emptyList()
+    val boxes = autoCollection(boxStore) ?: emptyList()
 
     box {
         borders.outline
@@ -32,7 +33,7 @@ fun addChild(inColumn : Boolean = false) {
         alignItems.endBottom
 
         text("Click here to add another box.") .. alignSelf.topCenter .. noSelect .. onClick {
-            boxStore.frontend.plusAssign(Index(boxes.size))
+            boxStore += Index(boxes.size)
         }
 
         if (inColumn) {
@@ -49,10 +50,10 @@ fun addChild(inColumn : Boolean = false) {
 @Adat
 private class Index(val index: Int)
 
-private val boxStore = autoList(listOf<Index>(Index(0), Index(1)), Index.adatWireFormat)
+private val boxStore = autoCollectionOrigin(listOf<Index>(Index(0), Index(1)))
 
 @Adaptive
-private fun boxList(boxes: List<Index>) {
+private fun boxList(boxes: Collection<Index>) {
     for (i in boxes) {
         box {
             boxPosition(400.dp, 200.dp, i.index)

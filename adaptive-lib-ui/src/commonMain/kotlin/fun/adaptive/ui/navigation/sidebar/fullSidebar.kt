@@ -1,9 +1,10 @@
 package `fun`.adaptive.ui.navigation.sidebar
 
-import `fun`.adaptive.auto.api.autoItemOrigin
+import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.ui.api.box
@@ -14,7 +15,6 @@ import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.navigation.NavStateOrigin
-import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.ui.navigation.sidebar.theme.FullSidebarTheme
 import `fun`.adaptive.ui.navigation.sidebar.theme.fullSidebarTheme
 
@@ -26,7 +26,8 @@ fun fullSidebar(
     theme: FullSidebarTheme = fullSidebarTheme,
     vararg instructions: AdaptiveInstruction,
 ): AdaptiveFragment {
-    val navState = autoItemOrigin(navStateOrigin)
+
+    val navState = autoItem(navStateOrigin)
 
     column(*instructions, *theme.container) {
         for (item in items.sortedBy { it.index }) {
