@@ -7,6 +7,8 @@ import `fun`.adaptive.auto.api.ItemBase
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
+import `fun`.adaptive.log.getLogger
+import `fun`.adaptive.utility.safeCall
 import kotlinx.coroutines.launch
 
 /**
@@ -18,6 +20,8 @@ class AutoItemProducer<IT : AdatClass>(
 ) : AutoItemListener<IT>(), AdaptiveProducer<IT> {
 
     override var latestValue: IT? = null
+
+    var disposed = false
 
     var instance: ItemBase<IT>? = null
         set(v) {
@@ -35,11 +39,14 @@ class AutoItemProducer<IT : AdatClass>(
     }
 
     override fun stop() {
+        disposed = true
+
         if (disposeInstance) {
             instance?.stop()
         } else {
             instance?.removeListener(this)
         }
+
         instance = null
     }
 
@@ -47,14 +54,22 @@ class AutoItemProducer<IT : AdatClass>(
         if (value === latestValue) return // Avoid double patching
         value.validateForContext() // TODO make sure that we don't validate unnecessarily
         adapter.scope.launch {
+            if (disposed) return@launch
             latestValue = value
             setDirty()
         }
     }
 
     override fun onChange(itemId: ItemId, newValue: IT, oldValue: IT?) {
+        if (disposed) return
+
         newValue.validateForContext() // TODO make sure that we don't validate unnecessarily
         adapter.scope.launch {
+            // I don't like this because it is not clear what happens exactly
+            // The question is not trivial unfortunately as the order of listeners decides
+            // the order of change application.
+            // FIXME handling of Auto producer dispose, fix other methods and AutoCollectionProducer as well!
+            if (disposed) return@launch
             latestValue = newValue
             setDirty() // calls patch
         }
@@ -62,6 +77,7 @@ class AutoItemProducer<IT : AdatClass>(
 
     override fun onRemove(itemId: ItemId, removed: IT?) {
         adapter.scope.launch {
+            if (disposed) return@launch
             latestValue = null
             setDirty()
         }
@@ -69,6 +85,7 @@ class AutoItemProducer<IT : AdatClass>(
 
     override fun onStop() {
         adapter.scope.launch {
+            if (disposed) return@launch
             latestValue = null
             setDirty()
         }

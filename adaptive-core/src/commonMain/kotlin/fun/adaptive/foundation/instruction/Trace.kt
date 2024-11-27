@@ -28,6 +28,10 @@ class Trace(vararg val patterns : Regex = arrayOf(Regex(".*"))) : AdaptiveInstru
         subject.alsoIfInstance<Traceable> { it.tracePatterns = patterns }
     }
 
+    override fun toString(): String {
+        return "Trace(${patterns.contentDeepToString().removeSurrounding("[", "]")})"
+    }
+
     companion object : WireFormat<Trace> {
 
         override val wireFormatName: String

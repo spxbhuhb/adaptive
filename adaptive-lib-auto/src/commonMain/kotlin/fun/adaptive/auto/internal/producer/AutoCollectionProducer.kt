@@ -19,6 +19,8 @@ class AutoCollectionProducer<IT : AdatClass>(
 
     override var latestValue: Collection<IT>? = null
 
+    var disposed = false
+
     var instance: CollectionBase<IT>? = null
         set(v) {
             field = v
@@ -35,17 +37,21 @@ class AutoCollectionProducer<IT : AdatClass>(
     }
 
     override fun stop() {
+        disposed = true
+
         if (disposeInstance) {
             instance?.stop()
         } else {
             instance?.removeListener(this)
         }
+
         instance = null
     }
 
     override fun onInit(value: Collection<IT>) {
         // FIXME if (value === latestValue) return // Avoid double patching
         adapter.scope.launch {
+            if (disposed) return@launch
             latestValue = value
             setDirty()
         }
@@ -54,6 +60,7 @@ class AutoCollectionProducer<IT : AdatClass>(
     override fun onChange(itemId: ItemId, newValue: IT, oldValue: IT?) {
         newValue.validateForContext() // TODO make sure that we don't validate unnecessarily
         adapter.scope.launch {
+            if (disposed) return@launch
             latestValue = instance!!.value
             setDirty() // calls patch
         }
@@ -61,6 +68,7 @@ class AutoCollectionProducer<IT : AdatClass>(
 
     override fun onRemove(itemId: ItemId, removed: IT?) {
         adapter.scope.launch {
+            if (disposed) return@launch
             latestValue = instance!!.value
             setDirty()
         }
@@ -68,6 +76,7 @@ class AutoCollectionProducer<IT : AdatClass>(
 
     override fun onStop() {
         adapter.scope.launch {
+            if (disposed) return@launch
             latestValue = null
             setDirty()
         }
