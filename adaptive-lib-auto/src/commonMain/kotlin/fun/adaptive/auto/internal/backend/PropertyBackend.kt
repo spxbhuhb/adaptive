@@ -73,7 +73,7 @@ class PropertyBackend<IT : AdatClass>(
     // Local operations
     // --------------------------------------------------------------------------------
 
-    override fun localAdd(timestamp: LamportTimestamp, item: IT, parentItemId : ItemId?): Pair<AutoAdd, IT> {
+    override fun localAdd(timestamp: LamportTimestamp, item: IT, parentItemId: ItemId?): Pair<AutoAdd, IT> {
         throw UnsupportedOperationException("auto item does not support adding items ($this)")
     }
 
@@ -160,7 +160,7 @@ class PropertyBackend<IT : AdatClass>(
         }
     }
 
-    override fun remoteRemove(operation: AutoRemove): Pair<LamportTimestamp?, Set<Pair<ItemId, IT>>> {
+    override fun remoteRemove(operation: AutoRemove): Pair<LamportTimestamp, Set<Pair<ItemId, IT>>>? {
         throw UnsupportedOperationException("auto item does not support removing items ($this)")
     }
 

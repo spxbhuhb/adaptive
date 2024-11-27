@@ -1,195 +1,256 @@
 package `fun`.adaptive.auto.api
 
+import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.AdatCompanion
+import `fun`.adaptive.adat.AdatCompanionResolve
+import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.backend.AutoWorker
-import `fun`.adaptive.auto.internal.instance.AutoInstance
+import `fun`.adaptive.auto.internal.backend.SetBackend
+import `fun`.adaptive.auto.internal.instance.AutoCollection
+import `fun`.adaptive.auto.internal.instance.AutoInstanceBuilder
+import `fun`.adaptive.auto.internal.persistence.AutoCollectionPersistence
+import `fun`.adaptive.auto.internal.persistence.CollectionMemoryPersistence
+import `fun`.adaptive.auto.internal.producer.AutoCollectionProducer
+import `fun`.adaptive.auto.model.AutoConnectionType
+import `fun`.adaptive.backend.query.firstImpl
+import `fun`.adaptive.foundation.NonAdaptive
+import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import `fun`.adaptive.foundation.producer.Producer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 /**
- * Connect to peers with [AutoApi] and produce a list that is
- * automatically synchronized between peers.
+ * Produces a new value whenever the auto collection handled by [instance]
+ * changes.
  *
- * - Adding/removing items from the list generate a new list instance (on all peers).
- * - Property changes (on any peer) generate a new list instance (on all peers).
- * - Property changes keep the non-affected instances.
+ * Does not create a new auto instance, adds a listener to [instance].
  *
- * Each new instance is validated by default, so fragments that use values
- * produced by [autoList] can safely use the validation result as it is
- * up-to-date all the time.
+ * This is a producer intended for use in an Adaptive fragment.
  *
- * The list is **NOT** thread safe.
+ * @param    instance       The instance to connect with.
+ * @param    binding        Set by the compiler plugin, ignore it.
+ */
+@Producer
+fun <A : AdatClass> autoCollection(
+    instance: CollectionBase<A>,
+    binding: AdaptiveStateVariableBinding<Collection<A>>? = null
+): Collection<A>? {
+    checkNotNull(binding)
+
+    val producer = AutoCollectionProducer(binding, disposeInstance = false)
+
+    producer.instance = instance
+
+    instance.addListener(producer)
+    binding.targetFragment.addProducer(producer)
+
+    // at this point the latest value of producer may be null
+    // or not null, as the instance may or may not have a value
+    // depending on the state of synchronization
+
+    return producer.latestValue
+}
+
+/**
+ * Create an **endpoint** and connect it to the peer with [AutoApi] using **service** connection.
  *
- * @param    binding            Set by the compiler plugin, ignore it.
- * @param    connect            A function to get the connection info. Typically, this is created by
- *                              a service call.
+ * This is a producer intended for use in an Adaptive fragment.
+ *
+ * Uses the transport of the fragment adapter.
+ *
+ * @param    trace             Log trace information.
+ * @param    binding           Set by the compiler plugin, ignore it.
+ * @param    companion         Set by the compiler plugin, ignore it.
+ * @param    infoFunSuspend    A function to get the connection info. Typically, this is created by
+ *                             a service call.
  *
  * @return   `null` (it takes time to connect and synchronize)
  */
-//@Producer
-//fun <A : AdatClass> autoList(
-//    companion: AdatCompanion<A>,
-//    peer: AutoInstance<*, *, List<A>, A>? = null,
-//    listener: AutoCollectionListener<A>? = null,
-//    binding: AdaptiveStateVariableBinding<List<A>>? = null,
-//    trace: Boolean = false,
-//    connect: suspend () -> AutoConnectionInfo<List<A>>?,
-//): List<A>? {
-//    checkNotNull(binding)
-//
-//    val store = AutoList(binding, connect, companion.adatWireFormat, listener, peer, trace)
-//
-//    binding.targetFragment.addProducer(store)
-//
-//    return null
-//}
+@Producer
+@AdatCompanionResolve
+fun <A : AdatClass> autoCollection(
+    trace: Boolean = false,
+    binding: AdaptiveStateVariableBinding<Collection<A>>? = null,
+    companion: AdatCompanion<A>? = null,
+    infoFunSuspend: InfoFunSuspend<SetBackend<A>, AutoCollectionPersistence<A>, Collection<A>, A>
+): Collection<A>? {
+    checkNotNull(binding)
+
+    val producer = AutoCollectionProducer(binding, disposeInstance = true)
+    binding.targetFragment.addProducer(producer)
+
+    val instance =
+        buildCollection(
+            origin = false,
+            infoFunSuspend = infoFunSuspend,
+            defaultWireFormat = companion !!.adatWireFormat,
+            listener = producer,
+            trace = trace,
+            scope = binding.targetFragment.adapter.scope,
+            worker = binding.targetFragment.adapter.backend.firstImpl<AutoWorker>()
+        )
+
+    producer.instance = instance
+
+    return producer.latestValue
+}
 
 /**
- * Connect to peers with [AutoApi] and produce a list that is
- * automatically synchronized between peers.
+ * Create an **origin controller** auto instance with the initial value set to [initialValue].
  *
- * - Adding/removing items from the list generate a new list instance (on all peers).
- * - Property changes (on any peer) generate a new list instance (on all peers).
- * - Property changes keep the non-affected instances.
+ * * The instance **DOES NOT** connect to any other nodes automatically.
+ * * The instance **DOES NOT** have persistence.
  *
- * Each new instance is validated by default, so fragments that use values
- * produced by [autoList] can safely use the validation result as it is
- * up-to-date all the time.
+ * When [worker] **IS NOT** null:
+ * * register the instance with [worker] to accept incoming service connections
+ * * the instance may have **service or direct** connections
  *
- * The list is **NOT** thread safe.
+ * When [worker] **IS** null:
+ * * the instance may have **only direct** connections
  *
- * @param    binding            Set by the compiler plugin, ignore it.
- * @param    connect            A function to get the connection info. Typically, this is created by
- *                              a service call.
- *
- * @return   `null` (it takes time to connect and synchronize)
+ * @param    initialValue   The value of the auto instance.
+ * @param    worker         An optional worker to register this instance with.
+ * @param    listener       An optional listener to get auto events.
+ * @param    persistence    Persistence provider, defaults to [CollectionMemoryPersistence].
+ * @param    trace          Log trace information.
+ * @param    companion      The adat companion to fetch the wireformat from. When on default the compiler
+ *                          will resolve the type parameter into an actual companion.
  */
-//@Producer
-//fun <A : AdatClass> autoList(
-//    peer: AutoInstance<*, *, List<A>, A>? = null,
-//    defaultWireFormat: AdatClassWireFormat<*>? = null,
-//    listener: AutoCollectionListener<A>? = null,
-//    binding: AdaptiveStateVariableBinding<List<A>>? = null,
-//    trace: Boolean = false,
-//    connect: suspend () -> AutoConnectionInfo<List<A>>,
-//): List<A>? {
-//    checkNotNull(binding)
-//
-//    val store = AutoList(binding, connect, defaultWireFormat, listener, peer, trace)
-//
-//    binding.targetFragment.addProducer(store)
-//
-//    return null
-//}
+@NonAdaptive
+@AdatCompanionResolve
+fun <A : AdatClass> autoCollectionOrigin(
+    initialValue: Collection<A>?,
+    worker: AutoWorker? = null,
+    listener: AutoCollectionListener<A>? = null,
+    persistence: AutoCollectionPersistence<A>? = null,
+    trace: Boolean = false,
+    companion: AdatCompanion<A>? = null
+): CollectionBase<A> =
+
+    @Suppress("UNCHECKED_CAST")
+    buildCollection(
+        origin = true,
+        initialValue = initialValue,
+        defaultWireFormat = companion!!.adatWireFormat,
+        listener = listener,
+        trace = trace,
+        worker = worker,
+        scope = CoroutineScope(Dispatchers.Default),
+        persistence = persistence
+    )
 
 /**
- * Creates an Auto List.
+ * Create a **node** with no initial value and connect it to another auto node
+ * through a worker.
  *
- * When [register] is true, register the list with [worker].
+ * The created instance:
  *
- * When [register] is false, use [AutoInstance.connectDirect] to create a direct
- * connection.
+ * - **initiates a connection** with [infoFunSuspend]
+ * - **is registered** with the [worker]
+ * - may have **service or direct** connections
  *
- * After registration peers can use [autoList] to connect to the registered
- * list. To get the connection info needed for the [autoList] use the `connectInfo`
- * function of the returned frontend.
- *
- * - Adding/removing items from the list generate a new list instance (on all peers).
- * - Property changes (on any peer) generate a new list instance (on all peers).
- * - Property changes keep the non-affected instances.
- *
- * Each new instance is validated by default, so code that use values
- * produced by [autoList] can safely use the validation result as it is
- * up-to-date all the time.
- *
- * The list is **NOT** thread safe.
- *
- * @param    worker             Origins that support peer connections must specify pass an [AutoWorker] in this
- *                              parameter. Standalone origins may pass `null`.
- *
- * @return   An [AutoInstance] for this auto list. Use this instance to change
- *           properties and to get connection info for the connecting peers.
+ * @param    worker          The worker to register this instance with.
+ * @param    listener        An optional listener to get auto events.
+ * @param    persistence     Persistence provider, defaults to [CollectionMemoryPersistence].
+ * @param    trace           Log trace information.
+ * @param    companion       The adat companion to fetch the wireformat from. When on default the compiler
+ *                           will resolve the type parameter into an actual companion.
+ * @param    infoFunSuspend  Called to get the connection info from the peer.
  */
-//fun <A : AdatClass> autoList(
-//    worker: AutoWorker,
-//    defaultWireFormat: AdatClassWireFormat<*>? = null,
-//    listener : AutoCollectionListener<A>? = null,
-//    serviceContext: ServiceContext? = null,
-//    handle: AutoHandle = AutoHandle(),
-//    register: Boolean = true,
-//    trace: Boolean = false
-//): ListBase<A> {
-//
-//    return AutoCollectionBase(
-//        worker,
-//        handle,
-//        serviceContext,
-//        defaultWireFormat,
-//        trace,
-//        register
-//    ) {
-//        if (listener != null) context.addListener(listener)
-//        backend = SetBackend(context)
-//        frontend = AdatClassListFrontend(backend)
-//    }
-//
-//}
+@NonAdaptive
+@AdatCompanionResolve
+fun <A : AdatClass> autoCollectionNode(
+    worker: AutoWorker,
+    listener: AutoCollectionListener<A>? = null,
+    persistence: AutoCollectionPersistence<A>? = null,
+    trace: Boolean = false,
+    companion: AdatCompanion<A>? = null,
+    infoFunSuspend: InfoFunSuspend<SetBackend<A>, AutoCollectionPersistence<A>, Collection<A>, A>,
+) =
 
+    @Suppress("UNCHECKED_CAST")
+    buildCollection(
+        origin = false,
+        infoFunSuspend = infoFunSuspend,
+        defaultWireFormat = companion !!.adatWireFormat,
+        listener = listener,
+        trace = trace,
+        worker = worker,
+        scope = CoroutineScope(Dispatchers.Default),
+        persistence = persistence
+    )
 
 /**
- * Registers an Auto list with [worker].
+ * Create a **node** with no initial value and connect it to another auto node
+ * without involving a worker.
  *
- * After registration peers can use [autoList] to connect to the registered
- * list. To get the connection info needed for the [autoList] use the `connectInfo`
- * function of the returned frontend.
+ * The created instance:
  *
- * - Adding/removing items from the list generate a new list instance (on all peers).
- * - Property changes (on any peer) generate a new list instance (on all peers).
- * - Property changes keep the non-affected instances.
+ * - creates a **direct connection** with [peer]
+ * - is **NOT registered** with any workers
+ * - may have **only direct** contentions
  *
- * Each new instance is validated by default, so code that use values
- * produced by [autoList] can safely use the validation result as it is
- * up-to-date all the time.
- *
- * The list is **NOT** thread safe.
- *
- * @param    worker             Origins that support peer connections must specify pass an [AutoWorker] in this
- *                              parameter. Standalone origins may pass `null`.
- *
- * @return   An [AutoInstance] for this auto list. Use this instance to change
- *           properties and to get connection info for the connecting peers.
+ * @param    peer            The instance to connect with.
+ * @param    listener        An optional listener to get auto events.
+ * @param    persistence     Persistence provider, defaults to [CollectionMemoryPersistence].
+ * @param    trace           Log trace information.
+ * @param    companion       The adat companion to fetch the wireformat from. When on default the compiler
+ *                           will resolve the type parameter into an actual companion.
  */
-//fun <A : AdatClass> autoList(
-//    worker: AutoWorker,
-//    companion: AdatCompanion<A>,
-//    listener : AutoCollectionListener<A>? = null,
-//    serviceContext: ServiceContext? = null,
-//    handle: AutoHandle = AutoHandle(),
-//    initialValues: List<A>? = null,
-//    trace: Boolean = false
-//): ListBase<A> {
-//
-//    return AutoCollectionBase(
-//        worker,
-//        handle,
-//        serviceContext,
-//        companion.adatWireFormat,
-//        trace
-//    ) {
-//        if (listener != null) context.addListener(listener)
-//
-//        backend = SetBackend(
-//            context,
-//            initialValues?.mapIndexed { index, item ->
-//                PropertyBackend<A>(
-//                    context,
-//                    ItemId(1, index + 1L),
-//                    companion.wireFormatName,
-//                    item.toArray()
-//                )
-//            }?.associateBy { it.itemId }?.toMutableMap()
-//        )
-//
-//        frontend = AdatClassListFrontend(backend)
-//
-//        frontend.commit(initial = true, fromBackend = false)
-//    }
-//
-//}
+@NonAdaptive
+@AdatCompanionResolve
+fun <A : AdatClass> autoCollectionNode(
+    peer: CollectionBase<A>,
+    listener: AutoCollectionListener<A>? = null,
+    persistence: AutoCollectionPersistence<A>? = null,
+    trace: Boolean = false,
+    companion: AdatCompanion<A>? = null
+) =
+    @Suppress("UNCHECKED_CAST")
+    buildCollection(
+        origin = false,
+        infoFunSuspend = { peer.connectInfo(AutoConnectionType.Direct) },
+        directPeer = peer,
+        defaultWireFormat = companion !!.adatWireFormat,
+        listener = listener,
+        trace = trace,
+        scope = CoroutineScope(Dispatchers.Default)
+    )
+
+
+@Suppress("UNCHECKED_CAST")
+private fun <A : AdatClass> buildCollection(
+    origin: Boolean,
+    defaultWireFormat: AdatClassWireFormat<A>,
+    scope: CoroutineScope,
+    initialValue: Collection<A>? = null,
+    infoFunSuspend: InfoFunSuspend<SetBackend<A>, AutoCollectionPersistence<A>, Collection<A>, A>? = null,
+    directPeer: CollectionBase<A>? = null,
+    listener: AutoCollectionListener<A>? = null,
+    trace: Boolean,
+    worker: AutoWorker? = null,
+    persistence: AutoCollectionPersistence<A>? = null,
+): AutoCollection<SetBackend<A>, AutoCollectionPersistence<A>, A> =
+
+    AutoInstanceBuilder<SetBackend<A>, AutoCollectionPersistence<A>, Collection<A>, A>(
+        origin = origin,
+        collection = false,
+        infoFunSuspend = infoFunSuspend,
+        directPeer = directPeer,
+        defaultWireFormat = defaultWireFormat,
+        collectionListener = listener,
+        worker = worker,
+        scope = scope,
+        trace = trace,
+        backendFun = { builder, info, value ->
+            SetBackend(
+                builder.instance,
+                null
+            )
+        },
+        persistenceFun = { builder ->
+            persistence ?: CollectionMemoryPersistence(wireFormatProvider = builder.instance.wireFormatProvider)
+        }
+    ).build(
+        initialValue
+    ) as AutoCollection<SetBackend<A>, AutoCollectionPersistence<A>, A>

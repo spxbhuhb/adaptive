@@ -12,7 +12,7 @@ import `fun`.adaptive.auto.model.operation.AutoRemove
 import `fun`.adaptive.auto.model.operation.AutoSyncEnd
 
 abstract class AutoCollectionBackend<IT : AdatClass>(
-    instance: AutoInstance<AutoCollectionBackend<IT>, AutoCollectionPersistence<IT>, Collection<IT>, IT>
+    instance: AutoInstance<*, *, Collection<IT>, IT>
 ) : AutoBackend<IT>(instance) {
 
     /**

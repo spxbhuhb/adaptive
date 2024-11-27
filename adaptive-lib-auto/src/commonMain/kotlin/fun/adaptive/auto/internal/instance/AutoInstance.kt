@@ -10,6 +10,8 @@ import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.auto.internal.backend.AutoBackend
 import `fun`.adaptive.auto.internal.backend.AutoCollectionBackend
 import `fun`.adaptive.auto.internal.backend.AutoItemBackend
+import `fun`.adaptive.auto.internal.backend.PropertyBackend
+import `fun`.adaptive.auto.internal.backend.SetBackend
 import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.internal.persistence.AutoPersistence
 import `fun`.adaptive.auto.model.AutoConnectionInfo
@@ -126,6 +128,13 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
                 val loggerName = "auto.${it.globalId.toShort()}.${it.peerId.toString().padStart(6, '0')}"
                 logger = getLogger(loggerName)
                 if (trace) logger.enableFine()
+            }
+
+            backend.let {
+                when (it) {
+                    is PropertyBackend<*> -> receive(LamportTimestamp(handle.peerId, it.lastUpdate.timestamp))
+                    is SetBackend<*> -> receive(LamportTimestamp(handle.peerId, it.lastUpdate.timestamp))
+                }
             }
         }
 
@@ -258,19 +267,22 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
 
     @RequireLock
     internal open fun remoteRemove(operation: AutoRemove) {
-        val (timestamp, removed) = backend.remoteRemove(operation)
+        val result = backend.remoteRemove(operation)
 
-        if (timestamp != null) {
+        if (result != null) {
+            val (timestamp, removed) = result
             receive(timestamp)
+
+            trace { "APPLIED  :: ${operation.itemIds} $removed" }
+
             removed.forEach {
                 onRemoteRemove(it.first, it.second)
             }
-            distribute(operation)
-            trace { "APPLIED  :: ${operation.itemIds} $removed" }
         } else {
-            distribute(operation)
             trace { "SKIPPED  :: ${operation.itemIds}" }
         }
+
+        distribute(operation)
     }
 
     @RequireLock
@@ -389,7 +401,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     // --------------------------------------------------------------------------------
 
     @RequireLock
-    protected fun receive(receivedTime: LamportTimestamp) {
+    internal fun receive(receivedTime: LamportTimestamp) {
         unsafeTime = unsafeTime.receive(receivedTime)
     }
 
@@ -470,6 +482,13 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
         lock.use {
             collectionListeners += listener
             if (isInitialized) listener.onInit(getItems())
+        }
+    }
+
+    @ThreadSafe
+    fun removeListener(listener: AutoCollectionListener<IT>) {
+        lock.use {
+            collectionListeners -= listener
         }
     }
 

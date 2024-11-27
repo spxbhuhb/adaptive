@@ -15,16 +15,19 @@ import `fun`.adaptive.auto.model.operation.AutoSyncEnd
 import `fun`.adaptive.auto.model.operation.AutoUpdate
 
 class SetBackend<IT : AdatClass>(
-    instance: AutoInstance<AutoCollectionBackend<IT>, AutoCollectionPersistence<IT>, Collection<IT>, IT>,
+    instance: AutoInstance<*, *, Collection<IT>, IT>,
     initialValue: MutableMap<ItemId, PropertyBackend<IT>>? = null,
 ) : AutoCollectionBackend<IT>(instance) {
 
     private val data = SetBackendData<IT>(initialValue)
 
+    var lastUpdate : LamportTimestamp = LamportTimestamp.CONNECTING
+        private set
+
     init {
         if (initialValue != null && initialValue.isNotEmpty()) {
             data.addAll(initialValue.keys)
-            instance.receive(LamportTimestamp(instance.handle.peerId, initialValue.values.maxOf { it.lastUpdate.timestamp }))
+            lastUpdate = LamportTimestamp(instance.handle.peerId, initialValue.values.maxOf { it.lastUpdate.timestamp })
         }
     }
 
@@ -103,8 +106,8 @@ class SetBackend<IT : AdatClass>(
         return null
     }
 
-    override fun remoteRemove(operation: AutoRemove): Pair<LamportTimestamp?, Set<Pair<ItemId, IT>>> {
-        data.remove(operation.itemIds, fromPeer = true)
+    override fun remoteRemove(operation: AutoRemove): Pair<LamportTimestamp, Set<Pair<ItemId, IT>>>? {
+        return operation.timestamp to data.remove(operation.itemIds, fromPeer = true)
     }
 
     override fun remoteSyncEnd(operation: AutoSyncEnd) {

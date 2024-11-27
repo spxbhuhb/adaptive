@@ -40,7 +40,7 @@ abstract class AutoBackend<IT : AdatClass>(
 
     abstract fun remoteUpdate(operation: AutoUpdate): Triple<LamportTimestamp, IT?, IT>?
 
-    abstract fun remoteRemove(operation: AutoRemove): Pair<LamportTimestamp?, Set<Pair<ItemId, IT>>>
+    abstract fun remoteRemove(operation: AutoRemove): Pair<LamportTimestamp, Set<Pair<ItemId, IT>>>?
 
     open fun remoteSyncEnd(operation: AutoSyncEnd) = Unit
 

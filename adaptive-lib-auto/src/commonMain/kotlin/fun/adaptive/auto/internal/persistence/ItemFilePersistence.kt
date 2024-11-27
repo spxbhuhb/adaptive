@@ -30,7 +30,7 @@ class ItemFilePersistence<IT : AdatClass>(
         write(path, wireFormatProvider, export)
     }
 
-
+// FIXME missing onRemove for ItemFilePersistence
 //    override fun onRemove() {
 //        deleteMeta(path)
 //    }

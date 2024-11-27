@@ -18,22 +18,25 @@ class AutoCollection<BE : AutoBackend<IT>, PT : AutoCollectionPersistence<IT>, I
 ), Collection<IT> {
 
     override val size: Int
-        get() = values.size
+        get() = value.size
 
-    val values: Collection<IT>
+    val valueOrNull : Collection<IT>?
+        get() = getItems() // FIXME valueOrNull in AutoCollection
+
+    val value: Collection<IT>
         get() = getItems()
 
     override fun contains(element: IT): Boolean =
-        values.contains(element)
+        value.contains(element)
 
     override fun containsAll(elements: Collection<IT>): Boolean =
-        values.containsAll(elements)
+        value.containsAll(elements)
 
     override fun isEmpty(): Boolean =
-        values.isEmpty()
+        value.isEmpty()
 
     override fun iterator(): Iterator<IT> =
-        values.iterator()
+        value.iterator()
 
     operator fun plusAssign(element: IT) {
         localAdd(element)
