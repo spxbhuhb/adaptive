@@ -6,6 +6,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.graphics.svg.api.svgFill
@@ -23,14 +24,21 @@ import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.cornerRadius
 import `fun`.adaptive.ui.api.fontSize
+import `fun`.adaptive.ui.api.fontWeight
+import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.maxHeight
 import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.mediaMetrics
 import `fun`.adaptive.ui.api.noPointerEvents
 import `fun`.adaptive.ui.api.onClick
+import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.paddingBottom
+import `fun`.adaptive.ui.api.paddingLeft
 import `fun`.adaptive.ui.api.paddingRight
+import `fun`.adaptive.ui.api.paddingTop
 import `fun`.adaptive.ui.api.position
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
@@ -42,6 +50,7 @@ import `fun`.adaptive.ui.builtin.power_settings_new
 import `fun`.adaptive.ui.builtin.settings
 import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.icon.actionIcon
+import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
@@ -180,9 +189,10 @@ private fun thin(
 ) {
     val appIcon = appData.mediumAppIcon
     val sidebarItems = appData.sidebarItems
+    val footerHeight = if (appData.userFullName != null) thinSidebarTheme.itemHeight * 3 else thinSidebarTheme.itemHeight
 
     grid {
-        rowTemplate(80.dp, 1.fr) .. maxHeight
+        rowTemplate(80.dp, 1.fr, footerHeight) .. maxHeight
 
         box {
             size(80.dp, 80.dp) .. alignItems.center
@@ -196,8 +206,33 @@ private fun thin(
         }
 
         column {
-            maxHeight .. verticalScroll
+            maxHeight .. verticalScroll .. borderBottom(colors.outline) .. borderTop(colors.outline)
             thinSidebar(sidebarItems, appData.navState)
+        }
+
+        thinFooter(appData)
+    }
+}
+
+@Adaptive
+private fun thinFooter(
+    appData: BasicAppData
+) {
+    val loginPage = appData.loginPage
+    val userFullName = appData.userFullName
+
+    if (userFullName == null) {
+        if (loginPage != null) {
+            actionIcon(Res.drawable.power_settings_new) .. alignSelf.center .. onClick { appData.navState.open(loginPage) }
+        }
+    } else {
+        grid {
+            rowTemplate((thinSidebarTheme.itemHeight - 4.dp) repeat 3)
+            alignItems.center .. paddingTop { 6.dp } .. paddingBottom { 6.dp }
+
+            nameplate(userFullName)
+            actionIcon(Res.drawable.settings)
+            actionIcon(Res.drawable.power_settings_new)
         }
     }
 }
@@ -212,19 +247,19 @@ private fun full(
 
     grid {
         rowTemplate(168.dp, 1.fr, fullSidebarTheme.itemHeight) .. maxHeight
-        
+
         box {
             if (appIcon != null) {
                 appIcon(appIcon) .. position(36.dp, 16.dp) .. onClick { toggle() }
             }
             text(appData.appName) .. boldFont .. fontSize(28.sp) .. position(60.dp, 88.dp)
         }
-        
+
         column {
             maxHeight .. verticalScroll .. borderBottom(colors.outline) .. borderTop(colors.outline)
             fullSidebar(sidebarItems, appData.navState)
         }
-        
+
         fullFooter(appData)
     }
 }
@@ -238,14 +273,15 @@ private fun fullFooter(
 
     if (userFullName == null) {
         if (loginPage != null) {
-            button("Login") .. alignSelf.center .. onClick { appData.navState.open(loginPage) }
+            button("Login", Res.drawable.power_settings_new) .. alignSelf.center .. onClick { appData.navState.open(loginPage) }
         }
     } else {
         grid {
             maxSize .. colTemplate(1.fr, 40.dp, 40.dp) .. paddingRight { 16.dp }
             row {
+                maxHeight .. alignSelf.startCenter .. alignItems.startCenter .. gap { 12.dp } .. paddingLeft { 20.dp }
                 nameplate(userFullName)
-                text(userFullName)
+                text(userFullName) .. maxWidth
             }
             actionIcon(Res.drawable.settings) .. alignSelf.center
             actionIcon(Res.drawable.power_settings_new) .. alignSelf.center
@@ -253,12 +289,20 @@ private fun fullFooter(
     }
 }
 
+private val nameplateStyles = instructionsOf(
+    textColors.onSuccessSurface,
+    fontSize(18.sp),
+    fontWeight(400),
+    alignSelf.center,
+    padding(top = 1.5.dp, left = 1.5.dp)
+)
+
 @Adaptive
-private fun nameplate(name : String) {
+private fun nameplate(name: String) {
     val initials = name.split(" ").mapNotNull { it.firstOrNull()?.toString()?.uppercase() }.take(2).joinToString("")
     box {
-        size(32.dp, 32.dp) .. cornerRadius(16.dp) .. backgroundColor(colors.successSurface)
-        text(initials) .. textColors.onSuccessSurface .. fontSize(24.sp) .. alignSelf.center
+        size(34.dp, 34.dp) .. cornerRadius(18.dp) .. backgroundColor(colors.successSurface) .. alignItems.center
+        text(initials) .. nameplateStyles
     }
 }
 

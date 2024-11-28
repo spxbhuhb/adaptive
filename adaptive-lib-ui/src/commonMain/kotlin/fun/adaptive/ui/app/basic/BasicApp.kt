@@ -17,7 +17,7 @@ open class BasicAppData {
     var userFullName : String? = null
     var session : Session? = null
 
-    val navState = autoItemOrigin(NavState())
+    val navState = autoItemOrigin(NavState(), trace = true)
 
     val layoutState = autoItemOrigin(DefaultLayoutState())
 

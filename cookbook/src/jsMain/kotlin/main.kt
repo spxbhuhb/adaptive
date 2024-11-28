@@ -2,13 +2,17 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.auth.authCommon
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.cookbook.Routes
+import `fun`.adaptive.cookbook.app.pageNotFound
+import `fun`.adaptive.cookbook.app.publicLanding
 import `fun`.adaptive.cookbook.appData
+import `fun`.adaptive.cookbook.auth.api.AccountApi
 import `fun`.adaptive.cookbook.auth.authRecipe
 import `fun`.adaptive.cookbook.cookbookCommon
 import `fun`.adaptive.cookbook.graphics.canvas.canvasRecipe
@@ -31,6 +35,7 @@ import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.ktor.api.webSocketTransport
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.maxSize
@@ -47,6 +52,7 @@ import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 fun main() {
 
@@ -65,6 +71,14 @@ fun main() {
         val localBackend = backend(transport) {
             auto()
             worker { SnackbarManager() }
+        }
+
+        appData.session = getService<SessionApi>(transport).getSession()
+
+        if (appData.session != null) {
+            val account = getService<AccountApi>(transport).account()
+            checkNotNull(account)
+            appData.userFullName = account.name
         }
 
         browser(CanvasFragmentFactory, SvgFragmentFactory, FormFragmentFactory, backend = localBackend) { adapter ->
@@ -101,6 +115,7 @@ fun mainContent() {
             in Routes.form -> formRecipe()
             in Routes.grid -> gridRecipe()
             in Routes.navigation -> navigationRecipe(navState)
+            in Routes.publicLanding -> publicLanding()
             in Routes.responsive -> responsiveMain()
             in Routes.select -> selectRecipe()
             in Routes.sidebar -> sideBarRecipe()
@@ -108,7 +123,13 @@ fun mainContent() {
             in Routes.svg -> svgRecipe()
             in Routes.text -> textRecipe()
             in Routes.tree -> treeRecipe()
-            else -> text("unknown route: $navState")
+            else -> {
+                if (navState?.segments?.isEmpty() == true) {
+                    publicLanding()
+                } else {
+                    pageNotFound(navState)
+                }
+            }
         }
     }
 }

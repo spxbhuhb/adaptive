@@ -26,6 +26,8 @@ open class NavState(
     val fullScreen: Boolean = false,
 ) {
 
+    constructor(vararg segments: String, fullScreen: Boolean) : this(segments.toList(), fullScreen = fullScreen)
+
     constructor(path: String) : this(segments = path.split("/").mapNotNull { it.ifEmpty { null } })
 
     /**

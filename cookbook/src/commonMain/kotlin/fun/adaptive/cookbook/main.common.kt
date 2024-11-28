@@ -13,7 +13,7 @@ val appData = BasicAppData().apply {
     this.largeAppIcon = Res.drawable.eco
     this.mediumAppIcon = Res.drawable.eco
 
-    this.loginPage = Routes.auth.sub("login")
+    this.loginPage = Routes.login
 
     this.sidebarItems = listOf(
         SidebarItem(Res.drawable.grid_view, "Auth", Routes.auth),
@@ -45,7 +45,9 @@ object Routes {
     val event = NavState("Event")
     val form = NavState("Form")
     val grid = NavState("Grid")
+    val login = NavState("Login", fullScreen = true)
     val navigation = navRouting
+    val publicLanding = NavState("PublicLanding")
     val responsive = NavState("Responsive")
     val select = NavState("Select")
     val sidebar = NavState("SideBar")

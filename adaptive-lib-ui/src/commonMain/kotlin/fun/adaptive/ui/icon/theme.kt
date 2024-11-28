@@ -4,6 +4,7 @@ import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.svg.api.svgFill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
+import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.cornerRadius
 import `fun`.adaptive.ui.api.size
@@ -34,7 +35,8 @@ class IconTheme(
 
     val actionIconContainer = instructionsOf(
         size(34.dp, 34.dp),
-        cornerRadius(16.dp)
+        cornerRadius(16.dp),
+        alignItems.center
     )
 
     val nonHoverColors = instructionsOf(
