@@ -34,6 +34,7 @@ import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.noSelect
 import `fun`.adaptive.ui.api.onClick
+import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.paddingRight
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
@@ -48,6 +49,7 @@ import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.snackbar.fail
 import `fun`.adaptive.ui.snackbar.warning
+import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import kotlinx.coroutines.launch
 
@@ -56,11 +58,11 @@ fun largeSignIn(): AdaptiveFragment {
     val signIn = copyStore { SignIn() }
 
     box {
-        maxSize .. alignItems.center .. margin { 32.dp } .. borders.outline .. cornerRadius8
+        maxSize .. alignItems.center
 
         grid {
-            size(377.dp, 600.dp) .. colTemplate(1.fr) .. rowTemplate(38.dp, 88.dp, 60.dp, 60.dp, 60.dp, 100.dp, 50.dp)
-            alignItems.center
+            size((377 + 64).dp, (500 + 64).dp) .. colTemplate(1.fr) .. rowTemplate(38.dp, 88.dp, 60.dp, 60.dp, 60.dp, 100.dp, 50.dp)
+            alignItems.center .. borders.outline .. cornerRadius8 .. backgrounds.surface .. padding { 32.dp }
 
             text("Üdvözlünk") .. letterSpacing(0.03) .. titleLarge .. semiBoldFont .. smallCaps
 
