@@ -148,3 +148,51 @@ fun Char.isNewLine() =
             || this == '\u2028'
             || this == '\u2029'
         )
+
+fun String.encodeToUrl(): String {
+    var result = ""
+    for (byte in encodeToByteArray()) {
+        val unsignedByte = byte.toInt() and 0xFF
+
+        when (unsignedByte) {
+            in 0x30 .. 0x39 -> result += unsignedByte.toChar() // 0-9
+            in 0x41 .. 0x5A -> result += unsignedByte.toChar()  // A-Z
+            in 0x61 .. 0x7A -> result += unsignedByte.toChar() // a-z
+            0x20 -> result += '+'
+            0x2D -> result += '-' // -
+            0x2E -> result += '.' // .
+            0x5F -> result += '_' // _
+            0x7E -> result += '~'  // ~
+            else -> {
+                result += "%"
+                result += unsignedByte.toString(16).uppercase().padStart(2, '0')
+            }
+        }
+    }
+    return result
+}
+
+fun String.decodeFromUrl(): String {
+    val result = mutableListOf<Byte>()
+    var i = 0
+    while (i < this.length) {
+        when {
+            this[i] == '%' -> {
+                val hexValue = this.substring(i + 1, i + 3)
+                result += hexValue.toInt(16).toByte()
+                i += 3
+            }
+
+            this[i] == '+' -> {
+                result += 0x20
+                i ++
+            }
+
+            else -> {
+                result += this[i].code.toByte()
+                i ++
+            }
+        }
+    }
+    return result.toByteArray().decodeToString()
+}

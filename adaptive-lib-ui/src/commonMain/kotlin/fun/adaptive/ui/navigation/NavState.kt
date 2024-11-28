@@ -4,6 +4,8 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.store.AdatStore
 import `fun`.adaptive.auto.api.ItemBase
+import `fun`.adaptive.utility.decodeFromUrl
+import `fun`.adaptive.utility.encodeToUrl
 
 typealias NavStateOrigin = ItemBase<NavState>
 
@@ -23,6 +25,7 @@ open class NavState(
     val parameters: Map<String, String> = emptyMap(),
     val tag: String = "",
     val custom: String = "",
+    val title: String? = null,
     val fullScreen: Boolean = false,
 ) {
 
@@ -34,12 +37,13 @@ open class NavState(
      * Create a [NavState] which is a sub-state of this one by adding the segments
      * to the segments of this.
      */
-    fun sub(vararg segments : String) : NavState =
+    fun sub(vararg segments: String): NavState =
         NavState(
             this.segments + segments,
             this.parameters,
             this.tag,
             this.custom,
+            this.title,
             this.fullScreen
         )
 
@@ -84,6 +88,20 @@ open class NavState(
         store().update(parse(url))
     }
 
+    fun toUrl(): String {
+        var result = "/" + segments.joinToString("/") { it.encodeToUrl() }
+        if (parameters.isNotEmpty()) {
+            result += "?" + parameters.map { "${it.key.encodeToUrl()}=${it.value.encodeToUrl()}" }.joinToString("&")
+        }
+        if (tag.isNotEmpty()) {
+            result += "#${tag.encodeToUrl()}"
+        }
+        if (custom.isNotEmpty()) {
+            result += "|${custom.encodeToUrl()}"
+        }
+        return result
+    }
+
     private fun store(): AdatStore<NavState> {
         @Suppress("UNCHECKED_CAST")
         val store = adatContext?.store as? AdatStore<NavState>
@@ -91,7 +109,8 @@ open class NavState(
     }
 
     companion object : AdatCompanion<NavState> {
-        private val regex = Regex("([^?#]*)(\\?[^#]*)?(#.*)?")
+
+        private val regex = Regex("(?:https?://)?(?:[a-zA-Z0-9.-]+(?::[0-9]{1,5})?)?([^?#]*)(\\?[^#]*)?(#[^|]*)?(\\|.*)?")
 
         fun parse(url: String): NavState {
             val match = regex.matchEntire(url)
@@ -100,19 +119,27 @@ open class NavState(
             val path = match
                 .groupValues[1]
                 .split('/')
-                .mapNotNull { it.ifEmpty { null } }
+                .mapNotNull { it.decodeFromUrl().ifEmpty { null } }
 
             val parameters = match
                 .groupValues[2]
+                .removePrefix("?")
                 .split('&')
-                .mapNotNull { it.ifEmpty { null } }
+                .mapNotNull { it.decodeFromUrl().ifEmpty { null } }
                 .map { it.split('=', limit = 2) }
-                .associate { it[0] to it[1] }
+                .associate { it[0].decodeFromUrl() to it[1].decodeFromUrl() }
 
             val tag = match
                 .groupValues[3]
+                .removePrefix("#")
+                .decodeFromUrl()
 
-            return NavState(path, parameters, tag)
+            val custom = match
+                .groupValues[4]
+                .removePrefix("|")
+                .decodeFromUrl()
+
+            return NavState(path, parameters, tag, custom)
         }
     }
 }

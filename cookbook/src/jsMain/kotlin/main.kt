@@ -4,8 +4,10 @@
 
 import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.auth.authCommon
+import `fun`.adaptive.auto.api.AutoItemListener
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.auto.api.autoItem
+import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.cookbook.Routes
@@ -41,10 +43,13 @@ import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.app.basic.BasicAppData
 import `fun`.adaptive.ui.app.basic.defaultAppLayout
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.form.FormFragmentFactory
+import `fun`.adaptive.ui.form.platform.BrowserHistoryStateListener
 import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.platform.withJsResources
 import `fun`.adaptive.ui.snackbar.SnackbarManager
 import `fun`.adaptive.ui.uiCommon
@@ -52,7 +57,7 @@ import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.random.Random
+import org.w3c.dom.PopStateEvent
 
 fun main() {
 
@@ -80,6 +85,8 @@ fun main() {
             checkNotNull(account)
             appData.userFullName = account.name
         }
+
+        BrowserHistoryStateListener(appData)
 
         browser(CanvasFragmentFactory, SvgFragmentFactory, FormFragmentFactory, backend = localBackend) { adapter ->
 

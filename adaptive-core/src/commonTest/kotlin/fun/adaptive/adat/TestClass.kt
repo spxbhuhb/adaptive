@@ -21,7 +21,7 @@ class TestClass(
 
     override val adatCompanion = Companion
 
-    override var adatContext : AdatContext<Any>? = null
+    override var adatContext: AdatContext<*>? = null
 
     override fun descriptor() { // not used in this test, compiler plugin tests and the "test" module contains actual unit tests
         properties {
