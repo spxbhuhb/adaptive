@@ -7,16 +7,17 @@ import `fun`.adaptive.cookbook.folder
 import `fun`.adaptive.cookbook.grid_view
 import `fun`.adaptive.cookbook.mail
 import `fun`.adaptive.ui.navigation.NavState
+import `fun`.adaptive.ui.navigation.navState
 import `fun`.adaptive.ui.navigation.sidebar.SidebarItem
 
 val sidebarRecipeNavState = autoItemOrigin(NavState())
 
 object Routes {
-    val zones = NavState("zones")
-    val notifications = NavState("notifications")
-    val settings = NavState("settings")
-    val reports = NavState("reports")
-    val networks = NavState("networks")
+    val zones = navState("zones")
+    val notifications = navState("notifications")
+    val settings = navState("settings")
+    val reports = navState("reports")
+    val networks = navState("networks")
 }
 
 val items = listOf(

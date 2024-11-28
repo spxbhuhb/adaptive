@@ -8,8 +8,9 @@ import `fun`.adaptive.adat.api.touchAndValidate
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.cookbook.appData
-import `fun`.adaptive.cookbook.auth.authRouting
 import `fun`.adaptive.cookbook.auth.model.SignIn
+import `fun`.adaptive.cookbook.shared.cornerRadius4
+import `fun`.adaptive.cookbook.shared.cornerRadius8
 import `fun`.adaptive.cookbook.shared.largeScreen
 import `fun`.adaptive.cookbook.shared.mediumGray
 import `fun`.adaptive.cookbook.shared.titleLarge
@@ -28,6 +29,8 @@ import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.inputPlaceholder
 import `fun`.adaptive.ui.api.letterSpacing
 import `fun`.adaptive.ui.api.lightFont
+import `fun`.adaptive.ui.api.margin
+import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.noSelect
 import `fun`.adaptive.ui.api.onClick
@@ -43,18 +46,17 @@ import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.checkbox.api.checkbox
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.*
-import `fun`.adaptive.ui.navigation.open
 import `fun`.adaptive.ui.snackbar.fail
-import `fun`.adaptive.ui.snackbar.success
 import `fun`.adaptive.ui.snackbar.warning
+import `fun`.adaptive.ui.theme.borders
 import kotlinx.coroutines.launch
 
 @Adaptive
-fun signIn(): AdaptiveFragment {
+fun largeSignIn(): AdaptiveFragment {
     val signIn = copyStore { SignIn() }
 
     box {
-        largeScreen .. alignItems.center
+        maxSize .. alignItems.center .. margin { 32.dp } .. borders.outline .. cornerRadius8
 
         grid {
             size(377.dp, 600.dp) .. colTemplate(1.fr) .. rowTemplate(38.dp, 88.dp, 60.dp, 60.dp, 60.dp, 100.dp, 50.dp)
@@ -85,7 +87,6 @@ fun signIn(): AdaptiveFragment {
                     try {
                         appData.session = getService<SessionApi>(adapter().transport).login(signIn.login, signIn.password)
                         appData.onLoginSuccess()
-                        appData.memberLanding?.let { appData.open(it) }
                     } catch (t: Throwable) {
                         fail("Sikertelen belépés!")
                     }

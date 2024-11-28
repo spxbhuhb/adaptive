@@ -10,8 +10,9 @@ import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.navigation.NavState
+import `fun`.adaptive.ui.navigation.navState
 
-val navRouting = NavState("navigation")
+val navRouting = navState("navigation")
 
 private val option1 = NavState(listOf("navigation", "1"))
 private val option2 = NavState(listOf("navigation", "2"))

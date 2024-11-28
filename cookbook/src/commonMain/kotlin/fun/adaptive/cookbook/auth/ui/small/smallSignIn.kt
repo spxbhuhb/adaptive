@@ -44,7 +44,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Adaptive
-fun signIn(): AdaptiveFragment {
+fun smallSignIn(): AdaptiveFragment {
     val signIn = copyStore { SignIn() }
 
     grid {

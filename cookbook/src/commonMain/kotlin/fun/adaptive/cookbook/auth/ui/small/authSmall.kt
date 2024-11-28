@@ -14,7 +14,7 @@ fun authSmall() {
         maxSize .. verticalScroll .. gap { 16.dp }
 
         signUp()
-        signIn()
+        smallSignIn()
         passwordReset()
     }
 }

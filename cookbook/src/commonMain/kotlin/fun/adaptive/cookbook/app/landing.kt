@@ -10,7 +10,7 @@ import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.instruction.dp
 
 @Adaptive
-fun publicLanding() {
+fun landing() {
     box {
         maxSize
         column {

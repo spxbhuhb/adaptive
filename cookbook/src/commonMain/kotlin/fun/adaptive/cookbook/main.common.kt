@@ -1,9 +1,13 @@
 package `fun`.adaptive.cookbook
 
+import `fun`.adaptive.cookbook.auth.api.AccountApi
 import `fun`.adaptive.cookbook.auth.authRouting
+import `fun`.adaptive.cookbook.shared.title
 import `fun`.adaptive.cookbook.ui.navigation.navRouting
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.app.basic.BasicAppData
 import `fun`.adaptive.ui.navigation.NavState
+import `fun`.adaptive.ui.navigation.navState
 import `fun`.adaptive.ui.navigation.sidebar.SidebarItem
 
 val appData = BasicAppData().apply {
@@ -14,6 +18,8 @@ val appData = BasicAppData().apply {
     this.mediumAppIcon = Res.drawable.eco
 
     this.loginPage = Routes.login
+    this.publicLanding = Routes.publicLanding
+    this.memberLanding = Routes.memberLanding
 
     this.sidebarItems = listOf(
         SidebarItem(Res.drawable.grid_view, "Auth", Routes.auth),
@@ -37,23 +43,24 @@ val appData = BasicAppData().apply {
 
 object Routes {
     val auth = authRouting
-    val box = NavState("Box")
-    val canvas = NavState("Canvas")
-    val dialog = NavState("Dialog")
-    val editor = NavState("Editor")
-    val empty = NavState("Empty")
-    val event = NavState("Event")
-    val form = NavState("Form")
-    val grid = NavState("Grid")
-    val login = NavState("Login", fullScreen = true)
-    val navigation = navRouting
-    val publicLanding = NavState("PublicLanding")
-    val responsive = NavState("Responsive")
-    val select = NavState("Select")
-    val sidebar = NavState("SideBar")
-    val snackbar = NavState("Snackbar")
-    val svg = NavState("SVG")
-    val text = NavState("Text")
-    val tree = NavState("Tree")
+    val box = navState("box", title = "Box")
+    val canvas = navState("canvas", title = "Canvas")
+    val dialog = navState("dialog", title = "Dialog")
+    val editor = navState("editor", title = "Editor")
+    val empty = navState("empty", title = "Empty")
+    val event = navState("event", title = "Event")
+    val form = navState("form", title = "Form")
+    val grid = navState("grid", title = "Grid")
+    val login = navState("login", title = "Login", fullScreen = true)
+    val navigation = navRouting // No title as it's a routing function, not a state
+    val publicLanding = navState("public-landing", title = "Cookbook")
+    val memberLanding = navState("member-landing", title = "Cookbook")
+    val responsive = navState("responsive", title = "Responsive")
+    val select = navState("select", title = "Select")
+    val sidebar = navState("sideBar", title = "SideBar")
+    val snackbar = navState("snackbar", title = "Snackbar")
+    val svg = navState("svg", title = "SVG")
+    val text = navState("text", title = "Text")
+    val tree = navState("tree", title = "Tree")
 }
 

@@ -1,9 +1,11 @@
 package `fun`.adaptive.ui.app.basic
 
+import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.auto.api.autoCollection
 import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.instructionsOf
@@ -13,6 +15,7 @@ import `fun`.adaptive.graphics.svg.api.svgFill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.resource.DrawableResource
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.backgroundColor
@@ -66,6 +69,7 @@ import `fun`.adaptive.ui.snackbar.snackList
 import `fun`.adaptive.ui.snackbar.snackbarTheme
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textColors
+import kotlinx.coroutines.launch
 
 @Adaptive
 fun defaultAppLayout(
@@ -232,7 +236,7 @@ private fun thinFooter(
 
             nameplate(userFullName)
             actionIcon(Res.drawable.settings)
-            actionIcon(Res.drawable.power_settings_new)
+            logout(appData)
         }
     }
 }
@@ -284,7 +288,7 @@ private fun fullFooter(
                 text(userFullName) .. maxWidth
             }
             actionIcon(Res.drawable.settings) .. alignSelf.center
-            actionIcon(Res.drawable.power_settings_new) .. alignSelf.center
+            logout(appData)
         }
     }
 }
@@ -320,6 +324,16 @@ fun appIcon(
         }
     }
     return fragment()
+}
+
+@Adaptive
+fun logout(appData: BasicAppData) {
+    actionIcon(Res.drawable.power_settings_new) .. alignSelf.center .. onClick {
+        adapter().scope.launch {
+            getService<SessionApi>(adapter().transport).logout()
+            appData.onLogout()
+        }
+    }
 }
 
 // FIXME sidebar mode toggle

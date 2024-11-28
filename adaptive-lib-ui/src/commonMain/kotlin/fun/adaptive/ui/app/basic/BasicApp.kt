@@ -3,6 +3,7 @@ package `fun`.adaptive.ui.app.basic
 import `fun`.adaptive.auth.model.Session
 import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.resource.DrawableResource
+import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.builtin.Res
 import `fun`.adaptive.ui.builtin.menu
 import `fun`.adaptive.ui.builtin.settings
@@ -10,6 +11,8 @@ import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.navigation.sidebar.SidebarItem
 
 open class BasicAppData {
+
+    lateinit var transport: ServiceCallTransport
 
     var appName: String? = null
     var appInfos: List<String>? = null
@@ -30,11 +33,12 @@ open class BasicAppData {
 
     var loginPage : NavState? = null
     var publicLanding : NavState? = null
-    val memberLanding : NavState? = null
+    var memberLanding: NavState? = null
 
     var accountSettingsPage : NavState? = null
 
     var onLoginSuccess : suspend () -> Unit = {}
+    var onLogout: suspend () -> Unit = {}
 
     fun open(newState: NavState) {
         this.navState.update(newState)

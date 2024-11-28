@@ -13,7 +13,7 @@ fun authLarge() {
     flowBox {
         maxSize .. verticalScroll .. gap { 16.dp }
 
-        signIn()
+        largeSignIn()
         signUp()
         passwordReset()
     }

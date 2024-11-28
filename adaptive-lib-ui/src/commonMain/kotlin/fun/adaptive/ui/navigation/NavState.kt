@@ -9,12 +9,16 @@ import `fun`.adaptive.utility.encodeToUrl
 
 typealias NavStateOrigin = ItemBase<NavState>
 
+fun navState(vararg segments: String, title: String? = null, fullScreen: Boolean = false) =
+    NavState(segments.toList(), title = title, fullScreen = fullScreen)
+
 fun NavStateOrigin.open(navState: NavState) {
     update(
         navState::segments,
         navState::parameters,
         navState::tag,
         navState::custom,
+        navState::title,
         navState::fullScreen
     )
 }
@@ -28,10 +32,6 @@ open class NavState(
     val title: String? = null,
     val fullScreen: Boolean = false,
 ) {
-
-    constructor(vararg segments: String, fullScreen: Boolean) : this(segments.toList(), fullScreen = fullScreen)
-
-    constructor(path: String) : this(segments = path.split("/").mapNotNull { it.ifEmpty { null } })
 
     /**
      * Create a [NavState] which is a sub-state of this one by adding the segments
@@ -69,23 +69,8 @@ open class NavState(
         return true
     }
 
-    fun enter(segment: Any) {
-        goto(
-            NavState(
-                this.segments + segment.toString(),
-                this.parameters,
-                this.tag,
-                this.custom
-            )
-        )
-    }
-
     fun goto(newState: NavState) {
         store().update(newState)
-    }
-
-    fun goto(url: String) {
-        store().update(parse(url))
     }
 
     fun toUrl(): String {
