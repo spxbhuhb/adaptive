@@ -89,6 +89,7 @@ fun main() {
         }
 
         appData.onLogout = suspend {
+            appData.navState.update(Routes.publicLanding)
             window.location.reload()
         }
 
