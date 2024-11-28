@@ -29,6 +29,19 @@ open class NavState(
     constructor(path: String) : this(segments = path.split("/").mapNotNull { it.ifEmpty { null } })
 
     /**
+     * Create a [NavState] which is a sub-state of this one by adding the segments
+     * to the segments of this.
+     */
+    fun sub(vararg segments : String) : NavState =
+        NavState(
+            this.segments + segments,
+            this.parameters,
+            this.tag,
+            this.custom,
+            this.fullScreen
+        )
+
+    /**
      * A navigation state contains another when it is an "outer" state.
      *
      * For example: `/a` contains `/a/b`

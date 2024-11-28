@@ -7,15 +7,11 @@ import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
-import `fun`.adaptive.cookbook.Res
 import `fun`.adaptive.cookbook.Routes
-import `fun`.adaptive.cookbook.appNavState
+import `fun`.adaptive.cookbook.appData
 import `fun`.adaptive.cookbook.auth.authRecipe
 import `fun`.adaptive.cookbook.cookbookCommon
-import `fun`.adaptive.cookbook.eco
 import `fun`.adaptive.cookbook.graphics.canvas.canvasRecipe
-import `fun`.adaptive.cookbook.items
-import `fun`.adaptive.cookbook.menu
 import `fun`.adaptive.cookbook.ui.dialog.dialogRecipe
 import `fun`.adaptive.cookbook.ui.editor.editorRecipe
 import `fun`.adaptive.cookbook.ui.event.eventRecipe
@@ -40,12 +36,13 @@ import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.app.basic.defaultAppLayout
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.form.FormFragmentFactory
 import `fun`.adaptive.ui.instruction.*
-import `fun`.adaptive.ui.layout.app.default.defaultAppLayout
 import `fun`.adaptive.ui.platform.withJsResources
 import `fun`.adaptive.ui.snackbar.SnackbarManager
+import `fun`.adaptive.ui.uiCommon
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -57,6 +54,7 @@ fun main() {
 
         clientId()
 
+        uiCommon()
         authCommon()
         cookbookCommon()
 
@@ -77,17 +75,9 @@ fun main() {
                 fontWeight = 300
             }
 
-            defaultAppLayout(
-                items,
-                appNavState,
-                Res.drawable.menu,
-                Res.drawable.eco,
-                Res.drawable.eco,
-                "Adaptive"
-            ) {
+            defaultAppLayout(appData) {
                 mainContent()
             }
-
         }
     }
 }
@@ -95,7 +85,7 @@ fun main() {
 @Adaptive
 fun mainContent() {
 
-    val navState = autoItem(appNavState)
+    val navState = autoItem(appData.navState)
 
     box {
         maxSize .. padding { 16.dp } .. backgroundColor(0xFAFAFA)

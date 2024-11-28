@@ -20,9 +20,9 @@ object Routes {
 }
 
 val items = listOf(
-    SidebarItem(0, Res.drawable.grid_view, "Zones", Routes.zones),
-    SidebarItem(1, Res.drawable.mail, "Notifications", Routes.notifications),
-    SidebarItem(2, Res.drawable.folder, "Settings", Routes.settings),
-    SidebarItem(3, Res.drawable.assignment, "Reports", Routes.reports),
-    SidebarItem(4, Res.drawable.assignment, "Networks", Routes.networks)
+    SidebarItem(Res.drawable.grid_view, "Zones", Routes.zones),
+    SidebarItem(Res.drawable.mail, "Notifications", Routes.notifications),
+    SidebarItem(Res.drawable.folder, "Settings", Routes.settings),
+    SidebarItem(Res.drawable.assignment, "Reports", Routes.reports),
+    SidebarItem(Res.drawable.assignment, "Networks", Routes.networks)
 )

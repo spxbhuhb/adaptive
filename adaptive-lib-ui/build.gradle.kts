@@ -61,8 +61,9 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.adaptive.core)
             implementation(libs.adaptive.ui)
-            implementation(libs.adaptive.lib.graphics)
             implementation(libs.adaptive.lib.auto)
+            implementation(libs.adaptive.lib.auth)
+            implementation(libs.adaptive.lib.graphics)
         }
     }
 }

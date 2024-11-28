@@ -39,7 +39,7 @@ fun fullSidebar(
 }
 
 @Adaptive
-private fun fullSidebarItem(
+fun fullSidebarItem(
     item: SidebarItem,
     navState: NavState?,
     theme: FullSidebarTheme

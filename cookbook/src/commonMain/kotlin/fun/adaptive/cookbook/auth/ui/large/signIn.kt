@@ -7,13 +7,12 @@ package `fun`.adaptive.cookbook.auth.ui.large
 import `fun`.adaptive.adat.api.touchAndValidate
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.auth.api.SessionApi
-import `fun`.adaptive.cookbook.appNavState
+import `fun`.adaptive.cookbook.appData
 import `fun`.adaptive.cookbook.auth.authRouting
 import `fun`.adaptive.cookbook.auth.model.SignIn
 import `fun`.adaptive.cookbook.shared.largeScreen
 import `fun`.adaptive.cookbook.shared.mediumGray
 import `fun`.adaptive.cookbook.shared.titleLarge
-import `fun`.adaptive.cookbook.ui.sidebar.sidebarRecipeNavState
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.adapter
@@ -84,9 +83,9 @@ fun signIn(): AdaptiveFragment {
 
                 adapter().scope.launch {
                     try {
-                        getService<SessionApi>(adapter().transport).login(signIn.login, signIn.password)
-                        success("Sikeres belépés!")
-                        appNavState.open(authRouting)
+                        appData.session = getService<SessionApi>(adapter().transport).login(signIn.login, signIn.password)
+                        appData.onLoginSuccess()
+                        appData.memberLanding?.let { appData.open(it) }
                     } catch (t: Throwable) {
                         fail("Sikertelen belépés!")
                     }

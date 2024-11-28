@@ -6,6 +6,5 @@ import `fun`.adaptive.wireformat.WireFormatRegistry
 import `fun`.adaptive.wireformat.builtin.EnumWireFormat
 
 fun cookbookCommon() {
-    uiCommon()
     WireFormatRegistry.set("fun.adaptive.cookbook.model.E", EnumWireFormat(E.entries))
 }

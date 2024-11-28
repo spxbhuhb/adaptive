@@ -1,12 +1,39 @@
 package `fun`.adaptive.cookbook
 
-import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.cookbook.auth.authRouting
 import `fun`.adaptive.cookbook.ui.navigation.navRouting
+import `fun`.adaptive.ui.app.basic.BasicAppData
 import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.navigation.sidebar.SidebarItem
 
-val appNavState = autoItemOrigin(Routes.auth)
+val appData = BasicAppData().apply {
+
+    this.appName = "Adaptive"
+
+    this.largeAppIcon = Res.drawable.eco
+    this.mediumAppIcon = Res.drawable.eco
+
+    this.loginPage = Routes.auth.sub("login")
+
+    this.sidebarItems = listOf(
+        SidebarItem(Res.drawable.grid_view, "Auth", Routes.auth),
+        SidebarItem(Res.drawable.grid_view, "Box", Routes.box),
+        SidebarItem(Res.drawable.grid_view, "Canvas", Routes.canvas),
+        SidebarItem(Res.drawable.grid_view, "Dialog", Routes.dialog),
+        SidebarItem(Res.drawable.grid_view, "Editor", Routes.editor),
+        SidebarItem(Res.drawable.grid_view, "Event", Routes.event),
+        SidebarItem(Res.drawable.grid_view, "Form", Routes.form),
+        SidebarItem(Res.drawable.grid_view, "Grid", Routes.grid),
+        SidebarItem(Res.drawable.grid_view, "Navigation", Routes.navigation),
+        SidebarItem(Res.drawable.grid_view, "Responsive", Routes.responsive),
+        SidebarItem(Res.drawable.grid_view, "Select", Routes.select),
+        SidebarItem(Res.drawable.grid_view, "Sidebar", Routes.sidebar),
+        SidebarItem(Res.drawable.grid_view, "Snackbar", Routes.snackbar),
+        SidebarItem(Res.drawable.grid_view, "SVG", Routes.svg),
+        SidebarItem(Res.drawable.grid_view, "Text", Routes.text),
+        SidebarItem(Res.drawable.grid_view, "Tree", Routes.tree)
+    )
+}
 
 object Routes {
     val auth = authRouting
@@ -28,21 +55,3 @@ object Routes {
     val tree = NavState("Tree")
 }
 
-val items = listOf(
-    SidebarItem(0, Res.drawable.grid_view, "Auth", Routes.auth),
-    SidebarItem(0, Res.drawable.grid_view, "Box", Routes.box),
-    SidebarItem(0, Res.drawable.grid_view, "Canvas", Routes.canvas),
-    SidebarItem(0, Res.drawable.grid_view, "Dialog", Routes.dialog),
-    SidebarItem(0, Res.drawable.grid_view, "Editor", Routes.editor),
-    SidebarItem(0, Res.drawable.grid_view, "Event", Routes.event),
-    SidebarItem(0, Res.drawable.grid_view, "Form", Routes.form),
-    SidebarItem(0, Res.drawable.grid_view, "Grid", Routes.grid),
-    SidebarItem(0, Res.drawable.grid_view, "Navigation", Routes.navigation),
-    SidebarItem(0, Res.drawable.grid_view, "Responsive", Routes.responsive),
-    SidebarItem(0, Res.drawable.grid_view, "Select", Routes.select),
-    SidebarItem(0, Res.drawable.grid_view, "Sidebar", Routes.sidebar),
-    SidebarItem(0, Res.drawable.grid_view, "Snackbar", Routes.snackbar),
-    SidebarItem(0, Res.drawable.grid_view, "SVG", Routes.svg),
-    SidebarItem(0, Res.drawable.grid_view, "Text", Routes.text),
-    SidebarItem(0, Res.drawable.grid_view, "Tree", Routes.tree)
-)

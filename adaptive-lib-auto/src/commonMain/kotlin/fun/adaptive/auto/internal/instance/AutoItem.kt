@@ -36,6 +36,15 @@ class AutoItem<BE : AutoItemBackend<IT>, PT : AutoItemPersistence<IT>, IT : Adat
         localUpdate(null, changes.map { it.name to it.get() })
     }
 
+    fun update(new: IT) {
+        localUpdate(
+            backend.itemId,
+            new.adatCompanion.adatDescriptors.map {
+                it.property.name to new.getValue(it.property.index)
+            }
+        )
+    }
+
     override fun persistenceInit() {
         persistenceUpdate(backend.itemId, backend.getItem())
     }
