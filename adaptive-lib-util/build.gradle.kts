@@ -13,8 +13,8 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-lib-auto"
-val pomName = "Adaptive Lib Automatically Synchronized Data Types"
+val baseName = "adaptive-lib-util"
+val pomName = "Adaptive Lib Utilities"
 val scmPath = "spxbhuhb/adaptive"
 
 // this is ugly but I don't use JS dependencies anyway, 
@@ -51,7 +51,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.adaptive.core)
-            implementation(libs.adaptive.lib.exposed)
             implementation(libs.kotlinx.io)
         }
 
@@ -59,7 +58,6 @@ kotlin {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.kotlinx.coroutines.debug)
-            implementation(libs.adaptive.lib.util)
         }
     }
 }

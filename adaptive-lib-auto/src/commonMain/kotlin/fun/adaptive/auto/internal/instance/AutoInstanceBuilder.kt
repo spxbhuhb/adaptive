@@ -92,7 +92,6 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
 
         if (origin) {
             instance.setInfo(connectionInfo !!, worker, trace)
-            if (loadedInfo == null) instance.persistenceInit()
         } else {
             connect(connectionInfo)
         }

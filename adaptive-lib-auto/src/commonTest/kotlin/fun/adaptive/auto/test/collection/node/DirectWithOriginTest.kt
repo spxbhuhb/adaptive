@@ -1,9 +1,9 @@
 package `fun`.adaptive.auto.test.collection.node
 
-import `fun`.adaptive.auto.api.CollectionBase
 import `fun`.adaptive.auto.api.autoCollectionNode
 import `fun`.adaptive.auto.api.autoCollectionOrigin
 import `fun`.adaptive.auto.test.support.TestData
+import `fun`.adaptive.auto.test.support.wait
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -133,10 +133,5 @@ class DirectWithOriginTest {
         assertEquals(content_23, origin.value)
     }
 
-    fun wait(node1: CollectionBase<TestData>, node2: CollectionBase<TestData>) {
-        while (node1.time.timestamp != node2.time.timestamp) {
-            continue
-        }
-    }
 
 }

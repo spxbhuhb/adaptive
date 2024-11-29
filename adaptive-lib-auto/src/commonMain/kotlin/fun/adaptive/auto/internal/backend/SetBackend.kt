@@ -212,7 +212,13 @@ class SetBackend<IT : AdatClass>(
 
         val values = value.toArray()
 
-        val backend = PropertyBackend<IT>(instance, value.adatCompanion.wireFormatName, values, null, itemId = itemId)
+        val backend = PropertyBackend<IT>(
+            instance,
+            value.adatCompanion.wireFormatName,
+            values,
+            List(values.size) { itemId },
+            itemId = itemId
+        )
 
         val added = data.add(itemId, backend)
 

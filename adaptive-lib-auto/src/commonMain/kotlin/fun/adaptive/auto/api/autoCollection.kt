@@ -217,7 +217,8 @@ fun <A : AdatClass> autoCollectionNode(
         defaultWireFormat = companion !!.adatWireFormat,
         listener = listener,
         trace = trace,
-        scope = CoroutineScope(Dispatchers.Default)
+        scope = CoroutineScope(Dispatchers.Default),
+        persistence = persistence
     )
 
 

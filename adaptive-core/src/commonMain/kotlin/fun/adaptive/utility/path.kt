@@ -84,12 +84,13 @@ fun Path.absolute() = SystemFileSystem.resolve(this)
 
 fun Path.list() = SystemFileSystem.list(this)
 
-fun Path.ensure(): Path {
-    SystemFileSystem.createDirectories(this)
-    return this
+fun Path.ensure(vararg sub: String): Path {
+    val path = Path(this, *sub)
+    SystemFileSystem.createDirectories(path)
+    return path
 }
 
-val testPath = Path("./build/tmp/test")
+val testPath = Path("./build/tmp/adaptiveTest")
 
 @CallSiteName
 fun clearedTestPath(callSiteName: String = "unknown"): Path {

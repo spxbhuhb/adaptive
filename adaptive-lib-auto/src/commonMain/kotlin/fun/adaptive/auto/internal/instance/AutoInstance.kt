@@ -124,7 +124,6 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
                     (backend as? AutoItemBackend<*>)?.also { be -> be.itemId = it.itemId }
                 }
 
-                // ${it.itemId?.let { ".$it" } ?: ""}
                 val loggerName = "auto.${it.globalId.toShort()}.${it.peerId.toString().padStart(6, '0')}"
                 logger = getLogger(loggerName)
                 if (trace) logger.enableFine()
@@ -133,7 +132,10 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
             backend.let {
                 when (it) {
                     is PropertyBackend<*> -> receive(LamportTimestamp(handle.peerId, it.lastUpdate.timestamp))
-                    is SetBackend<*> -> receive(LamportTimestamp(handle.peerId, it.lastUpdate.timestamp))
+                    is SetBackend<*> -> {
+                        receive(LamportTimestamp(handle.peerId, it.lastUpdate.timestamp))
+                        persistenceInit()
+                    }
                 }
             }
         }
