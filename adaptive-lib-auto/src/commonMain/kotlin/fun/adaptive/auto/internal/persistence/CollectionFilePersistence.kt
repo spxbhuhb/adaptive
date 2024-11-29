@@ -2,6 +2,9 @@ package `fun`.adaptive.auto.internal.persistence
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.auto.model.AutoMetadata
+import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.utility.delete
+import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.load
 import `fun`.adaptive.utility.save
 import `fun`.adaptive.wireformat.WireFormatProvider
@@ -9,37 +12,55 @@ import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 
 class CollectionFilePersistence<IT : AdatClass>(
-    val path: Path,
+    val metaPath: Path,
     wireFormatProvider: WireFormatProvider,
     val includeFun: (Path) -> Boolean = { true },
+    val pathFun : (itemId : ItemId, item : IT) -> Path
 ) : AutoCollectionPersistence<IT>(
     wireFormatProvider
 ) {
 
-    override fun load(): AutoCollectionExport<IT> {
-        val meta = Path(path).load(wireFormatProvider, AutoMetadata.adatWireFormat)
+    override fun load(): AutoCollectionExport<IT>? {
+        if (!metaPath.exists()) return null
 
-        val result = mutableListOf<AutoItemExport<IT>>()
+        val meta = metaPath.load(wireFormatProvider, AutoMetadata.adatWireFormat)
+        val metaName = metaPath.name
 
-        SystemFileSystem.list(path).forEach {
+        val items = mutableListOf<AutoItemExport<IT>>()
+
+        SystemFileSystem.list(metaPath.parent!!).forEach {
 
             if (it.name.startsWith(".")) return@forEach  // ignore hidden files
+            if (it.name == metaName) return@forEach // ignore meta file
             if (! includeFun(it)) return@forEach
 
-            ItemFilePersistence.read<IT>(it, wireFormatProvider)
+            items += ItemFilePersistence.read<IT>(it, wireFormatProvider)
         }
 
-        return AutoCollectionExport(meta, result)
+        return AutoCollectionExport(meta, items)
     }
 
-    override fun save(export: AutoCollectionExport<IT>) {
+    override fun update(export: AutoCollectionExport<IT>) {
         checkNotNull(export.meta) { "export without meta" }
-        save(path, export.meta, wireFormatProvider)
+        save(metaPath, export.meta, wireFormatProvider)
+        for (item in export.items) {
+            update(item)
+        }
     }
 
-// FIXME missing onRemove for ItemFilePersistence
-//    override fun onRemove() {
-//        deleteMeta(path)
-//    }
+    override fun add(export: AutoItemExport<IT>) {
+        val itemPath = pathFun(export.itemId!!, export.item!!)
+        ItemFilePersistence<IT>.write(itemPath, wireFormatProvider, export)
+    }
+
+    override fun update(export: AutoItemExport<IT>) {
+        val itemPath = pathFun(export.itemId!!, export.item!!)
+        ItemFilePersistence<IT>.write(itemPath, wireFormatProvider, export)
+    }
+
+    override fun remove(itemId: ItemId, item: IT?) {
+        if (item == null) return // TODO think about null items in CollectionFilePersistence.remove
+        pathFun(itemId, item).delete()
+    }
 
 }

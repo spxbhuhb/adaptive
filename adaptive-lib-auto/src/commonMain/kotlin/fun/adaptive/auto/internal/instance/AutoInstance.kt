@@ -84,7 +84,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
 
     internal lateinit var backend: BE
 
-    internal lateinit var persistence: PT
+    internal var persistence: PT? = null
 
     private var worker: AutoWorker? = null
 
@@ -176,6 +176,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     internal fun localAdd(item: IT) {
         lock.use {
             val (operation, added) = backend.localAdd(nextTime(), item)
+            persistenceAdd(operation.itemId)
 
             trace("localAdd") { "APPLIED  :: opItemId=${operation.itemId} added=$added" }
 
@@ -194,7 +195,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
             checkNotNull(original)
 
             val (operation, updated) = backend.localUpdate(nextTime(), safeItemId, updates)
-            persistenceUpdate(safeItemId, updated)
+            persistenceUpdate(safeItemId)
 
             trace("localUpdate") { "APPLIED  :: opItemId=${operation.itemId} diff=${updated.diff(original).map { it.path to updated.getValue(it.path) }}" }
 
@@ -207,6 +208,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     internal fun localRemove(itemId: ItemId) {
         lock.use {
             val (operation, removed) = backend.localRemove(nextTime(), itemId)
+            persistenceRemove(itemId, removed)
 
             trace("localRemove") { "APPLIED  :: itemId=${itemId} removed=$removed" }
 
@@ -234,6 +236,8 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
             val (timestamp, added) = result
             receive(timestamp)
 
+            persistenceAdd(operation.itemId)
+
             trace { "APPLIED  :: ${operation.itemId} $added" }
 
             onRemoteChange(operation.itemId, added, null)
@@ -252,7 +256,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
             val (timestamp, original, updated) = result
 
             receive(timestamp)
-            persistenceUpdate(operation.itemId, updated)
+            persistenceUpdate(operation.itemId)
 
             trace { "APPLIED  :: ${operation.itemId} $updated $original" }
 
@@ -272,6 +276,10 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
         if (result != null) {
             val (timestamp, removed) = result
             receive(timestamp)
+
+            removed.forEach {
+                persistenceRemove(it.first, it.second)
+            }
 
             trace { "APPLIED  :: ${operation.itemIds} $removed" }
 
@@ -420,9 +428,19 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     abstract fun persistenceInit()
 
     /**
+     * Called on local and remote item additions.
+     */
+    abstract fun persistenceAdd(itemId: ItemId)
+
+    /**
      * Called on local and remote item updates.
      */
-    abstract fun persistenceUpdate(itemId: ItemId, value: IT)
+    abstract fun persistenceUpdate(itemId: ItemId)
+
+    /**
+     * Called on local and remote item removes.
+     */
+    abstract fun persistenceRemove(itemId: ItemId, item: IT?)
 
     // --------------------------------------------------------------------------------
     // Peers

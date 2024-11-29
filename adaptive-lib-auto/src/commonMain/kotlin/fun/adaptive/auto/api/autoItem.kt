@@ -11,7 +11,6 @@ import `fun`.adaptive.auto.internal.instance.AutoInstanceBuilder
 import `fun`.adaptive.auto.internal.instance.AutoItem
 import `fun`.adaptive.auto.internal.persistence.AutoItemExport
 import `fun`.adaptive.auto.internal.persistence.AutoItemPersistence
-import `fun`.adaptive.auto.internal.persistence.ItemMemoryPersistence
 import `fun`.adaptive.auto.internal.producer.AutoItemProducer
 import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.ItemId
@@ -114,7 +113,7 @@ fun <A : AdatClass> autoItem(
  * @param    initialValue   The value of the auto instance.
  * @param    worker         An optional worker to register this instance with.
  * @param    listener       An optional listener to get auto events.
- * @param    persistence    Persistence provider, defaults to [ItemMemoryPersistence].
+ * @param    persistence    Persistence provider, optional.
  * @param    trace          Log trace information.
  * @param    companion      The adat companion to fetch the wireformat from. When on default the compiler
  *                          will resolve the type parameter into an actual companion.
@@ -134,7 +133,7 @@ fun <A : AdatClass> autoItemOrigin(
     buildItem(
         origin = true,
         initialValue = initialValue,
-        defaultWireFormat = companion!!.adatWireFormat,
+        defaultWireFormat = companion !!.adatWireFormat,
         listener = listener,
         trace = trace,
         worker = worker,
@@ -154,7 +153,7 @@ fun <A : AdatClass> autoItemOrigin(
  *
  * @param    worker          The worker to register this instance with.
  * @param    listener        An optional listener to get auto events.
- * @param    persistence     Persistence provider, defaults to [ItemMemoryPersistence].
+ * @param    persistence     Persistence provider, optional.
  * @param    trace           Log trace information.
  * @param    companion       The adat companion to fetch the wireformat from. When on default the compiler
  *                           will resolve the type parameter into an actual companion.
@@ -195,7 +194,7 @@ fun <A : AdatClass> autoItemNode(
  *
  * @param    peer            The instance to connect with.
  * @param    listener        An optional listener to get auto events.
- * @param    persistence     Persistence provider, defaults to [ItemMemoryPersistence].
+ * @param    persistence     Persistence provider, optional.
  * @param    trace           Log trace information.
  * @param    companion       The adat companion to fetch the wireformat from. When on default the compiler
  *                           will resolve the type parameter into an actual companion.
@@ -254,9 +253,7 @@ private fun <A : AdatClass> buildItem(
                 itemId = export.itemId ?: ItemId.CONNECTING
             )
         },
-        persistenceFun = { builder ->
-            persistence ?: ItemMemoryPersistence(wireFormatProvider = builder.instance.wireFormatProvider)
-        }
+        persistence = persistence
     ).build(
         initialValue
     ) as AutoItem<PropertyBackend<A>, AutoItemPersistence<A>, A>

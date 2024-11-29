@@ -12,7 +12,6 @@ import `fun`.adaptive.auto.internal.instance.AutoCollection
 import `fun`.adaptive.auto.internal.instance.AutoInstanceBuilder
 import `fun`.adaptive.auto.internal.persistence.AutoCollectionExport
 import `fun`.adaptive.auto.internal.persistence.AutoCollectionPersistence
-import `fun`.adaptive.auto.internal.persistence.CollectionMemoryPersistence
 import `fun`.adaptive.auto.internal.producer.AutoCollectionProducer
 import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.model.ItemId
@@ -115,7 +114,7 @@ fun <A : AdatClass> autoCollection(
  * @param    initialValue   The value of the auto instance.
  * @param    worker         An optional worker to register this instance with.
  * @param    listener       An optional listener to get auto events.
- * @param    persistence    Persistence provider, defaults to [CollectionMemoryPersistence].
+ * @param    persistence    Persistence provider, optional.
  * @param    trace          Log trace information.
  * @param    companion      The adat companion to fetch the wireformat from. When on default the compiler
  *                          will resolve the type parameter into an actual companion.
@@ -135,7 +134,7 @@ fun <A : AdatClass> autoCollectionOrigin(
     buildCollection(
         origin = true,
         initialValue = initialValue,
-        defaultWireFormat = companion!!.adatWireFormat,
+        defaultWireFormat = companion !!.adatWireFormat,
         listener = listener,
         trace = trace,
         worker = worker,
@@ -155,7 +154,7 @@ fun <A : AdatClass> autoCollectionOrigin(
  *
  * @param    worker          The worker to register this instance with.
  * @param    listener        An optional listener to get auto events.
- * @param    persistence     Persistence provider, defaults to [CollectionMemoryPersistence].
+ * @param    persistence     Persistence provider, optional.
  * @param    trace           Log trace information.
  * @param    companion       The adat companion to fetch the wireformat from. When on default the compiler
  *                           will resolve the type parameter into an actual companion.
@@ -196,7 +195,7 @@ fun <A : AdatClass> autoCollectionNode(
  *
  * @param    peer            The instance to connect with.
  * @param    listener        An optional listener to get auto events.
- * @param    persistence     Persistence provider, defaults to [CollectionMemoryPersistence].
+ * @param    persistence     Persistence provider, optional.
  * @param    trace           Log trace information.
  * @param    companion       The adat companion to fetch the wireformat from. When on default the compiler
  *                           will resolve the type parameter into an actual companion.
@@ -252,7 +251,7 @@ private fun <A : AdatClass> buildCollection(
             val values = mutableMapOf<ItemId, PropertyBackend<A>>()
 
             export.items.forEach {
-                values[it.itemId!!] = PropertyBackend(
+                values[it.itemId !!] = PropertyBackend(
                     builder.instance,
                     null,
                     it.item?.toArray(),
@@ -266,9 +265,7 @@ private fun <A : AdatClass> buildCollection(
                 values
             )
         },
-        persistenceFun = { builder ->
-            persistence ?: CollectionMemoryPersistence(wireFormatProvider = builder.instance.wireFormatProvider)
-        }
+        persistence = persistence
     ).build(
         initialValue
     ) as AutoCollection<SetBackend<A>, AutoCollectionPersistence<A>, A>

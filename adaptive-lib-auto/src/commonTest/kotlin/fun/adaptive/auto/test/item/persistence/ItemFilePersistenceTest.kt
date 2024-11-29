@@ -15,9 +15,10 @@ import `fun`.adaptive.wireformat.api.Json
 import kotlinx.io.files.Path
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
-class FilePersistenceTest {
+class ItemFilePersistenceTest {
 
     @Test
     fun saveAndLoad() {
@@ -41,6 +42,7 @@ class FilePersistenceTest {
 
         val import = persistence.load()
 
+        assertNotNull(import)
         assertEquals(export.meta, import.meta)
         assertEquals(export.itemId, import.itemId)
         assertEquals(export.propertyTimes, import.propertyTimes)
@@ -69,6 +71,7 @@ class FilePersistenceTest {
 
         val import = persistence.load()
 
+        assertNotNull(import)
         assertEquals(export.meta, import.meta)
         assertEquals(export.itemId, import.itemId)
         assertEquals(export.propertyTimes, import.propertyTimes)

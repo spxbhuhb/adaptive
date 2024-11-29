@@ -48,7 +48,7 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
     val scope: CoroutineScope,
     val trace: Boolean,
     val backendFun: (AutoInstanceBuilder<BE, PT, VT, IT>, export: AutoExport<VT>) -> BE,
-    val persistenceFun: (AutoInstanceBuilder<BE, PT, VT, IT>) -> PT,
+    val persistence: PT?,
 ) {
 
     @Suppress("UNCHECKED_CAST")
@@ -67,12 +67,12 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
     ): AutoInstance<BE, PT, VT, IT> {
         if (trace) instance.logger.enableFine()
 
-        instance.persistence = persistenceFun(this)
+        instance.persistence = persistence
 
-        val loadedExport = instance.persistence.load()
+        val loadedExport = instance.persistence?.load()
 
         @Suppress("UNCHECKED_CAST")
-        val loadedInfo = loadedExport.meta?.connection as? AutoConnectionInfo<VT>
+        val loadedInfo = loadedExport?.meta?.connection as? AutoConnectionInfo<VT>
 
         val connectionInfo = when {
             loadedInfo != null -> loadedInfo
@@ -103,7 +103,7 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
     @Suppress("UNCHECKED_CAST")
     fun buildExport(
         loadedInfo: AutoConnectionInfo<VT>?,
-        loadedExport: AutoExport<VT>,
+        loadedExport: AutoExport<VT>?,
         connectionInfo: AutoConnectionInfo<VT>?,
         initialValue: VT?
     ) =

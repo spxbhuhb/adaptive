@@ -7,7 +7,7 @@ abstract class AutoItemPersistence<IT : AdatClass>(
     val wireFormatProvider: WireFormatProvider,
 ) : AutoPersistence<IT, IT>() {
 
-    abstract override fun load(): AutoItemExport<IT>
+    abstract override fun load(): AutoItemExport<IT>?
 
     abstract fun save(export: AutoItemExport<IT>)
 

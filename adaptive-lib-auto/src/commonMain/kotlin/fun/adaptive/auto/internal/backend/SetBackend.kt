@@ -23,7 +23,7 @@ class SetBackend<IT : AdatClass>(
 
     private val data = SetBackendData<IT>(initialValue)
 
-    var lastUpdate : LamportTimestamp = LamportTimestamp.CONNECTING
+    var lastUpdate: LamportTimestamp = LamportTimestamp.CONNECTING
         private set
 
     init {
@@ -238,17 +238,24 @@ class SetBackend<IT : AdatClass>(
         return data[itemId]?.getItem()
     }
 
-    override fun export(): AutoCollectionExport<IT> =
+    override fun export(withItems: Boolean): AutoCollectionExport<IT> =
         AutoCollectionExport(
             AutoMetadata(instance.connectionInfo, null, null), // FIXME removed items and milestone in auto collection export
-            data.items().map {
-                AutoItemExport<IT>(
-                    null,
-                    it.itemId,
-                    it.propertyTimes.toList(),
-                    it.getItem()
-                )
+            if (withItems) {
+                data.items().map {
+                    AutoItemExport<IT>(
+                        null,
+                        it.itemId,
+                        it.propertyTimes.toList(),
+                        it.getItem()
+                    )
+                }
+            } else {
+                emptyList()
             }
         )
+
+    override fun exportItem(itemId: ItemId): AutoItemExport<IT>? =
+        data[itemId]?.export(withMeta = false)
 
 }

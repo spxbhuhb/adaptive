@@ -3,6 +3,7 @@ package `fun`.adaptive.auto.internal.backend
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.instance.AutoInstance
+import `fun`.adaptive.auto.internal.persistence.AutoItemExport
 import `fun`.adaptive.auto.model.ItemId
 
 abstract class AutoItemBackend<IT : AdatClass>(
@@ -17,18 +18,12 @@ abstract class AutoItemBackend<IT : AdatClass>(
 
     abstract fun getItemOrNull(): IT?
 
-//    fun update(propertyName: String, propertyValue: Any?) {
-//        update(itemId, propertyName, propertyValue)
-//    }
-//
-//    fun update(path: Array<String>, value: Any?) {
-//        check(path.size == 1) { "multi-level paths are not implemented yet" }
-//        update(itemId, path[0], value)
-//    }
-//
-//    fun update(new: IT) {
-//        update(itemId, new)
-//    }
+    /**
+     * @param  withMeta  When true, the `meta` field of [AutoItemExport] is set,
+     *                   when false, it will be `null`. Item instances use `true`,
+     *                   collection instances use `false`.
+     */
+    abstract fun export(withMeta: Boolean) : AutoItemExport<IT>
 
     /**
      * Called by collection backends when the item of this backend is removed from the collection.

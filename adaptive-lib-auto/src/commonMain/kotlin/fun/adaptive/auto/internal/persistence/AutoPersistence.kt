@@ -4,6 +4,6 @@ import `fun`.adaptive.adat.AdatClass
 
 abstract class AutoPersistence<VT,IT : AdatClass> {
 
-    abstract fun load(): AutoExport<VT>
+    abstract fun load(): AutoExport<VT>?
 
 }

@@ -5,6 +5,9 @@ import `fun`.adaptive.adat.AdatContext
 import `fun`.adaptive.adat.wireformat.AdatPropertyWireFormat
 import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.internal.instance.AutoInstance
+import `fun`.adaptive.auto.internal.persistence.AutoItemExport
+import `fun`.adaptive.auto.internal.persistence.AutoItemPersistence
+import `fun`.adaptive.auto.model.AutoMetadata
 import `fun`.adaptive.auto.model.AutoPropertyValue
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.auto.model.LamportTimestamp
@@ -211,6 +214,18 @@ class PropertyBackend<IT : AdatClass>(
 
         trace { "FINISHED :: itemId=$itemId time=$lastUpdate peerTime=$syncFrom" }
     }
+
+    // --------------------------------------------------------------------------------
+    // Persistence
+    // --------------------------------------------------------------------------------
+
+    override fun export(withMeta: Boolean) =
+        AutoItemExport<IT>(
+            meta = if (withMeta) AutoMetadata(instance.connectionInfo !!, null, null) else null,
+            itemId = itemId,
+            propertyTimes = propertyTimes.toList(),
+            item = getItem()
+        )
 
     // --------------------------------------------------------------------------------
     // Utility

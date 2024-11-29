@@ -46,32 +46,20 @@ class AutoItem<BE : AutoItemBackend<IT>, PT : AutoItemPersistence<IT>, IT : Adat
     }
 
     override fun persistenceInit() {
-        persistenceUpdate(backend.itemId, backend.getItem())
+        persistence?.save(backend.export(true))
     }
 
-    override fun persistenceUpdate(itemId: ItemId, value: IT) {
-        persistence.save(
-            AutoItemExport<IT>(
-                meta = AutoMetadata(connectionInfo!!, null, null),
-                itemId = handle.itemId,
-                propertyTimes = (backend as PropertyBackend<*>).propertyTimes.toList(),
-                item = value
-            )
-        )
+    override fun persistenceAdd(itemId: ItemId) {
+        throw UnsupportedOperationException("item instances does not support add")
     }
 
-//    fun update(propertyName: String, value: Any?) {
-//        backend.remoteUpdate(propertyName, value)
-//    }
-//
-//    fun update(path: Array<String>, value: Any?) {
-//        check(path.size == 1) { "multi-level paths are not implemented yet" }
-//        backend.remoteUpdate(path[0], value)
-//    }
-//
-//    fun update(new: IT) {
-//        backend.remoteUpdate(new)
-//    }
+    override fun persistenceUpdate(itemId: ItemId) {
+        persistence?.save(backend.export(true))
+    }
 
+    override fun persistenceRemove(itemId: ItemId, value: IT?) {
+        throw UnsupportedOperationException("item instances does not support remove")
+
+    }
 
 }

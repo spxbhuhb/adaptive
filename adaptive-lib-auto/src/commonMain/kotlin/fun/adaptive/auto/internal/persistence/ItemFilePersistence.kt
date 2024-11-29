@@ -21,8 +21,8 @@ class ItemFilePersistence<IT : AdatClass>(
     wireFormatProvider
 ) {
 
-    override fun load(): AutoItemExport<IT> {
-        if (! path.exists()) return AutoItemExport.none()
+    override fun load(): AutoItemExport<IT>? {
+        if (! path.exists()) return null
         return read<IT>(path, wireFormatProvider)
     }
 

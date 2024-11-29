@@ -65,9 +65,7 @@ fun <A : AdatClass> save(path: Path, value: A, wireFormatProvider: WireFormatPro
 
     @Suppress("UNCHECKED_CAST")
     wireFormatProvider.encoder()
-        .pseudoInstanceStart()
         .rawInstance(value, value.adatCompanion.adatWireFormat as WireFormat<A>)
-        .pseudoInstanceEnd()
         .pack()
         .also {
             out.write(it)
