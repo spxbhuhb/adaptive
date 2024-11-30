@@ -277,4 +277,7 @@ class PropertyBackend<IT : AdatClass>(
             .wireFormatEncode(instance.wireFormatProvider.encoder(), values)
             .pack()
 
+    override fun propertyTimes(): List<LamportTimestamp> =
+        propertyTimes.toList()
+
 }

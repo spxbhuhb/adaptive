@@ -39,14 +39,15 @@ class SetBackend<IT : AdatClass>(
 
     override fun localAdd(timestamp: LamportTimestamp, item: IT, parentItemId: ItemId?): Pair<AutoAdd, IT> {
         val itemId = timestamp
-        val item = addItem(itemId, item) !! // there is always a new item when adding locally
+        val item = addItem(itemId, item, propertyTimes = null) !! // there is always a new item when adding locally
 
         val operation = AutoAdd(
             timestamp = timestamp,
             itemId = itemId,
             item.wireFormat.wireFormatName,
             parentItemId,
-            item.encode()
+            item.encode(),
+            item.propertyTimes()
         )
 
         return operation to item.getItem()
@@ -79,7 +80,7 @@ class SetBackend<IT : AdatClass>(
         @Suppress("UNCHECKED_CAST")
         val value = wireFormat.wireFormatDecode(instance.wireFormatProvider.decoder(operation.payload)) as IT
 
-        val itemBackend = addItem(operation.itemId, value)
+        val itemBackend = addItem(operation.itemId, value, operation.propertyTimes)
 
         if (itemBackend == null) {
             return null
@@ -184,7 +185,7 @@ class SetBackend<IT : AdatClass>(
             val itemId = item.itemId
 
             if (itemId.timestamp > syncFrom.timestamp) {
-                add += AutoAdd(time, itemId, item.wireFormatName, null, item.encode())
+                add += AutoAdd(time, itemId, item.wireFormatName, null, item.encode(), item.propertyTimes())
             } else {
                 item.syncPeer(connector, syncFrom, modify, false)
             }
@@ -207,7 +208,8 @@ class SetBackend<IT : AdatClass>(
 
     fun addItem(
         itemId: ItemId,
-        value: IT
+        value: IT,
+        propertyTimes : List<LamportTimestamp>?
     ): AutoItemBackend<IT>? {
 
         val values = value.toArray()
@@ -216,7 +218,7 @@ class SetBackend<IT : AdatClass>(
             instance,
             value.adatCompanion.wireFormatName,
             values,
-            List(values.size) { itemId },
+            propertyTimes ?: List(values.size) { itemId },
             itemId = itemId
         )
 

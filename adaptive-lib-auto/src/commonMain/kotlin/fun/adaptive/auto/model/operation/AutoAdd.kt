@@ -11,7 +11,8 @@ class AutoAdd(
     val itemId: ItemId,
     val wireFormatName: String?,
     val parentItemId: ItemId?,
-    val payload: ByteArray
+    val payload: ByteArray,
+    val propertyTimes : List<LamportTimestamp>
 ) : AutoOperation() {
 
     override fun apply(instance: AutoGeneric) {

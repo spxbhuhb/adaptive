@@ -5,6 +5,7 @@ import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.instance.AutoInstance
 import `fun`.adaptive.auto.internal.persistence.AutoItemExport
 import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.auto.model.LamportTimestamp
 
 abstract class AutoItemBackend<IT : AdatClass>(
     instance: AutoInstance<*, *, *, IT>
@@ -33,4 +34,7 @@ abstract class AutoItemBackend<IT : AdatClass>(
     }
 
     internal abstract fun encode(): ByteArray
+
+    internal abstract fun propertyTimes() : List<LamportTimestamp>
+
 }

@@ -9,8 +9,8 @@ import kotlinx.io.files.SystemFileSystem
 /**
  * Calculate differences between two directories (recursively).
  */
-fun Path.diff(other: Path): List<FileDiffEntry> {
-    val result = mutableListOf<FileDiffEntry>()
+fun Path.diff(other: Path): List<PathDiffEntry> {
+    val result = mutableListOf<PathDiffEntry>()
 
     val set1 = mutableSetOf<FileEntry>()
     listRecursively(this.absolute().toString(), this, set1)
@@ -22,11 +22,11 @@ fun Path.diff(other: Path): List<FileDiffEntry> {
         val file2 = set2.find { it.relativePath == file1.relativePath }
         when {
             file2 == null -> {
-                result.add(FileDiffEntry(DiffType.MISSING_FROM_2, file1.relativePath))
+                result.add(PathDiffEntry(PathDiffType.MISSING_FROM_2, file1.relativePath))
             }
 
             file1.isDirectory != file2.isDirectory -> {
-                result.add(FileDiffEntry(DiffType.CONTENT_DIFFERENT, file1.relativePath))
+                result.add(PathDiffEntry(PathDiffType.CONTENT_DIFFERENT, file1.relativePath))
             }
 
             file1.isDirectory -> {
@@ -34,7 +34,7 @@ fun Path.diff(other: Path): List<FileDiffEntry> {
             }
 
             ! file1.path.read().contentEquals(file2.path.read()) -> {
-                result.add(FileDiffEntry(DiffType.CONTENT_DIFFERENT, file1.relativePath))
+                result.add(PathDiffEntry(PathDiffType.CONTENT_DIFFERENT, file1.relativePath))
             }
         }
     }
@@ -42,23 +42,12 @@ fun Path.diff(other: Path): List<FileDiffEntry> {
     for (file2 in set2) {
         val file1 = set1.find { it.relativePath == file2.relativePath }
         if (file1 == null) {
-            result.add(FileDiffEntry(DiffType.MISSING_FROM_1, file2.relativePath))
+            result.add(PathDiffEntry(PathDiffType.MISSING_FROM_1, file2.relativePath))
         }
     }
 
     return result
 }
-
-enum class DiffType {
-    MISSING_FROM_1,
-    MISSING_FROM_2,
-    CONTENT_DIFFERENT
-}
-
-class FileDiffEntry(
-    val type: DiffType,
-    val name: String
-)
 
 private class FileEntry(
     val path: Path,
@@ -66,8 +55,6 @@ private class FileEntry(
     val isDirectory: Boolean
 ) {
     override fun equals(other: Any?): Boolean {
-        println("=================")
-        println("$path $relativePath $isDirectory ${(other as? FileEntry)?.relativePath}")
         return relativePath == (other as? FileEntry)?.relativePath && other.isDirectory == isDirectory
     }
 

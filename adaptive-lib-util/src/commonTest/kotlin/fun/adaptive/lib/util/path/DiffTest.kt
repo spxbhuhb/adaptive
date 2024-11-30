@@ -33,7 +33,7 @@ class DiffTest {
 
         assertEquals(1, diff.size)
         assertEquals("other", diff.first().name)
-        assertEquals(DiffType.MISSING_FROM_1, diff.first().type)
+        assertEquals(PathDiffType.MISSING_FROM_1, diff.first().type)
     }
 
     @Test
@@ -48,7 +48,7 @@ class DiffTest {
 
         assertTrue(diff.size == 1)
         assertEquals("other", diff.first().name)
-        assertEquals(DiffType.MISSING_FROM_2, diff.first().type)
+        assertEquals(PathDiffType.MISSING_FROM_2, diff.first().type)
     }
 
 
@@ -68,7 +68,7 @@ class DiffTest {
 
         assertTrue(diff.size == 1)
         assertEquals("file.txt", diff.first().name)
-        assertEquals(DiffType.CONTENT_DIFFERENT, diff.first().type)
+        assertEquals(PathDiffType.CONTENT_DIFFERENT, diff.first().type)
     }
 
     @Test
@@ -84,8 +84,8 @@ class DiffTest {
         val diff = dir1.diff(dir2)
 
         assertEquals(2, diff.size)
-        assertTrue(diff.any { it.name == "extra_file.txt" && it.type == DiffType.MISSING_FROM_2 })
-        assertTrue(diff.any { it.name == "extra_dir" && it.type == DiffType.MISSING_FROM_2 })
+        assertTrue(diff.any { it.name == "extra_file.txt" && it.type == PathDiffType.MISSING_FROM_2 })
+        assertTrue(diff.any { it.name == "extra_dir" && it.type == PathDiffType.MISSING_FROM_2 })
     }
 
     @Test
@@ -101,7 +101,7 @@ class DiffTest {
 
         assertEquals(1, diff.size)
         assertEquals("same", diff.first().name)
-        assertEquals(DiffType.CONTENT_DIFFERENT, diff.first().type)
+        assertEquals(PathDiffType.CONTENT_DIFFERENT, diff.first().type)
     }
 
 

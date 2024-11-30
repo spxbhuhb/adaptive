@@ -6,7 +6,7 @@ import `fun`.adaptive.auto.api.autoCommon
 import `fun`.adaptive.auto.internal.persistence.CollectionFilePersistence
 import `fun`.adaptive.auto.test.support.TestData
 import `fun`.adaptive.auto.test.support.wait
-import `fun`.adaptive.lib.util.path.DiffType
+import `fun`.adaptive.lib.util.path.PathDiffType
 import `fun`.adaptive.lib.util.path.diff
 import `fun`.adaptive.utility.clearedTestPath
 import `fun`.adaptive.utility.ensure
@@ -31,46 +31,117 @@ class CollectionNodeFilePersistenceTest {
     fun basic() {
         autoCommon()
 
-        val dirPath = clearedTestPath()
+        with(TestSetup(clearedTestPath(), list_12)) {
 
-        // ---- origin setup --------
+            origin.add(td23)
 
-        val originPath = Path(dirPath, "origin").ensure()
+            wait(origin, node)
+
+            assertTrue(originMetaPath.exists())
+            assertTrue(nodeMetaPath.exists())
+
+            assertTrue(Path(originPath, "0.1.json").exists())
+            assertTrue(Path(originPath, "0.2.json").exists())
+
+            val diff = originPath.diff(nodePath)
+
+            assertEquals(1, diff.size)
+            assertEquals("meta.json", diff.first().name)
+            assertEquals(PathDiffType.CONTENT_DIFFERENT, diff.first().type)
+        }
+
+    }
+
+    @Test
+    fun `empty at connect`() {
+        autoCommon()
+
+        with(TestSetup(clearedTestPath(), emptyList())) {
+            wait(origin, node)
+
+            assertTrue(originMetaPath.exists())
+            assertTrue(nodeMetaPath.exists())
+
+            val diff = originPath.diff(nodePath)
+
+            assertEquals(1, diff.size)
+            assertEquals("meta.json", diff.first().name)
+            assertEquals(PathDiffType.CONTENT_DIFFERENT, diff.first().type)
+        }
+
+    }
+
+    @Test
+    fun `update before connect`() {
+        autoCommon()
+
+        with(TestSetup(clearedTestPath(), list_12)) {
+
+            origin.update(td12::i to 23) { true }
+            origin.add(td23)
+
+            wait(origin, node)
+
+            assertTrue(originMetaPath.exists())
+            assertTrue(nodeMetaPath.exists())
+
+            assertTrue(Path(originPath, "0.1.json").exists())
+            assertTrue(Path(originPath, "0.4.json").exists())
+
+            val diff = originPath.diff(nodePath)
+
+            assertEquals(1, diff.size)
+            assertEquals("meta.json", diff.first().name)
+            assertEquals(PathDiffType.CONTENT_DIFFERENT, diff.first().type)
+        }
+
+    }
+
+    @Test
+    fun `update after connect`() {
+        autoCommon()
+
+        with(TestSetup(clearedTestPath(), list_12)) {
+
+            wait(origin, node)
+
+            assertTrue(originMetaPath.exists())
+            assertTrue(nodeMetaPath.exists())
+
+            origin.update(td12::i to 23) { true }
+
+            assertTrue(Path(originPath, "0.1.json").exists())
+
+            val diff = originPath.diff(nodePath)
+
+            assertEquals(1, diff.size)
+            assertEquals("meta.json", diff.first().name)
+            assertEquals(PathDiffType.CONTENT_DIFFERENT, diff.first().type)
+        }
+
+    }
+
+    class TestSetup(
+        testDir: Path,
+        initialValue: List<TestData>
+    ) {
+        val originPath = Path(testDir, "origin").ensure()
         val originMetaPath = Path(originPath, "meta.json")
 
         val originPersistence = CollectionFilePersistence<TestData>(originMetaPath, Json) { itemId, item ->
             Path(originPath, "${itemId.peerId}.${itemId.timestamp}.json")
         }
 
-        val origin = autoCollectionOrigin(list_12, persistence = originPersistence, trace = true)
+        val origin = autoCollectionOrigin(initialValue, persistence = originPersistence)
 
-        // ---- node setup --------
-
-        val nodePath = Path(dirPath, "node").ensure()
+        val nodePath = Path(testDir, "node").ensure()
         val nodeMetaPath = Path(nodePath, "meta.json")
 
         val nodePersistence = CollectionFilePersistence<TestData>(nodeMetaPath, Json) { itemId, item ->
             Path(nodePath, "${itemId.peerId}.${itemId.timestamp}.json")
         }
 
-        val node = autoCollectionNode(origin, persistence = nodePersistence, trace = true)
-
-        // ---- test -------
-
-        origin.update(td12::i to 23) { true }
-        origin.add(td23)
-
-        wait(origin, node)
-
-        assertTrue(originMetaPath.exists())
-        assertTrue(nodeMetaPath.exists())
-
-        // ---- verification --------
-
-        val diff = originPath.diff(nodePath)
-
-        assertEquals(1, diff.size)
-        assertEquals("meta.json", diff.first().name)
-        assertEquals(DiffType.CONTENT_DIFFERENT, diff.first().type)
+        val node = autoCollectionNode(origin, persistence = nodePersistence)
     }
+
 }
