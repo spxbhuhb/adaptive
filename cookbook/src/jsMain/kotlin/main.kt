@@ -14,7 +14,7 @@ import `fun`.adaptive.cookbook.app.landing
 import `fun`.adaptive.cookbook.appData
 import `fun`.adaptive.cookbook.auth.api.AccountApi
 import `fun`.adaptive.cookbook.auth.authRecipe
-import `fun`.adaptive.cookbook.auth.ui.responsibe.signIn
+import `fun`.adaptive.cookbook.auth.ui.responsive.signIn
 import `fun`.adaptive.cookbook.cookbookCommon
 import `fun`.adaptive.cookbook.graphics.canvas.canvasRecipe
 import `fun`.adaptive.cookbook.ui.dialog.dialogRecipe

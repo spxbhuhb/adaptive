@@ -27,7 +27,7 @@ fun passwordReset(): AdaptiveFragment {
     var email = ""
 
     grid {
-        smallScreen .. colTemplate(1.fr) .. rowTemplate(213.dp, 78.dp, 1.fr, 81.dp)
+        smallScreen .. colTemplate(1.fr) .. rowTemplate(183.dp, 118.dp, 1.fr, 81.dp)
 
         title("Reset Password")
 

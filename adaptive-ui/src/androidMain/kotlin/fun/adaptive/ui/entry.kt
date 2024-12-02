@@ -12,6 +12,7 @@ import `fun`.adaptive.foundation.AdaptiveEntry
 import `fun`.adaptive.foundation.AdaptiveFragmentFactory
 import `fun`.adaptive.foundation.instruction.Trace
 import `fun`.adaptive.service.transport.LocalServiceCallTransport
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 /**
@@ -26,7 +27,8 @@ fun android(
     vararg imports : AdaptiveFragmentFactory,
     backend: BackendAdapter = BackendAdapter(
         dispatcher = Dispatchers.Main,
-        transport = LocalServiceCallTransport()
+        scope = CoroutineScope(Dispatchers.Main),
+    transport = LocalServiceCallTransport()
     ),
     trace : Trace? = null,
     @Adaptive block: (adapter : AdaptiveAdapter) -> Unit

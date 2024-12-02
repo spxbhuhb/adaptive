@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.auth.ui.responsibe
+package `fun`.adaptive.cookbook.auth.ui.responsive
 
 import `fun`.adaptive.cookbook.auth.ui.large.largeSignIn
 import `fun`.adaptive.cookbook.auth.ui.small.smallSignIn
@@ -11,7 +11,7 @@ fun signIn() {
 
     when {
         media.isSmall -> smallSignIn()
-        media.isMedium -> smallSignIn()
+        media.isMedium -> largeSignIn()
         media.isLarge -> largeSignIn()
     }
 

@@ -134,7 +134,7 @@ fun <A : AdatClass> autoCollectionOrigin(
     buildCollection(
         origin = true,
         initialValue = initialValue,
-        defaultWireFormat = companion !!.adatWireFormat,
+        defaultWireFormat = companion?.adatWireFormat,
         listener = listener,
         trace = trace,
         worker = worker,
@@ -175,7 +175,7 @@ fun <A : AdatClass> autoCollectionNode(
     buildCollection(
         origin = false,
         infoFunSuspend = infoFunSuspend,
-        defaultWireFormat = companion !!.adatWireFormat,
+        defaultWireFormat = companion?.adatWireFormat,
         listener = listener,
         trace = trace,
         worker = worker,
@@ -214,7 +214,7 @@ fun <A : AdatClass> autoCollectionNode(
         origin = false,
         infoFunSuspend = { peer.connectInfo(AutoConnectionType.Direct) },
         directPeer = peer,
-        defaultWireFormat = companion !!.adatWireFormat,
+        defaultWireFormat = companion?.adatWireFormat,
         listener = listener,
         trace = trace,
         scope = CoroutineScope(Dispatchers.Default),
@@ -225,7 +225,7 @@ fun <A : AdatClass> autoCollectionNode(
 @Suppress("UNCHECKED_CAST")
 private fun <A : AdatClass> buildCollection(
     origin: Boolean,
-    defaultWireFormat: AdatClassWireFormat<A>,
+    defaultWireFormat: AdatClassWireFormat<A>?,
     scope: CoroutineScope,
     initialValue: Collection<A>? = null,
     infoFunSuspend: InfoFunSuspend<SetBackend<A>, AutoCollectionPersistence<A>, Collection<A>, A>? = null,

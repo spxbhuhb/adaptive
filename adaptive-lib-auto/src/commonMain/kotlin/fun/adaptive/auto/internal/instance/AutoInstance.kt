@@ -362,7 +362,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     // --------------------------------------------------------------------------------
 
     @ThreadSafe
-    internal fun connectInfo(type: AutoConnectionType = AutoConnectionType.Service): AutoConnectionInfo<VT> =
+    fun connectInfo(type: AutoConnectionType = AutoConnectionType.Service): AutoConnectionInfo<VT> =
         lock.use {
             // Using the item id from connection info here works for items and collections as well.
             // For collections this will pass null, for items it will pass the actual value.
@@ -370,11 +370,11 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
         }
 
     @ThreadSafe
-    internal fun <IT> connectInfo(itemId: ItemId, type: AutoConnectionType = AutoConnectionType.Service): AutoConnectionInfo<IT> =
+    fun <IT> connectInfo(itemId: ItemId, type: AutoConnectionType = AutoConnectionType.Service): AutoConnectionInfo<IT> =
         lock.use { makeConnectInfo<IT>(itemId, type) }
 
     @ThreadSafe
-    internal fun <IT> connectInfo(type: AutoConnectionType = AutoConnectionType.Service, filterFun: (IT) -> Boolean): AutoConnectionInfo<IT>? {
+    fun <IT> connectInfo(type: AutoConnectionType = AutoConnectionType.Service, filterFun: (IT) -> Boolean): AutoConnectionInfo<IT>? {
         val safeBackend = backend
         check(safeBackend is AutoCollectionBackend<*>) { "connecting with filter function is supported only by AutoCollectionBackend" }
 
