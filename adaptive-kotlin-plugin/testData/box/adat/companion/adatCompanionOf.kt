@@ -20,12 +20,11 @@ fun box(): String {
 
     val t1 = adatCompanionOf<TestAdat>()
 
-    if (t1.wireFormatName != "fun.adaptive.adat.TestAdat") "Fail: wrong name"
-
+    if (t1.wireFormatName != "fun.adaptive.adat.TestAdat") return "Fail: wrong name"
 
     val t2 = adatCompanionOf<TestAdatWithCompanion>()
 
-    if (t2.wireFormatName != "fun.adaptive.adat.TestAdatWithCompanion") "Fail: wrong name != TestAdatWithCompanion"
+    if (t2.wireFormatName != "fun.adaptive.adat.TestAdatWithCompanion") return "Fail: wrong name != TestAdatWithCompanion"
 
     return "OK"
 }

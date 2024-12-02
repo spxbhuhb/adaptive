@@ -17,9 +17,12 @@ fun mock(i: Int) = i + 100
 @Suppress("OPT_IN_USAGE")
 fun box(): String {
 
+    val dispatcher = newSingleThreadContext("test thread")
+
     val adapter = AdaptiveTestAdapter(
         backend = BackendAdapter(
-            dispatcher = newSingleThreadContext("test thread"),
+            dispatcher = dispatcher,
+            scope = CoroutineScope(dispatcher),
             transport = TestServiceTransport()
         )
     )

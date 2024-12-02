@@ -6,6 +6,7 @@ package `fun`.adaptive.kotlin.adat.ir
 import `fun`.adaptive.kotlin.adat.FqNames
 import `fun`.adaptive.kotlin.common.AbstractIrBuilder
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
+import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.backend.js.utils.typeArguments
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
@@ -17,6 +18,7 @@ import org.jetbrains.kotlin.ir.util.companionObject
 import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import org.jetbrains.kotlin.ir.util.hasAnnotation
+import org.jetbrains.kotlin.ir.util.isClass
 import kotlin.math.exp
 
 class AdatCompanionResolveTransform(
@@ -32,6 +34,7 @@ class AdatCompanionResolveTransform(
 
     override fun visitCall(expression: IrCall): IrExpression {
         val func = expression.symbol.owner
+
         if (! func.hasAnnotation(FqNames.ADAT_COMPANION_RESOLVE)) {
             return super.visitCall(expression)
         }
@@ -60,9 +63,15 @@ class AdatCompanionResolveTransform(
             checkNotNull(tParam) { "cannot find type parameter for ${parameter.name} in ${expression.dumpKotlinLike()}" }
 
             val actualType = typeArguments[tParam.index]
+            val actualClass = actualType?.classOrNull?.owner
+            checkNotNull(actualClass) { "cannot find actual class for ${parameter.name} in ${expression.dumpKotlinLike()}" }
 
-            val companion = actualType?.classOrNull?.owner?.companionObject()
+            if (actualClass.modality == Modality.ABSTRACT) {
+                // keep the parameter null, abstract classes does not have companion generated
+                return super.visitCall(expression)
+            }
 
+            val companion = actualClass.companionObject()
             checkNotNull(companion) { "cannot find companion object in ${expression.dumpKotlinLike()}" }
 
             expression.putValueArgument(

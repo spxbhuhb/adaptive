@@ -9,26 +9,26 @@ class TestAdat(
 
 @AdatCompanionResolve
 fun <A : AdatClass> someFun(
-     companion : AdatCompanion<A>? = null
-) : AdatCompanion<A> {
-    return companion!!
+    companion: AdatCompanion<A>? = null
+): AdatCompanion<A> {
+    return companion !!
 }
 
 @AdatCompanionResolve
 fun <A : AdatClass> someOtherFun(
-    data : A,
-    companion : AdatCompanion<A>? = null
-) : AdatCompanion<A> {
-    return companion!!
+    data: A,
+    companion: AdatCompanion<A>? = null
+): AdatCompanion<A> {
+    return companion !!
 }
 
 fun box(): String {
 
     val c = someFun<TestAdat>()
-    if (c.wireFormatName != "fun.adaptive.adat.TestAdat") "Fail: wrong name"
+    if (c.wireFormatName != "fun.adaptive.adat.TestAdat") return "Fail: wrong name"
 
     val oc = someOtherFun(TestAdat(12))
-    if (oc.wireFormatName != "fun.adaptive.adat.TestAdat") "Fail: wrong name"
+    if (oc.wireFormatName != "fun.adaptive.adat.TestAdat") return "Fail: wrong name"
 
     return "OK"
 }
