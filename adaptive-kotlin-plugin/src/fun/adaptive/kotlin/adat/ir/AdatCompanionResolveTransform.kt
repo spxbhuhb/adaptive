@@ -64,10 +64,17 @@ class AdatCompanionResolveTransform(
 
             val actualType = typeArguments[tParam.index]
             val actualClass = actualType?.classOrNull?.owner
-            checkNotNull(actualClass) { "cannot find actual class for ${parameter.name} in ${expression.dumpKotlinLike()}" }
 
-            if (actualClass.modality == Modality.ABSTRACT) {
-                // keep the parameter null, abstract classes does not have companion generated
+            if (actualClass == null || actualClass.modality == Modality.ABSTRACT) {
+                //
+                // Actual class will be null in case of type parameters, there is not much we can do about
+                // this situation as it is quite possible that there is no actual class in the compilation
+                // unit at all.
+                //
+                // Abstract classes does not have companion generated.
+                //
+                // In both cases it seems to be reasonable to keep the companion null.
+                //
                 return super.visitCall(expression)
             }
 
