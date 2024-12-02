@@ -1,6 +1,7 @@
 package `fun`.adaptive.adat.store
 
 import `fun`.adaptive.adat.AdatClass
+import kotlin.reflect.KProperty
 
 abstract class AdatStore<A : AdatClass> {
 
@@ -13,6 +14,10 @@ abstract class AdatStore<A : AdatClass> {
     }
 
     open fun update(new : A) {
+        throw UnsupportedOperationException()
+    }
+
+    open fun update(original: A, changes: Array<out Pair<KProperty<*>, *>>): A {
         throw UnsupportedOperationException()
     }
 

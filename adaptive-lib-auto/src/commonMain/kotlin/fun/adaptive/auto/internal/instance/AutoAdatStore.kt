@@ -2,16 +2,15 @@ package `fun`.adaptive.auto.internal.instance
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.store.AdatStore
-import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.auto.model.itemId
+import kotlin.reflect.KProperty
 
 class AutoAdatStore<IT : AdatClass>(
     val instance : AutoInstance<*,*,*,IT>
 ) : AdatStore<IT>() {
 
-    override fun update(instance: IT, path: Array<String>, value: Any?) {
-        val ctx = checkNotNull(instance.adatContext) { "missing adat context for $instance"}
-        val id = checkNotNull(ctx.id as? ItemId) { "invalid item id ${ctx.id} in $instance"}
-        this.instance.localUpdate(id, listOf(path[0] to value))
+    override fun update(original: IT, path: Array<String>, value: Any?) {
+        this.instance.localUpdate(original.itemId, listOf(path[0] to value))
     }
 
     override fun update(new: IT) {
@@ -23,5 +22,8 @@ class AutoAdatStore<IT : AdatClass>(
             }
         )
     }
+
+    override fun update(original: IT, changes: Array<out Pair<KProperty<*>, *>>): IT =
+        this.instance.localUpdate(original.itemId, changes.map { it.first.name to it.second })
 
 }

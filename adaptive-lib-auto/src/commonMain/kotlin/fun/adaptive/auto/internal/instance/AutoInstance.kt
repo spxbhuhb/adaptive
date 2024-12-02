@@ -188,7 +188,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     }
 
     @ThreadSafe
-    internal fun localUpdate(itemId: ItemId?, updates: Collection<Pair<String, Any?>>) {
+    internal fun localUpdate(itemId: ItemId?, updates: Collection<Pair<String, Any?>>): IT =
         lock.use {
             val safeItemId = itemId ?: thisItemId
             checkNotNull(safeItemId) { "no item id passed and connection info does not contain one in $this" }
@@ -203,8 +203,9 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
 
             onLocalChange(operation.itemId, updated, original)
             distribute(operation)
+
+            updated
         }
-    }
 
     @ThreadSafe
     internal fun localRemove(itemId: ItemId) {

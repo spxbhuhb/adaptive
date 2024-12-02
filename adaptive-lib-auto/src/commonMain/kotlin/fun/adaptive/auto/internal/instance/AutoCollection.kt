@@ -22,7 +22,7 @@ class AutoCollection<BE : AutoCollectionBackend<IT>, PT : AutoCollectionPersiste
     override val size: Int
         get() = value.size
 
-    val valueOrNull : Collection<IT>?
+    val valueOrNull: Collection<IT>?
         get() = getItems() // FIXME valueOrNull in AutoCollection
 
     val value: Collection<IT>
@@ -62,11 +62,11 @@ class AutoCollection<BE : AutoCollectionBackend<IT>, PT : AutoCollectionPersiste
         }
     }
 
-    operator fun minusAssign(element : IT) {
+    operator fun minusAssign(element: IT) {
         localRemove(itemId(element))
     }
 
-    fun remove(element : IT) {
+    fun remove(element: IT) {
         localRemove(itemId(element))
     }
 
@@ -81,11 +81,11 @@ class AutoCollection<BE : AutoCollectionBackend<IT>, PT : AutoCollectionPersiste
     }
 
     override fun persistenceAdd(itemId: ItemId) {
-        persistence?.add(backend.exportItem(itemId)!!)
+        persistence?.add(backend.exportItem(itemId) !!)
     }
 
     override fun persistenceUpdate(itemId: ItemId) {
-        persistence?.update(backend.exportItem(itemId)!!)
+        persistence?.update(backend.exportItem(itemId) !!)
     }
 
     override fun persistenceRemove(itemId: ItemId, value: IT?) {

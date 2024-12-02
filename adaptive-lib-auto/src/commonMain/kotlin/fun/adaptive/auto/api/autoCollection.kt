@@ -86,7 +86,7 @@ fun <A : AdatClass> autoCollection(
         buildCollection(
             origin = false,
             infoFunSuspend = infoFunSuspend,
-            defaultWireFormat = companion !!.adatWireFormat,
+            defaultWireFormat = companion?.adatWireFormat,
             listener = producer,
             trace = trace,
             scope = binding.targetFragment.adapter.scope,
@@ -254,7 +254,7 @@ private fun <A : AdatClass> buildCollection(
             export.items.forEach {
                 values[it.itemId !!] = PropertyBackend(
                     builder.instance,
-                    null,
+                    it.item?.adatCompanion?.wireFormatName,
                     it.item?.toArray(),
                     initialPropertyTimes = it.propertyTimes,
                     itemId = it.itemId
