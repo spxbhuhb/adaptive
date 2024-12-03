@@ -61,7 +61,7 @@ class AutoCollectionProducer<IT : AdatClass>(
         newValue.validateForContext() // TODO make sure that we don't validate unnecessarily
         adapter.scope.launch {
             if (disposed) return@launch
-            latestValue = instance!!.value
+            latestValue = instance!!.valueOrNull // FIXME I don't like this when onChange is called, the collection should of been already initialized
             setDirty() // calls patch
         }
     }

@@ -12,6 +12,7 @@ import `fun`.adaptive.auto.model.operation.AutoRemove
 import `fun`.adaptive.auto.model.operation.AutoUpdate
 import `fun`.adaptive.auto.model.operation.AutoSyncEnd
 import `fun`.adaptive.reflect.CallSiteName
+import `fun`.adaptive.utility.RequireLock
 import `fun`.adaptive.utility.waitFor
 import `fun`.adaptive.wireformat.WireFormatRegistry
 import kotlin.time.Duration
@@ -19,6 +20,14 @@ import kotlin.time.Duration
 abstract class AutoBackend<IT : AdatClass>(
     val instance: AutoInstance<*, *, *, IT>,
 ) {
+
+    /**
+     * The instance is initialized after the first sync end if it is not
+     * an origin. Origins are supposed to be initialized right from their
+     * creation.
+     */
+    @RequireLock
+    internal var initialized = instance.origin
 
     abstract fun getItem(itemId: ItemId): IT?
 

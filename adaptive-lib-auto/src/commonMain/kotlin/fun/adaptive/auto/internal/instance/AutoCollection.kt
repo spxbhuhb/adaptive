@@ -23,10 +23,10 @@ class AutoCollection<BE : AutoCollectionBackend<IT>, PT : AutoCollectionPersiste
         get() = value.size
 
     val valueOrNull: Collection<IT>?
-        get() = getItems() // FIXME valueOrNull in AutoCollection
+        get() = getItems()
 
     val value: Collection<IT>
-        get() = getItems()
+        get() = checkNotNull(getItems()) { "the collection is not initialized yet $name"}
 
     override fun contains(element: IT): Boolean =
         value.contains(element)
@@ -71,7 +71,7 @@ class AutoCollection<BE : AutoCollectionBackend<IT>, PT : AutoCollectionPersiste
     }
 
     fun remove(selector: (IT) -> Boolean) {
-        getItems().filter(selector).forEach {
+        value.filter(selector).forEach {
             localRemove(itemId(it))
         }
     }

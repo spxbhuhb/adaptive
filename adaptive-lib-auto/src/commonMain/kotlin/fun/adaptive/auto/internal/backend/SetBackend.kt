@@ -118,6 +118,7 @@ class SetBackend<IT : AdatClass>(
         // item at the time (see syncPeer and modify for details)
         afterSync.forEach { remoteUpdate(it) } // calls instance.commit and distribute
         afterSync.clear()
+        initialized = true
     }
 
     // --------------------------------------------------------------------------------
@@ -209,7 +210,7 @@ class SetBackend<IT : AdatClass>(
     fun addItem(
         itemId: ItemId,
         value: IT,
-        propertyTimes : List<LamportTimestamp>?
+        propertyTimes: List<LamportTimestamp>?
     ): AutoItemBackend<IT>? {
 
         val values = value.toArray()
@@ -238,13 +239,11 @@ class SetBackend<IT : AdatClass>(
     override fun filter(filterFun: (IT) -> Boolean): Collection<IT> =
         data.items().map { it.getItem() }.filter { filterFun(it) }
 
-    override fun getItems(): Collection<IT> {
-        return data.items().map { it.getItem() }
-    }
+    override fun getItems(): Collection<IT>? =
+        if (! initialized) null else data.items().map { it.getItem() }
 
-    override fun getItem(itemId: ItemId): IT? {
-        return data[itemId]?.getItem()
-    }
+    override fun getItem(itemId: ItemId): IT? =
+        if (!initialized)null else data[itemId]?.getItem()
 
     override fun export(withItems: Boolean): AutoCollectionExport<IT> =
         AutoCollectionExport(

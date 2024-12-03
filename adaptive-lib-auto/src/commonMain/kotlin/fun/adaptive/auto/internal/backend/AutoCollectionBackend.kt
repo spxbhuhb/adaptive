@@ -26,7 +26,7 @@ abstract class AutoCollectionBackend<IT : AdatClass>(
 
     abstract fun filter(filterFun : (IT) -> Boolean) : Collection<IT>
 
-    internal abstract fun getItems() : Collection<IT>
+    internal abstract fun getItems() : Collection<IT>?
 
     /**
      * @param  withItems  When true the export will contain the items. When false

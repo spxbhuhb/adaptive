@@ -6,7 +6,6 @@ import `fun`.adaptive.adat.wireformat.AdatPropertyWireFormat
 import `fun`.adaptive.auto.internal.connector.AutoConnector
 import `fun`.adaptive.auto.internal.instance.AutoInstance
 import `fun`.adaptive.auto.internal.persistence.AutoItemExport
-import `fun`.adaptive.auto.internal.persistence.AutoItemPersistence
 import `fun`.adaptive.auto.model.AutoMetadata
 import `fun`.adaptive.auto.model.AutoPropertyValue
 import `fun`.adaptive.auto.model.ItemId
@@ -77,7 +76,7 @@ class PropertyBackend<IT : AdatClass>(
     // --------------------------------------------------------------------------------
 
     override fun localAdd(timestamp: LamportTimestamp, item: IT, parentItemId: ItemId?): Pair<AutoAdd, IT> {
-        throw UnsupportedOperationException("auto item does not support adding items ($this)")
+        throw UnsupportedOperationException("auto item does not support adding items (${this.wireFormatName})")
     }
 
     override fun localUpdate(
@@ -107,7 +106,7 @@ class PropertyBackend<IT : AdatClass>(
     }
 
     override fun localRemove(timestamp: LamportTimestamp, itemId: ItemId): Pair<AutoRemove, IT?> {
-        throw UnsupportedOperationException("auto item does not support removing items ($this)")
+        throw UnsupportedOperationException("auto item does not support removing items (${this.wireFormatName})")
     }
 
     // --------------------------------------------------------------------------------
@@ -115,7 +114,7 @@ class PropertyBackend<IT : AdatClass>(
     // --------------------------------------------------------------------------------
 
     override fun remoteAdd(operation: AutoAdd): Pair<LamportTimestamp, IT>? {
-        throw UnsupportedOperationException("auto item does not support adding items ($this)")
+        throw UnsupportedOperationException("auto item does not support adding items (${this.wireFormatName})")
     }
 
     override fun remoteUpdate(operation: AutoUpdate): Triple<LamportTimestamp, IT?, IT>? {
@@ -155,6 +154,8 @@ class PropertyBackend<IT : AdatClass>(
             }
         }
 
+        initialized = true
+
         if (changed) {
             item = null
             return Triple(lastUpdate, original, getItem())
@@ -164,7 +165,7 @@ class PropertyBackend<IT : AdatClass>(
     }
 
     override fun remoteRemove(operation: AutoRemove): Pair<LamportTimestamp, Set<Pair<ItemId, IT>>>? {
-        throw UnsupportedOperationException("auto item does not support removing items ($this)")
+        throw UnsupportedOperationException("auto item does not support removing items (${this.wireFormatName})")
     }
 
     // --------------------------------------------------------------------------------

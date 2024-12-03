@@ -55,6 +55,10 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     private val lock = getLock()
 
     @ThreadSafe
+    var name : String = "auto.CONNECTING   "
+        get() = lock.use { field }
+
+    @ThreadSafe
     val handle: AutoHandle
         get() = lock.use { checkNotNull(unsafeHandle) }
 
@@ -69,7 +73,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     private var unsafeTime = LamportTimestamp(unsafeHandle?.peerId ?: PEER_ID_CONNECTING, 0)
 
     @RequireLock
-    internal var logger: AdaptiveLogger = getLogger("auto.CONNECTING   ")
+    internal var logger: AdaptiveLogger = getLogger(name)
 
     @RequireLock
     internal var connectionInfo: AutoConnectionInfo<VT>? = null
@@ -98,10 +102,6 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
 
     internal val store = AutoAdatStore(this)
 
-    @RequireLock
-    private val isInitialized: Boolean
-        get() = ((time >= (connectionInfo?.acceptingTime ?: LamportTimestamp.ORIGIN)))
-
     // --------------------------------------------------------------------------------
     // Lifecycle
     // --------------------------------------------------------------------------------
@@ -124,14 +124,17 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
                     (backend as? AutoItemBackend<*>)?.also { be -> be.itemId = it.itemId }
                 }
 
-                val loggerName = "auto.${it.globalId.toShort()}.${it.peerId.toString().padStart(6, '0')}"
-                logger = getLogger(loggerName)
+                name = "auto.${it.globalId.toShort()}.${it.peerId.toString().padStart(6, '0')}"
+                logger = getLogger(name)
                 if (trace) logger.enableFine()
             }
 
             backend.let {
                 when (it) {
-                    is PropertyBackend<*> -> receive(LamportTimestamp(handle.peerId, it.lastUpdate.timestamp))
+                    is PropertyBackend<*> -> {
+                        receive(LamportTimestamp(handle.peerId, it.lastUpdate.timestamp))
+                        if (origin) persistenceInit()
+                    }
                     is SetBackend<*> -> {
                         receive(LamportTimestamp(handle.peerId, it.lastUpdate.timestamp))
                         persistenceInit()
@@ -487,7 +490,10 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     fun addListener(listener: AutoItemListener<IT>) {
         lock.use {
             itemListeners += listener
-            if (isInitialized) listener.onInit(thisItemId !!, getItem())
+            // FIXME clean up usage of thisItemId in addListener
+            thisItemId?.let {
+                if (backend.initialized) listener.onInit(it, getItem())
+            }
         }
     }
 
@@ -502,7 +508,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     fun addListener(listener: AutoCollectionListener<IT>) {
         lock.use {
             collectionListeners += listener
-            if (isInitialized) listener.onInit(getItems())
+            if (backend.initialized) listener.onInit(getItems()!!)
         }
     }
 
@@ -591,7 +597,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
 
     @ThreadSafe
     @Suppress("UNCHECKED_CAST")
-    protected fun getItems(): Collection<IT> =
+    protected fun getItems(): Collection<IT>? =
         lock.use {
             (backend as AutoCollectionBackend<IT>).getItems()
         }
