@@ -118,7 +118,6 @@ class SetBackend<IT : AdatClass>(
         // item at the time (see syncPeer and modify for details)
         afterSync.forEach { remoteUpdate(it) } // calls instance.commit and distribute
         afterSync.clear()
-        initialized = true
     }
 
     // --------------------------------------------------------------------------------

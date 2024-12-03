@@ -72,7 +72,7 @@ class CollectionNodeFilePersistenceTest {
     }
 
     @Test
-    fun `update before connect`() {
+    fun `update during connect`() {
         autoCommon()
 
         with(TestSetup(clearedTestPath(), list_12)) {
@@ -123,7 +123,8 @@ class CollectionNodeFilePersistenceTest {
 
     class TestSetup(
         testDir: Path,
-        initialValue: List<TestData>
+        initialValue: List<TestData>,
+        trace: Boolean = false
     ) {
         val originPath = Path(testDir, "origin").ensure()
         val originMetaPath = Path(originPath, "meta.json")
@@ -132,7 +133,7 @@ class CollectionNodeFilePersistenceTest {
             Path(originPath, "${itemId.peerId}.${itemId.timestamp}.json")
         }
 
-        val origin = autoCollectionOrigin(initialValue, persistence = originPersistence)
+        val origin = autoCollectionOrigin(initialValue, persistence = originPersistence, trace = trace)
 
         val nodePath = Path(testDir, "node").ensure()
         val nodeMetaPath = Path(nodePath, "meta.json")
@@ -141,7 +142,7 @@ class CollectionNodeFilePersistenceTest {
             Path(nodePath, "${itemId.peerId}.${itemId.timestamp}.json")
         }
 
-        val node = autoCollectionNode(origin, persistence = nodePersistence)
+        val node = autoCollectionNode(origin, persistence = nodePersistence, trace = trace)
     }
 
 }

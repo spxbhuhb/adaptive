@@ -22,12 +22,12 @@ abstract class AutoBackend<IT : AdatClass>(
 ) {
 
     /**
-     * The instance is initialized after the first sync end if it is not
-     * an origin. Origins are supposed to be initialized right from their
-     * creation.
+     * The instance is initialized when it has a usable value. This might be a
+     * non-synchronized, old value for nodes, but it was valid at some point of
+     * time.
      */
     @RequireLock
-    internal var initialized = instance.origin
+    internal var initialized = false
 
     abstract fun getItem(itemId: ItemId): IT?
 

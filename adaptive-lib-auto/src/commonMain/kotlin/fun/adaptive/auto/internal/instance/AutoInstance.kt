@@ -55,7 +55,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     private val lock = getLock()
 
     @ThreadSafe
-    var name : String = "auto.CONNECTING   "
+    var name: String = "auto.CONNECTING   "
         get() = lock.use { field }
 
     @ThreadSafe
@@ -127,17 +127,26 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
                 name = "auto.${it.globalId.toShort()}.${it.peerId.toString().padStart(6, '0')}"
                 logger = getLogger(name)
                 if (trace) logger.enableFine()
-            }
 
-            backend.let {
-                when (it) {
-                    is PropertyBackend<*> -> {
-                        receive(LamportTimestamp(handle.peerId, it.lastUpdate.timestamp))
-                        if (origin) persistenceInit()
-                    }
-                    is SetBackend<*> -> {
-                        receive(LamportTimestamp(handle.peerId, it.lastUpdate.timestamp))
-                        persistenceInit()
+                backend.let {
+                    when (it) {
+                        is PropertyBackend<*> -> {
+                            receive(LamportTimestamp(handle.peerId, it.lastUpdate.timestamp))
+                            if (origin) {
+                                persistenceInit()
+                                backend.initialized = true
+                                onLocalChange(it.itemId, getItem(), null)
+                            }
+                        }
+
+                        is SetBackend<*> -> {
+                            receive(LamportTimestamp(handle.peerId, it.lastUpdate.timestamp))
+                            persistenceInit()
+                            if (origin) {
+                                backend.initialized = true
+                                onInit(getItems() !!)
+                            }
+                        }
                     }
                 }
             }
@@ -299,12 +308,11 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
         distribute(operation)
     }
 
+    // FIXME do we need AutoEmpty when we have AutoSyncEnd?
     @RequireLock
     internal fun remoteEmpty(operation: AutoEmpty) {
-        receive(operation.timestamp)
+        // receive(operation.timestamp)
         trace { "APPLIED  :: opTime=${operation.timestamp}" }
-        onInit(emptyList())
-        onSyncEnd()
     }
 
     @RequireLock
@@ -318,6 +326,13 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
         backend.remoteSyncEnd(operation)
         receive(operation.timestamp)
         trace { "APPLIED  :: opTime=${operation.timestamp}" }
+
+        if (! backend.initialized) {
+            backend.initialized = true
+            // item backends will call onRemoteChange when they are updated
+            if (backend is AutoCollectionBackend<*>) onInit(getItems() !!)
+        }
+
         onSyncEnd()
     }
 
@@ -508,7 +523,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     fun addListener(listener: AutoCollectionListener<IT>) {
         lock.use {
             collectionListeners += listener
-            if (backend.initialized) listener.onInit(getItems()!!)
+            if (backend.initialized) listener.onInit(getItems() !!)
         }
     }
 
@@ -555,8 +570,10 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
         for (listener in itemListeners) {
             listener.onRemoteChange(itemId, newValue, oldValue)
         }
-        for (listener in collectionListeners) {
-            listener.onRemoteChange(itemId, newValue, oldValue)
+        if (backend.initialized) {
+            for (listener in collectionListeners) {
+                listener.onRemoteChange(itemId, newValue, oldValue)
+            }
         }
     }
 
@@ -565,13 +582,20 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
         for (listener in itemListeners) {
             listener.onLocalRemove(itemId, value)
         }
-        for (listener in collectionListeners) {
-            listener.onLocalRemove(itemId, value)
+        if (backend.initialized) {
+            for (listener in collectionListeners) {
+                listener.onLocalRemove(itemId, value)
+            }
         }
     }
 
     @RequireLock
     private fun onSyncEnd() {
+        if (! backend.initialized) {
+            onInit(emptyList())
+            backend.initialized = true
+        }
+
         for (listener in collectionListeners) {
             listener.onSyncEnd()
         }

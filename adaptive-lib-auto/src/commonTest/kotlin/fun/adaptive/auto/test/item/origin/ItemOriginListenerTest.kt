@@ -18,6 +18,8 @@ class ItemOriginListenerTest {
         val listener = TestListener()
         val instance = autoItemOrigin(td, listener = listener)
 
+        listener.assertLocal(TestData(12, "a"), null)
+
         instance.update(td::i to 23)
         listener.assertLocal(TestData(23, "a"), TestData(12, "a"))
 
