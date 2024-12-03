@@ -20,8 +20,8 @@ fun main() {
     browser(GroveFragmentFactory, backend = clientBackend) { adapter ->
 
         with(adapter.defaultTextRenderData) {
-            fontName = "Noto Sans"
-            fontSize = 17.sp
+            fontName = "Open Sans"
+            fontSize = 16.sp
         }
 
         groveMain()

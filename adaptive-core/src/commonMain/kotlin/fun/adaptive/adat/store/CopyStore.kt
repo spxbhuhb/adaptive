@@ -82,8 +82,8 @@ class CopyStore<A : AdatClass>(
             adatContext.apply(it)
             it.validateForContext()
             latestValue = it
-            onChange?.invoke(it)
             if (patch) {
+                onChange?.invoke(it)
                 setDirty()
             }
         }
