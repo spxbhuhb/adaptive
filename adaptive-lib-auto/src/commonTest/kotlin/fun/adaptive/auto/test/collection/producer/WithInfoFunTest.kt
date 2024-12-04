@@ -18,11 +18,11 @@ class WithInfoFunTest {
     @Test
     fun basic() = autoTest {
 
-        val origin = autoCollectionOrigin(content_12_23, serverWorker, trace = true)
+        val origin = autoCollectionOrigin(content_12_23, serverWorker)
 
         val adapter = test(clientBackend) {
             @Suppress("UNUSED_VARIABLE", "unused")
-            val collection = autoCollection(trace = true) { origin.connectInfo() }
+            val collection = autoCollection { origin.connectInfo() }
         }
 
         @Suppress("UNCHECKED_CAST")
@@ -40,6 +40,5 @@ class WithInfoFunTest {
 
         waitFor(1.seconds) { collection()!!.first().i == 45 }
     }
-
 
 }

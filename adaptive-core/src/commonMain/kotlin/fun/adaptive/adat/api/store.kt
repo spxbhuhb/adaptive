@@ -15,17 +15,3 @@ fun <A : AdatClass> A.storeOrNull(): AdatStore<A>? {
     @Suppress("UNCHECKED_CAST")
     return adatContext?.store as AdatStore<A>
 }
-
-fun <A : AdatClass> A.update(newValue: A) {
-    store().update(this, newValue)
-}
-
-fun <A : AdatClass, V> A.update(property : KProperty0<V>, value : V) {
-    store().update(this, arrayOf(property.name), value)
-}
-
-fun <A : AdatClass> A.update(vararg changes: Pair<KProperty<*>, *>): A =
-    store().update(this, changes)
-
-fun <A : AdatClass> A.update(changes: Collection<Pair<KProperty<*>, *>>): A =
-    this.update(*(changes.toTypedArray()))
