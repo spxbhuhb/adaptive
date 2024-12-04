@@ -5,6 +5,8 @@ import `fun`.adaptive.auto.api.autoCollection
 import `fun`.adaptive.auto.api.autoCollectionOrigin
 import `fun`.adaptive.auto.test.support.AutoTest.Companion.autoTest
 import `fun`.adaptive.auto.test.support.TestData
+import `fun`.adaptive.auto.test.support.content_12_23
+import `fun`.adaptive.auto.test.support.td12
 import `fun`.adaptive.foundation.testing.test
 import `fun`.adaptive.utility.waitFor
 import kotlin.test.Test
@@ -13,24 +15,14 @@ import kotlin.time.Duration.Companion.seconds
 
 class WithInfoFunTest {
 
-    val td12 = TestData(12, "a")
-    val td23 = TestData(23, "b")
-    val td45 = TestData(45, "c")
-
-    val content_empty = listOf<TestData>()
-    val content_12 = listOf(td12)
-    val content_23 = listOf(td23)
-    val content_12_23 = listOf(td12, td23)
-    val content_45_23 = listOf(td45, td23)
-
     @Test
     fun basic() = autoTest {
 
-        val origin = autoCollectionOrigin(content_12_23, serverWorker)
+        val origin = autoCollectionOrigin(content_12_23, serverWorker, trace = true)
 
         val adapter = test(clientBackend) {
             @Suppress("UNUSED_VARIABLE", "unused")
-            val collection = autoCollection { origin.connectInfo() }
+            val collection = autoCollection(trace = true) { origin.connectInfo() }
         }
 
         @Suppress("UNCHECKED_CAST")

@@ -102,6 +102,10 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
 
     internal val store = AutoAdatStore(this)
 
+    @ThreadSafe
+    val isInitialized : Boolean
+        get() = lock.use { backend.initialized }
+
     // --------------------------------------------------------------------------------
     // Lifecycle
     // --------------------------------------------------------------------------------
@@ -134,7 +138,8 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
                             receive(LamportTimestamp(handle.peerId, it.lastUpdate.timestamp))
                             if (origin) {
                                 persistenceInit()
-                                backend.initialized = true
+                            }
+                            if (backend.initialized) {
                                 onLocalChange(it.itemId, getItem(), null)
                             }
                         }
@@ -142,9 +147,8 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
                         is SetBackend<*> -> {
                             receive(LamportTimestamp(handle.peerId, it.lastUpdate.timestamp))
                             persistenceInit()
-                            if (origin) {
-                                backend.initialized = true
-                                onInit(getItems() !!)
+                            if (backend.initialized) {
+                                onInit(getItems())
                             }
                         }
                     }
@@ -330,7 +334,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
         if (! backend.initialized) {
             backend.initialized = true
             // item backends will call onRemoteChange when they are updated
-            if (backend is AutoCollectionBackend<*>) onInit(getItems() !!)
+            if (backend is AutoCollectionBackend<*>) onInit(getItems())
         }
 
         onSyncEnd()
@@ -446,22 +450,22 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
      * Called when an origin instance is initialized the first time. In that case
      * the initial value has to be persisted.
      */
-    abstract fun persistenceInit()
+    internal abstract fun persistenceInit()
 
     /**
      * Called on local and remote item additions.
      */
-    abstract fun persistenceAdd(itemId: ItemId)
+    internal abstract fun persistenceAdd(itemId: ItemId)
 
     /**
      * Called on local and remote item updates.
      */
-    abstract fun persistenceUpdate(itemId: ItemId)
+    internal abstract fun persistenceUpdate(itemId: ItemId)
 
     /**
      * Called on local and remote item removes.
      */
-    abstract fun persistenceRemove(itemId: ItemId, item: IT?)
+    internal abstract fun persistenceRemove(itemId: ItemId, item: IT?)
 
     // --------------------------------------------------------------------------------
     // Peers
@@ -472,7 +476,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
      * operations that happened after the `connector.peerTime` to the peer.
      */
     @ThreadSafe
-    fun addConnector(connector: AutoConnector): LamportTimestamp {
+    internal fun addConnector(connector: AutoConnector): LamportTimestamp {
 
         lock.use {
             connectors += connector
@@ -483,7 +487,7 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
     }
 
     @ThreadSafe
-    fun removeConnector(handle: AutoHandle) {
+    internal fun removeConnector(handle: AutoHandle) {
         lock.use {
             val toRemove = connectors.filter { it.peerHandle.peerId == handle.peerId }
 
@@ -621,9 +625,16 @@ abstract class AutoInstance<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, 
 
     @ThreadSafe
     @Suppress("UNCHECKED_CAST")
-    protected fun getItems(): Collection<IT>? =
+    protected fun getItems(): Collection<IT> =
         lock.use {
             (backend as AutoCollectionBackend<IT>).getItems()
+        }
+
+    @ThreadSafe
+    @Suppress("UNCHECKED_CAST")
+    protected fun getItemsOrNull(): Collection<IT>? =
+        lock.use {
+            (backend as AutoCollectionBackend<IT>).getItemsOrNull()
         }
 
     @ThreadSafe

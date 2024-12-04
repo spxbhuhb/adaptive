@@ -73,6 +73,13 @@ suspend inline fun <reified T> untilNotNull(
     }
 }
 
+/**
+ * Call [block] repeatedly until it does not throw an exception.
+ *
+ * - The default [waitStrategy] starts with 200 milliseconds delay and increments it by 15% up until 5 seconds.
+ * - **All** exceptions are caught and hidden.
+ * - Coroutine context activity is checked before each try with [ensureActive].
+ */
 suspend inline fun <reified T> untilSuccess(
     waitStrategy: WaitStrategy = WaitStrategy(),
     crossinline block: suspend () -> T,
@@ -83,8 +90,8 @@ suspend inline fun <reified T> untilSuccess(
 
         try {
             return block()
-        } catch (_: TimeoutCancellationException) {
-            // timeout is fine, others we can actually throw
+        } catch (_: Exception) {
+            // this is intentional, feels a bit strange but the whole point is to try until success
         }
 
         waitStrategy.wait()
@@ -111,7 +118,17 @@ suspend inline fun <reified T> untilNoTimeout(
 
 }
 
-object Flat1SecStrategy : WaitStrategy(100, 200.milliseconds, 1.seconds)
+/**
+ * - first delay is 200 milliseconds
+ * - each subsequent delay is 115% of the previous one
+ * - maximum delay is 5 seconds (once reached, stays 5)
+ */
+object DefaultWaitStrategy : WaitStrategy()
+
+/**
+ * - each delay is 1 second
+ */
+object Flat1SecStrategy : WaitStrategy(100, 1.seconds, 1.seconds)
 
 open class WaitStrategy(
     val retryMultiplier: Int = 115,

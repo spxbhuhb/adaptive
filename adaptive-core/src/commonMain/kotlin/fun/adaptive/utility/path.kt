@@ -108,7 +108,7 @@ fun clearedTestPath(callSiteName: String = "unknown"): Path {
         }
     }
 
-    val testDir = Path(testPath, callSiteName)
+    val testDir = Path(testPath, callSiteName.removeSuffix(".<anonymous>"))
     if (testDir.exists()) {
         clean(testDir)
     } else {

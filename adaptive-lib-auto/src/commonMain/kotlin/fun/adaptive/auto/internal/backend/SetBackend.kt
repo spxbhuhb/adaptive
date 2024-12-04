@@ -31,6 +31,7 @@ class SetBackend<IT : AdatClass>(
             data.addAll(initialValue.keys)
             lastUpdate = initialValue.values.maxOf { it.lastUpdate }
         }
+        initialized = (initialValue != null)
     }
 
     // --------------------------------------------------------------------------------
@@ -238,11 +239,14 @@ class SetBackend<IT : AdatClass>(
     override fun filter(filterFun: (IT) -> Boolean): Collection<IT> =
         data.items().map { it.getItem() }.filter { filterFun(it) }
 
-    override fun getItems(): Collection<IT>? =
+    override fun getItems(): Collection<IT> =
+        checkNotNull(getItemsOrNull())
+
+    override fun getItemsOrNull(): Collection<IT>? =
         if (! initialized) null else data.items().map { it.getItem() }
 
     override fun getItem(itemId: ItemId): IT? =
-        if (!initialized)null else data[itemId]?.getItem()
+        if (! initialized) null else data[itemId]?.getItem()
 
     override fun export(withItems: Boolean): AutoCollectionExport<IT> =
         AutoCollectionExport(

@@ -4,6 +4,7 @@ import `fun`.adaptive.auto.api.AutoApi
 import `fun`.adaptive.auto.internal.instance.AutoInstance
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.operation.*
+import `fun`.adaptive.utility.ThreadSafe
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.safeSuspendCall
 import `fun`.adaptive.utility.untilSuccess
@@ -34,6 +35,7 @@ class ServiceConnector(
 
     val operations: Channel<AutoOperation> = Channel(pendingLimit)
 
+    @ThreadSafe
     var status = Status.CREATED
         get() = lock.use { field }
         private set(value) = lock.use { field = value }

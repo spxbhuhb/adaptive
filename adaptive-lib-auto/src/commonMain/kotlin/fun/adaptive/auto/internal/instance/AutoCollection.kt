@@ -5,10 +5,13 @@ import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.auto.internal.backend.AutoCollectionBackend
 import `fun`.adaptive.auto.internal.persistence.AutoCollectionPersistence
 import `fun`.adaptive.auto.model.ItemId
+import `fun`.adaptive.utility.ThreadSafe
+import `fun`.adaptive.utility.waitFor
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
+import kotlin.time.Duration
 
 class AutoCollection<BE : AutoCollectionBackend<IT>, PT : AutoCollectionPersistence<IT>, IT : AdatClass>(
     origin: Boolean,
@@ -23,10 +26,10 @@ class AutoCollection<BE : AutoCollectionBackend<IT>, PT : AutoCollectionPersiste
         get() = value.size
 
     val valueOrNull: Collection<IT>?
-        get() = getItems()
+        get() = getItemsOrNull()
 
     val value: Collection<IT>
-        get() = checkNotNull(getItems()) { "the collection is not initialized yet $name"}
+        get() = getItems()
 
     override fun contains(element: IT): Boolean =
         value.contains(element)
@@ -90,6 +93,12 @@ class AutoCollection<BE : AutoCollectionBackend<IT>, PT : AutoCollectionPersiste
 
     override fun persistenceRemove(itemId: ItemId, value: IT?) {
         persistence?.remove(itemId, value)
+    }
+
+    @ThreadSafe
+    suspend fun ensureValue(timeout : Duration = Duration.INFINITE) : AutoCollection<BE,PT,IT> {
+        waitFor(timeout) { isInitialized }
+        return this
     }
 
 }

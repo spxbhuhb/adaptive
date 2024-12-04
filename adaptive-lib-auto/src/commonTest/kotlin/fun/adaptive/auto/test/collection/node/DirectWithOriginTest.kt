@@ -4,6 +4,7 @@ import `fun`.adaptive.auto.api.autoCollectionNode
 import `fun`.adaptive.auto.api.autoCollectionOrigin
 import `fun`.adaptive.auto.test.support.TestData
 import `fun`.adaptive.auto.test.support.wait
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -30,11 +31,11 @@ class DirectWithOriginTest {
     }
 
     @Test
-    fun `create single`() {
+    fun `create single`() = runTest {
         val origin = autoCollectionOrigin(content_12)
         val node = autoCollectionNode(origin)
 
-        wait(node, origin)
+        node.ensureValue()
 
         assertEquals(content_12, node.value)
     }

@@ -249,6 +249,10 @@ private fun <A : AdatClass> buildCollection(
         backendFun = { builder, export ->
             export as AutoCollectionExport<A>
 
+            if (export.items == null) {
+                return@AutoInstanceBuilder SetBackend(builder.instance, null)
+            }
+
             val values = mutableMapOf<ItemId, PropertyBackend<A>>()
 
             export.items.forEach {

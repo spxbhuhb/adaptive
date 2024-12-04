@@ -115,7 +115,7 @@ class AutoInstanceBuilder<BE : AutoBackend<IT>, PT : AutoPersistence<VT, IT>, VT
                     connectionInfo?.let { AutoMetadata(it, null, null) },
                     (initialValue as? Collection<IT>)?.map {
                         AutoItemExport<IT>(null, itemId, null, it).also { itemId = itemId.increment() }
-                    } ?: emptyList()
+                    }
                 )
             }
             else -> {

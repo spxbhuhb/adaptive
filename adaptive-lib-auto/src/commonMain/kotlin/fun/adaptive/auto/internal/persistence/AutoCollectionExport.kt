@@ -4,5 +4,5 @@ import `fun`.adaptive.auto.model.AutoMetadata
 
 class AutoCollectionExport<IT>(
     override val meta: AutoMetadata?,
-    val items : Collection<AutoItemExport<IT>>
+    val items : Collection<AutoItemExport<IT>>?
 ) : AutoExport<Collection<IT>>()

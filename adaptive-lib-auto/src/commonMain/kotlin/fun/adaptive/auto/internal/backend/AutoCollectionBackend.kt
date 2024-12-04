@@ -3,15 +3,10 @@ package `fun`.adaptive.auto.internal.backend
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.auto.internal.instance.AutoInstance
 import `fun`.adaptive.auto.internal.persistence.AutoCollectionExport
-import `fun`.adaptive.auto.internal.persistence.AutoCollectionPersistence
 import `fun`.adaptive.auto.internal.persistence.AutoItemExport
 import `fun`.adaptive.auto.model.ItemId
-import `fun`.adaptive.auto.model.LamportTimestamp
-import `fun`.adaptive.auto.model.operation.AutoAdd
-import `fun`.adaptive.auto.model.operation.AutoEmpty
-import `fun`.adaptive.auto.model.operation.AutoUpdate
-import `fun`.adaptive.auto.model.operation.AutoRemove
 import `fun`.adaptive.auto.model.operation.AutoSyncEnd
+import `fun`.adaptive.auto.model.operation.AutoUpdate
 
 abstract class AutoCollectionBackend<IT : AdatClass>(
     instance: AutoInstance<*, *, Collection<IT>, IT>
@@ -26,7 +21,9 @@ abstract class AutoCollectionBackend<IT : AdatClass>(
 
     abstract fun filter(filterFun : (IT) -> Boolean) : Collection<IT>
 
-    internal abstract fun getItems() : Collection<IT>?
+    internal abstract fun getItems() : Collection<IT>
+
+    internal abstract fun getItemsOrNull() : Collection<IT>?
 
     /**
      * @param  withItems  When true the export will contain the items. When false
