@@ -55,7 +55,7 @@ class ArmSelectBuilder(
 
             // add "else" if the last condition is not a constant true
             armSelect.branches.last().condition.irExpression.let {
-                if (! (it is IrConst<*> && it.value is Boolean && it.value == true)) {
+                if (! (it is IrConst && it.value is Boolean && it.value == true)) {
                     branches += irElseBranch()
                 }
             }
@@ -93,7 +93,7 @@ class ArmSelectBuilder(
 
                 // add "else" if the last condition is not a constant true
                 armSelect.branches.last().condition.irExpression.let {
-                    if (! (it is IrConst<*> && it.value is Boolean && it.value == true)) {
+                    if (! (it is IrConst && it.value is Boolean && it.value == true)) {
                         branches += irElseBranch()
                     }
                 }

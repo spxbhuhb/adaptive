@@ -33,7 +33,7 @@ class JsonBufferWriterTest {
         test("\"b\":true") { bool("b", true) }
         test("\"b\":false") { bool("b", false) }
 
-        test("\"n\":null") { number("n", null) }
+        test("\"n\":null") { number("n", null as Number?) }
         test("\"i\":1") { number("i", 1) }
         test("\"d\":1.1") { number("d", 1.1) }
 

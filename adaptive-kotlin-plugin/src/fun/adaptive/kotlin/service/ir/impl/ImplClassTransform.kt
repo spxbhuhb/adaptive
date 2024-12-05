@@ -107,13 +107,12 @@ class ImplClassTransform(
         oldPrimary.isPrimary = false
 
         oldPrimary.body = irFactory.createBlockBody(oldPrimary.startOffset, oldPrimary.endOffset).apply {
-            statements += IrDelegatingConstructorCallImpl.fromSymbolOwner(
+            statements += IrDelegatingConstructorCallImpl(
                 SYNTHETIC_OFFSET,
                 SYNTHETIC_OFFSET,
                 transformedClass.defaultType,
                 newPrimary.symbol,
-                typeArgumentsCount = 0,
-                valueArgumentsCount = 1
+                typeArgumentsCount = 0
             ).also {
                 it.putValueArgument(0, irNull())
             }
@@ -188,7 +187,7 @@ class ImplClassTransform(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 irBuiltIns.nothingType,
                 transformedClass.functionByName { "unknownFunction" },
-                0, 1
+                typeArgumentsCount = 0
             ).also {
                 it.dispatchReceiver = irGet(fromFun.dispatchReceiverParameter !!)
                 it.putValueArgument(0, getFunName)

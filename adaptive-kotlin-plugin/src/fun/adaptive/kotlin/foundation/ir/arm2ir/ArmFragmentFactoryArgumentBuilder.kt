@@ -43,8 +43,8 @@ class ArmFragmentFactoryArgumentBuilder(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 pluginContext.boundFragmentFactoryType,
                 pluginContext.boundFragmentFactoryClass.constructors.first(),
-                0, 0,
-                Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_COUNT,
+                typeArgumentsCount = 0,
+                constructorTypeArgumentsCount = 0
             ).apply {
                 putValueArgument(
                     Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARING_FRAGMENT,

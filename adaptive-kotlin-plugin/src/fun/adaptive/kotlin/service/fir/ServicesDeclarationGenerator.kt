@@ -19,8 +19,10 @@ import org.jetbrains.kotlin.fir.plugin.createMemberFunction
 import org.jetbrains.kotlin.fir.plugin.createMemberProperty
 import org.jetbrains.kotlin.fir.plugin.createNestedClass
 import org.jetbrains.kotlin.fir.resolve.defaultType
-import org.jetbrains.kotlin.fir.resolve.providers.getClassDeclaredFunctionSymbols
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
+import org.jetbrains.kotlin.fir.scopes.FirScope
+import org.jetbrains.kotlin.fir.scopes.getFunctions
+import org.jetbrains.kotlin.fir.scopes.impl.declaredMemberScope
 import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.*
 import org.jetbrains.kotlin.fir.types.coneType
@@ -83,7 +85,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
             Names.SERVICE_NAME,
             Names.SERVICE_CALL_TRANSPORT_PROPERTY,
             SpecialNames.INIT
-        ) + collectFunctions(classSymbol.getContainingClassSymbol(session) !!.classId)
+        ) + collectFunctions(classSymbol.getContainingClassSymbol() !!.classId)
     }
 
     private fun collectFunctions(classId: ClassId) =
@@ -154,7 +156,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         val functionName = callableId.callableName
 
         val interfaceFunctions = context.owner.resolvedSuperTypeRefs
-            .map { session.symbolProvider.getClassDeclaredFunctionSymbols(it.toClassLikeSymbol(session) !!.classId, functionName) }
+            .map { session.getClassDeclaredFunctionSymbols(it.toClassLikeSymbol(session) !!.classId, functionName) }
             .flatten()
             .filter { it.name.identifier != Strings.CALL_SERVICE }
 
@@ -180,6 +182,17 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
                 }
             }.symbol
         }
+    }
+
+    @OptIn(SymbolInternals::class)
+    private fun FirSession.getClassDeclaredMemberScope(classId: ClassId): FirScope? {
+        val classSymbol = symbolProvider.getClassLikeSymbolByClassId(classId) as? FirRegularClassSymbol ?: return null
+        return declaredMemberScope(classSymbol.fir, memberRequiredPhase = null)
+    }
+
+    fun FirSession.getClassDeclaredFunctionSymbols(classId: ClassId, name: Name): List<FirFunctionSymbol<*>> {
+        val classMemberScope = getClassDeclaredMemberScope(classId)
+        return classMemberScope?.getFunctions(name).orEmpty()
     }
 
     val MemberGenerationContext?.isForeign

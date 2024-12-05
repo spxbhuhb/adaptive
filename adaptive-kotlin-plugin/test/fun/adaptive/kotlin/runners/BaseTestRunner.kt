@@ -7,13 +7,11 @@ package `fun`.adaptive.kotlin.runners
 import `fun`.adaptive.kotlin.service.ExtensionRegistrarConfigurator
 import `fun`.adaptive.kotlin.service.PluginAnnotationsProvider
 import org.jetbrains.kotlin.config.JvmTarget
-import org.jetbrains.kotlin.platform.jvm.JvmPlatforms
-import org.jetbrains.kotlin.test.TestJdkKind
 import org.jetbrains.kotlin.test.backend.ir.JvmIrBackendFacade
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.directives.FirDiagnosticsDirectives
 import org.jetbrains.kotlin.test.directives.JvmEnvironmentConfigurationDirectives
-import org.jetbrains.kotlin.test.frontend.fir.Fir2IrJvmResultsConverter
+import org.jetbrains.kotlin.test.frontend.fir.Fir2IrResultsConverter
 import org.jetbrains.kotlin.test.frontend.fir.FirFrontendFacade
 import org.jetbrains.kotlin.test.initIdeaConfiguration
 import org.jetbrains.kotlin.test.model.FrontendKinds
@@ -45,8 +43,7 @@ fun TestConfigurationBuilder.commonFirWithPluginFrontendConfiguration(dumpFir : 
     commonConfigurationForTest(
         targetFrontend = FrontendKinds.FIR,
         frontendFacade = ::FirFrontendFacade,
-        frontendToBackendConverter = ::Fir2IrJvmResultsConverter,
-        backendFacade = ::JvmIrBackendFacade,
+        frontendToBackendConverter = ::Fir2IrResultsConverter,
         commonServicesConfiguration = {},
     )
 

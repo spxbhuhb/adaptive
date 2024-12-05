@@ -62,8 +62,7 @@ class StateAccessTransform(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 irBuiltIns.anyNType,
                 getVariableFunction,
-                0,
-                Indices.GET_CLOSURE_VARIABLE_ARGUMENT_COUNT
+                0
             ).also {
 
                 it.dispatchReceiver = irGetFragment()
@@ -87,8 +86,7 @@ class StateAccessTransform(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irBuiltIns.unitType,
             pluginContext.setStateVariable,
-            0,
-            Indices.SET_STATE_VARIABLE_ARGUMENT_COUNT
+            typeArgumentsCount = 0
         ).also {
 
             it.dispatchReceiver = irGet(newParent !!.dispatchReceiverParameter !!)
@@ -172,7 +170,7 @@ class StateAccessTransform(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 irBuiltIns.unitType,
                 pluginContext.patchIfDirty,
-                0, 0
+                typeArgumentsCount = 0
             ).also {
                 it.dispatchReceiver = irGet(newParent.dispatchReceiverParameter !!)
             }

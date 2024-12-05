@@ -88,7 +88,7 @@ class StateDefinitionTransform(
                         UNDEFINED_OFFSET,
                         irBuiltIns.arrayClass.typeWith(valueParameter.varargElementType !!),
                         pluginContext.kotlinSymbols.emptyArray,
-                        1, 0
+                        typeArgumentsCount = 1
                     ).also {
                         it.putTypeArgument(0, valueParameter.varargElementType !!)
                     }

@@ -57,8 +57,7 @@ class ArmCallBuilder(
                     pluginContext.adaptiveAnonymousClass.defaultType,
                     pluginContext.anonymousConstructor,
                     typeArgumentsCount = 0,
-                    constructorTypeArgumentsCount = 0,
-                    valueArgumentsCount = 4
+                    constructorTypeArgumentsCount = 0
                 ).also {
                     it.putValueArgument(0, irGet(buildFun.valueParameters[Indices.BUILD_PARENT]))
                     it.putValueArgument(1, irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]))

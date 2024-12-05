@@ -50,7 +50,7 @@ class ArmSequenceBuilder(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 irBuiltIns.intArray.defaultType,
                 irContext.irBuiltIns.findFunctions(Name.identifier("intArrayOf")).single(),
-                0, 1,
+                typeArgumentsCount = 0
             ).apply {
                 putValueArgument(0,
                     IrVarargImpl(

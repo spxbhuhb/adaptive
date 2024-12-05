@@ -8,12 +8,12 @@ import `fun`.adaptive.kotlin.adat.ir.AdatIrBuilder
 import `fun`.adaptive.kotlin.common.propertyGetter
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrProperty
-import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
 import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.ir.util.parentAsClass
+import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
 
 fun AdatIrBuilder.adatWireFormat(
     companionClass: IrClass,
@@ -25,9 +25,10 @@ fun AdatIrBuilder.adatWireFormat(
         SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
         IrConstructorCallImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            pluginContext.adatClassWireFormat.owner.typeWith(adatClassType),
-            pluginContext.adatClassWireFormat.constructors.first(),
-            1, 0, 2
+            type = pluginContext.adatClassWireFormat.owner.typeWith(adatClassType),
+            symbol = pluginContext.adatClassWireFormat.constructors.first(),
+            typeArgumentsCount = 1,
+            constructorTypeArgumentsCount = 0
         ).also {
             it.putTypeArgument(0, adatClassType)
 
