@@ -68,7 +68,7 @@ class AdaptiveStateVariableBinding<VT>(
                     // FIXME setting dirty masks and change propagation at bound value change
                     // the line above behave very strange, find out why
                     // sourceFragment.setDirty(indexInSourceState, true)
-                    targetFragment.setDirty(indexInTargetState, true)
+                    targetFragment.setDirtyBatch(indexInTargetState)
                 }
 
                 else -> throw UnsupportedOperationException()

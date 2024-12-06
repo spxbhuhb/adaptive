@@ -12,6 +12,7 @@ import `fun`.adaptive.foundation.internal.cleanStateMask
 import `fun`.adaptive.foundation.internal.initStateMask
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
 import `fun`.adaptive.foundation.query.FragmentVisitor
+import `fun`.adaptive.utility.PluginReference
 
 abstract class AdaptiveFragment(
     val adapter: AdaptiveAdapter,
@@ -191,6 +192,7 @@ abstract class AdaptiveFragment(
         if (trace) traceWithState("after-Patch-Internal")
     }
 
+    @PluginReference
     open fun patchIfDirty() {
         if (dirtyMask != 0) patchInternal()
     }
@@ -259,11 +261,28 @@ abstract class AdaptiveFragment(
         setDirty(index, origin != null)
     }
 
-    fun setDirty(index: Int, callPatch: Boolean) {
+    protected fun setDirty(index: Int, callPatch: Boolean) {
         dirtyMask = dirtyMask or (1 shl index)
         if (callPatch) {
             patchInternal()
         }
+    }
+
+    /**
+     * Called when batch closing operations are needed (typical use is actual UI
+     * layout updates). Calls close [closePatchBatch] after patching has been done.
+     */
+    fun setDirtyBatch(index : Int) {
+        setDirty(index, true)
+        closePatchBatch()
+    }
+
+    /**
+     * Closes a patch batch. This lets the fragment perform operations at once
+     * after a number of descendants have been patched.
+     */
+    fun closePatchBatch() {
+
     }
 
     // --------------------------------------------------------------------------

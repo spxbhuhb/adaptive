@@ -25,12 +25,12 @@ class Focus(
 
     val focusHandler = { _: Any ->
         latestValue = true
-        setDirty()
+        setDirtyBatch()
     }
 
     val blurHandler = { _: Any ->
         latestValue = false
-        setDirty()
+        setDirtyBatch()
     }
 
     fun AdaptiveFragment.receiver(): HTMLElement? =

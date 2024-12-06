@@ -25,12 +25,12 @@ class Hover(
 
     val enterHandler = { _: Any ->
         latestValue = true
-        setDirty()
+        setDirtyBatch()
     }
 
     val leaveHandler = { _: Any ->
         latestValue = false
-        setDirty()
+        setDirtyBatch()
     }
 
     fun AdaptiveFragment.receiver(): HTMLElement? =

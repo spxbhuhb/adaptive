@@ -54,7 +54,7 @@ class AdaptiveFetch<VT>(
             it.launch {
                 try {
                     latestValue = fetchFunction()
-                    setDirty()
+                    setDirtyBatch()
                 } catch (e: AdaptiveProducerCancel) {
                     it.cancel()
                 } catch (e: TimeoutCancellationException) {

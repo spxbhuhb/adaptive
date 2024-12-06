@@ -7,8 +7,6 @@ import `fun`.adaptive.auto.api.ItemBase
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
-import `fun`.adaptive.log.getLogger
-import `fun`.adaptive.utility.safeCall
 import kotlinx.coroutines.launch
 
 /**
@@ -56,7 +54,7 @@ class AutoItemProducer<IT : AdatClass>(
         adapter.scope.launch {
             if (disposed) return@launch
             latestValue = value
-            setDirty()
+            setDirtyBatch()
         }
     }
 
@@ -71,7 +69,7 @@ class AutoItemProducer<IT : AdatClass>(
             // FIXME handling of Auto producer dispose, fix other methods and AutoCollectionProducer as well!
             if (disposed) return@launch
             latestValue = newValue
-            setDirty() // calls patch
+            setDirtyBatch() // calls patch
         }
     }
 
@@ -79,7 +77,7 @@ class AutoItemProducer<IT : AdatClass>(
         adapter.scope.launch {
             if (disposed) return@launch
             latestValue = null
-            setDirty()
+            setDirtyBatch()
         }
     }
 
@@ -87,7 +85,7 @@ class AutoItemProducer<IT : AdatClass>(
         adapter.scope.launch {
             if (disposed) return@launch
             latestValue = null
-            setDirty()
+            setDirtyBatch()
         }
     }
 
