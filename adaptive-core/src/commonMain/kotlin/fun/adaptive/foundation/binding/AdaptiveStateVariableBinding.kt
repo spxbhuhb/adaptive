@@ -50,7 +50,8 @@ class AdaptiveStateVariableBinding<VT>(
     fun setValue(value: Any?, setProviderValue: Boolean) {
         checkNotNull(sourceFragment)
         if (path == null) {
-            sourceFragment.setStateVariable(indexInSourceState, value, this)
+            sourceFragment.setStateVariable(indexInSourceState, value)
+            sourceFragment.setDirtyBatch(indexInTargetState)
         } else {
             val provider = sourceFragment.getThisClosureVariable(indexInSourceClosure)
 

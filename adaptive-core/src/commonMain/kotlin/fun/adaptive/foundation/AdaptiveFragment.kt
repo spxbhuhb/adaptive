@@ -192,6 +192,7 @@ abstract class AdaptiveFragment(
         if (trace) traceWithState("after-Patch-Internal")
     }
 
+    @Suppress("unused")
     @PluginReference
     open fun patchIfDirty() {
         if (dirtyMask != 0) patchInternal()
@@ -244,10 +245,6 @@ abstract class AdaptiveFragment(
         thisClosure.get(variableIndex)
 
     fun setStateVariable(index: Int, value: Any?) {
-        setStateVariable(index, value, null)
-    }
-
-    fun setStateVariable(index: Int, value: Any?, origin: AdaptiveStateVariableBinding<*>?) {
         // TODO think about changes of state variable binding
         // Editor passes the binding to other fragments, however the binding equals to the
         // previous binding even when the value of the bound state variable has changed.
@@ -258,14 +255,11 @@ abstract class AdaptiveFragment(
 
         state[index] = value
 
-        setDirty(index, origin != null)
+        setDirty(index)
     }
 
-    protected fun setDirty(index: Int, callPatch: Boolean) {
+    private fun setDirty(index: Int) {
         dirtyMask = dirtyMask or (1 shl index)
-        if (callPatch) {
-            patchInternal()
-        }
     }
 
     /**
@@ -273,7 +267,8 @@ abstract class AdaptiveFragment(
      * layout updates). Calls close [closePatchBatch] after patching has been done.
      */
     fun setDirtyBatch(index : Int) {
-        setDirty(index, true)
+        setDirty(index)
+        patchInternal()
         closePatchBatch()
     }
 
@@ -305,7 +300,7 @@ abstract class AdaptiveFragment(
 
         // when we replace the producer after a dependency change, the dependents of the target
         // state variable have to be is patched
-        setDirty(producer.binding.indexInTargetState, false)
+        setDirty(producer.binding.indexInTargetState)
 
         if (producer.actual) {
             actualProducers ?: mutableListOf<AdaptiveProducer<*>>().also { actualProducers = it }
@@ -384,7 +379,7 @@ abstract class AdaptiveFragment(
         ).also {
             addBinding(it)
             descendant.setStateVariable(indexInTarget, it)
-            descendant.setDirty(indexInTarget, false)
+            descendant.setDirty(indexInTarget)
         }
 
     fun removeBinding(binding: AdaptiveStateVariableBinding<*>) {
