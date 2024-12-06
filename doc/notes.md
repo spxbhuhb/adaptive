@@ -53,10 +53,6 @@ This also would be nice for servers.
 `AdaptiveFragment.setStateVariable`
 
 - Ignores values that equals (`==`) with the current one in the state (returns immediately, nothing happens).
-- Calls `ValueBinding.callback` for each binding that is different from the one called `setStateVariable`.
-- ^^^ TODO this is actually not true, check why, might be an error
-- Calls `patchInternal` when the value is changed by a binding.
-
 
 ## Basics: Support Functions
 

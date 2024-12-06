@@ -180,7 +180,7 @@ abstract class AdaptiveFragment(
         if (trace) traceWithState("after-Patch-External")
     }
 
-    open fun patchInternal() {
+    protected open fun patchInternal() {
         if (trace) traceWithState("before-Patch-Internal")
 
         if (genPatchInternal()) {
@@ -190,6 +190,15 @@ abstract class AdaptiveFragment(
         dirtyMask = cleanStateMask
 
         if (trace) traceWithState("after-Patch-Internal")
+    }
+
+    /**
+     * Called when batch closing operations are needed (typical use is actual UI
+     * layout updates). Calls [patchInternal] and then [closePatchBatch].
+     */
+    open fun patchInternalBatch() {
+        patchInternal()
+        closePatchBatch()
     }
 
     @Suppress("unused")
@@ -264,7 +273,7 @@ abstract class AdaptiveFragment(
 
     /**
      * Called when batch closing operations are needed (typical use is actual UI
-     * layout updates). Calls close [closePatchBatch] after patching has been done.
+     * layout updates). Calls [patchInternal] and then [closePatchBatch].
      */
     fun setDirtyBatch(index : Int) {
         setDirty(index)

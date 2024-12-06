@@ -24,9 +24,9 @@ fun box() : String {
         WhenNoSubjectNoElse(v1)
     }.apply {
         rootFragment.setStateVariable(0, "b")
-        rootFragment.patchInternal()
+        rootFragment.patchInternalBatch()
         rootFragment.setStateVariable(0, "c")
-        rootFragment.patchInternal()
+        rootFragment.patchInternalBatch()
     }
 
     return adapter.assert(listOf(
