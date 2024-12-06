@@ -679,6 +679,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
+      @TestMetadata("closure.kt")
+      public void testClosure() {
+        runTest("testData/box/foundation/variables/closure.kt");
+      }
+
+      @Test
       @TestMetadata("inline.kt")
       public void testInline() {
         runTest("testData/box/foundation/variables/inline.kt");
