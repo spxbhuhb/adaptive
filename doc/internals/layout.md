@@ -3,18 +3,6 @@
 The main goal of the layout system - apart providing layouts - is to be deterministic across
 different platforms.
 
-Adaptive layouts are writing direction dependent horizontally, but fixed vertically.
-
-This means that surrounding values (padding, border and margin) use `start` and `end` instead
-of `left` and `right`. The actual mapping to `left` and `right` depends on instructions.
-(Actually, this is not true right now, I have to decide of I want to change the names.)
-
-Vertical surroundings always use `top` and `bottom`.
-
-The difference between the two directions comes from the fact that arabic languages actually
-do stick to right-to-left writing while easter ones use left-to-right instead of their traditional
-top-to-down.
-
 > [!IMPORTANT]
 >
 > When talking about child fragments in this document they **DO NOT** mean `AdaptiveFragment.children`,
