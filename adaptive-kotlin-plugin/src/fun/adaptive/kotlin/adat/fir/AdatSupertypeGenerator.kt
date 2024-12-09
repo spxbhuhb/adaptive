@@ -11,7 +11,6 @@ import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
 import org.jetbrains.kotlin.fir.extensions.predicateBasedProvider
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.FirResolvedTypeRef
-import org.jetbrains.kotlin.fir.types.builder.buildResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.name.ClassId
@@ -46,7 +45,7 @@ class AdatSupertypeGenerator(session: FirSession) : FirSupertypeGenerationExtens
         val symbol = classLikeDeclaration.symbol
 
         if (symbol.classId in companions) {
-            if (resolvedSupertypes.any { it.coneType == ClassIds.ADAT_COMPANION }) return emptyList()
+            if (resolvedSupertypes.any { it.coneType.classId == ClassIds.ADAT_COMPANION }) return emptyList()
 
             val adatClassType = symbol.classId.constructClassLikeType(emptyArray(), false)
 
