@@ -109,7 +109,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                 context.isAdatCompanion -> generateCompanionConstructor(context)
                 else -> emptyList()
             }
-        } catch (_ : IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             // This happens when there is no empty constructor yet, I don't really know what to do with this one.
             // TODO investigate empty constructor plugin problem
 
@@ -290,7 +290,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
     val FirClassSymbol<*>.isAdatCompanion
         get() = ((origin as? FirDeclarationOrigin.Plugin)?.key == AdatPluginKey)
             || getSuperTypes(session).any { it.classId == ClassIds.ADAT_COMPANION }
-            || getContainingClassSymbol()?.getSuperTypes(session)?.any { it.classId == ClassIds.ADAT_COMPANION } ?: false
+            || getContainingClassSymbol()?.let { session.predicateBasedProvider.matches(ADAT_PREDICATE, it) } == true
 
     val MemberGenerationContext?.isAdatClass
         get() = if (this == null) false else owner.isAdatClass
