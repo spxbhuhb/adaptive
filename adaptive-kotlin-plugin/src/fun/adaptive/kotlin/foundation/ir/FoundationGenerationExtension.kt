@@ -11,9 +11,6 @@ import `fun`.adaptive.kotlin.foundation.ir.ir2arm.OriginalFunctionTransform
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
-import org.jetbrains.kotlin.ir.util.FakeOverridesStrategy
-import org.jetbrains.kotlin.ir.util.KotlinLikeDumpOptions
-import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 
 internal class FoundationGenerationExtension(
     val options: AdaptiveOptions
@@ -49,7 +46,7 @@ internal class FoundationGenerationExtension(
             armEntryPoints
                 .forEach { ArmEntryPointBuilder(this, it).entryPointBody() }
 
-            debug("DUMP AFTER") { "\n\n" + moduleFragment.dumpKotlinLike(KotlinLikeDumpOptions(printFakeOverridesStrategy = FakeOverridesStrategy.NONE)) }
+            // debug("DUMP AFTER") { "\n\n" + moduleFragment.dumpKotlinLike(KotlinLikeDumpOptions(printFakeOverridesStrategy = FakeOverridesStrategy.NONE)) }
             // debug("DUMP AFTER") { "\n\n" + moduleFragment.dump() }
         }
     }
