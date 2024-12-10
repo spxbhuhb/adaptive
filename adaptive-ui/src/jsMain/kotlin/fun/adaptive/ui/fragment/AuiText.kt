@@ -3,7 +3,6 @@
  */
 package `fun`.adaptive.ui.fragment
 
-import `fun`.adaptive.adaptive_ui.generated.resources.Res.font
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.AbstractAuiFragment
@@ -31,7 +30,7 @@ open class AuiText(
 
     override fun genPatchInternal(): Boolean {
 
-        patchInstructions(true)
+        patchInstructions()
 
         if (haveToPatch(dirtyMask, 1)) {
             val content = this.content
@@ -48,6 +47,11 @@ open class AuiText(
         }
 
         return false
+    }
+
+    override fun applyRenderInstructions() {
+        if (renderData.text == null) renderData.text = uiAdapter.defaultTextRenderData
+        super.applyRenderInstructions()
     }
 
     override fun placeLayout(top: Double, left: Double) {

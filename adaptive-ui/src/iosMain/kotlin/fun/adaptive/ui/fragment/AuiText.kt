@@ -58,6 +58,10 @@ class AuiText(
         return false
     }
 
+    override fun applyRenderInstructions() {
+        if (renderData.text == null) renderData.text = uiAdapter.defaultTextRenderData
+        super.applyRenderInstructions()
+    }
 
     @OptIn(ExperimentalForeignApi::class)
     class AUILabel(

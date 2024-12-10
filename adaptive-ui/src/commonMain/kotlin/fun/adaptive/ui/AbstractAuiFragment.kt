@@ -25,6 +25,8 @@ abstract class AbstractAuiFragment<RT>(
      */
     open val uiAdapter = adapter
 
+    var layoutBatchId = 0L
+
     var previousRenderData = adapter.emptyRenderData
 
     /**
@@ -46,8 +48,8 @@ abstract class AbstractAuiFragment<RT>(
     open val isRootActual
         get() = false
 
-    open val invalidInput : Boolean
-        get() =  false
+    open val invalidInput: Boolean
+        get() = false
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         null
@@ -60,29 +62,33 @@ abstract class AbstractAuiFragment<RT>(
         return true
     }
 
-    open fun patchInstructions(addText: Boolean = false) {
-        if (instructionIndex != - 1 && haveToPatch(dirtyMask, 1 shl instructionIndex)) {
-            previousRenderData = renderData
-            renderData = AuiRenderData(uiAdapter, previousRenderData, uiAdapter.themeFor(this), instructions)
+    open fun patchInstructions() {
 
-            if (renderData.layout != previousRenderData.layout || renderData.container != previousRenderData.container)  {
-                // when patchInstructions is called during fragment create the layout fragment is not set
-                // this implicitly ignores the layout change call, not sure if that's OK
-                val layoutFragment = renderData.layoutFragment
+        if (instructionIndex == - 1) return
+        if (! haveToPatch(dirtyMask, 1 shl instructionIndex)) return
 
-                if (layoutFragment != null) {
-                    layoutFragment.layoutChange(this)
-                } else {
-                    // in this case this is a root fragment
-                    computeLayout(renderData.finalWidth, renderData.finalHeight)
-                    placeLayout(renderData.finalTop, renderData.finalTop)
-                }
+        previousRenderData = renderData
+        renderData = AuiRenderData(uiAdapter, previousRenderData, uiAdapter.themeFor(this), instructions)
+
+        if (renderData.layout != previousRenderData.layout || renderData.container != previousRenderData.container) {
+            // when patchInstructions is called during fragment create the layout fragment is not set
+            // this implicitly ignores the layout change call, not sure if that's OK
+            val layoutFragment = renderData.layoutFragment
+
+            if (layoutFragment != null) {
+                layoutFragment.layoutChange(this)
+            } else {
+                // in this case this is a root fragment
+                computeLayout(renderData.finalWidth, renderData.finalHeight)
+                placeLayout(renderData.finalTop, renderData.finalTop)
             }
-
-            if (addText && renderData.text == null) renderData.text = uiAdapter.defaultTextRenderData
-
-            uiAdapter.applyRenderInstructions(this)
         }
+
+        applyRenderInstructions()
+    }
+
+    protected open fun applyRenderInstructions() {
+        uiAdapter.applyRenderInstructions(this)
     }
 
     override fun mount() {

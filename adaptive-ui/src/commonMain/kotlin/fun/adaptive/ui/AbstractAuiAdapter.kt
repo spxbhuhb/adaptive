@@ -70,6 +70,10 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : AdaptiveAdapter {
 
     var actualBatchOwner: AbstractContainer<*, *>? = null
 
+    var layoutBatchId = 0L
+
+    val layoutBatch = mutableListOf<AbstractAuiFragment<RT>>()
+
     val emptyRenderData = AuiRenderData(this)
 
     var defaultTextRenderData = TextRenderData().apply {

@@ -27,23 +27,60 @@ Patching is initiated by:
 The actual layout update starts when patching has been done and the fragment that initiated
 the patching calls its own `closePatchBatch` function.
 
+## Layout Update Batch
+
+All layout updates happen in a layout update batch.
+
+A layout update batch:
+
+* executed by `AbstractAuiFragment.closePatchBatch`
+* has a unique batch identifier, stored in `AbstractAuiAdapter.layoutBatchId`
+* calls `computeLayout` and `placeLayout` of items in `AbstractAuiAdapter.layoutBatch`
+* clears `AbstractAuiAdapter.layoutBatch`
+* increments the `layoutBatchId` so the next batch will have its own unique id
+
 ## Fit Content, Fit Container
 
-There are two main strategies for sizing a fragment: 
+There are two main strategies for sizing a fragment:
 
-* setting its size to the size of its content - `fitContent`
-* setting its size to the size its container proposes - `fitContainer`
+* setting its size to the size of its content - `fit.content`
+* setting its size to the size its container proposes - `fit.container`
 
 Layout update optimization decisions have to know which strategy is used by the fragment.
 
-Fragments of the main root element generally use `fitContainer`.
+Fragments of the main root element generally use `fit.container`.
 
-Notable cases when `fitContent` is desired:
+Notable cases when `fit.content` is used:
 
 - dialog box
 - snackbar
 - pop-up
 
-For buttons and textual information the choice between `fitContent` or `fitContainer` depends
+For buttons and textual information the choice between `fit.content` or `fit.container` depends
 on the context.
 
+## Update decisions
+
+There are two decisions a fragment has to make:
+
+1. Which fragment to add to the batch, self or container?
+2. May the fragment skip the calculation?
+
+### Add to the batch
+
+fragment state change (patch) -> re-layout needed -> self or container?
+
+* fit-container -> self
+* fit-content -> container
+
+When added to the batch:
+
+* the fragment is added to `AbstractAuiAdapter.layoutBatch`
+* `AbstractAuiFragment.layoutBatchId` is set to `AbstractAuiAdapter.layoutBatchId`
+
+### Skip the calculation
+
+The fragment may skip the calculation when:
+
+* `fit.content`
+* `AbstractAuiFragment.layoutBatchId` != `AbstractAuiAdapter.layoutBatchId`
