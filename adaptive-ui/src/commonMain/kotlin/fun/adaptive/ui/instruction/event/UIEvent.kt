@@ -26,7 +26,7 @@ class UIEvent(
     fun patchIfDirty() {
         val closureOwner = fragment.createClosure.owner
         if (closureOwner.dirtyMask != cleanStateMask) {
-            closureOwner.patchInternal()
+            closureOwner.patchInternalBatch()
         }
     }
 }

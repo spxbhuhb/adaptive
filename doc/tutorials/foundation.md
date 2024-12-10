@@ -241,7 +241,7 @@ All adaptive fragments follow the same lifecycle pattern:
 1. a new, uninitialized instance is created (state contains nulls)
 2. call `create`
     1. call `patch`
-        1. call `declaringFragment.patchDescendant` to set the external state variables
+        1. call `declaringFragment.genPatchDescendant` to set the external state variables
         2. call `genPatchInternal` to set internal state variables
     2. call `genBuild` to create child fragments
 3. call `mount`

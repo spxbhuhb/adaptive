@@ -53,7 +53,7 @@ class AutoCollectionProducer<IT : AdatClass>(
         adapter.scope.launch {
             if (disposed) return@launch
             latestValue = value
-            setDirty()
+            setDirtyBatch()
         }
     }
 
@@ -62,7 +62,7 @@ class AutoCollectionProducer<IT : AdatClass>(
         adapter.scope.launch {
             if (disposed) return@launch
             latestValue = instance!!.valueOrNull // FIXME I don't like this when onChange is called, the collection should of been already initialized
-            setDirty() // calls patch
+            setDirtyBatch() // calls patch
         }
     }
 
@@ -70,7 +70,7 @@ class AutoCollectionProducer<IT : AdatClass>(
         adapter.scope.launch {
             if (disposed) return@launch
             latestValue = instance!!.value
-            setDirty()
+            setDirtyBatch()
         }
     }
 
@@ -78,7 +78,7 @@ class AutoCollectionProducer<IT : AdatClass>(
         adapter.scope.launch {
             if (disposed) return@launch
             latestValue = null
-            setDirty()
+            setDirtyBatch()
         }
     }
 

@@ -6,12 +6,6 @@ for [services](../service/README). It is optimized for handling function calls.
 WireFormat supports [JSON](https://json.org) and [Protobuf](https://protobuf.dev) out of the box, Protobuf being the
 default, JSON is provided for the faint-hearted.
 
-To switch to JSON put this somewhere into your bootstrap:
-
-```kotlin
-withJson()
-```
-
 ## Polymorphism
 
 WireFormat does not support polymorphism (now, I'll have to write it sooner or later).

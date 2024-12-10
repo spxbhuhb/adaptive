@@ -23,7 +23,7 @@ fun box(): String {
         }
     }.apply {
         rootFragment.setStateVariable(0, 200)
-        rootFragment.patchInternal()
+        rootFragment.patchInternalBatch()
     }
 
     return adapter.assert(

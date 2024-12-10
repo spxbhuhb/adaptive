@@ -37,7 +37,7 @@ fun box(): String {
         higherOrderTest(i)
     }.apply {
         rootFragment.setStateVariable(0, 120)
-        rootFragment.patchInternal()
+        rootFragment.patchInternalBatch()
     }
 
     return adapter.assert(

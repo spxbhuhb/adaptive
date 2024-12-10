@@ -116,37 +116,35 @@ fun create() {
 
 ## Patch
 
-There are four patch methods for each fragment:
+Patch methods for each fragment:
 
 * `patch` patches the fragment itself, calls `patchExternal` and `patchInternal`
-* `patchExternal` patches the external state variables of the fragment, calls `createClosure.owner.patchDescendant`
+* `patchExternal` patches the external state variables of the fragment, calls `createClosure.owner.genPatchDescendant`
 * `patchInternal` patches the internal state variables of the fragment and calls `patch` of its children
-* `patchDescendant` patches the external variables of a descendant fragment
+* `genPatchDescendant` patches the external variables of a descendant fragment
 
 Notes:
 
-* `patchExternal` calls `patchDescendant` of the **creating** fragment this updates all external state variables.
-* `patchDescendant`
+* `patchExternal` calls `genPatchDescendant` of the **creating** fragment this updates all external state variables.
+* `genPatchDescendant`
   * is **call site dependent**, it uses the `index` of the fragment to identify the call site
   * always uses `createClosure` to calculate the value of state variables
-* `patchInternal`
-  * always uses `dirtyMask` directly to calculate the value of state variables
 
 ```kotlin
 fun patchInternal() {
 
-    TODO("update internal state variables if necessary")
+    if (genPatchInternal()) {
+        // at this point all variables that have been updated are set to dirty
+        children.forEach { it.patch() }
+    }
 
-    // at this point all variables that have been updated are set to dirty
-    children.forEach { it.patch() }
-  
     // clear the state, the UI and the state should be in sync now
     dirtyMask = cleanStateMask
 }
 ```
 
 ```kotlin
-fun patchDescendant(fragment : AdaptiveFragment<BT>) {
+fun genPatchDescendant(fragment : AdaptiveFragment<BT>) {
     when (fragment.index) {
         1 -> {
             TODO("update external state variables of the fragment")

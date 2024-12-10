@@ -28,7 +28,7 @@ fun box() : String {
         IndependentVariable(v1)
     }.apply {
         rootFragment.setStateVariable(0, 20)
-        rootFragment.patchInternal()
+        rootFragment.patchInternalBatch()
     }
 
     return adapter.assert(listOf(

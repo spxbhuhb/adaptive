@@ -80,7 +80,7 @@ class Selection(
         }
 
         item.setStateVariable(item.instructionIndex, result.toTypedArray())
-        item.setDirty(item.instructionIndex, true)
+        item.setDirtyBatch(item.instructionIndex)
         nextRevision()
     }
 
@@ -120,7 +120,7 @@ class Selection(
         item.parent = container
 
         item.setStateVariable(item.instructionIndex, result.toTypedArray())
-        item.setDirty(item.instructionIndex, true)
+        item.setDirtyBatch(item.instructionIndex)
 
         item.mount()
     }

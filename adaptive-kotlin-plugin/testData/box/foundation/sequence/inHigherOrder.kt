@@ -29,7 +29,7 @@ fun box(): String {
         inHigherOrder(i)
     }.apply {
         rootFragment.setStateVariable(0, 23)
-        rootFragment.patchInternal()
+        rootFragment.patchInternalBatch()
     }
 
     return adapter.assert(

@@ -29,7 +29,7 @@ fun box(): String {
         WhenSubjectEnum(v1)
     }.apply {
         rootFragment.setStateVariable(0, TE.Second)
-        rootFragment.patchInternal()
+        rootFragment.patchInternalBatch()
     }
 
     return adapter.assert(

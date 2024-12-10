@@ -15,7 +15,7 @@ fun applyProperties(selection: Selection, data: InstructionEditorData) {
         val instructions = item.instructions.toMutableList()
         applyProperties(instructions, data)
         item.setStateVariable(item.instructionIndex, instructions.toTypedArray())
-        item.setDirty(item.instructionIndex, true)
+        item.setDirtyBatch(item.instructionIndex)
     }
     selection.nextRevision()
 }

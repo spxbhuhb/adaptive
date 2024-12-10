@@ -25,9 +25,9 @@ fun box(): String {
         WhenSubjectConditions(v1)
     }.apply {
         rootFragment.setStateVariable(0, 2)
-        rootFragment.patchInternal()
+        rootFragment.patchInternalBatch()
         rootFragment.setStateVariable(0, 3.0)
-        rootFragment.patchInternal()
+        rootFragment.patchInternalBatch()
     }
 
     return adapter.assert(

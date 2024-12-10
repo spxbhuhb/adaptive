@@ -54,12 +54,12 @@ class CopyStore<A : AdatClass>(
 
     override fun update(original: A, newValue: A) {
         makeCopy(newValue, null, true)
-        setDirty()
+        setDirtyBatch()
     }
 
     override fun update(newValue: A) {
         makeCopy(newValue, null, true)
-        setDirty()
+        setDirtyBatch()
     }
 
     override fun update(instance: A, path: Array<String>, value: Any?) {
@@ -84,7 +84,7 @@ class CopyStore<A : AdatClass>(
             latestValue = it
             if (patch) {
                 onChange?.invoke(it)
-                setDirty()
+                setDirtyBatch()
             }
         }
 
