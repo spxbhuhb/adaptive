@@ -1,6 +1,7 @@
 package `fun`.adaptive.auto.test.item.producer
 
 import `fun`.adaptive.adat.api.update
+import `fun`.adaptive.auto.api.ItemBase
 import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.auto.test.support.AutoTest.Companion.autoTest
@@ -17,6 +18,9 @@ import kotlinx.coroutines.launch
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
 
+// FIXME function local variables are not handled by the compiler plugin
+private lateinit var instanceBasicOrigin: ItemBase<TestData>
+private lateinit var instanceUpdateOrigin: ItemBase<TestData>
 
 class WithInstanceTest {
 
@@ -29,11 +33,11 @@ class WithInstanceTest {
         // to execute it, hence `delay`.
 
         val td = TestData(12, "a")
-        val origin = autoItemOrigin(td)
+        instanceBasicOrigin = autoItemOrigin(td)
 
         val adapter = test {
             @Suppress("UNUSED_VARIABLE", "unused")
-            val item = autoItem(origin)
+            val item = autoItem(instanceBasicOrigin)
         }
 
         @Suppress("UNCHECKED_CAST")
@@ -45,7 +49,7 @@ class WithInstanceTest {
         // nulls as well depending on how the coroutines run. Using
         // `last` should take care about that problem.
 
-        origin.update(td::i to 23)
+        instanceBasicOrigin.update(td::i to 23)
 
         waitForReal(1.seconds) { item()?.i == 23 }
     }
@@ -58,10 +62,10 @@ class WithInstanceTest {
             // see comments in `basic`
 
             val td = TestData(12, "a")
-            val origin = autoItemOrigin(td)
+            instanceUpdateOrigin = autoItemOrigin(td)
 
             val adapter = test(clientBackend) {
-                val item = autoItem(origin)
+                val item = autoItem(instanceUpdateOrigin)
                 if (item?.i == 23) {
                     item.update(item::i, 34)
                 }
@@ -72,7 +76,7 @@ class WithInstanceTest {
 
             waitForReal(1.seconds) { item() != null }
 
-            origin.update(td::i to 23)
+            instanceUpdateOrigin.update(td::i to 23)
 
             waitForReal(1.seconds) { item()?.i == 23 || item()?.i == 34 }
 

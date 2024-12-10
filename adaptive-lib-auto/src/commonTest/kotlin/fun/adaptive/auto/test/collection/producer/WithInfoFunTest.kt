@@ -1,6 +1,7 @@
 package `fun`.adaptive.auto.test.collection.producer
 
 import `fun`.adaptive.adat.api.update
+import `fun`.adaptive.auto.api.CollectionBase
 import `fun`.adaptive.auto.api.autoCollection
 import `fun`.adaptive.auto.api.autoCollectionOrigin
 import `fun`.adaptive.auto.test.support.AutoTest.Companion.autoTest
@@ -13,12 +14,15 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.seconds
 
+private lateinit var origin: CollectionBase<TestData>
+
+// FIXME function local variables are not handled by the compiler plugin
 class WithInfoFunTest {
 
     @Test
     fun basic() = autoTest {
 
-        val origin = autoCollectionOrigin(content_12_23, serverWorker)
+        origin = autoCollectionOrigin(content_12_23, serverWorker)
 
         val adapter = test(clientBackend) {
             @Suppress("UNUSED_VARIABLE", "unused")
