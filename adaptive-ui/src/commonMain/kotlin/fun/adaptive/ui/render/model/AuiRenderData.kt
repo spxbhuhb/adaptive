@@ -9,6 +9,7 @@ import `fun`.adaptive.foundation.testing.Traceable
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
+import `fun`.adaptive.ui.instruction.layout.Fit
 
 /**
  * A pre-processed version of fragment instructions to make access from layout easier.
@@ -41,6 +42,7 @@ data class AuiRenderData(
     override var tracePatterns: Array<out Regex> = emptyArray()
 
     var layoutFragment: AbstractContainer<*, *>? = null
+    var fit: Fit? = null
 
     var innerWidth: Double? = null
     var innerHeight: Double? = null
@@ -78,5 +80,29 @@ data class AuiRenderData(
 
         surroundingVertical = surroundingTop + surroundingBottom
         surroundingHorizontal = surroundingStart + surroundingEnd
+    }
+
+    fun layoutIndependentChanged(previous: AuiRenderData): Boolean {
+        if (decoration != previous.decoration) return true
+        if (event != previous.event) return true
+        if (input != previous.input) return true
+        if (text != previous.text) return true
+        return false
+    }
+
+    fun gridChanged(previous: AuiRenderData): Boolean {
+        return grid != previous.grid
+    }
+
+    fun layoutChanged(previous: AuiRenderData): Boolean {
+        if (layout != previous.layout) return true
+        if (container != previous.container) return true
+        return false
+    }
+
+    fun innerDimensionsChanged(previous: AuiRenderData): Boolean {
+        if (previous.innerWidth != innerWidth) return true
+        if (previous.innerHeight != innerHeight) return true
+        return false
     }
 }

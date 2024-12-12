@@ -18,9 +18,6 @@ open class AuiSpace(
 
     override val receiver = TestReceiver()
 
-    override fun genPatchInternal(): Boolean {
-        patchInstructions()
-        return false
-    }
+    override fun auiPatchInternal() = Unit
 
 }

@@ -70,9 +70,9 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : AdaptiveAdapter {
 
     var actualBatchOwner: AbstractContainer<*, *>? = null
 
-    var layoutBatchId = 0L
+    var updateBatchId = 0L
 
-    val layoutBatch = mutableListOf<AbstractAuiFragment<RT>>()
+    val updateBatch = mutableListOf<AbstractAuiFragment<RT>>()
 
     val emptyRenderData = AuiRenderData(this)
 
@@ -119,6 +119,24 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : AdaptiveAdapter {
      */
     abstract fun removeActual(itemReceiver: RT)
 
+    fun closePatchBatch() {
+        val markedId = updateBatchId ++
+        val updateId = updateBatchId ++
+
+        for (fragment in updateBatch) {
+            // this condition prevents duplicated updates
+            if (fragment.updateBatchId != markedId) continue
+
+            val renderData = fragment.renderData
+
+            fragment.updateBatchId = updateId
+            fragment.computeLayout(renderData.finalWidth, renderData.finalHeight)
+            fragment.placeLayout(renderData.finalTop, renderData.finalLeft)
+        }
+
+        updateBatch.clear()
+    }
+
     /**
      * Perform the layout on the actual UI.
      */
@@ -127,7 +145,7 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : AdaptiveAdapter {
     /**
      * Apply render instructions to the fragment such as coloring, border etc.
      */
-    abstract fun applyRenderInstructions(fragment: AbstractAuiFragment<RT>)
+    abstract fun applyLayoutIndependent(fragment: AbstractAuiFragment<RT>)
 
     inline fun <reified T> AdaptiveFragment.ifIsInstanceOrRoot(block: (it: T) -> Unit) {
         if (this is T) {

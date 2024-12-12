@@ -5,10 +5,7 @@
 package `fun`.adaptive.ui
 
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.instruction.Name
-import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.render.model.AuiRenderData
-import `fun`.adaptive.utility.firstOrNullIfInstance
 
 abstract class AbstractAuiFragment<RT>(
     adapter: AbstractAuiAdapter<RT, *>,
@@ -25,7 +22,7 @@ abstract class AbstractAuiFragment<RT>(
      */
     open val uiAdapter = adapter
 
-    var layoutBatchId = 0L
+    var updateBatchId = 0L
 
     var previousRenderData = adapter.emptyRenderData
 
@@ -51,6 +48,9 @@ abstract class AbstractAuiFragment<RT>(
     open val invalidInput: Boolean
         get() = false
 
+    val patchDescendants: Boolean
+        get() = false
+
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         null
 
@@ -58,10 +58,39 @@ abstract class AbstractAuiFragment<RT>(
         Unit
 
     override fun genPatchInternal(): Boolean {
+
         patchInstructions()
-        return true
+        auiPatchInternal()
+
+        if (isInit || renderData.layoutIndependentChanged(previousRenderData)) {
+            uiAdapter.applyLayoutIndependent(this)
+        }
+
+        if (renderData.innerDimensionsChanged(previousRenderData)) {
+            renderData.layoutFragment?.scheduleUpdate()
+            return patchDescendants
+        }
+
+        if (renderData.gridChanged(previousRenderData)) {
+            // the optimization for grid and non-grid updates are different, hence the separation
+            renderData.layoutFragment?.scheduleUpdate()
+            return patchDescendants
+        }
+
+        if (renderData.layoutChanged(previousRenderData)) {
+            renderData.layoutFragment?.scheduleUpdate()
+            return patchDescendants
+        }
+
+        return patchDescendants
     }
 
+    /**
+     * - create a new [AuiRenderData]
+     * - applies [instructions] to it
+     * - assigns it to [renderData]
+     * - schedules layout update when necessary
+     */
     open fun patchInstructions() {
 
         if (instructionIndex == - 1) return
@@ -70,26 +99,13 @@ abstract class AbstractAuiFragment<RT>(
         previousRenderData = renderData
         renderData = AuiRenderData(uiAdapter, previousRenderData, uiAdapter.themeFor(this), instructions)
 
-        if (renderData.layout != previousRenderData.layout || renderData.container != previousRenderData.container) {
-            // when patchInstructions is called during fragment create the layout fragment is not set
-            // this implicitly ignores the layout change call, not sure if that's OK
-            val layoutFragment = renderData.layoutFragment
-
-            if (layoutFragment != null) {
-                layoutFragment.layoutChange(this)
-            } else {
-                // in this case this is a root fragment
-                computeLayout(renderData.finalWidth, renderData.finalHeight)
-                placeLayout(renderData.finalTop, renderData.finalTop)
-            }
-        }
-
-        applyRenderInstructions()
     }
 
-    protected open fun applyRenderInstructions() {
-        uiAdapter.applyRenderInstructions(this)
-    }
+    /**
+     * Execute the fragment-dependent internal patching. Called after the instructions
+     * are processed into [renderData].
+     */
+    abstract fun auiPatchInternal()
 
     override fun mount() {
         super.mount()
@@ -113,6 +129,25 @@ abstract class AbstractAuiFragment<RT>(
         }
 
         super.unmount()
+    }
+
+    open fun scheduleUpdate() {
+        // When the fragment is not mounted it will be added to the layout or to the root fragment list.
+        // Both cases put the actual container or this fragment (in case of root fragment) onto the update batch.
+
+        if (! isMounted) return
+
+        // When the fragment batch id is the same as the adapter batch id this fragment is already scheduled
+        // for update. In that case we should not add it again.
+
+        if (updateBatchId != uiAdapter.updateBatchId) return
+
+        updateBatchId = uiAdapter.updateBatchId
+        uiAdapter.updateBatch += this
+    }
+
+    override fun closePatchBatch() {
+        uiAdapter.closePatchBatch()
     }
 
     /**
@@ -157,20 +192,4 @@ abstract class AbstractAuiFragment<RT>(
         uiAdapter.applyLayoutToActual(this)
     }
 
-    private val Double.padded
-        get() = toString().padStart(4, ' ')
-
-    fun dumpLayout(indent: String): String {
-        return buildString {
-            val name = (indent + (instructions.firstOrNullIfInstance<Name>()?.name ?: this@AbstractAuiFragment::class.simpleName !!)).padEnd(40, ' ')
-            val data = renderData
-
-            appendLine("$name  top: ${data.finalTop.padded}    left: ${data.finalLeft.padded}    width: ${data.finalWidth.padded}    height: ${data.finalHeight.padded}")
-            if (this@AbstractAuiFragment is AbstractContainer<*, *>) {
-                layoutItems.forEach {
-                    append(it.dumpLayout("$indent  "))
-                }
-            }
-        }
-    }
 }

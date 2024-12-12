@@ -5,12 +5,20 @@
 package `fun`.adaptive.ui.render.model
 
 import `fun`.adaptive.ui.AbstractAuiAdapter
-import `fun`.adaptive.ui.fragment.layout.RawTrack
-import `fun`.adaptive.ui.instruction.layout.Alignment
-import `fun`.adaptive.ui.instruction.layout.SpaceDistribution
 
+@Suppress("EqualsOrHashCode")
 class InputRenderData(
     val adapter : AbstractAuiAdapter<*,*>
 ) {
     var tabIndex : Int? = null
+
+    override fun equals(other: Any?): Boolean {
+        if (other === this) return true
+        if (other == null) return false
+        if (other !is InputRenderData) return false
+
+        if (tabIndex != other.tabIndex) return false
+
+        return true
+    }
 }

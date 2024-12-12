@@ -49,10 +49,7 @@ class SvgSvg(
         }
     }
 
-    override fun genPatchInternal(): Boolean {
-        patchInstructions()
-        return true
-    }
+    override fun auiPatchInternal() = Unit
 
     override fun placeLayout(top: Double, left: Double) {
         canvas.setSize(renderData.finalWidth, renderData.finalHeight)

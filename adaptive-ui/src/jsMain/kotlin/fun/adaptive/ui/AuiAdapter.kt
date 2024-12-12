@@ -9,7 +9,6 @@ import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.resource.defaultResourceEnvironment
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
-import `fun`.adaptive.ui.fragment.layout.AuiRootBox
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.SPixel
@@ -21,9 +20,6 @@ import `fun`.adaptive.ui.render.BrowserEventApplier
 import `fun`.adaptive.ui.render.BrowserInputApplier
 import `fun`.adaptive.ui.render.BrowserLayoutApplier
 import `fun`.adaptive.ui.render.BrowserTextApplier
-import `fun`.adaptive.ui.render.LayoutRenderApplier
-import `fun`.adaptive.ui.render.model.LayoutRenderData
-import `fun`.adaptive.ui.render.model.TextRenderData
 import `fun`.adaptive.utility.alsoIfInstance
 import `fun`.adaptive.utility.firstOrNullIfInstance
 import kotlinx.browser.document
@@ -32,8 +28,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.css.CSSStyleDeclaration
-import kotlin.apply
 
 class AuiAdapter(
     override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
@@ -61,11 +55,16 @@ class AuiAdapter(
         traceAddActual(fragment)
 
         fragment.alsoIfInstance<AbstractContainer<HTMLElement, HTMLDivElement>> {
-            rootContainer.getBoundingClientRect().let { r ->
-                it.computeLayout(r.width, r.height)
-                it.placeLayout(0.0, 0.0)
-                rootContainer.appendChild(it.receiver)
-            }
+            // FIXME should we move this to AbstractAuiAdapter?
+//            rootContainer.getBoundingClientRect().let { r ->
+//                it.computeLayout(r.width, r.height)
+//                it.placeLayout(0.0, 0.0)
+            rootContainer.appendChild(it.receiver)
+
+            it.updateBatchId = updateBatchId
+            updateBatch += it
+
+//            }
         }
 
         otherRootFragments += fragment
@@ -122,7 +121,7 @@ class AuiAdapter(
         }
     }
 
-    override fun applyRenderInstructions(fragment: AbstractAuiFragment<HTMLElement>) {
+    override fun applyLayoutIndependent(fragment: AbstractAuiFragment<HTMLElement>) {
         val renderData = fragment.renderData
 
         if (renderData.tracePatterns.isNotEmpty()) {

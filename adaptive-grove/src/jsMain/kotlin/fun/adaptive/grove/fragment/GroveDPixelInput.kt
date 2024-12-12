@@ -31,12 +31,9 @@ open class GroveDPixelInput(
     private val binding: AdaptiveStateVariableBinding<DPixel?>
         get() = state[1].checkIfInstance()
 
-    override fun genPatchInternal(): Boolean {
+    override fun auiPatchInternal() {
 
         val b = binding
-
-        patchInstructions()
-
 
         if (haveToPatch(dirtyMask, 1 shl 1)) {
             val value = b.value
@@ -71,7 +68,5 @@ open class GroveDPixelInput(
             receiver.pattern = "[0-9]*\\.[0-9]*"
             receiver.style.outline = "none"
         }
-
-        return false
     }
 }

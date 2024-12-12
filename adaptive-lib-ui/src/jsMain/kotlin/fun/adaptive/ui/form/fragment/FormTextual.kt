@@ -42,9 +42,7 @@ open class FormTextual(
 
     lateinit var path : Array<String>
 
-    override fun genPatchInternal(): Boolean {
-
-        patchInstructions()
+    override fun auiPatchInternal() {
 
         if (haveToPatch(dirtyMask, 1)) {
             propertyValue = formatValue(adatClass.getValue(property.index))
@@ -67,8 +65,6 @@ open class FormTextual(
                 }
             })
         }
-
-        return false
     }
 
     fun formatValue(value: Any?) =

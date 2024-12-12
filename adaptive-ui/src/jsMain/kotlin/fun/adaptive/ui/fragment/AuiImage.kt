@@ -27,15 +27,11 @@ open class AuiImage(
     private val res: DrawableResource
         get() = state[0].checkIfInstance()
 
-    override fun genPatchInternal(): Boolean {
-
-        patchInstructions()
+    override fun auiPatchInternal() {
 
         if (haveToPatch(dirtyMask, 1)) {
             receiver.src = res.uri
         }
-
-        return false
     }
 
     override fun placeLayout(top: Double, left: Double) {

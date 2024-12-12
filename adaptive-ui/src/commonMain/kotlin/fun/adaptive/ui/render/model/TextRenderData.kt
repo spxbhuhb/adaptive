@@ -7,8 +7,8 @@ package `fun`.adaptive.ui.render.model
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.instruction.SPixel
 import `fun`.adaptive.ui.instruction.decoration.Color
-import `fun`.adaptive.ui.instruction.sp
 
+@Suppress("EqualsOrHashCode")
 class TextRenderData {
 
     var fontName: String? = null
@@ -22,6 +22,26 @@ class TextRenderData {
     var noSelect: Boolean? = null
     var color: Color? = null
     var wrap: Boolean = true
+
+    override fun equals(other: Any?): Boolean {
+        if (other === this) return true
+        if (other == null) return false
+        if (other !is TextRenderData) return false
+
+        if (fontName != other.fontName) return false
+        if (fontSize != other.fontSize) return false
+        if (fontWeight != other.fontWeight) return false
+        if (lineHeight != other.lineHeight) return false
+        if (letterSpacing != other.letterSpacing) return false
+        if (italic != other.italic) return false
+        if (underline != other.underline) return false
+        if (smallCaps != other.smallCaps) return false
+        if (noSelect != other.noSelect) return false
+        if (color != other.color) return false
+        if (wrap != other.wrap) return false
+
+        return true
+    }
 
     fun toCssString(adapter: AbstractAuiAdapter<*, *>): String {
         val s = mutableListOf<String>()

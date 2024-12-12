@@ -13,6 +13,7 @@ import `fun`.adaptive.ui.instruction.event.OnPrimaryUp
 import `fun`.adaptive.ui.instruction.event.OnSecondaryDown
 import `fun`.adaptive.ui.instruction.event.OnSecondaryUp
 
+@Suppress("EqualsOrHashCode")
 class EventRenderData(
     val adapter : AbstractAuiAdapter<*, *>
 ) {
@@ -39,4 +40,22 @@ class EventRenderData(
 
     var onSecondaryUp: OnSecondaryUp? = null
     var onSecondaryUpListener: Any? = null
+
+    override fun equals(other: Any?): Boolean {
+        if (other === this) return true
+        if (other == null) return false
+        if (other !is EventRenderData) return false
+
+        // event listeners will not be the same until the render data is actually applied
+
+        if (other.onClick != this.onClick) return false
+        if (other.additionalEvents != this.additionalEvents) return false
+        if (other.onDoubleClick != this.onDoubleClick) return false
+        if (other.onMove != this.onMove) return false
+        if (other.onPrimaryDown != this.onPrimaryDown) return false
+        if (other.onPrimaryUp != this.onPrimaryUp) return false
+        if (other.onSecondaryDown != this.onSecondaryDown) return false
+        if (other.onSecondaryUp != this.onSecondaryUp) return false
+        return true
+    }
 }

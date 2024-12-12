@@ -74,7 +74,7 @@ class AuiTestAdapter(
         fragment.receiver.testHeight = data.finalWidth
     }
 
-    override fun applyRenderInstructions(fragment: AbstractAuiFragment<TestReceiver>) {
+    override fun applyLayoutIndependent(fragment: AbstractAuiFragment<TestReceiver>) {
         with(fragment) {
             if (renderData.tracePatterns.isNotEmpty()) {
                 tracePatterns = renderData.tracePatterns

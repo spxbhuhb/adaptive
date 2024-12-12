@@ -35,9 +35,7 @@ open class AuiInput(
     private val onChange: (String) -> Unit
         get() = state[2].checkIfInstance()
 
-    override fun genPatchInternal(): Boolean {
-
-        patchInstructions()
+    override fun auiPatchInternal() {
 
         if (haveToPatch(dirtyMask, 2)) {
             receiver.value = value ?: ""
@@ -51,7 +49,5 @@ open class AuiInput(
                 }
             })
         }
-
-        return false
     }
 }

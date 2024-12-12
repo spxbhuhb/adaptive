@@ -21,15 +21,11 @@ open class AdaptiveText(
     private val content: String
         get() = state[0]?.toString() ?: ""
 
-    override fun genPatchInternal(): Boolean {
-        patchInstructions()
-
+    override fun auiPatchInternal() {
         if (haveToPatch(dirtyMask, 1)) {
             renderData.innerWidth = content.length.toDouble() * 20.0
             renderData.innerHeight = 20.0
         }
-
-        return false
     }
 
 }

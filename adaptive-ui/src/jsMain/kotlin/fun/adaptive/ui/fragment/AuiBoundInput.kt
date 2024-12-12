@@ -46,66 +46,66 @@ open class AuiBoundInput(
     private val validityFun: (Boolean) -> Unit
         get() = state[4].checkIfInstance()
 
-    override var invalidInput : Boolean = false
+    override var invalidInput: Boolean = false
 
-    override fun genPatchInternal(): Boolean {
-
-        patchInstructions()
+    override fun auiPatchInternal() {
 
         // FIXME this is here because the value change does not change the binding itself
         // this results in a clear dirty mask and so the field is not updated
         val currentValue = valueToString(binding.value)
 
-        if ((haveToPatch(dirtyMask, 2) || receiver.value != currentValue) && !invalidInput) {
+        if ((haveToPatch(dirtyMask, 2) || receiver.value != currentValue) && ! invalidInput) {
             receiver.value = currentValue
         }
 
         if (isInit) {
-            receiver.addEventListener("input", {
+            init()
+        }
+    }
 
-                if (receiver.value != binding.value) {
-                    touch(binding)
+    fun init() {
+        receiver.addEventListener("input", {
 
-                    try {
-                        val newValue = valueFromString(receiver.value)
-                        binding.setValue(newValue, true)
-                        invalidInput = false
+            if (receiver.value != binding.value) {
+                touch(binding)
 
-                    } catch (_: Throwable) {
-                        // TODO think about value conversion exceptions in AuiBoundInput
-                        // keep this silent, this is quite normal in most cases
-                        invalidInput = true
-                    }
+                try {
+                    val newValue = valueFromString(receiver.value)
+                    binding.setValue(newValue, true)
+                    invalidInput = false
 
-                    validityFun(! invalidInput)
+                } catch (_: Throwable) {
+                    // TODO think about value conversion exceptions in AuiBoundInput
+                    // keep this silent, this is quite normal in most cases
+                    invalidInput = true
                 }
-            })
 
-            val propertyName = binding.path?.last()
-
-            val placeholder = get<InputPlaceholder>()?.value ?: propertyName
-            if (placeholder != null) {
-                receiver.placeholder = placeholder
+                validityFun(! invalidInput)
             }
+        })
 
-            val maxLength = get<MaxLength>()?.maxLength
-            if (maxLength != null) {
-                receiver.maxLength = maxLength
-            }
+        val propertyName = binding.path?.last()
 
-            val metadata = binding.adatCompanion?.adatMetadata
-            val descriptors = binding.adatCompanion?.adatDescriptors
-
-            // TODO checking for the secret descriptor in input field is too expensive considering the number of uses in an application
-            // however, if we will add more checks/customization properties it might be OK
-
-            if (propertyName != null && metadata != null && descriptors != null) {
-                val property = metadata[propertyName]
-                if (property.isSecret(descriptors)) receiver.type = "password"
-            }
+        val placeholder = get<InputPlaceholder>()?.value ?: propertyName
+        if (placeholder != null) {
+            receiver.placeholder = placeholder
         }
 
-        return false
+        val maxLength = get<MaxLength>()?.maxLength
+        if (maxLength != null) {
+            receiver.maxLength = maxLength
+        }
+
+        val metadata = binding.adatCompanion?.adatMetadata
+        val descriptors = binding.adatCompanion?.adatDescriptors
+
+        // TODO checking for the secret descriptor in input field is too expensive considering the number of uses in an application
+        // however, if we will add more checks/customization properties it might be OK
+
+        if (propertyName != null && metadata != null && descriptors != null) {
+            val property = metadata[propertyName]
+            if (property.isSecret(descriptors)) receiver.type = "password"
+        }
     }
 
     fun touch(binding: AdaptiveStateVariableBinding<Any>) {

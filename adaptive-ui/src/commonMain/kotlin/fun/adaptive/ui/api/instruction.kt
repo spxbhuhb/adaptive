@@ -53,6 +53,8 @@ import `fun`.adaptive.ui.instruction.input.TabIndex
 import `fun`.adaptive.ui.instruction.layout.AlignItems
 import `fun`.adaptive.ui.instruction.layout.AlignSelf
 import `fun`.adaptive.ui.instruction.layout.DistributeSpace
+import `fun`.adaptive.ui.instruction.layout.Fit
+import `fun`.adaptive.ui.instruction.layout.FitStrategy
 import `fun`.adaptive.ui.instruction.layout.Fixed
 import `fun`.adaptive.ui.instruction.layout.Frame
 import `fun`.adaptive.ui.instruction.layout.Gap
@@ -140,6 +142,17 @@ fun height(calc: () -> DPixel) = Height(calc())
 
 fun width(width: DPixel) = Width(width)
 fun width(calc: () -> DPixel) = Width(calc())
+
+object fit {
+    object container : Fit(FitStrategy.Container, FitStrategy.Container) {
+        val vertical = Fit(verticalStrategy = FitStrategy.Container, horizontalStrategy = null)
+        val horizontal = Fit(verticalStrategy = null, horizontalStrategy = FitStrategy.Container)
+    }
+    object content : Fit(FitStrategy.Content, FitStrategy.Content) {
+        val vertical = Fit(verticalStrategy = FitStrategy.Content, horizontalStrategy = null)
+        val horizontal = Fit(verticalStrategy = null, horizontalStrategy = FitStrategy.Content)
+    }
+}
 
 val maxSize = MaxSize()
 val maxWidth = MaxWidth()

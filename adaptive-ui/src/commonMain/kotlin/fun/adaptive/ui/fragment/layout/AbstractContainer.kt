@@ -9,6 +9,7 @@ import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
+import `fun`.adaptive.ui.api.fit
 import `fun`.adaptive.utility.alsoIfInstance
 import `fun`.adaptive.utility.checkIfInstance
 
@@ -90,10 +91,7 @@ abstract class AbstractContainer<RT, CRT : RT>(
                 }
             }
 
-            if (isMounted) {
-                // FIXME layout with late additions may affect higher level layouts
-                computeLayout(renderData.finalWidth, renderData.finalHeight)
-            }
+            scheduleUpdate()
         }
     }
 
@@ -124,10 +122,22 @@ abstract class AbstractContainer<RT, CRT : RT>(
                 }
             }
 
-            if (isMounted) {// FIXME layout with late removals may affect higher level layouts
-                computeLayout(renderData.finalWidth, renderData.finalHeight)
-            }
+            scheduleUpdate()
         }
+    }
+
+    override fun auiPatchInternal() = Unit
+
+    override fun scheduleUpdate() {
+        if (updateBatchId == uiAdapter.updateBatchId) return
+        updateBatchId = uiAdapter.updateBatchId
+
+        if (! isMounted) return
+
+        val fragmentToUpdate = if (renderData.fit == fit.container) this else renderData.layoutFragment ?: this
+
+        @Suppress("UNCHECKED_CAST")
+        uiAdapter.updateBatch += fragmentToUpdate as AbstractAuiFragment<RT>
     }
 
     fun placeStructural() {

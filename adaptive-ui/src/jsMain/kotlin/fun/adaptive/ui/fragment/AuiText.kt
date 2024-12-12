@@ -28,30 +28,25 @@ open class AuiText(
     private val content: String
         get() = state[0]?.toString() ?: ""
 
-    override fun genPatchInternal(): Boolean {
+    override fun auiPatchInternal() {
 
-        patchInstructions()
-
-        if (haveToPatch(dirtyMask, 1)) {
-            val content = this.content
-
-            if (receiver.textContent != content || isInit) {
-                receiver.textContent = content
-                measureText(content)
-
-                // TODO this is a potential second re-layout, we should optimize this somehow
-                if (! isInit && (renderData.innerWidth != previousRenderData.innerWidth || renderData.innerHeight != previousRenderData.innerHeight)) {
-                    renderData.layoutFragment?.layoutChange(this)
-                }
-            }
+        if (renderData.text == null) {
+            renderData.text = uiAdapter.defaultTextRenderData
         }
 
-        return false
-    }
+        val content = this.content
+        val contentChange = (isInit || content != receiver.textContent)
+        val styleChange = (renderData.text != previousRenderData.text)
 
-    override fun applyRenderInstructions() {
-        if (renderData.text == null) renderData.text = uiAdapter.defaultTextRenderData
-        super.applyRenderInstructions()
+        if (! haveToPatch(dirtyMask, 1) && ! contentChange && ! styleChange) {
+            return
+        }
+
+        if (contentChange) {
+            receiver.textContent = content
+        }
+
+        measureText(content)
     }
 
     override fun placeLayout(top: Double, left: Double) {
@@ -84,7 +79,7 @@ open class AuiText(
         renderData.innerHeight = ceil(
             text.lineHeight
                 ?: (text.fontSize ?: uiAdapter.defaultTextRenderData.fontSize)?.value?.let { it * 1.5 }
-                    ?: (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)
+                ?: (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)
         )
     }
 

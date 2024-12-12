@@ -20,18 +20,10 @@ open class AdaptiveImage(
 
     override val receiver = TestReceiver()
 
+    @Suppress("unused")
     private val res: DrawableResource
         get() = state[0].checkIfInstance()
 
-    override fun genPatchInternal(): Boolean {
-
-        if (haveToPatch(dirtyMask, 1)) {
-            res.uri
-        }
-
-        patchInstructions()
-
-        return false
-    }
+    override fun auiPatchInternal() = Unit
 
 }
