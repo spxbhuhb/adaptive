@@ -33,7 +33,7 @@ class SelectTest {
 
             fun v(value: Int) {
                 v0 = value
-                patchInternal()
+                patchInternalBatch()
             }
 
             // even: + 10  odd: + 20
