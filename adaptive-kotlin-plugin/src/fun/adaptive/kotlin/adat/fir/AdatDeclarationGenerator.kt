@@ -109,7 +109,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                 context.isAdatCompanion -> generateCompanionConstructor(context)
                 else -> emptyList()
             }
-        } catch (_ : IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             // This happens when there is no empty constructor yet, I don't really know what to do with this one.
             // TODO investigate empty constructor plugin problem
 
@@ -215,7 +215,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                         context !!.owner,
                         AdatPluginKey,
                         Names.WIREFORMAT_NAME,
-                        session.builtinTypes.stringType.type,
+                        session.builtinTypes.stringType.coneType,
                         isVal = true,
                         hasBackingField = true
                     ).symbol
@@ -241,32 +241,32 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
 
             Names.GEN_GET_VALUE -> {
                 listOf(
-                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.nullableAnyType.type) {
-                        valueParameter(Names.INDEX, session.builtinTypes.intType.type)
+                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.nullableAnyType.coneType) {
+                        valueParameter(Names.INDEX, session.builtinTypes.intType.coneType)
                     }.symbol
                 )
             }
 
             Names.GEN_SET_VALUE -> {
                 listOf(
-                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.unitType.type) {
-                        valueParameter(Names.INDEX, session.builtinTypes.intType.type)
-                        valueParameter(Names.VALUE, session.builtinTypes.nullableAnyType.type)
+                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.unitType.coneType) {
+                        valueParameter(Names.INDEX, session.builtinTypes.intType.coneType)
+                        valueParameter(Names.VALUE, session.builtinTypes.nullableAnyType.coneType)
                     }.symbol
                 )
             }
 
             Names.EQUALS -> {
                 listOf(
-                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.booleanType.type) {
-                        valueParameter(Names.OTHER, session.builtinTypes.nullableAnyType.type)
+                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.booleanType.coneType) {
+                        valueParameter(Names.OTHER, session.builtinTypes.nullableAnyType.coneType)
                     }.symbol
                 )
             }
 
             Names.HASHCODE -> {
                 listOf(
-                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.intType.type).symbol
+                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.intType.coneType).symbol
                 )
             }
 
@@ -275,7 +275,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                     emptyList()
                 } else {
                     listOf(
-                        createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.stringType.type).symbol
+                        createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.stringType.coneType).symbol
                     )
                 }
             }
@@ -289,8 +289,8 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
 
     val FirClassSymbol<*>.isAdatCompanion
         get() = ((origin as? FirDeclarationOrigin.Plugin)?.key == AdatPluginKey)
-            || getSuperTypes(session).any { it.type.classId == ClassIds.ADAT_COMPANION }
-            || getContainingClassSymbol(session)?.getSuperTypes(session)?.any { it.type.classId == ClassIds.ADAT_COMPANION } ?: false
+            || getSuperTypes(session).any { it.classId == ClassIds.ADAT_COMPANION }
+            || getContainingClassSymbol()?.let { session.predicateBasedProvider.matches(ADAT_PREDICATE, it) } == true
 
     val MemberGenerationContext?.isAdatClass
         get() = if (this == null) false else owner.isAdatClass
@@ -302,7 +302,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         get() = if (isAdatClass) {
             owner.classId.constructClassLikeType(emptyArray(), false)
         } else {
-            owner.getContainingClassSymbol(session) !!.classId.constructClassLikeType(emptyArray(), false)
+            owner.getContainingClassSymbol() !!.classId.constructClassLikeType(emptyArray(), false)
         }
 
 }

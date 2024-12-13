@@ -61,8 +61,7 @@ open class ClassBoundIrBuilder(
                     classSymbol.defaultType,
                     classSymbol.constructors.single(),
                     typeArgumentsCount = 0,
-                    constructorTypeArgumentsCount = 0,
-                    Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
+                    constructorTypeArgumentsCount = 0
                 )
 
             constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGetValue(pluginContext.adapter, irGet(buildFun.valueParameters[Indices.BUILD_PARENT])))
@@ -88,8 +87,7 @@ open class ClassBoundIrBuilder(
                 pluginContext.boundFragmentFactoryType,
                 pluginContext.boundFragmentFactoryConstructor,
                 typeArgumentsCount = 0,
-                constructorTypeArgumentsCount = 0,
-                Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_COUNT
+                constructorTypeArgumentsCount = 0
             )
 
         constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARING_FRAGMENT, irGet(patchFun.dispatchReceiverParameter !!))
@@ -104,8 +102,7 @@ open class ClassBoundIrBuilder(
             SYNTHETIC_OFFSET,
             irBuiltIns.unitType,
             pluginContext.setStateVariable,
-            typeArgumentsCount = 0,
-            valueArgumentsCount = Indices.SET_STATE_VARIABLE_ARGUMENT_COUNT
+            typeArgumentsCount = 0
         ).also { call ->
 
             call.dispatchReceiver = irGet(patchFun.valueParameters.first())
@@ -127,8 +124,7 @@ open class ClassBoundIrBuilder(
             SYNTHETIC_OFFSET,
             irBuiltIns.unitType,
             pluginContext.setStateVariable,
-            typeArgumentsCount = 0,
-            valueArgumentsCount = Indices.SET_STATE_VARIABLE_ARGUMENT_COUNT
+            typeArgumentsCount = 0
         ).also { call ->
 
             call.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!)
@@ -149,8 +145,7 @@ open class ClassBoundIrBuilder(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irBuiltIns.anyNType,
             pluginContext.getThisClosureVariable,
-            0,
-            Indices.GET_CLOSURE_VARIABLE_ARGUMENT_COUNT
+            typeArgumentsCount = 0
         ).also {
 
             it.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!)

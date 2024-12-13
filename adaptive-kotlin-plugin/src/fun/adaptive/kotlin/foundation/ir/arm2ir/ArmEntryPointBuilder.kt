@@ -41,8 +41,7 @@ class ArmEntryPointBuilder(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 irClass.defaultType,
                 irClass.constructors.single().symbol,
-                0, 0,
-                Indices.ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT
+                0, 0
             ).also { call ->
                 call.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGet(adapter))
                 call.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irNull())

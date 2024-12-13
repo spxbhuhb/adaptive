@@ -34,7 +34,7 @@ class CollectionFilePersistence<IT : AdatClass>(
             if (it.name == metaName) return@forEach // ignore meta file
             if (! includeFun(it)) return@forEach
 
-            items += ItemFilePersistence.read<IT>(it, wireFormatProvider)
+            items += ItemFilePersistence.read(it, wireFormatProvider)
         }
 
         return AutoCollectionExport(meta, items)
@@ -51,12 +51,12 @@ class CollectionFilePersistence<IT : AdatClass>(
 
     override fun add(export: AutoItemExport<IT>) {
         val itemPath = pathFun(export.itemId!!, export.item!!)
-        ItemFilePersistence<IT>.write(itemPath, wireFormatProvider, export)
+        ItemFilePersistence.write(itemPath, wireFormatProvider, export)
     }
 
     override fun update(export: AutoItemExport<IT>) {
         val itemPath = pathFun(export.itemId!!, export.item!!)
-        ItemFilePersistence<IT>.write(itemPath, wireFormatProvider, export)
+        ItemFilePersistence.write(itemPath, wireFormatProvider, export)
     }
 
     override fun remove(itemId: ItemId, item: IT?) {

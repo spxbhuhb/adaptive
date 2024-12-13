@@ -191,7 +191,7 @@ interface AbstractIrBuilder {
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irProperty.getter !!.returnType,
             irProperty.getter !!.symbol,
-            0, 0,
+            typeArgumentsCount = 0,
             origin = IrStatementOrigin.GET_PROPERTY
         ).apply {
             dispatchReceiver = receiver
@@ -202,7 +202,7 @@ interface AbstractIrBuilder {
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irProperty.getter !!.returnType,
             irProperty.setter !!.symbol,
-            0, 1
+            typeArgumentsCount = 0
         ).apply {
             dispatchReceiver = receiver
             putValueArgument(0, value)
@@ -212,10 +212,10 @@ interface AbstractIrBuilder {
     // Functions
     // --------------------------------------------------------------------------------------------------------
 
-    fun IrFunction.irBlockBody(builder : IrBlockBodyBuilder.() -> Unit) =
+    fun IrFunction.irBlockBody(builder: IrBlockBodyBuilder.() -> Unit) =
         DeclarationIrBuilder(pluginContext.irContext, symbol).irBlockBody(startOffset, endOffset, builder)
 
-    fun IrFunction.irReturnBody(builder : IrBlockBodyBuilder.() -> IrExpression) =
+    fun IrFunction.irReturnBody(builder: IrBlockBodyBuilder.() -> IrExpression) =
         DeclarationIrBuilder(pluginContext.irContext, symbol).irBlockBody(startOffset, endOffset) {
             + irReturn(builder())
         }
@@ -224,7 +224,7 @@ interface AbstractIrBuilder {
     // IR Basics
     // --------------------------------------------------------------------------------------------------------
 
-    fun irConst(value: Long): IrConst<Long> = IrConstImpl(
+    fun irConst(value: Long): IrConst = IrConstImpl(
         UNDEFINED_OFFSET,
         UNDEFINED_OFFSET,
         irContext.irBuiltIns.longType,
@@ -232,7 +232,7 @@ interface AbstractIrBuilder {
         value
     )
 
-    fun irConst(value: Int): IrConst<Int> = IrConstImpl(
+    fun irConst(value: Int): IrConst = IrConstImpl(
         UNDEFINED_OFFSET,
         UNDEFINED_OFFSET,
         irContext.irBuiltIns.intType,
@@ -240,7 +240,7 @@ interface AbstractIrBuilder {
         value
     )
 
-    fun irConst(value: String): IrConst<String> = IrConstImpl(
+    fun irConst(value: String): IrConst = IrConstImpl(
         UNDEFINED_OFFSET,
         UNDEFINED_OFFSET,
         irContext.irBuiltIns.stringType,
@@ -286,16 +286,13 @@ interface AbstractIrBuilder {
     )
 
     fun irIf(condition: IrExpression, body: IrExpression): IrExpression {
-        return IrIfThenElseImpl(
+        return IrWhenImpl(
             UNDEFINED_OFFSET,
             UNDEFINED_OFFSET,
             irContext.irBuiltIns.unitType,
-            origin = IrStatementOrigin.IF
-        ).also {
-            it.branches.add(
-                IrBranchImpl(condition, body)
-            )
-        }
+            origin = IrStatementOrigin.IF,
+            branches = listOf(IrBranchImpl(condition, body))
+        )
     }
 
     fun irImplicitAs(toType: IrType, argument: IrExpression): IrTypeOperatorCallImpl {
@@ -393,8 +390,7 @@ interface AbstractIrBuilder {
             UNDEFINED_OFFSET,
             symbol.owner.returnType,
             symbol as IrSimpleFunctionSymbol,
-            symbol.owner.typeParameters.size,
-            symbol.owner.valueParameters.size
+            symbol.owner.typeParameters.size
         ).also {
             if (dispatchReceiver != null) it.dispatchReceiver = dispatchReceiver
             args.forEachIndexed { index, arg ->
@@ -424,14 +420,14 @@ interface AbstractIrBuilder {
         }
     }
 
-    fun irArrayOf(elements : List<IrVarargElement>) : IrCall {
+    fun irArrayOf(elements: List<IrVarargElement>): IrCall {
         val type = irBuiltIns.arrayClass.typeWith(irBuiltIns.stringType)
 
         return IrCallImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             type,
             irBuiltIns.arrayOf,
-            1, 1,
+            typeArgumentsCount = 1
         ).apply {
             putTypeArgument(0, irBuiltIns.stringType)
             putValueArgument(0,

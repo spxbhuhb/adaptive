@@ -208,8 +208,7 @@ private fun AbstractIrBuilder.instance(name: String, generics: List<IrType>): Ir
         type,
         constructor,
         typeArgumentsCount = generics.size,
-        constructorTypeArgumentsCount = 0,
-        valueArgumentsCount = 0
+        constructorTypeArgumentsCount = 0
     ).also {
         generics.forEachIndexed { index, irType ->
             it.putTypeArgument(index, irType)
@@ -264,8 +263,7 @@ private fun irCall(function: IrSimpleFunctionSymbol, type: IrClassSymbol, typeAr
         UNDEFINED_OFFSET,
         type.typeWith(typeArguments),
         function,
-        typeArguments.size,
-        0
+        typeArguments.size
     ).also {
         typeArguments.forEachIndexed { index, irType ->
             it.putTypeArgument(index, irType)

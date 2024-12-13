@@ -55,12 +55,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
       runTest("testData/box/adat/newInstance.kt");
     }
 
-    @Test
-    @TestMetadata("withCompanion.kt")
-    public void testWithCompanion() {
-      runTest("testData/box/adat/withCompanion.kt");
-    }
-
     @Nested
     @TestMetadata("testData/box/adat/companion")
     @TestDataPath("$PROJECT_ROOT")
@@ -87,6 +81,24 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testAllFilesPresentInCompanion() {
         KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adat/companion"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
       }
+
+        @Test
+        @TestMetadata("withCompanion.kt")
+        public void testWithCompanion() {
+            runTest("testData/box/adat/companion/withCompanion.kt");
+        }
+
+        @Test
+        @TestMetadata("withTypedCompanion.kt")
+        public void testWithTypedCompanion() {
+            runTest("testData/box/adat/companion/withTypedCompanion.kt");
+        }
+
+        @Test
+        @TestMetadata("withoutCompanion.kt")
+        public void testWithoutCompanion() {
+            runTest("testData/box/adat/companion/withoutCompanion.kt");
+        }
     }
 
     @Nested

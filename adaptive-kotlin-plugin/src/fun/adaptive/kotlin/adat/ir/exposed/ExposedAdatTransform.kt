@@ -119,8 +119,7 @@ class ExposedAdatTransform(
                     adatClass.defaultType,
                     constructor.symbol,
                     typeArgumentsCount = 0,
-                    constructorTypeArgumentsCount = 0,
-                    valueArgumentsCount = mappings.size
+                    constructorTypeArgumentsCount = 0
                 ).also { call ->
                     // mappings are generated from value parameters of the constructor, indices are the same
                     mappings.forEachIndexed { index, mapping ->
@@ -162,7 +161,7 @@ class ExposedAdatTransform(
             UNDEFINED_OFFSET, UNDEFINED_OFFSET,
             func.owner.returnType,
             func,
-            1, 0
+            1
         ).also {
             it.extensionReceiver = value
             it.putTypeArgument(0, (mapping.parameter.type as IrSimpleType).arguments[0].typeOrFail)
@@ -229,8 +228,7 @@ class ExposedAdatTransform(
             UNDEFINED_OFFSET, UNDEFINED_OFFSET,
             func.owner.returnType,
             func,
-            0,
-            if (valueArgument == null) 0 else 1
+            0
         ).also {
             it.extensionReceiver = value
             if (valueArgument != null) {

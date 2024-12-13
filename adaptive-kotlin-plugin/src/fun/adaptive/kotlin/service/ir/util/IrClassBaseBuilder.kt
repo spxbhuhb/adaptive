@@ -48,13 +48,12 @@ interface IrClassBaseBuilder : AbstractIrBuilder {
 
             body = irFactory.createBlockBody(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET).apply {
 
-                statements += IrDelegatingConstructorCallImpl.fromSymbolOwner(
+                statements += IrDelegatingConstructorCallImpl(
                     SYNTHETIC_OFFSET,
                     SYNTHETIC_OFFSET,
                     irBuiltIns.anyType,
                     irBuiltIns.anyClass.constructors.first(),
-                    typeArgumentsCount = 0,
-                    valueArgumentsCount = 0
+                    typeArgumentsCount = 0
                 )
 
                 statements += IrInstanceInitializerCallImpl(

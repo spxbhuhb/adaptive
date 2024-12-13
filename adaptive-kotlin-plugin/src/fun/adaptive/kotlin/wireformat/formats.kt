@@ -55,8 +55,7 @@ class GenericWireFormat(
             pluginContext.wireFormatClass.defaultType, // TODO generic wire format: should pass proper types?
             constructor,
             typeArgumentsCount = 0,
-            constructorTypeArgumentsCount = 0,
-            valueArgumentsCount = arguments.size
+            constructorTypeArgumentsCount = 0
         ).also {
             arguments.forEachIndexed { index, argument ->
                 it.putValueArgument(
@@ -66,8 +65,7 @@ class GenericWireFormat(
                         pluginContext.wireFormatTypeArgument.defaultType,
                         pluginContext.wireFormatTypeArgument.constructors.first(),
                         typeArgumentsCount = 0,
-                        constructorTypeArgumentsCount = 0,
-                        valueArgumentsCount = 2
+                        constructorTypeArgumentsCount = 0
                     ).also {
                         it.putValueArgument(0, argument.buildWireFormat(builder))
                         it.putValueArgument(1, builder.irConst(argument.nullable))

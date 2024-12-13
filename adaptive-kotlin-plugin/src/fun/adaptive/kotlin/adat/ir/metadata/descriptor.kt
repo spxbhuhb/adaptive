@@ -118,7 +118,7 @@ private fun encodeDescriptorParameters(current: IrCall): String {
     check(current.valueArgumentsCount == 1) { "only single parameter descriptors are supported: ${current.dumpKotlinLike()}" }
 
     val const = current.getValueArgument(0)
-    check(const is IrConstImpl<*>) { "only constants are supported as descriptor parameters: ${current.dumpKotlinLike()}" }
+    check(const is IrConstImpl) { "only constants are supported as descriptor parameters: ${current.dumpKotlinLike()}" }
 
     return const.value.toString()
 }

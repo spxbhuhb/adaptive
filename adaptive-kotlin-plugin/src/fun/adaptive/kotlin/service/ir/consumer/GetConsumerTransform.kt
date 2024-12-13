@@ -47,7 +47,8 @@ class GetConsumerTransform(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             type,
             consumerClass.constructors.first { it.owner.isPrimary },
-            0, 0, 0
+            typeArgumentsCount = 0,
+            constructorTypeArgumentsCount = 0
         )
     }
 

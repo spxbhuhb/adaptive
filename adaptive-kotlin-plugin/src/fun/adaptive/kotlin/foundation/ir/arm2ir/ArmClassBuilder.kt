@@ -108,13 +108,12 @@ class ArmClassBuilder(
 
         constructor.body = irFactory.createBlockBody(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET).apply {
 
-            statements += IrDelegatingConstructorCallImpl.fromSymbolOwner(
+            statements += IrDelegatingConstructorCallImpl(
                 SYNTHETIC_OFFSET,
                 SYNTHETIC_OFFSET,
                 pluginContext.adaptiveFragmentType,
                 pluginContext.adaptiveFragmentClass.constructors.first(),
-                typeArgumentsCount = 0,
-                valueArgumentsCount = 5
+                typeArgumentsCount = 0
             ).apply {
                 putValueArgument(0, irGet(constructor.valueParameters[0]))
                 putValueArgument(1, irGet(constructor.valueParameters[1]))
@@ -194,7 +193,7 @@ class ArmClassBuilder(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irBuiltIns.unitType,
             pluginContext.create,
-            0, 0
+            typeArgumentsCount = 0
         ).also {
             it.dispatchReceiver = irGet(fragment)
         }
@@ -244,7 +243,7 @@ class ArmClassBuilder(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                     irBuiltIns.intType,
                     pluginContext.getCreateClosureDirtyMask,
-                    0, 0
+                    typeArgumentsCount = 0
                 ).also {
                     it.dispatchReceiver = irGet(patchFun.valueParameters[Indices.PATCH_DESCENDANT_FRAGMENT])
                 }
@@ -255,7 +254,7 @@ class ArmClassBuilder(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                     irBuiltIns.intType,
                     pluginContext.index.single().owner.getter !!.symbol,
-                    0, 0
+                    typeArgumentsCount = 0
                 ).also {
                     it.dispatchReceiver = irGet(patchFun.valueParameters[Indices.PATCH_DESCENDANT_FRAGMENT])
                 }
@@ -305,7 +304,7 @@ class ArmClassBuilder(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                     irBuiltIns.intType,
                     irClass.propertyGetter { "dirtyMask" },
-                    0, 0
+                    typeArgumentsCount = 0
                 ).also {
                     it.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!)
                 },
@@ -331,7 +330,7 @@ class ArmClassBuilder(
                     .transformThisStateAccess(armClass.stateVariables, newParent = patchFun, stateVariable = stateVariable) { irGet(patchFun.dispatchReceiverParameter !!) }
 
                 // optimize out null default values
-                if (transformedExpression is IrConstImpl<*> && transformedExpression.kind == IrConstKind.Null) continue
+                if (transformedExpression is IrConstImpl && transformedExpression.kind == IrConstKind.Null) continue
 
                 + irIf(
                     when (statement) {
@@ -367,7 +366,7 @@ class ArmClassBuilder(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 irBuiltIns.nothingType,
                 irClass.getSimpleFunction(Strings.INVALID_INDEX) !!,
-                0, 1
+                typeArgumentsCount = 0
             ).also {
                 it.dispatchReceiver = irGet(fromFun.dispatchReceiverParameter !!)
                 it.putValueArgument(
@@ -407,7 +406,8 @@ class ArmClassBuilder(
                         SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                         irClass.defaultType,
                         irClass.constructors.first().symbol,
-                        0, 0, 3
+                        typeArgumentsCount = 0,
+                        constructorTypeArgumentsCount = 0
                     ).also {
                         it.putValueArgument(0, irGetValue(pluginContext.adapter, irGet(parent)))
                         it.putValueArgument(1, irGet(parent))

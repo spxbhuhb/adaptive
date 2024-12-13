@@ -61,7 +61,7 @@ class ProducerTransform(
                     expression.startOffset, expression.endOffset,
                     irBuiltIns.anyNType,
                     pluginContext.getProducedValue,
-                    0, 1,
+                    typeArgumentsCount = 0,
                     expression.origin
                 )
             )

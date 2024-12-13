@@ -52,13 +52,13 @@ class ArmCallBuilder(
             }
 
             else -> {
+                // AdaptiveAnonymous(parent = parent, index = declarationIndex, stateSize = 0, factory = <this>.<get-state>().get(index = -1) /*as BoundFragmentFactory */)
                 IrConstructorCallImpl(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                     pluginContext.adaptiveAnonymousClass.defaultType,
                     pluginContext.anonymousConstructor,
                     typeArgumentsCount = 0,
-                    constructorTypeArgumentsCount = 0,
-                    valueArgumentsCount = 4
+                    constructorTypeArgumentsCount = 0
                 ).also {
                     it.putValueArgument(0, irGet(buildFun.valueParameters[Indices.BUILD_PARENT]))
                     it.putValueArgument(1, irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]))
@@ -83,10 +83,30 @@ class ArmCallBuilder(
         }
     }
 
+    /**
+     * Get the fragment factory from the state of the fragment.
+     *
+     * Original source code:
+     *
+     * ```kotlin
+     * @Adaptive
+     * fun inner(@Adaptive builder: () -> Unit) {
+     *     builder()
+     * }
+     * ```
+     *
+     * Generated code for `builder()` that uses this function (the `factory` parameter):
+     *
+     * ```kotlin
+     * AdaptiveAnonymous(parent = parent, index = declarationIndex, stateSize = 0, factory = <this>.<get-state>().get(index = -1) /*as BoundFragmentFactory */)
+     * ```
+     *
+     * `(armCall.irCall.dispatchReceiver as IrGetValue).symbol.owner` is the `builder` value parameter of `inner`
+     */
     fun irGetFragmentFactory(buildFun: IrSimpleFunction): IrExpression {
 
         val valueParameter = (armCall.irCall.dispatchReceiver as IrGetValue).symbol.owner as IrValueParameterImpl
-        val argumentIndex = valueParameter.index
+        val argumentIndex = armClass.stateVariables.indexOfFirst { it.name == valueParameter.name.asString() }
 
         val getState = irCall(
             irClass.getPropertyGetter(Strings.STATE) !!,

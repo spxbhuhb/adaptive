@@ -21,9 +21,9 @@ For support, please join the `#fun-adaptive` channel on [kotlinlang](https://sla
 * [Deep Waters](./doc/internals)
 
 > [!IMPORTANT]
-> 
-> Currently only IntelliJ 2024.2.1 and Kotlin 2.0.0 is supported. I'll update everything eventually, but for now
-> I focus on the functionality.
+>
+> Currently only IntelliJ 2024.3.1 and Kotlin 2.1.0 is supported. As of now I do not support any older versions
+> because the library is still in the initial development phase.
 > 
 > Adaptive uses the K2 compiler heavily. Starting from IntelliJ IDEA 2024.2 K2 support is available for multiplatform
 > projects. To have it, you have to enable K2 and the non-bundled plugins.
@@ -43,7 +43,7 @@ See [KTIJ-29248](https://youtrack.jetbrains.com/issue/KTIJ-29248/K2-IDE-Enable-n
 1. `Shift-Shift`
 2. select `Actions` on top
 3. type in `Registry`
-4. find `kotlin.k2.only.bundled.compiler.plugins.enabled` and set it OFF
+4. find `kotlin.k2.only.bundled.compiler.plugins.enabled` and set it **OFF**
  
 Technically you could avoid the registry setting by adding some boilerplate manually, but I think it's just
 easier to have it. Also, the issue above is scheduled for 2024.3, so hopefully this setting won't be needed

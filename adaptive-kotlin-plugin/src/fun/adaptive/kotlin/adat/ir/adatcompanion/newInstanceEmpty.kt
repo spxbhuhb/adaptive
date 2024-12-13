@@ -25,7 +25,7 @@ fun AdatIrBuilder.newInstanceEmpty(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 newInstanceFunction.returnType,
                 companionClass.parentAsClass.constructors.first { it.valueParameters.isEmpty() }.symbol,
-                0, 0, 0
+                0, 0
             )
         )
     }

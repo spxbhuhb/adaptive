@@ -37,7 +37,8 @@ class NewInstance(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                     transformedClass.defaultType,
                     implClassTransform.constructor.symbol,
-                    0, 0, 1
+                    typeArgumentsCount = 0,
+                    constructorTypeArgumentsCount = 0
                 ).also {
                     it.putValueArgument(0, irGet(valueParameters.first()))
                 }

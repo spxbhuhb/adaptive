@@ -26,7 +26,7 @@ fun AdatIrBuilder.newInstanceArray(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 newInstanceFunction.returnType,
                 companionClass.parentAsClass.constructors.first { it.valueParameters.size == 1 && it.origin == AdatPluginKey.origin }.symbol,
-                0, 0, 1
+                0, 0
             ).also {
                 it.putValueArgument(0, irGet(newInstanceFunction.valueParameters[0]))
             }
