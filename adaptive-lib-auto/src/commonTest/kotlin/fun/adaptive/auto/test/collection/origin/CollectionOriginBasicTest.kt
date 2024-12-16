@@ -43,7 +43,7 @@ class CollectionOriginBasicTest {
     }
 
     @Test
-    fun `add to empty`() {
+    fun addToEmpty() {
         val instance = autoCollectionOrigin(content_empty)
 
         instance += td12
@@ -54,7 +54,7 @@ class CollectionOriginBasicTest {
     }
 
     @Test
-    fun `add to single`() {
+    fun add_to_single() {
         val instance = autoCollectionOrigin(content_12)
 
         instance += td23
@@ -62,7 +62,7 @@ class CollectionOriginBasicTest {
     }
 
     @Test
-    fun `add and remove`() {
+    fun add_and_remove() {
         val instance = autoCollectionOrigin(content_empty)
 
         instance += td12
@@ -72,7 +72,7 @@ class CollectionOriginBasicTest {
     }
 
     @Test
-    fun `add two, remove first`() {
+    fun add_two_remove_first() {
         val instance = autoCollectionOrigin(content_empty)
 
         instance += td12
@@ -83,7 +83,7 @@ class CollectionOriginBasicTest {
     }
 
     @Test
-    fun `add two, remove second`() {
+    fun add_two_remove_second() {
         val instance = autoCollectionOrigin(content_empty)
 
         instance += td12

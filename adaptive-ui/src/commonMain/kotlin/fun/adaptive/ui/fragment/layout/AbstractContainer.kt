@@ -61,7 +61,7 @@ abstract class AbstractContainer<RT, CRT : RT>(
 
         try {
             uiAdapter.actualBatchOwner = this.renderData.layoutFragment
-            super.unmount()
+            super.unmount() // calls removeActual
         } finally {
             uiAdapter.actualBatchOwner = null
         }

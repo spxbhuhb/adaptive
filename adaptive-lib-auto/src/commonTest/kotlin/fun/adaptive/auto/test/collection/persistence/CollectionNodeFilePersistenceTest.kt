@@ -43,7 +43,7 @@ class CollectionNodeFilePersistenceTest {
     }
 
     @Test
-    fun `empty at connect`() {
+    fun empty_at_connect() {
         autoCommon()
 
         with(CollectionTestSetupDirect(clearedTestPath(), emptyList())) {
@@ -62,7 +62,7 @@ class CollectionNodeFilePersistenceTest {
     }
 
     @Test
-    fun `update during connect`() {
+    fun update_during_connect() {
         autoCommon()
 
         with(CollectionTestSetupDirect(clearedTestPath(), content_12)) {
@@ -88,7 +88,7 @@ class CollectionNodeFilePersistenceTest {
     }
 
     @Test
-    fun `update after connect`() {
+    fun update_after_connect() {
         autoCommon()
 
         with(CollectionTestSetupDirect(clearedTestPath(), content_12)) {

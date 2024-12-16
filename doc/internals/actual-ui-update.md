@@ -5,15 +5,10 @@ There are two kind of UI updates:
 * layout independent updates
 * layout dependent updates
 
-## Layout independent updates
-
-Layout independent updates are applied immediately, by `genPatchInternal` of the
-UI fragment.
+Layout independent updates are applied immediately, by `genPatchInternal`.
 
 These do not use the results of the layout calculations but include padding, margin 
 and border which have an effect on the calculations.
-
-## Layout dependent updates
 
 Layout dependent updates have to be optimized as layout is a CPU heavy process.
 

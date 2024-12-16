@@ -19,7 +19,7 @@ class CollectionUpdateTest {
     val content_12_23 = listOf(td12, td23)
 
     @Test
-    fun `update through adat store`() {
+    fun update_through_adat_store() {
         val instance = autoCollectionOrigin(content_12)
 
         val item = instance.value.first()
