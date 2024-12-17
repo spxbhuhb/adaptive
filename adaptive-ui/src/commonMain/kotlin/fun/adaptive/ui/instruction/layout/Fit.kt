@@ -6,10 +6,7 @@ package `fun`.adaptive.ui.instruction.layout
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.ui.render.container
 import `fun`.adaptive.ui.render.layout
-import `fun`.adaptive.ui.render.model.AuiRenderData
-import `fun`.adaptive.ui.render.model.ContainerRenderData
 
 @Adat
 open class Fit(
@@ -18,16 +15,18 @@ open class Fit(
 ) : AdaptiveInstruction {
 
     override fun apply(subject: Any) {
-        if (subject is AuiRenderData) {
-            val current = subject.fit
-            subject.fit = when {
-                current == null -> this
-                verticalStrategy == null -> Fit(current.verticalStrategy, horizontalStrategy ?: current.horizontalStrategy)
-                horizontalStrategy == null -> Fit(verticalStrategy, current.horizontalStrategy)
-                else -> this
-            }
+        layout(subject) {
+            it.fit = merge(it.fit)
         }
     }
+
+    fun merge(existing: Fit?): Fit =
+        when {
+            existing == null -> this
+            verticalStrategy == null -> Fit(existing.verticalStrategy, horizontalStrategy ?: existing.horizontalStrategy)
+            horizontalStrategy == null -> Fit(verticalStrategy, existing.horizontalStrategy)
+            else -> this
+        }
 
     override fun equals(other: Any?): Boolean {
         if (other === this) return true

@@ -8,6 +8,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
+import `fun`.adaptive.ui.render.model.AuiRenderData
 import kotlinx.browser.document
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
@@ -30,10 +31,6 @@ open class AuiText(
 
     override fun auiPatchInternal() {
 
-        if (renderData.text == null) {
-            renderData.text = uiAdapter.defaultTextRenderData
-        }
-
         val content = this.content
         val contentChange = (isInit || content != receiver.textContent)
         val styleChange = (renderData.text != previousRenderData.text)
@@ -44,6 +41,13 @@ open class AuiText(
 
         if (contentChange) {
             receiver.textContent = content
+        }
+
+        if (renderData === previousRenderData) {
+            renderData = AuiRenderData(uiAdapter, previousRenderData, uiAdapter.themeFor(this), instructions)
+            if (renderData.text == null) {
+                renderData.text = uiAdapter.defaultTextRenderData
+            }
         }
 
         measureText(content)

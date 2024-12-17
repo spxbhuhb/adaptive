@@ -128,18 +128,6 @@ abstract class AbstractContainer<RT, CRT : RT>(
 
     override fun auiPatchInternal() = Unit
 
-    override fun scheduleUpdate() {
-        if (updateBatchId == uiAdapter.updateBatchId) return
-        updateBatchId = uiAdapter.updateBatchId
-
-        if (! isMounted) return
-
-        val fragmentToUpdate = if (renderData.fit == fit.container) this else renderData.layoutFragment ?: this
-
-        @Suppress("UNCHECKED_CAST")
-        uiAdapter.updateBatch += fragmentToUpdate as AbstractAuiFragment<RT>
-    }
-
     fun placeStructural() {
         for (item in structuralItems) {
             item.computeLayout(renderData.finalWidth, renderData.finalHeight)

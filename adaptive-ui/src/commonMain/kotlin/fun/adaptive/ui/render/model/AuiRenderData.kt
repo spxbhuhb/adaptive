@@ -42,7 +42,6 @@ data class AuiRenderData(
     override var tracePatterns: Array<out Regex> = emptyArray()
 
     var layoutFragment: AbstractContainer<*, *>? = null
-    var fit: Fit? = null
 
     var innerWidth: Double? = null
     var innerHeight: Double? = null

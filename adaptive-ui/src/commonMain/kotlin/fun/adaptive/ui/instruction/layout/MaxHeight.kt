@@ -6,14 +6,14 @@ package `fun`.adaptive.ui.instruction.layout
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.ui.api.fit
 import `fun`.adaptive.ui.render.layout
-import `fun`.adaptive.ui.render.model.LayoutRenderData
 
 @Adat
 class MaxHeight : AdaptiveInstruction {
     override fun apply(subject: Any) {
         layout(subject) {
-            it.fillVertical = true
+            it.fit = fit.container.vertical.merge(it.fit)
         }
     }
 }

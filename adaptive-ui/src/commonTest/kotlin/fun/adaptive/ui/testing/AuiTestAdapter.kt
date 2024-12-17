@@ -101,6 +101,9 @@ class AuiTestAdapter(
 
     override val navSupport = NavSupport(this)
 
+    operator fun get(selector: AdaptiveInstruction) =
+        first(true) { selector in it.instructions } as AbstractAuiFragment<*>
+
     fun assertFinal(
         selector: AdaptiveInstruction,
         top: Int,

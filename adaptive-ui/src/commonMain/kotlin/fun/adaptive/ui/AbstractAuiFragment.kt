@@ -5,6 +5,7 @@
 package `fun`.adaptive.ui
 
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.ui.instruction.layout.FitStrategy
 import `fun`.adaptive.ui.render.model.AuiRenderData
 
 abstract class AbstractAuiFragment<RT>(
@@ -59,6 +60,8 @@ abstract class AbstractAuiFragment<RT>(
 
     override fun genPatchInternal(): Boolean {
 
+        previousRenderData = renderData
+
         patchInstructions()
         auiPatchInternal()
 
@@ -67,18 +70,18 @@ abstract class AbstractAuiFragment<RT>(
         }
 
         if (renderData.innerDimensionsChanged(previousRenderData)) {
-            renderData.layoutFragment?.scheduleUpdate()
+            scheduleUpdate()
             return patchDescendants
         }
 
         if (renderData.gridChanged(previousRenderData)) {
             // the optimization for grid and non-grid updates are different, hence the separation
-            renderData.layoutFragment?.scheduleUpdate()
+            scheduleUpdate()
             return patchDescendants
         }
 
         if (renderData.layoutChanged(previousRenderData)) {
-            renderData.layoutFragment?.scheduleUpdate()
+            scheduleUpdate()
             return patchDescendants
         }
 
@@ -96,7 +99,6 @@ abstract class AbstractAuiFragment<RT>(
         if (instructionIndex == - 1) return
         if (! haveToPatch(dirtyMask, 1 shl instructionIndex)) return
 
-        previousRenderData = renderData
         renderData = AuiRenderData(uiAdapter, previousRenderData, uiAdapter.themeFor(this), instructions)
 
     }
@@ -140,7 +142,7 @@ abstract class AbstractAuiFragment<RT>(
         // When the fragment batch id is the same as the adapter batch id this fragment is already scheduled
         // for update. In that case we should not add it again.
 
-        if (updateBatchId != uiAdapter.updateBatchId) return
+        if (updateBatchId == uiAdapter.updateBatchId) return
 
         updateBatchId = uiAdapter.updateBatchId
         uiAdapter.updateBatch += this
@@ -163,7 +165,7 @@ abstract class AbstractAuiFragment<RT>(
 
         data.finalWidth = when {
             instructedWidth != null -> instructedWidth
-            layout?.fillHorizontal == true -> proposedWidth
+            layout?.fit?.horizontalStrategy == FitStrategy.Container -> proposedWidth
             innerWidth != null -> innerWidth + data.surroundingHorizontal
             proposedWidth.isFinite() -> proposedWidth
             else -> data.surroundingHorizontal
@@ -174,7 +176,7 @@ abstract class AbstractAuiFragment<RT>(
 
         data.finalHeight = when {
             instructedHeight != null -> instructedHeight
-            layout?.fillVertical == true -> proposedHeight
+            layout?.fit?.verticalStrategy == FitStrategy.Container == true -> proposedHeight
             innerHeight != null -> innerHeight + data.surroundingVertical
             proposedHeight.isFinite() -> proposedHeight
             else -> data.surroundingVertical
@@ -190,6 +192,38 @@ abstract class AbstractAuiFragment<RT>(
         if (trace) trace("layout", "top: ${data.finalTop}, left: ${data.finalLeft}, width: ${data.finalWidth}, height: ${data.finalHeight}")
 
         uiAdapter.applyLayoutToActual(this)
+    }
+
+    open fun updateLayout(updateId: Long, item: AbstractAuiFragment<*>?) {
+        if (updateBatchId == updateId) return
+        updateBatchId = updateId
+
+        if (shouldUpdateSelf()) {
+            computeLayout(renderData.finalWidth, renderData.finalHeight)
+            placeLayout(renderData.finalTop, renderData.finalLeft)
+        } else {
+            renderData.layoutFragment?.updateLayout(updateId, this)
+        }
+    }
+
+    /**
+     * Calculate if the fragment should handle the layout update by itself, or it should pass the update
+     * to the parent.
+     */
+    open fun shouldUpdateSelf(): Boolean {
+        val layout = renderData.layout
+
+        // Default to update by parent when there are no layout instructions. In that case the fragment positions
+        // may change and the parent can do the optimization if possible.
+
+        if (layout == null) return false
+
+        val horizontal = layout.instructedWidth != null || layout.fit?.horizontalStrategy == FitStrategy.Container
+        val vertical = layout.instructedHeight != null || layout.fit?.verticalStrategy == FitStrategy.Container
+
+        if (horizontal && vertical) return true
+
+        return false
     }
 
 }

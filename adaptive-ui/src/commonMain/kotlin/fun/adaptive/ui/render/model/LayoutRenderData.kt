@@ -7,6 +7,7 @@ package `fun`.adaptive.ui.render.model
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.layout.Alignment
+import `fun`.adaptive.ui.instruction.layout.Fit
 import `fun`.adaptive.ui.instruction.layout.OverflowBehavior
 
 @Suppress("EqualsOrHashCode")
@@ -22,11 +23,10 @@ class LayoutRenderData(
     var margin: RawSurrounding? = null
     var border: RawSurrounding? = null
 
+    var fit: Fit? = null
+
     var verticalAlignment: Alignment? = null
     var horizontalAlignment: Alignment? = null
-
-    var fillHorizontal: Boolean = false
-    var fillVertical: Boolean = false
 
     var fixed: Boolean? = null
     var overflow : OverflowBehavior? = null
@@ -46,8 +46,7 @@ class LayoutRenderData(
         if (border != other.border) return false
         if (verticalAlignment != other.verticalAlignment) return false
         if (horizontalAlignment != other.horizontalAlignment) return false
-        if (fillHorizontal != other.fillHorizontal) return false
-        if (fillVertical != other.fillVertical) return false
+        if (fit != other.fit) return false
         if (fixed != other.fixed) return false
         if (overflow != other.overflow) return false
         if (zIndex != other.zIndex) return false

@@ -70,7 +70,7 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : AdaptiveAdapter {
 
     var actualBatchOwner: AbstractContainer<*, *>? = null
 
-    var updateBatchId = 0L
+    var updateBatchId = 1L
 
     val updateBatch = mutableListOf<AbstractAuiFragment<RT>>()
 
@@ -120,18 +120,11 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : AdaptiveAdapter {
     abstract fun removeActual(itemReceiver: RT)
 
     fun closePatchBatch() {
-        val markedId = updateBatchId ++
-        val updateId = updateBatchId ++
+        val updateId = ++ updateBatchId
+        updateBatchId ++
 
         for (fragment in updateBatch) {
-            // this condition prevents duplicated updates
-            if (fragment.updateBatchId != markedId) continue
-
-            val renderData = fragment.renderData
-
-            fragment.updateBatchId = updateId
-            fragment.computeLayout(renderData.finalWidth, renderData.finalHeight)
-            fragment.placeLayout(renderData.finalTop, renderData.finalLeft)
+            fragment.updateLayout(updateId, null)
         }
 
         updateBatch.clear()

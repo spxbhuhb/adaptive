@@ -6,19 +6,20 @@ package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.instruction.layout.Alignment
+import `fun`.adaptive.ui.instruction.layout.FitStrategy
 
 fun AbstractContainer<*, *>.computeFinal(proposedWidth: Double, itemsWidth: Double, proposedHeight: Double, itemsHeight: Double) {
     val data = renderData
     val layout = renderData.layout
 
     val innerWidth = when {
-        proposedWidth.isFinite() && layout?.fillHorizontal == true -> proposedWidth - data.surroundingHorizontal
+        proposedWidth.isFinite() && layout?.fit?.horizontalStrategy == FitStrategy.Container -> proposedWidth - data.surroundingHorizontal
         layout?.instructedWidth != null -> layout.instructedWidth !! - data.surroundingHorizontal
         else -> itemsWidth
     }
 
     val innerHeight = when {
-        proposedHeight.isFinite() && layout?.fillVertical == true -> proposedHeight - data.surroundingVertical
+        proposedHeight.isFinite() && layout?.fit?.verticalStrategy == FitStrategy.Container -> proposedHeight - data.surroundingVertical
         layout?.instructedHeight != null -> layout.instructedHeight !! - data.surroundingVertical
         else -> itemsHeight
     }
