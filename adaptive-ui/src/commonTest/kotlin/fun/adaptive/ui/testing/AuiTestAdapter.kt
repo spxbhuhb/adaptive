@@ -12,6 +12,7 @@ import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
+import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.SPixel
 import `fun`.adaptive.ui.platform.media.MediaMetrics
@@ -103,6 +104,30 @@ class AuiTestAdapter(
 
     operator fun get(selector: AdaptiveInstruction) =
         first(true) { selector in it.instructions } as AbstractAuiFragment<*>
+
+    fun assertFinal(
+        selector: AdaptiveInstruction,
+        frame: RawFrame
+    ) {
+        val renderData = (first(true) { selector in it.instructions } as AbstractAuiFragment<*>).renderData
+
+        assertEquals(
+            AssertFrame(
+                if (selector is Name) selector.name else selector::class.simpleName,
+                frame.top,
+                frame.left,
+                frame.width,
+                frame.height
+            ),
+            AssertFrame(
+                if (selector is Name) selector.name else selector::class.simpleName,
+                renderData.finalTop,
+                renderData.finalLeft,
+                renderData.finalWidth,
+                renderData.finalHeight
+            )
+        )
+    }
 
     fun assertFinal(
         selector: AdaptiveInstruction,
