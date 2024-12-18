@@ -214,10 +214,15 @@ abstract class AbstractAuiFragment<RT>(
 
         if (layout == null) return false
 
-        val horizontal = layout.instructedWidth != null || layout.fit?.horizontalStrategy == FitStrategy.Container
-        val vertical = layout.instructedHeight != null || layout.fit?.verticalStrategy == FitStrategy.Container
+        val fixHorizontal = layout.instructedWidth != null || layout.fit?.horizontalStrategy == FitStrategy.Container
+        val fixVertical = layout.instructedHeight != null || layout.fit?.verticalStrategy == FitStrategy.Container
 
-        if (horizontal && vertical) return true
+        val container = renderData.layoutFragment?.renderData?.container
+
+        val alignHorizontal = container?.horizontalAlignment != null || layout.horizontalAlignment != null
+        val alignVertical = container?.verticalAlignment != null || layout.verticalAlignment != null
+
+        if (fixHorizontal && fixVertical && !alignVertical && !alignHorizontal) return true
 
         return false
     }
