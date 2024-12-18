@@ -80,7 +80,6 @@ class Selection(
         }
 
         item.setStateVariable(item.instructionIndex, result.toTypedArray())
-        item.setDirtyBatch(item.instructionIndex)
         nextRevision()
     }
 

@@ -23,3 +23,5 @@ includeBuild("../adaptive-ui")
 includeBuild("../adaptive-lib-email")
 includeBuild("../adaptive-lib-ktor")
 includeBuild("../adaptive-lib-auth")
+includeBuild("../adaptive-lib-auto")
+

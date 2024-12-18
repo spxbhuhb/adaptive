@@ -16,17 +16,17 @@ import `fun`.adaptive.ui.instruction.layout.Frame
 
 @Adaptive
 fun overlay(selection: Selection, target: Selection) {
+    val selectionFrame = selection.containingFrame(selection)?.grow(1.0)
     val targetFrame = targetFrame(selection, target)
-    val frame = selection.containingFrame(selection)?.grow(1.0)
 
     // ----  rendering  ---------
 
-    if (frame != null) {
-        box(*containingBox, frame, noHit) { }
-        box(*guide, position(frame.top, 0.dp), maxWidth) { }
-        box(*guide, position(frame.top + frame.height - 1.0, 0.dp), maxWidth) { }
-        box(*guide, position(0.dp, frame.left), maxHeight) { }
-        box(*guide, position(0.dp, frame.left + frame.width - 1.0), maxHeight) { }
+    if (selectionFrame != null) {
+        box(*containingBox, selectionFrame, noHit) { }
+        box(*guide, position(selectionFrame.top, 0.dp), maxWidth) { }
+        box(*guide, position(selectionFrame.top + selectionFrame.height - 1.0, 0.dp), maxWidth) { }
+        box(*guide, position(0.dp, selectionFrame.left), maxHeight) { }
+        box(*guide, position(0.dp, selectionFrame.left + selectionFrame.width - 1.0), maxHeight) { }
     }
 
     if (targetFrame != null) {

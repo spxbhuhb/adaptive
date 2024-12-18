@@ -195,8 +195,15 @@ abstract class AbstractAuiFragment<RT>(
         updateBatchId = updateId
 
         if (shouldUpdateSelf()) {
-            computeLayout(renderData.finalWidth, renderData.finalHeight)
-            placeLayout(renderData.finalTop, renderData.finalLeft)
+            val layout = renderData.layout
+            computeLayout(
+                layout?.instructedWidth ?: previousRenderData.finalWidth,
+                layout?.instructedHeight ?: previousRenderData.finalHeight
+            )
+            placeLayout(
+                layout?.instructedTop ?: previousRenderData.finalTop,
+                layout?.instructedLeft ?: previousRenderData.finalLeft
+            )
         } else {
             renderData.layoutFragment?.updateLayout(updateId, this)
         }
@@ -222,9 +229,7 @@ abstract class AbstractAuiFragment<RT>(
         val alignHorizontal = container?.horizontalAlignment != null || layout.horizontalAlignment != null
         val alignVertical = container?.verticalAlignment != null || layout.verticalAlignment != null
 
-        if (fixHorizontal && fixVertical && !alignVertical && !alignHorizontal) return true
-
-        return false
+        return fixHorizontal && fixVertical && ! alignVertical && ! alignHorizontal
     }
 
 }
