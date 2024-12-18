@@ -286,7 +286,7 @@ abstract class AdaptiveFragment(
      * after a number of descendants have been patched.
      */
     open fun closePatchBatch() {
-
+        adapter.closePatchBatch()
     }
 
     // --------------------------------------------------------------------------

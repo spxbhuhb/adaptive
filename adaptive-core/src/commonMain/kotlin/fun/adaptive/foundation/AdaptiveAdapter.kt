@@ -60,6 +60,8 @@ interface AdaptiveAdapter {
 
     fun removeActualRoot(fragment: AdaptiveFragment) = Unit
 
+    fun closePatchBatch() = Unit
+
     /**
      * Called by the `adaptive` entry point function after the root fragment is mounted.
      */

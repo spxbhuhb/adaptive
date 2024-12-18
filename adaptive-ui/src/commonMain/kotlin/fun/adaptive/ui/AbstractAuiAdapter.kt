@@ -119,7 +119,7 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : AdaptiveAdapter {
      */
     abstract fun removeActual(itemReceiver: RT)
 
-    fun closePatchBatch() {
+    override fun closePatchBatch() {
         val updateId = ++ updateBatchId
         updateBatchId ++
 

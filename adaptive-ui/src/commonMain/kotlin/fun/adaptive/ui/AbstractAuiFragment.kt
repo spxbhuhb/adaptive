@@ -148,10 +148,6 @@ abstract class AbstractAuiFragment<RT>(
         uiAdapter.updateBatch += this
     }
 
-    override fun closePatchBatch() {
-        uiAdapter.closePatchBatch()
-    }
-
     /**
      * Basic layout computation that is used for intrinsic UI fragments. Layout fragments
      * override this method to implement their own calculation algorithm.
