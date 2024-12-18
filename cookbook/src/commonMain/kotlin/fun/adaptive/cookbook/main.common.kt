@@ -27,7 +27,6 @@ val appData = BasicAppData().apply {
         SidebarItem(Res.drawable.grid_view, "Form", Routes.form),
         SidebarItem(Res.drawable.grid_view, "Grid", Routes.grid),
         SidebarItem(Res.drawable.grid_view, "Navigation", Routes.navigation),
-        SidebarItem(Res.drawable.grid_view, "Responsive", Routes.responsive),
         SidebarItem(Res.drawable.grid_view, "Select", Routes.select),
         SidebarItem(Res.drawable.grid_view, "Sidebar", Routes.sidebar),
         SidebarItem(Res.drawable.grid_view, "Snackbar", Routes.snackbar),
@@ -51,7 +50,6 @@ object Routes {
     val navigation = navRouting // No title as it's a routing function, not a state
     val publicLanding = navState("public-landing", title = "Cookbook")
     val memberLanding = navState("member-landing", title = "Cookbook")
-    val responsive = navState("responsive", title = "Responsive")
     val select = navState("select", title = "Select")
     val sidebar = navState("sideBar", title = "SideBar")
     val snackbar = navState("snackbar", title = "Snackbar")

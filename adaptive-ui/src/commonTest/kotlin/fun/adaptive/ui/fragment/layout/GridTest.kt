@@ -1,7 +1,3 @@
-/*
- * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
- */
-
 package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
@@ -21,7 +17,8 @@ import `fun`.adaptive.ui.api.slot
 import `fun`.adaptive.ui.api.space
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.verticalScroll
-import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.support.C1
 import `fun`.adaptive.ui.support.F1
 import `fun`.adaptive.ui.support.F2
@@ -32,50 +29,51 @@ import kotlin.test.Test
 class GridTest {
 
     @Test
-    fun `basic fixed fixed`() {
+    fun basic_fixed_fixed() {
         cff(
             colTemplate(120.dp, 160.dp),
             rowTemplate(20.dp)
         ) {
-            assertFinal(C1, 0, 0, 400, 400)
+            assertFinal(C1, 0, 0, 280, 20)
             assertFinal(F1, 0, 0, 120, 20)
             assertFinal(F2, 0, 120, 160, 20)
         }
     }
 
     @Test
-    fun `basic fixed fraction`() {
+    fun basic_fixed_fraction() {
         cff(
+            maxWidth,
             colTemplate(140.dp, 1.fr),
             rowTemplate(20.dp)
         ) {
-            assertFinal(C1, 0, 0, 400, 400)
+            assertFinal(C1, 0, 0, 400, 20)
             assertFinal(F1, 0, 0, 140, 20)
             assertFinal(F2, 0, 140, 400 - 140, 20)
         }
     }
 
     @Test
-    fun `gap horizontal 5`() {
+    fun gap_horizontal_5() {
         cff(
             colTemplate(120.dp, 160.dp),
             rowTemplate(20.dp),
             gapWidth { 5.dp }
         ) {
-            assertFinal(C1, 0, 0, 400, 400)
+            assertFinal(C1, 0, 0, 285, 20)
             assertFinal(F1, 0, 0, 120, 20)
             assertFinal(F2, 0, 125, 160, 20)
         }
     }
 
     @Test
-    fun `gap vertical 5`() {
+    fun gap_vertical_5() {
         cff(
             colTemplate(120.dp),
             rowTemplate(20.dp, 30.dp),
             gapHeight { 5.dp }
         ) {
-            assertFinal(C1, 0, 0, 400, 400)
+            assertFinal(C1, 0, 0, 120, 55)
             assertFinal(F1, 0, 0, 120, 20)
             assertFinal(F2, 25, 0, 120, 30)
         }

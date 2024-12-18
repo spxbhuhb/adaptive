@@ -34,9 +34,9 @@ private fun content(message: String, navState: NavState?) {
         gap { 16.dp }
 
         text(message + " " + navState?.parameters?.get("sub"))
-        button("option 1.1") .. onDoubleClick { navState?.goto(NavState(listOf("navigation", "1"), parameters = mapOf("sub" to "1.1"))) }
-        button("option 1.2") .. onDoubleClick { navState?.goto(NavState(listOf("navigation", "1"), parameters = mapOf("sub" to "1.2"))) }
-        button("option 2.1") .. onDoubleClick { navState?.goto(NavState(listOf("navigation", "2"), parameters = mapOf("sub" to "2.1"))) }
-        button("option 2.2") .. onDoubleClick { navState?.goto(NavState(listOf("navigation", "2"), parameters = mapOf("sub" to "2.2"))) }
+        button("option 1.1") .. onClick { navState?.goto(NavState(listOf("navigation", "1"), parameters = mapOf("sub" to "1.1"))) }
+        button("option 1.2") .. onClick { navState?.goto(NavState(listOf("navigation", "1"), parameters = mapOf("sub" to "1.2"))) }
+        button("option 2.1") .. onClick { navState?.goto(NavState(listOf("navigation", "2"), parameters = mapOf("sub" to "2.1"))) }
+        button("option 2.2") .. onClick { navState?.goto(NavState(listOf("navigation", "2"), parameters = mapOf("sub" to "2.2"))) }
     }
 }

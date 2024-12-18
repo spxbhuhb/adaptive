@@ -137,7 +137,6 @@ fun mainContent() {
             in Routes.navigation -> navigationRecipe(navState)
             in Routes.publicLanding -> landing()
             in Routes.memberLanding -> landing()
-            in Routes.responsive -> responsiveMain()
             in Routes.select -> selectRecipe()
             in Routes.sidebar -> sideBarRecipe()
             in Routes.snackbar -> snackbarRecipe()
