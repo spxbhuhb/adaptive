@@ -29,6 +29,9 @@ class SvgSvg(
 
     val canvasAdapter = CanvasAdapter(adapter, canvas, this)
 
+    override val patchDescendants: Boolean
+        get() = true
+    
     val resource: DrawableResource
         get() = state[0].checkIfInstance()
 

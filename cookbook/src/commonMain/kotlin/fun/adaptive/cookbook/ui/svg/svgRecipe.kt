@@ -5,6 +5,7 @@ import `fun`.adaptive.cookbook.eco
 import `fun`.adaptive.cookbook.folder
 import `fun`.adaptive.cookbook.frame_inspect
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.instruction.traceAll
 import `fun`.adaptive.foundation.producer.poll
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.svg.api.svg
@@ -53,7 +54,7 @@ private fun colorChange() {
     val random = poll(1.seconds) { now().epochSeconds.toInt() % 4 } ?: 0
     val colors = arrayOf(iconColors.onSurface, iconColors.onSurfaceVariant, iconColors.onSurfaceFriendly, iconColors.onSurfaceAngry)
 
-    svg(Res.drawable.eco) .. colors[random]
+    svg(Res.drawable.eco, traceAll) .. colors[random]
 
     text(" - with changing color - $random")
 }
