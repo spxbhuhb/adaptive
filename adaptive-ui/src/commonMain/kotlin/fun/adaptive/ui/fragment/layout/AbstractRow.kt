@@ -58,36 +58,4 @@ abstract class AbstractRow<RT, CRT : RT>(
         return renderData.finalWidth
     }
 
-    override fun layoutChange(fragment: AbstractAuiFragment<*>) {
-        val previous = fragment.previousRenderData.layout ?: LayoutRenderData(uiAdapter)
-        val current = fragment.renderData.layout ?: LayoutRenderData(uiAdapter)
-
-        val currentInstructedHeight = current.instructedHeight
-
-        if (previous.instructedHeight != currentInstructedHeight) {
-
-            // The instructed height of the contained fragment changed, and it does not fit to the
-            // current height of the row. We have to resize the row to fit the changed fragment.
-
-            if (currentInstructedHeight != null && currentInstructedHeight > renderData.finalHeight) {
-                // TODO if the row has it's own instructed height it might limit the height of the fragment
-                // in that case the row height won't change and we don't have re-layout the layout that contains the row
-                super.layoutChange(this)
-                return
-            }
-        }
-
-        val currentInstructedWidth = current.instructedWidth
-
-        if (previous.instructedWidth != currentInstructedWidth) {
-            // TODO inefficient width change re-layout
-            super.layoutChange(this)
-            return
-        }
-
-        // This part should be reached only if the container can handle the layout change by itself.
-        // This means that the final dimensions of the container won't change, no matter what.
-
-        computeLayout(renderData.finalWidth, renderData.finalHeight)
-    }
 }

@@ -138,8 +138,4 @@ abstract class AbstractContainer<RT, CRT : RT>(
         }
     }
 
-    open fun layoutChange(fragment: AbstractAuiFragment<*>) {
-        // FIXME re-layout will probably work but it is really, really inefficient
-        renderData.layoutFragment?.layoutChange(this)
-    }
 }
