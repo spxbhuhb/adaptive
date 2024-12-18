@@ -46,7 +46,7 @@ Patching is initiated by:
     - mounts call `AuiAdapter.addActual` or `AuiAdapter.addActualRoot`
 - event handlers
   - started by `UIEvent.patchIfDirty`
-  - `patchIfDirty` calls `patchInternalBatch` if the declaring fragment of the event handler is dirty
+  - `patchIfDirty` calls `closePatchBatch` (actual patching is automatic, by the plugin)
 - producers 
   - started by `AdaptiveProducer.setDirtyBatch`
   - `setDirtyBatch` calls `targetFragment.setDirtyBatch` which in turn calls `patchInternalBatch`
@@ -60,7 +60,7 @@ All layout relayed updates happen in an update batch.
 
 An update batch:
 
-* executed when `AbstractAuiFragment.closePatchBatch` is called
+* executed when `AbstractFragment.closePatchBatch` is called
 * calls `AbstractAuiAdapter.closePatchBatch`
 * `AbstractAuiAdapter.updateBatchId`
   * copied into `AbstractAuiFragment.updateBatchId` when the fragment is added to the batch
@@ -133,12 +133,6 @@ it to its parent. This decision is made by calling `AbstractAuiFragment.shouldUp
 
 When `shouldUpdateSelf` returns with true, the fragment size won't change by the layout update. In general
 this is true when the following condition is true.
-
-```text
-has instructed width || fit.container.horizontally
-  &&
-has instructed height || fit.container.vertically  
-```
 
 For grids there is an additional option. When there are only fixed columns the grid size won't change by the update.
 

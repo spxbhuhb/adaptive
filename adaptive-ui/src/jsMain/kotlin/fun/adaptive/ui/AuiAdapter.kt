@@ -55,16 +55,11 @@ class AuiAdapter(
         traceAddActual(fragment)
 
         fragment.alsoIfInstance<AbstractContainer<HTMLElement, HTMLDivElement>> {
-            // FIXME should we move this to AbstractAuiAdapter?
-//            rootContainer.getBoundingClientRect().let { r ->
-//                it.computeLayout(r.width, r.height)
-//                it.placeLayout(0.0, 0.0)
-            rootContainer.appendChild(it.receiver)
-
-            it.updateBatchId = updateBatchId
-            updateBatch += it
-
-//            }
+            rootContainer.getBoundingClientRect().let { r ->
+                it.computeLayout(r.width, r.height)
+                it.placeLayout(0.0, 0.0)
+                rootContainer.appendChild(it.receiver)
+            }
         }
 
         otherRootFragments += fragment
