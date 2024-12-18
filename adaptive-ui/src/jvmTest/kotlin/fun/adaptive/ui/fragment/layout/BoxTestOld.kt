@@ -34,7 +34,7 @@ import `fun`.adaptive.ui.testing.AuiTestAdapter
 import `fun`.adaptive.ui.testing.uiTest
 import kotlin.test.Test
 
-class BoxTest {
+class BoxTestOld {
 
     @Test
     fun `box basic`() {

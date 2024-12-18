@@ -1,12 +1,8 @@
 package `fun`.adaptive.cookbook
 
-import `fun`.adaptive.cookbook.auth.api.AccountApi
 import `fun`.adaptive.cookbook.auth.authRouting
-import `fun`.adaptive.cookbook.shared.title
 import `fun`.adaptive.cookbook.ui.navigation.navRouting
-import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.app.basic.BasicAppData
-import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.navigation.navState
 import `fun`.adaptive.ui.navigation.sidebar.SidebarItem
 

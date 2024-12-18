@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.test.layout
+package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.rangeTo
@@ -9,9 +9,7 @@ import `fun`.adaptive.ui.api.fit
 import `fun`.adaptive.ui.api.position
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.layout.AlignItems
 import `fun`.adaptive.ui.instruction.layout.AlignSelf
 import `fun`.adaptive.ui.support.C1
@@ -19,7 +17,7 @@ import `fun`.adaptive.ui.support.F1
 import `fun`.adaptive.ui.testing.uiTest
 import kotlin.test.Test
 
-class BoxLayoutTest {
+class BoxTest {
 
     fun f(top: Int, left: Int, width: Int, height: Int) =
         RawFrame(top.toDouble(), left.toDouble(), width.toDouble(), height.toDouble())

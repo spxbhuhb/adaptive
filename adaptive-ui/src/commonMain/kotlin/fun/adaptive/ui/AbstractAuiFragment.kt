@@ -49,7 +49,7 @@ abstract class AbstractAuiFragment<RT>(
     open val invalidInput: Boolean
         get() = false
 
-    val patchDescendants: Boolean
+    open val patchDescendants: Boolean
         get() = false
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =

@@ -34,6 +34,9 @@ abstract class AbstractContainer<RT, CRT : RT>(
 
     override val uiAdapter = adapter
 
+    override val patchDescendants: Boolean
+        get() = true
+
     val layoutItems = mutableListOf<AbstractAuiFragment<RT>>() // Items to consider during layout.
 
     val directItems = mutableListOf<AbstractAuiFragment<RT>>() // Items to update directly, see class docs.

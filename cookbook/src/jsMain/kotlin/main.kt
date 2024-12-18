@@ -93,6 +93,8 @@ fun main() {
             window.location.reload()
         }
 
+        appData.navState.update(Routes.publicLanding)
+
         browser(CanvasFragmentFactory, SvgFragmentFactory, FormFragmentFactory, backend = localBackend) { adapter ->
 
             with(adapter.defaultTextRenderData) {
