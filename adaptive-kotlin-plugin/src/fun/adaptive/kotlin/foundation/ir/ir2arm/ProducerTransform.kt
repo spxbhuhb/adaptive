@@ -18,7 +18,8 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.util.hasAnnotation
 
 /**
- * Replaces the producer call (of there are any) with a call to `getProducedValue`.
+ * Replaces the producer call (if there are any) with a call to `getProducedValue`.
+ *
  * Dispatch receiver and parameters of the `getProducedValue` call are not set,
  * `ProducerPostProcessTransform` does that.
  *
@@ -42,30 +43,31 @@ class ProducerTransform(
 
     override fun visitCall(expression: IrCall): IrExpression {
 
-        if (expression.symbol.owner.hasAnnotation(pluginContext.producerAnnotation)) {
-
-            check(producerCall == null) { "only one producer call is allowed per state variable" }
-
-            producerCall = expression
-
-            producerDependencies =
-                if (variable.hasAnnotation(pluginContext.independentAnnotation)) {
-                    emptyList()
-                } else {
-                    expression.dependencies()
-                }
-
-            return irImplicitAs(
-                expression.type,
-                IrCallImpl(
-                    expression.startOffset, expression.endOffset,
-                    irBuiltIns.anyNType,
-                    pluginContext.getProducedValue,
-                    typeArgumentsCount = 0,
-                    expression.origin
-                )
-            )
+        if (! expression.symbol.owner.hasAnnotation(pluginContext.producerAnnotation)) {
+            return super.visitCall(expression)
         }
+
+        check(producerCall == null) { "only one producer call is allowed per state variable" }
+
+        producerCall = expression
+
+        producerDependencies =
+            if (variable.hasAnnotation(pluginContext.independentAnnotation)) {
+                emptyList()
+            } else {
+                expression.dependencies()
+            }
+
+        return irImplicitAs(
+            expression.type,
+            IrCallImpl(
+                expression.startOffset, expression.endOffset,
+                irBuiltIns.anyNType,
+                pluginContext.getProducedValue,
+                typeArgumentsCount = 0,
+                expression.origin
+            )
+        )
 
         return super.visitCall(expression)
     }

@@ -581,6 +581,30 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testPoll() {
         runTest("testData/box/foundation/producer/poll.kt");
       }
+
+      @Test
+      @TestMetadata("postfix.kt")
+      public void testPostfix() {
+        runTest("testData/box/foundation/producer/postfix.kt");
+      }
+
+      @Test
+      @TestMetadata("postfixNullable1.kt")
+      public void testPostfixNullable1() {
+        runTest("testData/box/foundation/producer/postfixNullable1.kt");
+      }
+
+      @Test
+      @TestMetadata("postfixNullable2.kt")
+      public void testPostfixNullable2() {
+        runTest("testData/box/foundation/producer/postfixNullable2.kt");
+      }
+
+      @Test
+      @TestMetadata("postfixNullableWithAdatCompanion.kt")
+      public void testPostfixNullableWithAdatCompanion() {
+        runTest("testData/box/foundation/producer/postfixNullableWithAdatCompanion.kt");
+      }
     }
 
     @Nested

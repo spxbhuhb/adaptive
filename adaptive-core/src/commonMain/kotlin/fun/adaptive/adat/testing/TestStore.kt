@@ -1,56 +1,86 @@
-package `fun`.adaptive.adat.store
+package `fun`.adaptive.adat.testing
 
-import `fun`.adaptive.adat.*
-import `fun`.adaptive.adat.api.*
+import `fun`.adaptive.adat.AdatChange
+import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.AdatCompanionResolve
+import `fun`.adaptive.adat.AdatContext
+import `fun`.adaptive.adat.api.deepCopy
+import `fun`.adaptive.adat.api.validateForContext
+import `fun`.adaptive.adat.store.AdatStore
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
 import `fun`.adaptive.foundation.producer.Producer
 
 /**
- * A producer that generates a new copy of the stored instance whenever
- * the `setValue` function is called.
- *
- * Each new copy is validated by default, so fragments that use values
- * produced by [copyStore] can safely use the validation result as it is
- * up-to-date all the time.
- *
- * @param    onChange  Called after a new instance is generated, but before the
- *                     state of the fragment is updated.
- * @param    source    Source of the stored data. [copyStore] makes a deep copy
- *                     of this instance, validates that copy and then returns with it.
- * @param    binding   Set by the compiler plugin, ignore it.
- *
- * @return   A validated copy of [source].
+ * A producer to be used for testing.
  */
 @Producer
-fun <A : AdatClass> copyStore(
+@Suppress("unused") // used by plugin test code
+fun <A : AdatClass> testStore(
     onChange: ((newValue: A) -> Unit)? = null,
     binding: AdaptiveStateVariableBinding<A>? = null,
     source: () -> A
 ): A {
     checkNotNull(binding)
 
-    val store = CopyStore(binding, source(), onChange)
+    val store = TestStore(binding, source(), onChange)
 
     binding.targetFragment.addProducer(store)
 
     return store.latestValue !!
 }
 
-class CopyStore<A : AdatClass>(
+/**
+ * A nullable producer to be used for testing. It is similar to `copyStore`.
+ */
+@Producer
+@Suppress("unused") // used by plugin test code
+fun <A : AdatClass> testStoreOrNull(
+    onChange: ((newValue: A) -> Unit)? = null,
+    binding: AdaptiveStateVariableBinding<A>? = null,
+    source: () -> A?
+): A? {
+    checkNotNull(binding)
+
+    val store = TestStore(binding, source(), onChange)
+
+    binding.targetFragment.addProducer(store)
+
+    return store.latestValue
+}
+
+/**
+ * A producer to be used for testing with companion resolution.
+ */
+@Producer
+@AdatCompanionResolve
+@Suppress("unused") // used by plugin test code
+fun <A : AdatClass> testStoreOrNullWithCompanion(
+    onChange: ((newValue: A) -> Unit)? = null,
+    binding: AdaptiveStateVariableBinding<A>? = null,
+    source: () -> A?
+): A? {
+    checkNotNull(binding)
+    checkNotNull(binding.adatCompanion)
+
+    val store = TestStore(binding, source(), onChange)
+
+    binding.targetFragment.addProducer(store)
+
+    return store.latestValue
+}
+
+class TestStore<A : AdatClass>(
     override val binding: AdaptiveStateVariableBinding<A>,
-    initialValue: A,
+    initialValue: A?,
     val onChange: ((newValue: A) -> Unit)?
 ) : AdatStore<A>(), AdaptiveProducer<A> {
 
     val adatContext = AdatContext<Any>(null, null, null, store = this, null)
 
-    override var latestValue: A? = makeCopy(initialValue, null, false)
+    override var latestValue: A? = initialValue?.let { makeCopy(it, null, false) }
 
     override fun update(newValue: A) {
-        makeCopy(newValue, null, true)
-    }
-    override fun update(original: A, newValue: A) {
         makeCopy(newValue, null, true)
     }
 
@@ -89,7 +119,7 @@ class CopyStore<A : AdatClass>(
     }
 
     override fun toString(): String {
-        return "CopyStore($binding)"
+        return "TestStore($binding)"
     }
 
 }
