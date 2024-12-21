@@ -3,12 +3,14 @@ package `fun`.adaptive.ui.fragment.layout
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.gapHeight
 import `fun`.adaptive.ui.api.gapWidth
 import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.padding
@@ -22,6 +24,7 @@ import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.support.C1
 import `fun`.adaptive.ui.support.F1
 import `fun`.adaptive.ui.support.F2
+import `fun`.adaptive.ui.support.F3
 import `fun`.adaptive.ui.testing.AuiTestAdapter
 import `fun`.adaptive.ui.testing.uiTest
 import kotlin.test.Test
@@ -93,6 +96,28 @@ class GridTest {
             }
 
         }.checks()
+    }
+
+    @Test
+    fun lastGap() {
+        uiTest(0, 0, 400, 400) {
+            grid {
+                C1
+                alignItems.startCenter
+                colTemplate(120.dp)
+                rowTemplate(20.dp repeat 3)
+                gap { 10.dp }
+
+                space() .. F1 .. height { 20.dp }
+                space() .. F2 .. height { 20.dp }
+                space() .. F3 .. height { 20.dp }
+            }
+        }.apply {
+            assertFinal(C1, 0, 0, 120, 80)
+            assertFinal(F1, 0, 0, 120, 20)
+            assertFinal(F2, 30, 0, 120, 20)
+            assertFinal(F3, 60, 0, 120, 20)
+        }
     }
 
     @Test
