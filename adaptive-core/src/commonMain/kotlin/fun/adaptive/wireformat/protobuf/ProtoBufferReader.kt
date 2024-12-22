@@ -108,6 +108,7 @@ class ProtoBufferReader(
         return list
     }
 
+    // FIXME optimize ProtoBufferReader, converting bytes to ULong seems like a waste
     private fun get(): ULong {
         if (readOffset >= endOffset) throw EndOfBuffer
         return buffer[readOffset ++].toULong() and 0xffUL
@@ -166,5 +167,9 @@ class ProtoBufferReader(
         }
 
         return value or ((next and valueMask) shl shift)
+    }
+
+    fun seek(position : Int) {
+        readOffset = offset + position
     }
 }
