@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.builders.declarations.addConstructor
 import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
 import org.jetbrains.kotlin.ir.builders.declarations.buildClass
+import org.jetbrains.kotlin.ir.builders.declarations.buildReceiverParameter
 import org.jetbrains.kotlin.ir.builders.irGet
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrConstKind
@@ -166,7 +167,9 @@ class ArmClassBuilder(
     fun genBuildBody() {
         val buildFun = irClass.getSimpleFunction(Strings.GEN_BUILD) !!.owner
 
+        buildFun.origin = IrDeclarationOrigin.DEFINED
         buildFun.isFakeOverride = false
+        buildFun.dispatchReceiverParameter = buildReceiverParameter(buildFun, IrDeclarationOrigin.INSTANCE_RECEIVER, irClass.defaultType)
 
         buildFun.body = DeclarationIrBuilder(irContext, buildFun.symbol).irBlockBody {
 
@@ -234,7 +237,9 @@ class ArmClassBuilder(
     fun genPatchDescendantBody() {
         val patchFun = irClass.getSimpleFunction(Strings.GEN_PATCH_DESCENDANT) !!.owner
 
+        patchFun.origin = IrDeclarationOrigin.DEFINED
         patchFun.isFakeOverride = false
+        patchFun.dispatchReceiverParameter = buildReceiverParameter(patchFun, IrDeclarationOrigin.INSTANCE_RECEIVER, irClass.defaultType)
 
         patchFun.body = DeclarationIrBuilder(irContext, patchFun.symbol).irBlockBody {
 
@@ -295,7 +300,9 @@ class ArmClassBuilder(
     fun genPatchInternalBody() {
         val patchFun = irClass.getSimpleFunction(Strings.GEN_PATCH_INTERNAL) !!.owner
 
+        patchFun.origin = IrDeclarationOrigin.DEFINED
         patchFun.isFakeOverride = false
+        patchFun.dispatchReceiverParameter = buildReceiverParameter(patchFun, IrDeclarationOrigin.INSTANCE_RECEIVER, irClass.defaultType)
 
         patchFun.body = DeclarationIrBuilder(irContext, patchFun.symbol).irBlockBody {
 

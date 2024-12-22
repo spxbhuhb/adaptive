@@ -22,7 +22,7 @@ import kotlin.test.assertTrue
 class CollectionFilePersistenceTest {
 
     @Test
-    fun `save and load empty`() {
+    fun save_and_load_empty() {
         autoCommon()
 
         val dirPath = clearedTestPath()
@@ -49,7 +49,7 @@ class CollectionFilePersistenceTest {
     }
 
     @Test
-    fun `save and load not empty`() {
+    fun save_and_load_not_empty() {
         autoCommon()
 
         val dirPath = clearedTestPath()

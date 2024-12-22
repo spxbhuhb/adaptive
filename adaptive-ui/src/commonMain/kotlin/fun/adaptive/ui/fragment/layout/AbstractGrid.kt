@@ -87,6 +87,9 @@ abstract class AbstractGrid<RT, CRT : RT>(
         val horizontalAlignment = container?.horizontalAlignment
         val verticalAlignment = container?.verticalAlignment
 
+        val lastRow = rowTracks.size - 1
+        val lastCol = colTracks.size - 1
+
         for (item in layoutItems) {
             val g = item.renderData.grid !!
 
@@ -99,11 +102,11 @@ abstract class AbstractGrid<RT, CRT : RT>(
             val col = g.colIndex
 
             val rowOffset = rowOffsets[row]
-            val spanHeight = rowOffsets[row + g.rowSpan] - rowOffset
+            val spanHeight = rowOffsets[row + g.rowSpan] - rowOffset - (if (row < lastRow) rowGap else 0.0)
             val topAlign = alignOnAxis(item.verticalAlignment, verticalAlignment, spanHeight, item.renderData.finalHeight)
 
             val colOffset = colOffsets[col]
-            val spanWidth = colOffsets[col + g.colSpan] - colOffset
+            val spanWidth = colOffsets[col + g.colSpan] - colOffset - (if (col < lastCol) colGap else 0.0)
             val leftAlign = alignOnAxis(item.horizontalAlignment, horizontalAlignment, spanWidth, item.renderData.finalWidth)
 
             item.placeLayout(
@@ -234,7 +237,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
             }
         }
 
-        val piece = (availableSpace - usedSpace) / fractionSum
+        val piece = if (fractionSum == 0.0) 0.0 else (availableSpace - usedSpace) / fractionSum
 
         var offset = 0.0
         var previous = 0.0 // size of the previous track

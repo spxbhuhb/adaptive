@@ -5,10 +5,8 @@
 package `fun`.adaptive.ui
 
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.instruction.Name
-import `fun`.adaptive.ui.fragment.layout.AbstractContainer
+import `fun`.adaptive.ui.instruction.layout.FitStrategy
 import `fun`.adaptive.ui.render.model.AuiRenderData
-import `fun`.adaptive.utility.firstOrNullIfInstance
 
 abstract class AbstractAuiFragment<RT>(
     adapter: AbstractAuiAdapter<RT, *>,
@@ -24,6 +22,8 @@ abstract class AbstractAuiFragment<RT>(
      * Use this field when accessing actual UI specific adapter functions.
      */
     open val uiAdapter = adapter
+
+    var updateBatchId = 0L
 
     var previousRenderData = adapter.emptyRenderData
 
@@ -46,8 +46,11 @@ abstract class AbstractAuiFragment<RT>(
     open val isRootActual
         get() = false
 
-    open val invalidInput : Boolean
-        get() =  false
+    open val invalidInput: Boolean
+        get() = false
+
+    open val patchDescendants: Boolean
+        get() = false
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         null
@@ -56,34 +59,55 @@ abstract class AbstractAuiFragment<RT>(
         Unit
 
     override fun genPatchInternal(): Boolean {
+
+        previousRenderData = renderData
+
         patchInstructions()
-        return true
-    }
+        auiPatchInternal()
 
-    open fun patchInstructions(addText: Boolean = false) {
-        if (instructionIndex != - 1 && haveToPatch(dirtyMask, 1 shl instructionIndex)) {
-            previousRenderData = renderData
-            renderData = AuiRenderData(uiAdapter, previousRenderData, uiAdapter.themeFor(this), instructions)
-
-            if (renderData.layout != previousRenderData.layout || renderData.container != previousRenderData.container)  {
-                // when patchInstructions is called during fragment create the layout fragment is not set
-                // this implicitly ignores the layout change call, not sure if that's OK
-                val layoutFragment = renderData.layoutFragment
-
-                if (layoutFragment != null) {
-                    layoutFragment.layoutChange(this)
-                } else {
-                    // in this case this is a root fragment
-                    computeLayout(renderData.finalWidth, renderData.finalHeight)
-                    placeLayout(renderData.finalTop, renderData.finalTop)
-                }
-            }
-
-            if (addText && renderData.text == null) renderData.text = uiAdapter.defaultTextRenderData
-
-            uiAdapter.applyRenderInstructions(this)
+        if (isInit || renderData.layoutIndependentChanged(previousRenderData)) {
+            uiAdapter.applyLayoutIndependent(this)
         }
+
+        if (renderData.innerDimensionsChanged(previousRenderData)) {
+            scheduleUpdate()
+            return patchDescendants
+        }
+
+        if (renderData.gridChanged(previousRenderData)) {
+            // the optimization for grid and non-grid updates are different, hence the separation
+            scheduleUpdate()
+            return patchDescendants
+        }
+
+        if (renderData.layoutChanged(previousRenderData)) {
+            scheduleUpdate()
+            return patchDescendants
+        }
+
+        return patchDescendants
     }
+
+    /**
+     * - create a new [AuiRenderData]
+     * - applies [instructions] to it
+     * - assigns it to [renderData]
+     * - schedules layout update when necessary
+     */
+    open fun patchInstructions() {
+
+        if (instructionIndex == - 1) return
+        if (! haveToPatch(dirtyMask, 1 shl instructionIndex)) return
+
+        renderData = AuiRenderData(uiAdapter, previousRenderData, uiAdapter.themeFor(this), instructions)
+
+    }
+
+    /**
+     * Execute the fragment-dependent internal patching. Called after the instructions
+     * are processed into [renderData].
+     */
+    abstract fun auiPatchInternal()
 
     override fun mount() {
         super.mount()
@@ -109,6 +133,21 @@ abstract class AbstractAuiFragment<RT>(
         super.unmount()
     }
 
+    open fun scheduleUpdate() {
+        // When the fragment is not mounted it will be added to the layout or to the root fragment list.
+        // Both cases put the actual container or this fragment (in case of root fragment) onto the update batch.
+
+        if (! isMounted) return
+
+        // When the fragment batch id is the same as the adapter batch id this fragment is already scheduled
+        // for update. In that case we should not add it again.
+
+        if (updateBatchId == uiAdapter.updateBatchId) return
+
+        updateBatchId = uiAdapter.updateBatchId
+        uiAdapter.updateBatch += this
+    }
+
     /**
      * Basic layout computation that is used for intrinsic UI fragments. Layout fragments
      * override this method to implement their own calculation algorithm.
@@ -122,7 +161,7 @@ abstract class AbstractAuiFragment<RT>(
 
         data.finalWidth = when {
             instructedWidth != null -> instructedWidth
-            layout?.fillHorizontal == true -> proposedWidth
+            layout?.fit?.horizontalStrategy == FitStrategy.Container -> proposedWidth
             innerWidth != null -> innerWidth + data.surroundingHorizontal
             proposedWidth.isFinite() -> proposedWidth
             else -> data.surroundingHorizontal
@@ -133,7 +172,7 @@ abstract class AbstractAuiFragment<RT>(
 
         data.finalHeight = when {
             instructedHeight != null -> instructedHeight
-            layout?.fillVertical == true -> proposedHeight
+            layout?.fit?.verticalStrategy == FitStrategy.Container == true -> proposedHeight
             innerHeight != null -> innerHeight + data.surroundingVertical
             proposedHeight.isFinite() -> proposedHeight
             else -> data.surroundingVertical
@@ -151,20 +190,46 @@ abstract class AbstractAuiFragment<RT>(
         uiAdapter.applyLayoutToActual(this)
     }
 
-    private val Double.padded
-        get() = toString().padStart(4, ' ')
+    open fun updateLayout(updateId: Long, item: AbstractAuiFragment<*>?) {
+        if (updateBatchId == updateId) return
+        updateBatchId = updateId
 
-    fun dumpLayout(indent: String): String {
-        return buildString {
-            val name = (indent + (instructions.firstOrNullIfInstance<Name>()?.name ?: this@AbstractAuiFragment::class.simpleName !!)).padEnd(40, ' ')
-            val data = renderData
-
-            appendLine("$name  top: ${data.finalTop.padded}    left: ${data.finalLeft.padded}    width: ${data.finalWidth.padded}    height: ${data.finalHeight.padded}")
-            if (this@AbstractAuiFragment is AbstractContainer<*, *>) {
-                layoutItems.forEach {
-                    append(it.dumpLayout("$indent  "))
-                }
-            }
+        if (shouldUpdateSelf()) {
+            val layout = renderData.layout
+            computeLayout(
+                layout?.instructedWidth ?: previousRenderData.finalWidth,
+                layout?.instructedHeight ?: previousRenderData.finalHeight
+            )
+            placeLayout(
+                layout?.instructedTop ?: previousRenderData.finalTop,
+                layout?.instructedLeft ?: previousRenderData.finalLeft
+            )
+        } else {
+            renderData.layoutFragment?.updateLayout(updateId, this)
         }
     }
+
+    /**
+     * Calculate if the fragment should handle the layout update by itself, or it should pass the update
+     * to the parent.
+     */
+    open fun shouldUpdateSelf(): Boolean {
+        val layout = renderData.layout
+
+        // Default to update by parent when there are no layout instructions. In that case the fragment positions
+        // may change and the parent can do the optimization if possible.
+
+        if (layout == null) return false
+
+        val fixHorizontal = layout.instructedWidth != null || layout.fit?.horizontalStrategy == FitStrategy.Container
+        val fixVertical = layout.instructedHeight != null || layout.fit?.verticalStrategy == FitStrategy.Container
+
+        val container = renderData.layoutFragment?.renderData?.container
+
+        val alignHorizontal = container?.horizontalAlignment != null || layout.horizontalAlignment != null
+        val alignVertical = container?.verticalAlignment != null || layout.verticalAlignment != null
+
+        return fixHorizontal && fixVertical && ! alignVertical && ! alignHorizontal
+    }
+
 }

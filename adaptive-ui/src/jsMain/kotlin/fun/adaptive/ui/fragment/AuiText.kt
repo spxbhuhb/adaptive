@@ -3,12 +3,12 @@
  */
 package `fun`.adaptive.ui.fragment
 
-import `fun`.adaptive.adaptive_ui.generated.resources.Res.font
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
+import `fun`.adaptive.ui.render.model.AuiRenderData
 import kotlinx.browser.document
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
@@ -29,25 +29,28 @@ open class AuiText(
     private val content: String
         get() = state[0]?.toString() ?: ""
 
-    override fun genPatchInternal(): Boolean {
+    override fun auiPatchInternal() {
 
-        patchInstructions(true)
+        val content = this.content
+        val contentChange = (isInit || content != receiver.textContent)
+        val styleChange = (renderData.text != previousRenderData.text)
 
-        if (haveToPatch(dirtyMask, 1)) {
-            val content = this.content
+        if (! haveToPatch(dirtyMask, 1) && ! contentChange && ! styleChange) {
+            return
+        }
 
-            if (receiver.textContent != content || isInit) {
-                receiver.textContent = content
-                measureText(content)
+        if (contentChange) {
+            receiver.textContent = content
+        }
 
-                // TODO this is a potential second re-layout, we should optimize this somehow
-                if (! isInit && (renderData.innerWidth != previousRenderData.innerWidth || renderData.innerHeight != previousRenderData.innerHeight)) {
-                    renderData.layoutFragment?.layoutChange(this)
-                }
+        if (renderData === previousRenderData) {
+            renderData = AuiRenderData(uiAdapter, previousRenderData, uiAdapter.themeFor(this), instructions)
+            if (renderData.text == null) {
+                renderData.text = uiAdapter.defaultTextRenderData
             }
         }
 
-        return false
+        measureText(content)
     }
 
     override fun placeLayout(top: Double, left: Double) {
@@ -80,7 +83,7 @@ open class AuiText(
         renderData.innerHeight = ceil(
             text.lineHeight
                 ?: (text.fontSize ?: uiAdapter.defaultTextRenderData.fontSize)?.value?.let { it * 1.5 }
-                    ?: (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)
+                ?: (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)
         )
     }
 

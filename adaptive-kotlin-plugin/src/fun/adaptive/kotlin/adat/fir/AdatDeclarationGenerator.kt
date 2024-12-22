@@ -72,34 +72,36 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         return companion.symbol
     }
 
+    private val classCallableNames = setOf(
+        Names.GEN_GET_VALUE,
+        Names.GEN_SET_VALUE,
+        Names.EQUALS,
+        Names.HASHCODE,
+        Names.TO_STRING,
+        Names.ADAT_COMPANION,
+        Names.ADAT_CONTEXT,
+        SpecialNames.INIT
+    )
+
+    private val companionCallableNames = setOf(
+        Names.ADAT_METADATA,
+        Names.ADAT_WIREFORMAT,
+        Names.ADAT_DESCRIPTORS,
+        Names.WIREFORMAT_NAME,
+        Names.NEW_INSTANCE,
+        SpecialNames.INIT
+    )
+
     override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> {
-        return when {
-            classSymbol.isAdatClass -> {
-                setOf(
-                    Names.GEN_GET_VALUE,
-                    Names.GEN_SET_VALUE,
-                    Names.EQUALS,
-                    Names.HASHCODE,
-                    Names.TO_STRING,
-                    Names.ADAT_COMPANION,
-                    Names.ADAT_CONTEXT,
-                    SpecialNames.INIT
-                )
-            }
+        val names = classSymbol.declarationSymbols.mapNotNull { if (it is FirNamedFunctionSymbol && ! it.name.isSpecial) it.name else null }
 
-            classSymbol.isAdatCompanion -> {
-                setOf(
-                    Names.ADAT_METADATA,
-                    Names.ADAT_WIREFORMAT,
-                    Names.ADAT_DESCRIPTORS,
-                    Names.WIREFORMAT_NAME,
-                    Names.NEW_INSTANCE,
-                    SpecialNames.INIT
-                )
-            }
-
+        val callableNames = when {
+            classSymbol.isAdatClass -> classCallableNames - names
+            classSymbol.isAdatCompanion -> companionCallableNames - names
             else -> emptySet()
         }
+
+        return callableNames
     }
 
     override fun generateConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> =
@@ -271,13 +273,9 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
             }
 
             Names.TO_STRING -> {
-                if (context.owner.declarationSymbols.any { it is FirNamedFunctionSymbol && ! it.name.isSpecial && it.name.identifier == "toString" }) {
-                    emptyList()
-                } else {
-                    listOf(
-                        createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.stringType.coneType).symbol
-                    )
-                }
+                listOf(
+                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.stringType.coneType).symbol
+                )
             }
 
             else -> emptyList()
@@ -293,10 +291,10 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
             || getContainingClassSymbol()?.let { session.predicateBasedProvider.matches(ADAT_PREDICATE, it) } == true
 
     val MemberGenerationContext?.isAdatClass
-        get() = if (this == null) false else owner.isAdatClass
+        get() = this?.owner?.isAdatClass == true
 
     val MemberGenerationContext?.isAdatCompanion
-        get() = if (this == null) false else owner.isAdatCompanion
+        get() = this?.owner?.isAdatCompanion == true
 
     val MemberGenerationContext.adatClassType
         get() = if (isAdatClass) {

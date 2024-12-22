@@ -285,8 +285,8 @@ abstract class AdaptiveFragment(
      * Closes a patch batch. This lets the fragment perform operations at once
      * after a number of descendants have been patched.
      */
-    fun closePatchBatch() {
-
+    open fun closePatchBatch() {
+        adapter.closePatchBatch()
     }
 
     // --------------------------------------------------------------------------

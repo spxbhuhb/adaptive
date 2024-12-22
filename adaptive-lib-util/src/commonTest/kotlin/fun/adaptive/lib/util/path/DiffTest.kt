@@ -11,7 +11,7 @@ import kotlin.test.assertTrue
 class DiffTest {
 
     @Test
-    fun `both directories are empty`() {
+    fun both_directories_are_empty() {
         val testDir = clearedTestPath()
         val dir1 = testDir.ensure("dir1")
         val dir2 = testDir.ensure("dir2")
@@ -22,7 +22,7 @@ class DiffTest {
     }
 
     @Test
-    fun `1 contains a surplus empty directory`() {
+    fun first_contains_a_surplus_empty_directory() {
         val testDir = clearedTestPath()
         val dir1 = testDir.ensure("dir1")
         val dir2 = testDir.ensure("dir2")
@@ -37,7 +37,7 @@ class DiffTest {
     }
 
     @Test
-    fun `2 contains a surplus empty directory`() {
+    fun second_contains_a_surplus_empty_directory() {
         val testDir = clearedTestPath()
         val dir1 = testDir.ensure("dir1")
         val dir2 = testDir.ensure("dir2")
@@ -53,7 +53,7 @@ class DiffTest {
 
 
     @Test
-    fun `same directory structure but different file content`() {
+    fun same_directory_structure_but_different_file_content() {
         val testDir = clearedTestPath()
         val dir1 = testDir.ensure("dir1")
         val dir2 = testDir.ensure("dir2")
@@ -72,7 +72,7 @@ class DiffTest {
     }
 
     @Test
-    fun `one directory has extra files and folders`() {
+    fun one_directory_has_extra_files_and_folders() {
         val testDir = clearedTestPath()
         val dir1 = testDir.ensure("dir1")
         val dir2 = testDir.ensure("dir2")
@@ -89,7 +89,7 @@ class DiffTest {
     }
 
     @Test
-    fun `files with same name but differ in directory and file`() {
+    fun files_with_same_name_but_differ_in_directory_and_file() {
         val testDir = clearedTestPath()
         val dir1 = testDir.ensure("dir1")
         val dir2 = testDir.ensure("dir2")

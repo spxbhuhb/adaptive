@@ -18,7 +18,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class RestartTest {
 
     @Test
-    fun `restart, direct origin stopped`() = runTest {
+    fun restart_direct_origin_stopped() = runTest {
         withContext(Dispatchers.Default) {
             val origin = autoCollectionOrigin(content_12)
 
@@ -35,7 +35,7 @@ class RestartTest {
     }
 
     @Test
-    fun `restart, service origin stopped, non-persistent`() = autoTest {
+    fun restart_service_origin_stopped_non_persistent() = autoTest {
         val origin = autoCollectionOrigin(content_12, serverWorker)
 
         val node = autoCollectionNode(clientWorker) { origin.connectInfo() }.ensureValue()
@@ -50,7 +50,7 @@ class RestartTest {
     }
 
     @Test
-    fun `restart, service origin stopped, persistent`() = autoTest {
+    fun restart_service_origin_stopped_persistent() = autoTest {
         val testPath = clearedTestPath()
 
         with(CollectionTestSetupService(this, testPath, content_12)) {

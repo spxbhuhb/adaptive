@@ -39,14 +39,10 @@ class CanvasCanvas(
         return AdaptiveAnonymous.switchAdapter(canvasAdapter, this, declarationIndex, 0, content).apply { create() }
     }
 
-    override fun genPatchInternal(): Boolean {
-        patchInstructions()
-
+    override fun auiPatchInternal() {
         instructions.firstOrNullIfInstance<Trace>()?.let {
             canvasAdapter.trace = it.patterns
         }
-
-        return true
     }
 
     override fun patchInternal() {

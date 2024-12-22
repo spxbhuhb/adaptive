@@ -47,23 +47,15 @@ class CopyStore<A : AdatClass>(
 
     override var latestValue: A? = makeCopy(initialValue, null, false)
 
-    @Deprecated("use update instead")
-    fun setProperty(path: List<String>, value: Any?) {
-        update(latestValue !!, path.toTypedArray(), value)
-    }
-
-    override fun update(original: A, newValue: A) {
-        makeCopy(newValue, null, true)
-        setDirtyBatch()
-    }
-
     override fun update(newValue: A) {
         makeCopy(newValue, null, true)
-        setDirtyBatch()
+    }
+    override fun update(original: A, newValue: A) {
+        makeCopy(newValue, null, true)
     }
 
     override fun update(instance: A, path: Array<String>, value: Any?) {
-        val current = requireNotNull(latestValue) { "missing latest value" }
+        val current = requireNotNull(latestValue) { "missing copyStore value" }
         makeCopy(current, AdatChange(path.toList(), value), patch = true)
     }
 

@@ -9,6 +9,7 @@ import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
+import `fun`.adaptive.ui.api.fit
 import `fun`.adaptive.utility.alsoIfInstance
 import `fun`.adaptive.utility.checkIfInstance
 
@@ -32,6 +33,9 @@ abstract class AbstractContainer<RT, CRT : RT>(
     override val receiver: CRT = adapter.makeContainerReceiver(this)
 
     override val uiAdapter = adapter
+
+    override val patchDescendants: Boolean
+        get() = true
 
     val layoutItems = mutableListOf<AbstractAuiFragment<RT>>() // Items to consider during layout.
 
@@ -60,7 +64,7 @@ abstract class AbstractContainer<RT, CRT : RT>(
 
         try {
             uiAdapter.actualBatchOwner = this.renderData.layoutFragment
-            super.unmount()
+            super.unmount() // calls removeActual
         } finally {
             uiAdapter.actualBatchOwner = null
         }
@@ -90,10 +94,7 @@ abstract class AbstractContainer<RT, CRT : RT>(
                 }
             }
 
-            if (isMounted) {
-                // FIXME layout with late additions may affect higher level layouts
-                computeLayout(renderData.finalWidth, renderData.finalHeight)
-            }
+            scheduleUpdate()
         }
     }
 
@@ -124,11 +125,11 @@ abstract class AbstractContainer<RT, CRT : RT>(
                 }
             }
 
-            if (isMounted) {// FIXME layout with late removals may affect higher level layouts
-                computeLayout(renderData.finalWidth, renderData.finalHeight)
-            }
+            scheduleUpdate()
         }
     }
+
+    override fun auiPatchInternal() = Unit
 
     fun placeStructural() {
         for (item in structuralItems) {
@@ -137,8 +138,4 @@ abstract class AbstractContainer<RT, CRT : RT>(
         }
     }
 
-    open fun layoutChange(fragment: AbstractAuiFragment<*>) {
-        // FIXME re-layout will probably work but it is really, really inefficient
-        renderData.layoutFragment?.layoutChange(this)
-    }
 }

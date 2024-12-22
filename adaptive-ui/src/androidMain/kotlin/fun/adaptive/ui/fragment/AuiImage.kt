@@ -15,6 +15,7 @@ import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
 import `fun`.adaptive.utility.checkIfInstance
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AdaptiveActual(aui)
@@ -29,21 +30,18 @@ class AuiImage(
     private val content: DrawableResource
         get() = state[0].checkIfInstance()
 
-    override fun genPatchInternal(): Boolean {
+    override fun auiPatchInternal() {
 
-        patchInstructions()
+        if ( ! haveToPatch(dirtyMask, 1)) return
 
-        if (haveToPatch(dirtyMask, 1)) {
-            // FIXME start image read in a different thread and during mount maybe?
+        CoroutineScope(Dispatchers.IO).launch {
+            val data = defaultResourceReader.read(content.path)
+            val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
             CoroutineScope(adapter.dispatcher).launch {
-                val data = defaultResourceReader.read(content.path)
-                val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
                 receiver.setScaleType(ImageView.ScaleType.CENTER_CROP)
                 receiver.setImageBitmap(bitmap)
             }
         }
-
-        return false
     }
 
 }

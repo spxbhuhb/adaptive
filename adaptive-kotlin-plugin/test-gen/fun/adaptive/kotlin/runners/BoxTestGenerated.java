@@ -82,23 +82,23 @@ public class BoxTestGenerated extends AbstractBoxTest {
         KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adat/companion"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
       }
 
-        @Test
-        @TestMetadata("withCompanion.kt")
-        public void testWithCompanion() {
-            runTest("testData/box/adat/companion/withCompanion.kt");
-        }
+      @Test
+      @TestMetadata("withCompanion.kt")
+      public void testWithCompanion() {
+        runTest("testData/box/adat/companion/withCompanion.kt");
+      }
 
-        @Test
-        @TestMetadata("withTypedCompanion.kt")
-        public void testWithTypedCompanion() {
-            runTest("testData/box/adat/companion/withTypedCompanion.kt");
-        }
+      @Test
+      @TestMetadata("withTypedCompanion.kt")
+      public void testWithTypedCompanion() {
+        runTest("testData/box/adat/companion/withTypedCompanion.kt");
+      }
 
-        @Test
-        @TestMetadata("withoutCompanion.kt")
-        public void testWithoutCompanion() {
-            runTest("testData/box/adat/companion/withoutCompanion.kt");
-        }
+      @Test
+      @TestMetadata("withoutCompanion.kt")
+      public void testWithoutCompanion() {
+        runTest("testData/box/adat/companion/withoutCompanion.kt");
+      }
     }
 
     @Nested
@@ -164,6 +164,22 @@ public class BoxTestGenerated extends AbstractBoxTest {
       @TestMetadata("basic.kt")
       public void testBasic() {
         runTest("testData/box/adat/exposed/basic.kt");
+      }
+    }
+
+    @Nested
+    @TestMetadata("testData/box/adat/functions")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Functions {
+      @Test
+      public void testAllFilesPresentInFunctions() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adat/functions"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+      }
+
+      @Test
+      @TestMetadata("equals.kt")
+      public void testEquals() {
+        runTest("testData/box/adat/functions/equals.kt");
       }
     }
 
@@ -564,6 +580,30 @@ public class BoxTestGenerated extends AbstractBoxTest {
       @TestMetadata("poll.kt")
       public void testPoll() {
         runTest("testData/box/foundation/producer/poll.kt");
+      }
+
+      @Test
+      @TestMetadata("postfix.kt")
+      public void testPostfix() {
+        runTest("testData/box/foundation/producer/postfix.kt");
+      }
+
+      @Test
+      @TestMetadata("postfixNullable1.kt")
+      public void testPostfixNullable1() {
+        runTest("testData/box/foundation/producer/postfixNullable1.kt");
+      }
+
+      @Test
+      @TestMetadata("postfixNullable2.kt")
+      public void testPostfixNullable2() {
+        runTest("testData/box/foundation/producer/postfixNullable2.kt");
+      }
+
+      @Test
+      @TestMetadata("postfixNullableWithAdatCompanion.kt")
+      public void testPostfixNullableWithAdatCompanion() {
+        runTest("testData/box/foundation/producer/postfixNullableWithAdatCompanion.kt");
       }
     }
 

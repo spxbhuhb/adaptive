@@ -95,7 +95,7 @@ open class AuiAdapter(
         )
     }
 
-    override fun applyRenderInstructions(fragment: AbstractAuiFragment<View>) {
+    override fun applyLayoutIndependent(fragment: AbstractAuiFragment<View>) {
 
         val renderData = AuiRenderData(this, fragment.previousRenderData, fragment.instructions)
         val view = fragment.receiver

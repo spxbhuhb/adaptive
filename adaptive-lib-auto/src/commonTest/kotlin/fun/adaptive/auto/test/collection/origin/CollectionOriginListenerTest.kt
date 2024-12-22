@@ -20,7 +20,7 @@ class CollectionOriginListenerTest {
     val content_12_23 = listOf(td12, td23)
 
     @Test
-    fun `add to empty`() {
+    fun add_to_empty() {
         val listener = TestListener()
         val instance = autoCollectionOrigin(content_empty, listener = listener)
 
@@ -32,7 +32,7 @@ class CollectionOriginListenerTest {
     }
 
     @Test
-    fun `add and remove`() {
+    fun add_and_remove() {
         val listener = TestListener()
         val instance = autoCollectionOrigin(content_empty, listener = listener)
 

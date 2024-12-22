@@ -11,6 +11,7 @@ import `fun`.adaptive.ui.fragment.layout.RawDropShadow
 import `fun`.adaptive.ui.instruction.decoration.BackgroundGradient
 import `fun`.adaptive.ui.instruction.decoration.Color
 
+@Suppress("EqualsOrHashCode")
 class DecorationRenderData(
     val adapter : AbstractAuiAdapter<*, *>
 ) {
@@ -23,4 +24,17 @@ class DecorationRenderData(
 
     var dropShadow: RawDropShadow? = null
 
+    override fun equals(other: Any?): Boolean {
+        if (other === this) return true
+        if (other == null) return false
+        if (other !is DecorationRenderData) return false
+
+        if (this.border != other.border) return false
+        if (this.cornerRadius != other.cornerRadius) return false
+        if (this.backgroundColor != other.backgroundColor) return false
+        if (this.backgroundGradient != other.backgroundGradient) return false
+        if (this.dropShadow != other.dropShadow) return false
+
+        return true
+    }
 }

@@ -40,9 +40,6 @@ val ThemeBackgrounds.cyan
 val ThemeBackgrounds.yellow
     get() = backgroundColor(0xffff00)
 
-val ThemeTextColors.white
-    get() = textColor(0xffffff)
-
 fun colors(active: Boolean = false, hover: Boolean = false) =
     when {
         active -> primaryStyles

@@ -21,7 +21,7 @@ class DirectWithOriginTest {
     val content_45_23 = listOf(td45, td23)
 
     @Test
-    fun `create empty`() {
+    fun create_empty() {
         val origin = autoCollectionOrigin(content_empty)
         val node = autoCollectionNode(origin)
 
@@ -31,7 +31,7 @@ class DirectWithOriginTest {
     }
 
     @Test
-    fun `create single`() = runTest {
+    fun create_single() = runTest {
         val origin = autoCollectionOrigin(content_12)
         val node = autoCollectionNode(origin)
 
@@ -41,7 +41,7 @@ class DirectWithOriginTest {
     }
 
     @Test
-    fun `create multi`() {
+    fun create_multi() {
         val origin = autoCollectionOrigin(content_12_23)
         val node = autoCollectionNode(origin)
 
@@ -51,7 +51,7 @@ class DirectWithOriginTest {
     }
 
     @Test
-    fun `add to empty origin`() {
+    fun add_to_empty_origin() {
         val origin = autoCollectionOrigin(content_empty)
         val node = autoCollectionNode(origin)
 
@@ -65,7 +65,7 @@ class DirectWithOriginTest {
     }
 
     @Test
-    fun `add to empty node`() {
+    fun add_to_empty_node() {
         val origin = autoCollectionOrigin(content_empty)
         val node = autoCollectionNode(origin)
 
@@ -79,7 +79,7 @@ class DirectWithOriginTest {
     }
 
     @Test
-    fun `update from origin`() {
+    fun update_from_origin() {
         val origin = autoCollectionOrigin(content_12_23)
         val node = autoCollectionNode(origin)
 
@@ -93,7 +93,7 @@ class DirectWithOriginTest {
     }
 
     @Test
-    fun `update from node`() {
+    fun update_from_node() {
         val origin = autoCollectionOrigin(content_12_23)
         val node = autoCollectionNode(origin)
 
@@ -107,7 +107,7 @@ class DirectWithOriginTest {
     }
 
     @Test
-    fun `remove from origin`() {
+    fun remove_from_origin() {
         val origin = autoCollectionOrigin(content_12_23)
         val node = autoCollectionNode(origin)
 
@@ -121,7 +121,7 @@ class DirectWithOriginTest {
     }
 
     @Test
-    fun `remove from node`() {
+    fun remove_from_node() {
         val origin = autoCollectionOrigin(content_12_23)
         val node = autoCollectionNode(origin)
 

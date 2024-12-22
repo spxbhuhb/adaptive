@@ -24,13 +24,13 @@ fun treeRecipe() {
                 tree(staticTree)
             }
         }
-//        column {
-//            text("random")
-//            column {
-//                borders.outline
-//                tree(generate())
-//            }
-//        }
+        column {
+            text("random")
+            column {
+                borders.outline
+                tree(generate())
+            }
+        }
     }
 }
 

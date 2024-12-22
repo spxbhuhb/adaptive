@@ -5,71 +5,19 @@ import `fun`.adaptive.foundation.instruction.DetachHandler
 import `fun`.adaptive.foundation.instruction.DetachName
 import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.resource.FileResource
-import `fun`.adaptive.ui.instruction.layout.GridColSpan
-import `fun`.adaptive.ui.instruction.layout.GridColTemplate
 import `fun`.adaptive.ui.instruction.DPixel
-import `fun`.adaptive.ui.instruction.text.FontName
-import `fun`.adaptive.ui.instruction.text.FontSize
-import `fun`.adaptive.ui.instruction.text.FontWeight
-import `fun`.adaptive.ui.instruction.text.LetterSpacing
-import `fun`.adaptive.ui.instruction.text.LineHeight
-import `fun`.adaptive.ui.instruction.text.NoSelect
 import `fun`.adaptive.ui.instruction.SPixel
-import `fun`.adaptive.ui.instruction.text.TextColor
-import `fun`.adaptive.ui.instruction.text.TextSmallCaps
-import `fun`.adaptive.ui.instruction.text.TextUnderline
-import `fun`.adaptive.ui.instruction.text.TextWrap
+import `fun`.adaptive.ui.instruction.decoration.*
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.event.*
+import `fun`.adaptive.ui.instruction.input.InputPlaceholder
+import `fun`.adaptive.ui.instruction.input.TabIndex
+import `fun`.adaptive.ui.instruction.layout.*
 import `fun`.adaptive.ui.instruction.navigation.ExternalLink
 import `fun`.adaptive.ui.instruction.navigation.HistorySize
 import `fun`.adaptive.ui.instruction.navigation.NavClick
 import `fun`.adaptive.ui.instruction.navigation.Route
-import `fun`.adaptive.ui.instruction.layout.GridCol
-import `fun`.adaptive.ui.instruction.layout.GridPos
-import `fun`.adaptive.ui.instruction.layout.GridRow
-import `fun`.adaptive.ui.instruction.layout.GridRepeat
-import `fun`.adaptive.ui.instruction.layout.GridRowSpan
-import `fun`.adaptive.ui.instruction.layout.GridRowTemplate
-import `fun`.adaptive.ui.instruction.layout.GridTrack
-import `fun`.adaptive.ui.instruction.layout.FlowItemLimit
-import `fun`.adaptive.ui.instruction.decoration.BackgroundColor
-import `fun`.adaptive.ui.instruction.decoration.BackgroundGradient
-import `fun`.adaptive.ui.instruction.decoration.Border
-import `fun`.adaptive.ui.instruction.decoration.Color
-import `fun`.adaptive.ui.instruction.decoration.CornerRadius
-import `fun`.adaptive.ui.instruction.decoration.DropShadow
-import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.event.NoPointerEvents
-import `fun`.adaptive.ui.instruction.event.OnClick
-import `fun`.adaptive.ui.instruction.event.OnClose
-import `fun`.adaptive.ui.instruction.event.OnDoubleClick
-import `fun`.adaptive.ui.instruction.event.OnMove
-import `fun`.adaptive.ui.instruction.event.OnPrimaryDown
-import `fun`.adaptive.ui.instruction.event.OnPrimaryUp
-import `fun`.adaptive.ui.instruction.event.OnSecondaryDown
-import `fun`.adaptive.ui.instruction.event.OnSecondaryUp
-import `fun`.adaptive.ui.instruction.event.UIEvent
-import `fun`.adaptive.ui.instruction.input.InputPlaceholder
-import `fun`.adaptive.ui.instruction.input.TabIndex
-import `fun`.adaptive.ui.instruction.layout.AlignItems
-import `fun`.adaptive.ui.instruction.layout.AlignSelf
-import `fun`.adaptive.ui.instruction.layout.DistributeSpace
-import `fun`.adaptive.ui.instruction.layout.Fixed
-import `fun`.adaptive.ui.instruction.layout.Frame
-import `fun`.adaptive.ui.instruction.layout.Gap
-import `fun`.adaptive.ui.instruction.layout.Height
-import `fun`.adaptive.ui.instruction.layout.Margin
-import `fun`.adaptive.ui.instruction.layout.MaxHeight
-import `fun`.adaptive.ui.instruction.layout.MaxSize
-import `fun`.adaptive.ui.instruction.layout.MaxWidth
-import `fun`.adaptive.ui.instruction.layout.Overflow
-import `fun`.adaptive.ui.instruction.layout.Padding
-import `fun`.adaptive.ui.instruction.layout.Position
-import `fun`.adaptive.ui.instruction.layout.Scroll
-import `fun`.adaptive.ui.instruction.layout.Size
-import `fun`.adaptive.ui.instruction.layout.SpaceDistribution
-import `fun`.adaptive.ui.instruction.layout.Width
-import `fun`.adaptive.ui.instruction.layout.ZIndex
-import `fun`.adaptive.ui.instruction.text.ToText
+import `fun`.adaptive.ui.instruction.text.*
 
 // ------------------------------------------------------------------------------------
 // Decoration
@@ -140,6 +88,17 @@ fun height(calc: () -> DPixel) = Height(calc())
 
 fun width(width: DPixel) = Width(width)
 fun width(calc: () -> DPixel) = Width(calc())
+
+object fit {
+    object container : Fit(FitStrategy.Container, FitStrategy.Container) {
+        val vertical = Fit(verticalStrategy = FitStrategy.Container, horizontalStrategy = null)
+        val horizontal = Fit(verticalStrategy = null, horizontalStrategy = FitStrategy.Container)
+    }
+    object content : Fit(FitStrategy.Content, FitStrategy.Content) {
+        val vertical = Fit(verticalStrategy = FitStrategy.Content, horizontalStrategy = null)
+        val horizontal = Fit(verticalStrategy = null, horizontalStrategy = FitStrategy.Content)
+    }
+}
 
 val maxSize = MaxSize()
 val maxWidth = MaxWidth()

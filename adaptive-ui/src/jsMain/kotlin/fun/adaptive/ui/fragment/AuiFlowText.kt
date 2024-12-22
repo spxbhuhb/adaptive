@@ -25,19 +25,15 @@ open class AuiFlowText(
     private val content: String
         get() = state[0]?.toString() ?: ""
 
-    override fun genPatchInternal(): Boolean {
+    override fun auiPatchInternal() {
 
-        patchInstructions()
+        if (!haveToPatch(dirtyMask, 1)) return
 
-        if (haveToPatch(dirtyMask, 1)) {
-            val content = this.content
+        val content = this.content
 
-            if (receiver.textContent != content) {
-                receiver.textContent = content
-            }
+        if (receiver.textContent != content) {
+            receiver.textContent = content
         }
-
-        return false
     }
 
 }

@@ -1,5 +1,14 @@
 # Navigation
 
+> [!IMPORTANT]
+>
+> This tutorial is somewhat **OBSOLETED**. It should still work, but I've found that using
+> slots for navigation raise a few hard to solve issues. Now `lib-ui` offers `NavState` 
+> with `auto` support, the cookbook uses it and it works quite OK.
+> 
+> I'm keeping the slot concept because it might be useful later, but I'm not 100% sure about that.
+>
+
 > [!NOTE]
 >
 > This tutorial uses browser for examples but - when stated otherwise - all examples apply to all

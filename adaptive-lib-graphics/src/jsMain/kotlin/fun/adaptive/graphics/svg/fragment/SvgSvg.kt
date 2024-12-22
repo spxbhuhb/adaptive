@@ -29,6 +29,9 @@ class SvgSvg(
 
     val canvasAdapter = CanvasAdapter(adapter, canvas, this)
 
+    override val patchDescendants: Boolean
+        get() = true
+    
     val resource: DrawableResource
         get() = state[0].checkIfInstance()
 
@@ -49,10 +52,7 @@ class SvgSvg(
         }
     }
 
-    override fun genPatchInternal(): Boolean {
-        patchInstructions()
-        return true
-    }
+    override fun auiPatchInternal() = Unit
 
     override fun placeLayout(top: Double, left: Double) {
         canvas.setSize(renderData.finalWidth, renderData.finalHeight)

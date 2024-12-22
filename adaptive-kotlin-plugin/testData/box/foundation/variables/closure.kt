@@ -35,4 +35,6 @@ fun box() : String {
         TraceEvent("AdaptiveT1", 3, "after-Mount", ""),
         TraceEvent("<root>", 2, "after-Mount", "")
     ))
+
+    return "OK"
 }

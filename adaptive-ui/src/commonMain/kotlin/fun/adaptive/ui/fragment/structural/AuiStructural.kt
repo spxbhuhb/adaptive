@@ -78,7 +78,4 @@ open class AuiStructural<RT, CRT : RT>(
         renderData.finalHeight = proposedHeight
     }
 
-    override fun layoutChange(fragment: AbstractAuiFragment<*>) {
-        // structural fragments do not perform layout calculations
-    }
 }

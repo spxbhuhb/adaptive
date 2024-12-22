@@ -62,24 +62,34 @@ abstract class AbstractBox<RT, CRT : RT>(
         placeStructural()
     }
 
-    override fun layoutChange(fragment: AbstractAuiFragment<*>) {
+    override fun updateLayout(updateId: Long, item: AbstractAuiFragment<*>?) {
+        if (item == null) {
+            super.updateLayout(updateId, item)
+        } else {
+            updateItemLayout(updateId, item)
+        }
+    }
+
+    private fun updateItemLayout(updateId: Long, item: AbstractAuiFragment<*>) {
         val data = this.renderData
         val container = data.container
 
         val innerWidth = data.innerWidth !!
         val innerHeight = data.innerHeight !!
 
-        fragment.computeLayout(innerWidth, innerHeight)
+        item.computeLayout(innerWidth, innerHeight)
 
         val horizontalAlignment = container?.horizontalAlignment
         val verticalAlignment = container?.verticalAlignment
 
-        val itemLayout = fragment.renderData.layout
+        val itemLayout = item.renderData.layout
 
-        val innerTop = itemLayout?.instructedTop ?: alignOnAxis(fragment.verticalAlignment, verticalAlignment, innerHeight, fragment.renderData.finalHeight)
-        val innerLeft = itemLayout?.instructedLeft ?: alignOnAxis(fragment.horizontalAlignment, horizontalAlignment, innerWidth, fragment.renderData.finalWidth)
+        val innerTop = itemLayout?.instructedTop ?: alignOnAxis(item.verticalAlignment, verticalAlignment, innerHeight, item.renderData.finalHeight)
+        val innerLeft = itemLayout?.instructedLeft ?: alignOnAxis(item.horizontalAlignment, horizontalAlignment, innerWidth, item.renderData.finalWidth)
 
-        fragment.placeLayout(innerTop + data.surroundingTop, innerLeft + data.surroundingStart)
+        item.placeLayout(innerTop + data.surroundingTop, innerLeft + data.surroundingStart)
+
+        item.updateBatchId = updateId
     }
 
 }

@@ -16,4 +16,5 @@ class TestReceiver(
     var testWidth = 0.0
     var testHeight = 0.0
 
+    var textContent = ""
 }

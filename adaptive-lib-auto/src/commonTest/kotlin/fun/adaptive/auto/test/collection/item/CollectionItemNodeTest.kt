@@ -16,7 +16,7 @@ class CollectionItemNodeTest {
     val content_12 = listOf(td12)
 
     @Test
-    fun `connect to a specific item`() = autoTest {
+    fun connect_to_a_specific_item() = autoTest {
 
         val origin = autoCollectionOrigin(content_12, worker = serverWorker)
 

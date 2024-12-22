@@ -9,5 +9,6 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 object Grid1 : AdaptiveInstruction
 object F1 : AdaptiveInstruction
 object F2 : AdaptiveInstruction
+object F3 : AdaptiveInstruction
 object C1 : AdaptiveInstruction
 

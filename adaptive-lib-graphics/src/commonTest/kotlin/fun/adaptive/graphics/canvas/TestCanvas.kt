@@ -47,7 +47,7 @@ class TestCanvas : ActualCanvas {
     }
 
     override fun line(x1: Double, y1: Double, x2: Double, y2: Double) {
-        TODO("Not yet implemented")
+
     }
 
     override fun transform(t: SvgTransform) {
@@ -55,15 +55,15 @@ class TestCanvas : ActualCanvas {
     }
 
     override fun setFont(font: String) {
-        TODO("Not yet implemented")
+
     }
 
     override fun setStroke(color: Color) {
-        TODO("Not yet implemented")
+
     }
 
     override fun setFill(color: Color) {
-        TODO("Not yet implemented")
+
     }
 
     override fun clear() {

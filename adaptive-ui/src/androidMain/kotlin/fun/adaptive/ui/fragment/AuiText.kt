@@ -23,25 +23,33 @@ class AuiText(
     private val content: String
         get() = state[0]?.toString() ?: ""
 
-    override fun genPatchInternal(): Boolean {
+    override fun auiPatchInternal() {
 
-        patchInstructions()
-
-        if (haveToPatch(dirtyMask, 1)) {
-            if (receiver.text != content) {
-                receiver.text = content
-
-                val widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-                val heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-
-                receiver.measure(widthSpec, heightSpec)
-
-                renderData.innerWidth = receiver.measuredWidth.toDouble()
-                renderData.innerHeight = receiver.measuredHeight.toDouble()
-            }
+        if (renderData.text == null) {
+            renderData.text = uiAdapter.defaultTextRenderData
         }
 
-        return false
+        val content = this.content
+        val contentChange = (content != receiver.text)
+        val styleChange = (renderData.text != previousRenderData.text)
+
+        if (! haveToPatch(dirtyMask, 1) && ! contentChange && ! styleChange) {
+            return
+        }
+
+        if (contentChange) {
+            receiver.text = content
+        }
+
+        val widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        val heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+
+        receiver.measure(widthSpec, heightSpec)
+
+        renderData.innerWidth = receiver.measuredWidth.toDouble()
+        renderData.innerHeight = receiver.measuredHeight.toDouble()
+
+        return
     }
 
 }
