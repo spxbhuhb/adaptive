@@ -1,8 +1,8 @@
 package `fun`.adaptive.resource
 
-import `fun`.adaptive.resource.model.FontResource
-import `fun`.adaptive.resource.model.FontResourceSet
-import `fun`.adaptive.resource.model.Fonts
+import `fun`.adaptive.resource.font.FontResource
+import `fun`.adaptive.resource.font.FontResourceSet
+import `fun`.adaptive.resource.font.Fonts
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,7 +23,7 @@ class FontTest {
 
         val reader = TestResourceReader { expected.encodeToByteArray() }
 
-        val content = Fonts.testFont.read(environment, reader)
+        val content = Fonts.testFont.readAll(environment, reader)
 
         assertEquals(expected, content.decodeToString())
     }

@@ -1,8 +1,8 @@
 package `fun`.adaptive.resource
 
-import `fun`.adaptive.resource.model.ImageResource
-import `fun`.adaptive.resource.model.ImageResourceSet
-import `fun`.adaptive.resource.model.Images
+import `fun`.adaptive.resource.image.ImageResource
+import `fun`.adaptive.resource.image.ImageResourceSet
+import `fun`.adaptive.resource.image.Images
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,7 +23,7 @@ class ImageTest {
 
         val reader = TestResourceReader { expected.encodeToByteArray() }
 
-        val content = Images.testImage.read(environment, reader)
+        val content = Images.testImage.readAll(environment, reader)
 
         assertEquals(expected, content.decodeToString())
     }

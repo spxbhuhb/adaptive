@@ -1,6 +1,4 @@
-package `fun`.adaptive.resource.model
-
-import `fun`.adaptive.resource.*
+package `fun`.adaptive.resource
 
 open class ResourceFileSet<T : ResourceFile>(
     val name: String,
@@ -11,7 +9,7 @@ open class ResourceFileSet<T : ResourceFile>(
     var lastEnvironment: ResourceEnvironment? = null
     var lastResult: T? = null
 
-    suspend fun read(
+    suspend fun readAll(
         environment: ResourceEnvironment = defaultResourceEnvironment,
         resourceReader: ResourceReader = defaultResourceReader
     ): ByteArray {

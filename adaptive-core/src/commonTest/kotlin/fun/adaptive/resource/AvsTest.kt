@@ -1,5 +1,7 @@
-package `fun`.adaptive.resource.avs
+package `fun`.adaptive.resource
 
+import `fun`.adaptive.resource.avs.AvsReader
+import `fun`.adaptive.resource.avs.AvsWriter
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals

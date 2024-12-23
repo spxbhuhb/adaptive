@@ -5,21 +5,21 @@ Resources are files coupled with the application code.
 Resource files can be sorted into two main groups:
 
 * unstructured
-  * images (JPG, PNG etc.)
-  * vector graphics (SVG)
-  * fonts
-  * generic file
+    * images (JPG, PNG etc.)
+    * vector graphics (SVG)
+    * fonts
+    * generic file
 * structured
-  * text
-    * simple strings such as labels
-    * templates for rendering strings
-    * rich text strings (HTML, Markdown)
-  * repositories
-    * fragment references
-    * Adat class references
-    * WireFormat references
-    * virtual fragments
-    * virtual Adat classes
+    * text
+        * simple strings such as labels
+        * templates for rendering strings
+        * rich text strings (HTML, Markdown)
+    * repositories
+        * fragment references
+        * Adat class references
+        * WireFormat references
+        * virtual fragments
+        * virtual Adat classes
 
 The unstructured group is simple to handle as the resource is just a byte array to be passed to whatever
 function can process it.
@@ -27,15 +27,6 @@ function can process it.
 The structured group is much more complex. Each kind has its own structure, pre- and post-processing.
 
 ## Resource access
-
-If not instructed otherwise, all resource accessors are extension functions of the global objects defined in 
-`fun.adaptive.resouce.model`:
-
-* Files
-* Fonts
-* Graphics
-* Images
-* Text
 
 The resource is generally passed to a function as below. The `Files.test` in this case references the
 generic file resource called `test`.
@@ -45,13 +36,22 @@ the variations of `test` by qualifiers.
 
 ```kotlin
 fun someFun() {
-    printName(Files.test)
+    printFile(Files.test)
 }
 
-fun printName(file : FileResource) {
-    println(file.name)
+fun printSize(file : FileResource) {
+    println(file.readAll().decodeToString())
 }
 ```
+
+If not instructed otherwise, all resource accessors are extension functions of the global objects defined in
+`fun.adaptive.resouce.model`:
+
+* Files
+* Fonts
+* Graphics
+* Images
+* Strings
 
 ## Unstructured resources
 
@@ -65,9 +65,78 @@ suspend fun someFun(file : FileResource) {
 
 ## Structured resources
 
-## AVS files
+* Each structured resource file is compiled into an [AVS](avs.md) file.
+* For each AVS file set a `*StoreResourceSet` is created.
+* The `*StoreResourceSet` class handles the type-specific processing of resource values.
 
-Each structured resource source file is compiled into an [AVS](avs.md).
+An example for strings:
+
+```kotlin
+private val commonStrings =
+    StringStoreResourceSet(
+        name = "common",
+        FileResource("strings/common-cs-CZ.avs", setOf(LanguageQualifier("cs"), RegionQualifier("CZ"))),
+        FileResource("strings/common-hu-HU.avs", setOf(LanguageQualifier("hu"), RegionQualifier("HU")))
+    )
+    
+val Strings.helloWorld
+    get() = commonStrings.get(12) // 12 is the index of the string in the AVS
+```
+
+
+### Implications
+
+The implementation structure above have a few implications.
+
+#### Initial load
+
+When structured resources used in non-suspending context, we cannot use `ResourceFileSet.readAll` as it is
+a suspending function.
+
+Therefore, automatic loading in non-suspending context is not possible, for example using string resources in
+UI code cannot wait until strings are loaded.
+
+This implies that resources used in non-suspending context must be loaded during application startup. To achieve
+this the resource type specific class `*StoreResourceSet` should provide a suspending `load` function.
+
+```kotlin
+suspend fun main() {
+    commonStrings.load()
+}
+```
+
+> [!NOTE]
+> 
+> The example above uses the default environment and the default reader. The actual implementation provided
+> parameters to change these.
+> 
+
+#### Index
+
+Using AVS for structured resources means that the resource access relies heavily on the index.
+
+The index **MUST** be the same in all qualified resource files, otherwise the all hell breaks loose.
+
+To ensure this we have to generate a compilation error if there is a missing value in any of the
+qualified files.
+
+If there is a need for values that are not replicated there is the possibility to create another
+resource set with different qualifiers or no qualifiers at all.
+
+For example:
+
+```kotlin
+strings/common-cs-CZ.avs
+strings/common-hu-HU.avs
+strings/unqualified.avs
+```
+
+> [!NOTE]
+> 
+> I've been thinking about using an inline get for the accessor, but it might be bad idea because of
+> the direct index. If I inline the call ,multi-module setups will have a hidden dependency because
+> of the index. This might or might not be a problem, I should check it in detail before using inline.
+> 
 
 ## Data size
 

@@ -1,11 +1,8 @@
 package `fun`.adaptive.resource
 
-import `fun`.adaptive.resource.model.Graphics
-import `fun`.adaptive.resource.model.GraphicsResource
-import `fun`.adaptive.resource.model.GraphicsResourceSet
-import `fun`.adaptive.resource.model.ImageResource
-import `fun`.adaptive.resource.model.ImageResourceSet
-import `fun`.adaptive.resource.model.Images
+import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.resource.graphics.GraphicsResource
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -26,7 +23,7 @@ class GraphicsTest {
 
         val reader = TestResourceReader { expected.encodeToByteArray() }
 
-        val content = Graphics.testGraphics.read(environment, reader)
+        val content = Graphics.testGraphics.readAll(environment, reader)
 
         assertEquals(expected, content.decodeToString())
     }

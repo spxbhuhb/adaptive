@@ -1,8 +1,9 @@
-package `fun`.adaptive.resource.model
+package `fun`.adaptive.resource.image
 
 import `fun`.adaptive.resource.Qualifier
+import `fun`.adaptive.resource.ResourceFile
 
-class FontResource(
+class ImageResource(
     path: String,
     qualifiers: Set<Qualifier>
 ) : ResourceFile(

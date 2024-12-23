@@ -51,4 +51,9 @@ class AvsReader(binary: ByteArray) : Collection<ByteArray>, Iterable<ByteArray> 
         override fun next(): ByteArray =
             get(index++)
     }
+
+    companion object {
+        val EMPTY = AvsReader(AvsWriter().pack())
+    }
+
 }

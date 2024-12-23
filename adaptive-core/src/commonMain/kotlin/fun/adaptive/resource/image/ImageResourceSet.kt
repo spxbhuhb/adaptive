@@ -1,4 +1,7 @@
-package `fun`.adaptive.resource.model
+package `fun`.adaptive.resource.image
+
+import `fun`.adaptive.resource.ResourceFileSet
+import `fun`.adaptive.resource.ResourceFileType
 
 class ImageResourceSet(
     name: String,

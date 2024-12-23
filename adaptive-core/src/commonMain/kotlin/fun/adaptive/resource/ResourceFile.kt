@@ -1,6 +1,4 @@
-package `fun`.adaptive.resource.model
-
-import `fun`.adaptive.resource.Qualifier
+package `fun`.adaptive.resource
 
 open class ResourceFile(
     val path: String,

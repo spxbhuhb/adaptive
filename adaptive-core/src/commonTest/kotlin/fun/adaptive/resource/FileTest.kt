@@ -1,8 +1,8 @@
 package `fun`.adaptive.resource
 
-import `fun`.adaptive.resource.model.FileResource
-import `fun`.adaptive.resource.model.FileResourceSet
-import `fun`.adaptive.resource.model.Files
+import `fun`.adaptive.resource.file.FileResource
+import `fun`.adaptive.resource.file.FileResourceSet
+import `fun`.adaptive.resource.file.Files
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -23,7 +23,7 @@ class FileTest {
 
         val reader = TestResourceReader { expected.encodeToByteArray() }
 
-        val content = Files.testFile.read(environment, reader)
+        val content = Files.testFile.readAll(environment, reader)
 
         assertEquals(expected, content.decodeToString())
     }

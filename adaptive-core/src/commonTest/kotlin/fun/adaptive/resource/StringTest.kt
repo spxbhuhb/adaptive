@@ -1,9 +1,11 @@
 package `fun`.adaptive.resource
 
-import `fun`.adaptive.resource.model.FileResource
-import `fun`.adaptive.resource.model.FileResourceSet
-import `fun`.adaptive.resource.model.Files
-import `fun`.adaptive.resource.model.Strings
+import `fun`.adaptive.resource.avs.AvsWriter
+import `fun`.adaptive.resource.file.FileResource
+import `fun`.adaptive.resource.file.FileResourceSet
+import `fun`.adaptive.resource.file.Files
+import `fun`.adaptive.resource.string.StringStoreResourceSet
+import `fun`.adaptive.resource.string.Strings
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -13,8 +15,6 @@ class StringTest {
     @Test
     fun getFileResource() = runTest {
 
-        val expected = "Hello World!"
-
         val environment = ResourceEnvironment(
             LanguageQualifier("hu"),
             RegionQualifier("HU"),
@@ -22,28 +22,33 @@ class StringTest {
             DensityQualifier.HDPI
         )
 
-        val reader = TestResourceReader { expected.encodeToByteArray() }
+        val v1 = "123"
+        val v2 = "456"
 
-        val content = Files.testFile.read(environment, reader)
+        val writer = AvsWriter()
+        writer += v1.encodeToByteArray()
+        writer += v2.encodeToByteArray()
+        val binary = writer.pack()
 
-        assertEquals(expected, content.decodeToString())
+        val reader = TestResourceReader { binary }
+
+        commonStrings.load(environment, reader)
+
+        assertEquals(v1, Strings.v1)
+        assertEquals(v2, Strings.v2)
     }
 
 }
 
-val Strings.testString: String
-    get() = CommonMainStrings0.testString
-
-private object CommonMainStrings0 {
-    var testString = ""
-
-    fun load(environment: ResourceEnvironment) {
-        testString = "Hello World!"
-    }
-}
-
-private fun init_testFile() =
-    FileResourceSet(
-        name = "testFile",
-        FileResource("adaptiveResources/test.txt", emptySet())
+private val commonStrings =
+    StringStoreResourceSet(
+        name = "common",
+        FileResource("strings/common-cs-CZ.avs", setOf(LanguageQualifier("cs"), RegionQualifier("CZ"))),
+        FileResource("strings/common-hu-HU.avs", setOf(LanguageQualifier("hu"), RegionQualifier("HU")))
     )
+
+val Strings.v1
+    get() = commonStrings.get(0)
+
+val Strings.v2
+    get() = commonStrings.get(1)
