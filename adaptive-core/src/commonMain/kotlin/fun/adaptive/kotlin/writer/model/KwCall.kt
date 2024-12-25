@@ -4,11 +4,17 @@ import `fun`.adaptive.kotlin.writer.KotlinWriter
 
 class KwCall(
     val symbol: KwSymbol
-) : KwElement, KwExpression {
+) : KwElement, KwExpression, KwExpressionScope {
 
+    var dispatchReceiver : KwExpression? = null
     val valueArguments = mutableListOf<KwValueArgument>()
 
     override fun toKotlin(writer: KotlinWriter): KotlinWriter {
+
+        dispatchReceiver?.let {
+            writer.add(it)
+            writer.add(".")
+        }
 
         if (valueArguments.isEmpty()) {
             writer

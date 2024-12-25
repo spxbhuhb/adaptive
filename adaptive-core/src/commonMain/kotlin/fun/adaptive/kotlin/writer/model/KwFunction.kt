@@ -19,6 +19,9 @@ class KwFunction(
     val isPropertyDelegation
         get() = name.startsWith("<delegate-")
 
+    val isInitializer
+        get() = name.startsWith("<init-")
+
     var valueParameters = mutableListOf<KwElement>() // TODO this should be a list of KwValueParameter
 
     var body: KwBody? = null
@@ -29,6 +32,7 @@ class KwFunction(
             isPropertyAccessor -> optimizedBody(writer)
             isPropertyDelegation -> optimizedBody(writer)
             isAnonymous -> optimizedBody(writer)
+            isInitializer -> optimizedBody(writer)
             else -> named(writer)
         }
 

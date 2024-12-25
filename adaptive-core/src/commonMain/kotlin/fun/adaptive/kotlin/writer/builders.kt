@@ -76,12 +76,17 @@ fun kwLambda(body: KwBody.() -> Unit): KwFunction {
     return kwFunction
 }
 
-fun KwProperty.kwGetter(builder: KwBody.() -> KwExpression): KwFunction {
+fun KwProperty.kwInitializer(builder: KwStatementContainer.() -> KwExpression): KwFunction {
+    val kwFunction = KwFunction("<init-$name>")
+    initializer = kwFunction
+    kwFunction.kwBlockBody { builder() }
+    return kwFunction
+}
+
+fun KwProperty.kwGetter(builder: KwStatementContainer.() -> KwExpression): KwFunction {
     val kwFunction = KwFunction("<get-$name>")
     getter = kwFunction
-    kwFunction.kwBlockBody {
-        statements += builder()
-    }
+    kwFunction.kwBlockBody { builder() }
     return kwFunction
 }
 
@@ -92,7 +97,7 @@ fun KwFunction.kwBlockBody(builder: KwBlockBody.() -> Unit): KwBlockBody {
     return kwBlockBody
 }
 
-fun KwFunction.kwExpressionBody(builder: KwBody.() -> KwExpression): KwExpressionBody {
+fun KwFunction.kwExpressionBody(builder: KwStatementContainer.() -> KwExpression): KwExpressionBody {
     val kwExpressionBody = KwExpressionBody()
     kwExpressionBody.statements += kwExpressionBody.builder()
     body = kwExpressionBody
@@ -101,16 +106,22 @@ fun KwFunction.kwExpressionBody(builder: KwBody.() -> KwExpression): KwExpressio
 
 fun kwSymbol(name: String) = KwSymbol(name)
 
-fun KwStatementContainer.kwReturn(builder: () -> KwExpression): KwReturn {
+fun KwStatementContainer.kwReturn(builder: KwStatementContainer.() -> KwExpression): KwReturn {
     val kwReturn = KwReturn(builder())
     statements += kwReturn
     return kwReturn
 }
 
-fun kwGetValue(name: String, expression: () -> KwExpression): KwGetValue {
-    return KwGetValue(name, expression())
+fun KwStatementContainer.kwGetValue(name: String, receiver: (() -> KwExpression)? = null): KwGetValue {
+    val kwGetValue = KwGetValue(name, receiver?.invoke())
+    statements += kwGetValue
+    return kwGetValue
 }
 
+fun KwExpressionScope.kwGetValue(name: String, receiver: (() -> KwExpression)? = null): KwGetValue {
+    val kwGetValue = KwGetValue(name, receiver?.invoke())
+    return kwGetValue
+}
 fun kwGetObject(name: String): KwGetObject {
     return KwGetObject(name)
 }
@@ -122,13 +133,13 @@ fun KwStatementContainer.kwCall(symbol: KwSymbol, block: KwCall.() -> Unit = { }
     return kwCall
 }
 
-fun KwCall.kwCall(symbol: KwSymbol, block: KwCall.() -> Unit = { }): KwCall {
+fun KwExpressionScope.kwCall(symbol: KwSymbol, block: KwCall.() -> Unit = { }): KwCall {
     val kwCall = KwCall(symbol)
     kwCall.block()
     return kwCall
 }
 
-fun KwCall.kwValueArgument(name: String? = null, value: () -> KwExpression): KwValueArgument {
+fun KwCall.kwValueArgument(name: String? = null, value: KwExpressionScope.() -> KwExpression): KwValueArgument {
     val kwValueArgument = KwValueArgument(name, value())
     valueArguments += kwValueArgument
     return kwValueArgument
@@ -136,6 +147,11 @@ fun KwCall.kwValueArgument(name: String? = null, value: () -> KwExpression): KwV
 
 fun kwConst(value: String): KwConst {
     val kwConst = KwConst(KwConstKind.String, value)
+    return kwConst
+}
+
+fun kwConst(value: Int): KwConst {
+    val kwConst = KwConst(KwConstKind.Number, value.toString())
     return kwConst
 }
 

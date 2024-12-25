@@ -22,6 +22,11 @@ class KwProperty(
 
         if (isVal) writer += "val" else writer += "var"
 
+        if (receiver != null) {
+            writer.symbol(receiver!!)
+            writer.add(".")
+        }
+
         writer.name(name)
 
         type?.let { writer.add(":").symbol(it) }
@@ -30,7 +35,7 @@ class KwProperty(
 
         when (safeInitializer) {
             is KwDelegation -> writer.add("by").add(safeInitializer)
-            is KwExpression -> writer.add("=").add(safeInitializer)
+            is KwExpression -> writer.add(safeInitializer)
         }
 
         val safeGetter = getter
