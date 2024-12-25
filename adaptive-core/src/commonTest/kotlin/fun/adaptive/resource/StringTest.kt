@@ -40,7 +40,7 @@ class StringTest {
 
 }
 
-private val commonStrings =
+val commonStrings =
     StringStoreResourceSet(
         name = "common",
         FileResource("strings/common-cs-CZ.avs", setOf(LanguageQualifier("cs"), RegionQualifier("CZ"))),

@@ -122,6 +122,11 @@ fun KwExpressionScope.kwGetValue(name: String, receiver: (() -> KwExpression)? =
     val kwGetValue = KwGetValue(name, receiver?.invoke())
     return kwGetValue
 }
+
+fun kwGetObject(symbol: KwSymbol): KwGetObject {
+    return KwGetObject(symbol.name)
+}
+
 fun kwGetObject(name: String): KwGetObject {
     return KwGetObject(name)
 }

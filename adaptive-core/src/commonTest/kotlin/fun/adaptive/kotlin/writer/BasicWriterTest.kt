@@ -4,6 +4,7 @@ import `fun`.adaptive.kotlin.writer.model.KwSymbol
 import `fun`.adaptive.kotlin.writer.model.KwVisibility
 import `fun`.adaptive.resource.generation.KwResourceSymbols
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class BasicWriterTest {
 
@@ -11,10 +12,30 @@ class BasicWriterTest {
     fun basicFile() {
         val writer = kotlinWriter { resourcesGeneratedFile() }
         writer.render()
-        writer.modules.forEach { module ->
-            module.files.forEach { file -> println(file.renderedSource)}
-        }
+        assertEquals(fileSource, writer.modules.first().files.first().renderedSource)
     }
+
+    val fileSource = """
+        package `fun`.adaptive.resource
+        
+        import `fun`.adaptive.resource.file.Files
+        import `fun`.adaptive.resource.file.FileResource
+        import `fun`.adaptive.resource.file.FileResourceSet
+        
+        val Files.testFile : FileResourceSet
+            get() = CommonMainFiles0.testFile
+        
+        private object CommonMainFiles0 {
+        
+            val testFile : FileResourceSet by lazy { init_testFile() }
+        
+        }
+        
+        private fun init_testFile() =
+            FileResourceSet(name = "testFile", FileResource("adaptiveResources/test.txt", emptySet()))
+        
+        
+        """.trimIndent()
 
     fun KotlinWriter.resourcesGeneratedFile() {
         kwModule {
@@ -74,10 +95,27 @@ class BasicWriterTest {
     fun basicString() {
         val writer = kotlinWriter { resourcesGeneratedString() }
         writer.render()
-        writer.modules.forEach { module ->
-            module.files.forEach { file -> println(file.renderedSource)}
-        }
+        assertEquals(stringSource, writer.modules.first().files.first().renderedSource)
     }
+
+    val stringSource = """
+        package `fun`.adaptive.resource
+        
+        import `fun`.adaptive.resource.string.Strings
+        import `fun`.adaptive.resource.string.StringStoreResourceSet
+        import `fun`.adaptive.resource.file.FileResource
+        
+        val commonStrings =
+            StringStoreResourceSet(name = "common", FileResource("strings/common-cs-CZ.avs", emptySet()), FileResource("strings/common-hu-HU.avs", emptySet()))
+        
+        val Strings.v1
+            get() = commonStrings.get(0)
+        
+        val Strings.v2
+            get() = commonStrings.get(1)
+        
+        
+        """.trimIndent()
 
     fun KotlinWriter.resourcesGeneratedString() {
         kwModule {
