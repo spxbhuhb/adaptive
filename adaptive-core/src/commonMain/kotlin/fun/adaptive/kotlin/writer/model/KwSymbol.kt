@@ -1,5 +1,5 @@
 package `fun`.adaptive.kotlin.writer.model
 
-class KwSymbol(
+data class KwSymbol(
     val name : String
 )

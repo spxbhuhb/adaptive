@@ -16,27 +16,29 @@ class KotlinWriter {
 
     private var newLine = false
 
-    private lateinit var file : KwFile
+    private lateinit var file: KwFile
+
+    private val symbols = mutableSetOf<KwSymbol>()
 
     operator fun plusAssign(kwElement: KwElement) {
         addIndentOrSpace()
         out.append(kwElement.toKotlin(this))
     }
 
-    fun add(kwElement: KwElement) : KotlinWriter {
+    fun add(kwElement: KwElement): KotlinWriter {
         addIndentOrSpace()
         kwElement.toKotlin(this)
         return this
     }
 
-    operator fun plusAssign(s : String) {
+    operator fun plusAssign(s: String) {
         if (s != ".") {
             addIndentOrSpace()
         }
         out.append(s)
     }
 
-    fun add(s : String) : KotlinWriter {
+    fun add(s: String): KotlinWriter {
         if (s != ".") {
             addIndentOrSpace()
         }
@@ -44,18 +46,21 @@ class KotlinWriter {
         return this
     }
 
-    fun name(name : String) : KotlinWriter =
+    fun name(name: String): KotlinWriter =
         add(name)
 
-    operator fun plusAssign(enum : Enum<*>) {
+    operator fun plusAssign(enum: Enum<*>) {
         addIndentOrSpace()
         out.append(enum.name.lowercase())
     }
 
-    fun symbol(symbol : KwSymbol) : KotlinWriter {
+    fun symbol(symbol: KwSymbol): KotlinWriter {
         addIndentOrSpace()
 
-        val import = file.imports.find { it.name == symbol.name || it.alias == symbol.name }
+        symbols += symbol
+
+        val import = file.imports.find { it.symbol == symbol || it.alias == symbol.name } // FIXME I'm not sure matching symbols with names is correct
+
         if (import != null) {
             if (import.alias != null) {
                 out.append(import.alias)
@@ -65,65 +70,67 @@ class KotlinWriter {
         } else {
             out.append(symbol.name)
         }
+
         return this
     }
 
-    fun newLine() : KotlinWriter {
+    fun newLine(): KotlinWriter {
         out.appendLine()
         newLine = true
         return this
     }
 
-    fun openBlock()  : KotlinWriter{
+    fun openBlock(): KotlinWriter {
         addIndentOrSpace()
         out.append("{")
         return this
     }
 
-    fun closeBlock()  : KotlinWriter{
+    fun closeBlock(): KotlinWriter {
         addIndentOrSpace()
         out.append("}")
         return this
     }
 
-    fun noArgCall() : KotlinWriter {
+    fun noArgCall(): KotlinWriter {
         out.append("()")
         return this
     }
 
-    fun openParenthesis()  : KotlinWriter{
+    fun openParenthesis(): KotlinWriter {
         out.append("(")
         return this
     }
 
-    fun closeParenthesis()  : KotlinWriter{
+    fun closeParenthesis(): KotlinWriter {
+        addIndent()
         out.append(")")
         return this
     }
 
-    fun openString() : KotlinWriter {
+    fun openString(): KotlinWriter {
         out.append('"')
         return this
     }
 
-    fun escapedString(s : String) : KotlinWriter {
+    fun escapedString(s: String): KotlinWriter {
         out.append(s.replace("\"", "\\\""))
         return this
     }
 
-    fun closeString() : KotlinWriter {
+    fun closeString(): KotlinWriter {
         out.append('"')
         return this
     }
 
-    fun withIndent(block: KotlinWriter.() -> Unit)  : KotlinWriter{
+    fun withIndent(block: KotlinWriter.() -> Unit): KotlinWriter {
         indent += "    "
         block()
         indent = indent.removeSuffix("    ")
         return this
     }
 
-    fun lines(elements: Iterable<KwElement>) : KotlinWriter {
+    fun lines(elements: Iterable<KwElement>): KotlinWriter {
         elements.forEach {
             it.toKotlin(this)
             newLine()
@@ -131,7 +138,7 @@ class KotlinWriter {
         return this
     }
 
-    fun declarations(elements: Iterable<KwElement>) : KotlinWriter {
+    fun declarations(elements: Iterable<KwElement>): KotlinWriter {
         elements.forEach {
             it.toKotlin(this)
             newLine()
@@ -140,14 +147,22 @@ class KotlinWriter {
         return this
     }
 
-    fun join(elements: Iterable<KwElement>, separator: String = ", ") : KotlinWriter {
+    fun join(elements: Iterable<KwElement>, separator: String = ",", multiLine : Boolean = false): KotlinWriter {
         elements.forEachIndexed { index, element ->
             if (index > 0) {
                 out.append(separator)
+                if (multiLine) newLine()
             }
             element.toKotlin(this)
         }
         return this
+    }
+
+    private fun addIndent() {
+        if (newLine) {
+            out.append(indent)
+            newLine = false
+        }
     }
 
     private fun addIndentOrSpace() {
@@ -167,16 +182,25 @@ class KotlinWriter {
         }
     }
 
-
-    fun render() {
+    fun render(): KotlinWriter {
         modules.forEach {
             for (file in it.files) {
                 this.file = file
+
                 file.toKotlin(this)
-                file.renderedSource = out.toString()
+                val declarations = out.toString()
                 out.clear()
+
+                file.headerToKotlin(this, symbols)
+                val header = out.toString()
+                out.clear()
+                symbols.clear()
+
+                file.renderedSource = header + declarations.trimEnd()
             }
         }
+
+        return this
     }
 
     override fun toString(): String {

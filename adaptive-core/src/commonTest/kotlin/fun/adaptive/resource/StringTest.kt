@@ -2,8 +2,6 @@ package `fun`.adaptive.resource
 
 import `fun`.adaptive.resource.avs.AvsWriter
 import `fun`.adaptive.resource.file.FileResource
-import `fun`.adaptive.resource.file.FileResourceSet
-import `fun`.adaptive.resource.file.Files
 import `fun`.adaptive.resource.string.StringStoreResourceSet
 import `fun`.adaptive.resource.string.Strings
 import kotlinx.coroutines.test.runTest
@@ -13,7 +11,7 @@ import kotlin.test.assertEquals
 class StringTest {
 
     @Test
-    fun getFileResource() = runTest {
+    fun basic() = runTest {
 
         val environment = ResourceEnvironment(
             LanguageQualifier("hu"),

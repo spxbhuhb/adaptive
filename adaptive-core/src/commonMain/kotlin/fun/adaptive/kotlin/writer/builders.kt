@@ -15,30 +15,21 @@ fun KotlinWriter.kwModule(name: String = ANONYMOUS, block: KwModule.() -> Unit):
 }
 
 fun KwModule.kwFile(
-    name: String,
-    pkg: String = "",
+    fileName: String,
+    packageName: String = "",
     block: KwFile.() -> Unit
 ): KwFile {
-    val kwFile = KwFile(this, name, pkg)
+    val kwFile = KwFile(this, fileName, packageName)
     files += kwFile
     kwFile.block()
     return kwFile
 }
 
 fun KwFile.kwImport(
-    name: String,
+    symbol : KwSymbol,
     alias: String? = null
 ): KwImport {
-    val kwImport = KwImport(name, alias)
-    imports += kwImport
-    return kwImport
-}
-
-fun KwFile.kwImport(
-    type : KwSymbol,
-    alias: String? = null
-): KwImport {
-    val kwImport = KwImport(type.name, alias)
+    val kwImport = KwImport(symbol, alias)
     imports += kwImport
     return kwImport
 }
@@ -124,11 +115,11 @@ fun KwExpressionScope.kwGetValue(name: String, receiver: (() -> KwExpression)? =
 }
 
 fun kwGetObject(symbol: KwSymbol): KwGetObject {
-    return KwGetObject(symbol.name)
+    return KwGetObject(symbol)
 }
 
 fun kwGetObject(name: String): KwGetObject {
-    return KwGetObject(name)
+    return KwGetObject(KwSymbol(name))
 }
 
 fun KwStatementContainer.kwCall(symbol: KwSymbol, block: KwCall.() -> Unit = { }): KwCall {
@@ -155,7 +146,13 @@ fun kwConst(value: String): KwConst {
     return kwConst
 }
 
-fun kwConst(value: Int): KwConst {
+fun KwStatementContainer.kwConst(value: Int): KwConst {
+    val kwConst = KwConst(KwConstKind.Number, value.toString())
+    statements += kwConst
+    return kwConst
+}
+
+fun KwExpressionScope.kwConst(value: Int): KwConst {
     val kwConst = KwConst(KwConstKind.Number, value.toString())
     return kwConst
 }

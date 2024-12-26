@@ -6,6 +6,7 @@ class KwCall(
     val symbol: KwSymbol
 ) : KwElement, KwExpression, KwExpressionScope {
 
+    var openFormat = false
     var dispatchReceiver : KwExpression? = null
     val valueArguments = mutableListOf<KwValueArgument>()
 
@@ -27,28 +28,36 @@ class KwCall(
         val last = valueArguments.last()
         val lastValue = last.value
 
+        writer.symbol(symbol)
+
         if (last.name?.isEmpty() != false && lastValue is KwFunction && lastValue.isAnonymous) {
-            writer.symbol(symbol)
-
             if (valueArguments.size > 1) {
-                writer
-                    .openParenthesis()
-                    .join(valueArguments.dropLast(1))
-                    .closeParenthesis()
+                addArguments(writer, valueArguments.subList(0, valueArguments.size - 1))
             }
-
             writer.add(last.value)
-
-            return writer
+        } else {
+            addArguments(writer, valueArguments)
         }
 
-        writer
-            .symbol(symbol)
-            .openParenthesis()
-            .join(valueArguments)
-            .closeParenthesis()
-
         return writer
+    }
+
+    private fun addArguments(writer : KotlinWriter, arguments: List<KwValueArgument>) {
+        if (openFormat) {
+            writer
+                .openParenthesis()
+                .newLine()
+                .withIndent {
+                    join(arguments, multiLine = true)
+                }
+                .newLine()
+                .closeParenthesis()
+        } else {
+            writer
+                .openParenthesis()
+                .join(arguments)
+                .closeParenthesis()
+        }
     }
 
 }

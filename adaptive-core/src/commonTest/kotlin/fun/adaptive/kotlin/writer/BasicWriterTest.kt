@@ -33,8 +33,6 @@ class BasicWriterTest {
         
         private fun init_testFile() =
             FileResourceSet(name = "testFile", FileResource("adaptiveResources/test.txt", emptySet()))
-        
-        
         """.trimIndent()
 
     fun KotlinWriter.resourcesGeneratedFile() {
@@ -74,7 +72,7 @@ class BasicWriterTest {
 
                 kwFunction(init_testFile) {
                     visibility = KwVisibility.PRIVATE
-                    body = kwExpressionBody {
+                    kwExpressionBody {
                         kwCall(KwResourceSymbols.fileResourceSet) {
                             kwValueArgument("name") { kwConst("testFile") }
                             kwValueArgument {
@@ -113,8 +111,6 @@ class BasicWriterTest {
         
         val Strings.v2
             get() = commonStrings.get(1)
-        
-        
         """.trimIndent()
 
     fun KotlinWriter.resourcesGeneratedString() {

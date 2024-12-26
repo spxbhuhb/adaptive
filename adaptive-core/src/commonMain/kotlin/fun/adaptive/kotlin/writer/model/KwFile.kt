@@ -14,14 +14,28 @@ class KwFile(
 
     override val declarations = mutableListOf<KwDeclaration>()
 
+    /**
+     * File generation is split into two so we can optimize imports.
+     */
+    fun headerToKotlin(writer: KotlinWriter, symbols: Set<KwSymbol>) {
+        val usedImports = imports.filter { it.symbol in symbols }
+
+        if (packageName.isNotEmpty()) {
+            writer
+                .add("package")
+                .add(packageName)
+                .newLine()
+                .newLine()
+        }
+
+        if (usedImports.isNotEmpty()) {
+            writer
+                .lines(imports.filter { it.symbol in symbols })
+                .newLine()
+        }
+    }
+
     override fun toKotlin(writer: KotlinWriter): KotlinWriter =
-        writer
-            .add("package")
-            .add(packageName)
-            .newLine()
-            .newLine()
-            .lines(imports)
-            .newLine()
-            .declarations(declarations)
+        writer.declarations(declarations)
 
 }
