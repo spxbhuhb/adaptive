@@ -7,12 +7,19 @@
  * This code has been copied from Compose Multiplatform: https://github.com/JetBrains/compose-multiplatform
  */
 
-package `fun`.adaptive.resource
+package `fun`.adaptive.resource.platform
 
+import `fun`.adaptive.resource.ResourceMetadata
+import `fun`.adaptive.resource.MissingResourceException
+import `fun`.adaptive.resource.ResourceReader
+import kotlinx.io.files.Path
 import java.io.File
 import java.io.InputStream
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.attribute.BasicFileAttributes
 
-fun getPlatformResourceReader(): ResourceReader = object : ResourceReader {
+actual fun getResourceReader(): ResourceReader = object : ResourceReader {
 
     override suspend fun read(path: String): ByteArray {
         val resource = getResourceAsStream(path)
@@ -40,6 +47,18 @@ fun getPlatformResourceReader(): ResourceReader = object : ResourceReader {
         return resource.toURI().toString()
     }
 
+    override fun sizeAndLastModified(path: Path): ResourceMetadata {
+        val attributes: BasicFileAttributes = Files.readAttributes(Paths.get(path.toString()), BasicFileAttributes::class.java)
+        return ResourceMetadata(
+            size = attributes.size(),
+            lastModified = attributes.lastModifiedTime().toMillis()
+        )
+    }
+
+    override fun setFileModificationTime(path: Path, timestamp: Long) {
+        File(path.toString()).setLastModified(timestamp)
+    }
+
     private fun getResourceAsStream(path: String): InputStream {
         val classLoader = getClassLoader()
         val resource = classLoader.getResourceAsStream(path) ?: run {
@@ -56,6 +75,6 @@ fun getPlatformResourceReader(): ResourceReader = object : ResourceReader {
     }
 
     private fun getClassLoader(): ClassLoader {
-        return Thread.currentThread().contextClassLoader ?: this.javaClass.classLoader!!
+        return Thread.currentThread().contextClassLoader ?: this.javaClass.classLoader !!
     }
 }

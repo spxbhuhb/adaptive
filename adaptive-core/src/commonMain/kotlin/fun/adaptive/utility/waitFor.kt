@@ -23,6 +23,16 @@ suspend fun waitForSuspend(timeout: Duration, condition: suspend () -> Boolean) 
     }
 }
 
+/**
+ * Create a new context which does not skip delays and delay the execution for [duration].
+ * Intended to be used with `runTest` from `coroutines-test`.
+ */
+@OptIn(ExperimentalCoroutinesApi::class)
+suspend fun realDelay(duration: Duration) {
+    withContext(Dispatchers.Default.limitedParallelism(1)) {
+        delay(duration)
+    }
+}
 
 @OptIn(ExperimentalCoroutinesApi::class)
 suspend fun waitForReal(timeout: Duration, condition: () -> Boolean) {

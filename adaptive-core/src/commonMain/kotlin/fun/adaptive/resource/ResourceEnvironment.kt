@@ -9,6 +9,10 @@
 
 package `fun`.adaptive.resource
 
+import `fun`.adaptive.resource.platform.getResourceEnvironment
+
+val defaultResourceEnvironment = getResourceEnvironment()
+
 class ResourceEnvironment(
     val language: LanguageQualifier,
     val region: RegionQualifier,
@@ -37,11 +41,6 @@ class ResourceEnvironment(
         return result
     }
 }
-
-val defaultResourceEnvironment: ResourceEnvironment
-    get() = checkNotNull(defaultResourceEnvironmentOrNull) { "no resource environment has been set, use with<platform>Resources() in your bootstrap to set the default one for the given platform" }
-
-var defaultResourceEnvironmentOrNull : ResourceEnvironment? = null
 
 fun Resource.getResourceItemByEnvironment(environment: ResourceEnvironment): ResourceItem {
     //Priority of environments: https://developer.android.com/guide/topics/resources/providing-resources#table2

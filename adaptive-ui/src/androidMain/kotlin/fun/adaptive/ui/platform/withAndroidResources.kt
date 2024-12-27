@@ -7,11 +7,12 @@ package `fun`.adaptive.ui.platform
 import android.content.res.Configuration
 import android.content.res.Resources
 import `fun`.adaptive.resource.*
+import `fun`.adaptive.resource.platform.getResourceReader
 import java.util.*
 
 fun withAndroidResources() {
     defaultResourceEnvironmentOrNull = getSystemEnvironment()
-    defaultResourceReaderOrNull = getPlatformResourceReader()
+    defaultResourceReaderOrNull = getResourceReader()
 }
 
 private fun getSystemEnvironment(): ResourceEnvironment {

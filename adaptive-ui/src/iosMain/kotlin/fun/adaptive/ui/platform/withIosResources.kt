@@ -64,6 +64,17 @@ private fun getPlatformResourceReader(): ResourceReader = object : ResourceReade
         return NSFileManager.defaultManager().contentsAtPath(path) ?: throw MissingResourceException(path)
     }
 
+    override fun sizeAndLastModified(path: String): Pair<Long,Long>? {
+        memScoped {
+            val stat = alloc<stat>()
+            if (stat(filePath, stat.ptr) == 0) {
+                return Pair(stat.st_size,stat.st_mtime)
+            } else {
+                throw IllegalArgumentException("Could not access file: $filePath")
+            }
+        }
+    }
+
     private fun readData(path: String, offset: Long, size: Long): NSData {
         val fileHandle = NSFileHandle.fileHandleForReadingAtPath(path) ?: throw MissingResourceException(path)
         fileHandle.seekToOffset(offset.toULong(), null)
