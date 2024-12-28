@@ -23,6 +23,7 @@ hikaricp = "3.4.2"
 javamail = "1.6.2"
 junit = "4.13.2"
 junit-bom = "5.8.0"
+kctfork = "0.7.0"
 kotlin = "2.1.0"
 kotlinpoet = "1.16.0"
 kotlin-wrappers = "1.0.0-pre.760"
@@ -66,6 +67,8 @@ hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
 javamail = { module = "com.sun.mail:javax.mail", version.ref = "javamail" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit-bom" }
+
+kctfork = { module = "dev.zacsweers.kctfork:core", version.ref = "kctfork"}
 
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }

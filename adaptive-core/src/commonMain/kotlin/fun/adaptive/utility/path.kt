@@ -19,15 +19,22 @@ import kotlinx.io.readByteArray
 /**
  * Write [string] to `this` in UTF-8.
  */
-fun Path.write(string: String, append: Boolean = false, useTemporaryFile: Boolean = false) {
-    write(string.encodeToByteArray(), append, useTemporaryFile)
+fun Path.write(string: String, append: Boolean = false, overwrite: Boolean = false, useTemporaryFile: Boolean = false) {
+    write(string.encodeToByteArray(), append = append, overwrite = overwrite, useTemporaryFile = useTemporaryFile)
 }
 
-fun Path.write(bytes: ByteArray, append: Boolean = false, useTemporaryFile: Boolean = false) {
+fun Path.write(bytes: ByteArray, append: Boolean = false, overwrite : Boolean = false, useTemporaryFile: Boolean = false) {
+    val exists = exists()
+    check((! exists) || overwrite) { "file $this already exists" }
+
     withTemporary(useTemporaryFile) { out ->
         SystemFileSystem.sink(out, append).buffered().use {
             it.write(bytes)
             it.flush()
+            // withTemporary will move the tmp, but atomicMove fails if the file is already there
+            if (!append && exists && useTemporaryFile) {
+                delete()
+            }
         }
     }
 }
@@ -35,16 +42,46 @@ fun Path.write(bytes: ByteArray, append: Boolean = false, useTemporaryFile: Bool
 /**
  * Encode [value] with [wireFormatProvider] into a byte array and write it to `this`.
  */
-fun <A : AdatClass> Path.save(value: A, wireFormatProvider: WireFormatProvider, useTemporaryFile: Boolean = true) {
-    withTemporary(useTemporaryFile) { out ->
-        @Suppress("UNCHECKED_CAST")
-        wireFormatProvider.encoder()
-            .rawInstance(value, value.adatCompanion.adatWireFormat as WireFormat<A>)
-            .pack()
-            .also {
-                out.write(it)
+fun <A : AdatClass> Path.save(value: A, wireFormatProvider: WireFormatProvider, overwrite : Boolean = false, useTemporaryFile: Boolean = true) {
+    check(! exists() || overwrite) { "file $this already exists" }
+
+    @Suppress("UNCHECKED_CAST")
+    wireFormatProvider.encoder()
+        .rawInstance(value, value.adatCompanion.adatWireFormat as WireFormat<A>)
+        .pack()
+        .also {
+            write(it, append = false, overwrite = overwrite, useTemporaryFile = useTemporaryFile)
+        }
+}
+
+/**
+ * Copy `this` file to [target].
+ *
+ * @param  overwrite         When `true`, overwrite [target] if it already exists. Default is `false`.
+ * @param  keepModified      When `true`, set the last modification time of [target] to the last
+ *                           modification time of `this`. Default is `false`.
+ * @param  useTemporaryFile  When true, copy into [target]`.tmp` first and then rename it to [target].
+ *                           Default is `false`.
+ */
+fun Path.copy(target: Path, overwrite: Boolean = false, keepModified: Boolean = false, useTemporaryFile: Boolean = false) {
+    // TODO I'm not sure Path.copy is right
+    check(! target.exists() || overwrite) { "file $target already exists" }
+
+    target.withTemporary(useTemporaryFile) { out ->
+
+        SystemFileSystem.sink(out, append = false).buffered().use { sink ->
+            SystemFileSystem.source(this).buffered().use { source ->
+                source.transferTo(sink)
             }
+        }
+
+        if (keepModified) {
+            getResourceReader().also {
+                it.setFileModificationTime(out, it.sizeAndLastModified(this).lastModified)
+            }
+        }
     }
+
 }
 
 @Deprecated("Use write(bytes, useTemporaryFile = true) instead.")
@@ -77,6 +114,17 @@ fun Path.exists() = SystemFileSystem.exists(this)
 
 fun Path.delete() = SystemFileSystem.delete(this)
 
+@DangerousApi("deletes all directories and files in this path recursively")
+fun Path.deleteRecursively() {
+    list().forEach {
+        if (SystemFileSystem.metadataOrNull(it)?.isDirectory == true) {
+            it.deleteRecursively()
+        } else {
+            it.delete()
+        }
+    }
+}
+
 fun Path.absolute() = SystemFileSystem.resolve(this)
 
 fun Path.list() = SystemFileSystem.list(this)
@@ -96,33 +144,40 @@ fun Path.ensure(vararg sub: String): Path {
 }
 
 /**
- * Copy `this` file to [target].
+ * Call [process] for all files in `this` directory and for all files
+ * in all subdirectories of `this` (recursively).
  *
- * @param  override          When `true`, override [target] if it already exists. Default is `false`.
- * @param  keepModified      When `true`, set the last modification time of [target] to the last
- *                           modification time of `this`. Default is `false`.
- * @param  useTemporaryFile  When true, copy into [target]`.tmp` first and then rename it to [target].
- *                           Default is `false`.
+ * [process] is not called for directories, only for files.
  */
-fun Path.copy(target: Path, override: Boolean = false, keepModified: Boolean = false, useTemporaryFile: Boolean = false) {
-    // TODO I'm not sure Path.copy is right
-    check(! target.exists() || override) { "file $target already exists" }
-
-    target.withTemporary(useTemporaryFile) { out ->
-
-        SystemFileSystem.sink(out, append = false).buffered().use { sink ->
-            SystemFileSystem.source(this).buffered().use { source ->
-                source.transferTo(sink)
-            }
-        }
-
-        if (keepModified) {
-            getResourceReader().also {
-                it.setFileModificationTime(out, it.sizeAndLastModified(this).lastModified)
-            }
+fun Path.walkFiles(process: (Path) -> Unit) {
+    for (file in list()) {
+        if (SystemFileSystem.metadataOrNull(file)?.isDirectory == true) {
+            file.walkFiles(process)
+        } else {
+            process(file)
         }
     }
+}
 
+/**
+ * Call [map] for all files in `this` directory and all files in all
+ * subdirectories of `this` (recursively).
+ *
+ * Collect the return values of [map] into a list.
+ *
+ * @return  The list of the mapped files.
+ */
+fun <T> Path.flatMapFiles(map: (Path) -> T) =
+    mutableListOf<T>().also { flatMapFiles(map, it) }
+
+private fun <T> Path.flatMapFiles(map: (Path) -> T, out: MutableList<T>) {
+    for (file in list()) {
+        if (SystemFileSystem.metadataOrNull(file)?.isDirectory == true) {
+            file.flatMapFiles(map, out)
+        } else {
+            out += map(file)
+        }
+    }
 }
 
 // ------------------------------------------------------------------------------------
@@ -180,7 +235,7 @@ fun Path.syncBySizeAndLastModification(other: Path, createThis: Boolean = true, 
             changed = thisFile.syncBySizeAndLastModification(fromFile, createThis, remove) || changed
         } else {
             if (thisFile.equalsBySizeAndLastModification(fromFile)) continue
-            fromFile.copy(thisFile, override = true, keepModified = true)
+            fromFile.copy(thisFile, overwrite = true, keepModified = true)
             changed = true
         }
     }
@@ -227,24 +282,15 @@ val testPath = Path("./build/adaptive/test")
  * `./build/adaptive/test/some.test.pkg.SomeTest.someTest`
  */
 @CallSiteName
+@OptIn(DangerousApi::class) // this is fine, confined into testPath
 fun clearedTestPath(callSiteName: String = "unknown"): Path {
 
-    fun clean(dir: Path) {
-        dir.list().forEach {
-
-            check(it.absolute().toString().startsWith(testPath.absolute().toString()))
-
-            if (SystemFileSystem.metadataOrNull(it)?.isDirectory == true) {
-                clean(it)
-            } else {
-                it.delete()
-            }
-        }
-    }
+    check(".." !in callSiteName) { "'..' is not allowed in the path: $callSiteName" }
 
     val testDir = Path(testPath, callSiteName.removeSuffix(".<anonymous>"))
+
     if (testDir.exists()) {
-        clean(testDir)
+        testDir.deleteRecursively()
     } else {
         testDir.ensure()
     }

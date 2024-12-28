@@ -1,13 +1,13 @@
 package `fun`.adaptive.resource.graphics
 
 import `fun`.adaptive.resource.ResourceFileSet
-import `fun`.adaptive.resource.ResourceFileType
+import `fun`.adaptive.resource.ResourceTypeQualifier
 
 class GraphicsResourceSet(
     name: String,
     vararg resources: GraphicsResource
 ) : ResourceFileSet<GraphicsResource>(
     name,
-    ResourceFileType.Graphics,
+    ResourceTypeQualifier.Graphics,
     resources.toList()
 )

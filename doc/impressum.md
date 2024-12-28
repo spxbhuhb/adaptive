@@ -66,6 +66,7 @@ We'll see how it turns out. I've put in the work, and I'll continue to do so in 
 
 * [H2](https://www.h2database.com/) (by multiple contributors, MPL 2.0 or EPL 1.0)
 * [SubEtha SMTP](https://github.com/voodoodyne/subethasmtp) (by SubEthaMail.org, Apache 2.0)
+* [kotlin-compiler-testing](https://github.com/ZacSweers/kotlin-compile-testing) (by multiple contributors, MPL 2.0)
 
 **Copied from**
 

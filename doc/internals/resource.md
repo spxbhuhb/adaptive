@@ -138,6 +138,16 @@ strings/unqualified.avs
 > of the index. This might or might not be a problem, I should check it in detail before using inline.
 > 
 
+## Accessor generation
+
+Resource accessor code is generated from the content of the resource directory (`adaptiveResources` by default).
+
+The code generator:
+
+- located in the `fun.adaptive.resource.codegen` package
+- uses `KotlinWriter` to generate the code
+- is started by calling `processResources`
+
 ## Data size
 
 These are from ChatGPT, so take them with a grain of salt.

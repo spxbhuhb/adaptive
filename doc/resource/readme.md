@@ -48,22 +48,31 @@ adaptive {
 
 ## Qualifiers
 
-All resource types (except for raw files in the files directory) support qualifiers.
-Apply qualifiers to directory names using a hyphen, for example:
+- All resource types support qualifiers.
+- Resource qualifiers are case-sensitive.
+- Directory names are treated as qualifiers.
+- Add qualifiers to files by adding a hyphen and the qualifier before the extension.
 
-`drawable-hu-rHU-hdpi-light`
-- `hu` language
-- `rHU` country
-- `hdpi` density
-- `light` theme
+Examples:
 
-You can add these qualifiers:
+```text
+adaptiveResources/
+    files/
+        someFile.txt
+        someFile-hu.txt
+    files-cs-CZ/
+        someFile-hdpi-light.txt
+    cs-CZ/
+        files/
+            someFile-hdpi-dark.txt    
+```
 
-- language
-- theme
-- density
+If a resource with the requested qualifier doesn't exist:
 
-If a resource with the requested qualifier doesn't exist, the default resource without a qualifier is used instead.
+- if a resource without qualifiers exists, it is used instead
+- if no resource without qualifiers exists, you'll get a compilation error
+
+If you have conflicting resources in different directories you'll get a compilation error.
 
 ### Language and regional qualifiers
 

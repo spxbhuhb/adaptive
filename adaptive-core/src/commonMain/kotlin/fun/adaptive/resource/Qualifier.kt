@@ -13,11 +13,36 @@ interface Qualifier
 
 data class LanguageQualifier(
     val language: String
-) : Qualifier
+) : Qualifier {
+
+    companion object {
+        val languageRegex = Regex("^[a-z]{2}$")
+
+        fun parse(value: String): Qualifier? {
+            if (value.matches(languageRegex)) {
+                return LanguageQualifier(value)
+            }
+            return null
+        }
+    }
+
+}
 
 data class RegionQualifier(
     val region: String
-) : Qualifier
+) : Qualifier {
+
+    companion object {
+        val regionRegex = Regex("^([A-Z]{3})|r?[A-Z]{2}$")
+
+        fun parse(value: String): Qualifier? {
+            if (value.matches(regionRegex)) {
+                return RegionQualifier(value)
+            }
+            return null
+        }
+    }
+}
 
 enum class ThemeQualifier : Qualifier {
     INVALID,
@@ -27,6 +52,12 @@ enum class ThemeQualifier : Qualifier {
     companion object {
         fun selectByValue(isDark: Boolean) =
             if (isDark) DARK else LIGHT
+
+        fun parse(value: String): Qualifier? = when (value) {
+            "light" -> LIGHT
+            "dark" -> DARK
+            else -> null
+        }
     }
 }
 
@@ -41,6 +72,7 @@ enum class DensityQualifier(val dpi: Int) : Qualifier {
     XXXHDPI(640);
 
     companion object {
+
         fun selectByValue(dpi: Int) = when {
             dpi <= LDPI.dpi -> LDPI
             dpi <= MDPI.dpi -> MDPI
@@ -49,6 +81,7 @@ enum class DensityQualifier(val dpi: Int) : Qualifier {
             dpi <= XXHDPI.dpi -> XXHDPI
             else -> XXXHDPI
         }
+
         fun selectByDensity(density: Float) = when {
             density <= 0.75 -> LDPI
             density <= 1.0 -> MDPI
@@ -57,5 +90,16 @@ enum class DensityQualifier(val dpi: Int) : Qualifier {
             density <= 3.0 -> XXHDPI
             else -> XXXHDPI
         }
+
+        fun parse(value: String): Qualifier? = when (value) {
+            "ldpi" -> LDPI
+            "mdpi" -> MDPI
+            "hdpi" -> HDPI
+            "xhdpi" -> XHDPI
+            "xxhdpi" -> XXHDPI
+            "xxxhdpi" -> XXXHDPI
+            else -> null
+        }
+
     }
 }

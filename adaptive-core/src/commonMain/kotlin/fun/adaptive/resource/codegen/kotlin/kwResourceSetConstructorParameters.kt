@@ -1,4 +1,4 @@
-package `fun`.adaptive.resource.generation
+package `fun`.adaptive.resource.codegen.kotlin
 
 import `fun`.adaptive.kotlin.writer.*
 import `fun`.adaptive.kotlin.writer.model.KwCall
@@ -31,8 +31,9 @@ private fun KwCall.resourceQualifiers(qualifiers: Set<Qualifier>) =
         } else {
             kwCall(KwKotlinSymbols.setOf) {
                 qualifiers.forEach {
-                    kwValueArgument {
-                        resourceQualifier(it)
+                    val qualifier = resourceQualifier(it)
+                    if (qualifier != null) {
+                        kwValueArgument { qualifier }
                     }
                 }
             }
@@ -41,17 +42,21 @@ private fun KwCall.resourceQualifiers(qualifiers: Set<Qualifier>) =
 
 private fun KwExpressionScope.resourceQualifier(qualifier: Qualifier) =
     when (qualifier) {
-        is LanguageQualifier -> kwCall(KwResourceSymbols.languageQualifier) {
-            kwValueArgument { kwConst(qualifier.language) }
-        }
+        is LanguageQualifier ->
+            kwCall(KwResourceSymbols.languageQualifier) {
+                kwValueArgument { kwConst(qualifier.language) }
+            }
 
-        is RegionQualifier -> kwCall(KwResourceSymbols.regionQualifier) {
-            kwValueArgument { kwConst(qualifier.region) }
-        }
+        is RegionQualifier ->
+            kwCall(KwResourceSymbols.regionQualifier) {
+                kwValueArgument { kwConst(qualifier.region) }
+            }
 
         is ThemeQualifier -> kwGetValue(qualifier.name) { kwGetObject(KwResourceSymbols.themeQualifier) }
 
         is DensityQualifier -> kwGetValue(qualifier.name) { kwGetObject(KwResourceSymbols.densityQualifier) }
+
+        is ResourceTypeQualifier -> null
 
         else -> error("Unknown qualifier type: ${qualifier::class}")
     }

@@ -1,4 +1,4 @@
-package `fun`.adaptive.resource.generation
+package `fun`.adaptive.resource.codegen.kotlin
 
 import `fun`.adaptive.kotlin.writer.kwSymbol
 

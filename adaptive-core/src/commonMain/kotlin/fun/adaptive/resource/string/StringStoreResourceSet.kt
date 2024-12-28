@@ -6,7 +6,7 @@ import `fun`.adaptive.resource.avs.AvsReader
 import `fun`.adaptive.resource.defaultResourceEnvironment
 import `fun`.adaptive.resource.defaultResourceReader
 import `fun`.adaptive.resource.ResourceFileSet
-import `fun`.adaptive.resource.ResourceFileType
+import `fun`.adaptive.resource.ResourceTypeQualifier
 import `fun`.adaptive.resource.file.FileResource
 
 class StringStoreResourceSet(
@@ -14,7 +14,7 @@ class StringStoreResourceSet(
     vararg resources: FileResource
 ) : ResourceFileSet<FileResource>(
     name,
-    ResourceFileType.StringStore,
+    ResourceTypeQualifier.Strings,
     resources.toList()
 ) {
 

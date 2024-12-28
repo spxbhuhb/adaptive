@@ -2,7 +2,7 @@ package `fun`.adaptive.kotlin.writer
 
 import `fun`.adaptive.kotlin.writer.model.KwSymbol
 import `fun`.adaptive.kotlin.writer.model.KwVisibility
-import `fun`.adaptive.resource.generation.KwResourceSymbols
+import `fun`.adaptive.resource.codegen.kotlin.KwResourceSymbols
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

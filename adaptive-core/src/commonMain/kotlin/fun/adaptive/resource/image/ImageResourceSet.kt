@@ -1,13 +1,13 @@
 package `fun`.adaptive.resource.image
 
 import `fun`.adaptive.resource.ResourceFileSet
-import `fun`.adaptive.resource.ResourceFileType
+import `fun`.adaptive.resource.ResourceTypeQualifier
 
 class ImageResourceSet(
     name: String,
     vararg resources: ImageResource
 ) : ResourceFileSet<ImageResource>(
     name,
-    ResourceFileType.Image,
+    ResourceTypeQualifier.Image,
     resources.toList()
 )

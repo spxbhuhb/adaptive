@@ -75,6 +75,7 @@ kotlin {
 
         sourceSets["jvmTest"].dependencies {
             api(libs.kotlin.test.junit)
+            implementation(libs.kctfork)
         }
     }
 }

@@ -35,7 +35,7 @@ class PathTest {
         sourcePath.write(expected)
         targetPath.write("to be overwritten")
 
-        sourcePath.copy(targetPath, override = true)
+        sourcePath.copy(targetPath, overwrite = true)
 
         val result = targetPath.read()
 
@@ -127,7 +127,7 @@ class PathTest {
         assertTrue(targetFile2.exists(), "Target directory should contain file2.txt")
 
         // Modify source directory and validate sync
-        sourceFile1.write("Updated file one content", useTemporaryFile = true)
+        sourceFile1.write("Updated file one content", overwrite = true, useTemporaryFile = true)
         val syncResult2 = targetDir.syncBySizeAndLastModification(sourceDir)
         assertTrue(syncResult2, "Sync should detect and apply changes to target directory")
 
