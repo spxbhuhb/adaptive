@@ -20,9 +20,8 @@ val scmPath = "spxbhuhb/adaptive"
 adaptive {
     pluginDebug = false
     resources {
-        publicResClass = true
-        packageOfResClass = "sandbox.lib"
-        generateResClass = auto
+        publicAccessors = true
+        packageOfResources = "sandbox.lib"
     }
 }
 

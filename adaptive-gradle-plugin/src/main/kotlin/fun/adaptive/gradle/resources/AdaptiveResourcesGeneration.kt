@@ -9,9 +9,9 @@
 
 package `fun`.adaptive.gradle.resources
 
-import `fun`.adaptive.gradle.resources.utils.IDEA_IMPORT_TASK_NAME
-import `fun`.adaptive.gradle.resources.utils.IdeaImportTask
-import `fun`.adaptive.gradle.resources.utils.uppercaseFirstChar
+import `fun`.adaptive.gradle.internal.utils.IDEA_IMPORT_TASK_NAME
+import `fun`.adaptive.gradle.internal.IdeaImportTask
+import `fun`.adaptive.gradle.internal.utils.uppercaseFirstChar
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
@@ -20,58 +20,26 @@ import java.io.File
 
 internal fun Project.configureAdaptiveResourcesGeneration(
     kotlinExtension: KotlinProjectExtension,
-    resClassSourceSetName: String,
     config: Provider<ResourcesExtension>,
     generateModulePath: Boolean
 ) {
-    logger.info("Configure adaptive resources generation")
+    logger.info("Configure Adaptive resources generation")
 
-    //lazy check a dependency on the Resources library
-    val shouldGenerateCode = config.map {
-        when (it.generateResClass) {
-            ResourcesExtension.ResourceClassGeneration.Auto -> {
-// this would be useful if resources would be a dependency, however, it is in core, so no need to use auto
-//                configurations.run {
-//                    val commonSourceSet = kotlinExtension.sourceSets.getByName(resClassSourceSetName)
-//                    //because the implementation configuration doesn't extend the api in the KGP ¯\_(ツ)_/¯
-//                    getByName(commonSourceSet.implementationConfigurationName).allDependencies +
-//                        getByName(commonSourceSet.apiConfigurationName).allDependencies
-//                }.any { dep ->
-//                    val depStringNotation = dep.let { "${it.group}:${it.name}:${it.version}" }
-//                    depStringNotation == AdaptiveGradlePlugin.CommonComponentsDependencies.resources
-//                }
-                true
-            }
-
-            ResourcesExtension.ResourceClassGeneration.Always -> true
-            ResourcesExtension.ResourceClassGeneration.Never -> false
-        }
-    }
     val packageName = config.getResourcePackage(project)
-    val makeAccessorsPublic = config.map { it.publicResClass }
+    val publicAccessors = config.map { it.publicAccessors }
     val packagingDir = config.getModuleResourcesDir(project)
 
     kotlinExtension.sourceSets.all { sourceSet ->
-        if (sourceSet.name == resClassSourceSetName) {
-            configureResClassGeneration(
-                sourceSet,
-                shouldGenerateCode,
-                packageName,
-                makeAccessorsPublic,
-                packagingDir,
-                generateModulePath
-            )
-        }
 
-        //common resources must be converted (XML -> CVR)
+        //common resources must be converted (XML -> AVS)
         val preparedResourcesTask = registerPrepareAdaptiveResourcesTask(sourceSet)
         val preparedResources = preparedResourcesTask.flatMap { it.outputDir.asFile }
+
         configureResourceAccessorsGeneration(
             sourceSet,
+            publicAccessors,
             preparedResources,
-            shouldGenerateCode,
             packageName,
-            makeAccessorsPublic,
             packagingDir,
             generateModulePath
         )
@@ -85,40 +53,11 @@ internal fun Project.configureAdaptiveResourcesGeneration(
     }
 }
 
-private fun Project.configureResClassGeneration(
-    resClassSourceSet: KotlinSourceSet,
-    shouldGenerateCode: Provider<Boolean>,
-    packageName: Provider<String>,
-    makeAccessorsPublic: Provider<Boolean>,
-    packagingDir: Provider<File>,
-    generateModulePath: Boolean
-) {
-    logger.info("Configure Res class generation for ${resClassSourceSet.name}")
-
-    val genTask = tasks.register(
-        "generateAdaptiveResClass",
-        GenerateResClassTask::class.java
-    ) { task ->
-        task.packageName.set(packageName)
-        task.shouldGenerateCode.set(shouldGenerateCode)
-        task.makeAccessorsPublic.set(makeAccessorsPublic)
-        task.codeDir.set(layout.buildDirectory.dir("$RES_GEN_DIR/kotlin/commonResClass"))
-
-        if (generateModulePath) {
-            task.packagingDir.set(packagingDir)
-        }
-    }
-
-    //register generated source set
-    resClassSourceSet.kotlin.srcDir(genTask.map { it.codeDir })
-}
-
 private fun Project.configureResourceAccessorsGeneration(
     sourceSet: KotlinSourceSet,
+    publicAccessors: Provider<Boolean>,
     resourcesDir: Provider<File>,
-    shouldGenerateCode: Provider<Boolean>,
     packageName: Provider<String>,
-    makeAccessorsPublic: Provider<Boolean>,
     packagingDir: Provider<File>,
     generateModulePath: Boolean
 ) {
@@ -129,11 +68,10 @@ private fun Project.configureResourceAccessorsGeneration(
         GenerateResourceAccessorsTask::class.java
     ) { task ->
         task.packageName.set(packageName)
+        task.publicAccessors.set(publicAccessors)
         task.sourceSetName.set(sourceSet.name)
-        task.shouldGenerateCode.set(shouldGenerateCode)
-        task.makeAccessorsPublic.set(makeAccessorsPublic)
         task.resDir.set(resourcesDir)
-        task.codeDir.set(layout.buildDirectory.dir("$RES_GEN_DIR/kotlin/${sourceSet.name}ResourceAccessors"))
+        task.codeDir.set(layout.buildDirectory.dir("$RES_GEN_DIR/kotlin/${sourceSet.name}Resources"))
 
         if (generateModulePath) {
             task.packagingDir.set(packagingDir)

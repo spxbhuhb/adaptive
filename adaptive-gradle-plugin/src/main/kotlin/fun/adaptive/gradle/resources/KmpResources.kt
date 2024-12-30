@@ -29,10 +29,9 @@ internal fun Project.configureKmpResources(
     kotlinExtension as KotlinMultiplatformExtension
     kmpResources as KotlinTargetResourcesPublication
 
-    logger.info("Configure KMP resources")
+    logger.info("Configure Adaptive resources")
 
-    val commonMain = KotlinSourceSet.COMMON_MAIN_SOURCE_SET_NAME
-    configureAdaptiveResourcesGeneration(kotlinExtension, commonMain, config, true)
+    configureAdaptiveResourcesGeneration(kotlinExtension, config, true)
 
     //configure KMP resources publishing for each supported target
     kotlinExtension.targets

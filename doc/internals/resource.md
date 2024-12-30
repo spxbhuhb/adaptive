@@ -83,7 +83,6 @@ val Strings.helloWorld
     get() = commonStrings.get(12) // 12 is the index of the string in the AVS
 ```
 
-
 ### Implications
 
 The implementation structure above have a few implications.
@@ -138,15 +137,28 @@ strings/unqualified.avs
 > of the index. This might or might not be a problem, I should check it in detail before using inline.
 > 
 
-## Accessor generation
-
-Resource accessor code is generated from the content of the resource directory (`adaptiveResources` by default).
+## Resource compilation
 
 The code generator:
 
 - located in the `fun.adaptive.resource.codegen` package
 - uses `KotlinWriter` to generate the code
-- is started by calling `processResources`
+- is started by:
+    - creating a `ResourceCompilation`
+    - calling `ResourceCompilation.compile`
+
+The compilation process:
+
+- [copyFilesAndCollectResourceSets](/adaptive-core/src/commonMain/kotlin/fun/adaptive/resource/codegen/copyFilesAndCollectResourceSets.kt)
+  - from `src/${sourceSet}/adaptiveResources` 
+  - to `build/generated/adaptive/resource/prepared/${sourceSet}`
+  - stop compilation if no files has been changed since the last compilation
+- [generateUnstructuredAccessors](/adaptive-core/src/commonMain/kotlin/fun/adaptive/resource/codegen/generateUnstructuredAccessors.kt)
+- [processStringResources](/adaptive-core/src/commonMain/kotlin/fun/adaptive/resource/codegen/processStringResources.kt)
+  - [collectValuesFromXml](/adaptive-core/src/commonMain/kotlin/fun/adaptive/resource/codegen/collectValuesFromXml.kt)
+  - [indexValueSets](/adaptive-core/src/commonMain/kotlin/fun/adaptive/resource/codegen/processStringResources.kt)
+  - [exportToAvs](/adaptive-core/src/commonMain/kotlin/fun/adaptive/resource/codegen/processStringResources.kt)
+  - [generateStringAccessors](/adaptive-core/src/commonMain/kotlin/fun/adaptive/resource/codegen/processStringResources.kt)
 
 ## Data size
 
@@ -168,7 +180,16 @@ of mobile applications:
 With 5000 strings and average size of 50 characters/string and 25 characters of metadata, the total size is 375 KB.
 If we double the bytes needed per character (Unicode), that is 625 KB.
 
-### Generated code size
+## Gradle plugin
+
+```text
+- AdaptiveGradlePlugin
+    - AdaptiveResources.configureAdaptiveResources
+        - AdaptiveResources.onKgpApplied
+```
+
+
+## Generated code size
 
 **These calculations are based on the code I copied from Compose in May 2024.** Most probably it will get optimized,
 but it is good to have some pointers to base our future development on.

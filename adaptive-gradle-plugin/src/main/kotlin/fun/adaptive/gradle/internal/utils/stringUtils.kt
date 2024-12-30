@@ -7,7 +7,7 @@
  * This code has been copied from Compose Multiplatform: https://github.com/JetBrains/compose-multiplatform
  */
 
-package `fun`.adaptive.gradle.resources.utils
+package `fun`.adaptive.gradle.internal.utils
 
 internal fun String.uppercaseFirstChar(): String =
     transformFirstCharIfNeeded(
@@ -28,7 +28,7 @@ private inline fun String.transformFirstCharIfNeeded(
     if (isNotEmpty()) {
         val firstChar = this[0]
         if (shouldTransform(firstChar)) {
-            val sb = java.lang.StringBuilder(length)
+            val sb = StringBuilder(length)
             sb.append(transform(firstChar))
             sb.append(this, 1, length)
             return sb.toString()

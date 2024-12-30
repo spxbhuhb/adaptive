@@ -13,8 +13,8 @@ import com.android.build.api.variant.AndroidComponentsExtension
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.internal.lint.AndroidLintAnalysisTask
 import com.android.build.gradle.internal.lint.LintModelWriterTask
-import `fun`.adaptive.gradle.resources.utils.registerTask
-import `fun`.adaptive.gradle.resources.utils.uppercaseFirstChar
+import `fun`.adaptive.gradle.internal.utils.registerTask
+import `fun`.adaptive.gradle.internal.utils.uppercaseFirstChar
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.file.DirectoryProperty

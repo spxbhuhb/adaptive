@@ -4,6 +4,11 @@ First of all, join the `#fun-adaptive` [kotlinlang](https://slack-chats.kotlinla
 
 I try to check the channel daily, there you can ask anything related to Adaptive.
 
+## Names
+
+**core modules**: The `adaptive-core`, `adaptive-gradle-plugin`, `adaptive-kotlin-plugin` modules. These often require
+special handling because they do not have the compiler plugin. So, usual stuff like `@Adat` or `@CallSiteName` does not work.
+
 ## Adding code 
 
 If you would like to add code, please ask first on the channel or open a GitHub issue for discussion.
@@ -29,6 +34,14 @@ Apart code style there are a some conventions to follow:
   - self-explaining variable and function names should not be documented
 - write the necessary documentation
 - add comments and explain your reasoning for non-trivial logic
+
+### Unit tests
+
+Unit tests that work with files should use the [clearedTestPath](/adaptive-core/src/commonMain/kotlin/fun/adaptive/utility/path.kt) function to clear the test path.
+
+All files produced by unit tests should go to the `build/adaptive/test/<package-name>.<file-name>.<function-name>` directory.
+
+In core modules build the path manually, in others use [@CallSiteName](/adaptive-core/src/commonMain/kotlin/fun/adaptive/reflect/CallSiteName.kt)
 
 ### @DangerousApi
 

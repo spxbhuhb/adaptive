@@ -9,10 +9,10 @@
 
 package `fun`.adaptive.gradle.resources
 
-import `fun`.adaptive.gradle.resources.utils.dependsOn
-import `fun`.adaptive.gradle.resources.utils.joinLowerCamelCase
-import `fun`.adaptive.gradle.resources.utils.registerOrConfigure
-import `fun`.adaptive.gradle.resources.utils.uppercaseFirstChar
+import `fun`.adaptive.gradle.internal.utils.dependsOn
+import `fun`.adaptive.gradle.internal.utils.joinLowerCamelCase
+import `fun`.adaptive.gradle.internal.utils.registerOrConfigure
+import `fun`.adaptive.gradle.internal.utils.uppercaseFirstChar
 
 import org.gradle.api.Project
 import org.gradle.api.file.Directory

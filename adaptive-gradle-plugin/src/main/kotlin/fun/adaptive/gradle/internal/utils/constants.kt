@@ -7,8 +7,6 @@
  * This code has been copied from Compose Multiplatform: https://github.com/JetBrains/compose-multiplatform
  */
 
-package `fun`.adaptive.gradle.resources.utils
+package `fun`.adaptive.gradle.internal.utils
 
-internal const val KOTLIN_MPP_PLUGIN_ID = "org.jetbrains.kotlin.multiplatform"
-internal const val KOTLIN_JVM_PLUGIN_ID = "org.jetbrains.kotlin.jvm"
 internal const val IDEA_IMPORT_TASK_NAME = "prepareKotlinIdeaImport"

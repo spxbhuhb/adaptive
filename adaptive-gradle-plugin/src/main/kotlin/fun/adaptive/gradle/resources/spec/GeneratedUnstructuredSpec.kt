@@ -1,57 +1,23 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-package `fun`.adaptive.gradle.resources
+package `fun`.adaptive.gradle.resources.spec
 
 import com.squareup.kotlinpoet.*
-import `fun`.adaptive.gradle.resources.utils.uppercaseFirstChar
-import java.nio.file.Path
+import `fun`.adaptive.gradle.internal.utils.uppercaseFirstChar
 import java.util.*
 import kotlin.io.path.invariantSeparatorsPathString
 
-internal enum class ResourceType(val typeName: String, val accessorName: String) {
-    DRAWABLE("drawable", "drawable"),
-    STRING("string", "string"),
-    STRING_ARRAY("string-array", "array"),
-    PLURAL_STRING("plurals", "plurals"),
-    FONT("font", "font"),
-    FILE("file", "file");
-
-    override fun toString(): String = typeName
-
-    companion object {
-        fun fromString(str: String): ResourceType? =
-            ResourceType.values().firstOrNull { it.typeName.equals(str, true) }
-    }
-}
-
-internal data class ResourceItem(
-    val type: ResourceType,
-    val qualifiers: List<String>,
-    val name: String,
-    val path: Path,
-    val offset: Long = -1,
-    val size: Long = -1,
-)
-
 private fun ResourceType.getClassName(): ClassName = when (this) {
-    ResourceType.DRAWABLE -> ClassName("fun.adaptive.resource", "DrawableResource")
-    ResourceType.FONT -> ClassName("fun.adaptive.resource", "FontResource")
+    ResourceType.FILE -> ClassName("fun.adaptive.resource.file", "FileResource")
+    ResourceType.FONT -> ClassName("fun.adaptive.resource.font", "FontResource")
+    ResourceType.GRAPHICS -> ClassName("fun.adaptive.resource.graphics", "GraphicsResource")
+    ResourceType.IMAGE -> ClassName("fun.adaptive.resource.image", "FileResource")
     ResourceType.STRING -> ClassName("fun.adaptive.resource", "StringResource")
-    ResourceType.STRING_ARRAY -> ClassName("fun.adaptive.resource", "StringArrayResource")
-    ResourceType.PLURAL_STRING -> ClassName("fun.adaptive.resource", "PluralStringResource")
-    ResourceType.FILE -> ClassName("fun.adaptive.resource", "FileResource")
 }
-
-private fun ResourceType.requiresKeyName() =
-    this in setOf(ResourceType.STRING, ResourceType.STRING_ARRAY, ResourceType.PLURAL_STRING)
-
-private val resourceItemClass = ClassName("fun.adaptive.resource", "ResourceItem")
-private val experimentalAnnotation = AnnotationSpec.builder(
-    ClassName("fun.adaptive.resource", "ExperimentalResourceApi")
-).build()
 
 private fun CodeBlock.Builder.addQualifiers(resourceItem: ResourceItem): CodeBlock.Builder {
+
     val languageQualifier = ClassName("fun.adaptive.resource", "LanguageQualifier")
     val regionQualifier = ClassName("fun.adaptive.resource", "RegionQualifier")
     val themeQualifier = ClassName("fun.adaptive.resource", "ThemeQualifier")
@@ -116,73 +82,6 @@ private fun CodeBlock.Builder.addQualifiers(resourceItem: ResourceItem): CodeBlo
     return this
 }
 
-internal fun getResFileSpec(
-    packageName: String,
-    fileName: String,
-    moduleDir: String,
-    isPublic: Boolean
-): FileSpec {
-    val resModifier = if (isPublic) KModifier.PUBLIC else KModifier.INTERNAL
-    return FileSpec.builder(packageName, fileName).also { file ->
-//        file.addAnnotation(
-//            AnnotationSpec.builder(ClassName("kotlin", "OptIn"))
-//                .addMember("fun.adaptive.resource.InternalResourceApi::class")
-//                .addMember("fun.adaptive.resource.ExperimentalResourceApi::class")
-//                .build()
-//        )
-        file.addType(TypeSpec.objectBuilder("Res").also { resObject ->
-            resObject.addModifiers(resModifier)
-
-            //readFileBytes
-            val readResourceBytes = MemberName("fun.adaptive.resource", "readResourceBytes")
-            resObject.addFunction(
-                FunSpec.builder("readBytes")
-                    .addKdoc(
-                        """
-                    Reads the content of the resource file at the specified path and returns it as a byte array.
-                    
-                    Example: `val bytes = Res.readBytes("files/key.bin")`
-                    
-                    @param path The path of the file to read in the adaptive resource's directory.
-                    @return The content of the file as a byte array.
-                """.trimIndent()
-                    )
-                    // .addAnnotation(experimentalAnnotation)
-                    .addParameter("path", String::class)
-                    .addModifiers(KModifier.SUSPEND)
-                    .returns(ByteArray::class)
-                    .addStatement("""return %M("$moduleDir" + path)""", readResourceBytes)
-                    .build()
-            )
-
-            //getUri
-            val getResourceUri = MemberName("fun.adaptive.resource", "getResourceUri")
-            resObject.addFunction(
-                FunSpec.builder("getUri")
-                    .addKdoc(
-                        """
-                    Returns the URI string of the resource file at the specified path.
-                    
-                    Example: `val uri = Res.getUri("files/key.bin")`
-                    
-                    @param path The path of the file in the adaptive resource's directory.
-                    @return The URI string of the file.
-                """.trimIndent()
-                    )
-                    //.addAnnotation(experimentalAnnotation)
-                    .addParameter("path", String::class)
-                    .returns(String::class)
-                    .addStatement("""return %M("$moduleDir" + path)""", getResourceUri)
-                    .build()
-            )
-
-            ResourceType.values().forEach { type ->
-                resObject.addType(TypeSpec.objectBuilder(type.accessorName).build())
-            }
-        }.build())
-    }.build()
-}
-
 // We need to divide accessors by different files because
 //
 // if all accessors are generated in a single object
@@ -192,6 +91,7 @@ internal fun getResFileSpec(
 // if accessor initializers are extracted from the single object but located in the same file
 // then a build may fail with: org.jetbrains.org.objectweb.asm.ClassTooLargeException: Class too large: Res$drawable
 private const val ITEMS_PER_FILE_LIMIT = 500
+
 internal fun getAccessorsSpecs(
     //type -> id -> items
     resources: Map<ResourceType, Map<String, List<ResourceItem>>>,
@@ -235,11 +135,6 @@ private fun getChunkFileSpec(
     idToResources: Map<String, List<ResourceItem>>
 ): FileSpec {
     return FileSpec.builder(packageName, fileName).also { chunkFile ->
-//        chunkFile.addAnnotation(
-//            AnnotationSpec.builder(ClassName("kotlin", "OptIn"))
-//                .addMember("fun.adaptive.resource.InternalResourceApi::class")
-//                .build()
-//        )
 
         val objectSpec = TypeSpec.objectBuilder(chunkClassName).also { typeObject ->
             typeObject.addModifiers(KModifier.PRIVATE)
@@ -259,33 +154,33 @@ private fun getChunkFileSpec(
                 .build()
             chunkFile.addProperty(accessor)
 
-            val initializer = FunSpec.builder("init_$resName")
-                .addModifiers(KModifier.PRIVATE)
-                .returns(type.getClassName())
-                .addStatement(
-                    CodeBlock.builder()
-                        .add("return %T(\n", type.getClassName()).withIndent {
-                            add("\"${type}:${resName}\",")
-                            if (type.requiresKeyName()) add(" \"$resName\",")
-                            withIndent {
-                                add("\nsetOf(\n").withIndent {
-                                    items.forEach { item ->
-                                        add("%T(", resourceItemClass)
-                                        add("setOf(").addQualifiers(item).add("), ")
-                                        //file separator should be '/' on all platforms
-                                        add("\"$moduleDir${item.path.invariantSeparatorsPathString}\", ")
-                                        add("${item.offset}, ${item.size}")
-                                        add("),\n")
-                                    }
-                                }
-                                add(")\n")
-                            }
-                        }
-                        .add(")")
-                        .build().toString()
-                )
-                .build()
-            chunkFile.addFunction(initializer)
+//            val initializer = FunSpec.builder("init_$resName")
+//                .addModifiers(KModifier.PRIVATE)
+//                .returns(type.getClassName())
+//                .addStatement(
+//                    CodeBlock.builder()
+//                        .add("return %T(\n", type.getClassName()).withIndent {
+//                            add("\"${type}:${resName}\",")
+//                            if (type.requiresKeyName()) add(" \"$resName\",")
+//                            withIndent {
+//                                add("\nsetOf(\n").withIndent {
+//                                    items.forEach { item ->
+//                                        add("%T(", resourceItemClass)
+//                                        add("setOf(").addQualifiers(item).add("), ")
+//                                        //file separator should be '/' on all platforms
+//                                        add("\"$moduleDir${item.path.invariantSeparatorsPathString}\", ")
+//                                        add("${item.offset}, ${item.size}")
+//                                        add("),\n")
+//                                    }
+//                                }
+//                                add(")\n")
+//                            }
+//                        }
+//                        .add(")")
+//                        .build().toString()
+//                )
+//                .build()
+//            chunkFile.addFunction(initializer)
         }
     }.build()
 }

@@ -7,7 +7,7 @@
  * This code has been copied from Compose Multiplatform: https://github.com/JetBrains/compose-multiplatform
  */
 
-package `fun`.adaptive.gradle.resources.utils
+package `fun`.adaptive.gradle.internal.utils
 
 import org.gradle.api.Project
 import org.gradle.api.Task
