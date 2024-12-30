@@ -26,9 +26,8 @@ application {
 adaptive {
     pluginDebug = false
     resources {
-        publicResClass = true
-        packageOfResClass = "fun.adaptive.site"
-        generateResClass = auto
+        publicAccessors = true
+        packageOfResources = "fun.adaptive.site"
     }
 }
 

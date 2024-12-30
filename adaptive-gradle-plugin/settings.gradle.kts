@@ -18,3 +18,5 @@ dependencyResolutionManagement {
         }
     }
 }
+
+includeBuild("../adaptive-core")

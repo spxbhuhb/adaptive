@@ -20,9 +20,8 @@ val scmPath = "spxbhuhb/adaptive"
 adaptive {
     pluginDebug = false
     resources {
-        publicResClass = true
-        packageOfResClass = "fun.adaptive.ui.builtin"
-        generateResClass = auto
+        publicAccessors = true
+        packageOfResources = "fun.adaptive.ui.builtin"
     }
 }
 

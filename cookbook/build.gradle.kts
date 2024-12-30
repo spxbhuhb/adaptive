@@ -1,5 +1,4 @@
 import org.gradle.kotlin.dsl.adaptive
-import org.gradle.kotlin.dsl.implementation
 
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
@@ -19,9 +18,8 @@ adaptive {
     pluginDebug = false
     debugFilter = ".*dialog.*"
     resources {
-        publicResClass = true
-        packageOfResClass = "fun.adaptive.cookbook"
-        generateResClass = auto
+        publicAccessors = true
+        packageOfResources = "fun.adaptive.cookbook"
     }
 }
 
