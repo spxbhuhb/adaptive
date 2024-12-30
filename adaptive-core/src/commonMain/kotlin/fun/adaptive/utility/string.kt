@@ -196,3 +196,31 @@ fun String.decodeFromUrl(): String {
     }
     return result.toByteArray().decodeToString()
 }
+
+fun String.uppercaseFirstChar(): String =
+    transformFirstCharIfNeeded(
+        shouldTransform = { it.isLowerCase() },
+        transform = { it.uppercaseChar() }
+    )
+
+fun String.lowercaseFirstChar(): String =
+    transformFirstCharIfNeeded(
+        shouldTransform = { it.isUpperCase() },
+        transform = { it.lowercaseChar() }
+    )
+
+inline fun String.transformFirstCharIfNeeded(
+    shouldTransform: (Char) -> Boolean,
+    transform: (Char) -> Char
+): String {
+    if (isNotEmpty()) {
+        val firstChar = this[0]
+        if (shouldTransform(firstChar)) {
+            val sb = StringBuilder(length)
+            sb.append(transform(firstChar))
+            sb.append(this, 1, length)
+            return sb.toString()
+        }
+    }
+    return this
+}

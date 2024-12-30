@@ -11,6 +11,7 @@ import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readByteArray
+import kotlinx.io.readString
 
 // ------------------------------------------------------------------------------------
 // Writing
@@ -102,6 +103,9 @@ fun Path.safeWrite(bytes: ByteArray) {
 
 fun Path.read(): ByteArray =
     SystemFileSystem.source(this).buffered().use { it.readByteArray() }
+
+fun Path.readString(): String =
+    SystemFileSystem.source(this).buffered().use { it.readString() }
 
 fun <A> Path.load(wireFormatProvider: WireFormatProvider, wireFormat: AdatClassWireFormat<A>): A =
     wireFormatProvider.decoder(this.read()).asInstance(wireFormat)

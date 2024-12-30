@@ -17,7 +17,13 @@ fun KwCall.resourceSetConstructorArguments(
     resourceFileSet.files.forEach { file ->
         kwValueArgument {
             kwCall(fileSymbol) {
-                kwValueArgument { kwConst(file.path) }
+                kwValueArgument {
+                    if (resourceFileSet.type.isUnstructured) {
+                        kwConst(file.path)
+                    } else {
+                        kwConst(file.path.replaceAfterLast('.', "avs"))
+                    }
+                }
                 resourceQualifiers(file.qualifiers)
             }
         }

@@ -4,6 +4,8 @@ import `fun`.adaptive.resource.DensityQualifier
 import `fun`.adaptive.resource.ResourceFileSet
 import `fun`.adaptive.resource.ResourceTypeQualifier
 import `fun`.adaptive.resource.ThemeQualifier
+import `fun`.adaptive.utility.resolve
+import `fun`.adaptive.utility.testPath
 import kotlinx.io.files.Path
 import kotlin.js.JsName
 import kotlin.test.Test
@@ -47,7 +49,7 @@ class MapToResourceFileTest {
     @Test
     @JsName("testMapToResourceFileAddsErrorOnDuplicateQualifiers")
     fun `test mapToResourceFile adds error on duplicate qualifiers`() {
-        val (mappedResources, errors) = test(
+        val (_, errors) = test(
             Path("/resources/icon1-mdpi-image.png"),
             Path("/resources/image/icon1-mdpi.png")
         )
@@ -83,20 +85,22 @@ class MapToResourceFileTest {
 
     fun test(
         vararg paths: Path
-    ): Pair<Map<ResourceTypeQualifier, MutableMap<String, ResourceFileSet<*>>>, MutableList<String>> {
+    ): Pair<Map<ResourceTypeQualifier, MutableMap<String, ResourceFileSet<*>>>, List<String>> {
 
         val prefix = "/resources"
-        val errors = mutableListOf<String>()
+        val testFilePath = testPath.resolve("resources")
 
-        val resourceSetsByType = ResourceTypeQualifier.entries
-            .map { it to mutableMapOf<String, ResourceFileSet<*>>() }
-            .associate { it }
+        with(
+            ResourceCompilation(
+                testFilePath, "", "commonTest", testFilePath, testFilePath
+            )
+        ) {
+            paths.forEach {
+                mapToResourceFile(prefix, it)
+            }
 
-        paths.forEach {
-            mapToResourceFile(prefix, resourceSetsByType, errors, it)
+            return Pair(resourceSetsByType, reports.map { it.message })
         }
-
-        return Pair(resourceSetsByType, errors)
     }
 
 }

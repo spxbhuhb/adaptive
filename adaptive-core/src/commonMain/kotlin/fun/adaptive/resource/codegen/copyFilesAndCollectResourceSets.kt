@@ -1,49 +1,28 @@
 package `fun`.adaptive.resource.codegen
 
-import `fun`.adaptive.resource.DensityQualifier
-import `fun`.adaptive.resource.LanguageQualifier
-import `fun`.adaptive.resource.Qualifier
-import `fun`.adaptive.resource.RegionQualifier
-import `fun`.adaptive.resource.ResourceFile
-import `fun`.adaptive.resource.ResourceFileSet
-import `fun`.adaptive.resource.ResourceTypeQualifier
-import `fun`.adaptive.resource.ThemeQualifier
-import `fun`.adaptive.utility.DangerousApi
-import `fun`.adaptive.utility.deleteRecursively
-import `fun`.adaptive.utility.exists
-import `fun`.adaptive.utility.syncBySizeAndLastModification
-import `fun`.adaptive.utility.walkFiles
+import `fun`.adaptive.resource.*
+import `fun`.adaptive.utility.*
 import kotlinx.io.files.Path
 
 @DangerousApi("deletes everything in targetPath recursively if sourcePath does not exist")
-internal fun copyFilesAndCollectResourceSets(
-    sourcePath: Path,
-    targetPath: Path,
-    resourceSetsByType: Map<ResourceTypeQualifier, MutableMap<String, ResourceFileSet<*>>>,
-    errors: MutableList<String>
-): Boolean {
+fun ResourceCompilation.copyFilesAndCollectResourceSets(): Boolean {
 
     if (! sourcePath.exists()) {
-        if (! targetPath.exists()) return false
-        targetPath.deleteRecursively()
+        if (! preparedResourcesPath.exists()) return false
+        preparedResourcesPath.deleteRecursively()
     }
 
-    val changed = targetPath.syncBySizeAndLastModification(sourcePath)
+    val changed = preparedResourcesPath.syncBySizeAndLastModification(sourcePath)
     if (! changed) return false
 
-    val prefix = targetPath.toString()
+    val prefix = preparedResourcesPath.toString()
 
-    targetPath.walkFiles { mapToResourceFile(prefix, resourceSetsByType, errors, it) }
+    preparedResourcesPath.walkFiles { mapToResourceFile(prefix, it) }
 
     return true
 }
 
-internal fun mapToResourceFile(
-    prefix: String,
-    resourceSetsByType: Map<ResourceTypeQualifier, MutableMap<String, ResourceFileSet<*>>>,
-    errors: MutableList<String>,
-    path: Path
-) {
+fun ResourceCompilation.mapToResourceFile(prefix: String, path: Path) {
 
     val relativeDirPath = path.parent.toString().removePrefix(prefix)
     val dirQualifiers = relativeDirPath.split("/").flatMap { it.split("-") }.filter { it.isNotEmpty() }
@@ -54,15 +33,15 @@ internal fun mapToResourceFile(
     val name = nameAndQualifiers.first()
     val qualifiers = dirQualifiers + fileQualifiers
 
-    val qualifierSet = qualifiers.mapNotNull { mapQualifier(it, errors) }.toSet()
+    val qualifierSet = qualifiers.mapNotNull { mapQualifier(it) }.toSet()
     if (qualifierSet.size != qualifiers.size) return
 
     val file = ResourceFile(
-        "$relativeDirPath/${path.name}",
+        "$relativeDirPath/${path.name}", // this will be replaced with .avs for structured resources
         qualifierSet
     )
 
-    val type = getType(path, file.qualifiers, errors) ?: return
+    val type = getType(path, file.qualifiers) ?: return
 
     val resourceSets = resourceSetsByType[type] !!
     val resourceSet = resourceSets[name]
@@ -74,33 +53,33 @@ internal fun mapToResourceFile(
 
     val existing = resourceSet.files.find { it.qualifiers == file.qualifiers }
     if (existing != null) {
-        errors += "Resource files with the same qualifier:\n    $path\n    $existing"
+        compilationError { "Resource files with the same qualifier:\n    $path\n    $existing" }
         return
     }
 
     resourceSet.files as MutableList += file
 }
 
-internal fun mapQualifier(text: String, errors: MutableList<String>): Qualifier? =
+fun ResourceCompilation.mapQualifier(text: String): Qualifier? =
     ResourceTypeQualifier.parse(text)
         ?: LanguageQualifier.parse(text)
         ?: RegionQualifier.parse(text)
         ?: ThemeQualifier.parse(text)
         ?: DensityQualifier.parse(text)
-        ?: null.also { errors += "Unknown qualifier: $text" }
+        ?: null.also { compilationError { "Unknown qualifier: $text" } }
 
 
-internal fun getType(path: Path, qualifiers: Set<Qualifier>, errors: MutableList<String>): ResourceTypeQualifier? {
+fun ResourceCompilation.getType(path: Path, qualifiers: Set<Qualifier>): ResourceTypeQualifier? {
 
     val types = qualifiers.filterIsInstance<ResourceTypeQualifier>().distinct()
 
     if (types.isEmpty()) {
-        errors += "Cannot determine resource type for:\n    $path"
+        compilationError { "Cannot determine resource type for:\n    $path" }
         return null
     }
 
     if (types.size > 1) {
-        errors += "Ambiguous resource types ($types) for\n    $path"
+        compilationError { "Ambiguous resource types ($types) for\n    $path" }
         return null
     }
 

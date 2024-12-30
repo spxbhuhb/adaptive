@@ -23,7 +23,7 @@ class StringStoreResourceSet(
 
     fun get(index : Int) : String =
         if (index < 0 || index >= values.size) {
-            error("Index $index out of bounds (0..${values.size - 1}). Have you called ${name}Strings.load() during application startup?")
+            error("Index $index out of bounds (0..${values.size - 1}). Have you called load() during application startup?")
         } else {
             values[index] ?: avsReader[index].decodeToString().also { values[index] = it }
         }

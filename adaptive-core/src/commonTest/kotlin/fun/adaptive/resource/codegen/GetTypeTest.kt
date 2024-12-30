@@ -2,7 +2,8 @@ package `fun`.adaptive.resource.codegen
 
 import `fun`.adaptive.resource.Qualifier
 import `fun`.adaptive.resource.ResourceTypeQualifier
-import kotlinx.io.files.Path
+import `fun`.adaptive.utility.resolve
+import `fun`.adaptive.utility.testPath
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -11,14 +12,19 @@ class GetTypeTest {
 
     @Test
     fun testGetType() {
-        val errors = mutableListOf<String>()
-        val testPath = Path("/test/path/to/resource.txt")
+        val testFilePath = testPath.resolve("resource.txt")
+
+        val compilation = ResourceCompilation(
+            testFilePath, "", "commonTest", testFilePath, testFilePath
+        )
+
+        val errors = compilation.reports
 
         // Test case: No resource type found
         val noTypeQualifiers = setOf<Qualifier>()
-        assertNull(getType(testPath, noTypeQualifiers, errors))
+        assertNull(compilation.getType(testFilePath, noTypeQualifiers))
         assertEquals(1, errors.size)
-        assertEquals("Cannot determine resource type for:\n    $testPath", errors.first())
+        assertEquals("Cannot determine resource type for:\n    $testFilePath", errors.first().message)
 
         // Test case: Ambiguous resource types
         errors.clear()
@@ -26,17 +32,17 @@ class GetTypeTest {
             ResourceTypeQualifier.parse("file")!!,
             ResourceTypeQualifier.parse("image")!!
         )
-        assertNull(getType(testPath, ambiguousQualifiers, errors))
+        assertNull(compilation.getType(testFilePath, ambiguousQualifiers))
         assertEquals(1, errors.size)
         assertEquals(
-            "Ambiguous resource types ([File, Image]) for\n    $testPath",
-            errors.first()
+            "Ambiguous resource types ([File, Image]) for\n    $testFilePath",
+            errors.first().message
         )
 
         // Test case: Valid single resource type
         errors.clear()
         val validQualifiers = setOf(ResourceTypeQualifier.parse("file")!!)
-        assertEquals(ResourceTypeQualifier.parse("file"), getType(testPath, validQualifiers, errors))
+        assertEquals(ResourceTypeQualifier.parse("file"), compilation.getType(testFilePath, validQualifiers))
         assertEquals(0, errors.size)
     }
 

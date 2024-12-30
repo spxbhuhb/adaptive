@@ -65,6 +65,7 @@ adaptiveResources/
     cs-CZ/
         files/
             someFile-hdpi-dark.txt    
+    someOtherFile-file.txt
 ```
 
 If a resource with the requested qualifier doesn't exist:

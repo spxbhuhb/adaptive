@@ -18,11 +18,11 @@ enum class ResourceTypeQualifier(
 
     companion object {
         fun parse(value: String): Qualifier? = when (value) {
-            "file" -> File
-            "font" -> Font
-            "graphics" -> Graphics
-            "image" -> Image
-            "strings" -> Strings
+            "file", "files" -> File
+            "font", "fonts" -> Font
+            "graphics", "graphics" -> Graphics
+            "image", "images" -> Image
+            "string", "strings" -> Strings
             else -> null
         }
     }
