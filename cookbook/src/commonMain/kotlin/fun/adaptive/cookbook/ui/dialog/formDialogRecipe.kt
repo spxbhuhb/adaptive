@@ -4,11 +4,11 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.onClose
 import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.builtin.Res
 import `fun`.adaptive.ui.builtin.check
 import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.dialog.api.formDialog
@@ -21,7 +21,7 @@ fun formDialogRecipe() {
 
     column {
         text("Hello World!")
-        button("Open", Res.drawable.check) .. onClick { modalOpen = true }
+        button("Open", Graphics.check) .. onClick { modalOpen = true }
         form(data)
 
         if (modalOpen) {

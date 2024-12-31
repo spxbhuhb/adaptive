@@ -6,10 +6,10 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.graphics.svg.api.svg
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.builtin.Res
 import `fun`.adaptive.ui.builtin.check
 import `fun`.adaptive.ui.checkbox.api.theme.CheckboxTheme
 import `fun`.adaptive.ui.checkbox.api.theme.checkboxTheme
@@ -26,7 +26,7 @@ fun boundCheckbox(
 
         if (binding.value) {
             box(*theme.active) {
-                svg(Res.drawable.check, *theme.icon)
+                svg(Graphics.check, *theme.icon)
             }
         } else {
             box(*theme.inactive) {

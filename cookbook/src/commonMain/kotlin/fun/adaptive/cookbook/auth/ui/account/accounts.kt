@@ -1,7 +1,7 @@
 package `fun`.adaptive.cookbook.auth.ui.account
 
 import `fun`.adaptive.adat.store.copyStore
-import `fun`.adaptive.cookbook.Res
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.cookbook.add
 import `fun`.adaptive.cookbook.auth.api.AccountApi
 import `fun`.adaptive.cookbook.auth.model.AccountSummary
@@ -71,7 +71,7 @@ private fun header(filter: AccountFilter) {
 
         editor { filter.text } .. alignSelf.center .. width { 400.dp } .. inputPlaceholder { "fiókok szűrése" }
 
-        buttonDialog("Fiók", Res.drawable.add, "Fiók hozzáadása") { accountEditor(close = it) } .. alignSelf.endCenter
+        buttonDialog("Fiók", Graphics.add, "Fiók hozzáadása") { accountEditor(close = it) } .. alignSelf.endCenter
     }
 }
 
@@ -124,21 +124,21 @@ private fun item(item: AccountSummary) {
         text(item.phone.ifEmpty { "(nincs telefonszám)" }) .. maxWidth .. emptyInst(item.phone)
         box {
             if (item.activated) {
-                icon(Res.drawable.check_circle) .. iconColors.onSurfaceFriendly
+                icon(Graphics.check_circle) .. iconColors.onSurfaceFriendly
             } else {
-                icon(Res.drawable.close) .. iconColors.onSurfaceAngry
+                icon(Graphics.close) .. iconColors.onSurfaceAngry
             }
         }
         box {
             if (item.locked) {
-                icon(Res.drawable.lock) .. iconColors.onSurfaceAngry
+                icon(Graphics.lock) .. iconColors.onSurfaceAngry
             } else {
-                icon(Res.drawable.lock_open) .. iconColors.onSurfaceFriendly
+                icon(Graphics.lock_open) .. iconColors.onSurfaceFriendly
             }
         }
         datetime(item.lastLogin) .. maxWidth .. alignSelf.endCenter .. textSmall
 
-        iconDialog(Res.drawable.edit, "Fiók szerkesztése") {
+        iconDialog(Graphics.edit, "Fiók szerkesztése") {
             accountEditor(
                 AccountEditorData(
                     item.id,

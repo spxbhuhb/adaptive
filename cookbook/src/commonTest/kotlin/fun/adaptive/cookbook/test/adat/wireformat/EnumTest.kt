@@ -12,9 +12,9 @@ class EnumTest {
 
     @Test
     fun basic() {
-        println(TA.adatMetadata.toJson(AdatClassMetadata).decodeToString())
+        //println(TA.adatMetadata.toJson(AdatClassMetadata).decodeToString())
 
-        WireFormatRegistry["fun.adaptive.adat.wireformat.TE"] = EnumWireFormat<TE>(TE.entries)
+        WireFormatRegistry["fun.adaptive.cookbook.test.adat.wireformat.TE"] = EnumWireFormat<TE>(TE.entries)
 
         val t = TA(TE.V1, setOf(TE.V1, TE.V2))
 

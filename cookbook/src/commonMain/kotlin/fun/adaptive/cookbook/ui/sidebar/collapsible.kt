@@ -3,7 +3,7 @@ package `fun`.adaptive.cookbook.ui.sidebar
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.auto.api.autoItemOrigin
-import `fun`.adaptive.cookbook.Res
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.cookbook.eco
 import `fun`.adaptive.cookbook.grid_view
 import `fun`.adaptive.foundation.Adaptive
@@ -60,7 +60,7 @@ fun collapsible() {
 
     box {
         size(800.dp, 600.dp) .. backgrounds.friendly
-        icon(Res.drawable.grid_view)
+        icon(Graphics.grid_view)
 
         when (state?.mode) {
             MENU_CLOSED -> closedMenu()
@@ -96,7 +96,7 @@ private fun fullHeader(vararg instructions : AdaptiveInstruction) : AdaptiveFrag
 
         box {
             size(48.dp, 48.dp)
-            svg(Res.drawable.eco) .. svgHeight(48.dp) .. svgWidth(48.dp) .. svgFill(colors.onSurface)
+            svg(Graphics.eco) .. svgHeight(48.dp) .. svgWidth(48.dp) .. svgFill(colors.onSurface)
         }
 
         text("Adaptive") .. boldFont .. fontSize(28.sp) .. paddingTop { 8.dp }
@@ -127,7 +127,7 @@ fun thinHeader(vararg instructions : AdaptiveInstruction) : AdaptiveFragment {
 
         box {
             size(48.dp, 48.dp)
-            svg(Res.drawable.eco) .. svgHeight(48.dp) .. svgWidth(48.dp) .. svgFill(colors.onSurface)
+            svg(Graphics.eco) .. svgHeight(48.dp) .. svgWidth(48.dp) .. svgFill(colors.onSurface)
         }
     }
     return fragment()

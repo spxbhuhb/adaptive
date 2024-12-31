@@ -4,9 +4,9 @@ import `fun`.adaptive.foundation.AdaptiveExpect
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.manualImplementation
-import `fun`.adaptive.resource.DrawableResource
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 
 @AdaptiveExpect(`fun`.adaptive.graphics.svg.svg)
-fun svg(resource: DrawableResource, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
+fun svg(resource: GraphicsResourceSet, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
     manualImplementation(resource, instructions)
 }

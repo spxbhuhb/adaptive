@@ -9,6 +9,7 @@
 
 package `fun`.adaptive.gradle.resources
 
+import `fun`.adaptive.utility.asUnderscoredIdentifier
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
 import java.io.File
@@ -30,6 +31,20 @@ open class ResourcesExtension {
      */
     var publicAccessors: Boolean = false
 
+    /**
+     * Whether the file name may contain qualifiers.
+     *
+     * Default is false.
+     */
+    var withFileQualifiers: Boolean = false
+
+    /**
+     * Treat resources without type qualifier as File.
+     *
+     * Default is true.
+     */
+    var withFileDefault: Boolean = true
+
 }
 
 internal fun Provider<ResourcesExtension>.getResourcePackage(project: Project) = map { config ->
@@ -40,10 +55,6 @@ internal fun Provider<ResourcesExtension>.getResourcePackage(project: Project) =
         "$id.generated.resources"
     }
 }
-
-internal fun String.asUnderscoredIdentifier(): String =
-    replace('-', '_')
-        .let { if (it.isNotEmpty() && it.first().isDigit()) "_$it" else it }
 
 //the dir where resources must be placed in the final artefact
 internal fun Provider<ResourcesExtension>.getModuleResourcesDir(project: Project) =

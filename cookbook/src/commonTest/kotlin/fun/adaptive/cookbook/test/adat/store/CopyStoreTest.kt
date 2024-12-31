@@ -13,7 +13,7 @@ import `fun`.adaptive.foundation.query.first
 import `fun`.adaptive.foundation.testing.AdaptiveT1
 import `fun`.adaptive.foundation.testing.T1
 import `fun`.adaptive.foundation.testing.test
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull

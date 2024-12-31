@@ -3,57 +3,21 @@ package `fun`.adaptive.ui.app.basic
 import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.auto.api.autoCollection
 import `fun`.adaptive.auto.api.autoItem
-import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.adapter
-import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.*
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.graphics.svg.api.svgFill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
-import `fun`.adaptive.resource.DrawableResource
+import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.service.api.getService
-import `fun`.adaptive.ui.api.alignItems
-import `fun`.adaptive.ui.api.alignSelf
-import `fun`.adaptive.ui.api.backgroundColor
-import `fun`.adaptive.ui.api.boldFont
-import `fun`.adaptive.ui.api.borderBottom
-import `fun`.adaptive.ui.api.borderTop
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.colTemplate
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.cornerRadius
-import `fun`.adaptive.ui.api.fontSize
-import `fun`.adaptive.ui.api.fontWeight
-import `fun`.adaptive.ui.api.gap
-import `fun`.adaptive.ui.api.grid
-import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.maxHeight
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.maxWidth
-import `fun`.adaptive.ui.api.mediaMetrics
-import `fun`.adaptive.ui.api.noPointerEvents
-import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.ui.api.paddingBottom
-import `fun`.adaptive.ui.api.paddingLeft
-import `fun`.adaptive.ui.api.paddingRight
-import `fun`.adaptive.ui.api.paddingTop
-import `fun`.adaptive.ui.api.position
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.rowTemplate
-import `fun`.adaptive.ui.api.size
-import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.api.verticalScroll
-import `fun`.adaptive.ui.builtin.Res
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.power_settings_new
 import `fun`.adaptive.ui.builtin.settings
 import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.icon.actionIcon
-import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
@@ -227,7 +191,7 @@ private fun thinFooter(
 
     if (userFullName == null) {
         if (loginPage != null) {
-            actionIcon(Res.drawable.power_settings_new) .. alignSelf.center .. onClick { appData.navState.open(loginPage) }
+            actionIcon(Graphics.power_settings_new) .. alignSelf.center .. onClick { appData.navState.open(loginPage) }
         }
     } else {
         grid {
@@ -235,7 +199,7 @@ private fun thinFooter(
             alignItems.center .. paddingTop { 6.dp } .. paddingBottom { 6.dp }
 
             nameplate(userFullName)
-            actionIcon(Res.drawable.settings)
+            actionIcon(Graphics.settings)
             logout(appData)
         }
     }
@@ -277,7 +241,7 @@ private fun fullFooter(
 
     if (userFullName == null) {
         if (loginPage != null) {
-            button("Login", Res.drawable.power_settings_new) .. alignSelf.center .. onClick { appData.navState.open(loginPage) }
+            button("Login", Graphics.power_settings_new) .. alignSelf.center .. onClick { appData.navState.open(loginPage) }
         }
     } else {
         grid {
@@ -287,7 +251,7 @@ private fun fullFooter(
                 nameplate(userFullName)
                 text(userFullName) .. maxWidth
             }
-            actionIcon(Res.drawable.settings) .. alignSelf.center
+            actionIcon(Graphics.settings) .. alignSelf.center
             logout(appData)
         }
     }
@@ -312,7 +276,7 @@ private fun nameplate(name: String) {
 
 @Adaptive
 fun appIcon(
-    icon: DrawableResource,
+    icon: GraphicsResourceSet,
     vararg instructions: AdaptiveInstruction,
 ): AdaptiveFragment {
     box(*instructions) {
@@ -328,7 +292,7 @@ fun appIcon(
 
 @Adaptive
 fun logout(appData: BasicAppData) {
-    actionIcon(Res.drawable.power_settings_new) .. alignSelf.center .. onClick {
+    actionIcon(Graphics.power_settings_new) .. alignSelf.center .. onClick {
         adapter().scope.launch {
             getService<SessionApi>(adapter().transport).logout()
             appData.onLogout()

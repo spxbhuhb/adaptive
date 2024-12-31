@@ -1,17 +1,13 @@
 package `fun`.adaptive.ui.dialog.api
 
-import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.rangeTo
-import `fun`.adaptive.resource.DrawableResource
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.onClose
 import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.icon.icon
-import `fun`.adaptive.ui.icon.primaryIconTheme
 
 /**
  * A label that opens the dialog built by [modalContent] when clicked.

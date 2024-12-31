@@ -7,12 +7,12 @@ import kotlinx.io.files.Path
 @DangerousApi("deletes everything in targetPath recursively if sourcePath does not exist")
 fun ResourceCompilation.copyFilesAndCollectResourceSets(): Boolean {
 
-    if (! sourcePath.exists()) {
+    if (! originalResourcesPath.exists()) {
         if (! preparedResourcesPath.exists()) return false
         preparedResourcesPath.deleteRecursively()
     }
 
-    val changed = preparedResourcesPath.syncBySizeAndLastModification(sourcePath)
+    val changed = preparedResourcesPath.syncBySizeAndLastModification(originalResourcesPath)
     if (! changed) return false
 
     val prefix = preparedResourcesPath.toString()
@@ -27,10 +27,18 @@ fun ResourceCompilation.mapToResourceFile(prefix: String, path: Path) {
     val relativeDirPath = path.parent.toString().removePrefix(prefix)
     val dirQualifiers = relativeDirPath.split("/").flatMap { it.split("-") }.filter { it.isNotEmpty() }
 
-    val nameAndQualifiers = path.name.substringBeforeLast('.').split('-')
-    val fileQualifiers = nameAndQualifiers.drop(1)
+    val name : String
+    val fileQualifiers : List<String>
 
-    val name = nameAndQualifiers.first()
+    if (withFileQualifiers) {
+        val nameAndQualifiers = path.name.substringBeforeLast('.').split('-')
+        fileQualifiers = nameAndQualifiers.drop(1)
+        name = nameAndQualifiers.first()
+    } else {
+        fileQualifiers = emptyList()
+        name = path.name.substringBeforeLast('.').asUnderscoredIdentifier()
+    }
+
     val qualifiers = dirQualifiers + fileQualifiers
 
     val qualifierSet = qualifiers.mapNotNull { mapQualifier(it) }.toSet()
@@ -74,8 +82,14 @@ fun ResourceCompilation.getType(path: Path, qualifiers: Set<Qualifier>): Resourc
     val types = qualifiers.filterIsInstance<ResourceTypeQualifier>().distinct()
 
     if (types.isEmpty()) {
-        compilationError { "Cannot determine resource type for:\n    $path" }
-        return null
+        if (withFileDefault) {
+            // invalid directory names won't get to this point as `mapQualifier` drops them
+            // so qualifiers are all valid at this point, only type is missing
+            return ResourceTypeQualifier.File
+        } else {
+            compilationError { "Cannot determine resource type for:\n    $path" }
+            return null
+        }
     }
 
     if (types.size > 1) {

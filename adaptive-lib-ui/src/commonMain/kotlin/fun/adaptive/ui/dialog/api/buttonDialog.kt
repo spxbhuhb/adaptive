@@ -2,10 +2,10 @@ package `fun`.adaptive.ui.dialog.api
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.rangeTo
-import `fun`.adaptive.resource.DrawableResource
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.onClose
 import `fun`.adaptive.ui.button.api.button
@@ -24,7 +24,7 @@ import `fun`.adaptive.ui.button.api.dangerButton
 @Adaptive
 fun buttonDialog(
     label: String,
-    resource: DrawableResource,
+    resource: GraphicsResourceSet,
     title: String,
     vararg instructions: AdaptiveInstruction,
     @Adaptive _fixme_adaptive_content: (close: () -> Unit) -> Unit
@@ -49,21 +49,21 @@ fun buttonDialog(
  * Use the `close` parameter of [modalContent] to close the modal.
  *
  * @param  label         The label of the button.
- * @param  resource      The drawable resource of the button icon.
+ * @param  icon          The resource of the button icon.
  * @param  title         Title of the dialog.
  * @param  modalContent  Content of the dialog.
  */
 @Adaptive
 fun dangerButtonDialog(
     label: String,
-    resource: DrawableResource,
+    icon: GraphicsResourceSet,
     title: String,
     vararg instructions: AdaptiveInstruction,
     @Adaptive _fixme_adaptive_content: (close: () -> Unit) -> Unit
 ): AdaptiveFragment {
     var modalOpen = false
 
-    dangerButton(label, resource, *instructions) .. onClick { modalOpen = true }
+    dangerButton(label, icon, *instructions) .. onClick { modalOpen = true }
 
     if (modalOpen) {
         dialog(title) {

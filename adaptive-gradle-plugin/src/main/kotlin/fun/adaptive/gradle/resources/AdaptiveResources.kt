@@ -5,6 +5,9 @@
 package `fun`.adaptive.gradle.resources
 
 import com.android.build.gradle.BaseExtension
+import `fun`.adaptive.gradle.resources.ProcessResourcesTask.Companion.configureProcessResourcesTask
+import `fun`.adaptive.gradle.resources.ProcessResourcesTask.Companion.getPreparedAdaptiveResourcesDir
+import `fun`.adaptive.gradle.resources.ProcessResourcesTask.Companion.withOriginalResourcesDir
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
 import org.gradle.util.GradleVersion
@@ -16,6 +19,7 @@ internal const val KOTLIN_MPP_PLUGIN_ID = "org.jetbrains.kotlin.multiplatform"
 
 internal const val ADAPTIVE_RESOURCES_DIR = "adaptiveResources"
 internal const val RES_GEN_DIR = "generated/adaptive/resource"
+
 private const val KMP_RES_EXT = "multiplatformResourcesPublication"
 private const val MIN_GRADLE_VERSION_FOR_KMP_RESOURCES = "7.6"
 private val androidPluginIds = listOf(
@@ -75,9 +79,11 @@ private fun Project.configureAdaptiveResources(
     config: Provider<ResourcesExtension>
 ) {
     logger.info("Configure adaptive resources")
-    configureAdaptiveResourcesGeneration(kotlinExtension, config, false)
 
     kotlinExtension.sourceSets.all { sourceSet ->
-        sourceSet.resources.srcDirs(getPreparedAdaptiveResourcesDir(sourceSet))
+        sourceSet.withOriginalResourcesDir {
+            configureProcessResourcesTask(sourceSet, config, it)
+            sourceSet.resources.srcDirs(getPreparedAdaptiveResourcesDir(sourceSet))
+        }
     }
 }

@@ -8,8 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.resource.DrawableResource
-import `fun`.adaptive.resource.defaultResourceReader
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
@@ -27,7 +26,7 @@ class AuiImage(
 
     override val receiver = ImageView(adapter.context)
 
-    private val content: DrawableResource
+    private val content: GraphicsResourceSet
         get() = state[0].checkIfInstance()
 
     override fun auiPatchInternal() {
@@ -35,7 +34,7 @@ class AuiImage(
         if ( ! haveToPatch(dirtyMask, 1)) return
 
         CoroutineScope(Dispatchers.IO).launch {
-            val data = defaultResourceReader.read(content.path)
+            val data = content.readAll()
             val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
             CoroutineScope(adapter.dispatcher).launch {
                 receiver.setScaleType(ImageView.ScaleType.CENTER_CROP)

@@ -9,12 +9,12 @@ import `fun`.adaptive.graphics.canvas.CanvasAdapter
 import `fun`.adaptive.graphics.canvas.fragment.CanvasSvg
 import `fun`.adaptive.graphics.canvas.platform.ActualBrowserCanvas
 import `fun`.adaptive.graphics.svg.svg
-import `fun`.adaptive.resource.DrawableResource
+import `fun`.adaptive.resource.graphics.GraphicsResource
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.utility.checkIfInstance
 import org.w3c.dom.HTMLElement
-import kotlin.also
 
 @AdaptiveActual(svg)
 class SvgSvg(
@@ -32,7 +32,7 @@ class SvgSvg(
     override val patchDescendants: Boolean
         get() = true
     
-    val resource: DrawableResource
+    val resource: GraphicsResourceSet
         get() = state[0].checkIfInstance()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {

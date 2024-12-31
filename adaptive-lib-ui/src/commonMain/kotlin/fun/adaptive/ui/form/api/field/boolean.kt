@@ -7,6 +7,8 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.graphics.svg.api.svg
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.frame
@@ -15,7 +17,7 @@ import `fun`.adaptive.ui.api.maxHeight
 import `fun`.adaptive.ui.api.noSelect
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.builtin.Res
+
 import `fun`.adaptive.ui.builtin.check
 import `fun`.adaptive.ui.checkbox.api.theme.checkboxTheme
 import `fun`.adaptive.ui.instruction.dp
@@ -31,7 +33,7 @@ fun boolean(data: AdatClass, property: AdatPropertyMetadata, vararg instructions
 
         if (data.getValue(property.index) as Boolean) {
             box(*checkboxTheme.active) {
-                image(Res.drawable.check) .. noSelect .. frame(1.dp, 1.dp, 18.dp, 18.dp)
+                svg(Graphics.check) .. noSelect .. frame(1.dp, 1.dp, 18.dp, 18.dp)
             }
         } else {
             box(*checkboxTheme.inactive) {

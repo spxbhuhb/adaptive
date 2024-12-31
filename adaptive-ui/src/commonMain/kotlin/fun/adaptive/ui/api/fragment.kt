@@ -6,11 +6,11 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.manualImplementation
-import `fun`.adaptive.resource.DrawableResource
+import `fun`.adaptive.resource.image.ImageResourceSet
 import `fun`.adaptive.ui.aui
 
 @AdaptiveExpect(aui)
-fun image(res: DrawableResource, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
+fun image(res: ImageResourceSet, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
     manualImplementation(res, instructions)
 }
 

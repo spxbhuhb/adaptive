@@ -5,43 +5,17 @@ import `fun`.adaptive.auth.api.PrincipalApi
 import `fun`.adaptive.auth.api.RoleApi
 import `fun`.adaptive.auth.model.Principal
 import `fun`.adaptive.auth.model.Role
-import `fun`.adaptive.cookbook.Res
 import `fun`.adaptive.cookbook.check
 import `fun`.adaptive.cookbook.gpp_maybe
-import `fun`.adaptive.cookbook.shared.yellow
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.Independent
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.producer.fetch
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.svg.api.svg
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.service.api.getService
-import `fun`.adaptive.ui.api.alignItems
-import `fun`.adaptive.ui.api.alignSelf
-import `fun`.adaptive.ui.api.borderTop
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.colTemplate
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.flowBox
-import `fun`.adaptive.ui.api.gap
-import `fun`.adaptive.ui.api.gapWidth
-import `fun`.adaptive.ui.api.grid
-import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.marginTop
-import `fun`.adaptive.ui.api.maxWidth
-import `fun`.adaptive.ui.api.noSelect
-import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.paddingHorizontal
-import `fun`.adaptive.ui.api.paddingLeft
-import `fun`.adaptive.ui.api.paddingRight
-import `fun`.adaptive.ui.api.paddingTop
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.rowTemplate
-import `fun`.adaptive.ui.api.size
-import `fun`.adaptive.ui.api.spaceBetween
-import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.api.width
-import `fun`.adaptive.ui.builtin.check
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.button.api.dangerButton
 import `fun`.adaptive.ui.checkbox.api.checkbox
@@ -52,9 +26,7 @@ import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.label.smallLabel
-import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.utility.UUID
 import kotlinx.coroutines.launch
 
@@ -219,7 +191,7 @@ fun roles(knownRoles: List<Role>, principalRoles: List<Role>) {
 
                         if (role in selectedRoles) {
                             box(*checkboxTheme.active) {
-                                svg(Res.drawable.check, *checkboxTheme.icon)
+                                svg(Graphics.check, *checkboxTheme.icon)
                             }
                         } else {
                             box(*checkboxTheme.inactive) {
@@ -245,13 +217,13 @@ fun buttons(account: AccountEditorData?, copy: AccountEditorData, close: () -> U
         row {
             gap { 16.dp }
 
-            dangerButtonDialog("Reset", Res.drawable.gpp_maybe, "Network Reset") { closeInner ->
+            dangerButtonDialog("Reset", Graphics.gpp_maybe, "Network Reset") { closeInner ->
 //                resetNetwork(copy) {
 //                    closeInner()
 //                }
             }
 
-            dangerButton("Csatlakoztatás", Res.drawable.gpp_maybe) .. onClick {
+            dangerButton("Csatlakoztatás", Graphics.gpp_maybe) .. onClick {
 //                io {
 //                    modelService.addCommand(EnableJoin(copy.id))
 //                    info("Csatlakozás engedélyezve.")
@@ -260,7 +232,7 @@ fun buttons(account: AccountEditorData?, copy: AccountEditorData, close: () -> U
             }
         }
 
-        button("Mentés", Res.drawable.check) .. onClick {
+        button("Mentés", Graphics.check) .. onClick {
             adapter().scope.launch {
                 if (account == null) {
                     // add account

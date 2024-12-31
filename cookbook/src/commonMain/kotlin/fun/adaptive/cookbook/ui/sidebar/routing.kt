@@ -1,7 +1,7 @@
 package `fun`.adaptive.cookbook.ui.sidebar
 
 import `fun`.adaptive.auto.api.autoItemOrigin
-import `fun`.adaptive.cookbook.Res
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.cookbook.assignment
 import `fun`.adaptive.cookbook.folder
 import `fun`.adaptive.cookbook.grid_view
@@ -21,9 +21,9 @@ object Routes {
 }
 
 val items = listOf(
-    SidebarItem(Res.drawable.grid_view, "Zones", Routes.zones),
-    SidebarItem(Res.drawable.mail, "Notifications", Routes.notifications),
-    SidebarItem(Res.drawable.folder, "Settings", Routes.settings),
-    SidebarItem(Res.drawable.assignment, "Reports", Routes.reports),
-    SidebarItem(Res.drawable.assignment, "Networks", Routes.networks)
+    SidebarItem(Graphics.grid_view, "Zones", Routes.zones),
+    SidebarItem(Graphics.mail, "Notifications", Routes.notifications),
+    SidebarItem(Graphics.folder, "Settings", Routes.settings),
+    SidebarItem(Graphics.assignment, "Reports", Routes.reports),
+    SidebarItem(Graphics.assignment, "Networks", Routes.networks)
 )

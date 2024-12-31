@@ -26,7 +26,18 @@ open class ResourceFileSet<T : ResourceFile>(
         result = 31 * result + files.hashCode()
         return result
     }
-    
+
+    val uri : String
+        get() = getUri(defaultResourceEnvironment, defaultResourceReader)
+
+    fun getUri(
+        environment: ResourceEnvironment,
+        resourceReader: ResourceReader
+    ) : String {
+        val file = getByEnvironment(environment)
+        return resourceReader.getUri(file.path)
+    }
+
     suspend fun readAll(
         environment: ResourceEnvironment = defaultResourceEnvironment,
         resourceReader: ResourceReader = defaultResourceReader

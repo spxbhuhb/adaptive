@@ -39,7 +39,7 @@ class ProcessResourcesTest {
 
         @OptIn(DangerousApi::class) // clearedTestPath confines delete into test working directory
         ResourceCompilation(
-            sourcePath = testBase.resolve("set1"),
+            originalResourcesPath = testBase.resolve("set1"),
             packageName = "`fun`.adaptive.resource.codegen.test",
             kmpSourceSet = "jvmTest",
             generatedCodePath = generatedSources,

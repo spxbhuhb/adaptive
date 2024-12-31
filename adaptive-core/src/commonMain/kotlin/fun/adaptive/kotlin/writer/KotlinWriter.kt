@@ -61,14 +61,21 @@ class KotlinWriter {
 
         val import = file.imports.find { it.symbol == symbol || it.alias == symbol.name } // FIXME I'm not sure matching symbols with names is correct
 
+        val escapedName : String
+        if (symbol.name.startsWith('`') && symbol.name.endsWith('`')) {
+            escapedName = symbol.name
+        } else {
+            escapedName = symbol.name.split('.').joinToString(".") { it.kotlinEscape() }
+        }
+
         if (import != null) {
             if (import.alias != null) {
                 out.append(import.alias)
             } else {
-                out.append(symbol.name.substringAfterLast('.'))
+                out.append(escapedName.substringAfterLast('.'))
             }
         } else {
-            out.append(symbol.name)
+            out.append(escapedName)
         }
 
         return this
@@ -164,6 +171,23 @@ class KotlinWriter {
             newLine = false
         }
     }
+    
+    /**
+     * Escapes a word if it is not a valid Kotlin identifier.
+     * If the word is already a valid Kotlin identifier, the original word is returned.
+     */
+    private fun String.kotlinEscape(): String {
+        if (this.startsWith('`') && this.endsWith('`')) return this
+        if (this.isNotEmpty() && this.first().isLetterOrUnderscore() && this.all { it.isLetterOrDigitOrUnderscore() }) {
+            if (this in reservedWords) return "`$this`"
+            return this
+        }
+        return "`$this`"
+    }
+    
+    private fun Char.isLetterOrUnderscore(): Boolean = this.isLetter() || this == '_'
+    
+    private fun Char.isLetterOrDigitOrUnderscore(): Boolean = this.isLetterOrDigit() || this == '_'
 
     private fun addIndentOrSpace() {
         val last = out.lastOrNull()
@@ -205,5 +229,14 @@ class KotlinWriter {
 
     override fun toString(): String {
         throw IllegalStateException("KotlinWriter is not intended to be used as a string")
+    }
+
+    companion object {
+        val reservedWords = setOf(
+            "as", "break", "class", "continue", "do", "else", "false", "for", "fun",
+            "if", "in", "interface", "is", "null", "object", "package", "return",
+            "super", "this", "throw", "true", "try", "typealias", "typeof", "val",
+            "var", "when", "while"
+        )
     }
 }

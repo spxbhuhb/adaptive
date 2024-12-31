@@ -9,58 +9,23 @@ import `fun`.adaptive.foundation.instruction.trace
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
-import `fun`.adaptive.graphics.svg.api.svg
-import `fun`.adaptive.resource.DrawableResource
+import `fun`.adaptive.resource.image.ImageResourceSet
+import `fun`.adaptive.resource.image.Images
 import `fun`.adaptive.site.*
-import `fun`.adaptive.ui.api.alignItems
-import `fun`.adaptive.ui.api.alignSelf
-import `fun`.adaptive.ui.api.backgroundColor
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.color
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.cornerBottomRadius
-import `fun`.adaptive.ui.api.cornerTopRadius
-import `fun`.adaptive.ui.api.externalLink
-import `fun`.adaptive.ui.api.fixed
-import `fun`.adaptive.ui.api.flowBox
-import `fun`.adaptive.ui.api.flowItemLimit
-import `fun`.adaptive.ui.api.gap
-import `fun`.adaptive.ui.api.grid
-import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.image
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.maxWidth
-import `fun`.adaptive.ui.api.mediaMetrics
-import `fun`.adaptive.ui.api.noSelect
-import `fun`.adaptive.ui.api.noTextWrap
-import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.ui.api.paddingBottom
-import `fun`.adaptive.ui.api.paddingLeft
-import `fun`.adaptive.ui.api.paddingRight
-import `fun`.adaptive.ui.api.paddingTop
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.rowTemplate
-import `fun`.adaptive.ui.api.size
-import `fun`.adaptive.ui.api.slot
-import `fun`.adaptive.ui.api.spaceBetween
-import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.api.textColor
-import `fun`.adaptive.ui.api.width
-import `fun`.adaptive.ui.api.zIndex
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
-import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.instruction.decoration.Color
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.layout.AlignSelf
+import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.platform.media.MediaMetrics
-import `fun`.adaptive.ui.platform.withJsResources
 
 val clientBackend = backend {  }
 
 fun main() {
 
     //withJsonWebSocketTransport(window.location.origin)
-    withJsResources()
 
     browser(CanvasFragmentFactory, SvgFragmentFactory, backend = clientBackend) { adapter ->
         with(adapter.defaultTextRenderData) {
@@ -90,7 +55,7 @@ fun header(media: MediaMetrics) {
         box {
             width { 24.dp } .. height { 24.dp }
             onClick { }
-            svg(Res.drawable.menu)
+            image(Images.menu)
         }
 
         text("Adaptive", textColor(white))
@@ -125,7 +90,7 @@ fun cards() {
             flowItemLimit { 4 }
             gap(24.dp)
 
-            card(Res.drawable.what_is_adaptive, color(0xFFF7E1u)) {
+            card(Images.what_is_adaptive, color(0xFFF7E1u)) {
                 column {
                     externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/what-is-adaptive.md")
                     largeTitle("What is Adaptive")
@@ -135,7 +100,7 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.preview_status, color(0xFF6347u)) {
+            card(Images.preview_status, color(0xFF6347u)) {
                 column {
                     externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/status.md")
                     largeTitle("Status")
@@ -145,7 +110,7 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.getting_started, color(0x87CEFAu)) {
+            card(Images.getting_started, color(0x87CEFAu)) {
                 column {
                     externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/getting-started.md")
                     largeTitle("Getting Started")
@@ -155,7 +120,7 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.tools, color(0xFFB07Cu)) {
+            card(Images.tools, color(0xFFB07Cu)) {
                 column {
                     externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/tools.md")
                     largeTitle("Tools")
@@ -165,7 +130,7 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.ui, color(0xFFBF00u)) {
+            card(Images.ui, color(0xFFBF00u)) {
                 column {
                     externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/ui/README.md")
                     largeTitle("User Interface")
@@ -175,7 +140,7 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.server, color(0x3CB371u)) {
+            card(Images.server, color(0x3CB371u)) {
                 column {
                     externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/server/README.md")
                     largeTitle("Server & Cloud")
@@ -185,7 +150,7 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.impressum, color(0xAEE1E1u)) {
+            card(Images.impressum, color(0xAEE1E1u)) {
                 column {
                     externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/impressum.md")
                     largeTitle("Impressum")
@@ -195,7 +160,7 @@ fun cards() {
                 }
             }
 
-            card(Res.drawable.deep_waters, color(0x6495EDu)) {
+            card(Images.deep_waters, color(0x6495EDu)) {
                 column {
                     externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/internals")
                     largeTitle("Deep Waters")
@@ -210,7 +175,7 @@ fun cards() {
 
 @Adaptive
 fun card(
-    image: DrawableResource,
+    image: ImageResourceSet,
     background: Color,
     @Adaptive cardContent: () -> Unit
 ) {

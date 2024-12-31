@@ -5,7 +5,7 @@ package `fun`.adaptive.ui.testing.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.resource.DrawableResource
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.testing.AuiTestAdapter
 import `fun`.adaptive.ui.testing.TestReceiver
@@ -21,7 +21,7 @@ open class AdaptiveImage(
     override val receiver = TestReceiver()
 
     @Suppress("unused")
-    private val res: DrawableResource
+    private val res: GraphicsResourceSet
         get() = state[0].checkIfInstance()
 
     override fun auiPatchInternal() = Unit

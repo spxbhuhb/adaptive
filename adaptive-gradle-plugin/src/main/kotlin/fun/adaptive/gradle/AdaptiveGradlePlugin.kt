@@ -19,6 +19,7 @@ const val KOTLIN_COMPILER_PLUGIN_ID = "adaptive"  // this is how the compiler id
 const val KOTLIN_COMPILER_PLUGIN_ARTIFACT_GROUP = "fun.adaptive"
 const val KOTLIN_COMPILER_PLUGIN_ARTIFACT_NAME = "adaptive-kotlin-plugin"
 const val GRADLE_EXTENSION_NAME = "adaptive"
+const val ADAPTIVE_TASK_GROUP = "adaptive"
 
 @Suppress("unused")
 class AdaptiveGradlePlugin : KotlinCompilerPluginSupportPlugin {
@@ -34,8 +35,9 @@ class AdaptiveGradlePlugin : KotlinCompilerPluginSupportPlugin {
     }
 
     override fun apply(target: Project): Unit = with(target) {
-        val adaptiveExtension = extensions.create(GRADLE_EXTENSION_NAME, AdaptiveGradleExtension::class.java)
+        logger.info("Adaptive Gradle plugin $PLUGIN_VERSION is being applied")
 
+        val adaptiveExtension = extensions.create(GRADLE_EXTENSION_NAME, AdaptiveGradleExtension::class.java)
         project.configureAdaptiveResources(adaptiveExtension.resources)
     }
 

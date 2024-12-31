@@ -10,7 +10,9 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.lib.sandbox.model.SignUp
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.boldFont
 import `fun`.adaptive.ui.api.border
@@ -42,7 +44,6 @@ import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.textColor
 import `fun`.adaptive.ui.api.underline
-import `fun`.adaptive.ui.builtin.Res
 import `fun`.adaptive.ui.builtin.check
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.*
@@ -142,7 +143,7 @@ fun checkbox(
 
         if (binding.value) {
             box(*activeCheckBox) {
-                image(Res.drawable.check) .. noSelect .. frame(1.dp, 1.dp, 18.dp, 18.dp)
+                svg(Graphics.check) .. noSelect .. frame(1.dp, 1.dp, 18.dp, 18.dp)
             }
         } else {
             box(*inactiveCheckBox) {

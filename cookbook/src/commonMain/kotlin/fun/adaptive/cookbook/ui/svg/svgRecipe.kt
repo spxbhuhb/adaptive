@@ -1,6 +1,5 @@
 package `fun`.adaptive.cookbook.ui.svg
 
-import `fun`.adaptive.cookbook.Res
 import `fun`.adaptive.cookbook.eco
 import `fun`.adaptive.cookbook.folder
 import `fun`.adaptive.cookbook.frame_inspect
@@ -11,6 +10,7 @@ import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.colSpan
 import `fun`.adaptive.ui.api.colTemplate
@@ -34,10 +34,10 @@ fun svgRecipe() {
         gap { 16.dp } .. maxWidth
         colTemplate(64.dp, 1.fr) .. rowTemplate(32.dp repeat 3)
 
-        svg(Res.drawable.eco)
+        svg(Graphics.eco)
         text(" - default")
 
-        svg(Res.drawable.eco) .. iconColors.onSurfaceFriendly
+        svg(Graphics.eco) .. iconColors.onSurfaceFriendly
         text(" - with color")
 
         colorChange()
@@ -54,7 +54,7 @@ private fun colorChange() {
     val random = poll(1.seconds) { now().epochSeconds.toInt() % 4 } ?: 0
     val colors = arrayOf(iconColors.onSurface, iconColors.onSurfaceVariant, iconColors.onSurfaceFriendly, iconColors.onSurfaceAngry)
 
-    svg(Res.drawable.eco, traceAll) .. colors[random]
+    svg(Graphics.eco, traceAll) .. colors[random]
 
     text(" - with changing color - $random")
 }
@@ -63,7 +63,7 @@ private fun colorChange() {
 private fun big() {
     column {
         gap { 16.dp }
-        svg(Res.drawable.eco) .. svgHeight(128.dp) .. svgWidth(128.dp) .. size(128.dp, 128.dp)
-        svg(Res.drawable.frame_inspect) .. svgHeight(128.dp) .. svgWidth(128.dp) .. size(128.dp, 128.dp)
+        svg(Graphics.eco) .. svgHeight(128.dp) .. svgWidth(128.dp) .. size(128.dp, 128.dp)
+        svg(Graphics.frame_inspect) .. svgHeight(128.dp) .. svgWidth(128.dp) .. size(128.dp, 128.dp)
     }
 }

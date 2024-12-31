@@ -46,7 +46,6 @@ import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.form.FormFragmentFactory
 import `fun`.adaptive.ui.form.platform.BrowserHistoryStateListener
 import `fun`.adaptive.ui.instruction.*
-import `fun`.adaptive.ui.platform.withJsResources
 import `fun`.adaptive.ui.snackbar.SnackbarManager
 import `fun`.adaptive.ui.uiCommon
 import kotlinx.browser.window
@@ -63,8 +62,6 @@ fun main() {
         uiCommon()
         authCommon()
         cookbookCommon()
-
-        withJsResources()
 
         val transport = webSocketTransport(window.location.origin)
 

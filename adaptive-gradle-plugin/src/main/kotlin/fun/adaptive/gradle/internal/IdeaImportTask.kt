@@ -15,6 +15,8 @@ import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 
+internal const val IDEA_IMPORT_TASK_NAME = "prepareKotlinIdeaImport"
+
 internal fun Project.ideaIsInSyncProvider(): Provider<Boolean> = provider {
     System.getProperty("idea.sync.active", "false").toBoolean()
 }

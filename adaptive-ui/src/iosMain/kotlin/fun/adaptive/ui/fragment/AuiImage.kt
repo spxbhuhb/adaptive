@@ -49,16 +49,15 @@ class AuiImage(
         patchInstructions()
 
         if (haveToPatch(dirtyMask, 1)) {
-            // FIXME start image read in a different thread and during mount maybe?
-            CoroutineScope(adapter.dispatcher).launch {
-                val data = defaultResourceReader.read(content.path)
-
-                val nsData = data.usePinned { pinnedData ->
-                    NSData.dataWithBytes(pinnedData.addressOf(0), data.size.toULong())
+            CoroutineScope(Dispatchers.IO).launch {
+                val data = content.readAll()
+                CoroutineScope(adapter.dispatcher).launch {
+                    val nsData = data.usePinned { pinnedData ->
+                        NSData.dataWithBytes(pinnedData.addressOf(0), data.size.toULong())
+                    }
+                    receiver.image = UIImage(data = nsData)
+                    receiver.contentMode = UIViewContentMode.UIViewContentModeScaleAspectFit
                 }
-
-                receiver.image = UIImage(data = nsData)
-                receiver.contentMode = UIViewContentMode.UIViewContentModeScaleAspectFit
             }
         }
 

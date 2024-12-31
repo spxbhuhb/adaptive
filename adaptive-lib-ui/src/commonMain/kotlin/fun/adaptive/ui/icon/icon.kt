@@ -5,11 +5,11 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.graphics.svg.api.svg
-import `fun`.adaptive.resource.DrawableResource
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 
 @Adaptive
 fun icon(
-    resource: DrawableResource,
+    resource: GraphicsResourceSet,
     vararg instructions: AdaptiveInstruction,
     theme: IconTheme = onSurfaceIconTheme,
 ): AdaptiveFragment {

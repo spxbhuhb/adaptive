@@ -1,6 +1,6 @@
 package `fun`.adaptive.cookbook.ui.dialog
 
-import `fun`.adaptive.cookbook.Res
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.cookbook.check
 import `fun`.adaptive.cookbook.grid_view
 import `fun`.adaptive.cookbook.mail
@@ -34,23 +34,23 @@ fun dialogRecipe() {
 
         dialogBasic()
 
-        buttonDialog("Button Dialog", Res.drawable.mail, "Button Dialog Title") { close ->
+        buttonDialog("Button Dialog", Graphics.mail, "Button Dialog Title") { close ->
             dialogContent(close)
         }
 
         row {
             gap { 16.dp }
-            iconDialog(Res.drawable.grid_view, "Icon Dialog Title") { close ->
+            iconDialog(Graphics.grid_view, "Icon Dialog Title") { close ->
                 dialogContent(close)
             }
             text("(icon dialog)") .. textColors.onSurfaceVariant
         }
 
-        buttonDialog("Independent", Res.drawable.mail, "Dialog Title") { close ->
+        buttonDialog("Independent", Graphics.mail, "Dialog Title") { close ->
             independent(close)
         }
 
-        buttonDialog("Independent Auto", Res.drawable.mail, "Dialog Title") { close ->
+        buttonDialog("Independent Auto", Graphics.mail, "Dialog Title") { close ->
             independentAuto(close)
         }
     }
@@ -83,7 +83,7 @@ private fun dialogContent(close: () -> Unit) {
         text("Data:") .. alignSelf.startCenter
         editor { data }
 
-        button("Save", Res.drawable.check) .. gridCol(2) .. alignSelf.endBottom ..
+        button("Save", Graphics.check) .. gridCol(2) .. alignSelf.endBottom ..
             onClick {
                 // save the content
                 close()

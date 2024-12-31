@@ -5,6 +5,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.column
@@ -16,7 +17,7 @@ import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.hover
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.builtin.Res
+
 import `fun`.adaptive.ui.builtin.arrow_drop_down
 import `fun`.adaptive.ui.builtin.arrow_drop_up
 import `fun`.adaptive.ui.icon.icon
@@ -94,7 +95,7 @@ private fun <T> selectTop(
         if (focus) theme.focused else theme.enabled
 
         text(selected?.let { toText.toTextFun(it) } ?: placeholder?.value ?: "") .. textColor
-        icon(if (open) Res.drawable.arrow_drop_up else Res.drawable.arrow_drop_down)
+        icon(if (open) Graphics.arrow_drop_up else Graphics.arrow_drop_down)
     }
 
     return fragment()

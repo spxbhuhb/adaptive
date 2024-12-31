@@ -2,9 +2,9 @@ package `fun`.adaptive.ui.app.basic
 
 import `fun`.adaptive.auth.model.Session
 import `fun`.adaptive.auto.api.autoItemOrigin
-import `fun`.adaptive.resource.DrawableResource
+import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.service.transport.ServiceCallTransport
-import `fun`.adaptive.ui.builtin.Res
 import `fun`.adaptive.ui.builtin.menu
 import `fun`.adaptive.ui.builtin.settings
 import `fun`.adaptive.ui.navigation.NavState
@@ -24,10 +24,10 @@ open class BasicAppData {
 
     val layoutState = autoItemOrigin(DefaultLayoutState())
 
-    var smallAppMenuIcon: DrawableResource = Res.drawable.menu
-    var smallSettingsAppIcon: DrawableResource = Res.drawable.settings
-    var mediumAppIcon: DrawableResource? = null
-    var largeAppIcon: DrawableResource? = null
+    var smallAppMenuIcon = Graphics.menu
+    var smallSettingsAppIcon = Graphics.settings
+    var mediumAppIcon: GraphicsResourceSet? = null
+    var largeAppIcon: GraphicsResourceSet? = null
 
     var sidebarItems = emptyList<SidebarItem>()
 

@@ -6,7 +6,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.manualImplementation
 import `fun`.adaptive.graphics.canvas.canvas
-import `fun`.adaptive.resource.DrawableResource
+import `fun`.adaptive.resource.graphics.GraphicsResource
 import kotlin.math.PI
 
 @AdaptiveExpect(canvas)
@@ -49,6 +49,6 @@ fun line(
 }
 
 @AdaptiveExpect(canvas)
-fun svg(resource : DrawableResource, vararg instructions: AdaptiveInstruction) {
+fun svg(resource : GraphicsResource, vararg instructions: AdaptiveInstruction) {
     manualImplementation(resource, instructions)
 }

@@ -1,6 +1,6 @@
 package `fun`.adaptive.cookbook.ui.dialog
 
-import `fun`.adaptive.cookbook.Res
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.cookbook.check
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.Independent
@@ -57,7 +57,7 @@ fun independent(close: () -> Unit) {
         text("Independent data:")
         editor { iData }
 
-        button("Save", Res.drawable.check) .. gridCol(2) .. alignSelf.endBottom .. onClick { close() }
+        button("Save", Graphics.check) .. gridCol(2) .. alignSelf.endBottom .. onClick { close() }
     }
 
 }

@@ -10,11 +10,6 @@ import `fun`.adaptive.resource.*
 import `fun`.adaptive.resource.platform.getResourceReader
 import java.util.*
 
-fun withAndroidResources() {
-    defaultResourceEnvironmentOrNull = getSystemEnvironment()
-    defaultResourceReaderOrNull = getResourceReader()
-}
-
 private fun getSystemEnvironment(): ResourceEnvironment {
     val locale = Locale.getDefault()
     val configuration = Resources.getSystem().configuration

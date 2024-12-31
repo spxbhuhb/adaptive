@@ -6,12 +6,6 @@ import org.gradle.kotlin.dsl.adaptive
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.adaptive)
-    java
-    application
-}
-
-application {
-    mainClass.set("MainKt")
 }
 
 adaptive {
@@ -63,11 +57,18 @@ kotlin {
             }
         }
 
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+
         jsMain {
             dependencies {
                 implementation(libs.ktor.client.core)
             }
         }
+
         jvmMain {
             dependencies {
                 implementation(libs.h2database)

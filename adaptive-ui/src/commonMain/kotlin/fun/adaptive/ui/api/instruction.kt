@@ -4,7 +4,9 @@ import `fun`.adaptive.foundation.instruction.AdaptiveDetach
 import `fun`.adaptive.foundation.instruction.DetachHandler
 import `fun`.adaptive.foundation.instruction.DetachName
 import `fun`.adaptive.foundation.instruction.Name
-import `fun`.adaptive.resource.FileResource
+import `fun`.adaptive.resource.defaultResourceReader
+import `fun`.adaptive.resource.file.FileResource
+import `fun`.adaptive.resource.file.FileResourceSet
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.SPixel
 import `fun`.adaptive.ui.instruction.decoration.*
@@ -208,7 +210,7 @@ fun route(
  */
 inline fun historySize(sizeFun: () -> Int) = HistorySize(sizeFun())
 
-fun externalLink(res: FileResource) = ExternalLink(res.uri)
+fun externalLink(res: FileResourceSet) = ExternalLink(res.uri)
 fun externalLink(href: String) = ExternalLink(href)
 
 // ------------------------------------------------------------------------------------

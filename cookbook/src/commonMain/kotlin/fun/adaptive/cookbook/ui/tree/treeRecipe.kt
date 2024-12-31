@@ -1,6 +1,6 @@
 package `fun`.adaptive.cookbook.ui.tree
 
-import `fun`.adaptive.cookbook.Res
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.cookbook.folder
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ui.api.column
@@ -36,22 +36,22 @@ fun treeRecipe() {
 
 val staticTree = listOf(
     TreeItem(
-        icon = Res.drawable.folder,
+        icon = Graphics.folder,
         title = "Item 1",
         children = listOf(
             TreeItem(
-                icon = Res.drawable.folder,
+                icon = Graphics.folder,
                 title = "Item 1.1",
                 children = listOf()
             )
         )
     ),
     TreeItem(
-        icon = Res.drawable.folder,
+        icon = Graphics.folder,
         title = "Item 2",
         children = listOf(
             TreeItem(
-                icon = Res.drawable.folder,
+                icon = Graphics.folder,
                 title = "Item 2.1",
                 children = listOf()
             )
@@ -69,7 +69,7 @@ private fun generateRandomTree(index: Int, depth: Int): TreeItem {
     }
 
     return TreeItem(
-        icon = Res.drawable.folder,
+        icon = Graphics.folder,
         title = nodeTitle,
         children = children
     )

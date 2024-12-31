@@ -81,6 +81,10 @@ abstract class AdaptiveLogger {
         if (level <= LogLevel.Warning) rawWarning(message(), exception)
     }
 
+    inline fun AdaptiveLogger.warning(message: () -> String) {
+        if (level <= LogLevel.Warning) warning(message())
+    }
+
     // --------------------------------------------------------------------------------
     // Error
     // --------------------------------------------------------------------------------

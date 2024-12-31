@@ -6,7 +6,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.rangeTo
-import `fun`.adaptive.resource.DrawableResource
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.onClose
 import `fun`.adaptive.ui.icon.icon
@@ -23,14 +23,14 @@ import `fun`.adaptive.ui.icon.primaryIconTheme
  */
 @Adaptive
 fun iconDialog(
-    resource: DrawableResource,
+    icon: GraphicsResourceSet,
     title: String,
     vararg instructions: AdaptiveInstruction,
     @Adaptive _fixme_adaptive_content: (close: () -> Unit) -> Unit
 ): AdaptiveFragment {
     var modalOpen = false
 
-    icon(resource, *instructions, theme = primaryIconTheme) .. onClick { modalOpen = true }
+    icon(icon, *instructions, theme = primaryIconTheme) .. onClick { modalOpen = true }
 
     if (modalOpen) {
         dialog(title) {

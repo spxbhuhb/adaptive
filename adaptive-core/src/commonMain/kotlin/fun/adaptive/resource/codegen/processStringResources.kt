@@ -8,7 +8,6 @@ import `fun`.adaptive.resource.ResourceTypeQualifier
 import `fun`.adaptive.resource.avs.AvsWriter
 import `fun`.adaptive.resource.codegen.ResourceCompilation.FileAndValues
 import `fun`.adaptive.resource.codegen.kotlin.stringResource
-import `fun`.adaptive.resource.string.StringStoreResourceSet
 import `fun`.adaptive.utility.delete
 import `fun`.adaptive.utility.readString
 import `fun`.adaptive.utility.resolve
@@ -39,7 +38,7 @@ fun ResourceCompilation.processStringResources(resourceFileSet: ResourceFileSet<
     // load all values from all the files
 
     val filesAndValues = resourceFileSet.files.map {
-        val path = sourcePath.resolve(it.path)
+        val path = originalResourcesPath.resolve(it.path)
         FileAndValues(
             it,
             mutableMapOf<String, ResourceCompilation.ResourceValue>().also {
@@ -78,6 +77,8 @@ fun ResourceCompilation.processStringResources(resourceFileSet: ResourceFileSet<
 internal fun ResourceCompilation.indexValueSets(
     sets: List<FileAndValues>
 ): List<String>? {
+    if (sets.isEmpty()) return emptyList()
+
     val sortedKeys = sets.map { it.values.keys.sorted() }
 
     if (sortedKeys.distinct().size != 1) {

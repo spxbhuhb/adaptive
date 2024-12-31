@@ -9,11 +9,10 @@
 
 package `fun`.adaptive.gradle.resources
 
-import `fun`.adaptive.gradle.internal.utils.dependsOn
-import `fun`.adaptive.gradle.internal.utils.joinLowerCamelCase
-import `fun`.adaptive.gradle.internal.utils.registerOrConfigure
-import `fun`.adaptive.gradle.internal.utils.uppercaseFirstChar
-
+import `fun`.adaptive.gradle.internal.dependsOn
+import `fun`.adaptive.gradle.internal.registerOrConfigure
+import `fun`.adaptive.utility.joinLowerCamelCase
+import `fun`.adaptive.utility.uppercaseFirstChar
 import org.gradle.api.Project
 import org.gradle.api.file.Directory
 import org.gradle.api.plugins.ExtensionAware
@@ -21,7 +20,9 @@ import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Copy
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.plugin.cocoapods.CocoapodsExtension
-import org.jetbrains.kotlin.gradle.plugin.mpp.*
+import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable
 import org.jetbrains.kotlin.konan.target.KonanTarget
 import java.io.File
 

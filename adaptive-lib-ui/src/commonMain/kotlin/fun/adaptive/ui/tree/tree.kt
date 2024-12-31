@@ -6,18 +6,8 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.svg.api.svg
-import `fun`.adaptive.ui.api.alignItems
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.hover
-import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.paddingLeft
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.size
-import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.api.width
-import `fun`.adaptive.ui.builtin.Res
+import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.arrow_drop_down
 import `fun`.adaptive.ui.builtin.arrow_right
 import `fun`.adaptive.ui.instruction.DPixel
@@ -84,8 +74,8 @@ private fun label(
             size(24.dp, 24.dp)
             when {
                 item.children.isEmpty() -> box { }
-                open -> svg(Res.drawable.arrow_drop_down)
-                else -> svg(Res.drawable.arrow_right)
+                open -> svg(Graphics.arrow_drop_down)
+                else -> svg(Graphics.arrow_right)
             }
         }
         text(item.title) .. theme.label .. colors

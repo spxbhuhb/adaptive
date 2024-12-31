@@ -13,22 +13,24 @@ import com.android.build.api.variant.AndroidComponentsExtension
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.internal.lint.AndroidLintAnalysisTask
 import com.android.build.gradle.internal.lint.LintModelWriterTask
-import `fun`.adaptive.gradle.internal.utils.registerTask
-import `fun`.adaptive.gradle.internal.utils.uppercaseFirstChar
+import `fun`.adaptive.gradle.internal.registerTask
+import `fun`.adaptive.gradle.resources.ProcessResourcesTask.Companion.getPreparedAdaptiveResourcesDir
+import `fun`.adaptive.utility.uppercaseFirstChar
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.FileCollection
 import org.gradle.api.file.FileSystemOperations
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.*
+import org.gradle.api.tasks.IgnoreEmptyDirectories
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.OutputDirectory
+import org.gradle.api.tasks.TaskAction
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinAndroidTarget
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinJvmAndroidCompilation
 import org.jetbrains.kotlin.gradle.plugin.sources.android.androidSourceSetInfoOrNull
-import org.jetbrains.kotlin.gradle.utils.ObservableSet
 import javax.inject.Inject
 
 @OptIn(ExperimentalKotlinGradlePluginApi::class)
@@ -46,7 +48,7 @@ internal fun Project.configureAndroidAdaptiveResources(
                 androidExtension.sourceSets
                     .matching { it.name == kotlinAndroidSourceSet.androidSourceSetName }
                     .all { androidSourceSet ->
-                        (compilation.allKotlinSourceSets as? ObservableSet<KotlinSourceSet>)?.forAll { kotlinSourceSet ->
+                        compilation.allKotlinSourceSets.forAll { kotlinSourceSet ->
                             val preparedAdaptiveResources = getPreparedAdaptiveResourcesDir(kotlinSourceSet)
                             androidSourceSet.resources.srcDirs(preparedAdaptiveResources)
 
@@ -70,7 +72,7 @@ internal fun Project.configureAndroidAdaptiveResources(
             androidTarget.compilations.all { compilation: KotlinJvmAndroidCompilation ->
                 if (compilation.androidVariant.name == variant.name) {
                     project.logger.info("Configure fonts for variant ${variant.name}")
-                    (compilation.allKotlinSourceSets as? ObservableSet<KotlinSourceSet>)?.forAll { kotlinSourceSet ->
+                    compilation.allKotlinSourceSets.forAll { kotlinSourceSet ->
                         val preparedAdaptiveResources = getPreparedAdaptiveResourcesDir(kotlinSourceSet)
                         variantResources.from(preparedAdaptiveResources)
                     }
@@ -83,7 +85,8 @@ internal fun Project.configureAndroidAdaptiveResources(
         ) {
             from.set(variantResources)
         }
-        variant.sources?.assets?.addGeneratedSourceDirectory(
+        @Suppress("UnstableApiUsage")
+        variant.sources.assets?.addGeneratedSourceDirectory(
             taskProvider = copyFonts,
             wiredWith = CopyAndroidFontsToAssetsTask::outputDirectory
         )
@@ -129,6 +132,6 @@ internal fun Project.fixAndroidLintTaskDependencies() {
     tasks.matching {
         it is AndroidLintAnalysisTask || it is LintModelWriterTask
     }.configureEach {
-        it.mustRunAfter(tasks.withType(GenerateResourceAccessorsTask::class.java))
+        it.mustRunAfter(tasks.withType(ProcessResourcesTask::class.java))
     }
 }

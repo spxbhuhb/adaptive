@@ -23,19 +23,3 @@ interface ResourceReader {
 }
 
 class MissingResourceException(path: String) : Exception("Missing resource with path: $path")
-
-/**
- * Reads the content of the resource file at the specified path and returns it as a byte array.
- *
- * @param path The path of the file to read in the resource's directory.
- * @return The content of the file as a byte array.
- */
-suspend fun readResourceBytes(path: String): ByteArray = getResourceReader().read(path)
-
-/**
- * Provides the platform dependent URI for a given resource path.
- *
- * @param path The path to the file in the resource's directory.
- * @return The URI string of the specified resource.
- */
-fun getResourceUri(path: String): String = getResourceReader().getUri(path)

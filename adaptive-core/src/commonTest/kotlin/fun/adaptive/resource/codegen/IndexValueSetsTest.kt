@@ -77,7 +77,7 @@ class IndexValueSetsTest {
         val filePath = Path("/fake/path/to/file.xml")
 
         val resourceCompilation = ResourceCompilation(
-            sourcePath, "", "commonTest", sourcePath, sourcePath
+            sourcePath, "", "commonTest", sourcePath, sourcePath,
         )
 
         val sets = sources.map {

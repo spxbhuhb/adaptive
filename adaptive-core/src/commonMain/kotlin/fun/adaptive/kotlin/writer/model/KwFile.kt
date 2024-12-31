@@ -23,7 +23,7 @@ class KwFile(
         if (packageName.isNotEmpty()) {
             writer
                 .add("package")
-                .add(packageName)
+                .symbol(KwSymbol(packageName))
                 .newLine()
                 .newLine()
         }

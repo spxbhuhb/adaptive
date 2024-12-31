@@ -35,9 +35,6 @@ open class Resource (
     val path : String
         get() = items.single().path
 
-    val uri : String
-        get() = defaultResourceReader.getUri(path)
-
 }
 
 data class ResourceItem(

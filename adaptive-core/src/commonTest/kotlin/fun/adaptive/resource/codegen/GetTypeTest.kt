@@ -15,7 +15,8 @@ class GetTypeTest {
         val testFilePath = testPath.resolve("resource.txt")
 
         val compilation = ResourceCompilation(
-            testFilePath, "", "commonTest", testFilePath, testFilePath
+            testFilePath, "", "commonTest", testFilePath, testFilePath,
+            withFileDefault = false
         )
 
         val errors = compilation.reports

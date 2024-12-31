@@ -7,13 +7,10 @@ import `fun`.adaptive.grove.designer.groveMain
 import `fun`.adaptive.grove.fragment.GroveFragmentFactory
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.instruction.sp
-import `fun`.adaptive.ui.platform.withJsResources
 
 val clientBackend = backend {  }
 
 fun main() {
-
-    withJsResources()
 
     //(trace = Trace(".*"))
     //, trace = trace("removeActual|.*-Unmount|setContent")

@@ -1,10 +1,9 @@
 package `fun`.adaptive.ui.tree
 
-import `fun`.adaptive.resource.DrawableResource
-import `fun`.adaptive.ui.navigation.NavState
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 
 open class TreeItem(
-    val icon: DrawableResource,
+    val icon: GraphicsResourceSet,
     val title: String,
     val children: List<TreeItem>,
 )

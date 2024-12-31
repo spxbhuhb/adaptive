@@ -4,7 +4,7 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.auto.api.autoItemOrigin
-import `fun`.adaptive.cookbook.Res
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.cookbook.check
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.Independent
@@ -69,7 +69,7 @@ fun independentAuto(close: () -> Unit) {
         text("Independent data:")
         editor { iData.s }
 
-        button("Save", Res.drawable.check) .. gridCol(2) .. alignSelf.endBottom .. onClick {
+        button("Save", Graphics.check) .. gridCol(2) .. alignSelf.endBottom .. onClick {
             sharedData.update(iData::s)
             close()
         }

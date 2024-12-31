@@ -14,14 +14,9 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.adaptive)
     alias(libs.plugins.shadow)
-    application
 }
 
 version = libs.versions.adaptive.get()
-
-application {
-    mainClass.set("MainKt")
-}
 
 adaptive {
     pluginDebug = false

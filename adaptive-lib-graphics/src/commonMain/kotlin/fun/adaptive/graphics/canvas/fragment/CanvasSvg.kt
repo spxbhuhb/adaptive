@@ -11,10 +11,10 @@ import `fun`.adaptive.graphics.canvas.canvas
 import `fun`.adaptive.graphics.svg.SvgAdapter
 import `fun`.adaptive.graphics.svg.parse.SvgInstruction
 import `fun`.adaptive.graphics.svg.parse.parseSvg
-import `fun`.adaptive.resource.DrawableResource
-import `fun`.adaptive.resource.defaultResourceReader
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.utility.checkIfInstance
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AdaptiveActual(canvas)
@@ -26,7 +26,7 @@ open class CanvasSvg(
 
     val svgAdapter = SvgAdapter(adapter, canvas).also { it.trace = adapter.trace }
 
-    var resource: DrawableResource
+    var resource: GraphicsResourceSet
         get() = state[0].checkIfInstance()
         set(v) {
             setStateVariable(0, v)
@@ -37,11 +37,12 @@ open class CanvasSvg(
     override fun genPatchInternal(): Boolean {
 
         if (haveToPatch(dirtyMask, 1)) {
-            // FIXME start resource read in a different thread and during mount maybe?
-            CoroutineScope(adapter.dispatcher).launch {
-                data = defaultResourceReader.read(resource.path)
-                svgAdapter.rootFragment = parseSvg(svgAdapter, data.decodeToString(), instructions.filterIsInstance<SvgInstruction>().toTypedArray())
-                svgAdapter.draw()
+            CoroutineScope(Dispatchers.Default).launch {
+                data = resource.readAll()
+                CoroutineScope(adapter.dispatcher).launch {
+                    svgAdapter.rootFragment = parseSvg(svgAdapter, data.decodeToString(), instructions.filterIsInstance<SvgInstruction>().toTypedArray())
+                    svgAdapter.draw()
+                }
             }
         }
 

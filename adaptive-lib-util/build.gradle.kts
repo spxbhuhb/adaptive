@@ -30,7 +30,7 @@ kotlin {
     jvm()
 
     js(IR) {
-        browser()
+        nodejs()
         binaries.library()
     }
 

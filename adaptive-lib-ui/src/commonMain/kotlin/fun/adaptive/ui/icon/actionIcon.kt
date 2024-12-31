@@ -5,13 +5,13 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.graphics.svg.api.svg
-import `fun`.adaptive.resource.DrawableResource
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.hover
 
 @Adaptive
 fun actionIcon(
-    resource: DrawableResource,
+    icon: GraphicsResourceSet,
     vararg instructions: AdaptiveInstruction,
     theme: IconTheme = onSurfaceIconTheme,
 ): AdaptiveFragment {
@@ -19,7 +19,7 @@ fun actionIcon(
     val colors = theme.colors(hover)
 
     box(*theme.actionIconContainer, *colors, *instructions) {
-        svg(resource, *theme.actionIcon, *colors, *instructions)
+        svg(icon, *theme.actionIcon, *colors, *instructions)
     }
 
     return fragment()

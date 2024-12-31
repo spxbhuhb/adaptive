@@ -7,6 +7,8 @@ package `fun`.adaptive.lib.sandbox.ui.mobile
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.producer.poll
 import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.resource.file.Files
+import `fun`.adaptive.resource.image.Images
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column
@@ -49,7 +51,7 @@ fun goodMorning() {
     val time = poll(1.milliseconds) { nowLocal() } ?: nowLocal()
     val timeText = "${time.hour.twoDigits}:${time.minute.twoDigits}:${time.second.twoDigits}"
 
-    image(Res.drawable.background)
+    image(Images.background)
 
     grid {
         rowTemplate(140.dp, 50.dp, 1.fr, 1.fr, 1.fr, 50.dp, 100.dp)
@@ -92,7 +94,7 @@ private fun logo() {
         paddingBottom(20.dp)
         maxSize
 
-        image(Res.drawable.logo, size(92.dp, 92.dp))
+        image(Images.logo, size(92.dp, 92.dp))
     }
 }
 
@@ -171,9 +173,9 @@ private fun terms() {
     column(AlignItems.Companion.center, padding(right = 32.dp, left = 32.dp, top = 12.dp)) {
         row {
             text("By joining you agree to our", *smallWhiteNoWrap, paddingRight(6.dp))
-            text("Terms of Service", externalLink(Res.file.terms), *smallWhiteNoWrap, bold, paddingRight(right = 6.dp))
+            text("Terms of Service", externalLink(Files.terms), *smallWhiteNoWrap, bold, paddingRight(right = 6.dp))
             text("and", *smallWhiteNoWrap)
         }
-        text("Privacy Policy", externalLink(Res.file.policy), *smallWhiteNoWrap, bold)
+        text("Privacy Policy", externalLink(Files.policy), *smallWhiteNoWrap, bold)
     }
 }

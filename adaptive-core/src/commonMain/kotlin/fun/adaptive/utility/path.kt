@@ -24,7 +24,7 @@ fun Path.write(string: String, append: Boolean = false, overwrite: Boolean = fal
     write(string.encodeToByteArray(), append = append, overwrite = overwrite, useTemporaryFile = useTemporaryFile)
 }
 
-fun Path.write(bytes: ByteArray, append: Boolean = false, overwrite : Boolean = false, useTemporaryFile: Boolean = false) {
+fun Path.write(bytes: ByteArray, append: Boolean = false, overwrite: Boolean = false, useTemporaryFile: Boolean = false) {
     val exists = exists()
     check((! exists) || overwrite) { "file $this already exists" }
 
@@ -33,7 +33,7 @@ fun Path.write(bytes: ByteArray, append: Boolean = false, overwrite : Boolean = 
             it.write(bytes)
             it.flush()
             // withTemporary will move the tmp, but atomicMove fails if the file is already there
-            if (!append && exists && useTemporaryFile) {
+            if (! append && exists && useTemporaryFile) {
                 delete()
             }
         }
@@ -43,15 +43,15 @@ fun Path.write(bytes: ByteArray, append: Boolean = false, overwrite : Boolean = 
 /**
  * Encode [value] with [wireFormatProvider] into a byte array and write it to `this`.
  */
-fun <A : AdatClass> Path.save(value: A, wireFormatProvider: WireFormatProvider, overwrite : Boolean = false, useTemporaryFile: Boolean = true) {
-    check(! exists() || overwrite) { "file $this already exists" }
+fun <A : AdatClass> save(path: Path, value: A, wireFormatProvider: WireFormatProvider, overwrite: Boolean = false, useTemporaryFile: Boolean = true) {
+    check(! path.exists() || overwrite) { "file $path already exists" }
 
     @Suppress("UNCHECKED_CAST")
     wireFormatProvider.encoder()
         .rawInstance(value, value.adatCompanion.adatWireFormat as WireFormat<A>)
         .pack()
         .also {
-            write(it, append = false, overwrite = overwrite, useTemporaryFile = useTemporaryFile)
+            path.write(it, append = false, overwrite = overwrite, useTemporaryFile = useTemporaryFile)
         }
 }
 
@@ -152,12 +152,15 @@ fun Path.ensure(vararg sub: String): Path {
  * in all subdirectories of `this` (recursively).
  *
  * [process] is not called for directories, only for files.
+ *
+ * @param  ignoreHidden  Ignore files with name starting with `.`.
  */
-fun Path.walkFiles(process: (Path) -> Unit) {
+fun Path.walkFiles(ignoreHidden: Boolean = true, process: (Path) -> Unit) {
     for (file in list()) {
         if (SystemFileSystem.metadataOrNull(file)?.isDirectory == true) {
-            file.walkFiles(process)
+            file.walkFiles(ignoreHidden, process)
         } else {
+            if (file.name.startsWith(".") && ignoreHidden) continue
             process(file)
         }
     }

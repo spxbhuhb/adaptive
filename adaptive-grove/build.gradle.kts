@@ -4,12 +4,6 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.adaptive)
-    java
-    application
-}
-
-application {
-    mainClass.set("MainKt")
 }
 
 // this is ugly but I don't use JS dependencies anyway, 

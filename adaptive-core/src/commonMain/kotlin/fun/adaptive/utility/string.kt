@@ -1,5 +1,6 @@
 /*
- * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ * Copyright © 2020-2024, Simplexion, Hungary and respective authors and developers.
+ * Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE.txt file.
  */
 
 package `fun`.adaptive.utility
@@ -197,6 +198,10 @@ fun String.decodeFromUrl(): String {
     return result.toByteArray().decodeToString()
 }
 
+//
+// Credit: I've copied the following functions from Compose Multiplatform: https://github.com/JetBrains/compose-multiplatform
+//
+
 fun String.uppercaseFirstChar(): String =
     transformFirstCharIfNeeded(
         shouldTransform = { it.isLowerCase() },
@@ -209,7 +214,7 @@ fun String.lowercaseFirstChar(): String =
         transform = { it.lowercaseChar() }
     )
 
-inline fun String.transformFirstCharIfNeeded(
+private inline fun String.transformFirstCharIfNeeded(
     shouldTransform: (Char) -> Boolean,
     transform: (Char) -> Char
 ): String {
@@ -224,3 +229,23 @@ inline fun String.transformFirstCharIfNeeded(
     }
     return this
 }
+
+fun String.asUnderscoredIdentifier(): String =
+    replace('-', '_')
+        .let { if (it.isNotEmpty() && it.first().isDigit()) "_$it" else it }
+
+
+fun joinDashLowercaseNonEmpty(vararg parts: String): String =
+    parts
+        .filter { it.isNotEmpty() }
+        .joinToString(separator = "-") { it.lowercase() }
+
+fun joinLowerCamelCase(vararg parts: String): String =
+    parts.withIndex().joinToString(separator = "") { (i, part) ->
+        if (i == 0) part.lowercaseFirstChar() else part.uppercaseFirstChar()
+    }
+
+fun joinUpperCamelCase(vararg parts: String): String =
+    parts.joinToString(separator = "") { it.uppercaseFirstChar() }
+
+// End of functions copied from Compose Multiplatform

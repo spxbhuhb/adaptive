@@ -8,11 +8,13 @@ import `fun`.adaptive.utility.DangerousApi
 import kotlinx.io.files.Path
 
 class ResourceCompilation(
-    val sourcePath: Path,
+    val originalResourcesPath: Path,
     val packageName: String,
     val kmpSourceSet: String,
     val generatedCodePath: Path,
-    val preparedResourcesPath: Path
+    val preparedResourcesPath: Path,
+    val withFileQualifiers : Boolean = true,
+    val withFileDefault : Boolean = true
 ) {
     class ResourceValue(
         val name : String,
@@ -40,7 +42,7 @@ class ResourceCompilation(
     val reports = mutableListOf<CompilationReport>()
 
     // TODO the description is not correct, what do we delete exactly?
-    @DangerousApi("deletes everything in target path recursively if sourcePath does not exist")
+    @DangerousApi("deletes everything in target path recursively if originalResourcesPath does not exist")
     fun compile() {
 
         copyFilesAndCollectResourceSets()

@@ -1,6 +1,6 @@
 package `fun`.adaptive.cookbook.ui.button
 
-import `fun`.adaptive.cookbook.Res
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.cookbook.grid_view
 import `fun`.adaptive.cookbook.mail
 import `fun`.adaptive.foundation.Adaptive
@@ -25,8 +25,8 @@ fun buttonRecipe() {
         text("Counter: $counter")
         flowBox {
             gap { 16.dp }
-            button("Hello World", Res.drawable.mail) .. onClick { counter ++ }
-            dangerButton("Hello World", Res.drawable.grid_view) .. onClick { counter ++ }
+            button("Hello World", Graphics.mail) .. onClick { counter ++ }
+            dangerButton("Hello World", Graphics.grid_view) .. onClick { counter ++ }
         }
     }
 
