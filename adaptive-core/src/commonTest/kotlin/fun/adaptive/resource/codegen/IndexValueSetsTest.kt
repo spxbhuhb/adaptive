@@ -3,6 +3,8 @@ package `fun`.adaptive.resource.codegen
 import `fun`.adaptive.resource.codegen.ResourceCompilation.FileAndValues
 import `fun`.adaptive.resource.codegen.ResourceCompilation.ResourceValue
 import `fun`.adaptive.resource.file.FileResource
+import `fun`.adaptive.utility.PlatformType
+import `fun`.adaptive.utility.platformType
 import `fun`.adaptive.utility.resolve
 import `fun`.adaptive.utility.testPath
 import kotlinx.io.files.Path
@@ -73,6 +75,8 @@ class IndexValueSetsTest {
         vararg sources: String,
         testFun: ResourceCompilation.(sets: List<FileAndValues>) -> Unit
     ) {
+        if (platformType == PlatformType.JsBrowser) return
+
         val sourcePath = testPath.resolve("resources")
         val filePath = Path("/fake/path/to/file.xml")
 

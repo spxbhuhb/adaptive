@@ -61,7 +61,6 @@ class RestartTest {
 
             val node2 = autoCollectionNode(clientWorker, persistence = nodePersistence) { origin.connectInfo() }
 
-            println(node2.valueOrNull)
             node2.ensureValue()
 
             assertEquals(content_12, node2.value)

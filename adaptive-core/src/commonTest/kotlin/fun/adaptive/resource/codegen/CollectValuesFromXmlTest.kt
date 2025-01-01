@@ -1,5 +1,7 @@
 package `fun`.adaptive.resource.codegen
 
+import `fun`.adaptive.utility.PlatformType
+import `fun`.adaptive.utility.platformType
 import `fun`.adaptive.utility.resolve
 import `fun`.adaptive.utility.testPath
 import kotlinx.io.files.Path
@@ -20,7 +22,7 @@ class CollectValuesFromXmlTest {
                     <string name="key4"/>
                 </resources>
             """.trimIndent()
-        }.also {
+        }?.also {
             val (resourceCompilation, values) = it
 
             assertTrue(resourceCompilation.reports.isEmpty())
@@ -44,7 +46,7 @@ class CollectValuesFromXmlTest {
                 <invalid name="key1">Value1</invalid>
             </resources>
         """.trimIndent()
-        }.also {
+        }?.also {
             val (resourceCompilation, values) = it
 
             assertTrue(resourceCompilation.reports.isNotEmpty())
@@ -60,7 +62,7 @@ class CollectValuesFromXmlTest {
             <resources>
             </resources>
         """.trimIndent()
-        }.also {
+        }?.also {
             val (resourceCompilation, values) = it
 
             assertTrue(resourceCompilation.reports.isEmpty())
@@ -77,7 +79,7 @@ class CollectValuesFromXmlTest {
                 <string name="key1">Value2</string>
             </resources>
         """.trimIndent()
-        }.also {
+        }?.also {
             val (resourceCompilation, values) = it
 
             assertTrue(resourceCompilation.reports.isNotEmpty()) // Expect warnings or errors due to duplicate keys
@@ -87,7 +89,9 @@ class CollectValuesFromXmlTest {
         }
     }
 
-    fun test(xmlContent: () -> String): Pair<ResourceCompilation, Map<String, ResourceCompilation.ResourceValue>> {
+    fun test(xmlContent: () -> String): Pair<ResourceCompilation, Map<String, ResourceCompilation.ResourceValue>>? {
+        if (platformType == PlatformType.JsBrowser) return null
+
         val sourcePath = testPath.resolve("resources")
         val filePath = Path("/fake/path/to/file.xml")
 

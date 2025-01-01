@@ -13,6 +13,8 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.manualImplementation
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -32,7 +34,7 @@ class BackendWorker(
     val workerImpl : WorkerImpl<*>?
         get() = impl as WorkerImpl<*>?
 
-    val scope = CoroutineScope(adapter.dispatcher)
+    val scope = CoroutineScope(SupervisorJob(adapter.scope.coroutineContext[Job]) + adapter.dispatcher)
 
     override fun mount() {
         if (trace) trace("before-Mount")
@@ -59,7 +61,7 @@ class BackendWorker(
             .also { it.unmount() }
 
         if (scope.isActive) {
-            scope.cancel() // TODO check Job docs about waiting
+            scope.cancel("unmount") // TODO check Job docs about waiting
         }
 
         impl = null

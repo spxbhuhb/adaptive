@@ -62,9 +62,8 @@ class AutoTest {
                         testFun()
                     }
 
-                        // FIXME figure out how to stop backends in tests properly
-//                        clientBackend.stop()
-//                        serverBackend.stop()
+                    clientBackend.stop()
+                    serverBackend.stop()
                 }
             }
     }

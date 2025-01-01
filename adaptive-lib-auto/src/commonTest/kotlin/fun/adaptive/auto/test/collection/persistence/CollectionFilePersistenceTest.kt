@@ -10,8 +10,10 @@ import `fun`.adaptive.auto.model.AutoConnectionInfo
 import `fun`.adaptive.auto.model.AutoMetadata
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.test.support.TestData
+import `fun`.adaptive.utility.PlatformType
 import `fun`.adaptive.utility.clearedTestPath
 import `fun`.adaptive.utility.exists
+import `fun`.adaptive.utility.platformType
 import `fun`.adaptive.wireformat.api.Json
 import kotlinx.io.files.Path
 import kotlin.test.Test
@@ -23,6 +25,8 @@ class CollectionFilePersistenceTest {
 
     @Test
     fun save_and_load_empty() {
+        if (platformType == PlatformType.JsBrowser) return
+
         autoCommon()
 
         val dirPath = clearedTestPath()
@@ -50,6 +54,8 @@ class CollectionFilePersistenceTest {
 
     @Test
     fun save_and_load_not_empty() {
+        if (platformType == PlatformType.JsBrowser) return
+
         autoCommon()
 
         val dirPath = clearedTestPath()
@@ -84,6 +90,8 @@ class CollectionFilePersistenceTest {
 
     @Test
     fun basic() {
+        if (platformType == PlatformType.JsBrowser) return
+
         autoCommon()
 
         val dirPath = clearedTestPath()

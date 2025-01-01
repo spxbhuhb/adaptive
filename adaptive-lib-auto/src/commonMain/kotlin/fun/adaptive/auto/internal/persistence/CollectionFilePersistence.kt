@@ -43,7 +43,7 @@ class CollectionFilePersistence<IT : AdatClass>(
     override fun update(export: AutoCollectionExport<IT>) {
         checkNotNull(export.meta) { "export without meta" }
         checkNotNull(export.items) { "export without items" }
-        save(metaPath, export.meta, wireFormatProvider)
+        save(metaPath, export.meta, wireFormatProvider, overwrite = true)
         for (item in export.items) {
             update(item)
         }

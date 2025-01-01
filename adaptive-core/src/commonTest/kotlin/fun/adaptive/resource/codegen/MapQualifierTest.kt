@@ -1,6 +1,8 @@
 package `fun`.adaptive.resource.codegen
 
 import `fun`.adaptive.resource.*
+import `fun`.adaptive.utility.PlatformType
+import `fun`.adaptive.utility.platformType
 import `fun`.adaptive.utility.resolve
 import `fun`.adaptive.utility.testPath
 import kotlin.test.Test
@@ -12,6 +14,8 @@ class MapQualifierTest {
 
     @Test
     fun testMapQualifier() {
+        if (platformType == PlatformType.JsBrowser) return
+
         val testFilePath = testPath.resolve("resource.txt")
 
         with(

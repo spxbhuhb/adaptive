@@ -4,15 +4,13 @@ import `fun`.adaptive.auto.api.AutoApi
 import `fun`.adaptive.auto.internal.instance.AutoInstance
 import `fun`.adaptive.auto.model.AutoHandle
 import `fun`.adaptive.auto.model.operation.*
-import `fun`.adaptive.utility.ThreadSafe
-import `fun`.adaptive.utility.getLock
-import `fun`.adaptive.utility.safeSuspendCall
-import `fun`.adaptive.utility.untilSuccess
-import `fun`.adaptive.utility.use
+import `fun`.adaptive.utility.*
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext
 
 class ServiceConnector(
@@ -34,6 +32,7 @@ class ServiceConnector(
     }
 
     val operations: Channel<AutoOperation> = Channel(pendingLimit)
+    var runContext: CoroutineContext? = null
 
     @ThreadSafe
     var status = Status.CREATED
@@ -56,18 +55,22 @@ class ServiceConnector(
     }
 
     suspend fun run() {
+        runContext = coroutineContext
+
         while (coroutineContext.isActive) {
             safeSuspendCall(instance.logger) {
 
-                connect() // tries until successful or disposed
-
                 try {
+                    connect() // tries until successful or disposed
                     sendOperations()
                 } catch (ex: Exception) {
+                    coroutineContext.ensureActive()
                     instance.error("service connection error", ex)
-                    disconnect()
+                    disconnect() // FIXME disconnect on coroutine cancellation
                 }
+
             }
+
             if (! initiator) break
         }
     }

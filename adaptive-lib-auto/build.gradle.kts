@@ -30,8 +30,13 @@ kotlin {
     jvm()
 
     js(IR) {
-        browser()
+        browser {
+            testTask {
+                enabled = false
+            }
+        }
         binaries.library()
+
     }
 
     if (libs.versions.ios.support.get() != "none") {

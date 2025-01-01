@@ -14,6 +14,8 @@ class PathTest {
 
     @Test
     fun testCopyExistsNoOverride() {
+        if (platformType == PlatformType.JsBrowser) return
+
         val testPath = clearedTestPath("$testFqn.testCopyExistsNoOverride")
         val filePath = testPath.resolve("test.txt")
 
@@ -26,6 +28,8 @@ class PathTest {
 
     @Test
     fun testCopyExistsOverride() {
+        if (platformType == PlatformType.JsBrowser) return
+
         val testPath = clearedTestPath("$testFqn.testCopyExistsOverride")
         val sourcePath = testPath.resolve("test.txt")
         val targetPath = testPath.resolve("test-copy.txt")
@@ -44,6 +48,8 @@ class PathTest {
 
     @Test
     fun testCopyNotExists() {
+        if (platformType == PlatformType.JsBrowser) return
+
         val testPath = clearedTestPath("$testFqn.testCopyNotExists")
         val sourcePath = testPath.resolve("test.txt")
         val targetPath = testPath.resolve("test-copy.txt")
@@ -60,6 +66,8 @@ class PathTest {
 
     @Test
     fun testCopyKeepModification() = runTest {
+        if (platformType == PlatformType.JsBrowser) return@runTest
+
         val testPath = clearedTestPath("$testFqn.testCopyKeepModification")
 
         val sourcePath = testPath.resolve("test.txt")
@@ -81,6 +89,8 @@ class PathTest {
 
     @Test
     fun testEqualsBySizeAndLastModification() = runTest {
+        if (platformType == PlatformType.JsBrowser) return@runTest
+
         val testDir = clearedTestPath("$testFqn.testEqualsBySizeAndLastModification")
         val otherFile = testDir.resolve("other.txt")
         val thisFile = testDir.resolve("this.txt")
@@ -106,6 +116,8 @@ class PathTest {
 
     @Test
     fun testSyncBySizeAndLastModification() {
+        if (platformType == PlatformType.JsBrowser) return
+
         val testDir = clearedTestPath("$testFqn.testSyncBySizeAndLastModification")
         val sourceDir = testDir.resolve("source").ensure()
         val targetDir = testDir.resolve("target").ensure()

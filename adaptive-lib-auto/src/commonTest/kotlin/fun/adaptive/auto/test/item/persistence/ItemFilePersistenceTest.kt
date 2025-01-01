@@ -9,8 +9,10 @@ import `fun`.adaptive.auto.model.AutoMetadata
 import `fun`.adaptive.auto.model.ITEM_ID_ORIGIN
 import `fun`.adaptive.auto.model.LamportTimestamp
 import `fun`.adaptive.auto.test.support.TestData
+import `fun`.adaptive.utility.PlatformType
 import `fun`.adaptive.utility.clearedTestPath
 import `fun`.adaptive.utility.exists
+import `fun`.adaptive.utility.platformType
 import `fun`.adaptive.wireformat.api.Json
 import kotlinx.io.files.Path
 import kotlin.test.Test
@@ -22,6 +24,8 @@ class ItemFilePersistenceTest {
 
     @Test
     fun saveAndLoad() {
+        if (platformType == PlatformType.JsBrowser) return
+
         autoCommon()
 
         val dirPath = clearedTestPath()
@@ -51,6 +55,8 @@ class ItemFilePersistenceTest {
 
     @Test
     fun saveAndLoadNoMeta() {
+        if (platformType == PlatformType.JsBrowser) return
+
         autoCommon()
 
         val dirPath = clearedTestPath()
@@ -80,6 +86,8 @@ class ItemFilePersistenceTest {
 
     @Test
     fun basic() {
+        if (platformType == PlatformType.JsBrowser) return
+
         autoCommon()
 
         val dirPath = clearedTestPath()

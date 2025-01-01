@@ -5,6 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
+import kotlin.coroutines.coroutineContext
 
 /**
  * Call [block] in a try/catch and catch **ALL** exceptions thrown. If an exception
@@ -46,12 +47,13 @@ fun <T> safeCall(logger: AdaptiveLogger, lock : Lock? = null, message : String? 
  * stop others even if it fails.
  *
  * **NOTE** Best is if your cleanup code does not throw exceptions, however, it may
- * be a tad bit hard to cover it all, hence [safeCall].
+ * be a tad bit hard to cover it all, hence [safeSuspendCall].
  */
 suspend fun <T> safeSuspendCall(logger: AdaptiveLogger, message: String? = null, block: suspend () -> T): T? =
     try {
         block()
     } catch (ex: Exception) {
+        coroutineContext.ensureActive()
         try {
             logger.error(message ?: ex.message ?: "", ex)
         } catch (lex: Exception) {

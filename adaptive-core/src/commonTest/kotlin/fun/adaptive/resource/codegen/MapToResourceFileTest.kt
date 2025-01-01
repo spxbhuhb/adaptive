@@ -4,6 +4,8 @@ import `fun`.adaptive.resource.DensityQualifier
 import `fun`.adaptive.resource.ResourceFileSet
 import `fun`.adaptive.resource.ResourceTypeQualifier
 import `fun`.adaptive.resource.ThemeQualifier
+import `fun`.adaptive.utility.PlatformType
+import `fun`.adaptive.utility.platformType
 import `fun`.adaptive.utility.resolve
 import `fun`.adaptive.utility.testPath
 import kotlinx.io.files.Path
@@ -17,6 +19,8 @@ class MapToResourceFileTest {
     @Test
     @JsName("testMapToResourceFileCreatesNewResourceFileSet")
     fun `test mapToResourceFile creates new ResourceFileSet when none exists`() {
+        if (platformType == PlatformType.JsBrowser) return
+
         val (mappedResources, errors) = test(
             Path("/resources/image/logo-dark-mdpi.png"),
         )
@@ -35,6 +39,8 @@ class MapToResourceFileTest {
     @Test
     @JsName("testMapToResourceFileAddsToExistingResourceFileSet")
     fun `test mapToResourceFile adds to existing ResourceFileSet`() {
+        if (platformType == PlatformType.JsBrowser) return
+
         val (mappedResources, errors) = test(
             Path("/resources/icon1-mdpi-image.png"),
             Path("/resources/icon1-hdpi-image.png")
@@ -49,6 +55,8 @@ class MapToResourceFileTest {
     @Test
     @JsName("testMapToResourceFileAddsErrorOnDuplicateQualifiers")
     fun `test mapToResourceFile adds error on duplicate qualifiers`() {
+        if (platformType == PlatformType.JsBrowser) return
+
         val (_, errors) = test(
             Path("/resources/icon1-mdpi-image.png"),
             Path("/resources/image/icon1-mdpi.png")
@@ -61,6 +69,8 @@ class MapToResourceFileTest {
     @Test
     @JsName("testMapToResourceFileAddsErrorOnAmbiguousResourceTypes")
     fun `test mapToResourceFile adds error on ambiguous resource types`() {
+        if (platformType == PlatformType.JsBrowser) return
+
         val (mappedResources, errors) = test(
             Path("/resources/file/icon1-mdpi-image.png")
         )
@@ -73,6 +83,7 @@ class MapToResourceFileTest {
     @Test
     @JsName("testMapToResourceFileAddsErrorOnUnknownResourceType")
     fun `test mapToResourceFile adds error on unknown qualifier`() {
+        if (platformType == PlatformType.JsBrowser) return
 
         val (mappedResources, errors) = test(
             Path("/resources/icon1-unknown.png")
