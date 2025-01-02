@@ -33,11 +33,15 @@ internal fun Project.configureKmpResources(
     kotlinExtension as KotlinMultiplatformExtension
     kmpResources as KotlinTargetResourcesPublication
 
-    //configure KMP resources publishing for each supported target
+    // add the `adaptiveResources<source-set-name>` task if there is an
+    // `adaptiveResources` directory in the given source set
+
+    val sourceSetsWithResourceDir = mutableSetOf<KotlinSourceSet>()
 
     kotlinExtension.sourceSets.all { sourceSet ->
         sourceSet.withOriginalResourcesDir {
             configureProcessResourcesTask(sourceSet, config, it)
+            sourceSetsWithResourceDir.add(sourceSet)
         }
     }
 
@@ -45,43 +49,36 @@ internal fun Project.configureKmpResources(
         .matching { target -> kmpResources.canPublishResources(target) }
         .all { target ->
             logger.info("Configure resources publication for '${target.targetName}' target")
+
             val packedResourceDir = config.getModuleResourcesDir(project)
 
-            val hasTask = target.compilations.any { compilation ->
-                compilation.kotlinSourceSets.any { sourceSet ->
-                    tasks.named { it == sourceSet.getProcessResourcesTaskName() }.isNotEmpty()
-                }
-            }
+            kmpResources.publishResourcesAsKotlinComponent(
+                target,
+                { sourceSet ->
+                    KotlinTargetResourcesPublication.ResourceRoot(
+                        getPreparedAdaptiveResourcesDir(sourceSet),
+                        emptyList(),
+                        //for android target exclude fonts
+                        if (target is KotlinAndroidTarget) listOf("**/font*/*") else emptyList()
+                    )
+                },
+                packedResourceDir
+            )
 
-            if (hasTask) {
-                kmpResources.publishResourcesAsKotlinComponent(
+            if (target is KotlinAndroidTarget) {
+                //for android target publish fonts in assets
+                logger.info("Configure fonts relocation for '${target.targetName}' target")
+                kmpResources.publishInAndroidAssets(
                     target,
                     { sourceSet ->
                         KotlinTargetResourcesPublication.ResourceRoot(
                             getPreparedAdaptiveResourcesDir(sourceSet),
-                            emptyList(),
-                            //for android target exclude fonts
-                            if (target is KotlinAndroidTarget) listOf("**/font*/*") else emptyList()
+                            listOf("**/font*/*"),
+                            emptyList()
                         )
                     },
                     packedResourceDir
                 )
-
-                if (target is KotlinAndroidTarget) {
-                    //for android target publish fonts in assets
-                    logger.info("Configure fonts relocation for '${target.targetName}' target")
-                    kmpResources.publishInAndroidAssets(
-                        target,
-                        { sourceSet ->
-                            KotlinTargetResourcesPublication.ResourceRoot(
-                                getPreparedAdaptiveResourcesDir(sourceSet),
-                                listOf("**/font*/*"),
-                                emptyList()
-                            )
-                        },
-                        packedResourceDir
-                    )
-                }
             }
         }
 

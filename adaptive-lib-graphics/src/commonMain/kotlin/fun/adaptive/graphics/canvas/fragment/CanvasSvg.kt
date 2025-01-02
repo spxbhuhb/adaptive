@@ -11,8 +11,10 @@ import `fun`.adaptive.graphics.canvas.canvas
 import `fun`.adaptive.graphics.svg.SvgAdapter
 import `fun`.adaptive.graphics.svg.parse.SvgInstruction
 import `fun`.adaptive.graphics.svg.parse.parseSvg
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.utility.checkIfInstance
+import `fun`.adaptive.utility.safeCall
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,22 +42,33 @@ open class CanvasSvg(
             CoroutineScope(Dispatchers.Default).launch {
                 data = resource.readAll()
                 CoroutineScope(adapter.dispatcher).launch {
-                    svgAdapter.rootFragment = parseSvg(svgAdapter, data.decodeToString(), instructions.filterIsInstance<SvgInstruction>().toTypedArray())
-                    svgAdapter.draw()
+                    parseAndDraw()
                 }
             }
         }
 
         if (data.isNotEmpty() && haveToPatch(dirtyMask, 2)) {
-            svgAdapter.rootFragment = parseSvg(svgAdapter, data.decodeToString(), instructions.filterIsInstance<SvgInstruction>().toTypedArray())
-            svgAdapter.draw()
+            parseAndDraw()
         }
 
         return true
     }
 
+    private fun parseAndDraw() {
+        safeCall(svgLogger, message = "Couldn't parse resource: ${resource.uri}") {
+            parseSvg(svgAdapter, data.decodeToString(), instructions.filterIsInstance<SvgInstruction>().toTypedArray())
+        }?.let {
+            svgAdapter.rootFragment = it
+            svgAdapter.draw()
+        }
+    }
+
     override fun draw() {
         if (trace) trace("draw")
+    }
+
+    companion object {
+        val svgLogger = getLogger("fun.adaptive.graphics.svg")
     }
 
 }

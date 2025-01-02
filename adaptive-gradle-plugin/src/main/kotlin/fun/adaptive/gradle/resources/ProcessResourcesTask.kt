@@ -66,6 +66,10 @@ internal abstract class ProcessResourcesTask : IdeaImportTask() {
 
     companion object {
 
+        /**
+         * Configure the `adaptiveResources<source-set-name>` task for the given source set.
+         * Should be called only when [originalResourcesDir] actually exists.
+         */
         fun Project.configureProcessResourcesTask(
             sourceSet: KotlinSourceSet,
             config: Provider<ResourcesExtension>,
@@ -77,8 +81,6 @@ internal abstract class ProcessResourcesTask : IdeaImportTask() {
             val withFileDefault = config.map { it.withFileDefault }
 
             logger.info("Configure resources task for ${sourceSet.name}")
-
-            if (! originalResourcesDir.exists()) return
 
             val genTask = tasks.register(
                 sourceSet.getProcessResourcesTaskName(),
@@ -97,6 +99,7 @@ internal abstract class ProcessResourcesTask : IdeaImportTask() {
 
             //register generated source set
             sourceSet.kotlin.srcDir(genTask.map { it.codeDir })
+            sourceSet.resources.srcDir(genTask.map { it.preparedDir })
 
             //setup task execution during IDE import
             tasks.configureEach { importTask ->

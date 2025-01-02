@@ -16,7 +16,8 @@ package `fun`.adaptive.resource
  */
 @Suppress("unused")
 object WebResourcesConfiguration {
-    var getResourcePath: (path: String) -> String = { "/$it" }
+    var getResourcePath: (path: String) -> String = { it }
+        private set // to force use of resourcePathMapping (for later extensions)
 
     /**
      * Sets a customization function for resource path. This allows you to modify the resource path
