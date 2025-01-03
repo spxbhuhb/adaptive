@@ -21,6 +21,7 @@ import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.OutputDirectory
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import java.io.File
@@ -42,7 +43,7 @@ internal abstract class ProcessResourcesTask : IdeaImportTask() {
     @get:Input
     abstract val sourceSetName: Property<String>
 
-    @get:Input
+    @get:InputFiles
     abstract val originalResourcesPath: Property<File>
 
     @get:OutputDirectory
