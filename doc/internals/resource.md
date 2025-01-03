@@ -180,16 +180,27 @@ of mobile applications:
 With 5000 strings and average size of 50 characters/string and 25 characters of metadata, the total size is 375 KB.
 If we double the bytes needed per character (Unicode), that is 625 KB.
 
-## Gradle plugin
+### Gradle plugin
 
-```text
-- AdaptiveGradlePlugin
-    - AdaptiveResources.configureAdaptiveResources
-        - AdaptiveResources.onKgpApplied
-```
+The Gradle plugin creates a tasks for each source set:
 
+- placed in the `adaptive` task group
+- named `processAdaptiveResources<source-set-name>`
+- calls `ResourceCompilation.compile` if there is an `adaptiveResources` directory in the source set
 
-## Generated code size
+This task creates two directories:
+
+- `build/generated/adaptive/resource/kotlin/<source-set-name>Resources`
+    - generated source code
+    - added to the given source set by `configureProcessResourcesTask`
+- `build/generated/adaptive/resource/prepared/<source-set-name>Resources`
+    - content of the original `adaptiveResources` directory, converted in come cases (like strings)
+    - added to the published resources by `configureKmpResources`
+
+The KMP multiplatform plugin aggregates the resources from the source sets that belongs to a target into
+the `build/kotlin-multiplatform-resources/aggregated-resources` directory.
+
+### Generated code size
 
 **These calculations are based on the code I copied from Compose in May 2024.** Most probably it will get optimized,
 but it is good to have some pointers to base our future development on.
@@ -259,4 +270,3 @@ size of the generated code is a real problem on the other hand. Especially that 
 
 Code optimization tools such as Proguard most probably shrink the code by a large margin, but it still would be much
 larger than necessary. (I haven't tested that.)
-

@@ -11,8 +11,6 @@ package `fun`.adaptive.gradle.resources
 
 import `fun`.adaptive.gradle.resources.ProcessResourcesTask.Companion.configureProcessResourcesTask
 import `fun`.adaptive.gradle.resources.ProcessResourcesTask.Companion.getPreparedAdaptiveResourcesDir
-import `fun`.adaptive.gradle.resources.ProcessResourcesTask.Companion.getProcessResourcesTaskName
-import `fun`.adaptive.gradle.resources.ProcessResourcesTask.Companion.withOriginalResourcesDir
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
 import org.jetbrains.kotlin.gradle.ComposeKotlinGradlePluginApi
@@ -36,14 +34,10 @@ internal fun Project.configureKmpResources(
     // add the `adaptiveResources<source-set-name>` task if there is an
     // `adaptiveResources` directory in the given source set
 
-    val sourceSetsWithResourceDir = mutableSetOf<KotlinSourceSet>()
-
     kotlinExtension.sourceSets.all { sourceSet ->
-        sourceSet.withOriginalResourcesDir {
-            configureProcessResourcesTask(sourceSet, config, it)
-            sourceSetsWithResourceDir.add(sourceSet)
-        }
+        configureProcessResourcesTask(sourceSet, config)
     }
+
 
     kotlinExtension.targets
         .matching { target -> kmpResources.canPublishResources(target) }

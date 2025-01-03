@@ -48,7 +48,7 @@ private fun KwFile.storeProperty(
     kwProperty(storePropertyName) {
         kwInitializer {
             kwCall(KwResourceSymbols.stringStoreResourceSet) {
-                resourceSetConstructorArguments(resourceSet, KwResourceSymbols.fileResource)
+                resourceSetConstructorArguments(resourceSet, packageName, KwResourceSymbols.fileResource)
             }
         }
     }

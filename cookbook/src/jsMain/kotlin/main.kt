@@ -15,7 +15,10 @@ import `fun`.adaptive.cookbook.appData
 import `fun`.adaptive.cookbook.auth.api.AccountApi
 import `fun`.adaptive.cookbook.auth.authRecipe
 import `fun`.adaptive.cookbook.auth.ui.responsive.signIn
+import `fun`.adaptive.cookbook.commonMainStringsStringStore0
 import `fun`.adaptive.cookbook.cookbookCommon
+import `fun`.adaptive.cookbook.goodmorning.goodMorning
+import `fun`.adaptive.cookbook.goodmorning.mobileExample
 import `fun`.adaptive.cookbook.graphics.canvas.canvasRecipe
 import `fun`.adaptive.cookbook.ui.dialog.dialogRecipe
 import `fun`.adaptive.cookbook.ui.editor.editorRecipe
@@ -79,6 +82,8 @@ fun main() {
             appData.userFullName = account.name
         }
 
+        commonMainStringsStringStore0.load()
+
         BrowserHistoryStateListener(appData)
 
         appData.onLoginSuccess = suspend {
@@ -89,8 +94,6 @@ fun main() {
             appData.navState.update(Routes.publicLanding)
             window.location.reload()
         }
-
-        appData.navState.update(Routes.box)
 
         browser(CanvasFragmentFactory, SvgFragmentFactory, FormFragmentFactory, backend = localBackend) { adapter ->
 
@@ -129,6 +132,7 @@ fun mainContent() {
             in Routes.empty -> box { }
             in Routes.event -> eventRecipe()
             in Routes.form -> formRecipe()
+            in Routes.goodMorning -> mobileExample { goodMorning() }
             in Routes.grid -> gridRecipe()
             in Routes.login -> signIn()
             in Routes.navigation -> navigationRecipe(navState)

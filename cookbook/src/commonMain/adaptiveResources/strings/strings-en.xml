@@ -1,0 +1,15 @@
+<!--
+  ~ Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+  -->
+
+<resources>
+    <string name="app_name">Good Morning</string>
+    <string name="snooze">Snooze</string>
+    <string name="sleepiness">Sleepiness:</string>
+    <string name="by_joining">By joining you agree to our</string>
+    <string name="terms_of_service">Terms of Service</string>
+    <string name="and">and</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="what_an_odd_second">What an odd second!</string>
+    <string name="you_are_sleepy">You are really sleepy today!</string>
+</resources>

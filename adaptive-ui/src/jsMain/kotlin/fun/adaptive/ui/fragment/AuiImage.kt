@@ -6,6 +6,7 @@ package `fun`.adaptive.ui.fragment
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
+import `fun`.adaptive.resource.image.ImageResourceSet
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
@@ -24,7 +25,7 @@ open class AuiImage(
     override val receiver: HTMLImageElement =
         document.createElement("img") as HTMLImageElement
 
-    private val res: GraphicsResourceSet
+    private val res: ImageResourceSet
         get() = state[0].checkIfInstance()
 
     override fun auiPatchInternal() {

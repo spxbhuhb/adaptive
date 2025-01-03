@@ -27,6 +27,10 @@ open class ResourceFileSet<T : ResourceFile>(
         return result
     }
 
+    override fun toString(): String {
+        return "ResourceFileSet(name='$name', type=$type, resources=${files.joinToString()})"
+    }
+
     val uri : String
         get() = getUri(defaultResourceEnvironment, defaultResourceReader)
 

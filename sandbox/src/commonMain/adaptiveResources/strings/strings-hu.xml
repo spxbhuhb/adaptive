@@ -1,0 +1,13 @@
+<!--
+  ~ Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+  -->
+
+<resources>
+    <string name="app_name">Jó reggelt!</string>
+    <string name="snooze">Szundi</string>
+    <string name="sleepiness">Álmosság:</string>
+    <string name="by_joining">A csatlakozással elfogadod a</string>
+    <string name="terms_of_service">Szolgáltatás Szabályzatot</string>
+    <string name="and">és az</string>
+    <string name="privacy_policy">Adatkezelési Szabályzatot</string>
+</resources>

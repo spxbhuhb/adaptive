@@ -8,6 +8,7 @@ import `fun`.adaptive.resource.*
 
 fun KwCall.resourceSetConstructorArguments(
     resourceFileSet: ResourceFileSet<*>,
+    packageName: String,
     fileSymbol: KwSymbol
 ) {
     openFormat = true
@@ -18,10 +19,13 @@ fun KwCall.resourceSetConstructorArguments(
         kwValueArgument {
             kwCall(fileSymbol) {
                 kwValueArgument {
+                    // FIXME clean up Q&D replacing of escape in resource path qualified name
+                    // maybe add proper handling of escaping to KwSymbol.. dunno
+                    val qualifiedName = if (packageName.isEmpty()) file.path else "/$packageName${file.path}".replace("`", "")
                     if (resourceFileSet.type.isUnstructured) {
-                        kwConst(file.path)
+                        kwConst(qualifiedName)
                     } else {
-                        kwConst(file.path.replaceAfterLast('.', "avs"))
+                        kwConst(qualifiedName.replaceAfterLast('.', "avs"))
                     }
                 }
                 resourceQualifiers(file.qualifiers)

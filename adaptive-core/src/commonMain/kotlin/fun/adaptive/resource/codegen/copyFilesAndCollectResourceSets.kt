@@ -4,7 +4,7 @@ import `fun`.adaptive.resource.*
 import `fun`.adaptive.utility.*
 import kotlinx.io.files.Path
 
-@DangerousApi("deletes everything in targetPath recursively if sourcePath does not exist")
+@DangerousApi("deletes everything in target path recursively")
 fun ResourceCompilation.copyFilesAndCollectResourceSets(): Boolean {
 
     if (! originalResourcesPath.exists()) {
@@ -12,10 +12,13 @@ fun ResourceCompilation.copyFilesAndCollectResourceSets(): Boolean {
         preparedResourcesPath.deleteRecursively()
     }
 
-    val changed = preparedResourcesPath.syncBySizeAndLastModification(originalResourcesPath)
+    val changed = preparedResourcesPath.syncBySizeAndLastModification(originalResourcesPath, remove = true)
     if (! changed) return false
 
     val prefix = preparedResourcesPath.toString()
+
+    // TODO Figure out if optimization of code generation is worth it
+    generatedCodePath.deleteRecursively()
 
     preparedResourcesPath.walkFiles { mapToResourceFile(prefix, it) }
 
@@ -44,8 +47,12 @@ fun ResourceCompilation.mapToResourceFile(prefix: String, path: Path) {
     val qualifierSet = qualifiers.mapNotNull { mapQualifier(it) }.toSet()
     if (qualifierSet.size != qualifiers.size) return
 
+    // structured processing will replace path with .avs
+    // Kotlin code generation will add the package name to the path
+    // (we cannot add package name here because then we can't find the file easily)
+
     val file = ResourceFile(
-        "$relativeDirPath/${path.name}", // this will be replaced with .avs for structured resources
+        "$relativeDirPath/${path.name}",
         qualifierSet
     )
 

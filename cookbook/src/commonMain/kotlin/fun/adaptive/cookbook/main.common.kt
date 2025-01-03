@@ -26,6 +26,7 @@ val appData = BasicAppData().apply {
         SidebarItem(Graphics.grid_view, "Editor", Routes.editor),
         SidebarItem(Graphics.grid_view, "Event", Routes.event),
         SidebarItem(Graphics.grid_view, "Form", Routes.form),
+        SidebarItem(Graphics.grid_view, "Good Morning", Routes.goodMorning),
         SidebarItem(Graphics.grid_view, "Grid", Routes.grid),
         SidebarItem(Graphics.grid_view, "Navigation", Routes.navigation),
         SidebarItem(Graphics.grid_view, "Select", Routes.select),
@@ -46,6 +47,7 @@ object Routes {
     val empty = navState("empty", title = "Empty")
     val event = navState("event", title = "Event")
     val form = navState("form", title = "Form")
+    val goodMorning = navState("goodMorning", title = "Good Morning")
     val grid = navState("grid", title = "Grid")
     val login = navState("login", title = "Login", fullScreen = true)
     val navigation = navRouting // No title as it's a routing function, not a state

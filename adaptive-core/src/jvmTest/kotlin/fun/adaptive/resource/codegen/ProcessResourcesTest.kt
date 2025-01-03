@@ -36,6 +36,7 @@ class ProcessResourcesTest {
     fun test1() {
         val generatedSources = clearedTestPath("$testFqn.test1/generatedSources")
         val preparedResources = clearedTestPath("$testFqn.test1/preparedResources")
+        val pathQualifier = "/fun.adaptive.resource.codegen.test"
 
         @OptIn(DangerousApi::class) // clearedTestPath confines delete into test working directory
         ResourceCompilation(
@@ -50,12 +51,12 @@ class ProcessResourcesTest {
             listOf(
                 FileResourceSet(
                     name = "a",
-                    FileResource("/a-file.txt", setOf())
+                    FileResource("$pathQualifier/a-file.txt", setOf())
                 ),
                 FileResourceSet(
                     name = "b",
-                    FileResource("/b-file-hu-HU-mdpi-light.txt", setOf(LanguageQualifier("hu"), RegionQualifier("HU"), DensityQualifier.MDPI, ThemeQualifier.LIGHT)),
-                    FileResource("/b-file.txt", setOf())
+                    FileResource("$pathQualifier/b-file-hu-HU-mdpi-light.txt", setOf(LanguageQualifier("hu"), RegionQualifier("HU"), DensityQualifier.MDPI, ThemeQualifier.LIGHT)),
+                    FileResource("$pathQualifier/b-file.txt", setOf())
                 )
             )
         }
@@ -63,21 +64,21 @@ class ProcessResourcesTest {
         assertResource(generatedSources, "jvmTestImage0") {
             ImageResourceSet(
                 name = "img1",
-                ImageResource("/images/img1.txt", setOf())
+                ImageResource("$pathQualifier/images/img1.txt", setOf())
             )
         }
 
         assertResource(generatedSources, "jvmTestFont0") {
             FontResourceSet(
                 name = "e",
-                FontResource("/fonts/e.ttf", setOf())
+                FontResource("$pathQualifier/fonts/e.ttf", setOf())
             )
         }
 
         assertResource(generatedSources, "jvmTestGraphics0") {
             GraphicsResourceSet(
                 name = "add",
-                GraphicsResource("/graphics/add.svg", setOf())
+                GraphicsResource("$pathQualifier/graphics/add.svg", setOf())
             )
         }
 
@@ -148,7 +149,7 @@ class ProcessResourcesTest {
         runBlocking {
             store.load(
                 environment = environment,
-                resourceReader = TestResourceReader { preparedResources.resolve(it).read() }
+                resourceReader = TestResourceReader { preparedResources.resolve(it.removePrefix("/fun.adaptive.resource.codegen.test")).read() }
             )
         }
 

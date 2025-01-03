@@ -7,7 +7,6 @@ package `fun`.adaptive.gradle.resources
 import com.android.build.gradle.BaseExtension
 import `fun`.adaptive.gradle.resources.ProcessResourcesTask.Companion.configureProcessResourcesTask
 import `fun`.adaptive.gradle.resources.ProcessResourcesTask.Companion.getPreparedAdaptiveResourcesDir
-import `fun`.adaptive.gradle.resources.ProcessResourcesTask.Companion.withOriginalResourcesDir
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
 import org.gradle.util.GradleVersion
@@ -81,9 +80,7 @@ private fun Project.configureAdaptiveResources(
     logger.info("Configure adaptive resources")
 
     kotlinExtension.sourceSets.all { sourceSet ->
-        sourceSet.withOriginalResourcesDir {
-            configureProcessResourcesTask(sourceSet, config, it)
-            sourceSet.resources.srcDirs(getPreparedAdaptiveResourcesDir(sourceSet))
-        }
+        configureProcessResourcesTask(sourceSet, config)
+        sourceSet.resources.srcDirs(getPreparedAdaptiveResourcesDir(sourceSet))
     }
 }

@@ -115,6 +115,7 @@ class PathTest {
     }
 
     @Test
+    @OptIn(DangerousApi::class) // confined to test path by `clearedTestPath`
     fun testSyncBySizeAndLastModification() {
         if (platformType == PlatformType.JsBrowser) return
 

@@ -9,6 +9,7 @@
 
 package `fun`.adaptive.gradle.resources
 
+import `fun`.adaptive.resource.ADAPTIVE_ARTEFACT_RESOURCE_DIRECTORY
 import `fun`.adaptive.utility.asUnderscoredIdentifier
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
@@ -25,6 +26,13 @@ open class ResourcesExtension {
     var packageOfResources: String = ""
 
     /**
+     * The directory in the final artefact into which the puts the resource files. Default
+     * is `resources`. If you change this you should also set the path resolver function in
+     * `WebResourcesConfiguration` or map the paths by other means.
+     */
+    var artefactDirectory: String = ADAPTIVE_ARTEFACT_RESOURCE_DIRECTORY
+
+    /**
      * Whether the generated resources accessors should be public or not.
      *
      * Default is false.
@@ -32,11 +40,16 @@ open class ResourcesExtension {
     var publicAccessors: Boolean = false
 
     /**
-     * Whether the file name may contain qualifiers.
+     * Whether the file name may contain qualifiers. This is useful if you want to
+     * put the same kind of files such as strings into one directory with names like
+     * `strings-hu.xml`.
      *
-     * Default is false.
+     * `true` means that you can't have `-` in file names as part after the `-` would
+     * be treated as a qualifier.
+     *
+     * Default is true.
      */
-    var withFileQualifiers: Boolean = false
+    var withFileQualifiers: Boolean = true
 
     /**
      * Treat resources without type qualifier as File.
@@ -58,4 +71,4 @@ internal fun Provider<ResourcesExtension>.getResourcePackage(project: Project) =
 
 //the dir where resources must be placed in the final artefact
 internal fun Provider<ResourcesExtension>.getModuleResourcesDir(project: Project) =
-    getResourcePackage(project).map { packageName -> File("$ADAPTIVE_RESOURCES_DIR/$packageName") }
+    getResourcePackage(project).map { packageName -> File("${get().artefactDirectory}/$packageName") }

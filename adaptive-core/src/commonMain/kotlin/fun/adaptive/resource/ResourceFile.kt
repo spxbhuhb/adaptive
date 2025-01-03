@@ -17,4 +17,8 @@ open class ResourceFile(
         result = 31 * result + qualifiers.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return "ResourceFile(path='$path', qualifiers=$qualifiers)"
+    }
 }

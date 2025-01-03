@@ -227,6 +227,7 @@ fun Path.equalsBySizeAndLastModification(other: Path): Boolean {
  *
  * @return  True if anything has been changed, false if there have not been any changes.
  */
+@DangerousApi("deletes files recursively in this path if they don't exists in the other")
 fun Path.syncBySizeAndLastModification(other: Path, createThis: Boolean = true, remove: Boolean = false): Boolean {
     if (! this.exists()) SystemFileSystem.createDirectories(this)
 
@@ -249,7 +250,17 @@ fun Path.syncBySizeAndLastModification(other: Path, createThis: Boolean = true, 
 
     if (remove) {
         for (thisFile in thisFiles) {
-            thisFile.delete()
+            try {
+                if (thisFile.isDirectory) {
+                    thisFile.deleteRecursively()
+                } else {
+                    thisFile.delete()
+                }
+            } catch (ex: Exception) {
+                // FIXME use a proper logger for resource generation
+                println("WARNING: could not delete $thisFile")
+                throw ex
+            }
             changed = true
         }
     }

@@ -50,7 +50,7 @@ fun KwFile.unstructuredResource(accessorObjectName : String, resources: List<Res
             visibility = KwVisibility.PRIVATE
             kwExpressionBody {
                 kwCall(resourceType.setSymbol) {
-                    resourceSetConstructorArguments(resource, resourceType.fileSymbol)
+                    resourceSetConstructorArguments(resource, packageName, resourceType.fileSymbol)
                 }
             }
         }

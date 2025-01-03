@@ -53,6 +53,8 @@ internal abstract class ProcessResourcesTask : IdeaImportTask() {
 
     @OptIn(DangerousApi::class) // codeDir and resourcesDir is confined to layout.buildDirectory
     override fun safeAction() {
+        if (!originalResourcesPath.get().exists()) return
+
         ResourceCompilation(
             originalResourcesPath = Path(originalResourcesPath.get().toString()),
             packageName = packageName.get(),
@@ -72,8 +74,7 @@ internal abstract class ProcessResourcesTask : IdeaImportTask() {
          */
         fun Project.configureProcessResourcesTask(
             sourceSet: KotlinSourceSet,
-            config: Provider<ResourcesExtension>,
-            originalResourcesDir: File
+            config: Provider<ResourcesExtension>
         ) {
             val packageName = config.getResourcePackage(project)
             val publicAccessors = config.map { it.publicAccessors }
@@ -87,7 +88,7 @@ internal abstract class ProcessResourcesTask : IdeaImportTask() {
                 ProcessResourcesTask::class.java
             ) { task ->
                 task.group = ADAPTIVE_TASK_GROUP
-                task.originalResourcesPath.set(originalResourcesDir)
+                task.originalResourcesPath.set(sourceSet.originalResourcesDir())
                 task.packageName.set(packageName)
                 task.publicAccessors.set(publicAccessors)
                 task.withFileQualifiers.set(withFileQualifiers)
@@ -99,7 +100,6 @@ internal abstract class ProcessResourcesTask : IdeaImportTask() {
 
             //register generated source set
             sourceSet.kotlin.srcDir(genTask.map { it.codeDir })
-            sourceSet.resources.srcDir(genTask.map { it.preparedDir })
 
             //setup task execution during IDE import
             tasks.configureEach { importTask ->
@@ -117,12 +117,10 @@ internal abstract class ProcessResourcesTask : IdeaImportTask() {
             .flatMap { it.preparedDir.asFile }
 
         fun KotlinSourceSet.getProcessResourcesTaskName() =
-            "adaptiveResources${name.uppercaseFirstChar()}"
+            "processAdaptiveResources${name.uppercaseFirstChar()}"
 
-        fun KotlinSourceSet.withOriginalResourcesDir(block : (File) -> Unit) {
-            val resDir =  project.projectDir.resolve("src/${name}/$ADAPTIVE_RESOURCES_DIR")
-            if (resDir.exists()) block(resDir)
-        }
+        fun KotlinSourceSet.originalResourcesDir() =
+            project.projectDir.resolve("src/${name}/$ADAPTIVE_RESOURCES_DIR")
 
     }
 
