@@ -1,50 +1,137 @@
 # Resources
 
-> [!NOTE] 
+> [!IMPORTANT]
 > 
-> The resource package is a copy of Compose resources package. I decided to make a copy
-> as Compose resources are very strongly tied to Compose itself and is pretty hard
-> to extend because of all sealed, internal, private etc.
->
-> That said, I've already added changes and extensions to suit our needs, so while
-> the package is very similar for now, it will diverge in the future.
+> I've tested the new resource subsystem in browser only, I have no idea if it works for
+> Android and iOS. It should but I don't know yet.
 > 
 
-## Setup
+Resource subsystem is part of the core module and the standard Adaptive Gradle plugin.
 
-Resource support is part of the core module and the standard Adaptive Gradle plugin.
+It lets you define various resources used by the application:
 
-To add resources create an `adaptiveResources` directory the source set you want 
-to add the resources to:
+* Files
+* Fonts
+* Images
+* Graphics
+* Strings
 
-<img alt="Directories" height="240" src="directories.png" width="248"/>
-
-Change the settings of the resource handling in the `adaptive` extension in `build.gradle.kts`:
+Once set up, you can access these resources easily from application code.
+Adaptive takes care of the resource pre-processing, code generation and publication.
 
 ```kotlin
-adaptive {
-    resources {
-        publicResClass = true
-        packageOfResClass = "some.library.resources"
-        generateResClass = always
-    }
+@Adaptive 
+fun someFun() {
+    externalLink(Files.terms)
+    // fonts are typically loaded independently
+    icon(Graphics.add)
+    image(Images.background)
+    text(Strings.message)
 }
 ```
 
-`publicResClass`
-  - `true` = generated `Res` class is public
-  - `false` = generated `Res` class is internal
-  - default: `false`
+If you are interested about under-the-hood mechanisms, check out the [Internals](../internals/resource.md).
 
-`packageOfResClass`
-  - package to generate the `Res` class into
-  - default: `<group name>.<module name>.generated.resources`
+## Setup
 
-`generateResClass`
-   - `always` - generate the `Res` class
-   - `auto` - generate the `Res` class
-   - `never` - do not generate the `Res` class
-   - default: `auto`
+1) Create an `adaptiveResources` directory in source set you want to add the resources to.
+2) Put the resources into the appropriate directories.
+3) Add [bootstrap string loading](#strings) to your application.
+4) Whenever you add a new resource
+   1) run the `processAdaptiveResources<source-set-name>` Gradle task (from the`adaptive` group)
+
+<img alt="Directories" height="364" src="directories.png" width="306"/>
+
+## Directories
+
+You can organize your resources by qualifiers freely, see [Qualifiers](#qualifiers).
+
+Note that the file names have the `_` character as name separator, check `withFileQualifiers` in
+[Additional Configuration](#additional-configuration) for more info.
+
+Basic setups (I like by environment more as it is much easier to copy):
+
+* by type
+
+```text
+adaptiveResources
+  files
+    terms_and_conditions-hu.pdf
+    terms_and_conditions-cs.pdf
+  fonts
+    open_sans.ttf
+  images
+    background.jpg
+  graphics
+    icon.svg
+  strings
+    strings-hu.xml
+    strings-cs.xml
+```
+
+* by environment
+
+```text
+adaptiveResources
+  hu
+    files
+        terms_and_conditions.pdf
+    strings
+        strings.xml
+  cs
+    files
+        terms_and_conditions.pdf
+    strings
+        strings.xml
+  hdpi
+    images
+        background.jpg
+  mdpi
+    images
+        background.jpg
+  images // you can put resolution independent images here (tiled for example)
+    blue.png  
+  graphics // SVG can be resolution independent
+    icon.svg      
+```
+
+## Strings
+
+To use strings you have to load them manually:
+
+```kotlin
+commonMainStringsStringStore0.load()
+```
+
+>
+> [!NOTE]
+>
+> The manual load is a design decision which I think is correct. Loading strings is
+> a suspending or blocking operation which I really don't want to deal with in general
+> code.
+>
+> The name of the property to load is generated:
+>
+> `<source-set-name><file-name>StringStore0`
+> 
+> I'll try to figure out some better ways to deal with this but this is it for now.
+>
+
+String resources are stored in XML files, exactly the same as on Android:
+
+```xml
+<resources>
+    <string name="app_name">Jó reggelt!</string>
+    <string name="snooze">Szundi</string>
+    <string name="sleepiness">Álmosság:</string>
+    <string name="by_joining">A csatlakozással elfogadod a</string>
+    <string name="terms_of_service">Szolgáltatás Szabályzatot</string>
+    <string name="and">és az</string>
+    <string name="privacy_policy">Adatkezelési Szabályzatot</string>
+    <string name="what_an_odd_second">Micsoda páratlan másodperc!</string>
+    <string name="you_are_sleepy">Nagyon álmos vagy ma!</string>
+</resources>
+```
 
 ## Qualifiers
 
@@ -79,7 +166,7 @@ If you have conflicting resources in different directories you'll get a compilat
 
 The language is defined by:
 
-- a two-letter (ISO 639-1) 
+- a two-letter (ISO 639-1)
 - or a three-letter (ISO 639-2) language code
 
 To specify the country, add a ISO 3166-1-alpha-2 country code with an `r` prefix, like `hu-rHU`.
@@ -100,38 +187,53 @@ The language and country codes are case-sensitive.
 - `xxhdpi` − 480 DPI, 3x density
 - `xxxhdpi` − 640dpi, 4x density
 
-### Sources
 
-Check these files to see how the given qualifier is retrieved on the given platform:
+## Additional configuration
 
-| Platform | Class                                                                                                           |
-|----------|-----------------------------------------------------------------------------------------------------------------|
-| android  | [withAndroidResources.kt](/adaptive-ui/src/androidMain/kotlin/fun/adaptive/ui/platform/withAndroidResources.kt) |
-| ios      | [withIosResources.kt](/adaptive-ui/src/iosMain/kotlin/fun/adaptive/ui/platform/withIosResources.kt)             |
-| browser  | [withJsResources.kt](/adaptive-ui/src/jsMain/kotlin/fun/adaptive/ui/platform/withJsResources.kt)                |
-
-## Res class
-
-The `Res` class is generated by these:
-
-- project import into IDEA
-- `./gradlew build`
-- `./gradlew generateAdaptiveResClass`
-
-You can find the class in the `build\generated` directory:
-
-<img alt="Res class" height="432" src="res-class.png" width="552"/>
-
-## Using resources
-
-You can simply use the resource items directly in adaptive functions which support them:
+You can change the settings of the resource handling in the `adaptive` extension in `build.gradle.kts`.
+The values here are the defaults, so you don't have to specify these explicitly.
 
 ```kotlin
-@Adaptive 
-fun bg() {
-    image(R.drawable.background)
+adaptive {
+    resources {
+        packageOfResources = "<group-name>.<module-name>.generated.resources"
+        artefactDirectory = "resources"
+        publicAccessors = false
+        withFileQualifiers = true
+        withFileDefault = true
+    }
 }
 ```
+
+`packageOfResources`
+
+* The unique identifier of the resources in the current project. 
+* Used as package for the generated code and for isolation resources in a final artefact.
+* If it is empty then `{group name}.{module name}.generated.resources` will be used.
+
+`artefactDirectory`
+
+* The directory in the final artefact into which the puts the resource files. 
+* If you change this you should also set the path resolver function in `WebResourcesConfiguration` or map the paths by other means.
+* Default is `resources`.
+
+`publicAccessors`
+
+* Whether the generated resources accessors should be `public` or `internal`.
+* Default is `false`.
+
+`withFileQualifiers`
+
+* Whether the file name may contain qualifiers. 
+* This is useful if you want to put the same kind of files such as strings into one directory with names like `strings-hu.xml`.
+* `true` means that you can't have `-` in file names as part after the `-` would be treated as a qualifier.
+* Default is `true`.
+
+`withFileDefault`
+
+* Treat resources without type qualifier as File.
+* This makes it possible to add files in the root resource package.
+* Default is `true`.
 
 ## iOS
 
@@ -151,3 +253,10 @@ To include a folder in the iOS application bundle as-is, follow these steps:
 * In the file dialog, navigate to and select the folder you want to add.
 * In the options dialog, ensure the "Create folder references" option is selected instead of "Create groups". This keeps the folder structure intact.
 * Click "Add".
+
+## Credit
+
+The resource subsystem is started from the code of the Compose resource plugin. Unfortunately, 
+Compose resources is so closely tied with Compose that it is basically impossible to use them
+independently. Also, it generates a crazy amount of code which I don't like. Hence, I decided to
+rewrite it.
