@@ -133,7 +133,7 @@ strings/unqualified.avs
 > [!NOTE]
 > 
 > I've been thinking about using an inline get for the accessor, but it might be bad idea because of
-> the direct index. If I inline the call ,multi-module setups will have a hidden dependency because
+> the direct index. If I inline the call, multi-module setups will have a hidden dependency because
 > of the index. This might or might not be a problem, I should check it in detail before using inline.
 > 
 
@@ -160,25 +160,6 @@ The compilation process:
   - [exportToAvs](/adaptive-core/src/commonMain/kotlin/fun/adaptive/resource/codegen/processStringResources.kt)
   - [generateStringAccessors](/adaptive-core/src/commonMain/kotlin/fun/adaptive/resource/codegen/processStringResources.kt)
 
-## Data size
-
-These are from ChatGPT, so take them with a grain of salt.
-
-The number of strings present in a mobile application can vary widely depending on the complexity,
-purpose, and functionality of the app. However, here are some general estimates for different types
-of mobile applications:
-
-* Simple Apps (e.g., calculator, flashlight, basic utility apps):
-    * Number of Strings: 50-200
-* Moderate Complexity Apps (e.g., social media, news, fitness tracking):
-    * Number of Strings: 200-1000
-* Complex Apps (e.g., e-commerce, banking, extensive productivity tools):
-    * Number of Strings: 1000-5000
-* Highly Complex Apps (e.g., large-scale enterprise apps, comprehensive games, multi-functional platforms):
-    * Number of Strings: 5000+
-
-With 5000 strings and average size of 50 characters/string and 25 characters of metadata, the total size is 375 KB.
-If we double the bytes needed per character (Unicode), that is 625 KB.
 
 ### Gradle plugin
 
@@ -199,6 +180,26 @@ This task creates two directories:
 
 The KMP multiplatform plugin aggregates the resources from the source sets that belongs to a target into
 the `build/kotlin-multiplatform-resources/aggregated-resources` directory.
+
+## Data size
+
+These are from ChatGPT, so take them with a grain of salt.
+
+The number of strings present in a mobile application can vary widely depending on the complexity,
+purpose, and functionality of the app. However, here are some general estimates for different types
+of mobile applications:
+
+* Simple Apps (e.g., calculator, flashlight, basic utility apps):
+    * Number of Strings: 50-200
+* Moderate Complexity Apps (e.g., social media, news, fitness tracking):
+    * Number of Strings: 200-1000
+* Complex Apps (e.g., e-commerce, banking, extensive productivity tools):
+    * Number of Strings: 1000-5000
+* Highly Complex Apps (e.g., large-scale enterprise apps, comprehensive games, multi-functional platforms):
+    * Number of Strings: 5000+
+
+With 5000 strings and average size of 50 characters/string and 25 characters of metadata, the total size is 375 KB.
+If we double the bytes needed per character (Unicode), that is 625 KB.
 
 ### Generated code size
 
