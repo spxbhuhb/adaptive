@@ -25,7 +25,6 @@ junit = "4.13.2"
 junit-bom = "5.8.0"
 kctfork = "0.7.0"
 kotlin = "2.1.0"
-kotlinpoet = "1.16.0"
 kotlin-wrappers = "1.0.0-pre.760"
 kotlinx-io = "0.5.3"
 ktor = "2.3.11"
@@ -77,8 +76,6 @@ kotlin-compiler-internal-test-framework = { module = "org.jetbrains.kotlin:kotli
 kotlin-script-runtime = { module = "org.jetbrains.kotlin:kotlin-script-runtime", version.ref = "kotlin" }
 kotlin-annotations-jvm = { module = "org.jetbrains.kotlin:kotlin-annotations-jvm", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
-
-kotlinpoet = { module = "com.squareup:kotlinpoet", version.ref = "kotlinpoet" }
 
 kotlin-wrappers-web = { module = "org.jetbrains.kotlin-wrappers:kotlin-web", version.ref = "kotlin-wrappers" }
 

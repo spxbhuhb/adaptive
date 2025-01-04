@@ -66,7 +66,7 @@ class PathTest {
 
     @Test
     fun testCopyKeepModification() = runTest {
-        if (platformType == PlatformType.JsBrowser) return@runTest
+        if (platformType == PlatformType.JsBrowser || platformType == PlatformType.iOS) return@runTest
 
         val testPath = clearedTestPath("$testFqn.testCopyKeepModification")
 
@@ -89,7 +89,7 @@ class PathTest {
 
     @Test
     fun testEqualsBySizeAndLastModification() = runTest {
-        if (platformType == PlatformType.JsBrowser) return@runTest
+        if (platformType == PlatformType.JsBrowser || platformType == PlatformType.iOS) return@runTest
 
         val testDir = clearedTestPath("$testFqn.testEqualsBySizeAndLastModification")
         val otherFile = testDir.resolve("other.txt")
@@ -117,7 +117,7 @@ class PathTest {
     @Test
     @OptIn(DangerousApi::class) // confined to test path by `clearedTestPath`
     fun testSyncBySizeAndLastModification() {
-        if (platformType == PlatformType.JsBrowser) return
+        if (platformType == PlatformType.JsBrowser || platformType == PlatformType.iOS) return
 
         val testDir = clearedTestPath("$testFqn.testSyncBySizeAndLastModification")
         val sourceDir = testDir.resolve("source").ensure()

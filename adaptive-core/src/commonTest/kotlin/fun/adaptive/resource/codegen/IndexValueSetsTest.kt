@@ -18,7 +18,7 @@ class IndexValueSetsTest {
 
     @Test
     @JsName("indexValueSetsReturnsNullForMismatchedKeys")
-    fun `indexValueSets returns null for mismatched keys, reports are not empty`() {
+    fun `indexValueSets returns null for mismatched keys reports are not empty`() {
         test(
             """
                 <resources>

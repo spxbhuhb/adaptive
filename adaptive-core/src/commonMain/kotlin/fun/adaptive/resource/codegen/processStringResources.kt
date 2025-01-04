@@ -26,12 +26,21 @@ import kotlin.String
  * - Sources should use the indices of the AVS files.
  */
 fun ResourceCompilation.processStringResources() {
+    logger?.fine { "Generating string resources" }
+
     resourceSetsByType[ResourceTypeQualifier.Strings]?.forEach { (_, resourceFileSet) ->
         processStringResources(resourceFileSet)
     }
 }
 
 fun ResourceCompilation.processStringResources(resourceFileSet: ResourceFileSet<*>) {
+
+    logger?.apply {
+        fine { "Generating string resources for ${resourceFileSet.name}" }
+        resourceFileSet.files.forEach {
+            fine { "    ${it.path}" }
+        }
+    }
 
     val originalReportSize = reports.size
 

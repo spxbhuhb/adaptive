@@ -84,7 +84,8 @@ class CollectionNodeFilePersistenceTest {
             assertTrue(nodeMetaPath.exists())
 
             assertTrue(Path(originPath, "0.1.json").exists())
-            assertTrue(Path(originPath, "0.4.json").exists())
+            // can be 3 or 4 depending on what happens first (connect or add)
+            assertTrue(Path(originPath, "0.3.json").exists() || Path(originPath, "0.4.json").exists())
 
             val diff = originPath.diff(nodePath)
 

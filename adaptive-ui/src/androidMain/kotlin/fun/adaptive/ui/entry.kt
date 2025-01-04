@@ -22,22 +22,24 @@ import kotlinx.coroutines.Dispatchers
  */
 @AdaptiveEntry
 fun android(
-    context : Context,
-    rootView : ViewGroup,
-    vararg imports : AdaptiveFragmentFactory,
+    context: Context,
+    rootView: ViewGroup,
+    vararg imports: AdaptiveFragmentFactory,
     backend: BackendAdapter = BackendAdapter(
         dispatcher = Dispatchers.Main,
         scope = CoroutineScope(Dispatchers.Main),
-    transport = LocalServiceCallTransport()
+        transport = LocalServiceCallTransport()
     ),
-    trace : Trace? = null,
-    @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
-) : AuiAdapter =
+    trace: Trace? = null,
+    @Adaptive block: (adapter: AdaptiveAdapter) -> Unit
+): AuiAdapter =
     AuiAdapter(
         context, rootView, backend
     ).also {
         it.fragmentFactory += imports
-        if (trace != null) { it.trace = trace.patterns }
+        if (trace != null) {
+            it.trace = trace.patterns
+        }
         block(it)
         it.mounted()
     }

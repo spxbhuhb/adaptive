@@ -22,6 +22,8 @@ adaptive {
     pluginDebug = false
     resources {
         publicAccessors = true
+        withFileQualifiers = false
+        trace = true
         packageOfResources = "fun.adaptive.site"
     }
 }

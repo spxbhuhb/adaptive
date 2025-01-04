@@ -22,8 +22,18 @@ import `fun`.adaptive.utility.write
  * org.jetbrains.org.objectweb.asm.ClassTooLargeException: Class too large: Res$drawable
  */
 fun ResourceCompilation.generateUnstructuredAccessors(resourceType: ResourceTypeQualifier) {
-    
+
     val chunks = resourceSetsByType[resourceType] !!.values.chunked(500)
+
+    logger?.apply {
+        fine { "Generating resource accessors for $resourceType" }
+        resourceSetsByType[resourceType] !!.values.forEach { resourceSet ->
+            resourceSet.files.forEach {
+                fine { "    Resource set: ${resourceSet.name}" }
+                fine { "        ${it.path}" }
+            }
+        }
+    }
 
     kotlinWriter {
         kwModule {

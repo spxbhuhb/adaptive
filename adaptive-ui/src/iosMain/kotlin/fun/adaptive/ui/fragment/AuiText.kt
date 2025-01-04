@@ -34,9 +34,7 @@ class AuiText(
     val content: String get() = state[0]?.toString() ?: ""
 
     @OptIn(ExperimentalForeignApi::class)
-    override fun genPatchInternal(): Boolean {
-
-        patchInstructions()
+    override fun auiPatchInternal() {
 
         if (haveToPatch(dirtyMask, 1)) {
 
@@ -45,7 +43,23 @@ class AuiText(
             // we don't have to do this if the instructions has been just applied
             // TODO think about layout effects of text changes
 
-            if (! haveToPatch(dirtyMask, 1 shl instructionIndex)) {
+            if (renderData.text == null) {
+                renderData.text = uiAdapter.defaultTextRenderData
+            }
+
+            val content = this.content
+            val contentChange = (content != receiver.text)
+            val styleChange = (renderData.text != previousRenderData.text)
+
+            if (! haveToPatch(dirtyMask, 1) && ! contentChange && ! styleChange) {
+                return
+            }
+
+            if (contentChange) {
+                receiver.text = content
+            }
+
+            if (styleChange) {
                 applyText(this)
             }
 
@@ -54,13 +68,6 @@ class AuiText(
                 renderData.innerHeight = this.height
             }
         }
-
-        return false
-    }
-
-    override fun applyRenderInstructions() {
-        if (renderData.text == null) renderData.text = uiAdapter.defaultTextRenderData
-        super.applyRenderInstructions()
     }
 
     @OptIn(ExperimentalForeignApi::class)

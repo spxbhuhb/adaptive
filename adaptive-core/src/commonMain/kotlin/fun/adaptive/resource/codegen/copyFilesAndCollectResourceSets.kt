@@ -7,13 +7,21 @@ import kotlinx.io.files.Path
 @DangerousApi("deletes everything in target path recursively")
 fun ResourceCompilation.copyFilesAndCollectResourceSets(): Boolean {
 
+    logger?.fine { "Collecting files and resources" }
+
     if (! originalResourcesPath.exists()) {
-        if (! preparedResourcesPath.exists()) return false
+        if (! preparedResourcesPath.exists()) {
+            logger?.fine { "Original resource path does not exits: $originalResourcesPath" }
+            return false
+        }
         preparedResourcesPath.deleteRecursively()
     }
 
     val changed = preparedResourcesPath.syncBySizeAndLastModification(originalResourcesPath, remove = true)
-    if (! changed) return false
+    if (! changed) {
+        logger?.fine { "No changes detected in original resources: $originalResourcesPath" }
+        return false
+    }
 
     val prefix = preparedResourcesPath.toString()
 
@@ -26,6 +34,8 @@ fun ResourceCompilation.copyFilesAndCollectResourceSets(): Boolean {
 }
 
 fun ResourceCompilation.mapToResourceFile(prefix: String, path: Path) {
+
+    logger?.fine { "Mapping file: $path" }
 
     val relativeDirPath = path.parent.toString().removePrefix(prefix)
     val dirQualifiers = relativeDirPath.split("/").flatMap { it.split("-") }.filter { it.isNotEmpty() }
@@ -45,7 +55,12 @@ fun ResourceCompilation.mapToResourceFile(prefix: String, path: Path) {
     val qualifiers = dirQualifiers + fileQualifiers
 
     val qualifierSet = qualifiers.mapNotNull { mapQualifier(it) }.toSet()
-    if (qualifierSet.size != qualifiers.size) return
+    if (qualifierSet.size != qualifiers.size) {
+        logger?.fine { "qualifier mapping difference for: $path"}
+        logger?.fine { "    qualifiers: $qualifiers"}
+        logger?.fine { "    qualifierSet: $qualifierSet"}
+        return
+    }
 
     // structured processing will replace path with .avs
     // Kotlin code generation will add the package name to the path
@@ -56,7 +71,12 @@ fun ResourceCompilation.mapToResourceFile(prefix: String, path: Path) {
         qualifierSet
     )
 
-    val type = getType(path, file.qualifiers) ?: return
+    val type = getType(path, file.qualifiers)
+
+    if (type == null) {
+        logger?.fine { "cannot determine file type for: $path" }
+        return
+    }
 
     val resourceSets = resourceSetsByType[type] !!
     val resourceSet = resourceSets[name]

@@ -10,6 +10,7 @@ import `fun`.adaptive.foundation.AdaptiveEntry
 import `fun`.adaptive.foundation.AdaptiveFragmentFactory
 import `fun`.adaptive.foundation.instruction.Trace
 import `fun`.adaptive.service.transport.LocalServiceCallTransport
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import platform.UIKit.UIView
 
@@ -24,6 +25,7 @@ fun ios(
     vararg imports : AdaptiveFragmentFactory,
     backend: BackendAdapter = BackendAdapter(
         dispatcher = Dispatchers.Main,
+        scope = CoroutineScope(Dispatchers.Main),
         transport = LocalServiceCallTransport()
     ),
     trace: Trace? = null,

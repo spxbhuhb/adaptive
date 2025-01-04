@@ -5,8 +5,7 @@ package `fun`.adaptive.ui.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.resource.DrawableResource
-import `fun`.adaptive.resource.defaultResourceReader
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
@@ -18,6 +17,8 @@ import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.launch
 import platform.CoreGraphics.CGRectMake
 import platform.Foundation.NSData
@@ -40,28 +41,25 @@ class AuiImage(
         receiver.tag = id
     }
 
-    private val content: DrawableResource
+    private val content: GraphicsResourceSet
         get() = state[0].checkIfInstance()
 
     @OptIn(ExperimentalForeignApi::class)
-    override fun genPatchInternal(): Boolean {
+    override fun auiPatchInternal() {
 
-        patchInstructions()
+        if (! haveToPatch(dirtyMask, 1)) return
 
-        if (haveToPatch(dirtyMask, 1)) {
-            CoroutineScope(Dispatchers.IO).launch {
-                val data = content.readAll()
-                CoroutineScope(adapter.dispatcher).launch {
-                    val nsData = data.usePinned { pinnedData ->
-                        NSData.dataWithBytes(pinnedData.addressOf(0), data.size.toULong())
-                    }
-                    receiver.image = UIImage(data = nsData)
-                    receiver.contentMode = UIViewContentMode.UIViewContentModeScaleAspectFit
+        CoroutineScope(Dispatchers.IO).launch {
+            val data = content.readAll()
+            CoroutineScope(adapter.dispatcher).launch {
+                val nsData = data.usePinned { pinnedData ->
+                    NSData.dataWithBytes(pinnedData.addressOf(0), data.size.toULong())
                 }
+                receiver.image = UIImage(data = nsData)
+                receiver.contentMode = UIViewContentMode.UIViewContentModeScaleAspectFit
             }
         }
 
-        return false
     }
 
     @OptIn(ExperimentalForeignApi::class)

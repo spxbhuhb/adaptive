@@ -52,8 +52,8 @@ dependencies {
     compileOnly(libs.plugin.android)
     compileOnly(libs.plugin.android.api)
 
-    embedded(libs.kotlinpoet)
-    implementation(libs.adaptive.core)
+    embedded(libs.kotlinx.io)
+    embedded(libs.adaptive.core)
 }
 
 val packagesToRelocate = listOf("de.undercouch", "com.squareup.kotlinpoet")

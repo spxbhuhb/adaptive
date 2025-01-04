@@ -8,6 +8,10 @@ import kotlinx.io.files.SystemFileSystem
 
 /**
  * Calculate differences between two directories (recursively).
+ *
+ * Reads and compares file content so this is an expensive operation.
+ *
+ * Not meant for big files as it reads the content at once.
  */
 fun Path.diff(other: Path): List<PathDiffEntry> {
     val result = mutableListOf<PathDiffEntry>()

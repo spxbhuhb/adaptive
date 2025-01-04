@@ -1,5 +1,6 @@
 package `fun`.adaptive.resource.codegen
 
+import `fun`.adaptive.log.AdaptiveLogger
 import `fun`.adaptive.log.LogLevel
 import `fun`.adaptive.resource.ResourceFile
 import `fun`.adaptive.resource.ResourceFileSet
@@ -14,7 +15,8 @@ class ResourceCompilation(
     val generatedCodePath: Path,
     val preparedResourcesPath: Path,
     val withFileQualifiers : Boolean = true,
-    val withFileDefault : Boolean = true
+    val withFileDefault : Boolean = true,
+    val logger : AdaptiveLogger? = null
 ) {
     class ResourceValue(
         val name : String,
@@ -53,6 +55,8 @@ class ResourceCompilation(
                     reports.joinToString("\n")
             )
         }
+
+        logger?.fine { "Generating unstructured resource accessors" }
 
         ResourceTypeQualifier.entries.filter { it.isUnstructured }.forEach { type ->
             generateUnstructuredAccessors(type)

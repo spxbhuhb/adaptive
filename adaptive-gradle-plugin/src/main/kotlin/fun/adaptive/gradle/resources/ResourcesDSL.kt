@@ -58,6 +58,12 @@ open class ResourcesExtension {
      */
     var withFileDefault: Boolean = true
 
+    /**
+     * When true, processing of resources will log trace to the standard output. The reason
+     * behind this is that --debug setting of Gradle writes out a lot of information
+     * we typically do not care about while debugging the plugin.
+     */
+    var trace: Boolean = false
 }
 
 internal fun Provider<ResourcesExtension>.getResourcePackage(project: Project) = map { config ->

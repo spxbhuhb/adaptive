@@ -2,45 +2,18 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package `fun`.adaptive.ui.platform
+package `fun`.adaptive.resource.platform
 
 import `fun`.adaptive.resource.*
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
+import kotlinx.io.files.Path
 import platform.Foundation.*
-import platform.UIKit.UIScreen
-import platform.UIKit.UIUserInterfaceStyle
 import platform.posix.memcpy
 
-fun withIosResources() {
-    defaultResourceEnvironmentOrNull = getSystemEnvironment()
-    defaultResourceReaderOrNull = getPlatformResourceReader()
-}
-
-private fun getSystemEnvironment(): ResourceEnvironment {
-    val locale = NSLocale.preferredLanguages.firstOrNull()
-        ?.let { NSLocale(it as String) }
-        ?: NSLocale.currentLocale
-
-    val languageCode = locale.languageCode
-    val regionCode = locale.objectForKey(NSLocaleCountryCode) as? String
-    val mainScreen = UIScreen.mainScreen
-    val isDarkTheme = mainScreen.traitCollection().userInterfaceStyle == UIUserInterfaceStyle.UIUserInterfaceStyleDark
-
-    //there is no an API to get a physical screen size and calculate a real DPI
-    val density = mainScreen.scale.toFloat()
-    return ResourceEnvironment(
-        language = LanguageQualifier(languageCode),
-        region = RegionQualifier(regionCode.orEmpty()),
-        theme = ThemeQualifier.selectByValue(isDarkTheme),
-        density = DensityQualifier.selectByDensity(density)
-    )
-}
-
-
 @OptIn(ExperimentalForeignApi::class)
-private fun getPlatformResourceReader(): ResourceReader = object : ResourceReader {
+actual fun getResourceReader(): ResourceReader = object : ResourceReader {
 
     override suspend fun read(path: String): ByteArray {
         val data = readData(getPathInBundle(path))
@@ -64,15 +37,12 @@ private fun getPlatformResourceReader(): ResourceReader = object : ResourceReade
         return NSFileManager.defaultManager().contentsAtPath(path) ?: throw MissingResourceException(path)
     }
 
-    override fun sizeAndLastModified(path: String): Pair<Long,Long>? {
-        memScoped {
-            val stat = alloc<stat>()
-            if (stat(filePath, stat.ptr) == 0) {
-                return Pair(stat.st_size,stat.st_mtime)
-            } else {
-                throw IllegalArgumentException("Could not access file: $filePath")
-            }
-        }
+    override fun sizeAndLastModified(path: Path): ResourceMetadata {
+        TODO("Not yet implemented")
+    }
+
+    override fun setFileModificationTime(path: Path, timestamp: Long) {
+        TODO("Not yet implemented")
     }
 
     private fun readData(path: String, offset: Long, size: Long): NSData {

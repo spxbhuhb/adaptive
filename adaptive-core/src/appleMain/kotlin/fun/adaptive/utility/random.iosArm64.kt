@@ -11,7 +11,7 @@ import platform.Security.kSecRandomDefault
 
 @OptIn(ExperimentalForeignApi::class)
 actual fun secureRandom(count : Int): IntArray {
-    val buffer = IntArray(2)
+    val buffer = IntArray(count)
     buffer.usePinned { pinned ->
         val rc = SecRandomCopyBytes(
             kSecRandomDefault,

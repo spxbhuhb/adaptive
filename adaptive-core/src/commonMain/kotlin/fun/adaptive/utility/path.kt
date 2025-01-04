@@ -272,7 +272,7 @@ fun Path.syncBySizeAndLastModification(other: Path, createThis: Boolean = true, 
 // Testing
 // ------------------------------------------------------------------------------------
 
-val testPath = Path("./build/adaptive/test")
+val testPath = Path("./build/adaptive/test/${platformType}")
 
 /**
  * - Compose a unique, fully qualified path for a unit test.
@@ -297,7 +297,11 @@ val testPath = Path("./build/adaptive/test")
  *
  * Creates the directory:
  *
- * `./build/adaptive/test/some.test.pkg.SomeTest.someTest`
+ * `./build/adaptive/test/JVM/some.test.pkg.SomeTest.someTest`
+ *
+ * On iOS the tests are put into a directory like this:
+ *
+ * `/Users/tiz/Library/Developer/CoreSimulator/Devices/D6554821-AD5A-46BC-9E25-A83F1BA38C9E/data/build/adaptive/test/iOS/`
  */
 @CallSiteName
 @OptIn(DangerousApi::class) // this is fine, confined into testPath

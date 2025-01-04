@@ -12,6 +12,8 @@ package `fun`.adaptive.gradle.resources
 import `fun`.adaptive.gradle.ADAPTIVE_TASK_GROUP
 import `fun`.adaptive.gradle.internal.IDEA_IMPORT_TASK_NAME
 import `fun`.adaptive.gradle.internal.IdeaImportTask
+import `fun`.adaptive.gradle.resources.ProcessResourcesTask.Companion.originalResourcesDir
+import `fun`.adaptive.log.StdoutLogger
 import `fun`.adaptive.resource.codegen.ResourceCompilation
 import `fun`.adaptive.utility.DangerousApi
 import `fun`.adaptive.utility.uppercaseFirstChar
@@ -41,6 +43,9 @@ internal abstract class ProcessResourcesTask : IdeaImportTask() {
     abstract val withFileDefault: Property<Boolean>
 
     @get:Input
+    abstract val trace: Property<Boolean>
+
+    @get:Input
     abstract val sourceSetName: Property<String>
 
     @get:InputFiles
@@ -54,7 +59,13 @@ internal abstract class ProcessResourcesTask : IdeaImportTask() {
 
     @OptIn(DangerousApi::class) // codeDir and resourcesDir is confined to layout.buildDirectory
     override fun safeAction() {
-        if (!originalResourcesPath.get().exists()) return
+        if (! originalResourcesPath.get().exists()) return
+
+        val logger = if (trace.get()) {
+            StdoutLogger(getProcessResourcesTaskName(sourceSetName.get())).enableFine()
+        } else {
+            null
+        }
 
         ResourceCompilation(
             originalResourcesPath = Path(originalResourcesPath.get().toString()),
@@ -63,8 +74,10 @@ internal abstract class ProcessResourcesTask : IdeaImportTask() {
             generatedCodePath = Path(codeDir.get().toString()),
             preparedResourcesPath = Path(preparedDir.get().toString()),
             withFileQualifiers = withFileQualifiers.get(),
-            withFileDefault = withFileDefault.get()
+            withFileDefault = withFileDefault.get(),
+            logger = logger
         ).compile()
+
     }
 
     companion object {
@@ -81,6 +94,7 @@ internal abstract class ProcessResourcesTask : IdeaImportTask() {
             val publicAccessors = config.map { it.publicAccessors }
             val withFileQualifiers = config.map { it.withFileQualifiers }
             val withFileDefault = config.map { it.withFileDefault }
+            val trace = config.map { it.trace }
 
             logger.info("Configure resources task for ${sourceSet.name}")
 
@@ -94,6 +108,7 @@ internal abstract class ProcessResourcesTask : IdeaImportTask() {
                 task.publicAccessors.set(publicAccessors)
                 task.withFileQualifiers.set(withFileQualifiers)
                 task.withFileDefault.set(withFileDefault)
+                task.trace.set(trace)
                 task.sourceSetName.set(sourceSet.name)
                 task.preparedDir.set(layout.buildDirectory.dir("$RES_GEN_DIR/prepared/${sourceSet.name}Resources"))
                 task.codeDir.set(layout.buildDirectory.dir("$RES_GEN_DIR/kotlin/${sourceSet.name}Resources"))
@@ -118,7 +133,10 @@ internal abstract class ProcessResourcesTask : IdeaImportTask() {
             .flatMap { it.preparedDir.asFile }
 
         fun KotlinSourceSet.getProcessResourcesTaskName() =
-            "processAdaptiveResources${name.uppercaseFirstChar()}"
+            getProcessResourcesTaskName(name)
+
+        fun getProcessResourcesTaskName(sourceSetName: String) =
+            "processAdaptiveResources${sourceSetName.uppercaseFirstChar()}"
 
         fun KotlinSourceSet.originalResourcesDir() =
             project.projectDir.resolve("src/${name}/$ADAPTIVE_RESOURCES_DIR")

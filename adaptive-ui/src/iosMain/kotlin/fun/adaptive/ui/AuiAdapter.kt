@@ -77,10 +77,10 @@ open class AuiAdapter(
         val frame = CGRectMake(data.finalLeft, data.finalTop, data.finalWidth, data.finalHeight)
 
         view.setFrame(frame)
-        applyRenderInstructions(fragment)
+        applyLayoutIndependent(fragment)
     }
 
-    override fun applyRenderInstructions(fragment: AbstractAuiFragment<UIView>) {
+    override fun applyLayoutIndependent(fragment: AbstractAuiFragment<UIView>) {
         val renderData = fragment.renderData
 
         if (renderData.tracePatterns.isNotEmpty()) {
