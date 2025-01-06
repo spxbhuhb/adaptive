@@ -20,6 +20,10 @@ open class Registry<T> {
         others.forEach { entries.putAll(it.entries) }
     }
 
+    operator fun plusAssign(other: Registry<T>) {
+        entries.putAll(other.entries)
+    }
+
     override fun toString(): String {
         return entries.toString()
     }
