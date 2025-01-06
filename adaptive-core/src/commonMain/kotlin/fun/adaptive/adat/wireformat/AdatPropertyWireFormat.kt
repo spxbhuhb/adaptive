@@ -18,21 +18,24 @@ class AdatPropertyWireFormat<T>(
     val index: Int
         get() = metadata.index
 
+    val fieldNumber : Int
+        inline get() = metadata.index + 1
+
     val name: String
         get() = metadata.name
 
     fun encode(encoder: WireFormatEncoder, instance: AdatClass) {
         @Suppress("UNCHECKED_CAST")
-        wireFormat.wireFormatEncode(encoder, metadata.index, metadata.name, instance.getValue(metadata.index) as T?)
+        wireFormat.wireFormatEncode(encoder,fieldNumber, metadata.name, instance.getValue(metadata.index) as T?)
     }
 
     fun encode(encoder : WireFormatEncoder, values : Array<Any?>) {
         @Suppress("UNCHECKED_CAST")
-        wireFormat.wireFormatEncode(encoder, metadata.index, metadata.name, values[metadata.index] as T?)
+        wireFormat.wireFormatEncode(encoder, fieldNumber, metadata.name, values[metadata.index] as T?)
     }
 
     fun decode(decoder: WireFormatDecoder<*>, values:Array<Any?>) {
-        val value = wireFormat.wireFormatDecode(decoder, metadata.index, metadata.name)
+        val value = wireFormat.wireFormatDecode(decoder, fieldNumber, metadata.name)
         values[metadata.index] = if (metadata.isNullable || metadata.hasDefault) value else checkNotNull(value)
     }
 

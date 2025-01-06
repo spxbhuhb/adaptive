@@ -20,6 +20,7 @@ kotlin {
 repositories {
     google()
     mavenCentral()
+    mavenLocal()
 }
 
 group = "fun.adaptive"

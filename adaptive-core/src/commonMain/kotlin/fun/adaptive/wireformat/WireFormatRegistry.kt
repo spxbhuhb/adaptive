@@ -16,6 +16,36 @@ object WireFormatRegistry : Registry<WireFormat<*>>() {
     init {
         val n = WireFormatTypeArgument<Any>(PolymorphicWireFormat, true)
 
+        set("kotlin.Any", PolymorphicWireFormat)
+
+        set("kotlin.Byte", ByteWireFormat)
+        set("kotlin.Short", ShortWireFormat)
+        set("kotlin.Int", IntWireFormat)
+        set("kotlin.Long", LongWireFormat)
+        set("kotlin.Float", FloatWireFormat)
+        set("kotlin.Double", DoubleWireFormat)
+        set("kotlin.Boolean", BooleanWireFormat)
+        set("kotlin.Char", CharWireFormat)
+        set("kotlin.String", StringWireFormat)
+
+        set("kotlin.ByteArray", ByteArrayWireFormat)
+        set("kotlin.ShortArray", ShortArrayWireFormat)
+        set("kotlin.IntArray", IntArrayWireFormat)
+        set("kotlin.LongArray", LongArrayWireFormat)
+        set("kotlin.FloatArray", FloatArrayWireFormat)
+        set("kotlin.DoubleArray", DoubleArrayWireFormat)
+        set("kotlin.BooleanArray", BooleanArrayWireFormat)
+        set("kotlin.CharArray", CharArrayWireFormat)
+
+        set("kotlin.UByte", UByteWireFormat)
+        set("kotlin.UShort", UShortWireFormat)
+        set("kotlin.UInt", UIntWireFormat)
+        set("kotlin.ULong", ULongWireFormat)
+        set("kotlin.UByteArray", UByteArrayWireFormat)
+        set("kotlin.UShortArray", UShortArrayWireFormat)
+        set("kotlin.UIntArray", UIntArrayWireFormat)
+        set("kotlin.ULongArray", ULongArrayWireFormat)
+
         set("kotlin.Pair", PairWireFormat(n, n))
         set("kotlin.Array", ArrayWireFormat(n))
         set("kotlin.collections.List", ListWireFormat(n))
@@ -27,6 +57,8 @@ object WireFormatRegistry : Registry<WireFormat<*>>() {
         set("kotlinx.datetime.LocalDate", LocalDateWireFormat)
         set("kotlinx.datetime.LocalDateTime", LocalDateTimeWireFormat)
         set("kotlinx.datetime.LocalTime", LocalTimeWireFormat)
+
+        set("fun.adaptive.utility.UUID", UuidWireFormat)
 
         this += AdatClassMetadata
         this += AdatPropertyMetadata

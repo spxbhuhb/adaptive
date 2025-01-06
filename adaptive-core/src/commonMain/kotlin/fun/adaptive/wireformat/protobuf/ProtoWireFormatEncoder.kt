@@ -722,11 +722,15 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
     // ----------------------------------------------------------------------------
 
     override fun <T> polymorphic(fieldNumber: Int, fieldName: String, value: T, wireFormat: WireFormat<T>): WireFormatEncoder {
+        val valueBytes = subEncoder.apply { wireFormat.wireFormatEncode(this, value) }.pack()
+
         val bytes = subEncoder.apply {
             string(1, "", wireFormat.wireFormatName)
-            instance(2, "", value, wireFormat)
+            writer.bytes(2, valueBytes)
         }.pack()
+
         writer.bytes(fieldNumber, bytes)
+
         return this
     }
 

@@ -467,7 +467,11 @@ class ProtoWireFormatDecoder(
         @Suppress("UNCHECKED_CAST")
         val wireFormat = WireFormatRegistry[wireFormatName] as WireFormat<T>
 
-        return wireFormat.wireFormatDecode(data, data.decoder())
+        return when (wireFormat.wireFormatKind) {
+            WireFormatKind.Primitive -> wireFormat.wireFormatDecode(data.decoder(), 1, "") !!
+            WireFormatKind.Collection -> wireFormat.wireFormatDecode(data, data.decoder()) !!
+            WireFormatKind.Instance -> wireFormat.wireFormatDecode(data, data.decoder()) !!
+        }
     }
 
     override fun <T> asPolymorphic(): T =
