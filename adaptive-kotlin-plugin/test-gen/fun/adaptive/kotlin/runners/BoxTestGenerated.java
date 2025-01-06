@@ -227,6 +227,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
+      @TestMetadata("anyProperty.kt")
+      public void testAnyProperty() {
+        runTest("testData/box/adat/polymorphic/anyProperty.kt");
+      }
+
+      @Test
       @TestMetadata("basic.kt")
       public void testBasic() {
         runTest("testData/box/adat/polymorphic/basic.kt");
