@@ -10,12 +10,22 @@ interface AdaptiveInstruction {
      * Apply the instructions to a subject. The instruction has to check if the subject
      * is something it can handle and do nothing if not.
      */
-    fun apply(subject: Any) = Unit
+    fun applyTo(subject: Any) = Unit
 
     /**
      * Execute the instruction if it supports execution. Default is no-op.
      */
     fun execute() = Unit
 
-}
+    operator fun rangeTo(instruction: AdaptiveInstruction): AdaptiveInstructionGroup {
+        return AdaptiveInstructionGroup(listOf(this, instruction))
+    }
 
+    operator fun rangeTo(group: AdaptiveInstructionGroup): AdaptiveInstructionGroup {
+        return AdaptiveInstructionGroup(listOf(this, group))
+    }
+
+    fun matchOrNull(predicate: (AdaptiveInstruction) -> Boolean) : AdaptiveInstruction? =
+        if (predicate(this)) this else null
+
+}

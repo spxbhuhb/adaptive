@@ -10,7 +10,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.graphics.svg.api.svgFill
 import `fun`.adaptive.graphics.svg.api.svgHeight
@@ -88,7 +88,7 @@ fun fullMode() {
 
 @Adaptive
 private fun fullHeader(vararg instructions : AdaptiveInstruction) : AdaptiveFragment {
-    grid(*instructions) {
+    grid(instructions()) {
         padding(16.dp, 0.dp, 16.dp, 32.dp)
         colTemplate(64.dp, 1.fr)
         alignItems.startCenter
@@ -121,7 +121,7 @@ fun thinMode() {
 
 @Adaptive
 fun thinHeader(vararg instructions : AdaptiveInstruction) : AdaptiveFragment {
-    box(*instructions) {
+    box(instructions()) {
         size(80.dp, 80.dp) .. alignItems.center
         onClick { sidebarState.update(sidebarState.value::mode to FULL) }
 

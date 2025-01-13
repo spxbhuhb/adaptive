@@ -1,7 +1,6 @@
 package `fun`.adaptive.cookbook.auth.ui.small
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.flowBox
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.maxSize

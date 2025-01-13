@@ -12,7 +12,7 @@ data class Stroke(
     val color: Color
 ) : GraphicsInstruction {
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         subject.alsoIfInstance<GraphicsRenderData> {
             it.stroke = this
         }

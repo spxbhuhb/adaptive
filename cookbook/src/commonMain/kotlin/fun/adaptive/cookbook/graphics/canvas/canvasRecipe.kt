@@ -2,7 +2,6 @@ package `fun`.adaptive.cookbook.graphics.canvas
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.producer.poll
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.canvas.api.canvas
 import `fun`.adaptive.graphics.canvas.api.circle
 import `fun`.adaptive.graphics.canvas.api.fill

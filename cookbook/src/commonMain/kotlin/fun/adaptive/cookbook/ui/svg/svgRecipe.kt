@@ -4,9 +4,9 @@ import `fun`.adaptive.cookbook.eco
 import `fun`.adaptive.cookbook.folder
 import `fun`.adaptive.cookbook.frame_inspect
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.instruction.traceAll
 import `fun`.adaptive.foundation.producer.poll
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth

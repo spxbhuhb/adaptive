@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.render.layout
 class Width(
     val width: DPixel
 ) : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         layout(subject) {
             it.instructedWidth = it.adapter.toPx(width)
         }

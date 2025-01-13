@@ -6,6 +6,7 @@ import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.foundation.*
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.instructionsOf
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.graphics.svg.api.svgFill
 import `fun`.adaptive.graphics.svg.api.svgHeight
@@ -279,7 +280,7 @@ fun appIcon(
     icon: GraphicsResourceSet,
     vararg instructions: AdaptiveInstruction,
 ): AdaptiveFragment {
-    box(*instructions) {
+    box(instructions()) {
         size(80.dp, 80.dp) .. alignItems.center
 
         box {

@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.render.model.ContainerRenderData
 class DistributeSpace(
     val distribution: SpaceDistribution
 ) : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         container(subject) {
             it.spaceDistribution = distribution
         }

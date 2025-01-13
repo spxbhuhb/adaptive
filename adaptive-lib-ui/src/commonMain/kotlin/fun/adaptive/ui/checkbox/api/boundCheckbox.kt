@@ -5,6 +5,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.box
@@ -21,15 +22,15 @@ fun boundCheckbox(
     theme: CheckboxTheme = checkboxTheme
 ): AdaptiveFragment {
 
-    row(*instructions) {
+    row(instructions()) {
         onClick { binding.setValue(! binding.value, true) }
 
         if (binding.value) {
-            box(*theme.active) {
-                svg(Graphics.check, *theme.icon)
+            box(theme.active) {
+                svg(Graphics.check, theme.icon)
             }
         } else {
-            box(*theme.inactive) {
+            box(theme.inactive) {
 
             }
         }

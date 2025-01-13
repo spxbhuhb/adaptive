@@ -12,13 +12,10 @@ import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
 import org.jetbrains.kotlin.ir.declarations.IrVariable
+import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.types.typeWith
-import org.jetbrains.kotlin.ir.util.deepCopyWithoutPatchingParents
-import org.jetbrains.kotlin.ir.util.dump
-import org.jetbrains.kotlin.ir.util.dumpKotlinLike
-import org.jetbrains.kotlin.ir.util.hasAnnotation
-import org.jetbrains.kotlin.ir.util.isVararg
+import org.jetbrains.kotlin.ir.util.*
 
 
 /**
@@ -28,7 +25,7 @@ import org.jetbrains.kotlin.ir.util.isVararg
 class StateDefinitionTransform(
     override val pluginContext: FoundationPluginContext,
     private val armClass: ArmClass,
-    val skipParameters : Int
+    val skipParameters: Int
 ) : AdaptiveAnnotationBasedExtension, AbstractIrBuilder {
 
     val names = mutableListOf<String>()
@@ -83,15 +80,28 @@ class StateDefinitionTransform(
 
 
                 if (valueParameter.isVararg && valueParameter.defaultValue == null) {
-                    val call = IrCallImpl(
-                        UNDEFINED_OFFSET,
-                        UNDEFINED_OFFSET,
-                        irBuiltIns.arrayClass.typeWith(valueParameter.varargElementType !!),
-                        pluginContext.kotlinSymbols.emptyArray,
-                        typeArgumentsCount = 1
-                    ).also {
-                        it.putTypeArgument(0, valueParameter.varargElementType !!)
-                    }
+
+                    val call: IrCall =
+
+                        if (valueParameter.isInstructions) {
+                            IrCallImpl(
+                                UNDEFINED_OFFSET,
+                                UNDEFINED_OFFSET,
+                                pluginContext.adaptiveInstructionGroupType,
+                                pluginContext.emptyInstructions,
+                                typeArgumentsCount = 0
+                            )
+                        } else {
+                            IrCallImpl(
+                                UNDEFINED_OFFSET,
+                                UNDEFINED_OFFSET,
+                                irBuiltIns.arrayClass.typeWith(valueParameter.varargElementType !!),
+                                pluginContext.kotlinSymbols.emptyArray,
+                                typeArgumentsCount = 1
+                            ).also {
+                                it.putTypeArgument(0, valueParameter.varargElementType !!)
+                            }
+                        }
 
                     armClass.stateDefinitionStatements +=
                         ArmDefaultValueStatement(
@@ -155,8 +165,8 @@ class StateDefinitionTransform(
 
         return ArmValueProducer(
             armClass,
-            visitor.producerCall!!,
-            visitor.producerDependencies!!,
+            visitor.producerCall !!,
+            visitor.producerDependencies !!,
             postProcess as IrVariable
         )
     }
@@ -169,7 +179,7 @@ class StateDefinitionTransform(
 
         check(name !in names) { "variable shadowing is not allowed:\n${declaration.dumpKotlinLike()}\n${declaration.dump()}" }
 
-        stateVariableIndex++
+        stateVariableIndex ++
         names += name
         armClass.stateVariables += this
     }

@@ -50,6 +50,12 @@ class FoundationPluginContext(
     val adaptiveInstructionClass = ClassIds.ADAPTIVE_INSTRUCTION.classSymbol()
     val adaptiveInstructionType = adaptiveInstructionClass.defaultType
 
+    val adaptiveInstructionGroupClass = ClassIds.ADAPTIVE_INSTRUCTION_GROUP.classSymbol()
+    val adaptiveInstructionGroupConstructor = adaptiveInstructionGroupClass.constructorByKey("arrayConstructor")
+    val adaptiveInstructionGroupType = adaptiveInstructionGroupClass.defaultType
+
+    val emptyInstructions = CallableIds.EMPTY_INSTRUCTIONS.propertyGetterSymbol()
+
     val adaptiveAnonymousClass = ClassIds.ADAPTIVE_ANONYMOUS.classSymbol()
     val anonymousConstructor = adaptiveAnonymousClass.constructors.first { it.owner.valueParameters.size == 4 }
 
@@ -75,14 +81,14 @@ class FoundationPluginContext(
     val localBinding = Strings.LOCAL_BINDING.fragmentFunction()
     val setBinding = Strings.SET_BINDING.fragmentFunction()
     val getProducedValue = Strings.GET_PRODUCED_VALUE.fragmentFunction()
-    val isDetached = Strings.IS_DETACHED.fragmentPropertyList().single().owner
 
     val arrayGet = checkNotNull(irContext.irBuiltIns.arrayClass.getSimpleFunction("get"))
 
     val helperFunctions = listOf(
         irContext.referenceFunctions(CallableIds.HELPER_FUNCTION_ADAPTER).single(),
         irContext.referenceFunctions(CallableIds.HELPER_FUNCTION_FRAGMENT).single(),
-        irContext.referenceFunctions(CallableIds.HELPER_FUNCTION_THIS_STATE).single()
+        irContext.referenceFunctions(CallableIds.HELPER_FUNCTION_THIS_STATE).single(),
+        irContext.referenceFunctions(CallableIds.HELPER_FUNCTION_INSTRUCTIONS).single()
     )
 
     val manualImplementation = irContext.referenceFunctions(CallableIds.MANUAL_IMPLEMENTATION).single()

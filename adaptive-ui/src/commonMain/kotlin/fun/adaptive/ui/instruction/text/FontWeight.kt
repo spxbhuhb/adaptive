@@ -13,7 +13,7 @@ class FontWeight(
     val weight: Int
 ) : AdaptiveInstruction {
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         text(subject) { it.fontWeight = weight }
     }
 

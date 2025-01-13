@@ -8,7 +8,7 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.boundInput
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.text
@@ -35,7 +35,7 @@ private fun timeInput(
 ): AdaptiveFragment {
     checkNotNull(binding) { "missing binding in timeInput" }
     boundInput<LocalTime>(
-        *instructions,
+        instructions(),
         binding = binding,
         toString = { it.toString() },
         fromString = { LocalTime.parse(it) },

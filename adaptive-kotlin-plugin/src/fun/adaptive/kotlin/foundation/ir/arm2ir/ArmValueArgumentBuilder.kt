@@ -13,6 +13,8 @@ import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrExpression
+import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
+import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 
 open class ArmValueArgumentBuilder(
     parent: ClassBoundIrBuilder,
@@ -51,10 +53,24 @@ open class ArmValueArgumentBuilder(
     open fun patchVariableValue(patchFun: IrSimpleFunction): IrExpression {
         valueArgument.detachExpressions.forEach { transformDetachExpression(patchFun, it) }
 
+        var valueExpression = valueArgument.irExpression.transformCreateStateAccess(closure, patchFun) { irGet(fragment) }
+
+        if (valueArgument.isInstructions) {
+            valueExpression =
+                IrConstructorCallImpl(
+                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                    pluginContext.adaptiveInstructionGroupType,
+                    pluginContext.adaptiveInstructionGroupConstructor,
+                    0, 0
+                ).also { call ->
+                    call.putValueArgument(0, valueExpression)
+                }
+        }
+
         return irSetDescendantStateVariable(
             patchFun,
             valueArgument.argumentIndex,
-            valueArgument.irExpression.transformCreateStateAccess(closure, patchFun) { irGet(fragment) }
+            valueExpression
         )
     }
 
@@ -70,4 +86,5 @@ open class ArmValueArgumentBuilder(
             )
         }
     }
+
 }

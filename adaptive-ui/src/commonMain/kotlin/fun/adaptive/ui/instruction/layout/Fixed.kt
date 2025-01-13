@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.render.model.LayoutRenderData
 
 @Adat
 class Fixed : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         layout(subject) {
             it.fixed = true
         }

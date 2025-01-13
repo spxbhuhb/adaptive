@@ -5,7 +5,6 @@ import `fun`.adaptive.cookbook.shared.green
 import `fun`.adaptive.cookbook.shared.purple
 import `fun`.adaptive.cookbook.shared.red
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.box

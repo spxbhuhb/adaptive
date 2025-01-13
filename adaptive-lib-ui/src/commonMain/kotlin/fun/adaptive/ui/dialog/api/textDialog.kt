@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.onClose
 import `fun`.adaptive.ui.api.text
@@ -27,7 +27,7 @@ fun textDialog(
 ): AdaptiveFragment {
     var modalOpen = false
 
-    text(label, *instructions) .. onClick { modalOpen = true }
+    text(label, instructions()) .. onClick { modalOpen = true }
 
     if (modalOpen) {
         dialog(title) {

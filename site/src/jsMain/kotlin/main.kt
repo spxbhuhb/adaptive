@@ -5,8 +5,9 @@
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
+import `fun`.adaptive.foundation.instruction.emptyInstructions
+import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.instruction.trace
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.resource.image.ImageResourceSet
@@ -180,7 +181,7 @@ fun card(
     @Adaptive cardContent: () -> Unit
 ) {
     val media = mediaMetrics()
-    val shadowIfLight = if (media.isLight) arrayOf(shadow) else emptyArray()
+    val shadowIfLight = if (media.isLight) instructionsOf(shadow) else emptyInstructions
 
     column(*shadowIfLight) {
         grid {

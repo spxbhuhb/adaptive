@@ -22,8 +22,8 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.instructionsOf
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.producer.poll
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.resource.file.Files
 import `fun`.adaptive.resource.image.Images
 import `fun`.adaptive.resource.string.Strings
@@ -127,7 +127,7 @@ val button = instructionsOf(
 
 @Adaptive
 fun button(label: String, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
-    row(*button, *instructions) {
+    row(button, instructions()) {
         text(label, textColor(white), textMedium, noSelect)
     }
     return fragment()
@@ -262,10 +262,10 @@ private fun messages(time: LocalDateTime, counter: Int) {
 private fun terms() {
     column(AlignItems.Companion.center, padding(right = 32.dp, left = 32.dp, top = 12.dp)) {
         row {
-            text(Strings.by_joining, *smallWhiteNoWrap, paddingRight(6.dp)) .. noSelect
-            text(Strings.terms_of_service, externalLink(Files.terms), *smallWhiteNoWrap, bold, paddingRight(right = 6.dp)) .. noSelect
-            text(Strings.and, *smallWhiteNoWrap) .. noSelect
+            text(Strings.by_joining, smallWhiteNoWrap, paddingRight(6.dp)) .. noSelect
+            text(Strings.terms_of_service, externalLink(Files.terms), smallWhiteNoWrap, bold, paddingRight(right = 6.dp)) .. noSelect
+            text(Strings.and, smallWhiteNoWrap) .. noSelect
         }
-        text(Strings.privacy_policy, externalLink(Files.policy), *smallWhiteNoWrap, bold) .. noSelect
+        text(Strings.privacy_policy, externalLink(Files.policy), smallWhiteNoWrap, bold) .. noSelect
     }
 }

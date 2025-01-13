@@ -2,6 +2,7 @@ package `fun`.adaptive.grove.designer.utility
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.api.update
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.ui.api.frame
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
@@ -62,15 +63,17 @@ class Selection(
         val dx = currentCursorPosition.left.value - previousCursorPosition.left.value
 
         val item = items.last() // FIXME we don't want to move layouts???
-        val instructions = item.instructions
-        val result = instructions.toMutableList()
+        val result = item.instructions.toMutableList()
 
-        val frame = instructions.firstOrNullIfInstance<Frame>()
+        val frame = result.firstOrNullIfInstance<Frame>()
+
         if (frame != null) {
             result.removeAll { it is Frame || it is Position }
             result += Frame(frame.top + dy, frame.left + dx, frame.width, frame.height)
         } else {
-            val position = instructions.firstOrNullIfInstance<Position>()
+
+            val position = result.firstOrNullIfInstance<Position>()
+
             if (position != null) {
                 result.removeAll { it is Position }
                 result += Position(position.top + dy, position.left + dx)
@@ -79,7 +82,8 @@ class Selection(
             }
         }
 
-        item.setStateVariable(item.instructionIndex, result.toTypedArray())
+        item.setStateVariable(item.instructionIndex, AdaptiveInstructionGroup(result))
+
         nextRevision()
     }
 
@@ -118,7 +122,7 @@ class Selection(
         item.parent?.children?.remove(item)
         item.parent = container
 
-        item.setStateVariable(item.instructionIndex, result.toTypedArray())
+        item.setStateVariable(item.instructionIndex, AdaptiveInstructionGroup(result))
         item.setDirtyBatch(item.instructionIndex)
 
         item.mount()

@@ -457,9 +457,27 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
+      @TestMetadata("innerRangeTo.kt")
+      public void testInnerRangeTo() {
+        runTest("testData/box/foundation/instruction/innerRangeTo.kt");
+      }
+
+      @Test
+      @TestMetadata("innerRangeToParam.kt")
+      public void testInnerRangeToParam() {
+        runTest("testData/box/foundation/instruction/innerRangeToParam.kt");
+      }
+
+      @Test
       @TestMetadata("innerVariations.kt")
       public void testInnerVariations() {
         runTest("testData/box/foundation/instruction/innerVariations.kt");
+      }
+
+      @Test
+      @TestMetadata("innerWhen.kt")
+      public void testInnerWhen() {
+        runTest("testData/box/foundation/instruction/innerWhen.kt");
       }
 
       @Test
@@ -475,9 +493,33 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
+      @TestMetadata("outerChain.kt")
+      public void testOuterChain() {
+        runTest("testData/box/foundation/instruction/outerChain.kt");
+      }
+
+      @Test
+      @TestMetadata("outerDeep.kt")
+      public void testOuterDeep() {
+        runTest("testData/box/foundation/instruction/outerDeep.kt");
+      }
+
+      @Test
+      @TestMetadata("outerWhen.kt")
+      public void testOuterWhen() {
+        runTest("testData/box/foundation/instruction/outerWhen.kt");
+      }
+
+      @Test
       @TestMetadata("passEmpty.kt")
       public void testPassEmpty() {
         runTest("testData/box/foundation/instruction/passEmpty.kt");
+      }
+
+      @Test
+      @TestMetadata("passthrough.kt")
+      public void testPassthrough() {
+        runTest("testData/box/foundation/instruction/passthrough.kt");
       }
 
       @Test

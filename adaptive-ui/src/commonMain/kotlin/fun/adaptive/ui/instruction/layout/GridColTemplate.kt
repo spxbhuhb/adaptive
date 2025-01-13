@@ -14,7 +14,7 @@ class GridColTemplate(
     val tracks: Array<out GridTrack>,
     val extend : GridTrack?
 ) : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         container(subject) { c ->
             c.colTracks = expand(tracks).map { RawTrack(it.isFix, it.isFraction, it.toRawValue(c.adapter)) }
             c.colExtension = extend?.let { RawTrack(it.isFix, it.isFraction, it.toRawValue(c.adapter)) }

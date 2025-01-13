@@ -16,7 +16,7 @@ class CornerRadius(
 
     constructor(all: DPixel) : this(all, all, all, all)
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         decoration(subject) {
             it.cornerRadius = RawCornerRadius(this, it.cornerRadius ?: RawCornerRadius.Companion.ZERO, it.adapter)
         }

@@ -6,6 +6,8 @@ package `fun`.adaptive.foundation.testing
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.query.filter
 import `fun`.adaptive.service.testing.TestServiceTransport
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.getLock
@@ -42,7 +44,7 @@ class AdaptiveTestAdapter(
 
     override val scope = CoroutineScope(dispatcher)
 
-    override var trace : Array<out Regex> = arrayOf(
+    override var trace: Array<out Regex> = arrayOf(
         Regex(".*(?!addActual|removeActual)") // anything that does not end with addActual/ removeActual
     )
 
@@ -110,5 +112,31 @@ class AdaptiveTestAdapter(
 
     fun toCode(): String =
         traceEvents.joinToString(",\n") { it.toCode() }
+
+    val fails = mutableListOf<String>()
+
+    @Suppress("unused") // used by plugin unit tests
+    val checkResults: String
+        get() =
+            if (fails.isEmpty()) "OK" else "Fail:\n    ${fails.joinToString("\n    ")}"
+
+    @Suppress("unused") // used by plugin unit tests
+    fun checkInstructions(
+        fragmentFilter: String,
+        fragmentIndex: Int,
+        vararg expected: AdaptiveInstruction
+    ) {
+
+        val fragments = filter(true) { fragmentFilter in it::class.simpleName !!.lowercase() }
+        val actual = fragments[fragmentIndex].instructions
+
+        if (actual.size != expected.size) fails += "instructions[$fragmentIndex].size != ${expected.size}"
+
+        expected.forEachIndexed { index, instruction ->
+            if (instruction !in actual) fails += "$instruction missing from fragment $fragmentIndex"
+        }
+
+        return
+    }
 
 }

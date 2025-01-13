@@ -16,7 +16,7 @@ class BackgroundGradient(
     val end: Color
 ) : AdaptiveInstruction {
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         decoration(subject) { it.backgroundGradient = this }
     }
 

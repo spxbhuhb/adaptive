@@ -1,13 +1,12 @@
 package `fun`.adaptive.ui.editor
 
-import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.boundInput
 import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.text
@@ -16,6 +15,7 @@ import `fun`.adaptive.ui.checkbox.api.boundCheckbox
 import `fun`.adaptive.ui.editor.theme.editorTheme
 import `fun`.adaptive.ui.instruction.input.MaxLength
 import `fun`.adaptive.ui.select.select
+import `fun`.adaptive.ui.select.theme.selectTheme
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatRegistry
@@ -40,8 +40,8 @@ fun <T> editor(
     val editorInfo = editorType(binding)
 
     when (editorInfo.first) {
-        EditorType.Simple -> simpleEditor(binding, *instructions)
-        EditorType.Enum -> enumEditor(binding, editorInfo.second, *instructions)
+        EditorType.Simple -> simpleEditor(binding, instructions())
+        EditorType.Enum -> enumEditor(binding, editorInfo.second, instructions())
         EditorType.Unsupported -> text("! no editor for type ${binding.boundType} !") .. textColors.onSurfaceAngry
     }
 
@@ -109,12 +109,12 @@ private fun simpleEditor(
     when (binding.boundType.removeSuffix("?")) {
 
         KotlinSignatures.BOOLEAN -> {
-            boundCheckbox(*instructions, binding = binding as AdaptiveStateVariableBinding<Boolean>)
+            boundCheckbox(instructions(), binding = binding as AdaptiveStateVariableBinding<Boolean>)
         }
 
         KotlinSignatures.INT -> {
             boundInput<Int>(
-                *styles, *instructions,
+                styles, instructions(),
                 binding = binding as AdaptiveStateVariableBinding<Int>,
                 toString = { it.toString() },
                 fromString = { it.toInt() },
@@ -124,7 +124,7 @@ private fun simpleEditor(
 
         KotlinSignatures.LONG -> {
             boundInput<Long>(
-                *styles, *instructions,
+                styles, instructions(),
                 binding = binding as AdaptiveStateVariableBinding<Long>,
                 toString = { it.toString() },
                 fromString = { it.toLong() },
@@ -134,7 +134,7 @@ private fun simpleEditor(
 
         KotlinSignatures.FLOAT -> {
             boundInput<Float>(
-                *styles, *instructions,
+                styles, instructions(),
                 binding = binding as AdaptiveStateVariableBinding<Float>,
                 toString = { it.toString() },
                 fromString = { it.toFloat() },
@@ -144,7 +144,7 @@ private fun simpleEditor(
 
         KotlinSignatures.DOUBLE -> {
             boundInput<Double>(
-                *styles, *instructions,
+                styles, instructions(),
                 binding = binding as AdaptiveStateVariableBinding<Double>,
                 toString = { it.toString() },
                 fromString = { it.toDouble() },
@@ -154,7 +154,7 @@ private fun simpleEditor(
 
         KotlinSignatures.STRING -> {
             boundInput<String>(
-                *styles, *instructions,
+                styles, instructions(),
                 binding = binding as AdaptiveStateVariableBinding<String>,
                 toString = { it },
                 fromString = { it },
@@ -164,7 +164,7 @@ private fun simpleEditor(
 
         DatetimeSignatures.LOCAL_TIME -> {
             boundInput<LocalTime>(
-                *styles, *instructions, width { editorTheme.timeWidth }, MaxLength(5),
+                styles, instructions(), width { editorTheme.timeWidth }, MaxLength(5),
                 binding = binding as AdaptiveStateVariableBinding<LocalTime>,
                 toString = { it.toString().take(5) },
                 fromString = { LocalTime.parse(it) },
@@ -174,7 +174,7 @@ private fun simpleEditor(
 
         DatetimeSignatures.LOCAL_DATE -> {
             boundInput<LocalDate>(
-                *styles, *instructions, width { editorTheme.dateWidth }, MaxLength(10),
+                styles, instructions(), width { editorTheme.dateWidth }, MaxLength(10),
                 binding = binding as AdaptiveStateVariableBinding<LocalDate>,
                 toString = { it.toString() },
                 fromString = { LocalDate.parse(it) },
@@ -202,6 +202,6 @@ private fun <T> enumEditor(
 ) {
     checkNotNull(wireFormat as? EnumWireFormat<T>)
 
-    select(binding.value, wireFormat.entries, instructions = instructions) { binding.setValue(it, true) }
+    select(binding.value, wireFormat.entries, selectTheme, instructions()) { binding.setValue(it, true) }
 
 }

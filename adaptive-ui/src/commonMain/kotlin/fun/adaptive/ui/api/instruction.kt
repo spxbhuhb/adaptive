@@ -190,7 +190,7 @@ val Number.colSpan
 // ------------------------------------------------------------------------------------
 
 fun navClick(
-    slotName: Name = Name.Companion.ANONYMOUS,
+    slotName: Name = Name.ANONYMOUS,
     @DetachName segment: String? = null,
     @AdaptiveDetach detachFun: (handler: DetachHandler) -> Unit
 ) = NavClick(slotName, segment, detachFun)

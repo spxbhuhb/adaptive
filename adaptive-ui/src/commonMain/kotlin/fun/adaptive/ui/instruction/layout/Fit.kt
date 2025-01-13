@@ -14,7 +14,7 @@ open class Fit(
     val horizontalStrategy: FitStrategy?
 ) : AdaptiveInstruction {
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         layout(subject) {
             it.fit = merge(it.fit)
         }

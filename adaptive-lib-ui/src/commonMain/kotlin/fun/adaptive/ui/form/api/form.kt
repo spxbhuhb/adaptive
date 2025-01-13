@@ -6,13 +6,13 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.repeat
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.wireformat.signature.KotlinSignatures
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.height
@@ -35,7 +35,7 @@ fun form(data: AdatClass, vararg instructions : AdaptiveInstruction) : AdaptiveF
 
     val propertyCount = data.getMetadata().properties.size
 
-    grid(*instructions) {
+    grid(instructions()) {
         width { 600.dp } .. height { (propertyCount * 44 + (propertyCount - 1) * 24).dp }
         colTemplate(200.dp, 400.dp) .. rowTemplate(44.dp repeat propertyCount) .. gap { 24.dp }
 

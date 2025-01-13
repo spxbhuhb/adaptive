@@ -194,8 +194,6 @@ Instructions may be added to fragments to modify them in many ways. `backgroundC
 are instructions in the code example below.
 
 ```kotlin
-import `fun`.adaptive.foundation.rangeTo
-
 @Adaptive
 fun helloWorld() {
     row {

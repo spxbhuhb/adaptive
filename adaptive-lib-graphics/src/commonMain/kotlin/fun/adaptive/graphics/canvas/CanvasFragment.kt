@@ -31,7 +31,7 @@ abstract class CanvasFragment(
 
     override fun genPatchInternal(): Boolean {
         if (instructionIndex != - 1 && haveToPatch(dirtyMask, 1 shl instructionIndex)) {
-            renderData = GraphicsRenderData().also { rd -> instructions.forEach { it.apply(rd) } }
+            renderData = GraphicsRenderData().also { rd -> instructions.applyTo(rd) }
         }
         return false
     }

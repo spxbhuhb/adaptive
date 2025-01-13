@@ -4,7 +4,6 @@ import `fun`.adaptive.cookbook.intro.model.IntroState
 import `fun`.adaptive.cookbook.shared.smallScreen
 import `fun`.adaptive.cookbook.shared.title
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column

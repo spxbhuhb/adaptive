@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.foundation
 
-import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import kotlin.js.JsName
 
 fun adapter(): AdaptiveAdapter {
@@ -20,19 +20,7 @@ fun <T : AdaptiveTransformInterface> thisState(): T {
     replacedByPlugin("gets the fragment as a transform interface")
 }
 
-operator fun AdaptiveFragment.rangeTo(instruction: AdaptiveInstruction): AdaptiveFragment {
-    replacedByPlugin("adds the instruction to the instruction parameter value")
+@JsName("getInstructions")
+fun instructions() : AdaptiveInstructionGroup {
+    replacedByPlugin("gets the instructions of the declaring fragment")
 }
-
-operator fun AdaptiveFragment.rangeTo(instructions: Array<out AdaptiveInstruction>): AdaptiveFragment {
-    replacedByPlugin("adds the instruction to the instruction parameter value")
-}
-
-operator fun AdaptiveInstruction.rangeTo(instruction: AdaptiveInstruction): Array<AdaptiveInstruction> =
-    arrayOf(this, instruction)
-
-operator fun Array<AdaptiveInstruction>.rangeTo(instruction: AdaptiveInstruction): Array<AdaptiveInstruction> =
-    this + instruction
-
-operator fun Array<AdaptiveInstruction>.rangeTo(instruction: Array<AdaptiveInstruction>): Array<AdaptiveInstruction> =
-    this + instruction

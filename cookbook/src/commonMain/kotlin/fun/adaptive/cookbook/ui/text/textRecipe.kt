@@ -3,8 +3,8 @@ package `fun`.adaptive.cookbook.ui.text
 import `fun`.adaptive.cookbook.shared.cornerRadius4
 import `fun`.adaptive.cookbook.shared.cornerRadius8
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.producer.poll
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.colTemplate

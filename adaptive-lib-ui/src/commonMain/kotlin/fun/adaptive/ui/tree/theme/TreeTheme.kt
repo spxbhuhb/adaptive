@@ -1,7 +1,6 @@
 package `fun`.adaptive.ui.tree.theme
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.fontSize
 import `fun`.adaptive.ui.api.gap

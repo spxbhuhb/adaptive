@@ -1,7 +1,6 @@
 package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.box

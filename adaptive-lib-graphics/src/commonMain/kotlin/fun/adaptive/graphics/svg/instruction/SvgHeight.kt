@@ -15,7 +15,7 @@ data class SvgHeight(
     // TODO exotic SVG units
     constructor(height: String) : this(height.removeSuffix("px").toDouble())
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         subject.alsoIfInstance<SvgRootRenderData> {
             it.height = this.height
         }

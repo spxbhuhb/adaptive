@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.column
@@ -24,7 +24,10 @@ import `fun`.adaptive.utility.firstOrNullIfInstance
 
 @Adaptive
 fun formDialog(title : String, data : AdatClass, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
-    dialog(title, *instructions) {
+
+    val onClose = fragment().instructions.firstOrNullIfInstance<OnClose>()
+
+    dialog(title, instructions()) {
 
         column {
             padding { 32.dp }
@@ -35,7 +38,7 @@ fun formDialog(title : String, data : AdatClass, vararg instructions: AdaptiveIn
             width { 708.dp } .. alignItems.end .. paddingRight { 32.dp } .. paddingBottom { 32.dp }
 
             button("Save", Graphics.check) .. onClick {
-                instructions.firstOrNullIfInstance<OnClose>()?.handler?.invoke()
+                onClose?.handler?.invoke()
             }
         }
 

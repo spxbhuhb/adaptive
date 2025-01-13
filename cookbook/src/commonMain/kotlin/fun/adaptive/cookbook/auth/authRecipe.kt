@@ -4,7 +4,6 @@ import `fun`.adaptive.cookbook.auth.ui.account.accounts
 import `fun`.adaptive.cookbook.auth.ui.large.authLarge
 import `fun`.adaptive.cookbook.auth.ui.small.authSmall
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.maxSize

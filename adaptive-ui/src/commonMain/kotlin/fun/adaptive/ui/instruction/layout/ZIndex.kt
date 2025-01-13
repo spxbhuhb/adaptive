@@ -12,7 +12,7 @@ import `fun`.adaptive.ui.render.layout
 class ZIndex(
     val value: Int
 ) : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         layout(subject) {
             it.zIndex = value
         }

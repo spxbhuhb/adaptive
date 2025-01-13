@@ -12,7 +12,7 @@ import `fun`.adaptive.ui.render.model.LayoutRenderData
 
 @Adat
 class MaxWidth : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         layout(subject) {
             it.fit = fit.container.horizontal.merge(it.fit)
         }

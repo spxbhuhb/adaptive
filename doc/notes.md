@@ -134,7 +134,7 @@ class AdaptiveSubTitle {
         }
 
         if (child.haveToPatch(instructions)) {
-            child.setStateVariable(1, arrayOf(mediumTitle))
+            child.setStateVariable(1, instructionsOf(mediumTitle))
         }
     }
 

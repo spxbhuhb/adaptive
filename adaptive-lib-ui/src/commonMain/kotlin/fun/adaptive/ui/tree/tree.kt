@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
@@ -22,7 +22,7 @@ fun tree(
     vararg instructions: AdaptiveInstruction,
 ): AdaptiveFragment {
 
-    column(*instructions, *theme.container) {
+    column(theme.container, instructions()) {
         for (item in items) {
             column {
                 node(item, theme, theme.indent)
@@ -65,7 +65,7 @@ private fun label(
     val hover = hover()
     val colors = theme.itemColors(false, hover)
 
-    row(*theme.item, *colors) {
+    row(theme.item, colors) {
         onClick { toggle() }
         alignItems.startCenter .. height { theme.itemHeight }
         paddingLeft { offset } .. width { theme.width }

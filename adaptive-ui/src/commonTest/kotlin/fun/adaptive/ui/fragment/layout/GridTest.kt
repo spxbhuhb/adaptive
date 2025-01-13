@@ -1,8 +1,9 @@
 package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.name
-import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column
@@ -83,14 +84,14 @@ class GridTest {
     }
 
     fun cff(
-        vararg instructions: AdaptiveInstruction,
+        vararg testInstructions: AdaptiveInstruction,
         f1: Array<AdaptiveInstruction> = emptyArray(),
         f2: Array<AdaptiveInstruction> = emptyArray(),
         checks: AuiTestAdapter.() -> Unit
     ) {
         uiTest(0, 0, 400, 400) {
 
-            grid(C1, *instructions) {
+            grid(C1, AdaptiveInstructionGroup(testInstructions)) {
                 space(*f1) .. F1
                 space(*f2) .. F2
             }

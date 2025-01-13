@@ -3,7 +3,6 @@ package `fun`.adaptive.cookbook.ui.dialog
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.onClick

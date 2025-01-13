@@ -14,26 +14,7 @@ import kotlin.test.assertFailsWith
 abstract class AbstractCollectionTest<ST>(
     wireFormatProvider: WireFormatProvider
 ) : AbstractWireFormatTest<ST>(wireFormatProvider) {
-
-    fun <T> array(value: Array<T?>, itemWireFormat: WireFormat<T>) {
-        val arrayWireFormat = ArrayWireFormat(WireFormatTypeArgument(itemWireFormat, false))
-
-        assertContentEquals(value, e { instance(1, fieldName, value, arrayWireFormat) } d { instance(1, fieldName, arrayWireFormat) })
-        assertEquals(null, e { instanceOrNull(1, fieldName, null, arrayWireFormat) } d { instanceOrNull(1, fieldName, arrayWireFormat) })
-        assertContentEquals(value, e { instanceOrNull(1, fieldName, value, arrayWireFormat) } d { instanceOrNull(1, fieldName, arrayWireFormat) })
-        assertContentEquals(value, r { rawInstance(value, arrayWireFormat) } d { rawInstance(it, arrayWireFormat) })
-    }
-
-    @Test
-    fun testIntArray() {
-        array(intListVal.toTypedArray(), IntWireFormat)
-    }
-
-    @Test
-    fun testInstanceArray() {
-        array(instanceListVal.toTypedArray(), B)
-    }
-
+    
     fun <T> list(value: List<T?>, itemWireFormat: WireFormat<T>, nullable: Boolean = false) {
         val listWireFormat = ListWireFormat(WireFormatTypeArgument(itemWireFormat, nullable))
 

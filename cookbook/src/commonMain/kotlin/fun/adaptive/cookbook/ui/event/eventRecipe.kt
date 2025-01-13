@@ -1,7 +1,6 @@
 package `fun`.adaptive.cookbook.ui.event
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column

@@ -14,7 +14,7 @@ data class ViewBox(
     val width: Double,
     val height: Double
 ) : SvgInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         subject.alsoIfInstance<SvgRootRenderData> {
             it.viewBox = this
         }

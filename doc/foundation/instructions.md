@@ -19,24 +19,26 @@ fun someFun() {
 
 ## Inner instructions
 
-You can put the instructions inside builder blocks, at the beginning, before any rendering instructions.
-This results in much more readable code.
+You can put the instructions inside builder blocks, at the beginning, before any state definition or rendering
+instructions. This results in much more readable code.
 
 >
 > [!WARNING]
 >
-> The placement is very strict. You cannot use `if`, `for` or other structures to add inner instructions
-> conditionally.
+> The placement is **strict** you cannot mix inner instructions with other state definition statements. 
+> 
+> Also, each statement must be an expression with a return value of type `AdaptiveInstruction`. For example
+> you cannot use `if` without an `else` branch or `for`.
 >
 
 ```kotlin
 import `fun`.adaptive.foundation.Adaptive
 
 @Adaptive
-fun someFun() {
+fun someFun(fixed : Boolean) {
     grid {
         rowTemplate(260.dp, 1.fr, 100.dp, 100.dp)
-        colTemplate(1.fr)
+        if (fixed) colTemplate(200.dp) else colTemplate(1.fr)
         
         text("Hello World!", white)
     }
@@ -50,7 +52,6 @@ This also results in much readable code.
 
 ```kotlin
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 
 @Adaptive
 fun someFun() {
@@ -70,13 +71,34 @@ You might want to use outer instructions on your own fragments. To do so, you ha
 > itself. You have to pass them to an actual UI fragment to have coloring, background, etc.
 >
 
+In the example below we simply pass through the instructions to the actual UI fragment to use.
+
 ```kotlin
 @Adaptive
 fun navButton(label: String, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
-    row(*button, *instructions) {
+    row(button, instructions()) {
         text(label, color(0xffffffu), fontSize(15.sp), noSelect)
     }
     return fragment()
+}
+```
+
+### Accessing instructions
+
+Instructions cannot be accessed directly with the variable, the plugin reports an error if
+you try that.
+
+Use the `instructions()` function to get the `AdaptiveInstructionGroup` that contains
+all the instructions the fragment has from all sources (parameter, inner, outer).
+
+```kotlin
+@Adaptive
+fun someFun() {
+    if (blue in instructions()) {
+        text("blue")
+    } else {
+        text("not blue")
+    }
 }
 ```
 
@@ -94,12 +116,12 @@ val cornerRadius8 = cornerRadius(8)
 You can organize your instructions into arrays to make instruction sets:
 
 ```kotlin
-val someStyles = arrayOf<AdaptiveInstriction>(greenGradient, cornerRadius8, AlignItems.Center, JustifyContent.Center)
+val someStyles = instructionsOf(greenGradient, cornerRadius8, AlignItems.Center, JustifyContent.Center)
 
 @Adaptive
 fun someFun() {
 
-    row(2.gridCol, *someStyles) {
+    row(2.gridCol, someStyles) {
         text("Hello World!", white)
     }
 
@@ -109,12 +131,12 @@ fun someFun() {
 You can also mix array instructions with single ones:
 
 ```kotlin
-val centered = arrayOf<AdaptiveInstriction>(AlignItems.Center, JustifyContent.Center)
+val centered = instructionsOf(AlignItems.Center, JustifyContent.Center)
 
 @Adaptive
 fun someFun() {
 
-    row(2.gridCol, *centered, greenGradient, cornerRadius8) {
+    row(2.gridCol, centered, greenGradient, cornerRadius8) {
         text("Hello World!", white)
     }
 

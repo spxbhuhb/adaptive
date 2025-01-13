@@ -18,7 +18,7 @@ class Frame(
     val height: DPixel
 ) : AdaptiveInstruction {
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         layout(subject) {
             val adapter = it.adapter
             it.instructedTop = adapter.toPx(top)

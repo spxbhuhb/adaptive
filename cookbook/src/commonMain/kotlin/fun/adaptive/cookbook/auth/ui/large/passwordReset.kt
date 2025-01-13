@@ -10,7 +10,6 @@ import `fun`.adaptive.cookbook.shared.title
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.inputPlaceholder

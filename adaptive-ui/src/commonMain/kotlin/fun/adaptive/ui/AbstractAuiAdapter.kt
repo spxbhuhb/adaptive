@@ -6,6 +6,8 @@ package `fun`.adaptive.ui
 
 import `fun`.adaptive.foundation.*
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
+import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.resource.ThemeQualifier
 import `fun`.adaptive.ui.api.normalFont
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
@@ -166,10 +168,10 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : AdaptiveAdapter {
     // Theme support
     // ------------------------------------------------------------------------------
 
-    val theme = mutableMapOf<String, Array<out AdaptiveInstruction>>()
+    val theme = mutableMapOf<String, AdaptiveInstructionGroup>()
 
-    fun themeFor(fragment: AbstractAuiFragment<RT>): Array<out AdaptiveInstruction> =
-        theme[fragment::class.simpleName] ?: emptyArray<AdaptiveInstruction>()
+    fun themeFor(fragment: AbstractAuiFragment<RT>): AdaptiveInstructionGroup =
+        theme[fragment::class.simpleName] ?: emptyInstructions
 
     // ------------------------------------------------------------------------------
     // Media metrics support

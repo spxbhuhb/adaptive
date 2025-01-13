@@ -9,7 +9,6 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.lib.sandbox.model.SignUp
 import `fun`.adaptive.resource.graphics.Graphics
@@ -110,19 +109,19 @@ fun welcomeInner(signUp: SignUp) {
 @Adaptive
 fun titleLarge(text: String) {
     row(height(213.dp), paddingTop(117.dp)) {
-        text(text, *titleLarge)
+        text(text, titleLarge)
     }
 }
 
 @Adaptive
 fun subTitle(text: String) {
-    text(text, *bodyMedium, lightFont, paddingTop(15.dp))
+    text(text, bodyMedium, lightFont, paddingTop(15.dp))
 }
 
 @Adaptive
 fun footerLink(normalText: String, linkText: String, href: String) {
     row(AlignItems.Companion.center, maxWidth) {
-        text(normalText, *bodyMedium)
+        text(normalText, bodyMedium)
         text(linkText, FontSize(17.sp), FontName("Noto Sans"), textColor(black), underline, externalLink(href))
     }
 }
@@ -142,11 +141,11 @@ fun checkbox(
         onClick { binding.setValue(! binding.value, true) }
 
         if (binding.value) {
-            box(*activeCheckBox) {
+            box(activeCheckBox) {
                 svg(Graphics.check) .. noSelect .. frame(1.dp, 1.dp, 18.dp, 18.dp)
             }
         } else {
-            box(*inactiveCheckBox) {
+            box(inactiveCheckBox) {
 
             }
         }

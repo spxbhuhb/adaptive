@@ -6,7 +6,6 @@ import `fun`.adaptive.cookbook.intro.model.IntroState
 import `fun`.adaptive.cookbook.intro.screens.end
 import `fun`.adaptive.cookbook.intro.screens.start
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.flowBox
 import `fun`.adaptive.ui.api.gap

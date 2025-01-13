@@ -5,12 +5,15 @@
 package `fun`.adaptive.kotlin.common
 
 import `fun`.adaptive.kotlin.AdaptiveOptions
+import `fun`.adaptive.kotlin.common.AdaptiveFqNames.PLUGIN_REFERENCE
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
+import org.jetbrains.kotlin.ir.symbols.IrConstructorSymbol
 import org.jetbrains.kotlin.ir.symbols.IrFieldSymbol
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.fields
+import org.jetbrains.kotlin.ir.util.getAnnotationArgumentValue
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.ClassId
 import java.nio.file.Files
@@ -52,6 +55,9 @@ abstract class AbstractPluginContext(
 
     fun IrClassSymbol.singleConstructor() =
         owner.constructors.single()
+
+    fun IrClassSymbol.constructorByKey(key: String): IrConstructorSymbol =
+        constructors.first { it.owner.getAnnotationArgumentValue<String>(PLUGIN_REFERENCE, "key") == key }
 
     fun IrClassSymbol.fieldByName(name: String): IrFieldSymbol =
         fields.single { it.owner.name.asString() == name }

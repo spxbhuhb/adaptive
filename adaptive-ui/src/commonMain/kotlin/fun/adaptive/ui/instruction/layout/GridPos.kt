@@ -16,7 +16,7 @@ class GridPos(
     val rowSpan: Int,
     val colSpan: Int
 ) : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         grid(subject) {
             it.gridRow = row
             it.gridCol = col

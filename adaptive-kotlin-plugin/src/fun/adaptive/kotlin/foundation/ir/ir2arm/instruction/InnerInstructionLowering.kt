@@ -8,6 +8,7 @@ import `fun`.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import `fun`.adaptive.kotlin.foundation.ir.util.HigherOrderProcessing
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.expressions.*
+import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.isFunction
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
@@ -44,15 +45,30 @@ class InnerInstructionLowering(
         val result = mutableListOf<IrExpression>()
 
         for (statement in body.statements) {
+
             if (statement !is IrExpression) break
             if (statement !is IrTypeOperatorCall) break
+
+            if (statement.argument.isRenderingCall()) break
+
             if (! statement.argument.type.isInstruction(pluginContext)) break
+
             result += statement.argument
         }
 
         repeat(result.size) { body.statements.removeAt(0) }
 
         return result
+    }
+
+    private fun IrExpression.isRenderingCall() : Boolean {
+        var current = this
+
+        while (current is IrCall && current.dispatchReceiver != null) {
+            current = current.dispatchReceiver!!
+        }
+
+        return current.type.isSubtypeOfClass(pluginContext.adaptiveFragmentClass)
     }
 
 }

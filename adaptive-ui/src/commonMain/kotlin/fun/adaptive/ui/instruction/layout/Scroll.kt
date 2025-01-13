@@ -13,7 +13,7 @@ class Scroll(
     val horizontal: Boolean? = null,
     val vertical: Boolean? = null
 ) : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         container(subject) {
             if (vertical != null) it.verticalScroll = vertical
             if (horizontal != null) it.horizontalScroll = horizontal

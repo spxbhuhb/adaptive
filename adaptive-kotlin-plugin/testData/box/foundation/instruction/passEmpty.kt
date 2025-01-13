@@ -3,18 +3,17 @@
  */
 package stuff
 
-import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.*
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adaptive
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.testing.*
 import `fun`.adaptive.foundation.query.*
 
 @Adaptive
-fun tf(
-    vararg instructions: AdaptiveInstruction = emptyArray(),
-) {
-    tf2(*instructions)
-    tf2(*instructions, TInst1)
+fun tf(vararg instructions: AdaptiveInstruction) {
+    tf2(instructions())
+    tf2(instructions(), TInst1)
 }
 
 @Adaptive

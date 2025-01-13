@@ -9,7 +9,6 @@ import `fun`.adaptive.kotlin.foundation.Indices
 import `fun`.adaptive.kotlin.foundation.Names
 import `fun`.adaptive.kotlin.foundation.Strings
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmClosure
-import `fun`.adaptive.kotlin.foundation.ir.arm.ArmInternalStateVariable
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmStateVariable
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmWhenStateVariable
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
@@ -22,7 +21,10 @@ import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
-import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.types.IrType
+import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.util.fqNameWhenAvailable
+import org.jetbrains.kotlin.ir.util.parents
 import org.jetbrains.kotlin.name.Name
 
 @OptIn(UnsafeDuringIrConstructionAPI::class)
@@ -31,8 +33,7 @@ class StateAccessTransform(
     private val closure: ArmClosure,
     private val getVariableFunction: IrSimpleFunctionSymbol,
     private val newParent: IrFunction?,
-    private val irGetFragment: () -> IrExpression,
-    private val stateVariable: ArmInternalStateVariable? = null
+    private val irGetFragment: () -> IrExpression
 ) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
 
     override val pluginContext = irBuilder.pluginContext
@@ -57,7 +58,7 @@ class StateAccessTransform(
 
     fun getStateVariable(stateVariable: ArmStateVariable): IrExpression =
         irBuilder.irImplicitAs(
-            stateVariable.type,
+            variableCastType(stateVariable),
             IrCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 irBuiltIns.anyNType,
@@ -73,6 +74,13 @@ class StateAccessTransform(
                 )
             }
         )
+
+    private fun variableCastType(stateVariable: ArmStateVariable): IrType =
+        if (stateVariable.isInstructions) {
+            pluginContext.adaptiveInstructionGroupType
+        } else {
+            stateVariable.type
+        }
 
     override fun visitSetValue(expression: IrSetValue): IrExpression {
 
@@ -113,15 +121,22 @@ class StateAccessTransform(
 
     fun transformHelper(expression: IrCall) =
         when (expression.symbol.owner.name.identifier) {
-            Strings.HELPER_ADAPTER -> getPropertyValue(Names.HELPER_ADAPTER)
+            Strings.HELPER_ADAPTER -> getPropertyValue(Names.ADAPTER)
             Strings.HELPER_FRAGMENT -> irGetFragment()
             Strings.HELPER_THIS_STATE -> irGetFragment()
+            Strings.HELPER_INSTRUCTIONS -> getInstructions()
             else -> throw IllegalStateException("unknown helper function: ${expression.symbol}")
         }
 
 
     fun getPropertyValue(name: Name) =
         irBuilder.irGetValue(irBuilder.irClass.property(name), irGetFragment())
+
+    fun getInstructions() : IrExpression {
+        val instructions = closure.firstOrNull { it.isInstructions }
+        checkNotNull(instructions) { "no instructions declared for the fragment: ${irBuilder.irClass.fqNameWhenAvailable}" }
+        return getStateVariable(instructions)
+    }
 
     override fun visitDeclaration(declaration: IrDeclarationBase): IrStatement {
         if (declaration.parent == irBuilder.armClass.originalFunction) {

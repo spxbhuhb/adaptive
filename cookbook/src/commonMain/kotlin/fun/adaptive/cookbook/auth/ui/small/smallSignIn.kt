@@ -17,7 +17,6 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.fontSize

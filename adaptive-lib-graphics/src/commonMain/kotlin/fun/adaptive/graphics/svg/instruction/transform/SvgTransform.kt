@@ -9,7 +9,7 @@ import `fun`.adaptive.graphics.svg.render.SvgRenderData
 import `fun`.adaptive.utility.alsoIfInstance
 
 interface SvgTransform : SvgInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         subject.alsoIfInstance<SvgRenderData> {
             val transforms = it.transform
             if (transforms == null) {

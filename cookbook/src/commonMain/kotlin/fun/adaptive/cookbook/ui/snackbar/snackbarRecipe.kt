@@ -2,7 +2,6 @@ package `fun`.adaptive.cookbook.ui.snackbar
 
 import `fun`.adaptive.auto.api.autoCollection
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.gap

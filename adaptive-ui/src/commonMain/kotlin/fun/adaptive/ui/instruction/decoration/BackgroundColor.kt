@@ -8,7 +8,7 @@ import `fun`.adaptive.ui.render.decoration
 class BackgroundColor(
     val color: Color
 ) : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         decoration(subject) { it.backgroundColor = color }
     }
 }

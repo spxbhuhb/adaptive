@@ -334,7 +334,10 @@ class ArmClassBuilder(
                 }
 
                 val transformedExpression = originalExpression
-                    .transformThisStateAccess(armClass.stateVariables, newParent = patchFun, stateVariable = stateVariable) { irGet(patchFun.dispatchReceiverParameter !!) }
+                    .transformThisStateAccess(
+                        armClass.stateVariables,
+                        newParent = patchFun
+                    ) { irGet(patchFun.dispatchReceiverParameter !!) }
 
                 // optimize out null default values
                 if (transformedExpression is IrConstImpl && transformedExpression.kind == IrConstKind.Null) continue

@@ -121,6 +121,7 @@ const val UTILITY_PACKAGE = "fun.adaptive.utility"
 
 object AdaptiveFqNames : NamesBase("") {
     val UUID = FqName("$UTILITY_PACKAGE.UUID")
+    val PLUGIN_REFERENCE =  FqName("$UTILITY_PACKAGE.PluginReference")
 }
 
 object AdaptiveClassIds : NamesBase("") {

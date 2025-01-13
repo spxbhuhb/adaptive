@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.render.text
 class FontSize(
     val fontSize: SPixel
 ) : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         text(subject) { it.fontSize = fontSize }
     }
 }

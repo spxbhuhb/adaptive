@@ -18,7 +18,7 @@ class Border(
     override val left: DPixel?
 ) : AdaptiveInstruction, Surrounding {
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         // decided to duplicate the border to keep layout calculations separate from decorations
         layout(subject) {
             it.border = RawSurrounding(this, it.border ?: RawSurrounding.Companion.ZERO, it.adapter)

@@ -9,6 +9,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.instructionsOf
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.color
@@ -88,7 +89,7 @@ val button = instructionsOf(
 
 @Adaptive
 fun button(label: String, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
-    row(*button, *instructions) {
+    row(button, instructions()) {
         text(label, textColor(white), textMedium, noSelect)
     }
     return fragment()

@@ -4,7 +4,6 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.cookbook.grid_view
 import `fun`.adaptive.cookbook.mail
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.flowBox
 import `fun`.adaptive.ui.api.gap

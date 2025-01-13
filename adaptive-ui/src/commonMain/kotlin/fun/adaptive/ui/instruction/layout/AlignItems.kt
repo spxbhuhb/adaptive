@@ -15,7 +15,7 @@ class AlignItems(
     val horizontal: Alignment?,
 ) : AdaptiveInstruction {
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         container(subject) {
             if (vertical != null) it.verticalAlignment = vertical
             if (horizontal != null) it.horizontalAlignment = horizontal

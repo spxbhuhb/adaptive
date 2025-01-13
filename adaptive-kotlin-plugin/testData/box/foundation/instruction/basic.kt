@@ -3,7 +3,7 @@
  */
 package stuff
 
-import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.*
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adaptive
 import `fun`.adaptive.foundation.testing.*
@@ -28,7 +28,7 @@ fun box(): String {
 
         val f = adapter.firstWith<TInst1>()
 
-        if (! f.instructions.contentEquals(arrayOf(TInst1, TInst2))) return "Fail:content"
+        if (f.instructions != instructionsOf(TInst1, TInst2)) return "Fail:content"
 
     }
 

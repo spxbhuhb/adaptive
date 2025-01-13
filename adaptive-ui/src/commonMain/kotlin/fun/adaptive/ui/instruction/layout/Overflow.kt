@@ -7,7 +7,7 @@ class Overflow(
     val overflow: OverflowBehavior?
 ) : AdaptiveInstruction {
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         layout(subject) {
             it.overflow = overflow
         }

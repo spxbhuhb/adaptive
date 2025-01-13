@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.box
@@ -44,17 +44,17 @@ fun <T> select(
     var open = false
     if (focus == false) open = false // this is not the same as open = focus!
 
-    val toText = instructions.firstOrNullIfInstance<ToText<T>>() ?: ToText<T> { it.toString() }
+    val toText = fragment().instructions.firstOrNullIfInstance<ToText<T>>() ?: ToText<T> { it.toString() }
     val openHeight = min(10, items.size) * theme.itemHeight
 
     box {
         theme.outerContainer
 
         if (open) {
-            box(*theme.openContainer) {
+            box(theme.openContainer) {
                 height { openHeight.dp }
 
-                selectTop(value, open, focus, toText, theme, *instructions) .. onClick { open = false }
+                selectTop(value, open, focus, toText, theme, instructions()) .. onClick { open = false }
 
                 column {
                     theme.itemsContainer
@@ -69,8 +69,8 @@ fun <T> select(
                 }
             }
         } else {
-            box(*theme.closedContainer) {
-                selectTop(value, open, focus, toText, theme, *instructions) .. onClick { open = true }
+            box(theme.closedContainer) {
+                selectTop(value, open, focus, toText, theme, instructions()) .. onClick { open = true }
             }
         }
     }
@@ -88,10 +88,11 @@ private fun <T> selectTop(
     vararg instructions: AdaptiveInstruction,
 ): AdaptiveFragment {
 
-    val placeholder = instructions.firstOrNullIfInstance<InputPlaceholder>()
+    val placeholder = fragment().instructions.firstOrNullIfInstance<InputPlaceholder>()
     val textColor = if (selected != null) textColors.onSurface else textColors.onSurfaceVariant
 
-    grid(*instructions, if (open) cornerTopRadius(8.dp) else cornerRadius(8.dp)) {
+    grid(instructions()) {
+        if (open) cornerTopRadius(8.dp) else cornerRadius(8.dp)
         if (focus) theme.focused else theme.enabled
 
         text(selected?.let { toText.toTextFun(it) } ?: placeholder?.value ?: "") .. textColor
@@ -112,7 +113,7 @@ private fun <T> selectItem(
 
     val hover = hover()
 
-    box(*instructions) {
+    box(instructions()) {
         theme.itemColors(value == selected, hover) .. theme.item
 
         text(toText.toTextFun(value)) .. alignSelf.startCenter

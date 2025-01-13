@@ -185,7 +185,6 @@ open class ClassBoundIrBuilder(
     fun IrStatement.transformThisStateAccess(
         closure: ArmClosure,
         newParent: IrFunction,
-        stateVariable: ArmInternalStateVariable? = null,
         irGetFragment: () -> IrExpression
     ): IrExpression =
         transform(
@@ -194,8 +193,7 @@ open class ClassBoundIrBuilder(
                 closure,
                 pluginContext.getThisClosureVariable,
                 newParent,
-                irGetFragment,
-                stateVariable
+                irGetFragment
             ), null
         ) as IrExpression
 

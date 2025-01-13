@@ -12,7 +12,7 @@ import `fun`.adaptive.ui.render.model.EventRenderData
 class OnDoubleClick(
     override val handler: (event: UIEvent) -> Unit,
 ) : UIEventHandler {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         event(subject) { it.onDoubleClick = this }
     }
 }

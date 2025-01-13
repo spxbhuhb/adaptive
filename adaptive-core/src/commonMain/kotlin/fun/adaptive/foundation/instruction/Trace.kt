@@ -24,7 +24,7 @@ class Trace(vararg val patterns : Regex = arrayOf(Regex(".*"))) : AdaptiveInstru
 
     constructor(vararg patterns: String) : this(*patterns.map { Regex(it) }.toTypedArray())
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         subject.alsoIfInstance<Traceable> { it.tracePatterns = patterns }
     }
 

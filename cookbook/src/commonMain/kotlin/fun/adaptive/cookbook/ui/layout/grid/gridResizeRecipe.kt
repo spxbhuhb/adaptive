@@ -12,7 +12,6 @@ import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.borders
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.colTemplate

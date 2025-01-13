@@ -5,7 +5,6 @@ import `fun`.adaptive.cookbook.check
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.Independent
 import `fun`.adaptive.foundation.producer.poll
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.colSpan

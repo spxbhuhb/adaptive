@@ -66,7 +66,7 @@ open class ArmInternalStateVariableBuilder(
     }
 
     fun IrExpression.transformStateAccess(patchFun: IrSimpleFunction) =
-        transformThisStateAccess(armClass.stateVariables, newParent = patchFun, stateVariable = stateVariable) { irGet(patchFun.dispatchReceiverParameter !!) }
+        transformThisStateAccess(armClass.stateVariables, newParent = patchFun) { irGet(patchFun.dispatchReceiverParameter !!) }
 
     /**
      * Set the state variable binding parameter of producer calls.

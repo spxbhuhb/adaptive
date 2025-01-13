@@ -6,6 +6,8 @@ package `fun`.adaptive.ui.fragment
 
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment.FoundationDelegate
+import `fun`.adaptive.foundation.instruction.instructionsOf
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.foundation.query.first
 import `fun`.adaptive.foundation.query.firstOrNull
@@ -147,7 +149,7 @@ class SlotTest {
             patchDescendantFun = {
                 when (it.declarationIndex) {
                     SLOT -> {
-                        it.setStateVariable(0, arrayOf(HistorySize(2)))
+                        it.setStateVariable(0, instructionsOf(HistorySize(2)))
                         it.setStateVariable(1, BoundFragmentFactory(this, T0)) // initialContent
                     }
 

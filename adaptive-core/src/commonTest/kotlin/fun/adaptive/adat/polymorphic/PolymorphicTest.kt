@@ -72,6 +72,12 @@ class PolymorphicTest {
     fun polymorphicList() = test { listOf(PolymorphicTestClass(12), 23) }
 
     @Test
+    fun instanceSet() = test { setOf(PolymorphicTestClass(12), PolymorphicTestClass(23)) }
+
+    @Test
+    fun polymorphicSet() = test { setOf(PolymorphicTestClass(12), 23) }
+
+    @Test
     fun duration() = test { 1.seconds }
 
     @Test

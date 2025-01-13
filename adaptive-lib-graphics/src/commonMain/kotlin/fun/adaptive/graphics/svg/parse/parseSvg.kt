@@ -5,6 +5,7 @@
 package `fun`.adaptive.graphics.svg.parse
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.graphics.svg.SvgAdapter
 import `fun`.adaptive.graphics.svg.SvgFragment
 import `fun`.adaptive.graphics.svg.fragment.SvgGroup
@@ -40,7 +41,7 @@ private fun toSvg(xmlElement: XmlElement, adapter: SvgAdapter, parent: SvgFragme
         else -> throw NotImplementedError("svg type ${xmlElement.tag} is not implemented yet")
     }
 
-    fragment.state[fragment.instructionIndex] = instructions.toTypedArray() + additionalInstructions
+    fragment.state[fragment.instructionIndex] = AdaptiveInstructionGroup(instructions.toTypedArray() + additionalInstructions)
     // no external patch for SVG fragments when loaded directly
     fragment.genPatchInternal()
 

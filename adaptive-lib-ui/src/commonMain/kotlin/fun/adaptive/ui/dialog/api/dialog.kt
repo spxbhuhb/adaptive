@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.column
@@ -23,10 +23,12 @@ import `fun`.adaptive.utility.firstOrNullIfInstance
 @Adaptive
 fun dialog(title : String, vararg instructions: AdaptiveInstruction, @Adaptive _fixme_adaptive_content: () -> Unit): AdaptiveFragment {
 
+    val onClose = fragment().instructions.firstOrNullIfInstance<OnClose>()
+
     rootBox {
         dialogTheme.root
 
-        column(*instructions) {
+        column(instructions()) {
             dialogTheme.mainContainer .. width(708.dp)
 
             row {
@@ -35,7 +37,7 @@ fun dialog(title : String, vararg instructions: AdaptiveInstruction, @Adaptive _
                 text(title) .. dialogTheme.titleText
 
                 svg(Graphics.close) .. dialogTheme.titleIcon .. onClick {
-                    instructions.firstOrNullIfInstance<OnClose>()?.handler?.invoke()
+                    onClose?.handler?.invoke()
                 }
             }
 

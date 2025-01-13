@@ -46,7 +46,7 @@ interface AdaptiveAnnotationBasedExtension {
             )
 
     val IrValueParameter?.isDetach: Boolean
-        get() = this?.hasAnnotation(pluginContext.adaptiveDetachClass) ?: false
+        get() = this?.hasAnnotation(pluginContext.adaptiveDetachClass) == true
 
     val IrCall.isExpectCall: Boolean
         get() = symbol.owner.hasAnnotation(pluginContext.adaptiveExpectClass)

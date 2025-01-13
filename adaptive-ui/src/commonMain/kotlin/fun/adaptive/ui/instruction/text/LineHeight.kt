@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.render.textAndAdapter
 
 @Adat
 class LineHeight(val height: DPixel) : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         textAndAdapter(subject) { t, a -> t.lineHeight = a.toPx(height) }
     }
 }

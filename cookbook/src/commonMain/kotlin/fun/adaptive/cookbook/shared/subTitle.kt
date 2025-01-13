@@ -8,5 +8,5 @@ import `fun`.adaptive.ui.api.paddingTop
 
 @Adaptive
 fun subTitle(text: String) {
-    flowText(text, *bodyMedium, lightFont, paddingTop(15.dp))
+    flowText(text, bodyMedium, lightFont, paddingTop(15.dp))
 }

@@ -21,7 +21,7 @@ class Padding(
 
     constructor(all: DPixel) : this(all, all, all, all)
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         layout(subject) {
             it.padding = RawSurrounding(this, it.padding ?: RawSurrounding.ZERO, it.adapter)
         }

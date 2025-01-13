@@ -4,12 +4,11 @@
 
 package `fun`.adaptive.ui.render.model
 
-import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.testing.Traceable
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
-import `fun`.adaptive.ui.instruction.layout.Fit
 
 /**
  * A pre-processed version of fragment instructions to make access from layout easier.
@@ -24,13 +23,9 @@ data class AuiRenderData(
     constructor(
         adapter: AbstractAuiAdapter<*, *>,
         previous: AuiRenderData?,
-        vararg instructionSets: Array<out AdaptiveInstruction>,
+        vararg instructionSets: AdaptiveInstructionGroup,
     ) : this(adapter) {
-        for (instructionSet in instructionSets) {
-            for (instruction in instructionSet) {
-                instruction.apply(this)
-            }
-        }
+        instructionSets.forEach { it.applyTo(this) }
         computeSurrounding()
         innerWidth = previous?.innerWidth
         innerHeight = previous?.innerHeight

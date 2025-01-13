@@ -10,32 +10,6 @@ import `fun`.adaptive.wireformat.WireFormatEncoder
 import `fun`.adaptive.wireformat.WireFormatKind
 import `fun`.adaptive.wireformat.signature.WireFormatTypeArgument
 
-class ArrayWireFormat<T>(
-    val typeArgument: WireFormatTypeArgument<T>
-) : WireFormat<Array<T?>> {
-
-    override val wireFormatName: String
-        get() = "kotlin.Array"
-
-    override val wireFormatKind: WireFormatKind
-        get() = WireFormatKind.Collection
-
-    override fun wireFormatEncode(encoder: WireFormatEncoder, value: Array<T?>): WireFormatEncoder =
-        encoder.items(value.toList(), typeArgument)
-
-    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Array<T?> {
-        val list = (decoder?.items(source, typeArgument) ?: emptyList()) as List<Any?>
-        @Suppress("UNCHECKED_CAST") // FIXME this does not work, Java arrays have to know the class of the type argument at compile time
-        return Array(list.size) { list[it] } as Array<T?>
-    }
-
-    override fun wireFormatCopy(typeArguments: List<WireFormatTypeArgument<*>>) : ArrayWireFormat<*> {
-        check(typeArguments.size == 1)
-        return ArrayWireFormat(typeArguments[0])
-    }
-
-}
-
 class ListWireFormat<T>(
     val typeArgument: WireFormatTypeArgument<T>
 ) : WireFormat<List<T?>> {
@@ -63,6 +37,8 @@ class ListWireFormat<T>(
 class SetWireFormat<T>(
     val typeArgument: WireFormatTypeArgument<T>
 ) : WireFormat<Set<T?>> {
+
+    constructor(wireFormat: WireFormat<T>) : this(WireFormatTypeArgument(wireFormat, false))
 
     override val wireFormatName: String
         get() = "kotlin.collections.Set"

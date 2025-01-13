@@ -13,7 +13,7 @@ data class SvgFill(
     val color: Color
 ) : SvgInstruction {
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         subject.alsoIfInstance<SvgRenderData> {
             it.fill = this
         }

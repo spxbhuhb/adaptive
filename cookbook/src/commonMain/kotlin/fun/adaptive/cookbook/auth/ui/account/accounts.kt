@@ -15,7 +15,6 @@ import `fun`.adaptive.cookbook.shared.title
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.producer.fetch
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf

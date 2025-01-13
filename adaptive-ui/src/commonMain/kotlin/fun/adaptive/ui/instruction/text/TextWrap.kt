@@ -12,7 +12,7 @@ import `fun`.adaptive.ui.render.text
 class TextWrap(
     val wrap: Boolean
 ) : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         text(subject) { it.wrap = wrap }
     }
 }

@@ -45,7 +45,7 @@ abstract class SvgFragment<T : SvgRenderData>(
 
     fun patchInstructions() {
         if (instructionIndex != - 1 && haveToPatch(dirtyMask, 1 shl instructionIndex)) {
-            renderData = newRenderData().also { rd -> instructions.forEach { it.apply(rd) } }
+            renderData = newRenderData().also { rd -> instructions.applyTo(rd) }
         }
     }
 

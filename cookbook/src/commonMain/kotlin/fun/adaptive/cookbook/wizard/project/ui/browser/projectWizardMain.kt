@@ -15,7 +15,6 @@ import `fun`.adaptive.cookbook.wizard.project.model.ProjectData
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.binding.PropertySelector
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column

@@ -5,7 +5,8 @@
 package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.maxSize
@@ -31,10 +32,10 @@ class ColTest {
         }
     }
 
-    fun cff(vararg instructions: AdaptiveInstruction, checks: AuiTestAdapter.() -> Unit) {
+    fun cff(vararg testInstructions: AdaptiveInstruction, checks: AuiTestAdapter.() -> Unit) {
         uiTest(0, 0, 400, 400) {
 
-            column(C1, *instructions) {
+            column(C1, AdaptiveInstructionGroup(testInstructions)) {
                 maxSize
 
                 space() .. F1 .. width { 120.dp } .. height { 20.dp }

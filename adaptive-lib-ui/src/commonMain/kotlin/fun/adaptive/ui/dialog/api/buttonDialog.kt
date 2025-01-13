@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.onClose
@@ -31,7 +31,7 @@ fun buttonDialog(
 ): AdaptiveFragment {
     var modalOpen = false
 
-    button(label, resource, *instructions) .. onClick { modalOpen = true }
+    button(label, resource, instructions()) .. onClick { modalOpen = true }
 
     if (modalOpen) {
         dialog(title) {
@@ -63,7 +63,7 @@ fun dangerButtonDialog(
 ): AdaptiveFragment {
     var modalOpen = false
 
-    dangerButton(label, icon, *instructions) .. onClick { modalOpen = true }
+    dangerButton(label, icon, instructions()) .. onClick { modalOpen = true }
 
     if (modalOpen) {
         dialog(title) {

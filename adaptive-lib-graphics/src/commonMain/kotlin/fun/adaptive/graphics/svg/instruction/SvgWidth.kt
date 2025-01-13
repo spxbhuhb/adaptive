@@ -16,7 +16,7 @@ data class SvgWidth(
     // TODO exotic SVG units
     constructor(width: String) : this(width.removeSuffix("px").toDouble())
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         subject.alsoIfInstance<SvgRootRenderData> {
             it.width = this.width
         }

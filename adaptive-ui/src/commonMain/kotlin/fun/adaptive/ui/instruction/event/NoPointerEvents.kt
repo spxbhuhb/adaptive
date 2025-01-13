@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.render.text
 
 @Adat
 class NoPointerEvents : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         event(subject) { it.noPointerEvents = true }
     }
 }

@@ -114,6 +114,7 @@ fun unsupported(vararg arguments: Any?): Nothing {
         "unsupported",
         """
             unsupported operation typically means a missing override somewhere
+            arguments: ${arguments.contentToString()}")"
         """
     )
 }

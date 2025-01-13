@@ -8,7 +8,6 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.fragment.measureFragmentTime
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.instruction.name
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.color
@@ -58,7 +57,7 @@ fun chessBoard() {
                 for (r in 0 until chessBoardSize) {
                     row {
                         for (c in 1 .. chessBoardSize) {
-                            row(*colors(r, c), AlignItems.Companion.center) {
+                            row(colors(r, c), AlignItems.Companion.center) {
                                 text(r * chessBoardSize + c, Size(40.dp, 40.dp)) .. name("Square: ${r * chessBoardSize + c}")
                             }
                         }

@@ -8,7 +8,6 @@ package `fun`.adaptive.lib.sandbox.ui.layout/*
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.instruction.name
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.margin

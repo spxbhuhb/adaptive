@@ -26,7 +26,6 @@ object Strings {
     const val ADAPTIVE_LOOP = "AdaptiveLoop"
     const val BOUND_FRAGMENT_FACTORY = "BoundFragmentFactory"
     const val ADAPTIVE_STATE_VARIABLE_BINDING = "AdaptiveStateVariableBinding"
-    const val ADAPTIVE_TRANSFORM_INTERFACE = "AdaptiveTransformInterface"
 
     const val ROOT_FRAGMENT = "rootFragment"
 
@@ -47,7 +46,6 @@ object Strings {
     const val LOCAL_BINDING = "localBinding"
     const val SET_BINDING = "setBinding"
     const val GET_PRODUCED_VALUE = "getProducedValue"
-    const val IS_DETACHED = "isDetached"
 
     const val ADAPTER = "adapter"
     const val PARENT = "parent"
@@ -57,6 +55,7 @@ object Strings {
     const val HELPER_ADAPTER = "adapter"
     const val HELPER_FRAGMENT = "fragment"
     const val HELPER_THIS_STATE = "thisState"
+    const val HELPER_INSTRUCTIONS = "instructions"
 
     const val ADAPTIVE_EXPECT = "AdaptiveExpect"
     const val MANUAL_IMPLEMENTATION = "manualImplementation"
@@ -80,7 +79,6 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val PARENT = Strings.PARENT.name()
     val DECLARATION_INDEX = Strings.DECLARATION_INDEX.name()
     val ADAPTER = Strings.ADAPTER.name()
-    val HELPER_ADAPTER = Strings.HELPER_ADAPTER.name()
     val KOTLIN_INVOKE = Strings.KOTLIN_INVOKE.name()
     val RANGE_TO = Strings.RANGE_TO.name()
 }
@@ -89,7 +87,6 @@ object FqNames {
     fun String.runtime() = FqName(Strings.RUNTIME_PACKAGE + "." + this)
     fun String.structural() = FqName(Strings.STRUCTURAL_PACKAGE + "." + this)
     fun String.instruction() = FqName(Strings.INSTRUCTION_PACKAGE + "." + this)
-
 
     val ADAPTIVE_ENTRY = Strings.ADAPTIVE_ENTRY.runtime()
 
@@ -120,11 +117,11 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
 
     val ADAPTIVE_STATE_VARIABLE_BINDING = Strings.ADAPTIVE_STATE_VARIABLE_BINDING.classId { BINDING }
 
-    val ADAPTIVE_TRANSFORM_INTERFACE = Strings.ADAPTIVE_TRANSFORM_INTERFACE.classId()
-
     val ADAPTIVE_EXPECT = Strings.ADAPTIVE_EXPECT.classId()
 
     val ADAPTIVE_INSTRUCTION = "AdaptiveInstruction".classId { INSTRUCTION }
+    val ADAPTIVE_INSTRUCTION_GROUP = "AdaptiveInstructionGroup".classId { INSTRUCTION }
+
     val ADAPTIVE_DETACH = "AdaptiveDetach".classId { INSTRUCTION }
     val DETACH_HANDLER = "DetachHandler".classId { INSTRUCTION }
 
@@ -140,6 +137,11 @@ object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val HELPER_FUNCTION_FRAGMENT = Strings.HELPER_FRAGMENT.callableId()
     val HELPER_FUNCTION_THIS_STATE = Strings.HELPER_THIS_STATE.callableId()
     val MANUAL_IMPLEMENTATION = Strings.MANUAL_IMPLEMENTATION.callableId()
+
+    private val INSTRUCTIONS = FqName("fun.adaptive.foundation.instruction")
+
+    val EMPTY_INSTRUCTIONS = "emptyInstructions".callableId { INSTRUCTIONS }
+    val HELPER_FUNCTION_INSTRUCTIONS = Strings.HELPER_INSTRUCTIONS.callableId()
 }
 
 object Indices {
@@ -147,8 +149,6 @@ object Indices {
     /**
      * Fragment constructor arguments.
      */
-    const val ADAPTIVE_GENERATED_FRAGMENT_ARGUMENT_COUNT = 3
-
     const val ADAPTIVE_FRAGMENT_ADAPTER = 0
     const val ADAPTIVE_FRAGMENT_PARENT = 1
     const val ADAPTIVE_FRAGMENT_INDEX = 2
@@ -167,8 +167,6 @@ object Indices {
     /**
      * `setStateVariable(index, value)` arguments
      */
-    const val SET_STATE_VARIABLE_ARGUMENT_COUNT = 2
-
     const val SET_STATE_VARIABLE_INDEX = 0
     const val SET_STATE_VARIABLE_VALUE = 1
 
@@ -176,15 +174,11 @@ object Indices {
      * `getCreateClosureVariable(index)` arguments
      * `getThisClosureVariable(index)` arguments
      */
-    const val GET_CLOSURE_VARIABLE_ARGUMENT_COUNT = 1
-
     const val GET_CLOSURE_VARIABLE_INDEX = 0
 
     /**
      * BoundFragmentFactory constructor arguments
      */
-    const val ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_COUNT = 2
-
     const val ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARING_FRAGMENT = 0
     const val ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARATION_INDEX = 1
 

@@ -5,10 +5,11 @@
 package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.foundation.instruction.name
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.query.firstWith
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.border
@@ -110,14 +111,14 @@ class BoxTestOld {
     fun AdaptiveInstruction.asArray() = arrayOf(this)
 
     fun cff(
-        vararg instructions: AdaptiveInstruction,
+        vararg testInstructions: AdaptiveInstruction,
         f1: Array<AdaptiveInstruction> = emptyArray(),
         f2: Array<AdaptiveInstruction> = emptyArray(),
         checks: AuiTestAdapter.() -> Unit
     ) {
         uiTest(0, 0, 400, 400) {
 
-            box(C1, *instructions) {
+            box(C1, AdaptiveInstructionGroup(testInstructions)) {
                 maxSize
 
                 space(*f1) .. F1 .. width { 120.dp } .. height { 20.dp }

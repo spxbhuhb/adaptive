@@ -12,7 +12,7 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.Trace
 import `fun`.adaptive.foundation.instruction.name
-import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.color
@@ -35,7 +35,7 @@ val trace = Trace()
 // TODO remove = emptyArray() when #29 is fixed
 @Adaptive
 fun layoutExample(title: String, vararg instructions: AdaptiveInstruction = emptyArray(), @Adaptive example: () -> Unit): AdaptiveFragment {
-    column(*instructions) {
+    column(instructions()) {
         text(title)
         box {
             size(208.dp, 158.dp) .. border(outerBorder, 4.dp) .. name("example-container")

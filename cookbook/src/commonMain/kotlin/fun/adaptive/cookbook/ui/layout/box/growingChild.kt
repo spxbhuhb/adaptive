@@ -2,7 +2,6 @@ package `fun`.adaptive.cookbook.ui.layout.box
 
 import `fun`.adaptive.cookbook.shared.blue
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.box

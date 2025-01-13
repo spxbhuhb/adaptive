@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.render.layout
 
 @Adat
 class MaxHeight : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         layout(subject) {
             it.fit = fit.container.vertical.merge(it.fit)
         }

@@ -33,7 +33,7 @@ class NavClick(
         slot.setContent(origin, detachIndex, segment)
     }
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         event(subject) {
             it.onClick = OnClick { execute() }
         }

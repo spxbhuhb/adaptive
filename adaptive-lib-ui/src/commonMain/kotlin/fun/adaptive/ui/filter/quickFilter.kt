@@ -2,7 +2,6 @@ package `fun`.adaptive.ui.filter
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.hover
 import `fun`.adaptive.ui.api.onClick

@@ -5,7 +5,6 @@ import `fun`.adaptive.cookbook.check
 import `fun`.adaptive.cookbook.grid_view
 import `fun`.adaptive.cookbook.mail
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column

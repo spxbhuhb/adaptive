@@ -47,7 +47,6 @@ object WireFormatRegistry : Registry<WireFormat<*>>() {
         set("kotlin.ULongArray", ULongArrayWireFormat)
 
         set("kotlin.Pair", PairWireFormat(n, n))
-        set("kotlin.Array", ArrayWireFormat(n))
         set("kotlin.collections.List", ListWireFormat(n))
         set("kotlin.collections.Set", SetWireFormat(n))
         set("kotlin.collections.Map", MapWireFormat(n, n))

@@ -6,7 +6,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.alignItems
@@ -27,16 +27,16 @@ import `fun`.adaptive.ui.instruction.dp
  */
 @Adaptive
 fun boolean(data: AdatClass, property: AdatPropertyMetadata, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
-    row(*instructions) {
+    row(instructions()) {
         noSelect .. maxHeight .. alignItems.startCenter
         onClick { data.setValue(property.index, ! (data.getValue(property.index) as Boolean)) }
 
         if (data.getValue(property.index) as Boolean) {
-            box(*checkboxTheme.active) {
+            box(checkboxTheme.active) {
                 svg(Graphics.check) .. noSelect .. frame(1.dp, 1.dp, 18.dp, 18.dp)
             }
         } else {
-            box(*checkboxTheme.inactive) {
+            box(checkboxTheme.inactive) {
 
             }
         }

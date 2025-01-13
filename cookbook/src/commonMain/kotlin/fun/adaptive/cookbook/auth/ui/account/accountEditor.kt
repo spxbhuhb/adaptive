@@ -11,7 +11,6 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.Independent
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.producer.fetch
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.service.api.getService
@@ -190,11 +189,11 @@ fun roles(knownRoles: List<Role>, principalRoles: List<Role>) {
                         size(24.dp, 24.dp) .. alignItems.center
 
                         if (role in selectedRoles) {
-                            box(*checkboxTheme.active) {
-                                svg(Graphics.check, *checkboxTheme.icon)
+                            box(checkboxTheme.active) {
+                                svg(Graphics.check, checkboxTheme.icon)
                             }
                         } else {
-                            box(*checkboxTheme.inactive) {
+                            box(checkboxTheme.inactive) {
 
                             }
                         }

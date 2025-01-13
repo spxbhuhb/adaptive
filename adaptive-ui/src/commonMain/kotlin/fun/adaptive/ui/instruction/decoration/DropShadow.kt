@@ -13,7 +13,7 @@ class DropShadow(
     val offsetY: DPixel,
     val standardDeviation: DPixel
 ) : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         decoration(subject) { it.dropShadow = RawDropShadow(this, it.adapter) }
     }
 }

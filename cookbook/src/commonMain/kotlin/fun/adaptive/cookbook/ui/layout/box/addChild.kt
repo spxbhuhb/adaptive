@@ -5,7 +5,6 @@ import `fun`.adaptive.auto.api.autoCollection
 import `fun`.adaptive.auto.api.autoCollectionOrigin
 import `fun`.adaptive.cookbook.shared.yellow
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.border

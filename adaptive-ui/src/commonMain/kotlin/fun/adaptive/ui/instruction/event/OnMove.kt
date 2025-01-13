@@ -12,7 +12,7 @@ import `fun`.adaptive.ui.render.model.EventRenderData
 class OnMove(
     override val handler: (event: UIEvent) -> Unit
 ) : UIEventHandler {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         event(subject) {
             it.additionalEvents = true
             it.onMove = this

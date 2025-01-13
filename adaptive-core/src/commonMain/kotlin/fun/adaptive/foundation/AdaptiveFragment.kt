@@ -6,6 +6,8 @@ package `fun`.adaptive.foundation
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
+import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.internal.AdaptiveClosure
 import `fun`.adaptive.foundation.internal.StateVariableMask
 import `fun`.adaptive.foundation.internal.cleanStateMask
@@ -58,7 +60,7 @@ abstract class AdaptiveFragment(
 
     var trace: Boolean = tracePatterns.isNotEmpty()
 
-    val state: Array<Any?> = arrayOfNulls<Any?>(stateSize)
+    val state: Array<Any?> = Array(stateSize) { null }
 
     @Suppress("LeakingThis") // closure won't do anything with fragments during init
     open val thisClosure: AdaptiveClosure = AdaptiveClosure(arrayOf(this), stateSize)
@@ -75,19 +77,17 @@ abstract class AdaptiveFragment(
     /**
      * Producers that are interested in [addActual] and [removeActual].
      */
-    var actualProducers : MutableList<AdaptiveProducer<*>>? = null
+    var actualProducers: MutableList<AdaptiveProducer<*>>? = null
 
     var bindings: MutableList<AdaptiveStateVariableBinding<*>>? = null
 
-    val instructions: Array<out AdaptiveInstruction>
+    val instructions: AdaptiveInstructionGroup
         get() =
             if (instructionIndex == - 1) {
-                null
+                emptyInstructions
             } else {
-                @Suppress("UNCHECKED_CAST")
-                state[instructionIndex] as? Array<out AdaptiveInstruction>
+                state[instructionIndex]?.let { it as AdaptiveInstructionGroup } ?: emptyInstructions
             }
-                ?: emptyArray()
 
     /**
      * True when this is the initial create call of the fragment.
@@ -275,7 +275,7 @@ abstract class AdaptiveFragment(
      * Called when batch closing operations are needed (typical use is actual UI
      * layout updates). Calls [patchInternal] and then [closePatchBatch].
      */
-    fun setDirtyBatch(index : Int) {
+    fun setDirtyBatch(index: Int) {
         setDirty(index)
         patchInternal()
         closePatchBatch()
@@ -287,6 +287,14 @@ abstract class AdaptiveFragment(
      */
     open fun closePatchBatch() {
         adapter.closePatchBatch()
+    }
+
+    // --------------------------------------------------------------------------
+    // Instruction support
+    // --------------------------------------------------------------------------
+
+    operator fun rangeTo(instruction: AdaptiveInstruction): AdaptiveFragment {
+        replacedByPlugin("moved into state: $instruction")
     }
 
     // --------------------------------------------------------------------------

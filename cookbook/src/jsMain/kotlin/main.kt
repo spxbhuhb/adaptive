@@ -35,7 +35,6 @@ import `fun`.adaptive.cookbook.ui.svg.svgRecipe
 import `fun`.adaptive.cookbook.ui.text.textRecipe
 import `fun`.adaptive.cookbook.ui.tree.treeRecipe
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.ktor.api.webSocketTransport

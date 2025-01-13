@@ -22,15 +22,15 @@ fun overlay(selection: Selection, target: Selection) {
     // ----  rendering  ---------
 
     if (selectionFrame != null) {
-        box(*containingBox, selectionFrame, noHit) { }
-        box(*guide, position(selectionFrame.top, 0.dp), maxWidth) { }
-        box(*guide, position(selectionFrame.top + selectionFrame.height - 1.0, 0.dp), maxWidth) { }
-        box(*guide, position(0.dp, selectionFrame.left), maxHeight) { }
-        box(*guide, position(0.dp, selectionFrame.left + selectionFrame.width - 1.0), maxHeight) { }
+        box(containingBox, selectionFrame, noHit) { }
+        box(guide, position(selectionFrame.top, 0.dp), maxWidth) { }
+        box(guide, position(selectionFrame.top + selectionFrame.height - 1.0, 0.dp), maxWidth) { }
+        box(guide, position(0.dp, selectionFrame.left), maxHeight) { }
+        box(guide, position(0.dp, selectionFrame.left + selectionFrame.width - 1.0), maxHeight) { }
     }
 
     if (targetFrame != null) {
-        box(*targetBox, targetFrame, noHit) { }
+        box(targetBox, targetFrame, noHit) { }
     }
 }
 

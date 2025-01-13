@@ -14,7 +14,7 @@ class GridCol(
     val col: Int,
     val span: Int
 ) : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         grid(subject) {
             it.gridCol = col
             it.colSpan = span

@@ -9,8 +9,8 @@ plugins {
 }
 
 adaptive {
-    pluginDebug = false
-    debugFilter = ".*dialog.*"
+    pluginDebug = true
+    debugFilter = ".*account.*"
     resources {
         publicAccessors = true
         packageOfResources = "fun.adaptive.cookbook"

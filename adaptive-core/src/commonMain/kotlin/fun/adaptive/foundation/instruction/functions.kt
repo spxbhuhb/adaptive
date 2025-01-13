@@ -7,9 +7,11 @@ package `fun`.adaptive.foundation.instruction
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.utility.firstOrNullIfInstance
 
-fun instructionsOf(vararg instructions: AdaptiveInstruction) = arrayOf(*instructions)
+val emptyInstructions = AdaptiveInstructionGroup(emptyList())
 
-inline operator fun <reified T : AdaptiveInstruction> Array<out AdaptiveInstruction>.invoke() {
+fun instructionsOf(vararg instructions: AdaptiveInstruction) = AdaptiveInstructionGroup(listOf(*instructions))
+
+inline operator fun <reified T : AdaptiveInstruction> List<AdaptiveInstruction>.invoke() {
     firstOrNullIfInstance<T>()?.execute()
 }
 

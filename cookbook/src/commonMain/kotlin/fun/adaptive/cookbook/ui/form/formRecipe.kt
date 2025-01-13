@@ -5,7 +5,6 @@ import `fun`.adaptive.adat.api.isNotValid
 import `fun`.adaptive.adat.api.isValid
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column

@@ -345,7 +345,7 @@ class IrFunction2ArmClass(
 
             parameter.isInstructions -> {
                 val detachExpressions = transformDetachExpressions(expression)
-                ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies(skipLambdas = true), detachExpressions)
+                ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies(skipLambdas = true), detachExpressions, isInstructions = true)
             }
 
             else -> {

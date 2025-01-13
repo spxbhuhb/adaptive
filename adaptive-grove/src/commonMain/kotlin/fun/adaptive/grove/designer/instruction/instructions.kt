@@ -48,7 +48,7 @@ fun instructions(selection: Selection) {
 fun section(label: String, @Adaptive content: () -> Unit) {
     column {
         maxWidth
-        row(*instructionTitle) { text(label, *instructionLabel) }
+        row(instructionTitle) { text(label, instructionLabel) }
         content()
     }
 }
@@ -61,21 +61,21 @@ fun positionAndSize(frame: Frame) {
             gap(10.dp)
             paddingLeft { 8.dp }
 
-            row(*valueField) {
-                text("Top", *valueLabel)
-                dPixelInput(*dpEditorInstructions) { frame.top }
+            row(valueField) {
+                text("Top", valueLabel)
+                dPixelInput(dpEditorInstructions) { frame.top }
             }
-            row(*valueField) {
-                text("Left", *valueLabel)
-                dPixelInput(*dpEditorInstructions) { frame.left }
+            row(valueField) {
+                text("Left", valueLabel)
+                dPixelInput(dpEditorInstructions) { frame.left }
             }
-            row(*valueField) {
-                text("Width", *valueLabel)
-                dPixelInput(*dpEditorInstructions) { frame.width }
+            row(valueField) {
+                text("Width", valueLabel)
+                dPixelInput(dpEditorInstructions) { frame.width }
             }
-            row(*valueField) {
-                text("Height", *valueLabel)
-                dPixelInput(*dpEditorInstructions) { frame.height }
+            row(valueField) {
+                text("Height", valueLabel)
+                dPixelInput(dpEditorInstructions) { frame.height }
             }
         }
     }

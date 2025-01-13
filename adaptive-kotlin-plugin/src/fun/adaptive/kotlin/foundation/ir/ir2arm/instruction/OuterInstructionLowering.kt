@@ -24,31 +24,51 @@ class OuterInstructionLowering(
             return super.visitTypeOperator(expression)
         }
 
-        // TODO make outer instruction recognition better, this is quite dirty I think
         val argument = expression.argument
 
-        if (argument !is IrCall)  {
+        if (argument !is IrCall) {
             return super.visitTypeOperator(expression)
         }
 
-        // FIXME handling of callback functions in outer instruction lowering
-        // problem: onClick { fragment().something }
-        val extensionReceiver = argument.extensionReceiver ?: return super.visitTypeOperator(expression)
-        if (! extensionReceiver.type.isSubtypeOfClass(pluginContext.adaptiveFragmentClass)) return super.visitTypeOperator(expression)
-
-        val (renderCall, instructions) = flattenInstructionCalls(argument)
-
-        val valueParameters = renderCall.symbol.owner.valueParameters
-
-        addInstructions(renderCall, valueParameters, instructions)
-
-        return super.visitCall(renderCall)
+        return visitCall(argument)
     }
 
     override fun visitCall(expression: IrCall): IrExpression {
 
-        val extensionReceiver = expression.extensionReceiver ?: return super.visitCall(expression)
-        if (! extensionReceiver.type.isSubtypeOfClass(pluginContext.adaptiveFragmentClass)) return super.visitCall(expression)
+        // All outer instructions use rangeTo and if a fragment call has outer instructions,
+        // the first `visitCall` will be called for the last `rangeTo` in the call chain.
+
+        val owner = expression.symbol.owner
+        if (! owner.isOperator || owner.name != Names.RANGE_TO) {
+            return super.visitCall(expression)
+        }
+
+        // If the result of `rangeTo` is not a fragment we surely do not have to lower.
+
+        if (! expression.type.isSubtypeOfClass(pluginContext.adaptiveFragmentClass)) {
+            return super.visitCall(expression)
+        }
+
+        // There are different cases to handle:
+        //
+        // Normal outer instructions:
+        //   case 1:    a() .. name("1")
+        //   case 2:    a() .. name("1") .. name("2")
+        //
+        // Outer instructions in adaptive lambdas:
+        //   case 3:    a { b .. name("1") }
+        //
+        // Instructions in arguments -- we should NOT lower these:
+        //   case 4:    a(name("1") .. name("2"))                 -- rangeTo type is not fragment, handled above
+        //   case 5:    a(fragment().instructions .. name("3"))   -- rangeTo type is not fragment, handled above
+        //   case 6:    a(fragment() .. name("3"))                -- this is actually an error, TODO report bug when outer instruction is used with fragment()
+        //
+        // The problematic is the instructions in the arguments, especially the last case
+        // where it is particularly hard to decide what to do. In the case of arguments we
+        // should not lower the instructions.
+        //
+        // TODO Think about ultimate receivers in OuterInstructionLowering. Is it true that we have to lower when it is a fragment call?
+        // We have to lower when the receiver of the first (by source code) `rangeTo` is a fragment call.
 
         val (renderCall, instructions) = flattenInstructionCalls(expression)
 
@@ -78,10 +98,9 @@ class OuterInstructionLowering(
      *   instruction:                   -- italic
      * ```
      *
-     * @return Pair(render call, list of instruction expressions)
+     * @return Pair(render call, list of instruction expressions), null when this is not an outer instruction chain
      */
-    fun flattenInstructionCalls(expression: IrExpression): Pair<IrCall, List<IrExpression>> {
-        check(expression is IrCall)
+    fun flattenInstructionCalls(expression: IrCall): Pair<IrCall, List<IrExpression>> {
 
         //  TYPE_OP type=kotlin.Unit origin=IMPLICIT_COERCION_TO_UNIT typeOperand=kotlin.Unit
         //    CALL 'public final fun rangeTo (instruction: `fun`.adaptive.foundation.instruction.AdaptiveInstruction): `fun`.adaptive.foundation.AdaptiveFragment [operator] declared in `fun`.adaptive.foundation' type=`fun`.adaptive.foundation.AdaptiveFragment origin=RANGE
@@ -100,22 +119,12 @@ class OuterInstructionLowering(
 
         while (current != null) {
 
-            if (current.extensionReceiver == null) {
-
-                check(current.isDirectAdaptiveCall || current.isArgumentAdaptiveCall) {
-                    "invalid outer instruction chain (not a rendering call): ${expression.dumpKotlinLike()}"
-                }
-
-                instructions.reverse()
-
-                return current to instructions
-            }
+            val receiver = current.dispatchReceiver
+            checkNotNull(receiver) { "invalid outer instruction chain (missing receiver): ${expression.dumpKotlinLike()}" }
 
             // TODO cache rangeTo operator functions?
             val owner = current.symbol.owner
-
             check(owner.isOperator) { "invalid outer instruction chain (not an operator): ${expression.dumpKotlinLike()}" }
-
             check(owner.name == Names.RANGE_TO) { "invalid outer instruction chain (not rangeTo): ${expression.dumpKotlinLike()}" }
 
             val value = current.getValueArgument(0) !!
@@ -125,9 +134,20 @@ class OuterInstructionLowering(
 
             instructions += value
 
-            current = current.extensionReceiver as? IrCall
+            check(receiver is IrCall) { "invalid outer instruction chain (receiver is not a call): ${expression.dumpKotlinLike()}"}
+
+            if ( ! receiver.symbol.owner.isOperator && receiver.type.isSubtypeOfClass(pluginContext.adaptiveFragmentClass)) {
+
+                check(receiver.isDirectAdaptiveCall || receiver.isArgumentAdaptiveCall) { "invalid outer instruction chain (not a rendering call): ${expression.dumpKotlinLike()}" }
+
+                instructions.reverse()
+
+                return receiver to instructions
+            }
+
+            current = receiver
         }
 
-        error { "invalid transform chain (missing fragment call): ${expression.dumpKotlinLike()}" }
+        throw IllegalStateException("invalid transform chain (missing fragment call): ${expression.dumpKotlinLike()}")
     }
 }

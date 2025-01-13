@@ -17,7 +17,8 @@ open class ArmValueArgument(
     val type : IrType,
     override val irExpression: IrExpression,
     dependencies: ArmDependencies,
-    val detachExpressions : List<ArmDetachExpression> = emptyList()
+    val detachExpressions : List<ArmDetachExpression> = emptyList(),
+    val isInstructions : Boolean = false,
 ) : ArmExpression(armClass, irExpression, dependencies) {
 
     open fun toPatchExpression(
@@ -29,7 +30,8 @@ open class ArmValueArgument(
     ) : IrExpression? =
         ArmValueArgumentBuilder(
             classBuilder,
-            this, closure,
+            this,
+            closure,
             fragmentParameter,
             closureDirtyMask
         ).genPatchDescendantExpression(patchFun)

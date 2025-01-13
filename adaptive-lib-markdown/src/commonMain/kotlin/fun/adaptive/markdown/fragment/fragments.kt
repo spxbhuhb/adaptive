@@ -6,6 +6,7 @@ package `fun`.adaptive.markdown.fragment
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.markdown.parse.*
@@ -39,7 +40,7 @@ val codeStyles = instructionsOf(
     textColor
 )
 
-val textStyles = arrayOf(
+val textStyles = instructionsOf(
     textColor
 )
 
@@ -99,13 +100,13 @@ fun inline(
 
     when {
         entry.code -> {
-            text(entry.text, *formatting.toTypedArray(), *codeStyles)
+            text(entry.text, *formatting.toTypedArray(), codeStyles)
         }
 
         entry.inlineLink -> {
         }
 
-        else -> text(entry.text, *formatting.toTypedArray(), *textStyles)
+        else -> text(entry.text, *formatting.toTypedArray(), textStyles)
         // TODO reflink, refdef
     }
 }
@@ -115,5 +116,5 @@ fun inlineLink(entry: MarkdownInlineAstEntry, instructions: MutableList<Adaptive
     val label = entry.text.substringBefore(']').trim('[')
     val href = entry.text.substringAfter('(').trim(')')
 
-    text(label, *instructions.toTypedArray(), linkColor, externalLink(href))
+    text(label, AdaptiveInstructionGroup(instructions), linkColor, externalLink(href))
 }

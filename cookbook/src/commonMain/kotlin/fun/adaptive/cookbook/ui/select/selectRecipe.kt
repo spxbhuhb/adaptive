@@ -2,7 +2,6 @@ package `fun`.adaptive.cookbook.ui.select
 
 import `fun`.adaptive.cookbook.model.E
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.inputPlaceholder
 import `fun`.adaptive.ui.api.padding

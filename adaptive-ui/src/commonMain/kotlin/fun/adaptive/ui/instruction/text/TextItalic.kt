@@ -10,7 +10,7 @@ import `fun`.adaptive.ui.render.text
 
 @Adat
 class TextItalic : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         text(subject) { it.italic = true }
     }
 }

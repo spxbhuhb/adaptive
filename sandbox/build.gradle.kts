@@ -10,7 +10,7 @@ plugins {
 
 adaptive {
     pluginDebug = false
-    debugFilter = ".*dialog.*"
+    debugFilter = ".*"
     resources {
         publicAccessors = true
         packageOfResources = "fun.adaptive.sandbox"

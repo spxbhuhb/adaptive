@@ -16,7 +16,7 @@ import `fun`.adaptive.ui.api.underline
 @Adaptive
 fun footerLink(normalText: String, linkText: String, href: String) {
     row(AlignItems.center, maxWidth) {
-        text(normalText, *bodyMedium)
+        text(normalText, bodyMedium)
         text(linkText, FontSize(17.sp), textColor(black), underline, externalLink(href))
     }
 }

@@ -3,7 +3,6 @@ package `fun`.adaptive.grove.designer
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.grove.designer.instruction.instructions
 import `fun`.adaptive.grove.designer.overlay.overlay
 import `fun`.adaptive.grove.designer.palette.palette

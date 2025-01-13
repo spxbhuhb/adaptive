@@ -12,7 +12,7 @@ import `fun`.adaptive.ui.render.text
 class FontName(
     val fontName: String
 ) : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         text(subject) { it.fontName = fontName }
     }
 }

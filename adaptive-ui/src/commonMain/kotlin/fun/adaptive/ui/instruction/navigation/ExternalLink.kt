@@ -17,7 +17,7 @@ class ExternalLink(val href: String) : AdaptiveInstruction {
         event.fragment.uiAdapter.openExternalLink(href)
     }
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         event(subject) { it.onClick = OnClick(this::openLink) }
     }
 

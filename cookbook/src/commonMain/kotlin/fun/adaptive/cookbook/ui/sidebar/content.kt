@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.noSelect
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.padding
@@ -25,7 +25,7 @@ private fun next() {
 fun sidebarContent(vararg instructions: AdaptiveInstruction) : AdaptiveFragment {
     val navState = autoItem(sidebarRecipeNavState)
 
-    row(*instructions) {
+    row(instructions()) {
         padding { 16.dp }
 
         when (navState) {

@@ -23,7 +23,7 @@ adaptive {
     resources {
         publicAccessors = true
         withFileQualifiers = false
-        trace = true
+        trace = false
         packageOfResources = "fun.adaptive.site"
     }
 }

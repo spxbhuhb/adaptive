@@ -5,6 +5,7 @@ package `fun`.adaptive.kotlin.base.success
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adaptive
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.testing.*
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.utility.firstOrNullIfInstance
@@ -22,7 +23,7 @@ val Number.testClass
 
 @Adaptive
 fun tc(vararg instructions : AdaptiveInstruction) {
-    T1(instructions.firstOrNullIfInstance<Test>()?.i ?: 999)
+    T1(fragment().parent?.instructions?.firstOrNullIfInstance<Test>()?.i ?: 999)
 }
 
 @Adaptive

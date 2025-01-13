@@ -14,7 +14,7 @@ class TextColor(
     val color: Color
 ) : AdaptiveInstruction {
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         text(subject) { it.color = color }
     }
 }

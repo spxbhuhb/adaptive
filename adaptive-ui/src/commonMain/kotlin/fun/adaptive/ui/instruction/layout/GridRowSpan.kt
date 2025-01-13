@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.render.model.GridRenderData
 class GridRowSpan(
     val span: Int
 ) : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         grid(subject) { it.rowSpan = span }
     }
 }

@@ -9,7 +9,7 @@ class TabIndex(
     val value: Int
 ) : AdaptiveInstruction {
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         input(subject) {
             it.tabIndex = value
         }

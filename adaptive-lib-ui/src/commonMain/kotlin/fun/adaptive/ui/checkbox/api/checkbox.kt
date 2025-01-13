@@ -6,6 +6,7 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instructions
 
 @Adaptive
 fun checkbox(
@@ -16,6 +17,6 @@ fun checkbox(
     selector: () -> Boolean
 ): AdaptiveFragment {
     checkNotNull(binding)
-    boundCheckbox(*instructions, binding = binding)
+    boundCheckbox(instructions(), binding = binding)
     return fragment()
 }

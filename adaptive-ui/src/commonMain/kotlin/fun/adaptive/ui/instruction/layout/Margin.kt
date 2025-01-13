@@ -21,7 +21,7 @@ class Margin(
 
     constructor(all: DPixel) : this(all, all, all, all)
 
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         layout(subject) {
             it.margin = RawSurrounding(this, it.margin ?: RawSurrounding.ZERO, it.adapter)
         }

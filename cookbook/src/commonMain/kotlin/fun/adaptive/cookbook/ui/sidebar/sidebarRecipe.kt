@@ -11,7 +11,6 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.navigation.sidebar.fullSidebar
 import `fun`.adaptive.ui.navigation.sidebar.theme.FullSidebarThemeVariant
 import `fun`.adaptive.ui.navigation.sidebar.thinSidebar
-import `fun`.adaptive.foundation.rangeTo
 
 @Adaptive
 fun sideBarRecipe() {

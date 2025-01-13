@@ -6,7 +6,6 @@ package `fun`.adaptive.lib.sandbox.ui.navigation
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.instruction.name
-import `fun`.adaptive.foundation.rangeTo
 import `fun`.adaptive.ui.api.slot
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.navClick

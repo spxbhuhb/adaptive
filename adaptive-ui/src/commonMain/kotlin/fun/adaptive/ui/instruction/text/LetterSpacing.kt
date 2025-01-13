@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.render.text
 
 @Adat
 class LetterSpacing(val value: Double) : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         text(subject) { it.letterSpacing = value }
     }
 }

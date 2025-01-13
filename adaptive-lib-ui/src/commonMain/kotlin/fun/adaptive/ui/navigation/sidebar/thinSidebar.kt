@@ -1,20 +1,15 @@
 package `fun`.adaptive.ui.navigation.sidebar
 
 import `fun`.adaptive.auto.api.autoItem
-import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.graphics.svg.api.svg
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.hover
-import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.navigation.NavStateOrigin
-import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.ui.navigation.sidebar.theme.ThinSidebarTheme
 import `fun`.adaptive.ui.navigation.sidebar.theme.thinSidebarTheme
 
@@ -28,7 +23,7 @@ fun thinSidebar(
 ): AdaptiveFragment {
     val navState = autoItem(navStateOrigin)
 
-    column(*instructions, *theme.container) {
+    column(theme.container, instructions()) {
         for (item in items.sortedBy { it.index }) {
             thinSidebarItem(item, navState, theme)
         }
@@ -49,10 +44,10 @@ private fun thinSidebarItem(
     val icon = theme.icon(navState in item.state, hover)
     val label = theme.label(navState in item.state, hover)
 
-    column(*theme.item) {
+    column(theme.item) {
         onClick { navState?.goto(item.state) }
 
-        box(*theme.iconContainer, *icon) {
+        box(theme.iconContainer, icon) {
             svg(item.icon) .. theme.icon .. icon
         }
 

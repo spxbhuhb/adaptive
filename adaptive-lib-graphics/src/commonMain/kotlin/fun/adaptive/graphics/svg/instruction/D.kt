@@ -11,7 +11,7 @@ import `fun`.adaptive.utility.alsoIfInstance
 data class D(
     val commands: List<SvgPathCommand>
 ) : SvgInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         subject.alsoIfInstance<SvgPathRenderData> {
             it.commands = commands
         }

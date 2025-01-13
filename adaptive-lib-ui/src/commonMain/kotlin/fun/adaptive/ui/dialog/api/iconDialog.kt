@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.rangeTo
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.onClose
@@ -30,7 +30,7 @@ fun iconDialog(
 ): AdaptiveFragment {
     var modalOpen = false
 
-    icon(icon, *instructions, theme = primaryIconTheme) .. onClick { modalOpen = true }
+    icon(icon, instructions(), theme = primaryIconTheme) .. onClick { modalOpen = true }
 
     if (modalOpen) {
         dialog(title) {

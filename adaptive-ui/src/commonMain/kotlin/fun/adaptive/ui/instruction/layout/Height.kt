@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.render.model.LayoutRenderData
 class Height(
     val height: DPixel
 ) : AdaptiveInstruction {
-    override fun apply(subject: Any) {
+    override fun applyTo(subject: Any) {
         layout(subject) {
             it.instructedHeight = it.adapter.toPx(height)
         }

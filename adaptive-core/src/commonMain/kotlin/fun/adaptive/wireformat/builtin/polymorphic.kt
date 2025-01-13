@@ -44,6 +44,7 @@ object PolymorphicWireFormat : WireFormat<Any> {
 
             is AdatClass -> value.adatCompanion.adatWireFormat
             is List<*> -> ListWireFormat(PolymorphicWireFormat)
+            is Set<*> -> SetWireFormat(PolymorphicWireFormat)
             is String -> StringWireFormat
             is Int -> IntWireFormat
             is Long -> LongWireFormat
@@ -82,7 +83,7 @@ object PolymorphicWireFormat : WireFormat<Any> {
             is UIntArray -> UIntArrayWireFormat
             is ULongArray -> ULongArrayWireFormat
 
-            else -> unsupported("polymorphic type: ${value?.let { it::class.simpleName }} is not supported yet")
+            else -> unsupported("polymorphic type: ${value.let { it::class.simpleName }} is not supported yet")
         } as WireFormat<Any?>
 
 }

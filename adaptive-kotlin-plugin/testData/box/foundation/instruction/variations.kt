@@ -3,7 +3,7 @@
  */
 package stuff
 
-import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.*
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adaptive
 import `fun`.adaptive.foundation.testing.*
@@ -72,13 +72,13 @@ fun box(): String {
         if (children[4].instructions.isNotEmpty()) return "Fail: children[4].instructions"
 
         if (children[5].instructionIndex != 1) return "Fail: children[5]"
-        if (! children[5].instructions.contentEquals(arrayOf(TInst1))) return "Fail: children[5].instructions"
+        if (children[5].instructions != instructionsOf(TInst1)) return "Fail: children[5].instructions"
 
         if (children[6].instructionIndex != 0) return "Fail: children[6]"
         if (children[6].instructions.isNotEmpty()) return "Fail: children[6].instructions"
 
         if (children[7].instructionIndex != 0) return "Fail: children[7]"
-        if (! children[7].instructions.contentEquals(arrayOf(TInst1))) return "Fail: children[7].instructions"
+        if (children[7].instructions != instructionsOf(TInst1)) return "Fail: children[7].instructions"
 
     }
 
