@@ -31,6 +31,10 @@ fun box(): String {
 
     adapter.checkInstructions("inner", 0, name("box"), name("outer"))
 
+    adapter.changeState("outer", 0, 0) { instructionsOf(name("changed")) }
+
+    adapter.checkInstructions("inner", 0, name("changed"), name("outer"))
+
     return adapter.checkResults
 
 }

@@ -427,6 +427,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
+      @TestMetadata("dependency.kt")
+      public void testDependency() {
+        runTest("testData/box/foundation/instruction/dependency.kt");
+      }
+
+      @Test
       @TestMetadata("detach.kt")
       public void testDetach() {
         runTest("testData/box/foundation/instruction/detach.kt");

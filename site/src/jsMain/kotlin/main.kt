@@ -183,7 +183,7 @@ fun card(
     val media = mediaMetrics()
     val shadowIfLight = if (media.isLight) instructionsOf(shadow) else emptyInstructions
 
-    column(*shadowIfLight) {
+    column(shadowIfLight) {
         grid {
             size(360.dp, 214.dp) .. padding(32.dp) .. cornerTopRadius(16.dp) .. backgroundColor(background)
 

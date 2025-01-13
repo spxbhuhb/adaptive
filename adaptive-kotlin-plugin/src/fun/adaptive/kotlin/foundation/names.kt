@@ -81,6 +81,7 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAPTER = Strings.ADAPTER.name()
     val KOTLIN_INVOKE = Strings.KOTLIN_INVOKE.name()
     val RANGE_TO = Strings.RANGE_TO.name()
+    val INSTRUCTIONS = Strings.INSTRUCTIONS.name()
 }
 
 object FqNames {

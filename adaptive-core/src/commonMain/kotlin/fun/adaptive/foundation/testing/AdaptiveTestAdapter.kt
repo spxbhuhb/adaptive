@@ -118,7 +118,7 @@ class AdaptiveTestAdapter(
     @Suppress("unused") // used by plugin unit tests
     val checkResults: String
         get() =
-            if (fails.isEmpty()) "OK" else "Fail:\n    ${fails.joinToString("\n    ")}"
+            if (fails.isEmpty()) "OK" else "Fail:\n    ${fails.joinToString("\n    ")}\n"
 
     @Suppress("unused") // used by plugin unit tests
     fun checkInstructions(
@@ -137,6 +137,20 @@ class AdaptiveTestAdapter(
         }
 
         return
+    }
+
+    @Suppress("unused") // used by plugin unit tests
+    fun changeState(
+        fragmentFilter: String,
+        fragmentIndex: Int,
+        stateVariableIndex : Int,
+        patch : Boolean = true,
+        value : () -> Any?
+    ) {
+        val fragments = filter(true) { fragmentFilter in it::class.simpleName !!.lowercase() }
+        val fragment = fragments[fragmentIndex]
+        fragment.setStateVariable(stateVariableIndex, value())
+        if (patch) fragment.setDirtyBatch(stateVariableIndex)
     }
 
 }
