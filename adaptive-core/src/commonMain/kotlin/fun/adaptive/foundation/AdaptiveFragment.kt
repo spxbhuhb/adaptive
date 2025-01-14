@@ -396,6 +396,8 @@ abstract class AdaptiveFragment(
         ).also {
             addBinding(it)
             descendant.setStateVariable(indexInTarget, it)
+            // TODO remove setDirty from setBinding as it is called in `setStateVariable`
+            // I haven't done this as it may have quite an effect and it is not focus right now
             descendant.setDirty(indexInTarget)
         }
 

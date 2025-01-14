@@ -3,7 +3,7 @@ package `fun`.adaptive.grove.hydration.model
 import `fun`.adaptive.adat.Adat
 
 @Adat
-class PatchDescendantItem(
+class AfmPatchDescendantBranch(
     val declarationIndex : Int,
-    val steps : List<PatchDescendantStep>
+    val steps : List<AfmPatchDescendantBranchStep>
 )

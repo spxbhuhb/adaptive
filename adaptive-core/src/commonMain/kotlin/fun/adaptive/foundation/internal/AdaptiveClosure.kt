@@ -17,7 +17,7 @@ class AdaptiveClosure(
     val owner
         get() = fragments[0]
 
-    var declarationScopeSize = owner.state.size
+    private var declarationScopeSize = owner.state.size
 
     /**
      * Get a state variable by its index in the closure. Walks over the scopes in the
