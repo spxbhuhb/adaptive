@@ -90,9 +90,6 @@ The copy store supports nested instances, so you can build complex data structur
 >
 
 ```kotlin
-import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.foundation.Adaptive
-
 @Adat
 class SomeAdat(
     val s1: String,
@@ -128,8 +125,6 @@ fun yetAnotherEditor(yaa : YetAnotherAdat) {
 To replace the whole instance of the copy store, use the `replaceWith` function:
 
 ```kotlin
-import `fun`.adaptive.foundation.Adaptive
-
 @Adaptive
 fun someEditor() {
     val someAdat = copyStore { SomeAdat("") }

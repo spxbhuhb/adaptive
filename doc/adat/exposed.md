@@ -26,7 +26,7 @@ out-of-the-box.
 class TestData(
     val someInt: Int,
     val someBoolean: Boolean
-) : AdatClass<TestData>
+) : AdatClass
 
 @ExposedAdatTable
 class TestTable : AdatTable<TestData, TestTable>() {

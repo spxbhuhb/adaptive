@@ -3,8 +3,6 @@
 A class is an adaptive data class when it has the `@Adat` annotation:
 
 ```kotlin
-package somepackage
-
 @Adat
 class SomeClass(
     val someInt : Int,
@@ -25,6 +23,7 @@ These classes are similar to `data` classes in concept but offer many other func
   * immutability information
   * constraints (if provided)
   * additional information (if provided)
+* runtime context (optional, used for bindings, error reports etc.)
 * validation
 * automatic mapping to Exposed tables
 * get/set fields by name or index
@@ -42,6 +41,8 @@ These classes are similar to `data` classes in concept but offer many other func
 | `getValue`    | get a value based on its name or its index                                                                                           |
 | `getMetadata` | get metadata of the class                                                                                                            |
 | `newInstance` | get a new instance (from Companion)                                                                                                  |
+| `toArray`     | export all properties into an array                                                                                                  |
+| `touch`       | mark properties touched (when the user changes the value)                                                                            |
 
 Most of these functions are **NOT** generated for these classes, they are implemented in `AdatClass`,
 `AdatCompanion` or by extension functions.
@@ -100,30 +101,30 @@ Metadata of the class above:
 
 ```json
 {
-  "v": 1,
-  "n": "fun.adaptive.adat.TestClass",
-  "f": 1,
-  "p": [
+  "version": 1,
+  "name": "fun.adaptive.adat.TestClass",
+  "flags": 1,
+  "properties": [
     {
-      "n": "someInt",
-      "i": 0,
-      "f": 3,
-      "s": "I",
-      "d": []
+      "name": "someInt",
+      "index": 0,
+      "flags": 3,
+      "signature": "I",
+      "descriptors": []
     },
     {
-      "n": "someBoolean",
-      "i": 1,
-      "f": 2,
-      "s": "Z",
-      "d": []
+      "name": "someBoolean",
+      "index": 1,
+      "flags": 2,
+      "signature": "Z",
+      "descriptors": []
     },
     {
-      "n": "someIntListSet",
-      "i": 2,
-      "f": 3,
-      "s": "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;",
-      "d": []
+      "name": "someIntListSet",
+      "index": 2,
+      "flags": 3,
+      "signature": "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;",
+      "descriptors": []
     }
   ]
 }
