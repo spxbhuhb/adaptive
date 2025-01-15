@@ -252,10 +252,47 @@ class IrFunction2ArmClass(
 
     fun transformCall(irCall: IrCall): ArmRenderingStatement? =
         when {
+            irCall.isHydratedCall -> transformHydratedCall(irCall)
             irCall.isDirectAdaptiveCall -> transformDirectCall(irCall)
             irCall.isArgumentAdaptiveCall -> transformArgumentCall(irCall)
             else -> throw IllegalStateException("non-adaptive call in rendering: ${irCall.dumpKotlinLike()}")
         }
+
+    fun transformHydratedCall(irCall: IrCall): ArmRenderingStatement {
+        // hydrated calls are always expect calls
+        val armCall = ArmCall(armClass, nextFragmentIndex, closure, true, irCall, isExpectCall = true)
+
+        // transform the model argument
+
+        val model = irCall.getValueArgument(0)
+        checkNotNull(model) { "invalid model in hydration call (model is null): ${irCall.dumpKotlinLike()}" }
+
+        val argument = transformValueArgument(armCall, model.type, null, model)
+        check(argument != null) { "invalid model in hydration call (model after transform is null): ${irCall.dumpKotlinLike()}" }
+
+        armCall.arguments += argument
+
+        // transform vararg (if present)
+
+        val vararg = irCall.getValueArgument(1)
+        if (vararg == null) {
+            return armCall.add()
+        }
+
+        check(vararg is IrVararg) { "invalid vararg in hydration call (vararg is null): ${irCall.dumpKotlinLike()}" }
+
+        for (element in vararg.elements) {
+            check(element is IrExpression) { "invalid vararg element in hydration call (element is not IrExpression): ${irCall.dumpKotlinLike()}" }
+
+            val argument = transformValueArgument(armCall, element.type, null, element)
+            check(argument != null) { "invalid model in hydration call (model after transform is null): ${irCall.dumpKotlinLike()}" }
+
+            armCall.arguments += argument
+        }
+
+        return armCall.add()
+    }
+
 
     fun transformDirectCall(irCall: IrCall): ArmRenderingStatement {
         val armCall = ArmCall(armClass, nextFragmentIndex, closure, true, irCall, irCall.isExpectCall)

@@ -835,6 +835,32 @@ public class BoxTestGenerated extends AbstractBoxTest {
   }
 
   @Nested
+  @TestMetadata("testData/box/grove")
+  @TestDataPath("$PROJECT_ROOT")
+  public class Grove {
+    @Test
+    public void testAllFilesPresentInGrove() {
+      KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/grove"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+    }
+
+    @Nested
+    @TestMetadata("testData/box/grove/hydration")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Hydration {
+      @Test
+      public void testAllFilesPresentInHydration() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/grove/hydration"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+      }
+
+      @Test
+      @TestMetadata("basic.kt")
+      public void testBasic() {
+        runTest("testData/box/grove/hydration/basic.kt");
+      }
+    }
+  }
+
+  @Nested
   @TestMetadata("testData/box/reflect")
   @TestDataPath("$PROJECT_ROOT")
   public class Reflect {

@@ -11,8 +11,8 @@ import `fun`.adaptive.backend.builtin.BackendWorker
 
 object BackendFragmentFactory : FoundationFragmentFactory() {
     init {
-        add("backend:service") { p, i -> BackendService(p.adapter as BackendAdapter, p, i) }
-        add("backend:store") { p, i -> BackendStore(p.adapter as BackendAdapter, p, i) }
-        add("backend:worker") { p, i -> BackendWorker(p.adapter as BackendAdapter, p, i) }
+        add("backend:service") { p, i, s -> BackendService(p.adapter as BackendAdapter, p, i) }
+        add("backend:store") { p, i, s -> BackendStore(p.adapter as BackendAdapter, p, i) }
+        add("backend:worker") { p, i, s -> BackendWorker(p.adapter as BackendAdapter, p, i) }
     }
 }

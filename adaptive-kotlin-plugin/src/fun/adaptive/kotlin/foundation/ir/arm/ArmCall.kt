@@ -30,7 +30,10 @@ open class ArmCall(
     val arguments = mutableListOf<ArmValueArgument>()
 
     fun getExpectName(): String =
-        checkNotNull(irCall.symbol.owner.getAnnotation(FqNames.ADAPTIVE_EXPECT)) { "missing ${Strings.ADAPTIVE_EXPECT} annotation" }
+        checkNotNull(
+            irCall.symbol.owner.getAnnotation(FqNames.ADAPTIVE_EXPECT) ?:
+            irCall.symbol.owner.getAnnotation(FqNames.ADAPTIVE_HYDRATED)
+        ) { "missing annotation ${Strings.ADAPTIVE_EXPECT} or ${Strings.ADAPTIVE_HYDRATED} should be there" }
             .getAnnotationStringValue() + ":" + target.shortName().identifier.removePrefix("Adaptive").lowercase()
 
     override fun branchBuilder(parent: ClassBoundIrBuilder): BranchBuilder =

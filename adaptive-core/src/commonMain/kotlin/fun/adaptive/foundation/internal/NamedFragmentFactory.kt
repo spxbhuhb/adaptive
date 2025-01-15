@@ -7,9 +7,9 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 
 class NamedFragmentFactory(
     val name: String,
-    val buildFun : (parent : AdaptiveFragment, index : Int) -> AdaptiveFragment
+    val buildFun : (parent : AdaptiveFragment, index : Int, stateSize : Int) -> AdaptiveFragment
 ) {
-    fun build(parent: AdaptiveFragment, index: Int) : AdaptiveFragment {
-        return buildFun(parent, index)
+    fun build(parent: AdaptiveFragment, index: Int, stateSize : Int = 0) : AdaptiveFragment {
+        return buildFun(parent, index, stateSize)
     }
 }

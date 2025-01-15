@@ -4,6 +4,7 @@
 package `fun`.adaptive.kotlin.foundation
 
 import `fun`.adaptive.kotlin.common.NamesBase
+import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.FqName
 
 object Strings {
@@ -58,6 +59,7 @@ object Strings {
     const val HELPER_INSTRUCTIONS = "instructions"
 
     const val ADAPTIVE_EXPECT = "AdaptiveExpect"
+    const val ADAPTIVE_HYDRATED = "AdaptiveHydrated"
     const val MANUAL_IMPLEMENTATION = "manualImplementation"
 
     const val NEW_SEQUENCE = "newSequence"
@@ -96,6 +98,7 @@ object FqNames {
     val ADAPTIVE_LOOP = Strings.ADAPTIVE_LOOP.structural()
 
     val ADAPTIVE_EXPECT = Strings.ADAPTIVE_EXPECT.runtime()
+    val ADAPTIVE_HYDRATED = Strings.ADAPTIVE_HYDRATED.runtime()
 
     val DETACH_NAME = Strings.DETACH_NAME.instruction()
 }
@@ -131,6 +134,8 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val INDEPENDENT = "Independent".classId()
 
     val ADAT_CLASS = "AdatClass".classId { ADAT_PACKAGE }
+
+    val HYDRATED = "AdaptiveHydrated".classId()
 }
 
 object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {
@@ -143,6 +148,8 @@ object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {
 
     val EMPTY_INSTRUCTIONS = "emptyInstructions".callableId { INSTRUCTIONS }
     val HELPER_FUNCTION_INSTRUCTIONS = Strings.HELPER_INSTRUCTIONS.callableId()
+
+    val HYDRATED_FUNCTION = CallableId("fun.adaptive.grove.api".fqName(), ("hydrated").name())
 }
 
 object Indices {

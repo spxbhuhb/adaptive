@@ -13,9 +13,9 @@ import `fun`.adaptive.ui.AuiAdapter
 
 object SvgFragmentFactory : FoundationFragmentFactory() {
     init {
-        add("svg:root") { p, i -> SvgRoot(p.adapter as SvgAdapter, p, i) }
-        add("svg:group") { p, i -> SvgGroup(p.adapter as SvgAdapter, p, i) }
-        add("svg:path") { p, i -> SvgPath(p.adapter as SvgAdapter, p, i) }
-        add("svg:svg") { p, i -> SvgSvg(p.adapter as AuiAdapter, p, i) }
+        add("svg:root") { p, i, s -> SvgRoot(p.adapter as SvgAdapter, p, i) }
+        add("svg:group") { p, i, s -> SvgGroup(p.adapter as SvgAdapter, p, i) }
+        add("svg:path") { p, i, s -> SvgPath(p.adapter as SvgAdapter, p, i) }
+        add("svg:svg") { p, i, s -> SvgSvg(p.adapter as AuiAdapter, p, i) }
     }
 }

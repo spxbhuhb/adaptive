@@ -10,6 +10,6 @@ import `fun`.adaptive.ui.form.fragment.FormTextual
 
 object FormFragmentFactory : FoundationFragmentFactory() {
     init {
-        add("form:textual") { p,i -> FormTextual(p.adapter as AuiAdapter, p, i) }
+        add("form:textual") { p, i, s -> FormTextual(p.adapter as AuiAdapter, p, i) }
     }
 }

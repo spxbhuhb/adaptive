@@ -10,13 +10,13 @@ import `fun`.adaptive.ui.testing.fragment.*
 
 object AuiFragmentFactory : AdaptiveFragmentFactory() {
     init {
-        add("aui:box") { p, i -> AdaptiveBox(p.adapter as AuiTestAdapter, p, i) }
-        add("aui:column") { p, i -> AdaptiveColumn(p.adapter as AuiTestAdapter, p, i) }
-        add("aui:grid") { p, i -> AdaptiveGrid(p.adapter as AuiTestAdapter, p, i) }
-        add("aui:image") { p, i -> AdaptiveImage(p.adapter as AuiTestAdapter, p, i) }
-        add("aui:row") { p, i -> AdaptiveRow(p.adapter as AuiTestAdapter, p, i) }
-        add("aui:space") { p, i -> AuiSpace(p.adapter as AuiTestAdapter, p, i) }
-        add("aui:slot") { p, i -> AuiSlot(p.adapter as AuiTestAdapter, p, i) }
-        add("aui:text") { p, i -> AdaptiveText(p.adapter as AuiTestAdapter, p, i) }
+        add("aui:box") { p, i, s -> AdaptiveBox(p.adapter as AuiTestAdapter, p, i) }
+        add("aui:column") { p, i, s -> AdaptiveColumn(p.adapter as AuiTestAdapter, p, i) }
+        add("aui:grid") { p, i, s -> AdaptiveGrid(p.adapter as AuiTestAdapter, p, i) }
+        add("aui:image") { p, i, s -> AdaptiveImage(p.adapter as AuiTestAdapter, p, i) }
+        add("aui:row") { p, i, s -> AdaptiveRow(p.adapter as AuiTestAdapter, p, i) }
+        add("aui:space") { p, i, s -> AuiSpace(p.adapter as AuiTestAdapter, p, i) }
+        add("aui:slot") { p, i, s -> AuiSlot(p.adapter as AuiTestAdapter, p, i) }
+        add("aui:text") { p, i, s -> AdaptiveText(p.adapter as AuiTestAdapter, p, i) }
     }
 }

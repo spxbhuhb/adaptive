@@ -51,6 +51,7 @@ class BoundaryVisitor(
 
     override fun visitCall(expression: IrCall) {
         when {
+            expression.isHydratedCall -> found = true
             expression.isDirectAdaptiveCall -> found = true
             expression.isArgumentAdaptiveCall -> found = true
             else -> super.visitCall(expression)

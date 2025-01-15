@@ -36,7 +36,8 @@ class ArmCallBuilder(
                     irGetValue(pluginContext.adapter, irGet(buildFun.valueParameters[Indices.BUILD_PARENT])),
                     irConst(armCall.getExpectName()),
                     irGet(buildFun.valueParameters[Indices.BUILD_PARENT]),
-                    irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX])
+                    irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]),
+                    irConst(armCall.arguments.count())
                 )
             }
 

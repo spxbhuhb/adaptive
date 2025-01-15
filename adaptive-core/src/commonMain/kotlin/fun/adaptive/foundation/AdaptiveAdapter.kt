@@ -53,8 +53,8 @@ interface AdaptiveAdapter {
     fun newLoop(parent : AdaptiveFragment, index : Int) : AdaptiveFragment =
         AdaptiveLoop<Any>(parent.adapter, parent, index)
 
-    fun actualize(name: String, parent: AdaptiveFragment, index: Int) =
-        fragmentFactory.newInstance(name, parent, index)
+    fun actualize(name: String, parent: AdaptiveFragment, index: Int, stateSize : Int) =
+        fragmentFactory.newInstance(name, parent, index, stateSize)
 
     fun addActualRoot(fragment: AdaptiveFragment) = Unit
 

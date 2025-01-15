@@ -11,17 +11,17 @@ import `fun`.adaptive.ui.fragment.structural.AuiSlot
 
 object AuiFragmentFactory : FoundationFragmentFactory() {
     init {
-        add("aui:box") { p, i -> AuiBox(p.adapter as AuiAdapter, p, i) }
-        add("aui:flowbox") { p, i -> AuiFlowBox(p.adapter as AuiAdapter, p, i) }
-        add("aui:column") { p, i -> AuiColumn(p.adapter as AuiAdapter, p, i) }
-        add("aui:grid") { p, i -> AuiGrid(p.adapter as AuiAdapter, p, i) }
-        add("aui:image") { p, i -> AuiImage(p.adapter as AuiAdapter, p, i) }
-        add("aui:input") { p, i -> AuiInput(p.adapter as AuiAdapter, p, i) }
-        add("aui:boundinput") { p, i -> AuiBoundInput(p.adapter as AuiAdapter, p, i) }
-        add("aui:row") { p, i -> AuiRow(p.adapter as AuiAdapter, p, i) }
-        add("aui:text") { p, i -> AuiText(p.adapter as AuiAdapter, p, i) }
-        add("aui:flowtext") { p, i -> AuiFlowText(p.adapter as AuiAdapter, p, i) }
-        add("aui:slot") { p, i -> AuiSlot(p.adapter as AuiAdapter, p, i) }
-        add("aui:rootbox") { p, i -> AuiRootBox(p.adapter as AuiAdapter, p, i) }
+        add("aui:box") { p, i, s -> AuiBox(p.adapter as AuiAdapter, p, i) }
+        add("aui:flowbox") { p, i, s -> AuiFlowBox(p.adapter as AuiAdapter, p, i) }
+        add("aui:column") { p, i, s -> AuiColumn(p.adapter as AuiAdapter, p, i) }
+        add("aui:grid") { p, i, s -> AuiGrid(p.adapter as AuiAdapter, p, i) }
+        add("aui:image") { p, i, s -> AuiImage(p.adapter as AuiAdapter, p, i) }
+        add("aui:input") { p, i, s -> AuiInput(p.adapter as AuiAdapter, p, i) }
+        add("aui:boundinput") { p, i, s -> AuiBoundInput(p.adapter as AuiAdapter, p, i) }
+        add("aui:row") { p, i, s -> AuiRow(p.adapter as AuiAdapter, p, i) }
+        add("aui:text") { p, i, s -> AuiText(p.adapter as AuiAdapter, p, i) }
+        add("aui:flowtext") { p, i, s -> AuiFlowText(p.adapter as AuiAdapter, p, i) }
+        add("aui:slot") { p, i, s -> AuiSlot(p.adapter as AuiAdapter, p, i) }
+        add("aui:rootbox") { p, i, s -> AuiRootBox(p.adapter as AuiAdapter, p, i) }
     }
 }

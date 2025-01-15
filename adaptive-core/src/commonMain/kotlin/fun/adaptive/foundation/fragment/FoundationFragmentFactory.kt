@@ -8,6 +8,6 @@ import `fun`.adaptive.foundation.AdaptiveFragmentFactory
 
 open class FoundationFragmentFactory : AdaptiveFragmentFactory() {
     init {
-        add("foundation:measurefragmenttime") { p, i -> FoundationMeasureFragmentTime(p.adapter, p, i) }
+        add("foundation:measurefragmenttime") { p, i, s -> FoundationMeasureFragmentTime(p.adapter, p, i) }
     }
 }
