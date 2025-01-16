@@ -1,6 +1,5 @@
 package `fun`.adaptive.ui.instruction.event
 
-import `fun`.adaptive.foundation.internal.cleanStateMask
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.instruction.layout.Position
 
@@ -15,7 +14,8 @@ class UIEvent(
     val fragment: AbstractAuiFragment<*>,
     val nativeEvent: Any?,
     val x: Double = Double.NaN,
-    val y: Double = Double.NaN
+    val y: Double = Double.NaN,
+    val transferData: TransferData? = null
 ) {
     val position: Position
         get() = Position(

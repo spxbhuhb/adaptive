@@ -13,47 +13,30 @@ The drag image is a bit problematic. Best would be to handle it ourselves but th
 * capture the view on Android and iOS
 
 ```kotlin
-@Adat
-class SomeEntity(
-    val id: Int,
-    val name: String
-)
+var items = emptyList<String>()
 
-@Adaptive
-fun draggableEntity(entity: SomeEntity) {
+column {
 
     draggable {
-        transferData { entity }
-        text(entity.name)
+        transferData { "hello" }
+        text(Strings.snooze)
     }
-    
-}
 
-@Adaptive
-fun someTarget() {
-    val ids = listOf<String>()
+    dropTarget {
 
-    dropTarget<SomeEntity> { transfer : SomeEntity? ->
-    
-        onDrop(transfer) { ids += it.id }
-    
-        column {
-            if (transfer != null) {
-                backgrounds.red
-            } else {
-                backgrounds.transparent
-            }
+        onDrop {
+            items = items + (it.transferData?.data as String)
+        }
 
-            for (id in ids) {
-                text(id)
+        column(size(200.dp, 200.dp), borders.outline) {
+            verticalScroll
+
+            for (item in items) {
+                text(item)
             }
         }
-    }
-}
 
-@Adaptive
-fun someSource() {
-    someDraggable(SomeEntity(12, "a"))
-    someDraggable(SomeEntity(23, "b"))
+    }
+
 }
 ```

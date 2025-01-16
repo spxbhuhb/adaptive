@@ -4,11 +4,11 @@ import `fun`.adaptive.foundation.instruction.AdaptiveDetach
 import `fun`.adaptive.foundation.instruction.DetachHandler
 import `fun`.adaptive.foundation.instruction.DetachName
 import `fun`.adaptive.foundation.instruction.Name
-import `fun`.adaptive.resource.defaultResourceReader
-import `fun`.adaptive.resource.file.FileResource
 import `fun`.adaptive.resource.file.FileResourceSet
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.SPixel
+import `fun`.adaptive.ui.instruction.event.OnDrop
+import `fun`.adaptive.ui.instruction.event.TransferData
 import `fun`.adaptive.ui.instruction.decoration.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.*
@@ -267,3 +267,10 @@ fun <T> toText(toTextFun: (T) -> String) = ToText(toTextFun)
  */
 inline fun tabIndex(value: () -> Int) = TabIndex(value())
 inline fun inputPlaceholder(valueFun: () -> String) = InputPlaceholder(valueFun())
+
+// ------------------------------------------------------------------------------------
+// Drag & Drop
+// ------------------------------------------------------------------------------------
+
+inline fun transferData(data: () -> Any?) = TransferData(data())
+fun onDrop(handler: (event: UIEvent) -> Unit) = OnDrop(handler)

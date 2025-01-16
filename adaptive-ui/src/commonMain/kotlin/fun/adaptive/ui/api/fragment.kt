@@ -87,3 +87,13 @@ fun text(content: Any?, vararg instructions: AdaptiveInstruction): AdaptiveFragm
 fun flowText(content: Any?, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
     manualImplementation(content, instructions)
 }
+
+@AdaptiveExpect(aui)
+fun draggable(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+    manualImplementation(content, instructions)
+}
+
+@AdaptiveExpect(aui)
+fun dropTarget(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+    manualImplementation(content, instructions)
+}

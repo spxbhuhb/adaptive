@@ -3,23 +3,15 @@
  */
 
 import `fun`.adaptive.backend.backend
-import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.instruction.traceAll
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
-import `fun`.adaptive.graphics.svg.api.svg
-import `fun`.adaptive.resource.graphics.GraphicsResourceSet
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.sandbox.snooze
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
-import `fun`.adaptive.ui.button.api.buttonTheme
+import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.uiCommon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +23,7 @@ fun main() {
 
         uiCommon()
 
-        browser(CanvasFragmentFactory, SvgFragmentFactory, backend = backend { }, trace = traceAll) { adapter ->
+        browser(CanvasFragmentFactory, SvgFragmentFactory, backend = backend { }) { adapter ->
 
             with(adapter.defaultTextRenderData) {
                 fontName = "Open Sans"
@@ -39,24 +31,32 @@ fun main() {
                 fontWeight = 300
             }
 
-            var a = false
+            var items = emptyList<String>()
 
             column {
-                mybutton("Hello") .. onClick { a = true }
-                if (a) {
-                    text("World")
-                }
-            }
 
+                draggable {
+                    transferData { "hello" }
+                    text(Strings.snooze)
+                }
+
+                dropTarget {
+
+                    onDrop {
+                        items = items + (it.transferData?.data as String)
+                    }
+
+                    column(size(200.dp, 200.dp), borders.outline) {
+                        verticalScroll
+
+                        for (item in items) {
+                            text(item)
+                        }
+                    }
+
+                }
+
+            }
         }
     }
-}
-
-@Adaptive
-fun mybutton(label: String, icon: GraphicsResourceSet? = null, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
-    row(buttonTheme.container, instructions()) {
-        if (icon != null) svg(icon) .. buttonTheme.icon
-        text(label) .. buttonTheme.text
-    }
-    return fragment()
 }

@@ -23,5 +23,7 @@ object AuiFragmentFactory : FoundationFragmentFactory() {
         add("aui:flowtext") { p, i, s -> AuiFlowText(p.adapter as AuiAdapter, p, i) }
         add("aui:slot") { p, i, s -> AuiSlot(p.adapter as AuiAdapter, p, i) }
         add("aui:rootbox") { p, i, s -> AuiRootBox(p.adapter as AuiAdapter, p, i) }
+        add("aui:draggable") { p, i, s -> AuiDraggable(p.adapter as AuiAdapter, p, i) }
+        add("aui:droptarget") { p, i, s -> AuiDropTarget(p.adapter as AuiAdapter, p, i) }
     }
 }

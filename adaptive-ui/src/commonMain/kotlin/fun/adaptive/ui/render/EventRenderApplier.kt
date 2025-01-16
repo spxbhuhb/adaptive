@@ -87,6 +87,14 @@ abstract class EventRenderApplier<R> : AbstractRenderApplier() {
             if (current != null) current.onSecondaryUpListener = it
         }
 
+        applyEventHandler(
+            fragment,
+            previous?.onDrop,
+            previous?.onDropListener,
+            current?.onDrop
+        ).also {
+            if (current != null) current.onDropListener = it
+        }
     }
 
     fun applyEventHandler(

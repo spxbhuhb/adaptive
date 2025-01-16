@@ -5,13 +5,8 @@
 package `fun`.adaptive.ui.render.model
 
 import `fun`.adaptive.ui.AbstractAuiAdapter
-import `fun`.adaptive.ui.instruction.event.OnClick
-import `fun`.adaptive.ui.instruction.event.OnDoubleClick
-import `fun`.adaptive.ui.instruction.event.OnMove
-import `fun`.adaptive.ui.instruction.event.OnPrimaryDown
-import `fun`.adaptive.ui.instruction.event.OnPrimaryUp
-import `fun`.adaptive.ui.instruction.event.OnSecondaryDown
-import `fun`.adaptive.ui.instruction.event.OnSecondaryUp
+import `fun`.adaptive.ui.instruction.event.OnDrop
+import `fun`.adaptive.ui.instruction.event.*
 
 @Suppress("EqualsOrHashCode")
 class EventRenderData(
@@ -41,6 +36,9 @@ class EventRenderData(
     var onSecondaryUp: OnSecondaryUp? = null
     var onSecondaryUpListener: Any? = null
 
+    var onDrop: OnDrop? = null
+    var onDropListener: Any? = null
+
     override fun equals(other: Any?): Boolean {
         if (other === this) return true
         if (other == null) return false
@@ -56,6 +54,8 @@ class EventRenderData(
         if (other.onPrimaryUp != this.onPrimaryUp) return false
         if (other.onSecondaryDown != this.onSecondaryDown) return false
         if (other.onSecondaryUp != this.onSecondaryUp) return false
+        if (other.onDrop != this.onDrop) return false
+
         return true
     }
 }
