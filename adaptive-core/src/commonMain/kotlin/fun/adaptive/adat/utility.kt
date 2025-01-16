@@ -6,6 +6,7 @@ package `fun`.adaptive.adat
 
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatProvider
+import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
 
 /**
  * Gets an adat class stored somewhere in this one based on [path]. Path
@@ -26,6 +27,14 @@ fun AdatClass.resolve(path: List<String>): AdatClass {
 
     return sub
 }
+
+fun <A : AdatClass> A.encodeToJson(): String =
+    @Suppress("UNCHECKED_CAST")
+    JsonWireFormatProvider().encode(this, this.adatCompanion.adatWireFormat as WireFormat<A>).decodeToString()
+
+fun <A : AdatClass> AdatCompanion<A>.decodeFromJson(json: String) =
+    @Suppress("UNCHECKED_CAST")
+    JsonWireFormatProvider().decode(json.encodeToByteArray(), adatWireFormat as WireFormat<A>)
 
 // TODO I'm not happy with AdatClass.encode and decode (unchecked cast)
 fun <A : AdatClass> A.encode(wireFormatProvider: WireFormatProvider): ByteArray {

@@ -1,9 +1,11 @@
 # Drag and Drop
 
-* `draggable` is a fragment that marks whatever is draggable
-* `transferData` is used to set the transferred data whenever the user starts a drag
-* `dragHover` is a producer, sets the variable value to true when the user is dragging over and the condition is true
-* `dropHandler` performs whatever data updates needed on drop
+| name           | type        | function                        |
+|----------------|-------------|---------------------------------|
+| `draggable`    | fragment    | contains whatever is draggable  |
+| `transferData` | instruction | sets transferred data           |
+| `dropTarget`   | fragment    | fragment that can receive drops |
+| `onDrop`       | instruction | handles the actual drop         |                            
 
 The drag image is a bit problematic. Best would be to handle it ourselves but that would be a big task, so I plan to use:
 
@@ -11,40 +13,30 @@ The drag image is a bit problematic. Best would be to handle it ourselves but th
 * capture the view on Android and iOS
 
 ```kotlin
-@Adat
-class SomeEntity(
-    val id: Int,
-    val name: String
-)
+var items = emptyList<String>()
 
-@Adaptive
-fun draggableEntity(entity: SomeEntity) {
+column {
+
     draggable {
-        transferData { entity }
-        text(entity.name)
+        transferData { "hello" }
+        text(Strings.snooze)
     }
-}
 
-@Adaptive
-fun someTarget() {
-    val ids = listOf<String>()
+    dropTarget {
 
-    dropHandler { ids += it.id }
-
-    val dragHover = dragHover { it.data is SomeEntity }
-
-    column {
-        if (dragHover) backgrounds.red else backgrounds.transparent
-
-        for (id in ids) {
-            text(id)
+        onDrop {
+            items = items + (it.transferData?.data as String)
         }
-    }
-}
 
-@Adaptive
-fun someSource() {
-    someDraggable(SomeEntity(12, "a"))
-    someDraggable(SomeEntity(23, "b"))
+        column(size(200.dp, 200.dp), borders.outline) {
+            verticalScroll
+
+            for (item in items) {
+                text(item)
+            }
+        }
+
+    }
+
 }
 ```

@@ -1,7 +1,10 @@
 package `fun`.adaptive.ui.render
 
+import `fun`.adaptive.adat.decodeFromJson
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
+import `fun`.adaptive.ui.instruction.event.OnDrop
+import `fun`.adaptive.ui.instruction.event.TransferData
 import `fun`.adaptive.ui.instruction.event.OnClick
 import `fun`.adaptive.ui.instruction.event.OnDoubleClick
 import `fun`.adaptive.ui.instruction.event.OnMove
@@ -10,6 +13,7 @@ import `fun`.adaptive.ui.instruction.event.OnPrimaryUp
 import `fun`.adaptive.ui.instruction.event.UIEvent
 import `fun`.adaptive.ui.instruction.event.UIEventHandler
 import `fun`.adaptive.ui.platform.BrowserEventListener
+import org.w3c.dom.DragEvent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.MouseEvent
@@ -32,6 +36,7 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
             is OnPrimaryDown -> "mousedown" to Primary
             is OnMove -> "mousemove" to Always
             is OnPrimaryUp -> "mouseup" to Primary
+            is OnDrop -> "drop" to Always
             else -> throw UnsupportedOperationException("unsupported event handler: $eventFun")
         }
 
@@ -41,6 +46,7 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
 
             val x: Double
             val y: Double
+            val transferData: TransferData?
 
             if (it is MouseEvent) {
                 val boundingRect = fragment.receiver.getBoundingClientRect()
@@ -53,8 +59,14 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
                 y = Double.NaN
             }
 
-            eventFun.execute(UIEvent(fragment, it, x, y))
+            if (it is DragEvent && it.type == "drop") {
+                transferData = it.dataTransfer?.getData("application/json")?.let { TransferData.decodeFromJson(it) }
+                it.preventDefault()
+            } else {
+                transferData = null
+            }
 
+            eventFun.execute(UIEvent(fragment, it, x, y, transferData))
         }
 
         fragment.receiver.addEventListener(eventName, listener)
