@@ -86,9 +86,12 @@ class GroveHydrated(
                 if (items.isEmpty()) return
                 if (itemIndex < 0 || itemIndex >= items.size) invalidIndex(itemIndex)
 
+                val init = fragment.isInit
+
                 for ((index, mapping) in items[itemIndex].mapping.withIndex()) {
-                    if ((fragment.dirtyMask and mapping.dependencyMask) == 0) continue
+                    if ( ! init && (fragment.dirtyMask and mapping.dependencyMask) == 0) continue
                     val value = (mapping.mapping as LfmConst).value
+                    println("patching $index with $value")
                     fragment.setStateVariable(index, value)
                 }
             }

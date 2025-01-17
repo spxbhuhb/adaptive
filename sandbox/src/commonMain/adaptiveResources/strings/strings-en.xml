@@ -3,11 +3,7 @@
   -->
 
 <resources>
-    <string name="app_name">Good Morning</string>
-    <string name="snooze">Snooze</string>
-    <string name="sleepiness">Sleepiness:</string>
-    <string name="by_joining">By joining you agree to our</string>
-    <string name="terms_of_service">Terms of Service</string>
-    <string name="and">and</string>
-    <string name="privacy_policy">Privacy Policy</string>
+    <string name="palette">Palette</string>
+    <string name="components">Components</string>
+    <string name="instructions">Instructions</string>
 </resources>

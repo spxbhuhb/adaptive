@@ -6,5 +6,5 @@ import `fun`.adaptive.foundation.internal.StateVariableMask
 @Adat
 class LfmMapping(
     val dependencyMask: StateVariableMask,
-    val mapping : LfmExpression
+    val mapping : LfmConst
 )

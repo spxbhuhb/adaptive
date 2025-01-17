@@ -5,6 +5,7 @@
 package `fun`.adaptive.ui.instruction
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.instruction.layout.GridRepeat
 import `fun`.adaptive.ui.instruction.layout.GridTrack
@@ -94,7 +95,7 @@ class DPixel(
 
     infix fun repeat(count: Int): GridRepeat = GridRepeat(count, this)
 
-    companion object {
+    companion object : AdatCompanion<DPixel> {
         val ZERO = DPixel(0.0)
         val NaP = DPixel(Double.NaN)
     }

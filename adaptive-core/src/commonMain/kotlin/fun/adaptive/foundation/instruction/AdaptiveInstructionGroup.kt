@@ -1,10 +1,17 @@
 package `fun`.adaptive.foundation.instruction
 
+import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.AdatCompanion
+import `fun`.adaptive.adat.metadata.AdatClassMetadata
+import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
+import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.utility.PluginReference
 
+@Adat
 class AdaptiveInstructionGroup(
     private val instructions: List<AdaptiveInstruction>
-) : AdaptiveInstruction {
+) : AdaptiveInstruction, AdatClass {
 
     @PluginReference("arrayConstructor")
     @Suppress("unused") // used by the compiler plugin in generated fragments
@@ -155,4 +162,44 @@ class AdaptiveInstructionGroup(
         return instructions.hashCode()
     }
 
+    // ------------------------------------------------------------------
+    // Adat support
+    // ------------------------------------------------------------------
+
+    override val adatCompanion: AdatCompanion<AdaptiveInstructionGroup>
+        get() = AdaptiveInstructionGroup
+
+    override fun genGetValue(index: Int): Any? =
+        when (index) {
+            0 -> instructions
+            else -> throw IndexOutOfBoundsException()
+        }
+
+    companion object : AdatCompanion<AdaptiveInstructionGroup> {
+
+        override val wireFormatName: String
+            get() = "fun.adaptive.foundation.instruction.AdaptiveInstructionGroup"
+
+        override val adatMetadata = AdatClassMetadata(
+            version = 1,
+            name = wireFormatName,
+            flags = AdatClassMetadata.IMMUTABLE,
+            properties = listOf(
+                AdatPropertyMetadata(
+                    "instructions",
+                    index = 0,
+                    flags = AdatPropertyMetadata.VAL or AdatPropertyMetadata.IMMUTABLE_VALUE,
+                    signature = "Lkotlin.collections.List<*>;"
+                )
+            )
+        )
+
+        override val adatWireFormat: AdatClassWireFormat<AdaptiveInstructionGroup>
+            get() = AdatClassWireFormat(this, adatMetadata)
+
+        override fun newInstance(values: Array<Any?>): AdaptiveInstructionGroup {
+            @Suppress("UNCHECKED_CAST")
+            return AdaptiveInstructionGroup(values.toList() as List<AdaptiveInstruction>)
+        }
+    }
 }

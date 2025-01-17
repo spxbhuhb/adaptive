@@ -7,6 +7,7 @@ package `fun`.adaptive.wireformat
 import `fun`.adaptive.adat.metadata.AdatClassMetadata
 import `fun`.adaptive.adat.metadata.AdatDescriptorMetadata
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.registry.Registry
 import `fun`.adaptive.service.model.DisconnectException
 import `fun`.adaptive.wireformat.builtin.*
@@ -62,6 +63,8 @@ object WireFormatRegistry : Registry<WireFormat<*>>() {
         this += AdatClassMetadata
         this += AdatPropertyMetadata
         this += AdatDescriptorMetadata
+
+        this += AdaptiveInstructionGroup
 
         this += DisconnectException
     }
