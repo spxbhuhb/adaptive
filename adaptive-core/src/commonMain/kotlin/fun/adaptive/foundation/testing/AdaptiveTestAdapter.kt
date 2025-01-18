@@ -10,6 +10,7 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.query.filter
 import `fun`.adaptive.service.testing.TestServiceTransport
 import `fun`.adaptive.service.transport.ServiceCallTransport
+import `fun`.adaptive.utility.PluginReference
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.utility.vmNowMicro
@@ -152,5 +153,9 @@ class AdaptiveTestAdapter(
         fragment.setStateVariable(stateVariableIndex, value())
         if (patch) fragment.setDirtyBatch(stateVariableIndex)
     }
+
+    @Suppress("unused") // used by plugin unit tests
+    val firstFragment : AdaptiveFragment
+        get() = rootFragment.children.first()
 
 }

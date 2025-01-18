@@ -8,6 +8,7 @@ import `fun`.adaptive.kotlin.foundation.ir.arm2ir.ArmClassBuilder
 import `fun`.adaptive.kotlin.foundation.ir.arm2ir.ArmEntryPointBuilder
 import `fun`.adaptive.kotlin.foundation.ir.ir2arm.EntryPointTransform
 import `fun`.adaptive.kotlin.foundation.ir.ir2arm.OriginalFunctionTransform
+import `fun`.adaptive.kotlin.foundation.ir.manual.AdaptiveActualTransform
 import org.jetbrains.kotlin.backend.common.extensions.IrGenerationExtension
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrModuleFragment
@@ -25,6 +26,7 @@ internal class FoundationGenerationExtension(
 
             // debug("DUMP BEFORE") { "\n\n" + moduleFragment.dump() }
 
+            moduleFragment.accept(AdaptiveActualTransform(this), null)
             moduleFragment.accept(OriginalFunctionTransform(this), null)
             moduleFragment.accept(EntryPointTransform(this), null)
 

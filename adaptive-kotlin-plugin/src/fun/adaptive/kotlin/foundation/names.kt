@@ -4,7 +4,6 @@
 package `fun`.adaptive.kotlin.foundation
 
 import `fun`.adaptive.kotlin.common.NamesBase
-import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.FqName
 
 object Strings {
@@ -47,6 +46,9 @@ object Strings {
     const val LOCAL_BINDING = "localBinding"
     const val SET_BINDING = "setBinding"
     const val GET_PRODUCED_VALUE = "getProducedValue"
+    const val STATE_VARIABLE = "stateVariable"
+    const val GET = "get"
+    const val SET = "set"
 
     const val ADAPTER = "adapter"
     const val PARENT = "parent"
@@ -59,6 +61,7 @@ object Strings {
     const val HELPER_INSTRUCTIONS = "instructions"
 
     const val ADAPTIVE_EXPECT = "AdaptiveExpect"
+    const val ADAPTIVE_ACTUAL = "AdaptiveActual"
     const val ADAPTIVE_HYDRATED = "AdaptiveHydrated"
     const val MANUAL_IMPLEMENTATION = "manualImplementation"
 
@@ -83,7 +86,7 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAPTER = Strings.ADAPTER.name()
     val KOTLIN_INVOKE = Strings.KOTLIN_INVOKE.name()
     val RANGE_TO = Strings.RANGE_TO.name()
-    val INSTRUCTIONS = Strings.INSTRUCTIONS.name()
+    val STATE_VARIABLE = Strings.STATE_VARIABLE.name()
 }
 
 object FqNames {
@@ -122,6 +125,7 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAPTIVE_STATE_VARIABLE_BINDING = Strings.ADAPTIVE_STATE_VARIABLE_BINDING.classId { BINDING }
 
     val ADAPTIVE_EXPECT = Strings.ADAPTIVE_EXPECT.classId()
+    val ADAPTIVE_ACTUAL = Strings.ADAPTIVE_ACTUAL.classId()
 
     val ADAPTIVE_INSTRUCTION = "AdaptiveInstruction".classId { INSTRUCTION }
     val ADAPTIVE_INSTRUCTION_GROUP = "AdaptiveInstructionGroup".classId { INSTRUCTION }
@@ -148,8 +152,6 @@ object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {
 
     val EMPTY_INSTRUCTIONS = "emptyInstructions".callableId { INSTRUCTIONS }
     val HELPER_FUNCTION_INSTRUCTIONS = Strings.HELPER_INSTRUCTIONS.callableId()
-
-    val HYDRATED_FUNCTION = CallableId("fun.adaptive.grove.api".fqName(), ("hydrated").name())
 }
 
 object Indices {

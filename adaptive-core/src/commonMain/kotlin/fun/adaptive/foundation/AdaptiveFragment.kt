@@ -15,6 +15,7 @@ import `fun`.adaptive.foundation.internal.initStateMask
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
 import `fun`.adaptive.foundation.query.FragmentVisitor
 import `fun`.adaptive.utility.PluginReference
+import kotlin.properties.ReadWriteProperty
 
 abstract class AdaptiveFragment(
     val adapter: AdaptiveAdapter,
@@ -428,6 +429,41 @@ abstract class AdaptiveFragment(
             boundType = boundType,
             adatCompanion = adatCompanion
         )
+
+    // --------------------------------------------------------------------------
+    // Manual implementation support
+    // --------------------------------------------------------------------------
+
+    /**
+     * This function provides an easy, controlled access to state variables for
+     * manually implemented fragments.
+     *
+     * ```kotlin
+     * val p by stateVariable<Int>()
+     * ```
+     *
+     * The compiler plugin replaces calls to this function with variable getter
+     * and possibly setter:
+     *
+     * ```
+     * var p : Int
+     *     get() = get(index)
+     *     set(v) { set(index, v) }
+     *
+     */
+    protected fun <T> stateVariable() : ReadWriteProperty<AdaptiveFragment, T> {
+        replacedByPlugin("state variable access")
+    }
+
+    inline fun <reified T> get(index : Int) : T {
+        val value = state[index]
+        check(value is T) { "$value is not an instance of ${T::class}" }
+        return value
+    }
+
+    fun set(index : Int, value : Any?) {
+        state[index] = value
+    }
 
     // --------------------------------------------------------------------------
     // Utility functions

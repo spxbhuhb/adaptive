@@ -381,6 +381,18 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testExpect() {
         runTest("testData/box/foundation/expect/expect.kt");
       }
+
+      @Test
+      @TestMetadata("stateVariableVal.kt")
+      public void testStateVariableVal() {
+        runTest("testData/box/foundation/expect/stateVariableVal.kt");
+      }
+
+      @Test
+      @TestMetadata("stateVariableVar.kt")
+      public void testStateVariableVar() {
+        runTest("testData/box/foundation/expect/stateVariableVar.kt");
+      }
     }
 
     @Nested
