@@ -5,6 +5,7 @@ package `fun`.adaptive.graphics.canvas.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.graphics.canvas.CanvasAdapter
 import `fun`.adaptive.graphics.canvas.CanvasFragment
 import `fun`.adaptive.graphics.canvas.canvas
@@ -24,15 +25,15 @@ open class CanvasSvg(
     adapter: CanvasAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : CanvasFragment(adapter, parent, index, 1, 2) {
+) : CanvasFragment(adapter, parent, index, 1, stateSize()) {
 
     val svgAdapter = SvgAdapter(adapter, canvas).also { it.trace = adapter.trace }
 
     var resource: GraphicsResourceSet
-        get() = state[0].checkIfInstance()
-        set(v) {
-            setStateVariable(0, v)
-        }
+        by stateVariable()
+
+    val fakeInstructions: AdaptiveInstructionGroup
+        by stateVariable()
 
     var data: ByteArray = byteArrayOf()
 

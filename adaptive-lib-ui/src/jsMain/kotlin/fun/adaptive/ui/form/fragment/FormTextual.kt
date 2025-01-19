@@ -7,6 +7,7 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.get
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
@@ -25,18 +26,19 @@ open class FormTextual(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 2, 3) {
+) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 2, stateSize()) {
 
     override val receiver: HTMLInputElement =
         document.createElement("input") as HTMLInputElement
 
     private val adatClass: AdatClass
-        get() = state[0] as AdatClass
+        by stateVariable()
 
     private val property : AdatPropertyMetadata
-        get() = state[1] as AdatPropertyMetadata
+        by stateVariable()
 
-    // 2 -> instructions
+    val fakeInstructions: AdaptiveInstructionGroup
+        by stateVariable()
 
     var propertyValue : String = ""
 

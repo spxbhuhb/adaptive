@@ -3,7 +3,6 @@ package `fun`.adaptive.ui.fragment.layout
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.name
-import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column
@@ -16,7 +15,6 @@ import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.rowTemplate
-import `fun`.adaptive.ui.api.slot
 import `fun`.adaptive.ui.api.space
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.verticalScroll
@@ -137,10 +135,7 @@ class GridTest {
 
                 column {
                     maxSize .. verticalScroll .. padding { 10.dp } .. name("column-2")
-
-                    slot {
-                        text("Click") .. maxWidth .. name("slot-text")
-                    }
+                    text("Click") .. maxWidth .. name("column-2-text")
                 }
             }
         }.apply {
@@ -152,7 +147,7 @@ class GridTest {
             assertFinal(name("world"), 34, 10, 180, 20)
 
             assertFinal(name("column-2"), 0, 200, 300, 400)
-            assertFinal(name("slot-text"), 10, 10, 280, 20)
+            assertFinal(name("column-2-text"), 10, 10, 280, 20)
 
         }
     }

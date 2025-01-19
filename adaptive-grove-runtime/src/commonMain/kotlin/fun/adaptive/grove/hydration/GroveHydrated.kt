@@ -7,7 +7,6 @@ import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.grove.hydration.lfm.LfmConst
 import `fun`.adaptive.grove.hydration.lfm.LfmFragment
-import `fun`.adaptive.utility.checkIfInstance
 
 /**
  * A fragment that builds its descendant tree from an [LfmFragment]. It creates an anonymous
@@ -37,7 +36,7 @@ class GroveHydrated(
     }
 
     val model: LfmFragment
-        get() = state[0].checkIfInstance<LfmFragment>()
+        by stateVariable()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         when (declarationIndex) {

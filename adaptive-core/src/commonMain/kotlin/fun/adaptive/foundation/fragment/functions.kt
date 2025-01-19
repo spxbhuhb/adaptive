@@ -11,15 +11,6 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.manualImplementation
 
 @AdaptiveExpect(foundation)
-fun delegate(
-    buildFun: (AdaptiveFragment.(parent: AdaptiveFragment, declarationIndex: Int) -> AdaptiveFragment?)? = null,
-    patchDescendantFun: (AdaptiveFragment.(fragment: AdaptiveFragment) -> Unit)? = null,
-    patchInternalFun: (AdaptiveFragment.() -> Boolean)? = null
-) {
-    manualImplementation(buildFun, patchDescendantFun, patchInternalFun)
-}
-
-@AdaptiveExpect(foundation)
 fun measureFragmentTime(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit) {
     manualImplementation(instructions, content)
 }

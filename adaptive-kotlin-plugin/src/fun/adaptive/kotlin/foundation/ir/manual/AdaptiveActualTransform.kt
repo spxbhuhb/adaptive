@@ -7,22 +7,16 @@ import `fun`.adaptive.kotlin.foundation.ClassIds
 import `fun`.adaptive.kotlin.foundation.Names
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
-import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.builders.*
-import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrProperty
-import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.expressions.IrCall
-import org.jetbrains.kotlin.ir.symbols.impl.IrSimpleFunctionSymbolImpl
-import org.jetbrains.kotlin.ir.types.IrType
-import org.jetbrains.kotlin.ir.util.defaultType
+import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.hasAnnotation
 import org.jetbrains.kotlin.ir.util.properties
-import org.jetbrains.kotlin.name.Name
 
 class AdaptiveActualTransform(
     private val pluginContext: FoundationPluginContext
@@ -73,7 +67,7 @@ class AdaptiveActualTransform(
     override fun visitClassNew(declaration: IrClass): IrStatement {
         if (! declaration.hasAnnotation(ClassIds.ADAPTIVE_ACTUAL)) return declaration
 
-        var index = 1 // index 0 is reserved for instructions
+        var index = 0 // index 0 is reserved for instructions
 
         for (property in declaration.properties) {
             if (! property.isDelegated) continue
@@ -81,105 +75,57 @@ class AdaptiveActualTransform(
             if (expression !is IrCall) continue
             if (expression.symbol.owner.name != Names.STATE_VARIABLE) continue
 
-            transformProperty(declaration, property, property.getter!!.returnType, index ++)
+            property.isDelegated = false
+            property.backingField = null
+            transformGetter(property, index)
+            transformSetter(property, index)
 
-            // println(property.dump())
+            index ++
         }
+
+        declaration.constructors.forEach { it.transform(AdaptiveActualStateSizeTransform(pluginContext, index), null) }
 
         return declaration
     }
 
-    fun transformProperty(irClass: IrClass, property: IrProperty, type: IrType, index: Int) {
-        property.isDelegated = false
-        property.backingField = null
-        property.getter = transformGetter(irClass, property, type, index)
-        if (property.isVar) {
-            property.setter = transformSetter(irClass, property, type, index)
-        } else {
-            property.setter = null
+    fun transformGetter(property: IrProperty, index: Int) {
+        val getter = property.getter ?: return
+
+        getter.origin = IrDeclarationOrigin.DEFINED
+
+        getter.body = DeclarationIrBuilder(pluginContext.irContext, getter.symbol).irBlockBody {
+            + irReturn(
+                irCall(
+                    pluginContext.get,
+                    getter.returnType,
+                    typeArgumentsCount = 1,
+                    valueArgumentsCount = 1
+                ).also { call ->
+                    call.dispatchReceiver = irGet(getter.dispatchReceiverParameter !!)
+                    call.putTypeArgument(0, getter.returnType)
+                    call.putValueArgument(0, irInt(index))
+                }
+            )
         }
     }
 
-    fun transformGetter(irClass: IrClass, property: IrProperty, type: IrType, index: Int): IrSimpleFunction =
+    fun transformSetter(property: IrProperty, index: Int) {
+        val setter = property.setter ?: return
 
-        pluginContext.irContext.irFactory.createSimpleFunction(
-            property.startOffset, property.endOffset,
-            IrDeclarationOrigin.DEFINED,
-            Name.special("<get-${property.name.identifier}>"),
-            property.visibility,
-            isInline = false,
-            isExpect = false,
-            returnType = type,
-            modality = property.modality,
-            symbol = IrSimpleFunctionSymbolImpl(),
-            isTailrec = false,
-            isSuspend = false,
-            isOperator = false,
-            isInfix = false,
-            isExternal = false,
-            isFakeOverride = false
-        ).also { function ->
-
-            function.parent = irClass
-            function.correspondingPropertySymbol = property.symbol
-
-            function.addDispatchReceiver { this.type = irClass.defaultType }
-
-            function.body = DeclarationIrBuilder(pluginContext.irContext, function.symbol).irBlockBody {
-                + irReturn(
-                    irCall(
-                        pluginContext.get,
-                        type,
-                        typeArgumentsCount = 1,
-                        valueArgumentsCount = 1
-                    ).also { call ->
-                        call.dispatchReceiver = irGet(function.dispatchReceiverParameter !!)
-                        call.putTypeArgument(0, type)
-                        call.putValueArgument(0, irInt(index))
-                    }
-                )
-            }
+        setter.body = DeclarationIrBuilder(pluginContext.irContext, setter.symbol).irBlockBody {
+            + irReturn(
+                irCall(
+                    pluginContext.set,
+                    property.getter !!.returnType,
+                    typeArgumentsCount = 0,
+                    valueArgumentsCount = 1
+                ).also { call ->
+                    call.dispatchReceiver = irGet(setter.dispatchReceiverParameter !!)
+                    call.putValueArgument(0, irInt(index))
+                    call.putValueArgument(1, irGet(setter.valueParameters.first()))
+                }
+            )
         }
+    }
 
-    fun transformSetter(irClass: IrClass, property: IrProperty, type: IrType, index: Int): IrSimpleFunction =
-
-        pluginContext.irContext.irFactory.createSimpleFunction(
-            property.startOffset, property.endOffset,
-            IrDeclarationOrigin.DEFINED,
-            Name.special("<set-${property.name.identifier}>"),
-            property.visibility,
-            isInline = false,
-            isExpect = false,
-            returnType = pluginContext.irBuiltIns.unitType,
-            modality = property.modality,
-            symbol = IrSimpleFunctionSymbolImpl(),
-            isTailrec = false,
-            isSuspend = false,
-            isOperator = false,
-            isInfix = false,
-            isExternal = false,
-            isFakeOverride = false
-        ).also { function ->
-
-            function.parent = irClass
-            function.correspondingPropertySymbol = property.symbol
-
-            function.addDispatchReceiver { this.type = irClass.defaultType }
-            function.addValueParameter { this.name = Name.identifier("v"); this.type = type }
-
-            function.body = DeclarationIrBuilder(pluginContext.irContext, function.symbol).irBlockBody {
-                + irReturn(
-                    irCall(
-                        pluginContext.set,
-                        type,
-                        typeArgumentsCount = 0,
-                        valueArgumentsCount = 1
-                    ).also { call ->
-                        call.dispatchReceiver = irGet(function.dispatchReceiverParameter !!)
-                        call.putValueArgument(0, irInt(index))
-                        call.putValueArgument(1, irGet(function.valueParameters.first()))
-                    }
-                )
-            }
-        }
 }

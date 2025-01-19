@@ -383,6 +383,18 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
+      @TestMetadata("stateSizeEmpty.kt")
+      public void testStateSizeEmpty() {
+        runTest("testData/box/foundation/expect/stateSizeEmpty.kt");
+      }
+
+      @Test
+      @TestMetadata("stateSizeMany.kt")
+      public void testStateSizeMany() {
+        runTest("testData/box/foundation/expect/stateSizeMany.kt");
+      }
+
+      @Test
       @TestMetadata("stateVariableVal.kt")
       public void testStateVariableVal() {
         runTest("testData/box/foundation/expect/stateVariableVal.kt");

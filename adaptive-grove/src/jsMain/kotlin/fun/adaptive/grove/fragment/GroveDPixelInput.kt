@@ -20,7 +20,7 @@ open class GroveDPixelInput(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 0, 2) {
+) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 0, stateSize()) {
 
     // 0 - instructions
     // 1 - binding
@@ -29,7 +29,7 @@ open class GroveDPixelInput(
         document.createElement("input") as HTMLInputElement
 
     private val binding: AdaptiveStateVariableBinding<DPixel?>
-        get() = state[1].checkIfInstance()
+        by stateVariable()
 
     override fun auiPatchInternal() {
 

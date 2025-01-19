@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.TextView
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
@@ -16,12 +17,15 @@ class AuiText(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<View>(adapter, parent, index, 1, 2) {
+) : AbstractAuiFragment<View>(adapter, parent, index, 1, stateSize()) {
 
     override val receiver = TextView(adapter.context)
 
     private val content: String
-        get() = state[0]?.toString() ?: ""
+        by stateVariable()
+
+    val fakeInstructions: AdaptiveInstructionGroup
+        by stateVariable()
 
     override fun auiPatchInternal() {
 

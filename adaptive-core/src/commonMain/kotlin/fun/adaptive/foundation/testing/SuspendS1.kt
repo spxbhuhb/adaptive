@@ -27,7 +27,9 @@ class AdaptiveSuspendS1(
     override fun genPatchInternal(): Boolean = true
 
     var s0: (suspend (Int) -> Unit)
-        get() = state[0].checkIfInstance()
-        set(v) { state[0] = v }
+        get() = get(0)
+        set(v) {
+            set(0, v)
+        }
 
 }

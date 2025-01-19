@@ -5,6 +5,7 @@ package `fun`.adaptive.graphics.svg.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.graphics.canvas.CanvasAdapter
 import `fun`.adaptive.graphics.canvas.fragment.CanvasSvg
 import `fun`.adaptive.graphics.canvas.platform.ActualBrowserCanvas
@@ -21,7 +22,7 @@ class SvgSvg(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 1, 2) {
+) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 1, stateSize()) {
 
     val canvas = ActualBrowserCanvas()
 
@@ -33,7 +34,10 @@ class SvgSvg(
         get() = true
     
     val resource: GraphicsResourceSet
-        get() = state[0].checkIfInstance()
+        by stateVariable()
+
+    val fakeInstructions: AdaptiveInstructionGroup
+        by stateVariable()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {
         if (declarationIndex != 0) invalidIndex(declarationIndex)
@@ -47,7 +51,7 @@ class SvgSvg(
                 it.resource = resource
                 it.dirtyMask = it.dirtyMask or 1
             }
-            it.state[it.instructionIndex] = instructions
+            it.set(it.instructionIndex, instructions)
             it.dirtyMask = it.dirtyMask or 2
         }
     }

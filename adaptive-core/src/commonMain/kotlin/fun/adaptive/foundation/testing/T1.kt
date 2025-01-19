@@ -21,7 +21,7 @@ class AdaptiveT1(
 ) : AdaptiveTestFragment(adapter, parent, index, 1) {
 
     val p0: Int
-        get() = state[0].checkIfInstance()
+        get() = get(0)
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? = null
 

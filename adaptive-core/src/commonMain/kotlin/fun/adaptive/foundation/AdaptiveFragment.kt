@@ -15,6 +15,7 @@ import `fun`.adaptive.foundation.internal.initStateMask
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
 import `fun`.adaptive.foundation.query.FragmentVisitor
 import `fun`.adaptive.utility.PluginReference
+import kotlin.jvm.JvmStatic
 import kotlin.properties.ReadWriteProperty
 
 abstract class AdaptiveFragment(
@@ -27,6 +28,11 @@ abstract class AdaptiveFragment(
     companion object {
         const val MOUNTED_MASK = 0x01
         const val DETACHED_MASK = 0x02
+
+        @JvmStatic
+        protected fun stateSize() : Int {
+            replacedByPlugin("replaced by the compiler plugin with the calculated state size")
+        }
     }
 
     val id: Long = adapter.newId()
@@ -457,7 +463,7 @@ abstract class AdaptiveFragment(
 
     inline fun <reified T> get(index : Int) : T {
         val value = state[index]
-        check(value is T) { "$value is not an instance of ${T::class}" }
+        check(value is T) { "$value (${value?.let { it::class.simpleName }}) is not an instance of ${T::class} in $this" }
         return value
     }
 

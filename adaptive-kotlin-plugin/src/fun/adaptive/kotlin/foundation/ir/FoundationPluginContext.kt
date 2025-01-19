@@ -83,8 +83,9 @@ class FoundationPluginContext(
     val localBinding = Strings.LOCAL_BINDING.fragmentFunction()
     val setBinding = Strings.SET_BINDING.fragmentFunction()
     val getProducedValue = Strings.GET_PRODUCED_VALUE.fragmentFunction()
-    val get = Strings.GET.fragmentFunction()
     val set = Strings.SET.fragmentFunction()
+    val get = Strings.GET.fragmentFunction()
+
 
     val arrayGet = checkNotNull(irContext.irBuiltIns.arrayClass.getSimpleFunction("get"))
 

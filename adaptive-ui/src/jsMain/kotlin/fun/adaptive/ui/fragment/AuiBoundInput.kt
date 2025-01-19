@@ -7,6 +7,7 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.get
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
@@ -23,7 +24,7 @@ open class AuiBoundInput(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int,
-) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 0, 4) {
+) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 0, stateSize()) {
 
     // 0 - instructions
     // 1 - binding
@@ -34,17 +35,20 @@ open class AuiBoundInput(
     override val receiver: HTMLInputElement =
         document.createElement("input") as HTMLInputElement
 
+    val fakeInstructions: AdaptiveInstructionGroup
+        by stateVariable()
+
     private val binding: AdaptiveStateVariableBinding<Any>
-        get() = state[1].checkIfInstance()
+        by stateVariable()
 
     private val valueToString: (Any) -> String
-        get() = state[2].checkIfInstance()
+        by stateVariable()
 
     private val valueFromString: (String) -> Any?
-        get() = state[3].checkIfInstance()
+        by stateVariable()
 
     private val validityFun: (Boolean) -> Unit
-        get() = state[4].checkIfInstance()
+        by stateVariable()
 
     override var invalidInput: Boolean = false
 

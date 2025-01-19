@@ -6,6 +6,7 @@ package `fun`.adaptive.graphics.canvas
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.Trace
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.foundation.testing.AdaptiveTestAdapter
@@ -19,14 +20,17 @@ class TestCanvasCanvas(
     adapter: AdaptiveTestAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, 0, 2) {
+) : AdaptiveFragment(adapter, parent, index, 0, stateSize()) {
 
     val canvas = TestCanvas()
 
     val canvasAdapter = CanvasAdapter(adapter, canvas, this)
 
+    val fakeInstructions: AdaptiveInstructionGroup
+        by stateVariable()
+
     val content: BoundFragmentFactory
-        get() = state[state.size - 1].checkIfInstance()
+        by stateVariable()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {
         if (declarationIndex != 0) invalidIndex(declarationIndex)

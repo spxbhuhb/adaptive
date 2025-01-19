@@ -74,11 +74,6 @@ fun space(vararg instructions: AdaptiveInstruction): AdaptiveFragment {
 }
 
 @AdaptiveExpect(aui)
-fun slot(vararg instructions: AdaptiveInstruction, @Adaptive initialContent: () -> Unit) {
-    manualImplementation(instructions, initialContent)
-}
-
-@AdaptiveExpect(aui)
 fun text(content: Any?, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
     manualImplementation(content, instructions)
 }

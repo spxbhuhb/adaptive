@@ -8,11 +8,11 @@ import android.view.View
 import android.widget.ImageView
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
-import `fun`.adaptive.utility.checkIfInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,12 +22,15 @@ class AuiImage(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<View>(adapter, parent, index, 1, 2) {
+) : AbstractAuiFragment<View>(adapter, parent, index, 1, stateSize()) {
 
     override val receiver = ImageView(adapter.context)
 
     private val content: GraphicsResourceSet
-        get() = state[0].checkIfInstance()
+        by stateVariable()
+
+    val fakeInstructions: AdaptiveInstructionGroup
+        by stateVariable()
 
     override fun auiPatchInternal() {
 

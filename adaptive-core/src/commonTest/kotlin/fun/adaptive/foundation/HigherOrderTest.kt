@@ -237,11 +237,11 @@ class AdaptiveHigherFun(
     index: Int
 ) : AdaptiveTestFragment(adapter, parent, index, 2) {
 
-    val higherI
-        get() = state[0] as Int
+    val higherI : Int
+        get() = get(0)
 
-    val builder
-        get() = state[1] as BoundFragmentFactory
+    val builder : BoundFragmentFactory
+        get() = get(1)
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {
         val fragment = when (declarationIndex) {
@@ -283,11 +283,11 @@ class AdaptiveHigherFunInner(
     index: Int
 ) : AdaptiveTestFragment(adapter, parent, index, 2) {
 
-    val innerI
-        get() = state[0] as Int
+    val innerI : Int
+        get() = get(0)
 
-    val builder
-        get() = state[1] as BoundFragmentFactory
+    val builder : BoundFragmentFactory
+        get() = get(1)
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {
         val fragment = when (declarationIndex) {

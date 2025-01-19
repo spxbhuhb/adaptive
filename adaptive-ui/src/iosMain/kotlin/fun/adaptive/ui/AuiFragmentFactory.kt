@@ -8,7 +8,6 @@ import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 import `fun`.adaptive.ui.fragment.AuiImage
 import `fun`.adaptive.ui.fragment.AuiText
 import `fun`.adaptive.ui.fragment.layout.*
-import `fun`.adaptive.ui.fragment.structural.AuiSlot
 
 object AuiFragmentFactory : FoundationFragmentFactory() {
     init {
@@ -18,7 +17,6 @@ object AuiFragmentFactory : FoundationFragmentFactory() {
         add("aui:grid") { p, i -> AuiGrid(p.adapter as AuiAdapter, p, i) }
         add("aui:image") { p, i -> AuiImage(p.adapter as AuiAdapter, p, i) }
         add("aui:row") { p, i -> AuiRow(p.adapter as AuiAdapter, p, i) }
-        add("aui:slot") { p, i -> AuiSlot(p.adapter as AuiAdapter, p, i) }
         add("aui:text") { p, i -> AuiText(p.adapter as AuiAdapter, p, i) }
     }
 }

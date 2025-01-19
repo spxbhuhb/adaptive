@@ -21,17 +21,17 @@ open class AuiText(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int,
-) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 1, 2) {
+) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 1, stateSize()) {
 
     override val receiver: HTMLSpanElement =
         document.createElement("span") as HTMLSpanElement
 
-    private val content: String
-        get() = state[0]?.toString() ?: ""
+    private val content : Any?
+        by stateVariable()
 
     override fun auiPatchInternal() {
 
-        val content = this.content
+        val content = this.content?.toString() ?: ""
         val contentChange = (isInit || content != receiver.textContent)
         val styleChange = (renderData.text != previousRenderData.text)
 
@@ -58,7 +58,7 @@ open class AuiText(
         receiver.style.whiteSpace = "pre"
     }
 
-    fun measureText(content: String) {
+    private fun measureText(content: String) {
 
         if (content.isEmpty()) {
             renderData.innerWidth = 0.0

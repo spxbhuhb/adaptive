@@ -5,6 +5,7 @@ package `fun`.adaptive.ui.testing.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.testing.AuiTestAdapter
@@ -16,13 +17,16 @@ open class AdaptiveImage(
     adapter: AuiTestAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<TestReceiver>(adapter, parent, index, 1, 2) {
+) : AbstractAuiFragment<TestReceiver>(adapter, parent, index, 1, stateSize()) {
 
     override val receiver = TestReceiver()
 
     @Suppress("unused")
     private val res: GraphicsResourceSet
-        get() = state[0].checkIfInstance()
+        by stateVariable()
+
+    val fakeInstructions: AdaptiveInstructionGroup
+        by stateVariable()
 
     override fun auiPatchInternal() = Unit
 

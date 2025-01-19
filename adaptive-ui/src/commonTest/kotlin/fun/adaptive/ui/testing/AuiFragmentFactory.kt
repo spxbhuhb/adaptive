@@ -5,7 +5,6 @@
 package `fun`.adaptive.ui.testing
 
 import `fun`.adaptive.foundation.AdaptiveFragmentFactory
-import `fun`.adaptive.ui.fragment.structural.AuiSlot
 import `fun`.adaptive.ui.testing.fragment.*
 
 object AuiFragmentFactory : AdaptiveFragmentFactory() {
@@ -16,7 +15,6 @@ object AuiFragmentFactory : AdaptiveFragmentFactory() {
         add("aui:image") { p, i, s -> AdaptiveImage(p.adapter as AuiTestAdapter, p, i) }
         add("aui:row") { p, i, s -> AdaptiveRow(p.adapter as AuiTestAdapter, p, i) }
         add("aui:space") { p, i, s -> AuiSpace(p.adapter as AuiTestAdapter, p, i) }
-        add("aui:slot") { p, i, s -> AuiSlot(p.adapter as AuiTestAdapter, p, i) }
         add("aui:text") { p, i, s -> AdaptiveText(p.adapter as AuiTestAdapter, p, i) }
     }
 }

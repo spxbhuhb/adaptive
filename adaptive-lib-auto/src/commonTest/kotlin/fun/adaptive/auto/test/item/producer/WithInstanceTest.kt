@@ -41,7 +41,7 @@ class WithInstanceTest {
         }
 
         @Suppress("UNCHECKED_CAST")
-        fun item() = (adapter.rootFragment.state[0] as TestData?)
+        fun item() = (adapter.rootFragment.get<TestData?>(0))
 
         waitForReal(1.seconds) { item() != null }
 
@@ -72,7 +72,7 @@ class WithInstanceTest {
             }
 
             @Suppress("UNCHECKED_CAST")
-            fun item() = (adapter.rootFragment.state[0] as TestData?)
+            fun item() = (adapter.rootFragment.get<TestData?>(0))
 
             waitForReal(1.seconds) { item() != null }
 

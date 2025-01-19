@@ -6,7 +6,6 @@ package `fun`.adaptive.backend
 import `fun`.adaptive.backend.builtin.BackendFragmentImpl
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.internal.initStateMask
-import `fun`.adaptive.utility.checkIfInstance
 
 abstract class BackendFragment(
     adapter: BackendAdapter,
@@ -52,6 +51,7 @@ abstract class BackendFragment(
     override fun toString(): String {
         return super.toString() + " impl: ${impl?.let { it::class.simpleName }}"
     }
+
     // -------------------------------------------------------------------------
     // Implementation support
     // -------------------------------------------------------------------------
@@ -59,12 +59,12 @@ abstract class BackendFragment(
     // 0 : instructions
 
     val implFun: () -> BackendFragmentImpl
-        get() = state[1].checkIfInstance()
+        get() = get(1)
 
     var impl: BackendFragmentImpl?
-        get() = state[2].checkIfInstance()
+        get() = get(2)
         set(value) {
-            state[2] = value
+            set(2, value)
         }
 
 }

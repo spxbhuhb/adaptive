@@ -2,6 +2,7 @@ package `fun`.adaptive.foundation.fragment
 
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.utility.checkIfInstance
 
@@ -17,10 +18,13 @@ class LocalContext(
 ) : AdaptiveFragment(adapter, parent, index, 1, 3) {
 
     val context: Any?
-        get() = state[0]
+        get() = get(0)
+
+    val fakeInstructions: AdaptiveInstructionGroup
+        get() = get(1)
 
     val content: BoundFragmentFactory
-        get() = state[2].checkIfInstance()
+        get() = get(2)
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? {
         if (declarationIndex != 0) invalidIndex(declarationIndex)

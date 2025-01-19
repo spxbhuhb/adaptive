@@ -5,6 +5,7 @@ package `fun`.adaptive.ui.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
@@ -17,13 +18,16 @@ open class AuiFlowText(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 1, 2) {
+) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 1, stateSize()) {
 
     override val receiver: HTMLDivElement =
         document.createElement("div") as HTMLDivElement
 
     private val content: String
-        get() = state[0]?.toString() ?: ""
+        by stateVariable()
+
+    val fakeInstructions: AdaptiveInstructionGroup
+        by stateVariable()
 
     override fun auiPatchInternal() {
 

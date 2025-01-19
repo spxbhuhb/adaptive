@@ -28,9 +28,9 @@ class AdaptiveS1R(
     override fun genPatchInternal(): Boolean = true
 
     var s0: ((Int) -> Int)
-        get() = state[0].checkIfInstance()
+        get() = get(0)
         set(v) {
-            state[0] = v
+            set(0, v)
         }
 
 }

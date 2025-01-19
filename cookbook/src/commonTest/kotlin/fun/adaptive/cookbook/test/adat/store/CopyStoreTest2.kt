@@ -67,7 +67,7 @@ class CopyStoreTest2 {
 
         assertEquals(23, t1.p0)
 
-        val value = root.state[0]
+        val value = root.get<SomeAdat>(0)
 
         assertIs<SomeAdat>(value)
 

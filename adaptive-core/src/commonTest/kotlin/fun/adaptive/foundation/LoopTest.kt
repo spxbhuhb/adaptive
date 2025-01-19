@@ -25,7 +25,7 @@ class LoopTest {
         val adapter = AdaptiveTestAdapter()
 
         AdaptiveLoopTest(adapter, null, 0).apply {
-            state[0] = 3 // count
+            set(0, 3) // count
             create()
             mount()
         }
@@ -126,9 +126,11 @@ class AdaptiveLoopTest(
     index: Int
 ) : AdaptiveTestFragment(adapter, parent, index, 1) {
 
-    var count : Int
-        get() = state[0] as Int
-        set(v) { state[0] = v }
+    var count: Int
+        get() = get(0)
+        set(v) {
+            set(0, v)
+        }
 
     val dependencyMask_0_0 = 0x01 // fragment index: 0, state variable index: 0
     val dependencyMask_0_1 = 0x02 // fragment index: 0, state variable index: 0
@@ -159,12 +161,14 @@ class AdaptiveLoopTest(
                     fragment.setStateVariable(1, BoundFragmentFactory(this, 1))
                 }
             }
+
             1 -> {
                 // T1.createClosure is [ (count), (i) ]
                 if (fragment.haveToPatch(closureMask, dependencyMask_1_0)) {
                     fragment.setStateVariable(0, (fragment.getCreateClosureVariable(1) as Int) + 10)
                 }
             }
+
             else -> invalidIndex(fragment.declarationIndex)
         }
     }

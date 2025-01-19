@@ -5,13 +5,10 @@ package `fun`.adaptive.graphics.canvas.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.graphics.canvas.CanvasAdapter
 import `fun`.adaptive.graphics.canvas.CanvasFragment
 import `fun`.adaptive.graphics.canvas.canvas
-import `fun`.adaptive.graphics.svg.api.svgFill
-import `fun`.adaptive.graphics.svg.instruction.SvgFill
-import `fun`.adaptive.ui.api.color
-import `fun`.adaptive.utility.checkIfInstance
 import kotlin.math.PI
 
 @AdaptiveActual(canvas)
@@ -19,25 +16,28 @@ open class CanvasCircle(
     adapter: CanvasAdapter,
     parent: AdaptiveFragment,
     index: Int,
-) : CanvasFragment(adapter, parent, index, 6, 7) {
+) : CanvasFragment(adapter, parent, index, 6, stateSize()) {
 
     val centerX: Double
-        get() = state[0].checkIfInstance()
+        by stateVariable()
 
     val centerY: Double
-        get() = state[1].checkIfInstance()
+        by stateVariable()
 
     val radius: Double
-        get() = state[2].checkIfInstance()
+        by stateVariable()
 
-    val startAngle: Double
-        get() = state[3]?.checkIfInstance() ?: 0.0
+    val startAngle: Double?
+        by stateVariable()
 
-    val endAngle: Double
-        get() = state[4]?.checkIfInstance() ?: (2 * PI)
+    val endAngle: Double?
+        by stateVariable()
 
-    val anticlockwise: Boolean
-        get() = state[5]?.checkIfInstance() ?: false
+    val anticlockwise: Boolean?
+        by stateVariable()
+
+    val fakeInstructions: AdaptiveInstructionGroup
+        by stateVariable()
 
     override fun draw() {
         trace("draw")
@@ -46,7 +46,7 @@ open class CanvasCircle(
 
         canvas.setFill(renderData.fill.color)
 
-        canvas.arc(centerX, centerY, radius, startAngle, endAngle, anticlockwise)
+        canvas.arc(centerX, centerY, radius, startAngle ?: 0.0, endAngle ?: (2 * PI), anticlockwise ?: false)
 
         canvas.restore(id)
     }

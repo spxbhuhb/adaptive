@@ -1,14 +1,8 @@
 package `fun`.adaptive.ui.api
 
-import `fun`.adaptive.foundation.instruction.AdaptiveDetach
-import `fun`.adaptive.foundation.instruction.DetachHandler
-import `fun`.adaptive.foundation.instruction.DetachName
-import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.resource.file.FileResourceSet
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.SPixel
-import `fun`.adaptive.ui.instruction.event.OnDrop
-import `fun`.adaptive.ui.instruction.event.TransferData
 import `fun`.adaptive.ui.instruction.decoration.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.*
@@ -16,9 +10,6 @@ import `fun`.adaptive.ui.instruction.input.InputPlaceholder
 import `fun`.adaptive.ui.instruction.input.TabIndex
 import `fun`.adaptive.ui.instruction.layout.*
 import `fun`.adaptive.ui.instruction.navigation.ExternalLink
-import `fun`.adaptive.ui.instruction.navigation.HistorySize
-import `fun`.adaptive.ui.instruction.navigation.NavClick
-import `fun`.adaptive.ui.instruction.navigation.Route
 import `fun`.adaptive.ui.instruction.text.*
 
 // ------------------------------------------------------------------------------------
@@ -188,27 +179,6 @@ val Number.colSpan
 // ------------------------------------------------------------------------------------
 // Navigation
 // ------------------------------------------------------------------------------------
-
-fun navClick(
-    slotName: Name = Name.ANONYMOUS,
-    @DetachName segment: String? = null,
-    @AdaptiveDetach detachFun: (handler: DetachHandler) -> Unit
-) = NavClick(slotName, segment, detachFun)
-
-/**
- * Defines a route for `slot` fragments. See the navigation
- * tutorial for details.
- */
-fun route(
-    @DetachName segment: String? = null,
-    @AdaptiveDetach detachFun: (handler: DetachHandler) -> Unit
-) = Route(segment, detachFun)
-
-/**
- * Sets history size for `slot` fragments. See the navigation
- * tutorial for details.
- */
-inline fun historySize(sizeFun: () -> Int) = HistorySize(sizeFun())
 
 fun externalLink(res: FileResourceSet) = ExternalLink(res.uri)
 fun externalLink(href: String) = ExternalLink(href)

@@ -47,6 +47,7 @@ object Strings {
     const val SET_BINDING = "setBinding"
     const val GET_PRODUCED_VALUE = "getProducedValue"
     const val STATE_VARIABLE = "stateVariable"
+    const val STATE_SIZE = "stateSize"
     const val GET = "get"
     const val SET = "set"
 
@@ -104,6 +105,8 @@ object FqNames {
     val ADAPTIVE_HYDRATED = Strings.ADAPTIVE_HYDRATED.runtime()
 
     val DETACH_NAME = Strings.DETACH_NAME.instruction()
+
+    val STATE_SIZE = FqName("fun.adaptive.foundation.AdaptiveFragment.Companion.stateSize")
 }
 
 object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {

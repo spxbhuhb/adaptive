@@ -7,18 +7,25 @@ import `fun`.adaptive.foundation.*
 import `fun`.adaptive.foundation.testing.*
 
 @AdaptiveExpect("c")
-fun test(i : Int) {
+fun test(p1 : Int, p2 : String, p3 : Set<Int>) {
     manualImplementation()
 }
 
 @AdaptiveActual("c")
-open class AdaptiveTest(
+class AdaptiveTest(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     declarationIndex: Int
 ) : AdaptiveFragment(adapter, parent, declarationIndex, -1, stateSize()) {
 
-    var p1 by stateVariable<Int>()
+    val p1 : Int
+        by stateVariable()
+
+    val p2 : String
+        by stateVariable()
+
+    val p3 : Set<Int>
+        by stateVariable()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? = null
 
@@ -36,12 +43,8 @@ fun box() : String {
     adapter.fragmentFactory.add("c:test") { p,i,s -> AdaptiveTest(p.adapter as AdaptiveTestAdapter, p, i) }
 
     adaptive(adapter) {
-        test(12)
+        test(12, "a", emptySet())
     }
-
-    adapter.firstFragment.set(0, 23)
-
-    if (adapter.firstFragment.get<Int>(0) != 23) return "Fail: adapter.firstFragment.get(0) != 23"
 
     return adapter.assert(listOf(
         TraceEvent("<root>", 2, "before-Create", ""),
@@ -50,10 +53,10 @@ fun box() : String {
         TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
         TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
         TraceEvent("AdaptiveTest", 3, "before-Create", ""),
-        TraceEvent("AdaptiveTest", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-        TraceEvent("AdaptiveTest", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
-        TraceEvent("AdaptiveTest", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
-        TraceEvent("AdaptiveTest", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
+        TraceEvent("AdaptiveTest", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null, null]"),
+        TraceEvent("AdaptiveTest", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, a, []]"),
+        TraceEvent("AdaptiveTest", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12, a, []]"),
+        TraceEvent("AdaptiveTest", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12, a, []]"),
         TraceEvent("AdaptiveTest", 3, "after-Create", ""),
         TraceEvent("<root>", 2, "after-Create", ""),
         TraceEvent("<root>", 2, "before-Mount", ""),

@@ -6,6 +6,7 @@ package `fun`.adaptive.graphics.canvas.fragment
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.Trace
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.graphics.canvas.platform.ActualBrowserCanvas
@@ -23,7 +24,7 @@ class CanvasCanvas(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 0, 2) {
+) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 0, stateSize()) {
 
     val canvas = ActualBrowserCanvas()
 
@@ -31,8 +32,11 @@ class CanvasCanvas(
 
     val canvasAdapter = CanvasAdapter(adapter, canvas, this)
 
+    val fakeInstructions: AdaptiveInstructionGroup
+        by stateVariable()
+
     val content: BoundFragmentFactory
-        get() = state[state.size - 1].checkIfInstance()
+        by stateVariable()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {
         if (declarationIndex != 0) invalidIndex(declarationIndex)

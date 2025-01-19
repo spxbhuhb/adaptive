@@ -19,7 +19,7 @@ open class FoundationMeasureFragmentTime(
 ) : AdaptiveFragment(adapter, parent, index, 0, 2) {
 
     val content: BoundFragmentFactory
-        get() = state[state.size - 1].checkIfInstance()
+        get() = get(1)
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? {
         if (declarationIndex != 0) invalidIndex(declarationIndex)

@@ -23,7 +23,7 @@ class AdaptiveSequence(
     )
 
     val indices : IntArray
-        get() = state[0].checkIfInstance()
+        get() = get(0)
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? {
         return null
@@ -42,6 +42,6 @@ class AdaptiveSequence(
     }
 
     override fun stateToTraceString(): String {
-        return if (state[0] != null) indices.contentToString() else "[]"
+        return if (get<Any?>(0) != null) indices.contentToString() else "[]"
     }
 }

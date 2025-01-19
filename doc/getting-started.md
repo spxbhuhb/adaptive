@@ -18,7 +18,6 @@
     * [Producers](foundation/producer.md)
     * [Expect fragments](foundation/expect.md)
 
-
 * [Adaptive Data Classes](adat/readme.md)
   * [Descriptor and validation](adat/descriptor-and-validation.md) 
   * [Immutable Adat Classes](adat/immutable-adat-classes.md)

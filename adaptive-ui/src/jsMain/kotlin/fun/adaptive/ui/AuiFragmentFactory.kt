@@ -7,7 +7,6 @@ package `fun`.adaptive.ui
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 import `fun`.adaptive.ui.fragment.*
 import `fun`.adaptive.ui.fragment.layout.*
-import `fun`.adaptive.ui.fragment.structural.AuiSlot
 
 object AuiFragmentFactory : FoundationFragmentFactory() {
     init {
@@ -21,7 +20,6 @@ object AuiFragmentFactory : FoundationFragmentFactory() {
         add("aui:row") { p, i, s -> AuiRow(p.adapter as AuiAdapter, p, i) }
         add("aui:text") { p, i, s -> AuiText(p.adapter as AuiAdapter, p, i) }
         add("aui:flowtext") { p, i, s -> AuiFlowText(p.adapter as AuiAdapter, p, i) }
-        add("aui:slot") { p, i, s -> AuiSlot(p.adapter as AuiAdapter, p, i) }
         add("aui:rootbox") { p, i, s -> AuiRootBox(p.adapter as AuiAdapter, p, i) }
         add("aui:draggable") { p, i, s -> AuiDraggable(p.adapter as AuiAdapter, p, i) }
         add("aui:droptarget") { p, i, s -> AuiDropTarget(p.adapter as AuiAdapter, p, i) }

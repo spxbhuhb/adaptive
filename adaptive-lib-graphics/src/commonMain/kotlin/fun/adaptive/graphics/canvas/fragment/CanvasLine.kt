@@ -5,6 +5,7 @@ package `fun`.adaptive.graphics.canvas.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.graphics.canvas.CanvasAdapter
 import `fun`.adaptive.graphics.canvas.CanvasFragment
 import `fun`.adaptive.graphics.canvas.canvas
@@ -19,19 +20,22 @@ open class CanvasLine(
     adapter: CanvasAdapter,
     parent: AdaptiveFragment,
     index: Int,
-) : CanvasFragment(adapter, parent, index, 4, 5) {
+) : CanvasFragment(adapter, parent, index, 4, stateSize()) {
 
     val x1: Double
-        get() = state[0].checkIfInstance()
+        by stateVariable()
 
     val y1: Double
-        get() = state[1].checkIfInstance()
+        by stateVariable()
 
     val x2: Double
-        get() = state[2].checkIfInstance()
+        by stateVariable()
 
     val y2: Double
-        get() = state[3]?.checkIfInstance() ?: 0.0
+        by stateVariable()
+
+    val fakeInstructions: AdaptiveInstructionGroup
+        by stateVariable()
 
     override fun draw() {
         trace("draw")

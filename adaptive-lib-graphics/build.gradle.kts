@@ -23,6 +23,10 @@ rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlu
     rootProject.the<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension>().lockFileName = "skip-yarn-lock"
 }
 
+adaptive {
+    pluginDebug = true
+}
+
 kotlin {
 
     jvmToolchain(11)

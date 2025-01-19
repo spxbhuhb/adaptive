@@ -145,7 +145,7 @@ class SelectTest {
         val adapter = AdaptiveTestAdapter()
 
         AdaptiveSelectTest(adapter, null, 0).apply {
-            state[0] = 1
+            set(0, 1)
             create()
             mount()
         }
@@ -192,7 +192,7 @@ class AdaptiveSelectTest(
 ) : AdaptiveTestFragment(adapter, parent, index, 1) {
 
     var v0: Int
-        get() = state[0] as Int
+        get() = get(0)
         set(v) {
             setStateVariable(0, v)
         }

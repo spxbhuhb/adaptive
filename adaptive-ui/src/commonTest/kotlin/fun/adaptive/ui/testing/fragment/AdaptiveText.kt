@@ -5,6 +5,7 @@ package `fun`.adaptive.ui.testing.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import `fun`.adaptive.ui.testing.AuiTestAdapter
@@ -15,15 +16,18 @@ open class AdaptiveText(
     adapter: AuiTestAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<TestReceiver>(adapter, parent, index, 1, 2) {
+) : AbstractAuiFragment<TestReceiver>(adapter, parent, index, 1, stateSize()) {
 
     override val receiver = TestReceiver()
 
-    private val content: String
-        get() = state[0]?.toString() ?: ""
+    private val content: Any?
+        by stateVariable()
+
+    val fakeInstructions: AdaptiveInstructionGroup
+        by stateVariable()
 
     override fun auiPatchInternal() {
-        val content = this.content
+        val content = this.content?.toString() ?: ""
         val contentChange = (isInit || content != receiver.textContent)
         val styleChange = (renderData.text != previousRenderData.text)
 
