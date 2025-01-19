@@ -47,9 +47,9 @@ object Strings {
     const val SET_BINDING = "setBinding"
     const val GET_PRODUCED_VALUE = "getProducedValue"
     const val STATE_VARIABLE = "stateVariable"
-    const val STATE_SIZE = "stateSize"
     const val GET = "get"
     const val SET = "set"
+    const val DIRTY_MASK = "dirtyMask"
 
     const val ADAPTER = "adapter"
     const val PARENT = "parent"
@@ -88,6 +88,8 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val KOTLIN_INVOKE = Strings.KOTLIN_INVOKE.name()
     val RANGE_TO = Strings.RANGE_TO.name()
     val STATE_VARIABLE = Strings.STATE_VARIABLE.name()
+    val HAVE_TO_PATCH = Strings.HAVE_TO_PATCH.name()
+    val DIRTY_MASK = Strings.DIRTY_MASK.name()
 }
 
 object FqNames {

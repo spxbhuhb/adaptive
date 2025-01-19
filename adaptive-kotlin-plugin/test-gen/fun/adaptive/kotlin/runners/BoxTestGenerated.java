@@ -383,6 +383,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
+      @TestMetadata("haveToPatch.kt")
+      public void testHaveToPatch() {
+        runTest("testData/box/foundation/expect/haveToPatch.kt");
+      }
+
+      @Test
       @TestMetadata("stateSizeEmpty.kt")
       public void testStateSizeEmpty() {
         runTest("testData/box/foundation/expect/stateSizeEmpty.kt");

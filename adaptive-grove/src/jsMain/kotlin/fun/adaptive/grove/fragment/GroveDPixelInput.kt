@@ -35,7 +35,7 @@ open class GroveDPixelInput(
 
         val b = binding
 
-        if (haveToPatch(dirtyMask, 1 shl 1)) {
+        if (haveToPatch(binding)) {
             val value = b.value
             if (value == null || value == DPixel.NaP) {
                 receiver.value = ""

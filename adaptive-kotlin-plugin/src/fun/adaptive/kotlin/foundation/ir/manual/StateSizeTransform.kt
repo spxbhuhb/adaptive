@@ -12,7 +12,7 @@ import org.jetbrains.kotlin.ir.expressions.IrDelegatingConstructorCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.util.kotlinFqName
 
-class AdaptiveActualStateSizeTransform(
+class StateSizeTransform(
     override val pluginContext: FoundationPluginContext,
     val stateSize : Int
 ) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {

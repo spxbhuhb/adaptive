@@ -34,7 +34,7 @@ open class AuiImage(
 
     override fun auiPatchInternal() {
 
-        if (haveToPatch(dirtyMask, 1)) {
+        if (haveToPatch(res)) {
             receiver.src = res.uri
         }
     }

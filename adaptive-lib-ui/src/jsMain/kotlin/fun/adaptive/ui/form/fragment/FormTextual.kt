@@ -46,7 +46,7 @@ open class FormTextual(
 
     override fun auiPatchInternal() {
 
-        if (haveToPatch(dirtyMask, 1)) {
+        if (haveToPatch(adatClass)) {
             propertyValue = formatValue(adatClass.getValue(property.index))
 
             if (receiver.value != propertyValue) {

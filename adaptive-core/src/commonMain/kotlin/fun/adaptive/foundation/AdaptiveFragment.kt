@@ -248,6 +248,11 @@ abstract class AdaptiveFragment(
     fun haveToPatch(closureDirtyMask: StateVariableMask, dependencyMask: StateVariableMask): Boolean =
         (dirtyMask == initStateMask) || (closureDirtyMask and dependencyMask) != cleanStateMask
 
+    @PluginReference
+    protected fun haveToPatch(value : Any?) : Boolean {
+        replacedByPlugin("replaced with bit mask variant", value)
+    }
+
     fun getThisClosureDirtyMask(): StateVariableMask =
         thisClosure.closureDirtyMask()
 

@@ -31,7 +31,7 @@ open class AuiFlowText(
 
     override fun auiPatchInternal() {
 
-        if (!haveToPatch(dirtyMask, 1)) return
+        if (! haveToPatch(content)) return
 
         val content = this.content
 

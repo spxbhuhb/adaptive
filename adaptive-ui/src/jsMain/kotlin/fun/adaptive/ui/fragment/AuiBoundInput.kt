@@ -58,7 +58,7 @@ open class AuiBoundInput(
         // this results in a clear dirty mask and so the field is not updated
         val currentValue = valueToString(binding.value)
 
-        if ((haveToPatch(dirtyMask, 2) || receiver.value != currentValue) && ! invalidInput) {
+        if ((haveToPatch(binding) || receiver.value != currentValue) && ! invalidInput) {
             receiver.value = currentValue
         }
 

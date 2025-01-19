@@ -3,6 +3,7 @@
  */
 package `fun`.adaptive.kotlin.foundation.ir.manual
 
+import `fun`.adaptive.kotlin.common.property
 import `fun`.adaptive.kotlin.foundation.ClassIds
 import `fun`.adaptive.kotlin.foundation.Names
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
@@ -14,7 +15,9 @@ import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.expressions.IrCall
+import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.util.constructors
+import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.hasAnnotation
 import org.jetbrains.kotlin.ir.util.properties
 
@@ -22,52 +25,22 @@ class AdaptiveActualTransform(
     private val pluginContext: FoundationPluginContext
 ) : IrElementTransformerVoidWithContext() {
 
-    // original:
-    //
-    // PROPERTY name:p1 visibility:public modality:FINAL [delegated,val]
-    //  FIELD PROPERTY_DELEGATE name:p1$delegate type:kotlin.properties.ReadWriteProperty<fun.adaptive.foundation.AdaptiveFragment, kotlin.Int> visibility:private [final]
-    //    EXPRESSION_BODY
-    //      CALL 'protected final fun stateVariable <T> (): kotlin.properties.ReadWriteProperty<fun.adaptive.foundation.AdaptiveFragment, T of stuff.AdaptiveTest.stateVariable> [fake_override] declared in stuff.AdaptiveTest' type=kotlin.properties.ReadWriteProperty<fun.adaptive.foundation.AdaptiveFragment, kotlin.Int> origin=null
-    //        <T>: kotlin.Int
-    //        $this: GET_VAR '<this>: stuff.AdaptiveTest declared in stuff.AdaptiveTest' type=stuff.AdaptiveTest origin=null
-    //  FUN DELEGATED_PROPERTY_ACCESSOR name:<get-p1> visibility:public modality:FINAL <> ($this:stuff.AdaptiveTest) returnType:kotlin.Int
-    //    correspondingProperty: PROPERTY name:p1 visibility:public modality:FINAL [delegated,val]
-    //    $this: VALUE_PARAMETER name:<this> type:stuff.AdaptiveTest
-    //    BLOCK_BODY
-    //      RETURN type=kotlin.Nothing from='public final fun <get-p1> (): kotlin.Int declared in stuff.AdaptiveTest'
-    //        CALL 'public abstract fun getValue (thisRef: T of kotlin.properties.ReadWriteProperty, property: kotlin.reflect.KProperty<*>): V of kotlin.properties.ReadWriteProperty [operator] declared in kotlin.properties.ReadWriteProperty' type=kotlin.Int origin=null
-    //          $this: GET_FIELD 'FIELD PROPERTY_DELEGATE name:p1$delegate type:kotlin.properties.ReadWriteProperty<fun.adaptive.foundation.AdaptiveFragment, kotlin.Int> visibility:private [final] declared in stuff.AdaptiveTest' type=kotlin.properties.ReadWriteProperty<fun.adaptive.foundation.AdaptiveFragment, kotlin.Int> origin=null
-    //            receiver: GET_VAR '<this>: stuff.AdaptiveTest declared in stuff.AdaptiveTest.<get-p1>' type=stuff.AdaptiveTest origin=null
-    //          thisRef: GET_VAR '<this>: stuff.AdaptiveTest declared in stuff.AdaptiveTest.<get-p1>' type=stuff.AdaptiveTest origin=null
-    //          property: PROPERTY_REFERENCE 'public final p1: kotlin.Int [delegated,val] declared in stuff.AdaptiveTest' field=null getter='public final fun <get-p1> (): kotlin.Int declared in stuff.AdaptiveTest' setter=null type=kotlin.reflect.KProperty1<stuff.AdaptiveTest, kotlin.Int> origin=PROPERTY_REFERENCE_FOR_DELEGATE
-
-    // transformed:
-    //
-    // PROPERTY name:p1 visibility:public modality:FINAL [var]
-    //  FUN name:<get-p1> visibility:public modality:FINAL <> ($this:stuff.AdaptiveTest) returnType:kotlin.Int
-    //    correspondingProperty: PROPERTY name:p1 visibility:public modality:FINAL [var]
-    //    $this: VALUE_PARAMETER name:<this> type:stuff.AdaptiveTest
-    //    BLOCK_BODY
-    //      RETURN type=kotlin.Nothing from='public final fun <get-p1> (): kotlin.Int declared in stuff.AdaptiveTest'
-    //        CALL 'public final fun get <T> (index: kotlin.Int): T of stuff.AdaptiveTest.get [inline,fake_override] declared in stuff.AdaptiveTest' type=kotlin.Int origin=null
-    //          <T>: kotlin.Int
-    //          $this: GET_VAR '<this>: stuff.AdaptiveTest declared in stuff.AdaptiveTest.<get-p1>' type=stuff.AdaptiveTest origin=null
-    //          index: CONST Int type=kotlin.Int value=1
-    //  FUN name:<set-p1> visibility:public modality:FINAL <> ($this:stuff.AdaptiveTest, v:kotlin.Int) returnType:kotlin.Unit
-    //    correspondingProperty: PROPERTY name:p1 visibility:public modality:FINAL [var]
-    //    $this: VALUE_PARAMETER name:<this> type:stuff.AdaptiveTest
-    //    VALUE_PARAMETER name:v index:0 type:kotlin.Int
-    //    BLOCK_BODY
-    //      RETURN type=kotlin.Nothing from='public final fun <set-p1> (v: kotlin.Int): kotlin.Unit declared in stuff.AdaptiveTest'
-    //        CALL 'public final fun set (index: kotlin.Int, value: kotlin.Any?): kotlin.Unit [fake_override] declared in stuff.AdaptiveTest' type=kotlin.Unit origin=null
-    //          $this: GET_VAR '<this>: stuff.AdaptiveTest declared in stuff.AdaptiveTest.<set-p1>' type=stuff.AdaptiveTest origin=null
-    //          index: CONST Int type=kotlin.Int value=1
-    //          value: GET_VAR 'v: kotlin.Int declared in stuff.AdaptiveTest.<set-p1>' type=kotlin.Int origin=null
-
     override fun visitClassNew(declaration: IrClass): IrStatement {
         if (! declaration.hasAnnotation(ClassIds.ADAPTIVE_ACTUAL)) return declaration
 
+        val propertyMap = transformProperties(declaration)
+
+        transformConstructors(declaration, propertyMap.size)
+
+        transformHaveToPatch(declaration, propertyMap)
+
+        return declaration
+    }
+
+    fun transformProperties(declaration: IrClass): Map<IrSimpleFunctionSymbol, Int> {
+
         var index = 0 // index 0 is reserved for instructions
+        val propertyMap = mutableMapOf<IrSimpleFunctionSymbol, Int>()
 
         for (property in declaration.properties) {
             if (! property.isDelegated) continue
@@ -80,12 +53,11 @@ class AdaptiveActualTransform(
             transformGetter(property, index)
             transformSetter(property, index)
 
+            propertyMap[property.getter!!.symbol] = index
             index ++
         }
 
-        declaration.constructors.forEach { it.transform(AdaptiveActualStateSizeTransform(pluginContext, index), null) }
-
-        return declaration
+        return propertyMap
     }
 
     fun transformGetter(property: IrProperty, index: Int) {
@@ -127,5 +99,38 @@ class AdaptiveActualTransform(
             )
         }
     }
+
+    fun transformConstructors(declaration : IrClass, stateSize: Int) {
+        declaration.constructors.forEach {
+            it.transform(
+                StateSizeTransform(pluginContext, stateSize),
+                null
+            )
+        }
+    }
+
+    private fun transformHaveToPatch(declaration: IrClass, propertyMap: Map<IrSimpleFunctionSymbol, Int>) {
+        val functions = declaration.functions
+
+        val haveToPatches = functions.filter { it.name == Names.HAVE_TO_PATCH }
+        val haveToPatchMask = haveToPatches.single { it.valueParameters.size == 2 }
+        val haveToPatchVariable = haveToPatches.single { it.valueParameters.size == 1 }
+
+        val dirtyMask = declaration.property(Names.DIRTY_MASK)
+
+        declaration.functions.forEach {
+            it.transform(
+                HaveToPatchTransform(
+                    pluginContext,
+                    dirtyMask,
+                    haveToPatchVariable.symbol,
+                    haveToPatchMask.symbol,
+                    propertyMap
+                ),
+                null
+            )
+        }
+    }
+
 
 }

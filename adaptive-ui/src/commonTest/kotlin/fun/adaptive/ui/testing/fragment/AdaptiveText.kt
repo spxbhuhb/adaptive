@@ -27,16 +27,16 @@ open class AdaptiveText(
         by stateVariable()
 
     override fun auiPatchInternal() {
-        val content = this.content?.toString() ?: ""
-        val contentChange = (isInit || content != receiver.textContent)
+        val safeContent = content?.toString() ?: ""
+        val contentChange = (isInit || safeContent != receiver.textContent)
         val styleChange = (renderData.text != previousRenderData.text)
 
-        if (! haveToPatch(dirtyMask, 1) && ! contentChange && ! styleChange) {
+        if (! haveToPatch(content) && ! contentChange && ! styleChange) {
             return
         }
 
         if (contentChange) {
-            receiver.textContent = content
+            receiver.textContent = safeContent
         }
 
         if (renderData === previousRenderData) {
@@ -46,7 +46,7 @@ open class AdaptiveText(
             }
         }
 
-        measureText(content)
+        measureText(safeContent)
     }
 
     fun measureText(content: String) {

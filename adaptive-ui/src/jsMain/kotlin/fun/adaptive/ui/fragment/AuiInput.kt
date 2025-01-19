@@ -34,7 +34,7 @@ open class AuiInput(
 
     override fun auiPatchInternal() {
 
-        if (haveToPatch(dirtyMask, 2)) {
+        if (haveToPatch(value)) {
             receiver.value = value ?: ""
         }
 

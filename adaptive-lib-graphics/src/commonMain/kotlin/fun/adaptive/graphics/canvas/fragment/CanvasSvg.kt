@@ -39,7 +39,7 @@ open class CanvasSvg(
 
     override fun genPatchInternal(): Boolean {
 
-        if (haveToPatch(dirtyMask, 1)) {
+        if (haveToPatch(resource)) {
             CoroutineScope(Dispatchers.Default).launch {
                 data = resource.readAll()
                 CoroutineScope(adapter.dispatcher).launch {
@@ -48,7 +48,7 @@ open class CanvasSvg(
             }
         }
 
-        if (data.isNotEmpty() && haveToPatch(dirtyMask, 2)) {
+        if (data.isNotEmpty() && haveToPatch(fakeInstructions)) {
             parseAndDraw()
         }
 

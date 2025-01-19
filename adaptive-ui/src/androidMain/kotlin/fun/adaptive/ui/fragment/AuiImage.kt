@@ -34,7 +34,7 @@ class AuiImage(
 
     override fun auiPatchInternal() {
 
-        if ( ! haveToPatch(dirtyMask, 1)) return
+        if ( ! haveToPatch(content)) return
 
         CoroutineScope(Dispatchers.IO).launch {
             val data = content.readAll()

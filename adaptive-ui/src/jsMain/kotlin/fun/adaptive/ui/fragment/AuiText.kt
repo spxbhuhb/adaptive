@@ -31,16 +31,16 @@ open class AuiText(
 
     override fun auiPatchInternal() {
 
-        val content = this.content?.toString() ?: ""
-        val contentChange = (isInit || content != receiver.textContent)
+        val safeContent = content?.toString() ?: ""
+        val contentChange = (isInit || safeContent != receiver.textContent)
         val styleChange = (renderData.text != previousRenderData.text)
 
-        if (! haveToPatch(dirtyMask, 1) && ! contentChange && ! styleChange) {
+        if (! haveToPatch(content) && ! contentChange && ! styleChange) {
             return
         }
 
         if (contentChange) {
-            receiver.textContent = content
+            receiver.textContent = safeContent
         }
 
         if (renderData === previousRenderData) {
@@ -50,7 +50,7 @@ open class AuiText(
             }
         }
 
-        measureText(content)
+        measureText(safeContent)
     }
 
     override fun placeLayout(top: Double, left: Double) {

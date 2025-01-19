@@ -21,7 +21,7 @@ class AuiText(
 
     override val receiver = TextView(adapter.context)
 
-    private val content: String
+    private val content: Any?
         by stateVariable()
 
     val fakeInstructions: AdaptiveInstructionGroup
@@ -33,16 +33,16 @@ class AuiText(
             renderData.text = uiAdapter.defaultTextRenderData
         }
 
-        val content = this.content
-        val contentChange = (content != receiver.text)
+        val safeContent = content?.toString() ?: ""
+        val contentChange = (safeContent != receiver.text)
         val styleChange = (renderData.text != previousRenderData.text)
 
-        if (! haveToPatch(dirtyMask, 1) && ! contentChange && ! styleChange) {
+        if (! haveToPatch(content) && ! contentChange && ! styleChange) {
             return
         }
 
         if (contentChange) {
-            receiver.text = content
+            receiver.text = safeContent
         }
 
         val widthSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)

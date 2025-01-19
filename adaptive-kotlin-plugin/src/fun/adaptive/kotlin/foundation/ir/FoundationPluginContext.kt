@@ -74,7 +74,7 @@ class FoundationPluginContext(
     val create = Strings.CREATE.fragmentFunction()
     val mount = Strings.MOUNT.fragmentFunction()
 
-    val haveToPatch = Strings.HAVE_TO_PATCH.fragmentFunction()
+    val haveToPatch = Strings.HAVE_TO_PATCH.fragmentFunction { it.owner.valueParameters.size == 2 }
     val getCreateClosureDirtyMask = Strings.GET_CREATE_CLOSURE_DIRTY_MASK.fragmentFunction()
     val getCreateClosureVariable = Strings.GET_CREATE_CLOSURE_VARIABLE.fragmentFunction()
     val getThisClosureVariable = Strings.GET_THIS_CLOSURE_VARIABLE.fragmentFunction()
