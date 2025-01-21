@@ -101,6 +101,8 @@ object FqNames {
     val ADAPTIVE_HYDRATED = Strings.ADAPTIVE_HYDRATED.runtime()
 
     val DETACH_NAME = Strings.DETACH_NAME.instruction()
+
+    val HELPER_FUNCTION_INSTRUCTIONS = Strings.HELPER_INSTRUCTIONS.runtime()
 }
 
 object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
