@@ -194,7 +194,9 @@ abstract class AbstractAuiFragment<RT>(
         if (updateBatchId == updateId) return
         updateBatchId = updateId
 
-        if (shouldUpdateSelf()) {
+        val layoutFragment = renderData.layoutFragment
+
+        if (shouldUpdateSelf() || layoutFragment == null) {
             val layout = renderData.layout
             computeLayout(
                 layout?.instructedWidth ?: previousRenderData.finalWidth,
