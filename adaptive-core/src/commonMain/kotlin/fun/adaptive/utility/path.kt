@@ -26,7 +26,7 @@ fun Path.write(string: String, append: Boolean = false, overwrite: Boolean = fal
 
 fun Path.write(bytes: ByteArray, append: Boolean = false, overwrite: Boolean = false, useTemporaryFile: Boolean = false) {
     val exists = exists()
-    check((! exists) || overwrite) { "file $this already exists" }
+    check((! exists) || overwrite || append) { "file $this already exists" }
 
     withTemporary(useTemporaryFile) { out ->
         SystemFileSystem.sink(out, append).buffered().use {

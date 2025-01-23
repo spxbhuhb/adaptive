@@ -199,7 +199,9 @@ abstract class AbstractAuiFragment<RT>(
 
         updateBatchId = updateId
 
-        if (shouldUpdateSelf()) {
+        val layoutFragment = renderData.layoutFragment
+
+        if (shouldUpdateSelf() || layoutFragment == null) {
             val layout = renderData.layout
             val baseData = if (obsoletePreviousData) renderData else previousRenderData
 

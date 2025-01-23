@@ -3,7 +3,7 @@
  */
 package `fun`.adaptive.kotlin.foundation.ir.ir2arm
 
-import `fun`.adaptive.kotlin.foundation.CallableIds
+import `fun`.adaptive.kotlin.foundation.FqNames
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmState
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmStateVariable
 import org.jetbrains.kotlin.ir.IrElement
@@ -11,7 +11,7 @@ import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
-import org.jetbrains.kotlin.ir.util.callableId
+import org.jetbrains.kotlin.ir.util.hasEqualFqName
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 
 /**
@@ -41,7 +41,7 @@ class DependencyVisitor(
      */
     override fun visitCall(expression: IrCall) {
 
-        if (expression.symbol.owner.callableId == CallableIds.HELPER_FUNCTION_INSTRUCTIONS) {
+        if (expression.symbol.owner.hasEqualFqName(FqNames.HELPER_FUNCTION_INSTRUCTIONS)) {
             closure.firstOrNull { it.isInstructions }?.let {
                 dependencies += it
             }

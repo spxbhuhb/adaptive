@@ -180,7 +180,7 @@ class SetBackend<IT : AdatClass>(
         }
 
         var add = mutableListOf<AutoAdd>()
-        val modify = mutableListOf<AutoUpdate>()
+        var modify = mutableListOf<AutoUpdate>()
 
         for (item in data.items()) {
             val itemId = item.itemId
@@ -193,8 +193,8 @@ class SetBackend<IT : AdatClass>(
 
             if (add.size + modify.size >= 1000) {
                 connector.send(AutoSyncBatch(time, add, modify))
-                add.clear()
-                modify.clear()
+                add = mutableListOf()
+                modify = mutableListOf()
             }
         }
 
