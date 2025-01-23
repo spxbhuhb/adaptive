@@ -108,6 +108,7 @@ object FqNames {
 
     val DETACH_NAME = Strings.DETACH_NAME.instruction()
 
+    val HELPER_FUNCTION_INSTRUCTIONS = Strings.HELPER_INSTRUCTIONS.runtime()
     val STATE_SIZE = FqName("fun.adaptive.foundation.AdaptiveFragment.Companion.stateSize")
 }
 
