@@ -16,7 +16,7 @@ open class CanvasCircle(
     adapter: CanvasAdapter,
     parent: AdaptiveFragment,
     index: Int,
-) : CanvasFragment(adapter, parent, index, 6, stateSize()) {
+) : CanvasFragment(adapter, parent, index, stateSize()) {
 
     val centerX: Double
         by stateVariable()
@@ -34,9 +34,6 @@ open class CanvasCircle(
         by stateVariable()
 
     val anticlockwise: Boolean?
-        by stateVariable()
-
-    val fakeInstructions: AdaptiveInstructionGroup
         by stateVariable()
 
     override fun draw() {

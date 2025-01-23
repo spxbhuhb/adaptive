@@ -19,7 +19,7 @@ class HydratedTest {
             hydrated(lfm)
 
         }.first<GroveHydrated>().apply {
-            state.size shouldBe 1
+            state.size shouldBe 2
             model shouldBe lfm
         }
     }

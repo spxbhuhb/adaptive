@@ -12,7 +12,7 @@ class CanvasSelect(
     adapter: CanvasAdapter,
     parent: AdaptiveFragment?,
     index: Int,
-) : CanvasStructural(adapter, parent, index, 2), AdaptiveSelectLogic {
+) : CanvasStructural(adapter, parent, index, 3), AdaptiveSelectLogic {
 
     override val createClosure: AdaptiveClosure
         get() = parent !!.thisClosure

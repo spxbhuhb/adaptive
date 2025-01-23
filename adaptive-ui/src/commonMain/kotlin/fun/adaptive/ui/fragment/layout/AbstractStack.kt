@@ -24,10 +24,9 @@ abstract class AbstractStack<RT, CRT : RT>(
     adapter: AbstractAuiAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
-    instructionsIndex: Int,
     stateSize: Int
 ) : AbstractContainer<RT, CRT>(
-    adapter, parent, declarationIndex, instructionsIndex, stateSize
+    adapter, parent, declarationIndex, stateSize
 ) {
 
     abstract fun itemsWidthCalc(itemsWidth: Double, item: AbstractAuiFragment<RT>): Double

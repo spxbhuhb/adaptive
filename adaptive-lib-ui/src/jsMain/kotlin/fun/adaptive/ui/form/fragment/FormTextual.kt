@@ -26,7 +26,7 @@ open class FormTextual(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 2, stateSize()) {
+) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, stateSize()) {
 
     override val receiver: HTMLInputElement =
         document.createElement("input") as HTMLInputElement
@@ -35,9 +35,6 @@ open class FormTextual(
         by stateVariable()
 
     private val property : AdatPropertyMetadata
-        by stateVariable()
-
-    val fakeInstructions: AdaptiveInstructionGroup
         by stateVariable()
 
     var propertyValue : String = ""

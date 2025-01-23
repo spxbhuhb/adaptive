@@ -83,15 +83,13 @@ class GridTest {
 
     fun cff(
         vararg testInstructions: AdaptiveInstruction,
-        f1: Array<AdaptiveInstruction> = emptyArray(),
-        f2: Array<AdaptiveInstruction> = emptyArray(),
         checks: AuiTestAdapter.() -> Unit
     ) {
         uiTest(0, 0, 400, 400) {
 
             grid(C1, AdaptiveInstructionGroup(testInstructions)) {
-                space(*f1) .. F1
-                space(*f2) .. F2
+                space() .. F1
+                space() .. F2
             }
 
         }.checks()

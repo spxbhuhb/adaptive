@@ -15,7 +15,9 @@ class AdaptiveInstructionGroup(
 
     @PluginReference("arrayConstructor")
     @Suppress("unused") // used by the compiler plugin in generated fragments
-    constructor(instructions: Array<out AdaptiveInstruction>) : this(instructions.toList())
+    // mapNotNull handles cases when there are no instructions and the state variable used contains null
+    // TODO think about null instructions in AdaptiveInstructionGroup constructor, maybe optimise it
+    constructor(instructions: Array<out AdaptiveInstruction?>) : this(instructions.mapNotNull { it })
 
     /**
      * Apply the all the instructions in this group to a subject. The instruction has

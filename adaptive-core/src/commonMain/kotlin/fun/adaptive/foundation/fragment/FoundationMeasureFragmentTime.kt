@@ -8,7 +8,6 @@ import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
-import `fun`.adaptive.utility.checkIfInstance
 import kotlin.time.measureTime
 
 @AdaptiveActual
@@ -16,7 +15,7 @@ open class FoundationMeasureFragmentTime(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, 0, 2) {
+) : AdaptiveFragment(adapter, parent, index, 2) {
 
     val content: BoundFragmentFactory
         get() = get(1)

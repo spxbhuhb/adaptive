@@ -22,7 +22,6 @@ abstract class AdaptiveFragment(
     val adapter: AdaptiveAdapter,
     var parent: AdaptiveFragment?,
     val declarationIndex: Int,
-    val instructionIndex: Int,
     stateSize: Int
 ) {
     companion object {
@@ -89,12 +88,7 @@ abstract class AdaptiveFragment(
     var bindings: MutableList<AdaptiveStateVariableBinding<*>>? = null
 
     val instructions: AdaptiveInstructionGroup
-        get() =
-            if (instructionIndex == - 1) {
-                emptyInstructions
-            } else {
-                state[instructionIndex]?.let { it as AdaptiveInstructionGroup } ?: emptyInstructions
-            }
+        get() = get(0) ?: emptyInstructions
 
     /**
      * True when this is the initial create call of the fragment.

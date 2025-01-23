@@ -11,11 +11,10 @@ import `fun`.adaptive.ui.instruction.layout.Width
 
 fun applyProperties(selection: Selection, data: InstructionEditorData) {
     for (item in selection.items) {
-        if (item.instructionIndex < 0) continue
         val instructions = item.instructions.toMutableList()
         applyProperties(instructions, data)
-        item.setStateVariable(item.instructionIndex, instructions.toTypedArray())
-        item.setDirtyBatch(item.instructionIndex)
+        item.setStateVariable(0, instructions.toTypedArray())
+        item.setDirtyBatch(0)
     }
     selection.nextRevision()
 }

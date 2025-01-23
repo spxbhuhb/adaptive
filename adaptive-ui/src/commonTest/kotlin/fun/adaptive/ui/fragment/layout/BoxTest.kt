@@ -1,5 +1,6 @@
 package `fun`.adaptive.ui.fragment.layout
 
+import `fun`.adaptive.foundation.dumpFragmentTree
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf
@@ -50,8 +51,8 @@ class BoxTest {
             adapter.assertFinal(F1, initial)
 
             adapter[F1].also {
-                it.setStateVariable(0, "ab")
-                it.setDirtyBatch(0)
+                it.setStateVariable(1, "ab")
+                it.setDirtyBatch(1)
             }
 
             adapter.assertFinal(C1, 0, 0, 400, 200)
@@ -89,8 +90,8 @@ class BoxTest {
             adapter.assertFinal(F1, initial)
 
             adapter[F1].also {
-                it.setStateVariable(0, "ab")
-                it.setDirtyBatch(0)
+                it.setStateVariable(1, "ab")
+                it.setDirtyBatch(1)
             }
 
             adapter.assertFinal(C1, 0, 0, 400, 200)
@@ -110,7 +111,7 @@ class BoxTest {
             adapter.assertFinal(F1, 100, 100, 20, 20)
 
             adapter[F1].also {
-                it.setStateVariable(1, instructionsOf(F1, position(150.dp, 150.dp)))
+                it.setStateVariable(0, instructionsOf(F1, position(150.dp, 150.dp)))
                 it.setDirtyBatch(0)
             }
 
@@ -129,7 +130,7 @@ class BoxTest {
             adapter.assertFinal(F1, 0, 0, 100, 100)
 
             adapter[F1].also {
-                it.setStateVariable(1, instructionsOf(F1, size(150.dp, 150.dp)))
+                it.setStateVariable(0, instructionsOf(F1, size(150.dp, 150.dp)))
                 it.setDirtyBatch(0)
             }
 

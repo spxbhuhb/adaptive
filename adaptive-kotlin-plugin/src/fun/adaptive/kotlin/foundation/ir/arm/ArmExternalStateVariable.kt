@@ -13,7 +13,7 @@ class ArmExternalStateVariable(
     override val name: String,
     override val type : IrType,
     override val isInstructions: Boolean,
-    val symbol : IrSymbol
+    val symbol : IrSymbol?
 ) : ArmStateVariable {
 
     override fun matches(symbol: IrSymbol): Boolean = (symbol == this.symbol)

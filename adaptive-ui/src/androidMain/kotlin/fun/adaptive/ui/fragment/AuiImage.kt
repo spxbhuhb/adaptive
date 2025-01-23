@@ -22,14 +22,11 @@ class AuiImage(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<View>(adapter, parent, index, 1, stateSize()) {
+) : AbstractAuiFragment<View>(adapter, parent, index, stateSize()) {
 
     override val receiver = ImageView(adapter.context)
 
     private val content: GraphicsResourceSet
-        by stateVariable()
-
-    val fakeInstructions: AdaptiveInstructionGroup
         by stateVariable()
 
     override fun auiPatchInternal() {

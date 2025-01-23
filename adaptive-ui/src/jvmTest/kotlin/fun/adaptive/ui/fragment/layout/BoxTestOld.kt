@@ -121,8 +121,8 @@ class BoxTestOld {
             box(C1, AdaptiveInstructionGroup(testInstructions)) {
                 maxSize
 
-                space(*f1) .. F1 .. width { 120.dp } .. height { 20.dp }
-                space(*f2) .. F2 .. width { 160.dp } .. height { 20.dp }
+                space(AdaptiveInstructionGroup(f1)) .. F1 .. width { 120.dp } .. height { 20.dp }
+                space(AdaptiveInstructionGroup(f2)) .. F2 .. width { 160.dp } .. height { 20.dp }
             }
 
         }.checks()
@@ -155,8 +155,6 @@ class BoxTestOld {
                 }
             }
         }.apply {
-            println((firstWith<Name>() as AbstractAuiFragment<*>).dumpLayout(""))
-
             assertFinal(name("box"), 0, 0, 80, 80)
             assertFinal(name("col"), 0, 0, 80, 80)
             assertFinal(name("row-0"), 0, 0, 80, 40)

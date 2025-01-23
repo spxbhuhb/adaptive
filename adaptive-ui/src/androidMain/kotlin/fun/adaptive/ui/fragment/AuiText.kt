@@ -17,14 +17,11 @@ class AuiText(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<View>(adapter, parent, index, 1, stateSize()) {
+) : AbstractAuiFragment<View>(adapter, parent, index, stateSize()) {
 
     override val receiver = TextView(adapter.context)
 
     private val content: Any?
-        by stateVariable()
-
-    val fakeInstructions: AdaptiveInstructionGroup
         by stateVariable()
 
     override fun auiPatchInternal() {

@@ -15,7 +15,7 @@ open class CanvasFillText(
     adapter: CanvasAdapter,
     parent: AdaptiveFragment,
     index: Int,
-) : CanvasFragment(adapter, parent, index, 3, stateSize()) {
+) : CanvasFragment(adapter, parent, index, stateSize()) {
 
     val x: Double
         by stateVariable()
@@ -24,9 +24,6 @@ open class CanvasFillText(
         by stateVariable()
 
     val text: String
-        by stateVariable()
-
-    val fakeInstructions: AdaptiveInstructionGroup
         by stateVariable()
 
     override fun draw() {

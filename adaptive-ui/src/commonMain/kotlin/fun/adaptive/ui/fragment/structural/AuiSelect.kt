@@ -12,7 +12,7 @@ class AuiSelect<RT, CRT : RT>(
     adapter: AbstractAuiAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     index: Int,
-) : AuiStructural<RT, CRT>(adapter, parent, index, 2), AdaptiveSelectLogic {
+) : AuiStructural<RT, CRT>(adapter, parent, index, 3), AdaptiveSelectLogic {
 
     override val createClosure: AdaptiveClosure
         get() = parent !!.thisClosure

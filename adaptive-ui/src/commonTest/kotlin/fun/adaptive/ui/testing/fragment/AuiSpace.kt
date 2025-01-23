@@ -5,6 +5,7 @@ package `fun`.adaptive.ui.testing.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.testing.AuiTestAdapter
 import `fun`.adaptive.ui.testing.TestReceiver
@@ -14,7 +15,7 @@ open class AuiSpace(
     adapter: AuiTestAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<TestReceiver>(adapter, parent, index, 0, 1) {
+) : AbstractAuiFragment<TestReceiver>(adapter, parent, index, stateSize()) {
 
     override val receiver = TestReceiver()
 

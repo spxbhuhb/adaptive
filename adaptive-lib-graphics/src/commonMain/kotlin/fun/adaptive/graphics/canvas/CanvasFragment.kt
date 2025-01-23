@@ -12,9 +12,8 @@ abstract class CanvasFragment(
     adapter: CanvasAdapter,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
-    instructionsIndex: Int,
     stateSize: Int
-) : AdaptiveFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize) {
+) : AdaptiveFragment(adapter, parent, declarationIndex, stateSize) {
 
     val canvasAdapter = adapter
 
@@ -30,7 +29,7 @@ abstract class CanvasFragment(
         Unit
 
     override fun genPatchInternal(): Boolean {
-        if (instructionIndex != - 1 && haveToPatch(dirtyMask, 1 shl instructionIndex)) {
+        if (haveToPatch(dirtyMask, 1)) {
             renderData = GraphicsRenderData().also { rd -> instructions.applyTo(rd) }
         }
         return false

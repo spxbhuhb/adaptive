@@ -25,7 +25,7 @@ fun box(): String {
     val s1 = adapter.first<AdaptiveS1>(true)
     s1.s0(12)
 
-    if (adapter.rootFragment.children.first().state[0] != 12) return "Fail: a != 12"
+    if (adapter.firstFragment.state[1] != 12) return "Fail: a != 12"
 
     return "OK"
 }

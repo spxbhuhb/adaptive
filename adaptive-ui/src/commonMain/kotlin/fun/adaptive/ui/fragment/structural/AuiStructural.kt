@@ -14,7 +14,7 @@ open class AuiStructural<RT, CRT : RT>(
     parent: AdaptiveFragment?,
     index: Int,
     stateSize: Int
-) : AbstractContainer<RT, CRT>(adapter, parent, index, - 1, stateSize) {
+) : AbstractContainer<RT, CRT>(adapter, parent, index, stateSize) {
 
     @Suppress("LeakingThis")
     override val receiver = adapter.makeStructuralReceiver(this)

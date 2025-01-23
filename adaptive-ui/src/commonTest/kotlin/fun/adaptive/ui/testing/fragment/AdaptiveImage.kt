@@ -10,22 +10,18 @@ import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.testing.AuiTestAdapter
 import `fun`.adaptive.ui.testing.TestReceiver
-import `fun`.adaptive.utility.checkIfInstance
 
 @AdaptiveActual("test")
 open class AdaptiveImage(
     adapter: AuiTestAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<TestReceiver>(adapter, parent, index, 1, stateSize()) {
+) : AbstractAuiFragment<TestReceiver>(adapter, parent, index, stateSize()) {
 
     override val receiver = TestReceiver()
 
     @Suppress("unused")
     private val res: GraphicsResourceSet
-        by stateVariable()
-
-    val fakeInstructions: AdaptiveInstructionGroup
         by stateVariable()
 
     override fun auiPatchInternal() = Unit

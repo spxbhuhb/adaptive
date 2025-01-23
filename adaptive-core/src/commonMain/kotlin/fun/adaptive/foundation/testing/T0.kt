@@ -9,7 +9,7 @@ package `fun`.adaptive.foundation.testing
 import `fun`.adaptive.foundation.*
 
 @AdaptiveExpect("test")
-fun T0() {
+fun T0() : AdaptiveFragment {
     manualImplementation()
 }
 
@@ -18,7 +18,7 @@ class AdaptiveT0(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveTestFragment(adapter, parent, index, 0) {
+) : AdaptiveTestFragment(adapter, parent, index, 1) {
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? = null
 

@@ -6,12 +6,10 @@ package `fun`.adaptive.ui.fragment
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
-import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.resource.image.ImageResourceSet
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
-import `fun`.adaptive.utility.checkIfInstance
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLImageElement
@@ -21,15 +19,12 @@ open class AuiImage(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 1, stateSize()) {
+) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, stateSize()) {
 
     override val receiver: HTMLImageElement =
         document.createElement("img") as HTMLImageElement
 
     private val res: ImageResourceSet
-        by stateVariable()
-
-    val fakeInstructions: AdaptiveInstructionGroup
         by stateVariable()
 
     override fun auiPatchInternal() {

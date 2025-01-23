@@ -33,7 +33,7 @@ class AccessTest {
     fun test() {
         val adapter = AdaptiveTestAdapter()
 
-        AdaptiveAccessBindingTest(adapter, null, 0).apply {
+        AdaptiveAccessBindingTest(adapter, null, 1).apply {
             create()
             mount()
         }
@@ -43,31 +43,31 @@ class AccessTest {
                 listOf(
                     //@formatter:off
                     TraceEvent("AdaptiveAccessBindingTest", 2, "before-Create", ""),
-                    TraceEvent("AdaptiveAccessBindingTest", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
-                    TraceEvent("AdaptiveAccessBindingTest", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
-                    TraceEvent("AdaptiveAccessBindingTest", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
-                    TraceEvent("AdaptiveAccessBindingTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
+                    TraceEvent("AdaptiveAccessBindingTest", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null, null]"),
+                    TraceEvent("AdaptiveAccessBindingTest", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null, null]"),
+                    TraceEvent("AdaptiveAccessBindingTest", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [null, null]"),
+                    TraceEvent("AdaptiveAccessBindingTest", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [null, 12]"),
                     TraceEvent("AdaptiveAccessor", 3, "before-Create", ""),
-                    TraceEvent("AdaptiveAccessor", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-                    TraceEvent("AdaptiveAccessBindingTest", 2, "before-Add-Binding", "binding: AdaptiveStateVariableBinding(2, 0, 0, 3, 0, null, kotlin.Int, null)"),
-                    TraceEvent("AdaptiveAccessBindingTest", 2, "after-Add-Binding", "binding: AdaptiveStateVariableBinding(2, 0, 0, 3, 0, null, kotlin.Int, null)"),
-                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, null, kotlin.Int, null)]"),
-                    TraceEvent("AdaptiveAccessor", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, null, kotlin.Int, null)]"),
-                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [AdaptiveStateVariableBinding(2, 0, 0, 3, 0, null, kotlin.Int, null)]"),
+                    TraceEvent("AdaptiveAccessor", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null]"),
+                    TraceEvent("AdaptiveAccessBindingTest", 2, "before-Add-Binding", "binding: AdaptiveStateVariableBinding(2, 1, 1, 3, 1, null, kotlin.Int, null)"),
+                    TraceEvent("AdaptiveAccessBindingTest", 2, "after-Add-Binding", "binding: AdaptiveStateVariableBinding(2, 1, 1, 3, 1, null, kotlin.Int, null)"),
+                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, AdaptiveStateVariableBinding(2, 1, 1, 3, 1, null, kotlin.Int, null)]"),
+                    TraceEvent("AdaptiveAccessor", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, AdaptiveStateVariableBinding(2, 1, 1, 3, 1, null, kotlin.Int, null)]"),
+                    TraceEvent("AdaptiveAccessor", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [null, AdaptiveStateVariableBinding(2, 1, 1, 3, 1, null, kotlin.Int, null)]"),
                     TraceEvent("AdaptiveT1", 4, "before-Create", ""),
-                    TraceEvent("AdaptiveT1", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null]"),
-                    TraceEvent("AdaptiveT1", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
-                    TraceEvent("AdaptiveT1", 4, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [12]"),
-                    TraceEvent("AdaptiveT1", 4, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [12]"),
+                    TraceEvent("AdaptiveT1", 4, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null]"),
+                    TraceEvent("AdaptiveT1", 4, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, 12]"),
+                    TraceEvent("AdaptiveT1", 4, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, 12]"),
+                    TraceEvent("AdaptiveT1", 4, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [null, 12]"),
                     TraceEvent("AdaptiveT1", 4, "after-Create", ""),
                     TraceEvent("AdaptiveAccessor", 3, "after-Create", ""),
                     TraceEvent("AdaptiveAccessBindingTest", 2, "after-Create", ""),
-                    TraceEvent("AdaptiveAccessBindingTest", 2, "before-Mount"),
-                    TraceEvent("AdaptiveAccessor", 3, "before-Mount"),
-                    TraceEvent("AdaptiveT1", 4, "before-Mount"),
-                    TraceEvent("AdaptiveT1", 4, "after-Mount"),
-                    TraceEvent("AdaptiveAccessor", 3, "after-Mount"),
-                    TraceEvent("AdaptiveAccessBindingTest", 2, "after-Mount")
+                    TraceEvent("AdaptiveAccessBindingTest", 2, "before-Mount", ""),
+                    TraceEvent("AdaptiveAccessor", 3, "before-Mount", ""),
+                    TraceEvent("AdaptiveT1", 4, "before-Mount", ""),
+                    TraceEvent("AdaptiveT1", 4, "after-Mount", ""),
+                    TraceEvent("AdaptiveAccessor", 3, "after-Mount", ""),
+                    TraceEvent("AdaptiveAccessBindingTest", 2, "after-Mount", "")
                     //@formatter:on
                 )
             ),
@@ -80,9 +80,9 @@ class AdaptiveAccessBindingTest(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveTestFragment(adapter, parent, index, 1) {
+) : AdaptiveTestFragment(adapter, parent, index, 2) {
 
-    val dependencyMask_0_0 = 0x01 // fragment index: 0, state variable index: 0
+    val dependencyMask_0_1 = 0x02 // fragment index: 0, state variable index: 1
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {
 
@@ -102,15 +102,15 @@ class AdaptiveAccessBindingTest(
 
         when (fragment.declarationIndex) {
             0 -> {
-                if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
-                    setBinding(0, fragment, 0, null, "kotlin.Int", null)
+                if (fragment.haveToPatch(closureMask, dependencyMask_0_1)) {
+                    setBinding(1, fragment, 1, null, "kotlin.Int", null)
                 }
             }
         }
     }
 
     override fun genPatchInternal(): Boolean {
-        state[0] = 12
+        state[1] = 12
         return true
     }
 
@@ -120,9 +120,9 @@ class AdaptiveAccessor(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, -1, 1) {
+) : AdaptiveFragment(adapter, parent, index, 2) {
 
-    val dependencyMask_0_0 = 0x00 // fragment index: 0, state variable index: 0
+    val dependencyMask_0_1 = 0x02 // fragment index: 0, state variable index: 1
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {
 
@@ -142,9 +142,9 @@ class AdaptiveAccessor(
 
         when (fragment.declarationIndex) {
             0 -> {
-                if (fragment.haveToPatch(closureMask, dependencyMask_0_0)) {
+                if (fragment.haveToPatch(closureMask, dependencyMask_0_1)) {
                     @Suppress("UNCHECKED_CAST")
-                    fragment.setStateVariable(0, (getThisClosureVariable(0) as AdaptiveStateVariableBinding<Int>).value)
+                    fragment.setStateVariable(1, (getThisClosureVariable(1) as AdaptiveStateVariableBinding<Int>).value)
                 }
             }
         }

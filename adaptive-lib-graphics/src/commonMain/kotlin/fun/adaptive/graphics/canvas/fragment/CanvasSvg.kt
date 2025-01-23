@@ -14,7 +14,6 @@ import `fun`.adaptive.graphics.svg.parse.SvgInstruction
 import `fun`.adaptive.graphics.svg.parse.parseSvg
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
-import `fun`.adaptive.utility.checkIfInstance
 import `fun`.adaptive.utility.safeCall
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,14 +24,11 @@ open class CanvasSvg(
     adapter: CanvasAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : CanvasFragment(adapter, parent, index, 1, stateSize()) {
+) : CanvasFragment(adapter, parent, index, stateSize()) {
 
     val svgAdapter = SvgAdapter(adapter, canvas).also { it.trace = adapter.trace }
 
     var resource: GraphicsResourceSet
-        by stateVariable()
-
-    val fakeInstructions: AdaptiveInstructionGroup
         by stateVariable()
 
     var data: ByteArray = byteArrayOf()
@@ -48,7 +44,7 @@ open class CanvasSvg(
             }
         }
 
-        if (data.isNotEmpty() && haveToPatch(fakeInstructions)) {
+        if (data.isNotEmpty() && haveToPatch(dirtyMask, 1)) {
             parseAndDraw()
         }
 

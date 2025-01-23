@@ -14,11 +14,12 @@ import org.jetbrains.kotlin.ir.types.IrType
 open class ArmValueArgument(
     armClass: ArmClass,
     val argumentIndex: Int,
-    val type : IrType,
+    val type: IrType,
     override val irExpression: IrExpression,
     dependencies: ArmDependencies,
-    val detachExpressions : List<ArmDetachExpression> = emptyList(),
-    val isInstructions : Boolean = false,
+    var detachExpressions: List<ArmDetachExpression> = emptyList(),
+    val isInstructions: Boolean = false,
+    val instructions: List<IrExpression> = emptyList()
 ) : ArmExpression(armClass, irExpression, dependencies) {
 
     open fun toPatchExpression(
@@ -27,7 +28,7 @@ open class ArmValueArgument(
         closure: ArmClosure,
         fragmentParameter: IrValueParameter,
         closureDirtyMask: IrVariable
-    ) : IrExpression? =
+    ): IrExpression? =
         ArmValueArgumentBuilder(
             classBuilder,
             this,

@@ -27,10 +27,10 @@ interface AdaptiveLoopLogic<IT> {
 
     @Suppress("UNCHECKED_CAST")
     val iterator
-        get() = state[0] as Iterator<IT>
+        get() = state[1] as Iterator<IT>
 
     val builder
-        get() = state[1] as BoundFragmentFactory
+        get() = state[2] as BoundFragmentFactory
 
     fun genPatchInternal() : Boolean {
         if (dirtyMask != cleanStateMask) {
@@ -51,7 +51,7 @@ interface AdaptiveLoopLogic<IT> {
                 if (isMounted) f.mount()
             } else {
                 children[index].also {
-                    it.setStateVariable(0, loopVariable)
+                    it.setStateVariable(1, loopVariable)
                     it.patch()
                 }
             }
@@ -75,13 +75,14 @@ interface AdaptiveLoopLogic<IT> {
     fun addAnonymous(iteratorValue: IT): AdaptiveFragment =
         makeAnonymous().also {
             children.add(it)
-            it.setStateVariable(0, iteratorValue)
+            it.setStateVariable(1, iteratorValue)
         }
 
     fun stateToTraceString(): String {
-        val s0 = state[0]?.let { it::class.simpleName ?: "<iterator>" }
-        val s1 = state[1]?.toString()
-        return "[$s0,$s1]"
+        val i = state[0]
+        val s0 = state[1]?.let { it::class.simpleName ?: "<iterator>" }
+        val s1 = state[2]?.toString()
+        return "[$i,$s0,$s1]"
     }
 
 }
@@ -90,7 +91,7 @@ class AdaptiveLoop<IT>(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int,
-) : AdaptiveFragment(adapter, parent, index, - 1, 2), AdaptiveLoopLogic<IT> {
+) : AdaptiveFragment(adapter, parent, index, 3), AdaptiveLoopLogic<IT> {
 
     override val createClosure: AdaptiveClosure
         get() = parent !!.thisClosure
@@ -101,7 +102,7 @@ class AdaptiveLoop<IT>(
 
     override fun genPatchInternal(): Boolean = super<AdaptiveLoopLogic>.genPatchInternal()
 
-    override fun makeAnonymous() = AdaptiveAnonymous(this, 0, 1, builder)
+    override fun makeAnonymous() = AdaptiveAnonymous(this, 0, 2, builder)
 
     // ---- Development support --------------------------------------------
 

@@ -18,15 +18,12 @@ open class AuiFlowText(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 1, stateSize()) {
+) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, stateSize()) {
 
     override val receiver: HTMLDivElement =
         document.createElement("div") as HTMLDivElement
 
     private val content: String
-        by stateVariable()
-
-    val fakeInstructions: AdaptiveInstructionGroup
         by stateVariable()
 
     override fun auiPatchInternal() {

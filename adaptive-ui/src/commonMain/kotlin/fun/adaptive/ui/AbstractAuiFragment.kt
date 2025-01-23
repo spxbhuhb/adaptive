@@ -12,9 +12,8 @@ abstract class AbstractAuiFragment<RT>(
     adapter: AbstractAuiAdapter<RT, *>,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
-    instructionsIndex: Int,
     stateSize: Int
-) : AdaptiveFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize) {
+) : AdaptiveFragment(adapter, parent, declarationIndex, stateSize) {
 
     abstract val receiver: RT
 
@@ -96,8 +95,7 @@ abstract class AbstractAuiFragment<RT>(
      */
     open fun patchInstructions() {
 
-        if (instructionIndex == - 1) return
-        if (! haveToPatch(dirtyMask, 1 shl instructionIndex)) return
+        if ( ! haveToPatch(dirtyMask, 1)) return
 
         renderData = AuiRenderData(uiAdapter, previousRenderData, uiAdapter.themeFor(this), instructions)
 
@@ -192,17 +190,26 @@ abstract class AbstractAuiFragment<RT>(
 
     open fun updateLayout(updateId: Long, item: AbstractAuiFragment<*>?) {
         if (updateBatchId == updateId) return
+
+        // The previous render data is obsolete when the fragment was not patched in this batch,
+        // but a descendant delegated the layout update. In this case contains data that belongs
+        // to the one but last render, not the last render.
+
+        val obsoletePreviousData = ((updateBatchId - updateId) != 1L)
+
         updateBatchId = updateId
 
         if (shouldUpdateSelf()) {
             val layout = renderData.layout
+            val baseData = if (obsoletePreviousData) renderData else previousRenderData
+
             computeLayout(
-                layout?.instructedWidth ?: previousRenderData.finalWidth,
-                layout?.instructedHeight ?: previousRenderData.finalHeight
+                layout?.instructedWidth ?: baseData.finalWidth,
+                layout?.instructedHeight ?: baseData.finalHeight
             )
             placeLayout(
-                layout?.instructedTop ?: previousRenderData.finalTop,
-                layout?.instructedLeft ?: previousRenderData.finalLeft
+                layout?.instructedTop ?: baseData.finalTop,
+                layout?.instructedLeft ?: baseData.finalLeft
             )
         } else {
             renderData.layoutFragment?.updateLayout(updateId, this)

@@ -10,11 +10,9 @@ import `fun`.adaptive.graphics.canvas.CanvasAdapter
 import `fun`.adaptive.graphics.canvas.fragment.CanvasSvg
 import `fun`.adaptive.graphics.canvas.platform.ActualBrowserCanvas
 import `fun`.adaptive.graphics.svg.svg
-import `fun`.adaptive.resource.graphics.GraphicsResource
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
-import `fun`.adaptive.utility.checkIfInstance
 import org.w3c.dom.HTMLElement
 
 @AdaptiveActual(svg)
@@ -22,7 +20,7 @@ class SvgSvg(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 1, stateSize()) {
+) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, stateSize()) {
 
     val canvas = ActualBrowserCanvas()
 
@@ -36,9 +34,6 @@ class SvgSvg(
     val resource: GraphicsResourceSet
         by stateVariable()
 
-    val fakeInstructions: AdaptiveInstructionGroup
-        by stateVariable()
-
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {
         if (declarationIndex != 0) invalidIndex(declarationIndex)
         return CanvasSvg(canvasAdapter, this, declarationIndex).also { it.create() }
@@ -49,10 +44,10 @@ class SvgSvg(
         (fragment as CanvasSvg).also {
             if (it.isInit || it.resource != resource) {
                 it.resource = resource
-                it.dirtyMask = it.dirtyMask or 1
+                it.dirtyMask = it.dirtyMask or 2
             }
-            it.set(it.instructionIndex, instructions)
-            it.dirtyMask = it.dirtyMask or 2
+            it.set(0, instructions)
+            it.dirtyMask = it.dirtyMask or 1
         }
     }
 

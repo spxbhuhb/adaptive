@@ -3,7 +3,6 @@
  */
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.api.validate
 import `fun`.adaptive.auto.api.autoCollection
 import `fun`.adaptive.auto.api.autoCollectionOrigin
 import `fun`.adaptive.auto.api.autoItem
@@ -12,7 +11,6 @@ import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
-import `fun`.adaptive.foundation.instruction.traceAll
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.api.GroveFragmentFactory
@@ -69,10 +67,6 @@ class FdiViewModel {
             listOf(
                 LfmMapping(
                     dependencyMask = 0,
-                    LfmConst("T", "Hello World!")
-                ),
-                LfmMapping(
-                    dependencyMask = 0,
                     LfmConst(
                         "Lfun.adaptive.foundation.instruction.AdaptiveInstructionGroup;",
                         AdaptiveInstructionGroup(
@@ -81,6 +75,10 @@ class FdiViewModel {
                             )
                         )
                     )
+                ),
+                LfmMapping(
+                    dependencyMask = 0,
+                    LfmConst("T", "Hello World!")
                 )
             )
         )

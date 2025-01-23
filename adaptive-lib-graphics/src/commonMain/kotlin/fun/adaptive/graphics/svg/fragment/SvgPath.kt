@@ -6,6 +6,7 @@ package `fun`.adaptive.graphics.svg.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.graphics.svg.SvgAdapter
 import `fun`.adaptive.graphics.svg.SvgFragment
 import `fun`.adaptive.graphics.svg.render.SvgPathRenderData
@@ -15,7 +16,7 @@ class SvgPath(
     adapter: SvgAdapter,
     parent : AdaptiveFragment?,
     declarationIndex : Int
-) : SvgFragment<SvgPathRenderData>(adapter, parent, declarationIndex, 0, 1) {
+) : SvgFragment<SvgPathRenderData>(adapter, parent, declarationIndex, stateSize()) {
 
     val path = canvas.newPath()
 

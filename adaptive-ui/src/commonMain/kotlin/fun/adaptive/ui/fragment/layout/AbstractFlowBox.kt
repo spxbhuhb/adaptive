@@ -8,7 +8,6 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.instruction.layout.FlowItemLimit
-import `fun`.adaptive.utility.firstOrNullIfInstance
 import kotlin.math.max
 
 abstract class AbstractFlowBox<RT, CRT : RT>(
@@ -16,7 +15,7 @@ abstract class AbstractFlowBox<RT, CRT : RT>(
     parent: AdaptiveFragment?,
     declarationIndex: Int
 ) : AbstractContainer<RT, CRT>(
-    adapter, parent, declarationIndex, 0, 2
+    adapter, parent, declarationIndex, 2
 ) {
 
     class Row<RT>(

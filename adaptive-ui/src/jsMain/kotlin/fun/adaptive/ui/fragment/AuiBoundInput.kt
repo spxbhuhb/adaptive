@@ -14,7 +14,6 @@ import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
 import `fun`.adaptive.ui.instruction.input.InputPlaceholder
 import `fun`.adaptive.ui.instruction.input.MaxLength
-import `fun`.adaptive.utility.checkIfInstance
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
@@ -24,7 +23,7 @@ open class AuiBoundInput(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int,
-) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 0, stateSize()) {
+) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, stateSize()) {
 
     // 0 - instructions
     // 1 - binding
@@ -34,9 +33,6 @@ open class AuiBoundInput(
 
     override val receiver: HTMLInputElement =
         document.createElement("input") as HTMLInputElement
-
-    val fakeInstructions: AdaptiveInstructionGroup
-        by stateVariable()
 
     private val binding: AdaptiveStateVariableBinding<Any>
         by stateVariable()

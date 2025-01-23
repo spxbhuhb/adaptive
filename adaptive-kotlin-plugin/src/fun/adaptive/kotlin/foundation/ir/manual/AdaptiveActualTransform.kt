@@ -30,7 +30,7 @@ class AdaptiveActualTransform(
 
         val propertyMap = transformProperties(declaration)
 
-        transformConstructors(declaration, propertyMap.size)
+        transformConstructors(declaration, propertyMap.size + 1)
 
         transformHaveToPatch(declaration, propertyMap)
 
@@ -39,7 +39,7 @@ class AdaptiveActualTransform(
 
     fun transformProperties(declaration: IrClass): Map<IrSimpleFunctionSymbol, Int> {
 
-        var index = 0 // index 0 is reserved for instructions
+        var index = 1 // index 0 is reserved for instructions
         val propertyMap = mutableMapOf<IrSimpleFunctionSymbol, Int>()
 
         for (property in declaration.properties) {

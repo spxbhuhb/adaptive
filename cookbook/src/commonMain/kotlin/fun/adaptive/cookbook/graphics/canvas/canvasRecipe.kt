@@ -23,7 +23,7 @@ import kotlin.time.Duration.Companion.milliseconds
 @Adaptive
 fun canvasRecipe() {
     flowBox {
-        //basicCanvas()
+        basicCanvas()
         networkCanvas()
     }
 }

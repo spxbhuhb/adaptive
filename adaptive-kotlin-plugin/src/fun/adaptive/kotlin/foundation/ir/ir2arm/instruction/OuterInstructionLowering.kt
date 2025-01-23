@@ -5,6 +5,7 @@ package `fun`.adaptive.kotlin.foundation.ir.ir2arm.instruction
 
 import `fun`.adaptive.kotlin.foundation.Names
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
+import `fun`.adaptive.kotlin.foundation.ir.arm.ArmClass
 import `fun`.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
@@ -15,7 +16,8 @@ import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 
 class OuterInstructionLowering(
-    override val pluginContext: FoundationPluginContext
+    override val pluginContext: FoundationPluginContext,
+    val armClass: ArmClass
 ) : IrElementTransformerVoid(), AdaptiveAnnotationBasedExtension {
 
     override fun visitTypeOperator(expression: IrTypeOperatorCall): IrExpression {
@@ -72,9 +74,9 @@ class OuterInstructionLowering(
 
         val (renderCall, instructions) = flattenInstructionCalls(expression)
 
-        val valueParameters = renderCall.symbol.owner.valueParameters
-
-        addInstructions(renderCall, valueParameters, instructions)
+        // note that `renderCall` is used here, not `expression`
+        val store = armClass.instructions.getOrPut(renderCall) { mutableListOf() }
+        store += instructions
 
         return super.visitCall(renderCall)
     }

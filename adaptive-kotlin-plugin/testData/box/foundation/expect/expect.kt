@@ -23,7 +23,7 @@ open class AdaptiveTest(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     declarationIndex: Int
-) : AdaptiveFragment(adapter, parent, declarationIndex, -1, 0) {
+) : AdaptiveFragment(adapter, parent, declarationIndex, 0) {
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? = null
 
@@ -55,14 +55,14 @@ fun box() : String {
 
     return adapter.assert(listOf(
         TraceEvent("<root>", 2, "before-Create", ""),
-        TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
-        TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
-        TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
-        TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: []"),
+        TraceEvent("<root>", 2, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
+        TraceEvent("<root>", 2, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
+        TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
+        TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [null]"),
         TraceEvent("AdaptiveSequence", 3, "before-Create", ""),
-        TraceEvent("AdaptiveSequence", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: []"),
-        TraceEvent("AdaptiveSequence", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [1, 2]"),
-        TraceEvent("AdaptiveSequence", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [1, 2]"),
+        TraceEvent("AdaptiveSequence", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null,null]"),
+        TraceEvent("AdaptiveSequence", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null,[1, 2]]"),
+        TraceEvent("AdaptiveSequence", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null,[1, 2]]"),
         TraceEvent("AdaptiveTest", 4, "before-Create", ""),
         TraceEvent("AdaptiveTest", 4, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
         TraceEvent("AdaptiveTest", 4, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
@@ -75,7 +75,7 @@ fun box() : String {
         TraceEvent("AdaptiveTest", 5, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: []"),
         TraceEvent("AdaptiveTest", 5, "after-Patch-Internal", "createMask: 0xffffffff thisMask: 0x00000000 state: []"),
         TraceEvent("AdaptiveTest", 5, "after-Create", ""),
-        TraceEvent("AdaptiveSequence", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [1, 2]"),
+        TraceEvent("AdaptiveSequence", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [null,[1, 2]]"),
         TraceEvent("AdaptiveSequence", 3, "after-Create", ""),
         TraceEvent("<root>", 2, "after-Create", ""),
         TraceEvent("<root>", 2, "before-Mount", ""),

@@ -65,4 +65,8 @@ interface AdaptiveAnnotationBasedExtension {
         return true
     }
 
+    fun IrType.isInstruction(pluginContext: FoundationPluginContext) =
+        isSubtypeOfClass(pluginContext.adaptiveInstructionClass) ||
+            (isArray() && getArrayElementType(pluginContext.irBuiltIns).isSubtypeOfClass(pluginContext.adaptiveInstructionClass))
+
 }

@@ -69,8 +69,8 @@ class IrFunction2ArmClass(
 
         StateDefinitionTransform(pluginContext, armClass, if (isRoot) 1 else 0).apply { transform() }
 
-        val innerInstructionLowering = InnerInstructionLowering(pluginContext)
-        val outerInstructionLowering = OuterInstructionLowering(pluginContext)
+        val innerInstructionLowering = InnerInstructionLowering(pluginContext, armClass)
+        val outerInstructionLowering = OuterInstructionLowering(pluginContext, armClass)
 
         val renderingStatements = armClass.originalRenderingStatements
             .onEach { it.acceptVoid(innerInstructionLowering) }
@@ -157,6 +157,7 @@ class IrFunction2ArmClass(
 
             val sequenceState = listOf(
                 ArmImplicitStateVariable(armClass, 0, closure.size, irNull()),
+                ArmImplicitStateVariable(armClass, 1, closure.size + 1, irNull()),
             )
 
             ArmSequence(
@@ -215,10 +216,13 @@ class IrFunction2ArmClass(
         val loopIndex = nextFragmentIndex
 
         val renderingState = listOf(
+
+            ArmImplicitStateVariable(armClass, 0, closure.size, irNull()),
+
             ArmExternalStateVariable(
                 armClass,
-                indexInState = 0,
-                indexInClosure = closure.size,
+                indexInState = 1,
+                indexInClosure = closure.size + 1,
                 name = irLoopVariable.name.identifier,
                 type = irLoopVariable.type,
                 isInstructions = false,
@@ -258,9 +262,36 @@ class IrFunction2ArmClass(
             else -> throw IllegalStateException("non-adaptive call in rendering: ${irCall.dumpKotlinLike()}")
         }
 
+    /**
+     * The instruction argument is present for all adaptive calls. It is paired with the first state variable
+     * which is instructions by definition.
+     *
+     * irConst(0) is a placeholder which is replaced by an AdaptiveInstructionGroup constructor call
+     * or a get object for `emptyInstructions`.
+     */
+    fun addInstructionsArgument(armCall: ArmCall) {
+        val instructions = armClass.instructions[armCall.irCall] ?: emptyList()
+
+        val detachExpressions = mutableListOf<ArmDetachExpression>()
+        instructions.forEach { transformDetachExpression(it, detachExpressions) }
+
+        armCall.arguments += ArmValueArgument(
+            armClass,
+            argumentIndex = 0,
+            pluginContext.adaptiveInstructionGroupType,
+            irConst(0), // placeholder
+            instructions.flatMap { it.dependencies() },
+            detachExpressions = detachExpressions,
+            isInstructions = true,
+            instructions = instructions
+        )
+    }
+
     fun transformHydratedCall(irCall: IrCall): ArmRenderingStatement {
         // hydrated calls are always expect calls
         val armCall = ArmCall(armClass, nextFragmentIndex, closure, true, irCall, isExpectCall = true)
+
+        addInstructionsArgument(armCall)
 
         // transform the model argument
 
@@ -298,6 +329,8 @@ class IrFunction2ArmClass(
         val armCall = ArmCall(armClass, nextFragmentIndex, closure, true, irCall, irCall.isExpectCall)
         val valueParameters = irCall.symbol.owner.valueParameters
 
+        addInstructionsArgument(armCall)
+
         for (argumentIndex in 0 until irCall.valueArgumentsCount) {
             val parameter = valueParameters[argumentIndex]
             val expression = irCall.getValueArgument(argumentIndex)
@@ -328,6 +361,8 @@ class IrFunction2ArmClass(
         val armCall = ArmCall(armClass, nextFragmentIndex, closure, false, irCall, false)
         val arguments = (irCall.dispatchReceiver !!.type as IrSimpleTypeImpl).arguments
 
+        addInstructionsArgument(armCall)
+
         for (argumentIndex in 0 until arguments.size - 1) {  // skip the return type
             val parameter = (arguments[argumentIndex] as IrSimpleTypeImpl)
             val expression = irCall.getValueArgument(argumentIndex) ?: continue
@@ -346,6 +381,13 @@ class IrFunction2ArmClass(
         expression: IrExpression?
     ): ArmValueArgument? =
         when {
+            parameter.isInstructions -> {
+                if (expression != null) {
+                    transformInstructionsVararg(expression, armCall)
+                }
+                null
+            }
+
             expression == null -> {
                 ArmDefaultValueArgument(
                     armClass,
@@ -380,18 +422,13 @@ class IrFunction2ArmClass(
                 null
             }
 
-            parameter.isInstructions -> {
-                val detachExpressions = transformDetachExpressions(expression)
-                ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies(skipLambdas = true), detachExpressions, isInstructions = true)
-            }
-
             else -> {
                 ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies())
             }
         }
 
     /**
-     * The hhigher-order function transform.
+     * The higher-order function transform.
      */
     fun transformFragmentFactoryArgument(
         expression: IrFunctionExpression
@@ -400,10 +437,12 @@ class IrFunction2ArmClass(
 
         var stateVariableIndex = closure.size
 
-        val innerState = expression.function.valueParameters.mapIndexed { indexInState, parameter ->
+        val innerState = listOf(
+            ArmImplicitStateVariable(armClass, 0, stateVariableIndex ++, irNull()) // instructions
+        ) + expression.function.valueParameters.mapIndexed { indexInState, parameter ->
             ArmExternalStateVariable(
                 armClass,
-                indexInState,
+                indexInState + 1, // +1 for instructions
                 stateVariableIndex ++,
                 parameter.name.identifier,
                 parameter.type,
@@ -494,20 +533,53 @@ class IrFunction2ArmClass(
         return result
     }
 
+    /**
+     * Replace the first argument (instructions by definition) with one that contains the
+     * instructions passed in the vararg argument as well.
+     */
+    fun transformInstructionsVararg(expression: IrExpression, armCall: ArmCall) {
+        check(expression is IrVararg)
+
+        val original = armCall.arguments[0]
+
+        // I hope casting to IrExpression is OK here. IrVarargElement is rather general, I don't know why.
+        // Order is important here, vararg instructions should be first so precedence rules are applied.
+
+        val allDependencies = expression.dependencies(skipLambdas = true) + original.dependencies
+        val allInstructions = expression.elements.map { it as IrExpression } + original.instructions
+        val allDetachExpressions = transformDetachExpressions(expression) + original.detachExpressions
+
+        armCall.arguments[0] =
+
+            ArmValueArgument(
+                armClass,
+                argumentIndex = 0,
+                pluginContext.adaptiveInstructionGroupType,
+                irConst(0), // placeholder
+                allDependencies,
+                detachExpressions = allDetachExpressions,
+                isInstructions = true,
+                instructions = allInstructions
+            )
+    }
+
     fun transformDetachExpressions(expression: IrExpression): List<ArmDetachExpression> {
         check(expression is IrVararg)
 
         val result = mutableListOf<ArmDetachExpression>()
 
         expression.elements.forEach { element ->
-            when (element) {
-                is IrCall -> transformDetach(element.symbol.owner.valueParameters, element, result)
-                is IrConstructorCall -> transformDetach(element.symbol.owner.valueParameters, element, result)
-            }
-
+            transformDetachExpression(element as IrExpression, result)
         }
 
         return result
+    }
+
+    fun transformDetachExpression(expression: IrExpression, result: MutableList<ArmDetachExpression>) {
+        when (expression) {
+            is IrCall -> transformDetach(expression.symbol.owner.valueParameters, expression, result)
+            is IrConstructorCall -> transformDetach(expression.symbol.owner.valueParameters, expression, result)
+        }
     }
 
     fun transformDetach(valueParameters: List<IrValueParameter>, accessExpression: IrMemberAccessExpression<*>, result: MutableList<ArmDetachExpression>) {
@@ -588,7 +660,8 @@ class IrFunction2ArmClass(
 
         val selectState = listOf(
             ArmImplicitStateVariable(armClass, 0, closure.size, irNull()),
-            ArmImplicitStateVariable(armClass, 1, closure.size + 1, irNull())
+            ArmImplicitStateVariable(armClass, 1, closure.size + 1, irNull()),
+            ArmImplicitStateVariable(armClass, 2, closure.size + 2, irNull())
         )
 
         armSelect.branches += statement.branches.mapNotNull { irBranch ->

@@ -82,7 +82,7 @@ class Selection(
             }
         }
 
-        item.setStateVariable(item.instructionIndex, AdaptiveInstructionGroup(result))
+        item.setStateVariable(0, AdaptiveInstructionGroup(result))
 
         nextRevision()
     }
@@ -122,8 +122,8 @@ class Selection(
         item.parent?.children?.remove(item)
         item.parent = container
 
-        item.setStateVariable(item.instructionIndex, AdaptiveInstructionGroup(result))
-        item.setDirtyBatch(item.instructionIndex)
+        item.setStateVariable(0, AdaptiveInstructionGroup(result))
+        item.setDirtyBatch(0)
 
         item.mount()
     }

@@ -30,7 +30,7 @@ class WithInfoFunTest {
         }
 
         @Suppress("UNCHECKED_CAST")
-        fun collection() = (adapter.rootFragment.get<Collection<TestData>?>(0))
+        fun collection() = (adapter.rootFragment.get<Collection<TestData>?>(1))
 
         waitFor(1.seconds) { collection() != null }
 

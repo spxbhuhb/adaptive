@@ -692,6 +692,22 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Nested
+    @TestMetadata("testData/box/foundation/query")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Query {
+      @Test
+      public void testAllFilesPresentInQuery() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/query"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+      }
+
+      @Test
+      @TestMetadata("first.kt")
+      public void testFirst() {
+        runTest("testData/box/foundation/query/first.kt");
+      }
+    }
+
+    @Nested
     @TestMetadata("testData/box/foundation/select")
     @TestDataPath("$PROJECT_ROOT")
     public class Select {

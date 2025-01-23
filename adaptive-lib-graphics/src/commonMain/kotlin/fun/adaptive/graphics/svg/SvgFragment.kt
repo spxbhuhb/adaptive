@@ -12,9 +12,8 @@ abstract class SvgFragment<T : SvgRenderData>(
     adapter: SvgAdapter,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
-    instructionsIndex: Int,
     stateSize: Int
-) : AdaptiveFragment(adapter, parent, declarationIndex, instructionsIndex, stateSize) {
+) : AdaptiveFragment(adapter, parent, declarationIndex, stateSize) {
 
     val svgAdapter = adapter
 
@@ -44,7 +43,7 @@ abstract class SvgFragment<T : SvgRenderData>(
     }
 
     fun patchInstructions() {
-        if (instructionIndex != - 1 && haveToPatch(dirtyMask, 1 shl instructionIndex)) {
+        if (haveToPatch(dirtyMask, 1)) {
             renderData = newRenderData().also { rd -> instructions.applyTo(rd) }
         }
     }

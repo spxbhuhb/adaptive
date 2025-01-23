@@ -41,7 +41,7 @@ private fun toSvg(xmlElement: XmlElement, adapter: SvgAdapter, parent: SvgFragme
         else -> throw NotImplementedError("svg type ${xmlElement.tag} is not implemented yet")
     }
 
-    fragment.set(fragment.instructionIndex, AdaptiveInstructionGroup(instructions.toTypedArray() + additionalInstructions))
+    fragment.set(0, AdaptiveInstructionGroup(instructions.toTypedArray() + additionalInstructions))
     // no external patch for SVG fragments when loaded directly
     fragment.genPatchInternal()
 

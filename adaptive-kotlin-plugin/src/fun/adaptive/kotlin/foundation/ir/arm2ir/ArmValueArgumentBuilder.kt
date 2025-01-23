@@ -14,6 +14,8 @@ import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
+import org.jetbrains.kotlin.ir.expressions.impl.IrVarargImpl
+import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 
 open class ArmValueArgumentBuilder(
@@ -25,10 +27,14 @@ open class ArmValueArgumentBuilder(
 ) : ClassBoundIrBuilder(parent) {
 
     open fun genPatchDescendantExpression(patchFun: IrSimpleFunction): IrExpression? =
-        irIf(
-            patchCondition(),
-            patchVariableValue(patchFun)
-        )
+        if (valueArgument.isInstructions && valueArgument.instructions.isEmpty()) {
+            null
+        } else {
+            irIf(
+                patchCondition(),
+                patchVariableValue(patchFun)
+            )
+        }
 
     fun patchCondition(): IrExpression =
         irCall(
@@ -53,18 +59,12 @@ open class ArmValueArgumentBuilder(
     open fun patchVariableValue(patchFun: IrSimpleFunction): IrExpression {
         valueArgument.detachExpressions.forEach { transformDetachExpression(patchFun, it) }
 
-        var valueExpression = valueArgument.irExpression.transformCreateStateAccess(closure, patchFun) { irGet(fragment) }
+        val valueExpression: IrExpression
 
         if (valueArgument.isInstructions) {
-            valueExpression =
-                IrConstructorCallImpl(
-                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                    pluginContext.adaptiveInstructionGroupType,
-                    pluginContext.adaptiveInstructionGroupConstructor,
-                    0, 0
-                ).also { call ->
-                    call.putValueArgument(0, valueExpression)
-                }
+            valueExpression = buildInstructionGroup(patchFun, valueArgument)
+        } else {
+            valueExpression = valueArgument.irExpression.transformCreateStateAccess(closure, patchFun) { irGet(fragment) }
         }
 
         return irSetDescendantStateVariable(
@@ -86,5 +86,27 @@ open class ArmValueArgumentBuilder(
             )
         }
     }
+
+    fun buildInstructionGroup(patchFun: IrSimpleFunction, valueArgument: ArmValueArgument): IrExpression =
+        IrConstructorCallImpl(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            pluginContext.adaptiveInstructionGroupType,
+            pluginContext.adaptiveInstructionGroupConstructor,
+            0, 0
+        ).apply {
+
+            val argument = IrVarargImpl(
+                SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                irBuiltIns.arrayClass.typeWith(pluginContext.adaptiveInstructionType),
+                pluginContext.adaptiveInstructionType
+            ).also {
+                for (instruction in valueArgument.instructions) {
+                    it.elements += instruction.transformCreateStateAccess(closure, patchFun) { irGet(fragment) }
+                }
+            }
+
+            putValueArgument(0, argument)
+        }
+
 
 }

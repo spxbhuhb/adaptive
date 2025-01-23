@@ -63,7 +63,7 @@ class CopyStoreTest {
         val root = adapter.rootFragment
         val t = root.first(true) { tag in it.instructions }
         val t1 = root.first<AdaptiveT1>(true)
-        val value = root.get<T>(0)
+        val value = root.get<T>(1)
 
         assertEquals(T(12), value)
         assertIs<T>(value)
@@ -93,7 +93,7 @@ class CopyStoreTest {
         val root = adapter.rootFragment
         val t = root.first(true) { tag in it.instructions }
         val t1 = root.first<AdaptiveT1>(true)
-        val value = root.get<M>(0)
+        val value = root.get<M>(1)
 
         assertIs<M>(value)
 
@@ -120,7 +120,7 @@ class CopyStoreTest {
         val root = adapter.rootFragment
         val t = root.first(true) { tag in it.instructions }
         val t1 = root.first<AdaptiveT1>(true)
-        val value = root.get<M>(0)
+        val value = root.get<M>(1)
 
         assertIs<M>(value)
 
@@ -145,7 +145,7 @@ class CopyStoreTest {
         }
 
         val root = adapter.rootFragment
-        val value = root.get<T>(0)
+        val value = root.get<T>(1)
 
         assertIs<T>(value)
 

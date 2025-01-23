@@ -4,7 +4,6 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
-import `fun`.adaptive.utility.checkIfInstance
 
 /**
  * A fragment that stores contextual data other fragments may try to find and use.
@@ -15,12 +14,9 @@ class LocalContext(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, 1, 3) {
+) : AdaptiveFragment(adapter, parent, index, 3) {
 
     val context: Any?
-        get() = get(0)
-
-    val fakeInstructions: AdaptiveInstructionGroup
         get() = get(1)
 
     val content: BoundFragmentFactory

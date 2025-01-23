@@ -11,7 +11,7 @@ abstract class AdaptiveTestFragment(
     parent: AdaptiveFragment?,
     index: Int,
     stateSize : Int
-) : AdaptiveFragment(adapter, parent, index, -1, stateSize) {
+) : AdaptiveFragment(adapter, parent, index, stateSize) {
 
     val receiver = TestNode()
 

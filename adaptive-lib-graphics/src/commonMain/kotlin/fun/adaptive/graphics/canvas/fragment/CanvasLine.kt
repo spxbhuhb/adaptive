@@ -9,18 +9,13 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.graphics.canvas.CanvasAdapter
 import `fun`.adaptive.graphics.canvas.CanvasFragment
 import `fun`.adaptive.graphics.canvas.canvas
-import `fun`.adaptive.graphics.svg.api.svgFill
-import `fun`.adaptive.graphics.svg.instruction.SvgFill
-import `fun`.adaptive.ui.api.color
-import `fun`.adaptive.utility.checkIfInstance
-import kotlin.math.PI
 
 @AdaptiveActual(canvas)
 open class CanvasLine(
     adapter: CanvasAdapter,
     parent: AdaptiveFragment,
     index: Int,
-) : CanvasFragment(adapter, parent, index, 4, stateSize()) {
+) : CanvasFragment(adapter, parent, index, stateSize()) {
 
     val x1: Double
         by stateVariable()
@@ -32,9 +27,6 @@ open class CanvasLine(
         by stateVariable()
 
     val y2: Double
-        by stateVariable()
-
-    val fakeInstructions: AdaptiveInstructionGroup
         by stateVariable()
 
     override fun draw() {

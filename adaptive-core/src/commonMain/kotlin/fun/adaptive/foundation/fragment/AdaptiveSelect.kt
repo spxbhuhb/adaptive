@@ -22,12 +22,12 @@ interface AdaptiveSelectLogic {
     val isMounted : Boolean
 
     val stateBranch
-        get() = state[0] as Int
+        get() = state[1] as Int
 
     var shownBranch // -1 means that there is nothing shown, like: `if (condition) div {  }`
-        get() = (state[1] as? Int) ?: -1
+        get() = (state[2] as? Int) ?: -1
         set(v) {
-            state[1] = v
+            state[2] = v
         }
 
     /**
@@ -75,7 +75,7 @@ class AdaptiveSelect(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int,
-) : AdaptiveFragment(adapter, parent, index, -1, 2), AdaptiveSelectLogic {
+) : AdaptiveFragment(adapter, parent, index, 3), AdaptiveSelectLogic {
 
     override val createClosure: AdaptiveClosure
         get() = parent !!.thisClosure

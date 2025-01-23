@@ -5,6 +5,7 @@ package `fun`.adaptive.kotlin.foundation.ir.ir2arm
 
 import `fun`.adaptive.kotlin.common.AbstractIrBuilder
 import `fun`.adaptive.kotlin.foundation.ADAPTIVE_STATE_VARIABLE_LIMIT
+import `fun`.adaptive.kotlin.foundation.Strings
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import `fun`.adaptive.kotlin.foundation.ir.arm.*
 import `fun`.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
@@ -44,8 +45,23 @@ class StateDefinitionTransform(
     }
 
     fun transform() {
+        addInstructions()
         transformParameters()
         transformStatements()
+    }
+
+    fun addInstructions() {
+        ArmExternalStateVariable(
+            armClass,
+            stateVariableIndex,
+            stateVariableIndex,
+            Strings.INSTRUCTIONS,
+            pluginContext.adaptiveInstructionGroupType,
+            isInstructions = true,
+            null
+        ).apply {
+            register(null)
+        }
     }
 
     fun transformParameters() {
@@ -60,6 +76,12 @@ class StateDefinitionTransform(
             // TODO add FIR checker to make sure the selector and the binding type arguments are the same
 
             if (valueParameter.type.isAccessSelector(valueParameter, armClass.stateVariables.lastOrNull()?.type)) {
+                return@forEach
+            }
+
+            // Instructions are added before `transformParameters`. They are the first state variable by definition.
+
+            if (valueParameter.isInstructions) {
                 return@forEach
             }
 
@@ -171,13 +193,15 @@ class StateDefinitionTransform(
         )
     }
 
-    fun ArmStateVariable.register(declaration: IrDeclaration) {
+    fun ArmStateVariable.register(declaration: IrDeclaration?) {
 
-        check(stateVariableIndex < ADAPTIVE_STATE_VARIABLE_LIMIT) { "maximum number of state variables is $ADAPTIVE_STATE_VARIABLE_LIMIT" }
+        if (declaration != null) {
+            check(stateVariableIndex < ADAPTIVE_STATE_VARIABLE_LIMIT) { "maximum number of state variables is $ADAPTIVE_STATE_VARIABLE_LIMIT (with instructions)" }
 
-        check(declaration.startOffset < armClass.boundary.startOffset) { "declaration in rendering at:\n${declaration.dumpKotlinLike()}\n${declaration.dump()}" }
+            check(declaration.startOffset < armClass.boundary.startOffset) { "declaration in rendering at:\n${declaration.dumpKotlinLike()}\n${declaration.dump()}" }
 
-        check(name !in names) { "variable shadowing is not allowed:\n${declaration.dumpKotlinLike()}\n${declaration.dump()}" }
+            check(name !in names) { "variable shadowing is not allowed:\n${declaration.dumpKotlinLike()}\n${declaration.dump()}" }
+        }
 
         stateVariableIndex ++
         names += name

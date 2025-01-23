@@ -18,10 +18,10 @@ class AdaptiveT1(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveTestFragment(adapter, parent, index, 1) {
+) : AdaptiveTestFragment(adapter, parent, index, 2) {
 
     val p0: Int
-        get() = get(0)
+        get() = get(1)
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? = null
 

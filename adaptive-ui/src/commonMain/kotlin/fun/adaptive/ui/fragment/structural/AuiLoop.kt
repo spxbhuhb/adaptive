@@ -13,7 +13,7 @@ class AuiLoop<RT, CRT : RT>(
     adapter: AbstractAuiAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     index: Int,
-) : AuiStructural<RT, CRT>(adapter, parent, index, 2), AdaptiveLoopLogic<Any> {
+) : AuiStructural<RT, CRT>(adapter, parent, index, 3), AdaptiveLoopLogic<Any> {
 
     override val createClosure: AdaptiveClosure
         get() = parent !!.thisClosure
@@ -30,6 +30,6 @@ class AuiLoop<RT, CRT : RT>(
 
     override fun stateToTraceString(): String = super<AdaptiveLoopLogic>.stateToTraceString()
 
-    override fun makeAnonymous() = AdaptiveAnonymous(this, 0, 1, builder)
+    override fun makeAnonymous() = AdaptiveAnonymous(this, 0, 2, builder)
 
 }

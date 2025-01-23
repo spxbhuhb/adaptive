@@ -11,11 +11,26 @@ abstract class BackendFragment(
     adapter: BackendAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, 0, 3) {
+) : AdaptiveFragment(adapter, parent, index, 3) {
 
     val backendAdapter
         get() = adapter as BackendAdapter
 
+    // -------------------------------------------------------------------------
+    // Implementation support
+    // -------------------------------------------------------------------------
+
+    // 0 : instructions
+
+    val implFun: () -> BackendFragmentImpl
+        get() = get(1)
+
+    var impl: BackendFragmentImpl?
+        get() = get(2)
+        set(value) {
+            set(2, value)
+        }
+    
     // -------------------------------------------------------------------------
     // Fragment overrides
     // -------------------------------------------------------------------------
@@ -52,19 +67,5 @@ abstract class BackendFragment(
         return super.toString() + " impl: ${impl?.let { it::class.simpleName }}"
     }
 
-    // -------------------------------------------------------------------------
-    // Implementation support
-    // -------------------------------------------------------------------------
-
-    // 0 : instructions
-
-    val implFun: () -> BackendFragmentImpl
-        get() = get(1)
-
-    var impl: BackendFragmentImpl?
-        get() = get(2)
-        set(value) {
-            set(2, value)
-        }
 
 }

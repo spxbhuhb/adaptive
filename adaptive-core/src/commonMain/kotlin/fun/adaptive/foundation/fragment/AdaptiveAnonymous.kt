@@ -14,7 +14,7 @@ class AdaptiveAnonymous private constructor(
     index: Int,
     stateSize: Int,
     val factory: BoundFragmentFactory
-) : AdaptiveFragment(adapter, parent, index, - 1, stateSize) {
+) : AdaptiveFragment(adapter, parent, index, stateSize) {
 
     constructor(
         parent: AdaptiveFragment,

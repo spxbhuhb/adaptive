@@ -60,7 +60,6 @@ fun collapsible() {
 
     box {
         size(800.dp, 600.dp) .. backgrounds.friendly
-        icon(Graphics.grid_view)
 
         when (state?.mode) {
             MENU_CLOSED -> closedMenu()

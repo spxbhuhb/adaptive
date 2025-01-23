@@ -16,7 +16,7 @@ abstract class AbstractColumn<RT, CRT : RT>(
     parent: AdaptiveFragment?,
     declarationIndex: Int
 ) : AbstractStack<RT, CRT>(
-    adapter, parent, declarationIndex, 0, 2
+    adapter, parent, declarationIndex, 2
 ) {
 
     override fun itemsWidthCalc(itemsWidth: Double, item: AbstractAuiFragment<RT>): Double =

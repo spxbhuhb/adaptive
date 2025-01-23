@@ -14,7 +14,7 @@ abstract class AbstractBox<RT, CRT : RT>(
     parent: AdaptiveFragment?,
     declarationIndex: Int
 ) : AbstractContainer<RT, CRT>(
-    adapter, parent, declarationIndex, 0, 2
+    adapter, parent, declarationIndex, 2
 ) {
 
     override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {

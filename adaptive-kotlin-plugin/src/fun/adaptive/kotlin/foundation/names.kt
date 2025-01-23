@@ -200,10 +200,10 @@ object Indices {
     /**
      * Structural fragment state indices
      */
-    const val ADAPTIVE_SEQUENCE_ITEM_INDICES = 0
-    const val ADAPTIVE_SELECT_BRANCH = 0
-    const val ADAPTIVE_LOOP_ITERATOR = 0
-    const val ADAPTIVE_LOOP_FACTORY = 1
+    const val ADAPTIVE_SEQUENCE_ITEM_INDICES = 1
+    const val ADAPTIVE_SELECT_BRANCH = 1
+    const val ADAPTIVE_LOOP_ITERATOR = 1
+    const val ADAPTIVE_LOOP_FACTORY = 2
 
     /**
      * AdaptiveFragment.invalidIndex(index) arguments

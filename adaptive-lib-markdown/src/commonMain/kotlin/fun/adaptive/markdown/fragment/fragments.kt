@@ -100,21 +100,21 @@ fun inline(
 
     when {
         entry.code -> {
-            text(entry.text, *formatting.toTypedArray(), codeStyles)
+            text(entry.text, AdaptiveInstructionGroup(formatting), codeStyles)
         }
 
         entry.inlineLink -> {
         }
 
-        else -> text(entry.text, *formatting.toTypedArray(), textStyles)
+        else -> text(entry.text, AdaptiveInstructionGroup(formatting), textStyles)
         // TODO reflink, refdef
     }
 }
 
-@Adaptive
-fun inlineLink(entry: MarkdownInlineAstEntry, instructions: MutableList<AdaptiveInstruction>) {
-    val label = entry.text.substringBefore(']').trim('[')
-    val href = entry.text.substringAfter('(').trim(')')
-
-    text(label, AdaptiveInstructionGroup(instructions), linkColor, externalLink(href))
-}
+//@Adaptive
+//fun inlineLink(entry: MarkdownInlineAstEntry, instructions: MutableList<AdaptiveInstruction>) {
+//    val label = entry.text.substringBefore(']').trim('[')
+//    val href = entry.text.substringAfter('(').trim(')')
+//
+//    text(label, AdaptiveInstructionGroup(instructions), linkColor, externalLink(href))
+//}

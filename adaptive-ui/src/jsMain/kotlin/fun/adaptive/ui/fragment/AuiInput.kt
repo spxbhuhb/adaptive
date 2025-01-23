@@ -18,13 +18,10 @@ open class AuiInput(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int,
-) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 0, stateSize()) {
+) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, stateSize()) {
 
     override val receiver: HTMLInputElement =
         document.createElement("input") as HTMLInputElement
-
-    val fakeInstructions: AdaptiveInstructionGroup
-        by stateVariable()
 
     private var value: String?
         by stateVariable()

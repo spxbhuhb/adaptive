@@ -26,7 +26,7 @@ class GroveHydrated(
     declarationIndex: Int,
     stateSize : Int
 ) : AdaptiveFragment(
-    adapter, parent, declarationIndex, - 1, stateSize
+    adapter, parent, declarationIndex, stateSize
 ) {
 
     companion object {
@@ -41,7 +41,8 @@ class GroveHydrated(
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         when (declarationIndex) {
 
-            ANONYMOUS_INDEX -> AdaptiveAnonymous(parent, ANONYMOUS_INDEX, model.internalStateVariables.size, BoundFragmentFactory(this, SEQUENCE_INDEX))
+            // + 1 for instructions which we won't use, but it's mandatory
+            ANONYMOUS_INDEX -> AdaptiveAnonymous(parent, ANONYMOUS_INDEX, model.internalStateVariables.size + 1, BoundFragmentFactory(this, SEQUENCE_INDEX))
 
             SEQUENCE_INDEX -> adapter.newSequence(this, SEQUENCE_INDEX)
 
@@ -74,7 +75,7 @@ class GroveHydrated(
 
             SEQUENCE_INDEX -> {
                 val build = dehydrated.descendants
-                fragment.setStateVariable(0, IntArray(build.size) { it + RESERVED_INDICES })
+                fragment.setStateVariable(1, IntArray(build.size) { it + RESERVED_INDICES })
             }
 
             else -> {
@@ -90,7 +91,6 @@ class GroveHydrated(
                 for ((index, mapping) in items[itemIndex].mapping.withIndex()) {
                     if ( ! init && (fragment.dirtyMask and mapping.dependencyMask) == 0) continue
                     val value = (mapping.mapping as LfmConst).value
-                    println("patching $index with $value")
                     fragment.setStateVariable(index, value)
                 }
             }

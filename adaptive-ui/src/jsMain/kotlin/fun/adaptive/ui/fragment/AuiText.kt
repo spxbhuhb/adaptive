@@ -5,6 +5,7 @@ package `fun`.adaptive.ui.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
@@ -21,7 +22,7 @@ open class AuiText(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int,
-) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, 1, stateSize()) {
+) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, stateSize()) {
 
     override val receiver: HTMLSpanElement =
         document.createElement("span") as HTMLSpanElement

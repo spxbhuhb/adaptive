@@ -6,24 +6,25 @@ package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
-import `fun`.adaptive.ui.api.fit
 import `fun`.adaptive.utility.alsoIfInstance
 import `fun`.adaptive.utility.checkIfInstance
 
 /**
  * Two uses: layouts and loop/select containers.
+ *
+ * State size is typically two, but in case of loop it is 3, therefore we cannot use `stateSize()`
  */
 abstract class AbstractContainer<RT, CRT : RT>(
     adapter: AbstractAuiAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
-    instructionsIndex: Int,
     stateSize: Int
 ) : AbstractAuiFragment<RT>(
-    adapter, parent, declarationIndex, instructionsIndex, stateSize
+    adapter, parent, declarationIndex, stateSize
 ) {
 
     val unbound
@@ -43,13 +44,15 @@ abstract class AbstractContainer<RT, CRT : RT>(
 
     val structuralItems = mutableListOf<AbstractAuiFragment<RT>>() // Items to update directly, see class docs.
 
+    // State of containers has different sizes for different container types
+    // We cannot use `by stateVariable()` here because of that.
     val content: BoundFragmentFactory
-        get() = state[state.size - 1].checkIfInstance()
+        get() = get(state.size - 1)
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? {
         if (declarationIndex != 0) invalidIndex(declarationIndex)
         // FIXME I think this anonymous fragment is superfluous
-        return AdaptiveAnonymous(this, declarationIndex, 0, content).apply { create() }
+        return AdaptiveAnonymous(this, declarationIndex, 1, content).apply { create() }
     }
 
     /**

@@ -4,6 +4,7 @@
 package `fun`.adaptive.kotlin.foundation.ir.ir2arm.instruction
 
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
+import `fun`.adaptive.kotlin.foundation.ir.arm.ArmClass
 import `fun`.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import `fun`.adaptive.kotlin.foundation.ir.util.HigherOrderProcessing
 import org.jetbrains.kotlin.ir.IrElement
@@ -14,7 +15,8 @@ import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
 
 class InnerInstructionLowering(
-    override val pluginContext: FoundationPluginContext
+    override val pluginContext: FoundationPluginContext,
+    val armClass: ArmClass
 ) : IrElementVisitorVoid, AdaptiveAnnotationBasedExtension {
 
     override fun visitElement(element: IrElement) {
@@ -31,9 +33,8 @@ class InnerInstructionLowering(
         @HigherOrderProcessing
         val adaptiveParameter = valueParameters.lastOrNull { it.isAdaptive && it.type.isFunction() } ?: return
 
-        val instructions = extractInnerInstructions(expression.getValueArgument(adaptiveParameter.index))
-
-        addInstructions(expression, valueParameters, instructions)
+        val store = armClass.instructions.getOrPut(expression) { mutableListOf() }
+        store += extractInnerInstructions(expression.getValueArgument(adaptiveParameter.index))
     }
 
     private fun extractInnerInstructions(irExpression: IrExpression?): List<IrExpression> {
@@ -61,11 +62,11 @@ class InnerInstructionLowering(
         return result
     }
 
-    private fun IrExpression.isRenderingCall() : Boolean {
+    private fun IrExpression.isRenderingCall(): Boolean {
         var current = this
 
         while (current is IrCall && current.dispatchReceiver != null) {
-            current = current.dispatchReceiver!!
+            current = current.dispatchReceiver !!
         }
 
         return current.type.isSubtypeOfClass(pluginContext.adaptiveFragmentClass)

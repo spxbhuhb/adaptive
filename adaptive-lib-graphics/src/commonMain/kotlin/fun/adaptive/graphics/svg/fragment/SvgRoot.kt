@@ -6,6 +6,7 @@ package `fun`.adaptive.graphics.svg.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.graphics.svg.SvgAdapter
 import `fun`.adaptive.graphics.svg.SvgFragment
 import `fun`.adaptive.graphics.svg.instruction.transform.Scale
@@ -17,7 +18,7 @@ class SvgRoot(
     adapter: SvgAdapter,
     parent : AdaptiveFragment?,
     declarationIndex : Int
-) : SvgFragment<SvgRootRenderData>(adapter, parent, declarationIndex, 0, 1) {
+) : SvgFragment<SvgRootRenderData>(adapter, parent, declarationIndex, stateSize()) {
 
     override fun newRenderData() = SvgRootRenderData()
 

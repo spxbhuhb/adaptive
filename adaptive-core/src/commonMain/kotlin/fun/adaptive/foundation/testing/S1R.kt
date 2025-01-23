@@ -19,7 +19,7 @@ class AdaptiveS1R(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int
-) : AdaptiveTestFragment(adapter, parent, index, 1) {
+) : AdaptiveTestFragment(adapter, parent, index, 2) {
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? = null
 
@@ -28,9 +28,9 @@ class AdaptiveS1R(
     override fun genPatchInternal(): Boolean = true
 
     var s0: ((Int) -> Int)
-        get() = get(0)
+        get() = get(1)
         set(v) {
-            set(0, v)
+            set(1, v)
         }
 
 }

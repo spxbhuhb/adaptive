@@ -6,13 +6,12 @@ package `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.internal.AdaptiveClosure
-import `fun`.adaptive.utility.checkIfInstance
 
 class AdaptiveSequence(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment?,
     index: Int,
-) : AdaptiveFragment(adapter, parent, index, -1, 1) {
+) : AdaptiveFragment(adapter, parent, index, 2) {
 
     override val createClosure : AdaptiveClosure
         get() = parent!!.thisClosure
@@ -23,7 +22,7 @@ class AdaptiveSequence(
     )
 
     val indices : IntArray
-        get() = get(0)
+        get() = get(1)
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? {
         return null
@@ -42,6 +41,8 @@ class AdaptiveSequence(
     }
 
     override fun stateToTraceString(): String {
-        return if (get<Any?>(0) != null) indices.contentToString() else "[]"
+        val i = state[0]
+        val si = get<IntArray?>(1)?.contentToString() ?: "null"
+        return "[$i,$si]"
     }
 }

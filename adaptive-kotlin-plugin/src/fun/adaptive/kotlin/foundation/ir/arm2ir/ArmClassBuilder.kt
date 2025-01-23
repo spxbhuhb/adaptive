@@ -119,8 +119,7 @@ class ArmClassBuilder(
                 putValueArgument(0, irGet(constructor.valueParameters[0]))
                 putValueArgument(1, irGet(constructor.valueParameters[1]))
                 putValueArgument(2, irGet(constructor.valueParameters[2]))
-                putValueArgument(3, irConst(instructionIndex()))
-                putValueArgument(4, irConst(armClass.stateVariables.size))
+                putValueArgument(3, irConst(armClass.stateVariables.size))
             }
 
             statements += IrInstanceInitializerCallImpl(
@@ -131,9 +130,6 @@ class ArmClassBuilder(
             )
         }
     }
-
-    private fun instructionIndex(): Int =
-        armClass.stateVariables.firstOrNull { it.isInstructions }?.indexInState ?: - 1
 
     private fun initializer(): IrAnonymousInitializer =
         irFactory.createAnonymousInitializer(
@@ -328,9 +324,9 @@ class ArmClassBuilder(
 
                 // FIXME casting a statement into an expression in internal patch
                 // FIXME apply the same pattern as for ArmInternalStateVariable
-                val (originalExpression, stateVariable) = when (statement) {
-                    is ArmDefaultValueStatement -> statement.defaultValue to null
-                    else -> statement.irStatement as IrExpression to null
+                val originalExpression = when (statement) {
+                    is ArmDefaultValueStatement -> statement.defaultValue
+                    else -> statement.irStatement as IrExpression
                 }
 
                 val transformedExpression = originalExpression

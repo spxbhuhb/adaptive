@@ -12,7 +12,7 @@ open class CanvasStructural(
     parent: AdaptiveFragment?,
     index: Int,
     stateSize: Int
-) : CanvasFragment(adapter, parent, index, - 1, stateSize) {
+) : CanvasFragment(adapter, parent, index, stateSize) {
 
     override fun draw() {
 
