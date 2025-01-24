@@ -37,8 +37,11 @@ object PolymorphicWireFormat : WireFormat<Any> {
     override fun <ST> wireFormatDecode(decoder: WireFormatDecoder<ST>, fieldNumber: Int, fieldName: String) =
         decoder.polymorphicOrNull<Any>(fieldNumber, fieldName)
 
-    @OptIn(ExperimentalUnsignedTypes::class)
     fun <T> wireFormatFor(value : T?) : WireFormat<Any?> =
+        wireFormatOrNullFor(value) ?: unsupported("polymorphic type: ${value?.let { it::class.simpleName } ?: "null"} is not supported yet")
+
+    @OptIn(ExperimentalUnsignedTypes::class)
+    fun <T> wireFormatOrNullFor(value: T?): WireFormat<Any?>? =
         when (value) {
             null -> UnitWireFormat
 
@@ -83,7 +86,7 @@ object PolymorphicWireFormat : WireFormat<Any> {
             is UIntArray -> UIntArrayWireFormat
             is ULongArray -> ULongArrayWireFormat
 
-            else -> unsupported("polymorphic type: ${value.let { it::class.simpleName }} is not supported yet")
-        } as WireFormat<Any?>
+            else -> null
+        } as WireFormat<Any?>?
 
 }

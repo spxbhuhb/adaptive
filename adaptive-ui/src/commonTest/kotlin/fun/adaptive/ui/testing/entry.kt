@@ -18,7 +18,7 @@ fun uiTest(
     height: Int,
     vararg imports : AdaptiveFragmentFactory,
     trace : Trace? = null,
-    @Adaptive block: (adapter : AdaptiveAdapter) -> Unit
+    @Adaptive block: (adapter: AuiTestAdapter) -> Unit
 ) : AuiTestAdapter {
 
     return AuiTestAdapter(

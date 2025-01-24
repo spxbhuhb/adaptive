@@ -1,0 +1,446 @@
+{
+  "steps": [
+    {
+      "afterStepSnapshot": {
+        "key": "<root>",
+        "state": [
+          [
+            "kotlin.String",
+            "null"
+          ],
+          [
+            "kotlin.collections.List",
+            [
+              [
+                "kotlin.Int",
+                1
+              ]
+            ]
+          ]
+        ],
+        "children": [
+          {
+            "key": "AdaptiveColumn",
+            "state": [
+              [
+                "kotlin.String",
+                "null"
+              ],
+              [
+                "kotlin.String",
+                "BoundFragmentFactory"
+              ]
+            ],
+            "children": [
+              {
+                "key": "AdaptiveAnonymous",
+                "state": [
+                  [
+                    "kotlin.String",
+                    "null"
+                  ]
+                ],
+                "children": [
+                  {
+                    "key": "AuiLoop",
+                    "state": [
+                      [
+                        "kotlin.String",
+                        "null"
+                      ],
+                      [
+                        "kotlin.String",
+                        "null"
+                      ],
+                      [
+                        "kotlin.String",
+                        "BoundFragmentFactory"
+                      ]
+                    ],
+                    "children": [
+                      {
+                        "key": "AdaptiveAnonymous",
+                        "state": [
+                          [
+                            "kotlin.String",
+                            "null"
+                          ],
+                          [
+                            "kotlin.Int",
+                            1
+                          ]
+                        ],
+                        "children": [
+                          {
+                            "key": "AdaptiveText",
+                            "state": [
+                              [
+                                "kotlin.String",
+                                "null"
+                              ],
+                              [
+                                "kotlin.Int",
+                                1
+                              ]
+                            ],
+                            "children": [],
+                            "finalTop": 0.0,
+                            "finalLeft": 0.0,
+                            "finalWidth": 20.0,
+                            "finalHeight": 20.0
+                          }
+                        ],
+                        "finalTop": null,
+                        "finalLeft": null,
+                        "finalWidth": null,
+                        "finalHeight": null
+                      }
+                    ],
+                    "finalTop": 0.0,
+                    "finalLeft": 0.0,
+                    "finalWidth": 20.0,
+                    "finalHeight": 20.0
+                  }
+                ],
+                "finalTop": null,
+                "finalLeft": null,
+                "finalWidth": null,
+                "finalHeight": null
+              }
+            ],
+            "finalTop": 0.0,
+            "finalLeft": 0.0,
+            "finalWidth": 20.0,
+            "finalHeight": 20.0
+          }
+        ],
+        "finalTop": null,
+        "finalLeft": null,
+        "finalWidth": null,
+        "finalHeight": null
+      }
+    },
+    {
+      "afterStepSnapshot": {
+        "key": "<root>",
+        "state": [
+          [
+            "kotlin.String",
+            "null"
+          ],
+          [
+            "kotlin.collections.List",
+            [
+              [
+                "kotlin.Int",
+                1
+              ],
+              [
+                "kotlin.Int",
+                2
+              ]
+            ]
+          ]
+        ],
+        "children": [
+          {
+            "key": "AdaptiveColumn",
+            "state": [
+              [
+                "kotlin.String",
+                "null"
+              ],
+              [
+                "kotlin.String",
+                "BoundFragmentFactory"
+              ]
+            ],
+            "children": [
+              {
+                "key": "AdaptiveAnonymous",
+                "state": [
+                  [
+                    "kotlin.String",
+                    "null"
+                  ]
+                ],
+                "children": [
+                  {
+                    "key": "AuiLoop",
+                    "state": [
+                      [
+                        "kotlin.String",
+                        "null"
+                      ],
+                      [
+                        "kotlin.String",
+                        "ArrayItr"
+                      ],
+                      [
+                        "kotlin.String",
+                        "BoundFragmentFactory"
+                      ]
+                    ],
+                    "children": [
+                      {
+                        "key": "AdaptiveAnonymous",
+                        "state": [
+                          [
+                            "kotlin.String",
+                            "null"
+                          ],
+                          [
+                            "kotlin.Int",
+                            1
+                          ]
+                        ],
+                        "children": [
+                          {
+                            "key": "AdaptiveText",
+                            "state": [
+                              [
+                                "kotlin.String",
+                                "null"
+                              ],
+                              [
+                                "kotlin.Int",
+                                1
+                              ]
+                            ],
+                            "children": [],
+                            "finalTop": 0.0,
+                            "finalLeft": 0.0,
+                            "finalWidth": 20.0,
+                            "finalHeight": 20.0
+                          }
+                        ],
+                        "finalTop": null,
+                        "finalLeft": null,
+                        "finalWidth": null,
+                        "finalHeight": null
+                      },
+                      {
+                        "key": "AdaptiveAnonymous",
+                        "state": [
+                          [
+                            "kotlin.String",
+                            "null"
+                          ],
+                          [
+                            "kotlin.Int",
+                            2
+                          ]
+                        ],
+                        "children": [
+                          {
+                            "key": "AdaptiveText",
+                            "state": [
+                              [
+                                "kotlin.String",
+                                "null"
+                              ],
+                              [
+                                "kotlin.Int",
+                                2
+                              ]
+                            ],
+                            "children": [],
+                            "finalTop": 20.0,
+                            "finalLeft": 0.0,
+                            "finalWidth": 20.0,
+                            "finalHeight": 20.0
+                          }
+                        ],
+                        "finalTop": null,
+                        "finalLeft": null,
+                        "finalWidth": null,
+                        "finalHeight": null
+                      }
+                    ],
+                    "finalTop": 0.0,
+                    "finalLeft": 0.0,
+                    "finalWidth": 20.0,
+                    "finalHeight": 40.0
+                  }
+                ],
+                "finalTop": null,
+                "finalLeft": null,
+                "finalWidth": null,
+                "finalHeight": null
+              }
+            ],
+            "finalTop": 0.0,
+            "finalLeft": 0.0,
+            "finalWidth": 20.0,
+            "finalHeight": 40.0
+          }
+        ],
+        "finalTop": null,
+        "finalLeft": null,
+        "finalWidth": null,
+        "finalHeight": null
+      }
+    },
+    {
+      "afterStepSnapshot": {
+        "key": "<root>",
+        "state": [
+          [
+            "kotlin.String",
+            "null"
+          ],
+          [
+            "kotlin.collections.List",
+            [
+              [
+                "kotlin.Int",
+                1
+              ],
+              [
+                "kotlin.Int",
+                3
+              ]
+            ]
+          ]
+        ],
+        "children": [
+          {
+            "key": "AdaptiveColumn",
+            "state": [
+              [
+                "kotlin.String",
+                "null"
+              ],
+              [
+                "kotlin.String",
+                "BoundFragmentFactory"
+              ]
+            ],
+            "children": [
+              {
+                "key": "AdaptiveAnonymous",
+                "state": [
+                  [
+                    "kotlin.String",
+                    "null"
+                  ]
+                ],
+                "children": [
+                  {
+                    "key": "AuiLoop",
+                    "state": [
+                      [
+                        "kotlin.String",
+                        "null"
+                      ],
+                      [
+                        "kotlin.String",
+                        "ArrayItr"
+                      ],
+                      [
+                        "kotlin.String",
+                        "BoundFragmentFactory"
+                      ]
+                    ],
+                    "children": [
+                      {
+                        "key": "AdaptiveAnonymous",
+                        "state": [
+                          [
+                            "kotlin.String",
+                            "null"
+                          ],
+                          [
+                            "kotlin.Int",
+                            1
+                          ]
+                        ],
+                        "children": [
+                          {
+                            "key": "AdaptiveText",
+                            "state": [
+                              [
+                                "kotlin.String",
+                                "null"
+                              ],
+                              [
+                                "kotlin.Int",
+                                1
+                              ]
+                            ],
+                            "children": [],
+                            "finalTop": 0.0,
+                            "finalLeft": 0.0,
+                            "finalWidth": 20.0,
+                            "finalHeight": 20.0
+                          }
+                        ],
+                        "finalTop": null,
+                        "finalLeft": null,
+                        "finalWidth": null,
+                        "finalHeight": null
+                      },
+                      {
+                        "key": "AdaptiveAnonymous",
+                        "state": [
+                          [
+                            "kotlin.String",
+                            "null"
+                          ],
+                          [
+                            "kotlin.Int",
+                            3
+                          ]
+                        ],
+                        "children": [
+                          {
+                            "key": "AdaptiveText",
+                            "state": [
+                              [
+                                "kotlin.String",
+                                "null"
+                              ],
+                              [
+                                "kotlin.Int",
+                                3
+                              ]
+                            ],
+                            "children": [],
+                            "finalTop": 20.0,
+                            "finalLeft": 0.0,
+                            "finalWidth": 20.0,
+                            "finalHeight": 20.0
+                          }
+                        ],
+                        "finalTop": null,
+                        "finalLeft": null,
+                        "finalWidth": null,
+                        "finalHeight": null
+                      }
+                    ],
+                    "finalTop": 0.0,
+                    "finalLeft": 0.0,
+                    "finalWidth": 20.0,
+                    "finalHeight": 40.0
+                  }
+                ],
+                "finalTop": null,
+                "finalLeft": null,
+                "finalWidth": null,
+                "finalHeight": null
+              }
+            ],
+            "finalTop": 0.0,
+            "finalLeft": 0.0,
+            "finalWidth": 20.0,
+            "finalHeight": 40.0
+          }
+        ],
+        "finalTop": null,
+        "finalLeft": null,
+        "finalWidth": null,
+        "finalHeight": null
+      }
+    }
+  ]
+}

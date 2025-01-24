@@ -49,6 +49,8 @@ import kotlinx.coroutines.cancel
  *
  * @property  actualBatchOwner  Used by layout fragments to group remove operations, so they can remove
  *                              a whole actual subtree at once.
+ *
+ * @property  afterClosePatchBatch   When not null, the adapter calls this function after closing a patch batch.
  */
 abstract class AbstractAuiAdapter<RT, CRT : RT> : AdaptiveAdapter {
 
@@ -77,6 +79,8 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : AdaptiveAdapter {
     val updateBatch = mutableListOf<AbstractAuiFragment<RT>>()
 
     val emptyRenderData = AuiRenderData(this)
+
+    var afterClosePatchBatch: ((adapter: AbstractAuiAdapter<RT, CRT>) -> Unit)? = null
 
     var defaultTextRenderData = TextRenderData().apply {
         color = Color(0u)
@@ -130,6 +134,7 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : AdaptiveAdapter {
         }
 
         updateBatch.clear()
+        afterClosePatchBatch?.invoke(this)
     }
 
     /**

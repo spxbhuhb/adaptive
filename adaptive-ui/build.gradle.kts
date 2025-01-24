@@ -66,6 +66,8 @@ kotlin {
 
         commonTest.dependencies {
             api(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
+            implementation(libs.kotlinx.coroutines.debug)
         }
 
         androidMain.dependencies {

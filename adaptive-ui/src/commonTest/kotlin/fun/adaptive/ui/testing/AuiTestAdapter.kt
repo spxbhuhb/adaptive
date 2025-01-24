@@ -13,6 +13,8 @@ import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.fragment.layout.RawFrame
+import `fun`.adaptive.ui.fragment.structural.AuiLoop
+import `fun`.adaptive.ui.fragment.structural.AuiSelect
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.SPixel
 import `fun`.adaptive.ui.platform.media.MediaMetrics
@@ -37,6 +39,12 @@ class AuiTestAdapter(
 
     override fun makeStructuralReceiver(fragment: AbstractContainer<TestReceiver, TestReceiver>): TestReceiver =
         TestReceiver()
+
+    override fun newSelect(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
+        AuiSelect(this, parent, index)
+
+    override fun newLoop(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
+        AuiLoop(this, parent, index)
 
     override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
