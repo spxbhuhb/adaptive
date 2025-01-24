@@ -5,9 +5,14 @@ package `fun`.adaptive.kotlin.reflect.ir
 
 import `fun`.adaptive.kotlin.AdaptiveOptions
 import `fun`.adaptive.kotlin.common.AbstractPluginContext
+import `fun`.adaptive.kotlin.reflect.CallableIds
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 
 class ReflectPluginContext(
     irContext: IrPluginContext,
     options: AdaptiveOptions
-) : AbstractPluginContext(irContext, options)
+) : AbstractPluginContext(irContext, options) {
+
+    val typeSignatureSymbol = irContext.referenceFunctions(CallableIds.TYPE_SIGNATURE)
+
+}

@@ -4,6 +4,7 @@
 package `fun`.adaptive.kotlin.reflect
 
 import `fun`.adaptive.kotlin.common.NamesBase
+import org.jetbrains.kotlin.name.FqName
 
 object Strings {
     const val REFLECT_PACKAGE = "fun.adaptive.reflect"
@@ -16,4 +17,8 @@ object Names : NamesBase(Strings.REFLECT_PACKAGE) {
 
 object FqNames : NamesBase(Strings.REFLECT_PACKAGE) {
     val CALL_SITE_NAME_ANNOTATION = "CallSiteName".fqName { Strings.REFLECT_PACKAGE }
+}
+
+object CallableIds : NamesBase(Strings.REFLECT_PACKAGE) {
+    val TYPE_SIGNATURE = "typeSignature".callableId()
 }

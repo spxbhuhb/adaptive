@@ -920,6 +920,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
     public void testCallSiteName() {
       runTest("testData/box/reflect/callSiteName.kt");
     }
+
+    @Test
+    @TestMetadata("typeSignature.kt")
+    public void testTypeSignature() {
+      runTest("testData/box/reflect/typeSignature.kt");
+    }
   }
 
   @Nested

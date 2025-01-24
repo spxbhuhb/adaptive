@@ -16,6 +16,7 @@ class ReflectGenerationExtension(
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
         ReflectPluginContext(pluginContext, options).apply {
             moduleFragment.transformChildrenVoid(CallSiteNameVisitor(this))
+            moduleFragment.transformChildrenVoid(TypeSignatureTransform(this))
         }
     }
 
