@@ -95,7 +95,7 @@ class DPixel(
 
     infix fun repeat(count: Int): GridRepeat = GridRepeat(count, this)
 
-    companion object : AdatCompanion<DPixel> {
+    companion object {
         val ZERO = DPixel(0.0)
         val NaP = DPixel(Double.NaN)
     }

@@ -9,34 +9,51 @@ import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatDecoder
 import `fun`.adaptive.wireformat.WireFormatEncoder
+import kotlin.collections.plus
 
 class AdatPropertyWireFormat<T>(
     val metadata: AdatPropertyMetadata,
-    val wireFormat : WireFormat<T>
+    val wireFormat: WireFormat<T>
 ) {
 
     val index: Int
         get() = metadata.index
 
-    val fieldNumber : Int
+    val fieldNumber: Int
         inline get() = metadata.index + 1
 
     val name: String
         get() = metadata.name
 
     fun encode(encoder: WireFormatEncoder, instance: AdatClass) {
-        @Suppress("UNCHECKED_CAST")
-        wireFormat.wireFormatEncode(encoder,fieldNumber, metadata.name, instance.getValue(metadata.index) as T?)
+        withErrorReport {
+            @Suppress("UNCHECKED_CAST")
+            wireFormat.wireFormatEncode(encoder, fieldNumber, metadata.name, instance.getValue(metadata.index) as T?)
+        }
     }
 
-    fun encode(encoder : WireFormatEncoder, values : Array<Any?>) {
-        @Suppress("UNCHECKED_CAST")
-        wireFormat.wireFormatEncode(encoder, fieldNumber, metadata.name, values[metadata.index] as T?)
+    fun encode(encoder: WireFormatEncoder, values: Array<Any?>) {
+        withErrorReport {
+            @Suppress("UNCHECKED_CAST")
+            wireFormat.wireFormatEncode(encoder, fieldNumber, metadata.name, values[metadata.index] as T?)
+        }
     }
 
-    fun decode(decoder: WireFormatDecoder<*>, values:Array<Any?>) {
-        val value = wireFormat.wireFormatDecode(decoder, fieldNumber, metadata.name)
-        values[metadata.index] = if (metadata.isNullable || metadata.hasDefault) value else checkNotNull(value)
+    fun decode(decoder: WireFormatDecoder<*>, values: Array<Any?>) {
+        withErrorReport {
+            val value = wireFormat.wireFormatDecode(decoder, fieldNumber, metadata.name)
+            values[metadata.index] = if (metadata.isNullable || metadata.hasDefault) value else checkNotNull(value)
+        }
     }
 
+    inline fun <T> withErrorReport(block: () -> T): T =
+        try {
+            block()
+        } catch (ex: Exception) {
+            if (ex is AdatWireFormatError) {
+                throw AdatWireFormatError(ex.formats + this, ex.cause)
+            } else {
+                throw AdatWireFormatError(listOf(this), ex)
+            }
+        }
 }
