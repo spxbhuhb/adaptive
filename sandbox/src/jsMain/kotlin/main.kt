@@ -4,9 +4,7 @@
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.auto.api.autoCollection
-import `fun`.adaptive.auto.api.autoCollectionOrigin
 import `fun`.adaptive.auto.api.autoItem
-import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
@@ -16,10 +14,9 @@ import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.api.GroveFragmentFactory
 import `fun`.adaptive.grove.api.hydrated
 import `fun`.adaptive.grove.groveRuntimeCommon
-import `fun`.adaptive.grove.hydration.lfm.LfmConst
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.hydration.lfm.LfmFragment
-import `fun`.adaptive.grove.hydration.lfm.LfmMapping
+import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.sandbox.components
@@ -28,13 +25,12 @@ import `fun`.adaptive.sandbox.palette
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.event.UIEvent
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.uiCommon
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.println
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -52,50 +48,9 @@ class LfmSelection(
 
 val emptySelection = LfmSelection(emptyList())
 
-class FdiViewModel {
-    val components = autoCollectionOrigin(emptyList<LfmDescendant>())
-    val snapshots = autoCollectionOrigin(emptyList<Snapshot>())
-    val selection = autoItemOrigin(emptySelection)
-    val target = autoItemOrigin(emptySelection)
-
-    fun addDescendant(event: UIEvent) {
-        val transfer = (event.transferData?.data as? LfmDescendant) ?: return
-
-        components += LfmDescendant(
-            UUID<LfmDescendant>(),
-            transfer.key,
-            listOf(
-                LfmMapping(
-                    dependencyMask = 0,
-                    LfmConst(
-                        "Lfun.adaptive.foundation.instruction.AdaptiveInstructionGroup;",
-                        AdaptiveInstructionGroup(
-                            listOf(
-                                Position(event.y.dp, event.x.dp)
-                            )
-                        )
-                    )
-                ),
-                LfmMapping(
-                    dependencyMask = 0,
-                    LfmConst("T", "Hello World!")
-                )
-            )
-        )
-    }
-
-    fun select(reference: UUID<LfmDescendant>, additional: Boolean) {
-        if (additional) {
-            selection.update(LfmSelection(selection.value.selected + reference))
-        } else {
-            selection.update(LfmSelection(listOf(reference)))
-        }
-    }
-
-    fun clearSelection() {
-        selection.update(emptySelection)
-    }
-}
+interface I
+class A : I
+class B : I
 
 fun main() {
 
@@ -114,13 +69,13 @@ fun main() {
                 fontWeight = 300
             }
 
-            val viewModel = FdiViewModel()
+            val viewModel = UfdViewModel()
 
             grid {
                 colTemplate(200.dp, 200.dp, 1.fr, 200.dp)
                 maxSize
 
-                palette()
+                palette(viewModel)
                 descendantsList(viewModel)
                 sheet(viewModel)
                 instructions(viewModel)
@@ -130,21 +85,25 @@ fun main() {
 }
 
 @Adaptive
-fun palette() {
+fun palette(viewModel: UfdViewModel) {
+    val items = autoCollection(viewModel.palette) ?: emptyList()
+
     column {
         maxSize .. borderRight(colors.outline)
 
         areaTitle(Strings.palette)
 
-        draggable {
-            transferData { LfmDescendant(UUID<LfmDescendant>(), key = "aui:text", emptyList()) }
-            text("Text")
+        for (item in items) {
+            draggable {
+                transferData { LfmDescendant(UUID<LfmDescendant>(), key = item.key, emptyList()) }
+                text(item.key)
+            }
         }
     }
 }
 
 @Adaptive
-fun descendantsList(viewModel: FdiViewModel) {
+fun descendantsList(viewModel: UfdViewModel) {
     val descendants = autoCollection(viewModel.components) ?: emptyList()
 
     column {
@@ -159,7 +118,7 @@ fun descendantsList(viewModel: FdiViewModel) {
 }
 
 @Adaptive
-fun sheet(viewModel: FdiViewModel) {
+fun sheet(viewModel: UfdViewModel) {
     val descendants = autoCollection(viewModel.components) ?: emptyList()
 
     dropTarget {
@@ -184,7 +143,7 @@ fun parseInstructions(item: LfmDescendant): AdaptiveInstructionGroup {
 }
 
 @Adaptive
-fun instructions(viewModel: FdiViewModel) {
+fun instructions(viewModel: UfdViewModel) {
     val allDescendants = autoCollection(viewModel.components) ?: emptyList()
     val selection = autoItem(viewModel.selection) ?: emptySelection
 

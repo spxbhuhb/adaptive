@@ -28,7 +28,4 @@ class Border(
         }
     }
 
-    companion object {
-        val NONE = Border(null, DPixel.Companion.ZERO, DPixel.Companion.ZERO, DPixel.Companion.ZERO, DPixel.Companion.ZERO)
-    }
 }
