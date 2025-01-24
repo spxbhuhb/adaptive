@@ -51,11 +51,10 @@
   - [color](./basic-instructions.md#color)
 
 [Navigation Instructions](./navigation-instructions.md)
-- [Replace](./navigation.md#navigation)
 - [ExternalLink](./navigation-instructions.md#externallink)
 
 [Event Instructions](./event-instructions.md)
-- [OnClick](./event-instructions.md#onclick)
+- [OnClick](./event-instructions.md)
 
 Producers
 
@@ -64,8 +63,7 @@ Producers
 
 Foundation Fragments
 
-- [slot](../foundation/foundation-fragments.md#slot)
-- [measureInitTime](../foundation/foundation-fragments.md#slot)
+- [measureInitTime](../foundation/foundation-fragments.md)
 
 [Foundation Instructions](../foundation/foundation-instructions.md)
 - [Name](../foundation/foundation-instructions.md#name)

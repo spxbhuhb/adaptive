@@ -47,7 +47,7 @@ However, this approach has a few drawbacks:
 - complicates the message encoders and decoders
 - a large list makes finding the records by tag expensive
 
-Thereforw, WireFormat defines two implicit Protobuf messages, one for the arguments of the function and one for the list itself:
+Therefore, WireFormat defines two implicit Protobuf messages, one for the arguments of the function and one for the list itself:
 
 ```protobuf
 message A {

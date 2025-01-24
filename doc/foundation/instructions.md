@@ -321,7 +321,7 @@ property of the fragment.
 Instructions may have constraints to help avoid errors. For example `onDrop` has no
 use outside of `dropTarget` fragment.
 
-I this case the instruction class/function should be annotated with `@InstructionConstraint`:
+In this case the instruction class/function should be annotated with `@InstructionConstraint`:
 
 ```kotlin
 @InstructionConstraint(fragment = "aui:dropTarget")

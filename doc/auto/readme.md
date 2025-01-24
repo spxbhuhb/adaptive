@@ -45,17 +45,6 @@ shrink. Modifying the properties of the items already in the list does not have 
 In a long-running application or in lists that add/remove items very fast you have to consider this.
 For the target use cases this won't be a problem, but keep it in mind. If unsure, ask on the Slack channel.
 
-## Recipes
-
-**backend - backend**
-
-- [autoFile - autoFile](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/autoFile_autoFile/Recipe.kt)
-- [autoFolder - autoFile](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/autoFolder_autoFile/Recipe.kt)
-- [autoFolder - autoList](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/autoFolder_autoList/Recipe.kt)
-- [autoFolder - autoListPoly](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/autoFolder_autoListPoly/Recipe.kt)
-- [autoListPoly - autoFolderPoly - autoListPoly](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/autoListPoly_autoFolder_autoListPoly/Recipe.kt)
-- [autoFolder](/cookbook/src/commonMain/kotlin/fun/adaptive/cookbook/auto/autoFolder/Recipe.kt)
-
 ## Setup
 
 > [!NOTE]

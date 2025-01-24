@@ -192,7 +192,7 @@ getService<DuplexApi>(serviceContext.transport).process(value)
 
 ## Supported Parameter and Return Types
 
-Whatever [WireFormat](../wireformat/README.md) supports.
+Whatever [WireFormat](../wireformat/readme.md) supports.
 
 ## Exceptions
 

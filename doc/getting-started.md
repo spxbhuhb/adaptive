@@ -40,9 +40,10 @@
 
 * Utilities
   * [Call site name](./utilities/call-site-name.md)
+  * [Type signature](./utilities/type-signature.md)
 
 * Misc
-  * [Actual UI](internals/actual%20UI.md)
+  * [Actual UI](internals/actual-ui.md)
   * [Platforms](internals/platforms.md)
   * [Notes](notes.md)
   * [References](references.md)
