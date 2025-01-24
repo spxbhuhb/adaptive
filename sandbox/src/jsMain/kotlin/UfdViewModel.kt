@@ -12,7 +12,6 @@ import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.UIEvent
 import `fun`.adaptive.ui.instruction.layout.Position
-import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.utility.UUID
 
@@ -20,7 +19,7 @@ class UfdViewModel {
     val palette = autoCollectionOrigin(
         listOf(
             descendant("aui:text", emptyInstructions, LfmMapping(dependencyMask = 0, LfmConst("T", "Text"))),
-            descendant("aui:box", instructionsOf(size(100.dp, 100.dp), border(colors.danger)))
+            descendant("aui:box", instructionsOf(size(100.dp, 100.dp), border(colors.danger, 1.dp)))
         )
     )
 

@@ -48,10 +48,6 @@ class LfmSelection(
 
 val emptySelection = LfmSelection(emptyList())
 
-interface I
-class A : I
-class B : I
-
 fun main() {
 
     CoroutineScope(Dispatchers.Default).launch {

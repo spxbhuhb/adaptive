@@ -15,13 +15,6 @@ class Color(
 
     fun opaque(opacity: Float) = Color(value, opacity)
 
-    /**
-     * @return [value] in "#ffffff" format
-     */
-    @Deprecated("use hex instread", replaceWith = ReplaceWith("hex"))
-    fun toHexColor(): String =
-        hex
-
     companion object {
         fun String.parse(): UInt {
             val cleanedValue = this.trim().removePrefix("#")
