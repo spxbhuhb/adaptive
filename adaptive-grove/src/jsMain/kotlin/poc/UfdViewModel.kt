@@ -1,3 +1,5 @@
+package poc
+
 import `fun`.adaptive.auto.api.autoCollectionOrigin
 import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup

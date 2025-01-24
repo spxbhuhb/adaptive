@@ -39,6 +39,9 @@ kotlin {
                 implementation(libs.adaptive.lib.email)
                 implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.lib.auth)
+                implementation(libs.adaptive.lib.graphics)
+                implementation(libs.adaptive.lib.ui)
+                implementation(libs.adaptive.grove.runtime)
             }
         }
 
