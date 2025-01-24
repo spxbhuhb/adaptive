@@ -5,6 +5,8 @@
 package `fun`.adaptive.wireformat.json.elements
 
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.wireformat.json.JsonWireFormatEncoder
+import `fun`.adaptive.wireformat.json.formatting.JsonFormat
 
 open class JsonElement {
 
@@ -53,4 +55,10 @@ open class JsonElement {
 
     open val asULong: ULong
         get() = throw IllegalStateException("JsonElement.asULong")
+
+    val asPrettyString: String
+        get() = JsonFormat().format(this)
+
+    fun toPrettyString(format: JsonFormat = JsonFormat()) = format.format(this)
+
 }

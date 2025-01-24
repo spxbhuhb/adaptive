@@ -6,7 +6,9 @@ package `fun`.adaptive.adat
 
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatProvider
+import `fun`.adaptive.wireformat.json.JsonBufferReader
 import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
+import `fun`.adaptive.wireformat.json.formatting.JsonFormat
 
 /**
  * Gets an adat class stored somewhere in this one based on [path]. Path
@@ -29,8 +31,14 @@ fun AdatClass.resolve(path: List<String>): AdatClass {
 }
 
 fun <A : AdatClass> A.encodeToJson(): String =
+    encodeToJsonByteArray().decodeToString()
+
+fun <A : AdatClass> A.encodeToPrettyJson(format: JsonFormat = JsonFormat()): String =
+    JsonBufferReader(encodeToJsonByteArray()).read().asPrettyString
+
+fun <A : AdatClass> A.encodeToJsonByteArray(): ByteArray =
     @Suppress("UNCHECKED_CAST")
-    JsonWireFormatProvider().encode(this, this.adatCompanion.adatWireFormat as WireFormat<A>).decodeToString()
+    JsonWireFormatProvider().encode(this, this.adatCompanion.adatWireFormat as WireFormat<A>)
 
 fun <A : AdatClass> AdatCompanion<A>.decodeFromJson(json: String) =
     @Suppress("UNCHECKED_CAST")
