@@ -29,6 +29,8 @@ data class AuiRenderData(
         computeSurrounding()
         innerWidth = previous?.innerWidth
         innerHeight = previous?.innerHeight
+        finalTop = previous?.finalTop ?: 0.0
+        finalLeft = previous?.finalLeft ?: 0.0
         finalWidth = previous?.finalWidth ?: 0.0
         finalHeight = previous?.finalHeight ?: 0.0
         layoutFragment = previous?.layoutFragment

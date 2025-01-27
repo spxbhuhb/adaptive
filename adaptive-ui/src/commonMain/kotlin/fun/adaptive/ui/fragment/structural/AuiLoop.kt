@@ -24,7 +24,6 @@ class AuiLoop<RT, CRT : RT>(
 
     override fun genPatchInternal(): Boolean {
         super<AdaptiveLoopLogic>.genPatchInternal()
-        //renderData.layoutFragment?.layoutChange(this) // FIXME loop layout change
         return false
     }
 

@@ -59,13 +59,19 @@ val staticTree = listOf(
     )
 )
 
+
+private fun generate(): List<TreeItem> {
+    val numRoots = Random.nextInt(1, 4)
+    return List(numRoots) { generateRandomTree(it + 1, 3) } // Adjust depth as needed
+}
+
 private fun generateRandomTree(index: Int, depth: Int): TreeItem {
     val nodeTitle = "Item ${index.toString().toCharArray().joinToString(".")}"
-    val numChildren = Random.nextInt(0, 4)
+    val numChildren = Random.nextInt(1, 4)
 
     val children = when (depth) {
         0 -> emptyList()
-        else -> List(numChildren) { generateRandomTree(index * 10 + it, depth - 1) }
+        else -> List(numChildren) { generateRandomTree(index * 10 + it + 1, depth - 1) }
     }
 
     return TreeItem(
@@ -73,9 +79,4 @@ private fun generateRandomTree(index: Int, depth: Int): TreeItem {
         title = nodeTitle,
         children = children
     )
-}
-
-private fun generate(): List<TreeItem> {
-    val numRoots = Random.nextInt(1, 4)
-    return List(numRoots) { generateRandomTree(it, 3) } // Adjust depth as needed
 }
