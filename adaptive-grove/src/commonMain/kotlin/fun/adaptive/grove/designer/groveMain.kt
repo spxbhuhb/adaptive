@@ -7,24 +7,10 @@ import `fun`.adaptive.grove.designer.instruction.instructions
 import `fun`.adaptive.grove.designer.overlay.overlay
 import `fun`.adaptive.grove.designer.palette.palette
 import `fun`.adaptive.grove.designer.utility.emptySelection
-import `fun`.adaptive.grove.designer.utility.noHit
 import `fun`.adaptive.grove.designer.utility.selectionOf
-import `fun`.adaptive.ui.api.backgroundColor
-import `fun`.adaptive.ui.api.border
-import `fun`.adaptive.ui.api.colTemplate
-import `fun`.adaptive.ui.api.color
-import `fun`.adaptive.ui.api.frame
-import `fun`.adaptive.ui.api.gapWidth
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.noSelect
-import `fun`.adaptive.ui.api.onMove
-import `fun`.adaptive.ui.api.onPrimaryDown
-import `fun`.adaptive.ui.api.onPrimaryUp
-import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.grid
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.layout.Position
 
 val blueBackground = backgroundColor(0x0000ff)
@@ -72,7 +58,7 @@ fun groveMain() {
             }
 
             box {
-                maxSize .. noHit
+                maxSize
 
                 box { frame(100.dp, 100.dp, 12.dp, 12.dp) .. blueBackground .. padding { 1.dp } }
                 box { frame(100.dp, 150.dp, 23.dp, 23.dp) .. greenBackground .. padding { 2.dp } }

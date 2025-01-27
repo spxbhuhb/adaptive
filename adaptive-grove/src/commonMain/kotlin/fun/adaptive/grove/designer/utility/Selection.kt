@@ -3,7 +3,7 @@ package `fun`.adaptive.grove.designer.utility
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
-import `fun`.adaptive.ui.api.frame
+import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.instruction.*
@@ -12,8 +12,6 @@ import `fun`.adaptive.ui.instruction.layout.Frame
 import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.instruction.layout.Size
 import `fun`.adaptive.utility.firstOrNullIfInstance
-import kotlin.math.max
-import kotlin.math.min
 
 fun emptySelection() = Selection(emptyList(), 0)
 
@@ -33,28 +31,8 @@ class Selection(
     operator fun contains(fragment: AbstractAuiFragment<*>): Boolean =
         items.contains(fragment)
 
-    fun containingFrame(selection: Selection): Frame? {
-        if (selection.items.isEmpty()) return null
-
-        var top = Double.MAX_VALUE
-        var left = Double.MAX_VALUE
-
-        var right = Double.MIN_VALUE
-        var bottom = Double.MIN_VALUE
-
-        for (fragment in items) {
-            val renderData = fragment.renderData
-            val finalTop = renderData.finalTop
-            val finalLeft = renderData.finalLeft
-
-            top = min(top, finalTop)
-            left = min(left, finalLeft)
-            bottom = max(finalTop + renderData.finalHeight, bottom)
-            right = max(finalLeft + renderData.finalWidth, left)
-        }
-
-        return frame(top.dp, left.dp, (right - left).dp, (bottom - top).dp)
-    }
+    fun containingFrame(selection: Selection): Frame? =
+        TODO()
 
     fun move(previousCursorPosition: Position, currentCursorPosition: Position) {
         if (items.isEmpty()) return

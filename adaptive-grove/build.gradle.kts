@@ -47,8 +47,12 @@ kotlin {
 
         jvmMain {
             dependencies {
-                implementation(libs.adaptive.lib.exposed)
                 implementation(libs.h2database)
+                implementation(libs.ktor.server.core)
+                implementation(libs.ktor.server.netty)
+                implementation(libs.ktor.server.websockets)
+                implementation(libs.ktor.server.forwardedheaders)
+                implementation(libs.adaptive.lib.exposed)
             }
         }
     }

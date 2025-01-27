@@ -24,4 +24,7 @@ includeBuild("../adaptive-lib-email")
 includeBuild("../adaptive-lib-ktor")
 includeBuild("../adaptive-lib-auth")
 includeBuild("../adaptive-lib-auto")
+includeBuild("../adaptive-lib-graphics")
+includeBuild("../adaptive-lib-ui")
+includeBuild("../adaptive-grove-runtime")
 

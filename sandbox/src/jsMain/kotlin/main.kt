@@ -5,7 +5,7 @@
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
-import `fun`.adaptive.grove.api.GroveFragmentFactory
+import `fun`.adaptive.grove.api.GroveRuntimeFragmentFactory
 import `fun`.adaptive.grove.groveRuntimeCommon
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.ui.api.box
@@ -32,7 +32,7 @@ fun main() {
 
         val snapshots = Channel<FragmentSnapshot>(Channel.UNLIMITED)
 
-        browser(CanvasFragmentFactory, SvgFragmentFactory, GroveFragmentFactory, backend = backend { }) { adapter ->
+        browser(CanvasFragmentFactory, SvgFragmentFactory, GroveRuntimeFragmentFactory, backend = backend { }) { adapter ->
 
             adapter.afterClosePatchBatch = { snapshots.trySend(it.snapshot()) }
 

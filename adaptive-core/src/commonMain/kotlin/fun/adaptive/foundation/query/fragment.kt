@@ -84,6 +84,15 @@ inline fun <reified T : Any> AdaptiveFragment.firstOrNull(
  * @param deep Deep search, go down in the fragment tree.
  * @param horizontal When [deep] is true, check a given level first, children second.
  */
+inline fun <reified T : AdaptiveInstruction> AdaptiveFragment.firstWith(deep: Boolean = true, horizontal: Boolean = true) =
+    first(deep, horizontal) { it.instructions.any { i -> i is T } }
+
+/**
+ * Find the first fragment which has an instruction of given class [T].
+ *
+ * @param deep Deep search, go down in the fragment tree.
+ * @param horizontal When [deep] is true, check a given level first, children second.
+ */
 inline fun <reified T : AdaptiveInstruction> AdaptiveFragment.firstOrNullWith(deep: Boolean = true, horizontal: Boolean = true) =
     firstOrNull(deep, horizontal) { it.instructions.any { i -> i is T } }
 
@@ -180,3 +189,25 @@ fun <T> AdaptiveFragment.collect(
 
     return matches
 }
+
+// -------------------------------------------------------------
+// Finding parent
+// -------------------------------------------------------------
+
+fun AdaptiveFragment.firstParentOrNull(
+    condition: (AdaptiveFragment) -> Boolean
+) : AdaptiveFragment? {
+    var current = this.parent
+    while (current != null) {
+        if (condition(current)) return current
+        current = current.parent
+    }
+    return null
+}
+
+fun AdaptiveFragment.firstParent(condition: (AdaptiveFragment) -> Boolean) =
+    firstParentOrNull(condition) ?: throw NoSuchElementException()
+
+inline fun <reified T : AdaptiveInstruction > AdaptiveFragment.firstParentWith() =
+    firstParent { it.instructions.any { i -> i is T } }
+

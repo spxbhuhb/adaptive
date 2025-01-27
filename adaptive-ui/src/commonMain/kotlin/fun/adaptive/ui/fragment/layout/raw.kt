@@ -4,6 +4,7 @@
 
 package `fun`.adaptive.ui.fragment.layout
 
+import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.instruction.decoration.Border
@@ -18,7 +19,8 @@ operator fun Double.plus(other: Double?): Double =
  * Frame where the values are actual device dependent pixel values. All measurements and
  * layout calculations should use this frame.
  */
-data class RawFrame(
+@Adat
+class RawFrame(
     val top : Double,
     val left : Double,
     val width : Double,
