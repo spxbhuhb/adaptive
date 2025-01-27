@@ -312,13 +312,16 @@ class IrFunction2ArmClass(
 
         check(vararg is IrVararg) { "invalid vararg in hydration call (vararg is null): ${irCall.dumpKotlinLike()}" }
 
-        for (element in vararg.elements) {
+        for ((index, element) in vararg.elements.withIndex()) {
             check(element is IrExpression) { "invalid vararg element in hydration call (element is not IrExpression): ${irCall.dumpKotlinLike()}" }
 
-            val argument = transformValueArgument(armCall, element.type, null, element)
-            check(argument != null) { "invalid model in hydration call (model after transform is null): ${irCall.dumpKotlinLike()}" }
-
-            armCall.arguments += argument
+            if (index == 0) {
+                addInstruction(element, armCall)
+            } else {
+                val argument = transformValueArgument(armCall, element.type, null, element)
+                check(argument != null) { "invalid model in hydration call (model after transform is null): ${irCall.dumpKotlinLike()}" }
+                armCall.arguments += argument
+            }
         }
 
         return armCall.add()
@@ -558,6 +561,31 @@ class IrFunction2ArmClass(
                 irConst(0), // placeholder
                 allDependencies,
                 detachExpressions = allDetachExpressions,
+                isInstructions = true,
+                instructions = allInstructions
+            )
+    }
+
+    /**
+     * Add the expression to the instructions. Used for hydrated calls where the first element of the
+     * vararg is the instructions by definition.
+     */
+    fun addInstruction(expression: IrExpression, armCall: ArmCall) {
+
+        val original = armCall.arguments[0]
+
+        val allDependencies = expression.dependencies(skipLambdas = true) + original.dependencies
+        val allInstructions = listOf(expression) + original.instructions // keep precedence!
+
+        armCall.arguments[0] =
+
+            ArmValueArgument(
+                armClass,
+                argumentIndex = 0,
+                pluginContext.adaptiveInstructionGroupType,
+                irConst(0), // placeholder
+                allDependencies,
+                detachExpressions = original.detachExpressions,
                 isInstructions = true,
                 instructions = allInstructions
             )

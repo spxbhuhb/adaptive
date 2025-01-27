@@ -4,6 +4,7 @@
 package `fun`.adaptive.grove.api
 
 import `fun`.adaptive.foundation.*
+import `fun`.adaptive.foundation.instruction.*
 import `fun`.adaptive.foundation.testing.*
 
 @AdaptiveHydrated("grove")
@@ -35,7 +36,7 @@ fun box() : String {
 
     adaptive(adapter) {
         hydrated("Hello - 1")
-        hydrated("Hello - 2", 12, "World")
+        hydrated("Hello - 2", instructionsOf(), 12, "World")
     }
 
     return adapter.assert(listOf(
@@ -57,9 +58,9 @@ fun box() : String {
         TraceEvent("GroveHydrated", 4, "after-Create", ""),
         TraceEvent("GroveHydrated", 5, "before-Create", ""),
         TraceEvent("GroveHydrated", 5, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null, null, null, null]"),
-        TraceEvent("GroveHydrated", 5, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null, Hello - 2, 12, World]"),
-        TraceEvent("GroveHydrated", 5, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [null, Hello - 2, 12, World]"),
-        TraceEvent("GroveHydrated", 5, "after-Patch-Internal", "createMask: 0xffffffff thisMask: 0x00000000 state: [null, Hello - 2, 12, World]"),
+        TraceEvent("GroveHydrated", 5, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [[], Hello - 2, 12, World]"),
+        TraceEvent("GroveHydrated", 5, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [[], Hello - 2, 12, World]"),
+        TraceEvent("GroveHydrated", 5, "after-Patch-Internal", "createMask: 0xffffffff thisMask: 0x00000000 state: [[], Hello - 2, 12, World]"),
         TraceEvent("GroveHydrated", 5, "after-Create", ""),
         TraceEvent("AdaptiveSequence", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [null,[1, 2]]"),
         TraceEvent("AdaptiveSequence", 3, "after-Create", ""),
