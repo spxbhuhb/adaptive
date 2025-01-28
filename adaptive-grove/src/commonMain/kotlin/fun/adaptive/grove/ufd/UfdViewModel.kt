@@ -7,8 +7,9 @@ import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.grove.hydration.lfm.LfmConst
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.hydration.lfm.LfmMapping
+import `fun`.adaptive.grove.sheet.SheetEngine
 import `fun`.adaptive.grove.sheet.SheetViewModel
-import `fun`.adaptive.grove.sheet.SheetSelection
+import `fun`.adaptive.grove.sheet.operation.Add
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.size
@@ -18,7 +19,8 @@ import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.utility.UUID
 
-class UfdViewModel : SheetViewModel() {
+class UfdViewModel {
+
     val palette = autoCollectionOrigin(
         listOf(
             descendant("aui:text", emptyInstructions, LfmMapping(dependencyMask = 0, LfmConst("T", "Text"))),
@@ -26,7 +28,7 @@ class UfdViewModel : SheetViewModel() {
         )
     )
 
-    fun addDescendant(event: UIEvent) {
+    fun addDescendant(event: UIEvent, sheetViewModel: SheetViewModel) {
         val transfer = (event.transferData?.data as? LfmDescendant) ?: return
         val template = palette.firstOrNull { it.key == transfer.key } ?: return
 
@@ -45,11 +47,7 @@ class UfdViewModel : SheetViewModel() {
 
         val instanceMapping = listOf(instanceInstructionMapping) + template.mapping.drop(1)
 
-        fragments += LfmDescendant(UUID(), template.key, instanceMapping)
-    }
-
-    fun clearSelection() {
-        selection.update(emptySelection)
+        sheetViewModel += Add(template.key, instanceMapping)
     }
 
     fun descendant(key: String, instructions: AdaptiveInstructionGroup, vararg args: LfmMapping) =

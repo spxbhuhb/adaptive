@@ -17,13 +17,20 @@ fun <T> Stack<T>.push(item: T) = add(item)
 
 /**
  * Pops (removes and return) last item from [Stack]
- * @return item Last item
+ * @return the last item
  */
 fun <T> Stack<T>.pop(): T = removeAt(lastIndex)
 
 /**
+ * Pops (removes and return) last item from [Stack] or null if the [Stack] is empty
+ *
+ * @return the last item or null
+ */
+fun <T> Stack<T>.popOrNull(): T? = if (isEmpty()) null else removeAt(lastIndex)
+
+/**
  * Peeks (return) last item from [Stack]
- * @return item Last item if [Stack] is not empty
+ * @return last item if [Stack] is not empty
  * @throws IndexOutOfBoundsException when the stack is empty
  */
 fun <T> Stack<T>.peek(): T = this[lastIndex]

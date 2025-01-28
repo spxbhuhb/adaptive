@@ -4,20 +4,27 @@ import `fun`.adaptive.auto.api.autoCollectionOrigin
 import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
-import `fun`.adaptive.grove.ufd.Snapshot
+import `fun`.adaptive.grove.sheet.operation.Select
+import `fun`.adaptive.grove.sheet.operation.SheetOperation
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.render.model.AuiRenderData
 
-open class SheetViewModel {
+open class SheetViewModel(
+    val engine: SheetEngine,
+    fragments: Collection<LfmDescendant>,
+    selection: SheetSelection
+) {
 
-    val fragments = autoCollectionOrigin(emptyList<LfmDescendant>())
-    val snapshots = autoCollectionOrigin(emptyList<Snapshot>())
+    val fragments = autoCollectionOrigin(fragments)
+    val selection = autoItemOrigin(selection)
 
-    val emptySelection = SheetSelection(emptyList())
-
-    val selection = autoItemOrigin(emptySelection)
-    val target = autoItemOrigin(emptySelection)
+    operator fun plusAssign(operation: SheetOperation) {
+        val result = engine.operations.trySend(operation)
+        if (result.isFailure) {
+            engine.logger.error("cannot sent operation: $operation, reason: ${result.exceptionOrNull()}")
+        }
+    }
 
     fun select(sheet: AdaptiveFragment, x: Double, y: Double) {
 
@@ -34,7 +41,7 @@ open class SheetViewModel {
             items += SelectionInfo(info.uuid, child.renderData.rawFrame())
         }
 
-        selection.update(SheetSelection(items))
+        this += Select(items)
     }
 
     fun AuiRenderData.contains(x: Double, y: Double) =
@@ -61,6 +68,10 @@ open class SheetViewModel {
         }
 
         return null
+    }
+
+    companion object {
+        val emptySelection = SheetSelection(emptyList())
     }
 
 }

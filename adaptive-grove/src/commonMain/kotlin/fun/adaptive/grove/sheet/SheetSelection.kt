@@ -1,6 +1,7 @@
 package `fun`.adaptive.grove.sheet
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.ui.api.frame
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Frame
@@ -34,4 +35,8 @@ class SheetSelection(
 
         return frame(top.dp, left.dp, (right - left).dp, (bottom - top).dp)
     }
+
+    fun selected(collection : Collection<LfmDescendant>) =
+        collection.filter { it.uuid in selected.map { it.uuid } }
+
 }

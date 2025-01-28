@@ -10,19 +10,18 @@ import `fun`.adaptive.grove.hydration.lfm.LfmConst
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.hydration.lfm.LfmExternalStateVariable
 import `fun`.adaptive.grove.hydration.lfm.LfmFragment
-import `fun`.adaptive.grove.ufd.UfdViewModel
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.maxSize
 
 @Adaptive
-fun sheet(viewModel: UfdViewModel) {
-    val descendants = autoCollection(viewModel.fragments) ?: emptyList()
+fun sheet(viewModel: SheetViewModel) {
+    val items = autoCollection(viewModel.fragments) ?: emptyList()
 
     box {
         maxSize .. SheetInner()
 
-        for (item in descendants) {
+        for (item in items) {
             hydrated(item.model(), instructionsOf(DescendantInfo(item.uuid)))
         }
     }

@@ -7,29 +7,29 @@ import `fun`.adaptive.foundation.query.firstParentWith
 import `fun`.adaptive.foundation.query.firstWith
 import `fun`.adaptive.grove.sheet.SheetInner
 import `fun`.adaptive.grove.sheet.SheetOuter
+import `fun`.adaptive.grove.sheet.SheetViewModel
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.theme.borders
 
 @Adaptive
-fun controlLayers(viewModel: UfdViewModel) {
+fun controlLayers(sheetViewModel: SheetViewModel, ufdViewModel: UfdViewModel) {
 
     var lastPosition: Position? = null
-    val selection = autoItem(viewModel.selection) ?: viewModel.emptySelection
+    val selection = autoItem(sheetViewModel.selection) ?: SheetViewModel.emptySelection
     val controlFrame = selection.containingFrame()?.grow(1.0)
+
 
     dropTarget {
 
-        onDrop { viewModel.addDescendant(it) }
+        onDrop { ufdViewModel.addDescendant(it, sheetViewModel) }
 
         box {
             maxSize
 
             onPrimaryDown { event ->
                 lastPosition = event.position
-                viewModel.select(fragment().firstParentWith<SheetOuter>().firstWith<SheetInner>(), event.x, event.y)
-//                selection.update(selectionOf(event))
-//                target.update(emptySelection())
+                sheetViewModel.select(fragment().firstParentWith<SheetOuter>().firstWith<SheetInner>(), event.x, event.y)
             }
 
             onMove { event ->
