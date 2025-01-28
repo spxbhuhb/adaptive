@@ -191,28 +191,27 @@ abstract class AbstractAuiFragment<RT>(
     open fun updateLayout(updateId: Long, item: AbstractAuiFragment<*>?) {
         if (updateBatchId == updateId) return
 
+        updateBatchId = updateId
+
         // The previous render data is obsolete when the fragment was not patched in this batch,
         // but a descendant delegated the layout update. In this case contains data that belongs
         // to the one but last render, not the last render.
-
-        val obsoletePreviousData = ((updateBatchId - updateId) != 1L)
-
-        updateBatchId = updateId
 
         val layoutFragment = renderData.layoutFragment
 
         if (shouldUpdateSelf() || layoutFragment == null) {
             val layout = renderData.layout
-            val baseData = if (obsoletePreviousData) renderData else previousRenderData
 
             computeLayout(
-                layout?.instructedWidth ?: baseData.finalWidth,
-                layout?.instructedHeight ?: baseData.finalHeight
+                layout?.instructedWidth ?: renderData.finalWidth,
+                layout?.instructedHeight ?: renderData.finalHeight
             )
+
             placeLayout(
-                layout?.instructedTop ?: baseData.finalTop,
-                layout?.instructedLeft ?: baseData.finalLeft
+                layout?.instructedTop ?: renderData.finalTop,
+                layout?.instructedLeft ?: renderData.finalLeft
             )
+
         } else {
             renderData.layoutFragment?.updateLayout(updateId, this)
         }
@@ -223,6 +222,8 @@ abstract class AbstractAuiFragment<RT>(
      * to the parent.
      */
     open fun shouldUpdateSelf(): Boolean {
+        if (updateBatchId == 0L) return false
+
         val layout = renderData.layout
 
         // Default to update by parent when there are no layout instructions. In that case the fragment positions
