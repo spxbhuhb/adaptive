@@ -20,12 +20,11 @@ import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.form.api.form
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.OnClose
-import `fun`.adaptive.utility.firstOrNullIfInstance
 
 @Adaptive
 fun formDialog(title : String, data : AdatClass, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
 
-    val onClose = fragment().instructions.firstOrNullIfInstance<OnClose>()
+    val onClose = fragment().instructions.firstInstanceOfOrNull<OnClose>()
 
     dialog(title, instructions()) {
 

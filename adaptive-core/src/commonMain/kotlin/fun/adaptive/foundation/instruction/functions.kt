@@ -16,4 +16,4 @@ inline operator fun <reified T : AdaptiveInstruction> List<AdaptiveInstruction>.
 }
 
 inline fun <reified T : AdaptiveInstruction> AdaptiveFragment.get() : T? =
-    instructions.firstOrNullIfInstance<T>()
+    instructions.firstInstanceOfOrNull<T>()

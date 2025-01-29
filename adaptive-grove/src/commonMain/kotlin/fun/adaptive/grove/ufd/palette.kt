@@ -15,7 +15,7 @@ import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.utility.UUID
 
 @Adaptive
-fun palette(viewModel: UfdViewModel) {
+fun palette(viewModel: UfdContext) {
     val items = autoCollection(viewModel.palette) ?: emptyList()
 
     column {

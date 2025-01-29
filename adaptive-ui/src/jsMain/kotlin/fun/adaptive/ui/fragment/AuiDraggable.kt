@@ -24,7 +24,7 @@ open class AuiDraggable(
         receiver.draggable = true
 
         receiver.ondragstart = { event ->
-            val transferData = instructions.firstOrNullIfInstance<TransferData>()
+            val transferData = instructions.firstInstanceOfOrNull<TransferData>()
             // TODO missing transferData should result in syntax error before compilation
             checkNotNull(transferData) { "draggable fragment without `transferData` annotation" }
 

@@ -6,7 +6,6 @@ package `fun`.adaptive.graphics.canvas
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
-import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.Trace
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.foundation.testing.AdaptiveTestAdapter
@@ -34,7 +33,7 @@ class TestCanvasCanvas(
 
     override fun genPatchInternal(): Boolean {
 
-        instructions.firstOrNullIfInstance<Trace>()?.let {
+        instructions.firstInstanceOfOrNull<Trace>()?.let {
             canvasAdapter.trace = it.patterns
         }
 

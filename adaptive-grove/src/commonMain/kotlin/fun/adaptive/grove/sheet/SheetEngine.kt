@@ -8,6 +8,7 @@ import `fun`.adaptive.grove.sheet.operation.SheetOperation
 import `fun`.adaptive.grove.sheet.operation.Undo
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.Stack
+import `fun`.adaptive.utility.pop
 import `fun`.adaptive.utility.popOrNull
 import `fun`.adaptive.utility.push
 import kotlinx.coroutines.CoroutineScope
@@ -25,15 +26,11 @@ class SheetEngine(
     lateinit var scope: CoroutineScope
     val operations = Channel<SheetOperation>()
 
-    override var latestValue: SheetViewModel?
-        get() = current
-        set(_) = throw UnsupportedOperationException()
+    val undoStack : Stack<SheetOperation> = mutableListOf<SheetOperation>()
+    val redoStack : Stack<SheetOperation> = mutableListOf<SheetOperation>()
 
-    var current: SheetViewModel =
+    override var latestValue : SheetViewModel? =
         SheetViewModel(this, emptyList(), SheetViewModel.emptySelection)
-
-    val undoStack : Stack<SheetViewModel> = mutableListOf()
-    val redoStack : Stack<SheetViewModel> = mutableListOf()
 
     override fun start() {
         CoroutineScope(binding.targetFragment.adapter.dispatcher).apply {
@@ -50,38 +47,37 @@ class SheetEngine(
 
     suspend fun main() {
         for (operation in operations) {
-            if (trace) {
-                logger.fine { "$operation" }
-            }
 
             when (operation) {
                 is Undo -> undo()
                 is Redo -> redo()
                 else -> op(operation)
             }
+
             setDirtyBatch()
         }
     }
 
     fun undo() {
         val last = undoStack.popOrNull() ?: return
+        if (trace) logger.fine { "UNDO -- $last" }
+        last.revert(latestValue!!)
         redoStack.push(last)
-        current = last
     }
 
     fun redo() {
         val last = redoStack.popOrNull() ?: return
+        if (trace) logger.fine { "REDO -- $last" }
+        last.commit(latestValue!!)
         undoStack.push(last)
-        current = last
     }
 
     fun op(operation: SheetOperation) {
-        undoStack.push(current)
-
-        val new = SheetViewModel(this, current.fragments.value, current.selection.value)
-        operation.applyTo(new)
-
-        current = new
+        if (trace) logger.fine { "$operation" }
+        val replace = operation.commit(latestValue!!)
+        if (replace) undoStack.pop()
+        undoStack.push(operation)
+        redoStack.clear()
     }
 
     companion object {

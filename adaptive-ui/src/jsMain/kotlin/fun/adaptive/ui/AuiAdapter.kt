@@ -21,7 +21,6 @@ import `fun`.adaptive.ui.render.BrowserInputApplier
 import `fun`.adaptive.ui.render.BrowserLayoutApplier
 import `fun`.adaptive.ui.render.BrowserTextApplier
 import `fun`.adaptive.utility.alsoIfInstance
-import `fun`.adaptive.utility.firstOrNullIfInstance
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineDispatcher
@@ -123,7 +122,7 @@ class AuiAdapter(
             fragment.tracePatterns = renderData.tracePatterns
         }
 
-        fragment.instructions.firstOrNullIfInstance<Name>()?.let {
+        fragment.instructions.firstInstanceOfOrNull<Name>()?.let {
             fragment.receiver.id = it.name
         }
 

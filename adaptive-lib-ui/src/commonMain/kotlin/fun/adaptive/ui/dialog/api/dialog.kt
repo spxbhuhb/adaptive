@@ -18,12 +18,11 @@ import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.builtin.close
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.OnClose
-import `fun`.adaptive.utility.firstOrNullIfInstance
 
 @Adaptive
 fun dialog(title : String, vararg instructions: AdaptiveInstruction, @Adaptive _fixme_adaptive_content: () -> Unit): AdaptiveFragment {
 
-    val onClose = fragment().instructions.firstOrNullIfInstance<OnClose>()
+    val onClose = fragment().instructions.firstInstanceOfOrNull<OnClose>()
 
     rootBox {
         dialogTheme.root

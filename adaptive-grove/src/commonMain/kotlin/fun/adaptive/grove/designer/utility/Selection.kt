@@ -3,10 +3,8 @@ package `fun`.adaptive.grove.designer.utility
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
-import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
-import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.instruction.event.UIEvent
 import `fun`.adaptive.ui.instruction.layout.Frame
 import `fun`.adaptive.ui.instruction.layout.Position
@@ -84,12 +82,12 @@ class Selection(
         val instructions = item.instructions
         val result = instructions.toMutableList()
 
-        val frame = instructions.firstOrNullIfInstance<Frame>()
+        val frame = instructions.firstInstanceOfOrNull<Frame>()
         if (frame != null) {
             result.removeAll { it is Frame || it is Position }
             result += Size(frame.width, frame.height)
         } else {
-            val position = instructions.firstOrNullIfInstance<Position>()
+            val position = instructions.firstInstanceOfOrNull<Position>()
             if (position != null) {
                 result.removeAll { it is Position }
             }

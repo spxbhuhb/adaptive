@@ -126,7 +126,7 @@ class InstructionGroupTest {
         val group = AdaptiveInstructionGroup(listOf(fooInstruction, barInstruction))
 
         // Act
-        val foundFoo = group.firstOrNullIfInstance<FooInstruction>()
+        val foundFoo = group.firstInstanceOfOrNull<FooInstruction>()
 
         // Assert
         assertEquals(fooInstruction, foundFoo, "Expected first FooInstruction to be found")
@@ -139,7 +139,7 @@ class InstructionGroupTest {
         val group = AdaptiveInstructionGroup(listOf(barInstruction))
 
         // Act
-        val foundFoo = group.firstOrNullIfInstance<FooInstruction>()
+        val foundFoo = group.firstInstanceOfOrNull<FooInstruction>()
 
         // Assert
         assertNull(foundFoo, "Expected null because no FooInstruction is present")
@@ -153,7 +153,7 @@ class InstructionGroupTest {
         val parentGroup = AdaptiveInstructionGroup(listOf(nestedGroup))
 
         // Act
-        val foundFoo = parentGroup.firstOrNullIfInstance<FooInstruction>()
+        val foundFoo = parentGroup.firstInstanceOfOrNull<FooInstruction>()
 
         // Assert
         assertEquals(fooInstruction, foundFoo, "Expected to find FooInstruction in nested group")

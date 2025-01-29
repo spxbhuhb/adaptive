@@ -22,4 +22,8 @@ class Position(
             it.instructedLeft = adapter.toPx(left)
         }
     }
+
+    companion object {
+        val NaP = Position(DPixel.NaP, DPixel.NaP)
+    }
 }

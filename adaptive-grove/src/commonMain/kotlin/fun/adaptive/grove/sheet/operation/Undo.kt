@@ -4,7 +4,11 @@ import `fun`.adaptive.grove.sheet.SheetViewModel
 
 class Undo : SheetOperation() {
 
-    override fun applyTo(viewModel: SheetViewModel) {
+    override fun commit(viewModel: SheetViewModel): Boolean {
+        throw UnsupportedOperationException("implemented in the engine")
+    }
+
+    override fun revert(viewModel: SheetViewModel) {
         throw UnsupportedOperationException("implemented in the engine")
     }
 

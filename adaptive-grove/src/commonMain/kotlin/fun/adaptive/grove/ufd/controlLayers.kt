@@ -2,48 +2,43 @@ package `fun`.adaptive.grove.ufd
 
 import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.query.firstParentWith
-import `fun`.adaptive.foundation.query.firstWith
-import `fun`.adaptive.grove.sheet.SheetInner
-import `fun`.adaptive.grove.sheet.SheetOuter
 import `fun`.adaptive.grove.sheet.SheetViewModel
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.theme.borders
+import `fun`.adaptive.utility.vmNowMicro
 
 @Adaptive
-fun controlLayers(sheetViewModel: SheetViewModel, ufdViewModel: UfdViewModel) {
+fun controlLayers(sheetViewModel: SheetViewModel, context: UfdContext) {
 
-    var lastPosition: Position? = null
+    var moveStart = 0L
+    var lastPosition = Position.NaP
     val selection = autoItem(sheetViewModel.selection) ?: SheetViewModel.emptySelection
     val controlFrame = selection.containingFrame()?.grow(1.0)
 
-
     dropTarget {
 
-        onDrop { ufdViewModel.addDescendant(it, sheetViewModel) }
+        onDrop { context.addDescendant(it) }
 
         box {
             maxSize
 
             onPrimaryDown { event ->
                 lastPosition = event.position
-                sheetViewModel.select(fragment().firstParentWith<SheetOuter>().firstWith<SheetInner>(), event.x, event.y)
+                moveStart = vmNowMicro()
+                context.select(event.x, event.y)
             }
 
             onMove { event ->
-                if (lastPosition == null) return@onMove
+                if (lastPosition === Position.NaP) return@onMove
                 val newPosition = event.position
-//                selection.move(lastPosition !!, newPosition)
+                context.move(moveStart, newPosition.left - lastPosition.left, newPosition.top - lastPosition.top)
                 lastPosition = newPosition
-//                target.update(selectionOf(event))
             }
 
             onPrimaryUp {
-                lastPosition = null
-//                selection.place(target)
-//                target.update(emptySelection())
+                lastPosition = Position.NaP
+                moveStart = 0L
             }
 
             if (controlFrame != null) {

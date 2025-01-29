@@ -6,7 +6,6 @@ package `fun`.adaptive.graphics.canvas.fragment
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
-import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.Trace
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.graphics.canvas.platform.ActualBrowserCanvas
@@ -42,7 +41,7 @@ class CanvasCanvas(
     }
 
     override fun auiPatchInternal() {
-        instructions.firstOrNullIfInstance<Trace>()?.let {
+        instructions.firstInstanceOfOrNull<Trace>()?.let {
             canvasAdapter.trace = it.patterns
         }
     }

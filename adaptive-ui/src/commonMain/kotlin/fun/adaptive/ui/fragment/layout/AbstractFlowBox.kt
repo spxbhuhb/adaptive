@@ -29,7 +29,7 @@ abstract class AbstractFlowBox<RT, CRT : RT>(
         val data = renderData
         val container = renderData.container
 
-        val itemLimit = instructions.firstOrNullIfInstance<FlowItemLimit>()?.limit ?: Int.MAX_VALUE
+        val itemLimit = instructions.firstInstanceOfOrNull<FlowItemLimit>()?.limit ?: Int.MAX_VALUE
 
         // ----  calculate layout of all items  ---------------------------------------
 

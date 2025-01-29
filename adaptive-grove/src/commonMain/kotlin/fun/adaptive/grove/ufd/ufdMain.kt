@@ -7,10 +7,9 @@ import adaptive_grove.generated.resources.redo
 import adaptive_grove.generated.resources.undo
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.grove.sheet.SheetEngine.Companion.sheetEngine
-import `fun`.adaptive.grove.sheet.SheetOuter
 import `fun`.adaptive.grove.sheet.operation.Redo
 import `fun`.adaptive.grove.sheet.operation.Undo
-import `fun`.adaptive.grove.sheet.sheet
+import `fun`.adaptive.grove.sheet.fragment.sheet
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.borderBottom
 import `fun`.adaptive.ui.api.box
@@ -31,14 +30,14 @@ import `fun`.adaptive.ui.theme.colors
 @Adaptive
 fun ufdMain() {
 
-    val ufdViewModel = UfdViewModel()
     val sheetViewModel = sheetEngine(trace = true)
+    val ufdContext = UfdContext(sheetViewModel)
 
     grid {
         colTemplate(200.dp, 200.dp, 1.fr, 200.dp)
         maxSize
 
-        palette(ufdViewModel)
+        palette(ufdContext)
 
         descendants(sheetViewModel)
 
@@ -52,9 +51,9 @@ fun ufdMain() {
             }
 
             box {
-                maxSize .. SheetOuter()
+                maxSize
                 sheet(sheetViewModel)
-                controlLayers(sheetViewModel, ufdViewModel)
+                controlLayers(sheetViewModel, ufdContext)
             }
 
         }

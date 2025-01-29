@@ -27,7 +27,6 @@ import `fun`.adaptive.ui.instruction.text.ToText
 import `fun`.adaptive.ui.select.theme.SelectTheme
 import `fun`.adaptive.ui.select.theme.selectTheme
 import `fun`.adaptive.ui.theme.textColors
-import `fun`.adaptive.utility.firstOrNullIfInstance
 import kotlin.math.min
 
 
@@ -44,7 +43,7 @@ fun <T> select(
     var open = false
     if (focus == false) open = false // this is not the same as open = focus!
 
-    val toText = fragment().instructions.firstOrNullIfInstance<ToText<T>>() ?: ToText<T> { it.toString() }
+    val toText = fragment().instructions.firstInstanceOfOrNull<ToText<T>>() ?: ToText<T> { it.toString() }
     val openHeight = min(10, items.size) * theme.itemHeight
 
     box {
@@ -88,7 +87,7 @@ private fun <T> selectTop(
     vararg instructions: AdaptiveInstruction,
 ): AdaptiveFragment {
 
-    val placeholder = fragment().instructions.firstOrNullIfInstance<InputPlaceholder>()
+    val placeholder = fragment().instructions.firstInstanceOfOrNull<InputPlaceholder>()
     val textColor = if (selected != null) textColors.onSurface else textColors.onSurfaceVariant
 
     grid(instructions()) {

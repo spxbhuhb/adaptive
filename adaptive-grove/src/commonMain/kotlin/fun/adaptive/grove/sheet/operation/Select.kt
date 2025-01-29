@@ -8,8 +8,16 @@ class Select(
     val items: MutableList<SelectionInfo>
 ) : SheetOperation() {
 
-    override fun applyTo(viewModel: SheetViewModel) {
+    val undoData = mutableListOf<SelectionInfo>()
+
+    override fun commit(viewModel: SheetViewModel): Boolean {
+        undoData += viewModel.selection.value.selected
         viewModel.selection.update(SheetSelection(items))
+        return false
+    }
+
+    override fun revert(viewModel: SheetViewModel) {
+        viewModel.selection.update(SheetSelection(undoData))
     }
 
     override fun toString(): String =

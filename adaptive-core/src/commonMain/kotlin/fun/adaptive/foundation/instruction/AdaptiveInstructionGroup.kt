@@ -67,8 +67,11 @@ class AdaptiveInstructionGroup(
     fun any(predicate: (AdaptiveInstruction) -> Boolean): Boolean =
         find(predicate) != null
 
-    inline fun <reified T : AdaptiveInstruction> firstOrNullIfInstance(): T? =
+    inline fun <reified T : AdaptiveInstruction> firstInstanceOfOrNull(): T? =
         find { it is T } as T?
+
+    inline fun <reified T : AdaptiveInstruction> firstInstanceOf(): T =
+        find { it is T } as T
 
     fun isNotEmpty(): Boolean {
         if (instructions.isEmpty()) return false
