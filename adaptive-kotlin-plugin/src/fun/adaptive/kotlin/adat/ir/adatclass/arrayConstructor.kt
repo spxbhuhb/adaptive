@@ -9,7 +9,6 @@ import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.IrBlockBodyBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irDelegatingConstructorCall
-import org.jetbrains.kotlin.ir.builders.irSetField
 import org.jetbrains.kotlin.ir.builders.irTemporary
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrConstructor
@@ -18,11 +17,9 @@ import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.expressions.impl.IrBranchImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrWhenImpl
-import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.deepCopyWithSymbols
-import org.jetbrains.kotlin.ir.util.superClass
 
 fun AdatIrBuilder.arrayConstructor(
     adatClass: IrClass,
@@ -35,32 +32,22 @@ fun AdatIrBuilder.arrayConstructor(
 
     constructor.body = DeclarationIrBuilder(pluginContext.irContext, constructor.symbol).irBlockBody {
 
-        + irDelegatingConstructorCall(
-            adatClass.superClass?.constructors?.first { it.valueParameters.isEmpty() } ?: irBuiltIns.anyClass.constructors.first().owner
-        )
-
-        + irCall(
-            pluginContext.verifyParameters,
-            dispatchReceiver = null,
-            args = arrayOf(
-                irGet(adatClass.thisReceiver !!),
-                irGet(constructor.valueParameters.first())
-            )
-        )
-
         val values = constructor.valueParameters.first()
 
-        for (property in properties) {
-            val backingField = property.property.backingField !! // TODO handle properties without backing fields?
+        + irDelegatingConstructorCall(
+            primary
+        ).also {
+            for ((index, property) in properties.withIndex()) {
+                val backingField = property.property.backingField !! // TODO handle properties without backing fields?
 
-            + irSetField(
-                receiver = irGet(adatClass.thisReceiver !!),
-                backingField,
-                irImplicitAs(
-                    backingField.type,
-                    valueOrDefault(this, values, property, primary, constructor, backingField.type)
+                it.putValueArgument(
+                    index,
+                    irImplicitAs(
+                        backingField.type,
+                        valueOrDefault(this, values, property, primary, constructor)
+                    )
                 )
-            )
+            }
         }
     }
 }
@@ -70,8 +57,7 @@ private fun AdatIrBuilder.valueOrDefault(
     values: IrValueParameter,
     property: PropertyData,
     primary: IrConstructor,
-    constructor: IrConstructor,
-    type: IrType
+    constructor: IrConstructor
 ): IrExpression {
 
     // gets the value from the passed array

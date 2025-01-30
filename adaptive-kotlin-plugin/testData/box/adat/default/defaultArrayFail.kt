@@ -20,18 +20,18 @@ fun box(): String {
 
     try {
         val t1 = TestAdat.newInstance(arrayOf(null, null, null))
-    } catch (ex : MissingParameterException) {
-        if (ex.className != "fun.adaptive.adat.TestAdat") return "Fail: t1 adatClass ${ex.className}"
-        if (ex.propertyName != "someString") return "Fail: t1 propertyName"
+        return "Fail: t1 created"
+    } catch (ex : NullPointerException) {
+
     }
 
     val id = UUID<Any>()
 
     try {
         val t2 = TestAdat2.newInstance(arrayOf(id, null, "Hello"))
-    } catch (ex : MissingParameterException) {
-        if (ex.className != "fun.adaptive.adat.TestAdat2") return "Fail:  t2 adatClass ${ex.className}"
-        if (ex.propertyName != "someInt23") return "Fail: t2 propertyName"
+        return "Fail: t2 created"
+    } catch (ex : NullPointerException) {
+
     }
 
     return "OK"
