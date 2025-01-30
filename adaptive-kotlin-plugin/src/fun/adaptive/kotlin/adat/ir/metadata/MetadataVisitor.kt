@@ -15,6 +15,8 @@ import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrProperty
+import org.jetbrains.kotlin.ir.expressions.IrGetValue
+import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.types.isNullable
 import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.*
@@ -57,7 +59,10 @@ class MetadataVisitor(
     override fun visitProperty(declaration: IrProperty) {
         if (declaration.name == Names.ADAT_COMPANION) return
         if (declaration.name == Names.ADAT_CONTEXT) return
-        if (declaration.backingField == null) return
+
+        val initializer = declaration.backingField?.initializer?.expression ?: return
+        if (initializer !is IrGetValue) return
+        if (initializer.origin != IrStatementOrigin.INITIALIZE_PROPERTY_FROM_PARAMETER) return
 
         val signature = Signature.typeSignature(declaration.getter !!.returnType)
 

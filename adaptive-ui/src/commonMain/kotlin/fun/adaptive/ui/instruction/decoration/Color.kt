@@ -10,7 +10,6 @@ class Color(
 
     constructor(value: String) : this(value.parse())
 
-    // FIXME should be ignored by Adat
     val hex by lazy { "#${value.toString(16).padStart(6, '0')}${(opacity * 255).toInt().toString(16).padStart(2, '0')}" }
 
     fun opaque(opacity: Float) = Color(value, opacity)

@@ -10,6 +10,12 @@ class SomeClass(
 )
 ```
 
+> [!IMPORTANT]
+> 
+> Just as for data classes, only the properties declared in the primary constructor are
+> handled by the generated code. Properties declared in the class body are ignored.
+> 
+
 Subtopics:
 
 * [Descriptor and validation](descriptor-and-validation.md)

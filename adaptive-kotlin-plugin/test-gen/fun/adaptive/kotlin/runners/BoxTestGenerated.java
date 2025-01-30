@@ -50,6 +50,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Test
+    @TestMetadata("ignoreNonConstructor.kt")
+    public void testIgnoreNonConstructor() {
+      runTest("testData/box/adat/ignoreNonConstructor.kt");
+    }
+
+    @Test
     @TestMetadata("newInstance.kt")
     public void testNewInstance() {
       runTest("testData/box/adat/newInstance.kt");
