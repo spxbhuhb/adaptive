@@ -2,7 +2,8 @@ package `fun`.adaptive.grove.sheet.operation
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
-import `fun`.adaptive.grove.sheet.SheetViewModel
+import `fun`.adaptive.grove.sheet.control.refreshSelection
+import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.utility.UUID

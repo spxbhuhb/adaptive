@@ -45,6 +45,12 @@ kotlin {
             }
         }
 
+        commonTest {
+            dependencies {
+                api(libs.kotlin.test)
+            }
+        }
+
         jvmMain {
             dependencies {
                 implementation(libs.h2database)

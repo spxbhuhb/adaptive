@@ -7,21 +7,11 @@ import adaptive_grove.generated.resources.redo
 import adaptive_grove.generated.resources.undo
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.grove.sheet.SheetEngine.Companion.sheetEngine
+import `fun`.adaptive.grove.sheet.fragment.sheet
 import `fun`.adaptive.grove.sheet.operation.Redo
 import `fun`.adaptive.grove.sheet.operation.Undo
-import `fun`.adaptive.grove.sheet.fragment.sheet
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.ui.api.borderBottom
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.colTemplate
-import `fun`.adaptive.ui.api.gap
-import `fun`.adaptive.ui.api.grid
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.maxWidth
-import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.rowTemplate
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
@@ -30,8 +20,8 @@ import `fun`.adaptive.ui.theme.colors
 @Adaptive
 fun ufdMain() {
 
-    val sheetViewModel = sheetEngine(trace = true)
-    val ufdContext = UfdContext(sheetViewModel)
+    val sheetViewModel = sheetEngine()
+    val ufdContext = UfdContext()
 
     grid {
         colTemplate(200.dp, 200.dp, 1.fr, 200.dp)
@@ -50,12 +40,7 @@ fun ufdMain() {
                 icon(Graphics.redo) .. onClick { sheetViewModel += Redo() }
             }
 
-            box {
-                maxSize
-                sheet(sheetViewModel)
-                controlLayers(sheetViewModel, ufdContext)
-            }
-
+            sheet(sheetViewModel)
         }
 
         instructions(sheetViewModel)

@@ -1,24 +1,31 @@
-package `fun`.adaptive.grove.ufd
+package `fun`.adaptive.grove.sheet.fragment
 
 import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.grove.sheet.SheetViewModel
+import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
+import `fun`.adaptive.grove.sheet.control.add
+import `fun`.adaptive.grove.sheet.control.move
+import `fun`.adaptive.grove.sheet.control.select
+import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.utility.vmNowMicro
 
 @Adaptive
-fun controlLayers(sheetViewModel: SheetViewModel, context: UfdContext) {
+fun controlLayer(viewModel: SheetViewModel) {
 
     var moveStart = 0L
     var lastPosition = Position.NaP
-    val selection = autoItem(sheetViewModel.selection) ?: SheetViewModel.emptySelection
-    val controlFrame = selection.containingFrame()?.grow(1.0)
+    val selection = autoItem(viewModel.selection) ?: viewModel.emptySelection
+    val controlFrame = selection.containingFrame?.grow(1.0)
 
     dropTarget {
 
-        onDrop { context.addDescendant(it) }
+        onDrop { event ->
+            val template = (event.transferData?.data as? LfmDescendant) ?: return@onDrop
+            viewModel.add(event.x, event.y, template)
+        }
 
         box {
             maxSize
@@ -26,13 +33,15 @@ fun controlLayers(sheetViewModel: SheetViewModel, context: UfdContext) {
             onPrimaryDown { event ->
                 lastPosition = event.position
                 moveStart = vmNowMicro()
-                context.select(event.x, event.y)
+                viewModel.select(event.x, event.y)
             }
 
             onMove { event ->
                 if (lastPosition === Position.NaP) return@onMove
                 val newPosition = event.position
-                context.move(moveStart, newPosition.left - lastPosition.left, newPosition.top - lastPosition.top)
+
+                viewModel.move(moveStart, newPosition.left - lastPosition.left, newPosition.top - lastPosition.top)
+
                 lastPosition = newPosition
             }
 

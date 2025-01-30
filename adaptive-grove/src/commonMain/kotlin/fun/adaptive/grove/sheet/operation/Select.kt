@@ -1,8 +1,8 @@
 package `fun`.adaptive.grove.sheet.operation
 
-import `fun`.adaptive.grove.sheet.SelectionInfo
-import `fun`.adaptive.grove.sheet.SheetSelection
-import `fun`.adaptive.grove.sheet.SheetViewModel
+import `fun`.adaptive.grove.sheet.model.SelectionInfo
+import `fun`.adaptive.grove.sheet.model.SheetSelection
+import `fun`.adaptive.grove.sheet.model.SheetViewModel
 
 class Select(
     val items: MutableList<SelectionInfo>

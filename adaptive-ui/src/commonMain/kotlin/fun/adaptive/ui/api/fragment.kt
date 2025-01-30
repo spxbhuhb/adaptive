@@ -44,6 +44,11 @@ fun flowBox(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> U
     manualImplementation(instructions, content)
 }
 
+@AdaptiveExpect(aui)
+fun rectangle(vararg instructions: AdaptiveInstruction): AdaptiveFragment {
+    manualImplementation(instructions)
+}
+
 /**
  * Create a box added to the root fragment list of the adapter. The box is automatically placed
  * at position (0,0) and sized to fill the all the viewport.

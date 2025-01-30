@@ -3,6 +3,7 @@ package `fun`.adaptive.grove.sheet
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
 import `fun`.adaptive.foundation.producer.Producer
+import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.grove.sheet.operation.Redo
 import `fun`.adaptive.grove.sheet.operation.SheetOperation
 import `fun`.adaptive.grove.sheet.operation.Undo
@@ -30,7 +31,10 @@ class SheetEngine(
     val redoStack : Stack<SheetOperation> = mutableListOf<SheetOperation>()
 
     override var latestValue : SheetViewModel? =
-        SheetViewModel(this, emptyList(), SheetViewModel.emptySelection)
+        SheetViewModel(this, emptyList())
+
+    val viewModel : SheetViewModel
+        get() = latestValue !!
 
     override fun start() {
         CoroutineScope(binding.targetFragment.adapter.dispatcher).apply {
@@ -47,7 +51,6 @@ class SheetEngine(
 
     suspend fun main() {
         for (operation in operations) {
-
             when (operation) {
                 is Undo -> undo()
                 is Redo -> redo()
@@ -61,20 +64,20 @@ class SheetEngine(
     fun undo() {
         val last = undoStack.popOrNull() ?: return
         if (trace) logger.fine { "UNDO -- $last" }
-        last.revert(latestValue!!)
+        last.revert(viewModel)
         redoStack.push(last)
     }
 
     fun redo() {
         val last = redoStack.popOrNull() ?: return
         if (trace) logger.fine { "REDO -- $last" }
-        last.commit(latestValue!!)
+        last.commit(viewModel)
         undoStack.push(last)
     }
 
     fun op(operation: SheetOperation) {
         if (trace) logger.fine { "$operation" }
-        val replace = operation.commit(latestValue!!)
+        val replace = operation.commit(viewModel)
         if (replace) undoStack.pop()
         undoStack.push(operation)
         redoStack.clear()

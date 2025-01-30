@@ -1,6 +1,6 @@
 package `fun`.adaptive.grove.sheet.operation
 
-import `fun`.adaptive.grove.sheet.SheetViewModel
+import `fun`.adaptive.grove.sheet.model.SheetViewModel
 
 class Undo : SheetOperation() {
 

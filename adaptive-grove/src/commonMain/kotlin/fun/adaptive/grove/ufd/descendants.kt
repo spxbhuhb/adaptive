@@ -3,7 +3,7 @@ package `fun`.adaptive.grove.ufd
 import adaptive_grove.generated.resources.components
 import `fun`.adaptive.auto.api.autoCollection
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.grove.sheet.SheetViewModel
+import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.borderRight
 import `fun`.adaptive.ui.api.column

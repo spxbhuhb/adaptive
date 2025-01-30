@@ -5,15 +5,15 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.grove.hydration.lfm.LfmConst
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
-import `fun`.adaptive.grove.sheet.DescendantInfo
-import `fun`.adaptive.grove.sheet.SheetViewModel
+import `fun`.adaptive.grove.sheet.model.DescendantInfo
+import `fun`.adaptive.grove.sheet.model.SheetViewModel
 
 /**
  * A fragment that contains hydrated fragments and supports adding, removing and patching them
  * independent of the standard adaptive fragment mechanisms.
  */
 @AdaptiveActual
-class GroveSheetInner(
+class GroveDrawingLayer(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment? = null,
     declarationIndex: Int
