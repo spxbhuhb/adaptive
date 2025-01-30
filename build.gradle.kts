@@ -41,3 +41,22 @@ registerTask("publishing:publishToMavenLocal")
 registerTask("publishing:publish")
 registerTask("other:kotlinUpgradeYarnLock")
 registerTask("verification:jvmTest")
+
+fun shorthand(buildName : String, taskName : String, shorthand:String) {
+    tasks.register(shorthand) {
+        group = "aaa"
+        gradle.includedBuilds.forEach { build ->
+            if (build.name != buildName) return@forEach
+            dependsOn(build.task(":$taskName"))
+        }
+    }
+}
+
+shorthand("adaptive-kotlin-plugin", "generateTests", "plugin-generate-tests")
+shorthand("adaptive-kotlin-plugin", "test", "plugin-test")
+shorthand("cookbook", "jsBrowserDevelopmentRun", "cookbook-js")
+shorthand("cookbook", "jvmRun", "cookbook-jvm")
+shorthand("adaptive-grove", "jsBrowserDevelopmentRun", "grove-js")
+shorthand("adaptive-grove", "jvmRun", "grove-jvm")
+shorthand("sandbox", "jsBrowserDevelopmentRun", "sandbox-js")
+shorthand("sandbox", "jvmRun", "sandbox-jvm")

@@ -2,12 +2,54 @@
 
 First of all, join the `#fun-adaptive` [kotlinlang](https://slack-chats.kotlinlang.org/) channel on Slack.
 
-I try to check the channel daily, there you can ask anything related to Adaptive.
+I try to check the channel daily, there you can ask anything related to the project.
+
+## Trying out things
+
+When you open the project in IDEA, the Gradle import creates shorthands to start
+the mostly used tasks:
+
+```text
+adaptive
+  adaptive
+    Tasks
+       aaa
+          cookbook-js
+          cookbook-jvm
+          grove-js
+          grove-jvm
+          plugin-generate-tests
+          plugin-test
+          sandbox-js
+          sandbox-jvm
+          
+```
+
+For applications (cookbook, grove, sandbox) use `jvm` to start the server side, then `js`
+to start the client in a browser.
+
+The `plugin` tasks are used during the Kotlin compiler plugin development (generate tests
+and run the test).
+
+You can also start these from the command line (I haven't tested this too much, the page opens,
+so I guess it works somewhat):
+
+```shell
+./gradlew cookbook-jvm
+```
+
+And in a separate terminal (as these do not exit until you manually stop them):
+
+```shell
+./gradlew cookbook-js
+```
 
 ## Names
 
-**core modules**: The `adaptive-core`, `adaptive-gradle-plugin`, `adaptive-kotlin-plugin` modules. These often require
-special handling because they do not have the compiler plugin. So, usual stuff like `@Adat` or `@CallSiteName` does not work.
+**core modules**: The `adaptive-core`, `adaptive-gradle-plugin`, `adaptive-kotlin-plugin` modules.
+
+These often require special handling because they do not have the compiler plugin.
+So, usual stuff like `@Adat` or `@CallSiteName` does not work.
 
 ## Adding code 
 
@@ -26,7 +68,7 @@ Apart code style there are a some conventions to follow:
 - use `private` when something is used only locally and it does not have a unit test
 - use `internal` when something is used only locally and it does have a unit test
 - put functions/classes into one file in these cases only:
-  - they are small and clearly belongs to each other
+  - they are small and clearly belong to each other
     - extensions of the same class
     - helper/builder/access functions of the same domain
   - there is one public function which calls the others, the others are private or internal
