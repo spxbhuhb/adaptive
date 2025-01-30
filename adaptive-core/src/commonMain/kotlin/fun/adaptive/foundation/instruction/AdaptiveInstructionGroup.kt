@@ -160,8 +160,9 @@ class AdaptiveInstructionGroup(
         return instructions == other.instructions
     }
 
-    override fun toString(): String =
-        toMutableList().toString()
+    override fun toString(): String {
+        return toMutableList().toString()
+    }
 
     override fun hashCode(): Int {
         return instructions.hashCode()
@@ -204,7 +205,7 @@ class AdaptiveInstructionGroup(
 
         override fun newInstance(values: Array<Any?>): AdaptiveInstructionGroup {
             @Suppress("UNCHECKED_CAST")
-            return AdaptiveInstructionGroup(values.toList() as List<AdaptiveInstruction>)
+            return AdaptiveInstructionGroup(values[0] as List<AdaptiveInstruction>)
         }
     }
 }
