@@ -3,6 +3,7 @@ package `fun`.adaptive.grove.sheet.model
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.ui.api.frame
+import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Frame
 import kotlin.math.max
@@ -13,9 +14,9 @@ class SheetSelection(
     val selected: List<SelectionInfo>
 ) {
 
-    val containingFrame: Frame?
+    val containingFrame: RawFrame
         get() {
-            if (selected.isEmpty()) return null
+            if (selected.isEmpty()) return RawFrame.NaF
 
             var top = Double.MAX_VALUE
             var left = Double.MAX_VALUE
@@ -32,15 +33,17 @@ class SheetSelection(
                 top = min(top, finalTop)
                 left = min(left, finalLeft)
                 bottom = max(finalTop + frame.height, bottom)
-                right = max(finalLeft + frame.width, left)
+                right = max(finalLeft + frame.width, right)
             }
 
-            return frame(top.dp, left.dp, (right - left).dp, (bottom - top).dp)
+            return RawFrame(top, left, right - left, bottom - top)
         }
 
     fun fragments(viewModel: SheetViewModel): List<LfmDescendant> {
         val uuids = selected.map { it.uuid }
         return viewModel.fragments.filter { it.uuid in uuids }
     }
+
+    fun isEmpty() = selected.isEmpty()
 
 }

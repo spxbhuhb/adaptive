@@ -1,6 +1,7 @@
 package `fun`.adaptive.ui.instruction.event
 
 import `fun`.adaptive.ui.AbstractAuiFragment
+import `fun`.adaptive.ui.fragment.layout.RawPosition
 import `fun`.adaptive.ui.instruction.layout.Position
 
 /**
@@ -15,13 +16,19 @@ class UIEvent(
     val nativeEvent: Any?,
     val x: Double = Double.NaN,
     val y: Double = Double.NaN,
-    val transferData: TransferData? = null
+    val transferData: TransferData? = null,
+    val modifiers: Set<EventModifier> = emptySet()
 ) {
     val position: Position
         get() = Position(
             fragment.uiAdapter.toDp(y),
             fragment.uiAdapter.toDp(x)
         )
+
+    val rawPosition: RawPosition
+        get() = RawPosition(y, x)
+
+    operator fun contains(modifier: EventModifier): Boolean = modifier in modifiers
 
     fun patchIfDirty() {
         val closureOwner = fragment.createClosure.owner

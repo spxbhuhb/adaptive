@@ -98,6 +98,9 @@ class DPixel(
     companion object {
         val ZERO = DPixel(0.0)
         val NaP = DPixel(Double.NaN)
+
+        fun min(a: DPixel, b: DPixel): DPixel = if (a.value < b.value) a else b
+        fun max(a: DPixel, b: DPixel): DPixel = if (a.value > b.value) a else b
     }
 }
 

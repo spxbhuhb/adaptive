@@ -8,7 +8,6 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.render.layout
-import `fun`.adaptive.ui.render.model.LayoutRenderData
 
 @Adat
 class Frame(
@@ -17,6 +16,13 @@ class Frame(
     val width: DPixel,
     val height: DPixel
 ) : AdaptiveInstruction {
+
+    constructor(p1 : Position, p2 : Position) : this(
+        DPixel.min(p1.top, p2.top),
+        DPixel.min(p1.left, p2.left),
+        DPixel.max(p1.left, p2.left) - DPixel.min(p1.left, p2.left),
+        DPixel.max(p1.top, p2.top) - DPixel.min(p1.top, p2.top)
+    )
 
     override fun applyTo(subject: Any) {
         layout(subject) {
@@ -28,7 +34,23 @@ class Frame(
         }
     }
 
-    fun grow(dp: Double) = Frame(top - dp, left - dp, width + (2 * dp), height + (2 * dp))
+    operator fun contains(position: Position) : Boolean {
+        if (this === NaF) return false
+        val x = position.left.value
+        val y = position.top.value
+        val x1 = left.value
+        val y1 = top.value
+        val x2 = x1 + width.value
+        val y2 = y1 + height.value
+        return x >= x1 && x <= x2 && y >= y1 && y <= y2
+    }
+
+    fun grow(dp: Double) =
+        if (this === NaF) {
+            NaF
+        } else {
+            Frame(top - dp, left - dp, width + (2 * dp), height + (2 * dp))
+        }
 
     companion object {
         val NaF = Frame(DPixel.Companion.NaP, DPixel.Companion.NaP, DPixel.Companion.NaP, DPixel.Companion.NaP)

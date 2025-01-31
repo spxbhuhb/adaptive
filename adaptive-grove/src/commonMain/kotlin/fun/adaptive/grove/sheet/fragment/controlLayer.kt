@@ -2,12 +2,15 @@ package `fun`.adaptive.grove.sheet.fragment
 
 import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.sheet.control.add
 import `fun`.adaptive.grove.sheet.control.move
 import `fun`.adaptive.grove.sheet.control.select
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.instruction.event.EventModifier
+import `fun`.adaptive.ui.instruction.layout.Frame
 import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.utility.vmNowMicro
@@ -16,9 +19,10 @@ import `fun`.adaptive.utility.vmNowMicro
 fun controlLayer(viewModel: SheetViewModel) {
 
     var moveStart = 0L
+    var startPosition = Position.NaP
     var lastPosition = Position.NaP
     val selection = autoItem(viewModel.selection) ?: viewModel.emptySelection
-    val controlFrame = selection.containingFrame?.grow(1.0)
+    var controlFrame = selection.containingFrame.toFrame(adapter()).grow(1.0)
 
     dropTarget {
 
@@ -31,26 +35,40 @@ fun controlLayer(viewModel: SheetViewModel) {
             maxSize
 
             onPrimaryDown { event ->
-                lastPosition = event.position
+                startPosition = event.position
+                lastPosition = startPosition
+
                 moveStart = vmNowMicro()
-                viewModel.select(event.x, event.y)
+
+                if (lastPosition !in controlFrame) {
+                    viewModel.select(event.x, event.y, EventModifier.SHIFT in event)
+                }
             }
 
             onMove { event ->
                 if (lastPosition === Position.NaP) return@onMove
                 val newPosition = event.position
 
-                viewModel.move(moveStart, newPosition.left - lastPosition.left, newPosition.top - lastPosition.top)
+                if (selection.isEmpty()) {
+                    controlFrame = Frame(startPosition, newPosition)
+                } else {
+                    viewModel.move(moveStart, newPosition.left - lastPosition.left, newPosition.top - lastPosition.top)
+                }
 
                 lastPosition = newPosition
             }
 
-            onPrimaryUp {
+            onPrimaryUp { event ->
                 lastPosition = Position.NaP
                 moveStart = 0L
+
+                if (selection.isEmpty()) {
+                    controlFrame = Frame.NaF
+                    viewModel.select(startPosition.toRaw(adapter()), event.x, event.y, EventModifier.SHIFT in event)
+                }
             }
 
-            if (controlFrame != null) {
+            if (controlFrame != Frame.NaF) {
                 box {
                     controlFrame .. borders.outline
                 }

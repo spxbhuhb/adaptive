@@ -5,12 +5,18 @@
 package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.foundation.AdaptiveAdapter
+import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.AbstractAuiAdapter
-import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.AbstractAuiFragment
+import `fun`.adaptive.ui.instruction.Surrounding
 import `fun`.adaptive.ui.instruction.decoration.Border
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.decoration.CornerRadius
 import `fun`.adaptive.ui.instruction.decoration.DropShadow
+import `fun`.adaptive.ui.instruction.layout.Frame
+import `fun`.adaptive.ui.instruction.layout.Position
+import `fun`.adaptive.ui.instruction.toPx
 
 operator fun Double.plus(other: Double?): Double =
     if (other == null) this else other + this
@@ -21,11 +27,26 @@ operator fun Double.plus(other: Double?): Double =
  */
 @Adat
 class RawFrame(
-    val top : Double,
-    val left : Double,
-    val width : Double,
-    val height : Double
-)
+    val top: Double,
+    val left: Double,
+    val width: Double,
+    val height: Double
+) {
+    fun toFrame(adapter: AdaptiveAdapter): Frame {
+        if (this === NaF) return Frame.NaF
+        check(adapter is AbstractAuiAdapter<*, *>)
+        return Frame(
+            adapter.toDp(top),
+            adapter.toDp(left),
+            adapter.toDp(width),
+            adapter.toDp(height)
+        )
+    }
+
+    companion object {
+        val NaF = RawFrame(Double.NaN, Double.NaN, Double.NaN, Double.NaN)
+    }
+}
 
 /**
  * Position where the values are actual device dependent pixel values. All measurements and
@@ -34,7 +55,20 @@ class RawFrame(
 data class RawPosition(
     val top: Double,
     val left: Double
-)
+) {
+
+    fun toPosition(fragment: AdaptiveFragment) {
+        check(fragment is AbstractAuiFragment<*>)
+        Position(
+            fragment.uiAdapter.toDp(top),
+            fragment.uiAdapter.toDp(left)
+        )
+    }
+
+    companion object {
+        val NaP = RawPosition(Double.NaN, Double.NaN)
+    }
+}
 
 /**
  * Size where the values are actual device dependent pixel values. All measurements and

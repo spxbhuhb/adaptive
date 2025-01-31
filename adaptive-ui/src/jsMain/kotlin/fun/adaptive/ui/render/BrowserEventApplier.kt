@@ -3,19 +3,12 @@ package `fun`.adaptive.ui.render
 import `fun`.adaptive.adat.decodeFromJson
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
-import `fun`.adaptive.ui.instruction.event.OnDrop
-import `fun`.adaptive.ui.instruction.event.TransferData
-import `fun`.adaptive.ui.instruction.event.OnClick
-import `fun`.adaptive.ui.instruction.event.OnDoubleClick
-import `fun`.adaptive.ui.instruction.event.OnMove
-import `fun`.adaptive.ui.instruction.event.OnPrimaryDown
-import `fun`.adaptive.ui.instruction.event.OnPrimaryUp
-import `fun`.adaptive.ui.instruction.event.UIEvent
-import `fun`.adaptive.ui.instruction.event.UIEventHandler
+import `fun`.adaptive.ui.instruction.event.*
 import `fun`.adaptive.ui.platform.BrowserEventListener
 import org.w3c.dom.DragEvent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.Event
+import org.w3c.dom.events.KeyboardEvent
 import org.w3c.dom.events.MouseEvent
 
 object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
@@ -40,38 +33,59 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
             else -> throw UnsupportedOperationException("unsupported event handler: $eventFun")
         }
 
-        val listener = BrowserEventListener(eventName, condition) {
+        val listener = BrowserEventListener(eventName, condition) { event ->
 
-            if (! this.condition.matches(it)) return@BrowserEventListener
+            if (! this.condition.matches(event)) return@BrowserEventListener
 
             val x: Double
             val y: Double
             val transferData: TransferData?
 
-            if (it is MouseEvent) {
+            if (event is MouseEvent) {
                 val boundingRect = fragment.receiver.getBoundingClientRect()
                 val renderData = fragment.renderData
                 val margin = renderData.layout?.margin ?: RawSurrounding.ZERO
-                x = it.clientX - boundingRect.x - margin.start
-                y = it.clientY - boundingRect.y - margin.top
+                x = event.clientX - boundingRect.x - margin.start
+                y = event.clientY - boundingRect.y - margin.top
             } else {
                 x = Double.NaN
                 y = Double.NaN
             }
 
-            if (it is DragEvent && it.type == "drop") {
-                transferData = it.dataTransfer?.getData("application/json")?.let { TransferData.decodeFromJson(it) }
-                it.preventDefault()
+            if (event is DragEvent && event.type == "drop") {
+                transferData = event.dataTransfer?.getData("application/json")?.let { TransferData.decodeFromJson(it) }
+                event.preventDefault()
             } else {
                 transferData = null
             }
 
-            eventFun.execute(UIEvent(fragment, it, x, y, transferData))
+            eventFun.execute(UIEvent(fragment, event, x, y, transferData, modifiers(event)))
         }
 
         fragment.receiver.addEventListener(eventName, listener)
 
         return listener
+    }
+
+    fun modifiers(event: Event): Set<EventModifier> {
+        val modifiers = mutableSetOf<EventModifier>()
+
+        when (event) {
+            is MouseEvent -> {
+                if (event.ctrlKey) modifiers.add(EventModifier.CTRL)
+                if (event.altKey) modifiers.add(EventModifier.ALT)
+                if (event.metaKey) modifiers.add(EventModifier.META)
+                if (event.shiftKey) modifiers.add(EventModifier.SHIFT)
+            }
+            is KeyboardEvent -> {
+                if (event.ctrlKey) modifiers.add(EventModifier.CTRL)
+                if (event.altKey) modifiers.add(EventModifier.ALT)
+                if (event.metaKey) modifiers.add(EventModifier.META)
+                if (event.shiftKey) modifiers.add(EventModifier.SHIFT)
+            }
+        }
+
+        return modifiers
     }
 
     override fun removeListener(fragment: AbstractAuiFragment<HTMLElement>, eventListener: Any?) {
