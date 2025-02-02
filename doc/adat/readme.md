@@ -21,6 +21,7 @@ Subtopics:
 * [Descriptor and validation](descriptor-and-validation.md)
 * [Immutable adat classes](immutable-adat-classes.md)
 * [Integration with Exposed](exposed.md)
+* [No-code Adat classes](nocode.md)
 
 These classes are similar to `data` classes in concept but offer many other functions in addition:
 

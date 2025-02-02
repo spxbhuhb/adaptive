@@ -12,6 +12,7 @@ fun <A : AdatClass> A.store(): AdatStore<A> {
 }
 
 fun <A : AdatClass> A.storeOrNull(): AdatStore<A>? {
+    val store = adatContext?.store ?: return null
     @Suppress("UNCHECKED_CAST")
-    return adatContext?.store as AdatStore<A>
+    return store as AdatStore<A>
 }

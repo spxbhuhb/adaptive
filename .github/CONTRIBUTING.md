@@ -44,6 +44,21 @@ And in a separate terminal (as these do not exit until you manually stop them):
 ./gradlew cookbook-js
 ```
 
+## Running core unit tests
+
+To run unit tests in core you have to publish `adaptive-core` to Maven local. If you don't
+do so, you'll get a dependency error.
+
+The core actually does not use the plugin, but Gradle wants to compile it for other projects
+and for that compilation you need the core artifact.
+
+```shell
+./gradlew :adaptive-core:publishToMavenLocal
+./gradlew :adaptive-core:allTests
+```
+
+This is only needed after version change, otherwise it is not necessary.
+
 ## Names
 
 **core modules**: The `adaptive-core`, `adaptive-gradle-plugin`, `adaptive-kotlin-plugin` modules.

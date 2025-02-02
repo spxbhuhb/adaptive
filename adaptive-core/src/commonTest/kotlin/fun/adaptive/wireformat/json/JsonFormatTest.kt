@@ -56,9 +56,9 @@ class JsonFormatTest {
 
         val expected = """
             {
-              "key1" :123,
-              "key2" :"value",
-              "key3" :false
+              "key1": 123,
+              "key2": "value",
+              "key3": false
             }
         """.trimIndent()
 
@@ -83,13 +83,13 @@ class JsonFormatTest {
 
         val expected = """
             {
-              "array" :[
+              "array": [
                 1,
                 {
-                  "nestedKey" :"nestedValue"
+                  "nestedKey": "nestedValue"
                 }
               ],
-              "boolean" :true
+              "boolean": true
             }
         """.trimIndent()
 
