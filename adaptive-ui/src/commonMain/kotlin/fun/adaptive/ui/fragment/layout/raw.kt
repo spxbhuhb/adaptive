@@ -43,6 +43,9 @@ class RawFrame(
         )
     }
 
+    fun move(dx: Double, dy: Double): RawFrame =
+        RawFrame(top + dy, left + dx, width, height)
+
     companion object {
         val NaF = RawFrame(Double.NaN, Double.NaN, Double.NaN, Double.NaN)
     }

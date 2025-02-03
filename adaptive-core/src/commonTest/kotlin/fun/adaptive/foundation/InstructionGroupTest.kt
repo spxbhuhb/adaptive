@@ -2,6 +2,7 @@ package `fun`.adaptive.foundation
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
+import `fun`.adaptive.foundation.instruction.instructionsOf
 import kotlin.test.*
 
 
@@ -497,4 +498,109 @@ class InstructionGroupTest {
         }
     }
 
+    @Test
+    fun `removeAll should remove matching instructions`() {
+        val instruction1 = TestInstruction("A")
+        val instruction2 = TestInstruction("B")
+        val instruction3 = TestInstruction("C")
+        val group = AdaptiveInstructionGroup(listOf(instruction1, instruction2, instruction3))
+
+        val result = group.removeAll { it == instruction2 }
+
+        assertEquals(instructionsOf(instruction1, instruction3), result)
+    }
+
+    @Test
+    fun `removeAll should remove all instructions if all match`() {
+        val instruction1 = TestInstruction("A")
+        val instruction2 = TestInstruction("B")
+        val group = AdaptiveInstructionGroup(listOf(instruction1, instruction2))
+
+        val result = group.removeAll { true }
+
+        assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun `removeAll should retain instructions if none match`() {
+        val instruction1 = TestInstruction("A")
+        val instruction2 = TestInstruction("B")
+        val group = AdaptiveInstructionGroup(listOf(instruction1, instruction2))
+
+        val result = group.removeAll { false }
+
+        assertEquals(instructionsOf(instruction1, instruction2), result)
+    }
+
+    @Test
+    fun `removeAll should remove instructions recursively in nested groups`() {
+        val instruction1 = TestInstruction("A")
+        val instruction2 = TestInstruction("B")
+        val nestedGroup = AdaptiveInstructionGroup(listOf(instruction2))
+        val group = AdaptiveInstructionGroup(listOf(instruction1, nestedGroup))
+
+        val result = group.removeAll { it == instruction2 }
+
+        assertEquals(instructionsOf(instruction1), result)
+    }
+
+    @Test
+    fun `removeAll should retain structure of nested groups when applicable`() {
+        val instruction1 = TestInstruction("A")
+        val instruction2 = TestInstruction("B")
+        val nestedGroup = AdaptiveInstructionGroup(listOf(instruction2))
+        val group = AdaptiveInstructionGroup(listOf(instruction1, nestedGroup))
+
+        val result = group.removeAll { it == instruction1 }
+
+        assertEquals(instructionsOf(nestedGroup), result)
+    }
+
+    @Test
+    fun `findLast should return the last matching instruction`() {
+        val instruction1 = TestInstruction("A")
+        val instruction2 = TestInstruction("B")
+        val instruction3 = TestInstruction("A")
+        val group = AdaptiveInstructionGroup(listOf(instruction1, instruction2, instruction3))
+
+        val result = group.findLast { it is TestInstruction && it.id == "A" }
+
+        assertEquals(instruction3, result)
+    }
+
+    @Test
+    fun `findLast should return null when no match is found`() {
+        val instruction1 = TestInstruction("A")
+        val instruction2 = TestInstruction("B")
+        val group = AdaptiveInstructionGroup(listOf(instruction1, instruction2))
+
+        val result = group.findLast { it is TestInstruction && it.id == "C" }
+
+        assertNull(result)
+    }
+
+    @Test
+    fun `findLast should find instructions recursively in nested groups`() {
+        val instruction1 = TestInstruction("A")
+        val instruction2 = TestInstruction("B")
+        val instruction3 = TestInstruction("A")
+        val nestedGroup = AdaptiveInstructionGroup(listOf(instruction2, instruction3))
+        val group = AdaptiveInstructionGroup(listOf(instruction1, nestedGroup))
+
+        val result = group.findLast { it is TestInstruction && it.id == "A" }
+
+        assertEquals(instruction3, result)
+    }
+
+    @Test
+    fun `findLast should return last instruction when multiple instances exist`() {
+        val instruction1 = TestInstruction("A")
+        val instruction2 = TestInstruction("A")
+        val instruction3 = TestInstruction("B")
+        val group = AdaptiveInstructionGroup(listOf(instruction1, instruction2, instruction3))
+
+        val result = group.findLast { it is TestInstruction && it.id == "A" }
+
+        assertEquals(instruction2, result)
+    }
 }

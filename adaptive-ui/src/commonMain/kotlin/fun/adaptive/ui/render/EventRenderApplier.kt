@@ -95,6 +95,16 @@ abstract class EventRenderApplier<R> : AbstractRenderApplier() {
         ).also {
             if (current != null) current.onDropListener = it
         }
+
+        applyEventHandler(
+            fragment,
+            previous?.onKeyDown,
+            previous?.onKeyDownListener,
+            current?.onKeyDown
+        ).also {
+            if (current != null) current.onKeyDownListener = it
+        }
+
     }
 
     fun applyEventHandler(

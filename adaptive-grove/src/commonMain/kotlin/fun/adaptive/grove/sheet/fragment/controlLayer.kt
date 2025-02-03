@@ -4,12 +4,16 @@ import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
-import `fun`.adaptive.grove.sheet.control.add
-import `fun`.adaptive.grove.sheet.control.move
 import `fun`.adaptive.grove.sheet.control.select
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
+import `fun`.adaptive.grove.sheet.operation.Add
+import `fun`.adaptive.grove.sheet.operation.Copy
+import `fun`.adaptive.grove.sheet.operation.Cut
+import `fun`.adaptive.grove.sheet.operation.Move
+import `fun`.adaptive.grove.sheet.operation.Paste
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.event.EventModifier
+import `fun`.adaptive.ui.instruction.event.Keys
 import `fun`.adaptive.ui.instruction.layout.Frame
 import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.theme.borders
@@ -28,11 +32,12 @@ fun controlLayer(viewModel: SheetViewModel) {
 
         onDrop { event ->
             val template = (event.transferData?.data as? LfmDescendant) ?: return@onDrop
-            viewModel.add(event.x, event.y, template)
+            val position = event.position
+            viewModel += Add(position.left, position.top, template)
         }
 
         box {
-            maxSize
+            maxSize .. tabIndex { 0 } ..
 
             onPrimaryDown { event ->
                 startPosition = event.position
@@ -52,7 +57,7 @@ fun controlLayer(viewModel: SheetViewModel) {
                 if (selection.isEmpty()) {
                     controlFrame = Frame(startPosition, newPosition)
                 } else {
-                    viewModel.move(moveStart, newPosition.left - lastPosition.left, newPosition.top - lastPosition.top)
+                    viewModel += Move(moveStart, newPosition.left - lastPosition.left, newPosition.top - lastPosition.top)
                 }
 
                 lastPosition = newPosition
@@ -65,6 +70,15 @@ fun controlLayer(viewModel: SheetViewModel) {
                 if (selection.isEmpty()) {
                     controlFrame = Frame.NaF
                     viewModel.select(startPosition.toRaw(adapter()), event.x, event.y, EventModifier.SHIFT in event)
+                }
+            }
+
+            onKeydown { event ->
+                when (event.keyInfo?.key) {
+                    Keys.ESCAPE -> viewModel.select()
+                    Keys.X -> viewModel += Cut()
+                    Keys.C -> viewModel += Copy()
+                    Keys.V -> viewModel += Paste()
                 }
             }
 

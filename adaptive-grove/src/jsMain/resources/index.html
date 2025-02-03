@@ -19,8 +19,6 @@
             width: 100vw;
             margin: 0;
             padding: 0;
-            font-family: "Open Sans", sans-serif;
-            overflow: hidden;
         }
 
         :root {
@@ -32,7 +30,19 @@
             position: absolute;
             min-width: 0;
             min-height: 0;
-            text-wrap: nowrap;
+            outline: none;
+            font-family: "Open Sans", sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            user-select: none;
+            -webkit-user-select: none; /* Safari */
+        }
+
+        span {
+            /* overflow: hidden;
+            text-overflow: ellipsis; */
+            user-select: auto;
+            -webkit-user-select: auto; /* Safari */
         }
     </style>
 </head>

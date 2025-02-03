@@ -30,6 +30,7 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
             is OnMove -> "mousemove" to Always
             is OnPrimaryUp -> "mouseup" to Primary
             is OnDrop -> "drop" to Always
+            is OnKeyDown -> "keydown" to Always
             else -> throw UnsupportedOperationException("unsupported event handler: $eventFun")
         }
 
@@ -59,7 +60,14 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
                 transferData = null
             }
 
-            eventFun.execute(UIEvent(fragment, event, x, y, transferData, modifiers(event)))
+            val keyInfo = if (event is KeyboardEvent) {
+                event.preventDefault()
+                UIEvent.KeyInfo(event.key, event.isComposing, event.repeat)
+            } else {
+                null
+            }
+
+            eventFun.execute(UIEvent(fragment, event, x, y, transferData, keyInfo, modifiers(event)))
         }
 
         fragment.receiver.addEventListener(eventName, listener)

@@ -1,6 +1,7 @@
 package `fun`.adaptive.grove.sheet.operation
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
+import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.sheet.control.refreshSelection
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
@@ -53,11 +54,10 @@ class Move(
             val originalPosition = originalInstructions.firstInstanceOf<Position>()
             val newPosition = Position(originalPosition.top + effectiveDeltaY, originalPosition.left + effectiveDeltaX)
 
-            val newInstructionList = originalInstructions.toMutableList()
-            newInstructionList.removeAll { it is Position }
-            newInstructionList += newPosition
-
-            val newInstructions = AdaptiveInstructionGroup(newInstructionList)
+            val newInstructions = instructionsOf(
+                originalInstructions.removeAll { it is Position },
+                newPosition
+            )
 
             fragment.setStateVariable(0, newInstructions)
             fragment.genPatchInternal()

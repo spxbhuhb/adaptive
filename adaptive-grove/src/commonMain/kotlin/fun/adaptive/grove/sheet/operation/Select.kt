@@ -5,7 +5,7 @@ import `fun`.adaptive.grove.sheet.model.SheetSelection
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
 
 class Select(
-    val items: MutableList<SelectionInfo>
+    val items: List<SelectionInfo>
 ) : SheetOperation() {
 
     val undoData = mutableListOf<SelectionInfo>()

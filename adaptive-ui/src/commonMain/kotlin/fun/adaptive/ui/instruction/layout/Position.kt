@@ -5,12 +5,12 @@
 package `fun`.adaptive.ui.instruction.layout
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.fragment.layout.RawPosition
 import `fun`.adaptive.ui.instruction.DPixel
+import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.render.layout
 
 @Adat
@@ -38,5 +38,6 @@ class Position(
 
     companion object {
         val NaP = Position(DPixel.NaP, DPixel.NaP)
+        val ZERO = Position(0.dp, 0.dp)
     }
 }

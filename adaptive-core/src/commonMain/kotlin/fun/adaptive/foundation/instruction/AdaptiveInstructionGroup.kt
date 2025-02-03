@@ -45,6 +45,24 @@ class AdaptiveInstructionGroup(
         return AdaptiveInstructionGroup(this.instructions + instruction)
     }
 
+    fun removeAll(condition: (AdaptiveInstruction) -> Boolean): AdaptiveInstructionGroup {
+        val newInstructions = mutableListOf<AdaptiveInstruction>()
+
+        for (instruction in instructions) {
+            if (! condition(instruction)) {
+                if (instruction is AdaptiveInstructionGroup) {
+                    instruction.removeAll(condition)
+                        .takeIf { it.isNotEmpty() }
+                        ?.let { newInstructions += it }
+                } else {
+                    newInstructions += instruction
+                }
+            }
+        }
+
+        return AdaptiveInstructionGroup(newInstructions)
+    }
+
     // ------------------------------------------------------------------
     // Instruction tree lookup
     // ------------------------------------------------------------------
@@ -52,6 +70,14 @@ class AdaptiveInstructionGroup(
     fun find(predicate: (AdaptiveInstruction) -> Boolean): AdaptiveInstruction? {
         for (instruction in instructions) {
             instruction.matchOrNull(predicate)?.let { return it }
+        }
+        return null
+    }
+
+    fun findLast(predicate: (AdaptiveInstruction) -> Boolean): AdaptiveInstruction? {
+        var index = instructions.size - 1
+        while (index >= 0) {
+            instructions[index --].matchOrNull(predicate)?.let { return it }
         }
         return null
     }
@@ -72,6 +98,9 @@ class AdaptiveInstructionGroup(
 
     inline fun <reified T : AdaptiveInstruction> firstInstanceOf(): T =
         find { it is T } as T
+
+    inline fun <reified T : AdaptiveInstruction> lastInstanceOfOrNull(): T? =
+        findLast { it is T } as T?
 
     fun isNotEmpty(): Boolean {
         if (instructions.isEmpty()) return false

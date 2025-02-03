@@ -13,6 +13,10 @@ import `fun`.adaptive.ui.render.model.AuiRenderData
 import kotlin.math.max
 import kotlin.math.min
 
+fun SheetViewModel.select() {
+    this += Select(mutableListOf())
+}
+
 fun SheetViewModel.select(startPosition: RawPosition, x: Double, y: Double, add : Boolean) {
     val x1 = min(startPosition.left, x)
     val y1 = min(startPosition.top, y)

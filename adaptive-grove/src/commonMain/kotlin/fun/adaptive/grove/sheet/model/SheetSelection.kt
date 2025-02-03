@@ -2,10 +2,7 @@ package `fun`.adaptive.grove.sheet.model
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
-import `fun`.adaptive.ui.api.frame
 import `fun`.adaptive.ui.fragment.layout.RawFrame
-import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.layout.Frame
 import kotlin.math.max
 import kotlin.math.min
 

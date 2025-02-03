@@ -23,9 +23,9 @@ abstract class SheetOperation {
     abstract fun revert(viewModel: SheetViewModel)
 
     fun SheetViewModel.forEachSelected(block : (model : LfmDescendant, fragment : AdaptiveFragment) -> Unit) {
-        selection.value.selected.forEach {
-            val info = DescendantInfo(it.uuid)
-            val model = fragments.first { it.uuid == it.uuid }
+        selection.value.selected.forEach { info ->
+            val info = DescendantInfo(info.uuid)
+            val model = fragments.first { info.uuid == it.uuid }
             val fragment = root.children.first { info in it.instructions }
             block(model, fragment)
         }

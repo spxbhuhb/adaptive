@@ -64,6 +64,8 @@ fun onPrimaryUp(handler: (event: UIEvent) -> Unit) = OnPrimaryUp(handler)
 fun onSecondaryDown(handler: (event: UIEvent) -> Unit) = OnSecondaryDown(handler)
 fun onSecondaryUp(handler: (event: UIEvent) -> Unit) = OnSecondaryUp(handler)
 
+fun onKeydown(handler: (event: UIEvent) -> Unit) = OnKeyDown(handler)
+
 val noPointerEvents = NoPointerEvents()
 fun onClose(handler: () -> Unit) = OnClose(handler)
 

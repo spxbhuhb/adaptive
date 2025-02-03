@@ -17,6 +17,7 @@ class UIEvent(
     val x: Double = Double.NaN,
     val y: Double = Double.NaN,
     val transferData: TransferData? = null,
+    val keyInfo : KeyInfo? = null,
     val modifiers: Set<EventModifier> = emptySet()
 ) {
     val position: Position
@@ -34,4 +35,10 @@ class UIEvent(
         val closureOwner = fragment.createClosure.owner
         closureOwner.closePatchBatch()
     }
+
+    class KeyInfo(
+        val key: String,
+        val isComposing: Boolean,
+        val repeat: Boolean
+    )
 }

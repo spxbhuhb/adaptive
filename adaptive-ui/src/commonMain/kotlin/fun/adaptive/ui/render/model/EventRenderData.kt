@@ -39,6 +39,9 @@ class EventRenderData(
     var onDrop: OnDrop? = null
     var onDropListener: Any? = null
 
+    var onKeyDown: OnKeyDown? = null
+    var onKeyDownListener : Any? = null
+
     override fun equals(other: Any?): Boolean {
         if (other === this) return true
         if (other == null) return false
@@ -55,6 +58,7 @@ class EventRenderData(
         if (other.onSecondaryDown != this.onSecondaryDown) return false
         if (other.onSecondaryUp != this.onSecondaryUp) return false
         if (other.onDrop != this.onDrop) return false
+        if (other.onKeyDown != this.onKeyDown) return false
 
         return true
     }

@@ -20,7 +20,7 @@ import `fun`.adaptive.ui.theme.colors
 @Adaptive
 fun ufdMain() {
 
-    val sheetViewModel = sheetEngine()
+    val sheetViewModel = sheetEngine(true)
     val ufdContext = UfdContext()
 
     grid {
