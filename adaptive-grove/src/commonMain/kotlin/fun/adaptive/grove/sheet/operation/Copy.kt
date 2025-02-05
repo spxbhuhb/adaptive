@@ -12,8 +12,8 @@ class Copy : SheetOperation() {
 
         val copyData = mutableListOf<LfmDescendant>()
 
-        viewModel.forEachSelected { descendant, _ ->
-            copyData += descendant
+        viewModel.forSelection {
+            copyData += it.model
         }
 
         undoData = viewModel.clipboard

@@ -3,8 +3,8 @@ package `fun`.adaptive.grove.sheet.fragment
 import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
+import `fun`.adaptive.foundation.value.adaptiveValue
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
-import `fun`.adaptive.grove.sheet.control.select
 import `fun`.adaptive.grove.sheet.model.SheetSelection
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.grove.sheet.operation.*
@@ -27,8 +27,8 @@ fun controlLayer(viewModel: SheetViewModel) {
     var moveStart = 0L
     var startPosition = Position.NaP
     var lastPosition = Position.NaP
-    val selection = autoItem(viewModel.selection) ?: viewModel.emptySelection
-    var controlFrame = selection.containingFrame.toFrame(adapter()).grow(8.0)
+    val selectionRevision = adaptiveValue { viewModel.selectionRevision }
+    var controlFrame = viewModel.selection.containingFrame.toFrame(adapter()).grow(8.0)
 
     dropTarget {
 

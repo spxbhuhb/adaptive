@@ -4,8 +4,8 @@ import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.grove.hydration.lfm.LfmConst
-import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
-import `fun`.adaptive.grove.sheet.model.DescendantInfo
+import `fun`.adaptive.grove.sheet.model.ItemInfo
+import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
 
 /**
@@ -34,10 +34,13 @@ class GroveDrawingLayer(
         viewModel.root = this
     }
 
-    operator fun plusAssign(model: LfmDescendant) {
+    operator fun plusAssign(item : SheetItem) {
+        val model = item.model
+
         adapter.fragmentFactory.newInstance(model.key, this, -1, model.mapping.size).also { fragment ->
 
             children += fragment
+            item.fragment = fragment
 
             for ((index, mapping) in model.mapping.withIndex()) {
                 val value = (mapping.mapping as LfmConst).value
@@ -50,18 +53,12 @@ class GroveDrawingLayer(
         }
     }
 
-    operator fun minusAssign(model: LfmDescendant) {
-        val info = DescendantInfo(model.uuid)
+    operator fun minusAssign(item: SheetItem) {
+        val info = ItemInfo(item.index)
         val index = children.indexOfFirst { info in it.instructions }
         val child = children.removeAt(index)
         if (isMounted) child.unmount()
         child.dispose()
-    }
-
-    fun setInstructions(model: LfmDescendant) {
-        val info = DescendantInfo(model.uuid)
-        val child = children.first { info in it.instructions }
-        child.setStateVariable(0, model.instructions)
     }
 
 }

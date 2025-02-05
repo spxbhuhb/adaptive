@@ -5,38 +5,45 @@ import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.grove.hydration.lfm.LfmConst
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.hydration.lfm.LfmMapping
-import `fun`.adaptive.grove.sheet.model.DescendantInfo
+import `fun`.adaptive.grove.sheet.model.ItemInfo
+import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Position
+import `fun`.adaptive.ui.instruction.layout.Size
 import `fun`.adaptive.utility.UUID
 
 class Add(
-    x : DPixel, y: DPixel, template : LfmDescendant
+    val x: DPixel,
+    val y: DPixel,
+    val template: LfmDescendant
 ) : SheetOperation() {
 
-    val fragment = newDescendant(x, y, template)
+    var index = - 1
 
-    override fun commit(viewModel: SheetViewModel) : Boolean {
-        viewModel += fragment
+    override fun commit(viewModel: SheetViewModel): Boolean {
+        if (index == -1) {
+            index = viewModel.nextIndex
+            viewModel += newItem(index, x, y, template)
+        } else {
+            viewModel += viewModel.items[index]
+        }
         return false
     }
 
     override fun revert(viewModel: SheetViewModel) {
-        viewModel -= fragment
+        viewModel -= index
     }
 
-    fun newDescendant(x : DPixel, y : DPixel, template : LfmDescendant) : LfmDescendant {
-        val templateInstructionMapping = template.mapping.first()
-        val templateInstructions = templateInstructionMapping.mapping.value as AdaptiveInstructionGroup
+    fun newItem(index: Int, x: DPixel, y: DPixel, template: LfmDescendant): SheetItem {
 
-        val uuid = UUID<LfmDescendant>()
+        val templateInstructions = template.instructions
 
         val instanceInstructions = instructionsOf(
-            templateInstructions.removeAll { it is Position || it is DescendantInfo },
-            DescendantInfo(uuid),
+            templateInstructions.removeAll { it is Position || it is ItemInfo },
+            ItemInfo(index),
             Position(y, x)
         )
 
@@ -51,9 +58,16 @@ class Add(
 
         val instanceMapping = listOf(instanceInstructionMapping) + template.mapping.drop(1)
 
-        return LfmDescendant(uuid, template.key, instanceMapping)
+        val size = templateInstructions.firstInstanceOfOrNull<Size>() ?: Size(100.dp, 100.dp)
+
+        return SheetItem(
+            index,
+            x.value, y.value, x.value + size.width.value, y.value + size.height.value,
+            LfmDescendant(UUID(), template.key, instanceMapping)
+        )
+
     }
 
-    override fun toString(): String = "Add -- ${fragment.key} -- ${fragment.uuid}"
+    override fun toString(): String = "Add"
 
 }

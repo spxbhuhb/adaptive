@@ -3,7 +3,6 @@ package `fun`.adaptive.grove.sheet.operation
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
-import `fun`.adaptive.grove.sheet.control.refreshSelection
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.layout.Position
@@ -42,7 +41,10 @@ class Move(
             effectiveDeltaY = mergedDeltaY
         }
 
-        viewModel.forEachSelected { model, fragment ->
+        viewModel.selection.items.forEach { item ->
+
+            val fragment = item.fragment
+            val model = item.model
 
             val originalInstructions = fragment.instructions
 
@@ -72,8 +74,8 @@ class Move(
     }
 
     override fun revert(viewModel: SheetViewModel) {
-        viewModel.forEachSelected { model, fragment ->
-            val originalInstructions = undoData[model.uuid] ?: return@forEachSelected
+        viewModel.forSelection { model, fragment ->
+            val originalInstructions = undoData[model.uuid] ?: return@forSelection
             fragment.setStateVariable(0, originalInstructions)
             fragment.genPatchInternal()
             model.update(originalInstructions)

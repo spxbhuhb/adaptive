@@ -1,6 +1,5 @@
 package `fun`.adaptive.grove.sheet.operation
 
-import `fun`.adaptive.grove.sheet.model.SheetSelection
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Position
@@ -11,11 +10,11 @@ class Paste : SheetOperation() {
 
     override fun commit(viewModel: SheetViewModel): Boolean {
 
-        val descendants = viewModel.clipboard.descendants
+        val models = viewModel.clipboard.models
 
-        descendants.forEach { descendant ->
-            val position = descendant.instructions.lastInstanceOfOrNull<Position>() ?: Position.ZERO
-            val add = Add(position.left + 10.dp, position.top + 10.dp, descendant)
+        models.forEach { model ->
+            val position = model.instructions.lastInstanceOfOrNull<Position>() ?: Position.ZERO
+            val add = Add(position.left + 10.dp, position.top + 10.dp, model)
             add.commit(viewModel)
             undoData += add
         }
@@ -29,7 +28,7 @@ class Paste : SheetOperation() {
 
         // TODO revise paste selection frame
 
-        viewModel.selection.update(SheetSelection(emptyList()))
+        viewModel.select()
 
         return false
     }

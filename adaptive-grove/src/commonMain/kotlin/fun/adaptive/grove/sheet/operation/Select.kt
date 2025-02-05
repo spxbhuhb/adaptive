@@ -1,23 +1,23 @@
 package `fun`.adaptive.grove.sheet.operation
 
-import `fun`.adaptive.grove.sheet.model.SelectionInfo
+import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
 
 class Select(
-    val items: List<SelectionInfo>
+    val items: List<SheetItem>
 ) : SheetOperation() {
 
-    val undoData = mutableListOf<SelectionInfo>()
+    var undoData = SheetSelection(emptyList())
 
     override fun commit(viewModel: SheetViewModel): Boolean {
-        undoData += viewModel.selection.value.selected
-        viewModel.selection.update(SheetSelection(items))
+        undoData = viewModel.selection
+        viewModel.selection = SheetSelection(items)
         return false
     }
 
     override fun revert(viewModel: SheetViewModel) {
-        viewModel.selection.update(SheetSelection(undoData))
+        viewModel.selection = undoData
     }
 
     override fun toString(): String =
