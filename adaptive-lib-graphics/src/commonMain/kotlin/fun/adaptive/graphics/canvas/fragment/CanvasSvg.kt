@@ -5,7 +5,6 @@ package `fun`.adaptive.graphics.canvas.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.graphics.canvas.CanvasAdapter
 import `fun`.adaptive.graphics.canvas.CanvasFragment
 import `fun`.adaptive.graphics.canvas.canvas
@@ -44,7 +43,7 @@ open class CanvasSvg(
             }
         }
 
-        if (data.isNotEmpty() && haveToPatch(dirtyMask, 1)) {
+        if (data.isNotEmpty() && haveToPatch(dirtyMask, 3)) {
             parseAndDraw()
         }
 

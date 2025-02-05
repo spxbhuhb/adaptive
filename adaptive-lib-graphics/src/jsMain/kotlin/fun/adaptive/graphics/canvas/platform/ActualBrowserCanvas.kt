@@ -60,7 +60,9 @@ class ActualBrowserCanvas : ActualCanvas {
     }
 
     override fun draw(drawFun: () -> Unit) {
-        drawFun()
+        window.requestAnimationFrame {
+            drawFun()
+        }
     }
 
     override fun arc(
