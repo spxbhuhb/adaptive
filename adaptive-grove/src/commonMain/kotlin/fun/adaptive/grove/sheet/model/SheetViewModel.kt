@@ -22,10 +22,11 @@ class SheetViewModel(
     lateinit var root: GroveDrawingLayer
 
     operator fun plusAssign(operation: SheetOperation) {
-        val result = engine.operations.trySend(operation)
-        if (result.isFailure) {
-            engine.logger.error("cannot send operation: $operation, reason: ${result.exceptionOrNull()}")
-        }
+        engine.execute(operation)
+//        val result = engine.operations.trySend(operation)
+//        if (result.isFailure) {
+//            engine.logger.error("cannot send operation: $operation, reason: ${result.exceptionOrNull()}")
+//        }
     }
 
     operator fun plusAssign(fragment: LfmDescendant) {

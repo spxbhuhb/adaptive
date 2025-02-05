@@ -20,7 +20,7 @@ fun backgroundColor(color: Color) = BackgroundColor(color)
 fun backgroundColor(color: Int, opacity: Float = 1f) = BackgroundColor(Color(color.toUInt(), opacity))
 fun backgroundColor(color: UInt, opacity: Float = 1f) = BackgroundColor(Color(color, opacity))
 
-inline fun backgroundColor(color: () -> Int) = BackgroundColor(Color(color().toUInt()))
+inline fun backgroundColor(color: () -> Color) = BackgroundColor(color())
 
 fun backgroundGradient(startPosition: Position, endPosition: Position, start: Color, end: Color) = BackgroundGradient(startPosition, endPosition, start, end)
 fun leftToRightGradient(leftColor: Color, rightColor: Color) = BackgroundGradient(BackgroundGradient.LEFT, BackgroundGradient.RIGHT, leftColor, rightColor)

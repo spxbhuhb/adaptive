@@ -7,6 +7,7 @@ package `fun`.adaptive.ui
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.instruction.layout.FitStrategy
 import `fun`.adaptive.ui.render.model.AuiRenderData
+import `fun`.adaptive.ui.support.statistics.AuiStatistics
 
 abstract class AbstractAuiFragment<RT>(
     adapter: AbstractAuiAdapter<RT, *>,
@@ -25,6 +26,8 @@ abstract class AbstractAuiFragment<RT>(
     var updateBatchId = 0L
 
     var previousRenderData = adapter.emptyRenderData
+
+    val statistics = AuiStatistics()
 
     /**
      * The initial render data is read from the adapter. This makes it possible to apply
@@ -142,6 +145,8 @@ abstract class AbstractAuiFragment<RT>(
 
         if (updateBatchId == uiAdapter.updateBatchId) return
 
+        statistics.scheduleUpdate++
+
         updateBatchId = uiAdapter.updateBatchId
         uiAdapter.updateBatch += this
     }
@@ -151,6 +156,8 @@ abstract class AbstractAuiFragment<RT>(
      * override this method to implement their own calculation algorithm.
      */
     open fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
+        statistics.computeLayout++
+
         val data = renderData
         val layout = data.layout
 
@@ -178,6 +185,8 @@ abstract class AbstractAuiFragment<RT>(
     }
 
     open fun placeLayout(top: Double, left: Double) {
+        statistics.placeLayout++
+
         val data = renderData
 
         data.finalTop = top
@@ -190,6 +199,7 @@ abstract class AbstractAuiFragment<RT>(
 
     open fun updateLayout(updateId: Long, item: AbstractAuiFragment<*>?) {
         if (updateBatchId == updateId) return
+        statistics.updateLayout++
 
         updateBatchId = updateId
 
@@ -239,7 +249,15 @@ abstract class AbstractAuiFragment<RT>(
         val alignHorizontal = container?.horizontalAlignment != null || layout.horizontalAlignment != null
         val alignVertical = container?.verticalAlignment != null || layout.verticalAlignment != null
 
-        return fixHorizontal && fixVertical && ! alignVertical && ! alignHorizontal
+        val result = fixHorizontal && fixVertical && ! alignVertical && ! alignHorizontal
+
+        if (result) {
+            statistics.shouldUpdateSelfTrue++
+        } else {
+            statistics.shouldUpdateSelfFalse++
+        }
+
+        return result
     }
 
 }

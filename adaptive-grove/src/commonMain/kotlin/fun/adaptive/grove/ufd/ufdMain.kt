@@ -3,9 +3,11 @@
  */
 package `fun`.adaptive.grove.ufd
 
+import adaptive_grove.generated.resources.pest_control
 import adaptive_grove.generated.resources.redo
 import adaptive_grove.generated.resources.undo
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.grove.sheet.SheetEngine.Companion.sheetEngine
 import `fun`.adaptive.grove.sheet.fragment.sheet
 import `fun`.adaptive.grove.sheet.operation.Redo
@@ -15,7 +17,9 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.ui.support.statistics.dumpStatistics
 import `fun`.adaptive.ui.theme.colors
+import `fun`.adaptive.utility.println
 
 @Adaptive
 fun ufdMain() {
@@ -38,6 +42,7 @@ fun ufdMain() {
                 maxWidth .. gap { 4.dp } .. borderBottom(colors.outline) .. padding { 4.dp }
                 icon(Graphics.undo) .. onClick { sheetViewModel += Undo() }
                 icon(Graphics.redo) .. onClick { sheetViewModel += Redo() }
+                icon(Graphics.pest_control) .. onClick { adapter().dumpStatistics().println() }
             }
 
             sheet(sheetViewModel)

@@ -27,13 +27,13 @@ class SheetEngine(
     lateinit var scope: CoroutineScope
     val operations = Channel<SheetOperation>()
 
-    val undoStack : Stack<SheetOperation> = mutableListOf<SheetOperation>()
-    val redoStack : Stack<SheetOperation> = mutableListOf<SheetOperation>()
+    val undoStack: Stack<SheetOperation> = mutableListOf<SheetOperation>()
+    val redoStack: Stack<SheetOperation> = mutableListOf<SheetOperation>()
 
-    override var latestValue : SheetViewModel? =
+    override var latestValue: SheetViewModel? =
         SheetViewModel(this, emptyList())
 
-    val viewModel : SheetViewModel
+    val viewModel: SheetViewModel
         get() = latestValue !!
 
     override fun start() {
@@ -51,14 +51,18 @@ class SheetEngine(
 
     suspend fun main() {
         for (operation in operations) {
-            when (operation) {
-                is Undo -> undo()
-                is Redo -> redo()
-                else -> op(operation)
-            }
-
-            setDirtyBatch()
+            execute(operation)
         }
+    }
+
+    fun execute(operation: SheetOperation) {
+        when (operation) {
+            is Undo -> undo()
+            is Redo -> redo()
+            else -> op(operation)
+        }
+
+        setDirtyBatch()
     }
 
     fun undo() {
@@ -87,7 +91,7 @@ class SheetEngine(
 
         @Producer
         fun sheetEngine(
-            trace : Boolean = false,
+            trace: Boolean = false,
             binding: AdaptiveStateVariableBinding<SheetViewModel>? = null,
         ): SheetViewModel =
 

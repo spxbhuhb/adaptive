@@ -61,10 +61,11 @@ class Move(
 
             fragment.setStateVariable(0, newInstructions)
             fragment.genPatchInternal()
-            model.update(newInstructions)
+
+            //model.update(newInstructions)
         }
 
-        viewModel.root.closePatchBatch()
+//        viewModel.root.closePatchBatch()
         viewModel.refreshSelection()
 
         return merge
@@ -77,7 +78,7 @@ class Move(
             fragment.genPatchInternal()
             model.update(originalInstructions)
         }
-        viewModel.root.closePatchBatch()
+//        viewModel.root.closePatchBatch()
         viewModel.refreshSelection()
     }
 

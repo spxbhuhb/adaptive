@@ -15,11 +15,7 @@ import `fun`.adaptive.ui.instruction.SPixel
 import `fun`.adaptive.ui.platform.NavSupport
 import `fun`.adaptive.ui.platform.ResizeObserver
 import `fun`.adaptive.ui.platform.media.MediaMetrics
-import `fun`.adaptive.ui.render.BrowserDecorationApplier
-import `fun`.adaptive.ui.render.BrowserEventApplier
-import `fun`.adaptive.ui.render.BrowserInputApplier
-import `fun`.adaptive.ui.render.BrowserLayoutApplier
-import `fun`.adaptive.ui.render.BrowserTextApplier
+import `fun`.adaptive.ui.render.*
 import `fun`.adaptive.utility.alsoIfInstance
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -80,6 +76,12 @@ class AuiAdapter(
 
     override fun removeActual(itemReceiver: HTMLElement) {
         itemReceiver.remove()
+    }
+
+    override fun closePatchBatch() {
+        window.requestAnimationFrame {
+            super.closePatchBatch()
+        }
     }
 
     override fun applyLayoutToActual(fragment: AbstractAuiFragment<HTMLElement>) {
