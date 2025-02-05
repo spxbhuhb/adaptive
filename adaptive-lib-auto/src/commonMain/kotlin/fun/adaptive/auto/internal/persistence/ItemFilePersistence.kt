@@ -4,6 +4,7 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.auto.model.AutoMetadata
 import `fun`.adaptive.auto.model.LamportTimestamp
+import `fun`.adaptive.log.fallbackLogger
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.read
 import `fun`.adaptive.utility.write
@@ -39,62 +40,72 @@ class ItemFilePersistence<IT : AdatClass>(
 
         fun <IT : AdatClass> write(path: Path, wireFormatProvider: WireFormatProvider, export: AutoItemExport<IT>) {
 
-            val itemId = checkNotNull(export.itemId) { "export without item id" }
-            val propertyTimes = checkNotNull(export.propertyTimes) { "export without property times" }
-            val value = checkNotNull(export.item) { "export without value" }
+            try {
+                val itemId = checkNotNull(export.itemId) { "export without item id" }
+                val propertyTimes = checkNotNull(export.propertyTimes) { "export without property times" }
+                val value = checkNotNull(export.item) { "export without value" }
 
-            val times = mutableListOf<Long>()
+                val times = mutableListOf<Long>()
 
-            for (propertyTime in propertyTimes) {
-                times += propertyTime.peerId
-                times += propertyTime.timestamp
+                for (propertyTime in propertyTimes) {
+                    times += propertyTime.peerId
+                    times += propertyTime.timestamp
+                }
+
+                @Suppress("UNCHECKED_CAST")
+                val bytes = wireFormatProvider
+                    .encoder()
+                    .pseudoInstanceStart()
+                    .string(1, "type", value.adatCompanion.wireFormatName)
+                    .instanceOrNull(2, "itemId", itemId, LamportTimestamp)
+                    .instance(3, "properties", value, value.adatCompanion as AdatCompanion<IT>)
+                    .instance(4, "propertyTimes", times, ListWireFormat(LongWireFormat))
+                    .instanceOrNull(5, "meta", export.meta, AutoMetadata.adatWireFormat)
+                    .pseudoInstanceEnd()
+                    .pack()
+
+                path.write(bytes, overwrite = true, useTemporaryFile = true)
+            } catch (e: Exception) {
+                fallbackLogger.error("error while writing file: $path", e)
+                throw e
             }
-
-            @Suppress("UNCHECKED_CAST")
-            val bytes = wireFormatProvider
-                .encoder()
-                .pseudoInstanceStart()
-                .string(1, "type", value.adatCompanion.wireFormatName)
-                .instanceOrNull(2, "itemId", itemId, LamportTimestamp)
-                .instance(3, "properties", value, value.adatCompanion as AdatCompanion<IT>)
-                .instance(4, "propertyTimes", times, ListWireFormat(LongWireFormat))
-                .instanceOrNull(5, "meta", export.meta, AutoMetadata.adatWireFormat)
-                .pseudoInstanceEnd()
-                .pack()
-
-            path.write(bytes, overwrite = true, useTemporaryFile = true)
         }
 
         fun <IT : AdatClass> read(path: Path, wireFormatProvider: WireFormatProvider): AutoItemExport<IT> {
-            val decoder = wireFormatProvider.decoder(path.read())
+            try {
+                val decoder = wireFormatProvider.decoder(path.read())
 
-            val type = decoder.string(1, "type")
+                val type = decoder.string(1, "type")
 
-            val itemId = decoder.instanceOrNull(2, "itemId", LamportTimestamp)
+                val itemId = decoder.instanceOrNull(2, "itemId", LamportTimestamp)
 
-            @Suppress("UNCHECKED_CAST")
-            val wireFormat = requireNotNull(WireFormatRegistry[type] as? WireFormat<AdatClass>) { "missing wire format for $type" }
+                @Suppress("UNCHECKED_CAST")
+                val wireFormat = requireNotNull(WireFormatRegistry[type] as? WireFormat<AdatClass>) { "missing wire format for $type" }
 
-            @Suppress("UNCHECKED_CAST")
-            val value = decoder.instance<AdatClass>(3, "properties", wireFormat) as IT
+                @Suppress("UNCHECKED_CAST")
+                val value = decoder.instance<AdatClass>(3, "properties", wireFormat) as IT
 
-            @Suppress("UNCHECKED_CAST")
-            val times = decoder.instance(4, "propertyTimes", ListWireFormat(LongWireFormat)) as List<Long>
+                @Suppress("UNCHECKED_CAST")
+                val times = decoder.instance(4, "propertyTimes", ListWireFormat(LongWireFormat)) as List<Long>
 
-            val propertyTimes = mutableListOf<LamportTimestamp>()
+                val propertyTimes = mutableListOf<LamportTimestamp>()
 
-            for (i in times.indices step 2) {
-                propertyTimes += LamportTimestamp(times[i], times[i + 1])
+                for (i in times.indices step 2) {
+                    propertyTimes += LamportTimestamp(times[i], times[i + 1])
+                }
+
+                val meta = decoder.instanceOrNull(5, "meta", AutoMetadata)
+
+                return AutoItemExport<IT>(
+                    meta = meta,
+                    itemId = itemId,
+                    propertyTimes = propertyTimes,
+                    item = value
+                )
+            } catch (e: Exception) {
+                fallbackLogger.error("error while reading file: $path", e)
+                throw e
             }
-
-            val meta = decoder.instanceOrNull(5, "meta", AutoMetadata)
-
-            return AutoItemExport<IT>(
-                meta = meta,
-                itemId = itemId,
-                propertyTimes = propertyTimes,
-                item = value
-            )
         }
     }
 }
