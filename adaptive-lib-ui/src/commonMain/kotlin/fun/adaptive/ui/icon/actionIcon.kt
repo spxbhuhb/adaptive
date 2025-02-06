@@ -17,10 +17,11 @@ fun actionIcon(
     theme: IconTheme = onSurfaceIconTheme,
 ): AdaptiveFragment {
     val hover = hover()
-    val colors = theme.colors(hover)
+    val background = theme.background(hover)
+    val svgColors = theme.svgColors(hover)
 
-    box(theme.actionIconContainer, colors, instructions()) {
-        svg(icon, theme.actionIcon, colors, instructions())
+    box(theme.actionIconContainer, background, instructions()) {
+        svg(icon, theme.actionIcon, svgColors, instructions())
     }
 
     return fragment()

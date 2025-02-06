@@ -1,51 +1,30 @@
 package `fun`.adaptive.cookbook.auth.ui.account
 
 import `fun`.adaptive.adat.store.copyStore
-import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.cookbook.add
+import `fun`.adaptive.cookbook.*
 import `fun`.adaptive.cookbook.auth.api.AccountApi
 import `fun`.adaptive.cookbook.auth.model.AccountSummary
-import `fun`.adaptive.cookbook.check_circle
-import `fun`.adaptive.cookbook.close
-import `fun`.adaptive.cookbook.edit
-import `fun`.adaptive.cookbook.lock
-import `fun`.adaptive.cookbook.lock_open
 import `fun`.adaptive.cookbook.shared.cornerRadius8
 import `fun`.adaptive.cookbook.shared.title
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.producer.fetch
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.service.api.getService
-import `fun`.adaptive.ui.api.alignItems
-import `fun`.adaptive.ui.api.alignSelf
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.colTemplate
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.gap
-import `fun`.adaptive.ui.api.grid
-import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.hover
-import `fun`.adaptive.ui.api.inputPlaceholder
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.maxWidth
-import `fun`.adaptive.ui.api.paddingHorizontal
-import `fun`.adaptive.ui.api.paddingLeft
-import `fun`.adaptive.ui.api.paddingRight
-import `fun`.adaptive.ui.api.rowTemplate
-import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.api.verticalScroll
-import `fun`.adaptive.ui.api.width
+import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.builtin.more_vert
 import `fun`.adaptive.ui.datetime.datetime
 import `fun`.adaptive.ui.dialog.api.buttonDialog
 import `fun`.adaptive.ui.dialog.api.iconDialog
+import `fun`.adaptive.ui.dialog.api.rowIconDialog
 import `fun`.adaptive.ui.editor.editor
-import `fun`.adaptive.ui.icon.icon
+import `fun`.adaptive.ui.icon.actionIcon
+import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.emptyInst
-import `fun`.adaptive.ui.theme.iconColors
 import `fun`.adaptive.ui.theme.textSmall
 
 @Adaptive
@@ -91,6 +70,7 @@ private fun items(items: List<AccountSummary>?, emptyFilter: Boolean) {
 @Adaptive
 private fun item(item: AccountSummary) {
     val hover = hover()
+    var modalOpen = false
 
     val background =
         when {
@@ -110,7 +90,8 @@ private fun item(item: AccountSummary) {
             80.dp,   // activated
             80.dp,   // locked
             140.dp,  // last login
-            24.dp    // edit
+            24.dp,   // edit,
+            24.dp    // more actions
         )
 
         gap { 8.dp }
@@ -121,35 +102,31 @@ private fun item(item: AccountSummary) {
         text(item.name) .. maxWidth
         text(item.email.ifEmpty { "(nincs email)" }) .. maxWidth .. emptyInst(item.email)
         text(item.phone.ifEmpty { "(nincs telefonszám)" }) .. maxWidth .. emptyInst(item.phone)
-        box {
-            if (item.activated) {
-                icon(Graphics.check_circle) .. iconColors.onSurfaceFriendly
-            } else {
-                icon(Graphics.close) .. iconColors.onSurfaceAngry
-            }
-        }
-        box {
-            if (item.locked) {
-                icon(Graphics.lock) .. iconColors.onSurfaceAngry
-            } else {
-                icon(Graphics.lock_open) .. iconColors.onSurfaceFriendly
-            }
-        }
+
+        friendlyOrAngry(item.activated, Graphics.check_circle, Graphics.close)
+        friendlyOrAngry(! item.locked, Graphics.lock_open, Graphics.lock)
+
         datetime(item.lastLogin) .. maxWidth .. alignSelf.endCenter .. textSmall
 
-        iconDialog(Graphics.edit, "Fiók szerkesztése") {
-            accountEditor(
-                AccountEditorData(
-                    item.id,
-                    item.login,
-                    item.name,
-                    item.email,
-                    item.phone,
-                    item.activated,
-                    item.locked
-                ),
-                it
-            )
+        box {
+            if (hover || modalOpen) {
+                rowIconDialog(Graphics.edit, "Fiók szerkesztése", feedback = { modalOpen = it }) {
+                    accountEditor(
+                        AccountEditorData(
+                            item.id,
+                            item.login,
+                            item.name,
+                            item.email,
+                            item.phone,
+                            item.activated,
+                            item.locked
+                        ),
+                        it
+                    )
+                }
+            }
         }
+
+        actionIcon(Graphics.more_vert, theme = tableIconTheme)
     }
 }

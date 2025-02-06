@@ -4,52 +4,67 @@ import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.svg.api.svgFill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
-import `fun`.adaptive.ui.api.alignItems
-import `fun`.adaptive.ui.api.backgroundColor
-import `fun`.adaptive.ui.api.cornerRadius
-import `fun`.adaptive.ui.api.size
+import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.decoration.Color
+import `fun`.adaptive.ui.instruction.decoration.CornerRadius
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.ui.theme.iconColors
 
 var onSurfaceIconTheme = IconTheme(colors.onSurface)
 var primaryIconTheme = IconTheme(colors.primary)
 
+val tableIconTheme = IconTheme(
+    colors.primary,
+    iconSize = 24.dp,
+    containerSize = 34.dp,
+    margin = 2.dp,
+    cornerRadius = 15.dp
+)
+
 class IconTheme(
-    val color : Color
-){
+    val color: Color,
+    val iconSize: DPixel = 24.dp,
+    val containerSize: DPixel = 34.dp,
+    val margin: DPixel = 0.dp,
+    val cornerRadius: DPixel = 16.dp
+) {
     val icon = instructionsOf(
         svgFill(color),
-        svgHeight(24.dp),
-        svgWidth(24.dp),
-        size(24.dp, 24.dp)
+        svgHeight(iconSize),
+        svgWidth(iconSize),
+        size(iconSize, iconSize)
     )
 
     val actionIcon = instructionsOf(
-        svgHeight(24.dp),
-        svgWidth(24.dp),
-        size(24.dp, 24.dp)
+        svgHeight(iconSize),
+        svgWidth(iconSize),
+        size(iconSize, iconSize)
     )
 
     val actionIconContainer = instructionsOf(
-        size(34.dp, 34.dp),
-        cornerRadius(16.dp),
+        size(containerSize, containerSize),
+        margin(margin),
+        cornerRadius(cornerRadius),
         alignItems.center
     )
 
-    val nonHoverColors = instructionsOf(
+    val nonHoverBackground = backgroundColor(colors.surface.opaque(0f))
+
+    val hoverBackground = backgroundColor(colors.primary.opaque(0.2f))
+
+    fun background(hover: Boolean) =
+        if (hover) hoverBackground else nonHoverBackground
+
+    val svgNonHoverColors = instructionsOf(
         svgFill(color),
-        backgroundColor(colors.surface)
     )
 
-    val hoverColors = instructionsOf(
-        iconColors.onPrimary,
-        backgrounds.primary
+    val svgHoverColors = instructionsOf(
+        svgFill(color)
     )
 
-    fun colors(hover : Boolean) =
-        if (hover) hoverColors else nonHoverColors
+    fun svgColors(hover: Boolean) =
+        if (hover) svgHoverColors else svgNonHoverColors
 
 }
