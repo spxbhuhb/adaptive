@@ -47,8 +47,6 @@ class SheetViewModel(
 
     var clipboard = SheetClipboard(emptyList())
 
-    val modelRevision = adaptiveValueStore { 0 }
-
     lateinit var root: GroveDrawingLayer
 
 
@@ -67,7 +65,6 @@ class SheetViewModel(
             items += item
         }
         root += item
-        modelRevision.value = modelRevision.value + 1
     }
 
     operator fun minusAssign(index: Int) {
@@ -76,17 +73,23 @@ class SheetViewModel(
 
         item.removed = true
         root -= item
-        modelRevision.value = modelRevision.value + 1
     }
 
     fun select() {
         selection = emptySelection
     }
 
+    /**
+     * Direct version of select which is not put into the undo stack.
+     */
     fun select(items : List<SheetItem>, containingFrame : RawFrame = SheetSelection.containingFrame(items)) {
+        if (engine.trace) engine.logger.info("selecting ${items.size} items")
         selection = SheetSelection(items, containingFrame)
     }
 
+    /**
+     * User inducted select, creates and executes an undoable select operation.
+     */
     fun select(startPosition: RawPosition, x: Double, y: Double, add: Boolean) {
         val x1 = min(startPosition.left, x)
         val y1 = min(startPosition.top, y)
@@ -105,13 +108,23 @@ class SheetViewModel(
                 else -> true
             }
         }
+
+        if (engine.trace) {
+            engine.logger.info("selected ${selection.items.size} items in (${startPosition.left} ${startPosition.top}, $x,$y) additional: $add")
+        }
     }
 
+    /**
+     * User inducted select, creates and executes an undoable select operation.
+     */
     fun select(x: Double, y: Double, add: Boolean) {
         select(add) { it.contains(x, y) }
+        if (engine.trace) {
+            engine.logger.info("selected ${selection.items.size} at ($x,$y) additional: $add")
+        }
     }
 
-    fun select(add: Boolean, condition: (renderData: AuiRenderData) -> Boolean) {
+    private fun select(add: Boolean, condition: (renderData: AuiRenderData) -> Boolean) {
 
         val box = root.parent?.parent as AbstractContainer<*, *>
 
@@ -141,6 +154,7 @@ class SheetViewModel(
             }
         }
 
+        // we have to use select so it is possible to undo/redo
         this += Select(selectedItems)
     }
 
@@ -152,9 +166,6 @@ class SheetViewModel(
             y >= finalTop + finalHeight -> false
             else -> true
         }
-
-    private fun AuiRenderData.rawFrame() =
-        RawFrame(finalTop, finalLeft, finalWidth, finalHeight)
 
     private fun AdaptiveFragment?.itemInfo(sheet: AbstractContainer<*, *>): ItemInfo? {
         var current = this

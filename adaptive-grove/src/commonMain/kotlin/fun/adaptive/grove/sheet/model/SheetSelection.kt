@@ -6,14 +6,14 @@ import kotlin.math.min
 
 class SheetSelection(
     val items: List<SheetItem>,
-    var containingFrame : RawFrame = containingFrame(items)
+    var containingFrame: RawFrame = containingFrame(items)
 ) {
 
     fun isEmpty() = items.isEmpty()
 
     companion object {
 
-        fun containingFrame(items : List<SheetItem>) : RawFrame {
+        fun containingFrame(items: List<SheetItem>): RawFrame {
             if (items.isEmpty()) return RawFrame.NaF
 
             var top = Double.MAX_VALUE
@@ -35,7 +35,14 @@ class SheetSelection(
                 right = max(finalLeft + frame.width, right)
             }
 
-            return RawFrame(top, left, right - left, bottom - top)
+            val width = right - left
+            val height = bottom - top
+
+            if (width <= 1e-100 || height <= 1e-100) {
+                return RawFrame.NaF
+            } else {
+                return RawFrame(top, left, width, height)
+            }
         }
 
     }

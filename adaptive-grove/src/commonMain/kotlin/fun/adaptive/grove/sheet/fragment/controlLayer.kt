@@ -52,11 +52,13 @@ fun controlLayer(viewModel: SheetViewModel) {
             }
 
             onMove { event ->
+                // when start position is NaP the pointer movement started outside the window
                 if (lastPosition === Position.NaP) return@onMove
+                if (startPosition === Position.NaP) return@onMove
+
                 val newPosition = event.position
 
                 if (selection.isEmpty()) {
-
                     val dx = abs(startPosition.left.value - newPosition.left.value)
                     val dy = abs(startPosition.top.value - newPosition.top.value)
 
@@ -74,13 +76,15 @@ fun controlLayer(viewModel: SheetViewModel) {
             }
 
             onPrimaryUp { event ->
-                lastPosition = Position.NaP
-                moveStart = 0L
-
-                if (selection.isEmpty()) {
+                // when start position is NaP the pointer movement started outside the window
+                if (selection.isEmpty() && startPosition !== Position.NaP) {
                     controlFrame = Frame.NaF
                     viewModel.select(startPosition.toRaw(adapter()), event.x, event.y, EventModifier.SHIFT in event)
                 }
+
+                startPosition = Position.NaP
+                lastPosition = Position.NaP
+                moveStart = 0L
             }
 
             onKeydown { event ->
