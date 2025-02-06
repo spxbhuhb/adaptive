@@ -1,7 +1,6 @@
 package `fun`.adaptive.grove.sheet.operation
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
-import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.ui.instruction.DPixel
@@ -27,8 +26,8 @@ class Move(
         val last = viewModel.engine.undoStack.lastOrNull()
         val merge = (last is Move && last.start == start)
 
-        val effectiveDeltaX : DPixel
-        val effectiveDeltaY : DPixel
+        val effectiveDeltaX: DPixel
+        val effectiveDeltaY: DPixel
 
         if (merge) {
             undoData.putAll(last.undoData)
@@ -41,7 +40,7 @@ class Move(
             effectiveDeltaY = mergedDeltaY
         }
 
-        viewModel.selection.items.forEach { item ->
+        viewModel.forSelection { item ->
 
             val fragment = item.fragment
             val model = item.model
@@ -56,10 +55,7 @@ class Move(
             val originalPosition = originalInstructions.firstInstanceOf<Position>()
             val newPosition = Position(originalPosition.top + effectiveDeltaY, originalPosition.left + effectiveDeltaX)
 
-            val newInstructions = instructionsOf(
-                originalInstructions.removeAll { it is Position },
-                newPosition
-            )
+            val newInstructions = originalInstructions.removeAll { it is Position } + newPosition
 
             fragment.setStateVariable(0, newInstructions)
             fragment.genPatchInternal()
@@ -67,21 +63,22 @@ class Move(
             //model.update(newInstructions)
         }
 
-//        viewModel.root.closePatchBatch()
-        viewModel.refreshSelection()
+        val original = viewModel.selection
+        val newFrame = original.containingFrame.move(effectiveDeltaX.value, effectiveDeltaY.value)
+        viewModel.select(viewModel.selection.items, newFrame)
 
         return merge
     }
 
     override fun revert(viewModel: SheetViewModel) {
-        viewModel.forSelection { model, fragment ->
-            val originalInstructions = undoData[model.uuid] ?: return@forSelection
-            fragment.setStateVariable(0, originalInstructions)
-            fragment.genPatchInternal()
-            model.update(originalInstructions)
-        }
-//        viewModel.root.closePatchBatch()
-        viewModel.refreshSelection()
+//        viewModel.forSelection { model, fragment ->
+//            val originalInstructions = undoData[model.uuid] ?: return@forSelection
+//            fragment.setStateVariable(0, originalInstructions)
+//            fragment.genPatchInternal()
+//            model.update(originalInstructions)
+//        }
+////        viewModel.root.closePatchBatch()
+//        viewModel.refreshSelection()
     }
 
     override fun toString(): String = "Move -- mergedDeltaX=$mergedDeltaX  mergedDeltaY=$mergedDeltaY"

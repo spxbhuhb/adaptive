@@ -15,7 +15,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 class SheetViewModel(
-    val engine: SheetEngine,
+    val engine: SheetEngine
 ) {
 
     val emptySelection = SheetSelection(emptyList())
@@ -38,15 +38,16 @@ class SheetViewModel(
         get() = items.size
 
     var selection = emptySelection
-        set(value) {
+        private set(value) {
             field = value
-            selectionRevision.value = selectionRevision.value + 1
+            selectionStore.value = value
         }
+
+    val selectionStore = adaptiveValueStore { selection }
 
     var clipboard = SheetClipboard(emptyList())
 
     val modelRevision = adaptiveValueStore { 0 }
-    val selectionRevision = adaptiveValueStore { 0 }
 
     lateinit var root: GroveDrawingLayer
 
@@ -69,7 +70,7 @@ class SheetViewModel(
         modelRevision.value = modelRevision.value + 1
     }
 
-    operator fun minusAssign(index : Int) {
+    operator fun minusAssign(index: Int) {
         val item = items[index]
         if (item.removed) return
 
@@ -80,6 +81,10 @@ class SheetViewModel(
 
     fun select() {
         selection = emptySelection
+    }
+
+    fun select(items : List<SheetItem>, containingFrame : RawFrame = SheetSelection.containingFrame(items)) {
+        selection = SheetSelection(items, containingFrame)
     }
 
     fun select(startPosition: RawPosition, x: Double, y: Double, add: Boolean) {
@@ -132,25 +137,11 @@ class SheetViewModel(
             val indices = selectedItems.map { it.index }
             selection.items.forEach {
                 if (it.index in indices) return@forEach
-                items += it
+                selectedItems += it
             }
         }
 
-        this += Select(items)
-    }
-
-    fun SheetViewModel.refreshSelection() {
-        val box = root.parent?.parent as AbstractContainer<*, *>
-        val selected = selection.value.selected.map { it.uuid }
-        val items = mutableListOf<SelectionInfo>()
-
-        for (child in box.layoutItems) {
-            val info = child.itemInfo(box) ?: continue
-            if (info.uuid !in selected) continue
-            items += SelectionInfo(info.uuid, child.renderData.rawFrame())
-        }
-
-        selection.update(SheetSelection(items))
+        this += Select(selectedItems)
     }
 
     private fun AuiRenderData.contains(x: Double, y: Double) =

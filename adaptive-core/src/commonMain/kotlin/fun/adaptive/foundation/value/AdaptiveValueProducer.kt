@@ -13,7 +13,6 @@ class AdaptiveValueProducer<VT>(
     override fun start() {
         store.addListener(this)
         latestValue = store.value
-        setDirtyBatch()
     }
 
     override fun stop() {

@@ -10,9 +10,7 @@ import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.ui.instruction.DPixel
-import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Position
-import `fun`.adaptive.ui.instruction.layout.Size
 import `fun`.adaptive.utility.UUID
 
 class Add(
@@ -58,13 +56,7 @@ class Add(
 
         val instanceMapping = listOf(instanceInstructionMapping) + template.mapping.drop(1)
 
-        val size = templateInstructions.firstInstanceOfOrNull<Size>() ?: Size(100.dp, 100.dp)
-
-        return SheetItem(
-            index,
-            x.value, y.value, x.value + size.width.value, y.value + size.height.value,
-            LfmDescendant(UUID(), template.key, instanceMapping)
-        )
+        return SheetItem(index, LfmDescendant(UUID(), template.key, instanceMapping))
 
     }
 

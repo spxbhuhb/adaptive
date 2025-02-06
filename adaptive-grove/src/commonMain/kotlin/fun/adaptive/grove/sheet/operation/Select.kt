@@ -12,14 +12,14 @@ class Select(
 
     override fun commit(viewModel: SheetViewModel): Boolean {
         undoData = viewModel.selection
-        viewModel.selection = SheetSelection(items)
+        viewModel.select(items)
         return false
     }
 
     override fun revert(viewModel: SheetViewModel) {
-        viewModel.selection = undoData
+        viewModel.select(undoData.items)
     }
 
     override fun toString(): String =
-        "Select -- $items"
+        "Select -- ${items.size} ${items.joinToString { "${it.index}:${it.model.key}" }}"
 }

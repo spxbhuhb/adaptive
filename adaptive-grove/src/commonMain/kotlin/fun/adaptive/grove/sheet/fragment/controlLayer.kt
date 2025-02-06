@@ -1,6 +1,5 @@
 package `fun`.adaptive.grove.sheet.fragment
 
-import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.value.adaptiveValue
@@ -27,8 +26,8 @@ fun controlLayer(viewModel: SheetViewModel) {
     var moveStart = 0L
     var startPosition = Position.NaP
     var lastPosition = Position.NaP
-    val selectionRevision = adaptiveValue { viewModel.selectionRevision }
-    var controlFrame = viewModel.selection.containingFrame.toFrame(adapter()).grow(8.0)
+    val selection = adaptiveValue { viewModel.selectionStore } ?: viewModel.emptySelection
+    var controlFrame = selection.containingFrame.toFrame(adapter()).grow(8.0)
 
     dropTarget {
 
