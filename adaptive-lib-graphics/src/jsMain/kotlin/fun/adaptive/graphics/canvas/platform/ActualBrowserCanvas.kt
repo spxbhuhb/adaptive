@@ -4,14 +4,7 @@
 
 package `fun`.adaptive.graphics.canvas.platform
 
-import `fun`.adaptive.graphics.svg.instruction.*
-import `fun`.adaptive.graphics.svg.instruction.transform.Matrix
-import `fun`.adaptive.graphics.svg.instruction.transform.Rotate
-import `fun`.adaptive.graphics.svg.instruction.transform.Scale
-import `fun`.adaptive.graphics.svg.instruction.transform.SkewX
-import `fun`.adaptive.graphics.svg.instruction.transform.SkewY
-import `fun`.adaptive.graphics.svg.instruction.transform.SvgTransform
-import `fun`.adaptive.graphics.svg.instruction.transform.Translate
+import `fun`.adaptive.graphics.svg.instruction.transform.*
 import `fun`.adaptive.ui.instruction.decoration.Color
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -61,6 +54,7 @@ class ActualBrowserCanvas : ActualCanvas {
 
     override fun draw(drawFun: () -> Unit) {
         window.requestAnimationFrame {
+            clear()
             drawFun()
         }
     }
