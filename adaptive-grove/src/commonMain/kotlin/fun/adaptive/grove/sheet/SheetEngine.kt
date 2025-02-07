@@ -16,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import kotlin.time.measureTime
 
 class SheetEngine(
     val trace: Boolean,
@@ -30,11 +31,13 @@ class SheetEngine(
     val undoStack: Stack<SheetOperation> = mutableListOf<SheetOperation>()
     val redoStack: Stack<SheetOperation> = mutableListOf<SheetOperation>()
 
-    override var latestValue: SheetViewModel? =
-        SheetViewModel(this, emptyList())
+    override var latestValue: SheetViewModel?
+        get() = viewModel
+        set(_) {
+            throw UnsupportedOperationException()
+        }
 
-    val viewModel: SheetViewModel
-        get() = latestValue !!
+    val viewModel = SheetViewModel(this)
 
     override fun start() {
         CoroutineScope(binding.targetFragment.adapter.dispatcher).apply {
@@ -61,8 +64,6 @@ class SheetEngine(
             is Redo -> redo()
             else -> op(operation)
         }
-
-        setDirtyBatch()
     }
 
     fun undo() {
@@ -80,11 +81,24 @@ class SheetEngine(
     }
 
     fun op(operation: SheetOperation) {
-        if (trace) logger.fine { "$operation" }
-        val replace = operation.commit(viewModel)
-        if (replace) undoStack.pop()
-        undoStack.push(operation)
-        redoStack.clear()
+        measureTime {
+            val beforeSize = viewModel.items.size
+
+            val replace = operation.commit(viewModel)
+            if (replace) undoStack.pop()
+            undoStack.push(operation)
+            redoStack.clear()
+
+            val afterSize = viewModel.items.size
+            if (beforeSize != afterSize) {
+                viewModel.select(viewModel.items.subList(beforeSize, afterSize))
+            }
+
+            operation.firstRun = false
+
+        }.also {
+            if (trace) logger.fine { "$it - $operation" }
+        }
     }
 
     companion object {
@@ -97,7 +111,7 @@ class SheetEngine(
 
             SheetEngine(trace, checkNotNull(binding))
                 .also { binding.targetFragment.addProducer(it) }
-                .latestValue !!
+                .viewModel
 
     }
 

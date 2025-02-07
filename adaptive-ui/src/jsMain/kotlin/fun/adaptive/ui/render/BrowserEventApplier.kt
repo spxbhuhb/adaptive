@@ -21,9 +21,9 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
         }
     }
 
-    override fun addEventListener(fragment: AbstractAuiFragment<HTMLElement>, eventFun: UIEventHandler): Any {
+    override fun addEventListener(fragment: AbstractAuiFragment<HTMLElement>, eventHandler: UIEventHandler): Any {
 
-        val (eventName, condition) = when (eventFun) {
+        val (eventName, condition) = when (eventHandler) {
             is OnClick -> "click" to Always
             is OnDoubleClick -> "dblclick" to Always
             is OnPrimaryDown -> "mousedown" to Primary
@@ -31,13 +31,14 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
             is OnPrimaryUp -> "mouseup" to Primary
             is OnDrop -> "drop" to Always
             is OnKeyDown -> "keydown" to Always
-            else -> throw UnsupportedOperationException("unsupported event handler: $eventFun")
+            else -> throw UnsupportedOperationException("unsupported event handler: $eventHandler")
         }
 
         val listener = BrowserEventListener(eventName, condition) { event ->
 
             if (! this.condition.matches(event)) return@BrowserEventListener
 
+            val target = event.target
             val x: Double
             val y: Double
             val transferData: TransferData?
@@ -55,6 +56,11 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
 
             if (event is DragEvent && event.type == "drop") {
                 transferData = event.dataTransfer?.getData("application/json")?.let { TransferData.decodeFromJson(it) }
+
+                if (eventHandler is OnDrop && eventHandler.focusOnDrop && target is HTMLElement) {
+                    target.focus()
+                }
+
                 event.preventDefault()
             } else {
                 transferData = null
@@ -67,7 +73,7 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
                 null
             }
 
-            eventFun.execute(UIEvent(fragment, event, x, y, transferData, keyInfo, modifiers(event)))
+            eventHandler.execute(UIEvent(fragment, event, x, y, transferData, keyInfo, modifiers(event)))
         }
 
         fragment.receiver.addEventListener(eventName, listener)
@@ -85,6 +91,7 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
                 if (event.metaKey) modifiers.add(EventModifier.META)
                 if (event.shiftKey) modifiers.add(EventModifier.SHIFT)
             }
+
             is KeyboardEvent -> {
                 if (event.ctrlKey) modifiers.add(EventModifier.CTRL)
                 if (event.altKey) modifiers.add(EventModifier.ALT)

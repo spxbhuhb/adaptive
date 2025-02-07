@@ -13,15 +13,15 @@ import `fun`.adaptive.ui.theme.colors
 
 @Adaptive
 fun descendants(viewModel: SheetViewModel) {
-    val items = autoCollection(viewModel.fragments) ?: emptyList()
-
+//    val items = autoCollection(viewModel.fragments) ?: emptyList()
+//
     column {
         maxSize .. borderRight(colors.outline)
 
         areaTitle(Strings.components)
 
-        for (item in items) {
-            text(item.key)
-        }
+//        for (item in items) {
+//            text(item.key)
+//        }
     }
 }

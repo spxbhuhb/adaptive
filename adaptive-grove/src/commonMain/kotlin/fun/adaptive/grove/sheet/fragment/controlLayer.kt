@@ -1,10 +1,9 @@
 package `fun`.adaptive.grove.sheet.fragment
 
-import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
+import `fun`.adaptive.foundation.value.adaptiveValue
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
-import `fun`.adaptive.grove.sheet.control.select
 import `fun`.adaptive.grove.sheet.model.SheetSelection
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.grove.sheet.operation.*
@@ -27,12 +26,12 @@ fun controlLayer(viewModel: SheetViewModel) {
     var moveStart = 0L
     var startPosition = Position.NaP
     var lastPosition = Position.NaP
-    val selection = autoItem(viewModel.selection) ?: viewModel.emptySelection
+    val selection = adaptiveValue { viewModel.selectionStore } ?: viewModel.emptySelection
     var controlFrame = selection.containingFrame.toFrame(adapter()).grow(8.0)
 
     dropTarget {
 
-        onDrop { event ->
+        onDrop(focusOnDrop = true) { event ->
             val template = (event.transferData?.data as? LfmDescendant) ?: return@onDrop
             val position = event.position
             viewModel += Add(position.left, position.top, template)
@@ -53,11 +52,13 @@ fun controlLayer(viewModel: SheetViewModel) {
             }
 
             onMove { event ->
+                // when start position is NaP the pointer movement started outside the window
                 if (lastPosition === Position.NaP) return@onMove
+                if (startPosition === Position.NaP) return@onMove
+
                 val newPosition = event.position
 
                 if (selection.isEmpty()) {
-
                     val dx = abs(startPosition.left.value - newPosition.left.value)
                     val dy = abs(startPosition.top.value - newPosition.top.value)
 
@@ -75,13 +76,15 @@ fun controlLayer(viewModel: SheetViewModel) {
             }
 
             onPrimaryUp { event ->
-                lastPosition = Position.NaP
-                moveStart = 0L
-
-                if (selection.isEmpty()) {
+                // when start position is NaP the pointer movement started outside the window
+                if (selection.isEmpty() && startPosition !== Position.NaP) {
                     controlFrame = Frame.NaF
                     viewModel.select(startPosition.toRaw(adapter()), event.x, event.y, EventModifier.SHIFT in event)
                 }
+
+                startPosition = Position.NaP
+                lastPosition = Position.NaP
+                moveStart = 0L
             }
 
             onKeydown { event ->
@@ -105,13 +108,16 @@ private fun keyDownHandler(event: UIEvent, selection: SheetSelection, viewModel:
 
         Keys.V -> viewModel += Paste()
 
-        Keys.Z -> if (EventModifier.CTRL in event.modifiers) {
+        Keys.Z -> if (EventModifier.CTRL in event.modifiers || EventModifier.META in event.modifiers) {
             if (EventModifier.SHIFT in event.modifiers) {
                 viewModel += Redo()
             } else {
                 viewModel += Undo()
             }
         }
+
+        Keys.BACKSPACE -> viewModel += Remove()
+        Keys.DELETE -> viewModel += Remove()
 
         Keys.ARROW_UP -> move(selection, viewModel, 0.0, - 1.0)
         Keys.ARROW_DOWN -> move(selection, viewModel, 0.0, 1.0)

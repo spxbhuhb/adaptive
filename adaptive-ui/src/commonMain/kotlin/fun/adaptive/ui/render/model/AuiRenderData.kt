@@ -8,6 +8,7 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.testing.Traceable
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
+import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 
 /**
@@ -56,6 +57,9 @@ data class AuiRenderData(
     var finalWidth = 0.0
     var finalHeight = 0.0
 
+    val rawFrame
+        get() = RawFrame(finalTop, finalLeft, finalWidth, finalHeight)
+
     var layout: LayoutRenderData? = null
     var decoration: DecorationRenderData? = null
     var container: ContainerRenderData? = null
@@ -101,4 +105,5 @@ data class AuiRenderData(
         if (previous.innerHeight != innerHeight) return true
         return false
     }
+
 }

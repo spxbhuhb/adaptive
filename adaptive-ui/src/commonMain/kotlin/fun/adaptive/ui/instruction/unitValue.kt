@@ -73,6 +73,16 @@ class DPixel(
     override fun toRawValue(adapter: AbstractAuiAdapter<*, *>): Double =
         this.toPxOrZero(adapter)
 
+    override fun equals(other: Any?): Boolean {
+        if (other === this) return true
+        if (other == null) return false
+        return (other is DPixel && other.value == value)
+    }
+
+    override fun hashCode(): Int {
+        return value.hashCode()
+    }
+
     override fun toString(): String {
         return if (value.isNaN()) "NaP" else "${value}dp"
     }

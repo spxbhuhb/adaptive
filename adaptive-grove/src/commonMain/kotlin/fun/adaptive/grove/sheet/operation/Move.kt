@@ -1,13 +1,9 @@
 package `fun`.adaptive.grove.sheet.operation
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
-import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
-import `fun`.adaptive.grove.sheet.control.refreshSelection
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.layout.Position
-import `fun`.adaptive.utility.UUID
 
 /**
  * @property  start  The VM time when the move operation started. The operation uses this time to merge
@@ -19,7 +15,7 @@ class Move(
     val deltaY: DPixel
 ) : SheetOperation() {
 
-    val undoData = mutableMapOf<UUID<LfmDescendant>, AdaptiveInstructionGroup>()
+    val undoData = mutableMapOf<Int, AdaptiveInstructionGroup>()
 
     var mergedDeltaX = deltaX
     var mergedDeltaY = deltaY
@@ -28,8 +24,8 @@ class Move(
         val last = viewModel.engine.undoStack.lastOrNull()
         val merge = (last is Move && last.start == start)
 
-        val effectiveDeltaX : DPixel
-        val effectiveDeltaY : DPixel
+        val effectiveDeltaX: DPixel
+        val effectiveDeltaY: DPixel
 
         if (merge) {
             undoData.putAll(last.undoData)
@@ -42,44 +38,44 @@ class Move(
             effectiveDeltaY = mergedDeltaY
         }
 
-        viewModel.forEachSelected { model, fragment ->
+        viewModel.forSelection { item ->
 
+            val fragment = item.fragment
             val originalInstructions = fragment.instructions
 
+            // The selection cannot change when we merge with the previous move.
+            // Thus, we have to add the original instructions only when this is the
+            // first move of a merged move series.
+
             if (! merge) {
-                undoData[model.uuid] = originalInstructions
+                undoData[item.index] = originalInstructions
             }
 
             // FIXME - mixed density dependent and density independent pixels
             val originalPosition = originalInstructions.firstInstanceOf<Position>()
             val newPosition = Position(originalPosition.top + effectiveDeltaY, originalPosition.left + effectiveDeltaX)
 
-            val newInstructions = instructionsOf(
-                originalInstructions.removeAll { it is Position },
-                newPosition
-            )
+            val newInstructions = originalInstructions.removeAll { it is Position } + newPosition
 
             fragment.setStateVariable(0, newInstructions)
             fragment.genPatchInternal()
-
-            //model.update(newInstructions)
         }
 
-//        viewModel.root.closePatchBatch()
-        viewModel.refreshSelection()
+        val newFrame = viewModel.selection.containingFrame.move(effectiveDeltaX.value, effectiveDeltaY.value)
+        viewModel.select(viewModel.selection.items, newFrame)
 
         return merge
     }
 
     override fun revert(viewModel: SheetViewModel) {
-        viewModel.forEachSelected { model, fragment ->
-            val originalInstructions = undoData[model.uuid] ?: return@forEachSelected
+        viewModel.forSelection { item ->
+            val originalInstructions = undoData[item.index] ?: return@forSelection
+            val fragment = item.fragment
             fragment.setStateVariable(0, originalInstructions)
             fragment.genPatchInternal()
-            model.update(originalInstructions)
+            viewModel.drawingLayer.updateLayout(item)
         }
-//        viewModel.root.closePatchBatch()
-        viewModel.refreshSelection()
+        viewModel.select(viewModel.selection.items)
     }
 
     override fun toString(): String = "Move -- mergedDeltaX=$mergedDeltaX  mergedDeltaY=$mergedDeltaY"

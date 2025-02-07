@@ -12,9 +12,10 @@ import kotlin.math.max
 abstract class AbstractBox<RT, CRT : RT>(
     adapter: AbstractAuiAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
-    declarationIndex: Int
+    declarationIndex: Int,
+    stateSize : Int = 2
 ) : AbstractContainer<RT, CRT>(
-    adapter, parent, declarationIndex, 2
+    adapter, parent, declarationIndex, stateSize
 ) {
 
     override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
