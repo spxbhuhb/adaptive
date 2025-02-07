@@ -9,6 +9,7 @@ import `fun`.adaptive.ui.render.event
 
 @Adat
 class OnDrop(
+    val focusOnDrop : Boolean = false,
     override val handler: (event: UIEvent) -> Unit
 ) : UIEventHandler {
     override fun applyTo(subject: Any) {

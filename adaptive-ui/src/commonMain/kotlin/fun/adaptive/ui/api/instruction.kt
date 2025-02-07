@@ -245,4 +245,4 @@ inline fun inputPlaceholder(valueFun: () -> String) = InputPlaceholder(valueFun(
 // ------------------------------------------------------------------------------------
 
 inline fun transferData(data: () -> Any?) = TransferData(data())
-fun onDrop(handler: (event: UIEvent) -> Unit) = OnDrop(handler)
+fun onDrop(focusOnDrop : Boolean = false, handler: (event: UIEvent) -> Unit) = OnDrop(focusOnDrop, handler)
