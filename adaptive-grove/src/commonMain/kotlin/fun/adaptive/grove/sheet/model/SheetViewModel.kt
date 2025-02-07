@@ -6,11 +6,9 @@ import `fun`.adaptive.grove.sheet.SheetEngine
 import `fun`.adaptive.grove.sheet.fragment.GroveDrawingLayer
 import `fun`.adaptive.grove.sheet.operation.Select
 import `fun`.adaptive.grove.sheet.operation.SheetOperation
-import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.fragment.layout.RawPosition
 import `fun`.adaptive.ui.render.model.AuiRenderData
-import kotlin.collections.plusAssign
 import kotlin.math.max
 import kotlin.math.min
 
@@ -47,7 +45,7 @@ class SheetViewModel(
 
     var clipboard = SheetClipboard(emptyList())
 
-    lateinit var root: GroveDrawingLayer
+    lateinit var drawingLayer: GroveDrawingLayer<*,*>
 
 
     operator fun plusAssign(operation: SheetOperation) {
@@ -64,7 +62,7 @@ class SheetViewModel(
         } else {
             items += item
         }
-        root += item
+        drawingLayer += item
     }
 
     operator fun minusAssign(index: Int) {
@@ -72,7 +70,7 @@ class SheetViewModel(
         if (item.removed) return
 
         item.removed = true
-        root -= item
+        drawingLayer -= item
     }
 
     fun select() {
@@ -126,15 +124,13 @@ class SheetViewModel(
 
     private fun select(add: Boolean, condition: (renderData: AuiRenderData) -> Boolean) {
 
-        val box = root.parent?.parent as AbstractContainer<*, *>
-
         val selectedItems = mutableListOf<SheetItem>()
 
-        for (child in box.layoutItems) {
+        for (child in drawingLayer.layoutItems) {
 
             if (! condition(child.renderData)) continue
 
-            val info = child.itemInfo(box) ?: continue
+            val info = child.itemInfo() ?: continue
 
             selectedItems += items[info.index]
         }
@@ -167,7 +163,7 @@ class SheetViewModel(
             else -> true
         }
 
-    private fun AdaptiveFragment?.itemInfo(sheet: AbstractContainer<*, *>): ItemInfo? {
+    private fun AdaptiveFragment?.itemInfo(): ItemInfo? {
         var current = this
 
         while (current != null) {
@@ -175,7 +171,7 @@ class SheetViewModel(
             if (info != null) return info
 
             current = current.parent
-            if (current == sheet) return null
+            if (current == drawingLayer) return null
         }
 
         return null

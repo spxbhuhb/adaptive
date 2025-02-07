@@ -6,12 +6,10 @@ package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
-import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.utility.alsoIfInstance
-import `fun`.adaptive.utility.checkIfInstance
 
 /**
  * Two uses: layouts and loop/select containers.
@@ -98,8 +96,12 @@ abstract class AbstractContainer<RT, CRT : RT>(
                 }
             }
 
-            scheduleUpdate()
+            addActualScheduleUpdate(itemFragment)
         }
+    }
+
+    open fun addActualScheduleUpdate(itemFragment: AbstractAuiFragment<RT>) {
+        scheduleUpdate()
     }
 
     override fun removeActual(fragment: AdaptiveFragment, direct: Boolean?) {
@@ -129,8 +131,12 @@ abstract class AbstractContainer<RT, CRT : RT>(
                 }
             }
 
-            scheduleUpdate()
+            removeActualScheduleUpdate(itemFragment)
         }
+    }
+
+    open fun removeActualScheduleUpdate(itemFragment: AbstractAuiFragment<RT>) {
+        scheduleUpdate()
     }
 
     override fun auiPatchInternal() = Unit

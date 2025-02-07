@@ -1,27 +1,38 @@
 package `fun`.adaptive.grove.sheet.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
-import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.grove.hydration.lfm.LfmConst
 import `fun`.adaptive.grove.sheet.model.ItemInfo
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
+import `fun`.adaptive.ui.AbstractAuiAdapter
+import `fun`.adaptive.ui.AbstractAuiFragment
+import `fun`.adaptive.ui.fragment.layout.AbstractBox
 
 /**
  * A fragment that contains hydrated fragments and supports adding, removing and patching them
  * independent of the standard adaptive fragment mechanisms.
+ *
+ * State:
+ *
+ * 1. instructions
+ * 2. viewModel (never changes)
+ * 3. content (not used, inherited from AbstractBox)
  */
 @AdaptiveActual
-class GroveDrawingLayer(
-    adapter: AdaptiveAdapter,
+class GroveDrawingLayer<RT,CRT:RT>(
+    adapter: AbstractAuiAdapter<RT,CRT>,
     parent: AdaptiveFragment? = null,
     declarationIndex: Int
-) : AdaptiveFragment(
-    adapter, parent, declarationIndex, 2
+) : AbstractBox<RT,CRT>(
+    adapter, parent, declarationIndex, 3
 ) {
 
-    val viewModel by stateVariable<SheetViewModel>()
+    val viewModel
+        get() = get<SheetViewModel>(1)
+
+    val updateBatch = mutableListOf<SheetItem>()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? = null
 
@@ -31,7 +42,25 @@ class GroveDrawingLayer(
 
     override fun create() {
         super.create()
-        viewModel.root = this
+        viewModel.drawingLayer = this
+    }
+
+    override fun addActualScheduleUpdate(itemFragment: AbstractAuiFragment<RT>) {
+        if (!isMounted) {
+            scheduleUpdate()
+            return
+        }
+
+        // This call computes the layout of itemFragment and places it on the actual UI
+        // At this point we are outside the general UI patching batch, but that's OK.
+        // The reason for this is twofold: performance and having the actual frame
+        // calculated before the operation finishes, so the item can be selected properly.
+
+        updateLayout(updateBatchId, itemFragment)
+    }
+
+    override fun removeActualScheduleUpdate(itemFragment: AbstractAuiFragment<RT>) {
+        // we do not need to schedule layout update for remove
     }
 
     operator fun plusAssign(item : SheetItem) {
@@ -50,6 +79,8 @@ class GroveDrawingLayer(
             fragment.create()
 
             if (isMounted) fragment.mount()
+
+            updateBatch += item
         }
     }
 

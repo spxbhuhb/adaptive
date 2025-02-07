@@ -15,10 +15,7 @@ fun sheet(viewModel: SheetViewModel) {
     box {
         maxSize
 
-        box {
-            maxSize
-            drawingLayer(viewModel)
-        }
+        drawingLayer(viewModel) { maxSize }
 
         box {
             maxSize

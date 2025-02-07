@@ -64,8 +64,6 @@ class SheetEngine(
             is Redo -> redo()
             else -> op(operation)
         }
-
-        setDirtyBatch()
     }
 
     fun undo() {
@@ -84,10 +82,17 @@ class SheetEngine(
 
     fun op(operation: SheetOperation) {
         measureTime {
+            val beforeSize = viewModel.items.size
+
             val replace = operation.commit(viewModel)
             if (replace) undoStack.pop()
             undoStack.push(operation)
             redoStack.clear()
+
+            val afterSize = viewModel.items.size
+            if (beforeSize != afterSize) {
+                viewModel.select(viewModel.items.subList(beforeSize, afterSize))
+            }
         }.also {
             if (trace) logger.fine { "$it - $operation" }
         }
