@@ -93,6 +93,9 @@ class SheetEngine(
             if (beforeSize != afterSize) {
                 viewModel.select(viewModel.items.subList(beforeSize, afterSize))
             }
+
+            operation.firstRun = false
+
         }.also {
             if (trace) logger.fine { "$it - $operation" }
         }

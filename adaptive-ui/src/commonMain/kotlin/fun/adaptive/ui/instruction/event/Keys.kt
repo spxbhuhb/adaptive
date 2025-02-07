@@ -12,4 +12,6 @@ object Keys {
     const val ARROW_RIGHT = "ArrowRight"
     const val ARROW_UP = "ArrowUp"
     const val ARROW_DOWN = "ArrowDown"
+    const val DELETE = "Delete"
+    const val BACKSPACE = "Backspace"
 }

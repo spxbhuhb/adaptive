@@ -1,43 +1,66 @@
 package `fun`.adaptive.grove.sheet.operation
 
+import `fun`.adaptive.grove.sheet.model.SheetItem
+import `fun`.adaptive.grove.sheet.model.SheetSelection
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.layout.Position
 
 class Paste : SheetOperation() {
 
-    val undoData = mutableListOf<Add>()
+    lateinit var originalSelection : SheetSelection
+    val items = mutableListOf<SheetItem>()
 
     override fun commit(viewModel: SheetViewModel): Boolean {
 
-        val models = viewModel.clipboard.models
-
-        models.forEach { model ->
-            val position = model.instructions.lastInstanceOfOrNull<Position>() ?: Position.ZERO
-            val add = Add(position.left + 10.dp, position.top + 10.dp, model)
-            add.commit(viewModel)
-            undoData += add
+        if (firstRun) {
+            originalSelection = viewModel.selection
         }
 
-        // This is tricky as the layout is not run yet, so technically we
-        // do not know the final positions and sizes. We have this information
-        // from `frame`, but there is actually no guarantee that the fragment
-        // will have the same size as before.
+        val models = viewModel.clipboard.models
+        val frames = viewModel.clipboard.frames
 
-        // I'll go with the saved frame for now and revise this later.
+        val shift = (shift(viewModel) * 10).dp
 
-        // TODO revise paste selection frame
+        models.forEachIndexed { modelIndex, model ->
 
-        viewModel.select()
+            val frame = frames[modelIndex]
+
+            // FIXME mix of device dependent and device independent pixels
+
+            if (firstRun) {
+                val item = viewModel.addItem(viewModel.nextIndex, frame.left.dp + shift, frame.top.dp + shift, model)
+                items += item
+            } else {
+                viewModel.showItem(items[modelIndex].index)
+            }
+
+        }
+
+        viewModel.select(items)
 
         return false
     }
 
     override fun revert(viewModel: SheetViewModel) {
-        undoData.forEach { it.revert(viewModel) }
-        undoData.clear()
+        items.forEach { viewModel.hideItem(it.index) }
+        viewModel.select(originalSelection.items)
     }
 
     override fun toString(): String =
         "Paste"
+
+    private fun shift(viewModel: SheetViewModel) : Int {
+        var pastesBefore = 0
+        val stack = viewModel.engine.undoStack
+
+        for (i in stack.size - 1 downTo 0) {
+            if (stack[i] is Paste) {
+                pastesBefore++
+            } else {
+                break
+            }
+        }
+
+        return pastesBefore + 1
+    }
 }

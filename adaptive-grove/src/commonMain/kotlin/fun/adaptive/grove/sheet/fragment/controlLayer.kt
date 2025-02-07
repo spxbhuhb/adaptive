@@ -31,7 +31,7 @@ fun controlLayer(viewModel: SheetViewModel) {
 
     dropTarget {
 
-        onDrop { event ->
+        onDrop(focusOnDrop = true) { event ->
             val template = (event.transferData?.data as? LfmDescendant) ?: return@onDrop
             val position = event.position
             viewModel += Add(position.left, position.top, template)
@@ -108,13 +108,16 @@ private fun keyDownHandler(event: UIEvent, selection: SheetSelection, viewModel:
 
         Keys.V -> viewModel += Paste()
 
-        Keys.Z -> if (EventModifier.CTRL in event.modifiers) {
+        Keys.Z -> if (EventModifier.CTRL in event.modifiers || EventModifier.META in event.modifiers) {
             if (EventModifier.SHIFT in event.modifiers) {
                 viewModel += Redo()
             } else {
                 viewModel += Undo()
             }
         }
+
+        Keys.BACKSPACE -> viewModel += Remove()
+        Keys.DELETE -> viewModel += Remove()
 
         Keys.ARROW_UP -> move(selection, viewModel, 0.0, - 1.0)
         Keys.ARROW_DOWN -> move(selection, viewModel, 0.0, 1.0)

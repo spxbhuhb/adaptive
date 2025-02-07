@@ -92,4 +92,8 @@ class GroveDrawingLayer<RT,CRT:RT>(
         child.dispose()
     }
 
+    fun updateLayout(item : SheetItem) {
+        updateLayout(updateBatchId, item.fragment as AbstractAuiFragment<*>)
+    }
+
 }

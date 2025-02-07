@@ -1,14 +1,23 @@
 package `fun`.adaptive.grove.sheet.model
 
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
+import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.value.adaptiveValueStore
+import `fun`.adaptive.grove.hydration.lfm.LfmConst
+import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
+import `fun`.adaptive.grove.hydration.lfm.LfmMapping
 import `fun`.adaptive.grove.sheet.SheetEngine
 import `fun`.adaptive.grove.sheet.fragment.GroveDrawingLayer
 import `fun`.adaptive.grove.sheet.operation.Select
 import `fun`.adaptive.grove.sheet.operation.SheetOperation
+import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.fragment.layout.RawPosition
+import `fun`.adaptive.ui.instruction.DPixel
+import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.render.model.AuiRenderData
+import `fun`.adaptive.utility.UUID
 import kotlin.math.max
 import kotlin.math.min
 
@@ -43,9 +52,9 @@ class SheetViewModel(
 
     val selectionStore = adaptiveValueStore { selection }
 
-    var clipboard = SheetClipboard(emptyList())
+    var clipboard = SheetClipboard(emptyList(), emptyList())
 
-    lateinit var drawingLayer: GroveDrawingLayer<*,*>
+    lateinit var drawingLayer: GroveDrawingLayer<*, *>
 
 
     operator fun plusAssign(operation: SheetOperation) {
@@ -56,21 +65,48 @@ class SheetViewModel(
 //        }
     }
 
-    operator fun plusAssign(item: SheetItem) {
-        if (item.removed == true) {
-            item.removed = false
-        } else {
-            items += item
-        }
+    fun addItem(index: Int, x: DPixel, y: DPixel, template: LfmDescendant): SheetItem {
+
+        val templateInstructions = template.instructions
+
+        val instanceInstructions = instructionsOf(
+            templateInstructions.removeAll { it is Position || it is ItemInfo },
+            ItemInfo(index),
+            Position(y, x)
+        )
+
+        val instanceInstructionMapping =
+            LfmMapping(
+                dependencyMask = 0,
+                mapping = LfmConst(
+                    typeSignature<AdaptiveInstructionGroup>(),
+                    instanceInstructions
+                )
+            )
+
+        val instanceMapping = listOf(instanceInstructionMapping) + template.mapping.drop(1)
+        val item = SheetItem(index, LfmDescendant(UUID(), template.key, instanceMapping))
+
+        items += item
         drawingLayer += item
+
+        return item
     }
 
-    operator fun minusAssign(index: Int) {
+    fun hideItem(index: Int) {
         val item = items[index]
         if (item.removed) return
 
         item.removed = true
         drawingLayer -= item
+    }
+
+    fun showItem(index: Int) {
+        val item = items[index]
+        if (! item.removed) return
+
+        item.removed = false
+        drawingLayer += item
     }
 
     fun select() {
@@ -80,7 +116,7 @@ class SheetViewModel(
     /**
      * Direct version of select which is not put into the undo stack.
      */
-    fun select(items : List<SheetItem>, containingFrame : RawFrame = SheetSelection.containingFrame(items)) {
+    fun select(items: List<SheetItem>, containingFrame: RawFrame = SheetSelection.containingFrame(items)) {
         if (engine.trace) engine.logger.info("selecting ${items.size} items")
         selection = SheetSelection(items, containingFrame)
     }
