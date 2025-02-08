@@ -13,6 +13,8 @@ class SheetSelection(
 
     companion object {
 
+        val emptySelection = SheetSelection(emptyList())
+
         fun containingFrame(items: List<SheetItem>): RawFrame {
             if (items.isEmpty()) return RawFrame.NaF
 

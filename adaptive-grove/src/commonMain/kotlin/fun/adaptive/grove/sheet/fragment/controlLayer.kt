@@ -5,6 +5,7 @@ import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.value.adaptiveValue
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.sheet.model.SheetSelection
+import `fun`.adaptive.grove.sheet.model.SheetSelection.Companion.emptySelection
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.grove.sheet.operation.*
 import `fun`.adaptive.ui.api.*
@@ -26,7 +27,7 @@ fun controlLayer(viewModel: SheetViewModel) {
     var moveStart = 0L
     var startPosition = Position.NaP
     var lastPosition = Position.NaP
-    val selection = adaptiveValue { viewModel.selectionStore } ?: viewModel.emptySelection
+    val selection = adaptiveValue { viewModel.selectionStore } ?: emptySelection
     var controlFrame = selection.containingFrame.toFrame(adapter()).grow(8.0)
 
     dropTarget {

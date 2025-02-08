@@ -36,7 +36,7 @@ fun ufdMain() {
         descendants(sheetViewModel)
 
         grid {
-            rowTemplate(24.dp, 1.fr)
+            rowTemplate(33.dp, 1.fr)
 
             row {
                 maxWidth .. gap { 4.dp } .. borderBottom(colors.outline) .. padding { 4.dp }

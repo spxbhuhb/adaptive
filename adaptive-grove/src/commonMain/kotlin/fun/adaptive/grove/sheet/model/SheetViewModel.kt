@@ -9,6 +9,7 @@ import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.hydration.lfm.LfmMapping
 import `fun`.adaptive.grove.sheet.SheetEngine
 import `fun`.adaptive.grove.sheet.fragment.GroveDrawingLayer
+import `fun`.adaptive.grove.sheet.model.SheetSelection.Companion.emptySelection
 import `fun`.adaptive.grove.sheet.operation.Select
 import `fun`.adaptive.grove.sheet.operation.SheetOperation
 import `fun`.adaptive.reflect.typeSignature
@@ -24,8 +25,6 @@ import kotlin.math.min
 class SheetViewModel(
     val engine: SheetEngine
 ) {
-
-    val emptySelection = SheetSelection(emptyList())
 
     /**
      * This list contains all sheet items in the whole lifetime of the sheet,

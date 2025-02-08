@@ -4,21 +4,23 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.overflow
+import `fun`.adaptive.ui.api.scroll
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.layout.Size
 
 @Adaptive
 fun sheet(viewModel: SheetViewModel) {
 
-    // Boxes in this structure are important because they are used by
-    // mechanism to find and fragments. In particular, the box around
-    // the drawing layer is used by `select`.
+    val sheetSize = Size(3000.dp, 3000.dp)
 
     box {
-        maxSize
+        maxSize .. scroll .. overflow.hidden
 
-        drawingLayer(viewModel) { maxSize }
+        drawingLayer(viewModel) { sheetSize }
 
         box {
-            maxSize
+            sheetSize
             controlLayer(viewModel)
         }
     }

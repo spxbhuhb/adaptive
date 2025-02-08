@@ -38,8 +38,6 @@ class GroveDrawingLayer<RT,CRT:RT>(
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit
 
-    override fun genPatchInternal(): Boolean = false
-
     override fun create() {
         super.create()
         viewModel.drawingLayer = this
