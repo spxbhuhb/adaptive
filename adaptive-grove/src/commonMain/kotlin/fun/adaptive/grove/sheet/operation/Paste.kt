@@ -19,7 +19,7 @@ class Paste : SheetOperation() {
         val models = viewModel.clipboard.models
         val frames = viewModel.clipboard.frames
 
-        val shift = (shift(viewModel) * 10).dp
+        val shift = (shift(viewModel) * 5).dp
 
         models.forEachIndexed { modelIndex, model ->
 

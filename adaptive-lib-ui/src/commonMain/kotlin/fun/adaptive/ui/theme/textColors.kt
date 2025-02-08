@@ -11,6 +11,8 @@ class ThemeTextColors {
     val onSurfaceAngry = textColor(colors.onSurfaceAngry)
     val onPrimary = textColor(colors.onPrimary)
     val onPrimaryHover = textColor(colors.onPrimaryHover)
+    val onSelected = textColor(colors.onSelected)
+
     val white = textColor(colors.white)
 
     val onSuccessSurface = textColor(colors.onSuccessSurface)

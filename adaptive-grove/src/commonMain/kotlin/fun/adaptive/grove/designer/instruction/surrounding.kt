@@ -1,7 +1,7 @@
 package `fun`.adaptive.grove.designer.instruction
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.grove.designer.fragment.dPixelInput
+import `fun`.adaptive.grove.sheet.fragment.dPixelInput
 import `fun`.adaptive.grove.designer.instruction.styles.*
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.maxWidth

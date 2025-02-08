@@ -2,7 +2,7 @@ package `fun`.adaptive.grove.designer.instruction
 
 import `fun`.adaptive.adat.store.copyStore
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.grove.designer.fragment.dPixelInput
+import `fun`.adaptive.grove.sheet.fragment.dPixelInput
 import `fun`.adaptive.grove.designer.instruction.model.InstructionEditorData
 import `fun`.adaptive.grove.designer.instruction.model.applyProperties
 import `fun`.adaptive.grove.designer.instruction.model.intersect

@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.instruction.layout.Size
 import `fun`.adaptive.utility.firstOrNullIfInstance
 
-fun emptySelection() = Selection(emptyList(), 0)
+fun emptySelection2() = Selection(emptyList(), 0)
 
 fun selectionOf(event: UIEvent): Selection =
     Selection(hits(event.fragment, event.y, event.x), 0)

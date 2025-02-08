@@ -1,20 +1,6 @@
 [![Maven Central](https://img.shields.io/maven-central/v/fun.adaptive/adaptive-core)](https://mvnrepository.com/artifact/fun.adaptive/adaptive-core)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
-> [!IMPORTANT]
->
-> (As of 2025.01.20.) I've made some important - and hopefully beneficial - decisions regarding Adaptive:
-> I'll let go the release at the end of January.
-> I'll keep work towards a public release but the focus of the next few months will be Grove, including:
-> - API designer
-> - mock service generator
-> - Data model designer
-> - test data generator
-> - UI designer (already have PoC and hydration working)
-> - AI support for the designers with Llama.cpp
->
-> The next release and the next official announcement will happen when these things are done and I can build adaptive.fun with Grove easily.
-
 > [!CAUTION]
 >
 > Project status: **preview**
@@ -24,6 +10,14 @@
 >
 
 For support, please join the `#fun-adaptive` channel on [kotlinlang](https://slack-chats.kotlinlang.org/).
+
+Here are some Medium articles I've written about Adaptive, it is best to start with these I think:
+
+* [A life without Compose](https://medium.com/@tiz_26128/a-life-without-compose-5b77a9a8129f)
+* [I'm done with SVG](https://medium.com/@tiz_26128/im-done-with-svg-f3339118dcde)
+* [The state of Adaptive - 2024](https://medium.com/@tiz_26128/the-state-of-adaptive-2024-6a6fca3d632b)
+
+These documentation topics are a bit outdated but still they provide good information:
 
 * [What is Adaptive](./doc/what-is-adaptive.md)
 * [Status](./doc/status.md)

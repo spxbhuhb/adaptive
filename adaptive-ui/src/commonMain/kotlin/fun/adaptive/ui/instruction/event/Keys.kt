@@ -1,6 +1,12 @@
 package `fun`.adaptive.ui.instruction.event
 
 object Keys {
+    const val CONTROL = "Control"
+    const val ALT = "Alt"
+    const val META = "Meta"
+    const val ALT_GRAPH = "AltGraph"
+    const val SHIFT = "Shift"
+
     const val ESCAPE = "Escape"
     const val ENTER = "Enter"
     const val SPACE = " "

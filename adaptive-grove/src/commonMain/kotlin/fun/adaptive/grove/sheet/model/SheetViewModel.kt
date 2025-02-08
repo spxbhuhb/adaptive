@@ -3,6 +3,7 @@ package `fun`.adaptive.grove.sheet.model
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.instructionsOf
+import `fun`.adaptive.foundation.value.adaptiveValue
 import `fun`.adaptive.foundation.value.adaptiveValueStore
 import `fun`.adaptive.grove.hydration.lfm.LfmConst
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
@@ -53,8 +54,13 @@ class SheetViewModel(
 
     var clipboard = SheetClipboard(emptyList(), emptyList())
 
-    lateinit var drawingLayer: GroveDrawingLayer<*, *>
+    /**
+     * When not zero, the next action initiated with keyboard will be run this many
+     * times. For example typing 10 Ctrl-V will paste the clipboard 10 times.
+     */
+    val multiplier = adaptiveValueStore { 0 }
 
+    lateinit var drawingLayer: GroveDrawingLayer<*, *>
 
     operator fun plusAssign(operation: SheetOperation) {
         engine.execute(operation)
@@ -120,6 +126,10 @@ class SheetViewModel(
         selection = SheetSelection(items, containingFrame)
     }
 
+    fun select(item: SheetItem, add: Boolean) {
+        addSelectOp(mutableListOf(item), add)
+    }
+
     /**
      * User inducted select, creates and executes an undoable select operation.
      */
@@ -129,7 +139,7 @@ class SheetViewModel(
         val x2 = max(startPosition.left, x)
         val y2 = max(startPosition.top, y)
 
-        select(add) { renderData ->
+        selectByRenderData(add) { renderData ->
             val rx1 = renderData.finalLeft
             val ry1 = renderData.finalTop
             val rx2 = rx1 + renderData.finalWidth
@@ -151,13 +161,13 @@ class SheetViewModel(
      * User inducted select, creates and executes an undoable select operation.
      */
     fun select(x: Double, y: Double, add: Boolean) {
-        select(add) { it.contains(x, y) }
+        selectByRenderData(add) { it.contains(x, y) }
         if (engine.trace) {
             engine.logger.info("selected ${selection.items.size} at ($x,$y) additional: $add")
         }
     }
 
-    private fun select(add: Boolean, condition: (renderData: AuiRenderData) -> Boolean) {
+    private fun selectByRenderData(add: Boolean, condition: (renderData: AuiRenderData) -> Boolean) {
 
         val selectedItems = mutableListOf<SheetItem>()
 
@@ -170,6 +180,10 @@ class SheetViewModel(
             selectedItems += items[info.index]
         }
 
+        addSelectOp(selectedItems, add)
+    }
+
+    private fun addSelectOp(selectedItems: MutableList<SheetItem>, add: Boolean) {
         // if the selection is already up to date we don't have to refresh it
         // this prevents unnecessary undo/redo operations if the user clicks
         // on the same item a few times

@@ -8,6 +8,7 @@ class ThemeBackgrounds {
     val surface = backgroundColor(colors.surface)
     val surfaceVariant = backgroundColor(colors.surfaceVariant)
     val primary = backgroundColor(colors.primary)
+    val selected = backgroundColor(colors.selected)
     val overlay = backgroundColor(colors.overlay)
     val primaryHover = backgroundColor(colors.primaryHover)
     val surfaceHover = backgroundColor(colors.surface.opaque(0.1f))

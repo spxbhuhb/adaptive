@@ -8,8 +8,11 @@ import adaptive_grove.generated.resources.redo
 import adaptive_grove.generated.resources.undo
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
+import `fun`.adaptive.foundation.value.adaptiveValue
+import `fun`.adaptive.foundation.value.adaptiveValueStore
 import `fun`.adaptive.grove.sheet.SheetEngine.Companion.sheetEngine
 import `fun`.adaptive.grove.sheet.fragment.sheet
+import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.grove.sheet.operation.Redo
 import `fun`.adaptive.grove.sheet.operation.Undo
 import `fun`.adaptive.resource.graphics.Graphics
@@ -19,6 +22,8 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.support.statistics.dumpStatistics
 import `fun`.adaptive.ui.theme.colors
+import `fun`.adaptive.ui.theme.textColors
+import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.utility.println
 
 @Adaptive
@@ -43,6 +48,7 @@ fun ufdMain() {
                 icon(Graphics.undo) .. onClick { sheetViewModel += Undo() }
                 icon(Graphics.redo) .. onClick { sheetViewModel += Redo() }
                 icon(Graphics.pest_control) .. onClick { adapter().dumpStatistics().println() }
+                multiplier(sheetViewModel)
             }
 
             sheet(sheetViewModel)
@@ -51,4 +57,13 @@ fun ufdMain() {
         instructions(sheetViewModel)
     }
 
+}
+
+@Adaptive
+fun multiplier(viewModel: SheetViewModel) {
+    val multiplier = adaptiveValue { viewModel.multiplier }
+
+    if (multiplier != null && multiplier > 1) {
+        text("Next keyboard move will be $multiplier pixels") .. textSmall .. semiBoldFont .. textColors.onSurfaceAngry .. alignSelf.bottom
+    }
 }

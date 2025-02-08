@@ -32,6 +32,9 @@ class ThemeColors {
     val primaryHover = color(0x9B8CFFu)
     val onPrimaryHover = color(0xFFFFFFu)
 
+    val selected = color(0x6259CE)
+    val onSelected = color(0xFFFFFF)
+
     val outline = color(0xC5C5C5)
     val overlay = color(0x0, opacity = 0.4f)
 

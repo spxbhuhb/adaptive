@@ -6,7 +6,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.grove.designer.instruction.instructions
 import `fun`.adaptive.grove.designer.overlay.overlay
 import `fun`.adaptive.grove.designer.palette.palette
-import `fun`.adaptive.grove.designer.utility.emptySelection
+import `fun`.adaptive.grove.designer.utility.emptySelection2
 import `fun`.adaptive.grove.designer.utility.selectionOf
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
@@ -23,8 +23,8 @@ val canvasBorder = border(color(0xd0d0d0), 1.dp)
 
 @Adaptive
 fun groveMain() {
-    val selection = copyStore { emptySelection() }
-    val target = copyStore { emptySelection() }
+    val selection = copyStore { emptySelection2() }
+    val target = copyStore { emptySelection2() }
     var lastPosition: Position? = null
 
     grid {
@@ -40,7 +40,7 @@ fun groveMain() {
             onPrimaryDown { event ->
                 lastPosition = event.position
                 selection.update(selectionOf(event))
-                target.update(emptySelection())
+                target.update(emptySelection2())
             }
 
             onMove { event ->
@@ -54,7 +54,7 @@ fun groveMain() {
             onPrimaryUp {
                 lastPosition = null
                 selection.place(target)
-                target.update(emptySelection())
+                target.update(emptySelection2())
             }
 
             box {

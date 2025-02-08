@@ -100,7 +100,16 @@ fun controlLayer(viewModel: SheetViewModel) {
 }
 
 private fun keyDownHandler(event: UIEvent, selection: SheetSelection, viewModel: SheetViewModel) {
+    var keepMultiplier = false
+    val multiplier = viewModel.multiplier.value.let { if (it == 0) 1 else it }
+
     when (event.keyInfo?.key) {
+        Keys.CONTROL -> keepMultiplier = true
+        Keys.ALT -> keepMultiplier = true
+        Keys.META -> keepMultiplier = true
+        Keys.ALT_GRAPH -> keepMultiplier = true
+        Keys.SHIFT -> keepMultiplier = true
+
         Keys.ESCAPE -> viewModel.select()
 
         Keys.X -> viewModel += Cut()
@@ -120,10 +129,38 @@ private fun keyDownHandler(event: UIEvent, selection: SheetSelection, viewModel:
         Keys.BACKSPACE -> viewModel += Remove()
         Keys.DELETE -> viewModel += Remove()
 
-        Keys.ARROW_UP -> move(selection, viewModel, 0.0, - 1.0)
-        Keys.ARROW_DOWN -> move(selection, viewModel, 0.0, 1.0)
-        Keys.ARROW_LEFT -> move(selection, viewModel, - 1.0, 0.0)
-        Keys.ARROW_RIGHT -> move(selection, viewModel, 1.0, 0.0)
+        Keys.ARROW_UP -> move(selection, viewModel, 0.0, - 1.0 * multiplier)
+        Keys.ARROW_DOWN -> move(selection, viewModel, 0.0, 1.0 * multiplier)
+        Keys.ARROW_LEFT -> move(selection, viewModel, - 1.0 * multiplier, 0.0)
+        Keys.ARROW_RIGHT -> move(selection, viewModel, 1.0 * multiplier, 0.0)
+
+        else -> keepMultiplier = multiKeyHandler(event, viewModel)
+    }
+
+    if (!keepMultiplier) {
+        viewModel.multiplier.value = 0
+    }
+}
+
+private fun multiKeyHandler(event: UIEvent, viewModel: SheetViewModel): Boolean {
+    val key = event.keyInfo?.key ?: return false
+
+    when {
+        key.length == 1 && key.first().isDigit() -> {
+            shiftMultiplier(viewModel, key.toInt())
+            return true
+        }
+    }
+
+    return false
+}
+
+private fun shiftMultiplier(viewModel: SheetViewModel, value: Int) {
+    val current = viewModel.multiplier.value
+    if (current == 0) {
+        viewModel.multiplier.value = value
+    } else {
+        viewModel.multiplier.value = current * 10 + value
     }
 }
 
