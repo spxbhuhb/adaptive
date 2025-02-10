@@ -3,12 +3,13 @@ package `fun`.adaptive.grove.sheet.fragment
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.grove.hydration.lfm.LfmConst
+import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.ItemInfo
 import `fun`.adaptive.grove.sheet.model.SheetItem
-import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.AbstractBox
+import `fun`.adaptive.ui.instruction.DPixel
 
 /**
  * A fragment that contains hydrated fragments and supports adding, removing and patching them
@@ -21,16 +22,16 @@ import `fun`.adaptive.ui.fragment.layout.AbstractBox
  * 3. content (not used, inherited from AbstractBox)
  */
 @AdaptiveActual
-class GroveDrawingLayer<RT,CRT:RT>(
-    adapter: AbstractAuiAdapter<RT,CRT>,
+class GroveDrawingLayer<RT, CRT : RT>(
+    adapter: AbstractAuiAdapter<RT, CRT>,
     parent: AdaptiveFragment? = null,
     declarationIndex: Int
-) : AbstractBox<RT,CRT>(
+) : AbstractBox<RT, CRT>(
     adapter, parent, declarationIndex, 3
 ) {
 
-    val viewModel
-        get() = get<SheetViewModel>(1)
+    val controller
+        get() = get<SheetViewController>(1)
 
     val updateBatch = mutableListOf<SheetItem>()
 
@@ -40,11 +41,11 @@ class GroveDrawingLayer<RT,CRT:RT>(
 
     override fun create() {
         super.create()
-        viewModel.drawingLayer = this
+        controller.drawingLayer = this
     }
 
     override fun addActualScheduleUpdate(itemFragment: AbstractAuiFragment<RT>) {
-        if (!isMounted) {
+        if (! isMounted) {
             scheduleUpdate()
             return
         }
@@ -61,10 +62,10 @@ class GroveDrawingLayer<RT,CRT:RT>(
         // we do not need to schedule layout update for remove
     }
 
-    operator fun plusAssign(item : SheetItem) {
+    operator fun plusAssign(item: SheetItem) {
         val model = item.model
 
-        adapter.fragmentFactory.newInstance(model.key, this, -1, model.mapping.size).also { fragment ->
+        adapter.fragmentFactory.newInstance(model.key, this, - 1, model.mapping.size).also { fragment ->
 
             children += fragment
             item.fragment = fragment
@@ -90,8 +91,12 @@ class GroveDrawingLayer<RT,CRT:RT>(
         child.dispose()
     }
 
-    fun updateLayout(item : SheetItem) {
+    fun updateLayout(item: SheetItem) {
         updateLayout(updateBatchId, item.fragment as AbstractAuiFragment<*>)
     }
+
+    fun toPx(dp: DPixel) = uiAdapter.toPx(dp)
+
+    fun toDp(px: Double) = uiAdapter.toDp(px)
 
 }

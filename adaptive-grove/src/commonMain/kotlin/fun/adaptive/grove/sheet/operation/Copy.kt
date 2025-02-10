@@ -1,27 +1,27 @@
 package `fun`.adaptive.grove.sheet.operation
 
+import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.SheetClipboard
-import `fun`.adaptive.grove.sheet.model.SheetViewModel
 
 class Copy : SheetOperation() {
 
     lateinit var copyData : SheetClipboard
     lateinit var undoData : SheetClipboard
 
-    override fun commit(viewModel: SheetViewModel): Boolean {
+    override fun commit(controller: SheetViewController): Boolean {
 
         if (firstRun) {
-            undoData = viewModel.clipboard
-            copyData = viewModel.selectionToClipboard()
+            undoData = controller.clipboard
+            copyData = controller.selectionToClipboard()
         }
 
-        viewModel.clipboard = copyData
+        controller.clipboard = copyData
 
         return false
     }
 
-    override fun revert(viewModel: SheetViewModel) {
-        viewModel.clipboard = undoData
+    override fun revert(controller: SheetViewController) {
+        controller.clipboard = undoData
     }
 
     override fun toString(): String =

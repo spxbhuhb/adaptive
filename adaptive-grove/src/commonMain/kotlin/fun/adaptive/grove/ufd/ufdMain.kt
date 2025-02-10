@@ -9,10 +9,8 @@ import adaptive_grove.generated.resources.undo
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.value.adaptiveValue
-import `fun`.adaptive.foundation.value.adaptiveValueStore
-import `fun`.adaptive.grove.sheet.SheetEngine.Companion.sheetEngine
+import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.fragment.sheet
-import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.grove.sheet.operation.Redo
 import `fun`.adaptive.grove.sheet.operation.Undo
 import `fun`.adaptive.resource.graphics.Graphics
@@ -29,7 +27,7 @@ import `fun`.adaptive.utility.println
 @Adaptive
 fun ufdMain() {
 
-    val sheetViewModel = sheetEngine(true)
+    val controller = SheetViewController(true)
     val ufdContext = UfdContext()
 
     grid {
@@ -38,30 +36,30 @@ fun ufdMain() {
 
         palette(ufdContext)
 
-        descendants(sheetViewModel)
+        descendants(controller)
 
         grid {
             rowTemplate(33.dp, 1.fr)
 
             row {
                 maxWidth .. gap { 4.dp } .. borderBottom(colors.outline) .. padding { 4.dp }
-                icon(Graphics.undo) .. onClick { sheetViewModel += Undo() }
-                icon(Graphics.redo) .. onClick { sheetViewModel += Redo() }
+                icon(Graphics.undo) .. onClick { controller += Undo() }
+                icon(Graphics.redo) .. onClick { controller += Redo() }
                 icon(Graphics.pest_control) .. onClick { adapter().dumpStatistics().println() }
-                multiplier(sheetViewModel)
+                multiplier(controller)
             }
 
-            sheet(sheetViewModel)
+            sheet(controller)
         }
 
-        instructions(sheetViewModel)
+        instructions(controller)
     }
 
 }
 
 @Adaptive
-fun multiplier(viewModel: SheetViewModel) {
-    val multiplier = adaptiveValue { viewModel.multiplier }
+fun multiplier(controller: SheetViewController) {
+    val multiplier = adaptiveValue { controller.multiplierStore }
 
     if (multiplier != null && multiplier > 1) {
         text("Next keyboard move will be $multiplier pixels") .. textSmall .. semiBoldFont .. textColors.onSurfaceAngry .. alignSelf.bottom

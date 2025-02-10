@@ -1,8 +1,8 @@
 package `fun`.adaptive.grove.sheet.operation
 
+import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection
-import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.ui.instruction.dp
 
 class Paste : SheetOperation() {
@@ -10,16 +10,16 @@ class Paste : SheetOperation() {
     lateinit var originalSelection : SheetSelection
     val items = mutableListOf<SheetItem>()
 
-    override fun commit(viewModel: SheetViewModel): Boolean {
+    override fun commit(controller: SheetViewController): Boolean {
 
         if (firstRun) {
-            originalSelection = viewModel.selection
+            originalSelection = controller.selection
         }
 
-        val models = viewModel.clipboard.models
-        val frames = viewModel.clipboard.frames
+        val models = controller.clipboard.models
+        val frames = controller.clipboard.frames
 
-        val shift = (shift(viewModel) * 5).dp
+        val shift = (shift(controller) * 5).dp
 
         models.forEachIndexed { modelIndex, model ->
 
@@ -28,30 +28,30 @@ class Paste : SheetOperation() {
             // FIXME mix of device dependent and device independent pixels
 
             if (firstRun) {
-                val item = viewModel.addItem(viewModel.nextIndex, frame.left.dp + shift, frame.top.dp + shift, model)
+                val item = controller.addItem(frame.left.dp + shift, frame.top.dp + shift, model)
                 items += item
             } else {
-                viewModel.showItem(items[modelIndex].index)
+                controller.showItem(items[modelIndex].index)
             }
 
         }
 
-        viewModel.select(items)
+        controller.select(items)
 
         return false
     }
 
-    override fun revert(viewModel: SheetViewModel) {
-        items.forEach { viewModel.hideItem(it.index) }
-        viewModel.select(originalSelection.items)
+    override fun revert(controller: SheetViewController) {
+        items.forEach { controller.hideItem(it.index) }
+        controller.select(originalSelection.items)
     }
 
     override fun toString(): String =
         "Paste"
 
-    private fun shift(viewModel: SheetViewModel) : Int {
+    private fun shift(controller: SheetViewController) : Int {
         var pastesBefore = 0
-        val stack = viewModel.engine.undoStack
+        val stack = controller.undoStack
 
         for (i in stack.size - 1 downTo 0) {
             if (stack[i] is Paste) {

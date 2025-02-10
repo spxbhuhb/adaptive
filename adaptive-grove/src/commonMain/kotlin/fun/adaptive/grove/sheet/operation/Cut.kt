@@ -1,9 +1,9 @@
 package `fun`.adaptive.grove.sheet.operation
 
+import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.SheetClipboard
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection
-import `fun`.adaptive.grove.sheet.model.SheetViewModel
 
 class Cut : SheetOperation() {
 
@@ -12,30 +12,35 @@ class Cut : SheetOperation() {
 
     lateinit var cutData : SheetClipboard
 
-    val items = mutableListOf<SheetItem>()
+    val cutItems = mutableListOf<SheetItem>()
 
-    override fun commit(viewModel: SheetViewModel): Boolean {
+    override fun commit(controller: SheetViewController): Boolean {
 
-        if (firstRun) {
-            originalSelection = viewModel.selection
-            originalClipboard = viewModel.clipboard
-            cutData = viewModel.selectionToClipboard()
+        with(controller) {
+            if (firstRun) {
+                originalSelection = selection
+                originalClipboard = clipboard
+                cutData = selectionToClipboard()
+            }
+
+            forSelection {
+                hideItem(it.index)
+                cutItems += it
+            }
+
+            clipboard = cutData
+            select()
         }
-
-        viewModel.forSelection {
-            viewModel.hideItem(it.index)
-        }
-
-        viewModel.clipboard = cutData
-        viewModel.select()
 
         return false
     }
 
-    override fun revert(viewModel: SheetViewModel) {
-        items.forEach { viewModel.showItem(it.index) }
-        viewModel.clipboard = originalClipboard
-        viewModel.select(originalSelection.items)
+    override fun revert(controller: SheetViewController) {
+        with(controller) {
+            cutItems.forEach { showItem(it.index) }
+            clipboard = originalClipboard
+            select(originalSelection.items)
+        }
     }
 
     override fun toString(): String =

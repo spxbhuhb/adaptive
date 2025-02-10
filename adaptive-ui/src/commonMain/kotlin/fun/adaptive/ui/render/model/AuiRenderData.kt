@@ -106,4 +106,12 @@ data class AuiRenderData(
         return false
     }
 
+    fun contains(x: Double, y: Double) =
+        when {
+            y < finalTop -> false
+            x < finalLeft -> false
+            x >= finalLeft + finalWidth -> false
+            y >= finalTop + finalHeight -> false
+            else -> true
+        }
 }

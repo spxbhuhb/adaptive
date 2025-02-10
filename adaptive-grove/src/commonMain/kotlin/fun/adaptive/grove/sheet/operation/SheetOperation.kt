@@ -1,9 +1,6 @@
 package `fun`.adaptive.grove.sheet.operation
 
-import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
-import `fun`.adaptive.grove.sheet.model.SheetClipboard
-import `fun`.adaptive.grove.sheet.model.SheetViewModel
-import `fun`.adaptive.ui.fragment.layout.RawFrame
+import `fun`.adaptive.grove.sheet.SheetViewController
 
 abstract class SheetOperation {
 
@@ -17,22 +14,11 @@ abstract class SheetOperation {
      *
      * @return  true if this operation should replace the last one on stack, false otherwise
      */
-    abstract fun commit(viewModel: SheetViewModel): Boolean
+    abstract fun commit(controller: SheetViewController): Boolean
 
     /**
      * Revert a previous commit.
      */
-    abstract fun revert(viewModel: SheetViewModel)
+    abstract fun revert(controller: SheetViewController)
 
-    fun SheetViewModel.selectionToClipboard(): SheetClipboard {
-        val modelData = mutableListOf<LfmDescendant>()
-        val frameData = mutableListOf<RawFrame>()
-
-        forSelection {
-            modelData += it.model
-            frameData += it.frame
-        }
-
-        return SheetClipboard(modelData, frameData)
-    }
 }

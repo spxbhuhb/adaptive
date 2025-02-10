@@ -1,8 +1,8 @@
 package `fun`.adaptive.grove.sheet.operation
 
+import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection
-import `fun`.adaptive.grove.sheet.model.SheetViewModel
 
 class Select(
     val items: List<SheetItem>
@@ -10,16 +10,16 @@ class Select(
 
     var undoData = SheetSelection(emptyList())
 
-    override fun commit(viewModel: SheetViewModel): Boolean {
+    override fun commit(controller: SheetViewController): Boolean {
         if (firstRun) {
-            undoData = viewModel.selection
+            undoData = controller.selection
         }
-        viewModel.select(items)
+        controller.select(items)
         return false
     }
 
-    override fun revert(viewModel: SheetViewModel) {
-        viewModel.select(undoData.items)
+    override fun revert(controller: SheetViewController) {
+        controller.select(undoData.items)
     }
 
     override fun toString(): String =

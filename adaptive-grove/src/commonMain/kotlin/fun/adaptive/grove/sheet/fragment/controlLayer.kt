@@ -1,197 +1,82 @@
 package `fun`.adaptive.grove.sheet.fragment
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.value.adaptiveValue
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
-import `fun`.adaptive.grove.sheet.model.SheetSelection
-import `fun`.adaptive.grove.sheet.model.SheetSelection.Companion.emptySelection
-import `fun`.adaptive.grove.sheet.model.SheetViewModel
-import `fun`.adaptive.grove.sheet.operation.*
+import `fun`.adaptive.grove.sheet.ControlNames
+import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.operation.Add
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.EventModifier
-import `fun`.adaptive.ui.instruction.event.Keys
-import `fun`.adaptive.ui.instruction.event.UIEvent
 import `fun`.adaptive.ui.instruction.layout.Frame
-import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.utility.vmNowMicro
-import kotlin.math.abs
 
 @Adaptive
-fun controlLayer(viewModel: SheetViewModel) {
+fun controlLayer(controller: SheetViewController) {
 
-    var moveStart = 0L
-    var startPosition = Position.NaP
-    var lastPosition = Position.NaP
-    val selection = adaptiveValue { viewModel.selectionStore } ?: emptySelection
-    var controlFrame = selection.containingFrame.toFrame(adapter()).grow(8.0)
+    val controlFrame = adaptiveValue { controller.controlFrameStore } ?: Frame.NaF
 
     dropTarget {
 
         onDrop(focusOnDrop = true) { event ->
             val template = (event.transferData?.data as? LfmDescendant) ?: return@onDrop
             val position = event.position
-            viewModel += Add(position.left, position.top, template)
+            controller += Add(position.left, position.top, template)
         }
 
         box {
             maxSize .. tabIndex { 0 }
 
-            onPrimaryDown { event ->
-                startPosition = event.position
-                lastPosition = startPosition
-
-                moveStart = vmNowMicro()
-
-                if (lastPosition !in controlFrame) {
-                    viewModel.select(event.x, event.y, EventModifier.SHIFT in event)
-                }
+            onPrimaryDown {
+                controller.onTransformStart(it.position, EventModifier.SHIFT in it)
             }
 
-            onMove { event ->
-                // when start position is NaP the pointer movement started outside the window
-                if (lastPosition === Position.NaP) return@onMove
-                if (startPosition === Position.NaP) return@onMove
-
-                val newPosition = event.position
-
-                if (selection.isEmpty()) {
-                    val dx = abs(startPosition.left.value - newPosition.left.value)
-                    val dy = abs(startPosition.top.value - newPosition.top.value)
-
-                    if (dx >= 1.0 && dy >= 1.0) {
-                        controlFrame = Frame(startPosition, newPosition)
-                    } else {
-                        controlFrame = Frame.NaF
-                    }
-
-                } else {
-                    viewModel += Move(moveStart, newPosition.left - lastPosition.left, newPosition.top - lastPosition.top)
-                }
-
-                lastPosition = newPosition
+            onMove {
+                controller.onTransformChange(it.position)
             }
 
-            onPrimaryUp { event ->
-                // when start position is NaP the pointer movement started outside the window
-                if (selection.isEmpty() && startPosition !== Position.NaP) {
-                    controlFrame = Frame.NaF
-                    viewModel.select(startPosition.toRaw(adapter()), event.x, event.y, EventModifier.SHIFT in event)
-                }
-
-                startPosition = Position.NaP
-                lastPosition = Position.NaP
-                moveStart = 0L
+            onPrimaryUp {
+                controller.onTransformEnd(it.position, EventModifier.SHIFT in it)
             }
 
             onKeydown { event ->
-                keyDownHandler(event, selection, viewModel)
+                controller.onKeyDown(event.keyInfo ?: return@onKeydown, event.modifiers)
             }
 
             if (controlFrame != Frame.NaF) {
-                controls(controlFrame)
+                controls(controlFrame, controller)
             }
         }
     }
-}
-
-private fun keyDownHandler(event: UIEvent, selection: SheetSelection, viewModel: SheetViewModel) {
-    var keepMultiplier = false
-    val multiplier = viewModel.multiplier.value.let { if (it == 0) 1 else it }
-
-    when (event.keyInfo?.key) {
-        Keys.CONTROL -> keepMultiplier = true
-        Keys.ALT -> keepMultiplier = true
-        Keys.META -> keepMultiplier = true
-        Keys.ALT_GRAPH -> keepMultiplier = true
-        Keys.SHIFT -> keepMultiplier = true
-
-        Keys.ESCAPE -> viewModel.select()
-
-        Keys.X -> viewModel += Cut()
-
-        Keys.C -> viewModel += Copy()
-
-        Keys.V -> viewModel += Paste()
-
-        Keys.Z -> if (EventModifier.CTRL in event.modifiers || EventModifier.META in event.modifiers) {
-            if (EventModifier.SHIFT in event.modifiers) {
-                viewModel += Redo()
-            } else {
-                viewModel += Undo()
-            }
-        }
-
-        Keys.BACKSPACE -> viewModel += Remove()
-        Keys.DELETE -> viewModel += Remove()
-
-        Keys.ARROW_UP -> move(selection, viewModel, 0.0, - 1.0 * multiplier)
-        Keys.ARROW_DOWN -> move(selection, viewModel, 0.0, 1.0 * multiplier)
-        Keys.ARROW_LEFT -> move(selection, viewModel, - 1.0 * multiplier, 0.0)
-        Keys.ARROW_RIGHT -> move(selection, viewModel, 1.0 * multiplier, 0.0)
-
-        else -> keepMultiplier = multiKeyHandler(event, viewModel)
-    }
-
-    if (!keepMultiplier) {
-        viewModel.multiplier.value = 0
-    }
-}
-
-private fun multiKeyHandler(event: UIEvent, viewModel: SheetViewModel): Boolean {
-    val key = event.keyInfo?.key ?: return false
-
-    when {
-        key.length == 1 && key.first().isDigit() -> {
-            shiftMultiplier(viewModel, key.toInt())
-            return true
-        }
-    }
-
-    return false
-}
-
-private fun shiftMultiplier(viewModel: SheetViewModel, value: Int) {
-    val current = viewModel.multiplier.value
-    if (current == 0) {
-        viewModel.multiplier.value = value
-    } else {
-        viewModel.multiplier.value = current * 10 + value
-    }
-}
-
-private fun move(selection: SheetSelection, viewModel: SheetViewModel, deltaX: Double, deltaY: Double) {
-    if (! selection.isEmpty()) viewModel += Move(vmNowMicro(), deltaX.dp, deltaY.dp)
 }
 
 @Adaptive
-private fun controls(frame: Frame) {
+private fun controls(frame: Frame, controller: SheetViewController) {
     box {
         frame
 
         // borders
 
-        box { ControlStyles.topBorder }
-        box { ControlStyles.endBorder }
-        box { ControlStyles.bottomBorder }
-        box { ControlStyles.startBorder }
+        box { ControlStyles.topBorder } .. onPrimaryDown { controller.activeControl = ControlNames.TOP_BORDER }
+        box { ControlStyles.endBorder } .. onPrimaryDown { controller.activeControl = ControlNames.RIGHT_BORDER }
+        box { ControlStyles.bottomBorder } .. onPrimaryDown { controller.activeControl = ControlNames.BOTTOM_BORDER }
+        box { ControlStyles.startBorder } .. onPrimaryDown { controller.activeControl = ControlNames.LEFT_BORDER }
 
         // resize handles
 
-        box { ControlStyles.startTopHandle }
-        box { ControlStyles.startCenterHandle }
-        box { ControlStyles.startBottomHandle }
+        box { ControlStyles.startTopHandle } .. onPrimaryDown { controller.activeControl = ControlNames.LEFT_TOP }
+        box { ControlStyles.startCenterHandle } .. onPrimaryDown { controller.activeControl = ControlNames.LEFT_CENTER }
+        box { ControlStyles.startBottomHandle } .. onPrimaryDown { controller.activeControl = ControlNames.LEFT_BOTTOM }
 
-        box { ControlStyles.topCenterHandle }
-        box { ControlStyles.bottomCenterHandle }
+        box { ControlStyles.topCenterHandle } .. onPrimaryDown { controller.activeControl = ControlNames.TOP_CENTER }
+        box { ControlStyles.bottomCenterHandle } .. onPrimaryDown { controller.activeControl = ControlNames.BOTTOM_CENTER }
 
-        box { ControlStyles.endTopHandle }
-        box { ControlStyles.endCenterHandle }
-        box { ControlStyles.endBottomHandle }
+        box { ControlStyles.endTopHandle } .. onPrimaryDown { controller.activeControl = ControlNames.RIGHT_TOP }
+        box { ControlStyles.endCenterHandle } .. onPrimaryDown { controller.activeControl = ControlNames.RIGHT_CENTER }
+        box { ControlStyles.endBottomHandle } .. onPrimaryDown { controller.activeControl = ControlNames.RIGHT_BOTTOM }
     }
 }
 

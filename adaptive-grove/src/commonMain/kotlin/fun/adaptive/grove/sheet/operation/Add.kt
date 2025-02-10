@@ -1,8 +1,8 @@
 package `fun`.adaptive.grove.sheet.operation
 
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
+import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.SheetSelection
-import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.ui.instruction.DPixel
 
 class Add(
@@ -14,22 +14,21 @@ class Add(
     lateinit var originalSelection : SheetSelection
     var index = - 1
 
-    override fun commit(viewModel: SheetViewModel): Boolean {
+    override fun commit(controller : SheetViewController): Boolean {
 
         if (firstRun) {
-            originalSelection = viewModel.selection
-            index = viewModel.nextIndex
-            viewModel.addItem(index, x, y, template)
+            originalSelection = controller.selection
+            index = controller.addItem(x, y, template).index
         } else {
-            viewModel.showItem(index)
+            controller.showItem(index)
         }
 
         return false
     }
 
-    override fun revert(viewModel: SheetViewModel) {
-        viewModel.hideItem(index)
-        viewModel.select(originalSelection.items)
+    override fun revert(controller : SheetViewController) {
+        controller.hideItem(index)
+        controller.select(originalSelection.items)
     }
 
     override fun toString(): String = "Add"

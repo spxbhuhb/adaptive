@@ -7,7 +7,6 @@ import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.grove.hydration.lfm.LfmConst
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.hydration.lfm.LfmMapping
-import `fun`.adaptive.grove.sheet.model.SheetViewModel
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.size

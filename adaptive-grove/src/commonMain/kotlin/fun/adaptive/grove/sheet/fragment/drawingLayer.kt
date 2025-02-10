@@ -4,9 +4,9 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveExpect
 import `fun`.adaptive.foundation.manualImplementation
 import `fun`.adaptive.grove.grove
-import `fun`.adaptive.grove.sheet.model.SheetViewModel
+import `fun`.adaptive.grove.sheet.SheetViewController
 
 @AdaptiveExpect(grove)
-fun drawingLayer(viewModel: SheetViewModel, @Adaptive content : () -> Unit) {
-    manualImplementation(viewModel, content)
+fun drawingLayer(controller: SheetViewController, @Adaptive content : () -> Unit) {
+    manualImplementation(controller, content)
 }

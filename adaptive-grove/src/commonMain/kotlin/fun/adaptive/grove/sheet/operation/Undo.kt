@@ -1,14 +1,14 @@
 package `fun`.adaptive.grove.sheet.operation
 
-import `fun`.adaptive.grove.sheet.model.SheetViewModel
+import `fun`.adaptive.grove.sheet.SheetViewController
 
 class Undo : SheetOperation() {
 
-    override fun commit(viewModel: SheetViewModel): Boolean {
+    override fun commit(controller: SheetViewController): Boolean {
         throw UnsupportedOperationException("implemented in the engine")
     }
 
-    override fun revert(viewModel: SheetViewModel) {
+    override fun revert(controller: SheetViewController) {
         throw UnsupportedOperationException("implemented in the engine")
     }
 
