@@ -17,12 +17,18 @@ class Frame(
     val height: DPixel
 ) : AdaptiveInstruction {
 
-    constructor(p1 : Position, p2 : Position) : this(
+    constructor(p1: Position, p2: Position) : this(
         DPixel.min(p1.top, p2.top),
         DPixel.min(p1.left, p2.left),
         DPixel.max(p1.left, p2.left) - DPixel.min(p1.left, p2.left),
         DPixel.max(p1.top, p2.top) - DPixel.min(p1.top, p2.top)
     )
+
+    val position
+        get() = Position(top, left)
+
+    val size
+        get() = Size(width, height)
 
     override fun applyTo(subject: Any) {
         layout(subject) {
@@ -34,7 +40,7 @@ class Frame(
         }
     }
 
-    operator fun contains(position: Position) : Boolean {
+    operator fun contains(position: Position): Boolean {
         if (this === NaF) return false
         val x = position.left.value
         val y = position.top.value

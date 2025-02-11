@@ -3,7 +3,7 @@ package `fun`.adaptive.grove.sheet.fragment
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.value.adaptiveValue
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
-import `fun`.adaptive.grove.sheet.ControlNames
+import `fun`.adaptive.grove.sheet.Handles
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.operation.Add
 import `fun`.adaptive.ui.api.*
@@ -60,32 +60,32 @@ private fun controls(frame: Frame, controller: SheetViewController) {
 
         // borders
 
-        box { ControlStyles.topBorder } .. onPrimaryDown { controller.activeControl = ControlNames.TOP_BORDER }
-        box { ControlStyles.endBorder } .. onPrimaryDown { controller.activeControl = ControlNames.RIGHT_BORDER }
-        box { ControlStyles.bottomBorder } .. onPrimaryDown { controller.activeControl = ControlNames.BOTTOM_BORDER }
-        box { ControlStyles.startBorder } .. onPrimaryDown { controller.activeControl = ControlNames.LEFT_BORDER }
+        box { ControlStyles.topBorder } .. onPrimaryDown { controller.activeHandle = Handles.TOP_BORDER }
+        box { ControlStyles.endBorder } .. onPrimaryDown { controller.activeHandle = Handles.RIGHT_BORDER }
+        box { ControlStyles.bottomBorder } .. onPrimaryDown { controller.activeHandle = Handles.BOTTOM_BORDER }
+        box { ControlStyles.startBorder } .. onPrimaryDown { controller.activeHandle = Handles.LEFT_BORDER }
 
         // resize handles
 
-        box { ControlStyles.startTopHandle } .. onPrimaryDown { controller.activeControl = ControlNames.LEFT_TOP }
-        box { ControlStyles.startCenterHandle } .. onPrimaryDown { controller.activeControl = ControlNames.LEFT_CENTER }
-        box { ControlStyles.startBottomHandle } .. onPrimaryDown { controller.activeControl = ControlNames.LEFT_BOTTOM }
+        box { ControlStyles.startTopHandle } .. onPrimaryDown { controller.activeHandle = Handles.LEFT_TOP }
+        box { ControlStyles.startCenterHandle } .. onPrimaryDown { controller.activeHandle = Handles.LEFT_CENTER }
+        box { ControlStyles.startBottomHandle } .. onPrimaryDown { controller.activeHandle = Handles.LEFT_BOTTOM }
 
-        box { ControlStyles.topCenterHandle } .. onPrimaryDown { controller.activeControl = ControlNames.TOP_CENTER }
-        box { ControlStyles.bottomCenterHandle } .. onPrimaryDown { controller.activeControl = ControlNames.BOTTOM_CENTER }
+        box { ControlStyles.topCenterHandle } .. onPrimaryDown { controller.activeHandle = Handles.TOP_CENTER }
+        box { ControlStyles.bottomCenterHandle } .. onPrimaryDown { controller.activeHandle = Handles.BOTTOM_CENTER }
 
-        box { ControlStyles.endTopHandle } .. onPrimaryDown { controller.activeControl = ControlNames.RIGHT_TOP }
-        box { ControlStyles.endCenterHandle } .. onPrimaryDown { controller.activeControl = ControlNames.RIGHT_CENTER }
-        box { ControlStyles.endBottomHandle } .. onPrimaryDown { controller.activeControl = ControlNames.RIGHT_BOTTOM }
+        box { ControlStyles.endTopHandle } .. onPrimaryDown { controller.activeHandle = Handles.RIGHT_TOP }
+        box { ControlStyles.endCenterHandle } .. onPrimaryDown { controller.activeHandle = Handles.RIGHT_CENTER }
+        box { ControlStyles.endBottomHandle } .. onPrimaryDown { controller.activeHandle = Handles.RIGHT_BOTTOM }
     }
 }
 
 private object ControlStyles {
 
     val controlWidth = 8.dp
-    val borderBackground = backgroundColor { colors.outline.opaque(0.2f) }
+    val borderBackground = backgroundColor { colors.onSurfaceFriendly.opaque(0.2f) }
 
-    val resizeHandle = size(8.dp, 8.dp) .. backgrounds.overlay .. borders.outline
+    val resizeHandle = size(8.dp, 8.dp) .. backgrounds.friendly .. border(colors.onSurfaceFriendly, 1.dp)
 
     val topBorder = borderBackground .. alignSelf.top .. maxWidth .. height(controlWidth)
     val startBorder = borderBackground .. alignSelf.startTop .. maxHeight .. width(controlWidth)

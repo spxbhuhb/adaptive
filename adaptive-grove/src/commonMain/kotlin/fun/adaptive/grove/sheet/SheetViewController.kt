@@ -86,7 +86,7 @@ class SheetViewController(
      * Name of the active control for an ongoing continuous operation such as resize.
      * Default control names can be found in `controlLayer.ControlNames`.
      */
-    var activeControl: String? = null
+    var activeHandle: HandleInfo? = null
 
     /**
      * When not zero, the next action initiated with keyboard will be run this many
@@ -239,6 +239,11 @@ class SheetViewController(
         }
     }
 
+    fun <T> mapSelection(action: (item: SheetItem) -> T) : List<T> =
+        selection.items.map { item ->
+            action(item)
+        }
+
     fun select() {
         selection = emptySelection
     }
@@ -268,7 +273,7 @@ class SheetViewController(
         val x1 = min(px1, px2)
         val y1 = min(py1, py2)
         val x2 = max(px1, px2)
-        val y2 = max(px1, px2)
+        val y2 = max(py1, py2)
 
         selectByRenderData(add) { renderData ->
             val rx1 = renderData.finalLeft
@@ -365,6 +370,20 @@ class SheetViewController(
     val DPixel.px
         inline get() = drawingLayer.toPx(this)
 
+    fun toPx(dp: DPixel) =
+        drawingLayer.toPx(dp)
+
+    fun toFrame(rawFrame : RawFrame) =
+        rawFrame.toFrame(drawingLayer.uiAdapter)
+
+    fun toRawFrame(top : DPixel, left : DPixel, width : DPixel, height : DPixel) =
+        RawFrame(
+            top.px,
+            left.px,
+            width.px,
+            height.px
+        )
+
     // --------------------------------------------------------------------------------
     // Pointer event handling
     // --------------------------------------------------------------------------------
@@ -400,10 +419,10 @@ class SheetViewController(
             val dx = position.left - lastPosition.left
             val dy = position.top - lastPosition.top
 
-            if (activeControl == null) {
+            if (activeHandle == null) {
                 this += Move(transformStart, dx, dy)
             } else {
-                this += Resize(transformStart, dx, dy, activeControl!!)
+                this += Resize(transformStart, dx, dy, activeHandle !!)
             }
         }
 
@@ -420,7 +439,8 @@ class SheetViewController(
         transformStart = 0L
         startPosition = Position.NaP
         lastPosition = Position.NaP
-        activeControl = null
+        activeHandle = null
+
     }
 
     // --------------------------------------------------------------------------------
