@@ -72,17 +72,18 @@ class Resize(
         return instructionCache[cacheIndex] + newSize + newPosition
     }
 
-    override fun toString(): String = "Resize -- handle: ${handleInfo.name}  transformX=$transformX  transformY=$transformY"
+    override fun toString(): String = "Resize -- handle: ${handleInfo.name}  widthRatio=$widthRatio heightRatio=$heightRatio transformX=$transformX  transformY=$transformY"
 
     fun resizeFrame(
         originalPosition: Position,
         originalSize: Size
     ): Pair<Size, Position> {
 
-        var newLeft = originalPosition.left.value
+        var newLeft = originalPosition.left.value - originalFrame.left.value
         var newWidth = originalSize.width.value
 
         if (handleInfo.xActive) {
+            newLeft = newLeft / widthRatio
             newWidth = newWidth / widthRatio
         }
 
@@ -91,10 +92,11 @@ class Resize(
             newWidth = - newWidth
         }
 
-        var newTop = originalPosition.top.value
+        var newTop = originalPosition.top.value - originalFrame.top.value
         var newHeight = originalSize.height.value
 
         if (handleInfo.yActive) {
+            newTop = newTop / heightRatio
             newHeight = newHeight / heightRatio
         }
 
@@ -103,6 +105,6 @@ class Resize(
             newHeight = - newHeight
         }
 
-        return Size(newWidth.dp, newHeight.dp) to Position(newTop.dp, newLeft.dp)
+        return Size(newWidth.dp, newHeight.dp) to Position(originalFrame.top + newTop, originalFrame.left + newLeft)
     }
 }
