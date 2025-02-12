@@ -14,7 +14,7 @@ abstract class SheetOperation {
      *
      * @return  true if this operation should replace the last one on stack, false otherwise
      */
-    abstract fun commit(controller: SheetViewController): Boolean
+    abstract fun commit(controller: SheetViewController): OperationResult
 
     /**
      * Revert a previous commit.

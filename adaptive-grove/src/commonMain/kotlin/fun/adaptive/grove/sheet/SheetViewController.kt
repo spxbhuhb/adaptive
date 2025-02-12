@@ -148,23 +148,29 @@ class SheetViewController(
     }
 
     fun op(operation: SheetOperation) {
+        val result: OperationResult
         measureTime {
-            val beforeSize = items.size
+            result = operation.commit(this@SheetViewController)
 
-            val replace = operation.commit(this@SheetViewController)
-            if (replace) undoStack.pop()
-            undoStack.push(operation)
-            redoStack.clear()
+            when (result) {
+                OperationResult.PUSH -> {
+                    undoStack.push(operation)
+                }
 
-            val afterSize = items.size
-            if (beforeSize != afterSize) {
-                select(items.subList(beforeSize, afterSize))
+                OperationResult.REPLACE -> {
+                    undoStack.pop()
+                    undoStack.push(operation)
+                }
+
+                OperationResult.DROP -> Unit
             }
+
+            redoStack.clear()
 
             operation.firstRun = false
 
         }.also {
-            if (trace) logger.fine { "$it - $operation" }
+            if (trace) logger.fine { "$it - $operation $result" }
         }
     }
 
@@ -239,11 +245,6 @@ class SheetViewController(
         }
     }
 
-    fun <T> mapSelection(action: (item: SheetItem) -> T) : List<T> =
-        selection.items.map { item ->
-            action(item)
-        }
-
     fun select() {
         selection = emptySelection
     }
@@ -256,7 +257,17 @@ class SheetViewController(
         selection = SheetSelection(items, containingFrame)
     }
 
-    fun select(item: SheetItem, add: Boolean) {
+    /**
+     * Direct version of select which is not put into the undo stack.
+     */
+    fun select(index : Int) {
+        select(listOf(items[index]))
+    }
+
+    /**
+     * User inducted select, creates and executes an undoable select operation.
+     */
+    fun selectByItem(item: SheetItem, add: Boolean) {
         addSelectOp(mutableListOf(item), add)
     }
 
@@ -373,10 +384,10 @@ class SheetViewController(
     fun toPx(dp: DPixel) =
         drawingLayer.toPx(dp)
 
-    fun toFrame(rawFrame : RawFrame) =
+    fun toFrame(rawFrame: RawFrame) =
         rawFrame.toFrame(drawingLayer.uiAdapter)
 
-    fun toRawFrame(top : DPixel, left : DPixel, width : DPixel, height : DPixel) =
+    fun toRawFrame(top: DPixel, left: DPixel, width: DPixel, height: DPixel) =
         RawFrame(
             top.px,
             left.px,

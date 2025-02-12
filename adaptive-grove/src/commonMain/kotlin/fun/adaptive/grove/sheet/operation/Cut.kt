@@ -14,7 +14,10 @@ class Cut : SheetOperation() {
 
     val cutItems = mutableListOf<SheetItem>()
 
-    override fun commit(controller: SheetViewController): Boolean {
+    override fun commit(controller: SheetViewController): OperationResult {
+        if (controller.selection.isEmpty()) {
+            return OperationResult.DROP
+        }
 
         with(controller) {
             if (firstRun) {
@@ -32,7 +35,7 @@ class Cut : SheetOperation() {
             select()
         }
 
-        return false
+        return OperationResult.PUSH
     }
 
     override fun revert(controller: SheetViewController) {

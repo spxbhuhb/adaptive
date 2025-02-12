@@ -7,7 +7,10 @@ class Remove : SheetOperation() {
 
     val items = mutableListOf<SheetItem>()
 
-    override fun commit(controller: SheetViewController): Boolean {
+    override fun commit(controller: SheetViewController): OperationResult {
+        if (controller.selection.isEmpty()) {
+            return OperationResult.DROP
+        }
 
         if (firstRun) {
             controller.forSelection { items += it }
@@ -19,7 +22,7 @@ class Remove : SheetOperation() {
 
         controller.select()
 
-        return false
+        return OperationResult.PUSH
     }
 
     override fun revert(controller: SheetViewController) {

@@ -10,7 +10,10 @@ class Paste : SheetOperation() {
     lateinit var originalSelection : SheetSelection
     val items = mutableListOf<SheetItem>()
 
-    override fun commit(controller: SheetViewController): Boolean {
+    override fun commit(controller: SheetViewController): OperationResult {
+        if (controller.clipboard.models.isEmpty()) {
+            return OperationResult.DROP
+        }
 
         if (firstRun) {
             originalSelection = controller.selection
@@ -38,7 +41,7 @@ class Paste : SheetOperation() {
 
         controller.select(items)
 
-        return false
+        return OperationResult.PUSH
     }
 
     override fun revert(controller: SheetViewController) {

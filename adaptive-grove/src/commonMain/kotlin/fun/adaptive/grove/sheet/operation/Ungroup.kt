@@ -1,12 +1,11 @@
 package `fun`.adaptive.grove.sheet.operation
 
 import `fun`.adaptive.grove.sheet.SheetViewController
-import `fun`.adaptive.grove.sheet.model.SheetClipboard
+import `fun`.adaptive.grove.sheet.model.SheetSelection
 
-class Copy : SheetOperation() {
+class Ungroup : SheetOperation() {
 
-    lateinit var copyData : SheetClipboard
-    lateinit var undoData : SheetClipboard
+    var undoData = SheetSelection(emptyList())
 
     override fun commit(controller: SheetViewController): OperationResult {
         if (controller.selection.isEmpty()) {
@@ -14,19 +13,17 @@ class Copy : SheetOperation() {
         }
 
         if (firstRun) {
-            undoData = controller.clipboard
-            copyData = controller.selectionToClipboard()
+            undoData = controller.selection
         }
 
-        controller.clipboard = copyData
 
         return OperationResult.PUSH
     }
 
     override fun revert(controller: SheetViewController) {
-        controller.clipboard = undoData
+        controller.select(undoData.items)
     }
 
     override fun toString(): String =
-        "Copy"
+        "Ungroup -- ${undoData.items.size} ${undoData.items.joinToString { "${it.index}:${it.model.key}" }}"
 }

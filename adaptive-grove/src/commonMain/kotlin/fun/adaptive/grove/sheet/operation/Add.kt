@@ -14,7 +14,7 @@ class Add(
     lateinit var originalSelection : SheetSelection
     var index = - 1
 
-    override fun commit(controller : SheetViewController): Boolean {
+    override fun commit(controller: SheetViewController): OperationResult {
 
         if (firstRun) {
             originalSelection = controller.selection
@@ -23,7 +23,9 @@ class Add(
             controller.showItem(index)
         }
 
-        return false
+        controller.select(index)
+
+        return OperationResult.PUSH
     }
 
     override fun revert(controller : SheetViewController) {

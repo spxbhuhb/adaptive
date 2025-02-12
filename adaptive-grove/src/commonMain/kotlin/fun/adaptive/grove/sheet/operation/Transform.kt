@@ -2,6 +2,7 @@ package `fun`.adaptive.grove.sheet.operation
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.model.SheetSelection.Companion.emptySelection
 import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.layout.Position
@@ -13,15 +14,16 @@ import `fun`.adaptive.ui.instruction.layout.Size
  */
 abstract class Transform(
     val start: Long,
-    val deltaX: DPixel,
-    val deltaY: DPixel,
+    deltaX: DPixel,
+    deltaY: DPixel,
     val withSizes: Boolean
 ) : SheetOperation() {
 
     var transformX = deltaX
     var transformY = deltaY
 
-    var undoData = emptyMap<Int, AdaptiveInstructionGroup>()
+    var originalSelection = emptySelection
+    var originalInstructions = emptyMap<Int, AdaptiveInstructionGroup>()
 
     var startFrame = RawFrame.NaF
 
@@ -29,7 +31,11 @@ abstract class Transform(
     var positionCache = emptyList<Position>()
     var sizeCache = emptyList<Size>()
 
-    override fun commit(controller: SheetViewController): Boolean {
+    override fun commit(controller: SheetViewController): OperationResult {
+        if (controller.selection.isEmpty()) {
+            return OperationResult.DROP
+        }
+
         val last = controller.undoStack.lastOrNull()
         val merge = (last != null && last::class === this::class && last is Transform && last.start == start)
 
@@ -51,14 +57,14 @@ abstract class Transform(
             newFrame(controller)
         )
 
-        return merge
+        return if (merge) OperationResult.REPLACE else OperationResult.PUSH
     }
 
     open fun initialize(controller: SheetViewController) {
 
         startFrame = controller.selection.containingFrame
 
-        val undoData = mutableMapOf<Int, AdaptiveInstructionGroup>()
+        val originalInstructions = mutableMapOf<Int, AdaptiveInstructionGroup>()
         val instructionCache = mutableListOf<AdaptiveInstructionGroup>()
         val positionCache = mutableListOf<Position>()
         val sizeCache = mutableListOf<Size>()
@@ -66,7 +72,7 @@ abstract class Transform(
         controller.selection.items.forEachIndexed { index, item ->
             val instructions = item.fragment.instructions
 
-            undoData[index] = instructions
+            originalInstructions[index] = instructions
             instructionCache += instructions.removeAll { it is Position || (withSizes && it is Size) }
             positionCache += instructions.firstInstanceOf<Position>()
             if (withSizes) {
@@ -74,14 +80,16 @@ abstract class Transform(
             }
         }
 
-        this.undoData = undoData
+        this.originalSelection = controller.selection
+        this.originalInstructions = originalInstructions
         this.instructionCache = instructionCache
         this.positionCache = positionCache
         this.sizeCache = sizeCache
     }
 
     open fun merge(last: Transform) {
-        undoData = last.undoData
+        originalSelection = last.originalSelection
+        originalInstructions = last.originalInstructions
         startFrame = last.startFrame
         instructionCache = last.instructionCache
         positionCache = last.positionCache
@@ -92,17 +100,17 @@ abstract class Transform(
 
     abstract fun newFrame(controller: SheetViewController): RawFrame
 
-    abstract fun newInstructions(cacheIndex : Int): AdaptiveInstructionGroup
+    abstract fun newInstructions(cacheIndex: Int): AdaptiveInstructionGroup
 
     override fun revert(controller: SheetViewController) {
-        controller.forSelection { item ->
-            val originalInstructions = undoData[item.index] ?: return@forSelection
+        originalSelection.items.forEach { item ->
+            val originalInstructions = originalInstructions[item.index] ?: return@forEach
             val fragment = item.fragment
             fragment.setStateVariable(0, originalInstructions)
             fragment.genPatchInternal()
             controller.updateLayout(item)
         }
-        controller.select(controller.selection.items)
+        controller.select(originalSelection.items)
     }
 
 }

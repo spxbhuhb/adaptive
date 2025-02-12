@@ -7,6 +7,7 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
+import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.hover
 
@@ -21,7 +22,7 @@ fun actionIcon(
     val svgColors = theme.svgColors(hover)
 
     box(theme.actionIconContainer, background, instructions()) {
-        svg(icon, theme.actionIcon, svgColors, instructions())
+        svg(icon, theme.actionIcon, svgColors, alignSelf.center)
     }
 
     return fragment()

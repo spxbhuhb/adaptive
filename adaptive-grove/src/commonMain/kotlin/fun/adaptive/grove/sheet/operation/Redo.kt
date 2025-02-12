@@ -4,7 +4,7 @@ import `fun`.adaptive.grove.sheet.SheetViewController
 
 class Redo : SheetOperation() {
 
-    override fun commit(controller: SheetViewController) : Boolean {
+    override fun commit(controller: SheetViewController): OperationResult {
         throw UnsupportedOperationException("implemented in the engine")
     }
 

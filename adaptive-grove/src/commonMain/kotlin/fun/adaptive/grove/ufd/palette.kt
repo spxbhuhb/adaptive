@@ -21,7 +21,7 @@ fun palette(viewModel: UfdContext) {
 
     grid {
         maxSize .. borderRight(colors.outline)
-        rowTemplate(33.dp, 1.fr)
+        rowTemplate(udfTheme.headerHeight, 1.fr)
 
         areaTitle(Strings.palette, Graphics.palette)
 

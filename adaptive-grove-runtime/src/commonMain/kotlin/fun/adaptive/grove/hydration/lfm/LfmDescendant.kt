@@ -13,6 +13,22 @@ class LfmDescendant(
     val key: String,
     val mapping: List<LfmMapping>
 ) {
+    constructor(key: String, instructions: AdaptiveInstructionGroup, vararg args: LfmMapping) :
+        this(
+            UUID(),
+            key,
+            listOf(
+                LfmMapping(
+                    dependencyMask = 0,
+                    LfmConst(
+                        typeSignature<AdaptiveInstructionGroup>(),
+                        instructions
+                    )
+                ),
+                *args
+            )
+        )
+
     val instructions: AdaptiveInstructionGroup
         get() = AdaptiveInstructionGroup(
             listOf(
@@ -33,5 +49,6 @@ class LfmDescendant(
 
         update(this::mapping, listOf(instructionMapping) + this.mapping.drop(1))
     }
+
 
 }

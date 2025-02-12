@@ -7,7 +7,6 @@ import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.decoration.Color
-import `fun`.adaptive.ui.instruction.decoration.CornerRadius
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.colors
 
@@ -18,8 +17,8 @@ val tableIconTheme = IconTheme(
     colors.primary,
     iconSize = 24.dp,
     containerSize = 34.dp,
-    margin = 2.dp,
-    cornerRadius = 15.dp
+    margin = 3.dp,
+    cornerRadius = 6.dp
 )
 
 class IconTheme(
@@ -46,7 +45,8 @@ class IconTheme(
         size(containerSize, containerSize),
         margin(margin),
         cornerRadius(cornerRadius),
-        alignItems.center
+        alignItems.center,
+        tabIndex { 0 }
     )
 
     val nonHoverBackground = backgroundColor(colors.surface.opaque(0f))

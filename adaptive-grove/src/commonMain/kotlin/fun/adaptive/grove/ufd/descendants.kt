@@ -21,7 +21,7 @@ fun descendants(controller: SheetViewController) {
 
     grid {
         maxSize .. borderRight(colors.outline)
-        rowTemplate(33.dp, 1.fr)
+        rowTemplate(udfTheme.headerHeight, 1.fr)
 
         areaTitle(Strings.components)
 
@@ -46,7 +46,7 @@ fun itemRow(item: SheetItem, selection: SheetSelection, controller: SheetViewCon
     row {
         rowStyles(selected, hover)
 
-        onClick { controller.select(item, EventModifier.SHIFT in it.modifiers) }
+        onClick { controller.selectByItem(item, EventModifier.SHIFT in it.modifiers) }
 
         text(item.model.key) .. noSelect .. textColor
         text(item.index) .. textSmall .. noSelect .. textColor

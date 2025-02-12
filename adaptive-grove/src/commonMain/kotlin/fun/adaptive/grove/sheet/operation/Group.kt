@@ -1,21 +1,27 @@
 package `fun`.adaptive.grove.sheet.operation
 
 import `fun`.adaptive.grove.sheet.SheetViewController
-import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection
 
-class Select(
-    val items: List<SheetItem>
-) : SheetOperation() {
+class Group : SheetOperation() {
 
     var undoData = SheetSelection(emptyList())
 
     override fun commit(controller: SheetViewController): OperationResult {
+        if (controller.selection.isEmpty()) {
+            return OperationResult.DROP
+        }
+
         if (firstRun) {
             undoData = controller.selection
         }
 
-        controller.select(items)
+        val frame = controller.controlFrame
+        //controller.addItem(frame.top, frame.left, )
+
+        controller.forSelection {
+        }
+
 
         return OperationResult.PUSH
     }
@@ -25,5 +31,5 @@ class Select(
     }
 
     override fun toString(): String =
-        "Select -- ${items.size} ${items.joinToString { "${it.index}:${it.model.key}" }}"
+        "Group -- ${undoData.items.size} ${undoData.items.joinToString { "${it.index}:${it.model.key}" }}"
 }
