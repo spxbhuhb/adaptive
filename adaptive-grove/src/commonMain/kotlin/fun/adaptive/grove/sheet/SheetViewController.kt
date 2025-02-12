@@ -47,7 +47,7 @@ class SheetViewController(
      */
     val items = mutableListOf<SheetItem>()
 
-    private val nextIndex
+    private val nextIndex: ItemIndex
         get() = items.size
 
     var selection = emptySelection
@@ -56,6 +56,9 @@ class SheetViewController(
             selectionStore.value = value
             controlFrameStore.value = value.containingFrame.toFrame(drawingLayer.uiAdapter).grow(8.0)
         }
+
+    val selectionFrame: Frame
+        get() = selection.containingFrame.toFrame(drawingLayer.uiAdapter)
 
     val selectionStore = adaptiveValueStore { selection }
 
@@ -72,7 +75,8 @@ class SheetViewController(
     // --------------------------------------------------------------------------------
 
     /**
-     * The frame that contains the current selection.
+     * The frame that contains the controls for the current selection. This is typically
+     * larger than [selectionFrame] because it also contains the controls.
      */
     var controlFrame: Frame
         get() = controlFrameStore.value
@@ -178,7 +182,7 @@ class SheetViewController(
     // Item addition and removal
     // --------------------------------------------------------------------------------
 
-    fun addItem(x: DPixel, y: DPixel, template: LfmDescendant): SheetItem {
+    fun addItem(x: DPixel, y: DPixel, template: LfmDescendant, name: String = template.key): SheetItem {
 
         val index = nextIndex
         val templateInstructions = template.instructions
@@ -199,7 +203,7 @@ class SheetViewController(
             )
 
         val instanceMapping = listOf(instanceInstructionMapping) + template.mapping.drop(1)
-        val item = SheetItem(index, LfmDescendant(UUID(), template.key, instanceMapping))
+        val item = SheetItem(index, name, LfmDescendant(UUID(), template.key, instanceMapping))
 
         items += item
         drawingLayer += item
@@ -207,7 +211,7 @@ class SheetViewController(
         return item
     }
 
-    fun hideItem(index: Int) {
+    fun hideItem(index: ItemIndex) {
         val item = items[index]
         if (item.removed) return
 
@@ -215,7 +219,7 @@ class SheetViewController(
         drawingLayer -= item
     }
 
-    fun showItem(index: Int) {
+    fun showItem(index: ItemIndex) {
         val item = items[index]
         if (! item.removed) return
 
@@ -260,7 +264,7 @@ class SheetViewController(
     /**
      * Direct version of select which is not put into the undo stack.
      */
-    fun select(index : Int) {
+    fun select(index: Int) {
         select(listOf(items[index]))
     }
 
@@ -328,10 +332,26 @@ class SheetViewController(
 
             val info = child.itemInfo() ?: continue
 
-            selectedItems += items[info.index]
+            val item = items[info.index]
+            if (item.isGroup) continue
+            if (item.removed) continue
+            if (item.isInGroup) {
+                selectGroup(selectedItems, item.group!!)
+            } else {
+                selectedItems += item
+            }
         }
 
         addSelectOp(selectedItems, add)
+    }
+
+    private fun selectGroup(selectedItems: MutableList<SheetItem>, group: ItemIndex) {
+        val group = items[group]
+        if (group.isInGroup) {
+            selectGroup(selectedItems, group.group!!)
+        } else {
+            selectedItems += group
+        }
     }
 
     private fun addSelectOp(selectedItems: MutableList<SheetItem>, add: Boolean) {

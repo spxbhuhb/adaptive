@@ -1,6 +1,6 @@
 package `fun`.adaptive.grove.sheet.operation
 
-import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.HandleInfo
 import `fun`.adaptive.ui.fragment.layout.RawFrame
@@ -60,9 +60,7 @@ class Resize(
         return controller.toRawFrame(newPosition.top, newPosition.left, newSize.width, newSize.height)
     }
 
-    override fun newInstructions(
-        cacheIndex: Int,
-    ): AdaptiveInstructionGroup {
+    override fun newInstructions(cacheIndex: Int): AdaptiveInstruction {
 
         val (newSize, newPosition) = resizeFrame(
             positionCache[cacheIndex],

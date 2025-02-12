@@ -48,7 +48,7 @@ fun itemRow(item: SheetItem, selection: SheetSelection, controller: SheetViewCon
 
         onClick { controller.selectByItem(item, EventModifier.SHIFT in it.modifiers) }
 
-        text(item.model.key) .. noSelect .. textColor
+        text(item.name) .. noSelect .. textColor
         text(item.index) .. textSmall .. noSelect .. textColor
     }
 }

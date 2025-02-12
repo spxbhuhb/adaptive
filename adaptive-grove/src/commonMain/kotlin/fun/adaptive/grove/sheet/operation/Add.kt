@@ -2,6 +2,7 @@ package `fun`.adaptive.grove.sheet.operation
 
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.model.ItemIndex
 import `fun`.adaptive.grove.sheet.model.SheetSelection
 import `fun`.adaptive.ui.instruction.DPixel
 
@@ -12,7 +13,7 @@ class Add(
 ) : SheetOperation() {
 
     lateinit var originalSelection : SheetSelection
-    var index = - 1
+    var index : ItemIndex = - 1
 
     override fun commit(controller: SheetViewController): OperationResult {
 

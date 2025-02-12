@@ -11,6 +11,18 @@ class SheetSelection(
 
     fun isEmpty() = items.isEmpty()
 
+    fun forItems(action: (item: SheetItem) -> Unit) {
+        items.forEach { item ->
+            action(item)
+        }
+    }
+
+    fun <T> mapItems(action: (item: SheetItem) -> T) =
+        items.map { item ->
+            action(item)
+        }
+
+
     companion object {
 
         val emptySelection = SheetSelection(emptyList())

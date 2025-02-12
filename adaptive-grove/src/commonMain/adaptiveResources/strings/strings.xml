@@ -6,4 +6,5 @@
     <string name="palette">Palette</string>
     <string name="components">Components</string>
     <string name="instructions">Instructions</string>
+    <string name="group">group</string>
 </resources>
