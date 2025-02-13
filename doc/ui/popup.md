@@ -43,10 +43,21 @@ box {
 
 The popup checks if there is enough space for display in the preferred position.
 
-If there is not enough space it tries to find a position which:
+If there is not enough space it tries to find another position. Check `PopupAlign`
+for the exact algorithm (I created that with ChatGPT, seems reasonable.)
 
-- can contain the popup content
-- does not cover the container
+## Size
+
+You can set the size of the popup with the usual sizing instructions.
+
+When `maxWidth` or `maxHeight` is used the popup will use the final sizes of
+the container it belongs to.
+
+> [!NOTE]
+>
+> I have no idea what happens if the size of the container that the popup belongs
+> to change while the popup is shown.
+>
 
 ## Internals
 

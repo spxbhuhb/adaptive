@@ -11,6 +11,8 @@ import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.api.popupAlign
 import `fun`.adaptive.ui.fragment.layout.RawPosition
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
+import `fun`.adaptive.ui.instruction.layout.MaxHeight
+import `fun`.adaptive.ui.instruction.layout.MaxWidth
 import `fun`.adaptive.ui.instruction.layout.OuterAlignment
 import `fun`.adaptive.ui.instruction.layout.PopupAlign
 import `fun`.adaptive.ui.instruction.layout.Position
@@ -69,12 +71,7 @@ abstract class AbstractPopup<RT, CRT : RT>(
     override fun patch() {
         super.patch()
         if (active) {
-            val select = children.firstOrNull() ?: return
-            val box = select.children.firstOrNull() ?: return
-            if (box !is AbstractAuiFragment<*>) return
-
-            box.computeLayout(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)
-            placePopup(box)
+            placePopup()
         }
     }
 
@@ -84,12 +81,7 @@ abstract class AbstractPopup<RT, CRT : RT>(
         active = true
         patchInternal()
 
-        val select = children.firstOrNull() ?: return
-        val box = select.children.firstOrNull() ?: return
-        if (box !is AbstractAuiFragment<*>) return
-
-        box.computeLayout(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY)
-        placePopup(box)
+        placePopup()
     }
 
     fun hide() {
@@ -111,18 +103,40 @@ abstract class AbstractPopup<RT, CRT : RT>(
         }
     }
 
-    private fun placePopup(box: AbstractAuiFragment<*>) {
-        val metrics = uiAdapter.mediaMetrics
+    private fun placePopup() {
 
-        val position = getPosition(box.renderData)
+        val startPosition = this.absolutePosition
+
+        val select = children.firstOrNull() ?: return
+        val box = select.children.firstOrNull() ?: return
+        if (box !is AbstractAuiFragment<*>) return
+
+        val parentRenderData = renderData.layoutFragment?.renderData
+
+        val maxWidth = instructions.firstInstanceOfOrNull<MaxWidth>()
+        val maxHeight = instructions.lastInstanceOfOrNull<MaxHeight>()
+
+        box.computeLayout(
+            maxWidth?.let { parentRenderData?.finalWidth } ?: Double.POSITIVE_INFINITY,
+            maxHeight?.let { parentRenderData?.finalHeight } ?: Double.POSITIVE_INFINITY,
+        )
+
+        var alignment = instructions.lastInstanceOfOrNull<PopupAlign>() ?: popupAlign.belowStart
+
+        var position = RawPosition(0.0, 0.0)
+
+        PopupAlign.findBestPopupAlignment(alignment) {
+            position = getPosition(box.renderData, it)
+            isPositionOk(startPosition, position, box.renderData)
+        }
+
         box.placeLayout(position.top, position.left)
     }
 
-    fun getPosition(popupRenderData: AuiRenderData): RawPosition {
+    fun getPosition(popupRenderData: AuiRenderData, alignment: PopupAlign): RawPosition {
         val instructed = instructions.lastInstanceOfOrNull<Position>()
         if (instructed != null) return instructed.toRaw(uiAdapter)
 
-        val alignment = instructions.lastInstanceOfOrNull<PopupAlign>() ?: popupAlign.belowStart
         val parentRenderData = renderData.layoutFragment?.renderData ?: return RawPosition(0.0, 0.0)
         val parentFrame = parentRenderData.rawFrame
         val parentBorder = parentRenderData.layout?.border ?: RawSurrounding.ZERO
@@ -146,5 +160,21 @@ abstract class AbstractPopup<RT, CRT : RT>(
         }
 
         return RawPosition(top, left)
+    }
+
+    fun isPositionOk(startPosition: RawPosition, position: RawPosition, renderData: AuiRenderData): Boolean {
+        val metrics = uiAdapter.mediaMetrics
+        val width = metrics.viewWidth
+        val height = metrics.viewHeight
+
+        val x1 = startPosition.left + position.left
+        val y1 = startPosition.top + position.top
+        val x2 = x1 + renderData.finalWidth
+        val y2 = y1 + renderData.finalHeight
+
+        if (x1 < 0 || y1 < 0) return false
+        if (x2 > width || y2 > height) return false
+
+        return true
     }
 }

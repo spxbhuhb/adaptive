@@ -10,7 +10,9 @@ import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.api.GroveRuntimeFragmentFactory
 import `fun`.adaptive.grove.groveRuntimeCommon
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
+import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf
+import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.column
@@ -22,9 +24,13 @@ import `fun`.adaptive.ui.api.marginBottom
 import `fun`.adaptive.ui.api.marginLeft
 import `fun`.adaptive.ui.api.marginRight
 import `fun`.adaptive.ui.api.marginTop
+import `fun`.adaptive.ui.api.maxHeight
 import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.maxWidth
+import `fun`.adaptive.ui.api.noPointerEvents
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.paddingHorizontal
+import `fun`.adaptive.ui.api.paddingTop
 import `fun`.adaptive.ui.api.paddingVertical
 import `fun`.adaptive.ui.api.popupAlign
 import `fun`.adaptive.ui.api.position
@@ -48,7 +54,12 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.toList
 import kotlinx.coroutines.launch
 
-val popupStyles = paddingVertical { 4.dp } .. paddingHorizontal { 12.dp } .. border(colors.outline, 1.dp) .. cornerRadius(4.dp)
+val popupStyles =
+    paddingVertical { 4.dp } ..
+        paddingHorizontal { 12.dp } ..
+        border(colors.outline, 1.dp) ..
+        cornerRadius(4.dp) ..
+        backgroundColor(colors.onSurfaceFriendly.opaque(0.3f))
 
 fun main() {
 
@@ -75,8 +86,10 @@ fun main() {
 
             var popupWidth = Double.NaN
             var popupHeight = Double.NaN
+            var maxWidth = false
+            var maxHeight = false
 
-            var popupSize = makeSizeInstructions(popupWidth, popupHeight)
+            var popupSize = makeSizeInstructions(popupWidth, popupHeight, maxWidth, maxHeight)
 
             box {
                 maxSize
@@ -109,10 +122,20 @@ fun main() {
                         column {
                             text("Width") .. textSmall
                             editor { popupWidth } .. width { 96.dp }
+                            row {
+                                paddingTop { 8.dp } .. gap { 8.dp } .. alignItems.center
+                                editor { maxWidth }
+                                text("max") .. textSmall
+                            }
                         }
                         column {
                             text("Height") .. textSmall
                             editor { popupHeight } .. width { 96.dp }
+                            row {
+                                paddingTop { 8.dp } .. gap { 8.dp } .. alignItems.center
+                                editor { maxHeight }
+                                text("max") .. textSmall
+                            }
                         }
                     }
 
@@ -120,6 +143,11 @@ fun main() {
 
                     hoverPopup {
                         popupStyles .. alignment .. popupSize
+
+                        // this makes it possible to edit values even when the popup is centered
+                        // for most popups this might be a bad idea
+                        noPointerEvents
+
                         text("${alignment.horizontal} ${alignment.vertical}")
                     }
 
@@ -133,9 +161,18 @@ fun main() {
     }
 }
 
-fun makeSizeInstructions(width: Double, height: Double): AdaptiveInstructionGroup {
+fun makeSizeInstructions(width: Double, height: Double, mw: Boolean, mh: Boolean): AdaptiveInstructionGroup {
     val out = mutableListOf<AdaptiveInstruction>()
-    if (! width.isNaN()) out += width(width.dp)
-    if (! height.isNaN()) out += height(height.dp)
+
+    when {
+        mw -> out += maxWidth
+        ! width.isNaN() -> out += width(width.dp)
+    }
+
+    when {
+        mh -> out += maxHeight
+        ! height.isNaN() -> out += height(height.dp)
+    }
+
     return AdaptiveInstructionGroup(out)
 }

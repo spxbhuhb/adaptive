@@ -13,6 +13,30 @@ class PopupAlign(
     val horizontal: OuterAlignment?,
 ) : AdaptiveInstruction {
 
+    fun flipVertical(): PopupAlign = PopupAlign(
+        vertical = when (this.vertical) {
+            OuterAlignment.Above -> OuterAlignment.Below
+            OuterAlignment.Below -> OuterAlignment.Above
+            OuterAlignment.Start -> OuterAlignment.End
+            OuterAlignment.End -> OuterAlignment.Start
+            else -> this.vertical
+        },
+        horizontal = this.horizontal
+    )
+
+    fun flipHorizontal(): PopupAlign = PopupAlign(
+        vertical = this.vertical,
+        horizontal = when (this.horizontal) {
+            OuterAlignment.Before -> OuterAlignment.After
+            OuterAlignment.After -> OuterAlignment.Before
+            OuterAlignment.Start -> OuterAlignment.End
+            OuterAlignment.End -> OuterAlignment.Start
+            else -> this.horizontal
+        }
+    )
+
+    fun flipBoth(): PopupAlign = flipVertical().flipHorizontal()
+
     @Suppress("unused")
     companion object {
 
@@ -40,5 +64,17 @@ class PopupAlign(
         val belowEnd = PopupAlign(vertical = OuterAlignment.Below, horizontal = OuterAlignment.End)
         val belowAfter = PopupAlign(vertical = OuterAlignment.Below, horizontal = OuterAlignment.After)
 
+        fun findBestPopupAlignment(preferred: PopupAlign, check: (PopupAlign) -> Boolean): PopupAlign {
+
+            val attempts = listOf(
+                preferred,
+                preferred.flipVertical(),
+                preferred.flipHorizontal(),
+                preferred.flipBoth(),
+                PopupAlign(horizontal = OuterAlignment.Center, vertical = OuterAlignment.Center)
+            )
+
+            return attempts.firstOrNull { check(it) } ?: preferred
+        }
     }
 }

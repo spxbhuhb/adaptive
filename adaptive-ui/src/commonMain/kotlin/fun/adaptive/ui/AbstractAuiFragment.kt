@@ -5,6 +5,7 @@
 package `fun`.adaptive.ui
 
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.ui.fragment.layout.RawPosition
 import `fun`.adaptive.ui.instruction.layout.FitStrategy
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import `fun`.adaptive.ui.support.statistics.AuiStatistics
@@ -60,6 +61,25 @@ abstract class AbstractAuiFragment<RT>(
 
     open val patchDescendants: Boolean
         get() = false
+
+    /**
+     * The absolute position of this fragment in the adapter root fragment.
+     * Traverses up on layout parents and summarises the positions.
+     */
+    val absolutePosition: RawPosition
+        get() {
+            var top = renderData.finalTop
+            var left = renderData.finalLeft
+
+            var current = renderData.layoutFragment?.renderData
+            while (current != null) {
+                top += current.finalTop
+                left += current.finalLeft
+                current = current.layoutFragment?.renderData
+            }
+
+            return RawPosition(top, left)
+        }
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         null
