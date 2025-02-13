@@ -4,30 +4,12 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.api.isTouched
 import `fun`.adaptive.adat.api.isValid
 import `fun`.adaptive.adat.store.copyStore
-import `fun`.adaptive.cookbook.shared.bodySmall
-import `fun`.adaptive.cookbook.shared.cornerRadius8
-import `fun`.adaptive.cookbook.shared.darkGray
-import `fun`.adaptive.cookbook.shared.inputErrorContainer
-import `fun`.adaptive.cookbook.shared.inputErrorText
-import `fun`.adaptive.cookbook.shared.lightGray
-import `fun`.adaptive.cookbook.shared.titleSmall
+import `fun`.adaptive.cookbook.shared.*
 import `fun`.adaptive.cookbook.wizard.project.model.ProjectData
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.binding.PropertySelector
-import `fun`.adaptive.ui.api.border
-import `fun`.adaptive.ui.api.colTemplate
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.gap
-import `fun`.adaptive.ui.api.grid
-import `fun`.adaptive.ui.api.marginTop
-import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.ui.api.repeat
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.rowTemplate
-import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.api.textColor
-import `fun`.adaptive.ui.checkbox.api.checkbox
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.dp
 
@@ -105,11 +87,11 @@ fun projectWizardMain() {
                 colTemplate(200.dp, 400.dp) .. rowTemplate(32.dp repeat 3)
 
                 text("Browser")
-                checkbox { setup.browser }
+                editor { setup.browser }
                 text("Android")
-                checkbox { setup.android }
+                editor { setup.android }
                 text("iOS")
-                checkbox { setup.ios }
+                editor { setup.ios }
             }
         }
 
@@ -118,13 +100,13 @@ fun projectWizardMain() {
                 colTemplate(200.dp, 400.dp) .. rowTemplate(32.dp repeat 4)
 
                 text("Ktor")
-                checkbox { setup.ktor }
+                editor { setup.ktor }
                 text("Auth")
-                checkbox { setup.auth }
+                editor { setup.auth }
                 text("Exposed")
-                checkbox { setup.exposed }
+                editor { setup.exposed }
                 text("Auto")
-                checkbox { setup.auto }
+                editor { setup.auto }
             }
         }
     }

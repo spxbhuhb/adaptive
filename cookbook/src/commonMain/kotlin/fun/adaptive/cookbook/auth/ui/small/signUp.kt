@@ -56,7 +56,7 @@ fun signUp(): AdaptiveFragment {
             grid {
                 paddingTop(15.dp) .. alignItems.start .. colTemplate(40.dp, 1.fr)
 
-                checkbox { signUp.agreement }
+                editor { signUp.agreement }
                 row {
                     text("I agree to the ", fontSize(15.sp), textColor(darkGray))
                     text("Terms of Service", fontSize(15.sp), textColor(black), boldFont, externalLink("/terms.txt"))

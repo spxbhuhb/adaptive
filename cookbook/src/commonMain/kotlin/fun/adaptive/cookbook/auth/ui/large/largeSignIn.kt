@@ -73,7 +73,7 @@ fun largeSignIn(): AdaptiveFragment {
 
             row {
                 alignSelf.startCenter
-                checkbox { signIn.remember } .. paddingRight { 8.dp }
+                editor { signIn.remember } .. paddingRight { 8.dp }
                 text("Emlékezzünk rád")
             }
 

@@ -63,7 +63,7 @@ fun smallSignIn(): AdaptiveFragment {
                 paddingTop(15.dp) .. spaceBetween .. maxWidth
 
                 row {
-                    checkbox { signIn.remember } .. paddingRight { 8.dp }
+                    editor { signIn.remember } .. paddingRight { 8.dp }
                     text("Remember be", fontSize(15.sp), textColor(darkGray))
                 }
 

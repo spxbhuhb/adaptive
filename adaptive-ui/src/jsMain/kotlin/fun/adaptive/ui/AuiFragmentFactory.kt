@@ -7,6 +7,7 @@ package `fun`.adaptive.ui
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 import `fun`.adaptive.ui.fragment.*
 import `fun`.adaptive.ui.fragment.layout.*
+import `fun`.adaptive.ui.fragment.structural.AuiHoverPopup
 
 object AuiFragmentFactory : FoundationFragmentFactory() {
     init {
@@ -24,5 +25,6 @@ object AuiFragmentFactory : FoundationFragmentFactory() {
         add("aui:draggable") { p, i, s -> AuiDraggable(p.adapter as AuiAdapter, p, i) }
         add("aui:droptarget") { p, i, s -> AuiDropTarget(p.adapter as AuiAdapter, p, i) }
         add("aui:rectangle") { p, i, s -> AuiRectangle(p.adapter as AuiAdapter, p, i) }
+        add("aui:hoverpopup") { p, i, s -> AuiHoverPopup(p.adapter as AuiAdapter, p, i) }
     }
 }

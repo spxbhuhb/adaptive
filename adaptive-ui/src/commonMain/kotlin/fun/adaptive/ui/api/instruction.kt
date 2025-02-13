@@ -147,6 +147,8 @@ val horizontalScroll: Scroll = Scroll(horizontal = true, vertical = true)
 val fixed = Fixed()
 val overflow = Overflow.Companion
 
+val popupAlign = PopupAlign.Companion
+
 fun zIndex(value: Int): ZIndex = ZIndex(value)
 fun zIndex(value: () -> Int): ZIndex = ZIndex(value())
 

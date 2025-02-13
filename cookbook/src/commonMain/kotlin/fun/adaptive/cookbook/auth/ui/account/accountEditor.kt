@@ -85,8 +85,8 @@ fun common(account: AccountEditorData) {
         smallLabel { "Zárolt" }
 
         editor { account.login } .. width { 300.dp } .. alignSelf.startCenter
-        checkbox { account.activated }
-        checkbox { account.locked }
+        editor { account.activated }
+        editor { account.locked }
     }
 }
 

@@ -36,6 +36,13 @@ abstract class AbstractAuiFragment<RT>(
     var renderData = AuiRenderData(adapter)
 
     /**
+     * The receiver of the layout fragment this fragment belongs to if there is one.
+     */
+    val layoutReceiver: RT?
+        @Suppress("UNCHECKED_CAST")
+        get() = (renderData.layoutFragment?.receiver as? RT)
+
+    /**
      * Structural fragments (loop and select) set this to true to modify behaviour.
      */
     open val isStructural
@@ -154,6 +161,8 @@ abstract class AbstractAuiFragment<RT>(
     /**
      * Basic layout computation that is used for intrinsic UI fragments. Layout fragments
      * override this method to implement their own calculation algorithm.
+     *
+     * Sets final width and final height in render data.
      */
     open fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
         statistics.computeLayout++

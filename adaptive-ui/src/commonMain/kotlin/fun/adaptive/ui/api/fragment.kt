@@ -97,3 +97,18 @@ fun draggable(vararg instructions: AdaptiveInstruction, @Adaptive content: () ->
 fun dropTarget(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
     manualImplementation(content, instructions)
 }
+
+@AdaptiveExpect(aui)
+fun hoverPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+    manualImplementation(content, instructions)
+}
+
+@AdaptiveExpect(aui)
+fun primaryPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+    manualImplementation(content, instructions)
+}
+
+@AdaptiveExpect(aui)
+fun secondaryPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+    manualImplementation(content, instructions)
+}
