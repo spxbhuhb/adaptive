@@ -9,8 +9,8 @@ import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.cookbook.Routes
-import `fun`.adaptive.cookbook.app.pageNotFound
 import `fun`.adaptive.cookbook.app.landing
+import `fun`.adaptive.cookbook.app.pageNotFound
 import `fun`.adaptive.cookbook.appData
 import `fun`.adaptive.cookbook.auth.api.AccountApi
 import `fun`.adaptive.cookbook.auth.authRecipe
@@ -26,8 +26,8 @@ import `fun`.adaptive.cookbook.ui.event.eventRecipe
 import `fun`.adaptive.cookbook.ui.form.formRecipe
 import `fun`.adaptive.cookbook.ui.layout.box.boxRecipe
 import `fun`.adaptive.cookbook.ui.layout.grid.gridRecipe
-import `fun`.adaptive.cookbook.ui.layout.responsive.responsiveMain
 import `fun`.adaptive.cookbook.ui.navigation.navigationRecipe
+import `fun`.adaptive.cookbook.ui.popup.popupRecipe
 import `fun`.adaptive.cookbook.ui.select.selectRecipe
 import `fun`.adaptive.cookbook.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.cookbook.ui.snackbar.snackbarRecipe
@@ -35,7 +35,6 @@ import `fun`.adaptive.cookbook.ui.svg.svgRecipe
 import `fun`.adaptive.cookbook.ui.text.textRecipe
 import `fun`.adaptive.cookbook.ui.tree.treeRecipe
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.instruction.traceAll
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.ktor.api.webSocketTransport
@@ -48,7 +47,8 @@ import `fun`.adaptive.ui.app.basic.defaultAppLayout
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.form.FormFragmentFactory
 import `fun`.adaptive.ui.form.platform.BrowserHistoryStateListener
-import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.snackbar.SnackbarManager
 import `fun`.adaptive.ui.uiCommon
 import kotlinx.browser.window
@@ -138,6 +138,7 @@ fun mainContent() {
             in Routes.navigation -> navigationRecipe(navState)
             in Routes.publicLanding -> landing()
             in Routes.memberLanding -> landing()
+            in Routes.popup -> popupRecipe()
             in Routes.select -> selectRecipe()
             in Routes.sidebar -> sideBarRecipe()
             in Routes.snackbar -> snackbarRecipe()

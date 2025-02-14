@@ -29,6 +29,7 @@ val appData = BasicAppData().apply {
         SidebarItem(Graphics.grid_view, "Good Morning", Routes.goodMorning),
         SidebarItem(Graphics.grid_view, "Grid", Routes.grid),
         SidebarItem(Graphics.grid_view, "Navigation", Routes.navigation),
+        SidebarItem(Graphics.grid_view, "Popup", Routes.popup),
         SidebarItem(Graphics.grid_view, "Select", Routes.select),
         SidebarItem(Graphics.grid_view, "Sidebar", Routes.sidebar),
         SidebarItem(Graphics.grid_view, "Snackbar", Routes.snackbar),
@@ -53,6 +54,7 @@ object Routes {
     val navigation = navRouting // No title as it's a routing function, not a state
     val publicLanding = navState("public-landing", title = "Cookbook")
     val memberLanding = navState("member-landing", title = "Cookbook")
+    val popup = navState("popup", title = "Popup")
     val select = navState("select", title = "Select")
     val sidebar = navState("sideBar", title = "SideBar")
     val snackbar = navState("snackbar", title = "Snackbar")

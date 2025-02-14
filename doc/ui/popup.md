@@ -8,7 +8,7 @@ Variations:
 - primary
     - Shows when the user clicks on the container with the primary button (main action).
     - Remains if when the mouse moves our of the container.
-- secondary
+- context
     - Shows when the user clicks on the container with the secondary button (context menu).
     - Remains if when the mouse moves our of the container.
 
@@ -22,7 +22,7 @@ box {
     primaryPopup {
         text(Strings.primary)
     }
-    secondaryPopup {
+  contextPopup {
         text(Strings.primary)
     }
 }
@@ -59,13 +59,19 @@ the container it belongs to.
 > to change while the popup is shown.
 >
 
+## Toggle
+
+For primary and context popups you can use the `toggle` instruction to toggle the
+popup with clicks. Without `toggle` the popup remains there until the fragment
+is removed.
+
 ## Internals
 
 Popups functions use the manually coded, platform-dependent fragments, all of which extend `AbstractPopup`:
 
 - `AuiHoverPopup`
 - `AuiPrimaryPopup`
-- `AuiSecondaryPopup`
+- `AuiContextPopup`
 
 `AbstractPopup`
 

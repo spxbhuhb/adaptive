@@ -12,4 +12,10 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="what_an_odd_second">What an odd second!</string>
     <string name="you_are_sleepy">You are really sleepy today!</string>
+
+    <string name="hoverForPopup">Hover for popup</string>
+    <string name="rightClickForPopup">Right click for popup</string>
+    <string name="leftClickForPopup">Left click for popup</string>
+    <string name="popupContent">Popup content</string>
+
 </resources>
