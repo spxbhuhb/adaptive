@@ -90,6 +90,10 @@ class Resize(
             newWidth = newWidth / widthRatio
         }
 
+        if (handleInfo.xReverse && handleInfo.xActive) {
+            newLeft += transformX.value
+        }
+
         if (newWidth < 0.0) {
             newLeft += newWidth
             newWidth = - newWidth
@@ -101,6 +105,10 @@ class Resize(
         if (handleInfo.yActive) {
             newTop = newTop / heightRatio
             newHeight = newHeight / heightRatio
+        }
+
+        if (handleInfo.yReverse && handleInfo.yActive) {
+            newTop += transformY.value
         }
 
         if (newHeight < 0.0) {

@@ -5,7 +5,7 @@ import `fun`.adaptive.grove.sheet.model.HandleInfo
 object Handles {
     val LEFT_TOP = HandleInfo("left-top", xActive = true, xReverse = true, yActive = true, yReverse = true)
     val LEFT_CENTER = HandleInfo("left-center", xActive = true, xReverse = true, yActive = false, yReverse = false)
-    val LEFT_BOTTOM = HandleInfo("left-bottom", xActive = true, xReverse = true, yActive = true, yReverse = true)
+    val LEFT_BOTTOM = HandleInfo("left-bottom", xActive = true, xReverse = true, yActive = true, yReverse = false)
     val TOP_CENTER = HandleInfo("top-center", xActive = false, xReverse = false, yActive = true, yReverse = true)
     val RIGHT_TOP = HandleInfo("right-top", xActive = true, xReverse = false, yActive = true, yReverse = true)
     val RIGHT_CENTER = HandleInfo("right-center", xActive = true, xReverse = false, yActive = false, yReverse = false)
