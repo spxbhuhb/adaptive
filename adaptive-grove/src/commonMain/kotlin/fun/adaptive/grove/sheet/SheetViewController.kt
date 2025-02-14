@@ -46,8 +46,17 @@ open class SheetViewController(
      */
     val items = mutableListOf<SheetItem>()
 
-    private val nextIndex: ItemIndex
-        get() = ItemIndex(items.size)
+    /**
+     * I'm not particularly happy with this solution as it feels wrong to generate
+     * in [items] without adding an actual item. However, we need this to make
+     * index mapping easier. Let's be _very_ careful when using [nextIndex].
+     */
+    private var nextIndex = ItemIndex(-1)
+        get() {
+            field = ItemIndex(field.value + 1)
+            return field
+        }
+        set (_) { throw UnsupportedOperationException() }
 
     var selection = emptySelection
         private set(value) {
@@ -247,7 +256,7 @@ open class SheetViewController(
             it.group = clipboardItem.group?.let { indexMap[it] !! }
             it.members = clipboardItem.members?.map { indexMap[it] !! }?.toMutableList()
             items += it
-            return it
+            return it.debug()
         }
     }
 

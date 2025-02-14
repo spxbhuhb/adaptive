@@ -44,4 +44,8 @@ class SheetItem(
         }
 
     var beforeRemove : SheetClipboardItem? = null
+
+    override fun toString(): String =
+        "SheetItem(index=$index, name='$name', model=$model, group=$group, removed=$removed, members=$members, fragment=$fragmentOrNull, frame=$frame)"
+
 }
