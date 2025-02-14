@@ -148,6 +148,7 @@ val fixed = Fixed()
 val overflow = Overflow.Companion
 
 val popupAlign = PopupAlign.Companion
+val toggle = Toggle()
 
 fun zIndex(value: Int): ZIndex = ZIndex(value)
 fun zIndex(value: () -> Int): ZIndex = ZIndex(value())

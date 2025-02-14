@@ -109,6 +109,6 @@ fun primaryPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: ()
 }
 
 @AdaptiveExpect(aui)
-fun secondaryPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+fun contextPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
     manualImplementation(content, instructions)
 }
