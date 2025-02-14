@@ -13,7 +13,7 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.more_vert
-import `fun`.adaptive.ui.datetime.datetime
+import `fun`.adaptive.ui.datetime.instant
 import `fun`.adaptive.ui.dialog.api.buttonDialog
 import `fun`.adaptive.ui.dialog.api.rowIconDialog
 import `fun`.adaptive.ui.editor.editor
@@ -105,7 +105,7 @@ private fun item(item: AccountSummary) {
         friendlyOrAngry(item.activated, Graphics.check_circle, Graphics.close)
         friendlyOrAngry(! item.locked, Graphics.lock_open, Graphics.lock)
 
-        datetime(item.lastLogin) .. maxWidth .. alignSelf.endCenter .. textSmall
+        instant(item.lastLogin) .. maxWidth .. alignSelf.endCenter .. textSmall
 
         box {
             if (hover || modalOpen) {

@@ -1,0 +1,52 @@
+<!--
+  ~ Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+  -->
+
+<resources>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="january">January</string>
+    <string name="february">February</string>
+    <string name="march">March</string>
+    <string name="april">April</string>
+    <string name="may">May</string>
+    <string name="june">June</string>
+    <string name="july">July</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="october">October</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
+
+    <string name="januaryAbr">Jan</string>
+    <string name="februaryAbr">Feb</string>
+    <string name="marchAbr">Mar</string>
+    <string name="aprilAbr">Apr</string>
+    <string name="mayAbr">May</string>
+    <string name="juneAbr">Jun</string>
+    <string name="julyAbr">Jul</string>
+    <string name="augustAbr">Aug</string>
+    <string name="septemberAbr">Sep</string>
+    <string name="octoberAbr">Oct</string>
+    <string name="novemberAbr">Nov</string>
+    <string name="decemberAbr">Dec</string>
+
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+
+    <string name="mondayOneLetter">M</string>
+    <string name="tuesdayOneLetter">T</string>
+    <string name="wednesdayOneLetter">W</string>
+    <string name="thursdayOneLetter">T</string>
+    <string name="fridayOneLetter">F</string>
+    <string name="saturdayOneLetter">S</string>
+    <string name="sundayOneLetter">S</string>
+
+</resources>

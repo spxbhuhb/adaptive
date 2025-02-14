@@ -10,6 +10,7 @@
 package `fun`.adaptive.resource
 
 import `fun`.adaptive.resource.platform.getResourceEnvironment
+import kotlinx.datetime.DayOfWeek
 
 val defaultResourceEnvironment = getResourceEnvironment()
 
@@ -19,6 +20,10 @@ class ResourceEnvironment(
     val theme: ThemeQualifier,
     val density: DensityQualifier
 ) {
+
+    // TODO proper initialization of firstDayOfWeek
+    val firstDayOfWeek = DayOfWeek.MONDAY
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || this::class != other::class) return false

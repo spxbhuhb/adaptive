@@ -17,9 +17,8 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.button.api.dangerButton
-import `fun`.adaptive.ui.checkbox.api.checkbox
 import `fun`.adaptive.ui.checkbox.api.theme.checkboxTheme
-import `fun`.adaptive.ui.datetime.datetime
+import `fun`.adaptive.ui.datetime.instant
 import `fun`.adaptive.ui.dialog.api.dangerButtonDialog
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.dp
@@ -138,8 +137,8 @@ fun loginTimes(principal: Principal) {
         smallLabel { "Utolsó sikeres azonosítás" }
         smallLabel { "Utolsó sikertelen azonosítás" }
 
-        datetime(principal.lastAuthSuccess)
-        datetime(principal.lastAuthFail)
+        instant(principal.lastAuthSuccess)
+        instant(principal.lastAuthFail)
     }
 }
 

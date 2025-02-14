@@ -14,6 +14,8 @@ class ThemeIconColors {
     val onPrimary = svgFill(colors.onPrimary)
     val onPrimaryHover = svgFill(colors.onPrimaryHover)
 
+    val onSelected = svgFill(colors.onSelected)
+
     val onSuccessSurface = textColor(colors.onSuccessSurface)
     val onInfoSurface = textColor(colors.onInfoSurface)
     val onWarningSurface = textColor(colors.onWarningSurface)
