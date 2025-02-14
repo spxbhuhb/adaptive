@@ -5,6 +5,7 @@ import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection
 import `fun`.adaptive.ui.instruction.layout.Position
+import `fun`.adaptive.ui.instruction.layout.Size
 
 @Adat
 class Paste : SheetOperation() {
@@ -25,7 +26,8 @@ class Paste : SheetOperation() {
 
                 clipboard.items.forEach { clipboardItem ->
                     val position = clipboardItem.instructions?.lastInstanceOfOrNull<Position>() ?: Position.ZERO
-                    pastedItems += controller.createItem(clipboardItem, position + shift, indexMap)
+                    val size = clipboardItem.instructions?.lastInstanceOfOrNull<Size>()
+                    pastedItems += controller.createItem(clipboardItem, position + shift, size, indexMap)
                 }
             }
 

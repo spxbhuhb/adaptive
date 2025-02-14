@@ -1,9 +1,11 @@
 package `fun`.adaptive.grove.sheet.model
 
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.RawFrame
+import `fun`.adaptive.utility.UUID
 
 /**
  * @property  index    Index of the item in the `SheetViewController.items`. Never changes during the lifetime of the sheet.
@@ -13,7 +15,7 @@ import `fun`.adaptive.ui.fragment.layout.RawFrame
 class SheetItem(
     val index: ItemIndex,
     var name: String,
-    var model: LfmDescendant
+    var model: UUID<LfmDescendant>
 ) {
     var group: ItemIndex? = null
 
@@ -42,6 +44,8 @@ class SheetItem(
                 f.renderData.rawFrame
             }
         }
+
+    var initialInstructions : AdaptiveInstructionGroup? = null
 
     var beforeRemove : SheetClipboardItem? = null
 

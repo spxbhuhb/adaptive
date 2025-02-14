@@ -5,13 +5,15 @@ import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.ItemIndex
 import `fun`.adaptive.grove.sheet.model.SheetSelection
+import `fun`.adaptive.ui.api.position
 import `fun`.adaptive.ui.instruction.DPixel
+import `fun`.adaptive.utility.UUID
 
 @Adat
 class Add(
     val x: DPixel,
     val y: DPixel,
-    val template: LfmDescendant
+    val model: UUID<LfmDescendant>
 ) : SheetOperation() {
 
     lateinit var originalSelection : SheetSelection
@@ -22,7 +24,7 @@ class Add(
 
             if (firstRun) {
                 originalSelection = selection
-                index = createItem(y, x, template).index
+                index = createItem(model, position(y, x)).index
             }
 
             showItem(index)

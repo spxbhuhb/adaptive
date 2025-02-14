@@ -2,7 +2,6 @@ package `fun`.adaptive.grove.sheet.operation
 
 import adaptive_grove.generated.resources.group
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.foundation.adaptive
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.ItemIndex
 import `fun`.adaptive.grove.sheet.model.SheetSelection
@@ -24,8 +23,7 @@ class Group : SheetOperation() {
                 originalSelection.forItems { originalGroups[it.index] = it.group }
 
                 val frame = selectionFrame
-                val model = groupItemModel(frame.size)
-                val item = createItem(frame.top, frame.left, model)
+                val item = createItem(groupUuid, frame.position, frame.size)
 
                 index = item.index
 
@@ -52,5 +50,5 @@ class Group : SheetOperation() {
     }
 
     override fun toString(): String =
-        "Group -- ${originalSelection.items.size} ${originalSelection.items.joinToString { "${it.index}:${it.model.key}" }}"
+        "Group -- ${originalSelection.items.size} ${originalSelection.items.joinToString { "${it.index}:${it.model}" }}"
 }

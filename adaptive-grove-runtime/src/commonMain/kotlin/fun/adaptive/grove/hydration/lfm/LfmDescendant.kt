@@ -13,9 +13,9 @@ class LfmDescendant(
     val key: String,
     val mapping: List<LfmMapping>
 ) {
-    constructor(key: String, instructions: AdaptiveInstructionGroup, vararg args: LfmMapping) :
+    constructor(key: String, instructions: AdaptiveInstructionGroup, vararg args: LfmMapping, uuid: UUID<LfmDescendant> = UUID()) :
         this(
-            UUID(),
+            uuid,
             key,
             listOf(
                 LfmMapping(
@@ -35,20 +35,5 @@ class LfmDescendant(
                 this.mapping.first { it.mapping.value is AdaptiveInstruction }.mapping.value as AdaptiveInstruction
             )
         )
-
-    fun update(instructions: AdaptiveInstructionGroup) {
-
-        val instructionMapping =
-            LfmMapping(
-                dependencyMask = 0,
-                mapping = LfmConst(
-                    typeSignature<AdaptiveInstructionGroup>(),
-                    instructions
-                )
-            )
-
-        update(this::mapping, listOf(instructionMapping) + this.mapping.drop(1))
-    }
-
 
 }

@@ -32,6 +32,6 @@ abstract class Select: SheetOperation() {
     abstract fun SheetViewController.findItems(): List<SheetItem>
 
     val traceString: String
-        get() = "additional: $additional size:${selectedItems.size} ${selectedItems.joinToString { "${it.index}:${it.model.key}" }}"
+        get() = "additional: $additional size:${selectedItems.size} ${selectedItems.joinToString { "${it.index}:${it.model}" }}"
 
 }

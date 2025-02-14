@@ -3,7 +3,6 @@ package `fun`.adaptive.grove.sheet.operation
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.SheetClipboard
-import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection
 
 @Adat

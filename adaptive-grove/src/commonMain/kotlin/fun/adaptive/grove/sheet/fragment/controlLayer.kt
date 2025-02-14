@@ -6,12 +6,12 @@ import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.sheet.Handles
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.operation.Add
+import `fun`.adaptive.grove.sheet.operation.AddModel
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.instruction.layout.Frame
 import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
 
 @Adaptive
@@ -22,9 +22,10 @@ fun controlLayer(controller: SheetViewController) {
     dropTarget {
 
         onDrop(focusOnDrop = true) { event ->
-            val template = (event.transferData?.data as? LfmDescendant) ?: return@onDrop
+            val model = (event.transferData?.data as? LfmDescendant) ?: return@onDrop
             val position = event.position
-            controller += Add(position.left, position.top, template)
+            controller += AddModel(model)
+            controller += Add(position.left, position.top, model.uuid)
         }
 
         box {

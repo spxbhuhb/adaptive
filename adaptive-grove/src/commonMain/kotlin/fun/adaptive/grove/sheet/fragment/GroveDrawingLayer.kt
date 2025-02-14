@@ -4,7 +4,6 @@ import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.grove.hydration.lfm.LfmConst
 import `fun`.adaptive.grove.sheet.SheetViewController
-import `fun`.adaptive.grove.sheet.model.ItemInfo
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
@@ -63,7 +62,9 @@ class GroveDrawingLayer<RT, CRT : RT>(
     }
 
     operator fun plusAssign(item: SheetItem) {
-        val model = item.model
+        val model = controller.models[item.model] ?: error("No model for ${item.model}")
+
+        val initialInstructions = item.initialInstructions
         val beforeRemove = item.beforeRemove
 
         adapter.fragmentFactory.newInstance(model.key, this, - 1, model.mapping.size).also { fragment ->
@@ -73,6 +74,7 @@ class GroveDrawingLayer<RT, CRT : RT>(
 
             for ((index, mapping) in model.mapping.withIndex()) {
                 val value = when {
+                    index == 0 && initialInstructions != null -> initialInstructions
                     index == 0 && beforeRemove != null -> beforeRemove.instructions
                     else -> (mapping.mapping as LfmConst).value
                 }

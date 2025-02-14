@@ -1,18 +1,9 @@
 package `fun`.adaptive.grove
 
-import `fun`.adaptive.grove.sheet.operation.Add
-import `fun`.adaptive.grove.sheet.operation.Copy
-import `fun`.adaptive.grove.sheet.operation.Cut
-import `fun`.adaptive.grove.sheet.operation.Group
-import `fun`.adaptive.grove.sheet.operation.Move
-import `fun`.adaptive.grove.sheet.operation.Paste
-import `fun`.adaptive.grove.sheet.operation.Remove
-import `fun`.adaptive.grove.sheet.operation.Resize
-import `fun`.adaptive.grove.sheet.operation.SelectByFrame
-import `fun`.adaptive.grove.sheet.operation.SelectByIndex
-import `fun`.adaptive.grove.sheet.operation.SelectByPosition
-import `fun`.adaptive.grove.sheet.operation.Undo
-import `fun`.adaptive.grove.sheet.operation.Ungroup
+import `fun`.adaptive.grove.sheet.model.HandleInfo
+import `fun`.adaptive.grove.sheet.model.SheetClipboardItem
+import `fun`.adaptive.grove.sheet.model.SheetSnapshot
+import `fun`.adaptive.grove.sheet.operation.*
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
 fun groveCommon() {
@@ -32,4 +23,7 @@ fun groveCommon() {
     r += Undo
     r += Ungroup
 
+    r += HandleInfo
+    r += SheetSnapshot
+    r += SheetClipboardItem
 }

@@ -70,5 +70,5 @@ class Ungroup : SheetOperation() {
     }
 
     override fun toString(): String =
-        "Ungroup -- ${originalSelection.items.size} ${originalSelection.items.joinToString { "${it.index}:${it.model.key}" }}"
+        "Ungroup -- ${originalSelection.items.size} ${originalSelection.items.joinToString { "${it.index}:${it.model}" }}"
 }

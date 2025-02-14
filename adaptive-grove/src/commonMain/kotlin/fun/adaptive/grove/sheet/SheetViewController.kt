@@ -1,18 +1,15 @@
 package `fun`.adaptive.grove.sheet
 
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
+import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.value.adaptiveValueStore
-import `fun`.adaptive.grove.hydration.lfm.LfmConst
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
-import `fun`.adaptive.grove.hydration.lfm.LfmMapping
 import `fun`.adaptive.grove.sheet.fragment.GroveDrawingLayer
 import `fun`.adaptive.grove.sheet.model.*
 import `fun`.adaptive.grove.sheet.model.SheetSelection.Companion.emptySelection
 import `fun`.adaptive.grove.sheet.operation.*
 import `fun`.adaptive.log.getLogger
-import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
@@ -28,9 +25,17 @@ import kotlin.math.abs
 import kotlin.time.measureTime
 
 open class SheetViewController(
-    val trace: Boolean
+    val printTrace: Boolean = false,
+    val recordOperations: Boolean = false,
+    val recordMerge: Boolean = false
 ) {
-    val logger = getLogger("SheetViewController").also { if (trace) it.enableFine() }
+    val logger = getLogger("SheetViewController").also { if (printTrace) it.enableFine() }
+
+    val groupUuid = UUID<LfmDescendant>("db7b3633-c0f7-479d-812d-837d80065dfb")
+
+    val models = mutableMapOf<UUID<LfmDescendant>, LfmDescendant>(
+        groupUuid to LfmDescendant("aui:rectangle", emptyInstructions, uuid = groupUuid)
+    )
 
     /**
      * This list contains all sheet items in the whole lifetime of the sheet,
@@ -51,12 +56,14 @@ open class SheetViewController(
      * in [items] without adding an actual item. However, we need this to make
      * index mapping easier. Let's be _very_ careful when using [nextIndex].
      */
-    private var nextIndex = ItemIndex(-1)
+    private var nextIndex = ItemIndex(- 1)
         get() {
             field = ItemIndex(field.value + 1)
             return field
         }
-        set (_) { throw UnsupportedOperationException() }
+        set(_) {
+            throw UnsupportedOperationException()
+        }
 
     var selection = emptySelection
         private set(value) {
@@ -76,7 +83,14 @@ open class SheetViewController(
 
     val redoStack: Stack<SheetOperation> = mutableListOf<SheetOperation>()
 
-    val executionTrace = mutableListOf<SheetOperation>()
+    val snapshot
+        get() = SheetSnapshot(
+            models.values.toList(),
+            items.mapNotNull { if (it.removed) null else makeClipboardItem(it) },
+            recording.toList()
+        )
+
+    val recording = mutableListOf<SheetOperation>()
 
     lateinit var drawingLayer: GroveDrawingLayer<*, *>
 
@@ -140,9 +154,6 @@ open class SheetViewController(
     }
 
     fun execute(operation: SheetOperation) {
-        if (trace) {
-            executionTrace += operation
-        }
         when (operation) {
             is Undo -> undo()
             is Redo -> redo()
@@ -151,15 +162,19 @@ open class SheetViewController(
     }
 
     fun undo() {
+        if (recordOperations) recording += Undo()
+
         val last = undoStack.popOrNull() ?: return
-        if (trace) logger.fine { "UNDO -- $last" }
+        if (printTrace) logger.fine { "UNDO -- $last" }
         last.revert(this@SheetViewController)
         redoStack.push(last)
     }
 
     fun redo() {
+        if (recordOperations) recording += Redo()
+
         val last = redoStack.popOrNull() ?: return
-        if (trace) logger.fine { "REDO -- $last" }
+        if (printTrace) logger.fine { "REDO -- $last" }
         last.commit(this@SheetViewController)
         undoStack.push(last)
     }
@@ -171,10 +186,20 @@ open class SheetViewController(
 
             when (result) {
                 OperationResult.PUSH -> {
+                    if (recordOperations) {
+                        recording += operation
+                    }
                     undoStack.push(operation)
                 }
 
                 OperationResult.REPLACE -> {
+                    if (recordOperations) {
+                        if (recordMerge) {
+                            recording[recording.lastIndex] = operation
+                        } else {
+                            recording += operation
+                        }
+                    }
                     undoStack.pop()
                     undoStack.push(operation)
                 }
@@ -187,7 +212,7 @@ open class SheetViewController(
             operation.firstRun = false
 
         }.also {
-            if (trace) logger.fine { "$it - $operation $result" }
+            if (printTrace) logger.fine { "$it - $operation $result" }
         }
     }
 
@@ -196,15 +221,22 @@ open class SheetViewController(
     // --------------------------------------------------------------------------------
 
     fun indexMapFor(clipboardItems: List<SheetClipboardItem>): Map<ClipboardIndex, ItemIndex> =
-        clipboardItems.mapIndexed { index, item -> item.index to nextIndex }.toMap()
+        clipboardItems.mapIndexed { index, clipboardItem -> clipboardItem.clipboardIndex to nextIndex }.toMap()
 
-    fun createItem(top: DPixel, left: DPixel, template: LfmDescendant, name: String = template.key): SheetItem {
+    fun createItem(
+        modelUuid: UUID<LfmDescendant>,
+        position: Position,
+        size: Size? = null,
+        name: String? = null
+    ): SheetItem {
+
+        val model = models[modelUuid] ?: error("Model not found: $modelUuid")
 
         val clipboardItem =
             SheetClipboardItem(
-                index = ClipboardIndex(- 1),
-                name = name,
-                model = template,
+                clipboardIndex = - 1,
+                name = name ?: model.key,
+                model = modelUuid,
                 instructions = null,
                 group = null,
                 members = null
@@ -212,7 +244,8 @@ open class SheetViewController(
 
         val item = createItem(
             clipboardItem,
-            Position(top, left),
+            position,
+            size,
             indexMapFor(listOf(clipboardItem))
         )
 
@@ -222,41 +255,36 @@ open class SheetViewController(
     fun createItem(
         clipboardItem: SheetClipboardItem,
         position: Position?,
+        size: Size?,
         indexMap: Map<ClipboardIndex, ItemIndex>
     ): SheetItem {
 
-        val index = indexMap[clipboardItem.index] !!
+        val index = indexMap[clipboardItem.clipboardIndex] !!
 
-        val model = clipboardItem.model
+        val model = models[clipboardItem.model] ?: error("Model not found: ${clipboardItem.model}")
         val originalInstructions = clipboardItem.instructions ?: model.instructions
+
         val position = position ?: originalInstructions.lastInstanceOfOrNull<Position>() ?: Position(10.dp, 10.dp)
+        val size = size ?: originalInstructions.lastInstanceOfOrNull<Size>()
 
-        val instanceInstructions = instructionsOf(
-            originalInstructions.removeAll { it is Position || it is ItemInfo },
-            ItemInfo(index.value),
-            position
-        )
+        val otherInstructions = originalInstructions.removeAll { it is Position || it is Size || it is ItemInfo }
 
-        val instanceInstructionMapping =
-            LfmMapping(
-                dependencyMask = 0,
-                mapping = LfmConst(
-                    typeSignature<AdaptiveInstructionGroup>(),
-                    instanceInstructions
-                )
-            )
-
-        val instanceMapping = listOf(instanceInstructionMapping) + model.mapping.drop(1)
+        val instanceInstructions = if (size == null) {
+            instructionsOf(otherInstructions, ItemInfo(index.value), position)
+        } else {
+            instructionsOf(otherInstructions, ItemInfo(index.value), position, size)
+        }
 
         SheetItem(
             index,
             clipboardItem.name,
-            LfmDescendant(UUID(), model.key, instanceMapping)
+            model.uuid
         ).also {
+            it.initialInstructions = instanceInstructions
             it.group = clipboardItem.group?.let { indexMap[it] !! }
             it.members = clipboardItem.members?.map { indexMap[it] !! }?.toMutableList()
             items += it
-            return it.debug()
+            return it
         }
     }
 
@@ -272,13 +300,13 @@ open class SheetViewController(
         if (beforeRemove != null) {
 
             if (beforeRemove.group != null) {
-                val groupIndex = ItemIndex(beforeRemove.group.value)
+                val groupIndex = ItemIndex(beforeRemove.group)
                 item.group = groupIndex
                 items[groupIndex.value].members?.let { it += index }
             }
 
             if (beforeRemove.members != null) {
-                val members = beforeRemove.members.map { ItemIndex(it.value) }.toMutableList()
+                val members = beforeRemove.members.map { ItemIndex(it) }.toMutableList()
                 item.members = members
                 members.forEach {
                     items[it.value].group = item.index
@@ -326,12 +354,12 @@ open class SheetViewController(
 
     private fun makeClipboardItem(item: SheetItem) =
         SheetClipboardItem(
-            index = ClipboardIndex(item.index.value),
+            clipboardIndex = item.index.value,
             name = item.name,
             model = item.model,
             instructions = item.fragment.instructions,
-            group = item.group?.let { ClipboardIndex(it.value) },
-            members = item.members?.map { ClipboardIndex(it.value) }
+            group = item.group?.value,
+            members = item.members?.map { it.value }
         )
 
     fun forSelection(action: (item: SheetItem) -> Unit) {
@@ -357,7 +385,7 @@ open class SheetViewController(
     ) {
         // Transforms (Move, Resize) use these settings.
         // For these it is important to be fast, so it's better to have a shortcut here.
-        if (!additional && containingFrame != null) {
+        if (! additional && containingFrame != null) {
             selection = SheetSelection(selectedItems, containingFrame)
             return
         }
@@ -390,7 +418,7 @@ open class SheetViewController(
         select(listOf(items[index.value]), false)
     }
 
-    fun findByRenderData(condition: (renderData: AuiRenderData) -> Boolean) : MutableList<SheetItem> {
+    fun findByRenderData(condition: (renderData: AuiRenderData) -> Boolean): MutableList<SheetItem> {
 
         val selectedItems = mutableListOf<SheetItem>()
 
@@ -592,14 +620,4 @@ open class SheetViewController(
         if (! selection.isEmpty()) this += Move(vmNowMicro(), deltaX.dp, deltaY.dp)
     }
 
-    // --------------------------------------------------------------------------------
-    // Extension points
-    // --------------------------------------------------------------------------------
-
-    /**
-     * Called by the `Group` operation to create an item for the group itself.
-     */
-    open fun groupItemModel(size: Size): LfmDescendant {
-        return LfmDescendant("aui:rectangle", instructionsOf(size))
-    }
 }

@@ -4,6 +4,7 @@
 package `fun`.adaptive.grove.ufd
 
 import adaptive_grove.generated.resources.*
+import `fun`.adaptive.adat.encodeToJson
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.value.adaptiveValue
 import `fun`.adaptive.grove.sheet.SheetViewController
@@ -20,11 +21,12 @@ import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.theme.textSmall
+import `fun`.adaptive.utility.debug
 
 @Adaptive
 fun ufdMain() {
 
-    val controller = SheetViewController(true)
+    val controller = SheetViewController(false, true, true)
     val ufdContext = UfdContext()
 
     grid {
@@ -43,9 +45,9 @@ fun ufdMain() {
                 onKeydown { controller.onKeyDown(it.keyInfo !!, it.modifiers) }
 
                 row {
-                   for (action in actions) {
-                       action(action, controller)
-                   }
+                    for (action in actions) {
+                        action(action, controller)
+                    }
                 }
 
                 row {
@@ -54,7 +56,7 @@ fun ufdMain() {
 
                 row {
                     actionIcon(Graphics.pest_control, theme = tableIconTheme) .. onClick {
-                        controller.executionTrace.forEach { println(it) }
+                        controller.snapshot.encodeToJson().debug()
                     }
                 }
             }
@@ -68,9 +70,9 @@ fun ufdMain() {
 }
 
 class SheetAction(
-    val icon : GraphicsResourceSet,
-    val tooltip : String,
-    val onClick : () -> SheetOperation
+    val icon: GraphicsResourceSet,
+    val tooltip: String,
+    val onClick: () -> SheetOperation
 )
 
 val actions = listOf(
@@ -81,7 +83,7 @@ val actions = listOf(
 )
 
 @Adaptive
-private fun action(sheetAction: SheetAction, controller : SheetViewController) {
+private fun action(sheetAction: SheetAction, controller: SheetViewController) {
     actionIcon(sheetAction.icon, tooltip = sheetAction.tooltip, theme = tableIconTheme) .. onClick { controller += sheetAction.onClick() }
 }
 
