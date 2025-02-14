@@ -4,6 +4,7 @@
 * `component` is a sheet item that is part of a group
 * the `containing frame` of the group is the smallest rectangle that contains all components of the group
 * a group is a sheet item itself
+* created with the open function `SheetViewController.groupItemModel`
 
 ## Operation behaviour
 

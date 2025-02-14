@@ -1,7 +1,9 @@
 package `fun`.adaptive.grove.sheet.operation
 
+import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.grove.sheet.SheetViewController
 
+@Adat
 class Undo : SheetOperation() {
 
     override fun commit(controller: SheetViewController): OperationResult {

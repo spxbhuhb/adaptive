@@ -7,6 +7,7 @@ import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection
 import `fun`.adaptive.grove.sheet.model.SheetSelection.Companion.emptySelection
+import `fun`.adaptive.grove.sheet.operation.SelectByIndex
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
@@ -46,9 +47,9 @@ fun itemRow(item: SheetItem, selection: SheetSelection, controller: SheetViewCon
     row {
         rowStyles(selected, hover)
 
-        onClick { controller.selectByItem(item, EventModifier.SHIFT in it.modifiers) }
+        onClick { controller += SelectByIndex(item.index.value, EventModifier.SHIFT in it.modifiers) }
 
         text(item.name) .. noSelect .. textColor
-        text(item.index) .. textSmall .. noSelect .. textColor
+        text(item.index.value) .. textSmall .. noSelect .. textColor
     }
 }

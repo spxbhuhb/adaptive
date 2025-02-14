@@ -5,10 +5,14 @@ import `fun`.adaptive.graphics.svg.api.svgFill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.popupAlign
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
+import `fun`.adaptive.ui.theme.textColors
+import `fun`.adaptive.ui.theme.textSmall
 
 var onSurfaceIconTheme = IconTheme(colors.onSurface)
 var primaryIconTheme = IconTheme(colors.primary)
@@ -47,6 +51,21 @@ class IconTheme(
         cornerRadius(cornerRadius),
         alignItems.center,
         tabIndex { 0 }
+    )
+
+    val tooltip = instructionsOf(
+        paddingVertical { 4.dp },
+        paddingHorizontal { 12.dp },
+        //border(colors.outline, 1.dp),
+        cornerRadius(4.dp),
+        backgrounds.reverse,
+        popupAlign.belowStart,
+        // this is buggy - dropShadow(colors.reverse.opaque(0.2f), 4.dp, 4.dp, 4.dp),
+    )
+
+    val tooltipText = instructionsOf(
+        textSmall,
+        textColors.onReverse
     )
 
     val nonHoverBackground = backgroundColor(colors.surface.opaque(0f))

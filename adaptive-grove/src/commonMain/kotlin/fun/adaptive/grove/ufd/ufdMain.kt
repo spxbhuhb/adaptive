@@ -5,25 +5,21 @@ package `fun`.adaptive.grove.ufd
 
 import adaptive_grove.generated.resources.*
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.value.adaptiveValue
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.fragment.sheet
-import `fun`.adaptive.grove.sheet.operation.Group
-import `fun`.adaptive.grove.sheet.operation.Redo
-import `fun`.adaptive.grove.sheet.operation.Undo
-import `fun`.adaptive.grove.sheet.operation.Ungroup
+import `fun`.adaptive.grove.sheet.operation.*
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
+import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.support.statistics.dumpStatistics
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.theme.textSmall
-import `fun`.adaptive.utility.println
 
 @Adaptive
 fun ufdMain() {
@@ -32,7 +28,7 @@ fun ufdMain() {
     val ufdContext = UfdContext()
 
     grid {
-        colTemplate(200.dp, 200.dp, 1.fr, 200.dp)
+        colTemplate(200.dp, 200.dp, 1.fr, 400.dp)
         maxSize
 
         palette(ufdContext)
@@ -47,10 +43,9 @@ fun ufdMain() {
                 onKeydown { controller.onKeyDown(it.keyInfo !!, it.modifiers) }
 
                 row {
-                    actionIcon(Graphics.undo, theme = tableIconTheme) .. onClick { controller += Undo() }
-                    actionIcon(Graphics.redo, theme = tableIconTheme) .. onClick { controller += Redo() }
-                    actionIcon(Graphics.stack_group, theme = tableIconTheme) .. onClick { controller += Group() }
-                    actionIcon(Graphics.stack_off, theme = tableIconTheme) .. onClick { controller += Ungroup() }
+                   for (action in actions) {
+                       action(action, controller)
+                   }
                 }
 
                 row {
@@ -58,7 +53,9 @@ fun ufdMain() {
                 }
 
                 row {
-                    actionIcon(Graphics.pest_control, theme = tableIconTheme) .. onClick { adapter().dumpStatistics().println() }
+                    actionIcon(Graphics.pest_control, theme = tableIconTheme) .. onClick {
+                        controller.executionTrace.forEach { println(it) }
+                    }
                 }
             }
 
@@ -68,6 +65,24 @@ fun ufdMain() {
         instructions(controller)
     }
 
+}
+
+class SheetAction(
+    val icon : GraphicsResourceSet,
+    val tooltip : String,
+    val onClick : () -> SheetOperation
+)
+
+val actions = listOf(
+    SheetAction(Graphics.undo, Strings.undoToolTip) { Undo() },
+    SheetAction(Graphics.redo, Strings.redoToolTip) { Redo() },
+    SheetAction(Graphics.stack_group, Strings.groupToolTip) { Group() },
+    SheetAction(Graphics.stack_off, Strings.ungroupToolTip) { Ungroup() }
+)
+
+@Adaptive
+private fun action(sheetAction: SheetAction, controller : SheetViewController) {
+    actionIcon(sheetAction.icon, tooltip = sheetAction.tooltip, theme = tableIconTheme) .. onClick { controller += sheetAction.onClick() }
 }
 
 @Adaptive

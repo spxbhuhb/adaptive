@@ -36,6 +36,8 @@ class Position(
         )
     }
 
+    operator fun plus(value : Double) = Position(top + value, left + value)
+
     companion object {
         val NaP = Position(DPixel.NaP, DPixel.NaP)
         val ZERO = Position(0.dp, 0.dp)

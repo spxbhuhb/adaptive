@@ -21,14 +21,13 @@ import `fun`.adaptive.ui.instruction.event.Keys
 import `fun`.adaptive.ui.instruction.event.UIEvent.KeyInfo
 import `fun`.adaptive.ui.instruction.layout.Frame
 import `fun`.adaptive.ui.instruction.layout.Position
+import `fun`.adaptive.ui.instruction.layout.Size
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import `fun`.adaptive.utility.*
 import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.min
 import kotlin.time.measureTime
 
-class SheetViewController(
+open class SheetViewController(
     val trace: Boolean
 ) {
     val logger = getLogger("SheetViewController").also { if (trace) it.enableFine() }
@@ -48,7 +47,7 @@ class SheetViewController(
     val items = mutableListOf<SheetItem>()
 
     private val nextIndex: ItemIndex
-        get() = items.size
+        get() = ItemIndex(items.size)
 
     var selection = emptySelection
         private set(value) {
@@ -62,11 +61,13 @@ class SheetViewController(
 
     val selectionStore = adaptiveValueStore { selection }
 
-    var clipboard = SheetClipboard(emptyList(), emptyList())
+    var clipboard = SheetClipboard(emptyList())
 
     val undoStack: Stack<SheetOperation> = mutableListOf<SheetOperation>()
 
     val redoStack: Stack<SheetOperation> = mutableListOf<SheetOperation>()
+
+    val executionTrace = mutableListOf<SheetOperation>()
 
     lateinit var drawingLayer: GroveDrawingLayer<*, *>
 
@@ -130,6 +131,9 @@ class SheetViewController(
     }
 
     fun execute(operation: SheetOperation) {
+        if (trace) {
+            executionTrace += operation
+        }
         when (operation) {
             is Undo -> undo()
             is Redo -> redo()
@@ -179,18 +183,49 @@ class SheetViewController(
     }
 
     // --------------------------------------------------------------------------------
-    // Item addition and removal
+    // Item lifecycle
     // --------------------------------------------------------------------------------
 
-    fun addItem(x: DPixel, y: DPixel, template: LfmDescendant, name: String = template.key): SheetItem {
+    fun indexMapFor(clipboardItems: List<SheetClipboardItem>): Map<ClipboardIndex, ItemIndex> =
+        clipboardItems.mapIndexed { index, item -> item.index to nextIndex }.toMap()
 
-        val index = nextIndex
-        val templateInstructions = template.instructions
+    fun createItem(top: DPixel, left: DPixel, template: LfmDescendant, name: String = template.key): SheetItem {
+
+        val clipboardItem =
+            SheetClipboardItem(
+                index = ClipboardIndex(- 1),
+                name = name,
+                model = template,
+                instructions = null,
+                group = null,
+                members = null
+            )
+
+        val item = createItem(
+            clipboardItem,
+            Position(top, left),
+            indexMapFor(listOf(clipboardItem))
+        )
+
+        return item
+    }
+
+    fun createItem(
+        clipboardItem: SheetClipboardItem,
+        position: Position?,
+        indexMap: Map<ClipboardIndex, ItemIndex>
+    ): SheetItem {
+
+        val index = indexMap[clipboardItem.index] !!
+
+        val model = clipboardItem.model
+        val originalInstructions = clipboardItem.instructions ?: model.instructions
+        val position = position ?: originalInstructions.lastInstanceOfOrNull<Position>() ?: Position(10.dp, 10.dp)
 
         val instanceInstructions = instructionsOf(
-            templateInstructions.removeAll { it is Position || it is ItemInfo },
-            ItemInfo(index),
-            Position(y, x)
+            originalInstructions.removeAll { it is Position || it is ItemInfo },
+            ItemInfo(index.value),
+            position
         )
 
         val instanceInstructionMapping =
@@ -202,29 +237,68 @@ class SheetViewController(
                 )
             )
 
-        val instanceMapping = listOf(instanceInstructionMapping) + template.mapping.drop(1)
-        val item = SheetItem(index, name, LfmDescendant(UUID(), template.key, instanceMapping))
+        val instanceMapping = listOf(instanceInstructionMapping) + model.mapping.drop(1)
 
-        items += item
-        drawingLayer += item
-
-        return item
+        SheetItem(
+            index,
+            clipboardItem.name,
+            LfmDescendant(UUID(), model.key, instanceMapping)
+        ).also {
+            it.group = clipboardItem.group?.let { indexMap[it] !! }
+            it.members = clipboardItem.members?.map { indexMap[it] !! }?.toMutableList()
+            items += it
+            return it
+        }
     }
 
-    fun hideItem(index: ItemIndex) {
-        val item = items[index]
-        if (item.removed) return
-
-        item.removed = true
-        drawingLayer -= item
+    fun showItem(item: SheetItem) {
+        showItem(item.index)
     }
 
     fun showItem(index: ItemIndex) {
-        val item = items[index]
-        if (! item.removed) return
+        val item = items[index.value]
+
+        val beforeRemove = item.beforeRemove
+
+        if (beforeRemove != null) {
+
+            if (beforeRemove.group != null) {
+                val groupIndex = ItemIndex(beforeRemove.group.value)
+                item.group = groupIndex
+                items[groupIndex.value].members?.let { it += index }
+            }
+
+            if (beforeRemove.members != null) {
+                val members = beforeRemove.members.map { ItemIndex(it.value) }.toMutableList()
+                item.members = members
+                members.forEach {
+                    items[it.value].group = item.index
+                }
+            }
+
+        }
+
+        drawingLayer += item
 
         item.removed = false
-        drawingLayer += item
+        item.beforeRemove = null // this MUST be after drawingLayer.plusAssign
+    }
+
+    fun hideItem(item: SheetItem) {
+        hideItem(item.index)
+    }
+
+    fun hideItem(index: ItemIndex) {
+        val item = items[index.value]
+        if (item.removed) return
+
+        item.beforeRemove = makeClipboardItem(item)
+        item.removed = true
+
+        drawingLayer -= item
+
+        item.group = null
+        item.members = null
     }
 
     // --------------------------------------------------------------------------------
@@ -232,16 +306,24 @@ class SheetViewController(
     // --------------------------------------------------------------------------------
 
     fun selectionToClipboard(): SheetClipboard {
-        val modelData = mutableListOf<LfmDescendant>()
-        val frameData = mutableListOf<RawFrame>()
+        val out = mutableListOf<SheetClipboardItem>()
 
         forSelection {
-            modelData += it.model
-            frameData += it.frame
+            out += makeClipboardItem(it)
         }
 
-        return SheetClipboard(modelData, frameData)
+        return SheetClipboard(out)
     }
+
+    private fun makeClipboardItem(item: SheetItem) =
+        SheetClipboardItem(
+            index = ClipboardIndex(item.index.value),
+            name = item.name,
+            model = item.model,
+            instructions = item.fragment.instructions,
+            group = item.group?.let { ClipboardIndex(it.value) },
+            members = item.members?.map { ClipboardIndex(it.value) }
+        )
 
     fun forSelection(action: (item: SheetItem) -> Unit) {
         selection.items.forEach { item ->
@@ -249,6 +331,9 @@ class SheetViewController(
         }
     }
 
+    /**
+     * Direct version of select which is not put into the undo stack.
+     */
     fun select() {
         selection = emptySelection
     }
@@ -256,73 +341,47 @@ class SheetViewController(
     /**
      * Direct version of select which is not put into the undo stack.
      */
-    fun select(items: List<SheetItem>, containingFrame: RawFrame = SheetSelection.containingFrame(items)) {
-        if (trace) logger.info("selecting ${items.size} items")
-        selection = SheetSelection(items, containingFrame)
+    fun select(
+        selectedItems: List<SheetItem>,
+        additional: Boolean,
+        containingFrame: RawFrame? = null
+    ) {
+        // Transforms (Move, Resize) use these settings.
+        // For these it is important to be fast, so it's better to have a shortcut here.
+        if (!additional && containingFrame != null) {
+            selection = SheetSelection(selectedItems, containingFrame)
+            return
+        }
+
+        val result = selectedItems.toMutableList()
+
+        if (additional) {
+            val indices = result.map { it.index.value }
+
+            selection.items.forEach {
+                if (it.index.value in indices) return@forEach
+                result += it
+            }
+
+            // if the selection is already up to date we don't have to refresh it
+            // this prevents unnecessary undo/redo operations if the user clicks
+            // on the same item a few times
+
+            result.sortBy { it.index.value }
+            if (result == selection.items) return
+        }
+
+        selection = SheetSelection(result, containingFrame ?: SheetSelection.containingFrame(result))
     }
 
     /**
      * Direct version of select which is not put into the undo stack.
      */
-    fun select(index: Int) {
-        select(listOf(items[index]))
+    fun select(index: ItemIndex) {
+        select(listOf(items[index.value]), false)
     }
 
-    /**
-     * User inducted select, creates and executes an undoable select operation.
-     */
-    fun selectByItem(item: SheetItem, add: Boolean) {
-        addSelectOp(mutableListOf(item), add)
-    }
-
-    /**
-     * User inducted select, creates and executes an undoable select operation.
-     */
-    fun selectByArea(p1: Position, p2: Position, add: Boolean) {
-
-        val px1 = p1.left.px
-        val py1 = p1.top.px
-        val px2 = p2.left.px
-        val py2 = p2.top.px
-
-        val x1 = min(px1, px2)
-        val y1 = min(py1, py2)
-        val x2 = max(px1, px2)
-        val y2 = max(py1, py2)
-
-        selectByRenderData(add) { renderData ->
-            val rx1 = renderData.finalLeft
-            val ry1 = renderData.finalTop
-            val rx2 = rx1 + renderData.finalWidth
-            val ry2 = ry1 + renderData.finalHeight
-
-            when {
-                x1 >= rx2 || rx1 >= x2 -> false          // one rectangle is to the left of the other
-                y1 >= ry2 || ry1 >= y2 -> false          // one rectangle is above the other
-                else -> true
-            }
-        }
-
-        if (trace) {
-            logger.info("selected ${selection.items.size} items in $p1, $p2 additional: $add")
-        }
-    }
-
-    /**
-     * User inducted select, creates and executes an undoable select operation.
-     */
-    fun selectByPoint(position: Position, add: Boolean) {
-        val x = position.left.px
-        val y = position.top.px
-
-        selectByRenderData(add) { it.contains(x, y) }
-
-        if (trace) {
-            logger.info("selected ${selection.items.size} at ($x,$y) additional: $add")
-        }
-    }
-
-    private fun selectByRenderData(add: Boolean, condition: (renderData: AuiRenderData) -> Boolean) {
+    fun findByRenderData(condition: (renderData: AuiRenderData) -> Boolean) : MutableList<SheetItem> {
 
         val selectedItems = mutableListOf<SheetItem>()
 
@@ -336,43 +395,22 @@ class SheetViewController(
             if (item.isGroup) continue
             if (item.removed) continue
             if (item.isInGroup) {
-                selectGroup(selectedItems, item.group!!)
+                selectGroup(selectedItems, item.group !!)
             } else {
                 selectedItems += item
             }
         }
 
-        addSelectOp(selectedItems, add)
+        return selectedItems
     }
 
     private fun selectGroup(selectedItems: MutableList<SheetItem>, group: ItemIndex) {
-        val group = items[group]
+        val group = items[group.value]
         if (group.isInGroup) {
-            selectGroup(selectedItems, group.group!!)
+            selectGroup(selectedItems, group.group !!)
         } else {
             selectedItems += group
         }
-    }
-
-    private fun addSelectOp(selectedItems: MutableList<SheetItem>, add: Boolean) {
-
-        // if the selection is already up to date we don't have to refresh it
-        // this prevents unnecessary undo/redo operations if the user clicks
-        // on the same item a few times
-
-        selectedItems.sortBy { it.index }
-        if (selectedItems == selection.items) return
-
-        if (add) {
-            val indices = selectedItems.map { it.index }
-            selection.items.forEach {
-                if (it.index in indices) return@forEach
-                selectedItems += it
-            }
-        }
-
-        // we have to use select so it is possible to undo/redo
-        this += Select(selectedItems)
     }
 
     private fun AdaptiveFragment?.itemInfo(): ItemInfo? {
@@ -422,13 +460,13 @@ class SheetViewController(
     fun isTransformActive(): Boolean =
         startPosition !== Position.NaP && lastPosition !== Position.NaP
 
-    fun onTransformStart(position: Position, add: Boolean) {
+    fun onTransformStart(position: Position, additional: Boolean) {
         startPosition = position
         lastPosition = position
         transformStart = vmNowMicro()
 
         if (position !in controlFrame) {
-            selectByPoint(position, add)
+            this += SelectByPosition(position, additional)
             return
         }
     }
@@ -463,15 +501,14 @@ class SheetViewController(
     fun onTransformEnd(position: Position, add: Boolean) {
         // when start position is NaP the pointer movement started outside the window
         if (selection.isEmpty() && startPosition !== Position.NaP) {
-            controlFrame = Frame.NaF
-            selectByArea(startPosition, position, add)
+            controlFrame = Frame.NaF // this must be before SelectByFrame or it will clear the frame
+            this += SelectByFrame(Frame(startPosition, position), add)
         }
 
         transformStart = 0L
         startPosition = Position.NaP
         lastPosition = Position.NaP
         activeHandle = null
-
     }
 
     // --------------------------------------------------------------------------------
@@ -544,5 +581,16 @@ class SheetViewController(
 
     private fun move(deltaX: Double, deltaY: Double) {
         if (! selection.isEmpty()) this += Move(vmNowMicro(), deltaX.dp, deltaY.dp)
+    }
+
+    // --------------------------------------------------------------------------------
+    // Extension points
+    // --------------------------------------------------------------------------------
+
+    /**
+     * Called by the `Group` operation to create an item for the group itself.
+     */
+    open fun groupItemModel(size: Size): LfmDescendant {
+        return LfmDescendant("aui:rectangle", instructionsOf(size))
     }
 }

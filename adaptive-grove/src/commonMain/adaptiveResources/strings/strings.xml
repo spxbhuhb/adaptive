@@ -7,4 +7,9 @@
     <string name="components">Components</string>
     <string name="instructions">Instructions</string>
     <string name="group">group</string>
+
+    <string name="undoToolTip">Undo</string>
+    <string name="redoToolTip">Redo</string>
+    <string name="groupToolTip">Group</string>
+    <string name="ungroupToolTip">Ungroup</string>
 </resources>

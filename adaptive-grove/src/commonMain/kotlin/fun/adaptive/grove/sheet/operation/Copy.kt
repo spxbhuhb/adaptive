@@ -1,32 +1,36 @@
 package `fun`.adaptive.grove.sheet.operation
 
+import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.SheetClipboard
 
+@Adat
 class Copy : SheetOperation() {
 
-    lateinit var copyData : SheetClipboard
-    lateinit var undoData : SheetClipboard
+    lateinit var originalClipboard: SheetClipboard
+    lateinit var copyData: SheetClipboard
 
     override fun commit(controller: SheetViewController): OperationResult {
-        if (controller.selection.isEmpty()) {
-            return OperationResult.DROP
+        with(controller) {
+
+            if (selection.isEmpty()) return OperationResult.DROP
+
+            if (firstRun) {
+                originalClipboard = clipboard
+                copyData = selectionToClipboard()
+            }
+
+            clipboard = copyData
+
+            return OperationResult.PUSH
+
         }
-
-        if (firstRun) {
-            undoData = controller.clipboard
-            copyData = controller.selectionToClipboard()
-        }
-
-        controller.clipboard = copyData
-
-        return OperationResult.PUSH
     }
 
     override fun revert(controller: SheetViewController) {
-        controller.clipboard = undoData
+        controller.clipboard = originalClipboard
     }
 
     override fun toString(): String =
-        "Copy"
+        "Copy -- ${copyData.items.size} items"
 }

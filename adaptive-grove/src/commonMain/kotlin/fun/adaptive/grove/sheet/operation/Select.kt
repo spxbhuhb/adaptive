@@ -4,26 +4,34 @@ import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection
 
-class Select(
-    val items: List<SheetItem>
-) : SheetOperation() {
+abstract class Select: SheetOperation() {
 
-    var undoData = SheetSelection(emptyList())
+    abstract val additional: Boolean
+
+    lateinit var originalSelection: SheetSelection
+    lateinit var selectedItems: List<SheetItem>
 
     override fun commit(controller: SheetViewController): OperationResult {
-        if (firstRun) {
-            undoData = controller.selection
+        with(controller) {
+
+            if (firstRun) {
+                originalSelection = selection
+                selectedItems = findItems()
+            }
+
+            select(selectedItems, additional)
+
+            return OperationResult.PUSH
         }
-
-        controller.select(items)
-
-        return OperationResult.PUSH
     }
 
     override fun revert(controller: SheetViewController) {
-        controller.select(undoData.items)
+        controller.select(originalSelection.items, additional = false)
     }
 
-    override fun toString(): String =
-        "Select -- ${items.size} ${items.joinToString { "${it.index}:${it.model.key}" }}"
+    abstract fun SheetViewController.findItems(): List<SheetItem>
+
+    val traceString: String
+        get() = "additional: $additional size:${selectedItems.size} ${selectedItems.joinToString { "${it.index}:${it.model.key}" }}"
+
 }

@@ -7,14 +7,13 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
-import `fun`.adaptive.ui.api.alignSelf
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.hover
+import `fun`.adaptive.ui.api.*
 
 @Adaptive
 fun actionIcon(
     icon: GraphicsResourceSet,
     vararg instructions: AdaptiveInstruction,
+    tooltip: String? = null,
     theme: IconTheme = onSurfaceIconTheme,
 ): AdaptiveFragment {
     val hover = hover()
@@ -23,6 +22,11 @@ fun actionIcon(
 
     box(theme.actionIconContainer, background, instructions()) {
         svg(icon, theme.actionIcon, svgColors, alignSelf.center)
+        if (tooltip != null) {
+            hoverPopup(theme.tooltip) {
+                text(tooltip) .. theme.tooltipText
+            }
+        }
     }
 
     return fragment()

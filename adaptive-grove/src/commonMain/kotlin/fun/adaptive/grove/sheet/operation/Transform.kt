@@ -15,15 +15,12 @@ import `fun`.adaptive.ui.instruction.layout.Size
  * @property  start  The VM time when the move operation started. The operation uses this time to merge
  *                   with previous move operations.
  */
-abstract class Transform(
-    val start: Long,
-    deltaX: DPixel,
-    deltaY: DPixel,
-    val withSizes: Boolean
-) : SheetOperation() {
+abstract class Transform: SheetOperation() {
 
-    var transformX = deltaX
-    var transformY = deltaY
+    abstract val start: Long
+    abstract var transformX : DPixel
+    abstract var transformY : DPixel
+    abstract val withSizes: Boolean
 
     var originalSelection = emptySelection
     var originalInstructions = mutableMapOf<ItemIndex, AdaptiveInstructionGroup>()
@@ -55,6 +52,7 @@ abstract class Transform(
 
         controller.select(
             originalSelection.items,
+            additional = false,
             newFrame(controller)
         )
 
@@ -83,7 +81,7 @@ abstract class Transform(
         }
 
         if (item.isGroup) {
-            item.members !!.forEach { preprocess(controller, controller.items[it]) }
+            item.members !!.forEach { preprocess(controller, controller.items[it.value]) }
         }
     }
 
@@ -116,7 +114,7 @@ abstract class Transform(
             val originalInstructions = originalInstructions[item.index] ?: return@forEach
             item.applyInstructions(controller, originalInstructions)
         }
-        controller.select(originalSelection.items)
+        controller.select(originalSelection.items, additional = false)
     }
 
 }

@@ -1,5 +1,6 @@
 package `fun`.adaptive.grove.sheet.operation
 
+import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.HandleInfo
@@ -10,12 +11,16 @@ import `fun`.adaptive.ui.instruction.layout.Frame
 import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.instruction.layout.Size
 
+@Adat
 class Resize(
-    start: Long,
-    deltaX: DPixel,
-    deltaY: DPixel,
+    override val start: Long,
+    override var transformX: DPixel,
+    override var transformY: DPixel,
     val handleInfo: HandleInfo
-) : Transform(start, deltaX, deltaY, withSizes = true) {
+) : Transform() {
+
+    override val withSizes: Boolean
+        get() = true
 
     var originalFrame = Frame.NaF
 

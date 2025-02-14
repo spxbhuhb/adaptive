@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.fragment.layout.RawFrame
 class SheetItem(
     val index: ItemIndex,
     var name: String,
-    val model: LfmDescendant
+    var model: LfmDescendant
 ) {
     var group: ItemIndex? = null
 
@@ -25,13 +25,16 @@ class SheetItem(
     val isInGroup: Boolean
         get() = group != null
 
-    var members: List<ItemIndex>? = null
+    var members: MutableList<ItemIndex>? = null
 
-    lateinit var fragment: AdaptiveFragment
+    val fragment: AdaptiveFragment
+        get() = fragmentOrNull!!
+
+    var fragmentOrNull : AdaptiveFragment? = null
 
     val frame: RawFrame
         get() {
-            val f = fragment
+            val f = fragmentOrNull ?: return RawFrame.NaF
 
             return if (f !is AbstractAuiFragment<*>) {
                 RawFrame.NaF
@@ -40,4 +43,5 @@ class SheetItem(
             }
         }
 
+    var beforeRemove : SheetClipboardItem? = null
 }

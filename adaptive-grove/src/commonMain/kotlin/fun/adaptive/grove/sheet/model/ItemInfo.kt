@@ -7,5 +7,5 @@ import `fun`.adaptive.utility.UUID
 
 @Adat
 class ItemInfo(
-    val index : ItemIndex
+    val index : Int // TODO replace with ItemIndex when Adat supports value classes
 ) : AdaptiveInstruction

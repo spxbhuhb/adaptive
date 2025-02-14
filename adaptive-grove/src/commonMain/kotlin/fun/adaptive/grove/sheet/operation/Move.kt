@@ -1,16 +1,21 @@
 package `fun`.adaptive.grove.sheet.operation
 
+import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.layout.Position
 
-open class Move(
-    start: Long,
-    deltaX: DPixel,
-    deltaY: DPixel
-) : Transform(start, deltaX, deltaY, withSizes = false) {
+@Adat
+class Move(
+    override val start: Long,
+    override var transformX: DPixel,
+    override var transformY: DPixel
+) : Transform() {
+
+    override val withSizes: Boolean
+        get() = false
 
     override fun newFrame(controller: SheetViewController): RawFrame =
         startFrame.move(controller.toPx(transformX), controller.toPx(transformY))

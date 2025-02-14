@@ -19,4 +19,6 @@ class ThemeTextColors {
     val onInfoSurface = textColor(colors.onInfoSurface)
     val onWarningSurface = textColor(colors.onWarningSurface)
     val onFailSurface = textColor(colors.onFailSurface)
+
+    val onReverse = textColor(colors.onReverse)
 }

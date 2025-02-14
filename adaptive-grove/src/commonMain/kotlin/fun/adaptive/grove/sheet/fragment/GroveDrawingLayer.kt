@@ -64,14 +64,18 @@ class GroveDrawingLayer<RT, CRT : RT>(
 
     operator fun plusAssign(item: SheetItem) {
         val model = item.model
+        val beforeRemove = item.beforeRemove
 
         adapter.fragmentFactory.newInstance(model.key, this, - 1, model.mapping.size).also { fragment ->
 
             children += fragment
-            item.fragment = fragment
+            item.fragmentOrNull = fragment
 
             for ((index, mapping) in model.mapping.withIndex()) {
-                val value = (mapping.mapping as LfmConst).value
+                val value = when {
+                    index == 0 && beforeRemove != null -> beforeRemove.instructions
+                    else -> (mapping.mapping as LfmConst).value
+                }
                 fragment.setStateVariable(index, value)
             }
 
@@ -84,11 +88,11 @@ class GroveDrawingLayer<RT, CRT : RT>(
     }
 
     operator fun minusAssign(item: SheetItem) {
-        val info = ItemInfo(item.index)
-        val index = children.indexOfFirst { info in it.instructions }
-        val child = children.removeAt(index)
-        if (isMounted) child.unmount()
-        child.dispose()
+        val fragment = item.fragmentOrNull ?: return
+        children.remove(fragment)
+        if (isMounted) fragment.unmount()
+        fragment.dispose()
+        item.fragmentOrNull = null
     }
 
     fun updateLayout(item: SheetItem) {

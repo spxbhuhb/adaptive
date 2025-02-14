@@ -1,10 +1,12 @@
 package `fun`.adaptive.grove.sheet.operation
 
+import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.SheetClipboard
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection
 
+@Adat
 class Cut : SheetOperation() {
 
     lateinit var originalClipboard: SheetClipboard
@@ -12,37 +14,34 @@ class Cut : SheetOperation() {
 
     lateinit var cutData : SheetClipboard
 
-    val cutItems = mutableListOf<SheetItem>()
-
     override fun commit(controller: SheetViewController): OperationResult {
-        if (controller.selection.isEmpty()) {
-            return OperationResult.DROP
-        }
-
         with(controller) {
+
+            if (selection.isEmpty()) return OperationResult.DROP
+
             if (firstRun) {
                 originalSelection = selection
                 originalClipboard = clipboard
                 cutData = selectionToClipboard()
             }
 
-            forSelection {
-                hideItem(it.index)
-                cutItems += it
+            originalSelection.items.forEach {
+                hideItem(it)
             }
 
             clipboard = cutData
-            select()
-        }
 
-        return OperationResult.PUSH
+            select()
+
+            return OperationResult.PUSH
+        }
     }
 
     override fun revert(controller: SheetViewController) {
         with(controller) {
-            cutItems.forEach { showItem(it.index) }
+            originalSelection.items.forEach { showItem(it) }
             clipboard = originalClipboard
-            select(originalSelection.items)
+            select(originalSelection.items, additional = false)
         }
     }
 

@@ -42,4 +42,7 @@ class ThemeColors {
     val onDanger = color(0xFFFFFFu)
 
     val white = color(0xFFFFFF)
+
+    val reverse = color(0x1E1E1E)
+    val onReverse = color(0xFFFFFF)
 }

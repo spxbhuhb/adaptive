@@ -1,68 +1,72 @@
 package `fun`.adaptive.grove.sheet.operation
 
+import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.ItemIndex
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection.Companion.emptySelection
 
+@Adat
 class Ungroup : SheetOperation() {
 
     var originalSelection = emptySelection
-    var originalMembers = mutableMapOf<ItemIndex, List<ItemIndex>>()
+    var originalMembers = mutableMapOf<ItemIndex, MutableList<ItemIndex>?>()
 
     override fun commit(controller: SheetViewController): OperationResult {
-        if (controller.selection.isEmpty()) {
-            return OperationResult.DROP
-        }
+        with (controller) {
 
-        if (firstRun) {
-            originalSelection = controller.selection
-        }
+            if (selection.isEmpty()) return OperationResult.DROP
 
-        val newSelection = mutableListOf<SheetItem>()
-
-        for (selectedItem in originalSelection.items) {
-
-            if (! selectedItem.isGroup) {
-                newSelection += selectedItem
-                continue
+            if (firstRun) {
+                originalSelection = controller.selection
+                originalSelection.items.forEach {
+                    originalMembers[it.index] = it.members
+                }
             }
 
-            val members = selectedItem.members!!
+            val newSelection = mutableListOf<SheetItem>()
 
-            if (firstRun) originalMembers[selectedItem.index] = members
+            for (selectedItem in originalSelection.items) {
 
-            members.forEach { index ->
-                val groupItem = controller.items[index]
-                groupItem.group = null
-                newSelection += groupItem
+                if (! selectedItem.isGroup) {
+                    newSelection += selectedItem
+                    continue
+                }
+
+                val memberIndices = selectedItem.members ?: continue
+
+                memberIndices.forEach { index ->
+                    val member = items[index.value]
+                    member.group = null
+                    newSelection += member
+                }
+
+                selectedItem.members = mutableListOf()
+                hideItem(selectedItem)
             }
 
-            selectedItem.members = emptyList()
-            controller.hideItem(selectedItem.index)
+            select(newSelection, additional = false)
+
+            return OperationResult.PUSH
         }
-
-        controller.select(newSelection)
-
-        return OperationResult.PUSH
     }
 
     override fun revert(controller: SheetViewController) {
         for (selectedItem in originalSelection.items) {
             if (! selectedItem.isGroup) continue
 
-            val members = originalMembers[selectedItem.index]!!
+            val membersIndices = originalMembers[selectedItem.index] ?: continue
 
-            selectedItem.members = members
+            selectedItem.members = membersIndices
 
-            members.forEach { index ->
-                controller.items[index].group = selectedItem.index
+            membersIndices.forEach { index ->
+                controller.items[index.value].group = selectedItem.index
             }
 
             controller.showItem(selectedItem.index)
         }
 
-        controller.select(originalSelection.items)
+        controller.select(originalSelection.items, additional = false)
     }
 
     override fun toString(): String =

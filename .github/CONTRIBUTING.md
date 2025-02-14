@@ -119,3 +119,13 @@ processResources(
     preparedResourcesPath = preparedResources
 )
 ```
+
+### Notes
+
+These are helpful during development (and I don't want to forget them).
+
+To get layout update statistics:
+
+```kotlin
+adapter().dumpStatistics()
+```
