@@ -7,7 +7,6 @@ import `fun`.adaptive.backend.backend
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.api.GroveRuntimeFragmentFactory
-import `fun`.adaptive.grove.designer.groveMain
 import `fun`.adaptive.grove.fragment.GroveFragmentFactory
 import `fun`.adaptive.grove.groveCommon
 import `fun`.adaptive.grove.groveRuntimeCommon
