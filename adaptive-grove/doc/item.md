@@ -58,3 +58,49 @@ Removes and undo of additions use `SheetViewController.hideItem`:
 - clears the members of the item if it is a group
 - removes all links to the removed item from other items
 - removes the fragment by calling `GroveDrawingLayer.minusAssign`
+
+## Editing
+
+Editor types by access:
+
+- value based: displayed on the instructions or on the mapping panel
+- control based: control layer interaction (move, resize, arrange etc.)
+- inline: opened by double-clicking on an item 
+
+Editor registries in `SheetViewModel`:
+
+| Registry                    | Access          | Reference         | Class                    |
+|-----------------------------|-----------------|-------------------|--------------------------|
+| `controlRegistry`           | control         | model-key         | `SheetControl`           |
+| `instructionEditorRegistry` | value           | instruction class | `SheetInstructionEditor` |
+| `mappingEditorRegistry`     | value or inline | model-key         | `SheetMappingEditor`     |
+
+Editor lookup runs on:
+
+- select (control and value)
+- double-click (inline)
+
+Editor selection:
+
+- by reference if provided 
+- by calling the `matches` function of the editor registry entry (only if no reference is provided)
+
+When items are selected:
+
+- the instructions panel shows the instruction editors
+- the mapping panel shows the mapping value editors
+- the control layer shows the controls
+
+On double-click:
+
+- if the target of the click is a group, in-group selection runs
+- if the target is not a group:
+  - the inline editor opens
+  - the selection does not change
+
+Multi-item behaviour:
+
+- union of instructions shows
+  - fields for conflicting values are empty
+  - fields for equal values display the value
+- mapping editor shows only when a single item is selected
