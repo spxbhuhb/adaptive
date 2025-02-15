@@ -1,11 +1,13 @@
 package `fun`.adaptive.grove.sheet.operation
 
+import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.ItemIndex
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection.Companion.emptySelection
+import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.layout.Position
@@ -77,12 +79,17 @@ abstract class Transform: SheetOperation() {
         positionCache += instructions.firstInstanceOf<Position>()
 
         if (withSizes) {
-            sizeCache += instructions.firstInstanceOf<Size>()
+            sizeCache += instructions.firstInstanceOfOrNull<Size>() ?: item.fragment.renderedSize()
         }
 
         if (item.isGroup) {
             item.members !!.forEach { preprocess(controller, controller.items[it.value]) }
         }
+    }
+
+    fun AdaptiveFragment.renderedSize(): Size {
+        check(this is AbstractAuiFragment<*>)
+        return this.renderData.size
     }
 
     open fun merge(last: Transform) {

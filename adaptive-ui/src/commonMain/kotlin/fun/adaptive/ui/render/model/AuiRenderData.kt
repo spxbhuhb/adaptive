@@ -10,6 +10,7 @@ import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
+import `fun`.adaptive.ui.instruction.layout.Size
 
 /**
  * A pre-processed version of fragment instructions to make access from layout easier.
@@ -57,9 +58,6 @@ data class AuiRenderData(
     var finalWidth = 0.0
     var finalHeight = 0.0
 
-    val rawFrame
-        get() = RawFrame(finalTop, finalLeft, finalWidth, finalHeight)
-
     var layout: LayoutRenderData? = null
     var decoration: DecorationRenderData? = null
     var container: ContainerRenderData? = null
@@ -67,6 +65,12 @@ data class AuiRenderData(
     var grid: GridRenderData? = null
     var event: EventRenderData? = null
     var input: InputRenderData? = null
+
+    val rawFrame
+        get() = RawFrame(finalTop, finalLeft, finalWidth, finalHeight)
+
+    val size
+        get() = Size(adapter.toDp(finalWidth), adapter.toDp(finalHeight))
 
     fun computeSurrounding() {
         val padding = layout?.padding ?: RawSurrounding.ZERO
