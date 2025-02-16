@@ -22,4 +22,6 @@ class ThemeTextColors {
     val onFailSurface = textColor(colors.onFailSurface)
 
     val onReverse = textColor(colors.onReverse)
+    val onReverseVariant = textColor(colors.onReverseVariant)
+
 }

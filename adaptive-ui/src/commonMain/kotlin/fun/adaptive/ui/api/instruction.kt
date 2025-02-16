@@ -37,6 +37,7 @@ val noBorder = Border(color(0u), 0.dp, null, null, null)
 fun color(color: Int, opacity: Float = 1f) = Color(color.toUInt(), opacity)
 fun color(color: UInt, opacity: Float = 1f) = Color(color, opacity)
 
+inline fun cornerRadius(all : () -> DPixel) = CornerRadius(all())
 fun cornerRadius(all: DPixel) = CornerRadius(all)
 fun cornerRadius(topLeft: DPixel? = null, topRight: DPixel? = null, bottomLeft: DPixel? = null, bottomRight: DPixel? = null) = CornerRadius(topLeft, topRight, bottomLeft, bottomRight)
 
@@ -76,6 +77,7 @@ fun onClose(handler: () -> Unit) = OnClose(handler)
 fun frame(top: DPixel, left: DPixel, width: DPixel, height: DPixel) = Frame(top, left, width, height)
 
 fun position(top: DPixel, left: DPixel) = Position(top, left)
+fun size(size: DPixel) = Size(size, size)
 fun size(width: DPixel, height: DPixel) = Size(width, height)
 
 fun height(height: DPixel) = Height(height)

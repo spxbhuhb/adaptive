@@ -45,4 +45,5 @@ class ThemeColors {
 
     val reverse = color(0x1E1E1E)
     val onReverse = color(0xFFFFFF)
+    val onReverseVariant = color(0xBBBBBB)
 }
