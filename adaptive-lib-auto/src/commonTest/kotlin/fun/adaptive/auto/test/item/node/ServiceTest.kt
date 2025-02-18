@@ -4,6 +4,7 @@ import `fun`.adaptive.auto.api.autoItemNode
 import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.auto.model.AutoConnectionType
 import `fun`.adaptive.auto.test.support.AutoTest.Companion.autoTest
+import `fun`.adaptive.auto.test.support.AutoTest.Companion.sync
 import `fun`.adaptive.auto.test.support.TestData
 import `fun`.adaptive.utility.waitForReal
 import kotlin.test.Test
@@ -19,14 +20,15 @@ class ServiceTest {
         val origin = autoItemOrigin(td, serverWorker)
         val node = autoItemNode(clientWorker) { origin.connectInfo(AutoConnectionType.Service) }
 
-        waitForReal(1.seconds) { node.time.timestamp == origin.time.timestamp }
-
+        sync(node, origin)
         origin.update(td::i to 23)
-        waitForReal(1.seconds) { node.time.timestamp == origin.time.timestamp }
+
+        sync(node, origin)
         assertEquals(23, node.value.i)
 
         node.update(td::i to 34)
-        waitForReal(1.seconds) { node.time.timestamp == origin.time.timestamp }
+
+        sync(node, origin)
         assertEquals(34, origin.value.i)
     }
 

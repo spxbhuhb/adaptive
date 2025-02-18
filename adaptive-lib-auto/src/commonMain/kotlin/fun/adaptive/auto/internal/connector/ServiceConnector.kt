@@ -149,7 +149,7 @@ class ServiceConnector(
     override suspend fun disconnect() {
 //        safeSuspendCall(logger) {
 //
-//            status = if (reconnect) Status.CONNECTING else Status.DISPOSING
+        status = if (initiator) Status.CONNECTING else Status.DISPOSING
 //
 //            // removing the peer means that we won't get any new operations
 //            instance.removeConnector(peerHandle)

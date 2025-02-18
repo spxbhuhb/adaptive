@@ -1,12 +1,8 @@
 package `fun`.adaptive.utility
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.withContext
-import kotlinx.coroutines.withTimeout
 import kotlinx.datetime.Clock.System.now
 import kotlin.coroutines.coroutineContext
 import kotlin.time.Duration

@@ -76,7 +76,7 @@ class PathTest {
 
         sourcePath.write("Hello World!".encodeToByteArray())
 
-        realDelay(5.milliseconds) // so modification time will be different (FAT32 fails, but OK....)
+        waitForReal(5.milliseconds) // so modification time will be different (FAT32 fails, but OK....)
 
         sourcePath.copy(targetPath1)
 
@@ -107,7 +107,7 @@ class PathTest {
 
         assertTrue(thisFile.equalsBySizeAndLastModification(thisFile)) // compare this with this
 
-        realDelay(5.milliseconds) // so modification time will be different (FAT32 fails, but OK....)
+        waitForReal(5.milliseconds) // so modification time will be different (FAT32 fails, but OK....)
 
         otherFile.write("Test Content")
 

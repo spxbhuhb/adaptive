@@ -1,16 +1,20 @@
 package `fun`.adaptive.auto.test.support
 
+import `fun`.adaptive.auto.api.AutoGeneric
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.auto.backend.AutoWorker
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.service.testing.DirectServiceTransport
+import `fun`.adaptive.utility.waitForReal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 class AutoTest {
 
@@ -35,9 +39,9 @@ class AutoTest {
     companion object {
 
         @OptIn(ExperimentalCoroutinesApi::class)
-        fun autoTest(testFun: suspend AutoTest.() -> Unit) =
+        fun autoTest(timeout: Duration = 10.seconds, testFun: suspend AutoTest.() -> Unit) =
 
-            runTest {
+            runTest(timeout = timeout) {
                 with(AutoTest()) {
 
                     // Switch to a coroutine context that is NOT a test context. The test context
@@ -66,5 +70,9 @@ class AutoTest {
                     serverBackend.stop()
                 }
             }
+
+        suspend fun sync(i1: AutoGeneric, i2: AutoGeneric, duration: Duration = 1.seconds) {
+            waitForReal(duration) { i1.time.timestamp == i2.time.timestamp }
+        }
     }
 }

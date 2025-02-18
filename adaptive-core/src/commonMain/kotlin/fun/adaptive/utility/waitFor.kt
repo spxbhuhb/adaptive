@@ -28,7 +28,7 @@ suspend fun waitForSuspend(timeout: Duration, condition: suspend () -> Boolean) 
  * Intended to be used with `runTest` from `coroutines-test`.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-suspend fun realDelay(duration: Duration) {
+suspend fun waitForReal(duration: Duration) {
     withContext(Dispatchers.Default.limitedParallelism(1)) {
         delay(duration)
     }

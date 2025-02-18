@@ -7,6 +7,8 @@ package `fun`.adaptive.service.testing
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.model.TransportEnvelope
 import `fun`.adaptive.service.transport.ServiceCallTransport
+import `fun`.adaptive.utility.getLock
+import `fun`.adaptive.utility.use
 import `fun`.adaptive.wireformat.WireFormatDecoder
 import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.api.Proto
@@ -22,9 +24,20 @@ class DirectServiceTransport(
     name
 ) {
 
+    val lock = getLock()
+
+    /**
+     * When `true` the transport silently drops received envelopes. This is intended for
+     * testing connection breaks.
+     */
+    var drop = false
+        get() = lock.use { field }
+        set(value) = lock.use { field = value }
+
     lateinit var peerTransport: DirectServiceTransport
 
     override suspend fun send(envelope: TransportEnvelope) {
+        if (drop) return
         peerTransport.receive(wireFormatProvider.encode(envelope, TransportEnvelope))
     }
 
