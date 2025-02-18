@@ -1,8 +1,8 @@
 package `fun`.adaptive.resource.codegen
 
-import `fun`.adaptive.kotlin.writer.kotlinWriter
-import `fun`.adaptive.kotlin.writer.kwFile
-import `fun`.adaptive.kotlin.writer.kwModule
+import `fun`.adaptive.code.kotlin.writer.kotlinWriter
+import `fun`.adaptive.code.kotlin.writer.kwFile
+import `fun`.adaptive.code.kotlin.writer.kwModule
 import `fun`.adaptive.resource.ResourceTypeQualifier
 import `fun`.adaptive.resource.codegen.kotlin.unstructuredResource
 import `fun`.adaptive.utility.resolve

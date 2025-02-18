@@ -1,6 +1,6 @@
 package `fun`.adaptive.resource
 
-import `fun`.adaptive.kotlin.writer.model.KwSymbol
+import `fun`.adaptive.code.kotlin.writer.model.KwSymbol
 import `fun`.adaptive.resource.codegen.kotlin.KwResourceSymbols
 
 enum class ResourceTypeQualifier(

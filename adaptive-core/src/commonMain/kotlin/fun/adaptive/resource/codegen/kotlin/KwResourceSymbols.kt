@@ -1,6 +1,6 @@
 package `fun`.adaptive.resource.codegen.kotlin
 
-import `fun`.adaptive.kotlin.writer.kwSymbol
+import `fun`.adaptive.code.kotlin.writer.kwSymbol
 
 object KwResourceSymbols {
     val files = kwSymbol("`fun`.adaptive.resource.file.Files")

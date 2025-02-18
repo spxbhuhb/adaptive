@@ -1,9 +1,9 @@
 package `fun`.adaptive.resource.codegen.kotlin
 
-import `fun`.adaptive.kotlin.writer.*
-import `fun`.adaptive.kotlin.writer.model.KwCall
-import `fun`.adaptive.kotlin.writer.model.KwExpressionScope
-import `fun`.adaptive.kotlin.writer.model.KwSymbol
+import `fun`.adaptive.code.kotlin.writer.*
+import `fun`.adaptive.code.kotlin.writer.model.KwCall
+import `fun`.adaptive.code.kotlin.writer.model.KwExpressionScope
+import `fun`.adaptive.code.kotlin.writer.model.KwSymbol
 import `fun`.adaptive.resource.*
 
 fun KwCall.resourceSetConstructorArguments(

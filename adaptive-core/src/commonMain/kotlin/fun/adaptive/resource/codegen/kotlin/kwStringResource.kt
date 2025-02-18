@@ -1,7 +1,7 @@
 package `fun`.adaptive.resource.codegen.kotlin
 
-import `fun`.adaptive.kotlin.writer.*
-import `fun`.adaptive.kotlin.writer.model.KwFile
+import `fun`.adaptive.code.kotlin.writer.*
+import `fun`.adaptive.code.kotlin.writer.model.KwFile
 import `fun`.adaptive.resource.ResourceFileSet
 
 fun KwFile.stringResource(
