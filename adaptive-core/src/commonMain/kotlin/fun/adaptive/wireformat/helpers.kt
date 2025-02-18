@@ -4,6 +4,7 @@
 
 package `fun`.adaptive.wireformat
 
+import `fun`.adaptive.wireformat.json.JsonBufferReader
 import `fun`.adaptive.wireformat.json.JsonWireFormatDecoder
 import `fun`.adaptive.wireformat.json.JsonWireFormatEncoder
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatDecoder
@@ -23,3 +24,9 @@ fun <T> T.toProto(wireFormat: WireFormat<T>) =
 
 fun <T> ByteArray.fromProto(wireFormat: WireFormat<T>) =
     ProtoWireFormatDecoder(this).asInstance(wireFormat)
+
+/**
+ * `this` JSON string as a pretty JSON string (parses the original strings and then formats it).
+ */
+val String.asPrettyJson
+    get() = JsonBufferReader(this.encodeToByteArray()).read().asPrettyString
