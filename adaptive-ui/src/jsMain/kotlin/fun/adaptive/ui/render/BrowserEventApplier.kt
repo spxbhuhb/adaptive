@@ -74,6 +74,8 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
             }
 
             eventHandler.execute(UIEvent(fragment, event, x, y, transferData, keyInfo, modifiers(event)))
+
+            event.preventDefault()
         }
 
         fragment.receiver.addEventListener(eventName, listener)
