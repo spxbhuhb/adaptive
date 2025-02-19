@@ -327,6 +327,30 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
+      @TestMetadata("functionReferenceGlobalPropertyNoParam.kt")
+      public void testFunctionReferenceGlobalPropertyNoParam() {
+        runTest("testData/box/foundation/call/functionReferenceGlobalPropertyNoParam.kt");
+      }
+
+      @Test
+      @TestMetadata("functionReferenceGlobalPropertyWithParam.kt")
+      public void testFunctionReferenceGlobalPropertyWithParam() {
+        runTest("testData/box/foundation/call/functionReferenceGlobalPropertyWithParam.kt");
+      }
+
+      @Test
+      @TestMetadata("functionReferenceHardNoParam.kt")
+      public void testFunctionReferenceHardNoParam() {
+        runTest("testData/box/foundation/call/functionReferenceHardNoParam.kt");
+      }
+
+      @Test
+      @TestMetadata("functionReferenceHardWithParam.kt")
+      public void testFunctionReferenceHardWithParam() {
+        runTest("testData/box/foundation/call/functionReferenceHardWithParam.kt");
+      }
+
+      @Test
       @TestMetadata("higherOrder.kt")
       public void testHigherOrder() {
         runTest("testData/box/foundation/call/higherOrder.kt");

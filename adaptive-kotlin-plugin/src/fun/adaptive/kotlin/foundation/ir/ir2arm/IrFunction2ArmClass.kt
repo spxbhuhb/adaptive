@@ -401,20 +401,13 @@ class IrFunction2ArmClass(
             }
 
             parameter.isAdaptive -> {
-                if (expression is IrFunctionExpression) {
-                    val renderingStatement = transformFragmentFactoryArgument(expression)
-
-                    ArmFragmentFactoryArgument(
-                        armClass,
-                        armCall.arguments.size,
-                        renderingStatement.index,
-                        renderingStatement.closure,
-                        parameterType,
-                        expression,
-                        expression.dependencies()
-                    )
-                } else {
-                    ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies())
+                when (expression) {
+                    is IrFunctionExpression -> transformFunctionExpression(armCall, expression) // lambda
+                    is IrFunctionReference -> transformFunctionReference(armCall, expression) // hard-coded function reference like `::b`
+                    is IrCall -> transformFunctionReferenceProperty(armCall, expression) // function reference stored in a property
+                    else -> {
+                        ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies())
+                    }
                 }
             }
 
@@ -430,19 +423,71 @@ class IrFunction2ArmClass(
             }
         }
 
-    /**
-     * The higher-order function transform.
-     */
-    fun transformFragmentFactoryArgument(
+    fun transformFunctionExpression(
+        armCall: ArmCall,
         expression: IrFunctionExpression
-    ): ArmRenderingStatement {
+    ): ArmFragmentFactoryArgument {
+
         // add the anonymous function parameters to the closure
+        val innerState = innerState(expression.function)
+
+        val renderingStatement = withClosure(innerState) {
+            transformBlock(expression.function.body !!.statements)
+        } ?: placeholder(expression.function)
+
+        return ArmFragmentFactoryArgument(
+            armClass,
+            armCall.arguments.size,
+            renderingStatement.index,
+            renderingStatement.closure,
+            pluginContext.boundFragmentFactoryType,
+            expression,
+            expression.dependencies()
+        )
+    }
+
+    fun transformFunctionReference(
+        armCall: ArmCall,
+        expression: IrFunctionReference
+    ): ArmFragmentFactoryArgument {
+
+        return ArmFragmentFactoryArgument(
+            armClass,
+            armCall.arguments.size,
+            - 1, // renderingStatement.index,
+            emptyList(), //renderingStatement.closure,
+            pluginContext.kFunctionAdaptiveReferenceType,
+            expression,
+            expression.dependencies()
+        )
+
+    }
+
+    fun transformFunctionReferenceProperty(
+        armCall: ArmCall,
+        expression: IrCall
+    ): ArmFragmentFactoryArgument {
+
+        expression.type = pluginContext.adaptiveFunctionType
+
+        return ArmFragmentFactoryArgument(
+            armClass,
+            armCall.arguments.size,
+            - 1,
+            emptyList(),
+            pluginContext.adaptiveFunctionType,
+            expression,
+            expression.dependencies()
+        )
+    }
+
+    private fun innerState(function: IrSimpleFunction): List<ArmStateVariable> {
 
         var stateVariableIndex = closure.size
 
-        val innerState = listOf(
+        return listOf(
             ArmImplicitStateVariable(armClass, 0, stateVariableIndex ++, irNull()) // instructions
-        ) + expression.function.valueParameters.mapIndexed { indexInState, parameter ->
+        ) + function.valueParameters.mapIndexed { indexInState, parameter ->
             ArmExternalStateVariable(
                 armClass,
                 indexInState + 1, // +1 for instructions
@@ -453,11 +498,8 @@ class IrFunction2ArmClass(
                 parameter.symbol
             )
         }
-
-        return withClosure(innerState) {
-            transformBlock(expression.function.body !!.statements)
-        } ?: placeholder(expression.function)
     }
+
 
     private fun transformAccessSelector(armCall: ArmCall, expression: IrExpression) {
         check(expression is IrFunctionExpression)

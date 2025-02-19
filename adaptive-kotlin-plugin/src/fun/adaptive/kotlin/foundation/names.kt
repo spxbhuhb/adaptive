@@ -193,12 +193,6 @@ object Indices {
     const val GET_CLOSURE_VARIABLE_INDEX = 0
 
     /**
-     * BoundFragmentFactory constructor arguments
-     */
-    const val ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARING_FRAGMENT = 0
-    const val ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARATION_INDEX = 1
-
-    /**
      * Structural fragment state indices
      */
     const val ADAPTIVE_SEQUENCE_ITEM_INDICES = 1

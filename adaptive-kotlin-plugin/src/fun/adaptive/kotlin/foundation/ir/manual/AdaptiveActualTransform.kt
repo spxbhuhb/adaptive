@@ -21,6 +21,33 @@ import org.jetbrains.kotlin.ir.util.functions
 import org.jetbrains.kotlin.ir.util.hasAnnotation
 import org.jetbrains.kotlin.ir.util.properties
 
+/**
+ * Transforms manual implementations (marked with `@AdaptiveActual`) to resolve:
+ *
+ * - `stateSize()`
+ * - `stateVariable<T>()`
+ * - `haveToPatch(p)`
+ *
+ * ```kotlin
+ * @AdaptiveActual("c")
+ * class AdaptiveTest(
+ *     adapter: AdaptiveAdapter,
+ *     parent: AdaptiveFragment?,
+ *     declarationIndex: Int
+ * ) : AdaptiveFragment(adapter, parent, declarationIndex, stateSize()) {
+ *
+ *     val p1 by stateVariable<Int>()
+
+ *     override fun genPatchInternal() : Boolean {
+ *         if (haveToPatch(p1)) {
+ *             // ...
+ *         }
+ *         return false
+ *     }
+ *
+ * }
+ * ```
+ */
 class AdaptiveActualTransform(
     private val pluginContext: FoundationPluginContext
 ) : IrElementTransformerVoidWithContext() {

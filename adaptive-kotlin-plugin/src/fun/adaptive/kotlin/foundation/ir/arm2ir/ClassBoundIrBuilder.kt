@@ -4,23 +4,22 @@
 
 package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 
-import `fun`.adaptive.kotlin.foundation.Indices
-import `fun`.adaptive.kotlin.foundation.Names
-import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
-import `fun`.adaptive.kotlin.foundation.ir.arm.*
 import `fun`.adaptive.kotlin.common.AbstractIrBuilder
-import `fun`.adaptive.kotlin.common.property
+import `fun`.adaptive.kotlin.foundation.Indices
+import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
+import `fun`.adaptive.kotlin.foundation.ir.arm.ArmClass
+import `fun`.adaptive.kotlin.foundation.ir.arm.ArmClosure
+import `fun`.adaptive.kotlin.foundation.ir.arm.ArmDependencies
 import org.jetbrains.kotlin.ir.IrStatement
-import org.jetbrains.kotlin.ir.declarations.*
-import org.jetbrains.kotlin.ir.expressions.*
-import org.jetbrains.kotlin.ir.expressions.impl.*
-import org.jetbrains.kotlin.ir.symbols.*
-import org.jetbrains.kotlin.ir.transformStatement
-import org.jetbrains.kotlin.ir.types.IrType
-import org.jetbrains.kotlin.ir.types.defaultType
-import org.jetbrains.kotlin.ir.util.*
-import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.declarations.IrFunction
+import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
+import org.jetbrains.kotlin.ir.declarations.IrVariable
+import org.jetbrains.kotlin.ir.expressions.IrExpression
+import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
+import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
+import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
+import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 
 open class ClassBoundIrBuilder(
     override val pluginContext: FoundationPluginContext,
@@ -48,38 +47,11 @@ open class ClassBoundIrBuilder(
             irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX])
         )
 
-    fun irCallFromBuild(
-        buildFun: IrSimpleFunction,
-        target: FqName,
-        classSymbol: IrClassSymbol? = pluginContext.getSymbol(target)
-    ): IrExpression {
-
-        if (classSymbol != null) {
-            val constructorCall =
-                IrConstructorCallImpl(
-                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                    classSymbol.defaultType,
-                    classSymbol.constructors.single(),
-                    typeArgumentsCount = 0,
-                    constructorTypeArgumentsCount = 0
-                )
-
-            constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGetValue(pluginContext.adapter, irGet(buildFun.valueParameters[Indices.BUILD_PARENT])))
-            constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irGet(buildFun.valueParameters[Indices.BUILD_PARENT]))
-            constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]))
-
-            return constructorCall
-        }
-
-        return irCall(
-            pluginContext.adapterActualizeFun,
-            irGetValue(irClass.property(Names.ADAPTER), irGet(buildFun.dispatchReceiverParameter !!)),
-            irConst(target.asString()),
-            irGet(buildFun.valueParameters[Indices.BUILD_PARENT]),
-            irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX])
-        )
-    }
-
+    /**
+     * Called by `ArmLoopBuilder`. As of now we support only `for () { }` style loops
+     * which cannot have function references, so passing null as the factory function
+     * reference is fine.
+     */
     fun irFragmentFactoryFromPatch(patchFun: IrSimpleFunction, index: Int): IrExpression {
         val constructorCall =
             IrConstructorCallImpl(
@@ -88,10 +60,11 @@ open class ClassBoundIrBuilder(
                 pluginContext.boundFragmentFactoryConstructor,
                 typeArgumentsCount = 0,
                 constructorTypeArgumentsCount = 0
-            )
-
-        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARING_FRAGMENT, irGet(patchFun.dispatchReceiverParameter !!))
-        constructorCall.putValueArgument(Indices.ADAPTIVE_FRAGMENT_FACTORY_ARGUMENT_DECLARATION_INDEX, irConst(index))
+            ).also {
+                it.putValueArgument(0, irGet(patchFun.dispatchReceiverParameter !!))
+                it.putValueArgument(1, irConst(index))
+                it.putValueArgument(2, irNull())
+            }
 
         return constructorCall
     }
@@ -202,21 +175,5 @@ open class ClassBoundIrBuilder(
         this.forEach { mask = mask or (1 shl it.indexInClosure) }
         return irConst(mask)
     }
-
-    // --------------------------------------------------------------------------------------------------------
-    // Properties
-    // --------------------------------------------------------------------------------------------------------
-
-    /**
-     * Adds a property to [irClass].
-     */
-    fun addIrProperty(
-        inName: Name,
-        inType: IrType,
-        inIsVar: Boolean,
-        inInitializer: IrExpression? = null,
-        overridden: List<IrPropertySymbol>? = null
-    ): IrProperty =
-        irClass.addIrProperty(inName, inType, inIsVar, inInitializer, overridden)
 
 }

@@ -57,7 +57,7 @@ abstract class AbstractPopup<RT, CRT : RT>(
                 if (fragment.haveToPatch(closureDirtyMask, 0)) {
                     fragment.setStateVariable(
                         index = 1,
-                        value = BoundFragmentFactory(declaringFragment = this, declarationIndex = 2)
+                        value = BoundFragmentFactory(declaringFragment = this, declarationIndex = 2, null)
                     )
                 }
             }

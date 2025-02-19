@@ -155,62 +155,56 @@ fun genPatchDescendant(fragment : AdaptiveFragment<BT>) {
 
 ## Higher Order Arguments
 
-When using higher order functions the plugin uses the `AdaptiveFragmentFactory` and `AdaptiveSupportFunction` classes.
+When using higher order functions with the `@Adaptive` annotation, the plugin uses the `BoundFragmentFactory` 
+class to pass information about the fragment passed in the parameter.
+
+Higher order functions without `@Adaptive` annotation are state-access transformed, but passed as-is otherwise.
 
 ```kotlin
-fun Z3.higherFun(callback: () -> Unit, builder : Z3.() -> Unit) {
+fun higherFun(callback: () -> Unit, @Adaptive builder : () -> Unit) {
     callback() // this is initialization
     // ----- boundary ----
     builder() // this is rendering 
 }
 
-fun Z3.test() {
+fun test() {
     higherFun({ /*...*/ }) {
         /*...*/
     }
 }
 ```
 
+There are three ways to supply higher order arguments:
+
+1. lambda
+2. direct function reference
+3. property function reference
+
+These differ significantly as the lambda version:
+
+1) has access to the declaring fragment closure and all intermediate lamba closures
+2) has build and patching included in the declaring fragment
+
+For reference versions the referenced function has no information about the declaring closure,
+it's closure consists solely of its own external state variables.
+
 ```kotlin
-class AdaptiveHigherFun<BT> : AdaptiveFragment<BT> {
-    val state = arrayOfNulls(2)
-
-    fun create() {
-        // calls AdaptiveTest.patch which sets the state variables
-        // the state variables store the callback argument and the builder argument
-        createClosure.owner.patch(this)
-
-        state[0].execute(this) // executes `callback` 
-
-        genBuild(thisClosure, this, 0)?.let { children.add(it) } // 0 is the index of the `builder` call
-    }
-
-    fun build(declarationClosure: AdaptiveClosure, parent: AdaptiveFragment<BT>, declarationIndex: Int): AdaptiveFragment<BT> {
-        
-        val fragment = when (declarationIndex) {
-            0 -> state[1].build(declarationClosure, parent, declarationIndex)
-            else -> invalidIndex(declarationIndex) // throws exception
-        }
-
-        fragment.create()
-
-        return fragment
-    }
-
+@Adaptive
+fun higherFun(@Adaptive a: () -> Unit) {
+    a()
 }
 
-class AdaptiveTest<BT> : AdaptiveFragment<BT>  {
-    
-    fun patch(descendant : AdaptiveFragment<BT>) {
-        when (descendant.index) {
-            0 -> { // set the state variables of higherFun
-                descendant.state[0] = AdaptiveSupportFunction(descendant, index = 0) // index of the support function
-                descendant.state[1] = AdaptiveFragmentFactory(descendant, index = 1) // declaration index for the builder
-            }
-        }
-    }
-  
-}
+@Adaptive
+fun b() { }
+
+@Adaptive
+val c : () -> Unit
+
+@Adaptive
+fun someFun() {
+    higherFun {  } // lambda
+    higherFun(::a) // direct function reference
+    higherFun(c)   // property function reference
 ```
 
 ## Closures
@@ -234,7 +228,18 @@ Named components have two closures:
 * provides access to the state variables of the component
 * passed to all components built by the component as `createClosure`
 
+
+
+It is important that lambda has access to the closure
+
 ### Anonymous components
+
+Anonymous components have two different modes: "reference" and "lambda", depending on the way
+the higher order argument is supplied
+
+Lambda mode uses the declaration closure, reference mode defines its own closure.
+
+### Lambda anonymous components
 
 Anonymous components have three closures:
 
@@ -296,3 +301,4 @@ Test 1                                                ?                         
                 + Anonymous 4 (from lowerFun)         Anonymous 3 extends HigherFun2                     Anonymous 4 extends Anonymous 2 extends Test 1       [ lowerFunI1 = 37 (thisClosure.lowerFun1) lowerFunI2 = 112 (createClosure.higherI + createClosure.lowerFunInnerI) ]
                   + T1 1                              Anonymous 4 extends Anonymous 2 extends Test 1     T1                                                   [ p0 = 149 (createClosure.lowerFunI1 + createClosure.lowerFunI2) ]
 ```
+

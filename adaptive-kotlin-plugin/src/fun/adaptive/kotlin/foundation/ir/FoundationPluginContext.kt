@@ -16,10 +16,8 @@ import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.makeNullable
-import org.jetbrains.kotlin.ir.util.constructors
-import org.jetbrains.kotlin.ir.util.functions
-import org.jetbrains.kotlin.ir.util.getSimpleFunction
-import org.jetbrains.kotlin.ir.util.properties
+import org.jetbrains.kotlin.ir.types.typeWith
+import org.jetbrains.kotlin.ir.util.*
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 
@@ -110,6 +108,18 @@ class FoundationPluginContext(
     val detachFun = detachHandlerClass.owner.functionByName { Strings.DETACH }
 
     val adatClass = ClassIds.ADAT_CLASS.classSymbol()
+
+    val kFunctionAdaptiveReferenceType =
+        irBuiltIns.getKFunctionType(
+            adaptiveFragmentType, // returns with created fragment
+            listOf(adaptiveFragmentType, irBuiltIns.intType), // parent fragment, declaration index
+        )
+
+    val adaptiveFunctionType = irBuiltIns.functionN(2).typeWith(
+        adaptiveFragmentType,
+        irBuiltIns.intType,
+        adaptiveFragmentType
+    )
 
     private fun String.fragmentPropertyList() =
         adaptiveFragmentClass.owner.properties.filter { it.name.asString() == this }.map { it.symbol }.toList()

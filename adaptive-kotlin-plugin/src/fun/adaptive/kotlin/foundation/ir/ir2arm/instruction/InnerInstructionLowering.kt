@@ -13,6 +13,7 @@ import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.isFunction
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
+import kotlin.reflect.KFunction
 
 class InnerInstructionLowering(
     override val pluginContext: FoundationPluginContext,
@@ -38,8 +39,8 @@ class InnerInstructionLowering(
     }
 
     private fun extractInnerInstructions(irExpression: IrExpression?): List<IrExpression> {
-        if (irExpression == null) return emptyList()
-        irExpression as IrFunctionExpression
+        // there cannot be inner instructions for function references
+        if (irExpression as? IrFunctionExpression == null) return emptyList()
 
         val body = irExpression.function.body as? IrBlockBody ?: return emptyList()
 

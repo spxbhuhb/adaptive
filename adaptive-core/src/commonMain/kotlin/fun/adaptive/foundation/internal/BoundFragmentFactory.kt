@@ -7,12 +7,9 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 
 class BoundFragmentFactory(
     val declaringFragment: AdaptiveFragment,
-    val declarationIndex : Int
+    val declarationIndex: Int,
+    val functionReference: ((parent: AdaptiveFragment, declarationIndex: Int) -> AdaptiveFragment?)?
 ) {
-    fun build(parent: AdaptiveFragment, flags: Int): AdaptiveFragment? {
-        return declaringFragment.genBuild(parent, declarationIndex, flags)
-    }
-
     override fun toString() =
         "BoundFragmentFactory(${declaringFragment.id},$declarationIndex)"
 }
