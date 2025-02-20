@@ -42,7 +42,7 @@ class GroveHydrated(
         when (declarationIndex) {
 
             // + 1 for instructions which we won't use, but it's mandatory
-            ANONYMOUS_INDEX -> AdaptiveAnonymous(parent, ANONYMOUS_INDEX, model.internalStateVariables.size + 1, BoundFragmentFactory(this, SEQUENCE_INDEX))
+            ANONYMOUS_INDEX -> AdaptiveAnonymous(parent, ANONYMOUS_INDEX, model.internalStateVariables.size + 1, BoundFragmentFactory(this, SEQUENCE_INDEX, null))
 
             SEQUENCE_INDEX -> adapter.newSequence(this, SEQUENCE_INDEX)
 

@@ -50,8 +50,9 @@ class FunctionPropertyTransform(
      * Transform parameters of all non-adaptive functions.
      */
     override fun visitValueParameterNew(declaration: IrValueParameter): IrStatement {
-        if (! declaration.hasAnnotation(ClassIds.ADAPTIVE)) return declaration
-        declaration.type = pluginContext.adaptiveFunctionType
+        if (declaration.hasAnnotation(ClassIds.ADAPTIVE)) {
+            declaration.type = pluginContext.adaptiveFunctionType
+        }
         return super.visitValueParameterNew(declaration)
     }
 
@@ -64,9 +65,9 @@ class FunctionPropertyTransform(
         val expression = initializer.expression as? IrGetValue
 
         if (expression?.origin == IrStatementOrigin.INITIALIZE_PROPERTY_FROM_PARAMETER) {
-            if (! isFromAdaptiveParameter(declaration)) return declaration
+            if (! isFromAdaptiveParameter(declaration)) return super.visitPropertyNew(declaration)
         } else {
-            if (! declaration.hasAnnotation(ClassIds.ADAPTIVE)) return declaration
+            if (! declaration.hasAnnotation(ClassIds.ADAPTIVE)) return super.visitPropertyNew(declaration)
         }
 
         val getter = declaration.getter

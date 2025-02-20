@@ -723,6 +723,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
+      @TestMetadata("classPropertyWithDefault.kt")
+      public void testClassPropertyWithDefault() {
+        runTest("testData/box/foundation/reference/classPropertyWithDefault.kt");
+      }
+
+      @Test
       @TestMetadata("classPropertyWithParam.kt")
       public void testClassPropertyWithParam() {
         runTest("testData/box/foundation/reference/classPropertyWithParam.kt");
