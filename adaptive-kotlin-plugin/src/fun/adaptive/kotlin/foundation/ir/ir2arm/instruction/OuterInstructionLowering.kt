@@ -136,9 +136,9 @@ class OuterInstructionLowering(
 
             instructions += value
 
-            check(receiver is IrCall) { "invalid outer instruction chain (receiver is not a call): ${expression.dumpKotlinLike()}"}
+            check(receiver is IrCall) { "invalid outer instruction chain (receiver is not a call): ${expression.dumpKotlinLike()}" }
 
-            if ( ! receiver.symbol.owner.isOperator && receiver.type.isSubtypeOfClass(pluginContext.adaptiveFragmentClass)) {
+            if (chainEnd(receiver)) {
 
                 check(receiver.isDirectAdaptiveCall || receiver.isArgumentAdaptiveCall) { "invalid outer instruction chain (not a rendering call): ${expression.dumpKotlinLike()}" }
 
@@ -151,5 +151,15 @@ class OuterInstructionLowering(
         }
 
         throw IllegalStateException("invalid transform chain (missing fragment call): ${expression.dumpKotlinLike()}")
+    }
+
+    fun chainEnd(receiver: IrCall) : Boolean {
+        val receiverOwner = receiver.symbol.owner
+
+        if (receiverOwner.name == Names.KOTLIN_INVOKE) return true
+        if (receiverOwner.isOperator) return false
+        if (receiver.type.isSubtypeOfClass(pluginContext.adaptiveFragmentClass)) return true
+
+        return false
     }
 }

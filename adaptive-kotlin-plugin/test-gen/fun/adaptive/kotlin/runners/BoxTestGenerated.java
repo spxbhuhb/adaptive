@@ -327,30 +327,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
-      @TestMetadata("functionReferenceGlobalPropertyNoParam.kt")
-      public void testFunctionReferenceGlobalPropertyNoParam() {
-        runTest("testData/box/foundation/call/functionReferenceGlobalPropertyNoParam.kt");
-      }
-
-      @Test
-      @TestMetadata("functionReferenceGlobalPropertyWithParam.kt")
-      public void testFunctionReferenceGlobalPropertyWithParam() {
-        runTest("testData/box/foundation/call/functionReferenceGlobalPropertyWithParam.kt");
-      }
-
-      @Test
-      @TestMetadata("functionReferenceHardNoParam.kt")
-      public void testFunctionReferenceHardNoParam() {
-        runTest("testData/box/foundation/call/functionReferenceHardNoParam.kt");
-      }
-
-      @Test
-      @TestMetadata("functionReferenceHardWithParam.kt")
-      public void testFunctionReferenceHardWithParam() {
-        runTest("testData/box/foundation/call/functionReferenceHardWithParam.kt");
-      }
-
-      @Test
       @TestMetadata("higherOrder.kt")
       public void testHigherOrder() {
         runTest("testData/box/foundation/call/higherOrder.kt");
@@ -734,6 +710,52 @@ public class BoxTestGenerated extends AbstractBoxTest {
       @TestMetadata("first.kt")
       public void testFirst() {
         runTest("testData/box/foundation/query/first.kt");
+      }
+    }
+
+    @Nested
+    @TestMetadata("testData/box/foundation/reference")
+    @TestDataPath("$PROJECT_ROOT")
+    public class Reference {
+      @Test
+      public void testAllFilesPresentInReference() {
+        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/foundation/reference"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
+      }
+
+      @Test
+      @TestMetadata("classPropertyWithParam.kt")
+      public void testClassPropertyWithParam() {
+        runTest("testData/box/foundation/reference/classPropertyWithParam.kt");
+      }
+
+      @Test
+      @TestMetadata("classPropertyWithReturn.kt")
+      public void testClassPropertyWithReturn() {
+        runTest("testData/box/foundation/reference/classPropertyWithReturn.kt");
+      }
+
+      @Test
+      @TestMetadata("globalPropertyNoParam.kt")
+      public void testGlobalPropertyNoParam() {
+        runTest("testData/box/foundation/reference/globalPropertyNoParam.kt");
+      }
+
+      @Test
+      @TestMetadata("globalPropertyWithParam.kt")
+      public void testGlobalPropertyWithParam() {
+        runTest("testData/box/foundation/reference/globalPropertyWithParam.kt");
+      }
+
+      @Test
+      @TestMetadata("hardNoParam.kt")
+      public void testHardNoParam() {
+        runTest("testData/box/foundation/reference/hardNoParam.kt");
+      }
+
+      @Test
+      @TestMetadata("hardWithParam.kt")
+      public void testHardWithParam() {
+        runTest("testData/box/foundation/reference/hardWithParam.kt");
       }
     }
 

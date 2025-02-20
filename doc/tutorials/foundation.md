@@ -234,6 +234,45 @@ fun callHigherOrder() {
 
 For a more complex example see: [higherOrder.kt](/adaptive-kotlin-plugin/testData/box/foundation/call/higherOrder.kt).
 
+## Function references
+
+You can use function references by marking the property with `@Adaptive`.
+
+```kotlin
+class Config(
+   @Adaptive
+   val fragmentFun : () -> Unit
+)
+
+@Adaptive
+fun someFun(@Adaptive : f : () -> Unit) {
+    f()
+}
+
+@Adaptive
+fun useRef(config : Config) {
+    someFun(config.fragmentFun)
+}
+```
+
+Currently supported:
+
+- [class property](/adaptive-kotlin-plugin/testData/box/foundation/reference/classPropertyWithParam.kt)
+- [global property](/adaptive-kotlin-plugin/testData/box/foundation/reference/globalPropertyWithParam.kt)
+- [direct](/adaptive-kotlin-plugin/testData/box/foundation/reference/hardWithParam.kt)
+- [instructions](/adaptive-kotlin-plugin/testData/box/foundation/reference/classPropertyWithReturn.kt)
+
+Surely **NOT** supported:
+
+- nullable properties
+
+```kotlin
+@Adaptive
+val p : () -> Unit = {  }
+```
+
+I think there are quite a few cases which throw a compilation error, so just stick to the supported cases.
+
 ## Lifecycle
 
 All adaptive fragments follow the same lifecycle pattern:

@@ -121,6 +121,7 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     private val ADAT_PACKAGE = "fun.adaptive.adat".fqName()
 
     val ADAPTIVE = Strings.ADAPTIVE.classId()
+    val ADAPTIVE_ENTRY = Strings.ADAPTIVE_ENTRY.classId()
     val ADAPTIVE_FRAGMENT = Strings.ADAPTIVE_FRAGMENT.classId()
     val ADAPTIVE_ADAPTER = Strings.ADAPTIVE_ADAPTER.classId()
 
