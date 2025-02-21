@@ -11,8 +11,6 @@ import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
 import `fun`.adaptive.ui.instruction.event.OnClick
 import `fun`.adaptive.ui.instruction.event.UIEvent
-import `fun`.adaptive.utility.checkIfInstance
-import `fun`.adaptive.utility.firstOrNullIfInstance
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.usePinned
@@ -33,7 +31,7 @@ class AuiImage(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<UIView>(adapter, parent, index, 1, 2) {
+) : AbstractAuiFragment<UIView>(adapter, parent, index, stateSize()) {
 
     override val receiver = UIImageView()
 
@@ -42,12 +40,12 @@ class AuiImage(
     }
 
     private val content: GraphicsResourceSet
-        get() = state[0].checkIfInstance()
+        by stateVariable()
 
     @OptIn(ExperimentalForeignApi::class)
     override fun auiPatchInternal() {
 
-        if (! haveToPatch(dirtyMask, 1)) return
+        if (! haveToPatch(content)) return
 
         CoroutineScope(Dispatchers.IO).launch {
             val data = content.readAll()
@@ -68,7 +66,7 @@ class AuiImage(
     ) : UIImageView(CGRectMake(0.0, 0.0, 0.0, 0.0)) {
 
         override fun touchesEnded(touches: Set<*>, withEvent: platform.UIKit.UIEvent?) {
-            fragment.instructions.firstOrNullIfInstance<OnClick>()
+            fragment.instructions.firstInstanceOfOrNull<OnClick>()
                 ?.execute(UIEvent(fragment, withEvent))
 
             super.touchesBegan(touches, withEvent)

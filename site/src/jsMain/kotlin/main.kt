@@ -72,7 +72,7 @@ fun content(media: MediaMetrics) {
     column {
         maxWidth .. paddingTop { 32.dp } .. background .. trace(".*")
 
-        slot(mainContent) { cards() }
+        // slot(mainContent) { cards() }
 
         text("adaptive.fun does not use cookies") ..
             paddingTop { 32.dp } ..

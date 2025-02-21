@@ -54,7 +54,7 @@ fun applyText(fragment: AbstractAuiFragment<UIView>) {
     // ----  IMPORTANT content ----
     // ----  letter spacing ----
 
-    val text = (fragment as AuiText).content
+    val text = (fragment as AuiText).get<Any?>(1).toString()
 
     val letterSpacing = current?.letterSpacing
 

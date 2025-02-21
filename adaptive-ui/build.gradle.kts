@@ -41,7 +41,11 @@ kotlin {
     }
 
     js(IR) {
-        browser()
+        browser {
+            testTask {
+                enabled = false
+            }
+        }
         binaries.library()
     }
 

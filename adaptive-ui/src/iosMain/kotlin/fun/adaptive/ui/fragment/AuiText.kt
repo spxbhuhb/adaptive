@@ -11,7 +11,6 @@ import `fun`.adaptive.ui.aui
 import `fun`.adaptive.ui.instruction.event.OnClick
 import `fun`.adaptive.ui.instruction.event.UIEvent
 import `fun`.adaptive.ui.render.applyText
-import `fun`.adaptive.utility.firstOrNullIfInstance
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.cinterop.useContents
 import platform.CoreGraphics.CGRectMake
@@ -23,7 +22,7 @@ class AuiText(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<UIView>(adapter, parent, index, 1, 2) {
+) : AbstractAuiFragment<UIView>(adapter, parent, index, stateSize()) {
 
     override val receiver = AUILabel(this)
 
@@ -31,12 +30,13 @@ class AuiText(
         receiver.tag = id
     }
 
-    val content: String get() = state[0]?.toString() ?: ""
+    private val content: Any?
+        by stateVariable()
 
     @OptIn(ExperimentalForeignApi::class)
     override fun auiPatchInternal() {
 
-        if (haveToPatch(dirtyMask, 1)) {
+        if (haveToPatch(content)) {
 
             // we have to apply instructions if they haven't changed
             // instructions sets the actual text fields of the UILabel
@@ -56,7 +56,7 @@ class AuiText(
             }
 
             if (contentChange) {
-                receiver.text = content
+                receiver.text = content.toString()
             }
 
             if (styleChange) {
@@ -76,7 +76,7 @@ class AuiText(
     ) : UILabel(CGRectMake(0.0, 0.0, 0.0, 0.0)) {
 
         override fun touchesEnded(touches: Set<*>, withEvent: platform.UIKit.UIEvent?) {
-            fragment.instructions.firstOrNullIfInstance<OnClick>()
+            fragment.instructions.firstInstanceOfOrNull<OnClick>()
                 ?.execute(UIEvent(fragment, withEvent))
             super.touchesBegan(touches, withEvent)
         }
