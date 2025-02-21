@@ -763,6 +763,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testHardWithParam() {
         runTest("testData/box/foundation/reference/hardWithParam.kt");
       }
+
+      @Test
+      @TestMetadata("refreshHigherOrder.kt")
+      public void testRefreshHigherOrder() {
+        runTest("testData/box/foundation/reference/refreshHigherOrder.kt");
+      }
     }
 
     @Nested

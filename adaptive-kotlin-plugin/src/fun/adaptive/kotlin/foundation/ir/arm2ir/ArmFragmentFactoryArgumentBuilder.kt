@@ -24,19 +24,6 @@ class ArmFragmentFactoryArgumentBuilder(
     closureDirtyMask: IrVariable
 ) : ArmValueArgumentBuilder(parent, argument, closure, fragment, closureDirtyMask) {
 
-    /**
-     * When the declaration is a hard-coded lambda, we do not have to patch it as
-     * it cannot change.
-     */
-    override fun patchDirtyMask(): IrExpression {
-        val expression = argument.irExpression
-        if (expression is IrFunctionExpression && expression.function.origin == IrDeclarationOrigin.LOCAL_FUNCTION_FOR_LAMBDA) {
-            return irConst(0)
-        } else {
-            return super.patchDirtyMask()
-        }
-    }
-
     override fun patchVariableValue(patchFun: IrSimpleFunction): IrExpression =
         irSetDescendantStateVariable(
             patchFun,

@@ -7,7 +7,6 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.internal.AdaptiveClosure
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
-import `fun`.adaptive.utility.debug
 
 /**
  * Anonymous has two different modes: "reference" and "lambda".
@@ -20,7 +19,7 @@ class AdaptiveAnonymous private constructor(
     parent: AdaptiveFragment,
     index: Int,
     stateSize: Int,
-    val factory: BoundFragmentFactory
+    var factory: BoundFragmentFactory
 ) : AdaptiveFragment(adapter, parent, index, stateSize) {
 
     constructor(
@@ -32,18 +31,24 @@ class AdaptiveAnonymous private constructor(
 
     val reference: Boolean = (factory.functionReference != null)
 
+    // TODO think about `last` properties in AdaptiveAnonymous
+    // do we really need the last index? I don't know to be honest
+    var lastFactory: BoundFragmentFactory = factory
+    var lastIndex: Int = 0
+
     override val createClosure: AdaptiveClosure
         get() = parent !!.thisClosure
 
     override val thisClosure =
         if (reference) {
-        AdaptiveClosure(arrayOf(this), state.size)
-    } else {
-        extendWith(this, factory.declaringFragment)
-    }
+            AdaptiveClosure(arrayOf(this), state.size)
+        } else {
+            extendWith(this, factory.declaringFragment)
+        }
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) {
         if (reference) {
+            // TODO I don't really like that we copy everything here. Technically it should work, still a bit of a brute-force approach.
             state.forEachIndexed { index, value ->
                 fragment.setStateVariable(index, value)
             }
@@ -54,12 +59,25 @@ class AdaptiveAnonymous private constructor(
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         if (reference) {
+            lastIndex = declarationIndex
             factory.functionReference !!(this, declarationIndex)?.also { it.create() }
         } else {
             factory.declaringFragment.genBuild(this, factory.declarationIndex, flags)
         }
 
-    override fun genPatchInternal(): Boolean = true
+    override fun genPatchInternal(): Boolean {
+        if (reference) {
+            if (lastFactory !== factory) {
+                lastFactory = factory
+                children.forEach { if (it.isMounted) it.unmount(); it.dispose() }
+                children.clear()
+                children += genBuild(this, lastIndex, 0) ?: return false
+                if (isMounted) children.first().mount()
+                return false // create calls patch
+            }
+        }
+        return true
+    }
 
     /**
      * Finds the first parent with `thisClosure` owned by [declaringComponent]. Then extends that closure with

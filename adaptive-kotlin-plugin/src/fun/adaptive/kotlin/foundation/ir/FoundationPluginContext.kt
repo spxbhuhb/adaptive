@@ -6,6 +6,7 @@ package `fun`.adaptive.kotlin.foundation.ir
 import `fun`.adaptive.kotlin.AdaptiveOptions
 import `fun`.adaptive.kotlin.common.AbstractPluginContext
 import `fun`.adaptive.kotlin.common.functionByName
+import `fun`.adaptive.kotlin.common.property
 import `fun`.adaptive.kotlin.foundation.CallableIds
 import `fun`.adaptive.kotlin.foundation.ClassIds
 import `fun`.adaptive.kotlin.foundation.Strings
@@ -58,6 +59,7 @@ class FoundationPluginContext(
 
     val adaptiveAnonymousClass = ClassIds.ADAPTIVE_ANONYMOUS.classSymbol()
     val anonymousConstructor = adaptiveAnonymousClass.constructors.first { it.owner.valueParameters.size == 4 }
+    val anonymousFactorySetterSymbol = adaptiveAnonymousClass.property { "factory" }.setter!!.symbol
 
     val boundFragmentFactoryClass = ClassIds.BOUND_FRAGMENT_FACTORY.classSymbol()
     val boundFragmentFactoryType = boundFragmentFactoryClass.defaultType

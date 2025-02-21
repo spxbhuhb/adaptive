@@ -9,9 +9,9 @@ import `fun`.adaptive.kotlin.foundation.Strings
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmCall
 import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
+import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.declarations.impl.IrValueParameterImpl
-import org.jetbrains.kotlin.ir.expressions.IrBlock
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.expressions.impl.IrBlockImpl
@@ -99,15 +99,12 @@ class ArmCallBuilder(
      * Generated code for `builder()` that uses this function (the `factory` parameter):
      *
      * ```kotlin
-     * AdaptiveAnonymous(parent = parent, index = declarationIndex, stateSize = 0, factory = <this>.<get-state>().get(index = -1) /*as BoundFragmentFactory */)
+     * AdaptiveAnonymous(parent = parent, index = declarationIndex, stateSize = 0, factory = <this>.<get-state>().get(index = 1) /*as BoundFragmentFactory */)
      * ```
      *
      * `(armCall.irCall.dispatchReceiver as IrGetValue).symbol.owner` is the `builder` value parameter of `inner`
      */
     fun irGetFragmentFactory(buildFun: IrSimpleFunction): IrExpression {
-
-        val valueParameter = (armCall.irCall.dispatchReceiver as IrGetValue).symbol.owner as IrValueParameterImpl
-        val argumentIndex = armClass.stateVariables.indexOfFirst { it.name == valueParameter.name.asString() }
 
         val getState = irCall(
             irClass.getPropertyGetter(Strings.STATE) !!,
@@ -117,7 +114,7 @@ class ArmCallBuilder(
         val getStateVariable = irCall(
             pluginContext.arrayGet,
             dispatchReceiver = getState,
-            args = arrayOf(irConst(argumentIndex))
+            args = arrayOf(irConst(argumentIndex()))
         )
 
         return irImplicitAs(
@@ -126,10 +123,15 @@ class ArmCallBuilder(
         )
     }
 
-    override fun genPatchDescendantBranch(patchFun: IrSimpleFunction, closureMask: IrVariable): IrBlock {
+    fun argumentIndex() : Int {
+        val valueParameter = (armCall.irCall.dispatchReceiver as IrGetValue).symbol.owner as IrValueParameterImpl
+        return armClass.stateVariables.indexOfFirst { it.name == valueParameter.name.asString() }
+    }
+
+    override fun genPatchDescendantBranch(patchFun: IrSimpleFunction, closureMask: IrVariable): IrExpression {
         val fragmentParameter = patchFun.valueParameters.first()
 
-        return IrBlockImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.irContext.irBuiltIns.unitType)
+        IrBlockImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.irContext.irBuiltIns.unitType)
             .also { block ->
 
                 for (argument in armCall.arguments) {
@@ -143,7 +145,30 @@ class ArmCallBuilder(
                         block.statements += it
                     }
                 }
+
+                if (! armCall.isExpectCall && ! armCall.isDirect) {
+                    block.statements += genPatchDescendantAnonymousFactory(patchFun, closureMask, fragmentParameter)
+                }
+
+                return block
             }
     }
+
+    fun genPatchDescendantAnonymousFactory(patchFun: IrSimpleFunction, closureMask: IrVariable, fragmentParameter : IrValueParameter): IrExpression =
+        irIf(
+            irCall(
+                symbol = pluginContext.haveToPatch,
+                dispatchReceiver = irGet(fragmentParameter),
+                args = arrayOf(
+                    irGet(closureMask),
+                    listOf(armClass.stateVariables[argumentIndex()]).toDirtyMask()
+                )
+            ),
+            irCall(
+                pluginContext.anonymousFactorySetterSymbol,
+                irGet(fragmentParameter),
+                irGetFragmentFactory(patchFun)
+            )
+        )
 
 }
