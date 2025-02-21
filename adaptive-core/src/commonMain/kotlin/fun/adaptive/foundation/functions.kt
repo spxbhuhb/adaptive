@@ -24,3 +24,13 @@ fun <T : AdaptiveTransformInterface> thisState(): T {
 fun instructions() : AdaptiveInstructionGroup {
     replacedByPlugin("gets the instructions of the declaring fragment")
 }
+
+fun AdaptiveFragment.throwAway() {
+    if (isMounted) unmount()
+    dispose()
+}
+
+fun AdaptiveFragment.throwChildrenAway() {
+    children.forEach { it.throwAway() }
+    children.clear()
+}

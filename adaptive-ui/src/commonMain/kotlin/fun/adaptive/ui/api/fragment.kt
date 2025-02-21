@@ -8,6 +8,7 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.manualImplementation
 import `fun`.adaptive.resource.image.ImageResourceSet
 import `fun`.adaptive.ui.aui
+import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
 
 @AdaptiveExpect(aui)
 fun image(res: ImageResourceSet, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
@@ -29,7 +30,7 @@ fun <T> boundInput(
     binding: AdaptiveStateVariableBinding<T>,
     toString: (T) -> String,
     fromString: (String) -> T?,
-    validityFun : (Boolean) -> Unit
+    validityFun: (Boolean) -> Unit
 ): AdaptiveFragment {
     manualImplementation(instructions, binding, toString, fromString, validityFun)
 }
@@ -111,4 +112,15 @@ fun primaryPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: ()
 @AdaptiveExpect(aui)
 fun contextPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
     manualImplementation(content, instructions)
+}
+
+@AdaptiveExpect(aui)
+fun splitPane(
+    configuration: SplitPaneConfiguration,
+    @Adaptive pane1: () -> Unit,
+    @Adaptive divider: () -> Unit,
+    @Adaptive pane2: () -> Unit,
+    vararg instructions: AdaptiveInstruction
+): AdaptiveFragment {
+    manualImplementation(instructions, configuration, pane1, divider, pane2)
 }

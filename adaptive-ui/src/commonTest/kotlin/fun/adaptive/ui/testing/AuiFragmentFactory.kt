@@ -16,5 +16,6 @@ object AuiFragmentFactory : AdaptiveFragmentFactory() {
         add("aui:row") { p, i, s -> AdaptiveRow(p.adapter as AuiTestAdapter, p, i) }
         add("aui:space") { p, i, s -> AuiSpace(p.adapter as AuiTestAdapter, p, i) }
         add("aui:text") { p, i, s -> AdaptiveText(p.adapter as AuiTestAdapter, p, i) }
+        add("aui:splitpane") { p, i, s -> AdaptiveSplitPane(p.adapter as AuiTestAdapter, p, i) }
     }
 }

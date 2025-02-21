@@ -62,8 +62,7 @@ interface AdaptiveLoopLogic<IT> {
 
         while (index < originalSize) {
             val f = children.removeLast()
-            if (isMounted) f.unmount()
-            f.dispose()
+            f.throwAway()
             index ++
         }
     }

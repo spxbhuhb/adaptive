@@ -30,5 +30,6 @@ object AuiFragmentFactory : FoundationFragmentFactory() {
         add("aui:hoverpopup") { p, i, s -> AuiHoverPopup(p.adapter as AuiAdapter, p, i) }
         add("aui:primarypopup") { p, i, s -> AuiPrimaryPopup(p.adapter as AuiAdapter, p, i) }
         add("aui:contextpopup") { p, i, s -> AuiContextPopup(p.adapter as AuiAdapter, p, i) }
+        add("aui:splitpane") { p, i, s -> AuiSplitPane(p.adapter as AuiAdapter, p, i) }
     }
 }

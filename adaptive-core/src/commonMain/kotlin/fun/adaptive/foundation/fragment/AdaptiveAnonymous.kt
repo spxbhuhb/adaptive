@@ -7,6 +7,7 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.internal.AdaptiveClosure
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
+import `fun`.adaptive.foundation.throwChildrenAway
 
 /**
  * Anonymous has two different modes: "reference" and "lambda".
@@ -69,8 +70,7 @@ class AdaptiveAnonymous private constructor(
         if (reference) {
             if (lastFactory !== factory) {
                 lastFactory = factory
-                children.forEach { if (it.isMounted) it.unmount(); it.dispose() }
-                children.clear()
+                throwChildrenAway()
                 children += genBuild(this, lastIndex, 0) ?: return false
                 if (isMounted) children.first().mount()
                 return false // create calls patch

@@ -6,6 +6,7 @@ package `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.internal.AdaptiveClosure
+import `fun`.adaptive.foundation.throwAway
 
 interface AdaptiveSelectLogic {
 
@@ -51,10 +52,7 @@ interface AdaptiveSelectLogic {
 
         shownBranch = stateBranch  // new branch
 
-        shownFragment?.let { // drop old branch
-            if (isMounted) it.unmount()
-            it.dispose()
-        }
+        shownFragment?.throwAway()
 
         if (shownBranch == -1) { // nothing should be shown
             shownFragment = null

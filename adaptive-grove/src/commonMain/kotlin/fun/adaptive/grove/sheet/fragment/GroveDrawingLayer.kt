@@ -2,6 +2,7 @@ package `fun`.adaptive.grove.sheet.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.throwAway
 import `fun`.adaptive.grove.hydration.lfm.LfmConst
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.SheetItem
@@ -92,8 +93,7 @@ class GroveDrawingLayer<RT, CRT : RT>(
     operator fun minusAssign(item: SheetItem) {
         val fragment = item.fragmentOrNull ?: return
         children.remove(fragment)
-        if (isMounted) fragment.unmount()
-        fragment.dispose()
+        fragment.throwAway()
         item.fragmentOrNull = null
     }
 
