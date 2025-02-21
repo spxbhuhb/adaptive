@@ -120,7 +120,8 @@ fun splitPane(
     @Adaptive pane1: () -> Unit,
     @Adaptive divider: () -> Unit,
     @Adaptive pane2: () -> Unit,
+    onChange: ((Double) -> Unit)? = null,
     vararg instructions: AdaptiveInstruction
 ): AdaptiveFragment {
-    manualImplementation(instructions, configuration, pane1, divider, pane2)
+    manualImplementation(configuration, pane1, divider, pane2, onChange, instructions)
 }

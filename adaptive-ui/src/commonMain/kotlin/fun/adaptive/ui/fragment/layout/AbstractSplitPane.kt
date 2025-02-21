@@ -4,15 +4,24 @@
 
 package `fun`.adaptive.ui.fragment.layout
 
+import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.foundation.throwAway
 import `fun`.adaptive.foundation.throwChildrenAway
 import `fun`.adaptive.ui.AbstractAuiAdapter
+import `fun`.adaptive.ui.api.onMove
+import `fun`.adaptive.ui.api.onPrimaryDown
+import `fun`.adaptive.ui.api.onPrimaryUp
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.event.OnMove
 import `fun`.adaptive.ui.instruction.layout.Orientation
+import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
+import kotlin.math.max
 
 /**
  * The split pane has two children configurations:
@@ -45,14 +54,26 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         const val PANE1_BUILDER = 2
         const val DIVIDER_BUILDER = 3
         const val PANE2_BUILDER = 4
+        const val ON_CHANGE = 5
     }
 
     val configuration get() = get<SplitPaneConfiguration>(CONFIGURATION)
     val pane1Builder get() = get<BoundFragmentFactory>(PANE1_BUILDER)
     val dividerBuilder get() = get<BoundFragmentFactory>(DIVIDER_BUILDER)
     val pane2Builder get() = get<BoundFragmentFactory>(PANE2_BUILDER)
+    val onChange get() = get<((Double) -> Unit)?>(ON_CHANGE)
 
     var currentVisibility: SplitVisibility? = null
+
+    var lastPosition = Position.NaP
+
+    val eventInstructions = AdaptiveInstructionGroup(
+        listOf(
+            onPrimaryDown { lastPosition = it.position },
+            onMove { handleDividerMove(it.position) },
+            onPrimaryUp { lastPosition = Position.NaP }
+        )
+    )
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? {
         when (declarationIndex) {
@@ -81,6 +102,13 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
             P2_ANY -> if (haveToPatch(closureMask, 1 shl PANE2_BUILDER)) (fragment as AdaptiveAnonymous).factory = pane2Builder
             else -> invalidIndex(fragment.declarationIndex)
         }
+    }
+
+    override fun genPatchInternal(): Boolean {
+        if (instructions.firstInstanceOfOrNull<OnMove>() == null) {
+            setStateVariable(0, instructions + eventInstructions)
+        }
+        return super.genPatchInternal()
     }
 
     override fun auiPatchInternal() {
@@ -157,12 +185,18 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         renderData.finalWidth = proposedWidth
         renderData.finalHeight = proposedHeight
 
+        val top = renderData.surroundingTop
+        val start = renderData.surroundingStart
+
+        val fullAvailableWidth = proposedWidth - renderData.surroundingHorizontal
+        val fullAvailableHeight = proposedHeight - renderData.surroundingVertical
+
         val c = configuration
 
         if (layoutItems.size == 1) {
             val pane = layoutItems.first()
-            pane.computeLayout(proposedWidth, proposedHeight)
-            pane.placeLayout(renderData.surroundingTop, renderData.surroundingStart)
+            pane.computeLayout(fullAvailableWidth, fullAvailableHeight)
+            pane.placeLayout(top, start)
             return
         }
 
@@ -173,55 +207,68 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         val dividerRawSize = c.dividerSize.toRawValue(uiAdapter)
         val horizontal = (c.orientation == Orientation.Horizontal)
 
-        val availableWidth = if (horizontal) proposedWidth - dividerRawSize else proposedWidth
-        val availableHeight = if (horizontal) proposedHeight else proposedHeight - dividerRawSize
+        val availableWidth = if (horizontal) fullAvailableWidth - dividerRawSize else fullAvailableWidth
+        val availableHeight = if (horizontal) fullAvailableHeight else fullAvailableHeight - dividerRawSize
+
+        val pane1Width: Double
+        val pane1Height: Double
 
         when (c.method) {
             SplitMethod.Proportional -> {
                 if (horizontal) {
-                    pane1.computeLayout(availableWidth * (1.0 - c.split), availableHeight)
-                    pane2.computeLayout(availableWidth * c.split, availableHeight)
+                    pane1Width = availableWidth * (1 - c.split)
+                    pane1Height = availableHeight
                 } else {
-                    pane1.computeLayout(availableWidth, availableHeight * (1.0 - c.split))
-                    pane2.computeLayout(availableWidth, availableHeight * c.split)
+                    pane1Width = availableWidth
+                    pane1Height = availableHeight * (1 - c.split)
                 }
             }
 
             SplitMethod.FixFirst -> {
+                val px = uiAdapter.toPx(c.split.dp)
                 if (horizontal) {
-                    pane1.computeLayout(c.split, availableHeight)
-                    pane2.computeLayout(availableWidth - c.split, availableHeight)
+                    pane1Width = px
+                    pane1Height = availableHeight
                 } else {
-                    pane1.computeLayout(availableWidth, c.split)
-                    pane2.computeLayout(availableWidth, availableHeight - c.split)
+                    pane1Width = availableWidth
+                    pane1Height = px
                 }
             }
 
             SplitMethod.FixSecond -> {
+                val px = uiAdapter.toPx(c.split.dp)
                 if (horizontal) {
-                    pane1.computeLayout(availableWidth - c.split, availableHeight)
-                    pane2.computeLayout(c.split, availableHeight)
+                    pane1Width = availableWidth - px
+                    pane1Height = availableHeight
                 } else {
-                    pane1.computeLayout(availableWidth, availableHeight - c.split)
-                    pane2.computeLayout(availableWidth, c.split)
+                    pane1Width = availableWidth
+                    pane1Height = availableHeight - px
                 }
             }
         }
 
         if (horizontal) {
-            divider.computeLayout(dividerRawSize, availableHeight)
+            divider.computeLayout(dividerRawSize, fullAvailableHeight)
         } else {
-            divider.computeLayout(availableWidth, dividerRawSize)
+            divider.computeLayout(fullAvailableWidth, dividerRawSize)
         }
 
         if (horizontal) {
-            pane1.placeLayout(renderData.surroundingTop, renderData.surroundingStart)
-            divider.placeLayout(renderData.surroundingTop, pane1.renderData.finalLeft + pane1.renderData.finalWidth)
-            pane2.placeLayout(renderData.surroundingTop, divider.renderData.finalLeft + divider.renderData.finalWidth)
+            pane1.computeLayout(pane1Width, availableHeight)
+            pane2.computeLayout(availableWidth - pane1Width, availableHeight)
         } else {
-            pane1.placeLayout(renderData.surroundingTop, renderData.surroundingStart)
-            divider.placeLayout(pane1.renderData.finalTop + pane1.renderData.finalHeight, renderData.surroundingStart)
-            pane2.placeLayout(divider.renderData.finalTop + divider.renderData.finalHeight, renderData.surroundingStart)
+            pane1.computeLayout(availableWidth, pane1Height)
+            pane2.computeLayout(availableWidth, availableHeight - pane1Height)
+        }
+
+        if (horizontal) {
+            pane1.placeLayout(top, start)
+            divider.placeLayout(top, start + pane1Width)
+            pane2.placeLayout(top, start + dividerRawSize + pane1Width)
+        } else {
+            pane1.placeLayout(top, start)
+            divider.placeLayout(top + pane1Height, start)
+            pane2.placeLayout(top + pane1Height + dividerRawSize, start)
         }
     }
 
@@ -246,5 +293,56 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
 //
 //        item.updateBatchId = updateId
 //    }
+
+    fun handleDividerMove(newPosition: Position) {
+        if (lastPosition === Position.NaP) return
+
+        val dx = (newPosition.left - lastPosition.left).value
+        val dy = (newPosition.top - lastPosition.top).value
+
+        lastPosition = newPosition
+
+        val c = configuration
+        val horizontal = (c.orientation == Orientation.Horizontal)
+
+        val value: Double
+
+        val pane1 = layoutItems[0]
+        val pane1Width = pane1.renderData.finalWidth
+        val pane1Height = pane1.renderData.finalHeight
+
+        val pane2 = layoutItems[2]
+        val pane2Width = pane2.renderData.finalWidth
+        val pane2Height = pane2.renderData.finalHeight
+
+        when (c.method) {
+
+            SplitMethod.FixFirst, SplitMethod.FixSecond -> { // c.split is size of first in DP
+                if (horizontal) {
+                    value = max(0.0, c.split + dx)
+                } else {
+                    value = max(0.0, c.split + dy)
+                }
+            }
+
+            SplitMethod.Proportional -> {
+                if (horizontal) {
+                    value = c.split + dx / (pane1Width + pane2Width)
+                } else {
+                    value = c.split + dy / (pane1Height + pane2Height)
+                }
+            }
+        }
+
+        val safeOnChange = onChange
+
+        if (safeOnChange == null) {
+            configuration.update(configuration::split, value)
+        } else {
+            safeOnChange(value)
+        }
+
+        scheduleUpdate()
+    }
 
 }
