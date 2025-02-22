@@ -6,6 +6,10 @@ import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 
+/**
+ * @param  split  With fix method the size of the fix pane in DP. With proportional method the ratio
+ *                between the first pane and the total size.
+ */
 @Adat
 class SplitPaneConfiguration(
     val visibility : SplitVisibility,

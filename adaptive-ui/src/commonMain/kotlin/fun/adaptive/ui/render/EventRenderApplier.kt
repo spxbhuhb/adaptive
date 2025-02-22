@@ -53,6 +53,15 @@ abstract class EventRenderApplier<R> : AbstractRenderApplier() {
 
         applyEventHandler(
             fragment,
+            previous?.onLeave,
+            previous?.onLeaveListener,
+            current?.onLeave
+        ).also {
+            if (current != null) current.onLeaveListener = it
+        }
+
+        applyEventHandler(
+            fragment,
             previous?.onPrimaryDown,
             previous?.onPrimaryDownListener,
             current?.onPrimaryDown

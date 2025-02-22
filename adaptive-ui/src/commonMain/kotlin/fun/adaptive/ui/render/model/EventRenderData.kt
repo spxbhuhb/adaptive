@@ -24,6 +24,9 @@ class EventRenderData(
     var onMove: OnMove? = null
     var onMoveListener: Any? = null
 
+    var onLeave: OnLeave? = null
+    var onLeaveListener: Any? = null
+
     var onPrimaryDown: OnPrimaryDown? = null
     var onPrimaryDownListener: Any? = null
 
@@ -53,6 +56,7 @@ class EventRenderData(
         if (other.additionalEvents != this.additionalEvents) return false
         if (other.onDoubleClick != this.onDoubleClick) return false
         if (other.onMove != this.onMove) return false
+        if (other.onLeave != this.onLeave) return false
         if (other.onPrimaryDown != this.onPrimaryDown) return false
         if (other.onPrimaryUp != this.onPrimaryUp) return false
         if (other.onSecondaryDown != this.onSecondaryDown) return false

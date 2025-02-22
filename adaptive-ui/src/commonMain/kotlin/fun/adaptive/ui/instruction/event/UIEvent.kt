@@ -5,11 +5,17 @@ import `fun`.adaptive.ui.fragment.layout.RawPosition
 import `fun`.adaptive.ui.instruction.layout.Position
 
 /**
- * @property   x   The raw [x] coordinate where the event happened, relative to the frame of the
- *                 fragment that the event handler is attached to.
+ * For all positional information ([x], [y], [position], [rawPosition]):
  *
- * @property   y   The raw [y] coordinate where the event happened, relative to the frame of the
- *                 fragment that the event handler is attached to.
+ * - values are relative to the frame of the fragment that the event handler is attached to
+ * - the fragment frame includes all surroundings: margin, border and padding
+ * - mouse events over margin are **NOT** reported
+ *
+ * Note: when margin is present, the positional information never reaches zero.
+ *
+ * @property   position The device-independent position where the event happened.
+ * @property   x   The raw [x] coordinate where the event happened, see [UIEvent] for details.
+ * @property   y   The raw [y] coordinate where the event happened, see [UIEvent] for details.
  */
 class UIEvent(
     val fragment: AbstractAuiFragment<*>,

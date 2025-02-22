@@ -33,6 +33,7 @@ val appData = BasicAppData().apply {
         SidebarItem(Graphics.grid_view, "Select", Routes.select),
         SidebarItem(Graphics.grid_view, "Sidebar", Routes.sidebar),
         SidebarItem(Graphics.grid_view, "Snackbar", Routes.snackbar),
+        SidebarItem(Graphics.grid_view, "SplitPane", Routes.splitPane),
         SidebarItem(Graphics.grid_view, "SVG", Routes.svg),
         SidebarItem(Graphics.grid_view, "Text", Routes.text),
         SidebarItem(Graphics.grid_view, "Tree", Routes.tree)
@@ -58,6 +59,7 @@ object Routes {
     val select = navState("select", title = "Select")
     val sidebar = navState("sideBar", title = "SideBar")
     val snackbar = navState("snackbar", title = "Snackbar")
+    val splitPane = navState("splitPane", title = "SplitPane")
     val svg = navState("svg", title = "SVG")
     val text = navState("text", title = "Text")
     val tree = navState("tree", title = "Tree")

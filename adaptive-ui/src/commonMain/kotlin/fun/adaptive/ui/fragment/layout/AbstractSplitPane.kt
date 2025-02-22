@@ -7,11 +7,13 @@ package `fun`.adaptive.ui.fragment.layout
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
-import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
+import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.foundation.throwAway
 import `fun`.adaptive.foundation.throwChildrenAway
 import `fun`.adaptive.ui.AbstractAuiAdapter
+import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.onLeave
 import `fun`.adaptive.ui.api.onMove
 import `fun`.adaptive.ui.api.onPrimaryDown
 import `fun`.adaptive.ui.api.onPrimaryUp
@@ -22,6 +24,7 @@ import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 import kotlin.math.max
+import kotlin.math.min
 
 /**
  * The split pane has two children configurations:
@@ -65,14 +68,32 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
 
     var currentVisibility: SplitVisibility? = null
 
-    var lastPosition = Position.NaP
+    // When moving, the primary down happens somewhere inside the divider.
+    // We have to correct moves calculations with this amount to give
+    // the expected user experience.
 
-    val eventInstructions = AdaptiveInstructionGroup(
-        listOf(
-            onPrimaryDown { lastPosition = it.position },
-            onMove { handleDividerMove(it.position) },
-            onPrimaryUp { lastPosition = Position.NaP }
-        )
+    var startPosition = Position.NaP
+    var moveOffset : Double = 0.0 // device-dependent pixel
+
+    // These must be over all the pane so we get the events even if the mouse
+    // moves out of the divider a bit (which does happen).
+
+    val splitPaneInstructions = instructionsOf(
+        onMove { handleMove(it.x, it.y) },
+        onLeave { handleMoveEnd() },
+        onPrimaryUp { handleMoveEnd() }
+    )
+
+    // The content boxes must occupy the full size for the calculations to work.
+
+    val paneInstructions = instructionsOf(
+        maxSize
+    )
+
+    // Only a primary down on the divider should start resize.
+
+    val dividerInstructions = instructionsOf(
+        onPrimaryDown { handleMoveStart(it.position, it.x, it.y) }
     )
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? {
@@ -94,11 +115,23 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
     override fun genPatchDescendant(fragment: AdaptiveFragment) {
         val closureMask = fragment.getCreateClosureDirtyMask()
         when (fragment.declarationIndex) {
-            P1_BOX -> if (haveToPatch(closureMask, 1 shl PANE1_BUILDER)) fragment.setStateVariable(1, BoundFragmentFactory(this, P1_ANY, null))
+            P1_BOX -> {
+                if (haveToPatch(closureMask, 1)) fragment.setStateVariable(0, paneInstructions)
+                if (haveToPatch(closureMask, 1 shl PANE1_BUILDER)) fragment.setStateVariable(1, BoundFragmentFactory(this, P1_ANY, null))
+            }
+
             P1_ANY -> if (haveToPatch(closureMask, 1 shl PANE1_BUILDER)) (fragment as AdaptiveAnonymous).factory = pane1Builder
-            DI_BOX -> if (haveToPatch(closureMask, 1 shl DIVIDER_BUILDER)) fragment.setStateVariable(1, BoundFragmentFactory(this, DI_ANY, null))
+            DI_BOX -> {
+                if (haveToPatch(closureMask, 1)) fragment.setStateVariable(0, dividerInstructions)
+                if (haveToPatch(closureMask, 1 shl DIVIDER_BUILDER)) fragment.setStateVariable(1, BoundFragmentFactory(this, DI_ANY, null))
+            }
+
             DI_ANY -> if (haveToPatch(closureMask, 1 shl DIVIDER_BUILDER)) (fragment as AdaptiveAnonymous).factory = dividerBuilder
-            P2_BOX -> if (haveToPatch(closureMask, 1 shl PANE2_BUILDER)) fragment.setStateVariable(1, BoundFragmentFactory(this, P2_ANY, null))
+            P2_BOX -> {
+                if (haveToPatch(closureMask, 1)) fragment.setStateVariable(0, paneInstructions)
+                if (haveToPatch(closureMask, 1 shl PANE2_BUILDER)) fragment.setStateVariable(1, BoundFragmentFactory(this, P2_ANY, null))
+            }
+
             P2_ANY -> if (haveToPatch(closureMask, 1 shl PANE2_BUILDER)) (fragment as AdaptiveAnonymous).factory = pane2Builder
             else -> invalidIndex(fragment.declarationIndex)
         }
@@ -106,7 +139,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
 
     override fun genPatchInternal(): Boolean {
         if (instructions.firstInstanceOfOrNull<OnMove>() == null) {
-            setStateVariable(0, instructions + eventInstructions)
+            setStateVariable(0, instructions + splitPaneInstructions)
         }
         return super.genPatchInternal()
     }
@@ -216,11 +249,11 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         when (c.method) {
             SplitMethod.Proportional -> {
                 if (horizontal) {
-                    pane1Width = availableWidth * (1 - c.split)
+                    pane1Width = availableWidth * c.split
                     pane1Height = availableHeight
                 } else {
                     pane1Width = availableWidth
-                    pane1Height = availableHeight * (1 - c.split)
+                    pane1Height = availableHeight * c.split
                 }
             }
 
@@ -294,50 +327,71 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
 //        item.updateBatchId = updateId
 //    }
 
-    fun handleDividerMove(newPosition: Position) {
-        if (lastPosition === Position.NaP) return
+    fun handleMoveStart(position : Position, x: Double, y: Double) {
 
-        val dx = (newPosition.left - lastPosition.left).value
-        val dy = (newPosition.top - lastPosition.top).value
+        // position is inside the divider box.
 
-        lastPosition = newPosition
+        if (configuration.orientation == Orientation.Horizontal) {
+            moveOffset = x
+        } else {
+            moveOffset = y
+        }
+
+        startPosition = position
+    }
+
+    fun handleMove(x: Double, y: Double) {
+        if (startPosition === Position.NaP) return
+
+        // event position includes all surroundings: margin, border, padding
+        // we have to ignore these in the calculations to set sizes properly
+        // these effective values are cleared of surrounding data
+
+        val effectiveX = x - renderData.surroundingStart
+        val effectiveY = y - renderData.surroundingTop.dpValue
+        val effectiveWidth = renderData.finalWidth - renderData.surroundingHorizontal
+        val effectiveHeight = renderData.finalHeight - renderData.surroundingVertical
 
         val c = configuration
         val horizontal = (c.orientation == Orientation.Horizontal)
 
         val value: Double
 
-        val pane1 = layoutItems[0]
-        val pane1Width = pane1.renderData.finalWidth
-        val pane1Height = pane1.renderData.finalHeight
+        // the edges of the divider determine the sizes of the panes
 
-        val pane2 = layoutItems[2]
-        val pane2Width = pane2.renderData.finalWidth
-        val pane2Height = pane2.renderData.finalHeight
+        val dividerSize = uiAdapter.toPx(c.dividerSize)
+        val dividerStartEdge = (if (horizontal) effectiveX else effectiveY) - moveOffset
+        val dividerEndEdge = dividerStartEdge + dividerSize
 
         when (c.method) {
 
-            SplitMethod.FixFirst, SplitMethod.FixSecond -> { // c.split is size of first in DP
+            SplitMethod.FixFirst -> {
+                value = dividerStartEdge
+            }
+
+            SplitMethod.FixSecond -> { // c.split is size of second in DP
                 if (horizontal) {
-                    value = max(0.0, c.split + dx)
+                    value = effectiveWidth - dividerEndEdge
                 } else {
-                    value = max(0.0, c.split + dy)
+                    value = effectiveHeight - dividerEndEdge
                 }
             }
 
             SplitMethod.Proportional -> {
                 if (horizontal) {
-                    value = c.split + dx / (pane1Width + pane2Width)
+                    value = dividerStartEdge / (effectiveWidth - dividerSize)
                 } else {
-                    value = c.split + dy / (pane1Height + pane2Height)
+                    value = dividerStartEdge / (effectiveHeight - dividerSize)
                 }
             }
         }
 
+        val effectiveSize = (if (horizontal) effectiveWidth else effectiveHeight) - dividerSize
+
         val safeOnChange = onChange
 
         if (safeOnChange == null) {
-            configuration.update(configuration::split, value)
+            configuration.update(configuration::split, min(effectiveSize, max(0.0, value)).dpValue)
         } else {
             safeOnChange(value)
         }
@@ -345,4 +399,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         scheduleUpdate()
     }
 
+    fun handleMoveEnd() {
+        startPosition = Position.NaP
+    }
 }

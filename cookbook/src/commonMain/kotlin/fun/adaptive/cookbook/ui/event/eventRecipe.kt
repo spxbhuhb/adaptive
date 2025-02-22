@@ -5,6 +5,7 @@ import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.margin
 import `fun`.adaptive.ui.api.maxHeight
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.onClick
@@ -28,7 +29,7 @@ fun eventRecipe() {
         maxSize .. rowTemplate(200.dp, 1.fr)
 
         box {
-            borders.outline .. size(400.dp, 200.dp)
+            margin { 16.dp } .. borders.outline .. size(400.dp, 200.dp)
 
             onClick { nonMoveMessages += "${localTime()} - Click" }
             onDoubleClick { nonMoveMessages += "${localTime()} - Double click" }

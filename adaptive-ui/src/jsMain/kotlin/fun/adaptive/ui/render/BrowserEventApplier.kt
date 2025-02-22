@@ -28,6 +28,7 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
             is OnDoubleClick -> "dblclick" to Always
             is OnPrimaryDown -> "mousedown" to Primary
             is OnMove -> "mousemove" to Always
+            is OnLeave -> "mouseleave" to Always
             is OnPrimaryUp -> "mouseup" to Primary
             is OnDrop -> "drop" to Always
             is OnKeyDown -> "keydown" to Always
@@ -47,8 +48,8 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
                 val boundingRect = fragment.receiver.getBoundingClientRect()
                 val renderData = fragment.renderData
                 val margin = renderData.layout?.margin ?: RawSurrounding.ZERO
-                x = event.clientX - boundingRect.x - margin.start
-                y = event.clientY - boundingRect.y - margin.top
+                x = event.clientX - boundingRect.x + margin.start
+                y = event.clientY - boundingRect.y + margin.top
             } else {
                 x = Double.NaN
                 y = Double.NaN

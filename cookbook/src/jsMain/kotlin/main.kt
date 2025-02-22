@@ -31,6 +31,7 @@ import `fun`.adaptive.cookbook.ui.popup.popupRecipe
 import `fun`.adaptive.cookbook.ui.select.selectRecipe
 import `fun`.adaptive.cookbook.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.cookbook.ui.snackbar.snackbarRecipe
+import `fun`.adaptive.cookbook.ui.splitpane.splitPaneRecipe
 import `fun`.adaptive.cookbook.ui.svg.svgRecipe
 import `fun`.adaptive.cookbook.ui.text.textRecipe
 import `fun`.adaptive.cookbook.ui.tree.treeRecipe
@@ -142,6 +143,7 @@ fun mainContent() {
             in Routes.select -> selectRecipe()
             in Routes.sidebar -> sideBarRecipe()
             in Routes.snackbar -> snackbarRecipe()
+            in Routes.splitPane -> splitPaneRecipe()
             in Routes.svg -> svgRecipe()
             in Routes.text -> textRecipe()
             in Routes.tree -> treeRecipe()

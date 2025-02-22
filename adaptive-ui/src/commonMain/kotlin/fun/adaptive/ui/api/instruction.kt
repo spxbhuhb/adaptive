@@ -58,6 +58,7 @@ fun onClick(handler: (event: UIEvent) -> Unit) = OnClick(handler)
 fun onDoubleClick(handler: (event: UIEvent) -> Unit) = OnDoubleClick(handler)
 
 fun onMove(handler: (event: UIEvent) -> Unit) = OnMove(handler)
+fun onLeave(handler: (event: UIEvent) -> Unit) = OnLeave(handler)
 
 fun onPrimaryDown(handler: (event: UIEvent) -> Unit) = OnPrimaryDown(handler)
 fun onPrimaryUp(handler: (event: UIEvent) -> Unit) = OnPrimaryUp(handler)

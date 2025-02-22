@@ -6,6 +6,7 @@ package `fun`.adaptive.ui
 
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.fragment.layout.RawPosition
+import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.layout.FitStrategy
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import `fun`.adaptive.ui.support.statistics.AuiStatistics
@@ -289,4 +290,10 @@ abstract class AbstractAuiFragment<RT>(
         return result
     }
 
+    // FIXME dpValue unnecessarily creates a DPixel class
+    val Double.dpValue : Double
+        get() = uiAdapter.toDp(this).value
+
+    val DPixel.pixelValue : Double
+        get() = uiAdapter.toPx(this)
 }
