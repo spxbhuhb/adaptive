@@ -7,8 +7,8 @@
 >
 > Project status: **preview - stage 1**
 >
-> While the features above are all working, they are NOT complete. I typically add only what I need
-> for my specific projects, at some places the documentation is lacking, etc.
+> While the features below are all working, they are NOT complete. I typically add only what I need, 
+> at some places the documentation is lacking, etc.
 >
 > If you would like some features and/or modifications:
 >
