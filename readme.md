@@ -9,12 +9,18 @@
 >
 > While the features below are all working, they are NOT complete. I typically add only what I need, 
 > at some places the documentation is lacking, etc.
->
-> If you would like some features and/or modifications:
->
-> 1) write it and make a PR
-> 2) just ask, and I'll check if it can be done with reasonable effort
->
+> 
+> For now, Adaptive is a kind of personal project. With a scope this big it is not a realistic
+> expectation that people drop mature solutions in favor of something in preview state.
+> 
+> That said,
+> 
+> - it is realistic to go on and reach the point where the project is actually useful for others,
+> - I do use Adaptive in production environment, it works.
+> 
+> If you're interested, feel free to explore, contribute, or provide feedback—your input is valuable
+> in shaping Adaptive’s future!
+> 
 
 Adaptive is a low-code application development system for Kotlin Multiplatform, featuring:
 
