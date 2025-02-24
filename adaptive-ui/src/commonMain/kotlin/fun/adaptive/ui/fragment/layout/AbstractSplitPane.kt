@@ -27,7 +27,9 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * The split pane has two children configurations:
+ * The split pane has trhee children configurations:
+ *
+ * No child is shown.
  *
  * Only one child is shown:
  * - box
@@ -66,7 +68,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
     val pane2Builder get() = get<BoundFragmentFactory>(PANE2_BUILDER)
     val onChange get() = get<((Double) -> Unit)?>(ON_CHANGE)
 
-    var currentVisibility: SplitVisibility? = null
+    var currentVisibility = SplitVisibility.None
 
     // When moving, the primary down happens somewhere inside the divider.
     // We have to correct moves calculations with this amount to give
@@ -194,36 +196,66 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         when (currentVisibility) {
 
             SplitVisibility.Both -> {
-                if (visibility == SplitVisibility.First) {
-                    children.removeAt(2).throwAway() // throw away the second pane
-                    children.removeAt(1).throwAway() // throw away the divider
-                } else {
-                    children.removeAt(0).throwAway() // throw away the first pane
-                    children.removeAt(0).throwAway() // throw away the divider
+                when (visibility) {
+                    SplitVisibility.First -> {
+                        children.removeAt(2).throwAway() // throw away the second pane
+                        children.removeAt(1).throwAway() // throw away the divider
+                    }
+
+                    SplitVisibility.Second -> {
+                        children.removeAt(0).throwAway() // throw away the first pane
+                        children.removeAt(0).throwAway() // throw away the divider
+                    }
+
+                    SplitVisibility.None -> {
+                        throwChildrenAway()
+                    }
+
+                    else -> Unit
                 }
             }
 
             SplitVisibility.First -> {
-                if (visibility == SplitVisibility.Both) {
-                    children += genBuild(this, DI_BOX, 0) !!
-                    children += genBuild(this, P2_BOX, 0) !!
-                } else {
-                    throwChildrenAway()
-                    children += genBuild(this, P2_BOX, 0) !!
+                when (visibility) {
+                    SplitVisibility.Both -> {
+                        children += genBuild(this, DI_BOX, 0) !!
+                        children += genBuild(this, P2_BOX, 0) !!
+                    }
+
+                    SplitVisibility.Second -> {
+                        throwChildrenAway()
+                        children += genBuild(this, P2_BOX, 0) !!
+                    }
+
+                    SplitVisibility.First -> Unit
+
+                    SplitVisibility.None -> {
+                        throwChildrenAway()
+                    }
                 }
             }
 
             SplitVisibility.Second -> {
-                if (visibility == SplitVisibility.Both) {
-                    children += genBuild(this, P1_BOX, 0) !!
-                    children += genBuild(this, DI_BOX, 0) !!
-                } else {
-                    throwChildrenAway()
-                    children += genBuild(this, P1_BOX, 0) !!
+                when (visibility) {
+                    SplitVisibility.Both -> {
+                        children += genBuild(this, P1_BOX, 0) !!
+                        children += genBuild(this, DI_BOX, 0) !!
+                    }
+
+                    SplitVisibility.First -> {
+                        throwChildrenAway()
+                        children += genBuild(this, P1_BOX, 0) !!
+                    }
+
+                    SplitVisibility.None -> {
+                        throwChildrenAway()
+                    }
+
+                    SplitVisibility.Second -> Unit
                 }
             }
 
-            null -> {
+            SplitVisibility.None -> {
                 if (visibility == SplitVisibility.Both || visibility == SplitVisibility.First) {
                     children += genBuild(this, P1_BOX, 0) !!
                 }
@@ -250,8 +282,6 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         children.sortBy { it.declarationIndex }
         layoutItems.sortBy { it.declarationIndex }
 
-        println("$children $layoutItems")
-
         scheduleUpdate() // when visibility change we surely have to update the layout
     }
 
@@ -270,6 +300,8 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         val fullAvailableHeight = proposedHeight - renderData.surroundingVertical
 
         val c = configuration
+
+        if (layoutItems.isEmpty()) return
 
         if (layoutItems.size == 1) {
             val pane = layoutItems.first()

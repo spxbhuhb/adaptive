@@ -6,11 +6,7 @@ import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.value.valueFrom
-import `fun`.adaptive.general.Observable
+import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.api.GroveRuntimeFragmentFactory
@@ -21,24 +17,12 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.builtin.account_box
 import `fun`.adaptive.ui.builtin.menu
-import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
-import `fun`.adaptive.ui.icon.icon
-import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 import `fun`.adaptive.ui.instruction.sp
-import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.ui.theme.textColors
-import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.ui.uiCommon
-import `fun`.adaptive.ui.workspace.WorkspacePane
-import `fun`.adaptive.ui.workspace.WorkspacePanePosition
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.*
 import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
-import `fun`.adaptive.ui.workspace.wsMain
-import `fun`.adaptive.ui.workspace.wsPaneIcons
 import `fun`.adaptive.utility.UUID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -53,7 +37,13 @@ fun main() {
 
         commonMainStringsStringStore0.load()
 
-        browser(CanvasFragmentFactory, SvgFragmentFactory, GroveRuntimeFragmentFactory, backend = backend { }) { adapter ->
+        browser(
+            CanvasFragmentFactory,
+            SvgFragmentFactory,
+            GroveRuntimeFragmentFactory,
+            PaneFragmentFactory,
+            backend = backend { }
+        ) { adapter ->
 
             with(adapter.defaultTextRenderData) {
                 fontName = "Open Sans"
@@ -77,6 +67,14 @@ fun main() {
     }
 }
 
+object PaneFragmentFactory : FoundationFragmentFactory() {
+    init {
+        add("grove:palette", ::palette)
+        add("grove:emptypanel", ::emptyPanel)
+        add("grove:center", ::center)
+    }
+}
+
 fun initPanes(workspace: Workspace) {
     workspace.panes.addAll(
         listOf(
@@ -85,7 +83,7 @@ fun initPanes(workspace: Workspace) {
                 "Palette",
                 Graphics.menu,
                 WorkspacePanePosition.LeftTop,
-                ::palette,
+                "grove:palette",
                 "⌘ P"
             ),
             WorkspacePane(
@@ -93,7 +91,7 @@ fun initPanes(workspace: Workspace) {
                 "Components",
                 Graphics.account_box,
                 WorkspacePanePosition.LeftTop,
-                ::emptyPanel,
+                "grove:emptypanel",
                 "⌘ P"
             ),
             WorkspacePane(
@@ -101,14 +99,14 @@ fun initPanes(workspace: Workspace) {
                 "Palette",
                 Graphics.menu,
                 WorkspacePanePosition.LeftMiddle,
-                ::emptyPanel
+                "grove:emptypanel",
             ),
             WorkspacePane(
                 UUID(),
                 "Components",
                 Graphics.account_box,
                 WorkspacePanePosition.LeftMiddle,
-                ::emptyPanel,
+                "grove:emptypanel",
                 "⌘ P"
             ),
             WorkspacePane(
@@ -116,7 +114,7 @@ fun initPanes(workspace: Workspace) {
                 "Palette",
                 Graphics.menu,
                 WorkspacePanePosition.LeftBottom,
-                ::emptyPanel,
+                "grove:emptypanel",
                 "⌘ P"
             ),
             WorkspacePane(
@@ -124,7 +122,7 @@ fun initPanes(workspace: Workspace) {
                 "Components",
                 Graphics.account_box,
                 WorkspacePanePosition.LeftBottom,
-                ::emptyPanel,
+                "grove:emptypanel",
                 "⌘ P"
             ),
             WorkspacePane(
@@ -132,7 +130,7 @@ fun initPanes(workspace: Workspace) {
                 "Center",
                 Graphics.menu,
                 WorkspacePanePosition.Center,
-                ::center
+                "grove:center"
             ),
         )
     )

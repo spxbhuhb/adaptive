@@ -5,7 +5,7 @@
 package `fun`.adaptive.lib.sandbox.ui.misc
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.fragment.measureFragmentTime
+import `fun`.adaptive.foundation.api.measureFragmentTime
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.ui.api.backgroundColor

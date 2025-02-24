@@ -2,24 +2,11 @@ package `fun`.adaptive.ui.workspace
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
-import `fun`.adaptive.ui.api.backgroundColor
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.hoverPopup
-import `fun`.adaptive.ui.api.maxHeight
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.maxWidth
-import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.popupAlign
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.splitPane
-import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.api.width
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.backgrounds
@@ -98,9 +85,9 @@ private fun wsBottom(workspace: Workspace) {
 }
 
 @Adaptive
-private fun wsPane(workspace: Workspace, position: WorkspacePanePosition, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
+private fun wsPane(workspace: Workspace, position: WorkspacePanePosition): AdaptiveFragment {
 
-    val panelUuid = valueFrom {
+    val paneUuid = valueFrom {
         when (position) {
             WorkspacePanePosition.RightTop ->  { workspace.rightTop }
             WorkspacePanePosition.RightMiddle ->  { workspace.rightMiddle }
@@ -112,12 +99,12 @@ private fun wsPane(workspace: Workspace, position: WorkspacePanePosition, vararg
         }
     }
 
-    val panel = workspace.panes.firstOrNull { it.uuid == panelUuid }
+    val pane = workspace.panes.firstOrNull { it.uuid == paneUuid }
 
     box(instructions()) {
         maxSize .. backgroundColor { colors.onSurfaceFriendly.opaque(0.2f) }
-        if (panel != null) {
-            wsPaneContent(panel._fixme_adaptive_content)
+        if (pane != null) {
+            wsPaneContent(pane)
         } else {
             text("no content")
         }
@@ -127,13 +114,12 @@ private fun wsPane(workspace: Workspace, position: WorkspacePanePosition, vararg
 }
 
 @Adaptive
-private fun wsPaneContent(@Adaptive content: () -> AdaptiveFragment) {
+private fun wsPaneContent(pane : WorkspacePane) {
     box {
         maxSize
-        content()
+        actualize(pane.key)
     }
 }
-
 
 @Adaptive
 fun wsPaneIcons(
@@ -150,20 +136,20 @@ fun wsPaneIcons(
         if (left) theme.leftIconColumn else theme.rightIconColumn
 
         column {
-            for (panel in top) {
-                wsPanelIcon(panel, workspace)
+            for (pane in top) {
+                wsPaneIcon(pane, workspace)
             }
             if (top.isNotEmpty() && middle.isNotEmpty()) {
                 box { theme.divider }
             }
-            for (panel in middle) {
-                wsPanelIcon(panel, workspace)
+            for (pane in middle) {
+                wsPaneIcon(pane, workspace)
             }
         }
 
         column {
-            for (panel in bottom) {
-                wsPanelIcon(panel, workspace)
+            for (pane in bottom) {
+                wsPaneIcon(pane, workspace)
             }
         }
     }
@@ -171,18 +157,18 @@ fun wsPaneIcons(
 }
 
 @Adaptive
-private fun wsPanelIcon(
-    panel: WorkspacePane,
+private fun wsPaneIcon(
+    pane: WorkspacePane,
     workspace: Workspace
 ) {
 
     val theme = workspace.theme
 
     box {
-        theme.panelIconContainer
-        onClick { workspace.onIconClick(panel) }
+        theme.paneIconContainer
+        onClick { workspace.onIconClick(pane) }
 
-        icon(panel.icon)
+        icon(pane.icon)
 
         hoverPopup {
             popupAlign.afterCenter
@@ -190,10 +176,10 @@ private fun wsPanelIcon(
             row {
                 theme.tooltipContainer
 
-                text(panel.name) .. theme.tooltipName
+                text(pane.name) .. theme.tooltipName
 
-                if (panel.shortcut != null) {
-                    text(panel.shortcut) .. theme.tooltipShortcut
+                if (pane.shortcut != null) {
+                    text(pane.shortcut) .. theme.tooltipShortcut
                 }
             }
         }
