@@ -42,7 +42,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
     parent: AdaptiveFragment?,
     declarationIndex: Int
 ) : AbstractContainer<RT, CRT>(
-    adapter, parent, declarationIndex, 5
+    adapter, parent, declarationIndex, 6
 ) {
 
     companion object {
@@ -73,7 +73,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
     // the expected user experience.
 
     var startPosition = Position.NaP
-    var moveOffset : Double = 0.0 // device-dependent pixel
+    var moveOffset: Double = 0.0 // device-dependent pixel
 
     // These must be over all the pane so we get the events even if the mouse
     // moves out of the divider a bit (which does happen).
@@ -116,26 +116,56 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         val closureMask = fragment.getCreateClosureDirtyMask()
         when (fragment.declarationIndex) {
             P1_BOX -> {
-                if (haveToPatch(closureMask, 1)) fragment.setStateVariable(0, paneInstructions)
-                if (haveToPatch(closureMask, 1 shl PANE1_BUILDER)) fragment.setStateVariable(1, BoundFragmentFactory(this, P1_ANY, null))
+                if (haveToPatchConf(closureMask, 1)) {
+                    fragment.setStateVariable(0, paneInstructions)
+                }
+                if (haveToPatchConf(closureMask, PANE1_BUILDER)) {
+                    fragment.setStateVariable(1, BoundFragmentFactory(this, P1_ANY, null))
+                }
             }
 
-            P1_ANY -> if (haveToPatch(closureMask, 1 shl PANE1_BUILDER)) (fragment as AdaptiveAnonymous).factory = pane1Builder
+            P1_ANY -> {
+                if (haveToPatchConf(closureMask, PANE1_BUILDER)) {
+                    (fragment as AdaptiveAnonymous).factory = pane1Builder
+                }
+            }
+
             DI_BOX -> {
-                if (haveToPatch(closureMask, 1)) fragment.setStateVariable(0, dividerInstructions)
-                if (haveToPatch(closureMask, 1 shl DIVIDER_BUILDER)) fragment.setStateVariable(1, BoundFragmentFactory(this, DI_ANY, null))
+                if (haveToPatchConf(closureMask, 1)) {
+                    fragment.setStateVariable(0, dividerInstructions)
+                }
+                if (haveToPatchConf(closureMask, DIVIDER_BUILDER)) {
+                    fragment.setStateVariable(1, BoundFragmentFactory(this, DI_ANY, null))
+                }
             }
 
-            DI_ANY -> if (haveToPatch(closureMask, 1 shl DIVIDER_BUILDER)) (fragment as AdaptiveAnonymous).factory = dividerBuilder
+            DI_ANY -> {
+                if (haveToPatchConf(closureMask, DIVIDER_BUILDER)) {
+                    (fragment as AdaptiveAnonymous).factory = dividerBuilder
+                }
+            }
+
             P2_BOX -> {
-                if (haveToPatch(closureMask, 1)) fragment.setStateVariable(0, paneInstructions)
-                if (haveToPatch(closureMask, 1 shl PANE2_BUILDER)) fragment.setStateVariable(1, BoundFragmentFactory(this, P2_ANY, null))
+                if (haveToPatchConf(closureMask, 1)) {
+                    fragment.setStateVariable(0, paneInstructions)
+                }
+                if (haveToPatchConf(closureMask, PANE2_BUILDER)) {
+                    fragment.setStateVariable(1, BoundFragmentFactory(this, P2_ANY, null))
+                }
             }
 
-            P2_ANY -> if (haveToPatch(closureMask, 1 shl PANE2_BUILDER)) (fragment as AdaptiveAnonymous).factory = pane2Builder
+            P2_ANY -> {
+                if (haveToPatchConf(closureMask, PANE2_BUILDER)) {
+                    (fragment as AdaptiveAnonymous).factory = pane2Builder
+                }
+            }
+
             else -> invalidIndex(fragment.declarationIndex)
         }
     }
+
+    fun haveToPatchConf(closureMask: Int, d1: Int) =
+        haveToPatch(closureMask, (1 shl d1) or (1 shl CONFIGURATION))
 
     override fun genPatchInternal(): Boolean {
         if (instructions.firstInstanceOfOrNull<OnMove>() == null) {
@@ -162,6 +192,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
     fun switchVisibility(visibility: SplitVisibility) {
 
         when (currentVisibility) {
+
             SplitVisibility.Both -> {
                 if (visibility == SplitVisibility.First) {
                     children.removeAt(2).throwAway() // throw away the second pane
@@ -174,38 +205,52 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
 
             SplitVisibility.First -> {
                 if (visibility == SplitVisibility.Both) {
-                    children += genBuild(this, DI_BOX, 0) !!.also { it.mount() }
-                    children += genBuild(this, P2_BOX, 0) !!.also { it.mount() }
+                    children += genBuild(this, DI_BOX, 0) !!
+                    children += genBuild(this, P2_BOX, 0) !!
                 } else {
                     throwChildrenAway()
-                    children += genBuild(this, P2_BOX, 0) !!.also { it.mount() }
+                    children += genBuild(this, P2_BOX, 0) !!
                 }
             }
 
             SplitVisibility.Second -> {
                 if (visibility == SplitVisibility.Both) {
-                    children.add(0, genBuild(this, P1_BOX, 0) !!.also { it.mount() })
-                    children.add(1, genBuild(this, DI_BOX, 0) !!.also { it.mount() })
+                    children += genBuild(this, P1_BOX, 0) !!
+                    children += genBuild(this, DI_BOX, 0) !!
                 } else {
                     throwChildrenAway()
-                    children += genBuild(this, P1_BOX, 0) !!.also { it.mount() }
+                    children += genBuild(this, P1_BOX, 0) !!
                 }
             }
 
             null -> {
                 if (visibility == SplitVisibility.Both || visibility == SplitVisibility.First) {
-                    children += genBuild(this, P1_BOX, 0) !!.also { it.mount() }
+                    children += genBuild(this, P1_BOX, 0) !!
                 }
                 if (visibility == SplitVisibility.Both) {
-                    children.add(1, genBuild(this, DI_BOX, 0) !!.also { it.mount() })
+                    children += genBuild(this, DI_BOX, 0) !!
                 }
                 if (visibility == SplitVisibility.Both || visibility == SplitVisibility.Second) {
-                    children += genBuild(this, P2_BOX, 0) !!.also { it.mount() }
+                    children += genBuild(this, P2_BOX, 0) !!
                 }
             }
         }
 
         currentVisibility = visibility
+
+        if (isMounted) {
+            for (child in children) {
+                if (! child.isMounted) child.mount()
+            }
+        }
+
+        // the replacement logic above does not care about the order of the panes
+        // these two calls fix it, so they will be shown in the proper order
+
+        children.sortBy { it.declarationIndex }
+        layoutItems.sortBy { it.declarationIndex }
+
+        println("$children $layoutItems")
 
         scheduleUpdate() // when visibility change we surely have to update the layout
     }
@@ -288,9 +333,11 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
 
         if (horizontal) {
             pane1.computeLayout(pane1Width, availableHeight)
+            divider.computeLayout(c.dividerSize.pixelValue, availableHeight)
             pane2.computeLayout(availableWidth - pane1Width, availableHeight)
         } else {
             pane1.computeLayout(availableWidth, pane1Height)
+            divider.computeLayout(availableWidth, c.dividerSize.pixelValue)
             pane2.computeLayout(availableWidth, availableHeight - pane1Height)
         }
 
@@ -327,7 +374,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
 //        item.updateBatchId = updateId
 //    }
 
-    fun handleMoveStart(position : Position, x: Double, y: Double) {
+    fun handleMoveStart(position: Position, x: Double, y: Double) {
 
         // position is inside the divider box.
 

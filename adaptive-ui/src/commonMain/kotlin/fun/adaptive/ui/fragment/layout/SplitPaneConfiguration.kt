@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.instruction.layout.SplitVisibility
  *                between the first pane and the total size.
  */
 @Adat
-class SplitPaneConfiguration(
+data class SplitPaneConfiguration(
     val visibility : SplitVisibility,
     val method : SplitMethod,
     val split : Double,
