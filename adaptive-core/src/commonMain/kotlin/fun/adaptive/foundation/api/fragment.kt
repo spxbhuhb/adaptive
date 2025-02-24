@@ -10,3 +10,13 @@ import `fun`.adaptive.foundation.manualImplementation
 fun <T> localContext(context : T, vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit) {
     manualImplementation(instructions, content)
 }
+
+@AdaptiveExpect(foundation)
+fun measureFragmentTime(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit) {
+    manualImplementation(instructions, content)
+}
+
+@AdaptiveExpect(foundation)
+fun actualize(key : String) {
+    manualImplementation(key)
+}

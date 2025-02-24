@@ -741,6 +741,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
+      @TestMetadata("factoryAddAndActualize.kt")
+      public void testFactoryAddAndActualize() {
+        runTest("testData/box/foundation/reference/factoryAddAndActualize.kt");
+      }
+
+      @Test
       @TestMetadata("globalPropertyNoParam.kt")
       public void testGlobalPropertyNoParam() {
         runTest("testData/box/foundation/reference/globalPropertyNoParam.kt");

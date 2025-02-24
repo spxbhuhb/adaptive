@@ -1,7 +1,7 @@
 package `fun`.adaptive.foundation.api
 
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.fragment.LocalContext
+import `fun`.adaptive.foundation.fragment.FoundationLocalContext
 import kotlin.reflect.KClass
 
 /**
@@ -20,7 +20,7 @@ inline fun <reified T : Any> withLocalContext(start: AdaptiveFragment, block: (T
     block(start.findContext(T::class))
 
 /**
- * Find the first [LocalContext] fragment between parents of [this] with context
+ * Find the first [FoundationLocalContext] fragment between parents of [this] with context
  * of type [T] and return with the context.
  *
  * @return  the context or null if there is no such fragment
@@ -29,7 +29,7 @@ inline fun <reified T : Any> AdaptiveFragment.findContext() =
     findContext(T::class)
 
 /**
- * Find the first [LocalContext] fragment between parents of [this] with context
+ * Find the first [FoundationLocalContext] fragment between parents of [this] with context
  * of [type] and return with the context.
  *
  * @return  the context or null if there is no such fragment
@@ -39,7 +39,7 @@ fun <T : Any> AdaptiveFragment.findContext(type: KClass<T>): T? {
 
     while (current != null) {
         @Suppress("UNCHECKED_CAST")
-        if (current is LocalContext && type.isInstance(current.context)) return current.context as T
+        if (current is FoundationLocalContext && type.isInstance(current.context)) return current.context as T
         current = current.parent
     }
 

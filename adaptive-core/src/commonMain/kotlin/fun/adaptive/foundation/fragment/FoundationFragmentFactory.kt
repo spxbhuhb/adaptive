@@ -9,5 +9,7 @@ import `fun`.adaptive.foundation.AdaptiveFragmentFactory
 open class FoundationFragmentFactory : AdaptiveFragmentFactory() {
     init {
         add("foundation:measurefragmenttime") { p, i, s -> FoundationMeasureFragmentTime(p.adapter, p, i) }
+        add("foundation:localcontext") { p, i, s -> FoundationLocalContext(p.adapter, p, i) }
+        add("foundation:actualize") { p, i, s -> FoundationActualize(p.adapter, p, i) }
     }
 }

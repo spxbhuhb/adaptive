@@ -25,6 +25,7 @@ object Strings {
     const val ADAPTIVE_SELECT = "AdaptiveSelect"
     const val ADAPTIVE_LOOP = "AdaptiveLoop"
     const val BOUND_FRAGMENT_FACTORY = "BoundFragmentFactory"
+    const val ADAPTIVE_FRAGMENT_FACTORY = "AdaptiveFragmentFactory"
     const val ADAPTIVE_STATE_VARIABLE_BINDING = "AdaptiveStateVariableBinding"
 
     const val ROOT_FRAGMENT = "rootFragment"
@@ -51,6 +52,7 @@ object Strings {
     const val SET = "set"
     const val DIRTY_MASK = "dirtyMask"
 
+    const val ADD = "add"
     const val ADAPTER = "adapter"
     const val PARENT = "parent"
     const val DECLARATION_INDEX = "declarationIndex"
@@ -128,6 +130,7 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAPTIVE_ANONYMOUS = Strings.ADAPTIVE_ANONYMOUS.classId { STRUCTURAL }
 
     val BOUND_FRAGMENT_FACTORY = Strings.BOUND_FRAGMENT_FACTORY.classId { INTERNAL }
+    val ADAPTIVE_FRAGMENT_FACTORY = Strings.ADAPTIVE_FRAGMENT_FACTORY.classId()
 
     val ADAPTIVE_STATE_VARIABLE_BINDING = Strings.ADAPTIVE_STATE_VARIABLE_BINDING.classId { BINDING }
 

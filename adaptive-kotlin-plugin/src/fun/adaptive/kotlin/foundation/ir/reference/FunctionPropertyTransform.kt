@@ -4,6 +4,7 @@
 package `fun`.adaptive.kotlin.foundation.ir.reference
 
 import `fun`.adaptive.kotlin.foundation.ClassIds
+import `fun`.adaptive.kotlin.foundation.Strings
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import `fun`.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
@@ -13,7 +14,9 @@ import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.*
+import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrFunctionReferenceImplWithShape
+import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.hasAnnotation
 import org.jetbrains.kotlin.ir.util.primaryConstructor
 
@@ -45,6 +48,26 @@ class FunctionPropertyTransform(
         if (declaration.hasAnnotation(ClassIds.ADAPTIVE)) return declaration
         if (declaration.hasAnnotation(ClassIds.ADAPTIVE_ENTRY)) return declaration
         return super.visitSimpleFunction(declaration)
+    }
+
+    override fun visitCall(expression: IrCall): IrExpression {
+        val owner = expression.symbol.owner
+        val name = owner.name
+
+        if (name.isSpecial || name.identifier != Strings.ADD) return super.visitCall(expression)
+
+        if (pluginContext.addNonTransformed !in owner.overriddenSymbols) return super.visitCall(expression)
+
+        return IrCallImpl(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            pluginContext.irBuiltIns.unitType,
+            pluginContext.addTransformed,
+            typeArgumentsCount = 0
+        ).apply {
+            dispatchReceiver = expression.dispatchReceiver
+            putValueArgument(0, expression.getValueArgument(0))
+            putValueArgument(1, visitFunctionReference(expression.getValueArgument(1) as IrFunctionReference))
+        }
     }
 
     /**

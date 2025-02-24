@@ -65,6 +65,10 @@ class FoundationPluginContext(
     val boundFragmentFactoryType = boundFragmentFactoryClass.defaultType
     val boundFragmentFactoryConstructor = boundFragmentFactoryClass.constructors.single()
 
+    val adaptiveFragmentFactoryClass = ClassIds.ADAPTIVE_FRAGMENT_FACTORY.classSymbol().owner
+    val addNonTransformed = adaptiveFragmentFactoryClass.functionByKey("addNonTransformed").symbol
+    val addTransformed = adaptiveFragmentFactoryClass.functionByKey("addTransformed").symbol
+
     val adaptiveStateVariableBindingClass = ClassIds.ADAPTIVE_STATE_VARIABLE_BINDING.classSymbol()
 
     val adapter = Strings.ADAPTER.fragmentPropertyList().single().owner

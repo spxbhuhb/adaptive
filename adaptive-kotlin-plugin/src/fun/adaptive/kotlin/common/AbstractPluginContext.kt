@@ -7,6 +7,8 @@ package `fun`.adaptive.kotlin.common
 import `fun`.adaptive.kotlin.AdaptiveOptions
 import `fun`.adaptive.kotlin.common.AdaptiveFqNames.PLUGIN_REFERENCE
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
+import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.symbols.IrConstructorSymbol
 import org.jetbrains.kotlin.ir.symbols.IrFieldSymbol
@@ -58,6 +60,9 @@ abstract class AbstractPluginContext(
 
     fun IrClassSymbol.constructorByKey(key: String): IrConstructorSymbol =
         constructors.first { it.owner.getAnnotationArgumentValue<String>(PLUGIN_REFERENCE, "key") == key }
+
+    fun IrClass.functionByKey(key: String): IrSimpleFunction =
+        declarations.first { (it is IrSimpleFunction) && it.getAnnotationArgumentValue<String>(PLUGIN_REFERENCE, "key") == key } as IrSimpleFunction
 
     fun IrClassSymbol.fieldByName(name: String): IrFieldSymbol =
         fields.single { it.owner.name.asString() == name }

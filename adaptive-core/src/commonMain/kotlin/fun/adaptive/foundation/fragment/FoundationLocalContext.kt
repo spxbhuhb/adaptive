@@ -1,8 +1,8 @@
 package `fun`.adaptive.foundation.fragment
 
+import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 
 /**
@@ -10,7 +10,8 @@ import `fun`.adaptive.foundation.internal.BoundFragmentFactory
  * This is useful for local structures such as forms where editors can find their
  * local context and make changes in it.
  */
-class LocalContext(
+@AdaptiveActual(foundation)
+class FoundationLocalContext(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment,
     index: Int

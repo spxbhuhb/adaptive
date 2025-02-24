@@ -52,6 +52,13 @@ interface AdaptiveAdapter {
     fun newLoop(parent : AdaptiveFragment, index : Int) : AdaptiveFragment =
         AdaptiveLoop<Any>(parent.adapter, parent, index)
 
+    /**
+     * Create a new fragment instance from [fragmentFactory].
+     *
+     * @param stateSize State size if known, -1 otherwise. This parameter is used by hydration,
+     *                  manually written fragments typically use their state size and simply
+     *                  ignore this value.
+     */
     fun actualize(name: String, parent: AdaptiveFragment, index: Int, stateSize : Int) =
         fragmentFactory.newInstance(name, parent, index, stateSize)
 
