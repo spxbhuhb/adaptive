@@ -8,8 +8,6 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
-import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
 
 @Adaptive
@@ -19,7 +17,7 @@ fun wsMain(workspace: Workspace) {
     splitPane(
         config,
         { wsTop(workspace) },
-        { box { maxWidth .. height { 4.dp } .. backgrounds.friendly } },
+        { box { workspace.theme.splitDividerHorizontal } },
         { wsBottom(workspace) }
     ) .. maxSize
 }
@@ -31,7 +29,7 @@ private fun wsTop(workspace: Workspace) {
     splitPane(
         config,
         { wsLeft(workspace) },
-        { box { maxHeight .. width { 4.dp } .. backgrounds.friendly } },
+        { box { workspace.theme.splitDividerVertical } },
         { wsCenterRight(workspace) }
     ) .. maxSize
 }
@@ -43,7 +41,7 @@ private fun wsLeft(workspace: Workspace) {
     splitPane(
         config,
         { wsPane(workspace, WorkspacePanePosition.LeftTop) },
-        { box { maxWidth .. height { 4.dp } .. backgrounds.friendly } },
+        { box { workspace.theme.splitDividerHorizontal } },
         { wsPane(workspace, WorkspacePanePosition.LeftMiddle) }
     ) .. maxSize
 }
@@ -55,7 +53,7 @@ private fun wsCenterRight(workspace: Workspace) {
     splitPane(
         config,
         { wsPane(workspace, WorkspacePanePosition.Center) },
-        { box { maxSize .. backgrounds.friendly } },
+        { box { workspace.theme.splitDividerVertical } },
         { wsRight(workspace) }
     ) .. maxSize
 }
@@ -67,7 +65,7 @@ private fun wsRight(workspace: Workspace) {
     splitPane(
         config,
         { wsPane(workspace, WorkspacePanePosition.RightTop) },
-        { box { maxSize .. backgrounds.friendly } },
+        { box { workspace.theme.splitDividerHorizontal } },
         { wsPane(workspace, WorkspacePanePosition.RightMiddle) }
     ) .. maxSize
 }
@@ -79,7 +77,7 @@ private fun wsBottom(workspace: Workspace) {
     splitPane(
         config,
         { wsPane(workspace, WorkspacePanePosition.LeftBottom) },
-        { box { maxSize .. backgrounds.friendly } },
+        { box { workspace.theme.splitDividerVertical } },
         { wsPane(workspace, WorkspacePanePosition.RightBottom) }
     ) .. maxSize
 }
@@ -140,7 +138,7 @@ fun wsPaneIcons(
                 wsPaneIcon(pane, workspace)
             }
             if (top.isNotEmpty() && middle.isNotEmpty()) {
-                box { theme.divider }
+                box { theme.paneIconDivider }
             }
             for (pane in middle) {
                 wsPaneIcon(pane, workspace)

@@ -90,7 +90,7 @@ class Workspace {
             WorkspacePanePosition.LeftTop -> toggle(leftTop, pane)
             WorkspacePanePosition.LeftMiddle -> toggle(leftMiddle , pane)
             WorkspacePanePosition.LeftBottom -> toggle(leftBottom , pane)
-            WorkspacePanePosition.RightTop -> toggle(leftTop , pane)
+            WorkspacePanePosition.RightTop -> toggle(rightTop , pane)
             WorkspacePanePosition.RightMiddle -> toggle(rightMiddle , pane)
             WorkspacePanePosition.RightBottom -> toggle(rightBottom , pane)
             WorkspacePanePosition.Center -> Unit
