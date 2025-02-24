@@ -51,38 +51,8 @@ kotlin {
             dependencies {
                 implementation(libs.adaptive.core)
                 implementation(libs.adaptive.ui)
-                implementation(libs.adaptive.lib.email)
-                implementation(libs.adaptive.lib.ktor)
-                implementation(libs.adaptive.lib.auth)
-                implementation(libs.adaptive.lib.auto)
-                implementation(libs.adaptive.lib.graphics)
-                //implementation(libs.adaptive.lib.markdown)
                 implementation(libs.adaptive.lib.ui)
-                implementation(libs.adaptive.grove.runtime)
-                implementation(libs.kotlinx.coroutines.debug)
-            }
-        }
-
-        commonTest {
-            dependencies {
-                implementation(kotlin("test"))
-            }
-        }
-
-        jsMain {
-            dependencies {
-                implementation(libs.ktor.client.core)
-            }
-        }
-
-        jvmMain {
-            dependencies {
-                implementation(libs.h2database)
-                implementation(libs.ktor.server.core)
-                implementation(libs.ktor.server.netty)
-                implementation(libs.ktor.server.websockets)
-                implementation(libs.ktor.server.forwardedheaders)
-                implementation(libs.adaptive.lib.exposed)
+                implementation(libs.adaptive.lib.graphics)
             }
         }
     }
