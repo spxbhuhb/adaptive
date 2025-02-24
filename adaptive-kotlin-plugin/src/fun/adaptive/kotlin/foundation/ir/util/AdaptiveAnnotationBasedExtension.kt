@@ -27,7 +27,12 @@ interface AdaptiveAnnotationBasedExtension {
 
     val IrValueParameter?.isAdaptive: Boolean
         // FIXME remove hard-coded _fixme_adaptive_content
-        get() = this?.name?.identifier == "_fixme_adaptive_content" || this?.hasAnnotation(pluginContext.adaptiveClass) == true
+        get() {
+            if (this == null) return false
+            if (this.name.isSpecial) return false
+            if (this.name.identifier == "_fixme_adaptive_content") return true
+            return this.hasAnnotation(pluginContext.adaptiveClass) == true
+        }
 
     val IrValueParameter?.isInstructions: Boolean
         get() = (this != null
@@ -42,7 +47,7 @@ interface AdaptiveAnnotationBasedExtension {
     val IrCall.isExpectCall: Boolean
         get() = symbol.owner.hasAnnotation(pluginContext.adaptiveExpectClass)
 
-    val IrCall.isHydratedCall : Boolean
+    val IrCall.isHydratedCall: Boolean
         get() = symbol.owner.hasAnnotation(pluginContext.hydratedAnnotation)
 
     val IrCall.isDirectAdaptiveCall: Boolean

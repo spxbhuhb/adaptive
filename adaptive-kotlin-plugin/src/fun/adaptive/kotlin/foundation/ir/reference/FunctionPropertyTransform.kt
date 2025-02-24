@@ -5,6 +5,7 @@ package `fun`.adaptive.kotlin.foundation.ir.reference
 
 import `fun`.adaptive.kotlin.foundation.ClassIds
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
+import `fun`.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
@@ -31,8 +32,8 @@ import org.jetbrains.kotlin.ir.util.primaryConstructor
  * ```
  */
 class FunctionPropertyTransform(
-    private val pluginContext: FoundationPluginContext
-) : IrElementTransformerVoidWithContext() {
+    override val pluginContext: FoundationPluginContext
+) : IrElementTransformerVoidWithContext(), AdaptiveAnnotationBasedExtension {
 
     /**
      * Do not transform parameters of adaptive functions as we need those later,
@@ -50,7 +51,7 @@ class FunctionPropertyTransform(
      * Transform parameters of all non-adaptive functions.
      */
     override fun visitValueParameterNew(declaration: IrValueParameter): IrStatement {
-        if (declaration.hasAnnotation(ClassIds.ADAPTIVE)) {
+        if (declaration.isAdaptive) {
             declaration.type = pluginContext.adaptiveFunctionType
         }
         return super.visitValueParameterNew(declaration)
