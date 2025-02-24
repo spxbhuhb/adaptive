@@ -3,6 +3,19 @@
 
 **Maven Central version is _VERY_ outdated. I'll make new release when someone asks for it.**
 
+> [!CAUTION]
+>
+> Project status: **preview - stage 1**
+>
+> While the features above are all working, they are NOT complete. I typically add only what I need
+> for my specific projects, at some places the documentation is lacking, etc.
+>
+> If you would like some features and/or modifications:
+>
+> 1) write it and make a PR
+> 2) just ask, and I'll check if it can be done with reasonable effort
+>
+
 Adaptive is a low-code application development system for Kotlin Multiplatform, featuring:
 
 - fully reactive UI
@@ -14,26 +27,13 @@ Adaptive is a low-code application development system for Kotlin Multiplatform, 
 - very clean, easy to read UI code syntax
 - UI fragment library, editors etc.
 
-> [!CAUTION]
->
-> Project status: **experimental**
->
-> While the features above are all working, they are NOT finished. At some places the documentation
-> is lacking, etc.
-> 
-> Adaptive contains what I need, I don't try to add everything at once. If you would like some features
-> and/or modifications:
-> 
-> 1) write it and make a PR
-> 2) just ask, and I'll check if it can be done with reasonable effort
->
-
 Upcoming features (near future, already in development):
 
 - General purpose lexer/parser generation from ANTLR grammars
 - Kotlin lexer/parser to build Kotlin AST
 - Kotlin syntax coloring
 - UI fragments:
+  - split pane and workspace with multiple, resizable panes 
   - general purpose drawing sheet for graphical editors
   - date, time, date time editor
 
