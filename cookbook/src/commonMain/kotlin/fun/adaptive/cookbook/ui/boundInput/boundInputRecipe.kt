@@ -1,7 +1,7 @@
 package `fun`.adaptive.cookbook.ui.boundInput
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
@@ -19,7 +19,7 @@ import kotlinx.datetime.LocalTime
 
 @Adaptive
 fun boundInputRecipe() {
-    val data = copyStore { EditData(LocalTime(12, 0)) }
+    val data = copyOf { EditData(LocalTime(12, 0)) }
     column {
         text("stuff: ${data.time}")
         timeInput { data.time } .. editorTheme.enabled .. width { 80.dp }

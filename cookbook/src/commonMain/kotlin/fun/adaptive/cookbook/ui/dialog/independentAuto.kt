@@ -1,7 +1,7 @@
 package `fun`.adaptive.cookbook.ui.dialog
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.auto.api.autoItemOrigin
 import `fun`.adaptive.resource.graphics.Graphics
@@ -43,7 +43,7 @@ fun independentAuto(close: () -> Unit) {
     val autoData = autoItem(sharedData) ?: sharedData.value
 
     @Independent
-    var iData = copyStore { autoData }
+    var iData = copyOf { autoData }
 
     updateShared()
 

@@ -1,9 +1,9 @@
 package `fun`.adaptive.adat.store
 
-import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.general.Observable
 import kotlin.reflect.KProperty
 
-abstract class AdatStore<A : AdatClass> {
+abstract class AdatStore<A> : Observable<A>() {
 
     open fun update(original: A, path: Array<String>, value: Any?) {
         throw UnsupportedOperationException()

@@ -3,7 +3,7 @@ package `fun`.adaptive.grove.sheet
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.foundation.value.adaptiveValueStore
+import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.sheet.fragment.GroveDrawingLayer
 import `fun`.adaptive.grove.sheet.model.*
@@ -75,7 +75,7 @@ open class SheetViewController(
     val selectionFrame: Frame
         get() = selection.containingFrame.toFrame(drawingLayer.uiAdapter)
 
-    val selectionStore = adaptiveValueStore { selection }
+    val selectionStore = storeFor { selection }
 
     var clipboard = SheetClipboard(emptyList())
 
@@ -108,7 +108,7 @@ open class SheetViewController(
             controlFrameStore.value = v
         }
 
-    var controlFrameStore = adaptiveValueStore { Frame.NaF }
+    var controlFrameStore = storeFor { Frame.NaF }
 
     /**
      * Name of the active control for an ongoing continuous operation such as resize.
@@ -126,7 +126,7 @@ open class SheetViewController(
             multiplierStore.value = v
         }
 
-    val multiplierStore = adaptiveValueStore { 0 }
+    val multiplierStore = storeFor { 0 }
 
     /**
      * The VM time when the current transform (move, resize etc.) operation started.

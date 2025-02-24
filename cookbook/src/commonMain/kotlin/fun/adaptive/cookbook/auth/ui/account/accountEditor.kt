@@ -1,6 +1,6 @@
 package `fun`.adaptive.cookbook.auth.ui.account
 
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.auth.api.PrincipalApi
 import `fun`.adaptive.auth.api.RoleApi
 import `fun`.adaptive.auth.model.Principal
@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 fun accountEditor(account: AccountEditorData? = null, close: () -> Unit) {
 
     @Independent
-    var copy = copyStore { account ?: AccountEditorData() }
+    var copy = copyOf { account ?: AccountEditorData() }
 
     @Independent
     val principal = fetch { getService<PrincipalApi>(adapter().transport).get(account?.id?.cast() ?: UUID.nil()) }

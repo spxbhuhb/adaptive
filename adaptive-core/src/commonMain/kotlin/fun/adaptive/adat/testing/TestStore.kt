@@ -78,6 +78,12 @@ class TestStore<A : AdatClass>(
 
     val adatContext = AdatContext<Any>(null, null, null, store = this, null)
 
+    override var value: A
+        get() = checkNotNull(latestValue) { "missing copyStore value" }
+        set(value) {
+            update(value)
+        }
+
     override var latestValue: A? = initialValue?.let { makeCopy(it, null, false) }
 
     override fun update(newValue: A) {

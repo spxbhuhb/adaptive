@@ -3,7 +3,7 @@ package `fun`.adaptive.cookbook.ui.form
 import `fun`.adaptive.adat.api.hasProblem
 import `fun`.adaptive.adat.api.isNotValid
 import `fun`.adaptive.adat.api.isValid
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.colTemplate
@@ -11,7 +11,6 @@ import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.repeat
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.button.api.button
@@ -27,7 +26,7 @@ fun formRecipe() {
 
 @Adaptive
 fun adatFormRecipe() {
-    val data = copyStore { FormData() }
+    val data = copyOf { FormData() }
 
     grid {
         rowTemplate(44.dp repeat 5, 60.dp)

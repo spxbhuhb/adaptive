@@ -5,7 +5,7 @@ package `fun`.adaptive.kotlin.base.success
 
 import `fun`.adaptive.adat.*
 import `fun`.adaptive.adat.api.*
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.foundation.*
 import `fun`.adaptive.foundation.fragment.*
 import `fun`.adaptive.foundation.instruction.*
@@ -39,7 +39,7 @@ fun box(): String {
     val adapter = AdaptiveTestAdapter()
 
     adaptive(adapter) {
-        val t = copyStore { T(12) }
+        val t = copyOf { T(12) }
         updateTest(t, OnClick { t.ti.update { 23 } })
     }
 

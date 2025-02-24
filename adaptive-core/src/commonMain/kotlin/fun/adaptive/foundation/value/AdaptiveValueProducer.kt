@@ -2,11 +2,13 @@ package `fun`.adaptive.foundation.value
 
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
+import `fun`.adaptive.general.Observable
+import `fun`.adaptive.general.ObservableListener
 
 class AdaptiveValueProducer<VT>(
     override val binding: AdaptiveStateVariableBinding<VT>,
-    val store: AdaptiveValueStore<VT>
-) : AdaptiveProducer<VT>, AdaptiveValueListener<VT> {
+    val store: Observable<VT>
+) : AdaptiveProducer<VT>, ObservableListener<VT> {
 
     override var latestValue: VT? = null
 
@@ -19,7 +21,7 @@ class AdaptiveValueProducer<VT>(
         store.removeListener(this)
     }
 
-    override fun onValueChanged(value: VT) {
+    override fun onChange(value: VT) {
         latestValue = value
         setDirtyBatch()
     }

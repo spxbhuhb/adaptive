@@ -8,7 +8,7 @@ import `fun`.adaptive.foundation.testing.*
 import `fun`.adaptive.foundation.producer.*
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.adat.store.copyOf
 
 @Adat
 class T(
@@ -19,7 +19,7 @@ class T(
 fun copyStoreTest(pi: Int) {
 
     @Independent
-    val t = copyStore { T(pi + 2) }
+    val t = copyOf { T(pi + 2) }
 
     T1(t.ti)
 }

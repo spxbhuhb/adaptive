@@ -5,13 +5,11 @@
 package `fun`.adaptive.cookbook.auth.ui.large
 
 import `fun`.adaptive.adat.api.touchAndValidate
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.cookbook.appData
 import `fun`.adaptive.cookbook.auth.model.SignIn
-import `fun`.adaptive.cookbook.shared.cornerRadius4
 import `fun`.adaptive.cookbook.shared.cornerRadius8
-import `fun`.adaptive.cookbook.shared.largeScreen
 import `fun`.adaptive.cookbook.shared.mediumGray
 import `fun`.adaptive.cookbook.shared.titleLarge
 import `fun`.adaptive.foundation.Adaptive
@@ -28,7 +26,6 @@ import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.inputPlaceholder
 import `fun`.adaptive.ui.api.letterSpacing
 import `fun`.adaptive.ui.api.lightFont
-import `fun`.adaptive.ui.api.margin
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.noSelect
@@ -43,7 +40,6 @@ import `fun`.adaptive.ui.api.smallCaps
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.textColor
 import `fun`.adaptive.ui.button.api.button
-import `fun`.adaptive.ui.checkbox.api.checkbox
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.snackbar.fail
@@ -54,7 +50,7 @@ import kotlinx.coroutines.launch
 
 @Adaptive
 fun largeSignIn(): AdaptiveFragment {
-    val signIn = copyStore { SignIn() }
+    val signIn = copyOf { SignIn() }
 
     box {
         maxSize .. alignItems.center

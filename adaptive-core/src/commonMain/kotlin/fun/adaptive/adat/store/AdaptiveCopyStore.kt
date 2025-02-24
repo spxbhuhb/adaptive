@@ -1,55 +1,69 @@
 package `fun`.adaptive.adat.store
 
-import `fun`.adaptive.adat.*
-import `fun`.adaptive.adat.api.*
+import `fun`.adaptive.adat.AdatChange
+import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.AdatContext
+import `fun`.adaptive.adat.api.deepCopy
+import `fun`.adaptive.adat.api.validateForContext
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
 import `fun`.adaptive.foundation.producer.Producer
+import `fun`.adaptive.general.ObservableListener
 
 /**
- * A producer that generates a new copy of the stored instance whenever
- * the `setValue` function is called.
+ * A producer that generates a new copy of the [source] whenever the `update`
+ * function is called.
  *
  * Each new copy is validated by default, so fragments that use values
- * produced by [copyStore] can safely use the validation result as it is
+ * produced by [copyOf] can safely use the validation result as it is
  * up-to-date all the time.
  *
  * @param    onChange  Called after a new instance is generated, but before the
  *                     state of the fragment is updated.
- * @param    source    Source of the stored data. [copyStore] makes a deep copy
+ * @param    source    Source of the stored data. [copyOf] makes a deep copy
  *                     of this instance, validates that copy and then returns with it.
  * @param    binding   Set by the compiler plugin, ignore it.
  *
  * @return   A validated copy of [source].
  */
 @Producer
-fun <A : AdatClass> copyStore(
-    onChange: ((newValue: A) -> Unit)? = null,
+fun <A : AdatClass> copyOf(
+    onChange: ObservableListener<A>? = null,
     binding: AdaptiveStateVariableBinding<A>? = null,
     source: () -> A
 ): A {
     checkNotNull(binding)
 
-    val store = CopyStore(binding, source(), onChange)
+    val store = AdaptiveCopyStore(binding, source())
+
+    if (onChange != null) {
+        store.addListener(onChange)
+    }
 
     binding.targetFragment.addProducer(store)
 
     return store.latestValue !!
 }
 
-class CopyStore<A : AdatClass>(
-    override val binding: AdaptiveStateVariableBinding<A>,
-    initialValue: A,
-    val onChange: ((newValue: A) -> Unit)?
+class AdaptiveCopyStore<A>(
+    override val binding: AdaptiveStateVariableBinding<A>?,
+    initialValue: A
 ) : AdatStore<A>(), AdaptiveProducer<A> {
 
     val adatContext = AdatContext<Any>(null, null, null, store = this, null)
+
+    override var value: A
+        get() = checkNotNull(latestValue) { "missing copyStore value" }
+        set(value) {
+            update(value)
+        }
 
     override var latestValue: A? = makeCopy(initialValue, null, false)
 
     override fun update(newValue: A) {
         makeCopy(newValue, null, true)
     }
+
     override fun update(original: A, newValue: A) {
         makeCopy(newValue, null, true)
     }
@@ -69,16 +83,17 @@ class CopyStore<A : AdatClass>(
         makeCopy(latestValue !!, null, patch = true)
     }
 
-    fun makeCopy(value: A, change: AdatChange?, patch: Boolean) =
-        value.deepCopy(change).also {
+    @Suppress("UNCHECKED_CAST")
+    fun makeCopy(value: A, change: AdatChange?, patch: Boolean) : A =
+        (value as AdatClass).deepCopy(change).also {
             adatContext.apply(it)
             it.validateForContext()
-            latestValue = it
+            latestValue = it as A
             if (patch) {
-                onChange?.invoke(it)
+                notifyListeners()
                 setDirtyBatch()
             }
-        }
+        } as A
 
     override fun start() {
         // copy store is event-driven

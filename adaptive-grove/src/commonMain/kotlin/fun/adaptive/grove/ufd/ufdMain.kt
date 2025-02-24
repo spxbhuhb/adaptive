@@ -6,7 +6,7 @@ package `fun`.adaptive.grove.ufd
 import adaptive_grove.generated.resources.*
 import `fun`.adaptive.adat.encodeToJson
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.value.adaptiveValue
+import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.fragment.sheet
 import `fun`.adaptive.grove.sheet.operation.*
@@ -89,7 +89,7 @@ private fun action(sheetAction: SheetAction, controller: SheetViewController) {
 
 @Adaptive
 fun multiplier(controller: SheetViewController) {
-    val multiplier = adaptiveValue { controller.multiplierStore }
+    val multiplier = valueFrom { controller.multiplierStore }
 
     if (multiplier != null && multiplier > 1) {
         text("Next keyboard move will be $multiplier pixels") .. textSmall .. semiBoldFont .. textColors.onSurfaceAngry .. alignSelf.bottom

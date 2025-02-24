@@ -27,18 +27,12 @@ worry about values changing without the whole instance changing.
 `AdatClassMetadata.isImmutable` is `true` when the class is immutable, `false` otherwise.
 
 However, this comes with a problem when you want to provide a user interface to edit
-these classes. The `copyStore` producer solves this problem.
+these classes. The `copyOf` producer solves this problem.
 
-## Copy Store
+## Adaptive copy
 
-Adaptive provides a producer called `copyStore` that produces a new copy whenever a fragment
-changes a property in the class.
-
-The built-in fragments recognize that `someAdat` belongs to a copy store and instead of changing the value
-in-place they send a change request to the store. The store then produces a new value which triggers a patch
-in the fragment.
-
-(Actually, all fragments that use `AdaptiveStateValueBinding` work automatically with `copyStore`).
+- The `copyOf` producer creates a new copy whenever the `update` function of the Adat instance is called.
+- Built-in accessor based fragments (such as `editor`) automatically handle copies.
 
 ```kotlin
 @Adat
@@ -49,10 +43,24 @@ class SomeAdat(
 
 @Adaptive
 fun someEditor() {
-    val someAdat = copyStore { SomeAdat("", "") }
+    val someAdat = copyOf { SomeAdat("", "") }
     
-    input { someAdat.s1 }
-    input { someAdat.s2 }
+    editor { someAdat.s1 }
+    editor { someAdat.s2 }
+}
+```
+
+- The `storeFor` function creates a fragment-independent store for an Adat instance.
+- The `valueFrom` producer patches the fragment whenever the value in the store changes.
+
+```kotlin
+val globalStore = storeFor { SomeAdat("", "")  }
+
+@Adaptive
+fun someEditor() {
+    val someAdat = valueFrom { globalStore }
+    editor { someAdat.s1 }
+    editor { someAdat.s2 }
 }
 ```
 
@@ -74,7 +82,7 @@ class SomeAdat(
 
 @Adaptive
 fun someFun() {
-    val someAdat = copyStore { SomeAdat("", "") }
+    val someAdat = copyOf { SomeAdat("", "") }
 
     text(someAdat.s1) .. onClick { someAdat.s1.update { "new value" } }
 }
@@ -109,7 +117,7 @@ class YetAnotherAdat(
 
 @Adaptive
 fun someEditor() {
-    val someAdat = copyStore { SomeAdat("", SomeOtherAdat(12, YetAnotherAdat(true))) }
+    val someAdat = copyOf { SomeAdat("", SomeOtherAdat(12, YetAnotherAdat(true))) }
 
     yetAnotherEditor(someAdat.soa.yaa)
 }
@@ -127,7 +135,7 @@ To replace the whole instance of the copy store, use the `replaceWith` function:
 ```kotlin
 @Adaptive
 fun someEditor() {
-    val someAdat = copyStore { SomeAdat("") }
+    val someAdat = copyOf { SomeAdat("") }
     
     text(someAdat.s1) .. onClick { someAdat.replaceWith(SomeAdat("Hello")) }
 }

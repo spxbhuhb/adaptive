@@ -1,6 +1,6 @@
 package `fun`.adaptive.cookbook.ui.splitpane
 
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
@@ -36,7 +36,7 @@ private fun sp(configFun: () -> SplitPaneConfiguration) {
     // When the `onChange` parameter of `splitPane` is null, it uses `update` of the config
     // to apply distribution changes.
 
-    val config = copyStore { configFun() }
+    val config = copyOf { configFun() }
 
     box {
         height { 300.dp } .. maxWidth

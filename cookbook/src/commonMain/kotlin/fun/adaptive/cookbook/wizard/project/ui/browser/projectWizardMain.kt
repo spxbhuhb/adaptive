@@ -3,7 +3,7 @@ package `fun`.adaptive.cookbook.wizard.project.ui.browser
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.api.isTouched
 import `fun`.adaptive.adat.api.isValid
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.cookbook.shared.*
 import `fun`.adaptive.cookbook.wizard.project.model.ProjectData
 import `fun`.adaptive.foundation.Adaptive
@@ -60,7 +60,7 @@ fun fieldNote(
 
 @Adaptive
 fun projectWizardMain() {
-    val setup = copyStore { ProjectData() }
+    val setup = copyOf { ProjectData() }
 
     column {
         padding { 16.dp } .. gap(16.dp)

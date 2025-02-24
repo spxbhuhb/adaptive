@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.lib.sandbox.ui.mobile
 
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.binding.PropertySelector
@@ -26,7 +26,6 @@ import `fun`.adaptive.ui.api.frame
 import `fun`.adaptive.ui.api.gapWidth
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.image
 import `fun`.adaptive.ui.api.lightFont
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.noBorder
@@ -36,7 +35,6 @@ import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.paddingLeft
 import `fun`.adaptive.ui.api.paddingRight
 import `fun`.adaptive.ui.api.paddingTop
-import `fun`.adaptive.ui.api.repeat
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.size
@@ -53,7 +51,7 @@ import `fun`.adaptive.ui.instruction.text.FontSize
 
 @Adaptive
 fun welcome(withFeedback: Boolean = false) {
-    val signUp = copyStore { SignUp() }
+    val signUp = copyOf { SignUp() }
 
     if (withFeedback) {
         row {

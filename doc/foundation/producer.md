@@ -7,7 +7,9 @@ Producers provide value(s) for a state variable, typically from repeating or out
 | `fetch`     | Call a suspend function, set the value when it returns.                  |
 | `poll`      | Call a suspend function periodically, set the value after each call.     |
 | `periodic`  | Call a non-suspend function periodically, set the value after each call. |
-| `copyStore` | For [Immutable Adat Classes](../adat/immutable-adat-classes.md).         |
+| `valueFrom` | Bind to a fragment-independent value store.                              |
+| `copyOf`    | For [Immutable Adat Classes](../adat/immutable-adat-classes.md).         |
+
 
 > [!IMPORTANT]
 > 

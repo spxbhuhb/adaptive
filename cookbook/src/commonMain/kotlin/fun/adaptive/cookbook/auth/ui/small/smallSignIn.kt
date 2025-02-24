@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.cookbook.auth.ui.small
 
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.cookbook.auth.model.SignIn
 import `fun`.adaptive.cookbook.shared.darkGray
@@ -33,7 +33,6 @@ import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.textColor
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.button.api.button
-import `fun`.adaptive.ui.checkbox.api.checkbox
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.snackbar.fail
@@ -44,7 +43,7 @@ import kotlinx.coroutines.launch
 
 @Adaptive
 fun smallSignIn(): AdaptiveFragment {
-    val signIn = copyStore { SignIn() }
+    val signIn = copyOf { SignIn() }
 
     grid {
         smallScreen .. colTemplate(1.fr) .. rowTemplate(213.dp, 78.dp, 1.fr, 81.dp)

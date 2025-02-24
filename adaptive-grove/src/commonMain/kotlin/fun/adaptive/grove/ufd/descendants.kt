@@ -2,7 +2,7 @@ package `fun`.adaptive.grove.ufd
 
 import adaptive_grove.generated.resources.components
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.value.adaptiveValue
+import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection
@@ -18,7 +18,7 @@ import `fun`.adaptive.ui.theme.textSmall
 
 @Adaptive
 fun descendants(controller: SheetViewController) {
-    val selection = adaptiveValue { controller.selectionStore } ?: emptySelection
+    val selection = valueFrom { controller.selectionStore } ?: emptySelection
 
     grid {
         maxSize .. borderRight(colors.outline)

@@ -2,7 +2,7 @@ package `fun`.adaptive.cookbook.test.adat.store
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.api.store
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.binding.PropertySelector
@@ -56,7 +56,7 @@ class CopyStoreTest2 {
     @Test
     fun multiLevel3() {
         val adapter = test {
-            val someAdat = copyStore { SomeAdat("", SomeOtherAdat(12, YetAnotherAdat(23))) }
+            val someAdat = copyOf { SomeAdat("", SomeOtherAdat(12, YetAnotherAdat(23))) }
 
             yetAnotherEditor(someAdat.soa.yaa)
         }

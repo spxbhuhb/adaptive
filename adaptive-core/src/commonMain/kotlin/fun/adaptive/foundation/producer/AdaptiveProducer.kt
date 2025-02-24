@@ -6,10 +6,14 @@ package `fun`.adaptive.foundation.producer
 
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import kotlin.js.JsName
 
 interface AdaptiveProducer<T> {
 
-    val binding: AdaptiveStateVariableBinding<T>
+    // nullable to support classes which are producers and independent stores
+    // at the same time, like AdaptiveCopyStore
+
+    val binding: AdaptiveStateVariableBinding<T>?
 
     var latestValue: T?
 
@@ -34,16 +38,17 @@ interface AdaptiveProducer<T> {
      * Return with true if this producer has a value for the given state variable index.
      */
     fun hasValueFor(stateVariableIndex: Int): Boolean =
-        binding.indexInTargetState == stateVariableIndex
+        binding?.indexInTargetState == stateVariableIndex
 
     /**
      * Return with the latest produced value.
      */
+    @JsName("valueFun") // TODO clean up the confusion between `value()` and store `value`
     fun value(): Any? =
         latestValue
 
     fun setDirtyBatch() {
-        binding.targetFragment.setDirtyBatch(binding.indexInTargetState)
+        binding?.apply { targetFragment.setDirtyBatch(indexInTargetState) }
     }
 
     /**

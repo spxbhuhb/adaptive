@@ -1,21 +1,32 @@
 package `fun`.adaptive.foundation.value
 
+import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.store.AdaptiveCopyStore
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.Producer
+import `fun`.adaptive.general.Observable
 
-inline fun <VT> adaptiveValueStore(value: () -> VT): AdaptiveValueStore<VT> =
-    AdaptiveValueStore(value())
+inline fun <VT> storeFor(value : () -> VT) : Observable<VT> = adaptiveStoreFor(value())
+
+fun <VT> adaptiveStoreFor(value : VT): Observable<VT> =
+    if (value is AdatClass) {
+        AdaptiveCopyStore(null, value)
+    } else {
+        AdaptiveValueStore(value)
+    }
 
 @Producer
-fun <VT> adaptiveValue(
+fun <VT> valueFrom(
     binding: AdaptiveStateVariableBinding<VT>? = null,
-    producerFun: () -> AdaptiveValueStore<VT>
-): VT? {
+    producerFun: () -> Observable<VT>
+): VT {
     checkNotNull(binding)
 
+    val store = producerFun()
+
     binding.targetFragment.addProducer(
-        AdaptiveValueProducer(binding, producerFun())
+        AdaptiveValueProducer(binding, store)
     )
 
-    return null
+    return store.value
 }

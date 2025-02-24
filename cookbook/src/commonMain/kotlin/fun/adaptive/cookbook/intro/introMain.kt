@@ -1,6 +1,6 @@
 package `fun`.adaptive.cookbook.intro
 
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.cookbook.intro.model.IntroScreen
 import `fun`.adaptive.cookbook.intro.model.IntroState
 import `fun`.adaptive.cookbook.intro.screens.end
@@ -16,7 +16,7 @@ import `fun`.adaptive.ui.instruction.dp
 
 @Adaptive
 fun introMain() {
-    val state = copyStore { IntroState(IntroScreen.Start) }
+    val state = copyOf { IntroState(IntroScreen.Start) }
 
     column {
         maxHeight .. verticalScroll

@@ -323,7 +323,7 @@ abstract class AdaptiveFragment(
 
         // when we replace the producer after a dependency change, the dependents of the target
         // state variable have to be is patched
-        setDirty(producer.binding.indexInTargetState)
+        producer.binding?.let { setDirty(it.indexInTargetState) }
 
         if (producer.actual) {
             actualProducers ?: mutableListOf<AdaptiveProducer<*>>().also { actualProducers = it }

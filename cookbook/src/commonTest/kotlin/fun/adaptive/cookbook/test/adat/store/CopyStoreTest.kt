@@ -3,7 +3,7 @@ package `fun`.adaptive.cookbook.test.adat.store
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.api.store
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.binding.PropertySelector
@@ -56,7 +56,7 @@ class CopyStoreTest {
     @Test
     fun basic() {
         val adapter = test {
-            val value = copyStore { T(12) }
+            val value = copyOf { T(12) }
             t(tag) { value.someInt }
         }
 
@@ -85,7 +85,7 @@ class CopyStoreTest {
     @Test
     fun multiLevel1() {
         val adapter = test {
-            val value = copyStore { M(12, T(23)) }
+            val value = copyOf { M(12, T(23)) }
 
             m1(value)
         }
@@ -112,7 +112,7 @@ class CopyStoreTest {
     @Test
     fun multiLevel2() {
         val adapter = test {
-            val value = copyStore { M(12, T(23)) }
+            val value = copyOf { M(12, T(23)) }
 
             m2(value.t)
         }
@@ -141,7 +141,7 @@ class CopyStoreTest {
         var out = 0
 
         val adapter = test {
-            val value = copyStore({ out = it.someInt }) { T(12) }
+            val value = copyOf({ out = it.someInt }) { T(12) }
         }
 
         val root = adapter.rootFragment

@@ -11,6 +11,10 @@ class AutoAdatStore<IT : AdatClass>(
     val instance : AutoInstance<*,*,*,IT>
 ) : AdatStore<IT>() {
 
+    override var value: IT
+        get() = instance.store.value
+        set(value) { update(value) }
+
     override fun update(original: IT, new: IT) {
         val changes = mutableListOf<Pair<String,Any?>>()
         for (diffItem in  original.diff(new)) {

@@ -43,7 +43,7 @@ The descriptor is stored in:
 
 ## Validation
 
-* producers such as `CopyStore` or `autoItem`
+* producers such as `copyOf` or `autoItem`
   * automatically validate Adat instances based on the descriptor
   * perform the validation **before** patching fragments
 * you can manually run validation by calling `validate`

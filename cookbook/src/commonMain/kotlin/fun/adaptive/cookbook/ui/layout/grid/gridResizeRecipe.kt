@@ -1,7 +1,7 @@
 package `fun`.adaptive.cookbook.ui.layout.grid
 
 import `fun`.adaptive.adat.api.update
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.cookbook.shared.blue
 import `fun`.adaptive.cookbook.shared.green
 import `fun`.adaptive.cookbook.shared.purple
@@ -35,7 +35,7 @@ import `fun`.adaptive.ui.theme.textColors
 @Adaptive
 fun gridResizeRecipe() {
     var lastPosition: Position? = null
-    var contentSize = copyStore { size(400.dp, 200.dp) }
+    var contentSize = copyOf { size(400.dp, 200.dp) }
 
     box {
         size(800.dp, 400.dp) .. borders.outline .. noSelect

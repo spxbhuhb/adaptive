@@ -1,7 +1,7 @@
 package `fun`.adaptive.cookbook.ui.dialog
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.column
@@ -16,7 +16,7 @@ import `fun`.adaptive.ui.form.api.form
 @Adaptive
 fun formDialogRecipe() {
     var modalOpen = false
-    val data = copyStore { EditData("Something", "Something else", true) }
+    val data = copyOf { EditData("Something", "Something else", true) }
 
     column {
         text("Hello World!")

@@ -1,6 +1,6 @@
 package `fun`.adaptive.cookbook.auth.ui.account
 
-import `fun`.adaptive.adat.store.copyStore
+import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.cookbook.*
 import `fun`.adaptive.cookbook.auth.api.AccountApi
 import `fun`.adaptive.cookbook.auth.model.AccountSummary
@@ -28,7 +28,7 @@ import `fun`.adaptive.ui.theme.textSmall
 
 @Adaptive
 fun accounts() {
-    val filter = copyStore { AccountFilter() }
+    val filter = copyOf { AccountFilter() }
     val items = fetch { getService<AccountApi>(adapter().transport).accounts() }
 
     grid {
