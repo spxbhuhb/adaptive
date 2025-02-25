@@ -2,6 +2,8 @@ package `fun`.adaptive.cookbook.ui.splitpane
 
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
 import `fun`.adaptive.ui.instruction.dp
@@ -12,7 +14,7 @@ import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 
 @Adaptive
-fun splitPaneRecipe() {
+fun splitPaneRecipe(): AdaptiveFragment {
 
     column {
         gap { 16.dp } .. maxSize .. verticalScroll
@@ -28,6 +30,7 @@ fun splitPaneRecipe() {
 
     }
 
+    return fragment()
 }
 
 @Adaptive

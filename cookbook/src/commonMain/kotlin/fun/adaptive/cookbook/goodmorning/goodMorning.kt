@@ -134,47 +134,50 @@ fun button(label: String, vararg instructions: AdaptiveInstruction): AdaptiveFra
 }
 
 @Adaptive
-fun goodMorning() {
+fun goodMorning() : AdaptiveFragment {
 
     var counter = 0
     //val millis = poll(20.milliseconds) { Clock.System.now() } ?: Clock.System.now()
     val time = poll(1.milliseconds) { nowLocal() } ?: nowLocal()
     val timeText = "${time.hour.twoDigits}:${time.minute.twoDigits}:${time.second.twoDigits}"
 
-    image(Images.background)
-
-    grid {
-        rowTemplate(140.dp, 50.dp, 1.fr, 1.fr, 1.fr, 50.dp, 100.dp)
-        colTemplate(1.fr)
-
-        logo()
-        title()
-        time(timeText)
-        column {
-            progress(time)
-            //milliProgress(millis)
-        }
-        messages(time, counter)
+    mobileExample {
+        image(Images.background)
 
         grid {
-            maxSize
-            rowTemplate(50.dp)
-            colTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
+            rowTemplate(140.dp, 50.dp, 1.fr, 1.fr, 1.fr, 50.dp, 100.dp)
+            colTemplate(1.fr)
 
-            row(2.gridCol, greenGradient, cornerRadius, AlignItems.Companion.center, onClick { counter ++ }) {
+            logo()
+            title()
+            time(timeText)
+            column {
+                progress(time)
+                //milliProgress(millis)
+            }
+            messages(time, counter)
+
+            grid {
                 maxSize
-                text(Strings.snooze) .. textColor(white) .. textMedium .. noSelect
+                rowTemplate(50.dp)
+                colTemplate(32.dp, 1.fr, 32.dp, 1.fr, 32.dp)
+
+                row(2.gridCol, greenGradient, cornerRadius, AlignItems.Companion.center, onClick { counter ++ }) {
+                    maxSize
+                    text(Strings.snooze) .. textColor(white) .. textMedium .. noSelect
+                }
+
+                row(4.gridCol, whiteBorder, cornerRadius, AlignItems.Companion.center) {
+                    maxSize
+                    text("${Strings.sleepiness} $counter") .. textColor(white) .. textMedium
+                }
             }
 
-            row(4.gridCol, whiteBorder, cornerRadius, AlignItems.Companion.center) {
-                maxSize
-                text("${Strings.sleepiness} $counter") .. textColor(white) .. textMedium
-            }
+            terms()
         }
-
-        terms()
     }
 
+    return fragment()
 }
 
 @Adaptive

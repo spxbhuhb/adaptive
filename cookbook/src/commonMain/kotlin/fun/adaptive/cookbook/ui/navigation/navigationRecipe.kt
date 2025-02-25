@@ -1,6 +1,10 @@
 package `fun`.adaptive.cookbook.ui.navigation
 
+import `fun`.adaptive.auto.api.autoItem
+import `fun`.adaptive.cookbook.appData
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.onClick
@@ -17,7 +21,9 @@ private val option1 = NavState(listOf("navigation", "1"))
 private val option2 = NavState(listOf("navigation", "2"))
 
 @Adaptive
-fun navigationRecipe(navState: NavState?) {
+fun navigationRecipe(): AdaptiveFragment {
+
+    val navState = autoItem(appData.navState)
 
     when (navState) {
         in option1 -> content("current place: option 1", navState)
@@ -25,6 +31,7 @@ fun navigationRecipe(navState: NavState?) {
         else -> content("current place: no option selected", navState)
     }
 
+    return fragment()
 }
 
 @Adaptive

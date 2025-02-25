@@ -8,6 +8,7 @@ import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.cookbook.CookbookFragmentFactory
 import `fun`.adaptive.cookbook.Routes
 import `fun`.adaptive.cookbook.app.landing
 import `fun`.adaptive.cookbook.app.pageNotFound
@@ -96,7 +97,13 @@ fun main() {
             window.location.reload()
         }
 
-        browser(CanvasFragmentFactory, SvgFragmentFactory, FormFragmentFactory, backend = localBackend) { adapter ->
+        browser(
+            CanvasFragmentFactory,
+            SvgFragmentFactory,
+            FormFragmentFactory,
+            CookbookFragmentFactory,
+            backend = localBackend
+        ) { adapter ->
 
             with(adapter.defaultTextRenderData) {
                 fontName = "Open Sans"
@@ -125,7 +132,7 @@ fun mainContent() {
         maxSize .. padding { 16.dp } .. backgroundColor(0xFAFAFA)
 
         when (navState) {
-            in Routes.auth -> authRecipe(navState)
+            in Routes.auth -> authRecipe()
             in Routes.box -> boxRecipe()
             in Routes.canvas -> canvasRecipe()
             in Routes.dialog -> dialogRecipe()
@@ -136,7 +143,7 @@ fun mainContent() {
             in Routes.goodMorning -> mobileExample { goodMorning() }
             in Routes.grid -> gridRecipe()
             in Routes.login -> signIn()
-            in Routes.navigation -> navigationRecipe(navState)
+            in Routes.navigation -> navigationRecipe()
             in Routes.publicLanding -> landing()
             in Routes.memberLanding -> landing()
             in Routes.popup -> popupRecipe()

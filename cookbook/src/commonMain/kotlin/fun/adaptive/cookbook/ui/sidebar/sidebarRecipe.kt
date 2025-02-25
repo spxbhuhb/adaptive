@@ -1,6 +1,8 @@
 package `fun`.adaptive.cookbook.ui.sidebar
 
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.maxHeight
@@ -13,7 +15,7 @@ import `fun`.adaptive.ui.navigation.sidebar.theme.FullSidebarThemeVariant
 import `fun`.adaptive.ui.navigation.sidebar.thinSidebar
 
 @Adaptive
-fun sideBarRecipe() {
+fun sideBarRecipe(): AdaptiveFragment {
     column {
         maxHeight .. verticalScroll
 
@@ -31,6 +33,8 @@ fun sideBarRecipe() {
         text("Thin")
         thin()
     }
+
+    return fragment()
 }
 
 @Adaptive

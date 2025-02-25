@@ -5,6 +5,8 @@ import `fun`.adaptive.cookbook.check
 import `fun`.adaptive.cookbook.grid_view
 import `fun`.adaptive.cookbook.mail
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column
@@ -26,7 +28,7 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.textColors
 
 @Adaptive
-fun dialogRecipe() {
+fun dialogRecipe() : AdaptiveFragment {
 
     column {
         gap { 16.dp }
@@ -54,6 +56,8 @@ fun dialogRecipe() {
         }
     }
 
+
+    return fragment()
 }
 
 @Adaptive

@@ -1,6 +1,8 @@
 package `fun`.adaptive.cookbook.app
 
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.flowText
@@ -10,7 +12,7 @@ import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.instruction.dp
 
 @Adaptive
-fun landing() {
+fun landing(): AdaptiveFragment {
     box {
         maxSize
         column {
@@ -26,4 +28,6 @@ fun landing() {
             )
         }
     }
+
+    return fragment()
 }

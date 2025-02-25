@@ -4,6 +4,8 @@ import `fun`.adaptive.cookbook.eco
 import `fun`.adaptive.cookbook.folder
 import `fun`.adaptive.cookbook.frame_inspect
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.instruction.traceAll
 import `fun`.adaptive.foundation.producer.poll
@@ -29,7 +31,7 @@ import kotlinx.datetime.Clock.System.now
 import kotlin.time.Duration.Companion.seconds
 
 @Adaptive
-fun svgRecipe() {
+fun svgRecipe(): AdaptiveFragment {
     grid {
         gap { 16.dp } .. maxWidth
         colTemplate(64.dp, 1.fr) .. rowTemplate(32.dp repeat 3)
@@ -47,6 +49,8 @@ fun svgRecipe() {
             big()
         }
     }
+
+    return fragment()
 }
 
 @Adaptive

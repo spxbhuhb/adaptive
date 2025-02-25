@@ -2,6 +2,8 @@ package `fun`.adaptive.cookbook.ui.select
 
 import `fun`.adaptive.cookbook.model.E
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.inputPlaceholder
 import `fun`.adaptive.ui.api.padding
@@ -11,7 +13,7 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.select.select
 
 @Adaptive
-fun selectRecipe() {
+fun selectRecipe(): AdaptiveFragment {
     column {
         basicSelect()
         toTextSelect()
@@ -19,6 +21,8 @@ fun selectRecipe() {
         many()
         enumSelect()
     }
+
+    return fragment()
 }
 
 

@@ -236,6 +236,14 @@ For a more complex example see: [higherOrder.kt](/adaptive-kotlin-plugin/testDat
 
 ## Function references
 
+> [!NOTE]
+> 
+> While function references work in general, this issue blocks some
+> use cases such as passing the reference in a class:
+>
+> [KT-75416](https://youtrack.jetbrains.com/issue/KT-75416)
+> 
+
 You can use function references by marking the property with `@Adaptive`.
 
 ```kotlin

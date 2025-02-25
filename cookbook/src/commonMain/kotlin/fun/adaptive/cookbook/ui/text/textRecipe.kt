@@ -3,6 +3,8 @@ package `fun`.adaptive.cookbook.ui.text
 import `fun`.adaptive.cookbook.shared.cornerRadius4
 import `fun`.adaptive.cookbook.shared.cornerRadius8
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.producer.poll
 import `fun`.adaptive.ui.api.alignItems
@@ -25,7 +27,7 @@ import kotlinx.datetime.Clock.System.now
 import kotlin.time.Duration.Companion.seconds
 
 @Adaptive
-fun textRecipe() {
+fun textRecipe(): AdaptiveFragment {
     column {
         gap { 16.dp } .. maxWidth
 
@@ -34,6 +36,8 @@ fun textRecipe() {
         colorChange()
         contentChange()
     }
+
+    return fragment()
 }
 
 @Adaptive

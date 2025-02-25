@@ -1,9 +1,13 @@
 package `fun`.adaptive.cookbook.auth
 
+import `fun`.adaptive.auto.api.autoItem
+import `fun`.adaptive.cookbook.appData
 import `fun`.adaptive.cookbook.auth.ui.account.accounts
 import `fun`.adaptive.cookbook.auth.ui.large.authLarge
 import `fun`.adaptive.cookbook.auth.ui.small.authSmall
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.maxSize
@@ -24,7 +28,10 @@ private val large = NavState(listOf("Auth", "large"), fullScreen = true)
 private val users = NavState(listOf("Auth", "users"))
 
 @Adaptive
-fun authRecipe(navState: NavState?) {
+fun authRecipe() : AdaptiveFragment {
+
+    val navState = autoItem(appData.navState)
+
     grid {
         maxSize .. rowTemplate(60.dp, 1.fr) .. gap { 16.dp }
 
@@ -42,6 +49,8 @@ fun authRecipe(navState: NavState?) {
             else -> text("todo")
         }
     }
+
+    return fragment()
 }
 
 

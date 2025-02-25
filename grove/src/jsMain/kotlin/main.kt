@@ -10,7 +10,7 @@ import `fun`.adaptive.grove.fragment.GroveFragmentFactory
 import `fun`.adaptive.grove.groveCommon
 import `fun`.adaptive.grove.groveRuntimeCommon
 import `fun`.adaptive.grove.sheet.SheetFragmentFactory
-import `fun`.adaptive.grove.ufd.UfdPanelFactory
+import `fun`.adaptive.grove.ufd.UfdPaneFactory
 import `fun`.adaptive.grove.ufd.ufdMain
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.instruction.sp
@@ -34,7 +34,7 @@ fun main() {
                 GroveFragmentFactory,
                 GroveRuntimeFragmentFactory,
                 SheetFragmentFactory,
-                UfdPanelFactory
+                UfdPaneFactory
             )
 
             with(adapter.defaultTextRenderData) {

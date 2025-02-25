@@ -87,8 +87,8 @@ Editor selection:
 
 When items are selected:
 
-- the instructions panel shows the instruction editors
-- the mapping panel shows the mapping value editors
+- the instructions pane shows the instruction editors
+- the mapping pane shows the mapping value editors
 - the control layer shows the controls
 
 On double-click:

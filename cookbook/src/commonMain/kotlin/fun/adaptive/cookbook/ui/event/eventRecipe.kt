@@ -1,6 +1,8 @@
 package `fun`.adaptive.cookbook.ui.event
 
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column
@@ -21,7 +23,7 @@ import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.utility.localTime
 
 @Adaptive
-fun eventRecipe() {
+fun eventRecipe(): AdaptiveFragment {
     var nonMoveMessages = listOf<String>()
     var moveMessages = listOf<String>()
 
@@ -56,5 +58,6 @@ fun eventRecipe() {
 
     }
 
+    return fragment()
 }
 

@@ -5,6 +5,8 @@ import `fun`.adaptive.adat.api.isNotValid
 import `fun`.adaptive.adat.api.isValid
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column
@@ -18,10 +20,11 @@ import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.dp
 
 @Adaptive
-fun formRecipe() {
+fun formRecipe(): AdaptiveFragment {
     column {
         adatFormRecipe()
     }
+    return fragment()
 }
 
 @Adaptive

@@ -6,4 +6,6 @@ open class TreeItem(
     val icon: GraphicsResourceSet,
     val title: String,
     val children: List<TreeItem>,
+    val onClick: (TreeItem) -> Unit = { },
+    val data: Any? = null
 )

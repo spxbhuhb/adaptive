@@ -2,6 +2,8 @@ package `fun`.adaptive.cookbook.ui.snackbar
 
 import `fun`.adaptive.auto.api.autoCollection
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.gap
@@ -18,7 +20,7 @@ import `fun`.adaptive.ui.snackbar.success
 import `fun`.adaptive.ui.snackbar.warning
 
 @Adaptive
-fun snackbarRecipe() {
+fun snackbarRecipe(): AdaptiveFragment {
 //    val metrics = mediaMetrics()
     val snacks = autoCollection(snacks) ?: emptyList()
 //    val activeSnacks = autoList(activeSnacks, Snack.adatWireFormat) { activeSnacks.connectInfo(AutoConnectionType.Direct) } ?: emptyList()
@@ -50,4 +52,6 @@ fun snackbarRecipe() {
 //            snackList(activeSnacks) .. noPointerEvents .. globalPos
 //        }
     }
+
+    return fragment()
 }

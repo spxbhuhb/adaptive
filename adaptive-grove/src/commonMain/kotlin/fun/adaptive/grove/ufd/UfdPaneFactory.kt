@@ -2,7 +2,7 @@ package `fun`.adaptive.grove.ufd
 
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 
-object UfdPanelFactory : FoundationFragmentFactory() {
+object UfdPaneFactory : FoundationFragmentFactory() {
     init {
         add("grove:ufd:palette", ::ufdPalette)
         add("grove:ufd:structure", ::ufdStructure)

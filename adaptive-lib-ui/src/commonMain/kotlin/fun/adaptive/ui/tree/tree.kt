@@ -10,10 +10,12 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.arrow_drop_down
 import `fun`.adaptive.ui.builtin.arrow_right
+import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.tree.theme.TreeTheme
 import `fun`.adaptive.ui.tree.theme.treeTheme
+import kotlin.math.max
 
 @Adaptive
 fun tree(
@@ -66,9 +68,12 @@ private fun label(
     val colors = theme.itemColors(false, hover)
 
     row(theme.item, colors) {
-        onClick { toggle() }
-        alignItems.startCenter .. height { theme.itemHeight }
-        paddingLeft { offset } .. width { theme.width }
+        paddingLeft { offset }
+
+        onClick {
+            item.onClick(item)
+            toggle()
+        }
 
         box {
             size(24.dp, 24.dp)
@@ -78,6 +83,7 @@ private fun label(
                 else -> svg(Graphics.arrow_right)
             }
         }
+        icon(item.icon, theme.icon)
         text(item.title) .. theme.label .. colors
     }
 }

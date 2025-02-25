@@ -39,7 +39,7 @@ kotlin {
 
     js(IR) {
         browser()
-        binaries.executable()
+        binaries.library()
     }
 
     sourceSets {

@@ -27,7 +27,7 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
 @Adaptive
-fun editorRecipe() {
+fun editorRecipe(): AdaptiveFragment {
     var hasInvalidInput = false
     var lastCheck = localDateTime()
     val fragment = fragment()
@@ -55,6 +55,8 @@ fun editorRecipe() {
             enumEditor()
         }
     }
+
+    return fragment()
 }
 
 

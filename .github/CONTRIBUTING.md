@@ -120,6 +120,12 @@ processResources(
 )
 ```
 
+### Best practices
+
+1. I typically work in the sandbox module with a minimal implementation.
+2. When the sandbox version works I move it to the cookbook.
+3. When the cookbook version works I add the change to wherever I want it.
+
 ### Debugging and tracing
 
 Debugging code in a browser is not necessarily trivial, mostly because of coroutine stack traces does 

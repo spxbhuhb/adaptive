@@ -1,6 +1,8 @@
 package `fun`.adaptive.cookbook.graphics.canvas
 
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.producer.poll
 import `fun`.adaptive.graphics.canvas.api.canvas
 import `fun`.adaptive.graphics.canvas.api.circle
@@ -21,11 +23,13 @@ import kotlin.math.sin
 import kotlin.time.Duration.Companion.milliseconds
 
 @Adaptive
-fun canvasRecipe() {
+fun canvasRecipe(): AdaptiveFragment {
     flowBox {
         basicCanvas()
         networkCanvas()
     }
+
+    return fragment()
 }
 
 @Adaptive
