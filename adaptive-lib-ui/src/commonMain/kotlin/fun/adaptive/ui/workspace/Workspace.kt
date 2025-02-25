@@ -1,5 +1,7 @@
 package `fun`.adaptive.ui.workspace
 
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.general.Observable
 import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
@@ -9,8 +11,16 @@ import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.firstInstance
 
 class Workspace {
+
+    companion object {
+        inline fun <reified T> AdaptiveFragment.wsContext() =
+            firstContext<Workspace>().contexts.firstInstance<T>()
+    }
+
+    val contexts = mutableListOf<Any>()
 
     val theme
         get() = workspaceTheme

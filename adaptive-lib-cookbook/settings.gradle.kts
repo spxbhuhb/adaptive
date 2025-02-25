@@ -1,7 +1,7 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-rootProject.name = "sandbox"
+rootProject.name = "adaptive-lib-cookbook"
 
 pluginManagement {
     includeBuild("../adaptive-gradle-plugin")
@@ -27,6 +27,3 @@ includeBuild("../adaptive-lib-auto")
 includeBuild("../adaptive-lib-graphics")
 includeBuild("../adaptive-lib-markdown")
 includeBuild("../adaptive-lib-ui")
-includeBuild("../adaptive-lib-cookbook")
-includeBuild("../adaptive-grove")
-includeBuild("../adaptive-grove-runtime")

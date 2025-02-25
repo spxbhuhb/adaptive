@@ -1,5 +1,5 @@
 import org.gradle.kotlin.dsl.adaptive
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import com.vanniktech.maven.publish.SonatypeHost
 
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
@@ -7,14 +7,21 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.adaptive)
+    signing
+    alias(libs.plugins.gradleMavenPublish)
 }
 
+group = "fun.adaptive"
+version = libs.versions.adaptive.get()
+
+val baseName = "adaptive-lib-cookbook"
+val pomName = "Adaptive Lib Cookbook"
+val scmPath = "spxbhuhb/adaptive"
+
 adaptive {
-    pluginDebug = false
-    debugFilter = ".*"
     resources {
         publicAccessors = true
-        packageOfResources = "fun.adaptive.sandbox"
+        packageOfResources = "fun.adaptive.cookbook"
     }
 }
 
@@ -35,15 +42,11 @@ kotlin {
 
     jvm {
         withJava()
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        mainRun {
-            mainClass = "fun.adaptive.sandbox.MainKt"
-        }
     }
 
     js(IR) {
         browser()
-        binaries.executable()
+        binaries.library()
     }
 
     sourceSets {
@@ -51,15 +54,13 @@ kotlin {
             dependencies {
                 implementation(libs.adaptive.core)
                 implementation(libs.adaptive.ui)
-                implementation(libs.adaptive.lib.cookbook)
                 implementation(libs.adaptive.lib.email)
                 implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.lib.auth)
                 implementation(libs.adaptive.lib.auto)
                 implementation(libs.adaptive.lib.graphics)
+                implementation(libs.adaptive.lib.markdown)
                 implementation(libs.adaptive.lib.ui)
-                implementation(libs.adaptive.grove)
-                implementation(libs.adaptive.grove.runtime)
                 implementation(libs.kotlinx.coroutines.debug)
             }
         }
@@ -92,4 +93,45 @@ kotlin {
 
 tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.WARN
+}
+
+signing {
+    useGpgCmd()
+    sign(publishing.publications)
+}
+
+mavenPublishing {
+
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+
+    signAllPublications()
+
+    coordinates("fun.adaptive", baseName, version.toString())
+
+    pom {
+        description.set(project.name)
+        name.set(pomName)
+        url.set("https://adaptive.fun")
+        scm {
+            url.set("https://github.com/$scmPath")
+            connection.set("scm:git:git://github.com/$scmPath.git")
+            developerConnection.set("scm:git:ssh://git@github.com/$scmPath.git")
+        }
+        licenses {
+            license {
+                name.set("Apache 2.0")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                distribution.set("repo")
+            }
+        }
+        developers {
+            developer {
+                id.set("toth-istvan-zoltan")
+                name.set("Tóth István Zoltán")
+                url.set("https://github.com/toth-istvan-zoltan")
+                organization.set("Simplexion Kft.")
+                organizationUrl.set("https://www.simplexion.hu")
+            }
+        }
+    }
 }
