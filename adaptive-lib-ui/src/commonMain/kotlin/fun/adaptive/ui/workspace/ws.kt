@@ -8,7 +8,22 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
+import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.colors
+import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
+
+@Adaptive
+fun wsFull(workspace : Workspace) {
+    grid {
+        maxSize .. colTemplate(workspaceTheme.width, 1.fr, workspaceTheme.width)
+
+        wsPaneIcons(left = true, workspace)
+
+        wsMain(workspace)
+
+        wsPaneIcons(left = false, workspace)
+    }
+}
 
 @Adaptive
 fun wsMain(workspace: Workspace) {

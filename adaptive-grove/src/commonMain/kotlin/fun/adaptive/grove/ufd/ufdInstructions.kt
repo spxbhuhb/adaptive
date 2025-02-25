@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.theme.colors
 
 @Adaptive
-fun instructions() : AdaptiveFragment {
+fun ufdInstructions() : AdaptiveFragment {
 
     val controller = fragment().sheetViewController()
     val selection = valueFrom { controller.selectionStore }

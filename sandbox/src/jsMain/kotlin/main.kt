@@ -60,15 +60,7 @@ fun main() {
             initPanes(workspace)
 
             localContext(Context()) {
-                grid {
-                    maxSize .. colTemplate(workspaceTheme.width, 1.fr, workspaceTheme.width)
-
-                    wsPaneIcons(left = true, workspace)
-
-                    wsMain(workspace)
-
-                    wsPaneIcons(left = false, workspace)
-                }
+                wsFull(workspace)
             }
         }
     }

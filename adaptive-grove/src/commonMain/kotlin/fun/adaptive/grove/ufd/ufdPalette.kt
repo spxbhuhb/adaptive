@@ -20,7 +20,7 @@ import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.utility.firstInstance
 
 @Adaptive
-fun palette() : AdaptiveFragment {
+fun ufdPalette() : AdaptiveFragment {
 
     val controller = fragment().sheetViewController()
     val context = controller.extensions.firstInstance<UfdContext>()

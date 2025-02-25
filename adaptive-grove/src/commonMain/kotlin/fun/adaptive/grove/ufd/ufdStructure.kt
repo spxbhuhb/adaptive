@@ -19,7 +19,7 @@ import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textSmall
 
 @Adaptive
-fun structure() : AdaptiveFragment {
+fun ufdStructure() : AdaptiveFragment {
 
     val controller = fragment().sheetViewController()
     val selection = valueFrom { controller.selectionStore }
