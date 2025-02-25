@@ -8,6 +8,8 @@ import `fun`.adaptive.ui.workspace.WorkspacePane
 import `fun`.adaptive.ui.workspace.WorkspacePanePosition
 import `fun`.adaptive.utility.UUID
 
+const val apmProjectPaneKey = "grove:apm:project"
+
 fun AdaptiveAdapter.groveApmCommon() {
     fragmentFactory += arrayOf(ApmPaneFactory)
 }
@@ -21,7 +23,7 @@ fun Workspace.groveApmCommon() {
         "Project",
         Graphics.folder,
         WorkspacePanePosition.LeftTop,
-        "grove:apm:project"
+        apmProjectPaneKey
     )
 
 }

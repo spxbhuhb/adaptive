@@ -20,19 +20,16 @@ import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
 fun ufdComponents(): AdaptiveFragment {
 
-    val controller = valueFrom { fragment().wsContext<SheetViewContext>().focusedView }
+    val context = fragment().wsContext<SheetViewContext>()
+    val controller = valueFrom { context.focusedView }
     val selection = valueFromOrNull { controller?.selectionStore }
 
-    grid {
-        maxSize .. borderRight(colors.outline)
-        rowTemplate(ufdTheme.headerHeight, 1.fr)
-
-        areaTitle(Strings.components)
-
+    wsToolPane(context.pane(ufdComponentsPaneKey)) {
         if (controller != null && selection != null) {
             column {
                 maxSize .. scroll .. padding { 4.dp }

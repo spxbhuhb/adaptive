@@ -1,9 +1,13 @@
 package `fun`.adaptive.ui.workspace
 
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textColors
@@ -11,7 +15,9 @@ import `fun`.adaptive.ui.theme.textSmall
 
 class WorkspaceTheme(
     val width: DPixel = 40.dp,
-    val dividerSize : DPixel = 10.dp
+    val titleHeight: DPixel = 36.dp,
+    val dividerSize: DPixel = 10.dp,
+    val toolBackground: AdaptiveInstruction = backgrounds.surfaceVariant
 ) {
 
     companion object {
@@ -29,7 +35,9 @@ class WorkspaceTheme(
     val paneIconColumn = instructionsOf(
         maxHeight,
         width { width },
-        spaceBetween
+        spaceBetween,
+        zIndex { 200 },
+        toolBackground
     )
 
     val rightIconColumn = paneIconColumn + borderLeft(colors.outline)
@@ -70,5 +78,33 @@ class WorkspaceTheme(
     val tooltipName = tooltipTextBase + textColors.onReverse
 
     val tooltipShortcut = tooltipTextBase + textColors.onReverseVariant
+
+    val paneTitleContainer = instructionsOf(
+        maxWidth,
+        height { titleHeight },
+        spaceBetween,
+        alignItems.center,
+        backgrounds.surfaceVariant,
+        paddingLeft { 12.dp },
+        zIndex { 100 } // to have icon tooltips over items
+    )
+
+    val toolPaneTitleText = instructionsOf(
+        textColors.onSurface,
+        fontSize { 13.sp },
+        semiBoldFont,
+        noSelect
+    )
+
+    val toolPaneContainer = instructionsOf(
+        rowTemplate(titleHeight, 1.fr),
+        maxSize,
+        toolBackground
+    )
+
+    val toolPaneContent = instructionsOf(
+        maxSize,
+        scroll
+    )
 
 }

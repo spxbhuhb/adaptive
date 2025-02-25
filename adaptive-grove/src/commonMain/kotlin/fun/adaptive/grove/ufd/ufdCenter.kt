@@ -18,6 +18,7 @@ import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.tableIconTheme
+import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textColors
@@ -32,7 +33,7 @@ fun ufdCenter() : AdaptiveFragment {
 
     localContext(controller) {
         grid {
-            rowTemplate(ufdTheme.headerHeight, 1.fr)
+            rowTemplate(35.dp, 1.fr)
 
             row {
                 maxWidth .. borderBottom(colors.outline) .. spaceBetween

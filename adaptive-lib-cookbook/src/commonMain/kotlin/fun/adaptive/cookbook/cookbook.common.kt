@@ -9,6 +9,8 @@ import `fun`.adaptive.ui.workspace.WorkspacePane
 import `fun`.adaptive.ui.workspace.WorkspacePanePosition
 import `fun`.adaptive.utility.UUID
 
+const val cookbookRecipePaneKey = "cookbook:recipes"
+
 fun AdaptiveAdapter.cookbookCommon() {
     fragmentFactory += arrayOf(CookbookFragmentFactory)
 }
@@ -22,7 +24,7 @@ fun Workspace.cookbookCommon() {
         "Cookbook",
         Graphics.flatware,
         WorkspacePanePosition.LeftMiddle,
-        "cookbook:recipes"
+        cookbookRecipePaneKey
     )
 
     panes += WorkspacePane(

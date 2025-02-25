@@ -8,13 +8,16 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
 fun cookbookPane() : AdaptiveFragment {
     val context = fragment().wsContext<CookbookContext>()
     val items = root.toTreeItem { showRecipe(context, it) }.children
 
-    tree(items)
+    wsToolPane(context.pane(cookbookRecipePaneKey)) {
+        tree(items)
+    }
 
     return fragment()
 }

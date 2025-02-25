@@ -47,5 +47,5 @@ fun AdaptiveAdapter.groveSheetCommon() {
 }
 
 fun Workspace.groveSheetCommon() {
-    contexts += SheetViewContext()
+    contexts += SheetViewContext(this)
 }

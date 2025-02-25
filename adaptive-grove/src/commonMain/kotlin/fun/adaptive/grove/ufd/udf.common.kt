@@ -11,12 +11,17 @@ import `fun`.adaptive.ui.workspace.WorkspacePane
 import `fun`.adaptive.ui.workspace.WorkspacePanePosition
 import `fun`.adaptive.utility.UUID
 
+const val ufdPalettePaneKey = "grove:ufd:palette"
+const val ufdComponentsPaneKey = "grove:ufd:components"
+const val ufdInstructionsPaneKey = "grove:ufd:instructions"
+const val ufdCenterPaneKey = "grove:ufd:center"
+
 fun AdaptiveAdapter.groveUfdCommon() {
     fragmentFactory += arrayOf(UfdPaneFactory)
 }
 
 fun Workspace.groveUfdCommon() {
-    contexts += UfdContext()
+    contexts += UfdContext(this)
 
     panes += WorkspacePane(
         UUID(),

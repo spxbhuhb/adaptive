@@ -12,18 +12,16 @@ import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
 fun ufdInstructions() : AdaptiveFragment {
 
-    val controller = valueFrom { fragment().wsContext<SheetViewContext>().focusedView }
+    val context = fragment().wsContext<SheetViewContext>()
+    val controller = valueFrom { context.focusedView }
     val selection = valueFromOrNull { controller?.selectionStore }
 
-    column {
-        maxSize .. borderLeft(colors.outline)
-
-        areaTitle(Strings.instructions)
-
+    wsToolPane(context.pane(ufdInstructionsPaneKey)) {
         if (selection != null && selection.items.isNotEmpty()) {
             for (item in selection.items) {
                 flowText(item.fragment.instructions.toMutableList().joinToString("\n"))

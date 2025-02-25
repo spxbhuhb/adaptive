@@ -11,8 +11,11 @@ import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.WorkspaceContext
 
-class UfdContext {
+class UfdContext(
+    override val workspace: Workspace
+) : WorkspaceContext {
 
     val palette = autoCollectionOrigin(
         listOf(

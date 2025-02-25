@@ -8,13 +8,16 @@ import `fun`.adaptive.grove.apm.model.ApmProjectItemSet
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
 fun apmProject(): AdaptiveFragment {
     val context = fragment().wsContext<ApmContext>()
     val items = root.toTreeItem { showItem(context, it) }.children
 
-    tree(items)
+    wsToolPane(context.pane(apmProjectPaneKey)) {
+        tree(items)
+    }
 
     return fragment()
 }
