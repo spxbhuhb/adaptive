@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
-fun cookbookPane() : AdaptiveFragment {
+fun cookbookPane(): AdaptiveFragment {
     val context = fragment().wsContext<CookbookContext>()
     val items = root.toTreeItem { showRecipe(context, it) }.children
 
@@ -22,8 +22,8 @@ fun cookbookPane() : AdaptiveFragment {
     return fragment()
 }
 
-private fun showRecipe(context: CookbookContext, item : TreeItem) {
-    context.activeRecipeKey.value = (item.data as String)
+private fun showRecipe(context: CookbookContext, item: TreeItem) {
+    context.activeRecipeKey.value = (item.data as? String) ?: return
 
     val ws = context.workspace
     ws.center.value = ws.panes.first { it.key == "cookbook:center" }.uuid
@@ -31,10 +31,18 @@ private fun showRecipe(context: CookbookContext, item : TreeItem) {
 
 val root = CookbookRecipeSet(
     "Root",
-    emptyList(),
+    listOf(
+        CookbookRecipeSet(
+            "UI Fragments",
+            emptyList(),
+            listOf(
+                CookbookRecipe("Tree", "cookbook:recipe:tree")
+            )
+        )
+    ),
     listOf(
         CookbookRecipe("Recipe 1", "cookbook:recipe:recipe1"),
-        CookbookRecipe("Recipe 2", "cookbook:recipe:recipe2")
+        CookbookRecipe("Recipe 2", "cookbook:recipe:recipe2"),
     )
 )
 

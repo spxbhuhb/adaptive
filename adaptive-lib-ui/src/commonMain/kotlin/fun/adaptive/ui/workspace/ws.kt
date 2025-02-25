@@ -115,7 +115,7 @@ private fun wsPane(workspace: Workspace, position: WorkspacePanePosition): Adapt
     val pane = workspace.panes.firstOrNull { it.uuid == paneUuid }
 
     box(instructions()) {
-        maxSize .. backgroundColor { colors.onSurfaceFriendly.opaque(0.2f) }
+        maxSize
         if (pane != null) {
             wsPaneContent(pane)
         } else {

@@ -2,6 +2,7 @@ package `fun`.adaptive.cookbook.model
 
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.builtin.account_circle
+import `fun`.adaptive.ui.builtin.folder
 import `fun`.adaptive.ui.tree.TreeItem
 
 class CookbookRecipeSet(
@@ -11,8 +12,8 @@ class CookbookRecipeSet(
 ) {
     fun toTreeItem(onClick : (TreeItem) -> Unit) : TreeItem =
         TreeItem(
-            Graphics.account_circle,
-            title = "",
+            Graphics.folder,
+            title = name,
             children = subsets.map { it.toTreeItem(onClick) } + recipes.map { it.toTreeItem(onClick) },
             onClick = onClick
         )

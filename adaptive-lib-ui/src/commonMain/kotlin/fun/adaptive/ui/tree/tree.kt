@@ -27,7 +27,7 @@ fun tree(
     column(theme.container, instructions()) {
         for (item in items) {
             column {
-                node(item, theme, theme.indent)
+                node(item, theme, 0.dp)
             }
         }
     }
@@ -83,7 +83,7 @@ private fun label(
                 else -> svg(Graphics.arrow_right)
             }
         }
-        icon(item.icon, theme.icon)
+        icon(item.icon, theme.icon) .. colors
         text(item.title) .. theme.label .. colors
     }
 }

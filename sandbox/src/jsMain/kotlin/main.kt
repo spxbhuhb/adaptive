@@ -87,11 +87,6 @@ fun Workspace.siteCommon() {
 }
 
 @Adaptive
-fun project(): AdaptiveFragment {
-    return fragment()
-}
-
-@Adaptive
 fun site(): AdaptiveFragment {
     return site()
 }

@@ -22,7 +22,7 @@ var commonRowStyles = instructionsOf(
     spaceBetween
 )
 
-val nonSelectedRowStyles = commonRowStyles + backgrounds.surface
+val nonSelectedRowStyles = commonRowStyles
 val selectedRowStyles = commonRowStyles + backgrounds.selected
 val hoverRowStyles = commonRowStyles + backgrounds.primaryHover
 

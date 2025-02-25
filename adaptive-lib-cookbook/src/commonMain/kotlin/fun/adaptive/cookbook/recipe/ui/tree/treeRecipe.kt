@@ -1,19 +1,11 @@
-package `fun`.adaptive.cookbook.ui.tree
+package `fun`.adaptive.cookbook.recipe.ui.tree
 
-import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.cookbook.folder
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.gap
-import `fun`.adaptive.ui.api.grid
-import `fun`.adaptive.ui.api.maxHeight
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.rowTemplate
-import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.api.verticalScroll
+import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.builtin.folder
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.borders
@@ -23,8 +15,9 @@ import kotlin.random.Random
 
 @Adaptive
 fun treeRecipe(): AdaptiveFragment {
-    row {
-        gap { 16.dp }
+    grid {
+        maxSize .. colTemplate(1.fr, 1.fr) .. padding { 16.dp } .. gap { 16.dp }
+
         column {
             text("static")
             column {
@@ -32,6 +25,7 @@ fun treeRecipe(): AdaptiveFragment {
                 tree(staticTree)
             }
         }
+
         grid {
             rowTemplate(24.dp, 1.fr)
             text("random")

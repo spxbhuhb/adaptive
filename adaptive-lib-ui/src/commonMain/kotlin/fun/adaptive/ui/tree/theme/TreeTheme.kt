@@ -1,6 +1,7 @@
 package `fun`.adaptive.ui.tree.theme
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
+import `fun`.adaptive.graphics.svg.api.svgFill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.alignItems
@@ -20,8 +21,8 @@ import `fun`.adaptive.ui.theme.colors
 import kotlin.math.max
 
 open class TreeTheme(
-    open val itemHeight: DPixel = 32.dp,
-    open val indent: DPixel = 16.dp,
+    open val itemHeight: DPixel = 26.dp,
+    open val indent: DPixel = 22.dp,
 ) {
     open val container = instructionsOf(
         alignItems.startCenter,
@@ -29,21 +30,21 @@ open class TreeTheme(
     )
 
     open val icon = instructionsOf(
-        size(22.dp, 22.dp),
-        svgWidth(22.dp),
-        svgHeight(22.dp)
+        size(18.dp, 18.dp),
+        svgWidth(18.dp),
+        svgHeight(18.dp)
     )
 
     open val item = instructionsOf(
         height(itemHeight),
         alignItems.startCenter,
-        gap(6.dp),
         maxWidth
     )
 
     open val label = instructionsOf(
-        fontSize(16.sp),
-        lineHeight(22.dp),
+        fontSize(13.sp),
+        lineHeight(18.dp),
+        paddingLeft(4.dp),
         noSelect
     )
 
