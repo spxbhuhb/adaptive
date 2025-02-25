@@ -1,7 +1,7 @@
 package `fun`.adaptive.grove.sheet.operation
 
-import adaptive_grove.generated.resources.group
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.grove.resources.group
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.model.ItemIndex
 import `fun`.adaptive.grove.sheet.model.SheetSelection

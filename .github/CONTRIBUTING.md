@@ -135,6 +135,23 @@ Tips that might help:
   * `someFragment(stuff)` -> `someFragment(stuff.debug())`
 * use the `AdaptiveFragment.dumpFragmentTree()` function
 * use the `name("this is my fragment")` instruction (in browser the ID of the HTMLElement will be the name)
+* use the `pluginDebug` option in `build.gradle.kts`
+
+#### Plugin debug
+
+By setting `pluginDebug` to `true` you can instruct the compiler plugin to save
+the generated code into `build/adaptive/debug`.
+
+These files are BIG because they contain not just the source code but also the IR dump
+of the compiler generated results.
+
+Also, these files do not contain valid source code but a "Kotlin like" output.
+
+```kotlin
+adaptive {
+    pluginDebug = true
+}
+```
 
 ### Notes
 

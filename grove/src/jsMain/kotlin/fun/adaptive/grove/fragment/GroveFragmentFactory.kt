@@ -11,6 +11,5 @@ import `fun`.adaptive.ui.AuiAdapter
 object GroveFragmentFactory : FoundationFragmentFactory() {
     init {
         add("grove:dpixelinput") { p, i, s -> GroveDPixelInput(p.adapter as AuiAdapter, p, i) }
-        add("grove:drawinglayer") { p, i, s -> GroveDrawingLayer(p.adapter as AuiAdapter, p, i) }
     }
 }

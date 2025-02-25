@@ -3,17 +3,16 @@
  */
 package `fun`.adaptive.grove.ufd
 
-import adaptive_grove.generated.resources.*
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.api.localContext
+import `fun`.adaptive.grove.resources.palette
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.builtin.account_box
 import `fun`.adaptive.ui.builtin.menu
 import `fun`.adaptive.ui.builtin.settings
-import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.WorkspacePane
 import `fun`.adaptive.ui.workspace.WorkspacePanePosition
@@ -78,6 +77,8 @@ fun buildWorkspace(): Workspace {
     workspace.leftMiddle.value = structure.uuid
     workspace.rightTop.value = instructions.uuid
     workspace.center.value = center.uuid
+
+    workspace.updateSplits()
 
     return workspace
 }

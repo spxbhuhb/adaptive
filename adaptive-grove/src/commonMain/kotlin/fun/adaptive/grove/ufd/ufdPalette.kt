@@ -4,12 +4,12 @@
 
 package `fun`.adaptive.grove.ufd
 
-import adaptive_grove.generated.resources.palette
 import `fun`.adaptive.auto.api.autoCollection
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
+import `fun`.adaptive.grove.resources.palette
 import `fun`.adaptive.grove.sheet.SheetViewController.Companion.sheetViewController
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings

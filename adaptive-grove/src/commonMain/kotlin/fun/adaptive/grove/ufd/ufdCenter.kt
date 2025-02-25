@@ -1,6 +1,6 @@
 package `fun`.adaptive.grove.ufd
 
-import adaptive_grove.generated.resources.*
+import `fun`.adaptive.grove.resources.*
 import `fun`.adaptive.adat.encodeToJson
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment

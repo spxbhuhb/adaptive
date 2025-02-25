@@ -1,6 +1,6 @@
 package `fun`.adaptive.grove.ufd
 
-import adaptive_grove.generated.resources.instructions
+import `fun`.adaptive.grove.resources.instructions
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment

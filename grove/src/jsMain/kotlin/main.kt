@@ -2,7 +2,6 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-import adaptive_grove.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
@@ -10,6 +9,7 @@ import `fun`.adaptive.grove.api.GroveRuntimeFragmentFactory
 import `fun`.adaptive.grove.fragment.GroveFragmentFactory
 import `fun`.adaptive.grove.groveCommon
 import `fun`.adaptive.grove.groveRuntimeCommon
+import `fun`.adaptive.grove.sheet.SheetFragmentFactory
 import `fun`.adaptive.grove.ufd.UfdPanelFactory
 import `fun`.adaptive.grove.ufd.ufdMain
 import `fun`.adaptive.ui.browser
@@ -26,8 +26,6 @@ fun main() {
         groveRuntimeCommon()
         groveCommon()
 
-        commonMainStringsStringStore0.load()
-
         browser(backend = backend { }) { adapter ->
 
             adapter.fragmentFactory += arrayOf(
@@ -35,6 +33,7 @@ fun main() {
                 SvgFragmentFactory,
                 GroveFragmentFactory,
                 GroveRuntimeFragmentFactory,
+                SheetFragmentFactory,
                 UfdPanelFactory
             )
 
