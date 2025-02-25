@@ -87,19 +87,32 @@ class AdaptiveClosure(
         return "$owner"
     }
 
-    fun dump(): String {
+    fun dump(point: String, index: Int): String {
         val builder = StringBuilder()
-        builder.append("AdaptiveClosure:\n")
-        builder.append("Owner: $owner\n")
-        builder.append("DirtyMask: ${closureDirtyMask()}\n")
-        builder.append("Fragments:\n")
+
+        builder.append("\n")
+
+        builder.append("Function: $point\n")
+        builder.append("Index: $index\n")
+
+        builder.append("Closure owner: $owner\n")
+        builder.append("Closure size: $closureSize\n")
+        builder.append("Closure dirty mask: ${closureDirtyMask()}\n")
+
+        builder.append("Closure fragments\n")
         for (fragment in fragments) {
-            builder.append("\t$fragment        mask:${fragment.dirtyMask.toString(16)}\n")
+            builder.append("    $fragment    mask:${fragment.dirtyMask.toString(16)}    ${fragment.stateToTraceString()}\n")
         }
+
+        builder.append("Closure content\n")
+        for (index in 0 until closureSize) {
+            builder.append("    $index: ${get(index)}\n")
+        }
+
         return builder.toString()
     }
 
-    private fun invalidIndex(point: String, index : Int) : Nothing {
+    private fun invalidIndex(point: String, index: Int): Nothing {
         ops(
             "invalidStateVariableIndex",
             """
@@ -107,7 +120,8 @@ class AdaptiveClosure(
                 this might be an error in Adaptive or in your code,
                 if this is a manually implemented fragment, check it for bugs,
                 otherwise, please open a GitHub issue or contact me on Slack,
-                point: $point index: $index closure: ${this.dump()}
+                
+                ${this.dump(point, index)}
             """
         )
     }

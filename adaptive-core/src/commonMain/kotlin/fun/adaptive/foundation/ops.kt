@@ -46,7 +46,7 @@ fun ops(docPath: String, message: String): Nothing {
     val escapedPath = fullPath.replace(" ", "%20")
     val mdPath = if (escapedPath.endsWith(".md")) escapedPath else "$escapedPath.md"
 
-    val trimmedMessage = message.trimIndent().replace("\n", " ").replace("\r", " ").replace("\t", " ")
+    val trimmedMessage = message.trimIndent() //.replace("\n", " ").replace("\r", " ").replace("\t", " ")
 
     throw IllegalStateException("$trimmedMessage (For more information see: $mdPath)")
 }

@@ -25,7 +25,7 @@ class FoundationLocalContext(
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? {
         if (declarationIndex != 0) invalidIndex(declarationIndex)
-        return AdaptiveAnonymous(this, declarationIndex, 0, content).apply { create() }
+        return AdaptiveAnonymous(parent, declarationIndex, 1, content).apply { create() }
     }
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) = Unit

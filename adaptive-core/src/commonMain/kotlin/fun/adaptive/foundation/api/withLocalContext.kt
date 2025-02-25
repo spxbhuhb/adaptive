@@ -30,6 +30,17 @@ inline fun <reified T : Any> AdaptiveFragment.findContext() =
 
 /**
  * Find the first [FoundationLocalContext] fragment between parents of [this] with context
+ * of type [T] and return with the context.
+ *
+ * @return  the context
+ *
+ * @throws NoSuchElementException if no context of [T] is found
+ */
+inline fun <reified T : Any> AdaptiveFragment.firstContext() =
+    findContext(T::class) ?: throw NoSuchElementException("No context of type ${T::class.simpleName} found in $this")
+
+/**
+ * Find the first [FoundationLocalContext] fragment between parents of [this] with context
  * of [type] and return with the context.
  *
  * @return  the context or null if there is no such fragment
