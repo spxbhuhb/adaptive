@@ -50,7 +50,10 @@ open class AuiText(
 
         val metrics = measureContext.measureText(content)
 
-        renderData.innerWidth = ceil(metrics.width)
+        // without the 0.05 Firefox and Chrome displays a '...' as they think that there is not enough space
+        // I don't really know why that happens, I guess it's some Double rounding issue
+
+        renderData.innerWidth = ceil(metrics.width) + 0.05
         renderData.innerHeight = ceil(
             text.lineHeight
                 ?: (text.fontSize ?: uiAdapter.defaultTextRenderData.fontSize)?.value?.let { it * 1.5 }

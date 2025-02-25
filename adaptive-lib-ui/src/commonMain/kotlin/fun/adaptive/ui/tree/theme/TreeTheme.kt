@@ -6,19 +6,17 @@ import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.fontSize
-import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.lineHeight
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.noSelect
+import `fun`.adaptive.ui.api.normalFont
 import `fun`.adaptive.ui.api.paddingLeft
 import `fun`.adaptive.ui.api.size
-import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.colors
-import kotlin.math.max
 
 open class TreeTheme(
     open val itemHeight: DPixel = 26.dp,
@@ -45,6 +43,7 @@ open class TreeTheme(
         fontSize(13.sp),
         lineHeight(18.dp),
         paddingLeft(4.dp),
+        normalFont,
         noSelect
     )
 
