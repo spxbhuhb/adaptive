@@ -4,15 +4,15 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.UUID
 
 /**
- * Creates a [Snack] and adds it to [pendingSnacks].
+ * Creates a [Snack] and adds it to [pendingSnackChannel].
  *
- * [pendingSnacks] is an auto list which is handled by the snackbar manager.
+ * [pendingSnackChannel] is an auto list which is handled by the snackbar manager.
  */
 fun snackbar(message: String, type: SnackType) {
     val snack = Snack(UUID(), message, type)
-    snacks.add(snack)
+    snackStore.add(snack)
 
-    val result = pendingSnacks.trySend(snack)
+    val result = pendingSnackChannel.trySend(snack)
     if (! result.isSuccess) {
         getLogger("snackbar").warning("snack queue is full, snack not shown: $snack")
     }

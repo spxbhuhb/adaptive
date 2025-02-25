@@ -36,6 +36,10 @@ val root = CookbookRecipeSet(
             "UI Fragments",
             emptyList(),
             listOf(
+                CookbookRecipe("Snackbar", "cookbook:recipe:snackbar"),
+                CookbookRecipe("Split Pane", "cookbook:recipe:splitpane"),
+                CookbookRecipe("SVG", "cookbook:recipe:svg"),
+                CookbookRecipe("Text", "cookbook:recipe:text"),
                 CookbookRecipe("Tree", "cookbook:recipe:tree")
             )
         )

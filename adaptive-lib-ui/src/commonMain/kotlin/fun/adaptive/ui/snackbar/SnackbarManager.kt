@@ -7,17 +7,17 @@ import kotlinx.coroutines.delay
 class SnackbarManager : WorkerImpl<SnackbarManager> {
 
     override suspend fun run() {
-        for (snack in pendingSnacks) {
+        for (snack in pendingSnackChannel) {
 
-            while (activeSnacks.size >= 3) {
+            while (activeSnackStore.size >= 3) {
                 delay(100)
             }
 
-            activeSnacks.add(snack)
+            activeSnackStore.add(snack)
 
             launch {
                 delay(3000)
-                activeSnacks.remove { it.id == snack.id }
+                activeSnackStore.remove { it.id == snack.id }
             }
         }
     }

@@ -16,7 +16,7 @@ import kotlin.random.Random
 @Adaptive
 fun treeRecipe(): AdaptiveFragment {
     grid {
-        maxSize .. colTemplate(1.fr, 1.fr) .. padding { 16.dp } .. gap { 16.dp }
+        maxSize .. colTemplate(1.fr, 1.fr) .. gap { 16.dp }
 
         column {
             text("static")

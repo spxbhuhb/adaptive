@@ -1,21 +1,18 @@
-package `fun`.adaptive.cookbook.ui.text
+package `fun`.adaptive.cookbook.recipe.ui.text
 
-import `fun`.adaptive.cookbook.shared.cornerRadius4
-import `fun`.adaptive.cookbook.shared.cornerRadius8
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.producer.poll
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.cornerRadius
 import `fun`.adaptive.ui.api.flowBox
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.maxWidth
-import `fun`.adaptive.ui.api.repeat
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.size
@@ -48,6 +45,8 @@ private fun colorChange() {
     text("with changing color - $random") .. colors[random]
 }
 
+private val containerStyles = borders.outline .. size(100.dp, 40.dp) .. alignItems.center .. cornerRadius { 8.dp }
+
 @Adaptive
 private fun contentChange() {
     val random = poll(1.seconds) { now().epochSeconds.toInt() % 4 } ?: 0
@@ -60,31 +59,31 @@ private fun contentChange() {
 
         text("column")
         column {
-            borders.outline .. size(100.dp, 40.dp) .. alignItems.center .. cornerRadius8
+            containerStyles
             text(contents[random])
         }
 
         text("row")
         row {
-            borders.outline .. size(100.dp, 40.dp) .. alignItems.center .. cornerRadius8
+            containerStyles
             text(contents[random])
         }
 
         text("grid")
         grid {
-            borders.outline .. size(100.dp, 40.dp) .. alignItems.center .. cornerRadius8
+            containerStyles
             text(contents[random])
         }
 
         text("box")
         box {
-            borders.outline .. size(100.dp, 40.dp) .. alignItems.center .. cornerRadius8
+            containerStyles
             text(contents[random])
         }
 
         text("flowBox")
         flowBox {
-            borders.outline .. size(100.dp, 40.dp) .. alignItems.center .. cornerRadius8
+            containerStyles
             text(contents[random])
         }
 

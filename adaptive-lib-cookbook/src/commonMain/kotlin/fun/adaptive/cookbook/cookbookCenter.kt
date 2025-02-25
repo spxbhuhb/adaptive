@@ -7,6 +7,9 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.verticalScroll
+import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 
 @Adaptive
@@ -14,7 +17,8 @@ fun cookbookCenter() : AdaptiveFragment {
     val recipeKey = valueFrom { fragment().wsContext<CookbookContext>().activeRecipeKey }
 
     box {
-        maxSize
+        maxSize .. padding { 16.dp } .. verticalScroll
+
         if (recipeKey != null) {
             actualize(recipeKey)
         }

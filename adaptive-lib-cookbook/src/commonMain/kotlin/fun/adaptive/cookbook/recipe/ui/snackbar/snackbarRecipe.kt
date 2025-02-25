@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.ui.snackbar
+package `fun`.adaptive.cookbook.recipe.ui.snackbar
 
 import `fun`.adaptive.auto.api.autoCollection
 import `fun`.adaptive.foundation.Adaptive
@@ -15,14 +15,14 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.snackbar.fail
 import `fun`.adaptive.ui.snackbar.info
 import `fun`.adaptive.ui.snackbar.snackList
-import `fun`.adaptive.ui.snackbar.snacks
+import `fun`.adaptive.ui.snackbar.snackStore
 import `fun`.adaptive.ui.snackbar.success
 import `fun`.adaptive.ui.snackbar.warning
 
 @Adaptive
 fun snackbarRecipe(): AdaptiveFragment {
 //    val metrics = mediaMetrics()
-    val snacks = autoCollection(snacks) ?: emptyList()
+    val snacks = autoCollection(snackStore) ?: emptyList()
 //    val activeSnacks = autoList(activeSnacks, Snack.adatWireFormat) { activeSnacks.connectInfo(AutoConnectionType.Direct) } ?: emptyList()
 
 //    val globalPos = position(

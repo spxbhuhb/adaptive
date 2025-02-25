@@ -29,7 +29,7 @@ import `fun`.adaptive.ui.navigation.sidebar.theme.fullSidebarTheme
 import `fun`.adaptive.ui.navigation.sidebar.theme.thinSidebarTheme
 import `fun`.adaptive.ui.navigation.sidebar.thinSidebar
 import `fun`.adaptive.ui.platform.media.MediaMetrics
-import `fun`.adaptive.ui.snackbar.activeSnacks
+import `fun`.adaptive.ui.snackbar.activeSnackStore
 import `fun`.adaptive.ui.snackbar.snackList
 import `fun`.adaptive.ui.snackbar.snackbarTheme
 import `fun`.adaptive.ui.theme.colors
@@ -47,7 +47,7 @@ fun defaultAppLayout(
     val layoutState = autoItem(appData.layoutState)
     val navState = autoItem(appData.navState)
 
-    val activeSnacks = autoCollection(activeSnacks) ?: emptyList()
+    val activeSnacks = autoCollection(activeSnackStore) ?: emptyList()
 
     val snackbarPosition = position(
         metrics.viewHeight.dp - (snackbarTheme.snackHeight + snackbarTheme.snackGap) * activeSnacks.size,
