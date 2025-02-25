@@ -1,75 +1,38 @@
-/*
- * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
- */
+package `fun`.adaptive.cookbook.ui.workspace
 
-import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
-import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
-import `fun`.adaptive.graphics.svg.SvgFragmentFactory
-import `fun`.adaptive.grove.api.GroveRuntimeFragmentFactory
-import `fun`.adaptive.grove.groveRuntimeCommon
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.builtin.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.instruction.sp
-import `fun`.adaptive.ui.uiCommon
 import `fun`.adaptive.ui.workspace.*
 import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
 import `fun`.adaptive.utility.UUID
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class Context {
     val someData = "Some data from the context"
 }
 
-fun main() {
+fun workspaceRecipe() {
 
-    CoroutineScope(Dispatchers.Default).launch {
+    val workspace = Workspace()
+    initPanes(workspace)
 
-        uiCommon()
-        groveRuntimeCommon()
+    grid {
+        maxSize .. colTemplate(workspaceTheme.width, 1.fr, workspaceTheme.width)
 
-        commonMainStringsStringStore0.load()
+        localContext(Context()) {
+            wsPaneIcons(left = true, workspace)
 
-        browser(
-            CanvasFragmentFactory,
-            SvgFragmentFactory,
-            GroveRuntimeFragmentFactory,
-            PaneFragmentFactory,
-            backend = backend { }
-        ) { adapter ->
+            wsMain(workspace)
 
-            with(adapter.defaultTextRenderData) {
-                fontName = "Open Sans"
-                fontSize = 16.sp
-                fontWeight = 300
-            }
-
-            val workspace = Workspace()
-            initPanes(workspace)
-
-            localContext(Context()) {
-                grid {
-                    maxSize .. colTemplate(workspaceTheme.width, 1.fr, workspaceTheme.width)
-
-                    wsPaneIcons(left = true, workspace)
-
-                    wsMain(workspace)
-
-                    wsPaneIcons(left = false, workspace)
-                }
-            }
+            wsPaneIcons(left = false, workspace)
         }
     }
 }

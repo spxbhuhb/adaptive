@@ -2,11 +2,13 @@ package `fun`.adaptive.grove.ufd
 
 import adaptive_grove.generated.resources.components
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.SheetViewController.Companion.sheetViewController
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection
-import `fun`.adaptive.grove.sheet.model.SheetSelection.Companion.emptySelection
 import `fun`.adaptive.grove.sheet.operation.SelectByIndex
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
@@ -17,8 +19,10 @@ import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textSmall
 
 @Adaptive
-fun descendants(controller: SheetViewController) {
-    val selection = valueFrom { controller.selectionStore } ?: emptySelection
+fun structure() : AdaptiveFragment {
+
+    val controller = fragment().sheetViewController()
+    val selection = valueFrom { controller.selectionStore }
 
     grid {
         maxSize .. borderRight(colors.outline)
@@ -36,6 +40,8 @@ fun descendants(controller: SheetViewController) {
             }
         }
     }
+
+    return fragment()
 }
 
 @Adaptive

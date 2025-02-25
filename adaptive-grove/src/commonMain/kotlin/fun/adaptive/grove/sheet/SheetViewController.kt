@@ -1,6 +1,7 @@
 package `fun`.adaptive.grove.sheet
 
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.api.findContext
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.value.storeFor
@@ -29,7 +30,17 @@ open class SheetViewController(
     val recordOperations: Boolean = false,
     val recordMerge: Boolean = false
 ) {
+    companion object {
+        fun AdaptiveFragment.sheetViewController() : SheetViewController =
+            findContext<SheetViewController>()!!
+
+        inline fun <reified T> AdaptiveFragment.sheetViewExtension() =
+            sheetViewController().extensions.firstInstanceOrNull<T>()
+    }
+
     val logger = getLogger("SheetViewController").also { if (printTrace) it.enableFine() }
+
+    val extensions = mutableListOf<Any>()
 
     val groupUuid = UUID<LfmDescendant>("db7b3633-c0f7-479d-812d-837d80065dfb")
 

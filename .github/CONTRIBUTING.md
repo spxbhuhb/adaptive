@@ -7,7 +7,7 @@ I try to check the channel daily, there you can ask anything related to the proj
 ## Trying out things
 
 When you open the project in IDEA, the Gradle import creates shorthands to start
-the mostly used tasks:
+the most used tasks:
 
 ```text
 adaptive
@@ -46,6 +46,8 @@ And in a separate terminal (as these do not exit until you manually stop them):
 
 ## Running core unit tests
 
+This is only needed after version change, otherwise it is not necessary.
+
 To run unit tests in core you have to publish `adaptive-core` to Maven local. If you don't
 do so, you'll get a dependency error.
 
@@ -57,13 +59,11 @@ and for that compilation you need the core artifact.
 ./gradlew :adaptive-core:allTests
 ```
 
-This is only needed after version change, otherwise it is not necessary.
-
 ## Names
 
 **core modules**: The `adaptive-core`, `adaptive-gradle-plugin`, `adaptive-kotlin-plugin` modules.
 
-These often require special handling because they do not have the compiler plugin.
+These often require special handling because they do not use the compiler plugin.
 So, usual stuff like `@Adat` or `@CallSiteName` does not work.
 
 ## Adding code 
@@ -119,6 +119,22 @@ processResources(
     preparedResourcesPath = preparedResources
 )
 ```
+
+### Debugging and tracing
+
+Debugging code in a browser is not necessarily trivial, mostly because of coroutine stack traces does 
+not contain enough information.
+
+Tips that might help:
+
+* add the `trace` instruction to the fragment
+* add the `traceAll` instruction to the adapter
+  * this will print out a lot, you can use a regex to filter out some entries
+* use `println` (in state definition) or `debug` (after parameters or instructions):
+  * `box { someInstruction.debug() }`
+  * `someFragment(stuff)` -> `someFragment(stuff.debug())`
+* use the `AdaptiveFragment.dumpFragmentTree()` function
+* use the `name("this is my fragment")` instruction (in browser the ID of the HTMLElement will be the name)
 
 ### Notes
 
