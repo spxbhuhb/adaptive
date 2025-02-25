@@ -9,7 +9,6 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
 
 @Adaptive
@@ -32,7 +31,7 @@ fun wsMain(workspace: Workspace) {
     splitPane(
         config,
         { wsTop(workspace) },
-        { box { workspace.theme.splitDividerHorizontal } },
+        { wsHorizontalDivider(workspace.theme) },
         { wsBottom(workspace) }
     ) .. maxSize
 }
@@ -44,7 +43,7 @@ private fun wsTop(workspace: Workspace) {
     splitPane(
         config,
         { wsLeft(workspace) },
-        { box { workspace.theme.splitDividerVertical } },
+        { wsVerticalDivider(workspace.theme) },
         { wsCenterRight(workspace) }
     ) .. maxSize
 }
@@ -56,7 +55,7 @@ private fun wsLeft(workspace: Workspace) {
     splitPane(
         config,
         { wsPane(workspace, WorkspacePanePosition.LeftTop) },
-        { box { workspace.theme.splitDividerHorizontal } },
+        { wsHorizontalDivider(workspace.theme) },
         { wsPane(workspace, WorkspacePanePosition.LeftMiddle) }
     ) .. maxSize
 }
@@ -68,7 +67,7 @@ private fun wsCenterRight(workspace: Workspace) {
     splitPane(
         config,
         { wsPane(workspace, WorkspacePanePosition.Center) },
-        { box { workspace.theme.splitDividerVertical } },
+        { wsVerticalDivider(workspace.theme) },
         { wsRight(workspace) }
     ) .. maxSize
 }
@@ -80,7 +79,7 @@ private fun wsRight(workspace: Workspace) {
     splitPane(
         config,
         { wsPane(workspace, WorkspacePanePosition.RightTop) },
-        { box { workspace.theme.splitDividerHorizontal } },
+        { wsHorizontalDivider(workspace.theme) },
         { wsPane(workspace, WorkspacePanePosition.RightMiddle) }
     ) .. maxSize
 }
@@ -92,9 +91,29 @@ private fun wsBottom(workspace: Workspace) {
     splitPane(
         config,
         { wsPane(workspace, WorkspacePanePosition.LeftBottom) },
-        { box { workspace.theme.splitDividerVertical } },
+        { wsVerticalDivider(workspace.theme) },
         { wsPane(workspace, WorkspacePanePosition.RightBottom) }
     ) .. maxSize
+}
+
+@Adaptive
+private fun wsHorizontalDivider(theme : WorkspaceTheme) {
+    box {
+        theme.splitDividerHorizontalOverlay
+        box {
+            theme.splitDividerHorizontalVisible
+        }
+    }
+}
+
+@Adaptive
+private fun wsVerticalDivider(theme : WorkspaceTheme) {
+    box {
+        theme.splitDividerVerticalOverlay
+        box {
+            theme.splitDividerVerticalVisible
+        }
+    }
 }
 
 @Adaptive
@@ -181,7 +200,7 @@ private fun wsPaneIcon(
         theme.paneIconContainer
         onClick { workspace.onIconClick(pane) }
 
-        icon(pane.icon)
+        icon(pane.icon) .. theme.paneIcon
 
         hoverPopup {
             popupAlign.afterCenter

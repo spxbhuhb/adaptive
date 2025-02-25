@@ -9,6 +9,7 @@ import `fun`.adaptive.ui.fragment.layout.RawCornerRadius
 import `fun`.adaptive.ui.fragment.layout.RawDropShadow
 import `fun`.adaptive.ui.instruction.decoration.BackgroundGradient
 import `fun`.adaptive.ui.instruction.decoration.Color
+import `fun`.adaptive.ui.instruction.decoration.CursorType
 import org.w3c.dom.HTMLElement
 
 object BrowserDecorationApplier : DecorationRenderApplier<HTMLElement>() {
@@ -78,5 +79,14 @@ object BrowserDecorationApplier : DecorationRenderApplier<HTMLElement>() {
 
         receiver.style.filter =
             "drop-shadow(${dropShadow.color.hex} ${dropShadow.offsetX.pxs()} ${dropShadow.offsetY.pxs()} ${dropShadow.standardDeviation.pxs()})"
+    }
+
+    override fun applyCursor(receiver: HTMLElement, cursor: CursorType?) {
+        receiver.style.cursor = when (cursor) {
+            CursorType.Pointer -> "pointer"
+            CursorType.ColResize -> "col-resize"
+            CursorType.RowResize -> "row-resize"
+            else -> "auto"
+        }
     }
 }

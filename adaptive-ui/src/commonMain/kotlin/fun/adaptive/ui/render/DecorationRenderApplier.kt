@@ -6,6 +6,7 @@ import `fun`.adaptive.ui.fragment.layout.RawCornerRadius
 import `fun`.adaptive.ui.fragment.layout.RawDropShadow
 import `fun`.adaptive.ui.instruction.decoration.BackgroundGradient
 import `fun`.adaptive.ui.instruction.decoration.Color
+import `fun`.adaptive.ui.instruction.decoration.CursorType
 
 abstract class DecorationRenderApplier<R> : AbstractRenderApplier() {
 
@@ -79,6 +80,15 @@ abstract class DecorationRenderApplier<R> : AbstractRenderApplier() {
         if (dropShadow != previousDropShadow) {
             applyDropShadow(receiver, dropShadow)
         }
+
+        // ----  cursor  ----
+
+        val cursor = current?.cursor
+        val previousCursor = previous?.cursor
+
+        if (cursor != previousCursor) {
+            applyCursor(receiver, cursor)
+        }
     }
 
     abstract fun applyBorder(receiver: R, border: RawBorder?)
@@ -92,4 +102,6 @@ abstract class DecorationRenderApplier<R> : AbstractRenderApplier() {
     abstract fun clearBackground(receiver: R)
 
     abstract fun applyDropShadow(receiver: R, dropShadow: RawDropShadow?)
+
+    abstract fun applyCursor(receiver: R, cursor: CursorType?)
 }

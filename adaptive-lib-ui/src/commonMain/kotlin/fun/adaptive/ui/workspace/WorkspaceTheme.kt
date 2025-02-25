@@ -2,6 +2,7 @@ package `fun`.adaptive.ui.workspace
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.instructionsOf
+import `fun`.adaptive.graphics.svg.api.svgFill
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.instruction.DPixel
@@ -16,7 +17,7 @@ import `fun`.adaptive.ui.theme.textSmall
 class WorkspaceTheme(
     val width: DPixel = 40.dp,
     val titleHeight: DPixel = 36.dp,
-    val dividerSize: DPixel = 10.dp,
+    val dividerSize: DPixel = 9.dp,
     val toolBackground: AdaptiveInstruction = backgrounds.surfaceVariant
 ) {
 
@@ -24,12 +25,28 @@ class WorkspaceTheme(
         var workspaceTheme = WorkspaceTheme()
     }
 
-    val splitDividerHorizontal = instructionsOf(
-        maxWidth, height { dividerSize }, backgrounds.friendly
+    val splitDividerHorizontalVisible = instructionsOf(
+        maxWidth, height { 1.dp }, borderBottom(colors.outline)
     )
 
-    val splitDividerVertical = instructionsOf(
-        maxHeight .. width { dividerSize } .. backgrounds.friendly
+    val splitDividerHorizontalOverlay = instructionsOf(
+        maxWidth,
+        height { dividerSize },
+        zIndex { 300 },
+        paddingVertical { (dividerSize - 1.dp) / 2.dp },
+        cursor.rowResize
+    )
+
+    val splitDividerVerticalVisible = instructionsOf(
+        maxHeight, width { 1.dp }, borderLeft(colors.outline)
+    )
+
+    val splitDividerVerticalOverlay = instructionsOf(
+        maxHeight,
+        width { dividerSize },
+        zIndex { 300 },
+        paddingHorizontal { (dividerSize - 1.dp) / 2.dp },
+        cursor.colResize
     )
 
     val paneIconColumn = instructionsOf(
@@ -58,7 +75,7 @@ class WorkspaceTheme(
     )
 
     val paneIcon = instructionsOf(
-
+        svgFill(colors.onSurface)
     )
 
     val tooltipContainer = instructionsOf(

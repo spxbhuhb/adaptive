@@ -10,6 +10,7 @@ import `fun`.adaptive.ui.fragment.layout.RawCornerRadius
 import `fun`.adaptive.ui.fragment.layout.RawDropShadow
 import `fun`.adaptive.ui.instruction.decoration.BackgroundGradient
 import `fun`.adaptive.ui.instruction.decoration.Color
+import `fun`.adaptive.ui.instruction.decoration.CursorType
 
 @Suppress("EqualsOrHashCode")
 class DecorationRenderData(
@@ -24,6 +25,8 @@ class DecorationRenderData(
 
     var dropShadow: RawDropShadow? = null
 
+    var cursor : CursorType? = null
+
     override fun equals(other: Any?): Boolean {
         if (other === this) return true
         if (other == null) return false
@@ -34,6 +37,7 @@ class DecorationRenderData(
         if (this.backgroundColor != other.backgroundColor) return false
         if (this.backgroundGradient != other.backgroundGradient) return false
         if (this.dropShadow != other.dropShadow) return false
+        if (this.cursor != other.cursor) return false
 
         return true
     }

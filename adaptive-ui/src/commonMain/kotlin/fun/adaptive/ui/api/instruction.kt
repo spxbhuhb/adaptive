@@ -50,6 +50,8 @@ fun cornerTopRightRadius(topRight: DPixel) = cornerRadius(topRight = topRight)
 
 fun dropShadow(color: Color, offsetX: DPixel, offsetY: DPixel, standardDeviation: DPixel) = DropShadow(color, offsetX, offsetY, standardDeviation)
 
+val cursor = Cursor.Companion
+
 // ------------------------------------------------------------------------------------
 // Event
 // ------------------------------------------------------------------------------------

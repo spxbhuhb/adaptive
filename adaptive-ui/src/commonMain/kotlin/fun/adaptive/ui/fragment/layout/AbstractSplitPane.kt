@@ -23,6 +23,7 @@ import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
+import `fun`.adaptive.ui.instruction.toPx
 import kotlin.math.max
 import kotlin.math.min
 
@@ -314,7 +315,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         val divider = layoutItems[1]
         val pane2 = layoutItems[2]
 
-        val dividerRawSize = c.dividerSize.toRawValue(uiAdapter)
+        val dividerRawSize = c.dividerEffectiveSize.toRawValue(uiAdapter)
         val horizontal = (c.orientation == Orientation.Horizontal)
 
         val availableWidth = if (horizontal) fullAvailableWidth - dividerRawSize else fullAvailableWidth
@@ -365,21 +366,23 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
 
         if (horizontal) {
             pane1.computeLayout(pane1Width, availableHeight)
-            divider.computeLayout(c.dividerSize.pixelValue, availableHeight)
+            divider.computeLayout(c.dividerOverlaySize.pixelValue, availableHeight)
             pane2.computeLayout(availableWidth - pane1Width, availableHeight)
         } else {
             pane1.computeLayout(availableWidth, pane1Height)
-            divider.computeLayout(availableWidth, c.dividerSize.pixelValue)
+            divider.computeLayout(availableWidth, c.dividerOverlaySize.pixelValue)
             pane2.computeLayout(availableWidth, availableHeight - pane1Height)
         }
 
+        val dividerOffset = (c.dividerOverlaySize - c.dividerEffectiveSize).toPx(uiAdapter) / 2
+
         if (horizontal) {
             pane1.placeLayout(top, start)
-            divider.placeLayout(top, start + pane1Width)
+            divider.placeLayout(top, start + pane1Width - dividerOffset)
             pane2.placeLayout(top, start + dividerRawSize + pane1Width)
         } else {
             pane1.placeLayout(top, start)
-            divider.placeLayout(top + pane1Height, start)
+            divider.placeLayout(top + pane1Height - dividerOffset, start)
             pane2.placeLayout(top + pane1Height + dividerRawSize, start)
         }
     }
@@ -408,6 +411,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
 
     fun handleMoveStart(position: Position, x: Double, y: Double) {
 
+        println("moveStart")
         // position is inside the divider box.
 
         if (configuration.orientation == Orientation.Horizontal) {
@@ -438,7 +442,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
 
         // the edges of the divider determine the sizes of the panes
 
-        val dividerSize = uiAdapter.toPx(c.dividerSize)
+        val dividerSize = uiAdapter.toPx(c.dividerEffectiveSize)
         val dividerStartEdge = (if (horizontal) effectiveX else effectiveY) - moveOffset
         val dividerEndEdge = dividerStartEdge + dividerSize
 

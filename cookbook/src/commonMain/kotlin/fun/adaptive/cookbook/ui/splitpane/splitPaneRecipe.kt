@@ -20,13 +20,13 @@ fun splitPaneRecipe(): AdaptiveFragment {
         gap { 16.dp } .. maxSize .. verticalScroll
 
         text(SplitMethod.FixFirst)
-        sp { SplitPaneConfiguration(SplitVisibility.Both, SplitMethod.FixFirst, 100.0, Orientation.Horizontal, 4.dp) }
+        sp { SplitPaneConfiguration(SplitVisibility.Both, SplitMethod.FixFirst, 100.0, Orientation.Horizontal) }
 
         text(SplitMethod.FixSecond)
-        sp { SplitPaneConfiguration(SplitVisibility.Both, SplitMethod.FixSecond, 100.0, Orientation.Horizontal, 4.dp) }
+        sp { SplitPaneConfiguration(SplitVisibility.Both, SplitMethod.FixSecond, 100.0, Orientation.Horizontal) }
 
         text(SplitMethod.Proportional)
-        sp { SplitPaneConfiguration(SplitVisibility.Both, SplitMethod.Proportional, 0.4, Orientation.Horizontal, 4.dp) }
+        sp { SplitPaneConfiguration(SplitVisibility.Both, SplitMethod.Proportional, 0.4, Orientation.Horizontal) }
 
     }
 
