@@ -30,3 +30,20 @@ fun <VT> valueFrom(
 
     return store.value
 }
+
+// FIXME does valueFromOrNull properly refreshes the producer on producer fun change?
+@Producer
+fun <VT> valueFromOrNull(
+    binding: AdaptiveStateVariableBinding<VT>? = null,
+    producerFun: () -> Observable<VT>?
+): VT? {
+    checkNotNull(binding)
+
+    val store = producerFun()
+
+    binding.targetFragment.addProducer(
+        AdaptiveValueProducer(binding, store)
+    )
+
+    return store?.value
+}

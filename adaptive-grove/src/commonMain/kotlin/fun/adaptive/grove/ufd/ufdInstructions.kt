@@ -1,31 +1,35 @@
 package `fun`.adaptive.grove.ufd
 
-import `fun`.adaptive.grove.resources.instructions
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
-import `fun`.adaptive.grove.sheet.SheetViewController.Companion.sheetViewController
+import `fun`.adaptive.foundation.value.valueFromOrNull
+import `fun`.adaptive.grove.resources.instructions
+import `fun`.adaptive.grove.resources.selectItemsForInstructions
+import `fun`.adaptive.grove.sheet.SheetViewContext
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.ui.api.borderLeft
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.flowText
-import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.theme.colors
+import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 
 @Adaptive
 fun ufdInstructions() : AdaptiveFragment {
 
-    val controller = fragment().sheetViewController()
-    val selection = valueFrom { controller.selectionStore }
+    val controller = valueFrom { fragment().wsContext<SheetViewContext>().focusedView }
+    val selection = valueFromOrNull { controller?.selectionStore }
 
     column {
         maxSize .. borderLeft(colors.outline)
 
         areaTitle(Strings.instructions)
 
-        for (item in selection.items) {
-            flowText(item.fragment.instructions.toMutableList().joinToString("\n"))
+        if (selection != null && selection.items.isNotEmpty()) {
+            for (item in selection.items) {
+                flowText(item.fragment.instructions.toMutableList().joinToString("\n"))
+            }
+        } else {
+            text(Strings.selectItemsForInstructions)
         }
     }
 

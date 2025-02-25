@@ -19,9 +19,9 @@ fun Workspace.cookbookCommon() {
 
     panes += WorkspacePane(
         UUID(),
-        "Palette",
-        Graphics.settings,
-        WorkspacePanePosition.LeftTop,
+        "Cookbook",
+        Graphics.flatware,
+        WorkspacePanePosition.LeftMiddle,
         "cookbook:recipes"
     )
 

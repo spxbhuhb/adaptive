@@ -10,25 +10,23 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.resources.palette
-import `fun`.adaptive.grove.sheet.SheetViewController.Companion.sheetViewController
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.utility.firstInstance
+import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 
 @Adaptive
 fun ufdPalette() : AdaptiveFragment {
 
-    val controller = fragment().sheetViewController()
-    val context = controller.extensions.firstInstance<UfdContext>()
+    val context = fragment().wsContext<UfdContext>()
     val items = autoCollection(context.palette) ?: emptyList()
 
     grid {
         maxSize .. borderRight(colors.outline)
-        rowTemplate(udfTheme.headerHeight, 1.fr)
+        rowTemplate(ufdTheme.headerHeight, 1.fr)
 
         areaTitle(Strings.palette, Graphics.palette)
 

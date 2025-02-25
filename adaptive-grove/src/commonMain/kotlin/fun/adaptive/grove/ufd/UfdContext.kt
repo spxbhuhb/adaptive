@@ -10,6 +10,7 @@ import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.colors
+import `fun`.adaptive.ui.workspace.Workspace
 
 class UfdContext {
 

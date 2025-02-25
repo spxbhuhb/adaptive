@@ -7,18 +7,18 @@ import `fun`.adaptive.general.ObservableListener
 
 class AdaptiveValueProducer<VT>(
     override val binding: AdaptiveStateVariableBinding<VT>,
-    val store: Observable<VT>
+    val store: Observable<VT>?
 ) : AdaptiveProducer<VT>, ObservableListener<VT> {
 
     override var latestValue: VT? = null
 
     override fun start() {
-        store.addListener(this)
-        latestValue = store.value
+        store?.addListener(this)
+        latestValue = store?.value
     }
 
     override fun stop() {
-        store.removeListener(this)
+        store?.removeListener(this)
     }
 
     override fun onChange(value: VT) {

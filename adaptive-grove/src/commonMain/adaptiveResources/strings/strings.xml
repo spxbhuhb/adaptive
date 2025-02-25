@@ -12,4 +12,7 @@
     <string name="redoToolTip">Redo</string>
     <string name="groupToolTip">Group</string>
     <string name="ungroupToolTip">Ungroup</string>
+
+    <string name="noComponents">No components</string>
+    <string name="selectItemsForInstructions">Select fragments to show instructions.</string>
 </resources>

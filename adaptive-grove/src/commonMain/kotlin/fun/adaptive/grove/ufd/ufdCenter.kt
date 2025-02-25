@@ -1,13 +1,15 @@
 package `fun`.adaptive.grove.ufd
 
-import `fun`.adaptive.grove.resources.*
 import `fun`.adaptive.adat.encodeToJson
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.Independent
+import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.grove.resources.*
+import `fun`.adaptive.grove.sheet.SheetViewContext
 import `fun`.adaptive.grove.sheet.SheetViewController
-import `fun`.adaptive.grove.sheet.SheetViewController.Companion.sheetViewController
 import `fun`.adaptive.grove.sheet.fragment.sheet
 import `fun`.adaptive.grove.sheet.operation.*
 import `fun`.adaptive.resource.graphics.Graphics
@@ -20,38 +22,41 @@ import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.theme.textSmall
+import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 import `fun`.adaptive.utility.debug
 
 @Adaptive
 fun ufdCenter() : AdaptiveFragment {
 
-    val controller = fragment().sheetViewController()
+    val controller = SheetViewController().also { fragment().wsContext<SheetViewContext>().focusedView.value = it }
 
-    grid {
-        rowTemplate(udfTheme.headerHeight, 1.fr)
-
-        row {
-            maxWidth .. borderBottom(colors.outline) .. spaceBetween
-            onKeydown { controller.onKeyDown(it.keyInfo !!, it.modifiers) }
+    localContext(controller) {
+        grid {
+            rowTemplate(ufdTheme.headerHeight, 1.fr)
 
             row {
-                for (action in actions) {
-                    action(action, controller)
+                maxWidth .. borderBottom(colors.outline) .. spaceBetween
+                onKeydown { controller.onKeyDown(it.keyInfo !!, it.modifiers) }
+
+                row {
+                    for (action in actions) {
+                        action(action, controller)
+                    }
+                }
+
+                row {
+                    multiplier(controller)
+                }
+
+                row {
+                    actionIcon(Graphics.pest_control, theme = tableIconTheme) .. onClick {
+                        controller.snapshot.encodeToJson().debug()
+                    }
                 }
             }
 
-            row {
-                multiplier(controller)
-            }
-
-            row {
-                actionIcon(Graphics.pest_control, theme = tableIconTheme) .. onClick {
-                    controller.snapshot.encodeToJson().debug()
-                }
-            }
+            sheet()
         }
-
-        sheet()
     }
 
     return fragment()
