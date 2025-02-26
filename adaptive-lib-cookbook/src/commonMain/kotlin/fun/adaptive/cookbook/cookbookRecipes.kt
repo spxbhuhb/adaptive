@@ -32,36 +32,62 @@ private fun showRecipe(context: CookbookContext, item: TreeItem) {
 val root = CookbookRecipeSet(
     "Root",
     listOf(
-        CookbookRecipeSet(
+        set(
             "Demos",
-            emptyList(),
-            listOf(
-                CookbookRecipe("Good Morning", "cookbook:recipe:goodmorning")
-            )
+            CookbookRecipe("Good Morning", "cookbook:recipe:goodmorning")
         ),
-        CookbookRecipeSet(
-            "UI Fragments",
-            emptyList(),
-            listOf(
-                CookbookRecipe("Box", "cookbook:recipe:box"),
-                CookbookRecipe("Button", "cookbook:recipe:button"),
-                CookbookRecipe("Canvas", "cookbook:recipe:canvas"),
-                CookbookRecipe("Dialog", "cookbook:recipe:dialog"),
-                CookbookRecipe("Editor", "cookbook:recipe:editor"),
-                CookbookRecipe("Event", "cookbook:recipe:event"),
-                CookbookRecipe("Form", "cookbook:recipe:form"),
-                CookbookRecipe("Grid", "cookbook:recipe:grid"),
-                CookbookRecipe("Popup", "cookbook:recipe:popup"),
-                CookbookRecipe("Select", "cookbook:recipe:select"),
-                CookbookRecipe("Sidebar", "cookbook:recipe:sidebar"),
-                CookbookRecipe("Snackbar", "cookbook:recipe:snackbar"),
-                CookbookRecipe("Split Pane", "cookbook:recipe:splitpane"),
-                CookbookRecipe("SVG", "cookbook:recipe:svg"),
-                CookbookRecipe("Text", "cookbook:recipe:text"),
-                CookbookRecipe("Tree", "cookbook:recipe:tree")
-            )
+
+        set(
+            "Layout",
+            CookbookRecipe("Box", "cookbook:recipe:box"),
+            CookbookRecipe("Grid", "cookbook:recipe:grid"),
+            CookbookRecipe("Split Pane", "cookbook:recipe:splitpane"),
+            CookbookRecipe("Workspace", "cookbook:recipe:workspace")
+        ),
+
+        set(
+            "Basic fragments",
+            CookbookRecipe("Button", "cookbook:recipe:button"),
+            CookbookRecipe("Icon", "cookbook:recipe:icon"),
+            CookbookRecipe("SVG", "cookbook:recipe:svg"),
+            CookbookRecipe("Text", "cookbook:recipe:text"),
+        ),
+
+        set(
+            "Standalone inputs",
+            CookbookRecipe("Checkbox", "cookbook:recipe:checkbox"),
+            CookbookRecipe("Date picker", "cookbook:recipe:datepicker"),
+            CookbookRecipe("Select", "cookbook:recipe:select"),
+        ),
+
+        set(
+            "Bound inputs - editors",
+            CookbookRecipe("Editor", "cookbook:recipe:editor"),
+            CookbookRecipe("Form", "cookbook:recipe:form")
+        ),
+
+        set(
+            "Complex fragments",
+            CookbookRecipe("Canvas", "cookbook:recipe:canvas"),
+            CookbookRecipe("Dialog", "cookbook:recipe:dialog"),
+            CookbookRecipe("Sidebar", "cookbook:recipe:sidebar"),
+            CookbookRecipe("Snackbar", "cookbook:recipe:snackbar"),
+            CookbookRecipe("Tree", "cookbook:recipe:tree"),
+        ),
+
+        set(
+            "Other fragments",
+            CookbookRecipe("Event", "cookbook:recipe:event"),
+            CookbookRecipe("Popup", "cookbook:recipe:popup")
         )
     ),
     emptyList()
 )
+
+private fun set(name: String, vararg recipes: CookbookRecipe) =
+    CookbookRecipeSet(
+        name,
+        emptyList(),
+        recipes.toList()
+    )
 

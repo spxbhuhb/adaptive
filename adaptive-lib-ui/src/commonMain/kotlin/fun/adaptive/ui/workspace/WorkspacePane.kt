@@ -14,5 +14,6 @@ class WorkspacePane(
     val position: WorkspacePanePosition,
     val key : String,
     val shortcut: String? = null,
-    val direct : Boolean = false
+    val direct : Boolean = false,
+    val actions : List<WorkspacePaneAction> = emptyList()
 )

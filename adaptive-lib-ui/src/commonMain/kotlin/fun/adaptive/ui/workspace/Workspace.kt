@@ -97,14 +97,14 @@ class Workspace {
     /**
      * Toggle the given pane (typically when the user clicks on the pane icon).
      */
-    fun onIconClick(pane: WorkspacePane) {
+    fun toggle(pane: WorkspacePane) {
         when (pane.position) {
-            WorkspacePanePosition.LeftTop -> toggle(leftTop, pane)
-            WorkspacePanePosition.LeftMiddle -> toggle(leftMiddle , pane)
-            WorkspacePanePosition.LeftBottom -> toggle(leftBottom , pane)
-            WorkspacePanePosition.RightTop -> toggle(rightTop , pane)
-            WorkspacePanePosition.RightMiddle -> toggle(rightMiddle , pane)
-            WorkspacePanePosition.RightBottom -> toggle(rightBottom , pane)
+            WorkspacePanePosition.LeftTop -> toggleStore(leftTop, pane)
+            WorkspacePanePosition.LeftMiddle -> toggleStore(leftMiddle , pane)
+            WorkspacePanePosition.LeftBottom -> toggleStore(leftBottom , pane)
+            WorkspacePanePosition.RightTop -> toggleStore(rightTop , pane)
+            WorkspacePanePosition.RightMiddle -> toggleStore(rightMiddle , pane)
+            WorkspacePanePosition.RightBottom -> toggleStore(rightBottom , pane)
             WorkspacePanePosition.Center -> {
                 center.value = pane.uuid
                 return // no split update is needed as center is always shown
@@ -112,8 +112,8 @@ class Workspace {
         }
         updateSplits()
     }
-    
-    fun toggle(store : Observable<UUID<WorkspacePane>?>, pane: WorkspacePane) {
+
+    private fun toggleStore(store : Observable<UUID<WorkspacePane>?>, pane: WorkspacePane) {
         if (store.value == pane.uuid) {
             store.value = null
         } else {

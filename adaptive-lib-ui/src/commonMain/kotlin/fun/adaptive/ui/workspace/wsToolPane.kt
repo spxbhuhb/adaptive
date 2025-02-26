@@ -3,6 +3,7 @@ package `fun`.adaptive.ui.workspace
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.hover
 import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
 
 @Adaptive
@@ -12,10 +13,12 @@ fun wsToolPane(
     @Adaptive
     _fixme_adaptive_content: () -> Unit
 ) {
+    val hover = hover()
+
     grid {
         theme.toolPaneContainer
 
-        wsPaneTitle(pane, theme)
+        wsPaneTitle(pane, hover, theme)
 
         box {
             theme.toolPaneContent

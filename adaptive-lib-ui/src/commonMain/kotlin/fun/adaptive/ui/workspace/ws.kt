@@ -204,7 +204,7 @@ private fun wsPaneIcon(
 
     box {
         theme.paneIconContainer
-        onClick { workspace.onIconClick(pane) }
+        onClick { workspace.toggle(pane) }
 
         icon(pane.icon) .. theme.paneIcon
 

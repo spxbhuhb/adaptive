@@ -11,6 +11,8 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.ui.theme.backgrounds
+import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.workspace.*
 import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
 import `fun`.adaptive.utility.UUID
@@ -20,37 +22,42 @@ class Context {
 }
 
 @Adaptive
-fun workspaceRecipe() : AdaptiveFragment {
+fun workspaceRecipe(): AdaptiveFragment {
 
     val workspace = Workspace()
     initPanes(workspace)
 
-    grid {
-        maxSize .. colTemplate(workspaceTheme.width, 1.fr, workspaceTheme.width)
+    box {
+        maxSize .. backgrounds.friendlyOpaque .. padding { 16.dp }
 
-        localContext(Context()) {
-            wsPaneIcons(left = true, workspace)
+        grid {
+            maxSize .. colTemplate(workspaceTheme.width, 1.fr, workspaceTheme.width)
+            borders.outline .. backgrounds.surface
 
-            wsMain(workspace)
+            localContext(Context()) {
+                wsPaneIcons(left = true, workspace)
 
-            wsPaneIcons(left = false, workspace)
+                wsMain(workspace)
+
+                wsPaneIcons(left = false, workspace)
+            }
         }
     }
 
     return fragment()
 }
 
-object PaneFragmentFactory : FoundationFragmentFactory() {
+object WorkspaceRecipePaneFragmentFactory : FoundationFragmentFactory() {
     init {
-        add("grove:righttop", ::rightTop)
-        add("grove:rightmiddle", ::rightMiddle)
-        add("grove:bottomright", ::bottomRight)
-        add("grove:lefttop", ::leftTop)
-        add("grove:leftmiddle1", ::leftMiddle1)
-        add("grove:leftmiddle2", ::leftMiddle2)
-        add("grove:leftmiddle3", ::leftMiddle3)
-        add("grove:bottomleft", ::bottomLeft)
-        add("grove:center", ::center)
+        add("cookbook:support:righttop", ::rightTop)
+        add("cookbook:support:rightmiddle", ::rightMiddle)
+        add("cookbook:support:bottomright", ::bottomRight)
+        add("cookbook:support:lefttop", ::leftTop)
+        add("cookbook:support:leftmiddle1", ::leftMiddle1)
+        add("cookbook:support:leftmiddle2", ::leftMiddle2)
+        add("cookbook:support:leftmiddle3", ::leftMiddle3)
+        add("cookbook:support:bottomleft", ::bottomLeft)
+        add("cookbook:support:center", ::center)
     }
 }
 
@@ -62,7 +69,7 @@ fun initPanes(workspace: Workspace) {
                 "Left Top",
                 Graphics.menu,
                 WorkspacePanePosition.LeftTop,
-                "grove:lefttop",
+                "cookbook:support:lefttop",
                 "⌘ P"
             ),
             WorkspacePane(
@@ -70,28 +77,28 @@ fun initPanes(workspace: Workspace) {
                 "Left Middle - 1",
                 Graphics.account_box,
                 WorkspacePanePosition.LeftMiddle,
-                "grove:leftmiddle1",
+                "cookbook:support:leftmiddle1",
             ),
             WorkspacePane(
                 UUID(),
                 "Left Middle - 2",
                 Graphics.settings,
                 WorkspacePanePosition.LeftMiddle,
-                "grove:leftmiddle2",
+                "cookbook:support:leftmiddle2",
             ),
             WorkspacePane(
                 UUID(),
                 "Left Middle - 3",
                 Graphics.more_vert,
                 WorkspacePanePosition.LeftMiddle,
-                "grove:leftmiddle3",
+                "cookbook:support:leftmiddle3",
             ),
             WorkspacePane(
                 UUID(),
                 "Left Bottom",
                 Graphics.power_settings_new,
                 WorkspacePanePosition.LeftBottom,
-                "grove:bottomleft",
+                "cookbook:support:bottomleft",
                 "⌘ P"
             ),
             WorkspacePane(
@@ -99,7 +106,7 @@ fun initPanes(workspace: Workspace) {
                 "Right Top",
                 Graphics.account_box,
                 WorkspacePanePosition.RightTop,
-                "grove:righttop",
+                "cookbook:support:righttop",
                 "⌘ P"
             ),
             WorkspacePane(
@@ -107,7 +114,7 @@ fun initPanes(workspace: Workspace) {
                 "Right Middle",
                 Graphics.account_box,
                 WorkspacePanePosition.RightMiddle,
-                "grove:rightmiddle",
+                "cookbook:support:rightmiddle",
                 "⌘ P"
             ),
             WorkspacePane(
@@ -115,7 +122,7 @@ fun initPanes(workspace: Workspace) {
                 "Right Bottom",
                 Graphics.account_circle,
                 WorkspacePanePosition.RightBottom,
-                "grove:bottomright",
+                "cookbook:support:bottomright",
                 "⌘ P"
             ),
             WorkspacePane(
@@ -123,7 +130,7 @@ fun initPanes(workspace: Workspace) {
                 "Center",
                 Graphics.menu,
                 WorkspacePanePosition.Center,
-                "grove:center"
+                "cookbook:support:center"
             ),
         )
     )

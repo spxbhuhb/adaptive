@@ -3,10 +3,13 @@ package `fun`.adaptive.cookbook
 import `fun`.adaptive.cookbook.recipe.demo.goodmorning.goodMorning
 import `fun`.adaptive.cookbook.recipe.ui.button.buttonRecipe
 import `fun`.adaptive.cookbook.recipe.ui.canvas.canvasRecipe
+import `fun`.adaptive.cookbook.recipe.ui.checkbox.checkboxRecipe
+import `fun`.adaptive.cookbook.recipe.ui.datetime.datePickerRecipe
 import `fun`.adaptive.cookbook.recipe.ui.dialog.dialogRecipe
 import `fun`.adaptive.cookbook.recipe.ui.editor.editorRecipe
 import `fun`.adaptive.cookbook.recipe.ui.event.eventRecipe
 import `fun`.adaptive.cookbook.recipe.ui.form.formRecipe
+import `fun`.adaptive.cookbook.recipe.ui.icon.iconRecipe
 import `fun`.adaptive.cookbook.recipe.ui.layout.box.boxRecipe
 import `fun`.adaptive.cookbook.recipe.ui.layout.grid.gridRecipe
 import `fun`.adaptive.cookbook.recipe.ui.popup.popupRecipe
@@ -31,11 +34,14 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:box", ::boxRecipe)
         add("cookbook:recipe:button", ::buttonRecipe)
         add("cookbook:recipe:canvas", ::canvasRecipe)
+        add("cookbook:recipe:checkbox", ::checkboxRecipe)
+        add("cookbook:recipe:datepicker", ::datePickerRecipe)
         add("cookbook:recipe:dialog", ::dialogRecipe)
         add("cookbook:recipe:editor", ::editorRecipe)
         add("cookbook:recipe:event", ::eventRecipe)
         add("cookbook:recipe:form", ::formRecipe)
         add("cookbook:recipe:grid", ::gridRecipe)
+        add("cookbook:recipe:icon", ::iconRecipe)
         add("cookbook:recipe:popup", ::popupRecipe)
         add("cookbook:recipe:select", ::selectRecipe)
         add("cookbook:recipe:sidebar", ::sideBarRecipe)

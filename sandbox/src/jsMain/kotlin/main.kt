@@ -7,6 +7,7 @@ import `fun`.adaptive.auto.api.autoCollection
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.cookbook.cookbookCommon
+import `fun`.adaptive.cookbook.eco
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -120,7 +121,7 @@ fun Workspace.siteCommon() {
     panes += WorkspacePane(
         UUID(),
         "Home",
-        Graphics.menu,
+        Graphics.eco,
         WorkspacePanePosition.Center,
         "site:home",
         direct = true

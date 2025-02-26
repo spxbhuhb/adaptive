@@ -8,6 +8,9 @@
     <string name="cancel">Cancel</string>
     <string name="hide">Hide</string>
 
+    <string name="expandAll">Expand all</string>
+    <string name="collapseAll">Collapse all</string>
+
     <string name="january">January</string>
     <string name="february">February</string>
     <string name="march">March</string>

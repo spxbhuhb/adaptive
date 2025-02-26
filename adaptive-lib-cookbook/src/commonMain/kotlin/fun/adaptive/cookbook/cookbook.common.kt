@@ -1,11 +1,14 @@
 package `fun`.adaptive.cookbook
 
+import `fun`.adaptive.cookbook.recipe.ui.workspace.WorkspaceRecipePaneFragmentFactory
 import `fun`.adaptive.cookbook.support.E
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.ui.builtin.menu
+import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.ui.builtin.*
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.WorkspacePane
+import `fun`.adaptive.ui.workspace.WorkspacePaneAction
 import `fun`.adaptive.ui.workspace.WorkspacePanePosition
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.wireformat.WireFormatRegistry
@@ -19,7 +22,7 @@ suspend fun cookbookCommon() {
 }
 
 fun AdaptiveAdapter.cookbookCommon() {
-    fragmentFactory += arrayOf(CookbookFragmentFactory)
+    fragmentFactory += arrayOf(CookbookFragmentFactory, WorkspaceRecipePaneFragmentFactory)
 }
 
 fun Workspace.cookbookCommon() {
@@ -31,7 +34,17 @@ fun Workspace.cookbookCommon() {
         "Cookbook",
         Graphics.flatware,
         WorkspacePanePosition.LeftMiddle,
-        cookbookRecipePaneKey
+        cookbookRecipePaneKey,
+        actions = listOf(
+            WorkspacePaneAction(
+                Graphics.expand_all,
+                Strings.expandAll,
+            ) { w,p -> },
+            WorkspacePaneAction(
+                Graphics.collapse_all,
+                Strings.collapseAll,
+            ) { w,p -> }
+        )
     )
 
     panes += WorkspacePane(

@@ -25,6 +25,14 @@ val tableIconTheme = IconTheme(
     cornerRadius = 6.dp
 )
 
+val denseIconTheme = IconTheme(
+    colors.onSurface,
+    iconSize = 22.dp,
+    containerSize = 28.dp,
+    margin = 2.dp,
+    cornerRadius = 6.dp
+)
+
 class IconTheme(
     val color: Color,
     val iconSize: DPixel = 24.dp,
@@ -59,7 +67,7 @@ class IconTheme(
         //border(colors.outline, 1.dp),
         cornerRadius(4.dp),
         backgrounds.reverse,
-        popupAlign.belowStart,
+        popupAlign.afterBelow,
         zIndex { 100 },
         // this is buggy - dropShadow(colors.reverse.opaque(0.2f), 4.dp, 4.dp, 4.dp),
     )
