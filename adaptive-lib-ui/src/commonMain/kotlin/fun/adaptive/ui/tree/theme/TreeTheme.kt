@@ -5,6 +5,7 @@ import `fun`.adaptive.graphics.svg.api.svgFill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.alignItems
+import `fun`.adaptive.ui.api.cornerRadius
 import `fun`.adaptive.ui.api.fontSize
 import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.lineHeight
@@ -36,7 +37,8 @@ open class TreeTheme(
     open val item = instructionsOf(
         height(itemHeight),
         alignItems.startCenter,
-        maxWidth
+        maxWidth,
+        cornerRadius { 4.dp }
     )
 
     open val label = instructionsOf(

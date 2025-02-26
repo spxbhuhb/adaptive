@@ -6,12 +6,12 @@ package `fun`.adaptive.cookbook.auth.ui.large
 
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.cookbook.auth.model.SignUp
-import `fun`.adaptive.cookbook.shared.black
-import `fun`.adaptive.cookbook.shared.darkGray
-import `fun`.adaptive.cookbook.shared.footerLink
-import `fun`.adaptive.cookbook.shared.smallScreen
-import `fun`.adaptive.cookbook.shared.subTitle
-import `fun`.adaptive.cookbook.shared.title
+import `fun`.adaptive.cookbook.support.black
+import `fun`.adaptive.cookbook.support.darkGray
+import `fun`.adaptive.cookbook.support.footerLink
+import `fun`.adaptive.cookbook.support.smallScreen
+import `fun`.adaptive.cookbook.support.subTitle
+import `fun`.adaptive.cookbook.support.title
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment

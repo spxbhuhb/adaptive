@@ -23,6 +23,7 @@ import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
+import `fun`.adaptive.ui.theme.colorsSurface
 import kotlin.collections.plus
 
 open class SelectTheme(
@@ -86,6 +87,6 @@ open class SelectTheme(
         padding(16.dp)
     )
 
-    fun itemColors(selected: Boolean, hover: Boolean) = colors(false, hover)
+    fun itemColors(selected: Boolean, hover: Boolean) = colorsSurface(false, hover)
 
 }

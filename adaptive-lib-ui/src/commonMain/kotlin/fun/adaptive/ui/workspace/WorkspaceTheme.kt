@@ -32,7 +32,7 @@ class WorkspaceTheme(
     val splitDividerHorizontalOverlay = instructionsOf(
         maxWidth,
         height { dividerSize },
-        zIndex { 300 },
+        //zIndex { 300 },
         paddingVertical { (dividerSize - 1.dp) / 2.dp },
         cursor.rowResize
     )
@@ -44,7 +44,7 @@ class WorkspaceTheme(
     val splitDividerVerticalOverlay = instructionsOf(
         maxHeight,
         width { dividerSize },
-        zIndex { 300 },
+        //zIndex { 300 },
         paddingHorizontal { (dividerSize - 1.dp) / 2.dp },
         cursor.colResize
     )
@@ -84,7 +84,7 @@ class WorkspaceTheme(
         backgrounds.reverse,
         cornerRadius { 4.dp },
         gap { 8.dp },
-        zIndex { 100 }
+        //zIndex { 100 }
     )
 
     val tooltipTextBase = instructionsOf(
@@ -103,7 +103,7 @@ class WorkspaceTheme(
         alignItems.center,
         backgrounds.surfaceVariant,
         paddingLeft { 12.dp },
-        zIndex { 100 } // to have icon tooltips over items
+        //zIndex { 100 } // to have icon tooltips over items
     )
 
     val toolPaneTitleText = instructionsOf(
@@ -116,7 +116,8 @@ class WorkspaceTheme(
     val toolPaneContainer = instructionsOf(
         rowTemplate(titleHeight, 1.fr),
         maxSize,
-        toolBackground
+        toolBackground,
+        padding { 8.dp }
     )
 
     val toolPaneContent = instructionsOf(

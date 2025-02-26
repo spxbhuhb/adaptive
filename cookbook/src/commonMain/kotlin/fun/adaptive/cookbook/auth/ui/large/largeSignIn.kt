@@ -9,9 +9,9 @@ import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.cookbook.appData
 import `fun`.adaptive.cookbook.auth.model.SignIn
-import `fun`.adaptive.cookbook.shared.cornerRadius8
-import `fun`.adaptive.cookbook.shared.mediumGray
-import `fun`.adaptive.cookbook.shared.titleLarge
+import `fun`.adaptive.cookbook.support.cornerRadius8
+import `fun`.adaptive.cookbook.support.mediumGray
+import `fun`.adaptive.cookbook.support.titleLarge
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.adapter

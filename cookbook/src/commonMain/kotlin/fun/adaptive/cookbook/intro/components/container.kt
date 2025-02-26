@@ -1,8 +1,8 @@
 package `fun`.adaptive.cookbook.intro.components
 
 import `fun`.adaptive.cookbook.intro.model.IntroState
-import `fun`.adaptive.cookbook.shared.smallScreen
-import `fun`.adaptive.cookbook.shared.title
+import `fun`.adaptive.cookbook.support.smallScreen
+import `fun`.adaptive.cookbook.support.title
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.colTemplate

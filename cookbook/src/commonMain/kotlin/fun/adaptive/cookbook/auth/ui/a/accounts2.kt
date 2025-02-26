@@ -7,7 +7,7 @@ import `fun`.adaptive.cookbook.auth.ui.account.accountEditor
 import `fun`.adaptive.cookbook.check_circle
 import `fun`.adaptive.cookbook.close
 import `fun`.adaptive.cookbook.edit
-import `fun`.adaptive.cookbook.shared.cornerRadius8
+import `fun`.adaptive.cookbook.support.cornerRadius8
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf

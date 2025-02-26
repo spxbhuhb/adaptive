@@ -1,6 +1,6 @@
 package `fun`.adaptive.cookbook.app
 
-import `fun`.adaptive.cookbook.shared.title
+import `fun`.adaptive.cookbook.support.title
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.box

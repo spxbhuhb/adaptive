@@ -4,9 +4,9 @@
 
 package `fun`.adaptive.cookbook.auth.ui.small
 
-import `fun`.adaptive.cookbook.shared.smallScreen
-import `fun`.adaptive.cookbook.shared.subTitle
-import `fun`.adaptive.cookbook.shared.title
+import `fun`.adaptive.cookbook.support.smallScreen
+import `fun`.adaptive.cookbook.support.subTitle
+import `fun`.adaptive.cookbook.support.title
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment

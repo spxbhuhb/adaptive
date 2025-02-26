@@ -60,6 +60,7 @@ class IconTheme(
         cornerRadius(4.dp),
         backgrounds.reverse,
         popupAlign.belowStart,
+        zIndex { 100 },
         // this is buggy - dropShadow(colors.reverse.opaque(0.2f), 4.dp, 4.dp, 4.dp),
     )
 

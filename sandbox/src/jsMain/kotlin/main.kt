@@ -41,6 +41,7 @@ fun main() {
     CoroutineScope(Dispatchers.Default).launch {
 
         uiCommon()
+        cookbookCommon()
         groveCommon()
         groveRuntimeCommon()
 

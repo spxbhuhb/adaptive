@@ -4,8 +4,8 @@ import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.cookbook.*
 import `fun`.adaptive.cookbook.auth.api.AccountApi
 import `fun`.adaptive.cookbook.auth.model.AccountSummary
-import `fun`.adaptive.cookbook.shared.cornerRadius8
-import `fun`.adaptive.cookbook.shared.title
+import `fun`.adaptive.cookbook.support.cornerRadius8
+import `fun`.adaptive.cookbook.support.title
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.producer.fetch

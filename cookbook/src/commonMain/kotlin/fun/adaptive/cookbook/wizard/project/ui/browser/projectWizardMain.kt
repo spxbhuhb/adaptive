@@ -4,7 +4,7 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.api.isTouched
 import `fun`.adaptive.adat.api.isValid
 import `fun`.adaptive.adat.store.copyOf
-import `fun`.adaptive.cookbook.shared.*
+import `fun`.adaptive.cookbook.support.*
 import `fun`.adaptive.cookbook.wizard.project.model.ProjectData
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
