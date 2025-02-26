@@ -1,5 +1,7 @@
 package `fun`.adaptive.grove
 
+import `fun`.adaptive.foundation.AdaptiveAdapter
+import `fun`.adaptive.grove.api.GroveRuntimeFragmentFactory
 import `fun`.adaptive.grove.hydration.lfm.LfmConst
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.hydration.lfm.LfmExternalStateVariable
@@ -17,4 +19,8 @@ fun groveRuntimeCommon() {
     r += LfmFragment
     r += LfmInternalStateVariable
     r += LfmMapping
+}
+
+fun AdaptiveAdapter.groveRuntimeCommon() {
+    fragmentFactory += arrayOf(GroveRuntimeFragmentFactory)
 }
