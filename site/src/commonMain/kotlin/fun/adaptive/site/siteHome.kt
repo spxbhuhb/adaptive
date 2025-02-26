@@ -10,7 +10,6 @@ import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.AlignSelf
 import `fun`.adaptive.ui.instruction.sp
-import `fun`.adaptive.ui.theme.backgrounds
 
 @Adaptive
 fun siteHome(): AdaptiveFragment {
@@ -97,7 +96,7 @@ fun cards() {
 
             card(Images.ui_50, color(0xFFBF00u)) {
                 column {
-                    externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/ui/README.md")
+                    externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/ui/readme.md")
                     largeTitle("User Interface")
                     mediumTitle("multiplatform")
                     mediumTitle("reactive")
@@ -107,7 +106,7 @@ fun cards() {
 
             card(Images.server_50, color(0x3CB371u)) {
                 column {
-                    externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/server/README.md")
+                    externalLink("https://github.com/spxbhuhb/adaptive/blob/main/doc/server/readme.md")
                     largeTitle("Server & Cloud")
                     mediumTitle("multiplatform")
                     mediumTitle("reactive")
