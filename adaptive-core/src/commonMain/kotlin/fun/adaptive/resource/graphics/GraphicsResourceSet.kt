@@ -10,4 +10,9 @@ class GraphicsResourceSet(
     name,
     ResourceTypeQualifier.Graphics,
     resources.toList()
-)
+) {
+
+    override val cacheResource: Boolean
+        get() = true
+
+}

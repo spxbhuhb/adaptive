@@ -9,6 +9,11 @@ open class ResourceFileSet<T : ResourceFile>(
     var lastEnvironment: ResourceEnvironment? = null
     var lastResult: T? = null
 
+    open val cacheResource
+        get() = false
+
+    var cachedContent: ByteArray? = null
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is ResourceFileSet<*>) return false
@@ -47,16 +52,33 @@ open class ResourceFileSet<T : ResourceFile>(
         resourceReader: ResourceReader = defaultResourceReader
     ): ByteArray {
 
-        // When the query is the same, no need to run filtering again
+        // When the environment is the same, no need to run filtering again
         // this will probably cover 99% of the cases.
 
+        val bytes: ByteArray
+
+        println("$name ${environment == lastEnvironment} $environment $lastEnvironment")
         if (environment == lastEnvironment) {
-            return defaultResourceReader.read(lastResult !!.path)
+            val cached = cachedContent
+            if (cacheResource && cached != null) {
+                bytes = cached
+            } else {
+                bytes = resourceReader.read(lastResult !!.path).cache()
+            }
+        } else {
+            val file = getByEnvironment(environment)
+            bytes = resourceReader.read(file.path).cache()
+            lastEnvironment = environment
         }
 
-        val file = getByEnvironment(environment)
+        return bytes
+    }
 
-        return resourceReader.read(file.path)
+    fun ByteArray.cache(): ByteArray {
+        if (cacheResource) {
+            cachedContent = this
+        }
+        return this
     }
 
     fun getByEnvironment(environment: ResourceEnvironment): T {
