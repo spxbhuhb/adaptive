@@ -8,7 +8,7 @@ import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.instruction.layout.Alignment
 import `fun`.adaptive.ui.instruction.layout.FitStrategy
 
-fun AbstractContainer<*, *>.computeFinal(proposedWidth: Double, itemsWidth: Double, proposedHeight: Double, itemsHeight: Double) {
+fun AbstractAuiFragment<*>.computeFinal(proposedWidth: Double, itemsWidth: Double, proposedHeight: Double, itemsHeight: Double) {
     val data = renderData
     val layout = renderData.layout
 

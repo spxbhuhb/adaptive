@@ -3,6 +3,7 @@ package `fun`.adaptive.ui.render
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.layout.OverflowBehavior
+import `fun`.adaptive.ui.render.model.LayoutRenderData
 
 abstract class LayoutRenderApplier<R> : AbstractRenderApplier() {
 
@@ -15,8 +16,10 @@ abstract class LayoutRenderApplier<R> : AbstractRenderApplier() {
 
         if (previous == current) return
 
-        val receiver = fragment.receiver
+        applyTo(fragment.receiver, previous, current)
+    }
 
+    fun applyTo(receiver: R, previous: LayoutRenderData?, current: LayoutRenderData?) {
         // ----  padding  ----
 
         val padding = current?.padding

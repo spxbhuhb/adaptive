@@ -7,6 +7,7 @@ import `fun`.adaptive.ui.fragment.layout.RawDropShadow
 import `fun`.adaptive.ui.instruction.decoration.BackgroundGradient
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.decoration.CursorType
+import `fun`.adaptive.ui.render.model.DecorationRenderData
 
 abstract class DecorationRenderApplier<R> : AbstractRenderApplier() {
 
@@ -19,8 +20,10 @@ abstract class DecorationRenderApplier<R> : AbstractRenderApplier() {
 
         if (previous == current) return
 
-        val receiver = fragment.receiver
+        applyTo(fragment.receiver, previous, current)
+    }
 
+    fun applyTo(receiver: R, previous: DecorationRenderData?, current: DecorationRenderData?) {
         // ----  border  ----
 
         val border = current?.border

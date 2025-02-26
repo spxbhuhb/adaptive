@@ -9,7 +9,7 @@ import `fun`.adaptive.foundation.manualImplementation
 import `fun`.adaptive.resource.image.ImageResourceSet
 import `fun`.adaptive.ui.aui
 import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
-import `fun`.adaptive.ui.fragment.paragraph.ParagraphItem
+import `fun`.adaptive.ui.fragment.paragraph.model.Paragraph
 
 @AdaptiveExpect(aui)
 fun image(res: ImageResourceSet, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
@@ -128,6 +128,6 @@ fun splitPane(
 }
 
 @AdaptiveExpect(aui)
-fun paragraph(items: List<ParagraphItem>): AdaptiveFragment {
+fun paragraph(paragraph: Paragraph): AdaptiveFragment {
     manualImplementation()
 }

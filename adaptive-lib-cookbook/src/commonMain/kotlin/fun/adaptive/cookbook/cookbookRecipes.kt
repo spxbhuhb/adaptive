@@ -70,6 +70,7 @@ val root = CookbookRecipeSet(
             "Complex fragments",
             CookbookRecipe("Canvas", "cookbook:recipe:canvas"),
             CookbookRecipe("Dialog", "cookbook:recipe:dialog"),
+            CookbookRecipe("Paragraph", "cookbook:recipe:paragraph"),
             CookbookRecipe("Sidebar", "cookbook:recipe:sidebar"),
             CookbookRecipe("Snackbar", "cookbook:recipe:snackbar"),
             CookbookRecipe("Tree", "cookbook:recipe:tree"),

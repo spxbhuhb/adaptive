@@ -1,13 +1,9 @@
 package `fun`.adaptive.ui.render
 
 import `fun`.adaptive.ui.AbstractAuiFragment
-import `fun`.adaptive.ui.fragment.layout.RawBorder
-import `fun`.adaptive.ui.fragment.layout.RawCornerRadius
-import `fun`.adaptive.ui.fragment.layout.RawDropShadow
-import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.SPixel
-import `fun`.adaptive.ui.instruction.decoration.BackgroundGradient
 import `fun`.adaptive.ui.instruction.decoration.Color
+import `fun`.adaptive.ui.render.model.TextRenderData
 
 abstract class TextRenderApplier<R> : AbstractRenderApplier() {
 
@@ -24,19 +20,18 @@ abstract class TextRenderApplier<R> : AbstractRenderApplier() {
 
         if (previous == current) return
 
-        val receiver = fragment.receiver
-        val defaultTextRenderData = fragment.uiAdapter.defaultTextRenderData
+        applyTo(fragment.receiver, previous, current, fragment.uiAdapter.defaultTextRenderData)
+    }
 
-        call(current?.fontName, previous?.fontName) { applyFontName(receiver, it ?: defaultTextRenderData.fontName) }
-        call(current?.fontSize, previous?.fontSize) { applyFontSize(receiver, it ?: defaultTextRenderData.fontSize) }
-        call(current?.fontWeight, previous?.fontWeight) { applyFontWeight(receiver, it ?: defaultTextRenderData.fontWeight) }
+    fun applyTo(receiver: R, previous: TextRenderData?, current: TextRenderData?, default: TextRenderData) {
+        call(current?.fontName, previous?.fontName) { applyFontName(receiver, it ?: default.fontName) }
+        call(current?.fontSize, previous?.fontSize) { applyFontSize(receiver, it ?: default.fontSize) }
+        call(current?.fontWeight, previous?.fontWeight) { applyFontWeight(receiver, it ?: default.fontWeight) }
         call(current?.letterSpacing, previous?.letterSpacing) { applyLetterSpacing(receiver, it) }
         call(current?.wrap, previous?.wrap) { applyWrap(receiver, it) }
         call(current?.color, previous?.color) { applyColor(receiver, it) }
         call(current?.smallCaps, previous?.smallCaps) { applySmallCaps(receiver, it) }
         call(current?.noSelect, previous?.noSelect) { applyNoSelect(receiver, it) }
-
-
     }
 
     abstract fun applyFontName(receiver: R, fontName: String?)

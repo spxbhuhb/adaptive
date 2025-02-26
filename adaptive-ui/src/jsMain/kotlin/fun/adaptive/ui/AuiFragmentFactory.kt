@@ -7,6 +7,7 @@ package `fun`.adaptive.ui
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 import `fun`.adaptive.ui.fragment.*
 import `fun`.adaptive.ui.fragment.layout.*
+import `fun`.adaptive.ui.fragment.paragraph.AuiParagraph
 import `fun`.adaptive.ui.fragment.structural.AuiHoverPopup
 import `fun`.adaptive.ui.fragment.structural.AuiPrimaryPopup
 import `fun`.adaptive.ui.fragment.structural.AuiContextPopup
@@ -31,5 +32,6 @@ object AuiFragmentFactory : FoundationFragmentFactory() {
         add("aui:primarypopup") { p, i, s -> AuiPrimaryPopup(p.adapter as AuiAdapter, p, i) }
         add("aui:contextpopup") { p, i, s -> AuiContextPopup(p.adapter as AuiAdapter, p, i) }
         add("aui:splitpane") { p, i, s -> AuiSplitPane(p.adapter as AuiAdapter, p, i) }
+        add("aui:paragraph") { p, i, s -> AuiParagraph(p.adapter as AuiAdapter, p, i) }
     }
 }
