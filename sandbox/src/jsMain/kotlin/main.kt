@@ -8,8 +8,10 @@ import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.cookbook.cookbookCommon
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.localContext
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.api.GroveRuntimeFragmentFactory
@@ -61,6 +63,7 @@ fun main() {
 
             adapter.cookbookCommon()
             adapter.groveCommon()
+            adapter.siteCommon()
 
             with(adapter.defaultTextRenderData) {
                 fontName = "Open Sans"
@@ -102,10 +105,15 @@ fun buildWorkspace(): Workspace {
 
     workspace.groveCommon()
     workspace.cookbookCommon()
+    workspace.siteCommon()
 
     workspace.updateSplits()
 
     return workspace
+}
+
+fun AdaptiveAdapter.siteCommon() {
+    fragmentFactory += arrayOf(SiteFragmentFactory)
 }
 
 fun Workspace.siteCommon() {
@@ -114,11 +122,13 @@ fun Workspace.siteCommon() {
         "Home",
         Graphics.menu,
         WorkspacePanePosition.Center,
-        "site:home"
+        "site:home",
+        direct = true
     )
 }
 
 @Adaptive
-fun site(): AdaptiveFragment {
-    return site()
+fun siteHome(): AdaptiveFragment {
+    text("site")
+    return fragment()
 }

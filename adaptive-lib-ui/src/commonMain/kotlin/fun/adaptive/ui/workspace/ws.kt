@@ -160,7 +160,13 @@ fun wsPaneIcons(
 ) {
 
     val theme = workspace.theme
-    val top = workspace.topPanes(left)
+
+    val top = if (left) {
+        workspace.directPanes() + workspace.topPanes(left)
+    } else {
+        workspace.topPanes(left)
+    }
+
     val middle = workspace.middlePanes(left)
     val bottom = workspace.bottomPanes(left)
 

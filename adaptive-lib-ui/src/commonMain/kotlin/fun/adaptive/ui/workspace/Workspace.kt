@@ -74,6 +74,9 @@ class Workspace {
     // Utility
     // ---------------------------------------------------------------------------------------------
 
+    fun directPanes() =
+        panes.filter { it.direct }
+
     fun topPanes(left: Boolean) =
         panes.filter(if (left) WorkspacePanePosition.LeftTop else WorkspacePanePosition.RightTop)
 
@@ -102,7 +105,10 @@ class Workspace {
             WorkspacePanePosition.RightTop -> toggle(rightTop , pane)
             WorkspacePanePosition.RightMiddle -> toggle(rightMiddle , pane)
             WorkspacePanePosition.RightBottom -> toggle(rightBottom , pane)
-            WorkspacePanePosition.Center -> Unit
+            WorkspacePanePosition.Center -> {
+                center.value = pane.uuid
+                return // no split update is needed as center is always shown
+            }
         }
         updateSplits()
     }
