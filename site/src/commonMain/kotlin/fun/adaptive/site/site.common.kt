@@ -26,12 +26,6 @@ suspend fun siteCommon() {
     groveRuntimeCommon()
 }
 
-fun siteClientBackend() =
-    backend {
-        auto()
-        worker { SnackbarManager() }
-    }
-
 fun AbstractAuiAdapter<*, *>.siteCommon() {
 
     cookbookCommon()

@@ -3,14 +3,9 @@ package `fun`.adaptive.site
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.resource.image.ImageResourceSet
 import `fun`.adaptive.resource.image.Images
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.fragment.paragraph.items.LinkParagraphItem
-import `fun`.adaptive.ui.fragment.paragraph.items.TextParagraphItem
-import `fun`.adaptive.ui.fragment.paragraph.model.Paragraph
-import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphInstructionSet
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.AlignSelf
@@ -25,12 +20,6 @@ fun siteHome(): AdaptiveFragment {
 
         text("Adaptive") .. fontSize { 48.sp } .. alignSelf.center
 
-        box {
-            width { 400.dp } .. alignSelf.center .. backgrounds.friendlyOpaque .. padding { 16.dp }
-            cornerRadius { 4.dp } .. marginBottom { 16.dp }
-            paragraph(p) .. alignSelf.center
-        }
-
         cards()
 
         text("adaptive.fun does not use cookies") ..
@@ -41,13 +30,6 @@ fun siteHome(): AdaptiveFragment {
 
     return fragment()
 }
-
-val p = Paragraph(
-    listOf(ParagraphInstructionSet(instructionsOf())),
-    listOf(
-        LinkParagraphItem("Check this video for a short walkthrough of this site.", "https://youtube.com", 0)
-    )
-)
 
 val white = color(0xffffffu)
 val gray = color(0x606060u)
