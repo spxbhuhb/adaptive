@@ -25,10 +25,10 @@ fun ufdComponents(): AdaptiveFragment {
 
     val context = fragment().wsContext<SheetViewContext>()
     val controller = valueFrom { context.focusedView }
-    val selection = valueFromOrNull { controller?.selectionStore }
+    val selection = valueFromOrNull { controller?.selectionStore } ?: SheetSelection(emptyList())
 
     val pane = context.pane(ufdComponentsPaneKey)
-    val isEmpty = controller == null || selection == null || selection.items.isEmpty()
+    val isEmpty = (controller == null)
 
     wsToolPane(pane) {
         if (isEmpty) {
