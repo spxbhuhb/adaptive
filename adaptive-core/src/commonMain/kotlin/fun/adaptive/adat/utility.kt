@@ -9,6 +9,7 @@ import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.json.JsonBufferReader
 import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
 import `fun`.adaptive.wireformat.json.formatting.JsonFormat
+import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
 
 /**
  * Gets an adat class stored somewhere in this one based on [path]. Path
@@ -30,7 +31,7 @@ fun AdatClass.resolve(path: List<String>): AdatClass {
     return sub
 }
 
-fun <A : AdatClass> A.encodeToJson(): String =
+fun <A : AdatClass> A.encodeToJsonString(): String =
     encodeToJsonByteArray().decodeToString()
 
 fun <A : AdatClass> A.encodeToPrettyJson(format: JsonFormat = JsonFormat()): String =
@@ -40,9 +41,21 @@ fun <A : AdatClass> A.encodeToJsonByteArray(): ByteArray =
     @Suppress("UNCHECKED_CAST")
     JsonWireFormatProvider().encode(this, this.adatCompanion.adatWireFormat as WireFormat<A>)
 
+fun <A : AdatClass> AdatCompanion<A>.decodeFromJson(json: ByteArray) =
+    @Suppress("UNCHECKED_CAST")
+    JsonWireFormatProvider().decode(json, adatWireFormat as WireFormat<A>)
+
 fun <A : AdatClass> AdatCompanion<A>.decodeFromJson(json: String) =
     @Suppress("UNCHECKED_CAST")
     JsonWireFormatProvider().decode(json.encodeToByteArray(), adatWireFormat as WireFormat<A>)
+
+fun <A : AdatClass> A.encodeToProtoByteArray(): ByteArray =
+    @Suppress("UNCHECKED_CAST")
+    ProtoWireFormatProvider().encode(this, this.adatCompanion.adatWireFormat as WireFormat<A>)
+
+fun <A : AdatClass> AdatCompanion<A>.decodeFromProto(proto: ByteArray) =
+    @Suppress("UNCHECKED_CAST")
+    ProtoWireFormatProvider().decode(proto, adatWireFormat as WireFormat<A>)
 
 // TODO I'm not happy with AdatClass.encode and decode (unchecked cast)
 fun <A : AdatClass> A.encode(wireFormatProvider: WireFormatProvider): ByteArray {

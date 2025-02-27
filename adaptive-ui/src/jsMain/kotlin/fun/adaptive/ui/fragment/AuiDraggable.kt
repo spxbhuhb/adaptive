@@ -3,7 +3,7 @@
  */
 package `fun`.adaptive.ui.fragment
 
-import `fun`.adaptive.adat.encodeToJson
+import `fun`.adaptive.adat.encodeToJsonString
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.AuiAdapter
@@ -29,7 +29,7 @@ open class AuiDraggable(
             checkNotNull(transferData) { "draggable fragment without `transferData` annotation" }
 
             event.dataTransfer?.apply {
-                setData("application/json", transferData.encodeToJson())
+                setData("application/json", transferData.encodeToJsonString())
             }
 
         }

@@ -123,9 +123,9 @@ fun Path.deleteRecursively() {
     list().forEach {
         if (SystemFileSystem.metadataOrNull(it)?.isDirectory == true) {
             it.deleteRecursively()
-        } else {
-            it.delete()
         }
+        it.delete()
+
     }
 }
 

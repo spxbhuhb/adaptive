@@ -1,6 +1,6 @@
 package `fun`.adaptive.adat.nocode
 
-import `fun`.adaptive.adat.encodeToJson
+import `fun`.adaptive.adat.encodeToJsonString
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -15,8 +15,8 @@ class NoCodeAdatClassTest {
         assertEquals(ncc, nc.adatCompanion)
         assertEquals(t1.adatCompanion.adatMetadata, nc.adatCompanion.adatMetadata)
 
-        val t1Json = t1.encodeToJson()
-        val ncJson = nc.encodeToJson()
+        val t1Json = t1.encodeToJsonString()
+        val ncJson = nc.encodeToJsonString()
 
         assertEquals(t1Json, ncJson)
     }

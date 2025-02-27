@@ -1,9 +1,8 @@
 package `fun`.adaptive.grove.ufd
 
-import `fun`.adaptive.adat.encodeToJson
+import `fun`.adaptive.adat.encodeToJsonString
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.Independent
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
@@ -19,9 +18,7 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.denseIconTheme
 import `fun`.adaptive.ui.icon.tableIconTheme
-import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
@@ -55,7 +52,7 @@ fun ufdCenter() : AdaptiveFragment {
 
                 row {
                     actionIcon(Graphics.pest_control, theme = tableIconTheme) .. onClick {
-                        controller.snapshot.encodeToJson().debug()
+                        controller.snapshot.encodeToJsonString()
                     }
                 }
             }
