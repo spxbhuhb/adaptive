@@ -2,9 +2,14 @@ package `fun`.adaptive.grove.ufd
 
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.grove.resources.cards
+import `fun`.adaptive.grove.resources.components
+import `fun`.adaptive.grove.resources.data_table
+import `fun`.adaptive.grove.resources.instructions
 import `fun`.adaptive.grove.resources.palette
+import `fun`.adaptive.grove.resources.state
 import `fun`.adaptive.grove.resources.stroke_partial
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.builtin.menu
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.WorkspacePane
@@ -14,6 +19,8 @@ import `fun`.adaptive.utility.UUID
 const val ufdPalettePaneKey = "grove:ufd:palette"
 const val ufdComponentsPaneKey = "grove:ufd:components"
 const val ufdInstructionsPaneKey = "grove:ufd:instructions"
+const val ufdStatePaneKey = "grove:ufd:state"
+
 const val ufdCenterPaneKey = "grove:ufd:center"
 
 fun AdaptiveAdapter.groveUfdCommon() {
@@ -25,34 +32,42 @@ fun Workspace.groveUfdCommon() {
 
     panes += WorkspacePane(
         UUID(),
-        "Palette",
+        Strings.palette,
         Graphics.palette,
         WorkspacePanePosition.LeftTop,
-        "grove:ufd:palette"
+        ufdPalettePaneKey
     )
 
     panes += WorkspacePane(
         UUID(),
-        "Components",
+        Strings.components,
         Graphics.cards,
         WorkspacePanePosition.LeftMiddle,
-        "grove:ufd:components",
+        ufdComponentsPaneKey,
     )
 
     panes += WorkspacePane(
         UUID(),
-        "Instructions",
+        Strings.instructions,
         Graphics.stroke_partial,
         WorkspacePanePosition.RightTop,
-        "grove:ufd:instructions",
+        ufdInstructionsPaneKey
     )
 
     panes += WorkspacePane(
         UUID(),
-        "Sheet",
+        Strings.state,
+        Graphics.data_table,
+        WorkspacePanePosition.RightTop,
+        ufdStatePaneKey
+    )
+
+    panes += WorkspacePane(
+        UUID(),
+        "",
         Graphics.menu,
         WorkspacePanePosition.Center,
-        "grove:ufd:center"
+        ufdCenterPaneKey
     )
 
 }

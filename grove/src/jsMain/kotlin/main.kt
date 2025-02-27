@@ -12,8 +12,8 @@ import `fun`.adaptive.grove.groveCommon
 import `fun`.adaptive.grove.groveRuntimeCommon
 import `fun`.adaptive.grove.sheet.SheetFragmentFactory
 import `fun`.adaptive.grove.sheet.SheetViewController
-import `fun`.adaptive.grove.ufd.UfdContext
 import `fun`.adaptive.grove.ufd.UfdPaneFactory
+import `fun`.adaptive.grove.ufd.ufdPalettePaneKey
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.browser
@@ -55,7 +55,6 @@ fun main() {
             val workspace = buildWorkspace()
 
             val controller = SheetViewController(false, true, true)
-            controller.extensions += UfdContext(workspace)
 
             box {
                 maxSize
@@ -75,10 +74,12 @@ private fun buildWorkspace(): Workspace {
 
     with(workspace) {
         groveCommon()
-        leftTop.value = workspace.panes.first { it.position == WorkspacePanePosition.LeftTop }.uuid
-        leftMiddle.value = workspace.panes.first { it.position == WorkspacePanePosition.LeftMiddle }.uuid
-        rightTop.value = workspace.panes.first { it.position == WorkspacePanePosition.RightTop }.uuid
-        center.value = workspace.panes.first { it.position == WorkspacePanePosition.Center }.uuid
+
+        leftTop.value = panes.first { it.key == ufdPalettePaneKey }.uuid
+        leftMiddle.value = panes.first { it.position == WorkspacePanePosition.LeftMiddle }.uuid
+        //rightTop.value = panes.first { it.position == WorkspacePanePosition.RightTop }.uuid
+        center.value = panes.first { it.position == WorkspacePanePosition.Center }.uuid
+
         updateSplits()
     }
 

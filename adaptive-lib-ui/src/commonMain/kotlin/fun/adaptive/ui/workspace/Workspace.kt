@@ -26,6 +26,8 @@ class Workspace {
 
     val panes = mutableListOf<WorkspacePane>()
 
+    val focusedPane = storeFor<UUID<WorkspacePane>?> { null }
+
     val rightTop = storeFor<UUID<WorkspacePane>?> { null }
     val rightMiddle = storeFor<UUID<WorkspacePane>?> { null }
     val rightBottom = storeFor<UUID<WorkspacePane>?> { null }
@@ -161,5 +163,16 @@ class Workspace {
         if (current == new) return
         split.value = split.value.copy(visibility = new)
     }
+
+    fun paneStore(pane : WorkspacePane) : Observable<UUID<WorkspacePane>?> =
+        when (pane.position) {
+            WorkspacePanePosition.LeftTop -> leftTop
+            WorkspacePanePosition.LeftMiddle -> leftMiddle
+            WorkspacePanePosition.LeftBottom -> leftBottom
+            WorkspacePanePosition.RightTop -> rightTop
+            WorkspacePanePosition.RightMiddle -> rightMiddle
+            WorkspacePanePosition.RightBottom -> rightBottom
+            WorkspacePanePosition.Center -> center
+        }
 
 }

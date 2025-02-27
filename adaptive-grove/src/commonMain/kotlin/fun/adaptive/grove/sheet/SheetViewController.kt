@@ -33,14 +33,9 @@ open class SheetViewController(
     companion object {
         fun AdaptiveFragment.sheetViewController() : SheetViewController =
             findContext<SheetViewController>()!!
-
-        inline fun <reified T> AdaptiveFragment.sheetViewExtension() =
-            sheetViewController().extensions.firstInstanceOrNull<T>()
     }
 
     val logger = getLogger("SheetViewController").also { if (printTrace) it.enableFine() }
-
-    val extensions = mutableListOf<Any>()
 
     val groupUuid = UUID<LfmDescendant>("db7b3633-c0f7-479d-812d-837d80065dfb")
 

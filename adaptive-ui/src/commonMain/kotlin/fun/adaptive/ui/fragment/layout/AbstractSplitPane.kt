@@ -411,7 +411,6 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
 
     fun handleMoveStart(position: Position, x: Double, y: Double) {
 
-        println("moveStart")
         // position is inside the divider box.
 
         if (configuration.orientation == Orientation.Horizontal) {

@@ -17,6 +17,7 @@ import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.actionIcon
+import `fun`.adaptive.ui.icon.denseIconTheme
 import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
@@ -24,6 +25,7 @@ import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
 import `fun`.adaptive.utility.debug
 
 @Adaptive
@@ -33,13 +35,15 @@ fun ufdCenter() : AdaptiveFragment {
 
     localContext(controller) {
         grid {
-            rowTemplate(35.dp, 1.fr)
+            rowTemplate(workspaceTheme.titleHeight, 1.fr)
 
             row {
-                maxWidth .. borderBottom(colors.outline) .. spaceBetween
+                maxSize .. borderBottom(workspaceTheme.toolBorderColor) .. spaceBetween
                 onKeydown { controller.onKeyDown(it.keyInfo !!, it.modifiers) }
 
                 row {
+                    alignSelf.startCenter
+
                     for (action in actions) {
                         action(action, controller)
                     }
@@ -78,7 +82,7 @@ val actions = listOf(
 
 @Adaptive
 private fun action(sheetAction: SheetAction, controller: SheetViewController) {
-    actionIcon(sheetAction.icon, tooltip = sheetAction.tooltip, theme = tableIconTheme) .. onClick { controller += sheetAction.onClick() }
+    actionIcon(sheetAction.icon, tooltip = sheetAction.tooltip, theme = denseIconTheme) .. onClick { controller += sheetAction.onClick() }
 }
 
 @Adaptive

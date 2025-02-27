@@ -57,7 +57,6 @@ open class ResourceFileSet<T : ResourceFile>(
 
         val bytes: ByteArray
 
-        println("$name ${environment == lastEnvironment} $environment $lastEnvironment")
         if (environment == lastEnvironment) {
             val cached = cachedContent
             if (cacheResource && cached != null) {

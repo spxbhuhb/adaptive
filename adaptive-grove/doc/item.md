@@ -63,17 +63,17 @@ Removes and undo of additions use `SheetViewController.hideItem`:
 
 Editor types by access:
 
-- value based: displayed on the instructions or on the mapping panel
+- value based: displayed on the instructions pane or on the state pane
 - control based: control layer interaction (move, resize, arrange etc.)
 - inline: opened by double-clicking on an item 
 
-Editor registries in `SheetViewModel`:
+Editor registries in `SheetViewController`:
 
 | Registry                    | Access          | Reference         | Class                    |
 |-----------------------------|-----------------|-------------------|--------------------------|
-| `controlRegistry`           | control         | model-key         | `SheetControl`           |
+| `controlRegistry`           | control         | model-key         | `SheetControlEditor`     |
 | `instructionEditorRegistry` | value           | instruction class | `SheetInstructionEditor` |
-| `mappingEditorRegistry`     | value or inline | model-key         | `SheetMappingEditor`     |
+| `stateEditorRegistry`       | value or inline | model-key         | `SheetStateEditor`       |
 
 Editor lookup runs on:
 

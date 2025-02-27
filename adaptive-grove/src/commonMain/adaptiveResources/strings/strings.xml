@@ -6,6 +6,8 @@
     <string name="palette">Palette</string>
     <string name="components">Components</string>
     <string name="instructions">Instructions</string>
+    <string name="state">State</string>
+
     <string name="group">group</string>
 
     <string name="undoToolTip">Undo</string>
@@ -13,6 +15,8 @@
     <string name="groupToolTip">Group</string>
     <string name="ungroupToolTip">Ungroup</string>
 
-    <string name="noComponents">No components</string>
-    <string name="selectItemsForInstructions">Select fragments to show instructions.</string>
+    <string name="openForComponents">Open a project item for components.</string>
+    <string name="selectForInstructions">Select fragments to show instructions.</string>
+    <string name="selectForState">Select fragments to show state.</string>
+
 </resources>

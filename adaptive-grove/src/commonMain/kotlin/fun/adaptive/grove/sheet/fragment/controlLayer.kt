@@ -17,7 +17,7 @@ import `fun`.adaptive.ui.theme.colors
 @Adaptive
 fun controlLayer(controller: SheetViewController) {
 
-    val controlFrame = valueFrom { controller.controlFrameStore } ?: Frame.NaF
+    val controlFrame = valueFrom { controller.controlFrameStore }
 
     dropTarget {
 

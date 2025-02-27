@@ -36,7 +36,9 @@ class ThemeColors {
     val onSelected = color(0xFFFFFF)
 
     val outline = color(0xC5C5C5)
+    val lightOutline = color(0xE0E0E0)
     val overlay = color(0x0, opacity = 0.4f)
+    val lightOverlay = color(0x0, opacity = 0.1f)
 
     val danger = color(0xEC5453u)
     val onDanger = color(0xFFFFFFu)

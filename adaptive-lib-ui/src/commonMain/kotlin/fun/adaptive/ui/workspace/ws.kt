@@ -12,7 +12,7 @@ import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
 
 @Adaptive
-fun wsFull(workspace : Workspace) {
+fun wsFull(workspace: Workspace) {
     grid {
         maxSize .. colTemplate(workspaceTheme.width, 1.fr, workspaceTheme.width)
 
@@ -97,7 +97,7 @@ private fun wsBottom(workspace: Workspace) {
 }
 
 @Adaptive
-private fun wsHorizontalDivider(theme : WorkspaceTheme) {
+private fun wsHorizontalDivider(theme: WorkspaceTheme) {
     box {
         theme.splitDividerHorizontalOverlay
         box {
@@ -107,7 +107,7 @@ private fun wsHorizontalDivider(theme : WorkspaceTheme) {
 }
 
 @Adaptive
-private fun wsVerticalDivider(theme : WorkspaceTheme) {
+private fun wsVerticalDivider(theme: WorkspaceTheme) {
     box {
         theme.splitDividerVerticalOverlay
         box {
@@ -121,13 +121,33 @@ private fun wsPane(workspace: Workspace, position: WorkspacePanePosition): Adapt
 
     val paneUuid = valueFrom {
         when (position) {
-            WorkspacePanePosition.RightTop ->  { workspace.rightTop }
-            WorkspacePanePosition.RightMiddle ->  { workspace.rightMiddle }
-            WorkspacePanePosition.RightBottom ->  { workspace.rightBottom }
-            WorkspacePanePosition.LeftTop ->  { workspace.leftTop }
-            WorkspacePanePosition.LeftMiddle ->  { workspace.leftMiddle }
-            WorkspacePanePosition.LeftBottom ->  { workspace.leftBottom }
-            WorkspacePanePosition.Center -> { workspace.center }
+            WorkspacePanePosition.RightTop -> {
+                workspace.rightTop
+            }
+
+            WorkspacePanePosition.RightMiddle -> {
+                workspace.rightMiddle
+            }
+
+            WorkspacePanePosition.RightBottom -> {
+                workspace.rightBottom
+            }
+
+            WorkspacePanePosition.LeftTop -> {
+                workspace.leftTop
+            }
+
+            WorkspacePanePosition.LeftMiddle -> {
+                workspace.leftMiddle
+            }
+
+            WorkspacePanePosition.LeftBottom -> {
+                workspace.leftBottom
+            }
+
+            WorkspacePanePosition.Center -> {
+                workspace.center
+            }
         }
     }
 
@@ -146,7 +166,7 @@ private fun wsPane(workspace: Workspace, position: WorkspacePanePosition): Adapt
 }
 
 @Adaptive
-private fun wsPaneContent(pane : WorkspacePane) {
+private fun wsPaneContent(pane: WorkspacePane) {
     box {
         maxSize
         actualize(pane.key)
@@ -200,10 +220,16 @@ private fun wsPaneIcon(
     workspace: Workspace
 ) {
 
+    val hover = hover()
     val theme = workspace.theme
+    val activePane = valueFrom { workspace.paneStore(pane) }
+    val focusedPane = valueFrom { workspace.focusedPane }
+
+    val containerStyle = theme.paneIconContainer(pane, activePane, focusedPane, hover)
 
     box {
-        theme.paneIconContainer
+        containerStyle
+
         onClick { workspace.toggle(pane) }
 
         icon(pane.icon) .. theme.paneIcon

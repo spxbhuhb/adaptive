@@ -24,7 +24,9 @@ fun wsPaneTitle(
 
     row {
         theme.paneTitleContainer
+
         text(pane.name) .. theme.toolPaneTitleText
+
         row {
             if (showActions) {
                 for (action in pane.actions) {
