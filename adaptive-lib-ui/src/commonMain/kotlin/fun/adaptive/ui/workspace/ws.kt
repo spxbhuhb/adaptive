@@ -198,7 +198,7 @@ fun wsPaneIcons(
                 wsPaneIcon(pane, workspace)
             }
             if (top.isNotEmpty() && middle.isNotEmpty()) {
-                box { theme.paneIconDivider }
+                box { theme.paneIconSeparator }
             }
             for (pane in middle) {
                 wsPaneIcon(pane, workspace)

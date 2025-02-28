@@ -33,6 +33,14 @@ val denseIconTheme = IconTheme(
     cornerRadius = 6.dp
 )
 
+val smallCloseIconTheme = IconTheme(
+    colors.onSurfaceVariant,
+    iconSize = 13.dp,
+    containerSize = 17.dp,
+    margin = 1.dp,
+    cornerRadius = (8.5).dp
+)
+
 class IconTheme(
     val color: Color,
     val iconSize: DPixel = 24.dp,
@@ -74,7 +82,8 @@ class IconTheme(
 
     val tooltipText = instructionsOf(
         textSmall,
-        textColors.onReverse
+        textColors.onReverse,
+        noSelect
     )
 
     val nonHoverBackground = backgroundColor(colors.surface.opaque(0f))

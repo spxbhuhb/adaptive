@@ -29,6 +29,7 @@ class AuiPrimaryPopup(
 
     override fun mount() {
         super.mount()
+        receiver.style.position = "fixed"
         layoutReceiver?.addEventListener("click", clickHandler)
     }
 

@@ -4,9 +4,10 @@
 package `fun`.adaptive.foundation.internal
 
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.FragmentKey
 
 class NamedFragmentFactory(
-    val name: String,
+    val key: FragmentKey,
     val buildFun : (parent : AdaptiveFragment, index : Int, stateSize : Int) -> AdaptiveFragment
 ) {
     fun build(parent: AdaptiveFragment, index: Int, stateSize : Int = 0) : AdaptiveFragment {

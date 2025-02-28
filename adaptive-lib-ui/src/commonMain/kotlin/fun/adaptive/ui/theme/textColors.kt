@@ -5,6 +5,12 @@ import `fun`.adaptive.ui.api.textColor
 var textColors = ThemeTextColors()
 
 class ThemeTextColors {
+
+    val success = textColor(colors.success)
+    val info = textColor(colors.info)
+    val warning = textColor(colors.warning)
+    val fail = textColor(colors.fail)
+
     val onSurface = textColor(colors.onSurface)
     val onSurfaceVariant = textColor(colors.onSurfaceVariant)
     val onSurfaceFriendly = textColor(colors.onSurfaceFriendly)

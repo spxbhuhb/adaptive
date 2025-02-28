@@ -8,4 +8,5 @@ var borders = ThemeBorders()
 class ThemeBorders {
     val primary = border(colors.primary, 1.dp)
     val outline = border(colors.outline, 1.dp)
+    val friendly = border(colors.onSurfaceFriendly, 1.dp)
 }

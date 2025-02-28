@@ -92,7 +92,7 @@ class WorkspaceTheme(
 
     val paneIconContainerFocused = paneIconContainerBase + backgrounds.surfaceVariant
 
-    val paneIconDivider = instructionsOf(
+    val paneIconSeparator = instructionsOf(
         width { width },
         height { 16.dp },
         borderTop(colors.outline),

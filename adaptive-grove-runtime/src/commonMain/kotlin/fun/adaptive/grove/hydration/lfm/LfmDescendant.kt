@@ -1,7 +1,7 @@
 package `fun`.adaptive.grove.hydration.lfm
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.api.update
+import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.reflect.typeSignature
@@ -10,7 +10,7 @@ import `fun`.adaptive.utility.UUID
 @Adat
 class LfmDescendant(
     val uuid: UUID<LfmDescendant>,
-    val key: String,
+    val key: FragmentKey,
     val mapping: List<LfmMapping>
 ) {
     constructor(key: String, instructions: AdaptiveInstructionGroup, vararg args: LfmMapping, uuid: UUID<LfmDescendant> = UUID()) :

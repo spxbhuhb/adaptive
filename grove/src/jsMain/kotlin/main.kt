@@ -30,7 +30,6 @@ fun main() {
     CoroutineScope(Dispatchers.Default).launch {
 
         uiCommon()
-        groveRuntimeCommon()
         groveCommon()
 
         browser(backend = backend { }) { adapter ->
@@ -54,15 +53,11 @@ fun main() {
 
             val workspace = buildWorkspace()
 
-            val controller = SheetViewController(false, true, true)
-
             box {
                 maxSize
 
                 localContext(workspace) {
-                    localContext(controller) {
-                        wsFull(workspace)
-                    }
+                    wsFull(workspace)
                 }
             }
         }
@@ -78,7 +73,7 @@ private fun buildWorkspace(): Workspace {
         leftTop.value = panes.first { it.key == ufdPalettePaneKey }.uuid
         leftMiddle.value = panes.first { it.position == WorkspacePanePosition.LeftMiddle }.uuid
         //rightTop.value = panes.first { it.position == WorkspacePanePosition.RightTop }.uuid
-        center.value = panes.first { it.position == WorkspacePanePosition.Center }.uuid
+        //center.value = panes.first { it.position == WorkspacePanePosition.Center }.uuid
 
         updateSplits()
     }

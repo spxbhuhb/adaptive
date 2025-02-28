@@ -16,6 +16,7 @@ class AuiHoverPopup(
 
     override fun mount() {
         super.mount()
+        receiver.style.position = "fixed"
         layoutReceiver?.addEventListener("mouseenter", enterHandler)
         layoutReceiver?.addEventListener("mouseleave", leaveHandler)
     }

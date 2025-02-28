@@ -17,21 +17,21 @@ import `fun`.adaptive.utility.PluginReference
  */
 open class AdaptiveFragmentFactory : Registry<NamedFragmentFactory>() {
 
-    fun add(key: String, buildFun: (parent: AdaptiveFragment, declarationIndex: Int, stateSize : Int) -> AdaptiveFragment) {
+    fun add(key: FragmentKey, buildFun: (parent: AdaptiveFragment, declarationIndex: Int, stateSize : Int) -> AdaptiveFragment) {
         set(key, NamedFragmentFactory(key, buildFun))
     }
 
     @PluginReference("addNonTransformed")
-    fun add(key : String, @Adaptive f : () -> AdaptiveFragment) {
+    fun add(key : FragmentKey, @Adaptive f : () -> AdaptiveFragment) {
         set(key, NamedFragmentFactory(key) { _, _, _ -> f() })
     }
 
     @PluginReference("addTransformed")
-    fun add(key : String, f : (AdaptiveFragment, Int) -> AdaptiveFragment) {
+    fun add(key : FragmentKey, f : (AdaptiveFragment, Int) -> AdaptiveFragment) {
         set(key, NamedFragmentFactory(key) { p, i, _ -> f(p, i) })
     }
 
-    fun newInstance(key: String, parent: AdaptiveFragment, declarationIndex: Int, stateSize : Int): AdaptiveFragment {
+    fun newInstance(key: FragmentKey, parent: AdaptiveFragment, declarationIndex: Int, stateSize : Int): AdaptiveFragment {
         return checkNotNull(get(key)) { "Unknown fragment type: $key, known fragment types: ${entries.keys}" }
             .build(parent, declarationIndex, stateSize)
     }

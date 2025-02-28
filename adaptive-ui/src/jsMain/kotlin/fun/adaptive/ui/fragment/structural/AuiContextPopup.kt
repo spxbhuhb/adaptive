@@ -27,6 +27,7 @@ class AuiContextPopup(
 
     override fun mount() {
         super.mount()
+        receiver.style.position = "fixed"
         layoutReceiver?.addEventListener("contextmenu", clickHandler)
     }
 

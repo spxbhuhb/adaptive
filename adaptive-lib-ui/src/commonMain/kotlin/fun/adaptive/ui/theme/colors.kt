@@ -6,24 +6,32 @@ import `fun`.adaptive.ui.api.color
 var colors = ThemeColors()
 
 class ThemeColors {
+
+    val success = color(0x3CB371u)
+    val info = color(0x4A7ACFu)
+    val warning = color(0xFFE066u)
+    val fail = color(0xC43E3Du)
+    val friendly = color(0x3CB371u)
+    val angry = color(0xEC5453u)
+
     val surface = color(0xFFFFFF)
     val onSurface = color(0x1E1E1E)
-    val onSurfaceFriendly = color(0x3CB371u)
-    val onSurfaceAngry = color(0xEC5453u)
+    val onSurfaceFriendly = friendly
+    val onSurfaceAngry = angry
 
     val surfaceVariant = color(0xF2F2F2)
     val onSurfaceVariant = color(0x757575)
 
-    val successSurface = color(0x3CB371u)
+    val successSurface = success
     val onSuccessSurface = color(0xFFFFFFu)
 
-    val infoSurface = color(0x757575u)
+    val infoSurface = info
     val onInfoSurface = color(0xFFFFFFu)
 
-    val warningSurface = color(0xFFE066u)
+    val warningSurface = warning
     val onWarningSurface = color(0x1E1E1Eu)
 
-    val failSurface = color(0xC43E3Du)
+    val failSurface = fail
     val onFailSurface = color(0xFFFFFFu)
 
     val primary = color(0x6259CE)
@@ -48,4 +56,6 @@ class ThemeColors {
     val reverse = color(0x1E1E1E)
     val onReverse = color(0xFFFFFF)
     val onReverseVariant = color(0xBBBBBB)
+
+    val focusColor = color(0x0D6EFD)
 }
