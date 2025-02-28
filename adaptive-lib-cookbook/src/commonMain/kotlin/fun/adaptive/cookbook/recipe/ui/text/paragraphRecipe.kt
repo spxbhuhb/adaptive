@@ -9,7 +9,6 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.fragment.paragraph.items.LinkParagraphItem
 import `fun`.adaptive.ui.fragment.paragraph.items.TextParagraphItem
 import `fun`.adaptive.ui.fragment.paragraph.model.Paragraph
-import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphInstructionSet
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
@@ -32,8 +31,8 @@ fun paragraphRecipe(): AdaptiveFragment {
 
 val p = Paragraph(
     listOf(
-        ParagraphInstructionSet(instructionsOf()),
-        ParagraphInstructionSet(instructionsOf(boldFont))
+        instructionsOf(),
+        instructionsOf(boldFont)
     ),
     listOf(
         TextParagraphItem("Hello", 1),
@@ -44,8 +43,8 @@ val p = Paragraph(
 
 val link = Paragraph(
     listOf(
-        ParagraphInstructionSet(instructionsOf()),
-        ParagraphInstructionSet(instructionsOf(boldFont))
+        instructionsOf(),
+        instructionsOf(boldFont)
     ),
     listOf(
         TextParagraphItem("Hello", 1),
@@ -58,11 +57,11 @@ val link = Paragraph(
 
 val loermIpsum = Paragraph(
     listOf(
-        ParagraphInstructionSet(instructionsOf()),
-        ParagraphInstructionSet(instructionsOf(textColors.onSurfaceFriendly)),
-        ParagraphInstructionSet(instructionsOf(textColors.onSurfaceAngry)),
-        ParagraphInstructionSet(instructionsOf(backgrounds.friendlyOpaque)),
-        ParagraphInstructionSet(instructionsOf(borders.outline, cornerRadius { 4.dp }, paddingHorizontal { 4.dp }))
+        instructionsOf(),
+        instructionsOf(textColors.onSurfaceFriendly),
+        instructionsOf(textColors.onSurfaceAngry),
+        instructionsOf(backgrounds.friendlyOpaque),
+        instructionsOf(borders.outline, cornerRadius { 4.dp }, paddingHorizontal { 4.dp })
     ),
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         .split(" ")

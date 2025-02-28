@@ -4,6 +4,13 @@
 
 package `fun`.adaptive.markdown.parse
 
+import `fun`.adaptive.markdown.model.MarkdownCodeFenceAstEntry
+import `fun`.adaptive.markdown.model.MarkdownHeaderAstEntry
+import `fun`.adaptive.markdown.model.MarkdownHorizontalRuleAstEntry
+import `fun`.adaptive.markdown.model.MarkdownInlineAstEntry
+import `fun`.adaptive.markdown.model.MarkdownListAstEntry
+import `fun`.adaptive.markdown.model.MarkdownParagraphAstEntry
+import `fun`.adaptive.markdown.model.MarkdownQuoteAstEntry
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -15,7 +22,7 @@ class AstTest {
         val expected = listOf(
             MarkdownHeaderAstEntry(1, listOf(MarkdownInlineAstEntry("Header", bold = false, italic = false)))
         )
-        val actual = ast(tokenize(source))
+        val actual = parse(tokenize(source))
         assertEquals(expected, actual)
     }
 
@@ -25,7 +32,7 @@ class AstTest {
         val expected = listOf(
             MarkdownHeaderAstEntry(4, listOf(MarkdownInlineAstEntry("Header", bold = false, italic = false)))
         )
-        val actual = ast(tokenize(source))
+        val actual = parse(tokenize(source))
         assertEquals(expected, actual)
     }
 
@@ -41,7 +48,7 @@ class AstTest {
             MarkdownListAstEntry(true, 1, listOf(MarkdownInlineAstEntry("item 2", bold = false, italic = false))),
         )
 
-        val actual = ast(tokenize(source))
+        val actual = parse(tokenize(source))
         assertEquals(expected, actual)
     }
 
@@ -59,7 +66,7 @@ class AstTest {
             MarkdownListAstEntry(true, 1, listOf(MarkdownInlineAstEntry("item 2", bold = false, italic = false))),
         )
 
-        val actual = ast(tokenize(source))
+        val actual = parse(tokenize(source))
         assertEquals(expected, actual)
     }
 
@@ -81,7 +88,7 @@ class AstTest {
             MarkdownListAstEntry(true, 1, listOf(MarkdownInlineAstEntry("item 2", bold = false, italic = false))),
         )
 
-        val actual = ast(tokenize(source))
+        val actual = parse(tokenize(source))
         assertEquals(expected, actual)
     }
 
@@ -103,7 +110,7 @@ class AstTest {
             MarkdownListAstEntry(false, 1, listOf(MarkdownInlineAstEntry("item 2", bold = false, italic = false))),
         )
 
-        val actual = ast(tokenize(source))
+        val actual = parse(tokenize(source))
         assertEquals(expected, actual)
     }
 
@@ -121,7 +128,7 @@ class AstTest {
             MarkdownListAstEntry(false, 1, listOf(MarkdownInlineAstEntry("item 3", bold = false, italic = false))),
         )
 
-        val actual = ast(tokenize(source))
+        val actual = parse(tokenize(source))
         assertEquals(expected, actual)
     }
 
@@ -132,7 +139,7 @@ class AstTest {
         val expected = listOf(
             MarkdownCodeFenceAstEntry(null, "code")
         )
-        val actual = ast(tokenize(source))
+        val actual = parse(tokenize(source))
         assertEquals(expected, actual)
     }
 
@@ -142,7 +149,7 @@ class AstTest {
         val expected = listOf(
             MarkdownCodeFenceAstEntry("text", "code")
         )
-        val actual = ast(tokenize(source))
+        val actual = parse(tokenize(source))
         assertEquals(expected, actual)
     }
 
@@ -155,7 +162,7 @@ class AstTest {
                 false
             )
         )
-        val actual = ast(tokenize(source))
+        val actual = parse(tokenize(source))
         assertEquals(expected, actual)
     }
 
@@ -163,7 +170,7 @@ class AstTest {
     fun quote() {
         val source = ">This is a quote\n>and another quote"
         val expected = listOf(
-            MarkdownQuoteEntry(
+            MarkdownQuoteAstEntry(
                 listOf(
                     MarkdownParagraphAstEntry(
                         mutableListOf(
@@ -177,7 +184,7 @@ class AstTest {
             )
         )
 
-        val actual = ast(tokenize(source))
+        val actual = parse(tokenize(source))
 
         assertEquals(expected, actual)
     }
@@ -188,7 +195,7 @@ class AstTest {
         val expected = listOf(
             MarkdownHorizontalRuleAstEntry()
         )
-        val actual = ast(tokenize(source))
+        val actual = parse(tokenize(source))
         assertEquals(expected, actual)
     }
 
@@ -201,7 +208,7 @@ class AstTest {
                 false
             )
         )
-        val actual = ast(tokenize(source))
+        val actual = parse(tokenize(source))
         assertEquals(expected, actual)
     }
 
@@ -214,7 +221,7 @@ class AstTest {
                 false
             )
         )
-        val actual = ast(tokenize(source))
+        val actual = parse(tokenize(source))
         assertEquals(expected, actual)
     }
 
@@ -234,7 +241,7 @@ class AstTest {
                 false
             )
         )
-        val actual = ast(tokenize(source))
+        val actual = parse(tokenize(source))
         assertEquals(expected, actual)
     }
 }

@@ -134,7 +134,7 @@ class AuiParagraph(
         val cached = renderCache[index]
         if (cached != null) return cached
 
-        val renderData = AuiRenderData(uiAdapter, null, instructionSets[index].default)
+        val renderData = AuiRenderData(uiAdapter, null, instructionSets[index])
         val context = measureCanvas.getContext("2d") as CanvasRenderingContext2D
         val textRenderData = renderData.text ?: uiAdapter.defaultTextRenderData
 

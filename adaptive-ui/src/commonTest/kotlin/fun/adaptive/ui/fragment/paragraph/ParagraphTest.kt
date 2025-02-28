@@ -2,7 +2,6 @@ package `fun`.adaptive.ui.fragment.paragraph
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.ui.fragment.paragraph.model.Paragraph
-import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphInstructionSet
 import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphItem
 import `fun`.adaptive.ui.testing.AuiTestAdapter
 import `fun`.adaptive.ui.testing.fragment.AdaptiveParagraph
@@ -83,7 +82,7 @@ class ParagraphTest {
         paragraph.set(
             1,
             Paragraph(
-                listOf(ParagraphInstructionSet(instructionsOf())),
+                listOf(instructionsOf()),
                 items
             )
         )

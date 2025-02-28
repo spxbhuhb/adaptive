@@ -4,62 +4,16 @@
 
 package `fun`.adaptive.markdown.parse
 
-interface MarkdownAstEntry
+import `fun`.adaptive.markdown.model.MarkdownAstEntry
+import `fun`.adaptive.markdown.model.MarkdownCodeFenceAstEntry
+import `fun`.adaptive.markdown.model.MarkdownHeaderAstEntry
+import `fun`.adaptive.markdown.model.MarkdownHorizontalRuleAstEntry
+import `fun`.adaptive.markdown.model.MarkdownInlineAstEntry
+import `fun`.adaptive.markdown.model.MarkdownListAstEntry
+import `fun`.adaptive.markdown.model.MarkdownParagraphAstEntry
+import `fun`.adaptive.markdown.model.MarkdownQuoteAstEntry
 
-data class MarkdownHeaderAstEntry(
-    val level: Int,
-    val children: List<MarkdownInlineAstEntry>
-) : MarkdownAstEntry
-
-data class MarkdownInlineAstEntry(
-    val text: String,
-    val bold: Boolean,
-    val italic: Boolean,
-    val code: Boolean = false,
-    val inlineLink: Boolean = false,
-    val referenceLink: Boolean = false,
-    val referenceDef: Boolean = false,
-) : MarkdownAstEntry
-
-data class MarkdownParagraphAstEntry(
-    val children: MutableList<MarkdownInlineAstEntry>,
-    var closed: Boolean
-) : MarkdownAstEntry
-
-data class MarkdownListAstEntry(
-    val bullet: Boolean,
-    val level: Int,
-    val children: List<MarkdownAstEntry>
-) : MarkdownAstEntry
-
-data class MarkdownCodeFenceAstEntry(
-    val language: String?,
-    val content: String
-) : MarkdownAstEntry
-
-data class MarkdownQuoteEntry(
-    val children: List<MarkdownAstEntry>
-) : MarkdownAstEntry
-
-class MarkdownHorizontalRuleAstEntry : MarkdownAstEntry {
-
-    override fun toString(): String {
-        return this::class.simpleName.toString()
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null) return false
-        if (this::class != other::class) return false
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return this::class.hashCode()
-    }
-}
-
-fun ast(tokens: List<MarkdownToken>): List<MarkdownAstEntry> {
+fun parse(tokens: List<MarkdownToken>): List<MarkdownAstEntry> {
 
     val context = CompileContext(tokens)
     var index = 0
@@ -259,7 +213,7 @@ private fun CompileContext.list(token: MarkdownToken, start: Int): Int {
 
 private fun CompileContext.quote(token: MarkdownToken, start: Int): Int {
 
-    + MarkdownQuoteEntry(ast(tokenize(token.text)))
+    + MarkdownQuoteAstEntry(parse(tokenize(token.text)))
 
     return start + 1
 }

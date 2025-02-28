@@ -1,9 +1,11 @@
 package `fun`.adaptive.ui.fragment.paragraph.items
 
+import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.ui.fragment.paragraph.AbstractParagraph
 import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphItem
 
-open class TextParagraphItem(
+@Adat
+class TextParagraphItem(
     val text: String,
     override val instructionSetIndex: Int
 ) : ParagraphItem() {

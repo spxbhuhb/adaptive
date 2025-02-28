@@ -1,11 +1,11 @@
 package `fun`.adaptive.ui.fragment.paragraph
 
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.computeFinal
 import `fun`.adaptive.ui.fragment.paragraph.model.Paragraph
-import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphInstructionSet
 import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphItem
 
 abstract class AbstractParagraph<RT, CRT : RT>(
@@ -19,7 +19,7 @@ abstract class AbstractParagraph<RT, CRT : RT>(
     val paragraph: Paragraph
         get() = get(1)
 
-    var instructionSets = emptyList<ParagraphInstructionSet>()
+    var instructionSets = emptyList<AdaptiveInstructionGroup>()
 
     class Row(
         val items: List<ParagraphItem>,

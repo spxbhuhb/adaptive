@@ -1,8 +1,10 @@
 package `fun`.adaptive.ui.fragment.paragraph.items
 
+import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.ui.fragment.paragraph.AbstractParagraph
 import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphItem
 
+@Adat
 class LinkParagraphItem(
     val text: String,
     val href: String,
