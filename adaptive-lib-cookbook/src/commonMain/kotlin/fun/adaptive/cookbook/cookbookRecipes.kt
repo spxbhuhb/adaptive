@@ -42,6 +42,7 @@ val root = CookbookRecipeSet(
             CookbookRecipe("Box", "cookbook:recipe:box"),
             CookbookRecipe("Grid", "cookbook:recipe:grid"),
             CookbookRecipe("Split Pane", "cookbook:recipe:splitpane"),
+            CookbookRecipe("Tab", "cookbook:recipe:tab"),
             CookbookRecipe("Workspace", "cookbook:recipe:workspace")
         ),
 

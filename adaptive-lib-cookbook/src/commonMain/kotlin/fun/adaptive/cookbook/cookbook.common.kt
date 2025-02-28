@@ -5,6 +5,7 @@ import `fun`.adaptive.cookbook.support.E
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.builtin.*
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.WorkspacePane
@@ -22,7 +23,7 @@ suspend fun cookbookCommon() {
 }
 
 fun AdaptiveAdapter.cookbookCommon() {
-    fragmentFactory += arrayOf(CookbookFragmentFactory, WorkspaceRecipePaneFragmentFactory)
+    fragmentFactory += arrayOf(CookbookFragmentFactory, WorkspaceRecipePaneFragmentFactory, LibFragmentFactory)
 }
 
 fun Workspace.cookbookCommon() {
@@ -39,11 +40,11 @@ fun Workspace.cookbookCommon() {
             WorkspacePaneAction(
                 Graphics.expand_all,
                 Strings.expandAll,
-            ) { w,p -> },
+            ) { w, p -> },
             WorkspacePaneAction(
                 Graphics.collapse_all,
                 Strings.collapseAll,
-            ) { w,p -> }
+            ) { w, p -> }
         )
     )
 

@@ -18,6 +18,7 @@ import `fun`.adaptive.cookbook.recipe.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.cookbook.recipe.ui.snackbar.snackbarRecipe
 import `fun`.adaptive.cookbook.recipe.ui.splitpane.splitPaneRecipe
 import `fun`.adaptive.cookbook.recipe.ui.svg.svgRecipe
+import `fun`.adaptive.cookbook.recipe.ui.tab.tabRecipe
 import `fun`.adaptive.cookbook.recipe.ui.text.paragraphRecipe
 import `fun`.adaptive.cookbook.recipe.ui.text.textRecipe
 import `fun`.adaptive.cookbook.recipe.ui.tree.treeRecipe
@@ -50,6 +51,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:snackbar", ::snackbarRecipe)
         add("cookbook:recipe:splitpane", ::splitPaneRecipe)
         add("cookbook:recipe:svg", ::svgRecipe)
+        add("cookbook:recipe:tab", ::tabRecipe)
         add("cookbook:recipe:text", ::textRecipe)
         add("cookbook:recipe:tree", ::treeRecipe)
         add("cookbook:recipe:workspace", ::workspaceRecipe)
