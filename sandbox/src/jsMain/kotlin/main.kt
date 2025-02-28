@@ -5,6 +5,8 @@
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.foundation.api.localContext
+import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.api.hydrated
@@ -12,6 +14,7 @@ import `fun`.adaptive.grove.groveRuntimeCommon
 import `fun`.adaptive.markdown.transform.MarkdownToLfmTransform
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.ui.LibFragmentFactory
+import `fun`.adaptive.ui.api.boldFont
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.maxHeight
 import `fun`.adaptive.ui.api.maxSize
@@ -19,8 +22,13 @@ import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.codefence.codefence
+import `fun`.adaptive.ui.fragment.paragraph.items.TextParagraphItem
+import `fun`.adaptive.ui.fragment.paragraph.model.Paragraph
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.richtext.RichTextContext
+import `fun`.adaptive.ui.richtext.richTextParagraph
 import `fun`.adaptive.ui.snackbar.SnackbarManager
 import `fun`.adaptive.ui.uiCommon
 import kotlinx.coroutines.CoroutineScope
@@ -60,10 +68,39 @@ fun main() {
                 width { 400.dp } .. maxHeight .. verticalScroll .. padding { 16.dp }
 
                 hydrated(MarkdownToLfmTransform(source).transform())
+
+                localContext(rc) {
+                    richTextParagraph(items)
+                }
+
+                codefence(code)
             }
         }
     }
 }
+
+val code = """
+val rc = RichTextContext(
+    listOf(
+        instructionsOf(),
+        instructionsOf(boldFont)
+    )
+)    
+""".trimIndent()
+
+val rc = RichTextContext(
+    listOf(
+        instructionsOf(),
+        instructionsOf(boldFont)
+    )
+)
+
+val items = listOf(
+    TextParagraphItem("Hello", 1),
+    TextParagraphItem(" ", 0),
+    TextParagraphItem("World!", 0),
+)
+
 
 val source = """
     # Header 1
