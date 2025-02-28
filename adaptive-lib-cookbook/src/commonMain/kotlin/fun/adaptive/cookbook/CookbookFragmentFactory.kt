@@ -4,6 +4,7 @@ import `fun`.adaptive.cookbook.recipe.demo.goodmorning.goodMorning
 import `fun`.adaptive.cookbook.recipe.ui.button.buttonRecipe
 import `fun`.adaptive.cookbook.recipe.ui.canvas.canvasRecipe
 import `fun`.adaptive.cookbook.recipe.ui.checkbox.checkboxRecipe
+import `fun`.adaptive.cookbook.recipe.ui.codefence.codeFenceRecipe
 import `fun`.adaptive.cookbook.recipe.ui.datetime.datePickerRecipe
 import `fun`.adaptive.cookbook.recipe.ui.dialog.dialogRecipe
 import `fun`.adaptive.cookbook.recipe.ui.editor.editorRecipe
@@ -37,6 +38,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:button", ::buttonRecipe)
         add("cookbook:recipe:canvas", ::canvasRecipe)
         add("cookbook:recipe:checkbox", ::checkboxRecipe)
+        add("cookbook:recipe:codefence", ::codeFenceRecipe)
         add("cookbook:recipe:datepicker", ::datePickerRecipe)
         add("cookbook:recipe:dialog", ::dialogRecipe)
         add("cookbook:recipe:editor", ::editorRecipe)

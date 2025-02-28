@@ -55,6 +55,13 @@ val root = CookbookRecipeSet(
         ),
 
         set(
+            "Textual fragments",
+            CookbookRecipe("Code Fence", "cookbook:recipe:codefence"),
+            CookbookRecipe("Paragraph", "cookbook:recipe:paragraph"),
+            CookbookRecipe("Text", "cookbook:recipe:text")
+        ),
+
+        set(
             "Standalone inputs",
             CookbookRecipe("Checkbox", "cookbook:recipe:checkbox"),
             CookbookRecipe("Date picker", "cookbook:recipe:datepicker"),
