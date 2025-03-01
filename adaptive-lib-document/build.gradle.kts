@@ -1,4 +1,3 @@
-import org.gradle.kotlin.dsl.adaptive
 import com.vanniktech.maven.publish.SonatypeHost
 
 /*
@@ -14,16 +13,9 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-lib-cookbook"
-val pomName = "Adaptive Lib Cookbook"
+val baseName = "adaptive-lib-document"
+val pomName = "Adaptive Lib Document"
 val scmPath = "spxbhuhb/adaptive"
-
-adaptive {
-    resources {
-        publicAccessors = true
-        packageOfResources = "fun.adaptive.cookbook"
-    }
-}
 
 // this is ugly but I don't use JS dependencies anyway, 
 // https://youtrack.jetbrains.com/issue/KT-50848/Kotlin-JS-inner-build-routines-are-using-vulnerable-NPM-dependencies-and-now-that-we-have-kotlin-js-store-github-audit-this
@@ -32,67 +24,42 @@ rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlu
 }
 
 kotlin {
-    sourceSets.all {
-        languageSettings {
-            languageVersion = "2.0"
-        }
-    }
 
     jvmToolchain(11)
 
-    jvm {
-        withJava()
-    }
+    jvm()
 
     js(IR) {
         browser()
         binaries.library()
     }
 
-    sourceSets {
-        commonMain {
-            dependencies {
-                implementation(libs.adaptive.core)
-                implementation(libs.adaptive.ui)
-                implementation(libs.adaptive.lib.email)
-                implementation(libs.adaptive.lib.ktor)
-                implementation(libs.adaptive.lib.auth)
-                implementation(libs.adaptive.lib.auto)
-                implementation(libs.adaptive.lib.graphics)
-                implementation(libs.adaptive.lib.document)
-                implementation(libs.adaptive.lib.ui)
-                implementation(libs.kotlinx.coroutines.debug)
-            }
-        }
+    if (libs.versions.ios.support.get() != "none") {
+        listOf(
+            iosX64(),
+            iosArm64(),
+            iosSimulatorArm64()
+        )
+    }
 
-        commonTest {
-            dependencies {
-                implementation(kotlin("test"))
-            }
-        }
-
-        jsMain {
-            dependencies {
-                implementation(libs.ktor.client.core)
-            }
-        }
-
-        jvmMain {
-            dependencies {
-                implementation(libs.h2database)
-                implementation(libs.ktor.server.core)
-                implementation(libs.ktor.server.netty)
-                implementation(libs.ktor.server.websockets)
-                implementation(libs.ktor.server.forwardedheaders)
-                implementation(libs.adaptive.lib.exposed)
-            }
+    sourceSets.all {
+        languageSettings {
+            languageVersion = "2.0"
         }
     }
 
-}
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.adaptive.core)
+            implementation(libs.adaptive.ui)
+            implementation(libs.adaptive.lib.ui)
+            implementation(libs.adaptive.grove.runtime)
+        }
 
-tasks.withType<Jar> {
-    duplicatesStrategy = DuplicatesStrategy.WARN
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+        }
+    }
 }
 
 signing {

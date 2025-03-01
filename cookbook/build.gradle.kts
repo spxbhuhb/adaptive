@@ -55,7 +55,7 @@ kotlin {
                 implementation(libs.adaptive.lib.auth)
                 implementation(libs.adaptive.lib.auto)
                 implementation(libs.adaptive.lib.graphics)
-                implementation(libs.adaptive.lib.markdown)
+                implementation(libs.adaptive.lib.document)
                 implementation(libs.adaptive.lib.ui)
                 implementation(libs.kotlinx.coroutines.debug)
             }

@@ -1,10 +1,15 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-rootProject.name = "sandbox"
+rootProject.name = "adaptive-lib-document"
 
 pluginManagement {
     includeBuild("../adaptive-gradle-plugin")
+    repositories {
+        google()
+        gradlePluginPortal()
+        mavenCentral()
+    }
 }
 
 dependencyResolutionManagement {
@@ -20,13 +25,5 @@ dependencyResolutionManagement {
 
 includeBuild("../adaptive-core")
 includeBuild("../adaptive-ui")
-includeBuild("../adaptive-lib-email")
-includeBuild("../adaptive-lib-ktor")
-includeBuild("../adaptive-lib-auth")
-includeBuild("../adaptive-lib-auto")
-includeBuild("../adaptive-lib-graphics")
-includeBuild("../adaptive-lib-document")
 includeBuild("../adaptive-lib-ui")
-includeBuild("../adaptive-lib-cookbook")
-includeBuild("../adaptive-grove")
 includeBuild("../adaptive-grove-runtime")

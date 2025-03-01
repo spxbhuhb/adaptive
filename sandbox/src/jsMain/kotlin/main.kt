@@ -5,29 +5,17 @@
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
-import `fun`.adaptive.foundation.api.localContext
-import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.foundation.instruction.traceAll
+import `fun`.adaptive.document.ui.basic.docDocument
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
-import `fun`.adaptive.grove.api.hydrated
 import `fun`.adaptive.grove.groveRuntimeCommon
-import `fun`.adaptive.markdown.transform.MarkdownToLfmTransform
+import `fun`.adaptive.markdown.transform.MarkdownToDocTransform
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.ui.LibFragmentFactory
-import `fun`.adaptive.ui.api.boldFont
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.maxHeight
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.ui.api.verticalScroll
-import `fun`.adaptive.ui.api.width
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
-import `fun`.adaptive.ui.fragment.paragraph.items.TextParagraphItem
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
-import `fun`.adaptive.ui.richtext.RichText
-import `fun`.adaptive.ui.richtext.richTextParagraph
 import `fun`.adaptive.ui.snackbar.SnackbarManager
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.uiCommon
@@ -64,15 +52,11 @@ fun main() {
 
             adapter.groveRuntimeCommon()
 
-            val rt = MarkdownToLfmTransform(source).transform()
-
             column {
                 maxHeight .. verticalScroll .. padding { 16.dp } .. width { 400.dp }
                 borders.friendly
 
-                localContext(rt) {
-                    hydrated(rt.model)
-                }
+                docDocument(MarkdownToDocTransform(source).transform())
             }
         }
     }
@@ -98,6 +82,11 @@ val source = """
     reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur 
     sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
     est laborum.
+    
+    * List item 1
+      * List item 1.1
+    * List item 2
+    * List item 3
     
     [Standalone link](https://adaptive.fun)
     
