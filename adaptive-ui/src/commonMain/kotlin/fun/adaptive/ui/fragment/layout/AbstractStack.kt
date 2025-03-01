@@ -52,6 +52,9 @@ abstract class AbstractStack<RT, CRT : RT>(
         val data = renderData
         val container = renderData.container
 
+        val instructedWidth = renderData.layout?.instructedWidth
+        val instructedHeight = renderData.layout?.instructedHeight
+
         val instructedGap = instructedGap()
         val itemCount = layoutItems.size
 
@@ -61,8 +64,8 @@ abstract class AbstractStack<RT, CRT : RT>(
         var itemsWidth = totalGap
         var itemsHeight = totalGap
 
-        val proposedItemWidth = proposedWidth - data.surroundingHorizontal
-        val proposedItemHeight = proposedHeight - data.surroundingVertical
+        val proposedItemWidth = (instructedWidth ?: proposedWidth) - data.surroundingHorizontal
+        val proposedItemHeight = (instructedHeight ?: proposedHeight) - data.surroundingVertical
 
         for (item in layoutItems) {
             item.computeLayout(proposedItemWidth, proposedItemHeight)
