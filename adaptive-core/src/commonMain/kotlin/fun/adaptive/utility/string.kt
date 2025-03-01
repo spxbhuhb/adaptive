@@ -117,6 +117,27 @@ fun String.firstNotSpaceBefore(start: Int, until: Int): Int {
 }
 
 /**
+ * Extracts a list of substrings (words) from a given string. Uses
+ * [firstNotSpace] to find the beginning of words.
+ *
+ * @return A list of substrings (words) extracted.
+ */
+fun String.words(): List<String> {
+    val words = mutableListOf<String>()
+
+    val end = length
+    var index = first(0, end) { !it.isWhiteSpace }
+
+    while (index < end) {
+        val wordEnd = first(index + 1, end) { it.isWhiteSpace }
+        words += substring(index, wordEnd)
+        index = first(wordEnd, end) { !it.isWhiteSpace }
+    }
+
+    return words
+}
+
+/**
  * True when the character:
  *
  * - is in Unicode "Separator,Space" category
@@ -149,6 +170,12 @@ fun Char.isNewLine() =
             || this == '\u2028'
             || this == '\u2029'
         )
+
+/**
+ * True when the either [isSpace] or [isNewLine] is true.
+ */
+val Char.isWhiteSpace
+    get() = isSpace() || isNewLine()
 
 fun String.encodeToUrl(): String {
     var result = ""

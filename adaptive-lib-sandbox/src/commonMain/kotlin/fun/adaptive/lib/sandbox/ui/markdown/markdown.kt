@@ -5,13 +5,11 @@
 package `fun`.adaptive.lib.sandbox.ui.markdown
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.markdown.fragment.document
 import `fun`.adaptive.ui.api.column
 
 @Adaptive
 fun markdown() {
     column {
-        document(source)
     }
 }
 

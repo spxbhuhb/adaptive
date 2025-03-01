@@ -6,15 +6,15 @@
 
 Transformations:
 
-| Markdown AST entry               | Fragment        | Notes                            |
-|----------------------------------|-----------------|----------------------------------|
-| `MarkdownCodeFenceAstEntry`      | `lib:codefence` |                                  | 
-| `MarkdownHeaderAstEntry`         | `aui:paragraph` |                                  |
-| `MarkdownHorizontalRuleAstEntry` | `aui:box`       | with decorations and max width   |
-| `MarkdownParagraphAstEntry`      | `aui:paragraph` |                                  |
-| `MarkdownInlineAstEntry`         |                 | `ParagraphItem` - not a fragment |
-| `MarkdownListAstEntry`           | `lib:listWrap`  |                                  |
-| `MarkdownQuoteAstEntry`          | `lib:quoteWarp` |                                  |
+| Markdown AST entry               | Fragment                 | Notes                            |
+|----------------------------------|--------------------------|----------------------------------|
+| `MarkdownCodeFenceAstEntry`      | `lib:richtext:codefence` |                                  | 
+| `MarkdownHeaderAstEntry`         | `lib:richtext:paragraph` |                                  |
+| `MarkdownHorizontalRuleAstEntry` | `lib:richtext:hr`        | with decorations and max width   |
+| `MarkdownParagraphAstEntry`      | `lib:richtext:paragraph` |                                  |
+| `MarkdownInlineAstEntry`         |                          | `ParagraphItem` - not a fragment |
+| `MarkdownListAstEntry`           | `lib:richtext:list`      |                                  |
+| `MarkdownQuoteAstEntry`          | `lib:richtext:quote`     |                                  |
 
 ### Linearization
 

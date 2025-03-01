@@ -175,6 +175,18 @@ private fun text(source: String, start: Int, end: Int, tokens: MutableList<Markd
         }
     }
 
+    fun maybeReplace(char: Char, maybeIndex: Int) {
+        if (maybeIndex == index) {
+            builder.append(char)
+            index ++
+        } else {
+            val token = tokens.removeLast()
+            emptyBuilder()
+            tokens += token
+            index = maybeIndex
+        }
+    }
+
     fun sameChar(char: Char, type: MarkdownTokenType) {
         emptyBuilder()
 
@@ -199,22 +211,12 @@ private fun text(source: String, start: Int, end: Int, tokens: MutableList<Markd
 
             '!' -> {
                 val maybeIndex = maybeImage(source, index, tokens)
-                if (maybeIndex == index) {
-                    builder.append(char)
-                    index ++
-                } else {
-                    index = maybeIndex
-                }
+                maybeReplace(char, maybeIndex)
             }
 
             '[' -> {
                 val maybeIndex = maybeReference(source, index, tokens)
-                if (maybeIndex == index) {
-                    builder.append(char)
-                    index ++
-                } else {
-                    index = maybeIndex
-                }
+                maybeReplace(char, maybeIndex)
             }
 
             '\\' -> {

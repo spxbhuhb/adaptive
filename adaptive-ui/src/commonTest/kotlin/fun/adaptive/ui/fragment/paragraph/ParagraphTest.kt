@@ -11,6 +11,13 @@ import kotlin.test.assertEquals
 class ParagraphTest {
 
     @Test
+    fun `empty paragraph`() {
+        val paragraph = createTestParagraph(emptyList())
+        val rows = paragraph.computeRows(100.0)
+        assertEquals(0, rows.size)
+    }
+
+    @Test
     fun `test single row fits perfectly`() {
         val paragraph = createTestParagraph(
             listOf(

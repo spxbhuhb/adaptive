@@ -30,7 +30,7 @@ abstract class AbstractParagraph<RT, CRT : RT>(
     override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
         val rows = computeRows((renderData.layout?.instructedWidth ?: proposedWidth) - renderData.surroundingHorizontal)
 
-        val itemsWidth = rows.maxOf { it.width }
+        val itemsWidth = rows.maxOfOrNull { it.width } ?: 0.0
         val itemsHeight = rows.sumOf { it.height }
 
         computeFinal(proposedWidth, itemsWidth, proposedHeight, itemsHeight)

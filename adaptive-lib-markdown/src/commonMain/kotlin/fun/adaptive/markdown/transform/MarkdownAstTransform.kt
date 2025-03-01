@@ -10,7 +10,7 @@ import `fun`.adaptive.markdown.model.MarkdownQuoteAstEntry
 
 interface MarkdownAstTransform<C, R> {
     fun visit(header: MarkdownHeaderAstEntry, context: C): R
-    fun visit(inline: MarkdownInlineAstEntry, context: C): R
+    fun visit(inline: MarkdownInlineAstEntry, context: C) : R
     fun visit(paragraph: MarkdownParagraphAstEntry, context: C): R
     fun visit(list: MarkdownListAstEntry, context: C): R
     fun visit(codeFence: MarkdownCodeFenceAstEntry, context: C): R

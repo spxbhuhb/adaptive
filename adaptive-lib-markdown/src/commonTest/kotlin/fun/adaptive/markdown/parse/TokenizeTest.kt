@@ -255,6 +255,19 @@ class TokenizeTest {
     }
 
     @Test
+    fun linkInText() {
+        val input = "Link in [IntelliJ IDEA](https://www.jetbrains.com/idea/) text."
+        val expected = listOf(
+            MarkdownToken(MarkdownTokenType.Text, "Link in "),
+            MarkdownToken(MarkdownTokenType.InlineLink, "[IntelliJ IDEA](https://www.jetbrains.com/idea/)"),
+            MarkdownToken(MarkdownTokenType.Text, "text.")
+        )
+
+        val actual = tokenize(input)
+        assertEquals(expected, actual)
+    }
+
+    @Test
     fun referenceLink() {
         val input = "[Unbelievable][1]\n" +
             "[1]: https://example.com/nothing"

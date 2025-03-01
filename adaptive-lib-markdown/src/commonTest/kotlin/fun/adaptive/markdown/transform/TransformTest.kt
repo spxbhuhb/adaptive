@@ -16,9 +16,12 @@ class TransformTest {
 
     @Test
     fun basic() {
-        val source = "# Header"
-        MarkdownToLfmTransform(parse(tokenize(source))).transform()
+        val richText = MarkdownToLfmTransform(parse(tokenize(source))).transform()
         // do I want to check anything here?
+        println(richText.model.encodeToPrettyJson())
     }
 
+    val source = """    
+        Link in [Adaptive](https://adaptive.fun) text.
+    """.trimIndent()
 }

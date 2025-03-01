@@ -44,4 +44,14 @@ class StringTest {
             assertEquals(text, encodedText.decodeFromUrl())
         }
     }
+
+    @Test
+    fun `words should split string by whitespace`() {
+        assertEquals(listOf("Hello", "World"), "Hello World".words())
+        assertEquals(listOf("Kotlin", "is", "awesome"), " Kotlin  is   awesome ".words())
+        assertEquals(listOf("One", "Two", "Three"), "One\nTwo\tThree".words())
+        assertEquals(listOf("test"), "test".words())
+        assertEquals(emptyList<String>(), "     ".words())
+        assertEquals(emptyList<String>(), "".words())
+    }
 }

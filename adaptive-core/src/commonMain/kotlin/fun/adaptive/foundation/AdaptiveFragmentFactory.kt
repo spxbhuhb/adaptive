@@ -5,8 +5,10 @@
 package `fun`.adaptive.foundation
 
 import `fun`.adaptive.foundation.internal.NamedFragmentFactory
+import `fun`.adaptive.foundation.testing.AdaptiveS1R
 import `fun`.adaptive.registry.Registry
 import `fun`.adaptive.utility.PluginReference
+import kotlin.reflect.KFunction
 
 /**
  * Fragment factories create new instances of fragment based on a key. This supports the expect / actual pattern,
@@ -22,8 +24,8 @@ open class AdaptiveFragmentFactory : Registry<NamedFragmentFactory>() {
     }
 
     @PluginReference("addNonTransformed")
-    fun add(key : FragmentKey, @Adaptive f : () -> AdaptiveFragment) {
-        set(key, NamedFragmentFactory(key) { _, _, _ -> f() })
+    fun add(key : FragmentKey, @Adaptive f : KFunction<AdaptiveFragment>) {
+        replacedByPlugin("should be replaced with the transformed version", key, f)
     }
 
     @PluginReference("addTransformed")
