@@ -8,7 +8,6 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.instruction.layout.Alignment
-import `fun`.adaptive.ui.render.model.LayoutRenderData
 import kotlin.math.max
 
 abstract class AbstractColumn<RT, CRT : RT>(
@@ -24,6 +23,12 @@ abstract class AbstractColumn<RT, CRT : RT>(
 
     override fun itemsHeightCalc(itemsHeight: Double, item: AbstractAuiFragment<RT>): Double =
         itemsHeight + item.renderData.finalHeight
+
+    override fun constrainWidthCalc(remainingWidth: Double, item: AbstractAuiFragment<RT>): Double =
+        remainingWidth
+
+    override fun constrainHeightCalc(remainingHeight: Double, item: AbstractAuiFragment<RT>): Double =
+        remainingHeight - item.renderData.finalHeight
 
     override fun instructedGap(): Double =
         renderData.container?.gapHeight ?: 0.0

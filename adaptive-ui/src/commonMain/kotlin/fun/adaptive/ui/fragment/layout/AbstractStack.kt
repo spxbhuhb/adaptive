@@ -8,6 +8,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.instruction.layout.Alignment
+import `fun`.adaptive.ui.instruction.layout.FillStrategy
 import `fun`.adaptive.ui.instruction.layout.SpaceDistribution
 
 /**
@@ -32,6 +33,10 @@ abstract class AbstractStack<RT, CRT : RT>(
     abstract fun itemsWidthCalc(itemsWidth: Double, item: AbstractAuiFragment<RT>): Double
 
     abstract fun itemsHeightCalc(itemsHeight: Double, item: AbstractAuiFragment<RT>): Double
+
+    abstract fun constrainWidthCalc(remainingWidth: Double, item: AbstractAuiFragment<RT>): Double
+
+    abstract fun constrainHeightCalc(remainingHeight: Double, item: AbstractAuiFragment<RT>): Double
 
     abstract fun instructedGap(): Double
 
@@ -64,13 +69,19 @@ abstract class AbstractStack<RT, CRT : RT>(
         var itemsWidth = totalGap
         var itemsHeight = totalGap
 
-        val proposedItemWidth = (instructedWidth ?: proposedWidth) - data.surroundingHorizontal
-        val proposedItemHeight = (instructedHeight ?: proposedHeight) - data.surroundingVertical
+        var proposedItemWidth = (instructedWidth ?: proposedWidth) - data.surroundingHorizontal
+        var proposedItemHeight = (instructedHeight ?: proposedHeight) - data.surroundingVertical
+
+        val constrain = (data.layout?.fill == FillStrategy.Constrain)
 
         for (item in layoutItems) {
             item.computeLayout(proposedItemWidth, proposedItemHeight)
             itemsWidth = itemsWidthCalc(itemsWidth, item)
             itemsHeight = itemsHeightCalc(itemsHeight, item)
+            if (constrain) {
+                proposedItemWidth = constrainWidthCalc(proposedItemWidth, item)
+                proposedItemHeight = constrainHeightCalc(proposedItemHeight, item)
+            }
         }
 
         // ----  calculate sizes of this fragment  ------------------------------------

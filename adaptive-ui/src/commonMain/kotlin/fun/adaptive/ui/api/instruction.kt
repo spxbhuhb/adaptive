@@ -100,6 +100,10 @@ object fit {
     }
 }
 
+object fill {
+    val constrain = Fill(FillStrategy.Constrain)
+}
+
 val maxSize = MaxSize()
 val maxWidth = MaxWidth()
 val maxHeight = MaxHeight()
