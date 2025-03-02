@@ -1,6 +1,7 @@
 package `fun`.adaptive.document.ui.basic
 
 import `fun`.adaptive.document.model.DocList
+import `fun`.adaptive.document.model.DocListItem
 import `fun`.adaptive.document.ui.DocRenderContext
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -9,14 +10,19 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 
 @Adaptive
-fun docList(context : DocRenderContext, list: DocList): AdaptiveFragment {
+fun docList(context: DocRenderContext, list: DocList): AdaptiveFragment {
 
     column {
-        for (item in list.children.withIndex()) {
+        maxWidth
+        context.listContainer(list)
+
+        for (item in list.items) {
             row {
-                label(context, list, item.index)
-                docBlock(context, listOf(item.value))
+                maxWidth .. fill.constrain
+                label(context, item)
+                docBlock(context, listOf(item.content))
             }
+            if (item.subList != null) docList(context, item.subList)
         }
     }
 
@@ -24,16 +30,22 @@ fun docList(context : DocRenderContext, list: DocList): AdaptiveFragment {
 }
 
 @Adaptive
-private fun label(context : DocRenderContext, list : DocList, index : Int) {
-    box {
-        paddingTop { 7.dp } .. paddingLeft { 16.dp * (list.level - 1) } .. width { 16.dp * list.level - 4.dp }
+private fun label(context: DocRenderContext, item: DocListItem) {
+    val theme = context.theme
 
-        if (list.bullet) {
-            box {
-                context.theme.listBullet
-            }
+    val offset = if (item.bullet) 4.dp else 0.dp
+    val indent = (if (item.bullet) theme.bulletListIndent else theme.numberListIndent) * (item.path.size - 1)
+    val labelPadding = paddingLeft { indent + offset }
+
+    row {
+        labelPadding
+
+        if (item.bullet) theme.listBulletContainer else theme.listNumberContainer
+
+        if (item.bullet) {
+            box { theme.listBullet }
         } else {
-            text("$index")
+            text(theme.listPath(item)) .. theme.listNumber
         }
     }
 }

@@ -2,36 +2,12 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package `fun`.adaptive.markdown.parse
+package `fun`.adaptive.markdown.compiler
 
 import `fun`.adaptive.utility.*
 import kotlin.math.max
 
-enum class MarkdownTokenType {
-    Spaces,
-    Text,
-    NewLine,
-    Header,
-    BulletList,
-    NumberedList,
-    Quote,
-    CodeLanguage,
-    CodeFence,
-    Asterisks,
-    Underscores,
-    Hyphens,
-    CodeSpan,
-    InlineLink,
-    ReferenceLink,
-    ReferenceDef
-}
-
-data class MarkdownToken(
-    val type: MarkdownTokenType,
-    val text: String
-)
-
-fun tokenize(source: String): List<MarkdownToken> {
+internal fun tokenizeInternal(source: String): List<MarkdownToken> {
 
     var index = 0
     val end = source.length

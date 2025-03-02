@@ -4,13 +4,9 @@
 
 package `fun`.adaptive.markdown.model
 
-import `fun`.adaptive.markdown.transform.MarkdownAstTransform
+import `fun`.adaptive.markdown.compiler.MarkdownVisitor
 
-class MarkdownHorizontalRuleAstEntry : MarkdownAstEntry {
-
-    override fun <C, R> accept(visitor: MarkdownAstTransform<C, R>, context: C): R {
-        return visitor.visit(this, context)
-    }
+class MarkdownHorizontalRule : MarkdownElement() {
 
     override fun toString(): String {
         return this::class.simpleName.toString()
@@ -25,5 +21,9 @@ class MarkdownHorizontalRuleAstEntry : MarkdownAstEntry {
 
     override fun hashCode(): Int {
         return this::class.hashCode()
+    }
+
+    override fun <R, D> accept(visitor: MarkdownVisitor<R, D>, data: D): R {
+        return visitor.visitHorizontalRule(this, data)
     }
 }

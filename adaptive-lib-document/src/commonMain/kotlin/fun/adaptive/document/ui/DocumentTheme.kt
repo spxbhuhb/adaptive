@@ -1,20 +1,9 @@
 package `fun`.adaptive.document.ui
 
+import `fun`.adaptive.document.model.DocListItem
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.foundation.instruction.traceAll
-import `fun`.adaptive.ui.api.alignSelf
-import `fun`.adaptive.ui.api.backgroundColor
-import `fun`.adaptive.ui.api.cornerRadius
-import `fun`.adaptive.ui.api.fontSize
-import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.marginBottom
-import `fun`.adaptive.ui.api.maxWidth
-import `fun`.adaptive.ui.api.paddingHorizontal
-import `fun`.adaptive.ui.api.paddingTop
-import `fun`.adaptive.ui.api.semiBoldFont
-import `fun`.adaptive.ui.api.width
-import `fun`.adaptive.ui.codefence.CodeFenceTheme
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.backgrounds
@@ -79,6 +68,23 @@ class DocumentTheme {
         backgrounds.lightOverlay
     )
 
+    val bulletListIndent = 12.dp
+    val numberListIndent = 16.dp
+
+    val standaloneList = instructionsOf(
+        gap { 2.dp },
+        marginBottom { 12.dp }
+    )
+
+    val innerList = instructionsOf(
+        gap { 2.dp }
+    )
+
+    val listBulletContainer = instructionsOf(
+        paddingTop { 7.dp },
+        paddingRight { 6.dp }
+    )
+
     val listBullet = instructionsOf(
         backgroundColor(colors.onSurface),
         width { 5.dp },
@@ -86,7 +92,17 @@ class DocumentTheme {
         cornerRadius { 2.5.dp }
     )
 
-    val codeFenceTheme = CodeFenceTheme.DEFAULT
+    val listNumberContainer = instructionsOf(
+        paddingRight { 6.dp }
+    )
+
+    val listNumber = instructionsOf(
+        fontSize { 14.sp },
+        semiBoldFont
+    )
+
+    fun listPath(item: DocListItem): String =
+        item.path.joinToString(".") + "."
 
     companion object {
         val DEFAULT = DocumentTheme()

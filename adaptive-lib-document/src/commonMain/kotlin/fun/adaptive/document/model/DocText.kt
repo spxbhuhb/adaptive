@@ -1,9 +1,19 @@
 package `fun`.adaptive.document.model
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.document.processing.DocVisitor
 
 @Adat
 class DocText(
     override val style: DocStyleId,
     val text: String
-) : DocInlineElement()
+) : DocInlineElement() {
+
+    override fun <R, D> accept(visitor: DocVisitor<R, D>, data: D): R =
+        visitor.visitText(this, data)
+
+    override fun <D> acceptChildren(visitor: DocVisitor<Unit, D>, data: D) {
+
+    }
+
+}

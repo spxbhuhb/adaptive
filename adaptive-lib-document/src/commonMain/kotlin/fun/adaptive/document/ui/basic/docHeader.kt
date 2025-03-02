@@ -29,7 +29,7 @@ fun docHeader(context : DocRenderContext, element: DocHeader): AdaptiveFragment 
     paragraph(
         Paragraph(
             context.styles,
-            context.paragraphItems(element.children)
+            context.paragraphItems(element.content)
         )
     ) .. style
 

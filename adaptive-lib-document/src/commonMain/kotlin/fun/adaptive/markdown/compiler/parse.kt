@@ -2,18 +2,11 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package `fun`.adaptive.markdown.parse
+package `fun`.adaptive.markdown.compiler
 
-import `fun`.adaptive.markdown.model.MarkdownAstEntry
-import `fun`.adaptive.markdown.model.MarkdownCodeFenceAstEntry
-import `fun`.adaptive.markdown.model.MarkdownHeaderAstEntry
-import `fun`.adaptive.markdown.model.MarkdownHorizontalRuleAstEntry
-import `fun`.adaptive.markdown.model.MarkdownInlineAstEntry
-import `fun`.adaptive.markdown.model.MarkdownListAstEntry
-import `fun`.adaptive.markdown.model.MarkdownParagraphAstEntry
-import `fun`.adaptive.markdown.model.MarkdownQuoteAstEntry
+import `fun`.adaptive.markdown.model.*
 
-fun parse(tokens: List<MarkdownToken>): List<MarkdownAstEntry> {
+internal fun parseInternal(tokens: List<MarkdownToken>): List<MarkdownElement> {
 
     val context = CompileContext(tokens)
     var index = 0
@@ -45,15 +38,20 @@ fun parse(tokens: List<MarkdownToken>): List<MarkdownAstEntry> {
     return context.entries
 }
 
+private class ListStackEntry(
+    val spaces: Int,
+    val list: MarkdownList
+)
+
 private class CompileContext(
     var tokens: List<MarkdownToken>,
-    var entries: MutableList<MarkdownAstEntry> = mutableListOf()
+    var entries: MutableList<MarkdownElement> = mutableListOf()
 ) {
     var codeLanguage: String? = null
-    var listStack = mutableListOf<Int>()
+    var listStack = mutableListOf<ListStackEntry>()
     var spaces = 0
 
-    operator fun MarkdownAstEntry.unaryPlus() {
+    operator fun MarkdownElement.unaryPlus() {
         entries += this
     }
 }
@@ -66,17 +64,17 @@ private fun CompileContext.spaces(token: MarkdownToken, start: Int): Int {
 private fun CompileContext.text(start: Int): Int {
     val last = entries.lastOrNull()
 
-    val paragraph = if (last != null && last is MarkdownParagraphAstEntry && ! last.closed) {
-        last.children += MarkdownInlineAstEntry(" ", bold = false, italic = false) // TODO think about in-paragraph newline in markdown
+    val paragraph = if (last != null && last is MarkdownParagraph && ! last.closed) {
+        last.children += MarkdownInline(" ", bold = false, italic = false) // TODO think about in-paragraph newline in markdown
         last
     } else {
-        MarkdownParagraphAstEntry(mutableListOf(), false).also { entries += it }
+        MarkdownParagraph(mutableListOf(), false).also { entries += it }
     }
 
     return inline(start, paragraph.children)
 }
 
-private fun CompileContext.inline(start: Int, children: MutableList<MarkdownInlineAstEntry>): Int {
+private fun CompileContext.inline(start: Int, children: MutableList<MarkdownElement>): Int {
 
     var index = start
     val end = tokens.size
@@ -96,7 +94,7 @@ private fun CompileContext.inline(start: Int, children: MutableList<MarkdownInli
         }
 
         if (activeStyle != null) {
-            children += MarkdownInlineAstEntry(text, bold, italic)
+            children += MarkdownInline(text, bold, italic)
             return
         }
 
@@ -118,7 +116,7 @@ private fun CompileContext.inline(start: Int, children: MutableList<MarkdownInli
             }
 
             else -> {
-                children += MarkdownInlineAstEntry(text, bold, italic)
+                children += MarkdownInline(text, bold, italic)
             }
         }
     }
@@ -129,7 +127,7 @@ private fun CompileContext.inline(start: Int, children: MutableList<MarkdownInli
         when (token.type) {
 
             MarkdownTokenType.Text, MarkdownTokenType.Hyphens -> {
-                children += MarkdownInlineAstEntry(token.text, bold, italic)
+                children += MarkdownInline(token.text, bold, italic)
             }
 
             MarkdownTokenType.Asterisks, MarkdownTokenType.Underscores -> {
@@ -137,19 +135,19 @@ private fun CompileContext.inline(start: Int, children: MutableList<MarkdownInli
             }
 
             MarkdownTokenType.CodeSpan -> {
-                children += MarkdownInlineAstEntry(token.text, bold, italic, code = true)
+                children += MarkdownInline(token.text, bold, italic, code = true)
             }
 
             MarkdownTokenType.InlineLink -> {
-                children += MarkdownInlineAstEntry(token.text, bold, italic, inlineLink = true)
+                children += MarkdownInline(token.text, bold, italic, inlineLink = true)
             }
 
             MarkdownTokenType.ReferenceLink -> {
-                children += MarkdownInlineAstEntry(token.text, bold, italic, referenceLink = true)
+                children += MarkdownInline(token.text, bold, italic, referenceLink = true)
             }
 
             MarkdownTokenType.ReferenceDef -> {
-                children += MarkdownInlineAstEntry(token.text, bold, italic, referenceDef = true)
+                children += MarkdownInline(token.text, bold, italic, referenceDef = true)
             }
 
             MarkdownTokenType.NewLine -> break
@@ -164,8 +162,11 @@ private fun CompileContext.inline(start: Int, children: MutableList<MarkdownInli
 private fun CompileContext.newLine(start: Int): Int {
     val last = entries.lastOrNull()
 
-    if (last != null && last is MarkdownParagraphAstEntry) {
-        last.closed = true
+    if (last != null) {
+        when (last) {
+            is MarkdownParagraph -> last.closed = true
+            is MarkdownList -> listStack.clear()
+        }
     }
 
     spaces = 0
@@ -176,10 +177,10 @@ private fun CompileContext.newLine(start: Int): Int {
 private fun CompileContext.header(token: MarkdownToken, start: Int): Int {
     spaces = 0 // consume spaces before the header if any
 
-    val children = mutableListOf<MarkdownInlineAstEntry>()
+    val children = mutableListOf<MarkdownElement>()
     val next = inline(start + 1, children)
 
-    + MarkdownHeaderAstEntry(
+    + MarkdownHeader(
         level = token.text.length,
         children
     )
@@ -188,32 +189,56 @@ private fun CompileContext.header(token: MarkdownToken, start: Int): Int {
 }
 
 private fun CompileContext.list(token: MarkdownToken, start: Int): Int {
-    val last = entries.lastOrNull()
     val bullet = (token.type == MarkdownTokenType.BulletList)
 
-    if (last != null && last is MarkdownListAstEntry && last.bullet != bullet) {
-        listStack.clear()
-    }
+    // Remove lists from the stack which are deeper than this token
+    // the last stack item is a list which is at the same level as
+    // this token.
 
-    while (listStack.isNotEmpty() && spaces <= listStack.last()) {
+    while (listStack.isNotEmpty() && spaces < listStack.last().spaces) {
         listStack.removeLast()
     }
-    listStack.add(spaces)
 
-    val level = listStack.size
-    spaces = 0
+    // The inline content of the list item. This cannot contain other lists, it
+    // is just a paragraph.
 
-    val children = mutableListOf<MarkdownInlineAstEntry>()
+    val children = mutableListOf<MarkdownElement>()
     val next = inline(start + 1, children)
+    val paragraph = MarkdownParagraph(children, false)
 
-    + MarkdownListAstEntry(bullet, level, children)
+    if (listStack.isNotEmpty()) {
+        // We have a list on the stack. We might make a new sub-list or append
+        // the list item to the list on the stack, depending on the level of the item.
+
+        val last = listStack.last()
+        val currentList = last.list
+
+        if (last.spaces == spaces) {
+            currentList.items += MarkdownListItem(bullet, listStack.size, paragraph)
+        } else {
+            val subListItem = MarkdownListItem(bullet, listStack.size + 1, paragraph)
+            val subList = MarkdownList(bullet, subListItem.level, mutableListOf(subListItem))
+
+            currentList.items.last().subList = subList
+
+            listStack += ListStackEntry(spaces, subList)
+        }
+    } else {
+        // There is no list on the stack, so we have to make a new one
+        // The sole item in this list will be the paragraph we've just made.
+
+        + MarkdownList(bullet, 1, mutableListOf(MarkdownListItem(bullet, 1, paragraph)))
+            .also { listStack += ListStackEntry(spaces, it) }
+    }
+
+    spaces = 0
 
     return next
 }
 
 private fun CompileContext.quote(token: MarkdownToken, start: Int): Int {
 
-    + MarkdownQuoteAstEntry(parse(tokenize(token.text)))
+    + MarkdownQuote(parseInternal(tokenizeInternal(token.text)))
 
     return start + 1
 }
@@ -224,7 +249,7 @@ private fun CompileContext.codeLanguage(token: MarkdownToken, start: Int): Int {
 }
 
 private fun CompileContext.codeFence(token: MarkdownToken, start: Int): Int {
-    entries += MarkdownCodeFenceAstEntry(codeLanguage, token.text)
+    entries += MarkdownCodeFence(codeLanguage, token.text)
     codeLanguage = null
     return start + 1
 }
@@ -234,7 +259,7 @@ private fun CompileContext.maybeRule(token: MarkdownToken, start: Int): Int {
     val end = tokens.size
 
     if (token.text.length >= 3 && index == end || (index < tokens.size && tokens[index].type == MarkdownTokenType.NewLine)) {
-        + MarkdownHorizontalRuleAstEntry()
+        + MarkdownHorizontalRule()
         return index + 1
     } else {
         return text(start)

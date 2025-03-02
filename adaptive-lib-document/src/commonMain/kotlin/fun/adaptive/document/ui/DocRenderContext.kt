@@ -3,7 +3,9 @@ package `fun`.adaptive.document.ui
 import `fun`.adaptive.document.model.DocDocument
 import `fun`.adaptive.document.model.DocInlineElement
 import `fun`.adaptive.document.model.DocLink
+import `fun`.adaptive.document.model.DocList
 import `fun`.adaptive.document.model.DocText
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.ui.fragment.paragraph.items.LinkParagraphItem
 import `fun`.adaptive.ui.fragment.paragraph.items.TextParagraphItem
@@ -73,4 +75,12 @@ class DocRenderContext(
 
         return out
     }
+
+    fun listContainer(list: DocList): AdaptiveInstruction =
+        when {
+            list.style != - 1 -> styles[list.style]
+            list.standalone -> theme.standaloneList
+            else -> theme.innerList
+        }
+
 }

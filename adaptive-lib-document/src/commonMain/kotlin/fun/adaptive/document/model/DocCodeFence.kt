@@ -1,6 +1,7 @@
 package `fun`.adaptive.document.model
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.document.processing.DocVisitor
 
 @Adat
 class DocCodeFence(
@@ -9,7 +10,11 @@ class DocCodeFence(
     val language : String? = null
 ) : DocBlockElement() {
 
-    override val children
-        get() = emptyList<DocElement>()
+    override fun <R, D> accept(visitor: DocVisitor<R, D>, data: D): R =
+        visitor.visitCodeFence(this, data)
+
+    override fun <D> acceptChildren(visitor: DocVisitor<Unit, D>, data: D) {
+
+    }
 
 }

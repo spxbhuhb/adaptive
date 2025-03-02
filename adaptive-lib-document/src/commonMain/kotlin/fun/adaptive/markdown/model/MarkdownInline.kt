@@ -4,9 +4,9 @@
 
 package `fun`.adaptive.markdown.model
 
-import `fun`.adaptive.markdown.transform.MarkdownAstTransform
+import `fun`.adaptive.markdown.compiler.MarkdownVisitor
 
-data class MarkdownInlineAstEntry(
+class MarkdownInline(
     val text: String,
     val bold: Boolean,
     val italic: Boolean,
@@ -14,11 +14,10 @@ data class MarkdownInlineAstEntry(
     val inlineLink: Boolean = false,
     val referenceLink: Boolean = false,
     val referenceDef: Boolean = false,
-) : MarkdownAstEntry {
+) : MarkdownElement() {
 
-    override fun <C, R> accept(visitor: MarkdownAstTransform<C, R>, context: C): R {
-        return visitor.visit(this, context)
+    override fun <R, D> accept(visitor: MarkdownVisitor<R, D>, data: D): R {
+        return visitor.visitInline(this, data)
     }
-
 
 }

@@ -2,7 +2,7 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package `fun`.adaptive.markdown.parse
+package `fun`.adaptive.markdown.compiler
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -16,7 +16,7 @@ class TokenizeTest {
             MarkdownToken(MarkdownTokenType.Header, "#"),
             MarkdownToken(MarkdownTokenType.Text, "Header")
         )
-        val actualTokens = tokenize(source)
+        val actualTokens = tokenizeInternal(source)
         assertEquals(expectedTokens, actualTokens)
     }
 
@@ -27,7 +27,7 @@ class TokenizeTest {
             MarkdownToken(MarkdownTokenType.Header, "####"),
             MarkdownToken(MarkdownTokenType.Text, "Header")
         )
-        val actualTokens = tokenize(source)
+        val actualTokens = tokenizeInternal(source)
         assertEquals(expectedTokens, actualTokens)
     }
 
@@ -44,7 +44,7 @@ class TokenizeTest {
             MarkdownToken(MarkdownTokenType.Header, "##"),
             MarkdownToken(MarkdownTokenType.Text, "Header 2"),
         )
-        val actualTokens = tokenize(source)
+        val actualTokens = tokenizeInternal(source)
         assertEquals(expectedTokens, actualTokens)
     }
 
@@ -55,7 +55,7 @@ class TokenizeTest {
             MarkdownToken(MarkdownTokenType.Header, "#"),
             MarkdownToken(MarkdownTokenType.Text, "Header")
         )
-        val actualTokens = tokenize(source)
+        val actualTokens = tokenizeInternal(source)
         assertEquals(expectedTokens, actualTokens)
     }
 
@@ -88,7 +88,7 @@ class TokenizeTest {
             MarkdownToken(MarkdownTokenType.BulletList, "*"),
             MarkdownToken(MarkdownTokenType.Text, "item 2")
         )
-        val actualTokens = tokenize(source)
+        val actualTokens = tokenizeInternal(source)
         assertEquals(expectedTokens, actualTokens)
     }
 
@@ -121,7 +121,7 @@ class TokenizeTest {
             MarkdownToken(MarkdownTokenType.NumberedList, "2"),
             MarkdownToken(MarkdownTokenType.Text, "item 2")
         )
-        val actualTokens = tokenize(source)
+        val actualTokens = tokenizeInternal(source)
         assertEquals(expectedTokens, actualTokens)
     }
 
@@ -131,7 +131,7 @@ class TokenizeTest {
         val expectedTokens = listOf(
             MarkdownToken(MarkdownTokenType.CodeFence, "code")
         )
-        val actualTokens = tokenize(source)
+        val actualTokens = tokenizeInternal(source)
         assertEquals(expectedTokens, actualTokens)
     }
 
@@ -142,7 +142,7 @@ class TokenizeTest {
             MarkdownToken(MarkdownTokenType.CodeLanguage, "text"),
             MarkdownToken(MarkdownTokenType.CodeFence, "code")
         )
-        val actualTokens = tokenize(source)
+        val actualTokens = tokenizeInternal(source)
         assertEquals(expectedTokens, actualTokens)
     }
 
@@ -154,7 +154,7 @@ class TokenizeTest {
             MarkdownToken(MarkdownTokenType.Text, "bold text"),
             MarkdownToken(MarkdownTokenType.Asterisks, "**")
         )
-        val actualTokens = tokenize(source)
+        val actualTokens = tokenizeInternal(source)
         assertEquals(expectedTokens, actualTokens)
     }
 
@@ -165,7 +165,7 @@ class TokenizeTest {
             Pair(MarkdownTokenType.Quote, "This is a quote\nand another quote")
         )
 
-        val result = tokenize(source).map { Pair(it.type, it.text) }
+        val result = tokenizeInternal(source).map { Pair(it.type, it.text) }
 
         assertEquals(expectedResult, result)
     }
@@ -177,7 +177,7 @@ class TokenizeTest {
             Pair(MarkdownTokenType.Quote, "This is a quote\n > and an inner quote")
         )
 
-        val result = tokenize(source).map { Pair(it.type, it.text) }
+        val result = tokenizeInternal(source).map { Pair(it.type, it.text) }
 
         assertEquals(expectedResult, result)
     }
@@ -185,7 +185,7 @@ class TokenizeTest {
     @Test
     fun asterisks() {
         val source = "*test*"
-        val tokens = tokenize(source)
+        val tokens = tokenizeInternal(source)
         assertEquals(3, tokens.size)
         assertEquals(MarkdownTokenType.Asterisks, tokens[0].type)
         assertEquals("*", tokens[0].text)
@@ -198,7 +198,7 @@ class TokenizeTest {
     @Test
     fun underscores() {
         val source = "_test_"
-        val tokens = tokenize(source)
+        val tokens = tokenizeInternal(source)
         assertEquals(3, tokens.size)
         assertEquals(MarkdownTokenType.Underscores, tokens[0].type)
         assertEquals("_", tokens[0].text)
@@ -211,7 +211,7 @@ class TokenizeTest {
     @Test
     fun hyphens() {
         val source = "-test-"
-        val tokens = tokenize(source)
+        val tokens = tokenizeInternal(source)
         assertEquals(3, tokens.size)
         assertEquals(MarkdownTokenType.Hyphens, tokens[0].type)
         assertEquals("-", tokens[0].text)
@@ -228,7 +228,7 @@ class TokenizeTest {
             MarkdownToken(MarkdownTokenType.CodeSpan, "println()")
         )
 
-        val actual = tokenize(input)
+        val actual = tokenizeInternal(input)
         assertEquals(expected, actual)
     }
 
@@ -239,7 +239,7 @@ class TokenizeTest {
             MarkdownToken(MarkdownTokenType.CodeSpan, "`")
         )
 
-        val actual = tokenize(input)
+        val actual = tokenizeInternal(input)
         assertEquals(expected, actual)
     }
 
@@ -250,7 +250,7 @@ class TokenizeTest {
             MarkdownToken(MarkdownTokenType.InlineLink, "[IntelliJ IDEA](https://www.jetbrains.com/idea/)")
         )
 
-        val actual = tokenize(input)
+        val actual = tokenizeInternal(input)
         assertEquals(expected, actual)
     }
 
@@ -260,10 +260,10 @@ class TokenizeTest {
         val expected = listOf(
             MarkdownToken(MarkdownTokenType.Text, "Link in "),
             MarkdownToken(MarkdownTokenType.InlineLink, "[IntelliJ IDEA](https://www.jetbrains.com/idea/)"),
-            MarkdownToken(MarkdownTokenType.Text, "text.")
+            MarkdownToken(MarkdownTokenType.Text, " text.")
         )
 
-        val actual = tokenize(input)
+        val actual = tokenizeInternal(input)
         assertEquals(expected, actual)
     }
 
@@ -277,7 +277,7 @@ class TokenizeTest {
             MarkdownToken(MarkdownTokenType.ReferenceDef, "[1]: https://example.com/nothing")
         )
 
-        val actual = tokenize(input)
+        val actual = tokenizeInternal(input)
         assertEquals(expected, actual)
     }
 
@@ -288,14 +288,14 @@ class TokenizeTest {
             MarkdownToken(MarkdownTokenType.ReferenceDef, "[1]: https://www.jetbrains.com/")
         )
 
-        val actual = tokenize(input)
+        val actual = tokenizeInternal(input)
         assertEquals(expected, actual)
     }
 
     @Test
     fun longData() {
         // just to see that it does not crash for longer data
-        tokenize(longData)
+        tokenizeInternal(longData)
     }
 
     val longData = """

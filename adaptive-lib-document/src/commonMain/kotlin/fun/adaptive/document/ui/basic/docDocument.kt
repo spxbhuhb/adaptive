@@ -9,6 +9,6 @@ import `fun`.adaptive.foundation.Adaptive
 fun docDocument(doc: DocDocument) {
     val context = DocRenderContext(doc, doc.styles.map { it.instructions }, DocumentTheme.Companion.DEFAULT)
 
-    docBlock(context, doc.children)
+    docBlock(context, doc.blocks)
 
 }

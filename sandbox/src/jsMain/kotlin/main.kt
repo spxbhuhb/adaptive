@@ -5,10 +5,13 @@
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.document.processing.DocDumpVisitor.Companion.dump
 import `fun`.adaptive.document.ui.basic.docDocument
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.groveRuntimeCommon
+import `fun`.adaptive.markdown.compiler.MarkdownCompiler
+import `fun`.adaptive.markdown.transform.MarkdownAstDumpTransform.Companion.dumpMarkdown
 import `fun`.adaptive.markdown.transform.MarkdownToDocTransform
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.ui.LibFragmentFactory
@@ -19,6 +22,7 @@ import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.snackbar.SnackbarManager
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.uiCommon
+import `fun`.adaptive.utility.debug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -56,7 +60,7 @@ fun main() {
                 maxHeight .. verticalScroll .. padding { 16.dp } .. width { 400.dp }
                 borders.friendly
 
-                docDocument(MarkdownToDocTransform(source).transform())
+                docDocument(MarkdownCompiler.compile(source))
             }
         }
     }
@@ -87,6 +91,14 @@ val source = """
       * List item 1.1
     * List item 2
     * List item 3
+    
+    1. List item 1
+    2. List item 2
+        1. List item 2.1
+        2. List item 2.2
+            1. List item 2.2.1
+            2. Some text **also bold** and _italic_ and some `code` and a [link](https://adaptive.fun).
+    3. List item 3
     
     [Standalone link](https://adaptive.fun)
     

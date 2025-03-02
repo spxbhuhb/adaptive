@@ -4,17 +4,20 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.document.processing.DocVisitor
 
 @Adat
-class DocList(
+class DocListItem(
     override val style: DocStyleId,
-    val items: List<DocListItem>,
-    val standalone: Boolean
+    val content: DocBlockElement,
+    val subList: DocList?,
+    val path: List<Int>,
+    val bullet: Boolean
 ) : DocBlockElement() {
 
     override fun <R, D> accept(visitor: DocVisitor<R, D>, data: D): R =
-        visitor.visitList(this, data)
+        visitor.visitListItem(this, data)
 
     override fun <D> acceptChildren(visitor: DocVisitor<Unit, D>, data: D) {
-        items.forEach { it.accept(visitor, data) }
+        content.accept(visitor, data)
+        subList?.accept(visitor, data)
     }
 
 }

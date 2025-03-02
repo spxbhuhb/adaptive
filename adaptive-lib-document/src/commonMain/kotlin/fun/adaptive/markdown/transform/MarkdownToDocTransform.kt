@@ -4,16 +4,17 @@ import `fun`.adaptive.document.model.*
 import `fun`.adaptive.document.ui.DocumentTheme
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
+import `fun`.adaptive.markdown.compiler.MarkdownVisitor
 import `fun`.adaptive.markdown.model.*
-import `fun`.adaptive.markdown.parse.parse
-import `fun`.adaptive.markdown.parse.tokenize
+import `fun`.adaptive.markdown.compiler.parseInternal
+import `fun`.adaptive.markdown.compiler.tokenizeInternal
 
 class MarkdownToDocTransform(
-    val ast: List<MarkdownAstEntry>,
+    val ast: List<MarkdownElement>,
     val theme: DocumentTheme = DocumentTheme.DEFAULT,
-) : MarkdownAstTransform<Int, DocBlockElement?> {
+) : MarkdownVisitor<DocBlockElement?, Int>() {
 
-    constructor(source: String) : this(parse(tokenize(source)))
+    constructor(source: String) : this(parseInternal(tokenizeInternal(source)))
 
     companion object {
         const val BOLD = 0x1
@@ -39,6 +40,8 @@ class MarkdownToDocTransform(
             return (usedStyles.size - 1)
         }
 
+    var level: Int = 0
+
     var inlineStack = mutableListOf<DocInlineElement>()
 
     fun consumeInlineStack(): List<DocInlineElement> {
@@ -51,10 +54,15 @@ class MarkdownToDocTransform(
         val elements = ast.mapNotNull { it.accept(this, 0) }
         val styles = usedStyles.mapIndexed { index, mask -> buildStyle(index, mask) }
 
-        return DocDocument(-1, elements, styles)
+        return DocDocument(- 1, elements, styles)
     }
 
-    override fun visit(header: MarkdownHeaderAstEntry, styleMask: Int): DocHeader {
+    override fun visitElement(element: MarkdownElement, data: Int): DocBlockElement? {
+        // all child specific stuff is handled by type specific visitors
+        error("Should not be called")
+    }
+
+    override fun visitHeader(header: MarkdownHeader, styleMask: Int): DocHeader {
         val mask = styleMask or (header.level shl 8)
 
         // fills the inline stack
@@ -64,7 +72,7 @@ class MarkdownToDocTransform(
     }
 
     @Suppress("SameReturnValue")
-    override fun visit(inline: MarkdownInlineAstEntry, styleMask: Int): DocBlockElement? {
+    override fun visitInline(inline: MarkdownInline, styleMask: Int): DocBlockElement? {
 
         if (inline.text.isEmpty()) return null
 
@@ -88,35 +96,58 @@ class MarkdownToDocTransform(
         return null
     }
 
-    override fun visit(paragraph: MarkdownParagraphAstEntry, styleMask: Int): DocParagraph {
+    override fun visitParagraph(paragraph: MarkdownParagraph, styleMask: Int): DocParagraph {
 
         // fills the inline stack
         paragraph.children.forEach { it.accept(this, styleMask) }
 
-        return DocParagraph(-1, consumeInlineStack(), standalone = true)
+        return DocParagraph(- 1, consumeInlineStack(), standalone = (level == 0))
     }
 
-    override fun visit(list: MarkdownListAstEntry, styleMask: Int): DocList {
+    val listPath = mutableListOf<Int>()
 
-        // fills the inline stack
-        list.children.forEach { it.accept(this, styleMask) }
+    override fun visitList(list: MarkdownList, styleMask: Int): DocBlockElement {
 
-        DocList(
-            - 1,
-            listOf(DocParagraph(-1, consumeInlineStack(), standalone = false)),
-            list.bullet,
-            list.level
-        ).also { return it }
+        level ++
+        listPath += 0
+        val pathIndex = listPath.lastIndex
+
+        val children = list.items.map {
+            listPath[pathIndex] = listPath[pathIndex] + 1
+            it.accept(this, styleMask)
+        }
+
+        listPath.removeLast()
+        level --
+
+        @Suppress("UNCHECKED_CAST") // Markdown AST should guarantee that only list items are in the list
+        return DocList(- 1, children as List<DocListItem>, level == 0)
     }
 
-    override fun visit(codeFence: MarkdownCodeFenceAstEntry, styleMask: Int): DocCodeFence? =
-        DocCodeFence(-1, codeFence.content, codeFence.language)
+    override fun visitListItem(listItem: MarkdownListItem, styleMask: Int): DocBlockElement? {
+        return DocListItem(
+            -1,
+            listItem.content.accept(this, styleMask) as DocBlockElement,
+            listItem.subList?.accept(this, styleMask) as? DocList,
+            listPath.toList(),
+            listItem.bullet
+        )
+    }
 
-    override fun visit(quote: MarkdownQuoteAstEntry, styleMask: Int): DocQuote =
-        DocQuote(-1, quote.children.mapNotNull { it.accept(this, styleMask) })
+    override fun visitCodeFence(codeFence: MarkdownCodeFence, styleMask: Int): DocCodeFence? =
+        DocCodeFence(- 1, codeFence.content, codeFence.language)
 
-    override fun visit(horizontalRule: MarkdownHorizontalRuleAstEntry, styleMask: Int): DocRule =
+    override fun visitQuote(quote: MarkdownQuote, styleMask: Int): DocQuote =
+        DocQuote(- 1, mapChildren(quote.children, styleMask))
+
+    override fun visitHorizontalRule(horizontalRule: MarkdownHorizontalRule, styleMask: Int): DocRule =
         DocRule()
+
+    fun mapChildren(children: List<MarkdownElement>, styleMask: Int): List<DocBlockElement> =
+        children
+            .also { level ++ }
+            .mapNotNull { it.accept(this, styleMask) }
+            .also { level -- }
 
     fun buildStyle(index: Int, mask: Int): DocStyle {
 
@@ -140,4 +171,5 @@ class MarkdownToDocTransform(
 
         return DocStyle(index, AdaptiveInstructionGroup(out))
     }
+
 }

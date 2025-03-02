@@ -20,7 +20,7 @@ fun docParagraph(context: DocRenderContext, element: DocParagraph): AdaptiveFrag
     paragraph(
         Paragraph(
             context.styles,
-            context.paragraphItems(element.children)
+            context.paragraphItems(element.content)
         )
     ) .. style
 
