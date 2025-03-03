@@ -7,6 +7,8 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.height
+import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.codefence.codeFence
 import `fun`.adaptive.ui.instruction.dp
@@ -15,11 +17,11 @@ import `fun`.adaptive.ui.instruction.dp
 fun codeFenceRecipe(): AdaptiveFragment {
 
     column {
-        gap { 16.dp}
+        gap { 16.dp } .. maxSize .. verticalScroll
 
         example("simple code fence") { codeFence(code) .. width { 400.dp } }
 
-        example("scrolling code fence") { codeFence(longCode) .. width { 400.dp } .. height { 200.dp }}
+        example("scrolling code fence") { codeFence(longCode) .. width { 400.dp } .. height { 200.dp } }
     }
 
     return fragment()

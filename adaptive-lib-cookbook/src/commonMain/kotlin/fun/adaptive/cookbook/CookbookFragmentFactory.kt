@@ -1,6 +1,7 @@
 package `fun`.adaptive.cookbook
 
 import `fun`.adaptive.cookbook.recipe.demo.goodmorning.goodMorning
+import `fun`.adaptive.cookbook.recipe.demo.markdown.markdownDemoRecipe
 import `fun`.adaptive.cookbook.recipe.ui.button.buttonRecipe
 import `fun`.adaptive.cookbook.recipe.ui.canvas.canvasRecipe
 import `fun`.adaptive.cookbook.recipe.ui.checkbox.checkboxRecipe
@@ -17,13 +18,14 @@ import `fun`.adaptive.cookbook.recipe.ui.popup.popupRecipe
 import `fun`.adaptive.cookbook.recipe.ui.select.selectRecipe
 import `fun`.adaptive.cookbook.recipe.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.cookbook.recipe.ui.snackbar.snackbarRecipe
-import `fun`.adaptive.cookbook.recipe.ui.splitpane.splitPaneRecipe
+import `fun`.adaptive.cookbook.recipe.ui.layout.splitpane.splitPaneRecipe
 import `fun`.adaptive.cookbook.recipe.ui.svg.svgRecipe
 import `fun`.adaptive.cookbook.recipe.ui.tab.tabRecipe
 import `fun`.adaptive.cookbook.recipe.ui.text.paragraphRecipe
 import `fun`.adaptive.cookbook.recipe.ui.text.textRecipe
 import `fun`.adaptive.cookbook.recipe.ui.tree.treeRecipe
-import `fun`.adaptive.cookbook.recipe.ui.workspace.workspaceRecipe
+import `fun`.adaptive.cookbook.recipe.ui.layout.wrap.wrapRecipe
+import `fun`.adaptive.cookbook.recipe.ui.layout.workspace.workspaceRecipe
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 
 object CookbookFragmentFactory : FoundationFragmentFactory() {
@@ -46,6 +48,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:form", ::formRecipe)
         add("cookbook:recipe:grid", ::gridRecipe)
         add("cookbook:recipe:icon", ::iconRecipe)
+        add("cookbook:recipe:markdown:demo", ::markdownDemoRecipe)
         add("cookbook:recipe:paragraph", ::paragraphRecipe)
         add("cookbook:recipe:popup", ::popupRecipe)
         add("cookbook:recipe:select", ::selectRecipe)
@@ -57,5 +60,6 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:text", ::textRecipe)
         add("cookbook:recipe:tree", ::treeRecipe)
         add("cookbook:recipe:workspace", ::workspaceRecipe)
+        add("cookbook:recipe:wrap", ::wrapRecipe)
     }
 }

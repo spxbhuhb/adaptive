@@ -9,8 +9,10 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.flowBox
 import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.button.api.dangerButton
 import `fun`.adaptive.ui.instruction.dp
@@ -19,9 +21,9 @@ import `fun`.adaptive.ui.instruction.dp
 fun buttonRecipe() : AdaptiveFragment {
     var counter = 0
 
-    var a = false
-
     column {
+        maxSize .. verticalScroll
+
         text("Counter: $counter")
         flowBox {
             gap { 16.dp }

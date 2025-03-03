@@ -10,6 +10,8 @@ import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.builtin.account_circle
 import `fun`.adaptive.ui.builtin.settings
 import `fun`.adaptive.ui.instruction.dp
@@ -21,7 +23,7 @@ import kotlin.time.Duration.Companion.seconds
 @Adaptive
 fun svgRecipe(): AdaptiveFragment {
     grid {
-        gap { 16.dp } .. maxWidth
+        gap { 16.dp } .. maxSize .. verticalScroll
         colTemplate(64.dp, 1.fr) .. rowTemplate(32.dp repeat 3)
 
         svg(Graphics.account_circle)

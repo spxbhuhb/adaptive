@@ -7,16 +7,13 @@ package `fun`.adaptive.ui.fragment.layout
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
+import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.foundation.throwAway
 import `fun`.adaptive.foundation.throwChildrenAway
 import `fun`.adaptive.ui.AbstractAuiAdapter
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.onLeave
-import `fun`.adaptive.ui.api.onMove
-import `fun`.adaptive.ui.api.onPrimaryDown
-import `fun`.adaptive.ui.api.onPrimaryUp
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.OnMove
 import `fun`.adaptive.ui.instruction.layout.Orientation
@@ -28,7 +25,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * The split pane has trhee children configurations:
+ * The split pane has three children configurations:
  *
  * No child is shown.
  *
@@ -70,6 +67,9 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
     val onChange get() = get<((Double) -> Unit)?>(ON_CHANGE)
 
     var currentVisibility = SplitVisibility.None
+
+    val wrap
+        get() = configuration.method.let { it == SplitMethod.WrapFirst || it == SplitMethod.WrapSecond }
 
     // When moving, the primary down happens somewhere inside the divider.
     // We have to correct moves calculations with this amount to give
@@ -120,7 +120,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         when (fragment.declarationIndex) {
             P1_BOX -> {
                 if (haveToPatchConf(closureMask, 1)) {
-                    fragment.setStateVariable(0, paneInstructions)
+                    fragment.setStateVariable(0, paneInstructions + Name("box-1"))
                 }
                 if (haveToPatchConf(closureMask, PANE1_BUILDER)) {
                     fragment.setStateVariable(1, BoundFragmentFactory(this, P1_ANY, null))
@@ -134,8 +134,8 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
             }
 
             DI_BOX -> {
-                if (haveToPatchConf(closureMask, 1)) {
-                    fragment.setStateVariable(0, dividerInstructions)
+                if (! wrap && haveToPatchConf(closureMask, 1)) {
+                    fragment.setStateVariable(0, dividerInstructions + Name("div"))
                 }
                 if (haveToPatchConf(closureMask, DIVIDER_BUILDER)) {
                     fragment.setStateVariable(1, BoundFragmentFactory(this, DI_ANY, null))
@@ -150,7 +150,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
 
             P2_BOX -> {
                 if (haveToPatchConf(closureMask, 1)) {
-                    fragment.setStateVariable(0, paneInstructions)
+                    fragment.setStateVariable(0, paneInstructions + Name("box-2"))
                 }
                 if (haveToPatchConf(closureMask, PANE2_BUILDER)) {
                     fragment.setStateVariable(1, BoundFragmentFactory(this, P2_ANY, null))
@@ -171,7 +171,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         haveToPatch(closureMask, (1 shl d1) or (1 shl CONFIGURATION))
 
     override fun genPatchInternal(): Boolean {
-        if (instructions.firstInstanceOfOrNull<OnMove>() == null) {
+        if (! wrap && instructions.firstInstanceOfOrNull<OnMove>() == null) {
             setStateVariable(0, instructions + splitPaneInstructions)
         }
         return super.genPatchInternal()
@@ -287,10 +287,8 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
     }
 
     override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
-        // Split pane always occupies the proposed space, there is no point in using a split pane
-        // when the space is not fixed.
-        // TODO do we have to force bounds in both directions in SplitPane?
-        check(proposedWidth != unbound && proposedHeight != unbound)
+
+        // this is a general, bound case, updated when method is WrapFirst or WrapSecond
         renderData.finalWidth = proposedWidth
         renderData.finalHeight = proposedHeight
 
@@ -318,11 +316,13 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         val dividerRawSize = c.dividerEffectiveSize.toRawValue(uiAdapter)
         val horizontal = (c.orientation == Orientation.Horizontal)
 
-        val availableWidth = if (horizontal) fullAvailableWidth - dividerRawSize else fullAvailableWidth
-        val availableHeight = if (horizontal) fullAvailableHeight else fullAvailableHeight - dividerRawSize
+        var availableWidth = if (horizontal) fullAvailableWidth - dividerRawSize else fullAvailableWidth
+        var availableHeight = if (horizontal) fullAvailableHeight else fullAvailableHeight - dividerRawSize
 
         val pane1Width: Double
         val pane1Height: Double
+
+        val rawSplit = uiAdapter.toPx(c.split.dp)
 
         when (c.method) {
             SplitMethod.Proportional -> {
@@ -336,26 +336,67 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
             }
 
             SplitMethod.FixFirst -> {
-                val px = uiAdapter.toPx(c.split.dp)
                 if (horizontal) {
-                    pane1Width = px
+                    pane1Width = rawSplit
                     pane1Height = availableHeight
                 } else {
                     pane1Width = availableWidth
-                    pane1Height = px
+                    pane1Height = rawSplit
                 }
             }
 
             SplitMethod.FixSecond -> {
-                val px = uiAdapter.toPx(c.split.dp)
                 if (horizontal) {
-                    pane1Width = availableWidth - px
+                    pane1Width = availableWidth - rawSplit
                     pane1Height = availableHeight
                 } else {
                     pane1Width = availableWidth
-                    pane1Height = availableHeight - px
+                    pane1Height = availableHeight - rawSplit
                 }
             }
+
+            SplitMethod.WrapFirst -> {
+                // calculate the size of the first pane with:
+                // available size in main direction - split
+                // proposed size in the other direction (might be unbound)
+                if (horizontal) {
+                    pane1.computeLayout(availableWidth - rawSplit, availableHeight)
+                } else {
+                    pane1.computeLayout(availableWidth, availableHeight - rawSplit)
+                }
+
+                pane1Width = pane1.renderData.finalWidth
+                pane1Height = pane1.renderData.finalHeight
+
+                if (horizontal) {
+                    availableHeight = pane1Height + renderData.surroundingVertical
+                    renderData.finalHeight = availableHeight
+                } else {
+                    availableWidth = pane1Width + renderData.surroundingHorizontal
+                    renderData.finalWidth = availableWidth
+                }
+            }
+
+            SplitMethod.WrapSecond -> {
+                if (horizontal) {
+                    pane2.computeLayout(availableWidth - rawSplit, proposedHeight)
+                } else {
+                    pane2.computeLayout(availableWidth, availableHeight - rawSplit)
+                }
+
+                if (horizontal) {
+                    availableHeight = pane2.renderData.finalHeight + renderData.surroundingVertical
+                    renderData.finalHeight = availableHeight
+                    pane1Width = availableWidth - pane2.renderData.finalWidth
+                    pane1Height = availableHeight
+               } else {
+                    availableWidth = pane2.renderData.finalWidth + renderData.surroundingHorizontal
+                    renderData.finalWidth = availableWidth
+                    pane1Width = availableWidth
+                    pane1Height = availableHeight - pane2.renderData.finalHeight
+                }
+            }
+
         }
 
         if (horizontal) {
@@ -365,49 +406,55 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         }
 
         if (horizontal) {
-            pane1.computeLayout(pane1Width, availableHeight)
+            if (c.method != SplitMethod.WrapFirst) {
+                pane1.computeLayout(pane1Width, availableHeight)
+            }
+
             divider.computeLayout(c.dividerOverlaySize.pixelValue, availableHeight)
-            pane2.computeLayout(availableWidth - pane1Width, availableHeight)
+
+            if (c.method != SplitMethod.WrapSecond) {
+                pane2.computeLayout(availableWidth - pane1Width, availableHeight)
+            }
         } else {
-            pane1.computeLayout(availableWidth, pane1Height)
+            if (c.method != SplitMethod.WrapFirst) {
+                pane1.computeLayout(availableWidth, pane1Height)
+            }
+
             divider.computeLayout(availableWidth, c.dividerOverlaySize.pixelValue)
-            pane2.computeLayout(availableWidth, availableHeight - pane1Height)
+
+            if (c.method != SplitMethod.WrapSecond) {
+                pane2.computeLayout(availableWidth, availableHeight - pane1Height)
+            }
         }
 
         val dividerOffset = (c.dividerOverlaySize - c.dividerEffectiveSize).toPx(uiAdapter) / 2
 
-        if (horizontal) {
-            pane1.placeLayout(top, start)
-            divider.placeLayout(top, start + pane1Width - dividerOffset)
-            pane2.placeLayout(top, start + dividerRawSize + pane1Width)
-        } else {
-            pane1.placeLayout(top, start)
-            divider.placeLayout(top + pane1Height - dividerOffset, start)
-            pane2.placeLayout(top + pane1Height + dividerRawSize, start)
-        }
-    }
+        val itemsTotalWidth : Double
+        val itemsTotalHeight : Double
 
-//    override fun updateLayout(updateId: Long, item: AbstractAuiFragment<*>?) {
-//        if (item == null) {
-//            super.updateLayout(updateId, item)
-//        } else {
-//            updateItemLayout(updateId, item)
-//        }
-//    }
-//
-//    private fun updateItemLayout(updateId: Long, item: AbstractAuiFragment<*>) {
-//        val data = this.renderData
-//        val container = data.container
-//
-//        val innerWidth = data.innerWidth !!
-//        val innerHeight = data.innerHeight !!
-//
-//        item.computeLayout(innerWidth, innerHeight)
-//
-//        item.placeLayout(innerTop + data.surroundingTop, innerLeft + data.surroundingStart)
-//
-//        item.updateBatchId = updateId
-//    }
+        if (horizontal) {
+            val pane1FinalWidth = pane1.renderData.finalWidth
+
+            pane1.placeLayout(top, start)
+            divider.placeLayout(top, start + pane1FinalWidth - dividerOffset)
+            pane2.placeLayout(top, start + dividerRawSize + pane1FinalWidth)
+
+            itemsTotalWidth = pane1.renderData.finalWidth + dividerRawSize + pane2.renderData.finalWidth
+            itemsTotalHeight = max(pane1.renderData.finalHeight, pane2.renderData.finalHeight)
+        } else {
+            val pane1FinalHeight = pane1.renderData.finalHeight
+
+            pane1.placeLayout(top, start)
+            divider.placeLayout(top + pane1FinalHeight - dividerOffset, start)
+            pane2.placeLayout(top + pane1FinalHeight + dividerRawSize, start)
+
+            itemsTotalWidth = max(pane1.renderData.finalWidth, pane2.renderData.finalWidth)
+            itemsTotalHeight = pane1.renderData.finalHeight + dividerRawSize + pane2.renderData.finalHeight
+        }
+
+
+        computeFinal(proposedWidth, itemsTotalWidth, proposedHeight, itemsTotalHeight)
+    }
 
     fun handleMoveStart(position: Position, x: Double, y: Double) {
 
@@ -425,6 +472,9 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
     fun handleMove(x: Double, y: Double) {
         if (startPosition === Position.NaP) return
 
+        val c = configuration
+        if (c.method == SplitMethod.WrapFirst || c.method == SplitMethod.WrapSecond) return
+
         // event position includes all surroundings: margin, border, padding
         // we have to ignore these in the calculations to set sizes properly
         // these effective values are cleared of surrounding data
@@ -434,7 +484,6 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         val effectiveWidth = renderData.finalWidth - renderData.surroundingHorizontal
         val effectiveHeight = renderData.finalHeight - renderData.surroundingVertical
 
-        val c = configuration
         val horizontal = (c.orientation == Orientation.Horizontal)
 
         val value: Double
@@ -466,6 +515,8 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
                     value = dividerStartEdge / (effectiveHeight - dividerSize)
                 }
             }
+
+            else -> return // this is handled above, but the compiler complains
         }
 
         val effectiveSize = (if (horizontal) effectiveWidth else effectiveHeight) - dividerSize

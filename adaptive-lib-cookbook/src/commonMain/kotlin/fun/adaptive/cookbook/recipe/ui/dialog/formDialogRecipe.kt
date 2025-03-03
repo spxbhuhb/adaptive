@@ -5,9 +5,11 @@ import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.onClose
 import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.builtin.check
 import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.dialog.api.formDialog

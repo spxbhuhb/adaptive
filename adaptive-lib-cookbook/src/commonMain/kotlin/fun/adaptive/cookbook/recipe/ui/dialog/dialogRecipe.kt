@@ -31,7 +31,7 @@ import `fun`.adaptive.ui.theme.textColors
 fun dialogRecipe() : AdaptiveFragment {
 
     column {
-        gap { 16.dp }
+        gap { 16.dp } 
 
         dialogBasic()
 

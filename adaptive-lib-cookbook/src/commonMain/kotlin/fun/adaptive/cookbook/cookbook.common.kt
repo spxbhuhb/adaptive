@@ -1,6 +1,6 @@
 package `fun`.adaptive.cookbook
 
-import `fun`.adaptive.cookbook.recipe.ui.workspace.WorkspaceRecipePaneFragmentFactory
+import `fun`.adaptive.cookbook.recipe.ui.layout.workspace.WorkspaceRecipePaneFragmentFactory
 import `fun`.adaptive.cookbook.support.E
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.resource.graphics.Graphics

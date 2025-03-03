@@ -58,6 +58,7 @@ import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.instruction.layout.AlignItems
 import `fun`.adaptive.ui.instruction.layout.Height
@@ -78,7 +79,7 @@ fun mobileExample(@Adaptive body: () -> Unit) {
     val height = 812 + borderWidth // 812 // pixel: 808 - 24 - 24 = 760
 
     column {
-        AlignItems.Companion.start
+        AlignItems.start .. maxSize .. verticalScroll
         gap(10.dp)
 
         box {

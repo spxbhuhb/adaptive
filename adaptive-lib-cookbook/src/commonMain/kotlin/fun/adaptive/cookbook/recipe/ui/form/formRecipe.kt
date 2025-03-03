@@ -12,9 +12,11 @@ import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.dp
@@ -22,6 +24,8 @@ import `fun`.adaptive.ui.instruction.dp
 @Adaptive
 fun formRecipe(): AdaptiveFragment {
     column {
+        maxSize .. verticalScroll
+
         adatFormRecipe()
     }
     return fragment()

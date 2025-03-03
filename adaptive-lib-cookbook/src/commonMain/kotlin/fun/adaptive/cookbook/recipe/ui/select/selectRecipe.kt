@@ -6,15 +6,19 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.inputPlaceholder
+import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.toText
+import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.select.select
 
 @Adaptive
 fun selectRecipe(): AdaptiveFragment {
     column {
+        maxSize .. verticalScroll
+
         basicSelect()
         toTextSelect()
         singleItem()

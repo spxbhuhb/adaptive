@@ -13,11 +13,12 @@ import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.icon.primaryIconTheme
 import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.theme.borders
 
 @Adaptive
 fun iconRecipe(): AdaptiveFragment {
     column {
+        maxSize .. verticalScroll
+
         gap { 16.dp }
 
         example("Icon") {

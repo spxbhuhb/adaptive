@@ -23,10 +23,22 @@ abstract class AbstractBox<RT, CRT : RT>(
         val data = renderData
         val container = renderData.container
 
+        val instructedWidth = renderData.layout?.instructedWidth
+        val instructedHeight = renderData.layout?.instructedHeight
+
         // ----  calculate height and width proposed to items  ------------------------
 
-        val proposedItemWidth = (data.layout?.instructedWidth ?: proposedWidth) - data.surroundingHorizontal
-        val proposedItemHeight = (data.layout?.instructedHeight ?: proposedHeight) - data.surroundingVertical
+        var proposedItemWidth = if (renderData.container?.horizontalScroll == true) {
+            Double.POSITIVE_INFINITY
+        } else {
+            (instructedWidth ?: proposedWidth) - data.surroundingHorizontal
+        }
+
+        var proposedItemHeight = if (renderData.container?.verticalScroll == true) {
+            Double.POSITIVE_INFINITY
+        } else {
+            (instructedHeight ?: proposedHeight) - data.surroundingVertical
+        }
 
         // ----  calculate layout of all items  ---------------------------------------
 

@@ -12,11 +12,13 @@ import `fun`.adaptive.ui.api.cornerRadius
 import `fun`.adaptive.ui.api.flowBox
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.textColors
@@ -26,7 +28,7 @@ import kotlin.time.Duration.Companion.seconds
 @Adaptive
 fun textRecipe(): AdaptiveFragment {
     column {
-        gap { 16.dp } .. maxWidth
+        gap { 16.dp } .. maxSize .. verticalScroll
 
         text("default")
         text("with color") .. textColors.onSurfaceFriendly

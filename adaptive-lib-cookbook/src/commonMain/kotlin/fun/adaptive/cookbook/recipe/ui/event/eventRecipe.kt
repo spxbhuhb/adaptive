@@ -17,6 +17,7 @@ import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.borders
@@ -28,7 +29,7 @@ fun eventRecipe(): AdaptiveFragment {
     var moveMessages = listOf<String>()
 
     grid {
-        maxSize .. rowTemplate(200.dp, 1.fr)
+        maxSize .. verticalScroll .. rowTemplate(200.dp, 1.fr)
 
         box {
             margin { 16.dp } .. borders.outline .. size(400.dp, 200.dp)

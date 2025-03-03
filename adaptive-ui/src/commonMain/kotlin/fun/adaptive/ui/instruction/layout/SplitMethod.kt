@@ -14,5 +14,16 @@ enum class SplitMethod {
     /**
      * The available space is distributed between the panes according to the split value.
      */
-    Proportional
+    Proportional,
+
+    /**
+     * The available space is distributed as if the first pane would wrap the second.
+     */
+    WrapFirst,
+
+    /**
+     * The available space is distributed as if the second pane would wrap the first.
+     */
+    WrapSecond
+
 }

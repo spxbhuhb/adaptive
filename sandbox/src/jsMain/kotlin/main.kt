@@ -5,14 +5,11 @@
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
-import `fun`.adaptive.document.processing.DocDumpVisitor.Companion.dump
 import `fun`.adaptive.document.ui.basic.docDocument
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.groveRuntimeCommon
 import `fun`.adaptive.markdown.compiler.MarkdownCompiler
-import `fun`.adaptive.markdown.transform.MarkdownAstDumpTransform.Companion.dumpMarkdown
-import `fun`.adaptive.markdown.transform.MarkdownToDocTransform
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.api.*
@@ -22,7 +19,6 @@ import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.snackbar.SnackbarManager
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.uiCommon
-import `fun`.adaptive.utility.debug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -57,7 +53,7 @@ fun main() {
             adapter.groveRuntimeCommon()
 
             column {
-                maxHeight .. verticalScroll .. padding { 16.dp } .. width { 400.dp }
+                maxHeight .. verticalScroll .. padding { 16.dp } .. width { 400.dp } .. gap { 16.dp }
                 borders.friendly
 
                 docDocument(MarkdownCompiler.compile(source))
@@ -87,6 +83,8 @@ val source = """
     sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
     est laborum.
     
+    ---
+    
     * List item 1
       * List item 1.1
     * List item 2
@@ -107,4 +105,14 @@ val source = """
         println("Hello World!")
     }
     ```
+    
+    > One line quote.
+    
+    > Two lines of quote.
+    > Second line.
+    
+    > Quote levels.
+    > > Double quote.
+    > > > Triple quote.
+    
 """.trimIndent()

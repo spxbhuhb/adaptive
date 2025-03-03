@@ -34,7 +34,8 @@ val root = CookbookRecipeSet(
     listOf(
         set(
             "Demos",
-            CookbookRecipe("Good Morning", "cookbook:recipe:goodmorning")
+            CookbookRecipe("Good Morning", "cookbook:recipe:goodmorning"),
+            CookbookRecipe("Markdown", "cookbook:recipe:markdown:demo"),
         ),
 
         set(
@@ -43,7 +44,8 @@ val root = CookbookRecipeSet(
             CookbookRecipe("Grid", "cookbook:recipe:grid"),
             CookbookRecipe("Split Pane", "cookbook:recipe:splitpane"),
             CookbookRecipe("Tab", "cookbook:recipe:tab"),
-            CookbookRecipe("Workspace", "cookbook:recipe:workspace")
+            CookbookRecipe("Workspace", "cookbook:recipe:workspace"),
+            CookbookRecipe("Wrap", "cookbook:recipe:wrap")
         ),
 
         set(

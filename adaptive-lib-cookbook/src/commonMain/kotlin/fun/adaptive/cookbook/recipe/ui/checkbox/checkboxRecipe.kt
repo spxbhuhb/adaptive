@@ -6,8 +6,10 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.checkbox.api.checkbox
 import `fun`.adaptive.ui.instruction.dp
 
@@ -18,7 +20,7 @@ fun checkboxRecipe() : AdaptiveFragment {
     var v2 = false
 
     column {
-        gap { 16.dp }
+        gap { 16.dp } .. maxSize .. verticalScroll
 
         example("true initial value") {
             row {

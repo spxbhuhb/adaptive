@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.recipe.ui.splitpane
+package `fun`.adaptive.cookbook.recipe.ui.layout.splitpane
 
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.foundation.Adaptive

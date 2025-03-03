@@ -5,26 +5,14 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.AbstractAuiFragment
-import `fun`.adaptive.ui.api.alignItems
-import `fun`.adaptive.ui.api.colTemplate
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.gap
-import `fun`.adaptive.ui.api.grid
-import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.repeat
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.rowTemplate
-import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.utility.localDate
 import `fun`.adaptive.utility.localDateTime
 import `fun`.adaptive.utility.localTime
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalTime
 
 @Adaptive
 fun editorRecipe(): AdaptiveFragment {
@@ -33,6 +21,8 @@ fun editorRecipe(): AdaptiveFragment {
     val fragment = fragment()
 
     column {
+        maxSize .. verticalScroll
+
         row {
             gap(16.dp) .. alignItems.startCenter
 

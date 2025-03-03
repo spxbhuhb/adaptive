@@ -7,9 +7,11 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.noSelect
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.snackbar.fail
@@ -31,6 +33,8 @@ fun snackbarRecipe(): AdaptiveFragment {
 //    )
 
     box {
+        maxSize .. verticalScroll
+
         column {
             noSelect
             gap { 16.dp }

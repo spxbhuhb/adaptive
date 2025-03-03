@@ -17,7 +17,7 @@ import `fun`.adaptive.ui.theme.textColors
 @Adaptive
 fun paragraphRecipe(): AdaptiveFragment {
     column {
-        gap { 16.dp } .. maxWidth
+        gap { 16.dp } .. maxSize .. verticalScroll
 
         example("simple paragraph") { paragraph(p) }
 

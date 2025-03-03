@@ -11,8 +11,11 @@ import `fun`.adaptive.graphics.canvas.api.fillText
 import `fun`.adaptive.graphics.canvas.api.line
 import `fun`.adaptive.graphics.canvas.api.stroke
 import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.flowBox
+import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.size
+import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.borders
@@ -24,9 +27,12 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @Adaptive
 fun canvasRecipe(): AdaptiveFragment {
-    flowBox {
-        basicCanvas()
-        networkCanvas()
+    column {
+        maxSize .. verticalScroll
+        flowBox {
+            basicCanvas()
+            networkCanvas()
+        }
     }
 
     return fragment()

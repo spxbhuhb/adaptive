@@ -64,8 +64,10 @@ class DocumentTheme {
 
     val rule = instructionsOf(
         maxWidth,
-        height { 2.dp },
-        backgrounds.lightOverlay
+        height { 14.dp },
+        backgrounds.friendly,
+        marginBottom { 12.dp },
+        cornerRadius { 1.dp }
     )
 
     val bulletListIndent = 12.dp
@@ -103,6 +105,8 @@ class DocumentTheme {
 
     fun listPath(item: DocListItem): String =
         item.path.joinToString(".") + "."
+
+    val quoteDecorationWidth = 4.dp
 
     companion object {
         val DEFAULT = DocumentTheme()
