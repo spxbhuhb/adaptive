@@ -3,6 +3,8 @@
  */
 package `fun`.adaptive.utility
 
+import kotlinx.datetime.Clock.System.now
+import kotlinx.datetime.Instant
 import kotlin.experimental.ExperimentalObjCName
 import kotlin.native.ObjCName
 
@@ -46,6 +48,32 @@ class UUID<T> : Comparable<UUID<T>> {
             }
         }
 
+        /**
+         * Create a Version 7 UUID with the current time and random bytes from a
+         * secure random number generator. See [secureRandom].
+         */
+        fun <T> uuid7(): UUID<T> =
+            uuid7(now(), secureRandom(3))
+
+        /**
+         * Create a Version 7 UUID with the given timestamp and random part.
+         */
+        fun <T> uuid7(timestamp: Instant, random: IntArray): UUID<T> {
+            val unixTimestamp = timestamp.epochSeconds * 1_000 + timestamp.nanosecondsOfSecond / 1_000_000
+
+            val ms = (random[0].toLong() shl 32) or random[1].toLong()
+            val ls = random[2].toLong()
+
+            // High 64 bits: Timestamp (48 bits) + Version (4 bits) + Random (12 bits)
+            val msb = (unixTimestamp and 0xFFFFFFFFFFFFL shl 16) or
+                (0x7L shl 12) or // Version 7
+                (ms and 0xFFF)
+
+            // Low 64 bits: Variant (2 bits) + 62-bit Random
+            val lsb = (0x2L shl 62) or (ls and 0x3FFFFFFFFFFFFFFFL)
+
+            return UUID(msb, lsb)
+        }
     }
 
     val msbm: Int
