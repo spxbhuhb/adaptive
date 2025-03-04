@@ -1,5 +1,7 @@
 package `fun`.adaptive.sandbox
 
-fun main() {
+import `fun`.adaptive.cookbook.recipe.writeformat.protobuf.appendRecipe
 
+fun main() {
+    appendRecipe()
 }

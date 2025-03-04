@@ -41,6 +41,13 @@ fun Path.write(bytes: ByteArray, append: Boolean = false, overwrite: Boolean = f
 }
 
 /**
+ * Append [bytes] to the file with path `this`.
+ */
+fun Path.append(bytes: ByteArray) {
+    write(bytes, append = true, overwrite = false, useTemporaryFile = false)
+}
+
+/**
  * Encode [value] with [wireFormatProvider] into a byte array and write it to `this`.
  */
 fun <A : AdatClass> save(path: Path, value: A, wireFormatProvider: WireFormatProvider, overwrite: Boolean = false, useTemporaryFile: Boolean = true) {

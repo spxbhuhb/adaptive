@@ -17,7 +17,7 @@ class ByteArrayQueueTest {
         val tempPath = clearedTestPath()
         val queue = ByteArrayQueue(tempPath, chunkSizeLimit, barrier)
         queue.initialize()
-        assertTrue(queue.initialized, "Queue should be initialized")
+        assertTrue(queue.isInitialized, "Queue should be initialized")
     }
 
     @Test
@@ -64,7 +64,7 @@ class ByteArrayQueueTest {
         val data = "Test Position".encodeToByteArray()
         queue.enqueue(data)
 
-        val chunkName = queue.chunkNames.first()
+        val chunkName = queue.chunkIds.first()
         queue.position(chunkName, 0L)
         val dequeued = queue.dequeue()
 
@@ -82,7 +82,7 @@ class ByteArrayQueueTest {
         queue.enqueue(largeData)
         queue.enqueue(largeData)
 
-        assertTrue(queue.chunkNames.size > 1, "Queue should roll to a new chunk when size limit is exceeded")
+        assertTrue(queue.chunkIds.size > 1, "Queue should roll to a new chunk when size limit is exceeded")
     }
 
     @Test

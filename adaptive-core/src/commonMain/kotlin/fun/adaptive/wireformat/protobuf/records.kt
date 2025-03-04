@@ -7,11 +7,11 @@ package `fun`.adaptive.wireformat.protobuf
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.toUuid
 
-interface ProtoRecord {
+abstract class ProtoRecord {
 
-    val fieldNumber: Int
-    val type: Int
-    val value: ULong
+    abstract val fieldNumber: Int
+    abstract val type: Int
+    abstract val value: ULong
 
     fun string(): String {
         check(this is LenProtoRecord) { "not a LEN record, fieldNumber=$fieldNumber" }
@@ -28,12 +28,16 @@ interface ProtoRecord {
         return byteArray.copyOfRange(offset, offset + length)
     }
 
+    open fun decoder(): ProtoWireFormatDecoder {
+        throw NotImplementedError()
+    }
+
 }
 
 class VarintProtoRecord(
     override val fieldNumber: Int,
     override val value: ULong
-) : ProtoRecord {
+) : ProtoRecord() {
 
     override val type: Int
         get() = VARINT
@@ -43,7 +47,7 @@ class VarintProtoRecord(
 class I64ProtoRecord(
     override val fieldNumber: Int,
     override val value: ULong
-) : ProtoRecord {
+) : ProtoRecord() {
     override val type: Int
         get() = I64
 }
@@ -53,20 +57,20 @@ class LenProtoRecord(
     val byteArray: ByteArray,
     val offset: Int,
     val length: Int
-) : ProtoRecord {
+) : ProtoRecord() {
     override val type: Int
         get() = LEN
 
     override val value: ULong
         get() = throw IllegalStateException("long value is not available for LEN record")
 
-    fun decoder() = ProtoWireFormatDecoder(byteArray, offset, length)
+    override fun decoder() = ProtoWireFormatDecoder(byteArray, offset, length)
 }
 
 class I32ProtoRecord(
     override val fieldNumber: Int,
     override val value: ULong
-) : ProtoRecord {
+) : ProtoRecord() {
     override val type: Int
         get() = I32
 }

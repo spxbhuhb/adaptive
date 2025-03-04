@@ -23,11 +23,21 @@ fun <T> ByteArray.toUuid(offset: Int = 0): UUID<T> =
  * code quality. While it might be annoying to specify the types in all scenarios,
  * enforcing the proper types leads to well-defined and deterministic code.
  *
- * If you want to use it "freely" choose one of the following options:
  *
- * 1. use `External` type for UUIDs that represent external entities
- * 2. use `Interim` type for UUDSs that exists for a short time
- * 3. create an object that represents the entity type you want to use
+ * ```kotlin
+ * val uuid1 = uuid4<SomeType>()
+ * val uuid2 = uuid7<SomeType>()
+ * val uuid3 = monotonicUuid7(uuid2)
+ * ```
+ *
+ * `monotonicUuid7` guarantees that the timestamp in the created UUID is larger than the timestamp in the passed uuid.
+ *
+ *  `cast` can be used to easily cast a uuid to another type:
+ *
+ * ```kotlin
+ * val uuid1 = uuid4<SomeType>()
+ * val uuid2 : UUID<Any> = uuid1.cast()
+ * ```
  */
 class UUID<T> : Comparable<UUID<T>> {
 
@@ -47,6 +57,8 @@ class UUID<T> : Comparable<UUID<T>> {
                 null
             }
         }
+
+        fun <T> uuid4() = UUID<T>()
 
         /**
          * Create a Version 7 UUID with the current time and random bytes from a
@@ -73,6 +85,28 @@ class UUID<T> : Comparable<UUID<T>> {
             val lsb = (0x2L shl 62) or (ls and 0x3FFFFFFFFFFFFFFFL)
 
             return UUID(msb, lsb)
+        }
+
+        /**
+         * Create a new Version 7 UUID that is guaranteed to be larger than [lastId].
+         * If the timestamp in [lastId] is larger than the current time, the returning
+         * UUID will contain a timestamp one millisecond larger than in [lastId].
+         *
+         * The random part is fully random in all cases.
+         */
+        fun <T> monotonicUuid7(lastId: UUID<T>?): UUID<T> {
+
+            val newUuid = uuid7<T>(now(), secureRandom(3))
+
+            if (lastId == null || newUuid > lastId) {
+                return newUuid
+            }
+
+            val lastTimestamp = lastId.msb ushr 16
+
+            val adjustedMsb = ((lastTimestamp + 1) shl 16) or newUuid.msb and 0xFFFF
+
+            return UUID<T>(adjustedMsb, newUuid.lsb)
         }
     }
 
@@ -161,6 +195,9 @@ class UUID<T> : Comparable<UUID<T>> {
         return chars.concatToString()
     }
 
+    /**
+     * The first 6 character of the UUID as a string.
+     */
     fun toShort(): String {
         val chars = CharArray(6)
         digits(msbm shr 8, chars, 0, 6)
