@@ -269,6 +269,17 @@ class TokenizeTest {
     }
 
     @Test
+    fun imageLink() {
+        val input = "![IntelliJ IDEA](https://www.jetbrains.com/idea/)"
+        val expected = listOf(
+            MarkdownToken(MarkdownTokenType.ImageLink, "[IntelliJ IDEA](https://www.jetbrains.com/idea/)")
+        )
+
+        val actual = tokenizeInternal(input)
+        assertEquals(expected, actual)
+    }
+
+    @Test
     fun linkInText() {
         val input = "Link in [IntelliJ IDEA](https://www.jetbrains.com/idea/) text."
         val expected = listOf(

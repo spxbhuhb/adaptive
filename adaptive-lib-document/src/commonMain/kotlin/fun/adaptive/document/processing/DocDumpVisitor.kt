@@ -4,6 +4,8 @@ import `fun`.adaptive.document.model.DocCodeFence
 import `fun`.adaptive.document.model.DocDocument
 import `fun`.adaptive.document.model.DocElement
 import `fun`.adaptive.document.model.DocHeader
+import `fun`.adaptive.document.model.DocBlockImage
+import `fun`.adaptive.document.model.DocInlineImage
 import `fun`.adaptive.document.model.DocLink
 import `fun`.adaptive.document.model.DocListItem
 import `fun`.adaptive.document.model.DocParagraph
@@ -51,6 +53,18 @@ class DocDumpVisitor : DocVisitor<Unit, DocVisitorData>() {
     override fun visitHeader(docHeader: DocHeader, data: DocVisitorData) {
         data += "HEADER  level=${docHeader.level}  style=${docHeader.style} "
         super.visitHeader(docHeader, data)
+    }
+
+    override fun visitBlockImage(docBlockImage: DocBlockImage, data: DocVisitorData) {
+        data += "BLOCK IMAGE  url=${docBlockImage.url}  style=${docBlockImage.style}"
+        data.withIndent { "text: ${docBlockImage.text}" }
+        super.visitBlockImage(docBlockImage, data)
+    }
+
+    override fun visitInlineImage(docInlineImage: DocInlineImage, data: DocVisitorData) {
+        data += "INLINE IMAGE  url=${docInlineImage.url}  style=${docInlineImage.style}"
+        data.withIndent { "text: ${docInlineImage.text}" }
+        super.visitInlineImage(docInlineImage, data)
     }
 
     override fun visitLink(docLink: DocLink, data: DocVisitorData) {

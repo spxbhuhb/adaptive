@@ -15,6 +15,7 @@ enum class MarkdownTokenType {
     Hyphens,
     CodeSpan,
     InlineLink,
+    ImageLink,
     ReferenceLink,
     ReferenceDef
 }

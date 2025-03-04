@@ -276,7 +276,7 @@ private val imageLinkRegex = "!\\[[^\\[]+\\]\\([^)]+\\)".toRegex()
 private fun maybeImage(source: String, start: Int, tokens: MutableList<MarkdownToken>): Int {
 
     imageLinkRegex.matchAt(source, start)?.let {
-        tokens += MarkdownToken(MarkdownTokenType.InlineLink, it.value)
+        tokens += MarkdownToken(MarkdownTokenType.ImageLink, it.value.drop(1))
         return it.range.last + 1
     }
 

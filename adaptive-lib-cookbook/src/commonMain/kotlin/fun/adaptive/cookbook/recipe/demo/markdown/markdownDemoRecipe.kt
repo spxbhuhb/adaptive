@@ -76,4 +76,6 @@ val source = """
     > > Double quote.
     > > > Triple quote.
     
+    ![An image](https://raw.githubusercontent.com/spxbhuhb/adaptive-site-resources/110801e15484cbe47db9396fc78827ab79408a82/images/deep-waters-50.jpg)
+
 """.trimIndent()

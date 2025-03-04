@@ -5,6 +5,7 @@
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.document.processing.DocDumpVisitor.Companion.dump
 import `fun`.adaptive.document.ui.basic.docDocument
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
@@ -19,6 +20,7 @@ import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.snackbar.SnackbarManager
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.uiCommon
+import `fun`.adaptive.utility.debug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -56,7 +58,7 @@ fun main() {
                 maxHeight .. verticalScroll .. padding { 16.dp } .. width { 400.dp } .. gap { 16.dp }
                 borders.friendly
 
-                docDocument(MarkdownCompiler.compile(source))
+                docDocument(MarkdownCompiler.compile(source).also { it.dump().debug() })
             }
         }
     }
@@ -115,4 +117,5 @@ val source = """
     > > Double quote.
     > > > Triple quote.
     
+    ![An image](https://raw.githubusercontent.com/spxbhuhb/adaptive-site-resources/110801e15484cbe47db9396fc78827ab79408a82/images/deep-waters-50.jpg)
 """.trimIndent()

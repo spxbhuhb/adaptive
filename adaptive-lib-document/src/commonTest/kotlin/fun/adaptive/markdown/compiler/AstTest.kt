@@ -329,4 +329,13 @@ class AstTest {
         }
     }
 
+    @Test
+    fun imageLink() {
+        val source = "![IntelliJ IDEA](https://www.jetbrains.com/idea/)"
+
+        source assertEquals {
+            + image { "[IntelliJ IDEA](https://www.jetbrains.com/idea/)" }
+        }
+    }
+
 }

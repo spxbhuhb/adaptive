@@ -38,5 +38,15 @@ class MarkdownToDocTransformTest {
         }
     }
 
+    @Test
+    fun blockImage() {
+        val text = "An image"
+        val url = "https://github.com/spxbhuhb/adaptive-site-resources/blob/110801e15484cbe47db9396fc78827ab79408a82/images/deep-waters-50.jpg"
+        val source = "![$text]($url)"
+
+        source assertEqualsDump {
+            + blockImage(url) { text }
+        }
+    }
 
 }

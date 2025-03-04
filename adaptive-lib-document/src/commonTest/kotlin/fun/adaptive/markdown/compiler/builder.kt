@@ -10,6 +10,12 @@ import `fun`.adaptive.markdown.model.MarkdownQuote
 fun paragraph(content: () -> String) =
     MarkdownParagraph(mutableListOf(MarkdownInline(content(), bold = false, italic = false)), false)
 
+fun link(content: () -> String) =
+    MarkdownParagraph(mutableListOf(MarkdownInline(content(), bold = false, italic = false, inlineLink = true)), false)
+
+fun image(content: () -> String) =
+    MarkdownParagraph(mutableListOf(MarkdownInline(content(), bold = false, italic = false, imageLink = true)), false)
+
 fun item(level: Int = 1, bullet: Boolean = true, label : String, subBullet : Boolean = bullet, content: (ListBuilder.() -> Unit)? = null) =
     MarkdownListItem(bullet, level, paragraph { label }, content?.let { list(level + 1, subBullet, content) } )
 

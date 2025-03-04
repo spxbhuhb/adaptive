@@ -96,7 +96,15 @@ class MarkdownToDocTransform(
         return null
     }
 
-    override fun visitParagraph(paragraph: MarkdownParagraph, styleMask: Int): DocParagraph {
+    override fun visitParagraph(paragraph: MarkdownParagraph, styleMask: Int): DocBlockElement {
+
+        if (paragraph.children.size == 1) {
+            val first = paragraph.children.first()
+            if (first is MarkdownInline && first.imageLink) {
+                val match = inlineLinkRegex.matchEntire(first.text)!! // should not be null at this point
+                return DocBlockImage(-1, match.groupValues[1], match.groupValues[2])
+            }
+        }
 
         // fills the inline stack
         paragraph.children.forEach { it.accept(this, styleMask) }
@@ -138,16 +146,11 @@ class MarkdownToDocTransform(
         DocCodeFence(- 1, codeFence.content, codeFence.language)
 
     override fun visitQuote(quote: MarkdownQuote, styleMask: Int): DocQuote =
-        DocQuote(- 1, mapChildren(quote.children, styleMask))
+        // quote content should be treated as standalone to have proper separation
+        DocQuote(- 1, quote.children.mapNotNull { it.accept(this, styleMask) })
 
     override fun visitHorizontalRule(horizontalRule: MarkdownHorizontalRule, styleMask: Int): DocRule =
         DocRule()
-
-    fun mapChildren(children: List<MarkdownElement>, styleMask: Int): List<DocBlockElement> =
-        children
-            .also { level ++ }
-            .mapNotNull { it.accept(this, styleMask) }
-            .also { level -- }
 
     fun buildStyle(index: Int, mask: Int): DocStyle {
 

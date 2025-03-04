@@ -11,6 +11,7 @@ class MarkdownInline(
     val bold: Boolean,
     val italic: Boolean,
     val code: Boolean = false,
+    val imageLink: Boolean = false,
     val inlineLink: Boolean = false,
     val referenceLink: Boolean = false,
     val referenceDef: Boolean = false,

@@ -10,4 +10,12 @@ class ImageResourceSet(
     name,
     ResourceTypeQualifier.Image,
     resources.toList()
-)
+) {
+    companion object {
+        fun remoteImage(url : String) =
+            ImageResourceSet(
+                "<remote>",
+                ImageResource(url, emptySet())
+            )
+    }
+}

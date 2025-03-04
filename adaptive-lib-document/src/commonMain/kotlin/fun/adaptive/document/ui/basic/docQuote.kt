@@ -23,7 +23,7 @@ fun docQuote(context: DocRenderContext, quote: DocQuote): AdaptiveFragment {
             backgrounds.surfaceVariant .. cornerRadius { 2.dp } .. padding { 8.dp }
             docBlock(context, quote.content)
         }
-    }
+    } .. context.theme.quote
 
     return fragment()
 }

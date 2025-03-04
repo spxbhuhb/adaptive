@@ -4,6 +4,8 @@ import `fun`.adaptive.document.model.DocCodeFence
 import `fun`.adaptive.document.model.DocDocument
 import `fun`.adaptive.document.model.DocElement
 import `fun`.adaptive.document.model.DocHeader
+import `fun`.adaptive.document.model.DocBlockImage
+import `fun`.adaptive.document.model.DocInlineImage
 import `fun`.adaptive.document.model.DocLink
 import `fun`.adaptive.document.model.DocListItem
 import `fun`.adaptive.document.model.DocParagraph
@@ -24,6 +26,12 @@ abstract class DocVisitor<out R, in D> {
 
     open fun visitHeader(docHeader: DocHeader, data: D): R =
         visitElement(docHeader, data)
+
+    open fun visitBlockImage(docBlockImage: DocBlockImage, data: D): R =
+        visitElement(docBlockImage, data)
+
+    open fun visitInlineImage(docInlineImage: DocInlineImage, data: D): R =
+        visitElement(docInlineImage, data)
 
     open fun visitLink(docLink: DocLink, data: D): R =
         visitElement(docLink, data)

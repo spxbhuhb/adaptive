@@ -30,6 +30,7 @@ internal fun parseInternal(tokens: List<MarkdownToken>): List<MarkdownElement> {
             MarkdownTokenType.Hyphens -> context.maybeRule(token, index)
             MarkdownTokenType.CodeSpan -> context.text(index)
             MarkdownTokenType.InlineLink -> context.text(index)
+            MarkdownTokenType.ImageLink -> context.text(index)
             MarkdownTokenType.ReferenceLink -> context.text(index)
             MarkdownTokenType.ReferenceDef -> context.text(index)
         }
@@ -136,6 +137,10 @@ private fun CompileContext.inline(start: Int, children: MutableList<MarkdownElem
 
             MarkdownTokenType.CodeSpan -> {
                 children += MarkdownInline(token.text, bold, italic, code = true)
+            }
+
+            MarkdownTokenType.ImageLink -> {
+                children += MarkdownInline(token.text, bold, italic, imageLink = true)
             }
 
             MarkdownTokenType.InlineLink -> {

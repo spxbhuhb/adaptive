@@ -11,6 +11,11 @@ import `fun`.adaptive.ui.theme.colors
 
 class DocumentTheme {
 
+    /**
+     * The gap between blocks of content such as paragraphs.
+     */
+    val blockGap = gap { 12.dp }
+
     val h1 = instructionsOf(
         fontSize { 28.sp }
     )
@@ -52,21 +57,19 @@ class DocumentTheme {
     )
 
     val paragraph = instructionsOf(
-        maxWidth,
-        marginBottom { 12.dp }
+        maxWidth
     )
 
     val innerParagraph = emptyInstructions
 
     val codeFence = instructionsOf(
-        marginBottom { 12.dp }
+
     )
 
     val rule = instructionsOf(
         maxWidth,
-        height { 14.dp },
+        height { 2.dp },
         backgrounds.friendly,
-        marginBottom { 12.dp },
         cornerRadius { 1.dp }
     )
 
@@ -74,8 +77,7 @@ class DocumentTheme {
     val numberListIndent = 16.dp
 
     val standaloneList = instructionsOf(
-        gap { 2.dp },
-        marginBottom { 12.dp }
+        gap { 2.dp }
     )
 
     val innerList = instructionsOf(
@@ -106,7 +108,11 @@ class DocumentTheme {
     fun listPath(item: DocListItem): String =
         item.path.joinToString(".") + "."
 
+    val quote = instructionsOf()
+
     val quoteDecorationWidth = 4.dp
+
+    val blockImage = instructionsOf()
 
     companion object {
         val DEFAULT = DocumentTheme()
