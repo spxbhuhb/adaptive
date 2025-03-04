@@ -45,6 +45,7 @@ class TemporalRecordStore(
         if (initialized) return
 
         indexStore.initialize()
+        lastTimeStamp = indexStore.latest?.timestamp
         initialized = true
     }
 
@@ -94,13 +95,15 @@ class TemporalRecordStore(
             appendId = newId
 
             val newPath = path.resolve(chunkFileName(newId))
+
             appendChunk = SystemFileSystem.sink(newPath).buffered()
             indexStore.append(TemporalIndexEntry(timestamp, newId.cast(), 0))
+            appendPosition = 0
 
         } else {
 
             val latest = indexStore.latest?.timestamp ?: return
-            if (timestamp.minus(1.days) < latest) {
+            if (timestamp.minus(1.days) > latest) {
                 indexStore.append(TemporalIndexEntry(timestamp, appendId !!.cast(), 0))
             }
 
