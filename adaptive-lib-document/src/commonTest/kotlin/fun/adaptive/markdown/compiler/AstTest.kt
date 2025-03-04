@@ -314,4 +314,19 @@ class AstTest {
             }
         }
     }
+
+    @Test
+    fun quoteSeparation() {
+        val source = "> quote 1\n\n> quote 2"
+
+        source assertEquals {
+            + quote {
+                + paragraph { "quote 1" }
+            }
+            + quote {
+                + paragraph { "quote 2" }
+            }
+        }
+    }
+
 }

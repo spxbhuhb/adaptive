@@ -73,17 +73,41 @@ private fun quote(source: String, start: Int, end: Int, tokens: MutableList<Mark
     val quoteContent = StringBuilder()
 
     while (index < end) {
-        quoteLineRegex.matchAt(source, index)?.let {
-            quoteContent.append(it.groupValues[1])
-            quoteContent.append('\n')
-            index = it.range.last + 1
-        } ?: break
+        val lineEnd = source.first(index, end) { it.isNewLine() }
+
+        quoteContent.append(source.substring(index + 1, lineEnd))
+        quoteContent.append('\n')
+
+        index = lineEnd + 1 // character after the new line character
+        if (index >= end) break
+
+        // we are standing on the next character that may be:
+        // - a new line character different from the one at source[lineEnd] - i.e. \r\n
+        // - a new line character that is the same as the one at source[lineEnd] - i.e. \n\n
+        // - a quote character that means there is another line in the quote
+        // - some spaces and a quote character
+
+        val lineEndChar = source[lineEnd]
+        val nextChar = source[index]
+
+        if (nextChar == lineEndChar) break // covers \n\n
+
+        if (nextChar.isNewLine()) { // covers \r\n
+            index++
+            if (index >= end) break
+        }
+
+        val nextNonSpace = source.firstNotSpace(index, end)
+        if (nextNonSpace >= end || source[nextNonSpace] != '>') break
+
+        index = nextNonSpace
     }
 
     tokens += MarkdownToken(MarkdownTokenType.Quote, quoteContent.toString().trimEnd())
 
     return index
 }
+
 
 private fun number(source: String, start: Int, end: Int, tokens: MutableList<MarkdownToken>): Int {
     var index = source.firstNot(start, end) { it.isDigit() }

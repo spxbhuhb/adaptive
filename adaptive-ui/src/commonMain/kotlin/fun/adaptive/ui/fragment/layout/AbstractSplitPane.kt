@@ -369,11 +369,11 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
                 pane1Height = pane1.renderData.finalHeight
 
                 if (horizontal) {
-                    availableHeight = pane1Height + renderData.surroundingVertical
-                    renderData.finalHeight = availableHeight
+                    availableHeight = pane1Height
+                    renderData.finalHeight = availableHeight + renderData.surroundingVertical
                 } else {
-                    availableWidth = pane1Width + renderData.surroundingHorizontal
-                    renderData.finalWidth = availableWidth
+                    availableWidth = pane1Width
+                    renderData.finalWidth = availableWidth + renderData.surroundingHorizontal
                 }
             }
 
@@ -385,13 +385,13 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
                 }
 
                 if (horizontal) {
-                    availableHeight = pane2.renderData.finalHeight + renderData.surroundingVertical
-                    renderData.finalHeight = availableHeight
+                    availableHeight = pane2.renderData.finalHeight
+                    renderData.finalHeight = availableHeight + renderData.surroundingVertical
                     pane1Width = availableWidth - pane2.renderData.finalWidth
                     pane1Height = availableHeight
-               } else {
-                    availableWidth = pane2.renderData.finalWidth + renderData.surroundingHorizontal
-                    renderData.finalWidth = availableWidth
+                } else {
+                    availableWidth = pane2.renderData.finalWidth
+                    renderData.finalWidth = availableWidth + renderData.surroundingHorizontal
                     pane1Width = availableWidth
                     pane1Height = availableHeight - pane2.renderData.finalHeight
                 }
@@ -429,8 +429,8 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
 
         val dividerOffset = (c.dividerOverlaySize - c.dividerEffectiveSize).toPx(uiAdapter) / 2
 
-        val itemsTotalWidth : Double
-        val itemsTotalHeight : Double
+        val itemsTotalWidth: Double
+        val itemsTotalHeight: Double
 
         if (horizontal) {
             val pane1FinalWidth = pane1.renderData.finalWidth

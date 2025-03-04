@@ -183,6 +183,20 @@ class TokenizeTest {
     }
 
     @Test
+    fun quoteSeparation() {
+        val source = ">quote 1\n\n>quote 2"
+        val expectedResult = listOf(
+            Pair(MarkdownTokenType.Quote, "quote 1"),
+            Pair(MarkdownTokenType.NewLine, ""),
+            Pair(MarkdownTokenType.Quote, "quote 2")
+        )
+
+        val result = tokenizeInternal(source).map { Pair(it.type, it.text) }
+
+        assertEquals(expectedResult, result)
+    }
+
+    @Test
     fun asterisks() {
         val source = "*test*"
         val tokens = tokenizeInternal(source)
