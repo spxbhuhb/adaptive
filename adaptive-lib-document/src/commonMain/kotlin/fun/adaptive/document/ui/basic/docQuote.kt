@@ -17,7 +17,7 @@ fun docQuote(context: DocRenderContext, quote: DocQuote): AdaptiveFragment {
 
     wrapFromLeft(
         wrapperSize,
-        wrapper = { box { maxHeight .. width { wrapperSize } .. backgrounds.friendly .. cornerRadius { 2.dp } } },
+        { box { maxHeight .. width { wrapperSize } .. backgrounds.friendly .. cornerRadius { 2.dp } } },
     ) {
         box {
             backgrounds.surfaceVariant .. cornerRadius { 2.dp } .. padding { 8.dp }

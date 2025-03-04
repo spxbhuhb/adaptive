@@ -18,6 +18,7 @@ import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstImpl
+import org.jetbrains.kotlin.ir.expressions.impl.IrFunctionReferenceImplWithShape
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.defaultType
@@ -402,6 +403,7 @@ class IrFunction2ArmClass(
 
             parameter.isAdaptive -> {
                 when (expression) {
+                    is IrBlock -> transformFunctionExpressionWrapper(armCall, expression) // block with a local function to provide Unit return type
                     is IrFunctionExpression -> transformFunctionExpression(armCall, expression) // lambda
                     is IrFunctionReference -> transformFunctionReference(armCall, expression) // hard-coded function reference like `::b`
                     is IrCall -> transformFunctionReferenceProperty(armCall, expression) // function reference stored in a property
@@ -422,6 +424,54 @@ class IrFunction2ArmClass(
                 ArmValueArgument(armClass, armCall.arguments.size, parameterType, expression, expression.dependencies())
             }
         }
+
+    /**
+     * When the function to be called returns with AdaptiveFragment, but the function parameter returns
+     * with Unit, the function reference is wrapped in a block (`leftWrapper` is the original function
+     * which reference is passed):
+     *
+     * ```kotlin
+     * { // BLOCK
+     *   local fun leftWrapper() {
+     *     leftWrapper()
+     *   }
+     *
+     *   ::leftWrapper
+     * }
+     * ```
+     */
+    fun transformFunctionExpressionWrapper(
+        armCall: ArmCall,
+        expression: IrBlock
+    ): ArmFragmentFactoryArgument {
+        val localFun = expression.statements.first() as IrSimpleFunction
+        val body = localFun.body as IrBlockBody
+        val lastStatement = body.statements.last()
+
+        check(lastStatement is IrCall)
+
+        val reference = IrFunctionReferenceImplWithShape(
+            expression.startOffset,
+            expression.endOffset,
+            pluginContext.kFunctionAdaptiveReferenceType,
+            lastStatement.symbol,
+            typeArgumentsCount = 0,
+            valueArgumentsCount = 2,
+            contextParameterCount = 0,
+            hasDispatchReceiver = false,
+            hasExtensionReceiver = false
+        )
+
+        return ArmFragmentFactoryArgument(
+            armClass,
+            armCall.arguments.size,
+            - 1, // renderingStatement.index,
+            emptyList(), //renderingStatement.closure,
+            pluginContext.kFunctionAdaptiveReferenceType,
+            reference,
+            expression.dependencies()
+        )
+    }
 
     fun transformFunctionExpression(
         armCall: ArmCall,

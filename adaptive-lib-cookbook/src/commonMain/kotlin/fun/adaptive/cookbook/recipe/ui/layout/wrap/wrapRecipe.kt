@@ -5,7 +5,6 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.instruction.decoration.BackgroundColor
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.wrap.wrapFromBottom
@@ -23,66 +22,66 @@ fun wrapRecipe(): AdaptiveFragment {
         gap { 24.dp }
 
         example("wrap from left") {
-            wrapFromLeft(wrapperSize, { leftWrapper() }) {
+            wrapFromLeft(wrapperSize, ::leftWrapper) {
                 text("Hello World!")
             }
         }
 
         example("double wrap from left") {
-            wrapFromLeft(wrapperSize, { leftWrapper() }) {
-                wrapFromLeft(wrapperSize, { leftWrapper() }) {
+            wrapFromLeft(wrapperSize, ::leftWrapper) {
+                wrapFromLeft(wrapperSize, ::leftWrapper) {
                     text("Hello World!")
                 }
             }
         }
 
         example("wrap from top") {
-            wrapFromTop(wrapperSize, { topWrapper() }) {
+            wrapFromTop(wrapperSize, ::topWrapper) {
                 text("Hello World!")
             }
         }
 
         example("double wrap from top") {
-            wrapFromTop(wrapperSize, { topWrapper() }) {
-                wrapFromTop(wrapperSize, { topWrapper() }) {
+            wrapFromTop(wrapperSize, ::topWrapper) {
+                wrapFromTop(wrapperSize, ::topWrapper) {
                     text("Hello World!")
                 }
             }
         }
 
         example("wrap from right") {
-            wrapFromRight(wrapperSize, { rightWrapper() }) {
+            wrapFromRight(wrapperSize, ::rightWrapper) {
                 text("Hello World!")
             }
         }
 
         example("double wrap from right") {
-            wrapFromRight(wrapperSize, { rightWrapper() }) {
-                wrapFromRight(wrapperSize, { rightWrapper() }) {
+            wrapFromRight(wrapperSize, ::rightWrapper) {
+                wrapFromRight(wrapperSize, ::rightWrapper) {
                     text("Hello World!")
                 }
             }
         }
 
         example("wrap from bottom") {
-            wrapFromBottom(wrapperSize, { bottomWrapper() }) {
+            wrapFromBottom(wrapperSize, ::bottomWrapper) {
                 text("Hello World!")
             }
         }
 
         example("double wrap from bottom") {
-            wrapFromBottom(wrapperSize, { bottomWrapper() }) {
-                wrapFromBottom(wrapperSize, { bottomWrapper() }) {
+            wrapFromBottom(wrapperSize, ::bottomWrapper) {
+                wrapFromBottom(wrapperSize, ::bottomWrapper) {
                     text("Hello World!")
                 }
             }
         }
 
         example("wrap all around") {
-            wrapFromLeft(wrapperSize, { leftWrapper() }) {
-                wrapFromTop(wrapperSize, { topWrapper() }) {
-                    wrapFromRight(wrapperSize, { rightWrapper() }) {
-                        wrapFromBottom(wrapperSize, { bottomWrapper() }) {
+            wrapFromLeft(wrapperSize, ::leftWrapper) {
+                wrapFromTop(wrapperSize, ::topWrapper) {
+                    wrapFromRight(wrapperSize, ::rightWrapper) {
+                        wrapFromBottom(wrapperSize, ::bottomWrapper) {
                             text("Hello World!")
                         }
                     }
