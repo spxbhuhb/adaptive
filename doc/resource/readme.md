@@ -10,6 +10,7 @@ Resource subsystem is part of the core module and the standard Adaptive Gradle p
 
 It lets you define various resources used by the application:
 
+* Documents
 * Files
 * Fonts
 * Images
@@ -22,6 +23,7 @@ Adaptive takes care of the resource pre-processing, code generation and publicat
 ```kotlin
 @Adaptive 
 fun someFun() {
+    docDocument(Documents.someMarkdown)
     externalLink(Files.terms)
     // fonts are typically loaded independently
     icon(Graphics.add)
@@ -55,6 +57,8 @@ Basic setups (I like by environment more as it is much easier to copy):
 
 ```text
 adaptiveResources
+  documents
+    intro.md
   files
     terms_and_conditions-hu.pdf
     terms_and_conditions-cs.pdf

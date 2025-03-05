@@ -3,6 +3,11 @@ package `fun`.adaptive.resource.codegen.kotlin
 import `fun`.adaptive.code.kotlin.writer.kwSymbol
 
 object KwResourceSymbols {
+
+    val documents = kwSymbol("`fun`.adaptive.resource.document.Documents")
+    val documentResource = kwSymbol("`fun`.adaptive.resource.document.DocumentResource")
+    val documentResourceSet = kwSymbol("`fun`.adaptive.resource.document.DocumentResourceSet")
+
     val files = kwSymbol("`fun`.adaptive.resource.file.Files")
     val fileResource = kwSymbol("`fun`.adaptive.resource.file.FileResource")
     val fileResourceSet = kwSymbol("`fun`.adaptive.resource.file.FileResourceSet")

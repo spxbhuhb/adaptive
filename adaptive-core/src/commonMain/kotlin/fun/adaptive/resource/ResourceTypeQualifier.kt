@@ -10,6 +10,7 @@ enum class ResourceTypeQualifier(
     val isUnstructured : Boolean = true
 ) : Qualifier {
 
+    Document(KwResourceSymbols.documents, KwResourceSymbols.documentResource, KwResourceSymbols.documentResourceSet),
     File(KwResourceSymbols.files, KwResourceSymbols.fileResource, KwResourceSymbols.fileResourceSet),
     Font(KwResourceSymbols.fonts, KwResourceSymbols.fontResource, KwResourceSymbols.fontResourceSet),
     Graphics(KwResourceSymbols.graphics, KwResourceSymbols.graphicsResource, KwResourceSymbols.graphicsResourceSet),
@@ -18,6 +19,7 @@ enum class ResourceTypeQualifier(
 
     companion object {
         fun parse(value: String): Qualifier? = when (value) {
+            "document", "documents" -> Document
             "file", "files" -> File
             "font", "fonts" -> Font
             "graphics", "graphics" -> Graphics

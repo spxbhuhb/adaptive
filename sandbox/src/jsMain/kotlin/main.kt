@@ -6,12 +6,14 @@ import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.cookbook.cookbookCommon
-import `fun`.adaptive.document.processing.DocDumpVisitor.Companion.dump
+import `fun`.adaptive.cookbook.markdown_demo
 import `fun`.adaptive.document.ui.basic.docDocument
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.groveRuntimeCommon
-import `fun`.adaptive.markdown.compiler.MarkdownCompiler
+import `fun`.adaptive.resource.document.DocumentResourceSet.Companion.inlineDocument
+import `fun`.adaptive.resource.document.DocumentResourceSet.Companion.remoteDocument
+import `fun`.adaptive.resource.document.Documents
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.api.*
@@ -21,7 +23,6 @@ import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.snackbar.SnackbarManager
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.uiCommon
-import `fun`.adaptive.utility.debug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -61,7 +62,11 @@ fun main() {
                 maxHeight .. verticalScroll .. padding { 16.dp } .. width { 375.dp } .. gap { 16.dp }
                 borders.friendly
 
-                docDocument(MarkdownCompiler.compile(source).also { it.dump().debug() })
+                //docDocument(Documents.markdown_demo)
+                //docDocument(remoteDocument("http://127.0.0.1:3000/resources/fun.adaptive.cookbook/documents/markdown_demo.md"))
+                //docDocument(inlineDocument(".md", "# Header\n\nJust some inline markdown".encodeToByteArray()))
+
+                docDocument(inlineDocument(".md", source))
             }
         }
     }
@@ -123,4 +128,4 @@ val source = """
     > > > Triple quote.
     
     ![An image](https://raw.githubusercontent.com/spxbhuhb/adaptive-site-resources/110801e15484cbe47db9396fc78827ab79408a82/images/deep-waters-50.jpg)
-""".trimIndent()
+""".trimIndent().encodeToByteArray()

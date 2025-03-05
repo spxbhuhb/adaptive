@@ -14,7 +14,7 @@ class ImageResourceSet(
     companion object {
         fun remoteImage(url : String) =
             ImageResourceSet(
-                "<remote>",
+                REMOTE,
                 ImageResource(url, emptySet())
             )
     }

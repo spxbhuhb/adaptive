@@ -6,6 +6,11 @@ open class ResourceFileSet<T : ResourceFile>(
     val files: List<T>
 ) {
 
+    companion object {
+        const val REMOTE = "remote:"
+        const val INLINE = "inline:"
+    }
+
     var lastEnvironment: ResourceEnvironment? = null
     var lastResult: T? = null
 
@@ -36,6 +41,9 @@ open class ResourceFileSet<T : ResourceFile>(
         return "ResourceFileSet(name='$name', type=$type, resources=${files.joinToString()})"
     }
 
+    val isInline : Boolean
+        get() = name.startsWith(INLINE)
+
     val uri : String
         get() = getUri(defaultResourceEnvironment, defaultResourceReader)
 
@@ -43,6 +51,8 @@ open class ResourceFileSet<T : ResourceFile>(
         environment: ResourceEnvironment,
         resourceReader: ResourceReader
     ) : String {
+        if (isInline) return name.removePrefix(INLINE)
+
         val file = getByEnvironment(environment)
         return resourceReader.getUri(file.path)
     }
@@ -51,6 +61,8 @@ open class ResourceFileSet<T : ResourceFile>(
         environment: ResourceEnvironment = defaultResourceEnvironment,
         resourceReader: ResourceReader = defaultResourceReader
     ): ByteArray {
+
+        if (isInline) return cachedContent ?: ByteArray(0)
 
         // When the environment is the same, no need to run filtering again
         // this will probably cover 99% of the cases.

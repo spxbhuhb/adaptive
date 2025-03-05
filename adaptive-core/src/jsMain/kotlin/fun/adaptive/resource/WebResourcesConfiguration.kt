@@ -18,7 +18,13 @@ package `fun`.adaptive.resource
 @Suppress("unused")
 object WebResourcesConfiguration {
 
-    var getResourcePath: (path: String) -> String = { "/$ADAPTIVE_ARTEFACT_RESOURCE_DIRECTORY$it" }
+    var getResourcePath: (path: String) -> String =  { path ->
+        if (path.startsWith("http://") || path.startsWith("https://")) {
+            path
+        } else {
+            "/$ADAPTIVE_ARTEFACT_RESOURCE_DIRECTORY$path"
+        }
+    }
         private set // to force use of resourcePathMapping (for later extensions)
 
     /**
