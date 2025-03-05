@@ -6,22 +6,22 @@
 
 - Render complex documents.
 - [Documentation](/doc/document/readme.md)
-- [Recipe](aui://cookbook:recipe:markdown:demo)
+- Recipe: Demos / Markdown
 
 `wrap*`
 
 - Add wrappers around fragments that are rendered with unbound sizes.
-- [Recipe](aui://cookbook:recipe:wrap)
+- Recipe: Layout / Wrap
 
 `codeFence`
 
 - Render source codes.
-- [Recipe](aui://cookbook:recipe:codefene)
+- Recipe: Textual fragments / Code Fence
 
 `tab` (work in progress)
 
 - Tab container with multiple, switchable tabs.
-- [Recipe](aui://cookbook:recipe:tab)
+- Recipe: Layout / Tab
 
 ## New functionality
 
