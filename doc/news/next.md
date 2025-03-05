@@ -5,6 +5,7 @@
 `doc*`
 
 - Render complex documents.
+- [Documentation](/doc/document/readme.md)
 - [Recipe](aui://cookbook:recipe:markdown:demo)
 
 `wrap*`
@@ -27,7 +28,6 @@
 ### UI
 
 - `AuiImage` in browser now resizes the image according to instructions after it is actually loaded
-- `ImageResourceSet` now offers a `remoteImage` function to pass URLs to `image`
 - `box`, `column` and `row` now proposes unbound size when scroll is enabled (direction specific)
 - `SplitPane` now handles fragment wrapping
 - `SVG` resource caching
@@ -41,6 +41,14 @@
 
 - abstract document model
 - `DocVisitor` can be used to traverse the document model
+
+### Resource
+
+- `DocumentResourceSet` to have documents as application resources
+- inline and remote resource handling
+  - `remoteImage`
+  - `remoteDocument`
+  - `inlineDocument`
 
 ### Layout
 
