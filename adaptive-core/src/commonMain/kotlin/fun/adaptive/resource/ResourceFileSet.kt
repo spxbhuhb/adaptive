@@ -68,17 +68,20 @@ open class ResourceFileSet<T : ResourceFile>(
         // this will probably cover 99% of the cases.
 
         val bytes: ByteArray
+        val safeLastResult = lastResult
 
-        if (environment == lastEnvironment) {
+        if (environment == lastEnvironment && safeLastResult != null) {
             val cached = cachedContent
             if (cacheResource && cached != null) {
                 bytes = cached
             } else {
-                bytes = resourceReader.read(lastResult !!.path).cache()
+                bytes = resourceReader.read(safeLastResult.path).cache()
             }
         } else {
             val file = getByEnvironment(environment)
             bytes = resourceReader.read(file.path).cache()
+
+            lastResult = file
             lastEnvironment = environment
         }
 
