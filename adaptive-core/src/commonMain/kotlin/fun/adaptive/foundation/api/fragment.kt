@@ -18,6 +18,6 @@ fun measureFragmentTime(vararg instructions: AdaptiveInstruction, @Adaptive cont
 }
 
 @AdaptiveExpect(foundation)
-fun actualize(key : String) : AdaptiveFragment {
+fun actualize(key : String, vararg externalState : Any?) : AdaptiveFragment {
     manualImplementation(key)
 }
