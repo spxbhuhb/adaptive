@@ -142,7 +142,7 @@ fun goodMorning() : AdaptiveFragment {
     val timeText = "${time.hour.twoDigits}:${time.minute.twoDigits}:${time.second.twoDigits}"
 
     mobileExample {
-        image(Images.background)
+        image(Images.background) .. maxSize
 
         grid {
             rowTemplate(140.dp, 50.dp, 1.fr, 1.fr, 1.fr, 50.dp, 100.dp)

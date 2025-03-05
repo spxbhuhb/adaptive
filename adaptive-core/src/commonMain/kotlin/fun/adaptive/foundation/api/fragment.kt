@@ -2,6 +2,7 @@ package `fun`.adaptive.foundation.api
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveExpect
+import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment.foundation
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.manualImplementation
@@ -17,6 +18,6 @@ fun measureFragmentTime(vararg instructions: AdaptiveInstruction, @Adaptive cont
 }
 
 @AdaptiveExpect(foundation)
-fun actualize(key : String) {
+fun actualize(key : String) : AdaptiveFragment {
     manualImplementation(key)
 }

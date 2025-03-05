@@ -1,6 +1,7 @@
 package `fun`.adaptive.document.ui.basic
 
 import `fun`.adaptive.document.model.DocBlockElement
+import `fun`.adaptive.document.model.DocBlockFragment
 import `fun`.adaptive.document.model.DocCodeFence
 import `fun`.adaptive.document.model.DocHeader
 import `fun`.adaptive.document.model.DocBlockImage
@@ -26,6 +27,7 @@ fun docBlock(context: DocRenderContext, children: List<DocBlockElement>) {
                 is DocQuote -> docQuote(context, element)
                 is DocRule -> docRule(context, element)
                 is DocBlockImage -> docBlockImage(context, element)
+                is DocBlockFragment -> docBlockFragment(context, element)
             }
         }
     }

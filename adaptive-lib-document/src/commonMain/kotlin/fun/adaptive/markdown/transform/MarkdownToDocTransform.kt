@@ -5,9 +5,9 @@ import `fun`.adaptive.document.ui.DocumentTheme
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.markdown.compiler.MarkdownVisitor
-import `fun`.adaptive.markdown.model.*
 import `fun`.adaptive.markdown.compiler.parseInternal
 import `fun`.adaptive.markdown.compiler.tokenizeInternal
+import `fun`.adaptive.markdown.model.*
 
 class MarkdownToDocTransform(
     val ast: List<MarkdownElement>,
@@ -100,16 +100,30 @@ class MarkdownToDocTransform(
 
         if (paragraph.children.size == 1) {
             val first = paragraph.children.first()
-            if (first is MarkdownInline && first.imageLink) {
-                val match = inlineLinkRegex.matchEntire(first.text)!! // should not be null at this point
-                return DocBlockImage(-1, match.groupValues[1], match.groupValues[2])
-            }
+            maybeBlock(first)?.let { return it }
         }
 
         // fills the inline stack
         paragraph.children.forEach { it.accept(this, styleMask) }
 
         return DocParagraph(- 1, consumeInlineStack(), standalone = (level == 0))
+    }
+
+    private fun maybeBlock(element: MarkdownElement?): DocBlockElement? {
+        (element as? MarkdownInline) ?: return null
+        if (! element.inlineLink && ! element.imageLink) return null
+
+        val match = inlineLinkRegex.matchEntire(element.text) !! // should not be null at this point
+        val text = match.groupValues[1]
+        val url = match.groupValues[2]
+
+        when {
+            element.imageLink -> DocBlockImage(- 1, text, url)
+            url.startsWith("actualize://") -> DocBlockFragment(- 1, text, url)
+            else -> null
+        }.also {
+            return it
+        }
     }
 
     val listPath = mutableListOf<Int>()
@@ -134,7 +148,7 @@ class MarkdownToDocTransform(
 
     override fun visitListItem(listItem: MarkdownListItem, styleMask: Int): DocBlockElement? {
         return DocListItem(
-            -1,
+            - 1,
             listItem.content.accept(this, styleMask) as DocBlockElement,
             listItem.subList?.accept(this, styleMask) as? DocList,
             listPath.toList(),

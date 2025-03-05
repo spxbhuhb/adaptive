@@ -5,6 +5,7 @@
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.cookbook.cookbookCommon
 import `fun`.adaptive.document.processing.DocDumpVisitor.Companion.dump
 import `fun`.adaptive.document.ui.basic.docDocument
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
@@ -30,6 +31,7 @@ fun main() {
     CoroutineScope(Dispatchers.Default).launch {
 
         uiCommon()
+        cookbookCommon()
         groveRuntimeCommon()
 
         commonMainStringsStringStore0.load()
@@ -52,10 +54,11 @@ fun main() {
                 fontWeight = 300
             }
 
+            adapter.cookbookCommon()
             adapter.groveRuntimeCommon()
 
             column {
-                maxHeight .. verticalScroll .. padding { 16.dp } .. width { 400.dp } .. gap { 16.dp }
+                maxHeight .. verticalScroll .. padding { 16.dp } .. width { 375.dp } .. gap { 16.dp }
                 borders.friendly
 
                 docDocument(MarkdownCompiler.compile(source).also { it.dump().debug() })
@@ -84,6 +87,8 @@ val source = """
     reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur 
     sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
     est laborum.
+    
+    [Good Morning](actualize://cookbook:recipe:goodmorning)
     
     ---
     

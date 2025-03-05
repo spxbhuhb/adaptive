@@ -1,10 +1,12 @@
 package `fun`.adaptive.document.processing
 
+import `fun`.adaptive.document.model.DocBlockFragment
 import `fun`.adaptive.document.model.DocCodeFence
 import `fun`.adaptive.document.model.DocDocument
 import `fun`.adaptive.document.model.DocElement
 import `fun`.adaptive.document.model.DocHeader
 import `fun`.adaptive.document.model.DocBlockImage
+import `fun`.adaptive.document.model.DocInlineFragment
 import `fun`.adaptive.document.model.DocInlineImage
 import `fun`.adaptive.document.model.DocLink
 import `fun`.adaptive.document.model.DocListItem
@@ -39,6 +41,18 @@ class DocDumpVisitor : DocVisitor<Unit, DocVisitorData>() {
         data.level --
     }
 
+    override fun visitBlockFragment(docBlockFragment: DocBlockFragment, data: DocVisitorData) {
+        data += "BLOCK FRAGMENT  url=${docBlockFragment.url}  style=${docBlockFragment.style}"
+        data.withIndent { "text: ${docBlockFragment.text}" }
+        super.visitBlockFragment(docBlockFragment, data)
+    }
+    
+    override fun visitBlockImage(docBlockImage: DocBlockImage, data: DocVisitorData) {
+        data += "BLOCK IMAGE  url=${docBlockImage.url}  style=${docBlockImage.style}"
+        data.withIndent { "text: ${docBlockImage.text}" }
+        super.visitBlockImage(docBlockImage, data)
+    }
+
     override fun visitCodeFence(docCodeFence: DocCodeFence, data: DocVisitorData) {
         data += "CODE FENCE  language=${docCodeFence.language}  style=${docCodeFence.style} "
         data.withIndent { "content: ${docCodeFence.code}" }
@@ -55,12 +69,12 @@ class DocDumpVisitor : DocVisitor<Unit, DocVisitorData>() {
         super.visitHeader(docHeader, data)
     }
 
-    override fun visitBlockImage(docBlockImage: DocBlockImage, data: DocVisitorData) {
-        data += "BLOCK IMAGE  url=${docBlockImage.url}  style=${docBlockImage.style}"
-        data.withIndent { "text: ${docBlockImage.text}" }
-        super.visitBlockImage(docBlockImage, data)
+    override fun visitInlineFragment(docInlineFragment: DocInlineFragment, data: DocVisitorData) {
+        data += "INLINE FRAGMENT  url=${docInlineFragment.url}  style=${docInlineFragment.style}"
+        data.withIndent { "text: ${docInlineFragment.text}" }
+        super.visitInlineFragment(docInlineFragment, data)
     }
-
+    
     override fun visitInlineImage(docInlineImage: DocInlineImage, data: DocVisitorData) {
         data += "INLINE IMAGE  url=${docInlineImage.url}  style=${docInlineImage.style}"
         data.withIndent { "text: ${docInlineImage.text}" }

@@ -114,6 +114,8 @@ class DocumentTheme {
 
     val blockImage = instructionsOf()
 
+    val blockFragment = instructionsOf()
+
     companion object {
         val DEFAULT = DocumentTheme()
     }
