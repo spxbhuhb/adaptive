@@ -30,7 +30,7 @@ fun box(): String {
 
     if (t1.i1 != 13) return "Fail: t1.i1 ${t1.i1}"
 
-    val td = TestAdat.decodeFromJson(t1.encodeToJson())
+    val td = TestAdat.decodeFromJson(t1.encodeToJsonByteArray())
     if (t1.i1 != td.i1) return "Fail: ${t1.i1} != ${td.i1}"
 
     val t2 = TestAdat(12)

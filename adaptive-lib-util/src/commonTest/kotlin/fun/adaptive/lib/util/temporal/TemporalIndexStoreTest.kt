@@ -39,7 +39,7 @@ class TemporalIndexStoreTest {
             TemporalIndexEntry(now(), UUID(), 100L),
             TemporalIndexEntry(now(), UUID(), 200L)
         )
-        val initialIndex = TemporalIndexHeader(TemporalIndexStore.V1, store.uuid)
+        val initialIndex = TemporalIndexHeader(TemporalIndexStore.V1, store.storeUuid)
         path.write(initialIndex.encodeToProtoByteArray())
         initialEntries.forEach { path.append(it.encodeToProtoByteArray()) }
 
@@ -77,7 +77,7 @@ class TemporalIndexStoreTest {
         assertEquals(newEntry, store.entries.last(), "Last entry should be the one just added")
 
         // Reload the store to check persistence
-        val reloadedStore = TemporalIndexStore(store.uuid, path)
+        val reloadedStore = TemporalIndexStore(store.storeUuid, path)
         reloadedStore.initialize()
 
         assertEquals(1, reloadedStore.entries.size, "Entry should be persisted to file")

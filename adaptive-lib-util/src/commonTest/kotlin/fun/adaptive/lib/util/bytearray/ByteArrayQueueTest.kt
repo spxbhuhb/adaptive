@@ -119,4 +119,18 @@ class ByteArrayQueueTest {
         val persistedData = persistedPositionFile.readString()
         assertTrue(persistedData.contains(";"), "Dequeue position file should contain valid data")
     }
+
+    @Test
+    fun `dequeue should return with null when the queue is empty`() {
+        val tempPath = clearedTestPath()
+        val queue = ByteArrayQueue(tempPath, chunkSizeLimit, barrier, persistDequeue = true)
+
+        queue.initialize()
+
+        queue.enqueue("some data".encodeToByteArray())
+        queue.dequeue() // drop queued entry
+
+        assertNull(queue.dequeue(), "Dequeue should return null when chunk end is reached")
+        assertNull(queue.dequeue(), "Dequeue should return null when chunk end is reached")
+    }
 }

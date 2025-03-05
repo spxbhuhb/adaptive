@@ -152,6 +152,13 @@ class ByteArrayQueue(
         }
     }
 
+    val isEmpty: Boolean
+        get() = lock.use {
+            ensureInitialized()
+            rollDequeueChunk()
+            return (dequeueChunk == null) || (dequeuePosition >= dequeueEnd)
+        }
+
     fun dequeue(): ByteArray? {
         lock.use {
             ensureInitialized()
@@ -186,6 +193,7 @@ class ByteArrayQueue(
             enqueueChunk?.close()
 
             val newEnqueueId = monotonicUuid7(chunkIds.lastOrNull())
+            enqueueId = newEnqueueId
 
             val newPath = path.resolve(chunkFileName(newEnqueueId))
             enqueueChunk = SystemFileSystem.sink(newPath).buffered()
@@ -234,7 +242,6 @@ class ByteArrayQueue(
         // and open the next one.
 
         dequeueChunk?.close()
-        dequeueChunk = null
 
         val index = chunkIds.indexOf(dequeueId)
 

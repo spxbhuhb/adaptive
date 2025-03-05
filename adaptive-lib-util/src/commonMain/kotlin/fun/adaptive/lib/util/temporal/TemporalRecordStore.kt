@@ -1,33 +1,38 @@
 package `fun`.adaptive.lib.util.temporal
 
+import `fun`.adaptive.adat.encodeToProtoByteArray
+import `fun`.adaptive.lib.util.temporal.model.TemporalChunk
+import `fun`.adaptive.lib.util.temporal.model.TemporalChunkHeader
 import `fun`.adaptive.lib.util.temporal.model.TemporalIndexEntry
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.UUID.Companion.monotonicUuid7
+import `fun`.adaptive.utility.append
 import `fun`.adaptive.utility.read
 import `fun`.adaptive.utility.resolve
 import kotlinx.datetime.Instant
-import kotlinx.io.Sink
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlin.time.Duration.Companion.days
 
 class TemporalRecordStore(
-    val uuid: UUID<TemporalRecordStore>,
+    val storeUuid: UUID<TemporalRecordStore>,
     val path: Path,
+    val signature: String,
     val chunkSizeLimit: Long,
     initialize: Boolean = true
 ) {
 
     private var initialized: Boolean = false
 
-    val indexStore = TemporalIndexStore(uuid.cast(), path.resolve("index.pb"), initialize = false)
+    val indexStore = TemporalIndexStore(storeUuid.cast(), path.resolve("index.pb"), initialize = false)
 
-    var appendId: UUID<Any>? = null
-    var appendChunk: Sink? = null
-    var appendPosition = 0L
+    private var appendId: TemporalChunkId? = null
+    private var appendPath: Path? = null
+    private var appendPosition = 0L
 
     var lastTimeStamp: Instant? = null
+        private set
 
     init {
         if (initialize) {
@@ -54,14 +59,11 @@ class TemporalRecordStore(
 
         val safeLastTimeStamp = lastTimeStamp
 
-        require(safeLastTimeStamp == null || safeLastTimeStamp < timestamp) { "cannot insert out-of-band record: $safeLastTimeStamp > $timestamp" }
+        require(safeLastTimeStamp == null || safeLastTimeStamp < timestamp) { "cannot insert out-of-bound record: $safeLastTimeStamp > $timestamp" }
 
         rollAppendChunk(bytes.size, timestamp)
 
-        checkNotNull(appendChunk).apply {
-            write(bytes)
-            flush()
-        }
+        checkNotNull(appendPath).append(bytes)
 
         lastTimeStamp = timestamp
         appendPosition += bytes.size
@@ -88,23 +90,29 @@ class TemporalRecordStore(
      */
     private fun rollAppendChunk(forSize: Int, timestamp: Instant) {
 
-        if (appendChunk == null || appendPosition + forSize > chunkSizeLimit) {
-            appendChunk?.close()
+        if (appendPath == null || appendPosition + forSize > chunkSizeLimit) {
 
-            val newId = monotonicUuid7(appendId ?: indexStore.latest?.chunk).cast<Any>()
-            appendId = newId
+            val chunkUuid = monotonicUuid7<TemporalChunk>(appendId ?: indexStore.latest?.chunk)
+            appendId = chunkUuid
 
-            val newPath = path.resolve(chunkFileName(newId))
+            val header = TemporalChunkHeader(TemporalChunkHeader.V1, chunkUuid, storeUuid, signature).encodeToProtoByteArray()
 
-            appendChunk = SystemFileSystem.sink(newPath).buffered()
-            indexStore.append(TemporalIndexEntry(timestamp, newId.cast(), 0))
-            appendPosition = 0
+            val newPath = path.resolve(chunkFileName(chunkUuid))
+            appendPath = newPath
+
+            SystemFileSystem.sink(newPath).buffered().write(header)
+
+            val headerSize = header.size.toLong()
+
+            indexStore.append(TemporalIndexEntry(timestamp, chunkUuid.cast(), headerSize))
+            appendPosition = headerSize
 
         } else {
 
             val latest = indexStore.latest?.timestamp ?: return
+
             if (timestamp.minus(1.days) > latest) {
-                indexStore.append(TemporalIndexEntry(timestamp, appendId !!.cast(), 0))
+                indexStore.append(TemporalIndexEntry(timestamp, appendId !!.cast(), appendPosition))
             }
 
         }

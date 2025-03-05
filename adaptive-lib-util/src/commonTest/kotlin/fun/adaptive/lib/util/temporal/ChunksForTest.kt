@@ -24,7 +24,6 @@ class ChunksForTest {
 
     @Test
     fun `returns empty list when start is after last known timestamp`() {
-        val lastTimeStamp = Instant.parse("2024-03-01T09:00:00Z")
         val start = Instant.parse("2024-03-01T10:00:00Z")
         val end = Instant.parse("2024-03-01T12:00:00Z")
         val entries = listOf(

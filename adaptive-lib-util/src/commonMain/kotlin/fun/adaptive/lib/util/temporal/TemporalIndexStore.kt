@@ -21,7 +21,7 @@ import kotlinx.io.files.Path
  * 4. When add returns the data is in the file.
  */
 class TemporalIndexStore(
-    val uuid: UUID<TemporalIndexHeader>,
+    val storeUuid: TemporalRecordStoreId,
     val path: Path,
     initialize: Boolean = true
 ) {
@@ -49,10 +49,10 @@ class TemporalIndexStore(
 
         if (! path.exists()) {
             path.parent?.ensure()
-            path.write(TemporalIndexHeader(V1, uuid).encodeToProtoByteArray())
+            path.write(TemporalIndexHeader(V1, storeUuid).encodeToProtoByteArray())
         } else {
             val (header, loaded) = load(path)
-            check(header.uuid == uuid) { "uuid mismatch: ${header.uuid} != $uuid" }
+            check(header.storeUuid == storeUuid) { "uuid mismatch: ${header.storeUuid} != $storeUuid" }
             entries.addAll(loaded)
         }
 

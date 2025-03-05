@@ -27,7 +27,7 @@ class TemporalRecordStoreTest {
     @Test
     fun basic() {
         val testDir = clearedTestPath()
-        val store = TemporalRecordStore(uuid4(), testDir, 100)
+        val store = TemporalRecordStore(uuid4(), testDir, "", 100)
 
         val timestamp = Instant.parse("2024-01-01T00:00:00Z")
         val someRecord = SomeRecord(timestamp, 12)
@@ -47,7 +47,7 @@ class TemporalRecordStoreTest {
     @Test
     fun appendMultipleRecords() {
         val testDir = clearedTestPath()
-        val store = TemporalRecordStore(uuid4(), testDir, 100)
+        val store = TemporalRecordStore(uuid4(), testDir, "", 100)
 
         val timestamp1 = Instant.parse("2024-01-01T00:00:00Z")
         val timestamp2 = Instant.parse("2024-01-01T00:05:00Z")
@@ -67,7 +67,7 @@ class TemporalRecordStoreTest {
     @Test
     fun queryEmptyStore() {
         val testDir = clearedTestPath()
-        val store = TemporalRecordStore(uuid4(), testDir, 100)
+        val store = TemporalRecordStore(uuid4(), testDir, "", 100)
 
         val timestamp = Instant.parse("2024-01-01T00:00:00Z")
         val actual = mutableListOf<SomeRecord>()
@@ -80,7 +80,7 @@ class TemporalRecordStoreTest {
     @Test
     fun queryWithNoMatchingRecords() {
         val testDir = clearedTestPath()
-        val store = TemporalRecordStore(uuid4(), testDir, 100)
+        val store = TemporalRecordStore(uuid4(), testDir, "", 100)
 
         val timestamp1 = Instant.parse("2024-01-01T00:00:00Z")
         val record = SomeRecord(timestamp1, 10)
@@ -95,7 +95,7 @@ class TemporalRecordStoreTest {
     @Test
     fun appendDuplicateTimestamps() {
         val testDir = clearedTestPath()
-        val store = TemporalRecordStore(uuid4(), testDir, 100)
+        val store = TemporalRecordStore(uuid4(), testDir, "", 100)
 
         val timestamp = Instant.parse("2024-01-01T00:00:00Z")
         val record1 = SomeRecord(timestamp, 10)
@@ -110,7 +110,7 @@ class TemporalRecordStoreTest {
     @Test
     fun appendAndQueryLargeDataSet() {
         val testDir = clearedTestPath()
-        val store = TemporalRecordStore(uuid4(), testDir, 100)
+        val store = TemporalRecordStore(uuid4(), testDir, "", 100)
 
         val baseTimestamp = Instant.parse("2024-01-01T00:00:00Z")
         val records = mutableListOf<SomeRecord>()
@@ -133,8 +133,8 @@ class TemporalRecordStoreTest {
         // this check is tricky because we will actually get a larger set than the queried one
         // in this specific case I manually checked the returned range, and it seems to be OK
 
-        assertEquals(32, actualPartial.size)
-        assertEquals(records.subList(29, 61), actualPartial)
+        assertEquals(36, actualPartial.size)
+        assertEquals(records.subList(28, 64).joinToString("\n"), actualPartial.joinToString("\n"))
     }
 
     fun List<ByteArray>.decodeChunks(out: MutableList<SomeRecord>) {
