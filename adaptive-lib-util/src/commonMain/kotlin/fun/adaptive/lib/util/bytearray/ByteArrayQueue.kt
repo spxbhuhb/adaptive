@@ -53,6 +53,7 @@ class ByteArrayQueue(
 
     companion object {
         private const val ZERO_BYTE = 0.toByte()
+        const val DEQUEUE_NAME = "dequeue.bin"
     }
 
     private var lock = getLock()
@@ -66,7 +67,7 @@ class ByteArrayQueue(
     private var dequeuePosition: Long = 0L
     private var dequeueEnd: Long = 0L
 
-    private val dequeuePath = path.resolve("dequeue.bin")
+    private val dequeuePath = path.resolve(DEQUEUE_NAME)
 
     private val barrierSize = barrier.size
 
@@ -103,14 +104,14 @@ class ByteArrayQueue(
             path.ensure()
             path.list().forEach {
                 val name = it.name
-                if (name.startsWith(".") || ! name.endsWith(".bin")) return@forEach
+                if (name.startsWith(".") || ! name.endsWith(".bin") || name == DEQUEUE_NAME) return@forEach
                 chunkIds += name.asChunkId
             }
             chunkIds.sort()
 
             if (persistDequeue && chunkIds.isNotEmpty()) {
                 val (name, position) = dequeuePath.readString().split(';')
-                position(name.asChunkId, position.toLong())
+                unsafePosition(name.asChunkId, position.toLong())
             }
 
             initialized = true
@@ -137,19 +138,21 @@ class ByteArrayQueue(
     fun position(chunkId: UUID<Any>, position: Long) {
         lock.use {
             ensureInitialized()
-
             require(chunkId in chunkIds) { "unknown chunk: $chunkId" }
-
-            val chunkPath = path.resolve(chunkFileName(chunkId))
-            val chunkSize = checkNotNull(SystemFileSystem.metadataOrNull(chunkPath)?.size) { "unable to retrieve chunk size for $chunkPath" }
-
-            require(position < chunkSize) { "position after end of chunk: $position" }
-
-            dequeueId = chunkId
-            dequeueChunk = SystemFileSystem.source(chunkPath).buffered().apply { skip(position) }
-            dequeuePosition = position
-            dequeueEnd = chunkSize
+            unsafePosition(chunkId, position)
         }
+    }
+
+    private fun unsafePosition(chunkId: UUID<Any>, position: Long) {
+        val chunkPath = path.resolve(chunkFileName(chunkId))
+        val chunkSize = checkNotNull(SystemFileSystem.metadataOrNull(chunkPath)?.size) { "unable to retrieve chunk size for $chunkPath" }
+
+        require(position <= chunkSize) { "position after end of chunk: $position" }
+
+        dequeueId = chunkId
+        dequeueChunk = SystemFileSystem.source(chunkPath).buffered().apply { skip(position) }
+        dequeuePosition = position
+        dequeueEnd = chunkSize
     }
 
     val isEmpty: Boolean
