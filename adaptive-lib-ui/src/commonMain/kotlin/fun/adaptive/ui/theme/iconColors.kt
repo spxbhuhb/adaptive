@@ -1,20 +1,20 @@
 package `fun`.adaptive.ui.theme
 
-import `fun`.adaptive.graphics.svg.api.svgFill
+import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.ui.api.textColor
 
 var iconColors = ThemeIconColors()
 
 class ThemeIconColors {
-    val primary = svgFill(colors.primary)
-    val onSurface = svgFill(colors.onSurface)
-    val onSurfaceVariant = svgFill(colors.onSurfaceVariant)
-    val onSurfaceFriendly = svgFill(colors.onSurfaceFriendly)
-    val onSurfaceAngry = svgFill(colors.onSurfaceAngry)
-    val onPrimary = svgFill(colors.onPrimary)
-    val onPrimaryHover = svgFill(colors.onPrimaryHover)
+    val primary = fill(colors.primary)
+    val onSurface = fill(colors.onSurface)
+    val onSurfaceVariant = fill(colors.onSurfaceVariant)
+    val onSurfaceFriendly = fill(colors.onSurfaceFriendly)
+    val onSurfaceAngry = fill(colors.onSurfaceAngry)
+    val onPrimary = fill(colors.onPrimary)
+    val onPrimaryHover = fill(colors.onPrimaryHover)
 
-    val onSelected = svgFill(colors.onSelected)
+    val onSelected = fill(colors.onSelected)
 
     val onSuccessSurface = textColor(colors.onSuccessSurface)
     val onInfoSurface = textColor(colors.onInfoSurface)

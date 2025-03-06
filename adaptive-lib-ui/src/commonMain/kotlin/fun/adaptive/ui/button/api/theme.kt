@@ -1,7 +1,7 @@
 package `fun`.adaptive.ui.button.api
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.graphics.svg.api.svgFill
+import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.alignItems
@@ -44,7 +44,7 @@ class ButtonTheme(
 
     val icon = instructionsOf(
         size(22.dp, 22.dp),
-        svgFill(foreground),
+        fill(foreground),
         svgWidth(22.dp),
         svgHeight(22.dp),
         noSelect

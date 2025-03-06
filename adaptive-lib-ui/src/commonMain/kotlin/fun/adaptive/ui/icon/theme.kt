@@ -1,11 +1,10 @@
 package `fun`.adaptive.ui.icon
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.graphics.svg.api.svgFill
+import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.api.popupAlign
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
@@ -49,7 +48,7 @@ class IconTheme(
     val cornerRadius: DPixel = 16.dp
 ) {
     val icon = instructionsOf(
-        svgFill(color),
+        fill(color),
         svgHeight(iconSize),
         svgWidth(iconSize),
         size(iconSize, iconSize)
@@ -94,11 +93,11 @@ class IconTheme(
         if (hover) hoverBackground else nonHoverBackground
 
     val svgNonHoverColors = instructionsOf(
-        svgFill(color),
+        fill(color),
     )
 
     val svgHoverColors = instructionsOf(
-        svgFill(color)
+        fill(color)
     )
 
     fun svgColors(hover: Boolean) =

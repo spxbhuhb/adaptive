@@ -4,11 +4,6 @@
 
 package `fun`.adaptive.graphics.svg.render
 
-import `fun`.adaptive.graphics.svg.instruction.SvgFill
-import `fun`.adaptive.graphics.svg.instruction.transform.SvgTransform
-import `fun`.adaptive.ui.instruction.decoration.Color
+import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
 
-open class SvgRenderData {
-    var fill: SvgFill = SvgFill(Color(0x0u))
-    var transform : MutableList<SvgTransform>? = null
-}
+open class SvgRenderData : CanvasRenderData()

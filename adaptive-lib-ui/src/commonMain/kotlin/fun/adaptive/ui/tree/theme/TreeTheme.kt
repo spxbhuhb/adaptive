@@ -1,7 +1,6 @@
 package `fun`.adaptive.ui.tree.theme
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.graphics.svg.api.svgFill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.alignItems

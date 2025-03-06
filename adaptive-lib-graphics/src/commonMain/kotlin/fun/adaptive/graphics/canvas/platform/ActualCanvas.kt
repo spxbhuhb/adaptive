@@ -4,8 +4,8 @@
 
 package `fun`.adaptive.graphics.canvas.platform
 
-import `fun`.adaptive.graphics.canvas.render.GraphicsRenderData
-import `fun`.adaptive.graphics.svg.instruction.transform.SvgTransform
+import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
+import `fun`.adaptive.graphics.canvas.transform.CanvasTransform
 import `fun`.adaptive.ui.instruction.decoration.Color
 
 /**
@@ -15,7 +15,7 @@ import `fun`.adaptive.ui.instruction.decoration.Color
  */
 interface ActualCanvas {
 
-    fun apply(renderData: GraphicsRenderData?) {
+    fun apply(renderData: CanvasRenderData?) {
         if (renderData == null) return
         renderData.fill?.let { setFill(it.color) }
         renderData.stroke?.let { setStroke(it.color) }
@@ -81,7 +81,7 @@ interface ActualCanvas {
     /**
      * Add a transform to the canvas.
      */
-    fun transform(t: SvgTransform)
+    fun transform(t: CanvasTransform)
 
     fun setFont(font: String)
 

@@ -7,8 +7,8 @@ import `fun`.adaptive.foundation.*
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.instructions
+import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.graphics.svg.api.svg
-import `fun`.adaptive.graphics.svg.api.svgFill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.resource.graphics.Graphics
@@ -145,9 +145,9 @@ private fun top(
     grid {
         colTemplate(48.dp, 1.fr, 48.dp) .. height { 48.dp } .. alignItems.center
 
-        svg(appData.smallAppMenuIcon) .. svgFill(colors.onSurface)
+        svg(appData.smallAppMenuIcon) .. fill(colors.onSurface)
         text(appData.appName) .. boldFont .. fontSize(28.sp)
-        svg(appData.smallSettingsAppIcon) .. svgFill(colors.onSurface)
+        svg(appData.smallSettingsAppIcon) .. fill(colors.onSurface)
     }
 }
 
@@ -169,7 +169,7 @@ private fun thin(
             box {
                 size(48.dp, 48.dp)
                 if (appIcon != null) {
-                    svg(appIcon) .. svgHeight(48.dp) .. svgWidth(48.dp) .. svgFill(colors.onSurface) .. onClick { toggle() }
+                    svg(appIcon) .. svgHeight(48.dp) .. svgWidth(48.dp) .. fill(colors.onSurface) .. onClick { toggle() }
                 }
             }
         }
@@ -285,7 +285,7 @@ fun appIcon(
 
         box {
             size(48.dp, 48.dp)
-            svg(icon) .. svgHeight(48.dp) .. svgWidth(48.dp) .. svgFill(colors.onSurface)
+            svg(icon) .. svgHeight(48.dp) .. svgWidth(48.dp) .. fill(colors.onSurface)
         }
     }
     return fragment()

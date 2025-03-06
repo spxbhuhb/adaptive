@@ -33,7 +33,7 @@ class SvgPath(
 
         canvas.save(id)
 
-        canvas.setFill(renderData.fill.color)
+        canvas.apply(renderData)
 
         canvas.fill(path)
 

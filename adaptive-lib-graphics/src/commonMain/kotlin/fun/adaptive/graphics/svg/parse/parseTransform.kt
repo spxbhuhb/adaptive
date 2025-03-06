@@ -4,20 +4,20 @@
 
 package `fun`.adaptive.graphics.svg.parse
 
-import `fun`.adaptive.graphics.svg.instruction.transform.Matrix
-import `fun`.adaptive.graphics.svg.instruction.transform.Rotate
-import `fun`.adaptive.graphics.svg.instruction.transform.Scale
-import `fun`.adaptive.graphics.svg.instruction.transform.SkewX
-import `fun`.adaptive.graphics.svg.instruction.transform.SkewY
-import `fun`.adaptive.graphics.svg.instruction.transform.SvgTransform
-import `fun`.adaptive.graphics.svg.instruction.transform.Translate
+import `fun`.adaptive.graphics.canvas.transform.Matrix
+import `fun`.adaptive.graphics.canvas.transform.Rotate
+import `fun`.adaptive.graphics.canvas.transform.Scale
+import `fun`.adaptive.graphics.canvas.transform.SkewX
+import `fun`.adaptive.graphics.canvas.transform.SkewY
+import `fun`.adaptive.graphics.canvas.transform.CanvasTransform
+import `fun`.adaptive.graphics.canvas.transform.Translate
 import `fun`.adaptive.utility.firstNotOrNull
 
-fun parseTransform(source: String): List<SvgTransform> {
+fun parseTransform(source: String): List<CanvasTransform> {
 
     if (source.isEmpty()) return emptyList()
 
-    val transforms = mutableListOf<SvgTransform>()
+    val transforms = mutableListOf<CanvasTransform>()
     val end = source.length
     var index = 0
 
@@ -80,7 +80,7 @@ private fun build(
     transform: String?,
     parameters: List<StringBuilder>,
     parameterCount: Int,
-    transforms: MutableList<SvgTransform>
+    transforms: MutableList<CanvasTransform>
 ) {
     when (transform) {
         "translate" -> translate(parameters, parameterCount, transforms)
@@ -94,7 +94,7 @@ private fun build(
     }
 }
 
-fun translate(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<SvgTransform>) {
+fun translate(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransform>) {
     transforms += when (parameterCount) {
         1 -> Translate(parameters.toDouble(0), 0.0)
         2 -> Translate(parameters.toDouble(0), parameters.toDouble(1))
@@ -102,7 +102,7 @@ fun translate(parameters: List<StringBuilder>, parameterCount: Int, transforms: 
     }
 }
 
-fun scale(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<SvgTransform>) {
+fun scale(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransform>) {
     transforms += when (parameterCount) {
         1 -> {
             val amount = parameters.toDouble(0)
@@ -114,7 +114,7 @@ fun scale(parameters: List<StringBuilder>, parameterCount: Int, transforms: Muta
     }
 }
 
-fun rotate(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<SvgTransform>) {
+fun rotate(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransform>) {
     transforms += when (parameterCount) {
         1 -> Rotate(parameters.toDouble(0), 0.0, 0.0)
         3 -> Rotate(parameters.toDouble(0), parameters.toDouble(1), parameters.toDouble(2))
@@ -122,7 +122,7 @@ fun rotate(parameters: List<StringBuilder>, parameterCount: Int, transforms: Mut
     }
 }
 
-fun matrix(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<SvgTransform>) {
+fun matrix(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransform>) {
     if (parameterCount != 6) throw IllegalArgumentException("invalid parameter count $parameterCount for 'rotate'")
     transforms += Matrix(
         parameters.toDouble(0),
@@ -134,12 +134,12 @@ fun matrix(parameters: List<StringBuilder>, parameterCount: Int, transforms: Mut
     )
 }
 
-fun skewX(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<SvgTransform>) {
+fun skewX(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransform>) {
     if (parameterCount != 1) throw IllegalArgumentException("invalid parameter count $parameterCount for 'skewX'")
     transforms += SkewX(parameters.toDouble(0))
 }
 
-fun skewY(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<SvgTransform>) {
+fun skewY(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransform>) {
     if (parameterCount != 1) throw IllegalArgumentException("invalid parameter count $parameterCount for 'skewY'")
     transforms += SkewY(parameters.toDouble(0))
 }

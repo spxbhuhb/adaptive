@@ -9,8 +9,8 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
+import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.graphics.svg.api.svg
-import `fun`.adaptive.graphics.svg.api.svgFill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.resource.graphics.Graphics
@@ -23,7 +23,6 @@ import `fun`.adaptive.ui.navigation.sidebar.theme.fullSidebarTheme
 import `fun`.adaptive.ui.navigation.sidebar.theme.thinSidebarTheme
 import `fun`.adaptive.ui.navigation.sidebar.thinSidebar
 import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
 
 const val MENU_CLOSED = "menu_closed"
@@ -79,7 +78,7 @@ private fun fullHeader(vararg instructions : AdaptiveInstruction) : AdaptiveFrag
 
         box {
             size(48.dp, 48.dp)
-            svg(Graphics.eco) .. svgHeight(48.dp) .. svgWidth(48.dp) .. svgFill(colors.onSurface)
+            svg(Graphics.eco) .. svgHeight(48.dp) .. svgWidth(48.dp) .. fill(colors.onSurface)
         }
 
         text("Adaptive") .. boldFont .. fontSize(28.sp) .. paddingTop { 8.dp }
@@ -110,7 +109,7 @@ fun thinHeader(vararg instructions : AdaptiveInstruction) : AdaptiveFragment {
 
         box {
             size(48.dp, 48.dp)
-            svg(Graphics.eco) .. svgHeight(48.dp) .. svgWidth(48.dp) .. svgFill(colors.onSurface)
+            svg(Graphics.eco) .. svgHeight(48.dp) .. svgWidth(48.dp) .. fill(colors.onSurface)
         }
     }
     return fragment()

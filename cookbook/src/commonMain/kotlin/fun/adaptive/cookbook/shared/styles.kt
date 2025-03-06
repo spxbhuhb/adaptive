@@ -1,7 +1,7 @@
 package `fun`.adaptive.cookbook.shared
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.graphics.svg.api.svgFill
+import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.color
@@ -49,15 +49,15 @@ fun colors(active: Boolean = false, hover: Boolean = false) =
 
 val primaryBackground = backgroundColor(0x6259CE)
 val primaryText = textColor(0xffffffu)
-val primaryIcon = svgFill(0xffffffu)
+val primaryIcon = fill(0xffffffu)
 
 val hoverBackground = backgroundColor(0x9B8CFFu)
 val hoverText = textColor(0xffffffu)
-val hoverIcon = svgFill(0xffffffu)
+val hoverIcon = fill(0xffffffu)
 
 val normalBackground = backgroundColor(0xffffffu)
 val normalText = textColor(0x0)
-val normalIcon = svgFill(0x0)
+val normalIcon = fill(0x0)
 
 val primaryStyles = instructionsOf(primaryBackground, primaryText, primaryIcon)
 val hoverStyles = instructionsOf(hoverBackground, hoverText, hoverIcon)

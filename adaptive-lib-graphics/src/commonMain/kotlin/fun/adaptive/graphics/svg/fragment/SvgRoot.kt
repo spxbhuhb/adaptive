@@ -6,11 +6,10 @@ package `fun`.adaptive.graphics.svg.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.graphics.svg.SvgAdapter
 import `fun`.adaptive.graphics.svg.SvgFragment
-import `fun`.adaptive.graphics.svg.instruction.transform.Scale
-import `fun`.adaptive.graphics.svg.instruction.transform.Translate
+import `fun`.adaptive.graphics.canvas.transform.Scale
+import `fun`.adaptive.graphics.canvas.transform.Translate
 import `fun`.adaptive.graphics.svg.render.SvgRootRenderData
 
 @AdaptiveActual

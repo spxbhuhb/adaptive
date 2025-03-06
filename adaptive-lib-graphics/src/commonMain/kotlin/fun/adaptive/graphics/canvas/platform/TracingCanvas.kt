@@ -4,15 +4,15 @@
 
 package `fun`.adaptive.graphics.canvas.platform
 
-import `fun`.adaptive.graphics.canvas.render.GraphicsRenderData
-import `fun`.adaptive.graphics.svg.instruction.transform.SvgTransform
+import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
+import `fun`.adaptive.graphics.canvas.transform.CanvasTransform
 import `fun`.adaptive.ui.instruction.decoration.Color
 
 class TracingCanvas<T : ActualCanvas>(
     val canvas: T
 ) : ActualCanvas {
 
-    override fun apply(renderData: GraphicsRenderData?) {
+    override fun apply(renderData: CanvasRenderData?) {
         println("apply: $renderData")
         super.apply(renderData)
     }
@@ -67,7 +67,7 @@ class TracingCanvas<T : ActualCanvas>(
         canvas.line(x1, y1, x2, y2)
     }
 
-    override fun transform(t: SvgTransform) {
+    override fun transform(t: CanvasTransform) {
         println("transform: $t")
         canvas.transform(t)
     }

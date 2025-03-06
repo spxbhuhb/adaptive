@@ -1,7 +1,7 @@
 package `fun`.adaptive.ui.navigation.sidebar.theme
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.graphics.svg.api.svgFill
+import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.borderRight
 import `fun`.adaptive.ui.api.cornerRadius
@@ -46,7 +46,7 @@ open class FullSidebarThemeVariant(
 
     override fun itemColors(active: Boolean, hover: Boolean) =
         when {
-            active -> instructionsOf(backgrounds.surface, textColor(colors.primary), svgFill(colors.primary))
+            active -> instructionsOf(backgrounds.surface, textColor(colors.primary), fill(colors.primary))
             hover -> hoverColors
             else -> normalColors
         }

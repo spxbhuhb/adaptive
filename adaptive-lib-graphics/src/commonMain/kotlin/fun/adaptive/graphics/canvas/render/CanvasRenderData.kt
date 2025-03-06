@@ -6,12 +6,15 @@ package `fun`.adaptive.graphics.canvas.render
 
 import `fun`.adaptive.graphics.canvas.instruction.Fill
 import `fun`.adaptive.graphics.canvas.instruction.Stroke
+import `fun`.adaptive.graphics.canvas.transform.CanvasTransform
 
-open class GraphicsRenderData {
+open class CanvasRenderData {
+
     var fill: Fill? = null
     var stroke: Stroke? = null
+    var transform: MutableList<CanvasTransform>? = null
 
     override fun toString(): String {
-        return "GraphicsRenderData(fill=${fill?.color ?: "null"}, stroke=${stroke?.color ?: "null"})"
+        return "CanvasRenderData(fill=${fill?.color ?: "null"}, stroke=${stroke?.color ?: "null"})"
     }
 }

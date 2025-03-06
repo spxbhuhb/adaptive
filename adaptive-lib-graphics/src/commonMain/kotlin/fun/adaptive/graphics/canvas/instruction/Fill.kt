@@ -4,16 +4,16 @@
 
 package `fun`.adaptive.graphics.canvas.instruction
 
-import `fun`.adaptive.graphics.canvas.render.GraphicsRenderData
+import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.utility.alsoIfInstance
 
 data class Fill(
     val color: Color,
-) : GraphicsInstruction {
+) : CanvasInstruction {
 
     override fun applyTo(subject: Any) {
-        subject.alsoIfInstance<GraphicsRenderData> {
+        subject.alsoIfInstance<CanvasRenderData> {
             it.fill = this
         }
     }

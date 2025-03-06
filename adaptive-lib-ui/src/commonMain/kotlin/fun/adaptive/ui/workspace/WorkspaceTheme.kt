@@ -2,7 +2,7 @@ package `fun`.adaptive.ui.workspace
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.graphics.svg.api.svgFill
+import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.decoration.Color
@@ -100,7 +100,7 @@ class WorkspaceTheme(
     )
 
     val paneIcon = instructionsOf(
-        svgFill(colors.onSurface)
+        fill(colors.onSurface)
     )
 
     val tooltipContainer = instructionsOf(

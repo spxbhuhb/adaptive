@@ -4,7 +4,13 @@
 
 package `fun`.adaptive.graphics.canvas.platform
 
-import `fun`.adaptive.graphics.svg.instruction.transform.*
+import `fun`.adaptive.graphics.canvas.transform.Matrix
+import `fun`.adaptive.graphics.canvas.transform.Rotate
+import `fun`.adaptive.graphics.canvas.transform.Scale
+import `fun`.adaptive.graphics.canvas.transform.SkewX
+import `fun`.adaptive.graphics.canvas.transform.SkewY
+import `fun`.adaptive.graphics.canvas.transform.CanvasTransform
+import `fun`.adaptive.graphics.canvas.transform.Translate
 import `fun`.adaptive.ui.instruction.decoration.Color
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -101,7 +107,7 @@ class ActualBrowserCanvas : ActualCanvas {
         context.stroke()
     }
 
-    override fun transform(t: SvgTransform) {
+    override fun transform(t: CanvasTransform) {
         when (t) {
             is Translate -> context.translate(t.tx, t.ty)
 

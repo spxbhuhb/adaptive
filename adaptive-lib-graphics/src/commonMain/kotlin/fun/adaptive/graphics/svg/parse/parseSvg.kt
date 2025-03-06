@@ -6,32 +6,39 @@ package `fun`.adaptive.graphics.svg.parse
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
+import `fun`.adaptive.graphics.canvas.instruction.Fill
 import `fun`.adaptive.graphics.svg.SvgAdapter
 import `fun`.adaptive.graphics.svg.SvgFragment
 import `fun`.adaptive.graphics.svg.fragment.SvgGroup
 import `fun`.adaptive.graphics.svg.fragment.SvgPath
 import `fun`.adaptive.graphics.svg.fragment.SvgRoot
-import `fun`.adaptive.graphics.svg.instruction.*
+import `fun`.adaptive.graphics.svg.instruction.D
+import `fun`.adaptive.graphics.svg.instruction.SvgHeight
+import `fun`.adaptive.graphics.svg.instruction.SvgWidth
+import `fun`.adaptive.graphics.svg.instruction.ViewBox
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.wireformat.xml.XmlAttribute
 import `fun`.adaptive.wireformat.xml.XmlElement
 import `fun`.adaptive.wireformat.xml.parseXml
 
-interface SvgInstruction : AdaptiveInstruction
-
 fun parseSvg(
     adapter: SvgAdapter,
     source: String,
-    additionalInstructions: Array<out SvgInstruction> = emptyArray()
+    additionalInstructions: Array<out AdaptiveInstruction> = emptyArray()
 ): SvgFragment<*> {
     val xmlRoot = parseXml(source, skipBlankContent = true)
     requireNotNull(xmlRoot) { "could not parse XML: $source" }
     return toSvg(xmlRoot, adapter, null, additionalInstructions)
 }
 
-private fun toSvg(xmlElement: XmlElement, adapter: SvgAdapter, parent: SvgFragment<*>?, additionalInstructions: Array<out SvgInstruction>): SvgFragment<*> {
+private fun toSvg(
+    xmlElement: XmlElement,
+    adapter: SvgAdapter,
+    parent: SvgFragment<*>?,
+    additionalInstructions: Array<out AdaptiveInstruction>
+): SvgFragment<*> {
 
-    val instructions = mutableListOf<SvgInstruction>()
+    val instructions = mutableListOf<AdaptiveInstruction>()
     xmlElement.attributes.forEach { toSvg(it, instructions) }
 
     val fragment = when (xmlElement.tag) {
@@ -53,7 +60,7 @@ private fun toSvg(xmlElement: XmlElement, adapter: SvgAdapter, parent: SvgFragme
     return fragment
 }
 
-private fun toSvg(xmlAttribute: XmlAttribute, instructions: MutableList<SvgInstruction>) {
+private fun toSvg(xmlAttribute: XmlAttribute, instructions: MutableList<AdaptiveInstruction>) {
     val value = xmlAttribute.value
 
     when (xmlAttribute.name) {
@@ -69,27 +76,27 @@ private fun toSvg(xmlAttribute: XmlAttribute, instructions: MutableList<SvgInstr
     }
 }
 
-private fun transform(value: String, instructions: MutableList<SvgInstruction>) {
+private fun transform(value: String, instructions: MutableList<AdaptiveInstruction>) {
     instructions += parseTransform(value)
 }
 
-private fun fill(value: String, instructions: MutableList<SvgInstruction>) {
-    instructions += SvgFill(Color(value))
+private fun fill(value: String, instructions: MutableList<AdaptiveInstruction>) {
+    instructions += Fill(Color(value))
 }
 
-private fun d(value: String, instructions: MutableList<SvgInstruction>) {
+private fun d(value: String, instructions: MutableList<AdaptiveInstruction>) {
     instructions += D(parsePath(value))
 }
 
-private fun height(value: String, instructions: MutableList<SvgInstruction>) {
+private fun height(value: String, instructions: MutableList<AdaptiveInstruction>) {
     instructions += SvgHeight(value)
 }
 
-private fun width(value: String, instructions: MutableList<SvgInstruction>) {
+private fun width(value: String, instructions: MutableList<AdaptiveInstruction>) {
     instructions += SvgWidth(value)
 }
 
-private fun viewBox(value: String, instructions: MutableList<SvgInstruction>) {
+private fun viewBox(value: String, instructions: MutableList<AdaptiveInstruction>) {
     val params = value.toDoubles()
     require(params.size == 4) { "invalid viewBox parameter number ${params.size} (should be 4)" }
     instructions += ViewBox(params[0], params[1], params[2], params[3])

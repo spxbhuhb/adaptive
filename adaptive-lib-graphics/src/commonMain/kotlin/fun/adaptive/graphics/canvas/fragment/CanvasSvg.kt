@@ -8,8 +8,8 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.graphics.canvas.CanvasAdapter
 import `fun`.adaptive.graphics.canvas.CanvasFragment
 import `fun`.adaptive.graphics.canvas.canvas
+import `fun`.adaptive.graphics.canvas.instruction.CanvasInstruction
 import `fun`.adaptive.graphics.svg.SvgAdapter
-import `fun`.adaptive.graphics.svg.parse.SvgInstruction
 import `fun`.adaptive.graphics.svg.parse.parseSvg
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
@@ -52,7 +52,7 @@ open class CanvasSvg(
 
     private fun parseAndDraw() {
         safeCall(svgLogger, message = "Couldn't parse resource: ${resource.uri}") {
-            parseSvg(svgAdapter, data.decodeToString(), instructions.toMutableList().filterIsInstance<SvgInstruction>().toTypedArray())
+            parseSvg(svgAdapter, data.decodeToString(), instructions.toMutableList().filterIsInstance<CanvasInstruction>().toTypedArray())
         }?.let {
             svgAdapter.rootFragment = it
             svgAdapter.draw()

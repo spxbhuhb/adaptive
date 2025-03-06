@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.graphics.svg.instruction
 
-import `fun`.adaptive.graphics.svg.parse.SvgInstruction
+import `fun`.adaptive.graphics.canvas.instruction.CanvasInstruction
 import `fun`.adaptive.graphics.svg.render.SvgRootRenderData
 import `fun`.adaptive.utility.alsoIfInstance
 
@@ -13,7 +13,7 @@ data class ViewBox(
     val minY: Double,
     val width: Double,
     val height: Double
-) : SvgInstruction {
+) : CanvasInstruction {
     override fun applyTo(subject: Any) {
         subject.alsoIfInstance<SvgRootRenderData> {
             it.viewBox = this
