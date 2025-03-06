@@ -34,7 +34,7 @@ open class CanvasPath(
     }
 
     override fun drawInner() {
-        if (renderData.fill != null) {
+        if (renderData?.fill != null) {
             canvas.fill(path)
         } else {
             canvas.stroke(path)

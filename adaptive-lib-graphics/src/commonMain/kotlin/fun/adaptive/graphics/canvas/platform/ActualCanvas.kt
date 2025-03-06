@@ -15,7 +15,8 @@ import `fun`.adaptive.ui.instruction.decoration.Color
  */
 interface ActualCanvas {
 
-    fun apply(renderData: GraphicsRenderData) {
+    fun apply(renderData: GraphicsRenderData?) {
+        if (renderData == null) return
         renderData.fill?.let { setFill(it.color) }
         renderData.stroke?.let { setStroke(it.color) }
     }

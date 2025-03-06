@@ -12,7 +12,7 @@ class TracingCanvas<T : ActualCanvas>(
     val canvas: T
 ) : ActualCanvas {
 
-    override fun apply(renderData: GraphicsRenderData) {
+    override fun apply(renderData: GraphicsRenderData?) {
         println("apply: $renderData")
         super.apply(renderData)
     }

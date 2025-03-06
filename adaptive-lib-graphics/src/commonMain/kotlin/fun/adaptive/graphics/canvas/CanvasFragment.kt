@@ -20,7 +20,7 @@ abstract class CanvasFragment(
     val canvas: ActualCanvas
         get() = canvasAdapter.rootContainer
 
-    lateinit var renderData: GraphicsRenderData
+    var renderData: GraphicsRenderData? = null
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         null
