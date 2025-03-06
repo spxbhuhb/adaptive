@@ -54,6 +54,7 @@ kotlin {
             dependencies {
                 implementation(libs.adaptive.core)
                 implementation(libs.adaptive.ui)
+                implementation(libs.adaptive.lib.app.basic)
                 implementation(libs.adaptive.lib.email)
                 implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.lib.auth)

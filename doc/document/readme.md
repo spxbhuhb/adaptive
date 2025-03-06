@@ -55,3 +55,46 @@ docDocument(
 )
 ```
 
+## Markdown support
+
+Supported Markdown structures:
+
+- header
+- paragraph
+- link
+- list (bullet and  numbered)
+- bold, italic, inline code
+- code fence
+- quote
+- horizontal line
+- image
+
+
+### Actualize fragments
+
+To actualize a fragment from markdown (assuming it is in the adapters fragment factory):
+
+```markdown
+[Stuff](actualize://cookbook:recipe:demo:goodmorning)
+```
+
+### Include data
+
+> This feature is in-development, it does not work yet.
+
+Pass an Adat class in the `arguments` paramter of `docDocument`:
+
+```kotlin
+@Adat
+class MyDocumentData(
+    val text : String
+)
+
+docDocument(Documents.some_markdown, MyDocumentData("Hello World!"))
+```
+
+And then in the markdown: 
+
+```markdown
+[Message](argument://text)
+```

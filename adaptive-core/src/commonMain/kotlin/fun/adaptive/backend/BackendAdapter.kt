@@ -85,10 +85,10 @@ open class BackendAdapter(
         scope.safeLaunch(logger) {
             transport.start(this@BackendAdapter)
         }
+        isRunning = true
         while (wait && scope.isActive) {
             sleep(1000)
         }
-        isRunning = true
         return this
     }
 

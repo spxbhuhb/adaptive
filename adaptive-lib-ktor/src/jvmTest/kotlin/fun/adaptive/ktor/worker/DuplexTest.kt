@@ -11,7 +11,7 @@ import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ktor.ktor
-import `fun`.adaptive.lib.auth.auth
+import `fun`.adaptive.lib.auth.authJvm
 import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.service.api.getService
@@ -55,7 +55,7 @@ class DuplexTest {
         val serverBackend = backend {
             inMemoryH2(callSiteName.substringAfterLast('.'))
             service { DuplexService() }
-            auth() // to have session worker
+            authJvm() // to have session worker
             ktor()
         }
 

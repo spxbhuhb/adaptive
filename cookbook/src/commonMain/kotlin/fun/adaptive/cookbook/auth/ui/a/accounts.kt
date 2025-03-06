@@ -3,8 +3,8 @@ package `fun`.adaptive.cookbook.auth.ui.a
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.cookbook.add
-import `fun`.adaptive.cookbook.auth.api.AccountApi
-import `fun`.adaptive.cookbook.auth.model.AccountSummary
+import `fun`.adaptive.auth.api.BasicAccountApi
+import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.cookbook.auth.ui.account.AccountFilter
 import `fun`.adaptive.cookbook.auth.ui.account.accountEditor
 import `fun`.adaptive.cookbook.support.title
@@ -34,7 +34,7 @@ import `fun`.adaptive.ui.instruction.fr
 @Adaptive
 fun accounts() {
     val filter = copyOf { AccountFilter() }
-    val items = fetch { getService<AccountApi>(adapter().transport).accounts() }
+    val items = fetch { getService<BasicAccountApi>(adapter().transport).accounts() }
 
     grid {
         maxSize .. colTemplate(1.fr) .. rowTemplate(118.dp, 1.fr) .. paddingHorizontal { 16.dp }
@@ -58,7 +58,7 @@ fun header(filter: AccountFilter) {
 }
 
 @Adaptive
-fun items(items: List<AccountSummary>?, emptyFilter: Boolean) {
+fun items(items: List<BasicAccountSummary>?, emptyFilter: Boolean) {
     column {
         maxSize .. verticalScroll .. gap { 16.dp }
         when {

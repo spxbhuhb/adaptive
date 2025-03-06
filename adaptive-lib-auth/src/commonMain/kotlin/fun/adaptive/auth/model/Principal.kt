@@ -13,7 +13,7 @@ import kotlinx.datetime.Instant
 @Adat
 class Principal(
     override var id: UUID<Principal>,
-    var name: String,
+    var principalName: String,
     var activated: Boolean = false,
     var locked: Boolean = false,
     var expired: Boolean = false,

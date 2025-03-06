@@ -13,7 +13,7 @@ import `fun`.adaptive.cookbook.Routes
 import `fun`.adaptive.cookbook.app.landing
 import `fun`.adaptive.cookbook.app.pageNotFound
 import `fun`.adaptive.cookbook.appData
-import `fun`.adaptive.cookbook.auth.api.AccountApi
+import `fun`.adaptive.auth.api.BasicAccountApi
 import `fun`.adaptive.cookbook.auth.authRecipe
 import `fun`.adaptive.cookbook.auth.ui.responsive.signIn
 import `fun`.adaptive.cookbook.commonMainStringsStringStore0
@@ -79,7 +79,7 @@ fun main() {
         appData.session = getService<SessionApi>(transport).getSession()
 
         if (appData.session != null) {
-            val account = getService<AccountApi>(transport).account()
+            val account = getService<BasicAccountApi>(transport).account()
             checkNotNull(account)
             appData.userFullName = account.name
         }

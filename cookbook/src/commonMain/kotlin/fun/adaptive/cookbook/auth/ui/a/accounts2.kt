@@ -1,7 +1,7 @@
 package `fun`.adaptive.cookbook.auth.ui.a
 
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.cookbook.auth.model.AccountSummary
+import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.cookbook.auth.ui.account.AccountEditorData
 import `fun`.adaptive.cookbook.auth.ui.account.accountEditor
 import `fun`.adaptive.cookbook.check_circle
@@ -35,7 +35,7 @@ import `fun`.adaptive.ui.theme.textSmall
 
 
 @Adaptive
-fun item(item: AccountSummary) {
+fun item(item: BasicAccountSummary) {
     val hover = hover()
 
     val background =

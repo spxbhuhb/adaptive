@@ -15,7 +15,7 @@ import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ktor.ktor
-import `fun`.adaptive.lib.auth.auth
+import `fun`.adaptive.lib.auth.authJvm
 import `fun`.adaptive.lib.auth.crypto.BCrypt
 import `fun`.adaptive.lib.auth.store.CredentialTable
 import `fun`.adaptive.lib.auth.store.PrincipalTable
@@ -44,7 +44,7 @@ class AuthTest {
         val serverBackend = backend {
             inMemoryH2(callSiteName.substringAfterLast('.'))
             service { AuthTestService() }
-            auth() // to have session worker
+            authJvm() // to have session worker
             ktor()
         }
 

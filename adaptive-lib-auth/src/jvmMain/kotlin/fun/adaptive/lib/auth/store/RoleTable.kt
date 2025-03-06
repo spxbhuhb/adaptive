@@ -19,8 +19,11 @@ object RoleTable : AdatEntityTable<Role, RoleTable>("auth_role", columnName = "u
     val displayOrder = integer("display_order")
 
     fun getByContext(name: String): List<Role> =
-        join(RoleContextTable, JoinType.INNER, context, RoleContextTable.id)
+        join(RoleContextTable, JoinType.INNER, context, id)
             .select { RoleContextTable.name eq name }
             .map { fromRow(it) }
+
+    fun getByNameOrNull(name : String) : Role? =
+        select { RoleTable.name eq name }.firstOrNull()?.let { fromRow(it) }
 
 }

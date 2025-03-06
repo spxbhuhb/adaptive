@@ -14,12 +14,12 @@ import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.snackbar.fail
-import `fun`.adaptive.ui.snackbar.info
+import `fun`.adaptive.ui.snackbar.failNotification
+import `fun`.adaptive.ui.snackbar.infoNotification
 import `fun`.adaptive.ui.snackbar.snackList
 import `fun`.adaptive.ui.snackbar.snackStore
-import `fun`.adaptive.ui.snackbar.success
-import `fun`.adaptive.ui.snackbar.warning
+import `fun`.adaptive.ui.snackbar.successNotification
+import `fun`.adaptive.ui.snackbar.warningNotification
 
 @Adaptive
 fun snackbarRecipe(): AdaptiveFragment {
@@ -42,10 +42,10 @@ fun snackbarRecipe(): AdaptiveFragment {
             row {
                 gap { 16.dp }
 
-                button("Success") .. onClick { success("Success snackbar!") }
-                button("Info") .. onClick { info("Info snackbar!") }
-                button("Warning") .. onClick { warning("Warning snackbar!") }
-                button("Fail") .. onClick { fail("Fail snackbar!") }
+                button("Success") .. onClick { successNotification("Success snackbar!") }
+                button("Info") .. onClick { infoNotification("Info snackbar!") }
+                button("Warning") .. onClick { warningNotification("Warning snackbar!") }
+                button("Fail") .. onClick { failNotification("Fail snackbar!") }
             }
 
             snackList(snacks)

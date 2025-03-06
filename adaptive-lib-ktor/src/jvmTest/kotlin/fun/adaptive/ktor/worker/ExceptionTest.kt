@@ -8,7 +8,7 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.ktor.ktor
-import `fun`.adaptive.lib.auth.auth
+import `fun`.adaptive.lib.auth.authJvm
 import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.builtin.ServiceImpl
@@ -66,7 +66,7 @@ class ExceptionTest {
         val serverBackend = backend {
             inMemoryH2(callSiteName.substringAfterLast('.'))
             service { NumberService() }
-            auth() // to have session worker
+            authJvm() // to have session worker
             ktor()
         }
 

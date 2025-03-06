@@ -64,6 +64,10 @@ kotlin {
             implementation(libs.kotlin.test)
         }
 
+        jsMain.dependencies {
+            implementation(libs.ktor.client.core)
+        }
+
         jvmMain.dependencies {
             implementation(libs.adaptive.lib.exposed)
             implementation(libs.ktor.server.core)

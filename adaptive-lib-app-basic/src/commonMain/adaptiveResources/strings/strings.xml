@@ -1,0 +1,34 @@
+<!--
+  ~ Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+  -->
+
+<resources>
+    <string name="email">e-mail</string>
+    <string name="password">password</string>
+    <string name="noTechnicalInfo">There is no additional technical information.</string>
+    <string name="invalidFields">Please check the form, there are invalid values.</string>
+
+    <!-- auth -->
+    <string name="signInTitle">Welcome</string>
+    <string name="signInSubTitle">Sign in to continue</string>
+    <string name="signInRemember">Remember me</string>
+    <string name="signInForgot">**[Forgot password?](/password-reset)**</string>
+    <string name="signInButton">Sign In</string>
+    <string name="signInSuccess">You are signed in!</string>
+    <string name="singInFail">Sign-in error.</string>
+    <string name="signInSignUp">Don't have an account? **[Sign Up](/sign-up)**</string>
+
+    <string name="pwdResetTitle">Reset Password</string>
+    <string name="pwdResetSubTitle">Enter your e-mail address, and we will send you the instructions on how to reset your password.</string>
+    <string name="pwdResetButton">Send</string>
+    <string name="pwdResetSendSuccess">Password reset request has been sent.</string>
+
+    <string name="signUpTitle">Welcome</string>
+    <string name="signUpSubTitle">Sign up to join</string>
+    <string name="signUpAgree">I agree to the **[Terms of Service](/terms)**.</string>
+    <string name="signUpButton">Sign Up</string>
+    <string name="signUpFail">Sign-up error.</string>
+    <string name="signUpSignIn">Have an account? **[Sign Ip](/sign-in)**</string>
+
+
+</resources>

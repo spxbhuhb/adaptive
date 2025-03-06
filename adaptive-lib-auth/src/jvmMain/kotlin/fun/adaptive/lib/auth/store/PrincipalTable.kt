@@ -16,7 +16,7 @@ import org.jetbrains.exposed.sql.update
 @ExposedAdatTable
 object PrincipalTable : AdatEntityTable<Principal, PrincipalTable>("auth_principal") {
 
-    val name = text("name").uniqueIndex()
+    val principalName = text("principalName").uniqueIndex()
     val activated = bool("activated")
     val locked = bool("locked")
     val expired = bool("expired")
@@ -40,12 +40,12 @@ object PrincipalTable : AdatEntityTable<Principal, PrincipalTable>("auth_princip
 
     fun setName(uuid: UUID<Principal>, name: String) {
         update({ id uuidEq uuid }) {
-            it[this.name] = name
+            it[principalName] = name
         }
     }
 
-    fun getByNameOrNull(inName: String): Principal? =
-        select { name eq inName }
+    fun getByNameOrNull(name: String): Principal? =
+        select { principalName eq name }
             .map { fromRow(it) }
             .firstOrNull()
 

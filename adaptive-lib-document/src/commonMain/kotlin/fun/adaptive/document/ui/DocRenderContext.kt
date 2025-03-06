@@ -1,5 +1,6 @@
 package `fun`.adaptive.document.ui
 
+import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.document.model.DocDocument
 import `fun`.adaptive.document.model.DocInlineElement
 import `fun`.adaptive.document.model.DocLink
@@ -16,7 +17,8 @@ import `fun`.adaptive.utility.words
 class DocRenderContext(
     val document: DocDocument,
     val styles: List<AdaptiveInstructionGroup>,
-    val theme: DocumentTheme
+    val theme: DocumentTheme,
+    val arguments : AdatClass?
 ) {
 
     fun paragraphItems(elements: List<DocInlineElement>): List<ParagraphItem> =

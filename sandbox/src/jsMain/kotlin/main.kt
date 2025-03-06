@@ -2,18 +2,16 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import `fun`.adaptive.app.basic.basicAppMain
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.cookbook.cookbookCommon
-import `fun`.adaptive.cookbook.markdown_demo
 import `fun`.adaptive.document.ui.basic.docDocument
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.groveRuntimeCommon
 import `fun`.adaptive.resource.document.DocumentResourceSet.Companion.inlineDocument
-import `fun`.adaptive.resource.document.DocumentResourceSet.Companion.remoteDocument
-import `fun`.adaptive.resource.document.Documents
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.api.*
@@ -28,6 +26,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 fun main() {
+    basicAppMain()
+}
+
+fun main2() {
 
     CoroutineScope(Dispatchers.Default).launch {
 

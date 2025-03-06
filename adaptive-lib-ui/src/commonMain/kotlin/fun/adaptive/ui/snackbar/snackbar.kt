@@ -18,18 +18,18 @@ fun snackbar(message: String, type: SnackType) {
     }
 }
 
-fun success(message: String) {
+fun successNotification(message: String) {
     snackbar(message, SnackType.Success)
 }
 
-fun info(message: String) {
+fun infoNotification(message: String) {
     snackbar(message, SnackType.Info)
 }
 
-fun warning(message: String) {
+fun warningNotification(message: String) {
     snackbar(message, SnackType.Warning)
 }
 
-fun fail(message: String) {
+fun failNotification(message: String) {
     snackbar(message, SnackType.Fail)
 }

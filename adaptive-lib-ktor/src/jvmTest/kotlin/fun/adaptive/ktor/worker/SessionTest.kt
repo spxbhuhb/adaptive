@@ -8,7 +8,7 @@ import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.ktor.ktor
-import `fun`.adaptive.lib.auth.auth
+import `fun`.adaptive.lib.auth.authJvm
 import `fun`.adaptive.lib.auth.crypto.BCrypt
 import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.backend.BackendAdapter
@@ -46,7 +46,7 @@ class SessionTest {
             inline("KTOR_WIREFORMAT" to "json")
         }
         inMemoryH2(dbName)
-        auth() // to have session worker
+        authJvm() // to have session worker
         ktor()
     }
 

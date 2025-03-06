@@ -14,7 +14,7 @@ import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.ktor.ClientWebSocketServiceCallTransport
 import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ktor.ktor
-import `fun`.adaptive.lib.auth.auth
+import `fun`.adaptive.lib.auth.authJvm
 import `fun`.adaptive.lib.auth.crypto.BCrypt
 import `fun`.adaptive.lib.auth.store.CredentialTable
 import `fun`.adaptive.lib.auth.store.PrincipalTable
@@ -47,7 +47,7 @@ class DownloadTest {
         }
 
         inMemoryH2(dbName)
-        auth() // to have session worker
+        authJvm() // to have session worker
         ktor()
         service { FileService() }
     }
