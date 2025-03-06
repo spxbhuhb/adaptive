@@ -54,6 +54,9 @@ class CanvasCanvas(
     override fun placeLayout(top: Double, left: Double) {
         val data = renderData
 
+        data.finalTop = top
+        data.finalLeft = left
+
         canvas.setSize(data.finalWidth, data.finalWidth)
 
         uiAdapter.applyLayoutToActual(this)

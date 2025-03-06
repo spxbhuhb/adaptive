@@ -58,3 +58,12 @@ fun svg(resource : GraphicsResource, vararg instructions: AdaptiveInstruction) {
 fun path(commands: List<PathCommand>, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
     manualImplementation(commands, instructions)
 }
+
+@AdaptiveExpect(canvas)
+fun translate(
+    x1: Double,
+    y1: Double,
+    @Adaptive _KT_74337_content: () -> Unit
+): AdaptiveFragment {
+    manualImplementation(x1, y1, _KT_74337_content)
+}
