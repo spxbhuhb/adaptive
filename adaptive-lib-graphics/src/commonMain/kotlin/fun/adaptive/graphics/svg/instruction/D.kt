@@ -4,12 +4,13 @@
 
 package `fun`.adaptive.graphics.svg.instruction
 
+import `fun`.adaptive.graphics.canvas.path.PathCommand
 import `fun`.adaptive.graphics.svg.parse.SvgInstruction
 import `fun`.adaptive.graphics.svg.render.SvgPathRenderData
 import `fun`.adaptive.utility.alsoIfInstance
 
 data class D(
-    val commands: List<SvgPathCommand>
+    val commands: List<PathCommand>
 ) : SvgInstruction {
     override fun applyTo(subject: Any) {
         subject.alsoIfInstance<SvgPathRenderData> {

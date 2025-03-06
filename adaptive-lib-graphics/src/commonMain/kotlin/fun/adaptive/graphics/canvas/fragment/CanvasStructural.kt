@@ -14,7 +14,7 @@ open class CanvasStructural(
     stateSize: Int
 ) : CanvasFragment(adapter, parent, index, stateSize) {
 
-    override fun draw() {
+    override fun drawInner() {
 
     }
 

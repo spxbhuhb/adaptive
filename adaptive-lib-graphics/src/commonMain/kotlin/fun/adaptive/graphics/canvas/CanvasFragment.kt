@@ -45,6 +45,15 @@ abstract class CanvasFragment(
         super.unmount()
     }
 
-    abstract fun draw()
+    open fun draw() {
+        canvas.save(id)
+        canvas.apply(renderData)
+
+        drawInner()
+
+        canvas.restore(id)
+    }
+
+    abstract fun drawInner()
 
 }

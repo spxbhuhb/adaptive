@@ -81,6 +81,11 @@ class ActualBrowserCanvas : ActualCanvas {
         context.fill(path.receiver)
     }
 
+    override fun stroke(path: ActualPath) {
+        path as ActualBrowserPath
+        context.stroke(path.receiver)
+    }
+
     override fun fill() {
         context.fill()
     }

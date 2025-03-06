@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.graphics.canvas.platform
 
-import `fun`.adaptive.graphics.svg.instruction.Arc
+import `fun`.adaptive.graphics.canvas.path.Arc
 
 interface ActualPath {
     fun moveTo(x: Double, y: Double)

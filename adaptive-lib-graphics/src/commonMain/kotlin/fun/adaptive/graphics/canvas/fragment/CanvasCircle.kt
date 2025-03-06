@@ -5,7 +5,6 @@ package `fun`.adaptive.graphics.canvas.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.graphics.canvas.CanvasAdapter
 import `fun`.adaptive.graphics.canvas.CanvasFragment
 import `fun`.adaptive.graphics.canvas.canvas
@@ -36,16 +35,8 @@ open class CanvasCircle(
     val anticlockwise: Boolean?
         by stateVariable()
 
-    override fun draw() {
-        trace("draw")
-
-        canvas.save(id)
-
-        canvas.setFill(renderData.fill.color)
-
+    override fun drawInner() {
         canvas.arc(centerX, centerY, radius, startAngle ?: 0.0, endAngle ?: (2 * PI), anticlockwise ?: false)
-
-        canvas.restore(id)
     }
 
 }

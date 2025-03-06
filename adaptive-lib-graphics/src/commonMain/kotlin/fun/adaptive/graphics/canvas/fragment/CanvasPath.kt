@@ -8,25 +8,37 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.graphics.canvas.CanvasAdapter
 import `fun`.adaptive.graphics.canvas.CanvasFragment
 import `fun`.adaptive.graphics.canvas.canvas
+import `fun`.adaptive.graphics.canvas.path.PathCommand
 
 @AdaptiveActual(canvas)
-open class CanvasFillText(
+open class CanvasPath(
     adapter: CanvasAdapter,
     parent: AdaptiveFragment,
     index: Int,
 ) : CanvasFragment(adapter, parent, index, stateSize()) {
 
-    val x: Double
+    var path = canvas.newPath()
+
+    val commands: List<PathCommand>
         by stateVariable()
 
-    val y: Double
-        by stateVariable()
+    override fun genPatchInternal(): Boolean {
+        super.genPatchInternal()
 
-    val text: String
-        by stateVariable()
+        if (haveToPatch(commands)) {
+            path = canvas.newPath()
+            commands.forEach { it.apply(path) }
+        }
+
+        return false
+    }
 
     override fun drawInner() {
-        canvas.fillText(x, y, text)
+        if (renderData.fill != null) {
+            canvas.fill(path)
+        } else {
+            canvas.stroke(path)
+        }
     }
 
 }

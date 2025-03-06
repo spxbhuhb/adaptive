@@ -29,16 +29,8 @@ open class CanvasLine(
     val y2: Double
         by stateVariable()
 
-    override fun draw() {
-        trace("draw")
-
-        canvas.save(id)
-
-        canvas.setStroke(renderData.stroke.color)
-
+    override fun drawInner() {
         canvas.line(x1, y1, x2, y2)
-
-        canvas.restore(id)
     }
 
 }

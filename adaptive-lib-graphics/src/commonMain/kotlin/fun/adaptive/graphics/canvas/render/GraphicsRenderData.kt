@@ -6,9 +6,12 @@ package `fun`.adaptive.graphics.canvas.render
 
 import `fun`.adaptive.graphics.canvas.instruction.Fill
 import `fun`.adaptive.graphics.canvas.instruction.Stroke
-import `fun`.adaptive.ui.instruction.decoration.Color
 
 open class GraphicsRenderData {
-    var fill: Fill = Fill(Color(0x0u))
-    var stroke : Stroke = Stroke(Color(0x0u))
+    var fill: Fill? = null
+    var stroke: Stroke? = null
+
+    override fun toString(): String {
+        return "GraphicsRenderData(fill=${fill?.color ?: "null"}, stroke=${stroke?.color ?: "null"})"
+    }
 }

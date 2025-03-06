@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.graphics.canvas.platform
 
-import `fun`.adaptive.graphics.svg.instruction.SvgFill
+import `fun`.adaptive.graphics.canvas.render.GraphicsRenderData
 import `fun`.adaptive.graphics.svg.instruction.transform.SvgTransform
 import `fun`.adaptive.ui.instruction.decoration.Color
 
@@ -14,6 +14,11 @@ import `fun`.adaptive.ui.instruction.decoration.Color
  * @param  PT  Path type
  */
 interface ActualCanvas {
+
+    fun apply(renderData: GraphicsRenderData) {
+        renderData.fill?.let { setFill(it.color) }
+        renderData.stroke?.let { setStroke(it.color) }
+    }
 
     /**
      * Draw on the canvas by calling [drawFun]. Implementations may surround [drawFun] with whatever
@@ -57,6 +62,11 @@ interface ActualCanvas {
      * Fill a path
      */
     fun fill(path: ActualPath)
+
+    /**
+     * Fill a path
+     */
+    fun stroke(path: ActualPath)
 
     /**
      * Fill the current path.

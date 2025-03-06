@@ -4,13 +4,18 @@
 
 package `fun`.adaptive.graphics.canvas.platform
 
-import `fun`.adaptive.graphics.svg.instruction.*
+import `fun`.adaptive.graphics.canvas.render.GraphicsRenderData
 import `fun`.adaptive.graphics.svg.instruction.transform.SvgTransform
 import `fun`.adaptive.ui.instruction.decoration.Color
 
 class TracingCanvas<T : ActualCanvas>(
     val canvas: T
 ) : ActualCanvas {
+
+    override fun apply(renderData: GraphicsRenderData) {
+        println("apply: $renderData")
+        super.apply(renderData)
+    }
 
     override fun save(id: Long) {
         println("save: $id")
@@ -40,6 +45,11 @@ class TracingCanvas<T : ActualCanvas>(
     override fun fill(path: ActualPath) {
         println("fill: $path")
         canvas.fill(path)
+    }
+
+    override fun stroke(path: ActualPath) {
+        println("stroke: $path")
+        canvas.stroke(path)
     }
 
     override fun fill() {

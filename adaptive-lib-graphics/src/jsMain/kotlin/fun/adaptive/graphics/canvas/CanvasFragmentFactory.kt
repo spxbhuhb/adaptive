@@ -9,6 +9,7 @@ import `fun`.adaptive.graphics.canvas.fragment.CanvasCanvas
 import `fun`.adaptive.graphics.canvas.fragment.CanvasCircle
 import `fun`.adaptive.graphics.canvas.fragment.CanvasFillText
 import `fun`.adaptive.graphics.canvas.fragment.CanvasLine
+import `fun`.adaptive.graphics.canvas.fragment.CanvasPath
 import `fun`.adaptive.graphics.canvas.fragment.CanvasSvg
 import `fun`.adaptive.ui.AuiAdapter
 
@@ -19,5 +20,6 @@ object CanvasFragmentFactory : FoundationFragmentFactory() {
         add("canvas:line") { p, i, s -> CanvasLine(p.adapter as CanvasAdapter, p, i) }
         add("canvas:filltext") { p, i, s -> CanvasFillText(p.adapter as CanvasAdapter, p, i) }
         add("canvas:svg") { p, i, s -> CanvasSvg(p.adapter as CanvasAdapter, p, i) }
+        add("canvas:path") { p, i, s -> CanvasPath(p.adapter as CanvasAdapter, p, i) }
     }
 }

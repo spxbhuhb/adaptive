@@ -4,7 +4,10 @@
 
 package `fun`.adaptive.graphics.svg.parse
 
-import `fun`.adaptive.graphics.svg.instruction.*
+import `fun`.adaptive.graphics.canvas.path.ClosePath
+import `fun`.adaptive.graphics.canvas.path.CubicCurve
+import `fun`.adaptive.graphics.canvas.path.LineTo
+import `fun`.adaptive.graphics.canvas.path.MoveTo
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

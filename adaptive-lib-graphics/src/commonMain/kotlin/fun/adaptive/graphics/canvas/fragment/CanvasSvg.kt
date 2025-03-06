@@ -59,7 +59,7 @@ open class CanvasSvg(
         }
     }
 
-    override fun draw() {
+    override fun drawInner() {
         if (trace) trace("draw")
     }
 

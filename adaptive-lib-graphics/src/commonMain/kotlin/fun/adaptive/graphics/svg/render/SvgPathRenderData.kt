@@ -4,8 +4,8 @@
 
 package `fun`.adaptive.graphics.svg.render
 
-import `fun`.adaptive.graphics.svg.instruction.SvgPathCommand
+import `fun`.adaptive.graphics.canvas.path.PathCommand
 
 class SvgPathRenderData : SvgRenderData() {
-    var commands : List<SvgPathCommand> = emptyList()
+    var commands: List<PathCommand> = emptyList()
 }
