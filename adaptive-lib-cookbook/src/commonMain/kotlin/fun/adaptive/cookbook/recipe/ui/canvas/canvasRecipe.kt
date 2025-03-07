@@ -9,7 +9,10 @@ import `fun`.adaptive.graphics.canvas.api.circle
 import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.graphics.canvas.api.fillText
 import `fun`.adaptive.graphics.canvas.api.line
+import `fun`.adaptive.graphics.canvas.api.rotate
 import `fun`.adaptive.graphics.canvas.api.stroke
+import `fun`.adaptive.graphics.canvas.api.transform
+import `fun`.adaptive.graphics.canvas.api.translate
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.flowBox
@@ -40,14 +43,17 @@ fun canvasRecipe(): AdaptiveFragment {
 
 @Adaptive
 fun basicCanvas() {
-    val seconds = poll(50.milliseconds) { (now().toEpochMilliseconds() % 3000).toDouble() } ?: 0.0
+    val seconds = poll(50.milliseconds) { (now().toEpochMilliseconds() % 3600).toDouble() } ?: 0.0
 
     box {
         size(402.dp, 402.dp) .. borders.outline
 
         canvas {
             circle(100.0, 100.0, seconds / 30.0) .. fill(Color(0x00ff00u, 0.3f))
-            fillText(40.0, 40.0, "Canvas") .. fill(0xff00ff)
+            transform {
+                translate(100.0, 100.0) .. rotate((seconds / 10) * PI / 180, 0.0, 0.0)
+                fillText(0.0, 0.0, "Canvas") .. fill(0xff00ff)
+            }
             line(200.0, 200.0, 400.0, 400.0) .. stroke(0x0000ff)
         }
     }

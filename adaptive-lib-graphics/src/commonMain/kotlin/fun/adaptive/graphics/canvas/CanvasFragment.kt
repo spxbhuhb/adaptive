@@ -22,6 +22,9 @@ abstract class CanvasFragment(
 
     var renderData: CanvasRenderData? = null
 
+    open val isStructural
+        get() = false
+
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         null
 
@@ -37,11 +40,26 @@ abstract class CanvasFragment(
 
     override fun mount() {
         super.mount()
-        adapter.addActualRoot(this)
+
+        val safeParent = parent
+
+        if (safeParent == null) {
+            adapter.addActualRoot(this)
+        } else {
+            safeParent.addActual(this, if (isStructural) null else true)
+        }
     }
 
     override fun unmount() {
-        adapter.removeActualRoot(this)
+
+        val safeParent = parent
+
+        if (safeParent == null) {
+            adapter.removeActualRoot(this)
+        } else {
+            safeParent.removeActual(this, if (isStructural) null else true)
+        }
+
         super.unmount()
     }
 

@@ -8,8 +8,8 @@ import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.graphics.svg.SvgAdapter
 import `fun`.adaptive.graphics.svg.SvgFragment
-import `fun`.adaptive.graphics.canvas.transform.Scale
-import `fun`.adaptive.graphics.canvas.transform.Translate
+import `fun`.adaptive.graphics.canvas.instruction.Scale
+import `fun`.adaptive.graphics.canvas.instruction.Translate
 import `fun`.adaptive.graphics.svg.render.SvgRootRenderData
 
 @AdaptiveActual

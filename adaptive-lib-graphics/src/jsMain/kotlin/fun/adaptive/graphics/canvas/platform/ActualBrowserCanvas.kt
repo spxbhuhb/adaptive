@@ -4,13 +4,13 @@
 
 package `fun`.adaptive.graphics.canvas.platform
 
-import `fun`.adaptive.graphics.canvas.transform.Matrix
-import `fun`.adaptive.graphics.canvas.transform.Rotate
-import `fun`.adaptive.graphics.canvas.transform.Scale
-import `fun`.adaptive.graphics.canvas.transform.SkewX
-import `fun`.adaptive.graphics.canvas.transform.SkewY
-import `fun`.adaptive.graphics.canvas.transform.CanvasTransform
-import `fun`.adaptive.graphics.canvas.transform.Translate
+import `fun`.adaptive.graphics.canvas.instruction.Matrix
+import `fun`.adaptive.graphics.canvas.instruction.Rotate
+import `fun`.adaptive.graphics.canvas.instruction.Scale
+import `fun`.adaptive.graphics.canvas.instruction.SkewX
+import `fun`.adaptive.graphics.canvas.instruction.SkewY
+import `fun`.adaptive.graphics.canvas.instruction.CanvasTransformInstruction
+import `fun`.adaptive.graphics.canvas.instruction.Translate
 import `fun`.adaptive.ui.instruction.decoration.Color
 import kotlinx.browser.document
 import kotlinx.browser.window
@@ -107,7 +107,7 @@ class ActualBrowserCanvas : ActualCanvas {
         context.stroke()
     }
 
-    override fun transform(t: CanvasTransform) {
+    override fun transform(t: CanvasTransformInstruction) {
         when (t) {
             is Translate -> context.translate(t.tx, t.ty)
 

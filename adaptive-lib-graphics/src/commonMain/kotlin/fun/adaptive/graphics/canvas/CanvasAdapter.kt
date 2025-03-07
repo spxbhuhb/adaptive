@@ -5,8 +5,8 @@ package `fun`.adaptive.graphics.canvas
 
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.graphics.canvas.fragment.CanvasLoop
-import `fun`.adaptive.graphics.canvas.fragment.CanvasSelect
+import `fun`.adaptive.graphics.canvas.fragment.structural.CanvasLoop
+import `fun`.adaptive.graphics.canvas.fragment.structural.CanvasSelect
 import `fun`.adaptive.graphics.canvas.platform.ActualCanvas
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.alsoIfInstance

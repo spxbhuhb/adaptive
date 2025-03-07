@@ -6,7 +6,6 @@ package `fun`.adaptive.graphics.svg.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.graphics.svg.SvgAdapter
 import `fun`.adaptive.graphics.svg.SvgFragment
 import `fun`.adaptive.graphics.svg.render.SvgPathRenderData
@@ -29,7 +28,7 @@ class SvgPath(
     }
 
     override fun draw() {
-        renderData.transform { it.forEach { t -> canvas.transform(t) } }
+        renderData.transforms { it.forEach { t -> canvas.transform(t) } }
 
         canvas.save(id)
 

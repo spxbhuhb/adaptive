@@ -40,6 +40,17 @@ class CanvasCanvas(
         return AdaptiveAnonymous.switchAdapter(canvasAdapter, this, declarationIndex, 1, content).apply { create() }
     }
 
+    // This fragment has to catch actuals and add them to the canvas
+    // instead the parent fragment.
+
+    override fun addActual(fragment: AdaptiveFragment, direct: Boolean?) {
+        canvasAdapter.addActualRoot(fragment)
+    }
+
+    override fun removeActual(fragment: AdaptiveFragment, direct: Boolean?) {
+        canvasAdapter.removeActualRoot(fragment)
+    }
+
     override fun auiPatchInternal() {
         instructions.firstInstanceOfOrNull<Trace>()?.let {
             canvasAdapter.trace = it.patterns

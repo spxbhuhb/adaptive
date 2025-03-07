@@ -8,7 +8,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.graphics.canvas.CanvasAdapter
 import `fun`.adaptive.graphics.canvas.CanvasFragment
 import `fun`.adaptive.graphics.canvas.canvas
-import `fun`.adaptive.graphics.canvas.path.PathCommand
+import `fun`.adaptive.graphics.canvas.model.path.PathCommand
 
 @AdaptiveActual(canvas)
 open class CanvasPath(

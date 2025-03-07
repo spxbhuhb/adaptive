@@ -5,7 +5,7 @@
 package `fun`.adaptive.graphics.svg.instruction
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.graphics.canvas.path.PathCommand
+import `fun`.adaptive.graphics.canvas.model.path.PathCommand
 import `fun`.adaptive.graphics.svg.render.SvgPathRenderData
 import `fun`.adaptive.utility.alsoIfInstance
 

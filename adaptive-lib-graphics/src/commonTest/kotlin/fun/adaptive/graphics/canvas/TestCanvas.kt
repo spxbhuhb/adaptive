@@ -6,7 +6,7 @@ package `fun`.adaptive.graphics.canvas
 
 import `fun`.adaptive.graphics.canvas.platform.ActualCanvas
 import `fun`.adaptive.graphics.canvas.platform.ActualPath
-import `fun`.adaptive.graphics.canvas.transform.CanvasTransform
+import `fun`.adaptive.graphics.canvas.instruction.CanvasTransformInstruction
 import `fun`.adaptive.ui.instruction.decoration.Color
 
 class TestCanvas : ActualCanvas {
@@ -37,6 +37,10 @@ class TestCanvas : ActualCanvas {
 
     }
 
+    override fun stroke(path: ActualPath) {
+
+    }
+
     override fun fill() {
 
     }
@@ -49,7 +53,7 @@ class TestCanvas : ActualCanvas {
 
     }
 
-    override fun transform(t: CanvasTransform) {
+    override fun transform(t: CanvasTransformInstruction) {
 
     }
 

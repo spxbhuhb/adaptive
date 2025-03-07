@@ -1,7 +1,7 @@
 package `fun`.adaptive.graphics.canvas
 
 import `fun`.adaptive.graphics.canvas.platform.ActualPath
-import `fun`.adaptive.graphics.canvas.path.Arc
+import `fun`.adaptive.graphics.canvas.model.path.Arc
 
 class TestPath(
     val canvas: TestCanvas

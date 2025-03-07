@@ -4,13 +4,13 @@
 
 package `fun`.adaptive.graphics.svg.parse
 
-import `fun`.adaptive.graphics.canvas.path.Arc
-import `fun`.adaptive.graphics.canvas.path.ClosePath
-import `fun`.adaptive.graphics.canvas.path.CubicCurve
-import `fun`.adaptive.graphics.canvas.path.LineTo
-import `fun`.adaptive.graphics.canvas.path.MoveTo
-import `fun`.adaptive.graphics.canvas.path.PathCommand
-import `fun`.adaptive.graphics.canvas.path.QuadraticCurve
+import `fun`.adaptive.graphics.canvas.model.path.Arc
+import `fun`.adaptive.graphics.canvas.model.path.ClosePath
+import `fun`.adaptive.graphics.canvas.model.path.CubicCurve
+import `fun`.adaptive.graphics.canvas.model.path.LineTo
+import `fun`.adaptive.graphics.canvas.model.path.MoveTo
+import `fun`.adaptive.graphics.canvas.model.path.PathCommand
+import `fun`.adaptive.graphics.canvas.model.path.QuadraticCurve
 
 fun parsePath(source: String): List<PathCommand> {
 

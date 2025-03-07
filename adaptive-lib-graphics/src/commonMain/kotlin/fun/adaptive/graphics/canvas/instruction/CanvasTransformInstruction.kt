@@ -2,20 +2,20 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package `fun`.adaptive.graphics.canvas.transform
+package `fun`.adaptive.graphics.canvas.instruction
 
-import `fun`.adaptive.graphics.canvas.instruction.CanvasInstruction
+import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
 import `fun`.adaptive.graphics.svg.render.SvgRenderData
 import `fun`.adaptive.utility.alsoIfInstance
 
-interface CanvasTransform : CanvasInstruction {
+interface CanvasTransformInstruction : CanvasInstruction {
 
     override fun applyTo(subject: Any) {
 
-        subject.alsoIfInstance<SvgRenderData> {
-            val transforms = it.transform
+        subject.alsoIfInstance<CanvasRenderData> {
+            val transforms = it.transforms
             if (transforms == null) {
-                it.transform = mutableListOf(this)
+                it.transforms = mutableListOf(this)
             } else {
                 transforms += this
             }

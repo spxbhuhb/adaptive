@@ -6,7 +6,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.manualImplementation
 import `fun`.adaptive.graphics.canvas.canvas
-import `fun`.adaptive.graphics.canvas.path.PathCommand
+import `fun`.adaptive.graphics.canvas.model.path.PathCommand
 import `fun`.adaptive.resource.graphics.GraphicsResource
 import kotlin.math.PI
 
@@ -60,10 +60,9 @@ fun path(commands: List<PathCommand>, vararg instructions: AdaptiveInstruction):
 }
 
 @AdaptiveExpect(canvas)
-fun translate(
-    x1: Double,
-    y1: Double,
+fun transform(
+    vararg instructions: AdaptiveInstruction,
     @Adaptive _KT_74337_content: () -> Unit
 ): AdaptiveFragment {
-    manualImplementation(x1, y1, _KT_74337_content)
+    manualImplementation(instructions, _KT_74337_content)
 }

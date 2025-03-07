@@ -3,18 +3,15 @@ package `fun`.adaptive.graphics.chart
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.instruction.traceAll
 import `fun`.adaptive.graphics.canvas.api.*
-import `fun`.adaptive.graphics.canvas.path.ClosePath
-import `fun`.adaptive.graphics.canvas.path.LineTo
-import `fun`.adaptive.graphics.canvas.path.MoveTo
-import `fun`.adaptive.graphics.canvas.transform.Translate
 import `fun`.adaptive.graphics.chart.model.Axis
 import `fun`.adaptive.ui.instruction.layout.Orientation
 
 @Adaptive
 fun basicAxis(axis: Axis) {
-    translate(30.0, 30.0) {
+    transform {
+        translate(30.0, 30.0)
+
         if (axis.orientation == Orientation.Horizontal) {
             basicHorizontalAxis(axis)
         }

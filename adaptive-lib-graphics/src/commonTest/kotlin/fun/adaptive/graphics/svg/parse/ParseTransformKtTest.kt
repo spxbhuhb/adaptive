@@ -4,12 +4,12 @@
 
 package `fun`.adaptive.graphics.svg.parse
 
-import `fun`.adaptive.graphics.canvas.transform.Matrix
-import `fun`.adaptive.graphics.canvas.transform.Rotate
-import `fun`.adaptive.graphics.canvas.transform.Scale
-import `fun`.adaptive.graphics.canvas.transform.SkewX
-import `fun`.adaptive.graphics.canvas.transform.SkewY
-import `fun`.adaptive.graphics.canvas.transform.Translate
+import `fun`.adaptive.graphics.canvas.instruction.Matrix
+import `fun`.adaptive.graphics.canvas.instruction.Rotate
+import `fun`.adaptive.graphics.canvas.instruction.Scale
+import `fun`.adaptive.graphics.canvas.instruction.SkewX
+import `fun`.adaptive.graphics.canvas.instruction.SkewY
+import `fun`.adaptive.graphics.canvas.instruction.Translate
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull

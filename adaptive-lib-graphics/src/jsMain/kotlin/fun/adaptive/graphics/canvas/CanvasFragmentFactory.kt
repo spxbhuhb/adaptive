@@ -5,13 +5,7 @@
 package `fun`.adaptive.graphics.canvas
 
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
-import `fun`.adaptive.graphics.canvas.fragment.CanvasCanvas
-import `fun`.adaptive.graphics.canvas.fragment.CanvasCircle
-import `fun`.adaptive.graphics.canvas.fragment.CanvasFillText
-import `fun`.adaptive.graphics.canvas.fragment.CanvasLine
-import `fun`.adaptive.graphics.canvas.fragment.CanvasPath
-import `fun`.adaptive.graphics.canvas.fragment.CanvasSvg
-import `fun`.adaptive.graphics.canvas.fragment.CanvasTranslate
+import `fun`.adaptive.graphics.canvas.fragment.*
 import `fun`.adaptive.ui.AuiAdapter
 
 object CanvasFragmentFactory : FoundationFragmentFactory() {
@@ -22,6 +16,6 @@ object CanvasFragmentFactory : FoundationFragmentFactory() {
         add("canvas:filltext") { p, i, s -> CanvasFillText(p.adapter as CanvasAdapter, p, i) }
         add("canvas:svg") { p, i, s -> CanvasSvg(p.adapter as CanvasAdapter, p, i) }
         add("canvas:path") { p, i, s -> CanvasPath(p.adapter as CanvasAdapter, p, i) }
-        add("canvas:translate") { p, i, s -> CanvasTranslate(p.adapter as CanvasAdapter, p, i) }
+        add("canvas:transform") { p, i, s -> CanvasTransform(p.adapter as CanvasAdapter, p, i) }
     }
 }

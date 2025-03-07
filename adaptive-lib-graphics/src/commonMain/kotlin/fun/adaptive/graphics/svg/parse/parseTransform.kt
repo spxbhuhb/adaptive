@@ -4,20 +4,20 @@
 
 package `fun`.adaptive.graphics.svg.parse
 
-import `fun`.adaptive.graphics.canvas.transform.Matrix
-import `fun`.adaptive.graphics.canvas.transform.Rotate
-import `fun`.adaptive.graphics.canvas.transform.Scale
-import `fun`.adaptive.graphics.canvas.transform.SkewX
-import `fun`.adaptive.graphics.canvas.transform.SkewY
-import `fun`.adaptive.graphics.canvas.transform.CanvasTransform
-import `fun`.adaptive.graphics.canvas.transform.Translate
+import `fun`.adaptive.graphics.canvas.instruction.Matrix
+import `fun`.adaptive.graphics.canvas.instruction.Rotate
+import `fun`.adaptive.graphics.canvas.instruction.Scale
+import `fun`.adaptive.graphics.canvas.instruction.SkewX
+import `fun`.adaptive.graphics.canvas.instruction.SkewY
+import `fun`.adaptive.graphics.canvas.instruction.CanvasTransformInstruction
+import `fun`.adaptive.graphics.canvas.instruction.Translate
 import `fun`.adaptive.utility.firstNotOrNull
 
-fun parseTransform(source: String): List<CanvasTransform> {
+fun parseTransform(source: String): List<CanvasTransformInstruction> {
 
     if (source.isEmpty()) return emptyList()
 
-    val transforms = mutableListOf<CanvasTransform>()
+    val transforms = mutableListOf<CanvasTransformInstruction>()
     val end = source.length
     var index = 0
 
@@ -80,7 +80,7 @@ private fun build(
     transform: String?,
     parameters: List<StringBuilder>,
     parameterCount: Int,
-    transforms: MutableList<CanvasTransform>
+    transforms: MutableList<CanvasTransformInstruction>
 ) {
     when (transform) {
         "translate" -> translate(parameters, parameterCount, transforms)
@@ -94,7 +94,7 @@ private fun build(
     }
 }
 
-private fun translate(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransform>) {
+private fun translate(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransformInstruction>) {
     transforms += when (parameterCount) {
         1 -> Translate(parameters.toDouble(0), 0.0)
         2 -> Translate(parameters.toDouble(0), parameters.toDouble(1))
@@ -102,7 +102,7 @@ private fun translate(parameters: List<StringBuilder>, parameterCount: Int, tran
     }
 }
 
-private fun scale(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransform>) {
+private fun scale(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransformInstruction>) {
     transforms += when (parameterCount) {
         1 -> {
             val amount = parameters.toDouble(0)
@@ -114,7 +114,7 @@ private fun scale(parameters: List<StringBuilder>, parameterCount: Int, transfor
     }
 }
 
-private fun rotate(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransform>) {
+private fun rotate(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransformInstruction>) {
     transforms += when (parameterCount) {
         1 -> Rotate(parameters.toDouble(0), 0.0, 0.0)
         3 -> Rotate(parameters.toDouble(0), parameters.toDouble(1), parameters.toDouble(2))
@@ -122,7 +122,7 @@ private fun rotate(parameters: List<StringBuilder>, parameterCount: Int, transfo
     }
 }
 
-private fun matrix(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransform>) {
+private fun matrix(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransformInstruction>) {
     if (parameterCount != 6) throw IllegalArgumentException("invalid parameter count $parameterCount for 'rotate'")
     transforms += Matrix(
         parameters.toDouble(0),
@@ -134,12 +134,12 @@ private fun matrix(parameters: List<StringBuilder>, parameterCount: Int, transfo
     )
 }
 
-private fun skewX(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransform>) {
+private fun skewX(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransformInstruction>) {
     if (parameterCount != 1) throw IllegalArgumentException("invalid parameter count $parameterCount for 'skewX'")
     transforms += SkewX(parameters.toDouble(0))
 }
 
-private fun skewY(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransform>) {
+private fun skewY(parameters: List<StringBuilder>, parameterCount: Int, transforms: MutableList<CanvasTransformInstruction>) {
     if (parameterCount != 1) throw IllegalArgumentException("invalid parameter count $parameterCount for 'skewY'")
     transforms += SkewY(parameters.toDouble(0))
 }

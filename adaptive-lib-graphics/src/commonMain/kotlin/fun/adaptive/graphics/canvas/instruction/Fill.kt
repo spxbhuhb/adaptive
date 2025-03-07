@@ -4,11 +4,13 @@
 
 package `fun`.adaptive.graphics.canvas.instruction
 
+import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.utility.alsoIfInstance
 
-data class Fill(
+@Adat
+class Fill(
     val color: Color,
 ) : CanvasInstruction {
 

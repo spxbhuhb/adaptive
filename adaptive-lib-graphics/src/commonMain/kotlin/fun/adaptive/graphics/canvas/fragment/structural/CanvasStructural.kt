@@ -1,21 +1,25 @@
-/*
- * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
- */
-package `fun`.adaptive.graphics.canvas.fragment
+package `fun`.adaptive.graphics.canvas.fragment.structural
 
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.graphics.canvas.CanvasAdapter
 import `fun`.adaptive.graphics.canvas.CanvasFragment
 
-open class CanvasStructural(
+abstract class CanvasStructural(
     adapter: CanvasAdapter,
     parent: AdaptiveFragment?,
     index: Int,
     stateSize: Int
 ) : CanvasFragment(adapter, parent, index, stateSize) {
 
-    override fun drawInner() {
+    override val isStructural
+        get() = true
 
+    override fun draw() {
+        // children draw is called by the adapter or by a transform
+    }
+
+    override fun drawInner() {
+        // not called as draw is empty
     }
 
 }

@@ -5,7 +5,7 @@
 package `fun`.adaptive.graphics.canvas.platform
 
 import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
-import `fun`.adaptive.graphics.canvas.transform.CanvasTransform
+import `fun`.adaptive.graphics.canvas.instruction.CanvasTransformInstruction
 import `fun`.adaptive.ui.instruction.decoration.Color
 
 class TracingCanvas<T : ActualCanvas>(
@@ -67,7 +67,7 @@ class TracingCanvas<T : ActualCanvas>(
         canvas.line(x1, y1, x2, y2)
     }
 
-    override fun transform(t: CanvasTransform) {
+    override fun transform(t: CanvasTransformInstruction) {
         println("transform: $t")
         canvas.transform(t)
     }
