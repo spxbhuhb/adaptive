@@ -6,6 +6,7 @@ package `fun`.adaptive.ui.instruction.layout
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.ui.AbstractAuiAdapter
+import `fun`.adaptive.ui.DensityIndependentAdapter
 import `fun`.adaptive.ui.instruction.dp
 
 /**
@@ -29,7 +30,7 @@ class GridRepeat(
         }
     }
 
-    override fun toRawValue(adapter: AbstractAuiAdapter<*, *>): Double {
+    override fun toRawValue(adapter: DensityIndependentAdapter): Double {
         throw UnsupportedOperationException()
     }
 

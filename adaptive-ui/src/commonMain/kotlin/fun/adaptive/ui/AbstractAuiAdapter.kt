@@ -5,7 +5,6 @@
 package `fun`.adaptive.ui
 
 import `fun`.adaptive.foundation.*
-import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.resource.ThemeQualifier
@@ -52,7 +51,7 @@ import kotlinx.coroutines.cancel
  *
  * @property  afterClosePatchBatch   When not null, the adapter calls this function after closing a patch batch.
  */
-abstract class AbstractAuiAdapter<RT, CRT : RT> : AdaptiveAdapter {
+abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
 
     var nextId = 1L
 
@@ -158,16 +157,6 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : AdaptiveAdapter {
     open fun openExternalLink(href: String) {
         throw UnsupportedOperationException("openExternalLink($href)")
     }
-
-    // ------------------------------------------------------------------------------
-    // Device independent pixel <-> device dependent pixel conversions
-    // ------------------------------------------------------------------------------
-
-    abstract fun toPx(dPixel: DPixel): Double
-
-    abstract fun toDp(value: Double): DPixel
-
-    abstract fun toPx(sPixel: SPixel): Double
 
     // ------------------------------------------------------------------------------
     // Theme support

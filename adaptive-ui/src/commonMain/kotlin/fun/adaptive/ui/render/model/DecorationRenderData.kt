@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.ui.render.model
 
-import `fun`.adaptive.ui.AbstractAuiAdapter
+import `fun`.adaptive.ui.DensityIndependentAdapter
 import `fun`.adaptive.ui.fragment.layout.RawBorder
 import `fun`.adaptive.ui.fragment.layout.RawCornerRadius
 import `fun`.adaptive.ui.fragment.layout.RawDropShadow
@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.instruction.decoration.CursorType
 
 @Suppress("EqualsOrHashCode")
 class DecorationRenderData(
-    val adapter : AbstractAuiAdapter<*, *>
+    val adapter : DensityIndependentAdapter
 ) {
     var border: RawBorder? = null
 

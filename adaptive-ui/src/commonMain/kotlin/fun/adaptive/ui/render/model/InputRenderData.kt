@@ -5,10 +5,11 @@
 package `fun`.adaptive.ui.render.model
 
 import `fun`.adaptive.ui.AbstractAuiAdapter
+import `fun`.adaptive.ui.DensityIndependentAdapter
 
 @Suppress("EqualsOrHashCode")
 class InputRenderData(
-    val adapter : AbstractAuiAdapter<*,*>
+    val adapter : DensityIndependentAdapter
 ) {
     var tabIndex : Int? = null
 

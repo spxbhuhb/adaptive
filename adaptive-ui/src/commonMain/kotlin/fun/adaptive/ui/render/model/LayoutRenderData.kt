@@ -4,17 +4,16 @@
 
 package `fun`.adaptive.ui.render.model
 
-import `fun`.adaptive.ui.AbstractAuiAdapter
+import `fun`.adaptive.ui.DensityIndependentAdapter
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.layout.Alignment
-import `fun`.adaptive.ui.instruction.layout.Fill
 import `fun`.adaptive.ui.instruction.layout.FillStrategy
 import `fun`.adaptive.ui.instruction.layout.Fit
 import `fun`.adaptive.ui.instruction.layout.OverflowBehavior
 
 @Suppress("EqualsOrHashCode")
 class LayoutRenderData(
-    val adapter : AbstractAuiAdapter<*, *>
+    val adapter : DensityIndependentAdapter
 ) {
     var instructedTop: Double? = null
     var instructedLeft: Double? = null

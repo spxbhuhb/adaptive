@@ -4,14 +4,14 @@
 
 package `fun`.adaptive.ui.render.model
 
-import `fun`.adaptive.ui.AbstractAuiAdapter
+import `fun`.adaptive.ui.DensityIndependentAdapter
 import `fun`.adaptive.ui.fragment.layout.RawTrack
 import `fun`.adaptive.ui.instruction.layout.Alignment
 import `fun`.adaptive.ui.instruction.layout.SpaceDistribution
 
 @Suppress("EqualsOrHashCode")
 class ContainerRenderData(
-    val adapter : AbstractAuiAdapter<*,*>
+    val adapter : DensityIndependentAdapter
 ) {
     var gapWidth = 0.0
     var gapHeight = 0.0

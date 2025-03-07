@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.ui.instruction.layout
 
-import `fun`.adaptive.ui.AbstractAuiAdapter
+import `fun`.adaptive.ui.DensityIndependentAdapter
 
 /**
  * IMPORTANT Tracks must be immutable (or [GridRepeat] won't work).
@@ -17,9 +17,6 @@ interface GridTrack {
     val isFraction: Boolean
         get() = false
 
-    val isMinContent: Boolean
-        get() = false
-
     val value: Double
 
     val isExtend: Boolean
@@ -28,6 +25,6 @@ interface GridTrack {
         out.add(this)
     }
 
-    fun toRawValue(adapter: AbstractAuiAdapter<*, *>): Double
+    fun toRawValue(adapter: DensityIndependentAdapter): Double
 
 }

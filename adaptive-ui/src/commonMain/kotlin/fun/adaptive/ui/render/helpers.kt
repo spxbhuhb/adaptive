@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.ui.render
 
-import `fun`.adaptive.ui.AbstractAuiAdapter
+import `fun`.adaptive.ui.DensityIndependentAdapter
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import `fun`.adaptive.ui.render.model.ContainerRenderData
 import `fun`.adaptive.ui.render.model.DecorationRenderData
@@ -38,7 +38,7 @@ internal inline fun text(subject: Any, setter: (data: TextRenderData) -> Unit) {
     }
 }
 
-internal inline fun textAndAdapter(subject: Any, setter: (data: TextRenderData, adapter: AbstractAuiAdapter<*, *>) -> Unit) {
+internal inline fun textAndAdapter(subject: Any, setter: (data: TextRenderData, adapter: DensityIndependentAdapter) -> Unit) {
     if (subject is AuiRenderData) {
         setter((subject.text ?: TextRenderData().also { subject.text = it }), subject.adapter)
     }

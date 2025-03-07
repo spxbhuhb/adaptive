@@ -6,7 +6,7 @@ package `fun`.adaptive.ui.render.model
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.testing.Traceable
-import `fun`.adaptive.ui.AbstractAuiAdapter
+import `fun`.adaptive.ui.DensityIndependentAdapter
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
@@ -19,11 +19,11 @@ import `fun`.adaptive.ui.instruction.layout.Size
  * @property innerHeight the intrinsic height of the inner content of the fragment without padding, border width and margin
  */
 data class AuiRenderData(
-    val adapter: AbstractAuiAdapter<*, *>
+    val adapter: DensityIndependentAdapter
 ) : Traceable {
 
     constructor(
-        adapter: AbstractAuiAdapter<*, *>,
+        adapter: DensityIndependentAdapter,
         previous: AuiRenderData?,
         vararg instructionSets: AdaptiveInstructionGroup,
     ) : this(adapter) {

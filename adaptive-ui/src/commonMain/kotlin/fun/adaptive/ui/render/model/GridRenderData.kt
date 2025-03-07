@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.ui.render.model
 
-import `fun`.adaptive.ui.AbstractAuiAdapter
+import `fun`.adaptive.ui.DensityIndependentAdapter
 
 /**
  * @property   gridRow       The instructed row if any.
@@ -16,7 +16,7 @@ import `fun`.adaptive.ui.AbstractAuiAdapter
  */
 @Suppress("EqualsOrHashCode")
 class GridRenderData(
-    val adapter : AbstractAuiAdapter<*, *>
+    val adapter : DensityIndependentAdapter
 ) {
     var gridRow: Int? = null
     var gridCol: Int? = null

@@ -6,16 +6,13 @@ package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.foundation.AdaptiveAdapter
-import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.ui.AbstractAuiAdapter
-import `fun`.adaptive.ui.AbstractAuiFragment
+import `fun`.adaptive.ui.DensityIndependentAdapter
 import `fun`.adaptive.ui.instruction.Surrounding
 import `fun`.adaptive.ui.instruction.decoration.Border
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.decoration.CornerRadius
 import `fun`.adaptive.ui.instruction.decoration.DropShadow
 import `fun`.adaptive.ui.instruction.layout.Frame
-import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.instruction.toPx
 
 operator fun Double.plus(other: Double?): Double =
@@ -34,7 +31,7 @@ class RawFrame(
 ) {
     fun toFrame(adapter: AdaptiveAdapter): Frame {
         if (this === NaF) return Frame.NaF
-        check(adapter is AbstractAuiAdapter<*, *>)
+        check(adapter is DensityIndependentAdapter)
         return Frame(
             adapter.toDp(top),
             adapter.toDp(left),
@@ -58,20 +55,7 @@ class RawFrame(
 data class RawPosition(
     val top: Double,
     val left: Double
-) {
-
-    fun toPosition(fragment: AdaptiveFragment) {
-        check(fragment is AbstractAuiFragment<*>)
-        Position(
-            fragment.uiAdapter.toDp(top),
-            fragment.uiAdapter.toDp(left)
-        )
-    }
-
-    companion object {
-        val NaP = RawPosition(Double.NaN, Double.NaN)
-    }
-}
+)
 
 /**
  * Size where the values are actual device dependent pixel values. All measurements and
@@ -80,7 +64,11 @@ data class RawPosition(
 data class RawSize(
     val width: Double,
     val height: Double
-)
+) {
+    companion object {
+        val ZERO = RawSize(0.0, 0.0)
+    }
+}
 
 data class RawSurrounding(
     val top: Double,
@@ -88,7 +76,7 @@ data class RawSurrounding(
     val bottom: Double,
     val start: Double
 ) {
-    constructor(surrounding: Surrounding, previous: RawSurrounding, adapter: AbstractAuiAdapter<*, *>) :
+    constructor(surrounding: Surrounding, previous: RawSurrounding, adapter: DensityIndependentAdapter) :
         this(
             surrounding.top.toPx(adapter) ?: previous.top,
             surrounding.right.toPx(adapter) ?: previous.end,
@@ -108,7 +96,7 @@ data class RawBorder(
     val bottom: Double,
     val left: Double
 ) {
-    constructor(border: Border, previous: RawBorder, adapter: AbstractAuiAdapter<*, *>) :
+    constructor(border: Border, previous: RawBorder, adapter: DensityIndependentAdapter) :
         this(
             border.color ?: previous.color,
             border.top.toPx(adapter) ?: previous.top,
@@ -128,7 +116,7 @@ data class RawCornerRadius(
     val bottomLeft: Double,
     val bottomRight: Double
 ) {
-    constructor(cornerRadius: CornerRadius, previous: RawCornerRadius, adapter: AbstractAuiAdapter<*, *>) :
+    constructor(cornerRadius: CornerRadius, previous: RawCornerRadius, adapter: DensityIndependentAdapter) :
         this(
             cornerRadius.topLeft.toPx(adapter) ?: previous.topLeft,
             cornerRadius.topRight.toPx(adapter) ?: previous.topRight,
@@ -153,7 +141,7 @@ data class RawDropShadow(
     val offsetY: Double,
     val standardDeviation: Double
 ) {
-    constructor(dropShadow: DropShadow, adapter: AbstractAuiAdapter<*, *>) :
+    constructor(dropShadow: DropShadow, adapter: DensityIndependentAdapter) :
         this(
             dropShadow.color,
             dropShadow.offsetX.toPx(adapter),

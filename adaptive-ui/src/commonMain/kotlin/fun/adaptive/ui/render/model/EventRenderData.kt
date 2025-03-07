@@ -4,13 +4,12 @@
 
 package `fun`.adaptive.ui.render.model
 
-import `fun`.adaptive.ui.AbstractAuiAdapter
-import `fun`.adaptive.ui.instruction.event.OnDrop
+import `fun`.adaptive.ui.DensityIndependentAdapter
 import `fun`.adaptive.ui.instruction.event.*
 
 @Suppress("EqualsOrHashCode")
 class EventRenderData(
-    val adapter : AbstractAuiAdapter<*, *>
+    val adapter : DensityIndependentAdapter
 ) {
     var onClick: OnClick? = null
     var onClickListener : Any? = null

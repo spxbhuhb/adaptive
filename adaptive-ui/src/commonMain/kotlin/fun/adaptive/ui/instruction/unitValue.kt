@@ -5,8 +5,7 @@
 package `fun`.adaptive.ui.instruction
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.AdatCompanion
-import `fun`.adaptive.ui.AbstractAuiAdapter
+import `fun`.adaptive.ui.DensityIndependentAdapter
 import `fun`.adaptive.ui.instruction.layout.GridRepeat
 import `fun`.adaptive.ui.instruction.layout.GridTrack
 
@@ -27,7 +26,7 @@ val Double.dp: DPixel
  *
  * https://stackoverflow.com/questions/21260776/how-to-compare-double-numbers
  */
-fun DPixel.toPx(adapter: AbstractAuiAdapter<*, *>): Double =
+fun DPixel.toPx(adapter: DensityIndependentAdapter): Double =
     when {
         (- 0.000001 < this.value && this.value < 0.000001) -> 0.0
         else -> adapter.toPx(this)
@@ -41,7 +40,7 @@ fun DPixel.toPx(adapter: AbstractAuiAdapter<*, *>): Double =
  *
  * https://stackoverflow.com/questions/21260776/how-to-compare-double-numbers
  */
-fun DPixel?.toPx(adapter: AbstractAuiAdapter<*, *>): Double? =
+fun DPixel?.toPx(adapter: DensityIndependentAdapter): Double? =
     when {
         this == null -> null
         (- 0.000001 < this.value && this.value < 0.000001) -> 0.0
@@ -56,7 +55,7 @@ fun DPixel?.toPx(adapter: AbstractAuiAdapter<*, *>): Double? =
  *
  * https://stackoverflow.com/questions/21260776/how-to-compare-double-numbers
  */
-fun DPixel?.toPxOrZero(adapter: AbstractAuiAdapter<*, *>): Double =
+fun DPixel?.toPxOrZero(adapter: DensityIndependentAdapter): Double =
     if (this == null || (- 0.000001 < this.value && this.value < 0.000001)) 0.0 else adapter.toPx(this)
 
 @Adat
@@ -70,7 +69,7 @@ class DPixel(
     override val isExtend: Boolean
         get() = false
 
-    override fun toRawValue(adapter: AbstractAuiAdapter<*, *>): Double =
+    override fun toRawValue(adapter: DensityIndependentAdapter): Double =
         this.toPxOrZero(adapter)
 
     override fun equals(other: Any?): Boolean {
@@ -156,7 +155,7 @@ class Fraction(
 
     infix fun repeat(count: Int): GridRepeat = GridRepeat(count, this)
 
-    override fun toRawValue(adapter: AbstractAuiAdapter<*, *>): Double = value
+    override fun toRawValue(adapter: DensityIndependentAdapter): Double = value
 
     override fun toString(): String {
         return "${value}fr"
