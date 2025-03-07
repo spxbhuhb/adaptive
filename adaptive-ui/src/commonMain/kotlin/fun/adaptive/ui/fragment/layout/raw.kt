@@ -149,3 +149,13 @@ data class RawDropShadow(
             dropShadow.standardDeviation.toPx(adapter)
         )
 }
+
+data class RawTextMeasurement(
+    val width: Double,
+    val height: Double,
+    val baseline: Double
+) {
+    companion object {
+        val ZERO = RawTextMeasurement(0.0, 0.0, 0.0)
+    }
+}

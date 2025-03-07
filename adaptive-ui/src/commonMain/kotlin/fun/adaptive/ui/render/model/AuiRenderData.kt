@@ -18,7 +18,7 @@ import `fun`.adaptive.ui.instruction.layout.Size
  * @property innerWidth the intrinsic width of the inner content of the fragment without padding, border width and margin
  * @property innerHeight the intrinsic height of the inner content of the fragment without padding, border width and margin
  */
-data class AuiRenderData(
+open class AuiRenderData(
     val adapter: DensityIndependentAdapter
 ) : Traceable {
 

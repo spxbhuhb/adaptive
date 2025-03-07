@@ -8,6 +8,7 @@ import `fun`.adaptive.foundation.manualImplementation
 import `fun`.adaptive.graphics.canvas.canvas
 import `fun`.adaptive.graphics.canvas.model.path.PathCommand
 import `fun`.adaptive.resource.graphics.GraphicsResource
+import `fun`.adaptive.ui.instruction.layout.PopupAlign
 import kotlin.math.PI
 
 @AdaptiveExpect(canvas)
@@ -20,9 +21,10 @@ fun fillText(
     x: Double,
     y: Double,
     text: String,
+    alignment : PopupAlign? = null,
     vararg instructions: AdaptiveInstruction
 ) : AdaptiveFragment {
-    manualImplementation(x, y, text, instructions)
+    manualImplementation(x, y, text, alignment, instructions)
 }
 
 @AdaptiveExpect(canvas)

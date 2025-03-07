@@ -33,7 +33,7 @@ abstract class CanvasFragment(
 
     override fun genPatchInternal(): Boolean {
         if (haveToPatch(dirtyMask, 1)) {
-            renderData = CanvasRenderData().also { rd -> instructions.applyTo(rd) }
+            renderData = CanvasRenderData(canvasAdapter).also { rd -> instructions.applyTo(rd) }
         }
         return false
     }

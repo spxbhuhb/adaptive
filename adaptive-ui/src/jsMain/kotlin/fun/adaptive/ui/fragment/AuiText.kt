@@ -46,7 +46,7 @@ open class AuiText(
         }
 
         val text = renderData.text ?: uiAdapter.defaultTextRenderData
-        measureContext.font = text.toCssString(uiAdapter)
+        measureContext.font = text.toCssString(uiAdapter.defaultTextRenderData)
 
         val metrics = measureContext.measureText(content)
 

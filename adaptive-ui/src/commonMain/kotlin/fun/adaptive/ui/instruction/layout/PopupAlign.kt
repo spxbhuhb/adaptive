@@ -64,6 +64,8 @@ class PopupAlign(
         val belowEnd = PopupAlign(vertical = OuterAlignment.Below, horizontal = OuterAlignment.End)
         val belowAfter = PopupAlign(vertical = OuterAlignment.Below, horizontal = OuterAlignment.After)
 
+        val centerCenter = PopupAlign(vertical = OuterAlignment.Center, horizontal = OuterAlignment.Center)
+
         fun findBestPopupAlignment(preferred: PopupAlign, check: (PopupAlign) -> Boolean): PopupAlign {
 
             val attempts = listOf(

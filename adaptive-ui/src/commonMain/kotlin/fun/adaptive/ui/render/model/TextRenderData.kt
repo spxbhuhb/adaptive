@@ -43,14 +43,14 @@ class TextRenderData {
         return true
     }
 
-    fun toCssString(adapter: AbstractAuiAdapter<*, *>): String {
+    fun toCssString(default : TextRenderData?): String {
         val s = mutableListOf<String>()
         if (underline) s += "underline"
         if (smallCaps) s += "small-caps"
         s += "normal"
-        s += (fontWeight ?: adapter.defaultTextRenderData.fontWeight ?: "300").toString()
-        s += (fontSize?.value ?: adapter.defaultTextRenderData.fontSize?.value ?: 16).toString() + "px"  // FIXME font size in toCSSString does not care about scaling
-        s += "'${fontName ?: adapter.defaultTextRenderData.fontName ?: "Open Sans"}'"
+        s += (fontWeight ?: default?.fontWeight ?: "300").toString()
+        s += (fontSize?.value ?: default?.fontSize?.value ?: 16).toString() + "px"  // FIXME font size in toCSSString does not care about scaling
+        s += "'${fontName ?: default?.fontName ?: "Open Sans"}'"
         // FIXME missing letter spacing
         return s.joinToString(" ")
     }

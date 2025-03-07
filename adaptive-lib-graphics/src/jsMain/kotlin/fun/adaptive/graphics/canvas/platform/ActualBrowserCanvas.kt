@@ -4,19 +4,18 @@
 
 package `fun`.adaptive.graphics.canvas.platform
 
-import `fun`.adaptive.graphics.canvas.instruction.Matrix
-import `fun`.adaptive.graphics.canvas.instruction.Rotate
-import `fun`.adaptive.graphics.canvas.instruction.Scale
-import `fun`.adaptive.graphics.canvas.instruction.SkewX
-import `fun`.adaptive.graphics.canvas.instruction.SkewY
-import `fun`.adaptive.graphics.canvas.instruction.CanvasTransformInstruction
-import `fun`.adaptive.graphics.canvas.instruction.Translate
+import `fun`.adaptive.graphics.canvas.instruction.*
+import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
+import `fun`.adaptive.ui.fragment.AuiText.Companion.measureContext
+import `fun`.adaptive.ui.fragment.layout.RawSize
+import `fun`.adaptive.ui.fragment.layout.RawTextMeasurement
 import `fun`.adaptive.ui.instruction.decoration.Color
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
 import kotlin.math.PI
+import kotlin.math.ceil
 import kotlin.math.tan
 
 class ActualBrowserCanvas : ActualCanvas {
@@ -148,4 +147,33 @@ class ActualBrowserCanvas : ActualCanvas {
     override fun clear() {
         context.clearRect(0.0, 0.0, receiver.height.toDouble(), receiver.width.toDouble())
     }
+
+    override fun measureText(renderData : CanvasRenderData, text: String) : RawTextMeasurement {
+
+        if (text.isEmpty()) {
+            return RawTextMeasurement.ZERO
+        }
+
+        val textRenderData = renderData.text
+        if (textRenderData != null) {
+            measureContext.font = textRenderData.toCssString(null)
+        }
+
+        val metrics = context.measureText(text)
+
+        // without the 0.05 Firefox and Chrome displays a '...' as they think that there is not enough space
+        // I don't really know why that happens, I guess it's some Double rounding issue
+
+        val width = ceil(metrics.width) + 0.05
+        val height = ceil(
+            textRenderData?.lineHeight
+                ?: textRenderData?.fontSize?.value?.let { it * 1.5 }
+                ?: (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)
+        )
+
+        metrics.ideographicBaseline
+
+        return RawTextMeasurement(width, height, metrics.ideographicBaseline)
+    }
+
 }

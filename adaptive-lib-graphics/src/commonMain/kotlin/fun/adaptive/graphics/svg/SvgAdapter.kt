@@ -3,19 +3,20 @@
  */
 package `fun`.adaptive.graphics.svg
 
-import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.graphics.canvas.platform.ActualCanvas
 import `fun`.adaptive.service.transport.ServiceCallTransport
+import `fun`.adaptive.ui.DensityIndependentAdapter
+import `fun`.adaptive.ui.instruction.DPixel
+import `fun`.adaptive.ui.instruction.SPixel
 import `fun`.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 
 class SvgAdapter(
-    val parentAdapter: AdaptiveAdapter,
+    val parentAdapter: DensityIndependentAdapter,
     override val rootContainer: ActualCanvas,
-) : AdaptiveAdapter {
+) : DensityIndependentAdapter() {
 
     override val fragmentFactory = parentAdapter.fragmentFactory
 
@@ -43,4 +44,14 @@ class SvgAdapter(
             rootContainer.restore(0)
         }
     }
+
+    override fun toPx(dPixel: DPixel): Double =
+        parentAdapter.toPx(dPixel)
+
+    override fun toDp(value: Double): DPixel =
+        parentAdapter.toDp(value)
+
+    override fun toPx(sPixel: SPixel): Double =
+        parentAdapter.toPx(sPixel)
+
 }

@@ -4,10 +4,13 @@
 
 package `fun`.adaptive.graphics.svg.render
 
+import `fun`.adaptive.graphics.svg.SvgAdapter
 import `fun`.adaptive.graphics.svg.instruction.ViewBox
 
-class SvgRootRenderData : SvgRenderData() {
+class SvgRootRenderData(
+    adapter: SvgAdapter
+) : SvgRenderData(adapter) {
     var width: Double? = null
     var height: Double? = null
-    var viewBox : ViewBox? = null
+    var viewBox: ViewBox? = null
 }

@@ -144,7 +144,7 @@ class AuiParagraph(
             context
         ).also {
             renderCache[index] = it
-            context.font = textRenderData.toCssString(uiAdapter)
+            context.font = textRenderData.toCssString(uiAdapter.defaultTextRenderData)
             return it
         }
     }

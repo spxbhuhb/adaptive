@@ -3,22 +3,24 @@
  */
 package `fun`.adaptive.graphics.canvas
 
-import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.graphics.canvas.fragment.structural.CanvasLoop
 import `fun`.adaptive.graphics.canvas.fragment.structural.CanvasSelect
 import `fun`.adaptive.graphics.canvas.platform.ActualCanvas
 import `fun`.adaptive.service.transport.ServiceCallTransport
+import `fun`.adaptive.ui.DensityIndependentAdapter
+import `fun`.adaptive.ui.instruction.DPixel
+import `fun`.adaptive.ui.instruction.SPixel
 import `fun`.adaptive.utility.alsoIfInstance
 import `fun`.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 
 class CanvasAdapter(
-    val parentAdapter : AdaptiveAdapter,
+    val parentAdapter : DensityIndependentAdapter,
     override val rootContainer: ActualCanvas,
     override var rootFragment : AdaptiveFragment,
-) : AdaptiveAdapter {
+) : DensityIndependentAdapter() {
 
     override val fragmentFactory = parentAdapter.fragmentFactory
 
@@ -76,4 +78,14 @@ class CanvasAdapter(
         if (trace.isEmpty()) return
         trace("removeActual", "fragment: $fragment")
     }
+
+    override fun toPx(dPixel: DPixel): Double =
+        parentAdapter.toPx(dPixel)
+
+    override fun toDp(value: Double): DPixel =
+        parentAdapter.toDp(value)
+
+    override fun toPx(sPixel: SPixel): Double =
+        parentAdapter.toPx(sPixel)
+
 }

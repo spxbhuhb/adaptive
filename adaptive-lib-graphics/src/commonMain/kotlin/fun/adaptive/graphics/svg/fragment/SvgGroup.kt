@@ -17,7 +17,7 @@ class SvgGroup(
     declarationIndex : Int
 ) : SvgFragment<SvgRenderData>(adapter, parent, declarationIndex, stateSize()) {
 
-    override fun newRenderData() = SvgRenderData()
+    override fun newRenderData() = SvgRenderData(svgAdapter)
 
     override fun draw() {
         renderData.transforms {

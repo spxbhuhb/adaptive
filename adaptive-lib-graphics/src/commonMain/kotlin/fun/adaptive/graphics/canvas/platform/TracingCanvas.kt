@@ -4,8 +4,10 @@
 
 package `fun`.adaptive.graphics.canvas.platform
 
-import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
 import `fun`.adaptive.graphics.canvas.instruction.CanvasTransformInstruction
+import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
+import `fun`.adaptive.ui.fragment.layout.RawSize
+import `fun`.adaptive.ui.fragment.layout.RawTextMeasurement
 import `fun`.adaptive.ui.instruction.decoration.Color
 
 class TracingCanvas<T : ActualCanvas>(
@@ -90,5 +92,10 @@ class TracingCanvas<T : ActualCanvas>(
     override fun clear() {
         println("clear")
         canvas.clear()
+    }
+
+    override fun measureText(renderData : CanvasRenderData, text: String): RawTextMeasurement {
+        println("measureText: $text")
+        return canvas.measureText(renderData, text)
     }
 }

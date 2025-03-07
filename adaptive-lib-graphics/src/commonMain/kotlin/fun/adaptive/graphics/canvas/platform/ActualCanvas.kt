@@ -4,14 +4,14 @@
 
 package `fun`.adaptive.graphics.canvas.platform
 
-import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
 import `fun`.adaptive.graphics.canvas.instruction.CanvasTransformInstruction
+import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
+import `fun`.adaptive.ui.fragment.layout.RawSize
+import `fun`.adaptive.ui.fragment.layout.RawTextMeasurement
 import `fun`.adaptive.ui.instruction.decoration.Color
 
 /**
  * Implemented by bridge classes to connect common code with the actual UI canvas implementation.
- *
- * @param  PT  Path type
  */
 interface ActualCanvas {
 
@@ -26,7 +26,7 @@ interface ActualCanvas {
      * Draw on the canvas by calling [drawFun]. Implementations may surround [drawFun] with whatever
      * needed to notify the actual UI about the change.
      */
-    fun draw(drawFun : () -> Unit)
+    fun draw(drawFun: () -> Unit)
 
     /**
      * Draw an arc.
@@ -77,7 +77,7 @@ interface ActualCanvas {
 
     fun fillText(x: Double, y: Double, text: String)
 
-    fun line(x1 : Double, y1 : Double, x2 : Double, y2 : Double)
+    fun line(x1: Double, y1: Double, x2: Double, y2: Double)
 
     /**
      * Add a transform to the canvas.
@@ -86,15 +86,21 @@ interface ActualCanvas {
 
     fun setFont(font: String)
 
-    fun setStroke(color : Color)
+    fun setStroke(color: Color)
 
     /**
      * Set the fill style for the canvas.
      */
-    fun setFill(color : Color)
+    fun setFill(color: Color)
 
     /**
      * Clear the canvas.
      */
     fun clear()
+
+    /**
+     * Measure the dimensions of [text].
+     */
+    fun measureText(renderData : CanvasRenderData, text: String): RawTextMeasurement
+
 }

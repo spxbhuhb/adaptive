@@ -7,8 +7,12 @@ package `fun`.adaptive.graphics.canvas.render
 import `fun`.adaptive.graphics.canvas.instruction.Fill
 import `fun`.adaptive.graphics.canvas.instruction.Stroke
 import `fun`.adaptive.graphics.canvas.instruction.CanvasTransformInstruction
+import `fun`.adaptive.ui.DensityIndependentAdapter
+import `fun`.adaptive.ui.render.model.AuiRenderData
 
-open class CanvasRenderData {
+open class CanvasRenderData(
+    adapter : DensityIndependentAdapter
+) : AuiRenderData(adapter) {
 
     var fill: Fill? = null
     var stroke: Stroke? = null

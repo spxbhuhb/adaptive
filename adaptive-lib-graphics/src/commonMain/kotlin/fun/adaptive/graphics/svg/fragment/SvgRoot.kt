@@ -19,7 +19,7 @@ class SvgRoot(
     declarationIndex : Int
 ) : SvgFragment<SvgRootRenderData>(adapter, parent, declarationIndex, stateSize()) {
 
-    override fun newRenderData() = SvgRootRenderData()
+    override fun newRenderData() = SvgRootRenderData(svgAdapter)
 
     override fun draw() {
         val viewBox = renderData.viewBox

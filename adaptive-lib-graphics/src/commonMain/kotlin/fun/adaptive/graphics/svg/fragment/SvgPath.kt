@@ -19,7 +19,7 @@ class SvgPath(
 
     val path = canvas.newPath()
 
-    override fun newRenderData() = SvgPathRenderData()
+    override fun newRenderData() = SvgPathRenderData(svgAdapter)
 
     override fun genPatchInternal(): Boolean {
         super.genPatchInternal()

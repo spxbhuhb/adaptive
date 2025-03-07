@@ -5,5 +5,8 @@
 package `fun`.adaptive.graphics.svg.render
 
 import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
+import `fun`.adaptive.ui.DensityIndependentAdapter
 
-open class SvgRenderData : CanvasRenderData()
+open class SvgRenderData(
+    adapter : DensityIndependentAdapter
+) : CanvasRenderData(adapter)
