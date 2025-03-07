@@ -22,11 +22,15 @@ open class CanvasPath(
     val commands: List<PathCommand>
         by stateVariable()
 
+    val init: PathCommand?
+        by stateVariable()
+
     override fun genPatchInternal(): Boolean {
         super.genPatchInternal()
 
-        if (haveToPatch(commands)) {
+        if (haveToPatch(commands) || haveToPatch(init)) {
             path = canvas.newPath()
+            init?.apply(path)
             commands.forEach { it.apply(path) }
         }
 

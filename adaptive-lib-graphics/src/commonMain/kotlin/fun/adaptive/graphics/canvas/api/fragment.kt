@@ -57,7 +57,7 @@ fun svg(resource : GraphicsResource, vararg instructions: AdaptiveInstruction) {
 }
 
 @AdaptiveExpect(canvas)
-fun path(commands: List<PathCommand>, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
+fun path(commands: List<PathCommand>, init: PathCommand? = null, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
     manualImplementation(commands, instructions)
 }
 

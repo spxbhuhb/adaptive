@@ -14,4 +14,8 @@ class ChartTheme {
     val axisLine = instructionsOf(
         stroke(colors.onSurfaceVariant)
     )
+
+    val axisGuide = instructionsOf(
+        stroke(colors.onSurfaceVariant.opaque(0.2f))
+    )
 }
