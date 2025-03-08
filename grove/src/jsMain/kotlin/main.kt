@@ -9,9 +9,7 @@ import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.api.GroveRuntimeFragmentFactory
 import `fun`.adaptive.grove.fragment.GroveFragmentFactory
 import `fun`.adaptive.grove.groveCommon
-import `fun`.adaptive.grove.groveRuntimeCommon
 import `fun`.adaptive.grove.sheet.SheetFragmentFactory
-import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.ufd.UfdPaneFactory
 import `fun`.adaptive.grove.ufd.ufdPalettePaneKey
 import `fun`.adaptive.ui.api.box
@@ -19,8 +17,8 @@ import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.uiCommon
-import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.ui.workspace.WorkspacePanePosition
+import `fun`.adaptive.ui.workspace.model.Workspace
+import `fun`.adaptive.ui.workspace.model.WorkspacePanePosition
 import `fun`.adaptive.ui.workspace.wsFull
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -70,8 +68,8 @@ private fun buildWorkspace(): Workspace {
     with(workspace) {
         groveCommon()
 
-        leftTop.value = panes.first { it.key == ufdPalettePaneKey }.uuid
-        leftMiddle.value = panes.first { it.position == WorkspacePanePosition.LeftMiddle }.uuid
+        leftTop.value = toolPanes.first { it.key == ufdPalettePaneKey }.uuid
+        leftMiddle.value = toolPanes.first { it.position == WorkspacePanePosition.LeftMiddle }.uuid
         //rightTop.value = panes.first { it.position == WorkspacePanePosition.RightTop }.uuid
         //center.value = panes.first { it.position == WorkspacePanePosition.Center }.uuid
 

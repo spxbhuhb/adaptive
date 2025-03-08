@@ -10,9 +10,9 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.uiCommon
-import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.ui.workspace.WorkspacePane
-import `fun`.adaptive.ui.workspace.WorkspacePanePosition
+import `fun`.adaptive.ui.workspace.model.Workspace
+import `fun`.adaptive.ui.workspace.model.WorkspacePane
+import `fun`.adaptive.ui.workspace.model.WorkspacePanePosition
 import `fun`.adaptive.utility.UUID
 
 const val siteHomeKey = "site:home"
@@ -44,7 +44,7 @@ fun Workspace.siteCommon() {
     cookbookCommon()
     groveCommon()
 
-    panes += WorkspacePane(
+    toolPanes += WorkspacePane(
         UUID(),
         "Home",
         Graphics.eco,

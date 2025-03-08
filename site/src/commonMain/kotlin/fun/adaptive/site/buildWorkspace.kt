@@ -1,6 +1,6 @@
 package `fun`.adaptive.site
 
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.model.Workspace
 
 fun buildWorkspace(): Workspace {
 

@@ -9,7 +9,11 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
+import `fun`.adaptive.ui.workspace.model.WorkspaceTheme.Companion.workspaceTheme
+import `fun`.adaptive.ui.workspace.model.Workspace
+import `fun`.adaptive.ui.workspace.model.WorkspacePane
+import `fun`.adaptive.ui.workspace.model.WorkspacePanePosition
+import `fun`.adaptive.ui.workspace.model.WorkspaceTheme
 
 @Adaptive
 fun wsFull(workspace: Workspace) {
@@ -151,7 +155,7 @@ private fun wsPane(workspace: Workspace, position: WorkspacePanePosition): Adapt
         }
     }
 
-    val pane = workspace.panes.firstOrNull { it.uuid == paneUuid }
+    val pane = workspace.toolPanes.firstOrNull { it.uuid == paneUuid }
 
     box(instructions()) {
         maxSize
@@ -242,8 +246,8 @@ private fun wsPaneIcon(
 
                 text(pane.name) .. theme.tooltipName
 
-                if (pane.shortcut != null) {
-                    text(pane.shortcut) .. theme.tooltipShortcut
+                if (pane.tooltip != null) {
+                    text(pane.tooltip) .. theme.tooltipShortcut
                 }
             }
         }

@@ -9,7 +9,7 @@ class TabPane(
     val key: FragmentKey,
     val title: String? = null,
     val icon: GraphicsResourceSet? = null,
-    val toolTip: String? = null,
+    val tooltip: String? = null,
     val closeable: Boolean = true,
     val actions: List<TabPaneAction> = emptyList()
 )

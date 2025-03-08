@@ -10,8 +10,8 @@ import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.ui.workspace.WorkspaceContext
+import `fun`.adaptive.ui.workspace.model.Workspace
+import `fun`.adaptive.ui.workspace.model.WorkspaceContext
 
 class UfdContext(
     override val workspace: Workspace

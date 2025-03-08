@@ -14,7 +14,10 @@ import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.workspace.*
-import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
+import `fun`.adaptive.ui.workspace.model.WorkspaceTheme.Companion.workspaceTheme
+import `fun`.adaptive.ui.workspace.model.Workspace
+import `fun`.adaptive.ui.workspace.model.WorkspacePane
+import `fun`.adaptive.ui.workspace.model.WorkspacePanePosition
 import `fun`.adaptive.utility.UUID
 
 class Context {
@@ -62,7 +65,7 @@ object WorkspaceRecipePaneFragmentFactory : FoundationFragmentFactory() {
 }
 
 fun initPanes(workspace: Workspace) {
-    workspace.panes.addAll(
+    workspace.toolPanes.addAll(
         listOf(
             WorkspacePane(
                 UUID(),
@@ -135,7 +138,7 @@ fun initPanes(workspace: Workspace) {
         )
     )
 
-    workspace.center.value = workspace.panes.first { it.position == WorkspacePanePosition.Center }.uuid
+    workspace.center.value = workspace.toolPanes.first { it.position == WorkspacePanePosition.Center }.uuid
 }
 
 

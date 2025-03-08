@@ -4,7 +4,9 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.hover
-import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
+import `fun`.adaptive.ui.workspace.model.WorkspaceTheme.Companion.workspaceTheme
+import `fun`.adaptive.ui.workspace.model.WorkspacePane
+import `fun`.adaptive.ui.workspace.model.WorkspaceTheme
 
 @Adaptive
 fun wsToolPane(

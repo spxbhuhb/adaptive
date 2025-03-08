@@ -7,10 +7,10 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.builtin.*
-import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.ui.workspace.WorkspacePane
-import `fun`.adaptive.ui.workspace.WorkspacePaneAction
-import `fun`.adaptive.ui.workspace.WorkspacePanePosition
+import `fun`.adaptive.ui.workspace.model.Workspace
+import `fun`.adaptive.ui.workspace.model.WorkspacePane
+import `fun`.adaptive.ui.workspace.model.WorkspacePaneAction
+import `fun`.adaptive.ui.workspace.model.WorkspacePanePosition
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.wireformat.WireFormatRegistry
 import `fun`.adaptive.wireformat.builtin.EnumWireFormat
@@ -30,7 +30,7 @@ fun Workspace.cookbookCommon() {
 
     contexts += CookbookContext(this)
 
-    panes += WorkspacePane(
+    toolPanes += WorkspacePane(
         UUID(),
         "Cookbook",
         Graphics.flatware,
@@ -48,7 +48,7 @@ fun Workspace.cookbookCommon() {
         )
     )
 
-    panes += WorkspacePane(
+    toolPanes += WorkspacePane(
         UUID(),
         "Recipe",
         Graphics.menu,

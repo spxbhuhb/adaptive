@@ -1,8 +1,8 @@
 package `fun`.adaptive.grove.apm
 
 import `fun`.adaptive.foundation.value.storeFor
-import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.ui.workspace.WorkspaceContext
+import `fun`.adaptive.ui.workspace.model.Workspace
+import `fun`.adaptive.ui.workspace.model.WorkspaceContext
 
 class ApmContext(
     override val workspace: Workspace

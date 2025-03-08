@@ -7,7 +7,7 @@ import `fun`.adaptive.grove.apm.model.ApmProjectItem
 import `fun`.adaptive.grove.apm.model.ApmProjectItemSet
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.tree
-import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.model.Workspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
@@ -27,7 +27,7 @@ private fun showItem(context: ApmContext, item: TreeItem) {
     context.activeRecipeKey.value = centerKey
 
     val ws = context.workspace
-    ws.center.value = ws.panes.first { it.key == centerKey }.uuid
+    ws.center.value = ws.toolPanes.first { it.key == centerKey }.uuid
 }
 
 val root = ApmProjectItemSet(

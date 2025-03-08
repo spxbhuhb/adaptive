@@ -18,7 +18,7 @@ import `fun`.adaptive.ui.icon.smallCloseIconTheme
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.layout.GridTrack
 
-typealias TabHandleFun = (tab: TabPane, activeTab: TabPane?, theme: TabTheme) -> Unit
+typealias TabHandleFun = (model : TabContainer, tab: TabPane, activeTab: TabPane?, theme: TabTheme) -> Unit
 
 @Adaptive
 fun tabContainer(
@@ -71,9 +71,9 @@ fun tabHandle(
         box {
             text(tab.title) .. theme.tabHandleText
 
-            if (tab.toolTip != null) {
+            if (tab.tooltip != null) {
                 hoverPopup(theme.tabHandleToolTip) {
-                    text(tab.toolTip) .. theme.tabHandleToolTipText
+                    text(tab.tooltip) .. theme.tabHandleToolTipText
                 }
             }
         }
@@ -113,7 +113,7 @@ private fun header(
             for (tab in model.tabs) {
                 box {
                     onClick { switchTab(tab) }
-                    _fixme_adaptive_content(tab, activeTab, theme)
+                    _fixme_adaptive_content(model, tab, activeTab, theme)
                 }
             }
         }
@@ -122,7 +122,7 @@ private fun header(
             box { theme.separator }
             row {
                 for (action in actions) {
-                    actionIcon(action.icon, tooltip = action.toolTip, theme = denseIconTheme) .. onClick {
+                    actionIcon(action.icon, tooltip = action.tooltip, theme = denseIconTheme) .. onClick {
                         if (activeTab != null) action.action(activeTab)
                     }
                 }

@@ -12,6 +12,9 @@ import `fun`.adaptive.ui.builtin.hide
 import `fun`.adaptive.ui.builtin.remove
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.denseIconTheme
+import `fun`.adaptive.ui.workspace.model.Workspace
+import `fun`.adaptive.ui.workspace.model.WorkspacePane
+import `fun`.adaptive.ui.workspace.model.WorkspaceTheme
 
 @Adaptive
 fun wsPaneTitle(
@@ -30,7 +33,7 @@ fun wsPaneTitle(
         row {
             if (showActions) {
                 for (action in pane.actions) {
-                    actionIcon(action.icon, tooltip = action.toolTip, theme = denseIconTheme) .. onClick {
+                    actionIcon(action.icon, tooltip = action.tooltip, theme = denseIconTheme) .. onClick {
                         action.action(workspace, pane)
                     }
                 }

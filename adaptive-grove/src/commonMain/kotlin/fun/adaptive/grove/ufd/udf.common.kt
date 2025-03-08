@@ -11,9 +11,9 @@ import `fun`.adaptive.grove.resources.stroke_partial
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.builtin.menu
-import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.ui.workspace.WorkspacePane
-import `fun`.adaptive.ui.workspace.WorkspacePanePosition
+import `fun`.adaptive.ui.workspace.model.Workspace
+import `fun`.adaptive.ui.workspace.model.WorkspacePane
+import `fun`.adaptive.ui.workspace.model.WorkspacePanePosition
 import `fun`.adaptive.utility.UUID
 
 const val ufdPalettePaneKey = "grove:ufd:palette"
@@ -30,7 +30,7 @@ fun AdaptiveAdapter.groveUfdCommon() {
 fun Workspace.groveUfdCommon() {
     contexts += UfdContext(this)
 
-    panes += WorkspacePane(
+    toolPanes += WorkspacePane(
         UUID(),
         Strings.palette,
         Graphics.palette,
@@ -38,7 +38,7 @@ fun Workspace.groveUfdCommon() {
         ufdPalettePaneKey
     )
 
-    panes += WorkspacePane(
+    toolPanes += WorkspacePane(
         UUID(),
         Strings.components,
         Graphics.cards,
@@ -46,7 +46,7 @@ fun Workspace.groveUfdCommon() {
         ufdComponentsPaneKey,
     )
 
-    panes += WorkspacePane(
+    toolPanes += WorkspacePane(
         UUID(),
         Strings.instructions,
         Graphics.stroke_partial,
@@ -54,7 +54,7 @@ fun Workspace.groveUfdCommon() {
         ufdInstructionsPaneKey
     )
 
-    panes += WorkspacePane(
+    toolPanes += WorkspacePane(
         UUID(),
         Strings.state,
         Graphics.data_table,
@@ -62,7 +62,7 @@ fun Workspace.groveUfdCommon() {
         ufdStatePaneKey
     )
 
-    panes += WorkspacePane(
+    toolPanes += WorkspacePane(
         UUID(),
         "",
         Graphics.menu,

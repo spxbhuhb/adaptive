@@ -4,6 +4,6 @@ import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 
 class TabPaneAction(
     val icon : GraphicsResourceSet,
-    val toolTip : String,
+    val tooltip : String,
     val action : (tab : TabPane) -> Unit
 )

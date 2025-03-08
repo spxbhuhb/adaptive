@@ -1,6 +1,6 @@
 # Workspace
 
-`Workspace` is a very complex UI fragment capable of managing multiple tools, editors and such together.
+`Workspace` is a very complex UI fragment capable of managing multiple tools and content editors together.
 
 Each workspace has 9 main areas:
 
@@ -20,6 +20,10 @@ Each workspace has 9 main areas:
     - may be hidden or shown by the user by
         - clicking on the hide action in the pane title
         - clicking on an icon in the icon bars
+- The center area may contain:
+    - a specific content pane, in this case you have to set up the loading/switch
+    - a `wsCenterPane` which
+      - manages content pane groups (at lease one, maybe more)
 
 ## Icon bars
 

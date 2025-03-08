@@ -19,7 +19,7 @@ fun stroke(color: Int) = Stroke(Color(color.toUInt()))
 fun stroke(color: UInt) = Stroke(Color(color))
 
 fun translate(x: Double, y: Double) = Translate(x, y)
-fun rotate(angle: Double, x: Double, y: Double) = Rotate(angle, x, y)
+fun rotate(angle: Double, x: Double = 0.0, y: Double = 0.0) = Rotate(angle, x, y)
 fun scale(x: Double, y: Double) = Scale(x, y)
 fun skewX(angle: Double) = SkewX(angle)
 fun skewY(angle: Double) = SkewY(angle)

@@ -30,7 +30,10 @@ fun tabRecipe(): AdaptiveFragment {
 @Adaptive
 fun tabExample(description: String, model: TabContainer) {
     text(description)
-    tabContainer(model, { a, b, c -> tabHandle(model, a, b, c) }) .. size(400.dp, 100.dp) .. borders.outline
+    // when these are solved we can just use ::tabHandle (I hope)
+    // https://github.com/spxbhuhb/adaptive/issues/123
+    // KT-75416 KJS / IC: "IrLinkageError: Constructor can not be called: No constructor found for symbol" on jsBrowserDevelopmentRun restart
+    tabContainer(model, {a,b,c,d -> tabHandle(a,b,c,d)}) .. size(400.dp, 100.dp) .. borders.outline
 }
 
 val noTabsNoMenu = TabContainer(
@@ -50,7 +53,7 @@ val oneTabNoIconNoActionsNoMenu = TabContainer(
             UUID(),
             "lib:todo",
             "Pane 1",
-            toolTip = "Pane 1 ToolTip"
+            tooltip = "Pane 1 ToolTip"
         )
     )
 )
@@ -61,13 +64,13 @@ val twoTabsNoIconNoActionsNoMenu = TabContainer(
             UUID(),
             "lib:todo",
             "Pane 1",
-            toolTip = "Pane 1 ToolTip"
+            tooltip = "Pane 1 ToolTip"
         ),
         TabPane(
             UUID(),
             "lib:todo",
             "Pane 2",
-            toolTip = "Pane 2 ToolTip"
+            tooltip = "Pane 2 ToolTip"
         )
     )
 )
