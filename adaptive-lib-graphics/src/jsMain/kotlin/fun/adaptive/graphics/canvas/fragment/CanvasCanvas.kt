@@ -68,7 +68,7 @@ class CanvasCanvas(
         data.finalTop = top
         data.finalLeft = left
 
-        canvas.setSize(data.finalWidth, data.finalWidth)
+        canvas.setSize(data.finalWidth - data.surroundingHorizontal, data.finalHeight - data.surroundingVertical)
 
         uiAdapter.applyLayoutToActual(this)
         canvasAdapter.draw()

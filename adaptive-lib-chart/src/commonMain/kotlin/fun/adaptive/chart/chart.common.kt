@@ -36,7 +36,7 @@ fun Workspace.chartCommon() {
         WsPane(
             UUID(),
             item.name,
-            item.icon,
+            Graphics.monitoring,
             WsPanePosition.Center,
             WsChartContext.CHART_CONTENT_PANE_KEY,
             model = WsChartPaneData(),

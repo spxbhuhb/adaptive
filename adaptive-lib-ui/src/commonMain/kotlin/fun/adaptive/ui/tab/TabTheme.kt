@@ -1,6 +1,9 @@
 package `fun`.adaptive.ui.tab
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
+import `fun`.adaptive.graphics.canvas.api.fill
+import `fun`.adaptive.graphics.svg.api.svgHeight
+import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.smallCloseIconTheme
 import `fun`.adaptive.ui.instruction.DPixel
@@ -57,10 +60,23 @@ class TabTheme(
 
     val activeTabHandleContainer = tabHandleContainerBase + borderBottom(colors.focusColor, 4.dp)
 
+    val tabHandleIconContainer = instructionsOf(
+        size(19.dp),
+        paddingBottom { 1.dp }
+    )
+
+    val tabHandleIcon = instructionsOf(
+        size(17.dp, 17.dp),
+        svgWidth(17.dp),
+        svgHeight(17.dp),
+        fill(colors.info)
+    )
+
     val tabHandleText = instructionsOf(
         textColors.onSurface,
         fontSize { 13.sp },
-        paddingRight { 4.dp },
+        paddingLeft { 4.dp },
+        padding { 4.dp },
         noSelect
     )
 

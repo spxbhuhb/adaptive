@@ -1,19 +1,10 @@
 package `fun`.adaptive.chart.ui
 
-import `fun`.adaptive.chart.model.ChartAxis
-import `fun`.adaptive.chart.model.ChartGuide
-import `fun`.adaptive.chart.model.ChartLabel
-import `fun`.adaptive.chart.model.ChartPoint
-import `fun`.adaptive.chart.model.ChartSeries
-import `fun`.adaptive.chart.model.ChartTick
+import `fun`.adaptive.chart.model.*
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.instruction.emptyInstructions
-import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.canvas.api.*
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.color
-import `fun`.adaptive.ui.api.margin
-import `fun`.adaptive.ui.api.size
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.PopupAlign
@@ -123,6 +114,27 @@ fun basicChart() {
     }
 }
 
+
+@Adaptive
+fun lineChart() {
+    box {
+        maxSize .. padding { 10.dp }
+
+        canvas {
+
+            basicAxis(context, xAxis) .. translate(50.0, 361.0)
+            basicAxis(context, yAxis) .. translate(49.0, - 40.0)
+
+            transform {
+                translate(50.0, 360.0)
+                for (series in listOf(series1, series2)) {
+                    basicLineSeries(context, series)
+                }
+            }
+        }
+    }
+}
+
 @Adaptive
 fun dotAndText(x: Double, y: Double, alignment: PopupAlign?) {
     val text = alignment?.let { "${it.horizontal?.name}, ${it.vertical?.name}" } ?: "no alignment"
@@ -154,11 +166,11 @@ fun labels50100(size: Double, reverse: Boolean = false): List<ChartLabel> {
 
     for (i in 1 .. count) {
         val offset = if (reverse) (size - i * 50.0) else i * 50.0
-        if (i % 2 == 0) {
+        //if (i % 2 == 0) {
             out += ChartLabel(offset, "${i * 50}", instructions = emptyInstructions)
-        } else {
-            out += ChartLabel(offset, "${i * 50}", instructions = instructionsOf(fill(colors.friendly.opaque(0.7f))))
-        }
+        //} else {
+        //   out += ChartLabel(offset, "${i * 50}", instructions = instructionsOf(fill(colors.friendly.opaque(0.7f))))
+        //}
     }
 
     return out

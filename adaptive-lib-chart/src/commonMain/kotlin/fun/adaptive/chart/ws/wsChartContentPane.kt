@@ -1,6 +1,7 @@
 package `fun`.adaptive.chart.ws
 
 import `fun`.adaptive.chart.ui.basicChart
+import `fun`.adaptive.chart.ui.lineChart
 import `fun`.adaptive.chart.ws.model.WsChartContext
 import `fun`.adaptive.chart.ws.model.WsChartPaneData
 import `fun`.adaptive.foundation.Adaptive
@@ -18,7 +19,7 @@ fun wsChartContentPane(): AdaptiveFragment {
 
     val context = fragment().wsContext<WsChartContext>()
 
-    basicChart()
+    lineChart()
 
     return fragment()
 }

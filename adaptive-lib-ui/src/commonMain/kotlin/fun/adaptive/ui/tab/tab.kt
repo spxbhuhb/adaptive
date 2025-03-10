@@ -65,7 +65,11 @@ fun tabHandle(
         containerStyle
 
         if (tab.icon != null) {
-            icon(tab.icon)
+            box {
+                theme.tabHandleIconContainer
+
+                icon(tab.icon) .. theme.tabHandleIcon
+            }
         }
 
         box {
@@ -89,7 +93,6 @@ fun tabHandle(
         }
     }
 }
-
 
 @Adaptive
 private fun header(
