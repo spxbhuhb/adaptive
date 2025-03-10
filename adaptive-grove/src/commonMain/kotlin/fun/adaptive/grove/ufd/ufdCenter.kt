@@ -21,8 +21,8 @@ import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.theme.textSmall
-import `fun`.adaptive.ui.workspace.model.Workspace.Companion.wsContext
-import `fun`.adaptive.ui.workspace.model.WorkspaceTheme.Companion.workspaceTheme
+import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
 
 @Adaptive
 fun ufdCenter() : AdaptiveFragment {

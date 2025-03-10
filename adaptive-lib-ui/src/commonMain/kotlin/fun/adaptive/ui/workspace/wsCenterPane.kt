@@ -2,15 +2,15 @@ package `fun`.adaptive.ui.workspace
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.ui.workspace.model.Workspace
+import `fun`.adaptive.foundation.value.valueFrom
 
 @Adaptive
-fun wsCenterPane() : AdaptiveFragment {
-    val workspace = fragment().firstContext<Workspace>()
+fun wsCenterPane(workspace: Workspace): AdaptiveFragment {
 
-    wsContentPaneGroup(workspace.contentPaneGroups.first())
+    val groups = valueFrom { workspace.contentPaneGroups }
+
+    wsContentPaneGroup(groups.first())
 
     return fragment()
 }

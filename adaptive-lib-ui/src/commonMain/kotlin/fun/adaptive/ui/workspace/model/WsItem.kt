@@ -1,9 +1,11 @@
-package `fun`.adaptive.chart.ws
+package `fun`.adaptive.ui.workspace.model
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 
-abstract class WsProjectItem : AdatClass {
+abstract class WsItem : AdatClass {
     abstract val icon: GraphicsResourceSet
     abstract val name: String
+    abstract val type: WsItemType
+    abstract val tooltip: String?
 }

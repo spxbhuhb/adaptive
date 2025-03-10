@@ -12,13 +12,13 @@ import `fun`.adaptive.ui.builtin.hide
 import `fun`.adaptive.ui.builtin.remove
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.denseIconTheme
-import `fun`.adaptive.ui.workspace.model.Workspace
-import `fun`.adaptive.ui.workspace.model.WorkspacePane
-import `fun`.adaptive.ui.workspace.model.WorkspaceTheme
+import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.model.WsPane
+import `fun`.adaptive.ui.workspace.WorkspaceTheme
 
 @Adaptive
 fun wsPaneTitle(
-    pane: WorkspacePane,
+    pane: WsPane<*>,
     showActions : Boolean,
     theme: WorkspaceTheme
 ) {

@@ -1,16 +1,47 @@
-package `fun`.adaptive.ui.workspace.model
+package `fun`.adaptive.ui.workspace
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.canvas.api.fill
-import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.alignItems
+import `fun`.adaptive.ui.api.borderBottom
+import `fun`.adaptive.ui.api.borderLeft
+import `fun`.adaptive.ui.api.borderRight
+import `fun`.adaptive.ui.api.borderTop
+import `fun`.adaptive.ui.api.cornerRadius
+import `fun`.adaptive.ui.api.cursor
+import `fun`.adaptive.ui.api.fontSize
+import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.height
+import `fun`.adaptive.ui.api.margin
+import `fun`.adaptive.ui.api.maxHeight
+import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.maxWidth
+import `fun`.adaptive.ui.api.noSelect
+import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.paddingHorizontal
+import `fun`.adaptive.ui.api.paddingLeft
+import `fun`.adaptive.ui.api.paddingTop
+import `fun`.adaptive.ui.api.paddingVertical
+import `fun`.adaptive.ui.api.rowTemplate
+import `fun`.adaptive.ui.api.scroll
+import `fun`.adaptive.ui.api.semiBoldFont
+import `fun`.adaptive.ui.api.size
+import `fun`.adaptive.ui.api.spaceBetween
+import `fun`.adaptive.ui.api.width
+import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
-import `fun`.adaptive.ui.theme.*
-import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.ui.theme.backgrounds
+import `fun`.adaptive.ui.theme.colors
+import `fun`.adaptive.ui.theme.textColors
+import `fun`.adaptive.ui.theme.textMedium
+import `fun`.adaptive.ui.theme.textSmall
+import `fun`.adaptive.ui.workspace.model.WsPane
+import `fun`.adaptive.ui.workspace.model.WsPaneId
 
 class WorkspaceTheme(
     val width: DPixel = 40.dp,
@@ -60,9 +91,9 @@ class WorkspaceTheme(
     val leftIconColumn = paneIconColumn + borderRight(toolBorderColor)
 
     fun paneIconContainer(
-        thisPane: WorkspacePane,
-        activePane: UUID<WorkspacePane>?,
-        focusedPane: UUID<WorkspacePane>?,
+        thisPane: WsPane<*>,
+        activePane: WsPaneId?,
+        focusedPane: WsPaneId?,
         hover: Boolean
     ) =
         paneIconContainer(

@@ -10,12 +10,12 @@ import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.ui.workspace.model.Workspace
-import `fun`.adaptive.ui.workspace.model.WorkspaceContext
+import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.model.WsContext
 
 class UfdContext(
     override val workspace: Workspace
-) : WorkspaceContext {
+) : WsContext {
 
     val palette = autoCollectionOrigin(
         listOf(

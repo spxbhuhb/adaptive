@@ -4,13 +4,27 @@ import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.ui.tab.TabContainer
 import `fun`.adaptive.ui.tab.TabPane
 import `fun`.adaptive.ui.tab.TabPaneAction
+import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.utility.UUID
 
-class WorkspaceContentPaneGroup(
-    val workspace: Workspace
+class WsContentPaneGroup(
+    val uuid : UUID<WsContentPaneGroup>,
+    val workspace: Workspace,
+    firstPane : WsPane<*>
 ) {
-    val activePane = storeFor<WorkspacePane?> { null }
+    /**
+     * True when this group contains only one pane and that one pane
+     * cannot be changed. Singular pane groups does not show tabs.
+     */
+    var singular : Boolean = false
 
-    val panes = storeFor<List<WorkspacePane>> { emptyList() }
+    /**
+     * The active pane of this pane group. This is the pane that is currently
+     * shown.
+     */
+    val activePane = storeFor<WsPane<*>> { firstPane }
+
+    val panes = storeFor<List<WsPane<*>>> { listOf(firstPane) }
 
     fun toTabContainer() : TabContainer =
         TabContainer(
@@ -28,7 +42,8 @@ class WorkspaceContentPaneGroup(
                             wsAction.tooltip,
                             { wsAction.action(workspace, wsPane) }
                         )
-                    }
+                    },
+                    model = wsPane
                 )
             }
         )

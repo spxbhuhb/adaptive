@@ -11,5 +11,6 @@ class TabPane(
     val icon: GraphicsResourceSet? = null,
     val tooltip: String? = null,
     val closeable: Boolean = true,
-    val actions: List<TabPaneAction> = emptyList()
+    val actions: List<TabPaneAction> = emptyList(),
+    val model: Any? = null
 )

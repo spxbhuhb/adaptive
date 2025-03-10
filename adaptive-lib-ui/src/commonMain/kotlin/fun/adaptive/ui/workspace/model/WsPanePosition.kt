@@ -1,6 +1,6 @@
 package `fun`.adaptive.ui.workspace.model
 
-enum class WorkspacePanePosition {
+enum class WsPanePosition {
     RightTop,
     RightMiddle,
     RightBottom,

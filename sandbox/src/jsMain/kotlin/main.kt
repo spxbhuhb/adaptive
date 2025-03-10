@@ -5,7 +5,7 @@
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
-import `fun`.adaptive.chart.ui.basicChart
+import `fun`.adaptive.chart.chartCommon
 import `fun`.adaptive.cookbook.cookbookCommon
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
@@ -32,6 +32,7 @@ fun sandboxMain() {
         uiCommon()
         cookbookCommon()
         groveRuntimeCommon()
+        chartCommon()
 
         commonMainStringsStringStore0.load()
 
@@ -55,11 +56,11 @@ fun sandboxMain() {
 
             adapter.cookbookCommon()
             adapter.groveRuntimeCommon()
+            adapter.chartCommon()
 
             //docMain()
-            //basicChart()
+            chartMain()
             //svgMain()
-            wsMain()
         }
     }
 }

@@ -7,7 +7,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.tree
-import `fun`.adaptive.ui.workspace.model.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive

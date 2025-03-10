@@ -9,11 +9,9 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.workspace.model.WorkspaceTheme.Companion.workspaceTheme
-import `fun`.adaptive.ui.workspace.model.Workspace
-import `fun`.adaptive.ui.workspace.model.WorkspacePane
-import `fun`.adaptive.ui.workspace.model.WorkspacePanePosition
-import `fun`.adaptive.ui.workspace.model.WorkspaceTheme
+import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
+import `fun`.adaptive.ui.workspace.model.WsPane
+import `fun`.adaptive.ui.workspace.model.WsPanePosition
 
 @Adaptive
 fun wsFull(workspace: Workspace) {
@@ -58,9 +56,9 @@ private fun wsLeft(workspace: Workspace) {
 
     splitPane(
         config,
-        { wsPane(workspace, WorkspacePanePosition.LeftTop) },
+        { wsPane(workspace, WsPanePosition.LeftTop) },
         { wsHorizontalDivider(workspace.theme) },
-        { wsPane(workspace, WorkspacePanePosition.LeftMiddle) }
+        { wsPane(workspace, WsPanePosition.LeftMiddle) }
     ) .. maxSize
 }
 
@@ -70,7 +68,7 @@ private fun wsCenterRight(workspace: Workspace) {
 
     splitPane(
         config,
-        { wsPane(workspace, WorkspacePanePosition.Center) },
+        { wsCenterPane(workspace) },
         { wsVerticalDivider(workspace.theme) },
         { wsRight(workspace) }
     ) .. maxSize
@@ -82,9 +80,9 @@ private fun wsRight(workspace: Workspace) {
 
     splitPane(
         config,
-        { wsPane(workspace, WorkspacePanePosition.RightTop) },
+        { wsPane(workspace, WsPanePosition.RightTop) },
         { wsHorizontalDivider(workspace.theme) },
-        { wsPane(workspace, WorkspacePanePosition.RightMiddle) }
+        { wsPane(workspace, WsPanePosition.RightMiddle) }
     ) .. maxSize
 }
 
@@ -94,9 +92,9 @@ private fun wsBottom(workspace: Workspace) {
 
     splitPane(
         config,
-        { wsPane(workspace, WorkspacePanePosition.LeftBottom) },
+        { wsPane(workspace, WsPanePosition.LeftBottom) },
         { wsVerticalDivider(workspace.theme) },
-        { wsPane(workspace, WorkspacePanePosition.RightBottom) }
+        { wsPane(workspace, WsPanePosition.RightBottom) }
     ) .. maxSize
 }
 
@@ -121,36 +119,36 @@ private fun wsVerticalDivider(theme: WorkspaceTheme) {
 }
 
 @Adaptive
-private fun wsPane(workspace: Workspace, position: WorkspacePanePosition): AdaptiveFragment {
+private fun wsPane(workspace: Workspace, position: WsPanePosition): AdaptiveFragment {
 
     val paneUuid = valueFrom {
         when (position) {
-            WorkspacePanePosition.RightTop -> {
+            WsPanePosition.RightTop -> {
                 workspace.rightTop
             }
 
-            WorkspacePanePosition.RightMiddle -> {
+            WsPanePosition.RightMiddle -> {
                 workspace.rightMiddle
             }
 
-            WorkspacePanePosition.RightBottom -> {
+            WsPanePosition.RightBottom -> {
                 workspace.rightBottom
             }
 
-            WorkspacePanePosition.LeftTop -> {
+            WsPanePosition.LeftTop -> {
                 workspace.leftTop
             }
 
-            WorkspacePanePosition.LeftMiddle -> {
+            WsPanePosition.LeftMiddle -> {
                 workspace.leftMiddle
             }
 
-            WorkspacePanePosition.LeftBottom -> {
+            WsPanePosition.LeftBottom -> {
                 workspace.leftBottom
             }
 
-            WorkspacePanePosition.Center -> {
-                workspace.center
+            WsPanePosition.Center -> {
+                error("center panes should not be loaded into a tool slot")
             }
         }
     }
@@ -170,7 +168,7 @@ private fun wsPane(workspace: Workspace, position: WorkspacePanePosition): Adapt
 }
 
 @Adaptive
-private fun wsPaneContent(pane: WorkspacePane) {
+private fun wsPaneContent(pane: WsPane<*>) {
     box {
         maxSize
         actualize(pane.key)
@@ -220,7 +218,7 @@ fun wsPaneIcons(
 
 @Adaptive
 private fun wsPaneIcon(
-    pane: WorkspacePane,
+    pane: WsPane<*>,
     workspace: Workspace
 ) {
 

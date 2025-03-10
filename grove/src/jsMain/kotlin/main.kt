@@ -17,8 +17,8 @@ import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.uiCommon
-import `fun`.adaptive.ui.workspace.model.Workspace
-import `fun`.adaptive.ui.workspace.model.WorkspacePanePosition
+import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.ui.workspace.wsFull
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -69,7 +69,7 @@ private fun buildWorkspace(): Workspace {
         groveCommon()
 
         leftTop.value = toolPanes.first { it.key == ufdPalettePaneKey }.uuid
-        leftMiddle.value = toolPanes.first { it.position == WorkspacePanePosition.LeftMiddle }.uuid
+        leftMiddle.value = toolPanes.first { it.position == WsPanePosition.LeftMiddle }.uuid
         //rightTop.value = panes.first { it.position == WorkspacePanePosition.RightTop }.uuid
         //center.value = panes.first { it.position == WorkspacePanePosition.Center }.uuid
 

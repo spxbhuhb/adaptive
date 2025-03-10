@@ -36,7 +36,7 @@ fun tabContainer(
         header(model, theme, activeTab, { activeTab = it }, _fixme_adaptive_content)
 
         if (activeTab != null) {
-            localContext(activeTab) {
+            localContext(activeTab.model) {
                 actualize(activeTab.key)
             }
         }

@@ -11,9 +11,9 @@ import `fun`.adaptive.grove.resources.stroke_partial
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.builtin.menu
-import `fun`.adaptive.ui.workspace.model.Workspace
-import `fun`.adaptive.ui.workspace.model.WorkspacePane
-import `fun`.adaptive.ui.workspace.model.WorkspacePanePosition
+import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.model.WsPane
+import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
 const val ufdPalettePaneKey = "grove:ufd:palette"
@@ -30,44 +30,49 @@ fun AdaptiveAdapter.groveUfdCommon() {
 fun Workspace.groveUfdCommon() {
     contexts += UfdContext(this)
 
-    toolPanes += WorkspacePane(
+    toolPanes += WsPane(
         UUID(),
         Strings.palette,
         Graphics.palette,
-        WorkspacePanePosition.LeftTop,
-        ufdPalettePaneKey
+        WsPanePosition.LeftTop,
+        ufdPalettePaneKey,
+        model = TODO()
     )
 
-    toolPanes += WorkspacePane(
+    toolPanes += WsPane(
         UUID(),
         Strings.components,
         Graphics.cards,
-        WorkspacePanePosition.LeftMiddle,
+        WsPanePosition.LeftMiddle,
         ufdComponentsPaneKey,
+        model = TODO()
     )
 
-    toolPanes += WorkspacePane(
+    toolPanes += WsPane(
         UUID(),
         Strings.instructions,
         Graphics.stroke_partial,
-        WorkspacePanePosition.RightTop,
-        ufdInstructionsPaneKey
+        WsPanePosition.RightTop,
+        ufdInstructionsPaneKey,
+        model = TODO()
     )
 
-    toolPanes += WorkspacePane(
+    toolPanes += WsPane(
         UUID(),
         Strings.state,
         Graphics.data_table,
-        WorkspacePanePosition.RightTop,
-        ufdStatePaneKey
+        WsPanePosition.RightTop,
+        ufdStatePaneKey,
+        model = TODO()
     )
 
-    toolPanes += WorkspacePane(
+    toolPanes += WsPane(
         UUID(),
         "",
         Graphics.menu,
-        WorkspacePanePosition.Center,
-        ufdCenterPaneKey
+        WsPanePosition.Center,
+        ufdCenterPaneKey,
+        model = TODO()
     )
 
 }

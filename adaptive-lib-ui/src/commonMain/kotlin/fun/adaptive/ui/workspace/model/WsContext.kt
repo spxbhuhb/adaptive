@@ -1,6 +1,8 @@
 package `fun`.adaptive.ui.workspace.model
 
-interface WorkspaceContext {
+import `fun`.adaptive.ui.workspace.Workspace
+
+interface WsContext {
 
     val workspace: Workspace
 

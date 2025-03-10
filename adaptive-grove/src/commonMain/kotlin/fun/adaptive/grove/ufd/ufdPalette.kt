@@ -10,7 +10,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.workspace.model.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive

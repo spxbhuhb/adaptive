@@ -2,7 +2,6 @@ package `fun`.adaptive.cookbook.recipe.ui.layout.workspace
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
@@ -14,10 +13,11 @@ import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.workspace.*
-import `fun`.adaptive.ui.workspace.model.WorkspaceTheme.Companion.workspaceTheme
-import `fun`.adaptive.ui.workspace.model.Workspace
-import `fun`.adaptive.ui.workspace.model.WorkspacePane
-import `fun`.adaptive.ui.workspace.model.WorkspacePanePosition
+import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
+import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.model.WsPane
+import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
 class Context {
@@ -28,6 +28,7 @@ class Context {
 fun workspaceRecipe(): AdaptiveFragment {
 
     val workspace = Workspace()
+    workspace.contexts += Context()
     initPanes(workspace)
 
     box {
@@ -37,7 +38,7 @@ fun workspaceRecipe(): AdaptiveFragment {
             maxSize .. colTemplate(workspaceTheme.width, 1.fr, workspaceTheme.width)
             borders.outline .. backgrounds.surface
 
-            localContext(Context()) {
+            localContext(workspace) {
                 wsPaneIcons(left = true, workspace)
 
                 wsMain(workspace)
@@ -67,78 +68,87 @@ object WorkspaceRecipePaneFragmentFactory : FoundationFragmentFactory() {
 fun initPanes(workspace: Workspace) {
     workspace.toolPanes.addAll(
         listOf(
-            WorkspacePane(
+            WsPane(
                 UUID(),
                 "Left Top",
                 Graphics.menu,
-                WorkspacePanePosition.LeftTop,
+                WsPanePosition.LeftTop,
                 "cookbook:support:lefttop",
-                "⌘ P"
+                tooltip = "⌘ P",
+                model = TODO()
             ),
-            WorkspacePane(
+            WsPane(
                 UUID(),
                 "Left Middle - 1",
                 Graphics.account_box,
-                WorkspacePanePosition.LeftMiddle,
+                WsPanePosition.LeftMiddle,
                 "cookbook:support:leftmiddle1",
+                model = TODO()
             ),
-            WorkspacePane(
+            WsPane(
                 UUID(),
                 "Left Middle - 2",
                 Graphics.settings,
-                WorkspacePanePosition.LeftMiddle,
+                WsPanePosition.LeftMiddle,
                 "cookbook:support:leftmiddle2",
+                model = TODO()
             ),
-            WorkspacePane(
+            WsPane(
                 UUID(),
                 "Left Middle - 3",
                 Graphics.more_vert,
-                WorkspacePanePosition.LeftMiddle,
+                WsPanePosition.LeftMiddle,
                 "cookbook:support:leftmiddle3",
+                model = TODO()
             ),
-            WorkspacePane(
+            WsPane(
                 UUID(),
                 "Left Bottom",
                 Graphics.power_settings_new,
-                WorkspacePanePosition.LeftBottom,
+                WsPanePosition.LeftBottom,
                 "cookbook:support:bottomleft",
-                "⌘ P"
+                tooltip = "⌘ P",
+                model = TODO()
             ),
-            WorkspacePane(
+            WsPane(
                 UUID(),
                 "Right Top",
                 Graphics.account_box,
-                WorkspacePanePosition.RightTop,
+                WsPanePosition.RightTop,
                 "cookbook:support:righttop",
-                "⌘ P"
+                tooltip = "⌘ P",
+                model = TODO()
             ),
-            WorkspacePane(
+            WsPane(
                 UUID(),
                 "Right Middle",
                 Graphics.account_box,
-                WorkspacePanePosition.RightMiddle,
+                WsPanePosition.RightMiddle,
                 "cookbook:support:rightmiddle",
-                "⌘ P"
+                tooltip = "⌘ P",
+                model = TODO()
             ),
-            WorkspacePane(
+            WsPane(
                 UUID(),
                 "Right Bottom",
                 Graphics.account_circle,
-                WorkspacePanePosition.RightBottom,
+                WsPanePosition.RightBottom,
                 "cookbook:support:bottomright",
-                "⌘ P"
+                tooltip = "⌘ P",
+                model = TODO()
             ),
-            WorkspacePane(
+            WsPane(
                 UUID(),
                 "Center",
                 Graphics.menu,
-                WorkspacePanePosition.Center,
-                "cookbook:support:center"
+                WsPanePosition.Center,
+                "cookbook:support:center",
+                model = TODO()
             ),
         )
     )
 
-    workspace.center.value = workspace.toolPanes.first { it.position == WorkspacePanePosition.Center }.uuid
+    workspace.center.value = workspace.toolPanes.first { it.position == WsPanePosition.Center }.uuid
 }
 
 
@@ -216,7 +226,7 @@ fun bottomLeft(): AdaptiveFragment {
 
 @Adaptive
 fun center(): AdaptiveFragment {
-    val context = fragment().firstContext<Context>()
+    val context = fragment().wsContext<Context>()
 
     box {
         padding { 16.dp }
