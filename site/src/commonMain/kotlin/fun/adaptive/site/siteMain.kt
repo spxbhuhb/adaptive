@@ -9,7 +9,6 @@ import `fun`.adaptive.ui.workspace.wsFull
 fun siteMain() {
 
     val workspace = buildWorkspace()
-    workspace.center.value = workspace.toolPanes.first { it.key == siteHomeKey }.uuid
 
     localContext(workspace) {
         wsFull(workspace)

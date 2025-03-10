@@ -75,7 +75,7 @@ fun initPanes(workspace: Workspace) {
                 WsPanePosition.LeftTop,
                 "cookbook:support:lefttop",
                 tooltip = "⌘ P",
-                model = TODO()
+                model = Unit
             ),
             WsPane(
                 UUID(),
@@ -83,7 +83,7 @@ fun initPanes(workspace: Workspace) {
                 Graphics.account_box,
                 WsPanePosition.LeftMiddle,
                 "cookbook:support:leftmiddle1",
-                model = TODO()
+                model = Unit
             ),
             WsPane(
                 UUID(),
@@ -91,7 +91,7 @@ fun initPanes(workspace: Workspace) {
                 Graphics.settings,
                 WsPanePosition.LeftMiddle,
                 "cookbook:support:leftmiddle2",
-                model = TODO()
+                model = Unit
             ),
             WsPane(
                 UUID(),
@@ -99,7 +99,7 @@ fun initPanes(workspace: Workspace) {
                 Graphics.more_vert,
                 WsPanePosition.LeftMiddle,
                 "cookbook:support:leftmiddle3",
-                model = TODO()
+                model = Unit
             ),
             WsPane(
                 UUID(),
@@ -108,7 +108,7 @@ fun initPanes(workspace: Workspace) {
                 WsPanePosition.LeftBottom,
                 "cookbook:support:bottomleft",
                 tooltip = "⌘ P",
-                model = TODO()
+                model = Unit
             ),
             WsPane(
                 UUID(),
@@ -117,7 +117,7 @@ fun initPanes(workspace: Workspace) {
                 WsPanePosition.RightTop,
                 "cookbook:support:righttop",
                 tooltip = "⌘ P",
-                model = TODO()
+                model = Unit
             ),
             WsPane(
                 UUID(),
@@ -126,7 +126,7 @@ fun initPanes(workspace: Workspace) {
                 WsPanePosition.RightMiddle,
                 "cookbook:support:rightmiddle",
                 tooltip = "⌘ P",
-                model = TODO()
+                model = Unit
             ),
             WsPane(
                 UUID(),
@@ -135,7 +135,7 @@ fun initPanes(workspace: Workspace) {
                 WsPanePosition.RightBottom,
                 "cookbook:support:bottomright",
                 tooltip = "⌘ P",
-                model = TODO()
+                model = Unit
             ),
             WsPane(
                 UUID(),
@@ -143,7 +143,7 @@ fun initPanes(workspace: Workspace) {
                 Graphics.menu,
                 WsPanePosition.Center,
                 "cookbook:support:center",
-                model = TODO()
+                model = Unit
             ),
         )
     )

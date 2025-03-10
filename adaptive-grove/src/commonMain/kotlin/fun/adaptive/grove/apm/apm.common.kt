@@ -24,7 +24,7 @@ fun Workspace.groveApmCommon() {
         Graphics.folder,
         WsPanePosition.LeftTop,
         apmProjectPaneKey,
-        model = TODO()
+        model = Unit
     )
 
 }

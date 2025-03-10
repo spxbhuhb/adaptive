@@ -28,7 +28,7 @@ fun AdaptiveAdapter.cookbookCommon() {
 
 fun Workspace.cookbookCommon() {
 
-    contexts += CookbookContext(this)
+    contexts += WsCookbookContext(this)
 
     toolPanes += WsPane(
         UUID(),
@@ -46,16 +46,19 @@ fun Workspace.cookbookCommon() {
                 Strings.collapseAll,
             ) { w, p -> }
         ),
-        model = TODO()
+        model = Unit
     )
 
-    toolPanes += WsPane(
-        UUID(),
-        "Recipe",
-        Graphics.menu,
-        WsPanePosition.Center,
-        "cookbook:center",
-        model = TODO()
-    )
+    addContentPaneBuilder(WsCookbookContext.RECIPE_ITEM_TYPE) { item ->
+        WsPane(
+            UUID(),
+            item.name,
+            item.icon,
+            WsPanePosition.Center,
+            "cookbook:center",
+            tooltip = item.tooltip,
+            model = item
+        )
+    }
 
 }

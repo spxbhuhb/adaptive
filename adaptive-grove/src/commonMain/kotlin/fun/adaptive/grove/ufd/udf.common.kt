@@ -36,7 +36,7 @@ fun Workspace.groveUfdCommon() {
         Graphics.palette,
         WsPanePosition.LeftTop,
         ufdPalettePaneKey,
-        model = TODO()
+        model = Unit
     )
 
     toolPanes += WsPane(
@@ -45,7 +45,7 @@ fun Workspace.groveUfdCommon() {
         Graphics.cards,
         WsPanePosition.LeftMiddle,
         ufdComponentsPaneKey,
-        model = TODO()
+        model = Unit
     )
 
     toolPanes += WsPane(
@@ -54,7 +54,7 @@ fun Workspace.groveUfdCommon() {
         Graphics.stroke_partial,
         WsPanePosition.RightTop,
         ufdInstructionsPaneKey,
-        model = TODO()
+        model = Unit
     )
 
     toolPanes += WsPane(
@@ -63,7 +63,7 @@ fun Workspace.groveUfdCommon() {
         Graphics.data_table,
         WsPanePosition.RightTop,
         ufdStatePaneKey,
-        model = TODO()
+        model = Unit
     )
 
     toolPanes += WsPane(
@@ -72,7 +72,7 @@ fun Workspace.groveUfdCommon() {
         Graphics.menu,
         WsPanePosition.Center,
         ufdCenterPaneKey,
-        model = TODO()
+        model = Unit
     )
 
 }

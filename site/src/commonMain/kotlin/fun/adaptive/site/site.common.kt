@@ -19,16 +19,17 @@ const val siteHomeKey = "site:home"
 
 suspend fun siteCommon() {
     uiCommon()
-    cookbookCommon()
-    groveCommon()
     groveRuntimeCommon()
+    cookbookCommon()
+    //groveCommon()
 }
 
 fun AbstractAuiAdapter<*, *>.siteCommon() {
 
-    cookbookCommon()
-    groveCommon()
+    uiCommon()
     groveRuntimeCommon()
+    cookbookCommon()
+    //groveCommon()
 
     fragmentFactory += arrayOf(SiteFragmentFactory)
 
@@ -42,14 +43,14 @@ fun AbstractAuiAdapter<*, *>.siteCommon() {
 fun Workspace.siteCommon() {
 
     cookbookCommon()
-    groveCommon()
+    //groveCommon()
 
-    toolPanes += WsPane(
+    WsPane(
         UUID(),
         "Home",
         Graphics.eco,
         WsPanePosition.Center,
         siteHomeKey,
-        direct = true
+        Unit
     )
 }
