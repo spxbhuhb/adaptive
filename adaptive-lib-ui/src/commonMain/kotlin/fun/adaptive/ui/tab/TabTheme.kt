@@ -21,7 +21,7 @@ class TabTheme(
     )
 
     // subtract outerContainer surrounding
-    val innerHeight = tabListHeight - 1.dp
+    val innerHeight = tabListHeight
 
     val separatorSize = 16.dp
 

@@ -87,8 +87,8 @@ abstract class AbstractBox<RT, CRT : RT>(
         val data = this.renderData
         val container = data.container
 
-        val innerWidth = data.innerWidth !!
-        val innerHeight = data.innerHeight !!
+        val innerWidth = data.innerWidth ?: 0.0
+        val innerHeight = data.innerHeight ?: 0.0
 
         item.computeLayout(innerWidth, innerHeight)
 

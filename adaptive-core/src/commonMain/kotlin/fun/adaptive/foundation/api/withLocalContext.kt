@@ -41,6 +41,15 @@ inline fun <reified T : Any> AdaptiveFragment.firstContext() =
 
 /**
  * Find the first [FoundationLocalContext] fragment between parents of [this] with context
+ * of type [T] and return with the context.
+ *
+ * @return  the context or null if no such context exists
+ */
+inline fun <reified T : Any> AdaptiveFragment.firstContextOrNull() =
+    findContext(T::class)
+
+/**
+ * Find the first [FoundationLocalContext] fragment between parents of [this] with context
  * of [type] and return with the context.
  *
  * @return  the context or null if there is no such fragment
