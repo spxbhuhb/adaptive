@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.FragmentKey
 
 @Adat
 class Chart(
-    val axes: List<ChartAxis>,
-    val series: List<ChartSeries>,
+    val axes: List<ChartRenderAxis<*,*>>,
+    val series: List<ChartRenderSeries>,
     val renderer: FragmentKey? = null
 )

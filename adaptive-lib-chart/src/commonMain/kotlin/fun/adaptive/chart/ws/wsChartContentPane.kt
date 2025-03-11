@@ -1,6 +1,5 @@
 package `fun`.adaptive.chart.ws
 
-import `fun`.adaptive.chart.ui.basicChart
 import `fun`.adaptive.chart.ui.lineChart
 import `fun`.adaptive.chart.ws.model.WsChartContext
 import `fun`.adaptive.chart.ws.model.WsChartPaneData

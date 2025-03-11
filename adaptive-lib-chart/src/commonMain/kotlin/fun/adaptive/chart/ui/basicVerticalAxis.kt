@@ -1,6 +1,6 @@
 package `fun`.adaptive.chart.ui
 
-import `fun`.adaptive.chart.model.ChartAxis
+import `fun`.adaptive.chart.model.ChartRenderAxis
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -12,10 +12,15 @@ import `fun`.adaptive.ui.api.popupAlign
 import `fun`.adaptive.ui.fragment.layout.RawSize
 
 @Adaptive
-fun basicVerticalAxis(context: ChartRenderContext, axis: ChartAxis, canvasSize: RawSize): AdaptiveFragment {
+fun basicVerticalAxis(
+    context: ChartRenderContext<*,*>,
+    axis: ChartRenderAxis<*,*>,
+    canvasSize: RawSize
+): AdaptiveFragment {
     val axisHeight = canvasSize.height - axis.offset
-    val ticks = ticks50100(axisHeight, reverse = true)
-    val tickMax = ticks.maxOfOrNull { it.size } ?: 0.0
+    val markers = axis.markers(context, canvasSize)
+    val tickMax = markers.maxOfOrNull { it.tickSize ?: 0.0 } ?: 0.0
+    val guideSize = canvasSize.width - axis.size
 
     transform(translate(axis.size, 0.0)) {
 
@@ -23,16 +28,16 @@ fun basicVerticalAxis(context: ChartRenderContext, axis: ChartAxis, canvasSize: 
             line(0.0, 0.0, 0.0, axisHeight + 1) .. context.theme.axisLine
         }
 
-        for (tick in ticks) {
-            line(0.0, tick.offset, 0.0 - tick.size, tick.offset) .. context.theme.axisLine
-        }
-
-        for (label in labels50100(axisHeight, reverse = true)) {
-            fillText(- tickMax - 2.0, label.offset + 1.0, label.text, popupAlign.beforeCenter) .. context.theme.axisLabel .. label.instructions
-        }
-
-        for (guide in guides50100(axisHeight, canvasSize.width, reverse = true)) {
-            line(0.0, guide.offset, guide.size, guide.offset) .. context.theme.axisGuide
+        for (marker in markers) {
+            if (marker.tickSize != null) {
+                line(0.0, marker.offset, 0.0 - marker.tickSize, marker.offset) .. context.theme.axisLine
+            }
+            if (marker.labelText != null) {
+                fillText(- tickMax - 2.0, marker.offset + 1.0, marker.labelText, popupAlign.beforeCenter) .. context.theme.axisLabel .. marker.labelInstructions
+            }
+            if (marker.guide) {
+                line(0.0, marker.offset, guideSize, marker.offset) .. context.theme.axisGuide
+            }
         }
 
     }

@@ -1,10 +1,14 @@
 package `fun`.adaptive.chart.ui
 
-import `fun`.adaptive.chart.model.ChartAxis
-import `fun`.adaptive.chart.model.ChartSeries
+import `fun`.adaptive.chart.model.ChartRenderAxis
+import `fun`.adaptive.chart.model.ChartRenderSeries
 
-class ChartRenderContext(
-    val axes : List<ChartAxis>,
-    val series : List<ChartSeries>,
+class ChartRenderContext<XT,YT>(
+    val axes : List<ChartRenderAxis<XT,YT>>,
+    val series : List<ChartRenderSeries>,
+    val xRangeStart : XT,
+    val xRangeEnd : XT,
+    val yRangeStart : YT,
+    val yRangeEnd : YT,
     val theme : ChartTheme
 )

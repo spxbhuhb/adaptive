@@ -1,7 +1,7 @@
 package `fun`.adaptive.chart.ws.model
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.chart.model.ChartSeries
+import `fun`.adaptive.chart.model.ChartRenderSeries
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.workspace.model.WsItem
@@ -18,7 +18,7 @@ class WsItemChartSeries(
     override val name: String,
     override val type: WsItemType,
     override val tooltip: String?,
-    val seriesUuid: UUID<ChartSeries>,
+    val seriesUuid: UUID<ChartRenderSeries>,
     val children : List<WsItemChartSeries> = emptyList()
 ) : WsItem() {
 

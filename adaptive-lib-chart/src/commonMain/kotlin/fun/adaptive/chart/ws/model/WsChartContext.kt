@@ -1,6 +1,6 @@
 package `fun`.adaptive.chart.ws.model
 
-import `fun`.adaptive.chart.model.ChartSeries
+import `fun`.adaptive.chart.model.ChartRenderSeries
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsContext
@@ -21,7 +21,7 @@ class WsChartContext(
 
     val items = mutableListOf<WsItemChartSeries>()
 
-    val data = mutableMapOf<UUID<WsItemChartSeries>, ChartSeries>()
+    val data = mutableMapOf<UUID<WsItemChartSeries>, ChartRenderSeries>()
 
     fun openChart(item: WsItemChartSeries, modifiers: Set<EventModifier>) {
         workspace.addContent(item, modifiers)

@@ -1,6 +1,6 @@
 package `fun`.adaptive.chart.ui
 
-import `fun`.adaptive.chart.model.ChartSeries
+import `fun`.adaptive.chart.model.ChartRenderSeries
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -12,7 +12,7 @@ import `fun`.adaptive.graphics.canvas.model.path.MoveTo
 import `fun`.adaptive.ui.fragment.layout.RawSize
 
 @Adaptive
-fun basicLineSeries(context: ChartRenderContext, series: ChartSeries, canvasSize : RawSize): AdaptiveFragment {
+fun basicLineSeries(context: ChartRenderContext<*,*>, series: ChartRenderSeries, canvasSize : RawSize): AdaptiveFragment {
 
     val first = series.points.firstOrNull()
 

@@ -1,6 +1,6 @@
 package `fun`.adaptive.chart.ui
 
-import `fun`.adaptive.chart.model.ChartAxis
+import `fun`.adaptive.chart.model.ChartRenderAxis
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -12,28 +12,32 @@ import `fun`.adaptive.ui.api.popupAlign
 import `fun`.adaptive.ui.fragment.layout.RawSize
 
 @Adaptive
-fun basicHorizontalAxis(context: ChartRenderContext, axis: ChartAxis, canvasSize: RawSize): AdaptiveFragment {
-    val ticks = ticks50100(canvasSize.width, reverse = false)
-    val tickMax = ticks.maxOfOrNull { it.size } ?: 0.0
+fun basicHorizontalAxis(
+    context: ChartRenderContext<*,*>,
+    axis: ChartRenderAxis<*,*>,
+    canvasSize: RawSize
+): AdaptiveFragment {
+    val markers = axis.markers(context, canvasSize)
+    val tickMax = markers.maxOfOrNull { it.tickSize ?: 0.0 } ?: 0.0
+    val axisOffset = canvasSize.height - axis.size
 
-    transform(translate(axis.offset, canvasSize.height - axis.size)) {
+    transform(translate(axis.offset, axisOffset)) {
 
         if (axis.axisLine) {
             line(- 1.0, 0.0, canvasSize.width - axis.offset, 0.0) .. context.theme.axisLine
         }
 
-        for (tick in ticks) {
-            line(tick.offset, 0.0, tick.offset, 0.0 + tick.size) .. context.theme.axisLine
+        for (marker in markers) {
+            if (marker.tickSize != null) {
+                line(marker.offset, 0.0, marker.offset, 0.0 + marker.tickSize) .. context.theme.axisLine
+            }
+            if (marker.labelText != null) {
+                fillText(marker.offset, tickMax + 2.0, marker.labelText, popupAlign.belowCenter) .. context.theme.axisLabel .. marker.labelInstructions
+            }
+            if (marker.guide) {
+                line(marker.offset, 0.0, marker.offset, -axisOffset) .. context.theme.axisGuide
+            }
         }
-
-        for (label in labels50100(canvasSize.width, reverse = false)) {
-            fillText(label.offset, tickMax + 2.0, label.text, popupAlign.belowCenter) .. context.theme.axisLabel .. label.instructions
-        }
-
-        for (guide in guides50100(canvasSize.width, canvasSize.height, reverse = false)) {
-            line(guide.offset, 0.0, guide.offset, - guide.size) .. context.theme.axisGuide
-        }
-
     }
 
     return fragment()
