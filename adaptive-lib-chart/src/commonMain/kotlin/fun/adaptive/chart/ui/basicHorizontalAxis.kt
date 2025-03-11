@@ -1,6 +1,7 @@
 package `fun`.adaptive.chart.ui
 
 import `fun`.adaptive.chart.model.ChartRenderAxis
+import `fun`.adaptive.chart.model.ChartRenderContext
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -13,7 +14,7 @@ import `fun`.adaptive.ui.fragment.layout.RawSize
 
 @Adaptive
 fun basicHorizontalAxis(
-    context: ChartRenderContext<*,*>,
+    context: ChartRenderContext<*, *>,
     axis: ChartRenderAxis<*,*>,
     canvasSize: RawSize
 ): AdaptiveFragment {

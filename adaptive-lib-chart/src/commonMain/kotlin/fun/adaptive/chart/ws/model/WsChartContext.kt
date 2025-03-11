@@ -1,10 +1,8 @@
 package `fun`.adaptive.chart.ws.model
 
-import `fun`.adaptive.chart.model.ChartRenderSeries
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsContext
-import `fun`.adaptive.utility.UUID
 
 /**
  * This context holds data shared between chart content panes.
@@ -21,7 +19,7 @@ class WsChartContext(
 
     val items = mutableListOf<WsItemChartSeries>()
 
-    val data = mutableMapOf<UUID<WsItemChartSeries>, ChartRenderSeries>()
+//    val data = mutableMapOf<UUID<WsItemChartSeries>, ChartRenderSeries>()
 
     fun openChart(item: WsItemChartSeries, modifiers: Set<EventModifier>) {
         workspace.addContent(item, modifiers)

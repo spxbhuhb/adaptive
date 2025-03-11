@@ -12,3 +12,9 @@ Input data for rendering:
 - axes
 - series
 
+## Normalization
+
+For cartesian charts (that rely on X-Y pairs) the value and marker calculations are executed on normalized values.
+
+Normalization converts whatever value the chart handles into a `Double` in the `[0, 1)` range. Calculations and
+positioning use these normalized values and the drawing fragments convert them back to canvas coordinates.

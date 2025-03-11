@@ -145,7 +145,7 @@ class ActualBrowserCanvas : ActualCanvas {
     }
 
     override fun clear() {
-        context.clearRect(0.0, 0.0, receiver.height.toDouble(), receiver.width.toDouble())
+        context.clearRect(0.0, 0.0, receiver.width.toDouble(), receiver.height.toDouble())
     }
 
     override fun measureText(renderData : CanvasRenderData, text: String) : RawTextMeasurement {

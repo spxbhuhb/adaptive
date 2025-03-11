@@ -1,19 +1,19 @@
 package `fun`.adaptive.chart.ui
 
-import `fun`.adaptive.chart.model.ChartRenderAxis
-import `fun`.adaptive.chart.model.ChartRenderMarker
-import `fun`.adaptive.chart.model.ChartRenderPoint
-import `fun`.adaptive.chart.model.ChartRenderSeries
+import `fun`.adaptive.chart.model.*
+import `fun`.adaptive.chart.normalization.DoubleDoubleNormalizer
 import `fun`.adaptive.chart.ws.model.WsChartContext
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.instruction.emptyInstructions
+import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.canvas.api.canvas
+import `fun`.adaptive.graphics.canvas.api.stroke
 import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.color
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.utility.format
 
 
 val xAxis = ChartRenderAxis<Double, Double>(
@@ -23,14 +23,20 @@ val xAxis = ChartRenderAxis<Double, Double>(
     WsChartContext.BASIC_HORIZONTAL_AXIS
 ) { context, axis, canvasSize ->
 
-    val count = (canvasSize.width / 50).toInt()
+    val itemsWidth = canvasSize.width - context.itemOffsetX
+    val count = (itemsWidth / 50).toInt()
+    val step = 1.0 / count
+
+    val normalizer = context.normalizer
+
     val out = mutableListOf<ChartRenderMarker>()
 
     for (i in 1 .. count) {
+        val offset = i * step
         out += ChartRenderMarker(
-            offset = i * 50.0,
+            offset = i * step * itemsWidth,
             tickSize = if (i % 2 == 0) 8.0 else 4.0,
-            labelText = "${i * 50}",
+            labelText = normalizer.denormalizeX(offset)?.format(2),
             guide = true
         )
     }
@@ -45,14 +51,20 @@ val yAxis = ChartRenderAxis<Double, Double>(
     WsChartContext.BASIC_VERTICAL_AXIS
 ) { context, axis, canvasSize ->
 
-    val count = (canvasSize.height / 50).toInt() - 1
+    val itemsHeight = canvasSize.height - context.itemOffsetY
+    val count = (itemsHeight / 50).toInt() - 1
+    val step = 1.0 / count
+
+    val normalizer = context.normalizer
+
     val out = mutableListOf<ChartRenderMarker>()
 
     for (i in 1 .. count) {
+        val offset = i * step
         out += ChartRenderMarker(
-            offset = canvasSize.height - i * 50.0 - 50.0,
+            offset = itemsHeight - offset * itemsHeight,
             tickSize = if (i % 2 == 0) 8.0 else 4.0,
-            labelText = "${i * 50}",
+            labelText = normalizer.denormalizeY(offset)?.format(2),
             guide = true
         )
     }
@@ -60,37 +72,36 @@ val yAxis = ChartRenderAxis<Double, Double>(
     out
 }
 
-val series1 = ChartRenderSeries(
-    offsetX = 50.0,
-    offsetY = 50.0,
-    color(0xff00ff),
+val item1 = ChartItem(
+    WsChartContext.BASIC_LINE_SERIES,
     listOf(
-        ChartRenderPoint(0.0, 0.0),
-        ChartRenderPoint(100.0, 100.0),
-        ChartRenderPoint(200.0, 50.0),
-        ChartRenderPoint(300.0, 50.0)
+        ChartDataPoint(0.0, 0.0),
+        ChartDataPoint(100.0, 100.0),
+        ChartDataPoint(200.0, 50.0),
+        ChartDataPoint(300.0, 50.0)
     ),
-    WsChartContext.BASIC_LINE_SERIES
+    instructions = instructionsOf(stroke(0xff00ff))
 )
 
-val series2 = ChartRenderSeries(
-    offsetX = 50.0,
-    offsetY = 50.0,
-    color(0x00ff00),
+val item2 = ChartItem(
+    WsChartContext.BASIC_LINE_SERIES,
     listOf(
-        ChartRenderPoint(0.0, 10.0),
-        ChartRenderPoint(100.0, 80.0),
-        ChartRenderPoint(200.0, 70.0),
-        ChartRenderPoint(300.0, 60.0)
+        ChartDataPoint(0.0, 10.0),
+        ChartDataPoint(100.0, 80.0),
+        ChartDataPoint(200.0, 70.0),
+        ChartDataPoint(300.0, 60.0)
     ),
-    WsChartContext.BASIC_LINE_SERIES
+    instructions = instructionsOf(stroke(0x00ff00))
 )
+
+val items = listOf(item1, item2)
 
 val context = ChartRenderContext<Double, Double>(
+    items,
     listOf(xAxis, yAxis),
-    listOf(series1, series2),
-    0.0, 400.0, 0.0, 400.0,
-    ChartTheme()
+    50.0,
+    50.0,
+    { DoubleDoubleNormalizer(it) }
 )
 
 @Adaptive
@@ -104,8 +115,8 @@ fun lineChart(/*chart : Chart*/) {
                 actualize(axis.renderer, emptyInstructions, context, axis, canvasSize)
             }
 
-            for (series in context.series) {
-                actualize(series.renderer, emptyInstructions, context, series, canvasSize)
+            for (item in context.items) {
+                actualize(item.render, emptyInstructions, context, item, canvasSize)
             }
         }
     }
