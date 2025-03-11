@@ -2,10 +2,11 @@ package `fun`.adaptive.ui.workspace.model
 
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
+import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
 
-class WsPane<D>(
+data class WsPane<D>(
     val uuid: WsPaneId,
     val name: String,
     val icon: GraphicsResourceSet,
@@ -18,10 +19,10 @@ class WsPane<D>(
     val controller : WsPaneController<D> = WsUnitPaneController<D>(),
 ) {
 
-    fun accepts(item : WsItem) =
-        controller.accepts(this, item)
+    fun accepts(item : WsItem, modifier: Set<EventModifier>) =
+        controller.accepts(this, modifier, item)
 
-    fun load(item : WsItem) =
-        controller.load(this, item)
+    fun load(item : WsItem, modifier: Set<EventModifier>) =
+        controller.load(this, modifier, item)
 
 }

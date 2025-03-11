@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.workspace.wsToolPane
 @Adaptive
 fun apmProject(): AdaptiveFragment {
     val context = fragment().wsContext<ApmContext>()
-    val items = root.toTreeItem { showItem(context, it) }.children
+    val items = root.toTreeItem { item, modifiers -> showItem(context, item) }.children
 
     wsToolPane(context.pane(apmProjectPaneKey)) {
         tree(items)

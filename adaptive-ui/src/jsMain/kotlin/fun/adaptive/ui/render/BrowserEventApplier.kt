@@ -93,6 +93,7 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
                 if (event.altKey) modifiers.add(EventModifier.ALT)
                 if (event.metaKey) modifiers.add(EventModifier.META)
                 if (event.shiftKey) modifiers.add(EventModifier.SHIFT)
+                if (event.type == "dblclick") modifiers.add(EventModifier.DOUBLE)
             }
 
             is KeyboardEvent -> {

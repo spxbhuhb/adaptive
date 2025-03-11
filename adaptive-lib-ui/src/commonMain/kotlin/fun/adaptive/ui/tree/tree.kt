@@ -71,7 +71,12 @@ private fun label(
         paddingLeft { offset }
 
         onClick {
-            item.onClick(item)
+            item.onClick(item, it.modifiers)
+            toggle()
+        }
+
+        onDoubleClick {
+            item.onClick(item, it.modifiers)
             toggle()
         }
 

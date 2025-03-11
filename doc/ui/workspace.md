@@ -111,9 +111,8 @@ function.
   - active pane in each pane group
   - other panes in each pane group
 - creates a new pane by calling `paneFun` and depending on the `singularity` of the pane
-  - `SINGULAR_OVERALL`: removes **all** active pane groups and adds a new, singular one with the pane
-  - `SINGULAR_GROUP`: removes the **last** active pane group and adds a new, singular one with the pane
-  - `GROUP`:
+  - `SINGULAR`: removes **all** active pane groups and adds a new, singular one with the pane
+  - `NON_SINGULAR`:
     - if there is at least one non-singular pane group
       - adds the pane to last active non-singular pane group
     - if there is no non-singular pane group

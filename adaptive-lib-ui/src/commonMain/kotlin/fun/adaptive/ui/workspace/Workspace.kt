@@ -8,6 +8,7 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.builtin.menu
 import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
+import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
@@ -46,7 +47,7 @@ class Workspace {
 
     val contexts = mutableListOf<Any>()
 
-    val contentPaneBuilders = mutableMapOf<WsItemType,MutableList<WsContentPaneBuilder>>()
+    val contentPaneBuilders = mutableMapOf<WsItemType, MutableList<WsContentPaneBuilder>>()
 
     val theme
         get() = WorkspaceTheme.Companion.workspaceTheme
@@ -114,7 +115,7 @@ class Workspace {
     // ---------------------------------------------------------------------------------------------
 
     fun directPanes() =
-        toolPanes.filter { it.singularity == WsPaneSingularity.SINGULAR_OVERALL }
+        toolPanes.filter { it.singularity == WsPaneSingularity.SINGULAR }
 
     fun topPanes(left: Boolean) =
         toolPanes.filter(if (left) WsPanePosition.LeftTop else WsPanePosition.RightTop)
@@ -219,10 +220,10 @@ class Workspace {
         contentPaneBuilders.getOrPut(itemType) { mutableListOf() } += builder
     }
 
-    fun addContent(item: WsItem) {
+    fun addContent(item: WsItem, modifiers: Set<EventModifier>) {
 
-        accept(item)?.let {
-            it.load(item)
+        val accepted = accept(item, modifiers)
+        if (accepted) {
             return
         }
 
@@ -236,44 +237,53 @@ class Workspace {
         val pane = builder.invoke(item)
 
         when (pane.singularity) {
-            WsPaneSingularity.SINGULAR_OVERALL -> {
+            WsPaneSingularity.SINGULAR -> {
                 TODO()
             }
-            WsPaneSingularity.SINGULAR_GROUP -> {
-                TODO()
-            }
+
             WsPaneSingularity.GROUP -> {
-                loadGroupContentPane(pane, item)
+                addGroupContentPane(item, modifiers, pane)
             }
         }
     }
 
-    fun accept(item: WsItem): WsPane<*>? {
+    fun accept(item: WsItem, modifiers: Set<EventModifier>): Boolean {
         lastActiveContentPane?.let {
-            if (it.accepts(item)) return it
+            if (it.accepts(item, modifiers)) {
+                loadContentPane(item, modifiers, it, lastActiveContentPaneGroup!!)
+                return true
+            }
         }
 
         lastActiveContentPaneGroup?.let {
-            accept(item, it)?.also { return it }
+            if (accept(item, modifiers, it)) return true
         }
 
         contentPaneGroups.value.forEach {
-            accept(item, it)?.also { return it }
+            if (accept(item, modifiers, it)) return true
         }
 
-        return null
+        return false
     }
 
-    fun accept(item: WsItem, group: WsContentPaneGroup): WsPane<*>? {
+    fun accept(item: WsItem, modifiers: Set<EventModifier>, group: WsContentPaneGroup): Boolean {
 
-        for (pane in group.panes.value) {
-            if (pane.accepts(item)) return pane
+        for (pane in group.panes) {
+            if (pane.accepts(item, modifiers)) {
+                loadContentPane(item, modifiers, pane, lastActiveContentPaneGroup!!)
+                return true
+            }
         }
 
-        return null
+        return false
     }
 
-    fun loadGroupContentPane(pane : WsPane<*>, item: WsItem) {
+    fun loadContentPane(item: WsItem, modifiers: Set<EventModifier>, pane: WsPane<*>, group: WsContentPaneGroup) {
+        // pane.load may return with a different pane, most notably the name and tooltip of the pane may change
+        group.load(pane.load(item, modifiers))
+    }
+
+    fun addGroupContentPane(item: WsItem, modifiers: Set<EventModifier>, pane: WsPane<*>) {
 
         val safeGroup = lastActiveContentPaneGroup
 
@@ -282,10 +292,14 @@ class Workspace {
             WsContentPaneGroup(UUID(), this, pane).also {
                 lastActiveContentPaneGroup = it
                 contentPaneGroups.value = listOf(it)
-                pane.load(item)
+                loadContentPane(item, modifiers, pane, it)
             }
 
-            return
+        } else {
+
+            safeGroup.panes += pane
+            loadContentPane(item, modifiers, pane, safeGroup)
+
         }
 
         return

@@ -5,6 +5,7 @@ import `fun`.adaptive.cookbook.model.CookbookRecipeSet
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
@@ -13,7 +14,7 @@ import `fun`.adaptive.ui.workspace.wsToolPane
 @Adaptive
 fun cookbookRecipes(): AdaptiveFragment {
     val context = fragment().wsContext<WsCookbookContext>()
-    val items = root.toTreeItem { showRecipe(context, it) }.children
+    val items = root.toTreeItem { item, modifiers -> showRecipe(context, item, modifiers) }.children
 
     wsToolPane(context.pane(cookbookRecipePaneKey)) {
         tree(items)
@@ -22,12 +23,10 @@ fun cookbookRecipes(): AdaptiveFragment {
     return fragment()
 }
 
-private fun showRecipe(context: WsCookbookContext, item: TreeItem) {
+private fun showRecipe(context: WsCookbookContext, item: TreeItem, modifiers: Set<EventModifier>) {
     val safeItem = item.data as? WsRecipeItem ?: return
 
-    context.activeRecipeKey.value = safeItem.key
-
-    context.workspace.addContent(safeItem)
+    context.workspace.addContent(safeItem, modifiers)
 }
 
 val root = CookbookRecipeSet(

@@ -27,8 +27,7 @@ class WsItemChartSeries(
             icon,
             name,
             children = children.map { it.toTreeItem(context) },
-            onClick = { if (children.isEmpty()) context.openChart(this) },
             data = seriesUuid
-        )
+        ) { item, modifiers -> if (children.isEmpty()) context.openChart(this) }
 
 }

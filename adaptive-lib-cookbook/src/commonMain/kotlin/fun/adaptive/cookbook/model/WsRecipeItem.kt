@@ -5,6 +5,7 @@ import `fun`.adaptive.cookbook.WsCookbookContext
 import `fun`.adaptive.cookbook.dining
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
+import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.workspace.model.WsItem
 import `fun`.adaptive.ui.workspace.model.WsItemType
@@ -18,13 +19,13 @@ class WsRecipeItem(
     val key: String
 ) : WsItem() {
 
-    fun toTreeItem(onClick: (TreeItem) -> Unit): TreeItem =
+    fun toTreeItem(onClick: (TreeItem, Set<EventModifier>) -> Unit): TreeItem =
         TreeItem(
             Graphics.dining,
             name,
             emptyList(),
-            onClick = onClick,
-            data = this
+            data = this,
+            onClick = onClick
         )
 
 }

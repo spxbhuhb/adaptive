@@ -22,13 +22,30 @@ class WsContentPaneGroup(
      * The active pane of this pane group. This is the pane that is currently
      * shown.
      */
-    val activePane = storeFor<WsPane<*>> { firstPane }
+    var activePane = firstPane
+        private set
 
-    val panes = storeFor<List<WsPane<*>>> { listOf(firstPane) }
+    var panes = mutableListOf(firstPane)
+        private set
+
+    val tabContainer = storeFor<TabContainer> { toTabContainer() }
+
+    fun load(pane : WsPane<*>) {
+        val index = panes.indexOfFirst { it.uuid == pane.uuid }
+
+        if (index == -1) {
+            panes += pane
+        } else {
+            panes[index] = pane
+        }
+
+        activePane = pane
+        tabContainer.value = toTabContainer()
+    }
 
     fun toTabContainer() : TabContainer =
         TabContainer(
-            panes.value.map { wsPane ->
+            panes.map { wsPane ->
                 TabPane(
                     wsPane.uuid.cast(),
                     wsPane.key,
@@ -43,7 +60,8 @@ class WsContentPaneGroup(
                             { wsAction.action(workspace, wsPane) }
                         )
                     },
-                    model = wsPane
+                    model = wsPane,
+                    active = (wsPane.uuid == activePane.uuid)
                 )
             }
         )

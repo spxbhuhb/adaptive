@@ -6,7 +6,10 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.LibFragmentFactory
-import `fun`.adaptive.ui.builtin.*
+import `fun`.adaptive.ui.builtin.collapseAll
+import `fun`.adaptive.ui.builtin.collapse_all
+import `fun`.adaptive.ui.builtin.expandAll
+import `fun`.adaptive.ui.builtin.expand_all
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPaneAction
@@ -28,7 +31,9 @@ fun AdaptiveAdapter.cookbookCommon() {
 
 fun Workspace.cookbookCommon() {
 
-    contexts += WsCookbookContext(this)
+    val context = WsCookbookContext(this)
+
+    contexts += context
 
     toolPanes += WsPane(
         UUID(),
@@ -57,6 +62,7 @@ fun Workspace.cookbookCommon() {
             WsPanePosition.Center,
             "cookbook:center",
             tooltip = item.tooltip,
+            controller = CookbookPaneController(context),
             model = item
         )
     }

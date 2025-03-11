@@ -28,7 +28,7 @@ fun tabContainer(
     theme: TabTheme = TabTheme.DEFAULT
 ): AdaptiveFragment {
 
-    var activeTab = model.tabs.firstOrNull()
+    var activeTab = model.tabs.firstOrNull { it.active }
 
     grid(instructions()) {
         theme.outerContainer
@@ -72,7 +72,7 @@ fun tabHandle(
             }
         }
 
-        box {
+        row {
             text(tab.title) .. theme.tabHandleText
 
             if (tab.tooltip != null) {
