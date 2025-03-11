@@ -1,6 +1,7 @@
 package `fun`.adaptive.chart.ws.model
 
 import `fun`.adaptive.chart.model.ChartSeries
+import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsContext
 import `fun`.adaptive.utility.UUID
@@ -22,13 +23,18 @@ class WsChartContext(
 
     val data = mutableMapOf<UUID<WsItemChartSeries>, ChartSeries>()
 
-    fun openChart(item: WsItemChartSeries) {
-        workspace.addContent(item)
+    fun openChart(item: WsItemChartSeries, modifiers: Set<EventModifier>) {
+        workspace.addContent(item, modifiers)
     }
 
     companion object {
         const val CHART_TOOL_PANE_KEY = "chart:builder"
         const val CHART_CONTENT_PANE_KEY = "chart:view"
+
+        const val BASIC_HORIZONTAL_AXIS = "chart:axis:horizontal:basic"
+        const val BASIC_VERTICAL_AXIS = "chart:axis:vertical:basic"
+
+        const val BASIC_LINE_SERIES = "chart:series:line:basic"
 
         const val CHART_SERIES_ITEM_TYPE = "chart:series"
     }

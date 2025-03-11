@@ -8,11 +8,15 @@ import `fun`.adaptive.foundation.manualImplementation
 import `fun`.adaptive.graphics.canvas.canvas
 import `fun`.adaptive.graphics.canvas.model.path.PathCommand
 import `fun`.adaptive.resource.graphics.GraphicsResource
+import `fun`.adaptive.ui.fragment.layout.RawSize
 import `fun`.adaptive.ui.instruction.layout.PopupAlign
 import kotlin.math.PI
 
 @AdaptiveExpect(canvas)
-fun canvas(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit) {
+fun canvas(
+    vararg instructions: AdaptiveInstruction,
+    @Adaptive content: (size : RawSize) -> Unit
+) {
     manualImplementation(instructions, content)
 }
 

@@ -1,38 +1,35 @@
 package `fun`.adaptive.chart.ui
 
 import `fun`.adaptive.chart.model.*
+import `fun`.adaptive.chart.ws.model.WsChartContext
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.graphics.canvas.api.*
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.PopupAlign
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
 
 
 val xAxis = ChartAxis(
-    Orientation.Horizontal,
-    400.0,
-    ChartLabel(0.0, "X axis", 0.0, emptyInstructions),
+    size = 49.0,
+    offset = 50.0,
     axisLine = true,
-    ticks50100(400.0),
-    labels50100(400.0),
-    emptyList() // guides50100(400.0, 400.0)
+    WsChartContext.BASIC_HORIZONTAL_AXIS
 )
 
 val yAxis = ChartAxis(
-    Orientation.Vertical,
-    400.0,
-    ChartLabel(0.0, "Y axis", 0.0, emptyInstructions),
-    axisLine = false,
-    emptyList(), //ticks50100(400.0),
-    labels50100(400.0, reverse = true),
-    guides50100(400.0, 400.0)
+    size = 49.0,
+    offset = 49.0,
+    axisLine = true,
+    WsChartContext.BASIC_VERTICAL_AXIS
 )
 
 val series1 = ChartSeries(
+    offsetX = 50.0,
+    offsetY = 50.0,
     color(0xff00ff),
     listOf(
         ChartPoint(0.0, 0.0),
@@ -40,11 +37,12 @@ val series1 = ChartSeries(
         ChartPoint(200.0, 50.0),
         ChartPoint(300.0, 50.0)
     ),
-    0,
-    4
+    WsChartContext.BASIC_LINE_SERIES
 )
 
 val series2 = ChartSeries(
+    offsetX = 50.0,
+    offsetY = 50.0,
     color(0x00ff00),
     listOf(
         ChartPoint(0.0, 10.0),
@@ -52,11 +50,14 @@ val series2 = ChartSeries(
         ChartPoint(200.0, 70.0),
         ChartPoint(300.0, 60.0)
     ),
-    0,
-    4
+    WsChartContext.BASIC_LINE_SERIES
 )
 
-val context = ChartRenderContext(ChartTheme())
+val context = ChartRenderContext(
+    listOf(xAxis, yAxis),
+    listOf(series1, series2),
+    ChartTheme()
+)
 
 @Adaptive
 fun basicChart() {
@@ -101,35 +102,33 @@ fun basicChart() {
 
             //fillText(40.0, 40.0, "(40,40)") .. fill(0xff00ff)
 
-            basicAxis(context, xAxis) .. translate(50.0, 361.0)
-            basicAxis(context, yAxis) .. translate(49.0, - 40.0)
-
-            transform {
-                translate(50.0, 360.0)
-                for (series in listOf(series1, series2)) {
-                    basicLineSeries(context, series)
-                }
-            }
+//            basicAxis(context, xAxis) .. translate(50.0, 361.0)
+//            basicAxis(context, yAxis) .. translate(49.0, - 40.0)
+//
+//            transform {
+//                translate(50.0, 360.0)
+//                for (series in listOf(series1, series2)) {
+//                    basicLineSeries(context, series)
+//                }
+//            }
         }
     }
 }
 
 
 @Adaptive
-fun lineChart() {
+fun lineChart(/*chart : Chart*/) {
     box {
         maxSize .. padding { 10.dp }
 
-        canvas {
+        canvas { canvasSize ->
 
-            basicAxis(context, xAxis) .. translate(50.0, 361.0)
-            basicAxis(context, yAxis) .. translate(49.0, - 40.0)
+            for (axis in context.axes) {
+                actualize(axis.renderer, emptyInstructions, context, axis, canvasSize)
+            }
 
-            transform {
-                translate(50.0, 360.0)
-                for (series in listOf(series1, series2)) {
-                    basicLineSeries(context, series)
-                }
+            for (series in context.series) {
+                actualize(series.renderer, emptyInstructions, context, series, canvasSize)
             }
         }
     }
@@ -147,12 +146,12 @@ fun dotAndText(x: Double, y: Double, alignment: PopupAlign?) {
     }
 }
 
-fun ticks50100(size: Double): List<ChartTick> {
-    val count = ((size / 50) - 1).toInt()
+fun ticks50100(size: Double, reverse: Boolean): List<ChartTick> {
+    val count = (size / 50).toInt()
     val out = mutableListOf<ChartTick>()
 
     for (i in 1 .. count) {
-        val offset = i * 50.0
+        val offset = if (reverse) (size - i * 50.0) else i * 50.0
         val size = if (i % 2 == 0) 8.0 else 4.0
         out += ChartTick(offset, size)
     }
@@ -160,14 +159,14 @@ fun ticks50100(size: Double): List<ChartTick> {
     return out
 }
 
-fun labels50100(size: Double, reverse: Boolean = false): List<ChartLabel> {
-    val count = ((size / 50) - 1).toInt()
+fun labels50100(size: Double, reverse: Boolean): List<ChartLabel> {
+    val count = (size / 50).toInt()
     val out = mutableListOf<ChartLabel>()
 
     for (i in 1 .. count) {
         val offset = if (reverse) (size - i * 50.0) else i * 50.0
         //if (i % 2 == 0) {
-            out += ChartLabel(offset, "${i * 50}", instructions = emptyInstructions)
+        out += ChartLabel(offset, "${i * 50}", instructions = emptyInstructions)
         //} else {
         //   out += ChartLabel(offset, "${i * 50}", instructions = instructionsOf(fill(colors.friendly.opaque(0.7f))))
         //}
@@ -176,12 +175,12 @@ fun labels50100(size: Double, reverse: Boolean = false): List<ChartLabel> {
     return out
 }
 
-fun guides50100(axisSize: Double, guideSize: Double): List<ChartGuide> {
-    val count = ((axisSize / 50) - 1).toInt()
+fun guides50100(axisSize: Double, guideSize: Double, reverse: Boolean): List<ChartGuide> {
+    val count = (axisSize / 50).toInt()
     val out = mutableListOf<ChartGuide>()
 
     for (i in 1 .. count) {
-        val offset = i * 50.0
+        val offset = if (reverse) (axisSize - i * 50.0) else i * 50.0
         out += ChartGuide(offset, guideSize)
     }
 

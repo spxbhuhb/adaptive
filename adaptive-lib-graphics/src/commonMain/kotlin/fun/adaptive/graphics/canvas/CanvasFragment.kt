@@ -33,9 +33,11 @@ abstract class CanvasFragment(
 
     override fun genPatchInternal(): Boolean {
         if (haveToPatch(dirtyMask, 1)) {
-            renderData = CanvasRenderData(canvasAdapter).also { rd -> instructions.applyTo(rd) }
+            // this technique avoids unnecessary updates of render data, when draw is called
+            // render data will be updated from the latest set of instructions
+            renderData = null
         }
-        return false
+        return true
     }
 
     override fun mount() {
@@ -65,6 +67,11 @@ abstract class CanvasFragment(
 
     open fun draw() {
         canvas.save(id)
+
+        if (renderData == null) {
+            renderData = CanvasRenderData(canvasAdapter).also { rd -> instructions.applyTo(rd) }
+        }
+
         canvas.apply(renderData)
 
         drawInner()

@@ -28,6 +28,6 @@ class WsItemChartSeries(
             name,
             children = children.map { it.toTreeItem(context) },
             data = seriesUuid
-        ) { item, modifiers -> if (children.isEmpty()) context.openChart(this) }
+        ) { item, modifiers -> if (children.isEmpty()) context.openChart(this, modifiers) }
 
 }
