@@ -8,22 +8,20 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
-const val apmProjectPaneKey = "grove:apm:project"
-
 fun AdaptiveAdapter.groveApmCommon() {
     fragmentFactory += arrayOf(ApmPaneFactory)
 }
 
 fun Workspace.groveApmCommon() {
 
-    contexts += ApmContext(this)
+    contexts += ApmWsContext(this)
 
     toolPanes += WsPane(
         UUID(),
         "Project",
         Graphics.folder,
         WsPanePosition.LeftTop,
-        apmProjectPaneKey,
+        ApmWsContext.APM_PROJECT_TOOL_KEY,
         model = Unit
     )
 

@@ -4,6 +4,6 @@ import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 
 object ApmPaneFactory : FoundationFragmentFactory() {
     init {
-        add(apmProjectPaneKey, ::apmProject)
+        add(ApmWsContext.APM_PROJECT_TOOL_KEY, ::apmProject)
     }
 }

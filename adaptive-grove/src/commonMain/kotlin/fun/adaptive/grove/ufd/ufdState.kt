@@ -21,7 +21,7 @@ fun ufdState() : AdaptiveFragment {
     val controller = valueFrom { context.focusedView }
     val selection = valueFromOrNull { controller?.selectionStore }
 
-    val pane = context.pane(ufdStatePaneKey)
+    val pane = context.pane(UfdWsContext.STATE_TOOL_KEY)
     val isEmpty = selection == null || selection.items.isEmpty()
 
     wsToolPane(pane) {

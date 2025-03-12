@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 
 @Adaptive
 fun cookbookCenter() : AdaptiveFragment {
-    val recipeKey = valueFrom { fragment().wsContext<WsCookbookContext>().activeRecipeKey }
+    val recipeKey = valueFrom { fragment().wsContext<CbWsContext>().activeRecipeKey }
 
     box {
         maxSize .. padding { 16.dp }

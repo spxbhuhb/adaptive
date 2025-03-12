@@ -1,10 +1,11 @@
 package `fun`.adaptive.cookbook
 
-import `fun`.adaptive.cookbook.model.WsRecipeItem
-import `fun`.adaptive.cookbook.model.CookbookRecipeSet
+import `fun`.adaptive.cookbook.model.CbWsRecipeItem
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.ui.builtin.folder
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.tree
@@ -13,92 +14,88 @@ import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
 fun cookbookRecipes(): AdaptiveFragment {
-    val context = fragment().wsContext<WsCookbookContext>()
-    val items = root.toTreeItem { item, modifiers -> showRecipe(context, item, modifiers) }.children
+    val context = fragment().wsContext<CbWsContext>()
+    val items = recipes.map { it.toTreeItem(context) { item, modifiers -> showRecipe(context, item, modifiers) } }
 
-    wsToolPane(context.pane(cookbookRecipePaneKey)) {
+    wsToolPane(context.pane(CbWsContext.RECIPES_TOOL_KEY)) {
         tree(items)
     }
 
     return fragment()
 }
 
-private fun showRecipe(context: WsCookbookContext, item: TreeItem, modifiers: Set<EventModifier>) {
-    val safeItem = item.data as? WsRecipeItem ?: return
-
-    context.workspace.addContent(safeItem, modifiers)
+private fun showRecipe(context: CbWsContext, item: TreeItem<CbWsRecipeItem>, modifiers: Set<EventModifier>) {
+    context.workspace.addContent(item.data, modifiers)
 }
 
-val root = CookbookRecipeSet(
-    "Root",
+val recipes =
     listOf(
         set(
             "Demos",
-            WsRecipeItem("Good Morning", key = "cookbook:recipe:goodmorning"),
-            WsRecipeItem("Markdown", key = "cookbook:recipe:markdown:demo"),
+            CbWsRecipeItem("Good Morning", key = "cookbook:recipe:goodmorning"),
+            CbWsRecipeItem("Markdown", key = "cookbook:recipe:markdown:demo"),
         ),
 
         set(
             "Layout",
-            WsRecipeItem("Box", key = "cookbook:recipe:box"),
-            WsRecipeItem("Grid", key = "cookbook:recipe:grid"),
-            WsRecipeItem("Split Pane", key = "cookbook:recipe:splitpane"),
-            WsRecipeItem("Tab", key = "cookbook:recipe:tab"),
-            WsRecipeItem("Workspace", key = "cookbook:recipe:workspace"),
-            WsRecipeItem("Wrap", key = "cookbook:recipe:wrap")
+            CbWsRecipeItem("Box", key = "cookbook:recipe:box"),
+            CbWsRecipeItem("Grid", key = "cookbook:recipe:grid"),
+            CbWsRecipeItem("Split Pane", key = "cookbook:recipe:splitpane"),
+            CbWsRecipeItem("Tab", key = "cookbook:recipe:tab"),
+            CbWsRecipeItem("Workspace", key = "cookbook:recipe:workspace"),
+            CbWsRecipeItem("Wrap", key = "cookbook:recipe:wrap")
         ),
 
         set(
             "Basic fragments",
-            WsRecipeItem("Button", key = "cookbook:recipe:button"),
-            WsRecipeItem("Icon", key = "cookbook:recipe:icon"),
-            WsRecipeItem("SVG", key = "cookbook:recipe:svg"),
-            WsRecipeItem("Text", key = "cookbook:recipe:text"),
+            CbWsRecipeItem("Button", key = "cookbook:recipe:button"),
+            CbWsRecipeItem("Icon", key = "cookbook:recipe:icon"),
+            CbWsRecipeItem("SVG", key = "cookbook:recipe:svg"),
+            CbWsRecipeItem("Text", key = "cookbook:recipe:text"),
         ),
 
         set(
             "Textual fragments",
-            WsRecipeItem("Code Fence", key = "cookbook:recipe:codefence"),
-            WsRecipeItem("Paragraph", key = "cookbook:recipe:paragraph"),
-            WsRecipeItem("Text", key = "cookbook:recipe:text")
+            CbWsRecipeItem("Code Fence", key = "cookbook:recipe:codefence"),
+            CbWsRecipeItem("Paragraph", key = "cookbook:recipe:paragraph"),
+            CbWsRecipeItem("Text", key = "cookbook:recipe:text")
         ),
 
         set(
             "Standalone inputs",
-            WsRecipeItem("Checkbox", key = "cookbook:recipe:checkbox"),
-            WsRecipeItem("Date picker", key = "cookbook:recipe:datepicker"),
-            WsRecipeItem("Select", key = "cookbook:recipe:select"),
+            CbWsRecipeItem("Checkbox", key = "cookbook:recipe:checkbox"),
+            CbWsRecipeItem("Date picker", key = "cookbook:recipe:datepicker"),
+            CbWsRecipeItem("Select", key = "cookbook:recipe:select"),
         ),
 
         set(
             "Bound inputs - editors",
-            WsRecipeItem("Editor", key = "cookbook:recipe:editor"),
-            WsRecipeItem("Form", key = "cookbook:recipe:form")
+            CbWsRecipeItem("Editor", key = "cookbook:recipe:editor"),
+            CbWsRecipeItem("Form", key = "cookbook:recipe:form")
         ),
 
         set(
             "Complex fragments",
-            WsRecipeItem("Canvas", key = "cookbook:recipe:canvas"),
-            WsRecipeItem("Dialog", key = "cookbook:recipe:dialog"),
-            WsRecipeItem("Paragraph", key = "cookbook:recipe:paragraph"),
-            WsRecipeItem("Sidebar", key = "cookbook:recipe:sidebar"),
-            WsRecipeItem("Snackbar", key = "cookbook:recipe:snackbar"),
-            WsRecipeItem("Tree", key = "cookbook:recipe:tree"),
+            CbWsRecipeItem("Canvas", key = "cookbook:recipe:canvas"),
+            CbWsRecipeItem("Dialog", key = "cookbook:recipe:dialog"),
+            CbWsRecipeItem("Paragraph", key = "cookbook:recipe:paragraph"),
+            CbWsRecipeItem("Sidebar", key = "cookbook:recipe:sidebar"),
+            CbWsRecipeItem("Snackbar", key = "cookbook:recipe:snackbar"),
+            CbWsRecipeItem("Tree", key = "cookbook:recipe:tree"),
         ),
 
         set(
             "Other fragments",
-            WsRecipeItem("Event", key = "cookbook:recipe:event"),
-            WsRecipeItem("Popup", key = "cookbook:recipe:popup")
+            CbWsRecipeItem("Event", key = "cookbook:recipe:event"),
+            CbWsRecipeItem("Popup", key = "cookbook:recipe:popup")
         )
-    ),
-    emptyList()
-)
+    )
 
-private fun set(name: String, vararg recipes: WsRecipeItem) =
-    CookbookRecipeSet(
+private fun set(name: String, vararg recipes: CbWsRecipeItem) =
+    CbWsRecipeItem(
         name,
-        emptyList(),
-        recipes.toList()
+        Graphics.folder,
+        CbWsContext.RECIPE_FOLDER_TYPE,
+        children = recipes.toList()
     )
 

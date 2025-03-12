@@ -1,41 +1,29 @@
 package `fun`.adaptive.grove.ufd
 
 import `fun`.adaptive.foundation.AdaptiveAdapter
-import `fun`.adaptive.grove.resources.cards
-import `fun`.adaptive.grove.resources.components
-import `fun`.adaptive.grove.resources.data_table
-import `fun`.adaptive.grove.resources.instructions
-import `fun`.adaptive.grove.resources.palette
-import `fun`.adaptive.grove.resources.state
-import `fun`.adaptive.grove.resources.stroke_partial
+import `fun`.adaptive.grove.resources.*
+import `fun`.adaptive.grove.ufd.logic.UfdWsContentController
+import `fun`.adaptive.grove.ufd.model.UfdWsContentPaneData
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.ui.builtin.menu
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
-
-const val ufdPalettePaneKey = "grove:ufd:palette"
-const val ufdComponentsPaneKey = "grove:ufd:components"
-const val ufdInstructionsPaneKey = "grove:ufd:instructions"
-const val ufdStatePaneKey = "grove:ufd:state"
-
-const val ufdCenterPaneKey = "grove:ufd:center"
 
 fun AdaptiveAdapter.groveUfdCommon() {
     fragmentFactory += arrayOf(UfdPaneFactory)
 }
 
 fun Workspace.groveUfdCommon() {
-    contexts += UfdContext(this)
+    contexts += UfdWsContext(this)
 
     toolPanes += WsPane(
         UUID(),
         Strings.palette,
         Graphics.palette,
         WsPanePosition.LeftTop,
-        ufdPalettePaneKey,
+        UfdWsContext.PALETTE_TOOL_KEY,
         model = Unit
     )
 
@@ -44,7 +32,7 @@ fun Workspace.groveUfdCommon() {
         Strings.components,
         Graphics.cards,
         WsPanePosition.LeftMiddle,
-        ufdComponentsPaneKey,
+        UfdWsContext.COMPONENTS_TOOL_KEY,
         model = Unit
     )
 
@@ -53,7 +41,7 @@ fun Workspace.groveUfdCommon() {
         Strings.instructions,
         Graphics.stroke_partial,
         WsPanePosition.RightTop,
-        ufdInstructionsPaneKey,
+        UfdWsContext.INSTRUCTIONS_TOOL_KEY,
         model = Unit
     )
 
@@ -62,17 +50,22 @@ fun Workspace.groveUfdCommon() {
         Strings.state,
         Graphics.data_table,
         WsPanePosition.RightTop,
-        ufdStatePaneKey,
+        UfdWsContext.STATE_TOOL_KEY,
         model = Unit
     )
 
-    toolPanes += WsPane(
-        UUID(),
-        "",
-        Graphics.menu,
-        WsPanePosition.Center,
-        ufdCenterPaneKey,
-        model = Unit
-    )
+    addContentPaneBuilder(UfdWsContext.FRAGMENT_ITEM_TYPE) { item ->
+
+        WsPane(
+            UUID(),
+            item.name,
+            Graphics.cards,
+            WsPanePosition.Center,
+            UfdWsContext.CONTENT_PANE_KEY,
+            model = UfdWsContentPaneData(),
+            controller = UfdWsContentController()
+        )
+
+    }
 
 }

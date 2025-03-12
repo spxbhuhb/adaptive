@@ -15,11 +15,10 @@ import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.tree.theme.TreeTheme
 import `fun`.adaptive.ui.tree.theme.treeTheme
-import kotlin.math.max
 
 @Adaptive
-fun tree(
-    items: List<TreeItem>,
+fun <T> tree(
+    items: List<TreeItem<T>>,
     theme: TreeTheme = treeTheme,
     vararg instructions: AdaptiveInstruction,
 ): AdaptiveFragment {
@@ -36,8 +35,8 @@ fun tree(
 }
 
 @Adaptive
-private fun node(
-    item: TreeItem,
+private fun <T> node(
+    item: TreeItem<T>,
     theme: TreeTheme,
     offset: DPixel,
 ) {
@@ -57,8 +56,8 @@ private fun node(
 }
 
 @Adaptive
-private fun label(
-    item: TreeItem,
+private fun <T> label(
+    item: TreeItem<T>,
     theme: TreeTheme,
     offset: DPixel,
     open: Boolean,

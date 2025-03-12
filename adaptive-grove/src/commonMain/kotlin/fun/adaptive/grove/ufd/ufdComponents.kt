@@ -27,7 +27,7 @@ fun ufdComponents(): AdaptiveFragment {
     val controller = valueFrom { context.focusedView }
     val selection = valueFromOrNull { controller?.selectionStore } ?: SheetSelection(emptyList())
 
-    val pane = context.pane(ufdComponentsPaneKey)
+    val pane = context.pane(UfdWsContext.COMPONENTS_TOOL_KEY)
     val isEmpty = (controller == null)
 
     wsToolPane(pane) {

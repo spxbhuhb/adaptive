@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsContext
 
-class UfdContext(
+class UfdWsContext(
     override val workspace: Workspace
 ) : WsContext {
 
@@ -24,4 +24,13 @@ class UfdContext(
         )
     )
 
+    companion object {
+        const val PALETTE_TOOL_KEY = "grove:ufd:pane:palette"
+        const val COMPONENTS_TOOL_KEY = "grove:ufd:pane:components"
+        const val INSTRUCTIONS_TOOL_KEY = "grove:ufd:pane:instructions"
+        const val STATE_TOOL_KEY = "grove:ufd:pane:state"
+        const val CONTENT_PANE_KEY = "grove:ufd:pane:content"
+
+        const val FRAGMENT_ITEM_TYPE = "grove:fragment"
+    }
 }

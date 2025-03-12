@@ -31,7 +31,7 @@ fun AdaptiveAdapter.cookbookCommon() {
 
 fun Workspace.cookbookCommon() {
 
-    val context = WsCookbookContext(this)
+    val context = CbWsContext(this)
 
     contexts += context
 
@@ -54,7 +54,7 @@ fun Workspace.cookbookCommon() {
         model = Unit
     )
 
-    addContentPaneBuilder(WsCookbookContext.RECIPE_ITEM_TYPE) { item ->
+    addContentPaneBuilder(CbWsContext.RECIPE_ITEM_TYPE) { item ->
         WsPane(
             UUID(),
             item.name,

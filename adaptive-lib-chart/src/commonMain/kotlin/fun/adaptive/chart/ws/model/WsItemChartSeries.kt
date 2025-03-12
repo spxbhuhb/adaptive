@@ -21,12 +21,12 @@ class WsItemChartSeries(
     val children : List<WsItemChartSeries> = emptyList()
 ) : WsItem() {
 
-    fun toTreeItem(context : WsChartContext): TreeItem =
+    fun toTreeItem(context : WsChartContext): TreeItem<WsItemChartSeries> =
         TreeItem(
             icon,
             name,
             children = children.map { it.toTreeItem(context) },
-            data = seriesUuid
+            data = this
         ) { item, modifiers -> if (children.isEmpty()) context.openChart(this, modifiers) }
 
 }

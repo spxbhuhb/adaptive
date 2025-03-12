@@ -40,16 +40,18 @@ fun treeRecipe(): AdaptiveFragment {
 }
 
 val staticTree = listOf(
-    TreeItem(
+    TreeItem<Unit>(
         icon = Graphics.folder,
         title = "Item 1",
         children = listOf(
             TreeItem(
                 icon = Graphics.folder,
                 title = "Item 1.1",
-                children = listOf()
+                children = listOf(),
+                data = Unit
             )
-        )
+        ),
+        data = Unit
     ),
     TreeItem(
         icon = Graphics.folder,
@@ -58,19 +60,21 @@ val staticTree = listOf(
             TreeItem(
                 icon = Graphics.folder,
                 title = "Item 2.1",
-                children = listOf()
+                children = listOf(),
+                data = Unit
             )
-        )
+        ),
+        data = Unit
     )
 )
 
 
-private fun generate(): List<TreeItem> {
+private fun generate(): List<TreeItem<Unit>> {
     val numRoots = Random.nextInt(1, 4)
     return List(numRoots) { generateRandomTree(it + 1, 3) } // Adjust depth as needed
 }
 
-private fun generateRandomTree(index: Int, depth: Int): TreeItem {
+private fun generateRandomTree(index: Int, depth: Int): TreeItem<Unit>{
     val nodeTitle = "Item ${index.toString().toCharArray().joinToString(".")}"
     val numChildren = Random.nextInt(1, 4)
 
@@ -82,6 +86,7 @@ private fun generateRandomTree(index: Int, depth: Int): TreeItem {
     return TreeItem(
         icon = Graphics.folder,
         title = nodeTitle,
-        children = children
+        children = children,
+        data = Unit
     )
 }

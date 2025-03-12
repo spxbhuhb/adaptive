@@ -16,10 +16,10 @@ import `fun`.adaptive.ui.workspace.wsToolPane
 @Adaptive
 fun ufdPalette() : AdaptiveFragment {
 
-    val context = fragment().wsContext<UfdContext>()
+    val context = fragment().wsContext<UfdWsContext>()
     val items = autoCollection(context.palette) ?: emptyList()
 
-    wsToolPane(context.pane(ufdPalettePaneKey)) {
+    wsToolPane(context.pane(UfdWsContext.PALETTE_TOOL_KEY)) {
         column {
             for (item in items) {
                 paletteRow(item)

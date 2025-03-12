@@ -21,7 +21,7 @@ suspend fun siteCommon() {
     uiCommon()
     groveRuntimeCommon()
     cookbookCommon()
-    //groveCommon()
+    groveCommon()
 }
 
 fun AbstractAuiAdapter<*, *>.siteCommon() {
@@ -29,7 +29,7 @@ fun AbstractAuiAdapter<*, *>.siteCommon() {
     uiCommon()
     groveRuntimeCommon()
     cookbookCommon()
-    //groveCommon()
+    groveCommon()
 
     fragmentFactory += arrayOf(SiteFragmentFactory)
 
@@ -43,7 +43,7 @@ fun AbstractAuiAdapter<*, *>.siteCommon() {
 fun Workspace.siteCommon() {
 
     cookbookCommon()
-    //groveCommon()
+    groveCommon()
 
     WsPane(
         UUID(),
