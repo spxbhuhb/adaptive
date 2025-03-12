@@ -9,21 +9,21 @@ import kotlin.reflect.KProperty
 open class TreeItem<T>(
     icon: GraphicsResourceSet,
     title: String,
-    children: List<TreeItem<T>>,
     data: T,
-    open : Boolean = false,
-    onClick: (TreeItem<T>, Set<EventModifier>) -> Unit = { _, _ -> }
+    open: Boolean = false,
+    selected: Boolean = false,
+    val parent: TreeItem<T>?
 ) : Observable<TreeItem<T>>() {
 
     var icon by observable(icon, ::notify)
     var title by observable(title, ::notify)
     var open by observable(open, ::notify)
-    var children by observable(children, ::notify)
+    var selected by observable(selected, ::notify)
+    var children by observable(emptyList<TreeItem<T>>(), ::notify)
     var data by observable(data, ::notify)
-    var onClick by observable(onClick, ::notify)
 
     @Suppress("unused")
-    fun <VT> notify(property : KProperty<*>, oldValue : VT, newValue : VT) {
+    fun <VT> notify(property: KProperty<*>, oldValue: VT, newValue: VT) {
         notifyListeners()
     }
 
@@ -50,4 +50,5 @@ open class TreeItem<T>(
         open = false
         children.forEach { it.collapseAll() }
     }
+
 }

@@ -10,28 +10,31 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.tree.TreeItem
+import `fun`.adaptive.ui.tree.TreeViewModel
+import `fun`.adaptive.ui.tree.TreeViewModel.Companion.defaultSelectedFun
 import `fun`.adaptive.ui.tree.tree
 import kotlin.random.Random
 
 @Adaptive
 fun treeRecipe(): AdaptiveFragment {
+
     grid {
         maxSize .. colTemplate(1.fr, 1.fr) .. gap { 16.dp }
 
         column {
-            text("static")
+            text("static - double click to expand")
             column {
                 borders.outline
-                tree(staticTree)
+                tree(TreeViewModel(staticTree))
             }
         }
 
         grid {
             rowTemplate(24.dp, 1.fr)
-            text("random")
+            text("random - single click to expand")
             column {
                 borders.outline .. maxHeight .. verticalScroll
-                tree(generate())
+                tree(TreeViewModel(generate(), selectedFun = ::defaultSelectedFun, openWithSingleClick = true))
             }
         }
     }
@@ -43,50 +46,56 @@ val staticTree = listOf(
     TreeItem<Unit>(
         icon = Graphics.folder,
         title = "Item 1",
-        children = listOf(
+        data = Unit,
+        parent = null
+    ).also { item ->
+        item.children = listOf(
             TreeItem(
                 icon = Graphics.folder,
                 title = "Item 1.1",
-                children = listOf(),
-                data = Unit
+                data = Unit,
+                parent = item
             )
-        ),
-        data = Unit
-    ),
+        )
+    },
     TreeItem(
         icon = Graphics.folder,
         title = "Item 2",
-        children = listOf(
+        data = Unit,
+        parent = null
+    ).also { item ->
+        item.children = listOf(
             TreeItem(
                 icon = Graphics.folder,
                 title = "Item 2.1",
-                children = listOf(),
-                data = Unit
+                data = Unit,
+                parent = item
             )
-        ),
-        data = Unit
-    )
+        )
+    }
 )
 
 
 private fun generate(): List<TreeItem<Unit>> {
     val numRoots = Random.nextInt(1, 4)
-    return List(numRoots) { generateRandomTree(it + 1, 3) } // Adjust depth as needed
+    return List(numRoots) { generateRandomTree(it + 1, 3, null) } // Adjust depth as needed
 }
 
-private fun generateRandomTree(index: Int, depth: Int): TreeItem<Unit>{
+private fun generateRandomTree(index: Int, depth: Int, parent: TreeItem<Unit>?): TreeItem<Unit> {
     val nodeTitle = "Item ${index.toString().toCharArray().joinToString(".")}"
     val numChildren = Random.nextInt(1, 4)
 
-    val children = when (depth) {
-        0 -> emptyList()
-        else -> List(numChildren) { generateRandomTree(index * 10 + it + 1, depth - 1) }
-    }
-
-    return TreeItem(
+    val item = TreeItem(
         icon = Graphics.folder,
         title = nodeTitle,
-        children = children,
-        data = Unit
+        data = Unit,
+        parent = parent
     )
+
+    item.children = when (depth) {
+        0 -> emptyList()
+        else -> List(numChildren) { generateRandomTree(index * 10 + it + 1, depth - 1, item) }
+    }
+
+    return item
 }

@@ -5,18 +5,23 @@ import `fun`.adaptive.chart.ws.model.WsChartContext.Companion.CHART_TOOL_PANE_KE
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.ui.tree.TreeViewModel
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
-fun wsChartToolPane() : AdaptiveFragment {
+fun wsChartToolPane(): AdaptiveFragment {
 
     val context = fragment().wsContext<WsChartContext>()
-    val treeItems = context.items.map { it.toTreeItem(context) }
+
+    val treeViewModel = TreeViewModel(
+        context.items.map { it.toTreeItem(context, null) },
+        selectedFun = { viewModel, item, modifiers -> if (item.children.isEmpty()) context.openChart(item.data, modifiers) }
+    )
 
     wsToolPane(context.pane(CHART_TOOL_PANE_KEY)) {
-        tree(treeItems)
+        tree(treeViewModel)
     }
 
     return fragment()

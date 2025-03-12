@@ -6,26 +6,29 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.graphics.svg.api.svg
-import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.builtin.arrow_drop_down
-import `fun`.adaptive.ui.builtin.arrow_right
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.event.EventModifier
+import `fun`.adaptive.ui.instruction.event.UIEvent
+
+typealias TreeItemSelectedFun<T> = (viewModel: TreeViewModel<T>, item: TreeItem<T>, modifiers: Set<EventModifier>) -> Unit
+typealias TreeKeyDownFun<T> = (viewModel: TreeViewModel<T>, item: TreeItem<T>, event: UIEvent) -> Unit
+typealias TreeContextMenuBuilder<T> = ((hide: () -> Unit, item: TreeItem<T>) -> Unit)
 
 @Adaptive
 fun <T> tree(
-    items: List<TreeItem<T>>,
-    theme: TreeTheme = TreeTheme.DEFAULT,
+    viewModel: TreeViewModel<T>,
     @Adaptive
-    _KT_74337_context_menu: ((item: TreeItem<T>) -> Unit)? = null
+    _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<T>? = null
 ): AdaptiveFragment {
 
-    column(theme.container, instructions()) {
-        for (item in items) {
+
+    column(viewModel.theme.container, instructions()) {
+        for (item in viewModel.items) {
             column {
-                node(item, theme, 0.dp, _KT_74337_context_menu)
+                node(viewModel, item, 0.dp, _KT_74337_contextMenuBuilder)
             }
         }
     }
@@ -35,21 +38,21 @@ fun <T> tree(
 
 @Adaptive
 private fun <T> node(
+    viewModel: TreeViewModel<T>,
     item: TreeItem<T>,
-    theme: TreeTheme,
     offset: DPixel,
     @Adaptive
-    _KT_74337_context_menu: ((item: TreeItem<T>) -> Unit)?,
+    _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<T>?
 ) {
     val observed = valueFrom { item }
 
-    label(observed, theme, offset, observed.open, _KT_74337_context_menu) { item.open = ! item.open }
+    label(viewModel, item, offset, _KT_74337_contextMenuBuilder)
 
     if (observed.open) {
         column {
             for (child in observed.children) {
                 column {
-                    node(child, theme, offset + theme.indent, _KT_74337_context_menu)
+                    node(viewModel, child, offset + viewModel.theme.indent, _KT_74337_contextMenuBuilder)
                 }
             }
         }
@@ -58,47 +61,58 @@ private fun <T> node(
 
 @Adaptive
 private fun <T> label(
+    viewModel: TreeViewModel<T>,
     item: TreeItem<T>,
-    theme: TreeTheme,
     offset: DPixel,
-    open: Boolean,
     @Adaptive
-    _KT_74337_context_menu: ((item: TreeItem<T>) -> Unit)?,
-    toggle: () -> Unit,
+    _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<T>?
 ) {
-    val hover = hover()
-    val colors = theme.itemColors(false, hover)
+    val observed = valueFrom { item }
+    val theme = viewModel.theme
+
+    val colors = theme.itemColors(observed.selected, false)
+    val handleColors = theme.itemHandleColors(observed.selected, false)
 
     row(theme.item, colors) {
         paddingLeft { offset }
 
         onClick {
-            item.onClick(item, it.modifiers)
-            toggle()
-        }
-
-        onDoubleClick {
-            item.onClick(item, it.modifiers)
-            toggle()
-        }
-
-        box {
-            size(24.dp, 24.dp)
-            when {
-                item.children.isEmpty() -> box { }
-                open -> svg(Graphics.arrow_drop_down)
-                else -> svg(Graphics.arrow_right)
+            viewModel.selectedFun?.invoke(viewModel, observed, it.modifiers)
+            if (viewModel.openWithSingleClick) {
+                observed.open = ! observed.open
             }
         }
 
-        icon(item.icon, theme.icon) .. colors
+        onDoubleClick {
+            viewModel.selectedFun?.invoke(viewModel, observed, it.modifiers)
+            observed.open = ! observed.open
+        }
 
-        text(item.title) .. theme.label .. colors
+        onKeydown {
+            viewModel.keyDownFun?.invoke(viewModel, observed, it)
+        }
 
-        if (_KT_74337_context_menu != null) {
-            contextPopup {
+        box {
+            theme.handleContainer
+            // This is tricky, `onClick` on `row` will run if this runs. If both reverses open,
+            // it will remain the same at the end.
+            onClick { if (! viewModel.openWithSingleClick) observed.open = ! observed.open }
+
+            when {
+                observed.children.isEmpty() -> box { }
+                observed.open -> svg(theme.handleIconOpen) .. handleColors .. theme.handleIcon
+                else -> svg(theme.handleIconClosed) .. handleColors .. theme.handleIcon
+            }
+        }
+
+        icon(observed.icon, theme.icon) .. colors
+
+        text(observed.title) .. theme.label .. colors
+
+        if (_KT_74337_contextMenuBuilder != null) {
+            contextPopup { hide ->
                 popupAlign.belowCenter
-                _KT_74337_context_menu(item)
+                _KT_74337_contextMenuBuilder(hide, observed)
             }
         }
     }

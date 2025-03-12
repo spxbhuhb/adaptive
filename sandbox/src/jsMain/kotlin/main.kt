@@ -61,8 +61,8 @@ fun sandboxMain() {
             //docMain()
             //chartMain()
             //svgMain()
-            //treeMain()
-            contextMenuMain()
+            treeMain()
+            //contextMenuMain()
         }
     }
 }

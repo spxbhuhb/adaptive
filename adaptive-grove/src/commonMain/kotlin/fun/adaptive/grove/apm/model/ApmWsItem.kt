@@ -18,13 +18,12 @@ class ApmWsItem(
     val path: String
 ) : WsItem() {
 
-    fun toTreeItem(onClick: (TreeItem<ApmWsItem>, modifiers : Set<EventModifier>) -> Unit): TreeItem<ApmWsItem> =
+    fun toTreeItem(): TreeItem<ApmWsItem> =
         TreeItem<ApmWsItem>(
             Graphics.folder,
             name,
-            emptyList(),
             data = this,
-            onClick = onClick
+            parent = null
         )
 
 }

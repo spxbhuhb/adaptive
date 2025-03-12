@@ -8,6 +8,7 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.builtin.folder
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
+import `fun`.adaptive.ui.tree.TreeViewModel
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.wsToolPane
@@ -15,10 +16,19 @@ import `fun`.adaptive.ui.workspace.wsToolPane
 @Adaptive
 fun cookbookRecipes(): AdaptiveFragment {
     val context = fragment().wsContext<CbWsContext>()
-    val items = recipes.map { it.toTreeItem(context) { item, modifiers -> showRecipe(context, item, modifiers) } }
+
+    val treeViewModel = TreeViewModel(
+        recipes.map { it.toTreeItem(null) },
+        selectedFun = { viewModel, item, modifiers ->
+            if (item.data.type == CbWsContext.RECIPE_FOLDER_TYPE) return@TreeViewModel
+            showRecipe(context, item, modifiers)
+            TreeViewModel.defaultSelectedFun(viewModel, item, modifiers)
+        },
+        openWithSingleClick = true
+    )
 
     wsToolPane(context.pane(CbWsContext.RECIPES_TOOL_KEY)) {
-        tree(items)
+        tree(treeViewModel)
     }
 
     return fragment()
