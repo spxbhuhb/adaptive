@@ -59,8 +59,9 @@ fun sandboxMain() {
             adapter.chartCommon()
 
             //docMain()
-            chartMain()
+            //chartMain()
             //svgMain()
+            treeMain()
         }
     }
 }

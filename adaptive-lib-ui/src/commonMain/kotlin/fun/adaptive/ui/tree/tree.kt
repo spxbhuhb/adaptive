@@ -5,6 +5,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
+import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
@@ -40,13 +41,13 @@ private fun <T> node(
     theme: TreeTheme,
     offset: DPixel,
 ) {
-    var open = false
+    val observed = valueFrom { item }
 
-    label(item, theme, offset, open) { open = ! open }
+    label(observed, theme, offset, observed.open) { item.open = ! item.open }
 
     column {
-        if (open) {
-            for (child in item.children) {
+        if (observed.open) {
+            for (child in observed.children) {
                 column {
                     node(child, theme, offset + theme.indent)
                 }
