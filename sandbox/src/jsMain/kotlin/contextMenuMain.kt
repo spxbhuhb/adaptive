@@ -17,17 +17,18 @@ import `fun`.adaptive.ui.menu.contextMenu
 @Adaptive
 fun contextMenuMain() {
     var clickedOn = "-"
+    val menu = menu()
 
     column {
         maxSize .. padding { 16.dp } .. gap { 24.dp }
 
-        contextMenu(menu { item, _ -> clickedOn = item.label; })
+        contextMenu(menu) { item, modifiers -> clickedOn = item.label }
 
         box {
             text("right-click for context menu")
             contextPopup { hide ->
                 popupAlign.afterBelow
-                contextMenu(menu { item, _ -> clickedOn = item.label; hide() })
+                contextMenu(menu) { item, _ -> clickedOn = item.label; hide() }
             }
         }
 
@@ -35,9 +36,9 @@ fun contextMenuMain() {
     }
 }
 
-fun menu(onClick: (item: MenuItem<Unit>, modifiers: Set<EventModifier>) -> Unit) = listOf(
-    MenuItem<Unit>(Graphics.folder, "Menu item 1", Unit, onClick = onClick),
-    MenuItem<Unit>(null, "Menu item 2", Unit, onClick = onClick),
-    MenuItem<Unit>(Graphics.folder, "Menu item 3", Unit, "⌘ 1", onClick = onClick),
-    MenuItem<Unit>(null, "Menu item 4", Unit, "⌘ 2", onClick = onClick)
+fun menu() = listOf(
+    MenuItem<Unit>(Graphics.folder, "Menu item 1", Unit),
+    MenuItem<Unit>(null, "Menu item 2", Unit),
+    MenuItem<Unit>(Graphics.folder, "Menu item 3", Unit, "⌘ 1"),
+    MenuItem<Unit>(null, "Menu item 4", Unit, "⌘ 2")
 )
