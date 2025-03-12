@@ -7,17 +7,21 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
+import `fun`.adaptive.ui.instruction.event.EventModifier
+
+typealias MenuItemSelectedFun<T> = (item: MenuItem<T>, modifiers: Set<EventModifier>) -> Unit
 
 @Adaptive
 fun <T> contextMenu(
     items: List<MenuItem<T>>,
     theme: ContextMenuTheme = ContextMenuTheme.DEFAULT,
+    selectedFun: MenuItemSelectedFun<T>,
 ): AdaptiveFragment {
 
     column(theme.container, instructions()) {
         for (item in items) {
             column {
-                node(item, theme)
+                node(item, selectedFun, theme)
             }
         }
     }
@@ -28,11 +32,12 @@ fun <T> contextMenu(
 @Adaptive
 private fun <T> node(
     item: MenuItem<T>,
+    selectedFun: MenuItemSelectedFun<T>,
     theme: ContextMenuTheme
 ) {
     val observed = valueFrom { item }
 
-    label(observed, theme)
+    label(observed, selectedFun, theme)
 
     // TODO sub menus for context menu
 }
@@ -40,6 +45,7 @@ private fun <T> node(
 @Adaptive
 private fun <T> label(
     item: MenuItem<T>,
+    selectedFun: MenuItemSelectedFun<T>,
     theme: ContextMenuTheme
 ) {
     val hover = hover()
@@ -52,7 +58,8 @@ private fun <T> label(
         spaceBetween
 
         onClick {
-            item.onClick(item, it.modifiers)
+            selectedFun(item, it.modifiers)
+            it.stopPropagation()
         }
 
         row {

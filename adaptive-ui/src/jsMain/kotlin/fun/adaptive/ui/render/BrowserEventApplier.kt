@@ -74,7 +74,7 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
                 null
             }
 
-            eventHandler.execute(UIEvent(fragment, event, x, y, transferData, keyInfo, modifiers(event)))
+            eventHandler.execute(UIEvent(fragment, event, x, y, transferData, keyInfo, modifiers(event), { event.stopPropagation() }))
 
             event.preventDefault()
         }

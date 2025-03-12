@@ -24,7 +24,8 @@ class UIEvent(
     val y: Double = Double.NaN,
     val transferData: TransferData? = null,
     val keyInfo : KeyInfo? = null,
-    val modifiers: Set<EventModifier> = emptySet()
+    val modifiers: Set<EventModifier> = emptySet(),
+    val stopPropagation: () -> Unit = { }
 ) {
     val position: Position
         get() = Position(
