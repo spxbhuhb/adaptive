@@ -91,9 +91,14 @@ abstract class AbstractPopup<RT, CRT : RT>(
 
     override fun addActual(fragment: AdaptiveFragment, direct: Boolean?) {
         fragment.alsoIfInstance<AbstractAuiFragment<RT>> { itemFragment ->
+            configureBox(itemFragment)
             uiAdapter.addActual(receiver, itemFragment.receiver)
             addActualScheduleUpdate(itemFragment)
         }
+    }
+
+    open fun configureBox(fragment: AbstractAuiFragment<RT>) {
+
     }
 
     override fun removeActual(fragment: AdaptiveFragment, direct: Boolean?) {

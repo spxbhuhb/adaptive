@@ -27,7 +27,7 @@ fun popupRecipe(): AdaptiveFragment {
         gap { 16.dp }
 
         box {
-            text(Strings.hoverForPopup)
+            text(Strings.hoverForPopup) .. noSelect
             hoverPopup {
                 popupStyles .. popupAlign.afterCenter
                 text(Strings.popupContent)
@@ -35,17 +35,17 @@ fun popupRecipe(): AdaptiveFragment {
         }
 
         box {
-            text(Strings.leftClickForPopup)
+            text(Strings.leftClickForPopup) .. noSelect
             primaryPopup {
-                popupStyles .. popupAlign.afterCenter .. toggle
+                popupStyles .. popupAlign.afterCenter
                 text(Strings.popupContent)
             }
         }
 
         box {
-            text(Strings.rightClickForPopup)
+            text(Strings.rightClickForPopup) .. noSelect
             contextPopup {
-                popupStyles .. popupAlign.afterCenter .. toggle
+                popupStyles .. popupAlign.afterCenter
                 text(Strings.popupContent)
             }
         }
