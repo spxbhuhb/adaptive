@@ -3,7 +3,6 @@ package `fun`.adaptive.ui.tree
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.graphics.svg.api.svg
@@ -14,20 +13,19 @@ import `fun`.adaptive.ui.builtin.arrow_right
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.tree.theme.TreeTheme
-import `fun`.adaptive.ui.tree.theme.treeTheme
 
 @Adaptive
 fun <T> tree(
     items: List<TreeItem<T>>,
-    theme: TreeTheme = treeTheme,
-    vararg instructions: AdaptiveInstruction,
+    theme: TreeTheme = TreeTheme.DEFAULT,
+    @Adaptive
+    _KT_74337_context_menu: ((item: TreeItem<T>) -> Unit)? = null
 ): AdaptiveFragment {
 
     column(theme.container, instructions()) {
         for (item in items) {
             column {
-                node(item, theme, 0.dp)
+                node(item, theme, 0.dp, _KT_74337_context_menu)
             }
         }
     }
@@ -40,16 +38,18 @@ private fun <T> node(
     item: TreeItem<T>,
     theme: TreeTheme,
     offset: DPixel,
+    @Adaptive
+    _KT_74337_context_menu: ((item: TreeItem<T>) -> Unit)?,
 ) {
     val observed = valueFrom { item }
 
-    label(observed, theme, offset, observed.open) { item.open = ! item.open }
+    label(observed, theme, offset, observed.open, _KT_74337_context_menu) { item.open = ! item.open }
 
-    column {
-        if (observed.open) {
+    if (observed.open) {
+        column {
             for (child in observed.children) {
                 column {
-                    node(child, theme, offset + theme.indent)
+                    node(child, theme, offset + theme.indent, _KT_74337_context_menu)
                 }
             }
         }
@@ -62,6 +62,8 @@ private fun <T> label(
     theme: TreeTheme,
     offset: DPixel,
     open: Boolean,
+    @Adaptive
+    _KT_74337_context_menu: ((item: TreeItem<T>) -> Unit)?,
     toggle: () -> Unit,
 ) {
     val hover = hover()
@@ -88,7 +90,16 @@ private fun <T> label(
                 else -> svg(Graphics.arrow_right)
             }
         }
+
         icon(item.icon, theme.icon) .. colors
+
         text(item.title) .. theme.label .. colors
+
+        if (_KT_74337_context_menu != null) {
+            contextPopup {
+                popupAlign.belowCenter
+                _KT_74337_context_menu(item)
+            }
+        }
     }
 }

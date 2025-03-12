@@ -6,5 +6,5 @@ class TabContainer(
     val tabs: List<TabPane>,
     val closeToolTip : String? = null,
     val menuToolTip: String? = null,
-    val menu: List<MenuItem> = emptyList()
+    val menu: List<MenuItem<*>> = emptyList()
 )

@@ -7,10 +7,12 @@ Variations:
     - Disappears if the mouse moves out of the container.
 - primary
     - Shows when the user clicks on the container with the primary button (main action).
-    - Remains if when the mouse moves our of the container.
+    - Remains shown if when the mouse moves out of the container.
+    - Closes if the user clicks outside the popup.
 - context
     - Shows when the user clicks on the container with the secondary button (context menu).
-    - Remains if when the mouse moves our of the container.
+    - Remains shown if when the mouse moves out of the container.
+    - Closes if the user clicks outside the popup.
 
 Sizing strategy is `fit.content` for all variations.
 
@@ -22,7 +24,7 @@ box {
     primaryPopup {
         text(Strings.primary)
     }
-  contextPopup {
+    contextPopup {
         text(Strings.primary)
     }
 }
@@ -59,11 +61,15 @@ the container it belongs to.
 > to change while the popup is shown.
 >
 
-## Toggle
+## Hide programmatically
 
-For primary and context popups you can use the `toggle` instruction to toggle the
-popup with clicks. Without `toggle` the popup remains there until the fragment
-is removed.
+Use the hide function passed to the builder.
+
+```kotlin
+contextPopup { hide ->
+    text(Strings.primary) .. onClick { hide() }
+}
+```
 
 ## Internals
 

@@ -101,17 +101,17 @@ fun dropTarget(vararg instructions: AdaptiveInstruction, @Adaptive content: () -
 }
 
 @AdaptiveExpect(aui)
-fun hoverPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+fun hoverPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: (hide : () -> Unit) -> Unit): AdaptiveFragment {
     manualImplementation(content, instructions)
 }
 
 @AdaptiveExpect(aui)
-fun primaryPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+fun primaryPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: (hide : () -> Unit) -> Unit): AdaptiveFragment {
     manualImplementation(content, instructions)
 }
 
 @AdaptiveExpect(aui)
-fun contextPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+fun contextPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: (hide : () -> Unit) -> Unit): AdaptiveFragment {
     manualImplementation(content, instructions)
 }
 

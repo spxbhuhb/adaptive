@@ -1,8 +1,10 @@
 package `fun`.adaptive.cookbook.recipe.ui.tab
 
+import `fun`.adaptive.cookbook.menu
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.menu.MenuItem
@@ -44,7 +46,7 @@ val noTabsWithMenu = TabContainer(
     emptyList(),
     "Close tab",
     "Tab Container Menu",
-    listOf(MenuItem("Menu Item 1", null) { })
+    listOf(MenuItem<Unit>(Graphics.menu, "Menu Item 1", data = Unit))
 )
 
 val oneTabNoIconNoActionsNoMenu = TabContainer(

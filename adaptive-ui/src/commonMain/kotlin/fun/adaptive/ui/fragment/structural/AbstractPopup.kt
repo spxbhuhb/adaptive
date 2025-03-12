@@ -22,7 +22,7 @@ import `fun`.adaptive.utility.alsoIfInstance
 abstract class AbstractPopup<RT, CRT : RT>(
     adapter: AbstractAuiAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
-    index: Int,
+    index: Int
 ) : AuiStructural<RT, CRT>(
     adapter, parent, index, 2
 ) {
@@ -36,7 +36,7 @@ abstract class AbstractPopup<RT, CRT : RT>(
         when (declarationIndex) {
             0 -> parent.adapter.newSelect(parent = parent, index = declarationIndex)
             1 -> parent.adapter.actualize(name = "aui:box", parent = parent, index = declarationIndex, stateSize = 2)
-            2 -> AdaptiveAnonymous(parent = parent, index = declarationIndex, stateSize = 1, factory = get(1))
+            2 -> AdaptiveAnonymous(parent = parent, index = declarationIndex, stateSize = 2, factory = get(1))
             else -> invalidIndex(index = declarationIndex)
         }.also {
             it.create()
@@ -62,7 +62,11 @@ abstract class AbstractPopup<RT, CRT : RT>(
                 }
             }
 
-            2 -> Unit
+            2 -> {
+                if (fragment.haveToPatch(closureDirtyMask, 1 shl 1)) {
+                    fragment.setStateVariable(index = 1, value = ::hide)
+                }
+            }
 
             else -> invalidIndex(index)
         }

@@ -10,7 +10,9 @@ import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.denseIconTheme
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
+import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.tree
 import kotlin.random.Random
@@ -31,7 +33,12 @@ fun treeMain(): AdaptiveFragment {
 
             column {
                 borders.outline
-                tree(staticTree)
+                tree(staticTree) { item ->
+                    column {
+                        zIndex { 200 } .. borders.outline .. cornerRadius { 2.dp } .. backgrounds.surface .. padding { 4.dp }
+                        text("context menu for ${item.title}") .. textColors.onSurface
+                    }
+                }
             }
         }
 
@@ -105,7 +112,7 @@ private fun generateRandomTree(index: Int, depth: Int): TreeItem<Unit>{
     return TreeItem(
         icon = Graphics.folder,
         title = nodeTitle,
-        children = children,
-        data = Unit
+        data = Unit,
+        children = children
     )
 }
