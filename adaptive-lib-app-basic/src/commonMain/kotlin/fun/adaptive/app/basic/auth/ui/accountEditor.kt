@@ -22,7 +22,7 @@ import `fun`.adaptive.ui.dialog.api.dangerButtonDialog
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.label.smallLabel
+import `fun`.adaptive.ui.label.inputLabel
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.utility.UUID
 import kotlinx.coroutines.launch
@@ -78,9 +78,9 @@ fun common(account: AccountEditorData) {
         colTemplate(1.fr, 100.dp, 100.dp)
         alignItems.center
 
-        smallLabel { "Fiók név" } .. alignSelf.startCenter
-        smallLabel { "Aktivált" }
-        smallLabel { "Zárolt" }
+        inputLabel { "Fiók név" } .. alignSelf.startCenter
+        inputLabel { "Aktivált" }
+        inputLabel { "Zárolt" }
 
         editor { account.login } .. width { 300.dp } .. alignSelf.startCenter
         editor { account.activated }
@@ -95,7 +95,7 @@ fun name(account: AccountEditorData) {
         rowTemplate(28.dp, 44.dp)
         alignItems.startCenter
 
-        smallLabel { "Név" }
+        inputLabel { "Név" }
         editor { account.name } .. width { 600.dp }
     }
 }
@@ -107,7 +107,7 @@ fun email(account: AccountEditorData) {
         alignItems.startCenter
         gapWidth { 32.dp }
 
-        smallLabel { "E-mail cím" }
+        inputLabel { "E-mail cím" }
         editor { account.email } .. width { 600.dp }
     }
 }
@@ -119,7 +119,7 @@ fun phone(account: AccountEditorData) {
         rowTemplate(28.dp, 44.dp)
         alignItems.startCenter
 
-        smallLabel { "Telefonszám" }
+        inputLabel { "Telefonszám" }
         editor { account.phone }
     }
 }
@@ -133,8 +133,8 @@ fun loginTimes(principal: Principal) {
         gapWidth { 32.dp }
         alignItems.startCenter
 
-        smallLabel { "Utolsó sikeres azonosítás" }
-        smallLabel { "Utolsó sikertelen azonosítás" }
+        inputLabel { "Utolsó sikeres azonosítás" }
+        inputLabel { "Utolsó sikertelen azonosítás" }
 
         instant(principal.lastAuthSuccess)
         instant(principal.lastAuthFail)
@@ -150,8 +150,8 @@ fun loginCounters(principal: Principal) {
         gapWidth { 32.dp }
         alignItems.startCenter
 
-        smallLabel { "Sikeres azonosítások száma" }
-        smallLabel { "Sikertelen azonosítások száma" }
+        inputLabel { "Sikeres azonosítások száma" }
+        inputLabel { "Sikertelen azonosítások száma" }
 
         text(principal.authSuccessCount)
         text(principal.authFailCount)
@@ -166,7 +166,7 @@ fun roles(knownRoles: List<Role>, principalRoles: List<Role>) {
     column {
         paddingLeft { 32.dp } .. paddingRight { 16.dp } .. height { 120.dp } .. gap { 8.dp }
 
-        smallLabel { "Szerepkörök" }
+        inputLabel { "Szerepkörök" }
 
         flowBox {
             gap { 8.dp }

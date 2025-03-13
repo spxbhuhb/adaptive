@@ -20,7 +20,6 @@ import `fun`.adaptive.ui.builtin.arrow_drop_down
 import `fun`.adaptive.ui.builtin.arrow_drop_up
 import `fun`.adaptive.ui.builtin.collapse_all
 import `fun`.adaptive.ui.builtin.expand_all
-import `fun`.adaptive.ui.builtin.remove
 import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.denseIconTheme
@@ -28,6 +27,7 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
+import `fun`.adaptive.ui.label.uuidLabel
 import `fun`.adaptive.ui.menu.MenuItem
 import `fun`.adaptive.ui.menu.MenuItemBase
 import `fun`.adaptive.ui.menu.MenuSeparator
@@ -36,7 +36,6 @@ import `fun`.adaptive.ui.splitpane.splitPaneDivider
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.textColors
-import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
 import `fun`.adaptive.ui.tree.TreeViewModel.Companion.defaultSelectedFun
@@ -142,7 +141,7 @@ fun areaEditor(item: TreeItem<AioSpace>) {
         maxSize .. verticalScroll .. padding { 16.dp }
 
         h1(space.name)
-        text(space.uuid) .. textColors.onSurfaceVariant .. textSmall
+        uuidLabel { space.uuid }
 
         row {
             text("name:")

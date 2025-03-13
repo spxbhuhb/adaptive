@@ -8,6 +8,8 @@
     <string name="cancel">Cancel</string>
     <string name="hide">Hide</string>
 
+    <string name="copyToClipboard">Copy to clipboard</string>
+
     <string name="expandAll">Expand all</string>
     <string name="collapseAll">Collapse all</string>
 
