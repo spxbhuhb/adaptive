@@ -20,7 +20,8 @@ fun apmProject(): AdaptiveFragment {
 
     val treeViewModel = TreeViewModel(
         root.map { it.toTreeItem() },
-        selectedFun = { viewModel, item, modifiers -> showItem(context, item, modifiers) }
+        selectedFun = { viewModel, item, modifiers -> showItem(context, item, modifiers) },
+        context = Unit
     )
 
     wsToolPane(context.pane(ApmWsContext.APM_PROJECT_TOOL_KEY)) {

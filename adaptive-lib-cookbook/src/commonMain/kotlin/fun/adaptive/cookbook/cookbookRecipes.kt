@@ -24,6 +24,7 @@ fun cookbookRecipes(): AdaptiveFragment {
             showRecipe(context, item, modifiers)
             TreeViewModel.defaultSelectedFun(viewModel, item, modifiers)
         },
+        context = Unit,
         openWithSingleClick = true
     )
 

@@ -54,6 +54,7 @@ kotlin {
                 implementation(libs.adaptive.lib.cookbook)
                 implementation(libs.adaptive.lib.app.basic)
                 implementation(libs.adaptive.lib.email)
+                implementation(libs.adaptive.lib.iot)
                 implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.lib.auth)
                 implementation(libs.adaptive.lib.auto)

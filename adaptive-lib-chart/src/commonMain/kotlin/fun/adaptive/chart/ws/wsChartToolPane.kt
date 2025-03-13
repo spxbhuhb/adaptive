@@ -17,7 +17,8 @@ fun wsChartToolPane(): AdaptiveFragment {
 
     val treeViewModel = TreeViewModel(
         context.items.map { it.toTreeItem(context, null) },
-        selectedFun = { viewModel, item, modifiers -> if (item.children.isEmpty()) context.openChart(item.data, modifiers) }
+        selectedFun = { viewModel, item, modifiers -> if (item.children.isEmpty()) context.openChart(item.data, modifiers) },
+        context = Unit
     )
 
     wsToolPane(context.pane(CHART_TOOL_PANE_KEY)) {

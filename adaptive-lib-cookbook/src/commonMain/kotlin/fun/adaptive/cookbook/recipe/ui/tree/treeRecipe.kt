@@ -25,7 +25,7 @@ fun treeRecipe(): AdaptiveFragment {
             text("static - double click to expand")
             column {
                 borders.outline
-                tree(TreeViewModel(staticTree))
+                tree(TreeViewModel(staticTree, context = Unit))
             }
         }
 
@@ -34,7 +34,7 @@ fun treeRecipe(): AdaptiveFragment {
             text("random - single click to expand")
             column {
                 borders.outline .. maxHeight .. verticalScroll
-                tree(TreeViewModel(generate(), selectedFun = ::defaultSelectedFun, openWithSingleClick = true))
+                tree(TreeViewModel(generate(), context = Unit, selectedFun = ::defaultSelectedFun, openWithSingleClick = true))
             }
         }
     }

@@ -6,15 +6,16 @@ import `fun`.adaptive.ui.instruction.event.UIEvent
 import kotlin.properties.Delegates.observable
 import kotlin.reflect.KProperty
 
-class TreeViewModel<T>(
-    items: List<TreeItem<T>>,
-    selection: List<TreeItem<T>> = emptyList(),
-    val selectedFun: TreeItemSelectedFun<T>? = null,
-    val keyDownFun: TreeKeyDownFun<T>? = null,
+class TreeViewModel<IT, CT>(
+    items: List<TreeItem<IT>>,
+    selection: List<TreeItem<IT>> = emptyList(),
+    val context: CT,
+    val selectedFun: TreeItemSelectedFun<IT, CT>? = null,
+    val keyDownFun: TreeKeyDownFun<IT, CT>? = null,
     val theme: TreeTheme = TreeTheme.DEFAULT,
     val multiSelect: Boolean = false,
     val openWithSingleClick: Boolean = false
-) : Observable<TreeViewModel<T>>() {
+) : Observable<TreeViewModel<IT, CT>>() {
 
     var items by observable(items, ::notify)
     var selection by observable(selection, ::notify)
@@ -24,7 +25,7 @@ class TreeViewModel<T>(
         notifyListeners()
     }
 
-    override var value: TreeViewModel<T>
+    override var value: TreeViewModel<IT, CT>
         get() = this
         set(_) {
             throw UnsupportedOperationException()
@@ -32,8 +33,8 @@ class TreeViewModel<T>(
 
     companion object {
 
-        fun <T> defaultSelectedFun(
-            viewModel: TreeViewModel<T>, item: TreeItem<T>, modifiers: Set<EventModifier>
+        fun <IT, CT> defaultSelectedFun(
+            viewModel: TreeViewModel<IT, CT>, item: TreeItem<IT>, modifiers: Set<EventModifier>
         ) {
             when {
                 viewModel.multiSelect && EventModifier.META in modifiers -> {
@@ -54,8 +55,8 @@ class TreeViewModel<T>(
             }
         }
 
-        fun <T> defaultKeyDownFun(
-            viewModel: TreeViewModel<T>, item: TreeItem<T>, event: UIEvent
+        fun <IT, CT> defaultKeyDownFun(
+            viewModel: TreeViewModel<IT, CT>, item: TreeItem<IT>, event: UIEvent
         ) {
             val safeKeyInfo = event.keyInfo ?: return
 

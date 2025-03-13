@@ -10,7 +10,8 @@ import `fun`.adaptive.cookbook.cookbookCommon
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.groveRuntimeCommon
-import `fun`.adaptive.iot.space.treeMain
+import `fun`.adaptive.iot.iotCommon
+import `fun`.adaptive.iot.ui.treeMain
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.browser
@@ -34,6 +35,7 @@ fun sandboxMain() {
         cookbookCommon()
         groveRuntimeCommon()
         chartCommon()
+        iotCommon()
 
         commonMainStringsStringStore0.load()
 

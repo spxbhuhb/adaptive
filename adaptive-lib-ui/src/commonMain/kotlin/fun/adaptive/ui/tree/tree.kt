@@ -13,15 +13,15 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.instruction.event.UIEvent
 
-typealias TreeItemSelectedFun<T> = (viewModel: TreeViewModel<T>, item: TreeItem<T>, modifiers: Set<EventModifier>) -> Unit
-typealias TreeKeyDownFun<T> = (viewModel: TreeViewModel<T>, item: TreeItem<T>, event: UIEvent) -> Unit
-typealias TreeContextMenuBuilder<T> = ((hide: () -> Unit, item: TreeItem<T>) -> Unit)
+typealias TreeItemSelectedFun<IT, CT> = (viewModel: TreeViewModel<IT, CT>, item: TreeItem<IT>, modifiers: Set<EventModifier>) -> Unit
+typealias TreeKeyDownFun<IT, CT> = (viewModel: TreeViewModel<IT, CT>, item: TreeItem<IT>, event: UIEvent) -> Unit
+typealias TreeContextMenuBuilder<IT, CT> = ((hide: () -> Unit, viewModel: TreeViewModel<IT, CT>, item: TreeItem<IT>) -> Unit)
 
 @Adaptive
-fun <T> tree(
-    viewModel: TreeViewModel<T>,
+fun <IT, CT> tree(
+    viewModel: TreeViewModel<IT, CT>,
     @Adaptive
-    _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<T>? = null
+    _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<IT, CT>? = null
 ): AdaptiveFragment {
 
     column(viewModel.theme.container, instructions()) {
@@ -36,12 +36,12 @@ fun <T> tree(
 }
 
 @Adaptive
-private fun <T> node(
-    viewModel: TreeViewModel<T>,
-    item: TreeItem<T>,
+private fun <IT, CT> node(
+    viewModel: TreeViewModel<IT, CT>,
+    item: TreeItem<IT>,
     offset: DPixel,
     @Adaptive
-    _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<T>?
+    _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<IT, CT>?
 ) {
     val observed = valueFrom { item }
 
@@ -59,12 +59,12 @@ private fun <T> node(
 }
 
 @Adaptive
-private fun <T> label(
-    viewModel: TreeViewModel<T>,
-    item: TreeItem<T>,
+private fun <IT, CT> label(
+    viewModel: TreeViewModel<IT, CT>,
+    item: TreeItem<IT>,
     offset: DPixel,
     @Adaptive
-    _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<T>?
+    _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<IT, CT>?
 ) {
     val observed = valueFrom { item }
     val theme = viewModel.theme
@@ -110,7 +110,7 @@ private fun <T> label(
         if (_KT_74337_contextMenuBuilder != null) {
             contextPopup { hide ->
                 popupAlign.belowCenter
-                _KT_74337_contextMenuBuilder(hide, observed)
+                _KT_74337_contextMenuBuilder(hide, viewModel, observed)
             }
         }
     }

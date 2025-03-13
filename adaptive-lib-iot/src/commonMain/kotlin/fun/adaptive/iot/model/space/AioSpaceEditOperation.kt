@@ -1,6 +1,6 @@
-package `fun`.adaptive.iot.space
+package `fun`.adaptive.iot.model.space
 
-enum class SpaceEditOperation {
+enum class AioSpaceEditOperation {
     AddSite,
     AddBuilding,
     AddFloor,

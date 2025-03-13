@@ -13,10 +13,10 @@ class ChartRenderContext<XT : Comparable<XT>, YT : Comparable<YT>>(
     val theme: ChartTheme = ChartTheme()
 ) {
 
-    val range: ChartDataRange<XT, YT>? = getRange()
+    val range: ChartDataRange<XT, YT>? = initRange()
     val normalizer: ChartNormalizer<XT, YT> = range?.let { normalizerFun(range) } ?: NullNormalizer<XT, YT>()
 
-    fun getRange(): ChartDataRange<XT, YT>? {
+    fun initRange(): ChartDataRange<XT, YT>? {
         var xStart: XT? = null
         var xEnd: XT? = null
         var yStart: YT? = null

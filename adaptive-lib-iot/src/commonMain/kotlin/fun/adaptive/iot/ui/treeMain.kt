@@ -1,18 +1,21 @@
-package `fun`.adaptive.iot.space
+package `fun`.adaptive.iot.ui
 
+import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
 import `fun`.adaptive.adat.store.copyOf
-import `fun`.adaptive.cookbook.add
 import `fun`.adaptive.document.ui.direct.h1
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.iot.model.project.AioProject
+import `fun`.adaptive.iot.model.space.AioSpace
+import `fun`.adaptive.iot.model.space.AioSpaceEditOperation
+import `fun`.adaptive.iot.model.space.AioSpaceType
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.sandbox.*
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.builtin.add
 import `fun`.adaptive.ui.builtin.collapse_all
 import `fun`.adaptive.ui.builtin.expand_all
 import `fun`.adaptive.ui.builtin.remove
@@ -36,7 +39,6 @@ import `fun`.adaptive.ui.tree.TreeViewModel.Companion.defaultSelectedFun
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.utility.UUID
 
-typealias ProjectItemId = String
 
 val splitConfiguration =
     SplitPaneConfiguration(
@@ -51,10 +53,11 @@ fun treeMain(): AdaptiveFragment {
 
     val config = copyOf { splitConfiguration }
 
-    val treeViewModel = TreeViewModel(
-        staticTree,
+    val treeViewModel = TreeViewModel<AioSpace, AioProject>(
+        emptyList(),
         selectedFun = ::defaultSelectedFun,
-        multiSelect = false
+        multiSelect = false,
+        context = AioProject(UUID())
     )
 
     localContext(treeViewModel) {
@@ -73,7 +76,7 @@ fun treeMain(): AdaptiveFragment {
 }
 
 @Adaptive
-fun spaceTree(treeViewModel: TreeViewModel<Space>): AdaptiveFragment {
+fun spaceTree(treeViewModel: TreeViewModel<AioSpace, AioProject>): AdaptiveFragment {
 
     val observed = valueFrom { treeViewModel }
 
@@ -111,7 +114,7 @@ fun spaceTree(treeViewModel: TreeViewModel<Space>): AdaptiveFragment {
 }
 
 @Adaptive
-fun spaceEditor(treeViewModel: TreeViewModel<Space>): AdaptiveFragment {
+fun spaceEditor(treeViewModel: TreeViewModel<AioSpace, AioProject>): AdaptiveFragment {
     val observed = valueFrom { treeViewModel }
 
     val item = observed.selection.firstOrNull()
@@ -130,7 +133,7 @@ fun spaceEditor(treeViewModel: TreeViewModel<Space>): AdaptiveFragment {
 }
 
 @Adaptive
-fun areaEditor(item: TreeItem<Space>) {
+fun areaEditor(item: TreeItem<AioSpace>) {
     val observed = valueFrom { item }
     val space = observed.data
 
@@ -150,56 +153,62 @@ fun areaEditor(item: TreeItem<Space>) {
     }
 }
 
-fun apply(tree: TreeViewModel<Space>, menuItem: MenuItem<SpaceEditOperation>, treeItem: TreeItem<Space>?) {
-    val space : Space
+fun apply(tree: TreeViewModel<AioSpace, AioProject>, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AioSpace>?) {
+    val projectId = tree.context.uuid
+    val space: AioSpace
 
     when (menuItem.data) {
-        SpaceEditOperation.AddSite -> {
-            space = Space(
+        AioSpaceEditOperation.AddSite -> {
+            space = AioSpace(
                 uuid = UUID(),
-                piid = ProjectItemId(),
-                type = SpaceType.Site,
+                projectId = projectId,
+                friendlyId = "",
+                type = AioSpaceType.Site,
                 name = "${Strings.site} ${tree.items.size + 1}"
             )
         }
 
-        SpaceEditOperation.AddBuilding -> {
-            space = Space(
+        AioSpaceEditOperation.AddBuilding -> {
+            space = AioSpace(
                 uuid = UUID(),
-                piid = ProjectItemId(),
-                type = SpaceType.Building,
+                projectId = projectId,
+                friendlyId = "",
+                type = AioSpaceType.Building,
                 name = "${Strings.building} ${tree.items.size + 1}"
             )
         }
 
-        SpaceEditOperation.AddFloor -> {
-            space = Space(
+        AioSpaceEditOperation.AddFloor -> {
+            space = AioSpace(
                 uuid = UUID(),
-                piid = ProjectItemId(),
-                type = SpaceType.Floor,
+                projectId = projectId,
+                friendlyId = "",
+                type = AioSpaceType.Floor,
                 name = "${Strings.floor} ${tree.items.size + 1}"
             )
         }
 
-        SpaceEditOperation.AddRoom -> {
-            space = Space(
+        AioSpaceEditOperation.AddRoom -> {
+            space = AioSpace(
                 uuid = UUID(),
-                piid = ProjectItemId(),
-                type = SpaceType.Room,
+                projectId = projectId,
+                friendlyId = "",
+                type = AioSpaceType.Room,
                 name = "${Strings.room} ${tree.items.size + 1}"
             )
         }
 
-        SpaceEditOperation.AddArea -> {
-            space = Space(
+        AioSpaceEditOperation.AddArea -> {
+            space = AioSpace(
                 uuid = UUID(),
-                piid = ProjectItemId(),
-                type = SpaceType.Area,
+                projectId = projectId,
+                friendlyId = "",
+                type = AioSpaceType.Area,
                 name = "${Strings.area} ${tree.items.size + 1}"
             )
         }
 
-        SpaceEditOperation.Inactivate -> TODO()
+        AioSpaceEditOperation.Inactivate -> TODO()
     }
 
     val newItem = space.toTreeItem(treeItem)
@@ -213,54 +222,52 @@ fun apply(tree: TreeViewModel<Space>, menuItem: MenuItem<SpaceEditOperation>, tr
 }
 
 val addTopMenu = listOf(
-    MenuItem<SpaceEditOperation>(Graphics.responsive_layout, Strings.addSite, SpaceEditOperation.AddSite),
-    MenuItem<SpaceEditOperation>(Graphics.apartment, Strings.addBuilding, SpaceEditOperation.AddBuilding),
-    MenuItem<SpaceEditOperation>(Graphics.crop_5_4, Strings.addArea, SpaceEditOperation.AddArea),
+    MenuItem<AioSpaceEditOperation>(Graphics.responsive_layout, Strings.addSite, AioSpaceEditOperation.AddSite),
+    MenuItem<AioSpaceEditOperation>(Graphics.apartment, Strings.addBuilding, AioSpaceEditOperation.AddBuilding),
+    MenuItem<AioSpaceEditOperation>(Graphics.crop_5_4, Strings.addArea, AioSpaceEditOperation.AddArea),
 )
 
 val siteMenu = listOf(
-    MenuItem<SpaceEditOperation>(Graphics.apartment, Strings.addBuilding, SpaceEditOperation.AddBuilding),
-    MenuItem<SpaceEditOperation>(Graphics.crop_5_4, Strings.addArea, SpaceEditOperation.AddArea),
-    MenuItem<SpaceEditOperation>(Graphics.remove, Strings.inactivate, SpaceEditOperation.Inactivate),
+    MenuItem<AioSpaceEditOperation>(Graphics.apartment, Strings.addBuilding, AioSpaceEditOperation.AddBuilding),
+    MenuItem<AioSpaceEditOperation>(Graphics.crop_5_4, Strings.addArea, AioSpaceEditOperation.AddArea),
+    MenuItem<AioSpaceEditOperation>(Graphics.remove, Strings.inactivate, AioSpaceEditOperation.Inactivate),
 )
 
 val buildingMenu = listOf(
-    MenuItem<SpaceEditOperation>(Graphics.stacks, Strings.addFloor, SpaceEditOperation.AddFloor),
-    MenuItem<SpaceEditOperation>(Graphics.crop_5_4, Strings.addArea, SpaceEditOperation.AddArea),
-    MenuItem<SpaceEditOperation>(Graphics.remove, Strings.inactivate, SpaceEditOperation.Inactivate),
+    MenuItem<AioSpaceEditOperation>(Graphics.stacks, Strings.addFloor, AioSpaceEditOperation.AddFloor),
+    MenuItem<AioSpaceEditOperation>(Graphics.crop_5_4, Strings.addArea, AioSpaceEditOperation.AddArea),
+    MenuItem<AioSpaceEditOperation>(Graphics.remove, Strings.inactivate, AioSpaceEditOperation.Inactivate),
 )
 
 val floorMenu = listOf(
-    MenuItem<SpaceEditOperation>(Graphics.meeting_room, Strings.addRoom, SpaceEditOperation.AddRoom),
-    MenuItem<SpaceEditOperation>(Graphics.crop_5_4, Strings.addArea, SpaceEditOperation.AddArea),
-    MenuItem<SpaceEditOperation>(Graphics.remove, Strings.inactivate, SpaceEditOperation.Inactivate),
+    MenuItem<AioSpaceEditOperation>(Graphics.meeting_room, Strings.addRoom, AioSpaceEditOperation.AddRoom),
+    MenuItem<AioSpaceEditOperation>(Graphics.crop_5_4, Strings.addArea, AioSpaceEditOperation.AddArea),
+    MenuItem<AioSpaceEditOperation>(Graphics.remove, Strings.inactivate, AioSpaceEditOperation.Inactivate),
 )
 
 val roomMenu = listOf(
-    MenuItem<SpaceEditOperation>(Graphics.crop_5_4, Strings.addArea, SpaceEditOperation.AddArea),
-    MenuItem<SpaceEditOperation>(Graphics.remove, Strings.inactivate, SpaceEditOperation.Inactivate),
+    MenuItem<AioSpaceEditOperation>(Graphics.crop_5_4, Strings.addArea, AioSpaceEditOperation.AddArea),
+    MenuItem<AioSpaceEditOperation>(Graphics.remove, Strings.inactivate, AioSpaceEditOperation.Inactivate),
 )
 
-fun menu(space: Space) =
+fun menu(space: AioSpace) =
     when (space.type) {
-        SpaceType.Site -> siteMenu
-        SpaceType.Building -> buildingMenu
-        SpaceType.Floor -> floorMenu
-        SpaceType.Room -> roomMenu
-        SpaceType.Area -> roomMenu
+        AioSpaceType.Site -> siteMenu
+        AioSpaceType.Building -> buildingMenu
+        AioSpaceType.Floor -> floorMenu
+        AioSpaceType.Room -> roomMenu
+        AioSpaceType.Area -> roomMenu
     }
 
 @Adaptive
 fun contextMenuBuilder(
     hide: () -> Unit,
-    treeItem: TreeItem<Space>
-) {
-    val viewModel = fragment().firstContext<TreeViewModel<Space>>()
-
+    viewModel: TreeViewModel<AioSpace, AioProject>,
+    treeItem: TreeItem<AioSpace>
+): AdaptiveFragment {
     column {
         zIndex { 200 }
         contextMenu(menu(treeItem.data)) { menuItem, _ -> apply(viewModel, menuItem, treeItem); hide() }
     }
+    return fragment()
 }
-
-val staticTree = emptyList<TreeItem<Space>>()
