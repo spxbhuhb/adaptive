@@ -24,7 +24,6 @@ fun <T> tree(
     _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<T>? = null
 ): AdaptiveFragment {
 
-
     column(viewModel.theme.container, instructions()) {
         for (item in viewModel.items) {
             column {
@@ -70,10 +69,9 @@ private fun <T> label(
     val observed = valueFrom { item }
     val theme = viewModel.theme
 
-    val colors = theme.itemColors(observed.selected, false)
-    val handleColors = theme.itemHandleColors(observed.selected, false)
+    val foreground = theme.itemForeground(observed.selected, true)
 
-    row(theme.item, colors) {
+    row(theme.item, theme.itemBackground(observed.selected, true)) {
         paddingLeft { offset }
 
         onClick {
@@ -100,14 +98,14 @@ private fun <T> label(
 
             when {
                 observed.children.isEmpty() -> box { }
-                observed.open -> svg(theme.handleIconOpen) .. handleColors .. theme.handleIcon
-                else -> svg(theme.handleIconClosed) .. handleColors .. theme.handleIcon
+                observed.open -> svg(theme.handleIconOpen) .. foreground .. theme.handleIcon
+                else -> svg(theme.handleIconClosed) .. foreground .. theme.handleIcon
             }
         }
 
-        icon(observed.icon, theme.icon) .. colors
+        icon(observed.icon, theme.icon) .. foreground
 
-        text(observed.title) .. theme.label .. colors
+        text(observed.title) .. theme.label .. foreground
 
         if (_KT_74337_contextMenuBuilder != null) {
             contextPopup { hide ->

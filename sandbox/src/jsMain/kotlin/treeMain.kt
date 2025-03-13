@@ -3,6 +3,10 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.sandbox.apartment
+import `fun`.adaptive.sandbox.crop_5_4
+import `fun`.adaptive.sandbox.meeting_room
+import `fun`.adaptive.sandbox.stacks
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.collapse_all
 import `fun`.adaptive.ui.builtin.expand_all
@@ -14,6 +18,7 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.menu.MenuItem
 import `fun`.adaptive.ui.menu.contextMenu
+import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
@@ -43,7 +48,7 @@ fun treeMain(): AdaptiveFragment {
             }
 
             column {
-                borders.outline .. padding { 16.dp }
+                borders.outline .. padding { 16.dp } .. backgrounds.surfaceVariant
                 tree(treeViewModel, ::contextMenuBuilder)
             }
         }
@@ -100,33 +105,51 @@ fun contextMenuBuilder(
 
 val staticTree = listOf(
     TreeItem<Unit>(
-        icon = Graphics.folder,
-        title = "Item 1",
+        icon = Graphics.apartment,
+        title = "1. épület",
         data = Unit,
         parent = null
     ).also { item ->
         item.children = listOf(
-            TreeItem(
-                icon = Graphics.folder,
-                title = "Item 1.1",
+            TreeItem<Unit>(
+                icon = Graphics.stacks,
+                title = "1. emelet",
                 data = Unit,
-                parent = item
-            )
+                parent = null
+            ).also { item ->
+                item.children = listOf(
+                    TreeItem(
+                        icon = Graphics.meeting_room,
+                        title = "2. szoba",
+                        data = Unit,
+                        parent = item
+                    )
+                )
+            }
         )
     },
-    TreeItem(
-        icon = Graphics.folder,
-        title = "Item 2",
+    TreeItem<Unit>(
+        icon = Graphics.apartment,
+        title = "2. épület",
         data = Unit,
         parent = null
     ).also { item ->
         item.children = listOf(
             TreeItem(
-                icon = Graphics.folder,
-                title = "Item 2.1",
+                icon = Graphics.stacks,
+                title = "1. emelet",
                 data = Unit,
-                parent = item
-            )
+                parent = null
+            ).also { item ->
+                item.children = listOf(
+                    TreeItem(
+                        icon = Graphics.meeting_room,
+                        title = "2. szoba",
+                        data = Unit,
+                        parent = item
+                    )
+                )
+            }
         )
     }
 )

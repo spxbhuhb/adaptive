@@ -1,6 +1,8 @@
 package `fun`.adaptive.ui.theme
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
+import `fun`.adaptive.ui.instruction.decoration.BackgroundColor
+import `fun`.adaptive.ui.instruction.text.TextColor
 
 fun colors(active: Boolean = false, hover: Boolean = false) =
     when {
@@ -29,6 +31,24 @@ fun handleColors(active: Boolean = false, hover: Boolean = false) =
         hover -> hoverColors
         else -> normalHandleColors
     }
+
+fun background(selected : Boolean, variant : Boolean = true, focus : Boolean = false, hover : Boolean = false) =
+    BackgroundColor(
+        when {
+            selected -> if (focus) colors.selectedSurfaceFocus else colors.selectedSurfaceNoFocus
+            hover -> colors.hoverSurface
+            else -> if (variant) colors.surfaceVariant else colors.surface
+        }
+    )
+
+fun foreground(selected : Boolean, variant : Boolean = false, focus : Boolean = false, hover : Boolean = false) =
+    TextColor(
+        when {
+            selected -> if (focus) colors.onSurface else colors.onSurface
+            hover -> colors.onSurface
+            else -> if (variant) colors.onSurfaceVariant else colors.onSurface
+        }
+    )
 
 
 var primaryColors = instructionsOf(backgrounds.primary, textColors.onPrimary, iconColors.onPrimary)

@@ -7,9 +7,10 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.theme.background
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.ui.theme.variantColors
+import `fun`.adaptive.ui.theme.foreground
 
 
 open class ContextMenuTheme(
@@ -27,9 +28,9 @@ open class ContextMenuTheme(
     )
 
     open val icon = instructionsOf(
-        size(20.dp, 20.dp),
-        svgWidth(20.dp),
-        svgHeight(20.dp)
+        size(18.dp, 18.dp),
+        svgWidth(18.dp),
+        svgHeight(18.dp)
     )
 
     open val item = instructionsOf(
@@ -48,8 +49,11 @@ open class ContextMenuTheme(
         noSelect
     )
 
-    open fun itemColors(active: Boolean, hover: Boolean) =
-        colors(active, hover)
+    open fun itemBackground(hover: Boolean) =
+        background(false, hover = hover, variant = false)
+
+    open fun itemForeground(hover: Boolean, variant: Boolean) =
+        foreground(false, hover = hover, variant = variant)
 
     open val shortcut = instructionsOf(
         fontSize(13.sp),
@@ -58,9 +62,6 @@ open class ContextMenuTheme(
         normalFont,
         noSelect
     )
-
-    open fun variantItemColors(active: Boolean, hover: Boolean) =
-        variantColors(active, hover)
 
     companion object {
         var DEFAULT = ContextMenuTheme()

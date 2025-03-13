@@ -49,12 +49,12 @@ private fun <T> label(
     theme: ContextMenuTheme
 ) {
     val hover = hover()
-    val colors = theme.itemColors(false, hover)
-    val variantItemColors = theme.variantItemColors(false, hover)
+
+    val foreground = theme.itemForeground(hover, false)
 
     val icon = item.icon
 
-    row(theme.item, colors) {
+    row(theme.item, theme.itemBackground(hover)) {
         spaceBetween
 
         onClick {
@@ -64,16 +64,16 @@ private fun <T> label(
 
         row {
             if (icon != null) {
-                icon(icon, theme.icon) .. colors
+                icon(icon, theme.icon) .. foreground
             } else {
                 box { theme.icon }
             }
-            text(item.label) .. theme.label .. colors
+            text(item.label) .. theme.label .. foreground
         }
 
         if (item.shortcut != null) {
             row {
-                text(item.shortcut) .. theme.shortcut .. variantItemColors
+                text(item.shortcut) .. theme.shortcut .. theme.itemForeground(hover, true)
             }
         }
     }

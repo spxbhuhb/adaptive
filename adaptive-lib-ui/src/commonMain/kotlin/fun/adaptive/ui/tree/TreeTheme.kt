@@ -1,6 +1,7 @@
 package `fun`.adaptive.ui.tree
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
+import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.resource.graphics.Graphics
@@ -10,7 +11,8 @@ import `fun`.adaptive.ui.builtin.arrow_right
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
-import `fun`.adaptive.ui.theme.colors
+import `fun`.adaptive.ui.theme.background
+import `fun`.adaptive.ui.theme.foreground
 import `fun`.adaptive.ui.theme.handleColors
 
 open class TreeTheme(
@@ -43,8 +45,11 @@ open class TreeTheme(
         noSelect
     )
 
-    open fun itemColors(active: Boolean, hover: Boolean) =
-        colors(active, hover)
+    open fun itemBackground(selected: Boolean, focus: Boolean) =
+        background(selected, focus = focus, variant = true)
+
+    open fun itemForeground(selected: Boolean, focus: Boolean) =
+        foreground(selected, focus = focus)
 
     open val handleContainer = instructionsOf(
         size(24.dp, 24.dp)
@@ -58,8 +63,8 @@ open class TreeTheme(
 
     open val handleIconClosed = Graphics.arrow_right
 
-    open fun itemHandleColors(active: Boolean, hover: Boolean) =
-        handleColors(active, hover)
+    open fun itemHandleColors(selected : Boolean, focus: Boolean) =
+        fill(foreground(selected, focus = focus).color)
 
     companion object {
         var DEFAULT = TreeTheme()

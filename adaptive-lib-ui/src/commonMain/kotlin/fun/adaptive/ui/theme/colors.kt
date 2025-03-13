@@ -19,7 +19,7 @@ class ThemeColors {
     val onSurfaceFriendly = friendly
     val onSurfaceAngry = angry
 
-    val surfaceVariant = color(0xF2F2F2)
+    val surfaceVariant = color(0xF4F6F9)
     val onSurfaceVariant = color(0x757575)
 
     val successSurface = success
@@ -40,8 +40,9 @@ class ThemeColors {
     val primaryHover = color(0x9B8CFFu)
     val onPrimaryHover = color(0xFFFFFFu)
 
-    val selected = color(0x6259CE)
-    val onSelected = color(0xFFFFFF)
+    val selectedSurfaceFocus = color(0xCBDAFE)
+    val selectedSurfaceNoFocus = color(0xD7DADF)
+    val hoverSurface = color(0xCBDAFE)
 
     val outline = color(0xC5C5C5)
     val lightOutline = color(0xE0E0E0)
@@ -58,4 +59,5 @@ class ThemeColors {
     val onReverseVariant = color(0xBBBBBB)
 
     val focusColor = color(0x0D6EFD)
+
 }
