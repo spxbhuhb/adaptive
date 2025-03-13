@@ -6,4 +6,20 @@
     <string name="palette">Palette</string>
     <string name="components">Components</string>
     <string name="instructions">Instructions</string>
+
+    <string name="areas">Területek</string>
+    <string name="site">Telephely</string>
+    <string name="building">Épület</string>
+    <string name="floor">Szint</string>
+    <string name="area">Terület</string>
+    <string name="room">Szoba</string>
+
+    <string name="addSite">Telephely hozzáadása</string>
+    <string name="addBuilding">Épület hozzáadása</string>
+    <string name="addFloor">Szint hozzáadása</string>
+    <string name="addArea">Terület hozzáadása</string>
+    <string name="addRoom">Szoba hozzáadása</string>
+    <string name="inactivate">Inaktiválás</string>
+    <string name="selectArea">Válassz területet a szerkesztéshez</string>
+
 </resources>

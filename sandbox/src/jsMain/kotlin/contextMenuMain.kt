@@ -25,7 +25,7 @@ fun contextMenuMain() {
         contextMenu(menu) { item, modifiers -> clickedOn = item.label }
 
         box {
-            text("right-click for context menu")
+            text("right-click for context fun.adaptive.iot.space.menu")
             contextPopup { hide ->
                 popupAlign.afterBelow
                 contextMenu(menu) { item, _ -> clickedOn = item.label; hide() }

@@ -10,6 +10,7 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
+import `fun`.adaptive.ui.splitpane.splitPaneDivider
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
 
@@ -47,27 +48,10 @@ private fun sp(configFun: () -> SplitPaneConfiguration) {
         splitPane(
             config,
             { text("pane1") },
-            { divider() },
+            { splitPaneDivider() },
             { text("pane2") }
         ) .. maxSize .. borders.outline .. margin { 16.dp }
 
     }
 
-}
-
-@Adaptive
-private fun divider() {
-    box {
-        maxHeight
-        width { 9.dp }
-        zIndex { 300 }
-        paddingHorizontal { (9.dp - 1.dp) / 2.dp }
-        cursor.colResize
-
-        box {
-            maxHeight
-            width { 1.dp }
-            borderLeft(colors.outline)
-        }
-    }
 }
