@@ -52,7 +52,7 @@ open class CanvasSvg(
 
     private fun parseAndDraw() {
         safeCall(svgLogger, message = "Couldn't parse resource: ${resource.uri}") {
-            parseSvg(svgAdapter, data.decodeToString(), instructions.toMutableList().filterIsInstance<CanvasInstruction>().toTypedArray())
+            parseSvg(svgAdapter, data.decodeToString(), instructions.toMutableList().toTypedArray())
         }?.let {
             svgAdapter.rootFragment = it
             svgAdapter.draw()

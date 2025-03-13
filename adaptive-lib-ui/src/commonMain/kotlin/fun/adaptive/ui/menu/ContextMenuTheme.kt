@@ -36,6 +36,7 @@ open class ContextMenuTheme(
     open val item = instructionsOf(
         height(itemHeight),
         alignItems.startCenter,
+        spaceBetween,
         maxWidth,
         cornerRadius { 4.dp },
         paddingHorizontal { 6.dp }
@@ -49,11 +50,11 @@ open class ContextMenuTheme(
         noSelect
     )
 
-    open fun itemBackground(hover: Boolean) =
-        background(false, hover = hover, variant = false)
+    open fun itemBackground(hover: Boolean, inactive: Boolean) =
+        background(false, hover = hover, inactive = inactive)
 
-    open fun itemForeground(hover: Boolean, variant: Boolean) =
-        foreground(false, hover = hover, variant = variant)
+    open fun itemForeground(hover: Boolean, inactive: Boolean) =
+        foreground(false, hover = hover, inactive = inactive)
 
     open val shortcut = instructionsOf(
         fontSize(13.sp),
@@ -61,6 +62,12 @@ open class ContextMenuTheme(
         paddingLeft(4.dp),
         normalFont,
         noSelect
+    )
+
+    open val separator = instructionsOf(
+        maxWidth,
+        margin(5.5.dp, 5.dp, 6.dp, 5.dp),
+        borderBottom(colors.outline, 0.5.dp),
     )
 
     companion object {

@@ -13,6 +13,7 @@ class ThemeColors {
     val fail = color(0xC43E3Du)
     val friendly = color(0x3CB371u)
     val angry = color(0xEC5453u)
+    val inactive = color(0xA2A6B8u)
 
     val surface = color(0xFFFFFF)
     val onSurface = color(0x1E1E1E)

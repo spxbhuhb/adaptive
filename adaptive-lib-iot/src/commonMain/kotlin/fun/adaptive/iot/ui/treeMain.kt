@@ -16,6 +16,8 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.add
+import `fun`.adaptive.ui.builtin.arrow_drop_down
+import `fun`.adaptive.ui.builtin.arrow_drop_up
 import `fun`.adaptive.ui.builtin.collapse_all
 import `fun`.adaptive.ui.builtin.expand_all
 import `fun`.adaptive.ui.builtin.remove
@@ -27,6 +29,8 @@ import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 import `fun`.adaptive.ui.menu.MenuItem
+import `fun`.adaptive.ui.menu.MenuItemBase
+import `fun`.adaptive.ui.menu.MenuSeparator
 import `fun`.adaptive.ui.menu.contextMenu
 import `fun`.adaptive.ui.splitpane.splitPaneDivider
 import `fun`.adaptive.ui.theme.backgrounds
@@ -92,10 +96,7 @@ fun spaceTree(treeViewModel: TreeViewModel<AioSpace, AioProject>): AdaptiveFragm
                 actionIcon(Graphics.expand_all, theme = denseIconTheme) .. onClick { observed.items.forEach { it.expandAll() } }
                 actionIcon(Graphics.collapse_all, theme = denseIconTheme) .. onClick { observed.items.forEach { it.collapseAll() } }
                 box {
-                    size(24.dp)
-
                     actionIcon(Graphics.add, theme = denseIconTheme)
-
                     primaryPopup { hide ->
                         contextMenu(addTopMenu) { menuItem, _ -> apply(treeViewModel, menuItem, null); hide() }
                     }
@@ -155,7 +156,7 @@ fun areaEditor(item: TreeItem<AioSpace>) {
 
 fun apply(tree: TreeViewModel<AioSpace, AioProject>, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AioSpace>?) {
     val projectId = tree.context.uuid
-    val space: AioSpace
+    val space: AioSpace?
 
     when (menuItem.data) {
         AioSpaceEditOperation.AddSite -> {
@@ -208,16 +209,26 @@ fun apply(tree: TreeViewModel<AioSpace, AioProject>, menuItem: MenuItem<AioSpace
             )
         }
 
+        AioSpaceEditOperation.MoveUp -> {
+            space = null
+        }
+
+        AioSpaceEditOperation.MoveDown -> {
+            space = null
+        }
+
         AioSpaceEditOperation.Inactivate -> TODO()
     }
 
-    val newItem = space.toTreeItem(treeItem)
+    if (space != null) {
+        val newItem = space.toTreeItem(treeItem)
 
-    if (treeItem != null) {
-        treeItem.children += newItem
-        if (! treeItem.open) treeItem.open = true
-    } else {
-        tree.items += newItem
+        if (treeItem != null) {
+            treeItem.children += newItem
+            if (! treeItem.open) treeItem.open = true
+        } else {
+            tree.items += newItem
+        }
     }
 }
 
@@ -230,34 +241,72 @@ val addTopMenu = listOf(
 val siteMenu = listOf(
     MenuItem<AioSpaceEditOperation>(Graphics.apartment, Strings.addBuilding, AioSpaceEditOperation.AddBuilding),
     MenuItem<AioSpaceEditOperation>(Graphics.crop_5_4, Strings.addArea, AioSpaceEditOperation.AddArea),
-    MenuItem<AioSpaceEditOperation>(Graphics.remove, Strings.inactivate, AioSpaceEditOperation.Inactivate),
 )
 
 val buildingMenu = listOf(
     MenuItem<AioSpaceEditOperation>(Graphics.stacks, Strings.addFloor, AioSpaceEditOperation.AddFloor),
     MenuItem<AioSpaceEditOperation>(Graphics.crop_5_4, Strings.addArea, AioSpaceEditOperation.AddArea),
-    MenuItem<AioSpaceEditOperation>(Graphics.remove, Strings.inactivate, AioSpaceEditOperation.Inactivate),
 )
 
 val floorMenu = listOf(
     MenuItem<AioSpaceEditOperation>(Graphics.meeting_room, Strings.addRoom, AioSpaceEditOperation.AddRoom),
     MenuItem<AioSpaceEditOperation>(Graphics.crop_5_4, Strings.addArea, AioSpaceEditOperation.AddArea),
-    MenuItem<AioSpaceEditOperation>(Graphics.remove, Strings.inactivate, AioSpaceEditOperation.Inactivate),
 )
 
 val roomMenu = listOf(
     MenuItem<AioSpaceEditOperation>(Graphics.crop_5_4, Strings.addArea, AioSpaceEditOperation.AddArea),
-    MenuItem<AioSpaceEditOperation>(Graphics.remove, Strings.inactivate, AioSpaceEditOperation.Inactivate),
 )
 
-fun menu(space: AioSpace) =
-    when (space.type) {
-        AioSpaceType.Site -> siteMenu
-        AioSpaceType.Building -> buildingMenu
-        AioSpaceType.Floor -> floorMenu
-        AioSpaceType.Room -> roomMenu
-        AioSpaceType.Area -> roomMenu
+fun menu(viewModel: TreeViewModel<AioSpace, AioProject>, treeItem: TreeItem<AioSpace>): List<MenuItemBase<AioSpaceEditOperation>> {
+
+    val base =
+        when (treeItem.data.type) {
+            AioSpaceType.Site -> siteMenu
+            AioSpaceType.Building -> buildingMenu
+            AioSpaceType.Floor -> floorMenu
+            AioSpaceType.Room -> roomMenu
+            AioSpaceType.Area -> roomMenu
+        }
+
+    val out = mutableListOf<MenuItemBase<AioSpaceEditOperation>>()
+    out.addAll(base)
+
+    out += MenuSeparator<AioSpaceEditOperation>()
+
+    out += MenuItem<AioSpaceEditOperation>(
+        Graphics.arrow_drop_up, Strings.moveUp, AioSpaceEditOperation.MoveUp,
+        inactive = isFirst(viewModel, treeItem)
+    )
+
+    out += MenuItem<AioSpaceEditOperation>(
+        Graphics.arrow_drop_down, Strings.moveDown, AioSpaceEditOperation.MoveDown,
+        inactive = isLast(viewModel, treeItem)
+    )
+
+    out += MenuSeparator<AioSpaceEditOperation>()
+
+    out += MenuItem<AioSpaceEditOperation>(null, Strings.inactivate, AioSpaceEditOperation.Inactivate)
+
+    return out
+}
+
+fun isFirst(viewModel: TreeViewModel<AioSpace, AioProject>, treeItem: TreeItem<AioSpace>): Boolean {
+    val safeParent = treeItem.parent
+    if (safeParent == null) {
+        return viewModel.items.first() == treeItem
+    } else {
+        return safeParent.children.first() == treeItem
     }
+}
+
+fun isLast(viewModel: TreeViewModel<AioSpace, AioProject>, treeItem: TreeItem<AioSpace>): Boolean {
+    val safeParent = treeItem.parent
+    if (safeParent == null) {
+        return viewModel.items.last() == treeItem
+    } else {
+        return safeParent.children.last() == treeItem
+    }
+}
 
 @Adaptive
 fun contextMenuBuilder(
@@ -267,7 +316,7 @@ fun contextMenuBuilder(
 ): AdaptiveFragment {
     column {
         zIndex { 200 }
-        contextMenu(menu(treeItem.data)) { menuItem, _ -> apply(viewModel, menuItem, treeItem); hide() }
+        contextMenu(menu(viewModel, treeItem)) { menuItem, _ -> apply(viewModel, menuItem, treeItem); hide() }
     }
     return fragment()
 }

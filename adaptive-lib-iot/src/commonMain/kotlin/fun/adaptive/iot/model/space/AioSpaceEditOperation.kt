@@ -6,5 +6,7 @@ enum class AioSpaceEditOperation {
     AddFloor,
     AddRoom,
     AddArea,
+    MoveUp,
+    MoveDown,
     Inactivate
 }

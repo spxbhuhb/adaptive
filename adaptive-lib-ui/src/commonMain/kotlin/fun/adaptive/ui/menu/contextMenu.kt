@@ -13,7 +13,7 @@ typealias MenuItemSelectedFun<T> = (item: MenuItem<T>, modifiers: Set<EventModif
 
 @Adaptive
 fun <T> contextMenu(
-    items: List<MenuItem<T>>,
+    items: List<MenuItemBase<T>>,
     theme: ContextMenuTheme = ContextMenuTheme.DEFAULT,
     selectedFun: MenuItemSelectedFun<T>,
 ): AdaptiveFragment {
@@ -31,13 +31,17 @@ fun <T> contextMenu(
 
 @Adaptive
 private fun <T> node(
-    item: MenuItem<T>,
+    item: MenuItemBase<T>,
     selectedFun: MenuItemSelectedFun<T>,
     theme: ContextMenuTheme
 ) {
     val observed = valueFrom { item }
 
-    label(observed, selectedFun, theme)
+    if (observed is MenuItem<T>) {
+        label(observed, selectedFun, theme)
+    } else {
+        box { theme.separator }
+    }
 
     // TODO sub menus for context menu
 }
@@ -50,16 +54,16 @@ private fun <T> label(
 ) {
     val hover = hover()
 
-    val foreground = theme.itemForeground(hover, false)
+    val foreground = theme.itemForeground(hover, item.inactive)
 
     val icon = item.icon
 
-    row(theme.item, theme.itemBackground(hover)) {
-        spaceBetween
+    row(theme.item, theme.itemBackground(hover, item.inactive)) {
 
         onClick {
-            selectedFun(item, it.modifiers)
             it.stopPropagation()
+            if (item.inactive) return@onClick
+            selectedFun(item, it.modifiers)
         }
 
         row {

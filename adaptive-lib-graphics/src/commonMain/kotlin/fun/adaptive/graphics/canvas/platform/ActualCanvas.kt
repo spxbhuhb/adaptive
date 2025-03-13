@@ -18,13 +18,13 @@ interface ActualCanvas {
     fun apply(renderData: CanvasRenderData?) {
         if (renderData == null) return
 
-        renderData.decoration?.backgroundColor?.let { setFill(it) }
-        renderData.decoration?.border?.color?.let { setStroke(it) }
-        renderData.text?.color?.let { setFill(it) }
-
         renderData.fill?.let { setFill(it.color) }
         renderData.stroke?.let { setStroke(it.color) }
         renderData.transforms?.forEach { transform(it) }
+
+        renderData.decoration?.backgroundColor?.let { setFill(it) }
+        renderData.decoration?.border?.color?.let { setStroke(it) }
+        renderData.text?.color?.let { setFill(it) }
     }
 
     /**

@@ -19,4 +19,7 @@
     <string name="inactivate">Inaktiválás</string>
     <string name="selectArea">Válassz területet a szerkesztéshez</string>
 
+    <string name="moveUp">Mozgatás fel</string>
+    <string name="moveDown">Mozgatás le</string>
+
 </resources>

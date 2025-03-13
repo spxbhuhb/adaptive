@@ -32,18 +32,32 @@ fun handleColors(active: Boolean = false, hover: Boolean = false) =
         else -> normalHandleColors
     }
 
-fun background(selected : Boolean, variant : Boolean = true, focus : Boolean = false, hover : Boolean = false) =
+fun background(
+    selected: Boolean,
+    inactive: Boolean = false,
+    variant: Boolean = false,
+    focus: Boolean = false,
+    hover: Boolean = false
+) =
     BackgroundColor(
         when {
+            inactive -> if (variant) colors.surfaceVariant else colors.surface
             selected -> if (focus) colors.selectedSurfaceFocus else colors.selectedSurfaceNoFocus
             hover -> colors.hoverSurface
             else -> if (variant) colors.surfaceVariant else colors.surface
         }
     )
 
-fun foreground(selected : Boolean, variant : Boolean = false, focus : Boolean = false, hover : Boolean = false) =
+fun foreground(
+    selected: Boolean,
+    inactive: Boolean = false,
+    variant: Boolean = false,
+    focus: Boolean = false,
+    hover: Boolean = false,
+) =
     TextColor(
         when {
+            inactive -> colors.inactive
             selected -> if (focus) colors.onSurface else colors.onSurface
             hover -> colors.onSurface
             else -> if (variant) colors.onSurfaceVariant else colors.onSurface
