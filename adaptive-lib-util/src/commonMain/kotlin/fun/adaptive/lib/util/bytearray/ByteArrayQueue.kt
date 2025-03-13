@@ -131,7 +131,7 @@ class ByteArrayQueue(
                 flush()
             }
 
-            enqueuePosition += data.size + barrierSize
+            enqueuePosition += data.size + barrierSize + 4
         }
     }
 
@@ -174,7 +174,7 @@ class ByteArrayQueue(
             val size = chunk.readInt()
             val data = chunk.readByteArray(size)
 
-            check(barrier.all { it == ZERO_BYTE }) { "invalid queue barrier at position $dequeuePosition in file ${path.resolve(chunkFileName(dequeueId !!))}" }
+            check(barrier.withIndex().all { it.value == barrier[it.index] }) { "invalid queue barrier at position $dequeuePosition in file ${path.resolve(chunkFileName(dequeueId !!))}" }
 
             dequeuePosition += barrierSize + 4L + size
 

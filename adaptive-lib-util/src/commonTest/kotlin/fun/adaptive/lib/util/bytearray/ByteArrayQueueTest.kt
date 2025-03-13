@@ -1,136 +1,157 @@
-package `fun`.adaptive.lib.util.bytearray
-
+import `fun`.adaptive.lib.util.bytearray.ByteArrayQueue
+import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.clearedTestPath
-import `fun`.adaptive.utility.exists
-import `fun`.adaptive.utility.list
-import `fun`.adaptive.utility.readString
+import `fun`.adaptive.utility.read
 import `fun`.adaptive.utility.resolve
 import kotlin.test.*
 
 class ByteArrayQueueTest {
 
-    private val chunkSizeLimit = 1024L
-    private val barrier = ByteArray(4) { 0 }
-
     @Test
-    fun `initialize should setup queue correctly`() {
-        val tempPath = clearedTestPath()
-        val queue = ByteArrayQueue(tempPath, chunkSizeLimit, barrier)
-        queue.initialize()
-        assertTrue(queue.isInitialized, "Queue should be initialized")
+    fun testInitializationWithoutBarrier() {
+        val testPath = clearedTestPath()
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        assertTrue(queue.isInitialized)
     }
 
     @Test
-    fun `enqueue should add data to queue`() {
-        val tempPath = clearedTestPath()
-        val queue = ByteArrayQueue(tempPath, chunkSizeLimit, barrier)
-
-        queue.initialize()
-        val data = "Hello, Queue!".encodeToByteArray()
-        queue.enqueue(data)
-
-        assertTrue(tempPath.list().isNotEmpty(), "Queue should create chunk files")
+    fun testInitializationWithBarrier() {
+        val testPath = clearedTestPath()
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(1, 2, 3))
+        assertTrue(queue.isInitialized)
     }
 
     @Test
-    fun `dequeue should retrieve enqueued data`() {
-        val tempPath = clearedTestPath()
-        val queue = ByteArrayQueue(tempPath, chunkSizeLimit, barrier)
+    fun testEnqueueDequeueWithoutBarrier() {
+        val testPath = clearedTestPath()
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val data = "Hello, World!".encodeToByteArray()
 
-        queue.initialize()
-        val data = "Hello, Queue!".encodeToByteArray()
         queue.enqueue(data)
+        assertFalse(queue.isEmpty)
+
         val dequeued = queue.dequeue()
-
-        assertNotNull(dequeued, "Dequeued data should not be null")
-        assertContentEquals(data, dequeued, "Dequeued data should match enqueued data")
+        assertNotNull(dequeued)
+        assertContentEquals(data, dequeued)
     }
 
     @Test
-    fun `dequeue should return null if queue is empty`() {
-        val tempPath = clearedTestPath()
-        val queue = ByteArrayQueue(tempPath, chunkSizeLimit, barrier)
+    fun testEnqueueDequeueWithBarrier() {
+        val testPath = clearedTestPath()
+        val barrier = byteArrayOf(1, 2, 3)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = barrier)
+        val data = "Barrier Test".encodeToByteArray()
 
-        queue.initialize()
-        assertNull(queue.dequeue(), "Dequeue should return null when queue is empty")
-    }
-
-    @Test
-    fun `position should move to correct chunk and position`() {
-        val tempPath = clearedTestPath()
-        val queue = ByteArrayQueue(tempPath, chunkSizeLimit, barrier)
-
-        queue.initialize()
-        val data = "Test Position".encodeToByteArray()
         queue.enqueue(data)
+        assertFalse(queue.isEmpty)
 
-        val chunkName = queue.chunkIds.first()
-        queue.position(chunkName, 0L)
         val dequeued = queue.dequeue()
-
-        assertNotNull(dequeued, "Dequeued data should not be null after repositioning")
-        assertContentEquals(data, dequeued, "Data should match after repositioning")
+        assertNotNull(dequeued)
+        assertContentEquals(data, dequeued)
     }
 
     @Test
-    fun `rollEnqueueChunk should create new chunk when size limit is exceeded`() {
-        val tempPath = clearedTestPath()
-        val queue = ByteArrayQueue(tempPath, chunkSizeLimit, barrier)
-
-        queue.initialize()
-        val largeData = ByteArray((chunkSizeLimit / 2).toInt())
-        queue.enqueue(largeData)
-        queue.enqueue(largeData)
-
-        assertTrue(queue.chunkIds.size > 1, "Queue should roll to a new chunk when size limit is exceeded")
+    fun testEmptyQueueDequeueReturnsNull() {
+        val testPath = clearedTestPath()
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        assertTrue(queue.isEmpty)
+        assertNull(queue.dequeue())
     }
 
     @Test
-    fun `rollDequeueChunk should move to next chunk when end is reached`() {
-        val tempPath = clearedTestPath()
-        val queue = ByteArrayQueue(tempPath, chunkSizeLimit, barrier)
+    fun testChunkRollingWithoutBarrier() {
+        val testPath = clearedTestPath()
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 10, barrier = byteArrayOf())
 
-        queue.initialize()
-        val firstChunkData = "First Chunk".encodeToByteArray()
-        val secondChunkData = "Second Chunk".encodeToByteArray()
+        queue.enqueue("12345".encodeToByteArray())
+        queue.enqueue("67890".encodeToByteArray())
 
-        queue.enqueue(firstChunkData)
-        queue.enqueue(secondChunkData)
-
-        assertContentEquals(firstChunkData, queue.dequeue(), "First chunk should be dequeued first")
-        assertContentEquals(secondChunkData, queue.dequeue(), "Second chunk should be dequeued after first")
+        assertFalse(queue.isEmpty)
+        assertNotNull(queue.dequeue())
+        assertNotNull(queue.dequeue())
     }
 
     @Test
-    fun `dequeue should persist position when persistDequeue is true`() {
-        val tempPath = clearedTestPath()
-        val queue = ByteArrayQueue(tempPath, chunkSizeLimit, barrier, persistDequeue = true)
+    fun testChunkRollingWithBarrier() {
+        val testPath = clearedTestPath()
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 10, barrier = byteArrayOf(1, 2, 3))
 
-        queue.initialize()
-        val data = "Persistent Data".encodeToByteArray()
+        queue.enqueue("12345".encodeToByteArray())
+        queue.enqueue("67890".encodeToByteArray())
+
+        assertFalse(queue.isEmpty)
+        assertNotNull(queue.dequeue())
+        assertNotNull(queue.dequeue())
+    }
+
+    @Test
+    fun testPersistentDequeuePosition() {
+        val testPath = clearedTestPath()
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), persistDequeue = true)
+        val data = "PersistentData".encodeToByteArray()
         queue.enqueue(data)
 
         val dequeued = queue.dequeue()
-        assertNotNull(dequeued, "Dequeued data should not be null")
-        assertContentEquals(data, dequeued, "Dequeued data should match enqueued data")
+        assertNotNull(dequeued)
+        assertContentEquals(data, dequeued)
 
-        val persistedPositionFile = tempPath.resolve("dequeue.bin")
-        assertTrue(persistedPositionFile.exists(), "Dequeue position file should be created")
-        val persistedData = persistedPositionFile.readString()
-        assertTrue(persistedData.contains(";"), "Dequeue position file should contain valid data")
+        val dequeueFile = testPath.resolve(ByteArrayQueue.DEQUEUE_NAME).read().decodeToString()
+        assertTrue(dequeueFile.contains(';'))
     }
 
     @Test
-    fun `dequeue should return with null when the queue is empty`() {
-        val tempPath = clearedTestPath()
-        val queue = ByteArrayQueue(tempPath, chunkSizeLimit, barrier, persistDequeue = true)
+    fun testDequeueOrderWithoutBarrier() {
+        val testPath = clearedTestPath()
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val first = "First".encodeToByteArray()
+        val second = "Second".encodeToByteArray()
 
-        queue.initialize()
+        queue.enqueue(first)
+        queue.enqueue(second)
 
-        queue.enqueue("some data".encodeToByteArray())
-        queue.dequeue() // drop queued entry
+        assertContentEquals(first, queue.dequeue())
+        assertContentEquals(second, queue.dequeue())
+    }
 
-        assertNull(queue.dequeue(), "Dequeue should return null when chunk end is reached")
-        assertNull(queue.dequeue(), "Dequeue should return null when chunk end is reached")
+    @Test
+    fun testDequeueOrderWithBarrier() {
+        val testPath = clearedTestPath()
+        val barrier = byteArrayOf(1, 2, 3, 4)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = barrier)
+        val first = "First".encodeToByteArray()
+        val second = "Second".encodeToByteArray()
+
+        queue.enqueue(first)
+        queue.enqueue(second)
+
+        assertContentEquals(first, queue.dequeue())
+        assertContentEquals(second, queue.dequeue())
+    }
+
+    @Test
+    fun testQueueIntegrityAfterMultipleOperations() {
+        val testPath = clearedTestPath()
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+
+        queue.enqueue("Data1".encodeToByteArray())
+        queue.dequeue()
+        queue.enqueue("Data2".encodeToByteArray())
+        queue.enqueue("Data3".encodeToByteArray())
+
+        assertContentEquals("Data2".encodeToByteArray(), queue.dequeue())
+        assertContentEquals("Data3".encodeToByteArray(), queue.dequeue())
+        assertNull(queue.dequeue())
+    }
+
+    @Test
+    fun testInvalidDequeuePositionThrows() {
+        val testPath = clearedTestPath()
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+
+        val exception = assertFailsWith<IllegalArgumentException> {
+            queue.position(UUID(), 0L)
+        }
+
+        assertTrue(exception.message !!.contains("unknown chunk"))
     }
 }
