@@ -4,6 +4,12 @@
 
 <resources>
 
+    <string name="spxbId">SPXB ID</string>
+    <string name="name">Név</string>
+    <string name="active">Aktív</string>
+    <string name="type">Típus</string>
+    <string name="note">Megjegyzés</string>
+
     <string name="areas">Területek</string>
     <string name="site">Telephely</string>
     <string name="building">Épület</string>

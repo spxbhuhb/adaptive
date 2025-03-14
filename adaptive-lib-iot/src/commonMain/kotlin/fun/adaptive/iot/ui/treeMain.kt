@@ -2,7 +2,7 @@ package `fun`.adaptive.iot.ui
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
 import `fun`.adaptive.adat.store.copyOf
-import `fun`.adaptive.document.ui.direct.h1
+import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.localContext
@@ -15,19 +15,18 @@ import `fun`.adaptive.iot.model.space.AioSpaceType
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.builtin.add
-import `fun`.adaptive.ui.builtin.arrow_drop_down
-import `fun`.adaptive.ui.builtin.arrow_drop_up
-import `fun`.adaptive.ui.builtin.collapse_all
-import `fun`.adaptive.ui.builtin.expand_all
+import `fun`.adaptive.ui.builtin.*
 import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.denseIconTheme
+import `fun`.adaptive.ui.input.InputState
+import `fun`.adaptive.ui.input.textInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 import `fun`.adaptive.ui.label.uuidLabel
+import `fun`.adaptive.ui.label.withLabel
 import `fun`.adaptive.ui.menu.MenuItem
 import `fun`.adaptive.ui.menu.MenuItemBase
 import `fun`.adaptive.ui.menu.MenuSeparator
@@ -41,7 +40,6 @@ import `fun`.adaptive.ui.tree.TreeViewModel
 import `fun`.adaptive.ui.tree.TreeViewModel.Companion.defaultSelectedFun
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.utility.UUID
-
 
 val splitConfiguration =
     SplitPaneConfiguration(
@@ -138,17 +136,42 @@ fun areaEditor(item: TreeItem<AioSpace>) {
     val space = observed.data
 
     column {
-        maxSize .. verticalScroll .. padding { 16.dp }
+        maxSize .. verticalScroll .. padding { 16.dp } .. backgrounds.surface
 
-        h1(space.name)
-        uuidLabel { space.uuid }
+        column {
+            paddingBottom { 32.dp }
+            h2(space.name)
+            uuidLabel { space.uuid }
+        }
 
-        row {
-            text("name:")
-            input(value = space.name) {
-                item.title = it
-                observed.data = space.copy(name = it)
-            } .. height(36.dp)
+        column {
+
+            gap { 24.dp }
+
+            withLabel(Strings.spxbId, InputState(disabled = true)) { state ->
+                width { 400.dp }
+                textInput(space.friendlyId, state) {  }
+            }
+
+            withLabel(Strings.type, InputState(disabled = true)) { state ->
+                width { 400.dp }
+                textInput(space.spaceType.localized(), state) {  }
+            }
+
+            withLabel(Strings.name) {
+                width { 400.dp }
+                textInput(space.name) { v ->
+                    item.title = v
+                    observed.data = space.copy(name = v)
+                }
+            }
+
+            withLabel(Strings.note) {
+                width { 400.dp }
+                textInput(space.notes) { v ->
+                    observed.data = space.copy(notes = v)
+                }
+            }
         }
     }
 }
@@ -163,7 +186,7 @@ fun apply(tree: TreeViewModel<AioSpace, AioProject>, menuItem: MenuItem<AioSpace
                 uuid = UUID(),
                 projectId = projectId,
                 friendlyId = "",
-                type = AioSpaceType.Site,
+                spaceType = AioSpaceType.Site,
                 name = "${Strings.site} ${tree.items.size + 1}"
             )
         }
@@ -173,7 +196,7 @@ fun apply(tree: TreeViewModel<AioSpace, AioProject>, menuItem: MenuItem<AioSpace
                 uuid = UUID(),
                 projectId = projectId,
                 friendlyId = "",
-                type = AioSpaceType.Building,
+                spaceType = AioSpaceType.Building,
                 name = "${Strings.building} ${tree.items.size + 1}"
             )
         }
@@ -183,7 +206,7 @@ fun apply(tree: TreeViewModel<AioSpace, AioProject>, menuItem: MenuItem<AioSpace
                 uuid = UUID(),
                 projectId = projectId,
                 friendlyId = "",
-                type = AioSpaceType.Floor,
+                spaceType = AioSpaceType.Floor,
                 name = "${Strings.floor} ${tree.items.size + 1}"
             )
         }
@@ -193,7 +216,7 @@ fun apply(tree: TreeViewModel<AioSpace, AioProject>, menuItem: MenuItem<AioSpace
                 uuid = UUID(),
                 projectId = projectId,
                 friendlyId = "",
-                type = AioSpaceType.Room,
+                spaceType = AioSpaceType.Room,
                 name = "${Strings.room} ${tree.items.size + 1}"
             )
         }
@@ -203,7 +226,7 @@ fun apply(tree: TreeViewModel<AioSpace, AioProject>, menuItem: MenuItem<AioSpace
                 uuid = UUID(),
                 projectId = projectId,
                 friendlyId = "",
-                type = AioSpaceType.Area,
+                spaceType = AioSpaceType.Area,
                 name = "${Strings.area} ${tree.items.size + 1}"
             )
         }
@@ -259,7 +282,7 @@ val roomMenu = listOf(
 fun menu(viewModel: TreeViewModel<AioSpace, AioProject>, treeItem: TreeItem<AioSpace>): List<MenuItemBase<AioSpaceEditOperation>> {
 
     val base =
-        when (treeItem.data.type) {
+        when (treeItem.data.spaceType) {
             AioSpaceType.Site -> siteMenu
             AioSpaceType.Building -> buildingMenu
             AioSpaceType.Floor -> floorMenu
