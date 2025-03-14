@@ -14,7 +14,6 @@ import `fun`.adaptive.utility.UUID
 class WsItemChartSeries(
     override val name: String,
     override val type: WsItemType,
-    override val tooltip: String?,
     val seriesUuid: UUID<Any>,
     val children : List<WsItemChartSeries> = emptyList()
 ) : WsItem() {

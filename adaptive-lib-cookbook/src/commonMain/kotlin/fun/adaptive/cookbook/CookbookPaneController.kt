@@ -19,7 +19,7 @@ internal class CookbookPaneController(
     override fun load(pane: WsPane<WsItem>, modifiers: Set<EventModifier>, item: WsItem) : WsPane<WsItem> {
         check(item is CbWsRecipeItem)
         context.activeRecipeKey.value = item.key
-        return pane.copy(name = item.name, model = item, tooltip = item.tooltip)
+        return pane.copy(name = item.name, model = item, tooltip = pane.tooltip)
     }
 
 }

@@ -10,7 +10,6 @@ import `fun`.adaptive.ui.workspace.model.WsItemType
 class CbWsRecipeItem(
     override val name: String,
     override val type: WsItemType = CbWsContext.WSIT_CB_RECIPE,
-    override val tooltip: String? = null,
     val children: List<CbWsRecipeItem> = emptyList(),
     val key: String? = null
 ) : WsItem() {

@@ -61,7 +61,6 @@ fun Workspace.cookbookCommon() {
             context[item].icon,
             WsPanePosition.Center,
             "cookbook:center",
-            tooltip = item.tooltip,
             controller = CookbookPaneController(context),
             model = item
         )

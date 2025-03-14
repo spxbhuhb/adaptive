@@ -38,7 +38,6 @@ val root =
         ApmWsItem(
             "Test",
             UfdWsContext.WSIT_UFD_FRAGMENT,
-            tooltip = "./test",
             path = "./test"
         )
     )
