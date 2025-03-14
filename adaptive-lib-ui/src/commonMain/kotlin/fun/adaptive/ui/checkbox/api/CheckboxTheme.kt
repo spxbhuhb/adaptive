@@ -1,20 +1,29 @@
-package `fun`.adaptive.ui.checkbox.api.theme
+package `fun`.adaptive.ui.checkbox.api
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
+import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.cornerRadius
 import `fun`.adaptive.ui.api.noSelect
 import `fun`.adaptive.ui.api.position
 import `fun`.adaptive.ui.api.size
+import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.iconColors
 import `fun`.adaptive.ui.theme.textColors
 
-class CheckboxTheme {
+class CheckboxTheme(
+    val size : DPixel
+) {
+
+    var container = instructionsOf(
+        size(size),
+        alignItems.center
+    )
 
     var active = instructionsOf(
         size(20.dp, 20.dp),
@@ -37,4 +46,7 @@ class CheckboxTheme {
         iconColors.onPrimary
     )
 
+    companion object {
+        var DEFAULT = CheckboxTheme(38.dp)
+    }
 }

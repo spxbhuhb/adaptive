@@ -10,16 +10,15 @@ import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.builtin.check
-import `fun`.adaptive.ui.checkbox.api.theme.CheckboxTheme
-import `fun`.adaptive.ui.checkbox.api.theme.checkboxTheme
 
 @Adaptive
 fun checkbox(
     value: Boolean,
-    theme: CheckboxTheme = checkboxTheme,
+    theme: CheckboxTheme = CheckboxTheme.DEFAULT,
     onChange: (Boolean) -> Unit,
 ): AdaptiveFragment {
-    row(instructions()) {
+
+    row(theme.container, instructions()) {
 
         onClick { onChange(! value) }
 

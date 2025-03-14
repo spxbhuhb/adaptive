@@ -1,20 +1,39 @@
 package `fun`.adaptive.ui.label
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.ui.api.alignItems
-import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.IconTheme
-import `fun`.adaptive.ui.icon.denseIconTheme
-import `fun`.adaptive.ui.icon.smallCloseIconTheme
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.theme.textSmall
 
 class LabelTheme {
 
-    val inputLabel = instructionsOf(
-        textColors.onSurfaceVariant, textSmall
+    val base = instructionsOf(
+        fontSize(13.sp),
+        paddingBottom { 2.dp }
+    )
+
+    val enabled = base + instructionsOf(
+        textColors.onSurfaceVariant
+    )
+
+    val focused = base + instructionsOf(
+        textColors.primary
+    )
+
+    val disabled = base + instructionsOf(
+        textColors.onSurfaceVariant
+    )
+
+    val invalidFocused = base + instructionsOf(
+        textColors.fail
+    )
+
+    val invalidNotFocused = base + instructionsOf(
+        textColors.fail
     )
 
     val uuidLabelContainer = instructionsOf(

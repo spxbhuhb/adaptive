@@ -38,13 +38,13 @@ class Focus(
 
     override fun addActual(fragment: AdaptiveFragment) {
         val receiver = fragment.receiver() ?: return
-        receiver.addEventListener("focus", focusHandler)
-        receiver.addEventListener("blur", blurHandler)
+        receiver.addEventListener("focusin", focusHandler)
+        receiver.addEventListener("focusout", blurHandler)
     }
 
     override fun removeActual(fragment: AdaptiveFragment) {
         val receiver = fragment.receiver() ?: return
-        receiver.removeEventListener("focus", focusHandler)
-        receiver.removeEventListener("blur", blurHandler)
+        receiver.removeEventListener("focusin", focusHandler)
+        receiver.removeEventListener("focusout", blurHandler)
     }
 }

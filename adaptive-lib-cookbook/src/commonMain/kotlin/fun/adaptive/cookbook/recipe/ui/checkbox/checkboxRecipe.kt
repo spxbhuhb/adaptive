@@ -4,20 +4,17 @@ import `fun`.adaptive.cookbook.support.example
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.gap
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.api.verticalScroll
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.checkbox.api.checkbox
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.label.withLabel
 
 @Adaptive
 fun checkboxRecipe() : AdaptiveFragment {
 
     var v1 = true
     var v2 = false
+    var v3 = true
 
     column {
         gap { 16.dp } .. maxSize .. verticalScroll
@@ -35,6 +32,13 @@ fun checkboxRecipe() : AdaptiveFragment {
                 gap { 16.dp }
                 checkbox(v2) { v2 = it }
                 text("v2: $v2")
+            }
+        }
+
+        example("with label") {
+            withLabel("true initial value") {
+                alignItems.center .. gap { 8.dp }
+                checkbox(v3) { v -> v3 = v }
             }
         }
 

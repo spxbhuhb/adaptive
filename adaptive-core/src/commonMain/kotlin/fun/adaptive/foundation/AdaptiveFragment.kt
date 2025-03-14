@@ -239,6 +239,9 @@ abstract class AdaptiveFragment(
     // State and closure functions
     // --------------------------------------------------------------------------
 
+    val haveToPatchInstructions: Boolean
+        get() = (dirtyMask and 1) != 0
+
     fun haveToPatch(closureDirtyMask: StateVariableMask, dependencyMask: StateVariableMask): Boolean =
         (dirtyMask == initStateMask) || (closureDirtyMask and dependencyMask) != cleanStateMask
 

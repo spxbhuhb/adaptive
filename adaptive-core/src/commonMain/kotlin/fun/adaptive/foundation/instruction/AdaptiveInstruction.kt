@@ -17,10 +17,24 @@ interface AdaptiveInstruction {
      */
     fun execute() = Unit
 
+    /**
+     * Instruction precedence:
+     *
+     * - outer (strongest)
+     * - inner
+     * - argument (weakest)
+     */
     operator fun rangeTo(instruction: AdaptiveInstruction): AdaptiveInstructionGroup {
         return AdaptiveInstructionGroup(listOf(this, instruction))
     }
 
+    /**
+     * Instruction precedence:
+     *
+     * - outer (strongest)
+     * - inner
+     * - argument (weakest)
+     */
     operator fun rangeTo(group: AdaptiveInstructionGroup): AdaptiveInstructionGroup {
         return AdaptiveInstructionGroup(listOf(this, group))
     }

@@ -12,14 +12,12 @@ import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.builtin.check
-import `fun`.adaptive.ui.checkbox.api.theme.CheckboxTheme
-import `fun`.adaptive.ui.checkbox.api.theme.checkboxTheme
 
 @Adaptive
 fun boundCheckbox(
     vararg instructions: AdaptiveInstruction,
     binding: AdaptiveStateVariableBinding<Boolean>,
-    theme: CheckboxTheme = checkboxTheme
+    theme: CheckboxTheme = CheckboxTheme.DEFAULT
 ): AdaptiveFragment {
 
     row(instructions()) {

@@ -5,16 +5,16 @@ package `fun`.adaptive.ui.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.api.disabled
 import `fun`.adaptive.ui.aui
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 
 @AdaptiveActual(aui)
-open class AuiInput(
+open class AuiTextInputBase(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int,
@@ -30,6 +30,10 @@ open class AuiInput(
         by stateVariable()
 
     override fun auiPatchInternal() {
+
+        if (haveToPatchInstructions) {
+            receiver.disabled = (disabled in instructions)
+        }
 
         if (haveToPatch(value)) {
             receiver.value = value ?: ""

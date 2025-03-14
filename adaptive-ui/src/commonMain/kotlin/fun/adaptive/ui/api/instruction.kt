@@ -6,6 +6,7 @@ import `fun`.adaptive.ui.instruction.SPixel
 import `fun`.adaptive.ui.instruction.decoration.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.*
+import `fun`.adaptive.ui.instruction.input.Disabled
 import `fun`.adaptive.ui.instruction.input.InputPlaceholder
 import `fun`.adaptive.ui.instruction.input.TabIndex
 import `fun`.adaptive.ui.instruction.layout.*
@@ -107,6 +108,7 @@ object fill {
 val maxSize = MaxSize()
 val maxWidth = MaxWidth()
 val maxHeight = MaxHeight()
+val disabled = Disabled()
 
 fun gap(calcBoth: () -> DPixel): Gap = calcBoth().let { Gap(it, it) }
 fun gap(both: DPixel): Gap = Gap(both, both)

@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.label
+package `fun`.adaptive.ui.input
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -6,17 +6,16 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.focus
-import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.input.InputState
-
+import `fun`.adaptive.ui.api.textInputBase
 
 @Adaptive
-fun inputLabel(
-    inputState: InputState = InputState(),
-    theme: LabelTheme = LabelTheme.DEFAULT,
-    label: () -> String
-): AdaptiveFragment {
-    val observed = valueFrom { inputState }
+fun textInput(
+    value : String?,
+    state : InputState = InputState(),
+    theme : InputTheme = InputTheme.DEFAULT,
+    onChange : (String) -> Unit
+) : AdaptiveFragment {
+    val observed = valueFrom { state }
     val focus = focus()
 
     val themeInstructions = when {
@@ -25,7 +24,7 @@ fun inputLabel(
         else -> if (focus) theme.focused else theme.enabled
     }
 
-    text(label(), themeInstructions, instructions())
+    textInputBase(value = value, onChange = onChange) .. themeInstructions .. instructions()
 
     return fragment()
 }

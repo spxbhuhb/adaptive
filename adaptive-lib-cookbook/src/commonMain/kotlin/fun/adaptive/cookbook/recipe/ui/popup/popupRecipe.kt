@@ -73,24 +73,24 @@ fun alignment(
         size(400.dp, 400.dp) .. padding { 8.dp } .. border(colors.onSurfaceFriendly, 8.dp)
 
         checkbox(alignment == popupAlign.aboveBefore) { alignment = popupAlign.aboveBefore }
-        checkbox(alignment == popupAlign.aboveStart) { alignment = popupAlign.aboveStart } .. marginLeft { 32.dp }
+        checkbox(alignment == popupAlign.aboveStart) { alignment = popupAlign.aboveStart } .. marginLeft { 48.dp }
         checkbox(alignment == popupAlign.aboveCenter) { alignment = popupAlign.aboveCenter } .. alignSelf.topCenter
-        checkbox(alignment == popupAlign.aboveEnd) { alignment = popupAlign.aboveEnd } .. alignSelf.end .. marginRight { 32.dp }
+        checkbox(alignment == popupAlign.aboveEnd) { alignment = popupAlign.aboveEnd } .. alignSelf.end .. marginRight { 48.dp }
         checkbox(alignment == popupAlign.aboveAfter) { alignment = popupAlign.aboveAfter } .. alignSelf.end
 
         checkbox(alignment == popupAlign.belowBefore) { alignment = popupAlign.belowBefore } .. alignSelf.bottomStart
-        checkbox(alignment == popupAlign.belowStart) { alignment = popupAlign.belowStart } .. alignSelf.bottomStart .. marginLeft { 32.dp }
+        checkbox(alignment == popupAlign.belowStart) { alignment = popupAlign.belowStart } .. alignSelf.bottomStart .. marginLeft { 48.dp }
         checkbox(alignment == popupAlign.belowCenter) { alignment = popupAlign.belowCenter } .. alignSelf.bottomCenter
-        checkbox(alignment == popupAlign.belowEnd) { alignment = popupAlign.belowEnd } .. alignSelf.bottomEnd .. marginRight { 32.dp }
+        checkbox(alignment == popupAlign.belowEnd) { alignment = popupAlign.belowEnd } .. alignSelf.bottomEnd .. marginRight { 48.dp }
         checkbox(alignment == popupAlign.belowAfter) { alignment = popupAlign.belowAfter } .. alignSelf.bottomEnd
 
-        checkbox(alignment == popupAlign.beforeTop) { alignment = popupAlign.beforeTop } .. alignSelf.startTop .. marginTop { 32.dp }
+        checkbox(alignment == popupAlign.beforeTop) { alignment = popupAlign.beforeTop } .. alignSelf.startTop .. marginTop { 48.dp }
         checkbox(alignment == popupAlign.beforeCenter) { alignment = popupAlign.beforeCenter } .. alignSelf.startCenter
-        checkbox(alignment == popupAlign.beforeBottom) { alignment = popupAlign.beforeBottom } .. alignSelf.startBottom .. marginBottom { 32.dp }
+        checkbox(alignment == popupAlign.beforeBottom) { alignment = popupAlign.beforeBottom } .. alignSelf.startBottom .. marginBottom { 48.dp }
 
-        checkbox(alignment == popupAlign.afterTop) { alignment = popupAlign.afterTop } .. alignSelf.endTop .. marginTop { 32.dp }
+        checkbox(alignment == popupAlign.afterTop) { alignment = popupAlign.afterTop } .. alignSelf.endTop .. marginTop { 48.dp }
         checkbox(alignment == popupAlign.afterCenter) { alignment = popupAlign.afterCenter } .. alignSelf.endCenter
-        checkbox(alignment == popupAlign.afterBottom) { alignment = popupAlign.afterBottom } .. alignSelf.endBottom .. marginBottom { 32.dp }
+        checkbox(alignment == popupAlign.afterBottom) { alignment = popupAlign.afterBottom } .. alignSelf.endBottom .. marginBottom { 48.dp }
 
         row {
             position(64.dp, 64.dp) .. gap { 16.dp }

@@ -75,6 +75,7 @@ val recipes =
             CbWsRecipeItem("Checkbox", key = "cookbook:recipe:checkbox"),
             CbWsRecipeItem("Date picker", key = "cookbook:recipe:datepicker"),
             CbWsRecipeItem("Select", key = "cookbook:recipe:select"),
+            CbWsRecipeItem("Text input", key = "cookbook:recipe:input:text")
         ),
 
         set(

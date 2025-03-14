@@ -33,10 +33,24 @@ class AdaptiveInstructionGroup(
     // Instruction tree build
     // ------------------------------------------------------------------
 
+    /**
+     * Instruction precedence:
+     *
+     * - outer (strongest)
+     * - inner
+     * - argument (weakest)
+     */
     override operator fun rangeTo(instruction: AdaptiveInstruction): AdaptiveInstructionGroup {
         return AdaptiveInstructionGroup(this.instructions + instruction)
     }
 
+    /**
+     * Instruction precedence:
+     *
+     * - outer (strongest)
+     * - inner
+     * - argument (weakest)
+     */
     override operator fun rangeTo(other: AdaptiveInstructionGroup): AdaptiveInstructionGroup {
         return AdaptiveInstructionGroup(this.instructions + other.instructions)
     }
