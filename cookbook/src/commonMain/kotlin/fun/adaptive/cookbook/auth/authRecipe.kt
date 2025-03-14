@@ -15,7 +15,6 @@ import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.navigation.NavState

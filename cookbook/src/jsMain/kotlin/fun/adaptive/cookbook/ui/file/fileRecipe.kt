@@ -6,7 +6,6 @@ import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.button.api.button
 import kotlinx.browser.document
 import kotlinx.coroutines.launch
 import org.w3c.dom.HTMLAnchorElement

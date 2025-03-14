@@ -18,7 +18,7 @@ import `fun`.adaptive.utility.p02
 @Adaptive
 fun snackList(
     snacks: Collection<Snack>,
-    theme: SnackbarTheme = snackbarTheme,
+    theme: SnackbarTheme = SnackbarTheme.DEFAULT,
     vararg instructions: AdaptiveInstruction,
 ): AdaptiveFragment {
     column(theme.container, instructions()) {

@@ -13,15 +13,15 @@ import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.width
-import `fun`.adaptive.ui.editor.theme.editorTheme
+import `fun`.adaptive.ui.editor.theme.EditorTheme
 
 @Adaptive
-fun subForm(data: AdatClass, property: AdatPropertyMetadata): AdaptiveFragment {
+fun subForm(data: AdatClass, theme : EditorTheme, property: AdatPropertyMetadata): AdaptiveFragment {
     val value = data.getValue(property.index) as AdatClass
 
     if (data.hasDescriptor(property) { it is Readonly } && data.hasDescriptor(property) { it is UseToString }) {
         row {
-            editorTheme.enabled .. width { 400.dp } .. alignItems.startCenter
+            theme.enabled .. width { 400.dp } .. alignItems.startCenter
             text(value)
         }
     } else {

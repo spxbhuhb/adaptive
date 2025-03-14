@@ -15,11 +15,6 @@ import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.textColors
 
-val snackbarTheme = SnackbarTheme(
-    36.dp,
-    16.dp
-)
-
 open class SnackbarTheme(
     val snackHeight: DPixel,
     val snackGap: DPixel,
@@ -61,6 +56,10 @@ open class SnackbarTheme(
         SnackType.Info -> infoText
         SnackType.Warning -> warningText
         SnackType.Fail -> failText
+    }
+
+    companion object {
+        val DEFAULT = SnackbarTheme(36.dp, 16.dp)
     }
 
 }

@@ -16,7 +16,7 @@ import `fun`.adaptive.ui.api.paddingRight
 import `fun`.adaptive.ui.api.width
 
 import `fun`.adaptive.ui.builtin.check
-import `fun`.adaptive.ui.button.api.button
+import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.form.api.form
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.OnClose

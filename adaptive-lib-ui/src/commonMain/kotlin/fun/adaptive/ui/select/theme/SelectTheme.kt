@@ -1,48 +1,30 @@
 package `fun`.adaptive.ui.select.theme
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.ui.api.alignItems
-import `fun`.adaptive.ui.api.backgroundColor
-import `fun`.adaptive.ui.api.border
-import `fun`.adaptive.ui.api.colTemplate
-import `fun`.adaptive.ui.api.cornerBottomRadius
-import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.maxWidth
-import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.ui.api.paddingLeft
-import `fun`.adaptive.ui.api.paddingRight
-import `fun`.adaptive.ui.api.position
-import `fun`.adaptive.ui.api.tabIndex
-import `fun`.adaptive.ui.api.textColor
-import `fun`.adaptive.ui.api.verticalScroll
-import `fun`.adaptive.ui.api.width
-import `fun`.adaptive.ui.api.zIndex
-import `fun`.adaptive.ui.editor.theme.editorTheme
+import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.borders
-import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.ui.theme.colorsSurface
-import kotlin.collections.plus
+import `fun`.adaptive.ui.theme.*
 
 open class SelectTheme(
-    val itemHeight: Int = editorTheme.height,
+    val itemHeight : DPixel = inputHeightDefault,
+    val itemWidth : DPixel = inputWidthDefault
 ) {
 
     var outerContainer = instructionsOf(
-        height { itemHeight.dp }, // keep it fixed so we won't re-layout it even if the select is open
+        height { itemHeight }, // keep it fixed so we won't re-layout it even if the select is open
         tabIndex { 0 }
     )
 
     var closedContainer = instructionsOf(
-        width { editorTheme.width.dp },
-        height { itemHeight.dp }
+        width { itemWidth },
+        height { itemHeight}
     )
 
     var base = instructionsOf(
         colTemplate(1.fr, 24.dp),
-        height { itemHeight.dp },
+        height { itemHeight },
         alignItems.startCenter
     )
 
@@ -68,13 +50,13 @@ open class SelectTheme(
     )
 
     var openContainer = instructionsOf(
-        width { editorTheme.width.dp },
+        width { itemWidth },
         zIndex(2),
         backgrounds.surface
     )
 
     var itemsContainer = instructionsOf(
-        position(itemHeight.dp, 0.dp),
+        position(itemHeight, 0.dp),
         maxWidth,
         verticalScroll,
         border(colors.outline, top = 0.dp),
@@ -83,10 +65,13 @@ open class SelectTheme(
 
     var item = instructionsOf(
         maxWidth,
-        height { itemHeight.dp },
+        height { itemHeight },
         padding(16.dp)
     )
 
     fun itemColors(selected: Boolean, hover: Boolean) = colorsSurface(false, hover)
 
+    companion object {
+        var DEFAULT = SelectTheme()
+    }
 }

@@ -11,11 +11,10 @@ import `fun`.adaptive.ui.api.boundInput
 import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.width
-import `fun`.adaptive.ui.checkbox.api.boundCheckbox
-import `fun`.adaptive.ui.editor.theme.editorTheme
+import `fun`.adaptive.ui.checkbox.boundCheckbox
+import `fun`.adaptive.ui.editor.theme.EditorTheme
 import `fun`.adaptive.ui.instruction.input.MaxLength
 import `fun`.adaptive.ui.select.select
-import `fun`.adaptive.ui.select.theme.selectTheme
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatRegistry
@@ -30,6 +29,7 @@ import kotlinx.datetime.LocalTime
 @Adaptive
 fun <T> editor(
     vararg instructions: AdaptiveInstruction,
+    theme : EditorTheme = EditorTheme.DEFAULT,
     binding: AdaptiveStateVariableBinding<T>? = null,
     @Suppress("unused")
     @PropertySelector
@@ -40,8 +40,8 @@ fun <T> editor(
     val editorInfo = editorType(binding)
 
     when (editorInfo.first) {
-        EditorType.Simple -> simpleEditor(binding, instructions())
-        EditorType.Enum -> enumEditor(binding, editorInfo.second, instructions())
+        EditorType.Simple -> simpleEditor(binding, theme, instructions())
+        EditorType.Enum -> enumEditor(binding, theme, editorInfo.second, instructions())
         EditorType.Unsupported -> text("! no editor for type ${binding.boundType} !") .. textColors.onSurfaceAngry
     }
 
@@ -88,6 +88,7 @@ private fun parsedType(boundType: String): Pair<EditorType, WireFormat<*>?> =
 @Adaptive
 private fun simpleEditor(
     binding: AdaptiveStateVariableBinding<*>,
+    theme: EditorTheme,
     vararg instructions: AdaptiveInstruction,
 ) {
 
@@ -99,11 +100,11 @@ private fun simpleEditor(
     var invalidInput = false
 
     val styles = when {
-        ! isTouched -> if (focus) editorTheme.focused else editorTheme.enabled
-        (invalidInput || inError) && focus -> editorTheme.invalidFocused
-        (invalidInput || inError) -> editorTheme.invalidNotFocused
-        focus -> editorTheme.focused
-        else -> editorTheme.enabled
+        ! isTouched -> if (focus) theme.focused else theme.enabled
+        (invalidInput || inError) && focus -> theme.invalidFocused
+        (invalidInput || inError) -> theme.invalidNotFocused
+        focus -> theme.focused
+        else -> theme.enabled
     }
 
     when (binding.boundType.removeSuffix("?")) {
@@ -164,7 +165,7 @@ private fun simpleEditor(
 
         DatetimeSignatures.LOCAL_TIME -> {
             boundInput<LocalTime>(
-                styles, instructions(), width { editorTheme.timeWidth }, MaxLength(5),
+                styles, instructions(), width { theme.timeWidth }, MaxLength(5),
                 binding = binding as AdaptiveStateVariableBinding<LocalTime>,
                 toString = { it.toString().take(5) },
                 fromString = { LocalTime.parse(it) },
@@ -174,7 +175,7 @@ private fun simpleEditor(
 
         DatetimeSignatures.LOCAL_DATE -> {
             boundInput<LocalDate>(
-                styles, instructions(), width { editorTheme.dateWidth }, MaxLength(10),
+                styles, instructions(), width { theme.dateWidth }, MaxLength(10),
                 binding = binding as AdaptiveStateVariableBinding<LocalDate>,
                 toString = { it.toString() },
                 fromString = { LocalDate.parse(it) },
@@ -197,11 +198,12 @@ private fun simpleEditor(
 @Suppress("UNCHECKED_CAST")
 private fun <T> enumEditor(
     binding: AdaptiveStateVariableBinding<T>,
+    theme: EditorTheme,
     wireFormat: WireFormat<*>?,
     vararg instructions: AdaptiveInstruction,
 ) {
     checkNotNull(wireFormat as? EnumWireFormat<T>)
 
-    select(binding.value, wireFormat.entries, selectTheme, instructions()) { binding.setValue(it, true) }
+    select(binding.value, wireFormat.entries, theme.selectTheme, instructions()) { binding.setValue(it, true) }
 
 }

@@ -17,7 +17,7 @@ import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.verticalScroll
-import `fun`.adaptive.ui.button.api.button
+import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.dp
 

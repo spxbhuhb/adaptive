@@ -1,8 +1,10 @@
-package `fun`.adaptive.ui.checkbox.api
+package `fun`.adaptive.ui.checkbox
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.graphics.Graphics
@@ -12,17 +14,16 @@ import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.builtin.check
 
 @Adaptive
-fun checkbox(
-    value: Boolean,
-    theme: CheckboxTheme = CheckboxTheme.DEFAULT,
-    onChange: (Boolean) -> Unit,
+fun boundCheckbox(
+    vararg instructions: AdaptiveInstruction,
+    binding: AdaptiveStateVariableBinding<Boolean>,
+    theme: CheckboxTheme = CheckboxTheme.DEFAULT
 ): AdaptiveFragment {
 
-    row(theme.container, instructions()) {
+    row(instructions()) {
+        onClick { binding.setValue(! binding.value, true) }
 
-        onClick { onChange(! value) }
-
-        if (value) {
+        if (binding.value) {
             box(theme.active) {
                 svg(Graphics.check, theme.icon)
             }

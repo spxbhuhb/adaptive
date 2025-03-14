@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.checkbox.api
+package `fun`.adaptive.ui.checkbox
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.svg.api.svgHeight

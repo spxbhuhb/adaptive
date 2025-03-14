@@ -17,7 +17,7 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.power_settings_new
 import `fun`.adaptive.ui.builtin.settings
-import `fun`.adaptive.ui.button.api.button
+import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
@@ -29,9 +29,9 @@ import `fun`.adaptive.ui.navigation.sidebar.theme.fullSidebarTheme
 import `fun`.adaptive.ui.navigation.sidebar.theme.thinSidebarTheme
 import `fun`.adaptive.ui.navigation.sidebar.thinSidebar
 import `fun`.adaptive.ui.platform.media.MediaMetrics
+import `fun`.adaptive.ui.snackbar.SnackbarTheme
 import `fun`.adaptive.ui.snackbar.activeSnackStore
 import `fun`.adaptive.ui.snackbar.snackList
-import `fun`.adaptive.ui.snackbar.snackbarTheme
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textColors
 import kotlinx.coroutines.launch
@@ -49,9 +49,11 @@ fun defaultAppLayout(
 
     val activeSnacks = autoCollection(activeSnackStore) ?: emptyList()
 
+    val theme = SnackbarTheme.DEFAULT
+
     val snackbarPosition = position(
-        metrics.viewHeight.dp - (snackbarTheme.snackHeight + snackbarTheme.snackGap) * activeSnacks.size,
-        metrics.viewWidth.dp - snackbarTheme.snackWidth - 16.dp
+        metrics.viewHeight.dp - (theme.snackHeight + theme.snackGap) * activeSnacks.size,
+        metrics.viewWidth.dp - theme.snackWidth - 16.dp
     )
 
     grid(gridInst(metrics, layoutState, navState)) {

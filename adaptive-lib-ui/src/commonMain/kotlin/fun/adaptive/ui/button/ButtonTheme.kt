@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.button.api
+package `fun`.adaptive.ui.button
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.canvas.api.fill
@@ -18,9 +18,6 @@ import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.colors
-
-var buttonTheme = ButtonTheme()
-var dangerButtonTheme = ButtonTheme(colors.danger, colors.onDanger)
 
 class ButtonTheme(
     background : Color = colors.primary,
@@ -49,5 +46,10 @@ class ButtonTheme(
         svgHeight(22.dp),
         noSelect
     )
+
+    companion object {
+        val DEFAULT = ButtonTheme()
+        val DANGER =  ButtonTheme(colors.danger, colors.onDanger)
+    }
 
 }

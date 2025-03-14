@@ -149,4 +149,7 @@ class DatetimeTheme(
             else -> listItemTextBase
         }
 
+    companion object {
+        var DEFAULT = DatetimeTheme()
+    }
 }

@@ -2,7 +2,6 @@ package `fun`.adaptive.cookbook.intro.components
 
 import `fun`.adaptive.cookbook.intro.model.IntroState
 import `fun`.adaptive.cookbook.support.smallScreen
-import `fun`.adaptive.cookbook.support.title
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.colTemplate
@@ -12,7 +11,6 @@ import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.rowTemplate
-import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 

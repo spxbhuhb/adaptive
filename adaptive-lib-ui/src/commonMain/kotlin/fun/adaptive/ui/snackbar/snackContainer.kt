@@ -11,14 +11,16 @@ import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.instruction.dp
 
 @Adaptive
-fun snackContainer() {
+fun snackContainer(
+    theme : SnackbarTheme = SnackbarTheme.DEFAULT
+) {
     val metrics = mediaMetrics()
 
     val activeSnacks = autoCollection(activeSnackStore) ?: emptyList()
 
     val snackbarPosition = position(
-        metrics.viewHeight.dp - (snackbarTheme.snackHeight + snackbarTheme.snackGap) * activeSnacks.size,
-        metrics.viewWidth.dp - snackbarTheme.snackWidth - 16.dp
+        metrics.viewHeight.dp - (theme.snackHeight + theme.snackGap) * activeSnacks.size,
+        metrics.viewWidth.dp - theme.snackWidth - 16.dp
     )
 
     box {

@@ -8,8 +8,8 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.onClose
-import `fun`.adaptive.ui.button.api.button
-import `fun`.adaptive.ui.button.api.dangerButton
+import `fun`.adaptive.ui.button.button
+import `fun`.adaptive.ui.button.dangerButton
 
 /**
  * An icon button that opens the dialog built by [modalContent] when clicked.

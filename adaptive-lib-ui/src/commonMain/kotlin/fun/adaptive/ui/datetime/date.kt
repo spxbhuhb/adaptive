@@ -11,7 +11,6 @@ import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.*
 import `fun`.adaptive.ui.datetime.theme.DatetimeTheme
-import `fun`.adaptive.ui.datetime.theme.datetimeTheme
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.textSmall
@@ -25,7 +24,7 @@ private const val YEAR_MODE = 2
 
 @Adaptive
 fun datePicker(
-    theme: DatetimeTheme = datetimeTheme,
+    theme: DatetimeTheme = DatetimeTheme.DEFAULT,
 ) {
     var date = localDate()
     var mode = DAY_MODE
@@ -119,8 +118,8 @@ fun dayList(
 
         for (weekDay in days.subList(0, 7)) {
             box {
-                datetimeTheme.dayBoxBase
-                text(dayLetter(weekDay)) .. datetimeTheme.dayHeader
+                theme.dayBoxBase
+                text(dayLetter(weekDay)) .. theme.dayHeader
             }
         }
 
@@ -137,7 +136,7 @@ fun day(
     marked: Boolean,
     today: Boolean,
     selected: Boolean,
-    theme: DatetimeTheme = datetimeTheme,
+    theme: DatetimeTheme = DatetimeTheme.DEFAULT,
     onSelected: (date: LocalDate) -> Unit
 ) {
     box {

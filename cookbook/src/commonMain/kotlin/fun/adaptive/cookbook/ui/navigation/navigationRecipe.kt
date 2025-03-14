@@ -8,9 +8,7 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.onDoubleClick
 import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.button.api.button
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.navigation.navState

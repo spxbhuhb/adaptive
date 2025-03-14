@@ -15,7 +15,7 @@ import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.api.width
-import `fun`.adaptive.ui.editor.theme.editorTheme
+import `fun`.adaptive.ui.editor.theme.EditorTheme
 import `fun`.adaptive.ui.instruction.dp
 import kotlinx.datetime.LocalTime
 
@@ -25,7 +25,7 @@ fun boundInputRecipe() {
     column {
         maxSize .. verticalScroll
         text("stuff: ${data.time}")
-        timeInput { data.time } .. editorTheme.enabled .. width { 80.dp }
+        timeInput { data.time } .. EditorTheme.DEFAULT.enabled .. width { 80.dp }
     }
 }
 

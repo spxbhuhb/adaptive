@@ -13,8 +13,8 @@ import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.verticalScroll
-import `fun`.adaptive.ui.button.api.button
-import `fun`.adaptive.ui.button.api.dangerButton
+import `fun`.adaptive.ui.button.button
+import `fun`.adaptive.ui.button.dangerButton
 import `fun`.adaptive.ui.instruction.dp
 
 @Adaptive

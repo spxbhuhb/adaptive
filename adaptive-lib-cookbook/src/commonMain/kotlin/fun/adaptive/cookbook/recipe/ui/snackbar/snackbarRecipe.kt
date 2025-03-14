@@ -12,7 +12,7 @@ import `fun`.adaptive.ui.api.noSelect
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.verticalScroll
-import `fun`.adaptive.ui.button.api.button
+import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.snackbar.failNotification
 import `fun`.adaptive.ui.snackbar.infoNotification

@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.checkbox.api.checkbox
+import `fun`.adaptive.ui.checkbox.checkbox
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.label.withLabel
 

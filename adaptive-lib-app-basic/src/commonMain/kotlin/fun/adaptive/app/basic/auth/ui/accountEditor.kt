@@ -14,9 +14,9 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.check
-import `fun`.adaptive.ui.button.api.button
-import `fun`.adaptive.ui.button.api.dangerButton
-import `fun`.adaptive.ui.checkbox.api.checkbox
+import `fun`.adaptive.ui.button.button
+import `fun`.adaptive.ui.button.dangerButton
+import `fun`.adaptive.ui.checkbox.checkbox
 import `fun`.adaptive.ui.datetime.instant
 import `fun`.adaptive.ui.dialog.api.dangerButtonDialog
 import `fun`.adaptive.ui.editor.editor

@@ -6,18 +6,7 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.ui.api.alignSelf
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.cornerRadius
-import `fun`.adaptive.ui.api.cornerTopRadius
-import `fun`.adaptive.ui.api.focus
-import `fun`.adaptive.ui.api.grid
-import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.hover
-import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.text
-
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.arrow_drop_down
 import `fun`.adaptive.ui.builtin.arrow_drop_up
 import `fun`.adaptive.ui.icon.icon
@@ -25,7 +14,6 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.input.InputPlaceholder
 import `fun`.adaptive.ui.instruction.text.ToText
 import `fun`.adaptive.ui.select.theme.SelectTheme
-import `fun`.adaptive.ui.select.theme.selectTheme
 import `fun`.adaptive.ui.theme.textColors
 import kotlin.math.min
 
@@ -34,7 +22,7 @@ import kotlin.math.min
 fun <T> select(
     value: T?,
     items: List<T>,
-    theme: SelectTheme = selectTheme,
+    theme: SelectTheme = SelectTheme.DEFAULT,
     vararg instructions: AdaptiveInstruction,
     onChange: (T) -> Unit,
 ): AdaptiveFragment {
@@ -44,7 +32,7 @@ fun <T> select(
     if (focus == false) open = false // this is not the same as open = focus!
 
     val toText = fragment().instructions.firstInstanceOfOrNull<ToText<T>>() ?: ToText<T> { it.toString() }
-    val openHeight = min(10, items.size) * theme.itemHeight
+    val openHeight = min(10, items.size) * theme.itemHeight.value
 
     box {
         theme.outerContainer
@@ -81,7 +69,7 @@ fun <T> select(
 private fun <T> selectTop(
     selected: T?,
     open: Boolean,
-    focus : Boolean,
+    focus: Boolean,
     toText: ToText<T>,
     theme: SelectTheme,
     vararg instructions: AdaptiveInstruction,
