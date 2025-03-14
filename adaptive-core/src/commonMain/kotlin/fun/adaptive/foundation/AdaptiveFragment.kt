@@ -299,6 +299,13 @@ abstract class AdaptiveFragment(
     // Instruction support
     // --------------------------------------------------------------------------
 
+    /**
+     * Instruction precedence:
+     *
+     * - outer (strongest)
+     * - inner
+     * - argument (weakest)
+     */
     operator fun rangeTo(instruction: AdaptiveInstruction): AdaptiveFragment {
         replacedByPlugin("moved into state: $instruction")
     }

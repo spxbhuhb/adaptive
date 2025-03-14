@@ -1,5 +1,7 @@
 package `fun`.adaptive.general
 
+import kotlin.reflect.KProperty
+
 abstract class Observable<VT> {
 
     abstract var value: VT
@@ -16,6 +18,11 @@ abstract class Observable<VT> {
 
     fun removeListener(listener: ObservableListener<VT>) {
         listeners -= listener
+    }
+
+    @Suppress("unused")
+    fun <PT> notify(property: KProperty<*>, oldValue: PT, newValue: PT) {
+        notifyListeners()
     }
 
 }

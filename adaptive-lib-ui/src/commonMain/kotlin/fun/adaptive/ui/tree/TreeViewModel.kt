@@ -1,10 +1,9 @@
 package `fun`.adaptive.ui.tree
 
-import `fun`.adaptive.general.Observable
+import `fun`.adaptive.general.SelfObservable
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.instruction.event.UIEvent
 import kotlin.properties.Delegates.observable
-import kotlin.reflect.KProperty
 
 class TreeViewModel<IT, CT>(
     items: List<TreeItem<IT>>,
@@ -15,21 +14,10 @@ class TreeViewModel<IT, CT>(
     val theme: TreeTheme = TreeTheme.DEFAULT,
     val multiSelect: Boolean = false,
     val openWithSingleClick: Boolean = false
-) : Observable<TreeViewModel<IT, CT>>() {
+) : SelfObservable<TreeViewModel<IT, CT>>() {
 
     var items by observable(items, ::notify)
     var selection by observable(selection, ::notify)
-
-    @Suppress("unused")
-    fun <VT> notify(property: KProperty<*>, oldValue: VT, newValue: VT) {
-        notifyListeners()
-    }
-
-    override var value: TreeViewModel<IT, CT>
-        get() = this
-        set(_) {
-            throw UnsupportedOperationException()
-        }
 
     companion object {
 

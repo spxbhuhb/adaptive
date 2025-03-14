@@ -1,10 +1,8 @@
 package `fun`.adaptive.ui.tree
 
-import `fun`.adaptive.general.Observable
+import `fun`.adaptive.general.SelfObservable
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
-import `fun`.adaptive.ui.instruction.event.EventModifier
 import kotlin.properties.Delegates.observable
-import kotlin.reflect.KProperty
 
 open class TreeItem<T>(
     icon: GraphicsResourceSet,
@@ -13,7 +11,7 @@ open class TreeItem<T>(
     open: Boolean = false,
     selected: Boolean = false,
     val parent: TreeItem<T>?
-) : Observable<TreeItem<T>>() {
+) : SelfObservable<TreeItem<T>>() {
 
     var icon by observable(icon, ::notify)
     var title by observable(title, ::notify)
@@ -21,11 +19,6 @@ open class TreeItem<T>(
     var selected by observable(selected, ::notify)
     var children by observable(emptyList<TreeItem<T>>(), ::notify)
     var data by observable(data, ::notify)
-
-    @Suppress("unused")
-    fun <VT> notify(property: KProperty<*>, oldValue: VT, newValue: VT) {
-        notifyListeners()
-    }
 
     override var value: TreeItem<T>
         get() = this
