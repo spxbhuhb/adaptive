@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.form.api.field
+package `fun`.adaptive.ui.form.field
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata

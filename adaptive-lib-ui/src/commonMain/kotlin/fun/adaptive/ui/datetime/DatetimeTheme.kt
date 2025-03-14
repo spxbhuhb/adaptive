@@ -1,12 +1,32 @@
-package `fun`.adaptive.ui.datetime.theme
+package `fun`.adaptive.ui.datetime
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.alignItems
+import `fun`.adaptive.ui.api.alignSelf
+import `fun`.adaptive.ui.api.backgroundColor
+import `fun`.adaptive.ui.api.colTemplate
+import `fun`.adaptive.ui.api.cornerRadius
+import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.gridCol
+import `fun`.adaptive.ui.api.height
+import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.maxWidth
+import `fun`.adaptive.ui.api.noSelect
+import `fun`.adaptive.ui.api.paddingHorizontal
+import `fun`.adaptive.ui.api.paddingRight
+import `fun`.adaptive.ui.api.paddingTop
+import `fun`.adaptive.ui.api.rowTemplate
+import `fun`.adaptive.ui.api.semiBoldFont
+import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.theme.*
+import `fun`.adaptive.ui.theme.backgrounds
+import `fun`.adaptive.ui.theme.borders
+import `fun`.adaptive.ui.theme.colors
+import `fun`.adaptive.ui.theme.textColors
+import `fun`.adaptive.ui.theme.textMedium
 
 class DatetimeTheme(
     daySize: DPixel = 40.dp

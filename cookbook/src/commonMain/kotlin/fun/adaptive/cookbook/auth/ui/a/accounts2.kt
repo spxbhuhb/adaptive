@@ -21,7 +21,6 @@ import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.paddingLeft
 import `fun`.adaptive.ui.api.paddingRight
 import `fun`.adaptive.ui.datetime.instant
-import `fun`.adaptive.ui.dialog.api.iconDialog
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr

@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.input.InputPlaceholder
 import `fun`.adaptive.ui.instruction.text.ToText
-import `fun`.adaptive.ui.select.theme.SelectTheme
+import `fun`.adaptive.ui.select.SelectTheme
 import `fun`.adaptive.ui.theme.textColors
 import kotlin.math.min
 

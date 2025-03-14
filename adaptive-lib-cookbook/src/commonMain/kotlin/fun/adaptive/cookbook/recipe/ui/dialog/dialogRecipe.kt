@@ -20,9 +20,9 @@ import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.button.button
-import `fun`.adaptive.ui.dialog.api.buttonDialog
-import `fun`.adaptive.ui.dialog.api.dialog
-import `fun`.adaptive.ui.dialog.api.iconDialog
+import `fun`.adaptive.ui.dialog.buttonDialog
+import `fun`.adaptive.ui.dialog.dialog
+import `fun`.adaptive.ui.dialog.iconDialog
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.textColors

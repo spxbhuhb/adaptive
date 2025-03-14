@@ -1,11 +1,29 @@
-package `fun`.adaptive.ui.select.theme
+package `fun`.adaptive.ui.select
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.alignItems
+import `fun`.adaptive.ui.api.backgroundColor
+import `fun`.adaptive.ui.api.border
+import `fun`.adaptive.ui.api.colTemplate
+import `fun`.adaptive.ui.api.cornerBottomRadius
+import `fun`.adaptive.ui.api.height
+import `fun`.adaptive.ui.api.maxWidth
+import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.position
+import `fun`.adaptive.ui.api.tabIndex
+import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.api.verticalScroll
+import `fun`.adaptive.ui.api.width
+import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.theme.*
+import `fun`.adaptive.ui.theme.backgrounds
+import `fun`.adaptive.ui.theme.borders
+import `fun`.adaptive.ui.theme.colors
+import `fun`.adaptive.ui.theme.colorsSurface
+import `fun`.adaptive.ui.theme.inputHeightDefault
+import `fun`.adaptive.ui.theme.inputWidthDefault
 
 open class SelectTheme(
     val itemHeight : DPixel = inputHeightDefault,
@@ -19,7 +37,7 @@ open class SelectTheme(
 
     var closedContainer = instructionsOf(
         width { itemWidth },
-        height { itemHeight}
+        height { itemHeight }
     )
 
     var base = instructionsOf(

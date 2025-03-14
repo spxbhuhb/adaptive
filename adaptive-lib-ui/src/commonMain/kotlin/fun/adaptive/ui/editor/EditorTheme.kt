@@ -1,11 +1,20 @@
-package `fun`.adaptive.ui.editor.theme
+package `fun`.adaptive.ui.editor
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.backgroundColor
+import `fun`.adaptive.ui.api.border
+import `fun`.adaptive.ui.api.cornerRadius
+import `fun`.adaptive.ui.api.fontSize
+import `fun`.adaptive.ui.api.height
+import `fun`.adaptive.ui.api.lightFont
+import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.tabIndex
+import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
-import `fun`.adaptive.ui.select.theme.SelectTheme
+import `fun`.adaptive.ui.select.SelectTheme
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.inputHeightDefault
 import `fun`.adaptive.ui.theme.inputWidthDefault
@@ -62,7 +71,7 @@ class EditorTheme(
         backgroundColor(colors.failSurface.opaque(0.05f)),
     )
 
-    val selectTheme = SelectTheme.DEFAULT
+    val selectTheme = SelectTheme.Companion.DEFAULT
 
     companion object {
         val DEFAULT = EditorTheme()

@@ -10,8 +10,8 @@ import `fun`.adaptive.ui.api.onClose
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.builtin.check
 import `fun`.adaptive.ui.button.button
-import `fun`.adaptive.ui.dialog.api.formDialog
-import `fun`.adaptive.ui.form.api.form
+import `fun`.adaptive.ui.dialog.formDialog
+import `fun`.adaptive.ui.form.form
 
 @Adaptive
 fun formDialogRecipe() {

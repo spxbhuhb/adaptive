@@ -14,8 +14,8 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.close
 import `fun`.adaptive.ui.builtin.more_vert
 import `fun`.adaptive.ui.datetime.instant
-import `fun`.adaptive.ui.dialog.api.buttonDialog
-import `fun`.adaptive.ui.dialog.api.rowIconDialog
+import `fun`.adaptive.ui.dialog.buttonDialog
+import `fun`.adaptive.ui.dialog.rowIconDialog
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.tableIconTheme

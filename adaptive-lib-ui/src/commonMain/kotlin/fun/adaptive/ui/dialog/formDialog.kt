@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.dialog.api
+package `fun`.adaptive.ui.dialog
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.foundation.Adaptive
@@ -17,7 +17,7 @@ import `fun`.adaptive.ui.api.width
 
 import `fun`.adaptive.ui.builtin.check
 import `fun`.adaptive.ui.button.button
-import `fun`.adaptive.ui.form.api.form
+import `fun`.adaptive.ui.form.form
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.OnClose
 

@@ -15,7 +15,7 @@ import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.api.width
-import `fun`.adaptive.ui.editor.theme.EditorTheme
+import `fun`.adaptive.ui.editor.EditorTheme
 import `fun`.adaptive.ui.instruction.dp
 import kotlinx.datetime.LocalTime
 

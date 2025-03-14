@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.form.api
+package `fun`.adaptive.ui.form
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.api.isValid
@@ -8,9 +8,9 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.editor.theme.EditorTheme
-import `fun`.adaptive.ui.form.api.field.boolean
-import `fun`.adaptive.ui.form.api.field.textual
+import `fun`.adaptive.ui.editor.EditorTheme
+import `fun`.adaptive.ui.form.field.boolean
+import `fun`.adaptive.ui.form.field.textual
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.wireformat.signature.DatetimeSignatures
 import `fun`.adaptive.wireformat.signature.KotlinSignatures

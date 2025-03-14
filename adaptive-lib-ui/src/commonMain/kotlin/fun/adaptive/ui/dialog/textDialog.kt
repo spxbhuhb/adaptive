@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.dialog.api
+package `fun`.adaptive.ui.dialog
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment

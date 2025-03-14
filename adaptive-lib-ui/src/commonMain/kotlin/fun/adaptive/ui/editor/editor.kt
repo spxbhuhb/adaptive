@@ -12,7 +12,7 @@ import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.checkbox.boundCheckbox
-import `fun`.adaptive.ui.editor.theme.EditorTheme
+import `fun`.adaptive.ui.editor.EditorTheme
 import `fun`.adaptive.ui.instruction.input.MaxLength
 import `fun`.adaptive.ui.select.select
 import `fun`.adaptive.ui.theme.textColors

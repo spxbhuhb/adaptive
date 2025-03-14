@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.form.api
+package `fun`.adaptive.ui.form
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.descriptor.AdatDescriptor
@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.width
-import `fun`.adaptive.ui.editor.theme.EditorTheme
+import `fun`.adaptive.ui.editor.EditorTheme
 
 @Adaptive
 fun subForm(data: AdatClass, theme : EditorTheme, property: AdatPropertyMetadata): AdaptiveFragment {
