@@ -6,6 +6,7 @@ import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.general.Observable
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.builtin.menu
 import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
 import `fun`.adaptive.ui.instruction.event.EventModifier
@@ -15,6 +16,7 @@ import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 import `fun`.adaptive.ui.workspace.model.WsContentPaneBuilder
 import `fun`.adaptive.ui.workspace.model.WsContentPaneGroup
 import `fun`.adaptive.ui.workspace.model.WsItem
+import `fun`.adaptive.ui.workspace.model.WsItemConfig
 import `fun`.adaptive.ui.workspace.model.WsItemType
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPaneId
@@ -50,7 +52,7 @@ class Workspace {
     val contentPaneBuilders = mutableMapOf<WsItemType, MutableList<WsContentPaneBuilder>>()
 
     val theme
-        get() = WorkspaceTheme.Companion.workspaceTheme
+        get() = WorkspaceTheme.workspaceTheme
 
     val toolPanes = mutableListOf<WsPane<*>>()
 
@@ -304,5 +306,17 @@ class Workspace {
 
         return
     }
+
+    // --------------------------------------------------------------------------------
+    // Item type management
+    // --------------------------------------------------------------------------------
+
+    private val itemTypes = mutableMapOf<WsItemType, WsItemConfig>()
+
+    fun addItemConfig(type: WsItemType, icon: GraphicsResourceSet, tooltip: String? = null) {
+        itemTypes[type] = WsItemConfig(type, icon, tooltip)
+    }
+
+    fun getItemConfig(type: WsItemType) = itemTypes[type] ?: WsItemConfig.DEFAULT
 
 }

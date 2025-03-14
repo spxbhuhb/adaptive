@@ -9,4 +9,6 @@ interface WsContext {
     fun pane(key: String) =
         workspace.toolPanes.first { it.key == key }
 
+    operator fun get(item : WsItem) = workspace.getItemConfig(item.type)
+
 }

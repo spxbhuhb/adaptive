@@ -1,7 +1,6 @@
 package `fun`.adaptive.chart.ws.model
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.workspace.model.WsItem
 import `fun`.adaptive.ui.workspace.model.WsItemType
@@ -13,7 +12,6 @@ import `fun`.adaptive.utility.UUID
  */
 @Adat
 class WsItemChartSeries(
-    override val icon: GraphicsResourceSet,
     override val name: String,
     override val type: WsItemType,
     override val tooltip: String?,
@@ -21,14 +19,19 @@ class WsItemChartSeries(
     val children : List<WsItemChartSeries> = emptyList()
 ) : WsItem() {
 
-    fun toTreeItem(context: WsChartContext, parent: TreeItem<WsItemChartSeries>?): TreeItem<WsItemChartSeries> =
+    fun toTreeItem(context: WsChartContext, parent: TreeItem<WsItemChartSeries>?): TreeItem<WsItemChartSeries> {
+
+        val config = context[this]
+
         TreeItem(
-            icon,
+            config.icon,
             name,
             data = this,
             parent = parent
         ).also { item ->
             item.children = children.map { it.toTreeItem(context, item) }
+            return item
         }
+    }
 
 }

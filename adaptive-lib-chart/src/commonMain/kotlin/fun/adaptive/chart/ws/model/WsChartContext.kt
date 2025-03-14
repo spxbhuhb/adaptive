@@ -34,7 +34,7 @@ class WsChartContext(
 
         const val BASIC_LINE_SERIES = "chart:series:line:basic"
 
-        const val CHART_SERIES_ITEM_TYPE = "chart:series"
+        const val WSIT_CHART_SERIES = "chart:series"
     }
 
 }

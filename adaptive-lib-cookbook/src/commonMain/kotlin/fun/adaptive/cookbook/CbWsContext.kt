@@ -13,7 +13,7 @@ class CbWsContext(
     companion object {
         const val RECIPES_TOOL_KEY = "cookbook:recipes"
 
-        const val RECIPE_ITEM_TYPE = "cookbook:recipe"
-        const val RECIPE_FOLDER_TYPE = "cookbook:recipe-folder"
+        const val WSIT_CB_RECIPE = "cookbook:recipe"
+        const val WSIT_CB_RECIPE_FOLDER = "cookbook:recipe-folder"
     }
 }

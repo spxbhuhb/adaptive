@@ -54,11 +54,11 @@ fun Workspace.cookbookCommon() {
         model = Unit
     )
 
-    addContentPaneBuilder(CbWsContext.RECIPE_ITEM_TYPE) { item ->
+    addContentPaneBuilder(CbWsContext.WSIT_CB_RECIPE) { item ->
         WsPane(
             UUID(),
             item.name,
-            item.icon,
+            context[item].icon,
             WsPanePosition.Center,
             "cookbook:center",
             tooltip = item.tooltip,
@@ -66,5 +66,8 @@ fun Workspace.cookbookCommon() {
             model = item
         )
     }
+
+    addItemConfig(CbWsContext.WSIT_CB_RECIPE, Graphics.dining)
+    addItemConfig(CbWsContext.WSIT_CB_RECIPE_FOLDER, Graphics.dining)
 
 }

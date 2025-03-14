@@ -2,9 +2,6 @@ package `fun`.adaptive.cookbook.model
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.cookbook.CbWsContext
-import `fun`.adaptive.cookbook.dining
-import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.workspace.model.WsItem
 import `fun`.adaptive.ui.workspace.model.WsItemType
@@ -12,21 +9,24 @@ import `fun`.adaptive.ui.workspace.model.WsItemType
 @Adat
 class CbWsRecipeItem(
     override val name: String,
-    override val icon: GraphicsResourceSet = Graphics.dining,
-    override val type: WsItemType = CbWsContext.RECIPE_ITEM_TYPE,
+    override val type: WsItemType = CbWsContext.WSIT_CB_RECIPE,
     override val tooltip: String? = null,
     val children: List<CbWsRecipeItem> = emptyList(),
     val key: String? = null
 ) : WsItem() {
 
-    fun toTreeItem(parent: TreeItem<CbWsRecipeItem>?): TreeItem<CbWsRecipeItem> =
+    fun toTreeItem(context: CbWsContext, parent: TreeItem<CbWsRecipeItem>?): TreeItem<CbWsRecipeItem> {
+        val config = context[this]
+
         TreeItem(
-            Graphics.dining,
+            config.icon,
             name,
             data = this,
             parent = parent
         ).also { item ->
-            item.children = children.map { it.toTreeItem(item) }
+            item.children = children.map { it.toTreeItem(context, item) }
+            return item
         }
+    }
 
 }

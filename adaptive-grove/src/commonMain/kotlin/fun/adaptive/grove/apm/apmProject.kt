@@ -4,9 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.grove.apm.model.ApmWsItem
-import `fun`.adaptive.grove.resources.cards
 import `fun`.adaptive.grove.ufd.UfdWsContext
-import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
@@ -19,7 +17,7 @@ fun apmProject(): AdaptiveFragment {
     val context = fragment().wsContext<ApmWsContext>()
 
     val treeViewModel = TreeViewModel(
-        root.map { it.toTreeItem() },
+        root.map { it.toTreeItem(context) },
         selectedFun = { viewModel, item, modifiers -> showItem(context, item, modifiers) },
         context = Unit
     )
@@ -39,8 +37,7 @@ val root =
     listOf(
         ApmWsItem(
             "Test",
-            Graphics.cards,
-            UfdWsContext.FRAGMENT_ITEM_TYPE,
+            UfdWsContext.WSIT_UFD_FRAGMENT,
             tooltip = "./test",
             path = "./test"
         )

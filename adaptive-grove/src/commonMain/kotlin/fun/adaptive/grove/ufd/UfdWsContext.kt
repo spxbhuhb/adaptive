@@ -31,6 +31,6 @@ class UfdWsContext(
         const val STATE_TOOL_KEY = "grove:ufd:pane:state"
         const val CONTENT_PANE_KEY = "grove:ufd:pane:content"
 
-        const val FRAGMENT_ITEM_TYPE = "grove:fragment"
+        const val WSIT_UFD_FRAGMENT = "grove:ufd:item:fragment"
     }
 }

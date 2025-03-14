@@ -4,8 +4,6 @@ import `fun`.adaptive.cookbook.model.CbWsRecipeItem
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.ui.builtin.folder
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
@@ -18,9 +16,9 @@ fun cookbookRecipes(): AdaptiveFragment {
     val context = fragment().wsContext<CbWsContext>()
 
     val treeViewModel = TreeViewModel(
-        recipes.map { it.toTreeItem(null) },
+        recipes.map { it.toTreeItem(context, null) },
         selectedFun = { viewModel, item, modifiers ->
-            if (item.data.type == CbWsContext.RECIPE_FOLDER_TYPE) return@TreeViewModel
+            if (item.data.type == CbWsContext.WSIT_CB_RECIPE_FOLDER) return@TreeViewModel
             showRecipe(context, item, modifiers)
             TreeViewModel.defaultSelectedFun(viewModel, item, modifiers)
         },
@@ -105,8 +103,7 @@ val recipes =
 private fun set(name: String, vararg recipes: CbWsRecipeItem) =
     CbWsRecipeItem(
         name,
-        Graphics.folder,
-        CbWsContext.RECIPE_FOLDER_TYPE,
+        CbWsContext.WSIT_CB_RECIPE_FOLDER,
         children = recipes.toList()
     )
 

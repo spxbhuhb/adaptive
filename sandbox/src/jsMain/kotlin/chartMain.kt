@@ -56,7 +56,7 @@ fun initCharts(workspace: Workspace) {
     chartContext.items += WsItemChartSeries(
         Graphics.database,
         "Series 1",
-        WsChartContext.CHART_SERIES_ITEM_TYPE,
+        WsChartContext.WSIT_CHART_SERIES,
         tooltip = null,
         UUID()
     )

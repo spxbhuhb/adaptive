@@ -54,7 +54,7 @@ fun Workspace.groveUfdCommon() {
         model = Unit
     )
 
-    addContentPaneBuilder(UfdWsContext.FRAGMENT_ITEM_TYPE) { item ->
+    addContentPaneBuilder(UfdWsContext.WSIT_UFD_FRAGMENT) { item ->
 
         WsPane(
             UUID(),
@@ -67,5 +67,7 @@ fun Workspace.groveUfdCommon() {
         )
 
     }
+
+    addItemConfig(UfdWsContext.WSIT_UFD_FRAGMENT, Graphics.cards)
 
 }

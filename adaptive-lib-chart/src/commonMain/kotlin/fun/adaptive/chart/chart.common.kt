@@ -31,7 +31,7 @@ fun Workspace.chartCommon() {
         model = Unit
     )
 
-    addContentPaneBuilder(WsChartContext.CHART_SERIES_ITEM_TYPE) { item ->
+    addContentPaneBuilder(WsChartContext.WSIT_CHART_SERIES) { item ->
 
         WsPane(
             UUID(),
@@ -44,5 +44,7 @@ fun Workspace.chartCommon() {
         )
 
     }
+
+    addItemConfig(WsChartContext.WSIT_CHART_SERIES, Graphics.database)
 
 }
