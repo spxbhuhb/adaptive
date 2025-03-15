@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.input
+package `fun`.adaptive.ui.input.text
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -7,7 +7,8 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.multiLineTextInput
-import `fun`.adaptive.ui.api.singleLineTextInput
+import `fun`.adaptive.ui.input.InputState
+import `fun`.adaptive.ui.input.InputTheme
 
 @Adaptive
 fun textInputArea(

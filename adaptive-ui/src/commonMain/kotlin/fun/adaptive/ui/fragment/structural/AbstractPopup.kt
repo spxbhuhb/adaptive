@@ -11,20 +11,17 @@ import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.api.popupAlign
 import `fun`.adaptive.ui.fragment.layout.RawPosition
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
-import `fun`.adaptive.ui.instruction.layout.MaxHeight
-import `fun`.adaptive.ui.instruction.layout.MaxWidth
-import `fun`.adaptive.ui.instruction.layout.OuterAlignment
-import `fun`.adaptive.ui.instruction.layout.PopupAlign
-import `fun`.adaptive.ui.instruction.layout.Position
+import `fun`.adaptive.ui.instruction.layout.*
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import `fun`.adaptive.utility.alsoIfInstance
 
 abstract class AbstractPopup<RT, CRT : RT>(
     adapter: AbstractAuiAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
-    index: Int
+    index: Int,
+    stateSize : Int
 ) : AuiStructural<RT, CRT>(
-    adapter, parent, index, 2
+    adapter, parent, index, stateSize
 ) {
 
     var active = false
@@ -36,7 +33,7 @@ abstract class AbstractPopup<RT, CRT : RT>(
         when (declarationIndex) {
             0 -> parent.adapter.newSelect(parent = parent, index = declarationIndex)
             1 -> parent.adapter.actualize(name = "aui:box", parent = parent, index = declarationIndex, stateSize = 2)
-            2 -> AdaptiveAnonymous(parent = parent, index = declarationIndex, stateSize = 2, factory = get(1))
+            2 -> AdaptiveAnonymous(parent = parent, index = declarationIndex, stateSize = 2, factory = content)
             else -> invalidIndex(index = declarationIndex)
         }.also {
             it.create()
@@ -88,7 +85,7 @@ abstract class AbstractPopup<RT, CRT : RT>(
         placePopup()
     }
 
-    fun hide() {
+    open fun hide() {
         active = false
         patchInternal()
     }

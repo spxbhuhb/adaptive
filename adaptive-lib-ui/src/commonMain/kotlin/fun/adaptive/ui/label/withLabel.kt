@@ -30,7 +30,6 @@ fun withLabel(
     }
 
     column(instructions()) {
-        tabIndex { 0 }
         text(label, themeInstructions)
         _KT_74337_content(inputState)
     }

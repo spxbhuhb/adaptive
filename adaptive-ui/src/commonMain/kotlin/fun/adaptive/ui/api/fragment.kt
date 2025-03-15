@@ -113,13 +113,13 @@ fun hoverPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: (hid
 }
 
 @AdaptiveExpect(aui)
-fun primaryPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: (hide : () -> Unit) -> Unit): AdaptiveFragment {
-    manualImplementation(content, instructions)
+fun primaryPopup(focusParentOnHide : Boolean = false, vararg instructions: AdaptiveInstruction, @Adaptive content: (hide : () -> Unit) -> Unit): AdaptiveFragment {
+    manualImplementation(focusParentOnHide, content, instructions)
 }
 
 @AdaptiveExpect(aui)
-fun contextPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: (hide : () -> Unit) -> Unit): AdaptiveFragment {
-    manualImplementation(content, instructions)
+fun contextPopup(focusParentOnHide : Boolean = false, vararg instructions: AdaptiveInstruction, @Adaptive content: (hide : () -> Unit) -> Unit): AdaptiveFragment {
+    manualImplementation(focusParentOnHide, content, instructions)
 }
 
 @AdaptiveExpect(aui)

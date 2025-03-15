@@ -3,7 +3,6 @@ package `fun`.adaptive.cookbook.recipe.ui.svg
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.instruction.traceAll
 import `fun`.adaptive.foundation.producer.poll
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.graphics.svg.api.svgHeight
@@ -48,7 +47,7 @@ private fun colorChange() {
     val random = poll(1.seconds) { now().epochSeconds.toInt() % 4 } ?: 0
     val colors = arrayOf(iconColors.onSurface, iconColors.onSurfaceVariant, iconColors.onSurfaceFriendly, iconColors.onSurfaceAngry)
 
-    svg(Graphics.account_circle, traceAll) .. colors[random]
+    svg(Graphics.account_circle) .. colors[random]
 
     text(" - with changing color - $random")
 }

@@ -6,14 +6,14 @@ import `fun`.adaptive.cookbook.recipe.ui.button.buttonRecipe
 import `fun`.adaptive.cookbook.recipe.ui.canvas.canvasRecipe
 import `fun`.adaptive.cookbook.recipe.ui.checkbox.checkboxRecipe
 import `fun`.adaptive.cookbook.recipe.ui.codefence.codeFenceRecipe
-import `fun`.adaptive.cookbook.recipe.ui.datetime.datePickerRecipe
+import `fun`.adaptive.cookbook.recipe.ui.input.datetime.dateInputRecipe
 import `fun`.adaptive.cookbook.recipe.ui.dialog.dialogRecipe
 import `fun`.adaptive.cookbook.recipe.ui.editor.editorRecipe
 import `fun`.adaptive.cookbook.recipe.ui.event.eventRecipe
 import `fun`.adaptive.cookbook.recipe.ui.form.formRecipe
 import `fun`.adaptive.cookbook.recipe.ui.icon.iconRecipe
-import `fun`.adaptive.cookbook.recipe.ui.input.textInputAreaRecipe
-import `fun`.adaptive.cookbook.recipe.ui.input.textInputRecipe
+import `fun`.adaptive.cookbook.recipe.ui.input.text.textInputAreaRecipe
+import `fun`.adaptive.cookbook.recipe.ui.input.text.textInputRecipe
 import `fun`.adaptive.cookbook.recipe.ui.layout.box.boxRecipe
 import `fun`.adaptive.cookbook.recipe.ui.layout.grid.gridRecipe
 import `fun`.adaptive.cookbook.recipe.ui.popup.popupRecipe
@@ -43,7 +43,6 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:canvas", ::canvasRecipe)
         add("cookbook:recipe:checkbox", ::checkboxRecipe)
         add("cookbook:recipe:codefence", ::codeFenceRecipe)
-        add("cookbook:recipe:datepicker", ::datePickerRecipe)
         add("cookbook:recipe:dialog", ::dialogRecipe)
         add("cookbook:recipe:editor", ::editorRecipe)
         add("cookbook:recipe:event", ::eventRecipe)
@@ -63,6 +62,8 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:tree", ::treeRecipe)
         add("cookbook:recipe:workspace", ::workspaceRecipe)
         add("cookbook:recipe:wrap", ::wrapRecipe)
+
+        add("cookbook:recipe:input:date", ::dateInputRecipe)
         add("cookbook:recipe:input:text", ::textInputRecipe)
         add("cookbook:recipe:input:text-area", ::textInputAreaRecipe)
     }

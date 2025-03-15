@@ -37,6 +37,7 @@ class DatetimeTheme(
         paddingHorizontal { 16.dp },
         paddingTop { 8.dp },
         backgrounds.surfaceVariant,
+        borders.outline,
         cornerRadius(16.dp),
         colTemplate(1.fr),
         rowTemplate(64.dp, 1.fr, 36.dp)

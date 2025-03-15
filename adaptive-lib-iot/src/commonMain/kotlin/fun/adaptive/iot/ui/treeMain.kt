@@ -20,7 +20,8 @@ import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.denseIconTheme
 import `fun`.adaptive.ui.input.InputState
-import `fun`.adaptive.ui.input.textInput
+import `fun`.adaptive.ui.input.text.textInput
+import `fun`.adaptive.ui.input.text.textInputArea
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
@@ -150,12 +151,12 @@ fun areaEditor(item: TreeItem<AioSpace>) {
 
             withLabel(Strings.spxbId, InputState(disabled = true)) { state ->
                 width { 400.dp }
-                textInput(space.friendlyId, state) {  }
+                textInput(space.friendlyId, state) { }
             }
 
             withLabel(Strings.type, InputState(disabled = true)) { state ->
                 width { 400.dp }
-                textInput(space.spaceType.localized(), state) {  }
+                textInput(space.spaceType.localized(), state) { }
             }
 
             withLabel(Strings.name) {
@@ -168,9 +169,9 @@ fun areaEditor(item: TreeItem<AioSpace>) {
 
             withLabel(Strings.note) {
                 width { 400.dp }
-                textInput(space.notes) { v ->
+                textInputArea(space.notes) { v ->
                     observed.data = space.copy(notes = v)
-                }
+                } .. height { 400.dp }
             }
         }
     }

@@ -2,6 +2,7 @@ package `fun`.adaptive.ui.datetime
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.Independent
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
@@ -10,7 +11,6 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.*
-import `fun`.adaptive.ui.datetime.DatetimeTheme
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.textSmall
@@ -24,9 +24,14 @@ private const val YEAR_MODE = 2
 
 @Adaptive
 fun datePicker(
-    theme: DatetimeTheme = DatetimeTheme.DEFAULT,
+    value: LocalDate = localDate(),
+    close: () -> Unit,
+    onChange: (LocalDate) -> Unit,
+    theme: DatetimeTheme = DatetimeTheme.DEFAULT
 ) {
-    var date = localDate()
+    @Independent
+    val initValue = value
+
     var mode = DAY_MODE
 
     grid {
@@ -34,28 +39,28 @@ fun datePicker(
 
         grid {
             theme.datePickerMonthAndYear
-            month(date, { mode = toggleMode(mode, MONTH_MODE) }) { date = it }
-            year(date, { mode = toggleMode(mode, YEAR_MODE) }) { date = it }
+            month(value, { mode = toggleMode(mode, MONTH_MODE) }, onChange)
+            year(value, { mode = toggleMode(mode, YEAR_MODE) }, onChange)
         }
 
         box {
             theme.datePickerInner
             when (mode) {
-                DAY_MODE -> dayList(date, theme) { date = it }
-                MONTH_MODE -> monthList(date, theme) { date = it; mode = DAY_MODE }
-                YEAR_MODE -> yearList(date, theme) { date = it; mode = DAY_MODE }
+                DAY_MODE -> dayList(value, theme, onSelected = onChange)
+                MONTH_MODE -> monthList(value, theme) { onChange(it); mode = DAY_MODE }
+                YEAR_MODE -> yearList(value, theme) { onChange(it); mode = DAY_MODE }
             }
         }
 
         row {
             theme.datePickerActionsContainer
-            text(Strings.cancel) .. theme.datePickerActionText .. onClick { }
-            text(Strings.ok) .. theme.datePickerActionText .. onClick { }
+            text(Strings.cancel) .. theme.datePickerActionText .. onClick { onChange(initValue); close() }
+            text(Strings.ok) .. theme.datePickerActionText .. onClick { close() }
         }
     }
 }
 
-fun toggleMode(currentMode: Int, modeToSwitchTo: Int) =
+private fun toggleMode(currentMode: Int, modeToSwitchTo: Int) =
     if (currentMode == modeToSwitchTo) {
         DAY_MODE
     } else {
@@ -63,7 +68,7 @@ fun toggleMode(currentMode: Int, modeToSwitchTo: Int) =
     }
 
 @Adaptive
-fun month(value: LocalDate, switchMode: () -> Unit, onChange: (LocalDate) -> Unit) {
+private fun month(value: LocalDate, switchMode: () -> Unit, onChange: (LocalDate) -> Unit) {
     stepAndSelect(
         monthAbr(value.month),
         { onChange(value.minus(1, DateTimeUnit.MONTH)) },
@@ -73,7 +78,7 @@ fun month(value: LocalDate, switchMode: () -> Unit, onChange: (LocalDate) -> Uni
 }
 
 @Adaptive
-fun year(value: LocalDate, switchMode: () -> Unit, onChange: (LocalDate) -> Unit) {
+private fun year(value: LocalDate, switchMode: () -> Unit, onChange: (LocalDate) -> Unit) {
     stepAndSelect(
         value.year.toString(),
         { onChange(value.minus(1, DateTimeUnit.YEAR)) },
@@ -83,7 +88,7 @@ fun year(value: LocalDate, switchMode: () -> Unit, onChange: (LocalDate) -> Unit
 }
 
 @Adaptive
-fun stepAndSelect(label: String, stepLeft: () -> Unit, switchMode: () -> Unit, stepRight: () -> Unit) {
+private fun stepAndSelect(label: String, stepLeft: () -> Unit, switchMode: () -> Unit, stepRight: () -> Unit) {
     row {
         alignItems.center
         icon(Graphics.chevron_left) .. onClick { stepLeft() }
@@ -97,7 +102,7 @@ fun stepAndSelect(label: String, stepLeft: () -> Unit, switchMode: () -> Unit, s
 }
 
 @Adaptive
-fun dayList(
+private fun dayList(
     value: LocalDate,
     theme: DatetimeTheme,
     today: LocalDate = localDate(),
@@ -130,7 +135,7 @@ fun dayList(
 }
 
 @Adaptive
-fun day(
+private fun day(
     date: LocalDate,
     inMonth: Boolean,
     marked: Boolean,
@@ -146,7 +151,7 @@ fun day(
     }
 }
 
-fun dayLetter(date: LocalDate) =
+private fun dayLetter(date: LocalDate) =
     when (date.dayOfWeek.isoDayNumber) {
         1 -> Strings.mondayOneLetter
         2 -> Strings.tuesdayOneLetter
@@ -159,7 +164,7 @@ fun dayLetter(date: LocalDate) =
     }
 
 @Adaptive
-fun monthList(value: LocalDate, theme: DatetimeTheme, onSelected: (LocalDate) -> Unit) {
+private fun monthList(value: LocalDate, theme: DatetimeTheme, onSelected: (LocalDate) -> Unit) {
     val entries = Month.values() // FIXME use entries, but it causes compilation error
 
     column {
@@ -175,7 +180,7 @@ fun monthList(value: LocalDate, theme: DatetimeTheme, onSelected: (LocalDate) ->
 }
 
 @Adaptive
-fun yearList(value: LocalDate, theme: DatetimeTheme, onSelected: (LocalDate) -> Unit) {
+private fun yearList(value: LocalDate, theme: DatetimeTheme, onSelected: (LocalDate) -> Unit) {
     column {
         maxSize .. verticalScroll
         for (year in 1900 .. 2100) {

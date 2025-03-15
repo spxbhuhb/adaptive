@@ -1,11 +1,11 @@
-package `fun`.adaptive.cookbook.recipe.ui.input
+package `fun`.adaptive.cookbook.recipe.ui.input.text
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.InputState
-import `fun`.adaptive.ui.input.textInput
+import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.label.inputLabel
 import `fun`.adaptive.ui.label.withLabel

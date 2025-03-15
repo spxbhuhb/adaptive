@@ -58,10 +58,10 @@ fun focus(
 ): Boolean {
     checkNotNull(binding)
 
-    val hover = focusImpl(binding)
+    val focus = focusImpl(binding)
 
-    binding.targetFragment.addProducer(hover)
+    binding.targetFragment.addProducer(focus)
 
-    return hover.latestValue !!
+    return focus.latestValue !!
 
 }

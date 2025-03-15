@@ -9,7 +9,7 @@ class AuiHoverPopup(
     adapter: AuiAdapter,
     parent: AdaptiveFragment?,
     index: Int,
-) : AbstractPopup<HTMLElement, HTMLDivElement>(adapter, parent, index) {
+) : AbstractPopup<HTMLElement, HTMLDivElement>(adapter, parent, index, 2) {
 
     val enterHandler = { _: Any -> show() }
     val leaveHandler = { _: Any -> hide() }

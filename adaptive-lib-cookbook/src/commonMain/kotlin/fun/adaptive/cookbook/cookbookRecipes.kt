@@ -73,7 +73,7 @@ val recipes =
         set(
             "Standalone inputs",
             CbWsRecipeItem("Checkbox", key = "cookbook:recipe:checkbox"),
-            CbWsRecipeItem("Date picker", key = "cookbook:recipe:datepicker"),
+            CbWsRecipeItem("Date", key = "cookbook:recipe:input:date"),
             CbWsRecipeItem("Select", key = "cookbook:recipe:select"),
             CbWsRecipeItem("Text input", key = "cookbook:recipe:input:text"),
             CbWsRecipeItem("Text input area", key = "cookbook:recipe:input:text-area")
