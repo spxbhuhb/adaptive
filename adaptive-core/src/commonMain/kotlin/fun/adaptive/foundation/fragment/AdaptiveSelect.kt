@@ -60,8 +60,8 @@ interface AdaptiveSelectLogic {
         }
 
         makeBranch()?.also { // there is something to show
-            if (isMounted) it.mount()
             shownFragment = it
+            if (isMounted) it.mount()
         }
 
         // do not patch the newly built fragment, it has been patched already by create
