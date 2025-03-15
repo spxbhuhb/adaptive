@@ -12,6 +12,7 @@ import `fun`.adaptive.cookbook.recipe.ui.editor.editorRecipe
 import `fun`.adaptive.cookbook.recipe.ui.event.eventRecipe
 import `fun`.adaptive.cookbook.recipe.ui.form.formRecipe
 import `fun`.adaptive.cookbook.recipe.ui.icon.iconRecipe
+import `fun`.adaptive.cookbook.recipe.ui.input.textInputAreaRecipe
 import `fun`.adaptive.cookbook.recipe.ui.input.textInputRecipe
 import `fun`.adaptive.cookbook.recipe.ui.layout.box.boxRecipe
 import `fun`.adaptive.cookbook.recipe.ui.layout.grid.gridRecipe
@@ -63,5 +64,6 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:workspace", ::workspaceRecipe)
         add("cookbook:recipe:wrap", ::wrapRecipe)
         add("cookbook:recipe:input:text", ::textInputRecipe)
+        add("cookbook:recipe:input:text-area", ::textInputAreaRecipe)
     }
 }

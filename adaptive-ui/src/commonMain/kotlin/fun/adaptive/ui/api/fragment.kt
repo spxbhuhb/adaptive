@@ -17,7 +17,15 @@ fun image(res: ImageResourceSet, vararg instructions: AdaptiveInstruction): Adap
 }
 
 @AdaptiveExpect(aui)
-fun textInputBase(
+fun singleLineTextInput(
+    value: String?,
+    onChange: (newValue: String) -> Unit,
+): AdaptiveFragment {
+    manualImplementation(value, onChange)
+}
+
+@AdaptiveExpect(aui)
+fun multiLineTextInput(
     value: String?,
     onChange: (newValue: String) -> Unit,
 ): AdaptiveFragment {

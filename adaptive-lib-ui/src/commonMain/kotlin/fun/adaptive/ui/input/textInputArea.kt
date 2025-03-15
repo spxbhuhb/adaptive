@@ -6,10 +6,11 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.focus
+import `fun`.adaptive.ui.api.multiLineTextInput
 import `fun`.adaptive.ui.api.singleLineTextInput
 
 @Adaptive
-fun textInput(
+fun textInputArea(
     value : String?,
     state : InputState = InputState(),
     theme : InputTheme = InputTheme.DEFAULT,
@@ -24,7 +25,7 @@ fun textInput(
         else -> if (focus) theme.focused else theme.enabled
     }
 
-    singleLineTextInput(value = value, onChange = onChange) .. themeInstructions .. instructions()
+    multiLineTextInput(value = value, onChange = onChange) .. themeInstructions .. instructions()
 
     return fragment()
 }

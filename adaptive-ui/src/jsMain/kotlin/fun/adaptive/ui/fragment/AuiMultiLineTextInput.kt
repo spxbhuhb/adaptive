@@ -11,17 +11,17 @@ import `fun`.adaptive.ui.api.disabled
 import `fun`.adaptive.ui.aui
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.HTMLTextAreaElement
 
 @AdaptiveActual(aui)
-open class AuiTextInputBase(
+open class AuiMultiLineTextInput(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int,
 ) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, stateSize()) {
 
-    override val receiver: HTMLInputElement =
-        document.createElement("input") as HTMLInputElement
+    override val receiver: HTMLTextAreaElement =
+        document.createElement("textarea") as HTMLTextAreaElement
 
     private var value: String?
         by stateVariable()
@@ -46,6 +46,7 @@ open class AuiTextInputBase(
                     onChange(receiver.value)
                 }
             })
+            receiver.style.resize = "none"
         }
     }
 }
