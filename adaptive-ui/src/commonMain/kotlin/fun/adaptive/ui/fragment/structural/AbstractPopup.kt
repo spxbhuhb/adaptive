@@ -5,12 +5,13 @@ package `fun`.adaptive.ui.fragment.structural
 
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
+import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.api.popupAlign
+import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.fragment.layout.RawPosition
-import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.layout.*
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import `fun`.adaptive.utility.alsoIfInstance
@@ -19,10 +20,18 @@ abstract class AbstractPopup<RT, CRT : RT>(
     adapter: AbstractAuiAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     index: Int,
-    stateSize : Int
+    stateSize: Int
 ) : AuiStructural<RT, CRT>(
     adapter, parent, index, stateSize
 ) {
+
+    companion object {
+        const val SELECT_INDEX = 0
+        const val ROOT_BOX_INDEX = 1
+        const val CONTENT_INDEX = 2
+
+        val ROOT_INSTRUCTIONS = instructionsOf(zIndex { 2000 })
+    }
 
     var active = false
 
@@ -31,9 +40,9 @@ abstract class AbstractPopup<RT, CRT : RT>(
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         when (declarationIndex) {
-            0 -> parent.adapter.newSelect(parent = parent, index = declarationIndex)
-            1 -> parent.adapter.actualize(name = "aui:box", parent = parent, index = declarationIndex, stateSize = 2)
-            2 -> AdaptiveAnonymous(parent = parent, index = declarationIndex, stateSize = 2, factory = content)
+            SELECT_INDEX -> parent.adapter.newSelect(parent = parent, index = declarationIndex)
+            ROOT_BOX_INDEX -> parent.adapter.actualize(name = "aui:rootbox", parent = parent, index = declarationIndex, stateSize = 2)
+            CONTENT_INDEX -> AdaptiveAnonymous(parent = parent, index = declarationIndex, stateSize = 2, factory = content)
             else -> invalidIndex(index = declarationIndex)
         }.also {
             it.create()
@@ -45,21 +54,21 @@ abstract class AbstractPopup<RT, CRT : RT>(
 
         when (index) {
 
-            0 -> fragment.setStateVariable(1, if (active) 1 else - 1)
+            SELECT_INDEX -> fragment.setStateVariable(1, if (active) 1 else - 1)
 
-            1 -> {
+            ROOT_BOX_INDEX -> {
                 if (fragment.haveToPatch(closureDirtyMask, 1)) {
-                    fragment.setStateVariable(index = 0, value = instructions)
+                    fragment.setStateVariable(index = 0, value = instructions + ROOT_INSTRUCTIONS)
                 }
                 if (fragment.haveToPatch(closureDirtyMask, 0)) {
                     fragment.setStateVariable(
                         index = 1,
-                        value = BoundFragmentFactory(declaringFragment = this, declarationIndex = 2, null)
+                        value = BoundFragmentFactory(declaringFragment = this, declarationIndex = CONTENT_INDEX, null)
                     )
                 }
             }
 
-            2 -> {
+            CONTENT_INDEX -> {
                 if (fragment.haveToPatch(closureDirtyMask, 1 shl 1)) {
                     fragment.setStateVariable(index = 1, value = ::hide)
                 }
@@ -111,20 +120,21 @@ abstract class AbstractPopup<RT, CRT : RT>(
 
     private fun placePopup() {
 
-        val startPosition = this.absolutePosition
+        val layoutFragment = renderData.layoutFragment ?: return
+        val startPosition = layoutFragment.absolutePosition
 
         val select = children.firstOrNull() ?: return
         val box = select.children.firstOrNull() ?: return
         if (box !is AbstractAuiFragment<*>) return
 
-        val parentRenderData = renderData.layoutFragment?.renderData
+        val parentRenderData = layoutFragment.renderData
 
         val maxWidth = instructions.firstInstanceOfOrNull<MaxWidth>()
         val maxHeight = instructions.lastInstanceOfOrNull<MaxHeight>()
 
         box.computeLayout(
-            maxWidth?.let { parentRenderData?.finalWidth } ?: Double.POSITIVE_INFINITY,
-            maxHeight?.let { parentRenderData?.finalHeight } ?: Double.POSITIVE_INFINITY,
+            maxWidth?.let { parentRenderData.finalWidth } ?: Double.POSITIVE_INFINITY,
+            maxHeight?.let { parentRenderData.finalHeight } ?: Double.POSITIVE_INFINITY,
         )
 
         var alignment = instructions.lastInstanceOfOrNull<PopupAlign>() ?: popupAlign.belowStart
@@ -136,7 +146,7 @@ abstract class AbstractPopup<RT, CRT : RT>(
             isPositionOk(startPosition, position, box.renderData)
         }
 
-        box.placeLayout(position.top, position.left)
+        box.placeLayout(startPosition.top + position.top, startPosition.left + position.left)
     }
 
     fun getPosition(popupRenderData: AuiRenderData, alignment: PopupAlign): RawPosition {
@@ -145,23 +155,22 @@ abstract class AbstractPopup<RT, CRT : RT>(
 
         val parentRenderData = renderData.layoutFragment?.renderData ?: return RawPosition(0.0, 0.0)
         val parentFrame = parentRenderData.rawFrame
-        val parentBorder = parentRenderData.layout?.border ?: RawSurrounding.ZERO
 
         val left = when (alignment.horizontal) {
-            OuterAlignment.Before -> - (popupRenderData.finalWidth + parentBorder.start)
-            OuterAlignment.Start -> - parentBorder.start
-            OuterAlignment.Center -> (parentFrame.width / 2) - (popupRenderData.finalWidth / 2) - parentBorder.start
-            OuterAlignment.End -> parentFrame.width - popupRenderData.finalWidth - parentBorder.start
-            OuterAlignment.After -> parentFrame.width - parentBorder.start
+            OuterAlignment.Before -> - popupRenderData.finalWidth
+            OuterAlignment.Start -> 0.0
+            OuterAlignment.Center -> (parentFrame.width / 2) - (popupRenderData.finalWidth / 2)
+            OuterAlignment.End -> parentFrame.width - popupRenderData.finalWidth
+            OuterAlignment.After -> parentFrame.width
             else -> 0.0
         }
 
         val top = when (alignment.vertical) {
-            OuterAlignment.Above -> - (popupRenderData.finalHeight + parentBorder.end)
-            OuterAlignment.Start -> - parentBorder.top
-            OuterAlignment.Center -> (parentFrame.height / 2) - (popupRenderData.finalHeight / 2) - parentBorder.top
-            OuterAlignment.End -> parentFrame.height - popupRenderData.finalHeight - parentBorder.start
-            OuterAlignment.Below -> parentFrame.height - parentBorder.start
+            OuterAlignment.Above -> - popupRenderData.finalHeight
+            OuterAlignment.Start -> 0.0
+            OuterAlignment.Center -> (parentFrame.height / 2) - (popupRenderData.finalHeight / 2)
+            OuterAlignment.End -> parentFrame.height - popupRenderData.finalHeight
+            OuterAlignment.Below -> parentFrame.height
             else -> 0.0
         }
 
