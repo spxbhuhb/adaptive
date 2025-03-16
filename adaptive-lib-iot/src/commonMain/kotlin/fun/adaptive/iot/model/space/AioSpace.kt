@@ -11,6 +11,7 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.workspace.model.WsItemType
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.p04
 
 @Adat
 data class AioSpace(
@@ -32,6 +33,9 @@ data class AioSpace(
         data = this,
         parent = parent
     )
+
+    val friendlyDisplayId
+        get() = "SP-${friendlyId.p04}"
 
     fun icon() =
         when (spaceType) {

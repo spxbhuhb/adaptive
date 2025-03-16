@@ -9,6 +9,7 @@
     <string name="active">Aktív</string>
     <string name="type">Típus</string>
     <string name="note">Megjegyzés</string>
+    <string name="noname">(nincs név megadva)</string>
 
     <string name="areas">Területek</string>
     <string name="site">Telephely</string>

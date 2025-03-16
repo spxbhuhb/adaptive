@@ -1,8 +1,6 @@
 package `fun`.adaptive.iot
 
-import `fun`.adaptive.adaptive_lib_iot.generated.resources.addArea
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.apartment
-import `fun`.adaptive.adaptive_lib_iot.generated.resources.areas
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.iot.model.device.AioDevice
 import `fun`.adaptive.iot.model.device.point.AioDevicePoint
@@ -12,25 +10,17 @@ import `fun`.adaptive.iot.model.space.AioSpaceType
 import `fun`.adaptive.iot.ui.space.wsSpaceTreeEditor
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.AbstractAuiAdapter
-import `fun`.adaptive.ui.builtin.add
-import `fun`.adaptive.ui.builtin.collapseAll
-import `fun`.adaptive.ui.builtin.collapse_all
-import `fun`.adaptive.ui.builtin.expandAll
-import `fun`.adaptive.ui.builtin.expand_all
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.model.WsItem
 import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.model.WsPaneAction
-import `fun`.adaptive.ui.workspace.model.WsPaneMenuAction
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
-suspend fun iotCommon() {
+suspend fun iotCommon(loadStrings : Boolean = true) {
     val r = WireFormatRegistry
 
     r += AioProject
@@ -39,7 +29,9 @@ suspend fun iotCommon() {
     r += AioDevice
     r += AioDevicePoint
 
-    commonMainStringsStringStore0.load()
+    if (loadStrings) {
+        commonMainStringsStringStore0.load()
+    }
 }
 
 fun AbstractAuiAdapter<*, *>.iotCommon() {

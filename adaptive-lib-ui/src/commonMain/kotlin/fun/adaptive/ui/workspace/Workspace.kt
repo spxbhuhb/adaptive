@@ -7,6 +7,8 @@ import `fun`.adaptive.general.Observable
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
+import `fun`.adaptive.service.testing.DirectServiceTransport
+import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.builtin.menu
 import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
 import `fun`.adaptive.ui.instruction.event.EventModifier
@@ -25,9 +27,14 @@ import `fun`.adaptive.ui.workspace.model.WsPaneSingularity
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.firstInstance
 import `fun`.adaptive.utility.firstInstanceOrNull
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlin.collections.filter
 
-class Workspace {
+class Workspace(
+    val scope : CoroutineScope = CoroutineScope(Dispatchers.Unconfined),
+    val transport : ServiceCallTransport = DirectServiceTransport()
+) {
 
     companion object {
         inline fun <reified T> AdaptiveFragment.wsContext() =

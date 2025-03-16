@@ -17,6 +17,9 @@ fun Int.toByteArray(): ByteArray = ByteArray(4).also { this.encodeInto(it) }
 val Int.p02
     get() = this.toString().padStart(2, '0')
 
+val Int.p04
+    get() = this.toString().padStart(4, '0')
+
 /**
  * Convert an int to bytes and write those bytes into [target] starting
  * from [offset].

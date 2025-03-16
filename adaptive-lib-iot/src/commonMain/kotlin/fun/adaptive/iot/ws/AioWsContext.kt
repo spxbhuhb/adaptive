@@ -1,21 +1,47 @@
 package `fun`.adaptive.iot.ws
 
+import `fun`.adaptive.iot.api.AioSpaceApi
 import `fun`.adaptive.iot.model.project.AioProject
 import `fun`.adaptive.iot.model.space.AioSpace
+import `fun`.adaptive.iot.ui.space.SpaceTreeModel
+import `fun`.adaptive.iot.ui.space.initSpaces
+import `fun`.adaptive.service.api.getService
+import `fun`.adaptive.ui.instruction.event.EventModifier
+import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
-import `fun`.adaptive.ui.tree.TreeViewModel.Companion.defaultSelectedFun
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsContext
 import `fun`.adaptive.utility.UUID
 
 class AioWsContext(override val workspace: Workspace) : WsContext {
 
-    val spaceTree = TreeViewModel<AioSpace, AioProject>(
+    val spaceService = getService<AioSpaceApi>(workspace.transport)
+
+    val projectId = UUID<AioProject>()
+
+    val spaceMap = mutableMapOf<UUID<AioSpace>, AioSpace>()
+
+    val spaceTree = TreeViewModel<AioSpace, AioWsContext>(
         emptyList(),
-        selectedFun = ::defaultSelectedFun,
+        selectedFun = ::spaceToolSelectedFun,
         multiSelect = false,
-        context = AioProject(UUID())
+        context = this
     )
+
+    init {
+        io {
+            initSpaces(this)
+        }
+    }
+
+    fun spaceToolSelectedFun(viewModel: SpaceTreeModel, item: TreeItem<AioSpace>, modifiers: Set<EventModifier>) {
+        workspace.addContent(item.data, modifiers)
+        TreeViewModel.defaultSelectedFun(viewModel, item, modifiers)
+    }
+
+    fun updateSpace(space: AioSpace) {
+        io { spaceService.update(space) }
+    }
 
     companion object {
         const val WSIT_DEVICE = "aio:device"

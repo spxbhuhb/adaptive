@@ -5,24 +5,21 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
-import `fun`.adaptive.iot.model.project.AioProject
 import `fun`.adaptive.iot.model.space.AioSpace
 import `fun`.adaptive.iot.model.space.AioSpaceEditOperation
 import `fun`.adaptive.iot.model.space.AioSpaceType
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.builtin.*
-import `fun`.adaptive.ui.icon.actionIcon
-import `fun`.adaptive.ui.icon.denseIconTheme
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.menu.MenuItem
 import `fun`.adaptive.ui.menu.MenuItemBase
 import `fun`.adaptive.ui.menu.MenuSeparator
 import `fun`.adaptive.ui.menu.contextMenu
 import `fun`.adaptive.ui.tree.TreeItem
-import `fun`.adaptive.ui.tree.TreeViewModel
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsPane
@@ -46,36 +43,18 @@ fun wsSpaceTreeEditor() =
         model = Unit
     )
 
-private fun spaceToolExpandAll(workspace: Workspace, pane: WsPane<*>) {
+private fun spaceToolExpandAll(workspace: Workspace, @Suppress("unused") pane: WsPane<*>) {
     workspace.firstContext<AioWsContext>()?.spaceTree?.items?.forEach { it.expandAll() }
 }
 
-private fun spaceToolCollapseAll(workspace: Workspace, pane: WsPane<*>) {
+private fun spaceToolCollapseAll(workspace: Workspace, @Suppress("unused") pane: WsPane<*>) {
     workspace.firstContext<AioWsContext>()?.spaceTree?.items?.forEach { it.collapseAll() }
 }
 
 @Adaptive
-fun spaceTreeEditor(spaceTree: TreeViewModel<AioSpace, AioProject>) {
+fun spaceTreeEditor(spaceTree: SpaceTreeModel) {
 
     val observed = valueFrom { spaceTree }
-
-    row {
-        maxWidth .. spaceBetween .. alignItems.center
-
-        text(Strings.areas)
-
-        row {
-            actionIcon(Graphics.expand_all, theme = denseIconTheme) .. onClick { observed.items.forEach { it.expandAll() } }
-            actionIcon(Graphics.collapse_all, theme = denseIconTheme) .. onClick { observed.items.forEach { it.collapseAll() } }
-            box {
-                actionIcon(Graphics.add, theme = denseIconTheme)
-                primaryPopup { hide ->
-                    contextMenu(addTopMenu) { menuItem, _ -> ; hide() }
-                }
-            }
-        }
-
-    }
 
     tree(observed, ::contextMenuBuilder)
 
@@ -83,88 +62,65 @@ fun spaceTreeEditor(spaceTree: TreeViewModel<AioSpace, AioProject>) {
 
 private fun applyToolMenuAction(
     workspace: Workspace,
-    pane: WsPane<*>,
+    @Suppress("unused") pane: WsPane<*>,
     menuItem: MenuItem<AioSpaceEditOperation>,
-    modifiers: Set<EventModifier>
+    @Suppress("unused") modifiers: Set<EventModifier>
 ) {
     val tree = workspace.firstContext<AioWsContext>()?.spaceTree ?: return
     apply(tree, menuItem, null)
 }
 
-private fun apply(tree: TreeViewModel<AioSpace, AioProject>, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AioSpace>?) {
-    val projectId = tree.context.uuid
-    val space: AioSpace?
+private fun apply(tree: SpaceTreeModel, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AioSpace>?) {
+    val projectId = tree.context.projectId
+    val itemId = treeItem?.data?.uuid
+    val context = tree.context
 
-    when (menuItem.data) {
-        AioSpaceEditOperation.AddSite -> {
-            space = AioSpace(
-                uuid = UUID(),
-                projectId = projectId,
-                friendlyId = "",
-                spaceType = AioSpaceType.Site,
-                name = "${Strings.site} ${tree.items.size + 1}"
-            )
+    context.io {
+        val space: AioSpace?
+
+        when (menuItem.data) {
+            AioSpaceEditOperation.AddSite -> {
+                space = context.spaceService.add(projectId, itemId, AioSpaceType.Site)
+            }
+
+            AioSpaceEditOperation.AddBuilding -> {
+                space = context.spaceService.add(projectId, itemId, AioSpaceType.Building)
+            }
+
+            AioSpaceEditOperation.AddFloor -> {
+                space = context.spaceService.add(projectId, itemId, AioSpaceType.Floor)
+            }
+
+            AioSpaceEditOperation.AddRoom -> {
+                space = context.spaceService.add(projectId, itemId, AioSpaceType.Room)
+            }
+
+            AioSpaceEditOperation.AddArea -> {
+                space = context.spaceService.add(projectId, itemId, AioSpaceType.Area)
+            }
+
+            AioSpaceEditOperation.MoveUp -> {
+                space = null
+            }
+
+            AioSpaceEditOperation.MoveDown -> {
+                space = null
+            }
+
+            AioSpaceEditOperation.Inactivate -> {
+                space = null
+            }
         }
 
-        AioSpaceEditOperation.AddBuilding -> {
-            space = AioSpace(
-                uuid = UUID(),
-                projectId = projectId,
-                friendlyId = "",
-                spaceType = AioSpaceType.Building,
-                name = "${Strings.building} ${tree.items.size + 1}"
-            )
-        }
+        if (space != null) {
+            val newItem = space.toTreeItem(treeItem)
 
-        AioSpaceEditOperation.AddFloor -> {
-            space = AioSpace(
-                uuid = UUID(),
-                projectId = projectId,
-                friendlyId = "",
-                spaceType = AioSpaceType.Floor,
-                name = "${Strings.floor} ${tree.items.size + 1}"
-            )
-        }
-
-        AioSpaceEditOperation.AddRoom -> {
-            space = AioSpace(
-                uuid = UUID(),
-                projectId = projectId,
-                friendlyId = "",
-                spaceType = AioSpaceType.Room,
-                name = "${Strings.room} ${tree.items.size + 1}"
-            )
-        }
-
-        AioSpaceEditOperation.AddArea -> {
-            space = AioSpace(
-                uuid = UUID(),
-                projectId = projectId,
-                friendlyId = "",
-                spaceType = AioSpaceType.Area,
-                name = "${Strings.area} ${tree.items.size + 1}"
-            )
-        }
-
-        AioSpaceEditOperation.MoveUp -> {
-            space = null
-        }
-
-        AioSpaceEditOperation.MoveDown -> {
-            space = null
-        }
-
-        AioSpaceEditOperation.Inactivate -> TODO()
-    }
-
-    if (space != null) {
-        val newItem = space.toTreeItem(treeItem)
-
-        if (treeItem != null) {
-            treeItem.children += newItem
-            if (! treeItem.open) treeItem.open = true
-        } else {
-            tree.items += newItem
+            if (treeItem != null) {
+                treeItem.children += newItem
+                if (! treeItem.open) treeItem.open = true
+            } else {
+                tree.items += newItem
+            }
         }
     }
 }
@@ -194,7 +150,7 @@ private val roomMenu = listOf(
     MenuItem<AioSpaceEditOperation>(Graphics.crop_5_4, Strings.addArea, AioSpaceEditOperation.AddArea),
 )
 
-private fun menu(viewModel: TreeViewModel<AioSpace, AioProject>, treeItem: TreeItem<AioSpace>): List<MenuItemBase<AioSpaceEditOperation>> {
+private fun menu(viewModel: SpaceTreeModel, treeItem: TreeItem<AioSpace>): List<MenuItemBase<AioSpaceEditOperation>> {
 
     val base =
         when (treeItem.data.spaceType) {
@@ -227,7 +183,7 @@ private fun menu(viewModel: TreeViewModel<AioSpace, AioProject>, treeItem: TreeI
     return out
 }
 
-private fun isFirst(viewModel: TreeViewModel<AioSpace, AioProject>, treeItem: TreeItem<AioSpace>): Boolean {
+private fun isFirst(viewModel: SpaceTreeModel, treeItem: TreeItem<AioSpace>): Boolean {
     val safeParent = treeItem.parent
     if (safeParent == null) {
         return viewModel.items.first() == treeItem
@@ -236,7 +192,7 @@ private fun isFirst(viewModel: TreeViewModel<AioSpace, AioProject>, treeItem: Tr
     }
 }
 
-private fun isLast(viewModel: TreeViewModel<AioSpace, AioProject>, treeItem: TreeItem<AioSpace>): Boolean {
+private fun isLast(viewModel: SpaceTreeModel, treeItem: TreeItem<AioSpace>): Boolean {
     val safeParent = treeItem.parent
     if (safeParent == null) {
         return viewModel.items.last() == treeItem
@@ -248,7 +204,7 @@ private fun isLast(viewModel: TreeViewModel<AioSpace, AioProject>, treeItem: Tre
 @Adaptive
 private fun contextMenuBuilder(
     hide: () -> Unit,
-    viewModel: TreeViewModel<AioSpace, AioProject>,
+    viewModel: SpaceTreeModel,
     treeItem: TreeItem<AioSpace>
 ): AdaptiveFragment {
     column {

@@ -9,6 +9,10 @@ import `fun`.adaptive.utility.UUID
 @ServiceApi
 interface AioSpaceApi {
 
-    suspend fun addSpace(project: UUID<AioProject>, parent: UUID<AioSpace>?, type: AioSpaceType): AioSpace
+    suspend fun query() : List<AioSpace>
+
+    suspend fun add(projectId: UUID<AioProject>, parentId: UUID<AioSpace>?, type: AioSpaceType): AioSpace
+
+    suspend fun update(space: AioSpace)
 
 }
