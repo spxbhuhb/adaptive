@@ -15,7 +15,7 @@ class EventRenderData(
     var onClickListener : Any? = null
 
     var additionalEvents: Boolean = false
-    var noPointerEvents: Boolean? = null
+    var pointerEvents: PointerEvents? = null
 
     var onDoubleClick: OnDoubleClick? = null
     var onDoubleClickListener: Any? = null

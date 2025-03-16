@@ -14,7 +14,7 @@ data class WsPane<D>(
     val key : FragmentKey,
     val model : D,
     val tooltip: String? = null,
-    val actions : List<WsPaneAction> = emptyList(),
+    val actions : List<AbstractWsPaneAction<*>> = emptyList(),
     val singularity : WsPaneSingularity = WsPaneSingularity.GROUP,
     val controller : WsPaneController<D> = WsUnitPaneController<D>(),
 ) {

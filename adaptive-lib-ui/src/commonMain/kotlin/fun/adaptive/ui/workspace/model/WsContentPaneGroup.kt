@@ -53,11 +53,13 @@ class WsContentPaneGroup(
                     wsPane.icon,
                     wsPane.tooltip,
                     closeable = true,
-                    wsPane.actions.map { wsAction ->
+                    wsPane.actions.mapNotNull { wsAction ->
+                        // TODO context menu actions for content panes
+                        if (wsAction !is WsPaneAction<*>) return@mapNotNull null
                         TabPaneAction(
                             wsAction.icon,
                             wsAction.tooltip,
-                            { wsAction.action(workspace, wsPane) }
+                            { wsAction.execute(workspace, wsPane) }
                         )
                     },
                     model = wsPane,

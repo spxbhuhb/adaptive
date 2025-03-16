@@ -3,8 +3,13 @@ package `fun`.adaptive.ui.workspace.model
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.workspace.Workspace
 
-class WsPaneAction(
-    val icon : GraphicsResourceSet,
-    val tooltip : String,
-    val action : (workspace : Workspace, pane : WsPane<*>) -> Unit
-)
+open class WsPaneAction<T>(
+    icon : GraphicsResourceSet,
+    tooltip : String,
+    override val data : T,
+    val action : (workspace : Workspace, pane : WsPane<*>, data : T) -> Unit
+) : AbstractWsPaneAction<T>(icon, tooltip){
+
+    override fun execute(workspace: Workspace, pane: WsPane<*>) = action(workspace, pane, data)
+
+}

@@ -7,7 +7,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.resource.document.Documents
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.input.InputState
+import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.input.datetime.dateInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.label.withLabel
@@ -27,11 +27,11 @@ fun dateInputRecipe(): AdaptiveFragment {
             dateInput(date, it) { v -> date = v }
         }
 
-        withLabel("Disabled", InputState(disabled = true)) {
+        withLabel("Disabled", InputContext(disabled = true)) {
             dateInput(date, it) { v -> date = v }
         }
 
-        withLabel("Invalid", InputState(invalid = true)) {
+        withLabel("Invalid", InputContext(invalid = true)) {
             dateInput(date, it) { v -> date = v }
         }
     }

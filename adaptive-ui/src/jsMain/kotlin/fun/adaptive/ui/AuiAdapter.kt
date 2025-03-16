@@ -9,6 +9,7 @@ import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.resource.defaultResourceEnvironment
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
+import `fun`.adaptive.ui.fragment.layout.RawPosition
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.SPixel
@@ -197,6 +198,20 @@ class AuiAdapter(
         }
     }.also {
         it.observe(rootContainer)
+    }
+
+    // ------------------------------------------------------------------------------
+    // Scroll support
+    // ------------------------------------------------------------------------------
+
+    override fun scrollPosition(fragment: AbstractAuiFragment<HTMLElement>) : RawPosition {
+        val receiver = fragment.receiver
+        return RawPosition(receiver.scrollTop, receiver.scrollLeft)
+    }
+
+    override fun scrollTo(fragment: AbstractAuiFragment<HTMLElement>, position: RawPosition) {
+        val receiver = fragment.receiver
+        receiver.scrollTo(position.top, position.left)
     }
 
     // ------------------------------------------------------------------------------

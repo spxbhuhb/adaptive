@@ -34,5 +34,6 @@ object AuiFragmentFactory : FoundationFragmentFactory() {
         add("aui:contextpopup") { p, i, s -> AuiContextPopup(p.adapter as AuiAdapter, p, i) }
         add("aui:splitpane") { p, i, s -> AuiSplitPane(p.adapter as AuiAdapter, p, i) }
         add("aui:paragraph") { p, i, s -> AuiParagraph(p.adapter as AuiAdapter, p, i) }
+        add("aui:manuallayout") { p, i, s -> AuiManualLayout(p.adapter as AuiAdapter, p, i)}
     }
 }

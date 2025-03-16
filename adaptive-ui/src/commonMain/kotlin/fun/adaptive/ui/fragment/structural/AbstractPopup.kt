@@ -7,14 +7,16 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
+import `fun`.adaptive.foundation.query.first
+import `fun`.adaptive.foundation.query.firstOrNull
 import `fun`.adaptive.ui.AbstractAuiAdapter
-import `fun`.adaptive.ui.AbstractAuiFragment
-import `fun`.adaptive.ui.api.popupAlign
-import `fun`.adaptive.ui.api.zIndex
+import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.fragment.layout.AbstractBox
+import `fun`.adaptive.ui.fragment.layout.AbstractManualLayout
 import `fun`.adaptive.ui.fragment.layout.RawPosition
+import `fun`.adaptive.ui.fragment.layout.computeFinal
 import `fun`.adaptive.ui.instruction.layout.*
 import `fun`.adaptive.ui.render.model.AuiRenderData
-import `fun`.adaptive.utility.alsoIfInstance
 
 abstract class AbstractPopup<RT, CRT : RT>(
     adapter: AbstractAuiAdapter<RT, CRT>,
@@ -27,10 +29,12 @@ abstract class AbstractPopup<RT, CRT : RT>(
 
     companion object {
         const val SELECT_INDEX = 0
-        const val ROOT_BOX_INDEX = 1
-        const val CONTENT_INDEX = 2
+        const val OVERLAY_INDEX = 1
+        const val CONTAINER_INDEX = 2
+        const val CONTENT_INDEX = 3
 
-        val ROOT_INSTRUCTIONS = instructionsOf(zIndex { 2000 })
+        val ROOT_INSTRUCTIONS = instructionsOf(maxSize, noPointerEvents, zIndex { 2000 })
+        val CONTAINER_INSTRUCTIONS = instructionsOf(enablePointerEvents, tabIndex { 0 })
     }
 
     var active = false
@@ -38,15 +42,36 @@ abstract class AbstractPopup<RT, CRT : RT>(
     override val patchDescendants: Boolean
         get() = true
 
+    open val modal: Boolean
+        get() = false
+
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         when (declarationIndex) {
             SELECT_INDEX -> parent.adapter.newSelect(parent = parent, index = declarationIndex)
-            ROOT_BOX_INDEX -> parent.adapter.actualize(name = "aui:rootbox", parent = parent, index = declarationIndex, stateSize = 2)
+            OVERLAY_INDEX -> buildOverlay(parent)
+            CONTAINER_INDEX -> buildContainer(parent)
             CONTENT_INDEX -> AdaptiveAnonymous(parent = parent, index = declarationIndex, stateSize = 2, factory = content)
             else -> invalidIndex(index = declarationIndex)
         }.also {
             it.create()
         }
+
+    private fun buildOverlay(parent: AdaptiveFragment): AdaptiveFragment {
+        parent.adapter.actualize(name = "aui:manuallayout", parent = parent, index = OVERLAY_INDEX, stateSize = 2).also {
+            it as AbstractManualLayout<*, *>
+            it.isRootActual = true
+            it.computeLayoutFun = ::computePopupLayout
+            return it
+        }
+    }
+
+    protected open fun buildContainer(parent: AdaptiveFragment): AbstractBox<RT, CRT> {
+        parent.adapter.actualize(name = "aui:box", parent = parent, index = CONTAINER_INDEX, stateSize = 2).also {
+            @Suppress("UNCHECKED_CAST")
+            it as AbstractBox<RT, CRT>
+            return it
+        }
+    }
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) {
         val closureDirtyMask = fragment.getCreateClosureDirtyMask()
@@ -54,23 +79,38 @@ abstract class AbstractPopup<RT, CRT : RT>(
 
         when (index) {
 
-            SELECT_INDEX -> fragment.setStateVariable(1, if (active) 1 else - 1)
+            SELECT_INDEX -> fragment.setStateVariable(1, if (active) OVERLAY_INDEX else - 1)
 
-            ROOT_BOX_INDEX -> {
+            OVERLAY_INDEX -> {
                 if (fragment.haveToPatch(closureDirtyMask, 1)) {
-                    fragment.setStateVariable(index = 0, value = instructions + ROOT_INSTRUCTIONS)
+                    fragment.setStateVariable(index = 0, value = ROOT_INSTRUCTIONS)
+                }
+                if (fragment.haveToPatch(closureDirtyMask, 0)) {
+                    fragment.setStateVariable(
+                        index = 1,
+                        value = BoundFragmentFactory(declaringFragment = this, declarationIndex = CONTAINER_INDEX, null)
+                    )
+                }
+            }
+
+            CONTAINER_INDEX -> {
+                if (fragment.haveToPatch(closureDirtyMask, 1)) {
+                    fragment.setStateVariable(index = 0, value = instructions + CONTAINER_INSTRUCTIONS)
+                    getOverlay()?.scheduleUpdate()
                 }
                 if (fragment.haveToPatch(closureDirtyMask, 0)) {
                     fragment.setStateVariable(
                         index = 1,
                         value = BoundFragmentFactory(declaringFragment = this, declarationIndex = CONTENT_INDEX, null)
                     )
+                    getOverlay()?.scheduleUpdate()
                 }
             }
 
             CONTENT_INDEX -> {
                 if (fragment.haveToPatch(closureDirtyMask, 1 shl 1)) {
                     fragment.setStateVariable(index = 1, value = ::hide)
+                    getOverlay()?.scheduleUpdate()
                 }
             }
 
@@ -78,20 +118,10 @@ abstract class AbstractPopup<RT, CRT : RT>(
         }
     }
 
-    override fun patch() {
-        super.patch()
-        if (active) {
-            placePopup()
-        }
-    }
-
-    fun show() {
+    open fun show() {
         if (active) return
-
         active = true
         patchInternal()
-
-        placePopup()
     }
 
     open fun hide() {
@@ -99,40 +129,27 @@ abstract class AbstractPopup<RT, CRT : RT>(
         patchInternal()
     }
 
-    override fun addActual(fragment: AdaptiveFragment, direct: Boolean?) {
-        fragment.alsoIfInstance<AbstractAuiFragment<RT>> { itemFragment ->
-            configureBox(itemFragment)
-            uiAdapter.addActual(receiver, itemFragment.receiver)
-            addActualScheduleUpdate(itemFragment)
-        }
+    fun getOverlay() : AbstractManualLayout<*,*>? {
+        val select = children.first()
+        return select.firstOrNull<AbstractManualLayout<*,*>>()
     }
 
-    open fun configureBox(fragment: AbstractAuiFragment<RT>) {
-
-    }
-
-    override fun removeActual(fragment: AdaptiveFragment, direct: Boolean?) {
-        fragment.alsoIfInstance<AbstractAuiFragment<RT>> { itemFragment ->
-            uiAdapter.removeActual(itemFragment.receiver)
-            removeActualScheduleUpdate(itemFragment)
-        }
-    }
-
-    private fun placePopup() {
+    private fun computePopupLayout(proposedWidth: Double, proposedHeight: Double) {
 
         val layoutFragment = renderData.layoutFragment ?: return
         val startPosition = layoutFragment.absolutePosition
 
-        val select = children.firstOrNull() ?: return
-        val box = select.children.firstOrNull() ?: return
-        if (box !is AbstractAuiFragment<*>) return
+        val overlay = getOverlay() ?: return
+        overlay.computeFinal(proposedWidth, proposedWidth, proposedHeight, proposedWidth)
+
+        val container = overlay.first<AbstractBox<*,*>>()
 
         val parentRenderData = layoutFragment.renderData
 
         val maxWidth = instructions.firstInstanceOfOrNull<MaxWidth>()
         val maxHeight = instructions.lastInstanceOfOrNull<MaxHeight>()
 
-        box.computeLayout(
+        container.computeLayout(
             maxWidth?.let { parentRenderData.finalWidth } ?: Double.POSITIVE_INFINITY,
             maxHeight?.let { parentRenderData.finalHeight } ?: Double.POSITIVE_INFINITY,
         )
@@ -142,11 +159,11 @@ abstract class AbstractPopup<RT, CRT : RT>(
         var position = RawPosition(0.0, 0.0)
 
         PopupAlign.findBestPopupAlignment(alignment) {
-            position = getPosition(box.renderData, it)
-            isPositionOk(startPosition, position, box.renderData)
+            position = getPosition(container.renderData, it)
+            isPositionOk(startPosition, position, container.renderData)
         }
 
-        box.placeLayout(startPosition.top + position.top, startPosition.left + position.left)
+        container.placeLayout(startPosition.top + position.top, startPosition.left + position.left)
     }
 
     fun getPosition(popupRenderData: AuiRenderData, alignment: PopupAlign): RawPosition {

@@ -2,7 +2,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.input.InputState
+import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.input.datetime.dateInput
 import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.instruction.dp
@@ -25,7 +25,7 @@ fun datePickerMain(): AdaptiveFragment {
             dateInput(date, it) { v -> date = v }
         }
 
-        withLabel("Date", InputState(invalid = true)) {
+        withLabel("Date", InputContext(invalid = true)) {
             dateInput(date, it) { v -> date = v }
         }
     }

@@ -7,31 +7,29 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.focus
-import `fun`.adaptive.ui.api.tabIndex
 import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.input.InputState
-import `fun`.adaptive.utility.debug
+import `fun`.adaptive.ui.input.InputContext
 
 @Adaptive
 fun withLabel(
     label: String,
-    inputState: InputState = InputState(),
+    inputContext: InputContext = InputContext(),
     theme: LabelTheme = LabelTheme.DEFAULT,
     @Adaptive
-    _KT_74337_content : (InputState) -> Unit
+    _KT_74337_content : (InputContext) -> Unit
 ): AdaptiveFragment {
-    val observed = valueFrom { inputState }
+    val observed = valueFrom { inputContext }
     val focus = focus()
 
     val themeInstructions = when {
         observed.disabled -> theme.disabled
-        observed.invalid -> if (focus) theme.invalidFocused else theme.invalidNotFocused
-        else -> if (focus) theme.focused else theme.enabled
+        observed.invalid -> if (focus || observed.popupOpen) theme.invalidFocused else theme.invalidNotFocused
+        else -> if (focus || observed.popupOpen) theme.focused else theme.enabled
     }
 
     column(instructions()) {
         text(label, themeInstructions)
-        _KT_74337_content(inputState)
+        _KT_74337_content(inputContext)
     }
 
     return fragment()

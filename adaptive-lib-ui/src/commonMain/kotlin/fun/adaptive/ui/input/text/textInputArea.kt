@@ -7,13 +7,13 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.multiLineTextInput
-import `fun`.adaptive.ui.input.InputState
+import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.input.InputTheme
 
 @Adaptive
 fun textInputArea(
     value : String?,
-    state : InputState = InputState(),
+    state : InputContext = InputContext(),
     theme : InputTheme = InputTheme.DEFAULT,
     onChange : (String) -> Unit
 ) : AdaptiveFragment {

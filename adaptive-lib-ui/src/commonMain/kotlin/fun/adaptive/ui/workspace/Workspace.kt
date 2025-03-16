@@ -24,6 +24,7 @@ import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.ui.workspace.model.WsPaneSingularity
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.firstInstance
+import `fun`.adaptive.utility.firstInstanceOrNull
 import kotlin.collections.filter
 
 class Workspace {
@@ -131,6 +132,9 @@ class Workspace {
     fun List<WsPane<*>>.filter(position: WsPanePosition) =
         filter { it.position == position }
 
+    inline fun <reified T> firstContext() : T? =
+        contexts.firstInstanceOrNull<T>()
+
     // ---------------------------------------------------------------------------------------------
     // Pane switching
     // ---------------------------------------------------------------------------------------------
@@ -218,8 +222,10 @@ class Workspace {
     // Content management
     // --------------------------------------------------------------------------------
 
-    fun addContentPaneBuilder(itemType: WsItemType, builder: WsContentPaneBuilder) {
-        contentPaneBuilders.getOrPut(itemType) { mutableListOf() } += builder
+    fun addContentPaneBuilder(vararg itemTypes: WsItemType, builder: WsContentPaneBuilder) {
+        for (itemType in itemTypes) {
+            contentPaneBuilders.getOrPut(itemType) { mutableListOf() } += builder
+        }
     }
 
     fun addContent(item: WsItem, modifiers: Set<EventModifier>) {

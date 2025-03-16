@@ -1,6 +1,7 @@
 package `fun`.adaptive.ui.render
 
 import `fun`.adaptive.ui.AbstractAuiFragment
+import `fun`.adaptive.ui.instruction.event.PointerEvents
 import `fun`.adaptive.ui.instruction.event.UIEventHandler
 
 abstract class EventRenderApplier<R> : AbstractRenderApplier() {
@@ -23,11 +24,11 @@ abstract class EventRenderApplier<R> : AbstractRenderApplier() {
             if (current != null) current.onClickListener = it
         }
 
-        if (previous?.noPointerEvents != current?.noPointerEvents) {
+        if (previous?.pointerEvents != current?.pointerEvents) {
             applyNoPointerEvents(
                 fragment,
-                previous?.noPointerEvents,
-                current?.noPointerEvents
+                previous?.pointerEvents,
+                current?.pointerEvents
             )
         }
 
@@ -138,7 +139,7 @@ abstract class EventRenderApplier<R> : AbstractRenderApplier() {
         }
     }
 
-    abstract fun applyNoPointerEvents(fragment: AbstractAuiFragment<R>, previous: Boolean?, current: Boolean?)
+    abstract fun applyNoPointerEvents(fragment: AbstractAuiFragment<R>, previous: PointerEvents?, current: PointerEvents?)
 
     abstract fun addEventListener(fragment: AbstractAuiFragment<R>, eventFun: UIEventHandler): Any?
 

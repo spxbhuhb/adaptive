@@ -11,33 +11,33 @@ val appData = BasicAppData().apply {
 
     this.appName = "Adaptive"
 
-    this.largeAppIcon = Graphics.eco
-    this.mediumAppIcon = Graphics.eco
+//    this.largeAppIcon = Graphics.eco
+//    this.mediumAppIcon = Graphics.eco
 
     this.loginPage = Routes.login
     this.publicLanding = Routes.publicLanding
     this.memberLanding = Routes.memberLanding
 
-    this.sidebarItems = listOf(
-        SidebarItem(Graphics.grid_view, "Auth", Routes.auth),
-        SidebarItem(Graphics.grid_view, "Box", Routes.box),
-        SidebarItem(Graphics.grid_view, "Canvas", Routes.canvas),
-        SidebarItem(Graphics.grid_view, "Dialog", Routes.dialog),
-        SidebarItem(Graphics.grid_view, "Editor", Routes.editor),
-        SidebarItem(Graphics.grid_view, "Event", Routes.event),
-        SidebarItem(Graphics.grid_view, "Form", Routes.form),
-        SidebarItem(Graphics.grid_view, "Good Morning", Routes.goodMorning),
-        SidebarItem(Graphics.grid_view, "Grid", Routes.grid),
-        SidebarItem(Graphics.grid_view, "Navigation", Routes.navigation),
-        SidebarItem(Graphics.grid_view, "Popup", Routes.popup),
-        SidebarItem(Graphics.grid_view, "Select", Routes.select),
-        SidebarItem(Graphics.grid_view, "Sidebar", Routes.sidebar),
-        SidebarItem(Graphics.grid_view, "Snackbar", Routes.snackbar),
-        SidebarItem(Graphics.grid_view, "SplitPane", Routes.splitPane),
-        SidebarItem(Graphics.grid_view, "SVG", Routes.svg),
-        SidebarItem(Graphics.grid_view, "Text", Routes.text),
-        SidebarItem(Graphics.grid_view, "Tree", Routes.tree)
-    )
+//    this.sidebarItems = listOf(
+//        SidebarItem(Graphics.grid_view, "Auth", Routes.auth),
+//        SidebarItem(Graphics.grid_view, "Box", Routes.box),
+//        SidebarItem(Graphics.grid_view, "Canvas", Routes.canvas),
+//        SidebarItem(Graphics.grid_view, "Dialog", Routes.dialog),
+//        SidebarItem(Graphics.grid_view, "Editor", Routes.editor),
+//        SidebarItem(Graphics.grid_view, "Event", Routes.event),
+//        SidebarItem(Graphics.grid_view, "Form", Routes.form),
+//        SidebarItem(Graphics.grid_view, "Good Morning", Routes.goodMorning),
+//        SidebarItem(Graphics.grid_view, "Grid", Routes.grid),
+//        SidebarItem(Graphics.grid_view, "Navigation", Routes.navigation),
+//        SidebarItem(Graphics.grid_view, "Popup", Routes.popup),
+//        SidebarItem(Graphics.grid_view, "Select", Routes.select),
+//        SidebarItem(Graphics.grid_view, "Sidebar", Routes.sidebar),
+//        SidebarItem(Graphics.grid_view, "Snackbar", Routes.snackbar),
+//        SidebarItem(Graphics.grid_view, "SplitPane", Routes.splitPane),
+//        SidebarItem(Graphics.grid_view, "SVG", Routes.svg),
+//        SidebarItem(Graphics.grid_view, "Text", Routes.text),
+//        SidebarItem(Graphics.grid_view, "Tree", Routes.tree)
+//    )
 }
 
 object Routes {

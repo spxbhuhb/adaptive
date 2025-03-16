@@ -18,7 +18,7 @@ import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.datetime.datePicker
-import `fun`.adaptive.ui.input.InputState
+import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.input.InputTheme
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.colors
@@ -28,7 +28,7 @@ import kotlinx.datetime.LocalDate
 @Adaptive
 fun dateInput(
     value: LocalDate = localDate(),
-    state: InputState = InputState(),
+    state: InputContext = InputContext(),
     theme: InputTheme = InputTheme.DEFAULT,
     onChange: (date: LocalDate) -> Unit
 ): AdaptiveFragment {
@@ -38,8 +38,8 @@ fun dateInput(
 
     val themeInstructions = when {
         observed.disabled -> theme.disabled
-        observed.invalid -> if (focus) theme.invalidFocused else theme.invalidNotFocused
-        else -> if (focus) theme.focused else theme.enabled
+        observed.invalid -> if (focus || observed.popupOpen) theme.invalidFocused else theme.invalidNotFocused
+        else -> if (focus || observed.popupOpen) theme.focused else theme.enabled
     }
 
     box(themeInstructions, instructions()) {
@@ -49,7 +49,7 @@ fun dateInput(
 
         if (! observed.disabled) {
 
-            primaryPopup(focusParentOnHide = true) { hide ->
+            primaryPopup(state) { hide ->
                 popupAlign.belowStart .. onClick { it.stopPropagation() } .. zIndex { 10000 } .. padding { 4.dp }
                 dropShadow(colors.reverse.opaque(0.1f), 2.dp, 2.dp, 2.dp)
 

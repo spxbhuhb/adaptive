@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.input.InputState
+import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.label.inputLabel
@@ -26,24 +26,24 @@ fun textInputRecipe(): AdaptiveFragment {
         column {
             maxWidth
             inputLabel { "Disabled - separated label" }
-            textInput(value, InputState(disabled = true)) { value = it }
+            textInput(value, InputContext(disabled = true)) { value = it }
         }
 
         column {
             maxWidth
             inputLabel { "Invalid - separated label" }
-            textInput(value, InputState(invalid = true)) { value = it }
+            textInput(value, InputContext(invalid = true)) { value = it }
         }
 
         withLabel("Default - with label") { state ->
             textInput(value, state) { value = it }
         }
 
-        withLabel("Disabled - with label", InputState(disabled = true)) { state ->
+        withLabel("Disabled - with label", InputContext(disabled = true)) { state ->
             textInput(value, state) { value = it }
         }
 
-        withLabel("Invalid - with label", InputState(invalid = true)) { state ->
+        withLabel("Invalid - with label", InputContext(invalid = true)) { state ->
             textInput(value, state) { value = it }
         }
     }

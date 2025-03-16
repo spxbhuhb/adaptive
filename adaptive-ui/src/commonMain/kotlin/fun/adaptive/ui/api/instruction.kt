@@ -71,7 +71,8 @@ fun onSecondaryUp(handler: (event: UIEvent) -> Unit) = OnSecondaryUp(handler)
 
 fun onKeydown(handler: (event: UIEvent) -> Unit) = OnKeyDown(handler)
 
-val noPointerEvents = NoPointerEvents()
+val noPointerEvents = PointerEvents(false)
+val enablePointerEvents = PointerEvents(true)
 fun onClose(handler: () -> Unit) = OnClose(handler)
 
 // ------------------------------------------------------------------------------------

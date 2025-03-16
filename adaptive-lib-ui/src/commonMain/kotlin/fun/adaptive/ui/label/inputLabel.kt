@@ -7,16 +7,16 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.input.InputState
+import `fun`.adaptive.ui.input.InputContext
 
 
 @Adaptive
 fun inputLabel(
-    inputState: InputState = InputState(),
+    inputContext: InputContext = InputContext(),
     theme: LabelTheme = LabelTheme.DEFAULT,
     label: () -> String
 ): AdaptiveFragment {
-    val observed = valueFrom { inputState }
+    val observed = valueFrom { inputContext }
     val focus = focus()
 
     val themeInstructions = when {

@@ -4,15 +4,9 @@ import `fun`.adaptive.cookbook.recipe.ui.layout.workspace.WorkspaceRecipePaneFra
 import `fun`.adaptive.cookbook.support.E
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.LibFragmentFactory
-import `fun`.adaptive.ui.builtin.collapseAll
-import `fun`.adaptive.ui.builtin.collapse_all
-import `fun`.adaptive.ui.builtin.expandAll
-import `fun`.adaptive.ui.builtin.expand_all
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.model.WsPaneAction
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.wireformat.WireFormatRegistry
@@ -41,16 +35,6 @@ fun Workspace.cookbookCommon() {
         Graphics.flatware,
         WsPanePosition.LeftMiddle,
         cookbookRecipePaneKey,
-        actions = listOf(
-            WsPaneAction(
-                Graphics.expand_all,
-                Strings.expandAll,
-            ) { w, p -> },
-            WsPaneAction(
-                Graphics.collapse_all,
-                Strings.collapseAll,
-            ) { w, p -> }
-        ),
         model = Unit
     )
 

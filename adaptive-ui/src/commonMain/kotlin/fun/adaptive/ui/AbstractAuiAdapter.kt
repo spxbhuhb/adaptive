@@ -4,15 +4,18 @@
 
 package `fun`.adaptive.ui
 
-import `fun`.adaptive.foundation.*
+import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.emptyInstructions
+import `fun`.adaptive.foundation.nonLayoutTopLevelMessage
+import `fun`.adaptive.foundation.nonLayoutTopLevelPath
+import `fun`.adaptive.foundation.opsCheck
 import `fun`.adaptive.resource.ThemeQualifier
 import `fun`.adaptive.ui.api.normalFont
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
+import `fun`.adaptive.ui.fragment.layout.RawPosition
 import `fun`.adaptive.ui.fragment.structural.AuiLoop
 import `fun`.adaptive.ui.fragment.structural.AuiSelect
-import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.SPixel
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.platform.media.MediaMetrics
@@ -198,6 +201,18 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
      */
     open fun removeMediaMetricsProducer(producer: MediaMetricsProducer) {
         mediaMetricsProducers -= producer
+    }
+
+    // ------------------------------------------------------------------------------
+    // Scroll support
+    // ------------------------------------------------------------------------------
+
+    open fun scrollPosition(fragment: AbstractAuiFragment<RT>) : RawPosition {
+        throw UnsupportedOperationException("scrollPosition($fragment)")
+    }
+
+    open fun scrollTo(fragment: AbstractAuiFragment<RT>, position: RawPosition) {
+        throw UnsupportedOperationException("scrollTo($fragment, $position)")
     }
 
     // ------------------------------------------------------------------------------

@@ -21,9 +21,15 @@ class StringStoreResourceSet(
     var avsReader = AvsReader.EMPTY
     var values = emptyArray<String?>()
 
-    fun get(index : Int) : String =
+    fun get(index: Int): String =
         if (index < 0 || index >= values.size) {
-            error("Index $index out of bounds (0..${values.size - 1}). Have you called load() during application startup?")
+            error(
+                """
+                    Index $index out of bounds (0..${values.size - 1}). 
+                    Have you called load() during application startup?
+                    First path in store: ${files.firstOrNull()?.path}
+                """.trimIndent()
+            )
         } else {
             values[index] ?: avsReader[index].decodeToString().also { values[index] = it }
         }

@@ -2,14 +2,13 @@ package `fun`.adaptive.ui.fragment.structural
 
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.query.firstOrNull
-import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.fragment.layout.AbstractBox
+import `fun`.adaptive.ui.input.InputContext
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.KeyboardEvent
-import web.timers.setTimeout
 
 abstract class AbstractClickPopup(
     adapter: AuiAdapter,
@@ -18,10 +17,21 @@ abstract class AbstractClickPopup(
     val eventName: String
 ) : AbstractPopup<HTMLElement, HTMLDivElement>(adapter, parent, index, 3) {
 
-    val focusParentOnHide
-        get() = get<Boolean?>(1) == true
+    override val modal: Boolean
+        get() = true
 
-    val blurHandler = { _: Any -> hide() }
+    val inputContext
+        get() = get<InputContext?>(1)
+
+    val blurHandler = { _: Any ->
+        super.hide()
+
+        inputContext?.let { it.popupOpen = false }
+
+        if (inputContext?.focusContainerOnPopupFocusOut == true) {
+            layoutReceiver?.focus()
+        }
+    }
 
     val clickHandler = { event: Event ->
         if (active) {
@@ -40,32 +50,35 @@ abstract class AbstractClickPopup(
         }
     }
 
+    override fun buildContainer(parent: AdaptiveFragment): AbstractBox<HTMLElement, HTMLDivElement> {
+        val container = super.buildContainer(parent)
+        container.receiver.addEventListener("focusout", blurHandler)
+        container.receiver.addEventListener("keydown", keyDownHandler)
+        return container
+    }
+
+    override fun show() {
+        inputContext?.let { it.popupOpen = true }
+        super.show()
+    }
+
     override fun hide() {
-        // this is a trick to let focusout event propagate
-        setTimeout({
-            super.hide()
-            if (focusParentOnHide) { // put focus on the layout receiver on popup hiding
-                layoutReceiver?.focus()
-            }
-        }, 0)
+        super.hide()
+
+        inputContext?.let { it.popupOpen = false }
+
+        if (inputContext?.focusContainerOnPopupClose == true) {
+            layoutReceiver?.focus()
+        }
     }
 
     override fun mount() {
         super.mount()
-        receiver.style.position = "fixed"
         layoutReceiver?.addEventListener(eventName, clickHandler)
     }
 
-    override fun configureBox(fragment: AbstractAuiFragment<HTMLElement>) {
-        val receiver = fragment.receiver
-        receiver.tabIndex = 0
-        receiver.addEventListener("focusout", blurHandler)
-        receiver.addEventListener("keydown", keyDownHandler)
-    }
 
     override fun unmount() {
-        receiver.removeEventListener("keydown", keyDownHandler)
-        receiver.removeEventListener("focusout", blurHandler)
         layoutReceiver?.removeEventListener(eventName, clickHandler)
         super.unmount()
     }
