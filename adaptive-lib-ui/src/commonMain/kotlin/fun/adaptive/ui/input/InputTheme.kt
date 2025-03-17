@@ -2,6 +2,7 @@ package `fun`.adaptive.ui.input
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.api.disabled as uiDisabled
@@ -56,6 +57,16 @@ class InputTheme(
         padding(top = 1.dp, left = 16.dp, bottom = 1.dp, right = 16.dp),
         textColors.onSurface,
         backgroundColor(colors.failSurface.opaque(0.05f)),
+    )
+
+    val unitContainer = instructionsOf(
+        fill.constrainReverse
+    )
+
+    val unitText = instructionsOf(
+        alignSelf.bottom,
+        paddingLeft { 8.dp },
+        paddingBottom { 5.dp },
     )
 
     companion object {

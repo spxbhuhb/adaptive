@@ -56,7 +56,7 @@ fun ByteArray.toLong(offset: Int = 0): Long {
     return value
 }
 
-const val maxDecimals = 10
+const val maxDecimals = 9
 val shifts = Array(maxDecimals) { idx -> 10.0.pow(idx) }
 
 fun format(
@@ -74,7 +74,7 @@ fun Double.format(
     thousandSeparator: String? = null,
     hideZeroDecimals: Boolean = false,
 ): String {
-    check(decimals < maxDecimals) { "decimals must to be less than $maxDecimals" }
+    check(decimals <= maxDecimals) { "decimals must to be less than $maxDecimals" }
 
     return when {
         isNaN() -> "NaN"
@@ -82,9 +82,9 @@ fun Double.format(
         isInfinite() -> if (this < 0) "-Inf" else "+Inf"
 
         decimals == 0 -> {
-            round(this).toString().substringBefore('.').withSeparators(".").let {
-                if (it == "-0") "0" else it
-            }
+            round(this).toString().substringBefore('.')
+                .let { if (thousandSeparator != null) it.withSeparators(thousandSeparator) else it }
+                .let { if (it == "-0") "0" else it }
         }
 
         else -> {
@@ -100,7 +100,8 @@ fun Double.format(
                 .let { if (thousandSeparator != null) it.withSeparators(thousandSeparator) else it }
 
             val decimalString = s.substring(cutAt).let {
-                if (hideZeroDecimals && it.toLong() == 0L) "" else decimalSeparator + it
+                if (hideZeroDecimals && it.toLong() == 0L) "" else decimalSeparator +
+                    (if (hideZeroDecimals) it.trimEnd('0') else it)
             }
 
             return sign + integralString + decimalString

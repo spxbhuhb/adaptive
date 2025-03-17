@@ -81,13 +81,18 @@ abstract class AbstractStack<RT, CRT : RT>(
             (instructedHeight ?: proposedHeight) - data.surroundingVertical
         }
 
-        val constrain = (data.layout?.fill == FillStrategy.Constrain)
+        val fill = data.layout?.fill
+        val items = if (fill == FillStrategy.ConstrainReverse) {
+            layoutItems.reversed()
+        } else {
+            layoutItems
+        }
 
-        for (item in layoutItems) {
+        for (item in items) {
             item.computeLayout(proposedItemWidth, proposedItemHeight)
             itemsWidth = itemsWidthCalc(itemsWidth, item)
             itemsHeight = itemsHeightCalc(itemsHeight, item)
-            if (constrain) {
+            if (fill != null) {
                 proposedItemWidth = constrainWidthCalc(proposedItemWidth, item)
                 proposedItemHeight = constrainHeightCalc(proposedItemHeight, item)
             }

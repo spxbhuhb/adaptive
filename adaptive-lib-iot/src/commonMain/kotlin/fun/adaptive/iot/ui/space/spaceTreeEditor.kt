@@ -72,7 +72,9 @@ private fun applyToolMenuAction(
 
 private fun apply(tree: SpaceTreeModel, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AioSpace>?) {
     val projectId = tree.context.projectId
-    val itemId = treeItem?.data?.uuid
+    val item = treeItem?.data
+    val itemId = item?.uuid
+    val displayOrder = (treeItem?.children?.lastOrNull()?.data?.displayOrder ?: 0) + 1
     val context = tree.context
 
     context.io {
@@ -80,30 +82,34 @@ private fun apply(tree: SpaceTreeModel, menuItem: MenuItem<AioSpaceEditOperation
 
         when (menuItem.data) {
             AioSpaceEditOperation.AddSite -> {
-                space = context.spaceService.add(projectId, itemId, AioSpaceType.Site)
+                space = context.spaceService.add(projectId, itemId, AioSpaceType.Site, displayOrder)
             }
 
             AioSpaceEditOperation.AddBuilding -> {
-                space = context.spaceService.add(projectId, itemId, AioSpaceType.Building)
+                space = context.spaceService.add(projectId, itemId, AioSpaceType.Building, displayOrder)
             }
 
             AioSpaceEditOperation.AddFloor -> {
-                space = context.spaceService.add(projectId, itemId, AioSpaceType.Floor)
+                space = context.spaceService.add(projectId, itemId, AioSpaceType.Floor, displayOrder)
             }
 
             AioSpaceEditOperation.AddRoom -> {
-                space = context.spaceService.add(projectId, itemId, AioSpaceType.Room)
+                space = context.spaceService.add(projectId, itemId, AioSpaceType.Room, displayOrder)
             }
 
             AioSpaceEditOperation.AddArea -> {
-                space = context.spaceService.add(projectId, itemId, AioSpaceType.Area)
+                space = context.spaceService.add(projectId, itemId, AioSpaceType.Area, displayOrder)
             }
 
             AioSpaceEditOperation.MoveUp -> {
+                check(treeItem != null)
+                move(context, tree, treeItem, -1)
                 space = null
             }
 
             AioSpaceEditOperation.MoveDown -> {
+                check(treeItem != null)
+                move(context, tree, treeItem, 1)
                 space = null
             }
 
@@ -122,6 +128,47 @@ private fun apply(tree: SpaceTreeModel, menuItem: MenuItem<AioSpaceEditOperation
                 tree.items += newItem
             }
         }
+    }
+}
+
+private fun move(
+    context: AioWsContext,
+    tree: SpaceTreeModel,
+    treeItem: TreeItem<AioSpace>,
+    offset : Int
+) {
+    val parent = treeItem.parent
+    val children = parent?.children ?: tree.items
+
+    val index = children.indexOfFirst { it.data.uuid == treeItem.data.uuid }
+    if (offset < 0 && index < 1) return
+    if (offset > 0 && index == children.lastIndex) return
+
+    val item = children[index]
+    val sibling = children[index + offset]
+
+    val newList = children.toMutableList()
+    newList[index] = sibling
+    newList[index + offset] = item
+
+    if (parent != null) {
+        parent.children = newList
+    } else {
+        tree.items = newList
+    }
+
+    val itemDisplayOrder = item.data.displayOrder
+    val siblingDisplayOrder = sibling.data.displayOrder
+
+    val newSiblingSpace = sibling.data.copy(displayOrder = itemDisplayOrder)
+    val newItemSpace = item.data.copy(displayOrder = siblingDisplayOrder)
+
+    sibling.data = newSiblingSpace
+    item.data = newItemSpace
+
+    context.io {
+        context.spaceService.update(newItemSpace)
+        context.spaceService.update(newSiblingSpace)
     }
 }
 

@@ -7,13 +7,12 @@ package `fun`.adaptive.app.basic.auth.ui.small
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.*
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.basic.auth.model.BasicSignUp
-import `fun`.adaptive.document.ui.basic.docDocument
 import `fun`.adaptive.document.ui.direct.h1
 import `fun`.adaptive.document.ui.direct.h2
+import `fun`.adaptive.document.ui.direct.markdown
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.resource.document.DocumentResourceSet.Companion.inlineDocument
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.button.button
@@ -45,7 +44,7 @@ fun signUp(): AdaptiveFragment {
 
                 editor { signUp.agreement }
 
-                docDocument(inlineDocument(Strings.signUpAgree))
+                markdown(Strings.signUpAgree)
             }
 
             button(Strings.signUpButton) .. maxWidth .. onClick {
@@ -53,7 +52,7 @@ fun signUp(): AdaptiveFragment {
             }
         }
 
-        docDocument(inlineDocument(Strings.signUpSignIn))
+       markdown(Strings.signUpSignIn)
     }
 
     return fragment()

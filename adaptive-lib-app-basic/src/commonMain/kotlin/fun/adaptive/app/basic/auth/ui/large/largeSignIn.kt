@@ -10,14 +10,13 @@ import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.basic.appData
 import `fun`.adaptive.app.basic.auth.model.BasicSignIn
 import `fun`.adaptive.auth.api.SessionApi
-import `fun`.adaptive.document.ui.basic.docDocument
 import `fun`.adaptive.document.ui.direct.h1
 import `fun`.adaptive.document.ui.direct.h2
+import `fun`.adaptive.document.ui.direct.markdown
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.resource.document.DocumentResourceSet.Companion.inlineDocument
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
@@ -72,7 +71,7 @@ fun largeSignIn(): AdaptiveFragment {
                 }
             }
 
-            docDocument(inlineDocument(Strings.signInForgot))
+            markdown(Strings.signInForgot)
         }
     }
 

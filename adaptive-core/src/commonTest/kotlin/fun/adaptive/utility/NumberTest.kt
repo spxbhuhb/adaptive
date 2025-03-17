@@ -33,6 +33,9 @@ class NumberTest {
         assertEquals("12.3456", format(12.3456, 4))
         assertEquals("12.34560", format(12.3456, 5))
 
+        assertEquals("123", format(123.0, 0))
+        assertEquals("1234", format(1234.0, 0))
+
         assertEquals("-12", format(- 12.0, 0))
         assertEquals("-12.0", format(- 12.0, 1))
         assertEquals("-12.00", format(- 12.0, 2))

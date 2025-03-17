@@ -20,9 +20,10 @@ fun image(res: ImageResourceSet, vararg instructions: AdaptiveInstruction): Adap
 @AdaptiveExpect(aui)
 fun singleLineTextInput(
     value: String?,
+    validate: ((currentValue : String?, inputValue: String) -> Boolean)? = null,
     onChange: (newValue: String) -> Unit,
 ): AdaptiveFragment {
-    manualImplementation(value, onChange)
+    manualImplementation(value, validate, onChange)
 }
 
 @AdaptiveExpect(aui)
@@ -109,17 +110,17 @@ fun dropTarget(vararg instructions: AdaptiveInstruction, @Adaptive content: () -
 }
 
 @AdaptiveExpect(aui)
-fun hoverPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: (hide : () -> Unit) -> Unit): AdaptiveFragment {
+fun hoverPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: (hide: () -> Unit) -> Unit): AdaptiveFragment {
     manualImplementation(content, instructions)
 }
 
 @AdaptiveExpect(aui)
-fun primaryPopup(inputContext : InputContext? = null, vararg instructions: AdaptiveInstruction, @Adaptive content: (hide : () -> Unit) -> Unit): AdaptiveFragment {
+fun primaryPopup(inputContext: InputContext? = null, vararg instructions: AdaptiveInstruction, @Adaptive content: (hide: () -> Unit) -> Unit): AdaptiveFragment {
     manualImplementation(inputContext, content, instructions)
 }
 
 @AdaptiveExpect(aui)
-fun contextPopup(inputContext : InputContext? = null, vararg instructions: AdaptiveInstruction, @Adaptive content: (hide : () -> Unit) -> Unit): AdaptiveFragment {
+fun contextPopup(inputContext: InputContext? = null, vararg instructions: AdaptiveInstruction, @Adaptive content: (hide: () -> Unit) -> Unit): AdaptiveFragment {
     manualImplementation(inputContext, content, instructions)
 }
 
@@ -137,5 +138,5 @@ fun splitPane(
 
 @AdaptiveExpect(aui)
 fun paragraph(paragraph: Paragraph): AdaptiveFragment {
-    manualImplementation()
+    manualImplementation(paragraph)
 }

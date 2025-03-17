@@ -11,6 +11,7 @@ import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.InputContext
+import `fun`.adaptive.ui.input.number.doubleOrNullUnitInput
 import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.input.text.textInputArea
 import `fun`.adaptive.ui.instruction.dp
@@ -68,10 +69,20 @@ fun areaEditor(context : AioWsContext, item: TreeItem<AioSpace>) {
                 textInput(space.spaceType.localized(), state) { }
             }
 
+            withLabel(Strings.area) { state ->
+                width { 120.dp }
+                doubleOrNullUnitInput(space.area, 0, "m²", state) { v ->
+                    // FIXME space editor update mess
+                    observed.data = space.copy(area = v)
+                    context.updateSpace(space)
+                }
+            }
+
             withLabel(Strings.name) {
                 width { 400.dp }
                 textInput(space.name) { v ->
                     item.title = v
+                    // FIXME space editor update mess
                     observed.data = space.copy(name = v)
                     context.updateSpace(space)
                 }
@@ -80,9 +91,10 @@ fun areaEditor(context : AioWsContext, item: TreeItem<AioSpace>) {
             withLabel(Strings.note) {
                 width { 400.dp }
                 textInputArea(space.notes) { v ->
+                    // FIXME space editor update mess
                     observed.data = space.copy(notes = v)
                     context.updateSpace(space)
-                } .. height { 400.dp }
+                } .. height { 300.dp }
             }
         }
     }

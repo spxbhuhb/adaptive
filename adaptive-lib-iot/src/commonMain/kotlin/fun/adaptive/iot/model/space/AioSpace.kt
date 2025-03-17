@@ -8,6 +8,7 @@ import `fun`.adaptive.iot.model.project.AioProjectItem
 import `fun`.adaptive.iot.model.project.FriendlyItemId
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.workspace.model.WsItemType
 import `fun`.adaptive.utility.UUID
@@ -22,14 +23,15 @@ data class AioSpace(
     override val type: WsItemType = AioWsContext.WSIT_SPACE,
     val spaceType: AioSpaceType,
     val notes: String = "",
+    val displayOrder: Int,
     val active: Boolean = true,
     val area: Double? = null,
-    val parentId: AioSpaceId? = null
+    val parentId: AioSpaceId? = null,
 ) : AioProjectItem<AioSpace>() {
 
     fun toTreeItem(parent: TreeItem<AioSpace>?) = TreeItem(
         icon = icon(),
-        title = name,
+        title = name.ifEmpty { Strings.noname },
         data = this,
         parent = parent
     )

@@ -26,11 +26,12 @@ class DocumentResourceSet(
                 it.cachedContent = data
             }
 
-        fun inlineDocument(content : String) =
+        fun inlineDocument(name : String? = "<anonymous>", content : String) =
             DocumentResourceSet(
-                "$INLINE<anonymous>",
+                INLINE + name
             ).also {
                 it.cachedContent = content.encodeToByteArray()
             }
+
     }
 }

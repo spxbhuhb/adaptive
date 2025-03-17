@@ -6,28 +6,29 @@ import `fun`.adaptive.cookbook.recipe.ui.button.buttonRecipe
 import `fun`.adaptive.cookbook.recipe.ui.canvas.canvasRecipe
 import `fun`.adaptive.cookbook.recipe.ui.checkbox.checkboxRecipe
 import `fun`.adaptive.cookbook.recipe.ui.codefence.codeFenceRecipe
-import `fun`.adaptive.cookbook.recipe.ui.input.datetime.dateInputRecipe
 import `fun`.adaptive.cookbook.recipe.ui.dialog.dialogRecipe
 import `fun`.adaptive.cookbook.recipe.ui.editor.editorRecipe
 import `fun`.adaptive.cookbook.recipe.ui.event.eventRecipe
 import `fun`.adaptive.cookbook.recipe.ui.form.formRecipe
 import `fun`.adaptive.cookbook.recipe.ui.icon.iconRecipe
+import `fun`.adaptive.cookbook.recipe.ui.input.datetime.dateInputRecipe
+import `fun`.adaptive.cookbook.recipe.ui.input.number.doubleInputRecipe
 import `fun`.adaptive.cookbook.recipe.ui.input.text.textInputAreaRecipe
 import `fun`.adaptive.cookbook.recipe.ui.input.text.textInputRecipe
 import `fun`.adaptive.cookbook.recipe.ui.layout.box.boxRecipe
 import `fun`.adaptive.cookbook.recipe.ui.layout.grid.gridRecipe
+import `fun`.adaptive.cookbook.recipe.ui.layout.splitpane.splitPaneRecipe
+import `fun`.adaptive.cookbook.recipe.ui.layout.workspace.workspaceRecipe
+import `fun`.adaptive.cookbook.recipe.ui.layout.wrap.wrapRecipe
 import `fun`.adaptive.cookbook.recipe.ui.popup.popupRecipe
 import `fun`.adaptive.cookbook.recipe.ui.select.selectRecipe
 import `fun`.adaptive.cookbook.recipe.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.cookbook.recipe.ui.snackbar.snackbarRecipe
-import `fun`.adaptive.cookbook.recipe.ui.layout.splitpane.splitPaneRecipe
 import `fun`.adaptive.cookbook.recipe.ui.svg.svgRecipe
 import `fun`.adaptive.cookbook.recipe.ui.tab.tabRecipe
 import `fun`.adaptive.cookbook.recipe.ui.text.paragraphRecipe
 import `fun`.adaptive.cookbook.recipe.ui.text.textRecipe
 import `fun`.adaptive.cookbook.recipe.ui.tree.treeRecipe
-import `fun`.adaptive.cookbook.recipe.ui.layout.wrap.wrapRecipe
-import `fun`.adaptive.cookbook.recipe.ui.layout.workspace.workspaceRecipe
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 
 object CookbookFragmentFactory : FoundationFragmentFactory() {
@@ -64,6 +65,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:wrap", ::wrapRecipe)
 
         add("cookbook:recipe:input:date", ::dateInputRecipe)
+        add("cookbook:recipe:input:double", ::doubleInputRecipe)
         add("cookbook:recipe:input:text", ::textInputRecipe)
         add("cookbook:recipe:input:text-area", ::textInputAreaRecipe)
     }

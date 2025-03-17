@@ -37,7 +37,8 @@ class SpaceService : AioSpaceApi, ServiceImpl<SpaceService> {
     override suspend fun add(
         projectId: UUID<AioProject>,
         parentId: UUID<AioSpace>?,
-        type: AioSpaceType
+        type: AioSpaceType,
+        displayOrder: Int
     ): AioSpace {
         publicAccess()
 
@@ -52,6 +53,7 @@ class SpaceService : AioSpaceApi, ServiceImpl<SpaceService> {
                 friendlyId = friendlyId,
                 name = "SP-${friendlyId.p04}",
                 spaceType = type,
+                displayOrder = displayOrder,
                 parentId = parentId
             )
 

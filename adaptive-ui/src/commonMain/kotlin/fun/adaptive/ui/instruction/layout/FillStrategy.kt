@@ -5,10 +5,22 @@
 package `fun`.adaptive.ui.instruction.layout
 
 /**
- * Strategy that changes container calculation behaviour. When [Constrain], the
- * stack containers propose only the remaining space for their content in respect
- * of the content already placed.
+ * Strategy that changes container calculation behaviour.
+ *
+ * When [Constrain],
+ *
+ * [Constrain]
  */
 enum class FillStrategy {
-    Constrain
+    /**
+     * Stack containers (row, column) propose only the remaining space for their
+     * content in respect of the content already placed.
+     */
+    Constrain,
+
+    /**
+     * Stack containers (row, column) propose only the remaining space for their
+     * content in respect of the content that follows them.
+     */
+    ConstrainReverse
 }

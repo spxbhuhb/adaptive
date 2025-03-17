@@ -32,6 +32,8 @@ private fun AioSpace.mapToTreeItem(
         val children = childMap[uuid]
         if (children == null) return@also
 
+        children.sortBy { it.displayOrder }
+
         item.children = children.map { child ->
             child.mapToTreeItem(item, childMap)
         }

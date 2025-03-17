@@ -9,6 +9,7 @@ import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.api.disabled
 import `fun`.adaptive.ui.aui
+import `fun`.adaptive.ui.instruction.layout.Alignment
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
@@ -26,6 +27,9 @@ open class AuiSingleLineTextInput(
     private var value: String?
         by stateVariable()
 
+    private val validate: ((String?,String) -> Boolean)?
+        by stateVariable()
+
     private val onChange: (String) -> Unit
         by stateVariable()
 
@@ -33,6 +37,7 @@ open class AuiSingleLineTextInput(
 
         if (haveToPatchInstructions) {
             receiver.disabled = (disabled in instructions)
+            alignText()
         }
 
         if (haveToPatch(value)) {
@@ -42,10 +47,27 @@ open class AuiSingleLineTextInput(
         if (isInit) {
             receiver.addEventListener("input", {
                 if (receiver.value != value) {
-                    value = receiver.value
-                    onChange(receiver.value)
+                    if (validate?.invoke(value, receiver.value) == false) {
+                        receiver.value = value ?: ""
+                    } else {
+                        value = receiver.value
+                        onChange(receiver.value)
+                    }
                 }
             })
+        }
+    }
+
+    fun alignText() {
+        val alignment = renderData.container?.horizontalAlignment
+        if (alignment != null) {
+            receiver.style.textAlign = when (alignment) {
+                Alignment.Start -> "start"
+                Alignment.Center -> "center"
+                Alignment.End -> "end"
+            }
+        } else {
+            receiver.style.removeProperty("text-align")
         }
     }
 }

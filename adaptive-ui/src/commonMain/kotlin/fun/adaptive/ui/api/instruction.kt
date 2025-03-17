@@ -104,6 +104,7 @@ object fit {
 
 object fill {
     val constrain = Fill(FillStrategy.Constrain)
+    val constrainReverse = Fill(FillStrategy.ConstrainReverse)
 }
 
 val maxSize = MaxSize()

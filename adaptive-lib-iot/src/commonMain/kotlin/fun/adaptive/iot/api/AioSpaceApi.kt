@@ -11,7 +11,12 @@ interface AioSpaceApi {
 
     suspend fun query() : List<AioSpace>
 
-    suspend fun add(projectId: UUID<AioProject>, parentId: UUID<AioSpace>?, type: AioSpaceType): AioSpace
+    suspend fun add(
+        projectId: UUID<AioProject>,
+        parentId: UUID<AioSpace>?,
+        type: AioSpaceType,
+        displayOrder: Int
+    ): AioSpace
 
     suspend fun update(space: AioSpace)
 
