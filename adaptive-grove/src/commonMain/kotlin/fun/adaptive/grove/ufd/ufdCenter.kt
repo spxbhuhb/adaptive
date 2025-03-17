@@ -23,9 +23,10 @@ import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
+import `fun`.adaptive.ui.workspace.model.WsPane
 
 @Adaptive
-fun ufdCenter() : AdaptiveFragment {
+fun ufdCenter(pane : WsPane<*>) : AdaptiveFragment {
 
     val controller = SheetViewController().also { fragment().wsContext<SheetViewContext>().focusedView.value = it }
 

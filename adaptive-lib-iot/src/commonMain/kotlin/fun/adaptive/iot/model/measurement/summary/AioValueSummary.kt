@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot.model.device.point
+package `fun`.adaptive.iot.model.measurement.summary
 
 class AioValueSummary(
     val value : Any,

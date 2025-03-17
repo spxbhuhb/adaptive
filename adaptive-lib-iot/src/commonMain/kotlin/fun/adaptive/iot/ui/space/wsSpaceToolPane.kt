@@ -1,9 +1,9 @@
-package `fun`.adaptive.iot.ws
+package `fun`.adaptive.iot.ui.space
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.iot.ui.space.spaceTreeEditor
+import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.wsToolPane
 

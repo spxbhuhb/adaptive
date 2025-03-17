@@ -4,7 +4,7 @@ import `fun`.adaptive.general.SelfObservable
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import kotlin.properties.Delegates.observable
 
-open class TreeItem<T>(
+class TreeItem<T>(
     icon: GraphicsResourceSet,
     title: String,
     data: T,
@@ -43,5 +43,4 @@ open class TreeItem<T>(
         open = false
         children.forEach { it.collapseAll() }
     }
-
 }

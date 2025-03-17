@@ -16,3 +16,5 @@ typealias AioMeasurementPointId = UUID<AioMeasurementPoint>
 typealias AioProjectId = UUID<AioProject>
 typealias AioSpaceId = UUID<AioSpace>
 typealias AioNetworkId = UUID<AioNetwork>
+
+typealias AioMeasurementLocationType = String

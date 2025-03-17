@@ -11,6 +11,8 @@
     <string name="note">Megjegyzés</string>
     <string name="noname">(nincs név megadva)</string>
 
+    <string name="temperatureAndHumidity">Hőmérséklet és páratartalom</string>
+
     <string name="areas">Területek</string>
     <string name="site">Telephely</string>
     <string name="building">Épület</string>

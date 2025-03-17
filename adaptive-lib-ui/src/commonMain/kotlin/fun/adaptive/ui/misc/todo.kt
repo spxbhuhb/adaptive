@@ -13,10 +13,10 @@ import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.theme.textMedium
 
 @Adaptive
-fun todo() : AdaptiveFragment {
+fun todo(data : Any? = null) : AdaptiveFragment {
     box {
         padding { 16.dp }
-        text("TODO") .. textColors.info .. textMedium .. semiBoldFont .. instructions()
+        text("TODO $data") .. textColors.info .. textMedium .. semiBoldFont .. instructions()
     }
     return fragment()
 }

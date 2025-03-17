@@ -6,6 +6,7 @@ import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
@@ -36,9 +37,7 @@ fun tabContainer(
         header(model, theme, activeTab, { activeTab = it }, _fixme_adaptive_content)
 
         if (activeTab != null) {
-            localContext(activeTab.model) {
-                actualize(activeTab.key)
-            }
+            actualize(activeTab.key, emptyInstructions, activeTab.model)
         }
     }
 

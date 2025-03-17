@@ -54,6 +54,9 @@ class AioWsContext(override val workspace: Workspace) : WsContext {
 
         const val WSPANE_SPACE_TOOL = "aio:space:tool"
         const val WSPANE_SPACE_CONTENT = "aio:space:content"
+
+        const val WSPANE_MEASUREMENT_LOCATION_TOOL = "aio:measurement:location:tool"
+        const val WSPANE_MEASUREMENT_LOCATION_CONTENT = "aio:measurement:location:content"
     }
 
 }

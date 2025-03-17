@@ -19,6 +19,23 @@ class TreeViewModel<IT, CT>(
     var items by observable(items, ::notify)
     var selection by observable(selection, ::notify)
 
+    fun <NIT,NCT> transform(
+        context: NCT,
+        selectedFun: TreeItemSelectedFun<NIT, NCT>? = null,
+        keyDownFun: TreeKeyDownFun<NIT, NCT>? = null,
+        transform: (original : TreeItem<IT>, newParent : TreeItem<NIT>?) -> TreeItem<NIT>
+    ) =
+        TreeViewModel<NIT,NCT>(
+            items.map { transform(it, null) },
+            emptyList(),
+            context,
+            selectedFun,
+            keyDownFun,
+            theme,
+            multiSelect,
+            openWithSingleClick
+        )
+
     companion object {
 
         fun <IT, CT> defaultSelectedFun(

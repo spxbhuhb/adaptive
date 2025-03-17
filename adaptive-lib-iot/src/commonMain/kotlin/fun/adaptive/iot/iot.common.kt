@@ -2,19 +2,21 @@ package `fun`.adaptive.iot
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.apartment
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.commonMainStringsStringStore0
+import `fun`.adaptive.adaptive_lib_iot.generated.resources.dew_point
 import `fun`.adaptive.iot.model.device.AioDevice
 import `fun`.adaptive.iot.model.device.point.AioDevicePoint
 import `fun`.adaptive.iot.model.project.AioProject
 import `fun`.adaptive.iot.model.space.AioSpace
 import `fun`.adaptive.iot.model.space.AioSpaceType
+import `fun`.adaptive.iot.ui.measurement.MeasurementWsItem
+import `fun`.adaptive.iot.ui.measurement.wsMeasurementSpaceTree
+import `fun`.adaptive.iot.ui.space.SpacePaneController
 import `fun`.adaptive.iot.ui.space.wsSpaceTreeEditor
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.AbstractAuiAdapter
-import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.ui.workspace.logic.WsPaneController
-import `fun`.adaptive.ui.workspace.model.WsItem
+import `fun`.adaptive.ui.workspace.logic.WsClassPaneController
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
@@ -44,6 +46,7 @@ fun Workspace.iotCommon() {
     contexts += context
 
     toolPanes += wsSpaceTreeEditor()
+    toolPanes += wsMeasurementSpaceTree()
 
     addContentPaneBuilder(AioWsContext.WSIT_SPACE) { item ->
         WsPane(
@@ -57,16 +60,19 @@ fun Workspace.iotCommon() {
         )
     }
 
+    addContentPaneBuilder(AioWsContext.WSIT_MEASUREMENT_LOCATION) { item ->
+        WsPane(
+            UUID(),
+            item.name,
+            context[item].icon,
+            WsPanePosition.Center,
+            AioWsContext.WSPANE_MEASUREMENT_LOCATION_CONTENT,
+            controller = WsClassPaneController(MeasurementWsItem::class),
+            model = item as MeasurementWsItem
+        )
+    }
+
     addItemConfig(AioWsContext.WSIT_SPACE, Graphics.apartment)
-}
+    addItemConfig(AioWsContext.WSIT_MEASUREMENT_LOCATION, Graphics.dew_point)
 
-private class SpacePaneController(context: AioWsContext) : WsPaneController<WsItem>() {
-
-    override fun accepts(pane: WsPane<WsItem>, modifiers: Set<EventModifier>, item: WsItem): Boolean {
-        return item is AioSpace
-    }
-
-    override fun load(pane: WsPane<WsItem>, modifiers: Set<EventModifier>, item: WsItem): WsPane<WsItem> {
-        return pane
-    }
 }

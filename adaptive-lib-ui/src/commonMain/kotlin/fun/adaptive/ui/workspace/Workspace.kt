@@ -41,14 +41,14 @@ class Workspace(
             firstContext<Workspace>().contexts.firstInstance<T>()
 
         const val WS_CENTER_PANE = "lib:ws:center"
-        const val WS_NO_CONTENT = "lib:ws:nocontent"
+        const val WSPANE_EMPTY = "lib:ws:nocontent"
 
         val noContentPane = WsPane(
             UUID(),
             "No content",
             Graphics.menu,
             WsPanePosition.Center,
-            WS_NO_CONTENT,
+            WSPANE_EMPTY,
             model = Unit
         )
     }
