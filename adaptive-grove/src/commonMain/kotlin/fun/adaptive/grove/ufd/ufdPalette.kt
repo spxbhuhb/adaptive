@@ -11,15 +11,16 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
-fun ufdPalette() : AdaptiveFragment {
+fun ufdPalette(pane: WsPane<Unit>): AdaptiveFragment {
 
     val context = fragment().wsContext<UfdWsContext>()
     val items = autoCollection(context.palette) ?: emptyList()
 
-    wsToolPane(context.pane(UfdWsContext.PALETTE_TOOL_KEY)) {
+    wsToolPane(pane) {
         column {
             for (item in items) {
                 paletteRow(item)

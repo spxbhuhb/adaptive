@@ -4,6 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.*
@@ -171,7 +172,7 @@ private fun wsPane(workspace: Workspace, position: WsPanePosition): AdaptiveFrag
 private fun wsPaneContent(pane: WsPane<*>) {
     box {
         maxSize
-        actualize(pane.key)
+        actualize(pane.key, emptyInstructions, pane)
     }
 }
 

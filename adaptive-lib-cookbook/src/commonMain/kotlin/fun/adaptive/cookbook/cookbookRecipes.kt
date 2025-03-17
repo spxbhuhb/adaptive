@@ -11,10 +11,11 @@ import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
-fun cookbookRecipes(): AdaptiveFragment {
+fun cookbookRecipes(pane: WsPane<Unit>): AdaptiveFragment {
     val context = fragment().wsContext<CbWsContext>()
 
     val treeViewModel = TreeViewModel(
@@ -28,7 +29,7 @@ fun cookbookRecipes(): AdaptiveFragment {
         openWithSingleClick = true
     )
 
-    wsToolPane(context.pane(CbWsContext.RECIPES_TOOL_KEY)) {
+    wsToolPane(pane) {
         tree(treeViewModel)
     }
 

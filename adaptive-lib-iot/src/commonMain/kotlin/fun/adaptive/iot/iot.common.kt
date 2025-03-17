@@ -3,17 +3,20 @@ package `fun`.adaptive.iot
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.apartment
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.dew_point
+import `fun`.adaptive.adaptive_lib_iot.generated.resources.temperatureAndHumidity
 import `fun`.adaptive.iot.model.device.AioDevice
 import `fun`.adaptive.iot.model.device.point.AioDevicePoint
 import `fun`.adaptive.iot.model.project.AioProject
 import `fun`.adaptive.iot.model.space.AioSpace
 import `fun`.adaptive.iot.model.space.AioSpaceType
-import `fun`.adaptive.iot.ui.measurement.MeasurementWsItem
-import `fun`.adaptive.iot.ui.measurement.wsMeasurementSpaceTree
+import `fun`.adaptive.iot.model.space.SpaceBrowserConfig
+import `fun`.adaptive.iot.model.space.SpaceBrowserWsItem
+import `fun`.adaptive.iot.ui.space.wsSpaceBrowserTool
 import `fun`.adaptive.iot.ui.space.SpacePaneController
 import `fun`.adaptive.iot.ui.space.wsSpaceTreeEditorDef
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsClassPaneController
@@ -46,7 +49,13 @@ fun Workspace.iotCommon() {
     contexts += context
 
     toolPanes += wsSpaceTreeEditorDef()
-    toolPanes += wsMeasurementSpaceTree()
+    toolPanes += wsSpaceBrowserTool(
+        SpaceBrowserConfig(
+            Strings.temperatureAndHumidity,
+            Graphics.dew_point,
+            "", "", ""
+        )
+    )
 
     addContentPaneBuilder(AioWsContext.WSIT_SPACE) { item ->
         WsPane(
@@ -67,8 +76,8 @@ fun Workspace.iotCommon() {
             context[item].icon,
             WsPanePosition.Center,
             AioWsContext.WSPANE_MEASUREMENT_LOCATION_CONTENT,
-            controller = WsClassPaneController(MeasurementWsItem::class),
-            model = item as MeasurementWsItem
+            controller = WsClassPaneController(SpaceBrowserWsItem::class),
+            model = item as SpaceBrowserWsItem
         )
     }
 

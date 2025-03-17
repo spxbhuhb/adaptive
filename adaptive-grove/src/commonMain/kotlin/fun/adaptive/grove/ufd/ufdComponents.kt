@@ -17,17 +17,17 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.wsNoContent
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
-fun ufdComponents(): AdaptiveFragment {
+fun ufdComponents(pane: WsPane<Unit>): AdaptiveFragment {
 
     val context = fragment().wsContext<SheetViewContext>()
     val controller = valueFrom { context.focusedView }
     val selection = valueFromOrNull { controller?.selectionStore } ?: SheetSelection(emptyList())
 
-    val pane = context.pane(UfdWsContext.COMPONENTS_TOOL_KEY)
     val isEmpty = (controller == null)
 
     wsToolPane(pane) {

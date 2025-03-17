@@ -11,17 +11,17 @@ import `fun`.adaptive.grove.sheet.model.SheetSelection
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.flowText
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.wsNoContent
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
-fun ufdState() : AdaptiveFragment {
+fun ufdState(pane: WsPane<Unit>): AdaptiveFragment {
 
     val context = fragment().wsContext<SheetViewContext>()
     val controller = valueFrom { context.focusedView }
     val selection = valueFromOrNull { controller?.selectionStore }
 
-    val pane = context.pane(UfdWsContext.STATE_TOOL_KEY)
     val isEmpty = selection == null || selection.items.isEmpty()
 
     wsToolPane(pane) {

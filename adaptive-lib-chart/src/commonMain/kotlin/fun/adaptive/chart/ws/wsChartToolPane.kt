@@ -8,10 +8,11 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.tree.TreeViewModel
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
-fun wsChartToolPane(): AdaptiveFragment {
+fun wsChartToolPane(pane: WsPane<Unit>): AdaptiveFragment {
 
     val context = fragment().wsContext<WsChartContext>()
 
@@ -21,7 +22,7 @@ fun wsChartToolPane(): AdaptiveFragment {
         context = Unit
     )
 
-    wsToolPane(context.pane(CHART_TOOL_PANE_KEY)) {
+    wsToolPane(pane) {
         tree(treeViewModel)
     }
 

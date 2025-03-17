@@ -31,7 +31,7 @@ import `fun`.adaptive.ui.workspace.wsToolPane
 import `fun`.adaptive.utility.UUID
 
 @Adaptive
-fun wsSpaceTreeEditorPane(): AdaptiveFragment {
+fun wsSpaceTreeEditorPane(pane: WsPane<Unit>): AdaptiveFragment {
 
     val context = fragment().wsContext<AioWsContext>()
     val observed = valueFrom { context.spaceTree }
