@@ -11,7 +11,7 @@ import `fun`.adaptive.iot.model.space.AioSpaceType
 import `fun`.adaptive.iot.ui.measurement.MeasurementWsItem
 import `fun`.adaptive.iot.ui.measurement.wsMeasurementSpaceTree
 import `fun`.adaptive.iot.ui.space.SpacePaneController
-import `fun`.adaptive.iot.ui.space.wsSpaceTreeEditor
+import `fun`.adaptive.iot.ui.space.wsSpaceTreeEditorDef
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.AbstractAuiAdapter
@@ -45,7 +45,7 @@ fun Workspace.iotCommon() {
 
     contexts += context
 
-    toolPanes += wsSpaceTreeEditor()
+    toolPanes += wsSpaceTreeEditorDef()
     toolPanes += wsMeasurementSpaceTree()
 
     addContentPaneBuilder(AioWsContext.WSIT_SPACE) { item ->

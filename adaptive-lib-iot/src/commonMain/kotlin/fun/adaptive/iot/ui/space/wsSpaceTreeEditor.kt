@@ -22,13 +22,28 @@ import `fun`.adaptive.ui.menu.contextMenu
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPaneAction
 import `fun`.adaptive.ui.workspace.model.WsPaneMenuAction
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
+import `fun`.adaptive.ui.workspace.wsToolPane
 import `fun`.adaptive.utility.UUID
 
-fun wsSpaceTreeEditor() =
+@Adaptive
+fun wsSpaceTreeEditorPane(): AdaptiveFragment {
+
+    val context = fragment().wsContext<AioWsContext>()
+    val observed = valueFrom { context.spaceTree }
+
+    wsToolPane(context.pane(AioWsContext.WSPANE_SPACE_TOOL)) {
+        tree(observed, ::contextMenuBuilder)
+    }
+
+    return fragment()
+}
+
+fun wsSpaceTreeEditorDef() =
     WsPane(
         UUID(),
         Strings.areas,
@@ -36,8 +51,8 @@ fun wsSpaceTreeEditor() =
         WsPanePosition.RightTop,
         AioWsContext.WSPANE_SPACE_TOOL,
         actions = listOf(
-            WsPaneAction(Graphics.expand_all, Strings.expandAll, Unit) { w, p, d -> spaceToolExpandAll(w, p) },
-            WsPaneAction(Graphics.collapse_all, Strings.collapseAll, Unit) { w, p, d -> spaceToolCollapseAll(w, p) },
+            WsPaneAction(Graphics.zoom_out_map, Strings.expandAll, Unit) { w, p, d -> spaceToolExpandAll(w, p) },
+            WsPaneAction(Graphics.arrows_input, Strings.collapseAll, Unit) { w, p, d -> spaceToolCollapseAll(w, p) },
             WsPaneMenuAction(Graphics.add, Strings.addArea, addTopMenu, ::applyToolMenuAction)
         ),
         model = Unit
@@ -49,15 +64,6 @@ private fun spaceToolExpandAll(workspace: Workspace, @Suppress("unused") pane: W
 
 private fun spaceToolCollapseAll(workspace: Workspace, @Suppress("unused") pane: WsPane<*>) {
     workspace.firstContext<AioWsContext>()?.spaceTree?.items?.forEach { it.collapseAll() }
-}
-
-@Adaptive
-fun spaceTreeEditor(spaceTree: SpaceTreeModel) {
-
-    val observed = valueFrom { spaceTree }
-
-    tree(observed, ::contextMenuBuilder)
-
 }
 
 private fun applyToolMenuAction(
