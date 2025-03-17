@@ -1,8 +1,10 @@
 package `fun`.adaptive.iot.ws
 
 import `fun`.adaptive.iot.api.AioSpaceApi
+import `fun`.adaptive.iot.model.AioSpaceId
 import `fun`.adaptive.iot.model.project.AioProject
 import `fun`.adaptive.iot.model.space.AioSpace
+import `fun`.adaptive.iot.model.space.AioSpaceType
 import `fun`.adaptive.iot.ui.space.SpaceTreeModel
 import `fun`.adaptive.iot.ui.space.initSpaces
 import `fun`.adaptive.service.api.getService
@@ -12,6 +14,7 @@ import `fun`.adaptive.ui.tree.TreeViewModel
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsContext
 import `fun`.adaptive.utility.UUID
+import kotlin.collections.plus
 
 class AioWsContext(override val workspace: Workspace) : WsContext {
 
@@ -39,8 +42,28 @@ class AioWsContext(override val workspace: Workspace) : WsContext {
         TreeViewModel.defaultSelectedFun(viewModel, item, modifiers)
     }
 
+    fun addSpace(parentItem: TreeItem<AioSpace>?, itemId: AioSpaceId?, site: AioSpaceType, displayOrder: Int) {
+        io {
+            val space = spaceService.add(projectId, itemId, site, displayOrder)
+
+            spaceMap[space.uuid] = space
+
+            val newItem = space.toTreeItem(parentItem)
+
+            if (parentItem != null) {
+                parentItem.children += newItem
+                if (! parentItem.open) parentItem.open = true
+            } else {
+                spaceTree.items += newItem
+            }
+        }
+    }
+
     fun updateSpace(space: AioSpace) {
-        io { spaceService.update(space) }
+        io {
+            spaceService.update(space)
+            spaceMap[space.uuid] = space
+        }
     }
 
     companion object {

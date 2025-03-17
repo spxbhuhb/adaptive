@@ -84,6 +84,8 @@ class SpaceService : AioSpaceApi, ServiceImpl<SpaceService> {
     }
 
     fun loadSpaces() {
+        if (! path.exists()) return
+
         lock.use {
             val bytes = path.read()
             val root = JsonBufferReader(bytes).read()
