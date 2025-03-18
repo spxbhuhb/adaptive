@@ -1,10 +1,14 @@
 package `fun`.adaptive.iot.ws
 
+import `fun`.adaptive.iot.infrastructure.AioInfrastructureApi
+import `fun`.adaptive.iot.infrastructure.AioInfrastructureItem
+import `fun`.adaptive.iot.infrastructure.AioInfrastructureItemId
+import `fun`.adaptive.iot.infrastructure.initInfrastructure
 import `fun`.adaptive.iot.space.AioSpaceApi
 import `fun`.adaptive.iot.space.AioSpaceId
 import `fun`.adaptive.iot.project.model.AioProject
-import `fun`.adaptive.iot.space.model.AioSpace
-import `fun`.adaptive.iot.space.model.AioSpaceType
+import `fun`.adaptive.iot.space.AioSpace
+import `fun`.adaptive.iot.space.AioSpaceType
 import `fun`.adaptive.iot.space.ui.SpaceTreeModel
 import `fun`.adaptive.iot.space.ui.initSpaces
 import `fun`.adaptive.service.api.getService
@@ -22,7 +26,7 @@ class AioWsContext(override val workspace: Workspace) : WsContext {
 
     val projectId = UUID<AioProject>()
 
-    val spaceMap = mutableMapOf<UUID<AioSpace>, AioSpace>()
+    val spaceMap = mutableMapOf<AioSpaceId, AioSpace>()
 
     val spaceTree = TreeViewModel<AioSpace, AioWsContext>(
         emptyList(),
@@ -32,9 +36,21 @@ class AioWsContext(override val workspace: Workspace) : WsContext {
     )
 
     init {
-        io {
-            initSpaces(this)
-        }
+        io { initSpaces(this) }
+    }
+
+    val infrastructureService = getService<AioInfrastructureApi>(workspace.transport)
+
+    val infrastructureMap = mutableMapOf<AioInfrastructureItemId, AioInfrastructureItem>()
+
+    val infrastructureTree = TreeViewModel<AioInfrastructureItem, AioWsContext>(
+        emptyList(),
+        multiSelect = false,
+        context = this
+    )
+
+    init {
+        io { initInfrastructure(this) }
     }
 
     fun spaceToolSelectedFun(viewModel: SpaceTreeModel, item: TreeItem<AioSpace>, modifiers: Set<EventModifier>) {
@@ -79,6 +95,9 @@ class AioWsContext(override val workspace: Workspace) : WsContext {
 
         const val WSPANE_SPACE_TOOL = "aio:space:tool"
         const val WSPANE_SPACE_CONTENT = "aio:space:content"
+
+        const val WSPANE_INFRASTRUCTURE_TOOL = "aio:infrastructure:tool"
+        const val WSPANE_INFRASTRUCTURE_CONTENT = "aio:infrastructure:content"
 
         const val WSPANE_MEASUREMENT_LOCATION_TOOL = "aio:measurement:location:tool"
         const val WSPANE_MEASUREMENT_LOCATION_CONTENT = "aio:measurement:location:content"

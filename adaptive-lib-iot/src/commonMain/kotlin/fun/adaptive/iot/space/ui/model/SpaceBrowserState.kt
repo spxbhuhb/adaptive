@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot.space.model
+package `fun`.adaptive.iot.space.ui.model
 
 import `fun`.adaptive.general.SelfObservable
 import `fun`.adaptive.iot.ws.AioWsContext

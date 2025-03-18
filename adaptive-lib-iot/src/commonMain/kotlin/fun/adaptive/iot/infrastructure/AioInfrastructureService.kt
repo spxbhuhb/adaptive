@@ -1,13 +1,13 @@
 package `fun`.adaptive.iot.infrastructure
 
+import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.auth.model.RoleId
 import `fun`.adaptive.auth.util.getQueryRoleFor
 import `fun`.adaptive.auth.util.getUpdateRoleFor
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
-import `fun`.adaptive.iot.device.AioDeviceWorker
-import `fun`.adaptive.iot.infrastructure.model.AioInfrastructureItem
-import `fun`.adaptive.iot.network.AioNetworkWorker
+import `fun`.adaptive.iot.infrastructure.device.AioDeviceWorker
+import `fun`.adaptive.iot.infrastructure.network.AioNetworkWorker
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.trimSignature
@@ -35,9 +35,10 @@ class AioInfrastructureService : ServiceImpl<AioInfrastructureService>, AioInfra
     }
 
     override suspend fun query(): List<AioInfrastructureItem> {
-        // TODO cache queries
-        val networks = networkWorker.query(emptySet()).map { it.toInfrastructureItem() }
-        val devices = deviceWorker.query(emptySet())
+        publicAccess()
+
+        return networkWorker.query(emptySet()).map { it.toInfrastructureItem() } +
+            deviceWorker.query(emptySet()).map { it.toInfrastructureItem() }
     }
 
 }

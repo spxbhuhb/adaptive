@@ -5,9 +5,9 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
-import `fun`.adaptive.iot.space.model.AioSpace
-import `fun`.adaptive.iot.space.model.AioSpaceEditOperation
-import `fun`.adaptive.iot.space.model.AioSpaceType
+import `fun`.adaptive.iot.space.AioSpace
+import `fun`.adaptive.iot.space.ui.model.AioSpaceEditOperation
+import `fun`.adaptive.iot.space.AioSpaceType
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
@@ -36,7 +36,7 @@ fun wsSpaceTreeEditorPane(pane: WsPane<Unit>): AdaptiveFragment {
     val context = fragment().wsContext<AioWsContext>()
     val observed = valueFrom { context.spaceTree }
 
-    wsToolPane(context.pane(AioWsContext.WSPANE_SPACE_TOOL)) {
+    wsToolPane(pane) {
         tree(observed, ::contextMenuBuilder)
     }
 
@@ -53,7 +53,7 @@ fun wsSpaceTreeEditorDef() =
         actions = listOf(
             WsPaneAction(Graphics.zoom_out_map, Strings.expandAll, Unit) { w, p, d -> spaceToolExpandAll(w, p) },
             WsPaneAction(Graphics.arrows_input, Strings.collapseAll, Unit) { w, p, d -> spaceToolCollapseAll(w, p) },
-            WsPaneMenuAction(Graphics.add, Strings.addArea, addTopMenu, ::applyToolMenuAction)
+            WsPaneMenuAction(Graphics.add, Strings.add, addTopMenu, ::applyToolMenuAction)
         ),
         model = Unit
     )

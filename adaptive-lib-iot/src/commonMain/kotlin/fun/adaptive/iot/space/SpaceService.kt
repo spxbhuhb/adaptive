@@ -3,8 +3,6 @@ package `fun`.adaptive.iot.space
 import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.iot.project.model.AioProject
-import `fun`.adaptive.iot.space.model.AioSpace
-import `fun`.adaptive.iot.space.model.AioSpaceType
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.getLock

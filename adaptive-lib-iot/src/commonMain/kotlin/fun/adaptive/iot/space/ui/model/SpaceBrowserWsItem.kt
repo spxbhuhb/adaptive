@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot.space.model
+package `fun`.adaptive.iot.space.ui.model
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.iot.space.AioSpaceId

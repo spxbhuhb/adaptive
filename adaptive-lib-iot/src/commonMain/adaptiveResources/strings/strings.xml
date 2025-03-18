@@ -15,6 +15,9 @@
     <string name="moveUp">Mozgatás fel</string>
     <string name="moveDown">Mozgatás le</string>
     <string name="inactivate">Inaktiválás</string>
+    <string name="disable">Letiltás</string>
+    <string name="enable">Engedélyezés</string>
+    <string name="add">Hozzáadás</string>
 
     <!-- infrastructure -->
 
@@ -23,6 +26,10 @@
     <string name="network">Hálózat</string>
     <string name="device">Eszköz</string>
     <string name="point">Adatpont</string>
+
+    <string name="addHost">Számítógép hozzáadása</string>
+    <string name="addNetwork">Hálózat hozzáadása</string>
+    <string name="addDevice">Eszköz hozzáadása</string>
 
     <!-- space -->
 

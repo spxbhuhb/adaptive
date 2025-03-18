@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot.network
+package `fun`.adaptive.iot.infrastructure.network
 
 import `fun`.adaptive.iot.common.AioMarkerSet
 import `fun`.adaptive.service.ServiceApi

@@ -1,6 +1,7 @@
 package `fun`.adaptive.iot.curval
 
 import `fun`.adaptive.auth.context.ensureHas
+import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.auth.model.RoleId
 import `fun`.adaptive.auth.util.getQueryRoleFor
 import `fun`.adaptive.auth.util.getUpdateRoleFor
@@ -32,13 +33,13 @@ class CurValServerService : ServiceImpl<CurValServerService>, CurValApi {
     }
 
     override suspend fun update(curVal: CurVal) {
-        ensureHas(updateRole)
+        publicAccess() // ensureHas(updateRole)
 
         worker.update(curVal)
     }
 
-    override suspend fun subscribe(valueIds: List<AioValueId>) : CurValSubscriptionId {
-        ensureHas(queryRole)
+    override suspend fun subscribe(valueIds: List<AioValueId>): CurValSubscriptionId {
+        publicAccess() // ensureHas(queryRole)
 
         val subscription = CurValClientSubscription(
             uuid4(),
@@ -53,7 +54,7 @@ class CurValServerService : ServiceImpl<CurValServerService>, CurValApi {
     }
 
     override suspend fun unsubscribe(subscriptionId: CurValSubscriptionId) {
-        ensureHas(queryRole)
+        publicAccess() // ensureHas(queryRole)
 
         worker.unsubscribe(subscriptionId)
     }

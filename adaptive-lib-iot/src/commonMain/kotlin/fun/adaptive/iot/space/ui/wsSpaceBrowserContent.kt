@@ -5,8 +5,8 @@ import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.iot.space.model.AioSpace
-import `fun`.adaptive.iot.space.model.SpaceBrowserWsItem
+import `fun`.adaptive.iot.space.AioSpace
+import `fun`.adaptive.iot.space.ui.model.SpaceBrowserWsItem
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings

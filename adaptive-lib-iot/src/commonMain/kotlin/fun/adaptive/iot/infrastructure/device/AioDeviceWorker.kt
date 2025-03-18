@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot.device
+package `fun`.adaptive.iot.infrastructure.device
 
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.iot.common.AioMarkerSet

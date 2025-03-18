@@ -1,9 +1,9 @@
-package `fun`.adaptive.iot.network
+package `fun`.adaptive.iot.infrastructure.network
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.iot.common.AioMarkerSet
-import `fun`.adaptive.iot.infrastructure.model.AioInfrastructureItem
-import `fun`.adaptive.iot.infrastructure.model.AioInfrastructureItemType
+import `fun`.adaptive.iot.infrastructure.AioInfrastructureItem
+import `fun`.adaptive.iot.infrastructure.AioInfrastructureItemType
 import `fun`.adaptive.iot.project.AioProjectId
 import `fun`.adaptive.iot.project.model.AioProjectItem
 import `fun`.adaptive.iot.project.FriendlyItemId
@@ -17,7 +17,7 @@ class AioNetwork(
     override val projectId: AioProjectId,
     override val friendlyId: FriendlyItemId,
     override val name: String,
-    override val type: WsItemType = AioWsContext.Companion.WSIT_NETWORK,
+    override val type: WsItemType = AioWsContext.WSIT_NETWORK,
     override val markers : AioMarkerSet = emptySet(),
     val spaceId : AioSpaceId? = null
 ) : AioProjectItem<AioNetwork>() {

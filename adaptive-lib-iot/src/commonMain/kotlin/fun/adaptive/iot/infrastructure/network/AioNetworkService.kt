@@ -1,6 +1,6 @@
-package `fun`.adaptive.iot.device
+package `fun`.adaptive.iot.infrastructure.network
 
-import `fun`.adaptive.auth.context.ensureHas
+import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.auth.model.RoleId
 import `fun`.adaptive.auth.util.getQueryRoleFor
 import `fun`.adaptive.auth.util.getUpdateRoleFor
@@ -11,15 +11,15 @@ import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.trimSignature
 
-class AioDeviceService : ServiceImpl<AioDeviceService>, AioDeviceApi {
+class AioNetworkService : ServiceImpl<AioNetworkService>, AioNetworkApi {
 
     companion object {
-        val signature = AioDeviceService.typeSignature().trimSignature()
+        val signature = AioNetworkService.typeSignature().trimSignature()
 
         lateinit var queryRole: RoleId
         lateinit var updateRole: RoleId
 
-        lateinit var worker: AioDeviceWorker
+        lateinit var worker: AioNetworkWorker
     }
 
     override fun mount() {
@@ -28,12 +28,12 @@ class AioDeviceService : ServiceImpl<AioDeviceService>, AioDeviceApi {
         queryRole = getQueryRoleFor(signature).id
         updateRole = getUpdateRoleFor(signature).id
 
-        worker = adapter !!.firstImpl<AioDeviceWorker>()
+        worker = adapter !!.firstImpl<AioNetworkWorker>()
     }
 
 
-    override suspend fun query(markers: AioMarkerSet): List<AioDevice> {
-        ensureHas(queryRole)
+    override suspend fun query(markers: AioMarkerSet): List<AioNetwork> {
+        publicAccess() // ensureHas(queryRole)
         return worker.query(markers)
     }
 

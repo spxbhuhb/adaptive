@@ -1,10 +1,9 @@
-package `fun`.adaptive.iot.space.model
+package `fun`.adaptive.iot.space
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.iot.common.AioMarkerSet
 import `fun`.adaptive.iot.project.AioProjectId
-import `fun`.adaptive.iot.space.AioSpaceId
 import `fun`.adaptive.iot.project.model.AioProjectItem
 import `fun`.adaptive.iot.project.FriendlyItemId
 import `fun`.adaptive.iot.ws.AioWsContext

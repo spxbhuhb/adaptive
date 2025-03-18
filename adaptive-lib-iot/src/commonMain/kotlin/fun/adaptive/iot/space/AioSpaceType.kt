@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot.space.model
+package `fun`.adaptive.iot.space
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.area
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.building

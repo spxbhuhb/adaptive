@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot.space.ui
+package `fun`.adaptive.iot.infrastructure.ui
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
 import `fun`.adaptive.document.ui.direct.h2

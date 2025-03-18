@@ -1,8 +1,6 @@
 package `fun`.adaptive.iot.space
 
 import `fun`.adaptive.iot.project.model.AioProject
-import `fun`.adaptive.iot.space.model.AioSpace
-import `fun`.adaptive.iot.space.model.AioSpaceType
 import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.utility.UUID
 

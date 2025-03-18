@@ -4,15 +4,17 @@ import `fun`.adaptive.adaptive_lib_iot.generated.resources.apartment
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.dew_point
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.temperatureAndHumidity
-import `fun`.adaptive.iot.device.AioDevice
-import `fun`.adaptive.iot.point.AioPoint
+import `fun`.adaptive.iot.infrastructure.device.AioDevice
+import `fun`.adaptive.iot.infrastructure.point.AioPoint
+import `fun`.adaptive.iot.infrastructure.ui.wsInfrastructureEditorDef
 import `fun`.adaptive.iot.project.model.AioProject
-import `fun`.adaptive.iot.space.model.AioSpace
-import `fun`.adaptive.iot.space.model.AioSpaceType
-import `fun`.adaptive.iot.space.model.SpaceBrowserConfig
-import `fun`.adaptive.iot.space.model.SpaceBrowserWsItem
+import `fun`.adaptive.iot.space.AioSpace
+import `fun`.adaptive.iot.space.AioSpaceType
+import `fun`.adaptive.iot.space.ui.model.SpaceBrowserConfig
+import `fun`.adaptive.iot.space.ui.model.SpaceBrowserWsItem
 import `fun`.adaptive.iot.space.ui.wsSpaceBrowserTool
 import `fun`.adaptive.iot.space.ui.SpacePaneController
+import `fun`.adaptive.iot.space.ui.wsMeasurementToolPane
 import `fun`.adaptive.iot.space.ui.wsSpaceTreeEditorDef
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
@@ -49,6 +51,8 @@ fun Workspace.iotCommon() {
     contexts += context
 
     toolPanes += wsSpaceTreeEditorDef()
+    toolPanes += wsInfrastructureEditorDef()
+
     toolPanes += wsSpaceBrowserTool(
         SpaceBrowserConfig(
             Strings.temperatureAndHumidity,

@@ -1,10 +1,10 @@
-package `fun`.adaptive.iot.infrastructure.model
+package `fun`.adaptive.iot.infrastructure
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.device
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.host
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.network
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.point
-import `fun`.adaptive.iot.infrastructure.model.AioInfrastructureItemType.entries
+import `fun`.adaptive.iot.infrastructure.AioInfrastructureItemType.entries
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.utility.trimSignature
