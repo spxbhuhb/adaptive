@@ -4,14 +4,27 @@
 
 <resources>
 
+    <!-- general -->
+
     <string name="spxbId">SPXB ID</string>
     <string name="name">Név</string>
     <string name="active">Aktív</string>
     <string name="type">Típus</string>
     <string name="note">Megjegyzés</string>
     <string name="noname">(nincs név megadva)</string>
+    <string name="moveUp">Mozgatás fel</string>
+    <string name="moveDown">Mozgatás le</string>
+    <string name="inactivate">Inaktiválás</string>
 
-    <string name="temperatureAndHumidity">Hőmérséklet és páratartalom</string>
+    <!-- infrastructure -->
+
+    <string name="infrastructure">Infrastruktúra</string>
+    <string name="host">Számítógép</string>
+    <string name="network">Hálózat</string>
+    <string name="device">Eszköz</string>
+    <string name="point">Adatpont</string>
+
+    <!-- space -->
 
     <string name="areas">Területek</string>
     <string name="site">Telephely</string>
@@ -25,10 +38,10 @@
     <string name="addFloor">Szint hozzáadása</string>
     <string name="addArea">Terület hozzáadása</string>
     <string name="addRoom">Szoba hozzáadása</string>
-    <string name="inactivate">Inaktiválás</string>
     <string name="selectArea">Válassz területet a szerkesztéshez</string>
 
-    <string name="moveUp">Mozgatás fel</string>
-    <string name="moveDown">Mozgatás le</string>
+    <!-- misc -->
+
+    <string name="temperatureAndHumidity">Hőmérséklet és páratartalom</string>
 
 </resources>

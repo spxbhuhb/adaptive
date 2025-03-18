@@ -276,3 +276,6 @@ fun joinUpperCamelCase(vararg parts: String): String =
     parts.joinToString(separator = "") { it.uppercaseFirstChar() }
 
 // End of functions copied from Compose Multiplatform
+
+fun String.trimSignature() =
+    this.trimStart('L').trimEnd(';')

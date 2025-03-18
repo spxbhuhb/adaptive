@@ -2,12 +2,14 @@ package `fun`.adaptive.iot.device
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.iot.common.AioMarkerSet
-import `fun`.adaptive.iot.project.AioProjectId
-import `fun`.adaptive.iot.space.AioSpaceId
 import `fun`.adaptive.iot.curval.AioValueId
-import `fun`.adaptive.iot.project.model.AioProjectItem
-import `fun`.adaptive.iot.project.FriendlyItemId
+import `fun`.adaptive.iot.infrastructure.model.AioInfrastructureItem
+import `fun`.adaptive.iot.infrastructure.model.AioInfrastructureItemType
 import `fun`.adaptive.iot.network.AioNetworkId
+import `fun`.adaptive.iot.project.AioProjectId
+import `fun`.adaptive.iot.project.FriendlyItemId
+import `fun`.adaptive.iot.project.model.AioProjectItem
+import `fun`.adaptive.iot.space.AioSpaceId
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.ui.workspace.model.WsItemType
 
@@ -24,4 +26,17 @@ class AioDevice(
     val valueId1 : AioValueId? = null,
     val valueId2 : AioValueId? = null,
     val valueId3 : AioValueId? = null
-) : AioProjectItem<AioDevice>()
+) : AioProjectItem<AioDevice>() {
+
+    fun toInfrastructureItem() = AioInfrastructureItem(
+        uuid = uuid.cast(),
+        projectId = projectId,
+        friendlyId = friendlyId,
+        name = name,
+        markers = markers,
+        itemType = AioInfrastructureItemType.Device,
+        spaceId = spaceId,
+        parentId = networkId?.cast()
+    )
+
+}

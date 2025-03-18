@@ -9,11 +9,12 @@ import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.iot.common.AioMarkerSet
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.runtime.GlobalRuntimeContext
+import `fun`.adaptive.utility.trimSignature
 
 class AioNetworkService : ServiceImpl<AioNetworkService>, AioNetworkApi {
 
     companion object {
-        val signature = AioNetworkService.typeSignature()
+        val signature = AioNetworkService.typeSignature().trimSignature()
 
         lateinit var queryRole: RoleId
         lateinit var updateRole: RoleId

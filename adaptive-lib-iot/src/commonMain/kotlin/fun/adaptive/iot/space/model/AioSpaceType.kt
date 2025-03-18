@@ -7,6 +7,7 @@ import `fun`.adaptive.adaptive_lib_iot.generated.resources.room
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.site
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.utility.trimSignature
 import `fun`.adaptive.wireformat.builtin.EnumWireFormat
 
 enum class AioSpaceType {
@@ -27,6 +28,6 @@ enum class AioSpaceType {
 
     companion object : EnumWireFormat<AioSpaceType>(entries) {
         override val wireFormatName: String
-            get() = AioSpaceType.typeSignature().trimStart('L').trimEnd(';')
+            get() = AioSpaceType.typeSignature().trimSignature()
     }
 }

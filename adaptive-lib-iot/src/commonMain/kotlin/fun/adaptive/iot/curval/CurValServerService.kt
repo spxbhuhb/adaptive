@@ -9,11 +9,12 @@ import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid4
+import `fun`.adaptive.utility.trimSignature
 
 class CurValServerService : ServiceImpl<CurValServerService>, CurValApi {
 
     companion object {
-        val signature = CurValServerService.typeSignature()
+        val signature = CurValServerService.typeSignature().trimSignature()
 
         lateinit var queryRole: RoleId
         lateinit var updateRole: RoleId
@@ -27,7 +28,7 @@ class CurValServerService : ServiceImpl<CurValServerService>, CurValApi {
         queryRole = getQueryRoleFor(signature).id
         updateRole = getUpdateRoleFor(signature).id
 
-        worker = adapter !!.firstImpl<CurValWorker>()
+        worker = safeAdapter.firstImpl<CurValWorker>()
     }
 
     override suspend fun update(curVal: CurVal) {
@@ -43,7 +44,7 @@ class CurValServerService : ServiceImpl<CurValServerService>, CurValApi {
             uuid4(),
             valueIds,
             serviceContext.transport,
-            adapter !!.scope
+            safeAdapter.scope
         )
 
         worker.subscribe(subscription)

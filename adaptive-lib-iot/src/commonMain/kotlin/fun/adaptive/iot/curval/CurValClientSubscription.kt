@@ -4,6 +4,7 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
+import `fun`.adaptive.utility.trimSignature
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
@@ -24,7 +25,7 @@ class CurValClientSubscription(
 ) : CurValSubscription(uuid, valueIds) {
 
     companion object {
-        val logger = getLogger(CurValClientSubscription.typeSignature())
+        val logger = getLogger(CurValClientSubscription.typeSignature().trimSignature())
     }
 
     val channel = Channel<CurVal>(capacity)

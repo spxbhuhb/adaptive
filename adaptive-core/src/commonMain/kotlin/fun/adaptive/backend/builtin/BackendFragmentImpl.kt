@@ -4,9 +4,9 @@
 
 package `fun`.adaptive.backend.builtin
 
-import `fun`.adaptive.log.AdaptiveLogger
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.BackendFragment
+import `fun`.adaptive.log.AdaptiveLogger
 import `fun`.adaptive.utility.manualOrPlugin
 
 interface BackendFragmentImpl {
@@ -25,6 +25,14 @@ interface BackendFragmentImpl {
      */
     val adapter : BackendAdapter?
         get() = fragment?.adapter as? BackendAdapter
+
+    /**
+     * Adapter of the adaptive backend.
+     *
+     * @throws IllegalStateException The implementation is not part of an adaptive backend.
+     */
+    val safeAdapter : BackendAdapter
+        get() = checkNotNull(adapter) { "this implementation is not part of an adaptive backend" }
 
     /**
      * A logger that belongs to the given fragment if it is part of an adaptive

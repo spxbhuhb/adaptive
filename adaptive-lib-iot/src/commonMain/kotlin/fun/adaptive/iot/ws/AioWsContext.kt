@@ -67,11 +67,13 @@ class AioWsContext(override val workspace: Workspace) : WsContext {
     }
 
     companion object {
+        const val WSIT_INFRASTRUCTURE_ITEM = "aio:infrastructure:item"
+        const val WSIT_NETWORK = "aio:network"
         const val WSIT_DEVICE = "aio:device"
-        const val WSIT_POINT = "aio:device:point"
+        const val WSIT_POINT = "aio:point"
+
         const val WSIT_MEASUREMENT_LOCATION = "aio:measurement:point"
         const val WSIT_MEASUREMENT_POINT = "aio:measurement:point"
-        const val WSIT_NETWORK = "aio:network"
         const val WSIT_PROJECT = "aio:project"
         const val WSIT_SPACE = "aio:space"
 

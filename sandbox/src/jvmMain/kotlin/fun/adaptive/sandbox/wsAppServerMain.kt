@@ -10,11 +10,15 @@ import `fun`.adaptive.iot.app.iotAppServerMain
 import `fun`.adaptive.iot.iotCommon
 import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.log.getLogger
+import `fun`.adaptive.runtime.ApplicationNodeType
+import `fun`.adaptive.runtime.GlobalRuntimeContext
 import kotlinx.coroutines.runBlocking
 
 fun wsAppServerMain() {
     val logger = getLogger("application")
     logger.info("the application is starting")
+
+    GlobalRuntimeContext.nodeType = ApplicationNodeType.Server
 
     runBlocking {
         iotCommon(loadStrings = false)
