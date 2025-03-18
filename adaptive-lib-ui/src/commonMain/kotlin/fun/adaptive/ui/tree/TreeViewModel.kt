@@ -36,6 +36,10 @@ class TreeViewModel<IT, CT>(
             openWithSingleClick
         )
 
+    fun expandAll() = items.forEach { it.expandAll() }
+
+    fun collapseAll() = items.forEach { it.collapseAll() }
+
     companion object {
 
         fun <IT, CT> defaultSelectedFun(

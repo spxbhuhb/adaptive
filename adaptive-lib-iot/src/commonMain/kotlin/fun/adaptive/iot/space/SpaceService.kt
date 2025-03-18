@@ -2,7 +2,6 @@ package `fun`.adaptive.iot.space
 
 import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.backend.builtin.ServiceImpl
-import `fun`.adaptive.iot.project.model.AioProject
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.getLock
@@ -37,7 +36,6 @@ class SpaceService : AioSpaceApi, ServiceImpl<SpaceService> {
     }
 
     override suspend fun add(
-        projectId: UUID<AioProject>,
         parentId: UUID<AioSpace>?,
         type: AioSpaceType,
         displayOrder: Int
@@ -51,7 +49,6 @@ class SpaceService : AioSpaceApi, ServiceImpl<SpaceService> {
 
             val space = AioSpace(
                 uuid = UUID<AioSpace>(),
-                projectId = projectId,
                 friendlyId = friendlyId,
                 name = "SP-${friendlyId.p04}",
                 spaceType = type,

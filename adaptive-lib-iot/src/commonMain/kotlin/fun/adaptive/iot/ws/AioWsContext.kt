@@ -1,45 +1,34 @@
 package `fun`.adaptive.iot.ws
 
-import `fun`.adaptive.iot.infrastructure.AioInfrastructureApi
 import `fun`.adaptive.iot.infrastructure.AioInfrastructureItem
 import `fun`.adaptive.iot.infrastructure.AioInfrastructureItemId
 import `fun`.adaptive.iot.infrastructure.initInfrastructure
-import `fun`.adaptive.iot.space.AioSpaceApi
-import `fun`.adaptive.iot.space.AioSpaceId
-import `fun`.adaptive.iot.project.model.AioProject
+import `fun`.adaptive.iot.item.AioItem
+import `fun`.adaptive.iot.item.AioItemApi
+import `fun`.adaptive.iot.item.AioItemId
 import `fun`.adaptive.iot.space.AioSpace
+import `fun`.adaptive.iot.space.AioSpaceId
 import `fun`.adaptive.iot.space.AioSpaceType
 import `fun`.adaptive.iot.space.ui.SpaceTreeModel
 import `fun`.adaptive.iot.space.ui.initSpaces
+import `fun`.adaptive.iot.value.AioValueApi
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsContext
-import `fun`.adaptive.utility.UUID
-import kotlin.collections.plus
 
 class AioWsContext(override val workspace: Workspace) : WsContext {
 
-    val spaceService = getService<AioSpaceApi>(workspace.transport)
+    val valueService = getService<AioValueApi>(workspace.transport)
+    val itemService = getService<AioItemApi>(workspace.transport)
 
-    val projectId = UUID<AioProject>()
-
-    val spaceMap = mutableMapOf<AioSpaceId, AioSpace>()
-
-    val spaceTree = TreeViewModel<AioSpace, AioWsContext>(
-        emptyList(),
-        selectedFun = ::spaceToolSelectedFun,
-        multiSelect = false,
-        context = this
-    )
+    val spaceMap = mutableMapOf<AioItemId, AioItem>()
 
     init {
         io { initSpaces(this) }
     }
-
-    val infrastructureService = getService<AioInfrastructureApi>(workspace.transport)
 
     val infrastructureMap = mutableMapOf<AioInfrastructureItemId, AioInfrastructureItem>()
 
@@ -53,10 +42,6 @@ class AioWsContext(override val workspace: Workspace) : WsContext {
         io { initInfrastructure(this) }
     }
 
-    fun spaceToolSelectedFun(viewModel: SpaceTreeModel, item: TreeItem<AioSpace>, modifiers: Set<EventModifier>) {
-        workspace.addContent(item.data, modifiers)
-        TreeViewModel.defaultSelectedFun(viewModel, item, modifiers)
-    }
 
     fun addSpace(parentItem: TreeItem<AioSpace>?, itemId: AioSpaceId?, site: AioSpaceType, displayOrder: Int) {
         io {

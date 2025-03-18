@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
-import `fun`.adaptive.iot.space.AioSpace
+import `fun`.adaptive.iot.item.AioItem
 import `fun`.adaptive.iot.space.ui.model.SpaceBrowserConfig
 import `fun`.adaptive.iot.space.ui.model.SpaceBrowserState
 import `fun`.adaptive.iot.space.ui.model.SpaceBrowserWsItem
@@ -68,13 +68,11 @@ private fun browserToolSelectedFun(viewModel: SpaceBrowserModel, item: SpaceBrow
 }
 
 private fun spaceBrowserExpand(pane: WsPane<*>) {
-    val state = pane.model as SpaceBrowserState
-    state.tree?.items?.forEach { it.expandAll() }
+    (pane.model as SpaceBrowserState).tree?.items?.forEach { it.expandAll() }
 }
 
 private fun spaceBrowserCollapse(pane: WsPane<*>) {
-    val state = pane.model as SpaceBrowserState
-    state.tree?.items?.forEach { it.collapseAll() }
+    (pane.model as SpaceBrowserState).tree?.items?.forEach { it.collapseAll() }
 }
 
 private fun transformTreeModel(
@@ -83,7 +81,7 @@ private fun transformTreeModel(
     selectedFun: TreeItemSelectedFun<SpaceBrowserWsItem, AioWsContext>
 ): SpaceBrowserModel {
 
-    fun transformItem(original: TreeItem<AioSpace>, newParent: SpaceBrowserTreeItem?): SpaceBrowserTreeItem {
+    fun transformItem(original: TreeItem<AioItem>, newParent: SpaceBrowserTreeItem?): SpaceBrowserTreeItem {
         TreeItem(
             original.icon,
             original.title,

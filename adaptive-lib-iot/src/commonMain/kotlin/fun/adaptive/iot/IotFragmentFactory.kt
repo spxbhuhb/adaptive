@@ -6,11 +6,11 @@ import `fun`.adaptive.iot.space.ui.wsSpaceBrowserContent
 import `fun`.adaptive.iot.space.ui.wsMeasurementToolPane
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.iot.space.ui.wsSpaceContentPane
-import `fun`.adaptive.iot.space.ui.wsSpaceTreeEditorPane
+import `fun`.adaptive.iot.space.ui.wsSpaceEditorTool
 
 object IotFragmentFactory : FoundationFragmentFactory() {
     init {
-        add(AioWsContext.WSPANE_SPACE_TOOL, ::wsSpaceTreeEditorPane)
+        add(AioWsContext.WSPANE_SPACE_TOOL, ::wsSpaceEditorTool)
         add(AioWsContext.WSPANE_SPACE_CONTENT, ::wsSpaceContentPane)
 
         add(AioWsContext.WSPANE_INFRASTRUCTURE_TOOL, ::wsInfrastructureEditorPane)

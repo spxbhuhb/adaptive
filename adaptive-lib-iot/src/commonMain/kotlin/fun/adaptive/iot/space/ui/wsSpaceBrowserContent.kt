@@ -5,7 +5,7 @@ import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.iot.space.AioSpace
+import `fun`.adaptive.iot.item.AioItem
 import `fun`.adaptive.iot.space.ui.model.SpaceBrowserWsItem
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
@@ -18,7 +18,6 @@ import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.model.WsPane
-import kotlin.collections.get
 
 @Adaptive
 fun wsSpaceBrowserContent(pane: WsPane<SpaceBrowserWsItem>): AdaptiveFragment {
@@ -55,15 +54,15 @@ fun listHeader(context: AioWsContext, pane: WsPane<SpaceBrowserWsItem>) {
 }
 
 @Adaptive
-fun listItem(context: AioWsContext, pane: WsPane<SpaceBrowserWsItem>, space: AioSpace) {
+fun listItem(context: AioWsContext, pane: WsPane<SpaceBrowserWsItem>, space: AioItem) {
     row {
         gap { 16.dp }
-        text(space.friendlyDisplayId)
+        text(space.friendlyId)
         text(space.name)
     }
 }
 
-fun subSpaces(context: AioWsContext, item: SpaceBrowserWsItem): List<AioSpace> {
+fun subSpaces(context: AioWsContext, item: SpaceBrowserWsItem): List<AioItem> {
     val spaceId = item.spaceId
     val subSpaces = context.spaceMap.values.filter { it.parentId == spaceId }
     return subSpaces
@@ -89,7 +88,7 @@ fun spacePath(context: AioWsContext, item: SpaceBrowserWsItem) {
 fun spacePathNames(context: AioWsContext, item: SpaceBrowserWsItem): List<String> {
     val spaceId = item.spaceId
     val names = mutableListOf<String>()
-    var space: AioSpace? = context.spaceMap[spaceId]
+    var space: AioItem? = context.spaceMap[spaceId]
     while (space != null) {
         names.add(space.name)
         space = context.spaceMap[space.parentId]
