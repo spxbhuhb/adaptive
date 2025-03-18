@@ -74,10 +74,10 @@ class RoleService : RoleApi, ServiceImpl<RoleService> {
         roleGrants.remove(roleId, principalId)
     }
 
-    override suspend fun rolesOf(principalId: UUID<Principal>, contextId: UUID<RoleContext>?): List<Role> {
+    override suspend fun rolesOf(principalId: UUID<Principal>, context: String?): List<Role> {
         ensureOneOf(*getRoles)
 
-        return roleGrants.rolesOf(principalId, contextId)
+        return roleGrants.rolesOf(principalId, context)
     }
 
     override suspend fun grantedTo(roleId: UUID<Role>): List<UUID<Principal>> {

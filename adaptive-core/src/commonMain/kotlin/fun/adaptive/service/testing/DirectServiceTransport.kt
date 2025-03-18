@@ -34,11 +34,12 @@ class DirectServiceTransport(
         get() = lock.use { field }
         set(value) = lock.use { field = value }
 
-    lateinit var peerTransport: DirectServiceTransport
+    var peerTransport: DirectServiceTransport? = null
 
     override suspend fun send(envelope: TransportEnvelope) {
         if (drop) return
-        peerTransport.receive(wireFormatProvider.encode(envelope, TransportEnvelope))
+        checkNotNull(peerTransport) { "peer transport not set (maybe disconnected)" }
+            .receive(wireFormatProvider.encode(envelope, TransportEnvelope))
     }
 
     override fun context(): ServiceContext {
@@ -50,7 +51,7 @@ class DirectServiceTransport(
             .dispatch(funName, decoder)
 
     override suspend fun disconnect() {
-
+        peerTransport = null
     }
 
     override suspend fun stop() {

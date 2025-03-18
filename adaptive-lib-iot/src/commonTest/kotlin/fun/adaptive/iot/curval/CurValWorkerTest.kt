@@ -1,7 +1,7 @@
 package `fun`.adaptive.iot.curval
 
-import `fun`.adaptive.iot.model.AioStatus
-import `fun`.adaptive.iot.model.AioValueId
+import `fun`.adaptive.iot.common.AioStatus
+import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.utility.waitFor
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -25,9 +25,9 @@ class CurValWorkerTest {
         worker.update(oldValue)
         worker.update(newValue)
 
-        waitFor(1.seconds) { worker.updates.isEmpty }
+        waitFor(1.seconds) { worker.isIdle }
 
-        assertEquals(newValue, worker.values[valueId])
+        assertEquals(newValue, worker[valueId])
     }
 
     @Test
@@ -39,9 +39,9 @@ class CurValWorkerTest {
         worker.update(oldValue)
         worker.update(newValue)
 
-        waitFor(1.seconds) { worker.updates.isEmpty }
+        waitFor(1.seconds) { worker.isIdle }
 
-        assertEquals(oldValue, worker.values[valueId])
+        assertEquals(oldValue, worker[valueId])
     }
 
     @Test
@@ -51,7 +51,7 @@ class CurValWorkerTest {
         worker.update(initialValue)
 
         val channel = Channel<CurVal>(1)
-        val subscription = CurValSubscription(valueId, channel)
+        val subscription = CurValChannelSubscription(uuid4(), listOf(valueId), channel)
 
         worker.subscribe(listOf(subscription))
 
@@ -63,7 +63,7 @@ class CurValWorkerTest {
     fun `should notify subscribers on update`() = curValTest { worker ->
         val valueId = AioValueId()
         val channel = Channel<CurVal>(1)
-        val subscription = CurValSubscription(valueId, channel)
+        val subscription = CurValChannelSubscription(uuid4(), listOf(valueId), channel)
 
         worker.subscribe(listOf(subscription))
 
@@ -80,8 +80,8 @@ class CurValWorkerTest {
         val channel1 = Channel<CurVal>(1)
         val channel2 = Channel<CurVal>(1)
 
-        val subscription1 = CurValSubscription(valueId, channel1)
-        val subscription2 = CurValSubscription(valueId, channel2)
+        val subscription1 = CurValChannelSubscription(uuid4(), listOf(valueId), channel1)
+        val subscription2 = CurValChannelSubscription(uuid4(), listOf(valueId), channel2)
 
         worker.subscribe(listOf(subscription1, subscription2))
 
@@ -96,15 +96,15 @@ class CurValWorkerTest {
     fun `should unsubscribe properly`() = curValTest { worker ->
         val valueId = AioValueId()
         val channel = Channel<CurVal>(1)
-        val subscription = CurValSubscription(valueId, channel)
+        val subscription = CurValChannelSubscription(uuid4(), listOf(valueId), channel)
 
-        worker.subscribe(listOf(subscription))
-        worker.unsubscribe(listOf(subscription))
+        worker.subscribe(subscription)
+        worker.unsubscribe(subscription.uuid)
 
         val newValue = CurVal(valueId, Instant.parse("2023-01-01T12:03:00Z"), AioStatus.OK, "AfterUnsubscribe")
         worker.update(newValue)
 
-        waitFor(1.seconds) { worker.updates.isEmpty }
+        waitFor(1.seconds) { worker.isIdle }
 
         assertTrue(channel.isEmpty)
     }
@@ -121,6 +121,6 @@ class CurValWorkerTest {
 
             testFun(worker)
 
-            worker.updates.close()
+            worker.close()
         }
 }

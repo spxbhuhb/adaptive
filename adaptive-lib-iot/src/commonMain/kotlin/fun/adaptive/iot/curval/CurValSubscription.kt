@@ -1,9 +1,12 @@
 package `fun`.adaptive.iot.curval
 
-import `fun`.adaptive.iot.model.AioValueId
-import kotlinx.coroutines.channels.Channel
+abstract class CurValSubscription(
+    val uuid: CurValSubscriptionId,
+    val valueIds: List<AioValueId>
+) {
 
-class CurValSubscription(
-    val valueId: AioValueId,
-    val channel: Channel<CurVal>
-)
+    var worker : CurValWorker? = null
+
+    abstract fun update(curVal: CurVal)
+
+}

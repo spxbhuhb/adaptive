@@ -1,12 +1,12 @@
 package `fun`.adaptive.iot.ws
 
-import `fun`.adaptive.iot.api.AioSpaceApi
-import `fun`.adaptive.iot.model.AioSpaceId
-import `fun`.adaptive.iot.model.project.AioProject
-import `fun`.adaptive.iot.model.space.AioSpace
-import `fun`.adaptive.iot.model.space.AioSpaceType
-import `fun`.adaptive.iot.ui.space.SpaceTreeModel
-import `fun`.adaptive.iot.ui.space.initSpaces
+import `fun`.adaptive.iot.space.AioSpaceApi
+import `fun`.adaptive.iot.space.AioSpaceId
+import `fun`.adaptive.iot.project.model.AioProject
+import `fun`.adaptive.iot.space.model.AioSpace
+import `fun`.adaptive.iot.space.model.AioSpaceType
+import `fun`.adaptive.iot.space.ui.SpaceTreeModel
+import `fun`.adaptive.iot.space.ui.initSpaces
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
@@ -68,7 +68,7 @@ class AioWsContext(override val workspace: Workspace) : WsContext {
 
     companion object {
         const val WSIT_DEVICE = "aio:device"
-        const val WSIT_DEVICE_POINT = "aio:device:point"
+        const val WSIT_POINT = "aio:device:point"
         const val WSIT_MEASUREMENT_LOCATION = "aio:measurement:point"
         const val WSIT_MEASUREMENT_POINT = "aio:measurement:point"
         const val WSIT_NETWORK = "aio:network"

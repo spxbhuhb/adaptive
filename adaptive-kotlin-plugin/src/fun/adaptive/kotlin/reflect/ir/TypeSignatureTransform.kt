@@ -9,6 +9,9 @@ import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.types.IrType
+import org.jetbrains.kotlin.ir.types.classOrNull
+import org.jetbrains.kotlin.ir.util.defaultType
+import org.jetbrains.kotlin.ir.util.parentAsClass
 
 class TypeSignatureTransform(
     override val pluginContext: ReflectPluginContext,
@@ -20,12 +23,16 @@ class TypeSignatureTransform(
         }
 
         val receiver = expression.extensionReceiver
-        val type : IrType
+        var type : IrType
 
         if (receiver != null) {
             type = receiver.type
         } else {
             type = checkNotNull(expression.getTypeArgument(0))
+        }
+
+        type.classOrNull?.let {
+            if (it.owner.isCompanion) type = it.owner.parentAsClass.defaultType
         }
 
         val signature = Signature.typeSignature(type)

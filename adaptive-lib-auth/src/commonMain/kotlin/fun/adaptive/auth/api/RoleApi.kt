@@ -6,7 +6,6 @@ package `fun`.adaptive.auth.api
 
 import `fun`.adaptive.auth.model.Principal
 import `fun`.adaptive.auth.model.Role
-import `fun`.adaptive.auth.model.RoleContext
 import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.utility.UUID
 
@@ -29,7 +28,7 @@ interface RoleApi {
 
     suspend fun revoke(roleId: UUID<Role>, principalId: UUID<Principal>)
 
-    suspend fun rolesOf(principalId: UUID<Principal>, contextId: UUID<RoleContext>?): List<Role>
+    suspend fun rolesOf(principalId: UUID<Principal>, contextId: String?): List<Role>
 
     suspend fun grantedTo(roleId: UUID<Role>): List<UUID<Principal>>
 

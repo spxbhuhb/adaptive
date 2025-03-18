@@ -22,7 +22,6 @@ fun authJvm() {
     store { principals }
     store { credentials }
     store { roles }
-    store { roleContexts }
     store { roleGrants }
     store { roleMemberships }
     store { history }

@@ -9,7 +9,6 @@ package `fun`.adaptive.lib.auth.store
 internal val credentials = CredentialTable
 internal val history = HistoryTable
 internal val principals = PrincipalTable
-internal val roleContexts = RoleContextTable
 internal val roleGrants = RoleGrantTable
 internal val roleMemberships = RoleMembershipTable
 internal val roles = RoleTable

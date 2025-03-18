@@ -37,12 +37,12 @@ object RoleGrantTable : AdatTable<RoleGrant, RoleGrantTable>("auth_role_grant") 
         remove(roleId)
     }
 
-    fun rolesOf(principalId: UUID<Principal>, contextId: UUID<RoleContext>?): List<Role> {
+    fun rolesOf(principalId: UUID<Principal>, context: String?): List<Role> {
 
-        val condition = if (contextId == null) {
+        val condition = if (context == null) {
             Op.build { principal uuidEq principalId }
         } else {
-            Op.build { (principal uuidEq principalId) and (RoleTable.context uuidEq contextId) }
+            Op.build { (principal uuidEq principalId) and (RoleTable.context eq context) }
         }
 
         return this

@@ -4,16 +4,16 @@ import `fun`.adaptive.adaptive_lib_iot.generated.resources.apartment
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.dew_point
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.temperatureAndHumidity
-import `fun`.adaptive.iot.model.device.AioDevice
-import `fun`.adaptive.iot.model.device.point.AioDevicePoint
-import `fun`.adaptive.iot.model.project.AioProject
-import `fun`.adaptive.iot.model.space.AioSpace
-import `fun`.adaptive.iot.model.space.AioSpaceType
-import `fun`.adaptive.iot.model.space.SpaceBrowserConfig
-import `fun`.adaptive.iot.model.space.SpaceBrowserWsItem
-import `fun`.adaptive.iot.ui.space.wsSpaceBrowserTool
-import `fun`.adaptive.iot.ui.space.SpacePaneController
-import `fun`.adaptive.iot.ui.space.wsSpaceTreeEditorDef
+import `fun`.adaptive.iot.device.AioDevice
+import `fun`.adaptive.iot.point.AioPoint
+import `fun`.adaptive.iot.project.model.AioProject
+import `fun`.adaptive.iot.space.model.AioSpace
+import `fun`.adaptive.iot.space.model.AioSpaceType
+import `fun`.adaptive.iot.space.model.SpaceBrowserConfig
+import `fun`.adaptive.iot.space.model.SpaceBrowserWsItem
+import `fun`.adaptive.iot.space.ui.wsSpaceBrowserTool
+import `fun`.adaptive.iot.space.ui.SpacePaneController
+import `fun`.adaptive.iot.space.ui.wsSpaceTreeEditorDef
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
@@ -32,7 +32,7 @@ suspend fun iotCommon(loadStrings : Boolean = true) {
     r += AioSpace
     r += AioSpaceType
     r += AioDevice
-    r += AioDevicePoint
+    r += AioPoint
 
     if (loadStrings) {
         commonMainStringsStringStore0.load()

@@ -1,11 +1,11 @@
 package `fun`.adaptive.iot
 
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
-import `fun`.adaptive.iot.ui.space.wsSpaceBrowserContent
-import `fun`.adaptive.iot.ui.space.wsMeasurementToolPane
+import `fun`.adaptive.iot.space.ui.wsSpaceBrowserContent
+import `fun`.adaptive.iot.space.ui.wsMeasurementToolPane
 import `fun`.adaptive.iot.ws.AioWsContext
-import `fun`.adaptive.iot.ui.space.wsSpaceContentPane
-import `fun`.adaptive.iot.ui.space.wsSpaceTreeEditorPane
+import `fun`.adaptive.iot.space.ui.wsSpaceContentPane
+import `fun`.adaptive.iot.space.ui.wsSpaceTreeEditorPane
 
 object IotFragmentFactory : FoundationFragmentFactory() {
     init {
