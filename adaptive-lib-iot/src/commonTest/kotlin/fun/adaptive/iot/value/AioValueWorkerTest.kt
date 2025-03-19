@@ -1,6 +1,10 @@
 package `fun`.adaptive.iot.value
 
 import `fun`.adaptive.iot.item.AioStatus
+import `fun`.adaptive.iot.value.builtin.AvString
+import `fun`.adaptive.iot.value.operation.AioValueOperation
+import `fun`.adaptive.iot.value.operation.AvoAddOrUpdate
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.utility.waitFor
 import kotlinx.coroutines.*
@@ -19,10 +23,10 @@ class AioValueWorkerTest {
     @Test
     fun `should update values when newer timestamp is received`() = test { worker ->
         val valueId = AioValueId()
-        val oldValue = AioValue(valueId, Instant.parse("2023-01-01T12:00:00Z"), AioStatus.OK, "OldValue")
-        val newValue = AioValue(valueId, Instant.parse("2023-01-01T12:01:00Z"), AioStatus.OK, "NewValue")
+        val oldValue = AvString(valueId, Instant.parse("2023-01-01T12:00:00Z"), AioStatus.OK, "OldValue")
+        val newValue = AvString(valueId, Instant.parse("2023-01-01T12:01:00Z"), AioStatus.OK, "NewValue")
 
-        worker.update(oldValue)
+        worker.add(oldValue)
         worker.update(newValue)
 
         waitFor(1.seconds) { worker.isIdle }
@@ -33,10 +37,10 @@ class AioValueWorkerTest {
     @Test
     fun `should not update values when older timestamp is received`() = test { worker ->
         val valueId = AioValueId()
-        val oldValue = AioValue(valueId, Instant.parse("2023-01-01T12:01:00Z"), AioStatus.OK, "OldValue")
-        val newValue = AioValue(valueId, Instant.parse("2023-01-01T12:00:00Z"), AioStatus.OK, "NewValue")
+        val oldValue = AvString(valueId, Instant.parse("2023-01-01T12:01:00Z"), AioStatus.OK, "OldValue")
+        val newValue = AvString(valueId, Instant.parse("2023-01-01T12:00:00Z"), AioStatus.OK, "NewValue")
 
-        worker.update(oldValue)
+        worker.add(oldValue)
         worker.update(newValue)
 
         waitFor(1.seconds) { worker.isIdle }
@@ -47,62 +51,64 @@ class AioValueWorkerTest {
     @Test
     fun `should subscribe and receive initial values`() = test { worker ->
         val valueId = AioValueId()
-        val initialValue = AioValue(valueId, Instant.parse("2023-01-01T12:00:00Z"), AioStatus.OK, "InitialValue")
-        worker.update(initialValue)
+        val initialValue = AvString(valueId, Instant.parse("2023-01-01T12:00:00Z"), AioStatus.OK, "InitialValue")
+        worker.add(initialValue)
 
-        val channel = Channel<AioValue>(1)
-        val subscription = AioValueChannelSubscription(uuid4(), listOf(valueId), channel)
+        val channel = Channel<AioValueOperation>(1)
+        val subscription = AioValueChannelSubscription(uuid4(), listOf(valueId), emptyList(), channel)
 
         worker.subscribe(listOf(subscription))
 
-        val receivedValue = channel.receive()
-        assertEquals(initialValue, receivedValue)
+        val received = channel.receive()
+        check(received is AvoAddOrUpdate)
+        assertEquals(initialValue, received.value)
     }
 
     @Test
     fun `should notify subscribers on update`() = test { worker ->
         val valueId = AioValueId()
-        val channel = Channel<AioValue>(1)
-        val subscription = AioValueChannelSubscription(uuid4(), listOf(valueId), channel)
+        val channel = Channel<AioValueOperation>(1)
+        val subscription = AioValueChannelSubscription(uuid4(), listOf(valueId), emptyList(), channel)
 
         worker.subscribe(listOf(subscription))
 
-        val newValue = AioValue(valueId, Instant.parse("2023-01-01T12:01:00Z"), AioStatus.OK, "NewValue")
-        worker.update(newValue)
+        val newValue = AvString(valueId, Instant.parse("2023-01-01T12:01:00Z"), AioStatus.OK, "NewValue")
+        worker.add(newValue)
 
-        val receivedValue = channel.receive()
-        assertEquals(newValue, receivedValue)
+        val received = channel.receive()
+        check(received is AvoAddOrUpdate)
+        assertEquals(newValue, received.value)
     }
 
     @Test
     fun `should allow multiple subscribers to receive updates`() = test { worker ->
         val valueId = AioValueId()
-        val channel1 = Channel<AioValue>(1)
-        val channel2 = Channel<AioValue>(1)
+        val channel1 = Channel<AioValueOperation>(1)
+        val channel2 = Channel<AioValueOperation>(1)
 
-        val subscription1 = AioValueChannelSubscription(uuid4(), listOf(valueId), channel1)
-        val subscription2 = AioValueChannelSubscription(uuid4(), listOf(valueId), channel2)
+        val subscription1 = AioValueChannelSubscription(uuid4(), listOf(valueId), emptyList(), channel1)
+        val subscription2 = AioValueChannelSubscription(uuid4(), listOf(valueId), emptyList(), channel2)
 
         worker.subscribe(listOf(subscription1, subscription2))
 
-        val newValue = AioValue(valueId, Instant.parse("2023-01-01T12:02:00Z"), AioStatus.OK, "MultiSubscriberValue")
-        worker.update(newValue)
+        val newValue = AvString(valueId, Instant.parse("2023-01-01T12:02:00Z"), AioStatus.OK, "MultiSubscriberValue")
+        worker.add(newValue)
 
-        assertEquals(newValue, channel1.receive())
-        assertEquals(newValue, channel2.receive())
+        assertEquals(newValue, (channel1.receive() as AvoAddOrUpdate).value)
+        assertEquals(newValue, (channel2.receive() as AvoAddOrUpdate).value)
     }
 
     @Test
     fun `should unsubscribe properly`() = test { worker ->
         val valueId = AioValueId()
-        val channel = Channel<AioValue>(1)
-        val subscription = AioValueChannelSubscription(uuid4(), listOf(valueId), channel)
+        val channel = Channel<AioValueOperation>(1)
+        val subscription = AioValueChannelSubscription(uuid4(), listOf(valueId), emptyList(), channel)
 
         worker.subscribe(subscription)
         worker.unsubscribe(subscription.uuid)
 
-        val newValue = AioValue(valueId, Instant.parse("2023-01-01T12:03:00Z"), AioStatus.OK, "AfterUnsubscribe")
-        worker.update(newValue)
+        val newValue = AvString(valueId, Instant.parse("2023-01-01T12:03:00Z"), AioStatus.OK, "AfterUnsubscribe")
+        worker.add(newValue)
 
         waitFor(1.seconds) { worker.isIdle }
 
@@ -112,7 +118,8 @@ class AioValueWorkerTest {
     fun test(timeout: Duration = 10.seconds, testFun: suspend (worker: AioValueWorker) -> Unit) =
         runTest(timeout = timeout) {
             val worker = AioValueWorker()
-            val dispatcher = Dispatchers.Default
+            worker.logger = getLogger("worker")
+            val dispatcher = Dispatchers.Unconfined
             val scope = CoroutineScope(dispatcher)
 
             scope.launch {

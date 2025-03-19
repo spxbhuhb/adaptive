@@ -9,10 +9,10 @@ interface AioSpaceApi {
 
     suspend fun query(): List<AioItem>
 
-    suspend fun add(
-        parentId: UUID<AioItem>?,
-        displayOrder: Int
-    ): AioSpace
+//    suspend fun add(
+//        parentId: UUID<AioItem>?,
+//        displayOrder: Int
+//    ): AioSpace
 
     suspend fun update(space: AioItem)
 

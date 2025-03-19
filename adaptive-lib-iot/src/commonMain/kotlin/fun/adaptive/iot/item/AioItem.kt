@@ -2,32 +2,56 @@ package `fun`.adaptive.iot.item
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.noname
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.iot.space.SpaceMarkers
+import `fun`.adaptive.iot.space.markers.SpaceMarkers
+import `fun`.adaptive.iot.value.AioValue
+import `fun`.adaptive.iot.value.AioValueId
 import `fun`.adaptive.iot.ws.iconCache
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.builtin.empty
 import `fun`.adaptive.ui.tree.TreeItem
-import `fun`.adaptive.ui.workspace.model.WsItem
 import `fun`.adaptive.ui.workspace.model.WsItemType
 import `fun`.adaptive.utility.p04
+import kotlinx.datetime.Instant
 
 @Adat
 data class AioItem(
     override val name: String,
     override val type: WsItemType,
-    val uuid: AioItemId,
+    override val uuid: AioValueId,
+    override val timestamp: Instant,
+    override val status: AioStatus,
     val friendlyId: FriendlyItemId,
-    val markers: AioMarkerMap,
-    val displayOrder: Int,
-    val status: AioStatus,
+    val markersOrNull: AioMarkerMap?,
     val parentId: AioItemId?
-) : WsItem() {
+) : AioValue() {
+
+    val markers: AioMarkerMap
+        get() = markersOrNull ?: emptyMap()
+
+    operator fun contains(markerName : AioMarker) : Boolean {
+        return markersOrNull?.containsKey(markerName) == true
+    }
+
+    operator fun get(markerName : AioMarker) : AioValueId? {
+        return markersOrNull?.get(markerName)
+    }
+
+    fun copyWith(value: AioMarkerValue): AioItem {
+        return copyWith(value.markerName, value)
+    }
+
+    fun copyWith(key: AioMarker, value: AioMarkerValue?): AioItem {
+        val markers = markersOrNull?.toMutableMap() ?: mutableMapOf()
+        markers[key] = value?.uuid
+        return copy(markersOrNull = markers)
+    }
 
     fun friendlySpaceId() {
+        if (markersOrNull == null) return
         when {
-            SpaceMarkers.SPACE in markers -> "SP-${friendlyId.p04}"
+            SpaceMarkers.SPACE in markersOrNull -> "SP-${friendlyId.p04}"
             else -> "XX-${friendlyId.p04}"
         }
     }
@@ -37,18 +61,17 @@ data class AioItem(
         childMap: MutableMap<AioItemId?, MutableList<AioItem>>
     ): TreeItem<AioItem> {
 
-        val item = toTreeItem(parent)
-
-        val children = childMap[uuid]
-        if (children == null) return item
-
-        children.sortBy { it.displayOrder }
-
-        item.children = children.map { child ->
-            child.mapToTreeItem(item, childMap)
-        }
-
-        return item
+        TODO()
+//        val item = toTreeItem(parent)
+//
+//        val children = childMap[uuid]
+//        if (children == null) return item
+//
+//        item.children = children.map { child ->
+//            child.mapToTreeItem(item, childMap)
+//        }
+//
+//        return item
     }
 
     fun toTreeItem(parent: TreeItem<AioItem>?) = TreeItem(
@@ -59,7 +82,8 @@ data class AioItem(
     )
 
     fun icon(): GraphicsResourceSet {
-        for (marker in markers.keys) {
+        if (markersOrNull == null) return Graphics.empty
+        for (marker in markersOrNull.keys) {
             val icon = iconCache[marker]
             if (icon != null) return icon
         }

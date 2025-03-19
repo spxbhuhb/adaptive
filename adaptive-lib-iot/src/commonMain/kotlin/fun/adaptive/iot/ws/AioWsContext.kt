@@ -1,21 +1,10 @@
 package `fun`.adaptive.iot.ws
 
-import `fun`.adaptive.iot.infrastructure.AioInfrastructureItem
-import `fun`.adaptive.iot.infrastructure.AioInfrastructureItemId
-import `fun`.adaptive.iot.infrastructure.initInfrastructure
 import `fun`.adaptive.iot.item.AioItem
 import `fun`.adaptive.iot.item.AioItemApi
 import `fun`.adaptive.iot.item.AioItemId
-import `fun`.adaptive.iot.space.AioSpace
-import `fun`.adaptive.iot.space.AioSpaceId
-import `fun`.adaptive.iot.space.AioSpaceType
-import `fun`.adaptive.iot.space.ui.SpaceTreeModel
-import `fun`.adaptive.iot.space.ui.initSpaces
 import `fun`.adaptive.iot.value.AioValueApi
 import `fun`.adaptive.service.api.getService
-import `fun`.adaptive.ui.instruction.event.EventModifier
-import `fun`.adaptive.ui.tree.TreeItem
-import `fun`.adaptive.ui.tree.TreeViewModel
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsContext
 
@@ -27,45 +16,45 @@ class AioWsContext(override val workspace: Workspace) : WsContext {
     val spaceMap = mutableMapOf<AioItemId, AioItem>()
 
     init {
-        io { initSpaces(this) }
+        //io { initSpaces(this) }
     }
 
-    val infrastructureMap = mutableMapOf<AioInfrastructureItemId, AioInfrastructureItem>()
+//    val infrastructureMap = mutableMapOf<AioInfrastructureItemId, AioInfrastructureItem>()
+//
+//    val infrastructureTree = TreeViewModel<AioInfrastructureItem, AioWsContext>(
+//        emptyList(),
+//        multiSelect = false,
+//        context = this
+//    )
+//
+//    init {
+//        io { initInfrastructure(this) }
+//    }
+//
 
-    val infrastructureTree = TreeViewModel<AioInfrastructureItem, AioWsContext>(
-        emptyList(),
-        multiSelect = false,
-        context = this
-    )
+//    fun addSpace(parentItem: TreeItem<AioSpace>?, itemId: AioSpaceId?, site: AioSpaceType, displayOrder: Int) {
+//        io {
+//            val space = spaceService.add(projectId, itemId, site, displayOrder)
+//
+//            spaceMap[space.uuid] = space
+//
+//            val newItem = space.toTreeItem(parentItem)
+//
+//            if (parentItem != null) {
+//                parentItem.children += newItem
+//                if (! parentItem.open) parentItem.open = true
+//            } else {
+//                //spaceTree.items += newItem
+//            }
+//        }
+//    }
 
-    init {
-        io { initInfrastructure(this) }
-    }
-
-
-    fun addSpace(parentItem: TreeItem<AioSpace>?, itemId: AioSpaceId?, site: AioSpaceType, displayOrder: Int) {
-        io {
-            val space = spaceService.add(projectId, itemId, site, displayOrder)
-
-            spaceMap[space.uuid] = space
-
-            val newItem = space.toTreeItem(parentItem)
-
-            if (parentItem != null) {
-                parentItem.children += newItem
-                if (! parentItem.open) parentItem.open = true
-            } else {
-                spaceTree.items += newItem
-            }
-        }
-    }
-
-    fun updateSpace(space: AioSpace) {
-        io {
-            spaceService.update(space)
-            spaceMap[space.uuid] = space
-        }
-    }
+//    fun updateSpace(space: AioSpace) {
+//        io {
+//            spaceService.update(space)
+//            spaceMap[space.uuid] = space
+//        }
+//    }
 
     companion object {
         const val WSIT_INFRASTRUCTURE_ITEM = "aio:infrastructure:item"

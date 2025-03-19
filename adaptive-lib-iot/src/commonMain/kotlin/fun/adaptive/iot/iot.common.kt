@@ -4,15 +4,13 @@ import `fun`.adaptive.adaptive_lib_iot.generated.resources.apartment
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.dew_point
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.temperatureAndHumidity
-import `fun`.adaptive.iot.infrastructure.point.AioPoint
-import `fun`.adaptive.iot.infrastructure.ui.wsInfrastructureEditorDef
-import `fun`.adaptive.iot.space.AioSpace
 import `fun`.adaptive.iot.space.AioSpaceType
 import `fun`.adaptive.iot.space.ui.model.SpaceBrowserConfig
 import `fun`.adaptive.iot.space.ui.model.SpaceBrowserWsItem
 import `fun`.adaptive.iot.space.ui.wsSpaceBrowserTool
 import `fun`.adaptive.iot.space.ui.SpacePaneController
 import `fun`.adaptive.iot.space.ui.wsSpaceEditorToolDef
+import `fun`.adaptive.iot.value.builtin.AvString
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
@@ -27,11 +25,11 @@ import `fun`.adaptive.wireformat.WireFormatRegistry
 suspend fun iotCommon(loadStrings : Boolean = true) {
     val r = WireFormatRegistry
 
-    r += AioProject
-    r += AioSpace
+//    r += AioSpace
     r += AioSpaceType
-    r += AioDevice
-    r += AioPoint
+    r += AvString
+//    r += AioDevice
+//    r += AioPoint
 
     if (loadStrings) {
         commonMainStringsStringStore0.load()
@@ -47,8 +45,8 @@ fun Workspace.iotCommon() {
 
     contexts += context
 
-    toolPanes += wsSpaceEditorToolDef()
-    toolPanes += wsInfrastructureEditorDef()
+//    toolPanes += wsSpaceEditorToolDef()
+//    toolPanes += wsInfrastructureEditorDef()
 
     toolPanes += wsSpaceBrowserTool(
         SpaceBrowserConfig(

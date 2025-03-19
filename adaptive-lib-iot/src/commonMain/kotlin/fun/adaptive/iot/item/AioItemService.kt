@@ -19,12 +19,13 @@ class AioItemService : ServiceImpl<AioItemService>, AioItemApi {
 
     override suspend fun queryByMarker(marker: AioMarker): List<AioItem> {
         publicAccess()
-        return worker.query { it.value is AioItem && marker in it.value.markers }.map { it.value as AioItem }
+        TODO()
+//        return worker.query { it.value is AioItem && marker in it.value.markers }.map { it.value as AioItem }
     }
 
-    override suspend fun add(item: AioItem, markerData: Map<AioMarker, Any?>) {
-        publicAccess()
-        worker.update(AioValue(item.uuid.cast(), now(), item.status, item))
-    }
+//    override suspend fun add(item: AioItem, markerData: Map<AioMarker, Any?>) {
+//        publicAccess()
+//        //worker.update(AioValue(item.uuid.cast(), now(), item.status, item))
+//    }
 
 }

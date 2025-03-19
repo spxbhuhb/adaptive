@@ -6,6 +6,8 @@ import `fun`.adaptive.auth.util.getQueryRoleFor
 import `fun`.adaptive.auth.util.getUpdateRoleFor
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
+import `fun`.adaptive.iot.item.AioMarker
+import `fun`.adaptive.iot.value.operation.AioValueOperation
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid4
@@ -31,18 +33,19 @@ class AioValueServerService : ServiceImpl<AioValueServerService>, AioValueApi {
         worker = safeAdapter.firstImpl<AioValueWorker>()
     }
 
-    override suspend fun update(value: AioValue) {
+    override suspend fun process(operation: AioValueOperation) {
         publicAccess() // ensureHas(updateRole)
 
-        worker.update(value)
+        worker.process(operation)
     }
 
-    override suspend fun subscribe(valueIds: List<AioValueId>): AuiValueSubscriptionId {
+    override suspend fun subscribe(valueIds: List<AioValueId>, markerIds : List<AioMarker>): AuiValueSubscriptionId {
         publicAccess() // ensureHas(queryRole)
 
         val subscription = AioValueClientSubscription(
             uuid4(),
             valueIds,
+            markerIds,
             serviceContext.transport,
             safeAdapter.scope
         )

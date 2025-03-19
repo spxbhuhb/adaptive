@@ -1,5 +1,7 @@
 package `fun`.adaptive.iot.value
 
+import `fun`.adaptive.iot.item.AioMarker
+import `fun`.adaptive.iot.value.operation.AioValueOperation
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.service.api.getService
@@ -19,16 +21,17 @@ import kotlinx.coroutines.launch
 class AioValueClientSubscription(
     uuid: AuiValueSubscriptionId,
     valueIds: List<AioValueId>,
+    markers : List<AioMarker>,
     transport: ServiceCallTransport,
     scope: CoroutineScope,
     capacity: Int = valueIds.size + 1000
-) : AioValueSubscription(uuid, valueIds) {
+) : AioValueSubscription(uuid, valueIds, markers) {
 
     companion object {
         val logger = getLogger(AioValueClientSubscription.typeSignature().trimSignature())
     }
 
-    val channel = Channel<AioValue>(capacity)
+    val channel = Channel<AioValueOperation>(capacity)
     val service = getService<AioValueApi>(transport)
 
     init {
@@ -40,7 +43,7 @@ class AioValueClientSubscription(
     suspend fun run() {
         try {
             for (update in channel) {
-                service.update(update)
+                service.process(update)
             }
         } catch (e: Exception) {
             logger.warning(e)
@@ -48,7 +51,7 @@ class AioValueClientSubscription(
         }
     }
 
-    override fun update(value: AioValue) {
+    override fun send(value: AioValueOperation) {
         val success = channel.trySend(value).isSuccess
 
         if (! success) {

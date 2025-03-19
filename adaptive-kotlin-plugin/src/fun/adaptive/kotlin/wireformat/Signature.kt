@@ -8,7 +8,6 @@ import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.types.*
-import org.jetbrains.kotlin.ir.util.isFinalClass
 
 object Signature {
 
@@ -71,6 +70,8 @@ object Signature {
 
         check(irType is IrSimpleType)
 
+        if (irType.classOrNull?.owner?.modality != Modality.FINAL) return "*"
+
         if (irType.arguments.isEmpty()) {
             return "L$typeName;".addNull(irType)
         }
@@ -92,9 +93,6 @@ object Signature {
         val irClass = irTypeArgument.classOrNull ?: return "*"
 
         val owner = irClass.owner
-
-        owner.isFinalClass
-
         if (owner.modality != Modality.FINAL && owner.kind != ClassKind.ENUM_CLASS) return "*"
 
         return typeSignature(irTypeArgument)

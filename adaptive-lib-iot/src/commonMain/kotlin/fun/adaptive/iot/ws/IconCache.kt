@@ -8,7 +8,7 @@ import `fun`.adaptive.adaptive_lib_iot.generated.resources.host
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.meeting_room
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.memory
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.stacks
-import `fun`.adaptive.iot.space.SpaceMarkers
+import `fun`.adaptive.iot.space.markers.SpaceMarkers
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 

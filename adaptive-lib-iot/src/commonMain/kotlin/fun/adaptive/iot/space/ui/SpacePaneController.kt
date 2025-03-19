@@ -1,7 +1,7 @@
 package `fun`.adaptive.iot.space.ui
 
 import `fun`.adaptive.iot.item.AioItem
-import `fun`.adaptive.iot.space.SpaceMarkers
+import `fun`.adaptive.iot.space.markers.SpaceMarkers
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.logic.WsPaneController

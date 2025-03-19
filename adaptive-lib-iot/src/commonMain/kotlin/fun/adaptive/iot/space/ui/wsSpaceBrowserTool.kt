@@ -82,20 +82,22 @@ private fun transformTreeModel(
 ): SpaceBrowserModel {
 
     fun transformItem(original: TreeItem<AioItem>, newParent: SpaceBrowserTreeItem?): SpaceBrowserTreeItem {
-        TreeItem(
-            original.icon,
-            original.title,
-            SpaceBrowserWsItem(original.data.name, config = pane.model.config, spaceId = original.data.uuid),
-            parent = newParent
-        ).also { new ->
-            new.children = original.children.map { transformItem(it, new) }
-            return new
-        }
+        TODO()
+//        TreeItem(
+//            original.icon,
+//            original.title,
+//            SpaceBrowserWsItem(original.data.name, config = pane.model.config, spaceId = original.data.uuid),
+//            parent = newParent
+//        ).also { new ->
+//            new.children = original.children.map { transformItem(it, new) }
+//            return new
+//        }
     }
 
-    return context.spaceTree.transform(
-        context,
-        selectedFun = selectedFun,
-        transform = ::transformItem
-    )
+    TODO()
+//    return context.spaceTree.transform(
+//        context,
+//        selectedFun = selectedFun,
+//        transform = ::transformItem
+//    )
 }

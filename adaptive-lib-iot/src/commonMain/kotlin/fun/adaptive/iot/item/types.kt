@@ -6,4 +6,4 @@ import `fun`.adaptive.utility.UUID
 typealias AioItemId = UUID<AioItem>
 typealias FriendlyItemId = Int
 typealias AioMarker = String
-typealias AioMarkerMap = Map<AioMarker, AioValueId>
+typealias AioMarkerMap = Map<AioMarker, AioValueId?>

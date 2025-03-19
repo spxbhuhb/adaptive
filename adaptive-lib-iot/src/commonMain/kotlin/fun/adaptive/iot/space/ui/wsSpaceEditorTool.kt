@@ -7,11 +7,9 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.item.AioItem
 import `fun`.adaptive.iot.item.AioItem.Companion.toTree
-import `fun`.adaptive.iot.space.AioSpace
-import `fun`.adaptive.iot.space.ui.model.AioSpaceEditOperation
 import `fun`.adaptive.iot.space.AioSpaceType
-import `fun`.adaptive.iot.space.SpaceMarkers
-import `fun`.adaptive.iot.space.ui.model.SpaceBrowserState
+import `fun`.adaptive.iot.space.markers.SpaceMarkers
+import `fun`.adaptive.iot.space.ui.model.AioSpaceEditOperation
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
@@ -106,7 +104,7 @@ private fun applyToolMenuAction(
 private fun apply(tree: SpaceTreeModel, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AioItem>?) {
     val item = treeItem?.data
     val itemId = item?.uuid
-    val displayOrder = (treeItem?.children?.lastOrNull()?.data?.displayOrder ?: 0) + 1
+//    val displayOrder = (treeItem?.children?.lastOrNull()?.data?.displayOrder ?: 0) + 1
     val context = tree.context
 
     val addType = when (menuItem.data) {
@@ -119,7 +117,7 @@ private fun apply(tree: SpaceTreeModel, menuItem: MenuItem<AioSpaceEditOperation
     }
 
     if (addType != null) {
-        context.addSpace(treeItem, itemId, addType, displayOrder)
+        // TODO context.addSpace(treeItem, itemId, addType, displayOrder)
         return
     }
 
@@ -161,18 +159,18 @@ private fun move(
         tree.items = newList
     }
 
-    val itemDisplayOrder = item.data.displayOrder
-    val siblingDisplayOrder = sibling.data.displayOrder
-
-    val newSiblingSpace = sibling.data.copy(displayOrder = itemDisplayOrder)
-    val newItemSpace = item.data.copy(displayOrder = siblingDisplayOrder)
-
-    sibling.data = newSiblingSpace
-    item.data = newItemSpace
+//    val itemDisplayOrder = item.data.displayOrder
+//    val siblingDisplayOrder = sibling.data.displayOrder
+//
+//    val newSiblingSpace = sibling.data.copy(displayOrder = itemDisplayOrder)
+//    val newItemSpace = item.data.copy(displayOrder = siblingDisplayOrder)
+//
+//    sibling.data = newSiblingSpace
+//    item.data = newItemSpace
 
     context.io {
-        context.spaceService.update(newItemSpace)
-        context.spaceService.update(newSiblingSpace)
+        // TODO context.spaceService.update(newItemSpace)
+        // TODO context.spaceService.update(newSiblingSpace)
     }
 }
 
@@ -191,38 +189,39 @@ private val roomMenu = listOf(addArea)
 
 private fun menu(viewModel: SpaceTreeModel, treeItem: TreeItem<AioItem>): List<MenuItemBase<AioSpaceEditOperation>> {
 
-    val markers = treeItem.data.markers
-
-    val base =
-        when {
-            SpaceMarkers.SITE in markers -> siteMenu
-            SpaceMarkers.BUILDING in markers -> buildingMenu
-            SpaceMarkers.FLOOR in markers -> floorMenu
-            SpaceMarkers.ROOM in markers -> roomMenu
-            SpaceMarkers.AREA in markers -> areaMenu
-            else -> addTopMenu
-        }
-
-    val out = mutableListOf<MenuItemBase<AioSpaceEditOperation>>()
-    out.addAll(base)
-
-    out += MenuSeparator<AioSpaceEditOperation>()
-
-    out += MenuItem<AioSpaceEditOperation>(
-        Graphics.arrow_drop_up, Strings.moveUp, AioSpaceEditOperation.MoveUp,
-        inactive = isFirst(viewModel, treeItem)
-    )
-
-    out += MenuItem<AioSpaceEditOperation>(
-        Graphics.arrow_drop_down, Strings.moveDown, AioSpaceEditOperation.MoveDown,
-        inactive = isLast(viewModel, treeItem)
-    )
-
-    out += MenuSeparator<AioSpaceEditOperation>()
-
-    out += MenuItem<AioSpaceEditOperation>(null, Strings.inactivate, AioSpaceEditOperation.Inactivate)
-
-    return out
+    TODO()
+//    val markers = treeItem.data.markersOrNull
+//
+//    val base =
+//        when {
+//            SpaceMarkers.SITE in markers -> siteMenu
+//            SpaceMarkers.BUILDING in markers -> buildingMenu
+//            SpaceMarkers.FLOOR in markers -> floorMenu
+//            SpaceMarkers.ROOM in markers -> roomMenu
+//            SpaceMarkers.AREA in markers -> areaMenu
+//            else -> addTopMenu
+//        }
+//
+//    val out = mutableListOf<MenuItemBase<AioSpaceEditOperation>>()
+//    out.addAll(base)
+//
+//    out += MenuSeparator<AioSpaceEditOperation>()
+//
+//    out += MenuItem<AioSpaceEditOperation>(
+//        Graphics.arrow_drop_up, Strings.moveUp, AioSpaceEditOperation.MoveUp,
+//        inactive = isFirst(viewModel, treeItem)
+//    )
+//
+//    out += MenuItem<AioSpaceEditOperation>(
+//        Graphics.arrow_drop_down, Strings.moveDown, AioSpaceEditOperation.MoveDown,
+//        inactive = isLast(viewModel, treeItem)
+//    )
+//
+//    out += MenuSeparator<AioSpaceEditOperation>()
+//
+//    out += MenuItem<AioSpaceEditOperation>(null, Strings.inactivate, AioSpaceEditOperation.Inactivate)
+//
+//    return out
 }
 
 private fun isFirst(viewModel: SpaceTreeModel, treeItem: TreeItem<AioItem>): Boolean {
