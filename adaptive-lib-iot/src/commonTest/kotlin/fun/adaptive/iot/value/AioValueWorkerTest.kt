@@ -1,18 +1,27 @@
 package `fun`.adaptive.iot.value
 
+import `fun`.adaptive.iot.item.AioItem
+import `fun`.adaptive.iot.item.AioMarkerMap
 import `fun`.adaptive.iot.item.AioStatus
+import `fun`.adaptive.iot.item.AmvItemIdList
 import `fun`.adaptive.iot.value.builtin.AvString
 import `fun`.adaptive.iot.value.operation.AioValueOperation
 import `fun`.adaptive.iot.value.operation.AvoAddOrUpdate
+import `fun`.adaptive.iot.value.operation.AvoMarkerRemove
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.UUID.Companion.uuid4
+import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.utility.waitFor
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -113,6 +122,96 @@ class AioValueWorkerTest {
         waitFor(1.seconds) { worker.isIdle }
 
         assertTrue(channel.isEmpty)
+    }
+
+    fun addSensor(worker: AioValueWorker, markers: AioMarkerMap): AioItem {
+        val item = AioItem(
+            name = "Temp Sensor",
+            type = "sensor",
+            uuid = uuid7(),
+            timestamp = Instant.parse("2023-01-01T12:00:00Z"),
+            status = AioStatus.OK,
+            friendlyId = 1,
+            markersOrNull = markers,
+            parentId = null
+        )
+
+        worker.add(item) // Add the AioItem to the worker
+
+        return item
+    }
+
+    @Test
+    fun `should return values matching the marker query`() = test { worker ->
+        val marker = "temperature"
+        val item = addSensor(worker, mapOf(marker to uuid7()))
+
+        val result = worker.queryByMarker(marker)
+
+        assertEquals(listOf(item), result)
+    }
+
+    @Test
+    fun `should not return values if the marker query does not match any values`() = test { worker ->
+        val marker = "temperature"
+        addSensor(worker, mapOf("humidity" to uuid7()))
+
+        val result = worker.queryByMarker(marker)
+
+        assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun `should return multiple values if multiple markers match`() = test { worker ->
+        val marker = "temperature"
+        val item1 = addSensor(worker, mapOf(marker to uuid7()))
+        val item2 = addSensor(worker, mapOf(marker to uuid7()))
+
+        val result = worker.queryByMarker(marker)
+
+        assertEquals(setOf(item1, item2), result.toSet())
+    }
+
+    @Test
+    fun `should notify marker-based subscriptions when a new marker is added`() = test { worker ->
+        val marker = "temperature"
+        val initialItem = addSensor(worker, mapOf(marker to uuid7()))
+
+        val channel = Channel<AioValueOperation>(1)
+        val subscription = AioValueChannelSubscription(uuid4(), emptyList(), listOf(marker), channel)
+
+        worker.subscribe(listOf(subscription))
+
+        val newValue = initialItem.copyWith(marker, AmvItemIdList(initialItem.uuid, marker, emptyList()))
+
+        worker.update(newValue)
+
+        val received = channel.receive()
+        check(received is AvoAddOrUpdate)
+        assertEquals(newValue.uuid, received.value.uuid)
+        assertNotEquals(newValue.markers, (received.value as AioItem).markers)
+    }
+
+    @Test
+    fun `should notify marker-based subscriptions when a marker is removed`() = test { worker ->
+        val marker = "temperature"
+
+        val initialItem = addSensor(worker, mapOf(marker to uuid7()))
+        val newValue = initialItem.copy(markersOrNull = null)
+
+        val channel = Channel<AioValueOperation>(1)
+        val subscription = AioValueChannelSubscription(uuid4(), emptyList(), listOf(marker), channel)
+
+        worker.subscribe(listOf(subscription))
+
+        channel.receive() // drop the initial message which contains the initial value
+
+        worker.update(newValue)
+
+        val received = channel.receive()
+        check(received is AvoMarkerRemove)
+        assertEquals(received.valueId, newValue.uuid)
+        assertEquals(received.marker, "temperature")
     }
 
     fun test(timeout: Duration = 10.seconds, testFun: suspend (worker: AioValueWorker) -> Unit) =

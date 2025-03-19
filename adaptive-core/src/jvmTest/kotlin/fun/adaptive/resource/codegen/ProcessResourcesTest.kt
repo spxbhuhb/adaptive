@@ -5,6 +5,7 @@ import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.KotlinCompilation.ExitCode
 import com.tschuchort.compiletesting.SourceFile
 import `fun`.adaptive.resource.*
+import `fun`.adaptive.resource.document.Documents
 import `fun`.adaptive.resource.file.FileResource
 import `fun`.adaptive.resource.file.FileResourceSet
 import `fun`.adaptive.resource.file.Files
@@ -123,6 +124,7 @@ class ProcessResourcesTest {
             ResourceTypeQualifier.Graphics -> Graphics
             ResourceTypeQualifier.Image -> Images
             ResourceTypeQualifier.Strings -> Strings
+            ResourceTypeQualifier.Document -> Documents
         }
 
         expected.forEach {

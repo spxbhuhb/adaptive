@@ -42,8 +42,8 @@ class AioValueClientSubscription(
 
     suspend fun run() {
         try {
-            for (update in channel) {
-                service.process(update)
+            for (operation in channel) {
+                service.process(operation)
             }
         } catch (e: Exception) {
             logger.warning(e)

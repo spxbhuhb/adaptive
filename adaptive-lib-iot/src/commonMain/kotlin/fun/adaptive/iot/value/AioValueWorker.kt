@@ -4,11 +4,7 @@ import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.iot.item.AioItem
 import `fun`.adaptive.iot.item.AioMarker
 import `fun`.adaptive.iot.item.AioMarkerValue
-import `fun`.adaptive.iot.value.operation.AioValueOperation
-import `fun`.adaptive.iot.value.operation.AvoAdd
-import `fun`.adaptive.iot.value.operation.AvoAddOrUpdate
-import `fun`.adaptive.iot.value.operation.AvoTransaction
-import `fun`.adaptive.iot.value.operation.AvoUpdate
+import `fun`.adaptive.iot.value.operation.*
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,6 +23,8 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
     private val valueIdSubscriptions = mutableMapOf<AioValueId, MutableList<AioValueSubscription>>()
 
     private val markerSubscriptions = mutableMapOf<AioMarker, MutableList<AioValueSubscription>>()
+
+    private val markerIndices = mutableMapOf<AioMarker, MutableSet<AioValueId>>()
 
     private val trace = true
 
@@ -52,6 +50,7 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
                     is AvoTransaction -> transaction(operation, commitSet)
                     is AvoUpdate -> update(operation, commitSet)
                     is AvoAdd -> add(operation, commitSet)
+                    is AvoMarkerRemove -> Unit // used by subscribers, for worker it is no-op
                 }
 
                 commit(commitSet)
@@ -61,46 +60,36 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
 
     private fun add(operation: AvoAdd, commitSet: MutableSet<AioValueSubscription>) {
         val value = operation.value
-        val current = values[value.uuid]
 
-        if (current != null) {
+        val original = values.put(value.uuid, value)
+
+        if (original != null) {
+            original.let { values[it.uuid] = it } // rollback the replacement
             operation.fail()
             return
         }
 
-        values[value.uuid] = value
-
-        notify(value, commitSet)
-
-        operation.success()
+        indexAndNotify(original, value, operation, commitSet)
     }
 
     private fun update(operation: AvoUpdate, commitSet: MutableSet<AioValueSubscription>) {
         val value = operation.value
-        val current = values[value.uuid]
+        val original = values.put(value.uuid, value)
 
-        if (current == null || current.timestamp > value.timestamp) {
+        if (original == null || original.timestamp > value.timestamp) {
+            original?.let { values[it.uuid] = it } // rollback the replacement
             operation.fail()
             return
         }
 
-        values[value.uuid] = value
-
-        notify(value, commitSet)
-
-        operation.success()
+        indexAndNotify(original, value, operation, commitSet)
     }
 
     private fun addOrUpdate(operation: AvoAddOrUpdate, commitSet: MutableSet<AioValueSubscription>) {
         val value = operation.value
-        val current = values[value.uuid]
+        val original = values.put(value.uuid, value)
 
-        if (current == null || current.timestamp <= value.timestamp) {
-            values[value.uuid] = value
-            notify(value, commitSet)
-        }
-
-        operation.success()
+        indexAndNotify(original, value, operation, commitSet)
     }
 
     private fun transaction(transaction: AvoTransaction, commitSet: MutableSet<AioValueSubscription>) {
@@ -110,11 +99,22 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
                 is AvoUpdate -> update(operation, commitSet)
                 is AvoAdd -> add(operation, commitSet)
                 is AvoTransaction -> transaction(operation, commitSet)
+                is AvoMarkerRemove -> Unit // used by subscribers, for worker it is no-op
             }
         }
 
         transaction.success()
     }
+
+    private fun indexAndNotify(original: AioValue?, value: AioValue, operation: AioValueOperation, commitSet: MutableSet<AioValueSubscription>) {
+        index(original, value, commitSet)
+        notify(value, commitSet)
+        operation.success()
+    }
+
+    // --------------------------------------------------------------------------------
+    // Notification
+    // --------------------------------------------------------------------------------
 
     fun notify(value: AioValue, commitSet: MutableSet<AioValueSubscription>) {
         valueIdSubscriptions[value.uuid]?.forEach {
@@ -157,13 +157,65 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
                 unsubscribe(subscription.uuid)
             }
         }
+        commitSet.clear()
+    }
+
+    // --------------------------------------------------------------------------------
+    // Indexing
+    // --------------------------------------------------------------------------------
+
+    private fun index(original: AioValue?, value: AioValue, commitSet: MutableSet<AioValueSubscription>) {
+        when (value) {
+
+            is AioItem -> {
+                index(
+                    value.uuid,
+                    (original as? AioItem)?.markers?.keys ?: emptySet(),
+                    value.markers.keys,
+                    commitSet
+                )
+            }
+
+            is AioMarkerValue -> {
+                markerIndices[value.markerName]?.add(value.uuid)
+            }
+        }
+    }
+
+    private fun index(valueId: AioValueId, originalMarkers: Set<String>, markers: Set<String>, commitSet: MutableSet<AioValueSubscription>) {
+
+        for (marker in markers) {
+            if (marker !in originalMarkers) {
+                markerIndices.getOrPut(marker) { mutableSetOf() }.add(valueId)
+            }
+        }
+        for (marker in originalMarkers) {
+            if (marker !in markers) {
+                markerIndices[marker]?.remove(valueId)
+                markerSubscriptions[marker]?.forEach { markerRemove(it, valueId, marker, commitSet) }
+            }
+        }
+    }
+
+    private fun markerRemove(
+        subscription: AioValueSubscription,
+        valueId: AioValueId,
+        marker: AioMarker,
+        commitSet: MutableSet<AioValueSubscription>
+    ) {
+        try {
+            subscription.markerRemove(valueId, marker)
+            commitSet.add(subscription)
+        } catch (e: Exception) {
+            logger.warning(e)
+            commitSet.remove(subscription)
+            unsubscribe(subscription.uuid)
+        }
     }
 
     // --------------------------------------------------------------------------------
     // Subscription management
     // --------------------------------------------------------------------------------
-
-
 
     fun subscribe(subscription: AioValueSubscription) {
         lock.use {
@@ -198,6 +250,14 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
             this.markerSubscriptions
                 .getOrPut(marker) { mutableListOf() }
                 .add(subscription)
+
+            markerIndices[marker]?.let { index ->
+                for (valueId in index) {
+                    values[valueId]?.let { value ->
+                        subscription.add(value)
+                    }
+                }
+            }
         }
 
         subscription.commit()
@@ -230,7 +290,7 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
         }
 
     // --------------------------------------------------------------------------------
-    // Access
+    // Query
     // --------------------------------------------------------------------------------
 
     operator fun get(valueId: AioValueId): AioValue? =
@@ -248,6 +308,15 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
         lock.use {
             values.values.filter(filterFun)
         }
+
+    fun queryByMarker(marker: AioMarker): List<AioValue> =
+        lock.use {
+            markerIndices[marker]?.mapNotNull { values[it] } ?: emptyList()
+        }
+
+    // --------------------------------------------------------------------------------
+    // Update
+    // --------------------------------------------------------------------------------
 
     fun add(value: AioValue) {
         check(operations.trySend(AvoAdd(value)).isSuccess)

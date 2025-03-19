@@ -37,7 +37,7 @@ class TestSupport {
     companion object {
 
         @OptIn(ExperimentalCoroutinesApi::class)
-        fun auoValueTest(timeout: Duration = 10.seconds, testFun: suspend TestSupport.() -> Unit) =
+        fun aioValueTest(timeout: Duration = 10.seconds, testFun: suspend TestSupport.() -> Unit) =
 
             runTest(timeout = timeout) {
                 with(TestSupport()) {
