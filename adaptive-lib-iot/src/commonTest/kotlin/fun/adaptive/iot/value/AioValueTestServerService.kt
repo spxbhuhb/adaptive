@@ -9,7 +9,7 @@ import `fun`.adaptive.utility.UUID.Companion.uuid4
 class AioValueTestServerService : ServiceImpl<AioValueTestServerService>, AioValueApi {
 
     val worker
-        get() = adapter !!.firstImpl<AioValueWorker>()
+        get() = safeAdapter.firstImpl<AioValueWorker>()
 
     override suspend fun process(operation: AioValueOperation) {
         worker.process(operation)
@@ -22,7 +22,7 @@ class AioValueTestServerService : ServiceImpl<AioValueTestServerService>, AioVal
             valueIds,
             markerIds,
             serviceContext.transport,
-            adapter !!.scope
+            safeAdapter.scope
         )
 
         worker.subscribe(subscription)

@@ -78,7 +78,7 @@ class ImplClassTransform(
         if (declaration.overriddenSymbols.none { it.isServiceFunction() }) return declaration
 
         implementedServiceFunctions += ServiceFunctionEntry(
-            Signature.functionSignature(declaration),
+            Signature.functionSignature(declaration, pluginContext.adatClass),
             declaration
         )
 

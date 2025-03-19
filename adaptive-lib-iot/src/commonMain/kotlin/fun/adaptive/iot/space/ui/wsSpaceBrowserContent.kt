@@ -88,10 +88,10 @@ fun spacePath(context: AioWsContext, item: SpaceBrowserWsItem) {
 fun spacePathNames(context: AioWsContext, item: SpaceBrowserWsItem): List<String> {
     val spaceId = item.spaceId
     val names = mutableListOf<String>()
-    var space: AioItem? = context.spaceMap[spaceId]
-    while (space != null) {
-        names.add(space.name)
-        space = context.spaceMap[space.parentId]
-    }
+//    var space: AioItem? = context.spaceMap[spaceId]
+//    while (space != null) {
+//        names.add(space.name)
+//        space = context.spaceMap[space.parentId]
+//    }
     return names.reversed()
 }

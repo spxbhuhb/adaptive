@@ -30,7 +30,6 @@ class AdatPluginContext(
     val shortImmutableCache = ImmutableCache(true)
     val qualifiedImmutableCache = ImmutableCache(false)
 
-    val adatClass = ClassIds.ADAT_CLASS.classSymbol()
     val adatCompanion = ClassIds.ADAT_COMPANION.classSymbol()
     val adatClassWireFormat = ClassIds.ADAT_CLASS_WIREFORMAT.classSymbol()
 

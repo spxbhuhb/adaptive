@@ -80,8 +80,6 @@ fun box() : String {
         TraceEvent("AdaptiveT0", 6, "after-Mount", ""),
         TraceEvent("AdaptiveSequence", 5, "after-Mount", ""),
         TraceEvent("AdaptiveA", 4, "after-Mount", ""),
-        TraceEvent("AdaptiveA", 7, "before-Mount", ""),
-        TraceEvent("AdaptiveA", 7, "after-Mount", ""),
         TraceEvent("FoundationActualize", 3, "after-Mount", ""),
         TraceEvent("<root>", 2, "after-Mount", "")
     ))

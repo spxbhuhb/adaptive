@@ -88,7 +88,7 @@ class ConsumerClassTransform(
                         irCall(
                             consumerClass.functionByName { Strings.CALL_SERVICE },
                             irGet(function.dispatchReceiverParameter !!),
-                            irConst(Signature.functionSignature(function)),
+                            irConst(Signature.functionSignature(function, pluginContext.adatClass)),
                             buildPayload(function)
                         )
                     )

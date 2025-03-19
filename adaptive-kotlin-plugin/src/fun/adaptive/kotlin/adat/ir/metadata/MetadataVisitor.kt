@@ -64,7 +64,7 @@ class MetadataVisitor(
         if (initializer !is IrGetValue) return
         if (initializer.origin != IrStatementOrigin.INITIALIZE_PROPERTY_FROM_PARAMETER) return
 
-        val signature = Signature.typeSignature(declaration.getter !!.returnType)
+        val signature = Signature.typeSignature(declaration.getter !!.returnType, pluginContext.adatClass)
 
         properties += PropertyData(
             declaration,

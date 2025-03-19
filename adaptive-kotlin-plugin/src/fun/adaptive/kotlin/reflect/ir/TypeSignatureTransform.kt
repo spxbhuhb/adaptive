@@ -35,7 +35,7 @@ class TypeSignatureTransform(
             if (it.owner.isCompanion) type = it.owner.parentAsClass.defaultType
         }
 
-        val signature = Signature.typeSignature(type)
+        val signature = Signature.typeSignature(type, pluginContext.adatClass)
 
         return irConst(signature)
     }

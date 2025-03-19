@@ -11,15 +11,7 @@ import `fun`.adaptive.kotlin.wireformat.Signature
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrVariable
-import org.jetbrains.kotlin.ir.declarations.path
 import org.jetbrains.kotlin.ir.expressions.IrExpression
-import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
-import org.jetbrains.kotlin.ir.expressions.impl.IrVarargImpl
-import org.jetbrains.kotlin.ir.types.classFqName
-import org.jetbrains.kotlin.ir.types.typeWith
-import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
-import kotlin.text.map
-import kotlin.text.reversed
 
 class ArmStateVariableBindingArgumentBuilder(
     parent: ClassBoundIrBuilder,
@@ -38,7 +30,7 @@ class ArmStateVariableBindingArgumentBuilder(
                 irGet(patchFun.valueParameters.first()), // descendant
                 irConst(argument.argumentIndex), // indexInTarget
                 genPath(argument), // path
-                irConst(Signature.typeSignature(argument.boundType)), // boundType
+                irConst(Signature.typeSignature(argument.boundType, pluginContext.adatClass)), // boundType
                 adatCompanionOrNull(closure[argument.indexInClosure].type)
             )
         )

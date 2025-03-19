@@ -94,7 +94,7 @@ class WireFormatCache(
         .toMutableMap()
 
     fun getSignatureFormat(targetType: IrType): SignatureWireFormat =
-        typeSignature(targetType).let { signatureFormats[it] ?: loadSignatureFormat(it, targetType) }
+        typeSignature(targetType, pluginContext.adatClass).let { signatureFormats[it] ?: loadSignatureFormat(it, targetType) }
 
     private fun loadSignatureFormat(signature: String, irType: IrType): SignatureWireFormat {
         val typeFqName = checkNotNull(irType.classFqName) { "type without classFqName: $irType" }

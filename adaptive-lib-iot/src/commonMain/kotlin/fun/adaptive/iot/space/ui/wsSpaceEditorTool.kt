@@ -6,7 +6,6 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.item.AioItem
-import `fun`.adaptive.iot.item.AioItem.Companion.toTree
 import `fun`.adaptive.iot.space.AioSpaceType
 import `fun`.adaptive.iot.space.markers.SpaceMarkers
 import `fun`.adaptive.iot.space.ui.model.AioSpaceEditOperation
@@ -69,7 +68,7 @@ fun wsSpaceEditorToolDef(context: AioWsContext) {
         model = tree
     ).also {
         context.io {
-            it.model.items = context.itemService.queryByMarker(SpaceMarkers.SPACE).toTree()
+            //it.model.items = context.itemService.queryByMarker(SpaceMarkers.SPACE).toTree()
         }
     }
 }

@@ -106,7 +106,10 @@ fun parseTypeSignature(signature: String): WireFormatType {
             TokenType.Name -> stack.peek().generics += WireFormatType(token.value)
             TokenType.Open -> stack.push(stack.peek().generics.last())
             TokenType.Close -> stack.pop()
-            TokenType.Nullable -> stack.push(stack.pop().copy(nullable = true))
+            TokenType.Nullable -> {
+                val generics = stack.peek().generics
+                generics[generics.lastIndex] = generics.last().copy(nullable = true)
+            }
         }
     }
 

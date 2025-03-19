@@ -9,5 +9,6 @@ object SpaceMarkers {
     const val ROOM = "room"
     const val AREA = "area"
 
+    const val TOP_SPACES = "top-spaces"
     const val SUB_SPACES = "sub-spaces"
 }

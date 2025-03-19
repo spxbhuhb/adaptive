@@ -113,8 +113,6 @@ class FoundationPluginContext(
     val detachHandlerClass = ClassIds.DETACH_HANDLER.classSymbol()
     val detachFun = detachHandlerClass.owner.functionByName { Strings.DETACH }
 
-    val adatClass = ClassIds.ADAT_CLASS.classSymbol()
-
     val kFunctionAdaptiveReferenceType =
         irBuiltIns.getKFunctionType(
             adaptiveFragmentType, // returns with created fragment

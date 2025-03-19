@@ -4,9 +4,11 @@
 
 package `fun`.adaptive.kotlin.wireformat
 
+import `fun`.adaptive.kotlin.common.isSubclassOf
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.declarations.IrFunction
+import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.types.*
 
 object Signature {
@@ -51,17 +53,17 @@ object Signature {
 
     val reversedShorthands = shorthands.entries.associate { it.value to it.key }
 
-    fun functionSignature(function: IrFunction): String {
+    fun functionSignature(function: IrFunction, adatClass: IrClassSymbol): String {
         val parts = mutableListOf<String>()
 
         function.valueParameters.mapTo(parts) {
-            typeSignature(it.type)
+            typeSignature(it.type, adatClass)
         }
 
-        return function.name.identifier + "(" + parts.joinToString("") + ")" + typeSignature(function.returnType)
+        return function.name.identifier + "(" + parts.joinToString("") + ")" + typeSignature(function.returnType, adatClass)
     }
 
-    fun typeSignature(irType: IrType): String {
+    fun typeSignature(irType: IrType, adatClass: IrClassSymbol): String {
         val typeFqName = checkNotNull(irType.classFqName) { "type without null classFqName: $irType" }
         val typeName = typeFqName.asString()
 
@@ -70,24 +72,25 @@ object Signature {
 
         check(irType is IrSimpleType)
 
-        if (irType.classOrNull?.owner?.modality != Modality.FINAL) return "*"
+        val owner = irType.classOrNull?.owner
+        if (owner != null && owner.modality != Modality.FINAL && owner.isSubclassOf(adatClass)) return "*"
 
         if (irType.arguments.isEmpty()) {
             return "L$typeName;".addNull(irType)
         }
 
-        val argumentSignatures = irType.arguments.joinToString(";") { argumentSignature(it) }
+        val argumentSignatures = irType.arguments.joinToString(";") { argumentSignature(it, adatClass) }
 
         return "L$typeFqName<$argumentSignatures>;".addNull(irType)
     }
 
-    fun argumentSignature(irTypeArgument: IrTypeArgument): String {
+    fun argumentSignature(irTypeArgument: IrTypeArgument, adatClass: IrClassSymbol): String {
         if (irTypeArgument !is IrType) return "*"
 
         val classFqName = irTypeArgument.classFqName ?: return "*"
 
         if (classFqName.asString().startsWith("kotlin.collections")) {
-            return typeSignature(irTypeArgument)
+            return typeSignature(irTypeArgument, adatClass)
         }
 
         val irClass = irTypeArgument.classOrNull ?: return "*"
@@ -95,7 +98,7 @@ object Signature {
         val owner = irClass.owner
         if (owner.modality != Modality.FINAL && owner.kind != ClassKind.ENUM_CLASS) return "*"
 
-        return typeSignature(irTypeArgument)
+        return typeSignature(irTypeArgument, adatClass)
     }
 
     fun String.addNull(irType: IrType) =

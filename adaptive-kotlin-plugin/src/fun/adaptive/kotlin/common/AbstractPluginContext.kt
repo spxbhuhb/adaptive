@@ -5,6 +5,7 @@
 package `fun`.adaptive.kotlin.common
 
 import `fun`.adaptive.kotlin.AdaptiveOptions
+import `fun`.adaptive.kotlin.adat.ClassIds
 import `fun`.adaptive.kotlin.common.AdaptiveFqNames.PLUGIN_REFERENCE
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.declarations.IrClass
@@ -39,6 +40,8 @@ abstract class AbstractPluginContext(
     val kotlinUnsignedSymbols by lazy { KotlinUnsignedSymbols(irContext) }
     val dateTimeTypes by lazy { DateTimeTypes(irContext) }
     val adaptiveSymbols by lazy { AdaptiveSymbols(irContext) }
+
+    val adatClass = ClassIds.ADAT_CLASS.classSymbol()
 
     fun ClassId.classSymbol() =
         checkNotNull(irContext.referenceClass(this)) {

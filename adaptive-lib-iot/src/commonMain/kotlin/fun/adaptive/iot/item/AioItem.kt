@@ -24,7 +24,7 @@ data class AioItem(
     override val status: AioStatus,
     val friendlyId: FriendlyItemId,
     val markersOrNull: AioMarkerMap?,
-    val parentId: AioItemId?
+    val parentId: AioValueId?
 ) : AioValue() {
 
     val markers: AioMarkerMap
@@ -90,19 +90,19 @@ data class AioItem(
         return Graphics.empty
     }
 
-    companion object {
-
-        fun List<AioItem>.toTree(): List<TreeItem<AioItem>> {
-
-            val childListMap = mutableMapOf<AioItemId?, MutableList<AioItem>>()
-
-            for (item in this) {
-                val children = childListMap.getOrPut(item.parentId) { mutableListOf() }
-                children += item
-            }
-
-            return childListMap[null]?.map { it.mapToTreeItem(null, childListMap) } ?: emptyList()
-        }
-
-    }
+//    companion object {
+//
+//        fun List<AioItem>.toTree(): List<TreeItem<AioItem>> {
+//
+//            val childListMap = mutableMapOf<AioItemId?, MutableList<AioItem>>()
+//
+//            for (item in this) {
+//                val children = childListMap.getOrPut(item.parentId) { mutableListOf() }
+//                children += item
+//            }
+//
+//            return childListMap[null]?.map { it.mapToTreeItem(null, childListMap) } ?: emptyList()
+//        }
+//
+//    }
 }

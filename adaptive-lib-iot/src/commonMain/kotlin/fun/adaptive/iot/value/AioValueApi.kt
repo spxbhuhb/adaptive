@@ -7,7 +7,7 @@ import `fun`.adaptive.service.ServiceApi
 @ServiceApi
 interface AioValueApi {
 
-    suspend fun process(value: AioValueOperation)
+    suspend fun process(operation: AioValueOperation)
 
     suspend fun subscribe(valueIds: List<AioValueId> = emptyList(), markerIds: List<AioMarker> = emptyList()): AuiValueSubscriptionId
 

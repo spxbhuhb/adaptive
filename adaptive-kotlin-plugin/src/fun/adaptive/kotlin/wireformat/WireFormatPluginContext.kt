@@ -14,7 +14,6 @@ class WireFormatPluginContext(
 ) : AbstractPluginContext(irContext, options) {
 
     val wireFormatClass = ClassIds.WIREFORMAT.classSymbol()
-    val adatClass = ClassIds.ADATCLASS.classSymbol()
 
     val wireFormatEncoder = ClassIds.WIREFORMAT_ENCODER.classSymbol()
     val wireFormatDecoder = ClassIds.WIREFORMAT_DECODER.classSymbol()

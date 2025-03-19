@@ -18,6 +18,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
 
 @AdaptiveExpect(backend)
 fun worker(vararg instructions: AdaptiveInstruction, impl: () -> WorkerImpl<*>): AdaptiveFragment {
@@ -45,6 +46,8 @@ class BackendWorker(
                 scope.launch {
                     try {
                         it.run()
+                    } catch (_: CancellationException) {
+                        // this is OK (I think), I do cancel on unmount
                     } catch (ex: Exception) {
                         it.logger.error(ex)
                     }

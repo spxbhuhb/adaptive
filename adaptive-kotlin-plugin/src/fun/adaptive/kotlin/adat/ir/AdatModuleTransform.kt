@@ -25,7 +25,7 @@ class AdatModuleTransform(
     override fun visitClassNew(declaration: IrClass): IrStatement {
         when {
 
-            declaration.isSubclassOf(pluginContext.adatClass.owner) && declaration.modality != Modality.ABSTRACT -> {
+            declaration.isSubclassOf(pluginContext.adatClass.owner) && declaration.modality != Modality.ABSTRACT && declaration.modality != Modality.SEALED -> {
                 val transform = AdatClassTransform(pluginContext, declaration)
 
                 declaration.acceptChildrenVoid(transform)

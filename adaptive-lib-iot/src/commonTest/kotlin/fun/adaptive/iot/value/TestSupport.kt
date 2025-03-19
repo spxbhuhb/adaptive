@@ -6,6 +6,8 @@ import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.service.testing.DirectServiceTransport
+import `fun`.adaptive.wireformat.api.Json
+import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,8 +18,8 @@ import kotlin.time.Duration.Companion.seconds
 
 class TestSupport {
 
-    val clientTransport = DirectServiceTransport(name = "client").also { it.trace = true; it.transportLog.enableFine() }
-    val serverTransport = DirectServiceTransport(name = "server").also { it.trace = true; it.transportLog.enableFine() }
+    val clientTransport = DirectServiceTransport(name = "client", wireFormatProvider = Json).also { it.trace = true; it.transportLog.enableFine() }
+    val serverTransport = DirectServiceTransport(name = "server", wireFormatProvider = Json).also { it.trace = true; it.transportLog.enableFine() }
 
     init {
         clientTransport.peerTransport = serverTransport
@@ -46,10 +48,10 @@ class TestSupport {
                     // skips delays which wreaks havoc with service call timeouts that depend on
                     // delays actually working.
 
-                    val serverDispatcher = Dispatchers.Default
+                    val serverDispatcher = Dispatchers.Unconfined
                     val serverScope = CoroutineScope(serverDispatcher)
 
-                    val clientDispatcher = Dispatchers.Default.limitedParallelism(1)
+                    val clientDispatcher = Dispatchers.Unconfined
                     val clientScope = CoroutineScope(clientDispatcher)
 
                     serverBackend = backend(serverTransport, dispatcher = serverDispatcher, scope = serverScope) {
