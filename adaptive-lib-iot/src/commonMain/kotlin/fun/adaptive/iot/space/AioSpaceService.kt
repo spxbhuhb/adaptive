@@ -79,4 +79,8 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
         }
     }
 
+    override suspend fun spaceData(spaceId: AioValueId): AmvSpace {
+        return worker.markerVal(spaceId, SpaceMarkers.SPACE)
+    }
+
 }

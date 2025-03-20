@@ -373,6 +373,25 @@ class AioValueWorker internal constructor(
     fun item(valueId: AioValueId): AioItem =
         get(valueId) as AioItem
 
+    inline fun <reified T> markerVal(itemId: AioValueId, marker: AioMarker) =
+        getMarkerValue(itemId, marker) as T
+
+    inline fun <reified T> markerValOrNull(itemId: AioValueId, marker: AioMarker) =
+        getMarkerValue(itemId, marker) as T?
+
+    fun getMarkerValue(itemId: AioValueId, marker: AioMarker): AioMarkerValue? =
+        lock.use {
+            unsafeGetMarkerValue(itemId, marker)
+        }
+
+    private fun unsafeGetMarkerValue(valueId: AioValueId, marker: AioMarker): AioMarkerValue? =
+        values[valueId]?.let { item ->
+            item as AioItem
+            item.markersOrNull?.get(marker)?.let { markerValue ->
+                values[markerValue]
+            }
+        } as AioMarkerValue?
+
     fun query(filterFun: (AioValue) -> Boolean): List<AioValue> =
         lock.use {
             values.values.filter(filterFun)
@@ -512,16 +531,11 @@ class AioValueWorker internal constructor(
         fun item(itemId: AioValueId): AioItem =
             values[itemId] as AioItem
 
-        inline fun <reified T> markerVal(item: AioValueId, marker: AioMarker): T? =
-            getMarkerValue(item, marker) as T?
+        inline fun <reified T> markerVal(itemId: AioValueId, marker: AioMarker) =
+            getMarkerValue(itemId, marker) as T
 
-        fun getMarkerValue(item: AioValueId, marker: AioMarker) =
-            values[item]?.let { item ->
-                item as AioItem
-                item.markersOrNull?.get(marker)?.let { markerValue ->
-                    values[markerValue]
-                }
-            }
+        inline fun <reified T> markerValOrNull(itemId: AioValueId, marker: AioMarker) =
+            getMarkerValue(itemId, marker) as T?
 
         fun getContainingList(childId: AioValueId, childListMarker: AioMarker, topListMarker: AioMarker): AmvItemIdList? {
             val parentId = item(childId).parentId

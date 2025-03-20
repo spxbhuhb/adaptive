@@ -3,29 +3,47 @@ package `fun`.adaptive.iot.space.ui
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.producer.fetch
 import `fun`.adaptive.iot.item.AioItem
 import `fun`.adaptive.iot.ws.AioWsContext
+import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
 fun wsSpaceContentPaneDef(context: AioWsContext) {
-    context.workspace.addContentPaneBuilder(AioWsContext.WSIT_SPACE) { item ->
+    val workspace = context.workspace
+
+    workspace.addContentPaneBuilder(AioWsContext.WSIT_SPACE) { item ->
         WsPane(
             UUID(),
             item.name,
             context[item].icon,
             WsPanePosition.Center,
             AioWsContext.WSPANE_SPACE_CONTENT,
-            controller = SpaceContentController(context),
-            data = item
+            controller = SpaceContentController(workspace),
+            data = item as AioItem
         )
     }
 }
 
 @Adaptive
-fun wsSpaceContentPane(pane: WsPane<*, *>): AdaptiveFragment {
+fun wsSpaceContentPane(pane: WsPane<AioItem, SpaceContentController>): AdaptiveFragment {
+
+    val spaceData = fetch { pane.controller.spaceService.spaceData(pane.data.uuid) }
+
+    row {
+        gap { 16.dp }
+        text(pane.data.name)
+        text(pane.data.friendlyId)
+        text(pane.data.uuid)
+        text(spaceData?.area.toString())
+    }
+
 //    val context = fragment().wsContext<AioWsContext>()
 //
 //    val observed = valueFrom { context.spaceTree }

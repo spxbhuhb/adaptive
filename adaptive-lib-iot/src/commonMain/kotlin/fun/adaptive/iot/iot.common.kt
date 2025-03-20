@@ -8,6 +8,7 @@ import `fun`.adaptive.iot.item.AioStatus
 import `fun`.adaptive.iot.item.AmvItemIdList
 import `fun`.adaptive.iot.space.markers.AmvSpace
 import `fun`.adaptive.iot.space.ui.SpaceBrowserWsItem
+import `fun`.adaptive.iot.space.ui.wsSpaceContentPaneDef
 import `fun`.adaptive.iot.space.ui.wsSpaceEditorToolDef
 import `fun`.adaptive.iot.value.AioSubscribeCondition
 import `fun`.adaptive.iot.value.builtin.AvString
@@ -66,7 +67,7 @@ fun Workspace.iotCommon() {
 //        )
 //    )
 
-
+    wsSpaceContentPaneDef(context)
 
     addContentPaneBuilder(AioWsContext.WSIT_MEASUREMENT_LOCATION) { item ->
         WsPane(
