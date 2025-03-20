@@ -80,7 +80,7 @@ private fun apply(state: SpaceToolController, menuItem: MenuItem<AioSpaceEditOpe
     }
 
     if (name != null && marker != null) {
-        state.workspace.io { state.spaceService.addSpace(name, marker, treeItem?.data) }
+        state.io { state.spaceService.addSpace(name, marker, treeItem?.data) }
         return
     }
 
@@ -88,53 +88,11 @@ private fun apply(state: SpaceToolController, menuItem: MenuItem<AioSpaceEditOpe
 
     state.workspace.io {
         when (menuItem.data) {
-            AioSpaceEditOperation.MoveUp -> move(state, treeItem, - 1)
-            AioSpaceEditOperation.MoveDown -> move(state, treeItem, 1)
+            AioSpaceEditOperation.MoveUp -> state.io { state.spaceService.moveUp(treeItem.data) }
+            AioSpaceEditOperation.MoveDown -> state.io { state.spaceService.moveDown(treeItem.data) }
             AioSpaceEditOperation.Inactivate -> Unit
             else -> Unit
         }
-    }
-}
-
-private fun move(
-    state: SpaceToolController,
-    treeItem: TreeItem<AioValueId>,
-    offset: Int
-) {
-    val tree = state.treeViewModel
-
-    val parent = treeItem.parent
-    val children = parent?.children ?: tree.items
-
-    val index = children.indexOfFirst { it.data == treeItem.data }
-    if (offset < 0 && index < 1) return
-    if (offset > 0 && index == children.lastIndex) return
-
-    val item = children[index]
-    val sibling = children[index + offset]
-
-    val newList = children.toMutableList()
-    newList[index] = sibling
-    newList[index + offset] = item
-
-    if (parent != null) {
-        parent.children = newList
-    } else {
-        tree.items = newList
-    }
-
-//    val itemDisplayOrder = item.data.displayOrder
-//    val siblingDisplayOrder = sibling.data.displayOrder
-//
-//    val newSiblingSpace = sibling.data.copy(displayOrder = itemDisplayOrder)
-//    val newItemSpace = item.data.copy(displayOrder = siblingDisplayOrder)
-//
-//    sibling.data = newSiblingSpace
-//    item.data = newItemSpace
-
-    state.workspace.io {
-        // TODO context.spaceService.update(newItemSpace)
-        // TODO context.spaceService.update(newSiblingSpace)
     }
 }
 

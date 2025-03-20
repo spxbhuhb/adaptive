@@ -9,4 +9,8 @@ interface AioSpaceApi {
 
     suspend fun addSpace(name : String, spaceType : AioMarker, parentId: AioValueId?) : AioValueId
 
+    suspend fun moveUp(spaceId: AioValueId)
+
+    suspend fun moveDown(spaceId: AioValueId)
+
 }

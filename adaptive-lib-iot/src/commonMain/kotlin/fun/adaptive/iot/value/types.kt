@@ -4,4 +4,4 @@ import `fun`.adaptive.utility.UUID
 
 typealias AioValueId = UUID<AioValue>
 typealias AioValueSubscriptionId = UUID<AioValueSubscription>
-typealias AioComputeFun<T> = (context : AioValueWorker.WorkerComputeContext) -> T
+typealias AioComputeFun<T> = AioValueWorker.WorkerComputeContext.() -> T

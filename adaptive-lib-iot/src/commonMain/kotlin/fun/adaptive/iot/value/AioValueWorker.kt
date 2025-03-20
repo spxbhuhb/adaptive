@@ -523,6 +523,20 @@ class AioValueWorker internal constructor(
                 }
             }
 
+        fun getContainingList(childId: AioValueId, childListMarker: AioMarker, topListMarker: AioMarker): AmvItemIdList? {
+            val parentId = item(childId).parentId
+
+            val original: AmvItemIdList?
+
+            if (parentId == null) {
+                original = queryByMarker(topListMarker).firstOrNull() as? AmvItemIdList
+            } else {
+                original = markerVal(parentId, childListMarker)
+            }
+
+            return original
+        }
+
         fun addTopList(spaceId: AioValueId, listMarker: AioMarker) {
             val original = queryByMarker(listMarker).firstOrNull() as AmvItemIdList?
             val new: AmvItemIdList
@@ -554,6 +568,36 @@ class AioValueWorker internal constructor(
 
             this += new
             this += parent.copy(markersOrNull = markers)
+        }
+
+        fun moveUp(childId: AioValueId, childListMarker: AioMarker, topListMarker: AioMarker) {
+
+            val original = getContainingList(childId, childListMarker, topListMarker) ?: return
+
+            val originalList = original.itemIds.toMutableList()
+            val index = originalList.indexOf(childId)
+            if (index < 1) return
+
+            val newList = originalList.toMutableList()
+            newList[index] = newList[index - 1]
+            newList[index - 1] = childId
+
+            this += original.copy(itemIds = newList)
+        }
+
+        fun moveDown(childId: AioValueId, childListMarker: AioMarker, topListMarker: AioMarker) {
+
+            val original = getContainingList(childId, childListMarker, topListMarker) ?: return
+
+            val originalList = original.itemIds.toMutableList()
+            val index = originalList.indexOf(childId)
+            if (index >= originalList.lastIndex) return
+
+            val newList = originalList.toMutableList()
+            newList[index] = newList[index + 1]
+            newList[index + 1] = childId
+
+            this += original.copy(itemIds = newList)
         }
     }
 }

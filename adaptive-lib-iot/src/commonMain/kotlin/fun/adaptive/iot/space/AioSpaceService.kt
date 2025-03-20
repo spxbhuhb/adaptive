@@ -32,7 +32,7 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
 
         val spaceId = uuid7<AioValue>()
 
-        worker.execute { context ->
+        worker.execute {
 
             val spaceSpec = AmvSpace(owner = spaceId, area = 0.0)
 
@@ -42,7 +42,7 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
                 spaceId,
                 now(),
                 AioStatus.OK,
-                context.nextFriendlyId(SpaceMarkers.SPACE),
+                nextFriendlyId(SpaceMarkers.SPACE),
                 markersOrNull = mutableMapOf(
                     SpaceMarkers.SPACE to spaceSpec.uuid,
                     spaceType to null
@@ -50,17 +50,33 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
                 parentId = parentId
             )
 
-            context += space
-            context += spaceSpec
+            this += space
+            this += spaceSpec
 
             if (parentId == null) {
-                context.addTopList(spaceId, SpaceMarkers.TOP_SPACES)
+                addTopList(spaceId, SpaceMarkers.TOP_SPACES)
             } else {
-                context.addChild(parentId, spaceId, SpaceMarkers.SUB_SPACES)
+                addChild(parentId, spaceId, SpaceMarkers.SUB_SPACES)
             }
         }
 
         return spaceId
+    }
+
+    override suspend fun moveUp(spaceId: AioValueId) {
+        publicAccess()
+
+        worker.execute {
+            moveUp(spaceId, SpaceMarkers.SUB_SPACES, SpaceMarkers.TOP_SPACES)
+        }
+    }
+
+    override suspend fun moveDown(spaceId: AioValueId) {
+        publicAccess()
+
+        worker.execute {
+            moveDown(spaceId, SpaceMarkers.SUB_SPACES, SpaceMarkers.TOP_SPACES)
+        }
     }
 
 }
