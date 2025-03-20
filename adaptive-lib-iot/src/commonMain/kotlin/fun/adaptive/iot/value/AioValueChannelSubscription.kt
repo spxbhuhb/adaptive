@@ -4,7 +4,7 @@ import `fun`.adaptive.iot.value.operation.AioValueOperation
 import kotlinx.coroutines.channels.Channel
 
 class AioValueChannelSubscription(
-    uuid: AuiValueSubscriptionId,
+    uuid: AioValueSubscriptionId,
     conditions : List<AioSubscribeCondition>,
     val channel: Channel<AioValueOperation>
 ) : AioValueSubscription(uuid, conditions) {

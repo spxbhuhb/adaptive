@@ -11,10 +11,10 @@ class AioValueTestServerService : ServiceImpl<AioValueTestServerService>, AioVal
         get() = safeAdapter.firstImpl<AioValueWorker>()
 
     override suspend fun process(operation: AioValueOperation) {
-        worker.process(operation)
+        worker.queueOperation(operation)
     }
 
-    override suspend fun subscribe(conditions: List<AioSubscribeCondition>): AuiValueSubscriptionId {
+    override suspend fun subscribe(conditions: List<AioSubscribeCondition>): AioValueSubscriptionId {
 
         val subscription = AioValueClientSubscription(
             uuid4(),
@@ -28,7 +28,7 @@ class AioValueTestServerService : ServiceImpl<AioValueTestServerService>, AioVal
         return subscription.uuid
     }
 
-    override suspend fun unsubscribe(subscriptionId: AuiValueSubscriptionId) {
+    override suspend fun unsubscribe(subscriptionId: AioValueSubscriptionId) {
         worker.unsubscribe(subscriptionId)
     }
 

@@ -35,10 +35,10 @@ class AioValueServerService : ServiceImpl<AioValueServerService>, AioValueApi {
     override suspend fun process(operation: AioValueOperation) {
         publicAccess() // ensureHas(updateRole)
 
-        worker.process(operation)
+        worker.queueOperation(operation)
     }
 
-    override suspend fun subscribe(conditions: List<AioSubscribeCondition>): AuiValueSubscriptionId {
+    override suspend fun subscribe(conditions: List<AioSubscribeCondition>): AioValueSubscriptionId {
         publicAccess() // ensureHas(queryRole)
 
         val subscription = AioValueClientSubscription(
@@ -53,7 +53,7 @@ class AioValueServerService : ServiceImpl<AioValueServerService>, AioValueApi {
         return subscription.uuid
     }
 
-    override suspend fun unsubscribe(subscriptionId: AuiValueSubscriptionId) {
+    override suspend fun unsubscribe(subscriptionId: AioValueSubscriptionId) {
         publicAccess() // ensureHas(queryRole)
 
         worker.unsubscribe(subscriptionId)

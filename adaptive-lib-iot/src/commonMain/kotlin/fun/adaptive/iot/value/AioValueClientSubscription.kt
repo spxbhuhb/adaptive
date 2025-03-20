@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
  * closes the connection.
  */
 class AioValueClientSubscription(
-    uuid: AuiValueSubscriptionId,
+    uuid: AioValueSubscriptionId,
     conditions : List<AioSubscribeCondition>,
     transport: ServiceCallTransport,
     scope: CoroutineScope,

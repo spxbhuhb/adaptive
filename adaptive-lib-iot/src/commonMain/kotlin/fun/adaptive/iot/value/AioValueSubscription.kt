@@ -7,7 +7,7 @@ import `fun`.adaptive.iot.value.operation.AvoMarkerRemove
 import `fun`.adaptive.iot.value.operation.AvoTransaction
 
 abstract class AioValueSubscription(
-    val uuid: AuiValueSubscriptionId,
+    val uuid: AioValueSubscriptionId,
     val conditions: List<AioSubscribeCondition>
 ) {
 

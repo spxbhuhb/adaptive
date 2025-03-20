@@ -4,8 +4,8 @@ import `fun`.adaptive.adaptive_lib_iot.generated.resources.apartment
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.dew_point
 import `fun`.adaptive.iot.item.AioItem
+import `fun`.adaptive.iot.item.AioStatus
 import `fun`.adaptive.iot.item.AmvItemIdList
-import `fun`.adaptive.iot.space.AioSpaceType
 import `fun`.adaptive.iot.space.markers.AmvSpace
 import `fun`.adaptive.iot.space.ui.SpacePaneController
 import `fun`.adaptive.iot.space.ui.model.SpaceBrowserWsItem
@@ -35,10 +35,10 @@ suspend fun iotCommon(loadStrings : Boolean = true) {
     r += AioSubscribeCondition
 
     r += AioItem
+    r += AioStatus
     r += AmvItemIdList
 
     r += AmvSpace
-    r += AioSpaceType
 
     r += AvString
 

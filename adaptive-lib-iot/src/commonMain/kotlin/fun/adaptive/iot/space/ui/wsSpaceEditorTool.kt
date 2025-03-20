@@ -6,7 +6,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.item.AioItem
-import `fun`.adaptive.iot.space.AioSpaceType
+import `fun`.adaptive.iot.space.markers.SpaceMarkers
 import `fun`.adaptive.iot.space.ui.model.AioSpaceEditOperation
 import `fun`.adaptive.iot.space.ui.model.SpaceToolConfig
 import `fun`.adaptive.iot.space.ui.model.SpaceToolState
@@ -70,17 +70,17 @@ fun wsSpaceEditorToolDef(context: AioWsContext) : WsPane<SpaceToolState> {
 
 private fun apply(state: SpaceToolState, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AioValueId>?) {
 
-    val addType = when (menuItem.data) {
-        AioSpaceEditOperation.AddSite -> AioSpaceType.Site
-        AioSpaceEditOperation.AddBuilding -> AioSpaceType.Building
-        AioSpaceEditOperation.AddFloor -> AioSpaceType.Floor
-        AioSpaceEditOperation.AddRoom -> AioSpaceType.Room
-        AioSpaceEditOperation.AddArea -> AioSpaceType.Area
-        else -> null
+    val (name, marker) = when (menuItem.data) {
+        AioSpaceEditOperation.AddSite -> Strings.site to SpaceMarkers.SITE
+        AioSpaceEditOperation.AddBuilding -> Strings.building to SpaceMarkers.BUILDING
+        AioSpaceEditOperation.AddFloor -> Strings.floor to SpaceMarkers.FLOOR
+        AioSpaceEditOperation.AddRoom -> Strings.room to SpaceMarkers.ROOM
+        AioSpaceEditOperation.AddArea -> Strings.area to SpaceMarkers.AREA
+        else -> null to null
     }
 
-    if (addType != null) {
-        // TODO context.addSpace(treeItem, itemId, addType, displayOrder)
+    if (name != null && marker != null) {
+        state.workspace.io { state.spaceService.addSpace(name, marker, treeItem?.data) }
         return
     }
 

@@ -18,7 +18,7 @@ suspend fun addSubSpace(worker: AioValueWorker, spaceId: AioValueId, subSpaceId:
 
         val subSpacesSpec = AmvItemIdList(owner = space.uuid, markerName = SpaceMarkers.SUB_SPACES, listOf(subSpaceId))
 
-        worker.transaction(
+        worker.queueTransaction(
             listOf(
                 AvoUpdate(space.copyWith(subSpacesSpec)),
                 AvoAdd(subSpacesSpec)
@@ -29,7 +29,7 @@ suspend fun addSubSpace(worker: AioValueWorker, spaceId: AioValueId, subSpaceId:
         val original = worker[originalId]
         check(original is AmvItemIdList) { "Expected AmvItemIdList, got $original" }
 
-        worker.update(original.copy(itemIds = original.itemIds + subSpaceId))
+        worker.queueUpdate(original.copy(itemIds = original.itemIds + subSpaceId))
     }
 
     waitForReal(1.seconds) { worker.isIdle }

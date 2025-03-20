@@ -49,8 +49,8 @@ class AioUiTree(
         AioSubscribeCondition(marker = topListMarker)
     )
 
-    var remoteSubscriptionId: AuiValueSubscriptionId? = null
-    val localSubscriptionId: AuiValueSubscriptionId = uuid4()
+    var remoteSubscriptionId: AioValueSubscriptionId? = null
+    val localSubscriptionId: AioValueSubscriptionId = uuid4()
 
     // Tree update operations received from the server
     val updates = Channel<AioValueOperation>(Channel.UNLIMITED)
@@ -104,7 +104,7 @@ class AioUiTree(
                     is AvoAdd -> process(operation.value)
                     is AvoUpdate -> process(operation.value)
                     is AvoMarkerRemove -> TODO()
-                    is AvoTransaction -> Unit // forEach flattens the transactions
+                    else -> Unit // forEach flattens the transactions, compute is not handled here
                 }
             }
 

@@ -4,8 +4,6 @@ import `fun`.adaptive.iot.item.AmvItemIdList
 import `fun`.adaptive.iot.space.markers.SpaceMarkers
 import `fun`.adaptive.iot.value.AioValueId
 import `fun`.adaptive.iot.value.AioValueWorker
-import `fun`.adaptive.iot.value.operation.AvoAdd
-import `fun`.adaptive.iot.value.operation.AvoUpdate
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.utility.waitForReal
 import kotlin.time.Duration.Companion.seconds
@@ -23,7 +21,7 @@ suspend fun addSpaceTop(worker: AioValueWorker, spaceId: AioValueId) {
         new = AmvItemIdList(owner = uuid7(), markerName = SpaceMarkers.TOP_SPACES, listOf(spaceId))
     }
 
-    worker.addOrUpdate(new)
+    worker.queueAddOrUpdate(new)
 
     waitForReal(1.seconds) { worker.isIdle }
 }

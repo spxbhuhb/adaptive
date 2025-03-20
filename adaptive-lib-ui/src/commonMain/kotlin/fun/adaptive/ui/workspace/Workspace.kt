@@ -145,7 +145,7 @@ class Workspace(
     inline fun <reified T> firstContext() : T? =
         contexts.firstInstanceOrNull<T>()
 
-    fun io(block: () -> Unit) {
+    fun io(block: suspend () -> Unit) {
         scope.launch { block() }
     }
 

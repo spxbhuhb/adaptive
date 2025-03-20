@@ -35,8 +35,8 @@ class AioValueWorkerTest {
         val oldValue = AvString(valueId, Instant.parse("2023-01-01T12:00:00Z"), AioStatus.OK, "OldValue")
         val newValue = AvString(valueId, Instant.parse("2023-01-01T12:01:00Z"), AioStatus.OK, "NewValue")
 
-        worker.add(oldValue)
-        worker.update(newValue)
+        worker.queueAdd(oldValue)
+        worker.queueUpdate(newValue)
 
         waitFor(1.seconds) { worker.isIdle }
 
@@ -49,8 +49,8 @@ class AioValueWorkerTest {
         val oldValue = AvString(valueId, Instant.parse("2023-01-01T12:01:00Z"), AioStatus.OK, "OldValue")
         val newValue = AvString(valueId, Instant.parse("2023-01-01T12:00:00Z"), AioStatus.OK, "NewValue")
 
-        worker.add(oldValue)
-        worker.update(newValue)
+        worker.queueAdd(oldValue)
+        worker.queueUpdate(newValue)
 
         waitFor(1.seconds) { worker.isIdle }
 
@@ -61,7 +61,7 @@ class AioValueWorkerTest {
     fun `should subscribe and receive initial values`() = test { worker ->
         val valueId = AioValueId()
         val initialValue = AvString(valueId, Instant.parse("2023-01-01T12:00:00Z"), AioStatus.OK, "InitialValue")
-        worker.add(initialValue)
+        worker.queueAdd(initialValue)
 
         val channel = Channel<AioValueOperation>(1)
         val subscription = AioValueChannelSubscription(uuid4(), condition(valueId), channel)
@@ -82,7 +82,7 @@ class AioValueWorkerTest {
         worker.subscribe(listOf(subscription))
 
         val newValue = AvString(valueId, Instant.parse("2023-01-01T12:01:00Z"), AioStatus.OK, "NewValue")
-        worker.add(newValue)
+        worker.queueAdd(newValue)
 
         val received = channel.receive()
         check(received is AvoAddOrUpdate)
@@ -101,7 +101,7 @@ class AioValueWorkerTest {
         worker.subscribe(listOf(subscription1, subscription2))
 
         val newValue = AvString(valueId, Instant.parse("2023-01-01T12:02:00Z"), AioStatus.OK, "MultiSubscriberValue")
-        worker.add(newValue)
+        worker.queueAdd(newValue)
 
         assertEquals(newValue, (channel1.receive() as AvoAddOrUpdate).value)
         assertEquals(newValue, (channel2.receive() as AvoAddOrUpdate).value)
@@ -117,7 +117,7 @@ class AioValueWorkerTest {
         worker.unsubscribe(subscription.uuid)
 
         val newValue = AvString(valueId, Instant.parse("2023-01-01T12:03:00Z"), AioStatus.OK, "AfterUnsubscribe")
-        worker.add(newValue)
+        worker.queueAdd(newValue)
 
         waitFor(1.seconds) { worker.isIdle }
 
@@ -136,7 +136,7 @@ class AioValueWorkerTest {
             parentId = null
         )
 
-        worker.add(item) // Add the AioItem to the worker
+        worker.queueAdd(item) // Add the AioItem to the worker
 
         return item
     }
@@ -184,7 +184,7 @@ class AioValueWorkerTest {
 
         val newValue = initialItem.copyWith(marker, AmvItemIdList(initialItem.uuid, marker, emptyList()))
 
-        worker.update(newValue)
+        worker.queueUpdate(newValue)
 
         val received = channel.receive()
         check(received is AvoAddOrUpdate)
@@ -206,7 +206,7 @@ class AioValueWorkerTest {
 
         channel.receive() // drop the initial message which contains the initial value
 
-        worker.update(newValue)
+        worker.queueUpdate(newValue)
 
         val received = channel.receive()
         check(received is AvoMarkerRemove)

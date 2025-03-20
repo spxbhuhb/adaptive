@@ -40,7 +40,7 @@ fun wsAppServerMain() {
         authBasicJvm()
         ktor()
 
-        iotAppServerMain(FilePersistence(Path("./var/values").ensure(), 0))
+        iotAppServerMain(FilePersistence(Path("./var/values").ensure(), 2))
 
     }.also {
 

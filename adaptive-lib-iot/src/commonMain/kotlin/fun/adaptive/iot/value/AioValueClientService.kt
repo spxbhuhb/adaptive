@@ -19,14 +19,14 @@ class AioValueClientService : ServiceImpl<AioValueClientService>, AioValueApi {
 
     override suspend fun process(operation: AioValueOperation) {
         publicAccess()
-        worker.process(operation)
+        worker.queueOperation(operation)
     }
 
-    override suspend fun subscribe(conditions: List<AioSubscribeCondition>): AuiValueSubscriptionId {
+    override suspend fun subscribe(conditions: List<AioSubscribeCondition>): AioValueSubscriptionId {
         throw UnsupportedOperationException()
     }
 
-    override suspend fun unsubscribe(subscriptionId: AuiValueSubscriptionId) {
+    override suspend fun unsubscribe(subscriptionId: AioValueSubscriptionId) {
         throw UnsupportedOperationException()
     }
 

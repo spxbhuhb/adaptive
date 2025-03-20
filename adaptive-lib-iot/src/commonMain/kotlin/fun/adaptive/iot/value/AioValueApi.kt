@@ -8,8 +8,8 @@ interface AioValueApi {
 
     suspend fun process(operation: AioValueOperation)
 
-    suspend fun subscribe(conditions: List<AioSubscribeCondition> = emptyList()): AuiValueSubscriptionId
+    suspend fun subscribe(conditions: List<AioSubscribeCondition> = emptyList()): AioValueSubscriptionId
 
-    suspend fun unsubscribe(subscriptionId: AuiValueSubscriptionId)
+    suspend fun unsubscribe(subscriptionId: AioValueSubscriptionId)
 
 }

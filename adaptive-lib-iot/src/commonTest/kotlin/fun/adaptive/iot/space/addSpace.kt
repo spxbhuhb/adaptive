@@ -34,7 +34,7 @@ suspend fun addSpace(worker: AioValueWorker, name: String, friendlyItemId: Frien
         parentId = null
     )
 
-    worker.addAll(space, spaceSpec)
+    worker.queueAddAll(space, spaceSpec)
 
     waitForReal(1.seconds) { worker.isIdle }
 

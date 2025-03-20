@@ -9,11 +9,16 @@ import `fun`.adaptive.iot.value.persistence.AbstractValuePersistence
 import `fun`.adaptive.iot.value.persistence.NoPersistence
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
+import `fun`.adaptive.wireformat.builtin.PolymorphicWireFormat
+import `fun`.adaptive.wireformat.json.JsonWireFormatEncoder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.withTimeout
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 class AioValueWorker internal constructor(
-    val persistence : AbstractValuePersistence = NoPersistence()
+    val persistence: AbstractValuePersistence = NoPersistence()
 ) : WorkerImpl<AioValueWorker> {
 
     private val lock = getLock()
@@ -22,7 +27,7 @@ class AioValueWorker internal constructor(
 
     private val values = mutableMapOf<AioValueId, AioValue>()
 
-    private val subscriptions = mutableMapOf<AuiValueSubscriptionId, AioValueSubscription>()
+    private val subscriptions = mutableMapOf<AioValueSubscriptionId, AioValueSubscription>()
 
     private val valueIdSubscriptions = mutableMapOf<AioValueId, MutableList<AioValueSubscription>>()
 
@@ -61,6 +66,7 @@ class AioValueWorker internal constructor(
                 when (operation) {
                     is AvoAddOrUpdate -> addOrUpdate(operation, commitSet)
                     is AvoTransaction -> transaction(operation, commitSet)
+                    is AvoComputation<*> -> compute(operation, commitSet)
                     is AvoUpdate -> update(operation, commitSet)
                     is AvoAdd -> add(operation, commitSet)
                     is AvoMarkerRemove -> Unit // used by subscribers, for worker it is no-op
@@ -78,7 +84,7 @@ class AioValueWorker internal constructor(
 
         if (original != null) {
             original.let { values[it.uuid] = it } // rollback the replacement
-            operation.fail()
+            operation.fail("value with id ${value.uuid} already exists")
             return
         }
 
@@ -92,7 +98,7 @@ class AioValueWorker internal constructor(
 
         if (original == null || original.timestamp > value.timestamp) {
             original?.let { values[it.uuid] = it } // rollback the replacement
-            operation.fail()
+            operation.fail("value with id ${value.uuid} does not exists")
             return
         }
 
@@ -112,6 +118,7 @@ class AioValueWorker internal constructor(
         for (operation in transaction.operations) {
             when (operation) {
                 is AvoAddOrUpdate -> addOrUpdate(operation, commitSet)
+                is AvoComputation<*> -> compute(operation, commitSet)
                 is AvoUpdate -> update(operation, commitSet)
                 is AvoAdd -> add(operation, commitSet)
                 is AvoTransaction -> transaction(operation, commitSet)
@@ -120,6 +127,15 @@ class AioValueWorker internal constructor(
         }
 
         transaction.success()
+    }
+
+    private fun compute(operation: AvoComputation<*>, commitSet: MutableSet<AioValueSubscription>) {
+        try {
+            val result = operation.computation?.invoke(WorkerComputeContext(commitSet))
+            operation.success(result)
+        } catch (e: Exception) {
+            operation.fail(e)
+        }
     }
 
     private fun indexAndNotify(original: AioValue?, value: AioValue, operation: AioValueOperation, commitSet: MutableSet<AioValueSubscription>) {
@@ -193,7 +209,7 @@ class AioValueWorker internal constructor(
             }
 
             is AioMarkerValue -> {
-                markerIndices[value.markerName]?.add(value.uuid)
+                markerIndices.getOrPut(value.markerName) { mutableSetOf() }.add(value.uuid)
             }
         }
     }
@@ -237,7 +253,7 @@ class AioValueWorker internal constructor(
         }
     }
 
-    private inline fun MarkerSubscriptionEntry.ifApplicable(value : AioValue, block: () -> Unit) {
+    private inline fun MarkerSubscriptionEntry.ifApplicable(value: AioValue, block: () -> Unit) {
         if (itemOnly && value !is AioItem) return
         block()
     }
@@ -301,13 +317,13 @@ class AioValueWorker internal constructor(
         }
     }
 
-    fun unsubscribe(subscriptionId: AuiValueSubscriptionId) {
+    fun unsubscribe(subscriptionId: AioValueSubscriptionId) {
         lock.use {
             unsafeUnsubscribe(subscriptionId)
         }
     }
 
-    private fun unsafeUnsubscribe(subscriptionId: AuiValueSubscriptionId) {
+    private fun unsafeUnsubscribe(subscriptionId: AioValueSubscriptionId) {
         subscriptions.remove(subscriptionId)?.let { subscription ->
 
             for (condition in subscription.conditions) {
@@ -315,8 +331,8 @@ class AioValueWorker internal constructor(
                     valueIdSubscriptions[valueId]?.remove(subscription)
                 }
                 condition.marker?.let { marker ->
-                    markerSubscriptions[marker]?.removeAll {
-                        entry -> entry.subscription.uuid == subscriptionId
+                    markerSubscriptions[marker]?.removeAll { entry ->
+                        entry.subscription.uuid == subscriptionId
                     }
                 }
             }
@@ -356,30 +372,116 @@ class AioValueWorker internal constructor(
         }
 
     // --------------------------------------------------------------------------------
-    // Update
+    // Send operations to the operation queue
     // --------------------------------------------------------------------------------
 
-    fun add(value: AioValue) {
+    internal fun queueAdd(value: AioValue) {
         check(operations.trySend(AvoAdd(value)).isSuccess)
     }
 
-    fun addAll(vararg values: AioValue) =
-        transaction(values.map { AvoAdd(it) })
+    internal fun queueAddAll(vararg values: AioValue) =
+        queueTransaction(values.map { AvoAdd(it) })
 
-    fun update(value: AioValue) {
+    internal  fun queueUpdate(value: AioValue) {
         check(operations.trySend(AvoUpdate(value)).isSuccess)
     }
 
-    fun addOrUpdate(value: AioValue) {
+    internal fun queueAddOrUpdate(value: AioValue) {
         check(operations.trySend(AvoAddOrUpdate(value)).isSuccess)
     }
 
-    fun transaction(operations: List<AioValueOperation>) {
+    internal fun queueTransaction(operations: List<AioValueOperation>) {
         check(this.operations.trySend(AvoTransaction(operations)).isSuccess)
     }
 
-    fun process(operation: AioValueOperation) {
+    internal fun queueOperation(operation: AioValueOperation) {
         check(this.operations.trySend(operation).isSuccess)
+    }
+
+    /**
+     * Execute [computeFun] in the worker operation processing loop.
+     *
+     * The main purpose of [execute] is to perform changes on values with the guarantee that:
+     *
+     * - no other changes are applied meanwhile
+     * - the changes together are atomic from outside point of view
+     *
+     * Behaviour:
+     *
+     * - Waits until [computeFun] is executed or timeout has been reached (this wait does not lock the worker).
+     * - Throws exception if [computeFun] throws exception.
+     * - **It is possible that computeFun is executed after timed out**.
+     * - [computeFun] **MUST BE FAST**, it runs under the value worker lock, stops everything else
+     * - rollback **MUST BE HANDLED** by [computeFun], the worker does not guarantee that
+     */
+    suspend fun <T> execute(timeout: Duration = 5.seconds, computeFun: AioComputeFun<T>): T {
+        val channel = Channel<Any>()
+
+        val op = AvoComputation<T>().also {
+            it.channel = channel
+            it.computation = computeFun
+        }
+
+        check(this.operations.trySend(op).isSuccess)
+
+        val result = withTimeout(timeout) {
+            channel.receive()
+        }
+
+        if (result is Throwable) {
+            throw result
+        } else {
+            @Suppress("UNCHECKED_CAST")
+            return result as T
+        }
+    }
+
+    inner class WorkerComputeContext(
+        val commitSet: MutableSet<AioValueSubscription>
+    ) {
+
+        operator fun plusAssign(value: AioValue) {
+            addOrUpdate(AvoAddOrUpdate(value), commitSet)
+        }
+
+        operator fun get(valueId: AioValueId): AioValue? =
+            this@AioValueWorker[valueId]
+
+        fun nextFriendlyId(marker: AioMarker): Int =
+            queryByMarker(marker).maxOfOrNull { if (it is AioItem) it.friendlyId else 0 } ?: 0
+
+        fun queryByMarker(marker: AioMarker): List<AioValue> =
+            this@AioValueWorker.queryByMarker(marker)
+
+        fun dump() : String = this@AioValueWorker.dump()
+
+    }
+
+    // --------------------------------------------------------------------------------
+    // Utility
+    // --------------------------------------------------------------------------------
+
+    fun dump(): String {
+        val out = StringBuilder()
+
+        out.append("{\n  \"values\" : [\n")
+        values.forEach { (_, value) ->
+            val bytes = PolymorphicWireFormat.wireFormatEncode(JsonWireFormatEncoder(), value).pack()
+            out.append("    ")
+            out.append(bytes.decodeToString())
+            out.append(",\n")
+        }
+
+        out.append("  ],\n  \"indices\" : [\n")
+        markerIndices.forEach { (marker, index) ->
+            out.append("    \"$marker\" : [ ")
+            out.append(index.joinToString(", ") { "\"$it\"" })
+            out.append(" ],\n")
+        }
+
+        out.append("}")
+
+        return out.toString()
     }
 
     // --------------------------------------------------------------------------------

@@ -22,7 +22,7 @@ class AioValueClientSubscriptionTest {
         val subscription = AioValueClientSubscription(uuid4(), condition(valueId), serverTransport, serverBackend.scope)
 
         serverWorker.subscribe(listOf(subscription))
-        serverWorker.add(value)
+        serverWorker.queueAdd(value)
 
         waitForReal(1.seconds) { clientWorker[valueId] != null }
 
@@ -42,7 +42,7 @@ class AioValueClientSubscriptionTest {
 
         serverTransport.disconnect()
 
-        serverWorker.add(value)
+        serverWorker.queueAdd(value)
 
         waitForReal(1.seconds) { subscription.worker == null }
 

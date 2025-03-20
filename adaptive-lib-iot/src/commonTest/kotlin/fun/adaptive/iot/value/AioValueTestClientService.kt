@@ -7,14 +7,14 @@ import `fun`.adaptive.iot.value.operation.AioValueOperation
 class AioValueTestClientService : ServiceImpl<AioValueTestClientService>, AioValueApi {
 
     override suspend fun process(operation: AioValueOperation) {
-        adapter !!.firstImpl<AioValueWorker>().process(operation)
+        adapter !!.firstImpl<AioValueWorker>().queueOperation(operation)
     }
 
-    override suspend fun subscribe(conditions: List<AioSubscribeCondition>): AuiValueSubscriptionId {
+    override suspend fun subscribe(conditions: List<AioSubscribeCondition>): AioValueSubscriptionId {
         throw UnsupportedOperationException()
     }
 
-    override suspend fun unsubscribe(subscriptionId: AuiValueSubscriptionId) {
+    override suspend fun unsubscribe(subscriptionId: AioValueSubscriptionId) {
         throw UnsupportedOperationException()
     }
 
