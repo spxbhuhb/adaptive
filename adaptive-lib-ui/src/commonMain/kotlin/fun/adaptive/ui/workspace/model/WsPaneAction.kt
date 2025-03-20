@@ -7,9 +7,10 @@ open class WsPaneAction<T>(
     icon : GraphicsResourceSet,
     tooltip : String,
     override val data : T,
-    val action : (workspace : Workspace, pane : WsPane<*>, data : T) -> Unit
+    val action : (WsPaneActionArguments<T>) -> Unit
 ) : AbstractWsPaneAction<T>(icon, tooltip){
 
-    override fun execute(workspace: Workspace, pane: WsPane<*>) = action(workspace, pane, data)
+    override fun execute(workspace: Workspace, pane: WsPane<*>) =
+        action(WsPaneActionArguments<T>(workspace, pane, data))
 
 }

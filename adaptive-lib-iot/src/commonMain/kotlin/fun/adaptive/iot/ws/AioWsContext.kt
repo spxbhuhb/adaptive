@@ -8,7 +8,9 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsContext
 
-class AioWsContext(override val workspace: Workspace) : WsContext {
+class AioWsContext(
+    override val workspace: Workspace
+) : WsContext {
 
     val valueService = getService<AioValueApi>(workspace.transport)
     val itemService = getService<AioItemApi>(workspace.transport)

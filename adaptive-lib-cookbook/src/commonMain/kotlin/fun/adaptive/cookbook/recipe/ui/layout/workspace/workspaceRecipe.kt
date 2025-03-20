@@ -2,6 +2,7 @@ package `fun`.adaptive.cookbook.recipe.ui.layout.workspace
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
@@ -27,7 +28,7 @@ class Context {
 @Adaptive
 fun workspaceRecipe(): AdaptiveFragment {
 
-    val workspace = Workspace()
+    val workspace = Workspace(adapter().backend)
     workspace.contexts += Context()
     initPanes(workspace)
 

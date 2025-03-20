@@ -64,6 +64,8 @@ class AioUiTree(
     val topSpacesSize
         get() = topSpaces.size
 
+    operator fun get(valueId: AioValueId) = nodeMap[valueId]?.aioItem
+
     fun start() {
         localWorker.subscribe(
             AioValueChannelSubscription(localSubscriptionId, conditions, updates)

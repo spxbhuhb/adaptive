@@ -7,24 +7,21 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.item.AioItem
 import `fun`.adaptive.iot.space.AioSpaceType
-import `fun`.adaptive.iot.space.markers.SpaceMarkers
 import `fun`.adaptive.iot.space.ui.model.AioSpaceEditOperation
+import `fun`.adaptive.iot.space.ui.model.SpaceToolConfig
+import `fun`.adaptive.iot.space.ui.model.SpaceToolState
+import `fun`.adaptive.iot.value.AioValueId
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.builtin.*
-import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.menu.MenuItem
 import `fun`.adaptive.ui.menu.MenuItemBase
-import `fun`.adaptive.ui.menu.MenuSeparator
 import `fun`.adaptive.ui.menu.contextMenu
 import `fun`.adaptive.ui.tree.TreeItem
-import `fun`.adaptive.ui.tree.TreeViewModel
 import `fun`.adaptive.ui.tree.tree
-import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPaneAction
 import `fun`.adaptive.ui.workspace.model.WsPaneMenuAction
@@ -33,10 +30,9 @@ import `fun`.adaptive.ui.workspace.wsToolPane
 import `fun`.adaptive.utility.UUID
 
 @Adaptive
-fun wsSpaceEditorTool(pane: WsPane<SpaceTreeModel>): AdaptiveFragment {
+fun wsSpaceEditorTool(pane: WsPane<SpaceToolState>): AdaptiveFragment {
 
-    val context = fragment().wsContext<AioWsContext>()
-    val observed = valueFrom { pane.model }
+    val observed = valueFrom { pane.model.treeViewModel }
 
     wsToolPane(pane) {
         tree(observed, ::contextMenuBuilder)
@@ -45,66 +41,34 @@ fun wsSpaceEditorTool(pane: WsPane<SpaceTreeModel>): AdaptiveFragment {
     return fragment()
 }
 
-fun wsSpaceEditorToolDef(context: AioWsContext) {
+fun wsSpaceEditorToolDef(context: AioWsContext) : WsPane<SpaceToolState> {
 
-    val tree = TreeViewModel<AioItem, AioWsContext>(
-        emptyList(),
-        selectedFun = ::spaceToolSelectedFun,
-        multiSelect = false,
-        context = context
+    val state = SpaceToolState(
+        context.workspace, SpaceToolConfig(Strings.areas, Graphics.apartment)
     )
 
-    WsPane(
+    val pane = WsPane(
         UUID(),
         Strings.areas,
         Graphics.apartment,
         WsPanePosition.RightTop,
         AioWsContext.WSPANE_SPACE_TOOL,
         actions = listOf(
-            WsPaneAction(Graphics.zoom_out_map, Strings.expandAll, Unit) { w, p, d -> spaceToolExpandAll(p) },
-            WsPaneAction(Graphics.arrows_input, Strings.collapseAll, Unit) { w, p, d -> spaceToolCollapseAll(p) },
-            WsPaneMenuAction(Graphics.add, Strings.add, addTopMenu, ::applyToolMenuAction)
+            WsPaneAction(Graphics.zoom_out_map, Strings.expandAll, Unit) { state.expandAll() },
+            WsPaneAction(Graphics.arrows_input, Strings.collapseAll, Unit) { state.collapseAll() },
+            WsPaneMenuAction(Graphics.add, Strings.add, addTopMenu, { apply(state, it.menuItem, null) })
         ),
-        model = tree
-    ).also {
-        context.io {
-            //it.model.items = context.itemService.queryByMarker(SpaceMarkers.SPACE).toTree()
-        }
+        model = state
+    )
+
+    context.io {
+        state.start()
     }
+
+    return pane
 }
 
-
-fun spaceToolSelectedFun(viewModel: SpaceTreeModel, item: TreeItem<AioItem>, modifiers: Set<EventModifier>) {
-    viewModel.context.workspace.addContent(item.data, modifiers)
-    TreeViewModel.defaultSelectedFun(viewModel, item, modifiers)
-}
-
-private fun spaceToolExpandAll(pane: WsPane<*>) {
-    @Suppress("UNCHECKED_CAST")
-    (pane.model as SpaceTreeModel).items.forEach { it.expandAll() }
-}
-
-private fun spaceToolCollapseAll(pane: WsPane<*>) {
-    @Suppress("UNCHECKED_CAST")
-    (pane.model as SpaceTreeModel).items.forEach { it.collapseAll() }
-
-}
-
-private fun applyToolMenuAction(
-    workspace: Workspace,
-    @Suppress("unused") pane: WsPane<*>,
-    menuItem: MenuItem<AioSpaceEditOperation>,
-    @Suppress("unused") modifiers: Set<EventModifier>
-) {
-    @Suppress("UNCHECKED_CAST") val tree = (pane.model as SpaceTreeModel)
-    apply(tree, menuItem, null)
-}
-
-private fun apply(tree: SpaceTreeModel, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AioItem>?) {
-    val item = treeItem?.data
-    val itemId = item?.uuid
-//    val displayOrder = (treeItem?.children?.lastOrNull()?.data?.displayOrder ?: 0) + 1
-    val context = tree.context
+private fun apply(state: SpaceToolState, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AioValueId>?) {
 
     val addType = when (menuItem.data) {
         AioSpaceEditOperation.AddSite -> AioSpaceType.Site
@@ -122,10 +86,10 @@ private fun apply(tree: SpaceTreeModel, menuItem: MenuItem<AioSpaceEditOperation
 
     check(treeItem != null)
 
-    context.io {
+    state.workspace.io {
         when (menuItem.data) {
-            AioSpaceEditOperation.MoveUp -> move(context, tree, treeItem, - 1)
-            AioSpaceEditOperation.MoveDown -> move(context, tree, treeItem, 1)
+            AioSpaceEditOperation.MoveUp -> move(state, treeItem, - 1)
+            AioSpaceEditOperation.MoveDown -> move(state, treeItem, 1)
             AioSpaceEditOperation.Inactivate -> Unit
             else -> Unit
         }
@@ -133,15 +97,16 @@ private fun apply(tree: SpaceTreeModel, menuItem: MenuItem<AioSpaceEditOperation
 }
 
 private fun move(
-    context: AioWsContext,
-    tree: SpaceTreeModel,
-    treeItem: TreeItem<AioItem>,
+    state: SpaceToolState,
+    treeItem: TreeItem<AioValueId>,
     offset: Int
 ) {
+    val tree = state.treeViewModel
+
     val parent = treeItem.parent
     val children = parent?.children ?: tree.items
 
-    val index = children.indexOfFirst { it.data.uuid == treeItem.data.uuid }
+    val index = children.indexOfFirst { it.data == treeItem.data }
     if (offset < 0 && index < 1) return
     if (offset > 0 && index == children.lastIndex) return
 
@@ -167,7 +132,7 @@ private fun move(
 //    sibling.data = newSiblingSpace
 //    item.data = newItemSpace
 
-    context.io {
+    state.workspace.io {
         // TODO context.spaceService.update(newItemSpace)
         // TODO context.spaceService.update(newSiblingSpace)
     }
@@ -186,7 +151,7 @@ private val floorMenu = listOf(addRoom, addArea)
 private val areaMenu = listOf(addArea)
 private val roomMenu = listOf(addArea)
 
-private fun menu(viewModel: SpaceTreeModel, treeItem: TreeItem<AioItem>): List<MenuItemBase<AioSpaceEditOperation>> {
+private fun menu(viewModel: SpaceTreeModel, treeItem: TreeItem<AioValueId>): List<MenuItemBase<AioSpaceEditOperation>> {
 
     TODO()
 //    val markers = treeItem.data.markersOrNull
@@ -245,11 +210,11 @@ private fun isLast(viewModel: SpaceTreeModel, treeItem: TreeItem<AioItem>): Bool
 private fun contextMenuBuilder(
     hide: () -> Unit,
     viewModel: SpaceTreeModel,
-    treeItem: TreeItem<AioItem>
+    treeItem: TreeItem<AioValueId>
 ): AdaptiveFragment {
     column {
         zIndex { 200 }
-        contextMenu(menu(viewModel, treeItem)) { menuItem, _ -> apply(viewModel, menuItem, treeItem); hide() }
+        contextMenu(menu(viewModel, treeItem)) { menuItem, _ -> apply(viewModel.context, menuItem, treeItem); hide() }
     }
     return fragment()
 }

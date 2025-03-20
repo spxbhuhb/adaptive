@@ -1,5 +1,6 @@
 package `fun`.adaptive.ui.workspace
 
+import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.value.storeFor
@@ -29,11 +30,13 @@ import `fun`.adaptive.utility.firstInstance
 import `fun`.adaptive.utility.firstInstanceOrNull
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlin.collections.filter
 
 class Workspace(
-    val scope : CoroutineScope = CoroutineScope(Dispatchers.Unconfined),
-    val transport : ServiceCallTransport = DirectServiceTransport()
+    val backend: BackendAdapter,
+    val scope : CoroutineScope = backend.scope,
+    val transport : ServiceCallTransport = backend.transport
 ) {
 
     companion object {
@@ -141,6 +144,10 @@ class Workspace(
 
     inline fun <reified T> firstContext() : T? =
         contexts.firstInstanceOrNull<T>()
+
+    fun io(block: () -> Unit) {
+        scope.launch { block() }
+    }
 
     // ---------------------------------------------------------------------------------------------
     // Pane switching

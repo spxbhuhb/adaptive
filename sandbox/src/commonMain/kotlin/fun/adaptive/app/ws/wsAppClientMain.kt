@@ -66,7 +66,7 @@ fun wsAppAdaptiveMain() {
 
 private fun buildWorkspace(adapter: AdaptiveAdapter): Workspace {
 
-    val workspace = Workspace(adapter.scope, adapter.transport)
+    val workspace = Workspace((adapter as AbstractAuiAdapter<*,*>).backend)
 
     with(workspace) {
 

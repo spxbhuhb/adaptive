@@ -12,7 +12,7 @@ class WsPaneMenuAction<T>(
     icon: GraphicsResourceSet,
     tooltip: String,
     override val data: List<MenuItemBase<T>>,
-    val selectedFun: ActionMenuItemFun<T>,
+    val selectedFun: (WsPaneMenuActionArguments<T>) -> Unit,
     val theme: ContextMenuTheme = ContextMenuTheme.DEFAULT,
 ) : AbstractWsPaneAction<List<MenuItemBase<T>>>(icon, tooltip) {
 
@@ -22,6 +22,8 @@ class WsPaneMenuAction<T>(
 
     fun selected(workspace: Workspace, pane: WsPane<*>, menuItem: MenuItem<*>, modifiers: Set<EventModifier>) {
         @Suppress("UNCHECKED_CAST")
-        selectedFun(workspace, pane, menuItem as MenuItem<T>, modifiers)
+        selectedFun(
+            WsPaneMenuActionArguments<T>(workspace, pane, menuItem as MenuItem<T>, modifiers)
+        )
     }
 }

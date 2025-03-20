@@ -3,25 +3,18 @@ package `fun`.adaptive.iot
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.apartment
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.dew_point
-import `fun`.adaptive.adaptive_lib_iot.generated.resources.temperatureAndHumidity
 import `fun`.adaptive.iot.item.AioItem
 import `fun`.adaptive.iot.item.AmvItemIdList
 import `fun`.adaptive.iot.space.AioSpaceType
 import `fun`.adaptive.iot.space.markers.AmvSpace
-import `fun`.adaptive.iot.space.ui.model.SpaceBrowserConfig
-import `fun`.adaptive.iot.space.ui.model.SpaceBrowserWsItem
-import `fun`.adaptive.iot.space.ui.wsSpaceBrowserTool
 import `fun`.adaptive.iot.space.ui.SpacePaneController
+import `fun`.adaptive.iot.space.ui.model.SpaceBrowserWsItem
+import `fun`.adaptive.iot.space.ui.wsSpaceEditorToolDef
 import `fun`.adaptive.iot.value.AioSubscribeCondition
 import `fun`.adaptive.iot.value.builtin.AvString
-import `fun`.adaptive.iot.value.operation.AvoAdd
-import `fun`.adaptive.iot.value.operation.AvoAddOrUpdate
-import `fun`.adaptive.iot.value.operation.AvoMarkerRemove
-import `fun`.adaptive.iot.value.operation.AvoTransaction
-import `fun`.adaptive.iot.value.operation.AvoUpdate
+import `fun`.adaptive.iot.value.operation.*
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsClassPaneController
@@ -63,16 +56,16 @@ fun Workspace.iotCommon() {
 
     contexts += context
 
-//    toolPanes += wsSpaceEditorToolDef()
+    toolPanes += wsSpaceEditorToolDef(context)
 //    toolPanes += wsInfrastructureEditorDef()
-
-    toolPanes += wsSpaceBrowserTool(
-        SpaceBrowserConfig(
-            Strings.temperatureAndHumidity,
-            Graphics.dew_point,
-            "", "", ""
-        )
-    )
+//
+//    toolPanes += wsSpaceBrowserTool(
+//        SpaceToolConfig(
+//            Strings.temperatureAndHumidity,
+//            Graphics.dew_point,
+//            "", "", ""
+//        )
+//    )
 
     addContentPaneBuilder(AioWsContext.WSIT_SPACE) { item ->
         WsPane(

@@ -9,7 +9,7 @@ import `fun`.adaptive.ui.workspace.model.WsItemType
 @Adat
 class SpaceBrowserWsItem(
     override val name: String,
-    val config: SpaceBrowserConfig,
+    val config: SpaceToolConfig,
     val spaceId: AioItemId,
     val data: Any? = null,
     override val type: WsItemType = AioWsContext.WSIT_MEASUREMENT_LOCATION

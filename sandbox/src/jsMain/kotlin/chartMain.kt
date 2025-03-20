@@ -4,6 +4,7 @@ import `fun`.adaptive.chart.ws.model.WsChartContext
 import `fun`.adaptive.chart.ws.model.WsItemChartSeries
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.*
@@ -25,7 +26,7 @@ class Context {
 @Adaptive
 fun chartMain(): AdaptiveFragment {
 
-    val workspace = Workspace()
+    val workspace = Workspace(adapter().backend)
     workspace.chartCommon()
     initCharts(workspace)
 
