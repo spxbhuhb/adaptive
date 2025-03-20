@@ -8,11 +8,14 @@ import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.iot.app.iotAppServerMain
 import `fun`.adaptive.iot.iotCommon
+import `fun`.adaptive.iot.value.persistence.FilePersistence
 import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.runtime.ApplicationNodeType
 import `fun`.adaptive.runtime.GlobalRuntimeContext
+import `fun`.adaptive.utility.ensure
 import kotlinx.coroutines.runBlocking
+import kotlinx.io.files.Path
 
 fun wsAppServerMain() {
     val logger = getLogger("application")
@@ -37,7 +40,7 @@ fun wsAppServerMain() {
         authBasicJvm()
         ktor()
 
-        iotAppServerMain()
+        iotAppServerMain(FilePersistence(Path("./var/values").ensure(), 0))
 
     }.also {
 

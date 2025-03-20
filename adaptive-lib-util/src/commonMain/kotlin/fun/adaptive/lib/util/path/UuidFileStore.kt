@@ -53,7 +53,7 @@ import kotlinx.io.files.Path
  *
  * @property  levels  The number of levels to use.
  */
-abstract class UuidFileStore(
+abstract class UuidFileStore<T>(
     val root : Path,
     val levels : Int
 ) {
@@ -74,23 +74,23 @@ abstract class UuidFileStore(
      * - Skips all files with a name that is shorter than 36 characters.
      * - Stops if [loadFile] throws an exception.
      */
-    open fun loadAll() {
-        loadDir(root, 0)
+    open fun loadAll(context : T) {
+        loadDir(root, 0, context)
     }
 
-    open fun loadDir(dirPath : Path, dirLevel : Int) {
+    open fun loadDir(dirPath : Path, dirLevel : Int, context: T) {
         for (path in dirPath.list()) {
             val name = path.name
             if (dirLevel == levels) {
                 if (name.length < 36 || name.startsWith('.')) continue
-                loadFile(path)
+                loadFile(path, context)
             } else {
                 if (name.length != 2 || name.startsWith('.')) continue
-                loadDir(path, dirLevel + 1)
+                loadDir(path, dirLevel + 1, context)
             }
         }
     }
 
-    abstract fun loadFile(path : Path)
+    abstract fun loadFile(path : Path, context: T)
 
 }

@@ -5,12 +5,16 @@ import `fun`.adaptive.iot.item.AioItem
 import `fun`.adaptive.iot.item.AioMarker
 import `fun`.adaptive.iot.item.AioMarkerValue
 import `fun`.adaptive.iot.value.operation.*
+import `fun`.adaptive.iot.value.persistence.AbstractValuePersistence
+import `fun`.adaptive.iot.value.persistence.NoPersistence
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 
-class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
+class AioValueWorker internal constructor(
+    val persistence : AbstractValuePersistence = NoPersistence()
+) : WorkerImpl<AioValueWorker> {
 
     private val lock = getLock()
 
@@ -44,6 +48,10 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
     override suspend fun run() {
         if (trace) logger.enableFine()
 
+        lock.use {
+            persistence.loadValues(values)
+        }
+
         for (operation in operations) {
             lock.use {
                 if (trace) logger.fine("Operation: $operation")
@@ -74,6 +82,7 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
             return
         }
 
+        persistence.saveValue(value)
         indexAndNotify(original, value, operation, commitSet)
     }
 
@@ -87,6 +96,7 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
             return
         }
 
+        persistence.saveValue(value)
         indexAndNotify(original, value, operation, commitSet)
     }
 
@@ -94,6 +104,7 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
         val value = operation.value
         val original = values.put(value.uuid, value)
 
+        persistence.saveValue(value)
         indexAndNotify(original, value, operation, commitSet)
     }
 

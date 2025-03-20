@@ -12,10 +12,10 @@ import kotlin.test.assertFailsWith
 
 class UuidFileStoreTest {
 
-    class TestUuidFileStore(path : Path, levels: Int) : UuidFileStore(path, levels) {
+    class TestUuidFileStore(path: Path, levels: Int) : UuidFileStore<Unit>(path, levels) {
         val loadedFiles = mutableListOf<Path>()
 
-        override fun loadFile(path: Path) {
+        override fun loadFile(path: Path, context: Unit) {
             loadedFiles.add(path)
         }
     }
@@ -55,7 +55,7 @@ class UuidFileStoreTest {
         val validFile = subDir.resolve("48852c46-8e5a-40a1-a9c8-e757c6f58200").also { it.write("content") }
         subDir.resolve("invalid_file.txt").write("invalid")
 
-        store.loadAll()
+        store.loadAll(Unit)
 
         assertEquals(1, store.loadedFiles.size)
         assertEquals(validFile, store.loadedFiles[0])
@@ -74,17 +74,17 @@ class UuidFileStoreTest {
         val subDir3 = testRoot.resolve("00/82/f5").ensure()
         subDir3.resolve("48852c46-8e5a-40a1-a9c8-e757c6f58200").write("content")
 
-        store1.loadAll()
+        store1.loadAll(Unit)
         assertEquals(1, store1.loadedFiles.size)
 
-        store3.loadAll()
+        store3.loadAll(Unit)
         assertEquals(1, store3.loadedFiles.size)
     }
 
     @Test
     fun `test loadAll stops on exception`() {
-        class FailingUuidFileStore(path : Path, levels: Int) : UuidFileStore(path, levels) {
-            override fun loadFile(root: Path) {
+        class FailingUuidFileStore(path: Path, levels: Int) : UuidFileStore<Unit>(path, levels) {
+            override fun loadFile(root: Path, context: Unit) {
                 throw RuntimeException("Test Exception")
             }
         }
@@ -95,7 +95,7 @@ class UuidFileStoreTest {
         val subDir = testRoot.resolve("00/82").ensure()
         subDir.resolve("48852c46-8e5a-40a1-a9c8-e757c6f58200").write("content")
 
-        assertFailsWith<RuntimeException> { store.loadAll() }
+        assertFailsWith<RuntimeException> { store.loadAll(Unit) }
     }
 
     @Test
@@ -103,7 +103,7 @@ class UuidFileStoreTest {
         val testRoot = clearedTestPath()
         val store = TestUuidFileStore(testRoot, 2)
 
-        store.loadAll()
+        store.loadAll(Unit)
         assertEquals(0, store.loadedFiles.size)
     }
 }
