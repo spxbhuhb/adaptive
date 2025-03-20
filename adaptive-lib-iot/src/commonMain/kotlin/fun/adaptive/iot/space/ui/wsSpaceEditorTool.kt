@@ -5,11 +5,10 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
-import `fun`.adaptive.iot.item.AioItem
 import `fun`.adaptive.iot.space.markers.SpaceMarkers
 import `fun`.adaptive.iot.space.ui.model.AioSpaceEditOperation
 import `fun`.adaptive.iot.space.ui.model.SpaceToolConfig
-import `fun`.adaptive.iot.space.ui.model.SpaceToolState
+import `fun`.adaptive.iot.space.ui.model.SpaceToolController
 import `fun`.adaptive.iot.value.AioValueId
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
@@ -19,6 +18,7 @@ import `fun`.adaptive.ui.api.zIndex
 import `fun`.adaptive.ui.builtin.*
 import `fun`.adaptive.ui.menu.MenuItem
 import `fun`.adaptive.ui.menu.MenuItemBase
+import `fun`.adaptive.ui.menu.MenuSeparator
 import `fun`.adaptive.ui.menu.contextMenu
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.tree
@@ -30,7 +30,7 @@ import `fun`.adaptive.ui.workspace.wsToolPane
 import `fun`.adaptive.utility.UUID
 
 @Adaptive
-fun wsSpaceEditorTool(pane: WsPane<SpaceToolState>): AdaptiveFragment {
+fun wsSpaceEditorTool(pane: WsPane<SpaceToolController>): AdaptiveFragment {
 
     val observed = valueFrom { pane.model.treeViewModel }
 
@@ -41,9 +41,9 @@ fun wsSpaceEditorTool(pane: WsPane<SpaceToolState>): AdaptiveFragment {
     return fragment()
 }
 
-fun wsSpaceEditorToolDef(context: AioWsContext) : WsPane<SpaceToolState> {
+fun wsSpaceEditorToolDef(context: AioWsContext): WsPane<SpaceToolController> {
 
-    val state = SpaceToolState(
+    val state = SpaceToolController(
         context.workspace, SpaceToolConfig(Strings.areas, Graphics.apartment)
     )
 
@@ -54,8 +54,8 @@ fun wsSpaceEditorToolDef(context: AioWsContext) : WsPane<SpaceToolState> {
         WsPanePosition.RightTop,
         AioWsContext.WSPANE_SPACE_TOOL,
         actions = listOf(
-            WsPaneAction(Graphics.zoom_out_map, Strings.expandAll, Unit) { state.expandAll() },
-            WsPaneAction(Graphics.arrows_input, Strings.collapseAll, Unit) { state.collapseAll() },
+            WsPaneAction(Graphics.unfold_more, Strings.expandAll, Unit) { state.expandAll() },
+            WsPaneAction(Graphics.unfold_less, Strings.collapseAll, Unit) { state.collapseAll() },
             WsPaneMenuAction(Graphics.add, Strings.add, addTopMenu, { apply(state, it.menuItem, null) })
         ),
         model = state
@@ -68,7 +68,7 @@ fun wsSpaceEditorToolDef(context: AioWsContext) : WsPane<SpaceToolState> {
     return pane
 }
 
-private fun apply(state: SpaceToolState, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AioValueId>?) {
+private fun apply(state: SpaceToolController, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AioValueId>?) {
 
     val (name, marker) = when (menuItem.data) {
         AioSpaceEditOperation.AddSite -> Strings.site to SpaceMarkers.SITE
@@ -97,7 +97,7 @@ private fun apply(state: SpaceToolState, menuItem: MenuItem<AioSpaceEditOperatio
 }
 
 private fun move(
-    state: SpaceToolState,
+    state: SpaceToolController,
     treeItem: TreeItem<AioValueId>,
     offset: Int
 ) {
@@ -153,57 +153,43 @@ private val roomMenu = listOf(addArea)
 
 private fun menu(viewModel: SpaceTreeModel, treeItem: TreeItem<AioValueId>): List<MenuItemBase<AioSpaceEditOperation>> {
 
-    TODO()
-//    val markers = treeItem.data.markersOrNull
-//
-//    val base =
-//        when {
-//            SpaceMarkers.SITE in markers -> siteMenu
-//            SpaceMarkers.BUILDING in markers -> buildingMenu
-//            SpaceMarkers.FLOOR in markers -> floorMenu
-//            SpaceMarkers.ROOM in markers -> roomMenu
-//            SpaceMarkers.AREA in markers -> areaMenu
-//            else -> addTopMenu
-//        }
-//
-//    val out = mutableListOf<MenuItemBase<AioSpaceEditOperation>>()
-//    out.addAll(base)
-//
-//    out += MenuSeparator<AioSpaceEditOperation>()
-//
-//    out += MenuItem<AioSpaceEditOperation>(
-//        Graphics.arrow_drop_up, Strings.moveUp, AioSpaceEditOperation.MoveUp,
-//        inactive = isFirst(viewModel, treeItem)
-//    )
-//
-//    out += MenuItem<AioSpaceEditOperation>(
-//        Graphics.arrow_drop_down, Strings.moveDown, AioSpaceEditOperation.MoveDown,
-//        inactive = isLast(viewModel, treeItem)
-//    )
-//
-//    out += MenuSeparator<AioSpaceEditOperation>()
-//
-//    out += MenuItem<AioSpaceEditOperation>(null, Strings.inactivate, AioSpaceEditOperation.Inactivate)
-//
-//    return out
-}
+    val controller = viewModel.context
+    val itemId = treeItem.data
 
-private fun isFirst(viewModel: SpaceTreeModel, treeItem: TreeItem<AioItem>): Boolean {
-    val safeParent = treeItem.parent
-    if (safeParent == null) {
-        return viewModel.items.first() == treeItem
-    } else {
-        return safeParent.children.first() == treeItem
-    }
-}
+    val markers = controller.valueTreeStore[itemId]?.markers?.keys ?: emptySet<SpaceMarkers>()
 
-private fun isLast(viewModel: SpaceTreeModel, treeItem: TreeItem<AioItem>): Boolean {
-    val safeParent = treeItem.parent
-    if (safeParent == null) {
-        return viewModel.items.last() == treeItem
-    } else {
-        return safeParent.children.last() == treeItem
-    }
+    val base =
+        when {
+            SpaceMarkers.SITE in markers -> siteMenu
+            SpaceMarkers.BUILDING in markers -> buildingMenu
+            SpaceMarkers.FLOOR in markers -> floorMenu
+            SpaceMarkers.ROOM in markers -> roomMenu
+            SpaceMarkers.AREA in markers -> areaMenu
+            else -> addTopMenu
+        }
+
+    val out = mutableListOf<MenuItemBase<AioSpaceEditOperation>>()
+    out.addAll(base)
+
+    out += MenuSeparator<AioSpaceEditOperation>()
+
+    val subSpaces = controller.valueTreeStore.getSubSpaces(itemId)
+
+    out += MenuItem<AioSpaceEditOperation>(
+        Graphics.arrow_drop_up, Strings.moveUp, AioSpaceEditOperation.MoveUp,
+        inactive = (subSpaces.isEmpty() || subSpaces.first() == itemId)
+    )
+
+    out += MenuItem<AioSpaceEditOperation>(
+        Graphics.arrow_drop_down, Strings.moveDown, AioSpaceEditOperation.MoveDown,
+        inactive = (subSpaces.isEmpty() || subSpaces.last() == itemId)
+    )
+
+    out += MenuSeparator<AioSpaceEditOperation>()
+
+    out += MenuItem<AioSpaceEditOperation>(null, Strings.inactivate, AioSpaceEditOperation.Inactivate)
+
+    return out
 }
 
 @Adaptive

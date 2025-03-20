@@ -6,7 +6,6 @@ import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.iot.item.AioItem
 import `fun`.adaptive.iot.item.AioMarker
 import `fun`.adaptive.iot.item.AioStatus
-import `fun`.adaptive.iot.item.AmvItemIdList
 import `fun`.adaptive.iot.space.markers.AmvSpace
 import `fun`.adaptive.iot.space.markers.SpaceMarkers
 import `fun`.adaptive.iot.value.AioValue
@@ -14,7 +13,6 @@ import `fun`.adaptive.iot.value.AioValueId
 import `fun`.adaptive.iot.value.AioValueWorker
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.runtime.GlobalRuntimeContext
-import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import kotlinx.datetime.Clock.System.now
 
@@ -56,28 +54,13 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
             context += spaceSpec
 
             if (parentId == null) {
-                addTop(context, spaceId)
+                context.addTopList(spaceId, SpaceMarkers.TOP_SPACES)
+            } else {
+                context.addChild(parentId, spaceId, SpaceMarkers.SUB_SPACES)
             }
-
         }
 
         return spaceId
-    }
-
-    private fun addTop(context: AioValueWorker.WorkerComputeContext, spaceId: UUID<AioValue>) {
-        val topSpaces = context.queryByMarker(SpaceMarkers.TOP_SPACES)
-
-        val original = topSpaces.firstOrNull()
-        val new: AmvItemIdList
-
-        if (original != null) {
-            check(original is AmvItemIdList) { "Expected AmvItemIdList, got $topSpaces" }
-            new = original.copy(itemIds = original.itemIds + spaceId)
-        } else {
-            new = AmvItemIdList(owner = uuid7(), markerName = SpaceMarkers.TOP_SPACES, listOf(spaceId))
-        }
-
-        context += new
     }
 
 }

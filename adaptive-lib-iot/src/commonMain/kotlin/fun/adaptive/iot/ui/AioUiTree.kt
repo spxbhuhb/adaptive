@@ -7,10 +7,8 @@ import `fun`.adaptive.iot.item.AioMarker
 import `fun`.adaptive.iot.item.AmvItemIdList
 import `fun`.adaptive.iot.value.*
 import `fun`.adaptive.iot.value.operation.*
-import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
-import `fun`.adaptive.ui.builtin.empty
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import kotlinx.coroutines.CoroutineScope
@@ -65,6 +63,18 @@ class AioUiTree(
         get() = topSpaces.size
 
     operator fun get(valueId: AioValueId) = nodeMap[valueId]?.aioItem
+
+    /**
+     * The sub-spaces list that contains [childId]. This is the value of the
+     * sub-spaces marker from the parent node or the top-spaces list if
+     * [childId] is a top node.
+     */
+    fun getSubSpaces(childId: AioValueId): List<AioValueId> {
+        val aioItem = nodeMap[childId]?.aioItem ?: return emptyList()
+        if (aioItem.parentId == null) return topSpaces
+        val parent = nodeMap[aioItem.parentId] ?: return emptyList()
+        return parent.subSpaces ?: emptyList()
+    }
 
     fun start() {
         localWorker.subscribe(
@@ -134,7 +144,7 @@ class AioUiTree(
             val parentNode = parentId?.let { nodeMap[it] }
 
             node.treeItem = TreeItem(
-                Graphics.empty,
+                iconFor(item),
                 title = item.name,
                 data = item.uuid,
                 parent = parentNode?.treeItem,
@@ -183,6 +193,13 @@ class AioUiTree(
         if (topRefresh) {
             refreshTop(topSpaces.mapNotNull { nodeMap[it]?.treeItem })
         }
-    }
 
+//        nodeMap.values.forEach { node ->
+//            println("${node.aioItem?.name} ${node.aioItem?.uuid}")
+//        }
+//
+//        topSpaces.mapNotNull { nodeMap[it]?.treeItem }.forEach { ti ->
+//            ti.dumpTree().debug()
+//        }
+    }
 }

@@ -43,4 +43,14 @@ class TreeItem<T>(
         open = false
         children.forEach { it.collapseAll() }
     }
+
+    fun dumpTree(indent: Int = 0): String {
+        val prefix = " ".repeat(indent * 2)
+        val builder = StringBuilder()
+        builder.append(prefix).append(if (open) "[-] " else "[+] ").append(title).append("\n")
+        for (child in children) {
+            builder.append(child.dumpTree(indent + 1))
+        }
+        return builder.toString()
+    }
 }

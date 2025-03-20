@@ -5,7 +5,7 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.iot.space.markers.SpaceMarkers
 import `fun`.adaptive.iot.value.AioValue
 import `fun`.adaptive.iot.value.AioValueId
-import `fun`.adaptive.iot.ws.iconCache
+import `fun`.adaptive.iot.ui.iconCache
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.resource.string.Strings

@@ -13,14 +13,14 @@ import `fun`.adaptive.ui.tree.TreeViewModel
 import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
 
-class SpaceToolState(
+class SpaceToolController(
     override val workspace: Workspace,
     val config: SpaceToolConfig
-) : SelfObservable<SpaceToolState>(), WithWorkspace {
+) : SelfObservable<SpaceToolController>(), WithWorkspace {
 
     val spaceService = getService<AioSpaceApi>(transport)
 
-    val treeViewModel = TreeViewModel<AioValueId, SpaceToolState>(
+    val treeViewModel = TreeViewModel<AioValueId, SpaceToolController>(
         emptyList(),
         selectedFun = ::selectedFun,
         multiSelect = false,

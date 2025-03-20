@@ -4,9 +4,11 @@ import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.iot.item.AioItem
 import `fun`.adaptive.iot.item.AioMarker
 import `fun`.adaptive.iot.item.AioMarkerValue
+import `fun`.adaptive.iot.item.AmvItemIdList
 import `fun`.adaptive.iot.value.operation.*
 import `fun`.adaptive.iot.value.persistence.AbstractValuePersistence
 import `fun`.adaptive.iot.value.persistence.NoPersistence
+import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.wireformat.builtin.PolymorphicWireFormat
@@ -50,11 +52,24 @@ class AioValueWorker internal constructor(
     // Operations
     // --------------------------------------------------------------------------------
 
+    @ExperimentalCoroutinesApi
     override suspend fun run() {
         if (trace) logger.enableFine()
 
         lock.use {
+            check(values.isEmpty())
+            check(subscriptions.isEmpty())
+            check(markerIndices.isEmpty())
+            check(operations.isEmpty)
+
             persistence.loadValues(values)
+
+            // this will be empty as there are no subscriptions
+            val commitSet = mutableSetOf<AioValueSubscription>()
+
+            values.forEach { (_, value) ->
+                index(null, value, commitSet)
+            }
         }
 
         for (operation in operations) {
@@ -358,9 +373,6 @@ class AioValueWorker internal constructor(
     fun item(valueId: AioValueId): AioItem =
         get(valueId) as AioItem
 
-    fun itemOrNull(valueId: AioValueId): AioItem? =
-        get(valueId)?.let { it as AioItem }
-
     fun query(filterFun: (AioValue) -> Boolean): List<AioValue> =
         lock.use {
             values.values.filter(filterFun)
@@ -382,7 +394,7 @@ class AioValueWorker internal constructor(
     internal fun queueAddAll(vararg values: AioValue) =
         queueTransaction(values.map { AvoAdd(it) })
 
-    internal  fun queueUpdate(value: AioValue) {
+    internal fun queueUpdate(value: AioValue) {
         check(operations.trySend(AvoUpdate(value)).isSuccess)
     }
 
@@ -436,6 +448,47 @@ class AioValueWorker internal constructor(
         }
     }
 
+    // --------------------------------------------------------------------------------
+    // Utility
+    // --------------------------------------------------------------------------------
+
+    fun dump(): String {
+        val out = StringBuilder()
+
+        out.append("{\n  \"values\" : [\n")
+        values.forEach { (_, value) ->
+            val bytes = PolymorphicWireFormat.wireFormatEncode(JsonWireFormatEncoder(), value).pack()
+            out.append("    ")
+            out.append(bytes.decodeToString())
+            out.append(",\n")
+        }
+
+        out.append("  ],\n  \"indices\" : [\n")
+
+        markerIndices.forEach { (marker, index) ->
+            out.append("    \"$marker\" : [ ")
+            out.append(index.joinToString(", ") { "\"$it\"" })
+        }
+
+        out.append(" ],\n")
+
+        out.append("}")
+
+        return out.toString()
+    }
+
+    // --------------------------------------------------------------------------------
+    // Lifecycle
+    // --------------------------------------------------------------------------------
+
+    fun close() {
+        operations.close()
+    }
+
+    // --------------------------------------------------------------------------------
+    // Computation support
+    // --------------------------------------------------------------------------------
+
     inner class WorkerComputeContext(
         val commitSet: MutableSet<AioValueSubscription>
     ) {
@@ -453,43 +506,54 @@ class AioValueWorker internal constructor(
         fun queryByMarker(marker: AioMarker): List<AioValue> =
             this@AioValueWorker.queryByMarker(marker)
 
-        fun dump() : String = this@AioValueWorker.dump()
+        @Suppress("unused") // used for debugging
+        fun dump(): String = this@AioValueWorker.dump()
 
-    }
+        fun item(itemId: AioValueId): AioItem =
+            values[itemId] as AioItem
 
-    // --------------------------------------------------------------------------------
-    // Utility
-    // --------------------------------------------------------------------------------
+        inline fun <reified T> markerVal(item: AioValueId, marker: AioMarker): T? =
+            getMarkerValue(item, marker) as T?
 
-    fun dump(): String {
-        val out = StringBuilder()
+        fun getMarkerValue(item: AioValueId, marker: AioMarker) =
+            values[item]?.let { item ->
+                item as AioItem
+                item.markersOrNull?.get(marker)?.let { markerValue ->
+                    values[markerValue]
+                }
+            }
 
-        out.append("{\n  \"values\" : [\n")
-        values.forEach { (_, value) ->
-            val bytes = PolymorphicWireFormat.wireFormatEncode(JsonWireFormatEncoder(), value).pack()
-            out.append("    ")
-            out.append(bytes.decodeToString())
-            out.append(",\n")
+        fun addTopList(spaceId: AioValueId, listMarker: AioMarker) {
+            val original = queryByMarker(listMarker).firstOrNull() as AmvItemIdList?
+            val new: AmvItemIdList
+
+            if (original != null) {
+                new = original.copy(itemIds = original.itemIds + spaceId)
+            } else {
+                new = AmvItemIdList(owner = uuid7(), listMarker, listOf(spaceId))
+            }
+
+            this += new
         }
 
-        out.append("  ],\n  \"indices\" : [\n")
-        markerIndices.forEach { (marker, index) ->
-            out.append("    \"$marker\" : [ ")
-            out.append(index.joinToString(", ") { "\"$it\"" })
-            out.append(" ],\n")
+        fun addChild(parentId: AioValueId, childId: AioValueId, childListMarker: AioMarker) {
+            val original: AmvItemIdList? = markerVal(parentId, childListMarker)
+
+            if (original != null) {
+                this += original.copy(itemIds = original.itemIds + childId)
+                return
+            }
+
+            val new = AmvItemIdList(owner = parentId, childListMarker, listOf(childId))
+
+            val parent = item(parentId)
+
+            val markers = parent.markersOrNull?.toMutableMap() ?: mutableMapOf<AioMarker, AioValueId?>()
+
+            markers[childListMarker] = new.uuid
+
+            this += new
+            this += parent.copy(markersOrNull = markers)
         }
-
-        out.append("}")
-
-        return out.toString()
     }
-
-    // --------------------------------------------------------------------------------
-    // Lifecycle
-    // --------------------------------------------------------------------------------
-
-    fun close() {
-        operations.close()
-    }
-
 }
