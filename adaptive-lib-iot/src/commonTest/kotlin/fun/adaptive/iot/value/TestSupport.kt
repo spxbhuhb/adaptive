@@ -7,7 +7,6 @@ import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.service.testing.DirectServiceTransport
 import `fun`.adaptive.wireformat.api.Json
-import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,8 +17,8 @@ import kotlin.time.Duration.Companion.seconds
 
 class TestSupport {
 
-    val clientTransport = DirectServiceTransport(name = "client", wireFormatProvider = Json).also { it.trace = true; it.transportLog.enableFine() }
-    val serverTransport = DirectServiceTransport(name = "server", wireFormatProvider = Json).also { it.trace = true; it.transportLog.enableFine() }
+    val clientTransport = DirectServiceTransport(name = "client", wireFormatProvider = Json) // .also { it.trace = true; it.transportLog.enableFine() }
+    val serverTransport = DirectServiceTransport(name = "server", wireFormatProvider = Json) // .also { it.trace = true; it.transportLog.enableFine() }
 
     init {
         clientTransport.peerTransport = serverTransport

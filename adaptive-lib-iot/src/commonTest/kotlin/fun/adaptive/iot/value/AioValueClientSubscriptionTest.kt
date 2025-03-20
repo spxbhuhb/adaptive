@@ -19,7 +19,7 @@ class AioValueClientSubscriptionTest {
         val valueId = AioValueId()
         val value = AvString(valueId, time, AioStatus.OK, "Value")
 
-        val subscription = AioValueClientSubscription(uuid4(), listOf(valueId), emptyList(), serverTransport, serverBackend.scope)
+        val subscription = AioValueClientSubscription(uuid4(), condition(valueId), serverTransport, serverBackend.scope)
 
         serverWorker.subscribe(listOf(subscription))
         serverWorker.add(value)
@@ -36,7 +36,7 @@ class AioValueClientSubscriptionTest {
         val valueId = AioValueId()
         val value = AvString(valueId, time, AioStatus.OK, "Value")
 
-        val subscription = AioValueClientSubscription(uuid4(), listOf(valueId), emptyList(), serverTransport, serverBackend.scope)
+        val subscription = AioValueClientSubscription(uuid4(), condition(valueId), serverTransport, serverBackend.scope)
 
         serverWorker.subscribe(listOf(subscription))
 

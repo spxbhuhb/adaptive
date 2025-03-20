@@ -1,6 +1,5 @@
 package `fun`.adaptive.iot.value
 
-import `fun`.adaptive.iot.item.AioMarker
 import `fun`.adaptive.iot.value.operation.AioValueOperation
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.reflect.typeSignature
@@ -20,12 +19,11 @@ import kotlinx.coroutines.launch
  */
 class AioValueClientSubscription(
     uuid: AuiValueSubscriptionId,
-    valueIds: List<AioValueId>,
-    markers : List<AioMarker>,
+    conditions : List<AioSubscribeCondition>,
     transport: ServiceCallTransport,
     scope: CoroutineScope,
-    capacity: Int = valueIds.size + 1000
-) : AioValueSubscription(uuid, valueIds, markers) {
+    capacity: Int = conditions.size + 1000
+) : AioValueSubscription(uuid, conditions) {
 
     companion object {
         val logger = getLogger(AioValueClientSubscription.typeSignature().trimSignature())

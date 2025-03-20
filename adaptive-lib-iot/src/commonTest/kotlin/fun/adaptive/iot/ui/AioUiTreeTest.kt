@@ -38,7 +38,7 @@ class AioUiTreeTest {
 
         addSpaceTop(serverWorker, spaceId)
 
-        waitForReal(1.seconds) { tree.size > 0 }
+        waitForReal(1.seconds) { tree.topSpacesSize > 0 }
 
         assertEquals(1, tree.size)
         assertEquals(1, tops.size)

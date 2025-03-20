@@ -3,7 +3,6 @@ package `fun`.adaptive.iot.value
 import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
-import `fun`.adaptive.iot.item.AioMarker
 import `fun`.adaptive.iot.value.operation.AioValueOperation
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 
@@ -23,7 +22,7 @@ class AioValueClientService : ServiceImpl<AioValueClientService>, AioValueApi {
         worker.process(operation)
     }
 
-    override suspend fun subscribe(valueIds: List<AioValueId>, markerIds : List<AioMarker>): AuiValueSubscriptionId {
+    override suspend fun subscribe(conditions: List<AioSubscribeCondition>): AuiValueSubscriptionId {
         throw UnsupportedOperationException()
     }
 

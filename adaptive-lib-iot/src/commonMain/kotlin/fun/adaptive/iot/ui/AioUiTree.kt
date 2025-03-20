@@ -22,7 +22,7 @@ class AioUiTree(
     adapter: BackendAdapter,
     transport: ServiceCallTransport,
     val scope: CoroutineScope,
-    val itemMarker: AioMarker,
+    itemMarker: AioMarker,
     val childListMarker: AioMarker,
     val topListMarker: AioMarker,
     val refreshTop: (items: List<TreeItem<AioValueId>>) -> Unit
@@ -41,7 +41,13 @@ class AioUiTree(
     val localWorker = adapter.firstImpl<AioValueWorker>()
     val remoteService = getService<AioValueApi>(transport)
 
-    val markers = listOf(itemMarker, childListMarker, topListMarker)
+    val conditions = listOf(
+        // When loading items we don't use the value of the item selection marker,
+        // only the fact that there is a marker on the item.
+        AioSubscribeCondition(marker = itemMarker, itemOnly = true),
+        AioSubscribeCondition(marker = childListMarker),
+        AioSubscribeCondition(marker = topListMarker)
+    )
 
     var remoteSubscriptionId: AuiValueSubscriptionId? = null
     val localSubscriptionId: AuiValueSubscriptionId = uuid4()
@@ -55,18 +61,16 @@ class AioUiTree(
     val size
         get() = nodeMap.size
 
+    val topSpacesSize
+        get() = topSpaces.size
+
     fun start() {
         localWorker.subscribe(
-            AioValueChannelSubscription(
-                localSubscriptionId,
-                emptyList(),
-                markers,
-                updates
-            )
+            AioValueChannelSubscription(localSubscriptionId, conditions, updates)
         )
         scope.launch {
             supervisorScope {
-                remoteSubscriptionId = remoteService.subscribe(emptyList(), markers)
+                remoteSubscriptionId = remoteService.subscribe(conditions)
                 run()
             }
         }
@@ -136,6 +140,8 @@ class AioUiTree(
 
             if (parentNode != null) {
                 childRefresh += parentNode
+            } else {
+                topRefresh = true
             }
         } else {
             treeItem.title = item.name // treeItem is observable

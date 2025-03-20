@@ -64,7 +64,7 @@ class AioValueWorkerTest {
         worker.add(initialValue)
 
         val channel = Channel<AioValueOperation>(1)
-        val subscription = AioValueChannelSubscription(uuid4(), listOf(valueId), emptyList(), channel)
+        val subscription = AioValueChannelSubscription(uuid4(), condition(valueId), channel)
 
         worker.subscribe(listOf(subscription))
 
@@ -77,7 +77,7 @@ class AioValueWorkerTest {
     fun `should notify subscribers on update`() = test { worker ->
         val valueId = AioValueId()
         val channel = Channel<AioValueOperation>(1)
-        val subscription = AioValueChannelSubscription(uuid4(), listOf(valueId), emptyList(), channel)
+        val subscription = AioValueChannelSubscription(uuid4(), condition(valueId), channel)
 
         worker.subscribe(listOf(subscription))
 
@@ -95,8 +95,8 @@ class AioValueWorkerTest {
         val channel1 = Channel<AioValueOperation>(1)
         val channel2 = Channel<AioValueOperation>(1)
 
-        val subscription1 = AioValueChannelSubscription(uuid4(), listOf(valueId), emptyList(), channel1)
-        val subscription2 = AioValueChannelSubscription(uuid4(), listOf(valueId), emptyList(), channel2)
+        val subscription1 = AioValueChannelSubscription(uuid4(), condition(valueId), channel1)
+        val subscription2 = AioValueChannelSubscription(uuid4(), condition(valueId), channel2)
 
         worker.subscribe(listOf(subscription1, subscription2))
 
@@ -111,7 +111,7 @@ class AioValueWorkerTest {
     fun `should unsubscribe properly`() = test { worker ->
         val valueId = AioValueId()
         val channel = Channel<AioValueOperation>(1)
-        val subscription = AioValueChannelSubscription(uuid4(), listOf(valueId), emptyList(), channel)
+        val subscription = AioValueChannelSubscription(uuid4(), condition(valueId), channel)
 
         worker.subscribe(subscription)
         worker.unsubscribe(subscription.uuid)
@@ -178,7 +178,7 @@ class AioValueWorkerTest {
         val initialItem = addSensor(worker, mapOf(marker to uuid7()))
 
         val channel = Channel<AioValueOperation>(1)
-        val subscription = AioValueChannelSubscription(uuid4(), emptyList(), listOf(marker), channel)
+        val subscription = AioValueChannelSubscription(uuid4(), condition(marker), channel)
 
         worker.subscribe(listOf(subscription))
 
@@ -200,7 +200,7 @@ class AioValueWorkerTest {
         val newValue = initialItem.copy(markersOrNull = null)
 
         val channel = Channel<AioValueOperation>(1)
-        val subscription = AioValueChannelSubscription(uuid4(), emptyList(), listOf(marker), channel)
+        val subscription = AioValueChannelSubscription(uuid4(), condition(marker), channel)
 
         worker.subscribe(listOf(subscription))
 

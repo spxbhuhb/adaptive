@@ -8,8 +8,7 @@ import `fun`.adaptive.iot.value.operation.AvoTransaction
 
 abstract class AioValueSubscription(
     val uuid: AuiValueSubscriptionId,
-    val valueIds: List<AioValueId>,
-    val markers: List<AioMarker>
+    val conditions: List<AioSubscribeCondition>
 ) {
 
     var worker: AioValueWorker? = null

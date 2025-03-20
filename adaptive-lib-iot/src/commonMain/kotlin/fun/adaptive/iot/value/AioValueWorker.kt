@@ -22,7 +22,7 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
 
     private val valueIdSubscriptions = mutableMapOf<AioValueId, MutableList<AioValueSubscription>>()
 
-    private val markerSubscriptions = mutableMapOf<AioMarker, MutableList<AioValueSubscription>>()
+    private val markerSubscriptions = mutableMapOf<AioMarker, MutableList<MarkerSubscriptionEntry>>()
 
     private val markerIndices = mutableMapOf<AioMarker, MutableSet<AioValueId>>()
 
@@ -31,6 +31,11 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
     @OptIn(ExperimentalCoroutinesApi::class)
     val isIdle: Boolean
         get() = operations.isEmpty
+
+    class MarkerSubscriptionEntry(
+        val subscription: AioValueSubscription,
+        val itemOnly: Boolean
+    )
 
     // --------------------------------------------------------------------------------
     // Operations
@@ -113,7 +118,7 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
     }
 
     // --------------------------------------------------------------------------------
-    // Notification
+    // Notification (for remove marker check indexing also)
     // --------------------------------------------------------------------------------
 
     fun notify(value: AioValue, commitSet: MutableSet<AioValueSubscription>) {
@@ -133,7 +138,7 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
 
     fun notifyByMarker(markerName: String, value: AioValue, commitSet: MutableSet<AioValueSubscription>) {
         markerSubscriptions[markerName]?.forEach {
-            add(it, value, commitSet)
+            it.ifApplicable(value) { add(it.subscription, value, commitSet) }
         }
     }
 
@@ -161,7 +166,7 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
     }
 
     // --------------------------------------------------------------------------------
-    // Indexing
+    // Indexing and remove marker notification
     // --------------------------------------------------------------------------------
 
     private fun index(original: AioValue?, value: AioValue, commitSet: MutableSet<AioValueSubscription>) {
@@ -169,7 +174,7 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
 
             is AioItem -> {
                 index(
-                    value.uuid,
+                    value,
                     (original as? AioItem)?.markers?.keys ?: emptySet(),
                     value.markers.keys,
                     commitSet
@@ -182,7 +187,13 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
         }
     }
 
-    private fun index(valueId: AioValueId, originalMarkers: Set<String>, markers: Set<String>, commitSet: MutableSet<AioValueSubscription>) {
+    private fun index(
+        value: AioValue,
+        originalMarkers: Set<String>,
+        markers: Set<String>,
+        commitSet: MutableSet<AioValueSubscription>
+    ) {
+        val valueId = value.uuid
 
         for (marker in markers) {
             if (marker !in originalMarkers) {
@@ -192,7 +203,9 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
         for (marker in originalMarkers) {
             if (marker !in markers) {
                 markerIndices[marker]?.remove(valueId)
-                markerSubscriptions[marker]?.forEach { markerRemove(it, valueId, marker, commitSet) }
+                markerSubscriptions[marker]?.forEach {
+                    it.ifApplicable(value) { markerRemove(it.subscription, valueId, marker, commitSet) }
+                }
             }
         }
     }
@@ -211,6 +224,11 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
             commitSet.remove(subscription)
             unsubscribe(subscription.uuid)
         }
+    }
+
+    private inline fun MarkerSubscriptionEntry.ifApplicable(value : AioValue, block: () -> Unit) {
+        if (itemOnly && value !is AioItem) return
+        block()
     }
 
     // --------------------------------------------------------------------------------
@@ -236,31 +254,40 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
 
         this.subscriptions[subscription.uuid] = subscription
 
-        for (valueId in subscription.valueIds) {
-            this.valueIdSubscriptions
-                .getOrPut(valueId) { mutableListOf() }
-                .add(subscription)
-
-            values[valueId]?.let {
-                subscription.add(it)
+        for (condition in subscription.conditions) {
+            if (condition.valueId != null) {
+                addValueIdSubscription(subscription, condition.valueId)
             }
-        }
-
-        for (marker in subscription.markers) {
-            this.markerSubscriptions
-                .getOrPut(marker) { mutableListOf() }
-                .add(subscription)
-
-            markerIndices[marker]?.let { index ->
-                for (valueId in index) {
-                    values[valueId]?.let { value ->
-                        subscription.add(value)
-                    }
-                }
+            if (condition.marker != null) {
+                addMarkerSubscription(subscription, condition.marker, condition.itemOnly)
             }
         }
 
         subscription.commit()
+    }
+
+    private fun addValueIdSubscription(subscription: AioValueSubscription, valueId: AioValueId) {
+        this.valueIdSubscriptions
+            .getOrPut(valueId) { mutableListOf() }
+            .add(subscription)
+
+        values[valueId]?.let {
+            subscription.add(it)
+        }
+    }
+
+    private fun addMarkerSubscription(subscription: AioValueSubscription, marker: AioMarker, itemOnly: Boolean) {
+        this.markerSubscriptions
+            .getOrPut(marker) { mutableListOf() }
+            .add(MarkerSubscriptionEntry(subscription, itemOnly))
+
+        markerIndices[marker]?.let { index ->
+            for (valueId in index) {
+                values[valueId]?.let { value ->
+                    subscription.add(value)
+                }
+            }
+        }
     }
 
     fun unsubscribe(subscriptionId: AuiValueSubscriptionId) {
@@ -270,17 +297,20 @@ class AioValueWorker internal constructor() : WorkerImpl<AioValueWorker> {
     }
 
     private fun unsafeUnsubscribe(subscriptionId: AuiValueSubscriptionId) {
-        subscriptions.remove(subscriptionId)?.let {
+        subscriptions.remove(subscriptionId)?.let { subscription ->
 
-            for (valueId in it.valueIds) {
-                valueIdSubscriptions[valueId]?.remove(it)
+            for (condition in subscription.conditions) {
+                condition.valueId?.let { valueId ->
+                    valueIdSubscriptions[valueId]?.remove(subscription)
+                }
+                condition.marker?.let { marker ->
+                    markerSubscriptions[marker]?.removeAll {
+                        entry -> entry.subscription.uuid == subscriptionId
+                    }
+                }
             }
 
-            for (marker in it.markers) {
-                markerSubscriptions[marker]?.remove(it)
-            }
-
-            it.worker = null
+            subscription.worker = null
         }
     }
 
