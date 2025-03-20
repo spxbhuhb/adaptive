@@ -6,9 +6,6 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.space.markers.SpaceMarkers
-import `fun`.adaptive.iot.space.ui.model.AioSpaceEditOperation
-import `fun`.adaptive.iot.space.ui.model.SpaceToolConfig
-import `fun`.adaptive.iot.space.ui.model.SpaceToolController
 import `fun`.adaptive.iot.value.AioValueId
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
@@ -30,9 +27,9 @@ import `fun`.adaptive.ui.workspace.wsToolPane
 import `fun`.adaptive.utility.UUID
 
 @Adaptive
-fun wsSpaceEditorTool(pane: WsPane<SpaceToolController>): AdaptiveFragment {
+fun wsSpaceTool(pane: WsPane<Unit, SpaceToolController>): AdaptiveFragment {
 
-    val observed = valueFrom { pane.model.treeViewModel }
+    val observed = valueFrom { pane.controller.treeViewModel }
 
     wsToolPane(pane) {
         tree(observed, ::contextMenuBuilder)
@@ -41,11 +38,9 @@ fun wsSpaceEditorTool(pane: WsPane<SpaceToolController>): AdaptiveFragment {
     return fragment()
 }
 
-fun wsSpaceEditorToolDef(context: AioWsContext): WsPane<SpaceToolController> {
+fun wsSpaceEditorToolDef(context: AioWsContext): WsPane<Unit, SpaceToolController> {
 
-    val state = SpaceToolController(
-        context.workspace, SpaceToolConfig(Strings.areas, Graphics.apartment)
-    )
+    val controller = SpaceToolController(context.workspace)
 
     val pane = WsPane(
         UUID(),
@@ -54,15 +49,16 @@ fun wsSpaceEditorToolDef(context: AioWsContext): WsPane<SpaceToolController> {
         WsPanePosition.RightTop,
         AioWsContext.WSPANE_SPACE_TOOL,
         actions = listOf(
-            WsPaneAction(Graphics.unfold_more, Strings.expandAll, Unit) { state.expandAll() },
-            WsPaneAction(Graphics.unfold_less, Strings.collapseAll, Unit) { state.collapseAll() },
-            WsPaneMenuAction(Graphics.add, Strings.add, addTopMenu, { apply(state, it.menuItem, null) })
+            WsPaneAction(Graphics.unfold_more, Strings.expandAll, Unit) { controller.expandAll() },
+            WsPaneAction(Graphics.unfold_less, Strings.collapseAll, Unit) { controller.collapseAll() },
+            WsPaneMenuAction(Graphics.add, Strings.add, addTopMenu, { apply(controller, it.menuItem, null) })
         ),
-        model = state
+        data = Unit,
+        controller = controller
     )
 
     context.io {
-        state.start()
+        controller.start()
     }
 
     return pane

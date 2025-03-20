@@ -169,7 +169,7 @@ private fun wsPane(workspace: Workspace, position: WsPanePosition): AdaptiveFrag
 }
 
 @Adaptive
-private fun wsPaneContent(pane: WsPane<*>) {
+private fun wsPaneContent(pane: WsPane<*, *>) {
     box {
         maxSize
         actualize(pane.key, emptyInstructions, pane)
@@ -219,7 +219,7 @@ fun wsPaneIcons(
 
 @Adaptive
 private fun wsPaneIcon(
-    pane: WsPane<*>,
+    pane: WsPane<*, *>,
     workspace: Workspace
 ) {
 

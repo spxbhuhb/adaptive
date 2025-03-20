@@ -8,5 +8,5 @@ abstract class AbstractWsPaneAction<T>(
     val tooltip: String
 ) {
     abstract val data: T
-    abstract fun execute(workspace: Workspace, pane: WsPane<*>)
+    abstract fun execute(workspace: Workspace, pane: WsPane<*, *>)
 }

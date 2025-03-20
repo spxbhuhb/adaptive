@@ -7,6 +7,7 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.builtin.menu
 import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.utility.UUID
@@ -28,7 +29,8 @@ fun Workspace.chartCommon() {
         Graphics.menu,
         WsPanePosition.RightTop,
         WsChartContext.CHART_TOOL_PANE_KEY,
-        model = Unit
+        data = Unit,
+        controller = WsUnitPaneController()
     )
 
     addContentPaneBuilder(WsChartContext.WSIT_CHART_SERIES) { item ->
@@ -39,7 +41,7 @@ fun Workspace.chartCommon() {
             Graphics.monitoring,
             WsPanePosition.Center,
             WsChartContext.CHART_CONTENT_PANE_KEY,
-            model = WsChartPaneData(),
+            data = WsChartPaneData(),
             controller = WsChartContentController()
         )
 

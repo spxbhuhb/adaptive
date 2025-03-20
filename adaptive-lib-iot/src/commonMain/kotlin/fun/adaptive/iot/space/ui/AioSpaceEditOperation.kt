@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot.space.ui.model
+package `fun`.adaptive.iot.space.ui
 
 enum class AioSpaceEditOperation {
     AddSite,

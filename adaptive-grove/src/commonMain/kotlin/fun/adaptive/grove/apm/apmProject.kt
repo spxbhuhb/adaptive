@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
-fun apmProject(pane: WsPane<Unit>): AdaptiveFragment {
+fun apmProject(pane: WsPane<*, *>): AdaptiveFragment {
     val context = fragment().wsContext<ApmWsContext>()
 
     val treeViewModel = TreeViewModel(

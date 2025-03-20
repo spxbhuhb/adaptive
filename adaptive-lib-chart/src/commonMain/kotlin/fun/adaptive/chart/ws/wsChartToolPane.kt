@@ -12,7 +12,7 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
-fun wsChartToolPane(pane: WsPane<Unit>): AdaptiveFragment {
+fun wsChartToolPane(pane: WsPane<*, *>): AdaptiveFragment {
 
     val context = fragment().wsContext<WsChartContext>()
 

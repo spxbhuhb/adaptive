@@ -6,7 +6,6 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.iot.item.AioItem
-import `fun`.adaptive.iot.space.ui.model.SpaceBrowserWsItem
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
@@ -20,10 +19,10 @@ import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.model.WsPane
 
 @Adaptive
-fun wsSpaceBrowserContent(pane: WsPane<SpaceBrowserWsItem>): AdaptiveFragment {
+fun wsSpaceBrowserContent(pane: WsPane<SpaceBrowserWsItem, *>): AdaptiveFragment {
 
     val context = fragment().wsContext<AioWsContext>()
-    val subSpaces = subSpaces(context, pane.model)
+    val subSpaces = subSpaces(context, pane.data)
 
     column {
         maxSize .. verticalScroll .. padding { 16.dp } .. backgrounds.surface
@@ -40,21 +39,21 @@ fun wsSpaceBrowserContent(pane: WsPane<SpaceBrowserWsItem>): AdaptiveFragment {
 }
 
 @Adaptive
-fun pageHeader(context: AioWsContext, pane: WsPane<SpaceBrowserWsItem>) {
+fun pageHeader(context: AioWsContext, pane: WsPane<SpaceBrowserWsItem, *>) {
     column {
         paddingBottom { 32.dp }
         h2(Strings.temperatureAndHumidity)
-        spacePath(context, pane.model)
+        spacePath(context, pane.data)
     }
 }
 
 @Adaptive
-fun listHeader(context: AioWsContext, pane: WsPane<SpaceBrowserWsItem>) {
+fun listHeader(context: AioWsContext, pane: WsPane<SpaceBrowserWsItem, *>) {
 
 }
 
 @Adaptive
-fun listItem(context: AioWsContext, pane: WsPane<SpaceBrowserWsItem>, space: AioItem) {
+fun listItem(context: AioWsContext, pane: WsPane<SpaceBrowserWsItem, *>, space: AioItem) {
     row {
         gap { 16.dp }
         text(space.friendlyId)

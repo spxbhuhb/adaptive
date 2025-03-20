@@ -7,8 +7,7 @@ import `fun`.adaptive.iot.item.AioItem
 import `fun`.adaptive.iot.item.AioStatus
 import `fun`.adaptive.iot.item.AmvItemIdList
 import `fun`.adaptive.iot.space.markers.AmvSpace
-import `fun`.adaptive.iot.space.ui.SpacePaneController
-import `fun`.adaptive.iot.space.ui.model.SpaceBrowserWsItem
+import `fun`.adaptive.iot.space.ui.SpaceBrowserWsItem
 import `fun`.adaptive.iot.space.ui.wsSpaceEditorToolDef
 import `fun`.adaptive.iot.value.AioSubscribeCondition
 import `fun`.adaptive.iot.value.builtin.AvString
@@ -67,17 +66,7 @@ fun Workspace.iotCommon() {
 //        )
 //    )
 
-    addContentPaneBuilder(AioWsContext.WSIT_SPACE) { item ->
-        WsPane(
-            UUID(),
-            item.name,
-            context[item].icon,
-            WsPanePosition.Center,
-            AioWsContext.WSPANE_SPACE_CONTENT,
-            controller = SpacePaneController(context),
-            model = item
-        )
-    }
+
 
     addContentPaneBuilder(AioWsContext.WSIT_MEASUREMENT_LOCATION) { item ->
         WsPane(
@@ -87,7 +76,7 @@ fun Workspace.iotCommon() {
             WsPanePosition.Center,
             AioWsContext.WSPANE_MEASUREMENT_LOCATION_CONTENT,
             controller = WsClassPaneController(SpaceBrowserWsItem::class),
-            model = item as SpaceBrowserWsItem
+            data = item as SpaceBrowserWsItem
         )
     }
 

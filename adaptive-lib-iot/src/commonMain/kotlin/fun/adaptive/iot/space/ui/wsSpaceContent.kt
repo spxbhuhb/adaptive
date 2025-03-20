@@ -1,30 +1,31 @@
 package `fun`.adaptive.iot.space.ui
 
-import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
-import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.item.AioItem
 import `fun`.adaptive.iot.ws.AioWsContext
-import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.input.InputContext
-import `fun`.adaptive.ui.input.number.doubleOrNullUnitInput
-import `fun`.adaptive.ui.input.text.textInput
-import `fun`.adaptive.ui.input.text.textInputArea
-import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.label.uuidLabel
-import `fun`.adaptive.ui.label.withLabel
-import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.tree.TreeItem
-import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.model.WsPane
+import `fun`.adaptive.ui.workspace.model.WsPanePosition
+import `fun`.adaptive.utility.UUID
+
+fun wsSpaceContentPaneDef(context: AioWsContext) {
+    context.workspace.addContentPaneBuilder(AioWsContext.WSIT_SPACE) { item ->
+        WsPane(
+            UUID(),
+            item.name,
+            context[item].icon,
+            WsPanePosition.Center,
+            AioWsContext.WSPANE_SPACE_CONTENT,
+            controller = SpaceContentController(context),
+            data = item
+        )
+    }
+}
 
 @Adaptive
-fun wsSpaceContentPane(pane : WsPane<*>): AdaptiveFragment {
+fun wsSpaceContentPane(pane: WsPane<*, *>): AdaptiveFragment {
 //    val context = fragment().wsContext<AioWsContext>()
 //
 //    val observed = valueFrom { context.spaceTree }

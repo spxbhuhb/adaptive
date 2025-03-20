@@ -4,10 +4,10 @@ import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsItem
 
-class WsUnitPaneController<D> : WsPaneController<D>() {
+class WsUnitPaneController : WsPaneController<Unit>() {
 
-    override fun accepts(pane : WsPane<D>, modifiers: Set<EventModifier>, item : WsItem) = false
+    override fun accepts(pane: WsPaneType<Unit>, modifiers: Set<EventModifier>, item: WsItem) = false
 
-    override fun load(pane : WsPane<D>, modifiers: Set<EventModifier>, item : WsItem) = pane
+    override fun load(pane: WsPaneType<Unit>, modifiers: Set<EventModifier>, item: WsItem) = pane
 
 }

@@ -4,4 +4,4 @@ import `fun`.adaptive.utility.UUID
 
 typealias WsItemType = String
 typealias WsItemTooltip = String
-typealias WsPaneId = UUID<WsPane<*>>
+typealias WsPaneId = UUID<WsPane<*, *>>

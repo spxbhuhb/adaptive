@@ -22,6 +22,7 @@ import `fun`.adaptive.ui.snackbar.SnackbarManager
 import `fun`.adaptive.ui.snackbar.snackContainer
 import `fun`.adaptive.ui.uiCommon
 import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.ui.workspace.wsFull
@@ -80,7 +81,8 @@ private fun buildWorkspace(adapter: AdaptiveAdapter): Workspace {
                 Graphics.eco,
                 WsPanePosition.Center,
                 "home",
-                Unit
+                Unit,
+                WsUnitPaneController()
             )
         }
 

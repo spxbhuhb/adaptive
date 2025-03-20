@@ -16,7 +16,7 @@ import `fun`.adaptive.ui.workspace.wsNoContent
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
-fun ufdState(pane: WsPane<Unit>): AdaptiveFragment {
+fun ufdState(pane: WsPane<*, *>): AdaptiveFragment {
 
     val context = fragment().wsContext<SheetViewContext>()
     val controller = valueFrom { context.focusedView }

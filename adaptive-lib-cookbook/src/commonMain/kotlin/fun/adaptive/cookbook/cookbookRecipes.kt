@@ -15,7 +15,7 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
-fun cookbookRecipes(pane: WsPane<Unit>): AdaptiveFragment {
+fun cookbookRecipes(pane: WsPane<*, *>): AdaptiveFragment {
     val context = fragment().wsContext<CbWsContext>()
 
     val treeViewModel = TreeViewModel(

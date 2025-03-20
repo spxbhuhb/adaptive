@@ -6,7 +6,7 @@ import `fun`.adaptive.ui.workspace.Workspace
 
 class WsPaneMenuActionArguments<T>(
     val workspace: Workspace,
-    val pane: WsPane<*>,
+    val pane: WsPane<*, *>,
     val menuItem: MenuItem<T>,
     val modifiers: Set<EventModifier>
 )

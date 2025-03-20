@@ -8,7 +8,6 @@ import `fun`.adaptive.general.Observable
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
-import `fun`.adaptive.service.testing.DirectServiceTransport
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.builtin.menu
 import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
@@ -16,6 +15,7 @@ import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
+import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
 import `fun`.adaptive.ui.workspace.model.WsContentPaneBuilder
 import `fun`.adaptive.ui.workspace.model.WsContentPaneGroup
 import `fun`.adaptive.ui.workspace.model.WsItem
@@ -29,7 +29,6 @@ import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.firstInstance
 import `fun`.adaptive.utility.firstInstanceOrNull
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.collections.filter
 
@@ -52,7 +51,8 @@ class Workspace(
             Graphics.menu,
             WsPanePosition.Center,
             WSPANE_EMPTY,
-            model = Unit
+            data = Unit,
+            controller = WsUnitPaneController()
         )
     }
 
@@ -65,7 +65,7 @@ class Workspace(
     val theme
         get() = WorkspaceTheme.workspaceTheme
 
-    val toolPanes = mutableListOf<WsPane<*>>()
+    val toolPanes = mutableListOf<WsPane<*, *>>()
 
     val contentPaneGroups = storeFor {
         listOf<WsContentPaneGroup>(
@@ -75,7 +75,7 @@ class Workspace(
 
     var lastActiveContentPaneGroup: WsContentPaneGroup? = null
 
-    var lastActiveContentPane: WsPane<*>? = null
+    var lastActiveContentPane: WsPane<*, *>? = null
 
     val focusedPane = storeFor<WsPaneId?> { null }
 
@@ -139,7 +139,7 @@ class Workspace(
     fun bottomPanes(left: Boolean) =
         toolPanes.filter(if (left) WsPanePosition.LeftBottom else WsPanePosition.RightBottom)
 
-    fun List<WsPane<*>>.filter(position: WsPanePosition) =
+    fun List<WsPane<*, *>>.filter(position: WsPanePosition) =
         filter { it.position == position }
 
     inline fun <reified T> firstContext() : T? =
@@ -156,7 +156,7 @@ class Workspace(
     /**
      * Toggle the given pane (typically when the user clicks on the pane icon).
      */
-    fun toggle(pane: WsPane<*>) {
+    fun toggle(pane: WsPane<*, *>) {
         when (pane.position) {
             WsPanePosition.LeftTop -> toggleStore(leftTop, pane)
             WsPanePosition.LeftMiddle -> toggleStore(leftMiddle, pane)
@@ -172,7 +172,7 @@ class Workspace(
         updateSplits()
     }
 
-    private fun toggleStore(store: Observable<WsPaneId?>, pane: WsPane<*>) {
+    private fun toggleStore(store: Observable<WsPaneId?>, pane: WsPane<*, *>) {
         if (store.value == pane.uuid) {
             store.value = null
         } else {
@@ -221,7 +221,7 @@ class Workspace(
         split.value = split.value.copy(visibility = new)
     }
 
-    fun paneStore(pane: WsPane<*>): Observable<WsPaneId?> =
+    fun paneStore(pane: WsPane<*, *>): Observable<WsPaneId?> =
         when (pane.position) {
             WsPanePosition.LeftTop -> leftTop
             WsPanePosition.LeftMiddle -> leftMiddle
@@ -300,12 +300,12 @@ class Workspace(
         return false
     }
 
-    fun loadContentPane(item: WsItem, modifiers: Set<EventModifier>, pane: WsPane<*>, group: WsContentPaneGroup) {
+    fun loadContentPane(item: WsItem, modifiers: Set<EventModifier>, pane: WsPane<*, *>, group: WsContentPaneGroup) {
         // pane.load may return with a different pane, most notably the name and tooltip of the pane may change
         group.load(pane.load(item, modifiers))
     }
 
-    fun addGroupContentPane(item: WsItem, modifiers: Set<EventModifier>, pane: WsPane<*>) {
+    fun addGroupContentPane(item: WsItem, modifiers: Set<EventModifier>, pane: WsPane<*, *>) {
 
         val safeGroup = lastActiveContentPaneGroup
 

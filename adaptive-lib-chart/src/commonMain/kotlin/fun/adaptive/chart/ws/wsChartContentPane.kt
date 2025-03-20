@@ -11,8 +11,8 @@ import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.model.WsPane
 
 @Adaptive
-fun wsChartContentPane(pane : WsPane<WsChartPaneData>): AdaptiveFragment {
-    val items = valueFrom { pane.model.items }
+fun wsChartContentPane(pane: WsPane<WsChartPaneData, *>): AdaptiveFragment {
+    val items = valueFrom { pane.data.items }
 
     val context = fragment().wsContext<WsChartContext>()
 

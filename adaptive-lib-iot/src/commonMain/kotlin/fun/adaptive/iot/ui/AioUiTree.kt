@@ -11,7 +11,6 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.utility.UUID.Companion.uuid4
-import `fun`.adaptive.utility.debug
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
@@ -194,13 +193,13 @@ class AioUiTree(
         if (topRefresh) {
             refreshTop(topSpaces.mapNotNull { nodeMap[it]?.treeItem })
         }
-
-        nodeMap.values.forEach { node ->
-            println("${node.aioItem?.name} ${node.aioItem?.uuid} ${node.subSpaces}")
-        }
-
-        topSpaces.mapNotNull { nodeMap[it]?.treeItem }.forEach { ti ->
-            ti.dumpTree().debug()
-        }
+//
+//        nodeMap.values.forEach { node ->
+//            println("${node.aioItem?.name} ${node.aioItem?.uuid} ${node.subSpaces}")
+//        }
+//
+//        topSpaces.mapNotNull { nodeMap[it]?.treeItem }.forEach { ti ->
+//            ti.dumpTree().debug()
+//        }
     }
 }

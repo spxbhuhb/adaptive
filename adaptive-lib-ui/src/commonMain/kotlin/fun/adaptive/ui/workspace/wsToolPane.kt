@@ -10,7 +10,7 @@ import `fun`.adaptive.ui.workspace.WorkspaceTheme
 
 @Adaptive
 fun wsToolPane(
-    pane: WsPane<*>,
+    pane: WsPane<*, *>,
     theme: WorkspaceTheme = workspaceTheme,
     @Adaptive
     _fixme_adaptive_content: () -> Unit

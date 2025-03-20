@@ -10,7 +10,7 @@ import `fun`.adaptive.utility.UUID
 class WsContentPaneGroup(
     val uuid : UUID<WsContentPaneGroup>,
     val workspace: Workspace,
-    firstPane : WsPane<*>
+    firstPane: WsPane<*, *>
 ) {
     /**
      * True when this group contains only one pane and that one pane
@@ -30,7 +30,7 @@ class WsContentPaneGroup(
 
     val tabContainer = storeFor<TabContainer> { toTabContainer() }
 
-    fun load(pane : WsPane<*>) {
+    fun load(pane: WsPane<*, *>) {
         val index = panes.indexOfFirst { it.uuid == pane.uuid }
 
         if (index == -1) {

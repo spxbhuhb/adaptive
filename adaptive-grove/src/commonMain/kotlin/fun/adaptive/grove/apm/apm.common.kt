@@ -4,6 +4,7 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.grove.resources.folder
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
@@ -22,7 +23,8 @@ fun Workspace.groveApmCommon() {
         Graphics.folder,
         WsPanePosition.LeftTop,
         ApmWsContext.APM_PROJECT_TOOL_KEY,
-        model = Unit
+        data = Unit,
+        controller = WsUnitPaneController()
     )
 
 }

@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot.space.ui.model
+package `fun`.adaptive.iot.space.ui
 
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet

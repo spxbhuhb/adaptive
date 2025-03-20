@@ -6,8 +6,12 @@ import `fun`.adaptive.ui.workspace.model.WsItem
 
 abstract class WsPaneController<D> {
 
-    abstract fun accepts(pane : WsPane<D>, modifiers: Set<EventModifier>, item : WsItem) : Boolean
+    open fun accepts(pane: WsPaneType<D>, modifiers: Set<EventModifier>, item: WsItem): Boolean {
+        return false
+    }
 
-    abstract fun load(pane : WsPane<D>, modifiers: Set<EventModifier>, item : WsItem) : WsPane<D>
+    open fun load(pane: WsPaneType<D>, modifiers: Set<EventModifier>, item: WsItem): WsPaneType<D> {
+        throw UnsupportedOperationException("load for pane $pane is not supported")
+    }
 
 }

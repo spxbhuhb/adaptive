@@ -7,6 +7,7 @@ import `fun`.adaptive.grove.ufd.model.UfdWsContentPaneData
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
@@ -24,7 +25,8 @@ fun Workspace.groveUfdCommon() {
         Graphics.palette,
         WsPanePosition.LeftTop,
         UfdWsContext.PALETTE_TOOL_KEY,
-        model = Unit
+        data = Unit,
+        controller = WsUnitPaneController()
     )
 
     toolPanes += WsPane(
@@ -33,7 +35,8 @@ fun Workspace.groveUfdCommon() {
         Graphics.cards,
         WsPanePosition.LeftMiddle,
         UfdWsContext.COMPONENTS_TOOL_KEY,
-        model = Unit
+        data = Unit,
+        controller = WsUnitPaneController()
     )
 
     toolPanes += WsPane(
@@ -42,7 +45,8 @@ fun Workspace.groveUfdCommon() {
         Graphics.stroke_partial,
         WsPanePosition.RightTop,
         UfdWsContext.INSTRUCTIONS_TOOL_KEY,
-        model = Unit
+        data = Unit,
+        controller = WsUnitPaneController()
     )
 
     toolPanes += WsPane(
@@ -51,7 +55,8 @@ fun Workspace.groveUfdCommon() {
         Graphics.data_table,
         WsPanePosition.RightTop,
         UfdWsContext.STATE_TOOL_KEY,
-        model = Unit
+        data = Unit,
+        controller = WsUnitPaneController()
     )
 
     addContentPaneBuilder(UfdWsContext.WSIT_UFD_FRAGMENT) { item ->
@@ -62,7 +67,7 @@ fun Workspace.groveUfdCommon() {
             Graphics.cards,
             WsPanePosition.Center,
             UfdWsContext.CONTENT_PANE_KEY,
-            model = UfdWsContentPaneData(),
+            data = UfdWsContentPaneData(),
             controller = UfdWsContentController()
         )
 

@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.workspace.model.WsItem
 import `fun`.adaptive.ui.workspace.model.WsPane
 
 @Adaptive
-fun cookbookCenter(pane : WsPane<*>) : AdaptiveFragment {
+fun cookbookCenter(pane: WsPane<*, *>): AdaptiveFragment {
     val recipeKey = valueFrom { fragment().wsContext<CbWsContext>().activeRecipeKey }
 
     box {

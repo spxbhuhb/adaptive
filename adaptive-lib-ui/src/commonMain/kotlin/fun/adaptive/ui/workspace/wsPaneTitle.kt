@@ -18,7 +18,7 @@ import `fun`.adaptive.ui.workspace.model.WsPaneMenuAction
 
 @Adaptive
 fun wsPaneTitle(
-    pane: WsPane<*>,
+    pane: WsPane<*, *>,
     showActions: Boolean,
     theme: WorkspaceTheme
 ) {

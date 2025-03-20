@@ -61,7 +61,7 @@ class WorkspaceTheme(
     val leftIconColumn = paneIconColumn + borderRight(toolBorderColor)
 
     fun paneIconContainer(
-        thisPane: WsPane<*>,
+        thisPane: WsPane<*, *>,
         activePane: WsPaneId?,
         focusedPane: WsPaneId?,
         hover: Boolean

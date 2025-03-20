@@ -1,9 +1,7 @@
-package `fun`.adaptive.iot.space.ui.model
+package `fun`.adaptive.iot.space.ui
 
-import `fun`.adaptive.general.SelfObservable
 import `fun`.adaptive.iot.space.AioSpaceApi
 import `fun`.adaptive.iot.space.markers.SpaceMarkers
-import `fun`.adaptive.iot.space.ui.SpaceTreeModel
 import `fun`.adaptive.iot.ui.AioUiTree
 import `fun`.adaptive.iot.value.AioValueId
 import `fun`.adaptive.service.api.getService
@@ -12,11 +10,12 @@ import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
 import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.logic.WsPaneController
+import `fun`.adaptive.ui.workspace.model.WsItem
 
 class SpaceToolController(
-    override val workspace: Workspace,
-    val config: SpaceToolConfig
-) : SelfObservable<SpaceToolController>(), WithWorkspace {
+    override val workspace: Workspace
+) : WsPaneController<Unit>(), WithWorkspace {
 
     val spaceService = getService<AioSpaceApi>(transport)
 
