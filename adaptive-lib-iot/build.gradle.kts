@@ -59,6 +59,7 @@ kotlin {
             implementation(libs.adaptive.lib.graphics)
             implementation(libs.adaptive.lib.document)
             implementation(libs.adaptive.lib.exposed)
+            implementation(libs.adaptive.lib.util)
         }
 
         commonTest.dependencies {

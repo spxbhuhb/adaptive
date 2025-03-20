@@ -7,4 +7,7 @@
 * unit tests shall be independent and do not use the results of each other
 * for file operation use `kotlinx.io`
 * to get a path to a test directory use `clearedTestPath()` from the "`fun`.adaptive.utility" package
+* `clearedTestPath` ensures that the directories are made and their name is unique
+* `clearedTestPath` returns with a `Path`
+* to create directories use the `Path.ensure` method
 * cover corner cases, initialization, re-initialization
