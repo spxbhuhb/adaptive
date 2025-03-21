@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.app.basic
+package `fun`.adaptive.app.basic.ui
 
 import `fun`.adaptive.auth.model.Session
 import `fun`.adaptive.auto.api.autoItemOrigin

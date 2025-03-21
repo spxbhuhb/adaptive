@@ -31,4 +31,6 @@
     <string name="signUpSignIn">Have an account? **[Sign Ip](/sign-in)**</string>
 
 
+    <!-- admin -->
+    <string name="administration">Adminisztráció</string>
 </resources>

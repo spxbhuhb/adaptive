@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.app.basic
+package `fun`.adaptive.app.basic.ui
 
 /**
  * The user-selected mode of the sidebar.

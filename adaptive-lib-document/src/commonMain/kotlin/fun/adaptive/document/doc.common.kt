@@ -8,11 +8,8 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.builtin.menu_book
 import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.wireformat.WireFormatRegistry
 
 suspend fun docCommon(loadStrings: Boolean = true) {
-    val r = WireFormatRegistry
-
     if (loadStrings) {
         println("stuff")
         commonMainStringsStringStore0.load()

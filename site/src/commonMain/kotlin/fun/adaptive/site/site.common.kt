@@ -1,12 +1,13 @@
-package `fun`.adaptive.site/*
+/*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
+package `fun`.adaptive.site
 
+import `fun`.adaptive.app.ws.WsAppModule.wsAppHomePaneDef
 import `fun`.adaptive.cookbook.cookbookCommon
 import `fun`.adaptive.grove.groveCommon
 import `fun`.adaptive.grove.groveRuntimeCommon
 import `fun`.adaptive.ui.AbstractAuiAdapter
-import `fun`.adaptive.ui.app.ws.appHomePane
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.uiCommon
 import `fun`.adaptive.ui.workspace.Workspace
@@ -38,6 +39,6 @@ fun Workspace.siteCommon() {
 
     cookbookCommon()
     groveCommon()
-    appHomePane()
+    wsAppHomePaneDef()
 
 }

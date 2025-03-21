@@ -8,7 +8,7 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
-fun appAccount(pane: WsPane<*, *>): AdaptiveFragment {
+fun wsAppAccountTool(pane : WsPane<*,*>) : AdaptiveFragment {
 
     wsToolPane(pane) {
         todo()

@@ -1,14 +1,13 @@
-package `fun`.adaptive.ui.form.platform
+package `fun`.adaptive.app.platform
 
+import `fun`.adaptive.app.basic.ui.BasicAppData
 import `fun`.adaptive.auto.api.AutoItemListener
 import `fun`.adaptive.auto.model.ItemId
-import `fun`.adaptive.ui.app.basic.BasicAppData
 import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.wireformat.toJson
 import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.PopStateEvent
-import kotlin.js.json
 
 class BrowserHistoryStateListener(
     val appData: BasicAppData
@@ -19,7 +18,7 @@ class BrowserHistoryStateListener(
     init {
         window.addEventListener("popstate", { event ->
             event as PopStateEvent
-            popState = NavState.fromJson(event.state.toString().encodeToByteArray())
+            popState = NavState.Companion.fromJson(event.state.toString().encodeToByteArray())
 
             val title = popState?.title ?: appData.appName ?: ""
             document.title = title
@@ -27,7 +26,7 @@ class BrowserHistoryStateListener(
             appData.navState.update(popState !!)
         })
 
-        appData.navState.update(NavState.parse(window.location.href))
+        appData.navState.update(NavState.Companion.parse(window.location.href))
         appData.navState.addListener(this)
     }
 
@@ -38,7 +37,7 @@ class BrowserHistoryStateListener(
         val title = newValue.title ?: appData.appName ?: ""
         document.title = title
 
-        window.history.pushState(newValue.toJson(NavState).decodeToString(), newValue.title ?: "", newValue.toUrl())
+        window.history.pushState(newValue.toJson(NavState.Companion).decodeToString(), newValue.title ?: "", newValue.toUrl())
     }
 
 }

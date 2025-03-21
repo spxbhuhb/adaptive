@@ -1,10 +1,10 @@
 package `fun`.adaptive.site
 
+import `fun`.adaptive.app.ws.WsAppModule
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
-import `fun`.adaptive.ui.app.ws.appHomeKey
 
 object SiteFragmentFactory : FoundationFragmentFactory() {
     init {
-        add(appHomeKey, ::siteHome)
+        add(WsAppModule.HOME_CONTENT_KEY, ::siteHome)
     }
 }
