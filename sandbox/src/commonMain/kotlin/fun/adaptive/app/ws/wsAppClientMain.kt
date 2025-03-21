@@ -6,6 +6,7 @@ import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.chart.chartCommon
 import `fun`.adaptive.cookbook.eco
+import `fun`.adaptive.document.docCommon
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragmentFactory
@@ -40,6 +41,7 @@ fun wsAppClientMain(
         uiCommon()
         groveRuntimeCommon()
         chartCommon()
+        docCommon()
         iotCommon()
 
         commonMainStringsStringStore0.load()
@@ -73,6 +75,7 @@ private fun buildWorkspace(adapter: AdaptiveAdapter): Workspace {
 
         chartCommon()
         iotCommon()
+        docCommon()
 
         addContentPaneBuilder("home") {
             WsPane(
@@ -104,6 +107,7 @@ fun wsAppAdapterInit(adapter: AbstractAuiAdapter<*, *>, appFragmentFactory: Adap
         groveRuntimeCommon()
         chartCommon()
         iotCommon()
+        docCommon()
 
         with(defaultTextRenderData) {
             fontName = "Open Sans"

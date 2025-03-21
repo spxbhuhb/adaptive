@@ -13,7 +13,10 @@ import `fun`.adaptive.wireformat.WireFormatRegistry
 suspend fun docCommon(loadStrings: Boolean = true) {
     val r = WireFormatRegistry
 
-    commonMainStringsStringStore0.load()
+    if (loadStrings) {
+        println("stuff")
+        commonMainStringsStringStore0.load()
+    }
 }
 
 fun AbstractAuiAdapter<*, *>.docCommon() {

@@ -4,6 +4,7 @@ import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.chart.chartCommon
+import `fun`.adaptive.document.docCommon
 import `fun`.adaptive.foundation.AdaptiveFragmentFactory
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
@@ -34,6 +35,7 @@ fun wsAppBrowserMain(
         uiCommon()
         groveRuntimeCommon()
         chartCommon()
+        docCommon()
         iotCommon()
 
         commonMainStringsStringStore0.load()
