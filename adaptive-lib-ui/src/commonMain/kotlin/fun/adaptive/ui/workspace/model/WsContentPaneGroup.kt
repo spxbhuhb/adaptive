@@ -16,7 +16,8 @@ class WsContentPaneGroup(
      * True when this group contains only one pane and that one pane
      * cannot be changed. Singular pane groups does not show tabs.
      */
-    var singular : Boolean = false
+    val isSingular : Boolean
+        get() = (panes.size == 1 && panes.first().singularity == WsPaneSingularity.SINGULAR)
 
     /**
      * The active pane of this pane group. This is the pane that is currently

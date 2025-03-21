@@ -11,5 +11,7 @@ fun buildWorkspace(adapter: AdaptiveAdapter): Workspace {
 
     workspace.updateSplits()
 
+    workspace.addContent(siteHomeItem, emptySet())
+
     return workspace
 }

@@ -43,7 +43,8 @@ class Workspace(
             WsPanePosition.Center,
             WSPANE_EMPTY,
             data = Unit,
-            controller = WsUnitPaneController()
+            controller = WsUnitPaneController(),
+            singularity = WsPaneSingularity.SINGULAR
         )
     }
 
@@ -156,7 +157,9 @@ class Workspace(
             WsPanePosition.RightMiddle -> toggleStore(rightMiddle, pane)
             WsPanePosition.RightBottom -> toggleStore(rightBottom, pane)
             WsPanePosition.Center -> {
-                center.value = pane.uuid
+                if (pane.data is SingularWsItem) {
+                    addContent(pane.data, emptySet())
+                }
                 return // no split update is needed as center is always shown
             }
         }
@@ -251,7 +254,8 @@ class Workspace(
 
         when (pane.singularity) {
             WsPaneSingularity.SINGULAR -> {
-                TODO()
+                lastActiveContentPaneGroup = null
+                addGroupContentPane(item, modifiers, pane)
             }
 
             WsPaneSingularity.GROUP -> {
@@ -320,7 +324,7 @@ class Workspace(
 
         val safeGroup = lastActiveContentPaneGroup
 
-        if (safeGroup == null) {
+        if (safeGroup == null || safeGroup.isSingular) {
 
             WsContentPaneGroup(UUID(), this, pane).also {
                 lastActiveContentPaneGroup = it
