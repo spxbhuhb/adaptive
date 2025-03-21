@@ -8,12 +8,16 @@ import `fun`.adaptive.service.ServiceApi
 @ServiceApi
 interface AioSpaceApi {
 
-    suspend fun addSpace(name : String, spaceType : AioMarker, parentId: AioValueId?) : AioValueId
+    suspend fun add(name: String, spaceType: AioMarker, parentId: AioValueId?): AioValueId
+
+    suspend fun rename(spaceId : AioValueId, name: String)
 
     suspend fun moveUp(spaceId: AioValueId)
 
     suspend fun moveDown(spaceId: AioValueId)
 
-    suspend fun spaceData(spaceId: AioValueId): AmvSpace
+    suspend fun getSpaceData(spaceId: AioValueId): AmvSpace
+
+    suspend fun setSpaceData(valueId : AioValueId, area: Double, notes: String?)
 
 }

@@ -18,6 +18,13 @@
     <string name="disable">Letiltás</string>
     <string name="enable">Engedélyezés</string>
     <string name="add">Hozzáadás</string>
+    <string name="save">Mentés</string>
+
+    <string name="saveSuccess">Sikeres mentés.</string>
+    <string name="saveFail">Sikertelen mentés.</string>
+
+    <string name="renameSuccess">Sikeres átnevezés.</string>
+    <string name="renameFail">Sikertelen átnevezés.</string>
 
     <!-- infrastructure -->
 

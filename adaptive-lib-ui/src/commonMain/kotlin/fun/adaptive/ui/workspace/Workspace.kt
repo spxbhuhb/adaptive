@@ -16,21 +16,12 @@ import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
-import `fun`.adaptive.ui.workspace.model.WsContentPaneBuilder
-import `fun`.adaptive.ui.workspace.model.WsContentPaneGroup
-import `fun`.adaptive.ui.workspace.model.WsItem
-import `fun`.adaptive.ui.workspace.model.WsItemConfig
-import `fun`.adaptive.ui.workspace.model.WsItemType
-import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.model.WsPaneId
-import `fun`.adaptive.ui.workspace.model.WsPanePosition
-import `fun`.adaptive.ui.workspace.model.WsPaneSingularity
+import `fun`.adaptive.ui.workspace.model.*
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.firstInstance
 import `fun`.adaptive.utility.firstInstanceOrNull
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.collections.filter
 
 class Workspace(
     val backend: BackendAdapter,
@@ -249,7 +240,7 @@ class Workspace(
             return
         }
 
-        val builder = contentPaneBuilders[item.type]?.firstOrNull()
+        val builder = findBuilder(item.type)
 
         if (builder == null) {
             logger.warning("no pane builder for type ${item.type}")
@@ -267,6 +258,26 @@ class Workspace(
                 addGroupContentPane(item, modifiers, pane)
             }
         }
+    }
+
+    fun findBuilder(type : WsItemType) : WsContentPaneBuilder? {
+        var builder = contentPaneBuilders[type]?.firstOrNull()
+        if (builder != null) return builder
+
+        var generalType = type.substringBeforeLast(':')
+
+        while (generalType.isNotEmpty()) {
+
+            var builder = contentPaneBuilders[generalType]?.firstOrNull()
+            if (builder != null) return builder
+
+            val lastColon = generalType.lastIndexOf(':')
+            if (lastColon == -1) break
+
+            generalType = generalType.substring(0, lastColon)
+        }
+
+        return null
     }
 
     fun accept(item: WsItem, modifiers: Set<EventModifier>): Boolean {

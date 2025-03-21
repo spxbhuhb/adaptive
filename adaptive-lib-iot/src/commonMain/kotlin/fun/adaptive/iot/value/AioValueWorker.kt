@@ -10,12 +10,14 @@ import `fun`.adaptive.iot.value.persistence.AbstractValuePersistence
 import `fun`.adaptive.iot.value.persistence.NoPersistence
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.utility.getLock
+import `fun`.adaptive.utility.p04
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.wireformat.builtin.PolymorphicWireFormat
 import `fun`.adaptive.wireformat.json.JsonWireFormatEncoder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withTimeout
+import kotlin.reflect.KClass
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -467,6 +469,59 @@ class AioValueWorker internal constructor(
         }
     }
 
+    /**
+     * Executes an update on the value with id [valueId]:
+     *
+     * - fetches the value
+     * - calls [updateFun]
+     * - replaces the original value with the return value of [updateFun]
+     *
+     * Behaviour:
+     *
+     * - calls [execute], all behaviour of [execute] applies
+     */
+    suspend inline fun <reified T : AioValue> update(
+        valueId: AioValueId,
+        timeout: Duration = 5.seconds,
+        noinline updateFun: (T) -> T
+    ) {
+        executeUpdate(valueId, timeout, T::class, updateFun)
+    }
+
+    /**
+     * Executes an update on an item with id [valueId]:
+     *
+     * - fetches the value
+     * - calls [updateFun]
+     * - replaces the original value with the return value of [updateFun]
+     *
+     * Behaviour:
+     *
+     * - calls [execute], all behaviour of [execute] applies
+     */
+    suspend inline fun updateItem(
+        valueId: AioValueId,
+        timeout: Duration = 5.seconds,
+        noinline updateFun: (AioItem) -> AioItem
+    ) {
+        executeUpdate(valueId, timeout, AioItem::class, updateFun)
+    }
+
+    suspend fun <T : AioValue> executeUpdate(
+        valueId: AioValueId,
+        timeout: Duration,
+        kClass: KClass<T>,
+        updateFun: (T) -> T
+    ) {
+        execute(timeout) {
+            val value = checkNotNull(values[valueId])
+            check(kClass.isInstance(value)) { "Value with id $valueId is not of type ${kClass.simpleName}" }
+
+            @Suppress("UNCHECKED_CAST")
+            this += updateFun(value as T)
+        }
+    }
+
     // --------------------------------------------------------------------------------
     // Utility
     // --------------------------------------------------------------------------------
@@ -519,8 +574,27 @@ class AioValueWorker internal constructor(
         operator fun get(valueId: AioValueId): AioValue? =
             this@AioValueWorker[valueId]
 
-        fun nextFriendlyId(marker: AioMarker): Int =
-            queryByMarker(marker).maxOfOrNull { if (it is AioItem) it.friendlyId else 0 } ?: 0
+        fun nextFriendlyId(marker: AioMarker, prefix: String): String {
+            var max = 0
+
+            forEachItemByMarker(marker) { value ->
+                val i = value.friendlyId.removePrefix(prefix).toIntOrNull()
+                if (i != null && i > max) max = i
+            }
+
+            return "$prefix${(max + 1).p04}"
+        }
+
+        fun forEachByMarker(marker: AioMarker, block: (AioValue) -> Unit) {
+            markerIndices[marker]?.forEach { block(values[it] !!) }
+        }
+
+        fun forEachItemByMarker(marker: AioMarker, block: (AioItem) -> Unit) {
+            markerIndices[marker]?.forEach {
+                val value = values[it] as? AioItem
+                if (value != null) block(value)
+            }
+        }
 
         fun queryByMarker(marker: AioMarker): List<AioValue> =
             this@AioValueWorker.queryByMarker(marker)

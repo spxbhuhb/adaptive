@@ -1,16 +1,27 @@
 package `fun`.adaptive.iot.space.ui
 
+import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
+import `fun`.adaptive.adat.api.update
+import `fun`.adaptive.adat.store.copyOf
+import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.producer.fetch
 import `fun`.adaptive.iot.item.AioItem
+import `fun`.adaptive.iot.space.markers.AmvSpace
 import `fun`.adaptive.iot.ws.AioWsContext
-import `fun`.adaptive.ui.api.gap
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.button.button
+import `fun`.adaptive.ui.input.InputContext
+import `fun`.adaptive.ui.input.number.doubleOrNullUnitInput
+import `fun`.adaptive.ui.input.text.textInput
+import `fun`.adaptive.ui.input.text.textInputArea
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.tree.TreeItem
+import `fun`.adaptive.ui.label.uuidLabel
+import `fun`.adaptive.ui.label.withLabel
+import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
@@ -34,90 +45,76 @@ fun wsSpaceContentPaneDef(context: AioWsContext) {
 @Adaptive
 fun wsSpaceContentPane(pane: WsPane<AioItem, SpaceContentController>): AdaptiveFragment {
 
-    val spaceData = fetch { pane.controller.spaceService.spaceData(pane.data.uuid) }
+    val originalItem = copyOf { pane.data }
+    val copyItem = copyOf { originalItem }
+    val originalSpace = fetch { pane.controller.spaceService.getSpaceData(pane.data.uuid) } ?: AmvSpace(originalItem.uuid, 0.0)
+    val copySpace = copyOf { originalSpace }
 
-    row {
-        gap { 16.dp }
-        text(pane.data.name)
-        text(pane.data.friendlyId)
-        text(pane.data.uuid)
-        text(spaceData?.area.toString())
+    column {
+        maxSize .. verticalScroll .. padding { 16.dp } .. backgrounds.surface
+
+        column {
+            paddingBottom { 32.dp }
+            h2(pane.data.name.ifEmpty { Strings.noname })
+            uuidLabel { copyItem.uuid }
+        }
+
+        column {
+
+            gap { 24.dp }
+
+            withLabel(Strings.spxbId, InputContext(disabled = true)) { state ->
+                width { 400.dp }
+                textInput(copyItem.friendlyId, state) { }
+            }
+
+            withLabel(Strings.type, InputContext(disabled = true)) { state ->
+                width { 400.dp }
+                textInput(copyItem.type.localizedSpaceType(), state) { }
+            }
+
+            withLabel(Strings.area) { state ->
+                width { 120.dp }
+                doubleOrNullUnitInput(copySpace.area, 0, "m²", state) { v ->
+                    copySpace.update(copySpace::area, v)
+                }
+            }
+
+            withLabel(Strings.name) {
+                width { 400.dp }
+                textInput(copyItem.name) { v ->
+                    copyItem.update(copyItem::name, v)
+                }
+            }
+
+            withLabel(Strings.note) {
+                width { 400.dp }
+                textInputArea(copySpace.notes) { v ->
+                    copySpace.update(copySpace::notes, v)
+                } .. height { 300.dp }
+            }
+
+            button(Strings.save) .. onClick {
+                if (copyItem.name != originalItem.name) {
+                    pane.controller.rename(copyItem.uuid, copyItem.name)
+                    originalItem.update(originalItem::name, copyItem.name)
+                }
+                if (copySpace != originalSpace) {
+                    pane.controller.setSpaceData(copySpace)
+                }
+            }
+        }
     }
-
-//    val context = fragment().wsContext<AioWsContext>()
-//
-//    val observed = valueFrom { context.spaceTree }
-//
-//    val item = observed.selection.firstOrNull()
-//
-//    column {
-//        maxSize
-//
-//        if (item == null) {
-//            text(Strings.selectArea) .. alignSelf.center .. textColors.onSurfaceVariant
-//        } else {
-//            areaEditor(context, item)
-//        }
-//    }
 
     return fragment()
 }
 
-@Adaptive
-fun areaEditor(context: AioWsContext, item: TreeItem<AioItem>) {
-//    val observed = valueFrom { item }
-//    val space = observed.data
-//
-//    column {
-//        maxSize .. verticalScroll .. padding { 16.dp } .. backgrounds.surface
-//
-//        column {
-//            paddingBottom { 32.dp }
-//            h2(space.name.ifEmpty { Strings.noname })
-//            uuidLabel { space.uuid }
-//        }
-//
-//        column {
-//
-//            gap { 24.dp }
-//
-//            withLabel(Strings.spxbId, InputContext(disabled = true)) { state ->
-//                width { 400.dp }
-//                textInput(space.friendlyId, state) { }
-//            }
-//
-//            withLabel(Strings.type, InputContext(disabled = true)) { state ->
-//                width { 400.dp }
-//                textInput(space.spaceType.localized(), state) { }
-//            }
-//
-//            withLabel(Strings.area) { state ->
-//                width { 120.dp }
-//                doubleOrNullUnitInput(space.area, 0, "m²", state) { v ->
-//                    // FIXME space editor update mess
-//                    observed.data = space.copy(area = v)
-//                    context.updateSpace(space)
-//                }
-//            }
-//
-//            withLabel(Strings.name) {
-//                width { 400.dp }
-//                textInput(space.name) { v ->
-//                    item.title = v
-//                    // FIXME space editor update mess
-//                    observed.data = space.copy(name = v)
-//                    context.updateSpace(space)
-//                }
-//            }
-//
-//            withLabel(Strings.note) {
-//                width { 400.dp }
-//                textInputArea(space.notes) { v ->
-//                    // FIXME space editor update mess
-//                    observed.data = space.copy(notes = v)
-//                    context.updateSpace(space)
-//                } .. height { 300.dp }
-//            }
-//        }
-//    }
-}
+private fun String.localizedSpaceType() =
+    when (this.substringAfterLast(':')) {
+        "site" -> Strings.site
+        "building" -> Strings.building
+        "floor" -> Strings.floor
+        "room" -> Strings.room
+        "area" -> Strings.area
+        else -> Strings.noname
+    }

@@ -10,12 +10,13 @@ import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
 
 @Adat
-class AmvSpace(
+data class AmvSpace(
     override val uuid: AioValueId,
     override val timestamp: Instant,
     override val status: AioStatus,
     override val owner: AioValueId,
-    val area: Double
+    val area: Double,
+    val notes : String? = null
 ) : AioMarkerValue() {
 
     constructor(

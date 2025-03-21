@@ -76,7 +76,7 @@ private fun apply(state: SpaceToolController, menuItem: MenuItem<AioSpaceEditOpe
     }
 
     if (name != null && marker != null) {
-        state.io { state.spaceService.addSpace(name, marker, treeItem?.data) }
+        state.io { state.spaceService.add(name, marker, treeItem?.data) }
         return
     }
 

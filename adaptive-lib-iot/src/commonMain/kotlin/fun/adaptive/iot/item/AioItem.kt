@@ -48,14 +48,6 @@ data class AioItem(
         return copy(markersOrNull = markers)
     }
 
-    fun friendlySpaceId() {
-        if (markersOrNull == null) return
-        when {
-            SpaceMarkers.SPACE in markersOrNull -> "SP-${friendlyId.p04}"
-            else -> "XX-${friendlyId.p04}"
-        }
-    }
-
     private fun mapToTreeItem(
         parent: TreeItem<AioItem>?,
         childMap: MutableMap<AioItemId?, MutableList<AioItem>>

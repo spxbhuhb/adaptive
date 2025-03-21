@@ -27,7 +27,7 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
         worker = safeAdapter.firstImpl<AioValueWorker>()
     }
 
-    override suspend fun addSpace(name: String, spaceType: AioMarker, parentId: AioValueId?): AioValueId {
+    override suspend fun add(name: String, spaceType: AioMarker, parentId: AioValueId?): AioValueId {
         publicAccess()
 
         val spaceId = uuid7<AioValue>()
@@ -38,11 +38,11 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
 
             val space = AioItem(
                 name,
-                AioWsContext.WSIT_SPACE,
+                AioWsContext.WSIT_SPACE + ":$spaceType",
                 spaceId,
                 now(),
                 AioStatus.OK,
-                nextFriendlyId(SpaceMarkers.SPACE),
+                nextFriendlyId(SpaceMarkers.SPACE, "SP-"),
                 markersOrNull = mutableMapOf(
                     SpaceMarkers.SPACE to spaceSpec.uuid,
                     spaceType to null
@@ -63,6 +63,14 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
         return spaceId
     }
 
+    override suspend fun rename(spaceId: AioValueId, name: String) {
+        publicAccess()
+
+        worker.updateItem(spaceId) {
+            it.copy(timestamp = now(), name = name)
+        }
+    }
+
     override suspend fun moveUp(spaceId: AioValueId) {
         publicAccess()
 
@@ -79,8 +87,18 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
         }
     }
 
-    override suspend fun spaceData(spaceId: AioValueId): AmvSpace {
+    override suspend fun getSpaceData(spaceId: AioValueId): AmvSpace {
+        publicAccess()
+
         return worker.markerVal(spaceId, SpaceMarkers.SPACE)
+    }
+
+    override suspend fun setSpaceData(valueId: AioValueId, area: Double, notes: String?) {
+        publicAccess()
+
+        return worker.update<AmvSpace>(valueId) {
+            it.copy(timestamp = now(), area = area, notes = notes)
+        }
     }
 
 }
