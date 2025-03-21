@@ -15,7 +15,7 @@ import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
 import `fun`.adaptive.ui.workspace.wsMain
-import `fun`.adaptive.ui.workspace.wsPaneIcons
+import `fun`.adaptive.ui.workspace.wsSideBarIcons
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.firstInstanceOrNull
 
@@ -41,7 +41,7 @@ fun chartMain(): AdaptiveFragment {
 
                 wsMain(workspace)
 
-                wsPaneIcons(left = false, workspace)
+                wsSideBarIcons(left = false, workspace)
             }
         }
     }

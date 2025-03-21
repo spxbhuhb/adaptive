@@ -5,7 +5,6 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.chart.chartCommon
-import `fun`.adaptive.cookbook.eco
 import `fun`.adaptive.document.docCommon
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveAdapter
@@ -14,22 +13,19 @@ import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.grove.groveRuntimeCommon
 import `fun`.adaptive.iot.iotCommon
-import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.AbstractAuiAdapter
-import `fun`.adaptive.ui.app.appHomeItem
-import `fun`.adaptive.ui.app.appHomePane
+import `fun`.adaptive.ui.app.ws.appAccountPane
+import `fun`.adaptive.ui.app.ws.appHomeItem
+import `fun`.adaptive.ui.app.ws.appHomePane
+import `fun`.adaptive.ui.app.ws.appSignOutAction
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.snackbar.SnackbarManager
 import `fun`.adaptive.ui.snackbar.snackContainer
 import `fun`.adaptive.ui.uiCommon
 import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
-import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.ui.workspace.wsFull
-import `fun`.adaptive.utility.UUID
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -79,6 +75,8 @@ private fun buildWorkspace(adapter: AdaptiveAdapter): Workspace {
         iotCommon()
         docCommon()
         appHomePane()
+        appSignOutAction()
+        appAccountPane()
 
         workspace.addContent(appHomeItem)
 

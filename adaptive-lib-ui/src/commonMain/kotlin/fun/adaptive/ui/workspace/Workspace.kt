@@ -24,8 +24,8 @@ import kotlinx.coroutines.launch
 
 class Workspace(
     val backend: BackendAdapter,
-    val scope : CoroutineScope = backend.scope,
-    val transport : ServiceCallTransport = backend.transport
+    val scope: CoroutineScope = backend.scope,
+    val transport: ServiceCallTransport = backend.transport
 ) {
 
     companion object {
@@ -57,6 +57,8 @@ class Workspace(
         get() = WorkspaceTheme.workspaceTheme
 
     val toolPanes = mutableListOf<WsPane<*, *>>()
+
+    val sideBarActions = mutableListOf<AbstractSideBarAction>()
 
     val contentPaneGroups = storeFor {
         listOf<WsContentPaneGroup>(
@@ -118,20 +120,32 @@ class Workspace(
     // Utility
     // ---------------------------------------------------------------------------------------------
 
-    fun directPanes() =
-        toolPanes.filter { it.singularity == WsPaneSingularity.SINGULAR }
-
-    fun topPanes(left: Boolean) =
-        toolPanes.filter(if (left) WsPanePosition.LeftTop else WsPanePosition.RightTop)
+    fun topActions(left: Boolean) =
+        if (left) {
+            sideBarActions {
+                (it.singularity == WsPaneSingularity.SINGULAR && it.position == WsPanePosition.Center)
+                    || it.position == WsPanePosition.LeftTop
+            }
+        } else {
+            sideBarActions { it.position == WsPanePosition.RightTop }
+        }
 
     fun middlePanes(left: Boolean) =
-        toolPanes.filter(if (left) WsPanePosition.LeftMiddle else WsPanePosition.RightMiddle)
+        if (left) {
+            sideBarActions { it.position == WsPanePosition.LeftMiddle }
+        } else {
+            sideBarActions { it.position == WsPanePosition.RightMiddle }
+        }
 
     fun bottomPanes(left: Boolean) =
-        toolPanes.filter(if (left) WsPanePosition.LeftBottom else WsPanePosition.RightBottom)
+        if (left) {
+            sideBarActions { it.position == WsPanePosition.LeftBottom }
+        } else {
+            sideBarActions { it.position == WsPanePosition.RightBottom }
+        }
 
-    fun List<WsPane<*, *>>.filter(position: WsPanePosition) =
-        filter { it.position == position }
+    fun sideBarActions(filterFun: (action: AbstractSideBarAction) -> Boolean) =
+        (toolPanes.filter(filterFun) + sideBarActions.filter(filterFun)).sortedBy { it.displayOrder }
 
     fun io(block: suspend () -> Unit) {
         scope.launch { block() }
@@ -153,12 +167,13 @@ class Workspace(
             WsPanePosition.RightMiddle -> toggleStore(rightMiddle, pane)
             WsPanePosition.RightBottom -> toggleStore(rightBottom, pane)
             WsPanePosition.Center -> {
-                if (pane.data is SingularWsItem) {
-                    addContent(pane.data, emptySet())
+                if (pane.data is WsItem) {
+                    addContent(pane.data)
                 }
                 return // no split update is needed as center is always shown
             }
         }
+
         updateSplits()
     }
 
@@ -260,7 +275,7 @@ class Workspace(
         }
     }
 
-    fun findBuilder(type : WsItemType) : WsContentPaneBuilder? {
+    fun findBuilder(type: WsItemType): WsContentPaneBuilder? {
         var builder = contentPaneBuilders[type]?.firstOrNull()
         if (builder != null) return builder
 
@@ -272,7 +287,7 @@ class Workspace(
             if (builder != null) return builder
 
             val lastColon = generalType.lastIndexOf(':')
-            if (lastColon == -1) break
+            if (lastColon == - 1) break
 
             generalType = generalType.substring(0, lastColon)
         }
@@ -283,7 +298,7 @@ class Workspace(
     fun accept(item: WsItem, modifiers: Set<EventModifier>): Boolean {
         lastActiveContentPane?.let {
             if (it.accepts(item, modifiers)) {
-                loadContentPane(item, modifiers, it, lastActiveContentPaneGroup!!)
+                loadContentPane(item, modifiers, it, lastActiveContentPaneGroup !!)
                 return true
             }
         }
@@ -303,7 +318,7 @@ class Workspace(
 
         for (pane in group.panes) {
             if (pane.accepts(item, modifiers)) {
-                loadContentPane(item, modifiers, pane, lastActiveContentPaneGroup!!)
+                loadContentPane(item, modifiers, pane, lastActiveContentPaneGroup !!)
                 return true
             }
         }

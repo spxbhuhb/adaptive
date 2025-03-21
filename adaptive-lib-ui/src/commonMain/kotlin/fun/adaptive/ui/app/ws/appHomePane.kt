@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.app
+package `fun`.adaptive.ui.app.ws
 
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
@@ -25,7 +25,8 @@ fun Workspace.appHomePane() {
         appHomeKey,
         appHomeItem,
         WsSingularPaneController(appHomeItem),
-        singularity = WsPaneSingularity.SINGULAR
+        singularity = WsPaneSingularity.SINGULAR,
+        displayOrder = 0
     )
 
     toolPanes += pane

@@ -5,6 +5,8 @@
 <resources>
 
     <string name="home">Nyitólap</string>
+    <string name="account">Fiók</string>
+    <string name="signOut">Kilépés</string>
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>

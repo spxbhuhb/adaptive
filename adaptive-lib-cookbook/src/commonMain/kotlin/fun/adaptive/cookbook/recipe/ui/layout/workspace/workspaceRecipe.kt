@@ -41,11 +41,11 @@ fun workspaceRecipe(): AdaptiveFragment {
             borders.outline .. backgrounds.surface
 
             localContext(workspace) {
-                wsPaneIcons(left = true, workspace)
+                wsSideBarIcons(left = true, workspace)
 
                 wsMain(workspace)
 
-                wsPaneIcons(left = false, workspace)
+                wsSideBarIcons(left = false, workspace)
             }
         }
     }

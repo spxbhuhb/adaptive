@@ -10,6 +10,7 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.ui.workspace.Workspace.Companion.noContentPane
 import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
@@ -19,11 +20,11 @@ fun wsFull(workspace: Workspace) {
     grid {
         maxSize .. colTemplate(workspaceTheme.width, 1.fr, workspaceTheme.width)
 
-        wsPaneIcons(left = true, workspace)
+        wsSideBarIcons(left = true, workspace)
 
         wsMain(workspace)
 
-        wsPaneIcons(left = false, workspace)
+        wsSideBarIcons(left = false, workspace)
     }
 }
 
@@ -177,19 +178,14 @@ private fun wsPaneContent(pane: WsPane<*, *>) {
 }
 
 @Adaptive
-fun wsPaneIcons(
+fun wsSideBarIcons(
     left: Boolean,
     workspace: Workspace
 ) {
 
     val theme = workspace.theme
 
-    val top = if (left) {
-        workspace.directPanes() + workspace.topPanes(left)
-    } else {
-        workspace.topPanes(left)
-    }
-
+    val top = workspace.topActions(left)
     val middle = workspace.middlePanes(left)
     val bottom = workspace.bottomPanes(left)
 
@@ -198,19 +194,19 @@ fun wsPaneIcons(
 
         column {
             for (pane in top) {
-                wsPaneIcon(pane, workspace)
+                wsSideBarIcon(pane, workspace)
             }
             if (top.isNotEmpty() && middle.isNotEmpty()) {
                 box { theme.paneIconSeparator }
             }
             for (pane in middle) {
-                wsPaneIcon(pane, workspace)
+                wsSideBarIcon(pane, workspace)
             }
         }
 
         column {
             for (pane in bottom) {
-                wsPaneIcon(pane, workspace)
+                wsSideBarIcon(pane, workspace)
             }
         }
     }
@@ -218,24 +214,24 @@ fun wsPaneIcons(
 }
 
 @Adaptive
-private fun wsPaneIcon(
-    pane: WsPane<*, *>,
+private fun wsSideBarIcon(
+    action: AbstractSideBarAction,
     workspace: Workspace
 ) {
 
     val hover = hover()
     val theme = workspace.theme
-    val activePane = valueFrom { workspace.paneStore(pane) }
+    val activePane = valueFrom { workspace.paneStore(action.pane) }
     val focusedPane = valueFrom { workspace.focusedPane }
 
-    val containerStyle = theme.paneIconContainer(pane, activePane, focusedPane, hover)
+    val containerStyle = theme.paneIconContainer(action.pane, activePane, focusedPane, hover)
 
     box {
         containerStyle
 
-        onClick { workspace.toggle(pane) }
+        onClick { action.actionFun(workspace) }
 
-        icon(pane.icon) .. theme.paneIcon
+        icon(action.icon) .. theme.paneIcon
 
         hoverPopup {
             popupAlign.afterCenter
@@ -243,10 +239,10 @@ private fun wsPaneIcon(
             row {
                 theme.tooltipContainer
 
-                text(pane.name) .. theme.tooltipName
+                text(action.name) .. theme.tooltipName
 
-                if (pane.tooltip != null) {
-                    text(pane.tooltip) .. theme.tooltipShortcut
+                if (action.tooltip != null) {
+                    text(action.tooltip) .. theme.tooltipShortcut
                 }
             }
         }
