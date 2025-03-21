@@ -1,30 +1,30 @@
 package `fun`.adaptive.iot.space.markers
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.iot.item.AioMarkerValue
-import `fun`.adaptive.iot.item.AioStatus
-import `fun`.adaptive.iot.value.AioValueId
+import `fun`.adaptive.value.item.AvMarkerValue
+import `fun`.adaptive.value.item.AvStatus
+import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
 
 @Adat
 data class AmvSpace(
-    override val uuid: AioValueId,
+    override val uuid: AvValueId,
     override val timestamp: Instant,
-    override val status: AioStatus,
-    override val owner: AioValueId,
+    override val status: AvStatus,
+    override val owner: AvValueId,
     val area: Double,
     val notes : String? = null
-) : AioMarkerValue() {
+) : AvMarkerValue() {
 
     constructor(
-        owner: AioValueId,
+        owner: AvValueId,
         area: Double
     ) : this(
         uuid = uuid7(),
         timestamp = now(),
-        status = AioStatus.OK,
+        status = AvStatus.OK,
         owner = owner,
         area = area
     )

@@ -26,4 +26,5 @@ dependencyResolutionManagement {
 includeBuild("../adaptive-core")
 includeBuild("../adaptive-ui")
 includeBuild("../adaptive-lib-ui")
+includeBuild("../adaptive-lib-value")
 includeBuild("../adaptive-grove-runtime")

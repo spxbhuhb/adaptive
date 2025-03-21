@@ -3,10 +3,11 @@ package `fun`.adaptive.iot.ui
 import `fun`.adaptive.iot.space.addSpace
 import `fun`.adaptive.iot.space.addSpaceTop
 import `fun`.adaptive.iot.space.markers.SpaceMarkers
-import `fun`.adaptive.iot.value.AioValueId
-import `fun`.adaptive.iot.value.TestSupport.Companion.aioValueTest
+import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.TestSupport.Companion.aioValueTest
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.utility.waitForReal
+import `fun`.adaptive.value.ui.AvUiTree
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.seconds
@@ -16,13 +17,13 @@ class AioUiTreeTest {
     @Test
     fun basic() = aioValueTest {
 
-        var tops = emptyList<TreeItem<AioValueId>>()
+        var tops = emptyList<TreeItem<AvValueId>>()
 
-        fun refreshTop(new: List<TreeItem<AioValueId>>) {
+        fun refreshTop(new: List<TreeItem<AvValueId>>) {
             tops = new
         }
 
-        val tree = AioUiTree(
+        val tree = AvUiTree(
             clientBackend,
             clientTransport,
             clientBackend.scope,

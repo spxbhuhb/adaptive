@@ -6,14 +6,15 @@ import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.exposed.inMemoryH2
-import `fun`.adaptive.iot.app.iotAppServerMain
+import `fun`.adaptive.iot.app.iotServerBackend
 import `fun`.adaptive.iot.iotCommon
-import `fun`.adaptive.iot.value.persistence.FilePersistence
 import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.runtime.ApplicationNodeType
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.ensure
+import `fun`.adaptive.value.app.valueServerBackend
+import `fun`.adaptive.value.persistence.FilePersistence
 import kotlinx.coroutines.runBlocking
 import kotlinx.io.files.Path
 
@@ -40,7 +41,8 @@ fun wsAppServerMain() {
         authBasicJvm()
         ktor()
 
-        iotAppServerMain(FilePersistence(Path("./var/values").ensure(), 2))
+        valueServerBackend(FilePersistence(Path("./var/values").ensure(), 2))
+        iotServerBackend()
 
     }.also {
 

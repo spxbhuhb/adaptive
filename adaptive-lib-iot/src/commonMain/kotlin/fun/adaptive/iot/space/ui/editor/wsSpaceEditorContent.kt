@@ -9,7 +9,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.Independent
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.producer.fetch
-import `fun`.adaptive.iot.item.AioItem
+import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.iot.space.markers.AmvSpace
 import `fun`.adaptive.iot.space.ui.localizedSpaceType
 import `fun`.adaptive.iot.ws.AioWsContext
@@ -39,13 +39,13 @@ fun wsSpaceEditorContentDef(context: AioWsContext) {
             WsPanePosition.Center,
             AioWsContext.WSPANE_SPACE_CONTENT,
             controller = SpaceEditorContentController(workspace),
-            data = item as AioItem
+            data = item as AvItem
         )
     }
 }
 
 @Adaptive
-fun wsSpaceContentPane(pane: WsPane<AioItem, SpaceEditorContentController>): AdaptiveFragment {
+fun wsSpaceContentPane(pane: WsPane<AvItem, SpaceEditorContentController>): AdaptiveFragment {
 
     @Independent
     val originalItem = copyOf { pane.data }

@@ -1,15 +1,15 @@
 package `fun`.adaptive.iot.space
 
-import `fun`.adaptive.iot.item.AmvItemIdList
+import `fun`.adaptive.value.item.AmvItemIdList
 import `fun`.adaptive.iot.space.markers.SpaceMarkers
-import `fun`.adaptive.iot.value.AioValueId
-import `fun`.adaptive.iot.value.AioValueWorker
-import `fun`.adaptive.iot.value.operation.AvoAdd
-import `fun`.adaptive.iot.value.operation.AvoUpdate
+import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.AvValueWorker
+import `fun`.adaptive.value.operation.AvoAdd
+import `fun`.adaptive.value.operation.AvoUpdate
 import `fun`.adaptive.utility.waitForReal
 import kotlin.time.Duration.Companion.seconds
 
-suspend fun addSubSpace(worker: AioValueWorker, spaceId: AioValueId, subSpaceId: AioValueId) {
+suspend fun addSubSpace(worker: AvValueWorker, spaceId: AvValueId, subSpaceId: AvValueId) {
     val space = worker.item(spaceId)
 
     val originalId = space[SpaceMarkers.SUB_SPACES]

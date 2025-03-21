@@ -1,16 +1,16 @@
 package `fun`.adaptive.iot.space.ui.browser
 
-import `fun`.adaptive.iot.item.AioItem
-import `fun`.adaptive.iot.value.AioValueId
+import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.ui.workspace.model.WsPane
 
-fun WsPane<SpaceBrowserWsItem, *>.subSpaces(): List<AioValueId> {
+fun WsPane<SpaceBrowserWsItem, *>.subSpaces(): List<AvValueId> {
     val browserItem = this.data
     val toolController = browserItem.config.controller
     return toolController.valueTreeStore.getSubSpaces(browserItem.item.uuid)
 }
 
-fun WsPane<SpaceBrowserWsItem, *>.getSpace(spaceId: AioValueId): AioItem? {
+fun WsPane<SpaceBrowserWsItem, *>.getSpace(spaceId: AvValueId): AvItem? {
     val toolController = this.data.config.controller
     return toolController.valueTreeStore[spaceId]
 }
@@ -21,7 +21,7 @@ fun SpaceBrowserWsItem.spacePathNames(): List<String> {
     val spaceId = this.uuid
     val names = mutableListOf<String>()
 
-    var space: AioItem? = toolController.valueTreeStore[spaceId]
+    var space: AvItem? = toolController.valueTreeStore[spaceId]
     while (space != null) {
         names.add(space.name)
         space = space.parentId?.let { toolController.valueTreeStore[it] }

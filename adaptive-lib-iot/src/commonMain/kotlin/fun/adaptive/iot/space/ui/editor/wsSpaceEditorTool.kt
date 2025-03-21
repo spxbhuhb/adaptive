@@ -8,7 +8,7 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.space.markers.SpaceMarkers
 import `fun`.adaptive.iot.space.ui.AbstractSpaceToolController
 import `fun`.adaptive.iot.space.ui.SpaceTreeModel
-import `fun`.adaptive.iot.value.AioValueId
+import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
@@ -66,7 +66,7 @@ fun wsSpaceEditorToolDef(context: AioWsContext): WsPane<Unit, SpaceEditorToolCon
     return pane
 }
 
-private fun apply(state: AbstractSpaceToolController, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AioValueId>?) {
+private fun apply(state: AbstractSpaceToolController, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AvValueId>?) {
 
     val (name, marker) = when (menuItem.data) {
         AioSpaceEditOperation.AddSite -> Strings.site to SpaceMarkers.SITE
@@ -107,7 +107,7 @@ private val floorMenu = listOf(addRoom, addArea)
 private val areaMenu = listOf(addArea)
 private val roomMenu = listOf(addArea)
 
-private fun menu(viewModel: SpaceTreeModel, treeItem: TreeItem<AioValueId>): List<MenuItemBase<AioSpaceEditOperation>> {
+private fun menu(viewModel: SpaceTreeModel, treeItem: TreeItem<AvValueId>): List<MenuItemBase<AioSpaceEditOperation>> {
 
     val controller = viewModel.context
     val itemId = treeItem.data
@@ -152,7 +152,7 @@ private fun menu(viewModel: SpaceTreeModel, treeItem: TreeItem<AioValueId>): Lis
 private fun contextMenuBuilder(
     hide: () -> Unit,
     viewModel: SpaceTreeModel,
-    treeItem: TreeItem<AioValueId>
+    treeItem: TreeItem<AvValueId>
 ): AdaptiveFragment {
     column {
         zIndex { 200 }

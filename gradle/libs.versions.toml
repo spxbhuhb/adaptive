@@ -54,6 +54,7 @@ adaptive-lib-document = { module = "fun.adaptive:adaptive-lib-document", version
 adaptive-lib-sandbox = { module = "fun.adaptive:adaptive-lib-sandbox", version.ref = "adaptive" }
 adaptive-lib-ui = { module = "fun.adaptive:adaptive-lib-ui", version.ref = "adaptive" }
 adaptive-lib-util = { module = "fun.adaptive:adaptive-lib-util", version.ref = "adaptive" }
+adaptive-lib-value = { module = "fun.adaptive:adaptive-lib-value", version.ref = "adaptive" }
 adaptive-ui = { module = "fun.adaptive:adaptive-ui", version.ref = "adaptive" }
 
 android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material" }

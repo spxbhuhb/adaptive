@@ -2,7 +2,7 @@ package `fun`.adaptive.iot.space.ui.browser
 
 import `fun`.adaptive.iot.space.ui.AbstractSpaceToolController
 import `fun`.adaptive.iot.space.ui.SpaceTreeModel
-import `fun`.adaptive.iot.value.AioValueId
+import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
@@ -13,7 +13,7 @@ class SpaceBrowserToolController(
     val config: SpaceBrowserConfig
 ) : AbstractSpaceToolController(workspace) {
 
-    override fun selectedFun(viewModel: SpaceTreeModel, treeItem: TreeItem<AioValueId>, modifiers: Set<EventModifier>) {
+    override fun selectedFun(viewModel: SpaceTreeModel, treeItem: TreeItem<AvValueId>, modifiers: Set<EventModifier>) {
         val aioItem = valueTreeStore[treeItem.data] ?: return
 
         val browserItem = SpaceBrowserWsItem(

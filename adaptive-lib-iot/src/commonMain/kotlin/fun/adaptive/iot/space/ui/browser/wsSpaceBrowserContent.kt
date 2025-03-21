@@ -7,7 +7,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.emptyInstructions
-import `fun`.adaptive.iot.value.AioValueId
+import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
@@ -52,7 +52,7 @@ fun listHeader(pane: WsPane<SpaceBrowserWsItem, *>) {
 }
 
 @Adaptive
-fun listItem(pane: WsPane<SpaceBrowserWsItem, *>, spaceId: AioValueId) {
+fun listItem(pane: WsPane<SpaceBrowserWsItem, *>, spaceId: AvValueId) {
     val space = pane.getSpace(spaceId) !!
 
     row {

@@ -62,6 +62,7 @@ kotlin {
                 implementation(libs.adaptive.lib.document)
                 implementation(libs.adaptive.lib.chart)
                 implementation(libs.adaptive.lib.ui)
+                implementation(libs.adaptive.lib.value)
                 implementation(libs.adaptive.grove)
                 implementation(libs.adaptive.grove.runtime)
                 implementation(libs.kotlinx.coroutines.debug)

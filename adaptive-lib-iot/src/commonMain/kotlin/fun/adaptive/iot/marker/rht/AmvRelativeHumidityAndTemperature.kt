@@ -1,28 +1,28 @@
 package `fun`.adaptive.iot.marker.rht
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.iot.item.AioMarkerValue
-import `fun`.adaptive.iot.item.AioStatus
-import `fun`.adaptive.iot.value.AioValueId
+import `fun`.adaptive.value.item.AvMarkerValue
+import `fun`.adaptive.value.item.AvStatus
+import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
 
 @Adat
 class AmvRelativeHumidityAndTemperature(
-    override val uuid: AioValueId,
+    override val uuid: AvValueId,
     override val timestamp: Instant,
-    override val status: AioStatus,
-    override val owner: AioValueId,
+    override val status: AvStatus,
+    override val owner: AvValueId,
     override val markerName: String,
     val relativeHumidity: Double,
     val temperature: Double
-) : AioMarkerValue() {
+) : AvMarkerValue() {
 
-    constructor(owner: AioValueId, relativeHumidity: Double, temperature: Double) : this(
+    constructor(owner: AvValueId, relativeHumidity: Double, temperature: Double) : this(
         uuid = uuid7(),
         timestamp = now(),
-        status = AioStatus.OK,
+        status = AvStatus.OK,
         owner = owner,
         markerName = MARKER_NAME,
         relativeHumidity = relativeHumidity,

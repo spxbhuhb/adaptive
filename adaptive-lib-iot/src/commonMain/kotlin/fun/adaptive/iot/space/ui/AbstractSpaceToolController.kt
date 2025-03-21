@@ -2,8 +2,8 @@ package `fun`.adaptive.iot.space.ui
 
 import `fun`.adaptive.iot.space.AioSpaceApi
 import `fun`.adaptive.iot.space.markers.SpaceMarkers
-import `fun`.adaptive.iot.ui.AioUiTree
-import `fun`.adaptive.iot.value.AioValueId
+import `fun`.adaptive.value.ui.AvUiTree
+import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
@@ -18,14 +18,14 @@ abstract class AbstractSpaceToolController(
 
     val spaceService = getService<AioSpaceApi>(transport)
 
-    val treeViewModel = TreeViewModel<AioValueId, AbstractSpaceToolController>(
+    val treeViewModel = TreeViewModel<AvValueId, AbstractSpaceToolController>(
         emptyList(),
         selectedFun = ::selectedFun,
         multiSelect = false,
         context = this
     )
 
-    val valueTreeStore = AioUiTree(
+    val valueTreeStore = AvUiTree(
         backend,
         transport,
         scope,
@@ -39,7 +39,7 @@ abstract class AbstractSpaceToolController(
         valueTreeStore.start()
     }
 
-    fun refreshTop(tops : List<TreeItem<AioValueId>>) {
+    fun refreshTop(tops: List<TreeItem<AvValueId>>) {
         treeViewModel.items = tops
     }
 
@@ -51,6 +51,6 @@ abstract class AbstractSpaceToolController(
         treeViewModel.items.forEach { it.collapseAll() }
     }
 
-    abstract fun selectedFun(viewModel: SpaceTreeModel, treeItem: TreeItem<AioValueId>, modifiers: Set<EventModifier>)
+    abstract fun selectedFun(viewModel: SpaceTreeModel, treeItem: TreeItem<AvValueId>, modifiers: Set<EventModifier>)
 
 }

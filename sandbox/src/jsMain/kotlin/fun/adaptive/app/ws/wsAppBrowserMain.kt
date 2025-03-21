@@ -8,7 +8,6 @@ import `fun`.adaptive.foundation.AdaptiveFragmentFactory
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.groveRuntimeCommon
-import `fun`.adaptive.iot.app.iotAppClientBackend
 import `fun`.adaptive.iot.iotCommon
 import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.runtime.ApplicationNodeType
@@ -18,6 +17,7 @@ import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.snackbar.SnackbarManager
 import `fun`.adaptive.ui.uiCommon
+import `fun`.adaptive.value.app.valueClientBackend
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +43,7 @@ fun wsAppBrowserMain(
         val backend = backend(transport) {
             auto()
             worker { SnackbarManager() }
-            iotAppClientBackend()
+            valueClientBackend()
         }
 
         browser(

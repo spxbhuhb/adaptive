@@ -33,4 +33,5 @@ includeBuild("../adaptive-lib-graphics")
 includeBuild("../adaptive-lib-document")
 includeBuild("../adaptive-lib-ktor")
 includeBuild("../adaptive-lib-util")
+includeBuild("../adaptive-lib-value")
 

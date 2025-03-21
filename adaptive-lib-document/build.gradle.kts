@@ -53,6 +53,7 @@ kotlin {
             implementation(libs.adaptive.core)
             implementation(libs.adaptive.ui)
             implementation(libs.adaptive.lib.ui)
+            implementation(libs.adaptive.lib.value)
             implementation(libs.adaptive.grove.runtime)
         }
 

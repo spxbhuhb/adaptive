@@ -3,8 +3,8 @@ package `fun`.adaptive.iot.marker.rht.ui
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.iot.item.AioItem
-import `fun`.adaptive.iot.item.AioStatus
+import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.item.AvStatus
 import `fun`.adaptive.iot.marker.rht.AmvRelativeHumidityAndTemperature
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
@@ -18,7 +18,7 @@ import kotlinx.datetime.toLocalDateTime
 
 @Adaptive
 fun rhtListItem(
-    item : AioItem
+    item: AvItem
 ) : AdaptiveFragment {
 
     val rht = AmvRelativeHumidityAndTemperature(item.uuid, Double.NaN, Double.NaN)
@@ -52,7 +52,7 @@ fun Instant.localizedString() =
         .substringBeforeLast('.')
 
 @Adaptive
-fun status(status : AioStatus) {
+fun status(status: AvStatus) {
     val border = when {
         status.isOk -> border(colors.success, 2.dp)
         else -> borders.fail
