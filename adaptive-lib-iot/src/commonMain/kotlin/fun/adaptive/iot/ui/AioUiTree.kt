@@ -69,11 +69,18 @@ class AioUiTree(
      * sub-spaces marker from the parent node or the top-spaces list if
      * [childId] is a top node.
      */
-    fun getSubSpaces(childId: AioValueId): List<AioValueId> {
+    fun getParentSubSpaces(childId: AioValueId): List<AioValueId> {
         val aioItem = nodeMap[childId]?.aioItem ?: return emptyList()
         if (aioItem.parentId == null) return topSpaces
         val parent = nodeMap[aioItem.parentId] ?: return emptyList()
         return parent.subSpaces ?: emptyList()
+    }
+
+    /**
+     * The sub-spaces list of [childId].
+     */
+    fun getSubSpaces(childId: AioValueId): List<AioValueId> {
+        return nodeMap[childId]?.subSpaces ?: return emptyList()
     }
 
     fun start() {

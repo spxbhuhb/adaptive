@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot.space.ui
+package `fun`.adaptive.iot.space.ui.editor
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.renameFail
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.renameSuccess
@@ -13,15 +13,13 @@ import `fun`.adaptive.iot.value.AioValueId
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.instruction.event.EventModifier
-import `fun`.adaptive.ui.snackbar.snackbar
-import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
 import `fun`.adaptive.ui.workspace.model.WsItem
 
-class SpaceContentController(
+class SpaceEditorContentController(
     override val workspace: Workspace
 ) : WsPaneController<AioItem>(), WithWorkspace {
 

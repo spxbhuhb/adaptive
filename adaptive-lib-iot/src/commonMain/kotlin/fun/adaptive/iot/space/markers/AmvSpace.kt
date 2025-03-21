@@ -1,7 +1,6 @@
 package `fun`.adaptive.iot.space.markers
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.iot.item.AioItemId
 import `fun`.adaptive.iot.item.AioMarkerValue
 import `fun`.adaptive.iot.item.AioStatus
 import `fun`.adaptive.iot.value.AioValueId

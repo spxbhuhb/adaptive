@@ -1,62 +1,11 @@
 package `fun`.adaptive.iot.ws
 
-import `fun`.adaptive.iot.item.AioItem
-import `fun`.adaptive.iot.item.AioItemApi
-import `fun`.adaptive.iot.item.AioItemId
-import `fun`.adaptive.iot.value.AioValueApi
-import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsContext
 
 class AioWsContext(
     override val workspace: Workspace
 ) : WsContext {
-
-    val valueService = getService<AioValueApi>(workspace.transport)
-    val itemService = getService<AioItemApi>(workspace.transport)
-
-    val spaceMap = mutableMapOf<AioItemId, AioItem>()
-
-    init {
-        //io { initSpaces(this) }
-    }
-
-//    val infrastructureMap = mutableMapOf<AioInfrastructureItemId, AioInfrastructureItem>()
-//
-//    val infrastructureTree = TreeViewModel<AioInfrastructureItem, AioWsContext>(
-//        emptyList(),
-//        multiSelect = false,
-//        context = this
-//    )
-//
-//    init {
-//        io { initInfrastructure(this) }
-//    }
-//
-
-//    fun addSpace(parentItem: TreeItem<AioSpace>?, itemId: AioSpaceId?, site: AioSpaceType, displayOrder: Int) {
-//        io {
-//            val space = spaceService.add(projectId, itemId, site, displayOrder)
-//
-//            spaceMap[space.uuid] = space
-//
-//            val newItem = space.toTreeItem(parentItem)
-//
-//            if (parentItem != null) {
-//                parentItem.children += newItem
-//                if (! parentItem.open) parentItem.open = true
-//            } else {
-//                //spaceTree.items += newItem
-//            }
-//        }
-//    }
-
-//    fun updateSpace(space: AioSpace) {
-//        io {
-//            spaceService.update(space)
-//            spaceMap[space.uuid] = space
-//        }
-//    }
 
     companion object {
         const val WSIT_INFRASTRUCTURE_ITEM = "aio:infrastructure:item"
@@ -75,7 +24,9 @@ class AioWsContext(
         const val WSPANE_INFRASTRUCTURE_TOOL = "aio:infrastructure:tool"
         const val WSPANE_INFRASTRUCTURE_CONTENT = "aio:infrastructure:content"
 
-        const val WSPANE_MEASUREMENT_LOCATION_TOOL = "aio:measurement:location:tool"
+        const val WSPANE_RHT_BROWSER_TOOL = "aio:rht:browser:tool"
+        const val WSPANE_RHT_BROWSER_CONTENT = "aio:rht:browser:content"
+
         const val WSPANE_MEASUREMENT_LOCATION_CONTENT = "aio:measurement:location:content"
     }
 

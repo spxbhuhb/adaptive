@@ -11,15 +11,14 @@ import `fun`.adaptive.ui.tree.TreeViewModel
 import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
-import `fun`.adaptive.ui.workspace.model.WsItem
 
-class SpaceToolController(
+abstract class AbstractSpaceToolController(
     override val workspace: Workspace
 ) : WsPaneController<Unit>(), WithWorkspace {
 
     val spaceService = getService<AioSpaceApi>(transport)
 
-    val treeViewModel = TreeViewModel<AioValueId, SpaceToolController>(
+    val treeViewModel = TreeViewModel<AioValueId, AbstractSpaceToolController>(
         emptyList(),
         selectedFun = ::selectedFun,
         multiSelect = false,
@@ -36,6 +35,10 @@ class SpaceToolController(
         ::refreshTop
     )
 
+    fun start() {
+        valueTreeStore.start()
+    }
+
     fun refreshTop(tops : List<TreeItem<AioValueId>>) {
         treeViewModel.items = tops
     }
@@ -48,14 +51,6 @@ class SpaceToolController(
         treeViewModel.items.forEach { it.collapseAll() }
     }
 
-    fun selectedFun(viewModel: SpaceTreeModel, treeItem: TreeItem<AioValueId>, modifiers: Set<EventModifier>) {
-        val item = valueTreeStore[treeItem.data] ?: return
-        workspace.addContent(item, modifiers)
-        TreeViewModel.defaultSelectedFun(viewModel, treeItem, modifiers)
-    }
-
-    fun start() {
-        valueTreeStore.start()
-    }
+    abstract fun selectedFun(viewModel: SpaceTreeModel, treeItem: TreeItem<AioValueId>, modifiers: Set<EventModifier>)
 
 }

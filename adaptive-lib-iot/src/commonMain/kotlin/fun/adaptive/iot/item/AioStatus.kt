@@ -7,6 +7,9 @@ class AioStatus(
     val flags: Int
 ) {
 
+    val isOk
+        get() = (flags == OK.flags)
+
     companion object {
         val OK = AioStatus(0)
     }

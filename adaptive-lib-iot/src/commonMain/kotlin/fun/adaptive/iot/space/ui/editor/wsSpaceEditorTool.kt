@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot.space.ui
+package `fun`.adaptive.iot.space.ui.editor
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
 import `fun`.adaptive.foundation.Adaptive
@@ -6,6 +6,8 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.space.markers.SpaceMarkers
+import `fun`.adaptive.iot.space.ui.AbstractSpaceToolController
+import `fun`.adaptive.iot.space.ui.SpaceTreeModel
 import `fun`.adaptive.iot.value.AioValueId
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
@@ -27,7 +29,7 @@ import `fun`.adaptive.ui.workspace.wsToolPane
 import `fun`.adaptive.utility.UUID
 
 @Adaptive
-fun wsSpaceTool(pane: WsPane<Unit, SpaceToolController>): AdaptiveFragment {
+fun wsSpaceEditorTool(pane: WsPane<Unit, SpaceEditorToolController>): AdaptiveFragment {
 
     val observed = valueFrom { pane.controller.treeViewModel }
 
@@ -38,9 +40,9 @@ fun wsSpaceTool(pane: WsPane<Unit, SpaceToolController>): AdaptiveFragment {
     return fragment()
 }
 
-fun wsSpaceEditorToolDef(context: AioWsContext): WsPane<Unit, SpaceToolController> {
+fun wsSpaceEditorToolDef(context: AioWsContext): WsPane<Unit, SpaceEditorToolController> {
 
-    val controller = SpaceToolController(context.workspace)
+    val controller = SpaceEditorToolController(context.workspace)
 
     val pane = WsPane(
         UUID(),
@@ -64,7 +66,7 @@ fun wsSpaceEditorToolDef(context: AioWsContext): WsPane<Unit, SpaceToolControlle
     return pane
 }
 
-private fun apply(state: SpaceToolController, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AioValueId>?) {
+private fun apply(state: AbstractSpaceToolController, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AioValueId>?) {
 
     val (name, marker) = when (menuItem.data) {
         AioSpaceEditOperation.AddSite -> Strings.site to SpaceMarkers.SITE
@@ -127,7 +129,7 @@ private fun menu(viewModel: SpaceTreeModel, treeItem: TreeItem<AioValueId>): Lis
 
     out += MenuSeparator<AioSpaceEditOperation>()
 
-    val subSpaces = controller.valueTreeStore.getSubSpaces(itemId)
+    val subSpaces = controller.valueTreeStore.getParentSubSpaces(itemId)
 
     out += MenuItem<AioSpaceEditOperation>(
         Graphics.arrow_drop_up, Strings.moveUp, AioSpaceEditOperation.MoveUp,

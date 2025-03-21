@@ -6,10 +6,12 @@ import `fun`.adaptive.adaptive_lib_iot.generated.resources.dew_point
 import `fun`.adaptive.iot.item.AioItem
 import `fun`.adaptive.iot.item.AioStatus
 import `fun`.adaptive.iot.item.AmvItemIdList
+import `fun`.adaptive.iot.marker.rht.ui.wsRhtBrowserContentDef
+import `fun`.adaptive.iot.marker.rht.ui.wsRhtBrowserToolDef
 import `fun`.adaptive.iot.space.markers.AmvSpace
-import `fun`.adaptive.iot.space.ui.SpaceBrowserWsItem
-import `fun`.adaptive.iot.space.ui.wsSpaceContentPaneDef
-import `fun`.adaptive.iot.space.ui.wsSpaceEditorToolDef
+import `fun`.adaptive.iot.space.ui.browser.SpaceBrowserWsItem
+import `fun`.adaptive.iot.space.ui.editor.wsSpaceEditorContentDef
+import `fun`.adaptive.iot.space.ui.editor.wsSpaceEditorToolDef
 import `fun`.adaptive.iot.value.AioSubscribeCondition
 import `fun`.adaptive.iot.value.builtin.AvString
 import `fun`.adaptive.iot.value.operation.*
@@ -57,17 +59,10 @@ fun Workspace.iotCommon() {
     contexts += context
 
     toolPanes += wsSpaceEditorToolDef(context)
-//    toolPanes += wsInfrastructureEditorDef()
-//
-//    toolPanes += wsSpaceBrowserTool(
-//        SpaceToolConfig(
-//            Strings.temperatureAndHumidity,
-//            Graphics.dew_point,
-//            "", "", ""
-//        )
-//    )
+    wsSpaceEditorContentDef(context)
 
-    wsSpaceContentPaneDef(context)
+    toolPanes += wsRhtBrowserToolDef(context)
+    wsRhtBrowserContentDef(context)
 
     addContentPaneBuilder(AioWsContext.WSIT_MEASUREMENT_LOCATION) { item ->
         WsPane(
