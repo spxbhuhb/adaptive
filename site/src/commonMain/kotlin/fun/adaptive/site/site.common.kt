@@ -8,6 +8,7 @@ import `fun`.adaptive.grove.groveCommon
 import `fun`.adaptive.grove.groveRuntimeCommon
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.AbstractAuiAdapter
+import `fun`.adaptive.ui.app.appHomePane
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.uiCommon
 import `fun`.adaptive.ui.workspace.Workspace
@@ -17,9 +18,6 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.ui.workspace.model.WsPaneSingularity
 import `fun`.adaptive.utility.UUID
-
-const val siteHomeKey = "site:home"
-val siteHomeItem = SingularWsItem("Home", siteHomeKey)
 
 suspend fun siteCommon() {
     uiCommon()
@@ -48,19 +46,6 @@ fun Workspace.siteCommon() {
 
     cookbookCommon()
     groveCommon()
+    appHomePane()
 
-    val pane = WsPane(
-        UUID(),
-        "Home",
-        Graphics.eco,
-        WsPanePosition.Center,
-        siteHomeKey,
-        siteHomeItem,
-        WsSingularPaneController(siteHomeItem),
-        singularity = WsPaneSingularity.SINGULAR
-    )
-
-    toolPanes += pane
-
-    addContentPaneBuilder(siteHomeKey) { pane }
 }

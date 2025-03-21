@@ -2,6 +2,7 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import `fun`.adaptive.app.ws.AppFragmentFactory
 import `fun`.adaptive.app.ws.wsAppBrowserMain
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
@@ -25,7 +26,7 @@ import kotlinx.coroutines.launch
 fun main() {
     //basicAppMain()
     //sandboxMain()
-    wsAppBrowserMain()
+    wsAppBrowserMain(AppFragmentFactory)
 }
 
 fun sandboxMain() {

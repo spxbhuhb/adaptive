@@ -19,7 +19,6 @@ import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
 import `fun`.adaptive.ui.workspace.model.*
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.firstInstance
-import `fun`.adaptive.utility.firstInstanceOrNull
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -134,9 +133,6 @@ class Workspace(
     fun List<WsPane<*, *>>.filter(position: WsPanePosition) =
         filter { it.position == position }
 
-    inline fun <reified T> firstContext() : T? =
-        contexts.firstInstanceOrNull<T>()
-
     fun io(block: suspend () -> Unit) {
         scope.launch { block() }
     }
@@ -236,7 +232,7 @@ class Workspace(
         }
     }
 
-    fun addContent(item: WsItem, modifiers: Set<EventModifier>) {
+    fun addContent(item: WsItem, modifiers: Set<EventModifier> = emptySet()) {
 
         val accepted = accept(item, modifiers)
         if (accepted) {

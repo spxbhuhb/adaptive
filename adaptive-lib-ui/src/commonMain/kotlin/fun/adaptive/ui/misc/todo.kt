@@ -16,7 +16,7 @@ import `fun`.adaptive.ui.theme.textMedium
 fun todo(data : Any? = null) : AdaptiveFragment {
     box {
         padding { 16.dp }
-        text("TODO $data") .. textColors.info .. textMedium .. semiBoldFont .. instructions()
+        text("TODO ${data ?: ""}") .. textColors.info .. textMedium .. semiBoldFont .. instructions()
     }
     return fragment()
 }

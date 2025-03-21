@@ -18,6 +18,8 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.AbstractAuiAdapter
+import `fun`.adaptive.ui.app.appHomeItem
+import `fun`.adaptive.ui.app.appHomePane
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.snackbar.SnackbarManager
 import `fun`.adaptive.ui.snackbar.snackContainer
@@ -76,18 +78,9 @@ private fun buildWorkspace(adapter: AdaptiveAdapter): Workspace {
         chartCommon()
         iotCommon()
         docCommon()
+        appHomePane()
 
-        addContentPaneBuilder("home") {
-            WsPane(
-                UUID(),
-                "Home",
-                Graphics.eco,
-                WsPanePosition.Center,
-                "home",
-                Unit,
-                WsUnitPaneController()
-            )
-        }
+        workspace.addContent(appHomeItem)
 
         updateSplits()
     }

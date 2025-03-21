@@ -4,6 +4,8 @@
 
 <resources>
 
+    <string name="home">Nyitólap</string>
+
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="hide">Hide</string>
