@@ -16,9 +16,8 @@ import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.grove.groveRuntimeCommon
-import `fun`.adaptive.iot.WsIotModule
+import `fun`.adaptive.iot.IotWsModule
 import `fun`.adaptive.iot.iotCommon
-import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiModule
@@ -39,7 +38,7 @@ fun main() {
         GroveRuntimeModule<Workspace>(),
         WsChartModule(),
         WsDocModule(),
-        WsIotModule(),
+        IotWsModule(),
         WsAppModule,
         WsSandBoxModule
     ).main()

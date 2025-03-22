@@ -7,7 +7,7 @@ import `fun`.adaptive.value.item.AvItem
 fun WsPane<DocBrowserWsItem, *>.subDocuments(): List<AvValueId> {
     val browserItem = this.data
     val toolController = browserItem.config.controller
-    return toolController.valueTreeStore.getSubSpaces(browserItem.item.uuid)
+    return toolController.valueTreeStore.getSubItems(browserItem.item.uuid)
 }
 
 fun WsPane<DocBrowserWsItem, *>.getDocument(spaceId: AvValueId): AvItem? {

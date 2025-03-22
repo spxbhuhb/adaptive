@@ -1,17 +1,17 @@
 package `fun`.adaptive.value
 
 import `fun`.adaptive.backend.builtin.WorkerImpl
-import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvMarker
-import `fun`.adaptive.value.item.AvMarkerValue
-import `fun`.adaptive.value.item.AmvItemIdList
-import `fun`.adaptive.value.operation.*
-import `fun`.adaptive.value.persistence.AbstractValuePersistence
-import `fun`.adaptive.value.persistence.NoPersistence
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.p04
 import `fun`.adaptive.utility.use
+import `fun`.adaptive.value.item.AmvItemIdList
+import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.item.AvMarker
+import `fun`.adaptive.value.item.AvMarkerValue
+import `fun`.adaptive.value.operation.*
+import `fun`.adaptive.value.persistence.AbstractValuePersistence
+import `fun`.adaptive.value.persistence.NoPersistence
 import `fun`.adaptive.wireformat.builtin.PolymorphicWireFormat
 import `fun`.adaptive.wireformat.json.JsonWireFormatEncoder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,7 +21,7 @@ import kotlin.reflect.KClass
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-class AvValueWorker internal constructor(
+class AvValueWorker(
     val persistence: AbstractValuePersistence = NoPersistence()
 ) : WorkerImpl<AvValueWorker> {
 
@@ -408,26 +408,26 @@ class AvValueWorker internal constructor(
     // Send operations to the operation queue
     // --------------------------------------------------------------------------------
 
-    internal fun queueAdd(value: AvValue) {
+    fun queueAdd(value: AvValue) {
         check(operations.trySend(AvoAdd(value)).isSuccess)
     }
 
-    internal fun queueAddAll(vararg values: AvValue) =
+    fun queueAddAll(vararg values: AvValue) =
         queueTransaction(values.map { AvoAdd(it) })
 
-    internal fun queueUpdate(value: AvValue) {
+    fun queueUpdate(value: AvValue) {
         check(operations.trySend(AvoUpdate(value)).isSuccess)
     }
 
-    internal fun queueAddOrUpdate(value: AvValue) {
+    fun queueAddOrUpdate(value: AvValue) {
         check(operations.trySend(AvoAddOrUpdate(value)).isSuccess)
     }
 
-    internal fun queueTransaction(operations: List<AvValueOperation>) {
+    fun queueTransaction(operations: List<AvValueOperation>) {
         check(this.operations.trySend(AvoTransaction(operations)).isSuccess)
     }
 
-    internal fun queueOperation(operation: AvValueOperation) {
+    fun queueOperation(operation: AvValueOperation) {
         check(this.operations.trySend(operation).isSuccess)
     }
 

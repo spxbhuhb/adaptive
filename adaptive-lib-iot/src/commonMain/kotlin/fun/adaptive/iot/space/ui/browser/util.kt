@@ -7,7 +7,7 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 fun WsPane<SpaceBrowserWsItem, *>.subSpaces(): List<AvValueId> {
     val browserItem = this.data
     val toolController = browserItem.config.controller
-    return toolController.valueTreeStore.getSubSpaces(browserItem.item.uuid)
+    return toolController.valueTreeStore.getSubItems(browserItem.item.uuid)
 }
 
 fun WsPane<SpaceBrowserWsItem, *>.getSpace(spaceId: AvValueId): AvItem? {

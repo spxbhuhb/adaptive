@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot.space.markers
+package `fun`.adaptive.iot.space.marker
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.value.item.AvMarkerValue

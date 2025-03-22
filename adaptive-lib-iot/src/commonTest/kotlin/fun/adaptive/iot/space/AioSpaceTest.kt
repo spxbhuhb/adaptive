@@ -2,8 +2,8 @@ package `fun`.adaptive.iot.space
 
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AmvItemIdList
-import `fun`.adaptive.iot.space.markers.AmvSpace
-import `fun`.adaptive.iot.space.markers.SpaceMarkers
+import `fun`.adaptive.iot.space.marker.AmvSpace
+import `fun`.adaptive.iot.space.marker.SpaceMarkers
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.log.getLogger
@@ -24,7 +24,7 @@ class AioSpaceTest {
 
     @Test
     fun `adding a space`() = test { worker ->
-        val spaceId: AvValueId = addSpace(worker, "Building 1", 1, SpaceMarkers.BUILDING)
+        val spaceId: AvValueId = addSpace(worker, "Building 1", "1", SpaceMarkers.BUILDING)
 
         val space = worker.item(spaceId)
         assertNotNull(space)
@@ -47,8 +47,8 @@ class AioSpaceTest {
 
     @Test
     fun `adding a sub space`() = test { worker ->
-        val spaceId = addSpace(worker, "Building 1", 1, SpaceMarkers.BUILDING)
-        val subSpaceId = addSpace(worker, "Floor 1", 2, SpaceMarkers.FLOOR)
+        val spaceId = addSpace(worker, "Building 1", "1", SpaceMarkers.BUILDING)
+        val subSpaceId = addSpace(worker, "Floor 1", "2", SpaceMarkers.FLOOR)
 
         addSubSpace(worker, spaceId, subSpaceId)
 
@@ -63,7 +63,7 @@ class AioSpaceTest {
         assertNotNull(subSpace)
         assertEquals(subSpaceList.itemIds.first(), subSpace.uuid)
 
-        val subSpace2Id = addSpace(worker, "Floor 2", 3, SpaceMarkers.FLOOR)
+        val subSpace2Id = addSpace(worker, "Floor 2", "3", SpaceMarkers.FLOOR)
 
         addSubSpace(worker, spaceId, subSpace2Id)
 

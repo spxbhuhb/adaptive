@@ -13,7 +13,9 @@ fun iconFor(item: AvItem): GraphicsResourceSet {
 
     for (marker in item.markers.keys) {
         val icon = iconCache[marker]
-        if (icon != null) return icon
+        if (icon != null) {
+            return icon
+        }
     }
 
     return Graphics.empty

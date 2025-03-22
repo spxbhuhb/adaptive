@@ -8,10 +8,7 @@ class AioWsContext(
 ) : WsContext {
 
     companion object {
-        const val WSIT_INFRASTRUCTURE_ITEM = "aio:infrastructure:item"
-        const val WSIT_NETWORK = "aio:network"
         const val WSIT_DEVICE = "aio:device"
-        const val WSIT_POINT = "aio:point"
 
         const val WSIT_MEASUREMENT_LOCATION = "aio:measurement:point"
         const val WSIT_MEASUREMENT_POINT = "aio:measurement:point"
@@ -20,6 +17,9 @@ class AioWsContext(
 
         const val WSPANE_SPACE_TOOL = "aio:space:tool"
         const val WSPANE_SPACE_CONTENT = "aio:space:content"
+
+        const val WSPANE_DEVICE_TOOL = "aio:device:tool"
+        const val WSPANE_DEVICE_CONTENT = "aio:device:content"
 
         const val WSPANE_INFRASTRUCTURE_TOOL = "aio:infrastructure:tool"
         const val WSPANE_INFRASTRUCTURE_CONTENT = "aio:infrastructure:content"

@@ -6,8 +6,8 @@ import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.item.AvStatus
-import `fun`.adaptive.iot.space.markers.AmvSpace
-import `fun`.adaptive.iot.space.markers.SpaceMarkers
+import `fun`.adaptive.iot.space.marker.AmvSpace
+import `fun`.adaptive.iot.space.marker.SpaceMarkers
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker

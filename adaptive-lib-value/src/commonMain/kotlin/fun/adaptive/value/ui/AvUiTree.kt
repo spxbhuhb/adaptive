@@ -36,13 +36,13 @@ class AvUiTree(
     val refreshTop: (items: List<TreeItem<AvValueId>>) -> Unit
 ) {
 
-    private var topSpaces = emptyList<AvValueId>()
+    private var topIds = emptyList<AvValueId>()
 
     private val nodeMap = mutableMapOf<AvValueId, Node>()
 
     private class Node(
         var aioItem: AvItem? = null,
-        var subSpaces: List<AvValueId>? = null,
+        var childIds: List<AvValueId>? = null,
         var treeItem: TreeItem<AvValueId>? = null
     )
 
@@ -69,28 +69,28 @@ class AvUiTree(
     val size
         get() = nodeMap.size
 
-    val topSpacesSize
-        get() = topSpaces.size
+    val topItemsSize
+        get() = topIds.size
 
     operator fun get(valueId: AvValueId) = nodeMap[valueId]?.aioItem
 
     /**
-     * The sub-spaces list that contains [childId]. This is the value of the
-     * sub-spaces marker from the parent node or the top-spaces list if
+     * The sub items list that contains [childId]. This is the value of the
+     * sub items marker from the parent node or the top items list if
      * [childId] is a top node.
      */
-    fun getParentSubSpaces(childId: AvValueId): List<AvValueId> {
+    fun getParentSubItems(childId: AvValueId): List<AvValueId> {
         val aioItem = nodeMap[childId]?.aioItem ?: return emptyList()
-        if (aioItem.parentId == null) return topSpaces
+        if (aioItem.parentId == null) return topIds
         val parent = nodeMap[aioItem.parentId] ?: return emptyList()
-        return parent.subSpaces ?: emptyList()
+        return parent.childIds ?: emptyList()
     }
 
     /**
-     * The sub-spaces list of [childId].
+     * The sub items list of [childId].
      */
-    fun getSubSpaces(childId: AvValueId): List<AvValueId> {
-        return nodeMap[childId]?.subSpaces ?: return emptyList()
+    fun getSubItems(childId: AvValueId): List<AvValueId> {
+        return nodeMap[childId]?.childIds ?: return emptyList()
     }
 
     fun start() {
@@ -118,7 +118,7 @@ class AvUiTree(
     /**
      * Each incoming update is processed these steps:
      *
-     * - First, it is applied to [topSpaces] and [nodeMap].
+     * - First, it is applied to [topIds] and [nodeMap].
      * - Second, all changed children lists are refreshed.
      * - Third, top nodes list is refreshed if necessary.
      */
@@ -181,12 +181,12 @@ class AvUiTree(
         when (list.markerName) {
             childListMarker -> {
                 val node = nodeMap.getOrPut(list.owner) { Node() }
-                node.subSpaces = list.itemIds
+                node.childIds = list.itemIds
                 childRefresh += node
             }
 
             topListMarker -> {
-                topSpaces = list.itemIds
+                topIds = list.itemIds
                 topRefresh = true
             }
         }
@@ -203,19 +203,19 @@ class AvUiTree(
     fun refresh() {
         childRefresh.forEach { node ->
             node.treeItem?.let { ti ->
-                ti.children = node.subSpaces?.mapNotNull { nodeMap[it]?.treeItem } ?: emptyList()
+                ti.children = node.childIds?.mapNotNull { nodeMap[it]?.treeItem } ?: emptyList()
             }
         }
 
         if (topRefresh) {
-            refreshTop(topSpaces.mapNotNull { nodeMap[it]?.treeItem })
+            refreshTop(topIds.mapNotNull { nodeMap[it]?.treeItem })
         }
 //
 //        nodeMap.values.forEach { node ->
-//            println("${node.aioItem?.name} ${node.aioItem?.uuid} ${node.subSpaces}")
+//            println("${node.aioItem?.name} ${node.aioItem?.uuid} ${node.childIds}")
 //        }
 //
-//        topSpaces.mapNotNull { nodeMap[it]?.treeItem }.forEach { ti ->
+//        topIds.mapNotNull { nodeMap[it]?.treeItem }.forEach { ti ->
 //            ti.dumpTree().debug()
 //        }
     }

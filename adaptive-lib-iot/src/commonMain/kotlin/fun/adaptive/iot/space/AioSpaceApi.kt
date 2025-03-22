@@ -1,7 +1,7 @@
 package `fun`.adaptive.iot.space
 
 import `fun`.adaptive.value.item.AvMarker
-import `fun`.adaptive.iot.space.markers.AmvSpace
+import `fun`.adaptive.iot.space.marker.AmvSpace
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.service.ServiceApi
 

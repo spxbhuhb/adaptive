@@ -26,18 +26,6 @@
     <string name="renameSuccess">Sikeres átnevezés.</string>
     <string name="renameFail">Sikertelen átnevezés.</string>
 
-    <!-- infrastructure -->
-
-    <string name="infrastructure">Infrastruktúra</string>
-    <string name="host">Számítógép</string>
-    <string name="network">Hálózat</string>
-    <string name="device">Eszköz</string>
-    <string name="point">Adatpont</string>
-
-    <string name="addHost">Számítógép hozzáadása</string>
-    <string name="addNetwork">Hálózat hozzáadása</string>
-    <string name="addDevice">Eszköz hozzáadása</string>
-
     <!-- space -->
 
     <string name="areas">Területek</string>
@@ -46,6 +34,7 @@
     <string name="floor">Szint</string>
     <string name="area">Terület</string>
     <string name="room">Szoba</string>
+    <string name="space">Terület</string>
 
     <string name="addSite">Telephely hozzáadása</string>
     <string name="addBuilding">Épület hozzáadása</string>
@@ -53,6 +42,21 @@
     <string name="addArea">Terület hozzáadása</string>
     <string name="addRoom">Szoba hozzáadása</string>
     <string name="selectArea">Válassz területet a szerkesztéshez</string>
+
+    <!-- device -->
+
+    <string name="devices">Eszközök</string>
+    <string name="device">Eszköz</string>
+    <string name="computer">Számítógép</string>
+    <string name="network">Hálózat</string>
+    <string name="controller">Vezérlő</string>
+    <string name="point">Pont</string>
+
+    <string name="addDevice">Eszköz hozzáadása</string>
+    <string name="addComputer">Számítógép hozzáadása</string>
+    <string name="addNetwork">Hálózat hozzáadása</string>
+    <string name="addController">Vezérlő hozzáadása</string>
+    <string name="addPoint">Pont hozzáadása</string>
 
     <!-- misc -->
 
