@@ -4,7 +4,9 @@
 
 package `fun`.adaptive.wireformat
 
+import `fun`.adaptive.wireformat.builtin.PolymorphicWireFormat
 import `fun`.adaptive.wireformat.json.JsonBufferReader
+import `fun`.adaptive.wireformat.json.JsonBufferWriter
 import `fun`.adaptive.wireformat.json.JsonWireFormatDecoder
 import `fun`.adaptive.wireformat.json.JsonWireFormatEncoder
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatDecoder
@@ -30,3 +32,25 @@ fun <T> ByteArray.fromProto(wireFormat: WireFormat<T>) =
  */
 val String.asPrettyJson
     get() = JsonBufferReader(this.encodeToByteArray()).read().asPrettyString
+
+val Array<Any?>.asJson : String
+    get() {
+        val writer = JsonBufferWriter()
+        val encoder = JsonWireFormatEncoder(writer)
+
+        writer.openArray()
+        for (item in this) {
+            val wireFormat = PolymorphicWireFormat.wireFormatOrNullFor(item)
+            if (wireFormat != null) {
+                encoder.rawInstance(item, wireFormat)
+            } else {
+                encoder.rawString(item.toString())
+            }
+            writer.separator()
+        }
+        writer.closeArray()
+        return writer.pack().decodeToString()
+    }
+
+val Array<Any?>.asPrettyJson : String
+    get() = asJson.asPrettyJson

@@ -15,6 +15,7 @@ import `fun`.adaptive.foundation.internal.initStateMask
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
 import `fun`.adaptive.foundation.query.FragmentVisitor
 import `fun`.adaptive.utility.PluginReference
+import `fun`.adaptive.wireformat.asPrettyJson
 import kotlin.jvm.JvmStatic
 import kotlin.properties.ReadWriteProperty
 
@@ -32,6 +33,8 @@ abstract class AdaptiveFragment(
         protected fun stateSize() : Int {
             replacedByPlugin("replaced by the compiler plugin with the calculated state size")
         }
+
+        var jsonTrace = false
     }
 
     val id: Long = adapter.newId()
@@ -532,7 +535,11 @@ abstract class AdaptiveFragment(
     }
 
     open fun stateToTraceString(): String =
-        "[" + this.state.contentToString() + "]"
+        if (jsonTrace) {
+            state.asPrettyJson
+        } else {
+            "[" + this.state.contentToString() + "]"
+        }
 
     private fun Array<Any?>.contentToString() =
         this.joinToString(", ") {
