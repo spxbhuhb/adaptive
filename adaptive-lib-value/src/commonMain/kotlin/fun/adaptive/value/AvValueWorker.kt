@@ -1,6 +1,7 @@
 package `fun`.adaptive.value
 
 import `fun`.adaptive.backend.builtin.WorkerImpl
+import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.p04
@@ -59,10 +60,12 @@ class AvValueWorker(
         if (trace) logger.enableFine()
 
         lock.use {
-            check(values.isEmpty())
-            check(subscriptions.isEmpty())
-            check(markerIndices.isEmpty())
-            check(operations.isEmpty)
+            if (GlobalRuntimeContext.isServer) {
+                check(values.isEmpty()) { "Values are not empty" }
+                check(subscriptions.isEmpty()) { "Subscriptions are not empty" }
+                check(markerIndices.isEmpty()) { "Marker indices are not empty" }
+                check(operations.isEmpty) { "Operations are not empty" }
+            }
 
             persistence.loadValues(values)
 
@@ -409,26 +412,26 @@ class AvValueWorker(
     // --------------------------------------------------------------------------------
 
     fun queueAdd(value: AvValue) {
-        check(operations.trySend(AvoAdd(value)).isSuccess)
+        check(operations.trySend(AvoAdd(value)).isSuccess) { "Failed to queue add" }
     }
 
     fun queueAddAll(vararg values: AvValue) =
         queueTransaction(values.map { AvoAdd(it) })
 
     fun queueUpdate(value: AvValue) {
-        check(operations.trySend(AvoUpdate(value)).isSuccess)
+        check(operations.trySend(AvoUpdate(value)).isSuccess) { "Failed to queue update" }
     }
 
     fun queueAddOrUpdate(value: AvValue) {
-        check(operations.trySend(AvoAddOrUpdate(value)).isSuccess)
+        check(operations.trySend(AvoAddOrUpdate(value)).isSuccess) { "Failed to queue addOrUpdate" }
     }
 
     fun queueTransaction(operations: List<AvValueOperation>) {
-        check(this.operations.trySend(AvoTransaction(operations)).isSuccess)
+        check(this.operations.trySend(AvoTransaction(operations)).isSuccess) { "Failed to queue transaction" }
     }
 
     fun queueOperation(operation: AvValueOperation) {
-        check(this.operations.trySend(operation).isSuccess)
+        check(this.operations.trySend(operation).isSuccess) { "Failed to queue operation" }
     }
 
     /**
@@ -455,7 +458,7 @@ class AvValueWorker(
             it.computation = computeFun
         }
 
-        check(this.operations.trySend(op).isSuccess)
+        check(this.operations.trySend(op).isSuccess) { "Failed to queue execute" }
 
         val result = withTimeout(timeout) {
             channel.receive()
@@ -514,7 +517,7 @@ class AvValueWorker(
         updateFun: (T) -> T
     ) {
         execute(timeout) {
-            val value = checkNotNull(values[valueId])
+            val value = checkNotNull(values[valueId]) { "Value with id $valueId does not exist" }
             check(kClass.isInstance(value)) { "Value with id $valueId is not of type ${kClass.simpleName}" }
 
             @Suppress("UNCHECKED_CAST")
@@ -611,7 +614,10 @@ class AvValueWorker(
         inline fun <reified T> markerValOrNull(itemId: AvValueId, marker: AvMarker) =
             getMarkerValue(itemId, marker) as T?
 
-        fun getContainingList(childId: AvValueId, childListMarker: AvMarker, topListMarker: AvMarker): AmvItemIdList? {
+        fun getContainingList(
+            childId: AvValueId,
+            childListMarker: AvMarker, topListMarker: AvMarker
+        ): AmvItemIdList? {
             val parentId = item(childId).parentId
 
             val original: AmvItemIdList?
@@ -625,7 +631,10 @@ class AvValueWorker(
             return original
         }
 
-        fun addTopList(spaceId: AvValueId, listMarker: AvMarker) {
+        fun addTopList(
+            spaceId: AvValueId,
+            listMarker: AvMarker
+        ) {
             val original = queryByMarker(listMarker).firstOrNull() as AmvItemIdList?
             val new: AmvItemIdList
 
@@ -638,7 +647,11 @@ class AvValueWorker(
             this += new
         }
 
-        fun addChild(parentId: AvValueId, childId: AvValueId, childListMarker: AvMarker) {
+        fun addChild(
+            parentId: AvValueId,
+            childId: AvValueId,
+            childListMarker: AvMarker
+        ) {
             val original: AmvItemIdList? = markerVal(parentId, childListMarker)
 
             if (original != null) {
@@ -658,7 +671,11 @@ class AvValueWorker(
             this += parent.copy(markersOrNull = markers)
         }
 
-        fun moveUp(childId: AvValueId, childListMarker: AvMarker, topListMarker: AvMarker) {
+        fun moveUp(
+            childId: AvValueId,
+            childListMarker: AvMarker,
+            topListMarker: AvMarker
+        ) {
 
             val original = getContainingList(childId, childListMarker, topListMarker) ?: return
 
@@ -673,7 +690,11 @@ class AvValueWorker(
             this += original.copy(itemIds = newList)
         }
 
-        fun moveDown(childId: AvValueId, childListMarker: AvMarker, topListMarker: AvMarker) {
+        fun moveDown(
+            childId: AvValueId,
+            childListMarker: AvMarker,
+            topListMarker: AvMarker
+        ) {
 
             val original = getContainingList(childId, childListMarker, topListMarker) ?: return
 
@@ -686,6 +707,21 @@ class AvValueWorker(
             newList[index + 1] = childId
 
             this += original.copy(itemIds = newList)
+        }
+
+        fun addRef(
+            itemId: AvValueId,
+            refMarker: AvMarker,
+            refValueId: AvValueId
+        ) {
+            val item = item(itemId)
+
+            val markers = item.markersOrNull?.toMutableMap() ?: mutableMapOf<AvMarker, AvValueId?>()
+            if (markers[refMarker] == refValueId) return
+
+            markers[refMarker] = refValueId
+
+            this += item.copy(markersOrNull = markers)
         }
     }
 }

@@ -11,4 +11,6 @@ object SpaceMarkers {
 
     const val TOP_SPACES = "top-spaces"
     const val SUB_SPACES = "sub-spaces"
+
+    const val SPACE_REF = "spaceRef"
 }

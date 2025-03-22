@@ -1,11 +1,22 @@
 package `fun`.adaptive.iot.ws
 
+import `fun`.adaptive.iot.space.marker.SpaceMarkers
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsContext
+import `fun`.adaptive.value.ui.AvNameCache
 
 class AioWsContext(
     override val workspace: Workspace
 ) : WsContext {
+
+    val spaceNameCache = AvNameCache(
+        workspace.backend,
+        workspace.transport,
+        workspace.scope,
+        SpaceMarkers.SPACE
+    ).also {
+        it.start()
+    }
 
     companion object {
         const val WSIT_DEVICE = "aio:device"

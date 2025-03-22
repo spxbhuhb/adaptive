@@ -41,7 +41,7 @@ class InputTheme(
         uiDisabled,
         border(colors.outline, 1.dp),
         padding(top = 1.dp, left = 16.dp, bottom = 1.dp, right = 16.dp),
-        textColors.onSurfaceVariant,
+        textColors.onSurface,
         backgrounds.surfaceVariant
     )
 

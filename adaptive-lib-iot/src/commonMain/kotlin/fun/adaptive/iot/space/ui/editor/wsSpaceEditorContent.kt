@@ -6,7 +6,6 @@ import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.Independent
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.producer.fetch
 import `fun`.adaptive.value.item.AvItem
@@ -47,14 +46,11 @@ fun wsSpaceEditorContentDef(context: AioWsContext) {
 @Adaptive
 fun wsSpaceContentPane(pane: WsPane<AvItem, SpaceEditorContentController>): AdaptiveFragment {
 
-    @Independent
     val originalItem = copyOf { pane.data }
-
-    @Independent
-    val copyItem = copyOf { pane.data }
+    val editItem = copyOf { pane.data }
 
     val originalSpace = fetch { pane.controller.spaceService.getSpaceData(pane.data.uuid) } ?: AmvSpace(originalItem.uuid, 0.0)
-    val copySpace = copyOf { originalSpace }
+    val editSpace = copyOf { originalSpace }
 
     column {
         maxSize .. verticalScroll .. padding { 16.dp } .. backgrounds.surface
@@ -62,7 +58,7 @@ fun wsSpaceContentPane(pane: WsPane<AvItem, SpaceEditorContentController>): Adap
         column {
             paddingBottom { 32.dp }
             h2(pane.data.name.ifEmpty { Strings.noname })
-            uuidLabel { copyItem.uuid }
+            uuidLabel { editItem.uuid }
         }
 
         column {
@@ -71,43 +67,43 @@ fun wsSpaceContentPane(pane: WsPane<AvItem, SpaceEditorContentController>): Adap
 
             withLabel(Strings.spxbId, InputContext(disabled = true)) { state ->
                 width { 400.dp }
-                textInput(copyItem.friendlyId, state) { }
+                textInput(editItem.friendlyId, state) { }
             }
 
             withLabel(Strings.type, InputContext(disabled = true)) { state ->
                 width { 400.dp }
-                textInput(copyItem.localizedSpaceType, state) { }
+                textInput(editItem.localizedSpaceType, state) { }
             }
 
             withLabel(Strings.area) { state ->
                 width { 120.dp }
-                doubleOrNullUnitInput(copySpace.area, 0, "m²", state) { v ->
-                    copySpace.update(copySpace::area, v)
+                doubleOrNullUnitInput(editSpace.area, 0, "m²", state) { v ->
+                    editSpace.update(editSpace::area, v)
                 }
             }
 
             withLabel(Strings.name) {
                 width { 400.dp }
-                textInput(copyItem.name) { v ->
-                    println("update: ${copyItem.name} $v")
-                    copyItem.update(copyItem::name, v)
+                textInput(editItem.name) { v ->
+                    println("update: ${editItem.name} $v")
+                    editItem.update(editItem::name, v)
                 }
             }
 
             withLabel(Strings.note) {
                 width { 400.dp }
-                textInputArea(copySpace.notes) { v ->
-                    copySpace.update(copySpace::notes, v)
+                textInputArea(editSpace.notes) { v ->
+                    editSpace.update(editSpace::notes, v)
                 } .. height { 300.dp }
             }
 
             button(Strings.save) .. onClick {
-                if (copyItem.name != originalItem.name) {
-                    pane.controller.rename(copyItem.uuid, copyItem.name)
-                    originalItem.update(originalItem::name, copyItem.name)
+                if (editItem.name != originalItem.name) {
+                    pane.controller.rename(editItem.uuid, editItem.name)
+                    originalItem.update(originalItem::name, editItem.name)
                 }
-                if (copySpace != originalSpace) {
-                    pane.controller.setSpaceData(copySpace)
+                if (editSpace != originalSpace) {
+                    pane.controller.setSpaceData(editSpace)
                 }
             }
         }

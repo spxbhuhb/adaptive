@@ -20,4 +20,9 @@ interface AioSpaceApi {
 
     suspend fun setSpaceData(valueId: AvValueId, area: Double, notes: String?)
 
+    /**
+     * Add a `spaceRef` marker to [itemId] that points to [spaceId].
+     */
+    suspend fun setSpace(itemId: AvValueId, spaceId: AvValueId)
+
 }

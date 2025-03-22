@@ -101,4 +101,12 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
         }
     }
 
+    override suspend fun setSpace(itemId: AvValueId, spaceId: AvValueId) {
+        publicAccess()
+
+        worker.execute {
+            addRef(itemId, SpaceMarkers.SPACE_REF, spaceId)
+        }
+    }
+
 }

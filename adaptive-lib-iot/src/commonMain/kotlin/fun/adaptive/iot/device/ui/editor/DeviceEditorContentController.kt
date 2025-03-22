@@ -8,6 +8,7 @@ import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.iot.device.AioDeviceApi
 import `fun`.adaptive.iot.device.marker.AmvDevice
 import `fun`.adaptive.iot.device.marker.DeviceMarkers
+import `fun`.adaptive.iot.space.AioSpaceApi
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
@@ -23,6 +24,7 @@ class DeviceEditorContentController(
     override val workspace: Workspace
 ) : WsPaneController<AvItem>(), WithWorkspace {
 
+    val spaceService = getService<AioSpaceApi>(transport)
     val deviceService = getService<AioDeviceApi>(transport)
 
     override fun accepts(pane: WsPaneType<AvItem>, modifiers: Set<EventModifier>, item: WsItem): Boolean {
@@ -48,4 +50,11 @@ class DeviceEditorContentController(
             deviceService.setDeviceData(device.uuid, device.notes)
         }
     }
+
+    fun setSpace(deviceId : AvValueId, spaceId: AvValueId) {
+        remote(Strings.saveSuccess, Strings.saveFail) {
+            spaceService.setSpace(deviceId, spaceId)
+        }
+    }
+
 }
