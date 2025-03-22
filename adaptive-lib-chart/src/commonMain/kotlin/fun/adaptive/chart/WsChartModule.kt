@@ -4,9 +4,7 @@ import `fun`.adaptive.chart.ws.logic.WsChartContentController
 import `fun`.adaptive.chart.ws.model.WsChartContext
 import `fun`.adaptive.chart.ws.model.WsChartPaneData
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.ui.builtin.menu
 import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
@@ -17,15 +15,15 @@ class WsChartModule : ChartModule<Workspace>() {
 
         contexts += WsChartContext(this)
 
-        + WsPane(
-            UUID(),
-            "Chart",
-            Graphics.menu,
-            WsPanePosition.RightTop,
-            WsChartContext.CHART_TOOL_PANE_KEY,
-            data = Unit,
-            controller = WsUnitPaneController()
-        )
+//        + WsPane(
+//            UUID(),
+//            "Chart",
+//            Graphics.menu,
+//            WsPanePosition.RightTop,
+//            WsChartContext.CHART_TOOL_PANE_KEY,
+//            data = Unit,
+//            controller = WsUnitPaneController()
+//        )
 
         addContentPaneBuilder(WsChartContext.WSIT_CHART_SERIES) { item ->
 

@@ -58,6 +58,14 @@
     <string name="addController">Vezérlő hozzáadása</string>
     <string name="addPoint">Pont hozzáadása</string>
 
+    <!-- history -->
+
+    <string name="historicalData">Történeti adatok</string>
+
+    <!-- alarm -->
+
+    <string name="notifications">Értesítések</string>
+
     <!-- misc -->
 
     <string name="temperatureAndHumidity">Hőmérséklet és páratartalom</string>

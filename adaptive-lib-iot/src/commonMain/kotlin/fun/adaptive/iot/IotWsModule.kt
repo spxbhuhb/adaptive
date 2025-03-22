@@ -2,9 +2,11 @@ package `fun`.adaptive.iot
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
 import `fun`.adaptive.foundation.AdaptiveAdapter
+import `fun`.adaptive.iot.alarm.ui.wsAlarmToolDef
 import `fun`.adaptive.iot.device.marker.DeviceMarkers
 import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorContentDef
 import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorToolDef
+import `fun`.adaptive.iot.history.ui.wsHistoryToolDef
 import `fun`.adaptive.iot.marker.rht.ui.wsRhtBrowserContentDef
 import `fun`.adaptive.iot.marker.rht.ui.wsRhtBrowserToolDef
 import `fun`.adaptive.iot.space.marker.SpaceMarkers
@@ -43,14 +45,17 @@ class IotWsModule : IotModule<Workspace>(true) {
 
         contexts += context
 
+        + wsRhtBrowserToolDef(context)
+        wsRhtBrowserContentDef(context)
+
+        wsHistoryToolDef()
+        wsAlarmToolDef()
+
         + wsSpaceEditorToolDef(context)
         wsSpaceEditorContentDef(context)
 
         + wsDeviceEditorToolDef(context)
         wsDeviceEditorContentDef(context)
-
-        + wsRhtBrowserToolDef(context)
-        wsRhtBrowserContentDef(context)
 
         addContentPaneBuilder(AioWsContext.WSIT_MEASUREMENT_LOCATION) { item ->
             WsPane(
