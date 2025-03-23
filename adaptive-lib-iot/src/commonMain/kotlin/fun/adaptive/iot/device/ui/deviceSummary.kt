@@ -15,13 +15,13 @@ import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.value.item.AvItem
 
 @Adaptive
-fun controllerSummary(
+fun deviceSummary(
     device: AvItem<AioDeviceSpec>?,
     theme: AioTheme = AioTheme.DEFAULT
 ) {
 
     grid {
-        theme.controllerSummary
+        theme.deviceSummary
 
         if (device == null) {
             box { maxSize .. backgrounds.lightOverlay }

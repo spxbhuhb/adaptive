@@ -77,6 +77,8 @@
 
     <!-- misc -->
 
+    <string name="temperature">Hőmérséklet</string>
+    <string name="humidity">Páratartalom</string>
     <string name="temperatureAndHumidity">Hőmérséklet és páratartalom</string>
 
 </resources>

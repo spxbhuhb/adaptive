@@ -2,6 +2,7 @@ package `fun`.adaptive.iot
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
 import `fun`.adaptive.iot.device.AioDeviceSpec
+import `fun`.adaptive.iot.point.computed.AioComputedPointSpec
 import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.value.AvSubscribeCondition
@@ -31,6 +32,7 @@ open class IotModule<WT>(
 
         this += AioSpaceSpec
         this += AioDeviceSpec
+        this += AioComputedPointSpec
 
         this += AvString
     }

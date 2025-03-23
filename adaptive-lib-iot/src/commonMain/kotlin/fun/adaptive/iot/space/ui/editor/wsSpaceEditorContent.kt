@@ -10,7 +10,9 @@ import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.common.AioTheme
-import `fun`.adaptive.iot.device.ui.controllerSummary
+import `fun`.adaptive.iot.device.ui.deviceSummary
+import `fun`.adaptive.iot.point.PointMarkers
+import `fun`.adaptive.iot.point.ui.pointSummary
 import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.iot.space.ui.localizedSpaceType
@@ -73,7 +75,7 @@ fun wsSpaceContentPane(pane: WsPane<AvItem<AioSpaceSpec>, SpaceEditorContentCont
         editFields(editItem, editSpec)
         editNotes(editSpec)
 
-        points(pane.controller)
+        points(originalItem.uuid)
         devices(originalItem.uuid)
     }
 
@@ -171,27 +173,27 @@ private fun devices(spaceId : AvValueId) {
         maxSize .. fill.constrain
 
         column {
-            AioTheme.DEFAULT.controllerListContainer
+            AioTheme.DEFAULT.itemListContainer
 
             for (device in devices) {
-                controllerSummary(device.asAvItem())
+                deviceSummary(device.asAvItem())
             }
         }
     }
 }
 
 @Adaptive
-private fun points(controller: SpaceEditorContentController) {
-    val deviceIds = valueFrom { controller.devices }
+private fun points(spaceId : AvValueId) {
+    val points = valueFrom { AvUiList(adapter(), spaceId, PointMarkers.POINTS) }
 
     withLabel(Strings.points) {
         maxSize .. fill.constrain
 
         column {
-            maxSize .. verticalScroll .. borders.outline .. paddingBottom { 16.dp } .. cornerRadius { 8.dp }
+            AioTheme.DEFAULT.itemListContainer
 
-            for (deviceId in deviceIds) {
-                controllerSummary(controller.getDevice(deviceId))
+            for (point in points) {
+                pointSummary(point.asAvItem())
             }
         }
     }

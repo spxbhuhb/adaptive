@@ -12,7 +12,7 @@ import `fun`.adaptive.value.item.AvStatus
 
 class AioTheme {
 
-    val controllerListContainer = instructionsOf(
+    val itemListContainer = instructionsOf(
         maxSize,
         verticalScroll,
         borders.outline,
@@ -22,11 +22,19 @@ class AioTheme {
         gap { 12.dp }
     )
 
-    val controllerSummary = instructionsOf(
+    val deviceSummary = instructionsOf(
         maxWidth,
         gap { 16.dp },
         height { 28.dp },
         colTemplate(80.dp, 1.fr, 160.dp, 60.dp),
+        alignItems.startCenter
+    )
+
+    val pointSummary = instructionsOf(
+        maxWidth,
+        gap { 16.dp },
+        height { 28.dp },
+        colTemplate(1.fr, 160.dp, 60.dp),
         alignItems.startCenter
     )
 

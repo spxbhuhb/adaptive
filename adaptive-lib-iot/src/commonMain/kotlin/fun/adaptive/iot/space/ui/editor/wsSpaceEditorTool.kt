@@ -6,7 +6,6 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.space.SpaceMarkers
-import `fun`.adaptive.iot.space.ui.AbstractSpaceToolController
 import `fun`.adaptive.iot.space.ui.SpaceTreeModel
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.iot.ws.AioWsContext
@@ -66,7 +65,7 @@ fun wsSpaceEditorToolDef(context: AioWsContext): WsPane<Unit, SpaceEditorToolCon
     return pane
 }
 
-private fun apply(state: AbstractSpaceToolController, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AvValueId>?) {
+private fun apply(controller: SpaceEditorToolController, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AvValueId>?) {
 
     val (name, marker) = when (menuItem.data) {
         AioSpaceEditOperation.AddSite -> Strings.site to SpaceMarkers.SITE
@@ -78,20 +77,19 @@ private fun apply(state: AbstractSpaceToolController, menuItem: MenuItem<AioSpac
     }
 
     if (name != null && marker != null) {
-        state.io { state.spaceService.add(name, marker, treeItem?.data) }
+        controller.addSpace(name, marker, treeItem?.data)
         return
     }
 
     check(treeItem != null)
 
-    state.workspace.io {
-        when (menuItem.data) {
-            AioSpaceEditOperation.MoveUp -> state.io { state.spaceService.moveUp(treeItem.data) }
-            AioSpaceEditOperation.MoveDown -> state.io { state.spaceService.moveDown(treeItem.data) }
-            AioSpaceEditOperation.Inactivate -> Unit
-            else -> Unit
-        }
+    when (menuItem.data) {
+        AioSpaceEditOperation.MoveUp -> controller.moveUp(treeItem.data)
+        AioSpaceEditOperation.MoveDown -> controller.moveDown(treeItem.data)
+        AioSpaceEditOperation.Inactivate -> Unit
+        else -> Unit
     }
+
 }
 
 private val addSite = MenuItem<AioSpaceEditOperation>(Graphics.responsive_layout, Strings.addSite, AioSpaceEditOperation.AddSite)
@@ -156,7 +154,9 @@ private fun contextMenuBuilder(
 ): AdaptiveFragment {
     column {
         zIndex { 200 }
-        contextMenu(menu(viewModel, treeItem)) { menuItem, _ -> apply(viewModel.context, menuItem, treeItem); hide() }
+        contextMenu(menu(viewModel, treeItem)) { menuItem, _ ->
+            apply(viewModel.context as SpaceEditorToolController, menuItem, treeItem); hide()
+        }
     }
     return fragment()
 }

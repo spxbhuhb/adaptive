@@ -2,7 +2,7 @@ package `fun`.adaptive.iot.point.computed
 
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.builtin.worker
-import `fun`.adaptive.iot.point.marker.PointMarkers
+import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.AvChannelSubscription
 import `fun`.adaptive.value.AvSubscribeCondition
@@ -19,7 +19,6 @@ class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker> {
 
     val channel = Channel<AvValueOperation>(Channel.UNLIMITED)
 
-
     override suspend fun run() {
         subscribe()
 
@@ -29,7 +28,7 @@ class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker> {
     }
 
     private fun subscribe() {
-        val condition = AvSubscribeCondition(marker = PointMarkers.COMPUTED)
+        val condition = AvSubscribeCondition(marker = PointMarkers.COMPUTED_POINT)
         val subscription = AvChannelSubscription(uuid4(), listOf(condition), channel)
         valueWorker.subscribe(subscription)
     }

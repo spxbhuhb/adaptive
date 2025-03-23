@@ -26,6 +26,8 @@ class AioWsContext(
         const val WSIT_PROJECT = "aio:project"
         const val WSIT_SPACE = "aio:space"
 
+        const val WSIT_POINT = "aio:point"
+
         const val WSPANE_SPACE_TOOL = "aio:space:tool"
         const val WSPANE_SPACE_CONTENT = "aio:space:content"
 
