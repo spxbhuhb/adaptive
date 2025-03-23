@@ -48,7 +48,7 @@ fun wsDeviceEditorToolDef(context: AioWsContext): WsPane<Unit, DeviceEditorToolC
         UUID(),
         Strings.devices,
         Graphics.account_tree,
-        WsPanePosition.RightTop,
+        WsPanePosition.RightMiddle,
         AioWsContext.WSPANE_DEVICE_TOOL,
         actions = listOf(
             WsPaneAction(Graphics.unfold_more, Strings.expandAll, Unit) { controller.expandAll() },

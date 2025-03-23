@@ -69,7 +69,7 @@ object WsAppModule : AppModule<Workspace>() {
             UUID(),
             Strings.administration,
             Graphics.local_police,
-            WsPanePosition.RightMiddle,
+            WsPanePosition.RightBottom,
             ADMIN_TOOL_KEY,
             Unit,
             WsUnitPaneController(),

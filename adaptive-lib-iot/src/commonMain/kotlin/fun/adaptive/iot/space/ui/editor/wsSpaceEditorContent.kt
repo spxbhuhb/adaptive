@@ -6,10 +6,13 @@ import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.iot.common.AioTheme
 import `fun`.adaptive.iot.device.ui.controllerSummary
 import `fun`.adaptive.iot.space.AioSpaceSpec
+import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.iot.space.ui.localizedSpaceType
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.string.Strings
@@ -29,8 +32,10 @@ import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
+import `fun`.adaptive.value.ui.AvUiList
 
 fun wsSpaceEditorContentDef(context: AioWsContext) {
     val workspace = context.workspace
@@ -69,7 +74,7 @@ fun wsSpaceContentPane(pane: WsPane<AvItem<AioSpaceSpec>, SpaceEditorContentCont
         editNotes(editSpec)
 
         points(pane.controller)
-        devices(pane.controller)
+        devices(originalItem.uuid)
     }
 
     return fragment()
@@ -134,7 +139,6 @@ private fun editFields(
         withLabel(Strings.name) {
             width { 400.dp }
             textInput(editItem.name) { v ->
-                println("update: ${editItem.name} $v")
                 editItem.update(editItem::name, v)
             }
         }
@@ -160,17 +164,17 @@ private fun editNotes(editSpec: AioSpaceSpec) {
 }
 
 @Adaptive
-private fun devices(controller: SpaceEditorContentController) {
-    val deviceIds = valueFrom { controller.devices }
+private fun devices(spaceId : AvValueId) {
+    val devices = valueFrom { AvUiList(adapter(), spaceId, SpaceMarkers.SPACE_DEVICES) }
 
     withLabel(Strings.devices) {
         maxSize .. fill.constrain
 
         column {
-            maxSize .. verticalScroll .. borders.outline .. paddingBottom { 16.dp } .. cornerRadius { 8.dp }
-            height { 200.dp }
-            for (deviceId in deviceIds) {
-                controllerSummary(controller.getDevice(deviceId))
+            AioTheme.DEFAULT.controllerListContainer
+
+            for (device in devices) {
+                controllerSummary(device.asAvItem())
             }
         }
     }
@@ -185,7 +189,7 @@ private fun points(controller: SpaceEditorContentController) {
 
         column {
             maxSize .. verticalScroll .. borders.outline .. paddingBottom { 16.dp } .. cornerRadius { 8.dp }
-            height { 200.dp }
+
             for (deviceId in deviceIds) {
                 controllerSummary(controller.getDevice(deviceId))
             }

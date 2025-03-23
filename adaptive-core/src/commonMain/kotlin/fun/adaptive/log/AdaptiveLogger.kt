@@ -6,6 +6,8 @@ package `fun`.adaptive.log
 
 abstract class AdaptiveLogger {
 
+    var usePrintln : Boolean = false
+
     var level: LogLevel = LogLevel.Info
 
     /**

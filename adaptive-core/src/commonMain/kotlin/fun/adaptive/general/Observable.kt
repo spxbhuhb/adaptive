@@ -12,11 +12,11 @@ abstract class Observable<VT> {
         for (listener in listeners) listener.onChange(value)
     }
 
-    fun addListener(listener: ObservableListener<VT>) {
+    open fun addListener(listener: ObservableListener<VT>) {
         listeners += listener
     }
 
-    fun removeListener(listener: ObservableListener<VT>) {
+    open fun removeListener(listener: ObservableListener<VT>) {
         listeners -= listener
     }
 

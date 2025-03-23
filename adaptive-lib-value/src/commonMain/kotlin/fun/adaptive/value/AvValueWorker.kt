@@ -1,5 +1,6 @@
 package `fun`.adaptive.value
 
+import `fun`.adaptive.adat.encodeToJsonString
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid7
@@ -13,6 +14,7 @@ import `fun`.adaptive.value.item.AvMarkerValue
 import `fun`.adaptive.value.operation.*
 import `fun`.adaptive.value.persistence.AbstractValuePersistence
 import `fun`.adaptive.value.persistence.NoPersistence
+import `fun`.adaptive.wireformat.asPrettyJson
 import `fun`.adaptive.wireformat.builtin.PolymorphicWireFormat
 import `fun`.adaptive.wireformat.json.JsonWireFormatEncoder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -40,7 +42,7 @@ class AvValueWorker(
 
     private val markerIndices = mutableMapOf<AvMarker, MutableSet<AvValueId>>()
 
-    private val trace = true
+    private val trace = false
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val isIdle: Boolean
@@ -57,7 +59,7 @@ class AvValueWorker(
 
     @ExperimentalCoroutinesApi
     override suspend fun run() {
-        if (trace) logger.enableFine()
+        if (trace) logger.enableFine() // .also { it.usePrintln = true}
 
         lock.use {
             if (GlobalRuntimeContext.isServer) {
@@ -79,7 +81,7 @@ class AvValueWorker(
 
         for (operation in operations) {
             lock.use {
-                if (trace) logger.fine("Operation: $operation")
+                if (trace) logOperation(operation)
 
                 val commitSet = mutableSetOf<AvSubscription>()
 
@@ -96,6 +98,23 @@ class AvValueWorker(
             }
         }
     }
+
+    private fun logOperation(operation: AvValueOperation) {
+        if (operation is AvoTransaction) {
+            logger.fine("Transaction:")
+            operation.operations.forEach { logger.fine("  ${formatOperation(it)}") }
+        } else {
+            logger.fine("Operation: ${formatOperation(operation)}")
+        }
+    }
+
+    private fun formatOperation(operation: AvValueOperation): String =
+        if (logger.usePrintln) {
+            operation.encodeToJsonString().asPrettyJson
+        } else {
+            operation.toString()
+        }
+
 
     private fun add(operation: AvoAdd, commitSet: MutableSet<AvSubscription>) {
         val value = operation.value
@@ -680,7 +699,6 @@ class AvValueWorker(
 
             if (original != null) {
                 this += original.copy(itemIds = original.itemIds - childId)
-                return
             }
         }
 
@@ -736,7 +754,7 @@ class AvValueWorker(
             if (ref == refValueId) return
 
             if (ref != null) {
-                removeChild(itemId, ref, listMarker)
+                removeChild(ref, itemId, listMarker)
             }
 
             markers[refMarker] = refValueId

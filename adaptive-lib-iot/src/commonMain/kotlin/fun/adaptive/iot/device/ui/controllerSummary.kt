@@ -1,27 +1,35 @@
 package `fun`.adaptive.iot.device.ui
 
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.iot.common.AioTheme
 import `fun`.adaptive.iot.common.status
 import `fun`.adaptive.iot.common.timestamp
 import `fun`.adaptive.iot.device.AioDeviceSpec
-import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.api.alignSelf
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.normalFont
+import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.value.item.AvItem
 
 @Adaptive
-fun controllerSummary(device : AvItem<AioDeviceSpec>?) {
+fun controllerSummary(
+    device: AvItem<AioDeviceSpec>?,
+    theme: AioTheme = AioTheme.DEFAULT
+) {
 
-    row {
-        gap { 16.dp } .. height { 32.dp }
+    grid {
+        theme.controllerSummary
 
         if (device == null) {
             box { maxSize .. backgrounds.lightOverlay }
         } else {
-            text(device.friendlyId)
+            text(device.friendlyId) .. normalFont
             text(device.name)
-            status(device.status)
             timestamp(device.timestamp)
+            status(device.status) .. alignSelf.endCenter
         }
     }
 

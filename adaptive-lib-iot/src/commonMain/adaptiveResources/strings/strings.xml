@@ -28,6 +28,10 @@
 
     <string name="noDataChanged">Nincs módosított adat.</string>
 
+    <!-- status -->
+    <string name="statusOkShort">OK</string>
+    <string name="statusFaultShort">HIB</string>
+
     <!-- space -->
 
     <string name="areas">Területek</string>

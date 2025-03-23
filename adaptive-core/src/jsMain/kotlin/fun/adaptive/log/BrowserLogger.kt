@@ -13,11 +13,19 @@ class BrowserLogger(
     val prefix = "[$name]"
 
     override fun rawFine(message: String?, exception: Exception?) {
-        console.info(prefix, message, exception)
+        if (usePrintln) {
+            println("FINE: [$prefix] $message ${exception?.stackTraceToString() ?: ""}")
+        } else {
+            console.info(prefix, message, exception)
+        }
     }
 
     override fun rawInfo(message: String?, exception: Exception?) {
-        console.info(prefix, message, exception)
+        if (usePrintln) {
+            println("INFO: [$prefix] $message ${exception?.stackTraceToString() ?: ""}")
+        } else {
+            console.info(prefix, message, exception)
+        }
     }
 
     override fun rawWarning(message: String?, exception: Exception?) {

@@ -20,7 +20,7 @@ import `fun`.adaptive.ui.workspace.model.WsItem
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
-import `fun`.adaptive.value.ui.AvValueProxy
+import `fun`.adaptive.value.ui.AvUiList
 import `fun`.adaptive.value.ui.iconFor
 
 class SpaceEditorContentController(
@@ -28,8 +28,6 @@ class SpaceEditorContentController(
 ) : WsPaneController<AvItem<AioSpaceSpec>>(), WithWorkspace {
 
     val spaceService = getService<AioSpaceApi>(transport)
-
-    var valueProxy : AvValueProxy? = null
 
     val devices = adaptiveStoreFor(emptyList<AvValueId>())
 
