@@ -2,12 +2,14 @@ package `fun`.adaptive.ui.fragment.structural
 
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.query.firstOrNull
+import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.fragment.layout.AbstractBox
 import `fun`.adaptive.ui.input.InputContext
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.Event
+import org.w3c.dom.events.FocusEvent
 import org.w3c.dom.events.KeyboardEvent
 
 abstract class AbstractClickPopup(
@@ -23,13 +25,27 @@ abstract class AbstractClickPopup(
     val inputContext
         get() = get<InputContext?>(1)
 
-    val blurHandler = { _: Any ->
-        super.hide()
+    val blurHandler = { event: Any ->
+        event as FocusEvent
+        val target = event.relatedTarget as? HTMLElement
 
-        inputContext?.let { it.popupOpen = false }
+        // This makes input fields in popup work. I don't see why, but when an input field is inside the popup,
+        // the browser sends a focusout event on input focus. Most probably there is a reason for this,
+        // but I don't have the time to investigate it right now.
 
-        if (inputContext?.focusContainerOnPopupFocusOut == true) {
-            layoutReceiver?.focus()
+        // So, this check looks up the event target between the children and keeps the popup open if the
+        // focus is actually on one of the children.
+
+        val inside = this.firstOrNull { it is AbstractAuiFragment<*> && it.receiver === target }
+
+        if (inside == null) {
+            super.hide()
+
+            inputContext?.let { it.popupOpen = false }
+
+            if (inputContext?.focusContainerOnPopupFocusOut == true) {
+                layoutReceiver?.focus()
+            }
         }
     }
 
