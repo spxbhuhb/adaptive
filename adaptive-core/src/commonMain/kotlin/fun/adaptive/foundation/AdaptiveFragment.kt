@@ -3,6 +3,7 @@
  */
 package `fun`.adaptive.foundation
 
+import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
@@ -266,13 +267,24 @@ abstract class AdaptiveFragment(
         thisClosure.get(variableIndex)
 
     fun setStateVariable(index: Int, value: Any?) {
-        // TODO think about changes of state variable binding
-        // Editor passes the binding to other fragments, however the binding equals to the
-        // previous binding even when the value of the bound state variable has changed.
-        // This has an unwanted effect on patching as the fragments are not patched on
-        // bound state variable change. For now I've added the check for binding, but
-        // this might be not a good solution.
-        if (state[index] == value && value !is AdaptiveStateVariableBinding<*>) return
+        if (state[index] == value) {
+            // Adat classes should be updated when their context is different.
+            // In cases when a producer is used (like `copyOf`) the producer is saved into the context
+            // and updates are performed through the context. However, the general equals method will
+            // return with true in this case. Technically we could add the context to equals but I'm not
+            // sure how data classes handle that, hence the check here.
+            // TODO remove the need for data classes and add context to equals
+            val adatEquals = (value !is AdatClass || value.adatContext == (state[index] as? AdatClass)?.adatContext)
+
+            // TODO think about changes of state variable binding
+            // Editor passes the binding to other fragments, however the binding equals to the
+            // previous binding even when the value of the bound state variable has changed.
+            // This has an unwanted effect on patching as the fragments are not patched on
+            // bound state variable change. For now I've added the check for binding, but
+            // this might be not a good solution.
+
+            if (adatEquals && value !is AdaptiveStateVariableBinding<*>) return
+        }
 
         state[index] = value
 

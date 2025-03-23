@@ -350,6 +350,16 @@ class ArmClassBuilder(
                 )
             }
 
+            + IrCallImpl(
+                SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                irBuiltIns.intType,
+                irClass.getPropertySetter("dirtyMask")!!,
+                typeArgumentsCount = 0
+            ).also {
+                it.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!)
+                it.putValueArgument(0, irGet(dirtyMask))
+            }
+
             + irReturn(irConst(true))
         }
     }
