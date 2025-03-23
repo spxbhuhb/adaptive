@@ -55,6 +55,18 @@ data class AvItem<T>(
 
             return this
         }
+
+        inline fun <reified T> Any.asAvItemOrNull(): AvItem<T>? {
+
+            @Suppress("UNCHECKED_CAST") // just checked
+            this as AvItem<T>
+            if (specific == null) return this
+
+            @Suppress("USELESS_IS_CHECK") // not useless in this case actually
+            if (specific !is T) return null
+
+            return this
+        }
     }
 
 }

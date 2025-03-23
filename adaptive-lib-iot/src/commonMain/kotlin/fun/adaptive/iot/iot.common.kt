@@ -6,6 +6,7 @@ import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.iot.marker.rht.ui.wsRhtBrowserContentDef
 import `fun`.adaptive.iot.marker.rht.ui.wsRhtBrowserToolDef
 import `fun`.adaptive.iot.point.computed.AioComputedPointSpec
+import `fun`.adaptive.iot.point.sim.AioSimPointSpec
 import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.iot.space.ui.browser.SpaceBrowserWsItem
@@ -21,7 +22,7 @@ import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.builtin.AvString
-import `fun`.adaptive.value.item.AmvItemIdList
+import `fun`.adaptive.value.item.AvItemIdList
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvStatus
 import `fun`.adaptive.value.operation.*
@@ -41,11 +42,12 @@ suspend fun iotCommon(loadStrings: Boolean = true) {
 
     r += AvItem
     r += AvStatus
-    r += AmvItemIdList
+    r += AvItemIdList
 
     r += AioSpaceSpec
     r += AioDeviceSpec
     r += AioComputedPointSpec
+    r += AioSimPointSpec
 
     r += AvString
 

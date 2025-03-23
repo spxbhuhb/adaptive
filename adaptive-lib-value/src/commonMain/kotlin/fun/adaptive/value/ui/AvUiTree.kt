@@ -13,7 +13,7 @@ import `fun`.adaptive.value.AvValueApi
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueSubscriptionId
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.item.AmvItemIdList
+import `fun`.adaptive.value.item.AvItemIdList
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.operation.AvValueOperation
@@ -145,7 +145,7 @@ class AvUiTree(
     fun process(value: AvValue) {
         when (value) {
             is AvItem<*> -> process(value)
-            is AmvItemIdList -> process(value)
+            is AvItemIdList -> process(value)
         }
     }
 
@@ -177,7 +177,7 @@ class AvUiTree(
         }
     }
 
-    private fun process(list: AmvItemIdList) {
+    private fun process(list: AvItemIdList) {
         when (list.markerName) {
             childListMarker -> {
                 val node = nodeMap.getOrPut(list.parentId) { Node() }

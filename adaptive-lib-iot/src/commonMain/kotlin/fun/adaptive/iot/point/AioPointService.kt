@@ -5,6 +5,7 @@ import `fun`.adaptive.adat.api.deepCopy
 import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
+import `fun`.adaptive.iot.point.computed.AioPointComputeWorker
 import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.runtime.GlobalRuntimeContext
@@ -21,25 +22,37 @@ import kotlinx.datetime.Clock.System.now
 class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
 
     companion object {
-        lateinit var worker: AvValueWorker
+        lateinit var valueWorker: AvValueWorker
+        lateinit var computeWorker: AioPointComputeWorker
     }
 
     override fun mount() {
         check(GlobalRuntimeContext.isServer)
-        worker = safeAdapter.firstImpl<AvValueWorker>()
+        valueWorker = safeAdapter.firstImpl<AvValueWorker>()
+        computeWorker = safeAdapter.firstImpl<AioPointComputeWorker>()
     }
 
     override suspend fun add(
         name: String,
         itemType: AvMarker,
         parentId: AvValueId,
-        spec: AioPointSpec
+        spec: AioPointSpec,
+        markers: List<AvMarker>
     ): AvValueId {
         publicAccess()
 
         val itemId = uuid7<AvValue>()
 
-        worker.execute {
+        val itemMarkers = mutableMapOf(
+            PointMarkers.POINT to null,
+            itemType to null
+        )
+
+        for (marker in markers) {
+            itemMarkers[marker] = null
+        }
+
+        valueWorker.execute {
 
             val item = AvItem(
                 name,
@@ -49,10 +62,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
                 AvStatus.OK,
                 parentId,
                 nextFriendlyId(PointMarkers.POINT, "PT-"),
-                markersOrNull = mutableMapOf(
-                    PointMarkers.POINT to null,
-                    itemType to null
-                ),
+                markersOrNull = itemMarkers,
                 specific = spec
             )
 
@@ -67,7 +77,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
     override suspend fun rename(spaceId: AvValueId, name: String) {
         publicAccess()
 
-        worker.updateItem(spaceId) {
+        valueWorker.updateItem(spaceId) {
             it.copy(timestamp = now(), name = name)
         }
     }
@@ -75,7 +85,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
     override suspend fun moveUp(spaceId: AvValueId) {
         publicAccess()
 
-        worker.execute {
+        valueWorker.execute {
             moveUp(spaceId, SpaceMarkers.SUB_SPACES, SpaceMarkers.TOP_SPACES)
         }
     }
@@ -83,7 +93,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
     override suspend fun moveDown(spaceId: AvValueId) {
         publicAccess()
 
-        worker.execute {
+        valueWorker.execute {
             moveDown(spaceId, SpaceMarkers.SUB_SPACES, SpaceMarkers.TOP_SPACES)
         }
     }
@@ -91,7 +101,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
     override suspend fun setSpec(valueId: AvValueId, spec: AioPointSpec) {
         publicAccess()
 
-        return worker.update<AvItem<AioPointSpec>>(valueId) {
+        return valueWorker.update<AvItem<AioPointSpec>>(valueId) {
             it.copy(timestamp = now(), specific = spec)
         }
     }
@@ -101,26 +111,34 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
 
         val pointId = checkNotNull(curVal.parentId)
 
-        worker.execute {
-            val point = item(pointId).asAvItem<AioPointSpec>()
-            val originalCurValId = point.markers[PointMarkers.CUR_VAL]
-            val curValId = originalCurValId ?: uuid7<AvValue>()
-
-            this += curVal.deepCopy(AdatChange(listOf("uuid"), curValId))
-
-            val markers = if (originalCurValId == null) {
-                point.toMutableMarkers().also { it[PointMarkers.CUR_VAL] = curValId }
-            } else {
-                point.markersOrNull
-            }
-
-            this += point.copy(
-                status = curVal.status,
-                timestamp = curVal.timestamp,
-                markersOrNull = markers
-            )
+        val newCurVal = valueWorker.execute {
+            unsafeSetCurVal(this, pointId, curVal)
         }
+
+        computeWorker.channel.trySend(newCurVal)
     }
 
+    fun unsafeSetCurVal(context : AvValueWorker.WorkerComputeContext, pointId: AvValueId, curVal: AvValue) : AvValue {
+        val point = context.item(pointId).asAvItem<AioPointSpec>()
+        val originalCurValId = point.markers[PointMarkers.CUR_VAL]
+        val curValId = originalCurValId ?: uuid7<AvValue>()
 
+        val newCurVal = curVal.deepCopy(AdatChange(listOf("uuid"), curValId))
+
+        context += newCurVal
+
+        val markers = if (originalCurValId == null) {
+            point.toMutableMarkers().also { it[PointMarkers.CUR_VAL] = curValId }
+        } else {
+            point.markersOrNull
+        }
+
+        context += point.copy(
+            status = curVal.status,
+            timestamp = curVal.timestamp,
+            markersOrNull = markers
+        )
+
+        return newCurVal
+    }
 }

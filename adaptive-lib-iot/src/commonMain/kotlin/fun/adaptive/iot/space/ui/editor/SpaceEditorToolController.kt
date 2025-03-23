@@ -36,14 +36,16 @@ class SpaceEditorToolController(
                 Strings.temperature,
                 PointMarkers.COMPUTED_POINT,
                 spaceId,
-                AioComputedPointSpec(dependencyMarker = PhScienceMarkers.TEMP)
+                AioComputedPointSpec(dependencyMarker = PhScienceMarkers.TEMP),
+                listOf(PhScienceMarkers.TEMP)
             )
 
             pointService.add(
                 Strings.humidity,
                 PointMarkers.COMPUTED_POINT,
                 spaceId,
-                AioComputedPointSpec(dependencyMarker = PhScienceMarkers.HUMIDITY)
+                AioComputedPointSpec(dependencyMarker = PhScienceMarkers.HUMIDITY),
+                listOf(PhScienceMarkers.HUMIDITY)
             )
         }
     }

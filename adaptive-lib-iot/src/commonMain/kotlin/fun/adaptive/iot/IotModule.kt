@@ -3,11 +3,12 @@ package `fun`.adaptive.iot
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
 import `fun`.adaptive.iot.device.AioDeviceSpec
 import `fun`.adaptive.iot.point.computed.AioComputedPointSpec
+import `fun`.adaptive.iot.point.sim.AioSimPointSpec
 import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.builtin.AvString
-import `fun`.adaptive.value.item.AmvItemIdList
+import `fun`.adaptive.value.item.AvItemIdList
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvStatus
 import `fun`.adaptive.value.operation.*
@@ -28,11 +29,12 @@ open class IotModule<WT>(
 
         this += AvItem
         this += AvStatus
-        this += AmvItemIdList
+        this += AvItemIdList
 
         this += AioSpaceSpec
         this += AioDeviceSpec
         this += AioComputedPointSpec
+        this += AioSimPointSpec
 
         this += AvString
     }

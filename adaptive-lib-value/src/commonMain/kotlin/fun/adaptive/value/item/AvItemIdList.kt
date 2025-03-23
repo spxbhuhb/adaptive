@@ -7,7 +7,7 @@ import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
 
 @Adat
-data class AmvItemIdList(
+data class AvItemIdList(
     override val uuid: AvValueId,
     override val timestamp: Instant,
     override val status: AvStatus,

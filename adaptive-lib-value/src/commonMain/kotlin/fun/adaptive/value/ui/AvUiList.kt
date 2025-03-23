@@ -8,9 +8,8 @@ import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.UUID.Companion.uuid4
-import `fun`.adaptive.utility.debug
 import `fun`.adaptive.value.*
-import `fun`.adaptive.value.item.AmvItemIdList
+import `fun`.adaptive.value.item.AvItemIdList
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.operation.*
@@ -114,7 +113,7 @@ class AvUiList(
     }
 
     fun processList(value: AvValue) {
-        value as AmvItemIdList
+        value as AvItemIdList
         if (value.uuid == listId && list != value.itemIds) {
             list = value.itemIds
             renew()

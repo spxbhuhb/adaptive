@@ -7,8 +7,8 @@ import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.p04
 import `fun`.adaptive.utility.use
-import `fun`.adaptive.value.item.AmvItemIdList
 import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.item.AvItemIdList
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.item.AvMarkerValue
 import `fun`.adaptive.value.operation.*
@@ -627,8 +627,17 @@ class AvValueWorker(
         fun item(itemId: AvValueId): AvItem<*> =
             values[itemId] as AvItem<*>
 
+        fun itemOrNull(itemId: AvValueId?): AvItem<*>? =
+            itemId?.let { safeItemId -> values[safeItemId]?.let { it as AvItem<*> } }
+
         fun valueOrNull(valueId: AvValueId?): AvValue? =
             valueId?.let { values[valueId] }
+
+        fun itemIdsOrNull(itemListValeId: AvValueId?): List<AvValueId>? =
+            (valueOrNull(itemListValeId) as? AvItemIdList)?.itemIds
+
+        fun safeItemIds(itemListValeId: AvValueId?): List<AvValueId> =
+            itemIdsOrNull(itemListValeId) ?: emptyList()
 
         inline fun <reified T> markerVal(itemId: AvValueId, marker: AvMarker) =
             getMarkerValue(itemId, marker) as T
@@ -639,13 +648,13 @@ class AvValueWorker(
         fun getContainingList(
             childId: AvValueId,
             childListMarker: AvMarker, topListMarker: AvMarker
-        ): AmvItemIdList? {
+        ): AvItemIdList? {
             val parentId = item(childId).parentId
 
-            val original: AmvItemIdList?
+            val original: AvItemIdList?
 
             if (parentId == null) {
-                original = queryByMarker(topListMarker).firstOrNull() as? AmvItemIdList
+                original = queryByMarker(topListMarker).firstOrNull() as? AvItemIdList
             } else {
                 original = markerVal(parentId, childListMarker)
             }
@@ -657,13 +666,13 @@ class AvValueWorker(
             spaceId: AvValueId,
             listMarker: AvMarker
         ) {
-            val original = queryByMarker(listMarker).firstOrNull() as AmvItemIdList?
-            val new: AmvItemIdList
+            val original = queryByMarker(listMarker).firstOrNull() as AvItemIdList?
+            val new: AvItemIdList
 
             if (original != null) {
                 new = original.copy(itemIds = original.itemIds + spaceId)
             } else {
-                new = AmvItemIdList(parentId = uuid7(), listMarker, listOf(spaceId))
+                new = AvItemIdList(parentId = uuid7(), listMarker, listOf(spaceId))
             }
 
             this += new
@@ -674,14 +683,14 @@ class AvValueWorker(
             childId: AvValueId,
             childListMarker: AvMarker
         ) {
-            val original: AmvItemIdList? = markerVal(parentId, childListMarker)
+            val original: AvItemIdList? = markerVal(parentId, childListMarker)
 
             if (original != null) {
                 this += original.copy(itemIds = original.itemIds + childId)
                 return
             }
 
-            val new = AmvItemIdList(parentId = parentId, childListMarker, listOf(childId))
+            val new = AvItemIdList(parentId = parentId, childListMarker, listOf(childId))
 
             val parent = item(parentId)
 
@@ -698,7 +707,7 @@ class AvValueWorker(
             childId: AvValueId,
             childListMarker: AvMarker
         ) {
-            val original: AmvItemIdList? = markerVal(parentId, childListMarker)
+            val original: AvItemIdList? = markerVal(parentId, childListMarker)
 
             if (original != null) {
                 this += original.copy(itemIds = original.itemIds - childId)

@@ -2,43 +2,95 @@ package `fun`.adaptive.iot.point.computed
 
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.iot.device.DeviceMarkers
+import `fun`.adaptive.iot.point.AioPointService
 import `fun`.adaptive.iot.point.PointMarkers
-import `fun`.adaptive.utility.UUID.Companion.uuid4
-import `fun`.adaptive.value.AvChannelSubscription
-import `fun`.adaptive.value.AvSubscribeCondition
+import `fun`.adaptive.iot.space.SpaceMarkers
+import `fun`.adaptive.utility.safeSuspendCall
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.operation.AvValueOperation
-import `fun`.adaptive.value.operation.AvoAdd
-import `fun`.adaptive.value.operation.AvoAddOrUpdate
-import `fun`.adaptive.value.operation.AvoUpdate
+import `fun`.adaptive.value.builtin.AvDouble
+import `fun`.adaptive.value.item.AvItem.Companion.asAvItemOrNull
 import kotlinx.coroutines.channels.Channel
 
 class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker> {
 
     val valueWorker by worker<AvValueWorker>()
 
-    val channel = Channel<AvValueOperation>(Channel.UNLIMITED)
+    val channel = Channel<AvValue>(Channel.UNLIMITED)
 
     override suspend fun run() {
-        subscribe()
+        for (value in channel) {
+            safeSuspendCall(logger) {
+                val dependentPointIds = valueWorker.execute { collectDependents(value) ?: emptyList() }
 
-        for (operation in channel) {
-            operation.forEach { process(it) }
+                dependentPointIds.forEach { pointId ->
+                    computePoint(pointId, value)
+                }
+            }
         }
     }
 
-    private fun subscribe() {
-        val condition = AvSubscribeCondition(marker = PointMarkers.COMPUTED_POINT)
-        val subscription = AvChannelSubscription(uuid4(), listOf(condition), channel)
-        valueWorker.subscribe(subscription)
+    fun AvValueWorker.WorkerComputeContext.collectDependents(value: AvValue): MutableList<AvValueId>? {
+        val point = itemOrNull(value.parentId) ?: return null
+
+        // point container may be a controller or a space
+
+        val container = itemOrNull(point.parentId) ?: return null
+        val containerMarkers = container.markersOrNull ?: return null
+
+        // find out the space id this computation should work with
+
+        val spaceId: AvValueId?
+
+        when {
+            DeviceMarkers.CONTROLLER in containerMarkers -> spaceId = containerMarkers[SpaceMarkers.SPACE_REF]
+            SpaceMarkers.SPACE in containerMarkers -> spaceId = container.parentId
+            else -> spaceId = null
+        }
+
+        if (spaceId == null) return null
+
+        // here we have a space id for this value, let's get the space
+
+        val space = itemOrNull(spaceId) ?: return null
+        val spacePointIds = safeItemIds(space.markersOrNull?.get(PointMarkers.POINTS))
+
+        // We have a safe list of space point ids, let's try to find a point which
+        // is interested in this value.
+
+        val pointsToCompute = mutableListOf<AvValueId>()
+
+        for (spacePointId in spacePointIds) {
+            val spacePoint = itemOrNull(spacePointId)?.asAvItemOrNull<AioComputedPointSpec>() ?: continue
+
+            val dependencyMarker = spacePoint.specific?.dependencyMarker ?: continue
+            if (dependencyMarker !in point.markers) continue
+
+            pointsToCompute += spacePointId
+        }
+
+        return pointsToCompute
     }
 
-    private fun process(operation : AvValueOperation) {
-        when (operation) {
-            is AvoAddOrUpdate -> TODO()
-            is AvoUpdate -> TODO()
-            is AvoAdd -> TODO()
-            else -> Unit
+    suspend fun computePoint(computedPoint: AvValueId, incomingValue: AvValue) {
+        if (incomingValue !is AvDouble) return
+
+        val parentId = incomingValue.parentId ?: return
+
+        val sourceValues = sourceMaps.getOrPut(computedPoint) { mutableMapOf() }
+        sourceValues[parentId] = incomingValue.value
+
+        val result = sourceValues.values.sum() / sourceValues.size
+
+        val newCurVal = valueWorker.execute {
+            AioPointService().unsafeSetCurVal(this, computedPoint, AvDouble(computedPoint, result))
         }
+
+        newCurVal.let { channel.send(it) }
     }
+
+
+    val sourceMaps = mutableMapOf<AvValueId, MutableMap<AvValueId, Double>>()
 }

@@ -9,7 +9,13 @@ import `fun`.adaptive.value.item.AvStatus
 @ServiceApi
 interface AioPointApi {
 
-    suspend fun add(name: String, itemType: AvMarker, parentId: AvValueId, spec : AioPointSpec): AvValueId
+    suspend fun add(
+        name: String,
+        itemType: AvMarker,
+        parentId: AvValueId,
+        spec : AioPointSpec,
+        markers : List<AvMarker> = emptyList()
+    ): AvValueId
 
     suspend fun rename(valueId: AvValueId, name: String)
 
