@@ -1,7 +1,6 @@
 package `fun`.adaptive.iot.space
 
 import `fun`.adaptive.value.item.AvMarker
-import `fun`.adaptive.iot.space.marker.AmvSpace
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.service.ServiceApi
 
@@ -16,9 +15,7 @@ interface AioSpaceApi {
 
     suspend fun moveDown(spaceId: AvValueId)
 
-    suspend fun getSpaceData(spaceId: AvValueId): AmvSpace
-
-    suspend fun setSpaceData(valueId: AvValueId, area: Double, notes: String?)
+    suspend fun setSpecSpec(valueId: AvValueId, spec : AioSpaceSpec)
 
     /**
      * Add a `spaceRef` marker to [itemId] that points to [spaceId].

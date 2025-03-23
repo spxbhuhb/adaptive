@@ -10,7 +10,7 @@ fun WsPane<DeviceBrowserWsItem, *>.subDevices(): List<AvValueId> {
     return toolController.valueTreeStore.getSubItems(browserItem.item.uuid)
 }
 
-fun WsPane<DeviceBrowserWsItem, *>.getDevice(deviceId: AvValueId): AvItem? {
+fun WsPane<DeviceBrowserWsItem, *>.getDevice(deviceId: AvValueId): AvItem<*>? {
     val toolController = this.data.config.controller
     return toolController.valueTreeStore[deviceId]
 }
@@ -21,7 +21,7 @@ fun DeviceBrowserWsItem.devicePathNames(): List<String> {
     val deviceId = this.uuid
     val names = mutableListOf<String>()
 
-    var device: AvItem? = toolController.valueTreeStore[deviceId]
+    var device: AvItem<*>? = toolController.valueTreeStore[deviceId]
     while (device != null) {
         names.add(device.name)
         device = device.parentId?.let { toolController.valueTreeStore[it] }

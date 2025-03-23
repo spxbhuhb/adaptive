@@ -10,7 +10,7 @@ fun WsPane<SpaceBrowserWsItem, *>.subSpaces(): List<AvValueId> {
     return toolController.valueTreeStore.getSubItems(browserItem.item.uuid)
 }
 
-fun WsPane<SpaceBrowserWsItem, *>.getSpace(spaceId: AvValueId): AvItem? {
+fun WsPane<SpaceBrowserWsItem, *>.getSpace(spaceId: AvValueId): AvItem<*>? {
     val toolController = this.data.config.controller
     return toolController.valueTreeStore[spaceId]
 }
@@ -21,7 +21,7 @@ fun SpaceBrowserWsItem.spacePathNames(): List<String> {
     val spaceId = this.uuid
     val names = mutableListOf<String>()
 
-    var space: AvItem? = toolController.valueTreeStore[spaceId]
+    var space: AvItem<*>? = toolController.valueTreeStore[spaceId]
     while (space != null) {
         names.add(space.name)
         space = space.parentId?.let { toolController.valueTreeStore[it] }

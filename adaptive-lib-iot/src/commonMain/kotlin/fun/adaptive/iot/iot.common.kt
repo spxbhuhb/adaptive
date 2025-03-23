@@ -1,31 +1,15 @@
 package `fun`.adaptive.iot
 
-import `fun`.adaptive.adaptive_lib_iot.generated.resources.account_tree
-import `fun`.adaptive.adaptive_lib_iot.generated.resources.apartment
-import `fun`.adaptive.adaptive_lib_iot.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.adaptive_lib_iot.generated.resources.crop_5_4
-import `fun`.adaptive.adaptive_lib_iot.generated.resources.database
-import `fun`.adaptive.adaptive_lib_iot.generated.resources.dew_point
-import `fun`.adaptive.adaptive_lib_iot.generated.resources.host
-import `fun`.adaptive.adaptive_lib_iot.generated.resources.meeting_room
-import `fun`.adaptive.adaptive_lib_iot.generated.resources.memory
-import `fun`.adaptive.adaptive_lib_iot.generated.resources.responsive_layout
-import `fun`.adaptive.adaptive_lib_iot.generated.resources.stacks
-import `fun`.adaptive.iot.device.marker.AmvDevice
-import `fun`.adaptive.iot.device.marker.DeviceMarkers
-import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvStatus
-import `fun`.adaptive.value.item.AmvItemIdList
+import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
+import `fun`.adaptive.iot.device.AioDeviceSpec
+import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.iot.marker.rht.ui.wsRhtBrowserContentDef
 import `fun`.adaptive.iot.marker.rht.ui.wsRhtBrowserToolDef
-import `fun`.adaptive.iot.space.marker.AmvSpace
-import `fun`.adaptive.iot.space.marker.SpaceMarkers
+import `fun`.adaptive.iot.space.AioSpaceSpec
+import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.iot.space.ui.browser.SpaceBrowserWsItem
 import `fun`.adaptive.iot.space.ui.editor.wsSpaceEditorContentDef
 import `fun`.adaptive.iot.space.ui.editor.wsSpaceEditorToolDef
-import `fun`.adaptive.value.AvSubscribeCondition
-import `fun`.adaptive.value.builtin.AvString
-import `fun`.adaptive.value.operation.*
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.AbstractAuiAdapter
@@ -34,6 +18,12 @@ import `fun`.adaptive.ui.workspace.logic.WsClassPaneController
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.value.AvSubscribeCondition
+import `fun`.adaptive.value.builtin.AvString
+import `fun`.adaptive.value.item.AmvItemIdList
+import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.item.AvStatus
+import `fun`.adaptive.value.operation.*
 import `fun`.adaptive.value.ui.iconCache
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
@@ -52,8 +42,8 @@ suspend fun iotCommon(loadStrings: Boolean = true) {
     r += AvStatus
     r += AmvItemIdList
 
-    r += AmvSpace
-    r += AmvDevice
+    r += AioSpaceSpec
+    r += AioDeviceSpec
 
     r += AvString
 
@@ -74,7 +64,6 @@ fun AbstractAuiAdapter<*, *>.iotCommon() {
     iconCache[DeviceMarkers.COMPUTER] = Graphics.host
     iconCache[DeviceMarkers.NETWORK] = Graphics.account_tree
     iconCache[DeviceMarkers.DEVICE] = Graphics.memory
-    iconCache[DeviceMarkers.POINT] = Graphics.database
 }
 
 fun Workspace.iotCommon() {

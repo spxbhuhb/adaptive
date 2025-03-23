@@ -3,17 +3,15 @@ package `fun`.adaptive.iot.space
 import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
-import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvMarker
-import `fun`.adaptive.value.item.AvStatus
-import `fun`.adaptive.iot.space.marker.AmvSpace
-import `fun`.adaptive.iot.space.marker.SpaceMarkers
-import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid7
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.AvValueWorker
+import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.item.AvMarker
+import `fun`.adaptive.value.item.AvStatus
 import kotlinx.datetime.Clock.System.now
 
 class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
@@ -34,8 +32,6 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
 
         worker.execute {
 
-            val spaceSpec = AmvSpace(owner = spaceId, area = 0.0)
-
             val space = AvItem(
                 name,
                 AioWsContext.WSIT_SPACE + ":$spaceType",
@@ -44,14 +40,14 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
                 AvStatus.OK,
                 nextFriendlyId(SpaceMarkers.SPACE, "SP-"),
                 markersOrNull = mutableMapOf(
-                    SpaceMarkers.SPACE to spaceSpec.uuid,
+                    SpaceMarkers.SPACE to null,
                     spaceType to null
                 ),
-                parentId = parentId
+                parentId = parentId,
+                specific = AioSpaceSpec(area = 0.0)
             )
 
             this += space
-            this += spaceSpec
 
             if (parentId == null) {
                 addTopList(spaceId, SpaceMarkers.TOP_SPACES)
@@ -87,17 +83,11 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
         }
     }
 
-    override suspend fun getSpaceData(spaceId: AvValueId): AmvSpace {
+    override suspend fun setSpecSpec(valueId: AvValueId, spec : AioSpaceSpec) {
         publicAccess()
 
-        return worker.markerVal(spaceId, SpaceMarkers.SPACE)
-    }
-
-    override suspend fun setSpaceData(valueId: AvValueId, area: Double, notes: String?) {
-        publicAccess()
-
-        return worker.update<AmvSpace>(valueId) {
-            it.copy(timestamp = now(), area = area, notes = notes)
+        return worker.update<AvItem<AioSpaceSpec>>(valueId) {
+            it.copy(timestamp = now(), specific = spec)
         }
     }
 

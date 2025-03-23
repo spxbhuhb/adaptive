@@ -178,7 +178,7 @@ class AvValueWorker(
 
     fun notifyByMarker(value: AvValue, commitSet: MutableSet<AvSubscription>) {
         when (value) {
-            is AvItem -> value.markersOrNull?.forEach { marker -> notifyByMarker(marker.key, value, commitSet) }
+            is AvItem<*> -> value.markersOrNull?.forEach { marker -> notifyByMarker(marker.key, value, commitSet) }
             is AvMarkerValue -> notifyByMarker(value.markerName, value, commitSet)
         }
     }
@@ -219,10 +219,10 @@ class AvValueWorker(
     private fun index(original: AvValue?, value: AvValue, commitSet: MutableSet<AvSubscription>) {
         when (value) {
 
-            is AvItem -> {
+            is AvItem<*> -> {
                 index(
                     value,
-                    (original as? AvItem)?.markers?.keys ?: emptySet(),
+                    (original as? AvItem<*>)?.markers?.keys ?: emptySet(),
                     value.markers.keys,
                     commitSet
                 )
@@ -274,7 +274,7 @@ class AvValueWorker(
     }
 
     private inline fun MarkerSubscriptionEntry.ifApplicable(value: AvValue, block: () -> Unit) {
-        if (itemOnly && value !is AvItem) return
+        if (itemOnly && value !is AvItem<*>) return
         block()
     }
 
@@ -375,8 +375,8 @@ class AvValueWorker(
             values[valueId]
         }
 
-    fun item(valueId: AvValueId): AvItem =
-        get(valueId) as AvItem
+    fun item(valueId: AvValueId): AvItem<*> =
+        get(valueId) as AvItem<*>
 
     inline fun <reified T> markerVal(itemId: AvValueId, marker: AvMarker) =
         getMarkerValue(itemId, marker) as T
@@ -391,7 +391,7 @@ class AvValueWorker(
 
     private fun unsafeGetMarkerValue(valueId: AvValueId, marker: AvMarker): AvMarkerValue? =
         values[valueId]?.let { item ->
-            item as AvItem
+            item as AvItem<*>
             item.markersOrNull?.get(marker)?.let { markerValue ->
                 values[markerValue]
             }
@@ -505,7 +505,7 @@ class AvValueWorker(
     suspend inline fun updateItem(
         valueId: AvValueId,
         timeout: Duration = 5.seconds,
-        noinline updateFun: (AvItem) -> AvItem
+        noinline updateFun: (AvItem<*>) -> AvItem<*>
     ) {
         executeUpdate(valueId, timeout, AvItem::class, updateFun)
     }
@@ -592,9 +592,9 @@ class AvValueWorker(
             markerIndices[marker]?.forEach { block(values[it] !!) }
         }
 
-        fun forEachItemByMarker(marker: AvMarker, block: (AvItem) -> Unit) {
+        fun forEachItemByMarker(marker: AvMarker, block: (AvItem<*>) -> Unit) {
             markerIndices[marker]?.forEach {
-                val value = values[it] as? AvItem
+                val value = values[it] as? AvItem<*>
                 if (value != null) block(value)
             }
         }
@@ -605,8 +605,8 @@ class AvValueWorker(
         @Suppress("unused") // used for debugging
         fun dump(): String = this@AvValueWorker.dump()
 
-        fun item(itemId: AvValueId): AvItem =
-            values[itemId] as AvItem
+        fun item(itemId: AvValueId): AvItem<*> =
+            values[itemId] as AvItem<*>
 
         inline fun <reified T> markerVal(itemId: AvValueId, marker: AvMarker) =
             getMarkerValue(itemId, marker) as T

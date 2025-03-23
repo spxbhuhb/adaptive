@@ -3,13 +3,13 @@ package `fun`.adaptive.iot
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.iot.alarm.ui.wsAlarmToolDef
-import `fun`.adaptive.iot.device.marker.DeviceMarkers
+import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorContentDef
 import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorToolDef
 import `fun`.adaptive.iot.history.ui.wsHistoryToolDef
 import `fun`.adaptive.iot.marker.rht.ui.wsRhtBrowserContentDef
 import `fun`.adaptive.iot.marker.rht.ui.wsRhtBrowserToolDef
-import `fun`.adaptive.iot.space.marker.SpaceMarkers
+import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.iot.space.ui.browser.SpaceBrowserWsItem
 import `fun`.adaptive.iot.space.ui.editor.wsSpaceEditorContentDef
 import `fun`.adaptive.iot.space.ui.editor.wsSpaceEditorToolDef
@@ -36,7 +36,6 @@ class IotWsModule : IotModule<Workspace>(true) {
         iconCache[DeviceMarkers.COMPUTER] = Graphics.host
         iconCache[DeviceMarkers.NETWORK] = Graphics.account_tree
         iconCache[DeviceMarkers.CONTROLLER] = Graphics.memory
-        iconCache[DeviceMarkers.POINT] = Graphics.database
     }
 
     override fun Workspace.init() {

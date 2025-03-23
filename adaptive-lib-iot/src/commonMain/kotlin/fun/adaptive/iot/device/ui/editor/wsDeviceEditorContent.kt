@@ -7,10 +7,9 @@ import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.producer.fetch
-import `fun`.adaptive.iot.device.marker.AmvDevice
+import `fun`.adaptive.iot.device.AioDeviceSpec
 import `fun`.adaptive.iot.device.ui.localizedDeviceType
-import `fun`.adaptive.iot.space.marker.SpaceMarkers
+import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
@@ -28,6 +27,7 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 import `fun`.adaptive.value.ui.AvNameCache
 
 fun wsDeviceEditorContentDef(context: AioWsContext) {
@@ -41,19 +41,19 @@ fun wsDeviceEditorContentDef(context: AioWsContext) {
             WsPanePosition.Center,
             AioWsContext.WSPANE_DEVICE_CONTENT,
             controller = DeviceEditorContentController(workspace),
-            data = item as AvItem
+            data = item.asAvItem()
         )
     }
 }
 
 @Adaptive
-fun wsDeviceContentPane(pane: WsPane<AvItem, DeviceEditorContentController>): AdaptiveFragment {
+fun wsDeviceContentPane(pane: WsPane<AvItem<AioDeviceSpec>, DeviceEditorContentController>): AdaptiveFragment {
 
     val originalItem = copyOf { pane.data }
     val editItem = copyOf { pane.data }
 
-    val originalDevice = fetch { pane.controller.deviceService.getDeviceData(pane.data.uuid) } ?: AmvDevice(originalItem.uuid)
-    val editDevice = copyOf { originalDevice }
+    val originalSpec = pane.data.specific!!
+    val editSpec = copyOf { pane.data.specific!! }
 
     val spaceNames = fragment().wsContext<AioWsContext>().spaceNameCache.names
 
@@ -101,8 +101,8 @@ fun wsDeviceContentPane(pane: WsPane<AvItem, DeviceEditorContentController>): Ad
 
             withLabel(Strings.note) {
                 width { 400.dp }
-                textInputArea(editDevice.notes) { v ->
-                    editDevice.update(editDevice::notes, v)
+                textInputArea(editSpec.notes) { v ->
+                    editSpec.update(editSpec::notes, v)
                 } .. height { 300.dp }
             }
 
@@ -111,8 +111,8 @@ fun wsDeviceContentPane(pane: WsPane<AvItem, DeviceEditorContentController>): Ad
                     pane.controller.rename(editItem.uuid, editItem.name)
                     originalItem.update(originalItem::name, editItem.name)
                 }
-                if (editDevice != originalDevice) {
-                    pane.controller.setDeviceData(editDevice)
+                if (editSpec != originalSpec) {
+                    pane.controller.setSpec(pane.data.uuid, editSpec)
                 }
                 if (editSpace != originalSpace) {
                     pane.controller.setSpace(editItem.uuid, editSpace !!.itemId)

@@ -3,8 +3,6 @@ package `fun`.adaptive.iot.device
 import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
-import `fun`.adaptive.iot.device.marker.DeviceMarkers
-import `fun`.adaptive.iot.device.marker.AmvDevice
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid7
@@ -34,9 +32,7 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
 
         worker.execute {
 
-            val spec = AmvDevice(owner = itemId)
-
-            val item = AvItem(
+            val item = AvItem<AioDeviceSpec>(
                 name,
                 AioWsContext.WSIT_DEVICE + ":$itemType",
                 itemId,
@@ -44,14 +40,14 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
                 AvStatus.OK,
                 nextFriendlyId(DeviceMarkers.DEVICE, "DEV-"),
                 markersOrNull = mutableMapOf(
-                    DeviceMarkers.DEVICE to spec.uuid,
+                    DeviceMarkers.DEVICE to null,
                     itemType to null
                 ),
-                parentId = parentId
+                parentId = parentId,
+                specific = AioDeviceSpec()
             )
 
             this += item
-            this += spec
 
             if (parentId == null) {
                 addTopList(itemId, DeviceMarkers.TOP_DEVICES)
@@ -87,17 +83,11 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
         }
     }
 
-    override suspend fun getDeviceData(deviceId: AvValueId): AmvDevice {
+    override suspend fun setSpec(valueId: AvValueId, spec: AioDeviceSpec) {
         publicAccess()
 
-        return worker.markerVal(deviceId, DeviceMarkers.DEVICE)
-    }
-
-    override suspend fun setDeviceData(valueId: AvValueId, notes: String?) {
-        publicAccess()
-
-        return worker.update<AmvDevice>(valueId) {
-            it.copy(timestamp = now(), notes = notes)
+        return worker.update<AvItem<AioDeviceSpec>>(valueId) {
+            it.copy(timestamp = now(), specific = spec)
         }
     }
 

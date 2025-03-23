@@ -41,7 +41,7 @@ class AvUiTree(
     private val nodeMap = mutableMapOf<AvValueId, Node>()
 
     private class Node(
-        var aioItem: AvItem? = null,
+        var aioItem: AvItem<*>? = null,
         var childIds: List<AvValueId>? = null,
         var treeItem: TreeItem<AvValueId>? = null
     )
@@ -144,12 +144,12 @@ class AvUiTree(
 
     fun process(value: AvValue) {
         when (value) {
-            is AvItem -> process(value)
+            is AvItem<*> -> process(value)
             is AmvItemIdList -> process(value)
         }
     }
 
-    private fun process(item: AvItem) {
+    private fun process(item: AvItem<*>) {
         val node = nodeMap.getOrPut(item.uuid) { Node() }
 
         node.aioItem = item

@@ -10,7 +10,7 @@ class DeviceBrowserWsItem(
     override val name: String,
     override val type: WsItemType,
     val config: DeviceBrowserConfig,
-    val item: AvItem
+    val item: AvItem<*>
 ) : WsItem() {
 
     val uuid

@@ -1,6 +1,6 @@
 package `fun`.adaptive.iot.ws
 
-import `fun`.adaptive.iot.space.marker.SpaceMarkers
+import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsContext
 import `fun`.adaptive.value.ui.AvNameCache

@@ -6,7 +6,7 @@ import `fun`.adaptive.ui.builtin.empty
 import `fun`.adaptive.value.item.AvItem
 
 
-fun iconFor(item: AvItem): GraphicsResourceSet {
+fun iconFor(item: AvItem<*>): GraphicsResourceSet {
 
     val byType = iconCache[item.type]
     if (byType != null) return byType

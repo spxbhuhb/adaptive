@@ -10,7 +10,7 @@ class SpaceBrowserWsItem(
     override val name: String,
     override val type: WsItemType,
     val config: SpaceBrowserConfig,
-    val item: AvItem
+    val item: AvItem<*>
 ) : WsItem() {
 
     val uuid

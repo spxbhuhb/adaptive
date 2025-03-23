@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot.space.marker
+package `fun`.adaptive.iot.space
 
 object SpaceMarkers {
     const val SPACE = "space"

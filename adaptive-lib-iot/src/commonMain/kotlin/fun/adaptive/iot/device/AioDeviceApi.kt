@@ -1,9 +1,8 @@
 package `fun`.adaptive.iot.device
 
-import `fun`.adaptive.value.item.AvMarker
-import `fun`.adaptive.iot.device.marker.AmvDevice
-import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.service.ServiceApi
+import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.item.AvMarker
 
 @ServiceApi
 interface AioDeviceApi {
@@ -16,8 +15,6 @@ interface AioDeviceApi {
 
     suspend fun moveDown(deviceId: AvValueId)
 
-    suspend fun getDeviceData(deviceId: AvValueId): AmvDevice
-
-    suspend fun setDeviceData(valueId: AvValueId, notes: String?)
+    suspend fun setSpec(valueId: AvValueId, spec: AioDeviceSpec)
 
 }

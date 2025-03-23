@@ -18,7 +18,7 @@ import kotlinx.datetime.toLocalDateTime
 
 @Adaptive
 fun rhtListItem(
-    item: AvItem
+    item: AvItem<*>
 ) : AdaptiveFragment {
 
     val rht = AmvRelativeHumidityAndTemperature(item.uuid, Double.NaN, Double.NaN)

@@ -124,8 +124,8 @@ class AvValueWorkerTest {
         assertTrue(channel.isEmpty)
     }
 
-    fun addSensor(worker: AvValueWorker, markers: AvMarkerMap): AvItem {
-        val item = AvItem(
+    fun addSensor(worker: AvValueWorker, markers: AvMarkerMap): AvItem<*> {
+        val item = AvItem<Unit>(
             name = "Temp Sensor",
             type = "sensor",
             uuid = uuid7(),
@@ -133,7 +133,8 @@ class AvValueWorkerTest {
             status = AvStatus.OK,
             friendlyId = "1",
             markersOrNull = markers,
-            parentId = null
+            parentId = null,
+            specific = null
         )
 
         worker.queueAdd(item) // Add the AvItem to the worker
@@ -189,7 +190,7 @@ class AvValueWorkerTest {
         val received = channel.receive()
         check(received is AvoAddOrUpdate)
         assertEquals(newValue.uuid, received.value.uuid)
-        assertNotEquals(newValue.markers, (received.value as AvItem).markers)
+        assertNotEquals(newValue.markers, (received.value as AvItem<*>).markers)
     }
 
     @Test

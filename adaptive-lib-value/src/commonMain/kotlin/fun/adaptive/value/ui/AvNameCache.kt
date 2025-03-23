@@ -26,7 +26,7 @@ class AvNameCache(
         val names: List<String>
     )
 
-    private val itemMap = mutableMapOf<AvValueId, AvItem>()
+    private val itemMap = mutableMapOf<AvValueId, AvItem<*>>()
 
     var names = emptyList<NameCacheEntry>()
 
@@ -89,11 +89,11 @@ class AvNameCache(
     }
 
     fun process(value: AvValue) {
-        check(value is AvItem)
+        check(value is AvItem<*>)
         itemMap[value.uuid] = value
     }
 
-    fun pathNames(item : AvItem): List<String> {
+    fun pathNames(item : AvItem<*>): List<String> {
         var parentId = item.parentId
         val names = mutableListOf<String>(item.name)
 

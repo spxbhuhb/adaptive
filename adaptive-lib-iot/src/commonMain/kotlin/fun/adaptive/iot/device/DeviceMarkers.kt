@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot.device.marker
+package `fun`.adaptive.iot.device
 
 object DeviceMarkers {
     const val DEVICE = "device"

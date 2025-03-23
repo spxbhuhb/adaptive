@@ -10,7 +10,7 @@ class DocBrowserWsItem(
     override val name: String,
     override val type: WsItemType,
     val config: DocBrowserConfig,
-    val item: AvItem
+    val item: AvItem<*>
 ) : WsItem() {
 
     val uuid

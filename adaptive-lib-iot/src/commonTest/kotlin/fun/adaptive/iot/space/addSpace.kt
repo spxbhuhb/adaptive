@@ -5,7 +5,7 @@ import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.item.AvStatus
 import `fun`.adaptive.value.item.FriendlyItemId
 import `fun`.adaptive.iot.space.marker.AmvSpace
-import `fun`.adaptive.iot.space.marker.SpaceMarkers
+import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
@@ -20,7 +20,7 @@ suspend fun addSpace(worker: AvValueWorker, name: String, friendlyItemId: Friend
 
     val spaceSpec = AmvSpace(owner = spaceUuid, area = 12.3)
 
-    val space = AvItem(
+    val space = AvItem<Unit>(
         name,
         AioWsContext.WSIT_SPACE,
         spaceUuid,
@@ -31,7 +31,8 @@ suspend fun addSpace(worker: AvValueWorker, name: String, friendlyItemId: Friend
             SpaceMarkers.SPACE to spaceSpec.uuid,
             spaceType to null
         ),
-        parentId = null
+        parentId = null,
+        specific = null
     )
 
     worker.queueAddAll(space, spaceSpec)
