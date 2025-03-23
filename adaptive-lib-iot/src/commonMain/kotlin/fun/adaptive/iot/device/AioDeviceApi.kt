@@ -7,7 +7,12 @@ import `fun`.adaptive.value.item.AvMarker
 @ServiceApi
 interface AioDeviceApi {
 
-    suspend fun add(name: String, itemType: AvMarker, parentId: AvValueId?): AvValueId
+    suspend fun add(
+        name: String,
+        itemType: AvMarker,
+        parentId: AvValueId?,
+        virtual : Boolean
+    ): AvValueId
 
     suspend fun rename(deviceId: AvValueId, name: String)
 

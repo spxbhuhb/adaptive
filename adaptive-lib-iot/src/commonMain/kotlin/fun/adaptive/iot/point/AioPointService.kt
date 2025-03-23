@@ -93,4 +93,9 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
         }
     }
 
+    override suspend fun setReadValue(valueId: AvValueId, readValue: Double?, status: AvStatus) {
+
+    }
+
+
 }

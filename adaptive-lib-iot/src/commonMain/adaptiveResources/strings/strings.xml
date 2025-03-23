@@ -56,16 +56,25 @@
     <string name="computer">Számítógép</string>
     <string name="network">Hálózat</string>
     <string name="controller">Vezérlő</string>
+    <string name="virtualNetwork">Virtuális hálózat</string>
+    <string name="virtualController">Virtuális vezérlő</string>
 
     <string name="addDevice">Eszköz hozzáadása</string>
     <string name="addComputer">Számítógép hozzáadása</string>
     <string name="addNetwork">Hálózat hozzáadása</string>
     <string name="addController">Vezérlő hozzáadása</string>
+    <string name="addVirtualNetwork">Virtuális hálózat hozzáadása</string>
+    <string name="addVirtualController">Virtuális vezérlő hozzáadása</string>
 
     <!-- device -->
 
     <string name="points">Adatpontok</string>
     <string name="point">Adatpont</string>
+
+    <!-- point -->
+    <string name="newPointValue">Új érték</string>
+    <string name="setPointValue">Beállítás</string>
+    <string name="pointValueSet">Sikeres érték beállítás.</string>
 
     <!-- history -->
 

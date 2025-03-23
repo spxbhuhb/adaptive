@@ -148,7 +148,11 @@ class Workspace(
         (toolPanes.filter(filterFun) + sideBarActions.filter(filterFun)).sortedBy { it.displayOrder }
 
     fun io(block: suspend () -> Unit) {
-        scope.launch { block() }
+        scope.launch { block() } // FIXME this should run in the backend scope
+    }
+
+    fun ui(block: suspend () -> Unit) {
+        scope.launch { block() } // FIXME this should run in the frontend scope
     }
 
     // ---------------------------------------------------------------------------------------------

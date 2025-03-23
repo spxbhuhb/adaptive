@@ -5,10 +5,9 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.iot.device.AioDeviceSpec
 import `fun`.adaptive.iot.device.DeviceMarkers
-import `fun`.adaptive.iot.device.ui.AbstractDeviceToolController
 import `fun`.adaptive.iot.device.ui.DeviceTreeModel
-import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
@@ -27,6 +26,8 @@ import `fun`.adaptive.ui.workspace.model.WsPaneMenuAction
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.ui.workspace.wsToolPane
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 
 @Adaptive
 fun wsDeviceEditorTool(pane: WsPane<Unit, DeviceEditorToolController>): AdaptiveFragment {
@@ -66,30 +67,30 @@ fun wsDeviceEditorToolDef(context: AioWsContext): WsPane<Unit, DeviceEditorToolC
     return pane
 }
 
-private fun apply(state: AbstractDeviceToolController, menuItem: MenuItem<AioDeviceEditOperation>, treeItem: TreeItem<AvValueId>?) {
+private fun apply(controller: DeviceEditorToolController, menuItem: MenuItem<AioDeviceEditOperation>, treeItem: TreeItem<AvValueId>?) {
 
-    val (name, marker) = when (menuItem.data) {
-        AioDeviceEditOperation.AddComputer -> Strings.computer to DeviceMarkers.COMPUTER
-        AioDeviceEditOperation.AddNetwork -> Strings.network to DeviceMarkers.NETWORK
-        AioDeviceEditOperation.AddController -> Strings.controller to DeviceMarkers.CONTROLLER
-        AioDeviceEditOperation.AddDevice -> Strings.point to DeviceMarkers.DEVICE
-        else -> null to null
+    val (name, marker, virtual) = when (menuItem.data) {
+        AioDeviceEditOperation.AddComputer -> Triple(Strings.computer, DeviceMarkers.COMPUTER, false)
+        AioDeviceEditOperation.AddNetwork -> Triple(Strings.network, DeviceMarkers.NETWORK, false)
+        AioDeviceEditOperation.AddController -> Triple(Strings.controller, DeviceMarkers.CONTROLLER, false)
+        AioDeviceEditOperation.AddDevice -> Triple(Strings.point, DeviceMarkers.DEVICE, false)
+        AioDeviceEditOperation.AddVirtualNetwork -> Triple(Strings.virtualNetwork, DeviceMarkers.NETWORK, true)
+        AioDeviceEditOperation.AddVirtualController -> Triple(Strings.virtualController, DeviceMarkers.CONTROLLER, true)
+        else -> Triple(null, null, null)
     }
 
-    if (name != null && marker != null) {
-        state.io { state.deviceService.add(name, marker, treeItem?.data) }
+    if (name != null && marker != null && virtual != null) {
+        controller.addDevice(name, marker, treeItem?.data, virtual)
         return
     }
 
     check(treeItem != null)
 
-    state.workspace.io {
-        when (menuItem.data) {
-            AioDeviceEditOperation.MoveUp -> state.io { state.deviceService.moveUp(treeItem.data) }
-            AioDeviceEditOperation.MoveDown -> state.io { state.deviceService.moveDown(treeItem.data) }
-            AioDeviceEditOperation.Inactivate -> Unit
-            else -> Unit
-        }
+    when (menuItem.data) {
+        AioDeviceEditOperation.MoveUp -> controller.moveUp(treeItem.data)
+        AioDeviceEditOperation.MoveDown -> controller.moveDown(treeItem.data)
+        AioDeviceEditOperation.Inactivate -> Unit
+        else -> Unit
     }
 }
 
@@ -97,25 +98,30 @@ private val addComputer = MenuItem<AioDeviceEditOperation>(Graphics.host, String
 private val addNetwork = MenuItem<AioDeviceEditOperation>(Graphics.account_tree, Strings.addNetwork, AioDeviceEditOperation.AddNetwork)
 private val addController = MenuItem<AioDeviceEditOperation>(Graphics.memory, Strings.addController, AioDeviceEditOperation.AddController)
 private val addDevice = MenuItem<AioDeviceEditOperation>(Graphics.empty, Strings.addDevice, AioDeviceEditOperation.AddDevice)
+private val addVirtualNetwork = MenuItem<AioDeviceEditOperation>(Graphics.account_tree, Strings.addVirtualNetwork, AioDeviceEditOperation.AddVirtualNetwork)
+private val addVirtualController = MenuItem<AioDeviceEditOperation>(Graphics.memory, Strings.addVirtualController, AioDeviceEditOperation.AddVirtualController)
 
-private val addTopMenu = listOf(addComputer, addNetwork, addDevice)
+private val addTopMenu = listOf(addComputer, addNetwork, addDevice, addVirtualNetwork)
 private val computerMenu = listOf(addNetwork, addDevice)
 private val networkMenu = listOf(addController, addDevice)
 private val controllerMenu = listOf(addDevice)
 private val deviceMenu = listOf(addDevice)
+private val virtualNetworkMenu = listOf(addVirtualController)
 
 private fun menu(viewModel: DeviceTreeModel, treeItem: TreeItem<AvValueId>): List<MenuItemBase<AioDeviceEditOperation>> {
 
     val controller = viewModel.context
     val itemId = treeItem.data
 
+    val item = controller.valueTreeStore[itemId]?.asAvItem<AioDeviceSpec>()
     val markers = controller.valueTreeStore[itemId]?.markers?.keys ?: emptySet<DeviceMarkers>()
+    val virtual = (item?.specific?.virtual == true)
 
     val base =
         when {
             DeviceMarkers.COMPUTER in markers -> computerMenu
-            DeviceMarkers.NETWORK in markers -> networkMenu
-            DeviceMarkers.CONTROLLER in markers -> controllerMenu
+            DeviceMarkers.NETWORK in markers -> if (virtual == true) virtualNetworkMenu else networkMenu
+            DeviceMarkers.CONTROLLER in markers -> if (virtual == true) emptyList() else controllerMenu
             DeviceMarkers.DEVICE in markers -> deviceMenu
             else -> addTopMenu
         }
@@ -152,7 +158,16 @@ private fun contextMenuBuilder(
 ): AdaptiveFragment {
     column {
         zIndex { 200 }
-        contextMenu(menu(viewModel, treeItem)) { menuItem, _ -> apply(viewModel.context, menuItem, treeItem); hide() }
+        contextMenu(menu(viewModel, treeItem)) { menuItem, _ ->
+
+            apply(
+                viewModel.context as DeviceEditorToolController,
+                menuItem,
+                treeItem
+            )
+
+            hide()
+        }
     }
     return fragment()
 }

@@ -11,6 +11,7 @@ import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvMarker
+import `fun`.adaptive.value.item.AvMarkerValue
 import `fun`.adaptive.value.item.AvStatus
 import kotlinx.datetime.Clock.System.now
 
@@ -25,10 +26,24 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
         worker = safeAdapter.firstImpl<AvValueWorker>()
     }
 
-    override suspend fun add(name: String, itemType: AvMarker, parentId: AvValueId?): AvValueId {
+    override suspend fun add(
+        name: String,
+        itemType: AvMarker,
+        parentId: AvValueId?,
+        virtual: Boolean
+    ): AvValueId {
         publicAccess()
 
         val itemId = uuid7<AvValue>()
+
+        val markers = mutableMapOf<AvMarker, AvValueId?>(
+            DeviceMarkers.DEVICE to null,
+            itemType to null
+        )
+
+        if (virtual) {
+            markers[DeviceMarkers.VIRTUAL_DEVICE] = null
+        }
 
         worker.execute {
 
@@ -39,12 +54,9 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
                 now(),
                 AvStatus.OK,
                 nextFriendlyId(DeviceMarkers.DEVICE, "DEV-"),
-                markersOrNull = mutableMapOf(
-                    DeviceMarkers.DEVICE to null,
-                    itemType to null
-                ),
+                markersOrNull = markers,
                 parentId = parentId,
-                specific = AioDeviceSpec()
+                specific = AioDeviceSpec(virtual)
             )
 
             this += item

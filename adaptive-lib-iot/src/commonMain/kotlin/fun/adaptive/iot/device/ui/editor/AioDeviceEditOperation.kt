@@ -5,6 +5,8 @@ enum class AioDeviceEditOperation {
     AddNetwork,
     AddController,
     AddDevice,
+    AddVirtualNetwork,
+    AddVirtualController,
     MoveUp,
     MoveDown,
     Inactivate

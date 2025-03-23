@@ -21,14 +21,10 @@ class AvNameCache(
     itemMarker: AvMarker
 ) {
 
-    class NameCacheEntry(
-        val itemId: AvValueId,
-        val names: List<String>
-    )
 
     private val itemMap = mutableMapOf<AvValueId, AvItem<*>>()
 
-    var names = emptyList<NameCacheEntry>()
+    var names = emptyList<AvNameCacheEntry>()
 
     val localWorker = adapter.firstImpl<AvValueWorker>()
     val remoteService = getService<AvValueApi>(transport)
@@ -107,10 +103,10 @@ class AvNameCache(
     }
 
     fun refresh() {
-        val new = mutableListOf<NameCacheEntry>()
+        val new = mutableListOf<AvNameCacheEntry>()
 
         for (item in itemMap.values) {
-            new += NameCacheEntry(item.uuid, pathNames(item))
+            new += AvNameCacheEntry(item.uuid, pathNames(item))
         }
 
         names = new.sortedBy { it.names.joinToString(".") }

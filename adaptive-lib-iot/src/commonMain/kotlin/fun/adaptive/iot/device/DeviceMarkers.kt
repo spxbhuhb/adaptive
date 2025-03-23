@@ -9,4 +9,6 @@ object DeviceMarkers {
 
     const val TOP_DEVICES = "top-devices"
     const val SUB_DEVICES = "sub-devices"
+
+    const val VIRTUAL_DEVICE = "virtual-device"
 }
