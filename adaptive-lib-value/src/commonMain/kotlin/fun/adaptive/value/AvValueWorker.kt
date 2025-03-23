@@ -627,6 +627,9 @@ class AvValueWorker(
         fun item(itemId: AvValueId): AvItem<*> =
             values[itemId] as AvItem<*>
 
+        fun valueOrNull(valueId: AvValueId?): AvValue? =
+            valueId?.let { values[valueId] }
+
         inline fun <reified T> markerVal(itemId: AvValueId, marker: AvMarker) =
             getMarkerValue(itemId, marker) as T
 

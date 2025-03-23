@@ -78,9 +78,9 @@ fun wsDeviceContentPane(pane: WsPane<AvItem<AioDeviceSpec>, DeviceEditorContentC
         actions(pane.controller, originalItem, editItem, editSpec, originalSpace, editSpace)
 
         editFields(editItem, editSpace, spaceNames) { editSpace = it }
-        editNotes(editSpec)
+        points(originalItem.uuid) .. rowSpan(2)
 
-        points(originalItem.uuid)
+        editNotes(editSpec)
     }
 
     return fragment()
@@ -177,7 +177,7 @@ private fun editNotes(editSpec: AioDeviceSpec) {
 }
 
 @Adaptive
-private fun points(deviceId : AvValueId) {
+private fun points(deviceId : AvValueId) : AdaptiveFragment {
     val points = valueFrom { AvUiList(adapter(), deviceId, PointMarkers.POINTS) }
 
     withLabel(Strings.points) {
@@ -191,4 +191,6 @@ private fun points(deviceId : AvValueId) {
             }
         }
     }
+
+    return fragment()
 }

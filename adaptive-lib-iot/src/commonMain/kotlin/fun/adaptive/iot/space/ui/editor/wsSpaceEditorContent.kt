@@ -73,9 +73,9 @@ fun wsSpaceContentPane(pane: WsPane<AvItem<AioSpaceSpec>, SpaceEditorContentCont
         actions(pane.controller, originalItem, editItem, editSpec)
 
         editFields(editItem, editSpec)
-        editNotes(editSpec)
-
         points(originalItem.uuid)
+
+        editNotes(editSpec)
         devices(originalItem.uuid)
     }
 

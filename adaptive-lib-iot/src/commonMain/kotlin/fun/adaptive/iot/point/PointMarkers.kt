@@ -6,4 +6,6 @@ object PointMarkers {
     const val SYNTHETIC_POINT = "synthetic-point"
     const val COMPUTED_POINT = "computed-point"
     const val SIM_POINT = "sim-point"
+
+    const val CUR_VAL = "curVal"
 }

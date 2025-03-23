@@ -34,7 +34,7 @@ class AioTheme {
         maxWidth,
         gap { 16.dp },
         height { 28.dp },
-        colTemplate(1.fr, 160.dp, 60.dp),
+        colTemplate(1.fr, 1.fr, 160.dp, 60.dp),
         alignItems.startCenter
     )
 

@@ -24,4 +24,8 @@ class InputContext(
      */
     val focusContainerOnPopupClose: Boolean = true
 
+    companion object {
+        val DISABLED = InputContext(disabled = true)
+    }
+
 }

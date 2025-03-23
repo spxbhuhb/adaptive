@@ -86,7 +86,6 @@ class AvNameCache(
 
     fun process(value: AvValue) {
         check(value is AvItem<*>)
-        println(value.name)
         itemMap[value.uuid] = value
     }
 
@@ -110,6 +109,6 @@ class AvNameCache(
             new += AvNameCacheEntry(item.uuid, pathNames(item))
         }
 
-        names = new.sortedBy { it.names.joinToString(".").debug() }
+        names = new.sortedBy { it.names.joinToString(".") }
     }
 }

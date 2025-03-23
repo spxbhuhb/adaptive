@@ -1,5 +1,7 @@
 package `fun`.adaptive.iot.point
 
+import `fun`.adaptive.adat.AdatChange
+import `fun`.adaptive.adat.api.deepCopy
 import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
@@ -11,6 +13,7 @@ import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.item.AvStatus
 import kotlinx.datetime.Clock.System.now
@@ -30,7 +33,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
         name: String,
         itemType: AvMarker,
         parentId: AvValueId,
-        spec : AioPointSpec
+        spec: AioPointSpec
     ): AvValueId {
         publicAccess()
 
@@ -85,7 +88,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
         }
     }
 
-    override suspend fun setSpec(valueId: AvValueId, spec : AioPointSpec) {
+    override suspend fun setSpec(valueId: AvValueId, spec: AioPointSpec) {
         publicAccess()
 
         return worker.update<AvItem<AioPointSpec>>(valueId) {
@@ -93,8 +96,30 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
         }
     }
 
-    override suspend fun setCurVal(curVal : AvValue) {
-        println(curVal)
+    override suspend fun setCurVal(curVal: AvValue) {
+        publicAccess()
+
+        val pointId = checkNotNull(curVal.parentId)
+
+        worker.execute {
+            val point = item(pointId).asAvItem<AioPointSpec>()
+            val originalCurValId = point.markers[PointMarkers.CUR_VAL]
+            val curValId = originalCurValId ?: uuid7<AvValue>()
+
+            this += curVal.deepCopy(AdatChange(listOf("uuid"), curValId))
+
+            val markers = if (originalCurValId == null) {
+                point.toMutableMarkers().also { it[PointMarkers.CUR_VAL] = curValId }
+            } else {
+                point.markersOrNull
+            }
+
+            this += point.copy(
+                status = curVal.status,
+                timestamp = curVal.timestamp,
+                markersOrNull = markers
+            )
+        }
     }
 
 

@@ -72,6 +72,7 @@
     <string name="point">Adatpont</string>
 
     <!-- point -->
+    <string name="currentPointValue">Jelenlegi érték</string>
     <string name="newPointValue">Új érték</string>
     <string name="setPointValue">Beállítás</string>
     <string name="pointValueSet">Sikeres érték beállítás.</string>
