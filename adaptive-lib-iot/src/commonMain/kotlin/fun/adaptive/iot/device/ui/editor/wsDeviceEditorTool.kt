@@ -72,7 +72,6 @@ private fun apply(state: AbstractDeviceToolController, menuItem: MenuItem<AioDev
         AioDeviceEditOperation.AddComputer -> Strings.computer to DeviceMarkers.COMPUTER
         AioDeviceEditOperation.AddNetwork -> Strings.network to DeviceMarkers.NETWORK
         AioDeviceEditOperation.AddController -> Strings.controller to DeviceMarkers.CONTROLLER
-        AioDeviceEditOperation.AddPoint -> Strings.point to DeviceMarkers.POINT
         AioDeviceEditOperation.AddDevice -> Strings.point to DeviceMarkers.DEVICE
         else -> null to null
     }
@@ -97,14 +96,12 @@ private fun apply(state: AbstractDeviceToolController, menuItem: MenuItem<AioDev
 private val addComputer = MenuItem<AioDeviceEditOperation>(Graphics.host, Strings.addComputer, AioDeviceEditOperation.AddComputer)
 private val addNetwork = MenuItem<AioDeviceEditOperation>(Graphics.account_tree, Strings.addNetwork, AioDeviceEditOperation.AddNetwork)
 private val addController = MenuItem<AioDeviceEditOperation>(Graphics.memory, Strings.addController, AioDeviceEditOperation.AddController)
-private val addPoint = MenuItem<AioDeviceEditOperation>(Graphics.database, Strings.addPoint, AioDeviceEditOperation.AddPoint)
 private val addDevice = MenuItem<AioDeviceEditOperation>(Graphics.empty, Strings.addDevice, AioDeviceEditOperation.AddDevice)
 
 private val addTopMenu = listOf(addComputer, addNetwork, addDevice)
 private val computerMenu = listOf(addNetwork, addDevice)
 private val networkMenu = listOf(addController, addDevice)
-private val controllerMenu = listOf(addPoint, addDevice)
-private val pointMenu = emptyList<MenuItem<AioDeviceEditOperation>>()
+private val controllerMenu = listOf(addDevice)
 private val deviceMenu = listOf(addDevice)
 
 private fun menu(viewModel: DeviceTreeModel, treeItem: TreeItem<AvValueId>): List<MenuItemBase<AioDeviceEditOperation>> {
@@ -120,7 +117,6 @@ private fun menu(viewModel: DeviceTreeModel, treeItem: TreeItem<AvValueId>): Lis
             DeviceMarkers.NETWORK in markers -> networkMenu
             DeviceMarkers.CONTROLLER in markers -> controllerMenu
             DeviceMarkers.DEVICE in markers -> deviceMenu
-            DeviceMarkers.POINT in markers -> pointMenu
             else -> addTopMenu
         }
 

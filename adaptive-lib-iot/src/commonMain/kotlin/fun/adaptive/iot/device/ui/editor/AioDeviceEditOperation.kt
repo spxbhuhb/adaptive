@@ -4,7 +4,6 @@ enum class AioDeviceEditOperation {
     AddComputer,
     AddNetwork,
     AddController,
-    AddPoint,
     AddDevice,
     MoveUp,
     MoveDown,
