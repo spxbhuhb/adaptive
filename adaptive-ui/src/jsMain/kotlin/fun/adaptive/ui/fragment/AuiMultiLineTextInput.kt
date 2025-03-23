@@ -8,6 +8,8 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.api.disabled
+import `fun`.adaptive.ui.api.height
+import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.aui
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement

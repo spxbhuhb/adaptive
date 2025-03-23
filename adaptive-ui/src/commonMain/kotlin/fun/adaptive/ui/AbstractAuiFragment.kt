@@ -211,7 +211,7 @@ abstract class AbstractAuiFragment<RT>(
 
         data.finalHeight = when {
             instructedHeight != null -> instructedHeight
-            layout?.fit?.verticalStrategy == FitStrategy.Container == true -> proposedHeight
+            layout?.fit?.verticalStrategy == FitStrategy.Container -> proposedHeight
             innerHeight != null -> innerHeight + data.surroundingVertical
             proposedHeight.isFinite() -> proposedHeight
             else -> data.surroundingVertical

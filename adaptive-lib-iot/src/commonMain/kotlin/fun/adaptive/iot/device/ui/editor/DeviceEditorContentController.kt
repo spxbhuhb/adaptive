@@ -8,6 +8,7 @@ import `fun`.adaptive.iot.device.AioDeviceApi
 import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.iot.device.AioDeviceSpec
 import `fun`.adaptive.iot.space.AioSpaceApi
+import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.instruction.event.EventModifier
@@ -55,7 +56,7 @@ class DeviceEditorContentController(
 
     fun setSpace(deviceId : AvValueId, spaceId: AvValueId) {
         remote(Strings.saveSuccess, Strings.saveFail) {
-            spaceService.setSpace(deviceId, spaceId)
+            spaceService.setSpace(deviceId, spaceId, SpaceMarkers.SPACE_DEVICES)
         }
     }
 

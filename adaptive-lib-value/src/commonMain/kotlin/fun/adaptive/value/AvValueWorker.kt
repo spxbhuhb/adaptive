@@ -663,12 +663,25 @@ class AvValueWorker(
 
             val parent = item(parentId)
 
-            val markers = parent.markersOrNull?.toMutableMap() ?: mutableMapOf<AvMarker, AvValueId?>()
+            val markers = parent.toMutableMarkers()
 
             markers[childListMarker] = new.uuid
 
             this += new
             this += parent.copy(markersOrNull = markers)
+        }
+
+        fun removeChild(
+            parentId: AvValueId,
+            childId: AvValueId,
+            childListMarker: AvMarker
+        ) {
+            val original: AmvItemIdList? = markerVal(parentId, childListMarker)
+
+            if (original != null) {
+                this += original.copy(itemIds = original.itemIds - childId)
+                return
+            }
         }
 
         fun moveUp(
@@ -712,16 +725,42 @@ class AvValueWorker(
         fun addRef(
             itemId: AvValueId,
             refMarker: AvMarker,
-            refValueId: AvValueId
+            refValueId: AvValueId,
+            listMarker: AvMarker
         ) {
             val item = item(itemId)
+            val markers = item.toMutableMarkers()
 
-            val markers = item.markersOrNull?.toMutableMap() ?: mutableMapOf<AvMarker, AvValueId?>()
-            if (markers[refMarker] == refValueId) return
+            val ref = markers[refMarker]
+
+            if (ref == refValueId) return
+
+            if (ref != null) {
+                removeChild(itemId, ref, listMarker)
+            }
 
             markers[refMarker] = refValueId
 
             this += item.copy(markersOrNull = markers)
+
+            addChild(refValueId, itemId, listMarker)
+        }
+
+        fun removeRef(
+            itemId: AvValueId,
+            refMarker: AvMarker,
+            listMarker: AvMarker
+        ) {
+            val item = item(itemId)
+            val markers = item.toMutableMarkers()
+            if (markers[refMarker] == null) return
+
+            this += item.copy(markersOrNull = markers)
+
+            val ref = markers.remove(refMarker) ?: return
+
+            removeChild(itemId, ref, listMarker)
         }
     }
+
 }

@@ -17,7 +17,6 @@ class InputTheme(
 
     val base = instructionsOf(
         cornerRadius(8.dp),
-        height { height },
         fontSize { 17.sp },
         lightFont,
         tabIndex { 0 }
@@ -57,6 +56,20 @@ class InputTheme(
         padding(top = 1.dp, left = 16.dp, bottom = 1.dp, right = 16.dp),
         textColors.onSurface,
         backgroundColor(colors.failSurface.opaque(0.05f)),
+    )
+
+    val singleLine = instructionsOf(
+        height { height }
+    )
+
+    val textAreaFocused = instructionsOf(
+        paddingTop { 5.dp },
+        paddingLeft { 15.dp }
+    )
+
+    val textAreaNonFocused = instructionsOf(
+        paddingTop { 6.dp },
+        paddingLeft { 16.dp }
     )
 
     val unitContainer = instructionsOf(

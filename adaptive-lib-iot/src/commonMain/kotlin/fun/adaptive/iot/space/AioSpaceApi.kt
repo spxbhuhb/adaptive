@@ -19,7 +19,8 @@ interface AioSpaceApi {
 
     /**
      * Add a `spaceRef` marker to [itemId] that points to [spaceId].
+     * Add the [itemId] to the [listMarker] marker list of [spaceId].
      */
-    suspend fun setSpace(itemId: AvValueId, spaceId: AvValueId)
+    suspend fun setSpace(itemId: AvValueId, spaceId: AvValueId, listMarker : AvMarker)
 
 }

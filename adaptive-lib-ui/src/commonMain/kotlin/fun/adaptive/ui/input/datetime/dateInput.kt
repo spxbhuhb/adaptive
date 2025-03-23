@@ -42,7 +42,7 @@ fun dateInput(
         else -> if (focus || observed.popupOpen) theme.focused else theme.enabled
     }
 
-    box(themeInstructions, instructions()) {
+    box(themeInstructions, theme.singleLine, instructions()) {
         tabIndex { 0 }
 
         text(value.toString()) .. width { 200.dp } .. alignSelf.startCenter

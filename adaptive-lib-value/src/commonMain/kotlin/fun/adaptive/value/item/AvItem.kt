@@ -22,6 +22,9 @@ data class AvItem<T>(
     val markers: AvMarkerMap
         get() = markersOrNull ?: emptyMap()
 
+    fun toMutableMarkers() =
+        markersOrNull?.toMutableMap() ?: mutableMapOf()
+
     operator fun contains(markerName: AvMarker): Boolean {
         return markersOrNull?.containsKey(markerName) == true
     }

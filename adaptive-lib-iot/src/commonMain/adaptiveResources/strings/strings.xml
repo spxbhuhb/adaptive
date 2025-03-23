@@ -26,6 +26,8 @@
     <string name="renameSuccess">Sikeres átnevezés.</string>
     <string name="renameFail">Sikertelen átnevezés.</string>
 
+    <string name="noDataChanged">Nincs módosított adat.</string>
+
     <!-- space -->
 
     <string name="areas">Területek</string>
@@ -50,13 +52,16 @@
     <string name="computer">Számítógép</string>
     <string name="network">Hálózat</string>
     <string name="controller">Vezérlő</string>
-    <string name="point">Pont</string>
 
     <string name="addDevice">Eszköz hozzáadása</string>
     <string name="addComputer">Számítógép hozzáadása</string>
     <string name="addNetwork">Hálózat hozzáadása</string>
     <string name="addController">Vezérlő hozzáadása</string>
-    <string name="addPoint">Pont hozzáadása</string>
+
+    <!-- device -->
+
+    <string name="points">Adatpontok</string>
+    <string name="point">Adatpont</string>
 
     <!-- history -->
 

@@ -22,7 +22,7 @@ class WorkspaceTheme(
 ) {
 
     companion object {
-        var workspaceTheme = WorkspaceTheme()
+        var DEFAULT = WorkspaceTheme()
     }
 
     val splitDividerHorizontalVisible = instructionsOf(
@@ -164,5 +164,4 @@ class WorkspaceTheme(
         textColors.onSurfaceVariant,
         noSelect
     )
-
 }

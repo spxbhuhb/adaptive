@@ -26,7 +26,7 @@ fun textInput(
         else -> if (focus) theme.focused else theme.enabled
     }
 
-    singleLineTextInput(value = value, onChange = onChange) .. themeInstructions .. instructions()
+    singleLineTextInput(value = value, onChange = onChange) .. themeInstructions .. theme.singleLine .. instructions()
 
     return fragment()
 }

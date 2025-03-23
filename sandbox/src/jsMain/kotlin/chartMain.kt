@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
+import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.DEFAULT
 import `fun`.adaptive.ui.workspace.wsMain
 import `fun`.adaptive.ui.workspace.wsSideBarIcons
 import `fun`.adaptive.utility.UUID
@@ -34,7 +34,7 @@ fun chartMain(): AdaptiveFragment {
         maxSize .. backgrounds.friendlyOpaque .. padding { 16.dp }
 
         grid {
-            maxSize .. colTemplate(1.fr, workspaceTheme.width)
+            maxSize .. colTemplate(1.fr, DEFAULT.width)
             borders.outline .. backgrounds.surface
 
             localContext(workspace) {

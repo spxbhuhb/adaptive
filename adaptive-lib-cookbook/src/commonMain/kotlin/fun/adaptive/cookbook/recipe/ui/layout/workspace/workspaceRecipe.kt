@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.workspace.*
-import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
+import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.DEFAULT
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
@@ -37,7 +37,7 @@ fun workspaceRecipe(): AdaptiveFragment {
         maxSize .. backgrounds.friendlyOpaque .. padding { 16.dp }
 
         grid {
-            maxSize .. colTemplate(workspaceTheme.width, 1.fr, workspaceTheme.width)
+            maxSize .. colTemplate(DEFAULT.width, 1.fr, DEFAULT.width)
             borders.outline .. backgrounds.surface
 
             localContext(workspace) {

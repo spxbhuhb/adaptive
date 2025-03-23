@@ -4,6 +4,8 @@ import `fun`.adaptive.adaptive_lib_iot.generated.resources.renameFail
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.renameSuccess
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.saveFail
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.saveSuccess
+import `fun`.adaptive.foundation.value.adaptiveStoreFor
+import `fun`.adaptive.iot.device.AioDeviceSpec
 import `fun`.adaptive.iot.space.AioSpaceApi
 import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.iot.space.SpaceMarkers
@@ -18,6 +20,7 @@ import `fun`.adaptive.ui.workspace.model.WsItem
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
+import `fun`.adaptive.value.ui.AvValueProxy
 import `fun`.adaptive.value.ui.iconFor
 
 class SpaceEditorContentController(
@@ -25,6 +28,10 @@ class SpaceEditorContentController(
 ) : WsPaneController<AvItem<AioSpaceSpec>>(), WithWorkspace {
 
     val spaceService = getService<AioSpaceApi>(transport)
+
+    var valueProxy : AvValueProxy? = null
+
+    val devices = adaptiveStoreFor(emptyList<AvValueId>())
 
     override fun accepts(pane: WsPaneType<AvItem<AioSpaceSpec>>, modifiers: Set<EventModifier>, item: WsItem): Boolean {
         return (item is AvItem<*>) && (SpaceMarkers.SPACE in item.markers)
@@ -50,4 +57,9 @@ class SpaceEditorContentController(
             spaceService.setSpecSpec(spaceId, spec)
         }
     }
+
+    fun getDevice(deviceId : AvValueId) : AvItem<AioDeviceSpec>? {
+        return null
+    }
+
 }

@@ -22,7 +22,7 @@ import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
-import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
+import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.DEFAULT
 import `fun`.adaptive.ui.workspace.model.WsPane
 
 @Adaptive
@@ -32,10 +32,10 @@ fun ufdCenter(pane: WsPane<*, *>): AdaptiveFragment {
 
     localContext(controller) {
         grid {
-            rowTemplate(workspaceTheme.titleHeight, 1.fr)
+            rowTemplate(DEFAULT.titleHeight, 1.fr)
 
             row {
-                maxSize .. borderBottom(workspaceTheme.toolBorderColor) .. spaceBetween
+                maxSize .. borderBottom(DEFAULT.toolBorderColor) .. spaceBetween
                 onKeydown { controller.onKeyDown(it.keyInfo !!, it.modifiers) }
 
                 row {

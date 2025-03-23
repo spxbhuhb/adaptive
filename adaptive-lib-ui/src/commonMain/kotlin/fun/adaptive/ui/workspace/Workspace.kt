@@ -54,7 +54,7 @@ class Workspace(
     val contentPaneBuilders = mutableMapOf<WsItemType, MutableList<WsContentPaneBuilder>>()
 
     val theme
-        get() = WorkspaceTheme.workspaceTheme
+        get() = WorkspaceTheme.DEFAULT
 
     val toolPanes = mutableListOf<WsPane<*, *>>()
 

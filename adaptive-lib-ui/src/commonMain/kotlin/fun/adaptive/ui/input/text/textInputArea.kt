@@ -25,8 +25,12 @@ fun textInputArea(
         observed.invalid -> if (focus) theme.invalidFocused else theme.invalidNotFocused
         else -> if (focus) theme.focused else theme.enabled
     }
+    val areaInstructions = when {
+        focus -> theme.textAreaFocused
+        else -> theme.textAreaNonFocused
+    }
 
-    multiLineTextInput(value = value, onChange = onChange) .. themeInstructions .. instructions()
+    multiLineTextInput(value = value, onChange = onChange) .. themeInstructions .. areaInstructions .. instructions()
 
     return fragment()
 }

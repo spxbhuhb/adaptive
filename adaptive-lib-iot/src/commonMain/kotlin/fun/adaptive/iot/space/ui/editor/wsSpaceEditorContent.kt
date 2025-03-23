@@ -7,8 +7,9 @@ import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.iot.device.ui.controllerSummary
 import `fun`.adaptive.iot.space.AioSpaceSpec
-import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.iot.space.ui.localizedSpaceType
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.string.Strings
@@ -19,12 +20,16 @@ import `fun`.adaptive.ui.input.number.doubleOrNullUnitInput
 import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.input.text.textInputArea
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.label.uuidLabel
 import `fun`.adaptive.ui.label.withLabel
+import `fun`.adaptive.ui.snackbar.warningNotification
 import `fun`.adaptive.ui.theme.backgrounds
+import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 
 fun wsSpaceEditorContentDef(context: AioWsContext) {
@@ -47,67 +52,144 @@ fun wsSpaceEditorContentDef(context: AioWsContext) {
 fun wsSpaceContentPane(pane: WsPane<AvItem<AioSpaceSpec>, SpaceEditorContentController>): AdaptiveFragment {
 
     val originalItem = copyOf { pane.data }
+
     val editItem = copyOf { pane.data }
+    val editSpec = copyOf { pane.data.specific !! }
 
-    val originalSpec = originalItem.specific!!
-    val editSpec = editItem.specific!!
+    grid {
+        maxSize .. padding { 16.dp } .. backgrounds.surface
+        colTemplate(400.dp, 1.fr)
+        rowTemplate(56.dp, 312.dp, 1.fr)
+        gap { 16.dp }
 
-    column {
-        maxSize .. verticalScroll .. padding { 16.dp } .. backgrounds.surface
+        title(originalItem)
+        actions(pane.controller, originalItem, editItem, editSpec)
 
-        column {
-            paddingBottom { 32.dp }
-            h2(pane.data.name.ifEmpty { Strings.noname })
-            uuidLabel { editItem.uuid }
-        }
+        editFields(editItem, editSpec)
+        editNotes(editSpec)
 
-        column {
-
-            gap { 24.dp }
-
-            withLabel(Strings.spxbId, InputContext(disabled = true)) { state ->
-                width { 400.dp }
-                textInput(editItem.friendlyId, state) { }
-            }
-
-            withLabel(Strings.type, InputContext(disabled = true)) { state ->
-                width { 400.dp }
-                textInput(editItem.localizedSpaceType, state) { }
-            }
-
-            withLabel(Strings.area) { state ->
-                width { 120.dp }
-                doubleOrNullUnitInput(editSpec.area, 0, "m²", state) { v ->
-                    editSpec.update(editSpec::area, v)
-                }
-            }
-
-            withLabel(Strings.name) {
-                width { 400.dp }
-                textInput(editItem.name) { v ->
-                    println("update: ${editItem.name} $v")
-                    editItem.update(editItem::name, v)
-                }
-            }
-
-            withLabel(Strings.note) {
-                width { 400.dp }
-                textInputArea(editSpec.notes) { v ->
-                    editSpec.update(editSpec::notes, v)
-                } .. height { 300.dp }
-            }
-
-            button(Strings.save) .. onClick {
-                if (editItem.name != originalItem.name) {
-                    pane.controller.rename(editItem.uuid, editItem.name)
-                    originalItem.update(originalItem::name, editItem.name)
-                }
-                if (editSpec != originalSpec) {
-                    pane.controller.setSpaceSpec(pane.data.uuid, editSpec)
-                }
-            }
-        }
+        points(pane.controller)
+        devices(pane.controller)
     }
 
     return fragment()
 }
+
+@Adaptive
+fun title(
+    item: AvItem<AioSpaceSpec>,
+) {
+    column {
+        paddingBottom { 32.dp }
+        h2(item.name.ifEmpty { Strings.noname })
+        uuidLabel { item.uuid }
+    }
+}
+
+@Adaptive
+fun actions(
+    controller: SpaceEditorContentController,
+    originalItem: AvItem<AioSpaceSpec>,
+    editItem: AvItem<AioSpaceSpec>,
+    editSpec: AioSpaceSpec
+) {
+    button(Strings.save) ..
+        alignSelf.end ..
+        onClick {
+            if (editItem.name == originalItem.name && editSpec == originalItem.specific) {
+                warningNotification(Strings.noDataChanged)
+                return@onClick
+            }
+
+            if (editItem.name != originalItem.name) {
+                controller.rename(editItem.uuid, editItem.name)
+                originalItem.update(originalItem::name, editItem.name)
+            }
+            if (originalItem.specific != editSpec) {
+                controller.setSpaceSpec(originalItem.uuid, editSpec)
+            }
+        }
+}
+
+@Adaptive
+private fun editFields(
+    editItem: AvItem<AioSpaceSpec>,
+    editSpec: AioSpaceSpec
+) {
+    column {
+
+        gap { 24.dp }
+
+        withLabel(Strings.spxbId, InputContext(disabled = true)) { state ->
+            width { 400.dp }
+            textInput(editItem.friendlyId, state) { }
+        }
+
+        withLabel(Strings.type, InputContext(disabled = true)) { state ->
+            width { 400.dp }
+            textInput(editItem.localizedSpaceType, state) { }
+        }
+
+
+        withLabel(Strings.name) {
+            width { 400.dp }
+            textInput(editItem.name) { v ->
+                println("update: ${editItem.name} $v")
+                editItem.update(editItem::name, v)
+            }
+        }
+
+        withLabel(Strings.area) { state ->
+            width { 120.dp }
+            doubleOrNullUnitInput(editSpec.area, 0, "m²", state) { v ->
+                editSpec.update(editSpec::area, v)
+            }
+        }
+    }
+}
+
+@Adaptive
+private fun editNotes(editSpec: AioSpaceSpec) {
+    withLabel(Strings.note) {
+        maxSize .. fill.constrain
+
+        textInputArea(editSpec.notes) { v ->
+            editSpec.update(editSpec::notes, v)
+        } .. maxSize
+    }
+}
+
+@Adaptive
+private fun devices(controller: SpaceEditorContentController) {
+    val deviceIds = valueFrom { controller.devices }
+
+    withLabel(Strings.devices) {
+        maxSize .. fill.constrain
+
+        column {
+            maxSize .. verticalScroll .. borders.outline .. paddingBottom { 16.dp } .. cornerRadius { 8.dp }
+            height { 200.dp }
+            for (deviceId in deviceIds) {
+                controllerSummary(controller.getDevice(deviceId))
+            }
+        }
+    }
+}
+
+@Adaptive
+private fun points(controller: SpaceEditorContentController) {
+    val deviceIds = valueFrom { controller.devices }
+
+    withLabel(Strings.points) {
+        maxSize .. fill.constrain
+
+        column {
+            maxSize .. verticalScroll .. borders.outline .. paddingBottom { 16.dp } .. cornerRadius { 8.dp }
+            height { 200.dp }
+            for (deviceId in deviceIds) {
+                controllerSummary(controller.getDevice(deviceId))
+            }
+        }
+    }
+}
+

@@ -10,15 +10,14 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.workspace.Workspace.Companion.noContentPane
-import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.workspaceTheme
+import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.DEFAULT
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 
 @Adaptive
 fun wsFull(workspace: Workspace) {
     grid {
-        maxSize .. colTemplate(workspaceTheme.width, 1.fr, workspaceTheme.width)
+        maxSize .. colTemplate(DEFAULT.width, 1.fr, DEFAULT.width)
 
         wsSideBarIcons(left = true, workspace)
 

@@ -2,6 +2,9 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.adat.api.update
+import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.WsBrowserApplication
 import `fun`.adaptive.app.ws.WsAppModule
 import `fun`.adaptive.app.ws.WsSandBoxModule
@@ -12,17 +15,26 @@ import `fun`.adaptive.chart.WsChartModule
 import `fun`.adaptive.chart.chartCommon
 import `fun`.adaptive.cookbook.cookbookCommon
 import `fun`.adaptive.document.WsDocModule
+import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.grove.groveRuntimeCommon
 import `fun`.adaptive.iot.IotWsModule
 import `fun`.adaptive.iot.iotCommon
+import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiModule
+import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.input.text.textInputArea
+import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.label.withLabel
 import `fun`.adaptive.ui.snackbar.SnackbarManager
 import `fun`.adaptive.ui.uiCommon
 import `fun`.adaptive.ui.workspace.Workspace
@@ -33,6 +45,10 @@ import kotlinx.coroutines.launch
 fun main() {
     //basicAppMain()
     //sandboxMain()
+    iotMain()
+}
+
+fun iotMain() {
     WsBrowserApplication(
         LibUiModule,
         GroveRuntimeModule<Workspace>(),
@@ -42,7 +58,6 @@ fun main() {
         WsAppModule,
         WsSandBoxModule
     ).main()
-
 }
 
 fun sandboxMain() {
@@ -85,6 +100,26 @@ fun sandboxMain() {
             //treeMain()
             //contextMenuMain()
             //datePickerMain()
+            copyStore(Stuff(AioSpaceSpec()))
+        }
+    }
+}
+
+@Adat
+class Stuff(val spec: AioSpaceSpec)
+
+@Adaptive
+fun copyStore(stuff: Stuff) {
+    val originalSpec = copyOf { stuff.spec }
+    val editSpec = copyOf { stuff.spec }
+
+    println(editSpec)
+
+    column {
+        padding { 16.dp } .. maxSize
+
+        withLabel("Original spec") {
+            textInputArea(editSpec.notes) { v -> editSpec.update(editSpec::notes, v) } .. width { 300.dp }
         }
     }
 }

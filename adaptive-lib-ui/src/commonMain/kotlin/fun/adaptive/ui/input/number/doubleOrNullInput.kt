@@ -49,7 +49,7 @@ fun doubleOrNullInput(
                 observed.invalid = true
             }
         }
-    ) .. themeInstructions .. alignItems.end .. instructions()
+    ) .. themeInstructions .. theme.singleLine .. alignItems.end .. instructions()
 
     return fragment()
 }
