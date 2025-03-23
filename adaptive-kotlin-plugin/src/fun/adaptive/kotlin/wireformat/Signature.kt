@@ -10,6 +10,8 @@ import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.types.*
+import org.jetbrains.kotlin.ir.util.dumpKotlinLike
+import org.jetbrains.kotlin.ir.util.isTypeParameter
 
 object Signature {
 
@@ -64,7 +66,9 @@ object Signature {
     }
 
     fun typeSignature(irType: IrType, adatClass: IrClassSymbol): String {
-        val typeFqName = checkNotNull(irType.classFqName) { "type without null classFqName: $irType" }
+        if (irType.isTypeParameter()) return "*"
+
+        val typeFqName = checkNotNull(irType.classFqName) { "type without null classFqName: ${irType.dumpKotlinLike()}" }
         val typeName = typeFqName.asString()
 
         val builtin = shorthands[typeFqName.asString()]

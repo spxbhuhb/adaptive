@@ -26,7 +26,8 @@ class AdatGenerationExtension(
             // I'll comment this out until I figure out a better solution
             // moduleFragment.transformChildrenVoid(UpdateVisitor(this))
 
-            // debug("DUMP AFTER") { "\n\n" + moduleFragment.dumpKotlinLike(KotlinLikeDumpOptions(printFakeOverridesStrategy = FakeOverridesStrategy.NONE)) }
+            // println(dumpKotlinLike(moduleFragment))
+            // debug("DUMP AFTER") { dumpKotlinLike(moduleFragment) }
             // debug("DUMP AFTER") { "\n\n" + moduleFragment.dump() }
         }
     }

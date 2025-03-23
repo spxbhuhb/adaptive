@@ -43,6 +43,7 @@ private fun AdatClass.genericDeepCopy(replace: AdatChange?): AdatClass {
         values[index] = when {
             property.hasImmutableValue -> value
             value is AdatClass -> value.genericDeepCopy(null)
+            property.signature == "*" -> value
             value is Enum<*> -> value // FIXME mutable properties in enum
             value is Set<*> -> value.toSet() // FIXME mutable entries in a set
             value is List<*> -> value.toList() // FIXME mutable entries in a list
