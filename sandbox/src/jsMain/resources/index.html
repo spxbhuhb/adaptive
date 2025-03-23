@@ -8,8 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>Adaptive</title>
     <link rel="shortcut icon" type="image/png" href="/favicon.png">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
 
+    <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
@@ -56,10 +56,32 @@
 <body>
 </body>
 <script>
-    document.fonts.load('1em "Open Sans"').then(function () {
-    const script = document.createElement('script');
-    script.src = '/sandbox.js';
-    document.body.appendChild(script);
+document.fonts.ready.then(() => {
+
+    // Font loading is a real mess for accented characters. Without the font
+    // properly loaded text fragments displays "..." at the end of the text.
+
+    // This 50 millisec wait solution somewhat works for hungarian characters,
+    // I have to find out how to handle it better.
+
+    // I've tried to add a "&text=<accented-chars>" to the font link above,
+    // but it made the page very, very ugly.
+
+    // This might worth a look later:
+    // https://stackoverflow.com/questions/26867893/converting-and-rendering-web-fonts-to-base64-keep-original-look
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    ctx.font = "13px 'Open Sans'";
+    ctx.measureText("This is plain stupid, but it works: ő");
+
+    setTimeout(() => {
+        const script = document.createElement('script');
+        script.src = '/sandbox.js';
+        document.body.appendChild(script);
+        ctx.measureText("This is plain stupid, but it works: ő");
+    }, 50);
+
 });
 </script>
 </html>
