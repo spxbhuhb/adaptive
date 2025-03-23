@@ -180,7 +180,7 @@ class AvUiTree(
     private fun process(list: AmvItemIdList) {
         when (list.markerName) {
             childListMarker -> {
-                val node = nodeMap.getOrPut(list.owner) { Node() }
+                val node = nodeMap.getOrPut(list.parentId) { Node() }
                 node.childIds = list.itemIds
                 childRefresh += node
             }

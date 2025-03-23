@@ -44,12 +44,12 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
                 itemId,
                 now(),
                 AvStatus.OK,
+                parentId,
                 nextFriendlyId(PointMarkers.POINT, "PT-"),
                 markersOrNull = mutableMapOf(
                     PointMarkers.POINT to null,
                     itemType to null
                 ),
-                parentId = parentId,
                 specific = spec
             )
 
@@ -93,8 +93,8 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
         }
     }
 
-    override suspend fun setReadValue(valueId: AvValueId, readValue: Double?, status: AvStatus) {
-
+    override suspend fun setCurVal(curVal : AvValue) {
+        println(curVal)
     }
 
 

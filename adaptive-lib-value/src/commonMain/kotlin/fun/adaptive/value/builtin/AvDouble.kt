@@ -12,7 +12,8 @@ class AvDouble(
     override val uuid: AvValueId,
     override val timestamp: Instant,
     override val status: AvStatus,
-    val value : Double
+    override val parentId: AvValueId?,
+    val value : Double,
 ) : AvValue() {
 
     override val name: String

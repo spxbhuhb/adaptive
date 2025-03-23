@@ -38,12 +38,12 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
                 spaceId,
                 now(),
                 AvStatus.OK,
+                parentId,
                 nextFriendlyId(SpaceMarkers.SPACE, "SP-"),
                 markersOrNull = mutableMapOf(
                     SpaceMarkers.SPACE to null,
                     spaceType to null
                 ),
-                parentId = parentId,
                 specific = AioSpaceSpec(area = 0.0)
             )
 

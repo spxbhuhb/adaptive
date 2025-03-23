@@ -1,7 +1,6 @@
 package `fun`.adaptive.iot.space
 
 import `fun`.adaptive.value.item.AmvItemIdList
-import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.utility.UUID.Companion.uuid7
@@ -18,7 +17,7 @@ suspend fun addSpaceTop(worker: AvValueWorker, spaceId: AvValueId) {
         check(original is AmvItemIdList) { "Expected AmvItemIdList, got $spaceTops" }
         new = original.copy(itemIds = original.itemIds + spaceId)
     } else {
-        new = AmvItemIdList(owner = uuid7(), markerName = SpaceMarkers.TOP_SPACES, listOf(spaceId))
+        new = AmvItemIdList(parentId = uuid7(), markerName = SpaceMarkers.TOP_SPACES, listOf(spaceId))
     }
 
     worker.queueAddOrUpdate(new)

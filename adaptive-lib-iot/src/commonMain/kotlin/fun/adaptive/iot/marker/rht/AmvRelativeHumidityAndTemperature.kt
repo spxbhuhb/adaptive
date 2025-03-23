@@ -13,17 +13,17 @@ class AmvRelativeHumidityAndTemperature(
     override val uuid: AvValueId,
     override val timestamp: Instant,
     override val status: AvStatus,
-    override val owner: AvValueId,
+    override val parentId: AvValueId,
     override val markerName: String,
     val relativeHumidity: Double,
     val temperature: Double
 ) : AvMarkerValue() {
 
-    constructor(owner: AvValueId, relativeHumidity: Double, temperature: Double) : this(
+    constructor(parentId: AvValueId, relativeHumidity: Double, temperature: Double) : this(
         uuid = uuid7(),
         timestamp = now(),
         status = AvStatus.OK,
-        owner = owner,
+        parentId = parentId,
         markerName = MARKER_NAME,
         relativeHumidity = relativeHumidity,
         temperature = temperature

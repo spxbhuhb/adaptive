@@ -2,6 +2,7 @@ package `fun`.adaptive.iot.device.ui.editor
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.humidity
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.temperature
+import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.iot.device.ui.AbstractDeviceToolController
 import `fun`.adaptive.iot.device.ui.DeviceTreeModel
 import `fun`.adaptive.iot.haystack.PhScienceMarkers
@@ -32,7 +33,7 @@ class DeviceEditorToolController(
         io {
             val deviceId = deviceService.add(name, marker, data, virtual)
 
-            if (virtual) {
+            if (virtual && marker != DeviceMarkers.NETWORK) {
                 pointService.add(
                     Strings.temperature,
                     PointMarkers.SIM_POINT,

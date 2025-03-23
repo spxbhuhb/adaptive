@@ -13,9 +13,9 @@ data class AvItem<T>(
     override val uuid: AvValueId,
     override val timestamp: Instant,
     override val status: AvStatus,
+    override val parentId: AvValueId?,
     val friendlyId: FriendlyItemId,
     val markersOrNull: AvMarkerMap?,
-    val parentId: AvValueId?,
     val specific: T?
 ) : AvValue() {
 

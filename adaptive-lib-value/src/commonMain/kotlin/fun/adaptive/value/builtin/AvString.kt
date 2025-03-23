@@ -12,6 +12,7 @@ class AvString(
     override val uuid: AvValueId,
     override val timestamp: Instant,
     override val status: AvStatus,
+    override val parentId: AvValueId?,
     val value : String
 ) : AvValue() {
 

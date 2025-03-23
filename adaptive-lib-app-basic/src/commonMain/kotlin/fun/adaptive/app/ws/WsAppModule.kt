@@ -69,11 +69,11 @@ object WsAppModule : AppModule<Workspace>() {
             UUID(),
             Strings.administration,
             Graphics.local_police,
-            WsPanePosition.RightBottom,
+            WsPanePosition.RightMiddle,
             ADMIN_TOOL_KEY,
             Unit,
             WsUnitPaneController(),
-            displayOrder = Int.MAX_VALUE - 1
+            displayOrder = Int.MAX_VALUE
         )
 
     }

@@ -660,7 +660,7 @@ class AvValueWorker(
             if (original != null) {
                 new = original.copy(itemIds = original.itemIds + spaceId)
             } else {
-                new = AmvItemIdList(owner = uuid7(), listMarker, listOf(spaceId))
+                new = AmvItemIdList(parentId = uuid7(), listMarker, listOf(spaceId))
             }
 
             this += new
@@ -678,7 +678,7 @@ class AvValueWorker(
                 return
             }
 
-            val new = AmvItemIdList(owner = parentId, childListMarker, listOf(childId))
+            val new = AmvItemIdList(parentId = parentId, childListMarker, listOf(childId))
 
             val parent = item(parentId)
 

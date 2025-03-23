@@ -1,5 +1,6 @@
 package `fun`.adaptive.value
 
+import `fun`.adaptive.value.builtin.AvDouble
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvStatus
 import `fun`.adaptive.value.item.AmvItemIdList
@@ -23,4 +24,5 @@ fun valueCommon(loadStrings: Boolean = true) {
     r += AmvItemIdList
 
     r += AvString
+    r += AvDouble
 }

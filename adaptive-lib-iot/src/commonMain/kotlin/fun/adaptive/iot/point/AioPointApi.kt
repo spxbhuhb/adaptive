@@ -19,6 +19,6 @@ interface AioPointApi {
 
     suspend fun setSpec(valueId: AvValueId, spec : AioPointSpec)
 
-    suspend fun setReadValue(valueId: AvValueId, readValue : Double?, status : AvStatus)
+    suspend fun setCurVal(curVal : AvValue)
 
 }

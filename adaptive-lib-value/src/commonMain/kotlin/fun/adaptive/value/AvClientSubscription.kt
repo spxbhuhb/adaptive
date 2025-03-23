@@ -7,6 +7,7 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.trimSignature
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 
@@ -43,6 +44,9 @@ class AvClientSubscription(
             for (operation in channel) {
                 service.process(operation)
             }
+        } catch (_ : TimeoutCancellationException) {
+            // not much to do with this one, couldn't send the message, most probably the client disconnected
+            stop()
         } catch (e: Exception) {
             logger.warning(e)
             stop()

@@ -15,6 +15,7 @@ import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.ensure
 import `fun`.adaptive.value.app.valueServerBackend
 import `fun`.adaptive.value.persistence.FilePersistence
+import `fun`.adaptive.value.valueCommon
 import kotlinx.coroutines.runBlocking
 import kotlinx.io.files.Path
 
@@ -26,6 +27,7 @@ fun wsAppServerMain() {
 
     runBlocking {
         iotCommon(loadStrings = false)
+        valueCommon()
     }
 
     backend {

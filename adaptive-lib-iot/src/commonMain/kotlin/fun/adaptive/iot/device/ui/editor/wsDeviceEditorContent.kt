@@ -77,7 +77,7 @@ fun wsDeviceContentPane(pane: WsPane<AvItem<AioDeviceSpec>, DeviceEditorContentC
         title(originalItem)
         actions(pane.controller, originalItem, editItem, editSpec, originalSpace, editSpace)
 
-        editFields(editItem, editSpace) { editSpace = it }
+        editFields(editItem, editSpace, spaceNames) { editSpace = it }
         editNotes(editSpec)
 
         points(originalItem.uuid)
@@ -111,7 +111,7 @@ fun actions(
     button(Strings.save) ..
         alignSelf.end ..
         onClick {
-            if (editItem.name == originalItem.name && editSpec == originalItem.specific) {
+            if (editItem.name == originalItem.name && editSpec == originalItem.specific && editSpace == originalSpace) {
                 warningNotification(Strings.noDataChanged)
                 return@onClick
             }
@@ -131,7 +131,7 @@ fun actions(
 private fun editFields(
     editItem: AvItem<AioDeviceSpec>,
     editSpace : AvNameCacheEntry?,
-    spaceNames : List<AvNameCacheEntry> = emptyList(),
+    spaceNames : List<AvNameCacheEntry>,
     updateSpace : (AvNameCacheEntry?) -> Unit
 ) {
     column {

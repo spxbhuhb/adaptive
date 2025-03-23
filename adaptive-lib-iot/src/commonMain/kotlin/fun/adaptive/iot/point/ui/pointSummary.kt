@@ -26,9 +26,13 @@ import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.builtin.AvDouble
+import `fun`.adaptive.value.builtin.AvString
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvStatus
+import kotlinx.datetime.Clock.System.now
 
 @Adaptive
 fun pointSummary(
@@ -75,7 +79,9 @@ fun setValuePopup(point: AvItem<AioPointSpec>, state: InputContext, hide: () -> 
 
         button(Strings.setPointValue) .. alignSelf.end .. onClick {
             workspace.io {
-                getService<AioPointApi>(adapter().transport).setReadValue(point.uuid, value, AvStatus.OK)
+                getService<AioPointApi>(adapter().transport).setCurVal(
+                    AvDouble(UUID.nil(), now(), AvStatus.OK, point.uuid, value ?: Double.NaN)
+                )
                 successNotification(Strings.pointValueSet)
             }
             hide()

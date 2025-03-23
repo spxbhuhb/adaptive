@@ -53,9 +53,9 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
                 itemId,
                 now(),
                 AvStatus.OK,
+                parentId,
                 nextFriendlyId(DeviceMarkers.DEVICE, "DEV-"),
                 markersOrNull = markers,
-                parentId = parentId,
                 specific = AioDeviceSpec(virtual)
             )
 

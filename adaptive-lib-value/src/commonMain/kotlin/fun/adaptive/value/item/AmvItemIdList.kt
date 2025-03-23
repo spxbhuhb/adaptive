@@ -11,20 +11,20 @@ data class AmvItemIdList(
     override val uuid: AvValueId,
     override val timestamp: Instant,
     override val status: AvStatus,
-    override val owner: AvValueId,
+    override val parentId: AvValueId,
     override val markerName: String,
     val itemIds: List<AvValueId>
 ) : AvMarkerValue() {
 
     constructor(
-        owner: AvValueId,
+        parentId: AvValueId,
         markerName: String,
         itemIds: List<AvValueId> = emptyList()
     ) : this(
         uuid = uuid7(),
         timestamp = now(),
         status = AvStatus.OK,
-        owner = owner,
+        parentId = parentId,
         markerName = markerName,
         itemIds = itemIds
     )

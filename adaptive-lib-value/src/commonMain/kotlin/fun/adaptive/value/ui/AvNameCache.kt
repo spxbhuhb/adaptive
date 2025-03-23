@@ -5,6 +5,7 @@ import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.debug
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvMarker
@@ -20,7 +21,6 @@ class AvNameCache(
     val scope: CoroutineScope,
     itemMarker: AvMarker
 ) {
-
 
     private val itemMap = mutableMapOf<AvValueId, AvItem<*>>()
 
@@ -38,7 +38,7 @@ class AvNameCache(
     var remoteSubscriptionId: AvValueSubscriptionId? = null
     val localSubscriptionId: AvValueSubscriptionId = UUID.Companion.uuid4()
 
-    val updates = Channel<AvValueOperation>(Channel.Factory.UNLIMITED)
+    val updates = Channel<AvValueOperation>(Channel.UNLIMITED)
 
     val size
         get() = itemMap.size
@@ -86,6 +86,7 @@ class AvNameCache(
 
     fun process(value: AvValue) {
         check(value is AvItem<*>)
+        println(value.name)
         itemMap[value.uuid] = value
     }
 
@@ -109,6 +110,6 @@ class AvNameCache(
             new += AvNameCacheEntry(item.uuid, pathNames(item))
         }
 
-        names = new.sortedBy { it.names.joinToString(".") }
+        names = new.sortedBy { it.names.joinToString(".").debug() }
     }
 }
