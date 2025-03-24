@@ -9,9 +9,14 @@ import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.cornerRadius
 import `fun`.adaptive.ui.api.fontSize
 import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.lightFont
 import `fun`.adaptive.ui.api.noSelect
+import `fun`.adaptive.ui.api.normalFont
+import `fun`.adaptive.ui.api.paddingHorizontal
 import `fun`.adaptive.ui.api.paddingRight
+import `fun`.adaptive.ui.api.paddingTop
+import `fun`.adaptive.ui.api.paddingVertical
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.textColor
 import `fun`.adaptive.ui.instruction.decoration.Color
@@ -25,18 +30,19 @@ class ButtonTheme(
 ) {
     val container = instructionsOf(
         backgroundColor(background),
-        cornerRadius(10.dp),
+        cornerRadius(6.dp),
         alignItems.center,
         gap(6.dp),
-        size(153.dp, 38.dp),
-        paddingRight(10.dp)
+        height { 28.dp },
+        paddingHorizontal { 20.dp }
     )
 
     val text = instructionsOf(
         textColor(foreground),
-        fontSize(14.sp),
-        lightFont,
-        noSelect
+        fontSize(13.sp),
+        normalFont,
+        noSelect,
+        paddingTop(2.dp)
     )
 
     val icon = instructionsOf(
