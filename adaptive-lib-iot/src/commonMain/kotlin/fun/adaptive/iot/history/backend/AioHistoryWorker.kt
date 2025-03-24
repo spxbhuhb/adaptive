@@ -64,7 +64,10 @@ class AioHistoryWorker : WorkerImpl<AioHistoryWorker> {
     override suspend fun run() {
         store = object : UuidFileStore<Unit>(historyRoot, 2, dirStore = true) {
             override fun loadPath(path: Path, map: Unit) {
-                loadHistory(path)?.let { histories[it.metadata.uuid] = it }
+                loadHistory(path)?.let {
+                    contexts[it.metadata.uuid] = AioHistoryAccessContext(it.metadata.uuid)
+                    histories[it.metadata.uuid] = it
+                }
             }
         }
 

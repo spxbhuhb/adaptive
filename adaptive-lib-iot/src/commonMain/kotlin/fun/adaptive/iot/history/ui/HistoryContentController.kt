@@ -1,10 +1,12 @@
 package `fun`.adaptive.iot.history.ui
 
+import `fun`.adaptive.adaptive_lib_iot.generated.resources.monitoring
 import `fun`.adaptive.iot.history.AioHistoryApi
 import `fun`.adaptive.iot.history.model.AioDoubleHistoryRecord
 import `fun`.adaptive.iot.history.model.AioHistoryQuery
 import `fun`.adaptive.iot.point.AioPointSpec
 import `fun`.adaptive.iot.point.PointMarkers
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.WithWorkspace
@@ -24,14 +26,14 @@ class HistoryContentController(
     val historyService = getService<AioHistoryApi>(transport)
 
     override fun accepts(pane: WsPaneType<HistoryBrowserWsItem>, modifiers: Set<EventModifier>, item: WsItem): Boolean {
-        return (item is AvItem<*>) && (PointMarkers.POINT in item.markers)
+        return (item is HistoryBrowserWsItem)
     }
 
     override fun load(pane: WsPaneType<HistoryBrowserWsItem>, modifiers: Set<EventModifier>, item: WsItem): WsPaneType<HistoryBrowserWsItem> {
         return pane.copy(
             name = item.name,
             data = item as HistoryBrowserWsItem,
-            icon = iconFor(item.item)
+            icon = Graphics.monitoring
         )
     }
 
