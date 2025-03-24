@@ -10,11 +10,13 @@ import `fun`.adaptive.iot.history.ui.wsHistoryTool
 import `fun`.adaptive.iot.domain.rht.AmvRelativeHumidityAndTemperature
 import `fun`.adaptive.iot.domain.rht.ui.rhtListHeader
 import `fun`.adaptive.iot.domain.rht.ui.rhtListItem
+import `fun`.adaptive.iot.history.ui.wsHistoryContent
 import `fun`.adaptive.iot.space.ui.browser.wsSpaceBrowserContent
 import `fun`.adaptive.iot.space.ui.browser.wsSpaceBrowserTool
 import `fun`.adaptive.iot.space.ui.editor.wsSpaceContentPane
 import `fun`.adaptive.iot.space.ui.editor.wsSpaceEditorTool
 import `fun`.adaptive.iot.ws.AioWsContext
+import `fun`.adaptive.iot.ws.AioWsContext.Companion.WSPANE_HISTORY_CONTENT
 
 object IotFragmentFactory : FoundationFragmentFactory() {
     init {
@@ -25,7 +27,9 @@ object IotFragmentFactory : FoundationFragmentFactory() {
         add(AioWsContext.WSPANE_DEVICE_CONTENT, ::wsDeviceContentPane)
 
         add(WSPANE_ALARM_TOOL, ::wsAlarmTool)
+
         add(WSPANE_HISTORY_TOOL, ::wsHistoryTool)
+        add(WSPANE_HISTORY_CONTENT, ::wsHistoryContent)
 
         add(AioWsContext.WSPANE_RHT_BROWSER_TOOL, ::wsSpaceBrowserTool)
         add(AioWsContext.WSPANE_RHT_BROWSER_CONTENT, ::wsSpaceBrowserContent)

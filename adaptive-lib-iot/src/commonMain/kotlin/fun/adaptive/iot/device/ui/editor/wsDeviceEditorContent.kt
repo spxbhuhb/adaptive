@@ -65,8 +65,8 @@ fun wsDeviceContentPane(pane: WsPane<AvItem<AioDeviceSpec>, DeviceEditorContentC
 
     val spaceNames = fragment().wsContext<AioWsContext>().spaceNameCache.value
 
-    val originalSpace = spaceNames.firstOrNull { it.itemId == editItem.markers[SpaceMarkers.SPACE_REF] }
-    var editSpace = spaceNames.firstOrNull { it.itemId == editItem.markers[SpaceMarkers.SPACE_REF] }
+    val originalSpace = spaceNames.firstOrNull { it.item.uuid == editItem.markers[SpaceMarkers.SPACE_REF] }
+    var editSpace = spaceNames.firstOrNull { it.item.uuid == editItem.markers[SpaceMarkers.SPACE_REF] }
 
     grid {
         maxSize .. padding { 16.dp } .. backgrounds.surface
@@ -122,7 +122,7 @@ fun actions(
             }
 
             if (editSpace != originalSpace) {
-                controller.setSpace(editItem.uuid, editSpace !!.itemId)
+                controller.setSpace(editItem.uuid, editSpace !!.item.uuid)
             }
         }
 }

@@ -92,19 +92,5 @@ fun Workspace.iotCommon() {
     toolPanes += wsRhtBrowserToolDef(context)
     wsRhtBrowserContentDef(context)
 
-    addContentPaneBuilder(AioWsContext.WSIT_MEASUREMENT_LOCATION) { item ->
-        WsPane(
-            UUID(),
-            item.name,
-            context[item].icon,
-            WsPanePosition.Center,
-            AioWsContext.WSPANE_MEASUREMENT_LOCATION_CONTENT,
-            controller = WsClassPaneController(SpaceBrowserWsItem::class),
-            data = item as SpaceBrowserWsItem
-        )
-    }
-
     addItemConfig(AioWsContext.WSIT_SPACE, Graphics.apartment)
-    addItemConfig(AioWsContext.WSIT_MEASUREMENT_LOCATION, Graphics.dew_point)
-
 }

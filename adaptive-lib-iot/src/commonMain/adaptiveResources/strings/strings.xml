@@ -83,6 +83,9 @@
     <!-- history -->
 
     <string name="historicalData">Történeti adatok</string>
+    <string name="downloadReport">Riport letöltés</string>
+    <string name="timestamp">Időpont</string>
+    <string name="value">Érték</string>
 
     <!-- alarm -->
 

@@ -1,23 +1,19 @@
 package `fun`.adaptive.iot.history.ui
 
-import `fun`.adaptive.iot.device.DeviceMarkers
+import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.iot.point.PointMarkers
-import `fun`.adaptive.iot.space.SpaceMarkers
-import `fun`.adaptive.ui.instruction.event.EventModifier
-import `fun`.adaptive.ui.tree.TreeItem
-import `fun`.adaptive.ui.tree.TreeViewModel
+import `fun`.adaptive.iot.ws.AioWsContext.Companion.WSIT_HISTORY
 import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
-import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.ui.AvNameCache
-import `fun`.adaptive.value.ui.AvUiTree
 
 class HistoryToolController(
     override val workspace: Workspace
 ) : WsPaneController<Unit>(), WithWorkspace {
 
-    val hisNames = AvNameCache(
+    val hisItems = AvNameCache(
         workspace.backend,
         workspace.transport,
         workspace.scope,
@@ -63,4 +59,10 @@ class HistoryToolController(
 //
 //    }
 
+    fun openHistory(item: AvItem<*>) {
+        workspace.addContent(
+            HistoryBrowserWsItem(item.name, WSIT_HISTORY, item),
+            emptySet()
+        )
+    }
 }

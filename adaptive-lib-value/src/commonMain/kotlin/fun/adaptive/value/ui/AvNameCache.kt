@@ -111,7 +111,7 @@ class AvNameCache(
         val new = mutableListOf<AvNameCacheEntry>()
 
         for (item in itemMap.values) {
-            new += AvNameCacheEntry(item.uuid, pathNames(item))
+            new += AvNameCacheEntry(item, pathNames(item))
         }
 
         value = new.sortedBy { it.names.joinToString(".") }

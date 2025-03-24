@@ -9,6 +9,7 @@ import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorToolDef
 import `fun`.adaptive.iot.history.ui.wsHistoryToolDef
 import `fun`.adaptive.iot.domain.rht.ui.wsRhtBrowserContentDef
 import `fun`.adaptive.iot.domain.rht.ui.wsRhtBrowserToolDef
+import `fun`.adaptive.iot.history.ui.wsHistoryContentDef
 import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.iot.space.ui.browser.SpaceBrowserWsItem
 import `fun`.adaptive.iot.space.ui.editor.wsSpaceEditorContentDef
@@ -48,7 +49,7 @@ class IotWsModule : IotModule<Workspace>(true) {
         wsRhtBrowserContentDef(context)
 
         wsHistoryToolDef()
-        wsAlarmToolDef()
+        wsHistoryContentDef(context)
 
         + wsSpaceEditorToolDef(context)
         wsSpaceEditorContentDef(context)
@@ -56,20 +57,9 @@ class IotWsModule : IotModule<Workspace>(true) {
         + wsDeviceEditorToolDef(context)
         wsDeviceEditorContentDef(context)
 
-        addContentPaneBuilder(AioWsContext.WSIT_MEASUREMENT_LOCATION) { item ->
-            WsPane(
-                UUID(),
-                item.name,
-                context[item].icon,
-                WsPanePosition.Center,
-                AioWsContext.WSPANE_MEASUREMENT_LOCATION_CONTENT,
-                controller = WsClassPaneController(SpaceBrowserWsItem::class),
-                data = item as SpaceBrowserWsItem
-            )
-        }
+        wsAlarmToolDef()
 
         addItemConfig(AioWsContext.WSIT_SPACE, Graphics.apartment)
-        addItemConfig(AioWsContext.WSIT_MEASUREMENT_LOCATION, Graphics.dew_point)
 
     }
 }

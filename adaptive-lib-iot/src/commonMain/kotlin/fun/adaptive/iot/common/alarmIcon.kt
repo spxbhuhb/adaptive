@@ -9,11 +9,13 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.item.AvStatus
 
 @Adaptive
-fun alarmIcon(item : AvItem<*>) {
-    if (!item.status.isOk) {
+fun alarmIcon(flags : Int) {
+    val status = AvStatus(flags)
+
+    if (!status.isOk) {
         icon(Graphics.notifications) .. fill(colors.fail) .. svgWidth(24.dp) .. svgHeight(24.dp)
     }
 }

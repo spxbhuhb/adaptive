@@ -5,6 +5,8 @@ import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.tabIndex
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
@@ -99,6 +101,16 @@ class AioTheme {
 
     fun statusBorder(color: Color) =
         border(color.opaque(0.4f), 1.dp)
+
+    val inlineEditorPopup = instructionsOf(
+        backgrounds.surfaceVariant,
+        borders.outline,
+        padding { 16.dp },
+        cornerRadius { 4.dp },
+        onClick { it.stopPropagation() },
+        tabIndex { 0 },
+        zIndex { 10000 }
+    )
 
     companion object {
         val DEFAULT = AioTheme()

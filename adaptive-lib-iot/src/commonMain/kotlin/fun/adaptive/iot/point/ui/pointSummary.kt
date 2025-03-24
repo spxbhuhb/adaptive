@@ -28,9 +28,7 @@ import `fun`.adaptive.ui.label.uuidLabel
 import `fun`.adaptive.ui.label.withLabel
 import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.textMedium
-import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.format
@@ -62,10 +60,7 @@ fun pointSummary(
 
         if (point != null && point.isSimulated) {
             contextPopup(observed) { hide ->
-                width { 300.dp } .. backgrounds.surfaceVariant .. borders.outline
-                padding { 16.dp } .. cornerRadius { 4.dp } .. onClick { it.stopPropagation() }
-                tabIndex { 0 } .. zIndex { 10000 }
-
+                theme.inlineEditorPopup .. width { 300.dp }
                 setValuePopup(point, pointValue, observed, hide)
             }
         }
@@ -80,7 +75,7 @@ fun setValuePopup(
     state: InputContext,
     hide: () -> Unit
 ) {
-    var value : Double? = null
+    var value: Double? = null
     val workspace = fragment().firstContext<Workspace>()
 
     val pointService = getService<AioPointApi>(adapter().transport)
@@ -94,7 +89,7 @@ fun setValuePopup(
         }
 
         withLabel(Strings.currentPointValue, InputContext.DISABLED) {
-            doubleOrNullInput(pointValue?.value, state = InputContext.DISABLED) {  }
+            doubleOrNullInput(pointValue?.value, state = InputContext.DISABLED) { }
         }
 
         withLabel(Strings.newPointValue) {

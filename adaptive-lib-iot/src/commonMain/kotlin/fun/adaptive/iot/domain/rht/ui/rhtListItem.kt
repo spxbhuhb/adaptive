@@ -59,7 +59,7 @@ fun rhtListItem(
 
         box {
             maxSize .. alignItems.center
-            alarmIcon(item)
+            alarmIcon(item.status.flags)
         }
 
         timestamp(item.timestamp) .. textSmall .. alignSelf.center
