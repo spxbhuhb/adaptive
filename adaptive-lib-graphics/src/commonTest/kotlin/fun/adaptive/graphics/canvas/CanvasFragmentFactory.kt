@@ -5,15 +5,15 @@
 package `fun`.adaptive.graphics.canvas
 
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
-import `fun`.adaptive.foundation.testing.AdaptiveTestAdapter
 import `fun`.adaptive.graphics.canvas.fragment.CanvasCircle
 import `fun`.adaptive.graphics.canvas.fragment.CanvasFillText
 import `fun`.adaptive.graphics.canvas.fragment.CanvasLine
 import `fun`.adaptive.graphics.canvas.fragment.CanvasSvg
+import `fun`.adaptive.ui.testing.DensityIndependentTestAdapter
 
 object CanvasFragmentFactory : FoundationFragmentFactory() {
     init {
-        add("canvas:canvas") { p, i, s -> TestCanvasCanvas(p.adapter as AdaptiveTestAdapter, p, i) }
+        add("canvas:canvas") { p, i, s -> TestCanvasCanvas(p.adapter as DensityIndependentTestAdapter, p, i) }
         add("canvas:circle") { p, i, s -> CanvasCircle(p.adapter as CanvasAdapter, p, i) }
         add("canvas:line") { p, i, s -> CanvasLine(p.adapter as CanvasAdapter, p, i) }
         add("canvas:filltext") { p, i, s -> CanvasFillText(p.adapter as CanvasAdapter, p, i) }

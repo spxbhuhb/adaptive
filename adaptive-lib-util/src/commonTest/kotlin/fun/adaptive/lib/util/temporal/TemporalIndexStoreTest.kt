@@ -6,6 +6,7 @@ import `fun`.adaptive.lib.util.temporal.model.TemporalIndexHeader
 import `fun`.adaptive.lib.util.utilCommon
 import `fun`.adaptive.utility.*
 import kotlinx.datetime.Clock.System.now
+import kotlin.js.JsName
 import kotlin.test.*
 
 class TemporalIndexStoreTest {
@@ -18,6 +19,7 @@ class TemporalIndexStoreTest {
     }
 
     @Test
+    @JsName("storeInitializesCorrectlyWhenFileDoesNotExist")
     fun `store initializes correctly when file does not exist`() {
         val testDir = clearedTestPath()
         val path = testDir.resolve(indexName)
@@ -31,6 +33,7 @@ class TemporalIndexStoreTest {
     }
 
     @Test
+    @JsName("storeInitializesCorrectlyWhenFileExistsButIsEmpty")
     fun `store initializes correctly when file exists`() {
         val path = clearedTestPath().resolve(indexName)
         val store = TemporalIndexStore(UUID(), path, initialize = false)
@@ -50,6 +53,7 @@ class TemporalIndexStoreTest {
     }
 
     @Test
+    @JsName("storeRejectsInitializationIfFileExistsButIsInvalid")
     fun `store rejects initialization if UUID does not match`() {
         val path = clearedTestPath().resolve(indexName)
         val store = TemporalIndexStore(UUID(), path, initialize = false)
@@ -65,6 +69,7 @@ class TemporalIndexStoreTest {
     }
 
     @Test
+    @JsName("addEntryUpdatesStoreAndPersistsToFile")
     fun `add entry updates store and persists to file`() {
         val path = clearedTestPath().resolve(indexName)
         val store = TemporalIndexStore(UUID(), path)
@@ -85,6 +90,7 @@ class TemporalIndexStoreTest {
     }
 
     @Test
+    @JsName("latestReturnsNullWhenEmpty")
     fun `latest returns last entry or null if empty`() {
         val path = clearedTestPath().resolve(indexName)
         val store = TemporalIndexStore(UUID(), path)

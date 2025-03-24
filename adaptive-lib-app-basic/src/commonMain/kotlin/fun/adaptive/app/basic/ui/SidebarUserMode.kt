@@ -1,5 +1,9 @@
 package `fun`.adaptive.app.basic.ui
 
+import `fun`.adaptive.reflect.typeSignature
+import `fun`.adaptive.utility.trimSignature
+import `fun`.adaptive.wireformat.builtin.EnumWireFormat
+
 /**
  * The user-selected mode of the sidebar.
  *
@@ -17,5 +21,10 @@ package `fun`.adaptive.app.basic.ui
  */
 enum class SidebarUserMode {
     Open,
-    Closed
+    Closed;
+
+    companion object : EnumWireFormat<SidebarUserMode>(entries) {
+        override val wireFormatName: String
+            get() = SidebarUserMode.typeSignature().trimSignature()
+    }
 }

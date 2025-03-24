@@ -56,8 +56,8 @@ fun shorthand(buildName : String, taskName : String, shorthand:String) {
 
 shorthand("adaptive-kotlin-plugin", "generateTests", "plugin-generate-tests")
 shorthand("adaptive-kotlin-plugin", "test", "plugin-test")
-shorthand("cookbook", "jsBrowserDevelopmentRun", "cookbook-js")
-shorthand("cookbook", "jvmRun", "cookbook-jvm")
+//shorthand("cookbook", "jsBrowserDevelopmentRun", "cookbook-js")
+//shorthand("cookbook", "jvmRun", "cookbook-jvm")
 shorthand("grove", "jsBrowserDevelopmentRun", "grove-js")
 shorthand("grove", "jvmRun", "grove-jvm")
 shorthand("adaptive-grove", "processAdaptiveResourcesCommonMain", "grove-resources")

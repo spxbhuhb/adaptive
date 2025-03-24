@@ -11,6 +11,7 @@ import `fun`.adaptive.iot.history.model.AioDoubleHistoryRecord
 import `fun`.adaptive.iot.history.model.AioHistoryId
 import `fun`.adaptive.iot.iotCommon
 import `fun`.adaptive.reflect.typeSignature
+import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.clearedTestPath
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.waitFor
@@ -97,7 +98,7 @@ class HistoryWorkerTest {
 
         waitFor(10.seconds) { worker.isInitialized }
 
-        val uuid = HistoryId("be39e8fe-5015-4260-9f39-271612bc399f")
+        val uuid = AioHistoryId("be39e8fe-5015-4260-9f39-271612bc399f")
         worker.create(uuid, AioDoubleHistoryRecord.typeSignature())
 
         return TestContext(rootPath, adapter, worker, uuid)

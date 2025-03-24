@@ -7,13 +7,14 @@ package `fun`.adaptive.graphics.svg.parse
 import `fun`.adaptive.foundation.testing.AdaptiveTestAdapter
 import `fun`.adaptive.graphics.canvas.TestCanvas
 import `fun`.adaptive.graphics.svg.SvgAdapter
+import `fun`.adaptive.ui.testing.DensityIndependentTestAdapter
 import kotlin.test.Test
 
 class ParseSvgKtTest {
     @Test
     fun basic() {
         val canvas = TestCanvas()
-        val fragment = parseSvg(SvgAdapter(AdaptiveTestAdapter(), canvas), svg2)
+        val fragment = parseSvg(SvgAdapter(DensityIndependentTestAdapter(), canvas), svg2)
         fragment.draw()
         //canvas.trace.forEach { println(it) }
     }

@@ -9,12 +9,13 @@ import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
 import `fun`.adaptive.foundation.instruction.Trace
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.foundation.testing.AdaptiveTestAdapter
+import `fun`.adaptive.ui.testing.DensityIndependentTestAdapter
 import kotlin.apply
 import kotlin.let
 
 @AdaptiveActual(canvas)
 class TestCanvasCanvas(
-    adapter: AdaptiveTestAdapter,
+    adapter: DensityIndependentTestAdapter,
     parent: AdaptiveFragment,
     index: Int
 ) : AdaptiveFragment(adapter, parent, index, stateSize()) {

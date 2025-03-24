@@ -5,12 +5,14 @@ import `fun`.adaptive.ui.fragment.paragraph.model.Paragraph
 import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphItem
 import `fun`.adaptive.ui.testing.AuiTestAdapter
 import `fun`.adaptive.ui.testing.fragment.AdaptiveParagraph
+import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ParagraphTest {
 
     @Test
+    @JsName("empty_paragraph")
     fun `empty paragraph`() {
         val paragraph = createTestParagraph(emptyList())
         val rows = paragraph.computeRows(100.0)
@@ -18,6 +20,7 @@ class ParagraphTest {
     }
 
     @Test
+    @JsName("single_item_fits_perfectly")
     fun `test single row fits perfectly`() {
         val paragraph = createTestParagraph(
             listOf(
@@ -33,6 +36,7 @@ class ParagraphTest {
     }
 
     @Test
+    @JsName("items_wrap_to_new_row")
     fun `test items wrap to new row`() {
         val paragraph = createTestParagraph(
             listOf(
@@ -50,6 +54,7 @@ class ParagraphTest {
     }
 
     @Test
+    @JsName("single_item_wider_than_row")
     fun `test single item wider than row`() {
         val paragraph = createTestParagraph(
             listOf(
@@ -64,6 +69,7 @@ class ParagraphTest {
     }
 
     @Test
+    @JsName("multiple_items_in_single_row")
     fun `test multiple items in multiple rows`() {
         val paragraph = createTestParagraph(
             listOf(

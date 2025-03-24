@@ -4,6 +4,10 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.api.isTouched
 import `fun`.adaptive.adat.api.isValid
 import `fun`.adaptive.adat.store.copyOf
+import `fun`.adaptive.cookbook.shared.bodySmall
+import `fun`.adaptive.cookbook.shared.darkGray
+import `fun`.adaptive.cookbook.shared.inputErrorContainer
+import `fun`.adaptive.cookbook.shared.inputErrorText
 import `fun`.adaptive.cookbook.support.*
 import `fun`.adaptive.cookbook.wizard.project.model.ProjectData
 import `fun`.adaptive.foundation.Adaptive

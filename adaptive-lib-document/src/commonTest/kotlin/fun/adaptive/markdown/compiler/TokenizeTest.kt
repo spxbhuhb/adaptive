@@ -4,6 +4,7 @@
 
 package `fun`.adaptive.markdown.compiler
 
+import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -318,6 +319,7 @@ class TokenizeTest {
     }
 
     @Test
+    @JsName("long_data_test")
     fun longData() {
         // just to see that it does not crash for longer data
         tokenizeInternal(longData)

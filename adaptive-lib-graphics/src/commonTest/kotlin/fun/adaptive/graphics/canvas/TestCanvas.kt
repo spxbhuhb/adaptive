@@ -4,11 +4,11 @@
 
 package `fun`.adaptive.graphics.canvas
 
+import `fun`.adaptive.graphics.canvas.instruction.CanvasTransformInstruction
 import `fun`.adaptive.graphics.canvas.platform.ActualCanvas
 import `fun`.adaptive.graphics.canvas.platform.ActualPath
-import `fun`.adaptive.graphics.canvas.instruction.CanvasTransformInstruction
 import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
-import `fun`.adaptive.ui.fragment.layout.RawSize
+import `fun`.adaptive.ui.fragment.layout.RawTextMeasurement
 import `fun`.adaptive.ui.instruction.decoration.Color
 
 class TestCanvas : ActualCanvas {
@@ -75,8 +75,8 @@ class TestCanvas : ActualCanvas {
 
     }
 
-    override fun measureText(renderData: CanvasRenderData, text: String): RawSize {
-        return RawSize(text.length.toDouble(), renderData.text?.fontSize?.value ?: 0.0)
+    override fun measureText(renderData: CanvasRenderData, text: String): RawTextMeasurement {
+        return RawTextMeasurement(text.length.toDouble(), renderData.text?.fontSize?.value ?: 0.0, 0.0)
     }
 
 }

@@ -17,7 +17,7 @@ class AvValueClientSubscriptionTest {
         val time = Instant.parse("2023-01-01T12:00:00Z")
 
         val valueId = AvValueId()
-        val value = AvString(valueId, time, AvStatus.OK, "Value")
+        val value = AvString(valueId, time, AvStatus.OK, null, "Value")
 
         val subscription = AvClientSubscription(uuid4(), condition(valueId), serverTransport, serverBackend.scope)
 
@@ -34,7 +34,7 @@ class AvValueClientSubscriptionTest {
         val time = Instant.parse("2023-01-01T12:00:00Z")
 
         val valueId = AvValueId()
-        val value = AvString(valueId, time, AvStatus.OK, "Value")
+        val value = AvString(valueId, time, AvStatus.OK, null, "Value")
 
         val subscription = AvClientSubscription(uuid4(), condition(valueId), serverTransport, serverBackend.scope)
 

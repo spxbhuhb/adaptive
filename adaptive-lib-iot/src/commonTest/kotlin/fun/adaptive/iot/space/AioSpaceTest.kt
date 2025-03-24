@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
+import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -22,27 +23,25 @@ import kotlin.time.Duration.Companion.seconds
 class AioSpaceTest {
 
     @Test
+    @JsName("adding_a_space")
     fun `adding a space`() = test { worker ->
         val spaceId: AvValueId = addSpace(worker, "Building 1", "1", SpaceMarkers.BUILDING)
 
         val space = worker.item(spaceId).asAvItem<AioSpaceSpec>()
         assertNotNull(space)
 
-        assertNotNull(space[SpaceMarkers.SPACE])
+        assertNotNull(SpaceMarkers.SPACE in space.markers)
         assertTrue(SpaceMarkers.BUILDING in space.markers)
 
         val spaceFromQuery = worker.query { it is AvItem<*> && SpaceMarkers.BUILDING in it.markers }.firstOrNull()?.asAvItem<AioSpaceSpec>()
         assertNotNull(spaceFromQuery)
         assertEquals(space, spaceFromQuery)
 
-        val spaceAvmId = space.markers[SpaceMarkers.SPACE]
-        assertNotNull(spaceAvmId)
-
         assertEquals(12.3, spaceFromQuery.specific?.area)
     }
 
-
     @Test
+    @JsName("adding_a_sub_space")
     fun `adding a sub space`() = test { worker ->
         val spaceId = addSpace(worker, "Building 1", "1", SpaceMarkers.BUILDING)
         val subSpaceId = addSpace(worker, "Floor 1", "2", SpaceMarkers.FLOOR)

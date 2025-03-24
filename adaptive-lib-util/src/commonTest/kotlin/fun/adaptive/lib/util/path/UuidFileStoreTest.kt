@@ -6,6 +6,7 @@ import `fun`.adaptive.utility.ensure
 import `fun`.adaptive.utility.resolve
 import `fun`.adaptive.utility.write
 import kotlinx.io.files.Path
+import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -21,6 +22,7 @@ class UuidFileStoreTest {
     }
 
     @Test
+    @JsName("testPathForGeneratesCorrectPathWithTwoLevelsOfSubdirectories")
     fun `test pathFor generates correct path`() {
         val root = clearedTestPath()
 
@@ -34,6 +36,7 @@ class UuidFileStoreTest {
     }
 
     @Test
+    @JsName("testPathForGeneratesCorrectPathWithThreeLevelsOfSubdirectories")
     fun `test pathFor with different levels`() {
         val root = clearedTestPath()
 
@@ -46,6 +49,7 @@ class UuidFileStoreTest {
     }
 
     @Test
+    @JsName("testPathForWithInvalidUuidThrowsException")
     fun `test loadAll loads all valid files`() {
         val testRoot = clearedTestPath()
 
@@ -62,6 +66,7 @@ class UuidFileStoreTest {
     }
 
     @Test
+    @JsName("testLoadAllWithInvalidUuidDoesNotLoadThem")
     fun `test loadAll with different levels`() {
         val testRoot = clearedTestPath()
 
@@ -82,6 +87,7 @@ class UuidFileStoreTest {
     }
 
     @Test
+    @JsName("testLoadAllStopsOnException")
     fun `test loadAll stops on exception`() {
         class FailingUuidFileStore(path: Path, levels: Int) : UuidFileStore<Unit>(path, levels) {
             override fun loadPath(root: Path, context: Unit) {
@@ -99,6 +105,7 @@ class UuidFileStoreTest {
     }
 
     @Test
+    @JsName("testLoadAllWithEmptyDirectoryDoesNothing")
     fun `test loadAll with empty directory`() {
         val testRoot = clearedTestPath()
         val store = TestUuidFileStore(testRoot, 2)

@@ -11,7 +11,6 @@ import `fun`.adaptive.grove.fragment.GroveFragmentFactory
 import `fun`.adaptive.grove.groveCommon
 import `fun`.adaptive.grove.sheet.SheetFragmentFactory
 import `fun`.adaptive.grove.ufd.UfdPaneFactory
-import `fun`.adaptive.grove.ufd.ufdPalettePaneKey
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.browser
@@ -63,18 +62,19 @@ fun main() {
 }
 
 private fun buildWorkspace(): Workspace {
-    val workspace = Workspace()
-
-    with(workspace) {
-        groveCommon()
-
-        leftTop.value = toolPanes.first { it.key == ufdPalettePaneKey }.uuid
-        leftMiddle.value = toolPanes.first { it.position == WsPanePosition.LeftMiddle }.uuid
-        //rightTop.value = panes.first { it.position == WorkspacePanePosition.RightTop }.uuid
-        //center.value = panes.first { it.position == WorkspacePanePosition.Center }.uuid
-
-        updateSplits()
-    }
-
-    return workspace
+    TODO()
+//    val workspace = Workspace()
+//
+//    with(workspace) {
+//        groveCommon()
+//
+//        leftTop.value = toolPanes.first { it.key == ufdPalettePaneKey }.uuid
+//        leftMiddle.value = toolPanes.first { it.position == WsPanePosition.LeftMiddle }.uuid
+//        //rightTop.value = panes.first { it.position == WorkspacePanePosition.RightTop }.uuid
+//        //center.value = panes.first { it.position == WorkspacePanePosition.Center }.uuid
+//
+//        updateSplits()
+//    }
+//
+//    return workspace
 }

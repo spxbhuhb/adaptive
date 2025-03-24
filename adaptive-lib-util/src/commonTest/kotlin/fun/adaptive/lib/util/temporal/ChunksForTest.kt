@@ -4,6 +4,7 @@ import `fun`.adaptive.lib.util.temporal.model.TemporalChunk
 import `fun`.adaptive.lib.util.temporal.model.TemporalIndexEntry
 import `fun`.adaptive.utility.UUID
 import kotlinx.datetime.Instant
+import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -13,6 +14,7 @@ class ChunksForTest {
     private fun uuid(): UUID<TemporalChunk> = UUID()
 
     @Test
+    @JsName("returnsEmptyListWhenStartIsBeforeFirstEntryTimestamp")
     fun `returns empty list when lastTimeStamp is null`() {
         val start = Instant.parse("2024-03-01T10:00:00Z")
         val end = Instant.parse("2024-03-01T12:00:00Z")
@@ -23,6 +25,7 @@ class ChunksForTest {
     }
 
     @Test
+    @JsName("returnsEmptyListWhenStartIsBeforeFirstEntryTimestamp2")
     fun `returns empty list when start is after last known timestamp`() {
         val start = Instant.parse("2024-03-01T10:00:00Z")
         val end = Instant.parse("2024-03-01T12:00:00Z")
@@ -35,6 +38,7 @@ class ChunksForTest {
     }
 
     @Test
+    @JsName("returnsEmptyListWhenEndIsBeforeFirstEntryTimestamp")
     fun `returns empty list when end is before first entry timestamp`() {
         val start = Instant.parse("2024-03-01T06:00:00Z")
         val end = Instant.parse("2024-03-01T07:00:00Z")
@@ -47,6 +51,7 @@ class ChunksForTest {
     }
 
     @Test
+    @JsName("returnsEmptyListWhenEndIsBeforeFirstEntryTimestamp2")
     fun `returns empty list when entries list is empty`() {
         val start = Instant.parse("2024-03-01T06:00:00Z")
         val end = Instant.parse("2024-03-01T07:00:00Z")
@@ -57,6 +62,7 @@ class ChunksForTest {
     }
 
     @Test
+    @JsName("returnsEmptyListWhenStartIsBeforeFirstEntryTimestamp3")
     fun `returns empty list when start is after end`() {
         val start = Instant.parse("2024-03-01T12:00:00Z")
         val end = Instant.parse("2024-03-01T10:00:00Z")
@@ -69,6 +75,7 @@ class ChunksForTest {
     }
 
     @Test
+    @JsName("returnsEmptyListWhenEndIsBeforeFirstEntryTimestamp3")
     fun `returns expected chunk UUIDs when timestamps match the range`() {
         val chunk1 = uuid()
         val chunk2 = uuid()
@@ -88,6 +95,7 @@ class ChunksForTest {
     }
 
     @Test
+    @JsName("doesNotIncludeChunksOutsideTheRangeInTheResult")
     fun `does not include duplicate chunks in the result`() {
         val chunk1 = uuid()
         val chunk2 = uuid()
