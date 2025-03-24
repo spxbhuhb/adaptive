@@ -63,6 +63,10 @@ kotlin {
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.kotlinx.coroutines.debug)
         }
+
+        jvmMain.dependencies {
+            implementation(libs.ktor.network)
+        }
     }
 }
 
