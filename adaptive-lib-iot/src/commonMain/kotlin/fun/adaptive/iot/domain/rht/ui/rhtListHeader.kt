@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot.marker.rht.ui
+package `fun`.adaptive.iot.domain.rht.ui
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
 import `fun`.adaptive.foundation.Adaptive

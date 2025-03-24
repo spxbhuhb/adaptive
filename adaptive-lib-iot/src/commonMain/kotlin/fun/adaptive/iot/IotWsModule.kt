@@ -7,8 +7,8 @@ import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorContentDef
 import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorToolDef
 import `fun`.adaptive.iot.history.ui.wsHistoryToolDef
-import `fun`.adaptive.iot.marker.rht.ui.wsRhtBrowserContentDef
-import `fun`.adaptive.iot.marker.rht.ui.wsRhtBrowserToolDef
+import `fun`.adaptive.iot.domain.rht.ui.wsRhtBrowserContentDef
+import `fun`.adaptive.iot.domain.rht.ui.wsRhtBrowserToolDef
 import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.iot.space.ui.browser.SpaceBrowserWsItem
 import `fun`.adaptive.iot.space.ui.editor.wsSpaceEditorContentDef

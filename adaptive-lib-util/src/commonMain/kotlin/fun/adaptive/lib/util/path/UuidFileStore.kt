@@ -51,11 +51,13 @@ import kotlinx.io.files.Path
  * - **APFS (MacOS):** Handles many files well but benefits from deeper nesting for millions of files.
  * - **XFS (High-performance Linux FS):** Better for large numbers of files but still benefits from 3-4 levels at >1 million files.
  *
- * @property  levels  The number of levels to use.
+ * @property  levels     The number of levels to use.
+ * @property  dirStore   When true, [pathFor] adds the UUID to the returned path.
  */
 abstract class UuidFileStore<T>(
     val root : Path,
-    val levels : Int
+    val levels : Int,
+    val dirStore : Boolean = false
 ) {
 
     /**
@@ -64,15 +66,20 @@ abstract class UuidFileStore<T>(
     open fun pathFor(uuid: UUID<*>): Path {
         val s = uuid.toString().reversed()
         val dirs = 0.until(levels).map { s.substring(it * 2, it * 2 + 2).reversed() }.toTypedArray()
-        return Path(root, *dirs)
+        return if (dirStore) {
+            Path(root, *dirs, uuid.toString())
+        } else {
+            Path(root, *dirs)
+        }
     }
 
     /**
-     * Traverse through all the files and call [loadFile] for each of them.
+     * Traverse through all the paths and call [loadPath] for each at the
+     * appropriate level.
      *
-     * - Skips all files with a name that starts with a dot.
-     * - Skips all files with a name that is shorter than 36 characters.
-     * - Stops if [loadFile] throws an exception.
+     * - Skips all paths with a name that starts with a dot.
+     * - Skips all paths with a name that is shorter than 36 characters.
+     * - Stops if [loadPath] throws an exception.
      */
     open fun loadAll(context : T) {
         loadDir(root, 0, context)
@@ -83,7 +90,7 @@ abstract class UuidFileStore<T>(
             val name = path.name
             if (dirLevel == levels) {
                 if (name.length < 36 || name.startsWith('.')) continue
-                loadFile(path, context)
+                loadPath(path, context)
             } else {
                 if (name.length != 2 || name.startsWith('.')) continue
                 loadDir(path, dirLevel + 1, context)
@@ -91,6 +98,6 @@ abstract class UuidFileStore<T>(
         }
     }
 
-    abstract fun loadFile(path : Path, context: T)
+    abstract fun loadPath(path : Path, context: T)
 
 }

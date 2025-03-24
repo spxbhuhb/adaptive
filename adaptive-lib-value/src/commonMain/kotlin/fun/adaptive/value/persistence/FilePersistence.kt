@@ -19,7 +19,7 @@ class FilePersistence(
 
     val store = object : UuidFileStore<MutableMap<AvValueId, AvValue>>(root, levels) {
 
-        override fun loadFile(path: Path, map: MutableMap<AvValueId, AvValue>) {
+        override fun loadPath(path: Path, map: MutableMap<AvValueId, AvValue>) {
             if (!path.name.endsWith(".json")) return
 
             val bytes = path.read()

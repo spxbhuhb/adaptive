@@ -8,16 +8,14 @@ import `fun`.adaptive.iot.device.ui.DeviceTreeModel
 import `fun`.adaptive.iot.haystack.PhScienceMarkers
 import `fun`.adaptive.iot.point.AioPointApi
 import `fun`.adaptive.iot.point.PointMarkers
-import `fun`.adaptive.iot.point.computed.AioComputedPointSpec
 import `fun`.adaptive.iot.point.sim.AioSimPointSpec
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
-import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.ui.instruction.event.EventModifier
-import `fun`.adaptive.ui.instruction.layout.Scroll
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
 import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.value.AvValueId
 
 class DeviceEditorToolController(
     workspace: Workspace
@@ -41,7 +39,7 @@ class DeviceEditorToolController(
                     PointMarkers.SIM_POINT,
                     deviceId,
                     AioSimPointSpec(),
-                    listOf(PhScienceMarkers.TEMP)
+                    listOf(PhScienceMarkers.TEMP, PointMarkers.HIS)
                 )
 
                 pointService.add(
@@ -49,7 +47,7 @@ class DeviceEditorToolController(
                     PointMarkers.SIM_POINT,
                     deviceId,
                     AioSimPointSpec(),
-                    listOf(PhScienceMarkers.HUMIDITY)
+                    listOf(PhScienceMarkers.HUMIDITY, PointMarkers.HIS)
                 )
             }
         }

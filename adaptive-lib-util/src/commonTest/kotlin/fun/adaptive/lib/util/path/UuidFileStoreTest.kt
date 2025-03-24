@@ -15,7 +15,7 @@ class UuidFileStoreTest {
     class TestUuidFileStore(path: Path, levels: Int) : UuidFileStore<Unit>(path, levels) {
         val loadedFiles = mutableListOf<Path>()
 
-        override fun loadFile(path: Path, context: Unit) {
+        override fun loadPath(path: Path, context: Unit) {
             loadedFiles.add(path)
         }
     }
@@ -84,7 +84,7 @@ class UuidFileStoreTest {
     @Test
     fun `test loadAll stops on exception`() {
         class FailingUuidFileStore(path: Path, levels: Int) : UuidFileStore<Unit>(path, levels) {
-            override fun loadFile(root: Path, context: Unit) {
+            override fun loadPath(root: Path, context: Unit) {
                 throw RuntimeException("Test Exception")
             }
         }

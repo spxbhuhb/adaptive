@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot.marker.rht
+package `fun`.adaptive.iot.domain.rht
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.value.item.AvMarkerValue

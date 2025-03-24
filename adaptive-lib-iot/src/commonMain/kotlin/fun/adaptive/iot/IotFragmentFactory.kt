@@ -7,9 +7,9 @@ import `fun`.adaptive.iot.device.ui.editor.wsDeviceContentPane
 import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorTool
 import `fun`.adaptive.iot.history.ui.WSPANE_HISTORY_TOOL
 import `fun`.adaptive.iot.history.ui.wsHistoryTool
-import `fun`.adaptive.iot.marker.rht.AmvRelativeHumidityAndTemperature
-import `fun`.adaptive.iot.marker.rht.ui.rhtListHeader
-import `fun`.adaptive.iot.marker.rht.ui.rhtListItem
+import `fun`.adaptive.iot.domain.rht.AmvRelativeHumidityAndTemperature
+import `fun`.adaptive.iot.domain.rht.ui.rhtListHeader
+import `fun`.adaptive.iot.domain.rht.ui.rhtListItem
 import `fun`.adaptive.iot.space.ui.browser.wsSpaceBrowserContent
 import `fun`.adaptive.iot.space.ui.browser.wsSpaceBrowserTool
 import `fun`.adaptive.iot.space.ui.editor.wsSpaceContentPane

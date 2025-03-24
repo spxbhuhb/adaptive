@@ -2,10 +2,10 @@ package `fun`.adaptive.value.ui
 
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.query.firstImpl
+import `fun`.adaptive.general.Observable
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.utility.debug
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvMarker
@@ -20,11 +20,16 @@ class AvNameCache(
     transport: ServiceCallTransport,
     val scope: CoroutineScope,
     itemMarker: AvMarker
-) {
+) : Observable<List<AvNameCacheEntry>>() {
+
+
+    override var value: List<AvNameCacheEntry> = emptyList()
+        set(v) {
+            field = v
+            notifyListeners()
+        }
 
     private val itemMap = mutableMapOf<AvValueId, AvItem<*>>()
-
-    var names = emptyList<AvNameCacheEntry>()
 
     val localWorker = adapter.firstImpl<AvValueWorker>()
     val remoteService = getService<AvValueApi>(transport)
@@ -109,6 +114,6 @@ class AvNameCache(
             new += AvNameCacheEntry(item.uuid, pathNames(item))
         }
 
-        names = new.sortedBy { it.names.joinToString(".") }
+        value = new.sortedBy { it.names.joinToString(".") }
     }
 }

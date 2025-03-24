@@ -2,6 +2,11 @@ package `fun`.adaptive.iot
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
 import `fun`.adaptive.iot.device.AioDeviceSpec
+import `fun`.adaptive.iot.history.model.AioBooleanHistoryRecord
+import `fun`.adaptive.iot.history.model.AioDoubleHistoryRecord
+import `fun`.adaptive.iot.history.model.AioHistoryMetadata
+import `fun`.adaptive.iot.history.model.AioHistoryQuery
+import `fun`.adaptive.iot.history.model.AioStringHistoryRecord
 import `fun`.adaptive.iot.point.computed.AioComputedPointSpec
 import `fun`.adaptive.iot.point.sim.AioSimPointSpec
 import `fun`.adaptive.iot.space.AioSpaceSpec
@@ -37,6 +42,12 @@ open class IotModule<WT>(
         this += AioSimPointSpec
 
         this += AvString
+
+        this += AioDoubleHistoryRecord
+        this += AioBooleanHistoryRecord
+        this += AioStringHistoryRecord
+        this += AioHistoryMetadata
+        this += AioHistoryQuery
     }
     
     override suspend fun loadResources() {

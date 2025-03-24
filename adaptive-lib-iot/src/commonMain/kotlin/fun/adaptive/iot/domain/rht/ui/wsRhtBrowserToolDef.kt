@@ -1,8 +1,8 @@
-package `fun`.adaptive.iot.marker.rht.ui
+package `fun`.adaptive.iot.domain.rht.ui
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.dew_point
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.temperatureAndHumidity
-import `fun`.adaptive.iot.marker.rht.AmvRelativeHumidityAndTemperature
+import `fun`.adaptive.iot.domain.rht.AmvRelativeHumidityAndTemperature
 import `fun`.adaptive.iot.space.ui.browser.SpaceBrowserConfig
 import `fun`.adaptive.iot.space.ui.browser.SpaceBrowserToolController
 import `fun`.adaptive.iot.ws.AioWsContext

@@ -3,8 +3,13 @@ package `fun`.adaptive.iot
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
 import `fun`.adaptive.iot.device.AioDeviceSpec
 import `fun`.adaptive.iot.device.DeviceMarkers
-import `fun`.adaptive.iot.marker.rht.ui.wsRhtBrowserContentDef
-import `fun`.adaptive.iot.marker.rht.ui.wsRhtBrowserToolDef
+import `fun`.adaptive.iot.history.model.AioBooleanHistoryRecord
+import `fun`.adaptive.iot.history.model.AioDoubleHistoryRecord
+import `fun`.adaptive.iot.history.model.AioHistoryMetadata
+import `fun`.adaptive.iot.history.model.AioHistoryQuery
+import `fun`.adaptive.iot.history.model.AioStringHistoryRecord
+import `fun`.adaptive.iot.domain.rht.ui.wsRhtBrowserContentDef
+import `fun`.adaptive.iot.domain.rht.ui.wsRhtBrowserToolDef
 import `fun`.adaptive.iot.point.computed.AioComputedPointSpec
 import `fun`.adaptive.iot.point.sim.AioSimPointSpec
 import `fun`.adaptive.iot.space.AioSpaceSpec
@@ -50,6 +55,12 @@ suspend fun iotCommon(loadStrings: Boolean = true) {
     r += AioSimPointSpec
 
     r += AvString
+
+    r += AioDoubleHistoryRecord
+    r += AioBooleanHistoryRecord
+    r += AioStringHistoryRecord
+    r += AioHistoryMetadata
+    r += AioHistoryQuery
 
     if (loadStrings) {
         commonMainStringsStringStore0.load()

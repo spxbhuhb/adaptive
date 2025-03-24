@@ -65,7 +65,7 @@ class AioTheme {
         maxWidth,
         gap { 16.dp },
         height { 28.dp },
-        colTemplate(80.dp, 1.fr, 160.dp, 60.dp),
+        colTemplate(80.dp, 1.fr, 160.dp, 84.dp),
         alignItems.startCenter
     )
 
@@ -73,7 +73,7 @@ class AioTheme {
         maxWidth,
         gap { 16.dp },
         height { 28.dp },
-        colTemplate(1.fr, 1.fr, 160.dp, 60.dp),
+        colTemplate(1.fr, 1.fr, 160.dp, 84.dp),
         alignItems.startCenter
     )
 

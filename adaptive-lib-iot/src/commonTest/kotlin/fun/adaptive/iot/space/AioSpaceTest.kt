@@ -2,10 +2,10 @@ package `fun`.adaptive.iot.space
 
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItemIdList
-import `fun`.adaptive.iot.space.marker.AmvSpace
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.log.getLogger
+import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,22 +25,20 @@ class AioSpaceTest {
     fun `adding a space`() = test { worker ->
         val spaceId: AvValueId = addSpace(worker, "Building 1", "1", SpaceMarkers.BUILDING)
 
-        val space = worker.item(spaceId)
+        val space = worker.item(spaceId).asAvItem<AioSpaceSpec>()
         assertNotNull(space)
 
         assertNotNull(space[SpaceMarkers.SPACE])
         assertTrue(SpaceMarkers.BUILDING in space.markers)
 
-        val spaceFromQuery = worker.query { it is AvItem && SpaceMarkers.BUILDING in it.markers }.firstOrNull() as? AvItem
+        val spaceFromQuery = worker.query { it is AvItem<*> && SpaceMarkers.BUILDING in it.markers }.firstOrNull()?.asAvItem<AioSpaceSpec>()
+        assertNotNull(spaceFromQuery)
         assertEquals(space, spaceFromQuery)
 
         val spaceAvmId = space.markers[SpaceMarkers.SPACE]
         assertNotNull(spaceAvmId)
 
-        val spaceSpec = worker[spaceAvmId] as? AmvSpace
-        assertNotNull(spaceSpec)
-
-        assertEquals(12.3, spaceSpec.area)
+        assertEquals(12.3, spaceFromQuery.specific?.area)
     }
 
 

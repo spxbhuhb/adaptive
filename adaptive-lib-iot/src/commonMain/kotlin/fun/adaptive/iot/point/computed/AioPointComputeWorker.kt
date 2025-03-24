@@ -3,6 +3,7 @@ package `fun`.adaptive.iot.point.computed
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.iot.device.DeviceMarkers
+import `fun`.adaptive.iot.history.AioHistoryService
 import `fun`.adaptive.iot.point.AioPointService
 import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.iot.space.SpaceMarkers
@@ -16,9 +17,13 @@ import kotlinx.coroutines.channels.Channel
 
 class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker> {
 
-    val valueWorker by worker<AvValueWorker>()
+    companion object {
+        suspend fun update(curVal: AvValue?) = curVal?.let { channel.send(curVal) }
 
-    val channel = Channel<AvValue>(Channel.UNLIMITED)
+        private val channel = Channel<AvValue>(Channel.UNLIMITED)
+    }
+
+    val valueWorker by worker<AvValueWorker>()
 
     override suspend fun run() {
         for (value in channel) {
@@ -88,7 +93,8 @@ class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker> {
             AioPointService().unsafeSetCurVal(this, computedPoint, AvDouble(computedPoint, result))
         }
 
-        newCurVal.let { channel.send(it) }
+        update(newCurVal)
+        AioHistoryService.append(newCurVal)
     }
 
 

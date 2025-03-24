@@ -36,6 +36,7 @@ fun wsAppServerMain() {
             inline(
                 "KTOR_PORT" to 8080,
                 "KTOR_WIREFORMAT" to "json",
+                "AIO_HISTORY_PATH" to "./var/history"
             )
         }
         inMemoryH2()

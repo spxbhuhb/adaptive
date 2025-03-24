@@ -8,4 +8,5 @@ object PointMarkers {
     const val SIM_POINT = "sim-point"
 
     const val CUR_VAL = "curVal"
+    const val HIS = "his"
 }

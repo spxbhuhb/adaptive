@@ -63,7 +63,7 @@ fun wsDeviceContentPane(pane: WsPane<AvItem<AioDeviceSpec>, DeviceEditorContentC
     val editItem = copyOf { pane.data }
     val editSpec = copyOf { pane.data.specific !! }
 
-    val spaceNames = fragment().wsContext<AioWsContext>().spaceNameCache.names
+    val spaceNames = fragment().wsContext<AioWsContext>().spaceNameCache.value
 
     val originalSpace = spaceNames.firstOrNull { it.itemId == editItem.markers[SpaceMarkers.SPACE_REF] }
     var editSpace = spaceNames.firstOrNull { it.itemId == editItem.markers[SpaceMarkers.SPACE_REF] }

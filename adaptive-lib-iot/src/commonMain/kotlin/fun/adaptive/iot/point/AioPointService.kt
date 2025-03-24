@@ -5,6 +5,7 @@ import `fun`.adaptive.adat.api.deepCopy
 import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
+import `fun`.adaptive.iot.history.AioHistoryService
 import `fun`.adaptive.iot.point.computed.AioPointComputeWorker
 import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.iot.ws.AioWsContext
@@ -23,13 +24,11 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
 
     companion object {
         lateinit var valueWorker: AvValueWorker
-        lateinit var computeWorker: AioPointComputeWorker
     }
 
     override fun mount() {
         check(GlobalRuntimeContext.isServer)
         valueWorker = safeAdapter.firstImpl<AvValueWorker>()
-        computeWorker = safeAdapter.firstImpl<AioPointComputeWorker>()
     }
 
     override suspend fun add(
@@ -115,10 +114,11 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
             unsafeSetCurVal(this, pointId, curVal)
         }
 
-        computeWorker.channel.trySend(newCurVal)
+        AioPointComputeWorker.update(newCurVal)
+        AioHistoryService.append(newCurVal)
     }
 
-    fun unsafeSetCurVal(context : AvValueWorker.WorkerComputeContext, pointId: AvValueId, curVal: AvValue) : AvValue {
+    internal fun unsafeSetCurVal(context : AvValueWorker.WorkerComputeContext, pointId: AvValueId, curVal: AvValue) : AvValue {
         val point = context.item(pointId).asAvItem<AioPointSpec>()
         val originalCurValId = point.markers[PointMarkers.CUR_VAL]
         val curValId = originalCurValId ?: uuid7<AvValue>()
