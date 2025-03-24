@@ -38,8 +38,8 @@ class ThemeColors {
     val primary = color(0x0D6EFD)
     val onPrimary = color(0xFFFFFF)
 
-    val primaryHover = color(0x9B8CFFu)
-    val onPrimaryHover = color(0xFFFFFFu)
+    val primaryHover = color(0xCBDAFEu)
+    val onPrimaryHover = color(0x1E1E1Eu)
 
     val selectedSurfaceFocus = color(0xCBDAFE)
     val selectedSurfaceNoFocus = color(0xD7DADF)

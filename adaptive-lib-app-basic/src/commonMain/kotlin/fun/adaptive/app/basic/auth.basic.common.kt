@@ -27,6 +27,6 @@ fun authBasicCommon() {
 
 
     WireFormatRegistry += DefaultLayoutState
-    WireFormatRegistry.set("fun.adaptive.ui.app.basic.SidebarUserMode", EnumWireFormat(SidebarUserMode.entries))
+    WireFormatRegistry += SidebarUserMode
 
 }
