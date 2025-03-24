@@ -4,10 +4,12 @@ import `fun`.adaptive.adaptive_lib_iot.generated.resources.temperatureAndHumidit
 import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.emptyInstructions
-import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
@@ -17,20 +19,27 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.workspace.model.WsPane
+import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.ui.AvUiList
 
 @Adaptive
 fun wsSpaceBrowserContent(pane: WsPane<SpaceBrowserWsItem, *>): AdaptiveFragment {
 
-    val subSpaces = pane.subSpaces()
+    val subSpaces = valueFrom { AvUiList(adapter(), pane.data.uuid, SpaceMarkers.SUB_SPACES) }
 
     column {
-        maxSize .. verticalScroll .. padding { 16.dp } .. backgrounds.surface
+        maxSize .. padding { 16.dp } .. backgrounds.surfaceVariant
+        fill.constrain
 
         pageHeader(pane)
         listHeader(pane)
 
-        for (space in subSpaces) {
-            listItem(pane, space)
+        column {
+            gap { 12.dp } .. maxSize .. verticalScroll
+
+            for (space in subSpaces) {
+                listItem(pane, space)
+            }
         }
     }
 
@@ -48,16 +57,14 @@ fun pageHeader(pane: WsPane<SpaceBrowserWsItem, *>) {
 
 @Adaptive
 fun listHeader(pane: WsPane<SpaceBrowserWsItem, *>) {
-
+    actualize(pane.data.config.headerKey, emptyInstructions)
 }
 
 @Adaptive
-fun listItem(pane: WsPane<SpaceBrowserWsItem, *>, spaceId: AvValueId) {
-    val space = pane.getSpace(spaceId) !!
-
+fun listItem(pane: WsPane<SpaceBrowserWsItem, *>, space: AvItem<*>) {
     row {
-        height { 32.dp } .. maxWidth
-        actualize(pane.data.config.itemKey !!, emptyInstructions, space)
+        height { 56.dp } .. maxWidth
+        actualize(pane.data.config.itemKey, emptyInstructions, space)
     }
 }
 

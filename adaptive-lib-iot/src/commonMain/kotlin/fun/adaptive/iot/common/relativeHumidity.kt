@@ -6,6 +6,6 @@ import `fun`.adaptive.utility.format
 import kotlinx.datetime.Instant
 
 @Adaptive
-fun relativeHumidity(rh: Double, decimals : Int = 1) {
-    text("${rh.format(decimals)} %")
+fun relativeHumidity(rh: Double?, decimals : Int = 1) {
+    text(rh?.let { "${it.format(decimals)} %" })
 }

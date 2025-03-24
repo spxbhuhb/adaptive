@@ -32,6 +32,7 @@ class AmvRelativeHumidityAndTemperature(
     companion object {
         const val MARKER_NAME = "relative-humidity-and-temperature"
         const val WSIT_RHT_BROWSER_ITEM = "aio:rht:browser:item"
+        const val RHT_LIST_HEADER = "rht:list:header"
         const val RHT_LIST_ITEM = "rht:list:item"
     }
 }

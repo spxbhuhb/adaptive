@@ -1,11 +1,15 @@
 package `fun`.adaptive.iot.common
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
+import `fun`.adaptive.graphics.canvas.api.fill
+import `fun`.adaptive.graphics.svg.api.svgHeight
+import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.value.item.AvStatus
@@ -20,6 +24,41 @@ class AioTheme {
         paddingHorizontal { 12.dp },
         cornerRadius { 8.dp },
         gap { 12.dp }
+    )
+
+    val itemListHeader = instructionsOf(
+        height { 46.dp },
+        gap { 12.dp },
+        paddingHorizontal { 10.dp },
+        cornerRadius { 10.dp },
+        alignItems.startCenter,
+        backgrounds.surface,
+        border(colors.outline.opaque(0.5f), 1.dp),
+        marginBottom { 12.dp }
+    )
+
+    val itemListItemContainer = instructionsOf(
+        maxWidth,
+        gap { 12.dp },
+        height { 56.dp },
+        paddingHorizontal { 10.dp },
+        cornerRadius { 10.dp },
+        alignItems.startCenter,
+        backgrounds.surface,
+        border(colors.outline.opaque(0.5f), 1.dp)
+    )
+
+    val itemListIconContainer = instructionsOf(
+        alignItems.center,
+        height { 36.dp },
+        width { 36.dp },
+        cornerRadius { 10.dp },
+        backgrounds.successSurface
+    )
+
+    val itemListIcon = instructionsOf(
+        width { 24.dp }, height { 24.dp }, svgHeight(24.dp), svgWidth(24.dp),
+        fill(colors.onSuccessSurface)
     )
 
     val deviceSummary = instructionsOf(
@@ -39,16 +78,17 @@ class AioTheme {
     )
 
     val statusContainer = instructionsOf(
-        cornerRadius { 8.dp },
-        height { 28.dp },
+        cornerRadius { 14.dp },
+        height { 24.dp },
+        width { 82.dp },
         paddingHorizontal { 10.dp },
         alignSelf.endCenter,
         alignItems.center
     )
 
     val statusText = instructionsOf(
-        fontSize { 14.sp },
-        semiBoldFont
+        fontSize { 13.sp },
+        normalFont
     )
 
     fun statusColor(status: AvStatus) =
@@ -58,7 +98,7 @@ class AioTheme {
         }
 
     fun statusBorder(color: Color) =
-        border(color, 2.dp)
+        border(color.opaque(0.4f), 1.dp)
 
     companion object {
         val DEFAULT = AioTheme()

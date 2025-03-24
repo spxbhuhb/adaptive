@@ -5,6 +5,6 @@ import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.utility.format
 
 @Adaptive
-fun temperature(temperature: Double, decimals : Int = 1) {
-    text("${temperature.format(decimals)} °C")
+fun temperature(temperature: Double?, decimals : Int = 1) {
+    text(temperature?.let { "${it.format(decimals)} °C" })
 }

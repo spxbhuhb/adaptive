@@ -8,6 +8,7 @@ import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorTool
 import `fun`.adaptive.iot.history.ui.WSPANE_HISTORY_TOOL
 import `fun`.adaptive.iot.history.ui.wsHistoryTool
 import `fun`.adaptive.iot.marker.rht.AmvRelativeHumidityAndTemperature
+import `fun`.adaptive.iot.marker.rht.ui.rhtListHeader
 import `fun`.adaptive.iot.marker.rht.ui.rhtListItem
 import `fun`.adaptive.iot.space.ui.browser.wsSpaceBrowserContent
 import `fun`.adaptive.iot.space.ui.browser.wsSpaceBrowserTool
@@ -30,5 +31,6 @@ object IotFragmentFactory : FoundationFragmentFactory() {
         add(AioWsContext.WSPANE_RHT_BROWSER_CONTENT, ::wsSpaceBrowserContent)
 
         add(AmvRelativeHumidityAndTemperature.RHT_LIST_ITEM, ::rhtListItem)
+        add(AmvRelativeHumidityAndTemperature.RHT_LIST_HEADER, ::rhtListHeader)
     }
 }

@@ -29,8 +29,11 @@
     <string name="noDataChanged">Nincs módosított adat.</string>
 
     <!-- status -->
+    <string name="status">Állapot</string>
     <string name="statusOkShort">OK</string>
     <string name="statusFaultShort">HIB</string>
+    <string name="lastSeen">Utolsó kommunikáció</string>
+    <string name="alarm">Riasztás</string>
 
     <!-- space -->
 

@@ -23,6 +23,7 @@ fun wsRhtBrowserToolDef(context: AioWsContext): WsPane<Unit, SpaceBrowserToolCon
         Strings.temperatureAndHumidity,
         Graphics.dew_point,
         AmvRelativeHumidityAndTemperature.WSIT_RHT_BROWSER_ITEM,
+        headerKey = AmvRelativeHumidityAndTemperature.RHT_LIST_HEADER,
         itemKey = AmvRelativeHumidityAndTemperature.RHT_LIST_ITEM
     )
 

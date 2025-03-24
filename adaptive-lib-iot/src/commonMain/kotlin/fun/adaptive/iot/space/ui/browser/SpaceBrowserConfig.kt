@@ -9,8 +9,8 @@ class SpaceBrowserConfig(
     val icon: GraphicsResourceSet,
     val itemType : WsItemType,
     val filterKey: FragmentKey? = null,
-    val headerKey: FragmentKey? = null,
-    val itemKey: FragmentKey? = null
+    val headerKey: FragmentKey,
+    val itemKey: FragmentKey
 ) {
     lateinit var controller : SpaceBrowserToolController
 }

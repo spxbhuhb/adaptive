@@ -30,7 +30,6 @@ import `fun`.adaptive.ui.label.uuidLabel
 import `fun`.adaptive.ui.label.withLabel
 import `fun`.adaptive.ui.snackbar.warningNotification
 import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
