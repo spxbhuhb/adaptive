@@ -1,6 +1,7 @@
 package `fun`.adaptive.iot.history.ui
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.database
+import `fun`.adaptive.adaptive_lib_iot.generated.resources.historicalData
 import `fun`.adaptive.foundation.value.adaptiveStoreFor
 import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.iot.device.DeviceMarkers
@@ -8,6 +9,7 @@ import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.iot.ws.AioWsContext.Companion.WSIT_HISTORY
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
@@ -18,7 +20,6 @@ import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.ui.AvNameCache
 import `fun`.adaptive.value.ui.AvUiTree
-import `fun`.adaptive.value.ui.iconFor
 
 class HistoryToolController(
     override val workspace: Workspace
@@ -107,16 +108,28 @@ class HistoryToolController(
     }
 
     fun selectedFun(viewModel: HistoryTreeModel, treeItem: TreeItem<AvValueId>, modifiers: Set<EventModifier>) {
-        val item = (treeItem.attachment as? AvItem<*>) ?: return
-
-        if (PointMarkers.HIS in item.markers) {
-            workspace.addContent(
-                HistoryBrowserWsItem(item.name, WSIT_HISTORY, viewModel.selection.mapNotNull { it.attachment as? AvItem<*> }),
-                emptySet()
-            )
-        }
 
         TreeViewModel.defaultSelectedFun(viewModel, treeItem, modifiers)
+
+        val items = viewModel.selection.map { selectedItem ->
+            val attachment = selectedItem.attachment as? AvItem<*>
+            attachment?.let { listOf(it) } ?: selectedItem.children.mapNotNull { it.attachment as? AvItem<*> }
+        }.flatten()
+
+        val points = items.filter { PointMarkers.HIS in it.markers }
+        if (points.isEmpty()) return
+
+        val first = points.firstOrNull()
+
+        if (first == null) return
+
+        val name = if (items.size == 1) first.name else Strings.historicalData
+
+        workspace.addContent(
+            HistoryBrowserWsItem(name, WSIT_HISTORY, items),
+            emptySet()
+        )
+
     }
 
     override fun onChange(value: AvNameCache) {

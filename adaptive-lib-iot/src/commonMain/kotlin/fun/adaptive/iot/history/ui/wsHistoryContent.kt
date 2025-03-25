@@ -1,18 +1,17 @@
 package `fun`.adaptive.iot.history.ui
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
-import `fun`.adaptive.adat.store.copyOf
-import `fun`.adaptive.chart.model.ChartDataPoint
 import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
-import `fun`.adaptive.iot.common.*
-import `fun`.adaptive.iot.history.model.AioDoubleHistoryRecord
+import `fun`.adaptive.iot.common.AioTheme
+import `fun`.adaptive.iot.common.alarmIcon
+import `fun`.adaptive.iot.common.status
+import `fun`.adaptive.iot.common.timestamp
 import `fun`.adaptive.iot.history.ui.HistoryContentController.Mode
 import `fun`.adaptive.iot.history.ui.chart.historyChart
-import `fun`.adaptive.iot.point.AioPointSpec
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.button.button
@@ -20,32 +19,28 @@ import `fun`.adaptive.ui.filter.quickFilter
 import `fun`.adaptive.ui.input.datetime.dateInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.label.uuidLabel
-import `fun`.adaptive.ui.platform.download.downloadFile
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.textMedium
 import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.utility.format
 import `fun`.adaptive.utility.localDate
-import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 import `fun`.adaptive.value.item.AvStatus
-import kotlinx.datetime.Instant
 
 @Adaptive
 fun wsHistoryContent(
     pane: WsPane<HistoryBrowserWsItem, HistoryContentController>
 ): AdaptiveFragment {
 
-    val originalItem = copyOf { pane.data.items.first() }.asAvItem<AioPointSpec>()
+    val items = pane.data.items
+    val name = if (items.size == 1) items.first().name.ifEmpty { Strings.noname } else Strings.historicalData
     val mode = valueFrom { pane.controller.mode }
 
     column {
         maxSize .. padding { 16.dp } .. backgrounds.surface
         fill.constrain .. backgrounds.surfaceVariant
 
-        title(pane.controller, originalItem)
+        title(pane.controller, name)
 
         if (mode == Mode.TABLE) {
             historyTableHeader()
@@ -62,7 +57,7 @@ fun wsHistoryContent(
 @Adaptive
 fun title(
     controller: HistoryContentController,
-    item: AvItem<AioPointSpec>,
+    name: String
 ) {
     var modeList = listOf(Mode.TABLE to Strings.table, Mode.CHART to Strings.chart)
     val mode = valueFrom { controller.mode }
@@ -79,10 +74,7 @@ fun title(
             maxWidth .. colTemplate(1.fr, 1.fr)
             paddingBottom { 32.dp } .. height { 56.dp }
 
-            column {
-                h2(item.name.ifEmpty { Strings.noname })
-                uuidLabel { item.uuid }
-            }
+            h2(name)
 
             button(Strings.downloadReport) .. alignSelf.end .. onClick {
                 downloadReport(controller)
@@ -118,25 +110,27 @@ fun historyTable(
     controller: HistoryContentController,
     theme: AioTheme = AioTheme.DEFAULT
 ) {
+    val contentItems = valueFrom { controller.contentItems }
+
     column {
         gap { 4.dp }
 
-//        when (controller..size) {
-//            0 -> box { }
-//            1 -> singleHistoryTable(contentItems.first().records, theme)
-//            else -> multiHistoryTable(contentItems, theme)
-//        }
-
-
+        when (contentItems.size) {
+            0 -> box { }
+            1 -> singleHistoryTable(controller, theme)
+            else -> multiHistoryTable(controller, theme)
+        }
     }
 }
 
 @Adaptive
 fun singleHistoryTable(
-    records: List<AioDoubleHistoryRecord>,
+    controller: HistoryContentController,
     theme: AioTheme
 ) {
-    for (record in records) {
+    val contentItems = valueFrom { controller.contentItems }
+
+    for (record in contentItems.first().records) {
         grid {
             theme.historyRecordContainer
 
@@ -150,7 +144,7 @@ fun singleHistoryTable(
 
 @Adaptive
 fun multiHistoryTable(
-    contentItems: List<HistoryContentController.ContentItem>,
+    controller: HistoryContentController,
     theme: AioTheme
 ) {
 

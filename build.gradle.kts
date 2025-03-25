@@ -17,6 +17,7 @@ val publishTasks = listOf(
 val noPublishBuilds = listOf(
     "adaptive-grove",
     "adaptive-lib-cookbook",
+    "app:adaptive-app-iot",
     "grove",
     "cookbook",
     "sandbox",
@@ -56,11 +57,11 @@ fun shorthand(buildName : String, taskName : String, shorthand:String) {
 
 shorthand("adaptive-kotlin-plugin", "generateTests", "plugin-generate-tests")
 shorthand("adaptive-kotlin-plugin", "test", "plugin-test")
-//shorthand("cookbook", "jsBrowserDevelopmentRun", "cookbook-js")
-//shorthand("cookbook", "jvmRun", "cookbook-jvm")
 shorthand("grove", "jsBrowserDevelopmentRun", "grove-js")
 shorthand("grove", "jvmRun", "grove-jvm")
 shorthand("adaptive-grove", "processAdaptiveResourcesCommonMain", "grove-resources")
 shorthand("sandbox", "jsBrowserDevelopmentRun", "sandbox-js")
 shorthand("sandbox", "jvmRun", "sandbox-jvm")
 shorthand("site", "jsBrowserDevelopmentRun", "site-js")
+shorthand("adaptive-app-iot", "jsBrowserDevelopmentRun", "iot-js")
+shorthand("adaptive-app-iot", "jvmRun", "iot-jvm")

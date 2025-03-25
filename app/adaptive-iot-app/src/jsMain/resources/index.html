@@ -1,0 +1,87 @@
+<!--
+  ~ Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+  -->
+<!doctype html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Adaptive</title>
+    <link rel="shortcut icon" type="image/png" href="/favicon.png">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+
+    <!--    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=block" rel="stylesheet" rel="stylesheet">-->
+    <!--    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" rel="stylesheet">-->
+    <!--    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">-->
+    <!--    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>-->
+
+    <style>
+        body, html {
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Because browsers are frigging idiots and pixel perfect is not perfect enough... */
+        }
+
+        :root {
+            color-scheme: light;
+        }
+
+        * {
+            box-sizing: border-box;
+            position: absolute;
+            min-width: 0;
+            min-height: 0;
+            outline: none;
+            font-family: "Open Sans", sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            user-select: none;
+            -webkit-user-select: none; /* Safari */
+        }
+
+        span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            user-select: auto;
+            -webkit-user-select: auto; /* Safari */
+        }
+    </style>
+</head>
+<body>
+</body>
+<script>
+    document.fonts.ready.then(() => {
+
+        // Font loading is a real mess for accented characters. Without the font
+        // properly loaded text fragments displays "..." at the end of the text.
+
+        // This 50 millisec wait solution somewhat works for hungarian characters,
+        // I have to find out how to handle it better.
+
+        // I've tried to add a "&text=<accented-chars>" to the font link above,
+        // but it made the page very, very ugly.
+
+        // This might worth a look later:
+        // https://stackoverflow.com/questions/26867893/converting-and-rendering-web-fonts-to-base64-keep-original-look
+
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        ctx.font = "13px 'Open Sans'";
+        ctx.measureText("This is plain stupid, but it works: ő");
+
+        setTimeout(() => {
+            const script = document.createElement('script');
+            script.src = '/adaptive-iot-app.js';
+            document.body.appendChild(script);
+            ctx.measureText("This is plain stupid, but it works: ő");
+        }, 50);
+
+    });
+</script>
+</html>
