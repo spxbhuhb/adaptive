@@ -11,6 +11,7 @@ import `fun`.adaptive.ui.builtin.hide
 import `fun`.adaptive.ui.builtin.remove
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.denseIconTheme
+import `fun`.adaptive.ui.icon.denseVariantIconTheme
 import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.menu.contextMenu
 import `fun`.adaptive.ui.workspace.model.WsPane
@@ -32,11 +33,13 @@ fun wsPaneTitle(
         text(pane.name) .. theme.toolPaneTitleText
 
         row {
+            theme.toolPaneTitleActionContainer
+
             if (showActions || actionContext.popupOpen) {
                 for (action in pane.actions) {
                     if (action is WsPaneMenuAction<*>) {
                         box {
-                            actionIcon(action.icon, tooltip = action.tooltip, theme = denseIconTheme)
+                            actionIcon(action.icon, tooltip = action.tooltip, theme = denseVariantIconTheme)
                             primaryPopup(actionContext) { hide ->
                                 contextMenu(action.data, action.theme) { menuItem, modifiers ->
                                     action.selected(workspace, pane, menuItem, modifiers);
@@ -45,12 +48,12 @@ fun wsPaneTitle(
                             }
                         }
                     } else {
-                        actionIcon(action.icon, tooltip = action.tooltip, theme = denseIconTheme) .. onClick {
+                        actionIcon(action.icon, tooltip = action.tooltip, theme = denseVariantIconTheme) .. onClick {
                             action.execute(workspace, pane)
                         }
                     }
                 }
-                actionIcon(Graphics.remove, tooltip = Strings.hide, theme = denseIconTheme) .. onClick {
+                actionIcon(Graphics.remove, tooltip = Strings.hide, theme = denseVariantIconTheme) .. onClick {
                     workspace.toggle(pane)
                 }
             }

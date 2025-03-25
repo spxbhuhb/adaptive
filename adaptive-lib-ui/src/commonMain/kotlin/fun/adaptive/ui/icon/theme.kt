@@ -32,6 +32,14 @@ val denseIconTheme = IconTheme(
     cornerRadius = 6.dp
 )
 
+val denseVariantIconTheme = IconTheme(
+    colors.onSurfaceVariant,
+    iconSize = 22.dp,
+    containerSize = 28.dp,
+    margin = 2.dp,
+    cornerRadius = 6.dp
+)
+
 val smallCloseIconTheme = IconTheme(
     colors.onSurfaceVariant,
     iconSize = 13.dp,

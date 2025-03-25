@@ -5,7 +5,11 @@ import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.colTemplate
+import `fun`.adaptive.ui.api.marginBottom
+import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.paddingHorizontal
 import `fun`.adaptive.ui.api.tabIndex
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
@@ -110,6 +114,36 @@ class AioTheme {
         onClick { it.stopPropagation() },
         tabIndex { 0 },
         zIndex { 10000 }
+    )
+
+    val historyColumns = colTemplate(160.dp, 1.fr, 84.dp, 84.dp)
+
+    val historyListHeader = instructionsOf(
+        height { 42.dp }, // depends marginBottom
+        gap { 12.dp },
+        paddingLeft { 20.dp },
+        paddingRight { 4.dp },
+        cornerRadius { 10.dp },
+        alignItems.startCenter,
+        backgrounds.surface,
+        border(colors.outline.opaque(0.4f), 1.dp),
+        maxWidth,
+        historyColumns,
+        marginBottom { 8.dp }
+    )
+
+    val historyRecordContainer = instructionsOf(
+        maxWidth,
+        gap { 12.dp },
+        height { 34.dp },
+        paddingLeft { 20.dp },
+        paddingRight { 4.dp },
+        cornerRadius { 10.dp },
+        alignItems.startCenter,
+        backgrounds.surface,
+        border(colors.outline.opaque(0.4f), 1.dp),
+        maxWidth,
+        historyColumns
     )
 
     companion object {

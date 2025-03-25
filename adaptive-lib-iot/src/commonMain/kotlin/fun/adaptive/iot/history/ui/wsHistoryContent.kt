@@ -7,24 +7,24 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.producer.fetch
-import `fun`.adaptive.iot.common.AioTheme
-import `fun`.adaptive.iot.common.alarmIcon
-import `fun`.adaptive.iot.common.localizedString
-import `fun`.adaptive.iot.common.status
-import `fun`.adaptive.iot.common.timestamp
+import `fun`.adaptive.iot.common.*
 import `fun`.adaptive.iot.history.model.AioDoubleHistoryRecord
 import `fun`.adaptive.iot.point.AioPointSpec
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.button.button
+import `fun`.adaptive.ui.filter.quickFilter
+import `fun`.adaptive.ui.input.datetime.dateInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.label.uuidLabel
 import `fun`.adaptive.ui.platform.download.downloadFile
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.textMedium
+import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.utility.format
+import `fun`.adaptive.utility.localDate
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 import `fun`.adaptive.value.item.AvStatus
@@ -35,12 +35,11 @@ fun wsHistoryContent(
 ): AdaptiveFragment {
 
     val originalItem = copyOf { pane.data.item }.asAvItem<AioPointSpec>()
-    val records = fetch {pane. controller.query(originalItem) } ?: emptyList()
+    val records = fetch { pane.controller.query(originalItem) } ?: emptyList()
 
-    grid {
+    column {
         maxSize .. padding { 16.dp } .. backgrounds.surface
-        rowTemplate(56.dp, 46.dp, 1.fr)
-        gap { 16.dp }
+        fill.constrain .. backgrounds.surfaceVariant
 
         title(originalItem, records)
         historyTableHeader()
@@ -54,21 +53,38 @@ fun wsHistoryContent(
 @Adaptive
 fun title(
     item: AvItem<AioPointSpec>,
-    records : List<AioDoubleHistoryRecord>
+    records: List<AioDoubleHistoryRecord>
 ) {
-    grid {
-        maxSize
-        colTemplate(1.fr, 1.fr)
-        paddingBottom { 32.dp }
+    var status1 = "Táblázat"
+    var status2 = ""
+    var start = localDate()
+    var end = localDate()
 
-        column {
-            h2(item.name.ifEmpty { Strings.noname })
-            uuidLabel { item.uuid }
+    column {
+        gap { 24.dp } .. paddingBottom { 16.dp }
+
+        grid {
+            maxWidth .. colTemplate(1.fr, 1.fr)
+            paddingBottom { 32.dp } .. height { 56.dp }
+
+            column {
+                h2(item.name.ifEmpty { Strings.noname })
+                uuidLabel { item.uuid }
+            }
+
+            button(Strings.downloadReport) .. alignSelf.end .. onClick {
+                downloadReport(records)
+            }
         }
 
-        button(Strings.downloadReport) .. alignSelf.end .. onClick {
-            downloadReport(records)
+        row {
+            gap { 16.dp }
+            quickFilter(status1, listOf("Táblázat", "Grafikon"), { this }) { v -> status1 = v }
+            quickFilter(status2, listOf("Ma", "Hét", "Hónap", "Egyedi"), { this }) { v -> status2 = v }
+            dateInput(start) { v -> start = v }
+            dateInput(end) { v -> end = v }
         }
+
     }
 }
 
@@ -77,13 +93,12 @@ fun historyTableHeader(
     theme: AioTheme = AioTheme.DEFAULT
 ) {
     grid {
-        theme.itemListHeader .. maxSize .. paddingHorizontal { 8.dp }
-        colTemplate(160.dp, 1.fr, 84.dp, 48.dp)
+        theme.historyListHeader
 
         text(Strings.timestamp) .. textMedium .. normalFont
-        text(Strings.value) .. textMedium .. normalFont
-        text(Strings.status) .. alignSelf.center .. textMedium .. normalFont
+        text(Strings.value) .. textMedium .. normalFont .. paddingLeft { 24.dp }
         text(Strings.alarm) .. textMedium .. normalFont
+        text(Strings.status) .. alignSelf.center .. textMedium .. normalFont
     }
 }
 
@@ -93,15 +108,15 @@ fun historyTable(
     theme: AioTheme = AioTheme.DEFAULT
 ) {
     column {
+        gap { 4.dp }
         for (record in records) {
             grid {
-                theme.itemListItemContainer .. maxSize .. paddingHorizontal { 8.dp }
-                colTemplate(160.dp, 1.fr, 84.dp, 48.dp)
+                theme.historyRecordContainer
 
-                timestamp(record.timestamp)
-                text(record.value.format(1))
-                status(AvStatus(record.flags))
+                timestamp(record.timestamp) .. textSmall
+                text(record.value.format(1)) .. paddingLeft { 24.dp }
                 alarmIcon(record.flags)
+                status(AvStatus(record.flags))
             }
         }
     }

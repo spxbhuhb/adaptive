@@ -14,8 +14,11 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.arrow_right
+import `fun`.adaptive.ui.filter.quickFilter
 import `fun`.adaptive.ui.icon.icon
+import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.workspace.model.WsPane
@@ -48,10 +51,30 @@ fun wsSpaceBrowserContent(pane: WsPane<SpaceBrowserWsItem, *>): AdaptiveFragment
 
 @Adaptive
 fun pageHeader(pane: WsPane<SpaceBrowserWsItem, *>) {
+
+    var status1 = "Összes"
+    var status2 = "Összes"
+    var search = ""
+
     column {
-        paddingBottom { 32.dp }
-        h2(Strings.temperatureAndHumidity)
-        spacePath(pane.data)
+        paddingBottom { 32.dp } .. gap { 24.dp }
+
+        column {
+            h2(Strings.temperatureAndHumidity)
+            spacePath(pane.data)
+        }
+
+        grid {
+            gap { 16.dp } .. colTemplate(1.fr, 300.dp) .. rowTemplate(38.dp)
+
+            row {
+                gap { 16.dp }
+                quickFilter(status1, listOf("Összes", "Aktív", "Nem elérhető"), { this }) { v -> status1 = v }
+                quickFilter(status2, listOf("Összes", "Rendben", "Riasztás"), { this }) { v -> status2 = v }
+            }
+
+            textInput(search) { v -> search = v } .. inputPlaceholder { "Szűrés" } .. maxWidth
+        }
     }
 }
 

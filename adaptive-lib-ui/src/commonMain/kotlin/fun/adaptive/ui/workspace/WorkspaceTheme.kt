@@ -141,6 +141,10 @@ class WorkspaceTheme(
         paddingTop { 3.dp } // for better visual experience
     )
 
+    val toolPaneTitleActionContainer = instructionsOf(
+        backgrounds.surfaceVariant
+    )
+
     val toolPaneContainer = instructionsOf(
         rowTemplate(titleHeight, 1.fr),
         maxSize,

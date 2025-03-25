@@ -10,6 +10,7 @@ import `fun`.adaptive.iot.history.model.AioHistoryQuery
 import `fun`.adaptive.iot.history.model.AioStringHistoryRecord
 import `fun`.adaptive.iot.domain.rht.ui.wsRhtBrowserContentDef
 import `fun`.adaptive.iot.domain.rht.ui.wsRhtBrowserToolDef
+import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.iot.point.computed.AioComputedPointSpec
 import `fun`.adaptive.iot.point.sim.AioSimPointSpec
 import `fun`.adaptive.iot.space.AioSpaceSpec
@@ -79,6 +80,8 @@ fun AbstractAuiAdapter<*, *>.iotCommon() {
     iconCache[DeviceMarkers.COMPUTER] = Graphics.host
     iconCache[DeviceMarkers.NETWORK] = Graphics.account_tree
     iconCache[DeviceMarkers.DEVICE] = Graphics.memory
+
+    iconCache[PointMarkers.POINT] = Graphics.database
 }
 
 fun Workspace.iotCommon() {

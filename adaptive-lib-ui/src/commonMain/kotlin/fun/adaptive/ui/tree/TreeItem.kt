@@ -19,6 +19,7 @@ class TreeItem<T>(
     var selected by observable(selected, ::notify)
     var children by observable(emptyList<TreeItem<T>>(), ::notify)
     var data by observable(data, ::notify)
+    var attachment by observable<Any?>(null, ::notify)
 
     override var value: TreeItem<T>
         get() = this

@@ -6,16 +6,20 @@ import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.value.item.AvStatus
 
 @Adaptive
-fun alarmIcon(flags : Int) {
+fun alarmIcon(flags: Int) {
     val status = AvStatus(flags)
 
-    if (!status.isOk) {
+    if (! status.isOk) {
         icon(Graphics.notifications) .. fill(colors.fail) .. svgWidth(24.dp) .. svgHeight(24.dp)
+    } else {
+        box { size(24.dp) }
     }
 }

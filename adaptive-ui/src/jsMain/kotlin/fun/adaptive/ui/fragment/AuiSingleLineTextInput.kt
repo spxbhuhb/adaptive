@@ -5,10 +5,13 @@ package `fun`.adaptive.ui.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.get
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.api.disabled
 import `fun`.adaptive.ui.aui
+import `fun`.adaptive.ui.instruction.input.InputPlaceholder
+import `fun`.adaptive.ui.instruction.input.MaxLength
 import `fun`.adaptive.ui.instruction.layout.Alignment
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
@@ -37,6 +40,18 @@ open class AuiSingleLineTextInput(
 
         if (haveToPatchInstructions) {
             receiver.disabled = (disabled in instructions)
+
+
+            val placeholder = get<InputPlaceholder>()?.value
+            if (placeholder != null) {
+                receiver.placeholder = placeholder
+            }
+
+            val maxLength = get<MaxLength>()?.maxLength
+            if (maxLength != null) {
+                receiver.maxLength = maxLength
+            }
+
             alignText()
         }
 
