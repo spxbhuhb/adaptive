@@ -17,7 +17,7 @@ val publishTasks = listOf(
 val noPublishBuilds = listOf(
     "adaptive-grove",
     "adaptive-lib-cookbook",
-    "app:adaptive-app-iot",
+    "adaptive-iot-app",
     "grove",
     "cookbook",
     "sandbox",
