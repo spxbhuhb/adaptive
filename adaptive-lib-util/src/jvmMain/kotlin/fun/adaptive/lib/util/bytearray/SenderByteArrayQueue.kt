@@ -1,15 +1,17 @@
 package `fun`.adaptive.lib.util.bytearray
 
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.WaitStrategy
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import `fun`.adaptive.utility.vmNowSecond
+import kotlinx.coroutines.*
 import kotlinx.io.files.Path
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
 import java.net.SocketTimeoutException
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 class SenderByteArrayQueue(
@@ -19,15 +21,20 @@ class SenderByteArrayQueue(
     chunkSizeLimit: Long,
     barrier: ByteArray,
     persistDequeue: Boolean = true,
-    sendTimeout: Int = 2000,
+    name: String = path.name,
+    val sendTimeout: Int = 2000,
+    val failReportInterval: Duration = 1.hours,
+    val unknownErrorDelay: Duration = 15.minutes,
     val retryStrategy: WaitStrategy = WaitStrategy(200, 1.seconds, 10.seconds)
 ) {
+
+    val logger = getLogger("SenderByteArrayQueue.$name")
 
     val queue = ByteArrayQueue(path, chunkSizeLimit, barrier, persistDequeue)
 
     val scope = CoroutineScope(Dispatchers.IO)
 
-    private val socket = DatagramSocket().also { it.soTimeout = sendTimeout }
+    private var socket = DatagramSocket().also { it.soTimeout = sendTimeout }
 
     fun enqueue(byteArray: ByteArray) {
         queue.enqueue(byteArray)
@@ -37,7 +44,7 @@ class SenderByteArrayQueue(
         scope.launch {
             try {
                 while (isActive) {
-                    send()
+                    send() // sends one packet
                 }
             } finally {
                 socket.close()
@@ -53,33 +60,53 @@ class SenderByteArrayQueue(
         val packet = DatagramPacket(byteArray, byteArray.size, address, port)
         val buffer = ByteArray(byteArray.size)
         val responsePacket = DatagramPacket(buffer, buffer.size)
+        var lastFail: Long? = vmNowSecond()
 
-        while (true) {
-            try {
-                socket.send(packet)
+        try {
+            socket.send(packet)
+            socket.receive(responsePacket)
+
+            while (! responsePacket.data.contentEquals(byteArray)) {
+                // We've got some other data, it might be a response to a previous send.
+                // Let's try to read until we get the proper response. Worst case is that
+                // receive goes to timeout. Then - as we used peek, not dequeue, the next
+                // run will try to send the same byte array again.
                 socket.receive(responsePacket)
+            }
 
-                while (! responsePacket.data.contentEquals(byteArray)) {
-                    // We've got some other data, it might be a response to a previous send.
-                    // Let's try to read until we get the proper response. Worst case is that
-                    // receive goes to timeout. Then - as we used peek, not dequeue, the next
-                    // run will try to send the same byte array again.
-                    socket.receive(responsePacket)
-                }
+            // At this point we've got a correct response. We can remove this byte array
+            // from the queue safely as it has been acknowledged. If we've got some
+            // incorrect responses, the loop above will finish with an exception.
 
-                // At this point we've got a correct response. We can remove this byte array
-                // from the queue safely as it has been acknowledged. If we've got some
-                // incorrect responses, the loop above will finish with an exception.
+            queue.dequeue()
+            retryStrategy.reset()
+            lastFail = null
 
-                queue.dequeue()
-                retryStrategy.reset()
+        } catch (_: SocketTimeoutException) {
 
-                break
+            // Not much to do here, we'll try it again after a short delay.
+            // This should happen very rarely in real scenarios.
+            retryStrategy.wait()
 
-            } catch (_: SocketTimeoutException) {
-                // Not much to do here, we'll try it again after a short delay.
-                // This should happen very rarely in real scenarios.
-                retryStrategy.wait()
+            if (lastFail != null && vmNowSecond() - lastFail > failReportInterval.inWholeSeconds) {
+                logger.warning("couldn't send curVal updates in $failReportInterval")
+            }
+
+        } catch (e: Exception) {
+            logger.error(e)
+
+            try {
+                socket.close()
+            } catch (e: Exception) {
+                logger.warning(e)
+            }
+
+            delay(unknownErrorDelay)
+
+            try {
+                socket = DatagramSocket().also { it.soTimeout = sendTimeout }
+            } catch (e: Exception) {
+                logger.error(e)
             }
         }
     }
