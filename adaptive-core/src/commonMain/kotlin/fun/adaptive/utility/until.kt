@@ -128,7 +128,7 @@ object Flat1SecStrategy : WaitStrategy(100, 1.seconds, 1.seconds)
 
 open class WaitStrategy(
     val retryMultiplier: Int = 115,
-    initialDelay: Duration = 200.milliseconds,
+    val initialDelay: Duration = 200.milliseconds,
     maximumDelay: Duration = 5.seconds,
 ) {
 
@@ -138,5 +138,9 @@ open class WaitStrategy(
     suspend fun wait() {
         delay(retryDelay)
         if (retryDelay < maximumDelayMillis) retryDelay = (retryDelay * retryMultiplier) / 100
+    }
+
+    fun reset() {
+        retryDelay = initialDelay.inWholeMilliseconds
     }
 }

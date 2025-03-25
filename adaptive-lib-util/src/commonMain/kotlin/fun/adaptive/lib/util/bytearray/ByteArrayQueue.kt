@@ -119,7 +119,10 @@ class ByteArrayQueue(
             }
             chunkIds.sort()
 
-            if (persistDequeue && chunkIds.isNotEmpty()) {
+            // It is possible that the dequeue file does not exist if there hasn't been any dequeue
+            // operations between creating the queue and restarting it.
+
+            if (persistDequeue && dequeuePath.exists()) {
                 val (name, position) = dequeuePath.readString().split(';')
                 unsafePosition(name.asChunkId, position.toLong())
             }
