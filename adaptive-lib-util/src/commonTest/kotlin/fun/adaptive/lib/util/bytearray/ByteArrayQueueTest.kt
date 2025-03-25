@@ -3,6 +3,8 @@ import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.clearedTestPath
 import `fun`.adaptive.utility.read
 import `fun`.adaptive.utility.resolve
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.test.*
 
 class ByteArrayQueueTest {
@@ -30,7 +32,7 @@ class ByteArrayQueueTest {
         queue.enqueue(data)
         assertFalse(queue.isEmpty)
 
-        val dequeued = queue.dequeue()
+        val dequeued = queue.dequeueOrNull()
         assertNotNull(dequeued)
         assertContentEquals(data, dequeued)
     }
@@ -45,7 +47,7 @@ class ByteArrayQueueTest {
         queue.enqueue(data)
         assertFalse(queue.isEmpty)
 
-        val dequeued = queue.dequeue()
+        val dequeued = queue.dequeueOrNull()
         assertNotNull(dequeued)
         assertContentEquals(data, dequeued)
     }
@@ -55,7 +57,7 @@ class ByteArrayQueueTest {
         val testPath = clearedTestPath()
         val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
         assertTrue(queue.isEmpty)
-        assertNull(queue.dequeue())
+        assertNull(queue.dequeueOrNull())
     }
 
     @Test
@@ -67,8 +69,8 @@ class ByteArrayQueueTest {
         queue.enqueue("67890".encodeToByteArray())
 
         assertFalse(queue.isEmpty)
-        assertNotNull(queue.dequeue())
-        assertNotNull(queue.dequeue())
+        assertNotNull(queue.dequeueOrNull())
+        assertNotNull(queue.dequeueOrNull())
     }
 
     @Test
@@ -80,8 +82,8 @@ class ByteArrayQueueTest {
         queue.enqueue("67890".encodeToByteArray())
 
         assertFalse(queue.isEmpty)
-        assertNotNull(queue.dequeue())
-        assertNotNull(queue.dequeue())
+        assertNotNull(queue.dequeueOrNull())
+        assertNotNull(queue.dequeueOrNull())
     }
 
     @Test
@@ -91,7 +93,7 @@ class ByteArrayQueueTest {
         val data = "PersistentData".encodeToByteArray()
         queue.enqueue(data)
 
-        val dequeued = queue.dequeue()
+        val dequeued = queue.dequeueOrNull()
         assertNotNull(dequeued)
         assertContentEquals(data, dequeued)
 
@@ -109,8 +111,8 @@ class ByteArrayQueueTest {
         queue.enqueue(first)
         queue.enqueue(second)
 
-        assertContentEquals(first, queue.dequeue())
-        assertContentEquals(second, queue.dequeue())
+        assertContentEquals(first, queue.dequeueOrNull())
+        assertContentEquals(second, queue.dequeueOrNull())
     }
 
     @Test
@@ -124,8 +126,8 @@ class ByteArrayQueueTest {
         queue.enqueue(first)
         queue.enqueue(second)
 
-        assertContentEquals(first, queue.dequeue())
-        assertContentEquals(second, queue.dequeue())
+        assertContentEquals(first, queue.dequeueOrNull())
+        assertContentEquals(second, queue.dequeueOrNull())
     }
 
     @Test
@@ -134,13 +136,13 @@ class ByteArrayQueueTest {
         val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
 
         queue.enqueue("Data1".encodeToByteArray())
-        queue.dequeue()
+        queue.dequeueOrNull()
         queue.enqueue("Data2".encodeToByteArray())
         queue.enqueue("Data3".encodeToByteArray())
 
-        assertContentEquals("Data2".encodeToByteArray(), queue.dequeue())
-        assertContentEquals("Data3".encodeToByteArray(), queue.dequeue())
-        assertNull(queue.dequeue())
+        assertContentEquals("Data2".encodeToByteArray(), queue.dequeueOrNull())
+        assertContentEquals("Data3".encodeToByteArray(), queue.dequeueOrNull())
+        assertNull(queue.dequeueOrNull())
     }
 
     @Test
@@ -153,5 +155,59 @@ class ByteArrayQueueTest {
         }
 
         assertTrue(exception.message !!.contains("unknown chunk"))
+    }
+
+    @Test
+    fun testDequeueWithTimeout() = runTest {
+        val testPath = clearedTestPath()
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val data = "Timeout Test".encodeToByteArray()
+
+        queue.enqueue(data)
+        val dequeued = withTimeoutOrNull(1000) { queue.dequeue() }
+
+        assertNotNull(dequeued)
+        assertContentEquals(data, dequeued)
+    }
+
+    @Test
+    fun testDequeueWithTimeoutNoData() = runTest {
+        val testPath = clearedTestPath()
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+
+        val dequeued = withTimeoutOrNull(100) { queue.dequeue() }
+
+        assertNull(dequeued)
+    }
+
+    @Test
+    fun testDequeueMultipleItems() {
+        val testPath = clearedTestPath()
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+
+        val first = "First Item".encodeToByteArray()
+        val second = "Second Item".encodeToByteArray()
+        val third = "Third Item".encodeToByteArray()
+
+        queue.enqueue(first)
+        queue.enqueue(second)
+        queue.enqueue(third)
+
+        assertContentEquals(first, queue.dequeueOrNull())
+        assertContentEquals(second, queue.dequeueOrNull())
+        assertContentEquals(third, queue.dequeueOrNull())
+        assertNull(queue.dequeueOrNull())
+    }
+
+    @Test
+    fun testDequeueAfterEnd() {
+        val testPath = clearedTestPath()
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+
+        val data = "End Test".encodeToByteArray()
+        queue.enqueue(data)
+
+        assertContentEquals(data, queue.dequeueOrNull())
+        assertNull(queue.dequeueOrNull())  // Ensure the queue is empty
     }
 }

@@ -2,22 +2,25 @@ package `fun`.adaptive.lib.util.bytearray
 
 import `fun`.adaptive.utility.*
 import `fun`.adaptive.utility.UUID.Companion.monotonicUuid7
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.withTimeout
 import kotlinx.io.Sink
 import kotlinx.io.Source
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readByteArray
+import kotlin.time.Duration
 
 /**
  * A file backed byte array queue:
  *
  * - [enqueue] enqueues a byte array
- * - [dequeue] dequeues a byte array
+ * - [dequeueOrNull] dequeues a byte array
  *
  * - all calls are thread-safe
  * - [enqueue] flushes the file before returning
- * - [dequeue] flushes dequeue position before returning
+ * - [dequeueOrNull] flushes dequeue position before returning
  * - Data is stored in chunk files, each named as `<uuid-7>.bin`.
  * - The UUID is guaranteed to be monotonic, even if the clock shifts.
  *     - (assuming the latest chunk file is present during initialization)
@@ -40,7 +43,7 @@ import kotlinx.io.readByteArray
  * @property  path            The path to a directory that holds queue files.
  * @property  chunkSizeLimit  Maximum size of one queue chunk file in bytes.
  * @property  barrier         A byte array to put between entries, may be empty.
- * @property  persistDequeue  When true, [dequeue] persists the dequeue position in a file.
+ * @property  persistDequeue  When true, [dequeueOrNull] persists the dequeue position in a file.
  * @property  initialize      When true, [initialize] is called automatically by class `init`.
  */
 class ByteArrayQueue(
@@ -73,6 +76,8 @@ class ByteArrayQueue(
 
     internal val chunkIds = mutableListOf<UUID<Any>>()
 
+    internal val notificationQueue = Channel<Boolean>(2)
+
     private var initialized: Boolean = false
 
     val isInitialized: Boolean
@@ -95,7 +100,7 @@ class ByteArrayQueue(
 
 
     /**
-     * Initialize the queue. Must be called before any call to [enqueue] and [dequeue].
+     * Initialize the queue. Must be called before any call to [enqueue] and [dequeueOrNull].
      */
     fun initialize() {
         lock.use {
@@ -132,6 +137,7 @@ class ByteArrayQueue(
             }
 
             enqueuePosition += data.size + barrierSize + 4
+            notificationQueue.trySend(true)
         }
     }
 
@@ -162,7 +168,18 @@ class ByteArrayQueue(
             return (dequeueChunk == null) || (dequeuePosition >= dequeueEnd)
         }
 
-    fun dequeue(): ByteArray? {
+    suspend fun dequeue(): ByteArray {
+        var result = dequeueOrNull()
+
+        while (result == null) {
+            notificationQueue.receive()
+            result = dequeueOrNull()
+        }
+
+        return result
+    }
+
+    fun dequeueOrNull(): ByteArray? {
         lock.use {
             ensureInitialized()
 
