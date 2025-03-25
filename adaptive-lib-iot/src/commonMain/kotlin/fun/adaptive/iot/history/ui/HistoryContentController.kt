@@ -1,6 +1,7 @@
 package `fun`.adaptive.iot.history.ui
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.monitoring
+import `fun`.adaptive.foundation.value.adaptiveStoreFor
 import `fun`.adaptive.iot.history.AioHistoryApi
 import `fun`.adaptive.iot.history.model.AioDoubleHistoryRecord
 import `fun`.adaptive.iot.history.model.AioHistoryQuery
@@ -22,6 +23,12 @@ import kotlinx.datetime.Instant
 class HistoryContentController(
     override val workspace: Workspace
 ) : WsPaneController<HistoryBrowserWsItem>(), WithWorkspace {
+
+    enum class Mode {
+        TABLE, CHART
+    }
+
+    var mode = adaptiveStoreFor(Mode.CHART)
 
     val historyService = getService<AioHistoryApi>(transport)
 

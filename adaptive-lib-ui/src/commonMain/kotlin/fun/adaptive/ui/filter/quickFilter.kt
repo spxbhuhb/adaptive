@@ -21,10 +21,10 @@ fun <T> quickFilter(selected: T, entries: List<T>, labelFun: T.() -> String, onS
 
 @Adaptive
 private fun <T> quickFilterItem(entry: T, selected: Boolean, labelFun: T.() -> String, onSelect: (it: T) -> Unit) {
-    val hover = hover()
+    //val hover = hover()
 
     row {
-        filterTheme.item(selected, hover) .. onClick { onSelect(entry) }
+        filterTheme.item(selected, false) .. onClick { onSelect(entry) }
 
         text(entry.labelFun()) .. filterTheme.label
     }

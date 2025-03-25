@@ -26,6 +26,7 @@ dependencyResolutionManagement {
 includeBuild("../adaptive-core")
 includeBuild("../adaptive-ui")
 includeBuild("../adaptive-lib-auto")
+includeBuild("../adaptive-lib-chart")
 includeBuild("../adaptive-lib-auth")
 includeBuild("../adaptive-lib-exposed")
 includeBuild("../adaptive-lib-ui")

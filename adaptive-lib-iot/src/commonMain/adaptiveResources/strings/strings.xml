@@ -86,6 +86,8 @@
     <string name="downloadReport">Riport letöltés</string>
     <string name="timestamp">Időpont</string>
     <string name="value">Érték</string>
+    <string name="table">Táblázat</string>
+    <string name="chart">Grafikon</string>
 
     <!-- alarm -->
 

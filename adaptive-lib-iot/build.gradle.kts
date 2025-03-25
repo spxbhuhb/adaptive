@@ -58,6 +58,7 @@ kotlin {
             implementation(libs.adaptive.ui)
             implementation(libs.adaptive.lib.ktor)
             implementation(libs.adaptive.lib.auto)
+            implementation(libs.adaptive.lib.chart)
             implementation(libs.adaptive.lib.auth)
             implementation(libs.adaptive.lib.ui)
             implementation(libs.adaptive.lib.graphics)

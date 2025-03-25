@@ -7,8 +7,11 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.producer.fetch
+import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.common.*
 import `fun`.adaptive.iot.history.model.AioDoubleHistoryRecord
+import `fun`.adaptive.iot.history.ui.HistoryContentController.Mode
+import `fun`.adaptive.iot.history.ui.chart.historyChart
 import `fun`.adaptive.iot.point.AioPointSpec
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
@@ -36,14 +39,20 @@ fun wsHistoryContent(
 
     val originalItem = copyOf { pane.data.item }.asAvItem<AioPointSpec>()
     val records = fetch { pane.controller.query(originalItem) } ?: emptyList()
+    val mode = valueFrom { pane.controller.mode }
 
     column {
         maxSize .. padding { 16.dp } .. backgrounds.surface
         fill.constrain .. backgrounds.surfaceVariant
 
-        title(originalItem, records)
-        historyTableHeader()
-        historyTable(records)
+        title(pane.controller, originalItem, records)
+
+        if (mode == Mode.TABLE) {
+            historyTableHeader()
+            historyTable(records)
+        } else {
+            historyChart(pane.controller, records)
+        }
     }
 
     return fragment()
@@ -52,16 +61,20 @@ fun wsHistoryContent(
 
 @Adaptive
 fun title(
+    controller : HistoryContentController,
     item: AvItem<AioPointSpec>,
     records: List<AioDoubleHistoryRecord>
 ) {
-    var status1 = "Táblázat"
+    var modeList = listOf(Mode.TABLE to Strings.table, Mode.CHART to Strings.chart)
+    val mode = valueFrom { controller.mode }
+    val currentMode = modeList.first { it.first == mode }
+
     var status2 = ""
     var start = localDate()
     var end = localDate()
 
     column {
-        gap { 24.dp } .. paddingBottom { 16.dp }
+        gap { 24.dp } .. paddingBottom { 16.dp } .. height { 144.dp }
 
         grid {
             maxWidth .. colTemplate(1.fr, 1.fr)
@@ -79,12 +92,11 @@ fun title(
 
         row {
             gap { 16.dp }
-            quickFilter(status1, listOf("Táblázat", "Grafikon"), { this }) { v -> status1 = v }
+            quickFilter(currentMode, modeList, { second}) { v -> controller.mode.value = v.first }
             quickFilter(status2, listOf("Ma", "Hét", "Hónap", "Egyedi"), { this }) { v -> status2 = v }
             dateInput(start) { v -> start = v }
             dateInput(end) { v -> end = v }
         }
-
     }
 }
 
