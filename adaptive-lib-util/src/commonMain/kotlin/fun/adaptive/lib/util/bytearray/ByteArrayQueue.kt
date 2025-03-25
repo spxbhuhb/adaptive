@@ -3,20 +3,24 @@ package `fun`.adaptive.lib.util.bytearray
 import `fun`.adaptive.utility.*
 import `fun`.adaptive.utility.UUID.Companion.monotonicUuid7
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.withTimeout
 import kotlinx.io.Sink
 import kotlinx.io.Source
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readByteArray
-import kotlin.time.Duration
 
 /**
  * A file backed byte array queue:
  *
  * - [enqueue] enqueues a byte array
- * - [dequeueOrNull] dequeues a byte array
+ * - [dequeue] waits until a byte array is in the queue and then returns with it
+ * - [dequeueOrNull] dequeues a byte array or returns with null if the queue is empty
+ * - [peek] returns with the top of the queue (waiting for it if necessary) but does not advance the dequeue position
+ * - [peekOrNull] returns with the top of the queue or null if the queue is empty, but do not advance the dequeue position
+ *
+ * **IMPORTANT** Multiple consecutive peeks and the following dequeue returns with the **SAME** array instance. So, if
+ * you modify the array returned by peek or peekOrNull, the next peeks and dequeue will return with the modified array.
  *
  * - all calls are thread-safe
  * - [enqueue] flushes the file before returning
@@ -55,7 +59,6 @@ class ByteArrayQueue(
 ) {
 
     companion object {
-        private const val ZERO_BYTE = 0.toByte()
         const val DEQUEUE_NAME = "dequeue.bin"
     }
 
@@ -79,6 +82,8 @@ class ByteArrayQueue(
     internal val notificationQueue = Channel<Boolean>(2)
 
     private var initialized: Boolean = false
+
+    private var peekData: ByteArray? = null
 
     val isInitialized: Boolean
         get() = lock.use { initialized }
@@ -168,6 +173,9 @@ class ByteArrayQueue(
             return (dequeueChunk == null) || (dequeuePosition >= dequeueEnd)
         }
 
+    val isNotEmpty: Boolean
+        get() = ! isEmpty
+
     suspend fun dequeue(): ByteArray {
         var result = dequeueOrNull()
 
@@ -181,26 +189,57 @@ class ByteArrayQueue(
 
     fun dequeueOrNull(): ByteArray? {
         lock.use {
-            ensureInitialized()
-
-            rollDequeueChunk()
-            val chunk = dequeueChunk ?: return null
-            if (dequeuePosition >= dequeueEnd) return null
-
-            val barrier = chunk.readByteArray(barrierSize)
-            val size = chunk.readInt()
-            val data = chunk.readByteArray(size)
-
-            check(barrier.withIndex().all { it.value == barrier[it.index] }) { "invalid queue barrier at position $dequeuePosition in file ${path.resolve(chunkFileName(dequeueId !!))}" }
-
-            dequeuePosition += barrierSize + 4L + size
-
-            if (persistDequeue) {
-                dequeuePath.write("$dequeueId;$dequeuePosition", overwrite = true, useTemporaryFile = true)
+            if (peekData == null) {
+                peekData = unsafePeek() ?: return null
             }
-
-            return data
+            return unSafeConsume()
         }
+    }
+
+    suspend fun peek(): ByteArray {
+        var result = peekOrNull()
+
+        while (result == null) {
+            notificationQueue.receive()
+            result = peekOrNull()
+        }
+
+        return result
+    }
+
+    fun peekOrNull(): ByteArray? =
+        lock.use {
+            peekData ?: unsafePeek()
+        }
+
+    private fun unsafePeek(): ByteArray? {
+        ensureInitialized()
+
+        rollDequeueChunk()
+        val chunk = dequeueChunk ?: return null
+        if (dequeuePosition >= dequeueEnd) return null
+
+        val barrier = chunk.readByteArray(barrierSize)
+        val size = chunk.readInt()
+        peekData = chunk.readByteArray(size)
+
+        check(barrier.withIndex().all { it.value == barrier[it.index] }) { "invalid queue barrier at position $dequeuePosition in file ${path.resolve(chunkFileName(dequeueId !!))}" }
+
+        return peekData
+    }
+
+    private fun unSafeConsume(): ByteArray {
+        val safePeekData = checkNotNull(peekData)
+
+        dequeuePosition += barrierSize + 4L + safePeekData.size
+
+        if (persistDequeue) {
+            dequeuePath.write("$dequeueId;$dequeuePosition", overwrite = true, useTemporaryFile = true)
+        }
+
+        peekData = null
+
+        return safePeekData
     }
 
     /**
@@ -218,6 +257,8 @@ class ByteArrayQueue(
             val newPath = path.resolve(chunkFileName(newEnqueueId))
             enqueueChunk = SystemFileSystem.sink(newPath).buffered()
             chunkIds.add(newEnqueueId)
+
+            enqueuePosition = 0L
         }
     }
 

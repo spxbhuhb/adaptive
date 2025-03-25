@@ -211,7 +211,7 @@ class AioHistoryWorker : WorkerImpl<AioHistoryWorker> {
     }
 
     suspend fun processAddQueue() {
-        var addQueueEntry = addQueue.dequeue() // FIXME can loose record if problem happens after this line
+        var addQueueEntry = addQueue.peekOrNull()
 
         while (addQueueEntry != null) {
 
@@ -242,7 +242,8 @@ class AioHistoryWorker : WorkerImpl<AioHistoryWorker> {
                 }
             }
 
-            addQueueEntry = addQueue.dequeue() // FIXME ^^^ and also here
+            addQueue.dequeue()
+            addQueueEntry = addQueue.peekOrNull()
         }
 
         delay(5000)
