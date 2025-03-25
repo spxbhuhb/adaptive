@@ -1,7 +1,8 @@
 package `fun`.adaptive.chart.ui
 
 import `fun`.adaptive.chart.model.*
-import `fun`.adaptive.chart.normalization.DoubleDoubleNormalizer
+import `fun`.adaptive.chart.normalization.InstantDoubleNormalizer
+import `fun`.adaptive.chart.ui.temporal.temporalHorizontalAxisMarkers
 import `fun`.adaptive.chart.ws.model.WsChartContext
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.api.actualize
@@ -14,37 +15,17 @@ import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.utility.format
+import kotlinx.datetime.Instant
 
-
-val xAxis = ChartRenderAxis<Double, Double>(
+val xAxis = ChartRenderAxis<Instant, Double>(
     size = 49.0,
     offset = 50.0,
     axisLine = true,
-    WsChartContext.BASIC_HORIZONTAL_AXIS
-) { context, axis, canvasSize ->
+    WsChartContext.BASIC_HORIZONTAL_AXIS,
+    ::temporalHorizontalAxisMarkers
+)
 
-    val itemsWidth = canvasSize.width - context.itemOffsetX
-    val count = (itemsWidth / 50).toInt()
-    val step = 1.0 / count
-
-    val normalizer = context.normalizer
-
-    val out = mutableListOf<ChartRenderMarker>()
-
-    for (i in 1 .. count) {
-        val offset = i * step
-        out += ChartRenderMarker(
-            offset = i * step * itemsWidth,
-            tickSize = if (i % 2 == 0) 8.0 else 4.0,
-            labelText = normalizer.denormalizeX(offset)?.format(2),
-            guide = true
-        )
-    }
-
-    out
-}
-
-val yAxis = ChartRenderAxis<Double, Double>(
+val yAxis = ChartRenderAxis<Instant, Double>(
     size = 49.0,
     offset = 49.0,
     axisLine = true,
@@ -64,7 +45,8 @@ val yAxis = ChartRenderAxis<Double, Double>(
         out += ChartRenderMarker(
             offset = itemsHeight - offset * itemsHeight,
             tickSize = if (i % 2 == 0) 8.0 else 4.0,
-            labelText = normalizer.denormalizeY(offset)?.format(2),
+            labelText = normalizer.denormalizeY(offset)?.format(1),
+            labelOffset = 0.0,
             guide = true
         )
     }
@@ -75,10 +57,10 @@ val yAxis = ChartRenderAxis<Double, Double>(
 val item1 = ChartItem(
     WsChartContext.BASIC_LINE_SERIES,
     listOf(
-        ChartDataPoint(0.0, 0.0),
-        ChartDataPoint(100.0, 100.0),
-        ChartDataPoint(200.0, 50.0),
-        ChartDataPoint(300.0, 50.0)
+        ChartDataPoint(Instant.parse("2024-01-01T12:00:00.0Z"), 0.0),
+        ChartDataPoint(Instant.parse("2024-01-01T13:00:00.0Z"), 100.0),
+        ChartDataPoint(Instant.parse("2024-01-01T14:00:00.0Z"), 50.0),
+        ChartDataPoint(Instant.parse("2024-01-01T15:00:00.0Z"), 50.0)
     ),
     instructions = instructionsOf(stroke(0xff00ff))
 )
@@ -86,22 +68,22 @@ val item1 = ChartItem(
 val item2 = ChartItem(
     WsChartContext.BASIC_LINE_SERIES,
     listOf(
-        ChartDataPoint(0.0, 10.0),
-        ChartDataPoint(100.0, 80.0),
-        ChartDataPoint(200.0, 70.0),
-        ChartDataPoint(300.0, 60.0)
+        ChartDataPoint(Instant.parse("2024-01-01T12:00:00.0Z"), 10.0),
+        ChartDataPoint(Instant.parse("2024-01-01T13:00:00.0Z"), 80.0),
+        ChartDataPoint(Instant.parse("2024-01-01T14:00:00.0Z"), 70.0),
+        ChartDataPoint(Instant.parse("2024-01-01T15:00:00.0Z"), 60.0)
     ),
     instructions = instructionsOf(stroke(0x00ff00))
 )
 
 val items = listOf(item1, item2)
 
-val context = ChartRenderContext<Double, Double>(
+val context = ChartRenderContext<Instant, Double>(
     items,
     listOf(xAxis, yAxis),
     50.0,
     50.0,
-    { DoubleDoubleNormalizer(it) }
+    { InstantDoubleNormalizer(it) }
 )
 
 @Adaptive

@@ -33,7 +33,7 @@ fun basicHorizontalAxis(
                 line(marker.offset, 0.0, marker.offset, 0.0 + marker.tickSize) .. context.theme.axisLine
             }
             if (marker.labelText != null) {
-                fillText(marker.offset, tickMax + 2.0, marker.labelText, popupAlign.belowCenter) .. context.theme.axisLabel .. marker.labelInstructions
+                fillText(marker.offset, tickMax + 2.0 + marker.labelOffset, marker.labelText, popupAlign.belowCenter) .. context.theme.axisLabel .. marker.labelInstructions
             }
             if (marker.guide) {
                 line(marker.offset, 0.0, marker.offset, -axisOffset) .. context.theme.axisGuide

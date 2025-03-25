@@ -10,6 +10,7 @@ data class ChartRenderMarker(
     val tickInstructions: AdaptiveInstructionGroup = emptyInstructions,
 
     val labelText: String? = null,
+    val labelOffset: Double = 0.0,
     val labelRotation: Double? = null,
     val labelInstructions: AdaptiveInstructionGroup = emptyInstructions,
 

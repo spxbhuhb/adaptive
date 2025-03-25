@@ -10,10 +10,5 @@ import `fun`.adaptive.ui.workspace.model.WsItemType
 class HistoryBrowserWsItem(
     override val name: String,
     override val type: WsItemType,
-    val item: AvItem<*>
-) : WsItem() {
-
-    val uuid
-        get() = item.uuid
-
-}
+    val items: List<AvItem<*>>
+) : WsItem()

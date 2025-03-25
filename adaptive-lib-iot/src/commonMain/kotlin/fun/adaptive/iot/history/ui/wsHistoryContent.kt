@@ -2,11 +2,11 @@ package `fun`.adaptive.iot.history.ui
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
 import `fun`.adaptive.adat.store.copyOf
+import `fun`.adaptive.chart.model.ChartDataPoint
 import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.producer.fetch
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.common.*
 import `fun`.adaptive.iot.history.model.AioDoubleHistoryRecord
@@ -31,27 +31,27 @@ import `fun`.adaptive.utility.localDate
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 import `fun`.adaptive.value.item.AvStatus
+import kotlinx.datetime.Instant
 
 @Adaptive
 fun wsHistoryContent(
     pane: WsPane<HistoryBrowserWsItem, HistoryContentController>
 ): AdaptiveFragment {
 
-    val originalItem = copyOf { pane.data.item }.asAvItem<AioPointSpec>()
-    val records = fetch { pane.controller.query(originalItem) } ?: emptyList()
+    val originalItem = copyOf { pane.data.items.first() }.asAvItem<AioPointSpec>()
     val mode = valueFrom { pane.controller.mode }
 
     column {
         maxSize .. padding { 16.dp } .. backgrounds.surface
         fill.constrain .. backgrounds.surfaceVariant
 
-        title(pane.controller, originalItem, records)
+        title(pane.controller, originalItem)
 
         if (mode == Mode.TABLE) {
             historyTableHeader()
-            historyTable(records)
+            historyTable(pane.controller)
         } else {
-            historyChart(pane.controller, records)
+            historyChart(pane.controller.chartItems)
         }
     }
 
@@ -61,9 +61,8 @@ fun wsHistoryContent(
 
 @Adaptive
 fun title(
-    controller : HistoryContentController,
+    controller: HistoryContentController,
     item: AvItem<AioPointSpec>,
-    records: List<AioDoubleHistoryRecord>
 ) {
     var modeList = listOf(Mode.TABLE to Strings.table, Mode.CHART to Strings.chart)
     val mode = valueFrom { controller.mode }
@@ -86,7 +85,7 @@ fun title(
             }
 
             button(Strings.downloadReport) .. alignSelf.end .. onClick {
-                downloadReport(records)
+                downloadReport(controller)
             }
         }
 
@@ -116,29 +115,56 @@ fun historyTableHeader(
 
 @Adaptive
 fun historyTable(
-    records: List<AioDoubleHistoryRecord>,
+    controller: HistoryContentController,
     theme: AioTheme = AioTheme.DEFAULT
 ) {
     column {
         gap { 4.dp }
-        for (record in records) {
-            grid {
-                theme.historyRecordContainer
 
-                timestamp(record.timestamp) .. textSmall
-                text(record.value.format(1)) .. paddingLeft { 24.dp }
-                alarmIcon(record.flags)
-                status(AvStatus(record.flags))
-            }
+//        when (controller..size) {
+//            0 -> box { }
+//            1 -> singleHistoryTable(contentItems.first().records, theme)
+//            else -> multiHistoryTable(contentItems, theme)
+//        }
+
+
+    }
+}
+
+@Adaptive
+fun singleHistoryTable(
+    records: List<AioDoubleHistoryRecord>,
+    theme: AioTheme
+) {
+    for (record in records) {
+        grid {
+            theme.historyRecordContainer
+
+            timestamp(record.timestamp) .. textSmall
+            text(record.value.format(1)) .. paddingLeft { 24.dp }
+            alarmIcon(record.flags)
+            status(AvStatus(record.flags))
         }
     }
 }
 
-fun downloadReport(records: List<AioDoubleHistoryRecord>) {
-    val out = StringBuilder()
-    for (record in records) {
-        out.append("${record.timestamp.localizedString()};${record.value};${record.flags}\n")
-    }
+@Adaptive
+fun multiHistoryTable(
+    contentItems: List<HistoryContentController.ContentItem>,
+    theme: AioTheme
+) {
 
-    downloadFile(out.toString().encodeToByteArray(), "history.csv", "text/csv")
+}
+
+fun downloadReport(controller: HistoryContentController) {
+
+
+//    val out = StringBuilder()
+//    for (contentItem in contentItems) {
+//        for (record in contentItem.records) {
+//            out.append("${contentItem.point.name};${record.timestamp.localizedString()};${record.value};${record.flags}\n")
+//        }
+//    }
+//
+//    downloadFile(out.toString().encodeToByteArray(), "history.csv", "text/csv")
 }

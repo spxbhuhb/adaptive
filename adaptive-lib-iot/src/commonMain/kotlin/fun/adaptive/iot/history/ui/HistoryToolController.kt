@@ -42,7 +42,7 @@ class HistoryToolController(
     val treeViewModel = TreeViewModel<AvValueId, HistoryToolController>(
         emptyList(),
         selectedFun = ::selectedFun,
-        multiSelect = false,
+        multiSelect = true,
         context = this
     )
 
@@ -111,7 +111,7 @@ class HistoryToolController(
 
         if (PointMarkers.HIS in item.markers) {
             workspace.addContent(
-                HistoryBrowserWsItem(item.name, WSIT_HISTORY, item),
+                HistoryBrowserWsItem(item.name, WSIT_HISTORY, viewModel.selection.mapNotNull { it.attachment as? AvItem<*> }),
                 emptySet()
             )
         }

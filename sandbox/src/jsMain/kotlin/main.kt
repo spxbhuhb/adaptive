@@ -13,6 +13,7 @@ import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.chart.WsChartModule
 import `fun`.adaptive.chart.chartCommon
+import `fun`.adaptive.chart.ui.lineChart
 import `fun`.adaptive.cookbook.cookbookCommon
 import `fun`.adaptive.document.WsDocModule
 import `fun`.adaptive.foundation.Adaptive
@@ -26,6 +27,7 @@ import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiModule
+import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
@@ -100,7 +102,11 @@ fun sandboxMain() {
             //treeMain()
             //contextMenuMain()
             //datePickerMain()
-            copyStore(Stuff(AioSpaceSpec()))
+            //copyStore(Stuff(AioSpaceSpec()))
+            box {
+                maxSize .. padding { 16.dp }
+                lineChart()
+            }
         }
     }
 }
