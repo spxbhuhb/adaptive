@@ -15,12 +15,13 @@ import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.value.item.AvItem
 import kotlinx.datetime.Instant
 
 @Adaptive
-fun historyChart(chartItems: List<ChartItem<Instant,Double>>) {
+fun historyChart(chartItems: List<ChartItem<Instant,Double,AvItem<*>>>) {
 
-    val xAxis = ChartAxis<Instant, Double>(
+    val xAxis = ChartAxis<Instant, Double,AvItem<*>>(
         size = 49.0,
         offset = 50.0,
         axisLine = true,
@@ -28,7 +29,7 @@ fun historyChart(chartItems: List<ChartItem<Instant,Double>>) {
         ::temporalHorizontalAxisMarkers
     )
 
-    val yAxis = ChartAxis<Instant, Double>(
+    val yAxis = ChartAxis<Instant, Double,AvItem<*>>(
         size = 49.0,
         offset = 49.0,
         axisLine = true,
@@ -36,7 +37,7 @@ fun historyChart(chartItems: List<ChartItem<Instant,Double>>) {
         ::doubleVerticalAxisMarkers
     )
 
-    val context = ChartRenderContext<Instant, Double>(
+    val context = ChartRenderContext<Instant, Double,AvItem<*>>(
         chartItems,
         listOf(xAxis, yAxis),
         50.0,

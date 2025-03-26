@@ -14,8 +14,8 @@ import `fun`.adaptive.ui.fragment.layout.RawSize
 
 @Adaptive
 fun basicHorizontalAxis(
-    context: ChartRenderContext<*, *>,
-    axis: ChartAxis<*,*>,
+    context: ChartRenderContext<*, *, *>,
+    axis: ChartAxis<*, *, *>,
     canvasSize: RawSize
 ): AdaptiveFragment {
     val markers = axis.markers(context, canvasSize)
@@ -36,7 +36,7 @@ fun basicHorizontalAxis(
                 fillText(marker.offset, tickMax + 2.0 + marker.labelOffset, marker.labelText, popupAlign.belowCenter) .. context.theme.axisLabel .. marker.labelInstructions
             }
             if (marker.guide) {
-                line(marker.offset, 0.0, marker.offset, -axisOffset) .. context.theme.axisGuide
+                line(marker.offset, 0.0, marker.offset, - axisOffset) .. context.theme.axisGuide
             }
         }
     }

@@ -11,17 +11,17 @@ import `fun`.adaptive.ui.fragment.layout.RawSize
  *                    change that.
  * @property axisLine Show the actual line or not.
  */
-class ChartAxis<XT : Comparable<XT>, YT : Comparable<YT>>(
+class ChartAxis<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
     val size: Double,
     val offset: Double,
     val axisLine: Boolean,
     val renderer: FragmentKey,
-    val markerFun: (ChartRenderContext<XT, YT>, ChartAxis<XT, YT>, RawSize) -> List<ChartMarker>
+    val markerFun: (ChartRenderContext<XT, YT, AT>, ChartAxis<XT, YT, AT>, RawSize) -> List<ChartMarker>
 ) {
 
-    fun markers(context: ChartRenderContext<*, *>, canvasSize: RawSize): List<ChartMarker> {
-        @Suppress("UNCHECKED_CAST") // couldn't find a way to use function references for axis builder and keep type safety
-        return markerFun(context as ChartRenderContext<XT, YT>, this, canvasSize)
+    fun markers(context: ChartRenderContext<*, *, *>, canvasSize: RawSize): List<ChartMarker> {
+        @Suppress("UNCHECKED_CAST") // TODO couldn't find a way to use function references for axis builder and keep type safety
+        return markerFun(context as ChartRenderContext<XT, YT, AT>, this, canvasSize)
     }
 
 }

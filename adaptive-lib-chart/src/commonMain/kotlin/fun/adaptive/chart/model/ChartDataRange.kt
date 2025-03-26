@@ -10,7 +10,7 @@ data class ChartDataRange<XT, YT>(
     companion object {
 
         fun <XT : Comparable<XT>, YT : Comparable<YT>> ChartDataRange<XT, YT>?.update(
-            data: List<ChartDataPoint<XT, YT>>
+            data: List<AbstractChartDataPoint<XT, YT>>
         ): ChartDataRange<XT, YT>? {
 
             var xStart: XT? = this?.xStart

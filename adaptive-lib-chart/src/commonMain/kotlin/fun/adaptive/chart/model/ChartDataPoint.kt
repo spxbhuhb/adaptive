@@ -1,6 +1,6 @@
 package `fun`.adaptive.chart.model
 
-data class ChartDataPoint<XT, YT>(
-    val x: XT,
-    val y: YT
-)
+class ChartDataPoint<XT, YT>(
+    override val x: XT,
+    override val y: YT
+) : AbstractChartDataPoint<XT, YT>()

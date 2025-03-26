@@ -1,7 +1,7 @@
 package `fun`.adaptive.iot.history.ui
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.monitoring
-import `fun`.adaptive.chart.model.ChartDataPoint
+import `fun`.adaptive.chart.model.AbstractChartDataPoint
 import `fun`.adaptive.chart.model.ChartItem
 import `fun`.adaptive.foundation.value.adaptiveStoreFor
 import `fun`.adaptive.iot.history.AioHistoryApi
@@ -44,10 +44,10 @@ class HistoryContentController(
 
     val contentItems = adaptiveStoreFor(emptyList<ContentItem>())
 
-    val chartItems: List<ChartItem<Instant, Double>>
+    val chartItems: List<ChartItem<Instant, Double, AvItem<*>>>
         get() = chartItemsOrNull ?: emptyList()
 
-    var chartItemsOrNull: List<ChartItem<Instant, Double>>? = null
+    var chartItemsOrNull: List<ChartItem<Instant, Double, AvItem<*>>>? = null
 
     override fun accepts(pane: WsPaneType<HistoryBrowserWsItem>, modifiers: Set<EventModifier>, item: WsItem): Boolean {
         return (item is HistoryBrowserWsItem)
@@ -97,7 +97,7 @@ class HistoryContentController(
         }
     }
 
-    fun normalize(contentItems: List<HistoryContentController.ContentItem>): List<ChartDataPoint<Instant, Double>> {
+    fun normalize(contentItems: List<HistoryContentController.ContentItem>): List<AbstractChartDataPoint<Instant, Double>> {
         TODO()
     }
 }

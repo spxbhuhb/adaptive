@@ -14,8 +14,8 @@ import `fun`.adaptive.ui.fragment.layout.RawSize
 
 @Adaptive
 fun basicVerticalAxis(
-    context: ChartRenderContext<*, *>,
-    axis: ChartAxis<*,*>,
+    context: ChartRenderContext<*, *, *>,
+    axis: ChartAxis<*, *, *>,
     canvasSize: RawSize
 ): AdaptiveFragment {
     val axisHeight = canvasSize.height - axis.offset

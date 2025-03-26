@@ -19,7 +19,7 @@ import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.minutes
 
-val xAxis = ChartAxis<Instant, Double>(
+val xAxis = ChartAxis<Instant, Double, Unit>(
     size = 49.0,
     offset = 50.0,
     axisLine = true,
@@ -27,7 +27,7 @@ val xAxis = ChartAxis<Instant, Double>(
     ::temporalHorizontalAxisMarkers
 )
 
-val yAxis = ChartAxis<Instant, Double>(
+val yAxis = ChartAxis<Instant, Double, Unit>(
     size = 49.0,
     offset = 49.0,
     axisLine = true,
@@ -64,7 +64,8 @@ val item1 = ChartItem(
         ChartDataPoint(Instant.parse("2024-01-01T14:00:00.0Z"), 50.0),
         ChartDataPoint(Instant.parse("2024-01-01T15:00:00.0Z"), 50.0)
     ),
-    instructions = instructionsOf(stroke(0xff00ff))
+    instructions = instructionsOf(stroke(0xff00ff)),
+    Unit
 )
 
 val item2 = ChartItem(
@@ -75,12 +76,13 @@ val item2 = ChartItem(
         ChartDataPoint(Instant.parse("2024-01-01T14:00:00.0Z"), 70.0),
         ChartDataPoint(Instant.parse("2024-01-01T15:00:00.0Z"), 60.0)
     ),
-    instructions = instructionsOf(stroke(0x00ff00))
+    instructions = instructionsOf(stroke(0x00ff00)),
+    Unit
 )
 
 val items = listOf(item1, item2)
 
-val context = ChartRenderContext<Instant, Double>(
+val context = ChartRenderContext<Instant, Double, Unit>(
     items,
     listOf(xAxis, yAxis),
     50.0,
@@ -120,7 +122,7 @@ fun multiTable() {
     val iStart = now()
     val iEnd = iStart + 15.minutes
 
-    val cc = CalculationContext<Instant,Double>(
+    val cc = CalculationContext<Instant,Double, Unit>(
         Instant.parse("2024-01-01T12:00:00.0Z"),
         Instant.parse("2024-01-01T15:00:00.0Z"),
         context.normalizer.normalizedInterval(iStart, iEnd),

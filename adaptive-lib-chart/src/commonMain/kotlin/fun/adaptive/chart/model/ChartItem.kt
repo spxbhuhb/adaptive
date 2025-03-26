@@ -7,19 +7,20 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.graphics.canvas.model.path.LineTo
 
-class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>>(
+class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
     val renderKey: FragmentKey,
-    val sourceData: List<ChartDataPoint<XT, YT>>,
-    val instructions: AdaptiveInstructionGroup = emptyInstructions
+    val sourceData: List<AbstractChartDataPoint<XT, YT>>,
+    val instructions: AdaptiveInstructionGroup = emptyInstructions,
+    val attachment: AT? = null
 ) {
 
-    val normalizedData = mutableListOf<ChartDataPoint<Double, Double>>()
+    val normalizedData = mutableListOf<AbstractChartDataPoint<Double, Double>>()
 
     var operations = mutableListOf<LineTo>()
 
     val cells = mutableListOf<YT?>()
 
-    fun normalize(normalizer: ChartNormalizer<XT, YT>): ChartItem<XT, YT> {
+    fun normalize(normalizer: ChartNormalizer<XT, YT>): ChartItem<XT, YT, AT> {
 
         val out = normalizedData
         if (out.isNotEmpty()) return this
@@ -35,7 +36,7 @@ class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>>(
         return this
     }
 
-    fun prepareOperations(width: Double, height: Double): ChartItem<XT, YT> {
+    fun prepareOperations(width: Double, height: Double): ChartItem<XT, YT, AT> {
 
         val out = operations
         if (out.isNotEmpty()) return this
@@ -48,8 +49,8 @@ class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>>(
     }
 
     fun prepareCells(
-        config : CalculationContext<XT,YT>
-    ): ChartItem<XT, YT> {
+        config : CalculationContext<XT,YT, AT>
+    ): ChartItem<XT, YT, AT> {
 
         val out = cells
         if (out.isNotEmpty()) return this

@@ -13,8 +13,8 @@ import `fun`.adaptive.ui.fragment.layout.RawSize
 
 @Adaptive
 fun  basicLineSeries(
-    context: ChartRenderContext<*, *>,
-    item: ChartItem<*, *>,
+    context: ChartRenderContext<*, *, *>,
+    item: ChartItem<*, *, *>,
     canvasSize: RawSize
 ): AdaptiveFragment {
 
@@ -30,16 +30,16 @@ fun  basicLineSeries(
     return fragment()
 }
 
-private fun <XT : Comparable<XT>, YT : Comparable<YT>> operations(
-    context : ChartRenderContext<XT, YT>,
-    item : ChartItem<*, *>,
+private fun <XT : Comparable<XT>, YT : Comparable<YT>,AT> operations(
+    context : ChartRenderContext<XT, YT, AT>,
+    item : ChartItem<*, *, *>,
     canvasSize : RawSize
 ): MutableList<LineTo> {
     // Can't be helped for now the problem is that function references does not allow type parameters.
     // Therefore, the generic, fragment factory line series function cannot have type parameters.
 
     @Suppress("UNCHECKED_CAST")
-    item as ChartItem<XT, YT>
+    item as ChartItem<XT, YT, AT>
 
     val width = canvasSize.width - context.itemOffsetX
     val height = canvasSize.height - context.itemOffsetY

@@ -7,8 +7,8 @@ import `fun`.adaptive.ui.fragment.layout.RawSize
 import `fun`.adaptive.utility.format
 
 fun doubleVerticalAxisMarkers(
-    context : ChartRenderContext<*, Double>,
-    @Suppress("unused") axis : ChartAxis<*, Double>,
+    context : ChartRenderContext<*, Double, *>,
+    @Suppress("unused") axis : ChartAxis<*, Double, *>,
     canvasSize : RawSize
 ) : List<ChartMarker> {
     val range = context.range ?: return emptyList()

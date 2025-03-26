@@ -15,8 +15,8 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 fun temporalHorizontalAxisMarkers(
-    context : ChartRenderContext<Instant, *>,
-    @Suppress("unused") axis : ChartAxis<Instant, *>,
+    context : ChartRenderContext<Instant, *, *>,
+    @Suppress("unused") axis : ChartAxis<Instant, *, *>,
     canvasSize : RawSize
 ) : List<ChartMarker> {
     val range = context.range ?: return emptyList()
