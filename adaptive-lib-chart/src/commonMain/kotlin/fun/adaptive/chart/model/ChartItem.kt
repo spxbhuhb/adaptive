@@ -14,6 +14,11 @@ class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
     val attachment: AT? = null
 ) {
 
+    // these are used to check if operation recalculation is needed
+
+    var lastWidth = 0.0
+    var lastHeight = 0.0
+
     val normalizedData = mutableListOf<AbstractChartDataPoint<Double, Double>>()
 
     var operations = mutableListOf<LineTo>()
@@ -39,6 +44,13 @@ class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
     fun prepareOperations(width: Double, height: Double): ChartItem<XT, YT, AT> {
 
         val out = operations
+
+        if (width != lastWidth || height != lastHeight) {
+            out.clear()
+            lastWidth = width
+            lastHeight = height
+        }
+
         if (out.isNotEmpty()) return this
 
         for (point in normalizedData) {
