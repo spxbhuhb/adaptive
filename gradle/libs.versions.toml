@@ -48,7 +48,6 @@ adaptive-lib-cookbook = { module = "fun.adaptive:adaptive-lib-cookbook", version
 adaptive-lib-graphics = { module = "fun.adaptive:adaptive-lib-graphics", version.ref = "adaptive" }
 adaptive-lib-email = { module = "fun.adaptive:adaptive-lib-email", version.ref = "adaptive" }
 adaptive-lib-exposed = { module = "fun.adaptive:adaptive-lib-exposed", version.ref = "adaptive" }
-adaptive-lib-iot = { module = "fun.adaptive:adaptive-lib-iot", version.ref = "adaptive" }
 adaptive-lib-ktor = { module = "fun.adaptive:adaptive-lib-ktor", version.ref = "adaptive" }
 adaptive-lib-document = { module = "fun.adaptive:adaptive-lib-document", version.ref = "adaptive" }
 adaptive-lib-sandbox = { module = "fun.adaptive:adaptive-lib-sandbox", version.ref = "adaptive" }
@@ -57,6 +56,7 @@ adaptive-lib-util = { module = "fun.adaptive:adaptive-lib-util", version.ref = "
 adaptive-lib-value = { module = "fun.adaptive:adaptive-lib-value", version.ref = "adaptive" }
 adaptive-ui = { module = "fun.adaptive:adaptive-ui", version.ref = "adaptive" }
 
+adaptive-iot-lib-core = { module = "fun.adaptive:adaptive-iot-lib-core", version.ref = "adaptive" }
 adaptive-iot-lib-zigbee = { module = "fun.adaptive:adaptive-iot-lib-zigbee", version.ref = "adaptive" }
 
 android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material" }

@@ -1,6 +1,5 @@
 package `fun`.adaptive.iot.lib.zigbee
 
-import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
 import `fun`.adaptive.iot.history.model.*
 import `fun`.adaptive.iot.lib.zigbee.model.ZigBeeControllerSpec
 import `fun`.adaptive.iot.lib.zigbee.model.ZigBeeNetworkSpec

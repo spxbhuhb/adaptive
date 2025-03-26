@@ -34,4 +34,4 @@ includeBuild("../adaptive-lib-value")
 includeBuild("../adaptive-grove")
 includeBuild("../adaptive-grove-runtime")
 
-includeBuild("../iot/adaptive-lib-iot")
+includeBuild("../iot/adaptive-iot-lib-core")

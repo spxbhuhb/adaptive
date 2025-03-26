@@ -13,14 +13,20 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-iot-lib-zigbee"
-val pomName = "Adaptive IoT Lib ZigBee"
+val baseName = "adaptive-iot-lib-core"
+val pomName = "Adaptive IoT Core Library"
 val scmPath = "spxbhuhb/adaptive"
 
 // this is ugly but I don't use JS dependencies anyway, 
 // https://youtrack.jetbrains.com/issue/KT-50848/Kotlin-JS-inner-build-routines-are-using-vulnerable-NPM-dependencies-and-now-that-we-have-kotlin-js-store-github-audit-this
 rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin> {
     rootProject.the<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension>().lockFileName = "skip-yarn-lock"
+}
+
+adaptive {
+    resources {
+        packageOfResources = "fun.adaptive.iot.generated.resources"
+    }
 }
 
 kotlin {
@@ -56,17 +62,25 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.adaptive.core)
             implementation(libs.adaptive.ui)
+            implementation(libs.adaptive.lib.ktor)
+            implementation(libs.adaptive.lib.auto)
+            implementation(libs.adaptive.lib.chart)
+            implementation(libs.adaptive.lib.auth)
             implementation(libs.adaptive.lib.ui)
             implementation(libs.adaptive.lib.graphics)
             implementation(libs.adaptive.lib.document)
+            implementation(libs.adaptive.lib.exposed)
             implementation(libs.adaptive.lib.util)
             implementation(libs.adaptive.lib.value)
-            implementation(libs.adaptive.iot.lib.core)
         }
 
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
+        }
+
+        jvmTest.dependencies {
+            implementation(libs.h2database)
         }
     }
 }

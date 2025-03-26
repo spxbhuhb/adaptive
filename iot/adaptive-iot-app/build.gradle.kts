@@ -69,7 +69,6 @@ kotlin {
                 implementation(libs.adaptive.ui)
                 implementation(libs.adaptive.lib.app.basic)
                 implementation(libs.adaptive.lib.email)
-                implementation(libs.adaptive.lib.iot)
                 implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.lib.auth)
                 implementation(libs.adaptive.lib.auto)
@@ -78,6 +77,8 @@ kotlin {
                 implementation(libs.adaptive.lib.chart)
                 implementation(libs.adaptive.lib.ui)
                 implementation(libs.adaptive.lib.value)
+
+                implementation(libs.adaptive.iot.lib.core)
                 implementation(libs.adaptive.iot.lib.zigbee)
 
                 implementation(libs.adaptive.grove.runtime)

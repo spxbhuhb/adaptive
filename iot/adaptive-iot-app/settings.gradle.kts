@@ -32,5 +32,5 @@ includeBuild("../../adaptive-lib-chart")
 includeBuild("../../adaptive-lib-value")
 includeBuild("../../adaptive-grove-runtime")
 
-includeBuild("../adaptive-lib-iot")
+includeBuild("../adaptive-iot-lib-core")
 includeBuild("../adaptive-iot-lib-zigbee")

@@ -54,7 +54,6 @@ kotlin {
                 implementation(libs.adaptive.lib.cookbook)
                 implementation(libs.adaptive.lib.app.basic)
                 implementation(libs.adaptive.lib.email)
-                implementation(libs.adaptive.lib.iot)
                 implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.lib.auth)
                 implementation(libs.adaptive.lib.auto)
@@ -63,8 +62,12 @@ kotlin {
                 implementation(libs.adaptive.lib.chart)
                 implementation(libs.adaptive.lib.ui)
                 implementation(libs.adaptive.lib.value)
+
                 implementation(libs.adaptive.grove)
                 implementation(libs.adaptive.grove.runtime)
+
+                implementation(libs.adaptive.iot.lib.core)
+
                 implementation(libs.kotlinx.coroutines.debug)
             }
         }
