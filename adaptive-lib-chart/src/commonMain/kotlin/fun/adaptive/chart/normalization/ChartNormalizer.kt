@@ -10,4 +10,7 @@ abstract class ChartNormalizer<XT, YT> {
 
     abstract fun denormalizeY(y: Double): YT?
 
+    fun normalizedInterval(start: XT, end: XT): Double =
+        normalizeX(end) - normalizeX(start)
+
 }

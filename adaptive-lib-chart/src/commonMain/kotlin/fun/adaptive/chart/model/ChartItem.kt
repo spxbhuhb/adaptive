@@ -1,51 +1,87 @@
 package `fun`.adaptive.chart.model
 
+import `fun`.adaptive.chart.calculation.CalculationContext
+import `fun`.adaptive.chart.normalization.ChartNormalizer
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.graphics.canvas.model.path.LineTo
 
 class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>>(
-    val render: FragmentKey,
-    val data: List<ChartDataPoint<XT, YT>>,
+    val renderKey: FragmentKey,
+    val sourceData: List<ChartDataPoint<XT, YT>>,
     val instructions: AdaptiveInstructionGroup = emptyInstructions
 ) {
 
     val normalizedData = mutableListOf<ChartDataPoint<Double, Double>>()
 
-    fun normalize(context: ChartRenderContext<XT, YT>) {
-        if (normalizedData.isNotEmpty()) return
+    var operations = mutableListOf<LineTo>()
 
-        val normalizer = context.normalizer
+    val cells = mutableListOf<YT?>()
 
-        for (point in data) {
+    fun normalize(normalizer: ChartNormalizer<XT, YT>): ChartItem<XT, YT> {
 
-            normalizedData +=
+        val out = normalizedData
+        if (out.isNotEmpty()) return this
+
+        for (point in sourceData) {
+            out +=
                 ChartDataPoint(
                     normalizer.normalizeX(point.x),
                     normalizer.normalizeY(point.y)
                 )
-
         }
 
-        normalizedData
+        return this
     }
 
-    fun lineTo(context: ChartRenderContext<*, *>, width: Double, height: Double): List<LineTo> {
-        @Suppress("UNCHECKED_CAST") // couldn't figure out how to resolve this, function references does not support types
-        context as ChartRenderContext<XT, YT>
+    fun prepareOperations(width: Double, height: Double): ChartItem<XT, YT> {
 
-        normalize(context)
-
-        val out = mutableListOf<LineTo>()
+        val out = operations
+        if (out.isNotEmpty()) return this
 
         for (point in normalizedData) {
-            out += LineTo(
-                point.x * width,
-                - point.y * height
-            )
+            out += LineTo(point.x * width, - point.y * height)
         }
 
-        return out
+        return this
     }
+
+    fun prepareCells(
+        config : CalculationContext<XT,YT>
+    ): ChartItem<XT, YT> {
+
+        val out = cells
+        if (out.isNotEmpty()) return this
+
+        val normalizer = config.normalizer
+        val normalizedInterval = config.normalizedInterval
+        val calculation = config.calculation
+
+        var index = 0
+        var curPos = normalizer.normalizeX(config.start)
+        val endPos = normalizer.normalizeX(config.end)
+
+        while (curPos < endPos) {
+            var nextIndex = index
+            val nextPos = curPos + normalizedInterval
+
+            while (nextIndex < normalizedData.size && normalizedData[nextIndex].x < nextPos) {
+                nextIndex++
+            }
+
+            if (nextIndex != index) {
+                out += calculation(this, index, nextIndex)
+            } else {
+                out += null
+            }
+
+            index = nextIndex
+            curPos += normalizedInterval
+        }
+
+        return this
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package `fun`.adaptive.chart.ui
 
+import `fun`.adaptive.chart.calculation.CalculationContext
 import `fun`.adaptive.chart.model.*
 import `fun`.adaptive.chart.normalization.InstantDoubleNormalizer
 import `fun`.adaptive.chart.ui.temporal.temporalHorizontalAxisMarkers
@@ -10,14 +11,15 @@ import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.canvas.api.canvas
 import `fun`.adaptive.graphics.canvas.api.stroke
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.utility.format
+import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
+import kotlin.time.Duration.Companion.minutes
 
-val xAxis = ChartRenderAxis<Instant, Double>(
+val xAxis = ChartAxis<Instant, Double>(
     size = 49.0,
     offset = 50.0,
     axisLine = true,
@@ -25,7 +27,7 @@ val xAxis = ChartRenderAxis<Instant, Double>(
     ::temporalHorizontalAxisMarkers
 )
 
-val yAxis = ChartRenderAxis<Instant, Double>(
+val yAxis = ChartAxis<Instant, Double>(
     size = 49.0,
     offset = 49.0,
     axisLine = true,
@@ -38,11 +40,11 @@ val yAxis = ChartRenderAxis<Instant, Double>(
 
     val normalizer = context.normalizer
 
-    val out = mutableListOf<ChartRenderMarker>()
+    val out = mutableListOf<ChartMarker>()
 
     for (i in 1 .. count) {
         val offset = i * step
-        out += ChartRenderMarker(
+        out += ChartMarker(
             offset = itemsHeight - offset * itemsHeight,
             tickSize = if (i % 2 == 0) 8.0 else 4.0,
             labelText = normalizer.denormalizeY(offset)?.format(1),
@@ -58,7 +60,7 @@ val item1 = ChartItem(
     WsChartContext.BASIC_LINE_SERIES,
     listOf(
         ChartDataPoint(Instant.parse("2024-01-01T12:00:00.0Z"), 0.0),
-        ChartDataPoint(Instant.parse("2024-01-01T13:00:00.0Z"), 100.0),
+        ChartDataPoint(Instant.parse("2024-01-01T12:42:00.0Z"), 100.0),
         ChartDataPoint(Instant.parse("2024-01-01T14:00:00.0Z"), 50.0),
         ChartDataPoint(Instant.parse("2024-01-01T15:00:00.0Z"), 50.0)
     ),
@@ -88,17 +90,54 @@ val context = ChartRenderContext<Instant, Double>(
 
 @Adaptive
 fun lineChart(/*chart : Chart*/) {
-    box {
+    var chart = true
+
+    column {
         maxSize .. padding { 10.dp }
+        button("toggle") .. onClick { chart = !chart }
 
-        canvas { canvasSize ->
+        if (chart) {
+            canvas { canvasSize ->
 
-            for (axis in context.axes) {
-                actualize(axis.renderer, emptyInstructions, context, axis, canvasSize)
+                for (axis in context.axes) {
+                    actualize(axis.renderer, emptyInstructions, context, axis, canvasSize)
+                }
+
+                for (item in context.items) {
+                    actualize(item.renderKey, emptyInstructions, context, item, canvasSize)
+                }
             }
+        } else {
+            column {
+                multiTable()
+            }
+        }
+    }
+}
 
-            for (item in context.items) {
-                actualize(item.render, emptyInstructions, context, item, canvasSize)
+@Adaptive
+fun multiTable() {
+    val iStart = now()
+    val iEnd = iStart + 15.minutes
+
+    val cc = CalculationContext<Instant,Double>(
+        Instant.parse("2024-01-01T12:00:00.0Z"),
+        Instant.parse("2024-01-01T15:00:00.0Z"),
+        context.normalizer.normalizedInterval(iStart, iEnd),
+        context.normalizer
+    ) { chartItem, start, end ->
+        chartItem.sourceData[start].y
+    }
+
+    val markerColumn = cc.markers
+    val valueColumns = context.items.map { it.normalize(cc.normalizer).prepareCells(cc) }
+
+    for (i in 0 until markerColumn.size) {
+        row {
+            gap { 16.dp }
+            text(markerColumn[i])
+            for (valueColumn in valueColumns) {
+                text(valueColumn.cells[i])
             }
         }
     }

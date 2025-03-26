@@ -1,6 +1,6 @@
 package `fun`.adaptive.chart.ui
 
-import `fun`.adaptive.chart.model.ChartRenderAxis
+import `fun`.adaptive.chart.model.ChartAxis
 import `fun`.adaptive.chart.model.ChartRenderContext
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -15,7 +15,7 @@ import `fun`.adaptive.ui.fragment.layout.RawSize
 @Adaptive
 fun basicVerticalAxis(
     context: ChartRenderContext<*, *>,
-    axis: ChartRenderAxis<*,*>,
+    axis: ChartAxis<*,*>,
     canvasSize: RawSize
 ): AdaptiveFragment {
     val axisHeight = canvasSize.height - axis.offset

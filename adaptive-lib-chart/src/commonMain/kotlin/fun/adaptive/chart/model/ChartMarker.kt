@@ -3,7 +3,7 @@ package `fun`.adaptive.chart.model
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 
-data class ChartRenderMarker(
+data class ChartMarker(
     val offset: Double,
 
     val tickSize : Double? = null,

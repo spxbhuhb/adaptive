@@ -1,7 +1,7 @@
 package `fun`.adaptive.iot.history.ui.chart
 
 import `fun`.adaptive.chart.model.ChartItem
-import `fun`.adaptive.chart.model.ChartRenderAxis
+import `fun`.adaptive.chart.model.ChartAxis
 import `fun`.adaptive.chart.model.ChartRenderContext
 import `fun`.adaptive.chart.normalization.InstantDoubleNormalizer
 import `fun`.adaptive.chart.ui.temporal.doubleVerticalAxisMarkers
@@ -11,7 +11,6 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.graphics.canvas.api.canvas
-import `fun`.adaptive.iot.history.ui.HistoryContentController
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
@@ -21,7 +20,7 @@ import kotlinx.datetime.Instant
 @Adaptive
 fun historyChart(chartItems: List<ChartItem<Instant,Double>>) {
 
-    val xAxis = ChartRenderAxis<Instant, Double>(
+    val xAxis = ChartAxis<Instant, Double>(
         size = 49.0,
         offset = 50.0,
         axisLine = true,
@@ -29,7 +28,7 @@ fun historyChart(chartItems: List<ChartItem<Instant,Double>>) {
         ::temporalHorizontalAxisMarkers
     )
 
-    val yAxis = ChartRenderAxis<Instant, Double>(
+    val yAxis = ChartAxis<Instant, Double>(
         size = 49.0,
         offset = 49.0,
         axisLine = true,
@@ -55,7 +54,7 @@ fun historyChart(chartItems: List<ChartItem<Instant,Double>>) {
             }
 
             for (item in context.items) {
-                actualize(item.render, emptyInstructions, context, item, canvasSize)
+                actualize(item.renderKey, emptyInstructions, context, item, canvasSize)
             }
         }
     }

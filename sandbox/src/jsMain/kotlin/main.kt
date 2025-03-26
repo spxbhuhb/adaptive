@@ -46,8 +46,8 @@ import kotlinx.coroutines.launch
 
 fun main() {
     //basicAppMain()
-    //sandboxMain()
-    iotMain()
+    sandboxMain()
+    // iotMain()
 }
 
 fun iotMain() {

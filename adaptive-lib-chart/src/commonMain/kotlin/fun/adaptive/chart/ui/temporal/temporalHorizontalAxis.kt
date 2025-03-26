@@ -1,8 +1,8 @@
 package `fun`.adaptive.chart.ui.temporal
 
-import `fun`.adaptive.chart.model.ChartRenderAxis
+import `fun`.adaptive.chart.model.ChartAxis
 import `fun`.adaptive.chart.model.ChartRenderContext
-import `fun`.adaptive.chart.model.ChartRenderMarker
+import `fun`.adaptive.chart.model.ChartMarker
 import `fun`.adaptive.ui.fragment.layout.RawSize
 import `fun`.adaptive.utility.p02
 import kotlinx.datetime.Instant
@@ -16,9 +16,9 @@ import kotlin.time.Duration.Companion.seconds
 
 fun temporalHorizontalAxisMarkers(
     context : ChartRenderContext<Instant, *>,
-    @Suppress("unused") axis : ChartRenderAxis<Instant, *>,
+    @Suppress("unused") axis : ChartAxis<Instant, *>,
     canvasSize : RawSize
-) : List<ChartRenderMarker> {
+) : List<ChartMarker> {
     val range = context.range ?: return emptyList()
 
     val itemsWidth = canvasSize.width - context.itemOffsetX
@@ -30,11 +30,11 @@ fun temporalHorizontalAxisMarkers(
     val xRange = range.xEnd - range.xStart
     val tickRange = xRange / count
 
-    val out = mutableListOf<ChartRenderMarker>()
+    val out = mutableListOf<ChartMarker>()
 
     for (i in 1 .. count - 1) {
         val offset = i * step
-        out += ChartRenderMarker(
+        out += ChartMarker(
             offset = i * step * itemsWidth,
             tickSize = if (i % 2 == 0) 8.0 else 4.0,
             labelText = instantLabelText(normalizer.denormalizeX(offset), tickRange),
