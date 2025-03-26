@@ -7,6 +7,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.common.AioTheme
 import `fun`.adaptive.iot.device.AioDeviceSpec
@@ -78,15 +79,13 @@ fun wsDeviceContentPane(pane: WsPane<AvItem<AioDeviceSpec>, DeviceEditorContentC
         actions(pane.controller, originalItem, editItem, editSpec, originalSpace, editSpace)
 
         editFields(editItem, editSpace, spaceNames) { editSpace = it }
-        points(originalItem.uuid) .. rowSpan(2)
-
         editNotes(editSpec)
+
+        points(originalItem.uuid) .. colSpan(2)
     }
 
     return fragment()
 }
-
-
 
 @Adaptive
 fun title(
@@ -185,7 +184,7 @@ private fun points(deviceId : AvValueId) : AdaptiveFragment {
     val points = valueFrom { AvUiList(adapter(), deviceId, PointMarkers.POINTS) }
 
     withLabel(Strings.points) {
-        maxSize .. fill.constrain
+        maxSize .. fill.constrain .. instructions()
 
         column {
             AioTheme.DEFAULT.itemListContainer

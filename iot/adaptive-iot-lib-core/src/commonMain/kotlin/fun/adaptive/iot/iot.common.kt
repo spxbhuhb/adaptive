@@ -17,36 +17,16 @@ import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.value.AvSubscribeCondition
-import `fun`.adaptive.value.builtin.AvString
-import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvItemIdList
-import `fun`.adaptive.value.item.AvStatus
-import `fun`.adaptive.value.operation.*
 import `fun`.adaptive.value.ui.iconCache
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
 suspend fun iotCommon(loadStrings: Boolean = true) {
     val r = WireFormatRegistry
 
-    r += AvoAdd
-    r += AvoAddOrUpdate
-    r += AvoMarkerRemove
-    r += AvoUpdate
-    r += AvoTransaction
-
-    r += AvSubscribeCondition
-
-    r += AvItem
-    r += AvStatus
-    r += AvItemIdList
-
     r += AioSpaceSpec
     r += AioVirtualDeviceSpec
     r += AioComputedPointSpec
     r += AioSimPointSpec
-
-    r += AvString
 
     r += AioDoubleHistoryRecord
     r += AioBooleanHistoryRecord
