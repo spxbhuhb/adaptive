@@ -63,5 +63,8 @@ shorthand("adaptive-grove", "processAdaptiveResourcesCommonMain", "grove-resourc
 shorthand("sandbox", "jsBrowserDevelopmentRun", "sandbox-js")
 shorthand("sandbox", "jvmRun", "sandbox-jvm")
 shorthand("site", "jsBrowserDevelopmentRun", "site-js")
-shorthand("adaptive-app-iot", "jsBrowserDevelopmentRun", "iot-js")
-shorthand("adaptive-app-iot", "jvmRun", "iot-jvm")
+shorthand("adaptive-iot-app", "jsBrowserDevelopmentRun", "iot-js")
+shorthand("adaptive-iot-app", "jvmRun", "iot-jvm")
+
+// If you add a shorthand, and it does not start the jvm/js double-check the project
+// name, typically that's what's wrong.

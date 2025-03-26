@@ -70,6 +70,8 @@ We'll see how it turns out. I've put in the work, and I'll continue to do so in 
 
 **Copied from**
 
+* [IntelliJ IDEA](https://github.com/JetBrains/intellij-community) (by Jetbrains, Apache 2.0)
+  * UI workspace concepts and design elements
 * [Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform) (by JetBrains, Apache 2.0)
     * parts of the resources module
     * the resources part of the Gradle plugin
@@ -83,7 +85,7 @@ We'll see how it turns out. I've put in the work, and I'll continue to do so in 
 * [KVision](https://kvision.io) (some service related ideas)
 * [Tailwindcss](https://tailwindcss.com) (style concept)
 
-**Images and colors**
+**Images, colors**
 
 * [SvgPathEditor](https://yqnn.github.io/svg-path-editor/) SVG Path Editor by Yann Armelin
 * [ChatGPT](https://chatgpt.com)

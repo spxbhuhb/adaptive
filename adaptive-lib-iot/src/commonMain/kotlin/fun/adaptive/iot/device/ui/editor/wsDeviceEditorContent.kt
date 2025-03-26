@@ -124,6 +124,10 @@ fun actions(
             if (editSpace != originalSpace) {
                 controller.setSpace(editItem.uuid, editSpace !!.item.uuid)
             }
+
+            if (originalItem.specific != editSpec) {
+                controller.setSpec(editItem.uuid, editSpec)
+            }
         }
 }
 

@@ -11,7 +11,8 @@ interface AioDeviceApi {
         name: String,
         itemType: AvMarker,
         parentId: AvValueId?,
-        virtual : Boolean
+        spec: AioDeviceSpec,
+        markers: Map<AvMarker, AvValueId?>? = null
     ): AvValueId
 
     suspend fun rename(deviceId: AvValueId, name: String)

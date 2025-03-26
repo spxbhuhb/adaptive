@@ -9,6 +9,7 @@ import `fun`.adaptive.chart.WsChartModule
 import `fun`.adaptive.document.WsDocModule
 import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.iot.IotWsModule
+import `fun`.adaptive.iot.lib.zigbee.ZigbeeModule
 import `fun`.adaptive.ui.LibUiModule
 import `fun`.adaptive.ui.workspace.Workspace
 
@@ -19,6 +20,7 @@ fun main() {
         WsChartModule(),
         WsDocModule(),
         IotWsModule(),
+        ZigbeeModule<Workspace>(),
         WsAppModule,
         WsSandBoxModule
     ).main()

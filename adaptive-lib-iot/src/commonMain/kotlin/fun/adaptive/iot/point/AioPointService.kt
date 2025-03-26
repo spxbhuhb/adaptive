@@ -36,20 +36,16 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
         itemType: AvMarker,
         parentId: AvValueId,
         spec: AioPointSpec,
-        markers: List<AvMarker>
+        markers: Map<AvMarker, AvValueId?>?
     ): AvValueId {
         publicAccess()
 
-        val itemId = uuid7<AvValue>()
+        val itemId = markers?.get("migratedId")?.cast() ?: uuid7<AvValue>()
 
-        val itemMarkers = mutableMapOf(
-            PointMarkers.POINT to null,
-            itemType to null
-        )
+        val itemMarkers = markers?.toMutableMap() ?: mutableMapOf()
 
-        for (marker in markers) {
-            itemMarkers[marker] = null
-        }
+        itemMarkers[PointMarkers.POINT] = null
+        itemMarkers[itemType] = null
 
         valueWorker.execute {
 
@@ -118,7 +114,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
         AioHistoryService.append(newCurVal)
     }
 
-    internal fun unsafeSetCurVal(context : AvValueWorker.WorkerComputeContext, pointId: AvValueId, curVal: AvValue) : AvValue {
+    internal fun unsafeSetCurVal(context: AvValueWorker.WorkerComputeContext, pointId: AvValueId, curVal: AvValue): AvValue {
         val point = context.item(pointId).asAvItem<AioPointSpec>()
         val originalCurValId = point.markers[PointMarkers.CUR_VAL]
         val curValId = originalCurValId ?: uuid7<AvValue>()

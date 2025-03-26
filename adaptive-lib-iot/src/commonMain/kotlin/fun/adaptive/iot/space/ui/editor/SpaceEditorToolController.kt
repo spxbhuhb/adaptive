@@ -37,7 +37,7 @@ class SpaceEditorToolController(
                 PointMarkers.COMPUTED_POINT,
                 spaceId,
                 AioComputedPointSpec(dependencyMarker = PhScienceMarkers.TEMP),
-                listOf(PhScienceMarkers.TEMP, PointMarkers.HIS)
+                mapOf(PhScienceMarkers.TEMP to null, PointMarkers.HIS to null)
             )
 
             pointService.add(
@@ -45,7 +45,7 @@ class SpaceEditorToolController(
                 PointMarkers.COMPUTED_POINT,
                 spaceId,
                 AioComputedPointSpec(dependencyMarker = PhScienceMarkers.HUMIDITY),
-                listOf(PhScienceMarkers.HUMIDITY, PointMarkers.HIS)
+                mapOf(PhScienceMarkers.HUMIDITY to null, PointMarkers.HIS to null)
             )
         }
     }

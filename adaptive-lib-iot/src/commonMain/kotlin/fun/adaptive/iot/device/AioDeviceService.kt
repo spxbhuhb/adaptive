@@ -11,7 +11,6 @@ import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvMarker
-import `fun`.adaptive.value.item.AvMarkerValue
 import `fun`.adaptive.value.item.AvStatus
 import kotlinx.datetime.Clock.System.now
 
@@ -30,19 +29,20 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
         name: String,
         itemType: AvMarker,
         parentId: AvValueId?,
-        virtual: Boolean
+        spec: AioDeviceSpec,
+        markers: Map<AvMarker, AvValueId?>?
     ): AvValueId {
         publicAccess()
 
-        val itemId = uuid7<AvValue>()
+        val itemId = markers?.get("migratedId")?.cast() ?: uuid7<AvValue>()
 
-        val markers = mutableMapOf<AvMarker, AvValueId?>(
-            DeviceMarkers.DEVICE to null,
-            itemType to null
-        )
+        val itemMarkers = markers?.toMutableMap() ?: mutableMapOf()
 
-        if (virtual) {
-            markers[DeviceMarkers.VIRTUAL_DEVICE] = null
+        itemMarkers[DeviceMarkers.DEVICE] = null
+        itemMarkers[itemType] = null
+
+        if (spec.virtual) {
+            itemMarkers[DeviceMarkers.VIRTUAL_DEVICE] = null
         }
 
         worker.execute {
@@ -55,8 +55,8 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
                 AvStatus.OK,
                 parentId,
                 nextFriendlyId(DeviceMarkers.DEVICE, "DEV-"),
-                markersOrNull = markers,
-                specific = AioDeviceSpec(virtual)
+                markersOrNull = itemMarkers,
+                specific = spec
             )
 
             this += item

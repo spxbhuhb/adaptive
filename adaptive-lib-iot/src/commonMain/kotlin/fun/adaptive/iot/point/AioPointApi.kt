@@ -4,7 +4,6 @@ import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvMarker
-import `fun`.adaptive.value.item.AvStatus
 
 @ServiceApi
 interface AioPointApi {
@@ -14,7 +13,7 @@ interface AioPointApi {
         itemType: AvMarker,
         parentId: AvValueId,
         spec : AioPointSpec,
-        markers : List<AvMarker> = emptyList()
+        markers: Map<AvMarker, AvValueId?>? = null
     ): AvValueId
 
     suspend fun rename(valueId: AvValueId, name: String)

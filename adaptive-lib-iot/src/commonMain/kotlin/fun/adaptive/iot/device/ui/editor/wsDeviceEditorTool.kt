@@ -73,7 +73,7 @@ private fun apply(controller: DeviceEditorToolController, menuItem: MenuItem<Aio
         AioDeviceEditOperation.AddComputer -> Triple(Strings.computer, DeviceMarkers.COMPUTER, false)
         AioDeviceEditOperation.AddNetwork -> Triple(Strings.network, DeviceMarkers.NETWORK, false)
         AioDeviceEditOperation.AddController -> Triple(Strings.controller, DeviceMarkers.CONTROLLER, false)
-        AioDeviceEditOperation.AddDevice -> Triple(Strings.point, DeviceMarkers.DEVICE, false)
+        AioDeviceEditOperation.AddDevice -> Triple(Strings.device, DeviceMarkers.DEVICE, false)
         AioDeviceEditOperation.AddVirtualNetwork -> Triple(Strings.virtualNetwork, DeviceMarkers.NETWORK, true)
         AioDeviceEditOperation.AddVirtualController -> Triple(Strings.virtualController, DeviceMarkers.CONTROLLER, true)
         else -> Triple(null, null, null)

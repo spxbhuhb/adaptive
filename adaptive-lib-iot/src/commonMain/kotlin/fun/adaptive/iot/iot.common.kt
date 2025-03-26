@@ -1,8 +1,8 @@
 package `fun`.adaptive.iot
 
 import `fun`.adaptive.adaptive_lib_iot.generated.resources.*
-import `fun`.adaptive.iot.device.AioDeviceSpec
 import `fun`.adaptive.iot.device.DeviceMarkers
+import `fun`.adaptive.iot.device.virtual.AioVirtualDeviceSpec
 import `fun`.adaptive.iot.domain.rht.ui.wsRhtBrowserContentDef
 import `fun`.adaptive.iot.domain.rht.ui.wsRhtBrowserToolDef
 import `fun`.adaptive.iot.history.model.*
@@ -42,7 +42,7 @@ suspend fun iotCommon(loadStrings: Boolean = true) {
     r += AvItemIdList
 
     r += AioSpaceSpec
-    r += AioDeviceSpec
+    r += AioVirtualDeviceSpec
     r += AioComputedPointSpec
     r += AioSimPointSpec
 

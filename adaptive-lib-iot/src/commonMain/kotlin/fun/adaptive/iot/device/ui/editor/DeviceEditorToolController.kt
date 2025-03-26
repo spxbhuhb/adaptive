@@ -5,6 +5,7 @@ import `fun`.adaptive.adaptive_lib_iot.generated.resources.temperature
 import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.iot.device.ui.AbstractDeviceToolController
 import `fun`.adaptive.iot.device.ui.DeviceTreeModel
+import `fun`.adaptive.iot.device.virtual.AioVirtualDeviceSpec
 import `fun`.adaptive.iot.haystack.PhScienceMarkers
 import `fun`.adaptive.iot.point.AioPointApi
 import `fun`.adaptive.iot.point.PointMarkers
@@ -31,7 +32,7 @@ class DeviceEditorToolController(
 
     fun addDevice(name: String, marker: String, data: AvValueId?, virtual: Boolean) {
         io {
-            val deviceId = deviceService.add(name, marker, data, virtual)
+            val deviceId = deviceService.add(name, marker, data, AioVirtualDeviceSpec())
 
             if (virtual && marker != DeviceMarkers.NETWORK) {
                 pointService.add(
@@ -39,7 +40,7 @@ class DeviceEditorToolController(
                     PointMarkers.SIM_POINT,
                     deviceId,
                     AioSimPointSpec(),
-                    listOf(PhScienceMarkers.TEMP, PointMarkers.HIS)
+                    mapOf(PhScienceMarkers.TEMP to null, PointMarkers.HIS to null)
                 )
 
                 pointService.add(
@@ -47,7 +48,7 @@ class DeviceEditorToolController(
                     PointMarkers.SIM_POINT,
                     deviceId,
                     AioSimPointSpec(),
-                    listOf(PhScienceMarkers.HUMIDITY, PointMarkers.HIS)
+                    mapOf(PhScienceMarkers.HUMIDITY to null, PointMarkers.HIS to null)
                 )
             }
         }

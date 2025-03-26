@@ -23,6 +23,7 @@ import kotlinx.coroutines.withTimeout
 import kotlin.reflect.KClass
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.measureTime
 
 class AvValueWorker(
     val persistence: AbstractValuePersistence = NoPersistence()
@@ -69,7 +70,11 @@ class AvValueWorker(
                 check(operations.isEmpty) { "Operations are not empty" }
             }
 
-            persistence.loadValues(values)
+            measureTime {
+                persistence.loadValues(values)
+            }.also {
+                logger.info("loaded ${values.size} values in $it")
+            }
 
             // this will be empty as there are no subscriptions
             val commitSet = mutableSetOf<AvSubscription>()

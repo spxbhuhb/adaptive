@@ -8,6 +8,7 @@ import `fun`.adaptive.backend.setting.dsl.propertyFile
 import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.iot.iotCommon
+import `fun`.adaptive.iot.lib.zigbee.ZigbeeModule
 import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.runtime.ApplicationNodeType
@@ -16,6 +17,7 @@ import `fun`.adaptive.utility.ensure
 import `fun`.adaptive.value.app.valueServerBackend
 import `fun`.adaptive.value.persistence.FilePersistence
 import `fun`.adaptive.value.valueCommon
+import `fun`.adaptive.wireformat.WireFormatRegistry
 import kotlinx.coroutines.runBlocking
 import kotlinx.io.files.Path
 
@@ -29,6 +31,8 @@ fun main() {
         iotCommon(loadStrings = false)
         valueCommon()
     }
+
+    ZigbeeModule<Unit>().apply { WireFormatRegistry.init() }
 
     backend {
 
