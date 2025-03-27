@@ -31,7 +31,10 @@ fun historyTable(
 
             else -> {
                 multiHistoryTableHeader(controller)
-                multiHistoryTableContent(controller)
+                column {
+                    maxSize .. gap { 4.dp } .. verticalScroll
+                    multiHistoryTableContent(controller)
+                }
             }
         }
     }

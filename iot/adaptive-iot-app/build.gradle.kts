@@ -21,7 +21,7 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
-version = libs.versions.adaptive.get()
+version = "0.25.327.2"
 
 adaptive {
     pluginDebug = false

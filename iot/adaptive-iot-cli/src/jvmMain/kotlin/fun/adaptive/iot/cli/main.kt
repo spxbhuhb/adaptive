@@ -6,7 +6,7 @@ import `fun`.adaptive.lib.util.bytearray.ListenerByteArrayQueue
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.factory.BasicServiceImplFactory
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.utility.clearedTestPath
+import `fun`.adaptive.utility.ensure
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.builtin.AvBoolean
 import `fun`.adaptive.value.builtin.AvDouble
@@ -14,14 +14,20 @@ import `fun`.adaptive.value.item.AvStatus
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Instant
+import kotlinx.io.files.Path
 
-fun main() {
-    val listener = ListenerByteArrayQueue(12675, clearedTestPath(), 1024L * 1024L, byteArrayOf(0x0A, 0x0A, 0x0A, 0x0A))
+fun main(vararg argv: String) {
+    check(argv.size == 2) { "usage: adaptive-iot-cli <queue-path> <url>" }
+
+    val queuePath = Path(argv[0]).ensure()
+    val url = argv[1]
+
+    val listener = ListenerByteArrayQueue(12675, queuePath, 1024L * 1024L, byteArrayOf(0x0A, 0x0A, 0x0A, 0x0A))
     listener.start()
 
     runBlocking {
 
-        val pointService = getService<AioPointApi>(webSocketTransport("http://localhost:8080").start(BasicServiceImplFactory()))
+        val pointService = getService<AioPointApi>(webSocketTransport(url).start(BasicServiceImplFactory()))
 
         while (true) {
             var message = ""

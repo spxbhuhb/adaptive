@@ -11,7 +11,7 @@ if [ ! -d "./build/app" ]; then
 fi
 
 rm -rf ./build/app/$2/*
-rm ./build/app/aio-$2.zip
+rm ./build/app/aio-app-$2.zip
 
 mkdir ./build/app/$2/etc
 cp ./etc/aio.release.properties ./build/app/$2/etc/aio.properties
@@ -31,10 +31,10 @@ mkdir ./build/app/$2/var/log
 mkdir ./build/app/$2/var/log/archive
 
 cd ./build/app/$2
-zip -r ../aio-$2.zip *
+zip -r ../aio-app-$2.zip *
 
 if [ -d "$HOME/Desktop" ]; then
-  cp ../aio-$2.zip ~/Desktop
+  cp ../aio-app-$2.zip ~/Desktop
 else
   echo "Warning: ~/Desktop directory does not exist. Skipping copy."
 fi

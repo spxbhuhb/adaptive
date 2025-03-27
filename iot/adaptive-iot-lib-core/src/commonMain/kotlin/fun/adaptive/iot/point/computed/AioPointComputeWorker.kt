@@ -100,7 +100,7 @@ class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker> {
         }
 
         update(newCurVal)
-        AioHistoryService.append(newCurVal)
+        newCurVal?.let { AioHistoryService.append(newCurVal) }
     }
 
 

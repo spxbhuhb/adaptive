@@ -31,6 +31,7 @@ import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.textMedium
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.utility.format
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.builtin.AvConvertedDouble
@@ -61,10 +62,10 @@ fun pointSummary(
             status(point.status) .. alignSelf.endCenter
         }
 
-        if (point != null && point.isSimulated && pointValue is AvDouble) {
+        if (point != null && point.isSimulated) {
             contextPopup(observed) { hide ->
                 theme.inlineEditorPopup .. width { 300.dp }
-                setValuePopup(point, pointValue, observed, hide)
+                setValuePopup(point, pointValue as? AvDouble, observed, hide)
             }
         }
     }
@@ -110,7 +111,7 @@ fun setValuePopup(
 
         button(Strings.setPointValue) .. alignSelf.end .. onClick {
             workspace.io {
-                val curVal = AvDouble(UUID.nil(), now(), AvStatus.OK, point.uuid, value ?: Double.NaN)
+                val curVal = AvDouble(UUID.nil(), now(), AvStatus.OK, uuid4(), value ?: Double.NaN)
                 pointService.setCurVal(curVal)
                 successNotification(Strings.pointValueSet)
             }

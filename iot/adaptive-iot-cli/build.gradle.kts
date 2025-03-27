@@ -21,7 +21,7 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
-version = libs.versions.adaptive.get()
+version = "0.25.327.1"
 
 // this is ugly but I don't use JS dependencies anyway, 
 // https://youtrack.jetbrains.com/issue/KT-50848/Kotlin-JS-inner-build-routines-are-using-vulnerable-NPM-dependencies-and-now-that-we-have-kotlin-js-store-github-audit-this
@@ -112,24 +112,6 @@ registerShadowJar("jvm")
 
 tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.WARN
-}
-
-tasks.getByName("build") {
-    doFirst {
-        val out = ByteArrayOutputStream()
-        exec {
-            commandLine("git", "rev-parse", "--short", "HEAD")
-            standardOutput = out
-        }
-
-        val about = """
-            version: $version
-            releaseDate: ${SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").also { it.timeZone = TimeZone.getTimeZone("UTC") }.format(Date())}
-            commit: ${out.toByteArray().decodeToString()}
-        """.trimIndent()
-
-        Files.write(Paths.get("$projectDir/var/release/about.yaml"), about.encodeToByteArray(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
-    }
 }
 
 tasks.register("release") {

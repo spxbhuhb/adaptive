@@ -9,6 +9,7 @@ import `fun`.adaptive.iot.history.AioHistoryService
 import `fun`.adaptive.iot.point.computed.AioPointComputeWorker
 import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.iot.ws.AioWsContext
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.value.AvValue
@@ -105,6 +106,11 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
         publicAccess()
 
         val pointId = checkNotNull(curVal.parentId)
+
+        if (valueWorker[pointId] == null) {
+            getLogger("AioPointService").warning("dropping curVal for unknown point: $pointId  $curVal")
+            return
+        }
 
         val newCurVal = valueWorker.execute {
             unsafeSetCurVal(this, pointId, curVal)
