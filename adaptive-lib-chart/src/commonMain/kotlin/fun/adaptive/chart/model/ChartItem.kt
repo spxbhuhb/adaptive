@@ -8,11 +8,12 @@ import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.graphics.canvas.model.path.LineTo
 import `fun`.adaptive.model.CartesianPoint
 
-class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
+data class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
     val renderKey: FragmentKey,
     val sourceData: List<CartesianPoint<XT, YT>>,
     val instructions: AdaptiveInstructionGroup = emptyInstructions,
-    val attachment: AT? = null
+    val attachment: AT? = null,
+    val loading: Boolean = true
 ) {
 
     // these are used to check if operation recalculation is needed
@@ -62,7 +63,7 @@ class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
     }
 
     fun prepareCells(
-        config : CalculationContext<XT,YT, AT>
+        config: CalculationContext<XT, YT, AT>
     ): ChartItem<XT, YT, AT> {
 
         val out = cells
@@ -81,7 +82,7 @@ class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
             val nextPos = curPos + normalizedInterval
 
             while (nextIndex < normalizedData.size && normalizedData[nextIndex].x < nextPos) {
-                nextIndex++
+                nextIndex ++
             }
 
             if (nextIndex != index) {

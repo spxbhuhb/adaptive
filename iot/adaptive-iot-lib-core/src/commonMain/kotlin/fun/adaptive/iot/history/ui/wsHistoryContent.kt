@@ -46,7 +46,7 @@ fun wsHistoryContent(
             historyTableHeader()
             historyTable(pane.controller)
         } else {
-            historyChart(pane.controller.chartItems)
+            historyChart(pane.controller)
         }
     }
 
@@ -110,7 +110,7 @@ fun historyTable(
     controller: HistoryContentController,
     theme: AioTheme = AioTheme.DEFAULT
 ) {
-    val contentItems = valueFrom { controller.contentItems }
+    val contentItems = valueFrom { controller.chartItems }
 
     column {
         gap { 4.dp }
@@ -128,16 +128,16 @@ fun singleHistoryTable(
     controller: HistoryContentController,
     theme: AioTheme
 ) {
-    val contentItems = valueFrom { controller.contentItems }
+    val contentItems = valueFrom { controller.chartItems }
 
-    for (record in contentItems.first().records) {
+    for (record in contentItems.first().sourceData) {
         grid {
             theme.historyRecordContainer
 
-            timestamp(record.timestamp) .. textSmall
-            text(record.value.format(1)) .. paddingLeft { 24.dp }
-            alarmIcon(record.flags)
-            status(AvStatus(record.flags))
+            timestamp(record.y.timestamp) .. textSmall
+            text(record.y.value.format(1)) .. paddingLeft { 24.dp }
+            alarmIcon(record.y.flags)
+            status(AvStatus(record.y.flags))
         }
     }
 }

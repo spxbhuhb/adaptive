@@ -9,11 +9,15 @@ class AioDoubleHistoryRecord(
     val timestamp: Instant,
     val value: Double,
     val flags: Int
-) : CartesianPoint<Instant, AioDoubleHistoryRecord>() {
+) : CartesianPoint<Instant, AioDoubleHistoryRecord>(), Comparable<AioDoubleHistoryRecord> {
 
     override val x: Instant
         get() = timestamp
 
     override val y: AioDoubleHistoryRecord
         get() = this
+
+    override fun compareTo(other: AioDoubleHistoryRecord): Int =
+        value.compareTo(other.value)
+    
 }
