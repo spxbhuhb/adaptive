@@ -19,6 +19,6 @@ class DoubleHistoryValueNormalizer(
         get() = this.toLong().let(Instant::fromEpochSeconds)
 
     override val Double.asYt: AioDoubleHistoryRecord
-        get() = AioDoubleHistoryRecord(timestamp = Instant.DISTANT_PAST, value = this, flags = 0)
+        get() = AioDoubleHistoryRecord(timestamp = Instant.DISTANT_PAST, rawValue = this, value = this, flags = 0)
 
 }

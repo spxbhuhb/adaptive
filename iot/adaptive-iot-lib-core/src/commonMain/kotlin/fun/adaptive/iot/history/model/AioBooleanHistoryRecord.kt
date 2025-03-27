@@ -6,6 +6,7 @@ import kotlinx.datetime.Instant
 @Adat
 class AioBooleanHistoryRecord(
     val timestamp: Instant,
+    val rawValue: Boolean,
     val value: Boolean,
     val flags: Int
 )

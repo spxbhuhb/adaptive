@@ -8,6 +8,7 @@ import `fun`.adaptive.iot.generated.resources.*
 import `fun`.adaptive.iot.history.model.*
 import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.iot.point.computed.AioComputedPointSpec
+import `fun`.adaptive.iot.point.conversion.number.DoubleMultiplyConversion
 import `fun`.adaptive.iot.point.sim.AioSimPointSpec
 import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.iot.space.SpaceMarkers
@@ -17,6 +18,7 @@ import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.value.builtin.AvDouble
 import `fun`.adaptive.value.ui.iconCache
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
@@ -33,6 +35,9 @@ suspend fun iotCommon(loadStrings: Boolean = true) {
     r += AioStringHistoryRecord
     r += AioHistoryMetadata
     r += AioHistoryQuery
+
+    r += AvDouble
+    r += DoubleMultiplyConversion
 
     if (loadStrings) {
         commonMainStringsStringStore0.load()

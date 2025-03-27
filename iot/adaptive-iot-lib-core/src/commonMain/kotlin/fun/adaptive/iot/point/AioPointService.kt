@@ -119,7 +119,9 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
         val originalCurValId = point.markers[PointMarkers.CUR_VAL]
         val curValId = originalCurValId ?: uuid7<AvValue>()
 
-        val newCurVal = curVal.deepCopy(AdatChange(listOf("uuid"), curValId))
+        val curValWithId = curVal.deepCopy(AdatChange(listOf("uuid"), curValId))
+
+        val newCurVal = point.specific?.conversion?.convert(curValWithId) ?: curValWithId
 
         context += newCurVal
 

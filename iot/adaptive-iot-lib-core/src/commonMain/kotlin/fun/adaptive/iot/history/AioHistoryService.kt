@@ -16,6 +16,7 @@ import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.builtin.AvBoolean
+import `fun`.adaptive.value.builtin.AvConvertedDouble
 import `fun`.adaptive.value.builtin.AvDouble
 import kotlinx.datetime.Instant
 
@@ -31,15 +32,22 @@ class AioHistoryService : ServiceImpl<AioHistoryService>, AioHistoryApi {
             if (PointMarkers.HIS !in point.markers) return
 
             when (curValue) {
+                is AvConvertedDouble -> historyWorker.append(
+                    point.uuid.cast(), curValue.timestamp,
+                    AioDoubleHistoryRecord.typeSignature(),
+                    AioDoubleHistoryRecord(curValue.timestamp, curValue.originalValue, curValue.convertedValue, curValue.status.flags).encodeToProtoByteArray()
+                )
+
                 is AvDouble -> historyWorker.append(
                     point.uuid.cast(), curValue.timestamp,
                     AioDoubleHistoryRecord.typeSignature(),
-                    AioDoubleHistoryRecord(curValue.timestamp, curValue.value, curValue.status.flags).encodeToProtoByteArray()
+                    AioDoubleHistoryRecord(curValue.timestamp, curValue.value, curValue.value, curValue.status.flags).encodeToProtoByteArray()
                 )
+
                 is AvBoolean -> historyWorker.append(
                     point.uuid.cast(), curValue.timestamp,
                     AioBooleanHistoryRecord.typeSignature(),
-                    AioBooleanHistoryRecord(curValue.timestamp, curValue.value, curValue.status.flags).encodeToProtoByteArray()
+                    AioBooleanHistoryRecord(curValue.timestamp, curValue.value, curValue.value, curValue.status.flags).encodeToProtoByteArray()
                 )
             }
         }

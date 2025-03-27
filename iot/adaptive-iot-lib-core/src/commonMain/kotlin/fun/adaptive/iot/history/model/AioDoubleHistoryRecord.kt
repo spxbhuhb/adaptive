@@ -7,6 +7,7 @@ import kotlinx.datetime.Instant
 @Adat
 class AioDoubleHistoryRecord(
     val timestamp: Instant,
+    val rawValue: Double,
     val value: Double,
     val flags: Int
 ) : CartesianPoint<Instant, AioDoubleHistoryRecord>(), Comparable<AioDoubleHistoryRecord> {

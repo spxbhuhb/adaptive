@@ -1,35 +1,37 @@
 package `fun`.adaptive.value.builtin
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.value.item.AvStatus
-import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.model.NamedItemType
 import `fun`.adaptive.utility.UUID.Companion.uuid7
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.item.AvStatus
 import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
 
 @Adat
-data class AvDouble(
+data class AvConvertedDouble(
     override val uuid: AvValueId,
     override val timestamp: Instant,
     override val status: AvStatus,
     override val parentId: AvValueId?,
-    val value : Double,
+    val originalValue: Double,
+    val convertedValue: Double,
 ) : AvValue() {
 
-    constructor(parentId: AvValueId, value: Double) : this(
+    constructor(parentId: AvValueId, sourceValue: Double, value: Double) : this(
         uuid7(),
         now(),
         AvStatus.OK,
         parentId,
+        sourceValue,
         value
     )
 
     override val name: String
-        get() = "Double"
+        get() = "ConvertedDouble"
 
     override val type: NamedItemType
-        get() = "Double"
+        get() = "ConvertedDouble"
 
 }

@@ -11,6 +11,7 @@ import `fun`.adaptive.utility.safeSuspendCall
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
+import `fun`.adaptive.value.builtin.AvConvertedDouble
 import `fun`.adaptive.value.builtin.AvDouble
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItemOrNull
 import kotlinx.coroutines.channels.Channel
@@ -80,12 +81,17 @@ class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker> {
     }
 
     suspend fun computePoint(computedPoint: AvValueId, incomingValue: AvValue) {
-        if (incomingValue !is AvDouble) return
+
+        val value = when (incomingValue) {
+            is AvConvertedDouble -> incomingValue.convertedValue
+            is AvDouble -> incomingValue.value
+            else -> return
+        }
 
         val parentId = incomingValue.parentId ?: return
 
         val sourceValues = sourceMaps.getOrPut(computedPoint) { mutableMapOf() }
-        sourceValues[parentId] = incomingValue.value
+        sourceValues[parentId] = value
 
         val result = sourceValues.values.sum() / sourceValues.size
 
