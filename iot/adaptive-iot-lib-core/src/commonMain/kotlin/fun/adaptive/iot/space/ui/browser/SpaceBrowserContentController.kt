@@ -7,7 +7,7 @@ import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
-import `fun`.adaptive.ui.workspace.model.WsItem
+import `fun`.adaptive.model.NamedItem
 
 class SpaceBrowserContentController(
     override val workspace: Workspace
@@ -15,11 +15,11 @@ class SpaceBrowserContentController(
 
     val spaceService = getService<AioSpaceApi>(transport)
 
-    override fun accepts(pane: WsPaneType<SpaceBrowserWsItem>, modifiers: Set<EventModifier>, item: WsItem): Boolean {
+    override fun accepts(pane: WsPaneType<SpaceBrowserWsItem>, modifiers: Set<EventModifier>, item: NamedItem): Boolean {
         return (item is SpaceBrowserWsItem)
     }
 
-    override fun load(pane: WsPaneType<SpaceBrowserWsItem>, modifiers: Set<EventModifier>, item: WsItem): WsPaneType<SpaceBrowserWsItem> {
+    override fun load(pane: WsPaneType<SpaceBrowserWsItem>, modifiers: Set<EventModifier>, item: NamedItem): WsPaneType<SpaceBrowserWsItem> {
         return pane.copy(
             name = item.name,
             data = item as SpaceBrowserWsItem,

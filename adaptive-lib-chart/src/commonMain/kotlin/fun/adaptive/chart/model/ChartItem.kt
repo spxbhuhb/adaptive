@@ -6,10 +6,11 @@ import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.graphics.canvas.model.path.LineTo
+import `fun`.adaptive.model.CartesianPoint
 
 class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
     val renderKey: FragmentKey,
-    val sourceData: List<AbstractChartDataPoint<XT, YT>>,
+    val sourceData: List<CartesianPoint<XT, YT>>,
     val instructions: AdaptiveInstructionGroup = emptyInstructions,
     val attachment: AT? = null
 ) {
@@ -19,7 +20,7 @@ class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
     var lastWidth = 0.0
     var lastHeight = 0.0
 
-    val normalizedData = mutableListOf<AbstractChartDataPoint<Double, Double>>()
+    val normalizedData = mutableListOf<CartesianPoint<Double, Double>>()
 
     var operations = mutableListOf<LineTo>()
 

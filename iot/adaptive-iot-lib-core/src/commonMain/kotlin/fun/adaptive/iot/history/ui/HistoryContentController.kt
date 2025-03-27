@@ -1,7 +1,7 @@
 package `fun`.adaptive.iot.history.ui
 
 import `fun`.adaptive.iot.generated.resources.monitoring
-import `fun`.adaptive.chart.model.AbstractChartDataPoint
+import `fun`.adaptive.model.CartesianPoint
 import `fun`.adaptive.chart.model.ChartItem
 import `fun`.adaptive.foundation.value.adaptiveStoreFor
 import `fun`.adaptive.iot.history.AioHistoryApi
@@ -15,7 +15,7 @@ import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
-import `fun`.adaptive.ui.workspace.model.WsItem
+import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
@@ -49,11 +49,11 @@ class HistoryContentController(
 
     var chartItemsOrNull: List<ChartItem<Instant, Double, AvItem<*>>>? = null
 
-    override fun accepts(pane: WsPaneType<HistoryBrowserWsItem>, modifiers: Set<EventModifier>, item: WsItem): Boolean {
+    override fun accepts(pane: WsPaneType<HistoryBrowserWsItem>, modifiers: Set<EventModifier>, item: NamedItem): Boolean {
         return (item is HistoryBrowserWsItem)
     }
 
-    override fun load(pane: WsPaneType<HistoryBrowserWsItem>, modifiers: Set<EventModifier>, item: WsItem): WsPaneType<HistoryBrowserWsItem> {
+    override fun load(pane: WsPaneType<HistoryBrowserWsItem>, modifiers: Set<EventModifier>, item: NamedItem): WsPaneType<HistoryBrowserWsItem> {
         item as HistoryBrowserWsItem
 
         loadHistories(item)
@@ -97,7 +97,7 @@ class HistoryContentController(
         }
     }
 
-    fun normalize(contentItems: List<HistoryContentController.ContentItem>): List<AbstractChartDataPoint<Instant, Double>> {
+    fun normalize(contentItems: List<HistoryContentController.ContentItem>): List<CartesianPoint<Instant, Double>> {
         TODO()
     }
 }

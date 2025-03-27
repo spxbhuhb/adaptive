@@ -4,7 +4,7 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.value.item.AvStatus
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.ui.workspace.model.WsItemType
+import `fun`.adaptive.model.NamedItemType
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
@@ -29,7 +29,7 @@ class AvDouble(
     override val name: String
         get() = "Double"
 
-    override val type: WsItemType
+    override val type: NamedItemType
         get() = "Double"
 
 }

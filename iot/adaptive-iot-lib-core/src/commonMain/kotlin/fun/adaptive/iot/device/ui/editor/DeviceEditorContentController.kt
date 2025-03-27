@@ -16,7 +16,7 @@ import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
-import `fun`.adaptive.ui.workspace.model.WsItem
+import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
@@ -29,11 +29,11 @@ class DeviceEditorContentController(
     val spaceService = getService<AioSpaceApi>(transport)
     val deviceService = getService<AioDeviceApi>(transport)
 
-    override fun accepts(pane: WsPaneType<AvItem<AioDeviceSpec>>, modifiers: Set<EventModifier>, item: WsItem): Boolean {
+    override fun accepts(pane: WsPaneType<AvItem<AioDeviceSpec>>, modifiers: Set<EventModifier>, item: NamedItem): Boolean {
         return (item is AvItem<*>) && (DeviceMarkers.DEVICE in item.markers)
     }
 
-    override fun load(pane: WsPaneType<AvItem<AioDeviceSpec>>, modifiers: Set<EventModifier>, item: WsItem): WsPaneType<AvItem<AioDeviceSpec>> {
+    override fun load(pane: WsPaneType<AvItem<AioDeviceSpec>>, modifiers: Set<EventModifier>, item: NamedItem): WsPaneType<AvItem<AioDeviceSpec>> {
         val deviceItem = item.asAvItem<AioDeviceSpec>()
         return pane.copy(
             name = item.name,

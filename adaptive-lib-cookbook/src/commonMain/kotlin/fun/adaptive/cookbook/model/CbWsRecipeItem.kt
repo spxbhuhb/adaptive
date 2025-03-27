@@ -3,16 +3,16 @@ package `fun`.adaptive.cookbook.model
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.cookbook.CbWsContext
 import `fun`.adaptive.ui.tree.TreeItem
-import `fun`.adaptive.ui.workspace.model.WsItem
-import `fun`.adaptive.ui.workspace.model.WsItemType
+import `fun`.adaptive.model.NamedItem
+import `fun`.adaptive.model.NamedItemType
 
 @Adat
 class CbWsRecipeItem(
     override val name: String,
-    override val type: WsItemType = CbWsContext.WSIT_CB_RECIPE,
+    override val type: NamedItemType = CbWsContext.WSIT_CB_RECIPE,
     val children: List<CbWsRecipeItem> = emptyList(),
     val key: String? = null
-) : WsItem() {
+) : NamedItem() {
 
     fun toTreeItem(context: CbWsContext, parent: TreeItem<CbWsRecipeItem>?): TreeItem<CbWsRecipeItem> {
         val config = context[this]

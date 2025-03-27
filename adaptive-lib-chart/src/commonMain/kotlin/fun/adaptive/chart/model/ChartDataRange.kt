@@ -1,5 +1,7 @@
 package `fun`.adaptive.chart.model
 
+import `fun`.adaptive.model.CartesianPoint
+
 data class ChartDataRange<XT, YT>(
     val xStart: XT,
     val xEnd: XT,
@@ -10,7 +12,7 @@ data class ChartDataRange<XT, YT>(
     companion object {
 
         fun <XT : Comparable<XT>, YT : Comparable<YT>> ChartDataRange<XT, YT>?.update(
-            data: List<AbstractChartDataPoint<XT, YT>>
+            data: List<CartesianPoint<XT, YT>>
         ): ChartDataRange<XT, YT>? {
 
             var xStart: XT? = this?.xStart

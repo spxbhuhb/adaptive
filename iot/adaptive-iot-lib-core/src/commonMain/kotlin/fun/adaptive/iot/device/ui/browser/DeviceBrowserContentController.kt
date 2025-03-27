@@ -7,7 +7,7 @@ import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
-import `fun`.adaptive.ui.workspace.model.WsItem
+import `fun`.adaptive.model.NamedItem
 
 class DeviceBrowserContentController(
     override val workspace: Workspace
@@ -15,11 +15,11 @@ class DeviceBrowserContentController(
 
     val deviceService = getService<AioDeviceApi>(transport)
 
-    override fun accepts(pane: WsPaneType<DeviceBrowserWsItem>, modifiers: Set<EventModifier>, item: WsItem): Boolean {
+    override fun accepts(pane: WsPaneType<DeviceBrowserWsItem>, modifiers: Set<EventModifier>, item: NamedItem): Boolean {
         return (item is DeviceBrowserWsItem)
     }
 
-    override fun load(pane: WsPaneType<DeviceBrowserWsItem>, modifiers: Set<EventModifier>, item: WsItem): WsPaneType<DeviceBrowserWsItem> {
+    override fun load(pane: WsPaneType<DeviceBrowserWsItem>, modifiers: Set<EventModifier>, item: NamedItem): WsPaneType<DeviceBrowserWsItem> {
         return pane.copy(
             name = item.name,
             data = item as DeviceBrowserWsItem,

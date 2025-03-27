@@ -4,7 +4,6 @@ import `fun`.adaptive.iot.generated.resources.renameFail
 import `fun`.adaptive.iot.generated.resources.renameSuccess
 import `fun`.adaptive.iot.generated.resources.saveFail
 import `fun`.adaptive.iot.generated.resources.saveSuccess
-import `fun`.adaptive.foundation.value.adaptiveStoreFor
 import `fun`.adaptive.iot.space.AioSpaceApi
 import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.iot.space.SpaceMarkers
@@ -15,7 +14,7 @@ import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
-import `fun`.adaptive.ui.workspace.model.WsItem
+import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
@@ -27,11 +26,11 @@ class SpaceEditorContentController(
 
     val spaceService = getService<AioSpaceApi>(transport)
 
-    override fun accepts(pane: WsPaneType<AvItem<AioSpaceSpec>>, modifiers: Set<EventModifier>, item: WsItem): Boolean {
+    override fun accepts(pane: WsPaneType<AvItem<AioSpaceSpec>>, modifiers: Set<EventModifier>, item: NamedItem): Boolean {
         return (item is AvItem<*>) && (SpaceMarkers.SPACE in item.markers)
     }
 
-    override fun load(pane: WsPaneType<AvItem<AioSpaceSpec>>, modifiers: Set<EventModifier>, item: WsItem): WsPaneType<AvItem<AioSpaceSpec>> {
+    override fun load(pane: WsPaneType<AvItem<AioSpaceSpec>>, modifiers: Set<EventModifier>, item: NamedItem): WsPaneType<AvItem<AioSpaceSpec>> {
         val spaceItem = item.asAvItem<AioSpaceSpec>()
         return pane.copy(
             name = item.name,

@@ -5,17 +5,17 @@ import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
-import `fun`.adaptive.ui.workspace.model.WsItem
+import `fun`.adaptive.model.NamedItem
 
 class DocBrowserContentController(
     override val workspace: Workspace
 ) : WsPaneController<DocBrowserWsItem>(), WithWorkspace {
 
-    override fun accepts(pane: WsPaneType<DocBrowserWsItem>, modifiers: Set<EventModifier>, item: WsItem): Boolean {
+    override fun accepts(pane: WsPaneType<DocBrowserWsItem>, modifiers: Set<EventModifier>, item: NamedItem): Boolean {
         return (item is DocBrowserWsItem)
     }
 
-    override fun load(pane: WsPaneType<DocBrowserWsItem>, modifiers: Set<EventModifier>, item: WsItem): WsPaneType<DocBrowserWsItem> {
+    override fun load(pane: WsPaneType<DocBrowserWsItem>, modifiers: Set<EventModifier>, item: NamedItem): WsPaneType<DocBrowserWsItem> {
         return pane.copy(
             name = item.name,
             data = item as DocBrowserWsItem,

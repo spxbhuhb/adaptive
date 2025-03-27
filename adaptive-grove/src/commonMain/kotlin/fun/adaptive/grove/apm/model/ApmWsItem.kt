@@ -3,15 +3,15 @@ package `fun`.adaptive.grove.apm.model
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.grove.apm.ApmWsContext
 import `fun`.adaptive.ui.tree.TreeItem
-import `fun`.adaptive.ui.workspace.model.WsItem
-import `fun`.adaptive.ui.workspace.model.WsItemType
+import `fun`.adaptive.model.NamedItem
+import `fun`.adaptive.model.NamedItemType
 
 @Adat
 class ApmWsItem(
     override val name: String,
-    override val type: WsItemType,
+    override val type: NamedItemType,
     val path: String
-) : WsItem() {
+) : NamedItem() {
 
     fun toTreeItem(context: ApmWsContext): TreeItem<ApmWsItem> {
         val config = context[this]

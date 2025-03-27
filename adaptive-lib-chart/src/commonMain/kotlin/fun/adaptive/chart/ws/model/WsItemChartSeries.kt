@@ -2,8 +2,8 @@ package `fun`.adaptive.chart.ws.model
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.ui.tree.TreeItem
-import `fun`.adaptive.ui.workspace.model.WsItem
-import `fun`.adaptive.ui.workspace.model.WsItemType
+import `fun`.adaptive.model.NamedItem
+import `fun`.adaptive.model.NamedItemType
 import `fun`.adaptive.utility.UUID
 
 /**
@@ -13,10 +13,10 @@ import `fun`.adaptive.utility.UUID
 @Adat
 class WsItemChartSeries(
     override val name: String,
-    override val type: WsItemType,
+    override val type: NamedItemType,
     val seriesUuid: UUID<Any>,
     val children : List<WsItemChartSeries> = emptyList()
-) : WsItem() {
+) : NamedItem() {
 
     fun toTreeItem(context: WsChartContext, parent: TreeItem<WsItemChartSeries>?): TreeItem<WsItemChartSeries> {
 

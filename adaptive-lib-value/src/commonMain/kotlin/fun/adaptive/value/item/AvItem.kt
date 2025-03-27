@@ -1,7 +1,7 @@
 package `fun`.adaptive.value.item
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.ui.workspace.model.WsItemType
+import `fun`.adaptive.model.NamedItemType
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 import kotlinx.datetime.Instant
@@ -9,7 +9,7 @@ import kotlinx.datetime.Instant
 @Adat
 data class AvItem<T>(
     override val name: String,
-    override val type: WsItemType,
+    override val type: NamedItemType,
     override val uuid: AvValueId,
     override val timestamp: Instant,
     override val status: AvStatus,

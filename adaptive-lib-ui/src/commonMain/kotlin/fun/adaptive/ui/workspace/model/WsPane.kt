@@ -1,6 +1,7 @@
 package `fun`.adaptive.ui.workspace.model
 
 import `fun`.adaptive.foundation.FragmentKey
+import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.AbstractSideBarAction
@@ -24,11 +25,11 @@ data class WsPane<D, C : WsPaneController<D>>(
 
 
     @Suppress("UNCHECKED_CAST")
-    fun accepts(item: WsItem, modifier: Set<EventModifier>) =
+    fun accepts(item: NamedItem, modifier: Set<EventModifier>) =
         controller.accepts(this as WsPaneType<D>, modifier, item)
 
     @Suppress("UNCHECKED_CAST")
-    fun load(item: WsItem, modifier: Set<EventModifier>) =
+    fun load(item: NamedItem, modifier: Set<EventModifier>) =
         controller.load(this as WsPaneType<D>, modifier, item)
 
     override val pane: WsPane<*, *>

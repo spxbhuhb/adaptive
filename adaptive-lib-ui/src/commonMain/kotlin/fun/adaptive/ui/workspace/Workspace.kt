@@ -6,6 +6,8 @@ import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.general.Observable
 import `fun`.adaptive.log.getLogger
+import `fun`.adaptive.model.NamedItem
+import `fun`.adaptive.model.NamedItemType
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.service.transport.ServiceCallTransport
@@ -51,7 +53,7 @@ class Workspace(
 
     val contexts = mutableListOf<Any>()
 
-    val contentPaneBuilders = mutableMapOf<WsItemType, MutableList<WsContentPaneBuilder>>()
+    val contentPaneBuilders = mutableMapOf<NamedItemType, MutableList<WsContentPaneBuilder>>()
 
     val theme
         get() = WorkspaceTheme.DEFAULT
@@ -171,7 +173,7 @@ class Workspace(
             WsPanePosition.RightMiddle -> toggleStore(rightMiddle, pane)
             WsPanePosition.RightBottom -> toggleStore(rightBottom, pane)
             WsPanePosition.Center -> {
-                if (pane.data is WsItem) {
+                if (pane.data is NamedItem) {
                     addContent(pane.data)
                 }
                 return // no split update is needed as center is always shown
@@ -257,13 +259,13 @@ class Workspace(
     // Content management
     // --------------------------------------------------------------------------------
 
-    fun addContentPaneBuilder(vararg itemTypes: WsItemType, builder: WsContentPaneBuilder) {
+    fun addContentPaneBuilder(vararg itemTypes: NamedItemType, builder: WsContentPaneBuilder) {
         for (itemType in itemTypes) {
             contentPaneBuilders.getOrPut(itemType) { mutableListOf() } += builder
         }
     }
 
-    fun addContent(item: WsItem, modifiers: Set<EventModifier> = emptySet()) {
+    fun addContent(item: NamedItem, modifiers: Set<EventModifier> = emptySet()) {
 
         val accepted = accept(item, modifiers)
         if (accepted) {
@@ -291,7 +293,7 @@ class Workspace(
         }
     }
 
-    fun findBuilder(type: WsItemType): WsContentPaneBuilder? {
+    fun findBuilder(type: NamedItemType): WsContentPaneBuilder? {
         var builder = contentPaneBuilders[type]?.firstOrNull()
         if (builder != null) return builder
 
@@ -311,7 +313,7 @@ class Workspace(
         return null
     }
 
-    fun accept(item: WsItem, modifiers: Set<EventModifier>): Boolean {
+    fun accept(item: NamedItem, modifiers: Set<EventModifier>): Boolean {
         lastActiveContentPane?.let {
             if (it.accepts(item, modifiers)) {
                 loadContentPane(item, modifiers, it, lastActiveContentPaneGroup !!)
@@ -330,7 +332,7 @@ class Workspace(
         return false
     }
 
-    fun accept(item: WsItem, modifiers: Set<EventModifier>, group: WsContentPaneGroup): Boolean {
+    fun accept(item: NamedItem, modifiers: Set<EventModifier>, group: WsContentPaneGroup): Boolean {
 
         for (pane in group.panes) {
             if (pane.accepts(item, modifiers)) {
@@ -342,12 +344,12 @@ class Workspace(
         return false
     }
 
-    fun loadContentPane(item: WsItem, modifiers: Set<EventModifier>, pane: WsPane<*, *>, group: WsContentPaneGroup) {
+    fun loadContentPane(item: NamedItem, modifiers: Set<EventModifier>, pane: WsPane<*, *>, group: WsContentPaneGroup) {
         // pane.load may return with a different pane, most notably the name and tooltip of the pane may change
         group.load(pane.load(item, modifiers))
     }
 
-    fun addGroupContentPane(item: WsItem, modifiers: Set<EventModifier>, pane: WsPane<*, *>) {
+    fun addGroupContentPane(item: NamedItem, modifiers: Set<EventModifier>, pane: WsPane<*, *>) {
 
         val safeGroup = lastActiveContentPaneGroup
 
@@ -373,12 +375,12 @@ class Workspace(
     // Item type management
     // --------------------------------------------------------------------------------
 
-    private val itemTypes = mutableMapOf<WsItemType, WsItemConfig>()
+    private val itemTypes = mutableMapOf<NamedItemType, WsItemConfig>()
 
-    fun addItemConfig(type: WsItemType, icon: GraphicsResourceSet, tooltip: String? = null) {
+    fun addItemConfig(type: NamedItemType, icon: GraphicsResourceSet, tooltip: String? = null) {
         itemTypes[type] = WsItemConfig(type, icon, tooltip)
     }
 
-    fun getItemConfig(type: WsItemType) = itemTypes[type] ?: WsItemConfig.DEFAULT
+    fun getItemConfig(type: NamedItemType) = itemTypes[type] ?: WsItemConfig.DEFAULT
 
 }

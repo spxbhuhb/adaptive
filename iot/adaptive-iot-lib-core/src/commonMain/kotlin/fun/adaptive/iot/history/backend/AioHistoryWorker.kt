@@ -103,7 +103,8 @@ class AioHistoryWorker : WorkerImpl<AioHistoryWorker> {
     suspend fun acquireForOperation(uuid: AioHistoryId) {
         waitFor(1.minutes) {
             historyAccessLock.use {
-                val context = checkNotNull(contexts[uuid]) { "no context for history id: $uuid" }
+                val context = contexts[uuid]
+                if (context == null) throw NoSuchElementException(uuid.toString())
                 (! context.mergeSemaphore).also { if (it) context.runningOperationCount += 1 }
             }
         }

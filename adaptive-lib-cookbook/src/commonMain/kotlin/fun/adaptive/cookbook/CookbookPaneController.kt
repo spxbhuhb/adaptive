@@ -4,19 +4,19 @@ import `fun`.adaptive.cookbook.model.CbWsRecipeItem
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
-import `fun`.adaptive.ui.workspace.model.WsItem
+import `fun`.adaptive.model.NamedItem
 
 internal class CookbookPaneController(
     val context: CbWsContext,
-) : WsPaneController<WsItem>() {
+) : WsPaneController<NamedItem>() {
 
-    override fun accepts(pane: WsPaneType<WsItem>, modifiers: Set<EventModifier>, item: WsItem): Boolean {
+    override fun accepts(pane: WsPaneType<NamedItem>, modifiers: Set<EventModifier>, item: NamedItem): Boolean {
         if (item !is CbWsRecipeItem) return false
         if (EventModifier.ALT in modifiers) return false
         return true
     }
 
-    override fun load(pane: WsPaneType<WsItem>, modifiers: Set<EventModifier>, item: WsItem): WsPaneType<WsItem> {
+    override fun load(pane: WsPaneType<NamedItem>, modifiers: Set<EventModifier>, item: NamedItem): WsPaneType<NamedItem> {
         check(item is CbWsRecipeItem)
         context.activeRecipeKey.value = item.key
         return pane.copy(name = item.name, data = item, tooltip = pane.tooltip)

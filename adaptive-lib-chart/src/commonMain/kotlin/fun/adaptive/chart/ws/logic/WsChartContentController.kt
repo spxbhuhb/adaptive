@@ -5,21 +5,20 @@ import `fun`.adaptive.chart.ws.model.WsItemChartSeries
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
-import `fun`.adaptive.ui.workspace.model.WsItem
-import `fun`.adaptive.ui.workspace.model.WsPane
+import `fun`.adaptive.model.NamedItem
 
 class WsChartContentController : WsPaneController<WsChartPaneData>() {
 
     override fun accepts(
         pane: WsPaneType<WsChartPaneData>,
-        modifiers: Set<EventModifier>, item: WsItem
+        modifiers: Set<EventModifier>, item: NamedItem
     ): Boolean {
         return (item is WsItemChartSeries)
     }
 
     override fun load(
         pane: WsPaneType<WsChartPaneData>,
-        modifiers: Set<EventModifier>, item: WsItem
+        modifiers: Set<EventModifier>, item: NamedItem
     ): WsPaneType<WsChartPaneData> {
 
         check(item is WsItemChartSeries)
