@@ -8,7 +8,7 @@ import `fun`.adaptive.ui.api.text
 import kotlinx.datetime.Instant
 
 @Adaptive
-fun timestamp(instant: Instant) : AdaptiveFragment {
-    text(instant.localizedString(), instructions())
+fun timestamp(instant: Instant?) : AdaptiveFragment {
+    text(instant?.localizedString() ?: "", instructions())
     return fragment()
 }

@@ -5,7 +5,7 @@ import `fun`.adaptive.chart.normalization.ChartNormalizer
 import `fun`.adaptive.chart.normalization.NullNormalizer
 import `fun`.adaptive.chart.ui.ChartTheme
 
-class ChartRenderContext<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
+data class ChartRenderContext<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
     val items: List<ChartItem<XT, YT, AT>>,
     val axes: List<ChartAxis<XT, YT, AT>>,
     val itemOffsetX: Double,

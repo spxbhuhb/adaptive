@@ -20,6 +20,8 @@ data class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
 
     var lastWidth = 0.0
     var lastHeight = 0.0
+    var lastStart : XT? = null
+    var lastEnd : XT? = null
 
     val normalizedData = mutableListOf<CartesianPoint<Double, Double>>()
 
@@ -67,6 +69,13 @@ data class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
     ): ChartItem<XT, YT, AT> {
 
         val out = cells
+
+        if (config.start != lastStart || config.end != lastEnd) {
+            out.clear()
+            lastStart = config.start
+            lastEnd = config.end
+        }
+
         if (out.isNotEmpty()) return this
 
         val normalizer = config.normalizer

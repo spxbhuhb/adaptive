@@ -1,15 +1,20 @@
 package `fun`.adaptive.iot.history.ui
 
+import `fun`.adaptive.chart.model.ChartAxis
+import `fun`.adaptive.chart.model.ChartRenderContext
+import `fun`.adaptive.chart.ui.temporal.doubleVerticalAxisMarkers
+import `fun`.adaptive.chart.ui.temporal.temporalHorizontalAxisMarkers
 import `fun`.adaptive.chart.ws.model.WsChartContext
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.foundation.value.adaptiveStoreFor
-import `fun`.adaptive.general.replaceFirst
+import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.graphics.canvas.api.stroke
+import `fun`.adaptive.iot.common.AioTheme
 import `fun`.adaptive.iot.generated.resources.monitoring
 import `fun`.adaptive.iot.history.AioHistoryApi
 import `fun`.adaptive.iot.history.model.AioDoubleHistoryRecord
 import `fun`.adaptive.iot.history.model.AioHistoryQuery
+import `fun`.adaptive.iot.history.ui.chart.DoubleHistoryValueNormalizer
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.resource.graphics.Graphics
@@ -19,10 +24,10 @@ import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
+import `fun`.adaptive.utility.replaceFirst
 import `fun`.adaptive.utility.secureRandom
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatDecoder
-import kotlinx.coroutines.launch
 import kotlinx.datetime.Instant
 
 class HistoryContentController(
@@ -33,11 +38,13 @@ class HistoryContentController(
         TABLE, CHART
     }
 
-    var mode = adaptiveStoreFor(Mode.CHART)
+    var mode = storeFor { Mode.CHART }
+
+    val theme = AioTheme.DEFAULT
 
     val historyService = getService<AioHistoryApi>(transport)
 
-    val chartItems = adaptiveStoreFor(emptyList<HistoryChartItem>())
+    val chartItems = storeFor { emptyList<HistoryChartItem>() }
 
     val instructionSets = mutableListOf<AdaptiveInstructionGroup>(
         instructionsOf(stroke(0x1f77b4)), // blue
@@ -57,6 +64,33 @@ class HistoryContentController(
         instructionsOf(stroke(0xc5b0d5)), // light purple
         instructionsOf(stroke(0xc49c94))  // light brown
     )
+
+    val xAxis = ChartAxis<Instant, AioDoubleHistoryRecord, AvItem<*>>(
+        size = 49.0,
+        offset = 50.0,
+        axisLine = true,
+        WsChartContext.BASIC_HORIZONTAL_AXIS,
+        ::temporalHorizontalAxisMarkers
+    )
+
+    val yAxis = ChartAxis<Instant, AioDoubleHistoryRecord, AvItem<*>>(
+        size = 49.0,
+        offset = 49.0,
+        axisLine = true,
+        WsChartContext.BASIC_VERTICAL_AXIS,
+        { c, a, s -> doubleVerticalAxisMarkers(c, a, s) { it.value } }
+    )
+
+    var chartContext = storeFor { chartRenderContext(emptyList<HistoryChartItem>()) }
+
+    private fun chartRenderContext(items: List<HistoryChartItem>) =
+        ChartRenderContext<Instant, AioDoubleHistoryRecord, AvItem<*>>(
+            items,
+            listOf(xAxis, yAxis),
+            50.0,
+            50.0,
+            { DoubleHistoryValueNormalizer(it) }
+        )
 
     override fun accepts(pane: WsPaneType<HistoryBrowserWsItem>, modifiers: Set<EventModifier>, item: NamedItem): Boolean {
         return (item is HistoryBrowserWsItem)
@@ -108,14 +142,22 @@ class HistoryContentController(
                 newChartItems += it
             }
 
-            scope.launch {
+            io {
                 val records = query(item)
-                val copy = chartItem.copy(sourceData = records, loading = false)
-                chartItems.replaceFirst(copy) { it.attachment?.uuid == item.uuid }
+                ui {
+                    val itemCopy = chartItem.copy(sourceData = records, loading = false)
+
+                    val context = chartContext.value
+                    val contextCopy = context.copy(
+                        items = context.items.toMutableList().replaceFirst(itemCopy) { it.attachment?.uuid == item.uuid }
+                    )
+
+                    chartContext.value = contextCopy
+                }
             }
         }
 
-        chartItems.value = newChartItems
+        chartContext.value = chartRenderContext(newChartItems)
     }
 
     suspend fun query(item: AvItem<*>): List<AioDoubleHistoryRecord> {

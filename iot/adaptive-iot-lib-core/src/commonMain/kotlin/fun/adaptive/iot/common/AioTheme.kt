@@ -116,7 +116,7 @@ class AioTheme {
         zIndex { 10000 }
     )
 
-    val historyColumns = colTemplate(160.dp, 1.fr, 84.dp, 84.dp)
+    val singleHistoryColumns = colTemplate(160.dp, 1.fr, 84.dp, 84.dp)
 
     val historyListHeader = instructionsOf(
         height { 42.dp }, // depends marginBottom
@@ -128,7 +128,6 @@ class AioTheme {
         backgrounds.surface,
         border(colors.outline.opaque(0.4f), 1.dp),
         maxWidth,
-        historyColumns,
         marginBottom { 8.dp }
     )
 
@@ -143,7 +142,6 @@ class AioTheme {
         backgrounds.surface,
         border(colors.outline.opaque(0.4f), 1.dp),
         maxWidth,
-        historyColumns
     )
 
     companion object {
