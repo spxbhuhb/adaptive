@@ -7,6 +7,7 @@ import `fun`.adaptive.value.item.AvMarker
 
 @Adat
 class AioComputedPointSpec(
+    override val displayAddress: String = "",
     override val notes: String = "",
     override val conversion: CurValConversion? = null,
     val dependencyMarker: AvMarker

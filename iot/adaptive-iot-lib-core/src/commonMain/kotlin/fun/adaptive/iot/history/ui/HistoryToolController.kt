@@ -5,6 +5,7 @@ import `fun`.adaptive.iot.generated.resources.historicalData
 import `fun`.adaptive.foundation.value.adaptiveStoreFor
 import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.iot.device.DeviceMarkers
+import `fun`.adaptive.iot.point.AioPointSpec
 import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.iot.ws.AioWsContext.Companion.WSIT_HISTORY
@@ -176,9 +177,10 @@ class HistoryToolController(
         val hisTreeItems = hisPoints
             .sortedBy { it.name }
             .map { hisPoint ->
+                val specific = hisPoint.specific as? AioPointSpec
                 TreeItem<AvValueId>(
                     Graphics.database,
-                    hisPoint.name,
+                    hisPoint.name + " " + specific?.displayAddress,
                     hisPoint.uuid,
                     parent = treeItem
                 ).also {
