@@ -16,6 +16,7 @@ import `fun`.adaptive.ui.filter.quickFilter
 import `fun`.adaptive.ui.input.datetime.dateInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.ui.platform.download.downloadFile
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.utility.localDate
@@ -81,17 +82,4 @@ fun title(
             dateInput(end) { v -> end = v }
         }
     }
-}
-
-fun downloadReport(controller: HistoryContentController) {
-
-
-//    val out = StringBuilder()
-//    for (contentItem in contentItems) {
-//        for (record in contentItem.records) {
-//            out.append("${contentItem.point.name};${record.timestamp.localizedString()};${record.value};${record.flags}\n")
-//        }
-//    }
-//
-//    downloadFile(out.toString().encodeToByteArray(), "history.csv", "text/csv")
 }

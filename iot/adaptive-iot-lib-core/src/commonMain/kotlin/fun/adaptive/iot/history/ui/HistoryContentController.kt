@@ -1,6 +1,8 @@
 package `fun`.adaptive.iot.history.ui
 
+import `fun`.adaptive.chart.calculation.CalculationContext
 import `fun`.adaptive.chart.model.ChartAxis
+import `fun`.adaptive.chart.model.ChartItem
 import `fun`.adaptive.chart.model.ChartRenderContext
 import `fun`.adaptive.chart.ui.temporal.doubleVerticalAxisMarkers
 import `fun`.adaptive.chart.ui.temporal.temporalHorizontalAxisMarkers
@@ -28,7 +30,9 @@ import `fun`.adaptive.utility.replaceFirst
 import `fun`.adaptive.utility.secureRandom
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatDecoder
+import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
+import kotlin.time.Duration.Companion.minutes
 
 class HistoryContentController(
     override val workspace: Workspace
@@ -188,4 +192,27 @@ class HistoryContentController(
     fun generateNewInstructionSet(): AdaptiveInstructionGroup {
         return instructionsOf(stroke(secureRandom(1).first())).also { instructionSets += it }
     }
+
+    fun multiTableColumns(
+        context: ChartRenderContext<Instant, AioDoubleHistoryRecord, AvItem<*>>
+    ): Pair<List<Instant?>, List<ChartItem<Instant, AioDoubleHistoryRecord, AvItem<*>>>> {
+
+        val iStart = context.range?.xStart ?: now()
+        val iEnd = context.range?.xEnd ?: now()
+
+        val cc = CalculationContext<Instant, AioDoubleHistoryRecord, AvItem<*>>(
+            iStart,
+            iEnd,
+            context.normalizer.normalizedInterval(now(), now() + 15.minutes),
+            context.normalizer
+        ) { chartItem, start, end ->
+            chartItem.sourceData[start].y
+        }
+
+        val markerColumn = cc.markers
+        val valueColumns = context.items.map { it.normalize(cc.normalizer).prepareCells(cc) }
+
+        return markerColumn to valueColumns
+    }
+
 }

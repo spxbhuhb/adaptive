@@ -1,11 +1,9 @@
 package `fun`.adaptive.iot.history.ui.table
 
-import `fun`.adaptive.chart.calculation.CalculationContext
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.common.timestamp
 import `fun`.adaptive.iot.generated.resources.timestamp
-import `fun`.adaptive.iot.history.model.AioDoubleHistoryRecord
 import `fun`.adaptive.iot.history.ui.HistoryContentController
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.colTemplate
@@ -17,10 +15,6 @@ import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.textMedium
 import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.utility.format
-import `fun`.adaptive.value.item.AvItem
-import kotlinx.datetime.Clock.System.now
-import kotlinx.datetime.Instant
-import kotlin.time.Duration.Companion.minutes
 
 @Adaptive
 fun multiHistoryTableHeader(
@@ -44,20 +38,9 @@ fun multiHistoryTableContent(
 ) {
     val context = valueFrom { controller.chartContext }
 
-    val iStart = context.range?.xStart ?: now()
-    val iEnd = context.range?.xEnd ?: now()
-
-    val cc = CalculationContext<Instant, AioDoubleHistoryRecord, AvItem<*>>(
-        iStart,
-        iEnd,
-        context.normalizer.normalizedInterval(now(), now() + 15.minutes),
-        context.normalizer
-    ) { chartItem, start, end ->
-        chartItem.sourceData[start].y
-    }
-
-    val markerColumn = cc.markers
-    val valueColumns = context.items.map { it.normalize(cc.normalizer).prepareCells(cc) }
+    val columns = controller.multiTableColumns(context)
+    val markerColumn = columns.first
+    val valueColumns = columns.second
 
     val template = colTemplate(160.dp, 1.fr repeat context.items.size)
 
