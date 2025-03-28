@@ -33,7 +33,7 @@ fun tabContainer(
     grid(instructions()) {
         theme.outerContainer
 
-        header(model, theme, activeTab, { activeTab = it }, _fixme_adaptive_content)
+        header(model, theme, activeTab, _fixme_adaptive_content)
 
         if (activeTab != null) {
             actualize(activeTab.key, emptyInstructions, activeTab.model)
@@ -86,7 +86,10 @@ fun tabHandle(
 
                 if (active || hover) {
                     actionIcon(Graphics.close, tooltip = model.closeToolTip, theme = smallCloseIconTheme) ..
-                        onClick { model.closeFun(model, tab) }
+                        onClick {
+                            it.stopPropagation()
+                            model.closeFun(model, tab)
+                        }
                 }
             }
         }
@@ -98,7 +101,6 @@ private fun header(
     model: TabContainer,
     theme: TabTheme,
     activeTab: TabPane?,
-    switchTab: (tab: TabPane) -> Unit,
     @Adaptive
     _fixme_adaptive_content: TabHandleFun
 ) {
@@ -114,7 +116,7 @@ private fun header(
             theme.tabHandleList
             for (tab in model.tabs) {
                 box {
-                    onClick { switchTab(tab) }
+                    onClick { model.switchFun(model, tab) }
                     _fixme_adaptive_content(model, tab, activeTab, theme)
                 }
             }

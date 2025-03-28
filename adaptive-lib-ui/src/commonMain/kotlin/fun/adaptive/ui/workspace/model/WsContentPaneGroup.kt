@@ -67,15 +67,25 @@ class WsContentPaneGroup(
                     active = (wsPane.uuid == activePane.uuid)
                 )
             },
+            switchFun = ::switchTab,
             closeFun = ::closeTab
         )
 
+    fun switchTab(model : TabContainer, pane : TabPane) {
+        val newTabs = model.switchTab(pane)
+        activePane = newTabs.tabs.first { it.active }.model as WsPane<*, *>
+        tabContainer.value = newTabs
+    }
+
     fun closeTab(model : TabContainer, pane : TabPane) {
         panes.removeAll { it.uuid == pane.uuid }
+
         if (panes.isEmpty()) {
             workspace.removePaneGroup(this)
         } else {
-            tabContainer.value = model.removePane(pane)
+            val newTabs = model.removeTab(pane)
+            activePane = newTabs.tabs.first { it.active }.model as WsPane<*, *>
+            tabContainer.value = newTabs
         }
     }
 
