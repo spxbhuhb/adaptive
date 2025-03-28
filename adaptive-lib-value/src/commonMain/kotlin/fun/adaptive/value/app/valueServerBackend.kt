@@ -1,9 +1,7 @@
 package `fun`.adaptive.value.app
 
-import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.value.AvValueServerService
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.persistence.AbstractValuePersistence
 import `fun`.adaptive.value.persistence.NoPersistence
@@ -14,7 +12,5 @@ fun valueServerBackend(
 ) {
 
     worker { AvValueWorker(persistence) }
-    service { AvValueServerService() }
-
 
 }

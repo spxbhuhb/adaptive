@@ -8,13 +8,13 @@ import `fun`.adaptive.auth.context.getPrincipalIdOrNull
 import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.auth.model.Principal
 import `fun`.adaptive.backend.builtin.ServiceImpl
-import `fun`.adaptive.lib.auth.service.PrincipalService
+import `fun`.adaptive.auth.backend.AuthPrincipalService
 import `fun`.adaptive.lib.auth.store.PrincipalTable
 
 class BasicAccountService : ServiceImpl<BasicAccountService>, BasicAccountApi {
 
     override suspend fun accounts(): List<BasicAccountSummary> {
-        ensureOneOf(*PrincipalService.getRoles)
+        ensureOneOf(*AuthPrincipalService.getRoles)
 
         val accounts = BasicAccountTable.all()
         val principals = PrincipalTable.all().associateBy { it.id }

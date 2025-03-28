@@ -1,6 +1,6 @@
 package `fun`.adaptive.app
 
-import `fun`.adaptive.auth.api.SessionApi
+import `fun`.adaptive.auth.api.AuthSessionApi
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.AdaptiveAdapter
@@ -53,7 +53,7 @@ abstract class BrowserApplication<WT : Any, ADT : UiClientApplicationData> : UiC
             }
 
             // this must be after backend init as backend init starts the transport
-            appData.sessionOrNull = getService<SessionApi>(transport).getSession()
+            appData.sessionOrNull = getService<AuthSessionApi>(transport).getSession()
 
             initWorkspace()
 

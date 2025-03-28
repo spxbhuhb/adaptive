@@ -5,10 +5,10 @@
 package `fun`.adaptive.auth.context
 
 import `fun`.adaptive.auth.model.AccessDenied
-import `fun`.adaptive.auth.model.Principal
-import `fun`.adaptive.auth.model.Role
+import `fun`.adaptive.auth.model.AuthPrincipalId
+import `fun`.adaptive.auth.model.AuthRole
+import `fun`.adaptive.auth.model.AuthRoleId
 import `fun`.adaptive.backend.builtin.ServiceImpl
-import `fun`.adaptive.utility.UUID
 
 /**
  * Ensures there is no service context for the call.
@@ -27,9 +27,9 @@ fun ServiceImpl<*>.ensureInternal() {
  *
  * @throws   AccessDenied  The call is not internal and the principal does not have the given role.
  */
-fun ServiceImpl<*>.ensureHasOrInternal(roleUuid: UUID<Role>) {
+fun ServiceImpl<*>.ensureHasOrInternal(roleId: AuthRoleId) {
     if (serviceContext.isInternal()) return
-    ensureHas(roleUuid)
+    ensureHas(roleId)
 }
 
 /**
@@ -46,8 +46,8 @@ fun ServiceImpl<*>.ensureLoggedIn() {
  *
  * @throws   AccessDenied  At least one of the roles is not in the context.
  */
-fun ServiceImpl<*>.ensureHas(roleUuid: UUID<Role>) {
-    if (! serviceContext.has(roleUuid)) throw AccessDenied()
+fun ServiceImpl<*>.ensureHas(roleId: AuthRoleId) {
+    if (! serviceContext.has(roleId)) throw AccessDenied()
 }
 
 /**
@@ -55,7 +55,7 @@ fun ServiceImpl<*>.ensureHas(roleUuid: UUID<Role>) {
  *
  * @throws   AccessDenied  At least one of the roles is not in the context.
  */
-fun ServiceImpl<*>.ensureAll(vararg roles: Role) {
+fun ServiceImpl<*>.ensureAll(vararg roles: AuthRole) {
     if (! serviceContext.hasAll(*roles)) throw AccessDenied()
 }
 
@@ -64,8 +64,8 @@ fun ServiceImpl<*>.ensureAll(vararg roles: Role) {
  *
  * @throws   AccessDenied  At least one of the roles is not in the context.
  */
-fun ServiceImpl<*>.ensureAll(vararg roles: UUID<Role>) {
-    if (! serviceContext.hasAll(*roles)) throw AccessDenied()
+fun ServiceImpl<*>.ensureAll(vararg roleIds: AuthRoleId) {
+    if (! serviceContext.hasAll(*roleIds)) throw AccessDenied()
 }
 
 /**
@@ -73,7 +73,7 @@ fun ServiceImpl<*>.ensureAll(vararg roles: UUID<Role>) {
  *
  * @throws   AccessDenied  None of the roles are in the context.
  */
-fun ServiceImpl<*>.ensureOneOf(vararg roles: Role) {
+fun ServiceImpl<*>.ensureOneOf(vararg roles: AuthRole) {
     if (! serviceContext.hasOneOf(*roles)) throw AccessDenied()
 }
 
@@ -82,8 +82,8 @@ fun ServiceImpl<*>.ensureOneOf(vararg roles: Role) {
  *
  * @throws   AccessDenied  None of the roles are in the context.
  */
-fun ServiceImpl<*>.ensureOneOf(vararg roleUuids: UUID<Role>) {
-    if (! serviceContext.hasOneOf(*roleUuids)) throw AccessDenied()
+fun ServiceImpl<*>.ensureOneOf(vararg roleIds: AuthRoleId) {
+    if (! serviceContext.hasOneOf(*roleIds)) throw AccessDenied()
 }
 
 /**
@@ -107,17 +107,17 @@ fun ensuredBy(block: () -> Boolean) {
 /**
  * Ensure that the service context runs in the name of the principal specified.
  */
-fun ServiceImpl<*>.ensurePrincipal(principal: UUID<Principal>) {
-    ensurePrincipal(serviceContext.ofPrincipal(principal))
+fun ServiceImpl<*>.ensurePrincipal(principalId: AuthPrincipalId) {
+    ensurePrincipal(serviceContext.ofPrincipal(principalId))
 }
 
 /**
  * Ensure that the service context runs in the name of the principal specified **OR**
  * it has **AT LEASE ONE** of the specified roles.
  */
-fun ServiceImpl<*>.ensurePrincipalOrOneOf(principal: UUID<Principal>, roles: Array<UUID<Role>>) {
-    if (serviceContext.ofPrincipal(principal)) return
-    ensureOneOf(*roles)
+fun ServiceImpl<*>.ensurePrincipalOrOneOf(principalId: AuthPrincipalId, roleIds: Array<AuthRoleId>) {
+    if (serviceContext.ofPrincipal(principalId)) return
+    ensureOneOf(*roleIds)
 }
 
 /**

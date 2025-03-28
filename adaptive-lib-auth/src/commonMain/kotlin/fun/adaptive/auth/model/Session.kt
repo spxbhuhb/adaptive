@@ -14,13 +14,13 @@ import kotlinx.datetime.Instant
 @Adat
 class Session(
     override val id: UUID<Session>,
-    override val principalOrNull: UUID<Principal>?,
+    override val principalOrNull: AuthPrincipalId?,
     val securityCode: String,
     val createdAt: Instant,
     val vmCreatedAt: Long,
     var lastActivity: Long, // TODO does the synchronization of ConcurrentHashMap enough for lastActivity?
-    val roles: List<Role>
-) : AdatEntity<Session>, ServiceSession {
+    val roles: Set<AuthRoleId>
+) : ServiceSession {
 
     override fun addSessionCleanup(cleanup: CleanupHandler<ServiceSession>) {
         TODO("Not yet implemented")

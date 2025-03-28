@@ -4,18 +4,17 @@
 
 package `fun`.adaptive.auth.api
 
-import `fun`.adaptive.auth.model.Principal
-import `fun`.adaptive.auth.model.Role
+import `fun`.adaptive.auth.model.AuthPrincipalId
+import `fun`.adaptive.auth.model.AuthRoleId
 import `fun`.adaptive.auth.model.Session
 import `fun`.adaptive.service.ServiceApi
-import `fun`.adaptive.utility.UUID
 
 @ServiceApi
-interface SessionApi {
+interface AuthSessionApi {
 
-    suspend fun owner(): UUID<Principal>?
+    suspend fun owner(): AuthPrincipalId?
 
-    suspend fun roles(): List<UUID<Role>>
+    suspend fun roles(): Set<AuthRoleId>
 
     suspend fun login(name: String, password: String): Session
 

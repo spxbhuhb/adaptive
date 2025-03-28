@@ -2,10 +2,10 @@ package `fun`.adaptive.app.basic.auth.ui
 
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.gpp_maybe
 import `fun`.adaptive.adat.store.copyOf
-import `fun`.adaptive.auth.api.PrincipalApi
-import `fun`.adaptive.auth.api.RoleApi
+import `fun`.adaptive.auth.api.AuthPrincipalApi
+import `fun`.adaptive.auth.api.AuthRoleApi
 import `fun`.adaptive.auth.model.Principal
-import `fun`.adaptive.auth.model.Role
+import `fun`.adaptive.auth.model.AuthRole
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.Independent
 import `fun`.adaptive.foundation.adapter
@@ -34,10 +34,10 @@ fun accountEditor(account: AccountEditorData? = null, close: () -> Unit) {
     var copy = copyOf { account ?: AccountEditorData() }
 
     @Independent
-    val principal = fetch { getService<PrincipalApi>(adapter().transport).get(account?.id?.cast() ?: UUID.nil()) }
+    val principal = fetch { getService<AuthPrincipalApi>(adapter().transport).getOrNull(account?.id?.cast() ?: UUID.nil()) }
 
-    val knownRoles = fetch { getService<RoleApi>(adapter().transport).all() } ?: emptyList()
-    val principalRoles = fetch { getService<RoleApi>(adapter().transport).rolesOf(account?.id?.cast() ?: UUID.nil(), null) } ?: emptyList()
+    val knownRoles = fetch { getService<AuthRoleApi>(adapter().transport).all() } ?: emptyList()
+    val principalRoles = fetch { getService<AuthRoleApi>(adapter().transport).rolesOf(account?.id?.cast() ?: UUID.nil(), null) } ?: emptyList()
 
     val rowCount = if (account == null) 4 else 6
 
@@ -159,7 +159,7 @@ fun loginCounters(principal: Principal) {
 }
 
 @Adaptive
-fun roles(knownRoles: List<Role>, principalRoles: List<Role>) {
+fun roles(knownRoles: List<AuthRole>, principalRoles: List<AuthRole>) {
 
     var selectedRoles = principalRoles
 

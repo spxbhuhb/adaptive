@@ -7,20 +7,16 @@ package `fun`.adaptive.app.ws.auth.signin
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.*
 import `fun`.adaptive.adat.api.touchAndValidate
 import `fun`.adaptive.adat.store.copyOf
-import `fun`.adaptive.app.UiClientApplication
-import `fun`.adaptive.app.UiClientApplication.Companion.uiApplication
-import `fun`.adaptive.app.UiClientApplicationData
 import `fun`.adaptive.app.basic.auth.model.BasicSignIn
 import `fun`.adaptive.app.ws.BasicAppWsModule
 import `fun`.adaptive.app.ws.BasicAppWsModule.Companion.wsApplication
-import `fun`.adaptive.auth.api.SessionApi
+import `fun`.adaptive.auth.api.AuthSessionApi
 import `fun`.adaptive.document.ui.direct.h1
 import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.document.ui.direct.markdown
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.adapter
-import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
@@ -33,7 +29,6 @@ import `fun`.adaptive.ui.snackbar.failNotification
 import `fun`.adaptive.ui.snackbar.warningNotification
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
-import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.utility.firstInstance
 import kotlinx.coroutines.launch
 
@@ -74,7 +69,7 @@ fun largeSignIn(): AdaptiveFragment {
 
                 adapter().scope.launch {
                     try {
-                        app.appData.sessionOrNull = getService<SessionApi>(adapter().transport).login(signIn.login, signIn.password)
+                        app.appData.sessionOrNull = getService<AuthSessionApi>(adapter().transport).login(signIn.login, signIn.password)
                         app.workspace.addContent(basicAppWsModule.HOME_CONTENT_ITEM)
                         app.onSignInSuccess()
                     } catch (t: Throwable) {

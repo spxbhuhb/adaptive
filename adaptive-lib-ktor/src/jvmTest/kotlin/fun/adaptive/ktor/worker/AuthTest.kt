@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.ktor.worker
 
-import `fun`.adaptive.auth.api.SessionApi
+import `fun`.adaptive.auth.api.AuthSessionApi
 import `fun`.adaptive.auth.model.AccessDenied
 import `fun`.adaptive.auth.model.Credential
 import `fun`.adaptive.auth.model.CredentialType
@@ -16,7 +16,7 @@ import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.lib.auth.authJvm
-import `fun`.adaptive.lib.auth.crypto.BCrypt
+import `fun`.adaptive.auth.util.BCrypt
 import `fun`.adaptive.lib.auth.store.CredentialTable
 import `fun`.adaptive.lib.auth.store.PrincipalTable
 import `fun`.adaptive.reflect.CallSiteName
@@ -60,7 +60,7 @@ class AuthTest {
 
         runBlocking {
             if (login) {
-                getService<SessionApi>(clientBackend.transport).login("admin", "stuff")
+                getService<AuthSessionApi>(clientBackend.transport).login("admin", "stuff")
                 delay(100) // let the websocket disconnect
             }
 
@@ -107,7 +107,7 @@ class AuthTest {
     @Test
     fun loggedInAfterLogout() {
         authTest(login = true) {
-            getService<SessionApi>(it.transport).logout()
+            getService<AuthSessionApi>(it.transport).logout()
             delay(100) // let the websocket disconnect
 
             assertFailsWith(AccessDenied::class) {

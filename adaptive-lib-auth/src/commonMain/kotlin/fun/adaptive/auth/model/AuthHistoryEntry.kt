@@ -13,21 +13,17 @@ import kotlinx.datetime.Instant
 @Adat
 class AuthHistoryEntry(
 
-    override val id: UUID<AuthHistoryEntry>,
+    val uuid: UUID<AuthHistoryEntry>,
 
     val event: String,
-    val executedBy: UUID<Principal>?,
+    val executedBy: AuthPrincipalId?,
     val executedAt: Instant,
 
     val session: UUID<Session>?,
-    val principal: UUID<Principal>?,
-    val role: UUID<Role>?,
-    val roleGroup: UUID<Role>?,
+    val principal: AuthPrincipalId?,
+    val role: AuthRoleId?,
+    val roleGroup: AuthRoleId?,
 
     val result: AuthenticationResult?
 
-) : AdatEntity<AuthHistoryEntry> {
-
-    companion object : AdatCompanion<AuthHistoryEntry>
-
-}
+)

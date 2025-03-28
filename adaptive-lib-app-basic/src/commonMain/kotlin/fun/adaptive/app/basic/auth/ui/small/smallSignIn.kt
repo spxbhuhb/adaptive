@@ -7,7 +7,7 @@ package `fun`.adaptive.app.basic.auth.ui.small
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.*
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.basic.auth.model.BasicSignIn
-import `fun`.adaptive.auth.api.SessionApi
+import `fun`.adaptive.auth.api.AuthSessionApi
 import `fun`.adaptive.document.ui.direct.h1
 import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.document.ui.direct.markdown
@@ -59,7 +59,7 @@ fun smallSignIn(): AdaptiveFragment {
             button(Strings.signInButton) .. maxWidth .. onClick {
                 CoroutineScope(Dispatchers.Default).launch {
                     try {
-                        getService<SessionApi>(adapter().transport).login(signIn.login, signIn.password)
+                        getService<AuthSessionApi>(adapter().transport).login(signIn.login, signIn.password)
                         successNotification(Strings.signInSuccess)
                     } catch (t: Throwable) {
                         t.printStackTrace()

@@ -1,6 +1,6 @@
 package `fun`.adaptive.app.sidebar.ui
 
-import `fun`.adaptive.auth.api.SessionApi
+import `fun`.adaptive.auth.api.AuthSessionApi
 import `fun`.adaptive.auto.api.autoCollection
 import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.foundation.*
@@ -297,7 +297,7 @@ fun appIcon(
 fun logout(appData: BasicAppData) {
     actionIcon(Graphics.power_settings_new) .. alignSelf.center .. onClick {
         adapter().scope.launch {
-            getService<SessionApi>(adapter().transport).logout()
+            getService<AuthSessionApi>(adapter().transport).logout()
             appData.onLogout()
         }
     }

@@ -4,10 +4,9 @@
 
 package `fun`.adaptive.auth.context
 
-import `fun`.adaptive.auth.model.Principal
+import `fun`.adaptive.auth.model.AuthPrincipalId
 import `fun`.adaptive.auth.model.Session
 import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.utility.UUID
 
 /**
  * Get the current session of the service context.
@@ -37,4 +36,4 @@ fun ServiceContext.getPrincipalId() =
  */
 @Suppress("UNCHECKED_CAST")
 fun ServiceContext.getPrincipalIdOrNull() =
-    sessionOrNull?.principalOrNull as? UUID<Principal>
+    sessionOrNull?.principalOrNull as? AuthPrincipalId

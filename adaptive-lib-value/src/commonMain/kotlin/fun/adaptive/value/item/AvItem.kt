@@ -2,21 +2,23 @@ package `fun`.adaptive.value.item
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.model.NamedItemType
+import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
+import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
 
 @Adat
 data class AvItem<T>(
     override val name: String,
     override val type: NamedItemType,
-    override val uuid: AvValueId,
-    override val timestamp: Instant,
-    override val status: AvStatus,
-    override val parentId: AvValueId?,
+    override val uuid: AvValueId = uuid7(),
+    override val timestamp: Instant = now(),
+    override val status: AvStatus = AvStatus.OK,
+    override val parentId: AvValueId? = null,
     val friendlyId: FriendlyItemId,
-    val markersOrNull: AvMarkerMap?,
-    val specific: T?
+    val markersOrNull: AvMarkerMap? = null,
+    val specific: T? = null
 ) : AvValue() {
 
     val markers: AvMarkerMap

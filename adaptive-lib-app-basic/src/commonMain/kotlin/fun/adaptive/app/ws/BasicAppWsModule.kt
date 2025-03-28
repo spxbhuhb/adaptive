@@ -6,7 +6,7 @@ import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.local_police
 import `fun`.adaptive.app.UiClientApplication
 import `fun`.adaptive.app.ws.main.backend.WsAppBackendFragmentFactory
 import `fun`.adaptive.app.ws.main.frontend.WsAppFrontendFragmentFactory
-import `fun`.adaptive.auth.api.SessionApi
+import `fun`.adaptive.auth.api.AuthSessionApi
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -149,7 +149,7 @@ class BasicAppWsModule<AT :  UiClientApplication<Workspace, *>> : AppModule<Work
             null
         ) {
             io {
-                getService<SessionApi>(transport).logout()
+                getService<AuthSessionApi>(transport).logout()
                 ui {
                     application.onSignOut()
                 }

@@ -8,7 +8,7 @@ import `fun`.adaptive.app.basic.auth.ui.responsive.responsive
 import `fun`.adaptive.app.basic.auth.ui.small.smallSignIn
 import `fun`.adaptive.app.basic.util.StringArgument
 import `fun`.adaptive.app.basic.util.document
-import `fun`.adaptive.auth.api.SessionApi
+import `fun`.adaptive.auth.api.AuthSessionApi
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.backend.backend
@@ -80,7 +80,7 @@ fun basicAppMain() {
         }
 
         appData.transport = transport
-        appData.session = getService<SessionApi>(transport).getSession()
+        appData.session = getService<AuthSessionApi>(transport).getSession()
 
         if (appData.session != null) {
             val account = getService<BasicAccountApi>(transport).account()

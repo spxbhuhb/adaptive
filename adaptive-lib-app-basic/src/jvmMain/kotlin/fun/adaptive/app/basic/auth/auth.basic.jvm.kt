@@ -10,9 +10,9 @@ import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.store
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.lib.auth.authJvm
-import `fun`.adaptive.lib.auth.crypto.BCrypt
-import `fun`.adaptive.lib.auth.service.PrincipalService
-import `fun`.adaptive.lib.auth.service.RoleService
+import `fun`.adaptive.auth.util.BCrypt
+import `fun`.adaptive.auth.backend.AuthPrincipalService
+import `fun`.adaptive.auth.backend.AuthRoleService
 import `fun`.adaptive.lib.auth.store.*
 import `fun`.adaptive.utility.UUID
 import kotlinx.datetime.Clock.System.now
@@ -28,7 +28,7 @@ fun authBasicJvm() {
 
 object AuthBasicInit {
 
-    fun role(name: String): Role {
+    fun role(name: String): AuthRole {
         val existing = RoleTable.getByNameOrNull(name)
         if (existing != null) return existing
 
@@ -76,13 +76,13 @@ object AuthBasicInit {
             val soPrincipal = account("so", "Security Officer", password)
             grant(soRole, soPrincipal)
 
-            PrincipalService.addRoles += soRole.id
-            PrincipalService.getRoles += soRole.id
-            PrincipalService.updateRoles += soRole.id
+            AuthPrincipalService.addRoles += soRole.id
+            AuthPrincipalService.getRoles += soRole.id
+            AuthPrincipalService.updateRoles += soRole.id
 
-            RoleService.addRoles += soRole.id
-            RoleService.getRoles += soRole.id
-            RoleService.updateRoles += soRole.id
+            AuthRoleService.addRoles += soRole.id
+            AuthRoleService.getRoles += soRole.id
+            AuthRoleService.updateRoles += soRole.id
         }
 
     }

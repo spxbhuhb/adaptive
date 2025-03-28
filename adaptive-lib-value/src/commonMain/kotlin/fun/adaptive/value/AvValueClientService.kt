@@ -17,7 +17,6 @@ class AvValueClientService : ServiceImpl<AvValueClientService>, AvValueApi {
     }
 
     override suspend fun process(operation: AvValueOperation) {
-        // publicAccess()
         worker.queueOperation(operation)
     }
 

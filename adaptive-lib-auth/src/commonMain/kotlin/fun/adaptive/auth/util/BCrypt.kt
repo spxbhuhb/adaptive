@@ -14,10 +14,11 @@
 @file:Suppress("DuplicatedCode")
 @file:OptIn(ExperimentalUnsignedTypes::class)
 
-package `fun`.adaptive.lib.auth.crypto
+package `fun`.adaptive.auth.util
 
-import java.io.UnsupportedEncodingException
-import java.security.SecureRandom
+import `fun`.adaptive.utility.secureRandomBytes
+import kotlin.jvm.JvmOverloads
+import kotlin.jvm.JvmStatic
 
 /**
  * BCrypt implements OpenBSD-style Blowfish password hashing using
@@ -550,7 +551,7 @@ class BCrypt {
         @Throws(IllegalArgumentException::class)
         private fun encodeBase64(d: ByteArray, len: Int): String {
             var off = 0
-            val rs = StringBuffer()
+            val rs = StringBuilder()
             var c1: Int
             var c2: Int
             require(! (len <= 0 || len > d.size)) { "Invalid len" }
@@ -600,7 +601,7 @@ class BCrypt {
         @Suppress("SpellCheckingInspection", "SameParameterValue")
         @Throws(IllegalArgumentException::class)
         private fun decodeBase64(s: String, maxolen: Int): ByteArray {
-            val rs = StringBuffer()
+            val rs = StringBuilder()
             var off = 0
             val slen = s.length
             var olen = 0
@@ -674,7 +675,7 @@ class BCrypt {
             var minor = 0.toChar()
             val rounds: Int
             val off: Int
-            val rs = StringBuffer()
+            val rs = StringBuilder()
             require(! (salt[0] != '$' || salt[1] != '2')) { "Invalid salt version" }
             if (salt[2] == '$') off = 3 else {
                 minor = salt[2]
@@ -686,11 +687,7 @@ class BCrypt {
             require(salt[off + 2] <= '$') { "Missing salt rounds" }
             rounds = salt.substring(off, off + 2).toInt()
             realSalt = salt.substring(off + 3, off + 25)
-            passwordb = try {
-                (password + if (minor >= 'a') "\u0000" else "").toByteArray(charset("UTF-8"))
-            } catch (uee: UnsupportedEncodingException) {
-                throw AssertionError("UTF-8 is not supported")
-            }
+            passwordb = (password + if (minor >= 'a') "\u0000" else "").encodeToByteArray()
             val saltb: ByteArray = decodeBase64(realSalt, BCRYPT_SALT_LEN)
             hashed = BCrypt().cryptRaw(
                 passwordb, saltb, rounds,
@@ -718,14 +715,12 @@ class BCrypt {
          * @param log_rounds    the log2 of the number of rounds of
          * hashing to apply - the work factor therefore increases as
          * 2**log_rounds.
-         * @param random        an instance of SecureRandom to use
          * @return    an encoded salt value
          */
         @JvmOverloads
-        fun gensalt(log_rounds: Int = GENSALT_DEFAULT_LOG2_ROUNDS, random: SecureRandom = SecureRandom()): String {
-            val rs = StringBuffer()
-            val rnd = ByteArray(BCRYPT_SALT_LEN)
-            random.nextBytes(rnd)
+        fun gensalt(log_rounds: Int = GENSALT_DEFAULT_LOG2_ROUNDS): String {
+            val rs = StringBuilder()
+            val rnd = secureRandomBytes(BCRYPT_SALT_LEN)
             rs.append("$2a$")
             if (log_rounds < 10) rs.append("0")
             require(log_rounds <= 30) { "log_rounds exceeds maximum (30)" }
@@ -744,15 +739,11 @@ class BCrypt {
          */
         @JvmStatic
         fun checkpw(plaintext: String, hashed: String): Boolean {
-            val hashedBytes: UByteArray
-            val tryBytes: UByteArray
-            try {
-                val tryPw = hashpw(plaintext, hashed)
-                hashedBytes = hashed.toByteArray(charset("UTF-8")).asUByteArray()
-                tryBytes = tryPw.toByteArray(charset("UTF-8")).asUByteArray()
-            } catch (uee: UnsupportedEncodingException) {
-                return false
-            }
+
+            val tryPw = hashpw(plaintext, hashed)
+            val hashedBytes = hashed.encodeToByteArray().asUByteArray()
+            val tryBytes = tryPw.encodeToByteArray().asUByteArray()
+
             if (hashedBytes.size != tryBytes.size) return false
 
             var ret: UByte = 0u

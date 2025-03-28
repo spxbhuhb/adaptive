@@ -5,10 +5,10 @@
 package `fun`.adaptive.auth.model
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.utility.UUID
 
 @Adat
-class RoleGrant(
-    var principal: UUID<Principal>,
-    var role: UUID<Role>
+class RoleSpec(
+    var context: String? = null,
+    var group: Boolean = false,
+    var displayOrder: Int = 0
 )

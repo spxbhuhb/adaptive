@@ -6,7 +6,7 @@ import `fun`.adaptive.app.UiClientApplicationData
 import `fun`.adaptive.app.basic.auth.api.BasicAccountApi
 import `fun`.adaptive.app.basic.auth.ui.AccountEditorData
 import `fun`.adaptive.app.ws.BasicAppWsModule
-import `fun`.adaptive.auth.api.PrincipalApi
+import `fun`.adaptive.auth.api.AuthPrincipalApi
 import `fun`.adaptive.auth.authCommon
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
@@ -32,7 +32,7 @@ class BasicAppAuthWsModule<AT : UiClientApplication<Workspace, UiClientApplicati
 
         suspend fun UiClientApplication<*, *>.getAccountEditorData(): AccountEditorData? {
             val principalId = appData.sessionOrNull?.principalOrNull ?: return null
-            val principal = getService<PrincipalApi>(transport).get(principalId)
+            val principal = getService<AuthPrincipalApi>(transport).getOrNull(principalId)
             val account = getService<BasicAccountApi>(transport).account() ?: return null
 
             return AccountEditorData(

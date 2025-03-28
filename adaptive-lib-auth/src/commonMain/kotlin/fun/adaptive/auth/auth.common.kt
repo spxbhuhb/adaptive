@@ -11,11 +11,8 @@ fun authCommon() {
     r += AuthenticationFail
     r += AuthHistoryEntry
     r += Credential
-    r += Principal
-    r += Role
-    r += RoleContext
-    r += RoleGrant
-    r += RoleMembership
+    r += PrincipalSpec
+    r += RoleSpec
     r += SecurityPolicy
     r += Session
 }

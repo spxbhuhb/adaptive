@@ -6,29 +6,20 @@ package `fun`.adaptive.lib.auth
 
 import `fun`.adaptive.auth.authCommon
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.lib.auth.service.PrincipalService
-import `fun`.adaptive.lib.auth.service.RoleService
-import `fun`.adaptive.lib.auth.service.SessionService
-import `fun`.adaptive.lib.auth.store.*
-import `fun`.adaptive.lib.auth.worker.SessionWorker
+import `fun`.adaptive.auth.backend.AuthPrincipalService
+import `fun`.adaptive.auth.backend.AuthRoleService
+import `fun`.adaptive.auth.backend.AuthSessionService
+import `fun`.adaptive.auth.backend.AuthSessionWorker
 import `fun`.adaptive.backend.builtin.service
-import `fun`.adaptive.backend.builtin.store
 import `fun`.adaptive.backend.builtin.worker
 
 @Adaptive
 fun authJvm() {
     authCommon()
 
-    store { principals }
-    store { credentials }
-    store { roles }
-    store { roleGrants }
-    store { roleMemberships }
-    store { history }
+    service { AuthPrincipalService() }
+    service { AuthRoleService() }
+    service { AuthSessionService() }
 
-    service { PrincipalService() }
-    service { RoleService() }
-    service { SessionService() }
-
-    worker { SessionWorker() }
+    worker { AuthSessionWorker() }
 }

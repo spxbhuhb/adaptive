@@ -9,7 +9,7 @@ import `fun`.adaptive.adat.api.touchAndValidate
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.basic.appData
 import `fun`.adaptive.app.basic.auth.model.BasicSignIn
-import `fun`.adaptive.auth.api.SessionApi
+import `fun`.adaptive.auth.api.AuthSessionApi
 import `fun`.adaptive.document.ui.direct.h1
 import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.document.ui.direct.markdown
@@ -63,7 +63,7 @@ fun largeSignIn(): AdaptiveFragment {
 
                 adapter().scope.launch {
                     try {
-                        appData.session = getService<SessionApi>(adapter().transport).login(signIn.login, signIn.password)
+                        appData.session = getService<AuthSessionApi>(adapter().transport).login(signIn.login, signIn.password)
                         appData.onLoginSuccess()
                     } catch (t: Throwable) {
                         failNotification(Strings.singInFail)

@@ -1,6 +1,6 @@
 package `fun`.adaptive.ktor.worker.download
 
-import `fun`.adaptive.auth.api.SessionApi
+import `fun`.adaptive.auth.api.AuthSessionApi
 import `fun`.adaptive.auth.model.Credential
 import `fun`.adaptive.auth.model.CredentialType
 import `fun`.adaptive.auth.model.Principal
@@ -15,7 +15,7 @@ import `fun`.adaptive.ktor.ClientWebSocketServiceCallTransport
 import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.lib.auth.authJvm
-import `fun`.adaptive.lib.auth.crypto.BCrypt
+import `fun`.adaptive.auth.util.BCrypt
 import `fun`.adaptive.lib.auth.store.CredentialTable
 import `fun`.adaptive.lib.auth.store.PrincipalTable
 import `fun`.adaptive.reflect.CallSiteName
@@ -71,7 +71,7 @@ class DownloadTest {
                     CredentialTable.plusAssign(Credential(UUID(), admin.id, CredentialType.PASSWORD, passwd, now()))
                 }
 
-                val session = getService<SessionApi>(clientBackend.transport).login("admin", "stuff")
+                val session = getService<AuthSessionApi>(clientBackend.transport).login("admin", "stuff")
                 delay(100) // let the websocket disconnect
 
                 test(clientBackend, session)

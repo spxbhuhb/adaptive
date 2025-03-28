@@ -4,10 +4,10 @@
 
 package `fun`.adaptive.auth.context
 
-import `fun`.adaptive.auth.model.Principal
-import `fun`.adaptive.auth.model.Role
+import `fun`.adaptive.auth.model.AuthPrincipalId
+import `fun`.adaptive.auth.model.AuthRole
+import `fun`.adaptive.auth.model.AuthRoleId
 import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.utility.UUID
 
 /**
  * True when there is no service context for the call
@@ -31,39 +31,39 @@ fun ServiceContext.isLoggedIn(): Boolean {
 /**
  * True when there is a session in the service context and the session has the [role].
  */
-fun ServiceContext.has(role: Role): Boolean {
+fun ServiceContext.has(role: AuthRole): Boolean {
     val session = getSessionOrNull() ?: return false
-    return session.roles.any { it.id == role.id }
+    return session.roles.any { it == role.uuid }
 }
 
 /**
- * True when there is a session in the service context and the session has the [role].
+ * True when there is a session in the service context and the session has the [roleId].
  */
-fun ServiceContext.has(role: UUID<Role>): Boolean {
+fun ServiceContext.has(roleId: AuthRoleId): Boolean {
     val session = getSessionOrNull() ?: return false
-    return session.roles.any { it.id == role }
+    return session.roles.any { it == roleId }
 }
 
 /**
  * True when there is a session in the service context and the session has **ALL** of
  * the [roles].
  */
-fun ServiceContext.hasAll(vararg roles: Role): Boolean {
+fun ServiceContext.hasAll(vararg roles: AuthRole): Boolean {
     val session = getSessionOrNull() ?: return false
     for (role in roles) {
-        if (! session.roles.any { it.id == role.id }) return false
+        if (! session.roles.any { it == role.uuid }) return false
     }
     return true
 }
 
 /**
  * True when there is a session in the service context and the session has **ALL** of
- * the [roles].
+ * the [roleIds].
  */
-fun ServiceContext.hasAll(vararg roles: UUID<Role>): Boolean {
+fun ServiceContext.hasAll(vararg roleIds: AuthRoleId): Boolean {
     val session = getSessionOrNull() ?: return false
-    for (role in roles) {
-        if (! session.roles.any { it.id == role }) return false
+    for (role in roleIds) {
+        if (! session.roles.any { it == role }) return false
     }
     return true
 }
@@ -72,30 +72,30 @@ fun ServiceContext.hasAll(vararg roles: UUID<Role>): Boolean {
  * True when there is a session in the service context and the session has
  * **AT LEAST ONE** of the [roles].
  */
-fun ServiceContext.hasOneOf(vararg roles: Role): Boolean {
+fun ServiceContext.hasOneOf(vararg roles: AuthRole): Boolean {
     val session = getSessionOrNull() ?: return false
     for (role in roles) {
-        if (session.roles.any { it.id == role.id }) return true
+        if (session.roles.any { it == role.uuid }) return true
     }
     return false
 }
 
 /**
  * True when there is a session in the service context and the session has
- * **AT LEAST ONE** of the [roles].
+ * **AT LEAST ONE** of the [roleIds].
  */
-fun ServiceContext.hasOneOf(vararg roles: UUID<Role>): Boolean {
+fun ServiceContext.hasOneOf(vararg roleIds: AuthRoleId): Boolean {
     val session = getSessionOrNull() ?: return false
-    for (role in roles) {
-        if (session.roles.any { it.id == role }) return true
+    for (role in roleIds) {
+        if (session.roles.any { it == role }) return true
     }
     return false
 }
 
 /**
  * True when there is a session in the service context and the principal
- * of the session is [principal].
+ * of the session is [principalId].
  */
-fun ServiceContext.ofPrincipal(principal: UUID<Principal>): Boolean {
-    return principal == sessionOrNull?.principalOrNull
+fun ServiceContext.ofPrincipal(principalId: AuthPrincipalId): Boolean {
+    return principalId == sessionOrNull?.principalOrNull
 }
