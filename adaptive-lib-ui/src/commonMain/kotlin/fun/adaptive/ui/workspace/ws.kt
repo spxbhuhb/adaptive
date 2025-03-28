@@ -9,6 +9,7 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
+import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.DEFAULT
 import `fun`.adaptive.ui.workspace.model.WsPane
@@ -16,14 +17,24 @@ import `fun`.adaptive.ui.workspace.model.WsPanePosition
 
 @Adaptive
 fun wsFull(workspace: Workspace) {
-    grid {
-        maxSize .. colTemplate(DEFAULT.width, 1.fr, DEFAULT.width)
+    val isFullScreen = valueFrom { workspace.isFullScreen }
 
-        wsSideBarIcons(left = true, workspace)
+    grid {
+        maxSize .. if (isFullScreen) colTemplate(0.dp, 1.fr, 0.dp) else  colTemplate(DEFAULT.width, 1.fr, DEFAULT.width)
+
+        box {
+            if (! isFullScreen) {
+                wsSideBarIcons(left = true, workspace)
+            }
+        }
 
         wsMain(workspace)
 
-        wsSideBarIcons(left = false, workspace)
+        box {
+            if (! isFullScreen) {
+                wsSideBarIcons(left = false, workspace)
+            }
+        }
     }
 }
 

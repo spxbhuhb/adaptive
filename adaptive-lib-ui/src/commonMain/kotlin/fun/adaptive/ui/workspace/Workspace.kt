@@ -74,6 +74,8 @@ class Workspace(
 
     val focusedPane = storeFor<WsPaneId?> { null }
 
+    val isFullScreen = storeFor { false }
+
     val rightTop = storeFor<WsPaneId?> { null }
     val rightMiddle = storeFor<WsPaneId?> { null }
     val rightBottom = storeFor<WsPaneId?> { null }
@@ -183,6 +185,26 @@ class Workspace(
         updateSplits()
     }
 
+    fun closeAllTools() {
+        leftTop.value = null
+        leftMiddle.value = null
+        leftBottom.value = null
+        rightTop.value = null
+        rightMiddle.value = null
+        rightBottom.value = null
+
+        updateSplits()
+    }
+
+    fun toFullScreen() {
+        closeAllTools()
+        isFullScreen.value = true
+    }
+
+    fun fromFullScreen() {
+        isFullScreen.value = false
+    }
+
     private fun toggleStore(store: Observable<WsPaneId?>, pane: WsPane<*, *>) {
         if (store.value == pane.uuid) {
             store.value = null
@@ -282,12 +304,20 @@ class Workspace(
         val pane = builder.invoke(item)
 
         when (pane.singularity) {
+            WsPaneSingularity.FULLSCREEN -> {
+                lastActiveContentPaneGroup = null
+                toFullScreen()
+                addGroupContentPane(item, modifiers, pane)
+            }
+
             WsPaneSingularity.SINGULAR -> {
                 lastActiveContentPaneGroup = null
+                fromFullScreen()
                 addGroupContentPane(item, modifiers, pane)
             }
 
             WsPaneSingularity.GROUP -> {
+                fromFullScreen()
                 addGroupContentPane(item, modifiers, pane)
             }
         }
