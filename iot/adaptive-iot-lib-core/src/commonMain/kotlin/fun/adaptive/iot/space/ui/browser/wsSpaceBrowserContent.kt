@@ -69,8 +69,8 @@ fun pageHeader(pane: WsPane<SpaceBrowserWsItem, *>) {
 
             row {
                 gap { 16.dp }
-                quickFilter(status1, listOf("Összes", "Aktív", "Nem elérhető"), { this }) { v -> status1 = v }
-                quickFilter(status2, listOf("Összes", "Rendben", "Riasztás"), { this }) { v -> status2 = v }
+                //quickFilter(status1, listOf("Összes", "Aktív", "Nem elérhető"), { this }) { v -> status1 = v }
+                //quickFilter(status2, listOf("Összes", "Rendben", "Riasztás"), { this }) { v -> status2 = v }
             }
 
             textInput(search) { v -> search = v } .. inputPlaceholder { "Szűrés" } .. maxWidth

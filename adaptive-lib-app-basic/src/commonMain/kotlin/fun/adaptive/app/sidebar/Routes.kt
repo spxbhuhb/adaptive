@@ -1,4 +1,4 @@
-package `fun`.adaptive.app.basic
+package `fun`.adaptive.app.sidebar
 
 import `fun`.adaptive.ui.navigation.navState
 

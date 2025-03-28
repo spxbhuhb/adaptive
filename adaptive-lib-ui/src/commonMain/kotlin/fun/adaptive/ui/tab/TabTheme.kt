@@ -6,25 +6,19 @@ import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.smallCloseIconTheme
-import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
-import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.ui.theme.textColors
-import `fun`.adaptive.ui.theme.textSmall
+import `fun`.adaptive.ui.theme.*
 
-class TabTheme(
-    tabListHeight: DPixel = 36.dp
-) {
+class TabTheme : AbstractTheme() {
 
     val outerContainer = instructionsOf(
-        rowTemplate(tabListHeight, 1.fr)
+        rowTemplate(paneHeaderHeightDp, 1.fr)
     )
 
     // subtract outerContainer surrounding
-    val innerHeight = tabListHeight
+    val innerHeight = paneHeaderHeightDp
 
     val separatorSize = 16.dp
 
@@ -74,6 +68,7 @@ class TabTheme(
 
     val tabHandleText = instructionsOf(
         textColors.onSurface,
+        normalFont,
         fontSize { 13.sp },
         paddingLeft { 4.dp },
         padding { 4.dp },

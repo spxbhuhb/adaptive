@@ -1,7 +1,7 @@
 package `fun`.adaptive.app.ws.main.frontend
 
 import `fun`.adaptive.app.ws.BasicAppWsModule
-import `fun`.adaptive.app.ws.wsAppAccountSelf
+import `fun`.adaptive.app.ws.auth.account.wsAppAccountSelf
 import `fun`.adaptive.app.ws.wsAppAdminTool
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 

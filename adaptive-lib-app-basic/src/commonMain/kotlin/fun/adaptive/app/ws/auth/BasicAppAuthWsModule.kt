@@ -3,13 +3,17 @@ package `fun`.adaptive.app.ws.auth
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.signInTitle
 import `fun`.adaptive.app.UiClientApplication
 import `fun`.adaptive.app.UiClientApplicationData
+import `fun`.adaptive.app.basic.auth.api.BasicAccountApi
+import `fun`.adaptive.app.basic.auth.ui.AccountEditorData
 import `fun`.adaptive.app.ws.BasicAppWsModule
+import `fun`.adaptive.auth.api.PrincipalApi
 import `fun`.adaptive.auth.authCommon
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AppModule
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.builtin.account_circle
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsSingularPaneController
@@ -25,6 +29,21 @@ class BasicAppAuthWsModule<AT : UiClientApplication<Workspace, UiClientApplicati
 
     companion object {
         const val SIGN_IN_KEY: FragmentKey = "app:ws:auth:sign-in"
+
+        suspend fun UiClientApplication<*, *>.getAccountEditorData(): AccountEditorData? {
+            val principalId = appData.sessionOrNull?.principalOrNull ?: return null
+            val principal = getService<PrincipalApi>(transport).get(principalId)
+            val account = getService<BasicAccountApi>(transport).account() ?: return null
+
+            return AccountEditorData(
+                login = principal.principalName,
+                name = account.name,
+                email = account.email,
+                phone = account.phone,
+                activated = principal.activated,
+                locked = principal.locked
+            )
+        }
     }
 
     lateinit var SIGN_IN_ITEM: SingularWsItem

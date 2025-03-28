@@ -2,7 +2,9 @@ package `fun`.adaptive.app
 
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveAdapter
+import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.FragmentKey
+import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.instruction.sp
@@ -12,6 +14,11 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
 abstract class UiClientApplication<WT, ADT : UiClientApplicationData> {
+
+    companion object {
+        val AdaptiveFragment.uiApplication
+            get() = this.firstContext<UiClientApplication<*, *>>()
+    }
 
     val modules = mutableSetOf<AppModule<WT, UiClientApplication<WT,ADT>>>()
 

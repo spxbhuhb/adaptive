@@ -26,11 +26,12 @@ import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.app.basic.ui.BasicAppData
-import `fun`.adaptive.app.basic.ui.defaultAppLayout
+import `fun`.adaptive.app.sidebar.ui.BasicAppData
+import `fun`.adaptive.app.sidebar.ui.defaultAppLayout
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.form.FormFragmentFactory
 import `fun`.adaptive.app.platform.BrowserHistoryStateListener
+import `fun`.adaptive.app.sidebar.Routes
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.navigation.sidebar.SidebarItem

@@ -124,7 +124,7 @@ private fun editFields(
 ) {
     column {
 
-        gap { 24.dp }
+        gap { 16.dp }
 
         withLabel(Strings.spxbId, InputContext(disabled = true)) { state ->
             width { 400.dp }

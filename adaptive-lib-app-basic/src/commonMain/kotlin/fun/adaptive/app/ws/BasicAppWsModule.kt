@@ -9,7 +9,9 @@ import `fun`.adaptive.app.ws.main.frontend.WsAppFrontendFragmentFactory
 import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveAdapter
+import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.FragmentKey
+import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AppModule
@@ -33,6 +35,9 @@ class BasicAppWsModule<AT :  UiClientApplication<Workspace, *>> : AppModule<Work
         const val ACCOUNT_SELF_KEY: FragmentKey = "app:ws:account:self"
         const val ADMIN_TOOL_KEY: FragmentKey = "app:ws:admin:tool"
         const val HOME_CONTENT_KEY: FragmentKey = "app:ws:home:content"
+
+        val AdaptiveFragment.wsApplication
+            get() = this.firstContext<UiClientApplication<Workspace, *>>()
     }
 
     lateinit var ACCOUNT_SELF_ITEM: SingularWsItem

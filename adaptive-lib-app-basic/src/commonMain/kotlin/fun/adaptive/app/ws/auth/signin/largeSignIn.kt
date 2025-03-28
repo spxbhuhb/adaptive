@@ -8,9 +8,11 @@ import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.*
 import `fun`.adaptive.adat.api.touchAndValidate
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.UiClientApplication
+import `fun`.adaptive.app.UiClientApplication.Companion.uiApplication
 import `fun`.adaptive.app.UiClientApplicationData
 import `fun`.adaptive.app.basic.auth.model.BasicSignIn
 import `fun`.adaptive.app.ws.BasicAppWsModule
+import `fun`.adaptive.app.ws.BasicAppWsModule.Companion.wsApplication
 import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.document.ui.direct.h1
 import `fun`.adaptive.document.ui.direct.h2
@@ -38,7 +40,7 @@ import kotlinx.coroutines.launch
 @Adaptive
 fun largeSignIn(): AdaptiveFragment {
 
-    val app = fragment().firstContext<UiClientApplication<Workspace, UiClientApplicationData>>()
+    val app = fragment().wsApplication
     val basicAppWsModule = app.modules.firstInstance<BasicAppWsModule<*>>()
 
     val signIn = copyOf { BasicSignIn() }

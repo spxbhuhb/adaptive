@@ -1,48 +1,33 @@
 package `fun`.adaptive.ui.select
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.ui.api.alignItems
-import `fun`.adaptive.ui.api.backgroundColor
-import `fun`.adaptive.ui.api.border
-import `fun`.adaptive.ui.api.colTemplate
-import `fun`.adaptive.ui.api.cornerBottomRadius
-import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.maxWidth
-import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.ui.api.position
-import `fun`.adaptive.ui.api.tabIndex
-import `fun`.adaptive.ui.api.textColor
-import `fun`.adaptive.ui.api.verticalScroll
-import `fun`.adaptive.ui.api.width
-import `fun`.adaptive.ui.api.zIndex
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.borders
-import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.ui.theme.colorsSurface
-import `fun`.adaptive.ui.theme.inputHeightDefault
-import `fun`.adaptive.ui.theme.inputWidthDefault
+import `fun`.adaptive.ui.theme.*
 
 open class SelectTheme(
-    val itemHeight : DPixel = inputHeightDefault,
-    val itemWidth : DPixel = inputWidthDefault
-) {
+    val itemWidth: DPixel = 400.dp
+) : AbstractTheme() {
 
     var outerContainer = instructionsOf(
-        height { itemHeight }, // keep it fixed so we won't re-layout it even if the select is open
+        height { inputHeightDp }, // keep it fixed so we won't re-layout it even if the select is open
         tabIndex { 0 }
     )
 
     var closedContainer = instructionsOf(
         width { itemWidth },
-        height { itemHeight }
+        height { inputHeightDp }
     )
+
+    var open = cornerTopRadius(inputCornerRadiusDp)
+
+    var closed = inputCornerRadius
 
     var base = instructionsOf(
         colTemplate(1.fr, 24.dp),
-        height { itemHeight },
+        height { inputHeightDp },
         alignItems.startCenter
     )
 
@@ -74,7 +59,7 @@ open class SelectTheme(
     )
 
     var itemsContainer = instructionsOf(
-        position(itemHeight, 0.dp),
+        position(inputHeightDp, 0.dp),
         maxWidth,
         verticalScroll,
         border(colors.outline, top = 0.dp),
@@ -83,7 +68,7 @@ open class SelectTheme(
 
     var item = instructionsOf(
         maxWidth,
-        height { itemHeight },
+        height { inputHeightDp },
         padding(16.dp)
     )
 

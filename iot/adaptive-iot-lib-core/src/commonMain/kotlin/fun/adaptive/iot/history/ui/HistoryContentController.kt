@@ -12,7 +12,9 @@ import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.graphics.canvas.api.stroke
 import `fun`.adaptive.iot.common.AioTheme
+import `fun`.adaptive.iot.generated.resources.chart
 import `fun`.adaptive.iot.generated.resources.monitoring
+import `fun`.adaptive.iot.generated.resources.table
 import `fun`.adaptive.iot.history.AioHistoryApi
 import `fun`.adaptive.iot.history.model.AioDoubleHistoryRecord
 import `fun`.adaptive.iot.history.model.AioHistoryQuery
@@ -20,7 +22,9 @@ import `fun`.adaptive.iot.history.ui.chart.DoubleHistoryValueNormalizer
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
+import `fun`.adaptive.ui.filter.QuickFilterModel
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
@@ -38,11 +42,18 @@ class HistoryContentController(
     override val workspace: Workspace
 ) : WsPaneController<HistoryBrowserWsItem>(), WithWorkspace {
 
-    enum class Mode {
-        TABLE, CHART
+    enum class Mode(val label: () -> String) {
+        TABLE(label = { Strings.table }),
+        CHART(label = { Strings.chart })
     }
 
-    var mode = storeFor { Mode.CHART }
+    var mode = storeFor<QuickFilterModel<Mode>> {
+        QuickFilterModel(
+            Mode.CHART,
+            Mode.entries,
+            { it.label() }
+        )
+    }
 
     val theme = AioTheme.DEFAULT
 

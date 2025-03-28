@@ -5,7 +5,9 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
-import `fun`.adaptive.iot.generated.resources.*
+import `fun`.adaptive.iot.generated.resources.downloadReport
+import `fun`.adaptive.iot.generated.resources.historicalData
+import `fun`.adaptive.iot.generated.resources.noname
 import `fun`.adaptive.iot.history.ui.HistoryContentController.Mode
 import `fun`.adaptive.iot.history.ui.chart.historyChart
 import `fun`.adaptive.iot.history.ui.table.historyTable
@@ -16,7 +18,6 @@ import `fun`.adaptive.ui.filter.quickFilter
 import `fun`.adaptive.ui.input.datetime.dateInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.platform.download.downloadFile
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.utility.localDate
@@ -36,7 +37,7 @@ fun wsHistoryContent(
 
         title(pane.controller, name)
 
-        if (mode == Mode.TABLE) {
+        if (mode.selected == Mode.TABLE) {
             historyTable(pane.controller)
         } else {
             historyChart(pane.controller)
@@ -52,9 +53,7 @@ fun title(
     controller: HistoryContentController,
     name: String
 ) {
-    var modeList = listOf(Mode.TABLE to Strings.table, Mode.CHART to Strings.chart)
     val mode = valueFrom { controller.mode }
-    val currentMode = modeList.first { it.first == mode }
 
     var status2 = ""
     var start = localDate()
@@ -76,8 +75,10 @@ fun title(
 
         row {
             gap { 16.dp }
-            quickFilter(currentMode, modeList, { second }) { v -> controller.mode.value = v.first }
-            quickFilter(status2, listOf("Ma", "Hét", "Hónap", "Egyedi"), { this }) { v -> status2 = v }
+            quickFilter(mode) { controller.mode.value = mode.copy(selected = it) }
+
+
+            //quickFilter(status2, listOf("Ma", "Hét", "Hónap", "Egyedi"), { this }) { v -> status2 = v }
             dateInput(start) { v -> start = v }
             dateInput(end) { v -> end = v }
         }

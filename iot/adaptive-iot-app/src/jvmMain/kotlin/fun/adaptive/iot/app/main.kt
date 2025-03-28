@@ -32,7 +32,7 @@ fun main() {
         valueCommon()
     }
 
-    ZigbeeModule<Unit>().apply { WireFormatRegistry.init() }
+    ZigbeeModule<Unit, Unit>().apply { WireFormatRegistry.init() }
 
     backend {
 

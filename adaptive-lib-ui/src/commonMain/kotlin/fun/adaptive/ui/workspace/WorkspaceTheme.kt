@@ -15,11 +15,10 @@ import `fun`.adaptive.ui.workspace.model.WsPaneId
 
 class WorkspaceTheme(
     val width: DPixel = 40.dp,
-    val titleHeight: DPixel = 36.dp,
     val dividerSize: DPixel = 9.dp,
     toolBackground: AdaptiveInstruction = backgrounds.surfaceVariant,
     val toolBorderColor: Color = colors.lightOutline
-) {
+) : AbstractTheme() {
 
     companion object {
         var DEFAULT = WorkspaceTheme()
@@ -124,7 +123,7 @@ class WorkspaceTheme(
 
     val paneTitleContainer = instructionsOf(
         maxWidth,
-        height { titleHeight },
+        height { paneHeaderHeightDp },
         spaceBetween,
         alignItems.center,
         backgrounds.surfaceVariant,
@@ -146,7 +145,7 @@ class WorkspaceTheme(
     )
 
     val toolPaneContainer = instructionsOf(
-        rowTemplate(titleHeight, 1.fr),
+        rowTemplate(paneHeaderHeightDp, 1.fr),
         maxSize,
         toolBackground,
     )

@@ -1,31 +1,39 @@
 package `fun`.adaptive.ui.filter
 
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.hover
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.text
 
 @Adaptive
-fun <T> quickFilter(selected: T, entries: List<T>, labelFun: T.() -> String, onSelect: (it: T) -> Unit) {
+fun <T> quickFilter(
+    model: QuickFilterModel<T>,
+    selectFun: (entry: T) -> Unit
+) {
     row {
-        filterTheme.container
+        model.theme.container
 
-        for (entry in entries) {
-            quickFilterItem(entry, entry == selected, labelFun, onSelect)
+        for (entry in model.entries) {
+            quickFilterItem(model, entry) .. onClick { selectFun(entry) }
         }
     }
 }
 
 @Adaptive
-private fun <T> quickFilterItem(entry: T, selected: Boolean, labelFun: T.() -> String, onSelect: (it: T) -> Unit) {
+private fun <T> quickFilterItem(
+    model: QuickFilterModel<T>,
+    entry: T
+): AdaptiveFragment {
     //val hover = hover()
 
-    row {
-        filterTheme.item(selected, false) .. onClick { onSelect(entry) }
+    row(instructions()) {
+        model.theme.item(model.selected == entry, false)
 
-        text(entry.labelFun()) .. filterTheme.label
+        text(model.labelFun(entry)) .. model.theme.label
     }
+
+    return fragment()
 }

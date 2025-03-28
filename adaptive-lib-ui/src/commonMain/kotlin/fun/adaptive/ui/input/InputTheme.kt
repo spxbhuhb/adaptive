@@ -2,36 +2,34 @@ package `fun`.adaptive.ui.input
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.api.alignSelf
-import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.api.disabled as uiDisabled
-import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.theme.AbstractTheme
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textColors
+import `fun`.adaptive.ui.api.disabled as uiDisabled
 
-class InputTheme(
-    val height: DPixel = 38.dp,
-) {
+class InputTheme : AbstractTheme() {
+
+    val paddingB1 = padding(top = 1.dp, left = 12.dp, bottom = 1.dp, right = 12.dp)
+    val paddingB2 = padding(left = 11.dp, right = 11.dp)
 
     val base = instructionsOf(
-        cornerRadius(8.dp),
-        fontSize { 17.sp },
-        lightFont,
+        inputCornerRadius,
+        inputFont,
         tabIndex { 0 }
     )
 
     val enabled = base + instructionsOf(
         border(colors.outline, 1.dp),
-        padding(top = 1.dp, left = 16.dp, bottom = 1.dp, right = 16.dp),
+        paddingB1,
         textColors.onSurface,
         backgrounds.surface,
     )
 
     val focused = base + instructionsOf(
         border(colors.primary, 2.dp),
-        padding(left = 15.dp, right = 15.dp),
+        paddingB2,
         textColors.onSurface,
         backgrounds.surface,
     )
@@ -39,37 +37,37 @@ class InputTheme(
     val disabled = base + instructionsOf(
         uiDisabled,
         border(colors.outline, 1.dp),
-        padding(top = 1.dp, left = 16.dp, bottom = 1.dp, right = 16.dp),
+        paddingB1,
         textColors.onSurface,
         backgrounds.surfaceVariant
     )
 
     val invalidFocused = base + instructionsOf(
         border(colors.fail, 2.dp),
-        padding(left = 15.dp, right = 15.dp),
+        paddingB2,
         textColors.onSurface,
         backgroundColor(colors.failSurface.opaque(0.05f)),
     )
 
     val invalidNotFocused = base + instructionsOf(
         border(colors.fail, 1.dp),
-        padding(top = 1.dp, left = 16.dp, bottom = 1.dp, right = 16.dp),
+        paddingB1,
         textColors.onSurface,
         backgroundColor(colors.failSurface.opaque(0.05f)),
     )
 
     val singleLine = instructionsOf(
-        height { height }
+        height { inputHeightDp }
     )
 
     val textAreaFocused = instructionsOf(
         paddingTop { 5.dp },
-        paddingLeft { 15.dp }
+        paddingLeft { 7.dp }
     )
 
     val textAreaNonFocused = instructionsOf(
         paddingTop { 6.dp },
-        paddingLeft { 16.dp }
+        paddingLeft { 7.dp }
     )
 
     val unitContainer = instructionsOf(

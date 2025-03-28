@@ -13,7 +13,6 @@ import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.input.InputPlaceholder
 import `fun`.adaptive.ui.instruction.text.ToText
-import `fun`.adaptive.ui.select.SelectTheme
 import `fun`.adaptive.ui.theme.textColors
 import kotlin.math.min
 
@@ -32,7 +31,7 @@ fun <T> select(
     if (focus == false) open = false // this is not the same as open = focus!
 
     val toText = fragment().instructions.firstInstanceOfOrNull<ToText<T>>() ?: ToText<T> { it.toString() }
-    val openHeight = min(10, items.size) * theme.itemHeight.value
+    val openHeight = min(10, items.size) * theme.inputHeightDp.value
 
     box {
         theme.outerContainer
@@ -79,10 +78,10 @@ private fun <T> selectTop(
     val textColor = if (selected != null) textColors.onSurface else textColors.onSurfaceVariant
 
     grid(instructions()) {
-        if (open) cornerTopRadius(8.dp) else cornerRadius(8.dp)
+        if (open) theme.open else theme.closed
         if (focus) theme.focused else theme.enabled
 
-        text(selected?.let { toText.toTextFun(it) } ?: placeholder?.value ?: "") .. textColor
+        text(selected?.let { toText.toTextFun(it) } ?: placeholder?.value ?: "") .. textColor .. theme.inputFont
         icon(if (open) Graphics.arrow_drop_up else Graphics.arrow_drop_down)
     }
 
@@ -103,7 +102,7 @@ private fun <T> selectItem(
     box(instructions()) {
         theme.itemColors(value == selected, hover) .. theme.item
 
-        text(toText.toTextFun(value)) .. alignSelf.startCenter
+        text(toText.toTextFun(value)) .. theme.inputFont .. alignSelf.startCenter
     }
 
     return fragment()

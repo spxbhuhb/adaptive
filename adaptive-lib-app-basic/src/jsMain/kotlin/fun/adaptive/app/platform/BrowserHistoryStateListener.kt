@@ -1,6 +1,6 @@
 package `fun`.adaptive.app.platform
 
-import `fun`.adaptive.app.basic.ui.BasicAppData
+import `fun`.adaptive.app.sidebar.ui.BasicAppData
 import `fun`.adaptive.auto.api.AutoItemListener
 import `fun`.adaptive.auto.model.ItemId
 import `fun`.adaptive.ui.navigation.NavState

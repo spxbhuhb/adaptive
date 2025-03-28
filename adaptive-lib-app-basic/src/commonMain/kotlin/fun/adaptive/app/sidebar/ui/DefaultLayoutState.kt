@@ -1,4 +1,4 @@
-package `fun`.adaptive.app.basic.ui
+package `fun`.adaptive.app.sidebar.ui
 
 import `fun`.adaptive.adat.Adat
 
