@@ -357,8 +357,8 @@ class Workspace(
 
             WsContentPaneGroup(UUID(), this, pane).also {
                 lastActiveContentPaneGroup = it
-                contentPaneGroups.value = listOf(it)
                 loadContentPane(item, modifiers, pane, it)
+                contentPaneGroups.value = listOf(it)
             }
 
         } else {
@@ -369,6 +369,13 @@ class Workspace(
         }
 
         return
+    }
+
+    fun removePaneGroup(group: WsContentPaneGroup) {
+        WsContentPaneGroup(UUID(), this, noContentPane).also {
+            lastActiveContentPaneGroup = it
+            contentPaneGroups.value = listOf(it)
+        }
     }
 
     // --------------------------------------------------------------------------------

@@ -8,7 +8,7 @@ import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.utility.UUID
 
 class WsContentPaneGroup(
-    val uuid : UUID<WsContentPaneGroup>,
+    val uuid: UUID<WsContentPaneGroup>,
     val workspace: Workspace,
     firstPane: WsPane<*, *>
 ) {
@@ -16,7 +16,7 @@ class WsContentPaneGroup(
      * True when this group contains only one pane and that one pane
      * cannot be changed. Singular pane groups does not show tabs.
      */
-    val isSingular : Boolean
+    val isSingular: Boolean
         get() = (panes.size == 1 && panes.first().singularity == WsPaneSingularity.SINGULAR)
 
     /**
@@ -34,7 +34,7 @@ class WsContentPaneGroup(
     fun load(pane: WsPane<*, *>) {
         val index = panes.indexOfFirst { it.uuid == pane.uuid }
 
-        if (index == -1) {
+        if (index == - 1) {
             panes += pane
         } else {
             panes[index] = pane
@@ -44,7 +44,7 @@ class WsContentPaneGroup(
         tabContainer.value = toTabContainer()
     }
 
-    fun toTabContainer() : TabContainer =
+    fun toTabContainer(): TabContainer =
         TabContainer(
             panes.map { wsPane ->
                 TabPane(
@@ -66,7 +66,17 @@ class WsContentPaneGroup(
                     model = wsPane,
                     active = (wsPane.uuid == activePane.uuid)
                 )
-            }
+            },
+            closeFun = ::closeTab
         )
+
+    fun closeTab(model : TabContainer, pane : TabPane) {
+        panes.removeAll { it.uuid == pane.uuid }
+        if (panes.isEmpty()) {
+            workspace.removePaneGroup(this)
+        } else {
+            tabContainer.value = model.removePane(pane)
+        }
+    }
 
 }

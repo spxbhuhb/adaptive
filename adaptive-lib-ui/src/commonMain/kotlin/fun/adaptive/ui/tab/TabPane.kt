@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.utility.UUID
 
-class TabPane(
+data class TabPane(
     val uuid : UUID<TabPane>,
     val key: FragmentKey,
     val title: String? = null,

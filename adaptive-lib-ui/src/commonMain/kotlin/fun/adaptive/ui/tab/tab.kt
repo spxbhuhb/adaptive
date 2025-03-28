@@ -3,7 +3,6 @@ package `fun`.adaptive.ui.tab
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.actualize
-import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.emptyInstructions
@@ -19,7 +18,7 @@ import `fun`.adaptive.ui.icon.smallCloseIconTheme
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.layout.GridTrack
 
-typealias TabHandleFun = (model : TabContainer, tab: TabPane, activeTab: TabPane?, theme: TabTheme) -> Unit
+typealias TabHandleFun = (model: TabContainer, tab: TabPane, activeTab: TabPane?, theme: TabTheme) -> Unit
 
 @Adaptive
 fun tabContainer(
@@ -46,7 +45,7 @@ fun tabContainer(
 
 @Adaptive
 fun tabHandle(
-    model : TabContainer,
+    model: TabContainer,
     tab: TabPane,
     activeTab: TabPane?,
     theme: TabTheme
@@ -86,7 +85,8 @@ fun tabHandle(
                 theme.tabHandleCloseContainer
 
                 if (active || hover) {
-                    actionIcon(Graphics.close, tooltip = model.closeToolTip, theme = smallCloseIconTheme)
+                    actionIcon(Graphics.close, tooltip = model.closeToolTip, theme = smallCloseIconTheme) ..
+                        onClick { model.closeFun(model, tab) }
                 }
             }
         }
