@@ -5,7 +5,7 @@ import `fun`.adaptive.iot.app.commonMainStringsStringStore0
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.workspace.Workspace
 
-object WsSandBoxModule : AppModule<Workspace>() {
+class IotAppWsModule() : AppModule<Workspace>() {
 
     override suspend fun loadResources() {
         commonMainStringsStringStore0.load()

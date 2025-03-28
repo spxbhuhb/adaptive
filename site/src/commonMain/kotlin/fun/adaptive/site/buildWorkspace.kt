@@ -1,6 +1,6 @@
 package `fun`.adaptive.site
 
-import `fun`.adaptive.app.ws.WsAppModule
+import `fun`.adaptive.app.ws.BasicAppWsModule
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.ui.workspace.Workspace
 
@@ -12,7 +12,7 @@ fun buildWorkspace(adapter: AdaptiveAdapter): Workspace {
 
     workspace.updateSplits()
 
-    workspace.addContent(WsAppModule.HOME_CONTENT_ITEM, emptySet())
+    workspace.addContent(BasicAppWsModule.HOME_CONTENT_ITEM, emptySet())
 
     return workspace
 }

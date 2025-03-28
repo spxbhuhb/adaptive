@@ -5,17 +5,18 @@
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.adat.store.copyOf
+import `fun`.adaptive.app.UiClientApplicationData
 import `fun`.adaptive.app.WsBrowserApplication
-import `fun`.adaptive.app.ws.WsAppModule
+import `fun`.adaptive.app.ws.BasicAppWsModule
 import `fun`.adaptive.app.ws.WsSandBoxModule
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.worker
-import `fun`.adaptive.chart.WsChartModule
+import `fun`.adaptive.chart.ChartWsModule
 import `fun`.adaptive.chart.chartCommon
 import `fun`.adaptive.chart.ui.lineChart
 import `fun`.adaptive.cookbook.cookbookCommon
-import `fun`.adaptive.document.WsDocModule
+import `fun`.adaptive.document.DocWsModule
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
@@ -52,12 +53,14 @@ fun main() {
 
 fun iotMain() {
     WsBrowserApplication(
-        LibUiModule,
+        UiClientApplicationData(),
+        // modules
+        LibUiModule(),
         GroveRuntimeModule<Workspace>(),
-        WsChartModule(),
-        WsDocModule(),
+        ChartWsModule(),
+        DocWsModule(),
         IotWsModule(),
-        WsAppModule,
+        BasicAppWsModule(),
         WsSandBoxModule
     ).main()
 }

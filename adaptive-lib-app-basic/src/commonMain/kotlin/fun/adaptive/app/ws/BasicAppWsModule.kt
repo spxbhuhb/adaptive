@@ -22,10 +22,18 @@ import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.ui.workspace.model.WsPaneSingularity
 import `fun`.adaptive.utility.UUID
 
-object WsAppModule : AppModule<Workspace>() {
+class BasicAppWsModule : AppModule<Workspace>() {
 
-    const val FRONTEND_MAIN_KEY: FragmentKey = "app:ws:frontend:main"
-    const val BACKEND_MAIN_KEY: FragmentKey = "app:ws:backend:main"
+    companion object {
+        const val FRONTEND_MAIN_KEY: FragmentKey = "app:ws:frontend:main"
+        const val BACKEND_MAIN_KEY: FragmentKey = "app:ws:backend:main"
+        const val ACCOUNT_SELF_KEY: FragmentKey = "app:ws:account:self"
+        const val ADMIN_TOOL_KEY: FragmentKey = "app:ws:admin:tool"
+        const val HOME_CONTENT_KEY: FragmentKey = "app:ws:home:content"
+
+        lateinit var ACCOUNT_SELF_ITEM: SingularWsItem
+        lateinit var HOME_CONTENT_ITEM: SingularWsItem
+    }
 
     override suspend fun loadResources() {
         commonMainStringsStringStore0.load()
@@ -46,22 +54,33 @@ object WsAppModule : AppModule<Workspace>() {
         wsAppSignOutActionDef()
     }
 
-    const val ACCOUNT_TOOL_KEY: FragmentKey = "app:ws:account:tool"
-
     fun Workspace.wsAppAccountToolDef() {
-        + WsPane(
-            UUID(),
+
+        ACCOUNT_SELF_ITEM = SingularWsItem(Strings.home, ACCOUNT_SELF_KEY)
+
+        addContentPaneBuilder(ACCOUNT_SELF_KEY) {
+            WsPane(
+                UUID(),
+                Strings.account,
+                Graphics.account_circle,
+                WsPanePosition.Center,
+                ACCOUNT_SELF_KEY,
+                ACCOUNT_SELF_ITEM,
+                WsSingularPaneController(ACCOUNT_SELF_ITEM),
+                displayOrder = Int.MAX_VALUE - 1
+            )
+        }
+
+        + WsSideBarAction(
             Strings.account,
             Graphics.account_circle,
             WsPanePosition.LeftBottom,
-            ACCOUNT_TOOL_KEY,
-            Unit,
-            WsUnitPaneController(),
-            displayOrder = Int.MAX_VALUE - 1
-        )
+            displayOrder = Int.MAX_VALUE - 1,
+            null
+        ) {
+            addContent(ACCOUNT_SELF_ITEM)
+        }
     }
-
-    const val ADMIN_TOOL_KEY: FragmentKey = "app:ws:admin:tool"
 
     fun Workspace.appAdminToolDef() {
 
@@ -78,26 +97,32 @@ object WsAppModule : AppModule<Workspace>() {
 
     }
 
-    const val HOME_CONTENT_KEY: FragmentKey = "app:ws:home:content"
-
-    lateinit var HOME_CONTENT_ITEM : SingularWsItem
-
     fun Workspace.wsAppHomePaneDef() {
 
         HOME_CONTENT_ITEM = SingularWsItem(Strings.home, HOME_CONTENT_KEY)
 
-        + WsPane(
-            UUID(),
+        addContentPaneBuilder(HOME_CONTENT_KEY) {
+            WsPane(
+                UUID(),
+                Strings.home,
+                Graphics.eco,
+                WsPanePosition.Center,
+                HOME_CONTENT_KEY,
+                HOME_CONTENT_ITEM,
+                WsSingularPaneController(HOME_CONTENT_ITEM),
+                singularity = WsPaneSingularity.SINGULAR,
+                displayOrder = 0
+            )
+        }
+
+        + WsSideBarAction(
             Strings.home,
             Graphics.eco,
-            WsPanePosition.Center,
-            HOME_CONTENT_KEY,
-            HOME_CONTENT_ITEM,
-            WsSingularPaneController(HOME_CONTENT_ITEM),
-            singularity = WsPaneSingularity.SINGULAR,
-            displayOrder = 0
-        ).also { pane ->
-            addContentPaneBuilder(HOME_CONTENT_KEY) { pane }
+            WsPanePosition.LeftTop,
+            0,
+            null
+        ) {
+            addContent(HOME_CONTENT_ITEM)
         }
 
     }

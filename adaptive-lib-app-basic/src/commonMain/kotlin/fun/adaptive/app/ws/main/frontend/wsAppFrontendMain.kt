@@ -10,7 +10,7 @@ import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.wsFull
 
 @Adaptive
-fun wsAppFrontendMain(application: UiClientApplication<Workspace>): AdaptiveFragment {
+fun wsAppFrontendMain(application: UiClientApplication<Workspace,*>): AdaptiveFragment {
 
     localContext(application.workspace) {
         wsFull(application.workspace)

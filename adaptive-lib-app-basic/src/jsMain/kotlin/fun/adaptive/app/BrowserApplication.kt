@@ -4,6 +4,7 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.api.actualize
+import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
@@ -17,7 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-abstract class BrowserApplication<WT : Any> : UiClientApplication<WT>() {
+abstract class BrowserApplication<WT : Any, ADT : UiClientApplicationData> : UiClientApplication<WT, ADT>() {
 
     override lateinit var transport: ServiceCallTransport
     override lateinit var backend: BackendAdapter
@@ -38,7 +39,10 @@ abstract class BrowserApplication<WT : Any> : UiClientApplication<WT>() {
 
             backend = backend(transport) { adapter ->
                 initBackendAdapter(adapter)
-                actualize(backendMainKey)
+
+                localContext(this@BrowserApplication) {
+                    actualize(backendMainKey)
+                }
             }
 
             initWorkspace()
@@ -57,7 +61,9 @@ abstract class BrowserApplication<WT : Any> : UiClientApplication<WT>() {
 
                 initFrontendAdapter(adapter)
 
-                actualize(frontendMainKey, emptyInstructions, this@BrowserApplication)
+                localContext(this@BrowserApplication) {
+                    actualize(frontendMainKey, emptyInstructions, this@BrowserApplication)
+                }
 
             }.also {
                 frontend = it

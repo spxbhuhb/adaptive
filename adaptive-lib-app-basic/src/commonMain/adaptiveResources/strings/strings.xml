@@ -33,4 +33,7 @@
 
     <!-- admin -->
     <string name="administration">Adminisztráció</string>
+
+    <!-- inspect -->
+    <string name="devTools">Fejlesztői eszközök</string>
 </resources>

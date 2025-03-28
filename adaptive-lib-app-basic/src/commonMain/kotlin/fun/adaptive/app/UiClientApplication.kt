@@ -11,7 +11,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
-abstract class UiClientApplication<WT> {
+abstract class UiClientApplication<WT, ADT : UiClientApplicationData> {
 
     val modules = mutableSetOf<AppModule<WT>>()
 
@@ -20,6 +20,7 @@ abstract class UiClientApplication<WT> {
     abstract val backend : BackendAdapter
     abstract val frontend : AdaptiveAdapter
 
+    abstract val appData : ADT
     abstract val workspace : WT
 
     abstract val backendMainKey : FragmentKey

@@ -3,7 +3,7 @@
  */
 package `fun`.adaptive.site
 
-import `fun`.adaptive.app.ws.WsAppModule.wsAppHomePaneDef
+import `fun`.adaptive.app.ws.BasicAppWsModule.wsAppHomePaneDef
 import `fun`.adaptive.cookbook.cookbookCommon
 import `fun`.adaptive.grove.groveCommon
 import `fun`.adaptive.grove.groveRuntimeCommon

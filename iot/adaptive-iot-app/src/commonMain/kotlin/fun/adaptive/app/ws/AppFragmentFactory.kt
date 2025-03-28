@@ -4,6 +4,6 @@ import `fun`.adaptive.foundation.AdaptiveFragmentFactory
 
 object AppFragmentFactory : AdaptiveFragmentFactory() {
     init {
-        add(WsAppModule.HOME_CONTENT_KEY, ::appHome)
+        add(BasicAppWsModule.HOME_CONTENT_KEY, ::appHome)
     }
 }

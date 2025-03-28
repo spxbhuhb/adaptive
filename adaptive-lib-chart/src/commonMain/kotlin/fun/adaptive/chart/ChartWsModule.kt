@@ -9,7 +9,7 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
-class WsChartModule : ChartModule<Workspace>() {
+class ChartWsModule : ChartModule<Workspace>() {
 
     override fun Workspace.init() {
 

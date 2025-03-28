@@ -10,7 +10,7 @@ import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.builtin.menu_book
 import `fun`.adaptive.ui.workspace.Workspace
 
-class WsDocModule(
+class DocWsModule(
     val loadStrings: Boolean = true
 ) : AppModule<Workspace>() {
 
