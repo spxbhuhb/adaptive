@@ -44,7 +44,7 @@ open class FoundationActualize(
 
     override fun genPatchInternal(): Boolean {
 
-        if (haveToPatch(getCreateClosureDirtyMask(), 1 shl 1)) {
+        if (haveToPatch(getThisClosureDirtyMask(), 1 shl 1)) {
             if (lastKey == key) return true // no need to patch
 
             lastKey = key
