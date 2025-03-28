@@ -1,5 +1,6 @@
 package `fun`.adaptive.app
 
+import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.AdaptiveAdapter
@@ -9,8 +10,10 @@ import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.ktor.api.webSocketTransport
+import `fun`.adaptive.ktor.util.clientId
 import `fun`.adaptive.runtime.ApplicationNodeType
 import `fun`.adaptive.runtime.GlobalRuntimeContext
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.browser
 import kotlinx.browser.window
@@ -31,7 +34,11 @@ abstract class BrowserApplication<WT : Any, ADT : UiClientApplicationData> : UiC
 
             GlobalRuntimeContext.nodeType = ApplicationNodeType.Client
 
+            initModules()
+
             initWireFormats()
+
+            clientId()
 
             loadResources()
 
@@ -44,6 +51,9 @@ abstract class BrowserApplication<WT : Any, ADT : UiClientApplicationData> : UiC
                     actualize(backendMainKey)
                 }
             }
+
+            // this must be after backend init as backend init starts the transport
+            appData.sessionOrNull = getService<SessionApi>(transport).getSession()
 
             initWorkspace()
 

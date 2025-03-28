@@ -7,7 +7,7 @@ import `fun`.adaptive.ui.snackbar.SnackType
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
-class LibUiModule : AppModule<Workspace>() {
+class LibUiModule<AT : Any> : AppModule<Workspace, AT>() {
 
     override fun WireFormatRegistry.init() {
         this += SnackType

@@ -13,7 +13,7 @@ import kotlinx.coroutines.coroutineScope
 
 abstract class UiClientApplication<WT, ADT : UiClientApplicationData> {
 
-    val modules = mutableSetOf<AppModule<WT>>()
+    val modules = mutableSetOf<AppModule<WT, UiClientApplication<WT,ADT>>>()
 
     abstract val transport : ServiceCallTransport
 
@@ -29,6 +29,10 @@ abstract class UiClientApplication<WT, ADT : UiClientApplicationData> {
     open val defaultFontName = "Open Sans"
     open val defaultFontSize = 16.sp
     open val defaultFontWeight = 300
+
+    fun initModules() {
+        modules.forEach { it.application = this }
+    }
 
     fun initWireFormats() {
         modules.forEach { with(it) { WireFormatRegistry.init() } }
@@ -50,6 +54,14 @@ abstract class UiClientApplication<WT, ADT : UiClientApplicationData> {
 
     open fun initWorkspace() {
         modules.forEach { with(it) { workspace.init() } }
+    }
+
+    open fun onSignInSuccess() {
+
+    }
+
+    open fun onSignOut() {
+
     }
 
 }

@@ -12,11 +12,11 @@ inline fun <reified T> Any.applyIfInstance(block: T.() -> Unit) {
     if (this is T) this.apply(block)
 }
 
-inline fun <reified T> List<Any>.firstInstance(): T {
+inline fun <reified T> Collection<Any>.firstInstance(): T {
     return first { it is T } as T
 }
 
-inline fun <reified T> List<Any>.firstInstanceOrNull(): T? {
+inline fun <reified T> Collection<Any>.firstInstanceOrNull(): T? {
     return firstOrNull { it is T } as? T
 }
 

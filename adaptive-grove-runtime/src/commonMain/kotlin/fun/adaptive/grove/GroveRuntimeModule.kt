@@ -6,7 +6,7 @@ import `fun`.adaptive.grove.hydration.lfm.*
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
-class GroveRuntimeModule<WT> : AppModule<WT>() {
+class GroveRuntimeModule<WT,AT:Any> : AppModule<WT, AT>() {
 
     override fun WireFormatRegistry.init() {
         this += LfmConst

@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
-class BasicAppInspectWsModule : AppModule<Workspace>() {
+class BasicAppInspectWsModule<AT : Any> : AppModule<Workspace, AT>() {
 
     companion object {
         const val INSPECT_TOOL_KEY: FragmentKey = "app:ws:inspect:tool"

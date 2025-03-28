@@ -18,7 +18,7 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.value.ui.iconCache
 
-class IotWsModule : IotModule<Workspace>(true) {
+class IotWsModule<AT : Any> : IotModule<Workspace, AT>(true) {
 
     override fun AdaptiveAdapter.init() {
         fragmentFactory += IotFragmentFactory

@@ -4,10 +4,11 @@ import `fun`.adaptive.app.ws.BasicAppWsModule
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.workspace.Workspace
+import kotlinx.browser.window
 
 open class WsBrowserApplication<ADT : UiClientApplicationData>(
     override val appData : ADT,
-    vararg modules : AppModule<Workspace>
+    vararg modules : AppModule<Workspace, UiClientApplication<Workspace, ADT>>
 ) : BrowserApplication<Workspace, ADT>() {
 
     init {
@@ -26,10 +27,12 @@ open class WsBrowserApplication<ADT : UiClientApplicationData>(
 
         super.initWorkspace()
 
-        workspace.addContent(BasicAppWsModule.HOME_CONTENT_ITEM)
-
         workspace.updateSplits()
 
+    }
+
+    override fun onSignOut() {
+        window.location.reload()
     }
 
 }

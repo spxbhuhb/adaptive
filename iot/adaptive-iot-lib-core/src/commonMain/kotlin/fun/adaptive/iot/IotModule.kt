@@ -16,9 +16,9 @@ import `fun`.adaptive.value.item.AvStatus
 import `fun`.adaptive.value.operation.*
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
-open class IotModule<WT>(
+open class IotModule<WT, AT : Any>(
     val loadStrings: Boolean = true
-) : AppModule<WT>() {
+) : AppModule<WT, AT>() {
 
     override fun WireFormatRegistry.init() {
         this += AvoAdd

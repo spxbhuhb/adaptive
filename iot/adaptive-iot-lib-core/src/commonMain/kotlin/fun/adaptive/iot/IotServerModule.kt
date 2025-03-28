@@ -12,7 +12,7 @@ import `fun`.adaptive.iot.point.computed.AioPointComputeWorker
 import `fun`.adaptive.iot.space.AioSpaceService
 import `fun`.adaptive.ui.workspace.Workspace
 
-class IotServerModule : IotModule<Workspace>(false) {
+class IotServerModule<AT : Any> : IotModule<Workspace, AT>(false) {
 
     override fun BackendAdapter.init() {
         service { AioSpaceService() }

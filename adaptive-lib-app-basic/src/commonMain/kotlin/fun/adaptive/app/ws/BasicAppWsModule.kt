@@ -3,14 +3,17 @@ package `fun`.adaptive.app.ws
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.administration
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.local_police
+import `fun`.adaptive.app.UiClientApplication
 import `fun`.adaptive.app.ws.main.backend.WsAppBackendFragmentFactory
 import `fun`.adaptive.app.ws.main.frontend.WsAppFrontendFragmentFactory
+import `fun`.adaptive.auth.api.SessionApi
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AppModule
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.builtin.*
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.WsSideBarAction
@@ -22,7 +25,7 @@ import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.ui.workspace.model.WsPaneSingularity
 import `fun`.adaptive.utility.UUID
 
-class BasicAppWsModule : AppModule<Workspace>() {
+class BasicAppWsModule<AT :  UiClientApplication<Workspace, *>> : AppModule<Workspace, AT>() {
 
     companion object {
         const val FRONTEND_MAIN_KEY: FragmentKey = "app:ws:frontend:main"
@@ -30,10 +33,10 @@ class BasicAppWsModule : AppModule<Workspace>() {
         const val ACCOUNT_SELF_KEY: FragmentKey = "app:ws:account:self"
         const val ADMIN_TOOL_KEY: FragmentKey = "app:ws:admin:tool"
         const val HOME_CONTENT_KEY: FragmentKey = "app:ws:home:content"
-
-        lateinit var ACCOUNT_SELF_ITEM: SingularWsItem
-        lateinit var HOME_CONTENT_ITEM: SingularWsItem
     }
+
+    lateinit var ACCOUNT_SELF_ITEM: SingularWsItem
+    lateinit var HOME_CONTENT_ITEM: SingularWsItem
 
     override suspend fun loadResources() {
         commonMainStringsStringStore0.load()
@@ -50,11 +53,11 @@ class BasicAppWsModule : AppModule<Workspace>() {
     override fun Workspace.init() {
         wsAppHomePaneDef()
         appAdminToolDef()
-        wsAppAccountToolDef()
+        wsAppAccountSelfDef()
         wsAppSignOutActionDef()
     }
 
-    fun Workspace.wsAppAccountToolDef() {
+    fun Workspace.wsAppAccountSelfDef() {
 
         ACCOUNT_SELF_ITEM = SingularWsItem(Strings.home, ACCOUNT_SELF_KEY)
 
@@ -125,6 +128,10 @@ class BasicAppWsModule : AppModule<Workspace>() {
             addContent(HOME_CONTENT_ITEM)
         }
 
+        if (this.lastActiveContentPaneGroup == null) {
+            addContent(HOME_CONTENT_ITEM)
+        }
+
     }
 
     fun Workspace.wsAppSignOutActionDef() {
@@ -135,7 +142,14 @@ class BasicAppWsModule : AppModule<Workspace>() {
             WsPanePosition.LeftBottom,
             Int.MAX_VALUE,
             null
-        ) { }
+        ) {
+            io {
+                getService<SessionApi>(transport).logout()
+                ui {
+                    application.onSignOut()
+                }
+            }
+        }
 
     }
 

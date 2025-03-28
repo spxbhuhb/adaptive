@@ -5,7 +5,7 @@ import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.ui.workspace.Workspace
 
-object WsSandBoxModule : AppModule<Workspace>() {
+object WsSandBoxModule : AppModule<Workspace, Any>() {
 
     override suspend fun loadResources() {
         commonMainStringsStringStore0.load()

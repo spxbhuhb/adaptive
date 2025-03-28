@@ -1,5 +1,6 @@
 package `fun`.adaptive.app.ws.main.backend
 
+import `fun`.adaptive.auth.authCommon
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.foundation.Adaptive

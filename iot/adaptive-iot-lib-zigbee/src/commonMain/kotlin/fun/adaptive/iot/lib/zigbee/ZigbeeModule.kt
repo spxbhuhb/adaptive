@@ -8,7 +8,7 @@ import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.value.operation.*
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
-open class ZigbeeModule<WT> : AppModule<WT>() {
+open class ZigbeeModule<WT,AT : Any> : AppModule<WT, AT>() {
 
     override fun WireFormatRegistry.init() {
         this += ZigBeeNetworkSpec

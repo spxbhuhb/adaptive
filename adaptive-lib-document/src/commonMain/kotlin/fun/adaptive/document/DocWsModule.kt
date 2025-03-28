@@ -10,9 +10,9 @@ import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.builtin.menu_book
 import `fun`.adaptive.ui.workspace.Workspace
 
-class DocWsModule(
+class DocWsModule<AT : Any>(
     val loadStrings: Boolean = true
-) : AppModule<Workspace>() {
+) : AppModule<Workspace, AT>() {
 
     override suspend fun loadResources() {
         if (loadStrings) {
