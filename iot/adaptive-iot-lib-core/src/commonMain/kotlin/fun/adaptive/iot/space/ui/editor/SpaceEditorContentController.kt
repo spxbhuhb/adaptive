@@ -18,7 +18,7 @@ import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
-import `fun`.adaptive.value.ui.iconFor
+import `fun`.adaptive.ui.value.iconFor
 
 class SpaceEditorContentController(
     override val workspace: Workspace

@@ -30,7 +30,7 @@ suspend fun addSpace(worker: AvValueWorker, name: String, friendlyItemId: Friend
             SpaceMarkers.SPACE to null,
             spaceType to null
         ),
-        specific = spaceSpec
+        spec = spaceSpec
     )
 
     worker.queueAddAll(space)

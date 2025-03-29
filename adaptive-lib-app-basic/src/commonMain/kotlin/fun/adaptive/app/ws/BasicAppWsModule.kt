@@ -149,7 +149,7 @@ class BasicAppWsModule<AT :  UiClientApplication<Workspace, *>> : AppModule<Work
             null
         ) {
             io {
-                getService<AuthSessionApi>(transport).logout()
+                getService<AuthSessionApi>(transport).signOut()
                 ui {
                     application.onSignOut()
                 }

@@ -115,7 +115,7 @@ private fun menu(viewModel: DeviceTreeModel, treeItem: TreeItem<AvValueId>): Lis
 
     val item = controller.valueTreeStore[itemId]?.asAvItem<AioDeviceSpec>()
     val markers = controller.valueTreeStore[itemId]?.markers?.keys ?: emptySet<DeviceMarkers>()
-    val virtual = (item?.specific?.virtual == true)
+    val virtual = (item?.spec?.virtual == true)
 
     val base =
         when {

@@ -18,7 +18,7 @@ data class AvItem<T>(
     override val parentId: AvValueId? = null,
     val friendlyId: FriendlyItemId,
     val markersOrNull: AvMarkerMap? = null,
-    val specific: T? = null
+    val spec: T
 ) : AvValue() {
 
     val markers: AvMarkerMap
@@ -50,10 +50,9 @@ data class AvItem<T>(
 
             @Suppress("UNCHECKED_CAST") // just checked
             this as AvItem<T>
-            if (specific == null) return this
 
             @Suppress("USELESS_IS_CHECK") // not useless in this case actually
-            check(specific is T)
+            check(spec is T)
 
             return this
         }
@@ -62,10 +61,9 @@ data class AvItem<T>(
 
             @Suppress("UNCHECKED_CAST") // just checked
             this as AvItem<T>
-            if (specific == null) return this
 
             @Suppress("USELESS_IS_CHECK") // not useless in this case actually
-            if (specific !is T) return null
+            if (spec !is T) return null
 
             return this
         }

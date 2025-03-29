@@ -102,7 +102,7 @@ class SessionTest {
     fun loginUnknownPrincipal() {
         sessionTest {
             assertFailsWith(AuthenticationFail::class) {
-                getService<AuthSessionApi>(it.transport).login("admin", "admin")
+                getService<AuthSessionApi>(it.transport).signIn("admin", "admin")
                 delay(100) // let the websocket disconnect
             }.also {
                 assertEquals(AuthenticationResult.UnknownPrincipal, it.result)
@@ -117,7 +117,7 @@ class SessionTest {
                 transaction {
                     PrincipalTable += Principal(UUID(), "admin")
                 }
-                getService<AuthSessionApi>(it.transport).login("admin", "admin")
+                getService<AuthSessionApi>(it.transport).signIn("admin", "admin")
                 delay(100) // let the websocket disconnect
             }.also {
                 assertEquals(AuthenticationResult.NoCredential, it.result)
@@ -136,7 +136,7 @@ class SessionTest {
                     PrincipalTable.plusAssign(admin)
                     CredentialTable.plusAssign(Credential(UUID(), admin.id, CredentialType.PASSWORD, passwd, now()))
                 }
-                getService<AuthSessionApi>(it.transport).login("admin", "admin")
+                getService<AuthSessionApi>(it.transport).signIn("admin", "admin")
                 delay(100) // let the websocket disconnect
             }.also {
                 assertEquals(AuthenticationResult.NotActivated, it.result)
@@ -155,7 +155,7 @@ class SessionTest {
                     PrincipalTable += admin
                     CredentialTable += Credential(UUID(), admin.id, CredentialType.PASSWORD, passwd, now())
                 }
-                getService<AuthSessionApi>(it.transport).login("admin", "other stuff")
+                getService<AuthSessionApi>(it.transport).signIn("admin", "other stuff")
                 delay(100) // let the websocket disconnect
             }.also {
                 assertEquals(AuthenticationResult.InvalidCredentials, it.result)
@@ -174,7 +174,7 @@ class SessionTest {
                 CredentialTable += Credential(UUID(), admin.id, CredentialType.PASSWORD, passwd, now())
             }
 
-            val session = getService<AuthSessionApi>(it.transport).login("admin", "stuff")
+            val session = getService<AuthSessionApi>(it.transport).signIn("admin", "stuff")
             delay(100) // let the websocket disconnect
 
             assertNotNull(session)
@@ -195,10 +195,10 @@ class SessionTest {
 
             val sessionService = getService<AuthSessionApi>(it.transport)
 
-            sessionService.login("admin", "stuff")
+            sessionService.signIn("admin", "stuff")
             delay(100) // to let the websocket close
 
-            sessionService.logout()
+            sessionService.signOut()
             delay(100) // to let the websocket close
 
             sessionService.getSession()

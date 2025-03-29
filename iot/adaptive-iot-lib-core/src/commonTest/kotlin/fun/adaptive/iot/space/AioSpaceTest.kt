@@ -37,7 +37,7 @@ class AioSpaceTest {
         assertNotNull(spaceFromQuery)
         assertEquals(space, spaceFromQuery)
 
-        assertEquals(12.3, spaceFromQuery.specific?.area)
+        assertEquals(12.3, spaceFromQuery.spec.area)
     }
 
     @Test

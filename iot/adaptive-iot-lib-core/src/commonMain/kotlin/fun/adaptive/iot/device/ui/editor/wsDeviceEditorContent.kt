@@ -37,8 +37,8 @@ import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
-import `fun`.adaptive.value.ui.AvNameCacheEntry
-import `fun`.adaptive.value.ui.AvUiList
+import `fun`.adaptive.ui.value.AvNameCacheEntry
+import `fun`.adaptive.ui.value.AvUiList
 
 fun wsDeviceEditorContentDef(context: AioWsContext) {
     val workspace = context.workspace
@@ -62,7 +62,7 @@ fun wsDeviceContentPane(pane: WsPane<AvItem<AioDeviceSpec>, DeviceEditorContentC
     val originalItem = copyOf { pane.data }
 
     val editItem = copyOf { pane.data }
-    val editSpec = copyOf { pane.data.specific !! }
+    val editSpec = copyOf { pane.data.spec }
 
     val spaceNames = fragment().wsContext<AioWsContext>().spaceNameCache.value
 
@@ -110,7 +110,7 @@ fun actions(
     button(Strings.save) ..
         alignSelf.end ..
         onClick {
-            if (editItem.name == originalItem.name && editSpec == originalItem.specific && editSpace == originalSpace) {
+            if (editItem.name == originalItem.name && editSpec == originalItem.spec && editSpace == originalSpace) {
                 warningNotification(Strings.noDataChanged)
                 return@onClick
             }
@@ -124,7 +124,7 @@ fun actions(
                 controller.setSpace(editItem.uuid, editSpace !!.item.uuid)
             }
 
-            if (originalItem.specific != editSpec) {
+            if (originalItem.spec != editSpec) {
                 controller.setSpec(editItem.uuid, editSpec)
             }
         }

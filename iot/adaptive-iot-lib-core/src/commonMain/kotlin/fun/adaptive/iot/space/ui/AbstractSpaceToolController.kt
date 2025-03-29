@@ -2,7 +2,7 @@ package `fun`.adaptive.iot.space.ui
 
 import `fun`.adaptive.iot.space.AioSpaceApi
 import `fun`.adaptive.iot.space.SpaceMarkers
-import `fun`.adaptive.value.ui.AvUiTree
+import `fun`.adaptive.ui.value.AvUiTree
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.instruction.event.EventModifier

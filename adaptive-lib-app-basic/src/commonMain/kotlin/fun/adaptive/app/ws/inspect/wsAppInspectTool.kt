@@ -1,7 +1,6 @@
 package `fun`.adaptive.app.ws.inspect
 
 import `fun`.adaptive.app.UiClientApplication
-import `fun`.adaptive.auth.model.Session
 import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -51,8 +50,8 @@ private fun session(app : UiClientApplication<*,*>) {
     column {
         h2("Session")
 
-        text("Session Id: ${session?.id ?: "<no-session>"}")
+        text("Session Id: ${session?.uuid ?: "<no-session>"}")
         text("Principal ID: ${session?.principalOrNull}")
-        text("Roles: ${session?.roles?.joinToString { it.name }}")
+        text("Roles: ${session?.roles?.joinToString()}")
     }
 }

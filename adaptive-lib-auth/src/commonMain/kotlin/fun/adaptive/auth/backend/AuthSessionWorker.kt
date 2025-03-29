@@ -59,7 +59,7 @@ class AuthSessionWorker : WorkerImpl<AuthSessionWorker>, ServiceSessionProvider 
 
         for (session in expired) {
 
-            lock.use { activeSessions.remove(session.id.cast()) }
+            lock.use { activeSessions.remove(session.uuid.cast()) }
 
             session.principalOrNull?.let {
 //                    history(it, session.id)
@@ -75,14 +75,14 @@ class AuthSessionWorker : WorkerImpl<AuthSessionWorker>, ServiceSessionProvider 
             val expired = preparedSessions.values.filter { it.vmCreatedAt < preparedCutoff }
 
             for (session in expired) {
-                preparedSessions.remove(session.id.cast())
+                preparedSessions.remove(session.uuid.cast())
             }
         }
     }
 
     fun addPreparedSession(session: Session) {
         lock.use {
-            preparedSessions[session.id.cast()] = session
+            preparedSessions[session.uuid.cast()] = session
         }
     }
 
@@ -106,7 +106,7 @@ class AuthSessionWorker : WorkerImpl<AuthSessionWorker>, ServiceSessionProvider 
 
     fun addActiveSession(session: Session) {
         lock.use {
-            activeSessions[session.id.cast()] = session
+            activeSessions[session.uuid.cast()] = session
         }
     }
 

@@ -59,7 +59,7 @@ fun smallSignIn(): AdaptiveFragment {
             button(Strings.signInButton) .. maxWidth .. onClick {
                 CoroutineScope(Dispatchers.Default).launch {
                     try {
-                        getService<AuthSessionApi>(adapter().transport).login(signIn.login, signIn.password)
+                        getService<AuthSessionApi>(adapter().transport).signIn(signIn.login, signIn.password)
                         successNotification(Strings.signInSuccess)
                     } catch (t: Throwable) {
                         t.printStackTrace()

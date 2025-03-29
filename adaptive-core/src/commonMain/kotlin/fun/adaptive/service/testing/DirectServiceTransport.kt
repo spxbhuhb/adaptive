@@ -15,7 +15,7 @@ import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
-class DirectServiceTransport(
+open class DirectServiceTransport(
     val dump: Boolean = false,
     override val wireFormatProvider: WireFormatProvider = Proto,
     name : String = "direct"

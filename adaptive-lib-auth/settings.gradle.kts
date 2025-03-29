@@ -24,4 +24,5 @@ dependencyResolutionManagement {
 }
 
 includeBuild("../adaptive-core")
+includeBuild("../adaptive-lib-util")
 includeBuild("../adaptive-lib-value")

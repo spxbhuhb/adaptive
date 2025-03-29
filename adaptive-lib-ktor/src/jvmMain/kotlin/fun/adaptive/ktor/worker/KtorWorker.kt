@@ -185,7 +185,7 @@ class KtorWorker(
                 return@get
             }
 
-            logger.info { "DOWNLOAD-START  ${session.id} $file" }
+            logger.info { "DOWNLOAD-START  ${session.uuid} $file" }
 
             call.response.header(
                 HttpHeaders.ContentDisposition,
@@ -198,9 +198,9 @@ class KtorWorker(
                         inputStream.copyTo(this)
                     }
                 }
-                logger.info { "DOWNLOAD-SUCCESS ${session.id} $file" }
+                logger.info { "DOWNLOAD-SUCCESS ${session.uuid} $file" }
             } catch (ex : Exception) {
-                logger.info("DOWNLOAD-FAIL ${session.id} $file", ex)
+                logger.info("DOWNLOAD-FAIL ${session.uuid} $file", ex)
             } finally {
                 file.delete()
             }

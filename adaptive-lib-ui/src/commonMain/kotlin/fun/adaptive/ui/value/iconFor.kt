@@ -1,4 +1,4 @@
-package `fun`.adaptive.value.ui
+package `fun`.adaptive.ui.value
 
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet

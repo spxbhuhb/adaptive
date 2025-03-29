@@ -141,7 +141,7 @@ class AvValueWorkerTest {
             friendlyId = "1",
             markersOrNull = markers,
             parentId = null,
-            specific = null
+            spec = Unit
         )
 
         worker.queueAdd(item) // Add the AvItem to the worker

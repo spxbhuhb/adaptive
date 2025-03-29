@@ -19,8 +19,8 @@ import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.ui.AvNameCache
-import `fun`.adaptive.value.ui.AvUiTree
+import `fun`.adaptive.ui.value.AvNameCache
+import `fun`.adaptive.ui.value.AvUiTree
 
 class HistoryToolController(
     override val workspace: Workspace
@@ -177,10 +177,10 @@ class HistoryToolController(
         val hisTreeItems = hisPoints
             .sortedBy { it.name }
             .map { hisPoint ->
-                val specific = hisPoint.specific as? AioPointSpec
+                val specific = hisPoint.spec as AioPointSpec
                 TreeItem<AvValueId>(
                     Graphics.database,
-                    hisPoint.name + " " + specific?.displayAddress,
+                    hisPoint.name + " " + specific.displayAddress,
                     hisPoint.uuid,
                     parent = treeItem
                 ).also {

@@ -36,7 +36,7 @@ import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
-import `fun`.adaptive.value.ui.AvUiList
+import `fun`.adaptive.ui.value.AvUiList
 
 fun wsSpaceEditorContentDef(context: AioWsContext) {
     val workspace = context.workspace
@@ -60,7 +60,7 @@ fun wsSpaceContentPane(pane: WsPane<AvItem<AioSpaceSpec>, SpaceEditorContentCont
     val originalItem = copyOf { pane.data }
 
     val editItem = copyOf { pane.data }
-    val editSpec = copyOf { pane.data.specific !! }
+    val editSpec = copyOf { pane.data.spec }
 
     grid {
         maxSize .. padding { 16.dp } .. backgrounds.surface
@@ -102,7 +102,7 @@ fun actions(
     button(Strings.save) ..
         alignSelf.end ..
         onClick {
-            if (editItem.name == originalItem.name && editSpec == originalItem.specific) {
+            if (editItem.name == originalItem.name && editSpec == originalItem.spec) {
                 warningNotification(Strings.noDataChanged)
                 return@onClick
             }
@@ -111,7 +111,7 @@ fun actions(
                 controller.rename(editItem.uuid, editItem.name)
                 originalItem.update(originalItem::name, editItem.name)
             }
-            if (originalItem.specific != editSpec) {
+            if (originalItem.spec != editSpec) {
                 controller.setSpaceSpec(originalItem.uuid, editSpec)
             }
         }

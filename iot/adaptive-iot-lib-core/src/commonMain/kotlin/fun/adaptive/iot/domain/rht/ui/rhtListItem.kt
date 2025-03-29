@@ -24,9 +24,9 @@ import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.value.builtin.AvDouble
 import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.ui.AvUiList
-import `fun`.adaptive.value.ui.AvUiValue
-import `fun`.adaptive.value.ui.iconFor
+import `fun`.adaptive.ui.value.AvUiList
+import `fun`.adaptive.ui.value.AvUiValue
+import `fun`.adaptive.ui.value.iconFor
 
 @Adaptive
 fun rhtListItem(

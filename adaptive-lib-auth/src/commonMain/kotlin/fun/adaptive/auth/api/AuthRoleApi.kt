@@ -7,7 +7,6 @@ package `fun`.adaptive.auth.api
 import `fun`.adaptive.auth.model.AuthRole
 import `fun`.adaptive.auth.model.RoleSpec
 import `fun`.adaptive.service.ServiceApi
-import `fun`.adaptive.value.AvValueId
 
 @ServiceApi
 interface AuthRoleApi {

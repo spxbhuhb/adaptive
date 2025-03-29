@@ -14,7 +14,6 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.arrow_right
-import `fun`.adaptive.ui.filter.quickFilter
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.instruction.dp
@@ -23,7 +22,7 @@ import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.ui.AvUiList
+import `fun`.adaptive.ui.value.AvUiList
 
 @Adaptive
 fun wsSpaceBrowserContent(pane: WsPane<SpaceBrowserWsItem, *>): AdaptiveFragment {

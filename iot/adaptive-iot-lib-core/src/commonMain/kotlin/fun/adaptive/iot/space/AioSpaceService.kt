@@ -44,7 +44,7 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
                     SpaceMarkers.SPACE to null,
                     spaceType to null
                 ),
-                specific = AioSpaceSpec(area = 0.0)
+                spec = AioSpaceSpec(area = 0.0)
             )
 
             this += space
@@ -87,7 +87,7 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
         publicAccess()
 
         return worker.update<AvItem<AioSpaceSpec>>(valueId) {
-            it.copy(timestamp = now(), specific = spec)
+            it.copy(timestamp = now(), spec = spec)
         }
     }
 

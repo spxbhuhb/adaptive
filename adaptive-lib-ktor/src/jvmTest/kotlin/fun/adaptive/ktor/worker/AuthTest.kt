@@ -60,7 +60,7 @@ class AuthTest {
 
         runBlocking {
             if (login) {
-                getService<AuthSessionApi>(clientBackend.transport).login("admin", "stuff")
+                getService<AuthSessionApi>(clientBackend.transport).signIn("admin", "stuff")
                 delay(100) // let the websocket disconnect
             }
 
@@ -107,7 +107,7 @@ class AuthTest {
     @Test
     fun loggedInAfterLogout() {
         authTest(login = true) {
-            getService<AuthSessionApi>(it.transport).logout()
+            getService<AuthSessionApi>(it.transport).signOut()
             delay(100) // let the websocket disconnect
 
             assertFailsWith(AccessDenied::class) {

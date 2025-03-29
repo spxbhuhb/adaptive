@@ -5,7 +5,6 @@
 package `fun`.adaptive.auth.model
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.AdatEntity
 import `fun`.adaptive.service.model.ServiceSession
 import `fun`.adaptive.utility.CleanupHandler
 import `fun`.adaptive.utility.UUID
@@ -13,7 +12,7 @@ import kotlinx.datetime.Instant
 
 @Adat
 class Session(
-    override val id: UUID<Session>,
+    override val uuid: UUID<Session>,
     override val principalOrNull: AuthPrincipalId?,
     val securityCode: String,
     val createdAt: Instant,

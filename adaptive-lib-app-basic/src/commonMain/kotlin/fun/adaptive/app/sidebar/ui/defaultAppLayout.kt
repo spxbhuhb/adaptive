@@ -297,7 +297,7 @@ fun appIcon(
 fun logout(appData: BasicAppData) {
     actionIcon(Graphics.power_settings_new) .. alignSelf.center .. onClick {
         adapter().scope.launch {
-            getService<AuthSessionApi>(adapter().transport).logout()
+            getService<AuthSessionApi>(adapter().transport).signOut()
             appData.onLogout()
         }
     }

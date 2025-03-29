@@ -5,8 +5,6 @@
 package `fun`.adaptive.auth.model
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.AdatCompanion
-import `fun`.adaptive.adat.AdatEntity
 import `fun`.adaptive.utility.UUID
 import kotlinx.datetime.Instant
 

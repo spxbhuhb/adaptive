@@ -69,7 +69,7 @@ fun largeSignIn(): AdaptiveFragment {
 
                 adapter().scope.launch {
                     try {
-                        app.appData.sessionOrNull = getService<AuthSessionApi>(adapter().transport).login(signIn.login, signIn.password)
+                        app.appData.sessionOrNull = getService<AuthSessionApi>(adapter().transport).signIn(signIn.login, signIn.password)
                         app.workspace.addContent(basicAppWsModule.HOME_CONTENT_ITEM)
                         app.onSignInSuccess()
                     } catch (t: Throwable) {

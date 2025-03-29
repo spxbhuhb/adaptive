@@ -1,8 +1,7 @@
-package `fun`.adaptive.value.ui
+package `fun`.adaptive.ui.value
 
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.AdaptiveAdapter
-import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.general.Observable
 import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.log.getLogger

@@ -63,7 +63,7 @@ fun largeSignIn(): AdaptiveFragment {
 
                 adapter().scope.launch {
                     try {
-                        appData.session = getService<AuthSessionApi>(adapter().transport).login(signIn.login, signIn.password)
+                        appData.session = getService<AuthSessionApi>(adapter().transport).signIn(signIn.login, signIn.password)
                         appData.onLoginSuccess()
                     } catch (t: Throwable) {
                         failNotification(Strings.singInFail)

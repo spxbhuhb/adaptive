@@ -26,7 +26,8 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.measureTime
 
 class AvValueWorker(
-    val persistence: AbstractValuePersistence = NoPersistence()
+    val persistence: AbstractValuePersistence = NoPersistence(),
+    private val trace : Boolean = false
 ) : WorkerImpl<AvValueWorker> {
 
     private val lock = getLock()
@@ -42,8 +43,6 @@ class AvValueWorker(
     private val markerSubscriptions = mutableMapOf<AvMarker, MutableList<MarkerSubscriptionEntry>>()
 
     private val markerIndices = mutableMapOf<AvMarker, MutableSet<AvValueId>>()
-
-    private val trace = false
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val isIdle: Boolean
@@ -475,7 +474,7 @@ class AvValueWorker(
      * - rollback **MUST BE HANDLED** by [computeFun], the worker does not guarantee that
      */
     suspend fun <T> execute(timeout: Duration = 5.seconds, computeFun: AvComputeFun<T>): T {
-        val channel = Channel<Any>()
+        val channel = Channel<Any>(Channel.BUFFERED)
 
         val op = AvoComputation<T>().also {
             it.channel = channel

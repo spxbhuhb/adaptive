@@ -56,7 +56,7 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
                 parentId,
                 nextFriendlyId(DeviceMarkers.DEVICE, "DEV-"),
                 markersOrNull = itemMarkers,
-                specific = spec
+                spec = spec
             )
 
             this += item
@@ -99,7 +99,7 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
         publicAccess()
 
         return worker.update<AvItem<AioDeviceSpec>>(valueId) {
-            it.copy(timestamp = now(), specific = spec)
+            it.copy(timestamp = now(), spec = spec)
         }
     }
 

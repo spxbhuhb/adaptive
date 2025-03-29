@@ -51,11 +51,13 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.adaptive.core)
+            implementation(libs.adaptive.lib.util)
             implementation(libs.adaptive.lib.value)
         }
 
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
         }
 
         jvmTest.dependencies {

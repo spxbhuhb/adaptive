@@ -16,7 +16,7 @@ import `fun`.adaptive.iot.space.ui.editor.wsSpaceEditorToolDef
 import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.value.ui.iconCache
+import `fun`.adaptive.ui.value.iconCache
 
 class IotWsModule<AT : Any> : IotModule<Workspace, AT>(true) {
 

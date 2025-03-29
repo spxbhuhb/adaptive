@@ -2,7 +2,7 @@ package `fun`.adaptive.iot.device.ui
 
 import `fun`.adaptive.iot.device.AioDeviceApi
 import `fun`.adaptive.iot.device.DeviceMarkers
-import `fun`.adaptive.value.ui.AvUiTree
+import `fun`.adaptive.ui.value.AvUiTree
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.instruction.event.EventModifier

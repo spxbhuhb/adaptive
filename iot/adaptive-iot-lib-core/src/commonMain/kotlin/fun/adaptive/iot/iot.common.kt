@@ -19,7 +19,7 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.value.builtin.AvDouble
-import `fun`.adaptive.value.ui.iconCache
+import `fun`.adaptive.ui.value.iconCache
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
 suspend fun iotCommon(loadStrings: Boolean = true) {

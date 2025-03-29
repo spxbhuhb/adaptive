@@ -71,7 +71,7 @@ class DownloadTest {
                     CredentialTable.plusAssign(Credential(UUID(), admin.id, CredentialType.PASSWORD, passwd, now()))
                 }
 
-                val session = getService<AuthSessionApi>(clientBackend.transport).login("admin", "stuff")
+                val session = getService<AuthSessionApi>(clientBackend.transport).signIn("admin", "stuff")
                 delay(100) // let the websocket disconnect
 
                 test(clientBackend, session)
@@ -89,7 +89,7 @@ class DownloadTest {
         val fileName = service.download()
 
         assertEquals("a.txt", fileName)
-        assertTrue(Path(testPath, session.id.toString(), fileName).exists())
+        assertTrue(Path(testPath, session.uuid.toString(), fileName).exists())
 
         val client = (adapter.transport as ClientWebSocketServiceCallTransport).client
         val response = client.get("http://localhost:8080/adaptive/download/$fileName")

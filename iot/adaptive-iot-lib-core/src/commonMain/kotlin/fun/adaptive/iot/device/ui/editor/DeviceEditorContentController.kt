@@ -20,7 +20,7 @@ import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
-import `fun`.adaptive.value.ui.iconFor
+import `fun`.adaptive.ui.value.iconFor
 
 class DeviceEditorContentController(
     override val workspace: Workspace

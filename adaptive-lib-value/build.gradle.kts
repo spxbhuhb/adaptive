@@ -55,18 +55,12 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.adaptive.core)
-            implementation(libs.adaptive.ui)
-            implementation(libs.adaptive.lib.ui)
             implementation(libs.adaptive.lib.util)
         }
 
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
-        }
-
-        jvmTest.dependencies {
-            implementation(libs.h2database)
         }
     }
 }

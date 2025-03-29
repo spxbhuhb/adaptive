@@ -16,12 +16,12 @@ interface AuthSessionApi {
 
     suspend fun roles(): Set<AuthRoleId>
 
-    suspend fun login(name: String, password: String): Session
+    suspend fun signIn(name: String, password: String): Session
 
     suspend fun activateSession(securityCode: String): Session
 
     suspend fun getSession(): Session?
 
-    suspend fun logout()
+    suspend fun signOut()
 
 }

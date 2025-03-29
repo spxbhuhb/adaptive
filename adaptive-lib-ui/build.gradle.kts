@@ -62,7 +62,7 @@ kotlin {
             implementation(libs.adaptive.grove.runtime)
             implementation(libs.adaptive.ui)
             implementation(libs.adaptive.lib.auto)
-            implementation(libs.adaptive.lib.auth)
+            implementation(libs.adaptive.lib.value)
             implementation(libs.adaptive.lib.graphics)
         }
         commonTest.dependencies {

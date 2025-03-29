@@ -5,7 +5,6 @@
 package `fun`.adaptive.auth.model
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvMarkerValue
 import `fun`.adaptive.value.item.AvStatus
@@ -13,7 +12,7 @@ import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
 
 @Adat
-data class AuthCredentialList(
+data class CredentialList(
     override val uuid: AvValueId,
     override val timestamp: Instant = now(),
     override val status: AvStatus = AvStatus.OK,
@@ -23,6 +22,6 @@ data class AuthCredentialList(
 ) : AvMarkerValue() {
 
     override val markerName: String
-        get() = "credentialList"
+        get() = AuthMarkers.CREDENTIAL_LIST
 
 }

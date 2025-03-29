@@ -2,13 +2,15 @@ package `fun`.adaptive.auth.backend
 
 import `fun`.adaptive.auth.api.AuthSessionApi
 import `fun`.adaptive.auth.backend.AuthPrincipalService.Companion.worker
-import `fun`.adaptive.auth.context.*
+import `fun`.adaptive.auth.context.ensuredByLogic
+import `fun`.adaptive.auth.context.getPrincipalIdOrNull
+import `fun`.adaptive.auth.context.getSessionOrNull
+import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.auth.model.CredentialType.ACTIVATION_KEY
 import `fun`.adaptive.auth.util.BCrypt
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
-import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.secureRandom
 import `fun`.adaptive.utility.use
@@ -29,7 +31,6 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService> {
     }
 
     override fun mount() {
-        check(GlobalRuntimeContext.isServer)
         valueWorker = safeAdapter.firstImpl<AvValueWorker>()
         sessionWorker = safeAdapter.firstImpl<AuthSessionWorker>()
     }
@@ -48,7 +49,7 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService> {
         return serviceContext.getSessionOrNull()?.roles ?: emptySet()
     }
 
-    override suspend fun login(name: String, password: String): Session {
+    override suspend fun signIn(name: String, password: String): Session {
         publicAccess()
 
         val policy = getPolicy()
@@ -61,13 +62,13 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService> {
         val vmNow = vmNowSecond()
 
         val session = Session(
-            id = serviceContext.uuid.cast(),
+            uuid = serviceContext.uuid.cast(),
             principalOrNull = principal.uuid,
             securityCode = abs(secureRandom(1)[0]).toString().padStart(6, '0').substring(0, 6),
             createdAt = now(),
             vmCreatedAt = vmNow,
             lastActivity = vmNow,
-            roles = principal.specific !!.roles
+            roles = principal.spec.roles
         )
 
         if (getPolicy().twoFactorAuthentication) {
@@ -112,7 +113,7 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService> {
         return serviceContext.getSessionOrNull()
     }
 
-    override suspend fun logout() {
+    override suspend fun signOut() {
         publicAccess()
 
         serviceContext.disconnect = true
@@ -146,7 +147,7 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService> {
         val principal = valueWorker.item(principalId).asAvItem<PrincipalSpec>()
 
         val validCredentials = if (checkCredentials) {
-            val credentialList = valueWorker.markerVal<AuthCredentialList>(principal.uuid, AUTH_CREDENTIAL_LIST)
+            val credentialList = valueWorker.markerVal<CredentialList>(principal.uuid, AuthMarkers.CREDENTIAL_LIST)
 
             val credential = credentialList.credentials.firstOrNull { it.type == credentialType }
                 ?: throw AuthenticationFail(AuthenticationResult.NoCredential)
@@ -160,7 +161,7 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService> {
         lockState(principalId)
 
         try {
-            val spec = principal.specific !!
+            val spec = principal.spec
 
             val result = when {
                 ! spec.activated && credentialType != ACTIVATION_KEY -> AuthenticationResult.NotActivated
@@ -237,7 +238,7 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService> {
         updateFun: (PrincipalSpec) -> PrincipalSpec
     ) {
         worker.update<AvValue>(principalId) { item ->
-            item.asAvItem<PrincipalSpec>().let { it.copy(specific = updateFun(it.specific !!)) }
+            item.asAvItem<PrincipalSpec>().let { it.copy(spec = updateFun(it.spec)) }
         }
     }
 

@@ -38,7 +38,7 @@ import `fun`.adaptive.value.builtin.AvConvertedDouble
 import `fun`.adaptive.value.builtin.AvDouble
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvStatus
-import `fun`.adaptive.value.ui.AvUiValue
+import `fun`.adaptive.ui.value.AvUiValue
 import kotlinx.datetime.Clock.System.now
 
 @Adaptive

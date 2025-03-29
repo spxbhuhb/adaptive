@@ -71,7 +71,7 @@ class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker> {
         for (spacePointId in spacePointIds) {
             val spacePoint = itemOrNull(spacePointId)?.asAvItemOrNull<AioComputedPointSpec>() ?: continue
 
-            val dependencyMarker = spacePoint.specific?.dependencyMarker ?: continue
+            val dependencyMarker = spacePoint.spec.dependencyMarker
             if (dependencyMarker !in point.markers) continue
 
             pointsToCompute += spacePointId

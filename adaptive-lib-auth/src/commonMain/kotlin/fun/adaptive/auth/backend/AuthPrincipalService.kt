@@ -1,8 +1,9 @@
 package `fun`.adaptive.auth.backend
 
 import `fun`.adaptive.auth.api.AuthPrincipalApi
-import `fun`.adaptive.auth.context.ensureOneOf
-import `fun`.adaptive.auth.context.ensurePrincipalOrOneOf
+import `fun`.adaptive.auth.backend.AuthWorker.Companion.securityOfficer
+import `fun`.adaptive.auth.context.ensureHas
+import `fun`.adaptive.auth.context.ensurePrincipalOrHas
 import `fun`.adaptive.auth.context.ofPrincipal
 import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.auth.model.*
@@ -12,10 +13,7 @@ import `fun`.adaptive.auth.model.CredentialType.PASSWORD_RESET_KEY
 import `fun`.adaptive.auth.util.BCrypt
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
-import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid7
-import `fun`.adaptive.utility.getLock
-import `fun`.adaptive.utility.use
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
@@ -26,25 +24,10 @@ import kotlinx.datetime.Clock.System.now
 class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService> {
 
     companion object {
-        val lock = getLock()
-
-        var addRoles: Array<AvValueId> = emptyArray<AvValueId>()
-            get() = lock.use { field }
-            set(value) = lock.use { field = value }
-
-        var getRoles: Array<AvValueId> = emptyArray<AvValueId>()
-            get() = lock.use { field }
-            set(value) = lock.use { field = value }
-
-        var updateRoles: Array<AvValueId> = emptyArray<AvValueId>()
-            get() = lock.use { field }
-            set(value) = lock.use { field = value }
-
         lateinit var worker: AvValueWorker
     }
 
     override fun mount() {
-        check(GlobalRuntimeContext.isServer)
         worker = safeAdapter.firstImpl<AvValueWorker>()
     }
 
@@ -54,47 +37,22 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     val policy
         get() = SecurityPolicy()
 
-    override suspend fun all(): List<AuthPrincipal> =
-        ensureOneOf(*getRoles).let {
-            worker.queryByMarker(AuthMarkers.PRINCIPAL).map {
-                it.asAvItem<PrincipalSpec>()
-            }
+    override suspend fun all(): List<AuthPrincipal> {
+        ensureHas(securityOfficer)
+
+        return worker.queryByMarker(AuthMarkers.PRINCIPAL).map {
+            it.asAvItem<PrincipalSpec>()
         }
+    }
 
     override suspend fun addPrincipal(
         name: String,
         spec: PrincipalSpec,
         activationKey: String?
     ) {
-        ensureOneOf(*addRoles)
+        ensureHas(securityOfficer)
 
-        val credentialListId = uuid7<AvValue>()
-
-        val principalValue = AvItem(
-            name = name,
-            type = AUTH_PRINCIPAL,
-            parentId = null,
-            markersOrNull = mapOf(AuthMarkers.CREDENTIAL_LIST to credentialListId),
-            friendlyId = name,
-            specific = spec
-        )
-
-        val credentials = mutableSetOf<Credential>()
-
-        if (activationKey != null) {
-            credentials += Credential(
-                ACTIVATION_KEY,
-                BCrypt.hashpw(activationKey, BCrypt.gensalt()),
-                now()
-            )
-        }
-
-        val credentialListValue = AuthCredentialList(
-            uuid = credentialListId,
-            parentId = principalValue.uuid,
-            type = AUTH_CREDENTIAL_LIST,
-            credentials = credentials
-        )
+        val (principalValue, credentialListValue) = addPrincipalPrep(name, spec, ACTIVATION_KEY, activationKey)
 
         //history(principal.id)
 
@@ -108,13 +66,53 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
 
     }
 
+    internal fun addPrincipalPrep(
+        name: String,
+        spec: PrincipalSpec,
+        credentialType: String,
+        credentialSecret: String?
+    ): Pair<AvItem<PrincipalSpec>, CredentialList> {
+
+        val credentialListId = uuid7<AvValue>()
+
+        val principalValue = AvItem(
+            name = name,
+            type = AUTH_PRINCIPAL,
+            parentId = null,
+            markersOrNull = mapOf(
+                AuthMarkers.PRINCIPAL to null,
+                AuthMarkers.CREDENTIAL_LIST to credentialListId
+            ),
+            friendlyId = name,
+            spec = spec
+        )
+
+        val credentials = mutableSetOf<Credential>()
+
+        if (credentialSecret != null) {
+            credentials += Credential(
+                credentialType,
+                BCrypt.hashpw(credentialSecret, BCrypt.gensalt()),
+                now()
+            )
+        }
+
+        val credentialListValue = CredentialList(
+            uuid = credentialListId,
+            parentId = principalValue.uuid,
+            type = AUTH_CREDENTIAL_LIST,
+            credentials = credentials
+        )
+
+        return (principalValue to credentialListValue)
+    }
+
     override suspend fun addCredential(
         principalId: AuthPrincipalId,
         credential: Credential,
         currentCredential: Credential?
     ) {
-
-        ensurePrincipalOrOneOf(principalId, updateRoles)
+        ensurePrincipalOrHas(principalId, securityOfficer)
 
         // history(credential.principal)
 
@@ -132,11 +130,11 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
         }
     }
 
-    override suspend fun getOrNull(principalId: AuthPrincipalId): AuthPrincipal? =
+    override suspend fun getOrNull(principalId: AuthPrincipalId): AuthPrincipal? {
+        ensurePrincipalOrHas(principalId, securityOfficer)
 
-        ensurePrincipalOrOneOf(principalId, getRoles).let {
-            worker[principalId.cast()]?.asAvItem<PrincipalSpec>()
-        }
+        return worker[principalId.cast()]?.asAvItem<PrincipalSpec>()
+    }
 
     override suspend fun activate(principalId: AuthPrincipalId, credential: Credential, key: Credential) {
         publicAccess()
@@ -180,7 +178,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
         principalId: AuthPrincipalId,
         activated: Boolean
     ) {
-        ensureOneOf(*updateRoles)
+        ensureHas(securityOfficer)
 
         // history(principalId)
 
@@ -191,7 +189,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
         principalId: AuthPrincipalId,
         locked: Boolean
     ) {
-        ensureOneOf(*updateRoles)
+        ensureHas(securityOfficer)
 
         //history(principalId)
 
@@ -205,7 +203,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
         principalId: AvValueId,
         updateFun: (MutableSet<Credential>) -> Set<Credential>
     ) {
-        val credentialList = markerVal<AuthCredentialList>(principalId.cast(), AUTH_CREDENTIAL_LIST)
+        val credentialList = markerVal<CredentialList>(principalId.cast(), AUTH_CREDENTIAL_LIST)
         this += credentialList.copy(timestamp = now(), credentials = updateFun(credentialList.credentials.toMutableSet()))
     }
 
@@ -214,7 +212,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
         updateFun: (PrincipalSpec) -> PrincipalSpec
     ) {
         worker.update<AvValue>(principalId) { item ->
-            item.asAvItem<PrincipalSpec>().let { it.copy(specific = updateFun(it.specific !!)) }
+            item.asAvItem<PrincipalSpec>().let { it.copy(spec = updateFun(it.spec)) }
         }
     }
 }

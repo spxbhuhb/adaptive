@@ -1,4 +1,4 @@
-package `fun`.adaptive.value.ui
+package `fun`.adaptive.ui.value
 
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.AdaptiveAdapter
@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import kotlin.collections.plusAssign
 
 class AvUiList(
     adapter: AdaptiveAdapter,

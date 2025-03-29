@@ -9,7 +9,7 @@ import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.ui.AvUiTree
+import `fun`.adaptive.ui.value.AvUiTree
 
 abstract class AbstractDocToolController(
     override val workspace: Workspace

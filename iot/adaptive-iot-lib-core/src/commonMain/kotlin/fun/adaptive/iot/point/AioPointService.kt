@@ -59,7 +59,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
                 parentId,
                 nextFriendlyId(PointMarkers.POINT, "PT-"),
                 markersOrNull = itemMarkers,
-                specific = spec
+                spec = spec
             )
 
             this += item
@@ -98,7 +98,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
         publicAccess()
 
         return valueWorker.update<AvItem<AioPointSpec>>(valueId) {
-            it.copy(timestamp = now(), specific = spec)
+            it.copy(timestamp = now(), spec = spec)
         }
     }
 
@@ -127,7 +127,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
 
         val curValWithId = curVal.deepCopy(AdatChange(listOf("uuid"), curValId))
 
-        val newCurVal = point.specific?.conversion?.convert(curValWithId) ?: curValWithId
+        val newCurVal = point.spec.conversion?.convert(curValWithId) ?: curValWithId
 
         context += newCurVal
 

@@ -5,7 +5,7 @@ import `fun`.adaptive.utility.UUID
 
 interface ServiceSession {
 
-    val id: UUID<*>
+    val uuid: UUID<*>
 
     val principalOrNull: UUID<*>?
 

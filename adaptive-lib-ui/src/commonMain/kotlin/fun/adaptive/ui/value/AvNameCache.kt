@@ -1,4 +1,4 @@
-package `fun`.adaptive.value.ui
+package `fun`.adaptive.ui.value
 
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.query.firstImpl
@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
+import kotlin.collections.plusAssign
 
 class AvNameCache(
     adapter: BackendAdapter,
