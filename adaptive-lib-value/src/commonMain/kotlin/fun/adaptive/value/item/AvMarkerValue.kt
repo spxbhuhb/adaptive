@@ -1,9 +1,9 @@
 package `fun`.adaptive.value.item
 
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.AvValueId
 
 abstract class AvMarkerValue : AvValue() {
+
     abstract val markerName: String
 
     override val name: String

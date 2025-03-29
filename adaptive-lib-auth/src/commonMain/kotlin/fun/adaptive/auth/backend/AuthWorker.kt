@@ -4,27 +4,29 @@
 
 package `fun`.adaptive.auth.backend
 
+import `fun`.adaptive.auth.backend.basic.AuthBasicService
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.auth.model.CredentialType.PASSWORD
+import `fun`.adaptive.auth.model.basic.BasicAccountSpec
 import `fun`.adaptive.backend.builtin.WorkerImpl
-import `fun`.adaptive.foundation.query.firstImpl
+import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.backend.query.firstImpl
+import `fun`.adaptive.backend.query.firstImplOrNull
+import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.firstItemOrNull
 import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.persistence.AbstractValuePersistence
+import `fun`.adaptive.value.persistence.NoPersistence
 
 class AuthWorker : WorkerImpl<AuthWorker> {
 
-    companion object {
-        lateinit var valueWorker: AvValueWorker
+    lateinit var securityOfficer: AvValueId
 
-        lateinit var securityOfficer: AuthRoleId
-            private set
-    }
+    val valueWorker by worker<AvValueWorker>()
 
     override fun mount() {
-        valueWorker = safeAdapter.firstImpl<AvValueWorker>()
         getOrCreateSoRole()
-        optCreateSoPrincipal()
     }
 
     fun getOrCreateSoRole() {
@@ -51,25 +53,41 @@ class AuthWorker : WorkerImpl<AuthWorker> {
         }
     }
 
-    fun optCreateSoPrincipal() {
+    override suspend fun run() {
+        optCreateSoPrincipal()
+    }
+
+    /**
+     * Create a security officer principal if none exists. Also create a basic
+     * account for the principal if `BasicAccountService` is part of the backend.
+     */
+    suspend fun optCreateSoPrincipal() {
+
         val soPrincipal = valueWorker.firstItemOrNull(AuthMarkers.PRINCIPAL) {
             securityOfficer in ((it.spec as? PrincipalSpec)?.roles ?: emptySet())
         }
 
-        if (soPrincipal != null) return
+        if (soPrincipal == null) {
+            val account = safeAdapter.firstImplOrNull<AuthBasicService>()?.let {
+                AvItem<BasicAccountSpec>(
+                    name = "Security Officer",
+                    type = AuthMarkers.BASIC_ACCOUNT,
+                    friendlyId = "Security Officer",
+                    spec = BasicAccountSpec(email = "so@localhost")
+                )
+            }
 
-        val (principalValue, credentialListValue) =
-            AuthPrincipalService().addPrincipalPrep("so", PrincipalSpec(), PASSWORD, "so")
-
-        valueWorker.queueAdd(principalValue)
-        valueWorker.queueAdd(credentialListValue)
-
-        // history -- added principal
+            getPrincipalService().addPrincipal(
+                "so",
+                PrincipalSpec(activated = true),
+                PASSWORD,
+                "so",
+                account
+            )
+        }
     }
 
-    override suspend fun run() {
-        // auth worker does not do much atm, it is responsible for initialization mostly
-    }
-
+    fun getPrincipalService() =
+        safeAdapter.firstImpl<AuthPrincipalService>().newInstance(Session.contextForRole(securityOfficer))
 
 }

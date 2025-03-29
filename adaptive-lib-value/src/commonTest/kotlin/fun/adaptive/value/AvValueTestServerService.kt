@@ -11,7 +11,7 @@ class AvValueTestServerService : ServiceImpl<AvValueTestServerService>, AvValueA
         get() = safeAdapter.firstImpl<AvValueWorker>()
 
     override suspend fun process(operation: AvValueOperation) {
-        worker.queueOperation(operation)
+        worker.queue(operation)
     }
 
     override suspend fun subscribe(conditions: List<AvSubscribeCondition>): AvValueSubscriptionId {

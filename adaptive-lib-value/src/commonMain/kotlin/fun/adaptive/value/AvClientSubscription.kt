@@ -63,7 +63,7 @@ class AvClientSubscription(
     }
 
     fun stop() {
-        worker?.unsubscribe(this.uuid)
+        store?.unsubscribe(this.uuid)
         channel.close()
     }
 

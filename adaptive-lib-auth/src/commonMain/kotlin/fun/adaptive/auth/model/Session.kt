@@ -5,9 +5,14 @@
 package `fun`.adaptive.auth.model
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.model.ServiceSession
+import `fun`.adaptive.service.transport.NullTransport
 import `fun`.adaptive.utility.CleanupHandler
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.UUID.Companion.uuid7
+import `fun`.adaptive.value.AvValueId
+import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
 
 @Adat
@@ -31,6 +36,18 @@ class Session(
 
     override fun cleanup() {
         TODO("Not yet implemented")
+    }
+
+    companion object {
+        /**
+         * Create an empty session for with [role]. Useful for intra-server calls.
+         */
+        fun forRole(role: AvValueId) = Session(uuid7(), null, "", now(), 0L, 0L, setOf(role))
+
+        /**
+         * Get a service context with an empty session with [role]. Useful for intra-server calls.
+         */
+        fun contextForRole(role: AvValueId) = ServiceContext(NullTransport, sessionOrNull = forRole(role))
     }
 
 }

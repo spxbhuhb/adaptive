@@ -4,7 +4,7 @@ import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.gpp_maybe
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.auth.api.AuthPrincipalApi
 import `fun`.adaptive.auth.api.AuthRoleApi
-import `fun`.adaptive.auth.model.Principal
+import `fun`.adaptive.auth.model.AuthPrincipal
 import `fun`.adaptive.auth.model.AuthRole
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.Independent
@@ -37,7 +37,7 @@ fun accountEditor(account: AccountEditorData? = null, close: () -> Unit) {
     val principal = fetch { getService<AuthPrincipalApi>(adapter().transport).getOrNull(account?.id?.cast() ?: UUID.nil()) }
 
     val knownRoles = fetch { getService<AuthRoleApi>(adapter().transport).all() } ?: emptyList()
-    val principalRoles = fetch { getService<AuthRoleApi>(adapter().transport).rolesOf(account?.id?.cast() ?: UUID.nil(), null) } ?: emptyList()
+    //val principalRoles = fetch { getService<AuthRoleApi>(adapter().transport).rolesOf(account?.id?.cast() ?: UUID.nil(), null) } ?: emptyList()
 
     val rowCount = if (account == null) 4 else 6
 
@@ -54,7 +54,7 @@ fun accountEditor(account: AccountEditorData? = null, close: () -> Unit) {
         if (principal != null) loginTimes(principal)
         if (principal != null) loginCounters(principal)
 
-        roles(knownRoles, principalRoles)
+        //roles(knownRoles, principalRoles)
 
         buttons(account, copy, close)
     }
@@ -125,7 +125,7 @@ fun phone(account: AccountEditorData) {
 }
 
 @Adaptive
-fun loginTimes(principal: Principal) {
+fun loginTimes(principal: AuthPrincipal) {
     grid {
         maxWidth
         rowTemplate(28.dp, 44.dp)
@@ -136,13 +136,13 @@ fun loginTimes(principal: Principal) {
         inputLabel { "Utolsó sikeres azonosítás" }
         inputLabel { "Utolsó sikertelen azonosítás" }
 
-        instant(principal.lastAuthSuccess)
-        instant(principal.lastAuthFail)
+        instant(principal.spec.lastAuthSuccess)
+        instant(principal.spec.lastAuthFail)
     }
 }
 
 @Adaptive
-fun loginCounters(principal: Principal) {
+fun loginCounters(principal: AuthPrincipal) {
     grid {
         maxWidth
         rowTemplate(28.dp, 44.dp)
@@ -153,8 +153,8 @@ fun loginCounters(principal: Principal) {
         inputLabel { "Sikeres azonosítások száma" }
         inputLabel { "Sikertelen azonosítások száma" }
 
-        text(principal.authSuccessCount)
-        text(principal.authFailCount)
+        text(principal.spec.authSuccessCount)
+        text(principal.spec.authFailCount)
     }
 }
 

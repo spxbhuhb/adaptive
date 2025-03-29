@@ -76,11 +76,10 @@ class AioSpaceTest {
             val scope = CoroutineScope(Dispatchers.Unconfined)
 
             scope.launch {
+                worker.mount()
                 worker.run()
             }
 
             testFun(worker)
-
-            worker.close()
         }
 }

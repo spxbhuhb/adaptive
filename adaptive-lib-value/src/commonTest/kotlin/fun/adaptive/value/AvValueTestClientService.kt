@@ -7,7 +7,7 @@ import `fun`.adaptive.value.operation.AvValueOperation
 class AvValueTestClientService : ServiceImpl<AvValueTestClientService>, AvValueApi {
 
     override suspend fun process(operation: AvValueOperation) {
-        adapter !!.firstImpl<AvValueWorker>().queueOperation(operation)
+        adapter !!.firstImpl<AvValueWorker>().queue(operation)
     }
 
     override suspend fun subscribe(conditions: List<AvSubscribeCondition>): AvValueSubscriptionId {

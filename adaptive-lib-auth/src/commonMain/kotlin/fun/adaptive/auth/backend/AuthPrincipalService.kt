@@ -1,7 +1,6 @@
 package `fun`.adaptive.auth.backend
 
 import `fun`.adaptive.auth.api.AuthPrincipalApi
-import `fun`.adaptive.auth.backend.AuthWorker.Companion.securityOfficer
 import `fun`.adaptive.auth.context.ensureHas
 import `fun`.adaptive.auth.context.ensurePrincipalOrHas
 import `fun`.adaptive.auth.context.ofPrincipal
@@ -12,24 +11,21 @@ import `fun`.adaptive.auth.model.CredentialType.PASSWORD
 import `fun`.adaptive.auth.model.CredentialType.PASSWORD_RESET_KEY
 import `fun`.adaptive.auth.util.BCrypt
 import `fun`.adaptive.backend.builtin.ServiceImpl
-import `fun`.adaptive.foundation.query.firstImpl
+import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
+import `fun`.adaptive.value.store.AvComputeContext
 import kotlinx.datetime.Clock.System.now
 
 class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService> {
 
-    companion object {
-        lateinit var worker: AvValueWorker
-    }
-
-    override fun mount() {
-        worker = safeAdapter.firstImpl<AvValueWorker>()
-    }
+    val valueWorker by worker<AvValueWorker>()
+    val authWorker by worker<AuthWorker>()
+    val securityOfficer by lazy { authWorker.securityOfficer }
 
     val sessionService
         get() = AuthSessionService().newInstance(serviceContext)
@@ -40,7 +36,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     override suspend fun all(): List<AuthPrincipal> {
         ensureHas(securityOfficer)
 
-        return worker.queryByMarker(AuthMarkers.PRINCIPAL).map {
+        return valueWorker.queryByMarker(AuthMarkers.PRINCIPAL).map {
             it.asAvItem<PrincipalSpec>()
         }
     }
@@ -52,37 +48,33 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     ) {
         ensureHas(securityOfficer)
 
-        val (principalValue, credentialListValue) = addPrincipalPrep(name, spec, ACTIVATION_KEY, activationKey)
-
-        //history(principal.id)
-
-        worker.execute {
-            val uniqueName = worker.queryByMarker(AuthMarkers.PRINCIPAL).none { it.name == name }
-            require(uniqueName) { "principal with the same name already exists" }
-
-            this += principalValue
-            this += credentialListValue
-        }
-
+        addPrincipal(name, spec, ACTIVATION_KEY, activationKey)
     }
 
-    internal fun addPrincipalPrep(
+    internal suspend fun addPrincipal(
         name: String,
         spec: PrincipalSpec,
         credentialType: String,
-        credentialSecret: String?
-    ): Pair<AvItem<PrincipalSpec>, CredentialList> {
+        credentialSecret: String?,
+        account: AvItem<*>? = null
+    ): AvValueId {
 
         val credentialListId = uuid7<AvValue>()
+
+        val markersOrNull = mutableMapOf(
+            AuthMarkers.PRINCIPAL to null,
+            AuthMarkers.CREDENTIAL_LIST to credentialListId
+        )
+
+        if (account != null) {
+            markersOrNull[AuthMarkers.ACCOUNT_REF] = account.uuid
+        }
 
         val principalValue = AvItem(
             name = name,
             type = AUTH_PRINCIPAL,
             parentId = null,
-            markersOrNull = mapOf(
-                AuthMarkers.PRINCIPAL to null,
-                AuthMarkers.CREDENTIAL_LIST to credentialListId
-            ),
+            markersOrNull = markersOrNull,
             friendlyId = name,
             spec = spec
         )
@@ -104,7 +96,19 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
             credentials = credentials
         )
 
-        return (principalValue to credentialListValue)
+        valueWorker.execute {
+            val uniqueName = valueWorker.queryByMarker(AuthMarkers.PRINCIPAL).none { it.name == name }
+            require(uniqueName) { "principal with the same name already exists" }
+
+            this += principalValue
+            this += credentialListValue
+
+            if (account != null) {
+                this += account.copy(parentId = principalValue.uuid)
+            }
+        }
+
+        return principalValue.uuid
     }
 
     override suspend fun addCredential(
@@ -121,7 +125,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
             sessionService.authenticate(principalId, currentCredential.value, true, currentCredential.type, policy)
         }
 
-        worker.execute {
+        valueWorker.execute {
             updateCredentials(principalId) {
                 it.removeAll { it.type == credential.type }
                 it.add(credential.hash())
@@ -133,7 +137,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     override suspend fun getOrNull(principalId: AuthPrincipalId): AuthPrincipal? {
         ensurePrincipalOrHas(principalId, securityOfficer)
 
-        return worker[principalId.cast()]?.asAvItem<PrincipalSpec>()
+        return valueWorker[principalId.cast()]?.asAvItem<PrincipalSpec>()
     }
 
     override suspend fun activate(principalId: AuthPrincipalId, credential: Credential, key: Credential) {
@@ -143,7 +147,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
 
         // history(credential.principal)
 
-        worker.execute {
+        valueWorker.execute {
             updateCredentials(principalId) {
                 it.removeAll { it.type == ACTIVATION_KEY }
                 it.add(credential.hash())
@@ -165,7 +169,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
 
         // history(credential.principal)
 
-        worker.execute {
+        valueWorker.execute {
             updateCredentials(principalId) {
                 it.removeAll { it.type == PASSWORD_RESET_KEY }
                 it.add(credential.hash())
@@ -199,7 +203,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     private fun Credential.hash(type: String? = null) =
         Credential(type ?: PASSWORD, BCrypt.hashpw(value, BCrypt.gensalt()), now())
 
-    private fun AvValueWorker.WorkerComputeContext.updateCredentials(
+    private fun AvComputeContext.updateCredentials(
         principalId: AvValueId,
         updateFun: (MutableSet<Credential>) -> Set<Credential>
     ) {
@@ -211,7 +215,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
         principalId: AvValueId,
         updateFun: (PrincipalSpec) -> PrincipalSpec
     ) {
-        worker.update<AvValue>(principalId) { item ->
+        valueWorker.update<AvValue>(principalId) { item ->
             item.asAvItem<PrincipalSpec>().let { it.copy(spec = updateFun(it.spec)) }
         }
     }

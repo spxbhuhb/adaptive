@@ -67,6 +67,13 @@ data class AvItem<T>(
 
             return this
         }
+
+        inline fun <reified T> AvItem<*>.withSpec(): AvItem<T> {
+            check(spec is T)
+            @Suppress("UNCHECKED_CAST")
+            return this as AvItem<T>
+        }
+
     }
 
 }

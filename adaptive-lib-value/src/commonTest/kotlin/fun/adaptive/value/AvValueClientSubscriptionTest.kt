@@ -44,7 +44,7 @@ class AvValueClientSubscriptionTest {
 
         serverWorker.queueAdd(value)
 
-        waitForReal(1.seconds) { subscription.worker == null }
+        waitForReal(1.seconds) { subscription.store == null }
 
         assertEquals(serverWorker.subscriptionCount(valueId), 0)
     }

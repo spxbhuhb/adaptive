@@ -33,16 +33,16 @@ class AuthTestSupport : AbstractTestSupport(
     val valueWorker
         get() = serverBackend.firstImpl<AvValueWorker>()
 
-    suspend fun addPrincipal(name: String, password: String?, spec: PrincipalSpec = PrincipalSpec()): AuthPrincipalId {
-        val (principalValue, credentialListValue) =
-            AuthPrincipalService().addPrincipalPrep(name, spec, PASSWORD, password)
+    val authWorker
+        get() = serverBackend.firstImpl<AuthWorker>()
 
-        valueWorker.queueAdd(principalValue)
-        valueWorker.queueAdd(credentialListValue)
+    suspend fun addPrincipal(name: String, password: String?, spec: PrincipalSpec = PrincipalSpec()): AuthPrincipalId {
+
+        val principalId = authWorker.getPrincipalService().addPrincipal(name, spec, PASSWORD, password)
 
         waitForReal(1.seconds) { valueWorker.isIdle }
 
-        return principalValue.uuid
+        return principalId
     }
 
     companion object {

@@ -11,7 +11,6 @@ import `fun`.adaptive.iot.history.model.AioDoubleHistoryRecord
 import `fun`.adaptive.iot.history.model.AioHistoryId
 import `fun`.adaptive.iot.iotCommon
 import `fun`.adaptive.reflect.typeSignature
-import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.clearedTestPath
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.waitFor
@@ -59,7 +58,7 @@ class HistoryWorkerTest {
             uuid,
             timestamp,
             AioDoubleHistoryRecord.typeSignature(),
-            AioDoubleHistoryRecord(timestamp, 12.0, 23).encodeToProtoByteArray()
+            AioDoubleHistoryRecord(timestamp, 12.0, 12.0, 23).encodeToProtoByteArray()
         )
 
         waitForReal(7.seconds)

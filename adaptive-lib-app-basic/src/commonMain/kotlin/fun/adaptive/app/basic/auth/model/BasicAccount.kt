@@ -12,6 +12,4 @@ class BasicAccount(
     val name: String,
     val email: String,
     val phone: String,
-) : AdatEntity<BasicAccount> {
-    companion object : AdatCompanion<Credential>
-}
+)

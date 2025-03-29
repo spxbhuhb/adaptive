@@ -1,9 +1,6 @@
 package `fun`.adaptive.auth.app
 
-import `fun`.adaptive.auth.backend.AuthPrincipalService
-import `fun`.adaptive.auth.backend.AuthRoleService
-import `fun`.adaptive.auth.backend.AuthSessionService
-import `fun`.adaptive.auth.backend.AuthSessionWorker
+import `fun`.adaptive.auth.backend.*
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.worker
@@ -16,6 +13,7 @@ class AuthServerModule<AT : Any> : AuthModule<Unit, AT>() {
         service { AuthSessionService() }
 
         worker { AuthSessionWorker() }
+        worker { AuthWorker() }
     }
 
 }

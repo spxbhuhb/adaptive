@@ -235,11 +235,10 @@ class AvValueWorkerTest {
             val scope = CoroutineScope(dispatcher)
 
             scope.launch {
+                worker.mount()
                 worker.run()
             }
 
             testFun(worker)
-
-            worker.close()
         }
 }

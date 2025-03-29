@@ -1,7 +1,6 @@
 package `fun`.adaptive.auth.backend
 
 import `fun`.adaptive.auth.api.AuthSessionApi
-import `fun`.adaptive.auth.backend.AuthPrincipalService.Companion.worker
 import `fun`.adaptive.auth.context.ensuredByLogic
 import `fun`.adaptive.auth.context.getPrincipalIdOrNull
 import `fun`.adaptive.auth.context.getSessionOrNull
@@ -10,7 +9,7 @@ import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.auth.model.CredentialType.ACTIVATION_KEY
 import `fun`.adaptive.auth.util.BCrypt
 import `fun`.adaptive.backend.builtin.ServiceImpl
-import `fun`.adaptive.foundation.query.firstImpl
+import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.secureRandom
 import `fun`.adaptive.utility.use
@@ -25,15 +24,8 @@ import kotlin.math.abs
 
 class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService> {
 
-    companion object {
-        lateinit var valueWorker: AvValueWorker
-        lateinit var sessionWorker: AuthSessionWorker
-    }
-
-    override fun mount() {
-        valueWorker = safeAdapter.firstImpl<AvValueWorker>()
-        sessionWorker = safeAdapter.firstImpl<AuthSessionWorker>()
-    }
+    val valueWorker by worker<AvValueWorker>()
+    val sessionWorker by worker<AuthSessionWorker>()
 
     // ----------------------------------------------------------------------------------
     // API functions
@@ -237,7 +229,7 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService> {
         principalId: AvValueId,
         updateFun: (PrincipalSpec) -> PrincipalSpec
     ) {
-        worker.update<AvValue>(principalId) { item ->
+        valueWorker.update<AvValue>(principalId) { item ->
             item.asAvItem<PrincipalSpec>().let { it.copy(spec = updateFun(it.spec)) }
         }
     }

@@ -19,6 +19,7 @@ import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.item.AvStatus
+import `fun`.adaptive.value.store.AvComputeContext
 import kotlinx.datetime.Clock.System.now
 
 class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
@@ -120,7 +121,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
         AioHistoryService.append(newCurVal)
     }
 
-    internal fun unsafeSetCurVal(context: AvValueWorker.WorkerComputeContext, pointId: AvValueId, curVal: AvValue): AvValue {
+    internal fun unsafeSetCurVal(context: AvComputeContext, pointId: AvValueId, curVal: AvValue): AvValue {
         val point = context.item(pointId).asAvItem<AioPointSpec>()
         val originalCurValId = point.markers[PointMarkers.CUR_VAL]
         val curValId = originalCurValId ?: uuid7<AvValue>()

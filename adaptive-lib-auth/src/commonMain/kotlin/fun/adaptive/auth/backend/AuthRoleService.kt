@@ -5,30 +5,24 @@
 package `fun`.adaptive.auth.backend
 
 import `fun`.adaptive.auth.api.AuthRoleApi
-import `fun`.adaptive.auth.backend.AuthWorker.Companion.securityOfficer
 import `fun`.adaptive.auth.context.ensureHas
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.backend.builtin.ServiceImpl
-import `fun`.adaptive.foundation.query.firstImpl
+import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.firstItemOrNull
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 
 class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService> {
 
-    companion object {
-        lateinit var worker: AvValueWorker
-    }
-
-    override fun mount() {
-        worker = safeAdapter.firstImpl<AvValueWorker>()
-    }
+    val valueWorker by worker<AvValueWorker>()
+    val authWorker by worker<AuthWorker>()
+    val securityOfficer by lazy { authWorker.securityOfficer }
 
     override suspend fun all(): List<AuthRole> {
         ensureHas(securityOfficer)
 
-        return worker.queryByMarker(AuthMarkers.ROLE).map {
+        return valueWorker.queryByMarker(AuthMarkers.ROLE).map {
             it.asAvItem<RoleSpec>()
         }
     }
@@ -47,8 +41,8 @@ class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService> {
             spec = spec
         )
 
-        worker.execute {
-            val uniqueName = worker.queryByMarker(AuthMarkers.ROLE).none { it.name == name }
+        valueWorker.execute {
+            val uniqueName = valueWorker.queryByMarker(AuthMarkers.ROLE).none { it.name == name }
             require(uniqueName) { "role with the same name already exists" }
 
             this += roleValue

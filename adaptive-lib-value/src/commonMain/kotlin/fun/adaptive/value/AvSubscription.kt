@@ -5,13 +5,14 @@ import `fun`.adaptive.value.operation.AvValueOperation
 import `fun`.adaptive.value.operation.AvoAddOrUpdate
 import `fun`.adaptive.value.operation.AvoMarkerRemove
 import `fun`.adaptive.value.operation.AvoTransaction
+import `fun`.adaptive.value.store.AvValueStore
 
 abstract class AvSubscription(
     val uuid: AvValueSubscriptionId,
     val conditions: List<AvSubscribeCondition>
 ) {
 
-    var worker: AvValueWorker? = null
+    var store: AvValueStore? = null
 
     val transaction = mutableListOf<AvValueOperation>()
 

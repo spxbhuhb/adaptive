@@ -14,6 +14,7 @@ import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.builtin.AvConvertedDouble
 import `fun`.adaptive.value.builtin.AvDouble
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItemOrNull
+import `fun`.adaptive.value.store.AvComputeContext
 import kotlinx.coroutines.channels.Channel
 
 class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker> {
@@ -38,7 +39,7 @@ class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker> {
         }
     }
 
-    fun AvValueWorker.WorkerComputeContext.collectDependents(value: AvValue): MutableList<AvValueId>? {
+    fun AvComputeContext.collectDependents(value: AvValue): MutableList<AvValueId>? {
         val point = itemOrNull(value.parentId) ?: return null
 
         // point container may be a controller or a space
