@@ -57,9 +57,8 @@ class AvComputeContext(
     inline fun <reified T> markerValOrNull(itemId: AvValueId, marker: AvMarker) =
         internalGetMarkerVal(itemId, marker) as T?
 
-    fun internalGetMarkerVal(itemId: AvValueId, marker: AvMarker) {
+    fun internalGetMarkerVal(itemId: AvValueId, marker: AvMarker) =
         store.unsafeGetMarkerValue(itemId, marker)
-    }
 
     fun getContainingList(
         childId: AvValueId,
