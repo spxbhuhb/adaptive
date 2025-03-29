@@ -3,6 +3,7 @@
  */
 package `fun`.adaptive.kotlin.foundation.ir.reference
 
+import `fun`.adaptive.kotlin.common.AdaptiveFqNames.PLUGIN_REFERENCE
 import `fun`.adaptive.kotlin.foundation.ClassIds
 import `fun`.adaptive.kotlin.foundation.Strings
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
@@ -17,6 +18,7 @@ import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrFunctionReferenceImplWithShape
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.util.getAnnotationArgumentValue
 import org.jetbrains.kotlin.ir.util.hasAnnotation
 import org.jetbrains.kotlin.ir.util.primaryConstructor
 
@@ -56,7 +58,9 @@ class FunctionPropertyTransform(
 
         if (name.isSpecial || name.identifier != Strings.ADD) return super.visitCall(expression)
 
-        if (pluginContext.addNonTransformed !in owner.overriddenSymbols) return super.visitCall(expression)
+        if (owner.getAnnotationArgumentValue<String>(PLUGIN_REFERENCE, "key") != "addNonTransformed") return super.visitCall(expression)
+
+        //if (pluginContext.addNonTransformed !in owner.overriddenSymbols) return super.visitCall(expression)
 
         return IrCallImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
