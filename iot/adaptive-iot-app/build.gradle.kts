@@ -76,6 +76,7 @@ kotlin {
                 implementation(libs.adaptive.lib.document)
                 implementation(libs.adaptive.lib.chart)
                 implementation(libs.adaptive.lib.ui)
+                implementation(libs.adaptive.lib.util)
                 implementation(libs.adaptive.lib.value)
 
                 implementation(libs.adaptive.iot.lib.core)

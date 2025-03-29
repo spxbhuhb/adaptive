@@ -6,9 +6,11 @@ import `fun`.adaptive.runtime.ClientWorkspace
 class AuthClientModule<WT : ClientWorkspace> : AuthModule<WT>() {
 
     override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
-        contexts += AuthAppContext().also {
-            check(session is Session)
-            it.sessionOrNull = session
+        contexts += AuthAppContext(workspace).also {
+            if (session != null) {
+                check(session is Session)
+                it.sessionOrNull = session
+            }
         }
     }
 

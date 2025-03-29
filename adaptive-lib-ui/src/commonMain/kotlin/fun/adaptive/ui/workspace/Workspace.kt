@@ -26,10 +26,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 open class Workspace(
-    val backend: BackendAdapter,
-    val scope: CoroutineScope = backend.scope,
-    val transport: ServiceCallTransport = backend.transport
-) : ClientWorkspace() {
+    backend: BackendAdapter,
+    scope: CoroutineScope = backend.scope,
+    transport: ServiceCallTransport = backend.transport
+) : ClientWorkspace(backend, scope, transport) {
 
     companion object {
         inline fun <reified T> AdaptiveFragment.wsContext() =
@@ -268,7 +268,7 @@ open class Workspace(
     // Tool management
     // --------------------------------------------------------------------------------
 
-    operator fun WsPane<*,*>.unaryPlus() {
+    operator fun WsPane<*, *>.unaryPlus() {
         toolPanes += this
     }
 

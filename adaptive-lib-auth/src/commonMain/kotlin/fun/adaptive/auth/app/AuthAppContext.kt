@@ -2,9 +2,12 @@ package `fun`.adaptive.auth.app
 
 import `fun`.adaptive.auth.model.Session
 import `fun`.adaptive.runtime.AbstractApplication
-import `fun`.adaptive.utility.firstInstance
+import `fun`.adaptive.runtime.ClientWorkspace
+import `fun`.adaptive.utility.firstInstanceOrNull
 
-open class AuthAppContext {
+open class AuthAppContext(
+    val workspace: ClientWorkspace
+) {
 
     var sessionOrNull : Session? = null
 
@@ -14,6 +17,6 @@ open class AuthAppContext {
 
     companion object {
         val AbstractApplication<*>.authContext
-            get() = workspace.contexts.firstInstance<AuthAppContext>()
+            get() = checkNotNull(workspace.contexts.firstInstanceOrNull<AuthAppContext>()) { "cannot find auth context" }
     }
 }

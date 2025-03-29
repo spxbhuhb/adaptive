@@ -4,9 +4,11 @@
 
 import `fun`.adaptive.app.BasicBrowserClientApplication.Companion.basicBrowserClient
 import `fun`.adaptive.app.client.basic.BasicAppClientModule
+import `fun`.adaptive.auth.app.NoAuthClientModule
 
 fun main() {
     basicBrowserClient {
+        module { NoAuthClientModule() }
         module { BasicAppClientModule() }
     }
 }
