@@ -1,8 +1,5 @@
 package `fun`.adaptive.iot
 
-import `fun`.adaptive.backend.BackendAdapter
-import `fun`.adaptive.backend.builtin.service
-import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.iot.alarm.AioAlarmService
 import `fun`.adaptive.iot.device.AioDeviceService
 import `fun`.adaptive.iot.history.AioHistoryService
@@ -14,18 +11,14 @@ import `fun`.adaptive.runtime.ServerWorkspace
 
 class IotServerModule<WT : ServerWorkspace> : IotModule<WT>() {
 
-    override fun backendAdapterInit(adapter : BackendAdapter) = with(adapter){
-
+    override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
+        + AioSpaceService()
+        + AioDeviceService()
+        + AioPointService()
+        + AioPointComputeWorker()
+        + AioAlarmService()
+        + AioHistoryService()
+        + AioHistoryWorker()
     }
 
-    //         service { AioSpaceService() }
-    //        service { AioDeviceService() }
-    //
-    //        service { AioPointService() }
-    //        worker { AioPointComputeWorker() }
-    //
-    //        service { AioAlarmService() }
-    //
-    //        service { AioHistoryService() }
-    //        worker { AioHistoryWorker() }
 }

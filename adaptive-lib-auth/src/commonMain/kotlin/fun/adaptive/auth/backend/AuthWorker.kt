@@ -16,8 +16,6 @@ import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.firstItemOrNull
 import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.persistence.AbstractValuePersistence
-import `fun`.adaptive.value.persistence.NoPersistence
 
 class AuthWorker : WorkerImpl<AuthWorker> {
 
@@ -25,8 +23,10 @@ class AuthWorker : WorkerImpl<AuthWorker> {
 
     val valueWorker by worker<AvValueWorker>()
 
-    override fun mount() {
+
+    override suspend fun run() {
         getOrCreateSoRole()
+        optCreateSoPrincipal()
     }
 
     fun getOrCreateSoRole() {
@@ -53,10 +53,6 @@ class AuthWorker : WorkerImpl<AuthWorker> {
         }
     }
 
-    override suspend fun run() {
-        optCreateSoPrincipal()
-    }
-
     /**
      * Create a security officer principal if none exists. Also create a basic
      * account for the principal if `BasicAccountService` is part of the backend.
@@ -66,7 +62,7 @@ class AuthWorker : WorkerImpl<AuthWorker> {
         val soPrincipal = valueWorker.firstItemOrNull(AuthMarkers.PRINCIPAL) {
             securityOfficer in ((it.spec as? PrincipalSpec)?.roles ?: emptySet())
         }
-
+        
         if (soPrincipal == null) {
             val account = safeAdapter.firstImplOrNull<AuthBasicService>()?.let {
                 AvItem<BasicAccountSpec>(
@@ -79,7 +75,7 @@ class AuthWorker : WorkerImpl<AuthWorker> {
 
             getPrincipalService().addPrincipal(
                 "so",
-                PrincipalSpec(activated = true),
+                PrincipalSpec(activated = true, roles = setOf(securityOfficer)),
                 PASSWORD,
                 "so",
                 account

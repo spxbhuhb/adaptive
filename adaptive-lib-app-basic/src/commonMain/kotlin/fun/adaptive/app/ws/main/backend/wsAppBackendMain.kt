@@ -11,7 +11,6 @@ import `fun`.adaptive.value.app.valueClientBackend
 @Adaptive
 fun wsAppBackendMain(): AdaptiveFragment {
 
-    auto()
     worker { SnackbarManager() }
     valueClientBackend()
 

@@ -44,7 +44,7 @@ abstract class ClientApplication<WT : ClientWorkspace> : AbstractApplication<WT>
     suspend fun loadResources() {
         modules.forEach { it.resourceInit() }
         coroutineScope {
-            modules.map { async { it.resourceInit() } }.awaitAll()
+            stringStores.map { async { it.load() } }.awaitAll()
         }
     }
 

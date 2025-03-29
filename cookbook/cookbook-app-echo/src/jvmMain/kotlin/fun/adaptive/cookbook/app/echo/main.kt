@@ -17,16 +17,9 @@ fun main() {
     }
 
     jvmServer {
-        // this module is the actual functionality provided by the server
-
-        module { EchoServerModule() }
-
-        // these modules provide a very minimal server setup:
-        // - no authentication
-        // - Ktor server on 8080
-
-        module { NoAuthServerModule() }
-        module { KtorJvmServerModule() }
-        module { BasicAppServerModule() }
+        module { EchoServerModule() } // business function :)
+        module { NoAuthServerModule() } // no authentication
+        module { KtorJvmServerModule() } // Ktor server
+        module { BasicAppServerModule() } // basic app bootstrap
     }
 }

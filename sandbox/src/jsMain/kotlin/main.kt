@@ -35,6 +35,7 @@ import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.label.withLabel
 import `fun`.adaptive.ui.snackbar.SnackbarManager
 import `fun`.adaptive.ui.uiCommon
+import `fun`.adaptive.value.app.ValueClientModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -50,6 +51,7 @@ fun iotMain() {
     wsBrowserClient {
         module { LibUiClientModule() }
         module { GroveRuntimeModule() }
+        module { ValueClientModule() }
         module { ChartWsModule() }
         module { DocWsModule() }
         module { IotWsModule() }

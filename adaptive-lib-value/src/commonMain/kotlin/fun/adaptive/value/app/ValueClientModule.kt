@@ -1,7 +1,5 @@
 package `fun`.adaptive.value.app
 
-import `fun`.adaptive.runtime.AbstractWorkspace
+import `fun`.adaptive.runtime.ClientWorkspace
 
-abstract class ValueClientModule<WT : AbstractWorkspace> : ValueModule<WT>() {
-
-}
+class ValueClientModule<WT : ClientWorkspace> : ValueModule<WT>()

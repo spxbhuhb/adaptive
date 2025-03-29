@@ -11,7 +11,6 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.runtime.ApplicationNodeType
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.ensure
-import `fun`.adaptive.value.app.valueServerBackend
 import `fun`.adaptive.value.persistence.FilePersistence
 import `fun`.adaptive.value.valueCommon
 import kotlinx.coroutines.runBlocking
@@ -41,7 +40,6 @@ fun wsAppServerMain() {
 
         ktor()
 
-        valueServerBackend(FilePersistence(Path("./var/values").ensure(), 2))
         iotServerBackend()
 
     }.also {
