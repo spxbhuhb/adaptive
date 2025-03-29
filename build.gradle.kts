@@ -19,6 +19,7 @@ val noPublishBuilds = listOf(
     "adaptive-lib-cookbook",
     "adaptive-iot-app",
     "adaptive-iot-cli",
+    "cookbook-app-echo",
     "grove",
     "cookbook",
     "sandbox",

@@ -10,21 +10,17 @@ import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.builtin.menu_book
 import `fun`.adaptive.ui.workspace.Workspace
 
-class DocWsModule<AT : Any>(
-    val loadStrings: Boolean = true
-) : AppModule<Workspace, AT>() {
+class DocWsModule<WT : Workspace> : AppModule<WT>() {
 
-    override suspend fun loadResources() {
-        if (loadStrings) {
-            commonMainStringsStringStore0.load()
-        }
+    override fun resourceInit() {
+        application.stringStores += commonMainStringsStringStore0
     }
 
-    override fun AdaptiveAdapter.init() {
-        fragmentFactory += DocFragmentFactory
+    override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter) {
+        + DocFragmentFactory
     }
 
-    override fun Workspace.init() {
+    override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
 
         val context = DocWsContext(this)
 

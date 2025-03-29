@@ -54,7 +54,7 @@ class AuthTestSupport : AbstractTestSupport(
         ) =
             runTest(timeout = timeout) {
 
-                with(AuthModule<Unit, Unit>()) { WireFormatRegistry.init() }
+                with(AuthModule<Unit, Unit>()) { WireFormatRegistry.initWireFormats() }
 
                 with(AuthTestSupport()) {
                     test { testFun() }

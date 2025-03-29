@@ -3,10 +3,11 @@ package `fun`.adaptive.app.ws
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.administration
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.local_police
-import `fun`.adaptive.app.UiClientApplication
+import `fun`.adaptive.app.ClientApplication
 import `fun`.adaptive.app.ws.main.backend.WsAppBackendFragmentFactory
 import `fun`.adaptive.app.ws.main.frontend.WsAppFrontendFragmentFactory
 import `fun`.adaptive.auth.api.AuthSessionApi
+import `fun`.adaptive.auth.app.AuthAppContext
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -27,7 +28,7 @@ import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.ui.workspace.model.WsPaneSingularity
 import `fun`.adaptive.utility.UUID
 
-class BasicAppWsModule<AT :  UiClientApplication<Workspace, *>> : AppModule<Workspace, AT>() {
+class BasicAppWsModule<WT : Workspace> : AppModule<WT>() {
 
     companion object {
         const val FRONTEND_MAIN_KEY: FragmentKey = "app:ws:frontend:main"
@@ -37,25 +38,25 @@ class BasicAppWsModule<AT :  UiClientApplication<Workspace, *>> : AppModule<Work
         const val HOME_CONTENT_KEY: FragmentKey = "app:ws:home:content"
 
         val AdaptiveFragment.wsApplication
-            get() = this.firstContext<UiClientApplication<Workspace, *>>()
+            get() = this.firstContext<ClientApplication<Workspace>>()
     }
 
     lateinit var ACCOUNT_SELF_ITEM: SingularWsItem
     lateinit var HOME_CONTENT_ITEM: SingularWsItem
 
-    override suspend fun loadResources() {
-        commonMainStringsStringStore0.load()
+    override fun resourceInit() {
+        application.stringStores += commonMainStringsStringStore0
     }
 
-    override fun BackendAdapter.init() {
-        fragmentFactory += WsAppBackendFragmentFactory
+    override fun backendAdapterInit(adapter: BackendAdapter) = with(adapter) {
+        + WsAppBackendFragmentFactory
     }
 
-    override fun AdaptiveAdapter.init() {
-        fragmentFactory += WsAppFrontendFragmentFactory
+    override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter) {
+        + WsAppFrontendFragmentFactory
     }
 
-    override fun Workspace.init() {
+    override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
         wsAppHomePaneDef()
         appAdminToolDef()
         wsAppAccountSelfDef()
@@ -151,7 +152,7 @@ class BasicAppWsModule<AT :  UiClientApplication<Workspace, *>> : AppModule<Work
             io {
                 getService<AuthSessionApi>(transport).signOut()
                 ui {
-                    application.onSignOut()
+                    application.firstContext<AuthAppContext>().onSignOut()
                 }
             }
         }

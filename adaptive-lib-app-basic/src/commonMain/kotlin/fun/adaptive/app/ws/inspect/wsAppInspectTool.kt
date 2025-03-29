@@ -1,6 +1,7 @@
 package `fun`.adaptive.app.ws.inspect
 
-import `fun`.adaptive.app.UiClientApplication
+import `fun`.adaptive.app.ClientApplication
+import `fun`.adaptive.auth.app.AuthAppContext.Companion.authContext
 import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -19,7 +20,7 @@ import `fun`.adaptive.ui.workspace.wsToolPane
 @Adaptive
 fun wsAppInspectTool(pane: WsPane<*, *>): AdaptiveFragment {
 
-    val app = fragment().firstContext<UiClientApplication<*,*>>()
+    val app = fragment().firstContext<ClientApplication<*>>()
 
     wsToolPane(pane) {
         row {
@@ -34,7 +35,7 @@ fun wsAppInspectTool(pane: WsPane<*, *>): AdaptiveFragment {
 }
 
 @Adaptive
-private fun modules(app : UiClientApplication<*,*>) {
+private fun modules(app : ClientApplication<*>) {
     column {
         h2("Modules")
         for (module in app.modules) {
@@ -44,8 +45,8 @@ private fun modules(app : UiClientApplication<*,*>) {
 }
 
 @Adaptive
-private fun session(app : UiClientApplication<*,*>) {
-    val session = app.appData.sessionOrNull
+private fun session(app : ClientApplication<*>) {
+    val session = app.authContext.sessionOrNull
 
     column {
         h2("Session")

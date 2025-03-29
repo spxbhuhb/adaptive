@@ -1,7 +1,5 @@
 package `fun`.adaptive.app.basic
 
-import `fun`.adaptive.app.basic.auth.AuthBasicInit.authBasicDefault
-import `fun`.adaptive.app.basic.auth.authBasicJvm
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.settings
@@ -25,14 +23,11 @@ fun basicAppMain() {
 
         inMemoryH2()
 
-        authBasicJvm()
         ktor()
     }.also {
 
         // at this point all backend components are created and mounted
         // so it is safe to use the database
-
-        authBasicDefault("so")
 
         Runtime.getRuntime().addShutdownHook(Thread { it.stop() })
 

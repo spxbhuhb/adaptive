@@ -1,11 +1,59 @@
-# Lib App Basic
+# Lib App
 
-Basic application setups.
+`lib-app` provides a framework for composing (pun intended) client and server applications
+in a somewhat simple, well-defined way.
 
-There are two UI setups for now:
+Note: you can build applications that use parts of Adaptive without using `lib-app`. It just
+does not worth it IMHO.
 
-- workspace based (main focus)
-- sidebar based (lagging behind a bit, I don't really use it)
+The library is built on three main concepts:
+
+- application
+- module
+- workspace
+
+An application:
+
+- in this context means a client or a server, no matter of the actual platform the application runs
+- is composed of modules
+- has exactly one workspace, the workspace contains the contexts of the application
+
+Application classes (Android/iOS is not ready yet, but will follow the same concept):
+
+```kotlin
+AbstractApplication
+  ServerApplication
+    JvmServerApplication
+  ClientApplication
+    BrowserApplication
+      WsBrowserApplication
+```
+
+An application module is a class that extends `AppModule`. During application startup these modules
+are added to the application:
+
+```kotlin
+fun main() {
+    jvmServer {
+        module { UtilServerModule() }
+        module { AuthServerModule() }
+        module { IotServerModule() }
+        module { BasicAppServerModule() }
+    }
+}
+```
+
+or
+
+```kotlin
+fun main() {
+    wsBrowserClient {
+        module { LibUiModule() }
+        module { DocWsModule() }
+        module { BasicAppWsModule() }
+    }
+}
+```
 
 ## Workspace based UI
 
@@ -19,14 +67,12 @@ Initialization involves an `index.html` (examples in site, iot, sandbox) and a `
 ```kotlin
 fun main() {
     WsBrowserApplication(
-        UiClientApplicationData(),
-        // ----  modules  --------
         LibUiModule(),
-        GroveRuntimeModule<Workspace>(),
+        GroveRuntimeModule(),
         ChartWsModule(),
         DocWsModule(),
         IotWsModule(),
-        ZigbeeModule<Workspace>(),
+        ZigbeeModule(),
         BasicAppWsModule(),
         IotAppWsModule()
     ).main()
@@ -40,15 +86,15 @@ By convention, module names ending with `WsModule` are workspace aware ones. The
 register tools, content panes, item types for the workspace.
 
 Modules with the `<WorkSpace>` type parameter are actually workspace independent, they can work with
-any module context. 
+any module context.
 
 Module functions are called in this order during application startup:
 
-- `WireFormatRegistry.init()`
-- `loadResources`
-- `BackendAdapter.init()`
-- `AdaptiveAdapter.init()`
-- `Workspace.init()`
+- `wireFormatInit`
+- `resourceInit`
+- `backendAdapterInit`
+- `frontendAdapterInit`
+- `workspaceInit`
 
 You can check any of the modules above to see how to initialize workspace elements. The code
 is quite straightforward.
@@ -65,13 +111,18 @@ which - hopefully - provide reasonable defaults.
 Both main fragments are initialized in a local context which provides the application instance,
 `WsBrowserApplication` in the example.
 
-You can easily access this context from any fragment. 
+You can easily access this context from any fragment.
 
 > [!NOTE]
-> 
-> Note that here we look for `UiClientApplication`. This is because `WsBrowserApplication` is platform 
+>
+> Note that here we look for `UiClientApplication`. This is because `WsBrowserApplication` is platform
 > dependent while `UiClientApplication` is not. Hence, from common code you can access only `UiClientApplication`.
 
 ```kotlin
 val app = fragment().firstContext<UiClientApplication<*,*>>()
 ```
+
+## Server side
+
+The server side setup is very similar to client side:
+

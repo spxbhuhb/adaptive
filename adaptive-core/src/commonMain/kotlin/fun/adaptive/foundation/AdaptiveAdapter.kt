@@ -18,7 +18,7 @@ interface AdaptiveAdapter {
 
     val fragmentFactory: AdaptiveFragmentFactory
 
-    val transport : ServiceCallTransport
+    val transport: ServiceCallTransport
 
     var rootFragment: AdaptiveFragment
 
@@ -26,9 +26,9 @@ interface AdaptiveAdapter {
 
     val dispatcher: CoroutineDispatcher
 
-    val scope : CoroutineScope
+    val scope: CoroutineScope
 
-    val backend : BackendAdapter
+    val backend: BackendAdapter
         get() = unsupported()
 
     var trace: Array<out Regex>
@@ -37,19 +37,19 @@ interface AdaptiveAdapter {
 
     fun newId(): Long
 
-    fun start() : AdaptiveAdapter = this
+    fun start(): AdaptiveAdapter = this
 
     fun stop() {
         scope.cancel()
     }
 
-    fun newSequence(parent : AdaptiveFragment, index : Int) : AdaptiveFragment =
+    fun newSequence(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
         AdaptiveSequence(parent.adapter, parent, index)
 
-    fun newSelect(parent : AdaptiveFragment, index : Int) : AdaptiveFragment =
+    fun newSelect(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
         AdaptiveSelect(parent.adapter, parent, index)
 
-    fun newLoop(parent : AdaptiveFragment, index : Int) : AdaptiveFragment =
+    fun newLoop(parent: AdaptiveFragment, index: Int): AdaptiveFragment =
         AdaptiveLoop<Any>(parent.adapter, parent, index)
 
     /**
@@ -59,7 +59,7 @@ interface AdaptiveAdapter {
      *                  manually written fragments typically use their state size and simply
      *                  ignore this value.
      */
-    fun actualize(name: String, parent: AdaptiveFragment, index: Int, stateSize : Int) =
+    fun actualize(name: String, parent: AdaptiveFragment, index: Int, stateSize: Int) =
         fragmentFactory.newInstance(name, parent, index, stateSize)
 
     fun addActualRoot(fragment: AdaptiveFragment) = Unit
@@ -72,6 +72,10 @@ interface AdaptiveAdapter {
      * Called by the `adaptive` entry point function after the root fragment is mounted.
      */
     fun mounted() = Unit
+
+    operator fun AdaptiveFragmentFactory.unaryPlus() {
+        fragmentFactory += this
+    }
 
     fun trace(fragment: AdaptiveFragment, point: String, data: String) {
         if (fragment.trace && fragment.tracePatterns.any { it.matches(point) }) {
@@ -90,7 +94,7 @@ interface AdaptiveAdapter {
     }
 
     fun log(point: String, data: String) {
-        TraceEvent("<adapter>", -1, point, data).println(startedAt)
+        TraceEvent("<adapter>", - 1, point, data).println(startedAt)
     }
 
     fun AdaptiveFragment.name() =

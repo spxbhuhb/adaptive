@@ -1,12 +1,13 @@
 package `fun`.adaptive.app.ws.auth
 
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.signInTitle
-import `fun`.adaptive.app.UiClientApplication
-import `fun`.adaptive.app.UiClientApplicationData
-import `fun`.adaptive.app.basic.auth.api.BasicAccountApi
-import `fun`.adaptive.app.basic.auth.ui.AccountEditorData
+import `fun`.adaptive.app.ClientApplication
 import `fun`.adaptive.app.ws.BasicAppWsModule
+import `fun`.adaptive.app.ws.auth.account.AccountEditorData
 import `fun`.adaptive.auth.api.AuthPrincipalApi
+import `fun`.adaptive.auth.api.basic.AuthBasicApi
+import `fun`.adaptive.auth.app.AuthAppContext
+import `fun`.adaptive.auth.app.AuthAppContext.Companion.authContext
 import `fun`.adaptive.auth.app.AuthModule
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
@@ -23,21 +24,23 @@ import `fun`.adaptive.ui.workspace.model.WsPaneSingularity
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.firstInstance
 
-class BasicAppAuthWsModule<AT : UiClientApplication<Workspace, UiClientApplicationData>> : AuthModule<Workspace, AT>() {
+class BasicAppAuthWsModule<WT : Workspace> : AuthModule<WT>() {
 
     companion object {
         const val SIGN_IN_KEY: FragmentKey = "app:ws:auth:sign-in"
 
-        suspend fun UiClientApplication<*, *>.getAccountEditorData(): AccountEditorData? {
-            val principalId = appData.sessionOrNull?.principalOrNull ?: return null
+        suspend fun ClientApplication<*>.getAccountEditorData(): AccountEditorData? {
+
+            val session = this.firstContext<AuthAppContext>().sessionOrNull ?: return null
+            val principalId = session.principalOrNull ?: return null
             val principal = getService<AuthPrincipalApi>(transport).getOrNull(principalId) ?: return null
-            val account = getService<BasicAccountApi>(transport).account() ?: return null
+            val account = getService< AuthBasicApi>(transport).account() ?: return null
 
             return AccountEditorData(
+                account.accountId,
                 login = principal.name,
                 name = account.name,
                 email = account.email,
-                phone = account.phone,
                 activated = principal.spec.activated,
                 locked = principal.spec.locked
             )
@@ -46,11 +49,11 @@ class BasicAppAuthWsModule<AT : UiClientApplication<Workspace, UiClientApplicati
 
     lateinit var SIGN_IN_ITEM: SingularWsItem
 
-    override fun AdaptiveAdapter.init() {
-        fragmentFactory += WsAppAuthFragmentFactory
+    override fun frontendAdapterInit(adapter : AdaptiveAdapter)= with(adapter) {
+        + WsAppAuthFragmentFactory
     }
 
-    override fun Workspace.init() {
+    override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
         wsAppSignInDef()
     }
 
@@ -71,10 +74,10 @@ class BasicAppAuthWsModule<AT : UiClientApplication<Workspace, UiClientApplicati
             )
         }
 
-        if (application.appData.sessionOrNull == null) {
+        if (application.authContext.sessionOrNull == null) {
             addContent(SIGN_IN_ITEM)
         } else {
-            val appModule = application.modules.firstInstance<BasicAppWsModule<AT>>()
+            val appModule = application.modules.firstInstance<BasicAppWsModule<WT>>()
             checkNotNull(application) { "BasicAppWsModule not found" }
             addContent(appModule.HOME_CONTENT_ITEM)
         }

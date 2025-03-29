@@ -24,11 +24,14 @@ includeBuild("adaptive-lib-ui")
 includeBuild("adaptive-lib-util")
 includeBuild("adaptive-lib-value")
 includeBuild("adaptive-ui")
+
+includeBuild("cookbook/cookbook-app-echo")
+
 includeBuild("iot/adaptive-iot-app")
 includeBuild("iot/adaptive-iot-cli")
 includeBuild("iot/adaptive-iot-lib-core")
 includeBuild("iot/adaptive-iot-lib-zigbee")
-//includeBuild("cookbook")
+
 includeBuild("grove")
 includeBuild("sandbox")
 includeBuild("site")

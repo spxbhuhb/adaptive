@@ -7,10 +7,11 @@ package `fun`.adaptive.app.ws.auth.signin
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.*
 import `fun`.adaptive.adat.api.touchAndValidate
 import `fun`.adaptive.adat.store.copyOf
-import `fun`.adaptive.app.basic.auth.model.BasicSignIn
 import `fun`.adaptive.app.ws.BasicAppWsModule
 import `fun`.adaptive.app.ws.BasicAppWsModule.Companion.wsApplication
 import `fun`.adaptive.auth.api.AuthSessionApi
+import `fun`.adaptive.auth.app.AuthAppContext.Companion.authContext
+import `fun`.adaptive.auth.model.basic.BasicSignIn
 import `fun`.adaptive.document.ui.direct.h1
 import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.document.ui.direct.markdown
@@ -69,7 +70,7 @@ fun largeSignIn(): AdaptiveFragment {
 
                 adapter().scope.launch {
                     try {
-                        app.appData.sessionOrNull = getService<AuthSessionApi>(adapter().transport).signIn(signIn.login, signIn.password)
+                        app.authContext.sessionOrNull = getService<AuthSessionApi>(adapter().transport).signIn(signIn.login, signIn.password)
                         app.workspace.addContent(basicAppWsModule.HOME_CONTENT_ITEM)
                         app.onSignInSuccess()
                     } catch (t: Throwable) {

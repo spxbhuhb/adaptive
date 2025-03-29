@@ -1,6 +1,6 @@
 package `fun`.adaptive.app.ws.main.frontend
 
-import `fun`.adaptive.app.UiClientApplication
+import `fun`.adaptive.app.ClientApplication
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.localContext
@@ -10,7 +10,7 @@ import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.wsFull
 
 @Adaptive
-fun wsAppFrontendMain(application: UiClientApplication<Workspace,*>): AdaptiveFragment {
+fun wsAppFrontendMain(application: ClientApplication<Workspace>): AdaptiveFragment {
 
     localContext(application.workspace) {
         wsFull(application.workspace)

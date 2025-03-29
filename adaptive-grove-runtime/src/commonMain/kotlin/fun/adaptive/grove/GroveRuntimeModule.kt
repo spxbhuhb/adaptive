@@ -3,22 +3,23 @@ package `fun`.adaptive.grove
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.grove.api.GroveRuntimeFragmentFactory
 import `fun`.adaptive.grove.hydration.lfm.*
+import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
-class GroveRuntimeModule<WT,AT:Any> : AppModule<WT, AT>() {
+class GroveRuntimeModule<WT : AbstractWorkspace> : AppModule<WT>() {
 
-    override fun WireFormatRegistry.init() {
-        this += LfmConst
-        this += LfmDescendant
-        this += LfmExternalStateVariable
-        this += LfmFragment
-        this += LfmInternalStateVariable
-        this += LfmMapping
+    override fun wireFormatInit(registry: WireFormatRegistry) = with(registry) {
+        + LfmConst
+        + LfmDescendant
+        + LfmExternalStateVariable
+        + LfmFragment
+        + LfmInternalStateVariable
+        + LfmMapping
     }
 
-    override fun AdaptiveAdapter.init() {
-        fragmentFactory += GroveRuntimeFragmentFactory
+    override fun frontendAdapterInit(adapter : AdaptiveAdapter)= with(adapter) {
+        + GroveRuntimeFragmentFactory
     }
 
 }

@@ -120,7 +120,7 @@ class KtorWorker(
                     else -> throw IllegalArgumentException("invalid wire format: $wireFormat, expected proto or json")
                 }
 
-            val transport = TransactionWebSocketServiceCallTransport(
+            val transport = ServerWebSocketServiceCallTransport(
                 wireFormatProvider,
                 this,
                 sessionUuid,

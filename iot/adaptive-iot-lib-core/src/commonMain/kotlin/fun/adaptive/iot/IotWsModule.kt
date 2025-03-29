@@ -18,10 +18,10 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.value.iconCache
 
-class IotWsModule<AT : Any> : IotModule<Workspace, AT>(true) {
+class IotWsModule<WT : Workspace> : IotModule<WT>() {
 
-    override fun AdaptiveAdapter.init() {
-        fragmentFactory += IotFragmentFactory
+    override fun frontendAdapterInit(adapter : AdaptiveAdapter)= with(adapter) {
+        + IotFragmentFactory
 
         iconCache[SpaceMarkers.SITE] = Graphics.responsive_layout
         iconCache[SpaceMarkers.BUILDING] = Graphics.apartment
@@ -34,7 +34,7 @@ class IotWsModule<AT : Any> : IotModule<Workspace, AT>(true) {
         iconCache[DeviceMarkers.CONTROLLER] = Graphics.memory
     }
 
-    override fun Workspace.init() {
+    override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
 
         val context = AioWsContext(this)
 

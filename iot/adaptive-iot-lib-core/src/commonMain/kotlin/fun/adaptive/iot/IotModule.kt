@@ -7,52 +7,31 @@ import `fun`.adaptive.iot.point.computed.AioComputedPointSpec
 import `fun`.adaptive.iot.point.conversion.number.DoubleMultiplyConversion
 import `fun`.adaptive.iot.point.sim.AioSimPointSpec
 import `fun`.adaptive.iot.space.AioSpaceSpec
+import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule
-import `fun`.adaptive.value.AvSubscribeCondition
-import `fun`.adaptive.value.builtin.AvDouble
-import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvItemIdList
-import `fun`.adaptive.value.item.AvStatus
-import `fun`.adaptive.value.operation.*
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
-open class IotModule<WT, AT : Any>(
-    val loadStrings: Boolean = true
-) : AppModule<WT, AT>() {
+open class IotModule<WT : AbstractWorkspace> : AppModule<WT>() {
 
-    override fun WireFormatRegistry.init() {
-        this += AvoAdd
-        this += AvoAddOrUpdate
-        this += AvoMarkerRemove
-        this += AvoUpdate
-        this += AvoTransaction
+    override fun wireFormatInit(registry: WireFormatRegistry) = with(registry) {
 
-        this += AvSubscribeCondition
+        + AioSpaceSpec
+        + AioVirtualDeviceSpec
+        + AioComputedPointSpec
+        + AioSimPointSpec
 
-        this += AvItem
-        this += AvStatus
-        this += AvItemIdList
+        + AioDoubleHistoryRecord
+        + AioBooleanHistoryRecord
+        + AioStringHistoryRecord
+        + AioHistoryMetadata
+        + AioHistoryQuery
 
-        this += AvDouble
+        + DoubleMultiplyConversion
 
-        this += AioSpaceSpec
-        this += AioVirtualDeviceSpec
-        this += AioComputedPointSpec
-        this += AioSimPointSpec
-
-        this += AioDoubleHistoryRecord
-        this += AioBooleanHistoryRecord
-        this += AioStringHistoryRecord
-        this += AioHistoryMetadata
-        this += AioHistoryQuery
-
-        this += DoubleMultiplyConversion
     }
-    
-    override suspend fun loadResources() {
-        if (loadStrings) {
-            commonMainStringsStringStore0.load()
-        }
+
+    override fun resourceInit() {
+        application.stringStores += commonMainStringsStringStore0
     }
 
 }

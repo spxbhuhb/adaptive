@@ -12,6 +12,7 @@ import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ktor.util.clientId
 import `fun`.adaptive.runtime.ApplicationNodeType
+import `fun`.adaptive.runtime.ClientWorkspace
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
@@ -21,12 +22,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-abstract class BrowserApplication<WT : Any, ADT : UiClientApplicationData> : UiClientApplication<WT, ADT>() {
+abstract class BrowserApplication<WT : ClientWorkspace> : ClientApplication<WT>() {
 
     override lateinit var transport: ServiceCallTransport
     override lateinit var backend: BackendAdapter
     override lateinit var frontend: AdaptiveAdapter
     override lateinit var workspace: WT
+
+    open fun buildWorkspace(session : Any?) = Unit
 
     fun main() {
 
@@ -34,9 +37,9 @@ abstract class BrowserApplication<WT : Any, ADT : UiClientApplicationData> : UiC
 
             GlobalRuntimeContext.nodeType = ApplicationNodeType.Client
 
-            initModules()
+            moduleInit()
 
-            initWireFormats()
+            wireFormatInit()
 
             clientId()
 
@@ -45,7 +48,7 @@ abstract class BrowserApplication<WT : Any, ADT : UiClientApplicationData> : UiC
             transport = webSocketTransport(window.location.origin)
 
             backend = backend(transport) { adapter ->
-                initBackendAdapter(adapter)
+                backendAdapterInit(adapter)
 
                 localContext(this@BrowserApplication) {
                     actualize(backendMainKey)
@@ -53,9 +56,9 @@ abstract class BrowserApplication<WT : Any, ADT : UiClientApplicationData> : UiC
             }
 
             // this must be after backend init as backend init starts the transport
-            appData.sessionOrNull = getService<AuthSessionApi>(transport).getSession()
+            val session = getService<AuthSessionApi>(transport).getSession()
 
-            initWorkspace()
+            buildWorkspace(session)
 
             browser(
                 CanvasFragmentFactory,
@@ -69,7 +72,7 @@ abstract class BrowserApplication<WT : Any, ADT : UiClientApplicationData> : UiC
                     fontWeight = defaultFontWeight
                 }
 
-                initFrontendAdapter(adapter)
+                frontendAdapterInit(adapter)
 
                 localContext(this@BrowserApplication) {
                     actualize(frontendMainKey, emptyInstructions, this@BrowserApplication)

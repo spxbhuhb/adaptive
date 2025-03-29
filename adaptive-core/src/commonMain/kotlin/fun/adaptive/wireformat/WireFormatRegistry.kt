@@ -72,4 +72,8 @@ object WireFormatRegistry : Registry<WireFormat<*>>() {
     operator fun plusAssign(wireFormat: WireFormat<*>) {
         set(wireFormat.wireFormatName, wireFormat)
     }
+
+    operator fun WireFormat<*>.unaryPlus() {
+        set(this.wireFormatName, this)
+    }
 }

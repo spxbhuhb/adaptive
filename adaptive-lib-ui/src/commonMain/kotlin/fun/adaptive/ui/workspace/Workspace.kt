@@ -10,6 +10,7 @@ import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.model.NamedItemType
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
+import `fun`.adaptive.runtime.ClientWorkspace
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.builtin.menu
 import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
@@ -24,11 +25,11 @@ import `fun`.adaptive.utility.firstInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class Workspace(
+open class Workspace(
     val backend: BackendAdapter,
     val scope: CoroutineScope = backend.scope,
     val transport: ServiceCallTransport = backend.transport
-) {
+) : ClientWorkspace() {
 
     companion object {
         inline fun <reified T> AdaptiveFragment.wsContext() =
@@ -50,8 +51,6 @@ class Workspace(
     }
 
     val logger = getLogger("workspace")
-
-    val contexts = mutableListOf<Any>()
 
     val contentPaneBuilders = mutableMapOf<NamedItemType, MutableList<WsContentPaneBuilder>>()
 

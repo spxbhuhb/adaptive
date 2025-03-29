@@ -5,14 +5,14 @@ import `fun`.adaptive.iot.app.commonMainStringsStringStore0
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.workspace.Workspace
 
-class IotAppWsModule<AT : Any>() : AppModule<Workspace, AT>() {
+class IotAppWsModule<WT : Workspace>() : AppModule<WT>() {
 
-    override suspend fun loadResources() {
-        commonMainStringsStringStore0.load()
+    override fun resourceInit() {
+        application.stringStores += commonMainStringsStringStore0
     }
 
-    override fun AdaptiveAdapter.init() {
-        fragmentFactory += AppFragmentFactory
+    override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter) {
+        + AppFragmentFactory
     }
 
 }

@@ -31,6 +31,7 @@ includeBuild("../adaptive-lib-ui")
 includeBuild("../adaptive-lib-chart")
 includeBuild("../adaptive-lib-cookbook")
 includeBuild("../adaptive-lib-value")
+includeBuild("../adaptive-lib-util")
 includeBuild("../adaptive-grove")
 includeBuild("../adaptive-grove-runtime")
 

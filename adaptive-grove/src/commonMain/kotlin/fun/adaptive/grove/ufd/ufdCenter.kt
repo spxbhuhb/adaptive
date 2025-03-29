@@ -32,7 +32,7 @@ fun ufdCenter(pane: WsPane<*, *>): AdaptiveFragment {
 
     localContext(controller) {
         grid {
-            rowTemplate(DEFAULT.titleHeight, 1.fr)
+            rowTemplate(DEFAULT.paneHeaderHeightDp, 1.fr)
 
             row {
                 maxSize .. borderBottom(DEFAULT.toolBorderColor) .. spaceBetween

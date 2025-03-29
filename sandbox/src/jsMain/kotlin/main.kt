@@ -5,8 +5,7 @@
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.adat.store.copyOf
-import `fun`.adaptive.app.UiClientApplicationData
-import `fun`.adaptive.app.WsBrowserApplication
+import `fun`.adaptive.app.WsBrowserClientApplication.Companion.wsBrowserClient
 import `fun`.adaptive.app.ws.BasicAppWsModule
 import `fun`.adaptive.app.ws.WsSandBoxModule
 import `fun`.adaptive.auto.api.auto
@@ -27,12 +26,8 @@ import `fun`.adaptive.iot.iotCommon
 import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.ui.LibFragmentFactory
-import `fun`.adaptive.ui.LibUiModule
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.ui.api.width
+import `fun`.adaptive.ui.LibUiClientModule
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.input.text.textInputArea
 import `fun`.adaptive.ui.instruction.dp
@@ -40,29 +35,27 @@ import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.label.withLabel
 import `fun`.adaptive.ui.snackbar.SnackbarManager
 import `fun`.adaptive.ui.uiCommon
-import `fun`.adaptive.ui.workspace.Workspace
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 fun main() {
+    iotMain()
     //basicAppMain()
-    sandboxMain()
+    //sandboxMain()
     // iotMain()
 }
 
 fun iotMain() {
-    WsBrowserApplication(
-        UiClientApplicationData(),
-        // modules
-        LibUiModule(),
-        GroveRuntimeModule<Workspace>(),
-        ChartWsModule(),
-        DocWsModule(),
-        IotWsModule(),
-        BasicAppWsModule(),
-        WsSandBoxModule
-    ).main()
+    wsBrowserClient {
+        module { LibUiClientModule() }
+        module { GroveRuntimeModule() }
+        module { ChartWsModule() }
+        module { DocWsModule() }
+        module { IotWsModule() }
+        module { BasicAppWsModule() }
+        module { WsSandBoxModule }
+    }
 }
 
 fun sandboxMain() {

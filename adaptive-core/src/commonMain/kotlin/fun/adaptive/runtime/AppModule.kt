@@ -4,27 +4,27 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
-abstract class AppModule<WT,AT:Any> {
+abstract class AppModule<WT : AbstractWorkspace> {
 
-    lateinit var application : AT
+    lateinit var application : AbstractApplication<WT>
 
-    open fun WireFormatRegistry.init() {
-
-    }
-
-    open suspend fun loadResources() {
+    open fun wireFormatInit(registry: WireFormatRegistry) {
 
     }
 
-    open fun BackendAdapter.init() {
+    open fun resourceInit() {
 
     }
 
-    open fun AdaptiveAdapter.init() {
+    open fun backendAdapterInit(adapter : BackendAdapter) {
 
     }
 
-    open fun WT.init() {
+    open fun frontendAdapterInit(adapter : AdaptiveAdapter) {
+
+    }
+
+    open fun workspaceInit(workspace: WT, session: Any?) {
 
     }
 

@@ -9,9 +9,9 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
-class ChartWsModule<AT:Any> : ChartModule<Workspace,AT>() {
+class ChartWsModule<WT : Workspace> : ChartModule<WT>() {
 
-    override fun Workspace.init() {
+    override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
 
         contexts += WsChartContext(this)
 

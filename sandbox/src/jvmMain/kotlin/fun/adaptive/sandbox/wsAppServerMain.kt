@@ -1,7 +1,5 @@
 package `fun`.adaptive.sandbox
 
-import `fun`.adaptive.app.basic.auth.AuthBasicInit.authBasicDefault
-import `fun`.adaptive.app.basic.auth.authBasicJvm
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.settings
@@ -41,7 +39,6 @@ fun wsAppServerMain() {
         }
         inMemoryH2()
 
-        authBasicJvm()
         ktor()
 
         valueServerBackend(FilePersistence(Path("./var/values").ensure(), 2))
@@ -51,8 +48,6 @@ fun wsAppServerMain() {
 
         // at this point all backend components are created and mounted
         // so it is safe to use the database
-
-        authBasicDefault("so")
 
         Runtime.getRuntime().addShutdownHook(Thread { it.stop() })
 

@@ -1,19 +1,17 @@
 package `fun`.adaptive.auth.app
 
 import `fun`.adaptive.auth.backend.*
-import `fun`.adaptive.backend.BackendAdapter
-import `fun`.adaptive.backend.builtin.service
-import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.runtime.ServerWorkspace
 
-class AuthServerModule<AT : Any> : AuthModule<Unit, AT>() {
+class AuthServerModule<WT : ServerWorkspace> : AuthModule<WT>() {
 
-    override fun BackendAdapter.init() {
-        service { AuthPrincipalService() }
-        service { AuthRoleService() }
-        service { AuthSessionService() }
+    override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
+        + AuthPrincipalService()
+        + AuthRoleService()
+        + AuthSessionService()
 
-        worker { AuthSessionWorker() }
-        worker { AuthWorker() }
+        + AuthSessionWorker()
+        + AuthWorker()
     }
 
 }

@@ -13,17 +13,17 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
-class BasicAppInspectWsModule<AT : Any> : AppModule<Workspace, AT>() {
+class BasicAppInspectWsModule<WT : Workspace> : AppModule<WT>() {
 
     companion object {
         const val INSPECT_TOOL_KEY: FragmentKey = "app:ws:inspect:tool"
     }
 
-    override fun AdaptiveAdapter.init() {
-        fragmentFactory += WsAppInspectFragmentFactory
+    override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter) {
+        + WsAppInspectFragmentFactory
     }
 
-    override fun Workspace.init() {
+    override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
         wsAppInspectToolDef()
     }
 

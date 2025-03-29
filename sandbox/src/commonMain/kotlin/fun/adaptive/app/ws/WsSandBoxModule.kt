@@ -5,14 +5,14 @@ import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.ui.workspace.Workspace
 
-object WsSandBoxModule : AppModule<Workspace, Any>() {
+object WsSandBoxModule : AppModule<Workspace>() {
 
-    override suspend fun loadResources() {
-        commonMainStringsStringStore0.load()
+    override fun resourceInit() {
+        application.stringStores += commonMainStringsStringStore0
     }
 
-    override fun AdaptiveAdapter.init() {
-        fragmentFactory += SandboxFragmentFactory
+    override fun frontendAdapterInit(adapter : AdaptiveAdapter)= with(adapter) {
+        + SandboxFragmentFactory
     }
 
 }

@@ -1,0 +1,71 @@
+package `fun`.adaptive.app
+
+import `fun`.adaptive.backend.BackendAdapter
+import `fun`.adaptive.foundation.AdaptiveAdapter
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.FragmentKey
+import `fun`.adaptive.foundation.api.firstContext
+import `fun`.adaptive.runtime.AbstractApplication
+import `fun`.adaptive.runtime.ClientWorkspace
+import `fun`.adaptive.service.transport.ServiceCallTransport
+import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.wireformat.WireFormatRegistry
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
+
+abstract class ClientApplication<WT : ClientWorkspace> : AbstractApplication<WT>() {
+
+    companion object {
+        val AdaptiveFragment.uiApplication
+            get() = this.firstContext<ClientApplication<*>>()
+    }
+
+    abstract val transport : ServiceCallTransport
+
+    abstract val backend : BackendAdapter
+    abstract val frontend : AdaptiveAdapter
+
+    abstract val backendMainKey : FragmentKey
+    abstract val frontendMainKey : FragmentKey
+
+    open val defaultFontName = "Open Sans"
+    open val defaultFontSize = 16.sp
+    open val defaultFontWeight = 300
+
+    fun moduleInit() {
+        modules.forEach { it.application = this }
+    }
+
+    fun wireFormatInit() {
+        modules.forEach { it.wireFormatInit(WireFormatRegistry) }
+    }
+
+    suspend fun loadResources() {
+        modules.forEach { it.resourceInit() }
+        coroutineScope {
+            modules.map { async { it.resourceInit() } }.awaitAll()
+        }
+    }
+
+    fun backendAdapterInit(adapter: BackendAdapter) {
+        modules.forEach { it.backendAdapterInit(adapter) }
+    }
+
+    fun frontendAdapterInit(adapter: AdaptiveAdapter) {
+        modules.forEach { it.frontendAdapterInit(adapter) }
+    }
+
+    open fun workspaceInit(workspace : WT, session : Any?) {
+        modules.forEach { it.workspaceInit(workspace, session) }
+    }
+
+    open fun onSignInSuccess() {
+
+    }
+
+    open fun onSignOut() {
+
+    }
+
+}

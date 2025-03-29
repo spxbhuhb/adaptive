@@ -107,8 +107,8 @@ class BCrypt {
      * Initialise the Blowfish key schedule
      */
     private fun initKey() {
-        kP = P_orig.clone()
-        kS = S_orig.clone()
+        kP = P_orig.copyOf()
+        kS = S_orig.copyOf()
     }
 
     /**
@@ -691,7 +691,7 @@ class BCrypt {
             val saltb: ByteArray = decodeBase64(realSalt, BCRYPT_SALT_LEN)
             hashed = BCrypt().cryptRaw(
                 passwordb, saltb, rounds,
-                bf_crypt_ciphertext.clone()
+                bf_crypt_ciphertext.copyOf()
             )
             rs.append("$2")
             if (minor >= 'a') rs.append(minor)
