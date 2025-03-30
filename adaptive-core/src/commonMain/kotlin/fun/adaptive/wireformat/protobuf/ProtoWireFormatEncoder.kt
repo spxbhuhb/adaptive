@@ -693,11 +693,21 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
     // ----------------------------------------------------------------------------
 
     override fun <T> instance(fieldNumber: Int, fieldName: String, value: T, wireFormat: WireFormat<T>): ProtoWireFormatEncoder {
-        if (wireFormat.wireFormatKind == WireFormatKind.Primitive) {
-            wireFormat.wireFormatEncode(this, value)
-        } else {
-            val bytes = subEncoder.apply { wireFormat.wireFormatEncode(this, value) }.pack()
-            writer.bytes(fieldNumber, bytes)
+        when (wireFormat.wireFormatKind) {
+
+            WireFormatKind.Primitive -> {
+                wireFormat.wireFormatEncode(this, value)
+            }
+
+            WireFormatKind.Polymorphic -> {
+                wireFormat.wireFormatEncode(this, fieldNumber, fieldName, value)
+            }
+
+            else -> {
+                val bytes = subEncoder.apply { wireFormat.wireFormatEncode(this, value) }.pack()
+                writer.bytes(fieldNumber, bytes)
+            }
+
         }
         return this
     }
@@ -843,6 +853,7 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
             WireFormatKind.Primitive -> wireFormat.wireFormatEncode(this, value)
             WireFormatKind.Collection -> instance(1, "", value, wireFormat)
             WireFormatKind.Instance -> instance(1, "", value, wireFormat)
+            WireFormatKind.Polymorphic -> wireFormat.wireFormatEncode(this, value)
         }
     }
 

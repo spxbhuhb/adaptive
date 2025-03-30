@@ -6,7 +6,7 @@ package `fun`.adaptive.wireformat.protobuf
 
 import `fun`.adaptive.utility.toDotString
 
-fun ProtoWireFormatDecoder.dumpProto(lines: MutableList<String>, indent: String = "") {
+fun ProtoWireFormatDecoder.dumpProto(lines: MutableList<String> = mutableListOf(), indent: String = "") : MutableList<String> {
     for (record in records) {
         when (record) {
             is VarintProtoRecord -> record.dumpProto(lines, indent)
@@ -15,6 +15,7 @@ fun ProtoWireFormatDecoder.dumpProto(lines: MutableList<String>, indent: String 
             is LenProtoRecord -> record.dumpProto(lines, indent)
         }
     }
+    return lines
 }
 
 fun ByteArray.dumpProto(): String {

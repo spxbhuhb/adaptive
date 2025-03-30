@@ -7,5 +7,6 @@ package `fun`.adaptive.wireformat
 enum class WireFormatKind {
     Primitive,
     Collection,
-    Instance
+    Instance,
+    Polymorphic
 }

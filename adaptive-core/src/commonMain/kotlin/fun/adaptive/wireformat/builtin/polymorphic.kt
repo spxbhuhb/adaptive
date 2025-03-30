@@ -19,7 +19,7 @@ object PolymorphicWireFormat : WireFormat<Any> {
         get() = "*"
 
     override val wireFormatKind: WireFormatKind
-        get() = WireFormatKind.Primitive
+        get() = WireFormatKind.Polymorphic
 
     @Suppress("UNCHECKED_CAST")
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: Any): WireFormatEncoder =

@@ -471,6 +471,7 @@ class ProtoWireFormatDecoder(
             WireFormatKind.Primitive -> wireFormat.wireFormatDecode(data.decoder(), 1, "") !!
             WireFormatKind.Collection -> wireFormat.wireFormatDecode(data, data.decoder()) !!
             WireFormatKind.Instance -> wireFormat.wireFormatDecode(data, data.decoder()) !!
+            WireFormatKind.Polymorphic -> wireFormat.wireFormatDecode(data, data.decoder()) !!
         }
     }
 
@@ -538,13 +539,7 @@ class ProtoWireFormatDecoder(
             WireFormatKind.Primitive -> {
                 wireFormat.wireFormatDecode(source, this)
             }
-
-            WireFormatKind.Collection -> {
-                check(source is LenProtoRecord)
-                wireFormat.wireFormatDecode(source, source.decoder())
-            }
-
-            WireFormatKind.Instance -> {
+            else -> {
                 check(source is LenProtoRecord)
                 wireFormat.wireFormatDecode(source, source.decoder())
             }
