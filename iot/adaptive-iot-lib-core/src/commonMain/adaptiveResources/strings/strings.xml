@@ -20,6 +20,10 @@
     <string name="add">Hozzáadás</string>
     <string name="save">Mentés</string>
     <string name="settings">Beállítások</string>
+    <string name="all">Összes</string>
+    <string name="filter">szűrés</string>
+    <string name="down">Nem elérhető</string>
+    <string name="ok">Rendben</string>
 
     <string name="saveSuccess">Sikeres mentés.</string>
     <string name="saveFail">Sikertelen mentés.</string>
