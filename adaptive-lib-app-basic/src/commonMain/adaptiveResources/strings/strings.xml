@@ -30,6 +30,13 @@
     <string name="signUpFail">Sign-up error.</string>
     <string name="signUpSignIn">Have an account? **[Sign Ip](/sign-in)**</string>
 
+    <string name="accounts">Fiókok</string>
+    <string name="accountName">Fiók név</string>
+    <string name="name">Név</string>
+    <string name="save">Mentés</string>
+    <string name="saveSuccess">Sikeres mentés.</string>
+    <string name="passwordChange">Jelszó változtatás</string>
+    <string name="accountSelf">Saját fiók</string>
 
     <!-- admin -->
     <string name="administration">Adminisztráció</string>

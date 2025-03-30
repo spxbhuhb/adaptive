@@ -4,6 +4,8 @@ import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.administration
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.local_police
 import `fun`.adaptive.app.ClientApplication
+import `fun`.adaptive.app.ws.admin.WsAdminContext
+import `fun`.adaptive.app.ws.auth.account.wsAppAccountSelfDef
 import `fun`.adaptive.app.ws.main.backend.WsAppBackendFragmentFactory
 import `fun`.adaptive.app.ws.main.frontend.WsAppFrontendFragmentFactory
 import `fun`.adaptive.auth.api.AuthSessionApi
@@ -13,11 +15,13 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.foundation.api.firstContext
+import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.builtin.*
+import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.WsSideBarAction
 import `fun`.adaptive.ui.workspace.logic.WsSingularPaneController
@@ -33,16 +37,24 @@ class BasicAppWsModule<WT : Workspace> : AppModule<WT>() {
     companion object {
         const val FRONTEND_MAIN_KEY: FragmentKey = "app:ws:frontend:main"
         const val BACKEND_MAIN_KEY: FragmentKey = "app:ws:backend:main"
-        const val ACCOUNT_SELF_KEY: FragmentKey = "app:ws:account:self"
         const val ADMIN_TOOL_KEY: FragmentKey = "app:ws:admin:tool"
         const val HOME_CONTENT_KEY: FragmentKey = "app:ws:home:content"
 
         val AdaptiveFragment.wsApplication
             get() = this.firstContext<ClientApplication<Workspace>>()
+
+        fun AdaptiveFragment.wsAddContent(item: NamedItem, modifiers: Set<EventModifier> = emptySet()) {
+            wsApplication.workspace.addContent(item, modifiers)
+        }
+
     }
 
     lateinit var ACCOUNT_SELF_ITEM: SingularWsItem
     lateinit var HOME_CONTENT_ITEM: SingularWsItem
+
+    override fun contextInit() {
+        application.workspace.contexts += WsAdminContext()
+    }
 
     override fun resourceInit() {
         application.stringStores += commonMainStringsStringStore0
@@ -61,34 +73,6 @@ class BasicAppWsModule<WT : Workspace> : AppModule<WT>() {
         appAdminToolDef()
         wsAppAccountSelfDef()
         wsAppSignOutActionDef()
-    }
-
-    fun Workspace.wsAppAccountSelfDef() {
-
-        ACCOUNT_SELF_ITEM = SingularWsItem(Strings.home, ACCOUNT_SELF_KEY)
-
-        addContentPaneBuilder(ACCOUNT_SELF_KEY) {
-            WsPane(
-                UUID(),
-                Strings.account,
-                Graphics.account_circle,
-                WsPanePosition.Center,
-                ACCOUNT_SELF_KEY,
-                ACCOUNT_SELF_ITEM,
-                WsSingularPaneController(ACCOUNT_SELF_ITEM),
-                displayOrder = Int.MAX_VALUE - 1
-            )
-        }
-
-        + WsSideBarAction(
-            Strings.account,
-            Graphics.account_circle,
-            WsPanePosition.LeftBottom,
-            displayOrder = Int.MAX_VALUE - 1,
-            null
-        ) {
-            addContent(ACCOUNT_SELF_ITEM)
-        }
     }
 
     fun Workspace.appAdminToolDef() {

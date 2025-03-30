@@ -5,6 +5,7 @@ import `fun`.adaptive.auth.api.basic.AuthBasicApi
 import `fun`.adaptive.auth.backend.AuthPrincipalService
 import `fun`.adaptive.auth.backend.AuthWorker
 import `fun`.adaptive.auth.context.ensureHas
+import `fun`.adaptive.auth.context.ensurePrincipalOrHas
 import `fun`.adaptive.auth.context.getPrincipalIdOrNull
 import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.auth.model.AuthMarkers
@@ -15,6 +16,8 @@ import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.auth.model.basic.BasicSignUp
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
@@ -70,6 +73,20 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
             signUp.password,
             accountValue
         )
+    }
+
+    override suspend fun save(principalId : AvValueId, name : String, spec: BasicAccountSpec) {
+        ensurePrincipalOrHas(principalId, securityOfficer)
+        ensureValid(spec)
+
+        val accountId = valueWorker.ref(principalId, AuthMarkers.ACCOUNT_REF)
+
+        valueWorker.update<AvValue>(accountId) { item ->
+            item.asAvItem<BasicAccountSpec>().copy(
+                name = name,
+                spec = spec
+            )
+        }
     }
 
     private fun accountSummary(principal : AvItem<PrincipalSpec>, account : AvItem<BasicAccountSpec>) =

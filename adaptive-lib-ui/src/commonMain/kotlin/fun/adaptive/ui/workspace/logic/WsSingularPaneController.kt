@@ -4,7 +4,7 @@ import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.model.SingularWsItem
 import `fun`.adaptive.model.NamedItem
 
-class WsSingularPaneController(
+open class WsSingularPaneController(
     val item : SingularWsItem
 ): WsPaneController<SingularWsItem>() {
 

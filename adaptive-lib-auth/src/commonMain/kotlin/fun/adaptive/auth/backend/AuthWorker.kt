@@ -69,7 +69,8 @@ class AuthWorker : WorkerImpl<AuthWorker> {
                     name = "Security Officer",
                     type = AuthMarkers.BASIC_ACCOUNT,
                     friendlyId = "Security Officer",
-                    spec = BasicAccountSpec(email = "so@localhost")
+                    spec = BasicAccountSpec(email = "so@localhost"),
+                    markersOrNull = mutableMapOf(AuthMarkers.BASIC_ACCOUNT to null)
                 )
             }
 

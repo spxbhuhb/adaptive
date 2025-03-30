@@ -8,6 +8,10 @@ abstract class AppModule<WT : AbstractWorkspace> {
 
     lateinit var application : AbstractApplication<WT>
 
+    open fun contextInit() {
+
+    }
+
     open fun wireFormatInit(registry: WireFormatRegistry) {
 
     }

@@ -57,6 +57,7 @@ abstract class ClientApplication<WT : ClientWorkspace> : AbstractApplication<WT>
     }
 
     open fun workspaceInit(workspace : WT, session : Any?) {
+        modules.forEach { it.contextInit() }
         modules.forEach { it.workspaceInit(workspace, session) }
     }
 

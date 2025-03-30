@@ -5,6 +5,9 @@ import `fun`.adaptive.model.NamedItem
 
 abstract class WsPaneController<D> {
 
+    open val adminTool
+        get() = false
+
     open fun accepts(pane: WsPaneType<D>, modifiers: Set<EventModifier>, item: NamedItem): Boolean {
         return false
     }

@@ -6,6 +6,7 @@ import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.backgroundColor
+import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.fontSize
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.height
@@ -15,15 +16,18 @@ import `fun`.adaptive.ui.api.paddingHorizontal
 import `fun`.adaptive.ui.api.paddingTop
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.instruction.decoration.Border
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.AbstractTheme
+import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
 
 class ButtonTheme(
     background : Color = colors.primary,
-    foreground : Color = colors.onPrimary
+    foreground : Color = colors.onPrimary,
+    border : Border = border(colors.outline, 0.dp),
 ) : AbstractTheme() {
 
     val container = instructionsOf(
@@ -31,7 +35,8 @@ class ButtonTheme(
         inputCornerRadius,
         alignItems.center,
         height { inputHeightDp },
-        paddingHorizontal { 20.dp }
+        paddingHorizontal { 20.dp },
+        border
     )
 
     val text = instructionsOf(
@@ -51,6 +56,7 @@ class ButtonTheme(
 
     companion object {
         var DEFAULT = ButtonTheme()
+        var noFocus = ButtonTheme(colors.surface, colors.onSurface, borders.outline)
         var DANGER = ButtonTheme(colors.danger, colors.onDanger)
     }
 

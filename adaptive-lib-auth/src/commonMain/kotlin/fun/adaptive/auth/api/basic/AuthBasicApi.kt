@@ -1,8 +1,10 @@
 package `fun`.adaptive.auth.api.basic
 
+import `fun`.adaptive.auth.model.basic.BasicAccountSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.auth.model.basic.BasicSignUp
 import `fun`.adaptive.service.ServiceApi
+import `fun`.adaptive.value.AvValueId
 
 @ServiceApi
 interface AuthBasicApi {
@@ -17,10 +19,14 @@ interface AuthBasicApi {
      */
     suspend fun account() : BasicAccountSummary?
 
-
     /**
      * Sign up for the application.
      */
     suspend fun signUp(signUp: BasicSignUp)
+
+    /**
+     * Save basic account name and spec.
+     */
+    suspend fun save(principalId : AvValueId, name : String, spec: BasicAccountSpec)
 
 }

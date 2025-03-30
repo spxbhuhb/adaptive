@@ -4,6 +4,8 @@ import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.signInTitle
 import `fun`.adaptive.app.ClientApplication
 import `fun`.adaptive.app.ws.BasicAppWsModule
 import `fun`.adaptive.app.ws.auth.account.AccountEditorData
+import `fun`.adaptive.app.ws.auth.admin.wsAppAccountManager
+import `fun`.adaptive.app.ws.auth.admin.wsAppAccountManagerDef
 import `fun`.adaptive.auth.api.AuthPrincipalApi
 import `fun`.adaptive.auth.api.basic.AuthBasicApi
 import `fun`.adaptive.auth.app.AuthAppContext
@@ -22,39 +24,24 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.ui.workspace.model.WsPaneSingularity
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.debug
 import `fun`.adaptive.utility.firstInstance
 
 class BasicAppAuthWsModule<WT : Workspace> : AuthModule<WT>() {
 
     companion object {
         const val SIGN_IN_KEY: FragmentKey = "app:ws:auth:sign-in"
-
-        suspend fun ClientApplication<*>.getAccountEditorData(): AccountEditorData? {
-
-            val session = this.firstContext<AuthAppContext>().sessionOrNull ?: return null
-            val principalId = session.principalOrNull ?: return null
-            val principal = getService<AuthPrincipalApi>(transport).getOrNull(principalId) ?: return null
-            val account = getService< AuthBasicApi>(transport).account() ?: return null
-
-            return AccountEditorData(
-                account.accountId,
-                login = principal.name,
-                name = account.name,
-                email = account.email,
-                activated = principal.spec.activated,
-                locked = principal.spec.locked
-            )
-        }
     }
 
     lateinit var SIGN_IN_ITEM: SingularWsItem
 
-    override fun frontendAdapterInit(adapter : AdaptiveAdapter)= with(adapter) {
+    override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter) {
         + WsAppAuthFragmentFactory
     }
 
     override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
         wsAppSignInDef()
+        wsAppAccountManagerDef()
     }
 
     fun Workspace.wsAppSignInDef() {

@@ -163,6 +163,16 @@ open class AvValueWorker(
     fun item(valueId: AvValueId): AvItem<*> =
         get(valueId) as AvItem<*>
 
+    fun ref(valueId: AvValueId, refMarker: AvMarker) =
+        checkNotNull(refOrNull(valueId, refMarker)) { "Marker $refMarker not found for value $valueId" }
+
+    fun refOrNull(valueId: AvValueId, refMarker: AvMarker) =
+        store.item(valueId).markersOrNull?.get(refMarker)
+
+    // FIXME move this down into the store to avoid locking twice
+    inline fun <reified T> refItem(valueId: AvValueId, refMarker: AvMarker) =
+        store.refItem(store.item(valueId), refMarker).withSpec<T>()
+
     inline fun <reified T> refItem(item: AvItem<*>, refMarker: AvMarker) =
         store.refItem(item, refMarker).withSpec<T>()
 

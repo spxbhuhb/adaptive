@@ -13,11 +13,11 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.background
 import `fun`.adaptive.ui.theme.foreground
-import `fun`.adaptive.ui.theme.handleColors
 
 open class TreeTheme(
     open val itemHeight: DPixel = 26.dp,
     open val indent: DPixel = 22.dp,
+    open val itemPadding : DPixel = 4.dp,
 ) {
     open val container = instructionsOf(
         alignItems.startCenter,
@@ -40,7 +40,7 @@ open class TreeTheme(
     open val label = instructionsOf(
         fontSize(13.sp),
         lineHeight(18.dp),
-        paddingLeft(4.dp),
+        paddingLeft(itemPadding),
         normalFont,
         noSelect
     )
@@ -68,5 +68,6 @@ open class TreeTheme(
 
     companion object {
         var DEFAULT = TreeTheme()
+        var list = TreeTheme(indent = 0.dp, itemPadding = 8.dp)
     }
 }
