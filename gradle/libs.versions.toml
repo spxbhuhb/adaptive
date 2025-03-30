@@ -13,6 +13,7 @@ androidx-constraintlayout = "2.1.4"
 androidx-core-ktx = "1.13.0"
 androidx-espresso-core = "3.5.1"
 androidx-test-junit = "1.1.5"
+clikt="5.0.3"
 coroutines = "1.7.3"
 datetime = "0.4.0"
 exposed = "0.41.1"
@@ -65,6 +66,8 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
 androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-junit" }
+
+clikt = { module = "com.github.ajalt.clikt:clikt", version.ref = "clikt" }
 
 exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
 exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }

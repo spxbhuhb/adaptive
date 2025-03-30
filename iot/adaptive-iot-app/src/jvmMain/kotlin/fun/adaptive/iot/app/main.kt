@@ -18,7 +18,7 @@ fun main() {
     settings {
         inline(
             "KTOR_PORT" to 8080,
-            "KTOR_WIREFORMAT" to "json",
+            "KTOR_WIREFORMAT" to "proto",
             "AIO_HISTORY_PATH" to "./var/history"
         )
     }

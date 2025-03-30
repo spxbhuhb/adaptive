@@ -63,6 +63,7 @@ kotlin {
 
                 implementation(libs.adaptive.iot.lib.core)
                 implementation(libs.adaptive.iot.lib.zigbee)
+                implementation(libs.clikt)
             }
         }
 

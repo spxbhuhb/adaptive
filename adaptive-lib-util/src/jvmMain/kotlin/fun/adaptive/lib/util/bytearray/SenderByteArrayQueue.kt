@@ -36,6 +36,9 @@ class SenderByteArrayQueue(
 
     private var socket = DatagramSocket().also { it.soTimeout = sendTimeout }
 
+    val isEmpty: Boolean
+        get() = queue.isEmpty
+
     fun enqueue(byteArray: ByteArray) {
         queue.enqueue(byteArray)
     }
@@ -50,6 +53,10 @@ class SenderByteArrayQueue(
                 socket.close()
             }
         }
+    }
+
+    fun stop() {
+        scope.cancel()
     }
 
     suspend fun send() {

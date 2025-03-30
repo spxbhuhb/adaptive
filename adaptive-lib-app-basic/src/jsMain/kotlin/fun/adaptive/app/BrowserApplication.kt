@@ -17,6 +17,7 @@ import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.browser
+import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +46,7 @@ abstract class BrowserApplication<WT : ClientWorkspace> : ClientApplication<WT>(
 
             loadResources()
 
-            transport = webSocketTransport(window.location.origin)
+            transport = webSocketTransport(window.location.origin, wireFormatProvider = Proto)
 
             backend = backend(transport) { adapter ->
                 backendAdapterInit(adapter)

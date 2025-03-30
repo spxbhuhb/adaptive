@@ -1,73 +1,18 @@
 package `fun`.adaptive.iot.cli
 
-import `fun`.adaptive.iot.point.AioPointApi
-import `fun`.adaptive.ktor.api.webSocketTransport
-import `fun`.adaptive.lib.util.bytearray.ListenerByteArrayQueue
-import `fun`.adaptive.service.api.getService
-import `fun`.adaptive.service.factory.BasicServiceImplFactory
-import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.utility.ensure
-import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.builtin.AvBoolean
-import `fun`.adaptive.value.builtin.AvDouble
-import `fun`.adaptive.value.item.AvStatus
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
-import kotlinx.datetime.Instant
-import kotlinx.io.files.Path
+import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.main
+import com.github.ajalt.clikt.core.subcommands
 
-fun main(vararg argv: String) {
-    check(argv.size == 2) { "usage: adaptive-iot-cli <queue-path> <url>" }
-
-    val queuePath = Path(argv[0]).ensure()
-    val url = argv[1]
-
-    val listener = ListenerByteArrayQueue(12675, queuePath, 1024L * 1024L, byteArrayOf(0x0A, 0x0A, 0x0A, 0x0A))
-    listener.start()
-
-    runBlocking {
-
-        val pointService = getService<AioPointApi>(webSocketTransport(url).start(BasicServiceImplFactory()))
-
-        while (true) {
-            var message = ""
-
-            try {
-                message = listener.queue.peek().decodeToString()
-
-                val fields = message.trim().split(" ")
-
-                val point = UUID<AvValue>(fields[0])
-                val signature = fields[1]
-                val timestamp = Instant.parse(fields[2])
-                val flags = fields[3].toInt()
-                val sValue = fields[4]
-
-                val curVal: AvValue?
-
-                when (signature) {
-                    "I" -> curVal = AvDouble(UUID.nil(), timestamp, AvStatus(flags), point, sValue.toDouble())
-                    "Z" -> curVal = AvBoolean(UUID.nil(), timestamp, AvStatus(flags), point, sValue.toBoolean())
-                    else -> {
-                        println("unknown signature in message (dropped): $message")
-                        curVal = null
-                    }
-                }
-
-                if (curVal != null) {
-                    pointService.setCurVal(curVal)
-                }
-
-                println("SUCCESS: $message")
-
-                listener.queue.dequeue()
-
-            } catch (e: Exception) {
-                println("error while processing message : $message")
-                e.printStackTrace()
-                delay(30000)
-            }
-        }
-    }
+class AdaptiveCli : CliktCommand(name = "aio-cli") {
+    override fun run() = Unit
 }
 
+fun main(args: Array<String>) {
+    AdaptiveCli()
+        .subcommands(
+            CurValUpload(),
+            SimHistory()
+        )
+        .main(args)
+}
