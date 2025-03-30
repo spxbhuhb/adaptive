@@ -167,4 +167,10 @@ class WorkspaceTheme(
         textColors.onSurfaceVariant,
         noSelect
     )
+
+    val contentPaneContainer = instructionsOf(
+        paddingHorizontal { 24.dp },
+        paddingVertical { 16.dp },
+        gap { 16.dp }
+    )
 }

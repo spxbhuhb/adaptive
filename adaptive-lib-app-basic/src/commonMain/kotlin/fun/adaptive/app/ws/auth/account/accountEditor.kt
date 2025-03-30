@@ -3,11 +3,11 @@ package `fun`.adaptive.app.ws.auth.account
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.*
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.adat.store.copyOf
+import `fun`.adaptive.app.ws.shared.wsContentHeader
 import `fun`.adaptive.auth.api.AuthPrincipalApi
 import `fun`.adaptive.auth.api.AuthRoleApi
 import `fun`.adaptive.auth.model.AuthPrincipal
 import `fun`.adaptive.auth.model.AuthRole
-import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.Independent
 import `fun`.adaptive.foundation.adapter
@@ -16,7 +16,6 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.builtin.account
 import `fun`.adaptive.ui.button.ButtonTheme
 import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.checkbox.checkbox
@@ -26,9 +25,9 @@ import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.label.inputLabel
-import `fun`.adaptive.ui.label.uuidLabel
 import `fun`.adaptive.ui.label.withLabel
 import `fun`.adaptive.ui.popup.PopupTheme
+import `fun`.adaptive.ui.workspace.WorkspaceTheme
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.uppercaseFirstChar
 
@@ -56,28 +55,17 @@ fun accountEditor(
     //val principalRoles = fetch { getService<AuthRoleApi>(adapter().transport).rolesOf(account?.id?.cast() ?: UUID.nil(), null) } ?: emptyList()
 
     column {
-        padding { 16.dp }
-        gap { 16.dp }
+        WorkspaceTheme.DEFAULT.contentPaneContainer
 
-        row {
-            maxWidth .. spaceBetween
-
-            column {
-                h2(Strings.account)
-                uuidLabel { copy.uuid }
-            }
-
+        wsContentHeader(Strings.accountSelf, copy.uuid) {
             row {
-                gap { 16.dp }
-                row {
-                    button(Strings.passwordChange, theme = ButtonTheme.noFocus)
-                    primaryPopup(popupState) { hide ->
-                        PopupTheme.default.inlineEditorPopup .. width { 300.dp }
-                        changePasswordPopup(copy.uuid) { }
-                    }
+                button(Strings.passwordChange, theme = ButtonTheme.noFocus)
+                primaryPopup(popupState) { hide ->
+                    PopupTheme.default.inlineEditorPopup .. width { 300.dp }
+                    changePasswordPopup(copy.uuid) { }
                 }
-                button(Strings.save) .. onClick { save(copy) }
             }
+            button(Strings.save) .. onClick { save(copy) }
         }
 
         withLabel(Strings.accountName, InputContext(disabled = true)) { state ->
@@ -97,7 +85,6 @@ fun accountEditor(
     }
 }
 
-
 @Adaptive
 fun loginTimes(principal: AuthPrincipal) {
     grid {
@@ -114,6 +101,8 @@ fun loginTimes(principal: AuthPrincipal) {
         instant(principal.spec.lastAuthFail)
     }
 }
+
+
 
 @Adaptive
 fun loginCounters(principal: AuthPrincipal) {

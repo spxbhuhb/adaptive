@@ -4,15 +4,16 @@ import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.*
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.ws.auth.account.AccountEditorData
 import `fun`.adaptive.app.ws.auth.account.accountEditor
+import `fun`.adaptive.app.ws.shared.wsContentHeader
 import `fun`.adaptive.auth.api.basic.AuthBasicApi
 import `fun`.adaptive.auth.model.basic.BasicAccountSummary
-import `fun`.adaptive.document.ui.DocumentTheme
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.producer.fetch
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.close
@@ -29,6 +30,7 @@ import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.emptyInst
 import `fun`.adaptive.ui.theme.textSmall
+import `fun`.adaptive.ui.workspace.WorkspaceTheme
 import `fun`.adaptive.ui.workspace.model.WsPane
 
 @Adaptive
@@ -45,24 +47,18 @@ fun accountList() {
     val filter = copyOf { AccountFilter() }
     val items = fetch { getService<AuthBasicApi>(adapter().transport).accounts() }
 
-    grid {
-        maxSize .. colTemplate(1.fr) .. rowTemplate(118.dp, 1.fr) .. paddingHorizontal { 16.dp }
+    column {
+        WorkspaceTheme.DEFAULT.contentPaneContainer
 
-        header(filter)
+        wsContentHeader(Strings.accounts) {
+            row {
+                gap { 16.dp }
+                editor { filter.text } .. width { 200.dp } .. inputPlaceholder { Strings.filter }
+                buttonDialog("Fiók", Graphics.add, Strings.addAccount) { accountEditor { } } .. alignSelf.endCenter
+            }
+        }
+
         items(items?.filter { filter.matches(it) }, filter.isEmpty())
-    }
-}
-
-@Adaptive
-private fun header(filter: AccountFilter) {
-    grid {
-        colTemplate(400.dp, 1.fr, 200.dp) .. height { 118.dp } .. maxWidth
-
-        text("Fiókok") .. DocumentTheme.DEFAULT.h1 .. alignSelf.startCenter
-
-        editor { filter.text } .. alignSelf.center .. width { 400.dp } .. inputPlaceholder { "fiókok szűrése" }
-
-        buttonDialog("Fiók", Graphics.add, "Fiók hozzáadása") { accountEditor { } } .. alignSelf.endCenter
     }
 }
 

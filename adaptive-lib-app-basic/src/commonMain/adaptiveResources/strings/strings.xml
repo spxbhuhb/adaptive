@@ -7,6 +7,7 @@
     <string name="password">jelszó</string>
     <string name="noTechnicalInfo">Nincs több információ</string>
     <string name="invalidFields">Érvénytelen mezők.</string>
+    <string name="filter">szűrés</string>
 
     <!-- auth -->
     <string name="signInTitle">Üdvözlünk!</string>
@@ -44,6 +45,7 @@
 
     <!-- admin -->
     <string name="administration">Adminisztráció</string>
+    <string name="addAccount">Fiók hozzáadása</string>
 
     <!-- inspect -->
     <string name="devTools">Fejlesztői eszközök</string>

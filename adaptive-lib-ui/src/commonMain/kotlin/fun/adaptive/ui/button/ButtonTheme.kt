@@ -4,22 +4,10 @@ import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
-import `fun`.adaptive.ui.api.alignItems
-import `fun`.adaptive.ui.api.backgroundColor
-import `fun`.adaptive.ui.api.border
-import `fun`.adaptive.ui.api.fontSize
-import `fun`.adaptive.ui.api.gap
-import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.noSelect
-import `fun`.adaptive.ui.api.normalFont
-import `fun`.adaptive.ui.api.paddingHorizontal
-import `fun`.adaptive.ui.api.paddingTop
-import `fun`.adaptive.ui.api.size
-import `fun`.adaptive.ui.api.textColor
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.decoration.Border
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.AbstractTheme
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
@@ -31,11 +19,12 @@ class ButtonTheme(
 ) : AbstractTheme() {
 
     val container = instructionsOf(
+        gap { 6.dp },
         backgroundColor(background),
         inputCornerRadius,
         alignItems.center,
         height { inputHeightDp },
-        paddingHorizontal { 20.dp },
+        paddingHorizontal { 16.dp },
         border
     )
 
@@ -47,10 +36,10 @@ class ButtonTheme(
     )
 
     val icon = instructionsOf(
-        size(22.dp, 22.dp),
+        size(18.dp, 18.dp),
         fill(foreground),
-        svgWidth(22.dp),
-        svgHeight(22.dp),
+        svgWidth(18.dp),
+        svgHeight(18.dp),
         noSelect
     )
 
