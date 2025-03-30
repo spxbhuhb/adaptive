@@ -30,10 +30,6 @@ open class WsBrowserClientApplication(
 
     }
 
-    override fun onSignOut() {
-        window.location.reload()
-    }
-
     companion object {
         fun wsBrowserClient(start: Boolean = true, buildFun: WsBrowserClientBuilder.() -> Unit) {
             val builder = WsBrowserClientBuilder()

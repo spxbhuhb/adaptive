@@ -6,10 +6,9 @@ import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.local_police
 import `fun`.adaptive.app.ClientApplication
 import `fun`.adaptive.app.ws.admin.WsAdminContext
 import `fun`.adaptive.app.ws.auth.account.wsAppAccountSelfDef
+import `fun`.adaptive.app.ws.auth.signOut.wsAppSignOutActionDef
 import `fun`.adaptive.app.ws.main.backend.WsAppBackendFragmentFactory
 import `fun`.adaptive.app.ws.main.frontend.WsAppFrontendFragmentFactory
-import `fun`.adaptive.auth.api.AuthSessionApi
-import `fun`.adaptive.auth.app.AuthAppContext
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -19,7 +18,6 @@ import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AppModule
-import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.builtin.*
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.Workspace
@@ -72,7 +70,7 @@ class BasicAppWsModule<WT : Workspace> : AppModule<WT>() {
         wsAppHomePaneDef()
         appAdminToolDef()
         wsAppAccountSelfDef()
-        wsAppSignOutActionDef()
+        wsAppSignOutActionDef(application)
     }
 
     fun Workspace.appAdminToolDef() {
@@ -124,23 +122,6 @@ class BasicAppWsModule<WT : Workspace> : AppModule<WT>() {
 
     }
 
-    fun Workspace.wsAppSignOutActionDef() {
 
-        + WsSideBarAction(
-            Strings.signOut,
-            Graphics.power_settings_new,
-            WsPanePosition.LeftBottom,
-            Int.MAX_VALUE,
-            null
-        ) {
-            io {
-                getService<AuthSessionApi>(transport).signOut()
-                ui {
-                    application.firstContext<AuthAppContext>().onSignOut()
-                }
-            }
-        }
-
-    }
 
 }

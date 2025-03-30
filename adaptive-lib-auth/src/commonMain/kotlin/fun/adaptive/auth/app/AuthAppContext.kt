@@ -11,10 +11,6 @@ open class AuthAppContext(
 
     var sessionOrNull : Session? = null
 
-    fun onSignOut() {
-
-    }
-
     companion object {
         val AbstractApplication<*>.authContext
             get() = checkNotNull(workspace.contexts.firstInstanceOrNull<AuthAppContext>()) { "cannot find auth context" }

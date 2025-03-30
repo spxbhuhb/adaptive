@@ -4,18 +4,18 @@
 
 <resources>
     <string name="email">e-mail</string>
-    <string name="password">password</string>
-    <string name="noTechnicalInfo">There is no additional technical information.</string>
-    <string name="invalidFields">Please check the form, there are invalid values.</string>
+    <string name="password">jelszó</string>
+    <string name="noTechnicalInfo">Nincs több információ</string>
+    <string name="invalidFields">Érvénytelen mezők.</string>
 
     <!-- auth -->
-    <string name="signInTitle">Welcome</string>
-    <string name="signInSubTitle">Sign in to continue</string>
+    <string name="signInTitle">Üdvözlünk!</string>
+    <string name="signInSubTitle">Lépj be a folytatáshoz.</string>
     <string name="signInRemember">Remember me</string>
     <string name="signInForgot">**[Forgot password?](/password-reset)**</string>
-    <string name="signInButton">Sign In</string>
-    <string name="signInSuccess">You are signed in!</string>
-    <string name="singInFail">Sign-in error.</string>
+    <string name="signInButton">Belépés</string>
+    <string name="signInSuccess">Sikeres belépés!</string>
+    <string name="singInFail">Nem sikerült a belépés.</string>
     <string name="signInSignUp">Don't have an account? **[Sign Up](/sign-up)**</string>
 
     <string name="pwdResetTitle">Reset Password</string>
@@ -37,6 +37,10 @@
     <string name="saveSuccess">Sikeres mentés.</string>
     <string name="passwordChange">Jelszó változtatás</string>
     <string name="accountSelf">Saját fiók</string>
+
+    <string name="currentPassword">Jelenlegi jelszó</string>
+    <string name="newPassword">Új jelszó</string>
+    <string name="confirmPassword">Megerősítés</string>
 
     <!-- admin -->
     <string name="administration">Adminisztráció</string>

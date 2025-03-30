@@ -19,13 +19,16 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.editor.editor
+import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.ui.platform.input.findActualInputValue
 import `fun`.adaptive.ui.snackbar.failNotification
 import `fun`.adaptive.ui.snackbar.warningNotification
 import `fun`.adaptive.ui.theme.backgrounds
@@ -40,12 +43,13 @@ fun largeSignIn(): AdaptiveFragment {
     val basicAppWsModule = app.modules.firstInstance<BasicAppWsModule<*>>()
 
     val signIn = copyOf { BasicSignIn() }
+    val signInFragment = fragment()
 
     box {
         maxSize .. alignItems.center .. backgrounds.surfaceVariant
 
-        grid {
-            size((377 + 64).dp, (500 + 64).dp) .. colTemplate(1.fr) .. rowTemplate(38.dp, 88.dp, 60.dp, 60.dp, 60.dp, 100.dp, 50.dp)
+        grid(name("signInForm")) {
+            size((300 + 64).dp, (340 + 64).dp) .. colTemplate(1.fr) .. rowTemplate(38.dp, 88.dp, 60.dp, 60.dp, 100.dp)
             alignItems.center .. borders.outline .. cornerRadius { 8.dp } .. backgrounds.surface .. padding { 32.dp }
 
             h1(Strings.signInTitle)
@@ -53,24 +57,33 @@ fun largeSignIn(): AdaptiveFragment {
             h2(Strings.signInSubTitle)
 
             editor { signIn.login } .. inputPlaceholder { Strings.email }
-            editor { signIn.password } .. inputPlaceholder { Strings.password }
+            textInput(signIn.password) {  } .. inputPlaceholder { Strings.password } .. secret .. name("signInPassword")
 
-            row {
-                alignSelf.startCenter
-                editor { signIn.remember } .. paddingRight { 8.dp }
-                text(Strings.signInRemember)
-            }
+//            row {
+//                alignSelf.startCenter
+//                editor { signIn.remember } .. paddingRight { 8.dp }
+//                text(Strings.signInRemember)
+//            }
 
-            button(Strings.signInButton) .. maxWidth .. onClick {
+            button(Strings.signInButton) .. maxWidth .. marginLeft { 32.dp } .. marginRight { 32.dp } .. onClick {
 
-                if (! signIn.touchAndValidate()) {
+                // have to use field values directly as Chrome autofill does not fire proper field change
+                // event, see https://stackoverflow.com/questions/35049555/chrome-autofill-autocomplete-no-value-for-password
+
+                val actualSignIn = BasicSignIn(
+                    signIn.login,
+                    findActualInputValue(signInFragment, "signInPassword"),
+                    signIn.remember
+                )
+
+                if (actualSignIn.login.isEmpty() || actualSignIn.password.isEmpty()) {
                     warningNotification(Strings.invalidFields)
                     return@onClick
                 }
 
                 adapter().scope.launch {
                     try {
-                        app.authContext.sessionOrNull = getService<AuthSessionApi>(adapter().transport).signIn(signIn.login, signIn.password)
+                        app.authContext.sessionOrNull = getService<AuthSessionApi>(adapter().transport).signIn(actualSignIn.login, actualSignIn.password)
                         app.workspace.addContent(basicAppWsModule.HOME_CONTENT_ITEM)
                         app.onSignInSuccess()
                     } catch (t: Throwable) {
@@ -80,7 +93,7 @@ fun largeSignIn(): AdaptiveFragment {
                 }
             }
 
-            markdown(Strings.signInForgot)
+            // markdown(Strings.signInForgot)
         }
     }
 

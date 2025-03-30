@@ -11,7 +11,6 @@ import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsSingularPaneController
-import `fun`.adaptive.utility.debug
 import `fun`.adaptive.utility.firstInstance
 
 class AccountSelfController(
@@ -22,8 +21,8 @@ class AccountSelfController(
 
         val session = workspace.contexts.firstInstance<AuthAppContext>().sessionOrNull ?: return null
         val principalId = session.principalOrNull ?: return null
-        val principal = getService<AuthPrincipalApi>(transport).getOrNull(principalId).debug() ?: return null
-        val account = getService<AuthBasicApi>(transport).account().debug() ?: return null
+        val principal = getService<AuthPrincipalApi>(transport).getOrNull(principalId) ?: return null
+        val account = getService<AuthBasicApi>(transport).account() ?: return null
 
         return AccountEditorData(
             principal.uuid,

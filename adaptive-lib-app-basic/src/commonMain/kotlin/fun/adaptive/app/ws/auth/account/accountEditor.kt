@@ -12,19 +12,15 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.Independent
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.producer.fetch
-import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.account
-import `fun`.adaptive.ui.builtin.check
 import `fun`.adaptive.ui.button.ButtonTheme
 import `fun`.adaptive.ui.button.button
-import `fun`.adaptive.ui.button.dangerButton
 import `fun`.adaptive.ui.checkbox.checkbox
 import `fun`.adaptive.ui.datetime.instant
-import `fun`.adaptive.ui.dialog.dangerButtonDialog
-import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.instruction.dp
@@ -32,16 +28,24 @@ import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.label.inputLabel
 import `fun`.adaptive.ui.label.uuidLabel
 import `fun`.adaptive.ui.label.withLabel
-import `fun`.adaptive.ui.theme.colors
+import `fun`.adaptive.ui.popup.PopupTheme
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.uppercaseFirstChar
-import kotlinx.coroutines.launch
 
 @Adaptive
 fun accountEditor(
     account: AccountEditorData? = null,
-    save : (AccountEditorData) -> Unit
+    save: (AccountEditorData) -> Unit
 ) {
+    val popupState = valueFrom { InputContext() }
+
+    // This is to prevent Safari overwriting the e-mail field on password change.
+    // With autofill, Safari just finds whatever field it likes and changes the value.
+    // Nothing else matters, but the field being disabled. So, I disable the input fields
+    // on the form when the password change popup is open. This strangely works.
+    // I lost a few years of my life by being very-very angry while I figured this out.
+
+    val safariHack = InputContext(disabled = popupState.value.popupOpen)
 
     var copy = copyOf { account ?: AccountEditorData() }
 
@@ -50,7 +54,6 @@ fun accountEditor(
 
     val knownRoles = fetch { getService<AuthRoleApi>(adapter().transport).all() } ?: emptyList()
     //val principalRoles = fetch { getService<AuthRoleApi>(adapter().transport).rolesOf(account?.id?.cast() ?: UUID.nil(), null) } ?: emptyList()
-
 
     column {
         padding { 16.dp }
@@ -66,7 +69,13 @@ fun accountEditor(
 
             row {
                 gap { 16.dp }
-                button(Strings.passwordChange, theme = ButtonTheme.noFocus) .. onClick { }
+                row {
+                    button(Strings.passwordChange, theme = ButtonTheme.noFocus)
+                    primaryPopup(popupState) { hide ->
+                        PopupTheme.default.inlineEditorPopup .. width { 300.dp }
+                        changePasswordPopup(copy.uuid) { }
+                    }
+                }
                 button(Strings.save) .. onClick { save(copy) }
             }
         }
@@ -78,84 +87,16 @@ fun accountEditor(
 
         withLabel(Strings.name) { state ->
             width { 400.dp }
-            textInput(copy.name) { copy.update(copy::name, it) }
+            textInput(copy.name, safariHack) { copy.update(copy::name, it) }
         }
 
         withLabel(Strings.email.uppercaseFirstChar()) { state ->
             width { 400.dp }
-            textInput(copy.email) { copy.update(copy::email, it) }
+            textInput(copy.email, safariHack) { copy.update(copy::email, it) }
         }
     }
-
-//    grid {
-//        rowTemplate(72.dp.repeat(rowCount), 86.dp)
-//        width { 708.dp } .. height { (24 + 72 * rowCount + rowCount * 16 + 120 + 86).dp }
-//        paddingTop { 24.dp } .. gap { 16.dp }
-//
-//        line { common(copy) }
-//        line { name(copy) }
-//        line { email(copy) }
-//
-//        if (principal != null) loginTimes(principal)
-//        if (principal != null) loginCounters(principal)
-//
-//        //roles(knownRoles, principalRoles)
-//
-//        buttons(account, copy, close)
-//    }
-
 }
 
-@Adaptive
-fun line(@Adaptive content: () -> Unit) {
-    box {
-        maxWidth .. height { 72.dp }
-        paddingLeft { 32.dp } .. paddingRight { 16.dp }
-        content()
-    }
-}
-
-@Adaptive
-fun common(account: AccountEditorData) {
-    grid {
-        maxWidth
-        rowTemplate(28.dp, 44.dp)
-        colTemplate(1.fr, 100.dp, 100.dp)
-        alignItems.center
-
-        inputLabel { "Fiók név" } .. alignSelf.startCenter
-        inputLabel { "Aktivált" }
-        inputLabel { "Zárolt" }
-
-        editor { account.login } .. width { 300.dp } .. alignSelf.startCenter
-        editor { account.activated }
-        editor { account.locked }
-    }
-}
-
-@Adaptive
-fun name(account: AccountEditorData) {
-    grid {
-        maxWidth
-        rowTemplate(28.dp, 44.dp)
-        alignItems.startCenter
-
-        inputLabel { "Név" }
-        editor { account.name } .. width { 600.dp }
-    }
-}
-
-@Adaptive
-fun email(account: AccountEditorData) {
-    grid {
-        rowTemplate(28.dp, 44.dp)
-        alignItems.startCenter
-        gapWidth { 32.dp }
-
-        inputLabel { "E-mail cím" }
-        editor { account.email } .. width { 600.dp }
-    }
-}
 
 @Adaptive
 fun loginTimes(principal: AuthPrincipal) {
@@ -224,44 +165,6 @@ fun roles(knownRoles: List<AuthRole>, principalRoles: List<AuthRole>) {
                     text(role.name) .. noSelect
                 }
             }
-        }
-    }
-}
-
-@Adaptive
-fun buttons(account: AccountEditorData?, copy: AccountEditorData, close: () -> Unit) {
-    row {
-        height { 86.dp } .. maxWidth
-        alignItems.center .. spaceBetween .. marginTop { 16.dp } .. paddingHorizontal { 32.dp }
-        borderTop(colors.outline)
-
-        row {
-            gap { 16.dp }
-
-            dangerButtonDialog("Reset", Graphics.gpp_maybe, "Network Reset") { closeInner ->
-//                resetNetwork(copy) {
-//                    closeInner()
-//                }
-            }
-
-            dangerButton("Csatlakoztatás", Graphics.gpp_maybe) .. onClick {
-//                io {
-//                    modelService.addCommand(EnableJoin(copy.id))
-//                    info("Csatlakozás engedélyezve.")
-//                    close()
-//                }
-            }
-        }
-
-        button("Mentés", Graphics.check) .. onClick {
-            adapter().scope.launch {
-                if (account == null) {
-                    // add account
-                } else {
-                    // update account
-                }
-            }
-            close()
         }
     }
 }

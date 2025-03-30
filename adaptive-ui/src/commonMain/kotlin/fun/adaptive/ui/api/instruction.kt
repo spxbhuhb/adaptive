@@ -8,6 +8,7 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.*
 import `fun`.adaptive.ui.instruction.input.Disabled
 import `fun`.adaptive.ui.instruction.input.InputPlaceholder
+import `fun`.adaptive.ui.instruction.input.Secret
 import `fun`.adaptive.ui.instruction.input.TabIndex
 import `fun`.adaptive.ui.instruction.layout.*
 import `fun`.adaptive.ui.instruction.navigation.ExternalLink
@@ -110,7 +111,6 @@ object fill {
 val maxSize = MaxSize()
 val maxWidth = MaxWidth()
 val maxHeight = MaxHeight()
-val disabled = Disabled()
 
 fun gap(calcBoth: () -> DPixel): Gap = calcBoth().let { Gap(it, it) }
 fun gap(both: DPixel): Gap = Gap(both, both)
@@ -254,6 +254,9 @@ fun <T> toText(toTextFun: (T) -> String) = ToText(toTextFun)
  */
 inline fun tabIndex(value: () -> Int) = TabIndex(value())
 inline fun inputPlaceholder(valueFun: () -> String) = InputPlaceholder(valueFun())
+
+val disabled = Disabled()
+val secret = Secret()
 
 // ------------------------------------------------------------------------------------
 // Drag & Drop

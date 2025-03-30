@@ -12,6 +12,7 @@ import `fun`.adaptive.auth.model.CredentialType.PASSWORD_RESET_KEY
 import `fun`.adaptive.auth.util.BCrypt
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
@@ -26,9 +27,6 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     val valueWorker by worker<AvValueWorker>()
     val authWorker by worker<AuthWorker>()
     val securityOfficer by lazy { authWorker.securityOfficer }
-
-    val sessionService
-        get() = AuthSessionService().newInstance(serviceContext)
 
     val policy
         get() = SecurityPolicy()
@@ -122,7 +120,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
 
         if (serviceContext.ofPrincipal(principalId)) {
             requireNotNull(currentCredential)
-            sessionService.authenticate(principalId, currentCredential.value, true, currentCredential.type, policy)
+            getSessionService().authenticate(principalId, currentCredential.value, true, currentCredential.type, policy)
         }
 
         valueWorker.execute {
@@ -143,7 +141,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     override suspend fun activate(principalId: AuthPrincipalId, credential: Credential, key: Credential) {
         publicAccess()
 
-        sessionService.authenticate(principalId, key.value, true, ACTIVATION_KEY, policy)
+        getSessionService().authenticate(principalId, key.value, true, ACTIVATION_KEY, policy)
 
         // history(credential.principal)
 
@@ -165,7 +163,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     ) {
         publicAccess()
 
-        sessionService.authenticate(principalId, key.value, true, PASSWORD_RESET_KEY, policy)
+        getSessionService().authenticate(principalId, key.value, true, PASSWORD_RESET_KEY, policy)
 
         // history(credential.principal)
 
@@ -207,7 +205,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
         principalId: AvValueId,
         updateFun: (MutableSet<Credential>) -> Set<Credential>
     ) {
-        val credentialList = markerVal<CredentialList>(principalId.cast(), AUTH_CREDENTIAL_LIST)
+        val credentialList = markerVal<CredentialList>(principalId.cast(), AuthMarkers.CREDENTIAL_LIST)
         this += credentialList.copy(timestamp = now(), credentials = updateFun(credentialList.credentials.toMutableSet()))
     }
 
@@ -219,4 +217,8 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
             item.asAvItem<PrincipalSpec>().let { it.copy(spec = updateFun(it.spec)) }
         }
     }
+
+    fun getSessionService() =
+        safeAdapter.firstImpl<AuthSessionService>().newInstance(Session.contextForRole(securityOfficer))
+
 }

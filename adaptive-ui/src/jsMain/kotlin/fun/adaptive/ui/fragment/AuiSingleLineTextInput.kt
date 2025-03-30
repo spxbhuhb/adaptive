@@ -12,6 +12,7 @@ import `fun`.adaptive.ui.api.disabled
 import `fun`.adaptive.ui.aui
 import `fun`.adaptive.ui.instruction.input.InputPlaceholder
 import `fun`.adaptive.ui.instruction.input.MaxLength
+import `fun`.adaptive.ui.instruction.input.Secret
 import `fun`.adaptive.ui.instruction.layout.Alignment
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
@@ -41,7 +42,6 @@ open class AuiSingleLineTextInput(
         if (haveToPatchInstructions) {
             receiver.disabled = (disabled in instructions)
 
-
             val placeholder = get<InputPlaceholder>()?.value
             if (placeholder != null) {
                 receiver.placeholder = placeholder
@@ -50,6 +50,11 @@ open class AuiSingleLineTextInput(
             val maxLength = get<MaxLength>()?.maxLength
             if (maxLength != null) {
                 receiver.maxLength = maxLength
+            }
+
+            val secret = get<Secret>()
+            if (secret != null) {
+                receiver.type = "password"
             }
 
             alignText()

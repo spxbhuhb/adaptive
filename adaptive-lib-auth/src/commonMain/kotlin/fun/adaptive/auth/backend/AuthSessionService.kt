@@ -136,6 +136,8 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService> {
 
         // FIXME check credential expiration
 
+        println("principalId: $principalId, password: $password, checkCredentials: $checkCredentials, credentialType: $credentialType, policy: $policy")
+
         val principal = valueWorker.item(principalId).asAvItem<PrincipalSpec>()
 
         val validCredentials = if (checkCredentials) {

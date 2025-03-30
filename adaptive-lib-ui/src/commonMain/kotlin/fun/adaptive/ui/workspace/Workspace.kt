@@ -10,14 +10,17 @@ import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.model.NamedItemType
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
+import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.ClientWorkspace
 import `fun`.adaptive.service.transport.ServiceCallTransport
+import `fun`.adaptive.ui.builtin.executionError
 import `fun`.adaptive.ui.builtin.menu
 import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
+import `fun`.adaptive.ui.snackbar.failNotification
 import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
 import `fun`.adaptive.ui.workspace.model.*
 import `fun`.adaptive.utility.UUID
@@ -151,7 +154,13 @@ open class Workspace(
         (toolPanes.filter(filterFun) + sideBarActions.filter(filterFun)).sortedBy { it.displayOrder }
 
     fun io(block: suspend () -> Unit) {
-        scope.launch { block() } // FIXME this should run in the backend scope
+        scope.launch {
+            try {
+                block()
+            } catch (ex : Exception) {
+                failNotification(Strings.executionError)
+            }
+        } // FIXME this should run in the backend scope
     }
 
     fun ui(block: suspend () -> Unit) {

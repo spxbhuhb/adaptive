@@ -14,6 +14,8 @@
 
     <string name="copyToClipboard">Copy to clipboard</string>
 
+    <string name="executionError">Failed to execute the operation.</string>
+
     <string name="expandAll">Összes megnyitása</string>
     <string name="collapseAll">Összes bezárása</string>
 
